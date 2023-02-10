@@ -1,9 +1,9 @@
-name: lint
+name: test
 
 on: push
 
 jobs:
-  lint:
+  unit:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,5 +17,5 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Lint
-        run: npm run lint
+      - name: Test
+        run: npx jest --config=jest.config.js
