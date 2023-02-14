@@ -1,8 +1,5 @@
-body {
-  margin: 0;
-}
-
 $body-color: #333;
-$font-family-base: ("Helvetica Neue",Helvetica,Arial,sans-serif);
+$font-family-base: ("Helvetica Neue",helvetica,arial,sans-serif);
 
+/* Boostrap variables override needs to be before this import */
 @import "~bootstrap/scss/bootstrap";
