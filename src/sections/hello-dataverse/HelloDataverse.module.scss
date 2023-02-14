@@ -1,0 +1,27 @@
+.container {
+  text-align: center;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  background-color: white;
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  line-height: 1.42857143;
+}
+
+.title {
+  color: #C55B28;
+}
+
+.logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.link {
+  color: #3174AF;
+}
+
