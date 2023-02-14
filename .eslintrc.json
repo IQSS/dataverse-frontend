@@ -2,6 +2,16 @@
   "settings": {
     "react": {
       "version": "detect"
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
+      }
     }
   },
   "env": {
@@ -40,5 +50,18 @@
         "bracketSameLine": true
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/tests/e2e/**/*.spec.ts"
+      ],
+      "rules": {
+        "testing-library/await-async-query": 0,
+        "@typescript-eslint/no-unsafe-member-access": 0,
+        "@typescript-eslint/no-unsafe-call": 0,
+        "testing-library/prefer-screen-queries": 0
+      }
+    }
+  ]
 }
