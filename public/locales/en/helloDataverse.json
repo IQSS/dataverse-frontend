@@ -1,4 +1,6 @@
 {
   "title": "Hello Dataverse",
-  "linkText": "Dataverse"
+  "linkText": "Dataverse",
+  "description": "Edit <1>src/sections/hello-dataverse/HelloDataverse.tsx</1> and save to reload.",
+  "altImage": "Dataverse logo"
 }
