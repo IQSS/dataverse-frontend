@@ -1,7 +1,7 @@
-import { HelloDataverse } from './sections/hello-dataverse/HelloDataverse'
+import { Router } from './Router'
 
 function App() {
-  return <HelloDataverse />
+  return <Router />
 }
 
 export default App
