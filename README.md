@@ -2,13 +2,19 @@
 
 [![Tests](https://github.com/IQSS/dataverse-frontend/actions/workflows/test.yml/badge.svg)](https://github.com/IQSS/dataverse-frontend/actions/workflows/test.yml)
 
-## Available Scripts
+## Getting Started
 
-In the project directory, you can run:
+First install node >=16 and npm >=8. Recommended versions `node v19` and `npm v9`.
 
 ### `npm install`
 
 Installs dependencies.
+
+
+## Available Scripts
+
+In the project directory, you can run at any time:
+
 ### `npm start`
 
 Runs the app in the development mode.\
