@@ -10,7 +10,6 @@ First install node >=16 and npm >=8. Recommended versions `node v19` and `npm v9
 
 Installs dependencies.
 
-
 ## Available Scripts
 
 In the project directory, you can run at any time:

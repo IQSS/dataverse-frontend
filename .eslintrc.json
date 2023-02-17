@@ -5,12 +5,7 @@
     },
     "import/resolver": {
       "node": {
-        "extensions": [
-          ".js",
-          ".jsx",
-          ".ts",
-          ".tsx"
-        ]
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
     }
   },
@@ -54,9 +49,7 @@
   },
   "overrides": [
     {
-      "files": [
-        "**/tests/e2e/**/*.spec.ts"
-      ],
+      "files": ["**/tests/e2e/**/*.spec.ts"],
       "rules": {
         "testing-library/await-async-query": 0,
         "@typescript-eslint/no-unsafe-member-access": 0,
