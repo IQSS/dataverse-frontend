@@ -1,10 +1,9 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-
-import { Button } from './Button'
+import { Button } from '../../sections/shared/Button'
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: 'Example/Button',
+  title: 'Shared/Button',
   component: Button,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {

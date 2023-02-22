@@ -1,7 +1,6 @@
 import React from 'react'
-
-import { Header } from './Header'
-import './page.css'
+import './hello-dataverse.css'
+import { Header } from '../../sections/shared/Header'
 
 type User = {
   name: string
