@@ -11,7 +11,7 @@ export default {
   }
 } as ComponentMeta<typeof HelloDataverse>
 
-const Template: ComponentStory<typeof HelloDataverse> = (args) => <HelloDataverse />
+const Template: ComponentStory<typeof HelloDataverse> = () => <HelloDataverse />
 
 export const LoggedOut = Template.bind({})
 
