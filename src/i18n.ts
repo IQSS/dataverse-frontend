@@ -8,3 +8,5 @@ void i18next
   .use(I18nextBrowserLanguageDetector)
   .use(I18NextHttpBackend)
   .init({ fallbackLng: 'en' })
+
+export default i18next

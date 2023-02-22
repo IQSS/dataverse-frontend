@@ -108,6 +108,7 @@
     "pre-commit": "^1.2.2",
     "prettier": "^2.8.4",
     "prop-types": "^15.8.1",
+    "storybook-react-i18next": "^1.1.2",
     "stylelint": "^15.1.0",
     "stylelint-config-rational-order": "^0.1.2",
     "stylelint-config-standard": "^30.0.1",
