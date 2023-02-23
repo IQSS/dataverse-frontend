@@ -13,14 +13,14 @@ export function HelloDataverse() {
   const { t } = useTranslation('helloDataverse')
 
   return (
-    <article className={styles.container}>
+    <article>
       <Header
         user={user}
         onLogin={() => setUser({ name: 'Jane Doe' })}
         onLogout={() => setUser(undefined)}
         onCreateAccount={() => setUser({ name: 'Jane Doe' })}
       />
-      <section>
+      <section className={styles.container}>
         <h2 className={styles.title}>{t('title')}</h2>
         <img src={logo} className={styles.logo} alt={t('altImage') ?? 'logo'} />
         <p>

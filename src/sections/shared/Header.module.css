@@ -1,0 +1,31 @@
+.wrapper {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 970px;
+  margin: 0 auto;
+  padding: 0.6rem;
+}
+
+.title {
+  color: #C55B28;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1;
+  margin: 6px 0 6px 0px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+button + button {
+  margin-left: 10px;
+}
+
+.welcome {
+  color: #333;
+  font-size: 14px;
+  margin-right: 10px;
+}
