@@ -1,7 +1,6 @@
 import { Button } from './Button'
-import styles from './Header.module.css'
+import styles from './Header.module.scss'
 import logo from '../hello-dataverse/logo.svg'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 type User = {

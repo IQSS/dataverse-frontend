@@ -1,5 +1,5 @@
 .wrapper {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgb(0 0 0 / 10%);
 }
 
 .container {
@@ -11,12 +11,12 @@
 }
 
 .title {
-  color: #C55B28;
+  display: inline-block;
+  margin: 6px 0;
+  color: #c55b28;
   font-weight: 400;
   font-size: 18px;
   line-height: 1;
-  margin: 6px 0 6px 0px;
-  display: inline-block;
   vertical-align: top;
 }
 
@@ -25,7 +25,7 @@ button + button {
 }
 
 .welcome {
+  margin-right: 10px;
   color: #333;
   font-size: 14px;
-  margin-right: 10px;
 }
