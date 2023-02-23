@@ -30,12 +30,12 @@ export function Header({ user, onLogin, onLogout, onCreateAccount }: HeaderProps
               <span className={styles.welcome}>
                 Welcome, <b>{user.name}</b>!
               </span>
-              <Button size="small" onClick={onLogout} label="Log out" />
+              <Button secondary onClick={onLogout} label="Log out" />
             </>
           ) : (
             <>
-              <Button size="small" onClick={onLogin} label="Log in" />
-              <Button primary size="small" onClick={onCreateAccount} label="Sign up" />
+              <Button secondary onClick={onLogin} label="Log in" />
+              <Button onClick={onCreateAccount} label="Sign up" />
             </>
           )}
         </div>
