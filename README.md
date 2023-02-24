@@ -8,7 +8,9 @@ First install node >=16 and npm >=8. Recommended versions `node v19` and `npm v9
 
 ### `npm install`
 
-Installs dependencies.
+Run this command to install the dependencies. You may see a message about vulnerabilities after running this command. \
+Please check this announcement from Create React App repository https://github.com/facebook/create-react-app/issues/11174 .
+These vulnerabilities won't be in the production build since they come from libraries only used during the development.
 
 ## Available Scripts
 
