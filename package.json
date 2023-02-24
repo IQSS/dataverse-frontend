@@ -40,7 +40,8 @@
     "cy:run": "cypress run",
     "git:add": "git add .",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "test-storybook": "test-storybook"
   },
   "pre-commit": [
     "lint:fix",
@@ -86,6 +87,7 @@
     "@storybook/node-logger": "^6.5.16",
     "@storybook/preset-create-react-app": "^4.1.2",
     "@storybook/react": "^6.5.16",
+    "@storybook/test-runner": "0.6.4",
     "@storybook/testing-library": "^0.0.13",
     "@swc/core": "^1.3.35",
     "@swc/jest": "^0.2.24",
@@ -94,6 +96,7 @@
     "@types/node-sass": "^4.11.3",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
+    "axe-playwright": "^1.2.3",
     "babel-plugin-named-exports-order": "^0.0.2",
     "cypress": "^12.5.1",
     "eslint": "^8.33.0",
