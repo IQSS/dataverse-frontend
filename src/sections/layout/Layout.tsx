@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
-import { Header } from '../shared/Header'
 import { useState } from 'react'
+import { Header } from './header/Header'
 
 type User = {
   name: string

@@ -1,11 +1,10 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import { Header } from '../../sections/shared/Header'
+import { Header } from '../../../sections/layout/header/Header'
 
 export default {
-  title: 'Shared/Header',
+  title: 'Layout/Header',
   component: Header,
   parameters: {
-    // More on Story layout: https://storybook.js.org/docs/react/configure/story-layout
     layout: 'fullscreen'
   }
 } as ComponentMeta<typeof Header>

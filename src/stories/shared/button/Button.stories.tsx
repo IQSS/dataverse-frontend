@@ -1,5 +1,5 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import { Button } from '../../sections/shared/Button'
+import { Button } from '../../../sections/shared/button/Button'
 
 export default {
   title: 'Shared/Button',

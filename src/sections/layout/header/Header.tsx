@@ -1,7 +1,7 @@
-import { Button } from './Button'
 import styles from './Header.module.scss'
-import logo from '../hello-dataverse/logo.svg'
+import logo from '../../shared/logo.svg'
 import { useTranslation } from 'react-i18next'
+import { Button } from '../../shared/button/Button'
 
 type User = {
   name: string
