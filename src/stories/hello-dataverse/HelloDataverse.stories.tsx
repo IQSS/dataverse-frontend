@@ -15,11 +15,3 @@ export default {
 const Template: ComponentStory<typeof HelloDataverse> = () => <HelloDataverse />
 
 export const LoggedOut = Template.bind({})
-
-export const LoggedIn = Template.bind({})
-
-LoggedIn.play = ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  const loginButton = canvas.getByRole('button', { name: /Log in/i })
-  userEvent.click(loginButton)
-}
