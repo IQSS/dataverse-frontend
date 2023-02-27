@@ -1,5 +1,4 @@
 import { renderWithRouter } from '../../renderWithRouter'
-import { HelloDataverse } from '../../../src/sections/hello-dataverse/HelloDataverse'
 import { screen } from '@testing-library/react'
 import { Layout } from '../../../src/sections/layout/Layout'
 
