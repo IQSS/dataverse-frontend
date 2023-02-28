@@ -1,0 +1,32 @@
+.wrapper {
+  background-image: linear-gradient(to bottom,#fff 0,#f8f8f8 100%);
+  border-bottom: 1px solid rgb(0 0 0 / 10%);
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 970px;
+  margin: 0 auto;
+  padding: 0.6rem;
+}
+
+.title {
+  display: inline-block;
+  margin: 6px 0;
+  color: #c55b28;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1;
+  vertical-align: top;
+}
+
+button + button {
+  margin-left: 10px;
+}
+
+.welcome {
+  margin-right: 10px;
+  color: #333;
+  font-size: 14px;
+}

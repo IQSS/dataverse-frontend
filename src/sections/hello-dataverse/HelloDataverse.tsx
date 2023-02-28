@@ -1,14 +1,27 @@
 import logo from './logo.svg'
 import styles from './HelloDataverse.module.scss'
 import { Trans, useTranslation } from 'react-i18next'
+import { Header } from '../shared/Header'
+import React from 'react'
+
+type User = {
+  name: string
+}
 
 export function HelloDataverse() {
+  const [user, setUser] = React.useState<User>()
   const { t } = useTranslation('helloDataverse')
 
   return (
-    <div className={styles.container}>
-      <header>
-        <h1 className={styles.title}>{t('title')}</h1>
+    <article>
+      <Header
+        user={user}
+        onLogin={() => setUser({ name: 'Jane Doe' })}
+        onLogout={() => setUser(undefined)}
+        onCreateAccount={() => setUser({ name: 'Jane Doe' })}
+      />
+      <section className={styles.container}>
+        <h2 className={styles.title}>{t('title')}</h2>
         <img src={logo} className={styles.logo} alt={t('altImage') ?? 'logo'} />
         <p>
           <Trans t={t} i18nKey="description" components={{ 1: <code /> }} />
@@ -20,7 +33,7 @@ export function HelloDataverse() {
           rel="noopener noreferrer">
           {t('linkText')}
         </a>
-      </header>
-    </div>
+      </section>
+    </article>
   )
 }
