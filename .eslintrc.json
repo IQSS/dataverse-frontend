@@ -56,6 +56,10 @@
         "@typescript-eslint/no-unsafe-call": 0,
         "testing-library/prefer-screen-queries": 0
       }
+    },
+    {
+      "files": ["**/tests/**/*.(test).(ts|tsx)"],
+      "extends": ["plugin:vitest/recommended"]
     }
   ]
 }

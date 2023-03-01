@@ -11,14 +11,14 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 19
+          node-version: 18
           cache: 'npm'
 
       - name: Install Dependencies
         run: npm install
 
       - name: Test
-        run: npx jest --config=jest.config.js
+        run: npm run test:no-watch
   e2e:
     runs-on: ubuntu-latest
 
@@ -27,7 +27,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 19
+          node-version: 18
           cache: 'npm'
 
       - name: Install Dependencies
@@ -47,7 +47,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 19
+          node-version: 18
           cache: 'npm'
 
       - name: Install Dependencies
