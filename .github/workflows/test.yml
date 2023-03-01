@@ -38,7 +38,7 @@ jobs:
         with:
           build: npm run build
           start: npm run start
-          wait-on: 'http://localhost:3000'
+          wait-on: 'http://localhost:5173'
   interaction-and-accessibility:
     runs-on: ubuntu-latest
 
