@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "types": ["cypress"],
+    "types": ["vite/client", "cypress"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -17,5 +17,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "tests", "jest.config.js", "cypress.config.ts"]
+  "include": ["src", "tests", "jest.config.js", "cypress.config.ts", "vite.config.ts"]
 }

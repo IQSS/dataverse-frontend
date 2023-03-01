@@ -22,17 +22,15 @@
     "react-dom": "^18.2.0",
     "react-i18next": "^12.1.5",
     "react-router-dom": "^6.8.1",
-    "react-scripts": "5.0.1",
     "sass": "^1.58.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "vite",
+    "build": "tsc && vite build",
     "test": "jest --watch --config=jest.config.js",
     "test-no-watch": "jest --config=jest.config.js",
-    "eject": "react-scripts eject",
     "lint": "eslint --ignore-path .gitignore . && stylelint **/*.scss && prettier --check '**/*.(yml|json|md|css)'",
     "lint:fix": "eslint --fix --ext .ts,.tsx ./src --ignore-path .gitignore . && stylelint --fix **/*.scss && prettier --write '**/*.(yml|json|md|css)'",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json,yml,md}' --config ./.prettierrc",
@@ -96,11 +94,13 @@
     "@types/node-sass": "^4.11.3",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
+    "@vitejs/plugin-react": "^3.1.0",
     "axe-playwright": "^1.2.3",
     "babel-plugin-named-exports-order": "^0.0.2",
     "cypress": "^12.5.1",
     "eslint": "^8.33.0",
     "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-simple-import-sort": "^10.0.0",
@@ -118,6 +118,7 @@
     "stylelint-config-standard": "^30.0.1",
     "stylelint-config-standard-scss": "^7.0.1",
     "stylelint-order": "^6.0.2",
+    "vite": "^4.1.4",
     "webpack": "^5.75.0"
   }
 }
