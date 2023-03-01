@@ -1,3 +1,4 @@
+@use "sass:map";
 @import "~bootstrap/scss/functions";
 
 $body-color: #333;
@@ -5,6 +6,13 @@ $font-family-base: ("Helvetica Neue",helvetica,arial,sans-serif);
 
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
+
+$custom-colors: (
+        "dataverse-orange": #c55b28
+);
+
+$theme-colors: map.merge($theme-colors, $custom-colors);
+
 @import "~bootstrap/scss/maps";
 @import "~bootstrap/scss/root";
 @import "~bootstrap/scss/reboot";
