@@ -29,6 +29,7 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
+    "preview": "vite preview",
     "test": "vitest watch",
     "test:no-watch": "vitest run",
     "test:coverage": "vitest run --coverage",

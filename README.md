@@ -28,6 +28,14 @@ You may also see any lint errors in the console.
 
 Launches the test runner for the unit tests in the interactive watch mode.
 
+### `npm run build`
+
+Builds the app for production to the `dist` folder.
+
+### `npm run preview`
+
+Locally preview the production build.
+
 ### `npm run cy:run`
 
 Launches the Cypress test runner for the end-to-end tests. \
@@ -40,7 +48,3 @@ Launches the linter. To automatically fix the errors run `npm run lint:fix`
 ### `npm run format`
 
 Launches the prettier formatter. We recommend you to configure your IDE to run prettier on save.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.

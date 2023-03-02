@@ -37,8 +37,8 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           build: npm run build
-          start: npm run start
-          wait-on: 'http://localhost:5173'
+          start: npm run preview
+          wait-on: 'http://localhost:4173'
   interaction-and-accessibility:
     runs-on: ubuntu-latest
 

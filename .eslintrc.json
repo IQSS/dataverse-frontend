@@ -29,7 +29,7 @@
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": ["./tsconfig.json"]
+    "project": ["./tsconfig.json", "./tests/e2e/tsconfig.json"]
   },
   "plugins": ["react", "simple-import-sort", "import", "unused-imports"],
   "rules": {
