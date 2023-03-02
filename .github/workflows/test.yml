@@ -38,7 +38,7 @@ jobs:
         with:
           build: npm run build
           start: npm run preview
-          wait-on: 'http://localhost:4173'
+          wait-on: 'npx wait-on --timeout 60000 http://localhost:4173'
   interaction-and-accessibility:
     runs-on: ubuntu-latest
 
