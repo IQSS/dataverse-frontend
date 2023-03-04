@@ -11,14 +11,14 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 19
+          node-version: 18
           cache: 'npm'
 
       - name: Install Dependencies
         run: npm install
 
       - name: Test
-        run: npx jest --config=jest.config.js
+        run: npm run test:no-watch
   e2e:
     runs-on: ubuntu-latest
 
@@ -27,7 +27,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 19
+          node-version: 18
           cache: 'npm'
 
       - name: Install Dependencies
@@ -37,8 +37,8 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           build: npm run build
-          start: npm run start
-          wait-on: 'http://localhost:3000'
+          start: npm run preview
+          wait-on: 'npx wait-on --timeout 60000 http://localhost:5173'
   interaction-and-accessibility:
     runs-on: ubuntu-latest
 
@@ -47,7 +47,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 19
+          node-version: 18
           cache: 'npm'
 
       - name: Install Dependencies

@@ -2,4 +2,4 @@ $body-color: #333;
 $font-family-base: ("Helvetica Neue",helvetica,arial,sans-serif);
 
 /* Boostrap variables override needs to be before this import */
-@import "~bootstrap/scss/bootstrap";
+@import "bootstrap/scss/bootstrap";

@@ -13,7 +13,10 @@
 /cypress
 
 # production
-/build
+/dist
+
+# storybook
+/storybook-static
 
 # misc
 .DS_Store

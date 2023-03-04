@@ -1,8 +1,10 @@
-const { injectAxe, checkA11y, configureAxe } = require('axe-playwright')
+import { injectAxe, checkA11y, configureAxe } from 'axe-playwright'
 
-const { getStoryContext } = require('@storybook/test-runner')
+import { getStoryContext } from '@storybook/test-runner'
 
-module.exports = {
+import type { TestRunnerConfig } from '@storybook/test-runner'
+
+const a11yConfig: TestRunnerConfig = {
   async preRender(page) {
     await injectAxe(page)
   },
@@ -13,7 +15,7 @@ module.exports = {
       rules: storyContext.parameters?.a11y?.config?.rules
     })
 
-    await checkA11y(page, '#root', {
+    await checkA11y(page, '#storybook-root', {
       detailedReport: true,
       detailedReportOptions: {
         html: true
@@ -21,3 +23,5 @@ module.exports = {
     })
   }
 }
+
+module.exports = a11yConfig
