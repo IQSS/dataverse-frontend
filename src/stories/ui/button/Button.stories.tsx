@@ -1,8 +1,8 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import { Button } from '../../../sections/shared/button/Button'
+import { Button } from '../../../sections/ui/button/Button'
 
 export default {
-  title: 'Shared/Button',
+  title: 'UI/Button',
   component: Button,
   argTypes: {
     backgroundColor: { control: 'color' }

@@ -1,7 +1,7 @@
 import styles from './Header.module.scss'
-import logo from '../../shared/logo.svg'
+import logo from '../../ui/logo.svg'
 import { useTranslation } from 'react-i18next'
-import { Button } from '../../shared/button/Button'
+import { Button } from '../../ui/button/Button'
 
 type User = {
   name: string

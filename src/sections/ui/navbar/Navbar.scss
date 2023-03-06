@@ -1,0 +1,9 @@
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+
+$navbar-light-brand-color: var(--bs-dataverse-orange);
+
+@import "node_modules/bootstrap/scss/mixins";
+@import "node_modules/bootstrap/scss/nav";
+@import "node_modules/bootstrap/scss/navbar";
+@import "node_modules/bootstrap/scss/containers";
