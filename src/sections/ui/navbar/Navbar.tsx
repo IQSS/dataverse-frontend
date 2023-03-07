@@ -24,15 +24,15 @@ interface NavbarProps {
 
 export function Navbar({ brand, links }: NavbarProps) {
   return (
-    <NavbarBS bg="light" expand="lg">
+    <NavbarBS collapseOnSelect expand="lg">
       <Container>
         <NavbarBS.Brand href={brand.link.path}>
           <img width="28" height="28" src={brand.logo.src} alt={brand.logo.altText ?? 'logo'} />
           {brand.link.title}
         </NavbarBS.Brand>
-        <NavbarBS.Toggle aria-controls="basic-navbar-nav" />
-        <NavbarBS.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+        <NavbarBS.Toggle aria-controls="responsive-navbar-nav" />
+        <NavbarBS.Collapse id="responsive-navbar-nav" className="justify-content-end">
+          <Nav>
             {links.length != 0 &&
               links.map((link, index) => (
                 <Nav.Link key={index} href={link.path}>
