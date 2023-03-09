@@ -19,10 +19,17 @@ Example.args = {
     { title: 'Link 1 ', value: '#' },
     { title: 'Link 2', value: '#' },
     {
-      title: 'Dropdown',
+      title: 'Dropdown 1',
       value: [
         { title: 'Link 3 ', value: '#' },
         { title: 'Link 4', value: '#' }
+      ]
+    },
+    {
+      title: 'Dropdown 2',
+      value: [
+        { title: 'Link 5 ', value: '#' },
+        { title: 'Link 6', value: '#' }
       ]
     }
   ]

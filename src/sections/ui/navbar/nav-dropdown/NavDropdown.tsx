@@ -1,5 +1,6 @@
 import { NavDropdown as NavDropdownBS } from 'react-bootstrap'
 import { Link } from '../NavbarProps'
+import './nav-dropdown.scss'
 
 interface DropdownProps {
   title: string

@@ -1,20 +1,19 @@
 import { Navbar as NavbarBS } from 'react-bootstrap'
 import { Container, Nav } from 'react-bootstrap'
-import './bootstrap-navbar-customized.scss'
-import styles from './Navbar.module.scss'
+import './navbar.scss'
 import { Link, NavbarProps } from './NavbarProps'
 import { NavDropdown } from './nav-dropdown/NavDropdown'
 
 export function Navbar({ brand, links }: NavbarProps) {
   return (
-    <NavbarBS collapseOnSelect expand="lg" fixed="top" className={styles.wrapper}>
+    <NavbarBS collapseOnSelect expand="lg" fixed="top">
       <Container>
         <NavbarBS.Brand href={brand.path}>
           <img width="28" height="28" src={brand.logo.src} alt={brand.logo.altText ?? 'logo'} />
           {brand.title}
         </NavbarBS.Brand>
         <NavbarBS.Toggle aria-controls="responsive-navbar-nav" />
-        <NavbarBS.Collapse id="responsive-navbar-nav" className={styles.collapse}>
+        <NavbarBS.Collapse id="responsive-navbar-nav">
           <Nav>
             {links.length != 0 &&
               links.map((link: Link, index) =>
