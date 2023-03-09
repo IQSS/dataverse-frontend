@@ -1,7 +1,7 @@
-import styles from './Header.module.scss'
 import logo from '../../ui/logo.svg'
 import { useTranslation } from 'react-i18next'
-import { Button } from '../../ui/button/Button'
+import { Link, Navbar } from '../../ui/navbar/Navbar'
+import { Route } from '../../route.enum'
 
 type User = {
   name: string
@@ -9,37 +9,28 @@ type User = {
 
 interface HeaderProps {
   user?: User
-  onLogin: () => void
-  onLogout: () => void
-  onCreateAccount: () => void
 }
 
-export function Header({ user, onLogin, onLogout, onCreateAccount }: HeaderProps) {
-  const { t } = useTranslation('helloDataverse')
+export function Header({ user }: HeaderProps) {
+  const { t } = useTranslation('header')
+
+  const links: Link[] = user
+    ? [{ title: user.name, path: [{ title: t('logOut'), path: Route.LOG_OUT }] }]
+    : [
+        { title: t('logIn'), path: Route.LOG_IN },
+        { title: t('signUp'), path: Route.SIGN_UP }
+      ]
 
   return (
-    <header className={styles.wrapper}>
-      <div className={styles.container}>
-        <div>
-          <img width="28" height="28" src={logo} alt={t('altImage') ?? 'logo'} />
-          <h1 className={styles.title}>Dataverse</h1>
-        </div>
-        <div>
-          {user ? (
-            <>
-              <span className={styles.welcome}>
-                Welcome, <b>{user.name}</b>!
-              </span>
-              <Button secondary onClick={onLogout} label="Log out" />
-            </>
-          ) : (
-            <>
-              <Button secondary onClick={onLogin} label="Log in" />
-              <Button onClick={onCreateAccount} label="Sign up" />
-            </>
-          )}
-        </div>
-      </div>
-    </header>
+    <>
+      <Navbar
+        brand={{
+          logo: { src: logo, altText: t('altLogoImage') },
+          title: t('brandTitle'),
+          path: Route.HOME
+        }}
+        links={links}
+      />
+    </>
   )
 }

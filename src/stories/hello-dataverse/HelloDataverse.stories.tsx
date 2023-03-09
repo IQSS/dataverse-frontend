@@ -3,7 +3,7 @@ import { HelloDataverse } from '../../sections/hello-dataverse/HelloDataverse'
 import { WithLayout } from '../WithLayout'
 
 export default {
-  title: 'Hello Dataverse/Page',
+  title: 'Sections/Hello Dataverse',
   component: HelloDataverse,
   decorators: [WithLayout],
   parameters: {
@@ -13,4 +13,4 @@ export default {
 
 const Template: ComponentStory<typeof HelloDataverse> = () => <HelloDataverse />
 
-export const LoggedOut = Template.bind({})
+export const Default = Template.bind({})
