@@ -1,7 +1,8 @@
 import logo from '../../ui/logo.svg'
 import { useTranslation } from 'react-i18next'
-import { Link, Navbar } from '../../ui/navbar/Navbar'
+import { Navbar } from '../../ui/navbar/Navbar'
 import { Route } from '../../route.enum'
+import { Link } from '../../ui/navbar/NavbarProps'
 
 type User = {
   name: string
@@ -15,10 +16,10 @@ export function Header({ user }: HeaderProps) {
   const { t } = useTranslation('header')
 
   const links: Link[] = user
-    ? [{ title: user.name, path: [{ title: t('logOut'), path: Route.LOG_OUT }] }]
+    ? [{ title: user.name, value: [{ title: t('logOut'), value: Route.LOG_OUT }] }]
     : [
-        { title: t('logIn'), path: Route.LOG_IN },
-        { title: t('signUp'), path: Route.SIGN_UP }
+        { title: t('logIn'), value: Route.LOG_IN },
+        { title: t('signUp'), value: Route.SIGN_UP }
       ]
 
   return (

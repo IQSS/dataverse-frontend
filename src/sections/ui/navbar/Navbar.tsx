@@ -1,28 +1,9 @@
-import { Navbar as NavbarBS, NavDropdown } from 'react-bootstrap'
+import { Navbar as NavbarBS } from 'react-bootstrap'
 import { Container, Nav } from 'react-bootstrap'
 import './bootstrap-navbar-customized.scss'
 import styles from './Navbar.module.scss'
-
-export interface Link {
-  title: string
-  path: string | Link[]
-}
-
-interface Logo {
-  src: string
-  altText: string | null
-}
-
-interface Brand {
-  logo: Logo
-  title: string
-  path: string
-}
-
-interface NavbarProps {
-  brand: Brand
-  links: Link[]
-}
+import { Link, NavbarProps } from './NavbarProps'
+import { NavDropdown } from './nav-dropdown/NavDropdown'
 
 export function Navbar({ brand, links }: NavbarProps) {
   return (
@@ -36,22 +17,13 @@ export function Navbar({ brand, links }: NavbarProps) {
         <NavbarBS.Collapse id="responsive-navbar-nav" className={styles.collapse}>
           <Nav>
             {links.length != 0 &&
-              links.map((link, index) =>
-                typeof link.path == 'string' ? (
-                  <Nav.Link eventKey={index} key={index} href={link.path}>
+              links.map((link: Link, index) =>
+                typeof link.value == 'string' ? (
+                  <Nav.Link eventKey={index} key={index} href={link.value}>
                     {link.title}
                   </Nav.Link>
                 ) : (
-                  <NavDropdown key={index} title={link.title} id="basic-nav-dropdown">
-                    {link.path.map(
-                      (link, index) =>
-                        typeof link.path == 'string' && (
-                          <NavDropdown.Item key={index} href={link.path}>
-                            {link.title}
-                          </NavDropdown.Item>
-                        )
-                    )}
-                  </NavDropdown>
+                  <NavDropdown key={index} title={link.title} links={link.value} />
                 )
               )}
           </Nav>

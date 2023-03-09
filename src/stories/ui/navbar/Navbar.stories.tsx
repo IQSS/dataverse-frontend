@@ -16,13 +16,13 @@ export const Example = Template.bind({})
 Example.args = {
   brand: { logo: { src: logo, altText: 'logo' }, title: 'Brand Title', path: '#' },
   links: [
-    { title: 'Link 1 ', path: '#' },
-    { title: 'Link 2', path: '#' },
+    { title: 'Link 1 ', value: '#' },
+    { title: 'Link 2', value: '#' },
     {
       title: 'Dropdown',
-      path: [
-        { title: 'Link 3 ', path: '#' },
-        { title: 'Link 4', path: '#' }
+      value: [
+        { title: 'Link 3 ', value: '#' },
+        { title: 'Link 4', value: '#' }
       ]
     }
   ]
