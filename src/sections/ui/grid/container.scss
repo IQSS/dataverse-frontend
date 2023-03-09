@@ -1,0 +1,11 @@
+@import "./src/assets/styles/bootstrap-variables";
+@import "./src/assets/styles/bootstrap-utils";
+
+$container-max-widths: (
+        md: 750px,
+        lg: 970px,
+        xl: 1170px
+);
+
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/containers";
