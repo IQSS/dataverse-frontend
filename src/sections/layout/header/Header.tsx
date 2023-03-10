@@ -18,8 +18,8 @@ export function Header({ user }: HeaderProps) {
   const links: Link[] = user
     ? [{ title: user.name, value: [{ title: t('logOut'), value: Route.LOG_OUT }] }]
     : [
-        { title: t('logIn'), value: Route.LOG_IN },
-        { title: t('signUp'), value: Route.SIGN_UP }
+        { title: t('signUp'), value: Route.SIGN_UP },
+        { title: t('logIn'), value: Route.LOG_IN }
       ]
 
   return (
