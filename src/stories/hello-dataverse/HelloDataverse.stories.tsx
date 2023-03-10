@@ -3,7 +3,7 @@ import { HelloDataverse } from '../../sections/hello-dataverse/HelloDataverse'
 import { WithLayout } from '../WithLayout'
 
 export default {
-  title: 'Sections/Hello Dataverse',
+  title: 'Pages/Hello Dataverse',
   component: HelloDataverse,
   decorators: [WithLayout],
   parameters: {

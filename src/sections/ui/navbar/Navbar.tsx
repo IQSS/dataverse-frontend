@@ -3,7 +3,7 @@ import { Nav } from 'react-bootstrap'
 import './navbar.scss'
 import { Link, NavbarProps } from './NavbarProps'
 import { NavDropdown } from './nav-dropdown/NavDropdown'
-import { Container } from '../grid/Container'
+import { Container } from '../grid/container/Container'
 
 export function Navbar({ brand, links }: NavbarProps) {
   return (

@@ -1,6 +1,4 @@
 @import "./src/assets/styles/bootstrap-variables";
-@import "bootstrap/scss/transitions";
-@import "bootstrap/scss/helpers";
 
 $navbar-light-brand-color: var(--bs-dataverse-orange);
 $navbar-brand-font-size: 18px;
@@ -8,6 +6,8 @@ $navbar-padding-y: 0.3rem;
 
 @import "bootstrap/scss/nav";
 @import "bootstrap/scss/navbar";
+@import "bootstrap/scss/transitions";
+@import "bootstrap/scss/helpers";
 
 .navbar {
   background-image: linear-gradient(to bottom,#fff 0,#f8f8f8 100%);
