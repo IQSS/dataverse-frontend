@@ -54,3 +54,22 @@ Launches the prettier formatter. We recommend you to configure your IDE to run p
 
 Runs the Storybook in the development mode.\
 Open [http://localhost:6006](http://localhost:6006) to view it in your browser.
+
+## Deployment
+
+Once the site is built through the `npm run build` command, it can be deployed in different ways to different types of infrastructure, depending on installation needs.
+
+We are working to provide different preconfigured automated deployment options, seeking to support common use cases today for installing applications of this nature.
+
+### AWS S3 Deployment
+
+AWS S3 deployment is done via the GitHub workflow `deploy`, which is run manually from GitHub Actions and will build and deploy the application to a remote S3 bucket.
+
+For this workflow to work, a GitHub environment must be first created with the following environment secrets:
+
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
+- AWS_S3_BUCKET_NAME
+- AWS_DEFAULT_REGION
+
+Selecting the `deploy` workflow in GitHub Actions will display the available environments for deployment in a drop-down menu.
