@@ -26,7 +26,7 @@ export function Header({ user }: HeaderProps) {
     <>
       <Navbar
         brand={{
-          logo: { src: logo, altText: t('altLogoImage') },
+          logo: { src: logo, altText: t('brandLogoImage') },
           title: t('brandTitle'),
           path: Route.HOME
         }}
