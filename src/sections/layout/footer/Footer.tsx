@@ -3,26 +3,29 @@ import { Row } from '../../ui/grid/row/Row'
 import { Col } from '../../ui/grid/col/Col'
 import styles from './Footer.module.scss'
 import dataverseProjectLogo from './dataverse-project-logo.svg'
+import { useTranslation } from 'react-i18next'
 
 export function Footer() {
+  const { t } = useTranslation('footer')
+
   return (
     <footer className={styles.container}>
       <Container>
         <Row>
           <Col sm={8}>
             <p className={styles.copyright}>
-              Copyright © 2023, The President &amp; Fellows of Harvard College&nbsp;|&nbsp;{' '}
+              {t('copyright')}
               <a
                 href="https://best-practices.dataverse.org/harvard-policies/harvard-privacy-policy.html"
                 rel="noreferrer"
                 target="_blank">
-                Privacy Policy
+                {t('privacyPolicy')}
               </a>
             </p>
           </Col>
           <Col sm={4}>
             <div className={styles['powered-by-container']}>
-              <span className={styles['powered-by-text']}>Powered by</span>
+              <span className={styles['powered-by-text']}>{t('poweredBy')}</span>
               <a
                 className={styles['powered-by-logo']}
                 href="https://dataverse.org/"
