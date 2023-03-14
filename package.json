@@ -27,6 +27,7 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
+    "build-basepath": "tsc && vite build --base=/spa",
     "preview": "vite preview",
     "test": "vitest watch",
     "test:no-watch": "vitest run",
