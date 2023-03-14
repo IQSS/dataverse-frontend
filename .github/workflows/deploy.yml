@@ -9,6 +9,7 @@ on:
         required: true
         options:
           - S3
+          - Payara
       environment:
         description: Environment to run the deployment against
         type: environment
@@ -30,7 +31,12 @@ jobs:
         run: npm install
 
       - name: Build
+        if: ${{ github.event.inputs.infra_type == 'S3' }}
         run: npm run build
+
+      - name: Build with base path
+        if: ${{ github.event.inputs.infra_type == 'Payara' }}
+        run: npm run build-basepath
 
       - uses: actions/upload-artifact@v3
         with:
@@ -67,3 +73,30 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+
+  deploy-to-payara:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    if: ${{ github.event.inputs.infra_type == 'Payara' }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: built-site
+          path: ./dist
+
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v6
+
+      - name: Build war file
+        working-directory: ./deployment/payara
+        run: mvn package "-Dversion=${{ steps.branch-name.outputs.current_branch }}"
