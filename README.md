@@ -55,3 +55,9 @@ Launches the prettier formatter. We recommend you to configure your IDE to run p
 
 Runs the Storybook in the development mode.  
 Open [http://localhost:6006](http://localhost:6006) to view it in your browser.
+
+## Changes in the style guide
+
+### Links
+
+We added the underline to the links to make them accessible.
