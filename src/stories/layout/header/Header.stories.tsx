@@ -1,22 +1,26 @@
-import { StoryFn, Meta } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
+import { WithI18next } from '../../WithI18next'
 import { Header } from '../../../sections/layout/header/Header'
 
-export default {
+const meta: Meta<typeof Header> = {
   title: 'Layout/Header',
   component: Header,
-  parameters: {
-    layout: 'fullscreen'
-  }
-} as Meta<typeof Header>
-
-const Template: StoryFn<typeof Header> = (args) => <Header {...args} />
-
-export const LoggedIn = Template.bind({})
-LoggedIn.args = {
-  user: {
-    name: 'Jane Doe'
-  }
+  decorators: [WithI18next]
 }
 
-export const LoggedOut = Template.bind({})
-LoggedOut.args = {}
+export default meta
+type Story = StoryObj<typeof Header>
+
+export const LoggedIn: Story = {
+  render: () => (
+    <Header
+      user={{
+        name: 'Jane Doe'
+      }}
+    />
+  )
+}
+
+export const LoggedOut: Story = {
+  render: () => <Header />
+}

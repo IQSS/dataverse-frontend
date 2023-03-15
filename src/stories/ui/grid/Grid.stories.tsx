@@ -1,49 +1,46 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react'
-import { Container, ContainerProps } from '../../../sections/ui/grid/container/Container'
-import { Row } from '../../../sections/ui/grid/row/Row'
+import type { Meta, StoryObj } from '@storybook/react'
+import { Container } from '../../../sections/ui/grid/container/Container'
+import { WithI18next } from '../../WithI18next'
 import { Col } from '../../../sections/ui/grid/col/Col'
+import { Row } from '../../../sections/ui/grid/row/Row'
 
-export default {
+const meta: Meta<typeof Container> = {
   /* Grid system for the layout of the page
    * It is based on a 12-column system, using Bootstrap's grid system underneath.
    */
+  tags: ['autodocs'],
   title: 'UI/Grid',
   component: Container,
-  parameters: {
-    layout: 'fullscreen'
-  }
-} as ComponentMeta<typeof Container>
+  decorators: [WithI18next]
+}
 
-const Template: ComponentStory<typeof Container> = ({ children }: ContainerProps) => (
-  <Container>{children}</Container>
-)
+export default meta
+type Story = StoryObj<typeof Container>
 
-export const EqualWidth12Columns = Template.bind({})
-
-EqualWidth12Columns.args = {
-  children: (
-    <Row>
-      <Col>1 of 1</Col>
-      <Col>1 of 2</Col>
-      <Col>1 of 3</Col>
-      <Col>1 of 4</Col>
-      <Col>1 of 5</Col>
-      <Col>1 of 6</Col>
-      <Col>1 of 7</Col>
-      <Col>1 of 8</Col>
-      <Col>1 of 9</Col>
-      <Col>1 of 10</Col>
-      <Col>1 of 11</Col>
-      <Col>1 of 12</Col>
-    </Row>
+export const EqualWidth12Columns: Story = {
+  render: () => (
+    <Container>
+      <Row>
+        <Col>1 of 1</Col>
+        <Col>1 of 2</Col>
+        <Col>1 of 3</Col>
+        <Col>1 of 4</Col>
+        <Col>1 of 5</Col>
+        <Col>1 of 6</Col>
+        <Col>1 of 7</Col>
+        <Col>1 of 8</Col>
+        <Col>1 of 9</Col>
+        <Col>1 of 10</Col>
+        <Col>1 of 11</Col>
+        <Col>1 of 12</Col>
+      </Row>
+    </Container>
   )
 }
 
-export const ColumnsWithDifferentWidths = Template.bind({})
-
-ColumnsWithDifferentWidths.args = {
-  children: (
-    <>
+export const ColumnsWithDifferentWidths: Story = {
+  render: () => (
+    <Container>
       <Row>
         <Col>1 of 3</Col>
         <Col xs={6}>2 of 3 (wider)</Col>
@@ -54,15 +51,13 @@ ColumnsWithDifferentWidths.args = {
         <Col xs={5}>2 of 3 (wider)</Col>
         <Col>3 of 3</Col>
       </Row>
-    </>
+    </Container>
   )
 }
 
-export const RowsWithDifferentWidths = Template.bind({})
-
-RowsWithDifferentWidths.args = {
-  children: (
-    <>
+export const RowsWithDifferentWidths: Story = {
+  render: () => (
+    <Container>
       <Row xs={2} md={4} lg={6}>
         <Col>1 of 2</Col>
         <Col>2 of 2</Col>
@@ -77,6 +72,6 @@ RowsWithDifferentWidths.args = {
         <Col>2 of 3</Col>
         <Col>3 of 3</Col>
       </Row>
-    </>
+    </Container>
   )
 }

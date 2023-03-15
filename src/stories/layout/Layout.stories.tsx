@@ -1,14 +1,16 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
 import { Layout } from '../../sections/layout/Layout'
+import { WithI18next } from '../WithI18next'
 
-export default {
+const meta: Meta<typeof Layout> = {
   title: 'Layout/Layout',
   component: Layout,
-  parameters: {
-    layout: 'fullscreen'
-  }
-} as ComponentMeta<typeof Layout>
+  decorators: [WithI18next]
+}
 
-const Template: ComponentStory<typeof Layout> = () => <Layout />
+export default meta
+type Story = StoryObj<typeof Layout>
 
-export const Default = Template.bind({})
+export const Default: Story = {
+  render: () => <Layout />
+}

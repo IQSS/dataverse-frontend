@@ -1,14 +1,16 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
 import { Footer } from '../../../sections/layout/footer/Footer'
+import { WithI18next } from '../../WithI18next'
 
-export default {
+const meta: Meta<typeof Footer> = {
   title: 'Layout/Footer',
   component: Footer,
-  parameters: {
-    layout: 'fullscreen'
-  }
-} as ComponentMeta<typeof Footer>
+  decorators: [WithI18next]
+}
 
-const Template: ComponentStory<typeof Footer> = () => <Footer />
+export default meta
+type Story = StoryObj<typeof Footer>
 
-export const Default = Template.bind({})
+export const Default: Story = {
+  render: () => <Footer />
+}
