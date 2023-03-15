@@ -19,10 +19,10 @@ In the project directory, you can run at any time:
 
 ### `npm start`
 
-Runs the app in the development mode.\
+Runs the app in the development mode.  
 Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
 
-The page will reload when you make changes.\
+The page will reload when you make changes.  
 You may also see any lint errors in the console.
 
 ### `npm test`
@@ -39,7 +39,7 @@ Locally preview the production build.
 
 ### `npm run cy:run`
 
-Launches the Cypress test runner for the end-to-end tests. \
+Launches the Cypress test runner for the end-to-end tests.  
 If you prefer to see the tests executing in cypress you can run `npm run cy:open`
 
 ### `npm run lint`
@@ -52,5 +52,5 @@ Launches the prettier formatter. We recommend you to configure your IDE to run p
 
 ### `npm run storybook`
 
-Runs the Storybook in the development mode.\
+Runs the Storybook in the development mode.  
 Open [http://localhost:6006](http://localhost:6006) to view it in your browser.
