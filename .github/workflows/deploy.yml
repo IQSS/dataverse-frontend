@@ -100,3 +100,12 @@ jobs:
       - name: Build war file
         working-directory: ./deployment/payara
         run: mvn package "-Dversion=${{ steps.branch-name.outputs.current_branch }}"
+
+      - name: Copy war file to remote instance
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.PAYARA_INSTANCE_HOST }}
+          username: ${{ secrets.PAYARA_INSTANCE_USERNAME }}
+          key: ${{ secrets.PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
+          source: './deployment/payara/target/dataverse-frontend.war'
+          target: '/home/dataverse/dataverse-frontend.war'
