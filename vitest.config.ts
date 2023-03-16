@@ -7,7 +7,7 @@ export default defineConfig({
     setupFiles: './tests/setupTests.ts',
     include: ['./tests/**/*.(test).(ts|tsx)'],
     coverage: {
-      reporter: ['text', 'html'],
+      reporter: ['lcov'],
       exclude: ['node_modules/', 'tests/'],
       lines: 95,
       functions: 95,
