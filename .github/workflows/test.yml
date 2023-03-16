@@ -17,10 +17,7 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Test
-        run: npm run test:no-watch
-
-      - name: Check coverage
+      - name: Run tests & check coverage
         run: npm run test:coverage
 
   e2e:
