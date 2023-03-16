@@ -8,7 +8,11 @@ export default defineConfig({
     include: ['./tests/**/*.(test).(ts|tsx)'],
     coverage: {
       reporter: ['text', 'html'],
-      exclude: ['node_modules/', 'tests/setupTests.ts']
+      exclude: ['node_modules/', 'tests/'],
+      lines: 95,
+      functions: 95,
+      branches: 95,
+      statements: 95
     }
   }
 })

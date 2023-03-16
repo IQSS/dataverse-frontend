@@ -19,6 +19,10 @@ jobs:
 
       - name: Test
         run: npm run test:no-watch
+
+      - name: Check coverage
+        run: npm run test:coverage
+
   e2e:
     runs-on: ubuntu-latest
 
