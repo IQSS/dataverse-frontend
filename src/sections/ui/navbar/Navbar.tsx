@@ -10,7 +10,7 @@ export function Navbar({ brand, links }: NavbarProps) {
     <NavbarBS collapseOnSelect expand="lg" fixed="top">
       <Container>
         <NavbarBS.Brand href={brand.path}>
-          <img width="28" height="28" src={brand.logo.src} alt={brand.logo.altText ?? 'logo'} />
+          <img width="28" height="28" src={brand.logo.src} alt={brand.logo.altText} />
           {brand.title}
         </NavbarBS.Brand>
         <NavbarBS.Toggle aria-controls="responsive-navbar-nav" />
