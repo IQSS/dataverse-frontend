@@ -43,17 +43,17 @@ describe('Navbar component', () => {
     expect(dropdownElement).toBeInTheDocument()
   })
 
-  test('shows the sublinks when the dropdown is clicked', () => {
-    const { getByRole } = render(<Navbar brand={brand} links={links} />)
+  test('shows the sublinks when the dropdown is clicked', async () => {
+    const { getByRole, findByRole } = render(<Navbar brand={brand} links={links} />)
 
     const dropdownElement = getByRole('button', { name: 'Dropdown' })
 
     fireEvent.click(dropdownElement)
 
-    const sublink1Element = getByRole('link', { name: 'Sublink 1' })
+    const sublink1Element = await findByRole('link', { name: 'Sublink 1' })
     expect(sublink1Element).toBeInTheDocument()
 
-    const sublink2Element = getByRole('link', { name: 'Sublink 2' })
+    const sublink2Element = await findByRole('link', { name: 'Sublink 2' })
     expect(sublink2Element).toBeInTheDocument()
   })
 })

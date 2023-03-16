@@ -21,27 +21,28 @@ describe('NavDropdown component', () => {
     expect(titleElement).toBeInTheDocument()
   })
 
-  test('renders the dropdown links', () => {
-    const { getByRole } = render(<NavDropdown title="Dropdown Title" links={links} />)
+  test('renders the dropdown links', async () => {
+    const { getByRole, findByRole } = render(<NavDropdown title="Dropdown Title" links={links} />)
 
     const dropdownTitle = getByRole('button', { name: 'Dropdown Title' })
+
     fireEvent.click(dropdownTitle)
 
-    const link1Element = getByRole('link', { name: 'Link 1' })
+    const link1Element = await findByRole('link', { name: 'Link 1' })
     expect(link1Element).toBeInTheDocument()
 
-    const link2Element = getByRole('link', { name: 'Link 2' })
+    const link2Element = await findByRole('link', { name: 'Link 2' })
     expect(link2Element).toBeInTheDocument()
 
-    const link3Element = getByRole('button', { name: 'Link 3' })
+    const link3Element = await findByRole('button', { name: 'Link 3' })
     expect(link3Element).toBeInTheDocument()
 
     fireEvent.click(link3Element)
 
-    const sublink1Element = getByRole('link', { name: 'Sublink 1' })
+    const sublink1Element = await findByRole('link', { name: 'Sublink 1' })
     expect(sublink1Element).toBeInTheDocument()
 
-    const sublink2Element = getByRole('link', { name: 'Sublink 2' })
+    const sublink2Element = await findByRole('link', { name: 'Sublink 2' })
     expect(sublink2Element).toBeInTheDocument()
   })
 })
