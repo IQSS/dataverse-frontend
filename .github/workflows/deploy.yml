@@ -108,7 +108,7 @@ jobs:
           username: ${{ secrets.PAYARA_INSTANCE_USERNAME }}
           key: ${{ secrets.PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
           source: './deployment/payara/target/dataverse-frontend.war'
-          target: '/home/dataverse'
+          target: '/home/${{ secrets.PAYARA_INSTANCE_USERNAME }}'
           overwrite: true
 
       - name: Execute payara war deployment remotely
