@@ -28,7 +28,7 @@
     "start": "vite",
     "build": "tsc && vite build",
     "build-basepath": "tsc && vite build --base=/spa",
-    "preview": "vite preview",
+    "preview": "vite preview --base=/spa",
     "test": "vitest watch",
     "test:no-watch": "vitest run",
     "test:coverage": "vitest run --coverage",
