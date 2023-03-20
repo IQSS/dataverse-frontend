@@ -87,3 +87,5 @@ For this workflow to work, a GitHub environment must be configured with the foll
 - PAYARA_INSTANCE_SSH_PRIVATE_KEY
 
 It is important that the remote instance is correctly pre-configured, with the Payara server running, and the SSH key pair established.
+
+Once deployed, the application will be available on the remote host using the base path "/spa". This base path differentiates the frontend application traffic from the other routes, which point to the Dataverse backend.
