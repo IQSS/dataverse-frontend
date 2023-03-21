@@ -16,8 +16,8 @@ on:
         required: true
       basepath:
         description: 'Server basepath, without slashes, to serve the application (For example: spa). This is only for Payara deployment, and should be left blank if a basepath is not needed.'
-        required: false
         type: string
+        required: false
 
 jobs:
   build:
