@@ -56,7 +56,53 @@ Launches the prettier formatter. We recommend you to configure your IDE to run p
 Runs the Storybook in the development mode.  
 Open [http://localhost:6006](http://localhost:6006) to view it in your browser.
 
-## Changes in the style guide
+## Deployment
+
+Once the site is built through the `npm run build` command, it can be deployed in different ways to different types of infrastructure, depending on installation needs.
+
+We are working to provide different preconfigured automated deployment options, seeking to support common use cases today for installing applications of this nature.
+
+### AWS S3 Deployment
+
+AWS S3 deployment is done via the GitHub workflow `deploy`, which is run manually from GitHub Actions and will build and deploy the application to a remote S3 bucket.
+
+For this workflow to work, a GitHub environment must be first created with the following environment secrets:
+
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
+- AWS_S3_BUCKET_NAME
+- AWS_DEFAULT_REGION
+
+Selecting the `deploy` workflow in GitHub Actions will display the available environments for deployment in a drop-down menu.
+
+Note that for the deployment to the S3 bucket to succeed, you must make the following changes to the bucket via the S3 web interface (or equivalent changes using aws-cli or similar tools):
+
+- Under "Permissions", "Permissions overview", "Block public access (bucket settings)", click "Edit", then uncheck "Block all public access" and save.
+- Under "Properties", "Static website hosting", click "Edit" and enable it. Change "Index document" and "Error document" to "index.html".
+- Under "Bucket policy", click "Edit" and paste the following policy (changing `<BUCKET_NAME>` to your bucket name) and save.
+
+```
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "PublicReadGetObject",
+			"Principal": "*",
+			"Effect": "Allow",
+			"Action": [
+				"s3:GetObject"
+			],
+			"Resource": [
+				"arn:aws:s3:::<BUCKET_NAME>/*"
+			]
+		}
+	]
+}
+```
+
+You should see the deployed app at http://BUCKET-NAME.s3-website-REGION.amazonaws.com such as http://mybucket.s3-website-us-east-1.amazonaws.com
+
+## Changes in the Style Guide
 
 ### Links
 
