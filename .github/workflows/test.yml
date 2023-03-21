@@ -17,8 +17,15 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Test
-        run: npm run test:no-watch
+      - name: Run tests & check coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage report to Coveralls
+        if: always()
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
   e2e:
     runs-on: ubuntu-latest
 

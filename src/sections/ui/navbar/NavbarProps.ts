@@ -5,7 +5,7 @@ export interface Link {
 
 interface Logo {
   src: string
-  altText: string | null
+  altText: string
 }
 
 interface Brand {
