@@ -43,7 +43,7 @@
   },
   "pre-commit": [
     "lint:fix",
-    "test:no-watch",
+    "test:coverage",
     "git:add"
   ],
   "eslintConfig": {
