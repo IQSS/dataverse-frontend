@@ -88,4 +88,4 @@ For this workflow to work, a GitHub environment must be configured with the foll
 
 It is important that the remote instance is correctly pre-configured, with the Payara server running, and a service account for Dataverse with the corresponding SSH key pair established.
 
-Once deployed, the application will be available on the remote host using the base path "/spa". This base path differentiates the frontend application traffic from the other routes, which point to the Dataverse backend.
+A basepath for the frontend application can be established on the remote server by setting the corresponding field in the workflow inputs. This mechanism prevents conflicts between the frontend application and any pre-existing deployed application running on Payara, which can potentially be a Dataverse backend. This way, only the routes with the base path included will redirect to the frontend application.

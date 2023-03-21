@@ -14,6 +14,10 @@ on:
         description: Environment to run the deployment against
         type: environment
         required: true
+      basepath:
+        description: 'Server basepath, without slashes, to serve the application (For example: spa). This is only for Payara deployment, and should be left blank if a basepath is not needed.'
+        required: false
+        type: string
 
 jobs:
   build:
@@ -31,12 +35,12 @@ jobs:
         run: npm install
 
       - name: Build
-        if: ${{ github.event.inputs.infra_type == 'S3' }}
+        if: ${{ github.event.inputs.infra_type == 'S3' || (github.event.inputs.infra_type == 'Payara' && github.event.inputs.basepath == '') }}
         run: npm run build
 
       - name: Build with base path
-        if: ${{ github.event.inputs.infra_type == 'Payara' }}
-        run: npm run build-basepath
+        if: ${{ github.event.inputs.infra_type == 'Payara' && github.event.inputs.basepath != '' }}
+        run: npm run build -- --base=/${{ github.event.inputs.basepath }}
 
       - uses: actions/upload-artifact@v3
         with:
@@ -123,4 +127,4 @@ jobs:
             ASADMIN='/usr/local/payara5/bin/asadmin --user admin'
             DATAVERSE_FRONTEND=`$ASADMIN list-applications |grep $APPLICATION_NAME |awk '{print $1}'`
             $ASADMIN undeploy $DATAVERSE_FRONTEND
-            $ASADMIN deploy --name $APPLICATION_NAME --contextroot spa $APPLICATION_WAR_PATH
+            $ASADMIN deploy --name $APPLICATION_NAME --contextroot /${{ github.event.inputs.basepath }} $APPLICATION_WAR_PATH
