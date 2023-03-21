@@ -16,7 +16,7 @@ export function Footer() {
             <p className={styles.copyright}>
               {t('copyright')}
               <a
-                href="https://best-practices.dataverse.org/harvard-policies/harvard-privacy-policy.html"
+                href="https://dataverse.org/best-practices/harvard-dataverse-privacy-policy"
                 rel="noreferrer"
                 target="_blank">
                 {t('privacyPolicy')}
