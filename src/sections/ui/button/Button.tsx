@@ -10,7 +10,11 @@ export interface ButtonProps {
 export const Button = ({ secondary = false, size = 'medium', label, ...props }: ButtonProps) => {
   const mode = secondary ? 'secondary' : 'primary'
   return (
-    <button type="button" className={[styles[mode], styles[size]].join(' ')} {...props}>
+    <button
+      data-testid="button-test"
+      type="button"
+      className={[styles[mode], styles[size]].join(' ')}
+      {...props}>
       {label}
     </button>
   )

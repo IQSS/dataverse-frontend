@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from '../../../sections/ui/button/Button'
-
+import { userEvent, within } from '@storybook/testing-library'
+import { expect } from '@storybook/jest'
 const meta: Meta<typeof Button> = {
   title: 'UI/Button',
   component: Button
@@ -18,9 +19,14 @@ export const Secondary: Story = {
 }
 
 export const Large: Story = {
-  render: () => <Button size="large" label="Button" />
-}
-
-export const Small: Story = {
-  render: () => <Button size="small" label="Button" />
+  render: () => <Button size="large" label="Large Button" />,
+  // eslint-disable-next-line @typescript-eslint/require-await
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    console.log('test interaction: ')
+    console.log(canvas)
+    userEvent.click(canvas.getByTestId('button-test'))
+    expect(canvas.getByTestId('button-test')).toBeInTheDocument()
+    expect(canvas.getByText('Large Button')).toBeInTheDocument()
+  }
 }
