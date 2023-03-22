@@ -1,6 +1,6 @@
 import styles from './Button.module.scss'
 
-interface ButtonProps {
+export interface ButtonProps {
   secondary?: boolean
   size?: 'small' | 'medium' | 'large'
   label: string

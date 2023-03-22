@@ -2,6 +2,7 @@
 
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![Tests](https://github.com/IQSS/dataverse-frontend/actions/workflows/test.yml/badge.svg)](https://github.com/IQSS/dataverse-frontend/actions/workflows/test.yml)
+[![Unit Tests Coverage](https://coveralls.io/repos/github/IQSS/dataverse-frontend/badge.svg?branch=develop)](https://coveralls.io/github/IQSS/dataverse-frontend?branch=develop)
 
 ## Getting Started
 
@@ -19,10 +20,10 @@ In the project directory, you can run at any time:
 
 ### `npm start`
 
-Runs the app in the development mode.\
+Runs the app in the development mode.  
 Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
 
-The page will reload when you make changes.\
+The page will reload when you make changes.  
 You may also see any lint errors in the console.
 
 ### `npm test`
@@ -39,7 +40,7 @@ Locally preview the production build.
 
 ### `npm run cy:run`
 
-Launches the Cypress test runner for the end-to-end tests. \
+Launches the Cypress test runner for the end-to-end tests.  
 If you prefer to see the tests executing in cypress you can run `npm run cy:open`
 
 ### `npm run lint`
@@ -52,7 +53,7 @@ Launches the prettier formatter. We recommend you to configure your IDE to run p
 
 ### `npm run storybook`
 
-Runs the Storybook in the development mode.\
+Runs the Storybook in the development mode.  
 Open [http://localhost:6006](http://localhost:6006) to view it in your browser.
 
 ## Deployment
@@ -74,6 +75,33 @@ For this workflow to work, a GitHub environment must be configured with the foll
 - AWS_S3_BUCKET_NAME
 - AWS_DEFAULT_REGION
 
+Note that for the deployment to the S3 bucket to succeed, you must make the following changes to the bucket via the S3 web interface (or equivalent changes using aws-cli or similar tools):
+
+- Under "Permissions", "Permissions overview", "Block public access (bucket settings)", click "Edit", then uncheck "Block all public access" and save.
+- Under "Properties", "Static website hosting", click "Edit" and enable it. Change "Index document" and "Error document" to "index.html".
+- Under "Bucket policy", click "Edit" and paste the following policy (changing `<BUCKET_NAME>` to your bucket name) and save.
+
+```
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "PublicReadGetObject",
+			"Principal": "*",
+			"Effect": "Allow",
+			"Action": [
+				"s3:GetObject"
+			],
+			"Resource": [
+				"arn:aws:s3:::<BUCKET_NAME>/*"
+			]
+		}
+	]
+}
+```
+
+You should see the deployed app at http://BUCKET-NAME.s3-website-REGION.amazonaws.com such as http://mybucket.s3-website-us-east-1.amazonaws.com
+
 ### Payara Deployment
 
 This option will build and deploy the application to a remote Payara server.
@@ -88,4 +116,10 @@ For this workflow to work, a GitHub environment must be configured with the foll
 
 It is important that the remote instance is correctly pre-configured, with the Payara server running, and a service account for Dataverse with the corresponding SSH key pair established.
 
-A basepath for the frontend application can be established on the remote server by setting the corresponding field in the workflow inputs. This mechanism prevents conflicts between the frontend application and any pre-existing deployed application running on Payara, which can potentially be a Dataverse backend. This way, only the routes with the base path included will redirect to the frontend application.
+A base path for the frontend application can be established on the remote server by setting the corresponding field in the workflow inputs. This mechanism prevents conflicts between the frontend application and any pre-existing deployed application running on Payara, which can potentially be a Dataverse backend. This way, only the routes with the base path included will redirect to the frontend application.
+
+## Changes in the Style Guide
+
+### Links
+
+We added the underline to the links to make them accessible.

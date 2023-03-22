@@ -1,25 +1,17 @@
-import { StoryFn, Meta } from '@storybook/react'
-import { within, userEvent } from '@storybook/testing-library'
+import type { Meta, StoryObj } from '@storybook/react'
 import { HelloDataverse } from '../../sections/hello-dataverse/HelloDataverse'
 import { WithI18next } from '../WithI18next'
+import { WithLayout } from '../WithLayout'
 
-export default {
-  title: 'Hello Dataverse/Page',
+const meta: Meta<typeof HelloDataverse> = {
+  title: 'Pages/Hello Dataverse',
   component: HelloDataverse,
-  decorators: [WithI18next],
-  parameters: {
-    layout: 'fullscreen'
-  }
-} as Meta<typeof HelloDataverse>
+  decorators: [WithI18next, WithLayout]
+}
 
-const Template: StoryFn<typeof HelloDataverse> = () => <HelloDataverse />
+export default meta
+type Story = StoryObj<typeof HelloDataverse>
 
-export const LoggedOut = Template.bind({})
-
-export const LoggedIn = Template.bind({})
-
-LoggedIn.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  const loginButton = await canvas.findByRole('button', { name: /Log in/i })
-  userEvent.click(loginButton)
+export const Default: Story = {
+  render: () => <HelloDataverse />
 }
