@@ -1,21 +1,17 @@
 @use "sass:map";
-@import "./src/assets/styles/bootstrap-variables";
+@import "src/assets/styles/bootstrap-variables";
+@import "src/assets/styles/typography";
+@import "src/assets/styles/colors";
 
 // Body
-$font-size-base: 14px;
-$body-color: #333;
-$font-family-base: ("Helvetica Neue",helvetica,arial,sans-serif);
+$font-size-base: $dv-font-size;
+$body-color: $dv-primary-text-color;
+$font-family-base: $dv-font-family;
 
-$link-color: #3174AF;
-$link-hover-color: #23527c;
+// Links
+$link-color: $dv-link-color;
+$link-hover-color: $dv-link-hover-color;
 $link-hover-decoration: underline;
-
-// Colors
-$custom-colors: (
-        "dataverse-orange": #c55b28
-);
-
-$theme-colors: map.merge($theme-colors, $custom-colors);
 
 @import "bootstrap/scss/maps";
 @import "bootstrap/scss/root";

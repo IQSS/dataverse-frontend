@@ -1,7 +1,9 @@
 @import "./src/assets/styles/bootstrap-variables";
+@import "src/assets/styles/colors";
+@import "src/assets/styles/typography";
 
-$navbar-light-brand-color: var(--bs-dataverse-orange);
-$navbar-brand-font-size: 18px;
+$navbar-light-brand-color: $dv-brand-color;
+$navbar-brand-font-size: $dv-brand-font-size;
 $navbar-padding-y: 0.3rem;
 $nav-link-padding-x: 15px;
 $navbar-nav-link-padding-x: 15px;

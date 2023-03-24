@@ -1,6 +1,7 @@
 @import "./src/assets/styles/bootstrap-variables";
+@import "src/assets/styles/typography";
 
-$dropdown-font-size: 14px;
+$dropdown-font-size: $dv-font-size;
 $dropdown-border-radius: 0 0 4px 4px;
 $dropdown-border-color: rgb(0 0 0 / 15%);
 $dropdown-padding-y: 5px;
