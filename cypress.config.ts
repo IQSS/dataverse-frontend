@@ -15,5 +15,13 @@ export default defineConfig({
     setupNodeEvents(on) {
       on('file:preprocessor', vitePreprocessor(path.resolve(__dirname, './vite.config.ts')))
     }
+  },
+  component: {
+    specPattern: 'tests/component/tests/**/*.spec.{js,jsx,ts,tsx}',
+    supportFile: 'tests/component/support/component.ts',
+    devServer: {
+      framework: 'react',
+      bundler: 'vite'
+    }
   }
 })

@@ -55,8 +55,9 @@
   },
   "overrides": [
     {
-      "files": ["**/tests/e2e/**/*.spec.ts"],
+      "files": ["**/tests/e2e/**/*.spec.ts", "**/tests/component/**/*.spec.ts"],
       "rules": {
+        "@typescript-eslint/no-namespace": 0,
         "testing-library/await-async-query": 0,
         "@typescript-eslint/no-unsafe-member-access": 0,
         "@typescript-eslint/no-unsafe-call": 0,
