@@ -18,11 +18,6 @@ describe('Button', () => {
     expect(container.firstChild).toHaveClass(styles.secondary)
   })
 
-  it('applies the correct style classes based on the size prop', () => {
-    const { container } = render(<Button size="small">{clickMeText}</Button>)
-    expect(container.firstChild).toHaveClass(styles.small)
-  })
-
   it('calls the onClick function when the button is clicked', () => {
     const handleClick = vi.fn()
     const { getByText } = render(<Button onClick={handleClick}>{clickMeText}</Button>)
@@ -35,11 +30,5 @@ describe('Button', () => {
     const { getByText } = render(<Button disabled>{clickMeText}</Button>)
 
     expect(getByText('Click me')).toBeDisabled()
-  })
-
-  it('adds "disabled" class to the button when isDisabled prop is true', () => {
-    const { container } = render(<Button disabled>{clickMeText}</Button>)
-
-    expect(container.firstChild).toHaveClass('disabled')
   })
 })

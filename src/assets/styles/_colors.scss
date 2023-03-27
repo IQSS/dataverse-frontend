@@ -1,10 +1,26 @@
 // Theme colors
 $dv-brand-color: #C55B28;
+$dv-primary-color: #337AB7;
 
 // Text colors
-$dv-primary-text-color: #333;
-$dv-secondary-text-color: #767676;
+$dv-text-color: #333;
+$dv-subtext-color: #767676;
+
+$dv-primary-text-color: white;
+$dv-primary-text-shadow-color: rgb(0 0 0 / 20%);
+
+$dv-secondary-text-color: $dv-text-color;
+$dv-secondary-text-shadow-color: white;
 
 // Link colors
 $dv-link-color: #3174AF;
 $dv-link-hover-color: #23527c;
+
+// Button colors
+$dv-primary-background-color: $dv-primary-color;
+$dv-primary-background-color-disabled: #265a88;
+$dv-primary-border-color: #245580;
+
+$dv-secondary-background-color: white;
+$dv-secondary-background-color-disabled: #e0e0e0;
+$dv-secondary-border-color: #ccc;

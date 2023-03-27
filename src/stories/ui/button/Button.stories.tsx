@@ -21,14 +21,22 @@ export const Tertiary: Story = {
   render: () => <Button variant="tertiary">Button</Button>
 }
 
-export const Disabled: Story = {
+export const PrimarDisabled: Story = {
   render: () => <Button disabled>Button</Button>
 }
 
-export const Large: Story = {
-  render: () => <Button size="large">Button</Button>
+export const SecondaryDisabled: Story = {
+  render: () => (
+    <Button disabled variant="secondary">
+      Button
+    </Button>
+  )
 }
 
-export const Small: Story = {
-  render: () => <Button size="small">Button</Button>
+export const TertiaryDisabled: Story = {
+  render: () => (
+    <Button disabled variant="tertiary">
+      Button
+    </Button>
+  )
 }
