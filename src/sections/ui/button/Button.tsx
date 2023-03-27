@@ -1,17 +1,22 @@
-import styles from './Button.module.scss'
+import { ReactNode } from 'react'
 
-export interface ButtonProps {
-  secondary?: boolean
-  size?: 'small' | 'medium' | 'large'
-  label: string
+type ButtonVariant = 'primary' | 'secondary' | 'tertiary'
+type ButtonSize = 'small' | 'medium' | 'large'
+
+interface ButtonProps {
+  variant?: ButtonVariant
+  size?: ButtonSize
+  isDisabled?: boolean
   onClick?: () => void
+  children: ReactNode
 }
 
-export const Button = ({ secondary = false, size = 'medium', label, ...props }: ButtonProps) => {
-  const mode = secondary ? 'secondary' : 'primary'
-  return (
-    <button type="button" className={[styles[mode], styles[size]].join(' ')} {...props}>
-      {label}
-    </button>
-  )
+export function Button({
+  variant = 'primary',
+  size = 'medium',
+  isDisabled = false,
+  onClick,
+  children
+}: ButtonProps) {
+  return <button>{children}</button>
 }
