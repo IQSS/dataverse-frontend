@@ -14,7 +14,7 @@ export function Button({ variant = 'primary', disabled = false, onClick, childre
   return (
     <button
       className={styles[variant]}
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
       disabled={disabled}
       aria-disabled={disabled}>
       {children}

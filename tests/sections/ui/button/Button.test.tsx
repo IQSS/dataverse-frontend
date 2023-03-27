@@ -31,4 +31,16 @@ describe('Button', () => {
 
     expect(getByText('Click me')).toBeDisabled()
   })
+
+  it('does not call the onClick function when the button is disabled', () => {
+    const handleClick = vi.fn()
+    const { getByText } = render(
+      <Button disabled onClick={handleClick}>
+        {clickMeText}
+      </Button>
+    )
+
+    fireEvent.click(getByText('Click me'))
+    expect(handleClick).not.toHaveBeenCalledTimes(1)
+  })
 })
