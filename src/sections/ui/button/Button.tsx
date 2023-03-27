@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import styles from './Button.module.scss'
+import cx from 'classnames'
 
 type ButtonVariant = 'primary' | 'secondary' | 'tertiary'
 type ButtonSize = 'small' | 'medium' | 'large'
@@ -21,7 +22,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      className={`${styles[variant]} ${styles[size]} ${disabled ? 'disabled' : ''}`}
+      className={cx(styles[variant], styles[size], { disabled })}
       onClick={onClick}
       disabled={disabled}>
       {children}
