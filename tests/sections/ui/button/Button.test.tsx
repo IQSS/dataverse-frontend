@@ -28,8 +28,10 @@ describe('Button', () => {
 
   it('disables the button when isDisabled prop is true', () => {
     const { getByText } = render(<Button disabled>{clickMeText}</Button>)
+    const button = getByText('Click me')
 
-    expect(getByText('Click me')).toBeDisabled()
+    expect(button).toBeDisabled()
+    expect(button).toHaveAttribute('aria-disabled', 'true')
   })
 
   it('does not call the onClick function when the button is disabled', () => {
