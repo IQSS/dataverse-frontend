@@ -32,13 +32,13 @@ describe('Button', () => {
   })
 
   it('disables the button when isDisabled prop is true', () => {
-    const { getByText } = render(<Button isDisabled>{clickMeText}</Button>)
+    const { getByText } = render(<Button disabled>{clickMeText}</Button>)
 
     expect(getByText('Click me')).toBeDisabled()
   })
 
   it('adds "disabled" class to the button when isDisabled prop is true', () => {
-    const { container } = render(<Button isDisabled>{clickMeText}</Button>)
+    const { container } = render(<Button disabled>{clickMeText}</Button>)
 
     expect(container.firstChild).toHaveClass('disabled')
   })

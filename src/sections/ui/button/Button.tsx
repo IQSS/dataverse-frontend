@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import styles from './Button.module.scss'
 
 type ButtonVariant = 'primary' | 'secondary' | 'tertiary'
 type ButtonSize = 'small' | 'medium' | 'large'
@@ -6,7 +7,7 @@ type ButtonSize = 'small' | 'medium' | 'large'
 interface ButtonProps {
   variant?: ButtonVariant
   size?: ButtonSize
-  isDisabled?: boolean
+  disabled?: boolean
   onClick?: () => void
   children: ReactNode
 }
@@ -14,9 +15,16 @@ interface ButtonProps {
 export function Button({
   variant = 'primary',
   size = 'medium',
-  isDisabled = false,
+  disabled = false,
   onClick,
   children
 }: ButtonProps) {
-  return <button>{children}</button>
+  return (
+    <button
+      className={`${styles[variant]} ${styles[size]} ${disabled && 'disabled'}`}
+      onClick={onClick}
+      disabled={disabled}>
+      {children}
+    </button>
+  )
 }
