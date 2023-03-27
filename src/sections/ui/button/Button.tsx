@@ -21,7 +21,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      className={`${styles[variant]} ${styles[size]} ${disabled && 'disabled'}`}
+      className={`${styles[variant]} ${styles[size]} ${disabled ? 'disabled' : ''}`}
       onClick={onClick}
       disabled={disabled}>
       {children}
