@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from '../../../sections/ui/button/Button'
+import { Icon } from '../../../sections/ui/icon.enum'
 
 const meta: Meta<typeof Button> = {
   title: 'UI/Button',
@@ -41,11 +42,25 @@ export const Disabled: Story = {
   )
 }
 
+export const WithIcon: Story = {
+  render: () => <Button icon={Icon.DATAVERSE}>Primary</Button>
+}
+
 export const SecondaryAsTheNegativeOption: Story = {
   render: () => (
     <>
       <Button>Continue</Button>
       <Button variant="secondary">Cancel</Button>
+    </>
+  )
+}
+
+export const GhostButtonUsage: Story = {
+  render: () => (
+    <>
+      <Button>Save</Button>
+      <Button variant="secondary">Cancel</Button>
+      <Button variant="link">Learn more</Button>
     </>
   )
 }
