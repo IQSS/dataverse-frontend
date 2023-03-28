@@ -10,6 +10,7 @@ interface ButtonProps {
   disabled?: boolean
   onClick?: () => void
   icon?: Icon
+  withSpacing?: boolean
   children: ReactNode
 }
 
@@ -18,16 +19,17 @@ export function Button({
   disabled = false,
   onClick,
   icon,
+  withSpacing,
   children
 }: ButtonProps) {
   return (
     <ButtonBS
-      className={styles[variant]}
+      className={`${styles[variant]} ${withSpacing ? styles.spacing : ''}`}
       variant={variant}
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
       aria-disabled={disabled}>
-      {icon && <span className={icon}></span>}
+      {icon && <span className={icon} role="img" aria-label={icon}></span>}
       {children}
     </ButtonBS>
   )

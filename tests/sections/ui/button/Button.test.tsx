@@ -1,7 +1,8 @@
-import { render, fireEvent } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import { Button } from '../../../../src/sections/ui/button/Button'
 import styles from '../../../../src/sections/ui/button/Button.module.scss'
 import { vi } from 'vitest'
+import { Icon } from '../../../../src/sections/ui/icon.enum'
 
 describe('Button', () => {
   const clickMeText = 'Click me'
@@ -16,6 +17,11 @@ describe('Button', () => {
     const { container } = render(<Button variant="secondary">{clickMeText}</Button>)
 
     expect(container.firstChild).toHaveClass(styles.secondary)
+  })
+
+  it('renders an icon when provided', () => {
+    const { getByRole } = render(<Button icon={Icon.DATAVERSE}>{clickMeText}</Button>)
+    expect(getByRole('img', { name: Icon.DATAVERSE })).toBeInTheDocument()
   })
 
   it('calls the onClick function when the button is clicked', () => {
