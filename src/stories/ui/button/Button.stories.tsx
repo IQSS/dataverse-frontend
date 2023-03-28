@@ -9,34 +9,39 @@ const meta: Meta<typeof Button> = {
 export default meta
 type Story = StoryObj<typeof Button>
 
-export const Primary: Story = {
+export const Default: Story = {
   render: () => <Button>Button</Button>
 }
 
-export const Secondary: Story = {
-  render: () => <Button variant="secondary">Button</Button>
-}
-
-export const Tertiary: Story = {
-  render: () => <Button variant="tertiary">Button</Button>
-}
-
-export const PrimarDisabled: Story = {
-  render: () => <Button disabled>Button</Button>
-}
-
-export const SecondaryDisabled: Story = {
+export const Variants: Story = {
   render: () => (
-    <Button disabled variant="secondary">
-      Button
-    </Button>
+    <>
+      <Button>Primary</Button>
+      <Button variant="secondary">Secondary</Button>
+      <Button variant="tertiary">Tertiary</Button>
+    </>
   )
 }
 
-export const TertiaryDisabled: Story = {
+export const Disabled: Story = {
   render: () => (
-    <Button disabled variant="tertiary">
-      Button
-    </Button>
+    <>
+      <Button disabled>Primary</Button>
+      <Button disabled variant="secondary">
+        Secondary
+      </Button>
+      <Button disabled variant="tertiary">
+        Tertiary
+      </Button>
+    </>
+  )
+}
+
+export const SecondaryAsTheNegativeOption: Story = {
+  render: () => (
+    <>
+      <Button>Continue</Button>
+      <Button variant="secondary">Cancel</Button>
+    </>
   )
 }

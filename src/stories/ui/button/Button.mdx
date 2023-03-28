@@ -1,0 +1,86 @@
+import { Canvas, Meta, Story } from '@storybook/blocks';
+
+import * as ButtonStories from './Button.stories';
+
+<Meta of={ButtonStories} />
+
+# Button
+
+A button is a graphical control element that is used to trigger an action or event when the user clicks or taps on it.
+
+Buttons can be used to perform a wide variety of actions, such as submitting a form, navigating to a new page, opening
+a dialog box, or initiating a process.
+
+<Canvas of={ButtonStories.Default} />
+
+## Usage
+
+### General
+
+- If the button contains an icon, put in on the left side of the text
+
+- Button width is set by it’s content, avoid changing its width
+
+- 7px spacing between buttons
+
+### Primary
+
+The primary button should be used as the main or most important action button in the user interface. Its purpose is to
+encourage users to take a specific action, such as submitting a form, completing a purchase, or initiating a new task.
+
+Use only one primary button, and any remaining calls to action should be represented as lower emphasis buttons
+
+### Secondary
+
+The secondary button should be used to provide additional options or actions to the user that are not as critical or
+urgent as the primary action. E.g.: “Cancel” or “Skip”.
+
+Do not use the secondary button without being accompanied by a primary button. It should be the negative or alternative
+action to the primary.
+
+### Tertiary
+
+The tertiary button should be used to provide a supplementary or tertiary action or option to the user. It doesn't need
+need to go paired, since it can be an independent action. E.g.: “View more” or “View less”.
+
+### Ghost
+
+The ghost button should be used as a secondary or tertiary button, or as a subtle call-to-action. Its purpose is to
+draw attention to the button without being overly distracting, while also providing a clear call-to-action. It looks
+like a link because the usage is very similar.
+
+For example: "Read More", "Learn More" or "Subscribe" to a newsletter.
+
+## Variants
+
+<Canvas of={ButtonStories.Variants} />
+
+### Disabled
+
+<Canvas of={ButtonStories.Disabled} />
+
+### With Icon
+
+<Canvas of={ButtonStories.WithIcon} />
+
+## Usage examples
+
+### Secondary as the negative option
+
+<Canvas of={ButtonStories.SecondaryAsTheNegativeOption} />
+
+## SASS variables
+
+```
+$dv-primary-text-color
+$dv-primary-text-shadow-color
+$dv-primary-background-color
+$dv-primary-background-color-disabled
+$dv-primary-border-color
+
+$dv-secondary-text-color
+$dv-secondary-text-shadow-color
+$dv-secondary-background-color
+$dv-secondary-background-color-disabled
+$dv-secondary-border-color
+```
