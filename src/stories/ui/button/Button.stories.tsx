@@ -19,6 +19,7 @@ export const Variants: Story = {
       <Button>Primary</Button>
       <Button variant="secondary">Secondary</Button>
       <Button variant="tertiary">Tertiary</Button>
+      <Button variant="link">Link</Button>
     </>
   )
 }
@@ -32,6 +33,9 @@ export const Disabled: Story = {
       </Button>
       <Button disabled variant="tertiary">
         Tertiary
+      </Button>
+      <Button disabled variant="link">
+        Link
       </Button>
     </>
   )

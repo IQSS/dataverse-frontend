@@ -45,3 +45,12 @@
 .tertiary {
   composes: common;
 }
+
+.link {
+  composes: common;
+  color: $dv-link-color;
+  text-decoration: underline;
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
