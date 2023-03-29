@@ -4,11 +4,8 @@ describe('Button', () => {
   it('should mount the component', () => {
     cy.mount(<Button label={'Test'} />)
   })
+  it('Should be selectable by testid', () => {
+    cy.mount(<Button label={'Test'} />)
+    cy.get('[data-testid="button-test"]').should('exist')
+  })
 })
-
-/*describe('Hello Dataverse', () => {
-    it('successfully loads', () => {
-        cy.visit('/')
-        cy.findAllByText(/Hello Dataverse/i).should('exist')
-    })
-})*/
