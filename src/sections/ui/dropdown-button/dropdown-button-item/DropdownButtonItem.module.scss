@@ -1,0 +1,25 @@
+@import "src/assets/styles/colors";
+@import "src/assets/styles/typography";
+
+.container {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: $dv-font-size;
+  text-decoration: none;
+  text-shadow: none;
+  border-color: rgb(0 0 0 / 15%);
+  border-radius: 0 0 4px 4px;
+
+  &:hover {
+    text-decoration: none;
+    background-image: linear-gradient(to bottom,#f5f5f5 0,#e8e8e8 100%);
+  }
+
+  &:focus {
+    background-image: linear-gradient(to bottom,#f5f5f5 0,#e8e8e8 100%);
+  }
+
+  &:active {
+    color: $dv-text-color;
+  }
+}
