@@ -13,17 +13,17 @@ type Story = StoryObj<typeof DropdownButton>
 export const Variants: Story = {
   render: () => (
     <>
-      <DropdownButton title="Dropdown Button" id="dropdown-id" variant="primary">
+      <DropdownButton title="Dropdown Button" id="dropdown-1" variant="primary">
         <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
         <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
         <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
       </DropdownButton>
-      <DropdownButton title="Dropdown Button" id="dropdown-id" variant="secondary">
+      <DropdownButton title="Dropdown Button" id="dropdown-2" variant="secondary">
         <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
         <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
         <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
       </DropdownButton>
-      <DropdownButton title="Dropdown Button" id="dropdown-id" variant="tertiary">
+      <DropdownButton title="Dropdown Button" id="dropdown-3" variant="tertiary">
         <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
         <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
         <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
