@@ -26,6 +26,17 @@
     background-image: none;
     border:none;
   }
+
+  &:hover {
+    color: $dv-secondary-text-color;
+    background-color: $dv-secondary-background-color-disabled;
+    background-image: none;
+    border: 1px solid $dv-secondary-border-color;
+  }
+
+  &:focus {
+    outline: 5px auto -webkit-focus-ring-color;
+  }
 }
 
 .primary {
@@ -37,6 +48,11 @@
   border: 1px solid $dv-primary-border-color;
 
   &:disabled {
+    background-color: $dv-primary-background-color-disabled;
+  }
+
+  &:hover {
+    color: $dv-primary-text-color;
     background-color: $dv-primary-background-color-disabled;
   }
 
