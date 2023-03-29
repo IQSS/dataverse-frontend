@@ -1,5 +1,4 @@
 import { ReactNode } from 'react'
-import './button.scss'
 import styles from './Button.module.scss'
 import { Button as ButtonBS } from 'react-bootstrap'
 import { Icon } from '../icon.enum'
