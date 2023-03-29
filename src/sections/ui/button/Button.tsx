@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import './button.scss'
 import styles from './Button.module.scss'
 import { Button as ButtonBS } from 'react-bootstrap'
 import { Icon } from '../icon.enum'
@@ -29,7 +30,7 @@ export function Button({
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
       aria-disabled={disabled}>
-      {icon && <span className={icon} role="img" aria-label={icon}></span>}
+      {icon && <span className={`${styles.icon} ${icon}`} role="img" aria-label={icon}></span>}
       {children}
     </ButtonBS>
   )

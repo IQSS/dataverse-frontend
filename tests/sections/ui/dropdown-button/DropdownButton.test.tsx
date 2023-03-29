@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react'
 import { DropdownButton } from '../../../../src/sections/ui/dropdown-button/DropdownButton'
-import styles from '../../../../src/sections/ui/button/Button.module.scss'
+import styles from '../../../../src/sections/ui/dropdown-button/DropdownButton.module.scss'
 
 const titleText = 'My Dropdown Button'
 
@@ -44,6 +44,6 @@ describe('DropdownButton', () => {
     )
     const dropdownButton = getByText(titleText)
 
-    expect(dropdownButton).toHaveClass(styles.secondary)
+    expect(dropdownButton.parentNode).toHaveClass(styles.secondary)
   })
 })

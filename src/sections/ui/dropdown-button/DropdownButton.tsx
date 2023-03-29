@@ -1,7 +1,9 @@
 import { DropdownButton as DropdownButtonBS } from 'react-bootstrap'
-type DropdownButtonVariant = 'primary' | 'secondary' | 'tertiary'
-import './dropdown-button.scss'
 import { ReactNode } from 'react'
+import './dropdown-button.scss'
+import styles from './DropdownButton.module.scss'
+
+type DropdownButtonVariant = 'primary' | 'secondary' | 'tertiary'
 
 interface DropdownButtonProps {
   id: string
@@ -12,7 +14,7 @@ interface DropdownButtonProps {
 
 export function DropdownButton({ id, title, variant, children }: DropdownButtonProps) {
   return (
-    <DropdownButtonBS id={id} title={title} variant={variant}>
+    <DropdownButtonBS className={styles[variant]} id={id} title={title} variant={variant}>
       {children}
     </DropdownButtonBS>
   )
