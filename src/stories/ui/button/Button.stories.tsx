@@ -14,6 +14,22 @@ export const Default: Story = {
   render: () => <Button>Button</Button>
 }
 
+export const Primary: Story = {
+  render: () => <Button>Primary</Button>
+}
+
+export const Secondary: Story = {
+  render: () => <Button variant="secondary">Secondary</Button>
+}
+
+export const Tertiary: Story = {
+  render: () => <Button variant="tertiary">Tertiary</Button>
+}
+
+export const Link: Story = {
+  render: () => <Button variant="link">Link</Button>
+}
+
 export const Variants: Story = {
   render: () => (
     <>
@@ -50,11 +66,22 @@ export const Disabled: Story = {
   )
 }
 
-export const WithIcon: Story = {
-  render: () => <Button icon={Icon.DATAVERSE}>Primary</Button>
+export const NoSpacing: Story = {
+  render: () => (
+    <>
+      <Button>Primary</Button>
+      <Button variant="secondary">Secondary</Button>
+      <Button variant="tertiary">Tertiary</Button>
+      <Button variant="link">Link</Button>
+    </>
+  )
 }
 
-export const SecondaryAsTheNegativeOption: Story = {
+export const WithIcon: Story = {
+  render: () => <Button icon={Icon.COLLECTION}>Primary</Button>
+}
+
+export const SecondaryAsAltOption: Story = {
   render: () => (
     <>
       <Button withSpacing>Continue</Button>
@@ -65,14 +92,14 @@ export const SecondaryAsTheNegativeOption: Story = {
   )
 }
 
-export const GhostButtonUsage: Story = {
+export const LinkButtonUsage: Story = {
   render: () => (
     <>
       <Button withSpacing>Save</Button>
       <Button withSpacing variant="secondary">
         Cancel
       </Button>
-      <Button variant="link">Learn more</Button>
+      <Button variant="link">Learn More</Button>
     </>
   )
 }
