@@ -1,6 +1,7 @@
 import { fireEvent, render } from '@testing-library/react'
 import { DropdownButton } from '../../../../src/sections/ui/dropdown-button/DropdownButton'
 import styles from '../../../../src/sections/ui/dropdown-button/DropdownButton.module.scss'
+import { Icon } from '../../../../src/sections/ui/icon.enum'
 
 const titleText = 'My Dropdown Button'
 
@@ -45,5 +46,19 @@ describe('DropdownButton', () => {
     const dropdownButton = getByText(titleText)
 
     expect(dropdownButton.parentNode).toHaveClass(styles.secondary)
+  })
+
+  it('renders an icon when provided', () => {
+    const { getByRole } = render(
+      <DropdownButton
+        id="my-dropdown"
+        title="My Dropdown Button"
+        variant="secondary"
+        icon={Icon.DATAVERSE}>
+        <span>Item 1</span>
+        <span>Item 2</span>
+      </DropdownButton>
+    )
+    expect(getByRole('img', { name: Icon.DATAVERSE })).toBeInTheDocument()
   })
 })
