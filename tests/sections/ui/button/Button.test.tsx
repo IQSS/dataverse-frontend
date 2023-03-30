@@ -1,6 +1,5 @@
 import { fireEvent, render } from '@testing-library/react'
 import { Button } from '../../../../src/sections/ui/button/Button'
-import styles from '../../../../src/sections/ui/button/Button.module.scss'
 import { vi } from 'vitest'
 import { Icon } from '../../../../src/sections/ui/icon.enum'
 
@@ -11,12 +10,6 @@ describe('Button', () => {
     const { getByText } = render(<Button>{clickMeText}</Button>)
 
     expect(getByText('Click me')).toBeInTheDocument()
-  })
-
-  it('applies the correct style classes based on the variant prop', () => {
-    const { container } = render(<Button variant="secondary">{clickMeText}</Button>)
-
-    expect(container.firstChild).toHaveClass(styles.secondary)
   })
 
   it('renders an icon when provided', () => {

@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import styles from './Button.module.scss'
+import './button.scss'
 import { Button as ButtonBS } from 'react-bootstrap'
 import { Icon } from '../icon.enum'
 
@@ -24,7 +25,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <ButtonBS
-      className={`${styles[variant]} ${withSpacing ? styles.spacing : ''}`}
+      className={`${withSpacing ? styles.spacing : ''}`}
       variant={variant}
       onClick={disabled ? undefined : onClick}
       disabled={disabled}

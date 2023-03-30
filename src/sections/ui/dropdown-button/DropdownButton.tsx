@@ -25,7 +25,7 @@ export function DropdownButton({
 }: DropdownButtonProps) {
   return (
     <DropdownButtonBS
-      className={`${styles[variant]} ${withSpacing ? styles.spacing : ''}`}
+      className={`${withSpacing ? styles.spacing : ''}`}
       id={id}
       title={
         <>
