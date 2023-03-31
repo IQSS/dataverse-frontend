@@ -4,7 +4,7 @@ import './dropdown-button.scss'
 import styles from './DropdownButton.module.scss'
 import { Icon } from '../icon.enum'
 
-type DropdownButtonVariant = 'primary' | 'secondary' | 'tertiary'
+type DropdownButtonVariant = 'primary' | 'secondary'
 
 interface DropdownButtonProps {
   id: string

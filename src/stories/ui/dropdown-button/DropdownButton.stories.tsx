@@ -34,11 +34,6 @@ export const Variants: Story = {
         <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
         <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
       </DropdownButton>
-      <DropdownButton withSpacing title="Tertiary" id="dropdown-3" variant="tertiary">
-        <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
-        <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
-        <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
-      </DropdownButton>
     </>
   )
 }

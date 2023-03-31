@@ -4,7 +4,7 @@ import './button.scss'
 import { Button as ButtonBS } from 'react-bootstrap'
 import { Icon } from '../icon.enum'
 
-type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'link'
+type ButtonVariant = 'primary' | 'secondary' | 'link'
 
 interface ButtonProps {
   variant?: ButtonVariant
