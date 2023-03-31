@@ -3,6 +3,7 @@
 @import "src/assets/styles/typography";
 
 $navbar-light-brand-color: $dv-brand-color;
+$navbar-brand-font-size: $dv-brand-font-size;
 
 @import "bootstrap/scss/nav";
 @import "bootstrap/scss/navbar";
