@@ -4,14 +4,12 @@
 @import "src/assets/styles/colors";
 
 // Body
-$font-size-base: $dv-font-size;
 $body-color: $dv-text-color;
 $font-family-base: $dv-font-family;
 
 // Links
 $link-color: $dv-link-color;
 $link-hover-color: $dv-link-hover-color;
-$link-hover-decoration: underline;
 
 @import "bootstrap/scss/maps";
 @import "bootstrap/scss/root";

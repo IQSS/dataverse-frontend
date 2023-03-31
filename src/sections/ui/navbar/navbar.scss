@@ -3,21 +3,11 @@
 @import "src/assets/styles/typography";
 
 $navbar-light-brand-color: $dv-brand-color;
-$navbar-brand-font-size: $dv-brand-font-size;
-$navbar-padding-y: 0.3rem;
-$nav-link-padding-x: 15px;
-$navbar-nav-link-padding-x: 15px;
 
 @import "bootstrap/scss/nav";
 @import "bootstrap/scss/navbar";
 @import "bootstrap/scss/transitions";
 @import "bootstrap/scss/helpers";
-
-.navbar {
-  background-image: linear-gradient(to bottom,#fff 0,#f8f8f8 100%);
-  border-bottom: 1px solid rgb(0 0 0 / 10%);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 15%),0 1px 5px rgb(0 0 0 / 7.5%);
-}
 
 .navbar-collapse {
   justify-content: end;
