@@ -19,7 +19,12 @@ export const Secondary: Story = {
 }
 
 export const Large: Story = {
-  render: () => <Button size="large" label="Large Button" />,
+  render: () => {
+    const handleSubmit = () => {
+      console.log('hello')
+    }
+    return <Button size="large" onClick={handleSubmit} label="Large Button" />
+  },
   // eslint-disable-next-line @typescript-eslint/require-await
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
