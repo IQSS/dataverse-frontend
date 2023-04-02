@@ -18,7 +18,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   const [password, setPassword] = useState('')
 
   const handleFormSubmit = (event: React.FormEvent) => {
-    console.log('clicked submit')
+    console.log('clicked submit: username: ' + username + ', password: ' + password)
     event.preventDefault()
     if (username && password) {
       onLogin({ username, password })
@@ -33,6 +33,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           <legend className="text-3xl text-gray-800 mb-4">{title}</legend>
           <InputField
             name="username"
+            data-testid="username"
             type="text"
             label="Username"
             submitted={submitted}
@@ -43,6 +44,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           />
           <InputField
             name="password"
+            data-testid="password"
             type="password"
             label="Password"
             submitted={submitted}
@@ -51,7 +53,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             value={password}
             autoComplete="current-password"
           />
-          <SubmitButton onClick={() => handleFormSubmit}>Login</SubmitButton>
+          <SubmitButton data-testid="submitButton" onClick={() => handleFormSubmit}>
+            Login
+          </SubmitButton>
           {errorMessage && <div className="text-red-500 mt-2">{errorMessage}</div>}
         </fieldset>
       </form>

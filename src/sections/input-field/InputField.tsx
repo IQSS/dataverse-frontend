@@ -19,7 +19,9 @@ export const InputField: React.FC<InputFieldProps> = (props) => {
         {...inputProps}
       />
       {submitted && !inputProps.value && (
-        <span className="text-red-500 mt-2">{requiredMessage}</span>
+        <span data-testid={inputProps.name + 'RequiredMessage'} className="text-red-500 mt-2">
+          {requiredMessage}
+        </span>
       )}
     </label>
   )
