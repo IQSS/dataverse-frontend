@@ -12,6 +12,7 @@ type Story = StoryObj<typeof LoginForm>
 
 // @ts-ignore
 const loginFn = ({ username, password }) => {
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   console.log(`Logging in with username: ${username} and password: ${password}`)
 }
 const jestSpy = jest.fn()
@@ -48,5 +49,16 @@ export const SubmitTest: Story = {
     await userEvent.type(canvas.getByTestId('password'), 'password')
     await userEvent.click(canvas.getByTestId('submitButton'))
     expect(jestSpy).toHaveBeenCalledWith({ username: 'johndoe', password: 'password' })
+  }
+}
+
+export const RequiredTest: Story = {
+  render: () => <LoginForm onLogin={jestSpy} title="Log In" />,
+
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await userEvent.click(canvas.getByTestId('submitButton'))
+    expect(jestSpy).not.toHaveBeenCalled()
   }
 }

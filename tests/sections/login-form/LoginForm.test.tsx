@@ -1,37 +1,88 @@
-import { renderWithRouter } from '../../renderWithRouter'
-import { screen } from '@testing-library/react'
-import { Layout } from '../../../src/sections/layout/Layout'
+import { render, fireEvent } from '@testing-library/react'
+import { LoginForm } from '../../../src/sections/login-form/LoginForm'
+import { jest } from '@storybook/jest'
+describe('LoginForm', () => {
+  const onLogin = jest.fn()
 
-describe('Layout', () => {
-  it('renders the header', () => {
-    renderWithRouter(<Layout />)
+  afterEach(() => {})
 
-    const brandLink = screen.getByRole('link', { name: 'brandLogoImage brandTitle' })
-    expect(brandLink).toBeInTheDocument()
+  it('should submit form when both username and password are provided', () => {
+    const { getByTestId } = render(<LoginForm onLogin={onLogin} />)
 
-    const brandImg = screen.getByRole('img', { name: 'brandLogoImage' })
-    expect(brandImg).toBeInTheDocument()
+    const usernameInput = getByTestId('username')
+    const passwordInput = getByTestId('password')
+    const submitButton = getByTestId('submitButton')
 
-    const signUpLink = screen.getByRole('link', { name: 'signUp' })
-    expect(signUpLink).toBeInTheDocument()
+    fireEvent.change(usernameInput, { target: { value: 'testuser' } })
+    fireEvent.change(passwordInput, { target: { value: 'testpass' } })
+    fireEvent.click(submitButton)
 
-    const logInLink = screen.getByRole('link', { name: 'logIn' })
-    expect(logInLink).toBeInTheDocument()
+    expect(onLogin).toHaveBeenCalledWith({
+      username: 'testuser',
+      password: 'testpass'
+    })
   })
 
-  it('renders the footer', () => {
-    renderWithRouter(<Layout />)
+  it('should not submit form when either username or password is missing', () => {
+    const { getByTestId } = render(<LoginForm onLogin={onLogin} />)
 
-    const copyright = screen.getByText('copyright')
-    expect(copyright).toBeInTheDocument()
+    const submitButton = getByTestId('submitButton')
 
-    const privacyPolicy = screen.getByRole('link', { name: 'privacyPolicy' })
-    expect(privacyPolicy).toBeInTheDocument()
+    fireEvent.click(submitButton)
 
-    const poweredByLink = screen.getByRole('link', { name: 'The Dataverse Project logo' })
-    expect(poweredByLink).toBeInTheDocument()
+    expect(onLogin).not.toHaveBeenCalled()
 
-    const poweredByImg = screen.getByRole('img', { name: 'The Dataverse Project logo' })
-    expect(poweredByImg).toBeInTheDocument()
+    const usernameInput = getByTestId('username')
+
+    fireEvent.change(usernameInput, { target: { value: 'testuser' } })
+    fireEvent.click(submitButton)
+
+    expect(onLogin).not.toHaveBeenCalled()
+
+    const passwordInput = getByTestId('password')
+
+    fireEvent.change(passwordInput, { target: { value: 'testpass' } })
+    fireEvent.click(submitButton)
+
+    expect(onLogin).toHaveBeenCalledWith({
+      username: 'testuser',
+      password: 'testpass'
+    })
+  })
+
+  it('should show required error messages when either username or password is missing', () => {
+    const { getByTestId, queryByText } = render(<LoginForm onLogin={onLogin} />)
+
+    const submitButton = getByTestId('submitButton')
+
+    fireEvent.click(submitButton)
+
+    expect(onLogin).not.toHaveBeenCalled()
+
+    expect(queryByText('Username is required')).toBeInTheDocument()
+    expect(queryByText('Password is required')).toBeInTheDocument()
+
+    const usernameInput = getByTestId('username')
+
+    fireEvent.change(usernameInput, { target: { value: 'testuser' } })
+    fireEvent.click(submitButton)
+
+    expect(onLogin).not.toHaveBeenCalled()
+
+    expect(queryByText('Username is required')).not.toBeInTheDocument()
+    expect(queryByText('Password is required')).toBeInTheDocument()
+
+    const passwordInput = getByTestId('password')
+
+    fireEvent.change(passwordInput, { target: { value: 'testpass' } })
+    fireEvent.click(submitButton)
+
+    expect(onLogin).toHaveBeenCalledWith({
+      username: 'testuser',
+      password: 'testpass'
+    })
+
+    expect(queryByText('Username is required')).not.toBeInTheDocument()
+    expect(queryByText('Password is required')).not.toBeInTheDocument()
   })
 })
