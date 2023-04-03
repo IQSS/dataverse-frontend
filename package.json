@@ -36,6 +36,8 @@
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json,yml,md}' --config ./.prettierrc",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
+    "cy:storybook-run": "cypress run --config-file cypress.storybook.config.ts",
+    "cy:storybook-open": "cypress open --config-file cypress.storybook.config.ts",
     "git:add": "git add .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
