@@ -7,7 +7,7 @@ import { Container } from '../grid/container/Container'
 
 export function Navbar({ brand, links }: NavbarProps) {
   return (
-    <NavbarBS collapseOnSelect expand="lg" fixed="top">
+    <NavbarBS collapseOnSelect bg="light" expand="lg" fixed="top">
       <Container>
         <NavbarBS.Brand href={brand.path}>
           <img width="28" height="28" src={brand.logo.src} alt={brand.logo.altText} />

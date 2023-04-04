@@ -22,10 +22,6 @@ export const Secondary: Story = {
   render: () => <Button variant="secondary">Secondary</Button>
 }
 
-export const Tertiary: Story = {
-  render: () => <Button variant="tertiary">Tertiary</Button>
-}
-
 export const Link: Story = {
   render: () => <Button variant="link">Link</Button>
 }
@@ -36,9 +32,6 @@ export const Variants: Story = {
       <Button withSpacing>Primary</Button>
       <Button withSpacing variant="secondary">
         Secondary
-      </Button>
-      <Button withSpacing variant="tertiary">
-        Tertiary
       </Button>
       <Button withSpacing variant="link">
         Link
@@ -56,9 +49,6 @@ export const Disabled: Story = {
       <Button withSpacing disabled variant="secondary">
         Secondary
       </Button>
-      <Button withSpacing disabled variant="tertiary">
-        Tertiary
-      </Button>
       <Button withSpacing disabled variant="link">
         Link
       </Button>
@@ -71,7 +61,6 @@ export const NoSpacing: Story = {
     <>
       <Button>Primary</Button>
       <Button variant="secondary">Secondary</Button>
-      <Button variant="tertiary">Tertiary</Button>
       <Button variant="link">Link</Button>
     </>
   )
