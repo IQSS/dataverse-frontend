@@ -48,7 +48,7 @@ export const SubmitTest: Story = {
     await userEvent.type(canvas.getByTestId('username'), 'johndoe')
     await userEvent.type(canvas.getByTestId('password'), 'password')
     await userEvent.click(canvas.getByTestId('submitButton'))
-    expect(jestSpy).toHaveBeenCalledWith({ username: 'johndoe', password: 'password' })
+    await expect(jestSpy).toHaveBeenCalledWith({ username: 'johndoe', password: 'password' })
   }
 }
 

@@ -4,9 +4,13 @@ import { LoginForm } from '../../../../../src/sections/login-form/LoginForm'
 //import { SubmitButton } from './SubmitButton'
 
 describe('LoginForm', () => {
+  beforeEach(() => {
+    console.log('this is run before each test')
+  })
   it('submits form successfully', () => {
     const onLogin = cy.stub().as('onLogin')
     cy.mount(<LoginForm onLogin={onLogin} />)
+    cy.pause()
     cy.get('[data-testid="username"]').type('johndoe')
     cy.get('[data-testid="password"]').type('password')
     cy.get('[data-testid="submitButton"]').click()
