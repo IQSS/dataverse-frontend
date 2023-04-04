@@ -22,10 +22,6 @@ export const Secondary: Story = {
   render: () => <Button variant="secondary">Secondary</Button>
 }
 
-export const Tertiary: Story = {
-  render: () => <Button variant="tertiary">Tertiary</Button>
-}
-
 export const Link: Story = {
   render: () => <Button variant="link">Link</Button>
 }
@@ -65,7 +61,6 @@ export const NoSpacing: Story = {
     <>
       <Button>Primary</Button>
       <Button variant="secondary">Secondary</Button>
-      <Button variant="tertiary">Tertiary</Button>
       <Button variant="link">Link</Button>
     </>
   )
