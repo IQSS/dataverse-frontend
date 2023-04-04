@@ -41,11 +41,11 @@ describe('DropdownButton', () => {
         id="my-dropdown"
         title="My Dropdown Button"
         variant="secondary"
-        icon={Icon.DATAVERSE}>
+        icon={Icon.COLLECTION}>
         <span>Item 1</span>
         <span>Item 2</span>
       </DropdownButton>
     )
-    expect(getByRole('img', { name: Icon.DATAVERSE })).toBeInTheDocument()
+    expect(getByRole('img', { name: Icon.COLLECTION })).toBeInTheDocument()
   })
 })

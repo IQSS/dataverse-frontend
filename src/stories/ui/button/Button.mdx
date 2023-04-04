@@ -21,32 +21,55 @@ a dialog box, or initiating a process.
 
 ### General
 
-- Button width is set by its content, avoid changing its width
+Button width is set by its content. Avoid changing its width.
 
-### Primary
+## Variants
 
-The primary button should be used as the main or most important action button in the user interface. Its purpose is to
-encourage users to take a specific action, such as submitting a form, completing a purchase, or initiating a new task.
+### All variants at a glance
 
-Use only one primary button, and any remaining calls to action should be represented as lower emphasis buttons
+<Canvas of={ButtonStories.Variants} />
 
-### Secondary
+### Primary button
+
+The primary button should be used for the main or most important action in the user interface. Its purpose is to
+encourage users to take a specific action, such as submitting a form or initiating a new task.
+
+Use only one primary button. Any remaining calls to action should be represented as variants with lower emphasis.
+
+<Canvas of={ButtonStories.Primary} />
+
+### Secondary button
 
 The secondary button should be used to provide additional options or actions to the user that are not as critical or
-urgent as the primary action. E.g.: “Cancel” or “Skip”.
+urgent as the primary action. E.g.: "Cancel" or "Skip".
 
 Do not use the secondary button without being accompanied by a primary button. It should be the negative or alternative
 action to the primary.
 
-### Link/Ghost
+<Canvas of={ButtonStories.Secondary} />
 
-The ghost button should be used as a secondary, or as a subtle call-to-action. Its purpose is to
+### Tertiary button
+
+The tertiary button should be used to provide a supplementary or tertiary action or option to the user. It doesn't need
+need to be paired with another button since it can be an independent action. E.g.: "View more" or "View less".
+
+<Canvas of={ButtonStories.Tertiary} />
+
+### Link
+
+The link button should be used as a secondary or tertiary button, or as a subtle call-to-action. Its purpose is to
 draw attention to the button without being overly distracting, while also providing a clear call-to-action. It looks
-like a link because the usage is very similar.
+like a link because the usage is very similar. E.g.: "Read More" or "Learn More".
 
-For example: "Read More", "Learn More" or "Subscribe" to a newsletter.
+<Canvas of={ButtonStories.Link} />
 
 ## Variants
+
+## Usage examples
+
+Note that unless specified, examples with multiple buttons have `withSpacing` set to true.
+
+### Basic (enabled, no icon)
 
 <Canvas of={ButtonStories.Variants} />
 
@@ -54,19 +77,21 @@ For example: "Read More", "Learn More" or "Subscribe" to a newsletter.
 
 <Canvas of={ButtonStories.Disabled} />
 
-### With Icon
+### No spacing
+
+<Canvas of={ButtonStories.NoSpacing} />
+
+### With icon
 
 <Canvas of={ButtonStories.WithIcon} />
 
-## Usage examples
+### Secondary button to cancel
 
-### Secondary as the negative option
+<Canvas of={ButtonStories.SecondaryAsAltOption} />
 
-<Canvas of={ButtonStories.SecondaryAsTheNegativeOption} />
+### Link button to learn more
 
-## Ghost button usage
-
-<Canvas of={ButtonStories.GhostButtonUsage} />
+<Canvas of={ButtonStories.LinkButtonUsage} />
 
 ## SASS variables
 

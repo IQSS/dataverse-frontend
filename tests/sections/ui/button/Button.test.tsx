@@ -13,8 +13,8 @@ describe('Button', () => {
   })
 
   it('renders an icon when provided', () => {
-    const { getByRole } = render(<Button icon={Icon.DATAVERSE}>{clickMeText}</Button>)
-    expect(getByRole('img', { name: Icon.DATAVERSE })).toBeInTheDocument()
+    const { getByRole } = render(<Button icon={Icon.COLLECTION}>{clickMeText}</Button>)
+    expect(getByRole('img', { name: Icon.COLLECTION })).toBeInTheDocument()
   })
 
   it('calls the onClick function when the button is clicked', () => {
