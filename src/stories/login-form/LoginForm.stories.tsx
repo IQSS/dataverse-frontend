@@ -56,6 +56,7 @@ export const RequiredTest: Story = {
   render: () => <LoginForm onLogin={jestSpy} title="Log In" />,
 
   play: async ({ canvasElement }) => {
+    jestSpy.mockClear()
     const canvas = within(canvasElement)
 
     await userEvent.click(canvas.getByTestId('submitButton'))

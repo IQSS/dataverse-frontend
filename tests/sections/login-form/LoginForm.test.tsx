@@ -4,7 +4,9 @@ import { jest } from '@storybook/jest'
 describe('LoginForm', () => {
   const onLogin = jest.fn()
 
-  afterEach(() => {})
+  afterEach(() => {
+    onLogin.mockClear()
+  })
 
   it('should submit form when both username and password are provided', () => {
     const { getByTestId } = render(<LoginForm onLogin={onLogin} />)
