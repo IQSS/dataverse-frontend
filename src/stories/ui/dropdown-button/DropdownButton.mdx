@@ -18,15 +18,46 @@ of options is too large to display at once.
 
 <Controls />
 
+## Usage guidelines
+Use dropdowns for a list of related options and try to keep the list short.
+
+### Dos
+- Use the dropdown as a navigation tool to goto a href related to the dropdown title
+
+### Don'ts
+
+- Use the dropdown as a select input
+
 ## Variants
 
 ### All variants at a glance
 
 <Canvas of={DropdownButtonStories.Variants} />
 
+### Primary dropdown
+
+The primary dropdown should be used for the main or most important actions in the user interface.
+
+Use only one primary dropdown. Any remaining calls to action should be represented as variants with lower emphasis.
+
+<Canvas of={DropdownButtonStories.Primary} />
+
+### Secondary dropdown
+
+The secondary dropdown should be used to provide additional options or actions to the user that are not as critical or
+urgent as the primary actions.
+
+<Canvas of={DropdownButtonStories.Secondary} />
+
 ### With Icon
 
 <Canvas of={DropdownButtonStories.WithIcon} />
+
+## Use cases
+
+### Navigation
+
+<Canvas of={DropdownButtonStories.Navigation} />
 
 ## SASS variables
 

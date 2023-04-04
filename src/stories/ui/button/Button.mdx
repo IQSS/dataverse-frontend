@@ -17,11 +17,19 @@ a dialog box, or initiating a process.
 
 <Controls />
 
-## Usage
+## Usage guidelines
 
-### General
+### Dos
+- Button labels:
+  - Concise
+  - Should include a verb
+  - Always include a noun if there is any room for interpretation about what the verb operates on
+- For action buttons on a page, we include an icon and text label.
 
-Button width is set by its content. Avoid changing its width.
+### Don'ts
+
+- Button width is set by its content. Avoid changing its width.
+- Do not use a button for a text link or navigation item like breadcrumbs.
 
 ## Variants
 
@@ -63,12 +71,6 @@ like a link because the usage is very similar. E.g.: "Read More" or "Learn More"
 
 <Canvas of={ButtonStories.Link} />
 
-## Variants
-
-## Usage examples
-
-Note that unless specified, examples with multiple buttons have `withSpacing` set to true.
-
 ### Basic (enabled, no icon)
 
 <Canvas of={ButtonStories.Variants} />
@@ -84,6 +86,14 @@ Note that unless specified, examples with multiple buttons have `withSpacing` se
 ### With icon
 
 <Canvas of={ButtonStories.WithIcon} />
+
+## Use cases
+
+Note that unless specified, examples with multiple buttons have `withSpacing` set to true.
+
+### Primary button for Call To Action
+
+<Canvas of={ButtonStories.PrimaryAsCTA} />
 
 ### Secondary button to cancel
 

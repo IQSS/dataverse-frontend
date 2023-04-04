@@ -43,17 +43,50 @@ export const Variants: Story = {
   )
 }
 
+export const Primary: Story = {
+  render: () => (
+    <>
+      <DropdownButton title="Primary" id="dropdown-primary" variant="primary">
+        <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
+        <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
+        <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
+      </DropdownButton>
+    </>
+  )
+}
+
+export const Secondary: Story = {
+  render: () => (
+    <>
+      <DropdownButton title="Secondary" id="dropdown-secondary" variant="secondary">
+        <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
+        <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
+        <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
+      </DropdownButton>
+    </>
+  )
+}
+
 export const WithIcon: Story = {
   render: () => (
     <DropdownButton
       withSpacing
       title="Dropdown Button"
-      id="dropdown-1"
+      id="dropdown-with-icon"
       variant="primary"
       icon={Icon.COLLECTION}>
       <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
       <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
       <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
+    </DropdownButton>
+  )
+}
+
+export const Navigation: Story = {
+  render: () => (
+    <DropdownButton withSpacing title="Edit" id="dropdown-navigation" variant="primary">
+      <DropdownButtonItem href="/users/edit">Users</DropdownButtonItem>
+      <DropdownButtonItem href="/products/edit">Products</DropdownButtonItem>
     </DropdownButton>
   )
 }

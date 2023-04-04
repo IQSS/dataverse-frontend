@@ -81,6 +81,14 @@ export const WithIcon: Story = {
   render: () => <Button icon={Icon.COLLECTION}>Primary</Button>
 }
 
+export const PrimaryAsCTA: Story = {
+  render: () => (
+    <>
+      <Button>Publish</Button>
+    </>
+  )
+}
+
 export const SecondaryAsAltOption: Story = {
   render: () => (
     <>
