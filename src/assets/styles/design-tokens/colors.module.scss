@@ -25,3 +25,8 @@ $dv-primary-border-color: #245580;
 $dv-secondary-background-color: white;
 $dv-secondary-background-color-disabled: #e0e0e0;
 $dv-secondary-border-color: #ccc;
+
+:export {
+  brandColor: $dv-brand-color;
+  primaryColor: $dv-primary-color;
+}
