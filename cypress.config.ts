@@ -11,14 +11,14 @@ export default defineConfig({
     video: false,
     viewportWidth: 1920,
     viewportHeight: 1080,
-    supportFile: 'tests/e2e/support/e2e.ts',
+    supportFile: 'cypress/support/e2e.ts',
     setupNodeEvents(on) {
       on('file:preprocessor', vitePreprocessor(path.resolve(__dirname, './vite.config.ts')))
     }
   },
   component: {
     specPattern: 'tests/sections/tests/**/*.spec.{js,jsx,ts,tsx}',
-    supportFile: 'tests/sections/support/component.ts',
+    supportFile: 'cypress/support/component.ts',
     devServer: {
       framework: 'react',
       bundler: 'vite'

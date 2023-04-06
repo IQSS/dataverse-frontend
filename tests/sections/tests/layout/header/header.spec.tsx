@@ -3,8 +3,10 @@ describe('Header component', () => {
   it('displays the user name when the user is logged in', () => {
     const user = { name: 'John Doe' }
     cy.mount(<Header user={user} />)
+    cy.get('.navbar-toggler-icon').click()
+    cy.contains('John Doe').should('be.visible')
+    cy.contains('John Doe').click()
     cy.pause()
-    cy.contains('John Doe').should('exist')
     cy.contains('logOut')
   })
 
