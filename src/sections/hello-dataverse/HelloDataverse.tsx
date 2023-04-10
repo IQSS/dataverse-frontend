@@ -24,7 +24,7 @@ export function HelloDataverse() {
       <p>
         <Trans t={t} i18nKey="description" components={{ 1: <code /> }} />
       </p>
-      <Button onClick={() => getVersion()}>Get version</Button>
+      <Button onClick={() => void getVersion()}>Get version</Button>
       <a
         className={styles.link}
         href="https://dataverse.org"
