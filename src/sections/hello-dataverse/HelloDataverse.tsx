@@ -9,11 +9,7 @@ export function HelloDataverse() {
 
   const getVersion = async () => {
     await getDataverseVersion.execute().then((result) => {
-      if (result.isSuccess) {
-        window.prompt(result.getValue())
-      } else {
-        window.prompt(result.errorMessage)
-      }
+      window.prompt(result)
     })
   }
 
