@@ -9,7 +9,7 @@ export function HelloDataverse() {
 
   const getVersion = async () => {
     await getDataverseVersion.execute().then((result) => {
-      window.prompt(result)
+      window.prompt(result.number)
     })
   }
 
