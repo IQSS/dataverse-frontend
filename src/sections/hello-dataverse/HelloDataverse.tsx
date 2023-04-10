@@ -1,9 +1,21 @@
 import logo from '../ui/logo.svg'
 import styles from './HelloDataverse.module.scss'
 import { Trans, useTranslation } from 'react-i18next'
+import { getDataverseVersion } from 'js-dataverse/dist/info'
+import { Button } from 'react-bootstrap'
 
 export function HelloDataverse() {
   const { t } = useTranslation('helloDataverse')
+
+  const getVersion = async () => {
+    await getDataverseVersion.execute().then((result) => {
+      if (result.isSuccess) {
+        window.prompt(result.getValue())
+      } else {
+        window.prompt(result.errorMessage)
+      }
+    })
+  }
 
   return (
     <section className={styles.container}>
@@ -12,6 +24,7 @@ export function HelloDataverse() {
       <p>
         <Trans t={t} i18nKey="description" components={{ 1: <code /> }} />
       </p>
+      <Button onClick={() => getVersion()}>Get version</Button>
       <a
         className={styles.link}
         href="https://dataverse.org"
