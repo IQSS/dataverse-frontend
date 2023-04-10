@@ -65,6 +65,7 @@ export const Default: Story = {
  * This an example use case for a menu using the navbar component
  */
 export const UseCaseMenu: Story = {
+  name: 'Example use case: Menu',
   render: () => (
     <CanvasFixedHeight height={150}>
       <Navbar
