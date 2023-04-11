@@ -1,30 +1,26 @@
-// ThemeProvider colors
+// Base colors
 $dv-brand-color: #C55B28;
 $dv-primary-color: #337AB7;
 $dv-secondary-color: #E7E7E7;
+$dv-success-color: #dff0d8;
+$dv-danger-color: #f2dede;
+$dv-warning-color: #fcf8e3;
+$dv-info-color: #d9edf7;
 
 // Text colors
 $dv-text-color: #333;
 $dv-subtext-color: #767676;
 
 $dv-primary-text-color: white;
-$dv-primary-text-shadow-color: rgb(0 0 0 / 20%);
-
 $dv-secondary-text-color: $dv-text-color;
-$dv-secondary-text-shadow-color: white;
+$dv-success-text-color: #3c763d;
+$dv-danger-text-color: #a94442;
+$dv-warning-text-color: #8a6d3b;
+$dv-info-text-color: #31708f;
 
 // Link colors
 $dv-link-color: #3174AF;
 $dv-link-hover-color: #23527c;
-
-// Button colors
-$dv-primary-background-color: $dv-primary-color;
-$dv-primary-background-color-disabled: #265a88;
-$dv-primary-border-color: #245580;
-
-$dv-secondary-background-color: white;
-$dv-secondary-background-color-disabled: #e0e0e0;
-$dv-secondary-border-color: #ccc;
 
 :export {
   brand: $dv-brand-color;
@@ -33,15 +29,15 @@ $dv-secondary-border-color: #ccc;
   textColor: $dv-text-color;
   subTextColor: $dv-subtext-color;
   primaryTextColor: $dv-primary-text-color;
-  primaryTextShadowColor: $dv-primary-text-shadow-color;
   secondaryTextColor: $dv-secondary-text-color;
-  secondaryTextShadowColor: $dv-secondary-text-shadow-color;
+  successTextColor: $dv-success-text-color;
+  dangerTextColor: $dv-danger-text-color;
+  warningTextColor: $dv-warning-text-color;
+  infoTextColor: $dv-info-text-color;
   linkColor: $dv-link-color;
   linkHoverColor: $dv-link-hover-color;
-  primaryBackgroundColor: $dv-primary-background-color;
-  primaryBackgroundColorDisabled: $dv-primary-background-color-disabled;
-  primaryBorderColor: $dv-primary-border-color;
-  secondaryBackgroundColor: $dv-secondary-background-color;
-  secondaryBackgroundColorDisabled: $dv-secondary-background-color-disabled;
-  secondaryBorderColor: $dv-secondary-border-color;
+  successColor: $dv-success-color;
+  dangerColor: $dv-danger-color;
+  warningColor: $dv-warning-color;
+  infoColor: $dv-info-color;
 }

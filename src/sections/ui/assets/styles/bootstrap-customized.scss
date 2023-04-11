@@ -3,9 +3,8 @@
 
 // Theme
 
-$enable-gradients: true;
-$primary: $dv-primary-background-color;
-$secondary: #E7E7E7;
+$primary: $dv-primary-color;
+$secondary: $dv-secondary-color;
 
 @import "node_modules/bootstrap/scss/functions";
 @import "node_modules/bootstrap/scss/variables";
