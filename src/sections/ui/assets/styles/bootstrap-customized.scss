@@ -1,7 +1,15 @@
-@use "sass:map";
-@import "src/sections/ui/assets/styles/bootstrap-variables";
 @import "src/sections/ui/assets/styles/design-tokens/typography.module";
 @import "src/sections/ui/assets/styles/design-tokens/colors.module";
+
+// Theme
+
+$enable-gradients: true;
+$primary: $dv-primary-background-color;
+$secondary: #E7E7E7;
+
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
 
 // Body
 $body-color: $dv-text-color;
@@ -11,7 +19,32 @@ $font-family-base: $dv-font-family;
 $link-color: $dv-link-color;
 $link-hover-color: $dv-link-hover-color;
 
+// Base
 @import "node_modules/bootstrap/scss/maps";
 @import "node_modules/bootstrap/scss/root";
 @import "node_modules/bootstrap/scss/reboot";
 @import "node_modules/bootstrap/scss/type";
+
+// Buttons and Dropdowns
+@import "bootstrap/scss/buttons";
+@import "bootstrap/scss/dropdown";
+
+// Grid
+@import "node_modules/bootstrap/scss/utilities";
+@import "node_modules/bootstrap/scss/utilities/api";
+@import "node_modules/bootstrap/scss/containers";
+@import "node_modules/bootstrap/scss/grid";
+
+// Navbar
+
+$navbar-light-brand-color: $dv-brand-color;
+$navbar-brand-font-size: $dv-brand-font-size;
+
+@import "bootstrap/scss/nav";
+@import "bootstrap/scss/navbar";
+@import "bootstrap/scss/transitions";
+@import "bootstrap/scss/helpers";
+
+.navbar-collapse {
+  justify-content: end;
+}

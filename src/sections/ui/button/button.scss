@@ -1,8 +1,0 @@
-@import "src/sections/ui/assets/styles/design-tokens/colors.module";
-
-$enable-gradients: true;
-$primary: $dv-primary-background-color;
-$secondary: #E7E7E7;
-
-@import "src/sections/ui/assets/styles/bootstrap-variables";
-@import "bootstrap/scss/buttons";

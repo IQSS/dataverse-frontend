@@ -1,5 +1,4 @@
 import { ReactNode } from 'react'
-import './container.scss'
 import { Container as ContainerBS } from 'react-bootstrap'
 import * as React from 'react'
 
