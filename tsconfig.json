@@ -18,5 +18,5 @@
     "jsx": "react-jsx"
   },
   "include": ["src", "tests", "cypress", "vitest.config.ts", "cypress.config.ts", "vite.config.ts"],
-  "exclude": ["tests/e2e/tests/**/**.spec.ts", "tests/sections/test/**/**.spec.tsx"]
+  "exclude": ["cypress/**/**.spec.ts", "cypress/**/**.spec.tsx"]
 }

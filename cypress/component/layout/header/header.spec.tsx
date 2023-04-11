@@ -1,4 +1,4 @@
-import { Header } from '../../../../../src/sections/layout/header/Header'
+import { Header } from '../../../../src/sections/layout/header/Header'
 describe('Header component', () => {
   it('displays the user name when the user is logged in', () => {
     const user = { name: 'John Doe' }

@@ -1,4 +1,4 @@
-import { Navbar } from '../../../../../src/sections/ui/navbar/Navbar'
+import { Navbar } from '../../../../src/sections/ui/navbar/Navbar'
 
 describe('Navbar component', () => {
   const brand = {

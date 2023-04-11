@@ -6,7 +6,7 @@ export default defineConfig({
   video: false,
   e2e: {
     baseUrl: 'http://localhost:5173',
-    specPattern: 'tests/e2e/tests/**/*.spec.{js,jsx,ts,tsx}',
+    specPattern: 'cypress/e2e/**/*.spec.{js,jsx,ts,tsx}',
     screenshotOnRunFailure: false,
     video: false,
     viewportWidth: 1920,
@@ -17,7 +17,7 @@ export default defineConfig({
     }
   },
   component: {
-    specPattern: 'tests/sections/tests/**/*.spec.{js,jsx,ts,tsx}',
+    specPattern: 'cypress/component/**/*.spec.{js,jsx,ts,tsx}',
     supportFile: 'cypress/support/component.ts',
     devServer: {
       framework: 'react',
