@@ -1,6 +1,6 @@
-@import "./src/assets/styles/bootstrap-variables";
-@import "src/assets/styles/design-tokens/colors.module";
-@import "src/assets/styles/design-tokens/typography.module";
+@import "src/sections/ui/assets/styles/bootstrap-variables";
+@import "src/sections/ui/assets/styles/design-tokens/colors.module";
+@import "src/sections/ui/assets/styles/design-tokens/typography.module";
 
 $navbar-light-brand-color: $dv-brand-color;
 $navbar-brand-font-size: $dv-brand-font-size;

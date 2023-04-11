@@ -1,0 +1,17 @@
+@use "sass:map";
+@import "src/sections/ui/assets/styles/bootstrap-variables";
+@import "src/sections/ui/assets/styles/design-tokens/typography.module";
+@import "src/sections/ui/assets/styles/design-tokens/colors.module";
+
+// Body
+$body-color: $dv-text-color;
+$font-family-base: $dv-font-family;
+
+// Links
+$link-color: $dv-link-color;
+$link-hover-color: $dv-link-hover-color;
+
+@import "node_modules/bootstrap/scss/maps";
+@import "node_modules/bootstrap/scss/root";
+@import "node_modules/bootstrap/scss/reboot";
+@import "node_modules/bootstrap/scss/type";
