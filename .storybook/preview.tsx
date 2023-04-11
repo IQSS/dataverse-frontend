@@ -1,5 +1,5 @@
 import type { Preview } from '@storybook/react'
-import '../src/sections/ui/assets/styles/index.scss'
+import { ThemeProvider } from '../src/sections/ui/theme/ThemeProvider'
 
 const preview: Preview = {
   parameters: {
@@ -10,7 +10,14 @@ const preview: Preview = {
         date: /Date$/
       }
     }
-  }
+  },
+  decorators: [
+    (Story) => (
+      <ThemeProvider>
+        <Story />
+      </ThemeProvider>
+    )
+  ]
 }
 
 export default preview
