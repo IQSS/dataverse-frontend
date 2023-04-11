@@ -27,6 +27,21 @@ $dv-secondary-background-color-disabled: #e0e0e0;
 $dv-secondary-border-color: #ccc;
 
 :export {
-  brandColor: $dv-brand-color;
-  primaryColor: $dv-primary-color;
+  brand: $dv-brand-color;
+  primary: $dv-primary-color;
+  secondary: $dv-secondary-color;
+  textColor: $dv-text-color;
+  subTextColor: $dv-subtext-color;
+  primaryTextColor: $dv-primary-text-color;
+  primaryTextShadowColor: $dv-primary-text-shadow-color;
+  secondaryTextColor: $dv-secondary-text-color;
+  secondaryTextShadowColor: $dv-secondary-text-shadow-color;
+  linkColor: $dv-link-color;
+  linkHoverColor: $dv-link-hover-color;
+  primaryBackgroundColor: $dv-primary-background-color;
+  primaryBackgroundColorDisabled: $dv-primary-background-color-disabled;
+  primaryBorderColor: $dv-primary-border-color;
+  secondaryBackgroundColor: $dv-secondary-background-color;
+  secondaryBackgroundColorDisabled: $dv-secondary-background-color-disabled;
+  secondaryBorderColor: $dv-secondary-border-color;
 }

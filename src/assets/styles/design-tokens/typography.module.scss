@@ -1,0 +1,12 @@
+$dv-font-size: 14px;
+$dv-font-size-sm: 12px;
+$dv-brand-font-size: 24px;
+
+$dv-font-family: ("Helvetica Neue",helvetica,arial,sans-serif);
+
+:export {
+  fontSize: $dv-font-size;
+  fontSizeSm: $dv-font-size-sm;
+  brandFontSize: $dv-brand-font-size;
+  fontFamily: $dv-font-family;
+}
