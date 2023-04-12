@@ -19,6 +19,7 @@ export const baseTheme = {
     warningTextColor: colorVariables.warningTextColor,
     infoTextColor: colorVariables.infoTextColor,
     dangerTextColor: colorVariables.dangerTextColor,
+    headingsColor: colorVariables.headingsColor,
     linkColor: colorVariables.linkColor,
     linkHoverColor: colorVariables.linkHoverColor
   },
@@ -26,6 +27,10 @@ export const baseTheme = {
     fontSize: typographyVariables.fontSize,
     fontSizeSm: typographyVariables.fontSizeSm,
     brandFontSize: typographyVariables.brandFontSize,
-    fontFamily: typographyVariables.fontFamily
+    fontFamily: typographyVariables.fontFamily,
+    fontWeight: typographyVariables.fontWeight,
+    fontWeightBold: typographyVariables.fontWeightBold,
+    fontWeightLight: typographyVariables.fontWeightLight,
+    lineHeight: typographyVariables.lineHeight
   }
 }

@@ -18,6 +18,8 @@ $dv-danger-text-color: #a94442;
 $dv-warning-text-color: #8a6d3b;
 $dv-info-text-color: #31708f;
 
+$dv-headings-color: #333;
+
 // Link colors
 $dv-link-color: #3174AF;
 $dv-link-hover-color: #23527c;
@@ -34,6 +36,7 @@ $dv-link-hover-color: #23527c;
   dangerTextColor: $dv-danger-text-color;
   warningTextColor: $dv-warning-text-color;
   infoTextColor: $dv-info-text-color;
+  headingsColor: $dv-headings-color;
   linkColor: $dv-link-color;
   linkHoverColor: $dv-link-hover-color;
   successColor: $dv-success-color;

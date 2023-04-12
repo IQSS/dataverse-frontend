@@ -12,7 +12,19 @@ $secondary: $dv-secondary-color;
 
 // Body
 $body-color: $dv-text-color;
+$headings-color: $dv-headings-color;
+
+  // Typography
 $font-family-base: $dv-font-family;
+
+$font-size-base: $dv-font-size;
+$font-size-sm: $dv-font-size-sm;
+
+$line-height-base: $dv-line-height;
+
+$font-weight-normal: $dv-font-weight;
+$font-weight-light: $dv-font-weight-light;
+$font-weight-bold: $dv-font-weight-bold;
 
 // Links
 $link-color: $dv-link-color;
