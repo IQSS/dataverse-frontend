@@ -2,10 +2,10 @@
 $dv-brand-color: #C55B28;
 $dv-primary-color: #337AB7;
 $dv-secondary-color: #6c757d;
-$dv-success-color: #5cb85c;
-$dv-danger-color: #d9534f;
-$dv-warning-color: #f0ad4e;
-$dv-info-color: #5bc0de;
+$dv-success-color: #3c763d;
+$dv-danger-color: #a94442;
+$dv-warning-color: #8a6d3b;
+$dv-info-color: #31708f;
 $dv-success-box-color: #dff0d8;
 $dv-danger-box-color: #f2dede;
 $dv-warning-box-color: #fcf8e3;
@@ -17,10 +17,6 @@ $dv-subtext-color: #767676;
 
 $dv-primary-text-color: white;
 $dv-secondary-text-color: $dv-text-color;
-$dv-success-text-color: #3c763d;
-$dv-danger-text-color: #a94442;
-$dv-warning-text-color: #8a6d3b;
-$dv-info-text-color: #31708f;
 
 $dv-headings-color: #333;
 
@@ -36,10 +32,6 @@ $dv-link-hover-color: #23527c;
   subTextColor: $dv-subtext-color;
   primaryTextColor: $dv-primary-text-color;
   secondaryTextColor: $dv-secondary-text-color;
-  successTextColor: $dv-success-text-color;
-  dangerTextColor: $dv-danger-text-color;
-  warningTextColor: $dv-warning-text-color;
-  infoTextColor: $dv-info-text-color;
   headingsColor: $dv-headings-color;
   linkColor: $dv-link-color;
   linkHoverColor: $dv-link-hover-color;
@@ -47,4 +39,8 @@ $dv-link-hover-color: #23527c;
   dangerColor: $dv-danger-color;
   warningColor: $dv-warning-color;
   infoColor: $dv-info-color;
+  successBoxColor: $dv-success-box-color;
+  dangerBoxColor: $dv-danger-box-color;
+  warningBoxColor: $dv-warning-box-color;
+  infoBoxColor: $dv-info-box-color;
 }

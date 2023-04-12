@@ -19,6 +19,10 @@ export const baseTheme = {
     warningTextColor: colorVariables.warningTextColor,
     infoTextColor: colorVariables.infoTextColor,
     dangerTextColor: colorVariables.dangerTextColor,
+    successBoxColor: colorVariables.successBoxColor,
+    warningBoxColor: colorVariables.warningBoxColor,
+    infoBoxColor: colorVariables.infoBoxColor,
+    dangerBoxColor: colorVariables.dangerBoxColor,
     headingsColor: colorVariables.headingsColor,
     linkColor: colorVariables.linkColor,
     linkHoverColor: colorVariables.linkHoverColor
