@@ -5,6 +5,10 @@
 
 $primary: $dv-primary-color;
 $secondary: $dv-secondary-color;
+$success: $dv-success-color;
+$info: $dv-info-color;
+$warning: $dv-warning-color;
+$danger: $dv-danger-color;
 
 @import "node_modules/bootstrap/scss/functions";
 @import "node_modules/bootstrap/scss/variables";
@@ -45,6 +49,9 @@ $link-hover-color: $dv-link-hover-color;
 @import "node_modules/bootstrap/scss/utilities/api";
 @import "node_modules/bootstrap/scss/containers";
 @import "node_modules/bootstrap/scss/grid";
+
+// Badge
+@import "bootstrap/scss/badge";
 
 // Navbar
 
