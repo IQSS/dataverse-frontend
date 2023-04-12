@@ -9,7 +9,7 @@ export function Footer() {
   const { t } = useTranslation('footer')
 
   return (
-    <footer className={styles.container}>
+    <footer data-testid="footer" className={styles.container}>
       <Container>
         <Row>
           <Col sm={8}>
@@ -27,6 +27,7 @@ export function Footer() {
             <div className={styles['powered-by-container']}>
               <span className={styles['powered-by-text']}>{t('poweredBy')}</span>
               <a
+                data-testid="poweredBy"
                 className={styles['powered-by-logo']}
                 href="https://dataverse.org/"
                 title="The Dataverse Project"
