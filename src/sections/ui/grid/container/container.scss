@@ -1,9 +1,2 @@
 @import "src/assets/styles/bootstrap-variables";
-
-$container-max-widths: (
-        md: 750px,
-        lg: 970px,
-        xl: 1170px
-);
-
 @import "node_modules/bootstrap/scss/containers";

@@ -1,16 +1,2 @@
 @import "./src/assets/styles/bootstrap-variables";
-
-$dropdown-font-size: 14px;
-$dropdown-border-radius: 0 0 4px 4px;
-$dropdown-border-color: rgb(0 0 0 / 15%);
-$dropdown-padding-y: 5px;
-
 @import "bootstrap/scss/dropdown";
-
-.navbar-nav .dropdown-menu {
-  box-shadow: 0 6px 12px rgb(0 0 0 / 17.5%);
-}
-
-.dropdown-item:hover, .dropdown-item:focus {
-  background-image: linear-gradient(to bottom,#f5f5f5 0,#e8e8e8 100%);
-}

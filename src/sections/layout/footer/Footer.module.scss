@@ -1,24 +1,23 @@
+@import "src/assets/styles/colors";
+@import "src/assets/styles/typography";
+
 .container {
     padding: 60px 0;
-    color: #767676;
+    color: $dv-subtext-color;
 }
 
 .copyright {
     margin: 0 0 10px;
-    font-size: 85%;
+    font-size: $dv-font-size-sm;
 }
 
 .powered-by-container {
-    font-size: .85em;
+    font-size: $dv-font-size-sm;
     text-align: right;
 }
 
 .powered-by-text {
     margin-right: 0.6em;
-}
-
-.powered-by-logo {
-    font-size: 14px;
 }
 
 .version {
