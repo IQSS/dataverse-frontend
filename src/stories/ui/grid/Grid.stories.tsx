@@ -1,13 +1,25 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Container } from '../../../sections/ui/grid/container/Container'
+import { Container } from '../../../sections/ui/grid/Container'
 import { WithI18next } from '../../WithI18next'
-import { Col } from '../../../sections/ui/grid/col/Col'
-import { Row } from '../../../sections/ui/grid/row/Row'
+import { Col } from '../../../sections/ui/grid/Col'
+import { Row } from '../../../sections/ui/grid/Row'
 
+/**
+ * ## Description
+ * Grid system for the layout of the page
+ * It is based on a 12-column system, using Bootstrap's grid system underneath.
+ *
+ * ## Usage guidelines
+ *
+ * Bootstrap provides a responsive, fluid, 12-column grid system that we use to organize our page layouts.
+ *
+ * We use the fixed-width Container component which provides responsive widths based on media queries for the page
+ * layout, with a series of rows and columns for the content.
+ *
+ * The grid layout uses Col component for horizontal groups of columns, inside a Row containing component. Content
+ * should be placed within columns, and only columns may be immediate children of rows.
+ */
 const meta: Meta<typeof Container> = {
-  /* Grid system for the layout of the page
-   * It is based on a 12-column system, using Bootstrap's grid system underneath.
-   */
   tags: ['autodocs'],
   title: 'UI/Grid',
   component: Container,

@@ -10,6 +10,18 @@
     "scss/dollar-variable-pattern": null,
     "scss/dollar-variable-empty-line-before": null,
     "selector-id-pattern": null,
-    "selector-class-pattern": null
+    "selector-class-pattern": null,
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": ["export"]
+      }
+    ],
+    "property-no-unknown": [
+      true,
+      {
+        "ignoreSelectors": [":export"]
+      }
+    ]
   }
 }
