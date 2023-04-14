@@ -36,27 +36,14 @@ type Story = StoryObj<typeof Navbar>
 export const Default: Story = {
   render: () => (
     <CanvasFixedHeight height={150}>
-      <Navbar
-        brand={{ logo: { src: logo, altText: 'logo' }, title: 'Brand Title', path: '#' }}
-        links={[
-          { title: 'Link 1 ', value: '#' },
-          { title: 'Link 2', value: '#' },
-          {
-            title: 'Dropdown 1',
-            value: [
-              { title: 'Link 3 ', value: '#' },
-              { title: 'Link 4', value: '#' }
-            ]
-          },
-          {
-            title: 'Dropdown 2',
-            value: [
-              { title: 'Link 5 ', value: '#' },
-              { title: 'Link 6', value: '#' }
-            ]
-          }
-        ]}
-      />
+      <Navbar brand={{ title: 'Brand Title', href: '#', logoImgSrc: logo }}>
+        <Navbar.Link href="/link-1">Link 1</Navbar.Link>
+        <Navbar.Link href="/link-2">Link 2</Navbar.Link>
+        <Navbar.Dropdown title="Dropdown 1" id="dropdown">
+          <Navbar.Dropdown.Item href="/link-3">Link 3</Navbar.Dropdown.Item>
+          <Navbar.Dropdown.Item href="/link-4">Link 4</Navbar.Dropdown.Item>
+        </Navbar.Dropdown>
+      </Navbar>
     </CanvasFixedHeight>
   )
 }
@@ -68,13 +55,10 @@ export const UseCaseMenu: Story = {
   name: 'Example use case: Menu',
   render: () => (
     <CanvasFixedHeight height={150}>
-      <Navbar
-        brand={{ logo: { src: logo, altText: 'logo' }, title: 'Dataverse', path: '#' }}
-        links={[
-          { title: 'Sign Up', value: '#' },
-          { title: 'Log In', value: '#' }
-        ]}
-      />
+      <Navbar brand={{ title: 'Dataverse', href: '#', logoImgSrc: logo }}>
+        <Navbar.Link href="/sing-up">Sing Up</Navbar.Link>
+        <Navbar.Link href="/login">Log In</Navbar.Link>
+      </Navbar>
     </CanvasFixedHeight>
   )
 }

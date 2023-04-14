@@ -2,36 +2,33 @@ import { render, fireEvent } from '@testing-library/react'
 import { Navbar } from '../../../../src/sections/ui/navbar/Navbar'
 
 const brand = {
-  logo: { src: 'logo.png', altText: 'Logo Alt Text' },
+  logoImgSrc: '/logo.svg',
   title: 'Brand Title',
-  path: '/home'
+  href: '/home'
 }
-
-const links = [
-  { title: 'Link 1', value: '/link1' },
-  { title: 'Link 2', value: '/link2' },
-  {
-    title: 'Dropdown',
-    value: [
-      { title: 'Sublink 1', value: '/sublink1' },
-      { title: 'Sublink 2', value: '/sublink2' }
-    ]
-  }
-]
 
 describe('Navbar component', () => {
   test('renders the brand logo and title', () => {
-    const { getByRole } = render(<Navbar brand={brand} links={[]} />)
+    const { getByRole } = render(<Navbar brand={brand} />)
 
-    const logoImage = getByRole('img', { name: 'Logo Alt Text' })
+    const logoImage = getByRole('img', { name: 'Brand Logo Image' })
     expect(logoImage).toBeInTheDocument()
 
-    const brandElement = getByRole('link', { name: 'Logo Alt Text Brand Title' })
+    const brandElement = getByRole('link', { name: 'Brand Logo Image Brand Title' })
     expect(brandElement).toBeInTheDocument()
   })
 
   test('renders the navbar links', () => {
-    const { getByRole } = render(<Navbar brand={brand} links={links} />)
+    const { getByRole } = render(
+      <Navbar brand={brand}>
+        <Navbar.Link href="/link-1">Link 1</Navbar.Link>
+        <Navbar.Link href="/link-2">Link 2</Navbar.Link>
+        <Navbar.Dropdown title="Dropdown" id="dropdown">
+          <Navbar.Dropdown.Item href="/sublink-1">Sublink 1</Navbar.Dropdown.Item>
+          <Navbar.Dropdown.Item href="/sublink-2">Sublink 2</Navbar.Dropdown.Item>
+        </Navbar.Dropdown>
+      </Navbar>
+    )
 
     const link1Element = getByRole('link', { name: 'Link 1' })
     expect(link1Element).toBeInTheDocument()
@@ -44,7 +41,16 @@ describe('Navbar component', () => {
   })
 
   test('shows the sublinks when the dropdown is clicked', async () => {
-    const { getByRole, findByRole } = render(<Navbar brand={brand} links={links} />)
+    const { getByRole, findByRole } = render(
+      <Navbar brand={brand}>
+        <Navbar.Link href="/link-1">Link 1</Navbar.Link>
+        <Navbar.Link href="/link-2">Link 2</Navbar.Link>
+        <Navbar.Dropdown title="Dropdown" id="dropdown">
+          <Navbar.Dropdown.Item href="/sublink-1">Sublink 1</Navbar.Dropdown.Item>
+          <Navbar.Dropdown.Item href="/sublink-2">Sublink 2</Navbar.Dropdown.Item>
+        </Navbar.Dropdown>
+      </Navbar>
+    )
 
     const dropdownElement = getByRole('button', { name: 'Dropdown' })
 
