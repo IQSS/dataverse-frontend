@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react'
-import { Tab } from './tab/Tab'
+import { Tab } from './Tab'
 import { Tabs as TabsBS } from 'react-bootstrap'
 
 interface TabsProps {

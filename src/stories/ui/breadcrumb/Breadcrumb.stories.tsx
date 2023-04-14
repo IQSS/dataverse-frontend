@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Breadcrumb } from '../../../sections/ui/breadcrumb/Breadcrumb'
-import { BreadcrumbItem } from '../../../sections/ui/breadcrumb/BreadcrumbItem'
 
 /**
  * ## Description
@@ -30,9 +29,9 @@ export const Default: Story = {
   render: () => (
     <>
       <Breadcrumb>
-        <BreadcrumbItem href="/link-1">Breadcrumb Item 1</BreadcrumbItem>
-        <BreadcrumbItem href="/link-2">Breadcrumb Item 2</BreadcrumbItem>
-        <BreadcrumbItem active>Breadcrumb Item 3</BreadcrumbItem>
+        <Breadcrumb.Item href="/link-1">Breadcrumb Item 1</Breadcrumb.Item>
+        <Breadcrumb.Item href="/link-2">Breadcrumb Item 2</Breadcrumb.Item>
+        <Breadcrumb.Item active>Breadcrumb Item 3</Breadcrumb.Item>
       </Breadcrumb>
     </>
   )
