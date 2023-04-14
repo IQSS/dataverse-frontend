@@ -22,23 +22,23 @@ const meta: Meta<typeof Tabs> = {
 export default meta
 type Story = StoryObj<typeof Tabs>
 
-const ExampleSection = ({ title }: { title: string }) => (
-  <div style={{ backgroundColor: 'lightgrey' }}>
+const ExampleContent = ({ title }: { title: string }) => (
+  <div style={{ padding: '10px' }}>
     <span>{title} Section</span>
   </div>
 )
 
 export const Default: Story = {
   render: () => (
-    <Tabs defaultActiveKey="link-1">
-      <Tabs.Tab eventKey="link-1" title="Link 1">
-        <ExampleSection title="Link 1" />
+    <Tabs defaultActiveKey="key-1">
+      <Tabs.Tab eventKey="key-1" title="Tab 1">
+        <ExampleContent title="Content 1" />
       </Tabs.Tab>
-      <Tabs.Tab eventKey="link-2" title="Link 2">
-        <ExampleSection title="Link 2" />
+      <Tabs.Tab eventKey="key-2" title="Tab 2">
+        <ExampleContent title="Content 2" />
       </Tabs.Tab>
-      <Tabs.Tab eventKey="link-3" title="Link 3">
-        <ExampleSection title="Link 3" />
+      <Tabs.Tab eventKey="key-3" title="Tab 3">
+        <ExampleContent title="Content 3" />
       </Tabs.Tab>
     </Tabs>
   )
