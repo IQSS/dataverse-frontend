@@ -1,5 +1,4 @@
 import { ReactNode } from 'react'
-import './row.scss'
 import { Row as RowBS } from 'react-bootstrap'
 import * as React from 'react'
 

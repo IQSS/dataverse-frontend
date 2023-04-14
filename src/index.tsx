@@ -1,15 +1,17 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './assets/styles/index.scss'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import './i18n'
+import { ThemeProvider } from './sections/ui/theme/ThemeProvider'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <React.Suspense fallback="loading">
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </React.Suspense>
   </React.StrictMode>
 )

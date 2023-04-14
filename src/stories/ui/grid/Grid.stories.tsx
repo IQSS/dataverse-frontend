@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Container } from '../../../sections/ui/grid/container/Container'
+import { Container } from '../../../sections/ui/grid/Container'
 import { WithI18next } from '../../WithI18next'
-import { Col } from '../../../sections/ui/grid/col/Col'
-import { Row } from '../../../sections/ui/grid/row/Row'
+import { Col } from '../../../sections/ui/grid/Col'
+import { Row } from '../../../sections/ui/grid/Row'
 
 /**
  * ## Description

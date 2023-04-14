@@ -1,5 +1,5 @@
 import type { Preview } from '@storybook/react'
-import '../src/assets/styles/index.scss'
+import { ThemeProvider } from '../src/sections/ui/theme/ThemeProvider'
 import DocumentationTemplate from '../src/stories/ui/DocumentationTemplate.mdx'
 
 const preview: Preview = {
@@ -14,7 +14,14 @@ const preview: Preview = {
     docs: {
       page: DocumentationTemplate
     }
-  }
+  },
+  decorators: [
+    (Story) => (
+      <ThemeProvider>
+        <Story />
+      </ThemeProvider>
+    )
+  ]
 }
 
 export default preview
