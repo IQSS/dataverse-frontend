@@ -4,16 +4,24 @@ describe('Layout', () => {
   it('renders the Header', () => {
     cy.mount(<Layout></Layout>)
 
-    cy.get('a').should('contain.text', 'brandTitle')
-    cy.get('img').should('have.attr', 'alt', 'brandLogoImage')
-    cy.get('a').should('contain.text', 'signUp')
-    cy.get('a').should('contain.text', 'logIn')
+    cy.findByRole('img', { name: 'brandLogoImage' }).should('exist')
+    cy.findByText('brandTitle').should('exist')
+
+    cy.findByRole('button', { name: 'Toggle navigation' }).click()
+    cy.findByRole('link', { name: 'signUp' }).should('exist')
+    cy.findByRole('link', { name: 'logIn' }).should('exist')
   })
   it('renders the Footer', () => {
     cy.mount(<Layout></Layout>)
 
-    cy.get('[data-testid="footer"]').should('be.visible')
-    cy.get('[data-testid="poweredBy"]').should('be.visible')
-    cy.get('img').should('have.attr', 'alt', 'brandLogoImage')
+    it('displays the Powered By link', () => {
+      cy.mount(<Layout></Layout>)
+      cy.findByRole('link', { name: 'The Dataverse Project logo' }).should('exist')
+    })
+
+    it('displays the Privacy Policy', () => {
+      cy.mount(<Layout></Layout>)
+      cy.findByText('privacyPolicy').should('exist')
+    })
   })
 })

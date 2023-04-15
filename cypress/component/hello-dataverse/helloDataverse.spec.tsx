@@ -9,6 +9,6 @@ describe('HelloDataverse page', () => {
         <HelloDataverse />
       </I18nextProvider>
     )
-    cy.get('h2').should('contain.text', 'Hello Dataverse')
+    cy.findByRole('heading').should('contain.text', 'Hello Dataverse')
   })
 })

@@ -27,7 +27,6 @@ export function Footer() {
             <div className={styles['powered-by-container']}>
               <span className={styles['powered-by-text']}>{t('poweredBy')}</span>
               <a
-                data-testid="poweredBy"
                 className={styles['powered-by-logo']}
                 href="https://dataverse.org/"
                 title="The Dataverse Project"
