@@ -1,4 +1,5 @@
 import { Form as FormBS } from 'react-bootstrap'
+import { Col } from '../../grid/Col'
 
 interface FormInputProps {
   type: 'text' | 'email' | 'password'
@@ -6,5 +7,9 @@ interface FormInputProps {
 }
 
 export function FormInput({ type, placeholder }: FormInputProps) {
-  return <FormBS.Control type={type} placeholder={placeholder} />
+  return (
+    <Col sm={9}>
+      <FormBS.Control type={type} placeholder={placeholder} />
+    </Col>
+  )
 }

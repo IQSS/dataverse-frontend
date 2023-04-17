@@ -15,15 +15,15 @@ export const Default: Story = {
     <Form>
       <Form.Group>
         <Form.Group.Label>Username</Form.Group.Label>
-        <Form.Group.Input type="text" placeholder="username" />
+        <Form.Group.Input type="text" placeholder="Username" />
       </Form.Group>
       <Form.Group>
         <Form.Group.Label>Email</Form.Group.Label>
-        <Form.Group.Input type="email" placeholder="email" />
+        <Form.Group.Input type="email" placeholder="Email" />
       </Form.Group>
       <Form.Group>
         <Form.Group.Label>Password</Form.Group.Label>
-        <Form.Group.Input type="password" placeholder="password" />
+        <Form.Group.Input type="password" placeholder="Password" />
       </Form.Group>
     </Form>
   )

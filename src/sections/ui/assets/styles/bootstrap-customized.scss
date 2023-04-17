@@ -53,6 +53,11 @@ $link-hover-color: $dv-link-hover-color;
 // Badge
 @import "bootstrap/scss/badge";
 
+// Forms
+$form-label-font-weight: $dv-font-weight-bold;
+
+@import "bootstrap/scss/forms";
+
 // Navbar
 
 $navbar-light-brand-color: $dv-brand-color;
