@@ -4,9 +4,13 @@ import { FormInput } from './FormInput'
 import { FormLabel } from './FormLabel'
 import { Row } from '../../grid/Row'
 
-function FormGroup({ children }: PropsWithChildren) {
+interface FormGroupProps {
+  controlId: string
+}
+
+function FormGroup({ controlId, children }: PropsWithChildren<FormGroupProps>) {
   return (
-    <FormBS.Group className="mb-3" as={Row}>
+    <FormBS.Group controlId={controlId} className="mb-3" as={Row}>
       {children}
     </FormBS.Group>
   )
