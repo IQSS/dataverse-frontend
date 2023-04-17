@@ -3,7 +3,7 @@ import { OverlayTrigger } from 'react-bootstrap'
 import { Placement } from 'react-bootstrap/types'
 import { QuestionIcon } from './QuestionIcon'
 
-interface TooltipProps {
+export interface TooltipProps {
   placement: Placement
   message: string
 }
