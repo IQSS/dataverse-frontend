@@ -90,3 +90,14 @@ export const Select: Story = {
     </Form>
   )
 }
+
+export const TextArea: Story = {
+  render: () => (
+    <Form>
+      <Form.Group controlId="basic-form-description">
+        <Form.Group.Label>Description</Form.Group.Label>
+        <Form.Group.TextArea />
+      </Form.Group>
+    </Form>
+  )
+}

@@ -5,6 +5,7 @@ import { FormLabel } from './FormLabel'
 import { Row } from '../../grid/Row'
 import { FormText } from './FormText'
 import { FormSelect } from './FormSelect'
+import { FormTextArea } from './FormTextArea'
 
 interface FormGroupProps {
   required?: boolean
@@ -28,6 +29,7 @@ function FormGroup({ required, controlId, children }: PropsWithChildren<FormGrou
 FormGroup.Label = FormLabel
 FormGroup.Input = FormInput
 FormGroup.Select = FormSelect
+FormGroup.TextArea = FormTextArea
 FormGroup.Text = FormText
 
 export { FormGroup }
