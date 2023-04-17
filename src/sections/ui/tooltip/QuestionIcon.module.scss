@@ -1,4 +1,10 @@
-svg
-:hover {
-  background-color: yellow;
+$fill-color: #99bcdb;
+$hover-color: #337ab7;
+
+svg {
+  color: $fill-color;
+}
+
+svg:hover {
+  color: $hover-color;
 }
