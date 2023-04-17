@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react'
+import React, { PropsWithChildren } from 'react'
 import { Form as FormBS } from 'react-bootstrap'
 import { FormInput } from './FormInput'
 import { FormLabel } from './FormLabel'
@@ -7,13 +7,18 @@ import { FormText } from './FormText'
 import { FormSelect } from './FormSelect'
 
 interface FormGroupProps {
+  required?: boolean
   controlId: string
 }
 
-function FormGroup({ controlId, children }: PropsWithChildren<FormGroupProps>) {
+function FormGroup({ required, controlId, children }: PropsWithChildren<FormGroupProps>) {
   return (
     <FormBS.Group controlId={controlId} className="mb-3" as={Row}>
-      {children}
+      {React.Children.map(children as JSX.Element, (child) => {
+        return React.cloneElement(child, {
+          required: required
+        })
+      })}
     </FormBS.Group>
   )
 }

@@ -2,10 +2,14 @@ import { PropsWithChildren } from 'react'
 import { Form as FormBS } from 'react-bootstrap'
 import { Col } from '../../grid/Col'
 
-export function FormSelect({ children }: PropsWithChildren) {
+interface FormSelectProps {
+  required?: boolean
+}
+
+export function FormSelect({ required, children }: PropsWithChildren<FormSelectProps>) {
   return (
     <Col sm={9}>
-      <FormBS.Select>{children}</FormBS.Select>
+      <FormBS.Select required={required}>{children}</FormBS.Select>
     </Col>
   )
 }

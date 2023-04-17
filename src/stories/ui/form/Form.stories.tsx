@@ -64,6 +64,17 @@ export const InputWithText: Story = {
   )
 }
 
+export const RequiredInput: Story = {
+  render: () => (
+    <Form>
+      <Form.Group controlId="basic-form-email" required>
+        <Form.Group.Label>Email</Form.Group.Label>
+        <Form.Group.Input type="email" placeholder="Email" />
+      </Form.Group>
+    </Form>
+  )
+}
+
 export const Select: Story = {
   render: () => (
     <Form>
