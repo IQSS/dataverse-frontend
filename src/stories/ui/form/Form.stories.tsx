@@ -1,6 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Form } from '../../../sections/ui/form/Form'
 
+/**
+ * ## Description
+ * A form is a collection of HTML elements used to gather user input. Allows users to enter data, such as text, numbers,
+ * or file uploads, and submit it to a server for processing.
+ *
+ * ## Usage guidelines
+ * ### Dos
+ * - Input labels:
+ *   - Each input field should have a label
+ *   - Labels should be short and descriptive
+ *   - They should be placed above the input field
+ *
+ * ### Don'ts
+ * - Leave inputs without labels
+ */
 const meta: Meta<typeof Form> = {
   title: 'UI/Form',
   component: Form,
