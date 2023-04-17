@@ -12,6 +12,9 @@ import { Form } from '../../../sections/ui/form/Form'
  *   - Each input field should have a label
  *   - Labels should be short and descriptive
  *   - They should be placed above the input field
+ * - Input text:
+ *  - If you need to describe an input text you can use the `Form.Group.Text` component
+ *  - Add the text below the input
  *
  * ### Don'ts
  * - Leave inputs without labels
@@ -39,6 +42,20 @@ export const Default: Story = {
       <Form.Group controlId="basic-form-password">
         <Form.Group.Label>Password</Form.Group.Label>
         <Form.Group.Input type="password" placeholder="Password" />
+      </Form.Group>
+    </Form>
+  )
+}
+export const InputWithText: Story = {
+  render: () => (
+    <Form>
+      <Form.Group controlId="basic-form-username">
+        <Form.Group.Label>Username</Form.Group.Label>
+        <Form.Group.Input type="text" placeholder="Username" />
+        <Form.Group.Text>
+          Create a valid username of 2 to 60 characters in length containing letters (a-Z), numbers
+          (0-9), dashes (-), underscores (_), and periods (.).
+        </Form.Group.Text>
       </Form.Group>
     </Form>
   )

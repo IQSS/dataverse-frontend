@@ -3,6 +3,7 @@ import { Form as FormBS } from 'react-bootstrap'
 import { FormInput } from './FormInput'
 import { FormLabel } from './FormLabel'
 import { Row } from '../../grid/Row'
+import { FormText } from './FormText'
 
 interface FormGroupProps {
   controlId: string
@@ -18,5 +19,6 @@ function FormGroup({ controlId, children }: PropsWithChildren<FormGroupProps>) {
 
 FormGroup.Label = FormLabel
 FormGroup.Input = FormInput
+FormGroup.Text = FormText
 
 export { FormGroup }
