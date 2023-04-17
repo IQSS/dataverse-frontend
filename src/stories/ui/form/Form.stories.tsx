@@ -15,6 +15,9 @@ import { Form } from '../../../sections/ui/form/Form'
  * - Input text:
  *  - If you need to describe an input text you can use the `Form.Group.Text` component
  *  - Add the text below the input
+ * - Select:
+ *  - First option should be the 'Select...' option
+ *  - The options should use the <option> tag
  *
  * ### Don'ts
  * - Leave inputs without labels
@@ -56,6 +59,22 @@ export const InputWithText: Story = {
           Create a valid username of 2 to 60 characters in length containing letters (a-Z), numbers
           (0-9), dashes (-), underscores (_), and periods (.).
         </Form.Group.Text>
+      </Form.Group>
+    </Form>
+  )
+}
+
+export const Select: Story = {
+  render: () => (
+    <Form>
+      <Form.Group controlId="basic-form-select">
+        <Form.Group.Label>Selector</Form.Group.Label>
+        <Form.Group.Select>
+          <option>Select...</option>
+          <option value="1">Option 1</option>
+          <option value="2">Option 2</option>
+          <option value="3">Option 3</option>
+        </Form.Group.Select>
       </Form.Group>
     </Form>
   )
