@@ -9,7 +9,7 @@ export function Footer() {
   const { t } = useTranslation('footer')
 
   return (
-    <footer data-testid="footer" className={styles.container}>
+    <footer className={styles.container}>
       <Container>
         <Row>
           <Col sm={8}>
