@@ -12,13 +12,15 @@ interface FormGroupProps {
 }
 
 function FormGroup({ required, controlId, children }: PropsWithChildren<FormGroupProps>) {
+  const childrenWithRequiredProp = React.Children.map(children as JSX.Element, (child) => {
+    return React.cloneElement(child, {
+      required: required
+    })
+  })
+
   return (
     <FormBS.Group controlId={controlId} className="mb-3" as={Row}>
-      {React.Children.map(children as JSX.Element, (child) => {
-        return React.cloneElement(child, {
-          required: required
-        })
-      })}
+      {childrenWithRequiredProp}
     </FormBS.Group>
   )
 }

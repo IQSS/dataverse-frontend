@@ -1,5 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { Form as FormBS } from 'react-bootstrap'
+import { RequiredInputSymbol } from './required-input-symbol/RequiredInputSymbol'
 
 interface FormLabelProps {
   required?: boolean
@@ -9,7 +10,7 @@ export function FormLabel({ required, children }: PropsWithChildren<FormLabelPro
   return (
     <FormBS.Label column sm={3}>
       {children}
-      {required && <span className="text-danger"> *</span>}
+      {required && <RequiredInputSymbol />}
     </FormBS.Label>
   )
 }
