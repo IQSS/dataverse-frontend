@@ -7,6 +7,7 @@ import { FormSelect } from './FormSelect'
 import { FormTextArea } from './FormTextArea'
 import { Col } from '../../grid/Col'
 import { Row } from '../../grid/Row'
+import { FormCheckbox } from './FormCheckbox'
 
 interface FormGroupProps {
   as?: typeof Col | typeof Row
@@ -34,5 +35,6 @@ FormGroup.Input = FormInput
 FormGroup.Select = FormSelect
 FormGroup.TextArea = FormTextArea
 FormGroup.Text = FormText
+FormGroup.Checkbox = FormCheckbox
 
 export { FormGroup }

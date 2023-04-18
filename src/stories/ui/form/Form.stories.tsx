@@ -170,3 +170,28 @@ export const TextArea: Story = {
     </Form>
   )
 }
+export const Checkbox: Story = {
+  render: () => (
+    <Form>
+      <Form.GroupWithMultipleFields title="Metadata Fields">
+        <Form.Group.Checkbox
+          defaultChecked
+          name="metadata-field"
+          label="Citation Metadata"
+          id="basic-form-citation-metadata"
+        />
+        <Form.Group.Checkbox
+          required
+          name="metadata-field"
+          label="Geospatial Metadata"
+          id="basic-form-geospatial-metadata"
+        />
+        <Form.Group.Checkbox
+          name="metadata-field"
+          label="Social Science and Humanities Metadata"
+          id="basic-form-social-science-metadata"
+        />
+      </Form.GroupWithMultipleFields>
+    </Form>
+  )
+}
