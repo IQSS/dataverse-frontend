@@ -89,6 +89,17 @@ export const RequiredField: Story = {
   )
 }
 
+export const ReadOnlyInput: Story = {
+  render: () => (
+    <Form>
+      <Form.Group controlId="basic-form-email">
+        <Form.Group.Label>Email</Form.Group.Label>
+        <Form.Group.Input type="email" readOnly value="text.email@example.com" />
+      </Form.Group>
+    </Form>
+  )
+}
+
 export const GroupWithMultipleFields: Story = {
   render: () => (
     <Form>
