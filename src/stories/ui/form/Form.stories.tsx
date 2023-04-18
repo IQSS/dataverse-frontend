@@ -94,52 +94,8 @@ export const ReadOnlyInput: Story = {
     <Form>
       <Form.Group controlId="basic-form-email">
         <Form.Group.Label>Email</Form.Group.Label>
-        <Form.Group.Input type="email" readOnly value="text.email@example.com" />
+        <Form.Group.Input type="email" readOnly defaultValue="text.email@example.com" />
       </Form.Group>
-    </Form>
-  )
-}
-
-export const GroupWithMultipleFields: Story = {
-  render: () => (
-    <Form>
-      <Form.GroupWithMultipleFields title="Author">
-        <Row>
-          <Form.Group as={Col} controlId="basic-form-name">
-            <Form.Group.Label>Name</Form.Group.Label>
-            <Form.Group.Input type="text" placeholder="Name" />
-            <Form.Group.Text>
-              Please, specify the authors name. If there are multiple authors, please separate them
-              with a comma.
-            </Form.Group.Text>
-          </Form.Group>
-          <Form.Group as={Col} controlId="basic-form-surname">
-            <Form.Group.Label>Surname</Form.Group.Label>
-            <Form.Group.Input type="text" placeholder="Surname" />
-          </Form.Group>
-        </Row>
-        <Row>
-          <Form.Group as={Col} controlId="basic-form-identifier-type">
-            <Form.Group.Label>Identifier Type</Form.Group.Label>
-            <Form.Group.Select>
-              <option>Select...</option>
-              <option value="1">Option 1</option>
-              <option value="2">Option 2</option>
-              <option value="3">Option 3</option>
-            </Form.Group.Select>
-          </Form.Group>
-          <Form.Group as={Col} controlId="basic-form-identifier">
-            <Form.Group.Label>Identifier</Form.Group.Label>
-            <Form.Group.Input type="text" placeholder="Identifier" />
-          </Form.Group>
-        </Row>
-        <Row>
-          <Form.Group as={Col} controlId="basic-form-description">
-            <Form.Group.Label>Description</Form.Group.Label>
-            <Form.Group.TextArea />
-          </Form.Group>
-        </Row>
-      </Form.GroupWithMultipleFields>
     </Form>
   )
 }
@@ -191,6 +147,94 @@ export const Checkbox: Story = {
           label="Social Science and Humanities Metadata"
           id="basic-form-social-science-metadata"
         />
+      </Form.GroupWithMultipleFields>
+    </Form>
+  )
+}
+
+export const GroupWithMultipleFields: Story = {
+  render: () => (
+    <Form>
+      <Form.GroupWithMultipleFields title="Author">
+        <Row>
+          <Form.Group as={Col} controlId="basic-form-name">
+            <Form.Group.Label>Name</Form.Group.Label>
+            <Form.Group.Input type="text" placeholder="Name" />
+            <Form.Group.Text>
+              Please, specify the authors name. If there are multiple authors, please separate them
+              with a comma.
+            </Form.Group.Text>
+          </Form.Group>
+          <Form.Group as={Col} controlId="basic-form-surname">
+            <Form.Group.Label>Surname</Form.Group.Label>
+            <Form.Group.Input type="text" placeholder="Surname" />
+          </Form.Group>
+        </Row>
+        <Row>
+          <Form.Group as={Col} controlId="basic-form-identifier-type">
+            <Form.Group.Label>Identifier Type</Form.Group.Label>
+            <Form.Group.Select>
+              <option>Select...</option>
+              <option value="1">Option 1</option>
+              <option value="2">Option 2</option>
+              <option value="3">Option 3</option>
+            </Form.Group.Select>
+          </Form.Group>
+          <Form.Group as={Col} controlId="basic-form-identifier">
+            <Form.Group.Label>Identifier</Form.Group.Label>
+            <Form.Group.Input type="text" placeholder="Identifier" />
+          </Form.Group>
+        </Row>
+        <Row>
+          <Form.Group as={Col} controlId="basic-form-description">
+            <Form.Group.Label>Description</Form.Group.Label>
+            <Form.Group.TextArea />
+          </Form.Group>
+        </Row>
+      </Form.GroupWithMultipleFields>
+    </Form>
+  )
+}
+
+export const FormValidation: Story = {
+  render: () => (
+    <Form validated>
+      <Form.GroupWithMultipleFields title="Author">
+        <Row>
+          <Form.Group as={Col} controlId="basic-form-name" required>
+            <Form.Group.Label>Name</Form.Group.Label>
+            <Form.Group.Input type="text" placeholder="Name" />
+            <Form.Group.Text>
+              Please, specify the authors name. If there are multiple authors, please separate them
+              with a comma.
+            </Form.Group.Text>
+          </Form.Group>
+          <Form.Group as={Col} controlId="basic-form-surname" required>
+            <Form.Group.Label>Surname</Form.Group.Label>
+            <Form.Group.Input type="text" placeholder="Surname" />
+          </Form.Group>
+        </Row>
+        <Row>
+          <Form.Group as={Col} controlId="basic-form-identifier-type">
+            <Form.Group.Label>Identifier Type</Form.Group.Label>
+            <Form.Group.Select>
+              <option>Select...</option>
+              <option value="1">Option 1</option>
+              <option value="2">Option 2</option>
+              <option value="3">Option 3</option>
+            </Form.Group.Select>
+          </Form.Group>
+          <Form.Group as={Col} controlId="basic-form-identifier" required>
+            <Form.Group.Label>Identifier</Form.Group.Label>
+            <Form.Group.Input type="text" placeholder="Identifier" defaultValue="123456" />
+          </Form.Group>
+        </Row>
+        <Row>
+          <Form.Group as={Col} controlId="basic-form-description">
+            <Form.Group.Label>Description</Form.Group.Label>
+            <Form.Group.TextArea />
+          </Form.Group>
+        </Row>
       </Form.GroupWithMultipleFields>
     </Form>
   )

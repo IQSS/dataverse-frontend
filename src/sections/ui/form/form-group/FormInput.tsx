@@ -5,7 +5,7 @@ interface FormInputProps {
   type: 'text' | 'email' | 'password'
   placeholder?: string
   required?: boolean
-  value?: string | number
+  defaultValue?: string | number
   readOnly?: boolean
   withinMultipleFieldsGroup?: boolean
 }
@@ -14,7 +14,7 @@ export function FormInput({
   type,
   placeholder,
   required,
-  value,
+  defaultValue,
   readOnly,
   withinMultipleFieldsGroup
 }: FormInputProps) {
@@ -24,7 +24,7 @@ export function FormInput({
         type={type}
         placeholder={placeholder}
         required={required}
-        value={value}
+        defaultValue={defaultValue}
         readOnly={readOnly}
         plaintext={readOnly}
       />

@@ -4,19 +4,19 @@ import { LayoutFormGroupElement } from './LayoutFormGroupElement'
 
 interface FormSelectProps {
   required?: boolean
-  value?: string | number
+  defaultValue?: string | number
   withinMultipleFieldsGroup?: boolean
 }
 
 export function FormSelect({
   required,
-  value,
+  defaultValue,
   withinMultipleFieldsGroup,
   children
 }: PropsWithChildren<FormSelectProps>) {
   return (
     <LayoutFormGroupElement withinMultipleFieldsGroup={withinMultipleFieldsGroup}>
-      <FormBS.Select required={required} value={value}>
+      <FormBS.Select required={required} defaultValue={defaultValue}>
         {children}
       </FormBS.Select>
     </LayoutFormGroupElement>

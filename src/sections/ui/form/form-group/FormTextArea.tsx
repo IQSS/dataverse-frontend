@@ -4,19 +4,19 @@ import { LayoutFormGroupElement } from './LayoutFormGroupElement'
 
 interface FormTextAreaProps {
   required?: boolean
-  value?: string | number
+  defaultValue?: string | number
   withinMultipleFieldsGroup?: boolean
 }
 
 export function FormTextArea({
   required,
-  value,
+  defaultValue,
   withinMultipleFieldsGroup,
   children
 }: PropsWithChildren<FormTextAreaProps>) {
   return (
     <LayoutFormGroupElement withinMultipleFieldsGroup={withinMultipleFieldsGroup}>
-      <FormBS.Control as="textarea" rows={5} required={required} value={value}>
+      <FormBS.Control as="textarea" rows={5} required={required} defaultValue={defaultValue}>
         {children}
       </FormBS.Control>
     </LayoutFormGroupElement>
