@@ -1,31 +1,12 @@
 import { Form as FormBS } from 'react-bootstrap'
+import * as React from 'react'
 
-interface FormCheckboxProps {
-  defaultChecked?: boolean
+interface FormCheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label?: string
   name?: string
   id?: string
-  required?: boolean
-  value?: string | number
 }
 
-export function FormCheckbox({
-  defaultChecked,
-  label,
-  name,
-  id,
-  required,
-  value
-}: FormCheckboxProps) {
-  return (
-    <FormBS.Check
-      defaultChecked={defaultChecked}
-      label={label}
-      name={name}
-      type="checkbox"
-      id={id}
-      required={required}
-      value={value}
-    />
-  )
+export function FormCheckbox({ label, name, id, ...props }: FormCheckboxProps) {
+  return <FormBS.Check label={label} name={name} type="checkbox" id={id} {...props} />
 }

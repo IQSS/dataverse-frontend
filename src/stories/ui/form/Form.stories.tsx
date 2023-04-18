@@ -83,7 +83,7 @@ export const RequiredField: Story = {
     <Form>
       <Form.Group controlId="basic-form-email" required>
         <Form.Group.Label>Email</Form.Group.Label>
-        <Form.Group.Input type="email" placeholder="Email" />
+        <Form.Group.Input type="email" placeholder="Email" aria-label="Disabled input example" />
       </Form.Group>
     </Form>
   )

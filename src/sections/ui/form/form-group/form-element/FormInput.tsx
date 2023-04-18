@@ -1,12 +1,12 @@
 import { Form as FormBS, InputGroup } from 'react-bootstrap'
 import { FormElementLayout } from './FormElementLayout'
 import { PropsWithChildren } from 'react'
+import * as React from 'react'
 
-interface FormInputProps {
+export type FormInputElement = HTMLInputElement | HTMLTextAreaElement
+
+interface FormInputProps extends React.HTMLAttributes<FormInputElement> {
   type: 'text' | 'email' | 'password'
-  placeholder?: string
-  required?: boolean
-  defaultValue?: string | number
   readOnly?: boolean
   prefix?: string
   withinMultipleFieldsGroup?: boolean
@@ -14,12 +14,10 @@ interface FormInputProps {
 
 export function FormInput({
   type,
-  placeholder,
-  required,
-  defaultValue,
   readOnly,
   prefix,
-  withinMultipleFieldsGroup
+  withinMultipleFieldsGroup,
+  ...props
 }: FormInputProps) {
   const FormInputPrefix = ({ children }: PropsWithChildren) => {
     return prefix ? (
@@ -35,14 +33,7 @@ export function FormInput({
   return (
     <FormElementLayout withinMultipleFieldsGroup={withinMultipleFieldsGroup}>
       <FormInputPrefix>
-        <FormBS.Control
-          type={type}
-          placeholder={placeholder}
-          required={required}
-          defaultValue={defaultValue}
-          readOnly={readOnly}
-          plaintext={readOnly}
-        />
+        <FormBS.Control type={type} readOnly={readOnly} plaintext={readOnly} {...props} />
       </FormInputPrefix>
     </FormElementLayout>
   )

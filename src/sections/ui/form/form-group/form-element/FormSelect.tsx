@@ -1,24 +1,20 @@
 import { PropsWithChildren } from 'react'
 import { Form as FormBS } from 'react-bootstrap'
 import { FormElementLayout } from './FormElementLayout'
+import * as React from 'react'
 
-interface FormSelectProps {
-  required?: boolean
-  defaultValue?: string | number
+interface FormSelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
   withinMultipleFieldsGroup?: boolean
 }
 
 export function FormSelect({
-  required,
-  defaultValue,
   withinMultipleFieldsGroup,
-  children
+  children,
+  ...props
 }: PropsWithChildren<FormSelectProps>) {
   return (
     <FormElementLayout withinMultipleFieldsGroup={withinMultipleFieldsGroup}>
-      <FormBS.Select required={required} defaultValue={defaultValue}>
-        {children}
-      </FormBS.Select>
+      <FormBS.Select {...props}>{children}</FormBS.Select>
     </FormElementLayout>
   )
 }

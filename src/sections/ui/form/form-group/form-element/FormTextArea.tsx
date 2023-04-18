@@ -1,22 +1,21 @@
 import { PropsWithChildren } from 'react'
 import { Form as FormBS } from 'react-bootstrap'
 import { FormElementLayout } from './FormElementLayout'
+import * as React from 'react'
 
-interface FormTextAreaProps {
-  required?: boolean
-  defaultValue?: string | number
+export type FormInputElement = HTMLInputElement | HTMLTextAreaElement
+interface FormTextAreaProps extends React.HTMLAttributes<FormInputElement> {
   withinMultipleFieldsGroup?: boolean
 }
 
 export function FormTextArea({
-  required,
-  defaultValue,
   withinMultipleFieldsGroup,
-  children
+  children,
+  ...props
 }: PropsWithChildren<FormTextAreaProps>) {
   return (
     <FormElementLayout withinMultipleFieldsGroup={withinMultipleFieldsGroup}>
-      <FormBS.Control as="textarea" rows={5} required={required} defaultValue={defaultValue}>
+      <FormBS.Control as="textarea" rows={5} {...props}>
         {children}
       </FormBS.Control>
     </FormElementLayout>
