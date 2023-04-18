@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { Form as FormBS } from 'react-bootstrap'
-import { LayoutFormGroupElement } from './LayoutFormGroupElement'
+import { FormElementLayout } from './FormElementLayout'
 
 interface FormSelectProps {
   required?: boolean
@@ -15,10 +15,10 @@ export function FormSelect({
   children
 }: PropsWithChildren<FormSelectProps>) {
   return (
-    <LayoutFormGroupElement withinMultipleFieldsGroup={withinMultipleFieldsGroup}>
+    <FormElementLayout withinMultipleFieldsGroup={withinMultipleFieldsGroup}>
       <FormBS.Select required={required} defaultValue={defaultValue}>
         {children}
       </FormBS.Select>
-    </LayoutFormGroupElement>
+    </FormElementLayout>
   )
 }

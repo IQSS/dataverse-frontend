@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { Form as FormBS } from 'react-bootstrap'
-import { LayoutFormGroupElement } from './LayoutFormGroupElement'
+import { FormElementLayout } from './FormElementLayout'
 
 interface FormTextAreaProps {
   required?: boolean
@@ -15,10 +15,10 @@ export function FormTextArea({
   children
 }: PropsWithChildren<FormTextAreaProps>) {
   return (
-    <LayoutFormGroupElement withinMultipleFieldsGroup={withinMultipleFieldsGroup}>
+    <FormElementLayout withinMultipleFieldsGroup={withinMultipleFieldsGroup}>
       <FormBS.Control as="textarea" rows={5} required={required} defaultValue={defaultValue}>
         {children}
       </FormBS.Control>
-    </LayoutFormGroupElement>
+    </FormElementLayout>
   )
 }

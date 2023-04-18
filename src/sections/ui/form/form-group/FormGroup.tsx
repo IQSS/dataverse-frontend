@@ -1,13 +1,13 @@
 import React, { PropsWithChildren } from 'react'
 import { Form as FormBS } from 'react-bootstrap'
-import { FormInput } from './FormInput'
-import { FormLabel } from './FormLabel'
-import { FormText } from './FormText'
-import { FormSelect } from './FormSelect'
-import { FormTextArea } from './FormTextArea'
+import { FormInput } from './form-element/FormInput'
+import { FormLabel } from './form-element/FormLabel'
+import { FormText } from './form-element/FormText'
+import { FormSelect } from './form-element/FormSelect'
+import { FormTextArea } from './form-element/FormTextArea'
 import { Col } from '../../grid/Col'
 import { Row } from '../../grid/Row'
-import { FormCheckbox } from './FormCheckbox'
+import { FormCheckbox } from './form-element/FormCheckbox'
 
 interface FormGroupProps {
   as?: typeof Col | typeof Row

@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { Form as FormBS } from 'react-bootstrap'
-import { Col } from '../../grid/Col'
+import { Col } from '../../../grid/Col'
 
 interface FormTextProps {
   withinMultipleFieldsGroup?: boolean

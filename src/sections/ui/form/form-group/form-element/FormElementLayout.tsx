@@ -1,10 +1,10 @@
 import { PropsWithChildren } from 'react'
-import { Col } from '../../grid/Col'
+import { Col } from '../../../grid/Col'
 
 interface LayoutFormGroupElementProps {
   withinMultipleFieldsGroup?: boolean
 }
-export function LayoutFormGroupElement({
+export function FormElementLayout({
   withinMultipleFieldsGroup,
   children
 }: PropsWithChildren<LayoutFormGroupElementProps>) {

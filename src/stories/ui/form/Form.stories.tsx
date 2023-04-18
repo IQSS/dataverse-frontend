@@ -100,6 +100,17 @@ export const ReadOnlyInput: Story = {
   )
 }
 
+export const InputWithPrefix: Story = {
+  render: () => (
+    <Form>
+      <Form.Group controlId="basic-form-identifier">
+        <Form.Group.Label>Identifier</Form.Group.Label>
+        <Form.Group.Input type="text" placeholder="Identifier" prefix="https://dataverse.org/" />
+      </Form.Group>
+    </Form>
+  )
+}
+
 export const Select: Story = {
   render: () => (
     <Form>
