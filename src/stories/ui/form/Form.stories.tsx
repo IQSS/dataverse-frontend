@@ -97,6 +97,10 @@ export const GroupWithMultipleFields: Story = {
           <Form.Group as={Col} controlId="basic-form-name">
             <Form.Group.Label>Name</Form.Group.Label>
             <Form.Group.Input type="text" placeholder="Name" />
+            <Form.Group.Text>
+              Please, specify the authors name. If there are multiple authors, please separate them
+              with a comma.
+            </Form.Group.Text>
           </Form.Group>
           <Form.Group as={Col} controlId="basic-form-surname">
             <Form.Group.Label>Surname</Form.Group.Label>
