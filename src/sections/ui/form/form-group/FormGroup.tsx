@@ -2,25 +2,28 @@ import React, { PropsWithChildren } from 'react'
 import { Form as FormBS } from 'react-bootstrap'
 import { FormInput } from './FormInput'
 import { FormLabel } from './FormLabel'
-import { Row } from '../../grid/Row'
 import { FormText } from './FormText'
 import { FormSelect } from './FormSelect'
 import { FormTextArea } from './FormTextArea'
+import { Col } from '../../grid/Col'
+import { Row } from '../../grid/Row'
 
 interface FormGroupProps {
+  as?: typeof Col | typeof Row
   required?: boolean
   controlId: string
 }
 
-function FormGroup({ required, controlId, children }: PropsWithChildren<FormGroupProps>) {
+function FormGroup({ as = Row, required, controlId, children }: PropsWithChildren<FormGroupProps>) {
   const childrenWithRequiredProp = React.Children.map(children as JSX.Element, (child) => {
     return React.cloneElement(child, {
-      required: required
+      required: required,
+      withinMultipleFieldsGroup: as === Col
     })
   })
 
   return (
-    <FormBS.Group controlId={controlId} className="mb-3" as={Row}>
+    <FormBS.Group controlId={controlId} className="mb-3" as={as}>
       {childrenWithRequiredProp}
     </FormBS.Group>
   )

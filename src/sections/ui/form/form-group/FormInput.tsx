@@ -1,16 +1,22 @@
 import { Form as FormBS } from 'react-bootstrap'
-import { Col } from '../../grid/Col'
+import { LayoutFormGroupElement } from './LayoutFormGroupElement'
 
 interface FormInputProps {
   type: 'text' | 'email' | 'password'
   placeholder?: string
   required?: boolean
+  withinMultipleFieldsGroup?: boolean
 }
 
-export function FormInput({ type, placeholder, required }: FormInputProps) {
+export function FormInput({
+  type,
+  placeholder,
+  required,
+  withinMultipleFieldsGroup
+}: FormInputProps) {
   return (
-    <Col sm={9}>
+    <LayoutFormGroupElement withinMultipleFieldsGroup={withinMultipleFieldsGroup}>
       <FormBS.Control type={type} placeholder={placeholder} required={required} />
-    </Col>
+    </LayoutFormGroupElement>
   )
 }

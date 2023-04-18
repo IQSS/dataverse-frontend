@@ -1,17 +1,22 @@
 import { PropsWithChildren } from 'react'
-import { Col } from '../../grid/Col'
 import { Form as FormBS } from 'react-bootstrap'
+import { LayoutFormGroupElement } from './LayoutFormGroupElement'
 
 interface FormTextAreaProps {
   required?: boolean
+  withinMultipleFieldsGroup?: boolean
 }
 
-export function FormTextArea({ required, children }: PropsWithChildren<FormTextAreaProps>) {
+export function FormTextArea({
+  required,
+  withinMultipleFieldsGroup,
+  children
+}: PropsWithChildren<FormTextAreaProps>) {
   return (
-    <Col sm={9}>
+    <LayoutFormGroupElement withinMultipleFieldsGroup={withinMultipleFieldsGroup}>
       <FormBS.Control as="textarea" rows={5} required={required}>
         {children}
       </FormBS.Control>
-    </Col>
+    </LayoutFormGroupElement>
   )
 }

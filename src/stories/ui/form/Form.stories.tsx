@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Form } from '../../../sections/ui/form/Form'
+import { Col } from '../../../sections/ui/grid/Col'
+import { Row } from '../../../sections/ui/grid/Row'
 
 /**
  * ## Description
@@ -38,6 +40,17 @@ export const Default: Story = {
         <Form.Group.Label>Username</Form.Group.Label>
         <Form.Group.Input type="text" placeholder="Username" />
       </Form.Group>
+    </Form>
+  )
+}
+
+export const AllInputTypes: Story = {
+  render: () => (
+    <Form>
+      <Form.Group controlId="basic-form-username">
+        <Form.Group.Label>Username</Form.Group.Label>
+        <Form.Group.Input type="text" placeholder="Username" />
+      </Form.Group>
       <Form.Group controlId="basic-form-email">
         <Form.Group.Label>Email</Form.Group.Label>
         <Form.Group.Input type="email" placeholder="Email" />
@@ -49,7 +62,8 @@ export const Default: Story = {
     </Form>
   )
 }
-export const InputWithText: Story = {
+
+export const FieldWithText: Story = {
   render: () => (
     <Form>
       <Form.Group controlId="basic-form-username">
@@ -64,13 +78,53 @@ export const InputWithText: Story = {
   )
 }
 
-export const RequiredInput: Story = {
+export const RequiredField: Story = {
   render: () => (
     <Form>
       <Form.Group controlId="basic-form-email" required>
         <Form.Group.Label>Email</Form.Group.Label>
         <Form.Group.Input type="email" placeholder="Email" />
       </Form.Group>
+    </Form>
+  )
+}
+
+export const GroupWithMultipleFields: Story = {
+  render: () => (
+    <Form>
+      <Form.GroupWithMultipleFields title="Author">
+        <Row>
+          <Form.Group as={Col} controlId="basic-form-name">
+            <Form.Group.Label>Name</Form.Group.Label>
+            <Form.Group.Input type="text" placeholder="Name" />
+          </Form.Group>
+          <Form.Group as={Col} controlId="basic-form-surname">
+            <Form.Group.Label>Surname</Form.Group.Label>
+            <Form.Group.Input type="text" placeholder="Surname" />
+          </Form.Group>
+        </Row>
+        <Row>
+          <Form.Group as={Col} controlId="basic-form-identifier-type">
+            <Form.Group.Label>Identifier Type</Form.Group.Label>
+            <Form.Group.Select>
+              <option>Select...</option>
+              <option value="1">Option 1</option>
+              <option value="2">Option 2</option>
+              <option value="3">Option 3</option>
+            </Form.Group.Select>
+          </Form.Group>
+          <Form.Group as={Col} controlId="basic-form-identifier">
+            <Form.Group.Label>Identifier</Form.Group.Label>
+            <Form.Group.Input type="text" placeholder="Identifier" />
+          </Form.Group>
+        </Row>
+        <Row>
+          <Form.Group as={Col} controlId="basic-form-description">
+            <Form.Group.Label>Description</Form.Group.Label>
+            <Form.Group.TextArea />
+          </Form.Group>
+        </Row>
+      </Form.GroupWithMultipleFields>
     </Form>
   )
 }

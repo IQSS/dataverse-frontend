@@ -1,15 +1,20 @@
 import { PropsWithChildren } from 'react'
 import { Form as FormBS } from 'react-bootstrap'
-import { Col } from '../../grid/Col'
+import { LayoutFormGroupElement } from './LayoutFormGroupElement'
 
 interface FormSelectProps {
   required?: boolean
+  withinMultipleFieldsGroup?: boolean
 }
 
-export function FormSelect({ required, children }: PropsWithChildren<FormSelectProps>) {
+export function FormSelect({
+  required,
+  withinMultipleFieldsGroup,
+  children
+}: PropsWithChildren<FormSelectProps>) {
   return (
-    <Col sm={9}>
+    <LayoutFormGroupElement withinMultipleFieldsGroup={withinMultipleFieldsGroup}>
       <FormBS.Select required={required}>{children}</FormBS.Select>
-    </Col>
+    </LayoutFormGroupElement>
   )
 }
