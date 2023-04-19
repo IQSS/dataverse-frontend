@@ -1,17 +1,17 @@
 import { renderWithRouter } from '../../renderWithRouter'
 import { screen } from '@testing-library/react'
 import { Layout } from '../../../src/sections/layout/Layout'
-import { createSandbox, SinonSandbox } from 'sinon';
-import { HeaderFactory } from '../../../src/sections/layout/header/HeaderFactory';
-import { HeaderHelper } from '../../testHelpers/sections/layout/header/HeaderHelper';
+import { createSandbox, SinonSandbox } from 'sinon'
+import { HeaderFactory } from '../../../src/sections/layout/header/HeaderFactory'
+import { HeaderHelper } from '../../testHelpers/sections/layout/header/HeaderHelper'
 
 describe('Layout', () => {
-  const sandbox: SinonSandbox = createSandbox();
+  const sandbox: SinonSandbox = createSandbox()
 
   afterEach(() => {
-    sandbox.restore();
+    sandbox.restore()
     sandbox.stub(HeaderFactory, 'create').returns(HeaderHelper.createLoggedInUserHeader(sandbox))
-  });
+  })
 
   it('renders the header', () => {
     renderWithRouter(<Layout />)

@@ -19,13 +19,14 @@ export function Header({ getCurrentAuthenticatedUser }: HeaderProps) {
   const [user, setUser] = useState<User>()
 
   useEffect(() => {
-    getCurrentAuthenticatedUser.execute()
+    getCurrentAuthenticatedUser
+      .execute()
       .then((authenticatedUser: AuthenticatedUser) => {
         setUser({ name: authenticatedUser.displayName })
       })
       .catch((error) => {
         console.log(error.message)
-      });
+      })
   }, [getCurrentAuthenticatedUser])
 
   return (
