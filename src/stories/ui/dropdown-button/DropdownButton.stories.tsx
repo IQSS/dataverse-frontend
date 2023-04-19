@@ -4,9 +4,45 @@ import { DropdownButtonItem } from '../../../sections/ui/dropdown-button/dropdow
 import { Icon } from '../../../sections/ui/icon.enum'
 import { CanvasFixedHeight } from '../CanvasFixedHeight'
 
+/**
+ * ## Description
+ * A dropdown button is a graphical user interface element that displays a list of options when it is clicked.
+ *
+ * Dropdown buttons can be used to present a compact and organized set of choices to the user. They are
+ * often used in forms, search bars, navigation menus, and other user interfaces where space is limited or where the number
+ * of options is too large to display at once.
+ *
+ * ## Usage guidelines
+ * Use dropdowns for a list of related options and try to keep the list short.
+ *
+ * ### Dos
+ * - Use the dropdown as a navigation tool to goto a href related to the dropdown title
+ *
+ * ### Don'ts
+ *
+ * - Use the dropdown as a select input
+ *
+ * ## SASS variables
+ *
+ * ```
+ * $dv-primary-text-color
+ * $dv-primary-text-shadow-color
+ * $dv-primary-background-color
+ * $dv-primary-background-color-disabled
+ * $dv-primary-border-color
+ *
+ * $dv-secondary-text-color
+ * $dv-secondary-text-shadow-color
+ * $dv-secondary-background-color
+ * $dv-secondary-border-color
+ * $dv-secondary-background-color-disabled
+ * ```
+ */
+
 const meta: Meta<typeof DropdownButton> = {
   title: 'UI/Dropdown Button',
-  component: DropdownButton
+  component: DropdownButton,
+  tags: ['autodocs']
 }
 
 export default meta
@@ -24,7 +60,7 @@ export const Default: Story = {
   )
 }
 
-export const Variants: Story = {
+export const AllVariantsAtAGlance: Story = {
   render: () => (
     <CanvasFixedHeight height={150}>
       <DropdownButton withSpacing title="Primary" id="dropdown-1" variant="primary">
@@ -41,7 +77,12 @@ export const Variants: Story = {
   )
 }
 
-export const Primary: Story = {
+/**
+ * The primary dropdown should be used for the main or most important actions in the user interface.
+ *
+ * Use only one primary dropdown. Any remaining calls to action should be represented as variants with lower emphasis.
+ */
+export const PrimaryDropdown: Story = {
   render: () => (
     <CanvasFixedHeight height={150}>
       <DropdownButton title="Primary" id="dropdown-primary" variant="primary">
@@ -53,7 +94,11 @@ export const Primary: Story = {
   )
 }
 
-export const Secondary: Story = {
+/**
+ * The secondary dropdown should be used to provide additional options or actions to the user that are not as critical or
+ * urgent as the primary actions.
+ */
+export const SecondaryDropdown: Story = {
   render: () => (
     <CanvasFixedHeight height={150}>
       <DropdownButton title="Secondary" id="dropdown-secondary" variant="secondary">
@@ -82,7 +127,11 @@ export const WithIcon: Story = {
   )
 }
 
-export const Navigation: Story = {
+/**
+ * This is an example use case for a navigation dropdown button.
+ */
+export const UseCaseNavigation: Story = {
+  name: 'Example use case: Navigation',
   render: () => (
     <CanvasFixedHeight height={150}>
       <DropdownButton withSpacing title="Edit" id="dropdown-navigation" variant="primary">

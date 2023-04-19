@@ -1,5 +1,6 @@
 import type { Preview } from '@storybook/react'
 import { ThemeProvider } from '../src/sections/ui/theme/ThemeProvider'
+import DocumentationTemplate from '../src/stories/ui/DocumentationTemplate.mdx'
 
 const preview: Preview = {
   parameters: {
@@ -9,6 +10,9 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/
       }
+    },
+    docs: {
+      page: DocumentationTemplate
     }
   },
   decorators: [
