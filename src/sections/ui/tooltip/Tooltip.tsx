@@ -14,8 +14,8 @@ export function Tooltip({ placement, message }: TooltipProps) {
       <OverlayTrigger
         key={placement}
         placement={placement}
-        overlay={<TooltipBS id={`tooltip-${placement}`}>{message}</TooltipBS>}>
-        <span>
+        overlay={<TooltipBS>{message}</TooltipBS>}>
+        <span role="img">
           <QuestionIcon></QuestionIcon>
         </span>
       </OverlayTrigger>

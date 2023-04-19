@@ -11,8 +11,8 @@ describe('Tooltip', () => {
     render(<Tooltip {...defaultProps} />)
   })
   it('renders the tooltip on mouseOver', async () => {
-    const { container, findByRole } = render(<Tooltip {...defaultProps} />)
-    const svg = container.querySelector('span > svg') as HTMLElement
+    const { getByRole, findByRole } = render(<Tooltip {...defaultProps} />)
+    const svg = getByRole('img')
     expect(svg).toBeInTheDocument()
     fireEvent.mouseOver(svg)
     expect(await findByRole('tooltip')).toBeInTheDocument()
