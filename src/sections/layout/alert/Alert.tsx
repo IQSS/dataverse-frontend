@@ -33,7 +33,10 @@ export function Alert({ variant, children }: AlertProps) {
   }
   return (
     <AlertBS variant={variant}>
-      <span aria-label={'alert-icon-' + variant}>{getAlertIcon(variant)}</span> &nbsp;
+      <span role="img" aria-label={'alert-icon-' + variant}>
+        {getAlertIcon(variant)}
+      </span>{' '}
+      &nbsp;
       {children}
     </AlertBS>
   )
