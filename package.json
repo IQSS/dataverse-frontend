@@ -116,6 +116,8 @@
     "stylelint-order": "^6.0.2",
     "vite": "^4.1.4",
     "vitest": "^0.29.2",
+    "@types/sinon": "^10.0.13",
+    "sinon": "^15.0.3",
     "js-dataverse": "file:./js-dataverse-2.0.0.tgz"
   }
 }

@@ -3,25 +3,30 @@ import { useTranslation } from 'react-i18next'
 import { Navbar } from '../../ui/navbar/Navbar'
 import { Route } from '../../route.enum'
 import { useEffect, useState } from 'react'
-import { getCurrentAuthenticatedUser, AuthenticatedUser } from 'js-dataverse/dist/users'
+import { AuthenticatedUser } from 'js-dataverse/dist/users'
+import { GetCurrentAuthenticatedUser } from '../../../useCases/GetCurrentAuthenticatedUser'
 
 type User = {
   name: string
 }
 
 interface HeaderProps {
-  user?: User
+  getCurrentAuthenticatedUser: GetCurrentAuthenticatedUser
 }
 
-export function Header({ user }: HeaderProps) {
+export function Header({ getCurrentAuthenticatedUser }: HeaderProps) {
   const { t } = useTranslation('header')
-  const [userState, setUserState] = useState(user)
+  const [user, setUser] = useState<User>()
 
   useEffect(() => {
-    getCurrentAuthenticatedUser.execute().then((authenticatedUser: AuthenticatedUser) => {
-      setUserState({ name: authenticatedUser.displayName })
-    })
-  }, [])
+    getCurrentAuthenticatedUser.execute()
+      .then((authenticatedUser: AuthenticatedUser) => {
+        setUser({ name: authenticatedUser.displayName })
+      })
+      .catch((error) => {
+        console.log(error.message)
+      });
+  }, [getCurrentAuthenticatedUser])
 
   return (
     <Navbar
@@ -30,8 +35,8 @@ export function Header({ user }: HeaderProps) {
         href: Route.HOME,
         logoImgSrc: logo
       }}>
-      {userState ? (
-        <Navbar.Dropdown title={userState.name} id="dropdown-user">
+      {user ? (
+        <Navbar.Dropdown title={user.name} id="dropdown-user">
           <Navbar.Dropdown.Item href={Route.LOG_OUT}>{t('logOut')}</Navbar.Dropdown.Item>
         </Navbar.Dropdown>
       ) : (
