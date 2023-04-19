@@ -1,10 +1,20 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Alert } from '../../../sections/layout/alert/Alert'
 import { AlertLink } from '../../../sections/layout/alert/AlertLink'
-
+/**
+ * ## Description
+ * This component is for notifications based on user actions.
+ * The type of message is controlled by the variant property.
+ *
+ * To include a link in the message, use the AlertLink component, which will style
+ * link in the same colors as the alert message.
+ *
+ *
+ */
 const meta: Meta<typeof Alert> = {
   title: 'Layout/Alert',
-  component: Alert
+  component: Alert,
+  tags: ['autodocs']
 }
 
 export default meta
