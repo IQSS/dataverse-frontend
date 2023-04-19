@@ -1,9 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Tooltip } from '../../../sections/ui/tooltip/Tooltip'
-
+/**
+ * ## Description
+ * This tooltip is a question mark icon.
+ * The orientation of the tooltip message is controlled by the placement property.
+ *
+ *
+ */
 const meta: Meta<typeof Tooltip> = {
   title: 'UI/Tooltip',
-  component: Tooltip
+  component: Tooltip,
+  tags: ['autodocs']
 }
 
 export default meta
