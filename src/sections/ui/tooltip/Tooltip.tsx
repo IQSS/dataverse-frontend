@@ -15,7 +15,7 @@ export function Tooltip({ placement, message }: TooltipProps) {
         key={placement}
         placement={placement}
         overlay={<TooltipBS>{message}</TooltipBS>}>
-        <span role="img">
+        <span role="img" aria-label="tooltip icon">
           <QuestionIcon></QuestionIcon>
         </span>
       </OverlayTrigger>
