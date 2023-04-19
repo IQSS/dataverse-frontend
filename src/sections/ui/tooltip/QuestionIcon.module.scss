@@ -1,10 +1,9 @@
-$fill-color: #99bcdb;
-$hover-color: #337ab7;
+@import "src/sections/ui/assets/styles/design-tokens/colors.module";
 
 svg {
-  color: $fill-color;
+  color: $dv-tooltip-color;
 }
 
 svg:hover {
-  color: $hover-color;
+  color: $dv-tooltip-hover-color;
 }
