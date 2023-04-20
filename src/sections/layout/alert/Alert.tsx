@@ -9,11 +9,11 @@ import {
 
 interface AlertProps {
   variant: 'success' | 'danger' | 'warning' | 'info'
-  dismissible: boolean
+  dismissible?: boolean
   children: ReactNode
 }
 
-export function Alert({ variant, dismissible, children }: AlertProps) {
+export function Alert({ variant, dismissible = true, children }: AlertProps) {
   function getAlertIcon(variant: string) {
     let icon
     switch (variant) {

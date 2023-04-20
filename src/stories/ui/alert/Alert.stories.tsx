@@ -9,6 +9,9 @@ import { AlertLink } from '../../../sections/layout/alert/AlertLink'
  * To include a link in the message, use the AlertLink component, which will style
  * link in the same colors as the alert message.
  *
+ * By default, the Alert message is dismissible, make it not dismissible
+ * by setting dismissible={false}.
+ *
  *
  */
 const meta: Meta<typeof Alert> = {
@@ -22,38 +25,38 @@ type Story = StoryObj<typeof Alert>
 
 export const Default: Story = {
   render: () => (
-    <Alert variant="success" dismissible={false}>
+    <Alert variant="success">
       <b>Success!</b> This is a detailed message.
     </Alert>
   )
 }
 export const WithLink: Story = {
   render: () => (
-    <Alert variant="success" dismissible={false}>
+    <Alert variant="success">
       Link with message <AlertLink href="#" link="here is a link"></AlertLink>
     </Alert>
   )
 }
-export const Dismissible: Story = {
+export const NotDismissible: Story = {
   render: () => (
-    <Alert variant="success" dismissible={true}>
-      Message in dismissible alert.
+    <Alert variant="info" dismissible={false}>
+      This alert is not dismissible.
     </Alert>
   )
 }
 export const AllVariantsAtAGlance: Story = {
   render: () => (
     <>
-      <Alert variant="success" dismissible={false}>
+      <Alert variant="success">
         <b>Success!</b> This is a detailed message.
       </Alert>
-      <Alert variant="info" dismissible={false}>
+      <Alert variant="info">
         <b>Information</b> This is a detailed message.
       </Alert>
-      <Alert variant="warning" dismissible={false}>
+      <Alert variant="warning">
         <b>Warning</b> This is a detailed message.
       </Alert>
-      <Alert variant="danger" dismissible={false}>
+      <Alert variant="danger">
         <b>Error!</b> This is a detailed message.
       </Alert>
     </>
