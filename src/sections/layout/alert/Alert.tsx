@@ -33,14 +33,16 @@ export function Alert({ variant, dismissible = true, children }: AlertProps) {
 
   const [show, setShow] = useState(true)
   return (
-    show && (
-      <AlertBS variant={variant} onClose={() => setShow(false)} dismissible={dismissible}>
-        <span role="img" aria-label={'alert-icon-' + variant}>
-          {getAlertIcon(variant)}
-        </span>{' '}
-        &nbsp;
-        {children}
-      </AlertBS>
-    )
+    <>
+      {show && (
+        <AlertBS variant={variant} onClose={() => setShow(false)} dismissible={dismissible}>
+          <span role="img" aria-label={`alert-icon-${variant}`}>
+            {getAlertIcon(variant)}
+          </span>{' '}
+          &nbsp;
+          {children}
+        </AlertBS>
+      )}
+    </>
   )
 }
