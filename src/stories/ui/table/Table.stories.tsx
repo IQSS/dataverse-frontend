@@ -1,6 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Table } from '../../../sections/ui/table/Table'
 
+/**
+ * ## Description
+ * A table is a UI element that displays data in a structured format, typically in rows and columns. Tables can be used
+ * to organize and present large amounts of data in a user-friendly and easily readable format.
+ *
+ * ## Usage guidelines
+ *  This table is not intended to be used for complex data manipulation. It is intended to be used for displaying data
+ *
+ * ### Dos
+ * - Use clear and concise table headings that accurately describe the data being presented
+ * - Use tables to display data that is related to each other
+ * - Use tables to display data that is not easily displayed in a list
+ *
+ * ### Don'ts
+ * - Don't use tables for layout purposes, such as aligning images or text. Use CSS instead.
+ */
 const meta: Meta<typeof Table> = {
   title: 'UI/Table',
   component: Table,
