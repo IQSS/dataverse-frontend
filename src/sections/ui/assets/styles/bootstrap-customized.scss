@@ -44,6 +44,7 @@ $link-hover-color: $dv-link-hover-color;
 @import "bootstrap/scss/buttons";
 @import "bootstrap/scss/dropdown";
 
+
 // Grid
 @import "node_modules/bootstrap/scss/utilities";
 @import "node_modules/bootstrap/scss/utilities/api";
@@ -55,6 +56,9 @@ $link-hover-color: $dv-link-hover-color;
 
 // Alert
 @import "bootstrap/scss/alert";
+
+// Close button for Alert
+@import "bootstrap/scss/close";
 
 // Navbar
 
