@@ -22,32 +22,38 @@ type Story = StoryObj<typeof Alert>
 
 export const Default: Story = {
   render: () => (
-    <Alert variant="success">
+    <Alert variant="success" dismissible>
       <b>Success!</b> This is a detailed message.
     </Alert>
   )
 }
 export const WithLink: Story = {
   render: () => (
-    <Alert variant="success">
+    <Alert variant="success" dismissible={false}>
       Link with message <AlertLink href="#" link="here is a link"></AlertLink>
     </Alert>
   )
 }
-
+export const Dismissible: Story = {
+  render: () => (
+    <Alert variant="success" dismissible={true}>
+      Link with message <AlertLink href="#" link="here is a link"></AlertLink>
+    </Alert>
+  )
+}
 export const AllVariantsAtAGlance: Story = {
   render: () => (
     <>
-      <Alert variant="success">
+      <Alert variant="success" dismissible={false}>
         <b>Success!</b> This is a detailed message.
       </Alert>
-      <Alert variant="info">
+      <Alert variant="info" dismissible={false}>
         <b>Information</b> This is a detailed message.
       </Alert>
-      <Alert variant="warning">
+      <Alert variant="warning" dismissible={false}>
         <b>Warning</b> This is a detailed message.
       </Alert>
-      <Alert variant="danger">
+      <Alert variant="danger" dismissible={false}>
         <b>Error!</b> This is a detailed message.
       </Alert>
     </>

@@ -1,5 +1,5 @@
 import { Alert as AlertBS } from 'react-bootstrap'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import {
   CheckCircleFill,
   ExclamationCircleFill,
@@ -9,10 +9,11 @@ import {
 
 interface AlertProps {
   variant: 'success' | 'danger' | 'warning' | 'info'
+  dismissible: boolean
   children: ReactNode
 }
 
-export function Alert({ variant, children }: AlertProps) {
+export function Alert({ variant, dismissible, children }: AlertProps) {
   function getAlertIcon(variant: string) {
     let icon
     switch (variant) {
@@ -31,13 +32,18 @@ export function Alert({ variant, children }: AlertProps) {
     }
     return icon
   }
-  return (
-    <AlertBS variant={variant}>
-      <span role="img" aria-label={'alert-icon-' + variant}>
-        {getAlertIcon(variant)}
-      </span>{' '}
-      &nbsp;
-      {children}
-    </AlertBS>
-  )
+  const [show, setShow] = useState(true)
+  if (show) {
+    return (
+      <AlertBS variant={variant} onClose={() => setShow(false)} dismissible={dismissible}>
+        <span role="img" aria-label={'alert-icon-' + variant}>
+          {getAlertIcon(variant)}
+        </span>{' '}
+        &nbsp;
+        {children}
+      </AlertBS>
+    )
+  } else {
+    return null
+  }
 }
