@@ -2,9 +2,9 @@ import { Form as FormBS } from 'react-bootstrap'
 import * as React from 'react'
 
 interface FormCheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
-  label?: string
-  name?: string
-  id?: string
+  id: string
+  label: string
+  name: string
 }
 
 export function FormCheckbox({ label, name, id, ...props }: FormCheckboxProps) {
