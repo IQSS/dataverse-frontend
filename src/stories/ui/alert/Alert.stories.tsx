@@ -24,11 +24,7 @@ export default meta
 type Story = StoryObj<typeof Alert>
 
 export const Default: Story = {
-  render: () => (
-    <Alert variant="success">
-      <b>Success!</b> This is a detailed message.
-    </Alert>
-  )
+  render: () => <Alert variant="success">This is a detailed message.</Alert>
 }
 export const WithLink: Story = {
   render: () => (
@@ -44,21 +40,21 @@ export const NotDismissible: Story = {
     </Alert>
   )
 }
+
+export const CustomHeading: Story = {
+  render: () => (
+    <Alert variant="info" customHeading="Something Happened!">
+      This alert has a custom heading.
+    </Alert>
+  )
+}
 export const AllVariantsAtAGlance: Story = {
   render: () => (
     <>
-      <Alert variant="success">
-        <b>Success!</b> This is a detailed message.
-      </Alert>
-      <Alert variant="info">
-        <b>Information</b> This is a detailed message.
-      </Alert>
-      <Alert variant="warning">
-        <b>Warning</b> This is a detailed message.
-      </Alert>
-      <Alert variant="danger">
-        <b>Error!</b> This is a detailed message.
-      </Alert>
+      <Alert variant="success">This is a detailed message.</Alert>
+      <Alert variant="info">This is a detailed message.</Alert>
+      <Alert variant="warning">This is a detailed message.</Alert>
+      <Alert variant="danger">This is a detailed message.</Alert>
     </>
   )
 }

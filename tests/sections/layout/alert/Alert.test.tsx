@@ -10,7 +10,7 @@ describe('Alert component', () => {
     )
     expect(getByRole('alert')).toBeInTheDocument()
     expect(getByLabelText('alert-icon-success')).toBeInTheDocument()
-    expect(getByText('This is a success message')).toBeInTheDocument()
+    expect(getByText('This is a success message', { exact: false })).toBeInTheDocument()
   })
 
   test('renders correctly with danger variant', () => {
@@ -21,7 +21,7 @@ describe('Alert component', () => {
     )
     expect(getByRole('alert')).toBeInTheDocument()
     expect(getByLabelText('alert-icon-danger')).toBeInTheDocument()
-    expect(getByText('This is a danger message')).toBeInTheDocument()
+    expect(getByText('This is a danger message', { exact: false })).toBeInTheDocument()
   })
 
   test('renders correctly with warning variant', () => {
@@ -32,7 +32,7 @@ describe('Alert component', () => {
     )
     expect(getByRole('alert')).toBeInTheDocument()
     expect(getByLabelText('alert-icon-warning')).toBeInTheDocument()
-    expect(getByText('This is a warning message')).toBeInTheDocument()
+    expect(getByText('This is a warning message', { exact: false })).toBeInTheDocument()
   })
 
   test('renders correctly with info variant', () => {
@@ -43,7 +43,7 @@ describe('Alert component', () => {
     )
     expect(getByRole('alert')).toBeInTheDocument()
     expect(getByLabelText('alert-icon-info')).toBeInTheDocument()
-    expect(getByText('This is an info message')).toBeInTheDocument()
+    expect(getByText('This is an info message', { exact: false })).toBeInTheDocument()
   })
 
   it('does not render when show state is false', () => {
