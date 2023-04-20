@@ -22,7 +22,7 @@ type Story = StoryObj<typeof Alert>
 
 export const Default: Story = {
   render: () => (
-    <Alert variant="success" dismissible>
+    <Alert variant="success" dismissible={false}>
       <b>Success!</b> This is a detailed message.
     </Alert>
   )
@@ -37,7 +37,7 @@ export const WithLink: Story = {
 export const Dismissible: Story = {
   render: () => (
     <Alert variant="success" dismissible={true}>
-      Link with message <AlertLink href="#" link="here is a link"></AlertLink>
+      Message in dismissible alert.
     </Alert>
   )
 }
