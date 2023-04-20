@@ -33,8 +33,7 @@ export function Alert({ variant, dismissible = true, children }: AlertProps) {
     return icon
   }
   const [show, setShow] = useState(true)
-  if (show) {
-    return (
+    return show && (
       <AlertBS variant={variant} onClose={() => setShow(false)} dismissible={dismissible}>
         <span role="img" aria-label={'alert-icon-' + variant}>
           {getAlertIcon(variant)}
@@ -43,7 +42,4 @@ export function Alert({ variant, dismissible = true, children }: AlertProps) {
         {children}
       </AlertBS>
     )
-  } else {
-    return null
-  }
 }
