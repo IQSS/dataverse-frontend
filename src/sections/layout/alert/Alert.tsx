@@ -7,33 +7,33 @@ import {
   InfoCircleFill
 } from 'react-bootstrap-icons'
 
+type AlertVariant = 'success' | 'info' | 'warning' | 'danger'
+
 interface AlertProps {
-  variant: 'success' | 'danger' | 'warning' | 'info'
+  variant: AlertVariant
   dismissible?: boolean
   children: ReactNode
 }
 
 export function Alert({ variant, dismissible = true, children }: AlertProps) {
-  function getAlertIcon(variant: string) {
-    let icon
-    switch (variant) {
-      case 'success':
-        console.log('success')
-        icon = <CheckCircleFill></CheckCircleFill>
-        break
-      case 'info':
-        icon = <InfoCircleFill></InfoCircleFill>
-        break
-      case 'warning':
-        icon = <ExclamationTriangleFill></ExclamationTriangleFill>
-        break
-      case 'danger':
-        icon = <ExclamationCircleFill></ExclamationCircleFill>
-    }
-    return icon
+  interface AlertIcons {
+    [key: string]: JSX.Element
   }
+
+  const ALERT_ICONS: AlertIcons = {
+    success: <CheckCircleFill></CheckCircleFill>,
+    info: <InfoCircleFill></InfoCircleFill>,
+    warning: <ExclamationTriangleFill></ExclamationTriangleFill>,
+    danger: <ExclamationCircleFill></ExclamationCircleFill>
+  }
+
+  function getAlertIcon(variant: AlertVariant): JSX.Element {
+    return ALERT_ICONS[variant]
+  }
+
   const [show, setShow] = useState(true)
-    return show && (
+  return (
+    show && (
       <AlertBS variant={variant} onClose={() => setShow(false)} dismissible={dismissible}>
         <span role="img" aria-label={'alert-icon-' + variant}>
           {getAlertIcon(variant)}
@@ -42,4 +42,5 @@ export function Alert({ variant, dismissible = true, children }: AlertProps) {
         {children}
       </AlertBS>
     )
+  )
 }
