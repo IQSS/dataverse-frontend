@@ -14,4 +14,4 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import '../../tests/e2e/support/commands'
+import '../../tests/support/commands'

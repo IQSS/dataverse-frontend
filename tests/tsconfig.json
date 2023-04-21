@@ -5,6 +5,6 @@
     "types": ["cypress", "@testing-library/cypress"],
     "isolatedModules": false
   },
-  "includes": ["./e2e/**/*.spec.ts", "./component/**/*.spec.tsx"],
+  "includes": ["e2e/**/*.ts", "component/**/*.tsx"],
   "exclude": []
 }
