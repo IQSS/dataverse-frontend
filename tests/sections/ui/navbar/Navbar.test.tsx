@@ -8,6 +8,8 @@ const brand = {
 }
 
 describe('Navbar component', () => {
+  const testDummyOnClickHandler = () => {}
+
   test('renders the brand logo and title', () => {
     const { getByRole } = render(<Navbar brand={brand} />)
 
@@ -24,8 +26,12 @@ describe('Navbar component', () => {
         <Navbar.Link href="/link-1">Link 1</Navbar.Link>
         <Navbar.Link href="/link-2">Link 2</Navbar.Link>
         <Navbar.Dropdown title="Dropdown" id="dropdown">
-          <Navbar.Dropdown.Item href="/sublink-1">Sublink 1</Navbar.Dropdown.Item>
-          <Navbar.Dropdown.Item href="/sublink-2">Sublink 2</Navbar.Dropdown.Item>
+          <Navbar.Dropdown.Item onClickHandler={testDummyOnClickHandler}>
+            Item 1
+          </Navbar.Dropdown.Item>
+          <Navbar.Dropdown.Item onClickHandler={testDummyOnClickHandler}>
+            Item 2
+          </Navbar.Dropdown.Item>
         </Navbar.Dropdown>
       </Navbar>
     )
@@ -40,14 +46,18 @@ describe('Navbar component', () => {
     expect(dropdownElement).toBeInTheDocument()
   })
 
-  test('shows the sublinks when the dropdown is clicked', async () => {
+  test('shows the items when the dropdown is clicked', async () => {
     const { getByRole, findByRole } = render(
       <Navbar brand={brand}>
         <Navbar.Link href="/link-1">Link 1</Navbar.Link>
         <Navbar.Link href="/link-2">Link 2</Navbar.Link>
         <Navbar.Dropdown title="Dropdown" id="dropdown">
-          <Navbar.Dropdown.Item href="/sublink-1">Sublink 1</Navbar.Dropdown.Item>
-          <Navbar.Dropdown.Item href="/sublink-2">Sublink 2</Navbar.Dropdown.Item>
+          <Navbar.Dropdown.Item onClickHandler={testDummyOnClickHandler}>
+            Item 1
+          </Navbar.Dropdown.Item>
+          <Navbar.Dropdown.Item onClickHandler={testDummyOnClickHandler}>
+            Item 2
+          </Navbar.Dropdown.Item>
         </Navbar.Dropdown>
       </Navbar>
     )
@@ -56,10 +66,10 @@ describe('Navbar component', () => {
 
     fireEvent.click(dropdownElement)
 
-    const sublink1Element = await findByRole('link', { name: 'Sublink 1' })
+    const sublink1Element = await findByRole('button', { name: 'Item 1' })
     expect(sublink1Element).toBeInTheDocument()
 
-    const sublink2Element = await findByRole('link', { name: 'Sublink 2' })
+    const sublink2Element = await findByRole('button', { name: 'Item 2' })
     expect(sublink2Element).toBeInTheDocument()
   })
 })

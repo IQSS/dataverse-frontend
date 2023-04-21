@@ -29,6 +29,11 @@ export function Header({ getCurrentAuthenticatedUser }: HeaderProps) {
       })
   }, [getCurrentAuthenticatedUser])
 
+  const handleLogOutClick = () => {
+    // TODO: handle logout
+    console.log('Logout button clicked!')
+  }
+
   return (
     <Navbar
       brand={{
@@ -38,7 +43,9 @@ export function Header({ getCurrentAuthenticatedUser }: HeaderProps) {
       }}>
       {user ? (
         <Navbar.Dropdown title={user.name} id="dropdown-user">
-          <Navbar.Dropdown.Item href={Route.LOG_OUT}>{t('logOut')}</Navbar.Dropdown.Item>
+          <Navbar.Dropdown.Item onClickHandler={handleLogOutClick}>
+            {t('logOut')}
+          </Navbar.Dropdown.Item>
         </Navbar.Dropdown>
       ) : (
         <>

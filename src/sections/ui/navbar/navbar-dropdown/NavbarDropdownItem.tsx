@@ -2,9 +2,12 @@ import { NavDropdown } from 'react-bootstrap'
 import { PropsWithChildren } from 'react'
 
 interface NavbarDropdownItemProps {
-  href: string
+  onClickHandler: Function
 }
 
-export function NavbarDropdownItem({ href, children }: PropsWithChildren<NavbarDropdownItemProps>) {
-  return <NavDropdown.Item href={href}>{children}</NavDropdown.Item>
+export function NavbarDropdownItem({
+  onClickHandler,
+  children
+}: PropsWithChildren<NavbarDropdownItemProps>) {
+  return <NavDropdown.Item onClick={() => onClickHandler()}>{children}</NavDropdown.Item>
 }
