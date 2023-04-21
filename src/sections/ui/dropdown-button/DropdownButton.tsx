@@ -36,7 +36,7 @@ export function DropdownButton({
         </>
       }
       variant={variant}
-      as={ButtonGroup}>
+      as={asButtonGroup ? ButtonGroup : undefined}>
       {children}
     </DropdownButtonBS>
   )
