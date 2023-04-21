@@ -2,17 +2,7 @@
   "all": true,
   "extends": "@istanbuljs/nyc-config-typescript",
   "check-coverage": true,
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": [
-    "src/stories/**/*.*",
-    "src/App.tsx",
-    "src/Router.tsx",
-    "src/i18n.ts",
-    "src/index.tsx",
-    "src/reportWebVitals.ts",
-    "tests/**/*.*",
-    "**/*.d.ts",
-    "**/*.cy.tsx",
-    "**/*.cy.ts"
-  ]
+  "include": ["src/sections/**/*.ts", "src/sections/**/*.tsx"],
+  "exclude": ["src/i18n.ts"],
+  "excludeAfterRemap": true
 }
