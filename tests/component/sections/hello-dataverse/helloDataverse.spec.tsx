@@ -1,6 +1,6 @@
-import { HelloDataverse } from '../../../src/sections/hello-dataverse/HelloDataverse'
+import { HelloDataverse } from '../../../../src/sections/hello-dataverse/HelloDataverse'
 import { I18nextProvider } from 'react-i18next'
-import i18next from '../../../src/i18n'
+import i18next from '../../../../src/i18n'
 
 describe('HelloDataverse page', () => {
   it('renders hello dataverse title', () => {

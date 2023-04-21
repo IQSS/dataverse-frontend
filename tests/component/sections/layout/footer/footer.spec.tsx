@@ -1,4 +1,4 @@
-import { Footer } from '../../../../src/sections/layout/footer/Footer'
+import { Footer } from '../../../../../src/sections/layout/footer/Footer'
 
 describe('Footer component', () => {
   it('displays the Powered By link', () => {

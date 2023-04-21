@@ -1,4 +1,4 @@
-import { Layout } from '../../../src/sections/layout/Layout'
+import { Layout } from '../../../../src/sections/layout/Layout'
 
 describe('Layout', () => {
   it('renders the Header', () => {

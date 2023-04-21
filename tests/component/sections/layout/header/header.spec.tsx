@@ -1,6 +1,6 @@
-import { Header } from '../../../../src/sections/layout/header/Header'
+import { Header } from '../../../../../src/sections/layout/header/Header'
 import { I18nextProvider } from 'react-i18next'
-import i18next from '../../../../src/i18n'
+import i18next from '../../../../../src/i18n'
 
 describe('Header component', () => {
   it('displays the user name when the user is logged in', () => {

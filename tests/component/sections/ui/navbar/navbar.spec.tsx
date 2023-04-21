@@ -1,4 +1,4 @@
-import { Navbar } from '../../../../src/sections/ui/navbar/Navbar'
+import { Navbar } from '../../../../../src/sections/ui/navbar/Navbar'
 
 const brand = {
   logo: { src: 'logo.png', altText: 'Logo Alt Text' },
