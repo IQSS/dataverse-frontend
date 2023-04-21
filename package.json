@@ -37,6 +37,7 @@
     "cy:open-unit": "cypress open --component --browser chrome",
     "test:e2e": "cypress run --e2e",
     "test:unit": "cypress run --component",
+    "test:coverage": "nyc check-coverage --statement 95 --branch 95 --function 95 --lines 95",
     "git:add": "git add .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
