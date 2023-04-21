@@ -2,6 +2,10 @@
   "all": true,
   "extends": "@istanbuljs/nyc-config-typescript",
   "check-coverage": true,
+  "functions": 100,
+  "lines": 100,
+  "statements": 100,
+  "branches": 100,
   "include": ["src/sections/**/*.ts", "src/sections/**/*.tsx"],
   "exclude": ["src/i18n.ts"],
   "excludeAfterRemap": true

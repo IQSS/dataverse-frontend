@@ -46,9 +46,7 @@ jobs:
           wait-on: 'npx wait-on --timeout 60000 http://localhost:5173'
 
       - name: Check coverage
-        uses: VeryGoodOpenSource/very_good_coverage@v2
-        with:
-          min_coverage: 95
+        run: nyc check-coverage --statement 95 --branch 95 --function 95 --lines 95
 
       - name: Upload coverage report to Coveralls
         if: always()
