@@ -2,6 +2,7 @@ import { DropdownButton as DropdownButtonBS } from 'react-bootstrap'
 import { ReactNode } from 'react'
 import styles from './DropdownButton.module.scss'
 import { Icon } from '../icon.enum'
+import { ButtonGroup } from '../button-group/ButtonGroup'
 
 type DropdownButtonVariant = 'primary' | 'secondary'
 
@@ -11,6 +12,7 @@ interface DropdownButtonProps {
   variant?: DropdownButtonVariant
   icon?: Icon
   withSpacing?: boolean
+  asButtonGroup?: boolean
   children: ReactNode
 }
 
@@ -20,6 +22,7 @@ export function DropdownButton({
   variant = 'primary',
   icon,
   withSpacing,
+  asButtonGroup,
   children
 }: DropdownButtonProps) {
   return (
@@ -32,7 +35,8 @@ export function DropdownButton({
           {title}
         </>
       }
-      variant={variant}>
+      variant={variant}
+      as={ButtonGroup}>
       {children}
     </DropdownButtonBS>
   )
