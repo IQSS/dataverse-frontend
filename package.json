@@ -7,6 +7,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -22,6 +23,7 @@
     "react-router-dom": "^6.8.1",
     "sass": "^1.58.1",
     "typescript": "^4.9.5",
+    "vite-plugin-istanbul": "^4.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -31,8 +33,9 @@
     "lint": "eslint --ignore-path .gitignore . && stylelint **/*.scss && prettier --check '**/*.(yml|json|md|css)'",
     "lint:fix": "eslint --fix --ext .ts,.tsx ./src --ignore-path .gitignore . && stylelint --fix **/*.scss && prettier --write '**/*.(yml|json|md|css)'",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json,yml,md}' --config ./.prettierrc",
-    "cy:open": "cypress open",
-    "test:e2e": "cypress run",
+    "cy:open-e2e": "cypress open --e2e --browser chrome",
+    "cy:open-unit": "cypress open --component --browser chrome",
+    "test:e2e": "cypress run --e2e",
     "test:unit": "cypress run --component",
     "git:add": "git add .",
     "storybook": "storybook dev -p 6006",
@@ -72,6 +75,7 @@
     ]
   },
   "devDependencies": {
+    "@cypress/code-coverage": "^3.10.4",
     "@storybook/addon-a11y": "^7.0.0-beta.60",
     "@storybook/addon-essentials": "^7.0.0-beta.60",
     "@storybook/addon-interactions": "^7.0.0-beta.60",

@@ -23,6 +23,17 @@ export default defineConfig({
     devServer: {
       framework: 'react',
       bundler: 'vite'
+    },
+    setupNodeEvents(on, config) {
+      // eslint-disable-next-line  @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires
+      require('@cypress/code-coverage/task')(on, config)
+
+      return config
+    }
+  },
+  env: {
+    codeCoverage: {
+      exclude: 'tests/**/*.*'
     }
   }
 })
