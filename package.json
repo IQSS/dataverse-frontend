@@ -28,15 +28,12 @@
     "start": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test:unit": "vitest watch",
-    "test:unit-no-watch": "vitest run",
-    "test:unit-coverage": "vitest run --coverage",
     "lint": "eslint --ignore-path .gitignore . && stylelint **/*.scss && prettier --check '**/*.(yml|json|md|css)'",
     "lint:fix": "eslint --fix --ext .ts,.tsx ./src --ignore-path .gitignore . && stylelint --fix **/*.scss && prettier --write '**/*.(yml|json|md|css)'",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json,yml,md}' --config ./.prettierrc",
     "cy:open": "cypress open",
     "test:e2e": "cypress run",
-    "test:component": "cypress run --component",
+    "test:unit": "cypress run --component",
     "git:add": "git add .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
@@ -45,7 +42,7 @@
   "pre-commit": [
     "lint:fix",
     "git:add",
-    "test:component"
+    "test:unit"
   ],
   "eslintConfig": {
     "extends": [
@@ -89,7 +86,6 @@
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "@vitejs/plugin-react": "^3.1.0",
-    "@vitest/coverage-c8": "^0.29.2",
     "axe-playwright": "^1.2.3",
     "babel-plugin-named-exports-order": "^0.0.2",
     "cypress": "^12.5.1",
@@ -102,7 +98,6 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-storybook": "^0.6.11",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "eslint-plugin-vitest": "^0.0.53",
     "jsdom": "^21.1.0",
     "pre-commit": "^1.2.2",
     "prettier": "^2.8.4",
@@ -115,7 +110,6 @@
     "stylelint-config-standard": "^30.0.1",
     "stylelint-config-standard-scss": "^7.0.1",
     "stylelint-order": "^6.0.2",
-    "vite": "4.1.0",
-    "vitest": "^0.29.2"
+    "vite": "4.1.0"
   }
 }
