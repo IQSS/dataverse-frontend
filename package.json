@@ -28,23 +28,24 @@
     "start": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "vitest watch",
-    "test:no-watch": "vitest run",
-    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest watch",
+    "test:unit-no-watch": "vitest run",
+    "test:unit-coverage": "vitest run --coverage",
     "lint": "eslint --ignore-path .gitignore . && stylelint **/*.scss && prettier --check '**/*.(yml|json|md|css)'",
     "lint:fix": "eslint --fix --ext .ts,.tsx ./src --ignore-path .gitignore . && stylelint --fix **/*.scss && prettier --write '**/*.(yml|json|md|css)'",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json,yml,md}' --config ./.prettierrc",
     "cy:open": "cypress open",
-    "cy:run": "cypress run",
-    "cy:run-component": "cypress run --component",
+    "test:e2e": "cypress run",
+    "test:component": "cypress run --component",
     "git:add": "git add .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test-storybook": "test-storybook"
+    "test:storybook": "test-storybook"
   },
   "pre-commit": [
     "lint:fix",
-    "git:add"
+    "git:add",
+    "test:component"
   ],
   "eslintConfig": {
     "extends": [
