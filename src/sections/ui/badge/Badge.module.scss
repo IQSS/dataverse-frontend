@@ -1,0 +1,27 @@
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'src/sections/ui/assets/styles/design-tokens/colors.module';
+
+.primary {
+    color: color-contrast($dv-primary-color) !important;
+}
+
+.secondary {
+    color: color-contrast($dv-secondary-color) !important;
+}
+
+.info {
+    color: color-contrast($dv-info-color) !important;
+}
+
+.success {
+    color: color-contrast($dv-success-color) !important;
+}
+
+.warning {
+    color: color-contrast($dv-warning-color) !important;
+}
+
+.danger {
+    color: color-contrast($dv-danger-color) !important;
+}
