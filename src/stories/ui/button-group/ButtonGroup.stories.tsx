@@ -7,31 +7,20 @@ import { DropdownButtonItem } from '../../../sections/ui/dropdown-button/dropdow
 
 /**
  * ## Description
- * The button group groups a series of buttons together.
+ * A ButtonGroup is a wrapper component for grouping multiple buttons together, providing them with a common layout and
+ * spacing. It can be used to visually indicate a related set of actions, or to improve the layout of multiple buttons
+ * on a page.
  *
  * ## Usage guidelines
  *
  * ### Dos
- * - ButtonGroup labels:
- *   - Concise
- *   - Should include a verb
- *   - Always include a noun if there is any room for interpretation about what the verb operates on
- * - For action buttons on a page, we include an icon and text label.
+ * - Use ButtonGroup to group related actions together.
+ * - Use ButtonGroup to visually improve the layout of multiple buttons on a page.
  *
  * ### Don'ts
  *
- * - ButtonGroup width is set by its content. Avoid changing its width.
- * - Do not use a button for a text link or navigation item like breadcrumbs.
+ * - Do not use ButtonGroup for a single button.
  *
- * ## Theme variables
- *
- * ```
- * theme.color.primary
- * theme.color.secondary
- *
- * theme.color.linkColor
- * theme.color.linkColorHover
- * ```
  */
 const meta: Meta<typeof ButtonGroup> = {
   title: 'UI/ButtonGroup',
@@ -42,7 +31,25 @@ const meta: Meta<typeof ButtonGroup> = {
 export default meta
 type Story = StoryObj<typeof ButtonGroup>
 
-export const NestedVerticalButtons: Story = {
+export const HorizontalButtonGroup: Story = {
+  render: () => (
+    <ButtonGroup>
+      <Button variant="secondary">Contact Owner</Button>
+      <Button variant="secondary">Share</Button>
+    </ButtonGroup>
+  )
+}
+
+export const VerticalButtonGroup: Story = {
+  render: () => (
+    <ButtonGroup vertical>
+      <Button variant="secondary">Contact Owner</Button>
+      <Button variant="secondary">Share</Button>
+    </ButtonGroup>
+  )
+}
+
+export const NestedButtonGroups: Story = {
   render: () => (
     <ButtonToolbar ariaLabel="Toolbar with button groups">
       <ButtonGroup vertical>
