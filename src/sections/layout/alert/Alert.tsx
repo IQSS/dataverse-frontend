@@ -1,13 +1,7 @@
 import { Alert as AlertBS } from 'react-bootstrap'
+import { AlertVariant } from './AlertVariant'
+import { AlertIcon } from './AlertIcon'
 import { ReactNode, useState } from 'react'
-import {
-  CheckCircleFill,
-  ExclamationCircleFill,
-  ExclamationTriangleFill,
-  InfoCircleFill
-} from 'react-bootstrap-icons'
-
-type AlertVariant = 'success' | 'info' | 'warning' | 'danger'
 
 interface AlertProps {
   variant: AlertVariant
@@ -17,17 +11,8 @@ interface AlertProps {
 }
 
 export function Alert({ variant, dismissible = true, customHeading, children }: AlertProps) {
-  interface AlertIcons {
-    [key: string]: JSX.Element
-  }
   interface AlertHeadings {
     [key: string]: string
-  }
-  const ALERT_ICONS: AlertIcons = {
-    success: <CheckCircleFill></CheckCircleFill>,
-    info: <InfoCircleFill></InfoCircleFill>,
-    warning: <ExclamationTriangleFill></ExclamationTriangleFill>,
-    danger: <ExclamationCircleFill></ExclamationCircleFill>
   }
 
   const ALERT_HEADINGS: AlertHeadings = {
@@ -38,9 +23,6 @@ export function Alert({ variant, dismissible = true, customHeading, children }: 
   }
   const [show, setShow] = useState(true)
 
-  function getAlertIcon(variant: AlertVariant): JSX.Element {
-    return ALERT_ICONS[variant]
-  }
   function getAlertHeading(variant: AlertVariant, customHeading?: string): string {
     return customHeading ?? ALERT_HEADINGS[variant]
   }
@@ -50,9 +32,7 @@ export function Alert({ variant, dismissible = true, customHeading, children }: 
     <>
       {show && (
         <AlertBS variant={variant} onClose={() => setShow(false)} dismissible={dismissible}>
-          <span role="img" aria-label={`alert-icon-${variant}`}>
-            {getAlertIcon(variant)}
-          </span>{' '}
+          <AlertIcon variant={variant} />
           &nbsp;
           <b>{heading}</b> - {children}
         </AlertBS>
