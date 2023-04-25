@@ -3,45 +3,28 @@ import { useTranslation } from 'react-i18next'
 import { Navbar } from '../../ui/navbar/Navbar'
 import { Route } from '../../route.enum'
 import { useEffect, useState } from 'react'
-import { AuthenticatedUser } from 'js-dataverse/dist/users'
-import { GetCurrentAuthenticatedUser } from '../../../useCases/GetCurrentAuthenticatedUser'
-import { Logout } from '../../../useCases/Logout'
-import { ReadError, WriteError } from 'js-dataverse/dist/core'
-
-type User = {
-  name: string
-}
+import { UserRepository } from '../../../domain/UserRepository'
+import { User } from '../../../domain/User'
 
 interface HeaderProps {
-  getCurrentAuthenticatedUser: GetCurrentAuthenticatedUser
-  logout: Logout
+  userRepository: UserRepository
 }
 
-export function Header({ getCurrentAuthenticatedUser, logout }: HeaderProps) {
+export function Header({ userRepository }: HeaderProps) {
   const { t } = useTranslation('header')
   const [user, setUser] = useState<User>()
   const baseRemoteUrl = import.meta.env.VITE_DATAVERSE_BACKEND_URL as string
 
   useEffect(() => {
-    getCurrentAuthenticatedUser
-      .execute()
-      .then((authenticatedUser: AuthenticatedUser) => {
-        setUser({ name: authenticatedUser.displayName })
-      })
-      .catch((error: ReadError) => {
-        console.log(error.message)
-      })
-  }, [getCurrentAuthenticatedUser])
+    userRepository.getAuthenticated().then((user: User) => {
+      setUser(user)
+    })
+  }, [userRepository])
 
   const handleLogOutClick = () => {
-    logout
-      .execute()
-      .then(() => {
-        setUser(undefined)
-      })
-      .catch((error: WriteError) => {
-        console.log(error.message)
-      })
+    userRepository.removeAuthenticated().then(() => {
+      setUser(undefined)
+    })
   }
 
   return (
