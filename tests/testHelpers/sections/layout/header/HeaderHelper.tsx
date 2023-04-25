@@ -2,12 +2,12 @@ import { SinonSandbox } from 'sinon'
 import { ReactElement } from 'react'
 import { Header } from '../../../../../src/sections/layout/header/Header'
 import { createGetCurrentAuthenticatedUser } from '../../../users/getCurrentAuthenticatedUserHelper'
-import { createAuthenticatedUser } from '../../../users/authenticatedUserHelper'
+import { createTestUser } from '../../../users/userHelper'
 
 export class HeaderHelper {
   static createLoggedInUserHeader(sandbox: SinonSandbox): ReactElement {
     const getCurrentAuthenticatedUserStub = createGetCurrentAuthenticatedUser()
-    getCurrentAuthenticatedUserStub.execute = sandbox.stub().resolves(createAuthenticatedUser())
+    getCurrentAuthenticatedUserStub.execute = sandbox.stub().resolves(createTestUser())
     return <Header getCurrentAuthenticatedUser={getCurrentAuthenticatedUserStub} />
   }
 
