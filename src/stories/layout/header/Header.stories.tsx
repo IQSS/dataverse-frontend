@@ -34,9 +34,9 @@ export const LoggedIn: Story = {
 export const LoggedOut: Story = {
   render: () => <Header userRepository={new MockedUserRepository()} />,
   play: async ({ canvasElement }) => {
-    const { findByText } = within(canvasElement)
+    const canvas = within(canvasElement)
 
-    await userEvent.click(await findByText(testData.name))
-    await userEvent.click(await findByText('Log Out'))
+    userEvent.click(await canvas.findByText(testData.name))
+    userEvent.click(await canvas.findByText('Log Out'))
   }
 }

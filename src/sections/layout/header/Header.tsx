@@ -16,15 +16,21 @@ export function Header({ userRepository }: HeaderProps) {
   const baseRemoteUrl = import.meta.env.VITE_DATAVERSE_BACKEND_URL as string
 
   useEffect(() => {
-    userRepository.getAuthenticated().then((user: User) => {
-      setUser(user)
-    })
+    userRepository
+      .getAuthenticated()
+      .then((user: User) => {
+        setUser(user)
+      })
+      .catch((error) => console.error('There was an error getting the authenticated user', error))
   }, [userRepository])
 
   const handleLogOutClick = () => {
-    userRepository.removeAuthenticated().then(() => {
-      setUser(undefined)
-    })
+    userRepository
+      .removeAuthenticated()
+      .then(() => {
+        setUser(undefined)
+      })
+      .catch((error) => console.error('There was an error removing the authenticated user', error))
   }
 
   return (

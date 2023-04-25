@@ -13,7 +13,7 @@ describe('Header component', () => {
   })
 
   test('displays the user name when the user is logged in', async () => {
-    const userRepository: UserRepository = {} as any as UserRepository
+    const userRepository: UserRepository = {} as UserRepository
     userRepository.getAuthenticated = sandbox.stub().resolves(testUser)
 
     const { findByText } = render(<Header userRepository={userRepository} />)
@@ -23,7 +23,7 @@ describe('Header component', () => {
   })
 
   test('displays the Sign Up and Log In links when the user is not logged in', () => {
-    const userRepository: UserRepository = {} as any as UserRepository
+    const userRepository: UserRepository = {} as UserRepository
     userRepository.getAuthenticated = sandbox.stub().resolves()
 
     const { getByRole } = render(<Header userRepository={userRepository} />)
@@ -36,7 +36,7 @@ describe('Header component', () => {
   })
 
   test('displays the Sign Up and Log In links after user Log Out', async () => {
-    const userRepository: UserRepository = {} as any as UserRepository
+    const userRepository: UserRepository = {} as UserRepository
     userRepository.getAuthenticated = sandbox.stub().resolves(testUser)
     userRepository.removeAuthenticated = sandbox.stub().resolves()
 
