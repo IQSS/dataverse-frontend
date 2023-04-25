@@ -5,7 +5,7 @@ import { Row } from '../../../sections/ui/grid/Row'
 
 /**
  * ## Description
- * A form is a collection of HTML elements used to gather user input. Allows users to enter data, such as text, numbers,
+ * A form is a collection of HTML elements used to gather user input. It allows users to enter data, such as text, numbers,
  * or file uploads, and submit it to a server for processing.
  *
  * ## Usage guidelines
