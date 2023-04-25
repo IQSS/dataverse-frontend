@@ -18,6 +18,7 @@
     "i18next-browser-languagedetector": "^7.0.1",
     "i18next-http-backend": "^2.1.1",
     "react-bootstrap": "^2.7.2",
+    "react-bootstrap-icons": "^1.10.3",
     "react-i18next": "^12.1.5",
     "react-router-dom": "^6.8.1",
     "sass": "^1.58.1",

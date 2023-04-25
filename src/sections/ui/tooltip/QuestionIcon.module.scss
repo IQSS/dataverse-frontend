@@ -1,0 +1,9 @@
+@import "src/sections/ui/assets/styles/design-tokens/colors.module";
+
+svg {
+  color: $dv-tooltip-color;
+}
+
+svg:hover {
+  color: $dv-tooltip-hover-color;
+}
