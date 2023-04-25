@@ -2,9 +2,8 @@ import logo from '../../ui/logo.svg'
 import { useTranslation } from 'react-i18next'
 import { Navbar } from '../../ui/navbar/Navbar'
 import { Route } from '../../route.enum'
-import { useEffect, useState } from 'react'
 import { UserRepository } from '../../../domain/UserRepository'
-import { User } from '../../../domain/User'
+import { useUser } from './useUser'
 
 interface HeaderProps {
   userRepository: UserRepository
@@ -12,26 +11,8 @@ interface HeaderProps {
 
 export function Header({ userRepository }: HeaderProps) {
   const { t } = useTranslation('header')
-  const [user, setUser] = useState<User>()
+  const { user, logOut } = useUser(userRepository)
   const baseRemoteUrl = import.meta.env.VITE_DATAVERSE_BACKEND_URL as string
-
-  useEffect(() => {
-    userRepository
-      .getAuthenticated()
-      .then((user: User | void) => {
-        user && setUser(user)
-      })
-      .catch((error) => console.error('There was an error getting the authenticated user', error))
-  }, [userRepository])
-
-  const handleLogOutClick = () => {
-    userRepository
-      .removeAuthenticated()
-      .then(() => {
-        setUser(undefined)
-      })
-      .catch((error) => console.error('There was an error removing the authenticated user', error))
-  }
 
   return (
     <Navbar
@@ -42,9 +23,7 @@ export function Header({ userRepository }: HeaderProps) {
       }}>
       {user ? (
         <Navbar.Dropdown title={user.name} id="dropdown-user">
-          <Navbar.Dropdown.Item onClickHandler={handleLogOutClick}>
-            {t('logOut')}
-          </Navbar.Dropdown.Item>
+          <Navbar.Dropdown.Item onClickHandler={logOut}>{t('logOut')}</Navbar.Dropdown.Item>
         </Navbar.Dropdown>
       ) : (
         <>
