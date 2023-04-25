@@ -1,25 +1,25 @@
 import { fireEvent, render } from '@testing-library/react'
 import { SinonSandbox, createSandbox } from 'sinon'
-import { createTestUser } from '../../../testHelpers/users/userHelper'
-import { HeaderHelper } from '../../../testHelpers/sections/layout/header/HeaderHelper'
+import { UserMother } from '../../../testHelpers/users/UserMother'
+import { HeaderMother } from '../../../testHelpers/sections/layout/header/HeaderMother'
 
 describe('Header component', () => {
   const sandbox: SinonSandbox = createSandbox()
-  const testUser = createTestUser()
+  const testUser = UserMother.create()
 
   afterEach(() => {
     sandbox.restore()
   })
 
   test('displays the user name when the user is logged in', async () => {
-    const { findByText } = render(HeaderHelper.createWithLoggedInUser(sandbox))
+    const { findByText } = render(HeaderMother.withLoggedInUser(sandbox, testUser))
 
     const userNameElement = await findByText(testUser.name)
     expect(userNameElement).toBeInTheDocument()
   })
 
   test('displays the Sign Up and Log In links when the user is not logged in', () => {
-    const { getByRole } = render(HeaderHelper.createWithGuestUser(sandbox))
+    const { getByRole } = render(HeaderMother.withGuestUser(sandbox))
 
     const signUpLinkElement = getByRole('link', { name: 'signUp' })
     expect(signUpLinkElement).toBeInTheDocument()
@@ -29,7 +29,7 @@ describe('Header component', () => {
   })
 
   test('displays the Sign Up and Log In links after user Log Out', async () => {
-    const { findByText, findByRole } = render(HeaderHelper.createWithLoggedInUser(sandbox))
+    const { findByText, findByRole } = render(HeaderMother.withLoggedInUser(sandbox, testUser))
 
     const userNameElement = await findByText(testUser.name)
     fireEvent.click(userNameElement)

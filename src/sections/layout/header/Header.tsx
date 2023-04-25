@@ -18,8 +18,8 @@ export function Header({ userRepository }: HeaderProps) {
   useEffect(() => {
     userRepository
       .getAuthenticated()
-      .then((user: User) => {
-        setUser(user)
+      .then((user: User | void) => {
+        user && setUser(user)
       })
       .catch((error) => console.error('There was an error getting the authenticated user', error))
   }, [userRepository])

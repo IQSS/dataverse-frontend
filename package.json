@@ -7,6 +7,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -85,6 +86,7 @@
     "@storybook/testing-library": "^0.1.0",
     "@testing-library/cypress": "^9.0.0",
     "@types/node-sass": "^4.11.3",
+    "@types/sinon": "^10.0.13",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "@vitejs/plugin-react": "^3.1.0",
@@ -102,12 +104,14 @@
     "eslint-plugin-storybook": "^0.6.11",
     "eslint-plugin-unused-imports": "^2.0.0",
     "eslint-plugin-vitest": "^0.0.53",
+    "js-dataverse": "file:./js-dataverse-2.0.0.tgz",
     "jsdom": "^21.1.0",
     "pre-commit": "^1.2.2",
     "prettier": "^2.8.4",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "sinon": "^15.0.3",
     "storybook": "^7.0.2",
     "stylelint": "^15.1.0",
     "stylelint-config-rational-order": "^0.1.2",
@@ -115,9 +119,6 @@
     "stylelint-config-standard-scss": "^7.0.1",
     "stylelint-order": "^6.0.2",
     "vite": "^4.1.4",
-    "vitest": "^0.29.2",
-    "@types/sinon": "^10.0.13",
-    "sinon": "^15.0.3",
-    "js-dataverse": "file:./js-dataverse-2.0.0.tgz"
+    "vitest": "^0.29.2"
   }
 }
