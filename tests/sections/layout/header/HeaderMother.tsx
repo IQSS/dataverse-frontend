@@ -1,9 +1,9 @@
 import { SinonSandbox } from 'sinon'
 import { ReactElement } from 'react'
-import { Header } from '../../../../../src/sections/layout/header/Header'
-import { UserMother } from '../../../users/UserMother'
-import { UserRepository } from '../../../../../src/domain/UserRepository'
-import { User } from '../../../../../src/domain/User'
+import { Header } from '../../../../src/sections/layout/header/Header'
+import { UserMother } from '../../../users/domain/models/UserMother'
+import { UserRepository } from '../../../../src/users/domain/repositories/UserRepository'
+import { User } from '../../../../src/users/domain/models/User'
 
 export class HeaderMother {
   static withLoggedInUser(sandbox: SinonSandbox, user: User = UserMother.create()): ReactElement {

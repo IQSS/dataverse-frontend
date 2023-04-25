@@ -2,7 +2,7 @@ import { renderWithRouter } from '../../renderWithRouter'
 import { Layout } from '../../../src/sections/layout/Layout'
 import { createSandbox, SinonSandbox } from 'sinon'
 import { HeaderFactory } from '../../../src/sections/layout/header/HeaderFactory'
-import { HeaderMother } from '../../testHelpers/sections/layout/header/HeaderMother'
+import { HeaderMother } from './header/HeaderMother'
 
 describe('Layout', () => {
   const sandbox: SinonSandbox = createSandbox()

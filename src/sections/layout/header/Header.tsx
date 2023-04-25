@@ -2,7 +2,7 @@ import logo from '../../ui/logo.svg'
 import { useTranslation } from 'react-i18next'
 import { Navbar } from '../../ui/navbar/Navbar'
 import { Route } from '../../route.enum'
-import { UserRepository } from '../../../domain/UserRepository'
+import { UserRepository } from '../../../users/domain/repositories/UserRepository'
 import { useUser } from './useUser'
 
 interface HeaderProps {
@@ -11,7 +11,7 @@ interface HeaderProps {
 
 export function Header({ userRepository }: HeaderProps) {
   const { t } = useTranslation('header')
-  const { user, logOut } = useUser(userRepository)
+  const { user, submitLogOut } = useUser(userRepository)
   const baseRemoteUrl = import.meta.env.VITE_DATAVERSE_BACKEND_URL as string
 
   return (
@@ -23,7 +23,7 @@ export function Header({ userRepository }: HeaderProps) {
       }}>
       {user ? (
         <Navbar.Dropdown title={user.name} id="dropdown-user">
-          <Navbar.Dropdown.Item onClickHandler={logOut}>{t('logOut')}</Navbar.Dropdown.Item>
+          <Navbar.Dropdown.Item onClickHandler={submitLogOut}>{t('logOut')}</Navbar.Dropdown.Item>
         </Navbar.Dropdown>
       ) : (
         <>

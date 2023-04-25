@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 import { Header } from './Header'
-import { UserJsDataverseRepository } from '../../../infrastructure/UserJsDataverseRepository'
+import { UserJsDataverseRepository } from '../../../users/infrastructure/repositories/UserJsDataverseRepository'
 
 const userRepository = new UserJsDataverseRepository()
 

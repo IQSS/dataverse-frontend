@@ -1,8 +1,8 @@
-import { User } from '../domain/User'
+import { User } from '../../domain/models/User'
 import { AuthenticatedUser, getCurrentAuthenticatedUser } from 'js-dataverse/dist/users'
 import { ReadError } from 'js-dataverse/dist/core'
 import { logout, WriteError } from 'js-dataverse'
-import { UserRepository } from '../domain/UserRepository'
+import { UserRepository } from '../../domain/repositories/UserRepository'
 
 export class UserJsDataverseRepository implements UserRepository {
   getAuthenticated(): Promise<User | void> {

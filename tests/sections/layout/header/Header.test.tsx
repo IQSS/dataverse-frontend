@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react'
 import { SinonSandbox, createSandbox } from 'sinon'
-import { UserMother } from '../../../testHelpers/users/UserMother'
-import { HeaderMother } from '../../../testHelpers/sections/layout/header/HeaderMother'
+import { UserMother } from '../../../users/domain/models/UserMother'
+import { HeaderMother } from './HeaderMother'
 
 describe('Header component', () => {
   const sandbox: SinonSandbox = createSandbox()

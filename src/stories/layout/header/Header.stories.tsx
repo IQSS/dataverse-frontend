@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { Header } from '../../../sections/layout/header/Header'
-import { UserRepository } from '../../../domain/UserRepository'
-import { User } from '../../../domain/User'
+import { UserRepository } from '../../../users/domain/repositories/UserRepository'
+import { User } from '../../../users/domain/models/User'
 import { userEvent, within } from '@storybook/testing-library'
 
 const meta: Meta<typeof Header> = {

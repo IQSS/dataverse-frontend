@@ -1,4 +1,4 @@
-import { User } from './User'
+import { User } from '../models/User'
 
 export interface UserRepository {
   getAuthenticated(): Promise<User | void>
