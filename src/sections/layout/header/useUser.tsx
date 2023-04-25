@@ -15,7 +15,8 @@ export function useUser(repository: UserRepository) {
       .catch((error) => console.error('There was an error getting the authenticated user', error))
   }, [repository])
 
-  const submitLogOut = () => {
+  const submitLogOut = (event: { preventDefault: () => void }) => {
+    event.preventDefault()
     logOut(repository)
       .then(() => {
         setUser(undefined)

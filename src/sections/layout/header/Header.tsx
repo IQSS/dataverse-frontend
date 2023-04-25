@@ -23,7 +23,9 @@ export function Header({ userRepository }: HeaderProps) {
       }}>
       {user ? (
         <Navbar.Dropdown title={user.name} id="dropdown-user">
-          <Navbar.Dropdown.Item onClickHandler={submitLogOut}>{t('logOut')}</Navbar.Dropdown.Item>
+          <Navbar.Dropdown.Item href={Route.LOG_OUT} onClick={submitLogOut}>
+            {t('logOut')}
+          </Navbar.Dropdown.Item>
         </Navbar.Dropdown>
       ) : (
         <>

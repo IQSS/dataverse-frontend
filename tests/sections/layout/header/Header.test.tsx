@@ -34,7 +34,7 @@ describe('Header component', () => {
     const userNameElement = await findByText(testUser.name)
     fireEvent.click(userNameElement)
 
-    const logOutLinkElement = await findByRole('button', { name: 'logOut' })
+    const logOutLinkElement = await findByRole('link', { name: 'logOut' })
     fireEvent.click(logOutLinkElement)
 
     const signUpLinkElement = await findByRole('link', { name: 'signUp' })
