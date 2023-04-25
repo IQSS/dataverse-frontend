@@ -10,7 +10,7 @@ describe('Layout', () => {
 
   afterEach(() => {
     sandbox.restore()
-    sandbox.stub(HeaderFactory, 'create').returns(HeaderHelper.createLoggedInUserHeader(sandbox))
+    sandbox.stub(HeaderFactory, 'create').returns(HeaderHelper.createWithLoggedInUser(sandbox))
   })
 
   it('renders the header', () => {
