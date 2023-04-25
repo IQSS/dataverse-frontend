@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { Header } from '../../../../src/sections/layout/header/Header'
+import { Header } from '../../../../../src/sections/layout/header/Header'
 
 describe('Header component', () => {
   test('displays the user name when the user is logged in', () => {

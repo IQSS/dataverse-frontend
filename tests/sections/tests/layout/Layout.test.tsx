@@ -1,6 +1,6 @@
-import { renderWithRouter } from '../../renderWithRouter'
+import { renderWithRouter } from '../../../renderWithRouter'
 import { screen } from '@testing-library/react'
-import { Layout } from '../../../src/sections/layout/Layout'
+import { Layout } from '../../../../src/sections/layout/Layout'
 
 describe('Layout', () => {
   it('renders the header', () => {
