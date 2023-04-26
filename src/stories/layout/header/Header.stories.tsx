@@ -3,7 +3,6 @@ import { WithI18next } from '../../WithI18next'
 import { Header } from '../../../sections/layout/header/Header'
 import { UserRepository } from '../../../users/domain/repositories/UserRepository'
 import { User } from '../../../users/domain/models/User'
-import { userEvent, within } from '@storybook/testing-library'
 
 const meta: Meta<typeof Header> = {
   title: 'Layout/Header',
@@ -29,14 +28,4 @@ class MockedUserRepository implements UserRepository {
 
 export const LoggedIn: Story = {
   render: () => <Header userRepository={new MockedUserRepository()} />
-}
-
-export const LoggedOut: Story = {
-  render: () => <Header userRepository={new MockedUserRepository()} />,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-
-    userEvent.click(await canvas.findByText(testData.name))
-    userEvent.click(await canvas.findByText('Log Out'))
-  }
 }
