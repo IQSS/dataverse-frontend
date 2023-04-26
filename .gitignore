@@ -13,7 +13,9 @@
 
 # testing
 /coverage
-/cypress
+/cypress/downloads
+/cypress/screenshots
+
 
 # production
 /dist
