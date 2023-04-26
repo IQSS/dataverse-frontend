@@ -28,6 +28,7 @@ jobs:
 
   e2e:
     runs-on: ubuntu-latest
+    environment: e2e
 
     steps:
       - uses: actions/checkout@v3
@@ -39,6 +40,14 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
+
+      - name: Create and populate .env file
+        env:
+          DATAVERSE_BACKEND_URL: ${{ secrets.DATAVERSE_BACKEND_URL }}
+        run: |
+          touch .env
+          echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
+        shell: bash
 
       - name: Cypress run
         uses: cypress-io/github-action@v4
