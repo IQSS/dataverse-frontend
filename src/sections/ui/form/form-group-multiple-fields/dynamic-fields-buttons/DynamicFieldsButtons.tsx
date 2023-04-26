@@ -5,16 +5,21 @@ import { MouseEvent } from 'react'
 interface AddFieldButtonsProps {
   originalField: boolean
   onAddButtonClick: (event: MouseEvent<HTMLButtonElement>) => void
+  onRemoveButtonClick: (event: MouseEvent<HTMLButtonElement>) => void
 }
 
-export function DynamicFieldsButtons({ originalField, onAddButtonClick }: AddFieldButtonsProps) {
+export function DynamicFieldsButtons({
+  originalField,
+  onAddButtonClick,
+  onRemoveButtonClick
+}: AddFieldButtonsProps) {
   return (
     <div className={styles.container}>
       <Button variant="secondary" onClick={onAddButtonClick}>
         +
       </Button>
       {!originalField && (
-        <Button variant="secondary" withSpacing>
+        <Button variant="secondary" withSpacing onClick={onRemoveButtonClick}>
           -
         </Button>
       )}
