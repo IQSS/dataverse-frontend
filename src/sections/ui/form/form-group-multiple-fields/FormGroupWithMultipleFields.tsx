@@ -17,21 +17,34 @@ export function FormGroupWithMultipleFields({
   required,
   children
 }: PropsWithChildren<FormGroupWithMultipleFieldsProps>) {
-  const [fields, setFields] = useState(children)
+  const [fields, setFields] = useState([children])
 
   return (
     <Row>
-      <Col sm={3}>
-        <span className={styles.title}>
-          {title} {required && <RequiredInputSymbol />}
-        </span>
-      </Col>
-      <Col sm={6}>{fields}</Col>
-      <Col sm={3}>
-        {withDynamicFields && (
-          <DynamicFieldsButtons onAddButtonClick={() => setFields([fields, children])} />
-        )}
-      </Col>
+      {fields.map((field, index) => {
+        const isFirstField = index == 0
+
+        return (
+          <>
+            <Col sm={3}>
+              {isFirstField && (
+                <span className={styles.title}>
+                  {title} {required && <RequiredInputSymbol />}
+                </span>
+              )}
+            </Col>
+            <Col sm={6}>{field}</Col>
+            <Col sm={3}>
+              {withDynamicFields && (
+                <DynamicFieldsButtons
+                  onAddButtonClick={() => setFields([...fields, field])}
+                  originalField={isFirstField}
+                />
+              )}
+            </Col>
+          </>
+        )
+      })}
     </Row>
   )
 }
