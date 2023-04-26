@@ -166,7 +166,7 @@ export const Checkbox: Story = {
 export const GroupWithMultipleFields: Story = {
   render: () => (
     <Form>
-      <Form.GroupWithMultipleFields title="Related Publication">
+      <Form.GroupWithMultipleFields title="Related Publication" withDynamicFields>
         <Row>
           <Form.Group as={Col} controlId="basic-form-citation">
             <Form.Group.Label>Citation</Form.Group.Label>
