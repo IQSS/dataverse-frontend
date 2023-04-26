@@ -6,18 +6,6 @@ const brand = {
   href: '/home'
 }
 
-const links = [
-  { title: 'Link 1', value: '/link1' },
-  { title: 'Link 2', value: '/link2' },
-  {
-    title: 'Dropdown',
-    value: [
-      { title: 'Sublink 1', value: '/sublink1' },
-      { title: 'Sublink 2', value: '/sublink2' }
-    ]
-  }
-]
-
 describe('Navbar component', () => {
   it('renders the brand logo and title', () => {
     cy.mount(<Navbar brand={brand} />)
