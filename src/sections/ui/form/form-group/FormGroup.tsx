@@ -5,17 +5,23 @@ import { FormLabel } from './form-element/FormLabel'
 import { FormText } from './form-element/FormText'
 import { FormSelect } from './form-element/FormSelect'
 import { FormTextArea } from './form-element/FormTextArea'
-import { Col } from '../../grid/Col'
+import { Col, ColProps } from '../../grid/Col'
 import { Row } from '../../grid/Row'
 import { FormCheckbox } from './form-element/FormCheckbox'
 
-interface FormGroupProps {
+interface FormGroupProps extends ColProps {
   as?: typeof Col | typeof Row
   required?: boolean
   controlId: string
 }
 
-function FormGroup({ as = Row, required, controlId, children }: PropsWithChildren<FormGroupProps>) {
+function FormGroup({
+  as = Row,
+  required,
+  controlId,
+  children,
+  ...props
+}: PropsWithChildren<FormGroupProps>) {
   const childrenWithRequiredProp = React.Children.map(children as JSX.Element, (child) => {
     return React.cloneElement(child, {
       required: required,
@@ -24,7 +30,7 @@ function FormGroup({ as = Row, required, controlId, children }: PropsWithChildre
   })
 
   return (
-    <FormBS.Group controlId={controlId} className="mb-3" as={as}>
+    <FormBS.Group controlId={controlId} className="mb-3" as={as} {...props}>
       {childrenWithRequiredProp}
     </FormBS.Group>
   )

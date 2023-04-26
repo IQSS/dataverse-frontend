@@ -10,7 +10,7 @@ type ColSpec =
       offset?: ColSize
     }
 
-interface ColProps extends React.HTMLAttributes<HTMLElement> {
+export interface ColProps extends React.HTMLAttributes<HTMLElement> {
   children: ReactNode
   xs?: ColSpec
   sm?: ColSpec

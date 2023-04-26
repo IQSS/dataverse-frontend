@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { Form as FormBS } from 'react-bootstrap'
-import { RequiredInputSymbol } from '../required-input-symbol/RequiredInputSymbol'
+import { RequiredInputSymbol } from '../../required-input-symbol/RequiredInputSymbol'
 
 interface FormLabelProps {
   required?: boolean

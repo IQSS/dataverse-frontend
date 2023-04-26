@@ -166,19 +166,11 @@ export const Checkbox: Story = {
 export const GroupWithMultipleFields: Story = {
   render: () => (
     <Form>
-      <Form.GroupWithMultipleFields title="Author">
+      <Form.GroupWithMultipleFields title="Related Publication">
         <Row>
-          <Form.Group as={Col} controlId="basic-form-name">
-            <Form.Group.Label>Name</Form.Group.Label>
-            <Form.Group.Input type="text" placeholder="Name" />
-            <Form.Group.Text>
-              Please, specify the authors name. If there are multiple authors, please separate them
-              with a comma.
-            </Form.Group.Text>
-          </Form.Group>
-          <Form.Group as={Col} controlId="basic-form-surname">
-            <Form.Group.Label>Surname</Form.Group.Label>
-            <Form.Group.Input type="text" placeholder="Surname" />
+          <Form.Group as={Col} controlId="basic-form-citation">
+            <Form.Group.Label>Citation</Form.Group.Label>
+            <Form.Group.TextArea />
           </Form.Group>
         </Row>
         <Row>
@@ -186,20 +178,20 @@ export const GroupWithMultipleFields: Story = {
             <Form.Group.Label>Identifier Type</Form.Group.Label>
             <Form.Group.Select>
               <option>Select...</option>
-              <option value="1">Option 1</option>
-              <option value="2">Option 2</option>
-              <option value="3">Option 3</option>
+              <option value="isbn">isbn</option>
+              <option value="url">url</option>
+              <option value="doi">doi</option>
             </Form.Group.Select>
           </Form.Group>
           <Form.Group as={Col} controlId="basic-form-identifier">
             <Form.Group.Label>Identifier</Form.Group.Label>
-            <Form.Group.Input type="text" placeholder="Identifier" />
+            <Form.Group.Input type="text" />
           </Form.Group>
         </Row>
         <Row>
-          <Form.Group as={Col} controlId="basic-form-description">
-            <Form.Group.Label>Description</Form.Group.Label>
-            <Form.Group.TextArea />
+          <Form.Group as={Col} controlId="basic-form-url" sm={6}>
+            <Form.Group.Label>URL</Form.Group.Label>
+            <Form.Group.Input type="text" placeholder="https://" />
           </Form.Group>
         </Row>
       </Form.GroupWithMultipleFields>
@@ -210,19 +202,15 @@ export const GroupWithMultipleFields: Story = {
 export const FormValidation: Story = {
   render: () => (
     <Form validated>
-      <Form.GroupWithMultipleFields title="Author">
+      <Form.GroupWithMultipleFields title="Author" required>
         <Row>
           <Form.Group as={Col} controlId="basic-form-name" required>
             <Form.Group.Label>Name</Form.Group.Label>
             <Form.Group.Input type="text" placeholder="Name" />
-            <Form.Group.Text>
-              Please, specify the authors name. If there are multiple authors, please separate them
-              with a comma.
-            </Form.Group.Text>
           </Form.Group>
-          <Form.Group as={Col} controlId="basic-form-surname" required>
-            <Form.Group.Label>Surname</Form.Group.Label>
-            <Form.Group.Input type="text" placeholder="Surname" />
+          <Form.Group as={Col} controlId="basic-form-affiliation">
+            <Form.Group.Label>Affiliation</Form.Group.Label>
+            <Form.Group.Input type="text" placeholder="Affiliation" />
           </Form.Group>
         </Row>
         <Row>
@@ -238,12 +226,6 @@ export const FormValidation: Story = {
           <Form.Group as={Col} controlId="basic-form-identifier" required>
             <Form.Group.Label>Identifier</Form.Group.Label>
             <Form.Group.Input type="text" placeholder="Identifier" defaultValue="123456" />
-          </Form.Group>
-        </Row>
-        <Row>
-          <Form.Group as={Col} controlId="basic-form-description">
-            <Form.Group.Label>Description</Form.Group.Label>
-            <Form.Group.TextArea />
           </Form.Group>
         </Row>
       </Form.GroupWithMultipleFields>
