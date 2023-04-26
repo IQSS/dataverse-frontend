@@ -13,12 +13,14 @@ interface FormGroupProps extends ColProps {
   as?: typeof Col | typeof Row
   required?: boolean
   controlId: string
+  multipleFieldIndex?: string
 }
 
 function FormGroup({
   as = Row,
   required,
   controlId,
+  multipleFieldIndex,
   children,
   ...props
 }: PropsWithChildren<FormGroupProps>) {
@@ -30,7 +32,11 @@ function FormGroup({
   })
 
   return (
-    <FormBS.Group controlId={controlId} className="mb-3" as={as} {...props}>
+    <FormBS.Group
+      controlId={multipleFieldIndex ? `${controlId}-${multipleFieldIndex}` : controlId}
+      className="mb-3"
+      as={as}
+      {...props}>
       {childrenWithRequiredProp}
     </FormBS.Group>
   )
