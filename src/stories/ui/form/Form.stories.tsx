@@ -19,7 +19,7 @@ import { Row } from '../../../sections/ui/grid/Row'
  *  - Add the text below the input
  * - Select:
  *  - First option should be the 'Select...' option
- *  - The options should use the <option> tag
+ *  - The options should use the `<option>` tag
  *
  * ### Don'ts
  * - Leave inputs without labels
