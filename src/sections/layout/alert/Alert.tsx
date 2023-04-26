@@ -2,6 +2,7 @@ import { Alert as AlertBS } from 'react-bootstrap'
 import { AlertVariant } from './AlertVariant'
 import { AlertIcon } from './AlertIcon'
 import { ReactNode, useState } from 'react'
+import { AlertLink } from './AlertLink'
 
 interface AlertProps {
   variant: AlertVariant
@@ -10,7 +11,7 @@ interface AlertProps {
   children: ReactNode
 }
 
-export function Alert({ variant, dismissible = true, customHeading, children }: AlertProps) {
+function Alert({ variant, dismissible = true, customHeading, children }: AlertProps) {
   interface AlertHeadings {
     [key: string]: string
   }
@@ -40,3 +41,6 @@ export function Alert({ variant, dismissible = true, customHeading, children }: 
     </>
   )
 }
+Alert.Link = AlertLink
+
+export { Alert }

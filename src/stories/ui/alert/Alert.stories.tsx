@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Alert } from '../../../sections/layout/alert/Alert'
-import { AlertLink } from '../../../sections/layout/alert/AlertLink'
+
 /**
  * ## Description
  * This component is for notifications based on user actions.
@@ -29,7 +29,7 @@ export const Default: Story = {
 export const WithLink: Story = {
   render: () => (
     <Alert variant="success">
-      Link with message <AlertLink href="#" link="here is a link"></AlertLink>
+      Link with message <Alert.Link href="#" link="here is a link"></Alert.Link>
     </Alert>
   )
 }
