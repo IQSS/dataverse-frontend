@@ -29,7 +29,7 @@
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": ["./tsconfig.json", "./tests/e2e/tsconfig.json"]
+    "project": ["./tsconfig.json", "./cypress/tsconfig.json"]
   },
   "plugins": ["react", "simple-import-sort", "import", "unused-imports"],
   "rules": {
@@ -55,7 +55,7 @@
   },
   "overrides": [
     {
-      "files": ["**/tests/e2e/**/*.spec.ts"],
+      "files": ["**/e2e/**/*.spec.ts", "**/component/**/*.spec.tsx"],
       "rules": {
         "testing-library/await-async-query": 0,
         "@typescript-eslint/no-unsafe-member-access": 0,

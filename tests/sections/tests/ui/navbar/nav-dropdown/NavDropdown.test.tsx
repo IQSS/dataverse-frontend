@@ -1,5 +1,5 @@
 import { fireEvent, render } from '@testing-library/react'
-import { NavDropdown } from '../../../../../src/sections/ui/navbar/nav-dropdown/NavDropdown'
+import { NavDropdown } from '../../../../../../src/sections/ui/navbar/nav-dropdown/NavDropdown'
 
 const links = [
   { title: 'Link 1', value: '/link1' },
