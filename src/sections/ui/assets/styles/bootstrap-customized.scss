@@ -18,7 +18,7 @@ $danger: $dv-danger-color;
 $body-color: $dv-text-color;
 $headings-color: $dv-headings-color;
 
-  // Typography
+// Typography
 $font-family-base: $dv-font-family;
 
 $font-size-base: $dv-font-size;
@@ -52,6 +52,11 @@ $link-hover-color: $dv-link-hover-color;
 
 // Badge
 @import "bootstrap/scss/badge";
+
+// Breadcrumb
+$breadcrumb-divider: ">";
+
+@import "bootstrap/scss/breadcrumb";
 
 // Tooltip
 @import "bootstrap/scss/tooltip";

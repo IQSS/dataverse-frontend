@@ -1,33 +1,38 @@
 import { Navbar as NavbarBS } from 'react-bootstrap'
 import { Nav } from 'react-bootstrap'
-import { Link, NavbarProps } from './NavbarProps'
-import { NavDropdown } from './nav-dropdown/NavDropdown'
+import { NavbarDropdown } from './navbar-dropdown/NavbarDropdown'
 import { Container } from '../grid/Container'
+import { PropsWithChildren } from 'react'
+import { NavbarLink } from './NavbarLink'
 
-export function Navbar({ brand, links }: NavbarProps) {
+interface Brand {
+  title: string
+  href: string
+  logoImgSrc: string
+}
+
+export interface NavbarProps {
+  brand: Brand
+}
+
+function Navbar({ brand, children }: PropsWithChildren<NavbarProps>) {
   return (
     <NavbarBS collapseOnSelect bg="light" expand="lg" fixed="top">
       <Container>
-        <NavbarBS.Brand href={brand.path}>
-          <img width="28" height="28" src={brand.logo.src} alt={brand.logo.altText} />
+        <NavbarBS.Brand href={brand.href}>
+          <img width="28" height="28" src={brand.logoImgSrc} alt="Brand Logo Image" />
           {brand.title}
         </NavbarBS.Brand>
         <NavbarBS.Toggle aria-controls="responsive-navbar-nav" />
         <NavbarBS.Collapse id="responsive-navbar-nav">
-          <Nav>
-            {links.length != 0 &&
-              links.map((link: Link, index) =>
-                typeof link.value == 'string' ? (
-                  <Nav.Link eventKey={index} key={index} href={link.value}>
-                    {link.title}
-                  </Nav.Link>
-                ) : (
-                  <NavDropdown key={index} title={link.title} links={link.value} />
-                )
-              )}
-          </Nav>
+          <Nav>{children}</Nav>
         </NavbarBS.Collapse>
       </Container>
     </NavbarBS>
   )
 }
+
+Navbar.Link = NavbarLink
+Navbar.Dropdown = NavbarDropdown
+
+export { Navbar }

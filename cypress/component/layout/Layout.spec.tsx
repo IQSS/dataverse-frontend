@@ -4,7 +4,7 @@ describe('Layout', () => {
   it('renders the Header', () => {
     cy.mount(<Layout></Layout>)
 
-    cy.findByRole('img', { name: 'brandLogoImage' }).should('exist')
+    cy.findByRole('img', { name: 'Brand Logo Image' }).should('exist')
     cy.findByText('brandTitle').should('exist')
 
     cy.findByRole('button', { name: 'Toggle navigation' }).click()

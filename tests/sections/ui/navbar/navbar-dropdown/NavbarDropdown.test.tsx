@@ -1,28 +1,31 @@
 import { fireEvent, render } from '@testing-library/react'
-import { NavDropdown } from '../../../../../../src/sections/ui/navbar/nav-dropdown/NavDropdown'
+import { NavbarDropdown } from '../../../../../src/sections/ui/navbar/navbar-dropdown/NavbarDropdown'
+import { Navbar } from '../../../../../src/sections/ui/navbar/Navbar'
 
-const links = [
-  { title: 'Link 1', value: '/link1' },
-  { title: 'Link 2', value: '/link2' },
-  {
-    title: 'Link 3',
-    value: [
-      { title: 'Sublink 1', value: '/sublink1' },
-      { title: 'Sublink 2', value: '/sublink2' }
-    ]
-  }
-]
-
-describe('NavDropdown component', () => {
+describe('NavbarDropdown component', () => {
   test('renders the dropdown title', () => {
-    const { getByRole } = render(<NavDropdown title="Dropdown Title" links={links} />)
+    const { getByRole } = render(
+      <NavbarDropdown title="Dropdown Title" id="dropdown">
+        <Navbar.Dropdown.Item href="/link-1">Link 1</Navbar.Dropdown.Item>
+        <Navbar.Dropdown.Item href="/link-2">Link 2</Navbar.Dropdown.Item>
+      </NavbarDropdown>
+    )
 
     const titleElement = getByRole('button', { name: 'Dropdown Title' })
     expect(titleElement).toBeInTheDocument()
   })
 
   test('renders the dropdown links', async () => {
-    const { getByRole, findByRole } = render(<NavDropdown title="Dropdown Title" links={links} />)
+    const { getByRole, findByRole } = render(
+      <NavbarDropdown title="Dropdown Title" id="dropdown">
+        <Navbar.Dropdown.Item href="/link-1">Link 1</Navbar.Dropdown.Item>
+        <Navbar.Dropdown.Item href="/link-2">Link 2</Navbar.Dropdown.Item>
+        <NavbarDropdown title="Link 3" id="dropdown-2">
+          <Navbar.Dropdown.Item href="/sublink-1">Sublink 1</Navbar.Dropdown.Item>
+          <Navbar.Dropdown.Item href="/sublink-2">Sublink 2</Navbar.Dropdown.Item>
+        </NavbarDropdown>
+      </NavbarDropdown>
+    )
 
     const dropdownTitle = getByRole('button', { name: 'Dropdown Title' })
 
