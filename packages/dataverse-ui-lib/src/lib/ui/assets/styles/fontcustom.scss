@@ -1,0 +1,69 @@
+/*
+  Icon Font: fontcustom
+*/
+
+@font-face {
+  font-weight: normal;
+  font-family: fontcustom;
+  font-style: normal;
+  src: url("src/sections/ui/assets/fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.eot");
+  src: url("src/sections/ui/assets/fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.eot?#iefix") format("embedded-opentype"),
+       url("src/sections/ui/assets/fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.woff2") format("woff2"),
+       url("src/sections/ui/assets/fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.woff") format("woff"),
+       url("src/sections/ui/assets/fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.ttf") format("truetype"),
+       url("src/sections/ui/assets/fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.svg#fontcustom") format("svg");
+}
+
+@media screen and (min-resolution) {
+  @font-face {
+    font-family: fontcustom;
+    src: url("src/sections/ui/assets/fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.svg#fontcustom") format("svg");
+  }
+}
+
+[data-icon]::before { content: attr(data-icon); }
+
+[data-icon]::before,
+.icon-astro::before,
+.icon-audio::before,
+.icon-code::before,
+.icon-collection::before,
+.icon-dataset::before,
+.icon-document::before,
+.icon-file::before,
+.icon-geodata::before,
+.icon-image::before,
+.icon-network::before,
+.icon-other::before,
+.icon-package::before,
+.icon-tabular::before,
+.icon-unlock::before,
+.icon-video::before {
+  display: inline-block;
+  font-weight: normal;
+  font-family: fontcustom, sans-serif;
+  font-style: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-transform: none;
+  text-decoration: inherit;
+  text-rendering: optimizelegibility;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+.icon-astro::before { content: "\f100"; }
+.icon-audio::before { content: "\f101"; }
+.icon-code::before { content: "\f102"; }
+.icon-collection::before { content: "\f103"; }
+.icon-dataset::before { content: "\f104"; }
+.icon-document::before { content: "\f105"; }
+.icon-file::before { content: "\f106"; }
+.icon-geodata::before { content: "\f107"; }
+.icon-image::before { content: "\f108"; }
+.icon-network::before { content: "\f109"; }
+.icon-other::before { content: "\f10a"; }
+.icon-package::before { content: "\f10b"; }
+.icon-tabular::before { content: "\f10c"; }
+.icon-unlock::before { content: "\f10d"; }
+.icon-video::before { content: "\f10e"; }
