@@ -23,6 +23,8 @@ $dv-headings-color: #333;
 // Link colors
 $dv-link-color: #3174AF;
 $dv-link-hover-color: #23527c;
+$dv-tooltip-color: #99bcdb;
+$dv-tooltip-hover-color: #337ab7;
 
 // Button colors
 $dv-button-border-color: #CCC;
@@ -47,4 +49,6 @@ $dv-button-border-color: #CCC;
   warningBoxColor: $dv-warning-box-color;
   infoBoxColor: $dv-info-box-color;
   buttonBorderColor: $dv-button-border-color;
+  tooltipFillColor: $dv-tooltip-color;
+  tooltipBorderColor: $dv-tooltip-hover-color;
 }
