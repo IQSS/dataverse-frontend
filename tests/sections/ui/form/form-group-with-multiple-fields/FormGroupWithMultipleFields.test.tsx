@@ -1,5 +1,6 @@
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import { FormGroupWithMultipleFields } from '../../../../../src/sections/ui/form/form-group-multiple-fields/FormGroupWithMultipleFields'
+import { FormGroup } from '../../../../../src/sections/ui/form/form-group/FormGroup'
 
 describe('FormGroupWithMultipleFields', () => {
   it('renders title with required input symbol if required prop is true', () => {
@@ -29,5 +30,26 @@ describe('FormGroupWithMultipleFields', () => {
     )
     const children = getByText('Test Children')
     expect(children).toBeInTheDocument()
+  })
+
+  it('adds and removes fields dynamically when enabled', () => {
+    const { getAllByLabelText, getByText } = render(
+      <FormGroupWithMultipleFields title="Test Group" withDynamicFields>
+        <FormGroup controlId="username">
+          <FormGroup.Label>Username</FormGroup.Label>
+          <FormGroup.Input type="text" />
+        </FormGroup>
+      </FormGroupWithMultipleFields>
+    )
+
+    expect(getAllByLabelText('Username').length).toBe(1)
+
+    fireEvent.click(getByText('+'))
+
+    expect(getAllByLabelText('Username').length).toBe(2)
+
+    fireEvent.click(getByText('-'))
+
+    expect(getAllByLabelText('Username').length).toBe(1)
   })
 })

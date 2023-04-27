@@ -62,4 +62,15 @@ describe('FormInput', () => {
     expect(handleChange).toHaveBeenCalled()
     expect(getByLabelText('Username')).toHaveValue('new value')
   })
+
+  it('renders with fieldIndex in the id when provided', () => {
+    const { getByLabelText } = render(
+      <FormGroup controlId="username" fieldIndex="1">
+        <FormGroup.Label>Username</FormGroup.Label>
+        <FormGroup.Input type="text" />
+      </FormGroup>
+    )
+    const input = getByLabelText('Username')
+    expect(input).toHaveAttribute('id', 'username-1')
+  })
 })

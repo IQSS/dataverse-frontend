@@ -14,17 +14,6 @@ describe('FormInput', () => {
     expect(textarea).toBeInTheDocument()
   })
 
-  it('uses FormElementLayout component', () => {
-    const { container } = render(
-      <FormGroup controlId="textarea">
-        <FormGroup.Label>Username</FormGroup.Label>
-        <FormGroup.TextArea />
-      </FormGroup>
-    )
-    const formElementLayout = container.querySelector('FormElementLayout')
-    expect(formElementLayout).toBeInTheDocument()
-  })
-
   it('handles withinMultipleFieldsGroup prop', () => {
     render(
       <FormGroup controlId="textarea">
@@ -32,5 +21,16 @@ describe('FormInput', () => {
         <FormGroup.TextArea withinMultipleFieldsGroup />
       </FormGroup>
     )
+  })
+
+  it('renders with fieldIndex in the id when provided', () => {
+    const { getByLabelText } = render(
+      <FormGroup controlId="textarea" fieldIndex="4">
+        <FormGroup.Label>Username</FormGroup.Label>
+        <FormGroup.TextArea withinMultipleFieldsGroup />
+      </FormGroup>
+    )
+    const input = getByLabelText('Username')
+    expect(input).toHaveAttribute('id', 'textarea-4')
   })
 })

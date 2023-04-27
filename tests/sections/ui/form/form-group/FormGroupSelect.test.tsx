@@ -68,4 +68,20 @@ describe('FormSelect', () => {
     expect(onChange).toHaveBeenCalledTimes(1)
     expect(selectElement).toHaveValue('2')
   })
+
+  it('renders with fieldIndex in the id when provided', () => {
+    const { getByLabelText } = render(
+      <FormGroup controlId="selector" fieldIndex="3">
+        <FormGroup.Label>Selector</FormGroup.Label>
+        <FormGroup.Select>
+          <option>Select...</option>
+          <option value="1">Option 1</option>
+          <option value="2">Option 2</option>
+          <option value="3">Option 3</option>
+        </FormGroup.Select>
+      </FormGroup>
+    )
+    const input = getByLabelText('Selector')
+    expect(input).toHaveAttribute('id', 'selector-3')
+  })
 })

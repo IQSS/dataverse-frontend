@@ -3,7 +3,7 @@ import styles from './DynamicFieldsButtons.module.scss'
 import { MouseEvent } from 'react'
 
 interface AddFieldButtonsProps {
-  originalField: boolean
+  originalField?: boolean
   onAddButtonClick: (event: MouseEvent<HTMLButtonElement>) => void
   onRemoveButtonClick: (event: MouseEvent<HTMLButtonElement>) => void
 }
