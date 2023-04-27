@@ -202,7 +202,7 @@ export const GroupWithMultipleFields: Story = {
 export const FormValidation: Story = {
   render: () => (
     <Form validated>
-      <Form.GroupWithMultipleFields title="Author" required>
+      <Form.GroupWithMultipleFields title="Author" required withDynamicFields>
         <Row>
           <Form.Group as={Col} controlId="basic-form-name" required>
             <Form.Group.Label>Name</Form.Group.Label>
