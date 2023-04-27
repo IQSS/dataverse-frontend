@@ -6,10 +6,10 @@ describe('Layout', () => {
   it('renders the header', () => {
     renderWithRouter(<Layout />)
 
-    const brandLink = screen.getByRole('link', { name: 'brandLogoImage brandTitle' })
+    const brandLink = screen.getByRole('link', { name: 'Brand Logo Image brandTitle' })
     expect(brandLink).toBeInTheDocument()
 
-    const brandImg = screen.getByRole('img', { name: 'brandLogoImage' })
+    const brandImg = screen.getByRole('img', { name: 'Brand Logo Image' })
     expect(brandImg).toBeInTheDocument()
 
     const signUpLink = screen.getByRole('link', { name: 'signUp' })

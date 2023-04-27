@@ -62,18 +62,18 @@ Once the site is built through the `npm run build` command, it can be deployed i
 
 We are working to provide different preconfigured automated deployment options, seeking to support common use cases today for installing applications of this nature.
 
+The current automated deployment options are available within the GitHub `deploy` workflow, which is designed to be run manually from GitHub Actions. The deployment option is selected via a dropdown menu, as well as the target environment.
+
 ### AWS S3 Deployment
 
-AWS S3 deployment is done via the GitHub workflow `deploy`, which is run manually from GitHub Actions and will build and deploy the application to a remote S3 bucket.
+This option will build and deploy the application to a remote S3 bucket.
 
-For this workflow to work, a GitHub environment must be first created with the following environment secrets:
+For this workflow to work, a GitHub environment must be configured with the following environment secrets:
 
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY
 - AWS_S3_BUCKET_NAME
 - AWS_DEFAULT_REGION
-
-Selecting the `deploy` workflow in GitHub Actions will display the available environments for deployment in a drop-down menu.
 
 Note that for the deployment to the S3 bucket to succeed, you must make the following changes to the bucket via the S3 web interface (or equivalent changes using aws-cli or similar tools):
 
@@ -101,6 +101,22 @@ Note that for the deployment to the S3 bucket to succeed, you must make the foll
 ```
 
 You should see the deployed app at http://BUCKET-NAME.s3-website-REGION.amazonaws.com such as http://mybucket.s3-website-us-east-1.amazonaws.com
+
+### Payara Deployment
+
+This option will build and deploy the application to a remote Payara server.
+
+This option is intended for an "all-in-one" solution, where the Dataverse backend application and the frontend application run on the same Payara server.
+
+For this workflow to work, a GitHub environment must be configured with the following environment secrets:
+
+- PAYARA_INSTANCE_HOST
+- PAYARA_INSTANCE_USERNAME
+- PAYARA_INSTANCE_SSH_PRIVATE_KEY
+
+It is important that the remote instance is correctly pre-configured, with the Payara server running, and a service account for Dataverse with the corresponding SSH key pair established.
+
+A base path for the frontend application can be established on the remote server by setting the corresponding field in the workflow inputs. This mechanism prevents conflicts between the frontend application and any pre-existing deployed application running on Payara, which can potentially be a Dataverse backend. This way, only the routes with the base path included will redirect to the frontend application.
 
 ## Changes in the Style Guide
 
