@@ -24,6 +24,9 @@ $dv-headings-color: #333;
 $dv-link-color: #3174AF;
 $dv-link-hover-color: #23527c;
 
+// Button colors
+$dv-button-border-color: #CCC;
+
 :export {
   brand: $dv-brand-color;
   primary: $dv-primary-color;
@@ -43,4 +46,5 @@ $dv-link-hover-color: #23527c;
   dangerBoxColor: $dv-danger-box-color;
   warningBoxColor: $dv-warning-box-color;
   infoBoxColor: $dv-info-box-color;
+  buttonBorderColor: $dv-button-border-color;
 }

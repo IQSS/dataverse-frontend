@@ -25,9 +25,11 @@ export function DropdownButton({
   asButtonGroup,
   children
 }: DropdownButtonProps) {
+  const spacingClass = withSpacing ? styles.spacing : ''
+
   return (
     <DropdownButtonBS
-      className={`${withSpacing ? styles.spacing : ''}`}
+      className={`${spacingClass} ${styles.border}`}
       id={id}
       title={
         <>

@@ -25,7 +25,8 @@ export const baseTheme = {
     dangerBoxColor: colorVariables.dangerBoxColor,
     headingsColor: colorVariables.headingsColor,
     linkColor: colorVariables.linkColor,
-    linkHoverColor: colorVariables.linkHoverColor
+    linkHoverColor: colorVariables.linkHoverColor,
+    buttonBorderColor: colorVariables.buttonBorderColor
   },
   typography: {
     fontSize: typographyVariables.fontSize,
