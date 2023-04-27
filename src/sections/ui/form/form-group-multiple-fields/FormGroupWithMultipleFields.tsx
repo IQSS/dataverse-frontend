@@ -4,28 +4,30 @@ import React, { PropsWithChildren, ReactNode, useState } from 'react'
 import styles from './FormGroupWithMultipleFields.module.scss'
 import { RequiredInputSymbol } from '../required-input-symbol/RequiredInputSymbol'
 import { DynamicFieldsButtons } from './dynamic-fields-buttons/DynamicFieldsButtons'
+import { FormGroup } from '../form-group/FormGroup'
 
-const MultipleFieldsTitle = ({ title, required }: { title: string; required?: boolean }) => (
+const Title = ({ title, required }: { title: string; required?: boolean }) => (
   <span className={styles.title}>
     {title} {required && <RequiredInputSymbol />}
   </span>
 )
 
-function setChildrenKey(children: ReactNode, multipleFieldIndex: number) {
+function getFieldWithIndex(children: ReactNode, fieldIndex: number) {
+  const isFormGroup = (child: ReactNode) => {
+    return React.isValidElement(child) && child.type === FormGroup
+  }
+
   return React.Children.map(children, (child) => {
     if (!React.isValidElement(child)) {
       return child
     }
 
-    // @ts-ignore
-    const childProps = child.props.controlId
-      ? { ...child.props, multipleFieldIndex: multipleFieldIndex }
+    const childProps = isFormGroup(child)
+      ? { ...child.props, fieldIndex: fieldIndex.toString() }
       : { ...child.props }
 
-    // @ts-ignore
     if (child.props.children) {
-      // @ts-ignore
-      childProps.children = setChildrenKey(child.props.children, multipleFieldIndex)
+      childProps.children = getFieldWithIndex(child.props.children, fieldIndex)
     }
 
     return React.cloneElement(child, childProps)
@@ -50,20 +52,18 @@ export function FormGroupWithMultipleFields({
     <>
       {fields.map((field, index) => {
         const isFirstField = index == 0
-        const fieldWithKey = setChildrenKey(field, index)
+        const fieldWithIndex = withDynamicFields ? getFieldWithIndex(field, index) : field
 
         return (
           <Row key={index}>
-            <Col sm={3}>
-              {isFirstField && <MultipleFieldsTitle title={title} required={required} />}
-            </Col>
-            <Col sm={6}>{fieldWithKey}</Col>
+            <Col sm={3}>{isFirstField && <Title title={title} required={required} />}</Col>
+            <Col sm={6}>{fieldWithIndex}</Col>
             <Col sm={3}>
               {withDynamicFields && (
                 <DynamicFieldsButtons
-                  onAddButtonClick={() => setFields([...fields, fieldWithKey])}
-                  onRemoveButtonClick={() => setFields(fields.filter((_, i) => i !== index))}
                   originalField={isFirstField}
+                  onAddButtonClick={() => setFields([...fields, fieldWithIndex])}
+                  onRemoveButtonClick={() => setFields(fields.filter((_, i) => i !== index))}
                 />
               )}
             </Col>
