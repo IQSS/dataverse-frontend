@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { DynamicFieldsButtons } from '../../../../../../src/sections/ui/form/form-group-multiple-fields/dynamic-fields-buttons/DynamicFieldsButtons'
 import { vi } from 'vitest'
 

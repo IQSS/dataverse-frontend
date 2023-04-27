@@ -6,17 +6,21 @@ function getFieldsWithIndex(fields: Array<ReactNode>) {
 }
 
 function getFieldWithIndex(field: ReactNode, fieldIndex: number) {
-  return React.Children.map(field, (child) => {
+  return React.Children.map(field, (child: ReactNode) => {
     if (!React.isValidElement(child)) {
       return child
     }
 
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment */
     const childProps = getPropsWithFieldIndex(child, fieldIndex)
 
+    /* eslint-disable @typescript-eslint/no-unsafe-member-access */
     if (child.props.children) {
+      /* eslint-disable @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-argument */
       childProps.children = getFieldWithIndex(child.props.children, fieldIndex)
     }
 
+    /* eslint-disable @typescript-eslint/no-unsafe-argument */
     return React.cloneElement(child, childProps)
   })
 }
@@ -26,6 +30,7 @@ function getPropsWithFieldIndex(child: ReactElement, fieldIndex: number) {
     return React.isValidElement(child) && child.type === FormGroup
   }
 
+  /* eslint-disable @typescript-eslint/no-unsafe-return */
   return isFormGroup(child)
     ? { ...child.props, fieldIndex: fieldIndex.toString() }
     : { ...child.props }
