@@ -178,9 +178,9 @@ export const GroupWithMultipleFields: Story = {
             <Form.Group.Label>Identifier Type</Form.Group.Label>
             <Form.Group.Select>
               <option>Select...</option>
+              <option value="doi">doi</option>
               <option value="isbn">isbn</option>
               <option value="url">url</option>
-              <option value="doi">doi</option>
             </Form.Group.Select>
           </Form.Group>
           <Form.Group as={Col} controlId="basic-form-identifier">
