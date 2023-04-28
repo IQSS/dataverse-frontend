@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { DropdownButtonItem } from '../../../../../src/sections/ui/dropdown-button/dropdown-button-item/DropdownButtonItem'
+import { DropdownButtonItem } from '../../../../../packages/dataverse-ui-lib/src/lib/dropdown-button/dropdown-button-item/DropdownButtonItem'
 
 describe('DropdownButtonItem', () => {
   it('renders the provided children', () => {

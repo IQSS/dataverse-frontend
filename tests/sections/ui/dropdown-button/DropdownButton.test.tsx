@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react'
-import { DropdownButton } from '../../../../src/sections/ui/dropdown-button/DropdownButton'
-import { Icon } from '../../../../src/sections/ui/icon.enum'
+import { DropdownButton } from '../../../../packages/dataverse-ui-lib/src/lib/dropdown-button/DropdownButton'
+import { Icon } from '../../../../packages/dataverse-ui-lib/src/lib/icon.enum'
 
 const titleText = 'My Dropdown Button'
 

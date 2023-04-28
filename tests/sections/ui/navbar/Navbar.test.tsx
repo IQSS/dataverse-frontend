@@ -1,5 +1,5 @@
 import { render, fireEvent } from '@testing-library/react'
-import { Navbar } from '../../../../src/sections/ui/navbar/Navbar'
+import { Navbar } from '../../../../packages/dataverse-ui-lib/src/lib/navbar/Navbar'
 
 const brand = {
   logoImgSrc: '/logo.svg',

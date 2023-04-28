@@ -1,5 +1,5 @@
 import { fireEvent, render } from '@testing-library/react'
-import { Tooltip, TooltipProps } from '../../../../src/sections/ui/tooltip/Tooltip'
+import { Tooltip, TooltipProps } from '../../../../packages/dataverse-ui-lib/src/lib/tooltip/Tooltip'
 
 describe('Tooltip', () => {
   const defaultProps: TooltipProps = {
