@@ -37,3 +37,17 @@ export {}
 //   }
 // }
 import '@testing-library/cypress/add-commands'
+import { ThemeProvider } from '../../src/sections/ui/theme/ThemeProvider'
+import { ReactNode } from 'react'
+import { I18nextProvider } from 'react-i18next'
+import i18next from '../../src/i18n'
+
+// Define your custom mount function
+
+Cypress.Commands.add('customMount', (component: ReactNode) => {
+  return cy.mount(
+    <ThemeProvider>
+      <I18nextProvider i18n={i18next}>{component}</I18nextProvider>
+    </ThemeProvider>
+  )
+})
