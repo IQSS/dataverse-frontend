@@ -1,5 +1,4 @@
 import { Button } from '../../../../src/sections/ui/button/Button'
-import jest from 'jest-mock'
 import { Icon } from '../../../../src/sections/ui/icon.enum'
 
 describe('Button', () => {
@@ -16,13 +15,13 @@ describe('Button', () => {
   })
 
   it('calls the onClick function when the button is clicked', () => {
-    const mock = jest.fn()
-    cy.customMount(<Button onClick={mock}>{clickMeText}</Button>)
+    const onClick = cy.stub().as('onClick')
+    cy.customMount(<Button onClick={onClick}>{clickMeText}</Button>)
 
     cy.findByText('Click me').click()
-    expect(mock).toHaveBeenCalledTimes(1)
+    cy.wrap(onClick).should('be.called')
   })
-  /*
+
   it('disables the button when isDisabled prop is true', () => {
     cy.customMount(<Button disabled>{clickMeText}</Button>)
     cy.findByText(clickMeText).should('be.disabled')
@@ -30,16 +29,14 @@ describe('Button', () => {
   })
 
   it('does not call the onClick function when the button is disabled', () => {
-    const handleClick = vi.fn()
+    const onClick = cy.stub().as('onClick')
     cy.customMount(
-      <Button disabled onClick={handleClick}>
+      <Button disabled onClick={onClick}>
         {clickMeText}
       </Button>
     )
 
-    cy.findByText('Click me').click()
-    expect(handleClick).not.toHaveBeenCalledTimes(1)
+    cy.findByText(clickMeText).click({ force: true })
+    cy.wrap(onClick).should('not.be.called')
   })
-  
- */
 })
