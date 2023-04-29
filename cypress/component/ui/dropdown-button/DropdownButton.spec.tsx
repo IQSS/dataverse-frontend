@@ -1,4 +1,3 @@
-import { fireEvent, render } from '@testing-library/react'
 import { DropdownButton } from '../../../../src/sections/ui/dropdown-button/DropdownButton'
 import { Icon } from '../../../../src/sections/ui/icon.enum'
 
@@ -6,37 +5,31 @@ const titleText = 'My Dropdown Button'
 
 describe('DropdownButton', () => {
   it('renders the provided title', () => {
-    const { getByText } = render(
+    cy.customMount(
       <DropdownButton id="my-dropdown" title={titleText} variant="primary">
         <span>Item 1</span>
         <span>Item 2</span>
       </DropdownButton>
     )
 
-    expect(getByText(titleText)).toBeInTheDocument()
+    cy.findByText(titleText).should('exist')
   })
 
-  it('renders the provided children', async () => {
-    const { getByText, findByText } = render(
+  it('renders the provided children', () => {
+    cy.customMount(
       <DropdownButton id="my-dropdown" title="My Dropdown Button" variant="primary">
         <span>Item 1</span>
         <span>Item 2</span>
       </DropdownButton>
     )
 
-    const dropdownButton = getByText(titleText)
-
-    fireEvent.click(dropdownButton)
-
-    const item1 = await findByText('Item 1')
-    expect(item1).toBeInTheDocument()
-
-    const item2 = await findByText('Item 2')
-    expect(item2).toBeInTheDocument()
+    cy.findByText(titleText).click()
+    cy.findByText('Item 1').should('be.visible')
+    cy.findByText('Item 2').should('be.visible')
   })
 
   it('renders an icon when provided', () => {
-    const { getByRole } = render(
+    cy.customMount(
       <DropdownButton
         id="my-dropdown"
         title="My Dropdown Button"
@@ -46,6 +39,7 @@ describe('DropdownButton', () => {
         <span>Item 2</span>
       </DropdownButton>
     )
-    expect(getByRole('img', { name: Icon.COLLECTION })).toBeInTheDocument()
+    cy.pause()
+    cy.findByRole('img', { name: Icon.COLLECTION }).should('be.visible')
   })
 })
