@@ -17,7 +17,13 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "tests", "cypress", "vitest.config.ts", "cypress.config.ts", "vite.config.ts",
+  "include": [
+    "src",
+    "tests",
+    "cypress",
+    "vitest.config.ts",
+    "cypress.config.ts",
+    "vite.config.ts",
     "packages/dataverse-ui-lib/src/"
   ],
   "exclude": ["cypress/**/**.spec.ts", "cypress/**/**.spec.tsx"]

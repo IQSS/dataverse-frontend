@@ -29,7 +29,12 @@
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": ["./tsconfig.json", "./cypress/tsconfig.json"]
+    "project": [
+      "./tsconfig.json",
+      "./cypress/tsconfig.json",
+      "./packages/dataverse-ui-lib/tsconfig.json",
+      "./packages/dataverse-ui-lib/tsconfig.node.json"
+    ]
   },
   "plugins": ["react", "simple-import-sort", "import", "unused-imports"],
   "rules": {
@@ -67,5 +72,6 @@
       "files": ["**/tests/**/*.(test).(ts|tsx)"],
       "extends": ["plugin:vitest/recommended"]
     }
-  ]
+  ],
+  "ignorePatterns": ["packages/dataverse-ui-lib/dist/**"]
 }
