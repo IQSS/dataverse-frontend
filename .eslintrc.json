@@ -33,7 +33,6 @@
       "./tsconfig.json",
       "./cypress/tsconfig.json",
       "./packages/dataverse-ui-lib/tsconfig.json",
-      "./packages/dataverse-ui-lib/tsconfig.node.json",
       "./packages/dataverse-ui-lib/tests/cypress/tsconfig.json"
     ]
   },
