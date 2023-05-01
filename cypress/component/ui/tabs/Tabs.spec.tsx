@@ -1,9 +1,8 @@
-import { render } from '@testing-library/react'
 import { Tabs } from '../../../../src/sections/ui/tabs/Tabs'
 
 describe('Tabs', () => {
   it('renders with default active key', () => {
-    const { getByText } = render(
+    cy.customMount(
       <Tabs defaultActiveKey="key-1">
         <Tabs.Tab eventKey="key-1" title="Tab 1">
           Content 1
@@ -16,13 +15,14 @@ describe('Tabs', () => {
         </Tabs.Tab>
       </Tabs>
     )
-
-    expect(getByText('Tab 1')).toHaveClass('active')
-    expect(getByText('Content 1')).toHaveClass('show', 'active')
+    cy.pause()
+    cy.findByText('Tab 1').should('have.class', 'active')
+    cy.findByText('Content 1').should('have.class', 'active')
+    cy.findByText('Content 1').should('have.class', 'show')
   })
 
   it('renders with different default active key', () => {
-    const { getByText } = render(
+    cy.customMount(
       <Tabs defaultActiveKey="key-2">
         <Tabs.Tab eventKey="key-1" title="Tab 1">
           Content 1
@@ -36,7 +36,7 @@ describe('Tabs', () => {
       </Tabs>
     )
 
-    expect(getByText('Tab 2')).toHaveClass('active')
-    expect(getByText('Content 2')).toHaveClass('show', 'active')
+    cy.findByText('Tab 2').should('have.class', 'active')
+    cy.findByText('Content 2').should('have.class', 'show').and('have.class', 'active')
   })
 })
