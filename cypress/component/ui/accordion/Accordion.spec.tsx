@@ -73,7 +73,6 @@ describe('Accordion', () => {
     cy.findByText(section2Body).should('not.be.visible')
 
     cy.findByText(section2Header).click()
-    cy.findByText(section1Header).click()
     cy.findByText(section1Body).should('be.visible')
     cy.findByText(section2Body).should('be.visible')
   })
