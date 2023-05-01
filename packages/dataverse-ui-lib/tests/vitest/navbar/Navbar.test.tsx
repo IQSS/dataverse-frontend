@@ -1,5 +1,5 @@
 import { render, fireEvent } from '@testing-library/react'
-import { Navbar } from '../../src/lib/components/navbar/Navbar'
+import { Navbar } from '../../../src/lib/components/navbar/Navbar'
 
 const brand = {
   logoImgSrc: '/logo.svg',

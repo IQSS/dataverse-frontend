@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { DropdownButtonItem } from '../../../src/lib/components/dropdown-button/dropdown-button-item/DropdownButtonItem'
+import { DropdownButtonItem } from '../../../../src/lib/components/dropdown-button/dropdown-button-item/DropdownButtonItem'
 
 describe('DropdownButtonItem', () => {
   it('renders the provided children', () => {

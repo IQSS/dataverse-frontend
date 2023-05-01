@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "types": ["vite/client", "cypress", "@testing-library/cypress"],
+    "types": ["vite/client", "@testing-library/jest-dom"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -17,6 +17,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "tests", "cypress", "vitest.config.ts", "cypress.config.ts", "vite.config.ts"],
-  "exclude": ["cypress/**/**.spec.ts", "cypress/**/**.spec.tsx"]
+  "include": ["src", "tests", "vitest.config.ts", "vite.config.ts"],
+  "exclude": ["tests/cypress/**"]
 }

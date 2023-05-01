@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { Tabs } from '../../src/lib/components/tabs/Tabs'
+import { Tabs } from '../../../src/lib/components/tabs/Tabs'
 
 describe('Tabs', () => {
   it('renders with default active key', () => {

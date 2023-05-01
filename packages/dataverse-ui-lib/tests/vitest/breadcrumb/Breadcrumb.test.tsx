@@ -1,4 +1,4 @@
-import { Breadcrumb } from '../../src/lib/components/breadcrumb/Breadcrumb'
+import { Breadcrumb } from '../../../src/lib/components/breadcrumb/Breadcrumb'
 import { render } from '@testing-library/react'
 
 describe('Breadcrumb', () => {
