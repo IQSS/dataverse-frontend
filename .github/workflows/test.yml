@@ -18,6 +18,10 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Build Dataverse UI Library
+        working-directory: ./packages/dataverse-ui-library
+        run: npm run build
+
       - name: Create and populate .env file
         env:
           DATAVERSE_BACKEND_URL: ${{ secrets.DATAVERSE_BACKEND_URL }}
@@ -46,6 +50,10 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Build Dataverse UI Library
+        working-directory: ./packages/dataverse-ui-library
+        run: npm run build
+
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
@@ -66,6 +74,10 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
+
+      - name: Build Dataverse UI Library
+        working-directory: ./packages/dataverse-ui-library
+        run: npm run build
 
       - name: Build Storybook
         run: npm run build-storybook --quiet
