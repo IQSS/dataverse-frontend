@@ -14,6 +14,10 @@ Run this command to install the dependencies. You may see a message about vulner
 Please check this announcement from Create React App repository https://github.com/facebook/create-react-app/issues/11174 .
 These vulnerabilities won't be in the production build since they come from libraries only used during the development.
 
+### `cd packages/dataverse-ui-lib && npm run build`
+
+Run this command to build the UI library. This is needed to be able to run the app.
+
 ## Available Scripts
 
 In the project directory, you can run at any time:
