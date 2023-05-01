@@ -5,7 +5,7 @@ import { AccordionBody } from './AccordionBody'
 import { AccordionHeader } from './AccordionHeader'
 
 interface AccordionProps {
-  defaultActiveKey?: string
+  defaultActiveKey?: string[] | string
   alwaysOpen?: boolean
   children: ReactNode
 }

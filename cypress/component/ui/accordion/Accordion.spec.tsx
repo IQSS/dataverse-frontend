@@ -32,7 +32,7 @@ describe('Accordion', () => {
     cy.findByText(section1Header).click()
     cy.findByText(section1Body).should('not.be.visible')
   })
-  it('renders without a defaultActiveKey', () => {
+  it('renders fully collapsed without a defaultActiveKey', () => {
     cy.mount(
       <ThemeProvider>
         <Accordion alwaysOpen={true}>
@@ -51,13 +51,11 @@ describe('Accordion', () => {
     cy.findByText(section1Body).should('not.be.visible')
     cy.findByText(section2Header).should('be.visible')
     cy.findByText(section2Body).should('not.be.visible')
-
-    cy.pause()
   })
   it('renders the always open tab correctly', () => {
     cy.mount(
       <ThemeProvider>
-        <Accordion alwaysOpen={true}>
+        <Accordion defaultActiveKey={['1']} alwaysOpen={true}>
           <Accordion.Item eventKey="1">
             <Accordion.Header>{section1Header}</Accordion.Header>
             <Accordion.Body>{section1Body}</Accordion.Body>
@@ -70,7 +68,7 @@ describe('Accordion', () => {
       </ThemeProvider>
     )
     cy.findByText(section1Header).should('be.visible')
-    cy.findByText(section1Body).should('not.be.visible')
+    cy.findByText(section1Body).should('be.visible')
     cy.findByText(section2Header).should('be.visible')
     cy.findByText(section2Body).should('not.be.visible')
 
