@@ -2,7 +2,7 @@ import { NavbarDropdown } from '../../../../../src/sections/ui/navbar/navbar-dro
 import { Navbar } from '../../../../../src/sections/ui/navbar/Navbar'
 
 describe('NavbarDropdown component', () => {
-  test('renders the dropdown title', () => {
+  it('renders the dropdown title', () => {
     cy.customMount(
       <NavbarDropdown title="Dropdown Title" id="dropdown">
         <Navbar.Dropdown.Item href="/link-1">Link 1</Navbar.Dropdown.Item>
@@ -12,8 +12,8 @@ describe('NavbarDropdown component', () => {
     cy.findByRole('button', { name: 'Dropdown Title' }).should('be.visible')
   })
 
-  test('renders the dropdown links', () => {
-    cy.findByRole(
+  it('renders the dropdown links', () => {
+    cy.customMount(
       <NavbarDropdown title="Dropdown Title" id="dropdown">
         <Navbar.Dropdown.Item href="/link-1">Link 1</Navbar.Dropdown.Item>
         <Navbar.Dropdown.Item href="/link-2">Link 2</Navbar.Dropdown.Item>
