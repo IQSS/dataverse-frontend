@@ -18,25 +18,7 @@
     "jsx": "react-jsx"
   },
   "include": ["src", "tests", "cypress", "vitest.config.ts", "cypress.config.ts", "vite.config.ts",
-    "packages/dataverse-ui-lib/src/lib/components/grid",
-    "packages/dataverse-ui-lib/src/lib/components/dropdown-button",
-    "packages/dataverse-ui-lib/src/lib/components/navbar",
-    "packages/dataverse-ui-lib/src/lib/components/tabs",
-    "packages/dataverse-ui-lib/src/lib/components/breadcrumb",
-    "packages/dataverse-ui-lib/src/lib/components/tooltip",
-    "packages/dataverse-ui-lib/src/lib/components/button",
-    "packages/dataverse-ui-lib/src/lib/components/badge",
-    "packages/dataverse-ui-lib/src/lib/components/theme",
-    "packages/dataverse-ui-lib/src/lib/components/icon.enum.ts",
-    "packages/dataverse-ui-lib/src/lib/stories/tabs",
-    "packages/dataverse-ui-lib/src/lib/stories/badge",
-    "packages/dataverse-ui-lib/src/lib/stories/grid",
-    "packages/dataverse-ui-lib/src/lib/stories/dropdown-button",
-    "packages/dataverse-ui-lib/src/lib/stories/breadcrumb",
-    "packages/dataverse-ui-lib/src/lib/stories/navbar",
-    "packages/dataverse-ui-lib/src/lib/stories/tooltip",
-    "packages/dataverse-ui-lib/src/lib/stories/button",
-    "packages/dataverse-ui-lib/src/lib/stories/CanvasFixedHeight.tsx"
+    "packages/dataverse-ui-lib/src/"
   ],
   "exclude": ["cypress/**/**.spec.ts", "cypress/**/**.spec.tsx"]
 }

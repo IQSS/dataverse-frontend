@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react'
-import { NavbarDropdown } from '../../../../../packages/dataverse-ui-lib/src/lib/components/navbar/navbar-dropdown/NavbarDropdown'
-import { Navbar } from '../../../../../packages/dataverse-ui-lib/src/lib/components/navbar/Navbar'
+import { NavbarDropdown } from '../../../src/lib/components/navbar/navbar-dropdown/NavbarDropdown'
+import { Navbar } from '../../../src/lib/components/navbar/Navbar'
 
 describe('NavbarDropdown component', () => {
   test('renders the dropdown title', () => {

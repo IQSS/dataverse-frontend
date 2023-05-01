@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react'
-import { Button } from '../../../../packages/dataverse-ui-lib/src/lib/components/button/Button'
+import { Button } from '../../src/lib/components/button/Button'
 import { vi } from 'vitest'
-import { Icon } from '../../../../packages/dataverse-ui-lib/src/lib/components/icon.enum'
+import { Icon } from '../../src/lib/components/icon.enum'
 
 describe('Button', () => {
   const clickMeText = 'Click me'
