@@ -1139,15 +1139,15 @@
   resolved "https://registry.npmjs.org/@emotion/use-insertion-effect-with-fallbacks/-/use-insertion-effect-with-fallbacks-1.0.0.tgz"
   integrity sha512-1eEgUGmkaljiBnRMTdksDV1W4kUnmwgp7X9G8B++9GYwl1lUdqSndSriIrTJ0N7LQaoauY9JJ2yhiOYK5+NI4A==
 
-"@esbuild/darwin-x64@0.16.17":
+"@esbuild/darwin-arm64@0.16.17":
   version "0.16.17"
-  resolved "https://registry.npmjs.org/@esbuild/darwin-x64/-/darwin-x64-0.16.17.tgz"
-  integrity sha512-2By45OBHulkd9Svy5IOCZt376Aa2oOkiE9QWUK9fe6Tb+WDr8hXL3dpqi+DeLiMed8tVXspzsTAvd0jUl96wmg==
+  resolved "https://registry.npmjs.org/@esbuild/darwin-arm64/-/darwin-arm64-0.16.17.tgz"
+  integrity sha512-/2agbUEfmxWHi9ARTX6OQ/KgXnOWfsNlTeLcoV7HSuSTv63E4DqtAc+2XqGw1KHxKMHGZgbVCZge7HXWX9Vn+w==
 
-"@esbuild/darwin-x64@0.17.15":
+"@esbuild/darwin-arm64@0.17.15":
   version "0.17.15"
-  resolved "https://registry.npmjs.org/@esbuild/darwin-x64/-/darwin-x64-0.17.15.tgz"
-  integrity sha512-NbImBas2rXwYI52BOKTW342Tm3LTeVlaOQ4QPZ7XuWNKiO226DisFk/RyPk3T0CKZkKMuU69yOvlapJEmax7cg==
+  resolved "https://registry.npmjs.org/@esbuild/darwin-arm64/-/darwin-arm64-0.17.15.tgz"
+  integrity sha512-7siLjBc88Z4+6qkMDxPT2juf2e8SJxmsbNVKFY2ifWCDT72v5YJz9arlvBw5oB4W/e61H1+HDB/jnu8nNg0rLA==
 
 "@eslint/eslintrc@^1.4.1":
   version "1.4.1"
@@ -4765,7 +4765,7 @@ data-urls@^3.0.2:
     whatwg-mimetype "^3.0.0"
     whatwg-url "^11.0.0"
 
-"dataverse-ui-lib@file:/Users/guillermoportasgonzalez/Projects/gportas/projects/theam/harvard/modernization/dataverse-frontend/packages/dataverse-ui-lib":
+"dataverse-ui-lib@file:/Users/melina/GitHub/dataverse-frontend/packages/dataverse-ui-lib":
   version "0.0.0"
   resolved "file:packages/dataverse-ui-lib"
 
@@ -12432,6 +12432,11 @@ vite-plugin-dts@^2.3.0:
     kolorist "^1.7.0"
     magic-string "^0.29.0"
     ts-morph "18.0.0"
+
+vite-plugin-libcss@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.npmjs.org/vite-plugin-libcss/-/vite-plugin-libcss-1.0.6.tgz"
+  integrity sha512-DUkVPiNEPFRpshhsqek9b/vPH4piytTsrlyRdl84ns4NlR7PJNSmjtDvyBytrL7E+jsrXD5iCEzBOtrChX45CA==
 
 "vite@^3.0.0 || ^4.0.0", vite@4.1.0:
   version "4.1.0"

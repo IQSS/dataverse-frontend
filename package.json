@@ -12,7 +12,6 @@
     ]
   },
   "dependencies": {
-    "dataverse-ui-lib": "*",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -20,6 +19,7 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "bootstrap": "^5.2.3",
+    "dataverse-ui-lib": "*",
     "i18next": "^22.4.9",
     "i18next-browser-languagedetector": "^7.0.1",
     "i18next-http-backend": "^2.1.1",
@@ -123,7 +123,8 @@
     "stylelint-config-standard-scss": "^7.0.1",
     "stylelint-order": "^6.0.2",
     "vite": "4.1.0",
-    "vitest": "^0.29.2",
-    "vite-plugin-dts": "^2.3.0"
+    "vite-plugin-dts": "^2.3.0",
+    "vite-plugin-libcss": "^1.0.6",
+    "vitest": "^0.29.2"
   }
 }
