@@ -1,0 +1,76 @@
+@import "src/lib/components/assets/styles/design-tokens/typography.module";
+@import "src/lib/components/assets/styles/design-tokens/colors.module";
+
+// Theme
+
+$primary: $dv-primary-color;
+$secondary: $dv-secondary-color;
+$success: $dv-success-color;
+$info: $dv-info-color;
+$warning: $dv-warning-color;
+$danger: $dv-danger-color;
+
+@import "../../../../../../../node_modules/bootstrap/scss/functions";
+@import "../../../../../../../node_modules/bootstrap/scss/variables";
+@import "../../../../../../../node_modules/bootstrap/scss/mixins";
+
+// Body
+$body-color: $dv-text-color;
+$headings-color: $dv-headings-color;
+
+// Typography
+$font-family-base: $dv-font-family;
+
+$font-size-base: $dv-font-size;
+$font-size-sm: $dv-font-size-sm;
+
+$line-height-base: $dv-line-height;
+
+$font-weight-normal: $dv-font-weight;
+$font-weight-light: $dv-font-weight-light;
+$font-weight-bold: $dv-font-weight-bold;
+
+// Links
+$link-color: $dv-link-color;
+$link-hover-color: $dv-link-hover-color;
+
+// Base
+@import "../../../../../../../node_modules/bootstrap/scss/maps";
+@import "../../../../../../../node_modules/bootstrap/scss/root";
+@import "../../../../../../../node_modules/bootstrap/scss/reboot";
+@import "../../../../../../../node_modules/bootstrap/scss/type";
+
+// Buttons and Dropdowns
+@import "../../../../../../../node_modules/bootstrap/scss/buttons";
+@import "../../../../../../../node_modules/bootstrap/scss/dropdown";
+
+// Grid
+@import "../../../../../../../node_modules/bootstrap/scss/utilities";
+@import "../../../../../../../node_modules/bootstrap/scss/utilities/api";
+@import "../../../../../../../node_modules/bootstrap/scss/containers";
+@import "../../../../../../../node_modules/bootstrap/scss/grid";
+
+// Badge
+@import "../../../../../../../node_modules/bootstrap/scss/badge";
+
+// Breadcrumb
+$breadcrumb-divider: ">";
+
+@import "../../../../../../../node_modules/bootstrap/scss/breadcrumb";
+
+// Tooltip
+@import "../../../../../../../node_modules/bootstrap/scss/tooltip";
+
+// Navbar
+
+$navbar-light-brand-color: $dv-brand-color;
+$navbar-brand-font-size: $dv-brand-font-size;
+
+@import "../../../../../../../node_modules/bootstrap/scss/nav";
+@import "../../../../../../../node_modules/bootstrap/scss/navbar";
+@import "../../../../../../../node_modules/bootstrap/scss/transitions";
+@import "../../../../../../../node_modules/bootstrap/scss/helpers";
+
+.navbar-collapse {
+  justify-content: end;
+}

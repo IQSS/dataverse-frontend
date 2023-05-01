@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Button } from '../../button/Button'
-import { Icon } from '../../icon.enum'
+import { Button } from '../../components/button/Button'
+import { Icon } from '../../components/icon.enum'
 
 /**
  * ## Description

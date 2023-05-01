@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Breadcrumb } from '../../breadcrumb/Breadcrumb'
+import { Breadcrumb } from '../../components/breadcrumb/Breadcrumb'
 
 /**
  * ## Description

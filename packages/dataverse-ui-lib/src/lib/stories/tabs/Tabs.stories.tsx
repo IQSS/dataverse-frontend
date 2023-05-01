@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Tabs } from '../../tabs/Tabs'
+import { Tabs } from '../../components/tabs/Tabs'
 
 /**
  * ## Description

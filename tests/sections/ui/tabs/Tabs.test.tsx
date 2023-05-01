@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { Tabs } from '../../../../packages/dataverse-ui-lib/src/lib/tabs/Tabs'
+import { Tabs } from '../../../../packages/dataverse-ui-lib/src/lib/components/tabs/Tabs'
 
 describe('Tabs', () => {
   it('renders with default active key', () => {

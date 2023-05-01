@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Col } from '../../grid/Col'
-import { Container } from '../../grid/Container'
-import { Row } from '../../grid/Row'
+import { Col } from '../../components/grid/Col'
+import { Container } from '../../components/grid/Container'
+import { Row } from '../../components/grid/Row'
 
 /**
  * ## Description

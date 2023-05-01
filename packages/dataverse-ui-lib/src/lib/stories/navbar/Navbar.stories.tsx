@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Navbar } from '../../navbar/Navbar'
+import { Navbar } from '../../components/navbar/Navbar'
 import { CanvasFixedHeight } from '../CanvasFixedHeight'
 import logo from '../assets/logo.svg'
 

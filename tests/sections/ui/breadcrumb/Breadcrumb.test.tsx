@@ -1,4 +1,4 @@
-import { Breadcrumb } from '../../../../packages/dataverse-ui-lib/src/lib/breadcrumb/Breadcrumb'
+import { Breadcrumb } from '../../../../packages/dataverse-ui-lib/src/lib/components/breadcrumb/Breadcrumb'
 import { render } from '@testing-library/react'
 
 describe('Breadcrumb', () => {

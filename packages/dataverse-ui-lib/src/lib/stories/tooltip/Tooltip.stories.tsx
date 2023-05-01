@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Tooltip } from '../../tooltip/Tooltip'
+import { Tooltip } from '../../components/tooltip/Tooltip'
 /**
  * ## Description
  * This tooltip is a question mark icon.
