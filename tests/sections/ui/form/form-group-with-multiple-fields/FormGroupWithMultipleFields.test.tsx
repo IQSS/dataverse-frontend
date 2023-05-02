@@ -44,11 +44,11 @@ describe('FormGroupWithMultipleFields', () => {
 
     expect(getAllByLabelText('Username').length).toBe(1)
 
-    fireEvent.click(getByText('+'))
+    fireEvent.click(getByText('Add'))
 
     expect(getAllByLabelText('Username').length).toBe(2)
 
-    fireEvent.click(getByText('-'))
+    fireEvent.click(getByText('Delete'))
 
     expect(getAllByLabelText('Username').length).toBe(1)
   })

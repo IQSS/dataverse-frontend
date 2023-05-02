@@ -14,7 +14,7 @@ describe('DynamicFieldsButtons', () => {
       />
     )
 
-    const addButton = getByRole('button', { name: '+' })
+    const addButton = getByRole('button', { name: 'Add' })
     expect(addButton).toBeInTheDocument()
 
     fireEvent.click(addButton)
@@ -31,7 +31,7 @@ describe('DynamicFieldsButtons', () => {
       />
     )
 
-    const removeButton = getByRole('button', { name: '-' })
+    const removeButton = getByRole('button', { name: 'Delete' })
     expect(removeButton).toBeInTheDocument()
 
     fireEvent.click(removeButton)
@@ -49,10 +49,10 @@ describe('DynamicFieldsButtons', () => {
       />
     )
 
-    const addButton = getByRole('button', { name: '+' })
+    const addButton = getByRole('button', { name: 'Add' })
     expect(addButton).toBeInTheDocument()
 
-    const removeButton = queryByRole('button', { name: '-' })
+    const removeButton = queryByRole('button', { name: 'Delete' })
     expect(removeButton).toBeNull()
 
     fireEvent.click(addButton)
