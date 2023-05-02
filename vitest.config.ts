@@ -6,19 +6,19 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './tests/setupTests.ts',
     deps: {
-      inline: [/dataverse-ui-lib/]
+      inline: [/design-system/]
     },
     include: [
       './tests/**/*.(test).(ts|tsx)',
-      './packages/dataverse-ui-lib/tests/**/*.(test).(ts|tsx)'
+      './packages/design-system/tests/**/*.(test).(ts|tsx)'
     ],
     coverage: {
       reporter: ['lcov'],
       exclude: [
         'node_modules/',
         'tests/',
-        'packages/dataverse-ui-lib/dist/',
-        'packages/dataverse-ui-lib/node_modules/'
+        'packages/design-system/dist/',
+        'packages/design-system/node_modules/'
       ],
       lines: 95,
       functions: 95,

@@ -1,5 +1,5 @@
 import type { Preview } from '@storybook/react'
-import { ThemeProvider } from 'dataverse-ui-lib'
+import { ThemeProvider } from '../packages/design-system'
 
 const preview: Preview = {
   parameters: {

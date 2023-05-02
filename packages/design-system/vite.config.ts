@@ -15,9 +15,9 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/lib/index.ts'),
-      name: 'dataverse-ui-lib',
+      name: 'dataverse-design-system',
       formats: ['es', 'umd'],
-      fileName: (format) => `dataverse-ui-lib.${format}.js`
+      fileName: (format) => `dataverse-design-system.${format}.js`
     },
     rollupOptions: {
       external: ['react', 'react-dom'],

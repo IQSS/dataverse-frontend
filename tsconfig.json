@@ -24,7 +24,7 @@
     "vitest.config.ts",
     "cypress.config.ts",
     "vite.config.ts",
-    "packages/dataverse-ui-lib/src/"
+    "packages/design-system/src/"
   ],
   "exclude": ["cypress/**/**.spec.ts", "cypress/**/**.spec.tsx"]
 }

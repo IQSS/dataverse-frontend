@@ -1,4 +1,4 @@
-import { Container, Row, Col } from 'dataverse-ui-lib'
+import { Container, Row, Col } from 'dataverse-design-system'
 import styles from './Footer.module.scss'
 import dataverseProjectLogo from './dataverse-project-logo.svg'
 import { useTranslation } from 'react-i18next'

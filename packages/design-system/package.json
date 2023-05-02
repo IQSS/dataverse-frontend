@@ -1,5 +1,5 @@
 {
-  "name": "dataverse-ui-lib",
+  "name": "dataverse-design-system",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -15,13 +15,13 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/dataverse-ui-lib.umd.js",
-  "module": "./dist/dataverse-ui-lib.es.js",
+  "main": "./dist/dataverse-design-system.umd.js",
+  "module": "./dist/dataverse-design-system.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/dataverse-ui-lib.es.js",
-      "require": "./dist/dataverse-ui-lib.umd.js"
+      "import": "./dist/dataverse-design-system.es.js",
+      "require": "./dist/dataverse-design-system.umd.js"
     }
   }
 }

@@ -4765,9 +4765,9 @@ data-urls@^3.0.2:
     whatwg-mimetype "^3.0.0"
     whatwg-url "^11.0.0"
 
-"dataverse-ui-lib@file:/Users/melina/GitHub/dataverse-frontend/packages/dataverse-ui-lib":
+"dataverse-design-system@file:/Users/melina/GitHub/dataverse-frontend/packages/design-system":
   version "0.0.0"
-  resolved "file:packages/dataverse-ui-lib"
+  resolved "file:packages/design-system"
 
 dayjs@^1.10.4:
   version "1.11.7"

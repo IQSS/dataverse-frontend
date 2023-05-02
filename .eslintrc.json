@@ -32,8 +32,8 @@
     "project": [
       "./tsconfig.json",
       "./cypress/tsconfig.json",
-      "./packages/dataverse-ui-lib/tsconfig.json",
-      "./packages/dataverse-ui-lib/tests/cypress/tsconfig.json"
+      "./packages/design-system/tsconfig.json",
+      "./packages/design-system/tests/cypress/tsconfig.json"
     ]
   },
   "plugins": ["react", "simple-import-sort", "import", "unused-imports"],
@@ -73,5 +73,5 @@
       "extends": ["plugin:vitest/recommended"]
     }
   ],
-  "ignorePatterns": ["packages/dataverse-ui-lib/dist/**"]
+  "ignorePatterns": ["packages/design-system/dist/**"]
 }

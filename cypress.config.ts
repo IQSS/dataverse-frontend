@@ -19,7 +19,7 @@ export default defineConfig({
   component: {
     specPattern: [
       'cypress/component/**/*.spec.{js,jsx,ts,tsx}',
-      'packages/dataverse-ui-lib/tests/cypress/component/**/*.spec.{js,jsx,ts,tsx}'
+      'packages/design-system/tests/cypress/component/**/*.spec.{js,jsx,ts,tsx}'
     ],
     supportFile: 'cypress/support/component.ts',
     devServer: {
