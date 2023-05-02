@@ -89,6 +89,17 @@ export const RequiredField: Story = {
   )
 }
 
+export const FieldWithMessage: Story = {
+  render: () => (
+    <Form>
+      <Form.Group controlId="basic-form-email" required>
+        <Form.Group.Label message="This is your personal email">Email</Form.Group.Label>
+        <Form.Group.Input type="email" placeholder="Email" aria-label="Disabled input example" />
+      </Form.Group>
+    </Form>
+  )
+}
+
 export const ReadOnlyInput: Story = {
   render: () => (
     <Form>
@@ -166,16 +177,23 @@ export const Checkbox: Story = {
 export const GroupWithMultipleFields: Story = {
   render: () => (
     <Form>
-      <Form.GroupWithMultipleFields title="Related Publication" withDynamicFields>
+      <Form.GroupWithMultipleFields
+        title="Related Publication"
+        message="The article or report that uses the data in the Dataset. The full list of related publications will be displayed on the metadata tab"
+        withDynamicFields>
         <Row>
           <Form.Group as={Col} controlId="basic-form-citation">
-            <Form.Group.Label>Citation</Form.Group.Label>
+            <Form.Group.Label message="The full bibliographic citation for the related publication">
+              Citation
+            </Form.Group.Label>
             <Form.Group.TextArea />
           </Form.Group>
         </Row>
         <Row>
           <Form.Group as={Col} controlId="basic-form-identifier-type">
-            <Form.Group.Label>Identifier Type</Form.Group.Label>
+            <Form.Group.Label message="The type of identifier that uniquely identifies a related publication">
+              Identifier Type
+            </Form.Group.Label>
             <Form.Group.Select>
               <option>Select...</option>
               <option value="doi">doi</option>
@@ -184,13 +202,17 @@ export const GroupWithMultipleFields: Story = {
             </Form.Group.Select>
           </Form.Group>
           <Form.Group as={Col} controlId="basic-form-identifier">
-            <Form.Group.Label>Identifier</Form.Group.Label>
+            <Form.Group.Label message="The identifier for a related publication">
+              Identifier
+            </Form.Group.Label>
             <Form.Group.Input type="text" />
           </Form.Group>
         </Row>
         <Row>
           <Form.Group as={Col} controlId="basic-form-url" sm={6}>
-            <Form.Group.Label>URL</Form.Group.Label>
+            <Form.Group.Label message="The URL form of the identifier entered in the Identifier field, e.g. the DOI URL if a DOI was entered in the Identifier field. Used to display what was entered in the ID Type and ID Number fields as a link. If what was entered in the Identifier field has no URL form, the URL of the publication webpage is used, e.g. a journal article webpage">
+              URL
+            </Form.Group.Label>
             <Form.Group.Input type="text" placeholder="https://" />
           </Form.Group>
         </Row>
@@ -202,20 +224,30 @@ export const GroupWithMultipleFields: Story = {
 export const FormValidation: Story = {
   render: () => (
     <Form validated>
-      <Form.GroupWithMultipleFields title="Author" required withDynamicFields>
+      <Form.GroupWithMultipleFields
+        title="Author"
+        required
+        message="The entity, e.g. a person or organization, that created the Dataset"
+        withDynamicFields>
         <Row>
           <Form.Group as={Col} controlId="basic-form-name" required>
-            <Form.Group.Label>Name</Form.Group.Label>
+            <Form.Group.Label message="The name of the author, such as the person's name or the name of an organization">
+              Name
+            </Form.Group.Label>
             <Form.Group.Input type="text" placeholder="Name" />
           </Form.Group>
           <Form.Group as={Col} controlId="basic-form-affiliation">
-            <Form.Group.Label>Affiliation</Form.Group.Label>
+            <Form.Group.Label message="The name of the entity affiliated with the author, e.g. an organization's name">
+              Affiliation
+            </Form.Group.Label>
             <Form.Group.Input type="text" placeholder="Affiliation" />
           </Form.Group>
         </Row>
         <Row>
           <Form.Group as={Col} controlId="basic-form-identifier-type">
-            <Form.Group.Label>Identifier Type</Form.Group.Label>
+            <Form.Group.Label message="The type of identifier that uniquely identifies the author (e.g. ORCID, ISNI)">
+              Identifier Type
+            </Form.Group.Label>
             <Form.Group.Select>
               <option>Select...</option>
               <option value="1">Option 1</option>
@@ -224,7 +256,9 @@ export const FormValidation: Story = {
             </Form.Group.Select>
           </Form.Group>
           <Form.Group as={Col} controlId="basic-form-identifier" required>
-            <Form.Group.Label>Identifier</Form.Group.Label>
+            <Form.Group.Label message="Uniquely identifies the author when paired with an identifier type">
+              Identifier
+            </Form.Group.Label>
             <Form.Group.Input type="text" placeholder="Identifier" defaultValue="123456" />
           </Form.Group>
         </Row>
