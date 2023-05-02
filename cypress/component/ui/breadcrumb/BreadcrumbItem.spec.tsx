@@ -13,7 +13,6 @@ describe('BreadcrumbItem', () => {
 
   it('has the correct href attribute', () => {
     cy.customMount(<BreadcrumbItem href="/home">Test</BreadcrumbItem>)
-    cy.pause()
     cy.findByRole('link').should('have.attr', 'href').and('eq', '/home')
   })
 })

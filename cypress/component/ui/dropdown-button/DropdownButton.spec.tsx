@@ -39,7 +39,6 @@ describe('DropdownButton', () => {
         <span>Item 2</span>
       </DropdownButton>
     )
-    cy.pause()
     cy.findByRole('img', { name: Icon.COLLECTION }).should('be.visible')
   })
 })

@@ -15,7 +15,6 @@ describe('Tabs', () => {
         </Tabs.Tab>
       </Tabs>
     )
-    cy.pause()
     cy.findByText('Tab 1').should('have.class', 'active')
     cy.findByText('Content 1').should('have.class', 'active')
     cy.findByText('Content 1').should('have.class', 'show')
