@@ -33,3 +33,7 @@ yarn-error.log*
 
 #deployment
 /deployment/payara/target
+
+#dev environment
+/dev-env/docker-dev-volumes
+/dev-env/dataverse
