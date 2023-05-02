@@ -4,9 +4,16 @@ import { Col } from '../../ui/grid/Col'
 import styles from './Footer.module.scss'
 import dataverseProjectLogo from './dataverse-project-logo.svg'
 import { useTranslation } from 'react-i18next'
+import { DataverseInfoRepository } from '../../../info/domain/repositories/DataverseInfoRepository'
+import { useDataverseVersion } from './useDataverseVersion'
 
-export function Footer() {
+interface FooterProps {
+  dataverseInfoRepository: DataverseInfoRepository
+}
+
+export function Footer({ dataverseInfoRepository }: FooterProps) {
   const { t } = useTranslation('footer')
+  const { dataverseVersion } = useDataverseVersion(dataverseInfoRepository)
 
   return (
     <footer className={styles.container}>
@@ -38,7 +45,7 @@ export function Footer() {
                   alt="The Dataverse Project logo"
                 />
               </a>
-              <span className={styles.version}>v. 5.13 build 1244-79d6e57</span>
+              <span className={styles.version}>{dataverseVersion}</span>
             </div>
           </Col>
         </Row>
