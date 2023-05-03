@@ -16,7 +16,7 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm install
+        run: rm package-lock.json && npm install
 
       - name: Create and populate .env file
         env:
@@ -44,7 +44,7 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm install
+        run: rm package-lock.json && npm install
 
       - name: Cypress run
         uses: cypress-io/github-action@v4
@@ -65,7 +65,7 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm install
+        run: rm package-lock.json && npm install
 
       - name: Build Storybook
         run: npm run build-storybook --quiet
