@@ -11,7 +11,6 @@ describe('Header component', () => {
         <Header user={user} />
       </I18nextProvider>
     )
-    cy.pause()
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.findByText(user.name).should('be.visible')
     cy.findByText(user.name).click()
