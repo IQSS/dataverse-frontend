@@ -18,7 +18,7 @@ export class UserJSDataverseRepository implements UserRepository {
 
   removeAuthenticated(): Promise<void> {
     return logout.execute().catch((error: WriteError) => {
-      console.log(error.message)
+      throw new Error(error.message)
     })
   }
 }

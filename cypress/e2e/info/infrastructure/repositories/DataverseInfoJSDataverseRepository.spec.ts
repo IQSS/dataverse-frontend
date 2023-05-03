@@ -1,11 +1,16 @@
 import { DataverseInfoJSDataverseRepository } from '../../../../../src/info/infrastructure/repositories/DataverseInfoJSDataverseRepository'
-import { getDataverseVersion } from '../../../../../src/info/domain/useCases/getDataverseVersion'
+import chai from 'chai'
+import chaiAsPromised from 'chai-as-promised'
+
+chai.use(chaiAsPromised)
+
+const expect = chai.expect
 
 describe('DataverseInfo JSDataverse Repository', () => {
   it('gets the dataverse version number', async () => {
     const dataverseInfoRepository = new DataverseInfoJSDataverseRepository()
-    const dataverseVersion = await getDataverseVersion(dataverseInfoRepository)
+    const dataverseVersion = await dataverseInfoRepository.getVersion()
 
-    expect(dataverseVersion).not.toBeNull()
+    expect(dataverseVersion).to.exist
   })
 })
