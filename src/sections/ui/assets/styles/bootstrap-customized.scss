@@ -61,6 +61,12 @@ $breadcrumb-divider: ">";
 // Tooltip
 @import "bootstrap/scss/tooltip";
 
+// Alert
+@import "bootstrap/scss/alert";
+
+// Close button for Alert
+@import "bootstrap/scss/close";
+
 // Navbar
 
 $navbar-light-brand-color: $dv-brand-color;
