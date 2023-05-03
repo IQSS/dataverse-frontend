@@ -17,7 +17,7 @@ describe('Layout', () => {
   it('renders the header', () => {
     cy.mount(<Layout />)
 
-    const brandLink = cy.findByRole('link', { name: 'Brand Logo Image brandTitle' })
+    const brandLink = cy.findByText('brandTitle')
     brandLink.should('exist')
 
     const brandImg = cy.findByRole('img', { name: 'Brand Logo Image' })

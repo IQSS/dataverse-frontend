@@ -25,7 +25,8 @@ describe('Footer component', () => {
 
     cy.mount(<Footer dataverseInfoRepository={dataverseInfoRepository} />)
 
-    cy.wrap(dataverseInfoRepository.getVersion()).should('have.been.called')
+    /* eslint-disable-next-line @typescript-eslint/unbound-method */
+    cy.wrap(dataverseInfoRepository.getVersion).should('have.been.called')
   })
 
   it('should open privacy policy link in new tab', () => {
