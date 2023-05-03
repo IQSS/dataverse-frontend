@@ -54,6 +54,9 @@ $link-hover-color: $dv-link-hover-color;
 // Badge
 @import "bootstrap/scss/badge";
 
+// Accordion
+@import "bootstrap/scss/accordion";
+
 // Modal
 @import "bootstrap/scss/modal";
 @import "bootstrap/scss/close";
@@ -69,8 +72,6 @@ $breadcrumb-divider: ">";
 // Alert
 @import "bootstrap/scss/alert";
 
-// Close button for Alert
-@import "bootstrap/scss/close";
 
 // Navbar
 
