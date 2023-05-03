@@ -53,26 +53,23 @@ describe('DropdownButton', () => {
   it('renders with spacing class when withSpacing prop is true', () => {
     const { getByRole } = render(
       <DropdownButton id="my-dropdown" title={titleText} withSpacing>
-      <span>Item 1</span>
-        <span>Item 2</span>
-      </DropdownButton>
-    )
-    
-    const button = getByRole('button', { name: titleText })
-    expect(button.parentNode).toHaveClass(styles.spacing)
-  })   
-  
-  it('renders as a button group', () => {
-    const { getByRole } = render(
-      <DropdownButton
-        id="dropdown-button"
-        title="Dropdown Button"
-        asButtonGroup>
         <span>Item 1</span>
         <span>Item 2</span>
       </DropdownButton>
     )
-    
+
+    const button = getByRole('button', { name: titleText })
+    expect(button.parentNode).toHaveClass(styles.spacing)
+  })
+
+  it('renders as a button group', () => {
+    const { getByRole } = render(
+      <DropdownButton id="dropdown-button" title="Dropdown Button" asButtonGroup>
+        <span>Item 1</span>
+        <span>Item 2</span>
+      </DropdownButton>
+    )
+
     expect(getByRole('group')).toBeInTheDocument()
   })
 })
