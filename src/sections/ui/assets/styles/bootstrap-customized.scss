@@ -42,6 +42,7 @@ $link-hover-color: $dv-link-hover-color;
 
 // Buttons and Dropdowns
 @import "bootstrap/scss/buttons";
+@import 'bootstrap/scss/button-group';
 @import "bootstrap/scss/dropdown";
 
 // Grid
@@ -56,6 +57,10 @@ $link-hover-color: $dv-link-hover-color;
 // Accordion
 @import "bootstrap/scss/accordion";
 
+// Modal
+@import "bootstrap/scss/modal";
+@import "bootstrap/scss/close";
+
 // Breadcrumb
 $breadcrumb-divider: ">";
 
@@ -63,6 +68,10 @@ $breadcrumb-divider: ">";
 
 // Tooltip
 @import "bootstrap/scss/tooltip";
+
+// Alert
+@import "bootstrap/scss/alert";
+
 
 // Navbar
 

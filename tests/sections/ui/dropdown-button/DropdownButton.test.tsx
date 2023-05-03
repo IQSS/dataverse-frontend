@@ -48,4 +48,18 @@ describe('DropdownButton', () => {
     )
     expect(getByRole('img', { name: Icon.COLLECTION })).toBeInTheDocument()
   })
+
+  it('renders as a button group', () => {
+    const { getByRole } = render(
+      <DropdownButton
+        id="dropdown-button"
+        title="Dropdown Button"
+        asButtonGroup
+        data-testid="dropdown-button">
+        <span>Item 1</span>
+        <span>Item 2</span>
+      </DropdownButton>
+    )
+    expect(getByRole('group')).toBeInTheDocument()
+  })
 })
