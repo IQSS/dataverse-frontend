@@ -22,9 +22,12 @@ export function Button({
   withSpacing,
   children
 }: ButtonProps) {
+  const spacingClass = withSpacing ? styles.spacing : ''
+  const borderClass = variant != 'link' ? styles.border : ''
+
   return (
     <ButtonBS
-      className={`${withSpacing ? styles.spacing : ''}`}
+      className={`${spacingClass} ${borderClass}`}
       variant={variant}
       onClick={disabled ? undefined : onClick}
       disabled={disabled}

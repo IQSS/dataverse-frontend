@@ -26,6 +26,7 @@ export const baseTheme = {
     headingsColor: colorVariables.headingsColor,
     linkColor: colorVariables.linkColor,
     linkHoverColor: colorVariables.linkHoverColor,
+    buttonBorderColor: colorVariables.buttonBorderColor,
     tooltipColor: colorVariables.tooltipColor,
     tooltipHoverColor: colorVariables.tooltipHoverColor
   },
