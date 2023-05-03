@@ -2,14 +2,13 @@ import { act, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Footer } from '../../../../src/sections/layout/footer/Footer'
 import { createSandbox, SinonSandbox } from 'sinon'
-import { DataverseInfoRepository } from '../../../../src/info/domain/repositories/DataverseInfoRepository'
 import { vi } from 'vitest'
+import { FooterMother } from './FooterMother'
+import { DataverseVersionMother } from '../../../info/models/DataverseVersionMother'
 
 describe('Footer', () => {
   const sandbox: SinonSandbox = createSandbox()
-  const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
-  const testVersion = 'v. 5.13 build 1244-79d6e57'
-  dataverseInfoRepository.getVersion = sandbox.stub().resolves(testVersion)
+  const testVersion = DataverseVersionMother.create()
 
   afterEach(() => {
     sandbox.restore()
@@ -17,7 +16,7 @@ describe('Footer', () => {
 
   it('should render footer content', async () => {
     const { getByText, getByAltText, findByText } = render(
-      <Footer dataverseInfoRepository={dataverseInfoRepository} />
+      FooterMother.withDataverseVersion(sandbox, testVersion)
     )
 
     expect(getByText('copyright')).toBeInTheDocument()
@@ -39,7 +38,7 @@ describe('Footer', () => {
   })
 
   it('should open privacy policy link in new tab', async () => {
-    const { findByText } = render(<Footer dataverseInfoRepository={dataverseInfoRepository} />)
+    const { findByText } = render(FooterMother.withDataverseVersion(sandbox))
 
     const privacyPolicyLink = await findByText('privacyPolicy')
 
