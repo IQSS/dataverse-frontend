@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { Header } from '../../../sections/layout/header/Header'
-import { UserRepository } from '../../../users/domain/repositories/UserRepository'
-import { User } from '../../../users/domain/models/User'
+import { HeaderMother } from '../../../../tests/sections/layout/header/HeaderMother'
+import { createSandbox } from 'sinon'
 
 const meta: Meta<typeof Header> = {
   title: 'Layout/Header',
@@ -13,19 +13,14 @@ const meta: Meta<typeof Header> = {
 export default meta
 type Story = StoryObj<typeof Header>
 
-const testData: User = {
-  name: 'Jane Doe'
-}
-class MockedUserRepository implements UserRepository {
-  getAuthenticated(): Promise<User> {
-    return Promise.resolve(testData)
-  }
-
-  removeAuthenticated(): Promise<void> {
-    return Promise.resolve()
+export const LoggedOut: Story = {
+  render: () => {
+    return HeaderMother.withGuestUser(createSandbox())
   }
 }
 
 export const LoggedIn: Story = {
-  render: () => <Header userRepository={new MockedUserRepository()} />
+  render: () => {
+    return HeaderMother.withLoggedInUser(createSandbox())
+  }
 }
