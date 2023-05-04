@@ -47,7 +47,8 @@
   "pre-commit": [
     "lint:fix",
     "git:add",
-    "test:unit"
+    "test:unit",
+    "test:coverage"
   ],
   "eslintConfig": {
     "extends": [
