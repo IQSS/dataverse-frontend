@@ -5,6 +5,7 @@ import { Tabs } from '../ui/tabs/Tabs'
 import { Col } from '../ui/grid/Col'
 import { Row } from '../ui/grid/Row'
 import styles from './Dataset.module.scss'
+import { DatasetSummary } from './datasetSummary/DatasetSummary'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -25,7 +26,7 @@ export function Dataset({ datasetRepository, id }: DatasetProps) {
           <Col sm={9}>Citation Block</Col>
         </Row>
         <Row>
-          <Col sm={9}>Summary Block</Col>
+          <DatasetSummary datasetRepository={datasetRepository} id={id}></DatasetSummary>
         </Row>
         <Tabs defaultActiveKey="files">
           <Tabs.Tab eventKey="files" title="Files">
