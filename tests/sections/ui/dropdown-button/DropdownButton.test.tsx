@@ -1,6 +1,7 @@
 import { fireEvent, render } from '@testing-library/react'
 import { DropdownButton } from '../../../../src/sections/ui/dropdown-button/DropdownButton'
 import { Icon } from '../../../../src/sections/ui/icon.enum'
+import styles from '../../../../src/sections/ui/dropdown-button/DropdownButton.module.scss'
 
 const titleText = 'My Dropdown Button'
 
@@ -49,17 +50,26 @@ describe('DropdownButton', () => {
     expect(getByRole('img', { name: Icon.COLLECTION })).toBeInTheDocument()
   })
 
-  it('renders as a button group', () => {
+  it('renders with spacing class when withSpacing prop is true', () => {
     const { getByRole } = render(
-      <DropdownButton
-        id="dropdown-button"
-        title="Dropdown Button"
-        asButtonGroup
-        data-testid="dropdown-button">
+      <DropdownButton id="my-dropdown" title={titleText} withSpacing>
         <span>Item 1</span>
         <span>Item 2</span>
       </DropdownButton>
     )
+
+    const button = getByRole('button', { name: titleText })
+    expect(button.parentNode).toHaveClass(styles.spacing)
+  })
+
+  it('renders as a button group', () => {
+    const { getByRole } = render(
+      <DropdownButton id="dropdown-button" title="Dropdown Button" asButtonGroup>
+        <span>Item 1</span>
+        <span>Item 2</span>
+      </DropdownButton>
+    )
+
     expect(getByRole('group')).toBeInTheDocument()
   })
 })
