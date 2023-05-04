@@ -12,7 +12,7 @@ describe('Dataset', () => {
     sandbox.restore()
   })
 
-  it('renders the header', async () => {
+  it('renders the Dataset page title and version', async () => {
     const datasetRepository: DatasetRepository = {} as DatasetRepository
     datasetRepository.getById = sandbox.stub().resolves(testDataset)
 
@@ -22,5 +22,8 @@ describe('Dataset', () => {
 
     const title = await findByText(testDataset.title)
     expect(title).toBeInTheDocument()
+
+    const version = await findByText(`Version ${testDataset.version}`)
+    expect(version).toBeInTheDocument()
   })
 })

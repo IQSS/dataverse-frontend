@@ -11,12 +11,13 @@ describe('Dataset', () => {
     sandbox.restore()
   })
 
-  it('renders the header', () => {
+  it('renders the Dataset page title and version', () => {
     const datasetRepository: DatasetRepository = {} as DatasetRepository
     datasetRepository.getById = sandbox.stub().resolves(testDataset)
 
     cy.mount(<Dataset datasetRepository={datasetRepository} id={testDataset.id} />)
 
     cy.findByText(testDataset.title).should('exist')
+    cy.findByText(`Version ${testDataset.version}`).should('exist')
   })
 })

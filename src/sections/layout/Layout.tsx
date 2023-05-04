@@ -6,12 +6,12 @@ import { FooterFactory } from './footer/FooterFactory'
 
 export function Layout() {
   return (
-    <article>
+    <>
       {HeaderFactory.create()}
       <Container className={styles['body-container']}>
         <Outlet />
       </Container>
       {FooterFactory.create()}
-    </article>
+    </>
   )
 }

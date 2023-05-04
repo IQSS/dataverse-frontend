@@ -15,10 +15,7 @@ type Story = StoryObj<typeof Dataset>
 
 class DatasetMockRepository implements DatasetRepository {
   getById(id: string) {
-    return Promise.resolve({
-      id: id,
-      title: 'Dataset title'
-    })
+    return Promise.resolve({ id: id, title: 'Dataset title', version: '1.0' })
   }
 }
 
