@@ -1,3 +1,5 @@
+@import "src/sections/ui/assets/styles/design-tokens/colors.module";
+
 .container {
   display: flex;
   flex-direction: column;
@@ -9,7 +11,7 @@
 }
 
 .title {
-  color: #C55B28;
+  color: $dv-brand-color;
 }
 
 .logo {
@@ -18,6 +20,6 @@
 }
 
 .link {
-  color: #3174AF;
+  color: $dv-link-color;
 }
 

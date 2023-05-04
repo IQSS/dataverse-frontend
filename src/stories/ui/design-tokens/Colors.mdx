@@ -1,0 +1,112 @@
+import { Meta, ColorPalette, ColorItem } from '@storybook/blocks'
+import { baseTheme } from '../../../sections/ui/theme/BaseTheme'
+
+<Meta title="Design Tokens/Colors" />
+
+# Color Palette
+The default color palette is set in the Bootstrap CSS. It provides some border and shadow colors, but the rest of the
+colors are set in the theme. These are the current colors in the base theme.
+
+<ColorPalette>
+  # Base Colors
+  <ColorItem
+    title="theme.color.brand"
+    subtitle="Brand Color"
+    colors={{ brand: baseTheme.color.brand }}
+  />
+  <ColorItem
+    title="theme.color.primary"
+    subtitle="Primary Color"
+    colors={{ primary: baseTheme.color.primary }}
+  />
+  <ColorItem
+    title="theme.color.secondary"
+    subtitle="Secondary Color"
+    colors={{ secondary:  baseTheme.color.secondary }}
+  />
+
+  # Text Colors
+  <ColorItem
+    title="theme.color.textColor"
+    subtitle="Text Color"
+    colors={{ textColor:  baseTheme.color.textColor }}
+  />
+  <ColorItem
+    title="theme.color.subTextColor"
+    subtitle="Sub Text Color"
+    colors={{ subTextColor:  baseTheme.color.subTextColor }}
+  />
+  <ColorItem
+    title="theme.color.primaryTextColor"
+    subtitle="On Primary Text Color"
+    colors={{ onPrimaryTextColor:  baseTheme.color.primaryTextColor }}
+  />
+  <ColorItem
+    title="theme.color.secondaryTextColor"
+    subtitle="On Secondary Text Color"
+    colors={{ onSecondaryTextColor:  baseTheme.color.secondaryTextColor }}
+  />
+
+  # Link Colors
+  <ColorItem
+    title="theme.color.linkColor"
+    subtitle="Link Color"
+    colors={{ linkColor:  baseTheme.color.linkColor }}
+  />
+  <ColorItem
+    title="theme.color.linkHoverColor"
+    subtitle="Link Hover Color"
+    colors={{ linkHoverColor:  baseTheme.color.linkHoverColor }}
+  />
+
+  # Button Colors
+  Button colors are the base colors of the theme. The border color is set separately.
+
+  <ColorItem
+    title="theme.color.buttonBorderColor"
+    subtitle="Button Border Color"
+    colors={{ linkColor:  baseTheme.color.buttonBorderColor }}
+  />
+
+  # Semantic Colors
+  <ColorItem
+    title="theme.color.successColor"
+    subtitle="Success Color"
+    colors={{ successColor:  baseTheme.color.successColor }}
+  />
+  <ColorItem
+    title="theme.color.successBoxColor"
+    subtitle="Success Box Color"
+    colors={{ successTextColor:  baseTheme.color.successBoxColor }}
+  />
+  <ColorItem
+    title="theme.color.dangerColor"
+    subtitle="Danger Color"
+    colors={{ dangerColor:  baseTheme.color.dangerColor }}
+  />
+  <ColorItem
+    title="theme.color.dangerBoxColor"
+    subtitle="Danger Box Color"
+    colors={{ dangerBoxColor:  baseTheme.color.dangerBoxColor }}
+  />
+  <ColorItem
+    title="theme.color.warningColor"
+    subtitle="Warning Color"
+    colors={{ warningColor:  baseTheme.color.warningColor }}
+  />
+  <ColorItem
+    title="theme.color.warningBoxColor"
+    subtitle="Warning Box Color"
+    colors={{ warningBoxColor:  baseTheme.color.warningBoxColor }}
+  />
+  <ColorItem
+    title="theme.color.infoColor"
+    subtitle="Info Color"
+    colors={{ infoColor:  baseTheme.color.infoColor }}
+  />
+  <ColorItem
+    title="theme.color.infoBoxColor"
+    subtitle="Info Box Color"
+    colors={{ infoBoxColor:  baseTheme.color.infoBoxColor }}
+  />
+</ColorPalette>

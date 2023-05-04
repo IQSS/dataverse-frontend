@@ -1,6 +1,6 @@
-import { Container } from '../../ui/grid/container/Container'
-import { Row } from '../../ui/grid/row/Row'
-import { Col } from '../../ui/grid/col/Col'
+import { Container } from '../../ui/grid/Container'
+import { Row } from '../../ui/grid/Row'
+import { Col } from '../../ui/grid/Col'
 import styles from './Footer.module.scss'
 import dataverseProjectLogo from './dataverse-project-logo.svg'
 import { useTranslation } from 'react-i18next'
@@ -27,7 +27,6 @@ export function Footer() {
             <div className={styles['powered-by-container']}>
               <span className={styles['powered-by-text']}>{t('poweredBy')}</span>
               <a
-                className={styles['powered-by-logo']}
                 href="https://dataverse.org/"
                 title="The Dataverse Project"
                 target="_blank"

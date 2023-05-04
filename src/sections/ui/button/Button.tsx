@@ -1,17 +1,39 @@
+import { ReactNode } from 'react'
 import styles from './Button.module.scss'
+import { Button as ButtonBS } from 'react-bootstrap'
+import { Icon } from '../icon.enum'
 
-export interface ButtonProps {
-  secondary?: boolean
-  size?: 'small' | 'medium' | 'large'
-  label: string
+type ButtonVariant = 'primary' | 'secondary' | 'link'
+
+interface ButtonProps {
+  variant?: ButtonVariant
+  disabled?: boolean
   onClick?: () => void
+  icon?: Icon
+  withSpacing?: boolean
+  children: ReactNode
 }
 
-export const Button = ({ secondary = false, size = 'medium', label, ...props }: ButtonProps) => {
-  const mode = secondary ? 'secondary' : 'primary'
+export function Button({
+  variant = 'primary',
+  disabled = false,
+  onClick,
+  icon,
+  withSpacing,
+  children
+}: ButtonProps) {
+  const spacingClass = withSpacing ? styles.spacing : ''
+  const borderClass = variant != 'link' ? styles.border : ''
+
   return (
-    <button type="button" className={[styles[mode], styles[size]].join(' ')} {...props}>
-      {label}
-    </button>
+    <ButtonBS
+      className={`${spacingClass} ${borderClass}`}
+      variant={variant}
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
+      aria-disabled={disabled}>
+      {icon && <span className={`${styles.icon} ${icon}`} role="img" aria-label={icon}></span>}
+      {children}
+    </ButtonBS>
   )
 }
