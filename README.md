@@ -30,9 +30,11 @@ Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
 The page will reload when you make changes.  
 You may also see any lint errors in the console.
 
-### `npm test`
+### `npm test:unit`
 
-Launches the test runner for the unit tests in the interactive watch mode.
+Launches the test runner for the unit tests in the interactive watch mode.  
+If you prefer to see the tests executing in cypress you can run `npm run cy:open-unit`  
+You can check the coverage with `npm run test:coverage`
 
 ### `npm run build`
 
@@ -42,10 +44,10 @@ Builds the app for production to the `dist` folder.
 
 Locally preview the production build.
 
-### `npm run cy:run`
+### `npm run test:e2e`
 
 Launches the Cypress test runner for the end-to-end tests.  
-If you prefer to see the tests executing in cypress you can run `npm run cy:open`
+If you prefer to see the tests executing in cypress you can run `npm run cy:open-e2e`
 
 ### `npm run lint`
 

@@ -14,7 +14,7 @@ import { Tabs } from '../../components/tabs/Tabs'
  * - theme.color.linkColorHover
  */
 const meta: Meta<typeof Tabs> = {
-  title: 'UI/Tabs',
+  title: 'Tabs',
   component: Tabs,
   tags: ['autodocs']
 }

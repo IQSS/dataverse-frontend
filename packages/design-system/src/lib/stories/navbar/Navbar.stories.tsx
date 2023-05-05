@@ -23,7 +23,7 @@ import logo from '../assets/logo.svg'
  *
  */
 const meta: Meta<typeof Navbar> = {
-  title: 'UI/Navbar',
+  title: 'Navbar',
   component: Navbar,
   tags: ['autodocs']
 }

@@ -1,9 +1,9 @@
 @import "src/lib/components/assets/styles/design-tokens/colors.module";
 
-svg {
+.question-tooltip {
   color: $dv-tooltip-color;
 }
 
-svg:hover {
+.question-tooltip:hover {
   color: $dv-tooltip-hover-color;
 }

@@ -20,7 +20,7 @@ import { Row } from '../../components/grid/Row'
  */
 const meta: Meta<typeof Container> = {
   tags: ['autodocs'],
-  title: 'UI/Grid',
+  title: 'Grid',
   component: Container
 }
 
@@ -81,6 +81,24 @@ export const RowsWithDifferentWidths: Story = {
         <Col>1 of 3</Col>
         <Col>2 of 3</Col>
         <Col>3 of 3</Col>
+      </Row>
+    </Container>
+  )
+}
+
+export const ColumnsWithOffset: Story = {
+  render: () => (
+    <Container>
+      <Row>
+        <Col md={4}>md=4</Col>
+        <Col md={{ span: 4, offset: 4 }}>{`md={{ span: 4, offset: 4 }}`}</Col>
+      </Row>
+      <Row>
+        <Col md={{ span: 3, offset: 3 }}>{`md={{ span: 3, offset: 3 }}`}</Col>
+        <Col md={{ span: 3, offset: 3 }}>{`md={{ span: 3, offset: 3 }}`}</Col>
+      </Row>
+      <Row>
+        <Col md={{ span: 6, offset: 3 }}>{`md={{ span: 6, offset: 3 }}`}</Col>
       </Row>
     </Container>
   )

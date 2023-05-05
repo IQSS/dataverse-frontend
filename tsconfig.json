@@ -17,14 +17,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": [
-    "src",
-    "tests",
-    "cypress",
-    "vitest.config.ts",
-    "cypress.config.ts",
-    "vite.config.ts",
-    "packages/design-system/src/"
-  ],
-  "exclude": ["cypress/**/**.spec.ts", "cypress/**/**.spec.tsx"]
+  "include": ["src", "tests", "cypress.config.ts", "vite.config.ts", "packages/design-system/src/"],
+  "exclude": ["tests/**/**.spec.ts", "tests/**/**.spec.tsx"]
 }

@@ -3,6 +3,7 @@ import path from 'node:path'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 import libCss from 'vite-plugin-libcss'
+import istanbul from 'vite-plugin-istanbul'
 
 export default defineConfig({
   plugins: [
@@ -10,7 +11,11 @@ export default defineConfig({
     dts({
       insertTypesEntry: true
     }),
-    libCss()
+    libCss(),
+    istanbul({
+      cypress: true,
+      requireEnv: false
+    })
   ],
   build: {
     lib: {

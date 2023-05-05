@@ -17,7 +17,7 @@ import { Breadcrumb } from '../../components/breadcrumb/Breadcrumb'
  * - Add a href to the last element of the breadcrumb.
  */
 const meta: Meta<typeof Breadcrumb> = {
-  title: 'UI/Breadcrumb',
+  title: 'Breadcrumb',
   component: Breadcrumb,
   tags: ['autodocs']
 }

@@ -23,24 +23,18 @@ import { Icon } from '../../components/icon.enum'
  * - Button width is set by its content. Avoid changing its width.
  * - Do not use a button for a text link or navigation item like breadcrumbs.
  *
- * ## SASS variables
+ * ## Theme variables
  *
  * ```
- * $dv-primary-text-color
- * $dv-primary-text-shadow-color
- * $dv-primary-background-color
- * $dv-primary-background-color-disabled
- * $dv-primary-border-color
+ * theme.color.primary
+ * theme.color.secondary
  *
- * $dv-secondary-text-color
- * $dv-secondary-text-shadow-color
- * $dv-secondary-background-color
- * $dv-secondary-background-color-disabled
- * $dv-secondary-border-color
+ * theme.color.linkColor
+ * theme.color.linkColorHover
  * ```
  */
 const meta: Meta<typeof Button> = {
-  title: 'UI/Button',
+  title: 'Button',
   component: Button,
   tags: ['autodocs']
 }

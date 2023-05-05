@@ -1,5 +1,11 @@
+@import "src/lib/components/assets/styles/design-tokens/colors.module";
+
+.border {
+  border: 1px solid $dv-button-border-color;
+}
+
 .spacing {
-  margin: 0 7px
+  margin: 0 7px;
 }
 
 .icon {

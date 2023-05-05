@@ -22,25 +22,19 @@ import { CanvasFixedHeight } from '../CanvasFixedHeight'
  *
  * - Use the dropdown as a select input
  *
- * ## SASS variables
+ * ## Theme variables
  *
  * ```
- * $dv-primary-text-color
- * $dv-primary-text-shadow-color
- * $dv-primary-background-color
- * $dv-primary-background-color-disabled
- * $dv-primary-border-color
+ * theme.color.primary
+ * theme.color.secondary
  *
- * $dv-secondary-text-color
- * $dv-secondary-text-shadow-color
- * $dv-secondary-background-color
- * $dv-secondary-border-color
- * $dv-secondary-background-color-disabled
+ * theme.color.linkColor
+ * theme.color.linkColorHover
  * ```
  */
 
 const meta: Meta<typeof DropdownButton> = {
-  title: 'UI/Dropdown Button',
+  title: 'Dropdown Button',
   component: DropdownButton,
   tags: ['autodocs']
 }

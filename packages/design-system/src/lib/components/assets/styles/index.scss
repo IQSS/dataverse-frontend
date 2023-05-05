@@ -1,2 +1,6 @@
+@layer bootstrap, core;
 @import "src/lib/components/assets/styles/fontcustom";
-@import "src/lib/components/assets/styles/bootstrap-customized";
+
+@layer bootstrap {
+  @import "src/lib/components/assets/styles/bootstrap-customized";
+}
