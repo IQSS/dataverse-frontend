@@ -7,9 +7,34 @@ export class DatasetMother {
       id: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
       version: faker.datatype.uuid(),
-      description: faker.lorem.lines(4),
-      subject: faker.lorem.slug(3),
-      keyword: faker.lorem.slug(4),
+      summaryFields: [
+        {
+          title: 'Description',
+          description: 'this is the description field',
+          value: faker.lorem.paragraph(3)
+        },
+
+        {
+          title: 'Subject',
+          description: 'this is the subject field',
+          value: faker.lorem.words(5)
+        },
+        {
+          title: 'Keyword',
+          description: 'this is the keyword field',
+          value: faker.lorem.words(3)
+        },
+        {
+          title: 'Related Publication',
+          description: 'this is the keyword field',
+          value: faker.lorem.words(3)
+        },
+        {
+          title: 'Notes',
+          description: 'this is the notes field',
+          value: faker.lorem.paragraph(3)
+        }
+      ],
       ...props
     }
   }

@@ -23,9 +23,9 @@ describe('DatasetSummary', () => {
     // const description = await findByText(`${testDataset.description.substring(0, 20)}`)
     // expect(description).toBeInTheDocument()
 
-    const subject = await findByText(`${testDataset.subject}`)
-    expect(subject).toBeInTheDocument()
-    const keyword = await findByText(`${testDataset.keyword}`)
+    const value1 = await findByText(`${testDataset.summaryFields[0].value}`)
+    expect(value1).toBeInTheDocument()
+    const keyword = await findByText(`${testDataset.summaryFields[0].title}`)
     expect(keyword).toBeInTheDocument()
   })
 })

@@ -2,6 +2,8 @@ import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetR
 import { useDataset } from '../useDataset'
 import { Col } from '../../ui/grid/Col'
 import { Row } from '../../ui/grid/Row'
+import { Tooltip } from '../../ui/tooltip/Tooltip'
+import { SanitizedHTML } from '../../ui/sanitized-html/SanitizedHtml'
 
 interface DatasetSummaryProps {
   datasetRepository: DatasetRepository
@@ -13,24 +15,17 @@ export function DatasetSummary({ datasetRepository, id }: DatasetSummaryProps) {
 
   return dataset ? (
     <article>
-      <Row>
-        <Col sm={2}>
-          <b>Description</b>:
-        </Col>
-        <Col> {dataset.description}</Col>
-      </Row>
-      <Row>
-        <Col sm={2}>
-          <b>Subject</b>:
-        </Col>
-        <Col> {dataset.subject}</Col>
-      </Row>
-      <Row>
-        <Col sm={2}>
-          <b>Keyword</b>:
-        </Col>
-        <Col> {dataset.keyword}</Col>
-      </Row>
+      {dataset.summaryFields.map((field, index) => (
+        <Row key={index}>
+          <Col sm={3}>
+            <b>{field.title}</b> <Tooltip placement="right" message={field.description}></Tooltip>
+          </Col>
+          <Col>
+            {' '}
+            <SanitizedHTML html={field.value}></SanitizedHTML>
+          </Col>
+        </Row>
+      ))}
     </article>
   ) : null
 }

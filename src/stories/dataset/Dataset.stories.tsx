@@ -3,6 +3,7 @@ import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { Dataset } from '../../sections/dataset/Dataset'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
+import { faker } from '@faker-js/faker'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -17,12 +18,36 @@ class DatasetMockRepository implements DatasetRepository {
   getById(id: string) {
     return Promise.resolve({
       id: id,
-      title: 'Here is the title',
+      title: 'Test Dataset',
       version: '1.0',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      subject: 'Medicine, Health and Life Sciences, Social Sciences',
-      keyword: 'Malaria, Tuberculosis, Drug Resistant'
+      summaryFields: [
+        {
+          title: 'Description',
+          description: 'this is the description field',
+          value: faker.lorem.paragraph(3)
+        },
+        {
+          title: 'Keyword',
+          description: 'this is the keyword field',
+          value: 'Malaria, Tuberculosis, Drug Resistant'
+        },
+        {
+          title: 'Subject',
+          description: 'this is the subject field',
+          value: 'Medicine, Health and Life Sciences, Social Sciences'
+        },
+
+        {
+          title: 'Related Publication',
+          description: 'this is the keyword field',
+          value: faker.lorem.words(3)
+        },
+        {
+          title: 'Notes',
+          description: 'this is the notes field',
+          value: faker.lorem.paragraph(3)
+        }
+      ]
     })
   }
 }
