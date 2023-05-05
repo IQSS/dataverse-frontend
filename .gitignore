@@ -37,3 +37,4 @@ yarn-error.log*
 #dev environment
 /dev-env/docker-dev-volumes
 /dev-env/dataverse
+/dev-env/dataverse-sample-data

@@ -2,9 +2,15 @@
 
 export DATAVERSE_BRANCH_NAME=$1
 
-DATAVERSE_HOST=http://localhost:8080
+# To avoid timeout issues on frontend container startup
+export COMPOSE_HTTP_TIMEOUT=200
+
+DATAVERSE_API_BASE_URL=http://localhost:8000/api
 
 echo "INFO - Setting up Dataverse on branch ${DATAVERSE_BRANCH_NAME}..."
+
+echo "INFO - Removing current environment if exists..."
+./rm-env.sh
 
 echo "INFO - Cloning Dataverse backend repository..."
 git clone -b ${DATAVERSE_BRANCH_NAME} git@github.com:IQSS/dataverse.git
@@ -16,15 +22,15 @@ echo "INFO - Waiting for containers to be ready..."
 # Up to ~5 minutes
 max_attempts=30
 n_attempts=0
-until $(curl --output /dev/null --silent --head --fail ${DATAVERSE_HOST}/api/info/version); do
-    if [ ${n_attempts} -eq ${max_attempts} ];then
-      echo "ERROR - Timeout reached while waiting for containers to be ready"
-      ./rm-env.sh
-      rm -rf dataverse
-      exit 1
-    fi
-    n_attempts=$(($n_attempts+1))
-    sleep 10
+until $(curl --output /dev/null --silent --head --fail ${DATAVERSE_API_BASE_URL}/info/version); do
+   if [ ${n_attempts} -eq ${max_attempts} ];then
+     echo "ERROR - Timeout reached while waiting for containers to be ready"
+     ./rm-env.sh
+     rm -rf dataverse
+     exit 1
+   fi
+   n_attempts=$(($n_attempts+1))
+   sleep 10
 done
 
 echo "INFO - Bootstrapping dataverse..."
@@ -44,9 +50,8 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 cp ../dvconfig.py ./dvconfig.py
-curl -X PUT -d 'true' ${DATAVERSE_HOST}/api/admin/settings/:AllowApiTokenLookupViaApi
+curl -X PUT -d 'true' ${DATAVERSE_API_BASE_URL}/admin/settings/:AllowApiTokenLookupViaApi
 dataverse_api_token=$(python3 get_api_token.py)
-sed -i '' "s/<DATAVERSE_HOST>/${DATAVERSE_HOST}/g" dvconfig.py
 sed -i '' "s/<DATAVERSE_API_TOKEN>/${dataverse_api_token}/g" dvconfig.py
 
 echo "INFO - Creating sample data..."

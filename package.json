@@ -26,7 +26,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "vite",
+    "start": "vite --base=/spa",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest watch",
