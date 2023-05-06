@@ -1,5 +1,6 @@
 import { fireEvent, render } from '@testing-library/react'
 import { Button } from '../../../../src/sections/ui/button/Button'
+import styles from '../../../../src/sections/ui/button/Button.module.scss'
 import { vi } from 'vitest'
 import { Icon } from '../../../../src/sections/ui/icon.enum'
 
@@ -43,5 +44,20 @@ describe('Button', () => {
 
     fireEvent.click(getByText('Click me'))
     expect(handleClick).not.toHaveBeenCalledTimes(1)
+  })
+
+  it('applies spacing class when withSpacing prop is true', () => {
+    const { getByRole } = render(<Button withSpacing>Click me!</Button>)
+    expect(getByRole('button')).toHaveClass(styles.spacing)
+  })
+
+  it('applies border class when variant is not link', () => {
+    const { getByRole } = render(<Button>Click me!</Button>)
+    expect(getByRole('button')).toHaveClass(styles.border)
+  })
+
+  it('does not apply border class when variant is link', () => {
+    const { getByRole } = render(<Button variant="link">Click me!</Button>)
+    expect(getByRole('button')).not.toHaveClass(styles.border)
   })
 })

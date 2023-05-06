@@ -8,14 +8,14 @@ const brand = {
 
 describe('Navbar component', () => {
   it('renders the brand logo and title', () => {
-    cy.mount(<Navbar brand={brand} />)
+    cy.customMount(<Navbar brand={brand} />)
 
     cy.findByRole('img', { name: 'Brand Logo Image' }).should('exist')
     cy.findByText('Brand Title').should('exist')
   })
 
   it('renders the navbar links', () => {
-    cy.mount(
+    cy.customMount(
       <Navbar brand={brand}>
         <Navbar.Link href="/link-1">Link 1</Navbar.Link>
         <Navbar.Link href="/link-2">Link 2</Navbar.Link>
@@ -35,7 +35,7 @@ describe('Navbar component', () => {
   })
 
   it('shows the sublinks when the dropdown is clicked', () => {
-    cy.mount(
+    cy.customMount(
       <Navbar brand={brand}>
         <Navbar.Link href="/link-1">Link 1</Navbar.Link>
         <Navbar.Link href="/link-2">Link 2</Navbar.Link>

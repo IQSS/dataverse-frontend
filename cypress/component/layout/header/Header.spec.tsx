@@ -18,7 +18,6 @@ describe('Header component', () => {
         {HeaderMother.withLoggedInUser(sandbox, testUser)}
       </I18nextProvider>
     )
-    cy.pause()
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.findByText(testUser.name).should('be.visible')
     cy.findByText(testUser.name).click()
