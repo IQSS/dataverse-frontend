@@ -1,11 +1,12 @@
 @import "src/sections/ui/assets/styles/design-tokens/colors.module";
+@import "src/assets/variables";
 
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: $body-available-height;
   font-size: calc(10px + 2vmin);
   text-align: center;
 }
