@@ -75,7 +75,7 @@ jobs:
         if: always()
         uses: coverallsapp/github-action@v2
         with:
-          path-to-lcov: "./merged-coverage/lcov.info"
+          path-to-lcov: './merged-coverage/lcov.info'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
   interaction-and-accessibility:
