@@ -56,6 +56,43 @@ Launches the prettier formatter. We recommend you to configure your IDE to run p
 Runs the Storybook in the development mode.  
 Open [http://localhost:6006](http://localhost:6006) to view it in your browser.
 
+## Local development environment
+
+A containerized environment, oriented to local development, is available to be run from the repository.
+
+This environment contains a dockerized instance of the Dataverse backend with its dependent services (database, mailserver, etc), as well as an npm development server running the SPA frontend (With code autoupdating).
+
+This environment is intended for locally testing any functionality that requires access to the Dataverse API from the SPA frontend.
+
+There is an Nginx reverse proxy container on top of the frontend and backend containers to avoid CORS issues while testing the application.
+
+### Run the environment
+
+Inside the `dev-env` folder, run the following command:
+
+```
+./run-env <dataverse_branch_name>
+```
+
+As the script argument, add the name of the Dataverse backend branch you want to deploy.
+
+Note that both the branch and the associated tag in the docker registry must to be pre pushed, otherwise the script will fail.
+
+If you are running the script for the first time, it may take a while, since `npm install` has to install all the dependencies. This can also happen if you added new dependencies to package.json.
+
+Once the script has finished, you will be able to access Dataverse via:
+
+- [http://localhost:8000/spa](http://localhost:8000/spa): SPA Frontend
+- [http://localhost:8000](http://localhost:8000): Dataverse Backend and JSF Frontend
+
+### Remove the environment
+
+To clean up your environment of any running environment containers, as well as any associated data volumes, run this script inside the `dev-env` folder:
+
+```
+./rm-env
+```
+
 ## Deployment
 
 Once the site is built through the `npm run build` command, it can be deployed in different ways to different types of infrastructure, depending on installation needs.
