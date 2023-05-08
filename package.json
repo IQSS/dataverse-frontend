@@ -47,7 +47,7 @@
     "test:unit-all": "concurrently 'cypress run --component' 'cd packages/design-system && npm run test:unit'",
     "test:coverage": "nyc check-coverage",
     "test:coverage-all": "nyc check-coverage && cd packages/design-system && npm run test:coverage",
-    "test:coverage-merge": "lcov-result-merger '**/*/lcov.info' 'merged-coverage/lcov.info'",
+    "test:coverage-merge": "perl -pi -e 's/src\\/lib/packages\\/design-system\\/src\\/lib/g' merged-coverage/lcov.info && lcov-result-merger '**/*/lcov.info' 'merged-coverage/lcov.info'",
     "git:add": "git add .",
     "storybook": "concurrently 'storybook dev -p 6006 && open \"http://localhost:6006\"' 'cd packages/design-system && npm run storybook'",
     "build-storybook": "storybook build",
