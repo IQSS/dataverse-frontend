@@ -57,7 +57,7 @@ jobs:
       - name: Cypress run Design System
         uses: cypress-io/github-action@v4
         with:
-          project: packages/design-system
+          working-directory: packages/design-system
           start: npm run preview
           component: true
           wait-on: 'npx wait-on --timeout 60000 http://localhost:4173'
