@@ -66,7 +66,7 @@ jobs:
           component: true
 
       - name: Check coverage, merge coverage
-        run: npm run test:coverage && npx lcov-result-merger '**/*/lcov.info' 'merged-coverage/merged-coverage.info'
+        run: npm run test:coverage && lcov-result-merger '**/*/lcov.info' 'merged-coverage/merged-coverage.info'
 
       - name: Upload coverage report to Coveralls
         if: always()
