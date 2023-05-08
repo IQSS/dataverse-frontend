@@ -3,7 +3,7 @@ import { useDataset } from '../useDataset'
 import { Col } from '../../ui/grid/Col'
 import { Row } from '../../ui/grid/Row'
 import { Tooltip } from '../../ui/tooltip/Tooltip'
-import { SanitizedHTML } from '../../ui/sanitized-html/SanitizedHtml'
+import MarkdownComponent from '../../ui/markdown/MarkdownComponent'
 
 interface DatasetSummaryProps {
   datasetRepository: DatasetRepository
@@ -22,7 +22,7 @@ export function DatasetSummary({ datasetRepository, id }: DatasetSummaryProps) {
           </Col>
           <Col>
             {' '}
-            <SanitizedHTML html={field.value}></SanitizedHTML>
+            <MarkdownComponent markdown={field.value} />
           </Col>
         </Row>
       ))}

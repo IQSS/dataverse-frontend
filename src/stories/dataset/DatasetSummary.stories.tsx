@@ -23,7 +23,8 @@ class DatasetMockRepository implements DatasetRepository {
         {
           title: 'Description',
           description: 'this is the description field',
-          value: faker.lorem.paragraph(3)
+          value:
+            'This is the description field. This text is *italic* and this is **bold**. Here is an image ![Alt text](https://picsum.photos/id/10/20/20) '
         },
         {
           title: 'Keyword',
@@ -38,7 +39,7 @@ class DatasetMockRepository implements DatasetRepository {
         {
           title: 'Related Publication',
           description: 'this is the keyword field',
-          value: 'CNN Journal <a href="https://cnn.com" target="_blank">CNN.com</a>'
+          value: 'CNN Journal [CNN.com](https://cnn.com)'
         },
         {
           title: 'Notes',
