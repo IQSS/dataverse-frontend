@@ -69,7 +69,7 @@ jobs:
         run: npm run test:coverage-all
 
       - name: Merge coverage
-        run: npm run test:coverage-merge
+        run: npm run test:coverage-merge && cat merged-coverage/lcov.info
 
       - name: Upload coverage report to Coveralls
         if: always()
