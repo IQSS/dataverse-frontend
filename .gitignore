@@ -11,6 +11,7 @@
 # testing
 /.nyc_output
 /coverage
+/merged-coverage/*
 /tests/downloads
 /tests/screenshots
 /packages/design-system/coverage
