@@ -43,12 +43,15 @@
     "cy:open-e2e": "cypress open --e2e --browser chrome",
     "cy:open-unit": "cypress open --component --browser chrome",
     "test:e2e": "cypress run --e2e",
-    "test:unit": "concurrently 'cypress run --component' 'cd packages/design-system && npm run test:unit'",
-    "test:coverage": "nyc check-coverage && cd packages/design-system && npm run test:coverage",
+    "test:unit": "cypress run --component",
+    "test:unit-all": "concurrently 'cypress run --component' 'cd packages/design-system && npm run test:unit'",
+    "test:coverage": "nyc check-coverage",
+    "test:coverage-all": "nyc check-coverage && cd packages/design-system && npm run test:coverage",
     "git:add": "git add .",
     "storybook": "concurrently 'storybook dev -p 6006 && open \"http://localhost:6006\"' 'cd packages/design-system && npm run storybook'",
     "build-storybook": "storybook build",
-    "test:storybook": "concurrently 'test-storybook' 'cd packages/design-system && npm run test:storybook'"
+    "test:storybook": "test-storybook",
+    "test:storybook-all": "concurrently 'test-storybook' 'cd packages/design-system && npm run test:storybook'"
   },
   "pre-commit": [
     "lint:fix",
@@ -112,6 +115,7 @@
     "eslint-plugin-storybook": "^0.6.11",
     "eslint-plugin-unused-imports": "^2.0.0",
     "jsdom": "^21.1.0",
+    "lcov-result-merger": "^3.3.0",
     "pre-commit": "^1.2.2",
     "prettier": "^2.8.4",
     "prop-types": "^15.8.1",

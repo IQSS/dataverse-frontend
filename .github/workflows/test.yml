@@ -18,7 +18,7 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Build Dataverse UI Library
+      - name: Build Dataverse Design System
         working-directory: packages/design-system
         run: npm run build
 
@@ -50,9 +50,17 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Build Dataverse UI Library
+      - name: Build Dataverse Design System
         working-directory: packages/design-system
         run: npm run build
+
+      - name: Cypress run Design System
+        working-directory: packages/design-system
+        uses: cypress-io/github-action@v4
+        with:
+          start: npm run preview
+          component: true
+          wait-on: 'npx wait-on --timeout 60000 http://localhost:5173'
 
       - name: Cypress run
         uses: cypress-io/github-action@v4
@@ -62,13 +70,14 @@ jobs:
           component: true
           wait-on: 'npx wait-on --timeout 60000 http://localhost:5173'
 
-      - name: Check coverage
-        run: npx nyc check-coverage --statement 95 --branch 95 --function 95 --lines 95
+      - name: Check coverage, merge coverage
+        run: npm run test:coverage && npx lcov-result-merger '**/*/lcov.info' 'merged-coverage/merged-coverage.info'
 
       - name: Upload coverage report to Coveralls
         if: always()
         uses: coverallsapp/github-action@v2
         with:
+          path-to-lcov: merged-coverage/merged-coverage.info
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
   interaction-and-accessibility:
@@ -85,9 +94,20 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Build Dataverse UI Library
+      - name: Build Dataverse Design System
         working-directory: packages/design-system
         run: npm run build
+
+      - name: Build Storybook Design System
+        working-directory: packages/design-system
+        run: npm run build-storybook --quiet
+
+      - name: Serve Storybook Design System and run tests
+        working-directory: packages/design-system
+        run: |
+          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+            "npx http-server storybook-static --port 6006 --silent" \
+            "npx wait-on http://127.0.0.1:6006 --l && npx test-storybook --url http://127.0.0.1:6006"
 
       - name: Build Storybook
         run: npm run build-storybook --quiet
