@@ -37,7 +37,7 @@
     "start": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint --ignore-path .gitignore . && stylelint **/*.scss && prettier --check '**/*.(yml|json|md|css)'",
+    "lint": "eslint --ignore-path .gitignore . && stylelint **/*.scss && prettier --check '**/*.(yml|json|md|css)' --ignore-path packages/design-system/.gitignore",
     "lint:fix": "eslint --fix --ext .ts,.tsx ./src --ignore-path .gitignore . && stylelint --fix **/*.scss && prettier --write '**/*.(yml|json|md|css)'",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json,yml,md}' --config ./.prettierrc",
     "cy:open-e2e": "cypress open --e2e --browser chrome",
