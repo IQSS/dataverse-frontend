@@ -66,7 +66,7 @@ jobs:
           component: true
 
       - name: Check coverage
-        run: npm run test:coverage
+        run: npm run test:coverage-all
 
       - name: Merge coverage
         run: npm run test:coverage-merge
