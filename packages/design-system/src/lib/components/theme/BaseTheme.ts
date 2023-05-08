@@ -1,7 +1,49 @@
 import colorVariables from '../assets/styles/design-tokens/colors.module.scss'
 import typographyVariables from '../assets/styles/design-tokens/typography.module.scss'
 
-export const baseTheme = {
+interface BaseTheme {
+  themeKey: string
+  color: {
+    brand: string
+    primary: string
+    secondary: string
+    successColor: string
+    warningColor: string
+    infoColor: string
+
+    dangerColor: string
+    textColor: string
+    subTextColor: string
+    primaryTextColor: string
+    secondaryTextColor: string
+    successTextColor: string
+    warningTextColor: string
+    infoTextColor: string
+    dangerTextColor: string
+    successBoxColor: string
+    warningBoxColor: string
+    infoBoxColor: string
+    dangerBoxColor: string
+    headingsColor: string
+    linkColor: string
+    linkHoverColor: string
+    buttonBorderColor: string
+    tooltipColor: string
+    tooltipHoverColor: string
+  }
+  typography: {
+    fontSize: string
+    fontSizeSm: string
+    brandFontSize: string
+    fontFamily: string
+    fontWeight: string
+    fontWeightBold: string
+    fontWeightLight: string
+    lineHeight: string
+  }
+}
+
+export const baseTheme: BaseTheme = {
   themeKey: 'base',
   color: {
     brand: colorVariables.brand,
