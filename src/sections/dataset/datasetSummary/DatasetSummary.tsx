@@ -26,6 +26,19 @@ export function DatasetSummary({ datasetRepository, id }: DatasetSummaryProps) {
           </Col>
         </Row>
       ))}
+      <Row>
+        <Col sm={3}>
+          <b>License/Data Use Agreement</b>
+        </Col>
+        <Col>
+          {' '}
+          <img src={dataset.license.iconUrl} title={dataset.license.shortDescription}></img>{' '}
+          <a href={dataset.license.uri}>{dataset.license.name}</a>
+        </Col>
+      </Row>
     </article>
   ) : null
 }
+/*
+<img src="https://licensebuttons.net/p/zero/1.0/88x31.png" title="Creative Commons CC0 1.0 Universal Public Domain Dedication. " style="display: inline;" onload="this.style.display='inline'">
+ */

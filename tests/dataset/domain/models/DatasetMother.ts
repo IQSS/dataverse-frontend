@@ -7,6 +7,12 @@ export class DatasetMother {
       id: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
       version: faker.datatype.uuid(),
+      license: {
+        name: 'CC0 1.0',
+        shortDescription: 'CC0 1.0 Universal Public Domain Dedication',
+        uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
+        iconUrl: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+      },
       summaryFields: [
         {
           title: 'Description',
