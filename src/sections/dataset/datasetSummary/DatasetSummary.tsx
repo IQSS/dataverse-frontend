@@ -32,7 +32,10 @@ export function DatasetSummary({ datasetRepository, id }: DatasetSummaryProps) {
         </Col>
         <Col>
           {' '}
-          <img src={dataset.license.iconUrl} title={dataset.license.shortDescription}></img>{' '}
+          <img
+            alt={dataset.license.name + ' license icon'}
+            src={dataset.license.iconUrl}
+            title={dataset.license.shortDescription}></img>{' '}
           <a href={dataset.license.uri}>{dataset.license.name}</a>
         </Col>
       </Row>
