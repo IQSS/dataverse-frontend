@@ -1,5 +1,6 @@
 import { Badge as BadgeBS } from 'react-bootstrap'
 import { ReactNode } from 'react'
+import styles from './Badge.module.scss'
 
 interface BadgeProps {
   variant: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info'
@@ -7,5 +8,9 @@ interface BadgeProps {
 }
 
 export function Badge({ variant, children }: BadgeProps) {
-  return <BadgeBS bg={variant}>{children}</BadgeBS>
+  return (
+    <BadgeBS bg={variant} className={styles[variant]}>
+      {children}
+    </BadgeBS>
+  )
 }

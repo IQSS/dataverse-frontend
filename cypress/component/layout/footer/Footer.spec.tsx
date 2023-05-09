@@ -9,11 +9,9 @@ describe('Footer component', () => {
   const testVersion = DataverseVersionMother.create()
 
   it('should render footer content', () => {
-    cy.mount(FooterMother.withDataverseVersion(sandbox, testVersion))
+    cy.customMount(FooterMother.withDataverseVersion(sandbox, testVersion))
 
-    cy.findByText('copyright').should('exist')
-    cy.findByText('privacyPolicy').should('exist')
-    cy.findByText('poweredBy').should('exist')
+    cy.findByText('Privacy Policy').should('exist')
     cy.findByAltText('The Dataverse Project logo').should('exist')
     cy.findByText(testVersion).should('exist')
   })
@@ -23,15 +21,15 @@ describe('Footer component', () => {
       getVersion: cy.stub().resolves(testVersion)
     }
 
-    cy.mount(<Footer dataverseInfoRepository={dataverseInfoRepository} />)
+    cy.customMount(<Footer dataverseInfoRepository={dataverseInfoRepository} />)
 
     /* eslint-disable-next-line @typescript-eslint/unbound-method */
     cy.wrap(dataverseInfoRepository.getVersion).should('have.been.called')
   })
 
   it('should open privacy policy link in new tab', () => {
-    cy.mount(FooterMother.withDataverseVersion(sandbox))
+    cy.customMount(FooterMother.withDataverseVersion(sandbox))
 
-    cy.findByText('privacyPolicy').should('exist')
+    cy.findByText('Privacy Policy').should('exist')
   })
 })

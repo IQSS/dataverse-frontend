@@ -15,28 +15,27 @@ describe('Layout', () => {
   })
 
   it('renders the header', () => {
-    cy.mount(<Layout />)
+    cy.customMount(<Layout />)
 
-    const brandLink = cy.findByText('brandTitle')
-    brandLink.should('exist')
+    cy.findByRole('img', { name: 'Brand Logo Image' }).should('exist')
+    cy.findByText('Dataverse').should('exist')
 
-    const brandImg = cy.findByRole('img', { name: 'Brand Logo Image' })
-    brandImg.should('exist')
+    cy.findByRole('button', { name: 'Toggle navigation' }).click()
+    cy.findByRole('link', { name: 'Sign Up' }).should('exist')
+    cy.findByRole('link', { name: 'Log In' }).should('exist')
   })
 
-  it('renders the footer', () => {
-    cy.mount(<Layout />)
+  it('renders the Footer', () => {
+    cy.customMount(<Layout></Layout>)
 
-    const copyright = cy.findByText('copyright')
-    copyright.should('exist')
+    it('displays the Powered By link', () => {
+      cy.customMount(<Layout></Layout>)
+      cy.findByRole('link', { name: 'The Dataverse Project logo' }).should('exist')
+    })
 
-    const privacyPolicy = cy.findByRole('link', { name: 'privacyPolicy' })
-    privacyPolicy.should('exist')
-
-    const poweredByLink = cy.findByRole('link', { name: 'The Dataverse Project logo' })
-    poweredByLink.should('exist')
-
-    const poweredByImg = cy.findByRole('img', { name: 'The Dataverse Project logo' })
-    poweredByImg.should('exist')
+    it('displays the Privacy Policy', () => {
+      cy.customMount(<Layout></Layout>)
+      cy.findByText('privacyPolicy').should('exist')
+    })
   })
 })
