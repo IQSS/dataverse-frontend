@@ -1,12 +1,9 @@
-import { createSandbox, SinonSandbox } from 'sinon'
 import { render } from '@testing-library/react'
 import { DatasetField, License } from '../../../src/dataset/domain/models/Dataset'
 import { DatasetSummary } from '../../../src/sections/dataset/datasetSummary/DatasetSummary'
 import { faker } from '@faker-js/faker'
 
 describe('DatasetSummary', () => {
-  const sandbox: SinonSandbox = createSandbox()
-
   const licenseMock: License = {
     name: 'CC0 1.0',
     shortDescription: 'CC0 1.0 Universal Public Domain Dedication',
@@ -42,10 +39,6 @@ describe('DatasetSummary', () => {
       value: faker.lorem.paragraph(3)
     }
   ]
-
-  afterEach(() => {
-    sandbox.restore()
-  })
 
   it('renders the DatasetSummary fields', async () => {
     const { findByText } = render(
