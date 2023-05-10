@@ -1,4 +1,4 @@
-import MarkdownComponent from '../../../../src/sections/ui/markdown/MarkdownComponent'
+import { MarkdownComponent } from '../../../../src/sections/ui/markdown/MarkdownComponent'
 
 describe('MarkdownComponent', () => {
   it('renders Markdown correctly', () => {
