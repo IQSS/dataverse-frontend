@@ -1,10 +1,10 @@
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { useDataset } from './useDataset'
-import { Badge } from '../ui/badge/Badge'
 import { Tabs } from '../ui/tabs/Tabs'
 import { Col } from '../ui/grid/Col'
 import { Row } from '../ui/grid/Row'
 import styles from './Dataset.module.scss'
+import { DatasetLabels } from './dataset-labels/DatasetLabels'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -18,7 +18,7 @@ export function Dataset({ datasetRepository, id }: DatasetProps) {
     <article>
       <header className={styles.header}>
         <h1>{dataset.title}</h1>
-        <Badge>Version {dataset.version}</Badge>
+        <DatasetLabels labels={dataset.labels} />
       </header>
       <div className={styles.container}>
         <Row>

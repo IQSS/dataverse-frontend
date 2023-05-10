@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { HelloDataverse } from './sections/hello-dataverse/HelloDataverse'
 import { Layout } from './sections/layout/Layout'
-import { Route } from './sections/route.enum'
+import { Route } from './sections/Route.enum'
 
 const router = createBrowserRouter(
   [

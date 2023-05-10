@@ -12,18 +12,19 @@ describe('Dataset', () => {
     sandbox.restore()
   })
 
-  it('renders the Dataset page title and version', async () => {
+  it('renders the Dataset page title and labels', async () => {
     const datasetRepository: DatasetRepository = {} as DatasetRepository
     datasetRepository.getById = sandbox.stub().resolves(testDataset)
 
-    const { findByText } = render(
+    const { findByText, getByText } = render(
       <Dataset datasetRepository={datasetRepository} id={testDataset.id} />
     )
 
     const title = await findByText(testDataset.title)
     expect(title).toBeInTheDocument()
 
-    const version = await findByText(`Version ${testDataset.version}`)
-    expect(version).toBeInTheDocument()
+    testDataset.labels.forEach((label) => {
+      expect(getByText(label.value)).toBeInTheDocument()
+    })
   })
 })

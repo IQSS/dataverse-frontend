@@ -1,7 +1,7 @@
 import { DropdownButton as DropdownButtonBS } from 'react-bootstrap'
 import { ReactNode } from 'react'
 import styles from './DropdownButton.module.scss'
-import { Icon } from '../icon.enum'
+import { Icon } from '../Icon.enum'
 
 type DropdownButtonVariant = 'primary' | 'secondary'
 

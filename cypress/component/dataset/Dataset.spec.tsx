@@ -18,6 +18,9 @@ describe('Dataset', () => {
     cy.mount(<Dataset datasetRepository={datasetRepository} id={testDataset.id} />)
 
     cy.findByText(testDataset.title).should('exist')
-    cy.findByText(`Version ${testDataset.version}`).should('exist')
+
+    testDataset.labels.forEach((label) => {
+      cy.findByText(label.value).should('exist')
+    })
   })
 })

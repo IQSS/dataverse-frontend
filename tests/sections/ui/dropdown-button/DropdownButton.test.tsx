@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react'
 import { DropdownButton } from '../../../../src/sections/ui/dropdown-button/DropdownButton'
-import { Icon } from '../../../../src/sections/ui/icon.enum'
+import { Icon } from '../../../../src/sections/ui/Icon.enum'
 import styles from '../../../../src/sections/ui/dropdown-button/DropdownButton.module.scss'
 
 const titleText = 'My Dropdown Button'

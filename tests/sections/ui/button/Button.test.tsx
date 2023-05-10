@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react'
 import { Button } from '../../../../src/sections/ui/button/Button'
 import { vi } from 'vitest'
-import { Icon } from '../../../../src/sections/ui/icon.enum'
+import { Icon } from '../../../../src/sections/ui/Icon.enum'
 
 describe('Button', () => {
   const clickMeText = 'Click me'
