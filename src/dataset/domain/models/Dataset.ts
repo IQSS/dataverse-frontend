@@ -1,6 +1,14 @@
-import { DatasetField } from './DatasetField'
-import { License } from './License'
-
+export interface DatasetField {
+  title: string
+  description: string
+  value: string
+}
+export interface License {
+  name: string
+  shortDescription: string
+  uri: string
+  iconUrl?: string
+}
 export interface Dataset {
   id: string
   title: string
