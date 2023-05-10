@@ -6,7 +6,7 @@ import { Col } from '../ui/grid/Col'
 import { Row } from '../ui/grid/Row'
 import styles from './Dataset.module.scss'
 import { DatasetSummary } from './datasetSummary/DatasetSummary'
-
+import { DatasetCitation } from './datasetCitation/DatasetCitation'
 interface DatasetProps {
   datasetRepository: DatasetRepository
   id: string
@@ -23,7 +23,9 @@ export function Dataset({ datasetRepository, id }: DatasetProps) {
       </header>
       <div className={styles.container}>
         <Row>
-          <Col sm={9}>Citation Block</Col>
+          <Col>
+            <DatasetCitation datasetRepository={datasetRepository} id={id}></DatasetCitation>
+          </Col>
         </Row>
         <Row>
           <DatasetSummary datasetRepository={datasetRepository} id={id}></DatasetSummary>

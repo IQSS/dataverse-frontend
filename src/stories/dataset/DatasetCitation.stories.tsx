@@ -1,17 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../WithI18next'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { DatasetSummary } from '../../sections/dataset/datasetSummary/DatasetSummary'
 import { faker } from '@faker-js/faker'
+import { DatasetCitation } from '../../sections/dataset/datasetCitation/DatasetCitation'
 
-const meta: Meta<typeof DatasetSummary> = {
-  title: 'Sections/Dataset Page/DatasetSummary',
-  component: DatasetSummary,
+const meta: Meta<typeof DatasetCitation> = {
+  title: 'Sections/Dataset Page/DatasetCitation',
+  component: DatasetCitation,
   decorators: [WithI18next]
 }
 
 export default meta
-type Story = StoryObj<typeof DatasetSummary>
+type Story = StoryObj<typeof DatasetCitation>
 
 class DatasetMockRepository implements DatasetRepository {
   getById(id: string) {
@@ -60,5 +60,5 @@ class DatasetMockRepository implements DatasetRepository {
 }
 
 export const Default: Story = {
-  render: () => <DatasetSummary datasetRepository={new DatasetMockRepository()} id="1" />
+  render: () => <DatasetCitation datasetRepository={new DatasetMockRepository()} id="1" />
 }

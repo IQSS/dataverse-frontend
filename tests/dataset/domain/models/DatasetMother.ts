@@ -7,6 +7,8 @@ export class DatasetMother {
       id: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
       version: faker.datatype.uuid(),
+      displayCitation:
+        'K, Ellen, 2023, "Test Terms", https://doi.org/10.70122/FK2/KLX4XO, Demo Dataverse, V1',
       license: {
         name: 'CC0 1.0',
         shortDescription: 'CC0 1.0 Universal Public Domain Dedication',
