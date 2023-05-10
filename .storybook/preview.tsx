@@ -27,9 +27,7 @@ const preview: Preview = {
   decorators: [
     (Story) => (
       <ThemeProvider>
-        <LoadingProvider>
-          <Story />
-        </LoadingProvider>
+        <Story />
       </ThemeProvider>
     ),
     mswDecorator

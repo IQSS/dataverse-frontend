@@ -10,11 +10,11 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <React.Suspense fallback="loading">
-      <ThemeProvider>
-        <LoadingProvider>
+      <LoadingProvider>
+        <ThemeProvider>
           <App />
-        </LoadingProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </LoadingProvider>
     </React.Suspense>
   </React.StrictMode>
 )
