@@ -4,13 +4,16 @@ import App from './App'
 import reportWebVitals from './reportWebVitals'
 import './i18n'
 import { ThemeProvider } from './sections/ui/theme/ThemeProvider'
+import { LoadingProvider } from './sections/loading/LoadingProvider'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <React.Suspense fallback="loading">
       <ThemeProvider>
-        <App />
+        <LoadingProvider>
+          <App />
+        </LoadingProvider>
       </ThemeProvider>
     </React.Suspense>
   </React.StrictMode>

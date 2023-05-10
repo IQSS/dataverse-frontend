@@ -3,10 +3,12 @@ import { Container } from '../ui/grid/Container'
 import styles from './Layout.module.scss'
 import { HeaderFactory } from './header/HeaderFactory'
 import { FooterFactory } from './footer/FooterFactory'
+import TopBarProgressIndicator from './topbar-progress-indicator/TopbarProgressIndicator'
 
 export function Layout() {
   return (
     <>
+      <TopBarProgressIndicator />
       {HeaderFactory.create()}
       <Container className={styles['body-container']}>
         <Outlet />

@@ -2,6 +2,7 @@ import type { Preview } from '@storybook/react'
 import { ThemeProvider } from '../src/sections/ui/theme/ThemeProvider'
 import DocumentationTemplate from '../src/stories/ui/DocumentationTemplate.mdx'
 import { initialize, mswDecorator } from 'msw-storybook-addon'
+import { LoadingProvider } from '../src/sections/loading/LoadingProvider'
 
 /*
  * Initializes MSW
@@ -26,7 +27,9 @@ const preview: Preview = {
   decorators: [
     (Story) => (
       <ThemeProvider>
-        <Story />
+        <LoadingProvider>
+          <Story />
+        </LoadingProvider>
       </ThemeProvider>
     ),
     mswDecorator
