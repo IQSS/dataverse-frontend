@@ -6,8 +6,8 @@ describe('NavbarDropdown component', () => {
   test('renders the dropdown title', () => {
     const { getByRole } = render(
       <NavbarDropdown title="Dropdown Title" id="dropdown">
-        <Navbar.Dropdown.Item href="/link-1">Link 1</Navbar.Dropdown.Item>
-        <Navbar.Dropdown.Item href="/link-2">Link 2</Navbar.Dropdown.Item>
+        <Navbar.Dropdown.Item href="/link-1">Item 1</Navbar.Dropdown.Item>
+        <Navbar.Dropdown.Item href="/link-2">Item 2</Navbar.Dropdown.Item>
       </NavbarDropdown>
     )
 
@@ -21,8 +21,8 @@ describe('NavbarDropdown component', () => {
         <Navbar.Dropdown.Item href="/link-1">Link 1</Navbar.Dropdown.Item>
         <Navbar.Dropdown.Item href="/link-2">Link 2</Navbar.Dropdown.Item>
         <NavbarDropdown title="Link 3" id="dropdown-2">
-          <Navbar.Dropdown.Item href="/sublink-1">Sublink 1</Navbar.Dropdown.Item>
-          <Navbar.Dropdown.Item href="/sublink-2">Sublink 2</Navbar.Dropdown.Item>
+          <Navbar.Dropdown.Item href="/link-3">Item 1</Navbar.Dropdown.Item>
+          <Navbar.Dropdown.Item href="/link-4">Item 2</Navbar.Dropdown.Item>
         </NavbarDropdown>
       </NavbarDropdown>
     )
@@ -42,10 +42,10 @@ describe('NavbarDropdown component', () => {
 
     fireEvent.click(link3Element)
 
-    const sublink1Element = await findByRole('link', { name: 'Sublink 1' })
+    const sublink1Element = await findByRole('link', { name: 'Item 1' })
     expect(sublink1Element).toBeInTheDocument()
 
-    const sublink2Element = await findByRole('link', { name: 'Sublink 2' })
+    const sublink2Element = await findByRole('link', { name: 'Item 2' })
     expect(sublink2Element).toBeInTheDocument()
   })
 })

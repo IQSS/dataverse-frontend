@@ -3,26 +3,36 @@ name: test
 on: push
 
 jobs:
-  e2e:
-    runs-on: ubuntu-latest
+  # Temporarily commented out, until we set up a suitable e2e environment for running GitHub actions
+  # e2e:
+  #   runs-on: ubuntu-latest
+  #   environment: e2e
 
-    steps:
-      - uses: actions/checkout@v3
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'npm'
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 18
+  #         cache: 'npm'
 
-      - name: Install Dependencies
-        run: npm install
+  #     - name: Install Dependencies
+  #       run: npm install
 
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-          build: npm run build
-          start: npm run preview
-          wait-on: 'npx wait-on --timeout 60000 http://localhost:5173'
+  #     - name: Create and populate .env file
+  #       env:
+  #         DATAVERSE_BACKEND_URL: ${{ secrets.DATAVERSE_BACKEND_URL }}
+  #       run: |
+  #         touch .env
+  #         echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
+  #       shell: bash
+
+  #     - name: Cypress run
+  #       uses: cypress-io/github-action@v4
+  #       with:
+  #         build: npm run build
+  #         start: npm run preview
+  #         wait-on: 'npx wait-on --timeout 60000 http://localhost:5173'
   component:
     runs-on: ubuntu-latest
 
