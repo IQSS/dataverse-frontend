@@ -1,7 +1,7 @@
 import colorVariables from '../assets/styles/design-tokens/colors.module.scss'
 import typographyVariables from '../assets/styles/design-tokens/typography.module.scss'
 
-interface BaseTheme {
+export interface BaseThemeType {
   themeKey: string
   color: {
     brand: string
@@ -43,7 +43,7 @@ interface BaseTheme {
   }
 }
 
-export const baseTheme: BaseTheme = {
+export const baseTheme: BaseThemeType = {
   themeKey: 'base',
   color: {
     brand: colorVariables.brand,

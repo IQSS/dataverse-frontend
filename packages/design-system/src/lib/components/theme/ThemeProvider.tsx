@@ -1,10 +1,10 @@
-import { baseTheme } from './BaseTheme'
+import { baseTheme, BaseThemeType } from './BaseTheme'
 import { ReactNode, useContext } from 'react'
 import { ThemeContext } from './ThemeContext'
 import '../assets/styles/index.scss'
 
 export interface ThemeProps {
-  theme?: typeof baseTheme
+  theme?: BaseThemeType
   children: ReactNode
 }
 
