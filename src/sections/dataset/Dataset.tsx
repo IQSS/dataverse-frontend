@@ -28,7 +28,9 @@ export function Dataset({ datasetRepository, id }: DatasetProps) {
           </Col>
         </Row>
         <Row>
-          <DatasetSummary datasetRepository={datasetRepository} id={id}></DatasetSummary>
+          <DatasetSummary
+            summaryFields={dataset.summaryFields}
+            license={dataset.license}></DatasetSummary>
         </Row>
         <Tabs defaultActiveKey="files">
           <Tabs.Tab eventKey="files" title="Files">

@@ -1,12 +1,17 @@
-import MarkdownComponent from '../../../../src/sections/ui/markdown/MarkdownComponent'
+import { MarkdownComponent } from '../../../../src/sections/ui/markdown/MarkdownComponent'
 
 describe('MarkdownComponent', () => {
   it('renders Markdown correctly', () => {
-    const markdown = '# Heading\n\nThis is some **bold** text'
+    const markdown =
+      '# Heading\n\nThis is some **bold** text ' +
+      'This is the description field. Here is [a link](https://dataverse.org). ' +
+      ' Here is an image ![Alt text](https://picsum.photos/id/10/20/20) '
+
     cy.mount(<MarkdownComponent markdown={markdown} />)
     cy.get('h1').should('have.text', 'Heading')
     cy.get('strong').should('have.text', 'bold')
     cy.get('p').should('exist')
+    cy.get('a').should('have.attr', 'href').and('eq', 'https://dataverse.org')
   })
 })
 

@@ -1,19 +1,14 @@
-import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
-import { useDataset } from '../useDataset'
 import { Col } from '../../ui/grid/Col'
 import { Row } from '../../ui/grid/Row'
 import styles from './DatasetCitation.module.scss'
 import { Icon } from '../../ui/icon.enum'
-import MarkdownComponent from '../../ui/markdown/MarkdownComponent'
+import { MarkdownComponent } from '../../ui/markdown/MarkdownComponent'
 interface DatasetCitationProps {
-  datasetRepository: DatasetRepository
-  id: string
+  displayCitation: string
 }
 
-export function DatasetCitation({ datasetRepository, id }: DatasetCitationProps) {
-  const { dataset } = useDataset(datasetRepository, id)
-
-  return dataset ? (
+export function DatasetCitation({ displayCitation }: DatasetCitationProps) {
+  return displayCitation ? (
     <article>
       <div className={styles.container}>
         <Row className={styles.row}>
@@ -24,7 +19,7 @@ export function DatasetCitation({ datasetRepository, id }: DatasetCitationProps)
           </Col>
           <Col>
             <Row>
-              <MarkdownComponent markdown={dataset.displayCitation}></MarkdownComponent>
+              <MarkdownComponent markdown={displayCitation}></MarkdownComponent>
             </Row>
             <Row>
               <Col sm={3}>Dropdown Citation</Col>
