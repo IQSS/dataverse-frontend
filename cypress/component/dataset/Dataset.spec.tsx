@@ -53,9 +53,7 @@ describe('Dataset', () => {
     cy.findByText(testDataset.title).should('exist')
 
     testDataset.labels.forEach((label) => {
-      cy.findAllByText(label.value).then((labelElement) => {
-        expect(labelElement).toBeInTheDocument()
-      })
+      cy.findAllByText(label.value).should('exist')
     })
   })
 })

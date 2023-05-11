@@ -18,7 +18,7 @@ describe('LoadingProvider', () => {
       const { isLoading, setIsLoading } = useLoading()
       return (
         <>
-          <button onClick={() => setIsLoading(true)}>buttonText</button>
+          <button onClick={() => setIsLoading(true)}>{buttonText}</button>
           {isLoading && <div>Loading...</div>}
         </>
       )
@@ -30,14 +30,12 @@ describe('LoadingProvider', () => {
       </LoadingProvider>
     )
 
-    const toggleLoadingButton = cy.findByText(buttonText)
-    expect(toggleLoadingButton).toBeInTheDocument()
+    cy.findByText(buttonText).should('exist')
 
-    const loadingText = cy.findByText('Loading...')
-    expect(loadingText).not.toBeInTheDocument()
+    cy.findByText('Loading...').should('not.exist')
 
-    toggleLoadingButton.click()
+    cy.findByText(buttonText).click()
 
-    expect(loadingText).toBeInTheDocument()
+    cy.findByText('Loading...').should('exist')
   })
 })
