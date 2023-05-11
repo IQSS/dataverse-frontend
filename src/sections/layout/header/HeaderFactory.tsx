@@ -1,8 +1,8 @@
 import { ReactElement } from 'react'
 import { Header } from './Header'
-import { UserJsDataverseRepository } from '../../../users/infrastructure/repositories/UserJsDataverseRepository'
+import { UserJSDataverseRepository } from '../../../users/infrastructure/repositories/UserJSDataverseRepository'
 
-const userRepository = new UserJsDataverseRepository()
+const userRepository = new UserJSDataverseRepository()
 
 export class HeaderFactory {
   static create(): ReactElement {

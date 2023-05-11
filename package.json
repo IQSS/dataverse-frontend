@@ -90,6 +90,7 @@
     "@storybook/test-runner": "0.10.0",
     "@storybook/testing-library": "^0.1.0",
     "@testing-library/cypress": "^9.0.0",
+    "@types/chai-as-promised": "^7.1.5",
     "@types/node-sass": "^4.11.3",
     "@types/sinon": "^10.0.13",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
@@ -97,6 +98,7 @@
     "@vitejs/plugin-react": "^3.1.0",
     "axe-playwright": "^1.2.3",
     "babel-plugin-named-exports-order": "^0.0.2",
+    "chai-as-promised": "^7.1.1",
     "cypress": "^12.5.1",
     "cypress-vite": "^1.3.0",
     "eslint": "^8.33.0",
@@ -109,6 +111,8 @@
     "eslint-plugin-unused-imports": "^2.0.0",
     "js-dataverse": "file:./js-dataverse-2.0.0.tgz",
     "jsdom": "^21.1.0",
+    "msw": "^1.2.1",
+    "msw-storybook-addon": "^1.8.0",
     "pre-commit": "^1.2.2",
     "prettier": "^2.8.4",
     "prop-types": "^15.8.1",
@@ -122,5 +126,8 @@
     "stylelint-config-standard-scss": "^7.0.1",
     "stylelint-order": "^6.0.2",
     "vite": "4.1.0"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }
