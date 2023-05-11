@@ -12,9 +12,10 @@
 .pnp.js
 
 # testing
+/.nyc_output
 /coverage
-/cypress/downloads
-/cypress/screenshots
+/tests/downloads
+/tests/screenshots
 
 
 # production

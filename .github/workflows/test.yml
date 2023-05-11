@@ -54,6 +54,16 @@ jobs:
           start: npm run preview
           component: true
           wait-on: 'npx wait-on --timeout 60000 http://localhost:5173'
+
+      - name: Check coverage
+        run: npx nyc check-coverage --statement 95 --branch 95 --function 95 --lines 95
+
+      - name: Upload coverage report to Coveralls
+        if: always()
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
   interaction-and-accessibility:
     runs-on: ubuntu-latest
 

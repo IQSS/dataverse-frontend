@@ -29,7 +29,7 @@
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": ["./tsconfig.json", "./cypress/tsconfig.json"]
+    "project": ["./tsconfig.json", "./tests/tsconfig.json"]
   },
   "plugins": ["react", "simple-import-sort", "import", "unused-imports"],
   "rules": {
@@ -62,10 +62,6 @@
         "@typescript-eslint/no-unsafe-call": 0,
         "testing-library/prefer-screen-queries": 0
       }
-    },
-    {
-      "files": ["**/tests/**/*.(test).(ts|tsx)"],
-      "extends": ["plugin:vitest/recommended"]
     }
   ]
 }
