@@ -46,7 +46,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'npm'
 
       - name: Install Dependencies
         run: rm package-lock.json && npm install
@@ -88,7 +87,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'npm'
 
       - name: Install Dependencies
         run: rm package-lock.json && npm install
