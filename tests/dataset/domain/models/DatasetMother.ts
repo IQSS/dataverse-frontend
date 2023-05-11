@@ -28,4 +28,8 @@ export class DatasetMother {
       ...props
     }
   }
+
+  static createEmpty(): undefined {
+    return undefined
+  }
 }
