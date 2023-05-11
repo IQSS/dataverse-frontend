@@ -55,9 +55,6 @@ jobs:
         working-directory: packages/design-system
         run: npm run build
 
-      - name: Remove Cypress cache
-        run: rm -rf ~/.cache/Cypress
-
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
@@ -66,7 +63,7 @@ jobs:
       - name: Cypress run Design System
         uses: cypress-io/github-action@v4
         with:
-          working-directory: packages/design-system
+          project: packages/design-system
           component: true
 
       - name: Check coverage
