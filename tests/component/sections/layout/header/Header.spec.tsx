@@ -25,4 +25,19 @@ describe('Header component', () => {
     cy.contains('Sign Up')
     cy.contains('Log In')
   })
+
+  it('log outs the user after clicking Log Out', () => {
+    cy.customMount(HeaderMother.withLoggedInUser(sandbox, testUser))
+
+    cy.findByRole('button', { name: 'Toggle navigation' }).click()
+
+    cy.findByText(testUser.name).click()
+
+    cy.findByText('Log Out').click()
+
+    cy.findByText(testUser.name).should('not.exist')
+
+    cy.findByText('Log In').should('exist')
+    cy.findByText('Sign Up').should('exist')
+  })
 })

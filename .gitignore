@@ -16,6 +16,7 @@
 /coverage
 /tests/downloads
 /tests/screenshots
+/packages/design-system/coverage
 
 
 # production

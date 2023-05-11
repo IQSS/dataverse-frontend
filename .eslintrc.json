@@ -29,7 +29,12 @@
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": ["./tsconfig.json", "./tests/tsconfig.json"]
+    "project": [
+      "./tsconfig.json",
+      "./tests/tsconfig.json",
+      "./packages/design-system/tsconfig.json",
+      "./packages/design-system/tests/tsconfig.json"
+    ]
   },
   "plugins": ["react", "simple-import-sort", "import", "unused-imports"],
   "rules": {
@@ -63,5 +68,6 @@
         "testing-library/prefer-screen-queries": 0
       }
     }
-  ]
+  ],
+  "ignorePatterns": ["packages/design-system/dist/**"]
 }

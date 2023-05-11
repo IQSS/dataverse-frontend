@@ -18,7 +18,7 @@ export default defineConfig({
   },
   component: {
     indexHtmlFile: 'tests/support/component-index.html',
-    specPattern: 'tests/component/**/*.spec.{js,jsx,ts,tsx}',
+    specPattern: ['tests/component/**/*.spec.{js,jsx,ts,tsx}'],
     supportFile: 'tests/support/component.ts',
     devServer: {
       framework: 'react',

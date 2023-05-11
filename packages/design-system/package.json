@@ -1,0 +1,29 @@
+{
+  "name": "dataverse-design-system",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "storybook": "storybook dev -p 6007",
+    "build-storybook": "storybook build",
+    "test:storybook": "test-storybook --url http://127.0.0.1:6007",
+    "cy:open-unit": "cypress open --component --browser chrome",
+    "test:unit": "cypress run --component",
+    "test:coverage": "nyc check-coverage"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/dataverse-design-system.umd.js",
+  "module": "./dist/dataverse-design-system.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/dataverse-design-system.es.js",
+      "require": "./dist/dataverse-design-system.umd.js"
+    }
+  }
+}

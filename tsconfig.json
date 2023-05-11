@@ -17,6 +17,13 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "tests", "cypress.config.ts", "vite.config.ts", "public"],
+  "include": [
+    "src",
+    "tests",
+    "cypress.config.ts",
+    "vite.config.ts",
+    "packages/design-system/src/",
+    "public"
+  ],
   "exclude": ["tests/**/**.spec.ts", "tests/**/**.spec.tsx"]
 }
