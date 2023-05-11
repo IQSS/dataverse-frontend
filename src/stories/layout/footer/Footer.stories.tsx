@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Footer } from '../../../sections/layout/footer/Footer'
 import { WithI18next } from '../../WithI18next'
+import { FooterMother } from '../../../../tests/component/sections/layout/footer/FooterMother'
+import { createSandbox } from 'sinon'
 
 const meta: Meta<typeof Footer> = {
   title: 'Layout/Footer',
@@ -12,5 +14,7 @@ export default meta
 type Story = StoryObj<typeof Footer>
 
 export const Default: Story = {
-  render: () => <Footer />
+  render: () => {
+    return FooterMother.withDataverseVersion(createSandbox())
+  }
 }

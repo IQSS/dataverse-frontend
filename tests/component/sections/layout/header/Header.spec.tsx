@@ -1,18 +1,25 @@
-import { Header } from '../../../../../src/sections/layout/header/Header'
+import { createSandbox, SinonSandbox } from 'sinon'
+import { UserMother } from '../../../users/domain/models/UserMother'
+import { HeaderMother } from './HeaderMother'
 
 describe('Header component', () => {
-  it('displays the user name when the user is logged in', () => {
-    const user = { name: 'John Doe' }
+  const sandbox: SinonSandbox = createSandbox()
+  const testUser = UserMother.create()
 
-    cy.customMount(<Header user={user} />)
+  afterEach(() => {
+    sandbox.restore()
+  })
+
+  it('displays the user name when the user is logged in', () => {
+    cy.customMount(HeaderMother.withLoggedInUser(sandbox, testUser))
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
-    cy.findByText(user.name).should('be.visible')
-    cy.findByText(user.name).click()
+    cy.findByText(testUser.name).should('be.visible')
+    cy.findByText(testUser.name).click()
     cy.findByText('Log Out').should('be.visible')
   })
 
   it('displays the Sign Up and Log In links when the user is not logged in', () => {
-    cy.customMount(<Header />)
+    cy.customMount(HeaderMother.withGuestUser(sandbox))
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.findByRole('link', { name: 'Sign Up' }).should('exist')
     cy.contains('Sign Up')
