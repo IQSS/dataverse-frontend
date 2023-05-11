@@ -3,6 +3,7 @@ import { DatasetRepository } from '../../../src/dataset/domain/repositories/Data
 import { Dataset } from '../../../src/sections/dataset/Dataset'
 import { DatasetMother } from '../../../tests/dataset/domain/models/DatasetMother'
 import { LoadingProvider } from '../../../src/sections/loading/LoadingProvider'
+import { useLoading } from '../../../src/sections/loading/LoadingContext'
 
 describe('Dataset', () => {
   const sandbox: SinonSandbox = createSandbox()
@@ -16,11 +17,25 @@ describe('Dataset', () => {
     const datasetRepository: DatasetRepository = {} as DatasetRepository
     datasetRepository.getById = sandbox.stub().resolves(testDataset)
 
+    const buttonText = 'Toggle Loading'
+    const TestComponent = () => {
+      const { isLoading, setIsLoading } = useLoading()
+      return (
+        <>
+          <button onClick={() => setIsLoading(true)}>{buttonText}</button>
+          {isLoading && <div>Loading...</div>}
+        </>
+      )
+    }
+
     cy.mount(
       <LoadingProvider>
         <Dataset datasetRepository={datasetRepository} id={testDataset.id} />
+        <TestComponent />
       </LoadingProvider>
     )
+
+    cy.findByText(buttonText).click()
 
     cy.findByTestId('dataset-skeleton').should('exist')
     cy.findByText(testDataset.title).should('not.exist')
