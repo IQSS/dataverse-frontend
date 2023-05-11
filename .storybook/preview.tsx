@@ -1,6 +1,14 @@
 import type { Preview } from '@storybook/react'
 import { ThemeProvider } from '../src/sections/ui/theme/ThemeProvider'
 import DocumentationTemplate from '../src/stories/ui/DocumentationTemplate.mdx'
+import { initialize, mswDecorator } from 'msw-storybook-addon'
+
+/*
+ * Initializes MSW
+ * See https://github.com/mswjs/msw-storybook-addon#configuring-msw
+ * to learn how to customize it
+ */
+initialize()
 
 const preview: Preview = {
   parameters: {
@@ -20,7 +28,8 @@ const preview: Preview = {
       <ThemeProvider>
         <Story />
       </ThemeProvider>
-    )
+    ),
+    mswDecorator
   ]
 }
 

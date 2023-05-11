@@ -1,8 +1,21 @@
+import { createSandbox, SinonSandbox } from 'sinon'
+import { HeaderFactory } from '../../../src/sections/layout/header/HeaderFactory'
+import { FooterFactory } from '../../../src/sections/layout/footer/FooterFactory'
+import { FooterMother } from '../../../tests/sections/layout/footer/FooterMother'
+import { HeaderMother } from '../../../tests/sections/layout/header/HeaderMother'
 import { Layout } from '../../../src/sections/layout/Layout'
 
 describe('Layout', () => {
-  it('renders the Header', () => {
-    cy.customMount(<Layout></Layout>)
+  const sandbox: SinonSandbox = createSandbox()
+
+  afterEach(() => {
+    sandbox.restore()
+    sandbox.stub(HeaderFactory, 'create').returns(HeaderMother.withLoggedInUser(sandbox))
+    sandbox.stub(FooterFactory, 'create').returns(FooterMother.withDataverseVersion(sandbox))
+  })
+
+  it('renders the header', () => {
+    cy.customMount(<Layout />)
 
     cy.findByRole('img', { name: 'Brand Logo Image' }).should('exist')
     cy.findByText('Dataverse').should('exist')
@@ -11,6 +24,7 @@ describe('Layout', () => {
     cy.findByRole('link', { name: 'Sign Up' }).should('exist')
     cy.findByRole('link', { name: 'Log In' }).should('exist')
   })
+
   it('renders the Footer', () => {
     cy.customMount(<Layout></Layout>)
 
