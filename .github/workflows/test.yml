@@ -55,15 +55,15 @@ jobs:
         working-directory: packages/design-system
         run: npm run build
 
+      - name: Cypress run
+        uses: cypress-io/github-action@v4
+        with:
+          component: true
+
       - name: Cypress run Design System
         uses: cypress-io/github-action@v4
         with:
           working-directory: packages/design-system
-          component: true
-
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
           component: true
 
       - name: Check coverage
