@@ -12,7 +12,7 @@ const meta: Meta<typeof DatasetCitation> = {
 export default meta
 type Story = StoryObj<typeof DatasetCitation>
 
-let citationFields: Citation = {
+const citationFields: Citation = {
   authors: ['Bennet, Elizabeth', 'Darcy, Fitzwilliam'],
   title: 'Test Terms',
   creationYear: 2023,
