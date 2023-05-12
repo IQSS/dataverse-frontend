@@ -15,7 +15,7 @@ const router = createBrowserRouter(
           element: <HelloDataverse />
         },
         {
-          path: `${Route.DATASET}/:id`,
+          path: `${Route.DATASETS}/:id`,
           element: DatasetFactory.create()
         }
       ]
