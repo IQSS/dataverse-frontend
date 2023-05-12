@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../WithI18next'
 import { DatasetCitation } from '../../sections/dataset/datasetCitation/DatasetCitation'
+import { Citation } from '../../dataset/domain/models/Dataset'
 
 const meta: Meta<typeof DatasetCitation> = {
   title: 'Sections/Dataset Page/DatasetCitation',
@@ -11,9 +12,50 @@ const meta: Meta<typeof DatasetCitation> = {
 export default meta
 type Story = StoryObj<typeof DatasetCitation>
 
-const displayCitation =
-  'K, Ellen, 2023, "Test Terms", [https://doi.org/10.70122/FK2/KLX4XO](https://doi.org/10.70122/FK2/KLX4XO), Demo Dataverse, V1'
+let citationFields: Citation = {
+  authors: ['Bennet, Elizabeth', 'Darcy, Fitzwilliam'],
+  title: 'Test Terms',
+  creationYear: 2023,
+  persistentIdentifier: 'https://doi.org/10.70122/FK2/KLX4XO',
+  persistentIdentifierUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+  publisher: 'Demo Dataverse',
+  version: ''
+}
 
 export const Default: Story = {
-  render: () => <DatasetCitation displayCitation={displayCitation} />
+  render: () => {
+    citationFields.version = 'V1'
+    return <DatasetCitation citation={citationFields} />
+  }
+}
+
+export const DraftVersion: Story = {
+  render: () => {
+    citationFields.version = 'DRAFT'
+    /*
+    Includes extra breaks so you can see the DRAFT tooltip message
+     */
+    return (
+      <div>
+        <br></br>
+        <br></br>
+        <DatasetCitation citation={citationFields} />
+      </div>
+    )
+  }
+}
+
+export const Deaccessioned: Story = {
+  render: () => {
+    citationFields.version = 'DRAFT'
+    citationFields.isDeaccessioned = true
+
+    return (
+      <div>
+        <br></br>
+        <br></br>
+        <DatasetCitation citation={citationFields} />
+      </div>
+    )
+  }
 }

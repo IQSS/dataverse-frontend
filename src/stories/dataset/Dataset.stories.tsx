@@ -20,8 +20,15 @@ class DatasetMockRepository implements DatasetRepository {
       id: id,
       title: 'Test Dataset',
       version: '1.0',
-      displayCitation:
-        'K, Ellen, 2023, "Test Terms", [https://doi.org/10.70122/FK2/KLX4XO](https://doi.org/10.70122/FK2/KLX4XO), Demo Dataverse, V1',
+      citation: {
+        authors: ['Bennet,Elizabeth', 'Darcy,Fitzwilliam'],
+        title: 'Replication Test Dataset',
+        creationYear: 2023,
+        persistentIdentifier: 'https://doi.org/10.70122/FK2/KLX4XO',
+        persistentIdentifierUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+        publisher: 'Demo Dataverse',
+        version: 'V1'
+      },
       license: {
         name: 'CC0 1.0',
         shortDescription: 'CC0 1.0 Universal Public Domain Dedication',

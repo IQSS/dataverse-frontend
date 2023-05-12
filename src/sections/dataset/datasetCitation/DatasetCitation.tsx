@@ -2,13 +2,55 @@ import { Col } from '../../ui/grid/Col'
 import { Row } from '../../ui/grid/Row'
 import styles from './DatasetCitation.module.scss'
 import { Icon } from '../../ui/icon.enum'
-import { MarkdownComponent } from '../../ui/markdown/MarkdownComponent'
+import { Citation } from '../../../dataset/domain/models/Dataset'
+import { Tooltip } from '../../ui/tooltip/Tooltip'
 interface DatasetCitationProps {
-  displayCitation: string
+  citation: Citation
 }
 
-export function DatasetCitation({ displayCitation }: DatasetCitationProps) {
-  return displayCitation ? (
+function mapAuthors(authors: string[]): string[] {
+  const authorStrings = authors.map((author, index) => {
+    // If this is the last author in the array, don't add a semi-colon
+    if (index === authors.length - 1) {
+      return author
+    }
+    // Otherwise, add a semi-colon after the author
+    return `${author}; `
+  })
+  return authorStrings
+}
+function getCitationText(citation: Citation) {
+  return (
+    <div>
+      {mapAuthors(citation.authors)}
+      {', '}
+      <a
+        className={styles.link}
+        href={citation.persistentIdentifierUrl}
+        target="_blank"
+        rel="noopener noreferrer">
+        {citation.persistentIdentifier}
+      </a>
+      {', '}
+      {citation.publisher}
+      {', '}
+      {citation.version}
+      {citation.version === 'DRAFT' && (
+        <span>
+          {' '}
+          <Tooltip
+            placement={'top'}
+            message={
+              'DRAFT VERSION will be replaced in the citation with the selected version once the dataset has been published.'
+            }
+          />
+        </span>
+      )}
+    </div>
+  )
+}
+export function DatasetCitation({ citation }: DatasetCitationProps) {
+  return citation ? (
     <article>
       <div className={styles.container}>
         <Row className={styles.row}>
@@ -18,21 +60,18 @@ export function DatasetCitation({ displayCitation }: DatasetCitationProps) {
             </div>
           </Col>
           <Col>
+            <Row>{getCitationText(citation)}</Row>
             <Row>
-              <MarkdownComponent markdown={displayCitation}></MarkdownComponent>
-            </Row>
-            <Row>
-              <Col sm={3}>Dropdown Citation</Col>
-              <Col>
+              <div>
                 Learn about{' '}
                 <a
                   className={styles.link}
-                  href="https://dataverse.org"
+                  href="https://dataverse.org/best-practices/data-citation"
                   target="_blank"
                   rel="noopener noreferrer">
                   Data Citation Standards.
                 </a>
-              </Col>
+              </div>
             </Row>
           </Col>
         </Row>

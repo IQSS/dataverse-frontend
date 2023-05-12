@@ -24,7 +24,7 @@ export function Dataset({ datasetRepository, id }: DatasetProps) {
       <div className={styles.container}>
         <Row>
           <Col>
-            <DatasetCitation datasetRepository={datasetRepository} id={id}></DatasetCitation>
+            <DatasetCitation displayCitation={dataset.displayCitation}></DatasetCitation>
           </Col>
         </Row>
         <Row>
