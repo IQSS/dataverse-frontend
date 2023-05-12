@@ -35,6 +35,10 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Build Dataverse UI Library
+        working-directory: packages/design-system
+        run: npm run build
+
       - name: Create and populate .env file
         env:
           DATAVERSE_BACKEND_URL: ${{ secrets.DATAVERSE_BACKEND_URL }}

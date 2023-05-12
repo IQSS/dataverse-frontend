@@ -1,8 +1,6 @@
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import styles from './Dataset.module.scss'
-import { Row } from '../ui/grid/Row'
-import { Col } from '../ui/grid/Col'
-import { Tabs } from '../ui/tabs/Tabs'
+import { Row, Col, Tabs } from 'dataverse-design-system'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 export function DatasetSkeleton() {

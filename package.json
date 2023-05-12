@@ -6,8 +6,14 @@
   "name": "dataverse-frontend",
   "version": "0.1.0",
   "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -15,6 +21,7 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "bootstrap": "^5.2.3",
+    "dataverse-design-system": "*",
     "i18next": "^22.4.9",
     "i18next-browser-languagedetector": "^7.0.1",
     "i18next-http-backend": "^2.1.1",
@@ -25,30 +32,35 @@
     "react-topbar-progress-indicator": "^4.1.1",
     "sass": "^1.58.1",
     "typescript": "^4.9.5",
+    "vite-plugin-istanbul": "^4.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "vite",
+    "start": "vite --base=/spa",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "vitest watch",
-    "test:no-watch": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "lint": "eslint --ignore-path .gitignore . && stylelint **/*.scss && prettier --check '**/*.(yml|json|md|css)'",
+    "lint": "eslint --ignore-path .gitignore . && stylelint **/*.scss && prettier --check '**/*.(yml|json|md|css)' --ignore-path packages/design-system/.gitignore",
     "lint:fix": "eslint --fix --ext .ts,.tsx ./src --ignore-path .gitignore . && stylelint --fix **/*.scss && prettier --write '**/*.(yml|json|md|css)'",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json,yml,md}' --config ./.prettierrc",
-    "cy:open": "cypress open",
-    "cy:run": "cypress run",
-    "cy:run-component": "cypress run --component",
+    "cy:open-e2e": "cypress open --e2e --browser chrome",
+    "cy:open-unit": "cypress open --component --browser chrome",
+    "test:e2e": "cypress run --e2e",
+    "test:unit": "cypress run --component",
+    "test:unit-all": "concurrently 'cypress run --component' 'cd packages/design-system && npm run test:unit'",
+    "test:coverage": "nyc check-coverage",
+    "test:coverage-all": "nyc check-coverage && cd packages/design-system && npm run test:coverage",
+    "test:coverage-merge": "lcov-result-merger '**/*/lcov.info' 'merged-coverage/lcov.info' && perl -pi -e 's/src\\/lib/packages\\/design-system\\/src\\/lib/g' merged-coverage/lcov.info",
     "git:add": "git add .",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "concurrently 'storybook dev -p 6006 && open \"http://localhost:6006\"' 'cd packages/design-system && npm run storybook'",
     "build-storybook": "storybook build",
-    "test-storybook": "test-storybook"
+    "test:storybook": "test-storybook",
+    "test:storybook-all": "concurrently 'test-storybook' 'cd packages/design-system && npm run test:storybook'"
   },
   "pre-commit": [
     "lint:fix",
-    "test:coverage",
-    "git:add"
+    "git:add",
+    "test:unit",
+    "test:coverage"
   ],
   "eslintConfig": {
     "extends": [
@@ -78,6 +90,8 @@
     ]
   },
   "devDependencies": {
+    "@csstools/postcss-cascade-layers": "^3.0.1",
+    "@cypress/code-coverage": "^3.10.4",
     "@storybook/addon-a11y": "^7.0.2",
     "@storybook/addon-essentials": "^7.0.2",
     "@storybook/addon-interactions": "^7.0.2",
@@ -94,10 +108,10 @@
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "@vitejs/plugin-react": "^3.1.0",
-    "@vitest/coverage-c8": "^0.29.2",
     "axe-playwright": "^1.2.3",
     "babel-plugin-named-exports-order": "^0.0.2",
     "chai-as-promised": "^7.1.1",
+    "concurrently": "^8.0.1",
     "cypress": "^12.5.1",
     "cypress-vite": "^1.3.0",
     "eslint": "^8.33.0",
@@ -108,11 +122,12 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-storybook": "^0.6.11",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "eslint-plugin-vitest": "^0.0.53",
     "js-dataverse": "file:./js-dataverse-2.0.0.tgz",
     "jsdom": "^21.1.0",
+    "lcov-result-merger": "^3.3.0",
     "msw": "^1.2.1",
     "msw-storybook-addon": "^1.8.0",
+    "postcss": "^8.4.23",
     "pre-commit": "^1.2.2",
     "prettier": "^2.8.4",
     "prop-types": "^15.8.1",
@@ -127,7 +142,9 @@
     "stylelint-config-standard-scss": "^7.0.1",
     "stylelint-order": "^6.0.2",
     "vite": "4.1.0",
-    "vitest": "^0.29.2"
+    "vite-plugin-css-injected-by-js": "^3.1.1",
+    "vite-plugin-dts": "^2.3.0",
+    "vite-plugin-libcss": "^1.0.6"
   },
   "msw": {
     "workerDirectory": "public"

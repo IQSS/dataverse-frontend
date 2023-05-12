@@ -1,5 +1,5 @@
 import TopBarProgress from 'react-topbar-progress-indicator'
-import { useTheme } from '../../ui/theme/ThemeProvider'
+import { useTheme } from 'dataverse-design-system'
 import { useEffect, useState } from 'react'
 import { useLoading } from '../../loading/LoadingContext'
 

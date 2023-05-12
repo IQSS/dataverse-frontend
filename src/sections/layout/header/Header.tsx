@@ -1,6 +1,6 @@
-import logo from '../../ui/logo.svg'
+import logo from '../../assets/logo.svg'
 import { useTranslation } from 'react-i18next'
-import { Navbar } from '../../ui/navbar/Navbar'
+import { Navbar } from 'dataverse-design-system'
 import { Route } from '../../Route.enum'
 import { UserRepository } from '../../../users/domain/repositories/UserRepository'
 import { useUser } from './useUser'
