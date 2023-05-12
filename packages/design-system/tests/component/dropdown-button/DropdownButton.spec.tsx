@@ -1,5 +1,5 @@
 import { DropdownButton } from '../../../src/lib/components/dropdown-button/DropdownButton'
-import { Icon } from '../../../src/lib/components/icon.enum'
+import { Icon } from '../../../src/lib/components/Icon.enum'
 import styles from '../../../src/lib/components/dropdown-button/DropdownButton.module.scss'
 
 const titleText = 'My Dropdown Button'
