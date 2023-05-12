@@ -1,10 +1,12 @@
 import { Alert } from 'dataverse-design-system'
+import { useTranslation } from 'react-i18next'
 
 export function PageNotFound() {
+  const { t } = useTranslation('pageNotFound')
+
   return (
-    <Alert variant="danger" customHeading="Page Not Found" dismissible={false}>
-      The page you are looking for was not found. If you believe this is an error, please contact
-      Demo Dataverse Support for assistance.
+    <Alert variant="danger" customHeading={t('heading')} dismissible={false}>
+      {t('message')}
     </Alert>
   )
 }

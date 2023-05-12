@@ -6,6 +6,7 @@ import { DatasetLabels } from './dataset-labels/DatasetLabels'
 import { useLoading } from '../loading/LoadingContext'
 import { DatasetSkeleton } from './DatasetSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
+import { useTranslation } from 'react-i18next'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -15,6 +16,7 @@ interface DatasetProps {
 export function Dataset({ datasetRepository, id }: DatasetProps) {
   const { dataset } = useDataset(datasetRepository, id)
   const { isLoading } = useLoading()
+  const { t } = useTranslation('dataset')
 
   if (isLoading) {
     return <DatasetSkeleton />
@@ -38,10 +40,10 @@ export function Dataset({ datasetRepository, id }: DatasetProps) {
               <Col sm={9}>Summary Block</Col>
             </Row>
             <Tabs defaultActiveKey="files">
-              <Tabs.Tab eventKey="files" title="Files">
+              <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
                 <div>Files Section</div>
               </Tabs.Tab>
-              <Tabs.Tab eventKey="metadata" title="Metadata">
+              <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
                 <div>Metadata Section</div>
               </Tabs.Tab>
             </Tabs>
