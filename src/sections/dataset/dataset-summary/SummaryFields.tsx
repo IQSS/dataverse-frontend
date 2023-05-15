@@ -2,7 +2,7 @@ import { Row, Col, Tooltip } from 'dataverse-design-system'
 import { MarkdownComponent } from '../markdown/MarkdownComponent'
 import { DatasetField } from '../../../dataset/domain/models/Dataset'
 interface SummaryFieldsProps {
-  summaryFields: DatasetField[]
+  summaryFields: DatasetField[] | undefined
 }
 
 export function SummaryFields({ summaryFields }: SummaryFieldsProps) {

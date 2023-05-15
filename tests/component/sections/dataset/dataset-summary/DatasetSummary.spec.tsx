@@ -1,4 +1,4 @@
-import { DatasetSummary } from '../../../../../src/sections/dataset/datasetSummary/DatasetSummary'
+import { DatasetSummary } from '../../../../../src/sections/dataset/dataset-summary/DatasetSummary'
 import { DatasetField, License } from '../../../../../src/dataset/domain/models/Dataset'
 import { faker } from '@faker-js/faker'
 

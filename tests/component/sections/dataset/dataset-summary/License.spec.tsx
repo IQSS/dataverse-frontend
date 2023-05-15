@@ -1,4 +1,4 @@
-import { License } from '../../../../../src/sections/dataset/datasetSummary/License'
+import { License } from '../../../../../src/sections/dataset/dataset-summary/License'
 
 describe('DatasetSummary', () => {
   it('renders the license information correctly', () => {

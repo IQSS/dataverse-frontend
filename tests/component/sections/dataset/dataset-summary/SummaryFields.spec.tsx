@@ -1,6 +1,6 @@
 import { DatasetField, License } from '../../../../../src/dataset/domain/models/Dataset'
 import { faker } from '@faker-js/faker'
-import { SummaryFields } from '../../../../../src/sections/dataset/datasetSummary/SummaryFields'
+import { SummaryFields } from '../../../../../src/sections/dataset/dataset-summary/SummaryFields'
 
 describe('DatasetSummary', () => {
   const licenseMock: License = {

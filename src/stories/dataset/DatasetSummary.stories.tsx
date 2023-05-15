@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../WithI18next'
 
-import { DatasetSummary } from '../../sections/dataset/datasetSummary/DatasetSummary'
+import { DatasetSummary } from '../../sections/dataset/dataset-summary/DatasetSummary'
 import { faker } from '@faker-js/faker'
 import { DatasetField, License } from '../../dataset/domain/models/Dataset'
 

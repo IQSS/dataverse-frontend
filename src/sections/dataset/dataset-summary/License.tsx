@@ -1,7 +1,7 @@
 import { Row, Col } from 'dataverse-design-system'
 import { License as LicenseModel } from '../../../dataset/domain/models/Dataset'
 interface LicenseProps {
-  license: LicenseModel
+  license: LicenseModel | undefined
 }
 
 export function License({ license }: LicenseProps) {

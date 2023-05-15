@@ -7,7 +7,7 @@ import { useLoading } from '../loading/LoadingContext'
 import { DatasetSkeleton } from './DatasetSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { useTranslation } from 'react-i18next'
-import { DatasetSummary } from './datasetSummary/DatasetSummary'
+import { DatasetSummary } from './dataset-summary/DatasetSummary'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
