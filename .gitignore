@@ -45,3 +45,4 @@ yarn-error.log*
 /dev-env/docker-dev-volumes
 /dev-env/dataverse
 /dev-env/dataverse-sample-data
+/packages/design-system/.nyc_output
