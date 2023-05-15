@@ -20,11 +20,10 @@
   "include": [
     "src",
     "tests",
-    "cypress",
-    "vitest.config.ts",
     "cypress.config.ts",
     "vite.config.ts",
+    "packages/design-system/src/",
     "public"
   ],
-  "exclude": ["cypress/**/**.spec.ts", "cypress/**/**.spec.tsx"]
+  "exclude": ["tests/**/**.spec.ts", "tests/**/**.spec.tsx"]
 }

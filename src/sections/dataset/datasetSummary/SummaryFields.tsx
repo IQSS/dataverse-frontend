@@ -1,7 +1,5 @@
-import { Row } from '../../ui/grid/Row'
-import { Col } from '../../ui/grid/Col'
-import { Tooltip } from '../../ui/tooltip/Tooltip'
-import { MarkdownComponent } from '../../ui/markdown/MarkdownComponent'
+import { Row, Col, Tooltip } from 'dataverse-design-system'
+import { MarkdownComponent } from '../markdown/MarkdownComponent'
 import { DatasetField } from '../../../dataset/domain/models/Dataset'
 interface SummaryFieldsProps {
   summaryFields: DatasetField[]

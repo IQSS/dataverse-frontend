@@ -12,10 +12,12 @@
 .pnp.js
 
 # testing
+/.nyc_output
 /coverage
 /cypress/downloads
 /cypress/screenshots
 .nyc_output
+/packages/design-system/coverage
 
 
 # production
@@ -38,3 +40,8 @@ yarn-error.log*
 
 #deployment
 /deployment/payara/target
+
+#dev environment
+/dev-env/docker-dev-volumes
+/dev-env/dataverse
+/dev-env/dataverse-sample-data

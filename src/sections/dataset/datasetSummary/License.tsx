@@ -1,5 +1,4 @@
-import { Row } from '../../ui/grid/Row'
-import { Col } from '../../ui/grid/Col'
+import { Row, Col } from 'dataverse-design-system'
 import { License as LicenseModel } from '../../../dataset/domain/models/Dataset'
 interface LicenseProps {
   license: LicenseModel

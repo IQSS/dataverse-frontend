@@ -1,3 +1,10 @@
+import { LabelSemanticMeaning } from './LabelSemanticMeaning.enum'
+
+export interface DatasetLabel {
+  semanticMeaning: LabelSemanticMeaning
+  value: string
+}
+
 export interface DatasetField {
   title: string
   description: string
@@ -12,6 +19,7 @@ export interface License {
 export interface Dataset {
   id: string
   title: string
+  labels: DatasetLabel[]
   version: string
   summaryFields: DatasetField[]
   license: License

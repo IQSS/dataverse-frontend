@@ -1,1 +1,1 @@
-export type DataverseVersion = `v. ${string} build ${string}`
+export type DataverseVersion = `v. ${string} ${string}`

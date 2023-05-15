@@ -1,0 +1,98 @@
+@import "src/lib/components/assets/styles/design-tokens/typography.module";
+@import "src/lib/components/assets/styles/design-tokens/colors.module";
+
+// Theme
+
+$primary: $dv-primary-color;
+$secondary: $dv-secondary-color;
+$success: $dv-success-color;
+$info: $dv-info-color;
+$warning: $dv-warning-color;
+$danger: $dv-danger-color;
+
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+// Body
+$body-color: $dv-text-color;
+$headings-color: $dv-headings-color;
+
+// Typography
+$font-family-base: $dv-font-family;
+
+$font-size-base: $dv-font-size;
+$font-size-sm: $dv-font-size-sm;
+
+$line-height-base: $dv-line-height;
+
+$font-weight-normal: $dv-font-weight;
+$font-weight-light: $dv-font-weight-light;
+$font-weight-bold: $dv-font-weight-bold;
+
+// Links
+$link-color: $dv-link-color;
+$link-hover-color: $dv-link-hover-color;
+
+// Base
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/type";
+
+// Buttons and Dropdowns
+@import "bootstrap/scss/buttons";
+@import 'bootstrap/scss/button-group';
+@import "bootstrap/scss/dropdown";
+
+// Grid
+@import "bootstrap/scss/utilities";
+@import "bootstrap/scss/utilities/api";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
+
+// Badge
+@import "bootstrap/scss/badge";
+
+// Forms
+$form-label-font-weight: $dv-font-weight-bold;
+
+@import "bootstrap/scss/forms";
+
+
+// Table
+@import "bootstrap/scss/tables";
+
+
+// Accordion
+@import "bootstrap/scss/accordion";
+
+// Modal
+@import "bootstrap/scss/modal";
+@import "bootstrap/scss/close";
+
+// Breadcrumb
+$breadcrumb-divider: ">";
+
+@import "bootstrap/scss/breadcrumb";
+
+// Tooltip
+@import "bootstrap/scss/tooltip";
+
+// Alert
+@import "bootstrap/scss/alert";
+
+
+// Navbar
+
+$navbar-light-brand-color: $dv-brand-color;
+$navbar-brand-font-size: $dv-brand-font-size;
+
+@import "bootstrap/scss/nav";
+@import "bootstrap/scss/navbar";
+@import "bootstrap/scss/transitions";
+@import "bootstrap/scss/helpers";
+
+.navbar-collapse {
+  justify-content: end;
+}

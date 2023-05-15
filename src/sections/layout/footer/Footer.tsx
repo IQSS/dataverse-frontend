@@ -1,6 +1,4 @@
-import { Container } from '../../ui/grid/Container'
-import { Row } from '../../ui/grid/Row'
-import { Col } from '../../ui/grid/Col'
+import { Container, Row, Col } from 'dataverse-design-system'
 import styles from './Footer.module.scss'
 import dataverseProjectLogo from './dataverse-project-logo.svg'
 import { useTranslation } from 'react-i18next'

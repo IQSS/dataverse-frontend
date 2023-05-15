@@ -14,6 +14,10 @@ Run this command to install the dependencies. You may see a message about vulner
 Please check this announcement from Create React App repository https://github.com/facebook/create-react-app/issues/11174 .
 These vulnerabilities won't be in the production build since they come from libraries only used during the development.
 
+### `cd packages/design-system && npm run build`
+
+Run this command to build the UI library. This is needed to be able to run the app.
+
 ## Available Scripts
 
 In the project directory, you can run at any time:
@@ -26,9 +30,11 @@ Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
 The page will reload when you make changes.  
 You may also see any lint errors in the console.
 
-### `npm test`
+### `npm test:unit`
 
-Launches the test runner for the unit tests in the interactive watch mode.
+Launches the test runner for the unit tests in the interactive watch mode.  
+If you prefer to see the tests executing in cypress you can run `npm run cy:open-unit`  
+You can check the coverage with `npm run test:coverage`
 
 ### `npm run build`
 
@@ -38,10 +44,10 @@ Builds the app for production to the `dist` folder.
 
 Locally preview the production build.
 
-### `npm run cy:run`
+### `npm run test:e2e`
 
 Launches the Cypress test runner for the end-to-end tests.  
-If you prefer to see the tests executing in cypress you can run `npm run cy:open`
+If you prefer to see the tests executing in cypress you can run `npm run cy:open-e2e`
 
 ### `npm run lint`
 
@@ -55,6 +61,43 @@ Launches the prettier formatter. We recommend you to configure your IDE to run p
 
 Runs the Storybook in the development mode.  
 Open [http://localhost:6006](http://localhost:6006) to view it in your browser.
+
+## Local development environment
+
+A containerized environment, oriented to local development, is available to be run from the repository.
+
+This environment contains a dockerized instance of the Dataverse backend with its dependent services (database, mailserver, etc), as well as an npm development server running the SPA frontend (With code autoupdating).
+
+This environment is intended for locally testing any functionality that requires access to the Dataverse API from the SPA frontend.
+
+There is an Nginx reverse proxy container on top of the frontend and backend containers to avoid CORS issues while testing the application.
+
+### Run the environment
+
+Inside the `dev-env` folder, run the following command:
+
+```
+./run-env <dataverse_branch_name>
+```
+
+As the script argument, add the name of the Dataverse backend branch you want to deploy.
+
+Note that both the branch and the associated tag in the docker registry must to be pre pushed, otherwise the script will fail.
+
+If you are running the script for the first time, it may take a while, since `npm install` has to install all the dependencies. This can also happen if you added new dependencies to package.json.
+
+Once the script has finished, you will be able to access Dataverse via:
+
+- [http://localhost:8000/spa](http://localhost:8000/spa): SPA Frontend
+- [http://localhost:8000](http://localhost:8000): Dataverse Backend and JSF Frontend
+
+### Remove the environment
+
+To clean up your environment of any running environment containers, as well as any associated data volumes, run this script inside the `dev-env` folder:
+
+```
+./rm-env
+```
 
 ## Deployment
 

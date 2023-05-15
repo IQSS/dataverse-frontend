@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { Header } from '../../../sections/layout/header/Header'
-import { HeaderMother } from '../../../../tests/sections/layout/header/HeaderMother'
 import { createSandbox } from 'sinon'
+import { HeaderMother } from '../../../../tests/component/sections/layout/header/HeaderMother'
 
 const meta: Meta<typeof Header> = {
   title: 'Layout/Header',
