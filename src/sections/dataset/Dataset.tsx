@@ -38,9 +38,11 @@ export function Dataset({ datasetRepository, id }: DatasetProps) {
               <Col sm={9}>Citation Block</Col>
             </Row>
             <Row>
-              <DatasetSummary
-                summaryFields={dataset.summaryFields}
-                license={dataset.license}></DatasetSummary>
+              <Col sm={9}>
+                <DatasetSummary
+                  summaryFields={dataset.summaryFields}
+                  license={dataset.license}></DatasetSummary>
+              </Col>
             </Row>
             <Tabs defaultActiveKey="files">
               <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
