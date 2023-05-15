@@ -30,14 +30,25 @@ export class DatasetMother {
           title: faker.lorem.sentence(),
           fields: [
             {
-              simpleField: faker.lorem.sentence()
+              title: faker.lorem.sentence(),
+              description: faker.lorem.sentence(),
+              value: faker.lorem.sentence()
             },
             {
-              compoundField: {
-                subField1: faker.lorem.sentence(),
-                subField2: faker.lorem.sentence(),
-                subField3: faker.lorem.sentence()
-              }
+              title: faker.lorem.sentence(),
+              description: faker.lorem.sentence(),
+              value: [
+                {
+                  subField1: faker.lorem.sentence(),
+                  subField2: faker.lorem.sentence(),
+                  subField3: faker.lorem.sentence()
+                },
+                {
+                  subField4: faker.lorem.sentence(),
+                  subField5: faker.lorem.sentence(),
+                  subField6: faker.lorem.sentence()
+                }
+              ]
             }
           ]
         },
@@ -45,14 +56,25 @@ export class DatasetMother {
           title: faker.lorem.sentence(),
           fields: [
             {
-              simpleField: faker.lorem.sentence()
+              title: faker.lorem.sentence(),
+              description: faker.lorem.sentence(),
+              value: faker.lorem.sentence()
             },
             {
-              compoundField: {
-                subField1: faker.lorem.sentence(),
-                subField2: faker.lorem.sentence(),
-                subField3: faker.lorem.sentence()
-              }
+              title: faker.lorem.sentence(),
+              description: faker.lorem.sentence(),
+              value: [
+                {
+                  subField1: faker.lorem.sentence(),
+                  subField2: faker.lorem.sentence(),
+                  subField3: faker.lorem.sentence()
+                },
+                {
+                  subField4: faker.lorem.sentence(),
+                  subField5: faker.lorem.sentence(),
+                  subField6: faker.lorem.sentence()
+                }
+              ]
             }
           ]
         }

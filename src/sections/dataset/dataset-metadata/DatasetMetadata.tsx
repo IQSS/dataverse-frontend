@@ -5,9 +5,12 @@ import { DatasetMetadataFields } from './dataset-metadata-fields/DatasetMetadata
 interface DatasetMetadataProps {
   metadataBlocks: DatasetMetadataBlock[]
 }
+
 export function DatasetMetadata({ metadataBlocks }: DatasetMetadataProps) {
+  const allKeys = metadataBlocks.map((_, index) => index.toString())
+
   return (
-    <Accordion defaultActiveKey={['0']} alwaysOpen>
+    <Accordion defaultActiveKey={allKeys} alwaysOpen>
       {metadataBlocks.map((metadataBlock, index) => (
         <Accordion.Item key={`${metadataBlock.title}-${index}`} eventKey={index.toString()}>
           <Accordion.Header>{metadataBlock.title}</Accordion.Header>

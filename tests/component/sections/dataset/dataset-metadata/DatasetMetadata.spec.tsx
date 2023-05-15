@@ -1,12 +1,6 @@
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { DatasetMetadata } from '../../../../../src/sections/dataset/dataset-metadata/DatasetMetadata'
 
-function camelCaseToTitleCase(camelCase: string) {
-  return camelCase
-    .replace(/([A-Z])/g, (match) => ` ${match}`)
-    .replace(/^./, (match) => match.toUpperCase())
-}
-
 describe('DatasetMetadata', () => {
   const mockMetadataBlocks = DatasetMother.create().metadataBlocks
 
@@ -14,25 +8,28 @@ describe('DatasetMetadata', () => {
     cy.customMount(<DatasetMetadata metadataBlocks={mockMetadataBlocks} />)
 
     mockMetadataBlocks.forEach((metadataBlock) => {
-      const accordionItem = cy.findByRole('button', { name: metadataBlock.title })
-      accordionItem.should('exist')
+      const titleItem = cy.findByRole('button', { name: metadataBlock.title })
+      titleItem.should('exist')
 
       metadataBlock.fields.forEach((field) => {
-        Object.entries(field).map(([key, value]) => {
-          const fieldsTitles = cy.findAllByText(camelCaseToTitleCase(key))
-          fieldsTitles.should('exist')
+        const fieldTitle = cy.findAllByText(field.title)
+        fieldTitle.should('exist')
 
-          // Simple field
-          if (typeof value === 'string') {
-            cy.findByText(value).should('exist')
-            return
-          }
+        fieldTitle.siblings('span').trigger('mouseover')
 
-          // Compound Field
-          Object.entries(value).map(([subKey, subValue]) => {
-            cy.findAllByText(camelCaseToTitleCase(subKey)).should('exist')
+        const fieldDescription = cy.findAllByText(field.description)
+        fieldDescription.should('exist')
 
-            cy.findByText(subValue).should('exist')
+        if (typeof field.value === 'string') {
+          const fieldValue = cy.findAllByText(field.value)
+          fieldValue.should('exist')
+          return
+        }
+
+        field.value.forEach((subField) => {
+          Object.values(subField).forEach((value) => {
+            const fieldValue = cy.findAllByText(value)
+            fieldValue.should('exist')
           })
         })
       })

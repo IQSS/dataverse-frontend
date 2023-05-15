@@ -7,7 +7,11 @@ export interface DatasetLabel {
 
 export type DatasetMetadataSubField = Record<string, string>
 
-export type DatasetMetadataField = Record<string, string | DatasetMetadataSubField>
+export interface DatasetMetadataField {
+  title: string
+  description: string
+  value: string | DatasetMetadataSubField[]
+}
 
 export interface DatasetMetadataBlock {
   title: string

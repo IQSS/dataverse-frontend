@@ -1,11 +1,8 @@
-import { DatasetMetadataField as DatasetMetadataFieldModel } from '../../../../dataset/domain/models/Dataset'
-import { Row } from 'dataverse-design-system'
-
-function camelCaseToTitleCase(camelCase: string) {
-  return camelCase
-    .replace(/([A-Z])/g, (match) => ` ${match}`)
-    .replace(/^./, (match) => match.toUpperCase())
-}
+import {
+  DatasetMetadataField as DatasetMetadataFieldModel,
+  DatasetMetadataSubField
+} from '../../../../dataset/domain/models/Dataset'
+import { Col, Row, Tooltip } from 'dataverse-design-system'
 
 interface DatasetMetadataFieldProps {
   metadataField: DatasetMetadataFieldModel
@@ -13,12 +10,35 @@ interface DatasetMetadataFieldProps {
 
 export function DatasetMetadataField({ metadataField }: DatasetMetadataFieldProps) {
   return (
+    <Row>
+      <Col sm={3}>
+        <strong>{metadataField.title} </strong>
+        <Tooltip placement="right" message={metadataField.description}></Tooltip>
+      </Col>
+      <Col>
+        {typeof metadataField.value === 'string' ? (
+          <span>{metadataField.value}</span>
+        ) : (
+          <DatasetMetadataSubFields metadataSubFields={metadataField.value} />
+        )}
+      </Col>
+    </Row>
+  )
+}
+
+interface DatasetMetadataSubFieldsProps {
+  metadataSubFields: DatasetMetadataSubField[]
+}
+function DatasetMetadataSubFields({ metadataSubFields }: DatasetMetadataSubFieldsProps) {
+  return (
     <>
-      {Object.entries(metadataField).map(([key, value]) => (
-        <Row key={`${key}`}>
-          <strong>{camelCaseToTitleCase(key)}</strong>
-          {typeof value === 'string' ? value : <DatasetMetadataField metadataField={value} />}
-        </Row>
+      {metadataSubFields.map((metadataSubField, index) => (
+        <div key={`metadata-subfield-${index}`}>
+          {Object.values(metadataSubField).map((value, index) => (
+            <span key={`${value}-${index}`}>{value} </span>
+          ))}
+          <br />
+        </div>
       ))}
     </>
   )

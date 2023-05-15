@@ -9,7 +9,10 @@ export function DatasetMetadataFields({ metadataFields }: DatasetMetadataFieldsP
   return (
     <>
       {metadataFields.map((metadataField, index) => (
-        <DatasetMetadataField key={`metadata-field-${index}`} metadataField={metadataField} />
+        <DatasetMetadataField
+          key={`${metadataField.title}-${index}`}
+          metadataField={metadataField}
+        />
       ))}
     </>
   )

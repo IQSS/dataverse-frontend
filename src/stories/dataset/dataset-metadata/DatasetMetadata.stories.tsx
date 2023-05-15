@@ -17,15 +17,27 @@ const metadataBlocks: DatasetMetadataBlock[] = [
     title: 'Citation Metadata',
     fields: [
       {
-        title: 'Some Title'
+        title: 'Title',
+        description: 'The main title of the Dataset',
+        value: 'Dataset Title'
       },
       {
-        author: {
-          authorName: 'Admin, Dataverse',
-          authorAffiliation: 'Dataverse.org',
-          authorIdentifierScheme: 'ORCID',
-          authorIdentifier: '123456789'
-        }
+        title: 'Author',
+        description: 'The entity, e.g. a person or organization, that created the Dataset',
+        value: [
+          {
+            authorName: 'Admin, Dataverse',
+            authorAffiliation: 'Dataverse.org',
+            authorIdentifierScheme: 'ORCID',
+            authorIdentifier: '123456789'
+          },
+          {
+            authorName: 'Owner, Dataverse',
+            authorAffiliation: 'Dataverse.org',
+            authorIdentifierScheme: 'ORCID',
+            authorIdentifier: '123456789'
+          }
+        ]
       }
     ]
   },
@@ -33,13 +45,19 @@ const metadataBlocks: DatasetMetadataBlock[] = [
     title: 'Geospatial Metadata',
     fields: [
       {
-        geographicUnit: 'km'
+        title: 'Geographic Unit',
+        description: 'The unit of measurement for the geographic coverage',
+        value: 'km'
       },
       {
-        geographicCoverage: {
-          geographicCoverageCountry: 'United States',
-          geographicCoverageCity: 'Cambridge'
-        }
+        title: 'Geographic Coverage',
+        description: 'The geographic coverage of the Dataset',
+        value: [
+          {
+            geographicCoverageCountry: 'United States',
+            geographicCoverageCity: 'Cambridge'
+          }
+        ]
       }
     ]
   }
