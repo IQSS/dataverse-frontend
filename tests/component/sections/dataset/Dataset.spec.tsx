@@ -71,4 +71,24 @@ describe('Dataset', () => {
       cy.findAllByText(label.value).should('exist')
     })
   })
+
+  it('renders the Dataset Metadata tab', () => {
+    const datasetRepository: DatasetRepository = {} as DatasetRepository
+    datasetRepository.getById = sandbox.stub().resolves(testDataset)
+
+    cy.mount(
+      <LoadingProvider>
+        <Dataset datasetRepository={datasetRepository} id={testDataset.id} />
+      </LoadingProvider>
+    )
+
+    cy.findByText(testDataset.title).should('exist')
+
+    const metadataTab = cy.findByRole('tab', { name: 'Metadata' })
+    metadataTab.should('exist')
+
+    metadataTab.click()
+
+    cy.findByText('Citation Metadata').should('exist')
+  })
 })

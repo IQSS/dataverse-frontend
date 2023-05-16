@@ -4,8 +4,8 @@ import { WithLayout } from '../WithLayout'
 import { Dataset } from '../../sections/dataset/Dataset'
 import { Dataset as DatasetModel } from '../../dataset/domain/models/Dataset'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { LabelSemanticMeaning } from '../../dataset/domain/models/LabelSemanticMeaning.enum'
 import { WithLayoutLoading } from '../WithLayoutLoading'
+import { DatasetMockData } from './DatasetMockData'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -20,14 +20,7 @@ class DatasetMockRepository implements DatasetRepository {
   getById(id: string): Promise<DatasetModel | undefined> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve({
-          id: id,
-          title: 'Dataset title',
-          labels: [
-            { value: 'Version 1.0', semanticMeaning: LabelSemanticMeaning.FILE },
-            { value: 'Draft', semanticMeaning: LabelSemanticMeaning.DATASET }
-          ]
-        })
+        resolve(DatasetMockData({ id: id }))
       }, 1000)
     })
   }

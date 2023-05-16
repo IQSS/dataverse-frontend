@@ -1,7 +1,6 @@
 import { Accordion } from 'dataverse-design-system'
 import { DatasetMetadataBlock as DatasetMetadataBlockModel } from '../../../dataset/domain/models/Dataset'
-import { DatasetMetadataFields } from './dataset-metadata-fields/DatasetMetadataFields'
-import { useTranslation } from 'react-i18next'
+import { DatasetMetadataBlock } from './dataset-metadata-block/DatasetMetadataBlock'
 
 interface DatasetMetadataProps {
   metadataBlocks: DatasetMetadataBlockModel[]
@@ -18,25 +17,5 @@ export function DatasetMetadata({ metadataBlocks }: DatasetMetadataProps) {
         </Accordion.Item>
       ))}
     </Accordion>
-  )
-}
-
-interface DatasetMetadataBlockProps {
-  metadataBlock: DatasetMetadataBlockModel
-}
-
-function DatasetMetadataBlock({ metadataBlock }: DatasetMetadataBlockProps) {
-  const { t } = useTranslation(metadataBlock.name)
-
-  return (
-    <>
-      <Accordion.Header>{t(`${metadataBlock.name}.name`)}</Accordion.Header>
-      <Accordion.Body>
-        <DatasetMetadataFields
-          metadataBlockName={metadataBlock.name}
-          metadataFields={metadataBlock.fields}
-        />
-      </Accordion.Body>
-    </>
   )
 }

@@ -7,6 +7,7 @@ import { useLoading } from '../loading/LoadingContext'
 import { DatasetSkeleton } from './DatasetSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { useTranslation } from 'react-i18next'
+import { DatasetMetadata } from './dataset-metadata/DatasetMetadata'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -41,12 +42,17 @@ export function Dataset({ datasetRepository, id }: DatasetProps) {
             </Row>
             <Tabs defaultActiveKey="files">
               <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
-                <div>Files Section</div>
+                <div className={styles['tab-container']}>
+                  <div>Files Section</div>
+                </div>
               </Tabs.Tab>
               <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
-                <div>Metadata Section</div>
+                <div className={styles['tab-container']}>
+                  <DatasetMetadata metadataBlocks={dataset.metadataBlocks} />
+                </div>
               </Tabs.Tab>
             </Tabs>
+            <div className={styles['separation-line']}></div>
           </div>
         </article>
       )}
