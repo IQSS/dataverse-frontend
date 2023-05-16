@@ -9,7 +9,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       setTimeout(() => {
         resolve({
           id: id,
-          title: 'Dataset title',
+          title: 'Dataset Title',
           labels: [
             { value: 'Version 1.0', semanticMeaning: LabelSemanticMeaning.FILE },
             { value: 'Draft', semanticMeaning: LabelSemanticMeaning.DATASET }
