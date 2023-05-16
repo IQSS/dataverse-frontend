@@ -60,7 +60,11 @@ Launches the prettier formatter. We recommend you to configure your IDE to run p
 ### `npm run storybook`
 
 Runs the Storybook in the development mode.  
-Open [http://localhost:6006](http://localhost:6006) to view it in your browser.
+
+There are 2 Storybook instances, one for the Design System and one for the Dataverse Frontend.
+
+Open [http://localhost:6006](http://localhost:6006) to view the Dataverse Frontend Storybook in your browser.  
+Open [http://localhost:6007](http://localhost:6007) to view the Design System Storybook in your browser.
 
 ## Local development environment
 
