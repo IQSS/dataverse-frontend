@@ -20,7 +20,6 @@ export interface Dataset {
   id: string
   title: string
   labels: DatasetLabel[]
-  version: string
   summaryFields: DatasetField[]
   license: License
 }

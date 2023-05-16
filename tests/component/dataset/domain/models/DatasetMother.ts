@@ -25,6 +25,39 @@ export class DatasetMother {
           semanticMeaning: faker.helpers.arrayElement(Object.values(LabelSemanticMeaning))
         }
       ],
+      summaryFields: [
+        {
+          title: faker.lorem.word(),
+          description: faker.lorem.sentence(),
+          value: faker.lorem.sentence()
+        },
+        {
+          title: faker.lorem.word(),
+          description: faker.lorem.sentence(),
+          value: faker.lorem.sentence()
+        },
+        {
+          title: faker.lorem.word(),
+          description: faker.lorem.sentence(),
+          value: faker.lorem.sentence()
+        },
+        {
+          title: faker.lorem.word(),
+          description: faker.lorem.sentence(),
+          value: faker.lorem.sentence()
+        },
+        {
+          title: faker.lorem.word(),
+          description: faker.lorem.sentence(),
+          value: faker.lorem.sentence()
+        }
+      ],
+      license: {
+        name: faker.lorem.sentence(),
+        shortDescription: faker.lorem.sentence(),
+        uri: faker.internet.url(),
+        iconUrl: faker.image.imageUrl()
+      },
       ...props
     }
   }

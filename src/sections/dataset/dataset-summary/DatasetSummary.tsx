@@ -8,10 +8,10 @@ interface DatasetSummaryProps {
 }
 
 export function DatasetSummary({ summaryFields, license }: DatasetSummaryProps) {
-  return summaryFields && license ? (
+  return (
     <article>
       <SummaryFields summaryFields={summaryFields}></SummaryFields>
       <License license={license}></License>
     </article>
-  ) : null
+  )
 }
