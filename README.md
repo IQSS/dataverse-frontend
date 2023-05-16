@@ -30,7 +30,7 @@ Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
 The page will reload when you make changes.  
 You may also see any lint errors in the console.
 
-### `npm test:unit`
+### `npm run test:unit`
 
 Launches the test runner for the unit tests in the interactive watch mode.  
 If you prefer to see the tests executing in cypress you can run `npm run cy:open-unit`  
