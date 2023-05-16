@@ -2,6 +2,22 @@
   "citation": {
     "name": "Citation Metadata",
     "datasetField": {
+      "persistentId": {
+        "name": "Persistent Identifier",
+        "description": "The Dataset's unique persistent identifier, either a DOI or Handle"
+      },
+      "alternativePersistentId": {
+        "name": "Previous Dataset Persistent ID",
+        "description": "A previously used persistent identifier for the Dataset, either a DOI or Handle"
+      },
+      "publicationDate": {
+        "name": "Publication Date",
+        "description": "The publication date of a Dataset."
+      },
+      "citationDate": {
+        "name": "Citation Date",
+        "description": "The citation date of a dataset, determined by the longest embargo on any file in version 1.0."
+      },
       "title": { "name": "Title", "description": "The main title of the Dataset" },
       "subtitle": {
         "name": "Subtitle",

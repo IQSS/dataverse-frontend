@@ -17,6 +17,10 @@ const metadataBlocks: DatasetMetadataBlock[] = [
   {
     name: MetadataBlockName.CITATION,
     fields: {
+      persistentId: 'doi:10.5072/FK2/ABC123',
+      alternativePersistentId: 'doi:10.5072/FK2/ABC123',
+      publicationDate: '2021-01-01',
+      citationDate: '2021-01-01',
       title: 'Dataset Title',
       author: [
         {
