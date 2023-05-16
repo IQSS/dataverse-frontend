@@ -59,7 +59,7 @@ Launches the prettier formatter. We recommend you to configure your IDE to run p
 
 ### `npm run storybook`
 
-Runs the Storybook in the development mode.  
+Runs the Storybook in the development mode.
 
 There are 2 Storybook instances, one for the Design System and one for the Dataverse Frontend.
 
@@ -170,3 +170,9 @@ A base path for the frontend application can be established on the remote server
 ### Links
 
 We added the underline to the links to make them accessible.
+
+### File Label
+
+Now we are using Bootstrap with a theme, so there is only one definition for the secondary color. Since Bootstrap applies
+the secondary color to the labels automatically, the color of the File label is now the global secondary color which is
+a lighter sade of grey than what it used to be.
