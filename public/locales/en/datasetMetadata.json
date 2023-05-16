@@ -1,0 +1,68 @@
+{
+  "citation": {
+    "name": "Citation Metadata",
+    "datasetField": {
+      "title": {
+        "name": "Title",
+        "description": "The main title of the Dataset"
+      },
+      "subtitle": {
+        "name": "Subtitle",
+        "description": "A secondary title that amplifies or states certain limitations on the main title"
+      },
+      "alternativeTitle": {
+        "name": "Alternative Title",
+        "description": "Either 1) a title commonly used to refer to the Dataset or 2) an abbreviation of the main title"
+      },
+      "alternativeURL": {
+        "name": "Alternative URL",
+        "description": "Another URL where one can view or access the data in the Dataset, e.g. a project or personal webpage"
+      },
+      "otherId": {
+        "name": "Other Identifier",
+        "description": "Another unique identifier for the Dataset (e.g. producer's or another repository's identifier)"
+      },
+      "otherIdAgency": {
+        "name": "Agency",
+        "description": "The name of the agency that generated the other identifier"
+      },
+      "otherIdValue": {
+        "name": "Identifier",
+        "description": "Another identifier uniquely identifies the Dataset"
+      },
+      "author": {
+        "name": "Author",
+        "description": "The entity, e.g. a person or organization, that created the Dataset"
+      },
+      "authorName": {
+        "name": "Name",
+        "description": "The name of the author, such as the person's name or the name of an organization"
+      },
+      "authorAffiliation": {
+        "name": "Affiliation",
+        "description": "The name of the entity affiliated with the author, e.g. an organization's name"
+      },
+      "authorIdentifierScheme": {
+        "name": "Identifier Type",
+        "description": "The type of identifier that uniquely identifies the author (e.g. ORCID, ISNI)"
+      },
+      "authorIdentifier": {
+        "name": "Identifier",
+        "description": "Uniquely identifies the author when paired with an identifier type"
+      }
+    }
+  },
+  "geospatial": {
+    "name": "Geospatial Metadata",
+    "datasetField": {
+      "geographicUnit": {
+        "name": "Geographic Unit",
+        "description": "Lowest level of geographic aggregation covered by the Dataset, e.g., village, county, region."
+      },
+      "geographicCoverage": {
+        "name": "Geographic Coverage",
+        "description": "Information on the geographic coverage of the data. Includes the total geographic scope of the data."
+      }
+    }
+ }
+}

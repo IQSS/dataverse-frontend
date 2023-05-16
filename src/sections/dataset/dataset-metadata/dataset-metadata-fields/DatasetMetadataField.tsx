@@ -3,17 +3,20 @@ import {
   DatasetMetadataSubField
 } from '../../../../dataset/domain/models/Dataset'
 import { Col, Row, Tooltip } from 'dataverse-design-system'
+import { useTranslation } from 'react-i18next'
 
 interface DatasetMetadataFieldProps {
   metadataField: DatasetMetadataFieldModel
 }
 
 export function DatasetMetadataField({ metadataField }: DatasetMetadataFieldProps) {
+  const { t } = useTranslation('datasetMetadata')
+
   return (
     <Row>
       <Col sm={3}>
-        <strong>{metadataField.title} </strong>
-        <Tooltip placement="right" message={metadataField.description}></Tooltip>
+        <strong>{t(metadataField.title)} </strong>
+        <Tooltip placement="right" message={t(metadataField.description)}></Tooltip>
       </Col>
       <Col>
         {typeof metadataField.value === 'string' ? (

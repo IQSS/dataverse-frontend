@@ -14,16 +14,16 @@ type Story = StoryObj<typeof DatasetMetadata>
 
 const metadataBlocks: DatasetMetadataBlock[] = [
   {
-    title: 'Citation Metadata',
+    title: 'citation.name',
     fields: [
       {
-        title: 'Title',
-        description: 'The main title of the Dataset',
+        title: 'citation.datasetField.title.name',
+        description: 'citation.datasetField.title.description',
         value: 'Dataset Title'
       },
       {
-        title: 'Author',
-        description: 'The entity, e.g. a person or organization, that created the Dataset',
+        title: 'citation.datasetField.author.name',
+        description: 'citation.datasetField.author.description',
         value: [
           {
             authorName: 'Admin, Dataverse',
@@ -42,16 +42,16 @@ const metadataBlocks: DatasetMetadataBlock[] = [
     ]
   },
   {
-    title: 'Geospatial Metadata',
+    title: 'geospatial.name',
     fields: [
       {
-        title: 'Geographic Unit',
-        description: 'The unit of measurement for the geographic coverage',
+        title: 'geospatial.datasetField.geographicUnit.name',
+        description: 'geospatial.datasetField.geographicUnit.description',
         value: 'km'
       },
       {
-        title: 'Geographic Coverage',
-        description: 'The geographic coverage of the Dataset',
+        title: 'geospatial.datasetField.geographicCoverage.name',
+        description: 'geospatial.datasetField.geographicCoverage.description',
         value: [
           {
             geographicCoverageCountry: 'United States',
