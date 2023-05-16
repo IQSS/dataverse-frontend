@@ -2,13 +2,11 @@
 
 .container {
     padding: 10px 10px 0;
-    background: $dv-info-box-color;
-    border: 0;
+    border: 1px solid $dv-info-border-color;
 }
 .deaccessioned {
     padding: 10px 10px 0;
-    background: $dv-danger-box-color;
-    border: 0;
+    border: 1px solid $dv-danger-color;
 }
 
 .icon {

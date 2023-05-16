@@ -20,6 +20,7 @@ class DatasetMockRepository implements DatasetRepository {
       id: id,
       title: 'Test Dataset',
       version: '1.0',
+
       citation: {
         authors: ['Bennet,Elizabeth', 'Darcy,Fitzwilliam'],
         title: 'Replication Test Dataset',
@@ -27,7 +28,8 @@ class DatasetMockRepository implements DatasetRepository {
         persistentIdentifier: 'https://doi.org/10.70122/FK2/KLX4XO',
         persistentIdentifierUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
         publisher: 'Demo Dataverse',
-        version: 'V1'
+        version: 'V1',
+        isDeaccessioned: false
       },
       license: {
         name: 'CC0 1.0',

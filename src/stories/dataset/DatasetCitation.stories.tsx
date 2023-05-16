@@ -12,26 +12,34 @@ const meta: Meta<typeof DatasetCitation> = {
 export default meta
 type Story = StoryObj<typeof DatasetCitation>
 
-const citationFields: Citation = {
-  authors: ['Bennet, Elizabeth', 'Darcy, Fitzwilliam'],
-  title: 'Test Terms',
-  creationYear: 2023,
-  persistentIdentifier: 'https://doi.org/10.70122/FK2/KLX4XO',
-  persistentIdentifierUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
-  publisher: 'Demo Dataverse',
-  version: ''
-}
-
 export const Default: Story = {
   render: () => {
-    citationFields.version = 'V1'
+    const citationFields: Citation = {
+      authors: ['Bennet, Elizabeth', 'Darcy, Fitzwilliam'],
+      title: 'Test Terms',
+      creationYear: 2023,
+      persistentIdentifier: 'https://doi.org/10.70122/FK2/KLX4XO',
+      persistentIdentifierUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+      publisher: 'Demo Dataverse',
+      version: 'V1'
+    }
+
     return <DatasetCitation citation={citationFields} />
   }
 }
 
 export const DraftVersion: Story = {
   render: () => {
-    citationFields.version = 'DRAFT'
+    const citationFields: Citation = {
+      authors: ['Bennet, Elizabeth', 'Darcy, Fitzwilliam'],
+      title: 'Test Terms',
+      creationYear: 2023,
+      persistentIdentifier: 'https://doi.org/10.70122/FK2/KLX4XO',
+      persistentIdentifierUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+      publisher: 'Demo Dataverse',
+      version: 'DRAFT'
+    }
+
     /*
     Includes extra breaks so you can see the DRAFT tooltip message
      */
@@ -47,8 +55,16 @@ export const DraftVersion: Story = {
 
 export const Deaccessioned: Story = {
   render: () => {
-    citationFields.version = 'DRAFT'
-    citationFields.isDeaccessioned = true
+    const citationFields: Citation = {
+      authors: ['Bennet, Elizabeth', 'Darcy, Fitzwilliam'],
+      title: 'Test Terms',
+      creationYear: 2023,
+      persistentIdentifier: 'https://doi.org/10.70122/FK2/KLX4XO',
+      persistentIdentifierUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+      publisher: 'Demo Dataverse',
+      version: 'V1',
+      isDeaccessioned: true
+    }
 
     return (
       <div>

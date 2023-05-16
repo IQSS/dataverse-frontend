@@ -46,13 +46,23 @@ function getCitationText(citation: Citation) {
           />
         </span>
       )}
+      {citation.isDeaccessioned && (
+        <span className={styles.deaccessionedText}>
+          {' '}
+          DEACCESSIONED VERSION{' '}
+          <Tooltip
+            placement={'top'}
+            message={'DEACCESSIONED version once the dataset has been published.'}
+          />
+        </span>
+      )}
     </div>
   )
 }
 export function DatasetCitation({ citation }: DatasetCitationProps) {
   return citation ? (
     <article>
-      <div className={styles.container}>
+      <div className={citation.isDeaccessioned ? styles.deaccessioned : styles.container}>
         <Row className={styles.row}>
           <Col sm={3}>
             <div className={styles.icon}>
