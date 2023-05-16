@@ -165,14 +165,16 @@ It is important that the remote instance is correctly pre-configured, with the P
 
 A base path for the frontend application can be established on the remote server by setting the corresponding field in the workflow inputs. This mechanism prevents conflicts between the frontend application and any pre-existing deployed application running on Payara, which can potentially be a Dataverse backend. This way, only the routes with the base path included will redirect to the frontend application.
 
-## Changes in the Style Guide
+## Changes from the Style Guide
+
+The design system and frontend in this repo are inspired by the Dataverse Project [Style Guide](https://guides.dataverse.org/en/latest/style/index.html), but the following changes have been made, especially for accessibility.
 
 ### Links
 
-We added the underline to the links to make them accessible.
+We added an underline to links to make them accessible.
 
-### File Label
+### File label
 
 Now we are using Bootstrap with a theme, so there is only one definition for the secondary color. Since Bootstrap applies
-the secondary color to the labels automatically, the color of the File label is now the global secondary color which is
-a lighter sade of grey than what it used to be.
+the secondary color to the labels automatically, the color of the file label is now the global secondary color which is
+a lighter shade of grey than what it used to be.
