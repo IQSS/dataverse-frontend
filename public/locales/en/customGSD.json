@@ -1,0 +1,44 @@
+{
+  "customGSD": {
+    "name": "Graduate School of Design Metadata",
+    "datasetField": {
+      "gsdStudentName": {
+        "name": "Student Name",
+        "description": "Full name of the student: Last Name, First Name (example: Smith, Jane). Use the name that the GSD Administrator has on file."
+      },
+      "gsdStudentProgram": {
+        "name": "Student's Program of Study",
+        "description": "Student's program of study."
+      },
+      "gsdCourseName": { "name": "Course Name", "description": "Name of the course." },
+      "gsdFacultyName": { "name": "Faculty Name", "description": "Name of the studio instructor." },
+      "gsdCoordinator": {
+        "name": "Core Studio Coordinator",
+        "description": "Name of the studio coordinator(s)."
+      },
+      "gsdSemester": { "name": "Semester / Year", "description": "Select the semester / year." },
+      "gsdRecommendation": {
+        "name": "Faculty Recommendation",
+        "description": "Indicate the recommendation(s) from the faculty for this project."
+      },
+      "gsdAccreditation": { "name": "Accreditation", "description": "Selection made by faculty." },
+      "gsdSiteType": {
+        "name": "Site Type",
+        "description": "Describe the type of building or site, based on function / purpose. Example: Military base."
+      },
+      "gsdProgramBrief": {
+        "name": "Program / Brief",
+        "description": "Example: redevelopment, restoration."
+      },
+      "gsdTypes": {
+        "name": "Types of Representation/ Medium/ Format",
+        "description": "Choose from the list."
+      },
+      "gsdPrizes": { "name": "Prizes", "description": "Choose from the list." },
+      "gsdTags": {
+        "name": "GSD Tags",
+        "description": "Use tags to describe the project. Write one keyword per field. To add more tags, click on the plus sign on the right."
+      }
+    }
+  }
+}

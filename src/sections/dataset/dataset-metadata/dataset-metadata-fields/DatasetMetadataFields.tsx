@@ -1,16 +1,23 @@
 import { DatasetMetadataField } from './DatasetMetadataField'
-import { DatasetMetadataField as DatasetMetadataFieldModel } from '../../../../dataset/domain/models/Dataset'
+import { DatasetMetadataFields as DatasetMetadataFieldsModel } from '../../../../dataset/domain/models/Dataset'
+import { MetadataBlockName } from '../../../../dataset/domain/models/MetadataBlockName'
 
 interface DatasetMetadataFieldsProps {
-  metadataFields: DatasetMetadataFieldModel[]
+  metadataBlockName: MetadataBlockName
+  metadataFields: DatasetMetadataFieldsModel
 }
 
-export function DatasetMetadataFields({ metadataFields }: DatasetMetadataFieldsProps) {
+export function DatasetMetadataFields({
+  metadataBlockName,
+  metadataFields
+}: DatasetMetadataFieldsProps) {
   return (
     <>
-      {metadataFields.map((metadataField, index) => (
+      {Object.entries(metadataFields).map(([metadataFieldName, metadataField], index) => (
         <DatasetMetadataField
-          key={`${metadataField.title}-${index}`}
+          key={`${metadataBlockName}-${metadataFieldName}-${index}`}
+          metadataBlockName={metadataBlockName}
+          metadataFieldName={metadataFieldName}
           metadataField={metadataField}
         />
       ))}

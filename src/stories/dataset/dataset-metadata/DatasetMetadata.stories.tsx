@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { DatasetMetadata } from '../../../sections/dataset/dataset-metadata/DatasetMetadata'
 import { DatasetMetadataBlock } from '../../../dataset/domain/models/Dataset'
+import { MetadataBlockName } from '../../../dataset/domain/models/MetadataBlockName'
 
 const meta: Meta<typeof DatasetMetadata> = {
   title: 'Sections/Dataset Page/DatasetMetadata',
@@ -14,52 +15,40 @@ type Story = StoryObj<typeof DatasetMetadata>
 
 const metadataBlocks: DatasetMetadataBlock[] = [
   {
-    title: 'citation.name',
-    fields: [
-      {
-        title: 'citation.datasetField.title.name',
-        description: 'citation.datasetField.title.description',
-        value: 'Dataset Title'
-      },
-      {
-        title: 'citation.datasetField.author.name',
-        description: 'citation.datasetField.author.description',
-        value: [
-          {
-            authorName: 'Admin, Dataverse',
-            authorAffiliation: 'Dataverse.org',
-            authorIdentifierScheme: 'ORCID',
-            authorIdentifier: '123456789'
-          },
-          {
-            authorName: 'Owner, Dataverse',
-            authorAffiliation: 'Dataverse.org',
-            authorIdentifierScheme: 'ORCID',
-            authorIdentifier: '123456789'
-          }
-        ]
-      }
-    ]
+    name: MetadataBlockName.CITATION,
+    fields: {
+      title: 'Dataset Title',
+      author: [
+        {
+          authorName: 'Admin, Dataverse',
+          authorAffiliation: 'Dataverse.org',
+          authorIdentifierScheme: 'ORCID',
+          authorIdentifier: '123456789'
+        },
+        {
+          authorName: 'Owner, Dataverse',
+          authorAffiliation: 'Dataverse.org',
+          authorIdentifierScheme: 'ORCID',
+          authorIdentifier: '123456789'
+        }
+      ]
+    }
   },
   {
-    title: 'geospatial.name',
-    fields: [
-      {
-        title: 'geospatial.datasetField.geographicUnit.name',
-        description: 'geospatial.datasetField.geographicUnit.description',
-        value: 'km'
-      },
-      {
-        title: 'geospatial.datasetField.geographicCoverage.name',
-        description: 'geospatial.datasetField.geographicCoverage.description',
-        value: [
-          {
-            geographicCoverageCountry: 'United States',
-            geographicCoverageCity: 'Cambridge'
-          }
-        ]
-      }
-    ]
+    name: MetadataBlockName.GEOSPATIAL,
+    fields: {
+      geographicUnit: 'km',
+      geographicCoverage: [
+        {
+          geographicCoverageCountry: 'United States',
+          geographicCoverageCity: 'Cambridge'
+        },
+        {
+          geographicCoverageCountry: 'United States',
+          geographicCoverageCity: 'Cambridge'
+        }
+      ]
+    }
   }
 ]
 

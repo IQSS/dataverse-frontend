@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { Dataset } from '../../../../../src/dataset/domain/models/Dataset'
 import { LabelSemanticMeaning } from '../../../../../src/dataset/domain/models/LabelSemanticMeaning.enum'
+import { MetadataBlockName } from '../../../../../src/dataset/domain/models/MetadataBlockName'
 
 export class DatasetMother {
   static create(props?: Partial<Dataset>): Dataset {
@@ -27,56 +28,39 @@ export class DatasetMother {
       ],
       metadataBlocks: [
         {
-          title: faker.lorem.sentence(),
-          fields: [
-            {
-              title: faker.lorem.sentence(),
-              description: faker.lorem.sentence(),
-              value: faker.lorem.sentence()
-            },
-            {
-              title: faker.lorem.sentence(),
-              description: faker.lorem.sentence(),
-              value: [
-                {
-                  subField1: faker.lorem.sentence(),
-                  subField2: faker.lorem.sentence(),
-                  subField3: faker.lorem.sentence()
-                },
-                {
-                  subField4: faker.lorem.sentence(),
-                  subField5: faker.lorem.sentence(),
-                  subField6: faker.lorem.sentence()
-                }
-              ]
-            }
-          ]
+          name: MetadataBlockName.CITATION,
+          fields: {
+            title: faker.lorem.sentence(),
+            author: [
+              {
+                authorName: faker.lorem.sentence(),
+                authorAffiliation: faker.lorem.sentence(),
+                authorIdentifierScheme: faker.lorem.sentence(),
+                authorIdentifier: faker.lorem.sentence()
+              },
+              {
+                authorName: faker.lorem.sentence(),
+                authorAffiliation: faker.lorem.sentence(),
+                authorIdentifierScheme: faker.lorem.sentence(),
+                authorIdentifier: faker.lorem.sentence()
+              }
+            ]
+          }
         },
         {
-          title: faker.lorem.sentence(),
-          fields: [
-            {
-              title: faker.lorem.sentence(),
-              description: faker.lorem.sentence(),
-              value: faker.lorem.sentence()
-            },
-            {
-              title: faker.lorem.sentence(),
-              description: faker.lorem.sentence(),
-              value: [
-                {
-                  subField1: faker.lorem.sentence(),
-                  subField2: faker.lorem.sentence(),
-                  subField3: faker.lorem.sentence()
-                },
-                {
-                  subField4: faker.lorem.sentence(),
-                  subField5: faker.lorem.sentence(),
-                  subField6: faker.lorem.sentence()
-                }
-              ]
-            }
-          ]
+          name: MetadataBlockName.GEOSPATIAL,
+          fields: {
+            geographicCoverage: [
+              {
+                geographicCoverageCountry: faker.lorem.sentence(),
+                geographicCoverageCity: faker.lorem.sentence()
+              },
+              {
+                geographicCoverageCountry: faker.lorem.sentence(),
+                geographicCoverageCity: faker.lorem.sentence()
+              }
+            ]
+          }
         }
       ],
       ...props

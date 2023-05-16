@@ -1,0 +1,27 @@
+{
+  "customARCS": {
+    "name": "Alliance for Research on Corporate Sustainability Metadata",
+    "datasetField": {
+      "ARCS1": {
+        "name": "1) Were any of these data sets a) purchased, b) obtained through licensed databases, or c) provided by an organization under a nondisclosure or other agreement?",
+        "description": "Licensed agreement of deposited data."
+      },
+      "ARCS2": {
+        "name": "2) If you responded Yes to Q1, have you ensured that sharing the data does not violate terms of the agreement? If you responded No to Q1, please enter N/A here.",
+        "description": "Data sharing does not violate terms."
+      },
+      "ARCS3": {
+        "name": "3) Do any of these data sets include individual-level data (either collected or pre-existing in the dataset) that might make them subject to U.S. or international human subjects considerations?",
+        "description": "Human subjects consideration."
+      },
+      "ARCS4": {
+        "name": "4) If you responded Yes to Q3, are these data sets totally de-identified or was sharing approved by your institutional review board ( IRB)? If you responded No to Q3 please enter N/A here.",
+        "description": "Deidentified data/sharing approved by IRB."
+      },
+      "ARCS5": {
+        "name": "5) Do these datasets contain sensitive or personally identifiable private information? (Harvard Research Data Security Policy {www.security.harvard.edu/research-data-security-policy} may apply because this Dataverse is hosted by Harvard University.)",
+        "description": "Data contain sensitive/identifiable private information."
+      }
+    }
+  }
+}

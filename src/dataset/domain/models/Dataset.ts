@@ -1,4 +1,5 @@
 import { LabelSemanticMeaning } from './LabelSemanticMeaning.enum'
+import { MetadataBlockName } from './MetadataBlockName'
 
 export interface DatasetLabel {
   semanticMeaning: LabelSemanticMeaning
@@ -7,15 +8,13 @@ export interface DatasetLabel {
 
 export type DatasetMetadataSubField = Record<string, string>
 
-export interface DatasetMetadataField {
-  title: string
-  description: string
-  value: string | DatasetMetadataSubField[]
-}
+export type DatasetMetadataField = string | DatasetMetadataSubField[]
+
+export type DatasetMetadataFields = Record<string, DatasetMetadataField>
 
 export interface DatasetMetadataBlock {
-  title: string
-  fields: DatasetMetadataField[]
+  name: MetadataBlockName
+  fields: DatasetMetadataFields
 }
 
 export interface Dataset {

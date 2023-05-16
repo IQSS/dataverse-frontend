@@ -1,48 +1,39 @@
-import {
-  DatasetMetadataField as DatasetMetadataFieldModel,
-  DatasetMetadataSubField
-} from '../../../../dataset/domain/models/Dataset'
+import { DatasetMetadataField as DatasetMetadataFieldModel } from '../../../../dataset/domain/models/Dataset'
 import { Col, Row, Tooltip } from 'dataverse-design-system'
 import { useTranslation } from 'react-i18next'
+import { DatasetMetadataSubFields } from './DatasetMetadataSubFields'
+import { MetadataBlockName } from '../../../../dataset/domain/models/MetadataBlockName'
 
 interface DatasetMetadataFieldProps {
+  metadataBlockName: MetadataBlockName
+  metadataFieldName: string
   metadataField: DatasetMetadataFieldModel
 }
 
-export function DatasetMetadataField({ metadataField }: DatasetMetadataFieldProps) {
-  const { t } = useTranslation('datasetMetadata')
+export function DatasetMetadataField({
+  metadataBlockName,
+  metadataFieldName,
+  metadataField
+}: DatasetMetadataFieldProps) {
+  const { t } = useTranslation(metadataBlockName)
+  const completeFieldName = `${metadataBlockName}.datasetField.${metadataFieldName}`
 
   return (
     <Row>
       <Col sm={3}>
-        <strong>{t(metadataField.title)} </strong>
-        <Tooltip placement="right" message={t(metadataField.description)}></Tooltip>
+        <strong>{t(`${completeFieldName}.name`)} </strong>
+        <Tooltip placement="right" message={t(`${completeFieldName}.description`)}></Tooltip>
       </Col>
       <Col>
-        {typeof metadataField.value === 'string' ? (
-          <span>{metadataField.value}</span>
+        {typeof metadataField === 'string' ? (
+          <span>{metadataField}</span>
         ) : (
-          <DatasetMetadataSubFields metadataSubFields={metadataField.value} />
+          <DatasetMetadataSubFields
+            fieldName={metadataFieldName}
+            metadataSubFields={metadataField}
+          />
         )}
       </Col>
     </Row>
-  )
-}
-
-interface DatasetMetadataSubFieldsProps {
-  metadataSubFields: DatasetMetadataSubField[]
-}
-function DatasetMetadataSubFields({ metadataSubFields }: DatasetMetadataSubFieldsProps) {
-  return (
-    <>
-      {metadataSubFields.map((metadataSubField, index) => (
-        <div key={`metadata-subfield-${index}`}>
-          {Object.values(metadataSubField).map((value, index) => (
-            <span key={`${value}-${index}`}>{value} </span>
-          ))}
-          <br />
-        </div>
-      ))}
-    </>
   )
 }
