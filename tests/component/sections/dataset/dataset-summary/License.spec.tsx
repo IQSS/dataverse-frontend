@@ -29,9 +29,4 @@ describe('DatasetSummary', () => {
       .should('have.attr', 'href', 'https://example.com/license')
       .and('have.text', 'Test License')
   })
-  it('renders the empty Licence correctly', () => {
-    const emptyLicense = undefined
-    cy.customMount(<License license={emptyLicense}></License>)
-    cy.get('article').should('not.exist')
-  })
 })

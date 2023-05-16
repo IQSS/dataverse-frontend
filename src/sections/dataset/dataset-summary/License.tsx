@@ -1,11 +1,11 @@
 import { Row, Col } from 'dataverse-design-system'
 import { License as LicenseModel } from '../../../dataset/domain/models/Dataset'
 interface LicenseProps {
-  license: LicenseModel | undefined
+  license: LicenseModel
 }
 
 export function License({ license }: LicenseProps) {
-  return license ? (
+  return (
     <article>
       <Row>
         <Col sm={3}>
@@ -21,5 +21,5 @@ export function License({ license }: LicenseProps) {
         </Col>
       </Row>
     </article>
-  ) : null
+  )
 }

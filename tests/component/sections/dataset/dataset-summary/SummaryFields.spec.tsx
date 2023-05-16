@@ -1,14 +1,8 @@
-import { DatasetField, License } from '../../../../../src/dataset/domain/models/Dataset'
+import { DatasetField } from '../../../../../src/dataset/domain/models/Dataset'
 import { faker } from '@faker-js/faker'
 import { SummaryFields } from '../../../../../src/sections/dataset/dataset-summary/SummaryFields'
 
 describe('DatasetSummary', () => {
-  const licenseMock: License = {
-    name: 'CC0 1.0',
-    shortDescription: 'CC0 1.0 Universal Public Domain Dedication',
-    uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
-    iconUrl: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
-  }
   const summaryFieldsMock: DatasetField[] = [
     {
       title: 'Description',
@@ -43,10 +37,5 @@ describe('DatasetSummary', () => {
       cy.findByText(field.title).should('exist')
       cy.findByText(field.value).should('exist')
     })
-  })
-  it('renders the empty SummaryFields correctly', () => {
-    const emptyFields = undefined
-    cy.customMount(<SummaryFields summaryFields={emptyFields}></SummaryFields>)
-    cy.get('article').should('not.exist')
   })
 })
