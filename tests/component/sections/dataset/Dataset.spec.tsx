@@ -4,15 +4,10 @@ import { Dataset } from '../../../../src/sections/dataset/Dataset'
 import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
 import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
 import { useLoading } from '../../../../src/sections/loading/LoadingContext'
-import { DatasetTemplateProvider } from '../../../../src/sections/dataset/dataset-template/DatasetTemplateProvider'
-import { DatasetTemplateMother } from '../../dataset/domain/models/DatasetTemplateMother'
-import { DatasetTemplateRepository } from '../../../../src/dataset/domain/repositories/DatasetTemplateRepository'
 
 describe('Dataset', () => {
   const sandbox: SinonSandbox = createSandbox()
   const testDataset = DatasetMother.create()
-  const datasetTemplateRepository: DatasetTemplateRepository = {} as DatasetTemplateRepository
-  datasetTemplateRepository.getById = sandbox.stub().resolves(DatasetTemplateMother.create())
 
   afterEach(() => {
     sandbox.restore()
@@ -35,9 +30,7 @@ describe('Dataset', () => {
 
     cy.customMount(
       <LoadingProvider>
-        <DatasetTemplateProvider repository={datasetTemplateRepository}>
-          <Dataset repository={datasetRepository} id={testDataset.id} />
-        </DatasetTemplateProvider>
+        <Dataset repository={datasetRepository} id={testDataset.id} />
         <TestComponent />
       </LoadingProvider>
     )
@@ -55,9 +48,7 @@ describe('Dataset', () => {
 
     cy.customMount(
       <LoadingProvider>
-        <DatasetTemplateProvider repository={datasetTemplateRepository}>
-          <Dataset repository={datasetRepository} id="wrong-id" />
-        </DatasetTemplateProvider>
+        <Dataset repository={datasetRepository} id="wrong-id" />
       </LoadingProvider>
     )
 
@@ -70,9 +61,7 @@ describe('Dataset', () => {
 
     cy.customMount(
       <LoadingProvider>
-        <DatasetTemplateProvider repository={datasetTemplateRepository}>
-          <Dataset repository={datasetRepository} id={testDataset.id} />
-        </DatasetTemplateProvider>
+        <Dataset repository={datasetRepository} id={testDataset.id} />
       </LoadingProvider>
     )
 
@@ -89,9 +78,7 @@ describe('Dataset', () => {
 
     cy.customMount(
       <LoadingProvider>
-        <DatasetTemplateProvider repository={datasetTemplateRepository}>
-          <Dataset repository={datasetRepository} id={testDataset.id} />
-        </DatasetTemplateProvider>
+        <Dataset repository={datasetRepository} id={testDataset.id} />
       </LoadingProvider>
     )
 
