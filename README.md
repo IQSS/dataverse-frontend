@@ -123,3 +123,5 @@ A base path for the frontend application can be established on the remote server
 ### Links
 
 We added the underline to the links to make them accessible.
+
+We changed the citation block to be white with a colored border, to make the text in the box more accessible.
