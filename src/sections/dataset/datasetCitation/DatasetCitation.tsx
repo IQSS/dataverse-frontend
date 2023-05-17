@@ -24,6 +24,9 @@ function getCitationText(citation: Citation) {
     <div>
       {mapAuthors(citation.authors)}
       {', '}
+      {citation.creationYear}
+      {', '}
+      {'"' + citation.title + '", '}
       <a
         className={styles.link}
         href={citation.persistentIdentifierUrl}
@@ -47,12 +50,14 @@ function getCitationText(citation: Citation) {
         </span>
       )}
       {citation.isDeaccessioned && (
-        <span className={styles.deaccessionedText}>
-          {' '}
+        <span>
+          {', '}
           DEACCESSIONED VERSION{' '}
           <Tooltip
             placement={'top'}
-            message={'DEACCESSIONED version once the dataset has been published.'}
+            message={
+              'DEACCESSIONED VERSION has been added to the citation for this version since it is no longer available.'
+            }
           />
         </span>
       )}
