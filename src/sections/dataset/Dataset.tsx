@@ -8,14 +8,15 @@ import { DatasetSkeleton } from './DatasetSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { useTranslation } from 'react-i18next'
 import { DatasetMetadata } from './dataset-metadata/DatasetMetadata'
+import { useDatasetTemplate } from './dataset-template/DatasetTemplateContext'
 
 interface DatasetProps {
-  datasetRepository: DatasetRepository
+  repository: DatasetRepository
   id: string
 }
 
-export function Dataset({ datasetRepository, id }: DatasetProps) {
-  const { dataset } = useDataset(datasetRepository, id)
+export function Dataset({ repository, id }: DatasetProps) {
+  const { dataset } = useDataset(repository, id)
   const { isLoading } = useLoading()
   const { t } = useTranslation('dataset')
 

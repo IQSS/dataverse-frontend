@@ -47,4 +47,5 @@ export interface Dataset {
   title: string
   labels: DatasetLabel[]
   metadataBlocks: DatasetMetadataBlock[]
+  templateId: string | undefined
 }

@@ -3,6 +3,7 @@ import { Col, Row, Tooltip } from 'dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { DatasetMetadataSubFields } from './DatasetMetadataSubFields'
 import { MetadataBlockName } from '../../../../dataset/domain/models/Dataset'
+import { DatasetMetadataFieldInstruction } from '../../dataset-template/DatasetMetadataFieldInstruction'
 
 interface DatasetMetadataFieldProps {
   metadataBlockName: MetadataBlockName
@@ -25,6 +26,7 @@ export function DatasetMetadataField({
         <Tooltip placement="right" message={t(`${completeFieldName}.description`)}></Tooltip>
       </Col>
       <Col>
+        <DatasetMetadataFieldInstruction metadataFieldName={metadataFieldName} />
         {typeof metadataField === 'string' ? (
           <span>{metadataField}</span>
         ) : (

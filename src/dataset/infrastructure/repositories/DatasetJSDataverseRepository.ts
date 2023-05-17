@@ -55,7 +55,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
                 ]
               }
             }
-          ]
+          ],
+          templateId: '123456789'
         })
       }, 1000)
     })

@@ -63,6 +63,7 @@ export class DatasetMother {
           }
         }
       ],
+      templateId: faker.datatype.uuid(),
       ...props
     }
   }

@@ -30,7 +30,7 @@ describe('Dataset', () => {
 
     cy.mount(
       <LoadingProvider>
-        <Dataset datasetRepository={datasetRepository} id={testDataset.id} />
+        <Dataset repository={datasetRepository} id={testDataset.id} />
         <TestComponent />
       </LoadingProvider>
     )
@@ -48,7 +48,7 @@ describe('Dataset', () => {
 
     cy.mount(
       <LoadingProvider>
-        <Dataset datasetRepository={datasetRepository} id="wrong-id" />
+        <Dataset repository={datasetRepository} id="wrong-id" />
       </LoadingProvider>
     )
 
@@ -61,7 +61,7 @@ describe('Dataset', () => {
 
     cy.mount(
       <LoadingProvider>
-        <Dataset datasetRepository={datasetRepository} id={testDataset.id} />
+        <Dataset repository={datasetRepository} id={testDataset.id} />
       </LoadingProvider>
     )
 
@@ -78,7 +78,7 @@ describe('Dataset', () => {
 
     cy.mount(
       <LoadingProvider>
-        <Dataset datasetRepository={datasetRepository} id={testDataset.id} />
+        <Dataset repository={datasetRepository} id={testDataset.id} />
       </LoadingProvider>
     )
 
