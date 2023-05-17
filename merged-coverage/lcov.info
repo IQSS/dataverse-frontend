@@ -34,7 +34,7 @@ DA:36,108
 BRDA:24,0,0,54
 BRDA:24,0,1,165
 end_of_record
-SF:packages/design-system/src/lib/components/icon.enum.ts
+SF:packages/design-system/src/lib/components/Icon.enum.ts
 DA:1,72
 DA:2,72
 DA:3,72

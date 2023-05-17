@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { DropdownButtonItem } from '../../components/dropdown-button/dropdown-button-item/DropdownButtonItem'
 import { DropdownButton } from '../../components/dropdown-button/DropdownButton'
-import { Icon } from '../../components/icon.enum'
+import { Icon } from '../../components/Icon.enum'
 import { CanvasFixedHeight } from '../CanvasFixedHeight'
 
 /**

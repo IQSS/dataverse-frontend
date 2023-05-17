@@ -1,7 +1,7 @@
 import { MouseEvent, ReactNode } from 'react'
 import styles from './Button.module.scss'
 import { Button as ButtonBS } from 'react-bootstrap'
-import { Icon } from '../icon.enum'
+import { Icon } from '../Icon.enum'
 
 type ButtonVariant = 'primary' | 'secondary' | 'link'
 

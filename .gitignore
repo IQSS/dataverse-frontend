@@ -14,8 +14,9 @@
 # testing
 /.nyc_output
 /coverage
-/tests/downloads
-/tests/screenshots
+/cypress/downloads
+/cypress/screenshots
+.nyc_output
 /packages/design-system/coverage
 
 
@@ -44,3 +45,4 @@ yarn-error.log*
 /dev-env/docker-dev-volumes
 /dev-env/dataverse
 /dev-env/dataverse-sample-data
+/packages/design-system/.nyc_output

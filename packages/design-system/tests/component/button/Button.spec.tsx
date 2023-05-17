@@ -1,5 +1,5 @@
 import { Button } from '../../../src/lib/components/button/Button'
-import { Icon } from '../../../src/lib/components/icon.enum'
+import { Icon } from '../../../src/lib/components/Icon.enum'
 
 describe('Button', () => {
   const clickMeText = 'Click me'

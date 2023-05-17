@@ -2,28 +2,26 @@
 @import 'bootstrap/scss/variables';
 @import 'src/lib/components/assets/styles/design-tokens/colors.module';
 
-@layer core {
-    .primary {
-        color: color-contrast($dv-primary-color);
-    }
+.primary:not(#\#) {
+    color: color-contrast($dv-primary-color);
+}
 
-    .secondary {
-        color: color-contrast($dv-secondary-color);
-    }
+.secondary:not(#\#) {
+    color: color-contrast($dv-secondary-color);
+}
 
-    .info {
-        color: color-contrast($dv-info-color);
-    }
+.info:not(#\#) {
+    color: color-contrast($dv-info-color);
+}
 
-    .success {
-        color: color-contrast($dv-success-color);
-    }
+.success:not(#\#) {
+    color: color-contrast($dv-success-color);
+}
 
-    .warning {
-        color: color-contrast($dv-warning-color);
-    }
+.warning:not(#\#) {
+    color: color-contrast($dv-warning-color);
+}
 
-    .danger {
-        color: color-contrast($dv-danger-color);
-    }
+.danger:not(#\#) {
+    color: color-contrast($dv-danger-color);
 }
