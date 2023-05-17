@@ -3,6 +3,7 @@ import { Dataset, MetadataBlockName } from '../../domain/models/Dataset'
 import { LabelSemanticMeaning } from '../../domain/models/Dataset'
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
+  /* eslint-disable-next-line unused-imports/no-unused-vars */
   getById(id: string): Promise<Dataset | undefined> {
     // TODO - Implement this method using the js-dataverse module
     return new Promise((resolve) => {

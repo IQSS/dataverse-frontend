@@ -23,7 +23,7 @@ describe('DatasetMetadataFieldInstruction', () => {
     cy.customMount(
       <DatasetTemplateProvider repository={datasetTemplateRepository}>
         <DatasetTemplateContext.Consumer>
-          {({ template, setTemplateId }) => {
+          {({ setTemplateId }) => {
             setTemplateId(templateId)
             return <DatasetMetadataFieldInstruction metadataFieldName={fieldName} />
           }}
@@ -50,7 +50,7 @@ describe('DatasetMetadataFieldInstruction', () => {
     cy.customMount(
       <DatasetTemplateProvider repository={datasetTemplateRepository}>
         <DatasetTemplateContext.Consumer>
-          {({ template, setTemplateId }) => {
+          {({ setTemplateId }) => {
             setTemplateId(undefined)
             return <DatasetMetadataFieldInstruction metadataFieldName={fieldName} />
           }}

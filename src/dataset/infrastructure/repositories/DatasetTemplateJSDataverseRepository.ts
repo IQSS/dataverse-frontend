@@ -2,6 +2,7 @@ import { DatasetTemplateRepository } from '../../domain/repositories/DatasetTemp
 import { DatasetTemplate } from '../../domain/models/DatasetTemplate'
 
 export class DatasetTemplateJSDataverseRepository implements DatasetTemplateRepository {
+  /* eslint-disable-next-line unused-imports/no-unused-vars */
   getById(id: string): Promise<DatasetTemplate | undefined> {
     // TODO - Implement this method using the js-dataverse module
     return new Promise((resolve) => {
