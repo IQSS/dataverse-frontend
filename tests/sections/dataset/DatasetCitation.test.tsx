@@ -47,7 +47,7 @@ describe('DatasetCitation component', () => {
       version: 'V1',
       isDeaccessioned: true
     }
-    const { getByText, getByRole } = render(<DatasetCitation citation={deaccessionedCitation} />)
+    const { getByText } = render(<DatasetCitation citation={deaccessionedCitation} />)
 
     expect(getByText(/DEACCESSIONED VERSION/)).toBeInTheDocument()
   })
