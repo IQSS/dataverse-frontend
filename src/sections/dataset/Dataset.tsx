@@ -7,6 +7,7 @@ import { useLoading } from '../loading/LoadingContext'
 import { DatasetSkeleton } from './DatasetSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { useTranslation } from 'react-i18next'
+import { DatasetSummary } from './dataset-summary/DatasetSummary'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -37,7 +38,11 @@ export function Dataset({ datasetRepository, id }: DatasetProps) {
               <Col sm={9}>Citation Block</Col>
             </Row>
             <Row>
-              <Col sm={9}>Summary Block</Col>
+              <Col sm={9}>
+                <DatasetSummary
+                  summaryFields={dataset.summaryFields}
+                  license={dataset.license}></DatasetSummary>
+              </Col>
             </Row>
             <Tabs defaultActiveKey="files">
               <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
