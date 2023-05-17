@@ -39,15 +39,15 @@ class DatasetMockNoDataRepository implements DatasetRepository {
 
 export const Default: Story = {
   decorators: [WithLayout],
-  render: () => <Dataset datasetRepository={new DatasetMockRepository()} id="1" />
+  render: () => <Dataset repository={new DatasetMockRepository()} id="1" />
 }
 
 export const Loading: Story = {
   decorators: [WithLayoutLoading],
-  render: () => <Dataset datasetRepository={new DatasetMockRepository()} id="1" />
+  render: () => <Dataset repository={new DatasetMockRepository()} id="1" />
 }
 
 export const DatasetNotFound: Story = {
   decorators: [WithLayout],
-  render: () => <Dataset datasetRepository={new DatasetMockNoDataRepository()} id="1" />
+  render: () => <Dataset repository={new DatasetMockNoDataRepository()} id="1" />
 }

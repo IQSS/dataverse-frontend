@@ -4,10 +4,15 @@ import { Dataset } from '../../../../src/sections/dataset/Dataset'
 import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
 import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
 import { useLoading } from '../../../../src/sections/loading/LoadingContext'
+import { DatasetTemplateProvider } from '../../../../src/sections/dataset/dataset-template/DatasetTemplateProvider'
+import { DatasetTemplateMother } from '../../dataset/domain/models/DatasetTemplateMother'
+import { DatasetTemplateRepository } from '../../../../src/dataset/domain/repositories/DatasetTemplateRepository'
 
 describe('Dataset', () => {
   const sandbox: SinonSandbox = createSandbox()
   const testDataset = DatasetMother.create()
+  const datasetTemplateRepository: DatasetTemplateRepository = {} as DatasetTemplateRepository
+  datasetTemplateRepository.getById = sandbox.stub().resolves(DatasetTemplateMother.create())
 
   afterEach(() => {
     sandbox.restore()
@@ -28,9 +33,11 @@ describe('Dataset', () => {
       )
     }
 
-    cy.mount(
+    cy.customMount(
       <LoadingProvider>
-        <Dataset datasetRepository={datasetRepository} id={testDataset.id} />
+        <DatasetTemplateProvider repository={datasetTemplateRepository}>
+          <Dataset repository={datasetRepository} id={testDataset.id} />
+        </DatasetTemplateProvider>
         <TestComponent />
       </LoadingProvider>
     )
@@ -46,9 +53,11 @@ describe('Dataset', () => {
     const datasetRepository: DatasetRepository = {} as DatasetRepository
     datasetRepository.getById = sandbox.stub().resolves(emptyDataset)
 
-    cy.mount(
+    cy.customMount(
       <LoadingProvider>
-        <Dataset datasetRepository={datasetRepository} id="wrong-id" />
+        <DatasetTemplateProvider repository={datasetTemplateRepository}>
+          <Dataset repository={datasetRepository} id="wrong-id" />
+        </DatasetTemplateProvider>
       </LoadingProvider>
     )
 
@@ -59,9 +68,11 @@ describe('Dataset', () => {
     const datasetRepository: DatasetRepository = {} as DatasetRepository
     datasetRepository.getById = sandbox.stub().resolves(testDataset)
 
-    cy.mount(
+    cy.customMount(
       <LoadingProvider>
-        <Dataset datasetRepository={datasetRepository} id={testDataset.id} />
+        <DatasetTemplateProvider repository={datasetTemplateRepository}>
+          <Dataset repository={datasetRepository} id={testDataset.id} />
+        </DatasetTemplateProvider>
       </LoadingProvider>
     )
 
@@ -76,9 +87,11 @@ describe('Dataset', () => {
     const datasetRepository: DatasetRepository = {} as DatasetRepository
     datasetRepository.getById = sandbox.stub().resolves(testDataset)
 
-    cy.mount(
+    cy.customMount(
       <LoadingProvider>
-        <Dataset datasetRepository={datasetRepository} id={testDataset.id} />
+        <DatasetTemplateProvider repository={datasetTemplateRepository}>
+          <Dataset repository={datasetRepository} id={testDataset.id} />
+        </DatasetTemplateProvider>
       </LoadingProvider>
     )
 

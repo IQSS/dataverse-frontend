@@ -51,5 +51,6 @@ export const DatasetMockData = (props?: Partial<Dataset>): Dataset => ({
       }
     }
   ],
+  templateId: '123456789',
   ...props
 })

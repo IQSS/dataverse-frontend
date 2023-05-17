@@ -10,12 +10,12 @@ import { useTranslation } from 'react-i18next'
 import { DatasetMetadata } from './dataset-metadata/DatasetMetadata'
 
 interface DatasetProps {
-  datasetRepository: DatasetRepository
+  repository: DatasetRepository
   id: string
 }
 
-export function Dataset({ datasetRepository, id }: DatasetProps) {
-  const { dataset } = useDataset(datasetRepository, id)
+export function Dataset({ repository, id }: DatasetProps) {
+  const { dataset } = useDataset(repository, id)
   const { isLoading } = useLoading()
   const { t } = useTranslation('dataset')
 
