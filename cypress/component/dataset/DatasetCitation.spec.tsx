@@ -1,12 +1,10 @@
 import { createSandbox, SinonSandbox } from 'sinon'
-import { DatasetMother } from '../../../tests/dataset/domain/models/DatasetMother'
 import { DatasetCitation } from '../../../src/sections/dataset/datasetCitation/DatasetCitation'
 import { ThemeProvider } from '../../../src/sections/ui/theme/ThemeProvider'
 import { Citation } from '../../../src/dataset/domain/models/Dataset'
 
 describe('DatasetCitation', () => {
   const sandbox: SinonSandbox = createSandbox()
-  const testDataset = DatasetMother.create()
 
   afterEach(() => {
     sandbox.restore()
