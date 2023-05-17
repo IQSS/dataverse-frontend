@@ -9,7 +9,7 @@ interface DatasetCitationProps {
 }
 
 function mapAuthors(authors: string[]): string[] {
-  const authorStrings = authors.map((author, index) => {
+  return authors.map((author, index) => {
     // If this is the last author in the array, don't add a semi-colon
     if (index === authors.length - 1) {
       return author
@@ -17,7 +17,6 @@ function mapAuthors(authors: string[]): string[] {
     // Otherwise, add a semi-colon after the author
     return `${author}; `
   })
-  return authorStrings
 }
 function getCitationText(citation: Citation) {
   return (
