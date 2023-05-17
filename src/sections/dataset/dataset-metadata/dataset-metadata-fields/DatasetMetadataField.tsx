@@ -2,7 +2,7 @@ import { DatasetMetadataField as DatasetMetadataFieldModel } from '../../../../d
 import { Col, Row, Tooltip } from 'dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { DatasetMetadataSubFields } from './DatasetMetadataSubFields'
-import { MetadataBlockName } from '../../../../dataset/domain/models/MetadataBlockName'
+import { MetadataBlockName } from '../../../../dataset/domain/models/Dataset'
 
 interface DatasetMetadataFieldProps {
   metadataBlockName: MetadataBlockName

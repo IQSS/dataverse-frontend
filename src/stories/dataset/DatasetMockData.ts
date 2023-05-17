@@ -1,5 +1,5 @@
-import { LabelSemanticMeaning } from '../../dataset/domain/models/LabelSemanticMeaning.enum'
-import { MetadataBlockName } from '../../dataset/domain/models/MetadataBlockName'
+import { LabelSemanticMeaning } from '../../dataset/domain/models/Dataset'
+import { MetadataBlockName } from '../../dataset/domain/models/Dataset'
 import { Dataset } from '../../dataset/domain/models/Dataset'
 
 export const DatasetMockData = (props?: Partial<Dataset>): Dataset => ({

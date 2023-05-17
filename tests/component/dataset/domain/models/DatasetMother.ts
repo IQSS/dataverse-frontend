@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { Dataset } from '../../../../../src/dataset/domain/models/Dataset'
-import { LabelSemanticMeaning } from '../../../../../src/dataset/domain/models/LabelSemanticMeaning.enum'
-import { MetadataBlockName } from '../../../../../src/dataset/domain/models/MetadataBlockName'
+import { LabelSemanticMeaning } from '../../../../../src/dataset/domain/models/Dataset'
+import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Dataset'
 
 export class DatasetMother {
   static create(props?: Partial<Dataset>): Dataset {
