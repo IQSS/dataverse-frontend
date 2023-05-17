@@ -44,4 +44,23 @@ describe('DatasetCitation', () => {
     cy.findByRole('article').should('exist')
     cy.findByText(/DEACCESSIONED VERSION/).should('not.exist')
   })
+  it('renders Deaccession information', () => {
+    const deaccessionedCitation: Citation = {
+      authors: ['Bennet, Elizabeth', 'Darcy, Fitzwilliam'],
+      title: 'Test Terms',
+      creationYear: 2023,
+      persistentIdentifier: 'https://doi.org/10.70122/FK2/KLX4XO',
+      persistentIdentifierUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+      publisher: 'Demo Dataverse',
+      version: 'V1',
+      isDeaccessioned: true
+    }
+    cy.mount(
+      <ThemeProvider>
+        <DatasetCitation citation={deaccessionedCitation} />
+      </ThemeProvider>
+    )
+
+    cy.findByText(/DEACCESSIONED VERSION/).should('exist')
+  })
 })
