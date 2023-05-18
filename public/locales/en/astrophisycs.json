@@ -1,0 +1,111 @@
+{
+  "astrophysics": {
+    "name": "Astronomy and Astrophysics Metadata",
+    "datasetField": {
+      "astroType": {
+        "title": "Type",
+        "description": "The nature or genre of the content of the files in the dataset."
+      },
+      "astroFacility": {
+        "title": "Facility",
+        "description": "The observatory or facility where the data was obtained."
+      },
+      "astroInstrument": {
+        "title": "Instrument",
+        "description": "The instrument used to collect the data."
+      },
+      "astroObject": {
+        "title": "Object",
+        "description": "Astronomical Objects represented in the data (Given as SIMBAD recognizable names preferred)."
+      },
+      "resolution.Spatial": {
+        "title": "Spatial Resolution",
+        "description": "The spatial (angular) resolution that is typical of the observations, in decimal degrees."
+      },
+      "resolution.Spectral": {
+        "title": "Spectral Resolution",
+        "description": "The spectral resolution that is typical of the observations, given as the ratio λ/Δλ."
+      },
+      "resolution.Temporal": {
+        "title": "Time Resolution",
+        "description": "The temporal resolution that is typical of the observations, given in seconds."
+      },
+      "coverage.Spectral.Bandpass": {
+        "title": "Bandpass",
+        "description": "Conventional bandpass name"
+      },
+      "coverage.Spectral.CentralWavelength": {
+        "title": "Central Wavelength (m)",
+        "description": "The central wavelength of the spectral bandpass, in meters. Enter a floating-point number."
+      },
+      "coverage.Spectral.Wavelength": {
+        "title": "Wavelength Range",
+        "description": "The minimum and maximum wavelength of the spectral bandpass. Enter a floating-point number."
+      },
+      "coverage.Spectral.MinimumWavelength": {
+        "title": "Minimum (m)",
+        "description": "The minimum wavelength of the spectral bandpass, in meters. Enter a floating-point number."
+      },
+      "coverage.Spectral.MaximumWavelength": {
+        "title": "Maximum (m)",
+        "description": "The maximum wavelength of the spectral bandpass, in meters. Enter a floating-point number."
+      },
+      "coverage.Temporal": {
+        "title": "Dataset Date Range",
+        "description": "Time period covered by the data."
+      },
+      "coverage.Temporal.StartTime": {
+        "title": "Start",
+        "description": "Dataset Start Date (YYYY-MM-DD)"
+      },
+      "coverage.Temporal.StopTime": {
+        "title": "End",
+        "description": "Dataset End Date (YYYY-MM-DD)"
+      },
+      "coverage.Spatial": {
+        "title": "Sky Coverage",
+        "description": "The sky coverage of the data object."
+      },
+      "coverage.Depth": {
+        "title": "Depth Coverage",
+        "description": "The (typical) depth coverage, or sensitivity, of the data object in Jy"
+      },
+      "coverage.ObjectDensity": {
+        "title": "Object Density",
+        "description": "The (typical) density of objects, catalog entries, telescope pointings, etc., on the sky, in number per square degree. Enter a floating-point number."
+      },
+      "coverage.ObjectCount": {
+        "title": "Object Count",
+        "description": "The total number of objects, catalog entries, etc., in the data object. Enter an integer."
+      },
+      "coverage.SkyFraction": {
+        "title": "Fraction of Sky",
+        "description": "The fraction of the sky represented in the observations, ranging from 0 to 1. Enter a floating-point number."
+      },
+      "coverage.Polarization": {
+        "title": "Polarization",
+        "description": "The polarization coverage"
+      },
+      "redshiftType": {
+        "title": "Redshift Type",
+        "description": "RedshiftType string C 'Redshift'; or 'Optical' or 'Radio' definitions of Doppler velocity used in the data object."
+      },
+      "resolution.Redshift": {
+        "title": "Redshift Resolution",
+        "description": "The resolution in redshift (unitless) or Doppler velocity (km/s) in the data object. Enter a floating-point number."
+      },
+      "coverage.RedshiftValue": {
+        "title": "Redshift Value",
+        "description": "The value of the redshift (unitless) or Doppler velocity (km/s) in the data object. Enter a floating-point number."
+      },
+      "coverage.Redshift.MinimumValue": {
+        "title": "Minimum",
+        "description": "The minimum value of the redshift (unitless) or Doppler velocity (km/s) in the data object. Enter a floating-point number."
+      },
+      "coverage.Redshift.MaximumValue": {
+        "title": "Maximum",
+        "description": "The maximum value of the redshift (unitless) or Doppler velocity (km/s) in the data object. Enter a floating-point number."
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "computationalworkflow": {
+    "name": "Computational Workflow Metadata",
+    "datasetField": {
+      "workflowType": {
+        "title": "Computational Workflow Type",
+        "description": "The kind of Computational Workflow, which is designed to compose and execute a series of computational or data manipulation steps in a scientific application."
+      },
+      "workflowCodeRepository": {
+        "title": "External Code Repository URL",
+        "description": "A link to the repository where the un-compiled, human-readable code and related code is located (e.g., GitHub, GitLab, SVN)"
+      },
+      "workflowDocumentation": {
+        "title": "Documentation",
+        "description": "A link (URL) to the documentation or text describing the Computational Workflow and its use"
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "customDigaai": {
+    "name": "Digaai Metadata",
+    "datasetField": {
+      "titulo": {
+        "title": "Título",
+        "description": "Título do jornal ou revista."
+      },
+      "numero": {
+        "title": "Número",
+        "description": "Número do jornal ou revista."
+      },
+      "datadePublicao": {
+        "title": "Data de Publicação",
+        "description": "Entrar dia/mes/ano.",
+        "format": "dia/mes/ano"
+      },
+      "localdePublicao": {
+        "title": "Local de Publicação",
+        "description": "Local de Publicação."
+      },
+      "proprietrio": {
+        "title": "Proprietário",
+        "description": "Proprietário."
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "customPSI": {
+    "name": "PSI Metadata",
+    "datasetField": {
+      "psiBehavior": {
+        "title": "Behavior",
+        "description": "Behavior"
+      },
+      "psiDonor": {
+        "title": "Donor",
+        "description": "Donor"
+      },
+      "psiHealthArea": {
+        "title": "Health Area",
+        "description": "Health Area"
+      },
+      "psiIntervention": {
+        "title": "Intervention",
+        "description": "Intervention"
+      },
+      "psiPopulation": {
+        "title": "Population",
+        "description": "Population"
+      },
+      "psiProductsServices": {
+        "title": "Products/Services",
+        "description": "Products/Services"
+      },
+      "psiStudyDesignElement": {
+        "title": "Study Design Element",
+        "description": "Study Design Element"
+      },
+      "psiStudyType": {
+        "title": "Study Type",
+        "description": "Study Type"
+      }
+    }
+  }
+}
