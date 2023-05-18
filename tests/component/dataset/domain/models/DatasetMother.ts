@@ -63,6 +63,39 @@ export class DatasetMother {
           }
         }
       ],
+      summaryFields: [
+        {
+          title: faker.lorem.word(),
+          description: faker.lorem.sentence(),
+          value: faker.lorem.sentence()
+        },
+        {
+          title: faker.lorem.word(),
+          description: faker.lorem.sentence(),
+          value: faker.lorem.sentence()
+        },
+        {
+          title: faker.lorem.word(),
+          description: faker.lorem.sentence(),
+          value: faker.lorem.sentence()
+        },
+        {
+          title: faker.lorem.word(),
+          description: faker.lorem.sentence(),
+          value: faker.lorem.sentence()
+        },
+        {
+          title: faker.lorem.word(),
+          description: faker.lorem.sentence(),
+          value: faker.lorem.sentence()
+        }
+      ],
+      license: {
+        name: faker.lorem.sentence(),
+        shortDescription: faker.lorem.sentence(),
+        uri: faker.internet.url(),
+        iconUrl: faker.image.imageUrl()
+      },
       ...props
     }
   }

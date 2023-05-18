@@ -5,7 +5,7 @@ import path from 'path'
 export default defineConfig({
   video: false,
   e2e: {
-    baseUrl: 'http://localhost:5173',
+    baseUrl: 'http://localhost:5173/spa',
     specPattern: 'tests/e2e/**/*.spec.{js,jsx,ts,tsx}',
     screenshotOnRunFailure: false,
     video: false,
