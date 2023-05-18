@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../WithI18next'
-import { DatasetCitation } from '../../sections/dataset/datasetCitation/DatasetCitation'
+import { DatasetCitation } from '../../sections/dataset/dataset-citation/DatasetCitation'
 import { Citation } from '../../dataset/domain/models/Dataset'
 
 const meta: Meta<typeof DatasetCitation> = {

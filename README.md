@@ -14,6 +14,10 @@ Run this command to install the dependencies. You may see a message about vulner
 Please check this announcement from Create React App repository https://github.com/facebook/create-react-app/issues/11174 .
 These vulnerabilities won't be in the production build since they come from libraries only used during the development.
 
+### `cd packages/design-system && npm run build`
+
+Run this command to build the UI library. This is needed to be able to run the app.
+
 ## Available Scripts
 
 In the project directory, you can run at any time:
@@ -26,9 +30,11 @@ Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
 The page will reload when you make changes.  
 You may also see any lint errors in the console.
 
-### `npm test`
+### `npm run test:unit`
 
-Launches the test runner for the unit tests in the interactive watch mode.
+Launches the test runner for the unit tests in the interactive watch mode.  
+If you prefer to see the tests executing in cypress you can run `npm run cy:open-unit`  
+You can check the coverage with `npm run test:coverage`
 
 ### `npm run build`
 
@@ -38,10 +44,10 @@ Builds the app for production to the `dist` folder.
 
 Locally preview the production build.
 
-### `npm run cy:run`
+### `npm run test:e2e`
 
 Launches the Cypress test runner for the end-to-end tests.  
-If you prefer to see the tests executing in cypress you can run `npm run cy:open`
+If you prefer to see the tests executing in cypress you can run `npm run cy:open-e2e`
 
 ### `npm run lint`
 
@@ -53,8 +59,49 @@ Launches the prettier formatter. We recommend you to configure your IDE to run p
 
 ### `npm run storybook`
 
-Runs the Storybook in the development mode.  
-Open [http://localhost:6006](http://localhost:6006) to view it in your browser.
+Runs the Storybook in the development mode.
+
+There are 2 Storybook instances, one for the Design System and one for the Dataverse Frontend.
+
+Open [http://localhost:6006](http://localhost:6006) to view the Dataverse Frontend Storybook in your browser.  
+Open [http://localhost:6007](http://localhost:6007) to view the Design System Storybook in your browser.
+
+## Local development environment
+
+A containerized environment, oriented to local development, is available to be run from the repository.
+
+This environment contains a dockerized instance of the Dataverse backend with its dependent services (database, mailserver, etc), as well as an npm development server running the SPA frontend (With code autoupdating).
+
+This environment is intended for locally testing any functionality that requires access to the Dataverse API from the SPA frontend.
+
+There is an Nginx reverse proxy container on top of the frontend and backend containers to avoid CORS issues while testing the application.
+
+### Run the environment
+
+Inside the `dev-env` folder, run the following command:
+
+```
+./run-env <dataverse_branch_name>
+```
+
+As the script argument, add the name of the Dataverse backend branch you want to deploy.
+
+Note that both the branch and the associated tag in the docker registry must to be pre pushed, otherwise the script will fail.
+
+If you are running the script for the first time, it may take a while, since `npm install` has to install all the dependencies. This can also happen if you added new dependencies to package.json.
+
+Once the script has finished, you will be able to access Dataverse via:
+
+- [http://localhost:8000/spa](http://localhost:8000/spa): SPA Frontend
+- [http://localhost:8000](http://localhost:8000): Dataverse Backend and JSF Frontend
+
+### Remove the environment
+
+To clean up your environment of any running environment containers, as well as any associated data volumes, run this script inside the `dev-env` folder:
+
+```
+./rm-env
+```
 
 ## Deployment
 
@@ -118,10 +165,18 @@ It is important that the remote instance is correctly pre-configured, with the P
 
 A base path for the frontend application can be established on the remote server by setting the corresponding field in the workflow inputs. This mechanism prevents conflicts between the frontend application and any pre-existing deployed application running on Payara, which can potentially be a Dataverse backend. This way, only the routes with the base path included will redirect to the frontend application.
 
-## Changes in the Style Guide
+## Changes from the Style Guide
+
+The design system and frontend in this repo are inspired by the Dataverse Project [Style Guide](https://guides.dataverse.org/en/latest/style/index.html), but the following changes have been made, especially for accessibility.
 
 ### Links
 
-We added the underline to the links to make them accessible.
+We added an underline to links to make them accessible.
+
+### File label
+
+Now we are using Bootstrap with a theme, so there is only one definition for the secondary color. Since Bootstrap applies
+the secondary color to the labels automatically, the color of the file label is now the global secondary color which is
+a lighter shade of grey than what it used to be.
 
 We changed the citation block to be white with a colored border, to make the text in the box more accessible.

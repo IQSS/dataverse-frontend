@@ -9,8 +9,13 @@ interface JSDataverseDataverseVersion {
 
 export class DataverseInfoJSDataverseRepository implements DataverseInfoRepository {
   static formatVersion(jsDataverseDataverseVersion: JSDataverseDataverseVersion): DataverseVersion {
-    return `v. ${jsDataverseDataverseVersion.number} build ${jsDataverseDataverseVersion.build}`
+    const buildFormatted = jsDataverseDataverseVersion.build
+      ? `build ${jsDataverseDataverseVersion.build}`
+      : ''
+
+    return `v. ${jsDataverseDataverseVersion.number} ${buildFormatted}`
   }
+
   getVersion(): Promise<DataverseVersion> {
     return getDataverseVersion
       .execute()

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Footer } from '../../../sections/layout/footer/Footer'
 import { WithI18next } from '../../WithI18next'
-import { FooterMother } from '../../../../tests/sections/layout/footer/FooterMother'
+import { FooterMother } from '../../../../tests/component/sections/layout/footer/FooterMother'
 import { createSandbox } from 'sinon'
 
 const meta: Meta<typeof Footer> = {

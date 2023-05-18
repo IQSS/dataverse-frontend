@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { Dataset } from '../../../../src/dataset/domain/models/Dataset'
+import { LabelSemanticMeaning } from '../../../../src/dataset/domain/models/LabelSemanticMeaning.enum'
 
 export class DatasetMother {
   static create(props?: Partial<Dataset>): Dataset {
@@ -22,6 +23,24 @@ export class DatasetMother {
         uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
         iconUrl: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
       },
+      labels: [
+        {
+          value: faker.lorem.word(),
+          semanticMeaning: faker.helpers.arrayElement(Object.values(LabelSemanticMeaning))
+        },
+        {
+          value: faker.lorem.word(),
+          semanticMeaning: faker.helpers.arrayElement(Object.values(LabelSemanticMeaning))
+        },
+        {
+          value: faker.lorem.word(),
+          semanticMeaning: faker.helpers.arrayElement(Object.values(LabelSemanticMeaning))
+        },
+        {
+          value: faker.lorem.word(),
+          semanticMeaning: faker.helpers.arrayElement(Object.values(LabelSemanticMeaning))
+        }
+      ],
       summaryFields: [
         {
           title: 'Description',

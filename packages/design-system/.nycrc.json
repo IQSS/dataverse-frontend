@@ -1,0 +1,11 @@
+{
+  "all": true,
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "check-coverage": true,
+  "functions": 95,
+  "lines": 95,
+  "statements": 95,
+  "branches": 95,
+  "include": ["src/lib/components/**/*.ts", "src/lib/components/**/*.tsx"],
+  "excludeAfterRemap": true
+}
