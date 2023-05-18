@@ -1,7 +1,7 @@
 import { createSandbox, SinonSandbox } from 'sinon'
 import { DatasetCitation } from '../../../../../src/sections/dataset/dataset-citation/DatasetCitation'
 import { ThemeProvider } from 'dataverse-design-system'
-import { Citation } from '../../../../../src/dataset/domain/models/Dataset'
+import { Citation, CitationStatus } from '../../../../../src/dataset/domain/models/Dataset'
 
 describe('DatasetCitation', () => {
   const sandbox: SinonSandbox = createSandbox()
@@ -12,12 +12,9 @@ describe('DatasetCitation', () => {
 
   it('renders the DatasetCitation fields', () => {
     const citationFields: Citation = {
-      authors: ['Bennet, Elizabeth', 'Darcy, Fitzwilliam'],
-      title: 'Test Terms',
-      creationYear: 2023,
-      persistentIdentifier: 'https://doi.org/10.70122/FK2/KLX4XO',
-      persistentIdentifierUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
-      publisher: 'Demo Dataverse',
+      value:
+        'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms", [https://doi.org/10.70122/FK2/KLX4XO](https://doi.org/10.70122/FK2/KLX4XO), Demo Dataverse',
+      status: CitationStatus.PUBLISHED,
       version: 'V1'
     }
     // TODO: remove ThemeProvider and replace with customMount()
@@ -26,18 +23,12 @@ describe('DatasetCitation', () => {
         <DatasetCitation citation={citationFields} />
       </ThemeProvider>
     )
-    citationFields.authors.map((author) => {
-      cy.findByText(new RegExp(`${author}`)).should('exist')
-    })
-    cy.findByText('Data Citation Standards.').should('exist')
-    cy.findByText(new RegExp(`${citationFields.title}`)).should('exist')
-    cy.findByText(new RegExp(`${citationFields.creationYear}`)).should('exist')
-    cy.findByText(new RegExp(`${citationFields.publisher}`)).should('exist')
-    cy.findByText(new RegExp(`${citationFields.version}`)).should('exist')
-    cy.findByRole('link', { name: citationFields.persistentIdentifier })
-      .should('have.attr', 'href')
-      .and('eq', citationFields.persistentIdentifierUrl)
 
+    cy.findByText('Data Citation Standards.').should('exist')
+    cy.findByText(new RegExp(`${citationFields.value}`)).should('exist')
+    if (citationFields.version) {
+      cy.findByText(new RegExp(`${citationFields.version}`)).should('exist')
+    }
     cy.findByRole('link', { name: 'Data Citation Standards.' })
       .should('have.attr', 'href')
       .and('eq', 'https://dataverse.org/best-practices/data-citation')
@@ -46,14 +37,10 @@ describe('DatasetCitation', () => {
   })
   it('renders Deaccession information', () => {
     const deaccessionedCitation: Citation = {
-      authors: ['Bennet, Elizabeth', 'Darcy, Fitzwilliam'],
-      title: 'Test Terms',
-      creationYear: 2023,
-      persistentIdentifier: 'https://doi.org/10.70122/FK2/KLX4XO',
-      persistentIdentifierUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
-      publisher: 'Demo Dataverse',
+      value:
+        'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms", [https://doi.org/10.70122/FK2/KLX4XO](https://doi.org/10.70122/FK2/KLX4XO), Demo Dataverse',
       version: 'V1',
-      isDeaccessioned: true
+      status: CitationStatus.DEACCESSIONED
     }
     cy.mount(
       <ThemeProvider>

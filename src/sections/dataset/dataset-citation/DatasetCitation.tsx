@@ -1,7 +1,7 @@
-import { Col, Row, Tooltip, Icon } from 'dataverse-design-system'
+import { Col, Icon, Row, Tooltip } from 'dataverse-design-system'
 import styles from './DatasetCitation.module.scss'
 
-import { Citation } from '../../../dataset/domain/models/Dataset'
+import { Citation, CitationStatus } from '../../../dataset/domain/models/Dataset'
 
 interface DatasetCitationProps {
   citation: Citation
@@ -20,23 +20,8 @@ function mapAuthors(authors: string[]): string[] {
 function getCitationText(citation: Citation) {
   return (
     <div>
-      {mapAuthors(citation.authors)}
-      {', '}
-      {citation.creationYear}
-      {', '}
-      {'"' + citation.title + '", '}
-      <a
-        className={styles.link}
-        href={citation.persistentIdentifierUrl}
-        target="_blank"
-        rel="noopener noreferrer">
-        {citation.persistentIdentifier}
-      </a>
-      {', '}
-      {citation.publisher}
-      {', '}
-      {citation.version}
-      {citation.version === 'DRAFT' && (
+      {citation.value}
+      {citation.status === CitationStatus.DRAFT && (
         <span>
           {' '}
           <Tooltip
@@ -47,7 +32,7 @@ function getCitationText(citation: Citation) {
           />
         </span>
       )}
-      {citation.isDeaccessioned && (
+      {citation.status === CitationStatus.DEACCESSIONED && (
         <span>
           {', '}
           DEACCESSIONED VERSION{' '}
@@ -65,7 +50,10 @@ function getCitationText(citation: Citation) {
 export function DatasetCitation({ citation }: DatasetCitationProps) {
   return citation ? (
     <article>
-      <div className={citation.isDeaccessioned ? styles.deaccessioned : styles.container}>
+      <div
+        className={
+          citation.status === CitationStatus.DEACCESSIONED ? styles.deaccessioned : styles.container
+        }>
         <Row className={styles.row}>
           <Col sm={3}>
             <div className={styles.icon}>
