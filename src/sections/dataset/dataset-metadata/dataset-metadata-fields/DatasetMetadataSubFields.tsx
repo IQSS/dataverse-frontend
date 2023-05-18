@@ -1,4 +1,5 @@
 import { DatasetMetadataSubField } from '../../../../dataset/domain/models/Dataset'
+import { MarkdownComponent } from '../../markdown/MarkdownComponent'
 
 interface DatasetMetadataSubFieldsProps {
   fieldName: string
@@ -12,10 +13,11 @@ export function DatasetMetadataSubFields({
     <>
       {metadataSubFields.map((metadataSubField, index) => (
         <div key={`${fieldName}-${index}`}>
-          {Object.values(metadataSubField).map((value, index) => (
-            <span key={`${fieldName}-${value}-${index}`}>{value} </span>
-          ))}
-          <br />
+          <MarkdownComponent
+            markdown={Object.values(metadataSubField)
+              .map((value) => value)
+              .join(' ')}
+          />
         </div>
       ))}
     </>

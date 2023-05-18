@@ -14,7 +14,6 @@ export function SummaryFields({ summaryFields }: SummaryFieldsProps) {
             <b>{field.title}</b> <Tooltip placement="right" message={field.description}></Tooltip>
           </Col>
           <Col>
-            {' '}
             <MarkdownComponent markdown={field.value} />
           </Col>
         </Row>

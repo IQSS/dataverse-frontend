@@ -36,7 +36,7 @@ describe('DatasetMetadata', () => {
 
           field.forEach((subField) => {
             Object.values(subField).forEach((value) => {
-              const fieldValue = cy.findAllByText(value)
+              const fieldValue = cy.findAllByText(value, { exact: false })
               fieldValue.should('exist')
             })
           })
