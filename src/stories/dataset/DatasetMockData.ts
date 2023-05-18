@@ -40,7 +40,7 @@ export const DatasetMockData = (props?: Partial<Dataset>): Dataset => ({
     {
       title: 'Notes',
       description: 'this is the notes field',
-      value: 'image'
+      value: 'Here is an image ![Alt text](https://picsum.photos/id/10/40/40)'
     }
   ],
   metadataBlocks: [

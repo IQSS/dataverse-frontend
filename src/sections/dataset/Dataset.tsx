@@ -39,7 +39,7 @@ export function Dataset({ repository, id }: DatasetProps) {
               <Col sm={9}>Citation Block</Col>
             </Row>
             <Row>
-              <Col sm={9}>
+              <Col sm={9} className={styles['summary-container']}>
                 <DatasetSummary
                   summaryFields={dataset.summaryFields}
                   license={dataset.license}></DatasetSummary>
