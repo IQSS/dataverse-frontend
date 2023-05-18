@@ -3,35 +3,35 @@
     "name": "PSI Metadata",
     "datasetField": {
       "psiBehavior": {
-        "title": "Behavior",
+        "name": "Behavior",
         "description": "Behavior"
       },
       "psiDonor": {
-        "title": "Donor",
+        "name": "Donor",
         "description": "Donor"
       },
       "psiHealthArea": {
-        "title": "Health Area",
+        "name": "Health Area",
         "description": "Health Area"
       },
       "psiIntervention": {
-        "title": "Intervention",
+        "name": "Intervention",
         "description": "Intervention"
       },
       "psiPopulation": {
-        "title": "Population",
+        "name": "Population",
         "description": "Population"
       },
       "psiProductsServices": {
-        "title": "Products/Services",
+        "name": "Products/Services",
         "description": "Products/Services"
       },
       "psiStudyDesignElement": {
-        "title": "Study Design Element",
+        "name": "Study Design Element",
         "description": "Study Design Element"
       },
       "psiStudyType": {
-        "title": "Study Type",
+        "name": "Study Type",
         "description": "Study Type"
       }
     }

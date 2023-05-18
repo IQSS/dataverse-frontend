@@ -88,6 +88,90 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
                   }
                 ]
               }
+            },
+            {
+              name: MetadataBlockName.ASTROPHYSICS,
+              fields: {
+                astroType: 'some astro type'
+              }
+            },
+            {
+              name: MetadataBlockName.BIOMEDICAL,
+              fields: {
+                studyDesignType: 'some design type'
+              }
+            },
+            {
+              name: MetadataBlockName.CODE_META,
+              fields: {
+                applicationCategory: 'some application category'
+              }
+            },
+            {
+              name: MetadataBlockName.COMPUTATIONAL_WORKFLOW,
+              fields: {
+                workflowDocumentation: 'some workflow documentation'
+              }
+            },
+            {
+              name: MetadataBlockName.CUSTOM_HBGDKI,
+              fields: {
+                hbgdkiLowerLimitAge: 'some lower limit age'
+              }
+            },
+            {
+              name: MetadataBlockName.CUSTOM_ARCS,
+              fields: {
+                ARCS3: 'some arcs3'
+              }
+            },
+            {
+              name: MetadataBlockName.CUSTOM_CHIA,
+              fields: {
+                variablesCHIA: 'some variables chia'
+              }
+            },
+            {
+              name: MetadataBlockName.CUSTOM_DIGAAI,
+              fields: {
+                datadePublicao: 'some datade publicao'
+              }
+            },
+            {
+              name: MetadataBlockName.CUSTOM_GSD,
+              fields: {
+                gsdAccreditation: 'some gsd accreditation'
+              }
+            },
+            {
+              name: MetadataBlockName.CUSTOM_MRA,
+              fields: {
+                mraCollection: 'some mra collection'
+              }
+            },
+            {
+              name: MetadataBlockName.CUSTOM_PSI,
+              fields: {
+                psiPopulation: 'some psi population'
+              }
+            },
+            {
+              name: MetadataBlockName.CUSTOM_PSRI,
+              fields: {
+                PSRI5: 'some psri5'
+              }
+            },
+            {
+              name: MetadataBlockName.JOURNAL,
+              fields: {
+                journalVolume: 'some journal volume'
+              }
+            },
+            {
+              name: MetadataBlockName.SOCIAL_SCIENCE,
+              fields: {
+                deviationsFromSampleDesign: 'some target sample actual size'
+              }
             }
           ]
         })

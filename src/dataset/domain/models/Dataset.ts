@@ -24,7 +24,7 @@ export enum MetadataBlockName {
   ASTROPHYSICS = 'astrophysics',
   BIOMEDICAL = 'biomedical',
   CODE_META = 'codeMeta20',
-  COMPUTATIONAL_WORKFLOW = 'computationalWorkflow',
+  COMPUTATIONAL_WORKFLOW = 'computationalworkflow',
   CUSTOM_ARCS = 'customARCS',
   CUSTOM_CHIA = 'customCHIA',
   CUSTOM_DIGAAI = 'customDigaai',
@@ -33,7 +33,7 @@ export enum MetadataBlockName {
   CUSTOM_PSI = 'customPSI',
   CUSTOM_PSRI = 'customPSRI',
   CUSTOM_HBGDKI = 'custom_hbgdki',
-  JOURNALS = 'journals',
+  JOURNAL = 'journal',
   SOCIAL_SCIENCE = 'socialscience'
 }
 

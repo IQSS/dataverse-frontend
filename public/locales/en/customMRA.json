@@ -3,7 +3,7 @@
     "name": "MRA Metadata",
     "datasetField": {
       "mraCollection": {
-        "title": "Murray Research Archive Collection",
+        "name": "Murray Research Archive Collection",
         "description": "Browse the Murray Research Archive collection with the following terms."
       }
     }

@@ -15,7 +15,7 @@ export function DatasetMetadataField({
   metadataFieldName,
   metadataField
 }: DatasetMetadataFieldProps) {
-  const { t } = useTranslation(metadataBlockName)
+  const { t } = useTranslation(`${metadataBlockName}`)
   const completeFieldName = `${metadataBlockName}.datasetField.${metadataFieldName}`
 
   return (

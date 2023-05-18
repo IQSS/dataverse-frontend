@@ -3,24 +3,23 @@
     "name": "Digaai Metadata",
     "datasetField": {
       "titulo": {
-        "title": "Título",
+        "name": "Título",
         "description": "Título do jornal ou revista."
       },
       "numero": {
-        "title": "Número",
+        "name": "Número",
         "description": "Número do jornal ou revista."
       },
       "datadePublicao": {
-        "title": "Data de Publicação",
-        "description": "Entrar dia/mes/ano.",
-        "format": "dia/mes/ano"
+        "name": "Data de Publicação",
+        "description": "Entrar dia/mes/ano."
       },
       "localdePublicao": {
-        "title": "Local de Publicação",
+        "name": "Local de Publicação",
         "description": "Local de Publicação."
       },
       "proprietrio": {
-        "title": "Proprietário",
+        "name": "Proprietário",
         "description": "Proprietário."
       }
     }
