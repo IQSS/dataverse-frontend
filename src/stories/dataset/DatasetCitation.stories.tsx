@@ -21,7 +21,13 @@ export const Default: Story = {
     }
     const status = DatasetStatus.PUBLISHED
     const version = '1.0'
-    return <DatasetCitation citation={citation} status={status} version={version} />
+    return (
+      <div>
+        <br></br>
+        <br></br>
+        <DatasetCitation citation={citation} status={status} version={version} />
+      </div>
+    )
   }
 }
 export const WithUNF: Story = {
@@ -34,7 +40,12 @@ export const WithUNF: Story = {
     }
     const status = DatasetStatus.PUBLISHED
     const version = '1.0'
-    return <DatasetCitation citation={citation} status={status} version={version} />
+    return (
+      <div>
+        <br></br>
+        <br></br> <DatasetCitation citation={citation} status={status} version={version} />
+      </div>
+    )
   }
 }
 
@@ -55,7 +66,7 @@ export const DraftVersion: Story = {
       <div>
         <br></br>
         <br></br>
-        return <DatasetCitation citation={citation} status={status} version={version} />
+        <DatasetCitation citation={citation} status={status} version={version} />
       </div>
     )
   }
@@ -78,7 +89,7 @@ export const Deaccessioned: Story = {
       <div>
         <br></br>
         <br></br>
-        return <DatasetCitation citation={citation} status={status} version={version} />
+        <DatasetCitation citation={citation} status={status} version={version} />
       </div>
     )
   }

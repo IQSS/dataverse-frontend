@@ -3,6 +3,6 @@
   "metadataTabTitle": "Metadata",
   "draft": "DRAFT",
   "deaccessioned": "DEACCESSIONED VERSION",
-  "draft.description": "draft tooltip",
-  "deaccessioned.description": "deaccessioned tooltip"
+  "draft.description": "DRAFT VERSION will be replaced in the citation with the selected version once the dataset has been published.",
+  "deaccessioned.description": "DEACCESSIONED VERSION has been added to the citation for this version since it is no longer available."
 }

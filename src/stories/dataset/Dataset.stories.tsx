@@ -34,7 +34,7 @@ class DatasetMockRepository implements DatasetRepository {
             publisher: 'Demo Dataverse'
           },
           status: DatasetStatus.DRAFT,
-          version: '1.0',
+          version: null,
           license: {
             name: 'CC0 1.0',
             shortDescription: 'CC0 1.0 Universal Public Domain Dedication',
