@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../WithI18next'
 import { DatasetCitation } from '../../sections/dataset/dataset-citation/DatasetCitation'
-import { Citation, CitationStatus } from '../../dataset/domain/models/Dataset'
+import { Citation, DatasetStatus } from '../../dataset/domain/models/Dataset'
 
 const meta: Meta<typeof DatasetCitation> = {
   title: 'Sections/Dataset Page/DatasetCitation',
@@ -14,34 +14,48 @@ type Story = StoryObj<typeof DatasetCitation>
 
 export const Default: Story = {
   render: () => {
-    const citationFields: Citation = {
-      value:
-        'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms", [https://doi.org/10.70122/FK2/KLX4XO](https://doi.org/10.70122/FK2/KLX4XO), Demo Dataverse',
-      status: CitationStatus.PUBLISHED,
-      version: '1.0'
+    const citation: Citation = {
+      citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
+      pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+      publisher: 'Demo Dataverse'
     }
-
-    return <DatasetCitation citation={citationFields} />
+    const status = DatasetStatus.PUBLISHED
+    const version = '1.0'
+    return <DatasetCitation citation={citation} status={status} version={version} />
+  }
+}
+export const WithUNF: Story = {
+  render: () => {
+    const citation: Citation = {
+      citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
+      pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+      publisher: 'Demo Dataverse',
+      unf: 'UNF:6:8ttuxucTZJWfZ9JgN1udiA== [fileUNF]'
+    }
+    const status = DatasetStatus.PUBLISHED
+    const version = '1.0'
+    return <DatasetCitation citation={citation} status={status} version={version} />
   }
 }
 
 export const DraftVersion: Story = {
   render: () => {
-    const citationFields: Citation = {
-      value:
-        'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms", [https://doi.org/10.70122/FK2/KLX4XO](https://doi.org/10.70122/FK2/KLX4XO), Demo Dataverse',
-      status: CitationStatus.DRAFT,
-      version: '1.0'
+    const citation: Citation = {
+      citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
+      pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+      publisher: 'Demo Dataverse'
     }
+    const status = DatasetStatus.DRAFT
+    const version = null
 
     /*
-    Includes extra breaks so you can see the DRAFT tooltip message
-     */
+      Includes extra breaks so you can see the DRAFT tooltip message
+       */
     return (
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation citation={citationFields} />
+        return <DatasetCitation citation={citation} status={status} version={version} />
       </div>
     )
   }
@@ -49,18 +63,22 @@ export const DraftVersion: Story = {
 
 export const Deaccessioned: Story = {
   render: () => {
-    const citationFields: Citation = {
-      value:
-        'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms", [https://doi.org/10.70122/FK2/KLX4XO](https://doi.org/10.70122/FK2/KLX4XO), Demo Dataverse',
-      status: CitationStatus.DEACCESSIONED,
-      version: '2.0'
+    const citation: Citation = {
+      citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
+      pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+      publisher: 'Demo Dataverse'
     }
+    const status = DatasetStatus.DEACCESSIONED
+    const version = '1.0'
 
+    /*
+        Includes extra breaks so you can see the DRAFT tooltip message
+         */
     return (
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation citation={citationFields} />
+        return <DatasetCitation citation={citation} status={status} version={version} />
       </div>
     )
   }

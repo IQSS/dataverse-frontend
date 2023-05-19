@@ -37,8 +37,10 @@ export function Dataset({ datasetRepository, id }: DatasetProps) {
           <div className={styles.container}>
             <Row>
               <Col sm={9}>
-                {' '}
-                <DatasetCitation citation={dataset.citation}></DatasetCitation>
+                <DatasetCitation
+                  citation={dataset.citation}
+                  status={dataset.status}
+                  version={dataset.version}></DatasetCitation>
               </Col>
             </Row>
             <Row>

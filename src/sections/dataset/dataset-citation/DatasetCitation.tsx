@@ -1,58 +1,43 @@
 import { Col, Icon, Row, Tooltip } from 'dataverse-design-system'
 import styles from './DatasetCitation.module.scss'
-
-import { Citation, CitationStatus } from '../../../dataset/domain/models/Dataset'
+import { useTranslation } from 'react-i18next'
+import { Citation, DatasetStatus } from '../../../dataset/domain/models/Dataset'
 
 interface DatasetCitationProps {
   citation: Citation
+  status: DatasetStatus
+  version: string | null
+}
+interface CitationDatasetStatusProps {
+  status: DatasetStatus
 }
 
-function mapAuthors(authors: string[]): string[] {
-  return authors.map((author, index) => {
-    // If this is the last author in the array, don't add a semi-colon
-    if (index === authors.length - 1) {
-      return author
-    }
-    // Otherwise, add a semi-colon after the author
-    return `${author}; `
-  })
-}
-function getCitationText(citation: Citation) {
+function CitationDescription({ citation, status, version }: DatasetCitationProps) {
   return (
-    <div>
-      {citation.value}
-      {citation.status === CitationStatus.DRAFT && (
-        <span>
-          {' '}
-          <Tooltip
-            placement={'top'}
-            message={
-              'DRAFT VERSION will be replaced in the citation with the selected version once the dataset has been published.'
-            }
-          />
-        </span>
-      )}
-      {citation.status === CitationStatus.DEACCESSIONED && (
-        <span>
-          {', '}
-          DEACCESSIONED VERSION{' '}
-          <Tooltip
-            placement={'top'}
-            message={
-              'DEACCESSIONED VERSION has been added to the citation for this version since it is no longer available.'
-            }
-          />
-        </span>
-      )}
-    </div>
+    <span>
+      {citation.citationText}, {citation.pidUrl}, {citation.publisher}
+      {version !== null && ', V' + version.substring(0, 1)}
+      {citation.unf && ', ' + citation.unf}
+      {status !== DatasetStatus.PUBLISHED && <CitationDatasetStatus status={status} />}
+    </span>
   )
 }
-export function DatasetCitation({ citation }: DatasetCitationProps) {
-  return citation ? (
+function CitationDatasetStatus({ status }: CitationDatasetStatusProps) {
+  const { t } = useTranslation('dataset')
+  return (
+    <span>
+      {', '}
+      {t(status)} <Tooltip placement={'top'} message={t(`${status}.description`)} />
+    </span>
+  )
+}
+
+export function DatasetCitation({ citation, status, version }: DatasetCitationProps) {
+  return (
     <article>
-      <div
+      <Row
         className={
-          citation.status === CitationStatus.DEACCESSIONED ? styles.deaccessioned : styles.container
+          status === DatasetStatus.DEACCESSIONED ? styles.deaccessioned : styles.container
         }>
         <Row className={styles.row}>
           <Col sm={3}>
@@ -61,7 +46,9 @@ export function DatasetCitation({ citation }: DatasetCitationProps) {
             </div>
           </Col>
           <Col>
-            <Row>{getCitationText(citation)}</Row>
+            <Row>
+              <CitationDescription citation={citation} status={status} version={version} />
+            </Row>
             <Row>
               <div>
                 Learn about{' '}
@@ -76,7 +63,7 @@ export function DatasetCitation({ citation }: DatasetCitationProps) {
             </Row>
           </Col>
         </Row>
-      </div>
+      </Row>
     </article>
-  ) : null
+  )
 }

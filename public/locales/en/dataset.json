@@ -1,4 +1,8 @@
 {
   "filesTabTitle": "Files",
-  "metadataTabTitle": "Metadata"
+  "metadataTabTitle": "Metadata",
+  "draft": "DRAFT",
+  "deaccessioned": "DEACCESSIONED VERSION",
+  "draft.description": "draft tooltip",
+  "deaccessioned.description": "deaccessioned tooltip"
 }

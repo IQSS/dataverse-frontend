@@ -28,7 +28,7 @@ describe('Dataset', () => {
       )
     }
 
-    cy.mount(
+    cy.customMount(
       <LoadingProvider>
         <Dataset datasetRepository={datasetRepository} id={testDataset.id} />
         <TestComponent />
@@ -46,7 +46,7 @@ describe('Dataset', () => {
     const datasetRepository: DatasetRepository = {} as DatasetRepository
     datasetRepository.getById = sandbox.stub().resolves(emptyDataset)
 
-    cy.mount(
+    cy.customMount(
       <LoadingProvider>
         <Dataset datasetRepository={datasetRepository} id="wrong-id" />
       </LoadingProvider>
@@ -59,7 +59,7 @@ describe('Dataset', () => {
     const datasetRepository: DatasetRepository = {} as DatasetRepository
     datasetRepository.getById = sandbox.stub().resolves(testDataset)
 
-    cy.mount(
+    cy.customMount(
       <LoadingProvider>
         <Dataset datasetRepository={datasetRepository} id={testDataset.id} />
       </LoadingProvider>

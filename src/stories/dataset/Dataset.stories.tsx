@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { Dataset } from '../../sections/dataset/Dataset'
-import { Dataset as DatasetModel } from '../../dataset/domain/models/Dataset'
+import { Dataset as DatasetModel, DatasetStatus } from '../../dataset/domain/models/Dataset'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { LabelSemanticMeaning } from '../../dataset/domain/models/LabelSemanticMeaning.enum'
 import { WithLayoutLoading } from '../WithLayoutLoading'
@@ -29,15 +29,11 @@ class DatasetMockRepository implements DatasetRepository {
             { value: 'Draft', semanticMeaning: LabelSemanticMeaning.DATASET }
           ],
           citation: {
-            authors: ['Bennet,Elizabeth', 'Darcy,Fitzwilliam'],
-            title: 'Replication Test Dataset',
-            creationYear: 2023,
-            persistentIdentifier: 'https://doi.org/10.70122/FK2/KLX4XO',
-            persistentIdentifierUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
-            publisher: 'Demo Dataverse',
-            version: 'V1',
-            isDeaccessioned: false
+            citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
+            pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+            publisher: 'Demo Dataverse'
           },
+          status: DatasetStatus.DRAFT,
           version: '1.0',
           license: {
             name: 'CC0 1.0',
