@@ -2,10 +2,7 @@ import { ANONYMIZED_FIELD_VALUE, LabelSemanticMeaning } from '../../dataset/doma
 import { MetadataBlockName } from '../../dataset/domain/models/Dataset'
 import { Dataset } from '../../dataset/domain/models/Dataset'
 
-export const DatasetMockData = (
-  props?: Partial<Dataset>,
-  anonymized: boolean = false
-): Dataset => ({
+export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): Dataset => ({
   id: '123456789',
   title: 'Dataset title',
   labels: [

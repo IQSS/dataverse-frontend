@@ -1,5 +1,5 @@
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { Dataset as DatasetModel, MetadataBlockName } from '../../dataset/domain/models/Dataset'
+import { Dataset as DatasetModel } from '../../dataset/domain/models/Dataset'
 import { DatasetMockData } from './DatasetMockData'
 
 export class DatasetMockRepository implements DatasetRepository {

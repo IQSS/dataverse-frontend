@@ -1,10 +1,13 @@
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { DatasetMetadata } from '../../../../../src/sections/dataset/dataset-metadata/DatasetMetadata'
+import { ANONYMIZED_FIELD_VALUE } from '../../../../../src/dataset/domain/models/Dataset'
+import { AnonymizedContext } from '../../../../../src/sections/dataset/anonymized/AnonymizedContext'
+import { AnonymizedProvider } from '../../../../../src/sections/dataset/anonymized/AnonymizedProvider'
 
 describe('DatasetMetadata', () => {
-  const mockMetadataBlocks = DatasetMother.create().metadataBlocks
-
   it('renders the metadata blocks correctly', () => {
+    const mockMetadataBlocks = DatasetMother.create().metadataBlocks
+
     cy.viewport(1280, 720)
 
     cy.fixture('metadataTranslations').then((t) => {
@@ -43,5 +46,22 @@ describe('DatasetMetadata', () => {
         })
       })
     })
+  })
+
+  it('renders the metadata blocks in anonymized view', () => {
+    const mockAnonymizedMetadataBlocks = DatasetMother.createAnonymized().metadataBlocks
+
+    cy.customMount(
+      <AnonymizedProvider>
+        <AnonymizedContext.Consumer>
+          {({ setAnonymizedView }) => {
+            setAnonymizedView(true)
+            return <DatasetMetadata metadataBlocks={mockAnonymizedMetadataBlocks} />
+          }}
+        </AnonymizedContext.Consumer>
+      </AnonymizedProvider>
+    )
+
+    cy.findAllByText(ANONYMIZED_FIELD_VALUE).should('exist')
   })
 })

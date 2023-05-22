@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { Dataset } from '../../../../../src/dataset/domain/models/Dataset'
+import { ANONYMIZED_FIELD_VALUE, Dataset } from '../../../../../src/dataset/domain/models/Dataset'
 import { LabelSemanticMeaning } from '../../../../../src/dataset/domain/models/Dataset'
 import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Dataset'
 
@@ -102,5 +102,25 @@ export class DatasetMother {
 
   static createEmpty(): undefined {
     return undefined
+  }
+
+  static createAnonymized(): Dataset {
+    return this.create({
+      metadataBlocks: [
+        {
+          name: MetadataBlockName.CITATION,
+          fields: {
+            title: faker.lorem.sentence(),
+            author: ANONYMIZED_FIELD_VALUE
+          }
+        },
+        {
+          name: MetadataBlockName.GEOSPATIAL,
+          fields: {
+            geographicCoverage: ANONYMIZED_FIELD_VALUE
+          }
+        }
+      ]
+    })
   }
 }

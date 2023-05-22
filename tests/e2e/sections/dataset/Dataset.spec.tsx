@@ -67,5 +67,17 @@ describe('Dataset', () => {
     cy.findByText('Major Deviations for Sample Design').should('exist')
   })
 
+  it('loads page not fount when no search parameter is passed', () => {
+    cy.visit('/datasets')
+
+    cy.findByText('Page Not Found').should('exist')
+  })
+
+  it('loads dataset anonymized view when privateUrlToken is passed', () => {
+    cy.visit('/datasets/?privateUrlToken=12345')
+
+    cy.findAllByText('withheld').should('exist')
+  })
+
   // TODO - Add test for when the dataset is not found and loading skeleton when the js-dataverse module is ready
 })

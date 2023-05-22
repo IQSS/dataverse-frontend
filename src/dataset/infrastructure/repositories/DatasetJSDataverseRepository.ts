@@ -1,5 +1,5 @@
 import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
-import { Dataset, MetadataBlockName } from '../../domain/models/Dataset'
+import { ANONYMIZED_FIELD_VALUE, Dataset, MetadataBlockName } from '../../domain/models/Dataset'
 import { LabelSemanticMeaning } from '../../domain/models/Dataset'
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
@@ -179,6 +179,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     })
   }
 
+  // eslint-disable-next-line unused-imports/no-unused-vars
   getByPrivateUrlToken(privateUrlToken: string): Promise<Dataset | undefined> {
     // TODO - Implement this method using the js-dataverse module
     return new Promise((resolve) => {
@@ -233,7 +234,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
                 publicationDate: '2021-01-01',
                 citationDate: '2021-01-01',
                 title: 'Dataset Title',
-                author: 'withheld'
+                author: ANONYMIZED_FIELD_VALUE
               }
             },
             {
@@ -242,12 +243,12 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
                 geographicUnit: 'km',
                 geographicCoverage: [
                   {
-                    geographicCoverageCountry: 'withheld',
-                    geographicCoverageCity: 'withheld'
+                    geographicCoverageCountry: ANONYMIZED_FIELD_VALUE,
+                    geographicCoverageCity: ANONYMIZED_FIELD_VALUE
                   },
                   {
-                    geographicCoverageCountry: 'withheld',
-                    geographicCoverageCity: 'withheld'
+                    geographicCoverageCountry: ANONYMIZED_FIELD_VALUE,
+                    geographicCoverageCity: ANONYMIZED_FIELD_VALUE
                   }
                 ]
               }
