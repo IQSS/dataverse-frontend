@@ -4,17 +4,16 @@ import { Citation, DatasetStatus } from '../../../../../src/dataset/domain/model
 
 describe('DatasetCitation', () => {
   const sandbox: SinonSandbox = createSandbox()
-
+  const citation: Citation = {
+    citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
+    pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+    publisher: 'Demo Dataverse'
+  }
   afterEach(() => {
     sandbox.restore()
   })
 
   it('renders the DatasetCitation fields', () => {
-    const citation: Citation = {
-      citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
-      pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
-      publisher: 'Demo Dataverse'
-    }
     const status = DatasetStatus.PUBLISHED
     const version = null
     cy.customMount(<DatasetCitation citation={citation} status={status} version={version} />)
@@ -30,11 +29,6 @@ describe('DatasetCitation', () => {
   })
 
   it('renders Draft Dataset', () => {
-    const citation: Citation = {
-      citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
-      pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
-      publisher: 'Demo Dataverse'
-    }
     const status = DatasetStatus.DRAFT
     const version = null
     cy.customMount(<DatasetCitation citation={citation} status={status} version={version} />)
@@ -43,15 +37,23 @@ describe('DatasetCitation', () => {
   })
 
   it('renders Deaccession Dataset', () => {
-    const citation: Citation = {
-      citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
-      pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
-      publisher: 'Demo Dataverse'
-    }
     const status = DatasetStatus.DEACCESSIONED
     const version = null
     cy.customMount(<DatasetCitation citation={citation} status={status} version={version} />)
 
     cy.findByText(/DEACCESSIONED VERSION/).should('exist')
+  })
+  it('renders version correctly', () => {
+    const status = DatasetStatus.DEACCESSIONED
+    const version = '12.3.5'
+    cy.customMount(<DatasetCitation citation={citation} status={status} version={version} />)
+
+    cy.findByText(/V12/).should('be.visible')
+  })
+  it('renders null version correctly', () => {
+    const status = DatasetStatus.DEACCESSIONED
+    const version = null
+    cy.customMount(<DatasetCitation citation={citation} status={status} version={version} />)
+    cy.findByText(/V1/).should('not.exist')
   })
 })

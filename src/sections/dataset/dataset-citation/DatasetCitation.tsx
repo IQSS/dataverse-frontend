@@ -16,7 +16,7 @@ function CitationDescription({ citation, status, version }: DatasetCitationProps
   return (
     <span>
       {citation.citationText}, {citation.pidUrl}, {citation.publisher}
-      {version && ', V' + version.substring(0, 1)}
+      {version && ', V' + version.split('.')[0]}
       {citation.unf && ', ' + citation.unf}
       {status !== DatasetStatus.PUBLISHED && <CitationDatasetStatus status={status} />}
     </span>
