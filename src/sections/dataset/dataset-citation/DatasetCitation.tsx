@@ -15,7 +15,7 @@ interface CitationDatasetStatusProps {
 function CitationDescription({ citation, status, version }: DatasetCitationProps) {
   return (
     <span>
-      {citation.citationText}, {citation.pidUrl}, {citation.publisher}
+      {citation.citationText}, <a href={citation.pidUrl}>{citation.pidUrl}</a>, {citation.publisher}
       {version && ', V' + version.split('.')[0]}
       {citation.unf && ', ' + citation.unf}
       <CitationDatasetStatus status={status} />

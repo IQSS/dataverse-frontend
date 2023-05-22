@@ -20,7 +20,9 @@ describe('DatasetCitation', () => {
 
     cy.findByText('Data Citation Standards.').should('exist')
     cy.findByText(/Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms"/).should('exist')
-
+    cy.findByRole('link', { name: citation.pidUrl })
+      .should('have.attr', 'href')
+      .and('eq', citation.pidUrl)
     cy.findByRole('link', { name: 'Data Citation Standards.' })
       .should('have.attr', 'href')
       .and('eq', 'https://dataverse.org/best-practices/data-citation')
