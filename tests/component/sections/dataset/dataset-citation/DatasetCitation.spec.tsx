@@ -13,7 +13,7 @@ describe('DatasetCitation', () => {
     sandbox.restore()
   })
 
-  it('renders the DatasetCitation fields', () => {
+  it('renders the DatasetCitation fields of Published Dataset', () => {
     const status = DatasetStatus.PUBLISHED
     const version = null
     cy.customMount(<DatasetCitation citation={citation} status={status} version={version} />)
@@ -25,7 +25,7 @@ describe('DatasetCitation', () => {
       .should('have.attr', 'href')
       .and('eq', 'https://dataverse.org/best-practices/data-citation')
     cy.findByRole('article').should('exist')
-    cy.findByText(/DEACCESSIONED VERSION/).should('not.exist')
+    cy.findByText(/PUBLISHED/).should('not.exist')
   })
 
   it('renders Draft Dataset', () => {

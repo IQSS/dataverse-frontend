@@ -18,18 +18,21 @@ function CitationDescription({ citation, status, version }: DatasetCitationProps
       {citation.citationText}, {citation.pidUrl}, {citation.publisher}
       {version && ', V' + version.split('.')[0]}
       {citation.unf && ', ' + citation.unf}
-      {status !== DatasetStatus.PUBLISHED && <CitationDatasetStatus status={status} />}
+      <CitationDatasetStatus status={status} />
     </span>
   )
 }
 function CitationDatasetStatus({ status }: CitationDatasetStatusProps) {
   const { t } = useTranslation('dataset')
-  return (
-    <span>
-      {', '}
-      {t(status)} <Tooltip placement={'top'} message={t(`${status}.description`)} />
-    </span>
-  )
+  if (status !== DatasetStatus.PUBLISHED) {
+    return (
+      <span>
+        {', '}
+        {t(status)} <Tooltip placement={'top'} message={t(`${status}.description`)} />
+      </span>
+    )
+  }
+  return null // Return null if status is DatasetStatus.PUBLISHED
 }
 
 export function DatasetCitation({ citation, status, version }: DatasetCitationProps) {
