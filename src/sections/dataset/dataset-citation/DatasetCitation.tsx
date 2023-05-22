@@ -36,6 +36,7 @@ function CitationDatasetStatus({ status }: CitationDatasetStatusProps) {
 }
 
 export function DatasetCitation({ citation, status, version }: DatasetCitationProps) {
+  const { t } = useTranslation('dataset')
   return (
     <article>
       <Row
@@ -54,13 +55,13 @@ export function DatasetCitation({ citation, status, version }: DatasetCitationPr
             </Row>
             <Row>
               <div>
-                Learn about{' '}
+                {t('citationLearnAbout')}{' '}
                 <a
                   className={styles.link}
                   href="https://dataverse.org/best-practices/data-citation"
                   target="_blank"
                   rel="noopener noreferrer">
-                  Data Citation Standards.
+                  {t('citationStandards')}.
                 </a>
               </div>
             </Row>
