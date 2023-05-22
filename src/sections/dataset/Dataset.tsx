@@ -12,11 +12,14 @@ import { DatasetSummary } from './dataset-summary/DatasetSummary'
 
 interface DatasetProps {
   repository: DatasetRepository
-  id: string
+  searchParams: {
+    id?: string
+    privateUrlToken?: string | null
+  }
 }
 
-export function Dataset({ repository, id }: DatasetProps) {
-  const { dataset } = useDataset(repository, id)
+export function Dataset({ repository, searchParams }: DatasetProps) {
+  const { dataset } = useDataset(repository, searchParams)
   const { isLoading } = useLoading()
   const { t } = useTranslation('dataset')
 

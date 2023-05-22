@@ -14,7 +14,10 @@ export interface DatasetLabel {
 
 export type DatasetMetadataSubField = Record<string, string>
 
-export type DatasetMetadataField = string | DatasetMetadataSubField[]
+export const ANONYMIZED_FIELD_VALUE = 'withheld'
+type AnonymizedField = typeof ANONYMIZED_FIELD_VALUE
+
+export type DatasetMetadataField = string | DatasetMetadataSubField[] | AnonymizedField
 
 export type DatasetMetadataFields = Record<string, DatasetMetadataField>
 

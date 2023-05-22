@@ -1,9 +1,13 @@
-import { DatasetMetadataField as DatasetMetadataFieldModel } from '../../../../dataset/domain/models/Dataset'
-import { Col, Row, Tooltip } from 'dataverse-design-system'
-import { useTranslation } from 'react-i18next'
-import { DatasetMetadataSubFields } from './DatasetMetadataSubFields'
+import {
+  DatasetMetadataField as DatasetMetadataFieldModel,
+  ANONYMIZED_FIELD_VALUE
+} from '../../../../dataset/domain/models/Dataset'
+import { Col, Row } from 'dataverse-design-system'
 import { MetadataBlockName } from '../../../../dataset/domain/models/Dataset'
-import { MarkdownComponent } from '../../markdown/MarkdownComponent'
+import { useAnonymized } from '../../anonymized/AnonymizedContext'
+import { DatasetMetadataFieldValue } from './DatasetMetadataFieldValue'
+import { DatasetMetadataFieldTitle } from './DatasetMetadataFieldTitle'
+import { useTranslation } from 'react-i18next'
 
 interface DatasetMetadataFieldProps {
   metadataBlockName: MetadataBlockName
@@ -16,25 +20,32 @@ export function DatasetMetadataField({
   metadataFieldName,
   metadataField
 }: DatasetMetadataFieldProps) {
-  const { t } = useTranslation(`${metadataBlockName}`)
-  const completeFieldName = `${metadataBlockName}.datasetField.${metadataFieldName}`
+  const { anonymizedView } = useAnonymized()
+  const isAnonymizedField = anonymizedView && metadataField == ANONYMIZED_FIELD_VALUE
 
   return (
     <Row>
       <Col sm={3}>
-        <strong>{t(`${completeFieldName}.name`)} </strong>
-        <Tooltip placement="right" message={t(`${completeFieldName}.description`)}></Tooltip>
+        <DatasetMetadataFieldTitle
+          metadataBlockName={metadataBlockName}
+          metadataFieldName={metadataFieldName}
+        />
       </Col>
       <Col>
-        {typeof metadataField === 'string' ? (
-          <MarkdownComponent markdown={metadataField} />
+        {isAnonymizedField ? (
+          <AnonymizedFieldValue />
         ) : (
-          <DatasetMetadataSubFields
-            fieldName={metadataFieldName}
-            metadataSubFields={metadataField}
+          <DatasetMetadataFieldValue
+            metadataFieldName={metadataFieldName}
+            metadataField={metadataField}
           />
         )}
       </Col>
     </Row>
   )
+}
+
+const AnonymizedFieldValue = () => {
+  const { t } = useTranslation('dataset')
+  return <span>{t('anonymizedFieldValue')}</span>
 }

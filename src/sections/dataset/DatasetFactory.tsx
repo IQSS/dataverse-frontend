@@ -1,17 +1,36 @@
 import { ReactElement } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Dataset } from './Dataset'
 import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repositories/DatasetJSDataverseRepository'
+import { AnonymizedContext } from './anonymized/AnonymizedContext'
+import { AnonymizedProvider } from './anonymized/AnonymizedProvider'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 
 export class DatasetFactory {
   static create(): ReactElement {
-    return <DatasetWithRouteId />
+    return (
+      <AnonymizedProvider>
+        <DatasetWithId />
+      </AnonymizedProvider>
+    )
+  }
+
+  static createAnonymized(): ReactElement {
+    return (
+      <AnonymizedProvider>
+        <AnonymizedContext.Consumer>
+          {({ setAnonymizedView }) => {
+            setAnonymizedView(true)
+            return <DatasetWithPrivateUrlToken />
+          }}
+        </AnonymizedContext.Consumer>
+      </AnonymizedProvider>
+    )
   }
 }
 
-function DatasetWithRouteId() {
+function DatasetWithId() {
   const { id } = useParams()
   const navigate = useNavigate()
 
@@ -20,5 +39,14 @@ function DatasetWithRouteId() {
     return <></>
   }
 
-  return <Dataset repository={datasetRepository} id={id} />
+  return <Dataset repository={datasetRepository} searchParams={{ id: id }} />
+}
+
+function DatasetWithPrivateUrlToken() {
+  const [searchParams] = useSearchParams()
+  const privateUrlToken = searchParams.get('privateUrlToken')
+
+  return (
+    <Dataset repository={datasetRepository} searchParams={{ privateUrlToken: privateUrlToken }} />
+  )
 }

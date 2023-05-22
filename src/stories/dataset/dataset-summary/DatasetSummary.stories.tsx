@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { WithI18next } from '../WithI18next'
+import { WithI18next } from '../../WithI18next'
 
-import { DatasetSummary } from '../../sections/dataset/dataset-summary/DatasetSummary'
+import { DatasetSummary } from '../../../sections/dataset/dataset-summary/DatasetSummary'
 import { faker } from '@faker-js/faker'
-import { DatasetField, License } from '../../dataset/domain/models/Dataset'
+import { DatasetField, License } from '../../../dataset/domain/models/Dataset'
 
 const meta: Meta<typeof DatasetSummary> = {
   title: 'Sections/Dataset Page/DatasetSummary',
