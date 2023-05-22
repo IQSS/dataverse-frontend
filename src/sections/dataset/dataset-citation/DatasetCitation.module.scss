@@ -2,8 +2,14 @@
 
 
 .container {
+    margin: 0.5rem 0;
     padding: 10px 10px 0;
     border: 1px solid $dv-info-border-color;
+
+}
+
+.citation {
+    margin-bottom: 1em;
 }
 
 .deaccessioned {
