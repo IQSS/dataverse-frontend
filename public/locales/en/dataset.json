@@ -1,7 +1,7 @@
 {
   "filesTabTitle": "Files",
   "metadataTabTitle": "Metadata",
-  "draft": "DRAFT",
+  "draft": "DRAFT VERSION",
   "deaccessioned": "DEACCESSIONED VERSION",
   "draft.description": "DRAFT VERSION will be replaced in the citation with the selected version once the dataset has been published.",
   "deaccessioned.description": "DEACCESSIONED VERSION has been added to the citation for this version since it is no longer available.",
