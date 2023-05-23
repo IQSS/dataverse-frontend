@@ -16,10 +16,25 @@ export interface License {
   uri: string
   iconUrl?: string
 }
+export enum DatasetStatus {
+  PUBLISHED = 'published',
+  DRAFT = 'draft',
+  DEACCESSIONED = 'deaccessioned'
+}
+export interface Citation {
+  citationText: string
+  pidUrl: string
+  publisher: string
+  unf?: string
+}
+
 export interface Dataset {
   id: string
   title: string
   labels: DatasetLabel[]
+  version: string | null
+  citation: Citation
+  status: DatasetStatus
   summaryFields: DatasetField[]
   license: License
 }

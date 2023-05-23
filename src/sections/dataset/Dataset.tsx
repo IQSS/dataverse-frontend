@@ -7,8 +7,9 @@ import { useLoading } from '../loading/LoadingContext'
 import { DatasetSkeleton } from './DatasetSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { useTranslation } from 'react-i18next'
-import { DatasetSummary } from './dataset-summary/DatasetSummary'
 
+import { DatasetSummary } from './dataset-summary/DatasetSummary'
+import { DatasetCitation } from './dataset-citation/DatasetCitation'
 interface DatasetProps {
   datasetRepository: DatasetRepository
   id: string
@@ -35,7 +36,12 @@ export function Dataset({ datasetRepository, id }: DatasetProps) {
           </header>
           <div className={styles.container}>
             <Row>
-              <Col sm={9}>Citation Block</Col>
+              <Col sm={9}>
+                <DatasetCitation
+                  citation={dataset.citation}
+                  status={dataset.status}
+                  version={dataset.version}></DatasetCitation>
+              </Col>
             </Row>
             <Row>
               <Col sm={9}>
