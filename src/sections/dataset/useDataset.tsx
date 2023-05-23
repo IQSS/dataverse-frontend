@@ -8,15 +8,15 @@ import { getDatasetByPrivateUrlToken } from '../../dataset/domain/useCases/getDa
 export function useDataset(
   repository: DatasetRepository,
   searchParams: {
-    id?: string
+    persistentId?: string
     privateUrlToken?: string | null
   }
 ) {
   const [dataset, setDataset] = useState<Dataset>()
   const { setIsLoading } = useLoading()
   const getDataset = () => {
-    if (searchParams.id) {
-      return getDatasetById(repository, searchParams.id)
+    if (searchParams.persistentId) {
+      return getDatasetById(repository, searchParams.persistentId)
     }
     if (searchParams.privateUrlToken) {
       return getDatasetByPrivateUrlToken(repository, searchParams.privateUrlToken)

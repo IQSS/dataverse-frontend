@@ -1,6 +1,6 @@
-import { DatasetField } from '../../../../src/dataset/domain/models/Dataset'
+import { DatasetField } from '../../../dataset/domain/models/Dataset'
 import { SummaryFields } from './SummaryFields'
-import { License as LicenseModel } from './../../../../src/dataset/domain/models/Dataset'
+import { License as LicenseModel } from '../../../dataset/domain/models/Dataset'
 import { License } from './License'
 interface DatasetSummaryProps {
   summaryFields: DatasetField[]

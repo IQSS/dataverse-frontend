@@ -59,7 +59,7 @@ export interface License {
 }
 
 export interface Dataset {
-  id: string
+  persistentId: string
   title: string
   labels: DatasetLabel[]
   summaryFields: DatasetField[]

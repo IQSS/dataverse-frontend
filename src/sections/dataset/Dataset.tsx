@@ -13,7 +13,7 @@ import { DatasetSummary } from './dataset-summary/DatasetSummary'
 interface DatasetProps {
   repository: DatasetRepository
   searchParams: {
-    id?: string
+    persistentId?: string
     privateUrlToken?: string | null
   }
 }

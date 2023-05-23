@@ -12,7 +12,7 @@ describe('Dataset', () => {
 
   it('renders skeleton while loading', () => {
     const datasetRepository: DatasetRepository = {} as DatasetRepository
-    datasetRepository.getById = cy.stub().resolves(testDataset)
+    datasetRepository.getByPersistentId = cy.stub().resolves(testDataset)
 
     const buttonText = 'Toggle Loading'
     const TestComponent = () => {
@@ -27,7 +27,10 @@ describe('Dataset', () => {
 
     cy.customMount(
       <LoadingProvider>
-        <Dataset repository={datasetRepository} searchParams={{ id: testDataset.id }} />
+        <Dataset
+          repository={datasetRepository}
+          searchParams={{ persistentId: testDataset.persistentId }}
+        />
         <TestComponent />
       </LoadingProvider>
     )
@@ -41,11 +44,11 @@ describe('Dataset', () => {
   it('renders page not found when dataset is null', () => {
     const emptyDataset = DatasetMother.createEmpty()
     const datasetRepository: DatasetRepository = {} as DatasetRepository
-    datasetRepository.getById = cy.stub().resolves(emptyDataset)
+    datasetRepository.getByPersistentId = cy.stub().resolves(emptyDataset)
 
     cy.customMount(
       <LoadingProvider>
-        <Dataset repository={datasetRepository} searchParams={{ id: 'wrong-id' }} />
+        <Dataset repository={datasetRepository} searchParams={{ persistentId: 'wrong-id' }} />
       </LoadingProvider>
     )
 
@@ -54,7 +57,7 @@ describe('Dataset', () => {
 
   it('renders page not found when no searchParam is passed', () => {
     const datasetRepository: DatasetRepository = {} as DatasetRepository
-    datasetRepository.getById = cy.stub().resolves(testDataset)
+    datasetRepository.getByPersistentId = cy.stub().resolves(testDataset)
 
     cy.customMount(
       <LoadingProvider>
@@ -67,15 +70,18 @@ describe('Dataset', () => {
 
   it('renders the Dataset page title and labels', () => {
     const datasetRepository: DatasetRepository = {} as DatasetRepository
-    datasetRepository.getById = cy.stub().resolves(testDataset)
+    datasetRepository.getByPersistentId = cy.stub().resolves(testDataset)
 
     cy.customMount(
       <LoadingProvider>
-        <Dataset repository={datasetRepository} searchParams={{ id: testDataset.id }} />
+        <Dataset
+          repository={datasetRepository}
+          searchParams={{ persistentId: testDataset.persistentId }}
+        />
       </LoadingProvider>
     )
 
-    cy.wrap(datasetRepository.getById).should('be.calledWith', testDataset.id)
+    cy.wrap(datasetRepository.getByPersistentId).should('be.calledWith', testDataset.persistentId)
 
     cy.findByText(testDataset.title).should('exist')
 
@@ -86,11 +92,14 @@ describe('Dataset', () => {
 
   it('renders the Dataset Metadata tab', () => {
     const datasetRepository: DatasetRepository = {} as DatasetRepository
-    datasetRepository.getById = cy.stub().resolves(testDataset)
+    datasetRepository.getByPersistentId = cy.stub().resolves(testDataset)
 
     cy.customMount(
       <LoadingProvider>
-        <Dataset repository={datasetRepository} searchParams={{ id: testDataset.id }} />
+        <Dataset
+          repository={datasetRepository}
+          searchParams={{ persistentId: testDataset.persistentId }}
+        />
       </LoadingProvider>
     )
 

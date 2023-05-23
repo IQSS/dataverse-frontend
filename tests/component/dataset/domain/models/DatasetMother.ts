@@ -6,7 +6,7 @@ import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Data
 export class DatasetMother {
   static create(props?: Partial<Dataset>): Dataset {
     return {
-      id: faker.datatype.uuid(),
+      persistentId: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
       labels: [
         {

@@ -3,10 +3,10 @@ import { Dataset as DatasetModel } from '../../dataset/domain/models/Dataset'
 import { DatasetMockData } from './DatasetMockData'
 
 export class DatasetMockRepository implements DatasetRepository {
-  getById(id: string): Promise<DatasetModel | undefined> {
+  getByPersistentId(persistentId: string): Promise<DatasetModel | undefined> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(DatasetMockData({ id: id }))
+        resolve(DatasetMockData({ persistentId: persistentId }))
       }, 1000)
     })
   }

@@ -3,7 +3,7 @@ import { MetadataBlockName } from '../../dataset/domain/models/Dataset'
 import { Dataset } from '../../dataset/domain/models/Dataset'
 
 export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): Dataset => ({
-  id: '123456789',
+  persistentId: '123456789',
   title: 'Dataset title',
   labels: [
     { value: 'Version 1.0', semanticMeaning: LabelSemanticMeaning.FILE },
