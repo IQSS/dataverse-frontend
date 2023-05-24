@@ -1,4 +1,4 @@
-import { LabelSemanticMeaning } from '../../../../../src/dataset/domain/models/LabelSemanticMeaning.enum'
+import { LabelSemanticMeaning } from '../../../../../src/dataset/domain/models/Dataset'
 import { DatasetLabels } from '../../../../../src/sections/dataset/dataset-labels/DatasetLabels'
 
 describe('DatasetLabels', () => {

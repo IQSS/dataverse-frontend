@@ -1,0 +1,101 @@
+{
+  "codeMeta20": {
+    "name": "Software Metadata (CodeMeta v2.0)",
+    "datasetField": {
+      "codeVersion": {
+        "name": "Software Version",
+        "description": "Version of the software instance, usually following some convention like SemVer etc."
+      },
+      "developmentStatus": {
+        "name": "Development Status",
+        "description": "Description of development status, e.g. work in progress (wip), active, etc. See repostatus.org for more information."
+      },
+      "codeRepository": {
+        "name": "Code Repository",
+        "description": "Link to the repository where the un-compiled, human-readable code and related code is located (SVN, GitHub, CodePlex, institutional GitLab instance, Gitea, etc.)."
+      },
+      "applicationCategory": {
+        "name": "Application Category",
+        "description": "Type of software application, e.g. Simulation, Analysis, Visualisation."
+      },
+      "applicationSubCategory": {
+        "name": "Application Subcategory",
+        "description": "Subcategory of the application, e.g. Arcade Game."
+      },
+      "programmingLanguage": {
+        "name": "Programming Language",
+        "description": "The programming language(s) used to implement the software (e.g. Python, C++, Matlab, Fortran, Java, Julia,...)"
+      },
+      "runtimePlatform": {
+        "name": "Runtime Platform",
+        "description": "Runtime platform or script interpreter dependencies (e.g. Java 11, Python 3.10 or .Net Framework 4.8)."
+      },
+      "operatingSystem": {
+        "name": "Operating Systems",
+        "description": "Operating systems supported (e.g. Windows 10, OSX 11.3, Android 11)."
+      },
+      "targetProduct": {
+        "name": "Target Product",
+        "description": "Target Operating System / Product to which the code applies. If applies to several versions, just the product name can be used."
+      },
+      "buildInstructions": {
+        "name": "Build Instructions",
+        "description": "Link to installation instructions/documentation"
+      },
+      "softwareRequirementsItem": {
+        "name": "Software Requirements",
+        "description": "Required software dependencies"
+      },
+      "softwareRequirements": {
+        "name": "Name & Version",
+        "description": "Name and version of the required software/library dependency"
+      },
+      "softwareRequirementsInfoUrl": {
+        "name": "Info URL",
+        "description": "Link to required software/library homepage or documentation (ideally also versioned)"
+      },
+      "softwareSuggestionsItem": {
+        "name": "Software Suggestions",
+        "description": "Optional dependencies, e.g. for optional features, code development, etc."
+      },
+      "softwareSuggestions": {
+        "name": "Name & Version",
+        "description": "Name and version of the optional software/library dependency"
+      },
+      "softwareSuggestionsInfoUrl": {
+        "name": "Info URL",
+        "description": "Link to optional software/library homepage or documentation (ideally also versioned)"
+      },
+      "memoryRequirements": {
+        "name": "Memory Requirements",
+        "description": "Minimum memory requirements."
+      },
+      "processorRequirements": {
+        "name": "Processor Requirements",
+        "description": "Processor architecture or other CPU requirements to run the application (e.g. IA64)."
+      },
+      "storageRequirements": {
+        "name": "Storage Requirements",
+        "description": "Minimum storage requirements (e.g. free space required)."
+      },
+      "permissions": {
+        "name": "Permissions",
+        "description": "Permission(s) required to run the code (for example, a mobile app may require full internet access or may run only on wifi)."
+      },
+      "softwareHelp": {
+        "name": "Software Help/Documentation",
+        "description": "Link to help texts or documentation"
+      },
+      "readme": { "name": "Readme", "description": "Link to the README of the project" },
+      "releaseNotes": { "name": "Release Notes", "description": "Link to release notes" },
+      "contIntegration": {
+        "name": "Continuous Integration",
+        "description": "Link to continuous integration service"
+      },
+      "issueTracker": {
+        "name": "Issue Tracker",
+        "description": "Link to software bug reporting or issue tracking system"
+      }
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "socialscience": {
+    "name": "Social Science and Humanities Metadata",
+    "datasetField": {
+      "unitOfAnalysis": {
+        "name": "Unit of Analysis",
+        "description": "Basic unit of analysis or observation that this Dataset describes, such as individuals, families/households, groups, institutions/organizations, administrative units, and more. For information about the DDI's controlled vocabulary for this element, please refer to the DDI web page at http://www.ddialliance.org/controlled-vocabularies."
+      },
+      "universe": {
+        "name": "Universe",
+        "description": "Description of the population covered by the data in the file; the group of people or other elements that are the object of the study and to which the study results refer. Age, nationality, and residence commonly help to  delineate a given universe, but any number of other factors may be used, such as age limits, sex, marital status, race, ethnic group, nationality, income, veteran status, criminal convictions, and more. The universe may consist of elements other than persons, such as housing units, court cases, deaths, countries, and so on. In general, it should be possible to tell from the description of the universe whether a given individual or element is a member of the population under study. Also known as the universe of interest, population of interest, and target population."
+      },
+      "timeMethod": {
+        "name": "Time Method",
+        "description": "The time method or time dimension of the data collection, such as panel, cross-sectional, trend, time- series, or other."
+      },
+      "dataCollector": {
+        "name": "Data Collector",
+        "description": "Individual, agency or organization responsible for  administering the questionnaire or interview or compiling the data."
+      },
+      "collectorTraining": {
+        "name": "Collector Training",
+        "description": "Type of training provided to the data collector"
+      },
+      "frequencyOfDataCollection": {
+        "name": "Frequency",
+        "description": "If the data collected includes more than one point in time, indicate the frequency with which the data was collected; that is, monthly, quarterly, or other."
+      },
+      "samplingProcedure": {
+        "name": "Sampling Procedure",
+        "description": "Type of sample and sample design used to select the survey respondents to represent the population. May include reference to the target sample size and the sampling fraction."
+      },
+      "targetSampleSize": {
+        "name": "Target Sample Size",
+        "description": "Specific information regarding the target sample size, actual  sample size, and the formula used to determine this."
+      },
+      "targetSampleActualSize": { "name": "Actual", "description": "Actual sample size." },
+      "targetSampleSizeFormula": {
+        "name": "Formula",
+        "description": "Formula used to determine target sample size."
+      },
+      "deviationsFromSampleDesign": {
+        "name": "Major Deviations for Sample Design",
+        "description": "Show correspondence as well as discrepancies between the sampled units (obtained) and available statistics for the population (age, sex-ratio, marital status, etc.) as a whole."
+      },
+      "collectionMode": {
+        "name": "Collection Mode",
+        "description": "Method used to collect the data; instrumentation characteristics (e.g., telephone interview, mail questionnaire, or other)."
+      },
+      "researchInstrument": {
+        "name": "Type of Research Instrument",
+        "description": "Type of data collection instrument used. Structured indicates an instrument in which all respondents are asked the same questions/tests, possibly with precoded answers. If a small portion of such a questionnaire includes open-ended questions, provide appropriate comments. Semi-structured indicates that the research instrument contains mainly open-ended questions. Unstructured indicates that in-depth interviews were conducted."
+      },
+      "dataCollectionSituation": {
+        "name": "Characteristics of Data Collection Situation",
+        "description": "Description of noteworthy aspects of the data collection situation. Includes information on factors such as cooperativeness of respondents, duration of interviews, number of call backs, or similar."
+      },
+      "actionsToMinimizeLoss": {
+        "name": "Actions to Minimize Losses",
+        "description": "Summary of actions taken to minimize data loss. Include information on actions such as follow-up visits, supervisory checks, historical matching, estimation, and so on."
+      },
+      "controlOperations": {
+        "name": "Control Operations",
+        "description": "Control OperationsMethods to facilitate data control performed by the primary investigator or by the data archive."
+      },
+      "weighting": {
+        "name": "Weighting",
+        "description": "The use of sampling procedures might make it necessary to apply weights to produce accurate statistical results. Describes the criteria for using weights in analysis of a collection. If a weighting formula or coefficient was developed, the formula is provided, its elements are defined, and it is indicated how the formula was applied to the data."
+      },
+      "cleaningOperations": {
+        "name": "Cleaning Operations",
+        "description": "Methods used to clean the data collection, such as consistency checking, wildcode checking, or other."
+      },
+      "datasetLevelErrorNotes": {
+        "name": "Study Level Error Notes",
+        "description": "Note element used for any information annotating or clarifying the methodology and processing of the study. "
+      },
+      "responseRate": {
+        "name": "Response Rate",
+        "description": "Percentage of sample members who provided information."
+      },
+      "samplingErrorEstimates": {
+        "name": "Estimates of Sampling Error",
+        "description": "Measure of how precisely one can estimate a population value from a given sample."
+      },
+      "otherDataAppraisal": {
+        "name": "Other Forms of Data Appraisal",
+        "description": "Other issues pertaining to the data appraisal. Describe issues such as response variance, nonresponse rate  and testing for bias, interviewer and response bias, confidence levels, question bias, or similar."
+      },
+      "socialScienceNotes": { "name": "Notes", "description": "General notes about this Dataset." },
+      "socialScienceNotesType": { "name": "Type", "description": "Type of note." },
+      "socialScienceNotesSubject": { "name": "Subject", "description": "Note subject." },
+      "socialScienceNotesText": { "name": "Text", "description": "Text for this note." }
+    }
+  }
+}

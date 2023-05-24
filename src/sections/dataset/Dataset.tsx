@@ -7,16 +7,20 @@ import { useLoading } from '../loading/LoadingContext'
 import { DatasetSkeleton } from './DatasetSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { useTranslation } from 'react-i18next'
-
+import { DatasetMetadata } from './dataset-metadata/DatasetMetadata'
 import { DatasetSummary } from './dataset-summary/DatasetSummary'
 import { DatasetCitation } from './dataset-citation/DatasetCitation'
+
 interface DatasetProps {
-  datasetRepository: DatasetRepository
-  id: string
+  repository: DatasetRepository
+  searchParams: {
+    id?: string
+    privateUrlToken?: string | null
+  }
 }
 
-export function Dataset({ datasetRepository, id }: DatasetProps) {
-  const { dataset } = useDataset(datasetRepository, id)
+export function Dataset({ repository, searchParams }: DatasetProps) {
+  const { dataset } = useDataset(repository, searchParams)
   const { isLoading } = useLoading()
   const { t } = useTranslation('dataset')
 
@@ -44,7 +48,7 @@ export function Dataset({ datasetRepository, id }: DatasetProps) {
               </Col>
             </Row>
             <Row>
-              <Col sm={9}>
+              <Col sm={9} className={styles['summary-container']}>
                 <DatasetSummary
                   summaryFields={dataset.summaryFields}
                   license={dataset.license}></DatasetSummary>
@@ -52,12 +56,17 @@ export function Dataset({ datasetRepository, id }: DatasetProps) {
             </Row>
             <Tabs defaultActiveKey="files">
               <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
-                <div>Files Section</div>
+                <div className={styles['tab-container']}>
+                  <div>Files Section</div>
+                </div>
               </Tabs.Tab>
               <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
-                <div>Metadata Section</div>
+                <div className={styles['tab-container']}>
+                  <DatasetMetadata metadataBlocks={dataset.metadataBlocks} />
+                </div>
               </Tabs.Tab>
             </Tabs>
+            <div className={styles['separation-line']}></div>
           </div>
         </article>
       )}

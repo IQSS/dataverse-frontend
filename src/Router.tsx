@@ -17,6 +17,10 @@ const router = createBrowserRouter(
         {
           path: `${Route.DATASETS}/:id`,
           element: DatasetFactory.create()
+        },
+        {
+          path: `${Route.DATASETS}`,
+          element: DatasetFactory.createAnonymized()
         }
       ]
     }

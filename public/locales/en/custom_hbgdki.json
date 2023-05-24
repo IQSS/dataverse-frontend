@@ -1,0 +1,78 @@
+{
+  "custom_hbgdki": {
+    "name": "HBGDki Custom Metadata",
+    "datasetField": {
+      "hbgdkiStudyName": { "name": "Name of Study", "description": "Name of the study." },
+      "hbgdkiStudyRegistry": {
+        "name": "Study Registry",
+        "description": "Which study registry was used?"
+      },
+      "hbgdkiStudyRegistryType": {
+        "name": "ID Type",
+        "description": "Which study registry was used?"
+      },
+      "hbgdkiStudyRegistryNumber": {
+        "name": "ID Number",
+        "description": "ID number for the study per the registry."
+      },
+      "hbgdkiStudyType": { "name": "Type of study", "description": "Type of study." },
+      "hbgdkiIntervention": {
+        "name": "Intervention",
+        "description": "If an interventional study, describe the interventions."
+      },
+      "hbgdkiLowerLimitAge": {
+        "name": "Lower limit of age at enrollment",
+        "description": "Lower limit of age at enrollment."
+      },
+      "hbgdkiUnitsLowerLimitAge": {
+        "name": "Units for lower age limit",
+        "description": "Units for lower age limit."
+      },
+      "hbgdkiUpperLimitAge": {
+        "name": "Upper limit of age at enrollment",
+        "description": "Upper limit of age at enrollment."
+      },
+      "hbgdkiUnitsUpperLimitAge": {
+        "name": "Units for upper age limit",
+        "description": "Units for upper age limit."
+      },
+      "hbgdkiOther": { "name": "Other entry criteria", "description": "Other entry criteria." },
+      "hbgdkiBiosampleType": {
+        "name": "Types of biosamples collected, if any",
+        "description": "Types of biosamples used (e.g., Blood, Stool,...)."
+      },
+      "hbgdkiGestationalAge": { "name": "Gestational age", "description": "Gestational age" },
+      "hbgdkiAnthropometry": { "name": "Anthropometry", "description": "Anthropometry" },
+      "hbgdkiBirthWeight": { "name": "Birth weight", "description": "Birth weight" },
+      "hbgdkiNeurocognitiveDev": {
+        "name": "Neurocognitive development",
+        "description": "Neurocognitive development"
+      },
+      "hbgdkiMaternalChar": {
+        "name": "Maternal characteristics",
+        "description": "Dataset parameters can include: age, height, weight, obstetric history."
+      },
+      "hbgdkiPregnancyBirth": {
+        "name": "Pregnancy and birth",
+        "description": "Dataset parameters can include: Morbidity, nutrition, ANC, delivery method and setting."
+      },
+      "hbgdkiSocioeconomicChar": {
+        "name": "Socioeconomic characteristics",
+        "description": "Socioeconomic characteristics"
+      },
+      "hbgdkiFeedingCare": {
+        "name": "Feeding care & practice",
+        "description": "Feeding care & practice"
+      },
+      "hbgdkiImmunizations": { "name": "Immunizations", "description": "Immunizations" },
+      "hbgdkiInfantChildhoodMorbidity": {
+        "name": "Morbidity in infancy and childhood",
+        "description": "Morbidity in infancy and childhood"
+      },
+      "hbgdkiWaterSanHygiene": {
+        "name": "Water, sanitation and hygiene standards",
+        "description": "Water, sanitation and hygiene standards"
+      }
+    }
+  }
+}

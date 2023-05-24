@@ -1,6 +1,7 @@
 {
   "filesTabTitle": "Files",
   "metadataTabTitle": "Metadata",
+  "anonymizedFieldValue": "withheld",
   "draft": "DRAFT VERSION",
   "deaccessioned": "DEACCESSIONED VERSION",
   "draft.description": "DRAFT VERSION will be replaced in the citation with the selected version once the dataset has been published.",

@@ -14,8 +14,7 @@
 # testing
 /.nyc_output
 /coverage
-/cypress/downloads
-/cypress/screenshots
+/cypress
 .nyc_output
 /packages/design-system/coverage
 

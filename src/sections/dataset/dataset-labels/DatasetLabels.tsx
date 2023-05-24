@@ -1,7 +1,7 @@
 import { Badge } from 'dataverse-design-system'
 import { DatasetLabel } from '../../../dataset/domain/models/Dataset'
 import styles from './DatasetLabels.module.scss'
-import { LabelSemanticMeaning } from '../../../dataset/domain/models/LabelSemanticMeaning.enum'
+import { LabelSemanticMeaning } from '../../../dataset/domain/models/Dataset'
 
 const VARIANT_BY_SEMANTIC_MEANING: Record<
   LabelSemanticMeaning,
