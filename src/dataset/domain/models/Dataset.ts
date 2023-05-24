@@ -45,12 +45,6 @@ export interface DatasetMetadataBlock {
   fields: DatasetMetadataFields
 }
 
-export interface DatasetField {
-  title: string
-  description: string
-  value: string
-}
-
 export interface License {
   name: string
   shortDescription: string
@@ -78,7 +72,7 @@ export interface Dataset {
   version: string | null
   citation: Citation
   status: DatasetStatus
-  summaryFields: DatasetField[]
+  summaryFields: DatasetMetadataBlock[]
   license: License
   metadataBlocks: DatasetMetadataBlock[]
 }

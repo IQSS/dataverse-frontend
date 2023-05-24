@@ -35,31 +35,15 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           },
           summaryFields: [
             {
-              title: 'Description',
-              description: 'this is the description field',
-              value:
-                'This is the description field. Here is [a link](https://dataverse.org). ' +
-                'This text is *italic* and this is **bold**. Here is an image ![Alt text](https://picsum.photos/id/10/20/20) '
-            },
-            {
-              title: 'Keyword',
-              description: 'this is the keyword field',
-              value: 'Malaria, Tuberculosis, Drug Resistant'
-            },
-            {
-              title: 'Subject',
-              description: 'this is the subject field',
-              value: 'Medicine, Health and Life Sciences, Social Sciences'
-            },
-            {
-              title: 'Related Publication',
-              description: 'this is the keyword field',
-              value: 'CNN Journal [CNN.com](https://cnn.com)'
-            },
-            {
-              title: 'Notes',
-              description: 'this is the notes field',
-              value: 'image'
+              name: MetadataBlockName.CITATION,
+              fields: {
+                dsDescription:
+                  'This text is *italic* and this is **bold**. Here is an image ![Alt text](https://picsum.photos/id/10/20/20) ',
+                keyword: 'Malaria, Tuberculosis, Drug Resistant',
+                subject: 'Medicine, Health and Life Sciences, Social Sciences',
+                publication: 'CNN Journal [CNN.com](https://cnn.com)',
+                notesText: 'Here is an image ![Alt text](https://picsum.photos/id/10/40/40)'
+              }
             }
           ],
           metadataBlocks: [
@@ -221,31 +205,15 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           },
           summaryFields: [
             {
-              title: 'Description',
-              description: 'this is the description field',
-              value:
-                'This is the description field. Here is [a link](https://dataverse.org). ' +
-                'This text is *italic* and this is **bold**. Here is an image ![Alt text](https://picsum.photos/id/10/20/20) '
-            },
-            {
-              title: 'Keyword',
-              description: 'this is the keyword field',
-              value: 'Malaria, Tuberculosis, Drug Resistant'
-            },
-            {
-              title: 'Subject',
-              description: 'this is the subject field',
-              value: 'Medicine, Health and Life Sciences, Social Sciences'
-            },
-            {
-              title: 'Related Publication',
-              description: 'this is the keyword field',
-              value: 'CNN Journal [CNN.com](https://cnn.com)'
-            },
-            {
-              title: 'Notes',
-              description: 'this is the notes field',
-              value: 'image'
+              name: MetadataBlockName.CITATION,
+              fields: {
+                dsDescription:
+                  'This text is *italic* and this is **bold**. Here is an image ![Alt text](https://picsum.photos/id/10/20/20) ',
+                keyword: 'Malaria, Tuberculosis, Drug Resistant',
+                subject: 'Medicine, Health and Life Sciences, Social Sciences',
+                publication: 'CNN Journal [CNN.com](https://cnn.com)',
+                notesText: 'Here is an image ![Alt text](https://picsum.photos/id/10/40/40)'
+              }
             }
           ],
           metadataBlocks: [

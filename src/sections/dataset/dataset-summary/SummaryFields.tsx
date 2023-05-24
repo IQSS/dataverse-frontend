@@ -1,23 +1,20 @@
-import { Row, Col, Tooltip } from 'dataverse-design-system'
-import { MarkdownComponent } from '../markdown/MarkdownComponent'
-import { DatasetField } from '../../../dataset/domain/models/Dataset'
+import { DatasetMetadataFields } from '../dataset-metadata/dataset-metadata-fields/DatasetMetadataFields'
+import { DatasetMetadataBlock } from '../../../dataset/domain/models/Dataset'
+
 interface SummaryFieldsProps {
-  summaryFields: DatasetField[]
+  summaryFields: DatasetMetadataBlock[]
 }
 
 export function SummaryFields({ summaryFields }: SummaryFieldsProps) {
   return (
-    <article>
-      {summaryFields.map((field, index) => (
-        <Row key={index}>
-          <Col sm={3}>
-            <b>{field.title}</b> <Tooltip placement="right" message={field.description}></Tooltip>
-          </Col>
-          <Col>
-            <MarkdownComponent markdown={field.value} />
-          </Col>
-        </Row>
+    <>
+      {summaryFields.map((metadataBlock, index) => (
+        <DatasetMetadataFields
+          key={`${metadataBlock.name}-${index}`}
+          metadataBlockName={metadataBlock.name}
+          metadataFields={metadataBlock.fields}
+        />
       ))}
-    </article>
+    </>
   )
 }

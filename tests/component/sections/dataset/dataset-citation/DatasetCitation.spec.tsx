@@ -58,4 +58,19 @@ describe('DatasetCitation', () => {
     cy.customMount(<DatasetCitation citation={citation} status={status} version={version} />)
     cy.findByText(/V1/).should('not.exist')
   })
+
+  it('renders with the unf property', () => {
+    const status = DatasetStatus.PUBLISHED
+    const version = null
+    const citationWithUnf: Citation = {
+      citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
+      pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+      publisher: 'Demo Dataverse',
+      unf: 'unf:123'
+    }
+
+    cy.customMount(<DatasetCitation citation={citationWithUnf} status={status} version={version} />)
+
+    cy.findByText(/unf:123/).should('exist')
+  })
 })
