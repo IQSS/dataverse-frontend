@@ -1,6 +1,11 @@
 import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
-import { ANONYMIZED_FIELD_VALUE, Dataset, MetadataBlockName } from '../../domain/models/Dataset'
-import { LabelSemanticMeaning } from '../../domain/models/Dataset'
+import {
+  ANONYMIZED_FIELD_VALUE,
+  Dataset,
+  MetadataBlockName,
+  DatasetStatus,
+  LabelSemanticMeaning
+} from '../../domain/models/Dataset'
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
   getById(id: string): Promise<Dataset | undefined> {
@@ -14,6 +19,14 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
             { value: 'Version 1.0', semanticMeaning: LabelSemanticMeaning.FILE },
             { value: 'Draft', semanticMeaning: LabelSemanticMeaning.DATASET }
           ],
+          citation: {
+            citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
+            pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+            publisher: 'Demo Dataverse'
+          },
+          status: DatasetStatus.PUBLISHED,
+
+          version: '1.0',
           license: {
             name: 'CC0 1.0',
             shortDescription: 'CC0 1.0 Universal Public Domain Dedication',
@@ -24,7 +37,9 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
             {
               title: 'Description',
               description: 'this is the description field',
-              value: 'This is a description of the dataset'
+              value:
+                'This is the description field. Here is [a link](https://dataverse.org). ' +
+                'This text is *italic* and this is **bold**. Here is an image ![Alt text](https://picsum.photos/id/10/20/20) '
             },
             {
               title: 'Keyword',
@@ -36,11 +51,10 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
               description: 'this is the subject field',
               value: 'Medicine, Health and Life Sciences, Social Sciences'
             },
-
             {
               title: 'Related Publication',
               description: 'this is the keyword field',
-              value: 'https://doi.org/10.5072/FK2/ABC123'
+              value: 'CNN Journal [CNN.com](https://cnn.com)'
             },
             {
               title: 'Notes',
@@ -191,6 +205,14 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
             { value: 'Version 1.0', semanticMeaning: LabelSemanticMeaning.FILE },
             { value: 'Draft', semanticMeaning: LabelSemanticMeaning.DATASET }
           ],
+          citation: {
+            citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
+            pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+            publisher: 'Demo Dataverse'
+          },
+          status: DatasetStatus.PUBLISHED,
+
+          version: '1.0',
           license: {
             name: 'CC0 1.0',
             shortDescription: 'CC0 1.0 Universal Public Domain Dedication',
@@ -201,7 +223,9 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
             {
               title: 'Description',
               description: 'this is the description field',
-              value: 'This is a description of the dataset'
+              value:
+                'This is the description field. Here is [a link](https://dataverse.org). ' +
+                'This text is *italic* and this is **bold**. Here is an image ![Alt text](https://picsum.photos/id/10/20/20) '
             },
             {
               title: 'Keyword',
@@ -213,11 +237,10 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
               description: 'this is the subject field',
               value: 'Medicine, Health and Life Sciences, Social Sciences'
             },
-
             {
               title: 'Related Publication',
               description: 'this is the keyword field',
-              value: 'https://doi.org/10.5072/FK2/ABC123'
+              value: 'CNN Journal [CNN.com](https://cnn.com)'
             },
             {
               title: 'Notes',
@@ -240,17 +263,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
             {
               name: MetadataBlockName.GEOSPATIAL,
               fields: {
-                geographicUnit: 'km',
-                geographicCoverage: [
-                  {
-                    geographicCoverageCountry: ANONYMIZED_FIELD_VALUE,
-                    geographicCoverageCity: ANONYMIZED_FIELD_VALUE
-                  },
-                  {
-                    geographicCoverageCountry: ANONYMIZED_FIELD_VALUE,
-                    geographicCoverageCity: ANONYMIZED_FIELD_VALUE
-                  }
-                ]
+                geographicUnit: ANONYMIZED_FIELD_VALUE,
+                geographicCoverage: ANONYMIZED_FIELD_VALUE
               }
             }
           ]
