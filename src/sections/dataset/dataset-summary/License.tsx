@@ -1,5 +1,5 @@
 import { Row, Col } from 'dataverse-design-system'
-import { License as LicenseModel } from '../../../dataset/domain/models/Dataset'
+import { DatasetLicense as LicenseModel } from '../../../dataset/domain/models/Dataset'
 interface LicenseProps {
   license: LicenseModel
 }

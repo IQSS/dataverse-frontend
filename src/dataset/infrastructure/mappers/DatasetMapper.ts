@@ -1,19 +1,46 @@
-import { Dataset as jsDataset } from 'js-dataverse'
-import { Dataset } from '../../domain/models/Dataset'
+import { Dataset as JSDataset, DatasetLicense as JSDatasetLicense } from 'js-dataverse'
+import { DatasetVersionState as JSDatasetVersionState } from 'js-dataverse/dist/datasets/domain/models/Dataset'
+import { Dataset, DatasetLicense, DatasetStatus } from '../../domain/models/Dataset'
 
 export class DatasetMapper {
-  static toModel(jsDataset: jsDataset): Dataset {
+  static toModel(jsDataset: JSDataset): Dataset {
+    DatasetMapper.validateJsDataset(jsDataset)
+
+    return new Dataset.Builder(
+      jsDataset.persistentId,
+      jsDataset.metadataBlocks[0].fields.title as string,
+      jsDataset.versionInfo,
+      DatasetMapper.toStatus(jsDataset.versionInfo.state),
+      [],
+      DatasetMapper.toLicense(jsDataset.license),
+      []
+    )
+  }
+
+  static validateJsDataset(jsDataset: JSDataset): void {
+    if (typeof jsDataset.metadataBlocks[0].fields.title !== 'string') {
+      throw new Error('Dataset title is not a string')
+    }
+  }
+
+  static toStatus(jsDatasetVersionState: JSDatasetVersionState): DatasetStatus {
+    switch (jsDatasetVersionState) {
+      case JSDatasetVersionState.DRAFT:
+        return DatasetStatus.DRAFT
+      case JSDatasetVersionState.DEACCESSIONED:
+        return DatasetStatus.DEACCESSIONED
+      case JSDatasetVersionState.RELEASED:
+        return DatasetStatus.RELEASED
+      default:
+        return DatasetStatus.DRAFT
+    }
+  }
+
+  static toLicense(jsDatasetVersionState: JSDatasetLicense): DatasetLicense {
     return {
-      persistentId: jsDataset.persistentId,
-      title: jsDataset.metadataBlocks[0].fields.title as string,
-      labels: [],
-      summaryFields: [],
-      license: {
-        name: jsDataset.license.name,
-        shortDescription: '',
-        uri: jsDataset.license.uri
-      },
-      metadataBlocks: []
+      name: jsDatasetVersionState.name,
+      uri: jsDatasetVersionState.uri,
+      shortDescription: jsDatasetVersionState.name
     }
   }
 }

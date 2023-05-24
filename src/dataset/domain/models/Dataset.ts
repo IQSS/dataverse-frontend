@@ -7,9 +7,11 @@ export enum LabelSemanticMeaning {
   DANGER = 'danger'
 }
 
-export interface DatasetLabel {
-  semanticMeaning: LabelSemanticMeaning
-  value: string
+export class DatasetLabel {
+  constructor(
+    public readonly semanticMeaning: LabelSemanticMeaning,
+    public readonly value: string
+  ) {}
 }
 
 export type DatasetMetadataSubField = Record<string, string>
@@ -51,18 +53,103 @@ export interface DatasetField {
   value: string
 }
 
-export interface License {
+export interface DatasetLicense {
   name: string
   shortDescription: string
   uri: string
   iconUrl?: string
 }
 
-export interface Dataset {
-  persistentId: string
-  title: string
-  labels: DatasetLabel[]
-  summaryFields: DatasetField[]
-  license: License
-  metadataBlocks: DatasetMetadataBlock[]
+export enum DatasetStatus {
+  RELEASED = 'published',
+  UNPUBLISHED = 'unpublished',
+  DRAFT = 'draft',
+  DEACCESSIONED = 'deaccessioned',
+  EMBARGOED = 'embargoed',
+  IN_REVIEW = 'inReview'
+}
+
+export interface DatasetVersion {
+  majorNumber: number
+  minorNumber: number
+}
+
+export class Dataset {
+  constructor(
+    public readonly persistentId: string,
+    public readonly title: string,
+    public readonly version: DatasetVersion | null,
+    public readonly status: DatasetStatus,
+    public readonly labels: DatasetLabel[],
+    public readonly summaryFields: DatasetField[],
+    public readonly license: DatasetLicense,
+    public readonly metadataBlocks: DatasetMetadataBlock[]
+  ) {}
+
+  static Builder = class {
+    public readonly labels: DatasetLabel[] = []
+
+    constructor(
+      public readonly persistentId: string,
+      public readonly title: string,
+      public readonly version: DatasetVersion,
+      public readonly status: DatasetStatus,
+      public readonly summaryFields: DatasetField[],
+      public readonly license: DatasetLicense,
+      public readonly metadataBlocks: DatasetMetadataBlock[]
+    ) {
+      this.withLabels(status, version)
+    }
+
+    withLabels(status: DatasetStatus, version: DatasetVersion) {
+      this.withStatusLabel(status)
+      this.withVersionLabel(status, version)
+    }
+
+    private withStatusLabel(status: DatasetStatus): void {
+      if (status === DatasetStatus.DRAFT) {
+        this.labels.push(new DatasetLabel(LabelSemanticMeaning.DATASET, DatasetStatus.DRAFT))
+      }
+
+      if (status === DatasetStatus.UNPUBLISHED) {
+        this.labels.push(new DatasetLabel(LabelSemanticMeaning.WARNING, DatasetStatus.UNPUBLISHED))
+      }
+
+      if (status === DatasetStatus.DEACCESSIONED) {
+        this.labels.push(new DatasetLabel(LabelSemanticMeaning.DANGER, DatasetStatus.DEACCESSIONED))
+      }
+
+      if (status === DatasetStatus.EMBARGOED) {
+        this.labels.push(new DatasetLabel(LabelSemanticMeaning.DATASET, DatasetStatus.EMBARGOED))
+      }
+
+      if (status === DatasetStatus.IN_REVIEW) {
+        this.labels.push(new DatasetLabel(LabelSemanticMeaning.SUCCESS, DatasetStatus.IN_REVIEW))
+      }
+    }
+
+    private withVersionLabel(status: DatasetStatus, version: DatasetVersion): void {
+      if (status === DatasetStatus.RELEASED) {
+        this.labels.push(
+          new DatasetLabel(
+            LabelSemanticMeaning.FILE,
+            `Version ${version.majorNumber}.${version.minorNumber}`
+          )
+        )
+      }
+    }
+
+    build(): Dataset {
+      return new Dataset(
+        this.persistentId,
+        this.title,
+        this.version,
+        this.status,
+        this.labels,
+        this.summaryFields,
+        this.license,
+        this.metadataBlocks
+      )
+    }
+  }
 }

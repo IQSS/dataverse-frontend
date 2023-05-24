@@ -1,9 +1,9 @@
 import { DatasetSummary } from '../../../../../src/sections/dataset/dataset-summary/DatasetSummary'
-import { DatasetField, License } from '../../../../../src/dataset/domain/models/Dataset'
+import { DatasetField, DatasetLicense } from '../../../../../src/dataset/domain/models/Dataset'
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 
 describe('DatasetSummary', () => {
-  const licenseMock: License = DatasetMother.create().license
+  const licenseMock: DatasetLicense = DatasetMother.create().license
   const summaryFieldsMock: DatasetField[] = DatasetMother.create().summaryFields
 
   it('renders the DatasetSummary fields', () => {

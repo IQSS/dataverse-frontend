@@ -3,7 +3,7 @@ import { WithI18next } from '../../WithI18next'
 
 import { DatasetSummary } from '../../../sections/dataset/dataset-summary/DatasetSummary'
 import { faker } from '@faker-js/faker'
-import { DatasetField, License } from '../../../dataset/domain/models/Dataset'
+import { DatasetField, DatasetLicense } from '../../../dataset/domain/models/Dataset'
 
 const meta: Meta<typeof DatasetSummary> = {
   title: 'Sections/Dataset Page/DatasetSummary',
@@ -11,7 +11,7 @@ const meta: Meta<typeof DatasetSummary> = {
   decorators: [WithI18next]
 }
 
-const licenseMock: License = {
+const licenseMock: DatasetLicense = {
   name: 'CC0 1.0',
   shortDescription: 'CC0 1.0 Universal Public Domain Dedication',
   uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
