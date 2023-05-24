@@ -47,5 +47,5 @@ export function DatasetMetadataField({
 
 const AnonymizedFieldValue = () => {
   const { t } = useTranslation('dataset')
-  return <span>{t('anonymizedFieldValue')}</span>
+  return <p>{t('anonymizedFieldValue')}</p>
 }
