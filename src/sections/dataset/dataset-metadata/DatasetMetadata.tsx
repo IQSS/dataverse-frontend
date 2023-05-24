@@ -7,10 +7,8 @@ interface DatasetMetadataProps {
 }
 
 export function DatasetMetadata({ metadataBlocks }: DatasetMetadataProps) {
-  const allKeys = metadataBlocks.map((_, index) => index.toString())
-
   return (
-    <Accordion defaultActiveKey={allKeys} alwaysOpen>
+    <Accordion defaultActiveKey={['0']} alwaysOpen>
       {metadataBlocks.map((metadataBlock, index) => (
         <Accordion.Item key={`${metadataBlock.name}-${index}`} eventKey={index.toString()}>
           <DatasetMetadataBlock metadataBlock={metadataBlock} />

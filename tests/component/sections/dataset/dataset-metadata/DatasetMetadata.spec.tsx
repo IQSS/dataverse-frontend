@@ -13,10 +13,14 @@ describe('DatasetMetadata', () => {
     cy.fixture('metadataTranslations').then((t) => {
       cy.customMount(<DatasetMetadata metadataBlocks={mockMetadataBlocks} />)
 
-      mockMetadataBlocks.forEach((metadataBlock) => {
+      mockMetadataBlocks.forEach((metadataBlock, index) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const titleItem = cy.findByRole('button', { name: t[metadataBlock.name].name })
         titleItem.should('exist')
+
+        if (index !== 0) {
+          titleItem.click()
+        }
 
         Object.entries(metadataBlock.fields).forEach(([fieldName, field]) => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
