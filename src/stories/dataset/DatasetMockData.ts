@@ -1,10 +1,21 @@
-import { ANONYMIZED_FIELD_VALUE, LabelSemanticMeaning } from '../../dataset/domain/models/Dataset'
+import {
+  ANONYMIZED_FIELD_VALUE,
+  DatasetStatus,
+  LabelSemanticMeaning
+} from '../../dataset/domain/models/Dataset'
 import { MetadataBlockName } from '../../dataset/domain/models/Dataset'
 import { Dataset } from '../../dataset/domain/models/Dataset'
 
 export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): Dataset => ({
   id: '123456789',
   title: 'Dataset title',
+  citation: {
+    citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
+    pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+    publisher: 'Demo Dataverse'
+  },
+  status: DatasetStatus.DRAFT,
+  version: null,
   labels: [
     { value: 'Version 1.0', semanticMeaning: LabelSemanticMeaning.FILE },
     { value: 'Draft', semanticMeaning: LabelSemanticMeaning.DATASET }
