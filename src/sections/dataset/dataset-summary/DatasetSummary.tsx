@@ -1,11 +1,10 @@
-import { DatasetField } from '../../../dataset/domain/models/Dataset'
 import { SummaryFields } from './SummaryFields'
-import { DatasetLicense as LicenseModel } from '../../../dataset/domain/models/Dataset'
+import { DatasetLicense, DatasetMetadataBlock } from '../../../dataset/domain/models/Dataset'
 import { License } from './License'
 
 interface DatasetSummaryProps {
-  summaryFields: DatasetField[]
-  license: LicenseModel
+  summaryFields: DatasetMetadataBlock[]
+  license: DatasetLicense
 }
 
 export function DatasetSummary({ summaryFields, license }: DatasetSummaryProps) {

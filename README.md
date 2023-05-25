@@ -178,3 +178,5 @@ We added an underline to links to make them accessible.
 Now we are using Bootstrap with a theme, so there is only one definition for the secondary color. Since Bootstrap applies
 the secondary color to the labels automatically, the color of the file label is now the global secondary color which is
 a lighter shade of grey than what it used to be.
+
+We changed the citation block to be white with a colored border, to make the text in the box more accessible.

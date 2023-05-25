@@ -1,13 +1,36 @@
 import { faker } from '@faker-js/faker'
-import { ANONYMIZED_FIELD_VALUE, Dataset } from '../../../../../src/dataset/domain/models/Dataset'
-import { LabelSemanticMeaning } from '../../../../../src/dataset/domain/models/Dataset'
+import {
+  ANONYMIZED_FIELD_VALUE,
+  Dataset,
+  DatasetStatus,
+  LabelSemanticMeaning
+} from '../../../../../src/dataset/domain/models/Dataset'
 import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Dataset'
 
 export class DatasetMother {
+  static createEmpty(): undefined {
+    return undefined
+  }
+
   static create(props?: Partial<Dataset>): Dataset {
     return {
       persistentId: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
+      version: {
+        majorNumber: faker.datatype.number(),
+        minorNumber: faker.datatype.number()
+      },
+      status: DatasetStatus.RELEASED,
+      citation: {
+        citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
+        pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+        publisher: 'Demo Dataverse'
+      },
+      license: {
+        name: 'CC0 1.0',
+        uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
+        iconUrl: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+      },
       labels: [
         {
           value: faker.lorem.word(),
@@ -65,42 +88,18 @@ export class DatasetMother {
       ],
       summaryFields: [
         {
-          title: faker.lorem.word(),
-          description: faker.lorem.sentence(),
-          value: faker.lorem.sentence()
-        },
-        {
-          title: faker.lorem.word(),
-          description: faker.lorem.sentence(),
-          value: faker.lorem.sentence()
-        },
-        {
-          title: faker.lorem.word(),
-          description: faker.lorem.sentence(),
-          value: faker.lorem.sentence()
-        },
-        {
-          title: faker.lorem.word(),
-          description: faker.lorem.sentence(),
-          value: faker.lorem.sentence()
-        },
-        {
-          title: faker.lorem.word(),
-          description: faker.lorem.sentence(),
-          value: faker.lorem.sentence()
+          name: MetadataBlockName.CITATION,
+          fields: {
+            dsDescription: faker.lorem.sentence(),
+            keyword: faker.lorem.sentence(),
+            subject: faker.lorem.sentence(),
+            publication: faker.lorem.sentence(),
+            notesText: faker.lorem.sentence()
+          }
         }
       ],
-      license: {
-        name: faker.lorem.sentence(),
-        uri: faker.internet.url(),
-        iconUrl: faker.image.imageUrl()
-      },
       ...props
     }
-  }
-
-  static createEmpty(): undefined {
-    return undefined
   }
 
   static createAnonymized(): Dataset {

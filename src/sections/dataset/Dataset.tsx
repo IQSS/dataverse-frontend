@@ -9,6 +9,7 @@ import { PageNotFound } from '../page-not-found/PageNotFound'
 import { useTranslation } from 'react-i18next'
 import { DatasetMetadata } from './dataset-metadata/DatasetMetadata'
 import { DatasetSummary } from './dataset-summary/DatasetSummary'
+import { DatasetCitation } from './dataset-citation/DatasetCitation'
 
 interface DatasetProps {
   repository: DatasetRepository
@@ -39,7 +40,12 @@ export function Dataset({ repository, searchParams }: DatasetProps) {
           </header>
           <div className={styles.container}>
             <Row>
-              <Col sm={9}>Citation Block</Col>
+              <Col sm={9}>
+                <DatasetCitation
+                  citation={dataset.citation}
+                  status={dataset.status}
+                  version={dataset.version}></DatasetCitation>
+              </Col>
             </Row>
             <Row>
               <Col sm={9} className={styles['summary-container']}>

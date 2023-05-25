@@ -1,6 +1,6 @@
 import { Dataset as JSDataset } from 'js-dataverse'
 import { DatasetVersionState as JSDatasetVersionState } from 'js-dataverse/dist/datasets/domain/models/Dataset'
-import { Dataset, DatasetStatus } from '../../domain/models/Dataset'
+import { Citation, Dataset, DatasetStatus } from '../../domain/models/Dataset'
 
 export class DatasetMapper {
   static toModel(jsDataset: JSDataset): Dataset {
@@ -11,6 +11,7 @@ export class DatasetMapper {
       jsDataset.metadataBlocks[0].fields.title as string,
       jsDataset.versionInfo,
       DatasetMapper.toStatus(jsDataset.versionInfo.state),
+      DatasetMapper.toCitation(),
       [],
       jsDataset.license,
       []
@@ -33,6 +34,14 @@ export class DatasetMapper {
         return DatasetStatus.RELEASED
       default:
         return DatasetStatus.DRAFT
+    }
+  }
+
+  static toCitation(): Citation {
+    return {
+      citationText: '',
+      pidUrl: '',
+      publisher: ''
     }
   }
 }

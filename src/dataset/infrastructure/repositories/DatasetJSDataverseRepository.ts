@@ -1,5 +1,10 @@
 import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
-import { ANONYMIZED_FIELD_VALUE, Dataset, MetadataBlockName } from '../../domain/models/Dataset'
+import {
+  ANONYMIZED_FIELD_VALUE,
+  Dataset,
+  DatasetStatus,
+  MetadataBlockName
+} from '../../domain/models/Dataset'
 import { LabelSemanticMeaning } from '../../domain/models/Dataset'
 import { getDataset, WriteError } from 'js-dataverse'
 import { DatasetMapper } from '../mappers/DatasetMapper'
@@ -26,38 +31,32 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
             { value: 'Version 1.0', semanticMeaning: LabelSemanticMeaning.FILE },
             { value: 'Draft', semanticMeaning: LabelSemanticMeaning.DATASET }
           ],
+          citation: {
+            citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
+            pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+            publisher: 'Demo Dataverse'
+          },
+          status: DatasetStatus.RELEASED,
+          version: {
+            majorNumber: 1,
+            minorNumber: 0
+          },
           license: {
             name: 'CC0 1.0',
-            shortDescription: 'CC0 1.0 Universal Public Domain Dedication',
             uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
             iconUrl: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
           },
           summaryFields: [
             {
-              title: 'Description',
-              description: 'this is the description field',
-              value: 'This is a description of the dataset'
-            },
-            {
-              title: 'Keyword',
-              description: 'this is the keyword field',
-              value: 'Malaria, Tuberculosis, Drug Resistant'
-            },
-            {
-              title: 'Subject',
-              description: 'this is the subject field',
-              value: 'Medicine, Health and Life Sciences, Social Sciences'
-            },
-
-            {
-              title: 'Related Publication',
-              description: 'this is the keyword field',
-              value: 'https://doi.org/10.5072/FK2/ABC123'
-            },
-            {
-              title: 'Notes',
-              description: 'this is the notes field',
-              value: 'image'
+              name: MetadataBlockName.CITATION,
+              fields: {
+                dsDescription:
+                  'This text is *italic* and this is **bold**. Here is an image ![Alt text](https://picsum.photos/id/10/20/20) ',
+                keyword: 'Malaria, Tuberculosis, Drug Resistant',
+                subject: 'Medicine, Health and Life Sciences, Social Sciences',
+                publication: 'CNN Journal [CNN.com](https://cnn.com)',
+                notesText: 'Here is an image ![Alt text](https://picsum.photos/id/10/40/40)'
+              }
             }
           ],
           metadataBlocks: [
@@ -75,17 +74,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
             {
               name: MetadataBlockName.GEOSPATIAL,
               fields: {
-                geographicUnit: 'km',
-                geographicCoverage: [
-                  {
-                    geographicCoverageCountry: ANONYMIZED_FIELD_VALUE,
-                    geographicCoverageCity: ANONYMIZED_FIELD_VALUE
-                  },
-                  {
-                    geographicCoverageCountry: ANONYMIZED_FIELD_VALUE,
-                    geographicCoverageCity: ANONYMIZED_FIELD_VALUE
-                  }
-                ]
+                geographicUnit: ANONYMIZED_FIELD_VALUE,
+                geographicCoverage: ANONYMIZED_FIELD_VALUE
               }
             }
           ]

@@ -47,12 +47,6 @@ export interface DatasetMetadataBlock {
   fields: DatasetMetadataFields
 }
 
-export interface DatasetField {
-  title: string
-  description: string
-  value: string
-}
-
 export interface DatasetLicense {
   name: string
   uri: string
@@ -73,14 +67,22 @@ export interface DatasetVersion {
   minorNumber: number
 }
 
+export interface Citation {
+  citationText: string
+  pidUrl: string
+  publisher: string
+  unf?: string
+}
+
 export class Dataset {
   constructor(
     public readonly persistentId: string,
     public readonly title: string,
     public readonly version: DatasetVersion | null,
     public readonly status: DatasetStatus,
+    public readonly citation: Citation,
     public readonly labels: DatasetLabel[],
-    public readonly summaryFields: DatasetField[],
+    public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
     public readonly metadataBlocks: DatasetMetadataBlock[]
   ) {}
@@ -93,7 +95,8 @@ export class Dataset {
       public readonly title: string,
       public readonly version: DatasetVersion,
       public readonly status: DatasetStatus,
-      public readonly summaryFields: DatasetField[],
+      public readonly citation: Citation,
+      public readonly summaryFields: DatasetMetadataBlock[],
       public readonly license: DatasetLicense,
       public readonly metadataBlocks: DatasetMetadataBlock[]
     ) {
@@ -144,6 +147,7 @@ export class Dataset {
         this.title,
         this.version,
         this.status,
+        this.citation,
         this.labels,
         this.summaryFields,
         this.license,
