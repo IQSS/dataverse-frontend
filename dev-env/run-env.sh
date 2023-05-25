@@ -14,7 +14,7 @@ echo "INFO - Removing current environment if exists..."
 ./rm-env.sh
 
 echo "INFO - Cloning Dataverse backend repository..."
-git clone -b ${DATAVERSE_BRANCH_NAME} git@github.com:IQSS/dataverse.git
+git clone -b ${DATAVERSE_BRANCH_NAME} https://github.com/IQSS/dataverse.git
 
 echo "INFO - Running docker containers..."
 docker-compose -f "./docker-compose-dev.yml" up -d --build

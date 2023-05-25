@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "INFO - Cloning Dataverse sample data repository..."
-git clone git@github.com:IQSS/dataverse-sample-data.git
+git clone https://github.com/IQSS/dataverse-sample-data.git
 
 echo "INFO - Configuring Dataverse sample data repository..."
 cd dataverse-sample-data
