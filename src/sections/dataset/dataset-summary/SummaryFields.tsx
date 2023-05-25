@@ -7,7 +7,7 @@ interface SummaryFieldsProps {
 
 export function SummaryFields({ summaryFields }: SummaryFieldsProps) {
   return (
-    <article>
+    <>
       {summaryFields.map((field, index) => (
         <Row key={index}>
           <Col sm={3}>
@@ -18,6 +18,6 @@ export function SummaryFields({ summaryFields }: SummaryFieldsProps) {
           </Col>
         </Row>
       ))}
-    </article>
+    </>
   )
 }

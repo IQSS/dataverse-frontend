@@ -92,7 +92,6 @@ export class DatasetMother {
       ],
       license: {
         name: faker.lorem.sentence(),
-        shortDescription: faker.lorem.sentence(),
         uri: faker.internet.url(),
         iconUrl: faker.image.imageUrl()
       },

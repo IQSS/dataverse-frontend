@@ -1,5 +1,9 @@
 {
   "filesTabTitle": "Files",
   "metadataTabTitle": "Metadata",
-  "anonymizedFieldValue": "withheld"
+  "anonymizedFieldValue": "withheld",
+  "license": {
+    "title": "License/Data Use Agreement",
+    "altTextPrefix": "License image for "
+  }
 }

@@ -1,6 +1,6 @@
-import { Dataset as JSDataset, DatasetLicense as JSDatasetLicense } from 'js-dataverse'
+import { Dataset as JSDataset } from 'js-dataverse'
 import { DatasetVersionState as JSDatasetVersionState } from 'js-dataverse/dist/datasets/domain/models/Dataset'
-import { Dataset, DatasetLicense, DatasetStatus } from '../../domain/models/Dataset'
+import { Dataset, DatasetStatus } from '../../domain/models/Dataset'
 
 export class DatasetMapper {
   static toModel(jsDataset: JSDataset): Dataset {
@@ -12,7 +12,7 @@ export class DatasetMapper {
       jsDataset.versionInfo,
       DatasetMapper.toStatus(jsDataset.versionInfo.state),
       [],
-      DatasetMapper.toLicense(jsDataset.license),
+      jsDataset.license,
       []
     )
   }
@@ -33,14 +33,6 @@ export class DatasetMapper {
         return DatasetStatus.RELEASED
       default:
         return DatasetStatus.DRAFT
-    }
-  }
-
-  static toLicense(jsDatasetVersionState: JSDatasetLicense): DatasetLicense {
-    return {
-      name: jsDatasetVersionState.name,
-      uri: jsDatasetVersionState.uri,
-      shortDescription: jsDatasetVersionState.name
     }
   }
 }

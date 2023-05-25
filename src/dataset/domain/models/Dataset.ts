@@ -55,7 +55,6 @@ export interface DatasetField {
 
 export interface DatasetLicense {
   name: string
-  shortDescription: string
   uri: string
   iconUrl?: string
 }
