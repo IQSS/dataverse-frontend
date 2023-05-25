@@ -1,5 +1,5 @@
-import { Dataset as JSDataset } from 'js-dataverse'
-import { DatasetVersionState as JSDatasetVersionState } from 'js-dataverse/dist/datasets/domain/models/Dataset'
+import { Dataset as JSDataset } from '@IQSS/dataverse-client-javascript'
+import { DatasetVersionState as JSDatasetVersionState } from '@IQSS/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
 import { DatasetCitation, Dataset, DatasetStatus } from '../../domain/models/Dataset'
 
 export class DatasetMapper {

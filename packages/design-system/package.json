@@ -14,6 +14,27 @@
     "test:unit": "cypress run --component",
     "test:coverage": "nyc check-coverage"
   },
+  "dependencies": {
+    "@types/react": "^18.0.27",
+    "typescript": "^4.9.5",
+    "vite-plugin-istanbul": "^4.0.1",
+    "bootstrap": "^5.2.3",
+    "react-bootstrap": "^2.7.2",
+    "react-bootstrap-icons": "^1.10.3",
+    "sass": "^1.58.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^3.1.0",
+    "@testing-library/cypress": "^9.0.0",
+    "@storybook/react": "^7.0.2",
+    "@storybook/test-runner": "0.10.0",
+    "cypress": "^12.5.1",
+    "vite": "4.1.0",
+    "vite-plugin-dts": "^2.3.0",
+    "vite-plugin-libcss": "^1.0.6",
+    "react": "^18.2.0",
+    "axe-playwright": "^1.2.3"
+  },
   "files": [
     "dist"
   ],

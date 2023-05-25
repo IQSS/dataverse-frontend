@@ -95,6 +95,12 @@ Once the script has finished, you will be able to access Dataverse via:
 - [http://localhost:8000/spa](http://localhost:8000/spa): SPA Frontend
 - [http://localhost:8000](http://localhost:8000): Dataverse Backend and JSF Frontend
 
+If you want to run the environment with aggregated test data (collections and datasets), run the following command:
+
+```
+./run-env <dataverse_branch_name> wd
+```
+
 ### Remove the environment
 
 To clean up your environment of any running environment containers, as well as any associated data volumes, run this script inside the `dev-env` folder:

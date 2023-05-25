@@ -6,7 +6,7 @@ import {
   MetadataBlockName
 } from '../../domain/models/Dataset'
 import { LabelSemanticMeaning } from '../../domain/models/Dataset'
-import { getDataset, WriteError } from 'js-dataverse'
+import { getDataset, WriteError } from '@IQSS/dataverse-client-javascript'
 import { DatasetMapper } from '../mappers/DatasetMapper'
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
