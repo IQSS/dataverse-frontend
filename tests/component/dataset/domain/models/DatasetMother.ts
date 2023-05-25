@@ -23,7 +23,7 @@ export class DatasetMother {
       status: DatasetStatus.RELEASED,
       citation: {
         citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
-        pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+        url: 'https://doi.org/10.70122/FK2/KLX4XO',
         publisher: 'Demo Dataverse'
       },
       license: {

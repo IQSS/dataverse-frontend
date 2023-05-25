@@ -1,10 +1,14 @@
 import { Col, Icon, Row, Tooltip } from 'dataverse-design-system'
 import styles from './DatasetCitation.module.scss'
 import { useTranslation } from 'react-i18next'
-import { Citation, DatasetStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
+import {
+  DatasetCitation as DatasetCitationModel,
+  DatasetStatus,
+  DatasetVersion
+} from '../../../dataset/domain/models/Dataset'
 
 interface DatasetCitationProps {
-  citation: Citation
+  citation: DatasetCitationModel
   status: DatasetStatus
   version: DatasetVersion | null
 }
@@ -15,7 +19,7 @@ interface CitationDatasetStatusProps {
 function CitationDescription({ citation, status, version }: DatasetCitationProps) {
   return (
     <span className={styles.citation}>
-      {citation.citationText}, <a href={citation.pidUrl}>{citation.pidUrl}</a>, {citation.publisher}
+      {citation.citationText}, <a href={citation.url}>{citation.url}</a>, {citation.publisher}
       {version && `, V${version.majorNumber}`}
       {citation.unf && `, ${citation.unf}`}
       <CitationDatasetStatus status={status} />

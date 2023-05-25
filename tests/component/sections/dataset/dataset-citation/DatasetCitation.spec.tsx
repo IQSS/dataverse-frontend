@@ -1,12 +1,15 @@
 import { createSandbox, SinonSandbox } from 'sinon'
 import { DatasetCitation } from '../../../../../src/sections/dataset/dataset-citation/DatasetCitation'
-import { Citation, DatasetStatus } from '../../../../../src/dataset/domain/models/Dataset'
+import {
+  DatasetCitation as DatasetCitationModel,
+  DatasetStatus
+} from '../../../../../src/dataset/domain/models/Dataset'
 
 describe('DatasetCitation', () => {
   const sandbox: SinonSandbox = createSandbox()
-  const citation: Citation = {
+  const citation: DatasetCitationModel = {
     citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
-    pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+    url: 'https://doi.org/10.70122/FK2/KLX4XO',
     publisher: 'Demo Dataverse'
   }
   afterEach(() => {
@@ -20,9 +23,9 @@ describe('DatasetCitation', () => {
 
     cy.findByText('Data Citation Standards.').should('exist')
     cy.findByText(/Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms"/).should('exist')
-    cy.findByRole('link', { name: citation.pidUrl })
+    cy.findByRole('link', { name: citation.url })
       .should('have.attr', 'href')
-      .and('eq', citation.pidUrl)
+      .and('eq', citation.url)
     cy.findByRole('link', { name: 'Data Citation Standards.' })
       .should('have.attr', 'href')
       .and('eq', 'https://dataverse.org/best-practices/data-citation')
@@ -62,9 +65,9 @@ describe('DatasetCitation', () => {
   it('renders with the unf property', () => {
     const status = DatasetStatus.RELEASED
     const version = null
-    const citationWithUnf: Citation = {
+    const citationWithUnf: DatasetCitationModel = {
       citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
-      pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+      url: 'https://doi.org/10.70122/FK2/KLX4XO',
       publisher: 'Demo Dataverse',
       unf: 'unf:123'
     }

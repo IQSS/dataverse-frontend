@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../WithI18next'
 import { DatasetCitation } from '../../sections/dataset/dataset-citation/DatasetCitation'
-import { Citation, DatasetStatus } from '../../dataset/domain/models/Dataset'
+import {
+  DatasetCitation as DatasetCitationModel,
+  DatasetStatus
+} from '../../dataset/domain/models/Dataset'
 import { DatasetMockData } from './DatasetMockData'
 
 const meta: Meta<typeof DatasetCitation> = {
@@ -35,9 +38,9 @@ export const Default: Story = {
 }
 export const WithUNF: Story = {
   render: () => {
-    const citation: Citation = {
+    const citation: DatasetCitationModel = {
       citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
-      pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+      url: 'https://doi.org/10.70122/FK2/KLX4XO',
       publisher: 'Demo Dataverse',
       unf: 'UNF:6:8ttuxucTZJWfZ9JgN1udiA== [fileUNF]'
     }

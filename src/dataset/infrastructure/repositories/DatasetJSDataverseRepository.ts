@@ -33,7 +33,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           ],
           citation: {
             citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
-            pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
+            url: 'https://doi.org/10.70122/FK2/KLX4XO',
             publisher: 'Demo Dataverse'
           },
           status: DatasetStatus.RELEASED,

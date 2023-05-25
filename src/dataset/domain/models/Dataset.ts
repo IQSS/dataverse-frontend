@@ -67,9 +67,9 @@ export interface DatasetVersion {
   minorNumber: number
 }
 
-export interface Citation {
+export interface DatasetCitation {
   citationText: string
-  pidUrl: string
+  url: string
   publisher: string
   unf?: string
 }
@@ -80,7 +80,7 @@ export class Dataset {
     public readonly title: string,
     public readonly version: DatasetVersion | null,
     public readonly status: DatasetStatus,
-    public readonly citation: Citation,
+    public readonly citation: DatasetCitation,
     public readonly labels: DatasetLabel[],
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
@@ -95,7 +95,7 @@ export class Dataset {
       public readonly title: string,
       public readonly version: DatasetVersion,
       public readonly status: DatasetStatus,
-      public readonly citation: Citation,
+      public readonly citation: DatasetCitation,
       public readonly summaryFields: DatasetMetadataBlock[],
       public readonly license: DatasetLicense,
       public readonly metadataBlocks: DatasetMetadataBlock[]
