@@ -1,4 +1,4 @@
-import { getDataverseVersion, WriteError } from 'js-dataverse'
+import { getDataverseVersion, WriteError } from '@IQSS/dataverse-client-javascript'
 import { DataverseInfoRepository } from '../../domain/repositories/DataverseInfoRepository'
 import { DataverseVersion } from '../../domain/models/DataverseVersion'
 

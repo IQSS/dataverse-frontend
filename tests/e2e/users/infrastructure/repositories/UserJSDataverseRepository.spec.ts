@@ -1,7 +1,7 @@
 import { UserJSDataverseRepository } from '../../../../../src/users/infrastructure/repositories/UserJSDataverseRepository'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
-import { ApiConfig } from 'js-dataverse/dist/core'
+import { ApiConfig } from '@IQSS/dataverse-client-javascript/dist/core'
 
 chai.use(chaiAsPromised)
 

@@ -93,6 +93,7 @@
   "devDependencies": {
     "@csstools/postcss-cascade-layers": "^3.0.1",
     "@cypress/code-coverage": "^3.10.4",
+    "@IQSS/dataverse-client-javascript": "2.0.0-pr61.8ac5f25",
     "@storybook/addon-a11y": "^7.0.2",
     "@storybook/addon-essentials": "^7.0.2",
     "@storybook/addon-interactions": "^7.0.2",
@@ -124,7 +125,6 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-storybook": "^0.6.11",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "js-dataverse": "file:./js-dataverse-2.0.0.tgz",
     "jsdom": "^21.1.0",
     "lcov-result-merger": "^3.3.0",
     "msw": "^1.2.1",
