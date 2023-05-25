@@ -7,7 +7,8 @@ import {
   DatasetCitation,
   Dataset,
   DatasetStatus,
-  MetadataBlockName
+  MetadataBlockName,
+  DatasetMetadataBlock
 } from '../../domain/models/Dataset'
 
 export class DatasetMapper {
@@ -18,10 +19,22 @@ export class DatasetMapper {
       jsDataset.versionInfo,
       DatasetMapper.toStatus(jsDataset.versionInfo.state),
       DatasetMapper.toCitation(),
-      [],
+      DatasetMapper.toMetadataBlocks(jsDataset.metadataBlocks),
       jsDataset.license,
-      []
+      DatasetMapper.toMetadataBlocks(jsDataset.metadataBlocks)
     )
+  }
+
+  static toTitle(jsDatasetMetadataBlocks: JSDatasetMetadataBlock[]): string {
+    const citationFields = jsDatasetMetadataBlocks.find(
+      (metadataBlock) => metadataBlock.name === MetadataBlockName.CITATION
+    )?.fields
+
+    if (citationFields && typeof citationFields.title === 'string') {
+      return citationFields.title
+    }
+
+    throw new Error('Dataset title not found')
   }
 
   static toStatus(jsDatasetVersionState: JSDatasetVersionState): DatasetStatus {
@@ -37,18 +50,6 @@ export class DatasetMapper {
     }
   }
 
-  static toTitle(jsDatasetMetadataBlocks: JSDatasetMetadataBlock[]): string {
-    const citationFields = jsDatasetMetadataBlocks.find(
-      (metadataBlock) => metadataBlock.name === MetadataBlockName.CITATION
-    )?.fields
-
-    if (citationFields && typeof citationFields.title === 'string') {
-      return citationFields.title
-    }
-
-    throw new Error('Dataset title not found')
-  }
-
   static toCitation(): DatasetCitation {
     // TODO: Implement
     return {
@@ -58,26 +59,26 @@ export class DatasetMapper {
     }
   }
 
-  // static toMetadataBlocks(
-  //   jsDatasetMetadataBlocks: JSDatasetMetadataBlock[]
-  // ): DatasetMetadataBlock[] {
-  //   return jsDatasetMetadataBlocks.map((jsDatasetMetadataBlock) => {
-  //     return {
-  //       name: DatasetMapper.toMetadataBlockName(jsDatasetMetadataBlock.name),
-  //       fields: DatasetMapper.toMetadataBlockName(jsDatasetMetadataBlock.name)
-  //     }
-  //   })
-  // }
-  //
-  // static toMetadataBlockName(jsDatasetMetadataBlockName: string): MetadataBlockName {
-  //   const metadataBlockNameKey = Object.values(MetadataBlockName).find((metadataBlockNameKey) => {
-  //     return metadataBlockNameKey === jsDatasetMetadataBlockName
-  //   })
-  //
-  //   if (metadataBlockNameKey === undefined) {
-  //     throw new Error('Incorrect Metadata block name key')
-  //   }
-  //
-  //   return metadataBlockNameKey
-  // }
+  static toMetadataBlocks(
+    jsDatasetMetadataBlocks: JSDatasetMetadataBlock[]
+  ): DatasetMetadataBlock[] {
+    return jsDatasetMetadataBlocks.map((jsDatasetMetadataBlock) => {
+      return {
+        name: DatasetMapper.toMetadataBlockName(jsDatasetMetadataBlock.name),
+        fields: jsDatasetMetadataBlock.fields
+      }
+    })
+  }
+
+  static toMetadataBlockName(jsDatasetMetadataBlockName: string): MetadataBlockName {
+    const metadataBlockNameKey = Object.values(MetadataBlockName).find((metadataBlockNameKey) => {
+      return metadataBlockNameKey === jsDatasetMetadataBlockName
+    })
+
+    if (metadataBlockNameKey === undefined) {
+      throw new Error('Incorrect Metadata block name key')
+    }
+
+    return metadataBlockNameKey
+  }
 }

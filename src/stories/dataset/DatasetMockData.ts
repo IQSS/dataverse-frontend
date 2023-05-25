@@ -47,6 +47,7 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
         publicationDate: anonymized ? ANONYMIZED_FIELD_VALUE : '2021-01-01',
         citationDate: '2021-01-01',
         title: 'Dataset Title',
+        subject: ['Subject1', 'Subject2'],
         author: anonymized
           ? ANONYMIZED_FIELD_VALUE
           : [
@@ -71,16 +72,10 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
         geographicUnit: 'km',
         geographicCoverage: anonymized
           ? ANONYMIZED_FIELD_VALUE
-          : [
-              {
-                geographicCoverageCountry: 'United States',
-                geographicCoverageCity: 'Cambridge'
-              },
-              {
-                geographicCoverageCountry: 'United States',
-                geographicCoverageCity: 'Cambridge'
-              }
-            ]
+          : {
+              geographicCoverageCountry: 'United States',
+              geographicCoverageCity: 'Cambridge'
+            }
       }
     }
   ],

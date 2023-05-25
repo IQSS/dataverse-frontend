@@ -19,9 +19,14 @@ export type DatasetMetadataSubField = Record<string, string>
 export const ANONYMIZED_FIELD_VALUE = 'withheld'
 type AnonymizedField = typeof ANONYMIZED_FIELD_VALUE
 
-export type DatasetMetadataField = string | DatasetMetadataSubField[] | AnonymizedField
+export type DatasetMetadataFieldValue =
+  | string
+  | string[]
+  | DatasetMetadataSubField
+  | DatasetMetadataSubField[]
+  | AnonymizedField
 
-export type DatasetMetadataFields = Record<string, DatasetMetadataField>
+export type DatasetMetadataFields = Record<string, DatasetMetadataFieldValue>
 
 export enum MetadataBlockName {
   CITATION = 'citation',

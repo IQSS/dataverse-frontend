@@ -54,6 +54,7 @@ export class DatasetMother {
           name: MetadataBlockName.CITATION,
           fields: {
             title: faker.lorem.sentence(),
+            subject: [faker.lorem.word(), faker.lorem.word()],
             author: [
               {
                 authorName: faker.lorem.sentence(),
@@ -73,16 +74,10 @@ export class DatasetMother {
         {
           name: MetadataBlockName.GEOSPATIAL,
           fields: {
-            geographicCoverage: [
-              {
-                geographicCoverageCountry: faker.lorem.sentence(),
-                geographicCoverageCity: faker.lorem.sentence()
-              },
-              {
-                geographicCoverageCountry: faker.lorem.sentence(),
-                geographicCoverageCity: faker.lorem.sentence()
-              }
-            ]
+            geographicCoverage: {
+              geographicCoverageCountry: faker.lorem.sentence(),
+              geographicCoverageCity: faker.lorem.sentence()
+            }
           }
         }
       ],
