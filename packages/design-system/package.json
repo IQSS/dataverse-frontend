@@ -25,5 +25,10 @@
       "import": "./dist/dataverse-design-system.es.js",
       "require": "./dist/dataverse-design-system.umd.js"
     }
-  }
+  },
+  "devDependencies": {
+    "chromatic": "^6.17.4"
+  },
+  "readme": "ERROR: No README data found!",
+  "_id": "dataverse-design-system@0.0.0"
 }

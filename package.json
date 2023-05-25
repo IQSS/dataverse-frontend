@@ -55,8 +55,7 @@
     "storybook": "concurrently 'storybook dev -p 6006 && open \"http://localhost:6006\"' 'cd packages/design-system && npm run storybook'",
     "build-storybook": "storybook build",
     "test:storybook": "test-storybook",
-    "test:storybook-all": "concurrently 'test-storybook' 'cd packages/design-system && npm run test:storybook'",
-    "chromatic": "npx chromatic --project-token=chpt_fc22d4e9980d630"
+    "test:storybook-all": "concurrently 'test-storybook' 'cd packages/design-system && npm run test:storybook'"
   },
   "pre-commit": [
     "lint:fix",
