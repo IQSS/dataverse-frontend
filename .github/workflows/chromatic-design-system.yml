@@ -1,4 +1,4 @@
-name: 'Chromatic'
+name: 'Chromatic Design System '
 
 # Event for the workflow
 on: push
@@ -12,12 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Install dependencies
+        working-directory: packages/design-system
         # 👇 Install dependencies with the same package manager used in the project (replace it as needed), e.g. yarn, npm, pnpm
         run: rm package-lock.json && npm install
         # 👇 Adds Chromatic as a step in the workflow
       - name: Publish to Chromatic
+        working-directory: packages/design-system
         uses: chromaui/action@v1
         # Chromatic GitHub Action options
         with:
           # 👇 Chromatic projectToken, refer to the manage page to obtain it.
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          projectToken: ${{ secrets.CHROMATIC_DESIGN_SYSTEM_PROJECT_TOKEN }}
