@@ -30,8 +30,9 @@ jobs:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
       - name: Publish Design System to Chromatic
         working-directory: packages/design-system
-        uses: chromaui/action@v1
-        # Chromatic GitHub Action options
-        with:
-          # 👇 Chromatic projectToken, refer to the manage page to obtain it.
-          projectToken: ${{ secrets.CHROMATIC_DESIGN_SYSTEM_PROJECT_TOKEN }}
+        steps:
+          - uses: chromaui/action@v1
+            # Chromatic GitHub Action options
+            with:
+              # 👇 Chromatic projectToken, refer to the manage page to obtain it.
+              projectToken: ${{ secrets.CHROMATIC_DESIGN_SYSTEM_PROJECT_TOKEN }}
