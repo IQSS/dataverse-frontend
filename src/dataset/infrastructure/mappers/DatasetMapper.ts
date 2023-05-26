@@ -1,6 +1,7 @@
 import {
   Dataset as JSDataset,
   DatasetMetadataBlock as JSDatasetMetadataBlock,
+  DatasetMetadataFields as JSDatasetMetadataFields,
   DatasetVersionInfo as JSDatasetVersionInfo
 } from '@IQSS/dataverse-client-javascript'
 import { DatasetVersionState as JSDatasetVersionState } from '@IQSS/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
@@ -9,17 +10,18 @@ import {
   DatasetStatus,
   MetadataBlockName,
   DatasetMetadataBlock,
-  DatasetVersion
+  DatasetVersion,
+  DatasetMetadataFields
 } from '../../domain/models/Dataset'
 
 export class DatasetMapper {
-  static toModel(jsDataset: JSDataset): Dataset {
+  static toModel(jsDataset: JSDataset, summaryFieldsNames: string[]): Dataset {
     return new Dataset.Builder(
       jsDataset.persistentId,
       DatasetMapper.toTitle(jsDataset.metadataBlocks),
       DatasetMapper.toVersion(jsDataset.versionInfo),
       DatasetMapper.toCitation(),
-      DatasetMapper.toMetadataBlocks(jsDataset.metadataBlocks),
+      DatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
       DatasetMapper.toMetadataBlocks(jsDataset.metadataBlocks)
     )
@@ -61,6 +63,30 @@ export class DatasetMapper {
   static toCitation(): string {
     // TODO: Implement
     return ''
+  }
+
+  static toSummaryFields(
+    jsDatasetMetadataBlocks: JSDatasetMetadataBlock[],
+    summaryFieldsNames: string[]
+  ): DatasetMetadataBlock[] {
+    return jsDatasetMetadataBlocks.map((jsDatasetMetadataBlock) => {
+      const getSummaryFields = (metadataFields: JSDatasetMetadataFields): DatasetMetadataFields => {
+        return Object.keys(metadataFields).reduce((acc, metadataFieldName) => {
+          if (summaryFieldsNames.includes(metadataFieldName)) {
+            return {
+              ...acc,
+              [metadataFieldName]: metadataFields[metadataFieldName]
+            }
+          }
+          return acc
+        }, {})
+      }
+
+      return {
+        name: DatasetMapper.toMetadataBlockName(jsDatasetMetadataBlock.name),
+        fields: getSummaryFields(jsDatasetMetadataBlock.fields)
+      }
+    })
   }
 
   static toMetadataBlocks(
