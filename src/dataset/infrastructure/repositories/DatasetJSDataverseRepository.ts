@@ -2,10 +2,13 @@ import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
 import { Dataset } from '../../domain/models/Dataset'
 import {
   getDatasetByPersistentId,
+  getDatasetCitation,
   getDatasetSummaryFieldNames,
-  WriteError
+  WriteError,
+  Dataset as JSDataset,
+  getPrivateUrlDataset
 } from '@IQSS/dataverse-client-javascript'
-import { DatasetMapper } from '../mappers/DatasetMapper'
+import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
   getByPersistentId(persistentId: string): Promise<Dataset | undefined> {
@@ -13,11 +16,13 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       getDatasetByPersistentId.execute(persistentId),
       getDatasetSummaryFieldNames.execute()
     ])
-      .then(([jsDataset, summaryFieldsNames]) =>
-        DatasetMapper.toModel(jsDataset, summaryFieldsNames)
+      .then(([jsDataset, summaryFieldsNames]: [JSDataset, string[]]) =>
+        Promise.all([jsDataset, summaryFieldsNames, getDatasetCitation.execute(jsDataset.id)])
+      )
+      .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
+        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames)
       )
       .catch((error: WriteError) => {
-        console.log(error)
         throw new Error(error.message)
       })
   }

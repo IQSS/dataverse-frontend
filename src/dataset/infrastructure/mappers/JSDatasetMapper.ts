@@ -14,16 +14,16 @@ import {
   DatasetMetadataFields
 } from '../../domain/models/Dataset'
 
-export class DatasetMapper {
-  static toModel(jsDataset: JSDataset, summaryFieldsNames: string[]): Dataset {
+export class JSDatasetMapper {
+  static toDataset(jsDataset: JSDataset, citation: string, summaryFieldsNames: string[]): Dataset {
     return new Dataset.Builder(
       jsDataset.persistentId,
-      DatasetMapper.toTitle(jsDataset.metadataBlocks),
-      DatasetMapper.toVersion(jsDataset.versionInfo),
-      DatasetMapper.toCitation(),
-      DatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
+      JSDatasetMapper.toTitle(jsDataset.metadataBlocks),
+      JSDatasetMapper.toVersion(jsDataset.versionInfo),
+      citation,
+      JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
-      DatasetMapper.toMetadataBlocks(jsDataset.metadataBlocks)
+      JSDatasetMapper.toMetadataBlocks(jsDataset.metadataBlocks)
     )
   }
 
@@ -43,7 +43,7 @@ export class DatasetMapper {
     return new DatasetVersion(
       jsDatasetVersionInfo.majorNumber,
       jsDatasetVersionInfo.minorNumber,
-      DatasetMapper.toStatus(jsDatasetVersionInfo.state)
+      JSDatasetMapper.toStatus(jsDatasetVersionInfo.state)
     )
   }
 
@@ -83,7 +83,7 @@ export class DatasetMapper {
       }
 
       return {
-        name: DatasetMapper.toMetadataBlockName(jsDatasetMetadataBlock.name),
+        name: JSDatasetMapper.toMetadataBlockName(jsDatasetMetadataBlock.name),
         fields: getSummaryFields(jsDatasetMetadataBlock.fields)
       }
     })
@@ -94,7 +94,7 @@ export class DatasetMapper {
   ): DatasetMetadataBlock[] {
     return jsDatasetMetadataBlocks.map((jsDatasetMetadataBlock) => {
       return {
-        name: DatasetMapper.toMetadataBlockName(jsDatasetMetadataBlock.name),
+        name: JSDatasetMapper.toMetadataBlockName(jsDatasetMetadataBlock.name),
         fields: jsDatasetMetadataBlock.fields
       }
     })
