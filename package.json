@@ -22,6 +22,7 @@
     "@types/react-dom": "^18.0.10",
     "bootstrap": "^5.2.3",
     "dataverse-design-system": "*",
+    "html-react-parser": "^3.0.16",
     "i18next": "^22.4.9",
     "i18next-browser-languagedetector": "^7.0.1",
     "i18next-http-backend": "^2.1.1",
@@ -93,7 +94,7 @@
   "devDependencies": {
     "@csstools/postcss-cascade-layers": "^3.0.1",
     "@cypress/code-coverage": "^3.10.4",
-    "@IQSS/dataverse-client-javascript": "2.0.0-pr60.28fa696",
+    "@IQSS/dataverse-client-javascript": "2.0.0-pr60.301cf3e",
     "@storybook/addon-a11y": "^7.0.2",
     "@storybook/addon-essentials": "^7.0.2",
     "@storybook/addon-interactions": "^7.0.2",

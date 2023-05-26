@@ -83,19 +83,12 @@ export class DatasetVersion {
   }
 }
 
-export interface DatasetCitation {
-  citationText: string
-  url: string
-  publisher: string
-  unf?: string
-}
-
 export class Dataset {
   constructor(
     public readonly persistentId: string,
     public readonly title: string,
     public readonly version: DatasetVersion,
-    public readonly citation: DatasetCitation,
+    public readonly citation: string,
     public readonly labels: DatasetLabel[],
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
@@ -109,7 +102,7 @@ export class Dataset {
       public readonly persistentId: string,
       public readonly title: string,
       public readonly version: DatasetVersion,
-      public readonly citation: DatasetCitation,
+      public readonly citation: string,
       public readonly summaryFields: DatasetMetadataBlock[],
       public readonly license: DatasetLicense,
       public readonly metadataBlocks: DatasetMetadataBlock[]

@@ -10,12 +10,10 @@ import { Dataset } from '../../dataset/domain/models/Dataset'
 export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): Dataset => ({
   persistentId: '123456789',
   title: 'Dataset title',
-  citation: {
-    citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
-    url: 'https://doi.org/10.70122/FK2/KLX4XO',
-    publisher: 'Demo Dataverse'
-  },
-  version: new DatasetVersion(1, 0, DatasetStatus.DRAFT),
+  citation: `${
+    anonymized ? 'Author name(s) withheld' : 'Bennet, Elizabeth; Darcy, Fitzwilliam'
+  }, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1`,
+  version: new DatasetVersion(1, 0, DatasetStatus.RELEASED),
   labels: [
     { value: 'Version 1.0', semanticMeaning: LabelSemanticMeaning.FILE },
     { value: 'Draft', semanticMeaning: LabelSemanticMeaning.DATASET }

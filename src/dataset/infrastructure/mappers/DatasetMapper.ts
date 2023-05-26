@@ -5,7 +5,6 @@ import {
 } from '@IQSS/dataverse-client-javascript'
 import { DatasetVersionState as JSDatasetVersionState } from '@IQSS/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
 import {
-  DatasetCitation,
   Dataset,
   DatasetStatus,
   MetadataBlockName,
@@ -59,13 +58,9 @@ export class DatasetMapper {
     }
   }
 
-  static toCitation(): DatasetCitation {
+  static toCitation(): string {
     // TODO: Implement
-    return {
-      citationText: '',
-      url: '',
-      publisher: ''
-    }
+    return ''
   }
 
   static toMetadataBlocks(

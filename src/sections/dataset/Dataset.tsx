@@ -41,16 +41,12 @@ export function Dataset({ repository, searchParams }: DatasetProps) {
           <div className={styles.container}>
             <Row>
               <Col sm={9}>
-                <DatasetCitation
-                  citation={dataset.citation}
-                  version={dataset.version}></DatasetCitation>
+                <DatasetCitation citation={dataset.citation} version={dataset.version} />
               </Col>
             </Row>
             <Row>
               <Col sm={9} className={styles['summary-container']}>
-                <DatasetSummary
-                  summaryFields={dataset.summaryFields}
-                  license={dataset.license}></DatasetSummary>
+                <DatasetSummary summaryFields={dataset.summaryFields} license={dataset.license} />
               </Col>
             </Row>
             <Tabs defaultActiveKey="files">

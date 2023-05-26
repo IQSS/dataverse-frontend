@@ -1,14 +1,11 @@
 import { Col, Icon, Row, Tooltip } from 'dataverse-design-system'
 import styles from './DatasetCitation.module.scss'
 import { useTranslation } from 'react-i18next'
-import {
-  DatasetCitation as DatasetCitationModel,
-  DatasetStatus,
-  DatasetVersion
-} from '../../../dataset/domain/models/Dataset'
+import { DatasetStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
+import parse from 'html-react-parser'
 
 interface DatasetCitationProps {
-  citation: DatasetCitationModel
+  citation: string
   version: DatasetVersion
 }
 
@@ -50,12 +47,12 @@ export function DatasetCitation({ citation, version }: DatasetCitationProps) {
 }
 
 function CitationDescription({ citation, version }: DatasetCitationProps) {
+  const citationAsReactElement = parse(citation)
+
   return (
     <span className={styles.citation}>
-      {citation.citationText}, <a href={citation.url}>{citation.url}</a>, {citation.publisher}
-      {version.status !== DatasetStatus.DRAFT && `, ${version.toStringMajor()}`}
-      {citation.unf && `, ${citation.unf}`}
-      <CitationDatasetStatus status={version.status} />
+      {citationAsReactElement}
+      <CitationTooltip status={version.status} />
     </span>
   )
 }
@@ -64,15 +61,15 @@ interface CitationDatasetStatusProps {
   status: DatasetStatus
 }
 
-function CitationDatasetStatus({ status }: CitationDatasetStatusProps) {
+function CitationTooltip({ status }: CitationDatasetStatusProps) {
   const { t } = useTranslation('dataset')
+
   if (status !== DatasetStatus.RELEASED) {
     return (
-      <span>
-        {', '}
-        {t(`citation.status.${status}.title`)}{' '}
+      <>
+        {' '}
         <Tooltip placement={'top'} message={t(`citation.status.${status}.description`)} />
-      </span>
+      </>
     )
   }
   return <></>

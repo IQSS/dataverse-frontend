@@ -1,11 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../WithI18next'
 import { DatasetCitation } from '../../sections/dataset/dataset-citation/DatasetCitation'
-import {
-  DatasetCitation as DatasetCitationModel,
-  DatasetStatus,
-  DatasetVersion
-} from '../../dataset/domain/models/Dataset'
+import { DatasetStatus, DatasetVersion } from '../../dataset/domain/models/Dataset'
 import { DatasetMockData } from './DatasetMockData'
 
 const meta: Meta<typeof DatasetCitation> = {
@@ -19,10 +15,7 @@ type Story = StoryObj<typeof DatasetCitation>
 
 export const Default: Story = {
   render: () => {
-    const dataset = DatasetMockData({
-      version: new DatasetVersion(1, 0, DatasetStatus.RELEASED)
-    })
-
+    const dataset = DatasetMockData()
     return (
       <div>
         <br></br>
@@ -34,18 +27,15 @@ export const Default: Story = {
 }
 export const WithUNF: Story = {
   render: () => {
-    const citation: DatasetCitationModel = {
-      citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
-      url: 'https://doi.org/10.70122/FK2/KLX4XO',
-      publisher: 'Demo Dataverse',
-      unf: 'UNF:6:8ttuxucTZJWfZ9JgN1udiA== [fileUNF]'
-    }
-    const version = new DatasetVersion(1, 0, DatasetStatus.RELEASED)
+    const dataset = DatasetMockData({
+      citation:
+        'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1, UNF:6:8ttuxucTZJWfZ9JgN1udiA== [fileUNF]'
+    })
 
     return (
       <div>
         <br></br>
-        <br></br> <DatasetCitation citation={citation} version={version} />
+        <br></br> <DatasetCitation citation={dataset.citation} version={dataset.version} />
       </div>
     )
   }
@@ -53,7 +43,11 @@ export const WithUNF: Story = {
 
 export const DraftVersion: Story = {
   render: () => {
-    const dataset = DatasetMockData()
+    const dataset = DatasetMockData({
+      citation:
+        'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, DRAFT VERSION',
+      version: new DatasetVersion(1, 0, DatasetStatus.DRAFT)
+    })
 
     /*
       Includes extra breaks, so you can see the DRAFT tooltip message
@@ -71,7 +65,29 @@ export const DraftVersion: Story = {
 export const Deaccessioned: Story = {
   render: () => {
     const dataset = DatasetMockData({
+      citation:
+        'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1 DEACCESSIONED VERSION',
       version: new DatasetVersion(1, 0, DatasetStatus.DEACCESSIONED)
+    })
+
+    /*
+        Includes extra breaks, so you can see the DRAFT tooltip message
+         */
+    return (
+      <div>
+        <br></br>
+        <br></br>
+        <DatasetCitation citation={dataset.citation} version={dataset.version} />
+      </div>
+    )
+  }
+}
+
+export const Anonymized: Story = {
+  render: () => {
+    const dataset = DatasetMockData({
+      citation:
+        'Author name(s) withheld, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1'
     })
 
     /*

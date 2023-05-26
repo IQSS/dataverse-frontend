@@ -18,11 +18,8 @@ export class DatasetMother {
       persistentId: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
       version: new DatasetVersion(1, 0, DatasetStatus.RELEASED),
-      citation: {
-        citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
-        url: 'https://doi.org/10.70122/FK2/KLX4XO',
-        publisher: 'Demo Dataverse'
-      },
+      citation:
+        'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1',
       license: {
         name: 'CC0 1.0',
         uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
@@ -96,6 +93,8 @@ export class DatasetMother {
 
   static createAnonymized(): Dataset {
     return this.create({
+      citation:
+        'Author name(s) withheld, 2023, "citation", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1',
       metadataBlocks: [
         {
           name: MetadataBlockName.CITATION,
