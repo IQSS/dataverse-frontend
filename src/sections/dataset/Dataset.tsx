@@ -49,7 +49,7 @@ export function Dataset({ repository, searchParams }: DatasetProps) {
                 <DatasetSummary summaryFields={dataset.summaryFields} license={dataset.license} />
               </Col>
             </Row>
-            <Tabs defaultActiveKey="files">
+            <Tabs defaultActiveKey="metadata">
               <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
                 <div className={styles['tab-container']}>
                   <div>Files Section</div>
