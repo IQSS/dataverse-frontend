@@ -7,15 +7,16 @@ import {
   MetadataBlockName
 } from '../../domain/models/Dataset'
 import { LabelSemanticMeaning } from '../../domain/models/Dataset'
-import { getDataset, WriteError } from '@IQSS/dataverse-client-javascript'
+import { getDatasetByPersistentId, WriteError } from '@IQSS/dataverse-client-javascript'
 import { DatasetMapper } from '../mappers/DatasetMapper'
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
   getByPersistentId(persistentId: string): Promise<Dataset | undefined> {
-    return getDataset
-      .execute(undefined, persistentId)
+    return getDatasetByPersistentId
+      .execute(persistentId)
       .then((dataset) => DatasetMapper.toModel(dataset))
       .catch((error: WriteError) => {
+        console.log(error)
         throw new Error(error.message)
       })
   }

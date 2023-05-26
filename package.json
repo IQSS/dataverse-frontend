@@ -93,7 +93,7 @@
   "devDependencies": {
     "@csstools/postcss-cascade-layers": "^3.0.1",
     "@cypress/code-coverage": "^3.10.4",
-    "@IQSS/dataverse-client-javascript": "2.0.0-pr60.051deaf",
+    "@IQSS/dataverse-client-javascript": "2.0.0-pr60.28fa696",
     "@storybook/addon-a11y": "^7.0.2",
     "@storybook/addon-essentials": "^7.0.2",
     "@storybook/addon-interactions": "^7.0.2",

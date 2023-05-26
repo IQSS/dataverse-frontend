@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { Dataset } from '../../dataset/domain/models/Dataset'
-import { getDatasetById } from '../../dataset/domain/useCases/getDatasetById'
+import { getDatasetByPersistentId } from '../../dataset/domain/useCases/getDatasetByPersistentId'
 import { useLoading } from '../loading/LoadingContext'
 import { getDatasetByPrivateUrlToken } from '../../dataset/domain/useCases/getDatasetByPrivateUrlToken'
 
@@ -16,7 +16,7 @@ export function useDataset(
   const { setIsLoading } = useLoading()
   const getDataset = () => {
     if (searchParams.persistentId) {
-      return getDatasetById(repository, searchParams.persistentId)
+      return getDatasetByPersistentId(repository, searchParams.persistentId)
     }
     if (searchParams.privateUrlToken) {
       return getDatasetByPrivateUrlToken(repository, searchParams.privateUrlToken)
