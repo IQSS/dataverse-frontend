@@ -2,7 +2,7 @@ import {
   ANONYMIZED_FIELD_VALUE,
   DatasetStatus,
   DatasetVersion,
-  LabelSemanticMeaning
+  DatasetLabelSemanticMeaning
 } from '../../dataset/domain/models/Dataset'
 import { MetadataBlockName } from '../../dataset/domain/models/Dataset'
 import { Dataset } from '../../dataset/domain/models/Dataset'
@@ -15,8 +15,8 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
   }, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1`,
   version: new DatasetVersion(1, 0, DatasetStatus.RELEASED),
   labels: [
-    { value: 'Version 1.0', semanticMeaning: LabelSemanticMeaning.FILE },
-    { value: 'Draft', semanticMeaning: LabelSemanticMeaning.DATASET }
+    { value: 'Version 1.0', semanticMeaning: DatasetLabelSemanticMeaning.FILE },
+    { value: 'Draft', semanticMeaning: DatasetLabelSemanticMeaning.DATASET }
   ],
   license: {
     name: 'CC0 1.0',

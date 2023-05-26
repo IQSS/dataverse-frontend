@@ -6,7 +6,7 @@ import {
   DatasetVersion,
   MetadataBlockName
 } from '../../domain/models/Dataset'
-import { LabelSemanticMeaning } from '../../domain/models/Dataset'
+import { DatasetLabelSemanticMeaning } from '../../domain/models/Dataset'
 import { getDatasetByPersistentId, WriteError } from '@IQSS/dataverse-client-javascript'
 import { DatasetMapper } from '../mappers/DatasetMapper'
 
@@ -30,8 +30,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           persistentId: '123456',
           title: 'Dataset Title',
           labels: [
-            { value: 'Version 1.0', semanticMeaning: LabelSemanticMeaning.FILE },
-            { value: 'Draft', semanticMeaning: LabelSemanticMeaning.DATASET }
+            { value: 'Version 1.0', semanticMeaning: DatasetLabelSemanticMeaning.FILE },
+            { value: 'Draft', semanticMeaning: DatasetLabelSemanticMeaning.DATASET }
           ],
           citation: {
             citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',

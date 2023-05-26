@@ -54,7 +54,7 @@ export class DatasetMapper {
       case JSDatasetVersionState.RELEASED:
         return DatasetStatus.RELEASED
       default:
-        return DatasetStatus.DRAFT
+        return DatasetStatus.RELEASED
     }
   }
 

@@ -4,7 +4,7 @@ import {
   Dataset,
   DatasetStatus,
   DatasetVersion,
-  LabelSemanticMeaning
+  DatasetLabelSemanticMeaning
 } from '../../../../../src/dataset/domain/models/Dataset'
 import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Dataset'
 
@@ -28,19 +28,19 @@ export class DatasetMother {
       labels: [
         {
           value: faker.lorem.word(),
-          semanticMeaning: faker.helpers.arrayElement(Object.values(LabelSemanticMeaning))
+          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
         },
         {
           value: faker.lorem.word(),
-          semanticMeaning: faker.helpers.arrayElement(Object.values(LabelSemanticMeaning))
+          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
         },
         {
           value: faker.lorem.word(),
-          semanticMeaning: faker.helpers.arrayElement(Object.values(LabelSemanticMeaning))
+          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
         },
         {
           value: faker.lorem.word(),
-          semanticMeaning: faker.helpers.arrayElement(Object.values(LabelSemanticMeaning))
+          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
         }
       ],
       metadataBlocks: [
