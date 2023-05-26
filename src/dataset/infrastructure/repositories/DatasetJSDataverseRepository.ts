@@ -27,13 +27,23 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
   }
 
-  // eslint-disable-next-line unused-imports/no-unused-vars
   getByPrivateUrlToken(privateUrlToken: string): Promise<Dataset | undefined> {
-    // TODO - Implement this method using the js-dataverse module
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(undefined)
-      }, 1000)
-    })
+    return Promise.all([
+      getPrivateUrlDataset.execute(privateUrlToken),
+      getDatasetSummaryFieldNames.execute()
+    ])
+      .then(([jsDataset, summaryFieldsNames]: [JSDataset, string[]]) =>
+        Promise.all([
+          jsDataset,
+          summaryFieldsNames,
+          getDatasetCitation.execute(jsDataset.id, undefined, true)
+        ])
+      )
+      .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
+        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames)
+      )
+      .catch((error: WriteError) => {
+        throw new Error(error.message)
+      })
   }
 }
