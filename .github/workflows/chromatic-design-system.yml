@@ -17,9 +17,9 @@ jobs:
         run: rm package-lock.json && npm install
         # 👇 Adds Chromatic as a step in the workflow
       - name: Publish to Chromatic
-        working-directory: packages/design-system
         uses: chromaui/action@v1
         # Chromatic GitHub Action options
         with:
           # 👇 Chromatic projectToken, refer to the manage page to obtain it.
           projectToken: ${{ secrets.CHROMATIC_DESIGN_SYSTEM_PROJECT_TOKEN }}
+          workingDir: packages/design-system
