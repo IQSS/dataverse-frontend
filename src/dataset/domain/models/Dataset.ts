@@ -63,7 +63,7 @@ export interface DatasetMetadataBlock {
 export interface DatasetLicense {
   name: string
   uri: string
-  iconUrl?: string
+  iconUri?: string
 }
 
 export enum DatasetStatus {

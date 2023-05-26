@@ -21,7 +21,7 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
   license: {
     name: 'CC0 1.0',
     uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
-    iconUrl: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+    iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
   summaryFields: [
     {

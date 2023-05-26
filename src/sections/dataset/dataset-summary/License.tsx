@@ -15,10 +15,10 @@ export function License({ license }: LicenseProps) {
         <b>{t('license.title')}</b>
       </Col>
       <Col>
-        {license.iconUrl && (
+        {license.iconUri && (
           <img
             alt={t(`license.altTextPrefix`) + license.name}
-            src={license.iconUrl}
+            src={license.iconUri}
             title={license.name}
             style={{ marginRight: '0.5rem' }}
           />
