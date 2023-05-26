@@ -18,6 +18,10 @@ type Story = StoryObj<typeof Dataset>
 
 export const Default: Story = {
   decorators: [WithLayout],
+  parameters: {
+    // Sets the delay for a specific story.
+    chromatic: { delay: 5000 }
+  },
   render: () => <Dataset repository={new DatasetMockRepository()} searchParams={{ id: '1' }} />
 }
 
