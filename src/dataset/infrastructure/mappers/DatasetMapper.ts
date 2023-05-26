@@ -1,6 +1,7 @@
 import {
   Dataset as JSDataset,
-  DatasetMetadataBlock as JSDatasetMetadataBlock
+  DatasetMetadataBlock as JSDatasetMetadataBlock,
+  DatasetVersionInfo as JSDatasetVersionInfo
 } from '@IQSS/dataverse-client-javascript'
 import { DatasetVersionState as JSDatasetVersionState } from '@IQSS/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
 import {
@@ -8,7 +9,8 @@ import {
   Dataset,
   DatasetStatus,
   MetadataBlockName,
-  DatasetMetadataBlock
+  DatasetMetadataBlock,
+  DatasetVersion
 } from '../../domain/models/Dataset'
 
 export class DatasetMapper {
@@ -16,8 +18,7 @@ export class DatasetMapper {
     return new Dataset.Builder(
       jsDataset.persistentId,
       DatasetMapper.toTitle(jsDataset.metadataBlocks),
-      jsDataset.versionInfo,
-      DatasetMapper.toStatus(jsDataset.versionInfo.state),
+      DatasetMapper.toVersion(jsDataset.versionInfo),
       DatasetMapper.toCitation(),
       DatasetMapper.toMetadataBlocks(jsDataset.metadataBlocks),
       jsDataset.license,
@@ -35,6 +36,14 @@ export class DatasetMapper {
     }
 
     throw new Error('Dataset title not found')
+  }
+
+  static toVersion(jsDatasetVersionInfo: JSDatasetVersionInfo): DatasetVersion {
+    return new DatasetVersion(
+      jsDatasetVersionInfo.majorNumber,
+      jsDatasetVersionInfo.minorNumber,
+      DatasetMapper.toStatus(jsDatasetVersionInfo.state)
+    )
   }
 
   static toStatus(jsDatasetVersionState: JSDatasetVersionState): DatasetStatus {

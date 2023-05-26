@@ -3,6 +3,7 @@ import {
   ANONYMIZED_FIELD_VALUE,
   Dataset,
   DatasetStatus,
+  DatasetVersion,
   LabelSemanticMeaning
 } from '../../../../../src/dataset/domain/models/Dataset'
 import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Dataset'
@@ -16,11 +17,7 @@ export class DatasetMother {
     return {
       persistentId: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
-      version: {
-        majorNumber: faker.datatype.number(),
-        minorNumber: faker.datatype.number()
-      },
-      status: DatasetStatus.RELEASED,
+      version: new DatasetVersion(1, 0, DatasetStatus.RELEASED),
       citation: {
         citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
         url: 'https://doi.org/10.70122/FK2/KLX4XO',

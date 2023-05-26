@@ -43,7 +43,6 @@ export function Dataset({ repository, searchParams }: DatasetProps) {
               <Col sm={9}>
                 <DatasetCitation
                   citation={dataset.citation}
-                  status={dataset.status}
                   version={dataset.version}></DatasetCitation>
               </Col>
             </Row>

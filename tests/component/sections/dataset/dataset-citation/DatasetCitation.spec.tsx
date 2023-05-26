@@ -2,7 +2,8 @@ import { createSandbox, SinonSandbox } from 'sinon'
 import { DatasetCitation } from '../../../../../src/sections/dataset/dataset-citation/DatasetCitation'
 import {
   DatasetCitation as DatasetCitationModel,
-  DatasetStatus
+  DatasetStatus,
+  DatasetVersion
 } from '../../../../../src/dataset/domain/models/Dataset'
 
 describe('DatasetCitation', () => {
@@ -12,14 +13,14 @@ describe('DatasetCitation', () => {
     url: 'https://doi.org/10.70122/FK2/KLX4XO',
     publisher: 'Demo Dataverse'
   }
+
   afterEach(() => {
     sandbox.restore()
   })
 
   it('renders the DatasetCitation fields of Published Dataset', () => {
-    const status = DatasetStatus.RELEASED
-    const version = null
-    cy.customMount(<DatasetCitation citation={citation} status={status} version={version} />)
+    const version = new DatasetVersion(1, 0, DatasetStatus.RELEASED)
+    cy.customMount(<DatasetCitation citation={citation} version={version} />)
 
     cy.findByText('Data Citation Standards.').should('exist')
     cy.findByText(/Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms"/).should('exist')
@@ -30,41 +31,34 @@ describe('DatasetCitation', () => {
       .should('have.attr', 'href')
       .and('eq', 'https://dataverse.org/best-practices/data-citation')
     cy.findByRole('article').should('exist')
-    cy.findByText(/PUBLISHED/).should('not.exist')
+    cy.findByText(/RELEASED/).should('not.exist')
+    cy.findByText(/V1/).should('exist')
   })
 
   it('renders Draft Dataset', () => {
-    const status = DatasetStatus.DRAFT
-    const version = null
-    cy.customMount(<DatasetCitation citation={citation} status={status} version={version} />)
+    const version = new DatasetVersion(1, 0, DatasetStatus.DRAFT)
+    cy.customMount(<DatasetCitation citation={citation} version={version} />)
 
     cy.findByText(/DRAFT/).should('exist')
-  })
-
-  it('renders Deaccession Dataset', () => {
-    const status = DatasetStatus.DEACCESSIONED
-    const version = null
-    cy.customMount(<DatasetCitation citation={citation} status={status} version={version} />)
-
-    cy.findByText(/DEACCESSIONED VERSION/).should('exist')
-  })
-  it('renders version correctly', () => {
-    const status = DatasetStatus.DEACCESSIONED
-    const version = { majorNumber: 12, minorNumber: 3 }
-    cy.customMount(<DatasetCitation citation={citation} status={status} version={version} />)
-
-    cy.findByText(/V12/).should('be.visible')
-  })
-  it('renders null version correctly', () => {
-    const status = DatasetStatus.DEACCESSIONED
-    const version = null
-    cy.customMount(<DatasetCitation citation={citation} status={status} version={version} />)
     cy.findByText(/V1/).should('not.exist')
   })
 
+  it('renders Deaccessioned Dataset', () => {
+    const version = new DatasetVersion(1, 0, DatasetStatus.DEACCESSIONED)
+    cy.customMount(<DatasetCitation citation={citation} version={version} />)
+
+    cy.findByText(/DEACCESSIONED VERSION/).should('exist')
+    cy.findByText(/V1/).should('exist')
+  })
+  it('renders version correctly', () => {
+    const version = new DatasetVersion(12, 3, DatasetStatus.RELEASED)
+    cy.customMount(<DatasetCitation citation={citation} version={version} />)
+
+    cy.findByText(/V12/).should('exist')
+  })
+
   it('renders with the unf property', () => {
-    const status = DatasetStatus.RELEASED
-    const version = null
+    const version = new DatasetVersion(12, 3, DatasetStatus.RELEASED)
     const citationWithUnf: DatasetCitationModel = {
       citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
       url: 'https://doi.org/10.70122/FK2/KLX4XO',
@@ -72,7 +66,7 @@ describe('DatasetCitation', () => {
       unf: 'unf:123'
     }
 
-    cy.customMount(<DatasetCitation citation={citationWithUnf} status={status} version={version} />)
+    cy.customMount(<DatasetCitation citation={citationWithUnf} version={version} />)
 
     cy.findByText(/unf:123/).should('exist')
   })

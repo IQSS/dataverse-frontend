@@ -3,6 +3,7 @@ import {
   ANONYMIZED_FIELD_VALUE,
   Dataset,
   DatasetStatus,
+  DatasetVersion,
   MetadataBlockName
 } from '../../domain/models/Dataset'
 import { LabelSemanticMeaning } from '../../domain/models/Dataset'
@@ -36,11 +37,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
             url: 'https://doi.org/10.70122/FK2/KLX4XO',
             publisher: 'Demo Dataverse'
           },
-          status: DatasetStatus.RELEASED,
-          version: {
-            majorNumber: 1,
-            minorNumber: 0
-          },
+          version: new DatasetVersion(1, 0, DatasetStatus.RELEASED),
           license: {
             name: 'CC0 1.0',
             uri: 'https://creativecommons.org/publicdomain/zero/1.0/',

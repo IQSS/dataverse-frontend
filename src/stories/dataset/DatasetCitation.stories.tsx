@@ -3,7 +3,8 @@ import { WithI18next } from '../WithI18next'
 import { DatasetCitation } from '../../sections/dataset/dataset-citation/DatasetCitation'
 import {
   DatasetCitation as DatasetCitationModel,
-  DatasetStatus
+  DatasetStatus,
+  DatasetVersion
 } from '../../dataset/domain/models/Dataset'
 import { DatasetMockData } from './DatasetMockData'
 
@@ -19,19 +20,14 @@ type Story = StoryObj<typeof DatasetCitation>
 export const Default: Story = {
   render: () => {
     const dataset = DatasetMockData({
-      status: DatasetStatus.RELEASED,
-      version: { majorNumber: 1, minorNumber: 0 }
+      version: new DatasetVersion(1, 0, DatasetStatus.RELEASED)
     })
 
     return (
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          citation={dataset.citation}
-          status={dataset.status}
-          version={dataset.version}
-        />
+        <DatasetCitation citation={dataset.citation} version={dataset.version} />
       </div>
     )
   }
@@ -44,13 +40,12 @@ export const WithUNF: Story = {
       publisher: 'Demo Dataverse',
       unf: 'UNF:6:8ttuxucTZJWfZ9JgN1udiA== [fileUNF]'
     }
-    const status = DatasetStatus.RELEASED
-    const version = { majorNumber: 1, minorNumber: 0 }
+    const version = new DatasetVersion(1, 0, DatasetStatus.RELEASED)
 
     return (
       <div>
         <br></br>
-        <br></br> <DatasetCitation citation={citation} status={status} version={version} />
+        <br></br> <DatasetCitation citation={citation} version={version} />
       </div>
     )
   }
@@ -67,11 +62,7 @@ export const DraftVersion: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          citation={dataset.citation}
-          status={dataset.status}
-          version={dataset.version}
-        />
+        <DatasetCitation citation={dataset.citation} version={dataset.version} />
       </div>
     )
   }
@@ -80,8 +71,7 @@ export const DraftVersion: Story = {
 export const Deaccessioned: Story = {
   render: () => {
     const dataset = DatasetMockData({
-      status: DatasetStatus.DEACCESSIONED,
-      version: { majorNumber: 1, minorNumber: 0 }
+      version: new DatasetVersion(1, 0, DatasetStatus.DEACCESSIONED)
     })
 
     /*
@@ -91,11 +81,7 @@ export const Deaccessioned: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          citation={dataset.citation}
-          status={dataset.status}
-          version={dataset.version}
-        />
+        <DatasetCitation citation={dataset.citation} version={dataset.version} />
       </div>
     )
   }

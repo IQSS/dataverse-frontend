@@ -1,6 +1,7 @@
 import {
   ANONYMIZED_FIELD_VALUE,
   DatasetStatus,
+  DatasetVersion,
   LabelSemanticMeaning
 } from '../../dataset/domain/models/Dataset'
 import { MetadataBlockName } from '../../dataset/domain/models/Dataset'
@@ -14,8 +15,7 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
     url: 'https://doi.org/10.70122/FK2/KLX4XO',
     publisher: 'Demo Dataverse'
   },
-  status: DatasetStatus.DRAFT,
-  version: null,
+  version: new DatasetVersion(1, 0, DatasetStatus.DRAFT),
   labels: [
     { value: 'Version 1.0', semanticMeaning: LabelSemanticMeaning.FILE },
     { value: 'Draft', semanticMeaning: LabelSemanticMeaning.DATASET }

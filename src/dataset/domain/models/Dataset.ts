@@ -67,9 +67,20 @@ export enum DatasetStatus {
   IN_REVIEW = 'inReview'
 }
 
-export interface DatasetVersion {
-  majorNumber: number
-  minorNumber: number
+export class DatasetVersion {
+  constructor(
+    public readonly majorNumber: number,
+    public readonly minorNumber: number,
+    public readonly status: DatasetStatus
+  ) {}
+
+  toString(): string {
+    return `${this.majorNumber}.${this.minorNumber}`
+  }
+
+  toStringMajor(): string {
+    return this.status !== DatasetStatus.DRAFT ? `V${this.majorNumber}` : ''
+  }
 }
 
 export interface DatasetCitation {
@@ -83,8 +94,7 @@ export class Dataset {
   constructor(
     public readonly persistentId: string,
     public readonly title: string,
-    public readonly version: DatasetVersion | null,
-    public readonly status: DatasetStatus,
+    public readonly version: DatasetVersion,
     public readonly citation: DatasetCitation,
     public readonly labels: DatasetLabel[],
     public readonly summaryFields: DatasetMetadataBlock[],
@@ -99,49 +109,45 @@ export class Dataset {
       public readonly persistentId: string,
       public readonly title: string,
       public readonly version: DatasetVersion,
-      public readonly status: DatasetStatus,
       public readonly citation: DatasetCitation,
       public readonly summaryFields: DatasetMetadataBlock[],
       public readonly license: DatasetLicense,
       public readonly metadataBlocks: DatasetMetadataBlock[]
     ) {
-      this.withLabels(status, version)
+      this.withLabels()
     }
 
-    withLabels(status: DatasetStatus, version: DatasetVersion) {
-      this.withStatusLabel(status)
-      this.withVersionLabel(status, version)
+    withLabels() {
+      this.withStatusLabel()
+      this.withVersionLabel()
     }
 
-    private withStatusLabel(status: DatasetStatus): void {
-      if (status === DatasetStatus.DRAFT) {
+    private withStatusLabel(): void {
+      if (this.version.status === DatasetStatus.DRAFT) {
         this.labels.push(new DatasetLabel(LabelSemanticMeaning.DATASET, DatasetStatus.DRAFT))
       }
 
-      if (status === DatasetStatus.UNPUBLISHED) {
+      if (this.version.status === DatasetStatus.UNPUBLISHED) {
         this.labels.push(new DatasetLabel(LabelSemanticMeaning.WARNING, DatasetStatus.UNPUBLISHED))
       }
 
-      if (status === DatasetStatus.DEACCESSIONED) {
+      if (this.version.status === DatasetStatus.DEACCESSIONED) {
         this.labels.push(new DatasetLabel(LabelSemanticMeaning.DANGER, DatasetStatus.DEACCESSIONED))
       }
 
-      if (status === DatasetStatus.EMBARGOED) {
+      if (this.version.status === DatasetStatus.EMBARGOED) {
         this.labels.push(new DatasetLabel(LabelSemanticMeaning.DATASET, DatasetStatus.EMBARGOED))
       }
 
-      if (status === DatasetStatus.IN_REVIEW) {
+      if (this.version.status === DatasetStatus.IN_REVIEW) {
         this.labels.push(new DatasetLabel(LabelSemanticMeaning.SUCCESS, DatasetStatus.IN_REVIEW))
       }
     }
 
-    private withVersionLabel(status: DatasetStatus, version: DatasetVersion): void {
-      if (status === DatasetStatus.RELEASED) {
+    private withVersionLabel(): void {
+      if (this.version.status === DatasetStatus.RELEASED) {
         this.labels.push(
-          new DatasetLabel(
-            LabelSemanticMeaning.FILE,
-            `Version ${version.majorNumber}.${version.minorNumber}`
-          )
+          new DatasetLabel(LabelSemanticMeaning.FILE, `Version ${this.version.toString()}`)
         )
       }
     }
@@ -151,7 +157,6 @@ export class Dataset {
         this.persistentId,
         this.title,
         this.version,
-        this.status,
         this.citation,
         this.labels,
         this.summaryFields,
