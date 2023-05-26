@@ -12,9 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Install dependencies
-        working-directory: packages/design-system
         # 👇 Install dependencies with the same package manager used in the project (replace it as needed), e.g. yarn, npm, pnpm
-        run: npm install
+        run: rm package-lock.json && npm install
+      - name: Build Dataverse Design System
+        working-directory: packages/design-system
+        run: npm run build
         # 👇 Adds Chromatic as a step in the workflow
       - name: Publish to Chromatic
         uses: chromaui/action@v1
