@@ -47,7 +47,7 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-      
+
       - name: Create .npmrc
         run: |
           cp .npmrc.example .npmrc
