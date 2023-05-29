@@ -33,7 +33,10 @@ export function useDataset(
         setDataset(dataset)
         setIsLoading(false)
       })
-      .catch((error) => console.error('There was an error getting the dataset', error))
+      .catch((error) => {
+        console.error('There was an error getting the dataset', error)
+        setIsLoading(false)
+      })
   }, [repository, searchParams])
 
   return { dataset }
