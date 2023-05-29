@@ -10,7 +10,11 @@ import { DatasetMockNoDataRepository } from './DatasetMockNoDataRepository'
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
   component: Dataset,
-  decorators: [WithI18next]
+  decorators: [WithI18next],
+  parameters: {
+    // Sets the delay for all stories.
+    chromatic: { delay: 15000 }
+  }
 }
 
 export default meta
@@ -18,10 +22,7 @@ type Story = StoryObj<typeof Dataset>
 
 export const Default: Story = {
   decorators: [WithLayout],
-  parameters: {
-    // Sets the delay for a specific story.
-    chromatic: { delay: 15000 }
-  },
+
   render: () => <Dataset repository={new DatasetMockRepository()} searchParams={{ id: '1' }} />
 }
 
