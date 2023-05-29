@@ -6,7 +6,8 @@ import {
   getDatasetSummaryFieldNames,
   WriteError,
   Dataset as JSDataset,
-  getPrivateUrlDataset
+  getPrivateUrlDataset,
+  getPrivateUrlDatasetCitation
 } from '@IQSS/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 
@@ -36,7 +37,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         Promise.all([
           jsDataset,
           summaryFieldsNames,
-          getDatasetCitation.execute(jsDataset.id, undefined, true)
+          getPrivateUrlDatasetCitation.execute(privateUrlToken)
         ])
       )
       .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
