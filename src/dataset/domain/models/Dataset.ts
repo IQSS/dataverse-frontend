@@ -67,11 +67,11 @@ export interface DatasetLicense {
 }
 
 export enum DatasetStatus {
-  RELEASED = 'RELEASED',
-  DRAFT = 'DRAFT',
-  DEACCESSIONED = 'DEACCESSIONED',
-  EMBARGOED = 'EMBARGOED',
-  IN_REVIEW = 'IN_REVIEW'
+  RELEASED = 'released',
+  DRAFT = 'draft',
+  DEACCESSIONED = 'deaccessioned',
+  EMBARGOED = 'embargoed',
+  IN_REVIEW = 'inReview'
 }
 
 export class DatasetVersion {

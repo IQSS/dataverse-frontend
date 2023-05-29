@@ -12,7 +12,7 @@ interface DatasetCitationProps {
 export function DatasetCitation({ citation, version }: DatasetCitationProps) {
   const { t } = useTranslation('dataset')
   return (
-    <article>
+    <>
       <Row
         className={
           version.status === DatasetStatus.DEACCESSIONED ? styles.deaccessioned : styles.container
@@ -42,7 +42,7 @@ export function DatasetCitation({ citation, version }: DatasetCitationProps) {
           </Col>
         </Row>
       </Row>
-    </article>
+    </>
   )
 }
 
