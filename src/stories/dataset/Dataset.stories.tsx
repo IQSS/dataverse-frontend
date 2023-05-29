@@ -13,7 +13,7 @@ const meta: Meta<typeof Dataset> = {
   decorators: [WithI18next],
   parameters: {
     // Sets the delay for all stories.
-    chromatic: { delay: 15000 }
+    chromatic: { delay: 15000, pauseAnimationAtEnd: true }
   }
 }
 
