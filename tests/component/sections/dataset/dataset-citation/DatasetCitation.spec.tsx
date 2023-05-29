@@ -1,5 +1,6 @@
 import { DatasetCitation } from '../../../../../src/sections/dataset/dataset-citation/DatasetCitation'
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
+import { DatasetStatus, DatasetVersion } from '../../../../../src/dataset/domain/models/Dataset'
 
 describe('DatasetCitation', () => {
   it('renders the DatasetCitation fields of released Dataset', () => {
@@ -14,8 +15,29 @@ describe('DatasetCitation', () => {
     cy.findByRole('link', { name: 'Data Citation Standards.' })
       .should('have.attr', 'href')
       .and('eq', 'https://dataverse.org/best-practices/data-citation')
-    cy.findByRole('article').should('exist')
     cy.findByText(/RELEASED/).should('not.exist')
     cy.findByText(/V1/).should('exist')
+  })
+
+  it('shows the draft tooltip when version is draft', () => {
+    const dataset = DatasetMother.create({ version: new DatasetVersion(1, 0, DatasetStatus.DRAFT) })
+    cy.customMount(<DatasetCitation citation={dataset.citation} version={dataset.version} />)
+
+    cy.findByRole('img', { name: 'tooltip icon' }).should('exist').trigger('mouseover')
+    cy.findByText(
+      /DRAFT VERSION will be replaced in the citation with the selected version once the dataset has been published./
+    ).should('exist')
+  })
+
+  it('shows the deaccessioned tooltip when version is deaccessioned', () => {
+    const dataset = DatasetMother.create({
+      version: new DatasetVersion(1, 0, DatasetStatus.DEACCESSIONED)
+    })
+    cy.customMount(<DatasetCitation citation={dataset.citation} version={dataset.version} />)
+
+    cy.findByRole('img', { name: 'tooltip icon' }).should('exist').trigger('mouseover')
+    cy.findByText(
+      /DEACCESSIONED VERSION has been added to the citation for this version since it is no longer available./
+    ).should('exist')
   })
 })
