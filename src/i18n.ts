@@ -21,7 +21,7 @@ void i18next
     backend: {
       loadPath:
         import.meta.env.BASE_URL != '/'
-          ? `${import.meta.env.BASE_URL}/locales/{{lng}}/{{ns}}.json`
+          ? `${import.meta.env.BASE_URL}locales/{{lng}}/{{ns}}.json`
           : `/locales/{{lng}}/{{ns}}.json`
     }
   })
