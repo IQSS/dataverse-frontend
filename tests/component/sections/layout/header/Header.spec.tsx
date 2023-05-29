@@ -1,8 +1,6 @@
 import { createSandbox, SinonSandbox } from 'sinon'
 import { UserMother } from '../../../users/domain/models/UserMother'
 import { HeaderMother } from './HeaderMother'
-import { UserRepository } from '../../../../../src/users/domain/repositories/UserRepository'
-import { Header } from '../../../../../src/sections/layout/header/Header'
 
 describe('Header component', () => {
   const sandbox: SinonSandbox = createSandbox()
@@ -13,13 +11,7 @@ describe('Header component', () => {
   })
 
   it('displays the user name when the user is logged in', () => {
-    cy.pause()
-
-    const userRepository: UserRepository = {} as UserRepository
-    userRepository.getAuthenticated = sandbox.stub().resolves(testUser)
-    userRepository.removeAuthenticated = sandbox.stub().resolves()
-
-    cy.customMount(<Header userRepository={userRepository} />)
+    cy.customMount(HeaderMother.withLoggedInUser(sandbox, testUser))
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.findByText(testUser.name).should('be.visible')
     cy.findByText(testUser.name).click()

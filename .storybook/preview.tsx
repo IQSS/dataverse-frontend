@@ -28,20 +28,4 @@ const preview: Preview = {
     mswDecorator
   ]
 }
-// Create a global variable called locale in storybook
-// and add a menu in the toolbar to change your locale
-export const globalTypes = {
-  locale: {
-    name: 'Locale',
-    description: 'Internationalization locale',
-    toolbar: {
-      icon: 'globe',
-      items: [
-        { value: 'en', title: 'English' },
-        { value: 'de', title: 'Deutsch' }
-      ],
-      showName: true
-    }
-  }
-}
 export default preview
