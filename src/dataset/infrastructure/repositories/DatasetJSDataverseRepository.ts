@@ -26,7 +26,10 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames)
       )
       .catch((error: WriteError) => {
-        throw new Error(error.message)
+        if (!version) {
+          throw new Error(error.message)
+        }
+        return this.getByPersistentId(persistentId)
       })
   }
 
