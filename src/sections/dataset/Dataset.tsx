@@ -15,7 +15,8 @@ interface DatasetProps {
   repository: DatasetRepository
   searchParams: {
     persistentId?: string
-    privateUrlToken?: string | null
+    privateUrlToken?: string
+    version?: string
   }
 }
 

@@ -19,8 +19,9 @@ export class DatasetFactory {
 
 function DatasetWithSearchParams() {
   const [searchParams] = useSearchParams()
-  const persistentId = searchParams.get('persistentId')
+  const persistentId = searchParams.get('persistentId') ?? undefined
   const privateUrlToken = searchParams.get('privateUrlToken')
+  const version = searchParams.get('version') ?? undefined
 
   if (privateUrlToken) {
     const { setAnonymizedView } = useAnonymized()
@@ -31,9 +32,10 @@ function DatasetWithSearchParams() {
     )
   }
 
-  if (persistentId) {
-    return <Dataset repository={datasetRepository} searchParams={{ persistentId: persistentId }} />
-  }
-
-  return <Dataset repository={datasetRepository} searchParams={{ persistentId: undefined }} />
+  return (
+    <Dataset
+      repository={datasetRepository}
+      searchParams={{ persistentId: persistentId, version: version }}
+    />
+  )
 }

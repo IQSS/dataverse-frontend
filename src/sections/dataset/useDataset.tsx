@@ -9,14 +9,15 @@ export function useDataset(
   repository: DatasetRepository,
   searchParams: {
     persistentId?: string
-    privateUrlToken?: string | null
+    privateUrlToken?: string
+    version?: string
   }
 ) {
   const [dataset, setDataset] = useState<Dataset>()
   const { setIsLoading } = useLoading()
   const getDataset = () => {
     if (searchParams.persistentId) {
-      return getDatasetByPersistentId(repository, searchParams.persistentId)
+      return getDatasetByPersistentId(repository, searchParams.persistentId, searchParams.version)
     }
     if (searchParams.privateUrlToken) {
       return getDatasetByPrivateUrlToken(repository, searchParams.privateUrlToken)

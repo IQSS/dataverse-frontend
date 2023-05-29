@@ -12,13 +12,15 @@ import {
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
-  getByPersistentId(persistentId: string): Promise<Dataset | undefined> {
-    return Promise.all([
-      getDatasetByPersistentId.execute(persistentId),
-      getDatasetSummaryFieldNames.execute()
-    ])
-      .then(([jsDataset, summaryFieldsNames]: [JSDataset, string[]]) =>
-        Promise.all([jsDataset, summaryFieldsNames, getDatasetCitation.execute(jsDataset.id)])
+  getByPersistentId(persistentId: string, version?: string): Promise<Dataset | undefined> {
+    return getDatasetByPersistentId
+      .execute(persistentId, this.versionToVersionId(version))
+      .then((jsDataset) =>
+        Promise.all([
+          jsDataset,
+          getDatasetSummaryFieldNames.execute(),
+          getDatasetCitation.execute(jsDataset.id, this.versionToVersionId(version))
+        ])
       )
       .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
         JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames)
@@ -31,20 +33,22 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   getByPrivateUrlToken(privateUrlToken: string): Promise<Dataset | undefined> {
     return Promise.all([
       getPrivateUrlDataset.execute(privateUrlToken),
-      getDatasetSummaryFieldNames.execute()
+      getDatasetSummaryFieldNames.execute(),
+      getPrivateUrlDatasetCitation.execute(privateUrlToken)
     ])
-      .then(([jsDataset, summaryFieldsNames]: [JSDataset, string[]]) =>
-        Promise.all([
-          jsDataset,
-          summaryFieldsNames,
-          getPrivateUrlDatasetCitation.execute(privateUrlToken)
-        ])
-      )
       .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
         JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames)
       )
       .catch((error: WriteError) => {
         throw new Error(error.message)
       })
+  }
+
+  versionToVersionId(version?: string): string | undefined {
+    if (version === 'DRAFT') {
+      return ':draft'
+    }
+
+    return version
   }
 }
