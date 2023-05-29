@@ -60,11 +60,6 @@ export class JSDatasetMapper {
     }
   }
 
-  static toCitation(): string {
-    // TODO: Implement
-    return ''
-  }
-
   static toSummaryFields(
     jsDatasetMetadataBlocks: JSDatasetMetadataBlock[],
     summaryFieldsNames: string[]
