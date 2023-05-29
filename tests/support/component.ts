@@ -33,6 +33,7 @@ declare global {
     interface Chainable {
       mount: typeof mount
       customMount: typeof mount
+      loginAsAdmin(go: string): Chainable<JQuery<HTMLElement>>
     }
   }
 }
