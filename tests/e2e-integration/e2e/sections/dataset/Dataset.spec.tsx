@@ -1,4 +1,4 @@
-import { DatasetLabelValue } from '../../../../src/dataset/domain/models/Dataset'
+import { DatasetLabelValue } from '../../../../../src/dataset/domain/models/Dataset'
 
 let PERSISTENT_ID = ''
 let API_TOKEN = ''
@@ -25,7 +25,7 @@ describe('Dataset', () => {
     return getApiToken()
       .then((apiToken) =>
         cy.exec(
-          `curl -H X-Dataverse-key:${apiToken} -X POST "http://localhost:8000/api/dataverses/root/datasets" --upload-file tests/e2e/fixtures/dataset-finch1.json -H 'Content-type:application/json'`
+          `curl -H X-Dataverse-key:${apiToken} -X POST "http://localhost:8000/api/dataverses/root/datasets" --upload-file tests/e2e-integration/fixtures/dataset-finch1.json -H 'Content-type:application/json'`
         )
       )
       .then(

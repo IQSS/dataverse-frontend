@@ -1,10 +1,13 @@
-import { DataverseInfoJSDataverseRepository } from '../../../../../src/info/infrastructure/repositories/DataverseInfoJSDataverseRepository'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
+import { DataverseInfoJSDataverseRepository } from '../../../../../../src/info/infrastructure/repositories/DataverseInfoJSDataverseRepository'
+import { IntegrationTests } from '../../../IntegrationTests'
 
 chai.use(chaiAsPromised)
 
 const expect = chai.expect
+
+IntegrationTests.setup()
 
 describe('DataverseInfo JSDataverse Repository', () => {
   it('gets the dataverse version number', async () => {
