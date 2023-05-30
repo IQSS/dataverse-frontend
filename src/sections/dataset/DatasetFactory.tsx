@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Dataset } from './Dataset'
 import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repositories/DatasetJSDataverseRepository'
@@ -18,15 +18,17 @@ export class DatasetFactory {
 }
 
 function DatasetWithSearchParams() {
+  const { setAnonymizedView } = useAnonymized()
   const [searchParams] = useSearchParams()
   const persistentId = searchParams.get('persistentId') ?? undefined
   const privateUrlToken = searchParams.get('privateUrlToken')
   const version = searchParams.get('version') ?? undefined
 
-  if (privateUrlToken) {
-    const { setAnonymizedView } = useAnonymized()
-    setAnonymizedView(true)
+  useEffect(() => {
+    if (privateUrlToken) setAnonymizedView(true)
+  }, [privateUrlToken])
 
+  if (privateUrlToken) {
     return (
       <Dataset repository={datasetRepository} searchParams={{ privateUrlToken: privateUrlToken }} />
     )

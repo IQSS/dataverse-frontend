@@ -54,7 +54,9 @@ Cypress.Commands.add('customMount', (component: ReactNode) => {
 
 Cypress.Commands.add('loginAsAdmin', (go?: string) => {
   cy.visit('/')
-  cy.findByRole('link', { name: /Log In/i }).click()
+  cy.findAllByRole('link', { name: /Log In/i })
+    .first()
+    .click()
   cy.findByLabelText('Username/Email').type('dataverseAdmin')
   cy.findByLabelText('Password').type('admin1')
   cy.findByRole('button', { name: /Log In/i }).click()
