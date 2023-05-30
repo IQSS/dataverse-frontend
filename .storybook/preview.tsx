@@ -28,4 +28,5 @@ const preview: Preview = {
     mswDecorator
   ]
 }
+
 export default preview
