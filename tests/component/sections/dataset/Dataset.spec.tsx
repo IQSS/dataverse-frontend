@@ -31,7 +31,7 @@ describe('Dataset', () => {
         <TestComponent />
       </LoadingProvider>
     )
-    
+
     cy.findByText(buttonText).click()
 
     cy.findByTestId('dataset-skeleton').should('exist')
