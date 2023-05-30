@@ -40,7 +40,7 @@ describe('Dataset', () => {
       .exec(
         `curl -H X-Dataverse-key:${API_TOKEN} -X POST "http://localhost:8000/api/datasets/:persistentId/actions/:publish?persistentId=${PERSISTENT_ID}&type=major"`
       )
-      .wait(500)
+      .wait(1000)
   }
 
   function createPrivateUrl(anonymized = false) {

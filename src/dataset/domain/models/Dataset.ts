@@ -65,6 +65,11 @@ export interface DatasetLicense {
   uri: string
   iconUri?: string
 }
+const defaultLicense: DatasetLicense = {
+  name: 'CC0 1.0',
+  uri: 'https://creativecommons.org/publicdomain/zero/1.0',
+  iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+}
 
 export enum DatasetStatus {
   RELEASED = 'released',
@@ -107,7 +112,7 @@ export class Dataset {
       public readonly version: DatasetVersion,
       public readonly citation: string,
       public readonly summaryFields: DatasetMetadataBlock[],
-      public readonly license: DatasetLicense,
+      public readonly license: DatasetLicense = defaultLicense,
       public readonly metadataBlocks: DatasetMetadataBlock[]
     ) {
       this.withLabels()
