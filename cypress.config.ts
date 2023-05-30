@@ -7,6 +7,7 @@ export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:8000',
     specPattern: 'tests/e2e/**/*.spec.{js,jsx,ts,tsx}',
+    fixturesFolder: 'tests/e2e/fixtures',
     screenshotOnRunFailure: false,
     video: false,
     viewportWidth: 1920,

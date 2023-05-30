@@ -1,91 +1,90 @@
+import { DatasetLabelValue } from '../../../../src/dataset/domain/models/Dataset'
+
+let persistentId = ''
+let apiToken = ''
+type Dataset = {
+  datasetVersion: { metadataBlocks: { citation: { fields: { value: string }[] } } }
+}
+
 describe('Dataset', () => {
-  // TODO - Replace hardcoded values with the actual values from a new created dataset
+  function createDataset() {
+    cy.loginAsAdmin('/dataverseuser.xhtml?selectTab=dataRelatedToMe')
+    cy.findByRole('link', { name: 'API Token' }).click()
+    return cy
+      .get('#apiToken code')
+      .invoke('text')
+      .then((apiTokenResult) => {
+        apiToken = apiTokenResult
+        return cy
+          .exec(
+            `curl -H X-Dataverse-key:${apiToken} -X POST "http://localhost:8000/api/dataverses/root/datasets" --upload-file tests/e2e/fixtures/dataset-finch1.json -H 'Content-type:application/json'`
+          )
+          .then(
+            (result: { stdout: string }) =>
+              JSON.parse(result.stdout) as { data: { persistentId: string } }
+          )
+          .then((stdout: { data: { persistentId: string } }) => stdout.data)
+      })
+  }
 
-  it('successfully loads a dataset when passing the id', () => {
-    cy.visit('/datasets/12345')
+  function publishDataset() {
+    cy.loginAsAdmin()
+    return cy.exec(
+      `curl -H X-Dataverse-key:${apiToken} -X POST "http://localhost:8000/api/datasets/:persistentId/actions/:publish?persistentId=${persistentId}&type=major"`
+    )
+  }
 
-    cy.findByRole('heading', { name: 'Dataset Title' }).should('exist')
-    cy.findByText('Version 1.0').should('exist')
-    cy.findByText('Draft').should('exist')
-
-    cy.findByText('Metadata').should('exist')
-    cy.findByText('Files').should('exist')
+  before(() => {
+    createDataset().then((data: { persistentId: string }) => {
+      persistentId = data.persistentId
+    })
   })
 
-  it('successfully loads a dataset metadata with all possible blocks translations', () => {
-    cy.visit('/datasets/12345')
+  it('successfully loads a dataset in draft mode', () => {
+    cy.visit('/spa/datasets?persistentId=' + persistentId)
 
-    cy.findByRole('heading', { name: 'Dataset Title' }).should('exist')
+    cy.fixture('dataset-finch1.json').then((dataset: Dataset) => {
+      cy.findByRole('heading', {
+        name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
+      }).should('exist')
+      cy.findByText(DatasetLabelValue.DRAFT).should('exist')
+      cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
 
-    cy.findByRole('tab', { name: 'Metadata' }).should('exist').click()
-
-    cy.findByText('Citation Metadata').should('exist')
-    cy.findByText('Author').should('exist')
-
-    cy.findByText('Geospatial Metadata').should('exist').click()
-    cy.findByText('Geographic Unit').should('exist')
-
-    cy.findByText('Astronomy and Astrophysics Metadata').should('exist').click()
-    cy.findByText('Type').should('exist')
-
-    cy.findByText('Software Metadata (CodeMeta v2.0)').should('exist').click()
-    cy.findByText('Application Category').should('exist')
-
-    cy.findByText('Computational Workflow Metadata').should('exist').click()
-    cy.findByText('Documentation').should('exist')
-
-    cy.findByText('HBGDki Custom Metadata').should('exist').click()
-    cy.findByText('Lower limit of age at enrollment').should('exist')
-
-    cy.findByText('Alliance for Research on Corporate Sustainability Metadata')
-      .should('exist')
-      .click()
-    cy.findByText(
-      '3) Do any of these data sets include individual-level data (either collected or pre-existing in the dataset) that might make them subject to U.S. or international human subjects considerations?'
-    ).should('exist')
-
-    cy.findByText('CHIA Metadata').should('exist').click()
-    cy.findByText('Variables').should('exist')
-
-    cy.findByText('Digaai Metadata').should('exist').click()
-    cy.findByText('Data de Publicação').should('exist')
-
-    cy.findByText('Graduate School of Design Metadata').should('exist').click()
-    cy.findByText('Accreditation').should('exist')
-
-    cy.findByText('MRA Metadata').should('exist').click()
-    cy.findByText('Murray Research Archive Collection').should('exist')
-
-    cy.findByText('PSI Metadata').should('exist').click()
-    cy.findByText('Population').should('exist')
-
-    cy.findByText('Political Science Replication Initiative Metadata').should('exist').click()
-    cy.findByText(
-      'Will you submit your replication code to this Dataverse (This is a PSRI requirement)?'
-    ).should('exist')
-
-    cy.findByText('Journal Metadata').should('exist').click()
-    cy.findByText('Volume').should('exist')
-
-    cy.findByText('Social Science and Humanities Metadata').should('exist').click()
-    cy.findByText('Major Deviations for Sample Design').should('exist')
+      cy.findByText('Metadata').should('exist')
+      cy.findByText('Files').should('exist')
+    })
   })
 
-  it('loads page not fount when no search parameter is passed', () => {
-    cy.visit('/datasets')
+  it('successfully loads a dataset when passing the id and version', () => {
+    publishDataset().then(() => {
+      cy.visit('/spa/datasets?persistentId=' + persistentId + '&version=1.0')
 
+      cy.fixture('dataset-finch1.json').then((dataset: Dataset) => {
+        cy.findByRole('heading', {
+          name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
+        }).should('exist')
+        cy.findByText(DatasetLabelValue.DRAFT).should('not.exist')
+        cy.findByText(DatasetLabelValue.UNPUBLISHED).should('not.exist')
+        cy.findByText('Version 1.0').should('exist')
+      })
+    })
+  })
+
+  it('loads the latest version of the dataset when passing a wrong version', () => {
+    cy.visit('/spa/datasets?persistentId=' + persistentId + '&version=2.0')
+
+    cy.fixture('dataset-finch1.json').then((dataset: Dataset) => {
+      cy.findByRole('heading', {
+        name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
+      }).should('exist')
+
+      cy.findByText(DatasetLabelValue.DRAFT).should('not.exist')
+      cy.findByText('Version 1.0').should('exist')
+    })
+  })
+
+  it('loads page not found when passing a wrong persistentId', () => {
+    cy.visit('/spa/datasets?persistentId=doi:10.5072/FK2/WRONG')
     cy.findByText('Page Not Found').should('exist')
   })
-
-  it('loads dataset anonymized view when privateUrlToken is passed', () => {
-    cy.visit('/datasets/?privateUrlToken=12345')
-
-    cy.findByRole('heading', { name: 'Dataset Title' }).should('exist')
-
-    cy.findByRole('tab', { name: 'Metadata' }).should('exist').click()
-
-    cy.findAllByText('withheld').should('exist')
-  })
-
-  // TODO - Add test for when the dataset is not found and loading skeleton when the js-dataverse module is ready
 })

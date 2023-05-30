@@ -7,7 +7,7 @@ export enum DatasetLabelSemanticMeaning {
   DANGER = 'danger'
 }
 
-enum DatasetLabelValue {
+export enum DatasetLabelValue {
   DRAFT = 'Draft',
   UNPUBLISHED = 'Unpublished',
   DEACCESSIONED = 'Deaccessioned',
