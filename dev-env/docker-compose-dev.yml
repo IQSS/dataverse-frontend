@@ -48,7 +48,7 @@ services:
       - DATAVERSE_DB_PASSWORD=secret
       - DATAVERSE_DB_USER=${DATAVERSE_DB_USER}
       - DATAVERSE_FEATURE_API_SESSION_AUTH=1
-    # We open 8080, rather than just expose, so that the docker-final-integrationTestsSetup.sh script works from the run-env.sh script
+    # We open 8080, rather than just expose, so that the docker-final-setup.sh script works from the run-env.sh script
     ports:
       - '8080:8080'
     networks:
