@@ -1,16 +1,16 @@
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { UserJSDataverseRepository } from '../../../../../../src/users/infrastructure/repositories/UserJSDataverseRepository'
-import { IntegrationTests } from '../../../IntegrationTests'
+import { IntegrationTestsUtils } from '../../../IntegrationTestsUtils'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
 
-IntegrationTests.setup()
+IntegrationTestsUtils.setup()
 
 const userRepository = new UserJSDataverseRepository()
 describe('User JSDataverse Repository', () => {
-  beforeEach(() => IntegrationTests.login())
+  beforeEach(() => IntegrationTestsUtils.login())
 
   it('gets the authenticated user', async () => {
     const expectedUser = { name: 'Dataverse Admin' }
