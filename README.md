@@ -101,6 +101,8 @@ If you want to run the environment with aggregated test data (collections and da
 ./run-env <dataverse_branch_name> wd
 ```
 
+_Note: The above command uses the dataverse-sample-data repository whose scripts occasionally fail, so the 'wd' option is currently unstable and not recommended._
+
 ### Remove the environment
 
 To clean up your environment of any running environment containers, as well as any associated data volumes, run this script inside the `dev-env` folder:
