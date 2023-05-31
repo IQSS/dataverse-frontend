@@ -8,25 +8,10 @@ type Dataset = {
 type createDatasetResponse = { persistentId: string; id: string }
 
 describe('Dataset', () => {
-  function getApiToken() {
-    cy.loginAsAdmin('/dataverseuser.xhtml?selectTab=dataRelatedToMe')
-    return cy
-      .findByRole('link', { name: 'API Token' })
-      .click()
-      .get('#apiToken code')
-      .invoke('text')
-      .then((apiToken) => {
-        API_TOKEN = apiToken
-        return apiToken
-      })
-  }
-
   function createDataset() {
-    return getApiToken()
-      .then((apiToken) =>
-        cy.exec(
-          `curl -H X-Dataverse-key:${apiToken} -X POST "http://localhost:8000/api/dataverses/root/datasets" --upload-file tests/e2e-integration/fixtures/dataset-finch1.json -H 'Content-type:application/json'`
-        )
+    return cy
+      .exec(
+        `curl -H X-Dataverse-key:${API_TOKEN} -X POST "http://localhost:8000/api/dataverses/root/datasets" --upload-file tests/e2e-integration/fixtures/dataset-finch1.json -H 'Content-type:application/json'`
       )
       .then(
         (result: { stdout: string }) => JSON.parse(result.stdout) as { data: createDatasetResponse }
@@ -66,9 +51,14 @@ describe('Dataset', () => {
 
   before(() => {
     allowAnonymizedAccess()
-    createDataset().then((data: createDatasetResponse) => {
-      PERSISTENT_ID = data.persistentId
-    })
+    cy.getApiToken()
+      .then((token: string) => {
+        API_TOKEN = token
+      })
+      .then(() => createDataset())
+      .then((data: createDatasetResponse) => {
+        PERSISTENT_ID = data.persistentId
+      })
   })
 
   it('successfully loads a dataset in draft mode', () => {

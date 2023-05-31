@@ -3,13 +3,10 @@ import chaiAsPromised from 'chai-as-promised'
 import { DatasetJSDataverseRepository } from '../../../../src/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { IntegrationTestsUtils } from '../IntegrationTestsUtils'
 import { DatasetHelper } from './DatasetHelper'
-import newDatasetData from '../../fixtures/dataset-finch1.json'
 import { DatasetStatus, DatasetVersion } from '../../../../src/dataset/domain/models/Dataset'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
-
-IntegrationTestsUtils.setup()
 
 const datasetData = (persistentId: string) => {
   const persistentIdUrl = `https://doi.org/${persistentId.replace('doi:', '')}`
@@ -70,10 +67,11 @@ const datasetData = (persistentId: string) => {
 
 const datasetRepository = new DatasetJSDataverseRepository()
 describe('Dataset JSDataverse Repository', () => {
+  before(() => IntegrationTestsUtils.setup())
   beforeEach(() => IntegrationTestsUtils.login())
 
   it('gets the dataset by persistentId', async () => {
-    const datasetResponse = await DatasetHelper.createDataset(newDatasetData)
+    const datasetResponse = await DatasetHelper.createDataset()
 
     await datasetRepository.getByPersistentId(datasetResponse.persistentId).then((dataset) => {
       if (!dataset) {
@@ -92,7 +90,7 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets the dataset by persistentId and version number', async () => {
-    const datasetResponse = await DatasetHelper.createDataset(newDatasetData)
+    const datasetResponse = await DatasetHelper.createDataset()
     await DatasetHelper.publishDataset(datasetResponse.persistentId)
 
     await IntegrationTestsUtils.wait(1500)
@@ -112,7 +110,7 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets the dataset by persistentId and version DRAFT keyword', async () => {
-    const datasetResponse = await DatasetHelper.createDataset(newDatasetData)
+    const datasetResponse = await DatasetHelper.createDataset()
 
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, 'DRAFT')
@@ -128,7 +126,7 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets the dataset by privateUrlToken', async () => {
-    const datasetResponse = await DatasetHelper.createDataset(newDatasetData)
+    const datasetResponse = await DatasetHelper.createDataset()
     const privateUrlResponse = await DatasetHelper.createPrivateUrl(datasetResponse.id)
 
     await datasetRepository.getByPrivateUrlToken(privateUrlResponse.token).then((dataset) => {

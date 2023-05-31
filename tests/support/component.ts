@@ -34,6 +34,7 @@ declare global {
       mount: typeof mount
       customMount: typeof mount
       loginAsAdmin(go?: string): Chainable<JQuery<HTMLElement>>
+      getApiToken(): Chainable<string>
     }
   }
 }

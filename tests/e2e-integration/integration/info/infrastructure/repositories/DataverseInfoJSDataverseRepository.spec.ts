@@ -7,9 +7,9 @@ chai.use(chaiAsPromised)
 
 const expect = chai.expect
 
-IntegrationTestsUtils.setup()
-
 describe('DataverseInfo JSDataverse Repository', () => {
+  before(() => IntegrationTestsUtils.setup())
+
   it('gets the dataverse version number', async () => {
     const dataverseInfoRepository = new DataverseInfoJSDataverseRepository()
     const dataverseVersion = await dataverseInfoRepository.getVersion()

@@ -1,4 +1,5 @@
 import { ApiConfig } from '@IQSS/dataverse-client-javascript/dist/core'
+import { DataverseApiHelper } from './DataverseApiHelper'
 
 export class IntegrationTestsUtils {
   static readonly DATAVERSE_BACKEND_URL =
@@ -6,6 +7,7 @@ export class IntegrationTestsUtils {
 
   static setup() {
     ApiConfig.init(`${this.DATAVERSE_BACKEND_URL}/api/v1`)
+    DataverseApiHelper.setup()
   }
 
   static login() {

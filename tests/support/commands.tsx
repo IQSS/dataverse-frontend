@@ -54,13 +54,21 @@ Cypress.Commands.add('customMount', (component: ReactNode) => {
 
 Cypress.Commands.add('loginAsAdmin', (go?: string) => {
   cy.visit('/')
-  cy.findAllByRole('link', { name: /Log In/i })
-    .first()
-    .click()
-  cy.findByLabelText('Username/Email').type('dataverseAdmin')
-  cy.findByLabelText('Password').type('admin1')
-  cy.findByRole('button', { name: /Log In/i }).click()
-  cy.findByText(/Dataverse Admin/i).should('exist')
+  cy.get('#topNavBar').then((navbar) => {
+    if (navbar.find('ul > li:nth-child(6) > a').text().includes('Log In')) {
+      cy.findAllByRole('link', { name: /Log In/i })
+        .first()
+        .click()
+      cy.findByLabelText('Username/Email').type('dataverseAdmin')
+      cy.findByLabelText('Password').type('admin1')
+      cy.findByRole('button', { name: /Log In/i }).click()
+      cy.findByText(/Dataverse Admin/i).should('exist')
+      if (go) cy.visit(go)
+    }
+  })
+})
 
-  if (go) cy.visit(go)
+Cypress.Commands.add('getApiToken', () => {
+  cy.loginAsAdmin('/dataverseuser.xhtml?selectTab=dataRelatedToMe')
+  return cy.findByRole('link', { name: 'API Token' }).click().get('#apiToken code').invoke('text')
 })

@@ -6,10 +6,9 @@ import { IntegrationTestsUtils } from '../../../IntegrationTestsUtils'
 chai.use(chaiAsPromised)
 const expect = chai.expect
 
-IntegrationTestsUtils.setup()
-
 const userRepository = new UserJSDataverseRepository()
 describe('User JSDataverse Repository', () => {
+  before(() => IntegrationTestsUtils.setup())
   beforeEach(() => IntegrationTestsUtils.login())
 
   it('gets the authenticated user', async () => {
