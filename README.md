@@ -66,6 +66,11 @@ There are 2 Storybook instances, one for the Design System and one for the Datav
 Open [http://localhost:6006](http://localhost:6006) to view the Dataverse Frontend Storybook in your browser.  
 Open [http://localhost:6007](http://localhost:6007) to view the Design System Storybook in your browser.
 
+Note that both Storybook instances are also published to Chromatic:
+
+- [Dataverse Frontend](https://www.chromatic.com/builds?appId=646f68aa9beb01b35c599acd)
+- [Dataverse Design System](https://www.chromatic.com/builds?appId=646fbe232a8d3b501a1943f3)
+
 ## Local development environment
 
 A containerized environment, oriented to local development, is available to be run from the repository.
