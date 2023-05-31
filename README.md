@@ -66,6 +66,11 @@ There are 2 Storybook instances, one for the Design System and one for the Datav
 Open [http://localhost:6006](http://localhost:6006) to view the Dataverse Frontend Storybook in your browser.  
 Open [http://localhost:6007](http://localhost:6007) to view the Design System Storybook in your browser.
 
+Note that both Storybook instances are also published to Chromatic:
+
+- [Dataverse Frontend](https://www.chromatic.com/builds?appId=646f68aa9beb01b35c599acd)
+- [Dataverse Design System](https://www.chromatic.com/builds?appId=646fbe232a8d3b501a1943f3)
+
 ## Local development environment
 
 A containerized environment, oriented to local development, is available to be run from the repository.
@@ -180,3 +185,9 @@ the secondary color to the labels automatically, the color of the file label is 
 a lighter shade of grey than what it used to be.
 
 We changed the citation block to be white with a colored border, to make the text in the box more accessible.
+
+## Thanks
+
+<a href="https://www.chromatic.com/"><img src="https://user-images.githubusercontent.com/321738/84662277-e3db4f80-af1b-11ea-88f5-91d67a5e59f6.png" width="153" height="30" alt="Chromatic" /></a>
+
+Thanks to [Chromatic](https://www.chromatic.com/) for providing the visual testing platform that helps us review UI changes and catch visual regressions.
