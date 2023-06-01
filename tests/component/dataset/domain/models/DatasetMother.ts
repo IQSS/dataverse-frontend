@@ -4,7 +4,8 @@ import {
   Dataset,
   DatasetStatus,
   DatasetVersion,
-  DatasetLabelSemanticMeaning
+  DatasetLabelSemanticMeaning,
+  DatasetLabelValue
 } from '../../../../../src/dataset/domain/models/Dataset'
 import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Dataset'
 
@@ -27,19 +28,19 @@ export class DatasetMother {
       },
       labels: [
         {
-          value: faker.lorem.word(),
+          value: DatasetLabelValue.IN_REVIEW,
           semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
         },
         {
-          value: faker.lorem.word(),
+          value: DatasetLabelValue.EMBARGOED,
           semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
         },
         {
-          value: faker.lorem.word(),
+          value: DatasetLabelValue.UNPUBLISHED,
           semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
         },
         {
-          value: faker.lorem.word(),
+          value: `Version ${faker.lorem.word()}`,
           semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
         }
       ],
