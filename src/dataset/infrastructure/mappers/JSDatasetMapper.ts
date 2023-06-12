@@ -23,7 +23,7 @@ export class JSDatasetMapper {
       citation,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
-      JSDatasetMapper.toMetadataBlocks(jsDataset.metadataBlocks)
+      JSDatasetMapper.toMetadataBlocks(jsDataset.metadataBlocks) // TODO Add alternativePersistentId, publicationDate, citationDate
     )
   }
 
@@ -85,12 +85,21 @@ export class JSDatasetMapper {
   }
 
   static toMetadataBlocks(
-    jsDatasetMetadataBlocks: JSDatasetMetadataBlock[]
+    jsDatasetMetadataBlocks: JSDatasetMetadataBlock[],
+    alternativePersistentId?: string,
+    publicationDate?: string,
+
+    citationDate?: string
   ): DatasetMetadataBlock[] {
     return jsDatasetMetadataBlocks.map((jsDatasetMetadataBlock) => {
       return {
         name: JSDatasetMapper.toMetadataBlockName(jsDatasetMetadataBlock.name),
-        fields: jsDatasetMetadataBlock.fields
+        fields: JSDatasetMapper.toMetadataFields(
+          jsDatasetMetadataBlock,
+          alternativePersistentId,
+          publicationDate,
+          citationDate
+        )
       }
     })
   }
@@ -105,5 +114,51 @@ export class JSDatasetMapper {
     }
 
     return metadataBlockNameKey
+  }
+
+  static toMetadataFields(
+    jsDatasetMetadataBlock: JSDatasetMetadataBlock,
+    alternativePersistentId?: string,
+    publicationDate?: string,
+    citationDate?: string
+  ): DatasetMetadataFields {
+    if (jsDatasetMetadataBlock.name === MetadataBlockName.CITATION) {
+      return {
+        ...JSDatasetMapper.getExtraFieldsForCitationMetadata(
+          publicationDate,
+          alternativePersistentId,
+          citationDate
+        ),
+        ...jsDatasetMetadataBlock.fields
+      }
+    }
+
+    return jsDatasetMetadataBlock.fields
+  }
+
+  static getExtraFieldsForCitationMetadata(
+    publicationDate?: string,
+    alternativePersistentId?: string,
+    citationDate?: string
+  ) {
+    const extraFields: {
+      alternativePersistentId?: string
+      publicationDate?: string
+      citationDate?: string
+    } = {}
+
+    if (alternativePersistentId) {
+      extraFields.alternativePersistentId = alternativePersistentId
+    }
+
+    if (publicationDate) {
+      extraFields.publicationDate = publicationDate
+    }
+
+    if (publicationDate && citationDate !== publicationDate) {
+      extraFields.citationDate = citationDate
+    }
+
+    return extraFields
   }
 }

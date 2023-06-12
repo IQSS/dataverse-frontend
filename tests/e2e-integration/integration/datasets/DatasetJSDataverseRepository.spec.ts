@@ -3,7 +3,11 @@ import chaiAsPromised from 'chai-as-promised'
 import { DatasetJSDataverseRepository } from '../../../../src/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { IntegrationTestsUtils } from '../IntegrationTestsUtils'
 import { DatasetHelper } from './DatasetHelper'
-import { DatasetStatus, DatasetVersion } from '../../../../src/dataset/domain/models/Dataset'
+import {
+  DatasetStatus,
+  DatasetVersion,
+  MetadataBlockName
+} from '../../../../src/dataset/domain/models/Dataset'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -106,6 +110,11 @@ describe('Dataset JSDataverse Repository', () => {
 
         expect(dataset.title).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(newVersion)
+
+        const citationMetadataBlock = dataset.metadataBlocks.find(
+          (metadataBlock) => metadataBlock.name === MetadataBlockName.CITATION
+        )
+        expect(citationMetadataBlock?.fields.publicationDate).to.exist
       })
   })
 
