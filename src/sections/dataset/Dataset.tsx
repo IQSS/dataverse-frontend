@@ -36,7 +36,7 @@ export function Dataset({ repository, searchParams }: DatasetProps) {
       ) : (
         <article>
           <header className={styles.header}>
-            <h1>{dataset.title}</h1>
+            <h1>{dataset.getTitle()}</h1>
             <DatasetLabels labels={dataset.labels} />
           </header>
           <div className={styles.container}>

@@ -1,5 +1,6 @@
 import {
   Dataset as JSDataset,
+  DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataBlock as JSDatasetMetadataBlock,
   DatasetMetadataFields as JSDatasetMetadataFields,
   DatasetVersionInfo as JSDatasetVersionInfo
@@ -12,33 +13,19 @@ import {
   DatasetMetadataBlock,
   DatasetVersion,
   DatasetMetadataFields,
-  MetadataBlocks
+  DatasetMetadataBlocks
 } from '../../domain/models/Dataset'
 
 export class JSDatasetMapper {
   static toDataset(jsDataset: JSDataset, citation: string, summaryFieldsNames: string[]): Dataset {
-    console.log(jsDataset)
     return new Dataset.Builder(
       jsDataset.persistentId,
-      JSDatasetMapper.toTitle(jsDataset.metadataBlocks),
       JSDatasetMapper.toVersion(jsDataset.versionInfo),
       citation,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
       JSDatasetMapper.toMetadataBlocks(jsDataset.metadataBlocks) // TODO Add alternativePersistentId, publicationDate, citationDate
-    )
-  }
-
-  static toTitle(jsDatasetMetadataBlocks: JSDatasetMetadataBlock[]): string {
-    const citationFields = jsDatasetMetadataBlocks.find(
-      (metadataBlock) => metadataBlock.name === MetadataBlockName.CITATION
-    )?.fields
-
-    if (citationFields && typeof citationFields.title === 'string') {
-      return citationFields.title
-    }
-
-    throw new Error('Dataset title not found')
+    ).build()
   }
 
   static toVersion(jsDatasetVersionInfo: JSDatasetVersionInfo): DatasetVersion {
@@ -63,7 +50,7 @@ export class JSDatasetMapper {
   }
 
   static toSummaryFields(
-    jsDatasetMetadataBlocks: JSDatasetMetadataBlock[],
+    jsDatasetMetadataBlocks: JSDatasetMetadataBlocks,
     summaryFieldsNames: string[]
   ): DatasetMetadataBlock[] {
     return jsDatasetMetadataBlocks.map((jsDatasetMetadataBlock) => {
@@ -87,11 +74,11 @@ export class JSDatasetMapper {
   }
 
   static toMetadataBlocks(
-    jsDatasetMetadataBlocks: JSDatasetMetadataBlock[],
+    jsDatasetMetadataBlocks: JSDatasetMetadataBlocks,
     alternativePersistentId?: string,
     publicationDate?: string,
     citationDate?: string
-  ): MetadataBlocks {
+  ): DatasetMetadataBlocks {
     return jsDatasetMetadataBlocks.map((jsDatasetMetadataBlock) => {
       return {
         name: JSDatasetMapper.toMetadataBlockName(jsDatasetMetadataBlock.name),
@@ -102,7 +89,7 @@ export class JSDatasetMapper {
           citationDate
         )
       }
-    }) as MetadataBlocks
+    }) as DatasetMetadataBlocks
   }
 
   static toMetadataBlockName(jsDatasetMetadataBlockName: string): MetadataBlockName {

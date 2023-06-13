@@ -33,7 +33,7 @@ export enum MetadataBlockName {
   SOCIAL_SCIENCE = 'socialscience'
 }
 
-export type MetadataBlocks = [CitationMetadataBlock, ...DatasetMetadataBlock[]]
+export type DatasetMetadataBlocks = [CitationMetadataBlock, ...DatasetMetadataBlock[]]
 
 export interface DatasetMetadataBlock {
   name: MetadataBlockName
@@ -220,26 +220,28 @@ export class DatasetVersion {
 export class Dataset {
   constructor(
     public readonly persistentId: string,
-    public readonly title: string,
     public readonly version: DatasetVersion,
     public readonly citation: string,
     public readonly labels: DatasetLabel[],
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
-    public readonly metadataBlocks: MetadataBlocks
+    public readonly metadataBlocks: DatasetMetadataBlocks
   ) {}
+
+  public getTitle(): string {
+    return this.metadataBlocks[0].fields.title
+  }
 
   static Builder = class {
     public readonly labels: DatasetLabel[] = []
 
     constructor(
       public readonly persistentId: string,
-      public readonly title: string,
       public readonly version: DatasetVersion,
       public readonly citation: string,
       public readonly summaryFields: DatasetMetadataBlock[],
       public readonly license: DatasetLicense = defaultLicense,
-      public readonly metadataBlocks: MetadataBlocks
+      public readonly metadataBlocks: DatasetMetadataBlocks
     ) {
       this.withLabels()
     }
@@ -292,7 +294,6 @@ export class Dataset {
     build(): Dataset {
       return new Dataset(
         this.persistentId,
-        this.title,
         this.version,
         this.citation,
         this.labels,

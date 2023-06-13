@@ -6,7 +6,8 @@ import {
   DatasetLabelValue,
   DatasetStatus,
   DatasetVersion,
-  MetadataBlockName
+  MetadataBlockName,
+  DatasetMetadataBlocks
 } from '../../../../../src/dataset/domain/models/Dataset'
 
 export class DatasetMother {
@@ -15,7 +16,7 @@ export class DatasetMother {
   }
 
   static create(props?: Partial<Dataset>): Dataset {
-    return {
+    const dataset = {
       persistentId: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
       version: new DatasetVersion(1, 0, DatasetStatus.RELEASED),
@@ -42,6 +43,18 @@ export class DatasetMother {
         {
           value: `Version ${faker.lorem.word()}`,
           semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
+        }
+      ],
+      summaryFields: [
+        {
+          name: MetadataBlockName.CITATION,
+          fields: {
+            dsDescription: faker.lorem.sentence(),
+            keyword: faker.lorem.sentence(),
+            subject: faker.lorem.sentence(),
+            publication: faker.lorem.sentence(),
+            notesText: faker.lorem.sentence()
+          }
         }
       ],
       metadataBlocks: [
@@ -86,21 +99,18 @@ export class DatasetMother {
             }
           }
         }
-      ],
-      summaryFields: [
-        {
-          name: MetadataBlockName.CITATION,
-          fields: {
-            dsDescription: faker.lorem.sentence(),
-            keyword: faker.lorem.sentence(),
-            subject: faker.lorem.sentence(),
-            publication: faker.lorem.sentence(),
-            notesText: faker.lorem.sentence()
-          }
-        }
-      ],
+      ] as DatasetMetadataBlocks,
       ...props
     }
+
+    return new Dataset.Builder(
+      dataset.persistentId,
+      dataset.version,
+      dataset.citation,
+      dataset.summaryFields,
+      dataset.license,
+      dataset.metadataBlocks
+    ).build()
   }
 
   static createAnonymized(): Dataset {

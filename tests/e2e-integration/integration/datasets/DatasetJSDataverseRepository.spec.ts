@@ -79,7 +79,7 @@ describe('Dataset JSDataverse Repository', () => {
       }
       const datasetExpected = datasetData(dataset.persistentId)
 
-      expect(dataset.title).to.deep.equal(datasetExpected.title)
+      expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
       expect(dataset.citation).to.deep.equal(datasetExpected.citation)
       expect(dataset.labels).to.deep.equal(datasetExpected.labels)
       expect(dataset.license).to.deep.equal(datasetExpected.license)
@@ -104,7 +104,7 @@ describe('Dataset JSDataverse Repository', () => {
         const datasetExpected = datasetData(dataset.persistentId)
         const newVersion = new DatasetVersion(1, 0, DatasetStatus.RELEASED)
 
-        expect(dataset.title).to.deep.equal(datasetExpected.title)
+        expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(newVersion)
       })
   })
@@ -120,7 +120,7 @@ describe('Dataset JSDataverse Repository', () => {
         }
         const datasetExpected = datasetData(dataset.persistentId)
 
-        expect(dataset.title).to.deep.equal(datasetExpected.title)
+        expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(datasetExpected.version)
       })
   })
@@ -135,7 +135,7 @@ describe('Dataset JSDataverse Repository', () => {
       }
       const datasetExpected = datasetData(dataset.persistentId)
 
-      expect(dataset.title).to.deep.equal(datasetExpected.title)
+      expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
       expect(dataset.version).to.deep.equal(datasetExpected.version)
     })
   })
