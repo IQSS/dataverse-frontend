@@ -180,7 +180,7 @@ describe('DatasetMetadata', () => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       cy.findByRole('button', { name: t[MetadataBlockName.CITATION].name }).should('exist')
 
-      cy.findByText(t['persistentId'].name as string).should('exist')
+      cy.findByText('Persistent Identifier').should('exist')
       cy.findByText(mockDataset.persistentId).should('exist')
     })
   })

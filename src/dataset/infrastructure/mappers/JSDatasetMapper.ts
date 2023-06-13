@@ -11,11 +11,13 @@ import {
   MetadataBlockName,
   DatasetMetadataBlock,
   DatasetVersion,
-  DatasetMetadataFields
+  DatasetMetadataFields,
+  MetadataBlocks
 } from '../../domain/models/Dataset'
 
 export class JSDatasetMapper {
   static toDataset(jsDataset: JSDataset, citation: string, summaryFieldsNames: string[]): Dataset {
+    console.log(jsDataset)
     return new Dataset.Builder(
       jsDataset.persistentId,
       JSDatasetMapper.toTitle(jsDataset.metadataBlocks),
@@ -88,9 +90,8 @@ export class JSDatasetMapper {
     jsDatasetMetadataBlocks: JSDatasetMetadataBlock[],
     alternativePersistentId?: string,
     publicationDate?: string,
-
     citationDate?: string
-  ): DatasetMetadataBlock[] {
+  ): MetadataBlocks {
     return jsDatasetMetadataBlocks.map((jsDatasetMetadataBlock) => {
       return {
         name: JSDatasetMapper.toMetadataBlockName(jsDatasetMetadataBlock.name),
@@ -101,7 +102,7 @@ export class JSDatasetMapper {
           citationDate
         )
       }
-    })
+    }) as MetadataBlocks
   }
 
   static toMetadataBlockName(jsDatasetMetadataBlockName: string): MetadataBlockName {

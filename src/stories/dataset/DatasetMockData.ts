@@ -9,7 +9,7 @@ import { MetadataBlockName } from '../../dataset/domain/models/Dataset'
 import { Dataset } from '../../dataset/domain/models/Dataset'
 
 export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): Dataset => ({
-  persistentId: '123456789',
+  persistentId: 'doi:10.5072/FK2/ABC123',
   title: 'Dataset title',
   citation: `${
     anonymized ? 'Author name(s) withheld' : 'Bennet, Elizabeth; Darcy, Fitzwilliam'
@@ -28,8 +28,12 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
     {
       name: MetadataBlockName.CITATION,
       fields: {
-        dsDescription:
-          'This text is *italic* and this is **bold**. Here is an image ![Alt text](https://picsum.photos/id/10/20/20) ',
+        dsDescription: [
+          {
+            dsDescriptionValue:
+              'This text is *italic* and this is **bold**. Here is an image ![Alt text](https://picsum.photos/id/10/20/20) '
+          }
+        ],
         keyword: 'Malaria, Tuberculosis, Drug Resistant',
         subject: 'Medicine, Health and Life Sciences, Social Sciences',
         publication: 'CNN Journal [CNN.com](https://cnn.com)',
@@ -41,7 +45,6 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
     {
       name: MetadataBlockName.CITATION,
       fields: {
-        persistentId: 'doi:10.5072/FK2/ABC123',
         alternativePersistentId: 'doi:10.5072/FK2/ABC123',
         publicationDate: anonymized ? ANONYMIZED_FIELD_VALUE : '2021-01-01',
         citationDate: '2021-01-01',
@@ -62,7 +65,21 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
                 authorIdentifierScheme: 'ORCID',
                 authorIdentifier: '123456789'
               }
-            ]
+            ],
+        datasetContact: anonymized
+          ? ANONYMIZED_FIELD_VALUE
+          : [
+              {
+                datasetContactName: 'Admin, Dataverse',
+                datasetContactEmail: 'adminDataverse@test.com'
+              }
+            ],
+        dsDescription: [
+          {
+            dsDescriptionValue:
+              'This text is *italic* and this is **bold**. Here is an image ![Alt text](https://picsum.photos/id/10/20/20) '
+          }
+        ]
       }
     },
     {

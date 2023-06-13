@@ -2,12 +2,12 @@ import { faker } from '@faker-js/faker'
 import {
   ANONYMIZED_FIELD_VALUE,
   Dataset,
+  DatasetLabelSemanticMeaning,
+  DatasetLabelValue,
   DatasetStatus,
   DatasetVersion,
-  DatasetLabelSemanticMeaning,
-  DatasetLabelValue
+  MetadataBlockName
 } from '../../../../../src/dataset/domain/models/Dataset'
-import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Dataset'
 
 export class DatasetMother {
   static createEmpty(): undefined {
@@ -63,6 +63,17 @@ export class DatasetMother {
                 authorIdentifierScheme: faker.lorem.sentence(),
                 authorIdentifier: faker.lorem.sentence()
               }
+            ],
+            datasetContact: [
+              {
+                datasetContactName: faker.lorem.sentence(),
+                datasetContactEmail: faker.internet.email()
+              }
+            ],
+            dsDescription: [
+              {
+                dsDescriptionValue: faker.lorem.sentence()
+              }
             ]
           }
         },
@@ -101,7 +112,15 @@ export class DatasetMother {
           name: MetadataBlockName.CITATION,
           fields: {
             title: faker.lorem.sentence(),
-            author: ANONYMIZED_FIELD_VALUE
+            subject: [faker.lorem.word(), faker.lorem.word()],
+            author: ANONYMIZED_FIELD_VALUE,
+            datasetContact: [
+              {
+                datasetContactName: faker.lorem.sentence(),
+                datasetContactEmail: faker.internet.email()
+              }
+            ],
+            dsDescription: ANONYMIZED_FIELD_VALUE
           }
         },
         {
