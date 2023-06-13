@@ -1,18 +1,18 @@
 import { Badge } from 'dataverse-design-system'
 import { DatasetLabel } from '../../../dataset/domain/models/Dataset'
 import styles from './DatasetLabels.module.scss'
-import { LabelSemanticMeaning } from '../../../dataset/domain/models/Dataset'
+import { DatasetLabelSemanticMeaning } from '../../../dataset/domain/models/Dataset'
 
 const VARIANT_BY_SEMANTIC_MEANING: Record<
-  LabelSemanticMeaning,
+  DatasetLabelSemanticMeaning,
   'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info'
 > = {
-  [LabelSemanticMeaning.DATASET]: 'primary',
-  [LabelSemanticMeaning.FILE]: 'secondary',
-  [LabelSemanticMeaning.SUCCESS]: 'success',
-  [LabelSemanticMeaning.DANGER]: 'danger',
-  [LabelSemanticMeaning.WARNING]: 'warning',
-  [LabelSemanticMeaning.INFO]: 'info'
+  [DatasetLabelSemanticMeaning.DATASET]: 'primary',
+  [DatasetLabelSemanticMeaning.FILE]: 'secondary',
+  [DatasetLabelSemanticMeaning.SUCCESS]: 'success',
+  [DatasetLabelSemanticMeaning.DANGER]: 'danger',
+  [DatasetLabelSemanticMeaning.WARNING]: 'warning',
+  [DatasetLabelSemanticMeaning.INFO]: 'info'
 }
 
 interface DatasetLabelsProps {

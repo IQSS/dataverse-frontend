@@ -1,15 +1,14 @@
-import { DataverseInfoJSDataverseRepository } from '../../../../../src/info/infrastructure/repositories/DataverseInfoJSDataverseRepository'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
-import { ApiConfig } from 'js-dataverse/dist/core'
+import { DataverseInfoJSDataverseRepository } from '../../../../../../src/info/infrastructure/repositories/DataverseInfoJSDataverseRepository'
+import { IntegrationTestsUtils } from '../../../IntegrationTestsUtils'
 
 chai.use(chaiAsPromised)
 
 const expect = chai.expect
 
 describe('DataverseInfo JSDataverse Repository', () => {
-  const VITE_DATAVERSE_BACKEND_URL = (import.meta.env.VITE_DATAVERSE_BACKEND_URL as string) ?? ''
-  ApiConfig.init(`${VITE_DATAVERSE_BACKEND_URL}/api/v1`)
+  before(() => IntegrationTestsUtils.setup())
 
   it('gets the dataverse version number', async () => {
     const dataverseInfoRepository = new DataverseInfoJSDataverseRepository()

@@ -13,12 +13,12 @@ export function DatasetMetadataFields({
 }: DatasetMetadataFieldsProps) {
   return (
     <>
-      {Object.entries(metadataFields).map(([metadataFieldName, metadataField], index) => (
+      {Object.entries(metadataFields).map(([metadataFieldName, metadataFieldValue], index) => (
         <DatasetMetadataField
           key={`${metadataBlockName}-${metadataFieldName}-${index}`}
           metadataBlockName={metadataBlockName}
           metadataFieldName={metadataFieldName}
-          metadataField={metadataField}
+          metadataFieldValue={metadataFieldValue}
         />
       ))}
     </>

@@ -1,4 +1,4 @@
-export enum LabelSemanticMeaning {
+export enum DatasetLabelSemanticMeaning {
   DATASET = 'dataset',
   FILE = 'file',
   SUCCESS = 'success',
@@ -7,9 +7,19 @@ export enum LabelSemanticMeaning {
   DANGER = 'danger'
 }
 
-export interface DatasetLabel {
-  semanticMeaning: LabelSemanticMeaning
-  value: string
+export enum DatasetLabelValue {
+  DRAFT = 'Draft',
+  UNPUBLISHED = 'Unpublished',
+  DEACCESSIONED = 'Deaccessioned',
+  EMBARGOED = 'Embargoed',
+  IN_REVIEW = 'In Review'
+}
+
+export class DatasetLabel {
+  constructor(
+    public readonly semanticMeaning: DatasetLabelSemanticMeaning,
+    public readonly value: DatasetLabelValue | `Version ${string}`
+  ) {}
 }
 
 export type DatasetMetadataSubField = Record<string, string>
@@ -17,9 +27,14 @@ export type DatasetMetadataSubField = Record<string, string>
 export const ANONYMIZED_FIELD_VALUE = 'withheld'
 type AnonymizedField = typeof ANONYMIZED_FIELD_VALUE
 
-export type DatasetMetadataField = string | DatasetMetadataSubField[] | AnonymizedField
+export type DatasetMetadataFieldValue =
+  | string
+  | string[]
+  | DatasetMetadataSubField
+  | DatasetMetadataSubField[]
+  | AnonymizedField
 
-export type DatasetMetadataFields = Record<string, DatasetMetadataField>
+export type DatasetMetadataFields = Record<string, DatasetMetadataFieldValue>
 
 export enum MetadataBlockName {
   CITATION = 'citation',
@@ -45,34 +60,120 @@ export interface DatasetMetadataBlock {
   fields: DatasetMetadataFields
 }
 
-export interface License {
+export interface DatasetLicense {
   name: string
-  shortDescription: string
   uri: string
-  iconUrl?: string
+  iconUri?: string
+}
+const defaultLicense: DatasetLicense = {
+  name: 'CC0 1.0',
+  uri: 'https://creativecommons.org/publicdomain/zero/1.0',
+  iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
 }
 
 export enum DatasetStatus {
-  PUBLISHED = 'published',
+  RELEASED = 'released',
   DRAFT = 'draft',
-  DEACCESSIONED = 'deaccessioned'
+  DEACCESSIONED = 'deaccessioned',
+  EMBARGOED = 'embargoed',
+  IN_REVIEW = 'inReview'
 }
 
-export interface Citation {
-  citationText: string
-  pidUrl: string
-  publisher: string
-  unf?: string
+export class DatasetVersion {
+  constructor(
+    public readonly majorNumber: number,
+    public readonly minorNumber: number,
+    public readonly status: DatasetStatus
+  ) {}
+
+  toString(): string {
+    return `${this.majorNumber}.${this.minorNumber}`
+  }
 }
 
-export interface Dataset {
-  id: string
-  title: string
-  labels: DatasetLabel[]
-  version: string | null
-  citation: Citation
-  status: DatasetStatus
-  summaryFields: DatasetMetadataBlock[]
-  license: License
-  metadataBlocks: DatasetMetadataBlock[]
+export class Dataset {
+  constructor(
+    public readonly persistentId: string,
+    public readonly title: string,
+    public readonly version: DatasetVersion,
+    public readonly citation: string,
+    public readonly labels: DatasetLabel[],
+    public readonly summaryFields: DatasetMetadataBlock[],
+    public readonly license: DatasetLicense,
+    public readonly metadataBlocks: DatasetMetadataBlock[]
+  ) {}
+
+  static Builder = class {
+    public readonly labels: DatasetLabel[] = []
+
+    constructor(
+      public readonly persistentId: string,
+      public readonly title: string,
+      public readonly version: DatasetVersion,
+      public readonly citation: string,
+      public readonly summaryFields: DatasetMetadataBlock[],
+      public readonly license: DatasetLicense = defaultLicense,
+      public readonly metadataBlocks: DatasetMetadataBlock[]
+    ) {
+      this.withLabels()
+    }
+
+    withLabels() {
+      this.withStatusLabel()
+      this.withVersionLabel()
+    }
+
+    private withStatusLabel(): void {
+      if (this.version.status === DatasetStatus.DRAFT) {
+        this.labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.DRAFT)
+        )
+      }
+
+      if (this.version.status !== DatasetStatus.RELEASED) {
+        this.labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.WARNING, DatasetLabelValue.UNPUBLISHED)
+        )
+      }
+
+      if (this.version.status === DatasetStatus.DEACCESSIONED) {
+        this.labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.DANGER, DatasetLabelValue.DEACCESSIONED)
+        )
+      }
+
+      if (this.version.status === DatasetStatus.EMBARGOED) {
+        this.labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.EMBARGOED)
+        )
+      }
+
+      if (this.version.status === DatasetStatus.IN_REVIEW) {
+        this.labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.SUCCESS, DatasetLabelValue.IN_REVIEW)
+        )
+      }
+    }
+
+    private withVersionLabel(): void {
+      if (this.version.status === DatasetStatus.RELEASED) {
+        this.labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.FILE, `Version ${this.version.toString()}`)
+        )
+      }
+    }
+
+    build(): Dataset {
+      return new Dataset(
+        this.persistentId,
+        this.title,
+        this.version,
+        this.citation,
+        this.labels,
+        this.summaryFields,
+        this.license,
+        this.metadataBlocks
+      )
+    }
+  }
 }

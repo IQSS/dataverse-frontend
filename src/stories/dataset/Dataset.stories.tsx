@@ -22,19 +22,22 @@ type Story = StoryObj<typeof Dataset>
 
 export const Default: Story = {
   decorators: [WithLayout],
-
-  render: () => <Dataset repository={new DatasetMockRepository()} searchParams={{ id: '1' }} />
+  render: () => (
+    <Dataset repository={new DatasetMockRepository()} searchParams={{ persistentId: '1' }} />
+  )
 }
 
 export const Loading: Story = {
   decorators: [WithLayoutLoading],
-  render: () => <Dataset repository={new DatasetMockRepository()} searchParams={{ id: '1' }} />
+  render: () => (
+    <Dataset repository={new DatasetMockRepository()} searchParams={{ persistentId: '1' }} />
+  )
 }
 
 export const DatasetNotFound: Story = {
   decorators: [WithLayout],
   render: () => (
-    <Dataset repository={new DatasetMockNoDataRepository()} searchParams={{ id: '1' }} />
+    <Dataset repository={new DatasetMockNoDataRepository()} searchParams={{ persistentId: '1' }} />
   )
 }
 

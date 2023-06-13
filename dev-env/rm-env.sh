@@ -2,3 +2,4 @@
 
 docker-compose -f "./docker-compose-dev.yml" down
 rm -rf ./docker-dev-volumes
+rm -rf ./dataverse

@@ -1,25 +1,30 @@
 import { Row, Col } from 'dataverse-design-system'
-import { License as LicenseModel } from '../../../dataset/domain/models/Dataset'
+import { DatasetLicense as LicenseModel } from '../../../dataset/domain/models/Dataset'
+import { useTranslation } from 'react-i18next'
+
 interface LicenseProps {
   license: LicenseModel
 }
 
 export function License({ license }: LicenseProps) {
+  const { t } = useTranslation('dataset')
+
   return (
-    <article>
-      <Row>
-        <Col sm={3}>
-          <b>License/Data Use Agreement</b>
-        </Col>
-        <Col>
-          {' '}
+    <Row>
+      <Col sm={3}>
+        <b>{t('license.title')}</b>
+      </Col>
+      <Col>
+        {license.iconUri && (
           <img
-            alt={license.name + ' license icon'}
-            src={license.iconUrl}
-            title={license.shortDescription}></img>{' '}
-          <a href={license.uri}>{license.name}</a>
-        </Col>
-      </Row>
-    </article>
+            alt={t(`license.altTextPrefix`) + license.name}
+            src={license.iconUri}
+            title={license.name}
+            style={{ marginRight: '0.5rem' }}
+          />
+        )}
+        <a href={license.uri}>{license.name}</a>
+      </Col>
+    </Row>
   )
 }

@@ -69,5 +69,5 @@
       }
     }
   ],
-  "ignorePatterns": ["packages/design-system/dist/**"]
+  "ignorePatterns": ["packages/design-system/dist/**", "dev-env/vite.config.ts"]
 }

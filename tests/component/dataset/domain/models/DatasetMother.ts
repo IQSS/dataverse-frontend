@@ -3,7 +3,9 @@ import {
   ANONYMIZED_FIELD_VALUE,
   Dataset,
   DatasetStatus,
-  LabelSemanticMeaning
+  DatasetVersion,
+  DatasetLabelSemanticMeaning,
+  DatasetLabelValue
 } from '../../../../../src/dataset/domain/models/Dataset'
 import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Dataset'
 
@@ -14,37 +16,32 @@ export class DatasetMother {
 
   static create(props?: Partial<Dataset>): Dataset {
     return {
-      id: faker.datatype.uuid(),
+      persistentId: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
-      version: faker.datatype.uuid(),
-      status: DatasetStatus.PUBLISHED,
-      citation: {
-        citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
-        pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
-        publisher: 'Demo Dataverse'
-      },
+      version: new DatasetVersion(1, 0, DatasetStatus.RELEASED),
+      citation:
+        'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1',
       license: {
         name: 'CC0 1.0',
-        shortDescription: 'CC0 1.0 Universal Public Domain Dedication',
         uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
-        iconUrl: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+        iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
       },
       labels: [
         {
-          value: faker.lorem.word(),
-          semanticMeaning: faker.helpers.arrayElement(Object.values(LabelSemanticMeaning))
+          value: DatasetLabelValue.IN_REVIEW,
+          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
         },
         {
-          value: faker.lorem.word(),
-          semanticMeaning: faker.helpers.arrayElement(Object.values(LabelSemanticMeaning))
+          value: DatasetLabelValue.EMBARGOED,
+          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
         },
         {
-          value: faker.lorem.word(),
-          semanticMeaning: faker.helpers.arrayElement(Object.values(LabelSemanticMeaning))
+          value: DatasetLabelValue.UNPUBLISHED,
+          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
         },
         {
-          value: faker.lorem.word(),
-          semanticMeaning: faker.helpers.arrayElement(Object.values(LabelSemanticMeaning))
+          value: `Version ${faker.lorem.word()}`,
+          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
         }
       ],
       metadataBlocks: [
@@ -52,6 +49,7 @@ export class DatasetMother {
           name: MetadataBlockName.CITATION,
           fields: {
             title: faker.lorem.sentence(),
+            subject: [faker.lorem.word(), faker.lorem.word()],
             author: [
               {
                 authorName: faker.lorem.sentence(),
@@ -71,16 +69,10 @@ export class DatasetMother {
         {
           name: MetadataBlockName.GEOSPATIAL,
           fields: {
-            geographicCoverage: [
-              {
-                geographicCoverageCountry: faker.lorem.sentence(),
-                geographicCoverageCity: faker.lorem.sentence()
-              },
-              {
-                geographicCoverageCountry: faker.lorem.sentence(),
-                geographicCoverageCity: faker.lorem.sentence()
-              }
-            ]
+            geographicCoverage: {
+              geographicCoverageCountry: faker.lorem.sentence(),
+              geographicCoverageCity: faker.lorem.sentence()
+            }
           }
         }
       ],
@@ -102,6 +94,8 @@ export class DatasetMother {
 
   static createAnonymized(): Dataset {
     return this.create({
+      citation:
+        'Author name(s) withheld, 2023, "citation", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1',
       metadataBlocks: [
         {
           name: MetadataBlockName.CITATION,

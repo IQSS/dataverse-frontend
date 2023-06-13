@@ -14,8 +14,9 @@ import { DatasetCitation } from './dataset-citation/DatasetCitation'
 interface DatasetProps {
   repository: DatasetRepository
   searchParams: {
-    id?: string
-    privateUrlToken?: string | null
+    persistentId?: string
+    privateUrlToken?: string
+    version?: string
   }
 }
 
@@ -41,20 +42,15 @@ export function Dataset({ repository, searchParams }: DatasetProps) {
           <div className={styles.container}>
             <Row>
               <Col sm={9}>
-                <DatasetCitation
-                  citation={dataset.citation}
-                  status={dataset.status}
-                  version={dataset.version}></DatasetCitation>
+                <DatasetCitation citation={dataset.citation} version={dataset.version} />
               </Col>
             </Row>
             <Row>
               <Col sm={9} className={styles['summary-container']}>
-                <DatasetSummary
-                  summaryFields={dataset.summaryFields}
-                  license={dataset.license}></DatasetSummary>
+                <DatasetSummary summaryFields={dataset.summaryFields} license={dataset.license} />
               </Col>
             </Row>
-            <Tabs defaultActiveKey="files">
+            <Tabs defaultActiveKey="metadata">
               <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
                 <div className={styles['tab-container']}>
                   <div>Files Section</div>

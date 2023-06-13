@@ -33,6 +33,7 @@ services:
       - VITE_DATAVERSE_BACKEND_URL=http://localhost:8000
     volumes:
       - ../:/usr/src/app
+      - ../dev-env/vite.config.ts:/usr/src/app/vite.config.ts
       - /usr/src/app/dev-env
       - /usr/src/app/node_modules
 

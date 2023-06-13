@@ -1,30 +1,28 @@
 import {
   ANONYMIZED_FIELD_VALUE,
   DatasetStatus,
-  LabelSemanticMeaning
+  DatasetVersion,
+  DatasetLabelSemanticMeaning,
+  DatasetLabelValue
 } from '../../dataset/domain/models/Dataset'
 import { MetadataBlockName } from '../../dataset/domain/models/Dataset'
 import { Dataset } from '../../dataset/domain/models/Dataset'
 
 export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): Dataset => ({
-  id: '123456789',
+  persistentId: '123456789',
   title: 'Dataset title',
-  citation: {
-    citationText: 'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Test Terms" ',
-    pidUrl: 'https://doi.org/10.70122/FK2/KLX4XO',
-    publisher: 'Demo Dataverse'
-  },
-  status: DatasetStatus.DRAFT,
-  version: null,
+  citation: `${
+    anonymized ? 'Author name(s) withheld' : 'Bennet, Elizabeth; Darcy, Fitzwilliam'
+  }, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1`,
+  version: new DatasetVersion(1, 0, DatasetStatus.RELEASED),
   labels: [
-    { value: 'Version 1.0', semanticMeaning: LabelSemanticMeaning.FILE },
-    { value: 'Draft', semanticMeaning: LabelSemanticMeaning.DATASET }
+    { value: 'Version 1.0', semanticMeaning: DatasetLabelSemanticMeaning.FILE },
+    { value: DatasetLabelValue.DRAFT, semanticMeaning: DatasetLabelSemanticMeaning.DATASET }
   ],
   license: {
     name: 'CC0 1.0',
-    shortDescription: 'CC0 1.0 Universal Public Domain Dedication',
     uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
-    iconUrl: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+    iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
   summaryFields: [
     {
@@ -48,6 +46,7 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
         publicationDate: anonymized ? ANONYMIZED_FIELD_VALUE : '2021-01-01',
         citationDate: '2021-01-01',
         title: 'Dataset Title',
+        subject: ['Subject1', 'Subject2'],
         author: anonymized
           ? ANONYMIZED_FIELD_VALUE
           : [
@@ -72,16 +71,10 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
         geographicUnit: 'km',
         geographicCoverage: anonymized
           ? ANONYMIZED_FIELD_VALUE
-          : [
-              {
-                geographicCoverageCountry: 'United States',
-                geographicCoverageCity: 'Cambridge'
-              },
-              {
-                geographicCoverageCountry: 'United States',
-                geographicCoverageCity: 'Cambridge'
-              }
-            ]
+          : {
+              geographicCoverageCountry: 'United States',
+              geographicCoverageCity: 'Cambridge'
+            }
       }
     }
   ],

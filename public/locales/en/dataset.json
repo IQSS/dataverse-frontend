@@ -2,10 +2,20 @@
   "filesTabTitle": "Files",
   "metadataTabTitle": "Metadata",
   "anonymizedFieldValue": "withheld",
-  "draft": "DRAFT VERSION",
-  "deaccessioned": "DEACCESSIONED VERSION",
-  "draft.description": "DRAFT VERSION will be replaced in the citation with the selected version once the dataset has been published.",
-  "deaccessioned.description": "DEACCESSIONED VERSION has been added to the citation for this version since it is no longer available.",
-  "citationLearnAbout": "Learn About",
-  "citationStandards": "Data Citation Standards"
+  "license": {
+    "title": "License/Data Use Agreement",
+    "altTextPrefix": "License image for "
+  },
+  "citation": {
+    "status": {
+      "draft": {
+        "description": "DRAFT VERSION will be replaced in the citation with the selected version once the dataset has been published."
+      },
+      "deaccessioned": {
+        "description": "DEACCESSIONED VERSION has been added to the citation for this version since it is no longer available."
+      }
+    },
+    "learnAbout": "Learn About",
+    "standards": "Data Citation Standards"
+  }
 }

@@ -1,14 +1,14 @@
-import { LabelSemanticMeaning } from '../../../../../src/dataset/domain/models/Dataset'
+import { DatasetLabelSemanticMeaning } from '../../../../../src/dataset/domain/models/Dataset'
 import { DatasetLabels } from '../../../../../src/sections/dataset/dataset-labels/DatasetLabels'
 
 describe('DatasetLabels', () => {
   const labels = [
-    { value: 'Label 1', semanticMeaning: LabelSemanticMeaning.DATASET },
-    { value: 'Label 2', semanticMeaning: LabelSemanticMeaning.FILE },
-    { value: 'Label 3', semanticMeaning: LabelSemanticMeaning.SUCCESS },
-    { value: 'Label 4', semanticMeaning: LabelSemanticMeaning.DANGER },
-    { value: 'Label 5', semanticMeaning: LabelSemanticMeaning.WARNING },
-    { value: 'Label 6', semanticMeaning: LabelSemanticMeaning.INFO }
+    { value: 'Label 1', semanticMeaning: DatasetLabelSemanticMeaning.DATASET },
+    { value: 'Label 2', semanticMeaning: DatasetLabelSemanticMeaning.FILE },
+    { value: 'Label 3', semanticMeaning: DatasetLabelSemanticMeaning.SUCCESS },
+    { value: 'Label 4', semanticMeaning: DatasetLabelSemanticMeaning.DANGER },
+    { value: 'Label 5', semanticMeaning: DatasetLabelSemanticMeaning.WARNING },
+    { value: 'Label 6', semanticMeaning: DatasetLabelSemanticMeaning.INFO }
   ]
 
   it('should render all labels', () => {

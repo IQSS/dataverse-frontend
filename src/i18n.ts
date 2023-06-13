@@ -20,9 +20,9 @@ void i18next
     returnNull: false,
     backend: {
       loadPath:
-        import.meta.env.BASE_URL != '/'
+        import.meta.env.BASE_URL != '/spa'
           ? `${import.meta.env.BASE_URL}locales/{{lng}}/{{ns}}.json`
-          : `/locales/{{lng}}/{{ns}}.json`
+          : `/spa/locales/{{lng}}/{{ns}}.json`
     }
   })
 

@@ -1,8 +1,8 @@
-import { ReactElement } from 'react'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { ReactElement, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Dataset } from './Dataset'
 import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repositories/DatasetJSDataverseRepository'
-import { AnonymizedContext } from './anonymized/AnonymizedContext'
+import { useAnonymized } from './anonymized/AnonymizedContext'
 import { AnonymizedProvider } from './anonymized/AnonymizedProvider'
 
 const datasetRepository = new DatasetJSDataverseRepository()
@@ -11,42 +11,33 @@ export class DatasetFactory {
   static create(): ReactElement {
     return (
       <AnonymizedProvider>
-        <DatasetWithId />
-      </AnonymizedProvider>
-    )
-  }
-
-  static createAnonymized(): ReactElement {
-    return (
-      <AnonymizedProvider>
-        <AnonymizedContext.Consumer>
-          {({ setAnonymizedView }) => {
-            setAnonymizedView(true)
-            return <DatasetWithPrivateUrlToken />
-          }}
-        </AnonymizedContext.Consumer>
+        <DatasetWithSearchParams />
       </AnonymizedProvider>
     )
   }
 }
 
-function DatasetWithId() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-
-  if (id === undefined) {
-    navigate('/')
-    return <></>
-  }
-
-  return <Dataset repository={datasetRepository} searchParams={{ id: id }} />
-}
-
-function DatasetWithPrivateUrlToken() {
+function DatasetWithSearchParams() {
+  const { setAnonymizedView } = useAnonymized()
   const [searchParams] = useSearchParams()
+  const persistentId = searchParams.get('persistentId') ?? undefined
   const privateUrlToken = searchParams.get('privateUrlToken')
+  const version = searchParams.get('version') ?? undefined
+
+  useEffect(() => {
+    if (privateUrlToken) setAnonymizedView(true)
+  }, [privateUrlToken])
+
+  if (privateUrlToken) {
+    return (
+      <Dataset repository={datasetRepository} searchParams={{ privateUrlToken: privateUrlToken }} />
+    )
+  }
 
   return (
-    <Dataset repository={datasetRepository} searchParams={{ privateUrlToken: privateUrlToken }} />
+    <Dataset
+      repository={datasetRepository}
+      searchParams={{ persistentId: persistentId, version: version }}
+    />
   )
 }

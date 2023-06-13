@@ -14,6 +14,11 @@ jobs:
           node-version: 19
           cache: 'npm'
 
+      - name: Create .npmrc
+        run: |
+          cp .npmrc.example .npmrc
+          sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
+
       - name: Install Dependencies
         run: rm package-lock.json && npm install
 
