@@ -65,7 +65,8 @@
       },
       "datasetContact": {
         "name": "Point of Contact",
-        "description": "The entity, e.g. a person or organization, that users of the Dataset can contact with questions"
+        "description": "The entity, e.g. a person or organization, that users of the Dataset can contact with questions",
+        "tip": "Use email button above to contact."
       },
       "datasetContactName": {
         "name": "Name",

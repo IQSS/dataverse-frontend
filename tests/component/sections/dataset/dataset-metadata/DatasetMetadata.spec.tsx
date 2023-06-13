@@ -184,4 +184,27 @@ describe('DatasetMetadata', () => {
       cy.findByText(mockDataset.persistentId).should('exist')
     })
   })
+
+  it('shows a tip if the translation exists', () => {
+    const mockDataset = DatasetMother.create()
+    const mockMetadataBlocks = mockDataset.metadataBlocks
+
+    cy.viewport(1280, 720)
+
+    cy.fixture('metadataTranslations').then((t) => {
+      cy.customMount(
+        <DatasetMetadata
+          persistentId={mockDataset.persistentId}
+          metadataBlocks={mockMetadataBlocks}
+        />
+      )
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      cy.findByRole('button', { name: t[MetadataBlockName.CITATION].name }).should('exist')
+
+      cy.findByText(t[MetadataBlockName.CITATION].datasetField.datasetContact.tip as string).should(
+        'exist'
+      )
+    })
+  })
 })
