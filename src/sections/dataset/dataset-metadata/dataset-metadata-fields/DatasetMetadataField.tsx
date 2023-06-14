@@ -3,7 +3,7 @@ import { Col, Row } from 'dataverse-design-system'
 import { MetadataBlockName } from '../../../../dataset/domain/models/Dataset'
 import { DatasetMetadataFieldValue } from './DatasetMetadataFieldValue'
 import { DatasetMetadataFieldTitle } from './DatasetMetadataFieldTitle'
-import { DatasetMetadataFieldTip } from '../dataset-metadata-tip/DatasetMetadataTip'
+import { DatasetMetadataFieldTip } from './DatasetMetadataFieldTip'
 
 interface DatasetMetadataFieldProps {
   metadataBlockName: MetadataBlockName

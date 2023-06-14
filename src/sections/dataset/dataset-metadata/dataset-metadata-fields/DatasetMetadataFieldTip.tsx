@@ -1,6 +1,6 @@
 import { MetadataBlockName } from '../../../../dataset/domain/models/Dataset'
 import { useTranslation } from 'react-i18next'
-import styles from './DatasetMetadataTip.module.scss'
+import styles from './DatasetMetadataFieldTip.module.scss'
 
 interface DatasetMetadataFieldTipProps {
   metadataBlockName: MetadataBlockName
