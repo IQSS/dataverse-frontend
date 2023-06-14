@@ -9,7 +9,6 @@ interface DatasetMetadataBlockProps {
 
 export function DatasetMetadataBlock({ metadataBlock }: DatasetMetadataBlockProps) {
   const { t } = useTranslation(metadataBlock.name)
-
   return (
     <>
       <Accordion.Header>{t(`${metadataBlock.name}.name`)}</Accordion.Header>

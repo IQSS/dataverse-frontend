@@ -10,6 +10,9 @@ import {
   isArrayOfObjects,
   metadataFieldValueToString
 } from '../../../../../src/sections/dataset/dataset-metadata/dataset-metadata-fields/DatasetMetadataFieldValue'
+import { MetadataBlockInfoProvider } from '../../../../../src/sections/dataset/metadata-block-info/MetadataBlockProvider'
+import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 
 describe('DatasetMetadata', () => {
   it('renders the metadata blocks sections titles correctly', () => {
@@ -102,6 +105,10 @@ describe('DatasetMetadata', () => {
   })
 
   it('renders the metadata blocks values correctly', () => {
+    const metadataBlockInfoMock = MetadataBlockInfoMother.create()
+    const metadataBlockInfoRepository: MetadataBlockInfoRepository =
+      {} as MetadataBlockInfoRepository
+    metadataBlockInfoRepository.getByName = cy.stub().resolves(metadataBlockInfoMock)
     const mockDataset = DatasetMother.create()
     const mockMetadataBlocks = mockDataset.metadataBlocks
 
@@ -109,10 +116,12 @@ describe('DatasetMetadata', () => {
 
     cy.fixture('metadataTranslations').then((t) => {
       cy.customMount(
-        <DatasetMetadata
-          persistentId={mockDataset.persistentId}
-          metadataBlocks={mockMetadataBlocks}
-        />
+        <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
+          <DatasetMetadata
+            persistentId={mockDataset.persistentId}
+            metadataBlocks={mockMetadataBlocks}
+          />
+        </MetadataBlockInfoProvider>
       )
 
       mockMetadataBlocks.forEach((metadataBlock, index) => {
@@ -121,8 +130,12 @@ describe('DatasetMetadata', () => {
           cy.findByRole('button', { name: t[metadataBlock.name].name }).click()
         }
 
-        Object.entries(metadataBlock.fields).forEach(([, metadataFieldValue]) => {
-          const metadataFieldValueString = metadataFieldValueToString(metadataFieldValue)
+        Object.entries(metadataBlock.fields).forEach(([metadataFieldName, metadataFieldValue]) => {
+          const metadataFieldValueString = metadataFieldValueToString(
+            metadataFieldName,
+            metadataFieldValue,
+            metadataBlockInfoMock
+          )
 
           if (isArrayOfObjects(metadataFieldValue)) {
             metadataFieldValueString.split(' \n \n').forEach((fieldValue) => {
