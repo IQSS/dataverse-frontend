@@ -6,11 +6,12 @@ import { WithLayoutLoading } from '../WithLayoutLoading'
 import { WithAnonymizedView } from './WithAnonymizedView'
 import { DatasetMockRepository } from './DatasetMockRepository'
 import { DatasetMockNoDataRepository } from './DatasetMockNoDataRepository'
+import { WithCitationMetadataBlockInfo } from './WithCitationMetadataBlockInfo'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
   component: Dataset,
-  decorators: [WithI18next],
+  decorators: [WithI18next, WithCitationMetadataBlockInfo],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }

@@ -19,7 +19,7 @@ export class MetadataBlockInfoMother {
         datasetContact: { displayFormat: '#VALUE' },
         datasetContactName: { displayFormat: '#VALUE' },
         datasetContactAffiliation: { displayFormat: '(#VALUE)' },
-        datasetContactEmail: { displayFormat: '(#VALUE)' },
+        datasetContactEmail: { displayFormat: '#VALUE' },
         dsDescription: { displayFormat: '' },
         dsDescriptionValue: { displayFormat: '#VALUE' }
       },

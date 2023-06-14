@@ -3,11 +3,12 @@ import { WithI18next } from '../../WithI18next'
 import { DatasetMetadata } from '../../../sections/dataset/dataset-metadata/DatasetMetadata'
 import { DatasetMockData } from '../DatasetMockData'
 import { WithAnonymizedView } from '../WithAnonymizedView'
+import { WithCitationMetadataBlockInfo } from '../WithCitationMetadataBlockInfo'
 
 const meta: Meta<typeof DatasetMetadata> = {
   title: 'Sections/Dataset Page/DatasetMetadata',
   component: DatasetMetadata,
-  decorators: [WithI18next]
+  decorators: [WithI18next, WithCitationMetadataBlockInfo]
 }
 
 export default meta

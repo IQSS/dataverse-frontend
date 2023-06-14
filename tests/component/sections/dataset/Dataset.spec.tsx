@@ -5,7 +5,6 @@ import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvide
 import { useLoading } from '../../../../src/sections/loading/LoadingContext'
 import { ANONYMIZED_FIELD_VALUE } from '../../../../src/dataset/domain/models/Dataset'
 import { AnonymizedContext } from '../../../../src/sections/dataset/anonymized/AnonymizedContext'
-import { AnonymizedProvider } from '../../../../src/sections/dataset/anonymized/AnonymizedProvider'
 
 describe('Dataset', () => {
   const testDataset = DatasetMother.create()
@@ -114,6 +113,7 @@ describe('Dataset', () => {
   })
 
   it('renders the Dataset in anonymized view', () => {
+    const setAnonymizedView = () => {}
     const testDatasetAnonymized = DatasetMother.createAnonymized()
     const datasetRepository: DatasetRepository = {} as DatasetRepository
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(testDatasetAnonymized)
@@ -121,19 +121,12 @@ describe('Dataset', () => {
 
     cy.customMount(
       <LoadingProvider>
-        <AnonymizedProvider>
-          <AnonymizedContext.Consumer>
-            {({ setAnonymizedView }) => {
-              setAnonymizedView(true)
-              return (
-                <Dataset
-                  repository={datasetRepository}
-                  searchParams={{ privateUrlToken: privateUrlToken }}
-                />
-              )
-            }}
-          </AnonymizedContext.Consumer>
-        </AnonymizedProvider>
+        <AnonymizedContext.Provider value={{ anonymizedView: true, setAnonymizedView }}>
+          <Dataset
+            repository={datasetRepository}
+            searchParams={{ privateUrlToken: privateUrlToken }}
+          />
+        </AnonymizedContext.Provider>
       </LoadingProvider>
     )
 

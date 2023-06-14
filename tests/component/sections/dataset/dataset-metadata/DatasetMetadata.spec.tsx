@@ -5,7 +5,6 @@ import {
   MetadataBlockName
 } from '../../../../../src/dataset/domain/models/Dataset'
 import { AnonymizedContext } from '../../../../../src/sections/dataset/anonymized/AnonymizedContext'
-import { AnonymizedProvider } from '../../../../../src/sections/dataset/anonymized/AnonymizedProvider'
 import {
   isArrayOfObjects,
   metadataFieldValueToString
@@ -154,23 +153,17 @@ describe('DatasetMetadata', () => {
   })
 
   it('renders the metadata blocks in anonymized view', () => {
+    const setAnonymizedView = () => {}
     const mockDataset = DatasetMother.createAnonymized()
     const mockAnonymizedMetadataBlocks = mockDataset.metadataBlocks
 
     cy.customMount(
-      <AnonymizedProvider>
-        <AnonymizedContext.Consumer>
-          {({ setAnonymizedView }) => {
-            setAnonymizedView(true)
-            return (
-              <DatasetMetadata
-                persistentId={mockDataset.persistentId}
-                metadataBlocks={mockAnonymizedMetadataBlocks}
-              />
-            )
-          }}
-        </AnonymizedContext.Consumer>
-      </AnonymizedProvider>
+      <AnonymizedContext.Provider value={{ anonymizedView: true, setAnonymizedView }}>
+        <DatasetMetadata
+          persistentId={mockDataset.persistentId}
+          metadataBlocks={mockAnonymizedMetadataBlocks}
+        />
+      </AnonymizedContext.Provider>
     )
 
     cy.findAllByText(ANONYMIZED_FIELD_VALUE).should('exist')
