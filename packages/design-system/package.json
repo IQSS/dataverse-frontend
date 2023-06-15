@@ -28,7 +28,7 @@
     "@testing-library/cypress": "^9.0.0",
     "@storybook/react": "^7.0.2",
     "@storybook/test-runner": "0.10.0",
-    "cypress": "^12.5.1",
+    "cypress": "12.5.1",
     "vite": "4.1.0",
     "vite-plugin-dts": "^2.3.0",
     "vite-plugin-libcss": "1.0.6",
