@@ -48,7 +48,7 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
         fields: {
           alternativePersistentId: 'doi:10.5072/FK2/ABC123',
           publicationDate: anonymized ? ANONYMIZED_FIELD_VALUE : '2021-01-01',
-          citationDate: '2021-01-01',
+          citationDate: '2023-01-01',
           title: 'Dataset Title',
           subject: ['Subject1', 'Subject2'],
           author: anonymized
@@ -58,21 +58,20 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
                   authorName: 'Admin, Dataverse',
                   authorAffiliation: 'Dataverse.org',
                   authorIdentifierScheme: 'ORCID',
-                  authorIdentifier: '123456789'
+                  authorIdentifier: '0000-0002-1825-1097'
                 },
                 {
                   authorName: 'Owner, Dataverse',
                   authorAffiliation: 'Dataverse.org',
                   authorIdentifierScheme: 'ORCID',
-                  authorIdentifier: '123456789'
+                  authorIdentifier: '0000-0032-1825-0098'
                 }
               ],
           datasetContact: anonymized
             ? ANONYMIZED_FIELD_VALUE
             : [
                 {
-                  datasetContactName: 'Admin, Dataverse',
-                  datasetContactEmail: 'adminDataverse@test.com'
+                  datasetContactName: 'Admin, Dataverse'
                 }
               ],
           dsDescription: [

@@ -15,7 +15,7 @@ export class MetadataBlockInfoMother {
         authorName: { displayFormat: '#VALUE' },
         authorAffiliation: { displayFormat: '(#VALUE)' },
         authorIdentifierScheme: { displayFormat: '- #VALUE:' },
-        authorIdentifier: { displayFormat: '#VALUE' },
+        authorIdentifier: { displayFormat: '[#VALUE](https://orcid.org/#VALUE)' },
         datasetContact: { displayFormat: '#VALUE' },
         datasetContactName: { displayFormat: '#VALUE' },
         datasetContactAffiliation: { displayFormat: '(#VALUE)' },
