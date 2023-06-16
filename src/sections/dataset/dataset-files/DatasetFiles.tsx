@@ -2,9 +2,27 @@ import './index.css'
 import { flexRender } from '@tanstack/react-table'
 import { Table } from 'dataverse-design-system'
 import { useFilesTable } from './useFilesTable'
+import { FileRepository } from '../../../files/domain/repositories/FileRepository'
+import { useFiles } from './useFiles'
+import { useEffect } from 'react'
 
-export function DatasetFiles() {
-  const { table } = useFilesTable()
+interface DatasetFilesProps {
+  filesRepository: FileRepository
+  datasetPersistentId: string
+  datasetVersion?: string
+}
+
+export function DatasetFiles({
+  filesRepository,
+  datasetPersistentId,
+  datasetVersion
+}: DatasetFilesProps) {
+  const { files } = useFiles(filesRepository, datasetPersistentId, datasetVersion)
+  const { table, setData } = useFilesTable()
+
+  useEffect(() => {
+    setData(files)
+  })
 
   return (
     <>

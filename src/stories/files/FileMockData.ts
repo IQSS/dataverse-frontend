@@ -1,15 +1,5 @@
 import { faker } from '@faker-js/faker'
-
-export type File = {
-  name: string
-  link: string
-  thumbnail: string
-  type: string
-  size: number
-  publicationDate: string
-  downloads: number
-  checksum: string
-}
+import { File } from '../../files/domain/models/File'
 
 const range = (len: number) => {
   const arr = []
@@ -32,10 +22,12 @@ const newFile = (): File => {
   }
 }
 
-export function makeData(len: number) {
+export function makeFiles(len: number): File[] {
   return range(len).map(() => {
     return {
       ...newFile()
     }
   })
 }
+
+export const FilesMockData = (): File[] => makeFiles(100)

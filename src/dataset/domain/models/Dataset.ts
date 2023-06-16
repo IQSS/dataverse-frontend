@@ -1,3 +1,5 @@
+import { File } from '../../../files/domain/models/File'
+
 export enum DatasetLabelSemanticMeaning {
   DATASET = 'dataset',
   FILE = 'file',
@@ -100,7 +102,8 @@ export class Dataset {
     public readonly labels: DatasetLabel[],
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
-    public readonly metadataBlocks: DatasetMetadataBlock[]
+    public readonly metadataBlocks: DatasetMetadataBlock[],
+    public files?: File[]
   ) {}
 
   static Builder = class {

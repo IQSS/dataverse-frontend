@@ -1,5 +1,5 @@
 import { HTMLProps, useEffect, useRef, useState } from 'react'
-import { makeData, File } from './makeData'
+import { File } from '../../../files/domain/models/File'
 import {
   ColumnDef,
   getCoreRowModel,
@@ -9,7 +9,7 @@ import {
 } from '@tanstack/react-table'
 
 export function useFilesTable() {
-  const [data] = useState(() => makeData(100))
+  const [data, setData] = useState<File[]>(() => [])
   const [rowSelection, setRowSelection] = useState({})
   const columns: ColumnDef<File>[] = [
     {
@@ -58,7 +58,7 @@ export function useFilesTable() {
     debugTable: true
   })
 
-  return { table }
+  return { table, setData }
 }
 
 function IndeterminateCheckbox({

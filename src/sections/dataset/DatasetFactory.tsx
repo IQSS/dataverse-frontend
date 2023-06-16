@@ -4,8 +4,10 @@ import { Dataset } from './Dataset'
 import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { useAnonymized } from './anonymized/AnonymizedContext'
 import { AnonymizedProvider } from './anonymized/AnonymizedProvider'
+import { FileJSDataverseRepository } from '../../files/infrastructure/FileJSDataverseRepository'
 
 const datasetRepository = new DatasetJSDataverseRepository()
+const fileRepository = new FileJSDataverseRepository()
 
 export class DatasetFactory {
   static create(): ReactElement {
@@ -30,13 +32,18 @@ function DatasetWithSearchParams() {
 
   if (privateUrlToken) {
     return (
-      <Dataset repository={datasetRepository} searchParams={{ privateUrlToken: privateUrlToken }} />
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        searchParams={{ privateUrlToken: privateUrlToken }}
+      />
     )
   }
 
   return (
     <Dataset
-      repository={datasetRepository}
+      datasetRepository={datasetRepository}
+      fileRepository={fileRepository}
       searchParams={{ persistentId: persistentId, version: version }}
     />
   )

@@ -11,9 +11,11 @@ import { DatasetMetadata } from './dataset-metadata/DatasetMetadata'
 import { DatasetSummary } from './dataset-summary/DatasetSummary'
 import { DatasetCitation } from './dataset-citation/DatasetCitation'
 import { DatasetFiles } from './dataset-files/DatasetFiles'
+import { FileRepository } from '../../files/domain/repositories/FileRepository'
 
 interface DatasetProps {
-  repository: DatasetRepository
+  datasetRepository: DatasetRepository
+  fileRepository: FileRepository
   searchParams: {
     persistentId?: string
     privateUrlToken?: string
@@ -21,8 +23,8 @@ interface DatasetProps {
   }
 }
 
-export function Dataset({ repository, searchParams }: DatasetProps) {
-  const { dataset } = useDataset(repository, searchParams)
+export function Dataset({ datasetRepository, fileRepository, searchParams }: DatasetProps) {
+  const { dataset } = useDataset(datasetRepository, searchParams)
   const { isLoading } = useLoading()
   const { t } = useTranslation('dataset')
 
@@ -54,7 +56,10 @@ export function Dataset({ repository, searchParams }: DatasetProps) {
             <Tabs defaultActiveKey="files">
               <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
                 <div className={styles['tab-container']}>
-                  <DatasetFiles />
+                  <DatasetFiles
+                    filesRepository={fileRepository}
+                    datasetPersistentId={dataset.persistentId}
+                  />
                 </div>
               </Tabs.Tab>
               <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
