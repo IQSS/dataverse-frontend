@@ -31,7 +31,7 @@
     "cypress": "^12.5.1",
     "vite": "4.1.0",
     "vite-plugin-dts": "^2.3.0",
-    "vite-plugin-libcss": "^1.0.6",
+    "vite-plugin-libcss": "1.0.6",
     "react": "^18.2.0",
     "axe-playwright": "^1.2.3",
     "chromatic": "^6.17.4"

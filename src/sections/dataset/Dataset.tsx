@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { DatasetMetadata } from './dataset-metadata/DatasetMetadata'
 import { DatasetSummary } from './dataset-summary/DatasetSummary'
 import { DatasetCitation } from './dataset-citation/DatasetCitation'
+import { DatasetFiles } from './dataset-files/DatasetFiles'
 
 interface DatasetProps {
   repository: DatasetRepository
@@ -50,10 +51,10 @@ export function Dataset({ repository, searchParams }: DatasetProps) {
                 <DatasetSummary summaryFields={dataset.summaryFields} license={dataset.license} />
               </Col>
             </Row>
-            <Tabs defaultActiveKey="metadata">
+            <Tabs defaultActiveKey="files">
               <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
                 <div className={styles['tab-container']}>
-                  <div>Files Section</div>
+                  <DatasetFiles />
                 </div>
               </Tabs.Tab>
               <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
