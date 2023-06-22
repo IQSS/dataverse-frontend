@@ -48,9 +48,8 @@ services:
       - DATAVERSE_DB_PASSWORD=secret
       - DATAVERSE_DB_USER=${DATAVERSE_DB_USER}
       - DATAVERSE_FEATURE_API_SESSION_AUTH=1
-    # We open 8080, rather than just expose, so that the docker-final-setup.sh script works from the run-env.sh script
-    ports:
-      - '8080:8080'
+    expose:
+      - '8080'
     networks:
       - dataverse
     depends_on:
@@ -86,8 +85,8 @@ services:
     environment:
       - POSTGRES_USER=${DATAVERSE_DB_USER}
       - POSTGRES_PASSWORD=secret
-    ports:
-      - '5432:5432'
+    expose:
+      - '5432'
     networks:
       - dataverse
     volumes:
