@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { File } from '../../../../files/domain/models/File'
 import { IndeterminateCheckbox } from './IndeterminateCheckbox'
+import { FileInfoCell } from './file-info-cell/FileInfoCell'
 
 export const columns: ColumnDef<File>[] = [
   {
@@ -29,8 +30,8 @@ export const columns: ColumnDef<File>[] = [
   },
   {
     header: 'Files',
-    accessorKey: 'name',
-    cell: (info) => info.getValue(),
+    accessorKey: 'info',
+    cell: (props) => <FileInfoCell file={props.row.original} />,
     footer: (props) => props.column.id
   }
 ]

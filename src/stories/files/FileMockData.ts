@@ -1,5 +1,5 @@
-import { faker } from '@faker-js/faker'
 import { File } from '../../files/domain/models/File'
+import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
 
 const range = (len: number) => {
   const arr = []
@@ -9,25 +9,10 @@ const range = (len: number) => {
   return arr
 }
 
-const newFile = (): File => {
-  return {
-    name: faker.system.fileName(),
-    link: faker.internet.url(),
-    thumbnail: faker.image.imageUrl(),
-    type: faker.system.fileType(),
-    size: faker.datatype.number(40),
-    publicationDate: faker.date.recent().toISOString(),
-    downloads: faker.datatype.number(40),
-    checksum: faker.datatype.uuid()
-  }
-}
-
 export function makeFiles(len: number): File[] {
   return range(len).map(() => {
-    return {
-      ...newFile()
-    }
+    return FileMother.create()
   })
 }
 
-export const FilesMockData = (): File[] => makeFiles(100)
+export const FilesMockData = (): File[] => makeFiles(20)

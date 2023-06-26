@@ -1,0 +1,39 @@
+@import "node_modules/dataverse-design-system/src/lib/components/assets/styles/design-tokens/typography.module";
+@import "node_modules/dataverse-design-system/src/lib/components/assets/styles/design-tokens/colors.module";
+
+.container {
+display: flex;
+}
+
+.thumbnail {
+  max-width: 64px;
+  max-height: 64px;
+
+  &__icon,
+  &__locked,
+  &__unlocked {
+    font-size: 64px;
+  }
+
+  &__icon {
+    color: $dv-subtext-color;
+  }
+
+  &__locked {
+    color: $dv-danger-color;
+  }
+
+  &__unlocked {
+    color: $dv-success-color;
+  }
+}
+
+.info-container {
+  padding-left: 10px;
+
+  &__body {
+    color: $dv-subtext-color;
+    font-size: $dv-font-size-sm;
+  }
+}
+
