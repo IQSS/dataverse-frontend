@@ -2,6 +2,7 @@ import { File } from '../../../../../files/domain/models/File'
 import { ClipboardPlusFill } from 'react-bootstrap-icons'
 import styles from './FileInfoCell.module.scss'
 import { FileThumbnail } from './file-thumbnail/FileThumbnail'
+import { FileTitle } from './file-title/FileTitle'
 
 export function FileInfoCell({ file }: { file: File }) {
   return (
@@ -13,7 +14,7 @@ export function FileInfoCell({ file }: { file: File }) {
         type={file.type}
       />
       <div className={styles['info-container']}>
-        <a href={file.link}>{file.name}</a>
+        <FileTitle link={file.getLink()} name={file.name} />
         <div className={styles['info-container__body']}>
           <div>
             <span>

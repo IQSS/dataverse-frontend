@@ -1,4 +1,3 @@
-import { render } from '@testing-library/react'
 import { FileThumbnail } from '../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info-cell/file-thumbnail/FileThumbnail'
 import { FileMother } from '../../../../../../files/domain/models/FileMother'
 

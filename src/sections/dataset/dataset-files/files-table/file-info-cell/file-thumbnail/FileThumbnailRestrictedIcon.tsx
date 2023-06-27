@@ -1,5 +1,5 @@
 import { Lock, Unlock } from 'react-bootstrap-icons'
-import styles from '../FileInfoCell.module.scss'
+import styles from './FileThumbnail.module.scss'
 
 export function FileThumbnailRestrictedIcon({ locked }: { locked: boolean }) {
   if (locked) {

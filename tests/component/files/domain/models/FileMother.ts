@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { File, FileSize } from '../../../../../src/files/domain/models/File'
+import { File, FileSize, FileVersion } from '../../../../../src/files/domain/models/File'
 
 const fileSizeUnits = ['B', 'KB', 'MB', 'GB']
 
@@ -11,9 +11,10 @@ const imageOrUndefined: () => string | undefined = () => {
 export class FileMother {
   static create(props?: Partial<File>): File {
     const fileMockedData = {
+      id: faker.datatype.uuid(),
       name: faker.system.fileName(),
       access: { restricted: faker.datatype.boolean(), canDownload: faker.datatype.boolean() },
-      link: `file.xhtml?fileId=${faker.datatype.uuid()}`,
+      version: { majorNumber: faker.datatype.number(), minorNumber: faker.datatype.number() },
       type: faker.system.fileType(),
       size: {
         value: faker.datatype.number({ max: 1024, precision: 2 }),
@@ -27,9 +28,10 @@ export class FileMother {
     }
 
     return new File(
+      fileMockedData.id,
+      new FileVersion(fileMockedData.version.majorNumber, fileMockedData.version.minorNumber),
       fileMockedData.name,
       fileMockedData.access,
-      fileMockedData.link,
       fileMockedData.type,
       new FileSize(fileMockedData.size.value, fileMockedData.size.unit),
       fileMockedData.publicationDate,

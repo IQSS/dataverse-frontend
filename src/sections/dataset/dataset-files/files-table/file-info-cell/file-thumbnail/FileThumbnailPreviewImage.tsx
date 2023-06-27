@@ -1,4 +1,4 @@
-import styles from '../FileInfoCell.module.scss'
+import styles from './FileThumbnail.module.scss'
 
 interface FileThumbnailPreviewImageProps {
   thumbnail: string

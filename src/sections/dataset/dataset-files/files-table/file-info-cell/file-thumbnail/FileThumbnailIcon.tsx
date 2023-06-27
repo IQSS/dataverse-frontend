@@ -1,4 +1,4 @@
-import styles from '../FileInfoCell.module.scss'
+import styles from './FileThumbnail.module.scss'
 import { Icon } from 'dataverse-design-system'
 
 const TYPE_TO_ICON: Record<string, Icon> = {

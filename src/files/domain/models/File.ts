@@ -11,11 +11,20 @@ export interface FileAccess {
   canDownload: boolean
 }
 
+export class FileVersion {
+  constructor(public readonly majorNumber: number, public readonly minorNumber: number) {}
+
+  toString(): string {
+    return `${this.majorNumber}.${this.minorNumber}`
+  }
+}
+
 export class File {
   constructor(
+    readonly id: string,
+    readonly version: FileVersion,
     readonly name: string,
     readonly access: FileAccess,
-    readonly link: string,
     readonly type: string,
     readonly size: FileSize,
     readonly publicationDate: string,
@@ -23,4 +32,8 @@ export class File {
     readonly checksum: string,
     readonly thumbnail?: string
   ) {}
+
+  getLink(): string {
+    return `/file?id=${this.id}&version=${this.version.toString()}`
+  }
 }
