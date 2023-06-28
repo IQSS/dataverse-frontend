@@ -13,6 +13,8 @@ describe('CopyToClipboardButton', () => {
       cy.wrap(win.navigator.clipboard.writeText).should('be.calledWith', textToCopy)
 
       cy.findByRole('img', { name: 'Correctly copied to clipboard icon' }).should('exist')
+
+      cy.findByRole('img', { name: 'Copy to clipboard icon' }).should('exist')
     })
   })
 

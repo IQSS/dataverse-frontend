@@ -93,4 +93,8 @@ export class FileMother {
       fileMockedData.description
     )
   }
+
+  static createMany(quantity: number): File[] {
+    return Array.from({ length: quantity }).map(() => this.create())
+  }
 }

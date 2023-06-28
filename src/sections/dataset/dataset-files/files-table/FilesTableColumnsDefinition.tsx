@@ -31,7 +31,6 @@ export const columns: ColumnDef<File>[] = [
   {
     header: 'Files',
     accessorKey: 'info',
-    cell: (props) => <FileInfoCell file={props.row.original} />,
-    footer: (props) => props.column.id
+    cell: (props) => <FileInfoCell file={props.row.original} />
   }
 ]
