@@ -36,7 +36,7 @@ export function Dataset({ repository, searchParams }: DatasetProps) {
       ) : (
         <article>
           <header className={styles.header}>
-            <h1>{dataset.title}</h1>
+            <h1>{dataset.getTitle()}</h1>
             <DatasetLabels labels={dataset.labels} />
           </header>
           <div className={styles.container}>
@@ -58,7 +58,10 @@ export function Dataset({ repository, searchParams }: DatasetProps) {
               </Tabs.Tab>
               <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
                 <div className={styles['tab-container']}>
-                  <DatasetMetadata metadataBlocks={dataset.metadataBlocks} />
+                  <DatasetMetadata
+                    persistentId={dataset.persistentId}
+                    metadataBlocks={dataset.metadataBlocks}
+                  />
                 </div>
               </Tabs.Tab>
             </Tabs>

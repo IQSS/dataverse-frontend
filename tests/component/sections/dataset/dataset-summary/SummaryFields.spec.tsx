@@ -5,12 +5,23 @@ import {
   isArrayOfObjects,
   metadataFieldValueToString
 } from '../../../../../src/sections/dataset/dataset-metadata/dataset-metadata-fields/DatasetMetadataFieldValue'
+import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { MetadataBlockInfoProvider } from '../../../../../src/sections/dataset/metadata-block-info/MetadataBlockProvider'
 
 describe('DatasetSummary', () => {
-  const summaryFieldsMock: DatasetMetadataBlock[] = DatasetMother.create().summaryFields
-
   it('renders the DatasetSummary fields', () => {
-    cy.customMount(<SummaryFields summaryFields={summaryFieldsMock} />)
+    const summaryFieldsMock: DatasetMetadataBlock[] = DatasetMother.create().summaryFields
+    const metadataBlockInfoMock = MetadataBlockInfoMother.create()
+    const metadataBlockInfoRepository: MetadataBlockInfoRepository =
+      {} as MetadataBlockInfoRepository
+    metadataBlockInfoRepository.getByName = cy.stub().resolves(metadataBlockInfoMock)
+
+    cy.customMount(
+      <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
+        <SummaryFields summaryFields={summaryFieldsMock} />
+      </MetadataBlockInfoProvider>
+    )
 
     cy.fixture('metadataTranslations').then((t) => {
       summaryFieldsMock.forEach((metadataBlock) => {
@@ -27,7 +38,11 @@ describe('DatasetSummary', () => {
           )
           summaryFieldDescription.should('exist')
 
-          const summaryFieldValueString = metadataFieldValueToString(summaryFieldValue)
+          const summaryFieldValueString = metadataFieldValueToString(
+            summaryFieldName,
+            summaryFieldValue,
+            metadataBlockInfoMock
+          )
 
           if (isArrayOfObjects(summaryFieldValue)) {
             summaryFieldValueString.split(' \n \n').forEach((fieldValue) => {

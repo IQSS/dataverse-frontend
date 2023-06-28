@@ -84,6 +84,13 @@ jobs:
           path-to-lcov: './merged-coverage/lcov.info'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Upload Cypress screenshots
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: ./cypress/screenshots
+
   interaction-and-accessibility:
     runs-on: ubuntu-latest
 

@@ -17,7 +17,7 @@ describe('Layout', () => {
   it('renders the header', () => {
     cy.customMount(<Layout />)
 
-    cy.findByRole('img', { name: 'Brand Logo Image' }).should('exist')
+    cy.findByAltText('Brand Logo Image').should('exist')
     cy.findByText('Dataverse').should('exist')
 
     cy.findByRole('button', { name: 'Toggle navigation' }).click()

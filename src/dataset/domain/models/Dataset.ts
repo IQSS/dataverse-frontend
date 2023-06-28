@@ -22,7 +22,25 @@ export class DatasetLabel {
   ) {}
 }
 
-export type DatasetMetadataSubField = Record<string, string>
+export enum MetadataBlockName {
+  CITATION = 'citation',
+  GEOSPATIAL = 'geospatial',
+  ASTROPHYSICS = 'astrophysics',
+  BIOMEDICAL = 'biomedical',
+  CODE_META = 'codeMeta20',
+  COMPUTATIONAL_WORKFLOW = 'computationalworkflow',
+  JOURNAL = 'journal',
+  SOCIAL_SCIENCE = 'socialscience'
+}
+
+export type DatasetMetadataBlocks = [CitationMetadataBlock, ...DatasetMetadataBlock[]]
+
+export interface DatasetMetadataBlock {
+  name: MetadataBlockName
+  fields: DatasetMetadataFields
+}
+
+export type DatasetMetadataFields = Record<string, DatasetMetadataFieldValue>
 
 export const ANONYMIZED_FIELD_VALUE = 'withheld'
 type AnonymizedField = typeof ANONYMIZED_FIELD_VALUE
@@ -34,30 +52,138 @@ export type DatasetMetadataFieldValue =
   | DatasetMetadataSubField[]
   | AnonymizedField
 
-export type DatasetMetadataFields = Record<string, DatasetMetadataFieldValue>
+export type DatasetMetadataSubField = Record<string, string | undefined>
 
-export enum MetadataBlockName {
-  CITATION = 'citation',
-  GEOSPATIAL = 'geospatial',
-  ASTROPHYSICS = 'astrophysics',
-  BIOMEDICAL = 'biomedical',
-  CODE_META = 'codeMeta20',
-  COMPUTATIONAL_WORKFLOW = 'computationalworkflow',
-  CUSTOM_ARCS = 'customARCS',
-  CUSTOM_CHIA = 'customCHIA',
-  CUSTOM_DIGAAI = 'customDigaai',
-  CUSTOM_GSD = 'customGSD',
-  CUSTOM_MRA = 'customMRA',
-  CUSTOM_PSI = 'customPSI',
-  CUSTOM_PSRI = 'customPSRI',
-  CUSTOM_HBGDKI = 'custom_hbgdki',
-  JOURNAL = 'journal',
-  SOCIAL_SCIENCE = 'socialscience'
+export interface CitationMetadataBlock extends DatasetMetadataBlock {
+  name: MetadataBlockName.CITATION
+  fields: {
+    alternativePersistentId?: string
+    publicationDate?: string
+    citationDate?: string
+    title: string
+    author: Author[] | AnonymizedField
+    datasetContact: DatasetContact[] | AnonymizedField
+    dsDescription: DatasetDescription[] | AnonymizedField
+    subject: string[] | AnonymizedField
+    subtitle?: string
+    alternativeTitle?: string
+    alternativeURL?: string
+    otherId?: OtherId[] | AnonymizedField
+    keyword?: Keyword[] | AnonymizedField
+    topicClassification?: TopicClassification[] | AnonymizedField
+    publication?: Publication[] | AnonymizedField
+    notesText?: string
+    language?: string[] | AnonymizedField
+    producer?: Producer[] | AnonymizedField
+    productionDate?: string
+    productionPlace?: string[] | AnonymizedField
+    contributor?: Contributor[] | AnonymizedField
+    grantNumber?: GrantNumber[] | AnonymizedField
+    distributor?: Distributor[] | AnonymizedField
+    distributionDate?: string
+    depositor?: string
+    dateOfDeposit?: string
+    timePeriodCovered?: TimePeriodCovered[] | AnonymizedField
+    dateOfCollection?: DateOfCollection[] | AnonymizedField
+    kindOfData?: string[] | AnonymizedField
+    series?: Series[] | AnonymizedField
+    software?: Software[] | AnonymizedField
+    relatedMaterial?: string[] | AnonymizedField
+    relatedDatasets?: string[] | AnonymizedField
+    otherReferences?: string[] | AnonymizedField
+    dataSources?: string[] | AnonymizedField
+    originOfSources?: string
+    characteristicOfSources?: string
+    accessToSources?: string
+  }
 }
 
-export interface DatasetMetadataBlock {
-  name: MetadataBlockName
-  fields: DatasetMetadataFields
+interface OtherId extends DatasetMetadataSubField {
+  otherIdAgency: string
+  otherIdValue: string
+}
+
+export interface Author extends DatasetMetadataSubField {
+  authorName: string
+  authorAffiliation: string
+  authorIdentifierScheme?: string
+  authorIdentifier?: string
+}
+
+export interface DatasetContact extends DatasetMetadataSubField {
+  datasetContactName: string
+  datasetContactEmail: string
+  datasetContactAffiliation?: string
+}
+
+export interface DatasetDescription extends DatasetMetadataSubField {
+  dsDescriptionValue: string
+  dsDescriptionDate?: string
+}
+
+interface Keyword extends DatasetMetadataSubField {
+  keywordValue?: string
+  keywordVocabulary?: string
+  keywordVocabularyURI?: string
+}
+
+interface TopicClassification extends DatasetMetadataSubField {
+  topicClassValue?: string
+  topicClassVocab?: string
+  topicClassVocabURI?: string
+}
+
+interface Publication extends DatasetMetadataSubField {
+  publicationCitation?: string
+  publicationIDType?: string
+  publicationIDNumber?: string
+  publicationURL?: string
+}
+
+interface Producer extends DatasetMetadataSubField {
+  producerName?: string
+  producerAffiliation?: string
+  producerAbbreviation?: string
+  producerURL?: string
+  producerLogoURL?: string
+}
+
+interface Contributor extends DatasetMetadataSubField {
+  contributorType?: string
+  contributorName?: string
+}
+
+interface GrantNumber extends DatasetMetadataSubField {
+  grantNumberAgency?: string
+  grantNumberValue?: string
+}
+
+interface Distributor extends DatasetMetadataSubField {
+  distributorName?: string
+  distributorAffiliation?: string
+  distributorAbbreviation?: string
+  distributorURL?: string
+  distributorLogoURL?: string
+}
+
+interface TimePeriodCovered extends DatasetMetadataSubField {
+  timePeriodCoveredStart?: string
+  timePeriodCoveredEnd?: string
+}
+
+interface DateOfCollection extends DatasetMetadataSubField {
+  dateOfCollectionStart?: string
+  dateOfCollectionEnd?: string
+}
+
+interface Series extends DatasetMetadataSubField {
+  seriesName?: string
+  seriesInformation?: string
+}
+
+interface Software extends DatasetMetadataSubField {
+  softwareName?: string
+  softwareVersion?: string
 }
 
 export interface DatasetLicense {
@@ -94,26 +220,28 @@ export class DatasetVersion {
 export class Dataset {
   constructor(
     public readonly persistentId: string,
-    public readonly title: string,
     public readonly version: DatasetVersion,
     public readonly citation: string,
     public readonly labels: DatasetLabel[],
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
-    public readonly metadataBlocks: DatasetMetadataBlock[]
+    public readonly metadataBlocks: DatasetMetadataBlocks
   ) {}
+
+  public getTitle(): string {
+    return this.metadataBlocks[0].fields.title
+  }
 
   static Builder = class {
     public readonly labels: DatasetLabel[] = []
 
     constructor(
       public readonly persistentId: string,
-      public readonly title: string,
       public readonly version: DatasetVersion,
       public readonly citation: string,
       public readonly summaryFields: DatasetMetadataBlock[],
       public readonly license: DatasetLicense = defaultLicense,
-      public readonly metadataBlocks: DatasetMetadataBlock[]
+      public readonly metadataBlocks: DatasetMetadataBlocks
     ) {
       this.withLabels()
     }
@@ -166,7 +294,6 @@ export class Dataset {
     build(): Dataset {
       return new Dataset(
         this.persistentId,
-        this.title,
         this.version,
         this.citation,
         this.labels,
