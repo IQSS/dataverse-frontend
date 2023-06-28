@@ -1,8 +1,16 @@
 import { File } from '../../../../../files/domain/models/File'
-import { ClipboardPlusFill } from 'react-bootstrap-icons'
 import styles from './FileInfoCell.module.scss'
 import { FileThumbnail } from './file-thumbnail/FileThumbnail'
-import { FileTitle } from './file-title/FileTitle'
+import { FileTitle } from './FileTitle'
+import { FileDirectory } from './FileDirectory'
+import { FileType } from './FileType'
+import { FileDate } from './FileDate'
+import { FileEmbargoDate } from './FileEmbargoDate'
+import { FileDownloads } from './FileDownloads'
+import { FileChecksum } from './FileChecksum'
+import { FileTabularData } from './FileTabularData'
+import { FileDescription } from './FileDescription'
+import { FileLabels } from './FileLabels'
 
 export function FileInfoCell({ file }: { file: File }) {
   return (
@@ -13,26 +21,19 @@ export function FileInfoCell({ file }: { file: File }) {
         access={file.access}
         type={file.type}
       />
-      <div className={styles['info-container']}>
+      <div className={styles['body-container']}>
         <FileTitle link={file.getLink()} name={file.name} />
-        <div className={styles['info-container__body']}>
-          <div>
-            <span>
-              {file.type} - {file.size.toString()}
-            </span>
-          </div>
-          <div>
-            <span>Published {file.publicationDate}</span>
-          </div>
-          <div>
-            <span>{file.downloads} Downloads</span>
-          </div>
-          <div>
-            <span>
-              {file.checksum} <ClipboardPlusFill />
-            </span>
-          </div>
+        <div className={styles['body-container__subtext']}>
+          <FileDirectory directory={file.directory} />
+          <FileType type={file.type} size={file.size} />
+          <FileDate date={file.date} />
+          <FileEmbargoDate embargo={file.embargo} status={file.version.status} />
+          <FileDownloads downloads={file.downloads} status={file.version.status} />
+          <FileChecksum checksum={file.checksum} />
+          <FileTabularData tabularData={file.tabularData} />
         </div>
+        <FileDescription description={file.description} />
+        <FileLabels labels={file.labels} />
       </div>
     </div>
   )

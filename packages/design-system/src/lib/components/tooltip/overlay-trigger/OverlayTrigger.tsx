@@ -7,6 +7,7 @@ interface OverlayTriggerProps {
   message: string
   children: ReactElement
 }
+
 export function OverlayTrigger({ placement, message, children }: OverlayTriggerProps) {
   return (
     <OverlayTriggerBS

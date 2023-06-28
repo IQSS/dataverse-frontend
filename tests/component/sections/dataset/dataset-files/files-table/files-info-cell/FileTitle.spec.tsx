@@ -1,5 +1,6 @@
-import { FileMother } from '../../../../../../files/domain/models/FileMother'
-import { FileTitle } from '../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info-cell/file-title/FileTitle'
+import { FileMother } from '../../../../../files/domain/models/FileMother'
+import { FileTitle } from '../../../../../../../src/sections/dataset/dataset-files/files-table/file-info-cell/FileTitle'
+import { FileStatus } from '../../../../../../../src/files/domain/models/File'
 
 describe('FileTitle', () => {
   it('renders the link and name correctly', () => {
@@ -8,7 +9,7 @@ describe('FileTitle', () => {
     const name = 'file-name.txt'
     const file = FileMother.create({
       id: id,
-      version: { majorNumber: 1, minorNumber: 0 },
+      version: { majorNumber: 1, minorNumber: 0, status: FileStatus.RELEASED },
       name: name
     })
 

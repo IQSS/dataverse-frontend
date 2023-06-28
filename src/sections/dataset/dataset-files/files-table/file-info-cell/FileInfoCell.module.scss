@@ -5,12 +5,27 @@
 display: flex;
 }
 
-.info-container {
+.body-container {
   padding-left: 10px;
 
-  &__body {
-    color: $dv-subtext-color;
+  &__subtext {
     font-size: $dv-font-size-sm;
+    color: $dv-subtext-color;
+
   }
 }
 
+.checksum-container {
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.description-container {
+  font-size: $dv-font-size-sm;
+  color: $dv-text-color;
+}
+
+.labels-container >*{
+  margin-right: 0.5em;;
+}

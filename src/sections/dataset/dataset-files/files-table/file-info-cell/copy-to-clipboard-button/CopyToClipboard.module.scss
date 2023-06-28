@@ -1,0 +1,11 @@
+@import "node_modules/dataverse-design-system/src/lib/components/assets/styles/design-tokens/colors.module";
+
+.container {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.check {
+  color: $dv-success-color;
+  font-size: 20px;
+}
