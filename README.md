@@ -86,7 +86,7 @@ There is an Nginx reverse proxy container on top of the frontend and backend con
 Inside the `dev-env` folder, run the following command:
 
 ```
-./run-env <dataverse_branch_name>
+./run-env.sh <dataverse_branch_name>
 ```
 
 As the script argument, add the name of the Dataverse backend branch you want to deploy.
@@ -100,13 +100,15 @@ Once the script has finished, you will be able to access Dataverse via:
 - [http://localhost:8000/spa](http://localhost:8000/spa): SPA Frontend
 - [http://localhost:8000](http://localhost:8000): Dataverse Backend and JSF Frontend
 
-If you want to run the environment with aggregated test data (collections and datasets), run the following command:
+_Note: The Dataverse configbaker takes some time to start the application, so the application will not be accessible until the bootstrapping is complete._
+
+If you want to add test data (collections and datasets) to the Dataverse instance, run the following command:
 
 ```
-./run-env <dataverse_branch_name> wd
+./add-env-data.sh
 ```
 
-_Note: The above command uses the dataverse-sample-data repository whose scripts occasionally fail, so the 'wd' option is currently unstable and not recommended._
+_Note: The above command uses the dataverse-sample-data repository whose scripts occasionally fail, so some of the test data may not be added_
 
 ### Remove the environment
 
