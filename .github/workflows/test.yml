@@ -37,7 +37,7 @@ jobs:
       - name: Start containers
         working-directory: dev-env
         # hardcoded branch name for action test
-        run: ./run-env 9588-datasets-api-extension
+        run: ./run-env.sh 9588-datasets-api-extension
 
       - name: Wait for containers to be ready
         run: timeout 300s sh -c 'until docker logs dev_dataverse_bootstrap | grep 'your instance has been configured'; do echo "Waiting for Dataverse to be bootstrapped..."; sleep 2; done'
