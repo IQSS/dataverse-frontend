@@ -2,6 +2,9 @@ name: test
 
 on: push
 
+env:
+  E2E_DATAVERSE_BRANCH: 9588-datasets-api-extension
+
 jobs:
   e2e:
     runs-on: ubuntu-latest
@@ -36,8 +39,7 @@ jobs:
 
       - name: Start containers
         working-directory: dev-env
-        # hardcoded branch name for action test
-        run: ./run-env.sh 9588-datasets-api-extension
+        run: ./run-env.sh "$E2E_DATAVERSE_BRANCH"
 
       - name: Wait for containers to be ready
         run: timeout 300s sh -c 'while ! docker logs dev_dataverse_bootstrap 2>&1 | grep -q "your instance has been configured"; do sleep 2; done'
