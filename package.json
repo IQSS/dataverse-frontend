@@ -30,6 +30,7 @@
     "react-bootstrap": "^2.7.2",
     "react-bootstrap-icons": "^1.10.3",
     "react-i18next": "^12.1.5",
+    "react-loader-spinner": "^5.3.4",
     "react-markdown": "^8.0.7",
     "react-router-dom": "^6.8.1",
     "react-topbar-progress-indicator": "^4.1.1",

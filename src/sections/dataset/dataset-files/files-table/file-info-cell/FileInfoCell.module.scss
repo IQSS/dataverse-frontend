@@ -9,21 +9,21 @@ display: flex;
   padding-left: 10px;
 
   &__subtext {
-    font-size: $dv-font-size-sm;
     color: $dv-subtext-color;
+    font-size: $dv-font-size-sm;
 
   }
 }
 
 .checksum-container {
-  min-height: 20px;
   display: flex;
   align-items: center;
+  min-height: 20px;
 }
 
 .description-container {
-  font-size: $dv-font-size-sm;
   color: $dv-text-color;
+  font-size: $dv-font-size-sm;
 }
 
 .labels-container >*{

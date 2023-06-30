@@ -10,6 +10,7 @@ describe('CopyToClipboardButton', () => {
 
       cy.findByRole('button', { name: 'Copy to clipboard icon' }).click()
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       cy.wrap(win.navigator.clipboard.writeText).should('be.calledWith', textToCopy)
 
       cy.findByRole('img', { name: 'Correctly copied to clipboard icon' }).should('exist')
