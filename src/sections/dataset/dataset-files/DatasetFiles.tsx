@@ -21,7 +21,7 @@ export function DatasetFiles({
 
   useEffect(() => {
     setFilesTableData(files)
-  })
+  }, [files])
 
   if (isLoading) {
     return <SpinnerSymbol />

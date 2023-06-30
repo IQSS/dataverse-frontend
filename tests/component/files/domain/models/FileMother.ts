@@ -97,4 +97,72 @@ export class FileMother {
   static createMany(quantity: number): File[] {
     return Array.from({ length: quantity }).map(() => this.create())
   }
+
+  static createDefault(props?: Partial<File>): File {
+    const defaultFile = {
+      type: 'file',
+      version: {
+        majorNumber: 1,
+        minorNumber: 0,
+        status: FileStatus.RELEASED
+      },
+      access: { restricted: false, canDownload: true },
+      labels: [],
+      checksum: undefined,
+      thumbnail: undefined,
+      directory: undefined,
+      embargo: undefined,
+      tabularData: undefined,
+      description: undefined,
+      ...props
+    }
+    return this.create(defaultFile)
+  }
+
+  static createWithLabels(): File {
+    return this.createDefault({
+      labels: faker.helpers.arrayElements<FileLabel>([
+        createFakeFileLabel(),
+        createFakeFileLabel(),
+        createFakeFileLabel(),
+        createFakeFileLabel()
+      ])
+    })
+  }
+
+  static createWithDirectory(): File {
+    return this.createDefault({ directory: faker.system.directoryPath() })
+  }
+
+  static createWithEmbargo(): File {
+    return this.createDefault({
+      embargo: {
+        active: true,
+        date: faker.date.future().toDateString()
+      }
+    })
+  }
+
+  static createWithTabularData(): File {
+    return this.createDefault({
+      type: 'tabular data',
+      tabularData: {
+        variablesCount: faker.datatype.number(100),
+        observationsCount: faker.datatype.number(100),
+        unf: `UNF:${faker.datatype.uuid()}==`
+      }
+    })
+  }
+
+  static createWithDescription(): File {
+    return this.createDefault({
+      description: faker.lorem.paragraph()
+    })
+  }
+
+  static createWithChecksum(): File {
+    return this.createDefault({
+      checksum: faker.datatype.uuid()
+    })
+  }
 }
