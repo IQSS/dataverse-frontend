@@ -2,7 +2,7 @@ import { Pagination } from 'react-bootstrap'
 
 interface PaginationItemProps {
   pageNumber: number
-  onClick?: () => void
+  onClick: () => void
   disabled?: boolean
   active?: boolean
 }
