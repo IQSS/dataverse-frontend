@@ -6,7 +6,7 @@ export function FileThumbnailRestrictedIcon({ locked }: { locked: boolean }) {
   const { t } = useTranslation('files')
   if (locked) {
     return (
-      <div>
+      <div className={styles.container}>
         <Lock
           className={styles.thumbnail__locked}
           role="img"
@@ -17,7 +17,7 @@ export function FileThumbnailRestrictedIcon({ locked }: { locked: boolean }) {
   }
 
   return (
-    <div>
+    <div className={styles.container}>
       <Unlock
         className={styles.thumbnail__unlocked}
         role="img"

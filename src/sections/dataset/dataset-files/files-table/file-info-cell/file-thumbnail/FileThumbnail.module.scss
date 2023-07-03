@@ -1,6 +1,11 @@
 @import "node_modules/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module";
 @import "node_modules/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
 
+.container {
+  min-width: 64px;
+    height: 100%;
+}
+
 .thumbnail {
   max-width: 64px;
   max-height: 64px;

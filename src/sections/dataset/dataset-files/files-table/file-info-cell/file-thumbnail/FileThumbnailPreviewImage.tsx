@@ -7,7 +7,7 @@ interface FileThumbnailPreviewImageProps {
 
 export function FileThumbnailPreviewImage({ thumbnail, name }: FileThumbnailPreviewImageProps) {
   return (
-    <div>
+    <div className={styles.container}>
       <img className={styles.thumbnail} src={thumbnail} alt={name} />
     </div>
   )
