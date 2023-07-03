@@ -57,4 +57,18 @@ describe('DatasetFiles', () => {
 
     cy.findByRole('columnheader', { name: '101 to 150 of 200 Files' }).should('exist')
   })
+
+  it('renders the no files message when there are no files', () => {
+    fileRepository.getAllByDatasetPersistentId = cy.stub().resolves([])
+
+    cy.customMount(
+      <DatasetFiles
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByText('There are no files in this dataset.').should('exist')
+  })
 })

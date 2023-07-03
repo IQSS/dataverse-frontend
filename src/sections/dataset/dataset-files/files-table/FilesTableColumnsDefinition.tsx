@@ -1,23 +1,25 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { File } from '../../../../files/domain/models/File'
-import { IndeterminateCheckbox } from './IndeterminateCheckbox'
+import { FilesTableCheckbox } from './FilesTableCheckbox'
 import { FileInfoCell } from './file-info-cell/FileInfoCell'
 import styles from './FilesTable.module.scss'
+import { FileInfoHeader } from './FileInfoHeader'
 
 export const columns: ColumnDef<File>[] = [
   {
     id: 'select',
     header: ({ table }) => (
-      <IndeterminateCheckbox
+      <FilesTableCheckbox
         {...{
           checked: table.getIsAllRowsSelected(),
           indeterminate: table.getIsSomeRowsSelected(),
-          onChange: table.getToggleAllRowsSelectedHandler()
+          onChange: table.getToggleAllRowsSelectedHandler(),
+          disabled: table.getPageCount() === 0
         }}
       />
     ),
     cell: ({ row }) => (
-      <IndeterminateCheckbox
+      <FilesTableCheckbox
         {...{
           checked: row.getIsSelected(),
           disabled: !row.getCanSelect(),
@@ -29,22 +31,13 @@ export const columns: ColumnDef<File>[] = [
   },
   {
     header: ({ table }) => (
-      <span className={styles['file-info-header']}>
-        {getFileInfoHeader(
-          table.getPageCount(),
-          table.getState().pagination.pageIndex,
-          table.getState().pagination.pageSize
-        )}
-      </span>
+      <FileInfoHeader
+        pageCount={table.getPageCount()}
+        pageSize={table.getState().pagination.pageSize}
+        pageIndex={table.getState().pagination.pageIndex}
+      />
     ),
     accessorKey: 'info',
     cell: (props) => <FileInfoCell file={props.row.original} />
   }
 ]
-
-function getFileInfoHeader(pageCount: number, pageIndex: number, pageSize: number) {
-  const startIndex = pageIndex * pageSize + 1
-  const fileCount = pageCount * pageSize
-  const endIndex = Math.min(startIndex + pageSize - 1, fileCount)
-  return `${startIndex} to ${endIndex} of ${fileCount} Files`
-}

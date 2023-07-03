@@ -26,6 +26,9 @@ export function TablePagination({
   canGoToPreviousPage,
   canGoToNextPage
 }: TablePaginationProps) {
+  if (pageCount === 0) {
+    return <></>
+  }
   return (
     <div className={styles.container}>
       <Pagination>

@@ -1,6 +1,6 @@
 import { HTMLProps, useEffect, useRef } from 'react'
 
-export function IndeterminateCheckbox({
+export function FilesTableCheckbox({
   indeterminate,
   ...rest
 }: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {

@@ -29,6 +29,7 @@
       "clickToCopy": "Click to copy",
       "correctlyCopiedIcon": "Correctly copied to clipboard icon",
       "copyToClipboardIcon": "Copy to clipboard icon"
-    }
+    },
+    "noFiles": "There are no files in this dataset."
   }
 }
