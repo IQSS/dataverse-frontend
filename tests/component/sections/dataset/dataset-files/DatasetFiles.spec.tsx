@@ -2,7 +2,7 @@ import { FileMother } from '../../../files/domain/models/FileMother'
 import { DatasetFiles } from '../../../../../src/sections/dataset/dataset-files/DatasetFiles'
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
 
-const testFiles = FileMother.createMany(10)
+const testFiles = FileMother.createMany(200)
 const datasetPersistentId = 'test-dataset-persistent-id'
 const datasetVersion = 'test-dataset-version'
 const fileRepository: FileRepository = {} as FileRepository
@@ -24,8 +24,37 @@ describe('DatasetFiles', () => {
     cy.findByRole('columnheader', { name: /Files/ }).should('exist')
     cy.get('table > thead > tr > th:nth-child(1) > input[type="checkbox"]').should('exist')
 
-    testFiles.forEach((file) => {
+    testFiles.slice(0, 10).forEach((file) => {
       cy.findByText(file.name).should('exist')
     })
+  })
+
+  it('renders the files table with the correct header on a page different than the first one ', () => {
+    cy.customMount(
+      <DatasetFiles
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByRole('button', { name: '6' }).click()
+
+    cy.findByRole('columnheader', { name: '51 to 60 of 200 Files' }).should('exist')
+  })
+
+  it('renders the files table with the correct header with a different page size ', () => {
+    cy.customMount(
+      <DatasetFiles
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByLabelText('Files per page').select('50')
+    cy.findByRole('button', { name: '3' }).click()
+
+    cy.findByRole('columnheader', { name: '101 to 150 of 200 Files' }).should('exist')
   })
 })
