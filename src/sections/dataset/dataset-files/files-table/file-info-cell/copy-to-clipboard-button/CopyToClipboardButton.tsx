@@ -23,6 +23,7 @@ export function CopyToClipboardButton({ text }: { text: string }) {
   return (
     <OverlayTrigger placement="top" message={`${t('table.copyToClipboard.clickToCopy')} ${text}`}>
       <span onClick={copyToClipboard} className={styles.container} role="button">
+        {text}
         {copied ? (
           <Check
             className={styles.check}
@@ -30,7 +31,11 @@ export function CopyToClipboardButton({ text }: { text: string }) {
             title={t('table.copyToClipboard.correctlyCopiedIcon')}
           />
         ) : (
-          <ClipboardPlusFill role="img" title={t('table.copyToClipboard.copyToClipboardIcon')} />
+          <ClipboardPlusFill
+            role="img"
+            title={t('table.copyToClipboard.copyToClipboardIcon')}
+            className={styles.icon}
+          />
         )}
       </span>
     </OverlayTrigger>

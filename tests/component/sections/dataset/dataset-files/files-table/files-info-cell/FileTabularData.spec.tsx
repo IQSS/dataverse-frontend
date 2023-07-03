@@ -10,8 +10,9 @@ describe('FileTabularData', () => {
     }
     cy.customMount(<FileTabularData tabularData={tabularData} />)
 
-    cy.findByText('10 Variables, 100 Observations ABC123').should('exist')
-    cy.findByRole('button', { name: 'Copy to clipboard icon' }).should('exist')
+    cy.findByText(/10 Variables, 100 Observations/).should('exist')
+    cy.findByText(tabularData.unf).should('exist')
+    cy.findByRole('button', { name: /Copy to clipboard icon/ }).should('exist')
   })
 
   it('renders an empty fragment when tabularData is not provided', () => {

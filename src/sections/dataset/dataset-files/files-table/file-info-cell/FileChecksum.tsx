@@ -8,7 +8,6 @@ export function FileChecksum({ checksum }: { checksum: string | undefined }) {
 
   return (
     <div className={styles['checksum-container']}>
-      {checksum}
       <CopyToClipboardButton text={checksum} />
     </div>
   )

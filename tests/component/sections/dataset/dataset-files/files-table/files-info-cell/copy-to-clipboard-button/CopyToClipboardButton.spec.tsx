@@ -8,14 +8,14 @@ describe('CopyToClipboardButton', () => {
     cy.window().then((win) => {
       cy.stub(win.navigator.clipboard, 'writeText').resolves()
 
-      cy.findByRole('button', { name: 'Copy to clipboard icon' }).click()
+      cy.findByRole('button', { name: /Copy to clipboard icon/ }).click()
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
       cy.wrap(win.navigator.clipboard.writeText).should('be.calledWith', textToCopy)
 
       cy.findByRole('img', { name: 'Correctly copied to clipboard icon' }).should('exist')
 
-      cy.findByRole('img', { name: 'Copy to clipboard icon' }).should('exist')
+      cy.findByRole('img', { name: /Copy to clipboard icon/ }).should('exist')
     })
   })
 
@@ -23,7 +23,7 @@ describe('CopyToClipboardButton', () => {
     const textToCopy = 'Sample text to copy'
     cy.customMount(<CopyToClipboardButton text={textToCopy} />)
 
-    cy.findByRole('button', { name: 'Copy to clipboard icon' }).trigger('mouseover')
+    cy.findByRole('button', { name: /Copy to clipboard icon/ }).trigger('mouseover')
     cy.findByText('Click to copy Sample text to copy').should('exist')
   })
 })

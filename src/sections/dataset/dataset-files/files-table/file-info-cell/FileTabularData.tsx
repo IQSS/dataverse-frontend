@@ -14,7 +14,7 @@ export function FileTabularData({
   return (
     <div>
       {tabularData.variablesCount} {t('table.tabularData.variables')},{' '}
-      {tabularData.observationsCount} {t('table.tabularData.observations')} {tabularData.unf}{' '}
+      {tabularData.observationsCount} {t('table.tabularData.observations')}{' '}
       <CopyToClipboardButton text={tabularData.unf} />
     </div>
   )

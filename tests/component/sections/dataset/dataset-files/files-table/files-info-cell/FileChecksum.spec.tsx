@@ -7,7 +7,7 @@ describe('FileChecksum', () => {
     cy.customMount(<FileChecksum checksum={checksum} />)
 
     cy.findByText(checksum).should('exist')
-    cy.findByRole('button', { name: 'Copy to clipboard icon' }).should('exist')
+    cy.findByRole('button', { name: /Copy to clipboard icon/ }).should('exist')
   })
 
   it('renders an empty fragment when checksum is not provided', () => {
