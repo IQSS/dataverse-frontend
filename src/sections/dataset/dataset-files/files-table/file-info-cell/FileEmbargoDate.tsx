@@ -24,8 +24,10 @@ export function FileEmbargoDate({ embargo, status }: FileEmbargoDateProps) {
 
 const embargoTypeOfDate = (embargoIsActive: boolean, status: FileStatus) => {
   if (status === FileStatus.RELEASED) {
-    return embargoIsActive ? 'embargoedUntil' : 'embargoedWasThrough'
+    return embargoIsActive
+      ? 'table.embargoDate.embargoedUntil'
+      : 'table.embargoDate.embargoedWasThrough'
   }
 
-  return 'embargoedWillBeUntil'
+  return 'table.embargoDate.embargoedWillBeUntil'
 }

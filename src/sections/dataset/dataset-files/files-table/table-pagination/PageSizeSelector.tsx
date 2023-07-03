@@ -1,4 +1,5 @@
 import styles from './TablePagination.module.scss'
+import { useTranslation } from 'react-i18next'
 
 export function PageSizeSelector({
   pageSize,
@@ -7,18 +8,21 @@ export function PageSizeSelector({
   pageSize: number
   setPageSize: (pageSize: number) => void
 }) {
+  const { t } = useTranslation('files')
+  const availableSizes = [10, 25, 50]
+
   return (
     <div className={styles['size-selector-container']}>
-      <label htmlFor="page-size-selector" className={styles['size-selector-container__text']}>
-        Files per page
+      <label htmlFor="files-per-page-selector" className={styles['size-selector-container__text']}>
+        {t('table.pagination.pageSize')}
       </label>
       <select
-        id="page-size-selector"
+        id="files-per-page-selector"
         value={pageSize}
         onChange={(e) => {
           setPageSize(Number(e.target.value))
         }}>
-        {[10, 25, 50].map((pageSize) => (
+        {availableSizes.map((pageSize) => (
           <option key={pageSize} value={pageSize}>
             {pageSize}
           </option>

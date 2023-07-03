@@ -4,7 +4,7 @@ import { File } from '../../files/domain/models/File'
 export class FileMockLoadingRepository implements FileRepository {
   // eslint-disable-next-line unused-imports/no-unused-vars
   getAllByDatasetPersistentId(persistentId: string, version?: string): Promise<File[]> {
-    return new Promise((resolve) => {
+    return new Promise(() => {
       setTimeout(() => {
         // Do nothing
       }, 0)

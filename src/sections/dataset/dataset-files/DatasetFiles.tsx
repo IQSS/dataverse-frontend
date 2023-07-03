@@ -3,7 +3,7 @@ import { FileRepository } from '../../../files/domain/repositories/FileRepositor
 import { useFiles } from './useFiles'
 import { useEffect } from 'react'
 import { FilesTable } from './files-table/FilesTable'
-import { SpinnerSymbol } from './SpinnerSymbol'
+import { SpinnerSymbol } from './files-table/spinner-symbol/SpinnerSymbol'
 
 interface DatasetFilesProps {
   filesRepository: FileRepository

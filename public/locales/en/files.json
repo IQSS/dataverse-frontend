@@ -1,8 +1,34 @@
 {
-  "metadataReleased": "Metadata Released",
-  "published": "Published",
-  "deposited": "Deposited",
-  "embargoedWillBeUntil": "Draft: will be embargoed until",
-  "embargoedUntil": "Embargoed until",
-  "embargoedWasThrough": "Was embargoed until"
+  "filesLoading": "Files loading spinner symbol",
+  "table": {
+    "pagination": {
+      "pageSize": "Files per page"
+    },
+    "tabularData": {
+      "variables": "Variables",
+      "observations": "Observations"
+    },
+    "embargoDate": {
+      "embargoedWillBeUntil": "Draft: will be embargoed until",
+      "embargoedUntil": "Embargoed until",
+      "embargoedWasThrough": "Was embargoed until"
+    },
+    "downloads": "Downloads",
+    "date": {
+      "metadataReleased": "Metadata Released",
+      "published": "Published",
+      "deposited": "Deposited"
+    },
+    "thumbnail": {
+      "restricted": {
+        "locked": "Locked File Icon",
+        "unlocked": "Unlocked File Icon"
+      }
+    },
+    "copyToClipboard": {
+      "clickToCopy": "Click to copy",
+      "correctlyCopiedIcon": "Correctly copied to clipboard icon",
+      "copyToClipboardIcon": "Copy to clipboard icon"
+    }
+  }
 }

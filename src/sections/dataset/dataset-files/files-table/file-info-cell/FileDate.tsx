@@ -6,7 +6,7 @@ export function FileDate({ date }: { date: FileDateModel }) {
   return (
     <div>
       <span>
-        {t(date.type)} {date.date}
+        {t(`table.date.${date.type}`)} {date.date}
       </span>
     </div>
   )
