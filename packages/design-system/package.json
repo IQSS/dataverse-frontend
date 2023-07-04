@@ -59,13 +59,13 @@
     "dist",
     "README.md"
   ],
-  "main": "./dist/dataverse-design-system.umd.js",
-  "module": "./dist/dataverse-design-system.es.js",
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/dataverse-design-system.es.js",
-      "require": "./dist/dataverse-design-system.umd.js"
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
     }
   },
   "publishConfig": {

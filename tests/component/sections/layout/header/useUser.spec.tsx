@@ -2,7 +2,7 @@ import { useUser } from '../../../../../src/sections/layout/header/useUser'
 import { createSandbox, SinonSandbox } from 'sinon'
 import { UserMother } from '../../../users/domain/models/UserMother'
 import { UserRepository } from '../../../../../src/users/domain/repositories/UserRepository'
-import { Button } from 'dataverse-design-system'
+import { Button } from '@iqss/dataverse-design-system'
 
 describe('useUser', () => {
   const sandbox: SinonSandbox = createSandbox()

@@ -37,7 +37,7 @@ export {}
 //   }
 // }
 import '@testing-library/cypress/add-commands'
-import { ThemeProvider } from 'dataverse-design-system'
+import { ThemeProvider } from '@iqss/dataverse-design-system'
 import { ReactNode } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import i18next from '../../src/i18n'

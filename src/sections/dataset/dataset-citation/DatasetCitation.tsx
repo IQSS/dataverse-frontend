@@ -1,4 +1,4 @@
-import { Col, Icon, Row, Tooltip } from 'dataverse-design-system'
+import { Col, Icon, Row, Tooltip } from '@iqss/dataverse-design-system'
 import styles from './DatasetCitation.module.scss'
 import { useTranslation } from 'react-i18next'
 import { DatasetStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'

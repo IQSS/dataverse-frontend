@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Tooltip } from 'dataverse-design-system'
+import { Tooltip } from '@iqss/dataverse-design-system'
 import { MetadataBlockName } from '../../../../dataset/domain/models/Dataset'
 
 interface DatasetMetadataFieldTitleProps {
