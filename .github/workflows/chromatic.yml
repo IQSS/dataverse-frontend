@@ -23,7 +23,7 @@ jobs:
 
       - name: Install Dependencies
         # 👇 Install dependencies with the same package manager used in the project (replace it as needed), e.g. yarn, npm, pnpm
-        run: rm package-lock.json && npm install
+        run:  npm install
         # 👇 Adds Chromatic as a step in the workflow
         # Install design system dependencies
 
