@@ -19,7 +19,7 @@ describe('DatasetSummary', () => {
             .name as string
           const summaryField = cy.findByText(translatedSummaryFieldName).should('exist')
 
-          summaryField.siblings('span').trigger('mouseover')
+          summaryField.siblings('div').trigger('mouseover')
 
           const summaryFieldDescription = cy.findAllByText(
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument

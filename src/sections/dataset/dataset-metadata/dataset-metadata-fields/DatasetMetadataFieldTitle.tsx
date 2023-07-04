@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Tooltip } from 'dataverse-design-system'
+import { QuestionMarkTooltip } from 'dataverse-design-system'
 import { MetadataBlockName } from '../../../../dataset/domain/models/Dataset'
 
 interface DatasetMetadataFieldTitleProps {
@@ -17,7 +17,9 @@ export function DatasetMetadataFieldTitle({
   return (
     <>
       <strong>{t(`${completeFieldName}.name`)} </strong>
-      <Tooltip placement="right" message={t(`${completeFieldName}.description`)}></Tooltip>
+      <QuestionMarkTooltip
+        placement="right"
+        message={t(`${completeFieldName}.description`)}></QuestionMarkTooltip>
     </>
   )
 }

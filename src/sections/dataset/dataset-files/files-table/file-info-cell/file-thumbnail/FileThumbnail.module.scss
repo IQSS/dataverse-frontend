@@ -3,7 +3,7 @@
 
 .container {
   min-width: 64px;
-    height: 100%;
+  height: 100%;
 }
 
 .thumbnail {
@@ -29,8 +29,14 @@
   }
 }
 
-.preview {
-  width: 400px;
-  height: 400px;
-  padding: 30px;
+.tooltip  {
+  display: table-cell;
+    width: 430px;
+  height: 430px;
+  vertical-align: middle;
 }
+
+.preview {
+  max-width: 390px;
+}
+

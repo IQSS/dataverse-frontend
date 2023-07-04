@@ -33,6 +33,8 @@ describe('FileThumbnail', () => {
     )
 
     cy.findByAltText(file.name).should('exist')
+    cy.findByAltText(file.name).trigger('mouseover')
+    cy.findByRole('tooltip').should('exist')
   })
 
   it('renders FileThumbnailIcon when thumbnail is not provided', () => {

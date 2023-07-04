@@ -2,7 +2,6 @@ import { ColumnDef } from '@tanstack/react-table'
 import { File } from '../../../../files/domain/models/File'
 import { FilesTableCheckbox } from './FilesTableCheckbox'
 import { FileInfoCell } from './file-info-cell/FileInfoCell'
-import styles from './FilesTable.module.scss'
 import { FileInfoHeader } from './FileInfoHeader'
 
 export const columns: ColumnDef<File>[] = [

@@ -2,7 +2,7 @@ import { Button } from '../../../button/Button'
 import styles from './DynamicFieldsButtons.module.scss'
 import { MouseEvent } from 'react'
 import { Dash, Plus } from 'react-bootstrap-icons'
-import { OverlayTrigger } from '../../../tooltip/overlay-trigger/OverlayTrigger'
+import { Tooltip } from '../../../tooltip/Tooltip'
 
 interface AddFieldButtonsProps {
   originalField?: boolean
@@ -17,21 +17,21 @@ export function DynamicFieldsButtons({
 }: AddFieldButtonsProps) {
   return (
     <div className={styles.container}>
-      <OverlayTrigger placement="top" message="Add">
+      <Tooltip placement="top" overlay="Add">
         <div className={styles['overlay-container']}>
           <Button variant="secondary" onClick={onAddButtonClick}>
             <Plus className={styles.icon} title="Add" />
           </Button>
         </div>
-      </OverlayTrigger>
+      </Tooltip>
       {!originalField && (
-        <OverlayTrigger placement="top" message="Delete">
+        <Tooltip placement="top" overlay="Delete">
           <div className={styles['overlay-container']}>
             <Button variant="secondary" withSpacing onClick={onRemoveButtonClick}>
               <Dash className={styles.icon} title="Delete" />
             </Button>
           </div>
-        </OverlayTrigger>
+        </Tooltip>
       )}
     </div>
   )

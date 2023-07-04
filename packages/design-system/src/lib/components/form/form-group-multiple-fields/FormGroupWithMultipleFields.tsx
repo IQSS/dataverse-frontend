@@ -5,7 +5,7 @@ import styles from './FormGroupWithMultipleFields.module.scss'
 import { RequiredInputSymbol } from '../required-input-symbol/RequiredInputSymbol'
 import { DynamicFieldsButtons } from './dynamic-fields-buttons/DynamicFieldsButtons'
 import { useFields } from './useFields'
-import { Tooltip } from '../../tooltip/Tooltip'
+import { QuestionMarkTooltip } from '../../tooltip/question-mark-tooltip/QuestionMarkTooltip'
 
 interface FormGroupWithMultipleFieldsProps {
   title: string
@@ -17,7 +17,7 @@ interface FormGroupWithMultipleFieldsProps {
 const Title = ({ title, required, message }: Partial<FormGroupWithMultipleFieldsProps>) => (
   <span className={styles.title}>
     {title} {required && <RequiredInputSymbol />}{' '}
-    {message && <Tooltip placement="right" message={message}></Tooltip>}
+    {message && <QuestionMarkTooltip placement="right" message={message}></QuestionMarkTooltip>}
   </span>
 )
 

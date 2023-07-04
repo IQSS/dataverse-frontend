@@ -1,5 +1,5 @@
 import { Check, ClipboardPlusFill } from 'react-bootstrap-icons'
-import { OverlayTrigger } from 'dataverse-design-system'
+import { Tooltip } from 'dataverse-design-system'
 import { useState } from 'react'
 import styles from './CopyToClipboard.module.scss'
 import { useTranslation } from 'react-i18next'
@@ -21,7 +21,7 @@ export function CopyToClipboardButton({ text }: { text: string }) {
   }
 
   return (
-    <OverlayTrigger placement="top" message={`${t('table.copyToClipboard.clickToCopy')} ${text}`}>
+    <Tooltip placement="top" overlay={`${t('table.copyToClipboard.clickToCopy')} ${text}`}>
       <span onClick={copyToClipboard} className={styles.container} role="button">
         {text}
         {copied ? (
@@ -34,10 +34,10 @@ export function CopyToClipboardButton({ text }: { text: string }) {
           <ClipboardPlusFill
             role="img"
             title={t('table.copyToClipboard.copyToClipboardIcon')}
-            className={styles.icon}
+            className={styles.clipboard}
           />
         )}
       </span>
-    </OverlayTrigger>
+    </Tooltip>
   )
 }

@@ -488,14 +488,14 @@ DA:4,42
 DA:5,216
 BRDA:1,0,0,216
 end_of_record
-SF:packages/design-system/src/lib/components/tooltip/Tooltip.tsx
+SF:packages/design-system/src/lib/components/tooltip/QuestionMarkTooltip.tsx
 DA:1,1512
 DA:11,216
 DA:12,42
 DA:19,216
 BRDA:1,0,0,216
 end_of_record
-SF:packages/design-system/src/lib/components/tooltip/overlay-trigger/OverlayTrigger.tsx
+SF:packages/design-system/src/lib/components/tooltip/overlay-trigger/Tooltip.tsx
 DA:1,1368
 DA:10,228
 DA:11,114

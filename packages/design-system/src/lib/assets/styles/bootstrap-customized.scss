@@ -76,7 +76,9 @@ $breadcrumb-divider: ">";
 
 @import "../../../../../../node_modules/bootstrap/scss/breadcrumb";
 
-// Tooltip
+// QuestionMarkTooltip
+$tooltip-max-width: 500px;
+
 @import "../../../../../../node_modules/bootstrap/scss/tooltip";
 
 // Alert
