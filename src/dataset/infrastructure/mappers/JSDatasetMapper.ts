@@ -1,5 +1,6 @@
 import {
   Dataset as JSDataset,
+  DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataBlock as JSDatasetMetadataBlock,
   DatasetMetadataFields as JSDatasetMetadataFields,
   DatasetVersionInfo as JSDatasetVersionInfo
@@ -11,32 +12,20 @@ import {
   MetadataBlockName,
   DatasetMetadataBlock,
   DatasetVersion,
-  DatasetMetadataFields
+  DatasetMetadataFields,
+  DatasetMetadataBlocks
 } from '../../domain/models/Dataset'
 
 export class JSDatasetMapper {
   static toDataset(jsDataset: JSDataset, citation: string, summaryFieldsNames: string[]): Dataset {
     return new Dataset.Builder(
       jsDataset.persistentId,
-      JSDatasetMapper.toTitle(jsDataset.metadataBlocks),
       JSDatasetMapper.toVersion(jsDataset.versionInfo),
       citation,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
-      JSDatasetMapper.toMetadataBlocks(jsDataset.metadataBlocks)
-    )
-  }
-
-  static toTitle(jsDatasetMetadataBlocks: JSDatasetMetadataBlock[]): string {
-    const citationFields = jsDatasetMetadataBlocks.find(
-      (metadataBlock) => metadataBlock.name === MetadataBlockName.CITATION
-    )?.fields
-
-    if (citationFields && typeof citationFields.title === 'string') {
-      return citationFields.title
-    }
-
-    throw new Error('Dataset title not found')
+      JSDatasetMapper.toMetadataBlocks(jsDataset.metadataBlocks) // TODO Add alternativePersistentId, publicationDate, citationDate
+    ).build()
   }
 
   static toVersion(jsDatasetVersionInfo: JSDatasetVersionInfo): DatasetVersion {
@@ -61,7 +50,7 @@ export class JSDatasetMapper {
   }
 
   static toSummaryFields(
-    jsDatasetMetadataBlocks: JSDatasetMetadataBlock[],
+    jsDatasetMetadataBlocks: JSDatasetMetadataBlocks,
     summaryFieldsNames: string[]
   ): DatasetMetadataBlock[] {
     return jsDatasetMetadataBlocks.map((jsDatasetMetadataBlock) => {
@@ -85,14 +74,22 @@ export class JSDatasetMapper {
   }
 
   static toMetadataBlocks(
-    jsDatasetMetadataBlocks: JSDatasetMetadataBlock[]
-  ): DatasetMetadataBlock[] {
+    jsDatasetMetadataBlocks: JSDatasetMetadataBlocks,
+    alternativePersistentId?: string,
+    publicationDate?: string,
+    citationDate?: string
+  ): DatasetMetadataBlocks {
     return jsDatasetMetadataBlocks.map((jsDatasetMetadataBlock) => {
       return {
         name: JSDatasetMapper.toMetadataBlockName(jsDatasetMetadataBlock.name),
-        fields: jsDatasetMetadataBlock.fields
+        fields: JSDatasetMapper.toMetadataFields(
+          jsDatasetMetadataBlock,
+          alternativePersistentId,
+          publicationDate,
+          citationDate
+        )
       }
-    })
+    }) as DatasetMetadataBlocks
   }
 
   static toMetadataBlockName(jsDatasetMetadataBlockName: string): MetadataBlockName {
@@ -105,5 +102,51 @@ export class JSDatasetMapper {
     }
 
     return metadataBlockNameKey
+  }
+
+  static toMetadataFields(
+    jsDatasetMetadataBlock: JSDatasetMetadataBlock,
+    alternativePersistentId?: string,
+    publicationDate?: string,
+    citationDate?: string
+  ): DatasetMetadataFields {
+    if (jsDatasetMetadataBlock.name === MetadataBlockName.CITATION) {
+      return {
+        ...JSDatasetMapper.getExtraFieldsForCitationMetadata(
+          publicationDate,
+          alternativePersistentId,
+          citationDate
+        ),
+        ...jsDatasetMetadataBlock.fields
+      }
+    }
+
+    return jsDatasetMetadataBlock.fields
+  }
+
+  static getExtraFieldsForCitationMetadata(
+    publicationDate?: string,
+    alternativePersistentId?: string,
+    citationDate?: string
+  ) {
+    const extraFields: {
+      alternativePersistentId?: string
+      publicationDate?: string
+      citationDate?: string
+    } = {}
+
+    if (alternativePersistentId) {
+      extraFields.alternativePersistentId = alternativePersistentId
+    }
+
+    if (publicationDate) {
+      extraFields.publicationDate = publicationDate
+    }
+
+    if (publicationDate && citationDate !== publicationDate) {
+      extraFields.citationDate = citationDate
+    }
+
+    return extraFields
   }
 }

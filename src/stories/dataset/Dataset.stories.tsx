@@ -7,11 +7,12 @@ import { WithAnonymizedView } from './WithAnonymizedView'
 import { DatasetMockRepository } from './DatasetMockRepository'
 import { DatasetMockNoDataRepository } from './DatasetMockNoDataRepository'
 import { FileMockRepository } from '../files/FileMockRepository'
+import { WithCitationMetadataBlockInfo } from './WithCitationMetadataBlockInfo'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
   component: Dataset,
-  decorators: [WithI18next],
+  decorators: [WithI18next, WithCitationMetadataBlockInfo],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
@@ -27,7 +28,7 @@ export const Default: Story = {
     <Dataset
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
-      searchParams={{ persistentId: '1' }}
+      searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
     />
   )
 }
@@ -38,7 +39,7 @@ export const Loading: Story = {
     <Dataset
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
-      searchParams={{ persistentId: '1' }}
+      searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
     />
   )
 }
@@ -49,7 +50,7 @@ export const DatasetNotFound: Story = {
     <Dataset
       datasetRepository={new DatasetMockNoDataRepository()}
       fileRepository={new FileMockRepository()}
-      searchParams={{ persistentId: '1' }}
+      searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
     />
   )
 }

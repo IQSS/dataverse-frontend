@@ -2,12 +2,13 @@ import { faker } from '@faker-js/faker'
 import {
   ANONYMIZED_FIELD_VALUE,
   Dataset,
+  DatasetLabelSemanticMeaning,
+  DatasetLabelValue,
   DatasetStatus,
   DatasetVersion,
-  DatasetLabelSemanticMeaning,
-  DatasetLabelValue
+  MetadataBlockName,
+  DatasetMetadataBlocks
 } from '../../../../../src/dataset/domain/models/Dataset'
-import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Dataset'
 
 export class DatasetMother {
   static createEmpty(): undefined {
@@ -15,7 +16,7 @@ export class DatasetMother {
   }
 
   static create(props?: Partial<Dataset>): Dataset {
-    return {
+    const dataset = {
       persistentId: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
       version: new DatasetVersion(1, 0, DatasetStatus.RELEASED),
@@ -44,6 +45,18 @@ export class DatasetMother {
           semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
         }
       ],
+      summaryFields: [
+        {
+          name: MetadataBlockName.CITATION,
+          fields: {
+            dsDescription: faker.lorem.sentence(),
+            keyword: faker.lorem.sentence(),
+            subject: faker.lorem.sentence(),
+            publication: faker.lorem.sentence(),
+            notesText: faker.lorem.sentence()
+          }
+        }
+      ],
       metadataBlocks: [
         {
           name: MetadataBlockName.CITATION,
@@ -63,6 +76,17 @@ export class DatasetMother {
                 authorIdentifierScheme: faker.lorem.sentence(),
                 authorIdentifier: faker.lorem.sentence()
               }
+            ],
+            datasetContact: [
+              {
+                datasetContactName: faker.lorem.sentence(),
+                datasetContactEmail: faker.internet.email()
+              }
+            ],
+            dsDescription: [
+              {
+                dsDescriptionValue: faker.lorem.sentence()
+              }
             ]
           }
         },
@@ -75,21 +99,18 @@ export class DatasetMother {
             }
           }
         }
-      ],
-      summaryFields: [
-        {
-          name: MetadataBlockName.CITATION,
-          fields: {
-            dsDescription: faker.lorem.sentence(),
-            keyword: faker.lorem.sentence(),
-            subject: faker.lorem.sentence(),
-            publication: faker.lorem.sentence(),
-            notesText: faker.lorem.sentence()
-          }
-        }
-      ],
+      ] as DatasetMetadataBlocks,
       ...props
     }
+
+    return new Dataset.Builder(
+      dataset.persistentId,
+      dataset.version,
+      dataset.citation,
+      dataset.summaryFields,
+      dataset.license,
+      dataset.metadataBlocks
+    ).build()
   }
 
   static createAnonymized(): Dataset {
@@ -101,7 +122,15 @@ export class DatasetMother {
           name: MetadataBlockName.CITATION,
           fields: {
             title: faker.lorem.sentence(),
-            author: ANONYMIZED_FIELD_VALUE
+            subject: [faker.lorem.word(), faker.lorem.word()],
+            author: ANONYMIZED_FIELD_VALUE,
+            datasetContact: [
+              {
+                datasetContactName: faker.lorem.sentence(),
+                datasetContactEmail: faker.internet.email()
+              }
+            ],
+            dsDescription: ANONYMIZED_FIELD_VALUE
           }
         },
         {

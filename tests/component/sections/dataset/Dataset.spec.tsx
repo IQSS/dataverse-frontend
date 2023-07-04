@@ -5,7 +5,6 @@ import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvide
 import { useLoading } from '../../../../src/sections/loading/LoadingContext'
 import { ANONYMIZED_FIELD_VALUE } from '../../../../src/dataset/domain/models/Dataset'
 import { AnonymizedContext } from '../../../../src/sections/dataset/anonymized/AnonymizedContext'
-import { AnonymizedProvider } from '../../../../src/sections/dataset/anonymized/AnonymizedProvider'
 import { FileRepository } from '../../../../src/files/domain/repositories/FileRepository'
 
 describe('Dataset', () => {
@@ -41,7 +40,7 @@ describe('Dataset', () => {
     cy.findByText(buttonText).click()
 
     cy.findByTestId('dataset-skeleton').should('exist')
-    cy.findByText(testDataset.title).should('not.exist')
+    cy.findByText(testDataset.getTitle()).should('not.exist')
   })
 
   it('renders page not found when dataset is null', () => {
@@ -95,7 +94,7 @@ describe('Dataset', () => {
 
     cy.wrap(datasetRepository.getByPersistentId).should('be.calledWith', testDataset.persistentId)
 
-    cy.findByText(testDataset.title).should('exist')
+    cy.findAllByText(testDataset.getTitle()).should('exist')
 
     testDataset.labels.forEach((label) => {
       cy.findAllByText(label.value).should('exist')
@@ -116,7 +115,7 @@ describe('Dataset', () => {
       </LoadingProvider>
     )
 
-    cy.findByText(testDataset.title).should('exist')
+    cy.findAllByText(testDataset.getTitle()).should('exist')
 
     const metadataTab = cy.findByRole('tab', { name: 'Metadata' })
     metadataTab.should('exist')
@@ -127,6 +126,7 @@ describe('Dataset', () => {
   })
 
   it('renders the Dataset in anonymized view', () => {
+    const setAnonymizedView = () => {}
     const testDatasetAnonymized = DatasetMother.createAnonymized()
     const datasetRepository: DatasetRepository = {} as DatasetRepository
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(testDatasetAnonymized)
@@ -134,20 +134,13 @@ describe('Dataset', () => {
 
     cy.customMount(
       <LoadingProvider>
-        <AnonymizedProvider>
-          <AnonymizedContext.Consumer>
-            {({ setAnonymizedView }) => {
-              setAnonymizedView(true)
-              return (
-                <Dataset
-                  datasetRepository={datasetRepository}
-                  fileRepository={fileRepository}
-                  searchParams={{ privateUrlToken: privateUrlToken }}
-                />
-              )
-            }}
-          </AnonymizedContext.Consumer>
-        </AnonymizedProvider>
+        <AnonymizedContext.Provider value={{ anonymizedView: true, setAnonymizedView }}>
+          <Dataset
+            datasetRepository={datasetRepository}
+            fileRepository={fileRepository}
+            searchParams={{ privateUrlToken: privateUrlToken }}
+          />
+        </AnonymizedContext.Provider>
       </LoadingProvider>
     )
 

@@ -5,16 +5,21 @@ import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repos
 import { useAnonymized } from './anonymized/AnonymizedContext'
 import { AnonymizedProvider } from './anonymized/AnonymizedProvider'
 import { FileJSDataverseRepository } from '../../files/infrastructure/FileJSDataverseRepository'
+import { MetadataBlockInfoProvider } from './metadata-block-info/MetadataBlockProvider'
+import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/MetadataBlockInfoJSDataverseRepository'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
+const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
 
 export class DatasetFactory {
   static create(): ReactElement {
     return (
-      <AnonymizedProvider>
-        <DatasetWithSearchParams />
-      </AnonymizedProvider>
+      <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
+        <AnonymizedProvider>
+          <DatasetWithSearchParams />
+        </AnonymizedProvider>
+      </MetadataBlockInfoProvider>
     )
   }
 }
