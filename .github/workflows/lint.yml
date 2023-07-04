@@ -20,7 +20,7 @@ jobs:
           sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
 
       - name: Install Dependencies
-        run:  npm install
+        run: npm install
 
       - name: Build Dataverse UI Library
         working-directory: packages/design-system

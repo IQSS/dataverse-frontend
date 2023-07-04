@@ -17,7 +17,7 @@ jobs:
           sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
       - name: Install dependencies
         # 👇 Install dependencies with the same package manager used in the project (replace it as needed), e.g. yarn, npm, pnpm
-        run:  npm install
+        run: npm install
       - name: Build Dataverse Design System
         working-directory: packages/design-system
         run: npm run build

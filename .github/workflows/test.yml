@@ -54,7 +54,7 @@ jobs:
           sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
 
       - name: Install Dependencies
-        run:  npm install
+        run: npm install
 
       - name: Build Dataverse Design System
         working-directory: packages/design-system
@@ -108,7 +108,7 @@ jobs:
           sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
 
       - name: Install Dependencies
-        run:  npm install
+        run: npm install
 
       - name: Build Dataverse Design System
         working-directory: packages/design-system
