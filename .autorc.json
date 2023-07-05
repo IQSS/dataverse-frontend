@@ -1,0 +1,5 @@
+{
+  "plugins": ["released", "npm", "all-contributors", "first-time-contributor"],
+  "onlyPublishWithReleaseLabel": true,
+  "baseBranch": "develop"
+}
