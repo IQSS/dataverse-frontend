@@ -13,13 +13,10 @@
   },
   "homepage": "https://github.com/IQSS/dataverse-frontend#readme",
   "keywords": [
+    "dataverse",
     "design-system",
     "react",
-    "components",
-    "ui",
-    "library",
-    "open-souce",
-    "dataverse"
+    "component"
   ],
   "scripts": {
     "dev": "vite",
