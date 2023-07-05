@@ -2,4 +2,4 @@
 
 ### Features
 
-- **Dataverse Design System:** add design system package
+- Created first version of the design system
