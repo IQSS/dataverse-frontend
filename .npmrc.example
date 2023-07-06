@@ -1,3 +1,9 @@
 legacy-peer-deps=true
-registry=https://npm.pkg.github.com/IQSS
+
+# design-system registry
+//registry.npmjs.org/:_authToken=YOUR_NPM_AUTH_TOKEN>
+@iqss:registry=https://registry.npmjs.org/
+
+# js-dataverse registry
 //npm.pkg.github.com/:_authToken=<YOUR_GITHUB_AUTH_TOKEN>
+@iqss:registry=https://npm.pkg.github.com/
