@@ -150,7 +150,7 @@
     "react-loading-skeleton": "^3.3.1",
     "sinon": "^15.0.3",
     "storybook": "^7.0.2",
-    "stylelint": "15.6.2",
+    "stylelint": "15.7.0",
     "stylelint-config-rational-order": "^0.1.2",
     "stylelint-config-standard": "^30.0.1",
     "stylelint-config-standard-scss": "^7.0.1",
