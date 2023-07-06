@@ -26,5 +26,11 @@ jobs:
         working-directory: packages/design-system
         run: npm run build
 
-      - name: Lint
-        run: npm run lint
+      - name: ESLint
+        run: npm run lint:eslint
+
+      - name: Stylelint
+        run: npm run lint:stylelint
+
+      - name: Prettier
+        run: npm run lint:prettier
