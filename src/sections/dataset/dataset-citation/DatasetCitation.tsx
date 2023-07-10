@@ -1,4 +1,4 @@
-import { Col, Icon, QuestionMarkTooltip, Row } from 'dataverse-design-system'
+import { Col, IconName, Icon, QuestionMarkTooltip, Row } from 'dataverse-design-system'
 import styles from './DatasetCitation.module.scss'
 import { useTranslation } from 'react-i18next'
 import { DatasetStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
@@ -20,7 +20,7 @@ export function DatasetCitation({ citation, version }: DatasetCitationProps) {
         <Row className={styles.row}>
           <Col sm={3}>
             <div className={styles.icon}>
-              <span className={Icon.DATASET}></span>
+              <Icon name={IconName.DATASET} />
             </div>
           </Col>
           <Col>

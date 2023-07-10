@@ -1,22 +1,22 @@
 import styles from './FileThumbnail.module.scss'
-import { Icon } from 'dataverse-design-system'
+import { IconName } from 'dataverse-design-system'
 
-const TYPE_TO_ICON: Record<string, Icon> = {
-  archive: Icon.PACKAGE,
-  video: Icon.VIDEO,
-  audio: Icon.AUDIO,
-  code: Icon.CODE,
-  data: Icon.TABULAR,
-  network: Icon.NETWORK,
-  astro: Icon.ASTRO,
-  image: Icon.IMAGE,
-  document: Icon.DOCUMENT,
-  geospatial: Icon.GEODATA,
-  tabular: Icon.TABULAR,
-  text: Icon.DOCUMENT,
-  unknown: Icon.FILE,
-  default: Icon.FILE,
-  other: Icon.OTHER
+const TYPE_TO_ICON: Record<string, IconName> = {
+  archive: IconName.PACKAGE,
+  video: IconName.VIDEO,
+  audio: IconName.AUDIO,
+  code: IconName.CODE,
+  data: IconName.TABULAR,
+  network: IconName.NETWORK,
+  astro: IconName.ASTRO,
+  image: IconName.IMAGE,
+  document: IconName.DOCUMENT,
+  geospatial: IconName.GEODATA,
+  tabular: IconName.TABULAR,
+  text: IconName.DOCUMENT,
+  unknown: IconName.FILE,
+  default: IconName.FILE,
+  other: IconName.OTHER
 }
 
 export function FileThumbnailIcon({ type }: { type: string }) {
