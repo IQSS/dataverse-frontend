@@ -1,4 +1,4 @@
-export enum Icon {
+export enum DataverseIconName {
   ASTRO = 'icon-astro',
   AUDIO = 'icon-audio',
   CODE = 'icon-code',

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from '../../components/button/Button'
-import { Icon } from '../../components/Icon.enum'
+import { DataverseIconName } from '../../components/icon/DataverseIconName'
 
 /**
  * ## Description
@@ -120,7 +120,7 @@ export const NoSpacing: Story = {
 }
 
 export const WithIcon: Story = {
-  render: () => <Button icon={Icon.COLLECTION}>Primary</Button>
+  render: () => <Button icon={DataverseIconName.COLLECTION}>Primary</Button>
 }
 
 export const UseCasePrimaryButtonAsCallToAction: Story = {

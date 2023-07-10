@@ -1,5 +1,6 @@
 import { Button } from '../../../src/lib/components/button/Button'
-import { Icon } from '../../../src/lib/components/Icon.enum'
+import { DataverseIconName } from '../../../src/lib/components/icon/DataverseIconName'
+import { ArrowClockwise } from 'react-bootstrap-icons'
 
 describe('Button', () => {
   const clickMeText = 'Click me'
@@ -9,9 +10,18 @@ describe('Button', () => {
     cy.findByText('Click me').should('exist')
   })
 
-  it('renders an icon when provided', () => {
-    cy.mount(<Button icon={Icon.COLLECTION}>{clickMeText}</Button>)
-    cy.findByRole('img', { name: Icon.COLLECTION }).should('exist')
+  it('renders an icon when icon name is provided', () => {
+    cy.mount(<Button icon={DataverseIconName.COLLECTION}>{clickMeText}</Button>)
+    cy.findByRole('img', { name: DataverseIconName.COLLECTION }).should('exist')
+  })
+
+  it('renders an icon when icon component is provided', () => {
+    cy.mount(
+      <Button icon={<ArrowClockwise role="img" aria-label="Arrow Clockwise Icon" />}>
+        {clickMeText}
+      </Button>
+    )
+    cy.findByRole('img', { name: 'Arrow Clockwise Icon' }).should('exist')
   })
 
   it('calls the onClick function when the button is clicked', () => {
