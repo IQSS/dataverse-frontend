@@ -1,7 +1,7 @@
 import { DropdownButton as DropdownButtonBS } from 'react-bootstrap'
 import { ReactNode } from 'react'
 import styles from './DropdownButton.module.scss'
-import { DataverseIconName } from '../icon/DataverseIconName'
+import { IconName } from '../icon/IconName'
 import { ButtonGroup } from '../button-group/ButtonGroup'
 import { Icon } from '../icon/Icon'
 
@@ -11,7 +11,7 @@ interface DropdownButtonProps {
   id: string
   title: string
   variant?: DropdownButtonVariant
-  icon?: DataverseIconName | ReactNode
+  icon?: IconName | ReactNode
   withSpacing?: boolean
   asButtonGroup?: boolean
   onSelect?: (eventKey: string | null) => void

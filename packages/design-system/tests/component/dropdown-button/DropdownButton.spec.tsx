@@ -1,5 +1,5 @@
 import { DropdownButton } from '../../../src/lib/components/dropdown-button/DropdownButton'
-import { DataverseIconName } from '../../../src/lib/components/icon/DataverseIconName'
+import { IconName } from '../../../src/lib/components/icon/IconName'
 import styles from '../../../src/lib/components/dropdown-button/DropdownButton.module.scss'
 import { ArrowClockwise } from 'react-bootstrap-icons'
 import DropdownItem from 'react-bootstrap/DropdownItem'
@@ -37,12 +37,12 @@ describe('DropdownButton', () => {
         id="my-dropdown"
         title="My Dropdown Button"
         variant="secondary"
-        icon={DataverseIconName.COLLECTION}>
+        icon={IconName.COLLECTION}>
         <span>Item 1</span>
         <span>Item 2</span>
       </DropdownButton>
     )
-    cy.findByRole('img', { name: DataverseIconName.COLLECTION }).should('be.visible')
+    cy.findByRole('img', { name: IconName.COLLECTION }).should('be.visible')
   })
 
   it('renders an icon when icon component provided', () => {

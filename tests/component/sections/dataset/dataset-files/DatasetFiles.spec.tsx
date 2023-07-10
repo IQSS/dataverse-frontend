@@ -71,4 +71,39 @@ describe('DatasetFiles', () => {
 
     cy.findByText('There are no files in this dataset.').should('exist')
   })
+
+  it('calls the useFiles hook with the correct parameters', () => {
+    cy.customMount(
+      <DatasetFiles
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.wrap(fileRepository.getAllByDatasetPersistentId).should(
+      'be.calledWith',
+      datasetPersistentId,
+      datasetVersion
+    )
+  })
+
+  it('calls the useFiles hook with the correct parameters when criteria changes', () => {
+    cy.customMount(
+      <DatasetFiles
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByRole('button', { name: /Sort/ }).click()
+    cy.findByText('Name (A-Z)').should('exist').click()
+    cy.wrap(fileRepository.getAllByDatasetPersistentId).should(
+      'be.calledWith',
+      datasetPersistentId,
+      datasetVersion,
+      { orderBy: 'name_az' }
+    )
+  })
 })

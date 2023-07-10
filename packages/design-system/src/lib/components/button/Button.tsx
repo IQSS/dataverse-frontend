@@ -1,7 +1,7 @@
 import { MouseEvent, ReactNode } from 'react'
 import styles from './Button.module.scss'
 import { Button as ButtonBS } from 'react-bootstrap'
-import { DataverseIconName } from '../icon/DataverseIconName'
+import { IconName } from '../icon/IconName'
 import { Icon } from '../icon/Icon'
 
 type ButtonVariant = 'primary' | 'secondary' | 'link'
@@ -10,7 +10,7 @@ interface ButtonProps {
   variant?: ButtonVariant
   disabled?: boolean
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void
-  icon?: DataverseIconName | ReactNode
+  icon?: IconName | ReactNode
   withSpacing?: boolean
   children: ReactNode
 }

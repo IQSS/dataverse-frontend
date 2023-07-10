@@ -1,8 +1,8 @@
-import { DataverseIconName, Icon } from '../../../src/lib'
+import { IconName, Icon } from '../../../src/lib'
 
 describe('Icon', () => {
   it('renders the icon with the correct text', () => {
-    cy.mount(<Icon name={DataverseIconName.DATASET} />)
-    cy.findByRole('img', { name: DataverseIconName.DATASET }).should('exist')
+    cy.mount(<Icon name={IconName.DATASET} />)
+    cy.findByRole('img', { name: IconName.DATASET }).should('exist')
   })
 })

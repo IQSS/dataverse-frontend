@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { DropdownButtonItem } from '../../components/dropdown-button/dropdown-button-item/DropdownButtonItem'
 import { DropdownButton } from '../../components/dropdown-button/DropdownButton'
-import { DataverseIconName } from '../../components/icon/DataverseIconName'
+import { IconName } from '../../components/icon/IconName'
 import { CanvasFixedHeight } from '../CanvasFixedHeight'
 
 /**
@@ -108,7 +108,7 @@ export const WithIcon: Story = {
         title="Dropdown Button"
         id="dropdown-1"
         variant="primary"
-        icon={DataverseIconName.COLLECTION}>
+        icon={IconName.COLLECTION}>
         <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
         <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
         <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
