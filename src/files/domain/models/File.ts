@@ -43,6 +43,11 @@ export enum FileDateType {
   DEPOSITED = 'deposited'
 }
 
+export enum FileVersionNotNumber {
+  LATEST = 'latest',
+  DRAFT = 'draft'
+}
+
 export interface FileDate {
   type: FileDateType
   date: string
