@@ -1,33 +1,33 @@
-import { FilesCriteriaInputs } from '../../../../../../src/sections/dataset/dataset-files/files-criteria-inputs/FilesCriteriaInputs'
+import { FileCriteriaInputs } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-inputs/FileCriteriaInputs'
 
 describe('FilesCriteriaInputs', () => {
   it('calls onCriteriaChange with the selected orderBy value', () => {
     const onCriteriaChange = cy.stub().as('onCriteriaChange')
 
-    cy.customMount(<FilesCriteriaInputs onCriteriaChange={onCriteriaChange} />)
+    cy.customMount(<FileCriteriaInputs onCriteriaChange={onCriteriaChange} />)
 
     cy.findByRole('button', { name: /Sort/ }).click()
     cy.findByText('Name (A-Z)').should('exist').click()
-    cy.wrap(onCriteriaChange).should('be.calledWith', { orderBy: 'name_az' })
+    cy.wrap(onCriteriaChange).should('be.calledWith', { sortBy: 'name_az' })
 
     cy.findByRole('button', { name: /Sort/ }).click()
     cy.findByText('Name (Z-A)').click()
-    cy.wrap(onCriteriaChange).should('be.calledWith', { orderBy: 'name_za' })
+    cy.wrap(onCriteriaChange).should('be.calledWith', { sortBy: 'name_za' })
 
     cy.findByRole('button', { name: /Sort/ }).click()
     cy.findByText('Newest').click()
-    cy.wrap(onCriteriaChange).should('be.calledWith', { orderBy: 'newest' })
+    cy.wrap(onCriteriaChange).should('be.calledWith', { sortBy: 'newest' })
 
     cy.findByRole('button', { name: /Sort/ }).click()
     cy.findByText('Oldest').click()
-    cy.wrap(onCriteriaChange).should('be.calledWith', { orderBy: 'oldest' })
+    cy.wrap(onCriteriaChange).should('be.calledWith', { sortBy: 'oldest' })
 
     cy.findByRole('button', { name: /Sort/ }).click()
     cy.findByText('Size').click()
-    cy.wrap(onCriteriaChange).should('be.calledWith', { orderBy: 'size' })
+    cy.wrap(onCriteriaChange).should('be.calledWith', { sortBy: 'size' })
 
     cy.findByRole('button', { name: /Sort/ }).click()
     cy.findByText('Type').click()
-    cy.wrap(onCriteriaChange).should('be.calledWith', { orderBy: 'type' })
+    cy.wrap(onCriteriaChange).should('be.calledWith', { sortBy: 'type' })
   })
 })

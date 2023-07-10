@@ -4,7 +4,7 @@ import { useFiles } from './useFiles'
 import { useEffect, useState } from 'react'
 import { FilesTable } from './files-table/FilesTable'
 import { SpinnerSymbol } from './files-table/spinner-symbol/SpinnerSymbol'
-import { FilesCriteriaInputs } from './files-criteria-inputs/FilesCriteriaInputs'
+import { FileCriteriaInputs } from './file-criteria-inputs/FileCriteriaInputs'
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 
 interface DatasetFilesProps {
@@ -40,7 +40,7 @@ export function DatasetFiles({
 
   return (
     <>
-      <FilesCriteriaInputs onCriteriaChange={handleCriteriaChange} />
+      <FileCriteriaInputs onCriteriaChange={handleCriteriaChange} />
       <FilesTable table={table} />
     </>
   )

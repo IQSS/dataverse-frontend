@@ -1,8 +1,8 @@
 export interface FileCriteria {
-  orderBy?: FileOrderBy
+  sortBy?: FileSortByOption
 }
 
-export enum FileOrderBy {
+export enum FileSortByOption {
   NAME_AZ = 'name_az',
   NAME_ZA = 'name_za',
   NEWEST = 'newest',

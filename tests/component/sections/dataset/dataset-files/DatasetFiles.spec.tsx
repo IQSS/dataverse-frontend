@@ -103,7 +103,7 @@ describe('DatasetFiles', () => {
       'be.calledWith',
       datasetPersistentId,
       datasetVersion,
-      { orderBy: 'name_az' }
+      { sortBy: 'name_az' }
     )
   })
 })

@@ -31,5 +31,19 @@
       "copyToClipboardIcon": "Copy to clipboard icon"
     },
     "noFiles": "There are no files in this dataset."
+  },
+  "criteria": {
+    "sortBy": {
+      "title": "Sort",
+      "icon": "Sort By Icon",
+      "options": {
+        "name_az": "Name (A-Z)",
+        "name_za": "Name (Z-A)",
+        "oldest": "Oldest",
+        "newest": "Newest",
+        "size": "Size",
+        "type": "Type"
+      }
+    }
   }
 }
