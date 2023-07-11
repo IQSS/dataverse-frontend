@@ -8,6 +8,7 @@ import { DatasetMockRepository } from './DatasetMockRepository'
 import { DatasetMockNoDataRepository } from './DatasetMockNoDataRepository'
 import { FileMockRepository } from '../files/FileMockRepository'
 import { WithCitationMetadataBlockInfo } from './WithCitationMetadataBlockInfo'
+import { FileMockNoDataRepository } from '../files/FileMockNoDataRepository'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -61,6 +62,17 @@ export const DatasetAnonymizedView: Story = {
     <Dataset
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
+      searchParams={{ privateUrlToken: '123456' }}
+    />
+  )
+}
+
+export const DatasetWithNoFiles: Story = {
+  decorators: [WithLayout, WithAnonymizedView],
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockNoDataRepository()}
       searchParams={{ privateUrlToken: '123456' }}
     />
   )

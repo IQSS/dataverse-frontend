@@ -106,4 +106,18 @@ describe('DatasetFiles', () => {
       { sortBy: 'name_az' }
     )
   })
+
+  it('does not render the files criteria inputs when there are no files', () => {
+    fileRepository.getAllByDatasetPersistentId = cy.stub().resolves([])
+
+    cy.customMount(
+      <DatasetFiles
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByRole('button', { name: /Sort/ }).should('not.exist')
+  })
 })

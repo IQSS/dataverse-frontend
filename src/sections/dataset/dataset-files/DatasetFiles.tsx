@@ -40,7 +40,7 @@ export function DatasetFiles({
 
   return (
     <>
-      <FileCriteriaInputs onCriteriaChange={handleCriteriaChange} />
+      {files.length !== 0 && <FileCriteriaInputs onCriteriaChange={handleCriteriaChange} />}
       <FilesTable table={table} />
     </>
   )
