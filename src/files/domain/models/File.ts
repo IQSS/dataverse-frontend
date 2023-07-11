@@ -73,13 +73,26 @@ export interface FileLabel {
   value: string
 }
 
+export class FileType {
+  constructor(readonly value: string) {}
+
+  toDisplayFormat(): string {
+    const words = this.value.split(' ')
+    return words
+      .map((word) => {
+        return word[0].toUpperCase() + word.substring(1)
+      })
+      .join(' ')
+  }
+}
+
 export class File {
   constructor(
     readonly id: string,
     readonly version: FileVersion,
     readonly name: string,
     readonly access: FileAccess,
-    readonly type: string,
+    readonly type: FileType,
     readonly size: FileSize,
     readonly date: FileDate,
     readonly downloads: number,

@@ -1,7 +1,7 @@
-import { FileSize } from '../../../../../files/domain/models/File'
+import { FileSize, FileType as FileTypeModel } from '../../../../../files/domain/models/File'
 
 interface FileTypeProps {
-  type: string
+  type: FileTypeModel
   size: FileSize
 }
 
@@ -9,15 +9,8 @@ export function FileType({ type, size }: FileTypeProps) {
   return (
     <div>
       <span>
-        {capitalizeFirstLetter(type)} - {size.toString()}
+        {type.toDisplayFormat()} - {size.toString()}
       </span>
     </div>
   )
-}
-
-function capitalizeFirstLetter(str: string): string {
-  if (str.length === 0) {
-    return str
-  }
-  return str.charAt(0).toUpperCase() + str.slice(1)
 }

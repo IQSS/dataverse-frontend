@@ -5,13 +5,15 @@ import { DropdownButton, DropdownButtonItem } from 'dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 
 export function FileCriteriaSortBy({
+  criteria,
   onCriteriaChange
 }: {
+  criteria: FileCriteria
   onCriteriaChange: (criteria: FileCriteria) => void
 }) {
   const { t } = useTranslation('files')
   const handleSortChange = (eventKey: string | null) => {
-    onCriteriaChange({ sortBy: eventKey as FileSortByOption })
+    onCriteriaChange(criteria.withSortBy(eventKey as FileSortByOption))
   }
 
   return (

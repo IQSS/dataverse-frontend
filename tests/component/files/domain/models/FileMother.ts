@@ -8,6 +8,7 @@ import {
   FileSize,
   FileSizeUnit,
   FileStatus,
+  FileType,
   FileVersion
 } from '../../../../../src/files/domain/models/File'
 
@@ -80,7 +81,7 @@ export class FileMother {
       ),
       fileMockedData.name,
       fileMockedData.access,
-      fileMockedData.type,
+      new FileType(fileMockedData.type as string),
       new FileSize(fileMockedData.size.value, fileMockedData.size.unit),
       fileMockedData.date,
       fileMockedData.downloads,
@@ -100,7 +101,7 @@ export class FileMother {
 
   static createDefault(props?: Partial<File>): File {
     const defaultFile = {
-      type: 'file',
+      type: new FileType('file'),
       version: {
         majorNumber: 1,
         minorNumber: 0,
@@ -145,7 +146,7 @@ export class FileMother {
 
   static createWithTabularData(): File {
     return this.createDefault({
-      type: 'tabular data',
+      type: new FileType('tabular data'),
       tabularData: {
         variablesCount: faker.datatype.number(100),
         observationsCount: faker.datatype.number(100),

@@ -20,7 +20,7 @@ describe('FileThumbnail', () => {
   it('renders FileThumbnailPreviewImage when thumbnail is provided', () => {
     const file = FileMother.create({
       access: { restricted: false, canDownload: true },
-      thumbnail: 'thumbnail'
+      thumbnail: 'thumbnail?'
     })
 
     cy.customMount(

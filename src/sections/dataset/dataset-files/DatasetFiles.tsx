@@ -13,13 +13,15 @@ interface DatasetFilesProps {
   datasetVersion?: string
 }
 
+const MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS = 2
+
 export function DatasetFiles({
   filesRepository,
   datasetPersistentId,
   datasetVersion
 }: DatasetFilesProps) {
-  const [criteria, setCriteria] = useState<FileCriteria>()
-  const MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS = 2
+  const [criteria, setCriteria] = useState<FileCriteria>(new FileCriteria())
+
   const { files, isLoading } = useFiles(
     filesRepository,
     datasetPersistentId,
@@ -28,7 +30,7 @@ export function DatasetFiles({
   )
   const { table, setFilesTableData } = useFilesTable()
   const handleCriteriaChange = (newCriteria: FileCriteria) => {
-    setCriteria((criteria) => ({ ...criteria, ...newCriteria }))
+    setCriteria(newCriteria)
   }
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export function DatasetFiles({
   return (
     <>
       {files.length >= MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS && (
-        <FileCriteriaInputs onCriteriaChange={handleCriteriaChange} />
+        <FileCriteriaInputs criteria={criteria} onCriteriaChange={handleCriteriaChange} />
       )}
       <FilesTable table={table} />
     </>

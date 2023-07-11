@@ -1,6 +1,7 @@
 import { FileMother } from '../../../files/domain/models/FileMother'
 import { DatasetFiles } from '../../../../../src/sections/dataset/dataset-files/DatasetFiles'
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
+import { FileCriteria, FileSortByOption } from '../../../../../src/files/domain/models/FileCriteria'
 
 const testFiles = FileMother.createMany(200)
 const datasetPersistentId = 'test-dataset-persistent-id'
@@ -103,8 +104,10 @@ describe('DatasetFiles', () => {
       'be.calledWith',
       datasetPersistentId,
       datasetVersion,
-      { sortBy: 'name_az' }
+      new FileCriteria().withSortBy(FileSortByOption.NAME_AZ)
     )
+
+    cy.findByRole('button', { name: 'Filter Type: All' }).should('exist')
   })
 
   it('does not render the files criteria inputs when there are less than 2 files', () => {
@@ -119,5 +122,6 @@ describe('DatasetFiles', () => {
     )
 
     cy.findByRole('button', { name: /Sort/ }).should('not.exist')
+    cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
   })
 })

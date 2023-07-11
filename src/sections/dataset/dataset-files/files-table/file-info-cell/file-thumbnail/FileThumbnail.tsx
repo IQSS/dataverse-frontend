@@ -1,12 +1,12 @@
 import { FileThumbnailIcon } from './FileThumbnailIcon'
 import { FileThumbnailPreviewImage } from './FileThumbnailPreviewImage'
-import { FileAccess } from '../../../../../../files/domain/models/File'
+import { FileAccess, FileType } from '../../../../../../files/domain/models/File'
 import { FileThumbnailRestrictedIcon } from './FileThumbnailRestrictedIcon'
 
 interface FileThumbnailProps {
   thumbnail?: string | undefined
   name: string
-  type: string
+  type: FileType
   access: FileAccess
 }
 

@@ -6,13 +6,6 @@ describe('FileType', () => {
     const file = FileMother.create()
     cy.customMount(<FileType type={file.type} size={file.size} />)
 
-    cy.findByText(`${capitalizeFirstLetter(file.type)} - ${file.size.toString()}`).should('exist')
+    cy.findByText(`${file.type.toDisplayFormat()} - ${file.size.toString()}`).should('exist')
   })
 })
-
-function capitalizeFirstLetter(str: string): string {
-  if (str.length === 0) {
-    return str
-  }
-  return str.charAt(0).toUpperCase() + str.slice(1)
-}
