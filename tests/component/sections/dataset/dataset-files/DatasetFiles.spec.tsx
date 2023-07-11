@@ -107,8 +107,8 @@ describe('DatasetFiles', () => {
     )
   })
 
-  it('does not render the files criteria inputs when there are no files', () => {
-    fileRepository.getAllByDatasetPersistentId = cy.stub().resolves([])
+  it('does not render the files criteria inputs when there are less than 2 files', () => {
+    fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(FileMother.createMany(1))
 
     cy.customMount(
       <DatasetFiles

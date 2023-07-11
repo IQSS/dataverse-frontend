@@ -19,6 +19,7 @@ export function DatasetFiles({
   datasetVersion
 }: DatasetFilesProps) {
   const [criteria, setCriteria] = useState<FileCriteria>()
+  const MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS = 2
   const { files, isLoading } = useFiles(
     filesRepository,
     datasetPersistentId,
@@ -40,7 +41,9 @@ export function DatasetFiles({
 
   return (
     <>
-      {files.length !== 0 && <FileCriteriaInputs onCriteriaChange={handleCriteriaChange} />}
+      {files.length >= MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS && (
+        <FileCriteriaInputs onCriteriaChange={handleCriteriaChange} />
+      )}
       <FilesTable table={table} />
     </>
   )
