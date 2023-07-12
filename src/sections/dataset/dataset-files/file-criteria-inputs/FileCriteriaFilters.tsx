@@ -1,27 +1,17 @@
 import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
 import { DropdownButton, DropdownButtonItem } from 'dataverse-design-system'
-import { FileType } from '../../../../files/domain/models/File'
+import { FilesCountInfo } from '../../../../files/domain/models/FilesCountInfo'
 
-export function FileCriteriaFilters({
-  criteria,
-  onCriteriaChange
-}: {
+interface FileCriteriaFiltersProps {
   criteria: FileCriteria
   onCriteriaChange: (criteria: FileCriteria) => void
-}) {
-  const totalFilesInfo = {
-    totalCount: 222,
-    countPerType: [
-      {
-        type: new FileType('text'),
-        count: 5
-      },
-      {
-        type: new FileType('image'),
-        count: 485
-      }
-    ]
-  } // TODO: Get from API
+  filesCountInfo: FilesCountInfo
+}
+export function FileCriteriaFilters({
+  criteria,
+  onCriteriaChange,
+  filesCountInfo
+}: FileCriteriaFiltersProps) {
   const handleTypeChange = (eventKey: string | null) => {
     onCriteriaChange(criteria.withFilterByType(eventKey as string))
   }
@@ -37,7 +27,7 @@ export function FileCriteriaFilters({
         {/* TODO: All bold if selected*/}
         <DropdownButtonItem eventKey="All">All</DropdownButtonItem>
         {/* TODO: Add separator to design system*/}
-        {totalFilesInfo.countPerType.map(({ type, count }) => (
+        {filesCountInfo.perFileType.map(({ type, count }) => (
           <DropdownButtonItem key={type.value} eventKey={type.value}>
             {`${type.toDisplayFormat()} (${count})`}
           </DropdownButtonItem>

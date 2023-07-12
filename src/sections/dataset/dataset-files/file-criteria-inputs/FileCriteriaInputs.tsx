@@ -3,18 +3,27 @@ import { Col, Row } from 'dataverse-design-system'
 import styles from './FileCriteriaInputs.module.scss'
 import { FileCriteriaSortBy } from './FileCriteriaSortBy'
 import { FileCriteriaFilters } from './FileCriteriaFilters'
+import { FilesCountInfo } from '../../../../files/domain/models/FilesCountInfo'
+
+interface FileCriteriaInputsProps {
+  criteria: FileCriteria
+  onCriteriaChange: (criteria: FileCriteria) => void
+  filesCountInfo: FilesCountInfo
+}
 
 export function FileCriteriaInputs({
   criteria,
-  onCriteriaChange
-}: {
-  criteria: FileCriteria
-  onCriteriaChange: (criteria: FileCriteria) => void
-}) {
+  onCriteriaChange,
+  filesCountInfo
+}: FileCriteriaInputsProps) {
   return (
     <Row className={styles['criteria-section']}>
       <Col>
-        <FileCriteriaFilters criteria={criteria} onCriteriaChange={onCriteriaChange} />
+        <FileCriteriaFilters
+          criteria={criteria}
+          onCriteriaChange={onCriteriaChange}
+          filesCountInfo={filesCountInfo}
+        />
       </Col>
       <Col className={styles['sort-container']}>
         <FileCriteriaSortBy criteria={criteria} onCriteriaChange={onCriteriaChange} />
