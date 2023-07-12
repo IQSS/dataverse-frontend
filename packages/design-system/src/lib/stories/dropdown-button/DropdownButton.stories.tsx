@@ -3,6 +3,7 @@ import { DropdownButtonItem } from '../../components/dropdown-button/dropdown-bu
 import { DropdownButton } from '../../components/dropdown-button/DropdownButton'
 import { IconName } from '../../components/icon/IconName'
 import { CanvasFixedHeight } from '../CanvasFixedHeight'
+import { DropdownSeparator } from '../../components/dropdown-button/dropdown-separator/DropdownSeparator'
 
 /**
  * ## Description
@@ -111,6 +112,19 @@ export const WithIcon: Story = {
         icon={IconName.COLLECTION}>
         <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
         <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
+        <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
+      </DropdownButton>
+    </CanvasFixedHeight>
+  )
+}
+
+export const WithSeparatorBetweenOptions: Story = {
+  render: () => (
+    <CanvasFixedHeight height={150}>
+      <DropdownButton withSpacing title="Dropdown Button" id="dropdown-1" variant="primary">
+        <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
+        <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
+        <DropdownSeparator />
         <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
       </DropdownButton>
     </CanvasFixedHeight>
