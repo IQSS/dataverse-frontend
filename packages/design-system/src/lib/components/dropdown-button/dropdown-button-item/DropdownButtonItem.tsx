@@ -1,15 +1,15 @@
 import { Dropdown as DropdownBS } from 'react-bootstrap'
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 
-interface DropdownItemProps {
+interface DropdownItemProps extends React.HTMLAttributes<HTMLElement> {
   href?: string
   eventKey?: string
   children: ReactNode
 }
 
-export function DropdownButtonItem({ href, eventKey, children }: DropdownItemProps) {
+export function DropdownButtonItem({ href, eventKey, children, ...props }: DropdownItemProps) {
   return (
-    <DropdownBS.Item href={href} eventKey={eventKey}>
+    <DropdownBS.Item href={href} eventKey={eventKey} {...props}>
       {children}
     </DropdownBS.Item>
   )

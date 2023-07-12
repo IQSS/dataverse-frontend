@@ -1,15 +1,21 @@
+import { FileType } from './File'
+
 export class FileCriteria {
   constructor(
     public readonly sortBy: FileSortByOption = FileSortByOption.NAME_AZ,
-    public readonly filterByType: string = 'All'
+    public readonly filterByType?: FileType
   ) {}
 
   withSortBy(sortBy: FileSortByOption): FileCriteria {
     return new FileCriteria(sortBy, this.filterByType)
   }
 
-  withFilterByType(filterByType: string): FileCriteria {
-    return new FileCriteria(this.sortBy, filterByType)
+  withFilterByType(filterByType: string | undefined): FileCriteria {
+    if (filterByType === undefined) {
+      return new FileCriteria(this.sortBy, undefined)
+    }
+
+    return new FileCriteria(this.sortBy, new FileType(filterByType))
   }
 }
 
