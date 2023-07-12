@@ -1,18 +1,14 @@
 import { useUser } from '../../../../../src/sections/layout/header/useUser'
-import { createSandbox, SinonSandbox } from 'sinon'
 import { UserMother } from '../../../users/domain/models/UserMother'
 import { UserRepository } from '../../../../../src/users/domain/repositories/UserRepository'
 import { Button } from 'dataverse-design-system'
 
+const testUser = UserMother.create()
+const userRepository: UserRepository = {} as UserRepository
 describe('useUser', () => {
-  const sandbox: SinonSandbox = createSandbox()
-  const testUser = UserMother.create()
-  const userRepository: UserRepository = {} as UserRepository
-  userRepository.getAuthenticated = sandbox.stub().resolves(testUser)
-  userRepository.removeAuthenticated = sandbox.stub().resolves()
-
-  afterEach(() => {
-    sandbox.restore()
+  beforeEach(() => {
+    userRepository.getAuthenticated = cy.stub().resolves(testUser)
+    userRepository.removeAuthenticated = cy.stub().resolves()
   })
 
   it('should set user after fetching from repository', () => {
