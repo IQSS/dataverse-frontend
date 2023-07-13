@@ -1,4 +1,4 @@
-import { FileCriteriaSortBy } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-inputs/FileCriteriaSortBy'
+import { FileCriteriaSortBy } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-controls/FileCriteriaSortBy'
 import {
   FileCriteria,
   FileSortByOption

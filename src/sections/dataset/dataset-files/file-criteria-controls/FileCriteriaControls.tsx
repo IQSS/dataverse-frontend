@@ -1,6 +1,6 @@
 import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
 import { Col, Row } from 'dataverse-design-system'
-import styles from './FileCriteriaInputs.module.scss'
+import styles from './FileCriteriaControls.module.scss'
 import { FileCriteriaSortBy } from './FileCriteriaSortBy'
 import { FileCriteriaFilters } from './FileCriteriaFilters'
 import { FilesCountInfo } from '../../../../files/domain/models/FilesCountInfo'
@@ -11,7 +11,7 @@ interface FileCriteriaInputsProps {
   filesCountInfo: FilesCountInfo
 }
 
-export function FileCriteriaInputs({
+export function FileCriteriaControls({
   criteria,
   onCriteriaChange,
   filesCountInfo

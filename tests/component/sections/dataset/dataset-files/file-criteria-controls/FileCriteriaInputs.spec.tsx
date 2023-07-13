@@ -1,4 +1,4 @@
-import { FileCriteriaInputs } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-inputs/FileCriteriaInputs'
+import { FileCriteriaControls } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-controls/FileCriteriaControls'
 import { FileCriteria } from '../../../../../../src/files/domain/models/FileCriteria'
 import { FilesCountInfoMother } from '../../../../files/domain/models/FilesCountInfoMother'
 
@@ -7,7 +7,7 @@ describe('FileCriteriaInputs', () => {
     const onCriteriaChange = cy.stub().as('onCriteriaChange')
 
     cy.customMount(
-      <FileCriteriaInputs
+      <FileCriteriaControls
         criteria={new FileCriteria()}
         onCriteriaChange={onCriteriaChange}
         filesCountInfo={FilesCountInfoMother.create()}
@@ -22,7 +22,7 @@ describe('FileCriteriaInputs', () => {
     const filesCountInfo = FilesCountInfoMother.create()
 
     cy.customMount(
-      <FileCriteriaInputs
+      <FileCriteriaControls
         criteria={new FileCriteria()}
         onCriteriaChange={onCriteriaChange}
         filesCountInfo={filesCountInfo}

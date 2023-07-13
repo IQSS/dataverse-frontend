@@ -1,8 +1,8 @@
 import { FileCriteria } from '../../../../../../src/files/domain/models/FileCriteria'
-import { FileCriteriaFilters } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-inputs/FileCriteriaFilters'
+import { FileCriteriaFilters } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-controls/FileCriteriaFilters'
 import { FilesCountInfoMother } from '../../../../files/domain/models/FilesCountInfoMother'
 import { FileType } from '../../../../../../src/files/domain/models/File'
-import styles from '../../../../../../src/sections/dataset/dataset-files/file-criteria-inputs/FileCriteriaInputs.module.scss'
+import styles from '../../../../../../src/sections/dataset/dataset-files/file-criteria-controls/FileCriteriaControls.module.scss'
 
 const defaultCriteria = new FileCriteria()
 const filesCountInfo = FilesCountInfoMother.create({
@@ -18,7 +18,7 @@ const filesCountInfo = FilesCountInfoMother.create({
   ]
 })
 
-describe('FilesCriteriaFilters', () => {
+describe('FilesCriteriaFilterByType', () => {
   it('renders filter by type options', () => {
     const onCriteriaChange = cy.stub().as('onCriteriaChange')
 
@@ -29,8 +29,6 @@ describe('FilesCriteriaFilters', () => {
         filesCountInfo={filesCountInfo}
       />
     )
-
-    cy.findByText('Filter by').should('exist')
 
     cy.findByRole('button', { name: 'Filter Type: All' }).click()
 
