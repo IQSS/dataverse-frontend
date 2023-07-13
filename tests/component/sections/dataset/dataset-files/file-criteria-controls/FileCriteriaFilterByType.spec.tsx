@@ -52,7 +52,7 @@ describe('FilesCriteriaFilterByType', () => {
     cy.findByText('Image (5)').click()
     cy.wrap(onCriteriaChange).should('be.calledWith', defaultCriteria.withFilterByType('image'))
 
-    cy.findByRole('button', { name: 'Filter Type: All' }).click()
+    cy.findByRole('button', { name: 'Filter Type: Image' }).click()
     cy.findByText('Text (10)').click()
     cy.wrap(onCriteriaChange).should('be.calledWith', defaultCriteria.withFilterByType('text'))
   })
@@ -88,23 +88,11 @@ describe('FilesCriteriaFilterByType', () => {
     cy.findByRole('button', { name: 'Filter Type: All' }).click()
     cy.findByText('All').should('have.class', styles['selected-option'])
 
-    cy.customMount(
-      <FileCriteriaFilterByType
-        criteria={defaultCriteria.withFilterByType('image')}
-        onCriteriaChange={onCriteriaChange}
-        filesCountInfo={filesCountInfo}
-      />
-    )
+    cy.findByRole('button', { name: 'Image (5)' }).click()
     cy.findByRole('button', { name: 'Filter Type: Image' }).click()
     cy.findByText('Image (5)').should('have.class', styles['selected-option'])
 
-    cy.customMount(
-      <FileCriteriaFilterByType
-        criteria={defaultCriteria.withFilterByType('text')}
-        onCriteriaChange={onCriteriaChange}
-        filesCountInfo={filesCountInfo}
-      />
-    )
+    cy.findByRole('button', { name: 'Text (10)' }).click()
     cy.findByRole('button', { name: 'Filter Type: Text' }).click()
     cy.findByText('Text (10)').should('have.class', styles['selected-option'])
   })

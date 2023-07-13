@@ -43,7 +43,7 @@ export function DatasetFiles({
 
   return (
     <>
-      {files.length >= MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS && (
+      {filesCountInfo.total >= MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS && (
         <FileCriteriaControls
           criteria={criteria}
           onCriteriaChange={handleCriteriaChange}

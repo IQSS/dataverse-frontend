@@ -9,36 +9,23 @@ export class FileCriteria {
   ) {}
 
   withSortBy(sortBy: FileSortByOption): FileCriteria {
-    return new FileCriteria(sortBy, this.filterByType)
+    return new FileCriteria(sortBy, this.filterByType, this.filterByAccess, this.filterByTag)
   }
 
   withFilterByType(filterByType: string | undefined): FileCriteria {
-    if (filterByType === undefined) {
-      return new FileCriteria(this.sortBy, undefined)
-    }
+    const newFilterByType = filterByType === undefined ? undefined : new FileType(filterByType)
 
-    return new FileCriteria(this.sortBy, new FileType(filterByType))
+    return new FileCriteria(this.sortBy, newFilterByType, this.filterByAccess, this.filterByTag)
   }
 
   withFilterByAccess(filterByAccess: FileAccessOption | undefined): FileCriteria {
-    if (filterByAccess === undefined) {
-      return new FileCriteria(this.sortBy, this.filterByType, undefined)
-    }
-
-    return new FileCriteria(this.sortBy, this.filterByType, filterByAccess)
+    return new FileCriteria(this.sortBy, this.filterByType, filterByAccess, this.filterByTag)
   }
 
   withFilterByTag(filterByTag: string | undefined): FileCriteria {
-    if (filterByTag === undefined) {
-      return new FileCriteria(this.sortBy, this.filterByType, this.filterByAccess, undefined)
-    }
+    const newFilterByTag = filterByTag === undefined ? undefined : new FileTag(filterByTag)
 
-    return new FileCriteria(
-      this.sortBy,
-      this.filterByType,
-      this.filterByAccess,
-      new FileTag(filterByTag)
-    )
+    return new FileCriteria(this.sortBy, this.filterByType, this.filterByAccess, newFilterByTag)
   }
 }
 
