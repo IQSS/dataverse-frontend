@@ -4,6 +4,7 @@ import styles from './FileCriteriaControls.module.scss'
 import { FileCriteriaFilterByType } from './FileCriteriaFilterByType'
 import { FileCriteriaFilterByAccess } from './FileCriteriaFilterByAccess'
 import { FileCriteriaFilterByTag } from './FileCriteriaFilterByTag'
+import { useTranslation } from 'react-i18next'
 
 interface FileCriteriaFiltersProps {
   criteria: FileCriteria
@@ -15,9 +16,10 @@ export function FileCriteriaFilters({
   onCriteriaChange,
   filesCountInfo
 }: FileCriteriaFiltersProps) {
+  const { t } = useTranslation('files')
   return (
     <>
-      <span className={styles['text-filter-by']}>Filter by</span>
+      <span className={styles['text-filter-by']}>{t('criteria.filters.title')}</span>
       <div className={styles['filters-container']}>
         <FileCriteriaFilterByType
           criteria={criteria}

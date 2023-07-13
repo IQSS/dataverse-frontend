@@ -4,6 +4,7 @@ import { FilesCountInfo } from '../../../../files/domain/models/FilesCountInfo'
 import styles from './FileCriteriaControls.module.scss'
 import { useState } from 'react'
 import { FileType } from '../../../../files/domain/models/File'
+import { useTranslation } from 'react-i18next'
 
 interface FileCriteriaFilterByTypeProps {
   criteria: FileCriteria
@@ -16,6 +17,7 @@ export function FileCriteriaFilterByType({
   onCriteriaChange,
   filesCountInfo
 }: FileCriteriaFilterByTypeProps) {
+  const { t } = useTranslation('files')
   const [selectedType, setSelectedType] = useState<FileType>(
     criteria.filterByType ?? new FileType('all')
   )
@@ -31,7 +33,7 @@ export function FileCriteriaFilterByType({
   return (
     <DropdownButton
       id="files-table-filter-by-type"
-      title={`Filter Type: ${selectedType.toDisplayFormat() ?? 'All'}`}
+      title={`${t('criteria.filterByType.title')}: ${selectedType.toDisplayFormat() ?? 'All'}`}
       onSelect={handleTypeChange}
       withSpacing
       variant="secondary">

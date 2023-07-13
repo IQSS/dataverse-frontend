@@ -30,7 +30,9 @@ export function FileCriteriaFilterByAccess({
   return (
     <DropdownButton
       id="files-table-filter-by-access"
-      title={`Access: ${t(`criteria.filterByAccess.options.${selectedAccess}`)}`}
+      title={`${t('criteria.filterByAccess.title')}: ${t(
+        `criteria.filterByAccess.options.${selectedAccess}`
+      )}`}
       onSelect={handleAccessChange}
       withSpacing
       variant="secondary">

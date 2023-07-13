@@ -3,6 +3,7 @@ import { DropdownButton, DropdownButtonItem, DropdownSeparator } from 'dataverse
 import { FilesCountInfo } from '../../../../files/domain/models/FilesCountInfo'
 import styles from './FileCriteriaControls.module.scss'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface FileCriteriaFilterByTagProps {
   criteria: FileCriteria
@@ -15,6 +16,7 @@ export function FileCriteriaFilterByTag({
   onCriteriaChange,
   filesCountInfo
 }: FileCriteriaFilterByTagProps) {
+  const { t } = useTranslation('files')
   const [selectedTag, setSelectedTag] = useState<FileTag>(
     criteria.filterByTag ?? new FileTag('all')
   )
@@ -31,7 +33,7 @@ export function FileCriteriaFilterByTag({
   return (
     <DropdownButton
       id="files-table-filter-by-tag"
-      title={`Filter Tag: ${selectedTag.toDisplayFormat() ?? 'All'}`}
+      title={`${t('criteria.filterByTag.title')}: ${selectedTag.toDisplayFormat() ?? 'All'}`}
       onSelect={handleTagChange}
       withSpacing
       variant="secondary">

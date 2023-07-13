@@ -45,7 +45,17 @@
         "type": "Type"
       }
     },
+    "filters": {
+      "title": "Filter by"
+    },
+    "filterByType": {
+      "title": "Filter Type"
+    },
+    "filterByTag": {
+      "title": "Filter Tag"
+    },
     "filterByAccess": {
+        "title": "Access",
       "options": {
         "all": "All",
         "public": "Public",
