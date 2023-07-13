@@ -46,3 +46,14 @@ export const NoFiles: Story = {
     />
   )
 }
+
+// TODO (filesCountInfo) - Implement use case for no filters, pending to be discussed
+// export const NoFilters: Story = {
+//   render: () => (
+//     <DatasetFiles
+//       filesRepository={new FileMockNoFiltersRepository()}
+//       datasetPersistentId={testDataset.persistentId}
+//       datasetVersion={testDataset.version.toString()}
+//     />
+//   )
+// }

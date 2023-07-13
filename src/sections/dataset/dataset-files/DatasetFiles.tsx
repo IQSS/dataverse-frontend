@@ -33,7 +33,7 @@ const filesCountInfo: FilesCountInfo = {
     { tag: new FileTag('document'), count: 5 },
     { tag: new FileTag('code'), count: 10 }
   ]
-} // TODO: Get from use case
+} // TODO (filesCountInfo) - Get from use case, pending to be discussed if this is going to have its own use case or not
 
 export function DatasetFiles({
   filesRepository,

@@ -55,7 +55,7 @@
       "title": "Filter Tag"
     },
     "filterByAccess": {
-        "title": "Access",
+      "title": "Access",
       "options": {
         "all": "All",
         "public": "Public",
