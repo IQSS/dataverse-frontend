@@ -1,15 +1,43 @@
 import { Col, Row, Table } from 'dataverse-design-system'
-import { Table as TableModel } from '@tanstack/react-table'
 import { FilesTableHeader } from './FilesTableHeader'
 import { FilesTableBody } from './FilesTableBody'
 import { TablePagination } from './table-pagination/TablePagination'
-import { File } from '../../../../files/domain/models/File'
 import styles from './FilesTable.module.scss'
+import { useEffect } from 'react'
+import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
+import { useFiles } from '../useFiles'
+import { useFilesTable } from './useFilesTable'
+import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
+import { FileRepository } from '../../../../files/domain/repositories/FileRepository'
 
 interface FilesTableProps {
-  table: TableModel<File>
+  filesRepository: FileRepository
+  datasetPersistentId: string
+  datasetVersion?: string
+  criteria?: FileCriteria
 }
-export function FilesTable({ table }: FilesTableProps) {
+export function FilesTable({
+  filesRepository,
+  datasetPersistentId,
+  datasetVersion,
+  criteria
+}: FilesTableProps) {
+  const { files, isLoading } = useFiles(
+    filesRepository,
+    datasetPersistentId,
+    datasetVersion,
+    criteria
+  )
+  const { table, setFilesTableData } = useFilesTable()
+
+  useEffect(() => {
+    setFilesTableData(files)
+  }, [files])
+
+  if (isLoading) {
+    return <SpinnerSymbol />
+  }
+
   return (
     <div>
       <Table>

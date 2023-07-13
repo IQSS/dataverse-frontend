@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
-import { File, FileType } from '../../../files/domain/models/File'
+import { File } from '../../../files/domain/models/File'
 import { getFilesByDatasetPersistentId } from '../../../files/domain/useCases/getFilesByDatasetPersistentId'
-import { FileAccessOption, FileCriteria, FileTag } from '../../../files/domain/models/FileCriteria'
-import { FilesCountInfo } from '../../../files/domain/models/FilesCountInfo'
+import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 
 export function useFiles(
   filesRepository: FileRepository,
@@ -13,27 +12,6 @@ export function useFiles(
 ) {
   const [files, setFiles] = useState<File[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const filesCountInfo: FilesCountInfo = {
-    total: 222,
-    perFileType: [
-      {
-        type: new FileType('text'),
-        count: 5
-      },
-      {
-        type: new FileType('image'),
-        count: 485
-      }
-    ],
-    perAccess: [
-      { access: FileAccessOption.PUBLIC, count: 222 },
-      { access: FileAccessOption.RESTRICTED, count: 10 }
-    ],
-    perFileTag: [
-      { tag: new FileTag('document'), count: 5 },
-      { tag: new FileTag('code'), count: 10 }
-    ]
-  } // TODO: Get from use case
 
   useEffect(() => {
     setIsLoading(true)
@@ -50,7 +28,6 @@ export function useFiles(
 
   return {
     files,
-    filesCountInfo,
     isLoading
   }
 }
