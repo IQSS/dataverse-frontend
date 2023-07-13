@@ -96,4 +96,21 @@ describe('FilesCriteriaFilterByTag', () => {
     cy.findByRole('button', { name: 'Filter Tag: Data' }).click()
     cy.findByText('Data (10)').should('have.class', styles['selected-option'])
   })
+
+  it('does not show the filter by tag dropdown when there are no filter options', () => {
+    const onCriteriaChange = cy.stub().as('onCriteriaChange')
+    const filesCountInfo = FilesCountInfoMother.create({
+      perFileTag: []
+    })
+
+    cy.customMount(
+      <FileCriteriaFilterByTag
+        criteria={defaultCriteria}
+        onCriteriaChange={onCriteriaChange}
+        filesCountInfo={filesCountInfo}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Filter Tag: All' }).should('not.exist')
+  })
 })

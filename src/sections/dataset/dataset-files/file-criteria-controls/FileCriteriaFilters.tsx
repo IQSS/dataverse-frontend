@@ -17,6 +17,15 @@ export function FileCriteriaFilters({
   filesCountInfo
 }: FileCriteriaFiltersProps) {
   const { t } = useTranslation('files')
+  const noFiltersCanBeApplied =
+    filesCountInfo.perAccess.length === 0 &&
+    filesCountInfo.perFileType.length === 0 &&
+    filesCountInfo.perFileTag.length === 0
+
+  if (noFiltersCanBeApplied) {
+    return <></>
+  }
+
   return (
     <>
       <span className={styles['text-filter-by']}>{t('criteria.filters.title')}</span>

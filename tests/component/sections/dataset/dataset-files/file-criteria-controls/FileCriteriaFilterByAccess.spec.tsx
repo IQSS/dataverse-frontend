@@ -104,4 +104,20 @@ describe('FilesCriteriaFilterByAccess', () => {
     cy.findByRole('button', { name: 'Access: Restricted' }).click()
     cy.findByText('Restricted (10)').should('have.class', styles['selected-option'])
   })
+
+  it('does not show the filter by access options when there are no filter options', () => {
+    const onCriteriaChange = cy.stub().as('onCriteriaChange')
+    const filesCountInfo = FilesCountInfoMother.create({
+      perAccess: []
+    })
+    cy.customMount(
+      <FileCriteriaFilterByAccess
+        criteria={defaultCriteria}
+        onCriteriaChange={onCriteriaChange}
+        filesCountInfo={filesCountInfo}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Access: All' }).should('not.exist')
+  })
 })

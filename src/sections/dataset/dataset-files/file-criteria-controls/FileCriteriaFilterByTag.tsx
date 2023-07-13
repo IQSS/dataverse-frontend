@@ -30,6 +30,10 @@ export function FileCriteriaFilterByTag({
     }
   }
 
+  if (filesCountInfo.perFileTag.length === 0) {
+    return <></>
+  }
+
   return (
     <DropdownButton
       id="files-table-filter-by-tag"

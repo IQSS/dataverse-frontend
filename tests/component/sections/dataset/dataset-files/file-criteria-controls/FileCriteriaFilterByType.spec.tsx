@@ -96,4 +96,19 @@ describe('FilesCriteriaFilterByType', () => {
     cy.findByRole('button', { name: 'Filter Type: Text' }).click()
     cy.findByText('Text (10)').should('have.class', styles['selected-option'])
   })
+
+  it('does not render the filter by type dropdown if there are no filter options', () => {
+    const onCriteriaChange = cy.stub().as('onCriteriaChange')
+    const criteria = defaultCriteria.withFilterByType('image')
+
+    cy.customMount(
+      <FileCriteriaFilterByType
+        criteria={criteria}
+        onCriteriaChange={onCriteriaChange}
+        filesCountInfo={FilesCountInfoMother.create({ perFileType: [] })}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Filter Type: Image' }).should('not.exist')
+  })
 })

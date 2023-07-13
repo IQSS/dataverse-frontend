@@ -30,6 +30,10 @@ export function FileCriteriaFilterByType({
     }
   }
 
+  if (filesCountInfo.perFileType.length === 0) {
+    return <></>
+  }
+
   return (
     <DropdownButton
       id="files-table-filter-by-type"

@@ -35,4 +35,27 @@ describe('FilesCriteriaFilters', () => {
     cy.findByRole('button', { name: 'Access: All' }).should('exist')
     cy.findByRole('button', { name: 'Filter Tag: All' }).should('exist')
   })
+
+  it('does not render filters by type options when there are no files or not filters to be applied', () => {
+    const onCriteriaChange = cy.stub().as('onCriteriaChange')
+    const filesCountInfo = FilesCountInfoMother.create({
+      perFileType: [],
+      perAccess: [],
+      perFileTag: []
+    })
+
+    cy.customMount(
+      <FileCriteriaFilters
+        criteria={defaultCriteria}
+        onCriteriaChange={onCriteriaChange}
+        filesCountInfo={filesCountInfo}
+      />
+    )
+
+    cy.findByText('Filter by').should('not.exist')
+
+    cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'Access: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'Filter Tag: All' }).should('not.exist')
+  })
 })
