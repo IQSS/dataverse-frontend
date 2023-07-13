@@ -3,6 +3,7 @@ import { FilesCountInfo } from '../../../../files/domain/models/FilesCountInfo'
 import styles from './FileCriteriaControls.module.scss'
 import { FileCriteriaFilterByType } from './FileCriteriaFilterByType'
 import { FileCriteriaFilterByAccess } from './FileCriteriaFilterByAccess'
+import { FileCriteriaFilterByTag } from './FileCriteriaFilterByTag'
 
 interface FileCriteriaFiltersProps {
   criteria: FileCriteria
@@ -24,6 +25,11 @@ export function FileCriteriaFilters({
           filesCountInfo={filesCountInfo}
         />
         <FileCriteriaFilterByAccess
+          criteria={criteria}
+          onCriteriaChange={onCriteriaChange}
+          filesCountInfo={filesCountInfo}
+        />
+        <FileCriteriaFilterByTag
           criteria={criteria}
           onCriteriaChange={onCriteriaChange}
           filesCountInfo={filesCountInfo}

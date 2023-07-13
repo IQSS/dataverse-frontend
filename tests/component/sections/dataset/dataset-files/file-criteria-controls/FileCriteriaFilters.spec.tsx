@@ -32,5 +32,7 @@ describe('FilesCriteriaFilters', () => {
     cy.findByText('Filter by').should('exist')
 
     cy.findByRole('button', { name: 'Filter Type: All' }).should('exist')
+    cy.findByRole('button', { name: 'Access: All' }).should('exist')
+    cy.findByRole('button', { name: 'Filter Tag: All' }).should('exist')
   })
 })

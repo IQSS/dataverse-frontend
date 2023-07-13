@@ -4,8 +4,8 @@ export class FileCriteria {
   constructor(
     public readonly sortBy: FileSortByOption = FileSortByOption.NAME_AZ,
     public readonly filterByType?: FileType,
-
-    public readonly filterByAccess?: FileAccessOption
+    public readonly filterByAccess?: FileAccessOption,
+    public readonly filterByTag?: FileTag
   ) {}
 
   withSortBy(sortBy: FileSortByOption): FileCriteria {
@@ -27,6 +27,19 @@ export class FileCriteria {
 
     return new FileCriteria(this.sortBy, this.filterByType, filterByAccess)
   }
+
+  withFilterByTag(filterByTag: string | undefined): FileCriteria {
+    if (filterByTag === undefined) {
+      return new FileCriteria(this.sortBy, this.filterByType, this.filterByAccess, undefined)
+    }
+
+    return new FileCriteria(
+      this.sortBy,
+      this.filterByType,
+      this.filterByAccess,
+      new FileTag(filterByTag)
+    )
+  }
 }
 
 export enum FileSortByOption {
@@ -43,4 +56,12 @@ export enum FileAccessOption {
   RESTRICTED = 'restricted',
   EMBARGOED = 'embargoed_public',
   EMBARGOED_RESTRICTED = 'embargoed_restricted'
+}
+
+export class FileTag {
+  constructor(readonly value: string) {}
+
+  toDisplayFormat(): string {
+    return this.value[0].toUpperCase() + this.value.substring(1)
+  }
 }

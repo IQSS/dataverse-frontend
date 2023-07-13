@@ -2,7 +2,7 @@ import { FileCriteriaControls } from '../../../../../../src/sections/dataset/dat
 import { FileCriteria } from '../../../../../../src/files/domain/models/FileCriteria'
 import { FilesCountInfoMother } from '../../../../files/domain/models/FilesCountInfoMother'
 
-describe('FileCriteriaInputs', () => {
+describe('FileCriteriaControls', () => {
   it('renders the SortBy input', () => {
     const onCriteriaChange = cy.stub().as('onCriteriaChange')
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
 import { File, FileType } from '../../../files/domain/models/File'
 import { getFilesByDatasetPersistentId } from '../../../files/domain/useCases/getFilesByDatasetPersistentId'
-import { FileAccessOption, FileCriteria } from '../../../files/domain/models/FileCriteria'
+import { FileAccessOption, FileCriteria, FileTag } from '../../../files/domain/models/FileCriteria'
 import { FilesCountInfo } from '../../../files/domain/models/FilesCountInfo'
 
 export function useFiles(
@@ -28,6 +28,10 @@ export function useFiles(
     perAccess: [
       { access: FileAccessOption.PUBLIC, count: 222 },
       { access: FileAccessOption.RESTRICTED, count: 10 }
+    ],
+    perFileTag: [
+      { tag: new FileTag('document'), count: 5 },
+      { tag: new FileTag('code'), count: 10 }
     ]
   } // TODO: Get from use case
 

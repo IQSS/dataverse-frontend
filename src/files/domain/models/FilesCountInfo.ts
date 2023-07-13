@@ -1,10 +1,11 @@
 import { FileType } from './File'
-import { FileAccessOption } from './FileCriteria'
+import { FileAccessOption, FileTag } from './FileCriteria'
 
 export interface FilesCountInfo {
   total: number
   perFileType: FileTypeCount[]
   perAccess: FileAccessCount[]
+  perFileTag: FileTagCount[]
 }
 
 export interface FileTypeCount {
@@ -14,5 +15,10 @@ export interface FileTypeCount {
 
 export interface FileAccessCount {
   access: FileAccessOption
+  count: number
+}
+
+export interface FileTagCount {
+  tag: FileTag
   count: number
 }

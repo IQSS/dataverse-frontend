@@ -5,7 +5,7 @@ import styles from './FileCriteriaControls.module.scss'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-interface FileCriteriaFilterByTypeProps {
+interface FileCriteriaFilterByAccessProps {
   criteria: FileCriteria
   onCriteriaChange: (criteria: FileCriteria) => void
   filesCountInfo: FilesCountInfo
@@ -15,7 +15,7 @@ export function FileCriteriaFilterByAccess({
   criteria,
   onCriteriaChange,
   filesCountInfo
-}: FileCriteriaFilterByTypeProps) {
+}: FileCriteriaFilterByAccessProps) {
   const { t } = useTranslation('files')
   const [selectedAccess, setSelectedAccess] = useState<string>(criteria.filterByAccess ?? 'all')
   const handleAccessChange = (eventKey: string | null) => {
@@ -29,7 +29,7 @@ export function FileCriteriaFilterByAccess({
 
   return (
     <DropdownButton
-      id="files-table-filter-by-type"
+      id="files-table-filter-by-access"
       title={`Access: ${t(`criteria.filterByAccess.options.${selectedAccess}`)}`}
       onSelect={handleAccessChange}
       withSpacing
