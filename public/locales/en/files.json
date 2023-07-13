@@ -44,6 +44,15 @@
         "size": "Size",
         "type": "Type"
       }
+    },
+    "filterByAccess": {
+      "options": {
+        "all": "All",
+        "public": "Public",
+        "restricted": "Restricted",
+        "embargoed_public": "Embargoed then Public",
+        "embargoed_restricted": "Embargoed then Restricted"
+      }
     }
   }
 }

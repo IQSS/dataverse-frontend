@@ -1,5 +1,6 @@
 import { FileThumbnail } from '../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info-cell/file-thumbnail/FileThumbnail'
 import { FileMother } from '../../../../../../files/domain/models/FileMother'
+import { FileType } from '../../../../../../../../src/files/domain/models/File'
 
 describe('FileThumbnail', () => {
   it('renders FileThumbnailRestrictedIcon when access is restricted', () => {
@@ -39,7 +40,7 @@ describe('FileThumbnail', () => {
 
   it('renders FileThumbnailIcon when thumbnail is not provided', () => {
     const file = FileMother.create({
-      type: 'some-type',
+      type: new FileType('some-type'),
       access: { restricted: false, canDownload: true }
     })
 

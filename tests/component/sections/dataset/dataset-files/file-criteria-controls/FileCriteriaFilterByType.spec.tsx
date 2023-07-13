@@ -1,8 +1,8 @@
 import { FileCriteria } from '../../../../../../src/files/domain/models/FileCriteria'
-import { FileCriteriaFilters } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-controls/FileCriteriaFilters'
 import { FilesCountInfoMother } from '../../../../files/domain/models/FilesCountInfoMother'
 import { FileType } from '../../../../../../src/files/domain/models/File'
 import styles from '../../../../../../src/sections/dataset/dataset-files/file-criteria-controls/FileCriteriaControls.module.scss'
+import { FileCriteriaFilterByType } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-controls/FileCriteriaFilterByType'
 
 const defaultCriteria = new FileCriteria()
 const filesCountInfo = FilesCountInfoMother.create({
@@ -23,7 +23,7 @@ describe('FilesCriteriaFilterByType', () => {
     const onCriteriaChange = cy.stub().as('onCriteriaChange')
 
     cy.customMount(
-      <FileCriteriaFilters
+      <FileCriteriaFilterByType
         criteria={defaultCriteria}
         onCriteriaChange={onCriteriaChange}
         filesCountInfo={filesCountInfo}
@@ -41,7 +41,7 @@ describe('FilesCriteriaFilterByType', () => {
     const onCriteriaChange = cy.stub().as('onCriteriaChange')
 
     cy.customMount(
-      <FileCriteriaFilters
+      <FileCriteriaFilterByType
         criteria={defaultCriteria}
         onCriteriaChange={onCriteriaChange}
         filesCountInfo={filesCountInfo}
@@ -62,7 +62,7 @@ describe('FilesCriteriaFilterByType', () => {
     const criteria = defaultCriteria.withFilterByType('image')
 
     cy.customMount(
-      <FileCriteriaFilters
+      <FileCriteriaFilterByType
         criteria={criteria}
         onCriteriaChange={onCriteriaChange}
         filesCountInfo={filesCountInfo}
@@ -78,7 +78,7 @@ describe('FilesCriteriaFilterByType', () => {
     const onCriteriaChange = cy.stub().as('onCriteriaChange')
 
     cy.customMount(
-      <FileCriteriaFilters
+      <FileCriteriaFilterByType
         criteria={defaultCriteria}
         onCriteriaChange={onCriteriaChange}
         filesCountInfo={filesCountInfo}
@@ -89,7 +89,7 @@ describe('FilesCriteriaFilterByType', () => {
     cy.findByText('All').should('have.class', styles['selected-option'])
 
     cy.customMount(
-      <FileCriteriaFilters
+      <FileCriteriaFilterByType
         criteria={defaultCriteria.withFilterByType('image')}
         onCriteriaChange={onCriteriaChange}
         filesCountInfo={filesCountInfo}
@@ -99,7 +99,7 @@ describe('FilesCriteriaFilterByType', () => {
     cy.findByText('Image (5)').should('have.class', styles['selected-option'])
 
     cy.customMount(
-      <FileCriteriaFilters
+      <FileCriteriaFilterByType
         criteria={defaultCriteria.withFilterByType('text')}
         onCriteriaChange={onCriteriaChange}
         filesCountInfo={filesCountInfo}

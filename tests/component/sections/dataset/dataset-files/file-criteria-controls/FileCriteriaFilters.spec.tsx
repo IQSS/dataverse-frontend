@@ -2,7 +2,6 @@ import { FileCriteria } from '../../../../../../src/files/domain/models/FileCrit
 import { FileCriteriaFilters } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-controls/FileCriteriaFilters'
 import { FilesCountInfoMother } from '../../../../files/domain/models/FilesCountInfoMother'
 import { FileType } from '../../../../../../src/files/domain/models/File'
-import styles from '../../../../../../src/sections/dataset/dataset-files/file-criteria-controls/FileCriteriaControls.module.scss'
 
 const defaultCriteria = new FileCriteria()
 const filesCountInfo = FilesCountInfoMother.create({

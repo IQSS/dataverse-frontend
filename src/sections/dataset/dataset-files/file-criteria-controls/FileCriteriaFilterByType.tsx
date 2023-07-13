@@ -30,6 +30,7 @@ export function FileCriteriaFilterByType({
       id="files-table-filter-by-type"
       title={`Filter Type: ${criteria.filterByType?.toDisplayFormat() ?? 'All'}`}
       onSelect={handleTypeChange}
+      withSpacing
       variant="secondary">
       <DropdownButtonItem
         eventKey="all"

@@ -17,10 +17,16 @@
 }
 
 .text-filter-by {
+  margin-left: 7px;
   color: $dv-subtext-color;
   font-size: $dv-font-size-sm;
 }
 
 .selected-option {
     font-weight: $dv-font-weight-bold;
+}
+
+.filters-container {
+  display: flex;
+  align-items: center;
 }

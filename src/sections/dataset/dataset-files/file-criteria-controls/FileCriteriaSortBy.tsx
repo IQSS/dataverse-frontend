@@ -24,6 +24,7 @@ export function FileCriteriaSortBy({
       title={t('criteria.sortBy.title')}
       id="files-table-sort-by"
       variant="secondary"
+      withSpacing
       onSelect={handleSortChange}>
       {Object.values(FileSortByOption).map((sortByOption) => (
         <DropdownButtonItem key={sortByOption} eventKey={sortByOption}>
