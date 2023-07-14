@@ -19,10 +19,15 @@
       "published": "Published",
       "deposited": "Deposited"
     },
-    "thumbnail": {
+    "fileAccess": {
+      "title": "File Access",
       "restricted": {
-        "locked": "Locked File Icon",
-        "unlocked": "Unlocked File Icon"
+        "tooltip": "Restricted",
+        "icon": "Restricted File Icon"
+      },
+      "restrictedWithAccess": {
+        "tooltip": "Restricted with Access Granted",
+        "icon": "Restricted with access Icon"
       }
     },
     "copyToClipboard": {

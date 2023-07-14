@@ -24,10 +24,8 @@ export function FileThumbnailIcon({ type }: { type: FileType }) {
   const icon = TYPE_TO_ICON[type.value] || TYPE_TO_ICON.default
 
   return (
-    <div className={styles.container}>
-      <span className={`${styles.thumbnail__icon} ${icon}`} role="img" aria-label={icon}>
-        <title>{icon}</title>
-      </span>
-    </div>
+    <span className={`${styles.icon} ${icon} ${styles.container}`} role="img" aria-label={icon}>
+      <title>{icon}</title>
+    </span>
   )
 }
