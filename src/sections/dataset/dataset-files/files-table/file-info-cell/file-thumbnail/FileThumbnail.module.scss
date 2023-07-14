@@ -45,13 +45,13 @@
   font-size: 20px;
 }
 
-.restricted-icon-locked {
+.restricted-icon-restricted {
     @extend %restricted-icon;
 
     color: $dv-danger-color;
 }
 
-.restricted-icon-unlocked {
+.restricted-icon-restrictedWithAccess {
     @extend %restricted-icon;
 
   right: -16px;

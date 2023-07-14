@@ -21,8 +21,8 @@ describe('FileThumbnail', () => {
     cy.findByAltText(file.name).trigger('mouseover')
     cy.findByRole('tooltip').should('exist')
 
-    cy.findByText('Locked File Icon').should('not.exist')
-    cy.findByText('Unlocked File Icon').should('not.exist')
+    cy.findByText('Restricted File Icon').should('not.exist')
+    cy.findByText('Restricted with access Icon').should('not.exist')
   })
 
   it('renders FileThumbnailPreviewImage when thumbnail is provided with unlocked icon if restricted with access', () => {
@@ -44,8 +44,9 @@ describe('FileThumbnail', () => {
     cy.findByAltText(file.name).trigger('mouseover')
     cy.findByRole('tooltip').should('exist')
 
-    cy.findByText('Locked File Icon').should('not.exist')
-    cy.findByText('Unlocked File Icon').should('exist')
+    cy.findByText('Restricted File Icon').should('not.exist')
+    cy.findByText('Restricted with access Icon').should('exist').parent().trigger('mouseover')
+    cy.findByText('File Access: Restricted with Access Granted').should('exist')
   })
 
   it('does not render FileThumbnailPreviewImage when thumbnail is provided if restricted with no access', () => {
@@ -67,8 +68,9 @@ describe('FileThumbnail', () => {
     cy.findByAltText(file.name).should('not.exist')
     cy.findByText('icon-image').should('exist')
 
-    cy.findByText('Locked File Icon').should('exist')
-    cy.findByText('Unlocked File Icon').should('not.exist')
+    cy.findByText('Restricted File Icon').should('exist').parent().trigger('mouseover')
+    cy.findByText('File Access: Restricted').should('exist')
+    cy.findByText('Restricted with access Icon').should('not.exist')
   })
 
   it('renders FileThumbnailIcon when thumbnail is not provided', () => {
@@ -81,8 +83,8 @@ describe('FileThumbnail', () => {
 
     cy.findByText('icon-file').should('exist')
 
-    cy.findByText('Locked File Icon').should('not.exist')
-    cy.findByText('Unlocked File Icon').should('not.exist')
+    cy.findByText('Restricted File Icon').should('not.exist')
+    cy.findByText('Restricted with access Icon').should('not.exist')
   })
 
   it('renders FileThumbnailIcon when thumbnail is not provided with lock icon when restricted with no access', () => {
@@ -95,8 +97,10 @@ describe('FileThumbnail', () => {
 
     cy.findByText('icon-file').should('exist')
 
-    cy.findByText('Locked File Icon').should('exist')
-    cy.findByText('Unlocked File Icon').should('not.exist')
+    cy.findByText('Restricted File Icon').should('exist')
+    cy.findByText('Restricted File Icon').should('exist').parent().trigger('mouseover')
+    cy.findByText('File Access: Restricted').should('exist')
+    cy.findByText('Restricted with access Icon').should('not.exist')
   })
 
   it('renders FileThumbnailIcon when thumbnail is not provided with unlock icon when restricted with access', () => {
@@ -109,7 +113,8 @@ describe('FileThumbnail', () => {
 
     cy.findByText('icon-file').should('exist')
 
-    cy.findByText('Locked File Icon').should('not.exist')
-    cy.findByText('Unlocked File Icon').should('exist')
+    cy.findByText('Restricted File Icon').should('not.exist')
+    cy.findByText('Restricted with access Icon').should('exist').parent().trigger('mouseover')
+    cy.findByText('File Access: Restricted with Access Granted').should('exist')
   })
 })
