@@ -1,4 +1,4 @@
-import { Lock, Unlock } from 'react-bootstrap-icons'
+import { LockFill, UnlockFill } from 'react-bootstrap-icons'
 import styles from './FileThumbnail.module.scss'
 import { useTranslation } from 'react-i18next'
 
@@ -6,23 +6,15 @@ export function FileThumbnailRestrictedIcon({ locked }: { locked: boolean }) {
   const { t } = useTranslation('files')
   if (locked) {
     return (
-      <div className={styles.container}>
-        <Lock
-          className={styles.thumbnail__locked}
-          role="img"
-          title={t('table.thumbnail.restricted.locked')}
-        />
-      </div>
+      <span className={styles['restricted-icon-locked']}>
+        <LockFill role="img" title={t('table.thumbnail.restricted.locked')} />
+      </span>
     )
   }
 
   return (
-    <div className={styles.container}>
-      <Unlock
-        className={styles.thumbnail__unlocked}
-        role="img"
-        title={t('table.thumbnail.restricted.unlocked')}
-      />
-    </div>
+    <span className={styles['restricted-icon-unlocked']}>
+      <UnlockFill role="img" title={t('table.thumbnail.restricted.unlocked')} />
+    </span>
   )
 }
