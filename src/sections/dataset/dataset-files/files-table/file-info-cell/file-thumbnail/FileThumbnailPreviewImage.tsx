@@ -8,17 +8,15 @@ interface FileThumbnailPreviewImageProps {
 
 export function FileThumbnailPreviewImage({ thumbnail, name }: FileThumbnailPreviewImageProps) {
   return (
-    <div className={styles.container}>
-      <Tooltip
-        overlay={
-          <div className={styles.tooltip}>
-            <img className={styles.preview} src={thumbnail} alt={name} />
-          </div>
-        }
-        placement="top"
-        maxWidth={430}>
-        <img className={styles.thumbnail} src={thumbnail} alt={name} />
-      </Tooltip>
-    </div>
+    <Tooltip
+      overlay={
+        <div className={styles.tooltip}>
+          <img className={styles['tooltip-preview-image']} src={thumbnail} alt={name} />
+        </div>
+      }
+      placement="top"
+      maxWidth={430}>
+      <img className={styles['preview-image']} src={thumbnail} alt={name} />
+    </Tooltip>
   )
 }

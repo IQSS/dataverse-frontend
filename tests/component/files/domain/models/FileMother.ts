@@ -23,6 +23,7 @@ const createFakeFileLabel = (): FileLabel => ({
 
 export class FileMother {
   static create(props?: Partial<File>): File {
+    const thumbnail = valueOrUndefined<string>(faker.image.imageUrl())
     const fileType = faker.helpers.arrayElement(['tabular data', faker.system.fileType()])
     const checksum = valueOrUndefined<string>(faker.datatype.uuid())
     const fileMockedData = {
@@ -34,7 +35,7 @@ export class FileMother {
         minorNumber: faker.datatype.number(),
         status: faker.helpers.arrayElement(Object.values(FileStatus))
       },
-      type: fileType,
+      type: thumbnail ? 'image' : fileType,
       size: {
         value: faker.datatype.number({ max: 1024, precision: 2 }),
         unit: faker.helpers.arrayElement(Object.values(FileSizeUnit))
@@ -53,7 +54,7 @@ export class FileMother {
           ])
         : [],
       checksum: checksum,
-      thumbnail: valueOrUndefined<string>(faker.image.imageUrl()),
+      thumbnail: thumbnail,
       directory: valueOrUndefined<string>(faker.system.directoryPath()),
       embargo: valueOrUndefined<FileEmbargo>({
         active: faker.datatype.boolean(),

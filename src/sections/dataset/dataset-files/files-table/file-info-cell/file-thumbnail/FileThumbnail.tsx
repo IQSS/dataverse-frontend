@@ -2,6 +2,7 @@ import { FileThumbnailIcon } from './FileThumbnailIcon'
 import { FileThumbnailPreviewImage } from './FileThumbnailPreviewImage'
 import { FileAccess } from '../../../../../../files/domain/models/File'
 import { FileThumbnailRestrictedIcon } from './FileThumbnailRestrictedIcon'
+import styles from './FileThumbnail.module.scss'
 
 interface FileThumbnailProps {
   thumbnail?: string | undefined
@@ -11,13 +12,19 @@ interface FileThumbnailProps {
 }
 
 export function FileThumbnail({ thumbnail, name, type, access }: FileThumbnailProps) {
-  if (access.restricted) {
-    return <FileThumbnailRestrictedIcon locked={!access.canDownload} />
-  }
+  const showPreviewImage = thumbnail && !(access.restricted && !access.canDownload)
 
-  if (thumbnail) {
-    return <FileThumbnailPreviewImage thumbnail={thumbnail} name={name} />
-  }
-
-  return <FileThumbnailIcon type={type} />
+  return (
+    <div
+      className={`${
+        showPreviewImage ? styles['container-preview-image'] : styles['container-icon']
+      }`}>
+      {showPreviewImage ? (
+        <FileThumbnailPreviewImage thumbnail={thumbnail} name={name} />
+      ) : (
+        <FileThumbnailIcon type={type} />
+      )}
+      {access.restricted && <FileThumbnailRestrictedIcon locked={!access.canDownload} />}
+    </div>
+  )
 }

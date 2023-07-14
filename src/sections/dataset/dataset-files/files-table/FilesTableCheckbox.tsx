@@ -14,5 +14,5 @@ export function FilesTableCheckbox({
     }
   }, [ref, indeterminate, rest.checked])
 
-  return <input type="checkbox" ref={ref} {...rest} />
+  return <input type="checkbox" aria-label="Select row" ref={ref} {...rest} />
 }

@@ -15,6 +15,11 @@ display: flex;
   }
 }
 
+.thumbnail-container {
+  min-width: 80px;
+  padding-left: 8px;
+}
+
 .checksum-container {
   display: flex;
   align-items: center;

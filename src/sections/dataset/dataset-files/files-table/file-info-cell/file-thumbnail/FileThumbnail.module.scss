@@ -1,42 +1,59 @@
 @import "node_modules/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module";
 @import "node_modules/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
 
-.container {
-  min-width: 64px;
-  height: 100%;
+%container {
+  position: relative;
+  display: inline-block;
 }
 
-.thumbnail {
+.container-preview-image {
+  @extend %container;
+}
+
+.container-icon {
+  @extend %container;
+
+  width: 55px;
+  height: 80px;
+}
+
+.preview-image {
   max-width: 64px;
   max-height: 64px;
+}
 
-  &__icon,
-  &__locked,
-  &__unlocked {
-    font-size: 64px;
-  }
-
-  &__icon {
-    color: $dv-subtext-color;
-  }
-
-  &__locked {
-    color: $dv-danger-color;
-  }
-
-  &__unlocked {
-    color: $dv-success-color;
-  }
+.icon {
+  color: $dv-subtext-color;
+  font-size: 64px;
 }
 
 .tooltip  {
   display: table-cell;
-    width: 430px;
+  width: 430px;
   height: 430px;
   vertical-align: middle;
 }
 
-.preview {
+.tooltip-preview-image {
   max-width: 390px;
 }
 
+%restricted-icon {
+  position: absolute;
+  right: -14px;
+  bottom: -5px;
+  font-size: 20px;
+}
+
+.restricted-icon-restricted {
+    @extend %restricted-icon;
+
+    color: $dv-danger-color;
+}
+
+.restricted-icon-restrictedWithAccess {
+    @extend %restricted-icon;
+
+  right: -16px;
+    color: $dv-success-color;
+}

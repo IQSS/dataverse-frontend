@@ -15,12 +15,14 @@ import { FileLabels } from './FileLabels'
 export function FileInfoCell({ file }: { file: File }) {
   return (
     <div className={styles.container}>
-      <FileThumbnail
-        thumbnail={file.thumbnail}
-        name={file.name}
-        access={file.access}
-        type={file.type}
-      />
+      <div className={styles['thumbnail-container']}>
+        <FileThumbnail
+          thumbnail={file.thumbnail}
+          name={file.name}
+          access={file.access}
+          type={file.type}
+        />
+      </div>
       <div className={styles['body-container']}>
         <FileTitle link={file.getLink()} name={file.name} />
         <div className={styles['body-container__subtext']}>
