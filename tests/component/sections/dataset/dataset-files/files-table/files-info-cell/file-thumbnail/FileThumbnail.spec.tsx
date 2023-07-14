@@ -51,7 +51,8 @@ describe('FileThumbnail', () => {
   it('does not render FileThumbnailPreviewImage when thumbnail is provided if restricted with no access', () => {
     const file = FileMother.create({
       access: { restricted: true, canDownload: false },
-      thumbnail: 'thumbnail'
+      thumbnail: 'thumbnail',
+      type: 'image'
     })
 
     cy.customMount(
