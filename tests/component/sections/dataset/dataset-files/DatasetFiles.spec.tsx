@@ -2,8 +2,7 @@ import { FileMother } from '../../../files/domain/models/FileMother'
 import { DatasetFiles } from '../../../../../src/sections/dataset/dataset-files/DatasetFiles'
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
 import { FileCriteria, FileSortByOption } from '../../../../../src/files/domain/models/FileCriteria'
-import { createRowSelection } from '../../../../../src/sections/dataset/dataset-files/files-table/useFilesTable'
-import { RowSelectionMessage } from '../../../../../src/sections/dataset/dataset-files/files-table/row-selection/RowSelectionMessage'
+import styles from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
 
 const testFiles = FileMother.createMany(200)
 const datasetPersistentId = 'test-dataset-persistent-id'
@@ -168,5 +167,23 @@ describe('DatasetFiles', () => {
     cy.findByRole('button', { name: 'Clear selection.' }).click()
 
     cy.findByText(/files are currently selected./).should('not.exist')
+  })
+
+  it('highlights the selected rows', () => {
+    cy.customMount(
+      <DatasetFiles
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+    cy.get(
+      'body > div > div:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]'
+    ).click()
+
+    cy.get('body > div > div:nth-child(2) > table > tbody > tr:nth-child(2)').should(
+      'have.class',
+      styles['selected-row']
+    )
   })
 })

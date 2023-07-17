@@ -1,0 +1,12 @@
+@import "node_modules/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
+
+.container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  background-color: $dv-warning-box-color;
+}
+
+.message {
+  margin-left: 0.75rem;
+}

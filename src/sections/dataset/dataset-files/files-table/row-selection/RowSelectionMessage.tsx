@@ -1,6 +1,7 @@
 import { createRowSelection, RowSelection } from '../useFilesTable'
 import { Button } from 'dataverse-design-system'
 import { useTranslation } from 'react-i18next'
+import styles from './RowSelectionMessage.module.scss'
 
 interface RowSelectionMessageProps {
   selectedFilesCount: number
@@ -33,8 +34,10 @@ export function RowSelectionMessage({
     return <></>
   }
   return (
-    <span>
-      {t('table.rowSelection.filesSelected', { count: selectedFilesCount })}
+    <div className={styles.container}>
+      <span className={styles.message}>
+        {t('table.rowSelection.filesSelected', { count: selectedFilesCount })}
+      </span>
       {selectedFilesCount < totalFilesCount && (
         <Button variant="link" onClick={selectAllRowsHandler}>
           {t('table.rowSelection.selectAll', { count: totalFilesCount })}
@@ -43,6 +46,6 @@ export function RowSelectionMessage({
       <Button variant="link" onClick={clearSelectionHandler}>
         {t('table.rowSelection.clearSelection')}
       </Button>
-    </span>
+    </div>
   )
 }
