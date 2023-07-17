@@ -9,15 +9,18 @@ import { useFiles } from '../useFiles'
 import { useFilesTable } from './useFilesTable'
 import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
 import { FileRepository } from '../../../../files/domain/repositories/FileRepository'
+import { RowSelectionMessage } from './row-selection/RowSelectionMessage'
 
 interface FilesTableProps {
   filesRepository: FileRepository
+  filesTotalCount: number
   datasetPersistentId: string
   datasetVersion?: string
   criteria?: FileCriteria
 }
 export function FilesTable({
   filesRepository,
+  filesTotalCount,
   datasetPersistentId,
   datasetVersion,
   criteria
@@ -28,7 +31,7 @@ export function FilesTable({
     datasetVersion,
     criteria
   )
-  const { table, setFilesTableData } = useFilesTable()
+  const { table, setFilesTableData, rowSelection } = useFilesTable()
 
   useEffect(() => {
     setFilesTableData(files)
@@ -40,6 +43,7 @@ export function FilesTable({
 
   return (
     <div>
+      <RowSelectionMessage rowSelection={rowSelection} filesTotalCount={filesTotalCount} />
       <Table>
         <FilesTableHeader headers={table.getHeaderGroups()} />
         <FilesTableBody rows={table.getRowModel().rows} />
