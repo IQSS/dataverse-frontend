@@ -5,6 +5,9 @@ interface AnonymizedContextProps {
   setAnonymizedView: (anonymizedView: boolean) => void
 }
 
-export const AnonymizedContext = createContext({} as AnonymizedContextProps)
+export const AnonymizedContext = createContext<AnonymizedContextProps>({
+  anonymizedView: false,
+  setAnonymizedView: /* istanbul ignore next */ (): void => {}
+})
 
 export const useAnonymized = () => useContext(AnonymizedContext)

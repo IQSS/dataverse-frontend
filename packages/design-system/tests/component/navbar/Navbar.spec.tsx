@@ -10,7 +10,7 @@ describe('Navbar component', () => {
   it('renders the brand logo and title', () => {
     cy.mount(<Navbar brand={brand} />)
 
-    cy.findByRole('img', { name: 'Brand Logo Image' }).should('exist')
+    cy.findByAltText('Brand Logo Image').should('exist')
     cy.findByText('Brand Title').should('exist')
   })
 

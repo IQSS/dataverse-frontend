@@ -6,11 +6,12 @@ import { WithLayoutLoading } from '../WithLayoutLoading'
 import { WithAnonymizedView } from './WithAnonymizedView'
 import { DatasetMockRepository } from './DatasetMockRepository'
 import { DatasetMockNoDataRepository } from './DatasetMockNoDataRepository'
+import { WithCitationMetadataBlockInfo } from './WithCitationMetadataBlockInfo'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
   component: Dataset,
-  decorators: [WithI18next],
+  decorators: [WithI18next, WithCitationMetadataBlockInfo],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
@@ -23,21 +24,30 @@ type Story = StoryObj<typeof Dataset>
 export const Default: Story = {
   decorators: [WithLayout],
   render: () => (
-    <Dataset repository={new DatasetMockRepository()} searchParams={{ persistentId: '1' }} />
+    <Dataset
+      repository={new DatasetMockRepository()}
+      searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
+    />
   )
 }
 
 export const Loading: Story = {
   decorators: [WithLayoutLoading],
   render: () => (
-    <Dataset repository={new DatasetMockRepository()} searchParams={{ persistentId: '1' }} />
+    <Dataset
+      repository={new DatasetMockRepository()}
+      searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
+    />
   )
 }
 
 export const DatasetNotFound: Story = {
   decorators: [WithLayout],
   render: () => (
-    <Dataset repository={new DatasetMockNoDataRepository()} searchParams={{ persistentId: '1' }} />
+    <Dataset
+      repository={new DatasetMockNoDataRepository()}
+      searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
+    />
   )
 }
 

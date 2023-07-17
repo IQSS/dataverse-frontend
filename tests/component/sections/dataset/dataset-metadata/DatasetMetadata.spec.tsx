@@ -1,21 +1,32 @@
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { DatasetMetadata } from '../../../../../src/sections/dataset/dataset-metadata/DatasetMetadata'
-import { ANONYMIZED_FIELD_VALUE } from '../../../../../src/dataset/domain/models/Dataset'
+import {
+  ANONYMIZED_FIELD_VALUE,
+  MetadataBlockName
+} from '../../../../../src/dataset/domain/models/Dataset'
 import { AnonymizedContext } from '../../../../../src/sections/dataset/anonymized/AnonymizedContext'
-import { AnonymizedProvider } from '../../../../../src/sections/dataset/anonymized/AnonymizedProvider'
 import {
   isArrayOfObjects,
   metadataFieldValueToString
 } from '../../../../../src/sections/dataset/dataset-metadata/dataset-metadata-fields/DatasetMetadataFieldValue'
+import { MetadataBlockInfoProvider } from '../../../../../src/sections/dataset/metadata-block-info/MetadataBlockProvider'
+import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 
 describe('DatasetMetadata', () => {
   it('renders the metadata blocks sections titles correctly', () => {
-    const mockMetadataBlocks = DatasetMother.create().metadataBlocks
+    const mockDataset = DatasetMother.create()
+    const mockMetadataBlocks = mockDataset.metadataBlocks
 
     cy.viewport(1280, 720)
 
     cy.fixture('metadataTranslations').then((t) => {
-      cy.customMount(<DatasetMetadata metadataBlocks={mockMetadataBlocks} />)
+      cy.customMount(
+        <DatasetMetadata
+          persistentId={mockDataset.persistentId}
+          metadataBlocks={mockMetadataBlocks}
+        />
+      )
 
       mockMetadataBlocks.forEach((metadataBlock) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -26,12 +37,18 @@ describe('DatasetMetadata', () => {
   })
 
   it('renders the metadata blocks title correctly', () => {
-    const mockMetadataBlocks = DatasetMother.create().metadataBlocks
+    const mockDataset = DatasetMother.create()
+    const mockMetadataBlocks = mockDataset.metadataBlocks
 
     cy.viewport(1280, 720)
 
     cy.fixture('metadataTranslations').then((t) => {
-      cy.customMount(<DatasetMetadata metadataBlocks={mockMetadataBlocks} />)
+      cy.customMount(
+        <DatasetMetadata
+          persistentId={mockDataset.persistentId}
+          metadataBlocks={mockMetadataBlocks}
+        />
+      )
 
       mockMetadataBlocks.forEach((metadataBlock, index) => {
         if (index !== 0) {
@@ -51,12 +68,18 @@ describe('DatasetMetadata', () => {
   })
 
   it('renders the metadata blocks description correctly', () => {
-    const mockMetadataBlocks = DatasetMother.create().metadataBlocks
+    const mockDataset = DatasetMother.create()
+    const mockMetadataBlocks = mockDataset.metadataBlocks
 
     cy.viewport(1280, 720)
 
     cy.fixture('metadataTranslations').then((t) => {
-      cy.customMount(<DatasetMetadata metadataBlocks={mockMetadataBlocks} />)
+      cy.customMount(
+        <DatasetMetadata
+          persistentId={mockDataset.persistentId}
+          metadataBlocks={mockMetadataBlocks}
+        />
+      )
 
       mockMetadataBlocks.forEach((metadataBlock, index) => {
         if (index !== 0) {
@@ -81,12 +104,24 @@ describe('DatasetMetadata', () => {
   })
 
   it('renders the metadata blocks values correctly', () => {
-    const mockMetadataBlocks = DatasetMother.create().metadataBlocks
+    const metadataBlockInfoMock = MetadataBlockInfoMother.create()
+    const metadataBlockInfoRepository: MetadataBlockInfoRepository =
+      {} as MetadataBlockInfoRepository
+    metadataBlockInfoRepository.getByName = cy.stub().resolves(metadataBlockInfoMock)
+    const mockDataset = DatasetMother.create()
+    const mockMetadataBlocks = mockDataset.metadataBlocks
 
     cy.viewport(1280, 720)
 
     cy.fixture('metadataTranslations').then((t) => {
-      cy.customMount(<DatasetMetadata metadataBlocks={mockMetadataBlocks} />)
+      cy.customMount(
+        <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
+          <DatasetMetadata
+            persistentId={mockDataset.persistentId}
+            metadataBlocks={mockMetadataBlocks}
+          />
+        </MetadataBlockInfoProvider>
+      )
 
       mockMetadataBlocks.forEach((metadataBlock, index) => {
         if (index !== 0) {
@@ -94,8 +129,12 @@ describe('DatasetMetadata', () => {
           cy.findByRole('button', { name: t[metadataBlock.name].name }).click()
         }
 
-        Object.entries(metadataBlock.fields).forEach(([, metadataFieldValue]) => {
-          const metadataFieldValueString = metadataFieldValueToString(metadataFieldValue)
+        Object.entries(metadataBlock.fields).forEach(([metadataFieldName, metadataFieldValue]) => {
+          const metadataFieldValueString = metadataFieldValueToString(
+            metadataFieldName,
+            metadataFieldValue,
+            metadataBlockInfoMock
+          )
 
           if (isArrayOfObjects(metadataFieldValue)) {
             metadataFieldValueString.split(' \n \n').forEach((fieldValue) => {
@@ -114,19 +153,64 @@ describe('DatasetMetadata', () => {
   })
 
   it('renders the metadata blocks in anonymized view', () => {
-    const mockAnonymizedMetadataBlocks = DatasetMother.createAnonymized().metadataBlocks
+    const setAnonymizedView = () => {}
+    const mockDataset = DatasetMother.createAnonymized()
+    const mockAnonymizedMetadataBlocks = mockDataset.metadataBlocks
 
     cy.customMount(
-      <AnonymizedProvider>
-        <AnonymizedContext.Consumer>
-          {({ setAnonymizedView }) => {
-            setAnonymizedView(true)
-            return <DatasetMetadata metadataBlocks={mockAnonymizedMetadataBlocks} />
-          }}
-        </AnonymizedContext.Consumer>
-      </AnonymizedProvider>
+      <AnonymizedContext.Provider value={{ anonymizedView: true, setAnonymizedView }}>
+        <DatasetMetadata
+          persistentId={mockDataset.persistentId}
+          metadataBlocks={mockAnonymizedMetadataBlocks}
+        />
+      </AnonymizedContext.Provider>
     )
 
     cy.findAllByText(ANONYMIZED_FIELD_VALUE).should('exist')
+  })
+
+  it('shows the Persistent Identifier as part of the Citation Metadata', () => {
+    const mockDataset = DatasetMother.create()
+    const mockMetadataBlocks = mockDataset.metadataBlocks
+
+    cy.viewport(1280, 720)
+
+    cy.fixture('metadataTranslations').then((t) => {
+      cy.customMount(
+        <DatasetMetadata
+          persistentId={mockDataset.persistentId}
+          metadataBlocks={mockMetadataBlocks}
+        />
+      )
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      cy.findByRole('button', { name: t[MetadataBlockName.CITATION].name }).should('exist')
+
+      cy.findByText('Persistent Identifier').should('exist')
+      cy.findByText(mockDataset.persistentId).should('exist')
+    })
+  })
+
+  it('shows a tip if the translation exists', () => {
+    const mockDataset = DatasetMother.create()
+    const mockMetadataBlocks = mockDataset.metadataBlocks
+
+    cy.viewport(1280, 720)
+
+    cy.fixture('metadataTranslations').then((t) => {
+      cy.customMount(
+        <DatasetMetadata
+          persistentId={mockDataset.persistentId}
+          metadataBlocks={mockMetadataBlocks}
+        />
+      )
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      cy.findByRole('button', { name: t[MetadataBlockName.CITATION].name }).should('exist')
+
+      cy.findByText(t[MetadataBlockName.CITATION].datasetField.datasetContact.tip as string).should(
+        'exist'
+      )
+    })
   })
 })
