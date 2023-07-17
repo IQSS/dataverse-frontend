@@ -1,6 +1,10 @@
 {
   "filesLoading": "Files loading spinner symbol",
   "table": {
+    "rowSelection": {
+"fileSelected_one": "{{count}} file is currently selected",
+      "fileSelected_other": "{{count}} files are currently selected"
+    },
     "pagination": {
       "pageSize": "Files per page"
     },
