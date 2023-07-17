@@ -39,10 +39,8 @@ jobs:
 
       - name: Update registry for the containerized development environment
         working-directory: dev-env
-        env:
-          REGISTRY: 'docker.io'
         run: |
-          sed -i~ '/^REGISTRY=/s/=.*/="$REGISTRY"/' .env
+          sed -i~ '/^REGISTRY=/s/=.*/=docker.io/' .env
         shell: bash
 
       - name: Start containers
