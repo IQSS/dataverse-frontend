@@ -40,7 +40,7 @@ services:
   dev_dataverse:
     container_name: 'dev_dataverse'
     hostname: dataverse
-    image: ${REGISTRY}/gdcc/dataverse:${DATAVERSE_BRANCH_NAME}
+    image: ${REGISTRY}/gdcc/dataverse:${DATAVERSE_IMAGE_TAG}
     restart: on-failure
     user: payara
     environment:

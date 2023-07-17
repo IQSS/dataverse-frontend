@@ -3,7 +3,7 @@ name: test
 on: push
 
 env:
-  E2E_DATAVERSE_BRANCH: 9588-datasets-api-extension
+  E2E_DATAVERSE_IMAGE_TAG: unstable
 
 jobs:
   e2e:
@@ -37,9 +37,17 @@ jobs:
           echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
         shell: bash
 
+      - name: Update registry for the containerized development environment
+        working-directory: dev-env
+        env:
+          REGISTRY: 'docker.io'
+        run: |
+          sed -i~ '/^REGISTRY=/s/=.*/="$REGISTRY"/' .env
+        shell: bash
+
       - name: Start containers
         working-directory: dev-env
-        run: ./run-env.sh "$E2E_DATAVERSE_BRANCH"
+        run: ./run-env.sh "$E2E_DATAVERSE_IMAGE_TAG"
 
       - name: Wait for containers to be ready
         run: timeout 300s sh -c 'while ! docker logs dev_dataverse_bootstrap 2>&1 | grep -q "your instance has been configured"; do sleep 2; done'
