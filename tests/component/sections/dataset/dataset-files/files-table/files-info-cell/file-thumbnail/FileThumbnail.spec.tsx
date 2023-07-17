@@ -54,7 +54,7 @@ describe('FileThumbnail', () => {
     const file = FileMother.create({
       access: { restricted: true, canDownload: false },
       thumbnail: 'thumbnail',
-      type: 'image'
+      type: new FileType('image')
     })
 
     cy.customMount(
@@ -90,7 +90,7 @@ describe('FileThumbnail', () => {
 
   it('renders FileThumbnailIcon when thumbnail is not provided with lock icon when restricted with no access', () => {
     const file = FileMother.create({
-      type: 'some-type',
+      type: new FileType('some-type'),
       access: { restricted: true, canDownload: false }
     })
 
@@ -106,7 +106,7 @@ describe('FileThumbnail', () => {
 
   it('renders FileThumbnailIcon when thumbnail is not provided with unlock icon when restricted with access', () => {
     const file = FileMother.create({
-      type: 'some-type',
+      type: new FileType('some-type'),
       access: { restricted: true, canDownload: true }
     })
 

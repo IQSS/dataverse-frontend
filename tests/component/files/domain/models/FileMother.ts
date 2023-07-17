@@ -36,7 +36,7 @@ export class FileMother {
         minorNumber: faker.datatype.number(),
         status: faker.helpers.arrayElement(Object.values(FileStatus))
       },
-      type: thumbnail ? 'image' : fileType,
+      type: new FileType(thumbnail ? 'image' : fileType),
       size: {
         value: faker.datatype.number({ max: 1024, precision: 2 }),
         unit: faker.helpers.arrayElement(Object.values(FileSizeUnit))
@@ -82,7 +82,7 @@ export class FileMother {
       ),
       fileMockedData.name,
       fileMockedData.access,
-      new FileType(fileMockedData.type as string),
+      fileMockedData.type,
       new FileSize(fileMockedData.size.value, fileMockedData.size.unit),
       fileMockedData.date,
       fileMockedData.downloads,
