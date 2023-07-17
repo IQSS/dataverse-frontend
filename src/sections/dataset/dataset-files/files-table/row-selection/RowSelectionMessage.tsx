@@ -24,19 +24,25 @@ export function RowSelectionMessage({
     const rowSelectionAll = createRowSelection(totalFilesCount)
     setRowSelection(rowSelectionAll)
   }
+  const clearSelectionHandler = () => {
+    const rowSelectionNone = createRowSelection(0)
+    setRowSelection(rowSelectionNone)
+  }
 
   if (!showMessage) {
     return <></>
   }
   return (
     <span>
-      {t('table.rowSelection.filesSelected', { count: selectedFilesCount })}.
+      {t('table.rowSelection.filesSelected', { count: selectedFilesCount })}
       {selectedFilesCount < totalFilesCount && (
         <Button variant="link" onClick={selectAllRowsHandler}>
-          {t('table.rowSelection.selectAll', { count: totalFilesCount })}.
+          {t('table.rowSelection.selectAll', { count: totalFilesCount })}
         </Button>
       )}
-      <Button variant="link">Clear selection</Button>
+      <Button variant="link" onClick={clearSelectionHandler}>
+        {t('table.rowSelection.clearSelection')}
+      </Button>
     </span>
   )
 }

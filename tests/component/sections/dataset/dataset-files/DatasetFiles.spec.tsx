@@ -129,8 +129,6 @@ describe('DatasetFiles', () => {
   })
 
   it("selects all rows when the 'Select all' button is clicked", () => {
-    fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(FileMother.createMany(200))
-
     cy.customMount(
       <DatasetFiles
         filesRepository={fileRepository}
@@ -148,5 +146,27 @@ describe('DatasetFiles', () => {
     cy.findByText('200 files are currently selected.').should('exist')
 
     cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).should('not.exist')
+  })
+
+  it('clears the selection when the clear selection button is clicked', () => {
+    cy.customMount(
+      <DatasetFiles
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.get(
+      'body > div > div:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]'
+    ).click()
+
+    cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
+
+    cy.findByText('200 files are currently selected.').should('exist')
+
+    cy.findByRole('button', { name: 'Clear selection.' }).click()
+
+    cy.findByText(/files are currently selected./).should('not.exist')
   })
 })
