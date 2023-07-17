@@ -2,8 +2,9 @@
   "filesLoading": "Files loading spinner symbol",
   "table": {
     "rowSelection": {
-"fileSelected_one": "{{count}} file is currently selected",
-      "fileSelected_other": "{{count}} files are currently selected"
+"filesSelected_one": "{{count}} file is currently selected",
+      "filesSelected_other": "{{count}} files are currently selected",
+      "selectAll": "Select all {{count}} files in this dataset"
     },
     "pagination": {
       "pageSize": "Files per page"

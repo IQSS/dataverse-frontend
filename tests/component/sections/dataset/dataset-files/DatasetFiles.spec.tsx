@@ -2,6 +2,8 @@ import { FileMother } from '../../../files/domain/models/FileMother'
 import { DatasetFiles } from '../../../../../src/sections/dataset/dataset-files/DatasetFiles'
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
 import { FileCriteria, FileSortByOption } from '../../../../../src/files/domain/models/FileCriteria'
+import { createRowSelection } from '../../../../../src/sections/dataset/dataset-files/files-table/useFilesTable'
+import { RowSelectionMessage } from '../../../../../src/sections/dataset/dataset-files/files-table/row-selection/RowSelectionMessage'
 
 const testFiles = FileMother.createMany(200)
 const datasetPersistentId = 'test-dataset-persistent-id'
@@ -124,5 +126,27 @@ describe('DatasetFiles', () => {
 
     cy.findByRole('button', { name: /Sort/ }).should('not.exist')
     cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
+  })
+
+  it("selects all rows when the 'Select all' button is clicked", () => {
+    fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(FileMother.createMany(200))
+
+    cy.customMount(
+      <DatasetFiles
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.get(
+      'body > div > div:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]'
+    ).click()
+
+    cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
+
+    cy.findByText('200 files are currently selected.').should('exist')
+
+    cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).should('not.exist')
   })
 })

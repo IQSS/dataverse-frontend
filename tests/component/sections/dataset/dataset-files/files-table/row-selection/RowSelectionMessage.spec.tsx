@@ -1,14 +1,10 @@
 import { RowSelectionMessage } from '../../../../../../../src/sections/dataset/dataset-files/files-table/row-selection/RowSelectionMessage'
+import { createRowSelection } from '../../../../../../../src/sections/dataset/dataset-files/files-table/useFilesTable'
 
 describe('RowSelectionMessage', () => {
   it('renders the message when there are more than 10 files and some row is selected', () => {
     cy.customMount(
-      <RowSelectionMessage
-        rowSelection={{
-          '1': true
-        }}
-        filesTotalCount={11}
-      />
+      <RowSelectionMessage selectedFilesCount={1} totalFilesCount={11} setRowSelection={() => {}} />
     )
 
     cy.findByText('1 file is currently selected.')
@@ -18,12 +14,7 @@ describe('RowSelectionMessage', () => {
 
   it('does not render the message when there are less than 10 files', () => {
     cy.customMount(
-      <RowSelectionMessage
-        rowSelection={{
-          '1': true
-        }}
-        filesTotalCount={9}
-      />
+      <RowSelectionMessage selectedFilesCount={1} totalFilesCount={9} setRowSelection={() => {}} />
     )
 
     cy.findByText('1 file is currently selected.').should('not.exist')
@@ -32,7 +23,9 @@ describe('RowSelectionMessage', () => {
   })
 
   it('does not render the message when there are more than 10 files but no row is selected', () => {
-    cy.customMount(<RowSelectionMessage rowSelection={{}} filesTotalCount={11} />)
+    cy.customMount(
+      <RowSelectionMessage selectedFilesCount={0} totalFilesCount={11} setRowSelection={() => {}} />
+    )
 
     cy.findByText('1 file is currently selected.').should('not.exist')
     cy.findByRole('button', { name: 'Select all 11 files in this dataset.' }).should('not.exist')
@@ -41,15 +34,25 @@ describe('RowSelectionMessage', () => {
 
   it('renders the plural form of the message when there is more than 1 row selected', () => {
     cy.customMount(
-      <RowSelectionMessage
-        rowSelection={{
-          '1': true,
-          '2': true
-        }}
-        filesTotalCount={11}
-      />
+      <RowSelectionMessage selectedFilesCount={2} totalFilesCount={11} setRowSelection={() => {}} />
     )
 
     cy.findByText('2 files are currently selected.')
+  })
+
+  it("calls setRowSelection when the 'Select all' button is clicked", () => {
+    const setRowSelection = cy.stub().as('setRowSelection')
+
+    cy.customMount(
+      <RowSelectionMessage
+        selectedFilesCount={1}
+        totalFilesCount={11}
+        setRowSelection={setRowSelection}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Select all 11 files in this dataset.' }).click()
+
+    cy.wrap(setRowSelection).should('be.calledWith', createRowSelection(11))
   })
 })

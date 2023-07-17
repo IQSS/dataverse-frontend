@@ -31,7 +31,7 @@ export function FilesTable({
     datasetVersion,
     criteria
   )
-  const { table, setFilesTableData, rowSelection } = useFilesTable()
+  const { table, setFilesTableData, rowSelection, setRowSelection } = useFilesTable()
 
   useEffect(() => {
     setFilesTableData(files)
@@ -43,7 +43,11 @@ export function FilesTable({
 
   return (
     <div>
-      <RowSelectionMessage rowSelection={rowSelection} filesTotalCount={filesTotalCount} />
+      <RowSelectionMessage
+        selectedFilesCount={Object.keys(rowSelection).length}
+        totalFilesCount={filesTotalCount}
+        setRowSelection={setRowSelection}
+      />
       <Table>
         <FilesTableHeader headers={table.getHeaderGroups()} />
         <FilesTableBody rows={table.getRowModel().rows} />

@@ -30,5 +30,15 @@ export function useFilesTable() {
     debugTable: true
   })
 
-  return { table, setFilesTableData, rowSelection }
+  return { table, setFilesTableData, rowSelection, setRowSelection }
+}
+
+export function createRowSelection(numberOfRows: number) {
+  const rowSelection: Record<string, boolean> = {}
+
+  for (let i = 0; i < numberOfRows; i++) {
+    rowSelection[i as unknown as string] = true
+  }
+
+  return rowSelection
 }
