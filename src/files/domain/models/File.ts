@@ -13,6 +13,19 @@ export class FileSize {
   toString(): string {
     return `${this.value} ${this.unit}`
   }
+
+  toBytes(): number {
+    const multiplier = {
+      [FileSizeUnit.BYTES]: 1,
+      [FileSizeUnit.KILOBYTES]: 1024,
+      [FileSizeUnit.MEGABYTES]: 1024 ** 2,
+      [FileSizeUnit.GIGABYTES]: 1024 ** 3,
+      [FileSizeUnit.TERABYTES]: 1024 ** 4,
+      [FileSizeUnit.PETABYTES]: 1024 ** 5
+    }
+
+    return this.value * multiplier[this.unit]
+  }
 }
 
 export interface FileAccess {

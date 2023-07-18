@@ -10,6 +10,7 @@ import { useFilesTable } from './useFilesTable'
 import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
 import { FileRepository } from '../../../../files/domain/repositories/FileRepository'
 import { RowSelectionMessage } from './row-selection/RowSelectionMessage'
+import { ZipDownloadLimitMessage } from './zip-download-limit-message/ZipDownloadLimitMessage'
 
 interface FilesTableProps {
   filesRepository: FileRepository
@@ -47,6 +48,9 @@ export function FilesTable({
         selectedFilesCount={Object.keys(rowSelection).length}
         totalFilesCount={filesTotalCount}
         setRowSelection={setRowSelection}
+      />
+      <ZipDownloadLimitMessage
+        selectedFiles={table.getSelectedRowModel().flatRows.map((row) => row.original)}
       />
       <Table>
         <FilesTableHeader headers={table.getHeaderGroups()} />

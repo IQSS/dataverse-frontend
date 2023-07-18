@@ -3,6 +3,7 @@ import { DatasetFiles } from '../../../../../src/sections/dataset/dataset-files/
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
 import { FileCriteria, FileSortByOption } from '../../../../../src/files/domain/models/FileCriteria'
 import styles from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
+import { FileSize, FileSizeUnit } from '../../../../../src/files/domain/models/File'
 
 const testFiles = FileMother.createMany(200)
 const datasetPersistentId = 'test-dataset-persistent-id'
@@ -185,5 +186,35 @@ describe('DatasetFiles', () => {
       'have.class',
       styles['selected-row']
     )
+  })
+
+  it('renders the zip download limit message when the zip download limit is reached', () => {
+    const testFiles = [
+      FileMother.create({ size: new FileSize(1024, FileSizeUnit.BYTES) }),
+      FileMother.create({ size: new FileSize(2048, FileSizeUnit.BYTES) })
+    ]
+    fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(testFiles)
+
+    cy.customMount(
+      <DatasetFiles
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByText(
+      'The overall size of the files selected (3.0 KB) for download exceeds the zip limit of 500.0 B. Please unselect some files to continue.'
+    ).should('not.exist')
+    cy.get(
+      'body > div > div:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(1) > input[type=checkbox]'
+    ).click()
+    cy.get(
+      'body > div > div:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]'
+    ).click()
+
+    cy.findByText(
+      'The overall size of the files selected (3.0 KB) for download exceeds the zip limit of 500.0 B. Please unselect some files to continue.'
+    ).should('exist')
   })
 })
