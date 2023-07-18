@@ -4,6 +4,9 @@ import { FileRepository } from '../../../../../src/files/domain/repositories/Fil
 import { FileCriteria, FileSortByOption } from '../../../../../src/files/domain/models/FileCriteria'
 import styles from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
 import { FileSize, FileSizeUnit } from '../../../../../src/files/domain/models/File'
+import { SettingsContext } from '../../../../../src/sections/settings/SettingsContext'
+import { SettingMother } from '../../../settings/domain/models/SettingMother'
+import { ZipDownloadLimit } from '../../../../../src/settings/domain/models/ZipDownloadLimit'
 
 const testFiles = FileMother.createMany(200)
 const datasetPersistentId = 'test-dataset-persistent-id'
@@ -194,13 +197,18 @@ describe('DatasetFiles', () => {
       FileMother.create({ size: new FileSize(2048, FileSizeUnit.BYTES) })
     ]
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(testFiles)
+    const getSettingByName = cy
+      .stub()
+      .resolves(SettingMother.createZipDownloadLimit(new ZipDownloadLimit(500, FileSizeUnit.BYTES)))
 
     cy.customMount(
-      <DatasetFiles
-        filesRepository={fileRepository}
-        datasetPersistentId={datasetPersistentId}
-        datasetVersion={datasetVersion}
-      />
+      <SettingsContext.Provider value={{ getSettingByName }}>
+        <DatasetFiles
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      </SettingsContext.Provider>
     )
 
     cy.findByText(

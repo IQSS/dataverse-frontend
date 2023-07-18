@@ -5,11 +5,12 @@ import { DatasetMockData } from '../DatasetMockData'
 import { FileMockRepository } from '../../files/FileMockRepository'
 import { FileMockLoadingRepository } from '../../files/FileMockLoadingRepository'
 import { FileMockNoDataRepository } from '../../files/FileMockNoDataRepository'
+import { WithSettings } from '../../WithSettings'
 
 const meta: Meta<typeof DatasetFiles> = {
   title: 'Sections/Dataset Page/DatasetFiles',
   component: DatasetFiles,
-  decorators: [WithI18next]
+  decorators: [WithI18next, WithSettings]
 }
 
 export default meta

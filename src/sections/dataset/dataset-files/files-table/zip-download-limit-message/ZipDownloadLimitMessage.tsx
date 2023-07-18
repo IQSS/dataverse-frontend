@@ -1,18 +1,35 @@
 import { useTranslation } from 'react-i18next'
 import styles from './ZipLimitMessage.module.scss'
 import { File, FileSizeUnit } from '../../../../../files/domain/models/File'
+import { useSettings } from '../../../../settings/SettingsContext'
+import { SettingName } from '../../../../../settings/domain/models/Setting'
+import { ZipDownloadLimit } from '../../../../../settings/domain/models/ZipDownloadLimit'
+import { useEffect, useState } from 'react'
 
 interface ZipDownloadLimitMessageProps {
   selectedFiles: File[]
 }
 
 const MINIMUM_FILES_TO_SHOW_MESSAGE = 1
-const zipDownloadLimitInBytes = 500
 
 export function ZipDownloadLimitMessage({ selectedFiles }: ZipDownloadLimitMessageProps) {
   const { t } = useTranslation('files')
+  const { getSettingByName } = useSettings()
+  const [zipDownloadLimitInBytes, setZipDownloadLimitInBytes] = useState<number>()
   const selectionTotalSizeInBytes = getFilesTotalSizeInBytes(selectedFiles)
+
+  useEffect(() => {
+    getSettingByName<ZipDownloadLimit>(SettingName.ZIP_DOWNLOAD_LIMIT)
+      .then((zipDownloadLimit) => {
+        setZipDownloadLimitInBytes(zipDownloadLimit.value.toBytes())
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }, [getSettingByName])
+
   const showMessage =
+    zipDownloadLimitInBytes &&
     selectedFiles.length > MINIMUM_FILES_TO_SHOW_MESSAGE &&
     selectionTotalSizeInBytes > zipDownloadLimitInBytes
 
