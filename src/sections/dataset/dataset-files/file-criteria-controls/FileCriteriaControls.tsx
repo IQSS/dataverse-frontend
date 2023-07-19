@@ -10,12 +10,15 @@ interface FileCriteriaInputsProps {
   onCriteriaChange: (criteria: FileCriteria) => void
   filesCountInfo: FilesCountInfo
 }
-
+const MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS = 2
 export function FileCriteriaControls({
   criteria,
   onCriteriaChange,
   filesCountInfo
 }: FileCriteriaInputsProps) {
+  if (filesCountInfo.total < MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS) {
+    return <></>
+  }
   return (
     <Row className={styles['criteria-section']}>
       <Col>

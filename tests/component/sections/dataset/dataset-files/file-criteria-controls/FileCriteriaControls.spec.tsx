@@ -45,6 +45,19 @@ describe('FileCriteriaControls', () => {
     onCriteriaChange = cy.stub().as('onCriteriaChange')
   })
 
+  it('does not render the files criteria inputs when there are less than 2 files', () => {
+    cy.customMount(
+      <FileCriteriaControls
+        criteria={new FileCriteria()}
+        onCriteriaChange={onCriteriaChange}
+        filesCountInfo={FilesCountInfoMother.create({ total: 1 })}
+      />
+    )
+
+    cy.findByRole('button', { name: /Sort/ }).should('not.exist')
+    cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
+  })
+
   it('renders the SortBy input', () => {
     cy.customMount(
       <FileCriteriaControls

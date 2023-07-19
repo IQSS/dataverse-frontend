@@ -6,6 +6,8 @@ import { FileAccessOption, FileCriteria, FileTag } from '../../../files/domain/m
 import { FilesCountInfo } from '../../../files/domain/models/FilesCountInfo'
 import { FileType } from '../../../files/domain/models/File'
 import { FilesSearch } from './files-search/FilesSearch'
+import { useFiles } from './useFiles'
+import { SpinnerSymbol } from './files-table/spinner-symbol/SpinnerSymbol'
 
 interface DatasetFilesProps {
   filesRepository: FileRepository
@@ -13,7 +15,6 @@ interface DatasetFilesProps {
   datasetVersion?: string
 }
 
-const MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS = 2
 const filesCountInfo: FilesCountInfo = {
   total: 200,
   perFileType: [
@@ -42,6 +43,12 @@ export function DatasetFiles({
   datasetVersion
 }: DatasetFilesProps) {
   const [criteria, setCriteria] = useState<FileCriteria>(new FileCriteria())
+  const { files, isLoading } = useFiles(
+    filesRepository,
+    datasetPersistentId,
+    datasetVersion,
+    criteria
+  )
   const handleCriteriaChange = (newCriteria: FileCriteria) => {
     setCriteria(newCriteria)
   }
@@ -49,20 +56,16 @@ export function DatasetFiles({
   return (
     <>
       <FilesSearch filesCountTotal={filesCountInfo.total} />
-      {filesCountInfo.total >= MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS && (
-        <FileCriteriaControls
-          criteria={criteria}
-          onCriteriaChange={handleCriteriaChange}
-          filesCountInfo={filesCountInfo}
-        />
-      )}
-      <FilesTable
-        filesRepository={filesRepository}
-        filesTotalCount={filesCountInfo.total}
-        datasetPersistentId={datasetPersistentId}
-        datasetVersion={datasetVersion}
+      <FileCriteriaControls
         criteria={criteria}
+        onCriteriaChange={handleCriteriaChange}
+        filesCountInfo={filesCountInfo}
       />
+      {isLoading ? (
+        <SpinnerSymbol />
+      ) : (
+        <FilesTable files={files} filesCountTotal={filesCountInfo.total} />
+      )}
     </>
   )
 }

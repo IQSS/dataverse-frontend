@@ -115,22 +115,6 @@ describe('DatasetFiles', () => {
     cy.findByRole('button', { name: 'Filter Type: All' }).should('exist')
   })
 
-  // TODO (filesCountInfo) - Implement getFilesCountInfo in the FileRepository to pass this test
-  it.skip('does not render the files criteria inputs when there are less than 2 files', () => {
-    fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(FileMother.createMany(1))
-
-    cy.customMount(
-      <DatasetFiles
-        filesRepository={fileRepository}
-        datasetPersistentId={datasetPersistentId}
-        datasetVersion={datasetVersion}
-      />
-    )
-
-    cy.findByRole('button', { name: /Sort/ }).should('not.exist')
-    cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
-  })
-
   it("selects all rows when the 'Select all' button is clicked", () => {
     cy.customMount(
       <DatasetFiles
@@ -140,9 +124,7 @@ describe('DatasetFiles', () => {
       />
     )
 
-    cy.get(
-      'body > div > div:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]'
-    ).click()
+    cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
 
     cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
 
@@ -160,9 +142,7 @@ describe('DatasetFiles', () => {
       />
     )
 
-    cy.get(
-      'body > div > div:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]'
-    ).click()
+    cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
 
     cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
 
@@ -181,14 +161,9 @@ describe('DatasetFiles', () => {
         datasetVersion={datasetVersion}
       />
     )
-    cy.get(
-      'body > div > div:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]'
-    ).click()
+    cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
 
-    cy.get('body > div > div:nth-child(2) > table > tbody > tr:nth-child(2)').should(
-      'have.class',
-      styles['selected-row']
-    )
+    cy.get('table > tbody > tr:nth-child(2)').should('have.class', styles['selected-row'])
   })
 
   it('renders the zip download limit message when the zip download limit is reached', () => {
@@ -214,12 +189,8 @@ describe('DatasetFiles', () => {
     cy.findByText(
       'The overall size of the files selected (3.0 KB) for download exceeds the zip limit of 500.0 B. Please unselect some files to continue.'
     ).should('not.exist')
-    cy.get(
-      'body > div > div:nth-child(2) > table > tbody > tr:nth-child(1) > td:nth-child(1) > input[type=checkbox]'
-    ).click()
-    cy.get(
-      'body > div > div:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]'
-    ).click()
+    cy.get('table > tbody > tr:nth-child(1) > td:nth-child(1) > input[type=checkbox]').click()
+    cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
 
     cy.findByText(
       'The overall size of the files selected (3.0 KB) for download exceeds the zip limit of 500.0 B. Please unselect some files to continue.'
