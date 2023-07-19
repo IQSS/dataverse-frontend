@@ -124,7 +124,7 @@ describe('DatasetFiles', () => {
       />
     )
 
-    cy.findByLabelText('Search this dataset').type('test{enter}')
+    cy.findByLabelText('Search').type('test{enter}')
     cy.wrap(fileRepository.getAllByDatasetPersistentId).should(
       'be.calledWith',
       datasetPersistentId,

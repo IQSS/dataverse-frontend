@@ -10,7 +10,7 @@ describe('FilesSearch', () => {
       <FileCriteriaSearchText criteria={defaultCriteria} onCriteriaChange={onCriteriaChange} />
     )
 
-    cy.findByLabelText('Search this dataset').should('exist')
+    cy.findByLabelText('Search').should('exist')
     cy.findByRole('button', { name: 'Submit search' }).should('exist')
   })
 
@@ -21,7 +21,7 @@ describe('FilesSearch', () => {
       <FileCriteriaSearchText criteria={defaultCriteria} onCriteriaChange={onCriteriaChange} />
     )
 
-    cy.findByLabelText('Search this dataset').type('test{enter}')
+    cy.findByLabelText('Search').type('test{enter}')
     cy.wrap(onCriteriaChange).should('be.calledWith', defaultCriteria.withSearchText('test'))
   })
 
@@ -32,7 +32,7 @@ describe('FilesSearch', () => {
       <FileCriteriaSearchText criteria={defaultCriteria} onCriteriaChange={onCriteriaChange} />
     )
 
-    cy.findByLabelText('Search this dataset').type('test')
+    cy.findByLabelText('Search').type('test')
     cy.findByRole('button', { name: 'Submit search' }).click()
     cy.wrap(onCriteriaChange).should('be.calledWith', defaultCriteria.withSearchText('test'))
   })

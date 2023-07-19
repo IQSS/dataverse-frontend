@@ -58,7 +58,7 @@ describe('FileCriteriaForm', () => {
     cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
     cy.findByRole('button', { name: 'Access: All' }).should('not.exist')
     cy.findByRole('button', { name: 'Filter Tag: All' }).should('not.exist')
-    cy.findByLabelText('Search this dataset').should('not.exist')
+    cy.findByLabelText('Search').should('not.exist')
   })
 
   it('renders the SortBy input', () => {
@@ -97,7 +97,7 @@ describe('FileCriteriaForm', () => {
       />
     )
 
-    cy.findByLabelText('Search this dataset').should('exist')
+    cy.findByLabelText('Search').should('exist')
   })
 
   it('saves global criteria when the sort by option changes', () => {
@@ -203,11 +203,11 @@ describe('FileCriteriaForm', () => {
       />
     )
 
-    cy.findByLabelText('Search this dataset').clear().type('new search')
+    cy.findByLabelText('Search').clear().type('new search')
 
     cy.findByRole('button', { name: 'Filter Type: Image' }).should('exist')
     cy.findByRole('button', { name: 'Access: Public' }).should('exist')
     cy.findByRole('button', { name: 'Filter Tag: Document' }).should('exist')
-    cy.findByLabelText('Search this dataset').should('have.value', 'new search')
+    cy.findByLabelText('Search').should('have.value', 'new search')
   })
 })
