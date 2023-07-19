@@ -1,11 +1,10 @@
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
 import { useState } from 'react'
 import { FilesTable } from './files-table/FilesTable'
-import { FileCriteriaControls } from './file-criteria-controls/FileCriteriaControls'
+import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
 import { FileAccessOption, FileCriteria, FileTag } from '../../../files/domain/models/FileCriteria'
 import { FilesCountInfo } from '../../../files/domain/models/FilesCountInfo'
 import { FileType } from '../../../files/domain/models/File'
-import { FilesSearch } from './files-search/FilesSearch'
 import { useFiles } from './useFiles'
 import { SpinnerSymbol } from './files-table/spinner-symbol/SpinnerSymbol'
 
@@ -55,8 +54,7 @@ export function DatasetFiles({
 
   return (
     <>
-      <FilesSearch filesCountTotal={filesCountInfo.total} />
-      <FileCriteriaControls
+      <FileCriteriaForm
         criteria={criteria}
         onCriteriaChange={handleCriteriaChange}
         filesCountInfo={filesCountInfo}

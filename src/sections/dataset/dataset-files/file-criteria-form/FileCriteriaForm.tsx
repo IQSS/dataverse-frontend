@@ -1,9 +1,10 @@
 import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
-import { Col, Row } from 'dataverse-design-system'
+import { Col, Form, Row } from 'dataverse-design-system'
 import styles from './FileCriteriaControls.module.scss'
 import { FileCriteriaSortBy } from './FileCriteriaSortBy'
 import { FileCriteriaFilters } from './FileCriteriaFilters'
 import { FilesCountInfo } from '../../../../files/domain/models/FilesCountInfo'
+import { FileCriteriaSearchText } from './FileCriteriaSearchText'
 
 interface FileCriteriaInputsProps {
   criteria: FileCriteria
@@ -11,7 +12,7 @@ interface FileCriteriaInputsProps {
   filesCountInfo: FilesCountInfo
 }
 const MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS = 2
-export function FileCriteriaControls({
+export function FileCriteriaForm({
   criteria,
   onCriteriaChange,
   filesCountInfo
@@ -20,17 +21,24 @@ export function FileCriteriaControls({
     return <></>
   }
   return (
-    <Row className={styles['criteria-section']}>
-      <Col>
-        <FileCriteriaFilters
-          criteria={criteria}
-          onCriteriaChange={onCriteriaChange}
-          filesCountInfo={filesCountInfo}
-        />
-      </Col>
-      <Col className={styles['sort-container']}>
-        <FileCriteriaSortBy criteria={criteria} onCriteriaChange={onCriteriaChange} />
-      </Col>
-    </Row>
+    <Form>
+      <Row>
+        <Col md={5}>
+          <FileCriteriaSearchText />
+        </Col>
+      </Row>
+      <Row className={styles['criteria-section']}>
+        <Col>
+          <FileCriteriaFilters
+            criteria={criteria}
+            onCriteriaChange={onCriteriaChange}
+            filesCountInfo={filesCountInfo}
+          />
+        </Col>
+        <Col className={styles['sort-container']}>
+          <FileCriteriaSortBy criteria={criteria} onCriteriaChange={onCriteriaChange} />
+        </Col>
+      </Row>
+    </Form>
   )
 }
