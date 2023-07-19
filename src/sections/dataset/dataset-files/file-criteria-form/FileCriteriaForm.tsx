@@ -24,7 +24,7 @@ export function FileCriteriaForm({
     <Form>
       <Row>
         <Col md={5}>
-          <FileCriteriaSearchText />
+          <FileCriteriaSearchText criteria={criteria} onCriteriaChange={onCriteriaChange} />
         </Col>
       </Row>
       <Row className={styles['criteria-section']}>
