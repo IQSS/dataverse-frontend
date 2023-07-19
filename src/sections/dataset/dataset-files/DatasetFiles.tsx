@@ -5,6 +5,7 @@ import { FileCriteriaControls } from './file-criteria-controls/FileCriteriaContr
 import { FileAccessOption, FileCriteria, FileTag } from '../../../files/domain/models/FileCriteria'
 import { FilesCountInfo } from '../../../files/domain/models/FilesCountInfo'
 import { FileType } from '../../../files/domain/models/File'
+import { FilesSearch } from './files-search/FilesSearch'
 
 interface DatasetFilesProps {
   filesRepository: FileRepository
@@ -47,6 +48,7 @@ export function DatasetFiles({
 
   return (
     <>
+      <FilesSearch filesCountTotal={filesCountInfo.total} />
       {filesCountInfo.total >= MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS && (
         <FileCriteriaControls
           criteria={criteria}
