@@ -133,7 +133,7 @@ export const InputWithButton: Story = {
       <Form.Group controlId="basic-form-search">
         <Form.InputGroup>
           <Form.Group.Input type="text" placeholder="Search..." aria-label="Search" />
-          <Button variant="secondary" icon={<Search />} />
+          <Button variant="secondary" icon={<Search />} aria-label="Search submit" />
         </Form.InputGroup>
       </Form.Group>
     </Form>

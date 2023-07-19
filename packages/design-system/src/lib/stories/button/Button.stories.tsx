@@ -125,7 +125,7 @@ export const WithIcon: Story = {
 }
 
 export const IconOnly: Story = {
-  render: () => <Button icon={<Search />} variant="secondary" />
+  render: () => <Button icon={<Search />} variant="secondary" aria-label="Search" />
 }
 
 export const UseCasePrimaryButtonAsCallToAction: Story = {
