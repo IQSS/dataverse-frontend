@@ -49,4 +49,9 @@ describe('Button', () => {
     cy.findByText(clickMeText).click({ force: true })
     cy.wrap(onClick).should('not.be.called')
   })
+
+  it('renders a button with only an icon', () => {
+    cy.mount(<Button icon={IconName.COLLECTION} />)
+    cy.findByRole('img', { name: IconName.COLLECTION }).should('exist')
+  })
 })

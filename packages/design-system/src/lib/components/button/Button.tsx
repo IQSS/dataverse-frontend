@@ -12,7 +12,7 @@ interface ButtonProps {
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void
   icon?: IconName | ReactNode
   withSpacing?: boolean
-  children: ReactNode
+  children?: ReactNode
 }
 
 export function Button({

@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { Form } from '../../components/form/Form'
 import { Col } from '../../components/grid/Col'
 import { Row } from '../../components/grid/Row'
+import { Button } from '../../components/button/Button'
+import { Search } from 'react-bootstrap-icons'
 
 /**
  * ## Description
@@ -116,7 +118,23 @@ export const InputWithPrefix: Story = {
     <Form>
       <Form.Group controlId="basic-form-identifier">
         <Form.Group.Label>Identifier</Form.Group.Label>
-        <Form.Group.Input type="text" placeholder="Identifier" prefix="https://dataverse.org/" />
+        <Form.InputGroup hasVisibleLabel>
+          <Form.InputGroup.Text>https://dataverse.org/</Form.InputGroup.Text>
+          <Form.Group.Input type="text" placeholder="Identifier" aria-label="identifier" />
+        </Form.InputGroup>
+      </Form.Group>
+    </Form>
+  )
+}
+
+export const InputWithButton: Story = {
+  render: () => (
+    <Form>
+      <Form.Group controlId="basic-form-search">
+        <Form.InputGroup>
+          <Form.Group.Input type="text" placeholder="Search..." aria-label="Search" />
+          <Button variant="secondary" icon={<Search />} />
+        </Form.InputGroup>
       </Form.Group>
     </Form>
   )

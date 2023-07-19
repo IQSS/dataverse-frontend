@@ -23,17 +23,6 @@ describe('FormInput', () => {
     cy.findByLabelText('Username').should('have.attr', 'readOnly')
   })
 
-  it('should render with the specified prefix', () => {
-    cy.mount(
-      <FormGroup controlId="username">
-        <FormGroup.Label>Username</FormGroup.Label>
-        <FormGroup.Input prefix="Prefix:" type="text" readOnly />
-      </FormGroup>
-    )
-
-    cy.findByText('Prefix:').should('exist')
-  })
-
   it('should render with the required symbol', () => {
     cy.mount(
       <FormGroup controlId="username" required>
