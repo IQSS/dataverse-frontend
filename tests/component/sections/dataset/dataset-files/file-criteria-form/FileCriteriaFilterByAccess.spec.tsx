@@ -3,7 +3,7 @@ import {
   FileCriteria
 } from '../../../../../../src/files/domain/models/FileCriteria'
 import { FilesCountInfoMother } from '../../../../files/domain/models/FilesCountInfoMother'
-import styles from '../../../../../../src/sections/dataset/dataset-files/file-criteria-form/FileCriteriaControls.module.scss'
+import styles from '../../../../../../src/sections/dataset/dataset-files/file-criteria-form/FileCriteriaForm.module.scss'
 import { FileCriteriaFilterByAccess } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-form/FileCriteriaFilterByAccess'
 
 const defaultCriteria = new FileCriteria()
