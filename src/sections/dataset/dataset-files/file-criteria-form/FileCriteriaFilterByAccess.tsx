@@ -1,7 +1,7 @@
 import { FileAccessOption, FileCriteria } from '../../../../files/domain/models/FileCriteria'
 import { DropdownButton, DropdownButtonItem, DropdownSeparator } from 'dataverse-design-system'
 import { FilesCountInfo } from '../../../../files/domain/models/FilesCountInfo'
-import styles from './FileCriteriaControls.module.scss'
+import styles from './FileCriteriaForm.module.scss'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 

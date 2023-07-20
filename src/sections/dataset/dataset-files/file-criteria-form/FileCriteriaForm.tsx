@@ -1,6 +1,6 @@
 import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
 import { Col, Form, Row } from 'dataverse-design-system'
-import styles from './FileCriteriaControls.module.scss'
+import styles from './FileCriteriaForm.module.scss'
 import { FileCriteriaSortBy } from './FileCriteriaSortBy'
 import { FileCriteriaFilters } from './FileCriteriaFilters'
 import { FilesCountInfo } from '../../../../files/domain/models/FilesCountInfo'
