@@ -6,7 +6,6 @@ import { FileAccessOption, FileCriteria, FileTag } from '../../../files/domain/m
 import { FilesCountInfo } from '../../../files/domain/models/FilesCountInfo'
 import { FileType } from '../../../files/domain/models/File'
 import { useFiles } from './useFiles'
-import { SpinnerSymbol } from './files-table/spinner-symbol/SpinnerSymbol'
 
 interface DatasetFilesProps {
   filesRepository: FileRepository
@@ -59,11 +58,7 @@ export function DatasetFiles({
         onCriteriaChange={handleCriteriaChange}
         filesCountInfo={filesCountInfo}
       />
-      {isLoading ? (
-        <SpinnerSymbol />
-      ) : (
-        <FilesTable files={files} filesCountTotal={filesCountInfo.total} />
-      )}
+      <FilesTable files={files} filesCountTotal={filesCountInfo.total} isLoading={isLoading} />
     </>
   )
 }

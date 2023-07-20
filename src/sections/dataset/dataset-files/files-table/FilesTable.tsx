@@ -8,18 +8,23 @@ import { useFilesTable } from './useFilesTable'
 import { RowSelectionMessage } from './row-selection/RowSelectionMessage'
 import { ZipDownloadLimitMessage } from './zip-download-limit-message/ZipDownloadLimitMessage'
 import { File } from '../../../../files/domain/models/File'
+import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
 
 interface FilesTableProps {
   files: File[]
   filesCountTotal: number
+  isLoading: boolean
 }
-export function FilesTable({ files, filesCountTotal }: FilesTableProps) {
+export function FilesTable({ files, filesCountTotal, isLoading }: FilesTableProps) {
   const { table, setFilesTableData, rowSelection, setRowSelection } = useFilesTable()
 
   useEffect(() => {
     setFilesTableData(files)
   }, [files])
 
+  if (isLoading) {
+    return <SpinnerSymbol />
+  }
   return (
     <div>
       <RowSelectionMessage
