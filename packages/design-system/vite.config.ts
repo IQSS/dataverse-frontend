@@ -20,9 +20,9 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/lib/index.ts'),
-      name: 'dataverse-design-system',
+      name: '@iqss/dataverse-design-system',
       formats: ['es', 'umd'],
-      fileName: (format) => `dataverse-design-system.${format}.js`
+      fileName: (format) => `index.${format}.js`
     },
     rollupOptions: {
       external: ['react', 'react-dom'],

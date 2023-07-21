@@ -1,6 +1,6 @@
 import { DatasetMetadataBlock as DatasetMetadataBlockModel } from '../../../../dataset/domain/models/Dataset'
 import { useTranslation } from 'react-i18next'
-import { Accordion } from 'dataverse-design-system'
+import { Accordion } from '@iqss/dataverse-design-system'
 import { DatasetMetadataFields } from '../dataset-metadata-fields/DatasetMetadataFields'
 
 interface DatasetMetadataBlockProps {

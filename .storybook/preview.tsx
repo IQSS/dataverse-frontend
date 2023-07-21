@@ -1,5 +1,5 @@
 import type { Preview } from '@storybook/react'
-import { ThemeProvider } from 'dataverse-design-system'
+import { ThemeProvider } from '@iqss/dataverse-design-system'
 import { initialize, mswDecorator } from 'msw-storybook-addon'
 
 /*

@@ -1,7 +1,23 @@
 {
-  "name": "dataverse-design-system",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@iqss/dataverse-design-system",
+  "version": "1.0.1",
+  "description": "Dataverse Design System Component Library",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IQSS/dataverse-frontend.git",
+    "directory": "packages/design-system"
+  },
+  "bugs": {
+    "url": "https://github.com/IQSS/dataverse-frontend/issues"
+  },
+  "homepage": "https://github.com/IQSS/dataverse-frontend#readme",
+  "keywords": [
+    "dataverse",
+    "design-system",
+    "react",
+    "component"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -16,38 +32,41 @@
   },
   "dependencies": {
     "@types/react": "^18.0.27",
-    "typescript": "^4.9.5",
-    "vite-plugin-istanbul": "^4.0.1",
     "bootstrap": "5.2.3",
     "react-bootstrap": "^2.7.2",
     "react-bootstrap-icons": "^1.10.3",
-    "sass": "^1.58.1"
+    "sass": "^1.58.1",
+    "typescript": "^4.9.5",
+    "vite-plugin-istanbul": "^4.0.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^3.1.0",
-    "@testing-library/cypress": "^9.0.0",
     "@storybook/react": "^7.0.2",
     "@storybook/test-runner": "0.10.0",
+    "@testing-library/cypress": "^9.0.0",
+    "@vitejs/plugin-react": "^3.1.0",
+    "axe-playwright": "^1.2.3",
+    "chromatic": "^6.17.4",
     "cypress": "^12.5.1",
+    "react": "^18.2.0",
     "vite": "4.1.0",
     "vite-plugin-dts": "^2.3.0",
-    "vite-plugin-libcss": "1.0.6",
-    "react": "^18.2.0",
-    "axe-playwright": "^1.2.3",
-    "chromatic": "^6.17.4"
+    "vite-plugin-libcss": "1.0.6"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
-  "main": "./dist/dataverse-design-system.umd.js",
-  "module": "./dist/dataverse-design-system.es.js",
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/dataverse-design-system.es.js",
-      "require": "./dist/dataverse-design-system.umd.js"
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
     }
   },
-  "readme": "ERROR: No README data found!",
-  "_id": "dataverse-design-system@0.0.0"
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "821b051d0591059bf81e68ea2ca429a4eed1515a"
 }
