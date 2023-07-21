@@ -4,7 +4,7 @@ import App from './App'
 import reportWebVitals from './reportWebVitals'
 import './i18n'
 import { LoadingProvider } from './sections/loading/LoadingProvider'
-import { ThemeProvider } from 'dataverse-design-system'
+import { ThemeProvider } from '@iqss/dataverse-design-system'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(

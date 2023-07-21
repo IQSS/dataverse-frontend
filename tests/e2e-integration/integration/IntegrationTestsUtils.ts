@@ -1,4 +1,4 @@
-import { ApiConfig } from '@IQSS/dataverse-client-javascript/dist/core'
+import { ApiConfig } from '@iqss/dataverse-client-javascript/dist/core'
 import { DataverseApiHelper } from './DataverseApiHelper'
 
 export class IntegrationTestsUtils {

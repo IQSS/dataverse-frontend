@@ -21,6 +21,7 @@ jobs:
         run: |
           cp .npmrc.example .npmrc
           sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
+          sed -i -e 's/<YOUR_NPM_AUTH_TOKEN>/${{ secrets.NPM_AUTH_TOKEN }}/g' .npmrc
 
       - name: Install Dependencies
         run: npm install
@@ -68,6 +69,7 @@ jobs:
         run: |
           cp .npmrc.example .npmrc
           sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
+          sed -i -e 's/<YOUR_NPM_AUTH_TOKEN>/${{ secrets.NPM_AUTH_TOKEN }}/g' .npmrc
 
       - name: Install Dependencies
         run: npm install
@@ -122,6 +124,7 @@ jobs:
         run: |
           cp .npmrc.example .npmrc
           sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
+          sed -i -e 's/<YOUR_NPM_AUTH_TOKEN>/${{ secrets.NPM_AUTH_TOKEN }}/g' .npmrc
 
       - name: Install Dependencies
         run: npm install

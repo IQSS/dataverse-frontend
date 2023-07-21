@@ -11,20 +11,27 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 19
+          node-version: 18
           cache: 'npm'
 
       - name: Create .npmrc
         run: |
           cp .npmrc.example .npmrc
           sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
+          sed -i -e 's/<YOUR_NPM_AUTH_TOKEN>/${{ secrets.NPM_AUTH_TOKEN }}/g' .npmrc
 
       - name: Install Dependencies
-        run: rm package-lock.json && npm install
+        run: npm install
 
       - name: Build Dataverse UI Library
         working-directory: packages/design-system
         run: npm run build
 
-      - name: Lint
-        run: npm run lint
+      - name: ESLint
+        run: npm run lint:eslint
+
+      - name: Stylelint
+        run: npm run lint:stylelint
+
+      - name: Prettier
+        run: npm run lint:prettier
