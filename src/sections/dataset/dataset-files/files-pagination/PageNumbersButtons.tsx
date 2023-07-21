@@ -23,7 +23,7 @@ export function PageNumbersButtons({
           <Pagination.Item
             key={pageNumber}
             pageNumber={pageNumber}
-            onClick={() => goToPage(pageIndex)}
+            onClick={() => goToPage(pageIndex + 1)}
             active={selectedPageIndex === pageIndex}
           />
         )

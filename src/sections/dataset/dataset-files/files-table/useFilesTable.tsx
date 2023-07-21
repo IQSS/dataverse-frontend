@@ -12,12 +12,11 @@ export interface RowSelection {
   [key: string]: boolean
 }
 
-export function useFilesTable() {
-  const [data, setFilesTableData] = useState<File[]>(() => [])
+export function useFilesTable(files: File[]) {
   const [rowSelection, setRowSelection] = useState({})
 
   const table = useReactTable({
-    data,
+    data: files,
     columns,
     state: {
       rowSelection
@@ -30,7 +29,7 @@ export function useFilesTable() {
     debugTable: true
   })
 
-  return { table, setFilesTableData, rowSelection, setRowSelection }
+  return { table, rowSelection, setRowSelection }
 }
 
 export function createRowSelection(numberOfRows: number) {

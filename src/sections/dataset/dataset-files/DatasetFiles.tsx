@@ -6,6 +6,8 @@ import { FileAccessOption, FileCriteria, FileTag } from '../../../files/domain/m
 import { FilesCountInfo } from '../../../files/domain/models/FilesCountInfo'
 import { FileType } from '../../../files/domain/models/File'
 import { useFiles } from './useFiles'
+import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
+import { FilesPagination } from './files-pagination/FilesPagination'
 
 interface DatasetFilesProps {
   filesRepository: FileRepository
@@ -35,11 +37,14 @@ const filesCountInfo: FilesCountInfo = {
   ]
 } // TODO (filesCountInfo) - Get from use case, pending to be discussed if this is going to have its own use case or not
 
+const filePaginationInfo: FilePaginationInfo = new FilePaginationInfo(1, 10, 200)
+
 export function DatasetFiles({
   filesRepository,
   datasetPersistentId,
   datasetVersion
 }: DatasetFilesProps) {
+  const [paginationInfo, setPaginationInfo] = useState<FilePaginationInfo>(filePaginationInfo)
   const [criteria, setCriteria] = useState<FileCriteria>(new FileCriteria())
   const { files, isLoading } = useFiles(
     filesRepository,
@@ -47,18 +52,19 @@ export function DatasetFiles({
     datasetVersion,
     criteria
   )
-  const handleCriteriaChange = (newCriteria: FileCriteria) => {
-    setCriteria(newCriteria)
-  }
 
   return (
     <>
       <FileCriteriaForm
         criteria={criteria}
-        onCriteriaChange={handleCriteriaChange}
+        onCriteriaChange={setCriteria}
         filesCountInfo={filesCountInfo}
       />
       <FilesTable files={files} filesCountTotal={filesCountInfo.total} isLoading={isLoading} />
+      <FilesPagination
+        paginationInfoInitial={paginationInfo}
+        onPaginationInfoChange={setPaginationInfo}
+      />
     </>
   )
 }
