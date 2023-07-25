@@ -1,7 +1,7 @@
 legacy-peer-deps=true
 
 # design-system registry
-//registry.npmjs.org/:_authToken=YOUR_NPM_AUTH_TOKEN>
+//registry.npmjs.org/:_authToken=<YOUR_NPM_AUTH_TOKEN>
 @iqss:registry=https://registry.npmjs.org/
 
 # js-dataverse registry
