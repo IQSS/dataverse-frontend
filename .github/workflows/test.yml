@@ -2,41 +2,58 @@ name: test
 
 on: push
 
+env:
+  E2E_DATAVERSE_IMAGE_TAG: unstable
+
 jobs:
-  # Temporarily commented out, until we set up a suitable e2e environment for running GitHub actions
-  # e2e:
-  #   runs-on: ubuntu-latest
-  #   environment: e2e
+  e2e:
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - uses: actions/checkout@v3
+    steps:
+      - uses: actions/checkout@v3
 
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 18
-  #         cache: 'npm'
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
 
-  #     - name: Install Dependencies
-  #       run:  npm install
+      - name: Create .npmrc
+        run: |
+          cp .npmrc.example .npmrc
+          sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
+          sed -i -e 's/<YOUR_NPM_AUTH_TOKEN>/${{ secrets.NPM_AUTH_TOKEN }}/g' .npmrc
 
-  #     - name: Build Dataverse Design System
-  #       working-directory: packages/design-system
-  #       run: npm run build
+      - name: Install Dependencies
+        run: npm install
 
-  #     - name: Create and populate .env file
-  #       env:
-  #         DATAVERSE_BACKEND_URL: ${{ secrets.DATAVERSE_BACKEND_URL }}
-  #       run: |
-  #         touch .env
-  #         echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
-  #       shell: bash
+      - name: Build Dataverse Design System
+        working-directory: packages/design-system
+        run: npm run build
 
-  #     - name: Cypress run
-  #       uses: cypress-io/github-action@v5
-  #       with:
-  #         build: npm run build
-  #         start: npm run preview
-  #         wait-on: 'npx wait-on --timeout 60000 http://localhost:5173'
+      - name: Create and populate .env file
+        env:
+          DATAVERSE_BACKEND_URL: 'http://localhost:8000'
+        run: |
+          touch .env
+          echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
+        shell: bash
+
+      - name: Update registry for the containerized development environment
+        working-directory: dev-env
+        run: |
+          sed -i~ '/^REGISTRY=/s/=.*/=docker.io/' .env
+        shell: bash
+
+      - name: Start containers
+        working-directory: dev-env
+        run: ./run-env.sh "$E2E_DATAVERSE_IMAGE_TAG"
+
+      - name: Wait for containers to be ready
+        run: timeout 300s sh -c 'while ! docker logs dev_dataverse_bootstrap 2>&1 | grep -q "your instance has been configured"; do sleep 2; done'
+
+      - name: Run e2e tests
+        run: npm run test:e2e
+
   component:
     runs-on: ubuntu-latest
 
@@ -52,6 +69,7 @@ jobs:
         run: |
           cp .npmrc.example .npmrc
           sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
+          sed -i -e 's/<YOUR_NPM_AUTH_TOKEN>/${{ secrets.NPM_AUTH_TOKEN }}/g' .npmrc
 
       - name: Install Dependencies
         run: npm install
@@ -106,6 +124,7 @@ jobs:
         run: |
           cp .npmrc.example .npmrc
           sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
+          sed -i -e 's/<YOUR_NPM_AUTH_TOKEN>/${{ secrets.NPM_AUTH_TOKEN }}/g' .npmrc
 
       - name: Install Dependencies
         run: npm install

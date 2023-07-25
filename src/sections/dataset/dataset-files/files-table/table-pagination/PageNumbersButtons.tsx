@@ -1,4 +1,4 @@
-import { Pagination } from 'dataverse-design-system'
+import { Pagination } from '@iqss/dataverse-design-system'
 
 interface PageNumbersButtonsProps {
   startPageIndex: number

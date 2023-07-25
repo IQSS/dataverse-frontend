@@ -1,5 +1,5 @@
 import { DatasetMetadataFieldValue as DatasetMetadataFieldValueModel } from '../../../../dataset/domain/models/Dataset'
-import { Col, Row } from 'dataverse-design-system'
+import { Col, Row } from '@iqss/dataverse-design-system'
 import { MetadataBlockName } from '../../../../dataset/domain/models/Dataset'
 import { DatasetMetadataFieldValue } from './DatasetMetadataFieldValue'
 import { DatasetMetadataFieldTitle } from './DatasetMetadataFieldTitle'

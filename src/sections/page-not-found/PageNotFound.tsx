@@ -1,4 +1,4 @@
-import { Alert } from 'dataverse-design-system'
+import { Alert } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 
 export function PageNotFound() {
