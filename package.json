@@ -160,7 +160,7 @@
     "vite": "4.1.0",
     "vite-plugin-css-injected-by-js": "^3.1.1",
     "vite-plugin-dts": "^2.3.0",
-    "vite-plugin-libcss": "^1.0.6"
+    "vite-plugin-libcss": "1.0.6"
   },
   "msw": {
     "workerDirectory": "public"
