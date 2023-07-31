@@ -1,19 +1,21 @@
+import { OverlayTrigger as OverlayTriggerBS, Tooltip as TooltipBS } from 'react-bootstrap'
 import { Placement } from 'react-bootstrap/types'
-import { QuestionIcon } from './QuestionIcon'
-import styles from './Tooltip.module.scss'
-import { OverlayTrigger } from './overlay-trigger/OverlayTrigger'
+import { ReactElement } from 'react'
 
-export interface TooltipProps {
+interface OverlayTriggerProps {
   placement: Placement
-  message: string
+  overlay: string | ReactElement
+  children: ReactElement
+  maxWidth?: number
 }
 
-export function Tooltip({ placement, message }: TooltipProps) {
+export function Tooltip({ placement, overlay, children, maxWidth = 200 }: OverlayTriggerProps) {
   return (
-    <OverlayTrigger placement={placement} message={message}>
-      <span role="img" aria-label="tooltip icon" className={styles.tooltip}>
-        <QuestionIcon></QuestionIcon>
-      </span>
-    </OverlayTrigger>
+    <OverlayTriggerBS
+      key={placement}
+      placement={placement}
+      overlay={<TooltipBS style={{ maxWidth: maxWidth }}>{overlay}</TooltipBS>}>
+      <div style={{ display: 'inline-block' }}>{children}</div>
+    </OverlayTriggerBS>
   )
 }

@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react'
 import { Form as FormBS } from 'react-bootstrap'
 import { RequiredInputSymbol } from '../../required-input-symbol/RequiredInputSymbol'
-import { Tooltip } from '../../../tooltip/Tooltip'
+import { QuestionMarkTooltip } from '../../../tooltip/question-mark-tooltip/QuestionMarkTooltip'
 
 interface FormLabelProps {
   required?: boolean
@@ -21,7 +21,7 @@ export function FormLabel({
     <FormBS.Label {...layoutProps}>
       {children}
       {required && <RequiredInputSymbol />}{' '}
-      {message && <Tooltip placement="right" message={message}></Tooltip>}
+      {message && <QuestionMarkTooltip placement="right" message={message}></QuestionMarkTooltip>}
     </FormBS.Label>
   )
 }

@@ -90,7 +90,7 @@ describe('DatasetMetadata', () => {
         Object.entries(metadataBlock.fields).forEach(([metadataFieldName]) => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           cy.findAllByText(t[metadataBlock.name].datasetField[metadataFieldName].name as string)
-            .siblings('span')
+            .siblings('div')
             .trigger('mouseover')
 
           const fieldDescription = cy.findAllByText(

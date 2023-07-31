@@ -1,19 +1,21 @@
-import { Tooltip, TooltipProps } from '../../../src/lib/components/tooltip/Tooltip'
+import { Tooltip } from '../../../src/lib/components/tooltip/Tooltip'
 
-describe('Tooltip', () => {
-  const defaultProps: TooltipProps = {
-    placement: 'bottom',
-    message: 'This is a tooltip message'
-  }
+describe('OverlayTrigger', () => {
+  it('renders tooltip when children is hovered', () => {
+    const message = 'Test tooltip message'
+    const placement = 'top'
 
-  it('renders without crashing', () => {
-    cy.mount(<Tooltip {...defaultProps} />)
-  })
-  it('renders the tooltip on mouseOver', () => {
-    cy.mount(<Tooltip {...defaultProps} />)
-    cy.findByRole('img').should('be.visible')
-    cy.findByRole('img').trigger('mouseover')
-    cy.findByRole('tooltip').should('be.visible')
-    cy.findByText(defaultProps.message).should('be.visible')
+    cy.mount(
+      <Tooltip placement={placement} overlay={message}>
+        <button>Hover me</button>
+      </Tooltip>
+    )
+
+    const hoverButton = cy.findByText('Hover me')
+    hoverButton.focus()
+    hoverButton.click()
+
+    cy.findByText(message).should('exist')
+    cy.findByRole('tooltip').should('exist')
   })
 })

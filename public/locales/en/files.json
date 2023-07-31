@@ -1,0 +1,40 @@
+{
+  "filesLoading": "Files loading spinner symbol",
+  "table": {
+    "pagination": {
+      "pageSize": "Files per page"
+    },
+    "tabularData": {
+      "variables": "Variables",
+      "observations": "Observations"
+    },
+    "embargoDate": {
+      "embargoedWillBeUntil": "Draft: will be embargoed until",
+      "embargoedUntil": "Embargoed until",
+      "embargoedWasThrough": "Was embargoed until"
+    },
+    "downloads": "Downloads",
+    "date": {
+      "metadataReleased": "Metadata Released",
+      "published": "Published",
+      "deposited": "Deposited"
+    },
+    "fileAccess": {
+      "title": "File Access",
+      "restricted": {
+        "tooltip": "Restricted",
+        "icon": "Restricted File Icon"
+      },
+      "restrictedWithAccess": {
+        "tooltip": "Restricted with Access Granted",
+        "icon": "Restricted with access Icon"
+      }
+    },
+    "copyToClipboard": {
+      "clickToCopy": "Click to copy",
+      "correctlyCopiedIcon": "Correctly copied to clipboard icon",
+      "copyToClipboardIcon": "Copy to clipboard icon"
+    },
+    "noFiles": "There are no files in this dataset."
+  }
+}

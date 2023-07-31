@@ -26,10 +26,10 @@ export function DatasetSkeleton() {
           </Row>
           <Tabs defaultActiveKey="files">
             <Tabs.Tab eventKey="files" title="Files">
-              <Skeleton height="300px" style={{ marginTop: 20 }} />
+              <Skeleton height="1000px" style={{ marginTop: 20 }} />
             </Tabs.Tab>
             <Tabs.Tab eventKey="metadata" title="Metadata">
-              <Skeleton height="300px" style={{ marginTop: 20 }} />
+              <Skeleton height="1000px" style={{ marginTop: 20 }} />
             </Tabs.Tab>
           </Tabs>
         </div>

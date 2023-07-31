@@ -1,5 +1,5 @@
-import colorVariables from '../assets/styles/design-tokens/colors.module.scss'
-import typographyVariables from '../assets/styles/design-tokens/typography.module.scss'
+import colorVariables from '../../assets/styles/design-tokens/colors.module.scss'
+import typographyVariables from '../../assets/styles/design-tokens/typography.module.scss'
 
 export interface BaseThemeType {
   themeKey: string

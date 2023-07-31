@@ -1,0 +1,19 @@
+@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
+
+.container {
+  cursor: pointer;
+}
+
+%icon {
+  margin-left: 5px;
+}
+
+.clipboard {
+  @extend %icon;
+}
+
+.check {
+  @extend %icon;
+
+  color: $dv-success-color;
+}

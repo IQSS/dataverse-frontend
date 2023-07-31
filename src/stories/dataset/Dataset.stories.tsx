@@ -6,6 +6,7 @@ import { WithLayoutLoading } from '../WithLayoutLoading'
 import { WithAnonymizedView } from './WithAnonymizedView'
 import { DatasetMockRepository } from './DatasetMockRepository'
 import { DatasetMockNoDataRepository } from './DatasetMockNoDataRepository'
+import { FileMockRepository } from '../files/FileMockRepository'
 import { WithCitationMetadataBlockInfo } from './WithCitationMetadataBlockInfo'
 
 const meta: Meta<typeof Dataset> = {
@@ -25,7 +26,8 @@ export const Default: Story = {
   decorators: [WithLayout],
   render: () => (
     <Dataset
-      repository={new DatasetMockRepository()}
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
       searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
     />
   )
@@ -35,7 +37,8 @@ export const Loading: Story = {
   decorators: [WithLayoutLoading],
   render: () => (
     <Dataset
-      repository={new DatasetMockRepository()}
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
       searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
     />
   )
@@ -45,7 +48,8 @@ export const DatasetNotFound: Story = {
   decorators: [WithLayout],
   render: () => (
     <Dataset
-      repository={new DatasetMockNoDataRepository()}
+      datasetRepository={new DatasetMockNoDataRepository()}
+      fileRepository={new FileMockRepository()}
       searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
     />
   )
@@ -55,7 +59,8 @@ export const DatasetAnonymizedView: Story = {
   decorators: [WithLayout, WithAnonymizedView],
   render: () => (
     <Dataset
-      repository={new DatasetMockRepository()}
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
       searchParams={{ privateUrlToken: '123456' }}
     />
   )

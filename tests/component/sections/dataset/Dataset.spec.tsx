@@ -5,9 +5,11 @@ import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvide
 import { useLoading } from '../../../../src/sections/loading/LoadingContext'
 import { ANONYMIZED_FIELD_VALUE } from '../../../../src/dataset/domain/models/Dataset'
 import { AnonymizedContext } from '../../../../src/sections/dataset/anonymized/AnonymizedContext'
+import { FileRepository } from '../../../../src/files/domain/repositories/FileRepository'
 
 describe('Dataset', () => {
   const testDataset = DatasetMother.create()
+  const fileRepository: FileRepository = {} as FileRepository
 
   it('renders skeleton while loading', () => {
     const datasetRepository: DatasetRepository = {} as DatasetRepository
@@ -27,7 +29,8 @@ describe('Dataset', () => {
     cy.customMount(
       <LoadingProvider>
         <Dataset
-          repository={datasetRepository}
+          datasetRepository={datasetRepository}
+          fileRepository={fileRepository}
           searchParams={{ persistentId: testDataset.persistentId }}
         />
         <TestComponent />
@@ -47,7 +50,11 @@ describe('Dataset', () => {
 
     cy.customMount(
       <LoadingProvider>
-        <Dataset repository={datasetRepository} searchParams={{ persistentId: 'wrong-id' }} />
+        <Dataset
+          datasetRepository={datasetRepository}
+          fileRepository={fileRepository}
+          searchParams={{ persistentId: 'wrong-id' }}
+        />
       </LoadingProvider>
     )
 
@@ -60,7 +67,11 @@ describe('Dataset', () => {
 
     cy.customMount(
       <LoadingProvider>
-        <Dataset repository={datasetRepository} searchParams={{}} />
+        <Dataset
+          datasetRepository={datasetRepository}
+          fileRepository={fileRepository}
+          searchParams={{}}
+        />
       </LoadingProvider>
     )
 
@@ -74,7 +85,8 @@ describe('Dataset', () => {
     cy.customMount(
       <LoadingProvider>
         <Dataset
-          repository={datasetRepository}
+          datasetRepository={datasetRepository}
+          fileRepository={fileRepository}
           searchParams={{ persistentId: testDataset.persistentId }}
         />
       </LoadingProvider>
@@ -96,7 +108,8 @@ describe('Dataset', () => {
     cy.customMount(
       <LoadingProvider>
         <Dataset
-          repository={datasetRepository}
+          datasetRepository={datasetRepository}
+          fileRepository={fileRepository}
           searchParams={{ persistentId: testDataset.persistentId }}
         />
       </LoadingProvider>
@@ -123,7 +136,8 @@ describe('Dataset', () => {
       <LoadingProvider>
         <AnonymizedContext.Provider value={{ anonymizedView: true, setAnonymizedView }}>
           <Dataset
-            repository={datasetRepository}
+            datasetRepository={datasetRepository}
+            fileRepository={fileRepository}
             searchParams={{ privateUrlToken: privateUrlToken }}
           />
         </AnonymizedContext.Provider>

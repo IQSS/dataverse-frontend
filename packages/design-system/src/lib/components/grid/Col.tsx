@@ -12,10 +12,10 @@ type ColSpec =
 
 export interface ColProps extends React.HTMLAttributes<HTMLElement> {
   children: ReactNode
-  xs?: ColSpec
-  sm?: ColSpec
-  md?: ColSpec
-  lg?: ColSpec
+  xs?: ColSpec | 'auto'
+  sm?: ColSpec | 'auto'
+  md?: ColSpec | 'auto'
+  lg?: ColSpec | 'auto'
 }
 
 export function Col({ children, ...props }: ColProps) {
