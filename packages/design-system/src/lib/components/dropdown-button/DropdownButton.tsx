@@ -1,8 +1,9 @@
 import { DropdownButton as DropdownButtonBS } from 'react-bootstrap'
 import { ReactNode } from 'react'
 import styles from './DropdownButton.module.scss'
-import { Icon } from '../Icon.enum'
+import { IconName } from '../icon/IconName'
 import { ButtonGroup } from '../button-group/ButtonGroup'
+import { Icon } from '../icon/Icon'
 
 type DropdownButtonVariant = 'primary' | 'secondary'
 
@@ -10,9 +11,10 @@ interface DropdownButtonProps {
   id: string
   title: string
   variant?: DropdownButtonVariant
-  icon?: Icon
+  icon?: IconName | ReactNode
   withSpacing?: boolean
   asButtonGroup?: boolean
+  onSelect?: (eventKey: string | null) => void
   children: ReactNode
 }
 
@@ -23,22 +25,22 @@ export function DropdownButton({
   icon,
   withSpacing,
   asButtonGroup,
+  onSelect,
   children
 }: DropdownButtonProps) {
-  const spacingClass = withSpacing ? styles.spacing : ''
-
   return (
     <DropdownButtonBS
-      className={`${spacingClass} ${styles.border}`}
+      className={withSpacing ? styles.spacing : ''}
       id={id}
       title={
         <>
-          {icon && <span className={`${styles.icon} ${icon}`} role="img" aria-label={icon}></span>}
+          {typeof icon === 'string' ? <Icon name={icon} /> : icon}
           {title}
         </>
       }
       variant={variant}
-      as={asButtonGroup ? ButtonGroup : undefined}>
+      as={asButtonGroup ? ButtonGroup : undefined}
+      onSelect={onSelect}>
       {children}
     </DropdownButtonBS>
   )

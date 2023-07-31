@@ -1,0 +1,5 @@
+@import "src/lib/assets/styles/design-tokens/colors.module";
+
+.border > button {
+  border: 1px solid $dv-button-border-color;
+}

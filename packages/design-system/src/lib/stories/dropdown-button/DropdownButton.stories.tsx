@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { DropdownButtonItem } from '../../components/dropdown-button/dropdown-button-item/DropdownButtonItem'
 import { DropdownButton } from '../../components/dropdown-button/DropdownButton'
-import { Icon } from '../../components/Icon.enum'
+import { IconName } from '../../components/icon/IconName'
 import { CanvasFixedHeight } from '../CanvasFixedHeight'
 
 /**
@@ -17,10 +17,6 @@ import { CanvasFixedHeight } from '../CanvasFixedHeight'
  *
  * ### Dos
  * - Use the dropdown as a navigation tool to goto a href related to the dropdown title
- *
- * ### Don'ts
- *
- * - Use the dropdown as a select input
  *
  * ## Theme variables
  *
@@ -112,7 +108,7 @@ export const WithIcon: Story = {
         title="Dropdown Button"
         id="dropdown-1"
         variant="primary"
-        icon={Icon.COLLECTION}>
+        icon={IconName.COLLECTION}>
         <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
         <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
         <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
@@ -131,6 +127,24 @@ export const UseCaseNavigation: Story = {
       <DropdownButton withSpacing title="Edit" id="dropdown-navigation" variant="primary">
         <DropdownButtonItem href="/users/edit">Users</DropdownButtonItem>
         <DropdownButtonItem href="/products/edit">Products</DropdownButtonItem>
+      </DropdownButton>
+    </CanvasFixedHeight>
+  )
+}
+
+export const UseCaseSelect: Story = {
+  name: 'Example use case: Select',
+  render: () => (
+    <CanvasFixedHeight height={150}>
+      <DropdownButton
+        withSpacing
+        title="Select"
+        id="dropdown-select"
+        variant="secondary"
+        onSelect={() => {}}>
+        <DropdownButtonItem eventKey="option-1">Option 1</DropdownButtonItem>
+        <DropdownButtonItem eventKey="option-2">Option 2</DropdownButtonItem>
+        <DropdownButtonItem eventKey="option-3">Option 3</DropdownButtonItem>
       </DropdownButton>
     </CanvasFixedHeight>
   )

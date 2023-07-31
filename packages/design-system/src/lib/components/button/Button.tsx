@@ -1,7 +1,8 @@
 import { MouseEvent, ReactNode } from 'react'
 import styles from './Button.module.scss'
 import { Button as ButtonBS } from 'react-bootstrap'
-import { Icon } from '../Icon.enum'
+import { IconName } from '../icon/IconName'
+import { Icon } from '../icon/Icon'
 
 type ButtonVariant = 'primary' | 'secondary' | 'link'
 
@@ -9,7 +10,7 @@ interface ButtonProps {
   variant?: ButtonVariant
   disabled?: boolean
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void
-  icon?: Icon
+  icon?: IconName | ReactNode
   withSpacing?: boolean
   children: ReactNode
 }
@@ -22,17 +23,14 @@ export function Button({
   withSpacing,
   children
 }: ButtonProps) {
-  const spacingClass = withSpacing ? styles.spacing : ''
-  const borderClass = variant != 'link' ? styles.border : ''
-
   return (
     <ButtonBS
-      className={`${spacingClass} ${borderClass}`}
+      className={withSpacing ? styles.spacing : ''}
       variant={variant}
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
       aria-disabled={disabled}>
-      {icon && <span className={`${styles.icon} ${icon}`} role="img" aria-label={icon}></span>}
+      {typeof icon === 'string' ? <Icon name={icon} /> : icon}
       {children}
     </ButtonBS>
   )
