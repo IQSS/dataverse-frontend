@@ -1,4 +1,4 @@
-import { Col, Row, Table } from 'dataverse-design-system'
+import { Col, Row, Table } from '@iqss/dataverse-design-system'
 import { Table as TableModel } from '@tanstack/react-table'
 import { FilesTableHeader } from './FilesTableHeader'
 import { FilesTableBody } from './FilesTableBody'

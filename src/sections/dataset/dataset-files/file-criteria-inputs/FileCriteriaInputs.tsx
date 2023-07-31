@@ -1,5 +1,5 @@
 import { FileCriteria, FileSortByOption } from '../../../../files/domain/models/FileCriteria'
-import { Col, DropdownButton, DropdownButtonItem, Row } from 'dataverse-design-system'
+import { Col, DropdownButton, DropdownButtonItem, Row } from '@iqss/dataverse-design-system'
 import styles from './FileCriteriaInputs.module.scss'
 import { ArrowDownUp } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
