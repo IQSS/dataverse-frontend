@@ -180,6 +180,19 @@ It is important that the remote instance is correctly pre-configured, with the P
 
 A base path for the frontend application can be established on the remote server by setting the corresponding field in the workflow inputs. This mechanism prevents conflicts between the frontend application and any pre-existing deployed application running on Payara, which can potentially be a Dataverse backend. This way, only the routes with the base path included will redirect to the frontend application.
 
+#### Beta Testing Environment
+
+To make the SPA Frontend accesible and testable by people interested in the project, there is a remote beta testing environment that includes the latest changes developed both for the frontend application and the Dataverse backend application (develop branches).
+
+This environment follows the "all-in-one" solution described above, where both applications coexist on a Payara server.
+
+Environment updates are carried out automatically through GitHub actions, present both in this repository and in the Dataverse backend repository, which deploy the develop branches when any change is pushed to them.
+
+The environment is accessible through the following URLs:
+
+- SPA: http://ec2-3-210-184-82.compute-1.amazonaws.com/spa
+- JSF: http://ec2-3-210-184-82.compute-1.amazonaws.com
+
 ## Changes from the Style Guide
 
 The design system and frontend in this repo are inspired by the Dataverse Project [Style Guide](https://guides.dataverse.org/en/latest/style/index.html), but the following changes have been made, especially for accessibility.
