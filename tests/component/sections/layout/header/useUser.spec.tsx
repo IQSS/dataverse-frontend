@@ -1,7 +1,7 @@
 import { useUser } from '../../../../../src/sections/layout/header/useUser'
 import { UserMother } from '../../../users/domain/models/UserMother'
 import { UserRepository } from '../../../../../src/users/domain/repositories/UserRepository'
-import { Button } from 'dataverse-design-system'
+import { Button } from '@iqss/dataverse-design-system'
 
 const testUser = UserMother.create()
 const userRepository: UserRepository = {} as UserRepository

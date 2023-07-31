@@ -15,7 +15,7 @@
 
 // Import commands.js using ES2015 syntax:
 import '../../tests/support/commands'
-import { ApiConfig } from '@IQSS/dataverse-client-javascript/dist/core'
+import { ApiConfig } from '@iqss/dataverse-client-javascript/dist/core'
 
 const VITE_DATAVERSE_BACKEND_URL = (import.meta.env.VITE_DATAVERSE_BACKEND_URL as string) ?? ''
 ApiConfig.init(`${VITE_DATAVERSE_BACKEND_URL}/api/v1`)

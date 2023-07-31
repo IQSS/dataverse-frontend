@@ -1,6 +1,6 @@
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { useDataset } from './useDataset'
-import { Tabs, Col, Row } from 'dataverse-design-system'
+import { Tabs, Col, Row } from '@iqss/dataverse-design-system'
 import styles from './Dataset.module.scss'
 import { DatasetLabels } from './dataset-labels/DatasetLabels'
 import { useLoading } from '../loading/LoadingContext'

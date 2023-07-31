@@ -8,7 +8,7 @@ import {
   Dataset as JSDataset,
   getPrivateUrlDataset,
   getPrivateUrlDatasetCitation
-} from '@IQSS/dataverse-client-javascript'
+} from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 
 export class DatasetJSDataverseRepository implements DatasetRepository {

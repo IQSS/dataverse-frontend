@@ -4,8 +4,8 @@ import {
   DatasetMetadataBlock as JSDatasetMetadataBlock,
   DatasetMetadataFields as JSDatasetMetadataFields,
   DatasetVersionInfo as JSDatasetVersionInfo
-} from '@IQSS/dataverse-client-javascript'
-import { DatasetVersionState as JSDatasetVersionState } from '@IQSS/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
+} from '@iqss/dataverse-client-javascript'
+import { DatasetVersionState as JSDatasetVersionState } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
 import {
   Dataset,
   DatasetStatus,

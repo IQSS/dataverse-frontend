@@ -1,4 +1,4 @@
-import { Col, Row, Table } from 'dataverse-design-system'
+import { Col, Row, Table } from '@iqss/dataverse-design-system'
 import { FilesTableHeader } from './FilesTableHeader'
 import { FilesTableBody } from './FilesTableBody'
 import { TablePagination } from './table-pagination/TablePagination'
