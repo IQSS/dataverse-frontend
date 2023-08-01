@@ -31,27 +31,6 @@ describe('FilesTable', () => {
     cy.findByLabelText('Files loading spinner symbol').should('exist')
   })
 
-  it('renders the files table with the correct header on a page different than the first one ', () => {
-    cy.customMount(
-      <FilesTable files={testFiles} filesCountTotal={filesCountTotal} isLoading={false} />
-    )
-
-    cy.findByRole('button', { name: '6' }).click()
-
-    cy.findByRole('columnheader', { name: '51 to 60 of 200 Files' }).should('exist')
-  })
-
-  it('renders the files table with the correct header with a different page size ', () => {
-    cy.customMount(
-      <FilesTable files={testFiles} filesCountTotal={filesCountTotal} isLoading={false} />
-    )
-
-    cy.findByLabelText('Files per page').select('50')
-    cy.findByRole('button', { name: '3' }).click()
-
-    cy.findByRole('columnheader', { name: '101 to 150 of 200 Files' }).should('exist')
-  })
-
   it('renders the no files message when there are no files', () => {
     cy.customMount(<FilesTable files={[]} filesCountTotal={filesCountTotal} isLoading={false} />)
 

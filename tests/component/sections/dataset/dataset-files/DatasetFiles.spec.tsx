@@ -32,6 +32,35 @@ describe('DatasetFiles', () => {
     cy.findByRole('columnheader', { name: /Files/ }).should('exist')
   })
 
+  it('renders the files table with the correct header on a page different than the first one ', () => {
+    cy.customMount(
+      <DatasetFiles
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByRole('button', { name: '6' }).click()
+
+    cy.findByRole('columnheader', { name: '51 to 60 of 200 Files' }).should('exist')
+  })
+
+  it('renders the files table with the correct header with a different page size ', () => {
+    cy.customMount(
+      <DatasetFiles
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByLabelText('Files per page').select('50')
+    cy.findByRole('button', { name: '3' }).click()
+
+    cy.findByRole('columnheader', { name: '101 to 150 of 200 Files' }).should('exist')
+  })
+
   it('calls the useFiles hook with the correct parameters', () => {
     cy.customMount(
       <DatasetFiles
