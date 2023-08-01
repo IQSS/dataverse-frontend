@@ -2,19 +2,22 @@ import { FileMother } from '../../../files/domain/models/FileMother'
 import { DatasetFiles } from '../../../../../src/sections/dataset/dataset-files/DatasetFiles'
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
 import { FileCriteria, FileSortByOption } from '../../../../../src/files/domain/models/FileCriteria'
-import styles from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
+import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
 import { FileSize, FileSizeUnit } from '../../../../../src/files/domain/models/File'
-import { SettingsContext } from '../../../../../src/sections/settings/SettingsContext'
-import { SettingMother } from '../../../settings/domain/models/SettingMother'
 import { ZipDownloadLimit } from '../../../../../src/settings/domain/models/ZipDownloadLimit'
+import { SettingMother } from '../../../settings/domain/models/SettingMother'
+import { SettingsContext } from '../../../../../src/sections/settings/SettingsContext'
+import styles from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
 
 const testFiles = FileMother.createMany(200)
 const datasetPersistentId = 'test-dataset-persistent-id'
 const datasetVersion = 'test-dataset-version'
 const fileRepository: FileRepository = {} as FileRepository
+const testFilesCountInfo = FilesCountInfoMother.create({ total: 200 })
 describe('DatasetFiles', () => {
   beforeEach(() => {
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(testFiles)
+    fileRepository.getCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
   })
 
   it('renders the files table', () => {
@@ -66,6 +69,9 @@ describe('DatasetFiles', () => {
 
   it('renders the no files message when there are no files', () => {
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves([])
+    fileRepository.getCountInfoByDatasetPersistentId = cy
+      .stub()
+      .resolves(FilesCountInfoMother.createEmpty())
 
     cy.customMount(
       <DatasetFiles
@@ -75,6 +81,10 @@ describe('DatasetFiles', () => {
       />
     )
 
+    cy.findByRole('button', { name: /Sort/ }).should('not.exist')
+    cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'Access: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'Filter Tag: All' }).should('not.exist')
     cy.findByText('There are no files in this dataset.').should('exist')
   })
 

@@ -1,4 +1,4 @@
-import { Row, Col } from 'dataverse-design-system'
+import { Row, Col } from '@iqss/dataverse-design-system'
 import { DatasetLicense as LicenseModel } from '../../../dataset/domain/models/Dataset'
 import { useTranslation } from 'react-i18next'
 

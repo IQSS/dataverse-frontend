@@ -1,25 +1,26 @@
-import { Col, Row, Table } from 'dataverse-design-system'
+import { Col, Row, Table } from '@iqss/dataverse-design-system'
 import { FilesTableHeader } from './FilesTableHeader'
 import { FilesTableBody } from './FilesTableBody'
 import { TablePagination } from './table-pagination/TablePagination'
 import styles from './FilesTable.module.scss'
-import { useEffect } from 'react'
 import { useFilesTable } from './useFilesTable'
+import { File } from '../../../../files/domain/models/File'
 import { RowSelectionMessage } from './row-selection/RowSelectionMessage'
 import { ZipDownloadLimitMessage } from './zip-download-limit-message/ZipDownloadLimitMessage'
-import { File } from '../../../../files/domain/models/File'
+import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
 
 interface FilesTableProps {
   files: File[]
+  isLoading: boolean
   filesCountTotal: number
 }
-export function FilesTable({ files, filesCountTotal }: FilesTableProps) {
-  const { table, setFilesTableData, rowSelection, setRowSelection } = useFilesTable()
 
-  useEffect(() => {
-    setFilesTableData(files)
-  }, [files])
+export function FilesTable({ files, isLoading, filesCountTotal }: FilesTableProps) {
+  const { table, rowSelection, setRowSelection } = useFilesTable(files)
 
+  if (isLoading) {
+    return <SpinnerSymbol />
+  }
   return (
     <div>
       <RowSelectionMessage

@@ -1,4 +1,4 @@
-import { Pagination } from 'dataverse-design-system'
+import { Pagination } from '@iqss/dataverse-design-system'
 import { PageNumbersButtonsWithEllipsis } from './PageNumbersButtonsWithEllipsis'
 import { PageSizeSelector } from './PageSizeSelector'
 import styles from './TablePagination.module.scss'

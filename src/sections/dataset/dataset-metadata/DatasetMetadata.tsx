@@ -1,4 +1,4 @@
-import { Accordion } from 'dataverse-design-system'
+import { Accordion } from '@iqss/dataverse-design-system'
 import {
   DatasetMetadataBlock as DatasetMetadataBlockModel,
   MetadataBlockName

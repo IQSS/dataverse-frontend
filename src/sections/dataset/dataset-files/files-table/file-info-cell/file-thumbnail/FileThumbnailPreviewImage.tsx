@@ -1,5 +1,5 @@
 import styles from './FileThumbnail.module.scss'
-import { Tooltip } from 'dataverse-design-system'
+import { Tooltip } from '@iqss/dataverse-design-system'
 
 interface FileThumbnailPreviewImageProps {
   thumbnail: string

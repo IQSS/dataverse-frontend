@@ -1,5 +1,5 @@
 import styles from './FileThumbnail.module.scss'
-import { IconName } from 'dataverse-design-system'
+import { IconName } from '@iqss/dataverse-design-system'
 import { FileType } from '../../../../../../files/domain/models/File'
 
 const TYPE_TO_ICON: Record<string, IconName> = {
