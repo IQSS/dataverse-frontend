@@ -46,15 +46,19 @@ describe('FileCriteriaControls', () => {
   })
 
   it('renders the SortBy input', () => {
+    const filesCountInfo = FilesCountInfoMother.createOnlyTotal()
     cy.customMount(
       <FileCriteriaControls
         criteria={new FileCriteria()}
         onCriteriaChange={onCriteriaChange}
-        filesCountInfo={FilesCountInfoMother.create()}
+        filesCountInfo={filesCountInfo}
       />
     )
 
     cy.findByRole('button', { name: /Sort/ }).should('exist')
+    cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'Access: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'Filter Tag: All' }).should('not.exist')
   })
 
   it('renders the Filters input', () => {
@@ -66,6 +70,7 @@ describe('FileCriteriaControls', () => {
       />
     )
 
+    cy.findByRole('button', { name: /Sort/ }).should('exist')
     cy.findByRole('button', { name: 'Filter Type: All' }).should('exist')
     cy.findByText('Filter by').should('exist')
   })
