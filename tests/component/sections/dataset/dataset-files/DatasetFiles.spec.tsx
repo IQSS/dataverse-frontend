@@ -1,14 +1,18 @@
 import { FileMother } from '../../../files/domain/models/FileMother'
 import { DatasetFiles } from '../../../../../src/sections/dataset/dataset-files/DatasetFiles'
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
+import { FileCriteria, FileSortByOption } from '../../../../../src/files/domain/models/FileCriteria'
+import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
 
 const testFiles = FileMother.createMany(200)
 const datasetPersistentId = 'test-dataset-persistent-id'
 const datasetVersion = 'test-dataset-version'
 const fileRepository: FileRepository = {} as FileRepository
+const testFilesCountInfo = FilesCountInfoMother.create({ total: 200 })
 describe('DatasetFiles', () => {
   beforeEach(() => {
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(testFiles)
+    fileRepository.getCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
   })
 
   it('renders the files table', () => {
@@ -60,6 +64,9 @@ describe('DatasetFiles', () => {
 
   it('renders the no files message when there are no files', () => {
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves([])
+    fileRepository.getCountInfoByDatasetPersistentId = cy
+      .stub()
+      .resolves(FilesCountInfoMother.createEmpty())
 
     cy.customMount(
       <DatasetFiles
@@ -69,6 +76,10 @@ describe('DatasetFiles', () => {
       />
     )
 
+    cy.findByRole('button', { name: /Sort/ }).should('not.exist')
+    cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'Access: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'Filter Tag: All' }).should('not.exist')
     cy.findByText('There are no files in this dataset.').should('exist')
   })
 
@@ -103,21 +114,9 @@ describe('DatasetFiles', () => {
       'be.calledWith',
       datasetPersistentId,
       datasetVersion,
-      { sortBy: 'name_az' }
-    )
-  })
-
-  it('does not render the files criteria inputs when there are no files', () => {
-    fileRepository.getAllByDatasetPersistentId = cy.stub().resolves([])
-
-    cy.customMount(
-      <DatasetFiles
-        filesRepository={fileRepository}
-        datasetPersistentId={datasetPersistentId}
-        datasetVersion={datasetVersion}
-      />
+      new FileCriteria().withSortBy(FileSortByOption.NAME_AZ)
     )
 
-    cy.findByRole('button', { name: /Sort/ }).should('not.exist')
+    cy.findByRole('button', { name: 'Filter Type: All' }).should('exist')
   })
 })

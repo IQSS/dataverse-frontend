@@ -1,15 +1,24 @@
 import { Col, Row, Table } from '@iqss/dataverse-design-system'
-import { Table as TableModel } from '@tanstack/react-table'
 import { FilesTableHeader } from './FilesTableHeader'
 import { FilesTableBody } from './FilesTableBody'
 import { TablePagination } from './table-pagination/TablePagination'
-import { File } from '../../../../files/domain/models/File'
 import styles from './FilesTable.module.scss'
+import { useFilesTable } from './useFilesTable'
+import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
+import { File } from '../../../../files/domain/models/File'
 
 interface FilesTableProps {
-  table: TableModel<File>
+  files: File[]
+  isLoading: boolean
 }
-export function FilesTable({ table }: FilesTableProps) {
+
+export function FilesTable({ files, isLoading }: FilesTableProps) {
+  const { table } = useFilesTable(files)
+
+  if (isLoading) {
+    return <SpinnerSymbol />
+  }
+
   return (
     <div>
       <Table>

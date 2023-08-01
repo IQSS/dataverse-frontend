@@ -1,11 +1,9 @@
-import { useFilesTable } from './files-table/useFilesTable'
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
-import { useFiles } from './useFiles'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { FilesTable } from './files-table/FilesTable'
-import { SpinnerSymbol } from './files-table/spinner-symbol/SpinnerSymbol'
-import { FileCriteriaInputs } from './file-criteria-inputs/FileCriteriaInputs'
+import { FileCriteriaControls } from './file-criteria-controls/FileCriteriaControls'
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
+import { useFiles } from './useFiles'
 
 interface DatasetFilesProps {
   filesRepository: FileRepository
@@ -18,30 +16,25 @@ export function DatasetFiles({
   datasetPersistentId,
   datasetVersion
 }: DatasetFilesProps) {
-  const [criteria, setCriteria] = useState<FileCriteria>()
-  const { files, isLoading } = useFiles(
+  const [criteria, setCriteria] = useState<FileCriteria>(new FileCriteria())
+  const { files, isLoading, filesCountInfo } = useFiles(
     filesRepository,
     datasetPersistentId,
     datasetVersion,
     criteria
   )
-  const { table, setFilesTableData } = useFilesTable()
   const handleCriteriaChange = (newCriteria: FileCriteria) => {
-    setCriteria((criteria) => ({ ...criteria, ...newCriteria }))
-  }
-
-  useEffect(() => {
-    setFilesTableData(files)
-  }, [files])
-
-  if (isLoading) {
-    return <SpinnerSymbol />
+    setCriteria(newCriteria)
   }
 
   return (
     <>
-      {files.length !== 0 && <FileCriteriaInputs onCriteriaChange={handleCriteriaChange} />}
-      <FilesTable table={table} />
+      <FileCriteriaControls
+        criteria={criteria}
+        onCriteriaChange={handleCriteriaChange}
+        filesCountInfo={filesCountInfo}
+      />
+      <FilesTable files={files} isLoading={isLoading} />
     </>
   )
 }

@@ -3,6 +3,8 @@ import { FileRepository } from '../../../files/domain/repositories/FileRepositor
 import { File } from '../../../files/domain/models/File'
 import { getFilesByDatasetPersistentId } from '../../../files/domain/useCases/getFilesByDatasetPersistentId'
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
+import { FilesCountInfo } from '../../../files/domain/models/FilesCountInfo'
+import { getFilesCountInfoByDatasetPersistentId } from '../../../files/domain/useCases/getFilesCountInfoByDatasetPersistentId'
 
 export function useFiles(
   filesRepository: FileRepository,
@@ -12,6 +14,12 @@ export function useFiles(
 ) {
   const [files, setFiles] = useState<File[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [filesCountInfo, setFilesCountInfo] = useState<FilesCountInfo>({
+    total: 0,
+    perFileType: [],
+    perAccess: [],
+    perFileTag: []
+  })
 
   useEffect(() => {
     setIsLoading(true)
@@ -24,10 +32,21 @@ export function useFiles(
         console.error('There was an error getting the files', error)
         setIsLoading(false)
       })
-  }, [filesRepository, datasetPersistentId, criteria])
+  }, [filesRepository, datasetPersistentId, datasetVersion, criteria])
+
+  useEffect(() => {
+    getFilesCountInfoByDatasetPersistentId(filesRepository, datasetPersistentId, datasetVersion)
+      .then((filesCountInfo: FilesCountInfo) => {
+        setFilesCountInfo(filesCountInfo)
+      })
+      .catch((error) => {
+        console.error('There was an error getting the files count info', error)
+      })
+  }, [filesRepository, datasetPersistentId, datasetVersion])
 
   return {
     files,
-    isLoading
+    isLoading,
+    filesCountInfo
   }
 }

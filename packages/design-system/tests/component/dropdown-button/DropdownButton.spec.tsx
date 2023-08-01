@@ -3,6 +3,7 @@ import { IconName } from '../../../src/lib/components/icon/IconName'
 import styles from '../../../src/lib/components/dropdown-button/DropdownButton.module.scss'
 import { ArrowClockwise } from 'react-bootstrap-icons'
 import DropdownItem from 'react-bootstrap/DropdownItem'
+import { DropdownSeparator } from '../../../src/lib'
 
 const titleText = 'My Dropdown Button'
 
@@ -95,5 +96,19 @@ describe('DropdownButton', () => {
     cy.findByText('Item 1').click()
 
     cy.wrap(onSelect).should('be.calledWith', '1')
+  })
+
+  it('renders with separator', () => {
+    cy.mount(
+      <DropdownButton id="dropdown-button" title={titleText}>
+        <DropdownItem eventKey="1">Item 1</DropdownItem>
+        <DropdownItem eventKey="2">Item 2</DropdownItem>
+        <DropdownSeparator />
+        <DropdownItem eventKey="3">Item 3</DropdownItem>
+      </DropdownButton>
+    )
+    cy.findByText(titleText).click()
+
+    cy.findByRole('separator').should('exist')
   })
 })

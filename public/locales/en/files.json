@@ -49,6 +49,25 @@
         "size": "Size",
         "type": "Type"
       }
+    },
+    "filters": {
+      "title": "Filter by"
+    },
+    "filterByType": {
+      "title": "Filter Type"
+    },
+    "filterByTag": {
+      "title": "Filter Tag"
+    },
+    "filterByAccess": {
+      "title": "Access",
+      "options": {
+        "all": "All",
+        "public": "Public",
+        "restricted": "Restricted",
+        "embargoed_public": "Embargoed then Public",
+        "embargoed_restricted": "Embargoed then Restricted"
+      }
     }
   }
 }

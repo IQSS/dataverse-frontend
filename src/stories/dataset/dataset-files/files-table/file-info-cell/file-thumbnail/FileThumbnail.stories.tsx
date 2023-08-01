@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker'
 import { FileThumbnail } from '../../../../../../sections/dataset/dataset-files/files-table/file-info-cell/file-thumbnail/FileThumbnail'
 import { WithI18next } from '../../../../../WithI18next'
 import { FileMother } from '../../../../../../../tests/component/files/domain/models/FileMother'
+import { FileType } from '../../../../../../files/domain/models/File'
 
 const meta: Meta<typeof FileThumbnail> = {
   title: 'Sections/Dataset Page/DatasetFiles/FilesTable/FileInfoCell/FileThumbnail',
@@ -16,7 +17,7 @@ type Story = StoryObj<typeof FileThumbnail>
 export const WithIcon: Story = {
   render: () => {
     const file = FileMother.create({
-      type: 'some-type',
+      type: new FileType('some-type'),
       access: { restricted: false, canDownload: true },
       thumbnail: undefined
     })

@@ -1,11 +1,12 @@
 import { FileThumbnail } from '../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info-cell/file-thumbnail/FileThumbnail'
 import { FileMother } from '../../../../../../files/domain/models/FileMother'
+import { FileType } from '../../../../../../../../src/files/domain/models/File'
 
 describe('FileThumbnail', () => {
   it('renders FileThumbnailPreviewImage when thumbnail is provided', () => {
     const file = FileMother.create({
       access: { restricted: false, canDownload: true },
-      thumbnail: 'thumbnail'
+      thumbnail: 'thumbnail?'
     })
 
     cy.customMount(
@@ -53,7 +54,7 @@ describe('FileThumbnail', () => {
     const file = FileMother.create({
       access: { restricted: true, canDownload: false },
       thumbnail: 'thumbnail',
-      type: 'image'
+      type: new FileType('image')
     })
 
     cy.customMount(
@@ -75,7 +76,7 @@ describe('FileThumbnail', () => {
 
   it('renders FileThumbnailIcon when thumbnail is not provided', () => {
     const file = FileMother.create({
-      type: 'some-type',
+      type: new FileType('some-type'),
       access: { restricted: false, canDownload: true }
     })
 
@@ -89,7 +90,7 @@ describe('FileThumbnail', () => {
 
   it('renders FileThumbnailIcon when thumbnail is not provided with lock icon when restricted with no access', () => {
     const file = FileMother.create({
-      type: 'some-type',
+      type: new FileType('some-type'),
       access: { restricted: true, canDownload: false }
     })
 
@@ -105,7 +106,7 @@ describe('FileThumbnail', () => {
 
   it('renders FileThumbnailIcon when thumbnail is not provided with unlock icon when restricted with access', () => {
     const file = FileMother.create({
-      type: 'some-type',
+      type: new FileType('some-type'),
       access: { restricted: true, canDownload: true }
     })
 
