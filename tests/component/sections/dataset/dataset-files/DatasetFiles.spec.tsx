@@ -109,20 +109,4 @@ describe('DatasetFiles', () => {
 
     cy.findByRole('button', { name: 'Filter Type: All' }).should('exist')
   })
-
-  // TODO (filesCountInfo) - Implement getFilesCountInfo in the FileRepository to pass this test
-  it.skip('does not render the files criteria inputs when there are less than 2 files', () => {
-    fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(FileMother.createMany(1))
-
-    cy.customMount(
-      <DatasetFiles
-        filesRepository={fileRepository}
-        datasetPersistentId={datasetPersistentId}
-        datasetVersion={datasetVersion}
-      />
-    )
-
-    cy.findByRole('button', { name: /Sort/ }).should('not.exist')
-    cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
-  })
 })

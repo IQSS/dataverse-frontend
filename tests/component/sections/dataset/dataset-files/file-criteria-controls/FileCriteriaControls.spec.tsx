@@ -157,4 +157,21 @@ describe('FileCriteriaControls', () => {
     cy.findByRole('button', { name: 'Access: Public' }).should('exist')
     cy.findByRole('button', { name: 'Filter Tag: Data' }).should('exist')
   })
+
+  it('does not render the files criteria inputs when there are less than 2 files', () => {
+    const filesCountInfo = FilesCountInfoMother.create({ total: 1 })
+    const criteria = new FileCriteria()
+    cy.customMount(
+      <FileCriteriaControls
+        criteria={criteria}
+        onCriteriaChange={onCriteriaChange}
+        filesCountInfo={filesCountInfo}
+      />
+    )
+
+    cy.findByRole('button', { name: /Sort/ }).should('not.exist')
+    cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'Access: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'Filter Tag: All' }).should('not.exist')
+  })
 })

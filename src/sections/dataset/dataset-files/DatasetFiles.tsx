@@ -13,7 +13,6 @@ interface DatasetFilesProps {
   datasetVersion?: string
 }
 
-const MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS = 2
 const filesCountInfo: FilesCountInfo = {
   total: 222,
   perFileType: [
@@ -54,13 +53,11 @@ export function DatasetFiles({
 
   return (
     <>
-      {filesCountInfo.total >= MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS && (
-        <FileCriteriaControls
-          criteria={criteria}
-          onCriteriaChange={handleCriteriaChange}
-          filesCountInfo={filesCountInfo}
-        />
-      )}
+      <FileCriteriaControls
+        criteria={criteria}
+        onCriteriaChange={handleCriteriaChange}
+        filesCountInfo={filesCountInfo}
+      />
       <FilesTable files={files} isLoading={isLoading} />
     </>
   )
