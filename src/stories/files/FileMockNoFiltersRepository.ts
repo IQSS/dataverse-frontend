@@ -13,12 +13,12 @@ export class FileMockNoFiltersRepository implements FileRepository {
       }, 1000)
     })
   }
-  // eslint-disable-next-line unused-imports/no-unused-vars
   getCountInfoByDatasetPersistentId(
+    // eslint-disable-next-line unused-imports/no-unused-vars
     persistentId: string,
+    // eslint-disable-next-line unused-imports/no-unused-vars
     version?: string
   ): Promise<FilesCountInfo> {
-    // TODO - implement using js-dataverse
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FilesCountInfoMother.createOnlyTotal())
