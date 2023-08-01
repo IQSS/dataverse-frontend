@@ -1,42 +1,22 @@
-import { Col, Row, Table } from 'dataverse-design-system'
+import { Col, Row, Table } from '@iqss/dataverse-design-system'
 import { FilesTableHeader } from './FilesTableHeader'
 import { FilesTableBody } from './FilesTableBody'
 import { TablePagination } from './table-pagination/TablePagination'
 import styles from './FilesTable.module.scss'
-import { useEffect } from 'react'
-import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
-import { useFiles } from '../useFiles'
 import { useFilesTable } from './useFilesTable'
 import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
-import { FileRepository } from '../../../../files/domain/repositories/FileRepository'
+import { File } from '../../../../files/domain/models/File'
 import { RowSelectionMessage } from './row-selection/RowSelectionMessage'
 import { ZipDownloadLimitMessage } from './zip-download-limit-message/ZipDownloadLimitMessage'
 
 interface FilesTableProps {
-  filesRepository: FileRepository
+  files: File[]
+  isLoading: boolean
   filesTotalCount: number
-  datasetPersistentId: string
-  datasetVersion?: string
-  criteria?: FileCriteria
 }
-export function FilesTable({
-  filesRepository,
-  filesTotalCount,
-  datasetPersistentId,
-  datasetVersion,
-  criteria
-}: FilesTableProps) {
-  const { files, isLoading } = useFiles(
-    filesRepository,
-    datasetPersistentId,
-    datasetVersion,
-    criteria
-  )
-  const { table, setFilesTableData, rowSelection, setRowSelection } = useFilesTable()
 
-  useEffect(() => {
-    setFilesTableData(files)
-  }, [files])
+export function FilesTable({ files, isLoading, filesTotalCount }: FilesTableProps) {
+  const { table, rowSelection, setRowSelection } = useFilesTable(files)
 
   if (isLoading) {
     return <SpinnerSymbol />

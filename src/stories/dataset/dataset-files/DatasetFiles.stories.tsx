@@ -6,6 +6,7 @@ import { FileMockRepository } from '../../files/FileMockRepository'
 import { FileMockLoadingRepository } from '../../files/FileMockLoadingRepository'
 import { FileMockNoDataRepository } from '../../files/FileMockNoDataRepository'
 import { WithSettings } from '../../WithSettings'
+import { FileMockNoFiltersRepository } from '../../files/FileMockNoFiltersRepository'
 
 const meta: Meta<typeof DatasetFiles> = {
   title: 'Sections/Dataset Page/DatasetFiles',
@@ -48,13 +49,12 @@ export const NoFiles: Story = {
   )
 }
 
-// TODO (filesCountInfo) - Implement use case for no filters, pending to be discussed
-// export const NoFilters: Story = {
-//   render: () => (
-//     <DatasetFiles
-//       filesRepository={new FileMockNoFiltersRepository()}
-//       datasetPersistentId={testDataset.persistentId}
-//       datasetVersion={testDataset.version.toString()}
-//     />
-//   )
-// }
+export const NoFilters: Story = {
+  render: () => (
+    <DatasetFiles
+      filesRepository={new FileMockNoFiltersRepository()}
+      datasetPersistentId={testDataset.persistentId}
+      datasetVersion={testDataset.version.toString()}
+    />
+  )
+}

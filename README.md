@@ -86,12 +86,12 @@ There is an Nginx reverse proxy container on top of the frontend and backend con
 Inside the `dev-env` folder, run the following command:
 
 ```
-./run-env.sh <dataverse_branch_name>
+./run-env.sh <dataverse_image_tag>
 ```
 
-As the script argument, add the name of the Dataverse backend branch you want to deploy.
+As the script argument, add the name of the Dataverse image tag you want to deploy.
 
-Note that both the branch and the associated tag in the docker registry must to be pre pushed, otherwise the script will fail.
+Note that the image tag in the docker registry must to be pre pushed, otherwise the script will fail.
 
 If you are running the script for the first time, it may take a while, since `npm install` has to install all the dependencies. This can also happen if you added new dependencies to package.json.
 

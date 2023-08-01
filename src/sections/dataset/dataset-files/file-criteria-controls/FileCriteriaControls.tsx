@@ -1,5 +1,5 @@
 import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
-import { Col, Row } from 'dataverse-design-system'
+import { Col, Row } from '@iqss/dataverse-design-system'
 import styles from './FileCriteriaControls.module.scss'
 import { FileCriteriaSortBy } from './FileCriteriaSortBy'
 import { FileCriteriaFilters } from './FileCriteriaFilters'
@@ -11,11 +11,17 @@ interface FileCriteriaInputsProps {
   filesCountInfo: FilesCountInfo
 }
 
+const MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS = 2
+
 export function FileCriteriaControls({
   criteria,
   onCriteriaChange,
   filesCountInfo
 }: FileCriteriaInputsProps) {
+  if (filesCountInfo.total < MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS) {
+    return <></>
+  }
+
   return (
     <Row className={styles['criteria-section']}>
       <Col>

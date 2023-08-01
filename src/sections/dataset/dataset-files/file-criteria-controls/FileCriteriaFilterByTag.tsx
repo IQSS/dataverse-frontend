@@ -1,5 +1,9 @@
 import { FileCriteria, FileTag } from '../../../../files/domain/models/FileCriteria'
-import { DropdownButton, DropdownButtonItem, DropdownSeparator } from 'dataverse-design-system'
+import {
+  DropdownButton,
+  DropdownButtonItem,
+  DropdownSeparator
+} from '@iqss/dataverse-design-system'
 import { FilesCountInfo } from '../../../../files/domain/models/FilesCountInfo'
 import styles from './FileCriteriaControls.module.scss'
 import { useState } from 'react'

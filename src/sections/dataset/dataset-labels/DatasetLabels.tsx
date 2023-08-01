@@ -1,4 +1,4 @@
-import { Badge } from 'dataverse-design-system'
+import { Badge } from '@iqss/dataverse-design-system'
 import { DatasetLabel } from '../../../dataset/domain/models/Dataset'
 import styles from './DatasetLabels.module.scss'
 import { DatasetLabelSemanticMeaning } from '../../../dataset/domain/models/Dataset'
