@@ -6,14 +6,17 @@ import {
   FileCriteria,
   FileSortByOption
 } from '../../../../../src/files/domain/models/FileCriteria'
+import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
 
 const testFiles = FileMother.createMany(200)
 const datasetPersistentId = 'test-dataset-persistent-id'
 const datasetVersion = 'test-dataset-version'
 const fileRepository: FileRepository = {} as FileRepository
+const testFilesCountInfo = FilesCountInfoMother.create({ total: 200 })
 describe('DatasetFiles', () => {
   beforeEach(() => {
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(testFiles)
+    fileRepository.getCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
   })
 
   it('renders the files table', () => {

@@ -1,5 +1,5 @@
 import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
-import { Col, Form, Row } from 'dataverse-design-system'
+import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import styles from './FileCriteriaForm.module.scss'
 import { FileCriteriaSortBy } from './FileCriteriaSortBy'
 import { FileCriteriaFilters } from './FileCriteriaFilters'

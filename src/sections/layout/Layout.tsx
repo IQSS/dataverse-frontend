@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom'
-import { Container } from 'dataverse-design-system'
+import { Container } from '@iqss/dataverse-design-system'
 import styles from './Layout.module.scss'
 import { HeaderFactory } from './header/HeaderFactory'
 import { FooterFactory } from './footer/FooterFactory'

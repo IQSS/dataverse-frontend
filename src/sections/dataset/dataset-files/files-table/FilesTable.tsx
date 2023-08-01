@@ -1,18 +1,19 @@
-import { Table } from 'dataverse-design-system'
+import { Table } from '@iqss/dataverse-design-system'
 import { FilesTableHeader } from './FilesTableHeader'
 import { FilesTableBody } from './FilesTableBody'
 import { useFilesTable } from './useFilesTable'
+import { File } from '../../../../files/domain/models/File'
 import { RowSelectionMessage } from './row-selection/RowSelectionMessage'
 import { ZipDownloadLimitMessage } from './zip-download-limit-message/ZipDownloadLimitMessage'
-import { File } from '../../../../files/domain/models/File'
 import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
 
 interface FilesTableProps {
   files: File[]
-  filesCountTotal: number
   isLoading: boolean
+  filesCountTotal: number
 }
-export function FilesTable({ files, filesCountTotal, isLoading }: FilesTableProps) {
+
+export function FilesTable({ files, isLoading, filesCountTotal }: FilesTableProps) {
   const { table, rowSelection, setRowSelection } = useFilesTable(files)
 
   if (isLoading) {

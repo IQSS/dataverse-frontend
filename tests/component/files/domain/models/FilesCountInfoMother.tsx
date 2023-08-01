@@ -40,4 +40,22 @@ export class FilesCountInfoMother {
       ...props
     }
   }
+
+  static createEmpty(): FilesCountInfo {
+    return {
+      total: 0,
+      perFileType: [],
+      perAccess: [],
+      perFileTag: []
+    }
+  }
+
+  static createOnlyTotal(): FilesCountInfo {
+    return {
+      total: faker.datatype.number(),
+      perFileType: [],
+      perAccess: [],
+      perFileTag: []
+    }
+  }
 }

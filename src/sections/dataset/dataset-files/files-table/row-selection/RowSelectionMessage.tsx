@@ -1,5 +1,5 @@
 import { createRowSelection, RowSelection } from '../useFilesTable'
-import { Button } from 'dataverse-design-system'
+import { Button } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import styles from './RowSelectionMessage.module.scss'
 

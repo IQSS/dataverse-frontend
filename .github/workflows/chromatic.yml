@@ -15,6 +15,7 @@ jobs:
         run: |
           cp .npmrc.example .npmrc
           sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
+          sed -i -e 's/<YOUR_NPM_AUTH_TOKEN>/${{ secrets.NPM_AUTH_TOKEN }}/g' .npmrc
       - name: Install dependencies
         # 👇 Install dependencies with the same package manager used in the project (replace it as needed), e.g. yarn, npm, pnpm
         run: npm install
