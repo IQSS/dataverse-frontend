@@ -8,12 +8,11 @@ import {
 } from '@tanstack/react-table'
 import { columns } from './FilesTableColumnsDefinition'
 
-export function useFilesTable() {
-  const [data, setFilesTableData] = useState<File[]>(() => [])
+export function useFilesTable(files: File[]) {
   const [rowSelection, setRowSelection] = useState({})
 
   const table = useReactTable({
-    data,
+    data: files,
     columns,
     state: {
       rowSelection
@@ -26,5 +25,5 @@ export function useFilesTable() {
     debugTable: true
   })
 
-  return { table, setFilesTableData }
+  return { table }
 }

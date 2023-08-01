@@ -5,6 +5,7 @@ import { FileCriteriaControls } from './file-criteria-controls/FileCriteriaContr
 import { FileAccessOption, FileCriteria, FileTag } from '../../../files/domain/models/FileCriteria'
 import { FilesCountInfo } from '../../../files/domain/models/FilesCountInfo'
 import { FileType } from '../../../files/domain/models/File'
+import { useFiles } from './useFiles'
 
 interface DatasetFilesProps {
   filesRepository: FileRepository
@@ -41,6 +42,12 @@ export function DatasetFiles({
   datasetVersion
 }: DatasetFilesProps) {
   const [criteria, setCriteria] = useState<FileCriteria>(new FileCriteria())
+  const { files, isLoading } = useFiles(
+    filesRepository,
+    datasetPersistentId,
+    datasetVersion,
+    criteria
+  )
   const handleCriteriaChange = (newCriteria: FileCriteria) => {
     setCriteria(newCriteria)
   }
@@ -54,12 +61,7 @@ export function DatasetFiles({
           filesCountInfo={filesCountInfo}
         />
       )}
-      <FilesTable
-        filesRepository={filesRepository}
-        datasetPersistentId={datasetPersistentId}
-        datasetVersion={datasetVersion}
-        criteria={criteria}
-      />
+      <FilesTable files={files} isLoading={isLoading} />
     </>
   )
 }

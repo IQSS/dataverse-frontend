@@ -3,36 +3,17 @@ import { FilesTableHeader } from './FilesTableHeader'
 import { FilesTableBody } from './FilesTableBody'
 import { TablePagination } from './table-pagination/TablePagination'
 import styles from './FilesTable.module.scss'
-import { useEffect } from 'react'
-import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
-import { useFiles } from '../useFiles'
 import { useFilesTable } from './useFilesTable'
 import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
-import { FileRepository } from '../../../../files/domain/repositories/FileRepository'
+import { File } from '../../../../files/domain/models/File'
 
 interface FilesTableProps {
-  filesRepository: FileRepository
-  datasetPersistentId: string
-  datasetVersion?: string
-  criteria?: FileCriteria
+  files: File[]
+  isLoading: boolean
 }
-export function FilesTable({
-  filesRepository,
-  datasetPersistentId,
-  datasetVersion,
-  criteria
-}: FilesTableProps) {
-  const { files, isLoading } = useFiles(
-    filesRepository,
-    datasetPersistentId,
-    datasetVersion,
-    criteria
-  )
-  const { table, setFilesTableData } = useFilesTable()
 
-  useEffect(() => {
-    setFilesTableData(files)
-  }, [files])
+export function FilesTable({ files, isLoading }: FilesTableProps) {
+  const { table } = useFilesTable(files)
 
   if (isLoading) {
     return <SpinnerSymbol />
