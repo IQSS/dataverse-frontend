@@ -70,6 +70,24 @@ describe('DatasetFiles', () => {
     cy.findByRole('columnheader', { name: '51 to 60 of 200 Files' }).should('exist')
   })
 
+  it('renders the files table with the correct page selected after updating the pageSize', () => {
+    cy.customMount(
+      <DatasetFiles
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByRole('button', { name: '3' }).click()
+
+    cy.findByRole('columnheader', { name: '21 to 30 of 200 Files' }).should('exist')
+
+    cy.findByLabelText('Files per page').select('25')
+
+    cy.findByRole('columnheader', { name: '26 to 50 of 200 Files' }).should('exist')
+  })
+
   it('renders the files table with the correct header with a different page size ', () => {
     cy.customMount(
       <DatasetFiles

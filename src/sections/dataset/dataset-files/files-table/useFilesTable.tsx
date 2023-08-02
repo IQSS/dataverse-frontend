@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { File } from '../../../../files/domain/models/File'
 import {
   getCoreRowModel,
@@ -7,12 +7,13 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 import { columns } from './FilesTableColumnsDefinition'
+import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
 
 export interface RowSelection {
   [key: string]: boolean
 }
 
-export function useFilesTable(files: File[]) {
+export function useFilesTable(files: File[], paginationInfo: FilePaginationInfo) {
   const [rowSelection, setRowSelection] = useState({})
 
   const table = useReactTable({
@@ -26,8 +27,15 @@ export function useFilesTable(files: File[]) {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    debugTable: true
+    debugTable: true,
+    manualPagination: true,
+    pageCount: paginationInfo.totalPages
   })
+
+  useEffect(() => {
+    table.setPageSize(paginationInfo.pageSize)
+    table.setPageIndex(paginationInfo.page - 1)
+  }, [paginationInfo])
 
   return { table, rowSelection, setRowSelection }
 }

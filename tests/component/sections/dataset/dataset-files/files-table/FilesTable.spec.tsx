@@ -5,17 +5,18 @@ import { SettingMother } from '../../../../settings/domain/models/SettingMother'
 import { ZipDownloadLimit } from '../../../../../../src/settings/domain/models/ZipDownloadLimit'
 import { SettingsContext } from '../../../../../../src/sections/settings/SettingsContext'
 import styles from '../../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
+import { FilePaginationInfo } from '../../../../../../src/files/domain/models/FilePaginationInfo'
 
 const testFiles = FileMother.createMany(200)
-const filesCountTotal = 200
+const paginationInfo = new FilePaginationInfo(1, 10, 200)
 describe('FilesTable', () => {
   it('renders the files table', () => {
     cy.customMount(
-      <FilesTable files={testFiles} filesCountTotal={filesCountTotal} isLoading={false} />
+      <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
     )
 
     cy.findByRole('table').should('exist')
-    cy.findByRole('columnheader', { name: /Files/ }).should('exist')
+    cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
     cy.get('table > thead > tr > th:nth-child(1) > input[type="checkbox"]').should('exist')
 
     testFiles.slice(0, 10).forEach((file) => {
@@ -25,21 +26,33 @@ describe('FilesTable', () => {
 
   it('renders the spinner when the data isLoading', () => {
     cy.customMount(
-      <FilesTable files={testFiles} filesCountTotal={filesCountTotal} isLoading={true} />
+      <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={true} />
     )
 
     cy.findByLabelText('Files loading spinner symbol').should('exist')
   })
 
   it('renders the no files message when there are no files', () => {
-    cy.customMount(<FilesTable files={[]} filesCountTotal={filesCountTotal} isLoading={false} />)
+    cy.customMount(<FilesTable files={[]} paginationInfo={paginationInfo} isLoading={false} />)
 
     cy.findByText('There are no files in this dataset.').should('exist')
   })
 
+  it('selects all rows when the header checkbox is clicked', () => {
+    cy.customMount(
+      <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
+    )
+
+    cy.get('table > thead > tr > th > input[type=checkbox]').click()
+
+    cy.findByText('200 files are currently selected.').should('exist')
+
+    cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).should('not.exist')
+  })
+
   it("selects all rows when the 'Select all' button is clicked", () => {
     cy.customMount(
-      <FilesTable files={testFiles} filesCountTotal={filesCountTotal} isLoading={false} />
+      <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
     )
 
     cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
@@ -53,7 +66,7 @@ describe('FilesTable', () => {
 
   it('clears the selection when the clear selection button is clicked', () => {
     cy.customMount(
-      <FilesTable files={testFiles} filesCountTotal={filesCountTotal} isLoading={false} />
+      <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
     )
 
     cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
@@ -69,7 +82,7 @@ describe('FilesTable', () => {
 
   it('highlights the selected rows', () => {
     cy.customMount(
-      <FilesTable files={testFiles} filesCountTotal={filesCountTotal} isLoading={false} />
+      <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
     )
     cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
 
@@ -87,7 +100,7 @@ describe('FilesTable', () => {
 
     cy.customMount(
       <SettingsContext.Provider value={{ getSettingByName }}>
-        <FilesTable files={testFiles} filesCountTotal={filesCountTotal} isLoading={false} />
+        <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
       </SettingsContext.Provider>
     )
 

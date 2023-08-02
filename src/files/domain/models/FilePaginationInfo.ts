@@ -23,7 +23,11 @@ export class FilePaginationInfo {
   }
 
   withPageSize(pageSize: number): FilePaginationInfo {
-    return new FilePaginationInfo(this.page, pageSize, this.total)
+    const getNewPage = (oldPageSize: number, newPageSize: number) => {
+      const newPage = Math.ceil((this.page * oldPageSize) / newPageSize)
+      return newPage > 0 ? newPage : 1
+    }
+    return new FilePaginationInfo(getNewPage(this.pageSize, pageSize), pageSize, this.total)
   }
 
   get totalPages(): number {

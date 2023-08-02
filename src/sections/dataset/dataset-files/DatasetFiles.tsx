@@ -35,7 +35,7 @@ export function DatasetFiles({
         onCriteriaChange={setCriteria}
         filesCountInfo={filesCountInfo}
       />
-      <FilesTable files={files} isLoading={isLoading} filesCountTotal={filesCountInfo.total} />
+      <FilesTable files={files} isLoading={isLoading} paginationInfo={paginationInfo} />
       <FilesPagination
         page={paginationInfo.page}
         pageSize={paginationInfo.pageSize}
