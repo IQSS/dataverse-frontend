@@ -4,29 +4,28 @@ import { FilesTableBody } from './FilesTableBody'
 import { TablePagination } from './table-pagination/TablePagination'
 import styles from './FilesTable.module.scss'
 import { useFilesTable } from './useFilesTable'
-import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
 import { File } from '../../../../files/domain/models/File'
 import { RowSelectionMessage } from './row-selection/RowSelectionMessage'
 import { ZipDownloadLimitMessage } from './zip-download-limit-message/ZipDownloadLimitMessage'
+import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
 
 interface FilesTableProps {
   files: File[]
   isLoading: boolean
-  filesTotalCount: number
+  filesCountTotal: number
 }
 
-export function FilesTable({ files, isLoading, filesTotalCount }: FilesTableProps) {
+export function FilesTable({ files, isLoading, filesCountTotal }: FilesTableProps) {
   const { table, rowSelection, setRowSelection } = useFilesTable(files)
 
   if (isLoading) {
     return <SpinnerSymbol />
   }
-
   return (
     <div>
       <RowSelectionMessage
         selectedFilesCount={Object.keys(rowSelection).length}
-        totalFilesCount={filesTotalCount}
+        totalFilesCount={filesCountTotal}
         setRowSelection={setRowSelection}
       />
       <ZipDownloadLimitMessage

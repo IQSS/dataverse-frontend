@@ -1,8 +1,8 @@
 import { FileCriteria, FileTag } from '../../../../../../src/files/domain/models/FileCriteria'
 import { FilesCountInfoMother } from '../../../../files/domain/models/FilesCountInfoMother'
 import { FileType } from '../../../../../../src/files/domain/models/File'
-import styles from '../../../../../../src/sections/dataset/dataset-files/file-criteria-controls/FileCriteriaControls.module.scss'
-import { FileCriteriaFilterByTag } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-controls/FileCriteriaFilterByTag'
+import styles from '../../../../../../src/sections/dataset/dataset-files/file-criteria-form/FileCriteriaForm.module.scss'
+import { FileCriteriaFilterByTag } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-form/FileCriteriaFilterByTag'
 
 const defaultCriteria = new FileCriteria()
 const filesCountInfo = FilesCountInfoMother.create({

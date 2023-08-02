@@ -5,7 +5,8 @@ export class FileCriteria {
     public readonly sortBy: FileSortByOption = FileSortByOption.NAME_AZ,
     public readonly filterByType?: FileType,
     public readonly filterByAccess?: FileAccessOption,
-    public readonly filterByTag?: FileTag
+    public readonly filterByTag?: FileTag,
+    public readonly searchText?: string
   ) {}
 
   withSortBy(sortBy: FileSortByOption): FileCriteria {
@@ -26,6 +27,16 @@ export class FileCriteria {
     const newFilterByTag = filterByTag === undefined ? undefined : new FileTag(filterByTag)
 
     return new FileCriteria(this.sortBy, this.filterByType, this.filterByAccess, newFilterByTag)
+  }
+
+  withSearchText(searchText: string | undefined): FileCriteria {
+    return new FileCriteria(
+      this.sortBy,
+      this.filterByType,
+      this.filterByAccess,
+      this.filterByTag,
+      searchText
+    )
   }
 }
 

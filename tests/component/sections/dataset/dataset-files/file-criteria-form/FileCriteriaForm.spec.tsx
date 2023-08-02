@@ -1,4 +1,4 @@
-import { FileCriteriaControls } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-controls/FileCriteriaControls'
+import { FileCriteriaForm } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-form/FileCriteriaForm'
 import {
   FileAccessOption,
   FileCriteria,
@@ -40,39 +40,64 @@ const filesCountInfo = FilesCountInfoMother.create({
     }
   ]
 })
-describe('FileCriteriaControls', () => {
+describe('FileCriteriaForm', () => {
   beforeEach(() => {
     onCriteriaChange = cy.stub().as('onCriteriaChange')
   })
 
-  it('renders the SortBy input', () => {
-    const filesCountInfo = FilesCountInfoMother.createOnlyTotal()
+  it('does not render the files criteria inputs when there are less than 2 files', () => {
     cy.customMount(
-      <FileCriteriaControls
+      <FileCriteriaForm
         criteria={new FileCriteria()}
         onCriteriaChange={onCriteriaChange}
-        filesCountInfo={filesCountInfo}
+        filesCountInfo={FilesCountInfoMother.create({ total: 1 })}
+      />
+    )
+
+    cy.findByRole('button', { name: /Sort/ }).should('not.exist')
+    cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'Access: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'Filter Tag: All' }).should('not.exist')
+    cy.findByLabelText('Search').should('not.exist')
+  })
+
+  it('renders the SortBy input', () => {
+    cy.customMount(
+      <FileCriteriaForm
+        criteria={new FileCriteria()}
+        onCriteriaChange={onCriteriaChange}
+        filesCountInfo={FilesCountInfoMother.create()}
       />
     )
 
     cy.findByRole('button', { name: /Sort/ }).should('exist')
-    cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
-    cy.findByRole('button', { name: 'Access: All' }).should('not.exist')
-    cy.findByRole('button', { name: 'Filter Tag: All' }).should('not.exist')
   })
 
   it('renders the Filters input', () => {
     cy.customMount(
-      <FileCriteriaControls
+      <FileCriteriaForm
         criteria={new FileCriteria()}
         onCriteriaChange={onCriteriaChange}
         filesCountInfo={filesCountInfo}
       />
     )
 
-    cy.findByRole('button', { name: /Sort/ }).should('exist')
     cy.findByRole('button', { name: 'Filter Type: All' }).should('exist')
+    cy.findByRole('button', { name: 'Access: All' }).should('exist')
+    cy.findByRole('button', { name: 'Filter Tag: All' }).should('exist')
     cy.findByText('Filter by').should('exist')
+  })
+
+  it('renders the Search input', () => {
+    cy.customMount(
+      <FileCriteriaForm
+        criteria={new FileCriteria()}
+        onCriteriaChange={onCriteriaChange}
+        filesCountInfo={filesCountInfo}
+      />
+    )
+
+    cy.findByLabelText('Search').should('exist')
   })
 
   it('saves global criteria when the sort by option changes', () => {
@@ -82,7 +107,7 @@ describe('FileCriteriaControls', () => {
       .withFilterByType('image')
 
     cy.customMount(
-      <FileCriteriaControls
+      <FileCriteriaForm
         criteria={criteria}
         onCriteriaChange={onCriteriaChange}
         filesCountInfo={filesCountInfo}
@@ -104,7 +129,7 @@ describe('FileCriteriaControls', () => {
       .withFilterByType('image')
 
     cy.customMount(
-      <FileCriteriaControls
+      <FileCriteriaForm
         criteria={criteria}
         onCriteriaChange={onCriteriaChange}
         filesCountInfo={filesCountInfo}
@@ -126,7 +151,7 @@ describe('FileCriteriaControls', () => {
       .withFilterByType('image')
 
     cy.customMount(
-      <FileCriteriaControls
+      <FileCriteriaForm
         criteria={criteria}
         onCriteriaChange={onCriteriaChange}
         filesCountInfo={filesCountInfo}
@@ -148,7 +173,7 @@ describe('FileCriteriaControls', () => {
       .withFilterByType('image')
 
     cy.customMount(
-      <FileCriteriaControls
+      <FileCriteriaForm
         criteria={criteria}
         onCriteriaChange={onCriteriaChange}
         filesCountInfo={filesCountInfo}
@@ -163,20 +188,26 @@ describe('FileCriteriaControls', () => {
     cy.findByRole('button', { name: 'Filter Tag: Data' }).should('exist')
   })
 
-  it('does not render the files criteria inputs when there are less than 2 files', () => {
-    const filesCountInfo = FilesCountInfoMother.create({ total: 1 })
+  it('saves global criteria when the search input changes', () => {
     const criteria = new FileCriteria()
+      .withFilterByTag('document')
+      .withFilterByAccess(FileAccessOption.PUBLIC)
+      .withFilterByType('image')
+      .withSearchText('search')
+
     cy.customMount(
-      <FileCriteriaControls
+      <FileCriteriaForm
         criteria={criteria}
         onCriteriaChange={onCriteriaChange}
         filesCountInfo={filesCountInfo}
       />
     )
 
-    cy.findByRole('button', { name: /Sort/ }).should('not.exist')
-    cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
-    cy.findByRole('button', { name: 'Access: All' }).should('not.exist')
-    cy.findByRole('button', { name: 'Filter Tag: All' }).should('not.exist')
+    cy.findByLabelText('Search').clear().type('new search')
+
+    cy.findByRole('button', { name: 'Filter Type: Image' }).should('exist')
+    cy.findByRole('button', { name: 'Access: Public' }).should('exist')
+    cy.findByRole('button', { name: 'Filter Tag: Document' }).should('exist')
+    cy.findByLabelText('Search').should('have.value', 'new search')
   })
 })

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from '../../components/button/Button'
 import { IconName } from '../../components/icon/IconName'
+import { Search } from 'react-bootstrap-icons'
 
 /**
  * ## Description
@@ -121,6 +122,10 @@ export const NoSpacing: Story = {
 
 export const WithIcon: Story = {
   render: () => <Button icon={IconName.COLLECTION}>Primary</Button>
+}
+
+export const IconOnly: Story = {
+  render: () => <Button icon={<Search />} variant="secondary" aria-label="Search" />
 }
 
 export const UseCasePrimaryButtonAsCallToAction: Story = {

@@ -1,7 +1,7 @@
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
 import { useState } from 'react'
 import { FilesTable } from './files-table/FilesTable'
-import { FileCriteriaControls } from './file-criteria-controls/FileCriteriaControls'
+import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 import { useFiles } from './useFiles'
 
@@ -29,12 +29,12 @@ export function DatasetFiles({
 
   return (
     <>
-      <FileCriteriaControls
+      <FileCriteriaForm
         criteria={criteria}
         onCriteriaChange={handleCriteriaChange}
         filesCountInfo={filesCountInfo}
       />
-      <FilesTable files={files} isLoading={isLoading} filesTotalCount={filesCountInfo.total} />
+      <FilesTable files={files} isLoading={isLoading} filesCountTotal={filesCountInfo.total} />
     </>
   )
 }

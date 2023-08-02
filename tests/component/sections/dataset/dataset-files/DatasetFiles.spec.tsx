@@ -125,6 +125,24 @@ describe('DatasetFiles', () => {
     cy.findByRole('button', { name: 'Filter Type: All' }).should('exist')
   })
 
+  it('calls the useFiles hook with the correct parameters when searchText criteria changes', () => {
+    cy.customMount(
+      <DatasetFiles
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByLabelText('Search').type('test{enter}')
+    cy.wrap(fileRepository.getAllByDatasetPersistentId).should(
+      'be.calledWith',
+      datasetPersistentId,
+      datasetVersion,
+      new FileCriteria().withSearchText('test')
+    )
+  })
+
   it("selects all rows when the 'Select all' button is clicked", () => {
     cy.customMount(
       <DatasetFiles

@@ -1,5 +1,5 @@
 import { FileCriteria } from '../../../../../../src/files/domain/models/FileCriteria'
-import { FileCriteriaFilters } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-controls/FileCriteriaFilters'
+import { FileCriteriaFilters } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-form/FileCriteriaFilters'
 import { FilesCountInfoMother } from '../../../../files/domain/models/FilesCountInfoMother'
 import { FileType } from '../../../../../../src/files/domain/models/File'
 
