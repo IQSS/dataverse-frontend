@@ -4,30 +4,31 @@ import { useTranslation } from 'react-i18next'
 import styles from './RowSelectionMessage.module.scss'
 
 interface RowSelectionMessageProps {
-  selectedFilesCount: number
+  rowSelection: RowSelection
   totalFilesCount: number
-  setRowSelection: (rowSelection: RowSelection) => void
+  onRowSelectionChange: (rowSelection: RowSelection) => void
 }
 
 const MINIMUM_SELECTED_FILES_TO_SHOW_MESSAGE = 0
 const MINIMUM_FILES_TO_SHOW_MESSAGE = 10
 
 export function RowSelectionMessage({
-  selectedFilesCount,
+  rowSelection,
   totalFilesCount,
-  setRowSelection
+  onRowSelectionChange
 }: RowSelectionMessageProps) {
   const { t } = useTranslation('files')
+  const selectedFilesCount = Object.keys(rowSelection).length
   const showMessage =
     totalFilesCount > MINIMUM_FILES_TO_SHOW_MESSAGE &&
     selectedFilesCount > MINIMUM_SELECTED_FILES_TO_SHOW_MESSAGE
   const selectAllRowsHandler = () => {
     const rowSelectionAll = createRowSelection(totalFilesCount)
-    setRowSelection(rowSelectionAll)
+    onRowSelectionChange(rowSelectionAll)
   }
   const clearSelectionHandler = () => {
     const rowSelectionNone = createRowSelection(0)
-    setRowSelection(rowSelectionNone)
+    onRowSelectionChange(rowSelectionNone)
   }
 
   if (!showMessage) {

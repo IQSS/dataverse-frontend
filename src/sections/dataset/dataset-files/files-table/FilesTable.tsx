@@ -23,9 +23,9 @@ export function FilesTable({ files, isLoading, paginationInfo }: FilesTableProps
   return (
     <>
       <RowSelectionMessage
-        selectedFilesCount={Object.keys(rowSelection).length}
+        rowSelection={rowSelection}
         totalFilesCount={paginationInfo.total}
-        setRowSelection={setRowSelection}
+        onRowSelectionChange={setRowSelection}
       />
       <ZipDownloadLimitMessage
         selectedFiles={table.getSelectedRowModel().flatRows.map((row) => row.original)}
