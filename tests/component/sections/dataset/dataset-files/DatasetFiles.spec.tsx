@@ -7,6 +7,7 @@ import {
   FileSortByOption
 } from '../../../../../src/files/domain/models/FileCriteria'
 import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
+import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 
 const testFiles = FileMother.createMany(200)
 const datasetPersistentId = 'test-dataset-persistent-id'
@@ -71,6 +72,12 @@ describe('DatasetFiles', () => {
     )
 
     cy.wrap(fileRepository.getAllByDatasetPersistentId).should(
+      'be.calledWith',
+      datasetPersistentId,
+      datasetVersion
+    )
+
+    cy.wrap(fileRepository.getCountInfoByDatasetPersistentId).should(
       'be.calledWith',
       datasetPersistentId,
       datasetVersion
@@ -168,6 +175,24 @@ describe('DatasetFiles', () => {
       datasetPersistentId,
       datasetVersion,
       new FileCriteria().withSearchText('test')
+    )
+  })
+
+  it('calls the useFiles hook with the correct parameters when paginationInfo changes', () => {
+    cy.customMount(
+      <DatasetFiles
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByRole('button', { name: '5' }).click()
+    cy.wrap(fileRepository.getAllByDatasetPersistentId).should(
+      'be.calledWith',
+      datasetPersistentId,
+      datasetVersion,
+      new FilePaginationInfo(5, 10, 200)
     )
   })
 })

@@ -2,7 +2,7 @@ import { FilesPagination } from '../../../../../../src/sections/dataset/dataset-
 import { FilePaginationInfo } from '../../../../../../src/files/domain/models/FilePaginationInfo'
 
 let paginationInfo: FilePaginationInfo
-
+const filesCountTotal = 200
 describe('FilesPagination', () => {
   beforeEach(() => {
     cy.viewport(1000, 1000)
@@ -13,7 +13,7 @@ describe('FilesPagination', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
       <FilesPagination
-        paginationInfoInitial={paginationInfo}
+        filesCountTotal={filesCountTotal}
         onPaginationInfoChange={onPaginationInfoChange}
       />
     )
@@ -26,7 +26,7 @@ describe('FilesPagination', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
       <FilesPagination
-        paginationInfoInitial={paginationInfo}
+        filesCountTotal={filesCountTotal}
         onPaginationInfoChange={onPaginationInfoChange}
       />
     )
@@ -42,7 +42,7 @@ describe('FilesPagination', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
       <FilesPagination
-        paginationInfoInitial={paginationInfo}
+        filesCountTotal={filesCountTotal}
         onPaginationInfoChange={onPaginationInfoChange}
       />
     )
@@ -55,7 +55,7 @@ describe('FilesPagination', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
       <FilesPagination
-        paginationInfoInitial={paginationInfo}
+        filesCountTotal={filesCountTotal}
         onPaginationInfoChange={onPaginationInfoChange}
       />
     )
@@ -68,7 +68,7 @@ describe('FilesPagination', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
       <FilesPagination
-        paginationInfoInitial={paginationInfo}
+        filesCountTotal={filesCountTotal}
         onPaginationInfoChange={onPaginationInfoChange}
       />
     )

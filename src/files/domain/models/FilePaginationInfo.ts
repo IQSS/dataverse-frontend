@@ -5,6 +5,9 @@ export class FilePaginationInfo {
     public readonly total: number = 0
   ) {}
 
+  withTotal(total: number): FilePaginationInfo {
+    return new FilePaginationInfo(this.page, this.pageSize, total)
+  }
   goToPage(page: number): FilePaginationInfo {
     return new FilePaginationInfo(page, this.pageSize, this.total)
   }
