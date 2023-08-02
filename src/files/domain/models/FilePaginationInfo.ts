@@ -13,10 +13,12 @@ export class FilePaginationInfo {
   }
 
   goToPreviousPage(): FilePaginationInfo {
+    if (!this.hasPreviousPage) throw new Error('No previous page')
     return this.goToPage(this.previousPage!)
   }
 
   goToNextPage(): FilePaginationInfo {
+    if (!this.hasNextPage) throw new Error('No next page')
     return this.goToPage(this.nextPage!)
   }
 

@@ -6,10 +6,12 @@ import { FilesCountInfoMother } from '../../../tests/component/files/domain/mode
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
 
 export class FileJSDataverseRepository implements FileRepository {
-  // eslint-disable-next-line unused-imports/no-unused-vars
   getAllByDatasetPersistentId(
+    // eslint-disable-next-line unused-imports/no-unused-vars
     persistentId: string,
+    // eslint-disable-next-line unused-imports/no-unused-vars
     version?: string,
+    // eslint-disable-next-line unused-imports/no-unused-vars
     paginationInfo?: FilePaginationInfo
   ): Promise<File[]> {
     // TODO - implement using js-dataverse

@@ -37,7 +37,9 @@ export function DatasetFiles({
       />
       <FilesTable files={files} isLoading={isLoading} filesCountTotal={filesCountInfo.total} />
       <FilesPagination
-        filesCountTotal={filesCountInfo.total}
+        page={paginationInfo.page}
+        pageSize={paginationInfo.pageSize}
+        total={filesCountInfo.total}
         onPaginationInfoChange={setPaginationInfo}
       />
     </>

@@ -2,18 +2,22 @@ import { FilesPagination } from '../../../../../../src/sections/dataset/dataset-
 import { FilePaginationInfo } from '../../../../../../src/files/domain/models/FilePaginationInfo'
 
 let paginationInfo: FilePaginationInfo
-const filesCountTotal = 200
+const page = 3
+const pageSize = 10
+const total = 200
 describe('FilesPagination', () => {
   beforeEach(() => {
     cy.viewport(1000, 1000)
-    paginationInfo = new FilePaginationInfo(3, 10, 200)
+    paginationInfo = new FilePaginationInfo(page, pageSize, total)
   })
 
   it('clicking on the first page button calls goToPage 1', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
       <FilesPagination
-        filesCountTotal={filesCountTotal}
+        page={page}
+        pageSize={pageSize}
+        total={total}
         onPaginationInfoChange={onPaginationInfoChange}
       />
     )
@@ -26,7 +30,9 @@ describe('FilesPagination', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
       <FilesPagination
-        filesCountTotal={filesCountTotal}
+        page={page}
+        pageSize={pageSize}
+        total={total}
         onPaginationInfoChange={onPaginationInfoChange}
       />
     )
@@ -42,7 +48,9 @@ describe('FilesPagination', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
       <FilesPagination
-        filesCountTotal={filesCountTotal}
+        page={page}
+        pageSize={pageSize}
+        total={total}
         onPaginationInfoChange={onPaginationInfoChange}
       />
     )
@@ -55,7 +63,9 @@ describe('FilesPagination', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
       <FilesPagination
-        filesCountTotal={filesCountTotal}
+        page={page}
+        pageSize={pageSize}
+        total={total}
         onPaginationInfoChange={onPaginationInfoChange}
       />
     )
@@ -68,7 +78,9 @@ describe('FilesPagination', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
       <FilesPagination
-        filesCountTotal={filesCountTotal}
+        page={page}
+        pageSize={pageSize}
+        total={total}
         onPaginationInfoChange={onPaginationInfoChange}
       />
     )
@@ -81,7 +93,9 @@ describe('FilesPagination', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
       <FilesPagination
-        paginationInfoInitial={paginationInfo}
+        page={page}
+        pageSize={pageSize}
+        total={total}
         onPaginationInfoChange={onPaginationInfoChange}
       />
     )

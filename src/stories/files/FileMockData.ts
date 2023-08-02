@@ -10,9 +10,9 @@ const range = (len: number) => {
 }
 
 export function makeFiles(len: number): File[] {
-  return range(len).map((value, index) => {
-    return FileMother.create({ name: 'file' + index })
+  return range(len).map(() => {
+    return FileMother.create()
   })
 }
 
-export const FilesMockData = (amount: number = 200): File[] => makeFiles(amount)
+export const FilesMockData = (amount = 200): File[] => makeFiles(amount)

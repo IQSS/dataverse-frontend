@@ -6,7 +6,6 @@ import { File } from '../../../../files/domain/models/File'
 import { RowSelectionMessage } from './row-selection/RowSelectionMessage'
 import { ZipDownloadLimitMessage } from './zip-download-limit-message/ZipDownloadLimitMessage'
 import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
-import { FilesPagination } from '../files-pagination/FilesPagination'
 
 interface FilesTableProps {
   files: File[]

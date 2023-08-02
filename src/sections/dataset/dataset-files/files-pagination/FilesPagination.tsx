@@ -4,16 +4,22 @@ import { PageSizeSelector } from './PageSizeSelector'
 import styles from './FilesPagination.module.scss'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
 import { useEffect, useState } from 'react'
-import { FilesCountInfo } from '../../../../files/domain/models/FilesCountInfo'
 
 interface FilesPaginationProps {
   onPaginationInfoChange: (paginationInfo: FilePaginationInfo) => void
-  filesCountTotal: number
+  page: number
+  pageSize: number
+  total: number
 }
 const NO_PAGES = 0
-export function FilesPagination({ onPaginationInfoChange, filesCountTotal }: FilesPaginationProps) {
+export function FilesPagination({
+  onPaginationInfoChange,
+  page,
+  pageSize,
+  total
+}: FilesPaginationProps) {
   const [paginationInfo, setPaginationInfo] = useState<FilePaginationInfo>(
-    new FilePaginationInfo().withTotal(filesCountTotal)
+    new FilePaginationInfo(page, pageSize, total)
   )
   const goToPage = (newPage: number) => {
     setPaginationInfo(paginationInfo.goToPage(newPage))
@@ -33,8 +39,8 @@ export function FilesPagination({ onPaginationInfoChange, filesCountTotal }: Fil
   }, [paginationInfo])
 
   useEffect(() => {
-    setPaginationInfo(paginationInfo.withTotal(filesCountTotal))
-  }, [filesCountTotal])
+    setPaginationInfo(paginationInfo.withTotal(total))
+  }, [total])
 
   if (paginationInfo.totalPages === NO_PAGES) {
     return <></>

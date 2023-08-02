@@ -4,16 +4,39 @@ import { FileRepository } from '../../../../../src/files/domain/repositories/Fil
 import {
   FileAccessOption,
   FileCriteria,
-  FileSortByOption
+  FileSortByOption,
+  FileTag
 } from '../../../../../src/files/domain/models/FileCriteria'
 import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
+import { FileType } from '../../../../../src/files/domain/models/File'
 
 const testFiles = FileMother.createMany(200)
 const datasetPersistentId = 'test-dataset-persistent-id'
 const datasetVersion = 'test-dataset-version'
 const fileRepository: FileRepository = {} as FileRepository
-const testFilesCountInfo = FilesCountInfoMother.create({ total: 200 })
+const testFilesCountInfo = FilesCountInfoMother.create({
+  total: 200,
+  perFileType: [
+    {
+      type: new FileType('text'),
+      count: 5
+    },
+    {
+      type: new FileType('image'),
+      count: 485
+    }
+  ],
+  perAccess: [
+    { access: FileAccessOption.PUBLIC, count: 222 },
+    { access: FileAccessOption.RESTRICTED, count: 10 }
+  ],
+  perFileTag: [
+    { tag: new FileTag('document'), count: 5 },
+    { tag: new FileTag('code'), count: 10 }
+  ]
+})
+const filePaginationInfo = new FilePaginationInfo(1, 10, 200)
 describe('DatasetFiles', () => {
   beforeEach(() => {
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(testFiles)
@@ -99,6 +122,7 @@ describe('DatasetFiles', () => {
       'be.calledWith',
       datasetPersistentId,
       datasetVersion,
+      filePaginationInfo,
       new FileCriteria().withSortBy(FileSortByOption.NAME_AZ)
     )
   })
@@ -118,6 +142,7 @@ describe('DatasetFiles', () => {
       'be.calledWith',
       datasetPersistentId,
       datasetVersion,
+      filePaginationInfo,
       new FileCriteria().withFilterByType('image')
     )
   })
@@ -137,6 +162,7 @@ describe('DatasetFiles', () => {
       'be.calledWith',
       datasetPersistentId,
       datasetVersion,
+      filePaginationInfo,
       new FileCriteria().withFilterByAccess(FileAccessOption.PUBLIC)
     )
   })
@@ -156,6 +182,7 @@ describe('DatasetFiles', () => {
       'be.calledWith',
       datasetPersistentId,
       datasetVersion,
+      filePaginationInfo,
       new FileCriteria().withFilterByTag('document')
     )
   })
@@ -174,6 +201,7 @@ describe('DatasetFiles', () => {
       'be.calledWith',
       datasetPersistentId,
       datasetVersion,
+      filePaginationInfo,
       new FileCriteria().withSearchText('test')
     )
   })
