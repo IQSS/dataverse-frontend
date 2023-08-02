@@ -190,8 +190,8 @@ Environment updates are carried out automatically through GitHub actions, presen
 
 The environment is accessible through the following URLs:
 
-- SPA: http://ec2-3-210-184-82.compute-1.amazonaws.com/spa
-- JSF: http://ec2-3-210-184-82.compute-1.amazonaws.com
+- SPA: https://beta.dataverse.org/spa
+- JSF: https://beta.dataverse.org
 
 ## Changes from the Style Guide
 
