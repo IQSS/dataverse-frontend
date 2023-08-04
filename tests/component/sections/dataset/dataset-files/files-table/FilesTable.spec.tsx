@@ -7,7 +7,7 @@ import { SettingsContext } from '../../../../../../src/sections/settings/Setting
 import styles from '../../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
 import { FilePaginationInfo } from '../../../../../../src/files/domain/models/FilePaginationInfo'
 
-const testFiles = FileMother.createMany(200)
+const testFiles = FileMother.createMany(10)
 const paginationInfo = new FilePaginationInfo(1, 10, 200)
 describe('FilesTable', () => {
   it('renders the files table', () => {
@@ -38,55 +38,71 @@ describe('FilesTable', () => {
     cy.findByText('There are no files in this dataset.').should('exist')
   })
 
-  it('selects all rows when the header checkbox is clicked', () => {
-    cy.customMount(
-      <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
-    )
+  describe('Row selection', () => {
+    it('selects all rows when the header checkbox is clicked', () => {
+      cy.customMount(
+        <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
+      )
 
-    cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.get('table > thead > tr > th > input[type=checkbox]').click()
 
-    cy.findByText('200 files are currently selected.').should('exist')
+      cy.findByText('200 files are currently selected.').should('exist')
 
-    cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).should('not.exist')
-  })
+      cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).should('not.exist')
+    })
 
-  it("selects all rows when the 'Select all' button is clicked", () => {
-    cy.customMount(
-      <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
-    )
+    it('clears row selection when the header checkbox is clicked', () => {
+      cy.customMount(
+        <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
+      )
 
-    cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
+      cy.get('table > thead > tr > th > input[type=checkbox]').click()
 
-    cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
+      cy.findByText('200 files are currently selected.').should('exist')
 
-    cy.findByText('200 files are currently selected.').should('exist')
+      cy.get('table > thead > tr > th > input[type=checkbox]').click()
 
-    cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).should('not.exist')
-  })
+      cy.findByText(/files are currently selected./).should('not.exist')
+    })
 
-  it('clears the selection when the clear selection button is clicked', () => {
-    cy.customMount(
-      <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
-    )
+    it("selects all rows when the 'Select all' button is clicked", () => {
+      cy.customMount(
+        <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
+      )
 
-    cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
+      cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
 
-    cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
+      cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
 
-    cy.findByText('200 files are currently selected.').should('exist')
+      cy.findByText('200 files are currently selected.').should('exist')
 
-    cy.findByRole('button', { name: 'Clear selection.' }).click()
+      cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).should('not.exist')
+    })
 
-    cy.findByText(/files are currently selected./).should('not.exist')
-  })
+    it('clears the selection when the clear selection button is clicked', () => {
+      cy.customMount(
+        <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
+      )
 
-  it('highlights the selected rows', () => {
-    cy.customMount(
-      <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
-    )
-    cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
+      cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
 
-    cy.get('table > tbody > tr:nth-child(2)').should('have.class', styles['selected-row'])
+      cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
+
+      cy.findByText('200 files are currently selected.').should('exist')
+
+      cy.findByRole('button', { name: 'Clear selection.' }).click()
+
+      cy.findByText(/files are currently selected./).should('not.exist')
+    })
+
+    it('highlights the selected rows', () => {
+      cy.customMount(
+        <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
+      )
+      cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
+
+      cy.get('table > tbody > tr:nth-child(2)').should('have.class', styles['selected-row'])
+    })
   })
 
   it('renders the zip download limit message when the zip download limit is reached', () => {

@@ -1,10 +1,12 @@
 import { RowSelectionMessage } from '../../../../../../../src/sections/dataset/dataset-files/files-table/row-selection/RowSelectionMessage'
-import { createRowSelection } from '../../../../../../../src/sections/dataset/dataset-files/files-table/useFilesTable'
+import { createRowSelection } from '../../../../../../../src/sections/dataset/dataset-files/files-table/row-selection/useRowSelection'
 
-let onRowSelectionChange = () => {}
+let selectAllRows = () => {}
+let clearRowSelection = () => {}
 describe('RowSelectionMessage', () => {
   beforeEach(() => {
-    onRowSelectionChange = cy.stub().as('onRowSelectionChange')
+    selectAllRows = cy.stub().as('selectAllRows')
+    clearRowSelection = cy.stub().as('clearRowSelection')
   })
 
   it('renders the message when there are more than 10 files and some row is selected', () => {
@@ -12,7 +14,8 @@ describe('RowSelectionMessage', () => {
       <RowSelectionMessage
         rowSelection={createRowSelection(1)}
         totalFilesCount={11}
-        onRowSelectionChange={onRowSelectionChange}
+        selectAllRows={selectAllRows}
+        clearRowSelection={clearRowSelection}
       />
     )
 
@@ -26,7 +29,8 @@ describe('RowSelectionMessage', () => {
       <RowSelectionMessage
         rowSelection={createRowSelection(1)}
         totalFilesCount={9}
-        onRowSelectionChange={onRowSelectionChange}
+        selectAllRows={selectAllRows}
+        clearRowSelection={clearRowSelection}
       />
     )
 
@@ -40,7 +44,8 @@ describe('RowSelectionMessage', () => {
       <RowSelectionMessage
         rowSelection={createRowSelection(0)}
         totalFilesCount={11}
-        onRowSelectionChange={onRowSelectionChange}
+        selectAllRows={selectAllRows}
+        clearRowSelection={clearRowSelection}
       />
     )
 
@@ -54,38 +59,41 @@ describe('RowSelectionMessage', () => {
       <RowSelectionMessage
         rowSelection={createRowSelection(2)}
         totalFilesCount={11}
-        onRowSelectionChange={onRowSelectionChange}
+        selectAllRows={selectAllRows}
+        clearRowSelection={clearRowSelection}
       />
     )
 
     cy.findByText('2 files are currently selected.')
   })
 
-  it("calls onRowSelectionChange when the 'Select all' button is clicked", () => {
+  it("calls selectAllRows when the 'Select all' button is clicked", () => {
     cy.customMount(
       <RowSelectionMessage
         rowSelection={createRowSelection(1)}
         totalFilesCount={11}
-        onRowSelectionChange={onRowSelectionChange}
+        selectAllRows={selectAllRows}
+        clearRowSelection={clearRowSelection}
       />
     )
 
     cy.findByRole('button', { name: 'Select all 11 files in this dataset.' }).click()
 
-    cy.wrap(onRowSelectionChange).should('be.calledWith', createRowSelection(11))
+    cy.wrap(selectAllRows).should('be.called')
   })
 
-  it("calls setRowSelection when the 'Clear selection.' button is clicked", () => {
+  it("calls clearRowSelection when the 'Clear selection.' button is clicked", () => {
     cy.customMount(
       <RowSelectionMessage
         rowSelection={createRowSelection(1)}
         totalFilesCount={11}
-        onRowSelectionChange={onRowSelectionChange}
+        selectAllRows={selectAllRows}
+        clearRowSelection={clearRowSelection}
       />
     )
 
     cy.findByRole('button', { name: 'Clear selection.' }).click()
 
-    cy.wrap(onRowSelectionChange).should('be.calledWith', createRowSelection(0))
+    cy.wrap(clearRowSelection).should('be.called')
   })
 })
