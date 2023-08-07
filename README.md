@@ -4,6 +4,10 @@
 [![Tests](https://github.com/IQSS/dataverse-frontend/actions/workflows/test.yml/badge.svg)](https://github.com/IQSS/dataverse-frontend/actions/workflows/test.yml)
 [![Unit Tests Coverage](https://coveralls.io/repos/github/IQSS/dataverse-frontend/badge.svg?branch=develop)](https://coveralls.io/github/IQSS/dataverse-frontend?branch=develop)
 
+## Demo videos
+
+- 2023-08-01: [View mode of the dataset page](https://groups.google.com/g/dataverse-community/c/cxZ3Bal_-uo/m/h3kh3iVNCwAJ)
+
 ## Getting Started
 
 First install node >=16 and npm >=8. Recommended versions `node v19` and `npm v9`.
