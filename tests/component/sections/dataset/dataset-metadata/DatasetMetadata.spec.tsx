@@ -7,13 +7,61 @@ import {
 import { AnonymizedContext } from '../../../../../src/sections/dataset/anonymized/AnonymizedContext'
 import {
   isArrayOfObjects,
-  metadataFieldValueToString
-} from '../../../../../src/sections/dataset/dataset-metadata/dataset-metadata-fields/DatasetMetadataFieldValue'
+  metadataFieldValueToMarkdownFormat
+} from '../../../../../src/sections/dataset/dataset-metadata/dataset-metadata-fields/DatasetMetadataFieldValueFormatted'
 import { MetadataBlockInfoProvider } from '../../../../../src/sections/dataset/metadata-block-info/MetadataBlockProvider'
 import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 
+const extractLinksFromText = (text: string): { text: string; link: string }[] => {
+  const linkFormat = /(?<!!) \[(.*?)\]\((.*?)\)/g
+  const matchesLinkFormat = text.match(linkFormat)
+
+  if (!matchesLinkFormat) {
+    return []
+  }
+
+  return matchesLinkFormat
+    .map((match) => {
+      const matchResult = match.match(/\[(.*?)\]\((.*?)\)/)
+      if (matchResult) {
+        const [, text, link] = matchResult
+        return { text, link }
+      }
+      return null
+    })
+    .filter((match) => match !== null) as { text: string; link: string }[]
+}
+
+const extractImagesFromText = (text: string): string[] => {
+  return text.match(/!\[(.*?)\]\((.*?)\)/g) || []
+}
+
 describe('DatasetMetadata', () => {
+  const checkMetadataFieldValue = (metadataFieldName: string, metadataFieldValue: string) => {
+    const extractedLinks = extractLinksFromText(metadataFieldValue)
+    const extractedImages = extractImagesFromText(metadataFieldValue)
+    const notPlainText = extractedLinks.length > 0 || extractedImages
+
+    if (notPlainText) {
+      if (extractedLinks) {
+        extractedLinks.forEach(({ text, link }) => {
+          cy.findByText(text).should('exist')
+          cy.findByText(text).should('have.attr', 'href', link)
+        })
+      }
+      if (extractedImages) {
+        extractedImages.forEach((image) => {
+          const [, altText, imageUrl] = image.match(/!\[(.*?)\]\((.*?)\)/) || []
+          cy.findByAltText(altText).should('exist')
+          cy.findByAltText(altText).should('have.attr', 'src', imageUrl)
+        })
+      }
+    } else {
+      cy.findByText(metadataFieldValue).should('exist')
+    }
+  }
+
   it('renders the metadata blocks sections titles correctly', () => {
     const mockDataset = DatasetMother.create()
     const mockMetadataBlocks = mockDataset.metadataBlocks
@@ -130,7 +178,7 @@ describe('DatasetMetadata', () => {
         }
 
         Object.entries(metadataBlock.fields).forEach(([metadataFieldName, metadataFieldValue]) => {
-          const metadataFieldValueString = metadataFieldValueToString(
+          const metadataFieldValueString = metadataFieldValueToMarkdownFormat(
             metadataFieldName,
             metadataFieldValue,
             metadataBlockInfoMock
@@ -138,15 +186,12 @@ describe('DatasetMetadata', () => {
 
           if (isArrayOfObjects(metadataFieldValue)) {
             metadataFieldValueString.split(' \n \n').forEach((fieldValue) => {
-              cy.findAllByText(fieldValue).should('exist')
+              checkMetadataFieldValue(metadataFieldName, fieldValue)
             })
             return
           }
 
-          const fieldValue = cy.findAllByText(metadataFieldValueString, {
-            exact: false
-          })
-          fieldValue.should('exist')
+          checkMetadataFieldValue(metadataFieldName, metadataFieldValueString)
         })
       })
     })

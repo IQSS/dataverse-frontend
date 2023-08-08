@@ -6,7 +6,7 @@ import { useAnonymized } from './anonymized/AnonymizedContext'
 import { AnonymizedProvider } from './anonymized/AnonymizedProvider'
 import { FileJSDataverseRepository } from '../../files/infrastructure/FileJSDataverseRepository'
 import { MetadataBlockInfoProvider } from './metadata-block-info/MetadataBlockProvider'
-import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/MetadataBlockInfoJSDataverseRepository'
+import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
