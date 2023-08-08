@@ -1,8 +1,8 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { File } from '../../../../files/domain/models/File'
 import { RowSelectionCheckbox } from './row-selection/RowSelectionCheckbox'
-import { FileInfoCell } from './file-info-cell/FileInfoCell'
-import { FileInfoHeader } from './FileInfoHeader'
+import { FileInfoCell } from './file-info/file-info-cell/FileInfoCell'
+import { FileInfoHeader } from './file-info/FileInfoHeader'
 
 export const createColumnsDefinition = (
   toggleAllRowsSelected: (event: unknown) => void
