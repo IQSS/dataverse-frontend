@@ -24,7 +24,12 @@ export class JSDatasetMapper {
       citation,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
-      JSDatasetMapper.toMetadataBlocks(jsDataset.metadataBlocks) // TODO Add alternativePersistentId, publicationDate, citationDate
+      JSDatasetMapper.toMetadataBlocks(
+        jsDataset.metadataBlocks,
+        jsDataset.alternativePersistentId,
+        jsDataset.publicationDate,
+        jsDataset.citationDate
+      )
     ).build()
   }
 
