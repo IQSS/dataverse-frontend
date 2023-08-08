@@ -7,11 +7,12 @@ import {
 import { AnonymizedContext } from '../../../../../src/sections/dataset/anonymized/AnonymizedContext'
 import {
   isArrayOfObjects,
-  metadataFieldValueToMarkdownFormat
+  metadataFieldValueToDisplayFormat
 } from '../../../../../src/sections/dataset/dataset-metadata/dataset-metadata-fields/DatasetMetadataFieldValueFormatted'
 import { MetadataBlockInfoProvider } from '../../../../../src/sections/dataset/metadata-block-info/MetadataBlockProvider'
 import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER } from '../../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
 
 const extractLinksFromText = (text: string): { text: string; link: string }[] => {
   const linkFormat = /(?<!!) \[(.*?)\]\((.*?)\)/g
@@ -46,15 +47,23 @@ describe('DatasetMetadata', () => {
     if (notPlainText) {
       if (extractedLinks) {
         extractedLinks.forEach(({ text, link }) => {
-          cy.findByText(text).should('exist')
-          cy.findByText(text).should('have.attr', 'href', link)
+          const translatedText = text.replaceAll(
+            METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
+            metadataFieldName
+          )
+          cy.findByText(translatedText).should('exist')
+          cy.findByText(translatedText).should('have.attr', 'href', link)
         })
       }
       if (extractedImages) {
         extractedImages.forEach((image) => {
           const [, altText, imageUrl] = image.match(/!\[(.*?)\]\((.*?)\)/) || []
-          cy.findByAltText(altText).should('exist')
-          cy.findByAltText(altText).should('have.attr', 'src', imageUrl)
+          const translatedAltText = altText.replaceAll(
+            METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
+            metadataFieldName
+          )
+          cy.findByAltText(translatedAltText).should('exist')
+          cy.findByAltText(translatedAltText).should('have.attr', 'src', imageUrl)
         })
       }
     } else {
@@ -178,7 +187,9 @@ describe('DatasetMetadata', () => {
         }
 
         Object.entries(metadataBlock.fields).forEach(([metadataFieldName, metadataFieldValue]) => {
-          const metadataFieldValueString = metadataFieldValueToMarkdownFormat(
+          const metadataFieldNameTranslated = t[metadataBlock.name].datasetField[metadataFieldName]
+            .name as string
+          const metadataFieldValueString = metadataFieldValueToDisplayFormat(
             metadataFieldName,
             metadataFieldValue,
             metadataBlockInfoMock
@@ -186,12 +197,12 @@ describe('DatasetMetadata', () => {
 
           if (isArrayOfObjects(metadataFieldValue)) {
             metadataFieldValueString.split(' \n \n').forEach((fieldValue) => {
-              checkMetadataFieldValue(metadataFieldName, fieldValue)
+              checkMetadataFieldValue(metadataFieldNameTranslated, fieldValue)
             })
             return
           }
 
-          checkMetadataFieldValue(metadataFieldName, metadataFieldValueString)
+          checkMetadataFieldValue(metadataFieldNameTranslated, metadataFieldValueString)
         })
       })
     })

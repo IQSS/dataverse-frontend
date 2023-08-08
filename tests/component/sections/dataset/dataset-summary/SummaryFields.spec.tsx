@@ -3,7 +3,7 @@ import { SummaryFields } from '../../../../../src/sections/dataset/dataset-summa
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import {
   isArrayOfObjects,
-  metadataFieldValueToMarkdownFormat
+  metadataFieldValueToDisplayFormat
 } from '../../../../../src/sections/dataset/dataset-metadata/dataset-metadata-fields/DatasetMetadataFieldValueFormatted'
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
@@ -38,7 +38,7 @@ describe('DatasetSummary', () => {
           )
           summaryFieldDescription.should('exist')
 
-          const summaryFieldValueString = metadataFieldValueToMarkdownFormat(
+          const summaryFieldValueString = metadataFieldValueToDisplayFormat(
             summaryFieldName,
             summaryFieldValue,
             metadataBlockInfoMock

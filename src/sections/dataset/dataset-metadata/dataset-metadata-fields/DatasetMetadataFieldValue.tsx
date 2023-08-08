@@ -1,17 +1,20 @@
 import {
   ANONYMIZED_FIELD_VALUE,
-  DatasetMetadataFieldValue as DatasetMetadataFieldValueModel
+  DatasetMetadataFieldValue as DatasetMetadataFieldValueModel,
+  MetadataBlockName
 } from '../../../../dataset/domain/models/Dataset'
 import { useAnonymized } from '../../anonymized/AnonymizedContext'
 import { useTranslation } from 'react-i18next'
 import { DatasetMetadataFieldValueFormatted } from './DatasetMetadataFieldValueFormatted'
 
 interface DatasetMetadataFieldValueProps {
+  metadataBlockName: MetadataBlockName
   metadataFieldName: string
   metadataFieldValue: DatasetMetadataFieldValueModel
 }
 
 export function DatasetMetadataFieldValue({
+  metadataBlockName,
   metadataFieldName,
   metadataFieldValue
 }: DatasetMetadataFieldValueProps) {
@@ -23,6 +26,7 @@ export function DatasetMetadataFieldValue({
 
   return (
     <DatasetMetadataFieldValueFormatted
+      metadataBlockName={metadataBlockName}
       metadataFieldName={metadataFieldName}
       metadataFieldValue={metadataFieldValue}
     />

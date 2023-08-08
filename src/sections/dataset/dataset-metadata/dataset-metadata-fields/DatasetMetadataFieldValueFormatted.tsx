@@ -1,33 +1,43 @@
 import { useMetadataBlockInfo } from '../../metadata-block-info/MetadataBlockInfoContext'
 import {
+  METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
   METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER,
   MetadataBlockInfo
 } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MarkdownComponent } from '../../markdown/MarkdownComponent'
 import {
   DatasetMetadataFieldValue as DatasetMetadataFieldValueModel,
-  DatasetMetadataSubField
+  DatasetMetadataSubField,
+  MetadataBlockName
 } from '../../../../dataset/domain/models/Dataset'
+import { useTranslation } from 'react-i18next'
 
 interface DatasetMetadataFieldValueFormattedProps {
+  metadataBlockName: MetadataBlockName
   metadataFieldName: string
   metadataFieldValue: DatasetMetadataFieldValueModel
 }
 export function DatasetMetadataFieldValueFormatted({
+  metadataBlockName,
   metadataFieldName,
   metadataFieldValue
 }: DatasetMetadataFieldValueFormattedProps) {
+  const { t } = useTranslation(metadataBlockName)
   const { metadataBlockInfo } = useMetadataBlockInfo()
-  const metadataFieldValueMarkdown = metadataFieldValueToMarkdownFormat(
+  const valueFormatted = metadataFieldValueToDisplayFormat(
     metadataFieldName,
     metadataFieldValue,
     metadataBlockInfo
   )
+  const valueFormattedWithNamesTranslated = valueFormatted.replaceAll(
+    METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
+    t(`${metadataBlockName}.datasetField.${metadataFieldName}.name`)
+  )
 
-  return <MarkdownComponent markdown={metadataFieldValueMarkdown} />
+  return <MarkdownComponent markdown={valueFormattedWithNamesTranslated} />
 }
 
-export function metadataFieldValueToMarkdownFormat(
+export function metadataFieldValueToDisplayFormat(
   metadataFieldName: string,
   metadataFieldValue: DatasetMetadataFieldValueModel,
   metadataBlockInfo?: MetadataBlockInfo
