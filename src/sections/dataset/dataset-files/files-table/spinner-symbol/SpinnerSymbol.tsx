@@ -1,4 +1,4 @@
-import { Col, Row, useTheme } from 'dataverse-design-system'
+import { Col, Row, useTheme } from '@iqss/dataverse-design-system'
 import { TailSpin } from 'react-loader-spinner'
 import styles from './SpinnerSymbol.module.scss'
 import { useTranslation } from 'react-i18next'

@@ -1,4 +1,4 @@
-import { Pagination } from 'dataverse-design-system'
+import { Pagination } from '@iqss/dataverse-design-system'
 
 interface PageNumbersButtonsProps {
   startPageIndex: number
@@ -23,7 +23,7 @@ export function PageNumbersButtons({
           <Pagination.Item
             key={pageNumber}
             pageNumber={pageNumber}
-            onClick={() => goToPage(pageIndex)}
+            onClick={() => goToPage(pageIndex + 1)}
             active={selectedPageIndex === pageIndex}
           />
         )

@@ -1,7 +1,7 @@
-import { Pagination } from 'dataverse-design-system'
+import { Pagination } from '@iqss/dataverse-design-system'
 import { PageNumbersButtons } from './PageNumbersButtons'
 
-interface TablePaginationNumbersWithEllipsisProps {
+interface PageNumbersButtonsWithEllipsisProps {
   selectedPageIndex: number
   pageCount: number
   goToPage: (pageIndex: number) => void
@@ -11,7 +11,7 @@ export function PageNumbersButtonsWithEllipsis({
   selectedPageIndex,
   pageCount,
   goToPage
-}: TablePaginationNumbersWithEllipsisProps) {
+}: PageNumbersButtonsWithEllipsisProps) {
   const firstPageNumber = 1
   const firstPageIndex = 0
   const lastPageIndex = pageCount - 1
@@ -28,7 +28,7 @@ export function PageNumbersButtonsWithEllipsis({
           <Pagination.Item
             pageNumber={firstPageNumber}
             active={selectedPageIndex === firstPageIndex}
-            onClick={() => goToPage(firstPageIndex)}
+            onClick={() => goToPage(firstPageIndex + 1)}
           />
           <Pagination.Ellipsis />
         </>
@@ -45,7 +45,7 @@ export function PageNumbersButtonsWithEllipsis({
           <Pagination.Item
             pageNumber={pageCount}
             active={selectedPageIndex === lastPageIndex}
-            onClick={() => goToPage(lastPageIndex)}
+            onClick={() => goToPage(lastPageIndex + 1)}
           />
         </>
       )}

@@ -1,5 +1,5 @@
 import { Check, ClipboardPlusFill } from 'react-bootstrap-icons'
-import { Tooltip } from 'dataverse-design-system'
+import { Tooltip } from '@iqss/dataverse-design-system'
 import { useState } from 'react'
 import styles from './CopyToClipboard.module.scss'
 import { useTranslation } from 'react-i18next'

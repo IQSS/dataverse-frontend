@@ -1,44 +1,39 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { File } from '../../../../files/domain/models/File'
-import {
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  useReactTable
-} from '@tanstack/react-table'
-import { columns } from './FilesTableColumnsDefinition'
+import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import { createColumnsDefinition } from './FilesTableColumnsDefinition'
+import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
+import { RowSelection, useRowSelection } from './row-selection/useRowSelection'
 
-export interface RowSelection {
-  [key: string]: boolean
-}
-
-export function useFilesTable() {
-  const [data, setFilesTableData] = useState<File[]>(() => [])
-  const [rowSelection, setRowSelection] = useState({})
-
+export function useFilesTable(files: File[], paginationInfo: FilePaginationInfo) {
+  const [currentPageRowSelection, setCurrentPageRowSelection] = useState<RowSelection>({})
+  const { rowSelection, selectAllRows, clearRowSelection, toggleAllRowsSelected } = useRowSelection(
+    currentPageRowSelection,
+    setCurrentPageRowSelection,
+    paginationInfo
+  )
   const table = useReactTable({
-    data,
-    columns,
+    data: files,
+    columns: createColumnsDefinition(toggleAllRowsSelected),
     state: {
-      rowSelection
+      rowSelection: currentPageRowSelection
     },
     enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
+    onRowSelectionChange: setCurrentPageRowSelection,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    debugTable: true
+    manualPagination: true,
+    pageCount: paginationInfo.totalPages
   })
 
-  return { table, setFilesTableData, rowSelection, setRowSelection }
-}
+  useEffect(() => {
+    table.setPageSize(paginationInfo.pageSize)
+    table.setPageIndex(paginationInfo.page - 1)
+  }, [paginationInfo])
 
-export function createRowSelection(numberOfRows: number) {
-  const rowSelection: Record<string, boolean> = {}
-
-  for (let i = 0; i < numberOfRows; i++) {
-    rowSelection[i as unknown as string] = true
+  return {
+    table,
+    rowSelection,
+    selectAllRows,
+    clearRowSelection
   }
-
-  return rowSelection
 }

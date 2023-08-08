@@ -4,7 +4,9 @@ import { RowSelectionCheckbox } from './row-selection/RowSelectionCheckbox'
 import { FileInfoCell } from './file-info-cell/FileInfoCell'
 import { FileInfoHeader } from './FileInfoHeader'
 
-export const columns: ColumnDef<File>[] = [
+export const createColumnsDefinition = (
+  toggleAllRowsSelected: (event: unknown) => void
+): ColumnDef<File>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -12,7 +14,7 @@ export const columns: ColumnDef<File>[] = [
         {...{
           checked: table.getIsAllRowsSelected(),
           indeterminate: table.getIsSomeRowsSelected(),
-          onChange: table.getToggleAllRowsSelectedHandler(),
+          onChange: toggleAllRowsSelected,
           disabled: table.getPageCount() === 0
         }}
       />

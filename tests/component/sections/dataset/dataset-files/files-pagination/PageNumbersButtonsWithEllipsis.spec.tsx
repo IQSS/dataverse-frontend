@@ -1,4 +1,4 @@
-import { PageNumbersButtonsWithEllipsis } from '../../../../../../../src/sections/dataset/dataset-files/files-table/table-pagination/PageNumbersButtonsWithEllipsis'
+import { PageNumbersButtonsWithEllipsis } from '../../../../../../src/sections/dataset/dataset-files/files-pagination/PageNumbersButtonsWithEllipsis'
 
 let goToPage: (pageIndex: number) => void
 const selectedPageIndex = 3
@@ -46,10 +46,10 @@ describe('PageNumbersButtonsWithEllipsis', () => {
     )
 
     cy.findByText('1').click()
-    cy.wrap(goToPage).should('have.been.calledWith', 0)
+    cy.wrap(goToPage).should('have.been.calledWith', 1)
 
     cy.findByText('7').click()
-    cy.wrap(goToPage).should('have.been.calledWith', 6)
+    cy.wrap(goToPage).should('have.been.calledWith', 7)
   })
 
   it('renders both ellipsis correctly', () => {
@@ -96,9 +96,9 @@ describe('PageNumbersButtonsWithEllipsis', () => {
     )
 
     cy.findByText('1').click()
-    cy.wrap(goToPage).should('have.been.calledWith', 0)
+    cy.wrap(goToPage).should('have.been.calledWith', 1)
 
     cy.findByText('100').click()
-    cy.wrap(goToPage).should('have.been.calledWith', 99)
+    cy.wrap(goToPage).should('have.been.calledWith', 100)
   })
 })

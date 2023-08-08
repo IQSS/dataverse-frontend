@@ -1,7 +1,7 @@
 import { LockFill, UnlockFill } from 'react-bootstrap-icons'
 import styles from './FileThumbnail.module.scss'
 import { useTranslation } from 'react-i18next'
-import { Tooltip } from 'dataverse-design-system'
+import { Tooltip } from '@iqss/dataverse-design-system'
 
 export function FileThumbnailRestrictedIcon({ locked }: { locked: boolean }) {
   const { t } = useTranslation('files')

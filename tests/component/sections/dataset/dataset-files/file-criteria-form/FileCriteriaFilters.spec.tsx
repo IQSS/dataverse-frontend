@@ -36,13 +36,9 @@ describe('FilesCriteriaFilters', () => {
     cy.findByRole('button', { name: 'Filter Tag: All' }).should('exist')
   })
 
-  it('does not render filters by type options when there are no files or not filters to be applied', () => {
+  it('does not render filters by type options when there are no filters to be applied', () => {
     const onCriteriaChange = cy.stub().as('onCriteriaChange')
-    const filesCountInfo = FilesCountInfoMother.create({
-      perFileType: [],
-      perAccess: [],
-      perFileTag: []
-    })
+    const filesCountInfo = FilesCountInfoMother.createOnlyTotal()
 
     cy.customMount(
       <FileCriteriaFilters

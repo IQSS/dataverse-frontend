@@ -1,7 +1,23 @@
 {
-  "name": "dataverse-design-system",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@iqss/dataverse-design-system",
+  "version": "1.0.1",
+  "description": "Dataverse Design System Component Library",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IQSS/dataverse-frontend.git",
+    "directory": "packages/design-system"
+  },
+  "bugs": {
+    "url": "https://github.com/IQSS/dataverse-frontend/issues"
+  },
+  "homepage": "https://github.com/IQSS/dataverse-frontend#readme",
+  "keywords": [
+    "dataverse",
+    "design-system",
+    "react",
+    "component"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -37,17 +53,20 @@
     "chromatic": "6.17.4"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
-  "main": "./dist/dataverse-design-system.umd.js",
-  "module": "./dist/dataverse-design-system.es.js",
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/dataverse-design-system.es.js",
-      "require": "./dist/dataverse-design-system.umd.js"
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
     }
   },
-  "readme": "ERROR: No README data found!",
-  "_id": "dataverse-design-system@0.0.0"
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "821b051d0591059bf81e68ea2ca429a4eed1515a"
 }
