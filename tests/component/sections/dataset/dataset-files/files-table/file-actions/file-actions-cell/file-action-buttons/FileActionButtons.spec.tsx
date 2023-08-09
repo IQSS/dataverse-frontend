@@ -7,5 +7,6 @@ describe('FileActionButtons', () => {
     cy.customMount(<FileActionButtons file={file} />)
 
     cy.findByRole('group', { name: 'File Action Buttons' }).should('exist')
+    cy.findByRole('button', { name: 'Access File' }).should('exist')
   })
 })
