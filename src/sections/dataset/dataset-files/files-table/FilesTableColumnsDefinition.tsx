@@ -4,6 +4,7 @@ import { RowSelectionCheckbox } from './row-selection/RowSelectionCheckbox'
 import { FileInfoCell } from './file-info/file-info-cell/FileInfoCell'
 import { FileInfoHeader } from './file-info/FileInfoHeader'
 import { FileActionsHeader } from './file-actions/FileActionsHeader'
+import { FileActionsCell } from './file-actions/file-actions-cell/FileActionsCell'
 
 export const createColumnsDefinition = (
   toggleAllRowsSelected: (event: unknown) => void
@@ -44,7 +45,7 @@ export const createColumnsDefinition = (
   },
   {
     header: () => <FileActionsHeader />,
-    accessorKey: 'info',
-    cell: (props) => <span>Some action buttons</span>
+    accessorKey: 'status',
+    cell: (props) => <FileActionsCell file={props.row.original} />
   }
 ]
