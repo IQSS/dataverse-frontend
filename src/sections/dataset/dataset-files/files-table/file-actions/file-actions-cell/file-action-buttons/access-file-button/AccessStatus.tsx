@@ -12,7 +12,7 @@ export function AccessStatus({ accessStatus }: AccessStatusProps) {
 
   return (
     <span className={styles[semanticMeaningByAccessStatus[accessStatus]]}>
-      {t(`table.fileAccess.${accessStatus}.name`)} <AccessStatusIcon accessStatus={accessStatus} />
+      <AccessStatusIcon accessStatus={accessStatus} /> {t(`table.fileAccess.${accessStatus}.name`)}
     </span>
   )
 }

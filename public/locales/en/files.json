@@ -36,16 +36,16 @@
         "name": "Restricted with Access Granted",
         "icon": "Restricted with access Icon"
       },
-        "embargoed": {
-            "name": "Embargoed"
-        },
+      "embargoed": {
+        "name": "Embargoed"
+      },
       "embargoedRestricted": {
         "name": "Embargoed"
       },
-        "public": {
-            "name": "Public",
-            "icon": "Public File Icon"
-        }
+      "public": {
+        "name": "Public",
+        "icon": "Public File Icon"
+      }
     },
     "copyToClipboard": {
       "clickToCopy": "Click to copy",
