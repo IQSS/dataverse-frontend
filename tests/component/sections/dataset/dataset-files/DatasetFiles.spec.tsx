@@ -82,9 +82,9 @@ describe('DatasetFiles', () => {
     )
 
     cy.findByRole('button', { name: /Sort/ }).should('not.exist')
-    cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'File Type: All' }).should('not.exist')
     cy.findByRole('button', { name: 'Access: All' }).should('not.exist')
-    cy.findByRole('button', { name: 'Filter Tag: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'File Tags: All' }).should('not.exist')
     cy.findByText('There are no files in this dataset.').should('exist')
   })
 
@@ -122,7 +122,7 @@ describe('DatasetFiles', () => {
       new FileCriteria().withSortBy(FileSortByOption.NAME_AZ)
     )
 
-    cy.findByRole('button', { name: 'Filter Type: All' }).should('exist')
+    cy.findByRole('button', { name: 'File Type: All' }).should('exist')
   })
 
   it('calls the useFiles hook with the correct parameters when searchText criteria changes', () => {
