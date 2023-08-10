@@ -18,4 +18,13 @@ describe('DropdownButtonItem', () => {
     )
     cy.findByRole('link').should('have.attr', 'href').and('eq', '/path')
   })
+
+  it('renders with the disabled attribute', () => {
+    cy.mount(
+      <DropdownButtonItem disabled>
+        <span>My Dropdown Item</span>
+      </DropdownButtonItem>
+    )
+    cy.findByRole('button').should('have.class', 'disabled')
+  })
 })

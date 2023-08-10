@@ -145,6 +145,21 @@ export const WithSeparatorHeaderBetweenOptions: Story = {
   )
 }
 
+export const WithDisabledOptions: Story = {
+  render: () => (
+    <CanvasFixedHeight height={150}>
+      <DropdownButton withSpacing title="Dropdown Button" id="dropdown-1" variant="primary">
+        <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
+        <DropdownButtonItem href="/item-2" disabled>
+          Item 2
+        </DropdownButtonItem>
+        <DropdownHeader>Header</DropdownHeader>
+        <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
+      </DropdownButton>
+    </CanvasFixedHeight>
+  )
+}
+
 /**
  * This is an example use case for a navigation dropdown button.
  */
