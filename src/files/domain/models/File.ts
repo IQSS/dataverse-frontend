@@ -33,6 +33,14 @@ export interface FileAccess {
   canDownload: boolean
 }
 
+export enum FileAccessStatus {
+  PUBLIC = 'public',
+  RESTRICTED = 'restricted',
+  RESTRICTED_ACCESS = 'restrictedAccess',
+  EMBARGOED = 'embargoed',
+  EMBARGOED_RESTRICTED = 'embargoedRestricted'
+}
+
 export enum FileStatus {
   DRAFT = 'draft',
   RELEASED = 'released'
@@ -120,5 +128,21 @@ export class File {
 
   getLink(): string {
     return `/file?id=${this.id}&version=${this.version.toString()}`
+  }
+
+  get accessStatus(): FileAccessStatus {
+    if (!this.access.restricted && !this.embargo?.active) {
+      return FileAccessStatus.PUBLIC
+    }
+    if (!this.access.canDownload) {
+      if (!this.embargo?.active) {
+        return FileAccessStatus.RESTRICTED
+      }
+      return FileAccessStatus.EMBARGOED_RESTRICTED
+    }
+    if (!this.embargo?.active) {
+      return FileAccessStatus.RESTRICTED_ACCESS
+    }
+    return FileAccessStatus.EMBARGOED
   }
 }

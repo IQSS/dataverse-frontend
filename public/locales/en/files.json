@@ -29,13 +29,23 @@
     "fileAccess": {
       "title": "File Access",
       "restricted": {
-        "tooltip": "Restricted",
+        "name": "Restricted",
         "icon": "Restricted File Icon"
       },
-      "restrictedWithAccess": {
-        "tooltip": "Restricted with Access Granted",
+      "restrictedAccess": {
+        "name": "Restricted with Access Granted",
         "icon": "Restricted with access Icon"
-      }
+      },
+        "embargoed": {
+            "name": "Embargoed"
+        },
+      "embargoedRestricted": {
+        "name": "Embargoed"
+      },
+        "public": {
+            "name": "Public",
+            "icon": "Public File Icon"
+        }
     },
     "copyToClipboard": {
       "clickToCopy": "Click to copy",
