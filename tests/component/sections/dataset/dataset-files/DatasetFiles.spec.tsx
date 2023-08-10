@@ -215,7 +215,7 @@ describe('DatasetFiles', () => {
         />
       )
 
-      cy.findByRole('button', { name: 'Filter Type: All' }).click()
+      cy.findByRole('button', { name: 'File Type: All' }).click()
       cy.findByText('Image (485)').should('exist').click()
       cy.wrap(fileRepository.getAllByDatasetPersistentId).should(
         'be.calledWith',
@@ -255,7 +255,7 @@ describe('DatasetFiles', () => {
         />
       )
 
-      cy.findByRole('button', { name: 'Filter Tag: All' }).click()
+      cy.findByRole('button', { name: 'File Tags: All' }).click()
       cy.findByText('Document (5)').should('exist').click()
       cy.wrap(fileRepository.getAllByDatasetPersistentId).should(
         'be.calledWith',
