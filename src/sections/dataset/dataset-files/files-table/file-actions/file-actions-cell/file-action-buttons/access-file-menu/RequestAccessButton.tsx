@@ -14,3 +14,7 @@ export function RequestAccessButton({
   }
   return <DropdownButtonItem>Request Access</DropdownButtonItem>
 }
+
+// TODO Access Requested button with italic and disabled
+// TODO Add use case for the onClick event
+// TODO If the user is not authenticated, the button should open the Log In modal
