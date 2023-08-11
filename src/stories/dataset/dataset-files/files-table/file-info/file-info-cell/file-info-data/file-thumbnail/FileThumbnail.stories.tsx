@@ -16,11 +16,7 @@ type Story = StoryObj<typeof FileThumbnail>
 
 export const WithIcon: Story = {
   render: () => {
-    const file = FileMother.create({
-      type: new FileType('some-type'),
-      access: { restricted: false, canDownload: true },
-      thumbnail: undefined
-    })
+    const file = FileMother.createDefault()
     return (
       <FileThumbnail
         thumbnail={file.thumbnail}
@@ -34,10 +30,7 @@ export const WithIcon: Story = {
 
 export const WithThumbnailPreview: Story = {
   render: () => {
-    const file = FileMother.create({
-      access: { restricted: false, canDownload: true },
-      thumbnail: faker.image.imageUrl()
-    })
+    const file = FileMother.createWithThumbnail()
     return (
       <FileThumbnail
         thumbnail={file.thumbnail}
@@ -51,7 +44,7 @@ export const WithThumbnailPreview: Story = {
 
 export const WithThumbnailRestrictedLockedIcon: Story = {
   render: () => {
-    const file = FileMother.create({ access: { restricted: true, canDownload: false } })
+    const file = FileMother.createWithRestrictedAccess()
     return (
       <FileThumbnail
         thumbnail={file.thumbnail}
@@ -65,7 +58,7 @@ export const WithThumbnailRestrictedLockedIcon: Story = {
 
 export const WithThumbnailRestrictedUnlockedIcon: Story = {
   render: () => {
-    const file = FileMother.create({ access: { restricted: true, canDownload: true } })
+    const file = FileMother.createWithRestrictedAccessWithAccessGranted()
     return (
       <FileThumbnail
         thumbnail={file.thumbnail}

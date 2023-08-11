@@ -1,4 +1,4 @@
-import { AccessFileButton } from './access-file-button/AccessFileButton'
+import { AccessFileMenu } from './access-file-menu/AccessFileMenu'
 import { File } from '../../../../../../../files/domain/models/File'
 
 interface FileActionButtonsProps {
@@ -7,7 +7,7 @@ interface FileActionButtonsProps {
 export function FileActionButtons({ file }: FileActionButtonsProps) {
   return (
     <div role="group" aria-label="File Action Buttons">
-      <AccessFileButton file={file} />
+      <AccessFileMenu file={file} />
     </div>
   )
 }

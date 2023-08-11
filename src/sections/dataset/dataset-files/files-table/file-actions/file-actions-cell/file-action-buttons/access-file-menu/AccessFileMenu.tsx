@@ -1,17 +1,13 @@
-import {
-  DropdownButton,
-  DropdownButtonItem,
-  DropdownHeader,
-  Tooltip
-} from '@iqss/dataverse-design-system'
+import { DropdownButton, DropdownHeader, Tooltip } from '@iqss/dataverse-design-system'
 import { File } from '../../../../../../../../files/domain/models/File'
 import { Download, FileEarmark } from 'react-bootstrap-icons'
 import { AccessStatus } from './AccessStatus'
+import { RequestAccessButton } from './RequestAccessButton'
 
 interface FileActionButtonAccessFileProps {
   file: File
 }
-export function AccessFileButton({ file }: FileActionButtonAccessFileProps) {
+export function AccessFileMenu({ file }: FileActionButtonAccessFileProps) {
   return (
     <Tooltip placement="top" overlay={<span>Access File</span>}>
       <DropdownButton
@@ -21,11 +17,11 @@ export function AccessFileButton({ file }: FileActionButtonAccessFileProps) {
         <DropdownHeader>
           File Access <FileEarmark />
         </DropdownHeader>
-        <DropdownButtonItem href="/item-1" disabled>
-          <AccessStatus accessStatus={file.accessStatus} />
-        </DropdownButtonItem>
-        <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
-        <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
+        <AccessStatus accessStatus={file.accessStatus} lockStatus={file.lockStatus} />
+        <RequestAccessButton
+          accessCanBeRequested={file.accessCanBeRequested}
+          lockStatus={file.lockStatus}
+        />
       </DropdownButton>
     </Tooltip>
   )

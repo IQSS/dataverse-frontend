@@ -31,6 +31,7 @@ export class FileSize {
 export interface FileAccess {
   restricted: boolean
   canDownload: boolean
+  ownerAllowsAccessRequest: boolean
 }
 
 export enum FileAccessStatus {
@@ -43,7 +44,8 @@ export enum FileAccessStatus {
 
 export enum FileStatus {
   DRAFT = 'draft',
-  RELEASED = 'released'
+  RELEASED = 'released',
+  DEACCESSIONED = 'deaccessioned'
 }
 
 export class FileVersion {
@@ -107,6 +109,12 @@ export class FileType {
   }
 }
 
+export enum FileLockStatus {
+  LOCKED = 'locked',
+  UNLOCKED = 'unlocked',
+  OPEN = 'open'
+}
+
 export class File {
   constructor(
     readonly id: string,
@@ -144,5 +152,20 @@ export class File {
       return FileAccessStatus.RESTRICTED_ACCESS
     }
     return FileAccessStatus.EMBARGOED
+  }
+
+  get accessCanBeRequested(): boolean {
+    return this.version.status !== FileStatus.DEACCESSIONED && this.access.ownerAllowsAccessRequest
+  }
+
+  get lockStatus(): FileLockStatus {
+    // TODO - Use this attribute for the FilesThumbnail components
+    if (!this.access.restricted && !this.embargo?.active) {
+      return FileLockStatus.OPEN
+    }
+    if (!this.access.canDownload) {
+      return FileLockStatus.LOCKED
+    }
+    return FileLockStatus.UNLOCKED
   }
 }

@@ -30,7 +30,11 @@ export class FileMother {
     const fileMockedData = {
       id: faker.datatype.uuid(),
       name: faker.system.fileName(),
-      access: { restricted: faker.datatype.boolean(), canDownload: faker.datatype.boolean() },
+      access: {
+        restricted: faker.datatype.boolean(),
+        canDownload: faker.datatype.boolean(),
+        ownerAllowsAccessRequest: faker.datatype.boolean()
+      },
       version: {
         majorNumber: faker.datatype.number(),
         minorNumber: faker.datatype.number(),
@@ -108,7 +112,7 @@ export class FileMother {
         minorNumber: 0,
         status: FileStatus.RELEASED
       },
-      access: { restricted: false, canDownload: true },
+      access: { restricted: false, canDownload: true, ownerAllowsAccessRequest: false },
       labels: [],
       checksum: undefined,
       thumbnail: undefined,
@@ -145,6 +149,20 @@ export class FileMother {
     })
   }
 
+  static createWithEmbargoRestricted(): File {
+    return this.createDefault({
+      access: {
+        restricted: true,
+        canDownload: false,
+        ownerAllowsAccessRequest: false
+      },
+      embargo: {
+        active: true,
+        date: faker.date.future().toDateString()
+      }
+    })
+  }
+
   static createWithTabularData(): File {
     return this.createDefault({
       type: new FileType('tabular data'),
@@ -165,6 +183,56 @@ export class FileMother {
   static createWithChecksum(): File {
     return this.createDefault({
       checksum: faker.datatype.uuid()
+    })
+  }
+
+  static createWithPublicAccess(): File {
+    return this.createDefault({
+      access: {
+        restricted: false,
+        canDownload: true,
+        ownerAllowsAccessRequest: false
+      },
+      embargo: undefined
+    })
+  }
+
+  static createWithRestrictedAccess(): File {
+    return this.createDefault({
+      access: {
+        restricted: true,
+        canDownload: false,
+        ownerAllowsAccessRequest: false
+      },
+      embargo: undefined
+    })
+  }
+
+  static createWithRestrictedAccessWithAccessGranted(): File {
+    return this.createDefault({
+      access: {
+        restricted: true,
+        canDownload: true,
+        ownerAllowsAccessRequest: true
+      },
+      embargo: undefined
+    })
+  }
+
+  static createWithAccessRequestAllowed(): File {
+    return this.createDefault({
+      access: {
+        restricted: true,
+        canDownload: false,
+        ownerAllowsAccessRequest: true
+      },
+      embargo: undefined
+    })
+  }
+
+  static createWithThumbnail(): File {
+    return this.createDefault({
+      thumbnail: faker.image.imageUrl()
     })
   }
 }
