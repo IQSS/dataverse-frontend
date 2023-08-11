@@ -20,8 +20,8 @@ export function AccessFileMenu({ file }: FileActionButtonAccessFileProps) {
         <AccessStatus accessStatus={file.accessStatus} lockStatus={file.lockStatus} />
         <RequestAccessButton
           versionStatus={file.version.status}
-          accessCanBeRequested={file.access.canBeRequested}
-          lockStatus={file.lockStatus}
+          accessStatus={file.accessStatus}
+          access={file.access}
         />
       </DropdownButton>
     </Tooltip>
