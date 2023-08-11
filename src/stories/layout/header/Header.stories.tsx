@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { Header } from '../../../sections/layout/header/Header'
-import { createSandbox } from 'sinon'
-import { HeaderMother } from '../../../../tests/component/sections/layout/header/HeaderMother'
+import { WithLoggedInUser } from '../../WithLoggedInUser'
 
 const meta: Meta<typeof Header> = {
   title: 'Layout/Header',
@@ -15,12 +14,13 @@ type Story = StoryObj<typeof Header>
 
 export const LoggedOut: Story = {
   render: () => {
-    return HeaderMother.withGuestUser(createSandbox())
+    return <Header />
   }
 }
 
 export const LoggedIn: Story = {
+  decorators: [WithLoggedInUser],
   render: () => {
-    return HeaderMother.withLoggedInUser(createSandbox())
+    return <Header />
   }
 }
