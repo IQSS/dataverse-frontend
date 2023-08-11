@@ -32,8 +32,11 @@ export class FileMother {
       name: faker.system.fileName(),
       access: {
         restricted: faker.datatype.boolean(),
-        canDownload: faker.datatype.boolean(),
-        ownerAllowsAccessRequest: faker.datatype.boolean()
+        canBeRequested: faker.datatype.boolean(),
+        requested: faker.datatype.boolean()
+      },
+      permissions: {
+        canDownload: faker.datatype.boolean()
       },
       version: {
         majorNumber: faker.datatype.number(),
@@ -86,6 +89,7 @@ export class FileMother {
       ),
       fileMockedData.name,
       fileMockedData.access,
+      fileMockedData.permissions,
       fileMockedData.type,
       new FileSize(fileMockedData.size.value, fileMockedData.size.unit),
       fileMockedData.date,
@@ -112,7 +116,8 @@ export class FileMother {
         minorNumber: 0,
         status: FileStatus.RELEASED
       },
-      access: { restricted: false, canDownload: true, ownerAllowsAccessRequest: false },
+      access: { restricted: false, canBeRequested: false, requested: false },
+      permissions: { canDownload: true },
       labels: [],
       checksum: undefined,
       thumbnail: undefined,
@@ -153,8 +158,11 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
-        canDownload: false,
-        ownerAllowsAccessRequest: false
+        canBeRequested: false,
+        requested: false
+      },
+      permissions: {
+        canDownload: false
       },
       embargo: {
         active: true,
@@ -190,8 +198,11 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: false,
-        canDownload: true,
-        ownerAllowsAccessRequest: false
+        canBeRequested: false,
+        requested: false
+      },
+      permissions: {
+        canDownload: true
       },
       embargo: undefined
     })
@@ -201,8 +212,11 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
-        canDownload: false,
-        ownerAllowsAccessRequest: false
+        canBeRequested: false,
+        requested: false
+      },
+      permissions: {
+        canDownload: false
       },
       embargo: undefined
     })
@@ -212,8 +226,11 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
-        canDownload: true,
-        ownerAllowsAccessRequest: true
+        canBeRequested: true,
+        requested: false
+      },
+      permissions: {
+        canDownload: true
       },
       embargo: undefined
     })
@@ -223,8 +240,11 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
-        canDownload: false,
-        ownerAllowsAccessRequest: true
+        canBeRequested: true,
+        requested: false
+      },
+      permissions: {
+        canDownload: false
       },
       embargo: undefined
     })
@@ -233,6 +253,36 @@ export class FileMother {
   static createWithThumbnail(): File {
     return this.createDefault({
       thumbnail: faker.image.imageUrl()
+    })
+  }
+
+  static createWithThumbnailRestrictedWithAccessGranted(): File {
+    return this.createDefault({
+      access: {
+        restricted: true,
+        canBeRequested: true,
+        requested: false
+      },
+      permissions: {
+        canDownload: true
+      },
+      thumbnail: faker.image.imageUrl(),
+      type: new FileType('image')
+    })
+  }
+
+  static createWithThumbnailRestricted(): File {
+    return this.createDefault({
+      access: {
+        restricted: true,
+        canBeRequested: false,
+        requested: false
+      },
+      permissions: {
+        canDownload: false
+      },
+      thumbnail: faker.image.imageUrl(),
+      type: new FileType('image')
     })
   }
 }

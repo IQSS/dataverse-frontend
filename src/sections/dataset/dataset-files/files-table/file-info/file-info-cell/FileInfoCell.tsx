@@ -19,8 +19,8 @@ export function FileInfoCell({ file }: { file: File }) {
         <FileThumbnail
           thumbnail={file.thumbnail}
           name={file.name}
-          access={file.access}
           type={file.type}
+          lockStatus={file.lockStatus}
         />
       </div>
       <div className={styles['body-container']}>

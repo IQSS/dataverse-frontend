@@ -19,7 +19,8 @@ export function AccessFileMenu({ file }: FileActionButtonAccessFileProps) {
         </DropdownHeader>
         <AccessStatus accessStatus={file.accessStatus} lockStatus={file.lockStatus} />
         <RequestAccessButton
-          accessCanBeRequested={file.accessCanBeRequested}
+          versionStatus={file.version.status}
+          accessCanBeRequested={file.access.canBeRequested}
           lockStatus={file.lockStatus}
         />
       </DropdownButton>

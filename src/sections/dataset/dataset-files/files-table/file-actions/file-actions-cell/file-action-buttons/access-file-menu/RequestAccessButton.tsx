@@ -1,15 +1,21 @@
-import { FileLockStatus } from '../../../../../../../../files/domain/models/File'
+import { FileLockStatus, FileStatus } from '../../../../../../../../files/domain/models/File'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 
 interface RequestAccessButtonProps {
+  versionStatus: FileStatus
   accessCanBeRequested: boolean
   lockStatus: FileLockStatus
 }
 export function RequestAccessButton({
+  versionStatus,
   accessCanBeRequested,
   lockStatus
 }: RequestAccessButtonProps) {
-  if (!accessCanBeRequested || lockStatus !== FileLockStatus.LOCKED) {
+  if (
+    versionStatus === FileStatus.DEACCESSIONED ||
+    !accessCanBeRequested ||
+    lockStatus !== FileLockStatus.LOCKED
+  ) {
     return <></>
   }
   return <DropdownButtonItem>Request Access</DropdownButtonItem>
