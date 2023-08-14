@@ -111,4 +111,14 @@ describe('DropdownButton', () => {
 
     cy.findByRole('separator').should('exist')
   })
+
+  it('renders disabled', () => {
+    cy.mount(
+      <DropdownButton id="dropdown-button" title={titleText} disabled>
+        <DropdownItem eventKey="1">Item 1</DropdownItem>
+        <DropdownItem eventKey="2">Item 2</DropdownItem>
+      </DropdownButton>
+    )
+    cy.findByText(titleText).should('be.disabled')
+  })
 })
