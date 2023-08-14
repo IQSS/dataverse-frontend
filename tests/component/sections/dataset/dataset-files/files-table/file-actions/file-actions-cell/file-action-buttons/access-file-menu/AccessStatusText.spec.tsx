@@ -1,11 +1,11 @@
 import { FileMother } from '../../../../../../../../files/domain/models/FileMother'
-import { AccessStatus } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessStatus'
+import { AccessStatusText } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessStatusText'
 import styles from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessFileMenu.module.scss'
 describe('AccessStatus', () => {
   it('renders the access status  public', () => {
     const filePublic = FileMother.createWithPublicAccess()
     cy.customMount(
-      <AccessStatus accessStatus={filePublic.accessStatus} lockStatus={filePublic.lockStatus} />
+      <AccessStatusText accessStatus={filePublic.accessStatus} lockStatus={filePublic.lockStatus} />
     )
 
     cy.findByText('Public').should('exist').should('have.class', styles.success)
@@ -15,7 +15,7 @@ describe('AccessStatus', () => {
   it('renders the access status restricted', () => {
     const fileRestricted = FileMother.createWithRestrictedAccess()
     cy.customMount(
-      <AccessStatus
+      <AccessStatusText
         accessStatus={fileRestricted.accessStatus}
         lockStatus={fileRestricted.lockStatus}
       />
@@ -28,7 +28,7 @@ describe('AccessStatus', () => {
   it('renders the access status restricted with access', () => {
     const fileRestricted = FileMother.createWithRestrictedAccessWithAccessGranted()
     cy.customMount(
-      <AccessStatus
+      <AccessStatusText
         accessStatus={fileRestricted.accessStatus}
         lockStatus={fileRestricted.lockStatus}
       />
@@ -43,7 +43,7 @@ describe('AccessStatus', () => {
   it('renders the access status embargoed', () => {
     const fileEmbargoed = FileMother.createWithEmbargo()
     cy.customMount(
-      <AccessStatus
+      <AccessStatusText
         accessStatus={fileEmbargoed.accessStatus}
         lockStatus={fileEmbargoed.lockStatus}
       />
@@ -56,7 +56,7 @@ describe('AccessStatus', () => {
   it('renders the access status embargoed restricted', () => {
     const fileEmbargoed = FileMother.createWithEmbargoRestricted()
     cy.customMount(
-      <AccessStatus
+      <AccessStatusText
         accessStatus={fileEmbargoed.accessStatus}
         lockStatus={fileEmbargoed.lockStatus}
       />

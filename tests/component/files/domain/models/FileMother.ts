@@ -250,6 +250,20 @@ export class FileMother {
     })
   }
 
+  static createWithAccessRequestPending(): File {
+    return this.createDefault({
+      access: {
+        restricted: true,
+        canBeRequested: true,
+        requested: true
+      },
+      permissions: {
+        canDownload: false
+      },
+      embargo: undefined
+    })
+  }
+
   static createWithThumbnail(): File {
     return this.createDefault({
       thumbnail: faker.image.imageUrl()

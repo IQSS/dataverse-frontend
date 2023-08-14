@@ -9,7 +9,7 @@ interface AccessStatusProps {
   lockStatus: FileLockStatus
 }
 
-export function AccessStatus({ accessStatus, lockStatus }: AccessStatusProps) {
+export function AccessStatusText({ accessStatus, lockStatus }: AccessStatusProps) {
   const { t } = useTranslation('files')
 
   return (

@@ -5,13 +5,16 @@ import {
 } from '../../../../../../../../files/domain/models/File'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import styles from './AccessFileMenu.module.scss'
+import { RequestAccessModal } from './RequestAccessModal'
 
 interface RequestAccessButtonProps {
+  fileId: string
   versionStatus: FileStatus
   accessStatus: FileAccessStatus
   access: FileAccess
 }
-export function RequestAccessButton({
+export function RequestAccessOption({
+  fileId,
   versionStatus,
   accessStatus,
   access
@@ -29,7 +32,5 @@ export function RequestAccessButton({
       </DropdownButtonItem>
     )
   }
-  return <DropdownButtonItem>Request Access</DropdownButtonItem>
+  return <RequestAccessModal fileId={fileId} />
 }
-// TODO Add use case for the onClick event
-// TODO If the user is not authenticated, the button should open the Log In modal
