@@ -19,8 +19,26 @@ export function RequestAccessOption({
   accessStatus,
   access
 }: RequestAccessButtonProps) {
-  if (versionStatus === FileStatus.DEACCESSIONED || accessStatus !== FileAccessStatus.RESTRICTED) {
+  if (
+    versionStatus === FileStatus.DEACCESSIONED ||
+    accessStatus === FileAccessStatus.PUBLIC ||
+    accessStatus === FileAccessStatus.RESTRICTED_WITH_ACCESS
+  ) {
     return <></>
+  }
+  if (accessStatus === FileAccessStatus.EMBARGOED) {
+    return (
+      <DropdownButtonItem disabled>
+        Files are unavailable during the specified embargo.
+      </DropdownButtonItem>
+    )
+  }
+  if (accessStatus === FileAccessStatus.EMBARGOED_RESTRICTED) {
+    return (
+      <DropdownButtonItem disabled>
+        Files are unavailable during the specified embargo and restricted after that.
+      </DropdownButtonItem>
+    )
   }
   if (!access.canBeRequested) {
     return <DropdownButtonItem disabled>Users may not request access to files.</DropdownButtonItem>

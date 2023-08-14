@@ -37,7 +37,7 @@ export interface FileAccess {
 export enum FileAccessStatus {
   PUBLIC = 'public',
   RESTRICTED = 'restricted',
-  RESTRICTED_ACCESS = 'restrictedAccess',
+  RESTRICTED_WITH_ACCESS = 'restrictedAccess',
   EMBARGOED = 'embargoed',
   EMBARGOED_RESTRICTED = 'embargoedRestricted'
 }
@@ -154,7 +154,7 @@ export class File {
       return FileAccessStatus.EMBARGOED_RESTRICTED
     }
     if (!this.embargo?.active) {
-      return FileAccessStatus.RESTRICTED_ACCESS
+      return FileAccessStatus.RESTRICTED_WITH_ACCESS
     }
     return FileAccessStatus.EMBARGOED
   }
