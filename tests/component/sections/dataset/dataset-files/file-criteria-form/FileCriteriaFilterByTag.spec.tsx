@@ -1,8 +1,8 @@
 import { FileCriteria, FileTag } from '../../../../../../src/files/domain/models/FileCriteria'
 import { FilesCountInfoMother } from '../../../../files/domain/models/FilesCountInfoMother'
 import { FileType } from '../../../../../../src/files/domain/models/File'
-import styles from '../../../../../../src/sections/dataset/dataset-files/file-criteria-controls/FileCriteriaControls.module.scss'
-import { FileCriteriaFilterByTag } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-controls/FileCriteriaFilterByTag'
+import styles from '../../../../../../src/sections/dataset/dataset-files/file-criteria-form/FileCriteriaForm.module.scss'
+import { FileCriteriaFilterByTag } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-form/FileCriteriaFilterByTag'
 
 const defaultCriteria = new FileCriteria()
 const filesCountInfo = FilesCountInfoMother.create({
@@ -30,7 +30,7 @@ describe('FilesCriteriaFilterByTag', () => {
       />
     )
 
-    cy.findByRole('button', { name: 'Filter Tag: All' }).click()
+    cy.findByRole('button', { name: 'File Tags: All' }).click()
 
     cy.findByText('All').should('exist')
     cy.findByText('Document (5)').should('exist')
@@ -48,11 +48,11 @@ describe('FilesCriteriaFilterByTag', () => {
       />
     )
 
-    cy.findByRole('button', { name: 'Filter Tag: All' }).click()
+    cy.findByRole('button', { name: 'File Tags: All' }).click()
     cy.findByText('Document (5)').click()
     cy.wrap(onCriteriaChange).should('be.calledWith', defaultCriteria.withFilterByTag('document'))
 
-    cy.findByRole('button', { name: 'Filter Tag: Document' }).click()
+    cy.findByRole('button', { name: 'File Tags: Document' }).click()
     cy.findByText('Data (10)').click()
     cy.wrap(onCriteriaChange).should('be.calledWith', defaultCriteria.withFilterByTag('data'))
   })
@@ -69,7 +69,7 @@ describe('FilesCriteriaFilterByTag', () => {
       />
     )
 
-    cy.findByRole('button', { name: 'Filter Tag: Document' }).click()
+    cy.findByRole('button', { name: 'File Tags: Document' }).click()
     cy.findByText('All').should('exist').click()
     cy.wrap(onCriteriaChange).should('be.calledWith', defaultCriteria.withFilterByType(undefined))
   })
@@ -85,15 +85,15 @@ describe('FilesCriteriaFilterByTag', () => {
       />
     )
 
-    cy.findByRole('button', { name: 'Filter Tag: All' }).click()
+    cy.findByRole('button', { name: 'File Tags: All' }).click()
     cy.findByText('All').should('have.class', styles['selected-option'])
 
     cy.findByRole('button', { name: 'Document (5)' }).click()
-    cy.findByRole('button', { name: 'Filter Tag: Document' }).click()
+    cy.findByRole('button', { name: 'File Tags: Document' }).click()
     cy.findByText('Document (5)').should('have.class', styles['selected-option'])
 
     cy.findByRole('button', { name: 'Data (10)' }).click()
-    cy.findByRole('button', { name: 'Filter Tag: Data' }).click()
+    cy.findByRole('button', { name: 'File Tags: Data' }).click()
     cy.findByText('Data (10)').should('have.class', styles['selected-option'])
   })
 
@@ -111,6 +111,6 @@ describe('FilesCriteriaFilterByTag', () => {
       />
     )
 
-    cy.findByRole('button', { name: 'Filter Tag: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'File Tags: All' }).should('not.exist')
   })
 })

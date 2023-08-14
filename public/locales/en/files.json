@@ -1,6 +1,13 @@
 {
   "filesLoading": "Files loading spinner symbol",
   "table": {
+    "rowSelection": {
+      "filesSelected_one": "{{count}} file is currently selected.",
+      "filesSelected_other": "{{count}} files are currently selected.",
+      "selectAll": "Select all {{count}} files in this dataset.",
+      "clearSelection": "Clear selection."
+    },
+    "zipDownloadExceedsLimit": "The overall size of the files selected ({{selectionTotalSize}}) for download exceeds the zip limit of {{zipDownloadSizeLimit}}. Please unselect some files to continue.",
     "pagination": {
       "pageSize": "Files per page"
     },
@@ -54,10 +61,10 @@
       "title": "Filter by"
     },
     "filterByType": {
-      "title": "Filter Type"
+      "title": "File Type"
     },
     "filterByTag": {
-      "title": "Filter Tag"
+      "title": "File Tags"
     },
     "filterByAccess": {
       "title": "Access",
@@ -68,6 +75,11 @@
         "embargoed_public": "Embargoed then Public",
         "embargoed_restricted": "Embargoed then Restricted"
       }
+    },
+    "searchText": {
+      "placeholder": "Search this dataset...",
+      "label": "Search",
+      "submit": "Submit search"
     }
   }
 }

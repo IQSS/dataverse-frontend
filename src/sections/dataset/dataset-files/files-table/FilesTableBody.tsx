@@ -1,6 +1,7 @@
 import { flexRender, Row } from '@tanstack/react-table'
 import { File } from '../../../../files/domain/models/File'
 import { useTranslation } from 'react-i18next'
+import styles from './FilesTable.module.scss'
 
 interface FilesTableBodyProps {
   rows: Row<File>[]
@@ -14,7 +15,7 @@ export function FilesTableBody({ rows }: FilesTableBodyProps) {
     <tbody>
       {rows.map((row) => {
         return (
-          <tr key={row.id}>
+          <tr key={row.id} className={row.getIsSelected() ? styles['selected-row'] : ''}>
             {row.getVisibleCells().map((cell) => {
               return (
                 <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>

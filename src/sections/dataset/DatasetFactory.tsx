@@ -7,19 +7,24 @@ import { AnonymizedProvider } from './anonymized/AnonymizedProvider'
 import { FileJSDataverseRepository } from '../../files/infrastructure/FileJSDataverseRepository'
 import { MetadataBlockInfoProvider } from './metadata-block-info/MetadataBlockProvider'
 import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/MetadataBlockInfoJSDataverseRepository'
+import { SettingsProvider } from '../settings/SettingsProvider'
+import { SettingJSDataverseRepository } from '../../settings/infrastructure/SettingJSDataverseRepository'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
+const settingRepository = new SettingJSDataverseRepository()
 
 export class DatasetFactory {
   static create(): ReactElement {
     return (
-      <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
-        <AnonymizedProvider>
-          <DatasetWithSearchParams />
-        </AnonymizedProvider>
-      </MetadataBlockInfoProvider>
+      <SettingsProvider repository={settingRepository}>
+        <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
+          <AnonymizedProvider>
+            <DatasetWithSearchParams />
+          </AnonymizedProvider>
+        </MetadataBlockInfoProvider>
+      </SettingsProvider>
     )
   }
 }

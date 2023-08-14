@@ -1,5 +1,5 @@
 import { ArrowDownUp } from 'react-bootstrap-icons'
-import styles from './FileCriteriaControls.module.scss'
+import styles from './FileCriteriaForm.module.scss'
 import { FileCriteria, FileSortByOption } from '../../../../files/domain/models/FileCriteria'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'

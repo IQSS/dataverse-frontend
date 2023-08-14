@@ -1,5 +1,5 @@
 import { FileCriteria } from '../../../../../../src/files/domain/models/FileCriteria'
-import { FileCriteriaFilters } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-controls/FileCriteriaFilters'
+import { FileCriteriaFilters } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-form/FileCriteriaFilters'
 import { FilesCountInfoMother } from '../../../../files/domain/models/FilesCountInfoMother'
 import { FileType } from '../../../../../../src/files/domain/models/File'
 
@@ -31,9 +31,9 @@ describe('FilesCriteriaFilters', () => {
 
     cy.findByText('Filter by').should('exist')
 
-    cy.findByRole('button', { name: 'Filter Type: All' }).should('exist')
+    cy.findByRole('button', { name: 'File Type: All' }).should('exist')
     cy.findByRole('button', { name: 'Access: All' }).should('exist')
-    cy.findByRole('button', { name: 'Filter Tag: All' }).should('exist')
+    cy.findByRole('button', { name: 'File Tags: All' }).should('exist')
   })
 
   it('does not render filters by type options when there are no filters to be applied', () => {
@@ -50,8 +50,8 @@ describe('FilesCriteriaFilters', () => {
 
     cy.findByText('Filter by').should('not.exist')
 
-    cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'File Type: All' }).should('not.exist')
     cy.findByRole('button', { name: 'Access: All' }).should('not.exist')
-    cy.findByRole('button', { name: 'Filter Tag: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'File Tags: All' }).should('not.exist')
   })
 })

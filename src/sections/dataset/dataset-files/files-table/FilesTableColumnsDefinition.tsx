@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { File } from '../../../../files/domain/models/File'
-import { FilesTableCheckbox } from './FilesTableCheckbox'
+import { RowSelectionCheckbox } from './row-selection/RowSelectionCheckbox'
 import { FileInfoCell } from './file-info-cell/FileInfoCell'
 import { FileInfoHeader } from './FileInfoHeader'
 
@@ -8,7 +8,7 @@ export const columns: ColumnDef<File>[] = [
   {
     id: 'select',
     header: ({ table }) => (
-      <FilesTableCheckbox
+      <RowSelectionCheckbox
         {...{
           checked: table.getIsAllRowsSelected(),
           indeterminate: table.getIsSomeRowsSelected(),
@@ -18,7 +18,7 @@ export const columns: ColumnDef<File>[] = [
       />
     ),
     cell: ({ row }) => (
-      <FilesTableCheckbox
+      <RowSelectionCheckbox
         {...{
           checked: row.getIsSelected(),
           disabled: !row.getCanSelect(),
