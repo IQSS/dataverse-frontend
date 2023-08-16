@@ -1,8 +1,8 @@
-import { DropdownButton, DropdownHeader, Tooltip } from '@iqss/dataverse-design-system'
 import { File } from '../../../../../../../../files/domain/models/File'
 import { Download, FileEarmark } from 'react-bootstrap-icons'
 import { AccessStatusText } from './AccessStatusText'
 import { RequestAccessOption } from './RequestAccessOption'
+import { DropdownButton, DropdownHeader, Tooltip } from '@iqss/dataverse-design-system'
 
 interface FileActionButtonAccessFileProps {
   file: File

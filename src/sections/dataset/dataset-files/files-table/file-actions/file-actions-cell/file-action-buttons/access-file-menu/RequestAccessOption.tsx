@@ -1,11 +1,11 @@
+import { DropdownButtonItem } from '@iqss/dataverse-design-system'
+import styles from './AccessFileMenu.module.scss'
+import { RequestAccessModal } from './RequestAccessModal'
 import {
   FileAccess,
   FileAccessStatus,
   FileStatus
 } from '../../../../../../../../files/domain/models/File'
-import { DropdownButtonItem } from '@iqss/dataverse-design-system'
-import styles from './AccessFileMenu.module.scss'
-import { RequestAccessModal } from './RequestAccessModal'
 
 interface RequestAccessButtonProps {
   fileId: string

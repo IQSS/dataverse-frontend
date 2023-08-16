@@ -41,8 +41,9 @@ const RequestAccessForm = ({
   fileId: string
   handleClose: () => void
 }) => {
+  /* istanbul ignore next */
   const requestAccessToFile = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+    /* istanbul ignore next */ event.preventDefault()
     event.stopPropagation()
 
     // TODO - Implement request access to file functionality

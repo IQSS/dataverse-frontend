@@ -1,10 +1,10 @@
 @import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
 
 .box {
-  background-color: $dv-info-box-color;
+  margin-bottom: 0.5em;
   color: $dv-info-color;
   text-align: center;
-  margin-bottom: 0.5em;
+  background-color: $dv-info-box-color;
 }
 
 .icon {
