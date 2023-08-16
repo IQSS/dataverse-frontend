@@ -91,5 +91,45 @@
       "label": "Search",
       "submit": "Submit search"
     }
+  },
+  "actions": {
+    "title": "File Actions",
+    "buttons": "File Action Buttons",
+    "optionsMenu": {
+      "title": "File Options",
+      "headers": {
+        "editOptions": "Edit Options"
+      }
+    },
+    "accessFileMenu": {
+      "title": "Access File",
+      "headers": {
+        "fileAccess": "File Access"
+      }
+    },
+    "editFilesMenu": {
+      "title": "Edit Files",
+      "options": {
+        "metadata": "Metadata",
+        "unrestrict": "Unrestrict",
+        "restrict": "Restrict",
+        "replace": "Replace",
+        "embargo": "Embargo",
+        "provenance": "Provenance",
+        "delete": "Delete"
+      }
+    }
+  },
+  "requestAccess": {
+    "title": "Request Access",
+    "askToAcceptTerms": "Please confirm and/or complete the information needed below in order to request access to files in this dataset",
+    "terms": "Terms of Access for Restricted Files",
+    "confirmation": "Accept",
+    "cancel": "Cancel",
+    "close": "Close",
+    "embargoed": "Files are unavailable during the specified embargo",
+    "embargoedRestricted": "Files are unavailable during the specified embargo and restricted after that",
+    "requestNotAllowed": "Users may not request access to files",
+    "accessRequested": "Access Requested"
   }
 }

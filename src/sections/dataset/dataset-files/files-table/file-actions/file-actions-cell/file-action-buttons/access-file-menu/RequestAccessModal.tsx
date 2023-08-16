@@ -5,11 +5,13 @@ import { Form } from '@iqss/dataverse-design-system'
 import { ExclamationTriangle } from 'react-bootstrap-icons'
 import { Route } from '../../../../../../../Route.enum'
 import styles from './AccessFileMenu.module.scss'
+import { useTranslation } from 'react-i18next'
 
 interface RequestAccessButtonProps {
   fileId: string
 }
 export function RequestAccessModal({ fileId }: RequestAccessButtonProps) {
+  const { t } = useTranslation('files')
   const { user } = useSession()
   const [show, setShow] = useState(false)
   const handleClose = () => {
@@ -19,10 +21,10 @@ export function RequestAccessModal({ fileId }: RequestAccessButtonProps) {
 
   return (
     <>
-      <DropdownButtonItem onClick={handleShow}>Request Access</DropdownButtonItem>
+      <DropdownButtonItem onClick={handleShow}>{t('requestAccess.title')}</DropdownButtonItem>
       <Modal show={show} onHide={handleClose} size="lg">
         <Modal.Header>
-          <Modal.Title>Request Access</Modal.Title>
+          <Modal.Title>{t('requestAccess.title')}</Modal.Title>
         </Modal.Header>
         {user ? (
           <RequestAccessForm fileId={fileId} handleClose={handleClose} />
@@ -41,6 +43,7 @@ const RequestAccessForm = ({
   fileId: string
   handleClose: () => void
 }) => {
+  const { t } = useTranslation('files')
   /* istanbul ignore next */
   const requestAccessToFile = (event: FormEvent<HTMLFormElement>) => {
     /* istanbul ignore next */ event.preventDefault()
@@ -54,20 +57,17 @@ const RequestAccessForm = ({
     <Form onSubmit={requestAccessToFile}>
       <Modal.Body>
         <Form.Group controlId="basic-form-username">
-          <p>
-            Please confirm and/or complete the information needed below in order to request access
-            to files in this dataset.
-          </p>
-          <Form.Group.Label>Terms of Access for Restricted Files</Form.Group.Label>
+          <p>{t('requestAccess.askToAcceptTerms')}.</p>
+          <Form.Group.Label>{t('requestAccess.terms')}</Form.Group.Label>
           <Form.Group.Input type="text" readOnly defaultValue="Some terms" />
         </Form.Group>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="primary" type="submit">
-          Accept
+          {t('requestAccess.confirmation')}
         </Button>
         <Button variant="secondary" type="button" onClick={handleClose}>
-          Cancel
+          {t('requestAccess.cancel')}
         </Button>
       </Modal.Footer>
     </Form>
@@ -75,6 +75,7 @@ const RequestAccessForm = ({
 }
 
 const RequestAccessLoginMessage = ({ handleClose }: { handleClose: () => void }) => {
+  const { t } = useTranslation('files')
   return (
     <>
       <Modal.Body>
@@ -85,7 +86,7 @@ const RequestAccessLoginMessage = ({ handleClose }: { handleClose: () => void })
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
-          Close
+          {t('requestAccess.close')}
         </Button>
       </Modal.Footer>
     </>

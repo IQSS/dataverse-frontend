@@ -6,6 +6,7 @@ import {
   FileAccessStatus,
   FileStatus
 } from '../../../../../../../../files/domain/models/File'
+import { useTranslation } from 'react-i18next'
 
 interface RequestAccessButtonProps {
   fileId: string
@@ -19,6 +20,7 @@ export function RequestAccessOption({
   accessStatus,
   access
 }: RequestAccessButtonProps) {
+  const { t } = useTranslation('files')
   if (
     versionStatus === FileStatus.DEACCESSIONED ||
     accessStatus === FileAccessStatus.PUBLIC ||
@@ -27,26 +29,20 @@ export function RequestAccessOption({
     return <></>
   }
   if (accessStatus === FileAccessStatus.EMBARGOED) {
-    return (
-      <DropdownButtonItem disabled>
-        Files are unavailable during the specified embargo.
-      </DropdownButtonItem>
-    )
+    return <DropdownButtonItem disabled>{t('requestAccess.embargoed')}.</DropdownButtonItem>
   }
   if (accessStatus === FileAccessStatus.EMBARGOED_RESTRICTED) {
     return (
-      <DropdownButtonItem disabled>
-        Files are unavailable during the specified embargo and restricted after that.
-      </DropdownButtonItem>
+      <DropdownButtonItem disabled>{t('requestAccess.embargoedRestricted')}.</DropdownButtonItem>
     )
   }
   if (!access.canBeRequested) {
-    return <DropdownButtonItem disabled>Users may not request access to files.</DropdownButtonItem>
+    return <DropdownButtonItem disabled>{t('requestAccess.requestNotAllowed')}.</DropdownButtonItem>
   }
   if (access.requested) {
     return (
       <DropdownButtonItem disabled className={styles['access-requested-message']}>
-        Access Requested
+        {t('requestAccess.accessRequested')}
       </DropdownButtonItem>
     )
   }

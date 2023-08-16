@@ -3,8 +3,10 @@ import { DropdownButton, DropdownHeader, Tooltip } from '@iqss/dataverse-design-
 import { PencilFill, ThreeDotsVertical } from 'react-bootstrap-icons'
 import { useSession } from '../../../../../../../session/SessionContext'
 import { EditFilesOptions } from '../../../edit-files-menu/EditFilesOptions'
+import { useTranslation } from 'react-i18next'
 
 export function FileOptionsMenu({ file }: { file: File }) {
+  const { t } = useTranslation('files')
   const { user } = useSession()
   const userHasDatasetUpdatePermissions = true // TODO - Implement permissions
   const datasetHasValidTermsOfAccess = true // TODO - Implement terms of access validation
@@ -20,16 +22,16 @@ export function FileOptionsMenu({ file }: { file: File }) {
   // }
 
   return (
-    <Tooltip placement="top" overlay={<span>File Options</span>}>
+    <Tooltip placement="top" overlay={<span>{t('actions.optionsMenu.title')}</span>}>
       <DropdownButton
         id={`file-options-file-${file.id}`}
         title=""
         disabled={datasetLockedFromEdits}
         asButtonGroup
         variant="secondary"
-        icon={<ThreeDotsVertical aria-label="File Options" />}>
+        icon={<ThreeDotsVertical aria-label={t('actions.optionsMenu.title')} />}>
         <DropdownHeader>
-          <PencilFill /> Edit Options
+          <PencilFill /> {t('actions.optionsMenu.headers.editOptions')}
         </DropdownHeader>
         <EditFilesOptions files={[file]} />
       </DropdownButton>

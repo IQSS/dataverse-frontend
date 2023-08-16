@@ -2,11 +2,13 @@ import styles from './FileInfoMessages.module.scss'
 import { ReactNode } from 'react'
 import { InfoCircleFill } from 'react-bootstrap-icons'
 import { File } from '../../../../../../../files/domain/models/File'
+import { useTranslation } from 'react-i18next'
 
 interface FileInfoMessagesProps {
   file: File
 }
 export function FileInfoMessages({ file }: FileInfoMessagesProps) {
+  const { t } = useTranslation('files')
   // const { user } = useSession()
   // const ingestInProgress = false // TODO - Implement ingest in progress (ask Guillermo)
   // const ingestProblem = false // TODO - Implement ingest problem (ask Guillermo)
@@ -28,7 +30,9 @@ export function FileInfoMessages({ file }: FileInfoMessagesProps) {
       {/*    </span>*/}
       {/*  </InfoMessageBox>*/}
       {/*)}*/}
-      {file.access.requested && <InfoMessageBox>Access requested</InfoMessageBox>}
+      {file.access.requested && (
+        <InfoMessageBox>{t('requestAccess.accessRequested')}</InfoMessageBox>
+      )}
     </>
   )
 }

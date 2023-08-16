@@ -1,12 +1,14 @@
 import { EditFilesMenu } from './edit-files-menu/EditFilesMenu'
 import { File } from '../../../../../files/domain/models/File'
 import styles from './FileActionsHeader.module.scss'
+import { useTranslation } from 'react-i18next'
 interface FileActionsHeaderProps {
   files: File[]
 }
 export function FileActionsHeader({ files }: FileActionsHeaderProps) {
+  const { t } = useTranslation('files')
   return (
-    <div aria-label="File Actions" className={styles.container}>
+    <div aria-label={t('actions.title')} className={styles.container}>
       <EditFilesMenu files={files} />
     </div>
   )

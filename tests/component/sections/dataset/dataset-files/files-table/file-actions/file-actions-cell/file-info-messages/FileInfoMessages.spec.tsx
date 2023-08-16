@@ -19,6 +19,6 @@ describe('FileInfoMessages', () => {
     const file = FileMother.createWithAccessRequestPending()
     cy.customMount(<FileInfoMessages file={file} />)
 
-    cy.findByText('Access requested').should('exist')
+    cy.findByText('Access Requested').should('exist')
   })
 })

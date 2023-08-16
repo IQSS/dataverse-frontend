@@ -4,12 +4,14 @@ import { useSession } from '../../../../../session/SessionContext'
 import styles from './EditFilesMenu.module.scss'
 import { EditFilesOptions } from './EditFilesOptions'
 import { File } from '../../../../../../files/domain/models/File'
+import { useTranslation } from 'react-i18next'
 
 interface EditFilesMenuProps {
   files: File[]
 }
 const MINIMUM_FILES_COUNT_TO_SHOW_EDIT_FILES_BUTTON = 1
 export function EditFilesMenu({ files }: EditFilesMenuProps) {
+  const { t } = useTranslation('files')
   const { user } = useSession()
   const userHasDatasetUpdatePermissions = true // TODO - Implement permissions
   const datasetHasValidTermsOfAccess = true // TODO - Implement terms of access validation
@@ -26,7 +28,7 @@ export function EditFilesMenu({ files }: EditFilesMenuProps) {
     <DropdownButton
       variant="secondary"
       id="edit-files-menu"
-      title="Edit Files"
+      title={t('actions.editFilesMenu.title')}
       disabled={datasetLockedFromEdits || !datasetHasValidTermsOfAccess}
       icon={<PencilFill className={styles.icon} />}>
       <EditFilesOptions files={files} />
