@@ -14,6 +14,7 @@ export function AccessFileMenu({ file }: FileActionButtonAccessFileProps) {
         id={`action-button-access-file-${file.id}`}
         title=""
         asButtonGroup
+        variant="secondary"
         icon={<Download aria-label="Access File" />}>
         <DropdownHeader>
           File Access <FileEarmark />

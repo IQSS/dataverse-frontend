@@ -6,6 +6,9 @@ import {
 } from '../../../../../../src/files/domain/models/FileCriteria'
 import { FilesCountInfoMother } from '../../../../files/domain/models/FilesCountInfoMother'
 import { FileType } from '../../../../../../src/files/domain/models/File'
+import { UserMother } from '../../../../users/domain/models/UserMother'
+import { UserRepository } from '../../../../../../src/users/domain/repositories/UserRepository'
+import { SessionProvider } from '../../../../../../src/sections/session/SessionProvider'
 
 let onCriteriaChange = () => {}
 const filesCountInfo = FilesCountInfoMother.create({
@@ -209,5 +212,24 @@ describe('FileCriteriaForm', () => {
     cy.findByRole('button', { name: 'Access: Public' }).should('exist')
     cy.findByRole('button', { name: 'Filter Tag: Document' }).should('exist')
     cy.findByLabelText('Search').should('have.value', 'new search')
+  })
+
+  it('renders the Upload Files button', () => {
+    const user = UserMother.create()
+    const userRepository = {} as UserRepository
+    userRepository.getAuthenticated = cy.stub().resolves(user)
+    userRepository.removeAuthenticated = cy.stub().resolves()
+
+    cy.customMount(
+      <SessionProvider repository={userRepository}>
+        <FileCriteriaForm
+          criteria={new FileCriteria()}
+          onCriteriaChange={onCriteriaChange}
+          filesCountInfo={filesCountInfo}
+        />
+      </SessionProvider>
+    )
+
+    cy.findByRole('button', { name: 'Upload Files' }).should('exist')
   })
 })

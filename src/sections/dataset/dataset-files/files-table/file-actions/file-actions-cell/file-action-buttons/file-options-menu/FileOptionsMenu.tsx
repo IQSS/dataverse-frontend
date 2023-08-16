@@ -32,6 +32,7 @@ export function FileOptionsMenu({ file }: { file: File }) {
         title=""
         disabled={datasetLockedFromEdits}
         asButtonGroup
+        variant="secondary"
         icon={<ThreeDotsVertical aria-label="File Options" />}>
         <DropdownHeader>
           <PencilFill /> Edit Options

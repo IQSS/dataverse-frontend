@@ -35,7 +35,7 @@ export const Default: Story = {
     />
   )
 }
-export const LoggedIn: Story = {
+export const LoggedInAsOwner: Story = {
   decorators: [WithLayout, WithLoggedInUser],
   render: () => (
     <Dataset

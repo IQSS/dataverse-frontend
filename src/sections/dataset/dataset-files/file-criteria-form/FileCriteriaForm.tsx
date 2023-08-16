@@ -5,6 +5,7 @@ import { FileCriteriaSortBy } from './FileCriteriaSortBy'
 import { FileCriteriaFilters } from './FileCriteriaFilters'
 import { FilesCountInfo } from '../../../../files/domain/models/FilesCountInfo'
 import { FileCriteriaSearchText } from './FileCriteriaSearchText'
+import { DatasetUploadFilesButton } from '../dataset-upload-files-button/DatasetUploadFilesButton'
 
 interface FileCriteriaInputsProps {
   criteria: FileCriteria
@@ -25,6 +26,9 @@ export function FileCriteriaForm({
       <Row>
         <Col md={5}>
           <FileCriteriaSearchText criteria={criteria} onCriteriaChange={onCriteriaChange} />
+        </Col>
+        <Col className={styles['upload-files-container']}>
+          <DatasetUploadFilesButton />
         </Col>
       </Row>
       <Row className={styles['criteria-section']}>
