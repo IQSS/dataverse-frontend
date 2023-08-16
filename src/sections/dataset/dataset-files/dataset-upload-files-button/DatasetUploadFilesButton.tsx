@@ -1,6 +1,7 @@
 import { Button } from '@iqss/dataverse-design-system'
 import { PlusLg } from 'react-bootstrap-icons'
 import { useSession } from '../../../session/SessionContext'
+import styles from './DatasetUploadFilesButton.module.scss'
 
 export function DatasetUploadFilesButton() {
   const { user } = useSession()
@@ -14,7 +15,10 @@ export function DatasetUploadFilesButton() {
     return <></>
   }
   return (
-    <Button onClick={handleClick} icon={<PlusLg />} disabled={datasetLockedFromEdits}>
+    <Button
+      onClick={handleClick}
+      icon={<PlusLg className={styles.icon} />}
+      disabled={datasetLockedFromEdits}>
       Upload Files
     </Button>
   )

@@ -44,7 +44,9 @@ export const createColumnsDefinition = (
     cell: (props) => <FileInfoCell file={props.row.original} />
   },
   {
-    header: () => <FileActionsHeader />,
+    header: ({ table }) => (
+      <FileActionsHeader files={table.getRowModel().rows.map((row) => row.original)} />
+    ),
     accessorKey: 'status',
     cell: (props) => <FileActionsCell file={props.row.original} />
   }

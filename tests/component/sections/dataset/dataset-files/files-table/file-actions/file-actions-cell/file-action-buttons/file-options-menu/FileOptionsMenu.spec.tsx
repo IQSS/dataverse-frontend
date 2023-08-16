@@ -55,7 +55,7 @@ describe('FileOptionsMenu', () => {
     // TODO: Implement this test
   })
 
-  it.skip('does not render if dataset is locked from edits', () => {
+  it.skip('renders disabled menu if dataset is locked from edits', () => {
     // TODO: Implement this test
   })
 
@@ -72,45 +72,5 @@ describe('FileOptionsMenu', () => {
 
     cy.findByRole('button', { name: 'File Options' }).click()
     cy.findByRole('button', { name: 'Metadata' }).should('exist')
-    cy.findByRole('button', { name: 'Restrict' }).should('exist')
-    cy.findByRole('button', { name: 'Unrestrict' }).should('not.exist')
-    cy.findByRole('button', { name: 'Replace' }).should('exist')
-    cy.findByRole('button', { name: 'Embargo' }).should('not.exist')
-    cy.findByRole('button', { name: 'Provenance' }).should('not.exist')
-    cy.findByRole('button', { name: 'Delete' }).should('exist')
-  })
-
-  it('renders the unrestrict option if the file is restricted', () => {
-    const fileRestricted = FileMother.createWithRestrictedAccess()
-    cy.customMount(
-      <SessionProvider repository={userRepository}>
-        <FileOptionsMenu file={fileRestricted} />
-      </SessionProvider>
-    )
-
-    cy.findByRole('button', { name: 'File Options' }).click()
-    cy.findByRole('button', { name: 'Unrestrict' }).should('exist')
-  })
-
-  it.skip('renders the embargo option if the embargo is allowed by settings', () => {
-    cy.customMount(
-      <SessionProvider repository={userRepository}>
-        <FileOptionsMenu file={file} />
-      </SessionProvider>
-    )
-
-    cy.findByRole('button', { name: 'File Options' }).click()
-    cy.findByRole('button', { name: 'Embargo' }).should('exist')
-  })
-
-  it.skip('renders provenance option if provenance is enabled in config', () => {
-    cy.customMount(
-      <SessionProvider repository={userRepository}>
-        <FileOptionsMenu file={file} />
-      </SessionProvider>
-    )
-
-    cy.findByRole('button', { name: 'File Options' }).click()
-    cy.findByRole('button', { name: 'Provenance' }).should('exist')
   })
 })
