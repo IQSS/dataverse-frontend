@@ -25,4 +25,10 @@ describe('ButtonGroup', () => {
 
     cy.findByRole('group').should('not.have.class', 'btn-group-vertical')
   })
+
+  it('renders html attributes', () => {
+    cy.mount(<ButtonGroup data-testid="button-group" aria-label="button group" />)
+
+    cy.findByRole('group').should('have.attr', 'aria-label', 'button group')
+  })
 })
