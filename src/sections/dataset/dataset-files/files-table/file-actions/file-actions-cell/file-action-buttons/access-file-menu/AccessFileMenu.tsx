@@ -13,6 +13,7 @@ export function AccessFileMenu({ file }: FileActionButtonAccessFileProps) {
       <DropdownButton
         id={`action-button-access-file-${file.id}`}
         title=""
+        asButtonGroup
         icon={<Download aria-label="Access File" />}>
         <DropdownHeader>
           File Access <FileEarmark />
