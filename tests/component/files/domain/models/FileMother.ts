@@ -22,6 +22,18 @@ const createFakeFileLabel = (): FileLabel => ({
   value: faker.lorem.word()
 })
 
+export class FileEmbargoMother {
+  static create(): FileEmbargo {
+    const dateAvailable = faker.date.future()
+    return new FileEmbargo(dateAvailable)
+  }
+
+  static createNotActive(): FileEmbargo {
+    const dateAvailable = faker.date.past()
+    return new FileEmbargo(dateAvailable)
+  }
+}
+
 export class FileMother {
   static create(props?: Partial<File>): File {
     const thumbnail = valueOrUndefined<string>(faker.image.imageUrl())
@@ -64,10 +76,7 @@ export class FileMother {
       checksum: checksum,
       thumbnail: thumbnail,
       directory: valueOrUndefined<string>(faker.system.directoryPath()),
-      embargo: valueOrUndefined<FileEmbargo>({
-        active: faker.datatype.boolean(),
-        date: faker.date.recent().toDateString()
-      }),
+      embargo: valueOrUndefined<FileEmbargo>(FileEmbargoMother.create()),
       tabularData:
         fileType === 'tabular data' && !checksum
           ? {
@@ -147,10 +156,7 @@ export class FileMother {
 
   static createWithEmbargo(): File {
     return this.createDefault({
-      embargo: {
-        active: true,
-        date: faker.date.future().toDateString()
-      }
+      embargo: FileEmbargoMother.create()
     })
   }
 
@@ -164,10 +170,7 @@ export class FileMother {
       permissions: {
         canDownload: false
       },
-      embargo: {
-        active: true,
-        date: faker.date.future().toDateString()
-      }
+      embargo: FileEmbargoMother.create()
     })
   }
 
@@ -297,6 +300,16 @@ export class FileMother {
       },
       thumbnail: faker.image.imageUrl(),
       type: new FileType('image')
+    })
+  }
+
+  static createDeaccessioned(): File {
+    return this.createDefault({
+      version: {
+        majorNumber: 1,
+        minorNumber: 0,
+        status: FileStatus.DEACCESSIONED
+      }
     })
   }
 }

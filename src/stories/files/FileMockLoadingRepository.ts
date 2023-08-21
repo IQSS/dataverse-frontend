@@ -1,6 +1,8 @@
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { File } from '../../files/domain/models/File'
 import { FilesCountInfo } from '../../files/domain/models/FilesCountInfo'
+import { FileUserPermissions } from '../../files/domain/models/FileUserPermissions'
+import { FileUserPermissionsMother } from '../../../tests/component/files/domain/models/FileUserPermissionsMother'
 
 export class FileMockLoadingRepository implements FileRepository {
   // eslint-disable-next-line unused-imports/no-unused-vars
@@ -20,6 +22,14 @@ export class FileMockLoadingRepository implements FileRepository {
     return new Promise(() => {
       setTimeout(() => {
         // Do nothing
+      }, 1000)
+    })
+  }
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  getFileUserPermissionsById(id: string): Promise<FileUserPermissions> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(FileUserPermissionsMother.create())
       }, 1000)
     })
   }

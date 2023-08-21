@@ -76,9 +76,12 @@ export interface FileDate {
   date: string
 }
 
-export interface FileEmbargo {
-  active: boolean
-  date: string
+export class FileEmbargo {
+  constructor(readonly dateAvailable: Date) {}
+
+  get isActive(): boolean {
+    return this.dateAvailable > new Date()
+  }
 }
 
 export interface FileTabularData {
@@ -144,29 +147,35 @@ export class File {
   }
 
   get accessStatus(): FileAccessStatus {
-    if (!this.access.restricted && !this.embargo?.active) {
+    if (!this.access.restricted && !this.isActivelyEmbargoed) {
       return FileAccessStatus.PUBLIC
     }
     if (!this.permissions.canDownload) {
-      if (!this.embargo?.active) {
+      if (!this.isActivelyEmbargoed) {
         return FileAccessStatus.RESTRICTED
       }
       return FileAccessStatus.EMBARGOED_RESTRICTED
     }
-    if (!this.embargo?.active) {
+    if (!this.isActivelyEmbargoed) {
       return FileAccessStatus.RESTRICTED_WITH_ACCESS
     }
     return FileAccessStatus.EMBARGOED
   }
 
-  // TODO - Use this attribute for the FilesThumbnail components
   get lockStatus(): FileLockStatus {
-    if (!this.access.restricted && !this.embargo?.active) {
+    if (!this.access.restricted && !this.isActivelyEmbargoed) {
       return FileLockStatus.OPEN
     }
     if (!this.permissions.canDownload) {
       return FileLockStatus.LOCKED
     }
     return FileLockStatus.UNLOCKED
+  }
+
+  get isActivelyEmbargoed(): boolean {
+    if (this.embargo) {
+      return this.embargo.isActive
+    }
+    return false
   }
 }
