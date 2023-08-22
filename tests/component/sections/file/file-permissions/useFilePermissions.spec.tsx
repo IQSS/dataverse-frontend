@@ -7,6 +7,7 @@ import { FileRepository } from '../../../../../src/files/domain/repositories/Fil
 import { File } from '../../../../../src/files/domain/models/File'
 import { FileUserPermissionsMother } from '../../../files/domain/models/FileUserPermissionsMother'
 import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
+import { AnonymizedContext } from '../../../../../src/sections/dataset/anonymized/AnonymizedContext'
 
 const fileRepository: FileRepository = {} as FileRepository
 function DownloadFileTestComponent({ file }: { file: File }) {
@@ -172,6 +173,27 @@ describe('useFilePermissions', () => {
 
       cy.findAllByText('Has download permission').should('exist')
       cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledOnce')
+    })
+
+    it('should always allow to download if the user is in anonymized view (privateUrl)', () => {
+      const file = FileMother.createWithRestrictedAccess()
+      fileRepository.getFileUserPermissionsById = cy
+        .stub()
+        .resolves(FileUserPermissionsMother.create({ fileId: file.id, canDownloadFile: false }))
+
+      const anonymizedView = true
+      const setAnonymizedView = () => {}
+      cy.mount(
+        <AnonymizedContext.Provider value={{ anonymizedView, setAnonymizedView }}>
+          <FilePermissionsProvider repository={fileRepository}>
+            <DownloadFileTestComponent file={file} />
+            <DownloadFileTestComponent file={file} />
+          </FilePermissionsProvider>
+        </AnonymizedContext.Provider>
+      )
+
+      cy.wrap(fileRepository.getFileUserPermissionsById).should('not.be.called')
+      cy.findAllByText('Has download permission').should('exist')
     })
   })
 
