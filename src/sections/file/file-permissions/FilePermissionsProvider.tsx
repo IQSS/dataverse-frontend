@@ -4,6 +4,7 @@ import { FilePermission } from '../../../files/domain/models/FileUserPermissions
 import { FilePermissionsContext } from './FilePermissionsContext'
 import { File } from '../../../files/domain/models/File'
 import { checkFileDownloadPermission } from '../../../files/domain/useCases/checkFileDownloadPermission'
+import { checkFileEditDatasetPermission } from '../../../files/domain/useCases/checkFileEditDatasetPermission'
 
 interface SessionUserFilePermissionsProviderProps {
   repository: FileRepository
@@ -24,6 +25,16 @@ export function FilePermissionsProvider({
         return false
       })
   }
+  const checkSessionUserHasEditDatasetPermission = (file: File): Promise<boolean> => {
+    return checkFileEditDatasetPermission(repository, file)
+      .then((canEditDataset) => {
+        return canEditDataset
+      })
+      .catch((error) => {
+        console.error('There was an error getting the edit dataset permission', error)
+        return false
+      })
+  }
 
   function checkSessionUserHasFilePermission(
     permission: FilePermission,
@@ -32,6 +43,8 @@ export function FilePermissionsProvider({
     switch (permission) {
       case FilePermission.DOWNLOAD_FILE:
         return checkSessionUserHasFileDownloadPermission(file)
+      case FilePermission.EDIT_DATASET:
+        return checkSessionUserHasEditDatasetPermission(file)
     }
   }
 

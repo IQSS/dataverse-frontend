@@ -5,5 +5,6 @@ export interface FileUserPermissions {
 }
 
 export enum FilePermission {
-  DOWNLOAD_FILE = 'downloadFile'
+  DOWNLOAD_FILE = 'downloadFile',
+  EDIT_DATASET = 'editDataset'
 }
