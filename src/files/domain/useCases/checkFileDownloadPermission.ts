@@ -11,7 +11,8 @@ export async function checkFileDownloadPermission(
     })
   }
 
-  if (!file.access.restricted && !file.isActivelyEmbargoed) {
+  const isRestricted = file.access.restricted || file.access.latestVersionRestricted
+  if (!isRestricted && !file.isActivelyEmbargoed) {
     return true
   }
 

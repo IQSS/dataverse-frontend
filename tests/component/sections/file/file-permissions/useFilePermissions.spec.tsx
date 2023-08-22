@@ -51,7 +51,6 @@ describe('useFilePermissions', () => {
         <TestComponent file={file} />
       </FilePermissionsProvider>
     )
-
     cy.wrap(fileRepository.getFileUserPermissionsById).should('not.be.called')
     cy.findByText('Has download permission').should('exist')
   })
@@ -74,6 +73,21 @@ describe('useFilePermissions', () => {
 
   it('should call getFileUserPermissionsById when the file is restricted', () => {
     const file = FileMother.createWithRestrictedAccess()
+    fileRepository.getFileUserPermissionsById = cy
+      .stub()
+      .resolves(FileUserPermissionsMother.create({ fileId: file.id, canDownloadFile: true }))
+    cy.mount(
+      <FilePermissionsProvider repository={fileRepository}>
+        <TestComponent file={file} />
+      </FilePermissionsProvider>
+    )
+
+    cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledWith', file.id)
+    cy.findByText('Has download permission').should('exist')
+  })
+
+  it('should call getFileUserPermissionsById when the file is public but latest version is restricted', () => {
+    const file = FileMother.createWithPublicAccessButLatestVersionRestricted()
     fileRepository.getFileUserPermissionsById = cy
       .stub()
       .resolves(FileUserPermissionsMother.create({ fileId: file.id, canDownloadFile: true }))

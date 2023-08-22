@@ -44,6 +44,7 @@ export class FileMother {
       name: faker.system.fileName(),
       access: {
         restricted: faker.datatype.boolean(),
+        latestVersionRestricted: faker.datatype.boolean(),
         canBeRequested: faker.datatype.boolean(),
         requested: faker.datatype.boolean()
       },
@@ -121,7 +122,12 @@ export class FileMother {
         minorNumber: 0,
         status: FileStatus.RELEASED
       },
-      access: { restricted: false, canBeRequested: false, requested: false },
+      access: {
+        restricted: false,
+        latestVersionRestricted: false,
+        canBeRequested: false,
+        requested: false
+      },
       permissions: { canDownload: true },
       labels: [],
       checksum: undefined,
@@ -160,6 +166,7 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
+        latestVersionRestricted: true,
         canBeRequested: false,
         requested: false
       },
@@ -194,6 +201,19 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: false,
+        latestVersionRestricted: false,
+        canBeRequested: false,
+        requested: false
+      },
+      embargo: undefined
+    })
+  }
+
+  static createWithPublicAccessButLatestVersionRestricted(): File {
+    return this.createDefault({
+      access: {
+        restricted: false,
+        latestVersionRestricted: true,
         canBeRequested: false,
         requested: false
       },
@@ -205,6 +225,7 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
+        latestVersionRestricted: true,
         canBeRequested: false,
         requested: false
       },
@@ -216,6 +237,7 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
+        latestVersionRestricted: true,
         canBeRequested: true,
         requested: false
       },
@@ -227,6 +249,7 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
+        latestVersionRestricted: true,
         canBeRequested: true,
         requested: false
       },
@@ -238,6 +261,7 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
+        latestVersionRestricted: true,
         canBeRequested: true,
         requested: true
       },
@@ -255,6 +279,7 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
+        latestVersionRestricted: true,
         canBeRequested: true,
         requested: false
       },
@@ -267,6 +292,7 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
+        latestVersionRestricted: true,
         canBeRequested: false,
         requested: false
       },
