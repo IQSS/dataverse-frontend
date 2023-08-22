@@ -11,11 +11,12 @@ import { WithCitationMetadataBlockInfo } from './WithCitationMetadataBlockInfo'
 import { FileMockNoDataRepository } from '../files/FileMockNoDataRepository'
 import { WithSettings } from '../WithSettings'
 import { WithLoggedInUser } from '../WithLoggedInUser'
+import { WithFilePermissions } from '../files/file-permission/WithFilePermissions'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
   component: Dataset,
-  decorators: [WithI18next, WithCitationMetadataBlockInfo, WithSettings],
+  decorators: [WithI18next, WithCitationMetadataBlockInfo, WithSettings, WithFilePermissions],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
