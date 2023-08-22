@@ -32,8 +32,6 @@ export function FilePermissionsProvider({
     switch (permission) {
       case FilePermission.DOWNLOAD_FILE:
         return checkSessionUserHasFileDownloadPermission(file)
-      default:
-        throw new Error(`Unknown file permission`)
     }
   }
 

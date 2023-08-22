@@ -102,6 +102,21 @@ describe('useFilePermissions', () => {
     cy.findByText('Has download permission').should('exist')
   })
 
+  it('should return false if there is an error in the use case request', () => {
+    const file = FileMother.createWithEmbargo()
+    fileRepository.getFileUserPermissionsById = cy
+      .stub()
+      .rejects(new Error('There was an error getting the file user permissions'))
+    cy.mount(
+      <FilePermissionsProvider repository={fileRepository}>
+        <TestComponent file={file} />
+      </FilePermissionsProvider>
+    )
+
+    cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledWith', file.id)
+    cy.findByText('Does not have download permission').should('exist')
+  })
+
   it.skip('should use the cached state canDownloadPermissionByFileId the second time the file is being consulted', () => {
     // TODO - Implement cache
     const file = FileMother.createWithRestrictedAccess()
