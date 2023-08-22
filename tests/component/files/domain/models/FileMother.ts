@@ -47,9 +47,6 @@ export class FileMother {
         canBeRequested: faker.datatype.boolean(),
         requested: faker.datatype.boolean()
       },
-      permissions: {
-        canDownload: faker.datatype.boolean()
-      },
       version: {
         majorNumber: faker.datatype.number(),
         minorNumber: faker.datatype.number(),
@@ -98,7 +95,6 @@ export class FileMother {
       ),
       fileMockedData.name,
       fileMockedData.access,
-      fileMockedData.permissions,
       fileMockedData.type,
       new FileSize(fileMockedData.size.value, fileMockedData.size.unit),
       fileMockedData.date,
@@ -167,9 +163,6 @@ export class FileMother {
         canBeRequested: false,
         requested: false
       },
-      permissions: {
-        canDownload: false
-      },
       embargo: FileEmbargoMother.create()
     })
   }
@@ -204,9 +197,6 @@ export class FileMother {
         canBeRequested: false,
         requested: false
       },
-      permissions: {
-        canDownload: true
-      },
       embargo: undefined
     })
   }
@@ -217,9 +207,6 @@ export class FileMother {
         restricted: true,
         canBeRequested: false,
         requested: false
-      },
-      permissions: {
-        canDownload: false
       },
       embargo: undefined
     })
@@ -232,9 +219,6 @@ export class FileMother {
         canBeRequested: true,
         requested: false
       },
-      permissions: {
-        canDownload: true
-      },
       embargo: undefined
     })
   }
@@ -246,9 +230,6 @@ export class FileMother {
         canBeRequested: true,
         requested: false
       },
-      permissions: {
-        canDownload: false
-      },
       embargo: undefined
     })
   }
@@ -259,9 +240,6 @@ export class FileMother {
         restricted: true,
         canBeRequested: true,
         requested: true
-      },
-      permissions: {
-        canDownload: false
       },
       embargo: undefined
     })
@@ -280,9 +258,6 @@ export class FileMother {
         canBeRequested: true,
         requested: false
       },
-      permissions: {
-        canDownload: true
-      },
       thumbnail: faker.image.imageUrl(),
       type: new FileType('image')
     })
@@ -294,9 +269,6 @@ export class FileMother {
         restricted: true,
         canBeRequested: false,
         requested: false
-      },
-      permissions: {
-        canDownload: false
       },
       thumbnail: faker.image.imageUrl(),
       type: new FileType('image')

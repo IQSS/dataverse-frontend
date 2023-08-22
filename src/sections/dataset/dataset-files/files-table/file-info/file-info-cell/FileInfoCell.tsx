@@ -16,12 +16,7 @@ export function FileInfoCell({ file }: { file: File }) {
   return (
     <div className={styles.container}>
       <div className={styles['thumbnail-container']}>
-        <FileThumbnail
-          thumbnail={file.thumbnail}
-          name={file.name}
-          type={file.type}
-          lockStatus={file.lockStatus}
-        />
+        <FileThumbnail file={file} />
       </div>
       <div className={styles['body-container']}>
         <FileTitle link={file.getLink()} name={file.name} />

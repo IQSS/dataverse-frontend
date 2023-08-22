@@ -15,55 +15,27 @@ type Story = StoryObj<typeof FileThumbnail>
 export const WithIcon: Story = {
   render: () => {
     const file = FileMother.createDefault()
-    return (
-      <FileThumbnail
-        thumbnail={file.thumbnail}
-        name={file.name}
-        type={file.type}
-        lockStatus={file.lockStatus}
-      />
-    )
+    return <FileThumbnail file={file} />
   }
 }
 
 export const WithThumbnailPreview: Story = {
   render: () => {
     const file = FileMother.createWithThumbnail()
-    return (
-      <FileThumbnail
-        thumbnail={file.thumbnail}
-        name={file.name}
-        type={file.type}
-        lockStatus={file.lockStatus}
-      />
-    )
+    return <FileThumbnail file={file} />
   }
 }
 
 export const WithThumbnailRestrictedLockedIcon: Story = {
   render: () => {
     const file = FileMother.createWithRestrictedAccess()
-    return (
-      <FileThumbnail
-        thumbnail={file.thumbnail}
-        name={file.name}
-        type={file.type}
-        lockStatus={file.lockStatus}
-      />
-    )
+    return <FileThumbnail file={file} />
   }
 }
 
 export const WithThumbnailRestrictedUnlockedIcon: Story = {
   render: () => {
     const file = FileMother.createWithRestrictedAccessWithAccessGranted()
-    return (
-      <FileThumbnail
-        thumbnail={file.thumbnail}
-        name={file.name}
-        type={file.type}
-        lockStatus={file.lockStatus}
-      />
-    )
+    return <FileThumbnail file={file} />
   }
 }

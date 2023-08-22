@@ -34,14 +34,6 @@ export interface FileAccess {
   requested: boolean
 }
 
-export enum FileAccessStatus {
-  PUBLIC = 'public',
-  RESTRICTED = 'restricted',
-  RESTRICTED_WITH_ACCESS = 'restrictedAccess',
-  EMBARGOED = 'embargoed',
-  EMBARGOED_RESTRICTED = 'embargoedRestricted'
-}
-
 export enum FileStatus {
   DRAFT = 'draft',
   RELEASED = 'released',
@@ -112,23 +104,12 @@ export class FileType {
   }
 }
 
-export enum FileLockStatus {
-  LOCKED = 'locked',
-  UNLOCKED = 'unlocked',
-  OPEN = 'open'
-}
-
-export interface FilePermissions {
-  canDownload: boolean
-}
-
 export class File {
   constructor(
     readonly id: string,
     readonly version: FileVersion,
     readonly name: string,
     readonly access: FileAccess,
-    readonly permissions: FilePermissions,
     readonly type: FileType,
     readonly size: FileSize,
     readonly date: FileDate,
@@ -144,32 +125,6 @@ export class File {
 
   getLink(): string {
     return `/file?id=${this.id}&version=${this.version.toString()}`
-  }
-
-  get accessStatus(): FileAccessStatus {
-    if (!this.access.restricted && !this.isActivelyEmbargoed) {
-      return FileAccessStatus.PUBLIC
-    }
-    if (!this.permissions.canDownload) {
-      if (!this.isActivelyEmbargoed) {
-        return FileAccessStatus.RESTRICTED
-      }
-      return FileAccessStatus.EMBARGOED_RESTRICTED
-    }
-    if (!this.isActivelyEmbargoed) {
-      return FileAccessStatus.RESTRICTED_WITH_ACCESS
-    }
-    return FileAccessStatus.EMBARGOED
-  }
-
-  get lockStatus(): FileLockStatus {
-    if (!this.access.restricted && !this.isActivelyEmbargoed) {
-      return FileLockStatus.OPEN
-    }
-    if (!this.permissions.canDownload) {
-      return FileLockStatus.LOCKED
-    }
-    return FileLockStatus.UNLOCKED
   }
 
   get isActivelyEmbargoed(): boolean {
