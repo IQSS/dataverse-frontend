@@ -3,20 +3,32 @@ import { UserMother } from '../../../../../../users/domain/models/UserMother'
 import { UserRepository } from '../../../../../../../../src/users/domain/repositories/UserRepository'
 import { SessionProvider } from '../../../../../../../../src/sections/session/SessionProvider'
 import { FileMother } from '../../../../../../files/domain/models/FileMother'
+import { FileRepository } from '../../../../../../../../src/files/domain/repositories/FileRepository'
+import { FileUserPermissionsMother } from '../../../../../../files/domain/models/FileUserPermissionsMother'
+import { FilePermissionsProvider } from '../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 
 const user = UserMother.create()
 const userRepository = {} as UserRepository
 const files = FileMother.createMany(2)
+const fileRepository: FileRepository = {} as FileRepository
 describe('EditFilesMenu', () => {
   beforeEach(() => {
     userRepository.getAuthenticated = cy.stub().resolves(user)
     userRepository.removeAuthenticated = cy.stub().resolves()
+    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+      FileUserPermissionsMother.create({
+        fileId: files[0].id,
+        canEditDataset: true
+      })
+    )
   })
   it('renders the Edit Files menu', () => {
     cy.customMount(
-      <SessionProvider repository={userRepository}>
-        <EditFilesMenu files={files} />
-      </SessionProvider>
+      <FilePermissionsProvider repository={fileRepository}>
+        <SessionProvider repository={userRepository}>
+          <EditFilesMenu files={files} />
+        </SessionProvider>
+      </FilePermissionsProvider>
     )
 
     cy.findByRole('button', { name: 'Edit Files' }).should('exist')
@@ -26,9 +38,11 @@ describe('EditFilesMenu', () => {
     userRepository.getAuthenticated = cy.stub().resolves(null)
 
     cy.customMount(
-      <SessionProvider repository={userRepository}>
-        <EditFilesMenu files={files} />
-      </SessionProvider>
+      <FilePermissionsProvider repository={fileRepository}>
+        <SessionProvider repository={userRepository}>
+          <EditFilesMenu files={files} />
+        </SessionProvider>
+      </FilePermissionsProvider>
     )
 
     cy.findByRole('button', { name: 'Edit Files' }).should('not.exist')
@@ -36,9 +50,11 @@ describe('EditFilesMenu', () => {
 
   it('does not render the Edit Files menu when there are no files in the dataset', () => {
     cy.customMount(
-      <SessionProvider repository={userRepository}>
-        <EditFilesMenu files={[]} />
-      </SessionProvider>
+      <FilePermissionsProvider repository={fileRepository}>
+        <SessionProvider repository={userRepository}>
+          <EditFilesMenu files={[]} />
+        </SessionProvider>
+      </FilePermissionsProvider>
     )
 
     cy.findByRole('button', { name: 'Edit Files' }).should('not.exist')
@@ -46,9 +62,11 @@ describe('EditFilesMenu', () => {
 
   it('renders the Edit Files options', () => {
     cy.customMount(
-      <SessionProvider repository={userRepository}>
-        <EditFilesMenu files={files} />
-      </SessionProvider>
+      <FilePermissionsProvider repository={fileRepository}>
+        <SessionProvider repository={userRepository}>
+          <EditFilesMenu files={files} />
+        </SessionProvider>
+      </FilePermissionsProvider>
     )
 
     cy.findByRole('button', { name: 'Edit Files' }).click()
@@ -56,7 +74,22 @@ describe('EditFilesMenu', () => {
   })
 
   it.skip('does not render the Edit Files menu when the user does not have update dataset permissions', () => {
-    // TODO: Implement this test
+    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+      FileUserPermissionsMother.create({
+        fileId: files[0].id,
+        canEditDataset: false
+      })
+    )
+
+    cy.customMount(
+      <FilePermissionsProvider repository={fileRepository}>
+        <SessionProvider repository={userRepository}>
+          <EditFilesMenu files={files} />
+        </SessionProvider>
+      </FilePermissionsProvider>
+    )
+
+    cy.findByRole('button', { name: 'Edit Files' }).should('not.exist')
   })
 
   it.skip('renders the disabled Edit Files menu when the dataset is locked from edits', () => {

@@ -4,16 +4,17 @@ import { PencilFill, ThreeDotsVertical } from 'react-bootstrap-icons'
 import { useSession } from '../../../../../../../session/SessionContext'
 import { EditFilesOptions } from '../../../edit-files-menu/EditFilesOptions'
 import { useTranslation } from 'react-i18next'
+import { useFileEditDatasetPermission } from '../../../../../../../file/file-permissions/useFileEditDatasetPermission'
 
 export function FileOptionsMenu({ file }: { file: File }) {
   const { t } = useTranslation('files')
   const { user } = useSession()
-  const userHasDatasetUpdatePermissions = true // TODO - Implement permissions
+  const { sessionUserHasEditDatasetPermission } = useFileEditDatasetPermission(file)
   const datasetHasValidTermsOfAccess = true // TODO - Implement terms of access validation
   const datasetLockedFromEdits = false // TODO - Ask Guillermo if this a dataset property coming from the api
   // const isDeleted = false // TODO - Ask Guillermo if this is a file property coming from the api
 
-  if (!user || !userHasDatasetUpdatePermissions || !datasetHasValidTermsOfAccess) {
+  if (!user || !sessionUserHasEditDatasetPermission || !datasetHasValidTermsOfAccess) {
     return <></>
   }
 

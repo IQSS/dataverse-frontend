@@ -3,6 +3,7 @@ import { FilePermission } from '../../../files/domain/models/FileUserPermissions
 import { useFilePermissions } from './FilePermissionsContext'
 import { File } from '../../../files/domain/models/File'
 
+// TODO: Consider getting the permission from the dataset instead of from the file
 export function useFileEditDatasetPermission(file: File) {
   const { checkSessionUserHasFilePermission } = useFilePermissions()
   const [sessionUserHasEditDatasetPermission, setSessionUserHasEditDatasetPermission] =
