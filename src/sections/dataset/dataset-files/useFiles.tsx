@@ -6,6 +6,8 @@ import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 import { FilesCountInfo } from '../../../files/domain/models/FilesCountInfo'
 import { getFilesCountInfoByDatasetPersistentId } from '../../../files/domain/useCases/getFilesCountInfoByDatasetPersistentId'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
+import { useFilePermissions } from '../../file/file-permissions/FilePermissionsContext'
+import { FilePermission } from '../../../files/domain/models/FileUserPermissions'
 
 export function useFiles(
   filesRepository: FileRepository,
@@ -14,6 +16,7 @@ export function useFiles(
   paginationInfo?: FilePaginationInfo,
   criteria?: FileCriteria
 ) {
+  const { fetchFilesPermission } = useFilePermissions()
   const [files, setFiles] = useState<File[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [filesCountInfo, setFilesCountInfo] = useState<FilesCountInfo>({
@@ -44,8 +47,11 @@ export function useFiles(
     )
       .then((files: File[]) => {
         setFiles(files)
-        setIsLoading(false)
+        return files
       })
+      .then((files: File[]) =>
+        fetchFilesPermission(FilePermission.DOWNLOAD_FILE, files).then(() => setIsLoading(false))
+      )
       .catch((error) => {
         console.error('There was an error getting the files', error)
         setIsLoading(false)

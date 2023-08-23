@@ -17,4 +17,11 @@ export class FileUserPermissionsMother {
       canEditDataset: true
     })
   }
+
+  static createWithDeniedPermissions(): FileUserPermissions {
+    return FileUserPermissionsMother.create({
+      canDownloadFile: false,
+      canEditDataset: false
+    })
+  }
 }

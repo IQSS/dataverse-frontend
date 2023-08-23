@@ -15,14 +15,33 @@ export function FilePermissionsProvider({
   repository,
   children
 }: PropsWithChildren<SessionUserFilePermissionsProviderProps>) {
+  const filePermissionsMap = new Map<string, { [x: string]: boolean }>()
   const { anonymizedView } = useAnonymized()
+
+  const updateFilePermissionsMap = (
+    fileIdToUpdate: string,
+    newPermissionKey: string,
+    newPermissionValue: boolean
+  ) => {
+    if (filePermissionsMap.has(fileIdToUpdate)) {
+      const existingValue = filePermissionsMap.get(fileIdToUpdate)
+      if (existingValue) {
+        existingValue[newPermissionKey] = newPermissionValue
+      }
+    } else {
+      const newValue = {
+        [newPermissionKey]: newPermissionValue
+      }
+      filePermissionsMap.set(fileIdToUpdate, newValue)
+    }
+  }
   const checkSessionUserHasFileDownloadPermission = (file: File): Promise<boolean> => {
     if (anonymizedView) {
       return Promise.resolve(true) // If the user is in anonymized view, they can always download the file
     }
     return checkFileDownloadPermission(repository, file)
       .then((canDownloadFile) => {
-        // TODO - Cache the result
+        updateFilePermissionsMap(file.id, FilePermission.DOWNLOAD_FILE, canDownloadFile)
         return canDownloadFile
       })
       .catch((error) => {
@@ -33,6 +52,7 @@ export function FilePermissionsProvider({
   const checkSessionUserHasEditDatasetPermission = (file: File): Promise<boolean> => {
     return checkFileEditDatasetPermission(repository, file)
       .then((canEditDataset) => {
+        updateFilePermissionsMap(file.id, FilePermission.EDIT_DATASET, canEditDataset)
         return canEditDataset
       })
       .catch((error) => {
@@ -45,6 +65,13 @@ export function FilePermissionsProvider({
     permission: FilePermission,
     file: File
   ): Promise<boolean> {
+    if (filePermissionsMap.has(file.id)) {
+      const savedPermission = filePermissionsMap.get(file.id)?.[permission]
+      if (savedPermission !== undefined) {
+        return Promise.resolve(savedPermission)
+      }
+    }
+
     switch (permission) {
       case FilePermission.DOWNLOAD_FILE:
         return checkSessionUserHasFileDownloadPermission(file)
@@ -53,9 +80,24 @@ export function FilePermissionsProvider({
     }
   }
 
+  function fetchFilesPermission(permission: FilePermission, files: File[]): Promise<boolean[]> {
+    return Promise.all(
+      files.map((file) =>
+        checkSessionUserHasFilePermission(permission, file)
+          .then((hasPermission) => {
+            return hasPermission
+          })
+          .catch((error) => {
+            console.error('There was an error getting the file permission', error)
+            return false
+          })
+      )
+    )
+  }
+
   return (
     <FilePermissionsContext.Provider
-      value={{ checkSessionUserHasFilePermission: checkSessionUserHasFilePermission }}>
+      value={{ checkSessionUserHasFilePermission, fetchFilesPermission }}>
       {children}
     </FilePermissionsContext.Provider>
   )

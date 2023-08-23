@@ -10,49 +10,67 @@ import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInf
 import { AnonymizedContext } from '../../../../../src/sections/dataset/anonymized/AnonymizedContext'
 
 const fileRepository: FileRepository = {} as FileRepository
-function DownloadFileTestComponent({ file }: { file: File }) {
+
+function SavedPermissionsTestComponent({
+  file,
+  permission
+}: {
+  file: File
+  permission: FilePermission
+}) {
   const { checkSessionUserHasFilePermission } = useFilePermissions()
-  const [hasFileDownloadPermission, setHasFileDownloadPermission] = useState<boolean>(false)
+  const [hasFilePermission, setHasFilePermission] = useState<boolean>(false)
+  const [hasFilePermissionAgain, setHasFilePermissionAgain] = useState<boolean>(false)
   useEffect(() => {
-    checkSessionUserHasFilePermission(FilePermission.DOWNLOAD_FILE, file)
+    checkSessionUserHasFilePermission(permission, file)
       .then((hasPermission) => {
-        setHasFileDownloadPermission(hasPermission)
+        setHasFilePermission(hasPermission)
+      })
+      .then(() => {
+        return checkSessionUserHasFilePermission(permission, file).then((hasPermission) => {
+          setHasFilePermissionAgain(hasPermission)
+        })
       })
       .catch((error) => {
-        console.error('There was an error getting the file download permission', error)
+        console.error('There was an error getting the file permission', error)
       })
   }, [file])
 
   return (
     <div>
-      {hasFileDownloadPermission ? (
-        <span>Has download permission</span>
+      {hasFilePermission ? (
+        <span>Has file permission</span>
       ) : (
-        <span>Does not have download permission</span>
+        <span>Does not have file permission</span>
+      )}
+      {hasFilePermissionAgain ? (
+        <span>Has file permission again</span>
+      ) : (
+        <span>Does not have file permission again</span>
       )}
     </div>
   )
 }
 
-function EditDatasetTestComponent({ file }: { file: File }) {
+function TestComponent({ file, permission }: { file: File; permission: FilePermission }) {
   const { checkSessionUserHasFilePermission } = useFilePermissions()
-  const [hasEditDatasetPermission, setHasEditDatasetPermission] = useState<boolean>(false)
+  const [hasFilePermission, setHasFilePermission] = useState<boolean>(false)
   useEffect(() => {
-    checkSessionUserHasFilePermission(FilePermission.EDIT_DATASET, file)
+    checkSessionUserHasFilePermission(permission, file)
       .then((hasPermission) => {
-        setHasEditDatasetPermission(hasPermission)
+        setHasFilePermission(hasPermission)
       })
       .catch((error) => {
-        console.error('There was an error getting the edit dataset permission', error)
+        console.error('There was an error getting the file  permission', error)
       })
   }, [file])
 
   return (
     <div>
-      {hasEditDatasetPermission ? (
-        <span>Has edit dataset permission</span>
+      {hasFilePermission ? (
+        <span>Has file permission</span>
       ) : (
-        <span>Does not have edit dataset permission</span>
+        <span>Does not have file permission</span>
       )}
     </div>
   )
@@ -75,11 +93,11 @@ describe('useFilePermissions', () => {
 
       cy.mount(
         <FilePermissionsProvider repository={fileRepository}>
-          <DownloadFileTestComponent file={file} />
+          <TestComponent file={file} permission={FilePermission.DOWNLOAD_FILE} />
         </FilePermissionsProvider>
       )
       cy.wrap(fileRepository.getFileUserPermissionsById).should('not.be.called')
-      cy.findByText('Has download permission').should('exist')
+      cy.findByText('Has file permission').should('exist')
     })
 
     it('should call getFileUserPermissionsById when the file is deaccessioned', () => {
@@ -90,12 +108,12 @@ describe('useFilePermissions', () => {
 
       cy.mount(
         <FilePermissionsProvider repository={fileRepository}>
-          <DownloadFileTestComponent file={file} />
+          <TestComponent file={file} permission={FilePermission.DOWNLOAD_FILE} />
         </FilePermissionsProvider>
       )
 
       cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledWith', file.id)
-      cy.findByText('Has download permission').should('exist')
+      cy.findByText('Has file permission').should('exist')
     })
 
     it('should call getFileUserPermissionsById when the file is restricted', () => {
@@ -105,12 +123,12 @@ describe('useFilePermissions', () => {
         .resolves(FileUserPermissionsMother.create({ fileId: file.id, canDownloadFile: true }))
       cy.mount(
         <FilePermissionsProvider repository={fileRepository}>
-          <DownloadFileTestComponent file={file} />
+          <TestComponent file={file} permission={FilePermission.DOWNLOAD_FILE} />
         </FilePermissionsProvider>
       )
 
       cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledWith', file.id)
-      cy.findByText('Has download permission').should('exist')
+      cy.findByText('Has file permission').should('exist')
     })
 
     it('should call getFileUserPermissionsById when the file is public but latest version is restricted', () => {
@@ -120,12 +138,12 @@ describe('useFilePermissions', () => {
         .resolves(FileUserPermissionsMother.create({ fileId: file.id, canDownloadFile: true }))
       cy.mount(
         <FilePermissionsProvider repository={fileRepository}>
-          <DownloadFileTestComponent file={file} />
+          <TestComponent file={file} permission={FilePermission.DOWNLOAD_FILE} />
         </FilePermissionsProvider>
       )
 
       cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledWith', file.id)
-      cy.findByText('Has download permission').should('exist')
+      cy.findByText('Has file permission').should('exist')
     })
 
     it('should call getFileUserPermissionsById when the file is embargoed', () => {
@@ -135,12 +153,12 @@ describe('useFilePermissions', () => {
         .resolves(FileUserPermissionsMother.create({ fileId: file.id, canDownloadFile: true }))
       cy.mount(
         <FilePermissionsProvider repository={fileRepository}>
-          <DownloadFileTestComponent file={file} />
+          <TestComponent file={file} permission={FilePermission.DOWNLOAD_FILE} />
         </FilePermissionsProvider>
       )
 
       cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledWith', file.id)
-      cy.findByText('Has download permission').should('exist')
+      cy.findByText('Has file permission').should('exist')
     })
 
     it('should return false if there is an error in the use case request', () => {
@@ -150,28 +168,27 @@ describe('useFilePermissions', () => {
         .rejects(new Error('There was an error getting the file user permissions'))
       cy.mount(
         <FilePermissionsProvider repository={fileRepository}>
-          <DownloadFileTestComponent file={file} />
+          <TestComponent file={file} permission={FilePermission.DOWNLOAD_FILE} />
         </FilePermissionsProvider>
       )
 
       cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledWith', file.id)
-      cy.findByText('Does not have download permission').should('exist')
+      cy.findByText('Does not have file permission').should('exist')
     })
 
-    it.skip('should use the cached state canDownloadPermissionByFileId the second time the file is being consulted', () => {
-      // TODO - Implement cache
+    it('should use the saved state of the permission the second time the file is being consulted', () => {
       const file = FileMother.createWithRestrictedAccess()
       fileRepository.getFileUserPermissionsById = cy
         .stub()
         .resolves(FileUserPermissionsMother.create({ fileId: file.id, canDownloadFile: true }))
       cy.mount(
         <FilePermissionsProvider repository={fileRepository}>
-          <DownloadFileTestComponent file={file} />
-          <DownloadFileTestComponent file={file} />
+          <SavedPermissionsTestComponent file={file} permission={FilePermission.DOWNLOAD_FILE} />
         </FilePermissionsProvider>
       )
 
-      cy.findAllByText('Has download permission').should('exist')
+      cy.findAllByText('Has file permission').should('exist')
+      cy.findAllByText('Has file permission again').should('exist')
       cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledOnce')
     })
 
@@ -186,14 +203,13 @@ describe('useFilePermissions', () => {
       cy.mount(
         <AnonymizedContext.Provider value={{ anonymizedView, setAnonymizedView }}>
           <FilePermissionsProvider repository={fileRepository}>
-            <DownloadFileTestComponent file={file} />
-            <DownloadFileTestComponent file={file} />
+            <TestComponent file={file} permission={FilePermission.DOWNLOAD_FILE} />
           </FilePermissionsProvider>
         </AnonymizedContext.Provider>
       )
 
       cy.wrap(fileRepository.getFileUserPermissionsById).should('not.be.called')
-      cy.findAllByText('Has download permission').should('exist')
+      cy.findAllByText('Has file permission').should('exist')
     })
   })
 
@@ -206,12 +222,12 @@ describe('useFilePermissions', () => {
 
       cy.mount(
         <FilePermissionsProvider repository={fileRepository}>
-          <EditDatasetTestComponent file={file} />
+          <TestComponent file={file} permission={FilePermission.EDIT_DATASET} />
         </FilePermissionsProvider>
       )
 
       cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledWith', file.id)
-      cy.findByText('Has edit dataset permission').should('exist')
+      cy.findByText('Has file permission').should('exist')
     })
 
     it('should return false if there is an error in the use case request', () => {
@@ -221,12 +237,28 @@ describe('useFilePermissions', () => {
         .rejects(new Error('There was an error getting the file user permissions'))
       cy.mount(
         <FilePermissionsProvider repository={fileRepository}>
-          <EditDatasetTestComponent file={file} />
+          <TestComponent file={file} permission={FilePermission.EDIT_DATASET} />
         </FilePermissionsProvider>
       )
 
       cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledWith', file.id)
-      cy.findByText('Does not have edit dataset permission').should('exist')
+      cy.findByText('Does not have file permission').should('exist')
+    })
+
+    it('should use the saved state of the edit dataset permission the second time the file is being consulted', () => {
+      const file = FileMother.createDefault()
+      fileRepository.getFileUserPermissionsById = cy
+        .stub()
+        .resolves(FileUserPermissionsMother.create({ fileId: file.id, canEditDataset: true }))
+      cy.mount(
+        <FilePermissionsProvider repository={fileRepository}>
+          <SavedPermissionsTestComponent file={file} permission={FilePermission.EDIT_DATASET} />
+        </FilePermissionsProvider>
+      )
+
+      cy.findAllByText('Has file permission').should('exist')
+      cy.findAllByText('Has file permission again').should('exist')
+      cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledOnce')
     })
   })
 })

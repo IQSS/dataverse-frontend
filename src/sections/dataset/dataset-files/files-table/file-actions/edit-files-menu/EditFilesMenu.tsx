@@ -14,7 +14,7 @@ const MINIMUM_FILES_COUNT_TO_SHOW_EDIT_FILES_BUTTON = 1
 export function EditFilesMenu({ files }: EditFilesMenuProps) {
   const { t } = useTranslation('files')
   const { user } = useSession()
-  const { sessionUserHasEditDatasetPermission } = useFileEditDatasetPermission(files[0])
+  const { sessionUserHasEditDatasetPermission } = useFileEditDatasetPermission(files[0] || {})
   const datasetHasValidTermsOfAccess = true // TODO - Implement terms of access validation
   const datasetLockedFromEdits = false // TODO - Ask Guillermo if this a dataset property coming from the api
 
