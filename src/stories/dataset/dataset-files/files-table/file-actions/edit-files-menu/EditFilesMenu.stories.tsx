@@ -4,11 +4,12 @@ import { WithSettings } from '../../../../../WithSettings'
 import { FileMother } from '../../../../../../../tests/component/files/domain/models/FileMother'
 import { EditFilesMenu } from '../../../../../../sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/EditFilesMenu'
 import { WithLoggedInUser } from '../../../../../WithLoggedInUser'
+import { WithFilePermissionsGranted } from '../../../../../files/file-permission/WithFilePermissionsGranted'
 
 const meta: Meta<typeof EditFilesMenu> = {
   title: 'Sections/Dataset Page/DatasetFiles/FilesTable/EditFilesMenu',
   component: EditFilesMenu,
-  decorators: [WithI18next, WithSettings, WithLoggedInUser]
+  decorators: [WithI18next, WithSettings, WithLoggedInUser, WithFilePermissionsGranted]
 }
 
 export default meta

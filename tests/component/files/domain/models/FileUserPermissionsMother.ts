@@ -10,4 +10,11 @@ export class FileUserPermissionsMother {
       ...props
     }
   }
+
+  static createWithGrantedPermissions(): FileUserPermissions {
+    return FileUserPermissionsMother.create({
+      canDownloadFile: true,
+      canEditDataset: true
+    })
+  }
 }
