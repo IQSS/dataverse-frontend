@@ -13,20 +13,35 @@ export class DataverseApiHelper {
     })
   }
 
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  static async request<T>(url: string, method: string, data?: any): Promise<T> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static async request<T>(url: string, method: string, data?: any, isFormData = false): Promise<T> {
     const config: AxiosRequestConfig = {
       url: `${this.API_URL}${url}`,
       method: method,
       headers: {
         'X-Dataverse-key': this.API_TOKEN,
-        'Content-Type': 'application/json'
+        'Content-Type': isFormData ? 'multipart/form-data' : 'application/json'
       },
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      data: data
+      data: isFormData ? this.createFormData(data) : data
     }
 
     const response: { data: { data: T } } = await axios(config)
     return response.data.data
+  }
+
+  static createFormData(data: any) {
+    const formData = new FormData()
+
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        if (data[key] instanceof File) {
+          formData.append(key, data[key], data[key].name)
+        } else {
+          formData.append(key, data[key])
+        }
+      }
+    }
+
+    return formData
   }
 }
