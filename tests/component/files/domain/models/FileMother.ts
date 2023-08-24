@@ -40,7 +40,7 @@ export class FileMother {
     const fileType = faker.helpers.arrayElement(['tabular data', faker.system.fileType()])
     const checksum = valueOrUndefined<string>(faker.datatype.uuid())
     const fileMockedData = {
-      id: faker.datatype.uuid(),
+      id: faker.datatype.number(),
       name: faker.system.fileName(),
       access: {
         restricted: faker.datatype.boolean(),

@@ -107,7 +107,7 @@ export class FileType {
 
 export class File {
   constructor(
-    readonly id: string,
+    readonly id: number,
     readonly version: FileVersion,
     readonly name: string,
     readonly access: FileAccess,
