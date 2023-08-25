@@ -4,7 +4,7 @@ import {
   Dataset,
   DatasetLabelSemanticMeaning,
   DatasetLabelValue,
-  DatasetStatus,
+  DatasetPublishingStatus,
   DatasetVersion,
   MetadataBlockName,
   DatasetMetadataBlocks
@@ -19,7 +19,7 @@ export class DatasetMother {
     const dataset = {
       persistentId: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
-      version: new DatasetVersion(1, 0, DatasetStatus.RELEASED),
+      version: new DatasetVersion(1, DatasetPublishingStatus.RELEASED, 0, 1),
       citation:
         'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1',
       license: {

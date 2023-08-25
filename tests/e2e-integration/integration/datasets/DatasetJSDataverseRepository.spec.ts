@@ -3,12 +3,15 @@ import chaiAsPromised from 'chai-as-promised'
 import { DatasetJSDataverseRepository } from '../../../../src/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { IntegrationTestsUtils } from '../IntegrationTestsUtils'
 import { DatasetHelper } from './DatasetHelper'
-import { DatasetStatus, DatasetVersion } from '../../../../src/dataset/domain/models/Dataset'
+import {
+  DatasetPublishingStatus,
+  DatasetVersion
+} from '../../../../src/dataset/domain/models/Dataset'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
 
-const datasetData = (persistentId: string) => {
+const datasetData = (persistentId: string, versionId: number) => {
   const persistentIdUrl = `https://doi.org/${persistentId.replace('doi:', '')}`
   return {
     citation: `Finch, Fiona, 2023, "Darwin's Finches", <a href="${persistentIdUrl}" target="_blank">${persistentIdUrl}</a>, Root, DRAFT VERSION`,
@@ -61,7 +64,12 @@ const datasetData = (persistentId: string) => {
       }
     ],
     title: "Darwin's Finches",
-    version: { majorNumber: undefined, minorNumber: undefined, status: 'draft' }
+    version: {
+      id: versionId,
+      majorNumber: undefined,
+      minorNumber: undefined,
+      publishingStatus: 'draft'
+    }
   }
 }
 
@@ -77,7 +85,7 @@ describe('Dataset JSDataverse Repository', () => {
       if (!dataset) {
         throw new Error('Dataset not found')
       }
-      const datasetExpected = datasetData(dataset.persistentId)
+      const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
       expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
       expect(dataset.citation).to.deep.equal(datasetExpected.citation)
@@ -101,8 +109,13 @@ describe('Dataset JSDataverse Repository', () => {
         if (!dataset) {
           throw new Error('Dataset not found')
         }
-        const datasetExpected = datasetData(dataset.persistentId)
-        const newVersion = new DatasetVersion(1, 0, DatasetStatus.RELEASED)
+        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
+        const newVersion = new DatasetVersion(
+          dataset.version.id,
+          DatasetPublishingStatus.RELEASED,
+          0,
+          1
+        )
 
         expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(newVersion)
@@ -118,7 +131,7 @@ describe('Dataset JSDataverse Repository', () => {
         if (!dataset) {
           throw new Error('Dataset not found')
         }
-        const datasetExpected = datasetData(dataset.persistentId)
+        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
         expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(datasetExpected.version)
@@ -133,7 +146,7 @@ describe('Dataset JSDataverse Repository', () => {
       if (!dataset) {
         throw new Error('Dataset not found')
       }
-      const datasetExpected = datasetData(dataset.persistentId)
+      const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
       expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
       expect(dataset.version).to.deep.equal(datasetExpected.version)

@@ -9,11 +9,12 @@ import { getDatasetFiles, WriteError } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
 import { JSFileMapper } from './mappers/JSFileMapper'
+import { DatasetVersion } from '../../dataset/domain/models/Dataset'
 
 export class FileJSDataverseRepository implements FileRepository {
   getAllByDatasetPersistentId(
-    persistentId: string,
-    version?: string,
+    datasetPersistentId: string,
+    datasetVersion: DatasetVersion,
     paginationInfo?: FilePaginationInfo,
     criteria?: FileCriteria
   ): Promise<File[]> {
@@ -21,17 +22,25 @@ export class FileJSDataverseRepository implements FileRepository {
     const jsFileOrderCriteria = DomainFileMapper.toJSFileOrderCriteria(criteria)
 
     return getDatasetFiles
-      .execute(persistentId, version, jsPagination.limit, jsPagination.offset, jsFileOrderCriteria)
-      .then((jsFiles) => jsFiles.map((jsFile) => JSFileMapper.toFile(jsFile)))
+      .execute(
+        datasetPersistentId,
+        datasetVersion.toString(),
+        jsPagination.limit,
+        jsPagination.offset,
+        jsFileOrderCriteria
+      )
+      .then((jsFiles) => jsFiles.map((jsFile) => JSFileMapper.toFile(jsFile, datasetVersion)))
       .catch((error: WriteError) => {
+        console.error('js-dataverse getDatasetFiles: ', error)
         throw new Error(error.message)
       })
   }
+
   getCountInfoByDatasetPersistentId(
     // eslint-disable-next-line unused-imports/no-unused-vars
-    persistentId: string,
+    datasetPersistentId: string,
     // eslint-disable-next-line unused-imports/no-unused-vars
-    version?: string
+    datasetVersion: DatasetVersion
   ): Promise<FilesCountInfo> {
     // TODO - implement using js-dataverse
     return new Promise((resolve) => {

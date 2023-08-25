@@ -4,13 +4,19 @@ import { FileRepository } from '../../../../../src/files/domain/repositories/Fil
 import { useFiles } from '../../../../../src/sections/dataset/dataset-files/useFiles'
 import { FileUserPermissionsMother } from '../../../files/domain/models/FileUserPermissionsMother'
 import { FilePermissionsProvider } from '../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
+import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 
 const files = FileMother.createMany(100)
 const filesCountInfo = FilesCountInfoMother.create({ total: 100 })
 const fileRepository: FileRepository = {} as FileRepository
+const datasetVersion = DatasetMother.create().version
 
 const FilesTableTestComponent = ({ datasetPersistentId }: { datasetPersistentId: string }) => {
-  const { isLoading, files, filesCountInfo } = useFiles(fileRepository, datasetPersistentId)
+  const { isLoading, files, filesCountInfo } = useFiles(
+    fileRepository,
+    datasetPersistentId,
+    datasetVersion
+  )
   if (isLoading) {
     return <span>Loading...</span>
   }

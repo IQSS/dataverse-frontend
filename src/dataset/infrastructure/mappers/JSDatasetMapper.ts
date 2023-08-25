@@ -8,7 +8,7 @@ import {
 import { DatasetVersionState as JSDatasetVersionState } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
 import {
   Dataset,
-  DatasetStatus,
+  DatasetPublishingStatus,
   MetadataBlockName,
   DatasetMetadataBlock,
   DatasetVersion,
@@ -18,9 +18,10 @@ import {
 
 export class JSDatasetMapper {
   static toDataset(jsDataset: JSDataset, citation: string, summaryFieldsNames: string[]): Dataset {
+    console.log('js-dataverse getDataset', jsDataset)
     return new Dataset.Builder(
       jsDataset.persistentId,
-      JSDatasetMapper.toVersion(jsDataset.versionInfo),
+      JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo),
       citation,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
@@ -28,24 +29,28 @@ export class JSDatasetMapper {
     ).build()
   }
 
-  static toVersion(jsDatasetVersionInfo: JSDatasetVersionInfo): DatasetVersion {
+  static toVersion(
+    jDatasetVersionId: number,
+    jsDatasetVersionInfo: JSDatasetVersionInfo
+  ): DatasetVersion {
     return new DatasetVersion(
-      jsDatasetVersionInfo.majorNumber,
+      jDatasetVersionId,
+      JSDatasetMapper.toStatus(jsDatasetVersionInfo.state),
       jsDatasetVersionInfo.minorNumber,
-      JSDatasetMapper.toStatus(jsDatasetVersionInfo.state)
+      jsDatasetVersionInfo.majorNumber
     )
   }
 
-  static toStatus(jsDatasetVersionState: JSDatasetVersionState): DatasetStatus {
+  static toStatus(jsDatasetVersionState: JSDatasetVersionState): DatasetPublishingStatus {
     switch (jsDatasetVersionState) {
       case JSDatasetVersionState.DRAFT:
-        return DatasetStatus.DRAFT
+        return DatasetPublishingStatus.DRAFT
       case JSDatasetVersionState.DEACCESSIONED:
-        return DatasetStatus.DEACCESSIONED
+        return DatasetPublishingStatus.DEACCESSIONED
       case JSDatasetVersionState.RELEASED:
-        return DatasetStatus.RELEASED
+        return DatasetPublishingStatus.RELEASED
       default:
-        return DatasetStatus.RELEASED
+        return DatasetPublishingStatus.DRAFT
     }
   }
 

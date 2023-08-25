@@ -11,11 +11,17 @@ import {
 } from '../../../../src/files/domain/models/File'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
+import { DatasetJSDataverseRepository } from '../../../../src/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
+import {
+  DatasetPublishingStatus,
+  DatasetVersion
+} from '../../../../src/dataset/domain/models/Dataset'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
 
 const fileRepository = new FileJSDataverseRepository()
+const datasetRepository = new DatasetJSDataverseRepository()
 const expectedFile = new File(
   1,
   { number: 1, publishingStatus: FilePublishingStatus.DRAFT },
@@ -37,40 +43,83 @@ describe('File JSDataverse Repository', () => {
   before(() => {
     IntegrationTestsUtils.setup()
   })
-  beforeEach(() => IntegrationTestsUtils.login())
+  beforeEach(() => {
+    IntegrationTestsUtils.login()
+  })
 
   it('gets all the files by dataset persistentId with the basic information', async () => {
-    const datasetResponse = await DatasetHelper.createWithFiles(3)
+    const dataset = await DatasetHelper.createWithFiles(3).then((datasetResponse) =>
+      datasetRepository.getByPersistentId(datasetResponse.persistentId)
+    )
+    if (!dataset) throw new Error('Dataset not found')
 
-    await fileRepository.getAllByDatasetPersistentId(datasetResponse.persistentId).then((files) => {
-      files.forEach((file, index) => {
-        expect(file.name).to.deep.equal(`${expectedFile.name}${index > 0 ? `-${index}` : ''}`)
-        expect(file.version).to.deep.equal(expectedFile.version)
+    await fileRepository
+      .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+      .then((files) => {
+        files.forEach((file, index) => {
+          expect(file.name).to.deep.equal(`${expectedFile.name}${index > 0 ? `-${index}` : ''}`)
+          expect(file.version).to.deep.equal(expectedFile.version)
 
-        // TODO - Implement JSFileMapper
-        // expect(file.access).to.deep.equal(expectedFile.access)
-        // expect(file.type).to.deep.equal(expectedFile.type)
-        // expect(file.size).to.deep.equal(expectedFile.size)
-        // expect(file.date).to.deep.equal(expectedFile.date)
-        // expect(file.downloads).to.deep.equal(expectedFile.downloads)
-        // expect(file.labels).to.deep.equal(expectedFile.labels)
+          // TODO - Implement JSFileMapper
+          // expect(file.access).to.deep.equal(expectedFile.access)
+          // expect(file.type).to.deep.equal(expectedFile.type)
+          // expect(file.size).to.deep.equal(expectedFile.size)
+          // expect(file.date).to.deep.equal(expectedFile.date)
+          // expect(file.downloads).to.deep.equal(expectedFile.downloads)
+          // expect(file.labels).to.deep.equal(expectedFile.labels)
+        })
       })
-    })
   })
 
   it('gets all the files by dataset persistentId after dataset publication', async () => {
-    const datasetResponse = await DatasetHelper.createWithFiles(3)
-    await DatasetHelper.publish(datasetResponse.persistentId)
+    const dataset = await DatasetHelper.createWithFiles(3).then((datasetResponse) =>
+      datasetRepository.getByPersistentId(datasetResponse.persistentId)
+    )
+    if (!dataset) throw new Error('Dataset not found')
 
+    await DatasetHelper.publish(dataset.persistentId)
     await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be published
 
-    await fileRepository.getAllByDatasetPersistentId(datasetResponse.persistentId).then((files) => {
-      const expectedPublishedFile = expectedFile
-      expectedPublishedFile.version.publishingStatus = FilePublishingStatus.RELEASED
+    await fileRepository
+      .getAllByDatasetPersistentId(
+        dataset.persistentId,
+        new DatasetVersion(dataset.version.id, DatasetPublishingStatus.RELEASED, 0, 1)
+      )
+      .then((files) => {
+        const expectedPublishedFile = expectedFile
+        expectedPublishedFile.version.publishingStatus = FilePublishingStatus.RELEASED
 
-      files.forEach((file, index) => {
-        expect(file.version).to.deep.equal(expectedPublishedFile.version)
+        files.forEach((file) => {
+          expect(file.version).to.deep.equal(expectedPublishedFile.version)
+        })
       })
-    })
+  })
+
+  it.skip('gets all the files by dataset persistentId after dataset deaccession', async () => {
+    const dataset = await DatasetHelper.createWithFiles(3).then((datasetResponse) =>
+      datasetRepository.getByPersistentId(datasetResponse.persistentId)
+    )
+    if (!dataset) throw new Error('Dataset not found')
+
+    await DatasetHelper.publish(dataset.persistentId)
+    await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be published
+
+    // TODO - Implement deaccession
+    // await DatasetHelper.deaccession(dataset.persistentId)
+    // await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
+    //
+    // await fileRepository
+    //   .getAllByDatasetPersistentId(
+    //     dataset.persistentId,
+    //     new DatasetVersion(dataset.version.id, DatasetPublishingStatus.DEACCESSIONED, 0, 1)
+    //   )
+    //   .then((files) => {
+    //     const expectedPublishedFile = expectedFile
+    //     expectedPublishedFile.version.publishingStatus = FilePublishingStatus.DEACCESSIONED
+    //
+    //     files.forEach((file, index) => {
+    //       expect(file.version).to.deep.equal(expectedPublishedFile.version)
+    //     })
+    //   })
   })
 })

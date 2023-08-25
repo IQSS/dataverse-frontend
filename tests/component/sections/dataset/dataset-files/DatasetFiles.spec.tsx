@@ -11,10 +11,11 @@ import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInf
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 import { FileType } from '../../../../../src/files/domain/models/File'
 import styles from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
+import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 
 const testFiles = FileMother.createMany(10)
 const datasetPersistentId = 'test-dataset-persistent-id'
-const datasetVersion = 'test-dataset-version'
+const datasetVersion = DatasetMother.create().version
 const fileRepository: FileRepository = {} as FileRepository
 const testFilesCountInfo = FilesCountInfoMother.create({
   total: 200,

@@ -6,12 +6,13 @@ import { FilesCountInfoMother } from '../../../tests/component/files/domain/mode
 import { FilePaginationInfo } from '../../files/domain/models/FilePaginationInfo'
 import { FileUserPermissionsMother } from '../../../tests/component/files/domain/models/FileUserPermissionsMother'
 import { FileUserPermissions } from '../../files/domain/models/FileUserPermissions'
+import { DatasetVersion } from '../../dataset/domain/models/Dataset'
 
 export class FileMockRepository implements FileRepository {
   // eslint-disable-next-line unused-imports/no-unused-vars
   getAllByDatasetPersistentId(
-    persistentId: string,
-    version?: string,
+    datasetPersistentId: string,
+    datasetVersion: DatasetVersion,
     paginationInfo?: FilePaginationInfo
   ): Promise<File[]> {
     return new Promise((resolve) => {
@@ -20,11 +21,12 @@ export class FileMockRepository implements FileRepository {
       }, 1000)
     })
   }
+
   getCountInfoByDatasetPersistentId(
     // eslint-disable-next-line unused-imports/no-unused-vars
-    persistentId: string,
+    datasetPersistentId: string,
     // eslint-disable-next-line unused-imports/no-unused-vars
-    version?: string
+    datasetVersion: DatasetVersion
   ): Promise<FilesCountInfo> {
     return new Promise((resolve) => {
       setTimeout(() => {

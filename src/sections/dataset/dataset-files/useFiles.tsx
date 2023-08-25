@@ -8,11 +8,12 @@ import { getFilesCountInfoByDatasetPersistentId } from '../../../files/domain/us
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 import { useFilePermissions } from '../../file/file-permissions/FilePermissionsContext'
 import { FilePermission } from '../../../files/domain/models/FileUserPermissions'
+import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 
 export function useFiles(
   filesRepository: FileRepository,
   datasetPersistentId: string,
-  datasetVersion?: string,
+  datasetVersion: DatasetVersion,
   paginationInfo?: FilePaginationInfo,
   criteria?: FileCriteria
 ) {
