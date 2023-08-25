@@ -33,7 +33,7 @@ export class FileMockRepository implements FileRepository {
     })
   }
   // eslint-disable-next-line unused-imports/no-unused-vars
-  getFileUserPermissionsById(id: string): Promise<FileUserPermissions> {
+  getFileUserPermissionsById(id: number): Promise<FileUserPermissions> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FileUserPermissionsMother.create())

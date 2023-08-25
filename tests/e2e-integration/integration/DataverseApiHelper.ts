@@ -22,6 +22,7 @@ export class DataverseApiHelper {
         'X-Dataverse-key': this.API_TOKEN,
         'Content-Type': isFormData ? 'multipart/form-data' : 'application/json'
       },
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       data: isFormData ? this.createFormData(data) : data
     }
 
@@ -29,14 +30,20 @@ export class DataverseApiHelper {
     return response.data.data
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static createFormData(data: any) {
     const formData = new FormData()
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     for (const key in data) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, no-prototype-builtins
       if (data.hasOwnProperty(key)) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
         if (data[key] instanceof File) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
           formData.append(key, data[key], data[key].name)
         } else {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
           formData.append(key, data[key])
         }
       }

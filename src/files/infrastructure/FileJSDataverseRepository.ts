@@ -41,7 +41,7 @@ export class FileJSDataverseRepository implements FileRepository {
     })
   }
   // eslint-disable-next-line unused-imports/no-unused-vars
-  getFileUserPermissionsById(id: string): Promise<FileUserPermissions> {
+  getFileUserPermissionsById(id: number): Promise<FileUserPermissions> {
     // TODO - implement using js-dataverse
     return new Promise((resolve) => {
       setTimeout(() => {
