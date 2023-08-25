@@ -4,15 +4,17 @@ import {
   FilePublishingStatus,
   FileSize,
   FileSizeUnit,
-  FileType
+  FileType,
+  FileVersion
 } from '../../domain/models/File'
 import { File as JSFile } from '@iqss/dataverse-client-javascript'
 
 export class JSFileMapper {
   static toFile(jsFile: JSFile): File {
+    console.log(jsFile)
     return new File(
       jsFile.id,
-      { number: jsFile.version, publishingStatus: FilePublishingStatus.DRAFT },
+      this.toFileVersion(jsFile.version, jsFile.publicationDate),
       jsFile.name,
       {
         restricted: false,
@@ -26,5 +28,14 @@ export class JSFileMapper {
       0,
       []
     )
+  }
+
+  static toFileVersion(jsVersion: number, jsPublicationDate?: Date): FileVersion {
+    return {
+      number: jsVersion,
+      publishingStatus: jsPublicationDate
+        ? FilePublishingStatus.RELEASED
+        : FilePublishingStatus.DRAFT
+    }
   }
 }

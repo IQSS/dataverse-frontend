@@ -71,7 +71,7 @@ describe('Dataset JSDataverse Repository', () => {
   beforeEach(() => IntegrationTestsUtils.login())
 
   it('gets the dataset by persistentId', async () => {
-    const datasetResponse = await DatasetHelper.createDataset()
+    const datasetResponse = await DatasetHelper.create()
 
     await datasetRepository.getByPersistentId(datasetResponse.persistentId).then((dataset) => {
       if (!dataset) {
@@ -90,8 +90,8 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets the dataset by persistentId and version number', async () => {
-    const datasetResponse = await DatasetHelper.createDataset()
-    await DatasetHelper.publishDataset(datasetResponse.persistentId)
+    const datasetResponse = await DatasetHelper.create()
+    await DatasetHelper.publish(datasetResponse.persistentId)
 
     await IntegrationTestsUtils.wait(1500)
 
@@ -110,7 +110,7 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets the dataset by persistentId and version DRAFT keyword', async () => {
-    const datasetResponse = await DatasetHelper.createDataset()
+    const datasetResponse = await DatasetHelper.create()
 
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, 'DRAFT')
@@ -126,7 +126,7 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets the dataset by privateUrlToken', async () => {
-    const datasetResponse = await DatasetHelper.createDataset()
+    const datasetResponse = await DatasetHelper.create()
     const privateUrlResponse = await DatasetHelper.createPrivateUrl(datasetResponse.id)
 
     await datasetRepository.getByPrivateUrlToken(privateUrlResponse.token).then((dataset) => {

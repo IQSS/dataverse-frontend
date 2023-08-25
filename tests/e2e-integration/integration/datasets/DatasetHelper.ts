@@ -12,11 +12,11 @@ export interface DatasetFileResponse {
 }
 
 export class DatasetHelper extends DataverseApiHelper {
-  static async createDataset(): Promise<DatasetResponse> {
+  static async create(): Promise<DatasetResponse> {
     return this.request<DatasetResponse>(`/dataverses/root/datasets`, 'POST', newDatasetData)
   }
 
-  static async publishDataset(persistentId: string): Promise<{ status: string }> {
+  static async publish(persistentId: string): Promise<{ status: string }> {
     return this.request<{ status: string }>(
       `/datasets/:persistentId/actions/:publish?persistentId=${persistentId}&type=major`,
       'POST'
@@ -28,12 +28,12 @@ export class DatasetHelper extends DataverseApiHelper {
   }
 
   static async createWithFiles(numberOfFiles: number): Promise<DatasetResponse> {
-    const datasetResponse = await this.createDataset()
+    const datasetResponse = await this.create()
     const files = await this.createFiles(datasetResponse.persistentId, numberOfFiles)
     return { ...datasetResponse, files: files }
   }
 
-  static async createFiles(
+  private static async createFiles(
     datasetPersistentId: string,
     numberOfFiles: number
   ): Promise<DatasetFileResponse[]> {
@@ -44,7 +44,7 @@ export class DatasetHelper extends DataverseApiHelper {
     return files
   }
 
-  static async createFile(datasetPersistentId: string): Promise<DatasetFileResponse> {
+  private static async createFile(datasetPersistentId: string): Promise<DatasetFileResponse> {
     const textFile = new Blob(['Hello, this is some data.'], { type: 'text/plain' })
     const data = {
       file: textFile,

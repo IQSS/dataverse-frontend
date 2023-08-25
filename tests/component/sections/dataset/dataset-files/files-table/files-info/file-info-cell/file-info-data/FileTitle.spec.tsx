@@ -4,12 +4,12 @@ import { FilePublishingStatus } from '../../../../../../../../../src/files/domai
 
 describe('FileTitle', () => {
   it('renders the link and name correctly', () => {
-    const id = '12345'
-    const versionParameter = '&version=1.0'
+    const id = 12345
+    const versionParameter = '&version=1'
     const name = 'file-name.txt'
     const file = FileMother.create({
       id: id,
-      version: { majorNumber: 1, minorNumber: 0, status: FilePublishingStatus.RELEASED },
+      version: { number: 1, publishingStatus: FilePublishingStatus.RELEASED },
       name: name
     })
 
