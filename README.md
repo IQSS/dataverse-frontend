@@ -197,21 +197,35 @@ The environment is accessible through the following URLs:
 - SPA: https://beta.dataverse.org/spa
 - JSF: https://beta.dataverse.org
 
-## Changes from the Style Guide
+## Changes from the original JSF application
+
+### Changes from the Style Guide
 
 The design system and frontend in this repo are inspired by the Dataverse Project [Style Guide](https://guides.dataverse.org/en/latest/style/index.html), but the following changes have been made, especially for accessibility.
 
-### Links
+#### Links
 
 We added an underline to links to make them accessible.
 
-### File label
+#### File label
 
 Now we are using Bootstrap with a theme, so there is only one definition for the secondary color. Since Bootstrap applies
 the secondary color to the labels automatically, the color of the file label is now the global secondary color which is
 a lighter shade of grey than what it used to be.
 
 We changed the citation block to be white with a colored border, to make the text in the box more accessible.
+
+### Changes in functionality behavior
+
+Our main goal is to replicate the behavior of the original JSF application in all its functionalities, although during development we have found opportunities to review certain behaviors and apply changes where we find appropriate.
+
+#### Dataset files tab search
+
+The original Dataset JSF page uses Solr to search for files based on the available filters. Past dataset versions are not indexed in Solr, so the filter option is not available (hidden) for such versions. When a version is indexed, the search text is searched in Solr, and Solr grammar can be applied. When the version is not indexed, the search text is searched in the database.
+
+The new SPA does not use Solr as the API endpoint it uses performs all queries on the database. Filters and search options are available for all versions in the same way, homogenizing behavior, although losing the possibility of using the Solr grammar.
+
+This change is made on the assumption that Solr is not required in the context of files tab search, whose search facets are reduced compared to other in-application searches. Therefore, if we find evidence that the assumption is incorrect, we will work on extending the search capabilities to support Solr.
 
 ## Thanks
 
