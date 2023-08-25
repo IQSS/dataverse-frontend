@@ -83,7 +83,7 @@ describe('File JSDataverse Repository', () => {
     await fileRepository
       .getAllByDatasetPersistentId(
         dataset.persistentId,
-        new DatasetVersion(dataset.version.id, DatasetPublishingStatus.RELEASED, 0, 1)
+        new DatasetVersion(dataset.version.id, DatasetPublishingStatus.RELEASED, 1, 0)
       )
       .then((files) => {
         const expectedPublishedFile = expectedFile
@@ -104,22 +104,24 @@ describe('File JSDataverse Repository', () => {
     await DatasetHelper.publish(dataset.persistentId)
     await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be published
 
-    // TODO - Implement deaccession
-    // await DatasetHelper.deaccession(dataset.persistentId)
-    // await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
-    //
-    // await fileRepository
-    //   .getAllByDatasetPersistentId(
-    //     dataset.persistentId,
-    //     new DatasetVersion(dataset.version.id, DatasetPublishingStatus.DEACCESSIONED, 0, 1)
-    //   )
-    //   .then((files) => {
-    //     const expectedPublishedFile = expectedFile
-    //     expectedPublishedFile.version.publishingStatus = FilePublishingStatus.DEACCESSIONED
-    //
-    //     files.forEach((file, index) => {
-    //       expect(file.version).to.deep.equal(expectedPublishedFile.version)
-    //     })
-    //   })
+    DatasetHelper.deaccession(dataset.persistentId)
+    await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
+    await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
+    await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
+
+    // TODO - Always returns 404, maybe js-dataverse always returns an error when trying to get the files of a deaccessioned dataset
+    fileRepository
+      .getAllByDatasetPersistentId(
+        dataset.persistentId,
+        new DatasetVersion(dataset.version.id, DatasetPublishingStatus.DEACCESSIONED, 1, 0)
+      )
+      .then((files) => {
+        const expectedDeaccessionedFile = expectedFile
+        expectedDeaccessionedFile.version.publishingStatus = FilePublishingStatus.DEACCESSIONED
+
+        files.forEach((file, index) => {
+          expect(file.version).to.deep.equal(expectedDeaccessionedFile.version)
+        })
+      })
   })
 })

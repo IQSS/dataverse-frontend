@@ -113,8 +113,8 @@ describe('Dataset JSDataverse Repository', () => {
         const newVersion = new DatasetVersion(
           dataset.version.id,
           DatasetPublishingStatus.RELEASED,
-          0,
-          1
+          1,
+          0
         )
 
         expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)

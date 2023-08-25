@@ -36,8 +36,8 @@ export class JSDatasetMapper {
     return new DatasetVersion(
       jDatasetVersionId,
       JSDatasetMapper.toStatus(jsDatasetVersionInfo.state),
-      jsDatasetVersionInfo.minorNumber,
-      jsDatasetVersionInfo.majorNumber
+      jsDatasetVersionInfo.majorNumber,
+      jsDatasetVersionInfo.minorNumber
     )
   }
 

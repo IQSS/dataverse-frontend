@@ -23,6 +23,25 @@ export class DatasetHelper extends DataverseApiHelper {
     )
   }
 
+  static deaccession(persistentId: string) {
+    return cy
+      .visit(`/dataset.xhtml?persistentId=${persistentId}`)
+      .get('#editDataSet')
+      .click()
+      .get('#datasetForm\\:deaccessionDatasetLink')
+      .click()
+      .get('#datasetForm\\:reasonOptions_label')
+      .click()
+      .get('#datasetForm\\:reasonOptions_2')
+      .click()
+      .get('#datasetForm\\:reasonForDeaccession')
+      .type('Test deaccession')
+      .get('#datasetForm\\:j_idt2181')
+      .click()
+      .get('#datasetForm\\:deaccessionConfirmation_content > div > input')
+      .click()
+  }
+
   static async createPrivateUrl(id: string): Promise<{ token: string }> {
     return this.request<{ token: string }>(`/datasets/${id}/privateUrl`, 'POST')
   }

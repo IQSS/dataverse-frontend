@@ -214,8 +214,8 @@ export class DatasetVersion {
   constructor(
     public readonly id: number,
     public readonly publishingStatus: DatasetPublishingStatus,
-    public readonly minorNumber?: number,
-    public readonly majorNumber?: number
+    public readonly majorNumber?: number,
+    public readonly minorNumber?: number
   ) {}
 
   toString(): string | DatasetNonNumericVersion {
