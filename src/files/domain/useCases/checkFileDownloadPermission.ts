@@ -1,11 +1,11 @@
 import { FileRepository } from '../repositories/FileRepository'
-import { File, FileStatus } from '../models/File'
+import { File, FilePublishingStatus } from '../models/File'
 
 export async function checkFileDownloadPermission(
   fileRepository: FileRepository,
   file: File
 ): Promise<boolean> {
-  if (file.version.status === FileStatus.DEACCESSIONED) {
+  if (file.version.publishingStatus === FilePublishingStatus.DEACCESSIONED) {
     return fileRepository.getFileUserPermissionsById(file.id).then((permissions) => {
       return permissions.canEditDataset
     })

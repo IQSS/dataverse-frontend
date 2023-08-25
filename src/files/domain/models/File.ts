@@ -35,22 +35,15 @@ export interface FileAccess {
   requested: boolean
 }
 
-export enum FileStatus {
+export enum FilePublishingStatus {
   DRAFT = 'draft',
   RELEASED = 'released',
   DEACCESSIONED = 'deaccessioned'
 }
 
-export class FileVersion {
-  constructor(
-    public readonly majorNumber: number,
-    public readonly minorNumber: number,
-    public readonly status: FileStatus
-  ) {}
-
-  toString(): string {
-    return `${this.majorNumber}.${this.minorNumber}`
-  }
+export interface FileVersion {
+  number: number
+  publishingStatus: FilePublishingStatus
 }
 
 export enum FileDateType {
@@ -125,7 +118,7 @@ export class File {
   ) {}
 
   getLink(): string {
-    return `/file?id=${this.id}&version=${this.version.toString()}`
+    return `/file?id=${this.id}&version=${this.version.number}`
   }
 
   get isActivelyEmbargoed(): boolean {

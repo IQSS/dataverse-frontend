@@ -24,8 +24,14 @@ export function FileInfoCell({ file }: { file: File }) {
           <FileDirectory directory={file.directory} />
           <FileType type={file.type} size={file.size} />
           <FileDate date={file.date} />
-          <FileEmbargoDate embargo={file.embargo} status={file.version.status} />
-          <FileDownloads downloads={file.downloads} status={file.version.status} />
+          <FileEmbargoDate
+            embargo={file.embargo}
+            publishingStatus={file.version.publishingStatus}
+          />
+          <FileDownloads
+            downloads={file.downloads}
+            publishingStatus={file.version.publishingStatus}
+          />
           <FileChecksum checksum={file.checksum} />
           <FileTabularData tabularData={file.tabularData} />
         </div>

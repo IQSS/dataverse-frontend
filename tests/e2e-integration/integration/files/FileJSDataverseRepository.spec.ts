@@ -6,9 +6,8 @@ import {
   FileDateType,
   FileSize,
   FileSizeUnit,
-  FileStatus,
-  FileType,
-  FileVersion
+  FilePublishingStatus,
+  FileType
 } from '../../../../src/files/domain/models/File'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
@@ -19,7 +18,7 @@ const expect = chai.expect
 const fileRepository = new FileJSDataverseRepository()
 const expectedFile = new File(
   1,
-  new FileVersion(1, 0, FileStatus.RELEASED),
+  { number: 1, publishingStatus: FilePublishingStatus.DRAFT },
   'blob',
   {
     restricted: false,

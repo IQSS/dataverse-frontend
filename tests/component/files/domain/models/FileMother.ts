@@ -7,9 +7,8 @@ import {
   FileLabelType,
   FileSize,
   FileSizeUnit,
-  FileStatus,
-  FileType,
-  FileVersion
+  FilePublishingStatus,
+  FileType
 } from '../../../../../src/files/domain/models/File'
 
 const valueOrUndefined: <T>(value: T) => T | undefined = (value) => {
@@ -49,9 +48,8 @@ export class FileMother {
         requested: faker.datatype.boolean()
       },
       version: {
-        majorNumber: faker.datatype.number(),
-        minorNumber: faker.datatype.number(),
-        status: faker.helpers.arrayElement(Object.values(FileStatus))
+        number: faker.datatype.number(),
+        publishingStatus: faker.helpers.arrayElement(Object.values(FilePublishingStatus))
       },
       type: new FileType(thumbnail ? 'image' : fileType),
       size: {
@@ -89,11 +87,7 @@ export class FileMother {
 
     return new File(
       fileMockedData.id,
-      new FileVersion(
-        fileMockedData.version.majorNumber,
-        fileMockedData.version.minorNumber,
-        fileMockedData.version.status
-      ),
+      fileMockedData.version,
       fileMockedData.name,
       fileMockedData.access,
       fileMockedData.type,
@@ -118,9 +112,8 @@ export class FileMother {
     const defaultFile = {
       type: new FileType('file'),
       version: {
-        majorNumber: 1,
-        minorNumber: 0,
-        status: FileStatus.RELEASED
+        number: 1,
+        publishingStatus: FilePublishingStatus.RELEASED
       },
       access: {
         restricted: false,
@@ -304,9 +297,8 @@ export class FileMother {
   static createDeaccessioned(): File {
     return this.createDefault({
       version: {
-        majorNumber: 1,
-        minorNumber: 0,
-        status: FileStatus.DEACCESSIONED
+        number: 1,
+        publishingStatus: FilePublishingStatus.DEACCESSIONED
       }
     })
   }
