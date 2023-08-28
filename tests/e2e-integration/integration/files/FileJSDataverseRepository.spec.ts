@@ -8,7 +8,8 @@ import {
   FileSizeUnit,
   FilePublishingStatus,
   FileType,
-  FileLabelType
+  FileLabelType,
+  FileEmbargo
 } from '../../../../src/files/domain/models/File'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
@@ -182,6 +183,28 @@ describe('File JSDataverse Repository', () => {
 
     it.skip('gets all the files by dataset persistentId after adding a thumbnail to the files', async () => {
       // TODO - Do this in thumbnails issue https://github.com/IQSS/dataverse-frontend/issues/160
+    })
+
+    it('gets all the files by dataset persistentId after embargo', async () => {
+      const datasetResponse = await DatasetHelper.createWithFiles(3)
+      if (!datasetResponse.files) throw new Error('Files not found')
+
+      const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      if (!dataset) throw new Error('Dataset not found')
+
+      const embargoDate = '2100-10-20'
+      await DatasetHelper.embargoFiles(
+        datasetResponse.persistentId,
+        [datasetResponse.files[0].id, datasetResponse.files[1].id, datasetResponse.files[2].id],
+        embargoDate
+      )
+
+      await fileRepository
+        .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((files) => {
+          const expectedEmbargo = new FileEmbargo(new Date(embargoDate))
+          expect(files[0].embargo).to.deep.equal(expectedEmbargo)
+        })
     })
   })
 })

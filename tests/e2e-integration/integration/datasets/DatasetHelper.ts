@@ -52,6 +52,18 @@ export class DatasetHelper extends DataverseApiHelper {
     return { ...datasetResponse, files: files }
   }
 
+  static async embargoFiles(
+    persistentId: string,
+    filesIds: number[],
+    embargoDate: string
+  ): Promise<DatasetResponse> {
+    return this.request<DatasetResponse>(
+      `/datasets/:persistentId/files/actions/:set-embargo?persistentId=${persistentId}`,
+      'POST',
+      { fileIds: filesIds, dateAvailable: embargoDate, reason: 'Standard project embargo' }
+    )
+  }
+
   private static async uploadFiles(
     datasetPersistentId: string,
     numberOfFiles: number

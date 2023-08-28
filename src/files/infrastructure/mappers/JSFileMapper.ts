@@ -4,6 +4,7 @@ import {
   FileChecksum,
   FileDate,
   FileDateType,
+  FileEmbargo,
   FileLabel,
   FileLabelType,
   FilePublishingStatus,
@@ -34,7 +35,8 @@ export class JSFileMapper {
       this.toFileLabels(jsFile.categories, jsFile.tabularTags),
       this.toFileChecksum(jsFile.checksum),
       undefined,
-      jsFile.directoryLabel
+      jsFile.directoryLabel,
+      this.toFileEmbargo(jsFile.embargo)
     )
   }
 
@@ -111,6 +113,13 @@ export class JSFileMapper {
   static toFileChecksum(jsFileChecksum?: JSFileChecksum): FileChecksum | undefined {
     if (jsFileChecksum) {
       return { algorithm: jsFileChecksum.type, value: jsFileChecksum.value }
+    }
+    return undefined
+  }
+
+  static toFileEmbargo(jsFileEmbargo?: JSFileEmbargo): FileEmbargo | undefined {
+    if (jsFileEmbargo) {
+      return new FileEmbargo(jsFileEmbargo.dateAvailable)
     }
     return undefined
   }

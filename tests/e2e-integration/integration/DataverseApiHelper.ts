@@ -11,6 +11,7 @@ export class DataverseApiHelper {
     cy.getApiToken().then((token) => {
       this.API_TOKEN = token
     })
+    void this.request('/admin/settings/:MaxEmbargoDurationInMonths', 'PUT', -1)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
