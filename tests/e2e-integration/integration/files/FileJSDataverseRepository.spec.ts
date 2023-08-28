@@ -7,7 +7,8 @@ import {
   FileSize,
   FileSizeUnit,
   FilePublishingStatus,
-  FileType
+  FileType,
+  FileLabelType
 } from '../../../../src/files/domain/models/File'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
@@ -70,9 +71,7 @@ describe('File JSDataverse Repository', () => {
           expect(file.size).to.deep.equal(expectedFile.size)
           expect(file.date).to.deep.equal(expectedFile.date)
           expect(file.downloadCount).to.deep.equal(expectedFile.downloadCount)
-
-          // TODO - Implement JSFileMapper
-          // expect(file.labels).to.deep.equal(expectedFile.labels)
+          expect(file.labels).to.deep.equal(expectedFile.labels)
         })
       })
   })
@@ -151,6 +150,26 @@ describe('File JSDataverse Repository', () => {
       .then((files) => {
         const expectedDownloadCount = 1
         expect(files[0].downloadCount).to.deep.equal(expectedDownloadCount)
+      })
+  })
+
+  it('gets all the files by dataset persistentId after adding labels to the files', async () => {
+    const datasetResponse = await DatasetHelper.createWithFiles(3)
+    if (!datasetResponse.files) throw new Error('Files not found')
+
+    const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+    if (!dataset) throw new Error('Dataset not found')
+
+    const expectedLabels = [
+      { type: FileLabelType.CATEGORY, value: 'category' },
+      { type: FileLabelType.CATEGORY, value: 'category_2' }
+    ] // TODO - Ask how to add tabularTags to the file
+    await FileHelper.addLabel(datasetResponse.files[0].id, expectedLabels)
+
+    await fileRepository
+      .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+      .then((files) => {
+        expect(files[0].labels).to.deep.equal(expectedLabels)
       })
   })
 })

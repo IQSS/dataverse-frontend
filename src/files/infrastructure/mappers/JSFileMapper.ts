@@ -3,6 +3,8 @@ import {
   FileAccess,
   FileDate,
   FileDateType,
+  FileLabel,
+  FileLabelType,
   FilePublishingStatus,
   FileSize,
   FileSizeUnit,
@@ -24,7 +26,7 @@ export class JSFileMapper {
       this.toFileSize(jsFile.sizeBytes),
       this.toFileDate(jsFile.creationDate, jsFile.publicationDate, jsFile.embargo),
       0,
-      []
+      this.toFileLabels(jsFile.categories, jsFile.tabularTags)
     )
   }
 
@@ -79,5 +81,22 @@ export class JSFileMapper {
       return { type: FileDateType.DEPOSITED, date: jsFileCreationDate }
     }
     throw new Error('File date not found')
+  }
+
+  static toFileLabels(jsFileCategories?: string[], jsFileTabularTags?: string[]): FileLabel[] {
+    const fileLabels: FileLabel[] = []
+    if (jsFileCategories) {
+      jsFileCategories.forEach((category) => {
+        fileLabels.push({ value: category, type: FileLabelType.CATEGORY })
+      })
+    }
+    if (jsFileTabularTags) {
+      jsFileTabularTags.forEach((tabularTag) => {
+        fileLabels.push({ value: tabularTag, type: FileLabelType.TAG })
+      })
+    }
+
+    // TODO - Add custom labels when they are added to js-dataverse
+    return fileLabels
   }
 }
