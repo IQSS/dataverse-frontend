@@ -78,6 +78,7 @@ describe('File JSDataverse Repository', () => {
             expect(file.downloadCount).to.deep.equal(expectedFile.downloadCount)
             expect(file.labels).to.deep.equal(expectedFile.labels)
             expect(file.checksum).to.deep.equal(expectedFile.checksum)
+            expect(file.directory).to.deep.equal(expectedFile.directory)
           })
         })
     })
@@ -177,6 +178,10 @@ describe('File JSDataverse Repository', () => {
         .then((files) => {
           expect(files[0].labels).to.deep.equal(expectedLabels)
         })
+    })
+
+    it.skip('gets all the files by dataset persistentId after adding a thumbnail to the files', async () => {
+      // TODO - Do this in thumbnails issue https://github.com/IQSS/dataverse-frontend/issues/160
     })
   })
 })

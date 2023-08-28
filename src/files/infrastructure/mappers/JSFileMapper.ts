@@ -32,7 +32,9 @@ export class JSFileMapper {
       this.toFileDate(jsFile.creationDate, jsFile.publicationDate, jsFile.embargo),
       0,
       this.toFileLabels(jsFile.categories, jsFile.tabularTags),
-      this.toFileChecksum(jsFile.checksum)
+      this.toFileChecksum(jsFile.checksum),
+      undefined,
+      jsFile.directoryLabel
     )
   }
 
