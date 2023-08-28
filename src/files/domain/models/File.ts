@@ -129,6 +129,11 @@ export class FileType {
   }
 }
 
+export interface FileChecksum {
+  algorithm: string
+  value: string
+}
+
 export class File {
   constructor(
     readonly id: number,
@@ -140,7 +145,7 @@ export class File {
     readonly date: FileDate,
     public downloadCount: number,
     readonly labels: FileLabel[],
-    readonly checksum?: string,
+    readonly checksum?: FileChecksum,
     readonly thumbnail?: string,
     readonly directory?: string,
     readonly embargo?: FileEmbargo,

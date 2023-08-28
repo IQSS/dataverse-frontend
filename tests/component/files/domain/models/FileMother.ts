@@ -8,7 +8,8 @@ import {
   FileSize,
   FileSizeUnit,
   FilePublishingStatus,
-  FileType
+  FileType,
+  FileChecksum
 } from '../../../../../src/files/domain/models/File'
 
 const valueOrUndefined: <T>(value: T) => T | undefined = (value) => {
@@ -30,6 +31,15 @@ export class FileEmbargoMother {
   static createNotActive(): FileEmbargo {
     const dateAvailable = faker.date.past()
     return new FileEmbargo(dateAvailable)
+  }
+}
+
+export class FileChecksumMother {
+  static create(): FileChecksum {
+    return {
+      algorithm: faker.lorem.word(),
+      value: faker.datatype.uuid()
+    }
   }
 }
 
@@ -69,7 +79,7 @@ export class FileMother {
             createFakeFileLabel()
           ])
         : [],
-      checksum: checksum,
+      checksum: FileChecksumMother.create(),
       thumbnail: thumbnail,
       directory: valueOrUndefined<string>(faker.system.directoryPath()),
       embargo: valueOrUndefined<FileEmbargo>(FileEmbargoMother.create()),
@@ -186,7 +196,7 @@ export class FileMother {
 
   static createWithChecksum(): File {
     return this.createDefault({
-      checksum: faker.datatype.uuid()
+      checksum: FileChecksumMother.create()
     })
   }
 

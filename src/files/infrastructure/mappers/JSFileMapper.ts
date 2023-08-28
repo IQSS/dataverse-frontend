@@ -1,6 +1,7 @@
 import {
   File,
   FileAccess,
+  FileChecksum,
   FileDate,
   FileDateType,
   FileLabel,
@@ -11,7 +12,11 @@ import {
   FileType,
   FileVersion
 } from '../../domain/models/File'
-import { File as JSFile, FileEmbargo as JSFileEmbargo } from '@iqss/dataverse-client-javascript'
+import {
+  File as JSFile,
+  FileEmbargo as JSFileEmbargo,
+  FileChecksum as JSFileChecksum
+} from '@iqss/dataverse-client-javascript'
 import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
 
 export class JSFileMapper {
@@ -26,7 +31,8 @@ export class JSFileMapper {
       this.toFileSize(jsFile.sizeBytes),
       this.toFileDate(jsFile.creationDate, jsFile.publicationDate, jsFile.embargo),
       0,
-      this.toFileLabels(jsFile.categories, jsFile.tabularTags)
+      this.toFileLabels(jsFile.categories, jsFile.tabularTags),
+      this.toFileChecksum(jsFile.checksum)
     )
   }
 
@@ -98,5 +104,12 @@ export class JSFileMapper {
 
     // TODO - Add custom labels when they are added to js-dataverse
     return fileLabels
+  }
+
+  static toFileChecksum(jsFileChecksum?: JSFileChecksum): FileChecksum | undefined {
+    if (jsFileChecksum) {
+      return { algorithm: jsFileChecksum.type, value: jsFileChecksum.value }
+    }
+    return undefined
   }
 }
