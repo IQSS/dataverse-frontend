@@ -1,11 +1,15 @@
 import { FileRepository } from '../domain/repositories/FileRepository'
-import { File } from '../domain/models/File'
+import { File, FilePublishingStatus } from '../domain/models/File'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
 import { FilesCountInfoMother } from '../../../tests/component/files/domain/models/FilesCountInfoMother'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
 import { FileUserPermissions } from '../domain/models/FileUserPermissions'
 import { FileUserPermissionsMother } from '../../../tests/component/files/domain/models/FileUserPermissionsMother'
-import { getDatasetFiles, WriteError } from '@iqss/dataverse-client-javascript'
+import {
+  getDatasetFiles,
+  getFileDownloadCount,
+  WriteError
+} from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
 import { JSFileMapper } from './mappers/JSFileMapper'
@@ -30,10 +34,33 @@ export class FileJSDataverseRepository implements FileRepository {
         jsFileOrderCriteria
       )
       .then((jsFiles) => jsFiles.map((jsFile) => JSFileMapper.toFile(jsFile, datasetVersion)))
+      .then((files) =>
+        Promise.all(
+          files.map((file) =>
+            FileJSDataverseRepository.getFileDownloadCount(
+              file.id,
+              file.version.publishingStatus
+            ).then((downloadCount) => {
+              file.downloadCount = downloadCount
+              return file
+            })
+          )
+        )
+      )
       .catch((error: WriteError) => {
-        console.error('js-dataverse getDatasetFiles: ', error)
+        console.error('Error getting files from Dataverse', error)
         throw new Error(error.message)
       })
+  }
+
+  private static getFileDownloadCount(
+    id: number,
+    publishingStatus: FilePublishingStatus
+  ): Promise<number> {
+    if (publishingStatus === FilePublishingStatus.RELEASED) {
+      return getFileDownloadCount.execute(id).then((downloadCount) => Number(downloadCount))
+    }
+    return Promise.resolve(0)
   }
 
   getCountInfoByDatasetPersistentId(

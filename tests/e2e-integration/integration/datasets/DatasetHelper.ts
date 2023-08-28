@@ -8,7 +8,7 @@ export interface DatasetResponse {
 }
 
 export interface DatasetFileResponse {
-  id: string
+  id: number
 }
 
 export class DatasetHelper extends DataverseApiHelper {
@@ -48,28 +48,28 @@ export class DatasetHelper extends DataverseApiHelper {
 
   static async createWithFiles(numberOfFiles: number): Promise<DatasetResponse> {
     const datasetResponse = await this.create()
-    const files = await this.createFiles(datasetResponse.persistentId, numberOfFiles)
+    const files = await this.uploadFiles(datasetResponse.persistentId, numberOfFiles)
     return { ...datasetResponse, files: files }
   }
 
-  private static async createFiles(
+  private static async uploadFiles(
     datasetPersistentId: string,
     numberOfFiles: number
   ): Promise<DatasetFileResponse[]> {
     const files = []
     for (let i = 0; i < numberOfFiles; i++) {
-      files.push(await this.createFile(datasetPersistentId))
+      files.push(await this.uploadFile(datasetPersistentId))
     }
     return files
   }
 
-  private static async createFile(datasetPersistentId: string): Promise<DatasetFileResponse> {
+  private static async uploadFile(datasetPersistentId: string): Promise<DatasetFileResponse> {
     const textFile = new Blob(['Hello, this is some data.'], { type: 'text/plain' })
     const data = {
       file: textFile,
       jsonData: JSON.stringify({ description: 'This is an example file' })
     }
-    const { files } = await this.request<{ files: [{ dataFile: { id: string } }] }>(
+    const { files } = await this.request<{ files: [{ dataFile: { id: number } }] }>(
       `/datasets/:persistentId/add?persistentId=${datasetPersistentId}`,
       'POST',
       data,

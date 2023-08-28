@@ -58,9 +58,9 @@ export class FileMother {
       },
       date: {
         type: faker.helpers.arrayElement(Object.values(FileDateType)),
-        date: faker.date.recent().toDateString()
+        date: faker.date.recent()
       },
-      downloads: faker.datatype.number(40),
+      downloadCount: faker.datatype.number(40),
       labels: faker.datatype.boolean()
         ? faker.helpers.arrayElements<FileLabel>([
             createFakeFileLabel(),
@@ -93,7 +93,7 @@ export class FileMother {
       fileMockedData.type,
       new FileSize(fileMockedData.size.value, fileMockedData.size.unit),
       fileMockedData.date,
-      fileMockedData.downloads,
+      fileMockedData.downloadCount,
       fileMockedData.labels,
       fileMockedData.checksum,
       fileMockedData.thumbnail,

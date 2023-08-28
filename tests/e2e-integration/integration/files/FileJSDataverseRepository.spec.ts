@@ -16,6 +16,7 @@ import {
   DatasetPublishingStatus,
   DatasetVersion
 } from '../../../../src/dataset/domain/models/Dataset'
+import { FileHelper } from './FileHelper'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -36,7 +37,10 @@ const expectedFile = new File(
   },
   new FileType('text/plain'),
   new FileSize(25, FileSizeUnit.BYTES),
-  { type: FileDateType.DEPOSITED, date: dateNow },
+  {
+    type: FileDateType.DEPOSITED,
+    date: dateNow
+  },
   0,
   []
 )
@@ -65,9 +69,9 @@ describe('File JSDataverse Repository', () => {
           expect(file.type).to.deep.equal(expectedFile.type)
           expect(file.size).to.deep.equal(expectedFile.size)
           expect(file.date).to.deep.equal(expectedFile.date)
+          expect(file.downloadCount).to.deep.equal(expectedFile.downloadCount)
 
           // TODO - Implement JSFileMapper
-          // expect(file.downloads).to.deep.equal(expectedFile.downloads)
           // expect(file.labels).to.deep.equal(expectedFile.labels)
         })
       })
@@ -126,6 +130,27 @@ describe('File JSDataverse Repository', () => {
         files.forEach((file, index) => {
           expect(file.version).to.deep.equal(expectedDeaccessionedFile.version)
         })
+      })
+  })
+
+  it('gets all the files by dataset persistentId after file has been downloaded', async () => {
+    const datasetResponse = await DatasetHelper.createWithFiles(3)
+    if (!datasetResponse.files) throw new Error('Files not found')
+
+    await DatasetHelper.publish(datasetResponse.persistentId)
+    await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be published
+
+    const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+    if (!dataset) throw new Error('Dataset not found')
+
+    await FileHelper.download(datasetResponse.files[0].id)
+    await IntegrationTestsUtils.wait(1500) // Wait for the file to be downloaded
+
+    await fileRepository
+      .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+      .then((files) => {
+        const expectedDownloadCount = 1
+        expect(files[0].downloadCount).to.deep.equal(expectedDownloadCount)
       })
   })
 })

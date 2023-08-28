@@ -138,7 +138,7 @@ export class File {
     readonly type: FileType,
     readonly size: FileSize,
     readonly date: FileDate,
-    readonly downloads: number,
+    public downloadCount: number,
     readonly labels: FileLabel[],
     readonly checksum?: string,
     readonly thumbnail?: string,

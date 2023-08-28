@@ -29,7 +29,7 @@ export function FileInfoCell({ file }: { file: File }) {
             publishingStatus={file.version.publishingStatus}
           />
           <FileDownloads
-            downloads={file.downloads}
+            downloadCount={file.downloadCount}
             publishingStatus={file.version.publishingStatus}
           />
           <FileChecksum checksum={file.checksum} />

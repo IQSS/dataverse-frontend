@@ -2,10 +2,10 @@ import { FilePublishingStatus } from '../../../../../../../files/domain/models/F
 import { useTranslation } from 'react-i18next'
 
 interface FileDownloadsProps {
-  downloads: number
+  downloadCount: number
   publishingStatus: FilePublishingStatus
 }
-export function FileDownloads({ downloads, publishingStatus }: FileDownloadsProps) {
+export function FileDownloads({ downloadCount, publishingStatus }: FileDownloadsProps) {
   const { t } = useTranslation('files')
   if (publishingStatus !== FilePublishingStatus.RELEASED) {
     return <></>
@@ -14,7 +14,7 @@ export function FileDownloads({ downloads, publishingStatus }: FileDownloadsProp
   return (
     <div>
       <span>
-        {downloads} {t('table.downloads')}
+        {downloadCount} {t('table.downloads')}
       </span>
     </div>
   )

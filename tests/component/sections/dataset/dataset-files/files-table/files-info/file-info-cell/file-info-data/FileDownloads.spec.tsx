@@ -5,7 +5,7 @@ describe('FileDownloads', () => {
   it('renders the number of downloads when file is RELEASED', () => {
     const downloads = 10
     const status = FilePublishingStatus.RELEASED
-    cy.customMount(<FileDownloads downloads={downloads} publishingStatus={status} />)
+    cy.customMount(<FileDownloads downloadCount={downloads} publishingStatus={status} />)
 
     cy.findByText('10 Downloads').should('exist')
   })
@@ -13,7 +13,7 @@ describe('FileDownloads', () => {
   it('renders an empty fragment when file is not RELEASED', () => {
     const downloads = 10
     const status = FilePublishingStatus.DRAFT
-    cy.customMount(<FileDownloads downloads={downloads} publishingStatus={status} />)
+    cy.customMount(<FileDownloads downloadCount={downloads} publishingStatus={status} />)
 
     cy.findByText('10 Downloads').should('not.exist')
   })
