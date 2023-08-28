@@ -8,23 +8,54 @@ export enum FileSizeUnit {
 }
 
 export class FileSize {
-  constructor(readonly value: number, readonly unit: FileSizeUnit) {}
+  static readonly multiplier = {
+    [FileSizeUnit.BYTES]: 1,
+    [FileSizeUnit.KILOBYTES]: 1024,
+    [FileSizeUnit.MEGABYTES]: 1024 ** 2,
+    [FileSizeUnit.GIGABYTES]: 1024 ** 3,
+    [FileSizeUnit.TERABYTES]: 1024 ** 4,
+    [FileSizeUnit.PETABYTES]: 1024 ** 5
+  }
+
+  constructor(readonly value: number, readonly unit: FileSizeUnit) {
+    ;[this.value, this.unit] = this.convertToLargestUnit(value, unit)
+  }
 
   toString(): string {
     return `${this.value} ${this.unit}`
   }
 
   toBytes(): number {
-    const multiplier = {
-      [FileSizeUnit.BYTES]: 1,
-      [FileSizeUnit.KILOBYTES]: 1024,
-      [FileSizeUnit.MEGABYTES]: 1024 ** 2,
-      [FileSizeUnit.GIGABYTES]: 1024 ** 3,
-      [FileSizeUnit.TERABYTES]: 1024 ** 4,
-      [FileSizeUnit.PETABYTES]: 1024 ** 5
+    return this.value * FileSize.multiplier[this.unit]
+  }
+
+  private convertToLargestUnit(value: number, unit: FileSizeUnit): [number, FileSizeUnit] {
+    let convertedValue = value
+    let convertedUnit = unit
+
+    while (convertedValue >= 1024 && convertedUnit !== FileSizeUnit.PETABYTES) {
+      convertedValue /= 1024
+      convertedUnit = this.getNextUnit(convertedUnit)
     }
 
-    return this.value * multiplier[this.unit]
+    return [convertedValue, convertedUnit]
+  }
+
+  private getNextUnit(unit: FileSizeUnit): FileSizeUnit {
+    switch (unit) {
+      case FileSizeUnit.BYTES:
+        return FileSizeUnit.KILOBYTES
+      case FileSizeUnit.KILOBYTES:
+        return FileSizeUnit.MEGABYTES
+      case FileSizeUnit.MEGABYTES:
+        return FileSizeUnit.GIGABYTES
+      case FileSizeUnit.GIGABYTES:
+        return FileSizeUnit.TERABYTES
+      case FileSizeUnit.TERABYTES:
+        return FileSizeUnit.PETABYTES
+      default:
+        return unit
+    }
   }
 }
 

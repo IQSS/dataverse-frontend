@@ -20,7 +20,7 @@ export class JSFileMapper {
       jsFile.name,
       this.toFileAccess(jsFile.restricted),
       this.toFileType(jsFile.contentType),
-      new FileSize(25, FileSizeUnit.BYTES),
+      this.toFileSize(jsFile.sizeBytes),
       { type: FileDateType.DEPOSITED, date: 'Thu Aug 24 2023' },
       0,
       []
@@ -57,5 +57,9 @@ export class JSFileMapper {
 
   static toFileType(jsFileContentType: string): FileType {
     return new FileType(jsFileContentType)
+  }
+
+  static toFileSize(jsFileSize: number): FileSize {
+    return new FileSize(jsFileSize, FileSizeUnit.BYTES)
   }
 }
