@@ -60,9 +60,9 @@ describe('File JSDataverse Repository', () => {
           expect(file.name).to.deep.equal(`${expectedFile.name}${index > 0 ? `-${index}` : ''}`)
           expect(file.version).to.deep.equal(expectedFile.version)
           expect(file.access).to.deep.equal(expectedFile.access)
+          expect(file.type).to.deep.equal(expectedFile.type)
 
           // TODO - Implement JSFileMapper
-          // expect(file.type).to.deep.equal(expectedFile.type)
           // expect(file.size).to.deep.equal(expectedFile.size)
           // expect(file.date).to.deep.equal(expectedFile.date)
           // expect(file.downloads).to.deep.equal(expectedFile.downloads)

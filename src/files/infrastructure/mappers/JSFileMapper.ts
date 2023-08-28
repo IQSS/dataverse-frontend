@@ -19,7 +19,7 @@ export class JSFileMapper {
       this.toFileVersion(jsFile.version, datasetVersion, jsFile.publicationDate),
       jsFile.name,
       this.toFileAccess(jsFile.restricted),
-      new FileType('text/plain'),
+      this.toFileType(jsFile.contentType),
       new FileSize(25, FileSizeUnit.BYTES),
       { type: FileDateType.DEPOSITED, date: 'Thu Aug 24 2023' },
       0,
@@ -53,5 +53,9 @@ export class JSFileMapper {
       canBeRequested: false,
       requested: false
     }
+  }
+
+  static toFileType(jsFileContentType: string): FileType {
+    return new FileType(jsFileContentType)
   }
 }
