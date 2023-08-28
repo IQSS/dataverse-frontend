@@ -29,7 +29,7 @@ const expectedFile = new File(
   {
     restricted: false,
     latestVersionRestricted: false,
-    canBeRequested: true,
+    canBeRequested: false,
     requested: false
   },
   new FileType('text/plain'),
@@ -59,9 +59,9 @@ describe('File JSDataverse Repository', () => {
         files.forEach((file, index) => {
           expect(file.name).to.deep.equal(`${expectedFile.name}${index > 0 ? `-${index}` : ''}`)
           expect(file.version).to.deep.equal(expectedFile.version)
+          expect(file.access).to.deep.equal(expectedFile.access)
 
           // TODO - Implement JSFileMapper
-          // expect(file.access).to.deep.equal(expectedFile.access)
           // expect(file.type).to.deep.equal(expectedFile.type)
           // expect(file.size).to.deep.equal(expectedFile.size)
           // expect(file.date).to.deep.equal(expectedFile.date)
@@ -109,7 +109,7 @@ describe('File JSDataverse Repository', () => {
     await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
     await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
 
-    // TODO - Always returns 404, maybe js-dataverse always returns an error when trying to get the files of a deaccessioned dataset
+    // TODO - It always returns 404 when the dataset is deaccessioned, update the test when the issue is fixed
     fileRepository
       .getAllByDatasetPersistentId(
         dataset.persistentId,

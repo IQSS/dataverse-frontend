@@ -1,5 +1,6 @@
 import {
   File,
+  FileAccess,
   FileDateType,
   FilePublishingStatus,
   FileSize,
@@ -17,12 +18,7 @@ export class JSFileMapper {
       jsFile.id,
       this.toFileVersion(jsFile.version, datasetVersion, jsFile.publicationDate),
       jsFile.name,
-      {
-        restricted: false,
-        latestVersionRestricted: false,
-        canBeRequested: true,
-        requested: true
-      },
+      this.toFileAccess(jsFile.restricted),
       new FileType('text/plain'),
       new FileSize(25, FileSizeUnit.BYTES),
       { type: FileDateType.DEPOSITED, date: 'Thu Aug 24 2023' },
@@ -47,5 +43,15 @@ export class JSFileMapper {
     }
 
     return fileVersion
+  }
+
+  static toFileAccess(jsFileRestricted: boolean): FileAccess {
+    return {
+      restricted: jsFileRestricted,
+      // TODO - Implement the rest of the properties when they are added to js-dataverse
+      latestVersionRestricted: false,
+      canBeRequested: false,
+      requested: false
+    }
   }
 }
