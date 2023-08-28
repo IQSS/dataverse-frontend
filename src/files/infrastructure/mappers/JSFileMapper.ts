@@ -1,6 +1,7 @@
 import {
   File,
   FileAccess,
+  FileDate,
   FileDateType,
   FilePublishingStatus,
   FileSize,
@@ -8,7 +9,7 @@ import {
   FileType,
   FileVersion
 } from '../../domain/models/File'
-import { File as JSFile } from '@iqss/dataverse-client-javascript'
+import { File as JSFile, FileEmbargo as JSFileEmbargo } from '@iqss/dataverse-client-javascript'
 import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
 
 export class JSFileMapper {
@@ -21,7 +22,7 @@ export class JSFileMapper {
       this.toFileAccess(jsFile.restricted),
       this.toFileType(jsFile.contentType),
       this.toFileSize(jsFile.sizeBytes),
-      { type: FileDateType.DEPOSITED, date: 'Thu Aug 24 2023' },
+      this.toFileDate(jsFile.creationDate, jsFile.publicationDate, jsFile.embargo),
       0,
       []
     )
@@ -61,5 +62,22 @@ export class JSFileMapper {
 
   static toFileSize(jsFileSize: number): FileSize {
     return new FileSize(jsFileSize, FileSizeUnit.BYTES)
+  }
+
+  static toFileDate(
+    jsFileCreationDate?: Date,
+    jsFilePublicationDate?: Date,
+    jsFileEmbargo?: JSFileEmbargo
+  ): FileDate {
+    if (jsFilePublicationDate) {
+      if (jsFileEmbargo) {
+        return { type: FileDateType.METADATA_RELEASED, date: jsFilePublicationDate }
+      }
+      return { type: FileDateType.PUBLISHED, date: jsFilePublicationDate }
+    }
+    if (jsFileCreationDate) {
+      return { type: FileDateType.DEPOSITED, date: jsFileCreationDate }
+    }
+    throw new Error('File date not found')
   }
 }

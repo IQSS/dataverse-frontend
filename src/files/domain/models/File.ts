@@ -90,7 +90,7 @@ export enum FileVersionNotNumber {
 
 export interface FileDate {
   type: FileDateType
-  date: string
+  date: Date
 }
 
 export class FileEmbargo {

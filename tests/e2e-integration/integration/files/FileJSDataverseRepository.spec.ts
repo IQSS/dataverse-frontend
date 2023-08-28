@@ -22,6 +22,8 @@ const expect = chai.expect
 
 const fileRepository = new FileJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
+const dateNow = new Date()
+dateNow.setHours(2, 0, 0, 0)
 const expectedFile = new File(
   1,
   { number: 1, publishingStatus: FilePublishingStatus.DRAFT },
@@ -34,7 +36,7 @@ const expectedFile = new File(
   },
   new FileType('text/plain'),
   new FileSize(25, FileSizeUnit.BYTES),
-  { type: FileDateType.DEPOSITED, date: new Date().toDateString() },
+  { type: FileDateType.DEPOSITED, date: dateNow },
   0,
   []
 )
@@ -62,9 +64,9 @@ describe('File JSDataverse Repository', () => {
           expect(file.access).to.deep.equal(expectedFile.access)
           expect(file.type).to.deep.equal(expectedFile.type)
           expect(file.size).to.deep.equal(expectedFile.size)
+          expect(file.date).to.deep.equal(expectedFile.date)
 
           // TODO - Implement JSFileMapper
-          // expect(file.date).to.deep.equal(expectedFile.date)
           // expect(file.downloads).to.deep.equal(expectedFile.downloads)
           // expect(file.labels).to.deep.equal(expectedFile.labels)
         })
@@ -86,11 +88,13 @@ describe('File JSDataverse Repository', () => {
         new DatasetVersion(dataset.version.id, DatasetPublishingStatus.RELEASED, 1, 0)
       )
       .then((files) => {
-        const expectedPublishedFile = expectedFile
+        let expectedPublishedFile = expectedFile
         expectedPublishedFile.version.publishingStatus = FilePublishingStatus.RELEASED
+        expectedPublishedFile.date.type = FileDateType.PUBLISHED
 
         files.forEach((file) => {
           expect(file.version).to.deep.equal(expectedPublishedFile.version)
+          expect(file.date).to.deep.equal(expectedFile.date)
         })
       })
   })
