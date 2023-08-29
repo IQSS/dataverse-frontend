@@ -48,7 +48,12 @@ const expectedFile = new File(
   {
     algorithm: 'MD5',
     value: '0187a54071542738aa47939e8218e5f2'
-  }
+  },
+  undefined,
+  undefined,
+  undefined,
+  undefined,
+  'This is an example file'
 )
 
 describe('File JSDataverse Repository', () => {
@@ -79,7 +84,11 @@ describe('File JSDataverse Repository', () => {
             expect(file.downloadCount).to.deep.equal(expectedFile.downloadCount)
             expect(file.labels).to.deep.equal(expectedFile.labels)
             expect(file.checksum).to.deep.equal(expectedFile.checksum)
+            expect(file.thumbnail).to.deep.equal(expectedFile.thumbnail)
             expect(file.directory).to.deep.equal(expectedFile.directory)
+            expect(file.embargo).to.deep.equal(expectedFile.embargo)
+            expect(file.tabularData).to.deep.equal(expectedFile.tabularData)
+            expect(file.description).to.deep.equal(expectedFile.description)
           })
         })
     })

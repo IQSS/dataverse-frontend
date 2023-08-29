@@ -22,7 +22,6 @@ import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain
 
 export class JSFileMapper {
   static toFile(jsFile: JSFile, datasetVersion: DatasetVersion): File {
-    console.log(jsFile)
     return new File(
       this.toFileId(jsFile.id),
       this.toFileVersion(jsFile.version, datasetVersion, jsFile.publicationDate),
@@ -37,7 +36,8 @@ export class JSFileMapper {
       this.toFileThumbnail(),
       this.toFileDirectory(jsFile.directoryLabel),
       this.toFileEmbargo(jsFile.embargo),
-      this.toFileTabularData()
+      this.toFileTabularData(),
+      this.toFileDescription(jsFile.description)
     )
   }
 
@@ -147,5 +147,9 @@ export class JSFileMapper {
 
   static toFileTabularData(): undefined {
     return undefined // This is always undefined because the tabular data comes from a different endpoint
+  }
+
+  static toFileDescription(jsFileDescription?: string): string | undefined {
+    return jsFileDescription
   }
 }
