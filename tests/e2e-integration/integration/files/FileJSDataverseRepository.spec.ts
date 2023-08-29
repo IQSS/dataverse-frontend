@@ -241,6 +241,26 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
+    it('gets the files pagination selection when passing pagination', async () => {
+      const dataset = await DatasetHelper.createWithFiles(3).then((datasetResponse) =>
+        datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      )
+      if (!dataset) throw new Error('Dataset not found')
+
+      await fileRepository
+        .getAllByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version,
+          new FilePaginationInfo(2, 1, 3)
+        )
+        .then((files) => {
+          files.forEach((file, index) => {
+            const expectedFileNames = ['blob-1']
+            expect(file.name).to.deep.equal(expectedFileNames[index])
+          })
+        })
+    })
+
     it('gets all the files by dataset persistentId when passing sortBy criteria', async () => {
       const dataset = await DatasetHelper.createWithFiles(3).then((datasetResponse) =>
         datasetRepository.getByPersistentId(datasetResponse.persistentId)
