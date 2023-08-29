@@ -46,9 +46,16 @@ export class DatasetHelper extends DataverseApiHelper {
     return this.request<{ token: string }>(`/datasets/${id}/privateUrl`, 'POST')
   }
 
-  static async createWithFiles(numberOfFiles: number): Promise<DatasetResponse> {
+  static async createWithFiles(
+    numberOfFiles: number,
+    useTabularFiles: boolean = false
+  ): Promise<DatasetResponse> {
     const datasetResponse = await this.create()
-    const files = await this.uploadFiles(datasetResponse.persistentId, numberOfFiles)
+    const files = await this.uploadFiles(
+      datasetResponse.persistentId,
+      numberOfFiles,
+      useTabularFiles
+    )
     return { ...datasetResponse, files: files }
   }
 
@@ -66,19 +73,22 @@ export class DatasetHelper extends DataverseApiHelper {
 
   private static async uploadFiles(
     datasetPersistentId: string,
-    numberOfFiles: number
+    numberOfFiles: number,
+    useTabularFile: boolean
   ): Promise<DatasetFileResponse[]> {
     const files = []
     for (let i = 0; i < numberOfFiles; i++) {
-      files.push(await this.uploadFile(datasetPersistentId))
+      files.push(await this.uploadFile(datasetPersistentId, useTabularFile))
     }
     return files
   }
 
-  private static async uploadFile(datasetPersistentId: string): Promise<DatasetFileResponse> {
-    const textFile = new Blob(['Hello, this is some data.'], { type: 'text/plain' })
+  private static async uploadFile(
+    datasetPersistentId: string,
+    useTabularFile: boolean
+  ): Promise<DatasetFileResponse> {
     const data = {
-      file: textFile,
+      file: this.generateFile(useTabularFile),
       jsonData: JSON.stringify({ description: 'This is an example file' })
     }
     const { files } = await this.request<{ files: [{ dataFile: { id: number } }] }>(
@@ -92,5 +102,12 @@ export class DatasetHelper extends DataverseApiHelper {
       throw new Error('No files returned')
     }
     return files[0].dataFile
+  }
+
+  private static generateFile(useTabularFile: boolean) {
+    if (useTabularFile) {
+      return new Blob([`Name,Age\nJohn,30\nJane,28`], { type: 'text/csv' })
+    }
+    return new Blob(['Hello, this is some data.'], { type: 'text/plain' })
   }
 }

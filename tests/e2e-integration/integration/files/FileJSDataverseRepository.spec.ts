@@ -206,5 +206,27 @@ describe('File JSDataverse Repository', () => {
           expect(files[0].embargo).to.deep.equal(expectedEmbargo)
         })
     })
+
+    it.skip('gets all the files by dataset persistentId when files are tabular data', async () => {
+      // TODO - Implement this when isTabularData flag is added to js-dataverse response
+      const datasetResponse = await DatasetHelper.createWithFiles(1, true)
+      if (!datasetResponse.files) throw new Error('Files not found')
+
+      const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      if (!dataset) throw new Error('Dataset not found')
+
+      await fileRepository
+        .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((files) => {
+          const expectedTabularData = {
+            variablesCount: 1,
+            observationsCount: 0,
+            unf: 'some'
+          }
+          files.forEach((file) => {
+            expect(file.tabularData).to.deep.equal(expectedTabularData)
+          })
+        })
+    })
   })
 })

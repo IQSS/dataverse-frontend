@@ -24,20 +24,25 @@ export class JSFileMapper {
   static toFile(jsFile: JSFile, datasetVersion: DatasetVersion): File {
     console.log(jsFile)
     return new File(
-      jsFile.id,
+      this.toFileId(jsFile.id),
       this.toFileVersion(jsFile.version, datasetVersion, jsFile.publicationDate),
-      jsFile.name,
+      this.toFileName(jsFile.name),
       this.toFileAccess(jsFile.restricted),
       this.toFileType(jsFile.contentType),
       this.toFileSize(jsFile.sizeBytes),
       this.toFileDate(jsFile.creationDate, jsFile.publicationDate, jsFile.embargo),
-      0,
+      this.toFileDownloads(),
       this.toFileLabels(jsFile.categories, jsFile.tabularTags),
       this.toFileChecksum(jsFile.checksum),
-      undefined,
-      jsFile.directoryLabel,
-      this.toFileEmbargo(jsFile.embargo)
+      this.toFileThumbnail(),
+      this.toFileDirectory(jsFile.directoryLabel),
+      this.toFileEmbargo(jsFile.embargo),
+      this.toFileTabularData()
     )
+  }
+
+  static toFileId(jsFileId: number): number {
+    return jsFileId
   }
 
   static toFileVersion(
@@ -56,6 +61,10 @@ export class JSFileMapper {
     }
 
     return fileVersion
+  }
+
+  static toFileName(jsFileName: string): string {
+    return jsFileName
   }
 
   static toFileAccess(jsFileRestricted: boolean): FileAccess {
@@ -93,6 +102,10 @@ export class JSFileMapper {
     throw new Error('File date not found')
   }
 
+  static toFileDownloads(): number {
+    return 0 // This is always 0 because the downloads come from a different endpoint
+  }
+
   static toFileLabels(jsFileCategories?: string[], jsFileTabularTags?: string[]): FileLabel[] {
     const fileLabels: FileLabel[] = []
     if (jsFileCategories) {
@@ -117,10 +130,22 @@ export class JSFileMapper {
     return undefined
   }
 
+  static toFileThumbnail(): undefined {
+    return undefined // This is always undefined because the thumbnails come from a different endpoint
+  }
+
+  static toFileDirectory(jsFileDirectory: string | undefined): string | undefined {
+    return jsFileDirectory
+  }
+
   static toFileEmbargo(jsFileEmbargo?: JSFileEmbargo): FileEmbargo | undefined {
     if (jsFileEmbargo) {
       return new FileEmbargo(jsFileEmbargo.dateAvailable)
     }
     return undefined
+  }
+
+  static toFileTabularData(): undefined {
+    return undefined // This is always undefined because the tabular data comes from a different endpoint
   }
 }
