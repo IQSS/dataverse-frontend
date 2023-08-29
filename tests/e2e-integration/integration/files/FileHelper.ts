@@ -16,7 +16,7 @@ export class FileHelper extends DataverseApiHelper {
   }
 
   static async addLabel(id: number, labels: FileLabel[]) {
-    const newMetadata: { description: string; tags?: string[]; categories?: string[] } = {
+    const newMetadata: { description: string; tabularTags?: string[]; categories?: string[] } = {
       description: 'Test description'
     }
 
@@ -24,6 +24,10 @@ export class FileHelper extends DataverseApiHelper {
       if (label.type === FileLabelType.CATEGORY) {
         newMetadata.categories = newMetadata.categories || []
         newMetadata.categories.push(label.value)
+      }
+      if (label.type === FileLabelType.TAG) {
+        newMetadata.tabularTags = newMetadata.tabularTags || []
+        newMetadata.tabularTags.push(label.value)
       }
     })
 

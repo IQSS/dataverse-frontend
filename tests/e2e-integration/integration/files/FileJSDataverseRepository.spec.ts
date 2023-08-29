@@ -173,7 +173,7 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    it('gets all the files by dataset persistentId after adding labels to the files', async () => {
+    it('gets all the files by dataset persistentId after adding category labels to the files', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(3)
       if (!datasetResponse.files) throw new Error('Files not found')
 
@@ -183,7 +183,26 @@ describe('File JSDataverse Repository', () => {
       const expectedLabels = [
         { type: FileLabelType.CATEGORY, value: 'category' },
         { type: FileLabelType.CATEGORY, value: 'category_2' }
-      ] // TODO - Ask how to add tabularTags to the file
+      ]
+      await FileHelper.addLabel(datasetResponse.files[0].id, expectedLabels)
+
+      await fileRepository
+        .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((files) => {
+          expect(files[0].labels).to.deep.equal(expectedLabels)
+        })
+    })
+
+    it.skip('gets all the files by dataset persistentId after adding tag labels to the files', async () => {
+      const datasetResponse = await DatasetHelper.createWithFiles(1, true)
+      if (!datasetResponse.files) throw new Error('Files not found')
+      await IntegrationTestsUtils.wait(1500) // Wait for the tabular data to be ingested
+
+      const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      if (!dataset) throw new Error('Dataset not found')
+
+      // TODO - This endpoint is not working to update the tabularTags
+      const expectedLabels = [{ type: FileLabelType.TAG, value: 'Survey' }]
       await FileHelper.addLabel(datasetResponse.files[0].id, expectedLabels)
 
       await fileRepository
