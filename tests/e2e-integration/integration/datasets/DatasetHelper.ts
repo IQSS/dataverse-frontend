@@ -48,7 +48,7 @@ export class DatasetHelper extends DataverseApiHelper {
 
   static async createWithFiles(
     numberOfFiles: number,
-    useTabularFiles: boolean = false
+    useTabularFiles = false
   ): Promise<DatasetResponse> {
     const datasetResponse = await this.create()
     const files = await this.uploadFiles(

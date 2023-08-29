@@ -19,7 +19,7 @@ export class FileJSDataverseRepository implements FileRepository {
   getAllByDatasetPersistentId(
     datasetPersistentId: string,
     datasetVersion: DatasetVersion,
-    paginationInfo?: FilePaginationInfo,
+    paginationInfo: FilePaginationInfo = new FilePaginationInfo(),
     criteria?: FileCriteria
   ): Promise<File[]> {
     const jsPagination = DomainFileMapper.toJSPagination(paginationInfo)

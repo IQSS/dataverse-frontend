@@ -3,10 +3,10 @@ import { FileCriteria, FileSortByOption } from '../../domain/models/FileCriteria
 import { FileOrderCriteria } from '@iqss/dataverse-client-javascript'
 
 export class DomainFileMapper {
-  static toJSPagination(paginationInfo?: FilePaginationInfo): { limit?: number; offset?: number } {
+  static toJSPagination(paginationInfo: FilePaginationInfo): { limit?: number; offset?: number } {
     return {
-      limit: paginationInfo?.pageSize,
-      offset: paginationInfo?.page
+      limit: paginationInfo.pageSize * paginationInfo.page,
+      offset: (paginationInfo.page - 1) * paginationInfo.pageSize
     }
   }
 

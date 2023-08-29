@@ -108,7 +108,7 @@ describe('File JSDataverse Repository', () => {
           new DatasetVersion(dataset.version.id, DatasetPublishingStatus.RELEASED, 1, 0)
         )
         .then((files) => {
-          let expectedPublishedFile = expectedFile
+          const expectedPublishedFile = expectedFile
           expectedPublishedFile.version.publishingStatus = FilePublishingStatus.RELEASED
           expectedPublishedFile.date.type = FileDateType.PUBLISHED
 
@@ -134,7 +134,7 @@ describe('File JSDataverse Repository', () => {
       await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
 
       // TODO - It always returns 404 when the dataset is deaccessioned, update the test when the issue is fixed
-      fileRepository
+      await fileRepository
         .getAllByDatasetPersistentId(
           dataset.persistentId,
           new DatasetVersion(dataset.version.id, DatasetPublishingStatus.DEACCESSIONED, 1, 0)
@@ -143,7 +143,7 @@ describe('File JSDataverse Repository', () => {
           const expectedDeaccessionedFile = expectedFile
           expectedDeaccessionedFile.version.publishingStatus = FilePublishingStatus.DEACCESSIONED
 
-          files.forEach((file, index) => {
+          files.forEach((file) => {
             expect(file.version).to.deep.equal(expectedDeaccessionedFile.version)
           })
         })

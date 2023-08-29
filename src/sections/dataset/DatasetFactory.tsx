@@ -9,6 +9,7 @@ import { MetadataBlockInfoProvider } from './metadata-block-info/MetadataBlockPr
 import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/MetadataBlockInfoJSDataverseRepository'
 import { SettingsProvider } from '../settings/SettingsProvider'
 import { SettingJSDataverseRepository } from '../../settings/infrastructure/SettingJSDataverseRepository'
+import { FilePermissionsProvider } from '../file/file-permissions/FilePermissionsProvider'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
@@ -18,13 +19,15 @@ const settingRepository = new SettingJSDataverseRepository()
 export class DatasetFactory {
   static create(): ReactElement {
     return (
-      <SettingsProvider repository={settingRepository}>
-        <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
-          <AnonymizedProvider>
-            <DatasetWithSearchParams />
-          </AnonymizedProvider>
-        </MetadataBlockInfoProvider>
-      </SettingsProvider>
+      <FilePermissionsProvider repository={fileRepository}>
+        <SettingsProvider repository={settingRepository}>
+          <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
+            <AnonymizedProvider>
+              <DatasetWithSearchParams />
+            </AnonymizedProvider>
+          </MetadataBlockInfoProvider>
+        </SettingsProvider>
+      </FilePermissionsProvider>
     )
   }
 }

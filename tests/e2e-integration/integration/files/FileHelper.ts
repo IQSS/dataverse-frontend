@@ -12,6 +12,7 @@ export class FileHelper extends DataverseApiHelper {
       .click()
       .get('#fileForm\\:j_idt273')
       .click()
+    return Promise.resolve()
   }
 
   static async addLabel(id: number, labels: FileLabel[]) {
@@ -19,7 +20,7 @@ export class FileHelper extends DataverseApiHelper {
       description: 'Test description'
     }
 
-    labels.forEach((label, index) => {
+    labels.forEach((label) => {
       if (label.type === FileLabelType.CATEGORY) {
         newMetadata.categories = newMetadata.categories || []
         newMetadata.categories.push(label.value)
