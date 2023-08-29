@@ -4,12 +4,12 @@ import { FileJSDataverseRepository } from '../../../../src/files/infrastructure/
 import {
   File,
   FileDateType,
+  FileEmbargo,
+  FileLabelType,
+  FilePublishingStatus,
   FileSize,
   FileSizeUnit,
-  FilePublishingStatus,
-  FileType,
-  FileLabelType,
-  FileEmbargo
+  FileType
 } from '../../../../src/files/domain/models/File'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
@@ -19,6 +19,8 @@ import {
   DatasetVersion
 } from '../../../../src/dataset/domain/models/Dataset'
 import { FileHelper } from './FileHelper'
+import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePaginationInfo'
+import { FileCriteria, FileSortByOption } from '../../../../src/files/domain/models/FileCriteria'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -75,7 +77,8 @@ describe('File JSDataverse Repository', () => {
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
           files.forEach((file, index) => {
-            expect(file.name).to.deep.equal(`${expectedFile.name}${index > 0 ? `-${index}` : ''}`)
+            const expectedFileNames = ['blob', 'blob-1', 'blob-2']
+            expect(file.name).to.deep.equal(expectedFileNames[index])
             expect(file.version).to.deep.equal(expectedFile.version)
             expect(file.access).to.deep.equal(expectedFile.access)
             expect(file.type).to.deep.equal(expectedFile.type)
@@ -237,10 +240,31 @@ describe('File JSDataverse Repository', () => {
           })
         })
     })
+
+    it('gets all the files by dataset persistentId when passing sortBy criteria', async () => {
+      const dataset = await DatasetHelper.createWithFiles(3).then((datasetResponse) =>
+        datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      )
+      if (!dataset) throw new Error('Dataset not found')
+
+      await fileRepository
+        .getAllByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version,
+          new FilePaginationInfo(),
+          new FileCriteria().withSortBy(FileSortByOption.NAME_ZA)
+        )
+        .then((files) => {
+          files.forEach((file, index) => {
+            const expectedFileNames = ['blob-2', 'blob-1', 'blob']
+            expect(file.name).to.deep.equal(expectedFileNames[index])
+          })
+        })
+    })
   })
 
   describe('Get file user permissions by id', () => {
-    it.only('gets file user permissions by id', async () => {
+    it('gets file user permissions by id', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(1)
       if (!datasetResponse.files) throw new Error('Files not found')
 
