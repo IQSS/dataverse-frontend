@@ -8,6 +8,7 @@ import { FileUserPermissionsMother } from '../../../tests/component/files/domain
 import {
   getDatasetFiles,
   getFileDownloadCount,
+  getFileUserPermissions,
   WriteError
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
@@ -76,13 +77,16 @@ export class FileJSDataverseRepository implements FileRepository {
       }, 1000)
     })
   }
-  // eslint-disable-next-line unused-imports/no-unused-vars
+
   getFileUserPermissionsById(id: number): Promise<FileUserPermissions> {
-    // TODO - implement using js-dataverse
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(FileUserPermissionsMother.create())
-      }, 1000)
-    })
+    return getFileUserPermissions
+      .execute(id)
+      .then((jsFileUserPermissions) =>
+        JSFileMapper.toFileUserPermissions(id, jsFileUserPermissions)
+      )
+      .catch((error: WriteError) => {
+        console.error('Error getting the file user permissions from Dataverse', error)
+        throw new Error(error.message)
+      })
   }
 }

@@ -238,4 +238,23 @@ describe('File JSDataverse Repository', () => {
         })
     })
   })
+
+  describe('Get file user permissions by id', () => {
+    it.only('gets file user permissions by id', async () => {
+      const datasetResponse = await DatasetHelper.createWithFiles(1)
+      if (!datasetResponse.files) throw new Error('Files not found')
+
+      const expectedFileUserPermissions = {
+        fileId: datasetResponse.files[0].id,
+        canDownloadFile: true,
+        canEditDataset: true
+      }
+
+      await fileRepository
+        .getFileUserPermissionsById(datasetResponse.files[0].id)
+        .then((fileUserPermissions) => {
+          expect(fileUserPermissions).to.deep.equal(expectedFileUserPermissions)
+        })
+    })
+  })
 })

@@ -19,6 +19,7 @@ import {
   FileChecksum as JSFileChecksum
 } from '@iqss/dataverse-client-javascript'
 import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
+import { FileUserPermissions } from '../../domain/models/FileUserPermissions'
 
 export class JSFileMapper {
   static toFile(jsFile: JSFile, datasetVersion: DatasetVersion): File {
@@ -39,6 +40,20 @@ export class JSFileMapper {
       this.toFileTabularData(),
       this.toFileDescription(jsFile.description)
     )
+  }
+
+  static toFileUserPermissions(
+    jsFileId: number,
+    jsFileUserPermissions: {
+      canDownloadFile: boolean
+      canEditOwnerDataset: boolean
+    }
+  ): FileUserPermissions {
+    return {
+      fileId: jsFileId,
+      canDownloadFile: jsFileUserPermissions.canDownloadFile,
+      canEditDataset: jsFileUserPermissions.canEditOwnerDataset
+    }
   }
 
   static toFileId(jsFileId: number): number {
