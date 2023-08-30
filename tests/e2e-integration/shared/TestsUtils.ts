@@ -2,7 +2,7 @@ import { ApiConfig } from '@iqss/dataverse-client-javascript/dist/core'
 import { DataverseApiHelper } from './DataverseApiHelper'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 
-export class IntegrationTestsUtils {
+export class TestsUtils {
   static readonly DATAVERSE_BACKEND_URL =
     (import.meta.env.VITE_DATAVERSE_BACKEND_URL as string) ?? ''
 

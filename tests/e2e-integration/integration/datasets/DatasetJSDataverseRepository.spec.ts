@@ -1,12 +1,12 @@
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { DatasetJSDataverseRepository } from '../../../../src/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
-import { IntegrationTestsUtils } from '../IntegrationTestsUtils'
-import { DatasetHelper } from './DatasetHelper'
+import { TestsUtils } from '../../shared/TestsUtils'
 import {
   DatasetPublishingStatus,
   DatasetVersion
 } from '../../../../src/dataset/domain/models/Dataset'
+import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -75,8 +75,8 @@ const datasetData = (persistentId: string, versionId: number) => {
 
 const datasetRepository = new DatasetJSDataverseRepository()
 describe('Dataset JSDataverse Repository', () => {
-  before(() => IntegrationTestsUtils.setup())
-  beforeEach(() => IntegrationTestsUtils.login())
+  before(() => TestsUtils.setup())
+  beforeEach(() => TestsUtils.login())
 
   it('gets the dataset by persistentId', async () => {
     const datasetResponse = await DatasetHelper.create()
@@ -101,7 +101,7 @@ describe('Dataset JSDataverse Repository', () => {
     const datasetResponse = await DatasetHelper.create()
     await DatasetHelper.publish(datasetResponse.persistentId)
 
-    await IntegrationTestsUtils.wait(1500)
+    await TestsUtils.wait(1500)
 
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, '1.0')

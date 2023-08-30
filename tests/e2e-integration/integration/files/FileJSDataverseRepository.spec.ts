@@ -1,5 +1,4 @@
-import { IntegrationTestsUtils } from '../IntegrationTestsUtils'
-import { DatasetHelper } from '../datasets/DatasetHelper'
+import { TestsUtils } from '../../shared/TestsUtils'
 import { FileJSDataverseRepository } from '../../../../src/files/infrastructure/FileJSDataverseRepository'
 import {
   File,
@@ -18,9 +17,10 @@ import {
   DatasetPublishingStatus,
   DatasetVersion
 } from '../../../../src/dataset/domain/models/Dataset'
-import { FileHelper } from './FileHelper'
 import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePaginationInfo'
 import { FileCriteria, FileSortByOption } from '../../../../src/files/domain/models/FileCriteria'
+import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
+import { FileHelper } from '../../shared/files/FileHelper'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -60,10 +60,10 @@ const expectedFile = new File(
 
 describe('File JSDataverse Repository', () => {
   before(() => {
-    IntegrationTestsUtils.setup()
+    TestsUtils.setup()
   })
   beforeEach(() => {
-    IntegrationTestsUtils.login()
+    TestsUtils.login()
   })
 
   describe('Get all files by dataset persistentId', () => {
@@ -103,7 +103,7 @@ describe('File JSDataverse Repository', () => {
       if (!dataset) throw new Error('Dataset not found')
 
       await DatasetHelper.publish(dataset.persistentId)
-      await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be published
+      await TestsUtils.wait(1500) // Wait for the dataset to be published
 
       await fileRepository
         .getAllByDatasetPersistentId(
@@ -129,12 +129,12 @@ describe('File JSDataverse Repository', () => {
       if (!dataset) throw new Error('Dataset not found')
 
       await DatasetHelper.publish(dataset.persistentId)
-      await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be published
+      await TestsUtils.wait(1500) // Wait for the dataset to be published
 
       DatasetHelper.deaccession(dataset.persistentId)
-      await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
-      await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
-      await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
+      await TestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
+      await TestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
+      await TestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
 
       // TODO - It always returns 404 when the dataset is deaccessioned, update the test when the issue is fixed
       await fileRepository
@@ -157,13 +157,13 @@ describe('File JSDataverse Repository', () => {
       if (!datasetResponse.files) throw new Error('Files not found')
 
       await DatasetHelper.publish(datasetResponse.persistentId)
-      await IntegrationTestsUtils.wait(1500) // Wait for the dataset to be published
+      await TestsUtils.wait(1500) // Wait for the dataset to be published
 
       const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
       if (!dataset) throw new Error('Dataset not found')
 
       await FileHelper.download(datasetResponse.files[0].id)
-      await IntegrationTestsUtils.wait(1500) // Wait for the file to be downloaded
+      await TestsUtils.wait(1500) // Wait for the file to be downloaded
 
       await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
@@ -196,7 +196,7 @@ describe('File JSDataverse Repository', () => {
     it.skip('gets all the files by dataset persistentId after adding tag labels to the files', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(1, true)
       if (!datasetResponse.files) throw new Error('Files not found')
-      await IntegrationTestsUtils.wait(1500) // Wait for the tabular data to be ingested
+      await TestsUtils.wait(1500) // Wait for the tabular data to be ingested
 
       const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
       if (!dataset) throw new Error('Dataset not found')

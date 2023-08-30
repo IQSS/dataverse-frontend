@@ -23,6 +23,12 @@ export class DatasetHelper extends DataverseApiHelper {
     )
   }
 
+  static async createAndPublish(): Promise<DatasetResponse> {
+    const datasetResponse = await this.create()
+    await this.publish(datasetResponse.persistentId)
+    return datasetResponse
+  }
+
   static deaccession(persistentId: string) {
     return cy
       .visit(`/dataset.xhtml?persistentId=${persistentId}`)
@@ -44,6 +50,13 @@ export class DatasetHelper extends DataverseApiHelper {
 
   static async createPrivateUrl(id: string): Promise<{ token: string }> {
     return this.request<{ token: string }>(`/datasets/${id}/privateUrl`, 'POST')
+  }
+
+  static async createPrivateUrlAnonymized(id: string): Promise<{ token: string }> {
+    return this.request<{ token: string }>(
+      `/datasets/${id}/privateUrl?anonymizedAccess=true`,
+      'POST'
+    )
   }
 
   static async createWithFiles(

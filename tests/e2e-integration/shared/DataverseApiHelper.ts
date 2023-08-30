@@ -1,17 +1,22 @@
 import axios, { AxiosRequestConfig } from 'axios'
-import { IntegrationTestsUtils } from './IntegrationTestsUtils'
+import { TestsUtils } from './TestsUtils'
 
 export class DataverseApiHelper {
   private static API_TOKEN = ''
   private static API_URL = ''
 
   static setup() {
-    this.API_URL = `${IntegrationTestsUtils.DATAVERSE_BACKEND_URL}/api`
+    this.API_URL = `${TestsUtils.DATAVERSE_BACKEND_URL}/api`
     // TODO - Replace with an ajax call to the API
     cy.getApiToken().then((token) => {
       this.API_TOKEN = token
     })
     void this.request('/admin/settings/:MaxEmbargoDurationInMonths', 'PUT', -1)
+    void this.request(
+      '/admin/settings/:AnonymizedFieldTypeNames',
+      'PUT',
+      'author, datasetContact, contributor, depositor, grantNumber, publication'
+    )
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
