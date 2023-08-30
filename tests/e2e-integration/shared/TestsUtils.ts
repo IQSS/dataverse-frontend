@@ -1,6 +1,7 @@
 import { ApiConfig } from '@iqss/dataverse-client-javascript/dist/core'
 import { DataverseApiHelper } from './DataverseApiHelper'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
+import { UserJSDataverseRepository } from '../../../src/users/infrastructure/repositories/UserJSDataverseRepository'
 
 export class TestsUtils {
   static readonly DATAVERSE_BACKEND_URL =
@@ -19,5 +20,9 @@ export class TestsUtils {
     return new Promise((resolve) => {
       setTimeout(resolve, ms)
     })
+  }
+
+  static logout() {
+    return new UserJSDataverseRepository().removeAuthenticated()
   }
 }

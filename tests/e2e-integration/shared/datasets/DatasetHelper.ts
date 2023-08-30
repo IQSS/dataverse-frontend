@@ -16,17 +16,13 @@ export class DatasetHelper extends DataverseApiHelper {
     return this.request<DatasetResponse>(`/dataverses/root/datasets`, 'POST', newDatasetData)
   }
 
-  static async publish(persistentId: string): Promise<{ status: string }> {
-    return this.request<{ status: string }>(
+  static async publish(persistentId: string): Promise<{ status: string; persistentId: string }> {
+    const response = await this.request<{ status: string }>(
       `/datasets/:persistentId/actions/:publish?persistentId=${persistentId}&type=major`,
       'POST'
     )
-  }
 
-  static async createAndPublish(): Promise<DatasetResponse> {
-    const datasetResponse = await this.create()
-    await this.publish(datasetResponse.persistentId)
-    return datasetResponse
+    return { ...response, persistentId }
   }
 
   static deaccession(persistentId: string) {
@@ -61,15 +57,40 @@ export class DatasetHelper extends DataverseApiHelper {
 
   static async createWithFiles(
     numberOfFiles: number,
-    useTabularFiles = false
+    useTabularFiles = false,
+    filesMetadata?: { [key: string]: string }
   ): Promise<DatasetResponse> {
     const datasetResponse = await this.create()
     const files = await this.uploadFiles(
       datasetResponse.persistentId,
       numberOfFiles,
-      useTabularFiles
+      useTabularFiles,
+      filesMetadata
     )
     return { ...datasetResponse, files: files }
+  }
+
+  static async createWithFilesRestricted(
+    numberOfFiles: number,
+    useTabularFiles = false
+  ): Promise<DatasetResponse> {
+    const datasetResponse = await this.createWithFiles(numberOfFiles, useTabularFiles, {
+      description: 'This is an example file',
+      restrict: 'true'
+    })
+    return datasetResponse
+  }
+
+  static async createWithFilesEmbargoed(
+    numberOfFiles: number,
+    useTabularFiles = false
+  ): Promise<DatasetResponse> {
+    const datasetResponse = await this.createWithFiles(numberOfFiles, useTabularFiles, {
+      description: 'This is an example file',
+      restrict: 'true',
+      embargoDate: '2021-01-01'
+    })
+    return datasetResponse
   }
 
   static async embargoFiles(
@@ -77,32 +98,36 @@ export class DatasetHelper extends DataverseApiHelper {
     filesIds: number[],
     embargoDate: string
   ): Promise<DatasetResponse> {
-    return this.request<DatasetResponse>(
+    const response = this.request<DatasetResponse>(
       `/datasets/:persistentId/files/actions/:set-embargo?persistentId=${persistentId}`,
       'POST',
       { fileIds: filesIds, dateAvailable: embargoDate, reason: 'Standard project embargo' }
     )
+    return { ...response, persistentId }
   }
 
   private static async uploadFiles(
     datasetPersistentId: string,
     numberOfFiles: number,
-    useTabularFile: boolean
+    useTabularFile: boolean,
+    filesMetadata: { [key: string]: string } = { description: 'This is an example file' }
   ): Promise<DatasetFileResponse[]> {
+    // TODO - Instead of uploading the files one by one, upload them all at once - do this refactor when integrating the pagination
     const files = []
     for (let i = 0; i < numberOfFiles; i++) {
-      files.push(await this.uploadFile(datasetPersistentId, useTabularFile))
+      files.push(await this.uploadFile(datasetPersistentId, useTabularFile, filesMetadata))
     }
     return files
   }
 
   private static async uploadFile(
     datasetPersistentId: string,
-    useTabularFile: boolean
+    useTabularFile: boolean,
+    filesMetadata: { [key: string]: string } = { description: 'This is an example file' }
   ): Promise<DatasetFileResponse> {
     const data = {
       file: this.generateFile(useTabularFile),
-      jsonData: JSON.stringify({ description: 'This is an example file' })
+      jsonData: JSON.stringify(filesMetadata)
     }
     const { files } = await this.request<{ files: [{ dataFile: { id: number } }] }>(
       `/datasets/:persistentId/add?persistentId=${datasetPersistentId}`,

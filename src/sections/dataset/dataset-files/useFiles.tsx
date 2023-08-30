@@ -39,24 +39,27 @@ export function useFiles(
 
   useEffect(() => {
     setIsLoading(true)
-    getFilesByDatasetPersistentId(
-      filesRepository,
-      datasetPersistentId,
-      datasetVersion,
-      paginationInfo,
-      criteria
-    )
-      .then((files: File[]) => {
-        setFiles(files)
-        return files
-      })
-      .then((files: File[]) =>
-        fetchFilesPermission(FilePermission.DOWNLOAD_FILE, files).then(() => setIsLoading(false))
+
+    if (filesCountInfo.total !== 0) {
+      getFilesByDatasetPersistentId(
+        filesRepository,
+        datasetPersistentId,
+        datasetVersion,
+        paginationInfo,
+        criteria
       )
-      .catch((error) => {
-        console.error('There was an error getting the files', error)
-        setIsLoading(false)
-      })
+        .then((files: File[]) => {
+          setFiles(files)
+          return files
+        })
+        .then((files: File[]) =>
+          fetchFilesPermission(FilePermission.DOWNLOAD_FILE, files).then(() => setIsLoading(false))
+        )
+        .catch((error) => {
+          console.error('There was an error getting the files', error)
+          setIsLoading(false)
+        })
+    }
   }, [filesRepository, datasetPersistentId, datasetVersion, paginationInfo, criteria])
 
   return {

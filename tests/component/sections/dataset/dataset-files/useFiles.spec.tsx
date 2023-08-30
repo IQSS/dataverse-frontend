@@ -96,4 +96,15 @@ describe('useFiles', () => {
     cy.findByText('Loading...').should('exist')
     cy.findByText('Files count: 100').should('exist')
   })
+
+  it('calls the file repository to get the files only if files count info is greater than 0', () => {
+    fileRepository.getCountInfoByDatasetPersistentId = cy
+      .stub()
+      .resolves(FilesCountInfoMother.create({ total: 0 }))
+
+    cy.customMount(<FilesTableTestComponent datasetPersistentId="persistentId" />)
+
+    cy.findByText('Loading...').should('exist')
+    cy.wrap(fileRepository.getAllByDatasetPersistentId).should('not.be.called')
+  })
 })
