@@ -4,7 +4,6 @@ import { FilesCountInfo } from '../domain/models/FilesCountInfo'
 import { FilesCountInfoMother } from '../../../tests/component/files/domain/models/FilesCountInfoMother'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
 import { FileUserPermissions } from '../domain/models/FileUserPermissions'
-import { FileUserPermissionsMother } from '../../../tests/component/files/domain/models/FileUserPermissionsMother'
 import {
   getDatasetFiles,
   getFileDownloadCount,

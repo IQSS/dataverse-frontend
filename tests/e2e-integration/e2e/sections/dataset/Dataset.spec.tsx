@@ -19,7 +19,7 @@ describe('Dataset', () => {
     it('successfully loads a dataset in draft mode', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
-        .then((persistentId) => {
+        .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
           cy.fixture('dataset-finch1.json').then((dataset: Dataset) => {
@@ -38,7 +38,7 @@ describe('Dataset', () => {
     it('loads page not found when the user is not authenticated and tries to access a draft', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
-        .then((persistentId) => {
+        .then((persistentId: string) => {
           cy.wrap(TestsUtils.logout())
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
@@ -49,7 +49,7 @@ describe('Dataset', () => {
     it('successfully loads a dataset when passing the id and version', () => {
       cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
         .its('persistentId')
-        .then((persistentId) => {
+        .then((persistentId: string) => {
           cy.wait(1500)
           cy.visit(`/spa/datasets?persistentId=${persistentId}&version=1.0`)
 
@@ -67,7 +67,7 @@ describe('Dataset', () => {
     it('loads the latest version of the dataset when passing a wrong version', () => {
       cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
         .its('persistentId')
-        .then((persistentId) => {
+        .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}&version=2.0`)
 
           cy.fixture('dataset-finch1.json').then((dataset: Dataset) => {
@@ -89,7 +89,7 @@ describe('Dataset', () => {
     it('successfully loads a dataset using a privateUrlToken', () => {
       cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.createPrivateUrl(dataset.id)))
         .its('token')
-        .then((token) => {
+        .then((token: string) => {
           cy.visit(`/spa/datasets?privateUrlToken=${token}`)
 
           cy.fixture('dataset-finch1.json').then((dataset: Dataset) => {
@@ -109,7 +109,7 @@ describe('Dataset', () => {
         )
       )
         .its('token')
-        .then((token) => {
+        .then((token: string) => {
           cy.visit(`/spa/datasets?privateUrlToken=${token}`)
 
           cy.fixture('dataset-finch1.json').then((dataset: Dataset) => {
@@ -133,7 +133,7 @@ describe('Dataset', () => {
     it('successfully loads the files tab', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
-        .then((persistentId) => {
+        .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
           cy.findByText('Files').should('exist')
@@ -145,7 +145,7 @@ describe('Dataset', () => {
     it('successfully loads the files tab with files', () => {
       cy.wrap(DatasetHelper.createWithFiles(3))
         .its('persistentId')
-        .then((persistentId) => {
+        .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
           cy.findByText('Files').should('exist')
@@ -161,7 +161,7 @@ describe('Dataset', () => {
       // TODO - Connect files count implementation to the pagination
       cy.wrap(DatasetHelper.createWithFiles(20), { timeout: 10000 })
         .its('persistentId')
-        .then((persistentId) => {
+        .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
           cy.findByText('Files').should('exist')
@@ -181,7 +181,7 @@ describe('Dataset', () => {
     it('successfully loads the action buttons when the user is logged in as owner', () => {
       cy.wrap(DatasetHelper.createWithFiles(3))
         .its('persistentId')
-        .then((persistentId) => {
+        .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
           cy.findByText('Files').should('exist')
@@ -200,7 +200,7 @@ describe('Dataset', () => {
         )
       )
         .its('persistentId')
-        .then((persistentId) => {
+        .then((persistentId: string) => {
           cy.wrap(TestsUtils.logout())
 
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
@@ -217,7 +217,7 @@ describe('Dataset', () => {
     it('loads the restricted files when the user is logged in as owner', () => {
       cy.wrap(DatasetHelper.createWithFilesRestricted(1))
         .its('persistentId')
-        .then((persistentId) => {
+        .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
           cy.findByText('Files').should('exist')
@@ -240,7 +240,7 @@ describe('Dataset', () => {
         )
       )
         .its('persistentId')
-        .then((persistentId) => {
+        .then((persistentId: string) => {
           cy.wrap(TestsUtils.logout())
 
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
@@ -266,7 +266,7 @@ describe('Dataset', () => {
         )
       )
         .its('persistentId')
-        .then((persistentId) => {
+        .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
           cy.findByText('Files').should('exist')

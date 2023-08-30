@@ -98,7 +98,7 @@ export class DatasetHelper extends DataverseApiHelper {
     filesIds: number[],
     embargoDate: string
   ): Promise<DatasetResponse> {
-    const response = this.request<DatasetResponse>(
+    const response = await this.request<DatasetResponse>(
       `/datasets/:persistentId/files/actions/:set-embargo?persistentId=${persistentId}`,
       'POST',
       { fileIds: filesIds, dateAvailable: embargoDate, reason: 'Standard project embargo' }
