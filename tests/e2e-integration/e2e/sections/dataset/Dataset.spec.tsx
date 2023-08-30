@@ -68,6 +68,7 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
         .its('persistentId')
         .then((persistentId: string) => {
+          cy.wait(1500) // Wait for the dataset to be published
           cy.visit(`/spa/datasets?persistentId=${persistentId}&version=2.0`)
 
           cy.fixture('dataset-finch1.json').then((dataset: Dataset) => {
@@ -201,6 +202,7 @@ describe('Dataset', () => {
       )
         .its('persistentId')
         .then((persistentId: string) => {
+          cy.wait(1500) // Wait for the dataset to be published
           cy.wrap(TestsUtils.logout())
 
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
@@ -241,6 +243,8 @@ describe('Dataset', () => {
       )
         .its('persistentId')
         .then((persistentId: string) => {
+          cy.wait(1500) // Wait for the dataset to be published
+
           cy.wrap(TestsUtils.logout())
 
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
