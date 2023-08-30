@@ -3,7 +3,7 @@ name: test
 on: push
 
 env:
-  E2E_DATAVERSE_IMAGE_TAG: unstable
+  E2E_DATAVERSE_IMAGE_TAG: 9692-files-api-extension-display-data
 
 jobs:
   e2e:
