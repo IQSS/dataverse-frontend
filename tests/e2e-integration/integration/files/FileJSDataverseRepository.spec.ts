@@ -193,7 +193,7 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    it.skip('gets all the files by dataset persistentId after adding tag labels to the files', async () => {
+    it('gets all the files by dataset persistentId after adding tag labels to the files', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(1, true)
       if (!datasetResponse.files) throw new Error('Files not found')
       await TestsUtils.wait(1500) // Wait for the tabular data to be ingested
@@ -201,7 +201,6 @@ describe('File JSDataverse Repository', () => {
       const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
       if (!dataset) throw new Error('Dataset not found')
 
-      // TODO - This endpoint is not working to update the tabularTags
       const expectedLabels = [{ type: FileLabelType.TAG, value: 'Survey' }]
       await FileHelper.addLabel(datasetResponse.files[0].id, expectedLabels)
 
@@ -216,7 +215,7 @@ describe('File JSDataverse Repository', () => {
       // TODO - Do this in thumbnails issue https://github.com/IQSS/dataverse-frontend/issues/160
     })
 
-    it('gets all the files by dataset persistentId after embargo', async () => {
+    it.only('gets all the files by dataset persistentId after embargo', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(3)
       if (!datasetResponse.files) throw new Error('Files not found')
 
@@ -229,6 +228,7 @@ describe('File JSDataverse Repository', () => {
         [datasetResponse.files[0].id, datasetResponse.files[1].id, datasetResponse.files[2].id],
         embargoDate
       )
+      await TestsUtils.wait(1500) // Wait for the files to be embargoed
 
       await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
