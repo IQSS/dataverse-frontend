@@ -95,7 +95,7 @@ export function createRowSelection(numberOfRows: number) {
   const rowSelection: Record<string, boolean> = {}
 
   for (let i = 0; i < numberOfRows; i++) {
-    rowSelection[i as unknown as string] = true
+    rowSelection[String(i)] = true
   }
 
   return rowSelection
