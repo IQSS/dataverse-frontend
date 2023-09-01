@@ -57,7 +57,7 @@ export function useRowSelection(
   }
   const selectAllRows = () => {
     setCurrentPageRowSelection(createRowSelection(paginationInfo.pageSize))
-    setRowSelection(createRowSelection(paginationInfo.total))
+    setRowSelection(createRowSelection(paginationInfo.totalFiles))
   }
   const clearRowSelection = () => {
     setCurrentPageRowSelection({})
@@ -71,7 +71,7 @@ export function useRowSelection(
     }
   }
   const isAllRowsSelected = () => {
-    return Object.keys(rowSelection).length === paginationInfo.total
+    return Object.keys(rowSelection).length === paginationInfo.totalFiles
   }
 
   useEffect(() => {

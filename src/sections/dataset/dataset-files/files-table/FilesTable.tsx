@@ -28,7 +28,7 @@ export function FilesTable({ files, isLoading, paginationInfo }: FilesTableProps
       <RowSelectionMessage
         rowSelection={rowSelection}
         selectAllRows={selectAllRows}
-        totalFilesCount={paginationInfo.total}
+        totalFilesCount={paginationInfo.totalFiles}
         clearRowSelection={clearRowSelection}
       />
       <ZipDownloadLimitMessage
