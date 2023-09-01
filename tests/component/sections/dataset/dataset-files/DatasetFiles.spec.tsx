@@ -9,8 +9,11 @@ import {
 } from '../../../../../src/files/domain/models/FileCriteria'
 import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
-import { FileType } from '../../../../../src/files/domain/models/File'
+import { FileSizeUnit, FileType } from '../../../../../src/files/domain/models/File'
 import styles from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
+import { SettingMother } from '../../../settings/domain/models/SettingMother'
+import { ZipDownloadLimit } from '../../../../../src/settings/domain/models/ZipDownloadLimit'
+import { SettingsContext } from '../../../../../src/sections/settings/SettingsContext'
 
 const testFiles = FileMother.createMany(10)
 const datasetPersistentId = 'test-dataset-persistent-id'
@@ -160,6 +163,36 @@ describe('DatasetFiles', () => {
       cy.get('table > tbody > tr:nth-child(2)').should('have.class', styles['selected-row'])
 
       cy.findByText('1 file is currently selected.').should('exist')
+    })
+
+    it('renders the zip download limit message when selecting rows from different pages', () => {
+      const getSettingByName = cy
+        .stub()
+        .resolves(SettingMother.createZipDownloadLimit(new ZipDownloadLimit(1, FileSizeUnit.BYTES)))
+
+      cy.customMount(
+        <SettingsContext.Provider value={{ getSettingByName }}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </SettingsContext.Provider>
+      )
+
+      cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
+      cy.findByRole('button', { name: 'Next' }).click()
+      cy.get('table > tbody > tr:nth-child(3) > td:nth-child(1) > input[type=checkbox]').click()
+
+      cy.findByText(
+        /exceeds the zip limit of 1.0 B. Please unselect some files to continue./
+      ).should('exist')
+
+      cy.get('table > tbody > tr:nth-child(3) > td:nth-child(1) > input[type=checkbox]').click()
+
+      cy.findByText(
+        /exceeds the zip limit of 1.0 B. Please unselect some files to continue./
+      ).should('not.exist')
     })
   })
 
