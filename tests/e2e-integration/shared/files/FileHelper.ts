@@ -78,4 +78,17 @@ export class FileHelper extends DataverseApiHelper {
       true
     )
   }
+
+  static async restrict(id: number) {
+    const newMetadata: { description: string; restrict: string } = {
+      description: 'Test description',
+      restrict: 'true'
+    }
+    return this.request<FileResponse>(
+      `/files/${id}/metadata`,
+      'POST',
+      { jsonData: JSON.stringify(newMetadata) },
+      true
+    )
+  }
 }

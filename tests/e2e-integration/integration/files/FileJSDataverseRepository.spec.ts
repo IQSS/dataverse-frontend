@@ -18,7 +18,11 @@ import {
   DatasetVersion
 } from '../../../../src/dataset/domain/models/Dataset'
 import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePaginationInfo'
-import { FileCriteria, FileSortByOption } from '../../../../src/files/domain/models/FileCriteria'
+import {
+  FileAccessOption,
+  FileCriteria,
+  FileSortByOption
+} from '../../../../src/files/domain/models/FileCriteria'
 import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
 import { FileHelper } from '../../shared/files/FileHelper'
 
@@ -82,7 +86,6 @@ describe('File JSDataverse Repository', () => {
             expect(file.version).to.deep.equal(expectedFile.version)
             expect(file.access).to.deep.equal(expectedFile.access)
             expect(file.type).to.deep.equal(expectedFile.type)
-            expect(file.size).to.deep.equal(expectedFile.size)
             expect(file.date).to.deep.equal(expectedFile.date)
             expect(file.downloadCount).to.deep.equal(expectedFile.downloadCount)
             expect(file.labels).to.deep.equal(expectedFile.labels)
@@ -93,6 +96,22 @@ describe('File JSDataverse Repository', () => {
             expect(file.tabularData).to.deep.equal(expectedFile.tabularData)
             expect(file.description).to.deep.equal(expectedFile.description)
           })
+        })
+    })
+
+    it('gets all the files by dataset persistentId with the correct size', async () => {
+      const expectedSize = new FileSize(25, FileSizeUnit.BYTES)
+      const dataset = await DatasetHelper.createWithFiles([
+        new Blob([new ArrayBuffer(expectedSize.value)], { type: 'text/csv' })
+      ]).then((datasetResponse) =>
+        datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      )
+      if (!dataset) throw new Error('Dataset not found')
+
+      await fileRepository
+        .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((files) => {
+          expect(files[0].size).to.deep.equal(expectedSize)
         })
     })
 
@@ -298,6 +317,89 @@ describe('File JSDataverse Repository', () => {
             const expectedFileNames = ['blob-2', 'blob-1', 'blob']
             expect(file.name).to.deep.equal(expectedFileNames[index])
           })
+        })
+    })
+
+    it('gets all the files by dataset persistentId when passing filterByType criteria', async () => {
+      const dataset = await DatasetHelper.createWithFiles([
+        FileHelper.create('txt'),
+        FileHelper.create('txt'),
+        FileHelper.create('csv')
+      ]).then((datasetResponse) =>
+        datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      )
+      if (!dataset) throw new Error('Dataset not found')
+
+      await fileRepository
+        .getAllByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version,
+          new FilePaginationInfo(),
+          new FileCriteria().withFilterByType('text/tab-separated-values')
+        )
+        .then((files) => {
+          expect(files.length).to.equal(1)
+        })
+    })
+
+    it('gets all the files by dataset persistentId when passing filterByAccess criteria', async () => {
+      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(3))
+      if (!datasetResponse.files) throw new Error('Files not found')
+
+      const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      if (!dataset) throw new Error('Dataset not found')
+
+      await FileHelper.restrict(datasetResponse.files[0].id)
+
+      await fileRepository
+        .getAllByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version,
+          new FilePaginationInfo(),
+          new FileCriteria().withFilterByAccess(FileAccessOption.RESTRICTED)
+        )
+        .then((files) => {
+          expect(files.length).to.equal(1)
+        })
+    })
+
+    it('gets all the files by dataset persistentId when passing filterByTag criteria', async () => {
+      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(3))
+      if (!datasetResponse.files) throw new Error('Files not found')
+
+      const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      if (!dataset) throw new Error('Dataset not found')
+
+      const category = { type: FileLabelType.CATEGORY, value: 'category' }
+      await FileHelper.addLabel(datasetResponse.files[0].id, [category])
+
+      await fileRepository
+        .getAllByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version,
+          new FilePaginationInfo(),
+          new FileCriteria().withFilterByTag(category.value)
+        )
+        .then((files) => {
+          expect(files.length).to.equal(1)
+        })
+    })
+
+    it('gets all the files by dataset persistentId when passing searchText criteria', async () => {
+      const dataset = await DatasetHelper.createWithFiles(FileHelper.createMany(3)).then(
+        (datasetResponse) => datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      )
+      if (!dataset) throw new Error('Dataset not found')
+
+      await fileRepository
+        .getAllByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version,
+          new FilePaginationInfo(),
+          new FileCriteria().withSearchText('blob-1')
+        )
+        .then((files) => {
+          expect(files.length).to.equal(1)
         })
     })
   })
