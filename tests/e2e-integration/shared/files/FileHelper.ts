@@ -6,20 +6,57 @@ interface FileResponse {
   id: number
 }
 
+export interface FileData {
+  file: Blob
+  jsonData: string
+}
+
+interface FileMetadata {
+  description: string
+  restrict?: string
+  categories?: string[]
+  tabIngest?: string
+}
+
 export class FileHelper extends DataverseApiHelper {
-  static createMany(count: number, type: 'csv' | 'txt' = 'txt'): Blob[] {
+  static createManyRestricted(
+    count: number,
+    type: 'csv' | 'txt' = 'txt',
+    fileMetadata: FileMetadata = { description: 'This is an example file' }
+  ): FileData[] {
     const files = []
     for (let i = 0; i < count; i++) {
-      files.push(this.create(type))
+      files.push(this.create(type, { ...fileMetadata, restrict: 'true' }))
     }
     return files
   }
 
-  static create(type: 'csv' | 'txt' = 'txt'): Blob {
-    if (type === 'csv') {
-      return new Blob([this.generateCsvData()], { type: 'text/csv' })
+  static createMany(
+    count: number,
+    type: 'csv' | 'txt' = 'txt',
+    fileMetadata: FileMetadata = { description: 'This is an example file' }
+  ): FileData[] {
+    const files = []
+    for (let i = 0; i < count; i++) {
+      files.push(this.create(type, fileMetadata))
     }
-    return new Blob([this.generateTxtData()], { type: 'text/plain' })
+    return files
+  }
+
+  static create(
+    type: 'csv' | 'txt' = 'txt',
+    fileMetadata: FileMetadata = { description: 'This is an example file' }
+  ): FileData {
+    let fileBinary = new Blob([this.generateTxtData()], { type: 'text/plain' })
+
+    if (type === 'csv') {
+      fileBinary = new Blob([this.generateCsvData()], { type: 'text/csv' })
+    }
+
+    return {
+      file: fileBinary,
+      jsonData: JSON.stringify(fileMetadata)
+    }
   }
 
   static generateCsvData(): string {

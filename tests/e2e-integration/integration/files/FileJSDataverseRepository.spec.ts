@@ -24,7 +24,7 @@ import {
   FileSortByOption
 } from '../../../../src/files/domain/models/FileCriteria'
 import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
-import { FileHelper } from '../../shared/files/FileHelper'
+import { FileData, FileHelper } from '../../shared/files/FileHelper'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -101,9 +101,11 @@ describe('File JSDataverse Repository', () => {
 
     it('gets all the files by dataset persistentId with the correct size', async () => {
       const expectedSize = new FileSize(25, FileSizeUnit.BYTES)
-      const dataset = await DatasetHelper.createWithFiles([
-        new Blob([new ArrayBuffer(expectedSize.value)], { type: 'text/csv' })
-      ]).then((datasetResponse) =>
+      const fileData: FileData = {
+        file: new Blob([new ArrayBuffer(expectedSize.value)], { type: 'text/csv' }),
+        jsonData: JSON.stringify({ description: 'This is an example file' })
+      }
+      const dataset = await DatasetHelper.createWithFiles([fileData]).then((datasetResponse) =>
         datasetRepository.getByPersistentId(datasetResponse.persistentId)
       )
       if (!dataset) throw new Error('Dataset not found')
@@ -385,7 +387,7 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    it.only('gets all the files by dataset persistentId when passing searchText criteria', async () => {
+    it('gets all the files by dataset persistentId when passing searchText criteria', async () => {
       const dataset = await DatasetHelper.createWithFiles(FileHelper.createMany(3)).then(
         (datasetResponse) => datasetRepository.getByPersistentId(datasetResponse.persistentId)
       )

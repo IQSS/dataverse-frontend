@@ -1,6 +1,6 @@
 import newDatasetData from '../../fixtures/dataset-finch1.json'
 import { DataverseApiHelper } from '../DataverseApiHelper'
-import { forEach } from 'react-bootstrap/ElementChildren'
+import { FileData } from '../files/FileHelper'
 
 export interface DatasetResponse {
   persistentId: string
@@ -56,30 +56,10 @@ export class DatasetHelper extends DataverseApiHelper {
     )
   }
 
-  static async createWithFiles(
-    filesBinary: Blob[],
-    filesMetadata?: { [key: string]: string }
-  ): Promise<DatasetResponse> {
+  static async createWithFiles(filesData: FileData[]): Promise<DatasetResponse> {
     const datasetResponse = await this.create()
-    const files = await this.uploadFiles(datasetResponse.persistentId, filesBinary, filesMetadata)
+    const files = await this.uploadFiles(datasetResponse.persistentId, filesData)
     return { ...datasetResponse, files: files }
-  }
-
-  static async createWithFilesRestricted(filesBinary: Blob[]): Promise<DatasetResponse> {
-    const datasetResponse = await this.createWithFiles(filesBinary, {
-      description: 'This is an example file',
-      restrict: 'true'
-    })
-    return datasetResponse
-  }
-
-  static async createWithFilesEmbargoed(filesBinary: Blob[]): Promise<DatasetResponse> {
-    const datasetResponse = await this.createWithFiles(filesBinary, {
-      description: 'This is an example file',
-      restrict: 'true',
-      embargoDate: '2021-01-01'
-    })
-    return datasetResponse
   }
 
   static async embargoFiles(
@@ -97,13 +77,12 @@ export class DatasetHelper extends DataverseApiHelper {
 
   private static async uploadFiles(
     datasetPersistentId: string,
-    filesBinary: Blob[],
-    filesMetadata: { [key: string]: string } = { description: 'This is an example file' }
+    filesData: FileData[]
   ): Promise<DatasetFileResponse[]> {
     // TODO - Instead of uploading the files one by one, upload them all at once - do this refactor when integrating the pagination
     const files = []
-    for (const fileBinary of filesBinary) {
-      const file = await this.uploadFile(datasetPersistentId, fileBinary, filesMetadata)
+    for (const fileData of filesData) {
+      const file = await this.uploadFile(datasetPersistentId, fileData)
       files.push(file)
     }
     return files
@@ -111,17 +90,12 @@ export class DatasetHelper extends DataverseApiHelper {
 
   private static async uploadFile(
     datasetPersistentId: string,
-    fileBinary: Blob,
-    filesMetadata: { [key: string]: string } = { description: 'This is an example file' }
+    fileData: FileData
   ): Promise<DatasetFileResponse> {
-    const data = {
-      file: fileBinary,
-      jsonData: JSON.stringify(filesMetadata)
-    }
     const { files } = await this.request<{ files: [{ dataFile: { id: number } }] }>(
       `/datasets/:persistentId/add?persistentId=${datasetPersistentId}`,
       'POST',
-      data,
+      fileData,
       true
     )
 

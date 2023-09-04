@@ -218,7 +218,7 @@ describe('Dataset', () => {
     })
 
     it('loads the restricted files when the user is logged in as owner', () => {
-      cy.wrap(DatasetHelper.createWithFilesRestricted(FileHelper.createMany(1)))
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createManyRestricted(1)))
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
@@ -238,7 +238,7 @@ describe('Dataset', () => {
 
     it('loads the restricted files when the user is not logged in as owner', () => {
       cy.wrap(
-        DatasetHelper.createWithFilesRestricted(FileHelper.createMany(1)).then((dataset) =>
+        DatasetHelper.createWithFiles(FileHelper.createManyRestricted(1)).then((dataset) =>
           DatasetHelper.publish(dataset.persistentId)
         )
       )
@@ -272,6 +272,8 @@ describe('Dataset', () => {
       )
         .its('persistentId')
         .then((persistentId: string) => {
+          cy.wait(1500) // Wait for the files to be embargoed
+
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
           cy.findByText('Files').should('exist')
@@ -281,6 +283,108 @@ describe('Dataset', () => {
 
           cy.findByRole('button', { name: 'Access File' }).should('exist').click()
           cy.findByText('Embargoed').should('exist')
+        })
+    })
+
+    it.skip('applies filters to the Files Table in the correct order', () => {
+      // TODO - Integrate fileCountInfo
+      const files = [
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('csv', {
+          description: 'Some description',
+          restrict: 'true',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true'
+        }),
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true',
+          tabIngest: 'false'
+        })
+      ]
+      cy.wrap(DatasetHelper.createWithFiles(files))
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+
+          cy.findByText('Files').should('exist')
+
+          cy.findByText('blob').should('exist')
+          cy.findByText('blob-1').should('exist')
+          cy.findByText('blob-2').should('exist')
+          cy.findByText('blob-3').should('exist')
+          cy.findByText('blob-4').should('exist')
+          cy.findByText('blob-5').should('exist')
+
+          cy.findByLabelText('Search').type('blob-{enter}', { force: true })
+
+          cy.findByText('blob').should('not.exist')
+          cy.findByText('blob-1').should('exist')
+          cy.findByText('blob-2').should('exist')
+          cy.findByText('blob-3').should('exist')
+          cy.findByText('blob-4').should('exist')
+          cy.findByText('blob-5').should('exist')
+
+          cy.findByRole('button', { name: 'Filter Tag: All' }).click({ force: true })
+          cy.findByText('category').should('exist').click({ force: true })
+
+          cy.findByText('blob').should('not.exist')
+          cy.findByText('blob-1').should('not.exist')
+          cy.findByText('blob-2').should('exist')
+          cy.findByText('blob-3').should('exist')
+          cy.findByText('blob-4').should('exist')
+          cy.findByText('blob-5').should('exist')
+
+          cy.findByRole('button', { name: 'Access: All' }).click()
+          cy.findByText('Restricted').should('exist').click()
+
+          cy.findByText('blob').should('not.exist')
+          cy.findByText('blob-1').should('not.exist')
+          cy.findByText('blob-2').should('not.exist')
+          cy.findByText('blob-3').should('exist')
+          cy.findByText('blob-4').should('exist')
+          cy.findByText('blob-5').should('exist')
+
+          cy.findByRole('button', { name: 'Filter Type: All' }).click()
+          cy.findByText('text/csv').should('exist').click()
+
+          cy.findByText('blob').should('not.exist')
+          cy.findByText('blob-1').should('not.exist')
+          cy.findByText('blob-2').should('not.exist')
+          cy.findByText('blob-3').should('not.exist')
+          cy.findByText('blob-4').should('exist')
+          cy.findByText('blob-5').should('exist')
+
+          cy.findByRole('button', { name: /Sort/ }).click()
+          cy.findByText('Name (Z-A)').should('exist').click()
+
+          cy.findByText('blob').should('not.exist')
+          cy.findByText('blob-1').should('not.exist')
+          cy.findByText('blob-2').should('not.exist')
+          cy.findByText('blob-3').should('not.exist')
+          cy.get('table > tbody > tr').eq(0).should('contain', 'blob-5')
+          cy.get('table > tbody > tr').eq(1).should('contain', 'blob-4')
         })
     })
   })
