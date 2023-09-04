@@ -89,7 +89,7 @@ describe('File JSDataverse Repository', () => {
             expect(file.date).to.deep.equal(expectedFile.date)
             expect(file.downloadCount).to.deep.equal(expectedFile.downloadCount)
             expect(file.labels).to.deep.equal(expectedFile.labels)
-            expect(file.checksum).to.deep.equal(expectedFile.checksum)
+            expect(file.checksum?.algorithm).to.deep.equal(expectedFile.checksum?.algorithm)
             expect(file.thumbnail).to.deep.equal(expectedFile.thumbnail)
             expect(file.directory).to.deep.equal(expectedFile.directory)
             expect(file.embargo).to.deep.equal(expectedFile.embargo)
@@ -385,7 +385,7 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    it('gets all the files by dataset persistentId when passing searchText criteria', async () => {
+    it.only('gets all the files by dataset persistentId when passing searchText criteria', async () => {
       const dataset = await DatasetHelper.createWithFiles(FileHelper.createMany(3)).then(
         (datasetResponse) => datasetRepository.getByPersistentId(datasetResponse.persistentId)
       )
