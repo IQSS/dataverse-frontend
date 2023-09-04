@@ -44,6 +44,8 @@ describe('FilesTable', () => {
         <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
       )
 
+      cy.wait(1000) // wait for the table to load
+
       cy.get('table > thead > tr > th > input[type=checkbox]').click()
 
       cy.findByText('200 files are currently selected.').should('exist')
@@ -55,6 +57,8 @@ describe('FilesTable', () => {
       cy.customMount(
         <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
       )
+
+      cy.wait(1000) // wait for the table to load
 
       cy.get('table > thead > tr > th > input[type=checkbox]').click()
 
