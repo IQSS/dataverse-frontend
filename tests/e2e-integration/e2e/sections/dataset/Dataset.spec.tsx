@@ -1,6 +1,7 @@
 import { DatasetLabelValue } from '../../../../../src/dataset/domain/models/Dataset'
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
+import { FileHelper } from '../../../shared/files/FileHelper'
 
 type Dataset = {
   datasetVersion: { metadataBlocks: { citation: { fields: { value: string }[] } } }
@@ -144,7 +145,7 @@ describe('Dataset', () => {
     })
 
     it('successfully loads the files tab with files', () => {
-      cy.wrap(DatasetHelper.createWithFiles(3))
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(3)))
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
@@ -160,7 +161,7 @@ describe('Dataset', () => {
 
     it.skip('navigates to the next page of files', () => {
       // TODO - Connect files count implementation to the pagination
-      cy.wrap(DatasetHelper.createWithFiles(20), { timeout: 10000 })
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(20)), { timeout: 10000 })
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
@@ -180,7 +181,7 @@ describe('Dataset', () => {
     })
 
     it('successfully loads the action buttons when the user is logged in as owner', () => {
-      cy.wrap(DatasetHelper.createWithFiles(3))
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(3)))
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
@@ -196,7 +197,7 @@ describe('Dataset', () => {
 
     it('does not load the action buttons when the user is not logged in as owner', () => {
       cy.wrap(
-        DatasetHelper.createWithFiles(3).then((dataset) =>
+        DatasetHelper.createWithFiles(FileHelper.createMany(3)).then((dataset) =>
           DatasetHelper.publish(dataset.persistentId)
         )
       )
@@ -217,7 +218,7 @@ describe('Dataset', () => {
     })
 
     it('loads the restricted files when the user is logged in as owner', () => {
-      cy.wrap(DatasetHelper.createWithFilesRestricted(1))
+      cy.wrap(DatasetHelper.createWithFilesRestricted(FileHelper.createMany(1)))
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
@@ -237,7 +238,7 @@ describe('Dataset', () => {
 
     it('loads the restricted files when the user is not logged in as owner', () => {
       cy.wrap(
-        DatasetHelper.createWithFilesRestricted(1).then((dataset) =>
+        DatasetHelper.createWithFilesRestricted(FileHelper.createMany(1)).then((dataset) =>
           DatasetHelper.publish(dataset.persistentId)
         )
       )
@@ -261,7 +262,7 @@ describe('Dataset', () => {
 
     it('loads the embargoed files', () => {
       cy.wrap(
-        DatasetHelper.createWithFiles(1).then((dataset) =>
+        DatasetHelper.createWithFiles(FileHelper.createMany(1)).then((dataset) =>
           DatasetHelper.embargoFiles(
             dataset.persistentId,
             [dataset.files ? dataset.files[0].id : 0],
