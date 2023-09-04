@@ -8,6 +8,10 @@ import {
 } from '@tanstack/react-table'
 import { columns } from './FilesTableColumnsDefinition'
 
+export interface RowSelection {
+  [key: string]: boolean
+}
+
 export function useFilesTable(files: File[]) {
   const [rowSelection, setRowSelection] = useState({})
 
@@ -25,5 +29,15 @@ export function useFilesTable(files: File[]) {
     debugTable: true
   })
 
-  return { table }
+  return { table, rowSelection, setRowSelection }
+}
+
+export function createRowSelection(numberOfRows: number) {
+  const rowSelection: Record<string, boolean> = {}
+
+  for (let i = 0; i < numberOfRows; i++) {
+    rowSelection[i as unknown as string] = true
+  }
+
+  return rowSelection
 }
