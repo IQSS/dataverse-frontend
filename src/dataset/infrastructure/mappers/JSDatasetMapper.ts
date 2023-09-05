@@ -148,7 +148,7 @@ export class JSDatasetMapper {
       extraFields.publicationDate = publicationDate
     }
 
-    if (publicationDate && citationDate !== publicationDate) {
+    if (citationDate && citationDate !== publicationDate) {
       extraFields.citationDate = citationDate
     }
 
