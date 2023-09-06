@@ -63,7 +63,7 @@ export class FileJSDataverseRepository implements FileRepository {
     return Promise.resolve(0)
   }
 
-  getCountInfoByDatasetPersistentId(
+  getFilesCountInfoByDatasetPersistentId(
     // eslint-disable-next-line unused-imports/no-unused-vars
     datasetPersistentId: string,
     // eslint-disable-next-line unused-imports/no-unused-vars
@@ -77,7 +77,7 @@ export class FileJSDataverseRepository implements FileRepository {
     })
   }
 
-  getFileUserPermissionsById(id: number): Promise<FileUserPermissions> {
+  getUserPermissionsById(id: number): Promise<FileUserPermissions> {
     return getFileUserPermissions
       .execute(id)
       .then((jsFileUserPermissions) =>

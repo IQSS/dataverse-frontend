@@ -69,7 +69,7 @@ describe('RequestAccessOption', () => {
   it('does not render the request access button when the file status is public', () => {
     const filePublic = FileMother.createWithPublicAccess()
     const fileRepository: FileRepository = {} as FileRepository
-    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+    fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
         fileId: filePublic.id,
         canDownloadFile: true
@@ -96,7 +96,7 @@ describe('RequestAccessOption', () => {
   it('does not render the request access button when the file status is restricted with access granted', () => {
     const fileRestrictedWithAccess = FileMother.createWithRestrictedAccessWithAccessGranted()
     const fileRepository: FileRepository = {} as FileRepository
-    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+    fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
         fileId: fileRestrictedWithAccess.id,
         canDownloadFile: true

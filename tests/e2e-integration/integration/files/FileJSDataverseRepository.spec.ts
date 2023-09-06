@@ -420,7 +420,7 @@ describe('File JSDataverse Repository', () => {
       }
 
       await fileRepository
-        .getFileUserPermissionsById(datasetResponse.files[0].id)
+        .getUserPermissionsById(datasetResponse.files[0].id)
         .then((fileUserPermissions) => {
           expect(fileUserPermissions).to.deep.equal(expectedFileUserPermissions)
         })
@@ -502,7 +502,7 @@ describe('File JSDataverse Repository', () => {
       }
 
       await fileRepository
-        .getCountInfoByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .getFilesCountInfoByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((filesCountInfo) => {
           expect(filesCountInfo).to.deep.equal(expectedFilesCountInfo)
         })

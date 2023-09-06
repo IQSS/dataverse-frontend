@@ -8,7 +8,7 @@ const fileRepository: FileRepository = {} as FileRepository
 describe('FileThumbnail', () => {
   it('renders FileThumbnailPreviewImage when thumbnail is provided and file can be downloaded', () => {
     const file = FileMother.createWithThumbnail()
-    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+    fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
         fileId: file.id,
         canDownloadFile: true
@@ -40,7 +40,7 @@ describe('FileThumbnail', () => {
 
   it('renders FileThumbnailPreviewImage when thumbnail is provided with unlocked icon if restricted with access', () => {
     const file = FileMother.createWithThumbnailRestrictedWithAccessGranted()
-    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+    fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
         fileId: file.id,
         canDownloadFile: true
@@ -101,7 +101,7 @@ describe('FileThumbnail', () => {
 
   it('renders FileThumbnailIcon when thumbnail is not provided with unlock icon when restricted with access', () => {
     const file = FileMother.createWithRestrictedAccessWithAccessGranted()
-    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+    fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
         fileId: file.id,
         canDownloadFile: true
