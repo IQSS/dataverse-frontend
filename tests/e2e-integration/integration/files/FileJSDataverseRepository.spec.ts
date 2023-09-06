@@ -21,10 +21,12 @@ import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePagi
 import {
   FileAccessOption,
   FileCriteria,
-  FileSortByOption
+  FileSortByOption,
+  FileTag
 } from '../../../../src/files/domain/models/FileCriteria'
 import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
 import { FileData, FileHelper } from '../../shared/files/FileHelper'
+import { FilesCountInfo } from '../../../../src/files/domain/models/FilesCountInfo'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -421,6 +423,88 @@ describe('File JSDataverse Repository', () => {
         .getFileUserPermissionsById(datasetResponse.files[0].id)
         .then((fileUserPermissions) => {
           expect(fileUserPermissions).to.deep.equal(expectedFileUserPermissions)
+        })
+    })
+  })
+
+  describe('Get FilesCountInfo by dataset persistentId', () => {
+    it('gets FilesCountInfo by dataset persistentId', async () => {
+      const files = [
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          categories: ['category_1']
+        }),
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category_1'],
+          restrict: 'true',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true',
+          tabIngest: 'false'
+        })
+      ]
+      const dataset = await DatasetHelper.createWithFiles(files).then((datasetResponse) =>
+        datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      )
+      if (!dataset) throw new Error('Dataset not found')
+
+      const expectedFilesCountInfo: FilesCountInfo = {
+        total: 6,
+        perAccess: [
+          {
+            access: FileAccessOption.RESTRICTED,
+            count: 3
+          },
+          {
+            access: FileAccessOption.PUBLIC,
+            count: 3
+          }
+        ],
+        perFileType: [
+          {
+            type: new FileType('csv'),
+            count: 3
+          },
+          {
+            type: new FileType('txt'),
+            count: 3
+          }
+        ],
+        perFileTag: [
+          {
+            tag: new FileTag('category'),
+            count: 3
+          },
+          {
+            tag: new FileTag('category_1'),
+            count: 2
+          }
+        ]
+      }
+
+      await fileRepository
+        .getCountInfoByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((filesCountInfo) => {
+          expect(filesCountInfo).to.deep.equal(expectedFilesCountInfo)
         })
     })
   })
