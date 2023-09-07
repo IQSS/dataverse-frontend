@@ -1,8 +1,9 @@
 import { Button, Form } from '@iqss/dataverse-design-system'
 import { Search } from 'react-bootstrap-icons'
 import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
-import { ChangeEvent, useState, KeyboardEvent } from 'react'
+import { ChangeEvent, useState, KeyboardEvent, MouseEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import SubmitEvent = JQuery.SubmitEvent
 
 interface FileCriteriaSearchTextProps {
   criteria: FileCriteria
@@ -18,14 +19,18 @@ export function FileCriteriaSearchText({
     const updatedSearchText = event.target.value
     setSearchText(updatedSearchText)
   }
-  const handleSubmitSearch = () => {
-    onCriteriaChange(criteria.withSearchText(searchText))
+  const handleButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    handleSubmitSearch()
   }
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault()
       handleSubmitSearch()
     }
+  }
+  const handleSubmitSearch = () => {
+    onCriteriaChange(criteria.withSearchText(searchText))
   }
 
   return (
@@ -43,7 +48,7 @@ export function FileCriteriaSearchText({
           variant="secondary"
           icon={<Search />}
           aria-label={t('criteria.searchText.submit')}
-          onClick={handleSubmitSearch}
+          onClick={handleButtonClick}
         />
       </Form.InputGroup>
     </Form.Group>

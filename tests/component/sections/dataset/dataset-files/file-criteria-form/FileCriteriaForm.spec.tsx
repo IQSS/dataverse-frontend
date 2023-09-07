@@ -259,4 +259,27 @@ describe('FileCriteriaForm', () => {
 
     cy.findByRole('button', { name: 'Upload Files' }).should('exist')
   })
+
+  it('does not reload the page when the search button is clicked', () => {
+    const onCriteriaChange = cy.stub().as('onCriteriaChange')
+    const criteria = new FileCriteria()
+      .withFilterByTag('document')
+      .withFilterByAccess(FileAccessOption.PUBLIC)
+      .withFilterByType('image')
+
+    cy.customMount(
+      <FileCriteriaForm
+        criteria={criteria}
+        onCriteriaChange={onCriteriaChange}
+        filesCountInfo={filesCountInfo}
+      />
+    )
+
+    cy.findByLabelText('Search').type('test')
+    cy.findByRole('button', { name: 'Submit search' }).click()
+
+    cy.wrap(onCriteriaChange).should('be.calledWith', criteria.withSearchText('test'))
+
+    cy.findByLabelText('Search').should('have.value', 'test')
+  })
 })

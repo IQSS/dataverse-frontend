@@ -338,6 +338,7 @@ describe('Dataset', () => {
 
           cy.findByText('Files').should('exist')
 
+          cy.findByText('1 to 6 of 6 Files').should('exist')
           cy.findByText('blob').should('exist')
           cy.findByText('blob-1').should('exist')
           cy.findByText('blob-2').should('exist')
@@ -347,6 +348,7 @@ describe('Dataset', () => {
 
           cy.findByLabelText('Search').type('blob-{enter}', { force: true })
 
+          cy.findByText('1 to 5 of 5 Files').should('exist')
           cy.findByText('blob').should('not.exist')
           cy.findByText('blob-1').should('exist')
           cy.findByText('blob-2').should('exist')
@@ -357,6 +359,7 @@ describe('Dataset', () => {
           cy.findByRole('button', { name: 'Filter Tag: All' }).click({ force: true })
           cy.findByText('Category (4)').should('exist').click({ force: true })
 
+          cy.findByText('1 to 4 of 4 Files').should('exist')
           cy.findByText('blob').should('not.exist')
           cy.findByText('blob-1').should('not.exist')
           cy.findByText('blob-2').should('exist')
@@ -367,6 +370,7 @@ describe('Dataset', () => {
           cy.findByRole('button', { name: 'Access: All' }).click({ force: true })
           cy.findByText('Restricted (3)').should('exist').click({ force: true })
 
+          cy.findByText('1 to 3 of 3 Files').should('exist')
           cy.findByText('blob').should('not.exist')
           cy.findByText('blob-1').should('not.exist')
           cy.findByText('blob-2').should('not.exist')
@@ -377,6 +381,7 @@ describe('Dataset', () => {
           cy.findByRole('button', { name: 'Filter Type: All' }).click({ force: true })
           cy.findByText('Text/csv (2)').should('exist').click({ force: true })
 
+          cy.findByText('1 to 2 of 2 Files').should('exist')
           cy.findByText('blob').should('not.exist')
           cy.findByText('blob-1').should('not.exist')
           cy.findByText('blob-2').should('not.exist')
