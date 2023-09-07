@@ -5,9 +5,11 @@ import { FileInfoCell } from './file-info/file-info-cell/FileInfoCell'
 import { FileInfoHeader } from './file-info/FileInfoHeader'
 import { FileActionsHeader } from './file-actions/FileActionsHeader'
 import { FileActionsCell } from './file-actions/file-actions-cell/FileActionsCell'
+import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
 
 export const createColumnsDefinition = (
-  toggleAllRowsSelected: (event: unknown) => void
+  toggleAllRowsSelected: (event: unknown) => void,
+  paginationInfo: FilePaginationInfo
 ): ColumnDef<File>[] => [
   {
     id: 'select',
@@ -33,13 +35,7 @@ export const createColumnsDefinition = (
     )
   },
   {
-    header: ({ table }) => (
-      <FileInfoHeader
-        pageCount={table.getPageCount()}
-        pageSize={table.getState().pagination.pageSize}
-        pageIndex={table.getState().pagination.pageIndex}
-      />
-    ),
+    header: ({ table }) => <FileInfoHeader paginationInfo={paginationInfo} />,
     accessorKey: 'info',
     cell: (props) => <FileInfoCell file={props.row.original} />
   },

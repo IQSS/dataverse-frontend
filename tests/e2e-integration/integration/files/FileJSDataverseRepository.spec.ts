@@ -471,32 +471,32 @@ describe('File JSDataverse Repository', () => {
         total: 6,
         perAccess: [
           {
-            access: FileAccessOption.RESTRICTED,
+            access: FileAccessOption.PUBLIC,
             count: 3
           },
           {
-            access: FileAccessOption.PUBLIC,
+            access: FileAccessOption.RESTRICTED,
             count: 3
           }
         ],
         perFileType: [
           {
-            type: new FileType('csv'),
+            type: new FileType('text/csv'),
             count: 3
           },
           {
-            type: new FileType('txt'),
+            type: new FileType('text/plain'),
             count: 3
           }
         ],
         perFileTag: [
           {
-            tag: new FileTag('category'),
-            count: 3
-          },
-          {
             tag: new FileTag('category_1'),
             count: 2
+          },
+          {
+            tag: new FileTag('category'),
+            count: 3
           }
         ]
       }

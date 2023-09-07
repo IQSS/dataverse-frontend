@@ -16,10 +16,22 @@ import {
 import {
   File as JSFile,
   FileEmbargo as JSFileEmbargo,
-  FileChecksum as JSFileChecksum
+  FileChecksum as JSFileChecksum,
+  FileCounts as JSFilesCountInfo,
+  FileContentTypeCount as JSFileContentTypeCount,
+  FileCategoryNameCount as JSFileCategoryNameCount,
+  FileAccessStatusCount as JSFileAccessStatusCount,
+  FileAccessStatus as JSFileAccessStatus
 } from '@iqss/dataverse-client-javascript'
 import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FileUserPermissions } from '../../domain/models/FileUserPermissions'
+import {
+  FileAccessCount,
+  FilesCountInfo,
+  FileTagCount,
+  FileTypeCount
+} from '../../domain/models/FilesCountInfo'
+import { FileAccessOption, FileTag } from '../../domain/models/FileCriteria'
 
 export class JSFileMapper {
   static toFile(jsFile: JSFile, datasetVersion: DatasetVersion): File {
@@ -134,7 +146,6 @@ export class JSFileMapper {
       })
     }
 
-    // TODO - Add custom labels when they are added to js-dataverse
     return fileLabels
   }
 
@@ -166,5 +177,54 @@ export class JSFileMapper {
 
   static toFileDescription(jsFileDescription?: string): string | undefined {
     return jsFileDescription
+  }
+
+  static toFilesCountInfo(jsFilesCountInfo: JSFilesCountInfo): FilesCountInfo {
+    return {
+      total: jsFilesCountInfo.total,
+      perFileType: jsFilesCountInfo.perContentType.map((jsFileContentTypeCount) =>
+        JSFileMapper.toFileTypeCount(jsFileContentTypeCount)
+      ),
+      perFileTag: jsFilesCountInfo.perCategoryName.map((jsFileCategoryNameCount) =>
+        JSFileMapper.toFileTagCount(jsFileCategoryNameCount)
+      ),
+      perAccess: jsFilesCountInfo.perAccessStatus.map((jsFileAccessStatusCount) =>
+        JSFileMapper.toFileAccessCount(jsFileAccessStatusCount)
+      )
+    }
+  }
+
+  static toFileTypeCount(jsFileContentTypeCount: JSFileContentTypeCount): FileTypeCount {
+    return {
+      type: new FileType(jsFileContentTypeCount.contentType),
+      count: jsFileContentTypeCount.count
+    }
+  }
+
+  static toFileTagCount(jsFileCategoryNameCount: JSFileCategoryNameCount): FileTagCount {
+    return {
+      tag: new FileTag(jsFileCategoryNameCount.categoryName),
+      count: jsFileCategoryNameCount.count
+    }
+  }
+
+  static toFileAccessCount(jsFileAccessStatusCount: JSFileAccessStatusCount): FileAccessCount {
+    return {
+      access: JSFileMapper.toFileAccessOption(jsFileAccessStatusCount.accessStatus),
+      count: jsFileAccessStatusCount.count
+    }
+  }
+
+  static toFileAccessOption(jsFileAccessStatus: JSFileAccessStatus): FileAccessOption {
+    switch (jsFileAccessStatus) {
+      case JSFileAccessStatus.RESTRICTED:
+        return FileAccessOption.RESTRICTED
+      case JSFileAccessStatus.PUBLIC:
+        return FileAccessOption.PUBLIC
+      case JSFileAccessStatus.EMBARGOED:
+        return FileAccessOption.EMBARGOED
+      case JSFileAccessStatus.EMBARGOED_RESTRICTED:
+        return FileAccessOption.EMBARGOED_RESTRICTED
+    }
   }
 }

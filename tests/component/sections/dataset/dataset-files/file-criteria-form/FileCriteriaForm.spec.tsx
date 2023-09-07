@@ -2,6 +2,7 @@ import { FileCriteriaForm } from '../../../../../../src/sections/dataset/dataset
 import {
   FileAccessOption,
   FileCriteria,
+  FileSortByOption,
   FileTag
 } from '../../../../../../src/files/domain/models/FileCriteria'
 import { FilesCountInfoMother } from '../../../../files/domain/models/FilesCountInfoMother'
@@ -104,10 +105,12 @@ describe('FileCriteriaForm', () => {
   })
 
   it('saves global criteria when the sort by option changes', () => {
+    const onCriteriaChange = cy.stub().as('onCriteriaChange')
     const criteria = new FileCriteria()
       .withFilterByTag('document')
       .withFilterByAccess(FileAccessOption.PUBLIC)
       .withFilterByType('image')
+      .withSearchText('search text')
 
     cy.customMount(
       <FileCriteriaForm
@@ -120,16 +123,21 @@ describe('FileCriteriaForm', () => {
     cy.findByRole('button', { name: /Sort/ }).click()
     cy.findByText('Oldest').click()
 
+    cy.wrap(onCriteriaChange).should('be.calledWith', criteria.withSortBy(FileSortByOption.OLDEST))
+
     cy.findByRole('button', { name: 'Filter Type: Image' }).should('exist')
     cy.findByRole('button', { name: 'Access: Public' }).should('exist')
     cy.findByRole('button', { name: 'Filter Tag: Document' }).should('exist')
+    cy.findByLabelText('Search').should('have.value', 'search text')
   })
 
   it('saves global criteria when the filter by type option changes', () => {
+    const onCriteriaChange = cy.stub().as('onCriteriaChange')
     const criteria = new FileCriteria()
       .withFilterByTag('document')
       .withFilterByAccess(FileAccessOption.PUBLIC)
       .withFilterByType('image')
+      .withSearchText('search text')
 
     cy.customMount(
       <FileCriteriaForm
@@ -142,16 +150,21 @@ describe('FileCriteriaForm', () => {
     cy.findByRole('button', { name: 'Filter Type: Image' }).click()
     cy.findByText('Text (10)').click()
 
+    cy.wrap(onCriteriaChange).should('be.calledWith', criteria.withFilterByType('text'))
+
     cy.findByRole('button', { name: 'Filter Type: Text' }).should('exist')
     cy.findByRole('button', { name: 'Access: Public' }).should('exist')
     cy.findByRole('button', { name: 'Filter Tag: Document' }).should('exist')
+    cy.findByLabelText('Search').should('have.value', 'search text')
   })
 
   it('saves global criteria when the filter by access option changes', () => {
+    const onCriteriaChange = cy.stub().as('onCriteriaChange')
     const criteria = new FileCriteria()
       .withFilterByTag('document')
       .withFilterByAccess(FileAccessOption.PUBLIC)
       .withFilterByType('image')
+      .withSearchText('search text')
 
     cy.customMount(
       <FileCriteriaForm
@@ -164,16 +177,24 @@ describe('FileCriteriaForm', () => {
     cy.findByRole('button', { name: 'Access: Public' }).click()
     cy.findByText('Restricted (10)').click()
 
+    cy.wrap(onCriteriaChange).should(
+      'be.calledWith',
+      criteria.withFilterByAccess(FileAccessOption.RESTRICTED)
+    )
+
     cy.findByRole('button', { name: 'Filter Type: Image' }).should('exist')
     cy.findByRole('button', { name: 'Access: Restricted' }).should('exist')
     cy.findByRole('button', { name: 'Filter Tag: Document' }).should('exist')
+    cy.findByLabelText('Search').should('have.value', 'search text')
   })
 
   it('saves global criteria when the filter by tag option changes', () => {
+    const onCriteriaChange = cy.stub().as('onCriteriaChange')
     const criteria = new FileCriteria()
       .withFilterByTag('document')
       .withFilterByAccess(FileAccessOption.PUBLIC)
       .withFilterByType('image')
+      .withSearchText('search text')
 
     cy.customMount(
       <FileCriteriaForm
@@ -186,17 +207,21 @@ describe('FileCriteriaForm', () => {
     cy.findByRole('button', { name: 'Filter Tag: Document' }).click()
     cy.findByText('Data (10)').click()
 
+    cy.wrap(onCriteriaChange).should('be.calledWith', criteria.withFilterByTag('data'))
+
     cy.findByRole('button', { name: 'Filter Type: Image' }).should('exist')
     cy.findByRole('button', { name: 'Access: Public' }).should('exist')
     cy.findByRole('button', { name: 'Filter Tag: Data' }).should('exist')
+    cy.findByLabelText('Search').should('have.value', 'search text')
   })
 
   it('saves global criteria when the search input changes', () => {
+    const onCriteriaChange = cy.stub().as('onCriteriaChange')
     const criteria = new FileCriteria()
       .withFilterByTag('document')
       .withFilterByAccess(FileAccessOption.PUBLIC)
       .withFilterByType('image')
-      .withSearchText('search')
+      .withSearchText('search text')
 
     cy.customMount(
       <FileCriteriaForm
@@ -206,7 +231,9 @@ describe('FileCriteriaForm', () => {
       />
     )
 
-    cy.findByLabelText('Search').clear().type('new search')
+    cy.findByLabelText('Search').clear().type('new search{enter}')
+
+    cy.wrap(onCriteriaChange).should('be.calledWith', criteria.withSearchText('new search'))
 
     cy.findByRole('button', { name: 'Filter Type: Image' }).should('exist')
     cy.findByRole('button', { name: 'Access: Public' }).should('exist')
