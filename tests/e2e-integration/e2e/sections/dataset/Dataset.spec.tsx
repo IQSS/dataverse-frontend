@@ -295,7 +295,7 @@ describe('Dataset', () => {
     })
 
     it.skip('applies filters to the Files Table in the correct order', () => {
-      // TODO - Restore this test once fileCountsInfo use case takes into account the filtered search
+      // TODO - Restore this test once fileCountsInfo use case takes into account the filtered results https://github.com/IQSS/dataverse-frontend/issues/172
       const files = [
         FileHelper.create('csv', {
           description: 'Some description',
