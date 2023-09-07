@@ -1,5 +1,7 @@
 FROM node:19.6.1-alpine as BUILD_IMAGE
 
+RUN apk --no-cache add python3 make g++
+
 WORKDIR /usr/src/app/packages/design-system
 COPY ./packages/design-system ./
 RUN npm install
@@ -9,8 +11,7 @@ WORKDIR /usr/src/app
 COPY package.json ./
 COPY package-lock.json ./
 COPY .npmrc ./
-RUN npm uninstall --save-dev lerna
-RUN npm install
+RUN npm ci
 
 FROM node:19.6.1-alpine 
 
