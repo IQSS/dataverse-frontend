@@ -29,8 +29,6 @@ export function DatasetFiles({
     criteria
   )
 
-  console.log('criteria', criteria)
-
   return (
     <>
       <FileCriteriaForm
