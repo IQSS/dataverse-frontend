@@ -1,3 +1,5 @@
+import exp from 'constants'
+
 export enum DatasetLabelSemanticMeaning {
   DATASET = 'dataset',
   FILE = 'file',
@@ -217,6 +219,11 @@ export class DatasetVersion {
   }
 }
 
+export interface DatasetPermissions {
+  canDownloadFiles: boolean
+  canUpdateDataset: boolean
+}
+
 export class Dataset {
   constructor(
     public readonly persistentId: string,
@@ -225,7 +232,8 @@ export class Dataset {
     public readonly labels: DatasetLabel[],
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
-    public readonly metadataBlocks: DatasetMetadataBlocks
+    public readonly metadataBlocks: DatasetMetadataBlocks,
+    public readonly permissions: DatasetPermissions
   ) {}
 
   public getTitle(): string {
@@ -241,7 +249,8 @@ export class Dataset {
       public readonly citation: string,
       public readonly summaryFields: DatasetMetadataBlock[],
       public readonly license: DatasetLicense = defaultLicense,
-      public readonly metadataBlocks: DatasetMetadataBlocks
+      public readonly metadataBlocks: DatasetMetadataBlocks,
+      public readonly permissions: DatasetPermissions
     ) {
       this.withLabels()
     }
@@ -299,7 +308,8 @@ export class Dataset {
         this.labels,
         this.summaryFields,
         this.license,
-        this.metadataBlocks
+        this.metadataBlocks,
+        this.permissions
       )
     }
   }

@@ -150,4 +150,21 @@ describe('Dataset', () => {
 
     cy.findAllByText(ANONYMIZED_FIELD_VALUE).should('exist')
   })
+
+  it('renders the Dataset Action Buttons', () => {
+    const datasetRepository: DatasetRepository = {} as DatasetRepository
+    datasetRepository.getByPersistentId = cy.stub().resolves(testDataset)
+
+    cy.customMount(
+      <LoadingProvider>
+        <Dataset
+          datasetRepository={datasetRepository}
+          fileRepository={fileRepository}
+          searchParams={{ persistentId: testDataset.persistentId }}
+        />
+      </LoadingProvider>
+    )
+
+    cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
+  })
 })

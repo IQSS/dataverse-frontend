@@ -100,6 +100,7 @@ export class DatasetMother {
           }
         }
       ] as DatasetMetadataBlocks,
+      permissions: { canDownloadFiles: false, canUpdateDataset: false },
       ...props
     }
 
@@ -109,7 +110,8 @@ export class DatasetMother {
       dataset.citation,
       dataset.summaryFields,
       dataset.license,
-      dataset.metadataBlocks
+      dataset.metadataBlocks,
+      dataset.permissions
     ).build()
   }
 

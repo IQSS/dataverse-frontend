@@ -12,6 +12,7 @@ import { DatasetSummary } from './dataset-summary/DatasetSummary'
 import { DatasetCitation } from './dataset-citation/DatasetCitation'
 import { DatasetFiles } from './dataset-files/DatasetFiles'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
+import { DatasetActionButtons } from './dataset-action-buttons/DatasetActionButtons'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -46,6 +47,9 @@ export function Dataset({ datasetRepository, fileRepository, searchParams }: Dat
             <Row>
               <Col sm={9}>
                 <DatasetCitation citation={dataset.citation} version={dataset.version} />
+              </Col>
+              <Col sm={3}>
+                <DatasetActionButtons dataset={dataset} />
               </Col>
             </Row>
             <Row>
