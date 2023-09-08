@@ -15,4 +15,11 @@ export class SettingMother {
           )
     }
   }
+
+  static createExternalStatusesAllowed(value?: string[]): Setting<string[]> {
+    return {
+      name: SettingName.ALLOWED_EXTERNAL_STATUSES,
+      value: value ? value : [faker.datatype.string(), faker.datatype.string()]
+    }
+  }
 }

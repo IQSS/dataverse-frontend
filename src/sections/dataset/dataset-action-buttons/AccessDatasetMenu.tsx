@@ -1,5 +1,4 @@
 import {
-  Dataset,
   DatasetPermissions,
   DatasetStatus,
   DatasetVersion

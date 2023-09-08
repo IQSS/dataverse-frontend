@@ -1,10 +1,6 @@
-import {
-  Dataset,
-  DatasetPermissions,
-  DatasetStatus,
-  DatasetVersion
-} from '../../../dataset/domain/models/Dataset'
+import { Dataset, DatasetStatus } from '../../../dataset/domain/models/Dataset'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
+import { ChangeCurationStatusMenu } from './ChangeCurationStatusMenu'
 
 interface PublishDatasetMenuProps {
   dataset: Dataset
@@ -27,6 +23,7 @@ export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
       variant="secondary"
       disabled={dataset.isLockedFromPublishing}>
       <DropdownButtonItem>Publish</DropdownButtonItem>
+      <ChangeCurationStatusMenu />
     </DropdownButton>
   )
 }

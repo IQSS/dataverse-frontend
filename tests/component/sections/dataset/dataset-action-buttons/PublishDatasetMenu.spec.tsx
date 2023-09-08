@@ -5,6 +5,9 @@ import {
   DatasetVersionMother
 } from '../../../dataset/domain/models/DatasetMother'
 import { DatasetLockReason } from '../../../../../src/dataset/domain/models/Dataset'
+import { SettingRepository } from '../../../../../src/settings/domain/repositories/SettingRepository'
+import { SettingMother } from '../../../settings/domain/models/SettingMother'
+import { SettingsProvider } from '../../../../../src/sections/settings/SettingsProvider'
 
 describe('PublishDatasetMenu', () => {
   it('renders the PublishDatasetMenu if is dataset latest version and it is a draft and publishing is allowed', () => {
@@ -16,7 +19,35 @@ describe('PublishDatasetMenu', () => {
 
     cy.customMount(<PublishDatasetMenu dataset={dataset} />)
 
-    cy.findByRole('button', { name: 'Publish Dataset' }).should('exist').should('be.enabled')
+    cy.findByRole('button', { name: 'Publish Dataset' })
+      .should('exist')
+      .should('be.enabled')
+      .click()
+
+    cy.findByRole('button', { name: 'Publish' }).should('exist')
+  })
+
+  it('renders the PublishDatasetMenu with the Change Curation Status sub menu', () => {
+    const dataset = DatasetMother.create({
+      version: DatasetVersionMother.createDraftAsLatestVersion(),
+      permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+      locks: []
+    })
+
+    const settingRepository = {} as SettingRepository
+    settingRepository.getByName = cy
+      .stub()
+      .resolves(SettingMother.createExternalStatusesAllowed(['Author Contacted', 'Privacy Review']))
+
+    cy.customMount(
+      <SettingsProvider repository={settingRepository}>
+        <PublishDatasetMenu dataset={dataset} />
+      </SettingsProvider>
+    )
+
+    cy.findByRole('button', { name: 'Publish Dataset' }).click()
+
+    cy.findByRole('button', { name: 'Change Curation Status' }).should('exist')
   })
 
   it('does not render the PublishDatasetMenu if publishing is not allowed', () => {
