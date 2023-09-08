@@ -20,7 +20,9 @@ describe('DatasetCitation', () => {
   })
 
   it('shows the draft tooltip when version is draft', () => {
-    const dataset = DatasetMother.create({ version: new DatasetVersion(1, 0, DatasetStatus.DRAFT) })
+    const dataset = DatasetMother.create({
+      version: new DatasetVersion(1, 0, DatasetStatus.DRAFT, false)
+    })
     cy.customMount(<DatasetCitation citation={dataset.citation} version={dataset.version} />)
 
     cy.findByRole('img', { name: 'tooltip icon' }).should('exist').trigger('mouseover')
@@ -31,7 +33,7 @@ describe('DatasetCitation', () => {
 
   it('shows the deaccessioned tooltip when version is deaccessioned', () => {
     const dataset = DatasetMother.create({
-      version: new DatasetVersion(1, 0, DatasetStatus.DEACCESSIONED)
+      version: new DatasetVersion(1, 0, DatasetStatus.DEACCESSIONED, false)
     })
     cy.customMount(<DatasetCitation citation={dataset.citation} version={dataset.version} />)
 

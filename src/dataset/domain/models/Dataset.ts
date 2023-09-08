@@ -211,7 +211,8 @@ export class DatasetVersion {
   constructor(
     public readonly majorNumber: number,
     public readonly minorNumber: number,
-    public readonly status: DatasetStatus
+    public readonly status: DatasetStatus,
+    public readonly isLatest: boolean
   ) {}
 
   toString(): string {
@@ -222,6 +223,24 @@ export class DatasetVersion {
 export interface DatasetPermissions {
   canDownloadFiles: boolean
   canUpdateDataset: boolean
+  canPublishDataset: boolean
+}
+
+export interface DatasetLock {
+  id: number
+  reason: DatasetLockReason
+}
+
+export enum DatasetLockReason {
+  INGEST = 'ingest',
+  WORKFLOW = 'workflow',
+  IN_REVIEW = 'inReview',
+  DCM_UPLOAD = 'dcmUpload',
+  GLOBUS_UPLOAD = 'globusUpload',
+  FINALIZE_PUBLICATION = 'finalizePublication',
+
+  EDIT_IN_PROGRESS = 'editInProgress',
+  FILE_VALIDATION_FAILED = 'fileValidationFailed'
 }
 
 export class Dataset {
@@ -233,11 +252,24 @@ export class Dataset {
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
     public readonly metadataBlocks: DatasetMetadataBlocks,
-    public readonly permissions: DatasetPermissions
+    public readonly permissions: DatasetPermissions,
+    public readonly locks: DatasetLock[]
   ) {}
 
   public getTitle(): string {
     return this.metadataBlocks[0].fields.title
+  }
+
+  public get isLockedFromPublishing(): boolean {
+    const lockedReasonIsInReview = this.locks.some(
+      (lock) => lock.reason === DatasetLockReason.IN_REVIEW
+    )
+
+    return this.isLocked && !(lockedReasonIsInReview && this.permissions.canPublishDataset)
+  }
+
+  public get isLocked(): boolean {
+    return this.locks.length > 0
   }
 
   static Builder = class {
@@ -250,7 +282,8 @@ export class Dataset {
       public readonly summaryFields: DatasetMetadataBlock[],
       public readonly license: DatasetLicense = defaultLicense,
       public readonly metadataBlocks: DatasetMetadataBlocks,
-      public readonly permissions: DatasetPermissions
+      public readonly permissions: DatasetPermissions,
+      public readonly locks: DatasetLock[]
     ) {
       this.withLabels()
     }
@@ -309,7 +342,8 @@ export class Dataset {
         this.summaryFields,
         this.license,
         this.metadataBlocks,
-        this.permissions
+        this.permissions,
+        this.locks
       )
     }
   }

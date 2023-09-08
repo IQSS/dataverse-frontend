@@ -1,22 +1,27 @@
-import { Dataset, DatasetStatus } from '../../../dataset/domain/models/Dataset'
+import {
+  Dataset,
+  DatasetPermissions,
+  DatasetStatus,
+  DatasetVersion
+} from '../../../dataset/domain/models/Dataset'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 
 interface AccessDatasetMenuProps {
-  dataset: Dataset
+  version: DatasetVersion
+  permissions: DatasetPermissions
 }
 
-export function AccessDatasetMenu({ dataset }: AccessDatasetMenuProps) {
+export function AccessDatasetMenu({ version, permissions }: AccessDatasetMenuProps) {
   if (
-    !dataset.permissions.canDownloadFiles ||
-    (dataset.version.status === DatasetStatus.DEACCESSIONED &&
-      !dataset.permissions.canUpdateDataset)
+    !permissions.canDownloadFiles ||
+    (version.status === DatasetStatus.DEACCESSIONED && !permissions.canUpdateDataset)
   ) {
     return <></>
   }
 
   return (
     <DropdownButton
-      id={`dataset-access-menu`}
+      id={`access-dataset-menu`}
       title="Access Dataset"
       asButtonGroup
       variant="primary">
@@ -24,3 +29,6 @@ export function AccessDatasetMenu({ dataset }: AccessDatasetMenuProps) {
     </DropdownButton>
   )
 }
+// TODO: add download feature https://github.com/IQSS/dataverse-frontend/issues/63
+// TODO: add explore feature
+// TODO: add compute feature

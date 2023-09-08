@@ -31,7 +31,7 @@ export const DraftVersion: Story = {
     const dataset = DatasetMockData({
       citation:
         'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, DRAFT VERSION',
-      version: new DatasetVersion(1, 0, DatasetStatus.DRAFT)
+      version: new DatasetVersion(1, 0, DatasetStatus.DRAFT, false)
     })
 
     /*
@@ -52,7 +52,7 @@ export const Deaccessioned: Story = {
     const dataset = DatasetMockData({
       citation:
         'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1 DEACCESSIONED VERSION',
-      version: new DatasetVersion(1, 0, DatasetStatus.DEACCESSIONED)
+      version: new DatasetVersion(1, 0, DatasetStatus.DEACCESSIONED, false)
     })
 
     /*

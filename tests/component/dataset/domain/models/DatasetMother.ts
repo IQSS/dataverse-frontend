@@ -7,8 +7,79 @@ import {
   DatasetStatus,
   DatasetVersion,
   MetadataBlockName,
-  DatasetMetadataBlocks
+  DatasetMetadataBlocks,
+  DatasetPermissions
 } from '../../../../../src/dataset/domain/models/Dataset'
+
+export class DatasetVersionMother {
+  static create(props?: Partial<DatasetVersion>): DatasetVersion {
+    return new DatasetVersion(
+      props?.majorNumber ?? 1,
+      props?.minorNumber ?? 0,
+      props?.status ?? DatasetStatus.RELEASED,
+      props?.isLatest ?? false
+    )
+  }
+
+  static createReleased(): DatasetVersion {
+    return new DatasetVersion(1, 0, DatasetStatus.RELEASED, false)
+  }
+
+  static createDeaccessioned(): DatasetVersion {
+    return new DatasetVersion(1, 0, DatasetStatus.DEACCESSIONED, false)
+  }
+
+  static createDraftAsLatestVersion(): DatasetVersion {
+    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, true)
+  }
+
+  static createDraft(): DatasetVersion {
+    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, false)
+  }
+}
+
+export class DatasetPermissionsMother {
+  static create(props?: Partial<DatasetPermissions>): DatasetPermissions {
+    return {
+      canDownloadFiles: faker.datatype.boolean(),
+      canUpdateDataset: faker.datatype.boolean(),
+      canPublishDataset: faker.datatype.boolean(),
+      ...props
+    }
+  }
+
+  static createWithFilesDownloadAllowed(): DatasetPermissions {
+    return this.create({ canDownloadFiles: true })
+  }
+
+  static createWithFilesDownloadNotAllowed(): DatasetPermissions {
+    return this.create({ canDownloadFiles: false })
+  }
+
+  static createWithUpdateDatasetAllowed(): DatasetPermissions {
+    return this.create({ canUpdateDataset: true })
+  }
+
+  static createWithUpdateDatasetNotAllowed(): DatasetPermissions {
+    return this.create({ canUpdateDataset: false })
+  }
+
+  static createWithAllAllowed(): DatasetPermissions {
+    return this.create({
+      canDownloadFiles: true,
+      canUpdateDataset: true,
+      canPublishDataset: true
+    })
+  }
+
+  static createWithPublishingDatasetAllowed(): DatasetPermissions {
+    return this.create({ canPublishDataset: true })
+  }
+
+  static createWithPublishingDatasetNotAllowed(): DatasetPermissions {
+    return this.create({ canPublishDataset: false })
+  }
+}
 
 export class DatasetMother {
   static createEmpty(): undefined {
@@ -19,7 +90,7 @@ export class DatasetMother {
     const dataset = {
       persistentId: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
-      version: new DatasetVersion(1, 0, DatasetStatus.RELEASED),
+      version: DatasetVersionMother.create(),
       citation:
         'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1',
       license: {
@@ -100,7 +171,8 @@ export class DatasetMother {
           }
         }
       ] as DatasetMetadataBlocks,
-      permissions: { canDownloadFiles: false, canUpdateDataset: false },
+      permissions: DatasetPermissionsMother.create(),
+      locks: [],
       ...props
     }
 
@@ -111,7 +183,8 @@ export class DatasetMother {
       dataset.summaryFields,
       dataset.license,
       dataset.metadataBlocks,
-      dataset.permissions
+      dataset.permissions,
+      dataset.locks
     ).build()
   }
 
