@@ -201,8 +201,7 @@ export enum DatasetStatus {
   RELEASED = 'released',
   DRAFT = 'draft',
   DEACCESSIONED = 'deaccessioned',
-  EMBARGOED = 'embargoed',
-  IN_REVIEW = 'inReview'
+  EMBARGOED = 'embargoed'
 }
 
 export class DatasetVersion {
@@ -210,7 +209,8 @@ export class DatasetVersion {
     public readonly majorNumber: number,
     public readonly minorNumber: number,
     public readonly status: DatasetStatus,
-    public readonly isLatest: boolean
+    public readonly isLatest: boolean,
+    public readonly isInReview: boolean
   ) {}
 
   toString(): string {
@@ -270,6 +270,10 @@ export class Dataset {
     return this.locks.length > 0
   }
 
+  public get isLockedInWorkflow(): boolean {
+    return this.locks.some((lock) => lock.reason === DatasetLockReason.WORKFLOW)
+  }
+
   static Builder = class {
     public readonly labels: DatasetLabel[] = []
 
@@ -316,7 +320,7 @@ export class Dataset {
         )
       }
 
-      if (this.version.status === DatasetStatus.IN_REVIEW) {
+      if (this.version.isInReview) {
         this.labels.push(
           new DatasetLabel(DatasetLabelSemanticMeaning.SUCCESS, DatasetLabelValue.IN_REVIEW)
         )

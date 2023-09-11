@@ -1,5 +1,6 @@
 import { PublishDatasetMenu } from '../../../../../../src/sections/dataset/dataset-action-buttons/publish-dataset-menu/PublishDatasetMenu'
 import {
+  DatasetLockMother,
   DatasetMother,
   DatasetPermissionsMother,
   DatasetVersionMother
@@ -90,12 +91,7 @@ describe('PublishDatasetMenu', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createDraftAsLatestVersion(),
       permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
-      locks: [
-        {
-          id: 1,
-          reason: DatasetLockReason.IN_REVIEW
-        }
-      ]
+      locks: [DatasetLockMother.createLockedInReview()]
     })
 
     cy.customMount(<PublishDatasetMenu dataset={dataset} />)

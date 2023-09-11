@@ -15,7 +15,7 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
     citation: `${
       anonymized ? 'Author name(s) withheld' : 'Bennet, Elizabeth; Darcy, Fitzwilliam'
     }, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1`,
-    version: new DatasetVersion(1, 0, DatasetStatus.RELEASED, false),
+    version: new DatasetVersion(1, 0, DatasetStatus.RELEASED, false, false),
     labels: [
       { value: 'Version 1.0', semanticMeaning: DatasetLabelSemanticMeaning.FILE },
       { value: DatasetLabelValue.DRAFT, semanticMeaning: DatasetLabelSemanticMeaning.DATASET }
@@ -95,7 +95,8 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
         }
       }
     ] as DatasetMetadataBlocks,
-    permissions: { canDownloadFiles: false, canUpdateDataset: false },
+    permissions: { canDownloadFiles: false, canUpdateDataset: false, canPublishDataset: false },
+    locks: [],
     ...props
   }
   return new Dataset.Builder(
@@ -105,6 +106,7 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
     dataset.summaryFields,
     dataset.license,
     dataset.metadataBlocks,
-    dataset.permissions
+    dataset.permissions,
+    dataset.locks
   ).build()
 }

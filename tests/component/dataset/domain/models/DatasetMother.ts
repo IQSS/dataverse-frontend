@@ -4,11 +4,13 @@ import {
   Dataset,
   DatasetLabelSemanticMeaning,
   DatasetLabelValue,
+  DatasetLock,
+  DatasetLockReason,
+  DatasetMetadataBlocks,
+  DatasetPermissions,
   DatasetStatus,
   DatasetVersion,
-  MetadataBlockName,
-  DatasetMetadataBlocks,
-  DatasetPermissions
+  MetadataBlockName
 } from '../../../../../src/dataset/domain/models/Dataset'
 
 export class DatasetVersionMother {
@@ -17,24 +19,29 @@ export class DatasetVersionMother {
       props?.majorNumber ?? 1,
       props?.minorNumber ?? 0,
       props?.status ?? DatasetStatus.RELEASED,
-      props?.isLatest ?? false
+      props?.isLatest ?? false,
+      props?.isInReview ?? false
     )
   }
 
   static createReleased(): DatasetVersion {
-    return new DatasetVersion(1, 0, DatasetStatus.RELEASED, false)
+    return new DatasetVersion(1, 0, DatasetStatus.RELEASED, false, false)
   }
 
   static createDeaccessioned(): DatasetVersion {
-    return new DatasetVersion(1, 0, DatasetStatus.DEACCESSIONED, false)
+    return new DatasetVersion(1, 0, DatasetStatus.DEACCESSIONED, false, false)
   }
 
   static createDraftAsLatestVersion(): DatasetVersion {
-    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, true)
+    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, true, false)
   }
 
   static createDraft(): DatasetVersion {
-    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, false)
+    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, false, false)
+  }
+
+  static createDraftAsLatestVersionInReview(): DatasetVersion {
+    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, true, true)
   }
 }
 
@@ -78,6 +85,32 @@ export class DatasetPermissionsMother {
 
   static createWithPublishingDatasetNotAllowed(): DatasetPermissions {
     return this.create({ canPublishDataset: false })
+  }
+
+  static createWithNoDatasetPermissions(): DatasetPermissions {
+    return this.create({
+      canDownloadFiles: true,
+      canUpdateDataset: false,
+      canPublishDataset: false
+    })
+  }
+}
+
+export class DatasetLockMother {
+  static create(props?: Partial<DatasetLock>): DatasetLock {
+    return {
+      id: faker.datatype.number(),
+      reason: faker.helpers.arrayElement(Object.values(DatasetLockReason)),
+      ...props
+    }
+  }
+
+  static createLockedInWorkflow(): DatasetLock {
+    return this.create({ reason: DatasetLockReason.WORKFLOW })
+  }
+
+  static createLockedInReview(): DatasetLock {
+    return this.create({ reason: DatasetLockReason.IN_REVIEW })
   }
 }
 

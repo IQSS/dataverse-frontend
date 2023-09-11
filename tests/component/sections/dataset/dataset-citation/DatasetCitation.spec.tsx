@@ -21,7 +21,7 @@ describe('DatasetCitation', () => {
 
   it('shows the draft tooltip when version is draft', () => {
     const dataset = DatasetMother.create({
-      version: new DatasetVersion(1, 0, DatasetStatus.DRAFT, false)
+      version: new DatasetVersion(1, 0, DatasetStatus.DRAFT, false, false)
     })
     cy.customMount(<DatasetCitation citation={dataset.citation} version={dataset.version} />)
 
@@ -33,7 +33,7 @@ describe('DatasetCitation', () => {
 
   it('shows the deaccessioned tooltip when version is deaccessioned', () => {
     const dataset = DatasetMother.create({
-      version: new DatasetVersion(1, 0, DatasetStatus.DEACCESSIONED, false)
+      version: new DatasetVersion(1, 0, DatasetStatus.DEACCESSIONED, false, false)
     })
     cy.customMount(<DatasetCitation citation={dataset.citation} version={dataset.version} />)
 

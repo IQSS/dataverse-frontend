@@ -22,11 +22,37 @@ const meta: Meta<typeof DatasetActionButtons> = {
 export default meta
 type Story = StoryObj<typeof DatasetActionButtons>
 
-export const DraftWithAllDatasetPermissions: Story = {
+export const WithPublishPermissions: Story = {
   render: () => (
     <DatasetActionButtons
       dataset={DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithAllAllowed(),
+        version: DatasetVersionMother.createDraftAsLatestVersion()
+      })}
+    />
+  )
+}
+
+export const WithNoDatasetPermissions: Story = {
+  render: () => (
+    <DatasetActionButtons
+      dataset={DatasetMother.create({
+        permissions: DatasetPermissionsMother.createWithNoDatasetPermissions(),
+        version: DatasetVersionMother.createDraftAsLatestVersion()
+      })}
+    />
+  )
+}
+
+export const WithUpdateAndNoPublishDatasetPermissions: Story = {
+  render: () => (
+    <DatasetActionButtons
+      dataset={DatasetMother.create({
+        permissions: DatasetPermissionsMother.create({
+          canDownloadFiles: true,
+          canPublishDataset: false,
+          canUpdateDataset: true
+        }),
         version: DatasetVersionMother.createDraftAsLatestVersion()
       })}
     />
