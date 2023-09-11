@@ -1,8 +1,8 @@
-import { ChangeCurationStatusMenu } from '../../../../../src/sections/dataset/dataset-action-buttons/ChangeCurationStatusMenu'
+import { ChangeCurationStatusMenu } from '../../../../../../src/sections/dataset/dataset-action-buttons/publish-dataset-menu/ChangeCurationStatusMenu'
 
-import { SettingMother } from '../../../settings/domain/models/SettingMother'
-import { SettingsProvider } from '../../../../../src/sections/settings/SettingsProvider'
-import { SettingRepository } from '../../../../../src/settings/domain/repositories/SettingRepository'
+import { SettingMother } from '../../../../settings/domain/models/SettingMother'
+import { SettingsProvider } from '../../../../../../src/sections/settings/SettingsProvider'
+import { SettingRepository } from '../../../../../../src/settings/domain/repositories/SettingRepository'
 
 describe('ChangeCurationStatusMenu', () => {
   it('renders the ChangeCurationStatusMenu if external statuses are allowed and the user has update dataset permissions', () => {

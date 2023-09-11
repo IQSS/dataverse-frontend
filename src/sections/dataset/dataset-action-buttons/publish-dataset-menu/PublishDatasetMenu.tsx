@@ -1,4 +1,4 @@
-import { Dataset, DatasetStatus } from '../../../dataset/domain/models/Dataset'
+import { Dataset, DatasetStatus } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { ChangeCurationStatusMenu } from './ChangeCurationStatusMenu'
 

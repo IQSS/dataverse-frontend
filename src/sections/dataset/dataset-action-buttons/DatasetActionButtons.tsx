@@ -1,7 +1,8 @@
 import { Dataset } from '../../../dataset/domain/models/Dataset'
 import { ButtonGroup } from '@iqss/dataverse-design-system'
-import { AccessDatasetMenu } from './AccessDatasetMenu'
-import { PublishDatasetMenu } from './PublishDatasetMenu'
+import { AccessDatasetMenu } from './access-dataset-menu/AccessDatasetMenu'
+import { PublishDatasetMenu } from './publish-dataset-menu/PublishDatasetMenu'
+import styles from './DatasetActionButtons.module.scss'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset
@@ -9,7 +10,7 @@ interface DatasetActionButtonsProps {
 
 export function DatasetActionButtons({ dataset }: DatasetActionButtonsProps) {
   return (
-    <ButtonGroup aria-label="Dataset Action Buttons">
+    <ButtonGroup aria-label="Dataset Action Buttons" vertical className={styles.group}>
       <AccessDatasetMenu version={dataset.version} permissions={dataset.permissions} />
       <PublishDatasetMenu dataset={dataset} />
     </ButtonGroup>

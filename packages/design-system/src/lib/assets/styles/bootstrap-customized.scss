@@ -100,3 +100,13 @@ $navbar-brand-font-size: $dv-brand-font-size;
 .navbar-collapse {
   justify-content: end;
 }
+
+.dropdown-menu > .dropdown > .dropdown-toggle {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.dropdown-menu > .dropdown > .dropdown-toggle:hover {
+  background-color: $dropdown-link-hover-bg;
+  border-color: transparent;
+}

@@ -1,13 +1,13 @@
-import { PublishDatasetMenu } from '../../../../../src/sections/dataset/dataset-action-buttons/PublishDatasetMenu'
+import { PublishDatasetMenu } from '../../../../../../src/sections/dataset/dataset-action-buttons/publish-dataset-menu/PublishDatasetMenu'
 import {
   DatasetMother,
   DatasetPermissionsMother,
   DatasetVersionMother
-} from '../../../dataset/domain/models/DatasetMother'
-import { DatasetLockReason } from '../../../../../src/dataset/domain/models/Dataset'
-import { SettingRepository } from '../../../../../src/settings/domain/repositories/SettingRepository'
-import { SettingMother } from '../../../settings/domain/models/SettingMother'
-import { SettingsProvider } from '../../../../../src/sections/settings/SettingsProvider'
+} from '../../../../dataset/domain/models/DatasetMother'
+import { DatasetLockReason } from '../../../../../../src/dataset/domain/models/Dataset'
+import { SettingRepository } from '../../../../../../src/settings/domain/repositories/SettingRepository'
+import { SettingMother } from '../../../../settings/domain/models/SettingMother'
+import { SettingsProvider } from '../../../../../../src/sections/settings/SettingsProvider'
 
 describe('PublishDatasetMenu', () => {
   it('renders the PublishDatasetMenu if is dataset latest version and it is a draft and publishing is allowed', () => {

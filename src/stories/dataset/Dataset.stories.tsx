@@ -10,6 +10,7 @@ import { FileMockRepository } from '../files/FileMockRepository'
 import { WithCitationMetadataBlockInfo } from './WithCitationMetadataBlockInfo'
 import { FileMockNoDataRepository } from '../files/FileMockNoDataRepository'
 import { WithSettings } from '../WithSettings'
+import { DatasetDraftWithAllPermissionsMockRepository } from './DatasetDraftWithAllPermissionsMockRepository'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -29,6 +30,17 @@ export const Default: Story = {
   render: () => (
     <Dataset
       datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+      searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
+    />
+  )
+}
+
+export const DraftWithAllDatasetPermissions: Story = {
+  decorators: [WithLayout],
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetDraftWithAllPermissionsMockRepository()}
       fileRepository={new FileMockRepository()}
       searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
     />

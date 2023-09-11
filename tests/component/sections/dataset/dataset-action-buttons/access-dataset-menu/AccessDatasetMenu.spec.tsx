@@ -1,8 +1,8 @@
-import { AccessDatasetMenu } from '../../../../../src/sections/dataset/dataset-action-buttons/AccessDatasetMenu'
+import { AccessDatasetMenu } from '../../../../../../src/sections/dataset/dataset-action-buttons/access-dataset-menu/AccessDatasetMenu'
 import {
   DatasetPermissionsMother,
   DatasetVersionMother
-} from '../../../dataset/domain/models/DatasetMother'
+} from '../../../../dataset/domain/models/DatasetMother'
 
 describe('AccessDatasetMenu', () => {
   it('renders the AccessDatasetMenu if the user has download files permissions and the dataset is not deaccessioned', () => {

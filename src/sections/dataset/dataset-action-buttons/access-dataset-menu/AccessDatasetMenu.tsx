@@ -2,7 +2,7 @@ import {
   DatasetPermissions,
   DatasetStatus,
   DatasetVersion
-} from '../../../dataset/domain/models/Dataset'
+} from '../../../../dataset/domain/models/Dataset'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 
 interface AccessDatasetMenuProps {
