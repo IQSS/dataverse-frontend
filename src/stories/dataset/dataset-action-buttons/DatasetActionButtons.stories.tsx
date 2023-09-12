@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { WithSettings } from '../../WithSettings'
-import { WithLayout } from '../../WithLayout'
 import { DatasetActionButtons } from '../../../sections/dataset/dataset-action-buttons/DatasetActionButtons'
 import {
   DatasetMother,

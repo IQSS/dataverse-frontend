@@ -5,7 +5,6 @@ import {
   DatasetPermissionsMother,
   DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
-import { PublishDatasetMenu } from '../../../../../../src/sections/dataset/dataset-action-buttons/publish-dataset-menu/PublishDatasetMenu'
 import { DatasetLockReason } from '../../../../../../src/dataset/domain/models/Dataset'
 
 describe('SubmitForReviewButton', () => {

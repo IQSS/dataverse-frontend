@@ -102,7 +102,7 @@ describe('Dataset JSDataverse Repository', () => {
           throw new Error('Dataset not found')
         }
         const datasetExpected = datasetData(dataset.persistentId)
-        const newVersion = new DatasetVersion(1, 0, DatasetStatus.RELEASED, false, false)
+        const newVersion = new DatasetVersion(1, 0, DatasetStatus.RELEASED, false, false, false)
 
         expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(newVersion)

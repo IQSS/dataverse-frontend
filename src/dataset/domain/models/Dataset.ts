@@ -210,7 +210,8 @@ export class DatasetVersion {
     public readonly minorNumber: number,
     public readonly status: DatasetStatus,
     public readonly isLatest: boolean,
-    public readonly isInReview: boolean
+    public readonly isInReview: boolean,
+    public readonly latestVersionStatus: DatasetStatus
   ) {}
 
   toString(): string {
@@ -222,6 +223,9 @@ export interface DatasetPermissions {
   canDownloadFiles: boolean
   canUpdateDataset: boolean
   canPublishDataset: boolean
+  canManageDatasetPermissions: boolean
+  canManageFilesPermissions: boolean
+  canDeleteDataset: boolean
 }
 
 export interface DatasetLock {
@@ -251,7 +255,8 @@ export class Dataset {
     public readonly license: DatasetLicense,
     public readonly metadataBlocks: DatasetMetadataBlocks,
     public readonly permissions: DatasetPermissions,
-    public readonly locks: DatasetLock[]
+    public readonly locks: DatasetLock[],
+    public readonly hasValidTermsOfAccess: boolean
   ) {}
 
   public getTitle(): string {
@@ -259,11 +264,7 @@ export class Dataset {
   }
 
   public get isLockedFromPublishing(): boolean {
-    const lockedReasonIsInReview = this.locks.some(
-      (lock) => lock.reason === DatasetLockReason.IN_REVIEW
-    )
-
-    return this.isLocked && !(lockedReasonIsInReview && this.permissions.canPublishDataset)
+    return this.isLockedFromEdits
   }
 
   public get isLocked(): boolean {
@@ -272,6 +273,16 @@ export class Dataset {
 
   public get isLockedInWorkflow(): boolean {
     return this.locks.some((lock) => lock.reason === DatasetLockReason.WORKFLOW)
+  }
+
+  public get isLockedFromEdits(): boolean {
+    const lockedReasonIsInReview = this.locks.some(
+      (lock) => lock.reason === DatasetLockReason.IN_REVIEW
+    )
+    // If the lock reason is workflow and the workflow userId is the same as the current user, then the user can edit
+    // TODO - Ask how we want to manage pending workflows
+
+    return this.isLocked && !(lockedReasonIsInReview && this.permissions.canPublishDataset)
   }
 
   static Builder = class {
@@ -285,7 +296,8 @@ export class Dataset {
       public readonly license: DatasetLicense = defaultLicense,
       public readonly metadataBlocks: DatasetMetadataBlocks,
       public readonly permissions: DatasetPermissions,
-      public readonly locks: DatasetLock[]
+      public readonly locks: DatasetLock[],
+      public readonly hasValidTermsOfAccess: boolean
     ) {
       this.withLabels()
     }
@@ -345,7 +357,8 @@ export class Dataset {
         this.license,
         this.metadataBlocks,
         this.permissions,
-        this.locks
+        this.locks,
+        this.hasValidTermsOfAccess
       )
     }
   }

@@ -35,6 +35,7 @@ export class JSDatasetMapper {
       jsDatasetVersionInfo.minorNumber,
       JSDatasetMapper.toStatus(jsDatasetVersionInfo.state),
       false,
+      false,
       false
     )
   }

@@ -20,28 +20,48 @@ export class DatasetVersionMother {
       props?.minorNumber ?? 0,
       props?.status ?? DatasetStatus.RELEASED,
       props?.isLatest ?? false,
-      props?.isInReview ?? false
+      props?.isInReview ?? false,
+      props?.latestVersionStatus ?? DatasetStatus.RELEASED
     )
   }
 
   static createReleased(): DatasetVersion {
-    return new DatasetVersion(1, 0, DatasetStatus.RELEASED, false, false)
+    return new DatasetVersion(1, 0, DatasetStatus.RELEASED, false, false, DatasetStatus.RELEASED)
   }
 
   static createDeaccessioned(): DatasetVersion {
-    return new DatasetVersion(1, 0, DatasetStatus.DEACCESSIONED, false, false)
+    return new DatasetVersion(
+      1,
+      0,
+      DatasetStatus.DEACCESSIONED,
+      false,
+      false,
+      DatasetStatus.RELEASED
+    )
   }
 
   static createDraftAsLatestVersion(): DatasetVersion {
-    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, true, false)
+    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, true, false, DatasetStatus.RELEASED)
   }
 
   static createDraft(): DatasetVersion {
-    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, false, false)
+    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, false, false, DatasetStatus.RELEASED)
   }
 
   static createDraftAsLatestVersionInReview(): DatasetVersion {
-    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, true, true)
+    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, true, true, DatasetStatus.RELEASED)
+  }
+
+  static createReleasedWithLatestVersionIsADraft(): DatasetVersion {
+    return new DatasetVersion(1, 0, DatasetStatus.RELEASED, false, false, DatasetStatus.DRAFT)
+  }
+
+  static createDraftWithLatestVersionIsADraft(): DatasetVersion {
+    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, false, false, DatasetStatus.DRAFT)
+  }
+
+  static createWithLatestVersionIsNotADraft(): DatasetVersion {
+    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, false, false, DatasetStatus.RELEASED)
   }
 }
 
@@ -51,6 +71,9 @@ export class DatasetPermissionsMother {
       canDownloadFiles: faker.datatype.boolean(),
       canUpdateDataset: faker.datatype.boolean(),
       canPublishDataset: faker.datatype.boolean(),
+      canManageDatasetPermissions: faker.datatype.boolean(),
+      canManageFilesPermissions: faker.datatype.boolean(),
+      canDeleteDataset: faker.datatype.boolean(),
       ...props
     }
   }
@@ -75,7 +98,10 @@ export class DatasetPermissionsMother {
     return this.create({
       canDownloadFiles: true,
       canUpdateDataset: true,
-      canPublishDataset: true
+      canPublishDataset: true,
+      canManageDatasetPermissions: true,
+      canManageFilesPermissions: true,
+      canDeleteDataset: true
     })
   }
 
@@ -94,6 +120,30 @@ export class DatasetPermissionsMother {
       canPublishDataset: false
     })
   }
+
+  static createWithManageDatasetPermissionsAllowed(): DatasetPermissions {
+    return this.create({ canManageDatasetPermissions: true })
+  }
+
+  static createWithManageFilesPermissionsAllowed(): DatasetPermissions {
+    return this.create({ canManageFilesPermissions: true })
+  }
+
+  static createWithManagePermissionsNotAllowed(): DatasetPermissions {
+    return this.create({ canManageDatasetPermissions: false, canManageFilesPermissions: false })
+  }
+
+  static createWithManagePermissionsAllowed(): DatasetPermissions {
+    return this.create({ canManageDatasetPermissions: true, canManageFilesPermissions: true })
+  }
+
+  static createWithDeleteDatasetAllowed(): DatasetPermissions {
+    return this.create({ canDeleteDataset: true })
+  }
+
+  static createWithDeleteDatasetNotAllowed(): DatasetPermissions {
+    return this.create({ canDeleteDataset: false })
+  }
 }
 
 export class DatasetLockMother {
@@ -111,6 +161,10 @@ export class DatasetLockMother {
 
   static createLockedInReview(): DatasetLock {
     return this.create({ reason: DatasetLockReason.IN_REVIEW })
+  }
+
+  static createLockedInEditInProgress(): DatasetLock {
+    return this.create({ reason: DatasetLockReason.EDIT_IN_PROGRESS })
   }
 }
 
@@ -206,6 +260,7 @@ export class DatasetMother {
       ] as DatasetMetadataBlocks,
       permissions: DatasetPermissionsMother.create(),
       locks: [],
+      hasValidTermsOfAccess: faker.datatype.boolean(),
       ...props
     }
 
@@ -217,7 +272,8 @@ export class DatasetMother {
       dataset.license,
       dataset.metadataBlocks,
       dataset.permissions,
-      dataset.locks
+      dataset.locks,
+      dataset.hasValidTermsOfAccess
     ).build()
   }
 
