@@ -5,6 +5,7 @@ import { PublishDatasetMenu } from './publish-dataset-menu/PublishDatasetMenu'
 import styles from './DatasetActionButtons.module.scss'
 import { SubmitForReviewButton } from './submit-for-review-button/SubmitForReviewButton'
 import { EditDatasetMenu } from './edit-dataset-menu/EditDatasetMenu'
+import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset
@@ -17,6 +18,7 @@ export function DatasetActionButtons({ dataset }: DatasetActionButtonsProps) {
       <PublishDatasetMenu dataset={dataset} />
       <SubmitForReviewButton dataset={dataset} />
       <EditDatasetMenu dataset={dataset} />
+      <LinkDatasetButton dataset={dataset} />
     </ButtonGroup>
   )
 }

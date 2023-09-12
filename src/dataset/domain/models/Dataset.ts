@@ -257,7 +257,8 @@ export class Dataset {
     public readonly permissions: DatasetPermissions,
     public readonly locks: DatasetLock[],
     public readonly hasValidTermsOfAccess: boolean,
-    public readonly isValid: boolean
+    public readonly isValid: boolean,
+    public readonly isReleased: boolean
   ) {}
 
   public getTitle(): string {
@@ -299,7 +300,8 @@ export class Dataset {
       public readonly permissions: DatasetPermissions,
       public readonly locks: DatasetLock[],
       public readonly hasValidTermsOfAccess: boolean,
-      public readonly isValid: boolean
+      public readonly isValid: boolean,
+      public readonly isReleased: boolean
     ) {
       this.withLabels()
     }
@@ -361,7 +363,8 @@ export class Dataset {
         this.permissions,
         this.locks,
         this.hasValidTermsOfAccess,
-        this.isValid
+        this.isValid,
+        this.isReleased
       )
     }
   }

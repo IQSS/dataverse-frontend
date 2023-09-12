@@ -5,12 +5,12 @@ import {
   DatasetVersionMother
 } from '../../../dataset/domain/models/DatasetMother'
 
-const dataset = DatasetMother.create()
 describe('DatasetActionButtons', () => {
   it('renders the DatasetActionButtons with the Publish button', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createDraftAsLatestVersion(),
-      permissions: DatasetPermissionsMother.createWithAllAllowed()
+      permissions: DatasetPermissionsMother.createWithAllAllowed(),
+      isReleased: true
     })
 
     cy.customMount(<DatasetActionButtons dataset={dataset} />)
@@ -19,6 +19,7 @@ describe('DatasetActionButtons', () => {
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Publish Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist')
+    cy.findByRole('button', { name: 'Link Dataset' }).should('exist')
   })
 
   it('renders the DatasetActionButtons with the Submit for Review button', () => {
@@ -28,7 +29,8 @@ describe('DatasetActionButtons', () => {
         canDownloadFiles: true,
         canUpdateDataset: true,
         canPublishDataset: false
-      })
+      }),
+      isReleased: true
     })
 
     cy.customMount(<DatasetActionButtons dataset={dataset} />)
@@ -37,5 +39,6 @@ describe('DatasetActionButtons', () => {
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Submit for Review' }).should('exist')
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist')
+    cy.findByRole('button', { name: 'Link Dataset' }).should('exist')
   })
 })

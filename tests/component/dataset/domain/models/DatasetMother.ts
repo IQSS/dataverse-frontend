@@ -262,6 +262,7 @@ export class DatasetMother {
       locks: [],
       hasValidTermsOfAccess: faker.datatype.boolean(),
       isValid: faker.datatype.boolean(),
+      isReleased: faker.datatype.boolean(),
       ...props
     }
 
@@ -275,7 +276,8 @@ export class DatasetMother {
       dataset.permissions,
       dataset.locks,
       dataset.hasValidTermsOfAccess,
-      dataset.isValid
+      dataset.isValid,
+      dataset.isReleased
     ).build()
   }
 
