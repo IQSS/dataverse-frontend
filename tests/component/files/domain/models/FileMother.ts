@@ -77,6 +77,7 @@ export class FileMother {
             }
           : undefined,
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
+      isDeleted: faker.datatype.boolean(),
       ...props
     }
 
@@ -95,12 +96,13 @@ export class FileMother {
       fileMockedData.date,
       fileMockedData.downloads,
       fileMockedData.labels,
-      fileMockedData.checksum,
+      fileMockedData.isDeleted,
       fileMockedData.thumbnail,
-      fileMockedData.directory,
+      fileMockedData.checksum,
       fileMockedData.embargo,
-      fileMockedData.tabularData,
-      fileMockedData.description
+      fileMockedData.directory,
+      fileMockedData.description,
+      fileMockedData.tabularData
     )
   }
 
@@ -125,6 +127,7 @@ export class FileMother {
       embargo: undefined,
       tabularData: undefined,
       description: undefined,
+      isDeleted: false,
       ...props
     }
     return this.create(defaultFile)
@@ -297,6 +300,12 @@ export class FileMother {
       },
       thumbnail: faker.image.imageUrl(),
       type: new FileType('image')
+    })
+  }
+
+  static createDeleted(): File {
+    return this.createDefault({
+      isDeleted: true
     })
   }
 }

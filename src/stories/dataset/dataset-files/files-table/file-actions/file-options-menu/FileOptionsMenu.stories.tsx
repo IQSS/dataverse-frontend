@@ -27,10 +27,11 @@ export const Restricted: Story = {
 // export const WithDatasetLockedFromEdits: Story = {
 //   render: () => <FileOptionsMenu file={FileMother.createDefault()} />
 // }
-//
-// export const WithFileAlreadyDeleted: Story = {
-//   render: () => <FileOptionsMenu file={FileMother.createDefault()} />
-// }
+
+export const WithFileAlreadyDeleted: Story = {
+  render: () => <FileOptionsMenu file={FileMother.createDeleted()} />
+}
+
 //
 // export const WithEmbargoAllowed: Story = {
 //   render: () => <FileOptionsMenu file={FileMother.createDefault()} />

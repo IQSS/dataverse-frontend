@@ -131,12 +131,13 @@ export class File {
     readonly date: FileDate,
     readonly downloads: number,
     readonly labels: FileLabel[],
-    readonly checksum?: string,
+    public readonly isDeleted: boolean,
     readonly thumbnail?: string,
-    readonly directory?: string,
+    readonly checksum?: string,
     readonly embargo?: FileEmbargo,
-    readonly tabularData?: FileTabularData,
-    readonly description?: string
+    readonly directory?: string,
+    readonly description?: string,
+    readonly tabularData?: FileTabularData
   ) {}
 
   getLink(): string {
