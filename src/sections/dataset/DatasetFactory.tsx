@@ -6,9 +6,9 @@ import { useAnonymized } from './anonymized/AnonymizedContext'
 import { AnonymizedProvider } from './anonymized/AnonymizedProvider'
 import { FileJSDataverseRepository } from '../../files/infrastructure/FileJSDataverseRepository'
 import { MetadataBlockInfoProvider } from './metadata-block-info/MetadataBlockProvider'
-import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/MetadataBlockInfoJSDataverseRepository'
-import { SettingsProvider } from '../settings/SettingsProvider'
+import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
 import { SettingJSDataverseRepository } from '../../settings/infrastructure/SettingJSDataverseRepository'
+import { SettingsProvider } from '../settings/SettingsProvider'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
