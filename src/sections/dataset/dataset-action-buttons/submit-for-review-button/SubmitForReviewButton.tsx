@@ -17,7 +17,11 @@ export function SubmitForReviewButton({ dataset }: SubmitForReviewButtonProps) {
   }
 
   return (
-    <Button variant="secondary" disabled={dataset.isLockedFromPublishing}>
+    <Button
+      variant="secondary"
+      disabled={
+        dataset.isLockedFromPublishing || !dataset.hasValidTermsOfAccess || !dataset.isValid
+      }>
       {dataset.version.isInReview ? 'Submitted for Review' : 'Submit for Review'}
     </Button>
   )

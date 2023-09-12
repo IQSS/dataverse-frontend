@@ -110,7 +110,9 @@ describe('SubmitForReviewButton', () => {
           id: 1,
           reason: DatasetLockReason.EDIT_IN_PROGRESS
         }
-      ]
+      ],
+      hasValidTermsOfAccess: true,
+      isValid: true
     })
 
     cy.customMount(<SubmitForReviewButton dataset={dataset} />)
@@ -118,18 +120,36 @@ describe('SubmitForReviewButton', () => {
     cy.findByRole('button', { name: 'Submit for Review' }).should('be.disabled')
   })
 
-  it.skip('renders the button disabled if the dataset does not have valid terms of access', () => {
-    // TODO - Implement datasetHasValidTermsOfAccess
+  it('renders the button disabled if the dataset does not have valid terms of access', () => {
+    const dataset = DatasetMother.create({
+      version: DatasetVersionMother.createDraftAsLatestVersion(),
+      permissions: DatasetPermissionsMother.create({
+        canUpdateDataset: true,
+        canPublishDataset: false
+      }),
+      locks: [],
+      hasValidTermsOfAccess: false,
+      isValid: true
+    })
 
-    //cy.customMount(<SubmitForReviewButton dataset={dataset} />)
+    cy.customMount(<SubmitForReviewButton dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Submit for Review' }).should('be.disabled')
   })
 
-  it.skip('renders the button disabled if the dataset is not valid', () => {
-    // TODO - Implement datasetIsNotValid
+  it('renders the button disabled if the dataset is not valid', () => {
+    const dataset = DatasetMother.create({
+      version: DatasetVersionMother.createDraftAsLatestVersion(),
+      permissions: DatasetPermissionsMother.create({
+        canUpdateDataset: true,
+        canPublishDataset: false
+      }),
+      locks: [],
+      hasValidTermsOfAccess: true,
+      isValid: false
+    })
 
-    //cy.customMount(<SubmitForReviewButton dataset={dataset} />)
+    cy.customMount(<SubmitForReviewButton dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Submit for Review' }).should('be.disabled')
   })

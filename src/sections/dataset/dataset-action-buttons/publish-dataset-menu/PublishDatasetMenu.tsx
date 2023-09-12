@@ -21,7 +21,9 @@ export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
       title="Publish Dataset"
       asButtonGroup
       variant="secondary"
-      disabled={dataset.isLockedFromPublishing}>
+      disabled={
+        dataset.isLockedFromPublishing || !dataset.hasValidTermsOfAccess || !dataset.isValid
+      }>
       <DropdownButtonItem>Publish</DropdownButtonItem>
       <ChangeCurationStatusMenu />
     </DropdownButton>

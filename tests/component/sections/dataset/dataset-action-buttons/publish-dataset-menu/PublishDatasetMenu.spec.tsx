@@ -15,15 +15,17 @@ describe('PublishDatasetMenu', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createDraftAsLatestVersion(),
       permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
-      locks: []
+      locks: [],
+      hasValidTermsOfAccess: true,
+      isValid: true
     })
 
     cy.customMount(<PublishDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Publish Dataset' })
       .should('exist')
-      .should('be.enabled')
       .click()
+      .should('be.enabled')
 
     cy.findByRole('button', { name: 'Publish' }).should('exist')
   })
@@ -32,7 +34,9 @@ describe('PublishDatasetMenu', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createDraftAsLatestVersion(),
       permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
-      locks: []
+      locks: [],
+      hasValidTermsOfAccess: true,
+      isValid: true
     })
 
     const settingRepository = {} as SettingRepository
@@ -91,7 +95,9 @@ describe('PublishDatasetMenu', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createDraftAsLatestVersion(),
       permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
-      locks: [DatasetLockMother.createLockedInReview()]
+      locks: [DatasetLockMother.createLockedInReview()],
+      hasValidTermsOfAccess: true,
+      isValid: true
     })
 
     cy.customMount(<PublishDatasetMenu dataset={dataset} />)
@@ -108,7 +114,9 @@ describe('PublishDatasetMenu', () => {
           id: 1,
           reason: DatasetLockReason.EDIT_IN_PROGRESS
         }
-      ]
+      ],
+      hasValidTermsOfAccess: true,
+      isValid: true
     })
 
     cy.customMount(<PublishDatasetMenu dataset={dataset} />)
@@ -116,18 +124,30 @@ describe('PublishDatasetMenu', () => {
     cy.findByRole('button', { name: 'Publish Dataset' }).should('be.disabled')
   })
 
-  it.skip('renders the button disabled if the dataset does not have valid terms of access', () => {
-    // TODO - Implement datasetHasValidTermsOfAccess
+  it('renders the button disabled if the dataset does not have valid terms of access', () => {
+    const dataset = DatasetMother.create({
+      version: DatasetVersionMother.createDraftAsLatestVersion(),
+      permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+      locks: [],
+      hasValidTermsOfAccess: false,
+      isValid: true
+    })
 
-    //cy.customMount(<PublishDatasetMenu dataset={dataset} />)
+    cy.customMount(<PublishDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('be.disabled')
   })
 
-  it.skip('renders the button disabled if the dataset is not valid', () => {
-    // TODO - Implement datasetIsNotValid
+  it('renders the button disabled if the dataset is not valid', () => {
+    const dataset = DatasetMother.create({
+      version: DatasetVersionMother.createDraftAsLatestVersion(),
+      permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+      locks: [],
+      hasValidTermsOfAccess: true,
+      isValid: false
+    })
 
-    //cy.customMount(<PublishDatasetMenu dataset={dataset} />)
+    cy.customMount(<PublishDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('be.disabled')
   })
