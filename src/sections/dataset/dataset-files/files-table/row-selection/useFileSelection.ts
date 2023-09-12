@@ -66,16 +66,6 @@ export function useFileSelection(
     setCurrentPageRowSelection({})
     setFileSelection({})
   }
-  const toggleAllFilesSelected = () => {
-    if (areAllFilesSelected()) {
-      clearFileSelection()
-    } else {
-      selectAllFiles()
-    }
-  }
-  const areAllFilesSelected = () => {
-    return Object.keys(fileSelection).length === paginationInfo.totalFiles
-  }
 
   useEffect(() => {
     setFileSelection(updateFileSelection())
@@ -88,8 +78,7 @@ export function useFileSelection(
   return {
     fileSelection,
     selectAllFiles,
-    clearFileSelection,
-    toggleAllFilesSelected
+    clearFileSelection
   }
 }
 
