@@ -3,6 +3,8 @@ import {
   File,
   FileDateType,
   FileEmbargo,
+  FileIngest,
+  FileIngestStatus,
   FileLabel,
   FileLabelType,
   FileSize,
@@ -21,6 +23,27 @@ const createFakeFileLabel = (): FileLabel => ({
   type: faker.helpers.arrayElement(Object.values(FileLabelType)),
   value: faker.lorem.word()
 })
+
+export class FileIngestMother {
+  static create(props?: Partial<FileIngest>): FileIngest {
+    return {
+      status: faker.helpers.arrayElement(Object.values(FileIngestStatus)),
+      reportMessage: valueOrUndefined<string>(faker.lorem.sentence()),
+      ...props
+    }
+  }
+
+  static createInProgress(): FileIngest {
+    return this.create({ status: FileIngestStatus.IN_PROGRESS })
+  }
+
+  static createIngestProblem(reportMessage?: string): FileIngest {
+    return this.create({
+      status: FileIngestStatus.ERROR,
+      reportMessage: reportMessage
+    })
+  }
+}
 
 export class FileMother {
   static create(props?: Partial<File>): File {
@@ -78,6 +101,7 @@ export class FileMother {
           : undefined,
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
       isDeleted: faker.datatype.boolean(),
+      ingest: { status: FileIngestStatus.NONE },
       ...props
     }
 
@@ -97,12 +121,13 @@ export class FileMother {
       fileMockedData.downloads,
       fileMockedData.labels,
       fileMockedData.isDeleted,
-      fileMockedData.thumbnail,
+      fileMockedData.ingest,
       fileMockedData.checksum,
       fileMockedData.embargo,
       fileMockedData.directory,
       fileMockedData.description,
-      fileMockedData.tabularData
+      fileMockedData.tabularData,
+      fileMockedData.thumbnail
     )
   }
 
@@ -306,6 +331,18 @@ export class FileMother {
   static createDeleted(): File {
     return this.createDefault({
       isDeleted: true
+    })
+  }
+
+  static createIngestInProgress(): File {
+    return this.createDefault({
+      ingest: FileIngestMother.createInProgress()
+    })
+  }
+
+  static createIngestProblem(reportMessage?: string): File {
+    return this.createDefault({
+      ingest: FileIngestMother.createIngestProblem(reportMessage)
     })
   }
 }

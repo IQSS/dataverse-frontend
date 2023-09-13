@@ -1,8 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { WithI18next } from '../../../../../WithI18next'
-import { WithSettings } from '../../../../../WithSettings'
-import { RequestAccessModal } from '../../../../../../sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/RequestAccessModal'
-import { WithLoggedInUser } from '../../../../../WithLoggedInUser'
+import { WithI18next } from '../../../../../../WithI18next'
+import { WithSettings } from '../../../../../../WithSettings'
+import { RequestAccessModal } from '../../../../../../../sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/RequestAccessModal'
+import { WithLoggedInUser } from '../../../../../../WithLoggedInUser'
 
 const meta: Meta<typeof RequestAccessModal> = {
   title:

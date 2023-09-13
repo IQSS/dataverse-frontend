@@ -1,9 +1,9 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { WithI18next } from '../../../../../WithI18next'
-import { WithSettings } from '../../../../../WithSettings'
-import { FileMother } from '../../../../../../../tests/component/files/domain/models/FileMother'
-import { FileOptionsMenu } from '../../../../../../sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/FileOptionsMenu'
-import { WithLoggedInUser } from '../../../../../WithLoggedInUser'
+import { WithI18next } from '../../../../../../WithI18next'
+import { WithSettings } from '../../../../../../WithSettings'
+import { FileMother } from '../../../../../../../../tests/component/files/domain/models/FileMother'
+import { FileOptionsMenu } from '../../../../../../../sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/FileOptionsMenu'
+import { WithLoggedInUser } from '../../../../../../WithLoggedInUser'
 
 const meta: Meta<typeof FileOptionsMenu> = {
   title:

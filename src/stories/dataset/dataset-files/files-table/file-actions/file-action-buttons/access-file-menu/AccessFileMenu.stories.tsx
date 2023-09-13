@@ -1,8 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { WithI18next } from '../../../../../WithI18next'
-import { WithSettings } from '../../../../../WithSettings'
-import { AccessFileMenu } from '../../../../../../sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessFileMenu'
-import { FileMother } from '../../../../../../../tests/component/files/domain/models/FileMother'
+import { WithI18next } from '../../../../../../WithI18next'
+import { WithSettings } from '../../../../../../WithSettings'
+import { AccessFileMenu } from '../../../../../../../sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessFileMenu'
+import { FileMother } from '../../../../../../../../tests/component/files/domain/models/FileMother'
 
 const meta: Meta<typeof AccessFileMenu> = {
   title:

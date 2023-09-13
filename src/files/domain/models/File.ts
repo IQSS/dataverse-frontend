@@ -119,6 +119,18 @@ export interface FilePermissions {
   canDownload: boolean
 }
 
+export enum FileIngestStatus {
+  NONE = 'none',
+  IN_PROGRESS = 'inProgress',
+  SCHEDULED = 'scheduled',
+  ERROR = 'error'
+}
+
+export interface FileIngest {
+  status: FileIngestStatus
+  reportMessage?: string
+}
+
 export class File {
   constructor(
     readonly id: string,
@@ -132,12 +144,13 @@ export class File {
     readonly downloads: number,
     readonly labels: FileLabel[],
     public readonly isDeleted: boolean,
-    readonly thumbnail?: string,
+    public readonly ingest: FileIngest,
     readonly checksum?: string,
     readonly embargo?: FileEmbargo,
     readonly directory?: string,
     readonly description?: string,
-    readonly tabularData?: FileTabularData
+    readonly tabularData?: FileTabularData,
+    readonly thumbnail?: string
   ) {}
 
   getLink(): string {
