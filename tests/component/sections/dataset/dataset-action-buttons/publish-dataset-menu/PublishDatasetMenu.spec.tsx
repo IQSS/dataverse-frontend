@@ -151,4 +151,23 @@ describe('PublishDatasetMenu', () => {
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('be.disabled')
   })
+
+  it('renders the Return to Author option if the dataset is in review', () => {
+    const dataset = DatasetMother.create({
+      version: DatasetVersionMother.createDraftAsLatestVersionInReview(),
+      permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+      locks: [],
+      hasValidTermsOfAccess: true,
+      isValid: true
+    })
+
+    cy.customMount(<PublishDatasetMenu dataset={dataset} />)
+
+    cy.findByRole('button', { name: 'Publish Dataset' })
+      .should('exist')
+      .click()
+      .should('be.enabled')
+
+    cy.findByRole('button', { name: 'Return to Author' }).should('exist')
+  })
 })

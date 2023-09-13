@@ -25,6 +25,7 @@ export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
         dataset.isLockedFromPublishing || !dataset.hasValidTermsOfAccess || !dataset.isValid
       }>
       <DropdownButtonItem>Publish</DropdownButtonItem>
+      {dataset.version.isInReview && <DropdownButtonItem>Return to Author</DropdownButtonItem>}
       <ChangeCurationStatusMenu />
     </DropdownButton>
   )
