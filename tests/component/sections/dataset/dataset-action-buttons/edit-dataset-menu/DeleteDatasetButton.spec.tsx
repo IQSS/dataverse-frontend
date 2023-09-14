@@ -23,7 +23,8 @@ describe('DeleteDatasetButton', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithDeleteDatasetAllowed(),
       locks: [],
-      version: DatasetVersionMother.createDraftWithLatestVersionIsADraft()
+      version: DatasetVersionMother.createDraftWithLatestVersionIsADraft(),
+      isReleased: false
     })
 
     cy.customMount(<DeleteDatasetButton dataset={dataset} />)
@@ -35,7 +36,8 @@ describe('DeleteDatasetButton', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithDeleteDatasetAllowed(),
       locks: [],
-      version: DatasetVersionMother.createReleasedWithLatestVersionIsADraft()
+      version: DatasetVersionMother.createReleasedWithLatestVersionIsADraft(),
+      isReleased: true
     })
 
     cy.customMount(<DeleteDatasetButton dataset={dataset} />)

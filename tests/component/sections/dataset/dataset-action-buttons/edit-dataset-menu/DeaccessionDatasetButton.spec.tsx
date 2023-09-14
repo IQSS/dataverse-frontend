@@ -1,7 +1,6 @@
 import {
   DatasetMother,
-  DatasetPermissionsMother,
-  DatasetVersionMother
+  DatasetPermissionsMother
 } from '../../../../dataset/domain/models/DatasetMother'
 import { DeaccessionDatasetButton } from '../../../../../../src/sections/dataset/dataset-action-buttons/edit-dataset-menu/DeaccessionDatasetButton'
 
@@ -9,7 +8,7 @@ describe('DeaccessionDatasetButton', () => {
   it('renders the DeaccessionDatasetButton if the user has publish dataset permissions and the dataset is released', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
-      version: DatasetVersionMother.createReleased()
+      isReleased: true
     })
 
     cy.customMount(<DeaccessionDatasetButton dataset={dataset} />)
@@ -21,7 +20,7 @@ describe('DeaccessionDatasetButton', () => {
   it('does not render the DeaccessionDatasetButton if the user does not have publish dataset permissions', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithPublishingDatasetNotAllowed(),
-      version: DatasetVersionMother.createReleased()
+      isReleased: true
     })
 
     cy.customMount(<DeaccessionDatasetButton dataset={dataset} />)
@@ -32,7 +31,7 @@ describe('DeaccessionDatasetButton', () => {
   it('does not render the DeaccessionDatasetButton if the dataset is not released', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
-      version: DatasetVersionMother.createDraft()
+      isReleased: false
     })
 
     cy.customMount(<DeaccessionDatasetButton dataset={dataset} />)

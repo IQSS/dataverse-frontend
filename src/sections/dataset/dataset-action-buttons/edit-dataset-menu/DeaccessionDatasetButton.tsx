@@ -1,4 +1,4 @@
-import { Dataset, DatasetStatus } from '../../../../dataset/domain/models/Dataset'
+import { Dataset } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButtonItem, DropdownSeparator } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 
@@ -6,7 +6,7 @@ interface DeaccessionDatasetButtonProps {
   dataset: Dataset
 }
 export function DeaccessionDatasetButton({ dataset }: DeaccessionDatasetButtonProps) {
-  if (dataset.version.status !== DatasetStatus.RELEASED || !dataset.permissions.canPublishDataset) {
+  if (!dataset.isReleased || !dataset.permissions.canPublishDataset) {
     return <></>
   }
 

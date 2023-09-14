@@ -18,7 +18,7 @@ export function DeleteDatasetButton({ dataset }: DeleteDatasetButtonProps) {
     <>
       <DropdownSeparator />
       <DropdownButtonItem>
-        {dataset.version.status === DatasetStatus.RELEASED
+        {dataset.isReleased
           ? t('datasetActionButtons.editDataset.delete.draft')
           : t('datasetActionButtons.editDataset.delete.released')}
       </DropdownButtonItem>
