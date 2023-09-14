@@ -1,6 +1,7 @@
 import { Dataset, DatasetStatus } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { ChangeCurationStatusMenu } from './ChangeCurationStatusMenu'
+import { useTranslation } from 'react-i18next'
 
 interface PublishDatasetMenuProps {
   dataset: Dataset
@@ -15,17 +16,20 @@ export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
     return <></>
   }
 
+  const { t } = useTranslation('dataset')
   return (
     <DropdownButton
       id={`publish-dataset-menu`}
-      title="Publish Dataset"
+      title={t('datasetActionButtons.publish.title')}
       asButtonGroup
       variant="secondary"
       disabled={
         dataset.isLockedFromPublishing || !dataset.hasValidTermsOfAccess || !dataset.isValid
       }>
-      <DropdownButtonItem>Publish</DropdownButtonItem>
-      {dataset.version.isInReview && <DropdownButtonItem>Return to Author</DropdownButtonItem>}
+      <DropdownButtonItem>{t('datasetActionButtons.publish.publish')}</DropdownButtonItem>
+      {dataset.version.isInReview && (
+        <DropdownButtonItem>{t('datasetActionButtons.publish.returnToAuthor')}</DropdownButtonItem>
+      )}
       <ChangeCurationStatusMenu />
     </DropdownButton>
   )

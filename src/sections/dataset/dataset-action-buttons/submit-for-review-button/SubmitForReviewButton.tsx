@@ -1,5 +1,6 @@
 import { Dataset, DatasetStatus } from '../../../../dataset/domain/models/Dataset'
 import { Button } from '@iqss/dataverse-design-system'
+import { useTranslation } from 'react-i18next'
 
 interface SubmitForReviewButtonProps {
   dataset: Dataset
@@ -16,13 +17,16 @@ export function SubmitForReviewButton({ dataset }: SubmitForReviewButtonProps) {
     return <></>
   }
 
+  const { t } = useTranslation('dataset')
   return (
     <Button
       variant="secondary"
       disabled={
         dataset.isLockedFromPublishing || !dataset.hasValidTermsOfAccess || !dataset.isValid
       }>
-      {dataset.version.isInReview ? 'Submitted for Review' : 'Submit for Review'}
+      {dataset.version.isInReview
+        ? t('datasetActionButtons.submitForReview.disabled')
+        : t('datasetActionButtons.submitForReview.enabled')}
     </Button>
   )
 }

@@ -7,6 +7,7 @@ import { useSettings } from '../../../settings/SettingsContext'
 import { useEffect, useState } from 'react'
 import { SettingName } from '../../../../settings/domain/models/Setting'
 import { AllowedExternalStatuses } from '../../../../settings/domain/models/AllowedExternalStatuses'
+import { useTranslation } from 'react-i18next'
 
 export function ChangeCurationStatusMenu() {
   const { getSettingByName } = useSettings()
@@ -25,16 +26,19 @@ export function ChangeCurationStatusMenu() {
     return <></>
   }
 
+  const { t } = useTranslation('dataset')
   return (
     <DropdownButton
       id={`change-curation-status-menu`}
-      title="Change Curation Status"
+      title={t('datasetActionButtons.publish.changeCurationStatus')}
       variant="secondary">
       {allowedExternalStatuses.map((status) => (
         <DropdownButtonItem key={status}>{status}</DropdownButtonItem>
       ))}
       <DropdownSeparator />
-      <DropdownButtonItem>Remove Current Status</DropdownButtonItem>
+      <DropdownButtonItem>
+        {t('datasetActionButtons.publish.removeCurrentStatus')}
+      </DropdownButtonItem>
     </DropdownButton>
   )
 }

@@ -6,14 +6,16 @@ import styles from './DatasetActionButtons.module.scss'
 import { SubmitForReviewButton } from './submit-for-review-button/SubmitForReviewButton'
 import { EditDatasetMenu } from './edit-dataset-menu/EditDatasetMenu'
 import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
+import { useTranslation } from 'react-i18next'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset
 }
 
 export function DatasetActionButtons({ dataset }: DatasetActionButtonsProps) {
+  const { t } = useTranslation('dataset')
   return (
-    <ButtonGroup aria-label="Dataset Action Buttons" vertical className={styles.group}>
+    <ButtonGroup aria-label={t('datasetActionButtons.title')} vertical className={styles.group}>
       <AccessDatasetMenu version={dataset.version} permissions={dataset.permissions} />
       <PublishDatasetMenu dataset={dataset} />
       <SubmitForReviewButton dataset={dataset} />

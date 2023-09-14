@@ -17,5 +17,43 @@
     },
     "learnAbout": "Learn About",
     "standards": "Data Citation Standards"
+  },
+  "datasetActionButtons": {
+    "title": "Dataset Action Buttons",
+    "submitForReview": {
+      "enabled": "Submit for Review",
+      "disabled": "Submitted for Review"
+    },
+    "publish": {
+      "title": "Publish Dataset",
+      "publish": "Publish",
+      "returnToAuthor": "Return to Author",
+      "changeCurationStatus": "Change Curation Status",
+      "removeCurrentStatus": "Remove Current Status"
+    },
+    "linkDataset": {
+      "title": "Link Dataset"
+    },
+    "editDataset": {
+      "title": "Edit Dataset",
+      "filesUpload": "Files (Upload)",
+      "metadata": "Metadata",
+      "terms": "Terms",
+      "privateUrl": "Private URL",
+      "thumbnailsPlusWidgets": "Thumbnails + Widgets",
+      "delete": {
+        "draft": "Delete Draft Version",
+        "released": "Delete Dataset"
+      },
+      "deaccession": "Deaccession Dataset",
+      "permissions": {
+        "title": "Permissions",
+        "dataset": "Dataset",
+        "file": "File"
+      }
+    },
+    "accessDataset": {
+      "title": "Access Dataset"
+    }
   }
 }

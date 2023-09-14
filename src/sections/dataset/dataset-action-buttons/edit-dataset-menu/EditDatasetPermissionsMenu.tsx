@@ -4,6 +4,7 @@ import { useSettings } from '../../../settings/SettingsContext'
 import { useEffect, useState } from 'react'
 import { SettingName } from '../../../../settings/domain/models/Setting'
 import { HasPublicStore } from '../../../../settings/domain/models/HasPublicStore'
+import { useTranslation } from 'react-i18next'
 
 interface EditDatasetPermissionsMenuProps {
   dataset: Dataset
@@ -16,6 +17,7 @@ export function EditDatasetPermissionsMenu({ dataset }: EditDatasetPermissionsMe
     return <></>
   }
 
+  const { t } = useTranslation('dataset')
   const { getSettingByName } = useSettings()
   const [hasPublicStore, setHasPublicStore] = useState<HasPublicStore>(false)
 
@@ -30,16 +32,27 @@ export function EditDatasetPermissionsMenu({ dataset }: EditDatasetPermissionsMe
   }, [getSettingByName])
 
   if (hasPublicStore) {
-    return <DropdownButtonItem>Permissions</DropdownButtonItem>
+    return (
+      <DropdownButtonItem>
+        {t('datasetActionButtons.editDataset.permissions.title')}
+      </DropdownButtonItem>
+    )
   }
 
   return (
-    <DropdownButton id={`edit-permissions-menu`} title="Permissions" variant="secondary">
+    <DropdownButton
+      id={`edit-permissions-menu`}
+      title={t('datasetActionButtons.editDataset.permissions.title')}
+      variant="secondary">
       {dataset.permissions.canManageDatasetPermissions && (
-        <DropdownButtonItem>Dataset</DropdownButtonItem>
+        <DropdownButtonItem>
+          {t('datasetActionButtons.editDataset.permissions.dataset')}
+        </DropdownButtonItem>
       )}
       {dataset.permissions.canManageFilesPermissions && (
-        <DropdownButtonItem>File</DropdownButtonItem>
+        <DropdownButtonItem>
+          {t('datasetActionButtons.editDataset.permissions.file')}
+        </DropdownButtonItem>
       )}
     </DropdownButton>
   )

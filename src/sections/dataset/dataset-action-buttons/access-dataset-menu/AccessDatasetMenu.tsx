@@ -4,6 +4,7 @@ import {
   DatasetVersion
 } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
+import { useTranslation } from 'react-i18next'
 
 interface AccessDatasetMenuProps {
   version: DatasetVersion
@@ -18,10 +19,11 @@ export function AccessDatasetMenu({ version, permissions }: AccessDatasetMenuPro
     return <></>
   }
 
+  const { t } = useTranslation('dataset')
   return (
     <DropdownButton
       id={`access-dataset-menu`}
-      title="Access Dataset"
+      title={t('datasetActionButtons.accessDataset.title')}
       asButtonGroup
       variant="primary">
       <DropdownButtonItem>Download</DropdownButtonItem>

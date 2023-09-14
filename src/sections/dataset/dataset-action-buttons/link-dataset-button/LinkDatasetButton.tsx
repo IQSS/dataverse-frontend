@@ -1,5 +1,6 @@
 import { Button } from '@iqss/dataverse-design-system'
 import { Dataset, DatasetStatus } from '../../../../dataset/domain/models/Dataset'
+import { useTranslation } from 'react-i18next'
 
 interface LinkDatasetButtonProps {
   dataset: Dataset
@@ -9,5 +10,7 @@ export function LinkDatasetButton({ dataset }: LinkDatasetButtonProps) {
   if (!dataset.isReleased || dataset.version.status === DatasetStatus.DEACCESSIONED) {
     return <></>
   }
-  return <Button variant="secondary">Link Dataset</Button>
+
+  const { t } = useTranslation('dataset')
+  return <Button variant="secondary">{t('datasetActionButtons.linkDataset.title')}</Button>
 }
