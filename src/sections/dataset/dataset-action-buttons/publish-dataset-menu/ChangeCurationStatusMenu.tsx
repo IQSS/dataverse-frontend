@@ -10,6 +10,7 @@ import { AllowedExternalStatuses } from '../../../../settings/domain/models/Allo
 import { useTranslation } from 'react-i18next'
 
 export function ChangeCurationStatusMenu() {
+  const { t } = useTranslation('dataset')
   const { getSettingByName } = useSettings()
   const [allowedExternalStatuses, setAllowedExternalStatuses] = useState<string[]>([])
   useEffect(() => {
@@ -26,7 +27,6 @@ export function ChangeCurationStatusMenu() {
     return <></>
   }
 
-  const { t } = useTranslation('dataset')
   return (
     <DropdownButton
       id={`change-curation-status-menu`}
