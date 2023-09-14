@@ -26,7 +26,10 @@ export const WithPublishPermissions: Story = {
     <DatasetActionButtons
       dataset={DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithAllAllowed(),
-        version: DatasetVersionMother.createDraftAsLatestVersion()
+        version: DatasetVersionMother.createDraftAsLatestVersion(),
+        hasValidTermsOfAccess: true,
+        isValid: true,
+        isReleased: true
       })}
     />
   )
@@ -37,7 +40,10 @@ export const WithNoDatasetPermissions: Story = {
     <DatasetActionButtons
       dataset={DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithNoDatasetPermissions(),
-        version: DatasetVersionMother.createDraftAsLatestVersion()
+        version: DatasetVersionMother.createDraftAsLatestVersion(),
+        hasValidTermsOfAccess: true,
+        isValid: true,
+        isReleased: true
       })}
     />
   )
@@ -52,7 +58,10 @@ export const WithUpdateAndNoPublishDatasetPermissions: Story = {
           canPublishDataset: false,
           canUpdateDataset: true
         }),
-        version: DatasetVersionMother.createDraftAsLatestVersion()
+        version: DatasetVersionMother.createDraftAsLatestVersion(),
+        hasValidTermsOfAccess: true,
+        isValid: true,
+        isReleased: true
       })}
     />
   )

@@ -102,6 +102,8 @@ $navbar-brand-font-size: $dv-brand-font-size;
 }
 
 .dropdown-menu > .dropdown > .dropdown-toggle {
+  width: 100%;
+  text-align: start;
   background-color: transparent;
   border-color: transparent;
 }

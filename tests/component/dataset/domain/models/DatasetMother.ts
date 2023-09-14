@@ -133,16 +133,23 @@ export class DatasetPermissionsMother {
     return this.create({ canManageDatasetPermissions: false, canManageFilesPermissions: false })
   }
 
-  static createWithManagePermissionsAllowed(): DatasetPermissions {
-    return this.create({ canManageDatasetPermissions: true, canManageFilesPermissions: true })
-  }
-
   static createWithDeleteDatasetAllowed(): DatasetPermissions {
     return this.create({ canDeleteDataset: true })
   }
 
   static createWithDeleteDatasetNotAllowed(): DatasetPermissions {
     return this.create({ canDeleteDataset: false })
+  }
+
+  static createWithNoneAllowed(): DatasetPermissions {
+    return this.create({
+      canDownloadFiles: false,
+      canUpdateDataset: false,
+      canPublishDataset: false,
+      canManageDatasetPermissions: false,
+      canManageFilesPermissions: false,
+      canDeleteDataset: false
+    })
   }
 }
 

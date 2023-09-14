@@ -23,6 +23,8 @@ export const WithSettings = (Story: StoryFn) => {
             'Final Approval'
           ]) as Setting<T>
         )
+      case SettingName.HAS_PUBLIC_STORE:
+        return Promise.resolve(SettingMother.createHasPublicStore(false) as Setting<T>)
     }
   }
 

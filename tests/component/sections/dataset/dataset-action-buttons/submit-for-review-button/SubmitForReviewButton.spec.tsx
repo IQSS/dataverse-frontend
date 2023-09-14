@@ -15,7 +15,9 @@ describe('SubmitForReviewButton', () => {
         canUpdateDataset: true,
         canPublishDataset: false
       }),
-      locks: []
+      locks: [],
+      hasValidTermsOfAccess: true,
+      isValid: true
     })
 
     cy.customMount(<SubmitForReviewButton dataset={dataset} />)
