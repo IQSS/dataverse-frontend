@@ -13,7 +13,7 @@ export function IngestInfoMessage({ ingest }: IngestInfoMessageProps) {
   if (ingest.status === FileIngestStatus.IN_PROGRESS) {
     return (
       <InfoMessageBox>
-        <span>Ingest in progress...</span>
+        <span>{t('ingest.inProgress')}</span>
       </InfoMessageBox>
     )
   }
@@ -22,18 +22,19 @@ export function IngestInfoMessage({ ingest }: IngestInfoMessageProps) {
     return (
       <InfoMessageBox>
         <span>
-          File available in original format only{' '}
+          {t('ingest.error.info')}{' '}
           <QuestionMarkTooltip
             placement="top"
             message={
               <p>
-                <a href="#" title="Tabular Data Files - Dataverse User Guide" target="_blank">
-                  Tabular ingest
+                <a href="#" title={t('ingest.error.tabularIngestGuide')} target="_blank">
+                  {t('ingest.error.tabularIngest')}
                 </a>{' '}
-                was unsuccessful.{' '}
                 {ingest.reportMessage
-                  ? ingest.reportMessage
-                  : 'Ingest failed. No further information is available.'}
+                  ? t('ingest.error.reportMessage', {
+                      reportMessage: ingest.reportMessage
+                    })
+                  : t('ingest.error.reportMessageDefault')}
               </p>
             }
           />
