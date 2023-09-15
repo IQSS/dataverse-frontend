@@ -5,11 +5,13 @@ import { getFilesByDatasetPersistentId } from '../../../files/domain/useCases/ge
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 import { FilesCountInfo } from '../../../files/domain/models/FilesCountInfo'
 import { getFilesCountInfoByDatasetPersistentId } from '../../../files/domain/useCases/getFilesCountInfoByDatasetPersistentId'
+import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 
 export function useFiles(
   filesRepository: FileRepository,
   datasetPersistentId: string,
   datasetVersion?: string,
+  paginationInfo?: FilePaginationInfo,
   criteria?: FileCriteria
 ) {
   const [files, setFiles] = useState<File[]>([])
@@ -22,19 +24,6 @@ export function useFiles(
   })
 
   useEffect(() => {
-    setIsLoading(true)
-    getFilesByDatasetPersistentId(filesRepository, datasetPersistentId, datasetVersion, criteria)
-      .then((files: File[]) => {
-        setFiles(files)
-        setIsLoading(false)
-      })
-      .catch((error) => {
-        console.error('There was an error getting the files', error)
-        setIsLoading(false)
-      })
-  }, [filesRepository, datasetPersistentId, datasetVersion, criteria])
-
-  useEffect(() => {
     getFilesCountInfoByDatasetPersistentId(filesRepository, datasetPersistentId, datasetVersion)
       .then((filesCountInfo: FilesCountInfo) => {
         setFilesCountInfo(filesCountInfo)
@@ -43,6 +32,25 @@ export function useFiles(
         console.error('There was an error getting the files count info', error)
       })
   }, [filesRepository, datasetPersistentId, datasetVersion])
+
+  useEffect(() => {
+    setIsLoading(true)
+    getFilesByDatasetPersistentId(
+      filesRepository,
+      datasetPersistentId,
+      datasetVersion,
+      paginationInfo,
+      criteria
+    )
+      .then((files: File[]) => {
+        setFiles(files)
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error('There was an error getting the files', error)
+        setIsLoading(false)
+      })
+  }, [filesRepository, datasetPersistentId, datasetVersion, paginationInfo, criteria])
 
   return {
     files,

@@ -1,10 +1,22 @@
 import { RowSelectionMessage } from '../../../../../../../src/sections/dataset/dataset-files/files-table/row-selection/RowSelectionMessage'
-import { createRowSelection } from '../../../../../../../src/sections/dataset/dataset-files/files-table/useFilesTable'
+import { createRowSelection } from '../../../../../../../src/sections/dataset/dataset-files/files-table/row-selection/useFileSelection'
 
+let selectAllRows = () => {}
+let clearRowSelection = () => {}
 describe('RowSelectionMessage', () => {
+  beforeEach(() => {
+    selectAllRows = cy.stub().as('selectAllRows')
+    clearRowSelection = cy.stub().as('clearRowSelection')
+  })
+
   it('renders the message when there are more than 10 files and some row is selected', () => {
     cy.customMount(
-      <RowSelectionMessage selectedFilesCount={1} totalFilesCount={11} setRowSelection={() => {}} />
+      <RowSelectionMessage
+        fileSelection={createRowSelection(1)}
+        totalFilesCount={11}
+        selectAllRows={selectAllRows}
+        clearRowSelection={clearRowSelection}
+      />
     )
 
     cy.findByText('1 file is currently selected.')
@@ -14,7 +26,12 @@ describe('RowSelectionMessage', () => {
 
   it('does not render the message when there are less than 10 files', () => {
     cy.customMount(
-      <RowSelectionMessage selectedFilesCount={1} totalFilesCount={9} setRowSelection={() => {}} />
+      <RowSelectionMessage
+        fileSelection={createRowSelection(1)}
+        totalFilesCount={9}
+        selectAllRows={selectAllRows}
+        clearRowSelection={clearRowSelection}
+      />
     )
 
     cy.findByText('1 file is currently selected.').should('not.exist')
@@ -24,7 +41,12 @@ describe('RowSelectionMessage', () => {
 
   it('does not render the message when there are more than 10 files but no row is selected', () => {
     cy.customMount(
-      <RowSelectionMessage selectedFilesCount={0} totalFilesCount={11} setRowSelection={() => {}} />
+      <RowSelectionMessage
+        fileSelection={createRowSelection(0)}
+        totalFilesCount={11}
+        selectAllRows={selectAllRows}
+        clearRowSelection={clearRowSelection}
+      />
     )
 
     cy.findByText('1 file is currently selected.').should('not.exist')
@@ -34,41 +56,44 @@ describe('RowSelectionMessage', () => {
 
   it('renders the plural form of the message when there is more than 1 row selected', () => {
     cy.customMount(
-      <RowSelectionMessage selectedFilesCount={2} totalFilesCount={11} setRowSelection={() => {}} />
+      <RowSelectionMessage
+        fileSelection={createRowSelection(2)}
+        totalFilesCount={11}
+        selectAllRows={selectAllRows}
+        clearRowSelection={clearRowSelection}
+      />
     )
 
     cy.findByText('2 files are currently selected.')
   })
 
-  it("calls setRowSelection when the 'Select all' button is clicked", () => {
-    const setRowSelection = cy.stub().as('setRowSelection')
-
+  it("calls selectAllRows when the 'Select all' button is clicked", () => {
     cy.customMount(
       <RowSelectionMessage
-        selectedFilesCount={1}
+        fileSelection={createRowSelection(1)}
         totalFilesCount={11}
-        setRowSelection={setRowSelection}
+        selectAllRows={selectAllRows}
+        clearRowSelection={clearRowSelection}
       />
     )
 
     cy.findByRole('button', { name: 'Select all 11 files in this dataset.' }).click()
 
-    cy.wrap(setRowSelection).should('be.calledWith', createRowSelection(11))
+    cy.wrap(selectAllRows).should('be.called')
   })
 
-  it("calls setRowSelection when the 'Clear selection.' button is clicked", () => {
-    const setRowSelection = cy.stub().as('setRowSelection')
-
+  it("calls clearRowSelection when the 'Clear selection.' button is clicked", () => {
     cy.customMount(
       <RowSelectionMessage
-        selectedFilesCount={1}
+        fileSelection={createRowSelection(1)}
         totalFilesCount={11}
-        setRowSelection={setRowSelection}
+        selectAllRows={selectAllRows}
+        clearRowSelection={clearRowSelection}
       />
     )
 
     cy.findByRole('button', { name: 'Clear selection.' }).click()
 
-    cy.wrap(setRowSelection).should('be.calledWith', createRowSelection(0))
+    cy.wrap(clearRowSelection).should('be.called')
   })
 })

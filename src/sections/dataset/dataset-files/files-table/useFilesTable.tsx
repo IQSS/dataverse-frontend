@@ -1,43 +1,50 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { File } from '../../../../files/domain/models/File'
-import {
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  useReactTable
-} from '@tanstack/react-table'
+import { getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { columns } from './FilesTableColumnsDefinition'
+import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
+import { useFileSelection } from './row-selection/useFileSelection'
 
-export interface RowSelection {
+export type RowSelection = {
   [key: string]: boolean
 }
 
-export function useFilesTable(files: File[]) {
-  const [rowSelection, setRowSelection] = useState({})
-
+export function useFilesTable(files: File[], paginationInfo: FilePaginationInfo) {
+  const [currentPageRowSelection, setCurrentPageRowSelection] = useState<RowSelection>({})
+  const [currentPageSelectedRowModel, setCurrentPageSelectedRowModel] = useState<
+    Record<string, Row<File>>
+  >({})
+  const { fileSelection, selectAllFiles, clearFileSelection } = useFileSelection(
+    currentPageSelectedRowModel,
+    setCurrentPageRowSelection,
+    paginationInfo
+  )
   const table = useReactTable({
     data: files,
-    columns,
+    columns: columns,
     state: {
-      rowSelection
+      rowSelection: currentPageRowSelection
     },
     enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
+    onRowSelectionChange: setCurrentPageRowSelection,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    debugTable: true
+    manualPagination: true,
+    pageCount: paginationInfo.totalPages
   })
 
-  return { table, rowSelection, setRowSelection }
-}
+  useEffect(() => {
+    table.setPageSize(paginationInfo.pageSize)
+    table.setPageIndex(paginationInfo.page - 1)
+  }, [paginationInfo])
 
-export function createRowSelection(numberOfRows: number) {
-  const rowSelection: Record<string, boolean> = {}
+  useEffect(() => {
+    setCurrentPageSelectedRowModel(table.getSelectedRowModel().rowsById)
+  }, [table.getSelectedRowModel().rowsById])
 
-  for (let i = 0; i < numberOfRows; i++) {
-    rowSelection[i as unknown as string] = true
+  return {
+    table,
+    fileSelection,
+    selectAllFiles,
+    clearFileSelection
   }
-
-  return rowSelection
 }
