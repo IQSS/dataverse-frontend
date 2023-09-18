@@ -18,7 +18,6 @@ import {
 
 export class JSDatasetMapper {
   static toDataset(jsDataset: JSDataset, citation: string, summaryFieldsNames: string[]): Dataset {
-    console.log('js-dataverse getDataset', jsDataset)
     return new Dataset.Builder(
       jsDataset.persistentId,
       JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo),
