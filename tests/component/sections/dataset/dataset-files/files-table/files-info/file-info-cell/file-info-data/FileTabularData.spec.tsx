@@ -6,12 +6,12 @@ describe('FileTabularData', () => {
     const tabularData = {
       variablesCount: 10,
       observationsCount: 100,
-      unf: 'ABC123'
+      unf: 'UNF:6:xXw6cIZnwHWvmRdwhYCQZA=='
     }
     cy.customMount(<FileTabularData tabularData={tabularData} />)
 
     cy.findByText(/10 Variables, 100 Observations/).should('exist')
-    cy.findByText(tabularData.unf).should('exist')
+    cy.findByText('UNF:6:xXw6...QZA==').should('exist')
     cy.findByRole('button', { name: /Copy to clipboard icon/ }).should('exist')
   })
 

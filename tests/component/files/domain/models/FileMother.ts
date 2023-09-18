@@ -34,10 +34,11 @@ export class FileEmbargoMother {
 }
 
 export class FileChecksumMother {
-  static create(): FileChecksum {
+  static create(props?: Partial<FileChecksum>): FileChecksum {
     return {
       algorithm: faker.lorem.word(),
-      value: faker.datatype.uuid()
+      value: faker.datatype.uuid(),
+      ...props
     }
   }
 }
@@ -87,7 +88,7 @@ export class FileMother {
           ? {
               variablesCount: faker.datatype.number(100),
               observationsCount: faker.datatype.number(100),
-              unf: `UNF:${faker.datatype.uuid()}==`
+              unf: `UNF:6:${faker.datatype.uuid()}==`
             }
           : undefined,
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
