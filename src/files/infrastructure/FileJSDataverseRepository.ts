@@ -48,7 +48,6 @@ export class FileJSDataverseRepository implements FileRepository {
         )
       )
       .catch((error: WriteError) => {
-        console.error('Error getting files from Dataverse', error)
         throw new Error(error.message)
       })
   }
@@ -84,7 +83,6 @@ export class FileJSDataverseRepository implements FileRepository {
         JSFileMapper.toFileUserPermissions(id, jsFileUserPermissions)
       )
       .catch((error: WriteError) => {
-        console.error('Error getting the file user permissions from Dataverse', error)
         throw new Error(error.message)
       })
   }
