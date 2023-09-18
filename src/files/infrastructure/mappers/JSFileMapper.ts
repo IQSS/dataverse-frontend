@@ -134,7 +134,6 @@ export class JSFileMapper {
       })
     }
 
-    // TODO - Add custom labels when they are added to js-dataverse
     return fileLabels
   }
 
