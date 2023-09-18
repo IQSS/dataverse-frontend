@@ -22,7 +22,9 @@ export class FileSize {
   }
 
   toString(): string {
-    return `${this.value} ${this.unit}`
+    const formattedValue =
+      this.value % 1 === 0 ? this.value.toFixed(0) : (Math.round(this.value * 10) / 10).toString()
+    return `${formattedValue} ${this.unit}`
   }
 
   toBytes(): number {
