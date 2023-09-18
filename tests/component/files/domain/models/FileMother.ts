@@ -23,9 +23,8 @@ const createFakeFileLabel = (): FileLabel => ({
 })
 
 export class FileEmbargoMother {
-  static create(): FileEmbargo {
-    const dateAvailable = faker.date.future()
-    return new FileEmbargo(dateAvailable)
+  static create(dateAvailable?: Date): FileEmbargo {
+    return new FileEmbargo(dateAvailable ?? faker.date.future())
   }
 
   static createNotActive(): FileEmbargo {
