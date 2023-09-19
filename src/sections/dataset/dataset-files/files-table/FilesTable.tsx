@@ -41,3 +41,18 @@ export function FilesTable({ files, isLoading, paginationInfo }: FilesTableProps
     </>
   )
 }
+
+export function getCellStyle(cellId: string) {
+  const statusCellId = 'status'
+  const infoCellId = 'info'
+
+  if (cellId == statusCellId) {
+    return { borderWidth: '0 1px 0 0' }
+  }
+
+  if (cellId == infoCellId) {
+    return { borderWidth: '0 0 0 1px' }
+  }
+
+  return undefined
+}

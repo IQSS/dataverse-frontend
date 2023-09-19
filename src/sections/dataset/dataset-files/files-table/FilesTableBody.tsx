@@ -2,6 +2,7 @@ import { flexRender, Row } from '@tanstack/react-table'
 import { File } from '../../../../files/domain/models/File'
 import { useTranslation } from 'react-i18next'
 import styles from './FilesTable.module.scss'
+import { getCellStyle } from './FilesTable'
 
 interface FilesTableBodyProps {
   rows: Row<File>[]
@@ -17,8 +18,11 @@ export function FilesTableBody({ rows }: FilesTableBodyProps) {
         return (
           <tr key={row.id} className={row.getIsSelected() ? styles['selected-row'] : ''}>
             {row.getVisibleCells().map((cell) => {
+              const cellIdWithoutPrefix = cell.id.split('_').slice(1).join('_')
               return (
-                <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                <td key={cell.id} style={getCellStyle(cellIdWithoutPrefix)}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
               )
             })}
           </tr>
