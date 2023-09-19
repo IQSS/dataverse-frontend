@@ -3,6 +3,8 @@ import {
   File,
   FileDateType,
   FileEmbargo,
+  FileIngest,
+  FileIngestStatus,
   FileLabel,
   FileLabelType,
   FileSize,
@@ -31,6 +33,26 @@ export class FileEmbargoMother {
   static createNotActive(): FileEmbargo {
     const dateAvailable = faker.date.past()
     return new FileEmbargo(dateAvailable)
+  }
+}
+export class FileIngestMother {
+  static create(props?: Partial<FileIngest>): FileIngest {
+    return {
+      status: faker.helpers.arrayElement(Object.values(FileIngestStatus)),
+      reportMessage: valueOrUndefined<string>(faker.lorem.sentence()),
+      ...props
+    }
+  }
+
+  static createInProgress(): FileIngest {
+    return this.create({ status: FileIngestStatus.IN_PROGRESS })
+  }
+
+  static createIngestProblem(reportMessage?: string): FileIngest {
+    return this.create({
+      status: FileIngestStatus.ERROR,
+      reportMessage: reportMessage
+    })
   }
 }
 
@@ -84,6 +106,8 @@ export class FileMother {
             }
           : undefined,
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
+      isDeleted: faker.datatype.boolean(),
+      ingest: { status: FileIngestStatus.NONE },
       ...props
     }
 
@@ -101,12 +125,14 @@ export class FileMother {
       fileMockedData.date,
       fileMockedData.downloads,
       fileMockedData.labels,
+      fileMockedData.isDeleted,
+      fileMockedData.ingest,
       fileMockedData.checksum,
-      fileMockedData.thumbnail,
-      fileMockedData.directory,
       fileMockedData.embargo,
+      fileMockedData.directory,
+      fileMockedData.description,
       fileMockedData.tabularData,
-      fileMockedData.description
+      fileMockedData.thumbnail
     )
   }
 
@@ -136,6 +162,7 @@ export class FileMother {
       embargo: undefined,
       tabularData: undefined,
       description: undefined,
+      isDeleted: false,
       ...props
     }
     return this.create(defaultFile)
@@ -308,6 +335,23 @@ export class FileMother {
         minorNumber: 0,
         status: FileStatus.DEACCESSIONED
       }
+    })
+  }
+  static createDeleted(): File {
+    return this.createDefault({
+      isDeleted: true
+    })
+  }
+
+  static createIngestInProgress(): File {
+    return this.createDefault({
+      ingest: FileIngestMother.createInProgress()
+    })
+  }
+
+  static createIngestProblem(reportMessage?: string): File {
+    return this.createDefault({
+      ingest: FileIngestMother.createIngestProblem(reportMessage)
     })
   }
 }

@@ -2,10 +2,11 @@ import { Placement } from 'react-bootstrap/types'
 import { QuestionIcon } from './QuestionIcon'
 import styles from './QuestionMarkTooltip.module.scss'
 import { Tooltip } from '../Tooltip'
+import { ReactElement } from 'react'
 
 export interface TooltipProps {
   placement: Placement
-  message: string
+  message: string | ReactElement
 }
 
 export function QuestionMarkTooltip({ placement, message }: TooltipProps) {

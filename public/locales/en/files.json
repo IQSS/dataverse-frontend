@@ -98,6 +98,11 @@
         "editOptions": "Edit Options"
       }
     },
+    "alreadyDeletedAlert": {
+      "title": "Edit File",
+      "message": "This file has already been deleted (or replaced) in the current version. It may not be edited.",
+      "close": "Close"
+    },
     "accessFileMenu": {
       "title": "Access File",
       "headers": {
@@ -128,5 +133,15 @@
     "embargoedThenRestricted": "Files are unavailable during the specified embargo and restricted after that",
     "requestNotAllowed": "Users may not request access to files",
     "accessRequested": "Access Requested"
+  },
+  "ingest": {
+    "inProgress": "Ingest in progress...",
+    "error": {
+      "info": "File available in original format only",
+      "tabularIngest": "Tabular ingest",
+      "tabularIngestGuide": "Tabular Data Files - Dataverse User Guide",
+      "reportMessage": "was unsuccessful. {{reportMessage}}",
+      "reportMessageDefault": "was unsuccessful. Ingest failed. No further information is available."
+    }
   }
 }
