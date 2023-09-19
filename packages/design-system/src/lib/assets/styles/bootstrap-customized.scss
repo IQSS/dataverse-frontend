@@ -61,6 +61,8 @@ $form-label-font-weight: $dv-font-weight-bold;
 
 
 // Table
+$table-cell-vertical-align: middle;
+
 @import "bootstrap/scss/tables";
 
 
@@ -99,4 +101,8 @@ $navbar-brand-font-size: $dv-brand-font-size;
 
 .navbar-collapse {
   justify-content: end;
+}
+
+th {
+  vertical-align: middle;
 }

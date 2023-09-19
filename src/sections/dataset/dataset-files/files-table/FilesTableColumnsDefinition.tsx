@@ -35,7 +35,7 @@ export const createColumnsDefinition = (
     )
   },
   {
-    header: ({ table }) => <FileInfoHeader paginationInfo={paginationInfo} />,
+    header: () => <FileInfoHeader paginationInfo={paginationInfo} />,
     accessorKey: 'info',
     cell: (props) => <FileInfoCell file={props.row.original} />
   },
