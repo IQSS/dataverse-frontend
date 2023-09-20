@@ -88,7 +88,7 @@ export const ButtonGroupWithTooltips: Story = {
           title=""
           asButtonGroup
           variant="secondary"
-          icon={<Download />}>
+          icon={<Download aria-label="Access File" />}>
           <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
           <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
         </DropdownButton>
@@ -99,7 +99,7 @@ export const ButtonGroupWithTooltips: Story = {
           title=""
           asButtonGroup
           variant="secondary"
-          icon={<ThreeDotsVertical />}>
+          icon={<ThreeDotsVertical aria-label="File Options" />}>
           <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
           <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
         </DropdownButton>
