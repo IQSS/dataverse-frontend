@@ -4,6 +4,8 @@ import { Button } from '../../components/button/Button'
 import { ButtonToolbar } from '../../components/button-group/ButtonToolbar'
 import { DropdownButton } from '../../components/dropdown-button/DropdownButton'
 import { DropdownButtonItem } from '../../components/dropdown-button/dropdown-button-item/DropdownButtonItem'
+import { Download, ThreeDotsVertical } from 'react-bootstrap-icons'
+import { Tooltip } from '../../components/tooltip/Tooltip'
 
 /**
  * ## Description
@@ -74,5 +76,34 @@ export const NestedButtonGroups: Story = {
         </ButtonGroup>
       </ButtonGroup>
     </ButtonToolbar>
+  )
+}
+
+export const ButtonGroupWithTooltips: Story = {
+  render: () => (
+    <ButtonGroup>
+      <Tooltip placement="top" overlay="Access File">
+        <DropdownButton
+          id={`action-button-access-file`}
+          title=""
+          asButtonGroup
+          variant="secondary"
+          icon={<Download />}>
+          <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
+          <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
+        </DropdownButton>
+      </Tooltip>
+      <Tooltip placement="top" overlay={<span>File Options</span>}>
+        <DropdownButton
+          id={`file-options-file`}
+          title=""
+          asButtonGroup
+          variant="secondary"
+          icon={<ThreeDotsVertical />}>
+          <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
+          <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
+        </DropdownButton>
+      </Tooltip>
+    </ButtonGroup>
   )
 }
