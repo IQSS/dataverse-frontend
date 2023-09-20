@@ -5,6 +5,7 @@ import {
   FileDate,
   FileDateType,
   FileEmbargo,
+  FileIngestStatus,
   FileLabel,
   FileLabelType,
   FilePublishingStatus,
@@ -33,6 +34,8 @@ export class JSFileMapper {
       this.toFileDate(jsFile.creationDate, jsFile.publicationDate, jsFile.embargo),
       this.toFileDownloads(),
       this.toFileLabels(jsFile.categories, jsFile.tabularTags),
+      false, // TODO - Implement this when it is added to js-dataverse
+      { status: FileIngestStatus.NONE }, // TODO - Implement this when it is added to js-dataverse
       this.toFileChecksum(jsFile.checksum),
       this.toFileThumbnail(),
       this.toFileDirectory(jsFile.directoryLabel),

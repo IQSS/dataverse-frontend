@@ -19,14 +19,20 @@ export class DataverseApiHelper {
     )
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static async request<T>(url: string, method: string, data?: any, isFormData = false): Promise<T> {
+  static async request<T>(
+    url: string,
+    method: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data?: any,
+    contentType = 'application/json'
+  ): Promise<T> {
+    const isFormData = contentType === 'multipart/form-data'
     const config: AxiosRequestConfig = {
       url: `${this.API_URL}${url}`,
       method: method,
       headers: {
         'X-Dataverse-key': this.API_TOKEN,
-        'Content-Type': isFormData ? 'multipart/form-data' : 'application/json'
+        'Content-Type': contentType
       },
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       data: isFormData ? this.createFormData(data) : data

@@ -9,9 +9,13 @@ import {
 } from '../../../../../src/files/domain/models/FileCriteria'
 import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
-import { FileType } from '../../../../../src/files/domain/models/File'
+import { FileSizeUnit, FileType } from '../../../../../src/files/domain/models/File'
 import styles from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
+import { SettingMother } from '../../../settings/domain/models/SettingMother'
+import { ZipDownloadLimit } from '../../../../../src/settings/domain/models/ZipDownloadLimit'
+import { SettingsProvider } from '../../../../../src/sections/settings/SettingsProvider'
+import { SettingRepository } from '../../../../../src/settings/domain/repositories/SettingRepository'
 
 const testFiles = FileMother.createMany(10)
 const datasetPersistentId = 'test-dataset-persistent-id'
@@ -162,6 +166,37 @@ describe('DatasetFiles', () => {
 
       cy.findByText('1 file is currently selected.').should('exist')
     })
+
+    it('renders the zip download limit message when selecting rows from different pages', () => {
+      const settingsRepository = {} as SettingRepository
+      settingsRepository.getByName = cy
+        .stub()
+        .resolves(SettingMother.createZipDownloadLimit(new ZipDownloadLimit(1, FileSizeUnit.BYTES)))
+
+      cy.customMount(
+        <SettingsProvider repository={settingsRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </SettingsProvider>
+      )
+
+      cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
+      cy.findByRole('button', { name: 'Next' }).click()
+      cy.get('table > tbody > tr:nth-child(3) > td:nth-child(1) > input[type=checkbox]').click()
+
+      cy.findByText(
+        /exceeds the zip limit of 1.0 B. Please unselect some files to continue./
+      ).should('exist')
+
+      cy.get('table > tbody > tr:nth-child(3) > td:nth-child(1) > input[type=checkbox]').click()
+
+      cy.findByText(
+        /exceeds the zip limit of 1.0 B. Please unselect some files to continue./
+      ).should('not.exist')
+    })
   })
 
   describe('Calling use cases', () => {
@@ -216,7 +251,7 @@ describe('DatasetFiles', () => {
         />
       )
 
-      cy.findByRole('button', { name: 'Filter Type: All' }).click()
+      cy.findByRole('button', { name: 'File Type: All' }).click()
       cy.findByText('Image (485)').should('exist').click()
       cy.wrap(fileRepository.getAllByDatasetPersistentId).should(
         'be.calledWith',
@@ -256,7 +291,7 @@ describe('DatasetFiles', () => {
         />
       )
 
-      cy.findByRole('button', { name: 'Filter Tag: All' }).click()
+      cy.findByRole('button', { name: 'File Tags: All' }).click()
       cy.findByText('Document (5)').should('exist').click()
       cy.wrap(fileRepository.getAllByDatasetPersistentId).should(
         'be.calledWith',

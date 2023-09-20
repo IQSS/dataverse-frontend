@@ -133,7 +133,7 @@ export class DatasetHelper extends DataverseApiHelper {
       `/datasets/:persistentId/add?persistentId=${datasetPersistentId}`,
       'POST',
       data,
-      true
+      'multipart/form-data'
     )
 
     if (!files || !files[0].dataFile) {
@@ -147,5 +147,17 @@ export class DatasetHelper extends DataverseApiHelper {
       return new Blob([`Name,Age\nJohn,30\nJane,28`], { type: 'text/csv' })
     }
     return new Blob(['Hello, this is some data.'], { type: 'text/plain' })
+  }
+
+  static async setCitationDateFieldType(
+    persistentId: string,
+    fieldType: string
+  ): Promise<{ status: string }> {
+    return this.request<{ status: string }>(
+      `/datasets/:persistentId/citationdate?persistentId=${persistentId}`,
+      'PUT',
+      fieldType,
+      'text/plain'
+    )
   }
 }
