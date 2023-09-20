@@ -2,14 +2,14 @@ export class FilePaginationInfo {
   constructor(
     public readonly page: number = 1,
     public readonly pageSize: number = 10,
-    public readonly total: number = 0
+    public readonly totalFiles: number = 0
   ) {}
 
   withTotal(total: number): FilePaginationInfo {
     return new FilePaginationInfo(this.page, this.pageSize, total)
   }
   goToPage(page: number): FilePaginationInfo {
-    return new FilePaginationInfo(page, this.pageSize, this.total)
+    return new FilePaginationInfo(page, this.pageSize, this.totalFiles)
   }
 
   goToPreviousPage(): FilePaginationInfo {
@@ -27,11 +27,11 @@ export class FilePaginationInfo {
       const newPage = Math.ceil((this.page * oldPageSize) / newPageSize)
       return newPage > 0 ? newPage : 1
     }
-    return new FilePaginationInfo(getNewPage(this.pageSize, pageSize), pageSize, this.total)
+    return new FilePaginationInfo(getNewPage(this.pageSize, pageSize), pageSize, this.totalFiles)
   }
 
   get totalPages(): number {
-    return Math.ceil(this.total / this.pageSize)
+    return Math.ceil(this.totalFiles / this.pageSize)
   }
 
   get hasPreviousPage(): boolean {

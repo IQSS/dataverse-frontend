@@ -58,9 +58,9 @@ describe('FileCriteriaForm', () => {
     )
 
     cy.findByRole('button', { name: /Sort/ }).should('not.exist')
-    cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'File Type: All' }).should('not.exist')
     cy.findByRole('button', { name: 'Access: All' }).should('not.exist')
-    cy.findByRole('button', { name: 'Filter Tag: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'File Tags: All' }).should('not.exist')
     cy.findByLabelText('Search').should('not.exist')
   })
 
@@ -85,9 +85,9 @@ describe('FileCriteriaForm', () => {
       />
     )
 
-    cy.findByRole('button', { name: 'Filter Type: All' }).should('exist')
+    cy.findByRole('button', { name: 'File Type: All' }).should('exist')
     cy.findByRole('button', { name: 'Access: All' }).should('exist')
-    cy.findByRole('button', { name: 'Filter Tag: All' }).should('exist')
+    cy.findByRole('button', { name: 'File Tags: All' }).should('exist')
     cy.findByText('Filter by').should('exist')
   })
 
@@ -120,9 +120,9 @@ describe('FileCriteriaForm', () => {
     cy.findByRole('button', { name: /Sort/ }).click()
     cy.findByText('Oldest').click()
 
-    cy.findByRole('button', { name: 'Filter Type: Image' }).should('exist')
+    cy.findByRole('button', { name: 'File Type: Image' }).should('exist')
     cy.findByRole('button', { name: 'Access: Public' }).should('exist')
-    cy.findByRole('button', { name: 'Filter Tag: Document' }).should('exist')
+    cy.findByRole('button', { name: 'File Tags: Document' }).should('exist')
   })
 
   it('saves global criteria when the filter by type option changes', () => {
@@ -139,12 +139,12 @@ describe('FileCriteriaForm', () => {
       />
     )
 
-    cy.findByRole('button', { name: 'Filter Type: Image' }).click()
+    cy.findByRole('button', { name: 'File Type: Image' }).click()
     cy.findByText('Text (10)').click()
 
-    cy.findByRole('button', { name: 'Filter Type: Text' }).should('exist')
+    cy.findByRole('button', { name: 'File Type: Text' }).should('exist')
     cy.findByRole('button', { name: 'Access: Public' }).should('exist')
-    cy.findByRole('button', { name: 'Filter Tag: Document' }).should('exist')
+    cy.findByRole('button', { name: 'File Tags: Document' }).should('exist')
   })
 
   it('saves global criteria when the filter by access option changes', () => {
@@ -164,9 +164,9 @@ describe('FileCriteriaForm', () => {
     cy.findByRole('button', { name: 'Access: Public' }).click()
     cy.findByText('Restricted (10)').click()
 
-    cy.findByRole('button', { name: 'Filter Type: Image' }).should('exist')
+    cy.findByRole('button', { name: 'File Type: Image' }).should('exist')
     cy.findByRole('button', { name: 'Access: Restricted' }).should('exist')
-    cy.findByRole('button', { name: 'Filter Tag: Document' }).should('exist')
+    cy.findByRole('button', { name: 'File Tags: Document' }).should('exist')
   })
 
   it('saves global criteria when the filter by tag option changes', () => {
@@ -183,12 +183,12 @@ describe('FileCriteriaForm', () => {
       />
     )
 
-    cy.findByRole('button', { name: 'Filter Tag: Document' }).click()
+    cy.findByRole('button', { name: 'File Tags: Document' }).click()
     cy.findByText('Data (10)').click()
 
-    cy.findByRole('button', { name: 'Filter Type: Image' }).should('exist')
+    cy.findByRole('button', { name: 'File Type: Image' }).should('exist')
     cy.findByRole('button', { name: 'Access: Public' }).should('exist')
-    cy.findByRole('button', { name: 'Filter Tag: Data' }).should('exist')
+    cy.findByRole('button', { name: 'File Tags: Data' }).should('exist')
   })
 
   it('saves global criteria when the search input changes', () => {
@@ -208,9 +208,9 @@ describe('FileCriteriaForm', () => {
 
     cy.findByLabelText('Search').clear().type('new search')
 
-    cy.findByRole('button', { name: 'Filter Type: Image' }).should('exist')
+    cy.findByRole('button', { name: 'File Type: Image' }).should('exist')
     cy.findByRole('button', { name: 'Access: Public' }).should('exist')
-    cy.findByRole('button', { name: 'Filter Tag: Document' }).should('exist')
+    cy.findByRole('button', { name: 'File Tags: Document' }).should('exist')
     cy.findByLabelText('Search').should('have.value', 'new search')
   })
 

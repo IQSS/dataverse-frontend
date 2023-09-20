@@ -15,7 +15,7 @@ interface FilesTableProps {
 }
 
 export function FilesTable({ files, isLoading, paginationInfo }: FilesTableProps) {
-  const { table, rowSelection, selectAllRows, clearRowSelection } = useFilesTable(
+  const { table, fileSelection, selectAllFiles, clearFileSelection } = useFilesTable(
     files,
     paginationInfo
   )
@@ -26,14 +26,12 @@ export function FilesTable({ files, isLoading, paginationInfo }: FilesTableProps
   return (
     <>
       <RowSelectionMessage
-        rowSelection={rowSelection}
-        selectAllRows={selectAllRows}
-        totalFilesCount={paginationInfo.total}
-        clearRowSelection={clearRowSelection}
+        fileSelection={fileSelection}
+        selectAllRows={selectAllFiles}
+        totalFilesCount={paginationInfo.totalFiles}
+        clearRowSelection={clearFileSelection}
       />
-      <ZipDownloadLimitMessage
-        selectedFiles={table.getSelectedRowModel().flatRows.map((row) => row.original)}
-      />
+      <ZipDownloadLimitMessage fileSelection={fileSelection} />
       <Table>
         <FilesTableHeader headers={table.getHeaderGroups()} />
         <FilesTableBody rows={table.getRowModel().rows} />

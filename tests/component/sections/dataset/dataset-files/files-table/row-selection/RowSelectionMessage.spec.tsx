@@ -1,5 +1,5 @@
 import { RowSelectionMessage } from '../../../../../../../src/sections/dataset/dataset-files/files-table/row-selection/RowSelectionMessage'
-import { createRowSelection } from '../../../../../../../src/sections/dataset/dataset-files/files-table/row-selection/useRowSelection'
+import { createRowSelection } from '../../../../../../../src/sections/dataset/dataset-files/files-table/row-selection/useFileSelection'
 
 let selectAllRows = () => {}
 let clearRowSelection = () => {}
@@ -12,7 +12,7 @@ describe('RowSelectionMessage', () => {
   it('renders the message when there are more than 10 files and some row is selected', () => {
     cy.customMount(
       <RowSelectionMessage
-        rowSelection={createRowSelection(1)}
+        fileSelection={createRowSelection(1)}
         totalFilesCount={11}
         selectAllRows={selectAllRows}
         clearRowSelection={clearRowSelection}
@@ -27,7 +27,7 @@ describe('RowSelectionMessage', () => {
   it('does not render the message when there are less than 10 files', () => {
     cy.customMount(
       <RowSelectionMessage
-        rowSelection={createRowSelection(1)}
+        fileSelection={createRowSelection(1)}
         totalFilesCount={9}
         selectAllRows={selectAllRows}
         clearRowSelection={clearRowSelection}
@@ -42,7 +42,7 @@ describe('RowSelectionMessage', () => {
   it('does not render the message when there are more than 10 files but no row is selected', () => {
     cy.customMount(
       <RowSelectionMessage
-        rowSelection={createRowSelection(0)}
+        fileSelection={createRowSelection(0)}
         totalFilesCount={11}
         selectAllRows={selectAllRows}
         clearRowSelection={clearRowSelection}
@@ -57,7 +57,7 @@ describe('RowSelectionMessage', () => {
   it('renders the plural form of the message when there is more than 1 row selected', () => {
     cy.customMount(
       <RowSelectionMessage
-        rowSelection={createRowSelection(2)}
+        fileSelection={createRowSelection(2)}
         totalFilesCount={11}
         selectAllRows={selectAllRows}
         clearRowSelection={clearRowSelection}
@@ -70,7 +70,7 @@ describe('RowSelectionMessage', () => {
   it("calls selectAllRows when the 'Select all' button is clicked", () => {
     cy.customMount(
       <RowSelectionMessage
-        rowSelection={createRowSelection(1)}
+        fileSelection={createRowSelection(1)}
         totalFilesCount={11}
         selectAllRows={selectAllRows}
         clearRowSelection={clearRowSelection}
@@ -85,7 +85,7 @@ describe('RowSelectionMessage', () => {
   it("calls clearRowSelection when the 'Clear selection.' button is clicked", () => {
     cy.customMount(
       <RowSelectionMessage
-        rowSelection={createRowSelection(1)}
+        fileSelection={createRowSelection(1)}
         totalFilesCount={11}
         selectAllRows={selectAllRows}
         clearRowSelection={clearRowSelection}

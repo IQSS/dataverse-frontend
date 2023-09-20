@@ -71,10 +71,10 @@
       "title": "Filter by"
     },
     "filterByType": {
-      "title": "Filter Type"
+      "title": "File Type"
     },
     "filterByTag": {
-      "title": "Filter Tag"
+      "title": "File Tags"
     },
     "filterByAccess": {
       "title": "Access",

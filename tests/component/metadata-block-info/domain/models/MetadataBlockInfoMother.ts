@@ -19,9 +19,12 @@ export class MetadataBlockInfoMother {
         datasetContact: { displayFormat: '#VALUE' },
         datasetContactName: { displayFormat: '#VALUE' },
         datasetContactAffiliation: { displayFormat: '(#VALUE)' },
-        datasetContactEmail: { displayFormat: '#VALUE' },
+        datasetContactEmail: { displayFormat: '[#VALUE](mailto:#VALUE)' },
         dsDescription: { displayFormat: '' },
-        dsDescriptionValue: { displayFormat: '#VALUE' }
+        dsDescriptionValue: { displayFormat: '#VALUE' },
+        producerURL: { displayFormat: '[#VALUE](#VALUE)' },
+        producerLogoURL: { displayFormat: '![#NAME](#VALUE)' },
+        dateOfCollectionStart: { displayFormat: '#NAME: #VALUE ' }
       },
       ...props
     }
