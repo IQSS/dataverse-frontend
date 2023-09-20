@@ -6,9 +6,7 @@ import { FileInfoHeader } from './file-info/FileInfoHeader'
 import { FileActionsHeader } from './file-actions/FileActionsHeader'
 import { FileActionsCell } from './file-actions/file-actions-cell/FileActionsCell'
 
-export const createColumnsDefinition = (
-  toggleAllRowsSelected: (event: unknown) => void
-): ColumnDef<File>[] => [
+export const columns: ColumnDef<File>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -16,7 +14,7 @@ export const createColumnsDefinition = (
         {...{
           checked: table.getIsAllRowsSelected(),
           indeterminate: table.getIsSomeRowsSelected(),
-          onChange: toggleAllRowsSelected,
+          onChange: table.getToggleAllRowsSelectedHandler(),
           disabled: table.getPageCount() === 0
         }}
       />

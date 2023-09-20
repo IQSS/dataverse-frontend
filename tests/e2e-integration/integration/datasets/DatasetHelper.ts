@@ -21,4 +21,16 @@ export class DatasetHelper extends DataverseApiHelper {
   static async createPrivateUrl(id: string): Promise<{ token: string }> {
     return this.request<{ token: string }>(`/datasets/${id}/privateUrl`, 'POST')
   }
+
+  static async setCitationDateFieldType(
+    persistentId: string,
+    fieldType: string
+  ): Promise<{ status: string }> {
+    return this.request<{ status: string }>(
+      `/datasets/:persistentId/citationdate?persistentId=${persistentId}`,
+      'PUT',
+      fieldType,
+      'text/plain'
+    )
+  }
 }

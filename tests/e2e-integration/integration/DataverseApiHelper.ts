@@ -14,13 +14,18 @@ export class DataverseApiHelper {
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  static async request<T>(url: string, method: string, data?: any): Promise<T> {
+  static async request<T>(
+    url: string,
+    method: string,
+    data?: any,
+    contentType?: string
+  ): Promise<T> {
     const config: AxiosRequestConfig = {
       url: `${this.API_URL}${url}`,
       method: method,
       headers: {
         'X-Dataverse-key': this.API_TOKEN,
-        'Content-Type': 'application/json'
+        'Content-Type': contentType ? contentType : 'application/json'
       },
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       data: data
