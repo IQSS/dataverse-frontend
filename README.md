@@ -4,6 +4,10 @@
 [![Tests](https://github.com/IQSS/dataverse-frontend/actions/workflows/test.yml/badge.svg)](https://github.com/IQSS/dataverse-frontend/actions/workflows/test.yml)
 [![Unit Tests Coverage](https://coveralls.io/repos/github/IQSS/dataverse-frontend/badge.svg?branch=develop)](https://coveralls.io/github/IQSS/dataverse-frontend?branch=develop)
 
+## Demo videos
+
+- 2023-08-01: [View mode of the dataset page](https://groups.google.com/g/dataverse-community/c/cxZ3Bal_-uo/m/h3kh3iVNCwAJ)
+
 ## Getting Started
 
 First install node >=16 and npm >=8. Recommended versions `node v19` and `npm v9`.
@@ -179,6 +183,19 @@ For this workflow to work, a GitHub environment must be configured with the foll
 It is important that the remote instance is correctly pre-configured, with the Payara server running, and a service account for Dataverse with the corresponding SSH key pair established.
 
 A base path for the frontend application can be established on the remote server by setting the corresponding field in the workflow inputs. This mechanism prevents conflicts between the frontend application and any pre-existing deployed application running on Payara, which can potentially be a Dataverse backend. This way, only the routes with the base path included will redirect to the frontend application.
+
+#### Beta Testing Environment
+
+To make the SPA Frontend accesible and testable by people interested in the project, there is a remote beta testing environment that includes the latest changes developed both for the frontend application and the Dataverse backend application (develop branches).
+
+This environment follows the "all-in-one" solution described above, where both applications coexist on a Payara server.
+
+Environment updates are carried out automatically through GitHub actions, present both in this repository and in the Dataverse backend repository, which deploy the develop branches when any change is pushed to them.
+
+The environment is accessible through the following URLs:
+
+- SPA: https://beta.dataverse.org/spa
+- JSF: https://beta.dataverse.org
 
 ## Changes from the Style Guide
 

@@ -68,13 +68,13 @@ export class DatasetMother {
                 authorName: faker.lorem.sentence(),
                 authorAffiliation: faker.lorem.sentence(),
                 authorIdentifierScheme: faker.lorem.sentence(),
-                authorIdentifier: faker.lorem.sentence()
+                authorIdentifier: faker.lorem.word()
               },
               {
                 authorName: faker.lorem.sentence(),
                 authorAffiliation: faker.lorem.sentence(),
                 authorIdentifierScheme: faker.lorem.sentence(),
-                authorIdentifier: faker.lorem.sentence()
+                authorIdentifier: faker.lorem.word()
               }
             ],
             datasetContact: [
@@ -86,6 +86,13 @@ export class DatasetMother {
             dsDescription: [
               {
                 dsDescriptionValue: faker.lorem.sentence()
+              }
+            ],
+            producer: [
+              {
+                producerName: faker.lorem.sentence(),
+                producerURL: faker.internet.url(),
+                producerLogoURL: faker.image.imageUrl()
               }
             ]
           }

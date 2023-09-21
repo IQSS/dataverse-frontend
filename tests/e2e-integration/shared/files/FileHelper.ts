@@ -112,7 +112,7 @@ export class FileHelper extends DataverseApiHelper {
       `/files/${id}/metadata`,
       'POST',
       { jsonData: JSON.stringify(newMetadata) },
-      true
+      'multipart/form-data'
     )
   }
 
@@ -125,7 +125,7 @@ export class FileHelper extends DataverseApiHelper {
       `/files/${id}/metadata`,
       'POST',
       { jsonData: JSON.stringify(newMetadata) },
-      true
+      'multipart/form-data'
     )
   }
 }

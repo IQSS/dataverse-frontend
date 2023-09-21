@@ -4,11 +4,11 @@ import { FileChecksumMother } from '../../../../../../../files/domain/models/Fil
 
 describe('FileChecksum', () => {
   it('renders the checksum and CopyToClipboardButton when checksum is provided', () => {
-    const checksum = FileChecksumMother.create()
+    const checksum = FileChecksumMother.create({ value: '0187a54071542738aa47939e8218e5f2' })
     cy.customMount(<FileChecksum checksum={checksum} />)
 
     cy.findByText(`${checksum.algorithm}:`).should('exist')
-    cy.findByText(checksum.value).should('exist')
+    cy.findByText('018...5f2').should('exist')
     cy.findByRole('button', { name: /Copy to clipboard icon/ }).should('exist')
   })
 

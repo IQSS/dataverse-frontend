@@ -18,14 +18,18 @@ import {
 
 export class JSDatasetMapper {
   static toDataset(jsDataset: JSDataset, citation: string, summaryFieldsNames: string[]): Dataset {
-    console.log('js-dataverse getDataset', jsDataset)
     return new Dataset.Builder(
       jsDataset.persistentId,
       JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo),
       citation,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
-      JSDatasetMapper.toMetadataBlocks(jsDataset.metadataBlocks) // TODO Add alternativePersistentId, publicationDate, citationDate
+      JSDatasetMapper.toMetadataBlocks(
+        jsDataset.metadataBlocks,
+        jsDataset.alternativePersistentId,
+        jsDataset.publicationDate,
+        jsDataset.citationDate
+      )
     ).build()
   }
 
@@ -148,7 +152,7 @@ export class JSDatasetMapper {
       extraFields.publicationDate = publicationDate
     }
 
-    if (publicationDate && citationDate !== publicationDate) {
+    if (citationDate && citationDate !== publicationDate) {
       extraFields.citationDate = citationDate
     }
 

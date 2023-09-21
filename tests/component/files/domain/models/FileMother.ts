@@ -3,6 +3,8 @@ import {
   File,
   FileDateType,
   FileEmbargo,
+  FileIngest,
+  FileIngestStatus,
   FileLabel,
   FileLabelType,
   FileSize,
@@ -23,9 +25,8 @@ const createFakeFileLabel = (): FileLabel => ({
 })
 
 export class FileEmbargoMother {
-  static create(): FileEmbargo {
-    const dateAvailable = faker.date.future()
-    return new FileEmbargo(dateAvailable)
+  static create(dateAvailable?: Date): FileEmbargo {
+    return new FileEmbargo(dateAvailable ?? faker.date.future())
   }
 
   static createNotActive(): FileEmbargo {
@@ -33,12 +34,33 @@ export class FileEmbargoMother {
     return new FileEmbargo(dateAvailable)
   }
 }
+export class FileIngestMother {
+  static create(props?: Partial<FileIngest>): FileIngest {
+    return {
+      status: faker.helpers.arrayElement(Object.values(FileIngestStatus)),
+      reportMessage: valueOrUndefined<string>(faker.lorem.sentence()),
+      ...props
+    }
+  }
+
+  static createInProgress(): FileIngest {
+    return this.create({ status: FileIngestStatus.IN_PROGRESS })
+  }
+
+  static createIngestProblem(reportMessage?: string): FileIngest {
+    return this.create({
+      status: FileIngestStatus.ERROR,
+      reportMessage: reportMessage
+    })
+  }
+}
 
 export class FileChecksumMother {
-  static create(): FileChecksum {
+  static create(props?: Partial<FileChecksum>): FileChecksum {
     return {
       algorithm: faker.lorem.word(),
-      value: faker.datatype.uuid()
+      value: faker.datatype.uuid(),
+      ...props
     }
   }
 }
@@ -88,10 +110,12 @@ export class FileMother {
           ? {
               variablesCount: faker.datatype.number(100),
               observationsCount: faker.datatype.number(100),
-              unf: `UNF:${faker.datatype.uuid()}==`
+              unf: `UNF:6:${faker.datatype.uuid()}==`
             }
           : undefined,
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
+      isDeleted: faker.datatype.boolean(),
+      ingest: { status: FileIngestStatus.NONE },
       ...props
     }
 
@@ -105,6 +129,8 @@ export class FileMother {
       fileMockedData.date,
       fileMockedData.downloadCount,
       fileMockedData.labels,
+      fileMockedData.isDeleted,
+      fileMockedData.ingest,
       fileMockedData.checksum,
       fileMockedData.thumbnail,
       fileMockedData.directory,
@@ -139,6 +165,7 @@ export class FileMother {
       embargo: undefined,
       tabularData: undefined,
       description: undefined,
+      isDeleted: false,
       ...props
     }
     return this.create(defaultFile)
@@ -310,6 +337,23 @@ export class FileMother {
         number: 1,
         publishingStatus: FilePublishingStatus.DEACCESSIONED
       }
+    })
+  }
+  static createDeleted(): File {
+    return this.createDefault({
+      isDeleted: true
+    })
+  }
+
+  static createIngestInProgress(): File {
+    return this.createDefault({
+      ingest: FileIngestMother.createInProgress()
+    })
+  }
+
+  static createIngestProblem(reportMessage?: string): File {
+    return this.createDefault({
+      ingest: FileIngestMother.createIngestProblem(reportMessage)
     })
   }
 }

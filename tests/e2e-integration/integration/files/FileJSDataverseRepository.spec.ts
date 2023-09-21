@@ -4,6 +4,7 @@ import {
   File,
   FileDateType,
   FileEmbargo,
+  FileIngestStatus,
   FileLabelType,
   FilePublishingStatus,
   FileSize,
@@ -51,6 +52,8 @@ const expectedFile = new File(
   },
   0,
   [],
+  false,
+  { status: FileIngestStatus.NONE },
   {
     algorithm: 'MD5',
     value: '0187a54071542738aa47939e8218e5f2'

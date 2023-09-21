@@ -279,7 +279,7 @@ describe('Dataset', () => {
           cy.findByText('Files').should('exist')
 
           cy.findByText(/Deposited/).should('exist')
-          cy.findByText('Draft: will be embargoed until Wed Oct 20 2100').should('exist')
+          cy.findByText('Draft: will be embargoed until Oct 20, 2100').should('exist')
 
           cy.findByRole('button', { name: 'Access File' }).should('exist').click()
           cy.findByText('Embargoed').should('exist')
