@@ -1,6 +1,9 @@
 import { DatasetCitation } from '../../../../../src/sections/dataset/dataset-citation/DatasetCitation'
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
-import { DatasetStatus, DatasetVersion } from '../../../../../src/dataset/domain/models/Dataset'
+import {
+  DatasetPublishingStatus,
+  DatasetVersion
+} from '../../../../../src/dataset/domain/models/Dataset'
 
 describe('DatasetCitation', () => {
   it('renders the DatasetCitation fields of released Dataset', () => {
@@ -21,7 +24,13 @@ describe('DatasetCitation', () => {
 
   it('shows the draft tooltip when version is draft', () => {
     const dataset = DatasetMother.create({
-      version: new DatasetVersion(1, 0, DatasetStatus.DRAFT, false, false, false)
+      version: new DatasetVersion(
+        1,
+        DatasetPublishingStatus.DRAFT,
+        true,
+        false,
+        DatasetPublishingStatus.DRAFT
+      )
     })
     cy.customMount(<DatasetCitation citation={dataset.citation} version={dataset.version} />)
 
@@ -33,7 +42,15 @@ describe('DatasetCitation', () => {
 
   it('shows the deaccessioned tooltip when version is deaccessioned', () => {
     const dataset = DatasetMother.create({
-      version: new DatasetVersion(1, 0, DatasetStatus.DEACCESSIONED, false, false, false)
+      version: new DatasetVersion(
+        1,
+        DatasetPublishingStatus.DEACCESSIONED,
+        true,
+        false,
+        DatasetPublishingStatus.DEACCESSIONED,
+        1,
+        0
+      )
     })
     cy.customMount(<DatasetCitation citation={dataset.citation} version={dataset.version} />)
 

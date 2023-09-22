@@ -8,7 +8,7 @@ import {
   DatasetLockReason,
   DatasetMetadataBlocks,
   DatasetPermissions,
-  DatasetStatus,
+  DatasetPublishingStatus,
   DatasetVersion,
   MetadataBlockName
 } from '../../../../../src/dataset/domain/models/Dataset'
@@ -16,52 +16,62 @@ import {
 export class DatasetVersionMother {
   static create(props?: Partial<DatasetVersion>): DatasetVersion {
     return new DatasetVersion(
-      props?.majorNumber ?? 1,
-      props?.minorNumber ?? 0,
-      props?.status ?? DatasetStatus.RELEASED,
+      props?.id ?? faker.datatype.number(),
+      props?.publishingStatus ?? DatasetPublishingStatus.RELEASED,
       props?.isLatest ?? false,
       props?.isInReview ?? false,
-      props?.latestVersionStatus ?? DatasetStatus.RELEASED
+      props?.latestVersionStatus ?? DatasetPublishingStatus.RELEASED,
+      props?.majorNumber ?? 1,
+      props?.minorNumber ?? 0
     )
   }
 
   static createReleased(): DatasetVersion {
-    return new DatasetVersion(1, 0, DatasetStatus.RELEASED, false, false, DatasetStatus.RELEASED)
+    return this.create({ publishingStatus: DatasetPublishingStatus.RELEASED })
   }
 
   static createDeaccessioned(): DatasetVersion {
-    return new DatasetVersion(
-      1,
-      0,
-      DatasetStatus.DEACCESSIONED,
-      false,
-      false,
-      DatasetStatus.RELEASED
-    )
+    return this.create({ publishingStatus: DatasetPublishingStatus.DEACCESSIONED })
   }
 
   static createDraftAsLatestVersion(): DatasetVersion {
-    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, true, false, DatasetStatus.RELEASED)
+    return this.create({ publishingStatus: DatasetPublishingStatus.DRAFT, isLatest: true })
   }
 
   static createDraft(): DatasetVersion {
-    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, false, false, DatasetStatus.RELEASED)
+    return this.create({ publishingStatus: DatasetPublishingStatus.DRAFT })
   }
 
   static createDraftAsLatestVersionInReview(): DatasetVersion {
-    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, true, true, DatasetStatus.RELEASED)
+    return this.create({
+      publishingStatus: DatasetPublishingStatus.DRAFT,
+      isLatest: true,
+      isInReview: true
+    })
   }
 
   static createReleasedWithLatestVersionIsADraft(): DatasetVersion {
-    return new DatasetVersion(1, 0, DatasetStatus.RELEASED, false, false, DatasetStatus.DRAFT)
+    return this.create({
+      publishingStatus: DatasetPublishingStatus.RELEASED,
+      isLatest: true,
+      latestVersionStatus: DatasetPublishingStatus.DRAFT
+    })
   }
 
   static createDraftWithLatestVersionIsADraft(): DatasetVersion {
-    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, false, false, DatasetStatus.DRAFT)
+    return this.create({
+      publishingStatus: DatasetPublishingStatus.DRAFT,
+      isLatest: true,
+      latestVersionStatus: DatasetPublishingStatus.DRAFT
+    })
   }
 
   static createWithLatestVersionIsNotADraft(): DatasetVersion {
-    return new DatasetVersion(1, 0, DatasetStatus.DRAFT, false, false, DatasetStatus.RELEASED)
+    return this.create({
+      publishingStatus: DatasetPublishingStatus.DRAFT,
+      isLatest: true,
+      latestVersionStatus: DatasetPublishingStatus.RELEASED
+    })
   }
 }
 

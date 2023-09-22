@@ -1,4 +1,4 @@
-import { Dataset, DatasetStatus } from '../../../../dataset/domain/models/Dataset'
+import { Dataset, DatasetPublishingStatus } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { ChangeCurationStatusMenu } from './ChangeCurationStatusMenu'
 import { useTranslation } from 'react-i18next'
@@ -10,7 +10,7 @@ interface PublishDatasetMenuProps {
 export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
   if (
     !dataset.version.isLatest ||
-    dataset.version.status !== DatasetStatus.DRAFT ||
+    dataset.version.publishingStatus !== DatasetPublishingStatus.DRAFT ||
     !dataset.permissions.canPublishDataset
   ) {
     return <></>

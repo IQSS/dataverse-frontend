@@ -24,7 +24,7 @@ export const Default: Story = {
     <DatasetFiles
       filesRepository={new FileMockRepository()}
       datasetPersistentId={testDataset.persistentId}
-      datasetVersion={testDataset.version.toString()}
+      datasetVersion={testDataset.version}
     />
   )
 }
@@ -34,7 +34,7 @@ export const Loading: Story = {
     <DatasetFiles
       filesRepository={new FileMockLoadingRepository()}
       datasetPersistentId={testDataset.persistentId}
-      datasetVersion={testDataset.version.toString()}
+      datasetVersion={testDataset.version}
     />
   )
 }
@@ -44,7 +44,7 @@ export const NoFiles: Story = {
     <DatasetFiles
       filesRepository={new FileMockNoDataRepository()}
       datasetPersistentId={testDataset.persistentId}
-      datasetVersion={testDataset.version.toString()}
+      datasetVersion={testDataset.version}
     />
   )
 }
@@ -54,7 +54,7 @@ export const NoFilters: Story = {
     <DatasetFiles
       filesRepository={new FileMockNoFiltersRepository()}
       datasetPersistentId={testDataset.persistentId}
-      datasetVersion={testDataset.version.toString()}
+      datasetVersion={testDataset.version}
     />
   )
 }

@@ -6,11 +6,12 @@ import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 import { useFiles } from './useFiles'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 import { FilesPagination } from './files-pagination/FilesPagination'
+import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 
 interface DatasetFilesProps {
   filesRepository: FileRepository
   datasetPersistentId: string
-  datasetVersion?: string
+  datasetVersion: DatasetVersion
 }
 
 export function DatasetFiles({

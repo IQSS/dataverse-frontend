@@ -1,4 +1,4 @@
-import { Dataset, DatasetStatus } from '../../../../dataset/domain/models/Dataset'
+import { Dataset, DatasetPublishingStatus } from '../../../../dataset/domain/models/Dataset'
 import { Button } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 
@@ -9,7 +9,7 @@ interface SubmitForReviewButtonProps {
 export function SubmitForReviewButton({ dataset }: SubmitForReviewButtonProps) {
   if (
     !dataset.version.isLatest ||
-    dataset.version.status !== DatasetStatus.DRAFT ||
+    dataset.version.publishingStatus !== DatasetPublishingStatus.DRAFT ||
     dataset.isLockedInWorkflow ||
     dataset.permissions.canPublishDataset ||
     !dataset.permissions.canUpdateDataset

@@ -1,5 +1,5 @@
 import { Button } from '@iqss/dataverse-design-system'
-import { Dataset, DatasetStatus } from '../../../../dataset/domain/models/Dataset'
+import { Dataset, DatasetPublishingStatus } from '../../../../dataset/domain/models/Dataset'
 import { useTranslation } from 'react-i18next'
 
 interface LinkDatasetButtonProps {
@@ -7,7 +7,10 @@ interface LinkDatasetButtonProps {
 }
 export function LinkDatasetButton({ dataset }: LinkDatasetButtonProps) {
   // TODO - get session context
-  if (!dataset.isReleased || dataset.version.status === DatasetStatus.DEACCESSIONED) {
+  if (
+    !dataset.isReleased ||
+    dataset.version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
+  ) {
     return <></>
   }
 

@@ -9,9 +9,9 @@ import {
   FileLabelType,
   FileSize,
   FileSizeUnit,
-  FileStatus,
+  FilePublishingStatus,
   FileType,
-  FileVersion
+  FileChecksum
 } from '../../../../../src/files/domain/models/File'
 
 const valueOrUndefined: <T>(value: T) => T | undefined = (value) => {
@@ -25,9 +25,8 @@ const createFakeFileLabel = (): FileLabel => ({
 })
 
 export class FileEmbargoMother {
-  static create(): FileEmbargo {
-    const dateAvailable = faker.date.future()
-    return new FileEmbargo(dateAvailable)
+  static create(dateAvailable?: Date): FileEmbargo {
+    return new FileEmbargo(dateAvailable ?? faker.date.future())
   }
 
   static createNotActive(): FileEmbargo {
@@ -56,13 +55,23 @@ export class FileIngestMother {
   }
 }
 
+export class FileChecksumMother {
+  static create(props?: Partial<FileChecksum>): FileChecksum {
+    return {
+      algorithm: faker.lorem.word(),
+      value: faker.datatype.uuid(),
+      ...props
+    }
+  }
+}
+
 export class FileMother {
   static create(props?: Partial<File>): File {
     const thumbnail = valueOrUndefined<string>(faker.image.imageUrl())
     const fileType = faker.helpers.arrayElement(['tabular data', faker.system.fileType()])
     const checksum = valueOrUndefined<string>(faker.datatype.uuid())
     const fileMockedData = {
-      id: faker.datatype.uuid(),
+      id: faker.datatype.number(),
       name: faker.system.fileName(),
       access: {
         restricted: faker.datatype.boolean(),
@@ -71,9 +80,8 @@ export class FileMother {
         requested: faker.datatype.boolean()
       },
       version: {
-        majorNumber: faker.datatype.number(),
-        minorNumber: faker.datatype.number(),
-        status: faker.helpers.arrayElement(Object.values(FileStatus))
+        number: faker.datatype.number(),
+        publishingStatus: faker.helpers.arrayElement(Object.values(FilePublishingStatus))
       },
       type: new FileType(thumbnail ? 'image' : fileType),
       size: {
@@ -82,9 +90,9 @@ export class FileMother {
       },
       date: {
         type: faker.helpers.arrayElement(Object.values(FileDateType)),
-        date: faker.date.recent().toDateString()
+        date: faker.date.recent()
       },
-      downloads: faker.datatype.number(40),
+      downloadCount: faker.datatype.number(40),
       labels: faker.datatype.boolean()
         ? faker.helpers.arrayElements<FileLabel>([
             createFakeFileLabel(),
@@ -93,7 +101,7 @@ export class FileMother {
             createFakeFileLabel()
           ])
         : [],
-      checksum: checksum,
+      checksum: FileChecksumMother.create(),
       thumbnail: thumbnail,
       directory: valueOrUndefined<string>(faker.system.directoryPath()),
       embargo: valueOrUndefined<FileEmbargo>(FileEmbargoMother.create()),
@@ -102,7 +110,7 @@ export class FileMother {
           ? {
               variablesCount: faker.datatype.number(100),
               observationsCount: faker.datatype.number(100),
-              unf: `UNF:${faker.datatype.uuid()}==`
+              unf: `UNF:6:${faker.datatype.uuid()}==`
             }
           : undefined,
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
@@ -113,26 +121,22 @@ export class FileMother {
 
     return new File(
       fileMockedData.id,
-      new FileVersion(
-        fileMockedData.version.majorNumber,
-        fileMockedData.version.minorNumber,
-        fileMockedData.version.status
-      ),
+      fileMockedData.version,
       fileMockedData.name,
       fileMockedData.access,
       fileMockedData.type,
       new FileSize(fileMockedData.size.value, fileMockedData.size.unit),
       fileMockedData.date,
-      fileMockedData.downloads,
+      fileMockedData.downloadCount,
       fileMockedData.labels,
       fileMockedData.isDeleted,
       fileMockedData.ingest,
       fileMockedData.checksum,
-      fileMockedData.embargo,
+      fileMockedData.thumbnail,
       fileMockedData.directory,
-      fileMockedData.description,
+      fileMockedData.embargo,
       fileMockedData.tabularData,
-      fileMockedData.thumbnail
+      fileMockedData.description
     )
   }
 
@@ -144,9 +148,8 @@ export class FileMother {
     const defaultFile = {
       type: new FileType('file'),
       version: {
-        majorNumber: 1,
-        minorNumber: 0,
-        status: FileStatus.RELEASED
+        number: 1,
+        publishingStatus: FilePublishingStatus.RELEASED
       },
       access: {
         restricted: false,
@@ -220,7 +223,7 @@ export class FileMother {
 
   static createWithChecksum(): File {
     return this.createDefault({
-      checksum: faker.datatype.uuid()
+      checksum: FileChecksumMother.create()
     })
   }
 
@@ -331,9 +334,8 @@ export class FileMother {
   static createDeaccessioned(): File {
     return this.createDefault({
       version: {
-        majorNumber: 1,
-        minorNumber: 0,
-        status: FileStatus.DEACCESSIONED
+        number: 1,
+        publishingStatus: FilePublishingStatus.DEACCESSIONED
       }
     })
   }

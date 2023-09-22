@@ -13,10 +13,7 @@ export function FilesTableHeader({ headers }: FilesTableHeaderProps) {
         <tr key={headerGroup.id}>
           {headerGroup.headers.map((header) => {
             return (
-              <th
-                key={header.id}
-                colSpan={header.colSpan}
-                className={header.id !== 'select' ? '' : styles['select-header']}>
+              <th key={header.id} colSpan={header.colSpan} className={styles[header.id]}>
                 {header.isPlaceholder ? null : (
                   <>{flexRender(header.column.columnDef.header, header.getContext())}</>
                 )}

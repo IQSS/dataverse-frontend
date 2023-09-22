@@ -3,6 +3,7 @@ import styles from './FileCriteriaForm.module.scss'
 import { FileCriteria, FileSortByOption } from '../../../../files/domain/models/FileCriteria'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
+import { useState } from 'react'
 
 export function FileCriteriaSortBy({
   criteria,
@@ -12,8 +13,12 @@ export function FileCriteriaSortBy({
   onCriteriaChange: (criteria: FileCriteria) => void
 }) {
   const { t } = useTranslation('files')
+  const [selectedOption, setSelectedOption] = useState<FileSortByOption>(criteria.sortBy)
   const handleSortChange = (eventKey: string | null) => {
-    onCriteriaChange(criteria.withSortBy(eventKey as FileSortByOption))
+    if (selectedOption !== eventKey) {
+      setSelectedOption(eventKey as FileSortByOption)
+      onCriteriaChange(criteria.withSortBy(eventKey as FileSortByOption))
+    }
   }
 
   return (
@@ -27,7 +32,10 @@ export function FileCriteriaSortBy({
       withSpacing
       onSelect={handleSortChange}>
       {Object.values(FileSortByOption).map((sortByOption) => (
-        <DropdownButtonItem key={sortByOption} eventKey={sortByOption}>
+        <DropdownButtonItem
+          key={sortByOption}
+          eventKey={sortByOption}
+          className={selectedOption === sortByOption ? styles['selected-option'] : ''}>
           {t(`criteria.sortBy.options.${sortByOption}`)}
         </DropdownButtonItem>
       ))}

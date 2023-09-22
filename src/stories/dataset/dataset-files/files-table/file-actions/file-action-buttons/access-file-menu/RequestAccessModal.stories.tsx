@@ -15,10 +15,10 @@ export default meta
 type Story = StoryObj<typeof RequestAccessModal>
 
 export const LoggedOut: Story = {
-  render: () => <RequestAccessModal fileId={'file-id'} />
+  render: () => <RequestAccessModal fileId={1} />
 }
 
 export const LoggedIn: Story = {
   decorators: [WithLoggedInUser],
-  render: () => <RequestAccessModal fileId={'file-id'} />
+  render: () => <RequestAccessModal fileId={1} />
 }

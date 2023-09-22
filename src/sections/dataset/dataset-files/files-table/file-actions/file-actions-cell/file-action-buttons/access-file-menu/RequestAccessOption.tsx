@@ -1,7 +1,7 @@
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import styles from './AccessFileMenu.module.scss'
 import { RequestAccessModal } from './RequestAccessModal'
-import { File, FileStatus } from '../../../../../../../../files/domain/models/File'
+import { File, FilePublishingStatus } from '../../../../../../../../files/domain/models/File'
 import { useTranslation } from 'react-i18next'
 import { useFileDownloadPermission } from '../../../../../../../file/file-permissions/useFileDownloadPermission'
 
@@ -12,7 +12,10 @@ export function RequestAccessOption({ file }: RequestAccessButtonProps) {
   const { t } = useTranslation('files')
   const { sessionUserHasFileDownloadPermission } = useFileDownloadPermission(file)
 
-  if (file.version.status === FileStatus.DEACCESSIONED || sessionUserHasFileDownloadPermission) {
+  if (
+    file.version.publishingStatus === FilePublishingStatus.DEACCESSIONED ||
+    sessionUserHasFileDownloadPermission
+  ) {
     return <></>
   }
   if (file.isActivelyEmbargoed) {

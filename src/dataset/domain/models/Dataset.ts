@@ -197,24 +197,33 @@ const defaultLicense: DatasetLicense = {
   iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
 }
 
-export enum DatasetStatus {
+export enum DatasetPublishingStatus {
   RELEASED = 'released',
   DRAFT = 'draft',
   DEACCESSIONED = 'deaccessioned',
   EMBARGOED = 'embargoed'
 }
 
+export enum DatasetNonNumericVersion {
+  LATEST = ':latest',
+  DRAFT = ':draft'
+}
+
 export class DatasetVersion {
   constructor(
-    public readonly majorNumber: number,
-    public readonly minorNumber: number,
-    public readonly status: DatasetStatus,
+    public readonly id: number,
+    public readonly publishingStatus: DatasetPublishingStatus,
     public readonly isLatest: boolean,
     public readonly isInReview: boolean,
-    public readonly latestVersionStatus: DatasetStatus
+    public readonly latestVersionStatus: DatasetPublishingStatus,
+    public readonly majorNumber?: number,
+    public readonly minorNumber?: number
   ) {}
 
-  toString(): string {
+  toString(): string | DatasetNonNumericVersion {
+    if (this.majorNumber === undefined || this.minorNumber === undefined) {
+      return DatasetNonNumericVersion.DRAFT
+    }
     return `${this.majorNumber}.${this.minorNumber}`
   }
 }
@@ -312,25 +321,25 @@ export class Dataset {
     }
 
     private withStatusLabel(): void {
-      if (this.version.status === DatasetStatus.DRAFT) {
+      if (this.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
         this.labels.push(
           new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.DRAFT)
         )
       }
 
-      if (this.version.status !== DatasetStatus.RELEASED) {
+      if (this.version.publishingStatus !== DatasetPublishingStatus.RELEASED) {
         this.labels.push(
           new DatasetLabel(DatasetLabelSemanticMeaning.WARNING, DatasetLabelValue.UNPUBLISHED)
         )
       }
 
-      if (this.version.status === DatasetStatus.DEACCESSIONED) {
+      if (this.version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED) {
         this.labels.push(
           new DatasetLabel(DatasetLabelSemanticMeaning.DANGER, DatasetLabelValue.DEACCESSIONED)
         )
       }
 
-      if (this.version.status === DatasetStatus.EMBARGOED) {
+      if (this.version.publishingStatus === DatasetPublishingStatus.EMBARGOED) {
         this.labels.push(
           new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.EMBARGOED)
         )
@@ -344,7 +353,7 @@ export class Dataset {
     }
 
     private withVersionLabel(): void {
-      if (this.version.status === DatasetStatus.RELEASED) {
+      if (this.version.publishingStatus === DatasetPublishingStatus.RELEASED) {
         this.labels.push(
           new DatasetLabel(DatasetLabelSemanticMeaning.FILE, `Version ${this.version.toString()}`)
         )

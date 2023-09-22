@@ -1,6 +1,6 @@
 import {
   DatasetPermissions,
-  DatasetStatus,
+  DatasetPublishingStatus,
   DatasetVersion
 } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
@@ -14,7 +14,8 @@ interface AccessDatasetMenuProps {
 export function AccessDatasetMenu({ version, permissions }: AccessDatasetMenuProps) {
   if (
     !permissions.canDownloadFiles ||
-    (version.status === DatasetStatus.DEACCESSIONED && !permissions.canUpdateDataset)
+    (version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED &&
+      !permissions.canUpdateDataset)
   ) {
     return <></>
   }

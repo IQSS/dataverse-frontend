@@ -8,7 +8,7 @@ import styles from './AccessFileMenu.module.scss'
 import { useTranslation } from 'react-i18next'
 
 interface RequestAccessButtonProps {
-  fileId: string
+  fileId: number
 }
 export function RequestAccessModal({ fileId }: RequestAccessButtonProps) {
   const { t } = useTranslation('files')
@@ -40,7 +40,7 @@ const RequestAccessForm = ({
   fileId,
   handleClose
 }: {
-  fileId: string
+  fileId: number
   handleClose: () => void
 }) => {
   const { t } = useTranslation('files')

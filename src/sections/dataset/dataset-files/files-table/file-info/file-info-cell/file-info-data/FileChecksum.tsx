@@ -1,14 +1,16 @@
 import styles from '../FileInfoCell.module.scss'
 import { CopyToClipboardButton } from './copy-to-clipboard-button/CopyToClipboardButton'
+import { FileChecksum as FileChecksumModel } from '../../../../../../../files/domain/models/File'
 
-export function FileChecksum({ checksum }: { checksum: string | undefined }) {
+export function FileChecksum({ checksum }: { checksum: FileChecksumModel | undefined }) {
   if (!checksum) {
     return <></>
   }
 
   return (
     <div className={styles['checksum-container']}>
-      <CopyToClipboardButton text={checksum} />
+      {`${checksum.algorithm}: `}
+      <CopyToClipboardButton text={checksum.value} />
     </div>
   )
 }

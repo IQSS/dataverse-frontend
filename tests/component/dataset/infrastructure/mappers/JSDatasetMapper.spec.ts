@@ -6,7 +6,6 @@ import {
   CitationMetadataBlock,
   DatasetMetadataBlock
 } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
-import { DatasetStatus, DatasetVersion } from '../../../../../src/dataset/domain/models/Dataset'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -17,8 +16,6 @@ const jsDataset = {
   versionId: 101,
   versionInfo: {
     state: DatasetVersionState.DRAFT,
-    majorNumber: 0,
-    minorNumber: 0,
     createTime: new Date('2023-09-07T13:40:04.000Z'),
     lastUpdateTime: new Date('2023-09-07T13:40:04.000Z'),
     releaseTime: undefined
@@ -53,7 +50,15 @@ const citation =
 const datasetSummaryFields = ['dsDescription', 'subject', 'keyword', 'publication', 'notesText']
 const expectedDataset = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
-  version: new DatasetVersion(0, 0, DatasetStatus.DRAFT, false, false, DatasetStatus.DRAFT),
+  version: {
+    id: 101,
+    publishingStatus: 'draft',
+    isLatest: true,
+    isInReview: false,
+    latestVersionStatus: 'draft',
+    majorNumber: undefined,
+    minorNumber: undefined
+  },
   citation:
     'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
   labels: [
@@ -114,6 +119,8 @@ const expectedDataset = {
 
 describe('JS Dataset Mapper', () => {
   it('maps jsDataset model to the domain Dataset model', () => {
+    console.log('jsDataset', JSDatasetMapper.toDataset(jsDataset, citation, datasetSummaryFields))
+    console.log('expectedDataset', expectedDataset)
     expect(expectedDataset).to.deep.equal(
       JSDatasetMapper.toDataset(jsDataset, citation, datasetSummaryFields)
     )

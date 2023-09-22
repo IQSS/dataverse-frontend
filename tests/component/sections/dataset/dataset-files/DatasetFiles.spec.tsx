@@ -11,13 +11,15 @@ import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInf
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 import { FileSizeUnit, FileType } from '../../../../../src/files/domain/models/File'
 import styles from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
+import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { SettingMother } from '../../../settings/domain/models/SettingMother'
 import { ZipDownloadLimit } from '../../../../../src/settings/domain/models/ZipDownloadLimit'
-import { SettingsContext } from '../../../../../src/sections/settings/SettingsContext'
+import { SettingsProvider } from '../../../../../src/sections/settings/SettingsProvider'
+import { SettingRepository } from '../../../../../src/settings/domain/repositories/SettingRepository'
 
 const testFiles = FileMother.createMany(10)
 const datasetPersistentId = 'test-dataset-persistent-id'
-const datasetVersion = 'test-dataset-version'
+const datasetVersion = DatasetMother.create().version
 const fileRepository: FileRepository = {} as FileRepository
 const testFilesCountInfo = FilesCountInfoMother.create({
   total: 200,
@@ -166,18 +168,19 @@ describe('DatasetFiles', () => {
     })
 
     it('renders the zip download limit message when selecting rows from different pages', () => {
-      const getSettingByName = cy
+      const settingsRepository = {} as SettingRepository
+      settingsRepository.getByName = cy
         .stub()
         .resolves(SettingMother.createZipDownloadLimit(new ZipDownloadLimit(1, FileSizeUnit.BYTES)))
 
       cy.customMount(
-        <SettingsContext.Provider value={{ getSettingByName }}>
+        <SettingsProvider repository={settingsRepository}>
           <DatasetFiles
             filesRepository={fileRepository}
             datasetPersistentId={datasetPersistentId}
             datasetVersion={datasetVersion}
           />
-        </SettingsContext.Provider>
+        </SettingsProvider>
       )
 
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()

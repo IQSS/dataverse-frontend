@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { DatasetCitation } from '../../../sections/dataset/dataset-citation/DatasetCitation'
-import { DatasetStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
+import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { DatasetMockData } from '../DatasetMockData'
 
 const meta: Meta<typeof DatasetCitation> = {
@@ -31,7 +31,13 @@ export const DraftVersion: Story = {
     const dataset = DatasetMockData({
       citation:
         'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, DRAFT VERSION',
-      version: new DatasetVersion(1, 0, DatasetStatus.DRAFT, false, false, DatasetStatus.DRAFT)
+      version: new DatasetVersion(
+        1,
+        DatasetPublishingStatus.DRAFT,
+        true,
+        false,
+        DatasetPublishingStatus.DRAFT
+      )
     })
 
     /*
@@ -54,11 +60,12 @@ export const Deaccessioned: Story = {
         'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1 DEACCESSIONED VERSION',
       version: new DatasetVersion(
         1,
-        0,
-        DatasetStatus.DEACCESSIONED,
+        DatasetPublishingStatus.DEACCESSIONED,
+        true,
         false,
-        false,
-        DatasetStatus.DEACCESSIONED
+        DatasetPublishingStatus.DEACCESSIONED,
+        1,
+        0
       )
     })
 

@@ -1,9 +1,12 @@
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { DatasetJSDataverseRepository } from '../../../../src/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
-import { IntegrationTestsUtils } from '../IntegrationTestsUtils'
-import { DatasetHelper } from './DatasetHelper'
-import { DatasetStatus, DatasetVersion } from '../../../../src/dataset/domain/models/Dataset'
+import { TestsUtils } from '../../shared/TestsUtils'
+import {
+  DatasetPublishingStatus,
+  DatasetVersion
+} from '../../../../src/dataset/domain/models/Dataset'
+import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -15,7 +18,7 @@ function getCurrentDateInYYYYMMDDFormat() {
   ).padStart(2, '0')}`
 }
 
-const datasetData = (persistentId: string) => {
+const datasetData = (persistentId: string, versionId: number) => {
   const persistentIdUrl = `https://doi.org/${persistentId.replace('doi:', '')}`
   return {
     citation: `Finch, Fiona, 2023, "Darwin's Finches", <a href="${persistentIdUrl}" target="_blank">${persistentIdUrl}</a>, Root, DRAFT VERSION`,
@@ -68,23 +71,28 @@ const datasetData = (persistentId: string) => {
       }
     ],
     title: "Darwin's Finches",
-    version: { majorNumber: undefined, minorNumber: undefined, status: 'draft' }
+    version: {
+      id: versionId,
+      majorNumber: undefined,
+      minorNumber: undefined,
+      publishingStatus: 'draft'
+    }
   }
 }
 
 const datasetRepository = new DatasetJSDataverseRepository()
 describe('Dataset JSDataverse Repository', () => {
-  before(() => IntegrationTestsUtils.setup())
-  beforeEach(() => IntegrationTestsUtils.login())
+  before(() => TestsUtils.setup())
+  beforeEach(() => TestsUtils.login())
 
   it('gets the dataset by persistentId', async () => {
-    const datasetResponse = await DatasetHelper.createDataset()
+    const datasetResponse = await DatasetHelper.create()
 
     await datasetRepository.getByPersistentId(datasetResponse.persistentId).then((dataset) => {
       if (!dataset) {
         throw new Error('Dataset not found')
       }
-      const datasetExpected = datasetData(dataset.persistentId)
+      const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
       expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
       expect(dataset.citation).to.deep.equal(datasetExpected.citation)
@@ -99,10 +107,10 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets the dataset by persistentId and version number', async () => {
-    const datasetResponse = await DatasetHelper.createDataset()
-    await DatasetHelper.publishDataset(datasetResponse.persistentId)
+    const datasetResponse = await DatasetHelper.create()
+    await DatasetHelper.publish(datasetResponse.persistentId)
 
-    await IntegrationTestsUtils.wait(1500)
+    await TestsUtils.wait(1500)
 
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, '1.0')
@@ -110,14 +118,15 @@ describe('Dataset JSDataverse Repository', () => {
         if (!dataset) {
           throw new Error('Dataset not found')
         }
-        const datasetExpected = datasetData(dataset.persistentId)
+        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
         const newVersion = new DatasetVersion(
+          dataset.version.id,
+          DatasetPublishingStatus.RELEASED,
+          true,
+          false,
+          DatasetPublishingStatus.RELEASED,
           1,
-          0,
-          DatasetStatus.RELEASED,
-          false,
-          false,
-          DatasetStatus.RELEASED
+          0
         )
         const expectedPublicationDate = getCurrentDateInYYYYMMDDFormat()
         expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
@@ -130,7 +139,7 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets the dataset by persistentId and version DRAFT keyword', async () => {
-    const datasetResponse = await DatasetHelper.createDataset()
+    const datasetResponse = await DatasetHelper.create()
 
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, 'DRAFT')
@@ -138,7 +147,7 @@ describe('Dataset JSDataverse Repository', () => {
         if (!dataset) {
           throw new Error('Dataset not found')
         }
-        const datasetExpected = datasetData(dataset.persistentId)
+        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
         expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(datasetExpected.version)
@@ -146,14 +155,14 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets the dataset by privateUrlToken', async () => {
-    const datasetResponse = await DatasetHelper.createDataset()
+    const datasetResponse = await DatasetHelper.create()
     const privateUrlResponse = await DatasetHelper.createPrivateUrl(datasetResponse.id)
 
     await datasetRepository.getByPrivateUrlToken(privateUrlResponse.token).then((dataset) => {
       if (!dataset) {
         throw new Error('Dataset not found')
       }
-      const datasetExpected = datasetData(dataset.persistentId)
+      const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
       expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
       expect(dataset.version).to.deep.equal(datasetExpected.version)
@@ -161,10 +170,10 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets the dataset after changing the citation date field type', async () => {
-    const datasetResponse = await DatasetHelper.createDataset()
+    const datasetResponse = await DatasetHelper.create()
 
-    await DatasetHelper.publishDataset(datasetResponse.persistentId)
-    await IntegrationTestsUtils.wait(1500)
+    await DatasetHelper.publish(datasetResponse.persistentId)
+    await TestsUtils.wait(1500)
 
     await DatasetHelper.setCitationDateFieldType(datasetResponse.persistentId, 'dateOfDeposit')
 

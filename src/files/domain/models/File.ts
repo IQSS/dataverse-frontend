@@ -8,23 +8,56 @@ export enum FileSizeUnit {
 }
 
 export class FileSize {
-  constructor(readonly value: number, readonly unit: FileSizeUnit) {}
+  static readonly multiplier = {
+    [FileSizeUnit.BYTES]: 1,
+    [FileSizeUnit.KILOBYTES]: 1024,
+    [FileSizeUnit.MEGABYTES]: 1024 ** 2,
+    [FileSizeUnit.GIGABYTES]: 1024 ** 3,
+    [FileSizeUnit.TERABYTES]: 1024 ** 4,
+    [FileSizeUnit.PETABYTES]: 1024 ** 5
+  }
+
+  constructor(readonly value: number, readonly unit: FileSizeUnit) {
+    ;[this.value, this.unit] = this.convertToLargestUnit(value, unit)
+  }
 
   toString(): string {
-    return `${this.value} ${this.unit}`
+    const formattedValue =
+      this.value % 1 === 0 ? this.value.toFixed(0) : (Math.round(this.value * 10) / 10).toString()
+    return `${formattedValue} ${this.unit}`
   }
 
   toBytes(): number {
-    const multiplier = {
-      [FileSizeUnit.BYTES]: 1,
-      [FileSizeUnit.KILOBYTES]: 1024,
-      [FileSizeUnit.MEGABYTES]: 1024 ** 2,
-      [FileSizeUnit.GIGABYTES]: 1024 ** 3,
-      [FileSizeUnit.TERABYTES]: 1024 ** 4,
-      [FileSizeUnit.PETABYTES]: 1024 ** 5
+    return this.value * FileSize.multiplier[this.unit]
+  }
+
+  private convertToLargestUnit(value: number, unit: FileSizeUnit): [number, FileSizeUnit] {
+    let convertedValue = value
+    let convertedUnit = unit
+
+    while (convertedValue >= 1024 && convertedUnit !== FileSizeUnit.PETABYTES) {
+      convertedValue /= 1024
+      convertedUnit = this.getNextUnit(convertedUnit)
     }
 
-    return this.value * multiplier[this.unit]
+    return [convertedValue, convertedUnit]
+  }
+
+  private getNextUnit(unit: FileSizeUnit): FileSizeUnit {
+    switch (unit) {
+      case FileSizeUnit.BYTES:
+        return FileSizeUnit.KILOBYTES
+      case FileSizeUnit.KILOBYTES:
+        return FileSizeUnit.MEGABYTES
+      case FileSizeUnit.MEGABYTES:
+        return FileSizeUnit.GIGABYTES
+      case FileSizeUnit.GIGABYTES:
+        return FileSizeUnit.TERABYTES
+      case FileSizeUnit.TERABYTES:
+        return FileSizeUnit.PETABYTES
+      default:
+        return unit
+    }
   }
 }
 
@@ -35,22 +68,15 @@ export interface FileAccess {
   requested: boolean
 }
 
-export enum FileStatus {
+export enum FilePublishingStatus {
   DRAFT = 'draft',
   RELEASED = 'released',
   DEACCESSIONED = 'deaccessioned'
 }
 
-export class FileVersion {
-  constructor(
-    public readonly majorNumber: number,
-    public readonly minorNumber: number,
-    public readonly status: FileStatus
-  ) {}
-
-  toString(): string {
-    return `${this.majorNumber}.${this.minorNumber}`
-  }
+export interface FileVersion {
+  number: number
+  publishingStatus: FilePublishingStatus
 }
 
 export enum FileDateType {
@@ -66,7 +92,7 @@ export enum FileVersionNotNumber {
 
 export interface FileDate {
   type: FileDateType
-  date: string
+  date: Date
 }
 
 export class FileEmbargo {
@@ -105,6 +131,11 @@ export class FileType {
   }
 }
 
+export interface FileChecksum {
+  algorithm: string
+  value: string
+}
+
 export enum FileIngestStatus {
   NONE = 'none',
   IN_PROGRESS = 'inProgress',
@@ -119,27 +150,27 @@ export interface FileIngest {
 
 export class File {
   constructor(
-    readonly id: string,
+    readonly id: number,
     readonly version: FileVersion,
     readonly name: string,
     readonly access: FileAccess,
     readonly type: FileType,
     readonly size: FileSize,
     readonly date: FileDate,
-    readonly downloads: number,
+    public downloadCount: number,
     readonly labels: FileLabel[],
     public readonly isDeleted: boolean,
     public readonly ingest: FileIngest,
-    readonly checksum?: string,
-    readonly embargo?: FileEmbargo,
+    readonly checksum?: FileChecksum,
+    readonly thumbnail?: string,
     readonly directory?: string,
-    readonly description?: string,
+    readonly embargo?: FileEmbargo,
     readonly tabularData?: FileTabularData,
-    readonly thumbnail?: string
+    readonly description?: string
   ) {}
 
   getLink(): string {
-    return `/file?id=${this.id}&version=${this.version.toString()}`
+    return `/file?id=${this.id}&version=${this.version.number}`
   }
 
   get isActivelyEmbargoed(): boolean {

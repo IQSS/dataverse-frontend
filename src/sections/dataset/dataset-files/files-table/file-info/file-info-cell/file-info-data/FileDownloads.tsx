@@ -1,20 +1,20 @@
-import { FileStatus } from '../../../../../../../files/domain/models/File'
+import { FilePublishingStatus } from '../../../../../../../files/domain/models/File'
 import { useTranslation } from 'react-i18next'
 
 interface FileDownloadsProps {
-  downloads: number
-  status: FileStatus
+  downloadCount: number
+  publishingStatus: FilePublishingStatus
 }
-export function FileDownloads({ downloads, status }: FileDownloadsProps) {
+export function FileDownloads({ downloadCount, publishingStatus }: FileDownloadsProps) {
   const { t } = useTranslation('files')
-  if (status !== FileStatus.RELEASED) {
+  if (publishingStatus !== FilePublishingStatus.RELEASED) {
     return <></>
   }
 
   return (
     <div>
       <span>
-        {downloads} {t('table.downloads')}
+        {downloadCount} {t('table.downloads')}
       </span>
     </div>
   )
