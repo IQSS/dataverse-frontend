@@ -36,7 +36,7 @@ export function FilesPagination({
 
   useEffect(() => {
     onPaginationInfoChange(paginationInfo)
-  }, [paginationInfo])
+  }, [paginationInfo.pageSize, paginationInfo.page])
 
   useEffect(() => {
     setPaginationInfo(paginationInfo.withTotal(total))

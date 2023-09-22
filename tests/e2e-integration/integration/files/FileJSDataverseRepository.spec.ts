@@ -4,6 +4,7 @@ import {
   File,
   FileDateType,
   FileEmbargo,
+  FileIngestStatus,
   FileLabelType,
   FilePublishingStatus,
   FileSize,
@@ -18,9 +19,15 @@ import {
   DatasetVersion
 } from '../../../../src/dataset/domain/models/Dataset'
 import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePaginationInfo'
-import { FileCriteria, FileSortByOption } from '../../../../src/files/domain/models/FileCriteria'
+import {
+  FileAccessOption,
+  FileCriteria,
+  FileSortByOption,
+  FileTag
+} from '../../../../src/files/domain/models/FileCriteria'
 import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
-import { FileHelper } from '../../shared/files/FileHelper'
+import { FileData, FileHelper } from '../../shared/files/FileHelper'
+import { FilesCountInfo } from '../../../../src/files/domain/models/FilesCountInfo'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -47,6 +54,8 @@ const expectedFile = new File(
   },
   0,
   [],
+  false,
+  { status: FileIngestStatus.NONE },
   {
     algorithm: 'MD5',
     value: '0187a54071542738aa47939e8218e5f2'
@@ -68,8 +77,8 @@ describe('File JSDataverse Repository', () => {
 
   describe('Get all files by dataset persistentId', () => {
     it('gets all the files by dataset persistentId with the basic information', async () => {
-      const dataset = await DatasetHelper.createWithFiles(3).then((datasetResponse) =>
-        datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      const dataset = await DatasetHelper.createWithFiles(FileHelper.createMany(3)).then(
+        (datasetResponse) => datasetRepository.getByPersistentId(datasetResponse.persistentId)
       )
       if (!dataset) throw new Error('Dataset not found')
 
@@ -82,11 +91,10 @@ describe('File JSDataverse Repository', () => {
             expect(file.version).to.deep.equal(expectedFile.version)
             expect(file.access).to.deep.equal(expectedFile.access)
             expect(file.type).to.deep.equal(expectedFile.type)
-            expect(file.size).to.deep.equal(expectedFile.size)
             expect(file.date).to.deep.equal(expectedFile.date)
             expect(file.downloadCount).to.deep.equal(expectedFile.downloadCount)
             expect(file.labels).to.deep.equal(expectedFile.labels)
-            expect(file.checksum).to.deep.equal(expectedFile.checksum)
+            expect(file.checksum?.algorithm).to.deep.equal(expectedFile.checksum?.algorithm)
             expect(file.thumbnail).to.deep.equal(expectedFile.thumbnail)
             expect(file.directory).to.deep.equal(expectedFile.directory)
             expect(file.embargo).to.deep.equal(expectedFile.embargo)
@@ -96,9 +104,27 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    it('gets all the files by dataset persistentId after dataset publication', async () => {
-      const dataset = await DatasetHelper.createWithFiles(3).then((datasetResponse) =>
+    it('gets all the files by dataset persistentId with the correct size', async () => {
+      const expectedSize = new FileSize(25, FileSizeUnit.BYTES)
+      const fileData: FileData = {
+        file: new Blob([new ArrayBuffer(expectedSize.value)], { type: 'text/csv' }),
+        jsonData: JSON.stringify({ description: 'This is an example file' })
+      }
+      const dataset = await DatasetHelper.createWithFiles([fileData]).then((datasetResponse) =>
         datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      )
+      if (!dataset) throw new Error('Dataset not found')
+
+      await fileRepository
+        .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((files) => {
+          expect(files[0].size).to.deep.equal(expectedSize)
+        })
+    })
+
+    it('gets all the files by dataset persistentId after dataset publication', async () => {
+      const dataset = await DatasetHelper.createWithFiles(FileHelper.createMany(3)).then(
+        (datasetResponse) => datasetRepository.getByPersistentId(datasetResponse.persistentId)
       )
       if (!dataset) throw new Error('Dataset not found')
 
@@ -123,8 +149,8 @@ describe('File JSDataverse Repository', () => {
     })
 
     it.skip('gets all the files by dataset persistentId after dataset deaccession', async () => {
-      const dataset = await DatasetHelper.createWithFiles(3).then((datasetResponse) =>
-        datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      const dataset = await DatasetHelper.createWithFiles(FileHelper.createMany(3)).then(
+        (datasetResponse) => datasetRepository.getByPersistentId(datasetResponse.persistentId)
       )
       if (!dataset) throw new Error('Dataset not found')
 
@@ -153,7 +179,7 @@ describe('File JSDataverse Repository', () => {
     })
 
     it('gets all the files by dataset persistentId after file has been downloaded', async () => {
-      const datasetResponse = await DatasetHelper.createWithFiles(3)
+      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(3))
       if (!datasetResponse.files) throw new Error('Files not found')
 
       await DatasetHelper.publish(datasetResponse.persistentId)
@@ -174,7 +200,7 @@ describe('File JSDataverse Repository', () => {
     })
 
     it('gets all the files by dataset persistentId after adding category labels to the files', async () => {
-      const datasetResponse = await DatasetHelper.createWithFiles(3)
+      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(3))
       if (!datasetResponse.files) throw new Error('Files not found')
 
       const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
@@ -194,7 +220,7 @@ describe('File JSDataverse Repository', () => {
     })
 
     it('gets all the files by dataset persistentId after adding tag labels to the files', async () => {
-      const datasetResponse = await DatasetHelper.createWithFiles(1, true)
+      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1, 'csv'))
       if (!datasetResponse.files) throw new Error('Files not found')
       await TestsUtils.wait(1500) // Wait for the tabular data to be ingested
 
@@ -215,8 +241,8 @@ describe('File JSDataverse Repository', () => {
       // TODO - Do this in thumbnails issue https://github.com/IQSS/dataverse-frontend/issues/160
     })
 
-    it.only('gets all the files by dataset persistentId after embargo', async () => {
-      const datasetResponse = await DatasetHelper.createWithFiles(3)
+    it('gets all the files by dataset persistentId after embargo', async () => {
+      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(3))
       if (!datasetResponse.files) throw new Error('Files not found')
 
       const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
@@ -240,7 +266,7 @@ describe('File JSDataverse Repository', () => {
 
     it.skip('gets all the files by dataset persistentId when files are tabular data', async () => {
       // TODO - Implement this when isTabularData flag is added to js-dataverse response
-      const datasetResponse = await DatasetHelper.createWithFiles(1, true)
+      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1, 'csv'))
       if (!datasetResponse.files) throw new Error('Files not found')
 
       const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
@@ -261,8 +287,8 @@ describe('File JSDataverse Repository', () => {
     })
 
     it('gets the files pagination selection when passing pagination', async () => {
-      const dataset = await DatasetHelper.createWithFiles(3).then((datasetResponse) =>
-        datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      const dataset = await DatasetHelper.createWithFiles(FileHelper.createMany(3)).then(
+        (datasetResponse) => datasetRepository.getByPersistentId(datasetResponse.persistentId)
       )
       if (!dataset) throw new Error('Dataset not found')
 
@@ -281,8 +307,8 @@ describe('File JSDataverse Repository', () => {
     })
 
     it('gets all the files by dataset persistentId when passing sortBy criteria', async () => {
-      const dataset = await DatasetHelper.createWithFiles(3).then((datasetResponse) =>
-        datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      const dataset = await DatasetHelper.createWithFiles(FileHelper.createMany(3)).then(
+        (datasetResponse) => datasetRepository.getByPersistentId(datasetResponse.persistentId)
       )
       if (!dataset) throw new Error('Dataset not found')
 
@@ -300,11 +326,94 @@ describe('File JSDataverse Repository', () => {
           })
         })
     })
+
+    it('gets all the files by dataset persistentId when passing filterByType criteria', async () => {
+      const dataset = await DatasetHelper.createWithFiles([
+        FileHelper.create('txt'),
+        FileHelper.create('txt'),
+        FileHelper.create('csv')
+      ]).then((datasetResponse) =>
+        datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      )
+      if (!dataset) throw new Error('Dataset not found')
+
+      await fileRepository
+        .getAllByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version,
+          new FilePaginationInfo(),
+          new FileCriteria().withFilterByType('text/tab-separated-values')
+        )
+        .then((files) => {
+          expect(files.length).to.equal(1)
+        })
+    })
+
+    it('gets all the files by dataset persistentId when passing filterByAccess criteria', async () => {
+      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(3))
+      if (!datasetResponse.files) throw new Error('Files not found')
+
+      const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      if (!dataset) throw new Error('Dataset not found')
+
+      await FileHelper.restrict(datasetResponse.files[0].id)
+
+      await fileRepository
+        .getAllByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version,
+          new FilePaginationInfo(),
+          new FileCriteria().withFilterByAccess(FileAccessOption.RESTRICTED)
+        )
+        .then((files) => {
+          expect(files.length).to.equal(1)
+        })
+    })
+
+    it('gets all the files by dataset persistentId when passing filterByTag criteria', async () => {
+      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(3))
+      if (!datasetResponse.files) throw new Error('Files not found')
+
+      const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      if (!dataset) throw new Error('Dataset not found')
+
+      const category = { type: FileLabelType.CATEGORY, value: 'category' }
+      await FileHelper.addLabel(datasetResponse.files[0].id, [category])
+
+      await fileRepository
+        .getAllByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version,
+          new FilePaginationInfo(),
+          new FileCriteria().withFilterByTag(category.value)
+        )
+        .then((files) => {
+          expect(files.length).to.equal(1)
+        })
+    })
+
+    it('gets all the files by dataset persistentId when passing searchText criteria', async () => {
+      const dataset = await DatasetHelper.createWithFiles(FileHelper.createMany(3)).then(
+        (datasetResponse) => datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      )
+      if (!dataset) throw new Error('Dataset not found')
+
+      await fileRepository
+        .getAllByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version,
+          new FilePaginationInfo(),
+          new FileCriteria().withSearchText('blob-1')
+        )
+        .then((files) => {
+          expect(files.length).to.equal(1)
+        })
+    })
   })
 
   describe('Get file user permissions by id', () => {
     it('gets file user permissions by id', async () => {
-      const datasetResponse = await DatasetHelper.createWithFiles(1)
+      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1))
       if (!datasetResponse.files) throw new Error('Files not found')
 
       const expectedFileUserPermissions = {
@@ -314,9 +423,91 @@ describe('File JSDataverse Repository', () => {
       }
 
       await fileRepository
-        .getFileUserPermissionsById(datasetResponse.files[0].id)
+        .getUserPermissionsById(datasetResponse.files[0].id)
         .then((fileUserPermissions) => {
           expect(fileUserPermissions).to.deep.equal(expectedFileUserPermissions)
+        })
+    })
+  })
+
+  describe('Get FilesCountInfo by dataset persistentId', () => {
+    it('gets FilesCountInfo by dataset persistentId', async () => {
+      const files = [
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          categories: ['category_1']
+        }),
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category_1'],
+          restrict: 'true',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true',
+          tabIngest: 'false'
+        })
+      ]
+      const dataset = await DatasetHelper.createWithFiles(files).then((datasetResponse) =>
+        datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      )
+      if (!dataset) throw new Error('Dataset not found')
+
+      const expectedFilesCountInfo: FilesCountInfo = {
+        total: 6,
+        perAccess: [
+          {
+            access: FileAccessOption.PUBLIC,
+            count: 3
+          },
+          {
+            access: FileAccessOption.RESTRICTED,
+            count: 3
+          }
+        ],
+        perFileType: [
+          {
+            type: new FileType('text/csv'),
+            count: 3
+          },
+          {
+            type: new FileType('text/plain'),
+            count: 3
+          }
+        ],
+        perFileTag: [
+          {
+            tag: new FileTag('category_1'),
+            count: 2
+          },
+          {
+            tag: new FileTag('category'),
+            count: 3
+          }
+        ]
+      }
+
+      await fileRepository
+        .getFilesCountInfoByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((filesCountInfo) => {
+          expect(filesCountInfo).to.deep.equal(expectedFilesCountInfo)
         })
     })
   })

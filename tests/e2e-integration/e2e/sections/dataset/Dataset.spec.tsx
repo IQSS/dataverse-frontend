@@ -1,6 +1,7 @@
 import { DatasetLabelValue } from '../../../../../src/dataset/domain/models/Dataset'
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
+import { FileHelper } from '../../../shared/files/FileHelper'
 
 type Dataset = {
   datasetVersion: { metadataBlocks: { citation: { fields: { value: string }[] } } }
@@ -131,7 +132,7 @@ describe('Dataset', () => {
   })
 
   describe('Visualizing the Files Tab', () => {
-    it('successfully loads the files tab', () => {
+    it.only('successfully loads the files tab', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
         .then((persistentId: string) => {
@@ -144,43 +145,51 @@ describe('Dataset', () => {
     })
 
     it('successfully loads the files tab with files', () => {
-      cy.wrap(DatasetHelper.createWithFiles(3))
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(3)))
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
           cy.findByText('Files').should('exist')
 
-          // cy.findByText('1 to 3 of 3 Files').should('exist') // TODO - Connect files count implementation
+          cy.findByText('1 to 3 of 3 Files').should('exist')
           cy.findByText('blob').should('exist')
           cy.findByText('blob-1').should('exist')
           cy.findByText('blob-2').should('exist')
         })
     })
 
-    it.skip('navigates to the next page of files', () => {
-      // TODO - Connect files count implementation to the pagination
-      cy.wrap(DatasetHelper.createWithFiles(20), { timeout: 10000 })
+    it('navigates to the next page of files', () => {
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(30)), { timeout: 10000 })
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
           cy.findByText('Files').should('exist')
 
+          cy.findByRole('button', { name: /Sort/ }).click({ force: true })
+          cy.findByText('Name (A-Z)').should('exist').click({ force: true })
+
           cy.findByText('1 to 10 of 30 Files').should('exist')
           cy.findByText('blob').should('exist')
-          cy.findByText('blob-9').should('exist')
+          cy.findByText('blob-17').should('exist')
 
-          cy.findByText('Next').click()
+          cy.findByText('Next').click({ force: true })
 
           cy.findByText('11 to 20 of 30 Files').should('exist')
-          cy.findByText('blob-10').should('exist')
-          cy.findByText('blob-19').should('exist')
+          cy.findByText('blob-18').should('exist')
+          cy.findByText('blob-26').should('exist')
+
+          cy.findByText('Previous').click({ force: true })
+
+          cy.findByText('1 to 10 of 30 Files').should('exist')
+          cy.findByText('blob').should('exist')
+          cy.findByText('blob-17').should('exist')
         })
     })
 
     it('successfully loads the action buttons when the user is logged in as owner', () => {
-      cy.wrap(DatasetHelper.createWithFiles(3))
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(3)))
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
@@ -196,7 +205,7 @@ describe('Dataset', () => {
 
     it('does not load the action buttons when the user is not logged in as owner', () => {
       cy.wrap(
-        DatasetHelper.createWithFiles(3).then((dataset) =>
+        DatasetHelper.createWithFiles(FileHelper.createMany(3)).then((dataset) =>
           DatasetHelper.publish(dataset.persistentId)
         )
       )
@@ -217,7 +226,7 @@ describe('Dataset', () => {
     })
 
     it('loads the restricted files when the user is logged in as owner', () => {
-      cy.wrap(DatasetHelper.createWithFilesRestricted(1))
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createManyRestricted(1)))
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
@@ -237,7 +246,7 @@ describe('Dataset', () => {
 
     it('loads the restricted files when the user is not logged in as owner', () => {
       cy.wrap(
-        DatasetHelper.createWithFilesRestricted(1).then((dataset) =>
+        DatasetHelper.createWithFiles(FileHelper.createManyRestricted(1)).then((dataset) =>
           DatasetHelper.publish(dataset.persistentId)
         )
       )
@@ -261,7 +270,7 @@ describe('Dataset', () => {
 
     it('loads the embargoed files', () => {
       cy.wrap(
-        DatasetHelper.createWithFiles(1).then((dataset) =>
+        DatasetHelper.createWithFiles(FileHelper.createMany(1)).then((dataset) =>
           DatasetHelper.embargoFiles(
             dataset.persistentId,
             [dataset.files ? dataset.files[0].id : 0],
@@ -271,6 +280,8 @@ describe('Dataset', () => {
       )
         .its('persistentId')
         .then((persistentId: string) => {
+          cy.wait(1500) // Wait for the files to be embargoed
+
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
           cy.findByText('Files').should('exist')
@@ -280,6 +291,113 @@ describe('Dataset', () => {
 
           cy.findByRole('button', { name: 'Access File' }).should('exist').click()
           cy.findByText('Embargoed').should('exist')
+        })
+    })
+
+    it.skip('applies filters to the Files Table in the correct order', () => {
+      // TODO - Restore this test once fileCountsInfo use case takes into account the filtered results https://github.com/IQSS/dataverse-frontend/issues/172
+      const files = [
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('csv', {
+          description: 'Some description',
+          restrict: 'true',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true'
+        }),
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true',
+          tabIngest: 'false'
+        })
+      ]
+      cy.wrap(DatasetHelper.createWithFiles(files))
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+
+          cy.findByText('Files').should('exist')
+
+          cy.findByText('1 to 6 of 6 Files').should('exist')
+          cy.findByText('blob').should('exist')
+          cy.findByText('blob-1').should('exist')
+          cy.findByText('blob-2').should('exist')
+          cy.findByText('blob-3').should('exist')
+          cy.findByText('blob-4').should('exist')
+          cy.findByText('blob-5').should('exist')
+
+          cy.findByLabelText('Search').type('blob-{enter}', { force: true })
+
+          cy.findByText('1 to 5 of 5 Files').should('exist')
+          cy.findByText('blob').should('not.exist')
+          cy.findByText('blob-1').should('exist')
+          cy.findByText('blob-2').should('exist')
+          cy.findByText('blob-3').should('exist')
+          cy.findByText('blob-4').should('exist')
+          cy.findByText('blob-5').should('exist')
+
+          cy.findByRole('button', { name: 'Filter Tag: All' }).click({ force: true })
+          cy.findByText('Category (4)').should('exist').click({ force: true })
+
+          cy.findByText('1 to 4 of 4 Files').should('exist')
+          cy.findByText('blob').should('not.exist')
+          cy.findByText('blob-1').should('not.exist')
+          cy.findByText('blob-2').should('exist')
+          cy.findByText('blob-3').should('exist')
+          cy.findByText('blob-4').should('exist')
+          cy.findByText('blob-5').should('exist')
+
+          cy.findByRole('button', { name: 'Access: All' }).click({ force: true })
+          cy.findByText('Restricted (3)').should('exist').click({ force: true })
+
+          cy.findByText('1 to 3 of 3 Files').should('exist')
+          cy.findByText('blob').should('not.exist')
+          cy.findByText('blob-1').should('not.exist')
+          cy.findByText('blob-2').should('not.exist')
+          cy.findByText('blob-3').should('exist')
+          cy.findByText('blob-4').should('exist')
+          cy.findByText('blob-5').should('exist')
+
+          cy.findByRole('button', { name: 'Filter Type: All' }).click({ force: true })
+          cy.findByText('Text/csv (2)').should('exist').click({ force: true })
+
+          cy.findByText('1 to 2 of 2 Files').should('exist')
+          cy.findByText('blob').should('not.exist')
+          cy.findByText('blob-1').should('not.exist')
+          cy.findByText('blob-2').should('not.exist')
+          cy.findByText('blob-3').should('not.exist')
+          cy.findByText('blob-4').should('exist')
+          cy.findByText('blob-5').should('exist')
+
+          cy.findByRole('button', { name: /Sort/ }).click({ force: true })
+          cy.findByText('Name (Z-A)').should('exist').click({ force: true })
+
+          cy.findByText('blob').should('not.exist')
+          cy.findByText('blob-1').should('not.exist')
+          cy.findByText('blob-2').should('not.exist')
+          cy.findByText('blob-3').should('not.exist')
+          cy.get('table > tbody > tr').eq(0).should('contain', 'blob-5')
+          cy.get('table > tbody > tr').eq(1).should('contain', 'blob-4')
         })
     })
   })

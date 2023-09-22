@@ -24,14 +24,14 @@ function TestComponent({ file }: { file: File }) {
 describe('useFileDownloadPermission', () => {
   beforeEach(() => {
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves([])
-    fileRepository.getCountInfoByDatasetPersistentId = cy
+    fileRepository.getFilesCountInfoByDatasetPersistentId = cy
       .stub()
       .resolves(FilesCountInfoMother.create())
   })
 
   it('should return file download permission', () => {
     const file = FileMother.createDeaccessioned()
-    fileRepository.getFileUserPermissionsById = cy
+    fileRepository.getUserPermissionsById = cy
       .stub()
       .resolves(FileUserPermissionsMother.create({ fileId: file.id, canEditDataset: true }))
 
@@ -41,13 +41,13 @@ describe('useFileDownloadPermission', () => {
       </FilePermissionsProvider>
     )
 
-    cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledWith', file.id)
+    cy.wrap(fileRepository.getUserPermissionsById).should('be.calledWith', file.id)
     cy.findByText('Has download permission').should('exist')
   })
 
   it('should return false for file download permission if there is an error', () => {
     const file = FileMother.createDeaccessioned()
-    fileRepository.getFileUserPermissionsById = cy
+    fileRepository.getUserPermissionsById = cy
       .stub()
       .rejects(new Error('Error getting file user permissions'))
 
@@ -57,7 +57,7 @@ describe('useFileDownloadPermission', () => {
       </FilePermissionsProvider>
     )
 
-    cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledWith', file.id)
+    cy.wrap(fileRepository.getUserPermissionsById).should('be.calledWith', file.id)
     cy.findByText('Does not have download permission').should('exist')
   })
 })

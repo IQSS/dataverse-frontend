@@ -10,23 +10,47 @@ export class FileCriteria {
   ) {}
 
   withSortBy(sortBy: FileSortByOption): FileCriteria {
-    return new FileCriteria(sortBy, this.filterByType, this.filterByAccess, this.filterByTag)
+    return new FileCriteria(
+      sortBy,
+      this.filterByType,
+      this.filterByAccess,
+      this.filterByTag,
+      this.searchText
+    )
   }
 
   withFilterByType(filterByType: string | undefined): FileCriteria {
     const newFilterByType = filterByType === undefined ? undefined : new FileType(filterByType)
 
-    return new FileCriteria(this.sortBy, newFilterByType, this.filterByAccess, this.filterByTag)
+    return new FileCriteria(
+      this.sortBy,
+      newFilterByType,
+      this.filterByAccess,
+      this.filterByTag,
+      this.searchText
+    )
   }
 
   withFilterByAccess(filterByAccess: FileAccessOption | undefined): FileCriteria {
-    return new FileCriteria(this.sortBy, this.filterByType, filterByAccess, this.filterByTag)
+    return new FileCriteria(
+      this.sortBy,
+      this.filterByType,
+      filterByAccess,
+      this.filterByTag,
+      this.searchText
+    )
   }
 
   withFilterByTag(filterByTag: string | undefined): FileCriteria {
     const newFilterByTag = filterByTag === undefined ? undefined : new FileTag(filterByTag)
 
-    return new FileCriteria(this.sortBy, this.filterByType, this.filterByAccess, newFilterByTag)
+    return new FileCriteria(
+      this.sortBy,
+      this.filterByType,
+      this.filterByAccess,
+      newFilterByTag,
+      this.searchText
+    )
   }
 
   withSearchText(searchText: string | undefined): FileCriteria {

@@ -22,7 +22,7 @@ export class FileMockRepository implements FileRepository {
     })
   }
 
-  getCountInfoByDatasetPersistentId(
+  getFilesCountInfoByDatasetPersistentId(
     // eslint-disable-next-line unused-imports/no-unused-vars
     datasetPersistentId: string,
     // eslint-disable-next-line unused-imports/no-unused-vars
@@ -35,7 +35,7 @@ export class FileMockRepository implements FileRepository {
     })
   }
   // eslint-disable-next-line unused-imports/no-unused-vars
-  getFileUserPermissionsById(id: number): Promise<FileUserPermissions> {
+  getUserPermissionsById(id: number): Promise<FileUserPermissions> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FileUserPermissionsMother.create())

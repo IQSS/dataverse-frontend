@@ -46,7 +46,7 @@ const filePaginationInfo = new FilePaginationInfo(1, 10, 200)
 describe('DatasetFiles', () => {
   beforeEach(() => {
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(testFiles)
-    fileRepository.getCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
+    fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
   })
 
   it('renders the files table', () => {
@@ -215,7 +215,7 @@ describe('DatasetFiles', () => {
         datasetVersion
       )
 
-      cy.wrap(fileRepository.getCountInfoByDatasetPersistentId).should(
+      cy.wrap(fileRepository.getFilesCountInfoByDatasetPersistentId).should(
         'be.calledWith',
         datasetPersistentId,
         datasetVersion

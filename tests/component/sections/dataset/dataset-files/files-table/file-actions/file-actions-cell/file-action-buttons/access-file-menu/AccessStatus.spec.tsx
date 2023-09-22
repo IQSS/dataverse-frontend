@@ -25,7 +25,7 @@ describe('AccessStatus', () => {
   it('renders the access status restricted with access', () => {
     const fileRestrictedWithAccess = FileMother.createWithRestrictedAccessWithAccessGranted()
     const fileRepository: FileRepository = {} as FileRepository
-    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+    fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
         fileId: fileRestrictedWithAccess.id,
         canDownloadFile: true
@@ -47,7 +47,7 @@ describe('AccessStatus', () => {
   it('renders the access status embargoed', () => {
     const fileRestrictedWithAccess = FileMother.createWithRestrictedAccessWithAccessGranted()
     const fileRepository: FileRepository = {} as FileRepository
-    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+    fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
         fileId: fileRestrictedWithAccess.id,
         canDownloadFile: true
@@ -75,7 +75,7 @@ describe('AccessStatus', () => {
   it('renders the access status embargoed restricted with access', () => {
     const fileRestrictedWithAccess = FileMother.createWithRestrictedAccessWithAccessGranted()
     const fileRepository: FileRepository = {} as FileRepository
-    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+    fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
         fileId: fileRestrictedWithAccess.id,
         canDownloadFile: true

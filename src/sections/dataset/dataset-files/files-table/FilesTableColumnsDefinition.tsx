@@ -5,8 +5,9 @@ import { FileInfoCell } from './file-info/file-info-cell/FileInfoCell'
 import { FileInfoHeader } from './file-info/FileInfoHeader'
 import { FileActionsHeader } from './file-actions/FileActionsHeader'
 import { FileActionsCell } from './file-actions/file-actions-cell/FileActionsCell'
+import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
 
-export const columns: ColumnDef<File>[] = [
+export const createColumnsDefinition = (paginationInfo: FilePaginationInfo): ColumnDef<File>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -31,13 +32,7 @@ export const columns: ColumnDef<File>[] = [
     )
   },
   {
-    header: ({ table }) => (
-      <FileInfoHeader
-        pageCount={table.getPageCount()}
-        pageSize={table.getState().pagination.pageSize}
-        pageIndex={table.getState().pagination.pageIndex}
-      />
-    ),
+    header: () => <FileInfoHeader paginationInfo={paginationInfo} />,
     accessorKey: 'info',
     cell: (props) => <FileInfoCell file={props.row.original} />
   },

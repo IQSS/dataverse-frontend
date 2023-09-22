@@ -15,7 +15,7 @@ describe('FileOptionsMenu', () => {
   beforeEach(() => {
     userRepository.getAuthenticated = cy.stub().resolves(user)
     userRepository.removeAuthenticated = cy.stub().resolves()
-    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+    fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
         fileId: file.id,
         canEditDataset: true
@@ -71,7 +71,7 @@ describe('FileOptionsMenu', () => {
   })
 
   it('does not render is the user do not have permissions to update the dataset', () => {
-    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+    fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
         fileId: file.id,
         canEditDataset: false
