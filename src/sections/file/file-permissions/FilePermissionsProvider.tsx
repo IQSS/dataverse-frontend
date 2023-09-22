@@ -15,11 +15,11 @@ export function FilePermissionsProvider({
   repository,
   children
 }: PropsWithChildren<SessionUserFilePermissionsProviderProps>) {
-  const filePermissionsMap = new Map<string, { [x: string]: boolean }>()
+  const filePermissionsMap = new Map<number, { [x: string]: boolean }>()
   const { anonymizedView } = useAnonymized()
 
   const updateFilePermissionsMap = (
-    fileIdToUpdate: string,
+    fileIdToUpdate: number,
     newPermissionKey: string,
     newPermissionValue: boolean
   ) => {

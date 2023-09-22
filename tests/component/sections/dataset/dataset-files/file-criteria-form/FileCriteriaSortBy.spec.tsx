@@ -3,6 +3,7 @@ import {
   FileCriteria,
   FileSortByOption
 } from '../../../../../../src/files/domain/models/FileCriteria'
+import styles from '../../../../../../src/sections/dataset/dataset-files/file-criteria-form/FileCriteriaForm.module.scss'
 
 const defaultCriteria = new FileCriteria()
 describe('FilesCriteriaSortBy', () => {
@@ -11,13 +12,6 @@ describe('FilesCriteriaSortBy', () => {
 
     cy.customMount(
       <FileCriteriaSortBy criteria={defaultCriteria} onCriteriaChange={onCriteriaChange} />
-    )
-
-    cy.findByRole('button', { name: /Sort/ }).click()
-    cy.findByText('Name (A-Z)').should('exist').click()
-    cy.wrap(onCriteriaChange).should(
-      'be.calledWith',
-      defaultCriteria.withSortBy(FileSortByOption.NAME_AZ)
     )
 
     cy.findByRole('button', { name: /Sort/ }).click()
@@ -54,5 +48,36 @@ describe('FilesCriteriaSortBy', () => {
       'be.calledWith',
       defaultCriteria.withSortBy(FileSortByOption.TYPE)
     )
+  })
+
+  it('does not call the onCriteriaChange callback when the same option is selected', () => {
+    const onCriteriaChange = cy.stub().as('onCriteriaChange')
+
+    cy.customMount(
+      <FileCriteriaSortBy criteria={defaultCriteria} onCriteriaChange={onCriteriaChange} />
+    )
+
+    cy.findByRole('button', { name: /Sort/ }).click()
+    cy.findByText('Name (A-Z)').should('exist').click()
+    cy.wrap(onCriteriaChange).should(
+      'not.be.calledWith',
+      defaultCriteria.withSortBy(FileSortByOption.NAME_AZ)
+    )
+  })
+
+  it('changes the sort by option to bold when selected', () => {
+    const onCriteriaChange = cy.stub().as('onCriteriaChange')
+
+    cy.customMount(
+      <FileCriteriaSortBy criteria={defaultCriteria} onCriteriaChange={onCriteriaChange} />
+    )
+
+    cy.findByRole('button', { name: /Sort/ }).click()
+    cy.findByText('Name (A-Z)').should('have.class', styles['selected-option'])
+
+    cy.findByRole('button', { name: 'Name (Z-A)' }).click()
+
+    cy.findByRole('button', { name: /Sort/ }).click()
+    cy.findByText('Name (Z-A)').should('have.class', styles['selected-option'])
   })
 })

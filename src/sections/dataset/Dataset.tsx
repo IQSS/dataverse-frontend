@@ -59,6 +59,7 @@ export function Dataset({ datasetRepository, fileRepository, searchParams }: Dat
                   <DatasetFiles
                     filesRepository={fileRepository}
                     datasetPersistentId={dataset.persistentId}
+                    datasetVersion={dataset.version}
                   />
                 </div>
               </Tabs.Tab>

@@ -1,7 +1,7 @@
 import { Col, IconName, Icon, QuestionMarkTooltip, Row } from '@iqss/dataverse-design-system'
 import styles from './DatasetCitation.module.scss'
 import { useTranslation } from 'react-i18next'
-import { DatasetStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
+import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import parse from 'html-react-parser'
 
 interface DatasetCitationProps {
@@ -15,7 +15,9 @@ export function DatasetCitation({ citation, version }: DatasetCitationProps) {
     <>
       <Row
         className={
-          version.status === DatasetStatus.DEACCESSIONED ? styles.deaccessioned : styles.container
+          version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
+            ? styles.deaccessioned
+            : styles.container
         }>
         <Row className={styles.row}>
           <Col sm={3}>
@@ -52,19 +54,19 @@ function CitationDescription({ citation, version }: DatasetCitationProps) {
   return (
     <span className={styles.citation}>
       {citationAsReactElement}
-      <CitationTooltip status={version.status} />
+      <CitationTooltip status={version.publishingStatus} />
     </span>
   )
 }
 
 interface CitationDatasetStatusProps {
-  status: DatasetStatus
+  status: DatasetPublishingStatus
 }
 
 function CitationTooltip({ status }: CitationDatasetStatusProps) {
   const { t } = useTranslation('dataset')
 
-  if (status !== DatasetStatus.RELEASED) {
+  if (status !== DatasetPublishingStatus.RELEASED) {
     return (
       <>
         {' '}

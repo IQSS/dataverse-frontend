@@ -23,7 +23,7 @@ export function CopyToClipboardButton({ text }: { text: string }) {
   return (
     <Tooltip placement="top" overlay={`${t('table.copyToClipboard.clickToCopy')} ${text}`}>
       <span onClick={copyToClipboard} className={styles.container} role="button">
-        {text}
+        {truncateText(text)}
         {copied ? (
           <Check
             className={styles.check}
@@ -40,4 +40,23 @@ export function CopyToClipboardButton({ text }: { text: string }) {
       </span>
     </Tooltip>
   )
+}
+
+function truncateText(text: string): string {
+  if (text.length <= 25) {
+    return text
+  }
+  let prefix = text.slice(0, 3)
+  let suffix = text.slice(-3)
+
+  const secondColonIndex = text.indexOf(':', text.indexOf(':') + 1)
+  if (secondColonIndex !== -1) {
+    prefix = text.slice(0, secondColonIndex + 5)
+  }
+
+  if (text.endsWith('==')) {
+    suffix = text.slice(-5)
+  }
+
+  return `${prefix}...${suffix}`
 }

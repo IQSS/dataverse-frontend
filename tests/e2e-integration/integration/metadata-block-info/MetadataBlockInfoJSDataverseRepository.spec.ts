@@ -1,8 +1,8 @@
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
-import { IntegrationTestsUtils } from '../IntegrationTestsUtils'
 import { MetadataBlockInfoJSDataverseRepository } from '../../../../src/metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
 import { MetadataBlockInfoCitationExample } from './MetadataBlockInfoCitationExample'
+import { TestsUtils } from '../../shared/TestsUtils'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -10,8 +10,8 @@ const expect = chai.expect
 const metadataBlockInfoExpected = MetadataBlockInfoCitationExample
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
 describe('Metadata Block Info JSDataverse Repository', () => {
-  before(() => IntegrationTestsUtils.setup())
-  beforeEach(() => IntegrationTestsUtils.login())
+  before(() => TestsUtils.setup())
+  beforeEach(() => TestsUtils.login())
 
   it('gets the metadataBlockInfo by name', async () => {
     await metadataBlockInfoRepository.getByName('citation').then((metadataBlockInfo) => {

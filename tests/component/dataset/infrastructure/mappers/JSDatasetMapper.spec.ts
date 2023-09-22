@@ -6,7 +6,6 @@ import {
   CitationMetadataBlock,
   DatasetMetadataBlock
 } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
-import { DatasetStatus, DatasetVersion } from '../../../../../src/dataset/domain/models/Dataset'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -53,7 +52,7 @@ const citation =
 const datasetSummaryFields = ['dsDescription', 'subject', 'keyword', 'publication', 'notesText']
 const expectedDataset = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
-  version: new DatasetVersion(0, 0, DatasetStatus.DRAFT),
+  version: { id: 101, minorNumber: 0, majorNumber: 0, publishingStatus: 'draft' },
   citation:
     'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
   labels: [
