@@ -25,6 +25,7 @@ export function DatasetFiles({
     filesRepository,
     datasetPersistentId,
     datasetVersion,
+    setPaginationInfo,
     paginationInfo,
     criteria
   )
@@ -40,7 +41,7 @@ export function DatasetFiles({
       <FilesPagination
         page={paginationInfo.page}
         pageSize={paginationInfo.pageSize}
-        total={filesCountInfo.total}
+        total={paginationInfo.totalFiles}
         onPaginationInfoChange={setPaginationInfo}
       />
     </>

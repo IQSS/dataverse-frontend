@@ -4,7 +4,7 @@ import { FileRepository } from '../../../../../src/files/domain/repositories/Fil
 import { useFiles } from '../../../../../src/sections/dataset/dataset-files/useFiles'
 import { FileUserPermissionsMother } from '../../../files/domain/models/FileUserPermissionsMother'
 import { FilePermissionsProvider } from '../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 import {
   DatasetPublishingStatus,
@@ -18,23 +18,20 @@ const datasetVersion = new DatasetVersion(1, DatasetPublishingStatus.RELEASED, 1
 
 const FilesTableTestComponent = ({ datasetPersistentId }: { datasetPersistentId: string }) => {
   const [paginationInfo, setPaginationInfo] = useState<FilePaginationInfo>(new FilePaginationInfo())
-  const { isLoading, files, filesCountInfo } = useFiles(
+  const { isLoading, files } = useFiles(
     fileRepository,
     datasetPersistentId,
     datasetVersion,
+    setPaginationInfo,
     paginationInfo
   )
-
-  useEffect(() => {
-    setPaginationInfo(paginationInfo.withTotal(filesCountInfo.total))
-  }, [filesCountInfo])
 
   if (isLoading) {
     return <span>Loading...</span>
   }
   return (
     <>
-      <div>Files count: {filesCountInfo.total}</div>
+      <div>Files count: {paginationInfo.totalFiles}</div>
       <table>
         <tbody>
           {files.map((file) => (

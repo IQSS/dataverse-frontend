@@ -14,23 +14,21 @@ export function useFiles(
   filesRepository: FileRepository,
   datasetPersistentId: string,
   datasetVersion: DatasetVersion,
-  paginationInfo?: FilePaginationInfo,
+  onPaginationInfoChange: (paginationInfo: FilePaginationInfo) => void,
+  paginationInfo: FilePaginationInfo,
   criteria?: FileCriteria
 ) {
   const { fetchFilesPermission } = useFilePermissions()
   const [files, setFiles] = useState<File[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [filesCountInfo, setFilesCountInfo] = useState<FilesCountInfo>({
-    total: 0,
-    perFileType: [],
-    perAccess: [],
-    perFileTag: []
-  })
+  const [filesCountInfo, setFilesCountInfo] = useState<FilesCountInfo>()
 
   useEffect(() => {
     getFilesCountInfoByDatasetPersistentId(filesRepository, datasetPersistentId, datasetVersion)
       .then((filesCountInfo: FilesCountInfo) => {
         setFilesCountInfo(filesCountInfo)
+        onPaginationInfoChange(paginationInfo.withTotal(filesCountInfo.total))
+        console.log(paginationInfo)
       })
       .catch((error) => {
         console.error('There was an error getting the files count info', error)
@@ -40,25 +38,31 @@ export function useFiles(
   useEffect(() => {
     setIsLoading(true)
 
-    if (filesCountInfo.total !== 0 && paginationInfo?.totalFiles !== 0) {
-      getFilesByDatasetPersistentId(
-        filesRepository,
-        datasetPersistentId,
-        datasetVersion,
-        paginationInfo,
-        criteria
-      )
-        .then((files: File[]) => {
-          setFiles(files)
-          return files
-        })
-        .then((files: File[]) =>
-          fetchFilesPermission(FilePermission.DOWNLOAD_FILE, files).then(() => setIsLoading(false))
+    if (filesCountInfo) {
+      if (filesCountInfo.total === 0) {
+        setIsLoading(false)
+      } else {
+        getFilesByDatasetPersistentId(
+          filesRepository,
+          datasetPersistentId,
+          datasetVersion,
+          paginationInfo,
+          criteria
         )
-        .catch((error) => {
-          console.error('There was an error getting the files', error)
-          setIsLoading(false)
-        })
+          .then((files: File[]) => {
+            setFiles(files)
+            return files
+          })
+          .then((files: File[]) =>
+            fetchFilesPermission(FilePermission.DOWNLOAD_FILE, files).then(() =>
+              setIsLoading(false)
+            )
+          )
+          .catch((error) => {
+            console.error('There was an error getting the files', error)
+            setIsLoading(false)
+          })
+      }
     }
   }, [filesRepository, datasetPersistentId, datasetVersion, paginationInfo, criteria])
 
