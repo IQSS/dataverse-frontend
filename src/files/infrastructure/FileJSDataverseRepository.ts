@@ -4,6 +4,8 @@ import { FilesMockData } from '../../stories/files/FileMockData'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
 import { FilesCountInfoMother } from '../../../tests/component/files/domain/models/FilesCountInfoMother'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
+import { FileUserPermissions } from '../domain/models/FileUserPermissions'
+import { FileUserPermissionsMother } from '../../../tests/component/files/domain/models/FileUserPermissionsMother'
 
 export class FileJSDataverseRepository implements FileRepository {
   getAllByDatasetPersistentId(
@@ -31,6 +33,15 @@ export class FileJSDataverseRepository implements FileRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FilesCountInfoMother.create())
+      }, 1000)
+    })
+  }
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  getFileUserPermissionsById(id: string): Promise<FileUserPermissions> {
+    // TODO - implement using js-dataverse
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(FileUserPermissionsMother.create())
       }, 1000)
     })
   }

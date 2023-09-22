@@ -1,30 +1,13 @@
 import { RequestAccessOption } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/RequestAccessOption'
-import {
-  FileAccessStatus,
-  FileStatus
-} from '../../../../../../../../../../src/files/domain/models/File'
+import { FileMother } from '../../../../../../../../files/domain/models/FileMother'
+import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
+import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
+import { FilePermissionsProvider } from '../../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 
-const accessCannotBeRequested = {
-  restricted: true,
-  canBeRequested: false,
-  requested: false
-}
-const accessCanBeRequested = {
-  restricted: true,
-  canBeRequested: true,
-  requested: false
-}
-const fileId = 'file-id'
 describe('RequestAccessOption', () => {
   it('renders the embargoed message when the file is embargoed', () => {
-    cy.customMount(
-      <RequestAccessOption
-        fileId={fileId}
-        versionStatus={FileStatus.RELEASED}
-        accessStatus={FileAccessStatus.EMBARGOED}
-        access={accessCannotBeRequested}
-      />
-    )
+    const fileEmbargoed = FileMother.createWithEmbargo()
+    cy.customMount(<RequestAccessOption file={fileEmbargoed} />)
 
     cy.findByRole('button', { name: 'Files are unavailable during the specified embargo.' })
       .should('exist')
@@ -32,14 +15,8 @@ describe('RequestAccessOption', () => {
   })
 
   it('renders the embargo then restricted message when the file is embargoed and restricted', () => {
-    cy.customMount(
-      <RequestAccessOption
-        fileId={fileId}
-        versionStatus={FileStatus.RELEASED}
-        accessStatus={FileAccessStatus.EMBARGOED_RESTRICTED}
-        access={accessCanBeRequested}
-      />
-    )
+    const fileEmbargoedRestricted = FileMother.createWithEmbargoRestricted()
+    cy.customMount(<RequestAccessOption file={fileEmbargoedRestricted} />)
 
     cy.findByRole('button', {
       name: 'Files are unavailable during the specified embargo and restricted after that.'
@@ -49,14 +26,8 @@ describe('RequestAccessOption', () => {
   })
 
   it('renders the Users may not request access to files. message when the file is restricted and access request is not allowed', () => {
-    cy.customMount(
-      <RequestAccessOption
-        fileId={fileId}
-        versionStatus={FileStatus.RELEASED}
-        accessStatus={FileAccessStatus.RESTRICTED}
-        access={accessCannotBeRequested}
-      />
-    )
+    const fileRestricted = FileMother.createWithRestrictedAccess()
+    cy.customMount(<RequestAccessOption file={fileRestricted} />)
 
     cy.findByRole('button', { name: 'Users may not request access to files.' })
       .should('exist')
@@ -64,32 +35,16 @@ describe('RequestAccessOption', () => {
   })
 
   it('renders the request access button when the file is restricted and can be requested', () => {
-    cy.customMount(
-      <RequestAccessOption
-        fileId={fileId}
-        versionStatus={FileStatus.RELEASED}
-        accessStatus={FileAccessStatus.RESTRICTED}
-        access={accessCanBeRequested}
-      />
-    )
+    const fileRestrictedCanBeRequested = FileMother.createWithAccessRequestAllowed()
+    cy.customMount(<RequestAccessOption file={fileRestrictedCanBeRequested} />)
 
     cy.findByRole('button', { name: 'Request Access' }).should('exist')
   })
 
   it('renders the access requested message when hen the file is restricted and the access has already been requested', () => {
-    const accessRequested = {
-      ...accessCanBeRequested,
-      requested: true
-    }
+    const fileAlreadyRequested = FileMother.createWithAccessRequestPending()
 
-    cy.customMount(
-      <RequestAccessOption
-        fileId={fileId}
-        versionStatus={FileStatus.RELEASED}
-        accessStatus={FileAccessStatus.RESTRICTED}
-        access={accessRequested}
-      />
-    )
+    cy.customMount(<RequestAccessOption file={fileAlreadyRequested} />)
 
     cy.findByRole('button', { name: 'Access Requested' })
       .should('exist')
@@ -97,14 +52,8 @@ describe('RequestAccessOption', () => {
   })
 
   it('does not render the request access button when the file is deaccessioned', () => {
-    cy.customMount(
-      <RequestAccessOption
-        fileId={fileId}
-        versionStatus={FileStatus.DEACCESSIONED}
-        access={accessCanBeRequested}
-        accessStatus={FileAccessStatus.RESTRICTED}
-      />
-    )
+    const fileDeaccessioned = FileMother.createDeaccessioned()
+    cy.customMount(<RequestAccessOption file={fileDeaccessioned} />)
 
     cy.findByRole('button', { name: 'Users may not request access to files.' }).should('not.exist')
     cy.findByRole('button', { name: 'Request Access' }).should('not.exist')
@@ -118,13 +67,19 @@ describe('RequestAccessOption', () => {
   })
 
   it('does not render the request access button when the file status is public', () => {
+    const filePublic = FileMother.createWithPublicAccess()
+    const fileRepository: FileRepository = {} as FileRepository
+    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+      FileUserPermissionsMother.create({
+        fileId: filePublic.id,
+        canDownloadFile: true
+      })
+    )
+
     cy.customMount(
-      <RequestAccessOption
-        fileId={fileId}
-        versionStatus={FileStatus.RELEASED}
-        access={accessCanBeRequested}
-        accessStatus={FileAccessStatus.PUBLIC}
-      />
+      <FilePermissionsProvider repository={fileRepository}>
+        <RequestAccessOption file={filePublic} />
+      </FilePermissionsProvider>
     )
 
     cy.findByRole('button', { name: 'Users may not request access to files.' }).should('not.exist')
@@ -139,13 +94,19 @@ describe('RequestAccessOption', () => {
   })
 
   it('does not render the request access button when the file status is restricted with access granted', () => {
+    const fileRestrictedWithAccess = FileMother.createWithRestrictedAccessWithAccessGranted()
+    const fileRepository: FileRepository = {} as FileRepository
+    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+      FileUserPermissionsMother.create({
+        fileId: fileRestrictedWithAccess.id,
+        canDownloadFile: true
+      })
+    )
+
     cy.customMount(
-      <RequestAccessOption
-        fileId={fileId}
-        versionStatus={FileStatus.RELEASED}
-        access={accessCanBeRequested}
-        accessStatus={FileAccessStatus.RESTRICTED_WITH_ACCESS}
-      />
+      <FilePermissionsProvider repository={fileRepository}>
+        <RequestAccessOption file={fileRestrictedWithAccess} />
+      </FilePermissionsProvider>
     )
 
     cy.findByRole('button', { name: 'Users may not request access to files.' }).should('not.exist')

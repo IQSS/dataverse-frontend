@@ -3,27 +3,44 @@ import { FileMother } from '../../../../../../../../files/domain/models/FileMoth
 import { UserMother } from '../../../../../../../../users/domain/models/UserMother'
 import { UserRepository } from '../../../../../../../../../../src/users/domain/repositories/UserRepository'
 import { SessionProvider } from '../../../../../../../../../../src/sections/session/SessionProvider'
+import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
+import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
+import { FilePermissionsProvider } from '../../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 
 const file = FileMother.createDefault()
 const user = UserMother.create()
 const userRepository = {} as UserRepository
+const fileRepository: FileRepository = {} as FileRepository
 describe('FileOptionsMenu', () => {
-  it('renders the FileOptionsMenu', () => {
+  beforeEach(() => {
     userRepository.getAuthenticated = cy.stub().resolves(user)
     userRepository.removeAuthenticated = cy.stub().resolves()
+    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+      FileUserPermissionsMother.create({
+        fileId: file.id,
+        canEditDataset: true
+      })
+    )
+  })
+
+  it('renders the FileOptionsMenu', () => {
     cy.customMount(
-      <SessionProvider repository={userRepository}>
-        <FileOptionsMenu file={file} />
-      </SessionProvider>
+      <FilePermissionsProvider repository={fileRepository}>
+        <SessionProvider repository={userRepository}>
+          <FileOptionsMenu file={file} />
+        </SessionProvider>
+      </FilePermissionsProvider>
     )
     cy.findByRole('button', { name: 'File Options' }).should('exist')
   })
 
   it('renders the file options menu with tooltip', () => {
     cy.customMount(
-      <SessionProvider repository={userRepository}>
-        <FileOptionsMenu file={file} />
-      </SessionProvider>
+      <FilePermissionsProvider repository={fileRepository}>
+        <SessionProvider repository={userRepository}>
+          <FileOptionsMenu file={file} />
+        </SessionProvider>
+      </FilePermissionsProvider>
     )
 
     cy.findByRole('button', { name: 'File Options' }).trigger('mouseover')
@@ -32,9 +49,11 @@ describe('FileOptionsMenu', () => {
 
   it('renders the dropdown header', () => {
     cy.customMount(
-      <SessionProvider repository={userRepository}>
-        <FileOptionsMenu file={file} />
-      </SessionProvider>
+      <FilePermissionsProvider repository={fileRepository}>
+        <SessionProvider repository={userRepository}>
+          <FileOptionsMenu file={file} />
+        </SessionProvider>
+      </FilePermissionsProvider>
     )
 
     cy.findByRole('button', { name: 'File Options' }).should('exist').click()
@@ -42,13 +61,30 @@ describe('FileOptionsMenu', () => {
   })
 
   it('does not render is the user is not authenticated', () => {
-    cy.customMount(<FileOptionsMenu file={file} />)
+    cy.customMount(
+      <FilePermissionsProvider repository={fileRepository}>
+        <FileOptionsMenu file={file} />
+      </FilePermissionsProvider>
+    )
 
     cy.findByRole('button', { name: 'File Options' }).should('not.exist')
   })
 
-  it.skip('does not render is the user do not have permissions to update the dataset', () => {
-    // TODO: Implement this test
+  it('does not render is the user do not have permissions to update the dataset', () => {
+    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+      FileUserPermissionsMother.create({
+        fileId: file.id,
+        canEditDataset: false
+      })
+    )
+    cy.customMount(
+      <FilePermissionsProvider repository={fileRepository}>
+        <SessionProvider repository={userRepository}>
+          <FileOptionsMenu file={file} />
+        </SessionProvider>
+      </FilePermissionsProvider>
+    )
+    cy.findByRole('button', { name: 'File Options' }).should('not.exist')
   })
 
   it.skip('does not render if there are not valid terms of access', () => {
@@ -66,9 +102,11 @@ describe('FileOptionsMenu', () => {
     const file = FileMother.createDeleted()
 
     cy.customMount(
-      <SessionProvider repository={userRepository}>
-        <FileOptionsMenu file={file} />
-      </SessionProvider>
+      <FilePermissionsProvider repository={fileRepository}>
+        <SessionProvider repository={userRepository}>
+          <FileOptionsMenu file={file} />
+        </SessionProvider>
+      </FilePermissionsProvider>
     )
     cy.findByRole('button', { name: 'File Options' }).should('exist').click()
 
@@ -81,9 +119,11 @@ describe('FileOptionsMenu', () => {
 
   it('renders the menu options', () => {
     cy.customMount(
-      <SessionProvider repository={userRepository}>
-        <FileOptionsMenu file={file} />
-      </SessionProvider>
+      <FilePermissionsProvider repository={fileRepository}>
+        <SessionProvider repository={userRepository}>
+          <FileOptionsMenu file={file} />
+        </SessionProvider>
+      </FilePermissionsProvider>
     )
 
     cy.findByRole('button', { name: 'File Options' }).click()

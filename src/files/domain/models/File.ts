@@ -30,16 +30,9 @@ export class FileSize {
 
 export interface FileAccess {
   restricted: boolean
+  latestVersionRestricted: boolean
   canBeRequested: boolean
   requested: boolean
-}
-
-export enum FileAccessStatus {
-  PUBLIC = 'public',
-  RESTRICTED = 'restricted',
-  RESTRICTED_WITH_ACCESS = 'restrictedAccess',
-  EMBARGOED = 'embargoed',
-  EMBARGOED_RESTRICTED = 'embargoedRestricted'
 }
 
 export enum FileStatus {
@@ -76,9 +69,12 @@ export interface FileDate {
   date: string
 }
 
-export interface FileEmbargo {
-  active: boolean
-  date: string
+export class FileEmbargo {
+  constructor(readonly dateAvailable: Date) {}
+
+  get isActive(): boolean {
+    return this.dateAvailable > new Date()
+  }
 }
 
 export interface FileTabularData {
@@ -109,16 +105,6 @@ export class FileType {
   }
 }
 
-export enum FileLockStatus {
-  LOCKED = 'locked',
-  UNLOCKED = 'unlocked',
-  OPEN = 'open'
-}
-
-export interface FilePermissions {
-  canDownload: boolean
-}
-
 export enum FileIngestStatus {
   NONE = 'none',
   IN_PROGRESS = 'inProgress',
@@ -137,7 +123,6 @@ export class File {
     readonly version: FileVersion,
     readonly name: string,
     readonly access: FileAccess,
-    readonly permissions: FilePermissions,
     readonly type: FileType,
     readonly size: FileSize,
     readonly date: FileDate,
@@ -157,30 +142,10 @@ export class File {
     return `/file?id=${this.id}&version=${this.version.toString()}`
   }
 
-  get accessStatus(): FileAccessStatus {
-    if (!this.access.restricted && !this.embargo?.active) {
-      return FileAccessStatus.PUBLIC
+  get isActivelyEmbargoed(): boolean {
+    if (this.embargo) {
+      return this.embargo.isActive
     }
-    if (!this.permissions.canDownload) {
-      if (!this.embargo?.active) {
-        return FileAccessStatus.RESTRICTED
-      }
-      return FileAccessStatus.EMBARGOED_RESTRICTED
-    }
-    if (!this.embargo?.active) {
-      return FileAccessStatus.RESTRICTED_WITH_ACCESS
-    }
-    return FileAccessStatus.EMBARGOED
-  }
-
-  // TODO - Use this attribute for the FilesThumbnail components
-  get lockStatus(): FileLockStatus {
-    if (!this.access.restricted && !this.embargo?.active) {
-      return FileLockStatus.OPEN
-    }
-    if (!this.permissions.canDownload) {
-      return FileLockStatus.LOCKED
-    }
-    return FileLockStatus.UNLOCKED
+    return false
   }
 }

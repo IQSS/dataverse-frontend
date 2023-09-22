@@ -32,14 +32,11 @@
         "name": "Restricted",
         "icon": "Restricted File Icon"
       },
-      "restrictedAccess": {
+      "restrictedWithAccess": {
         "name": "Restricted with Access Granted",
         "icon": "Restricted with access Icon"
       },
       "embargoed": {
-        "name": "Embargoed"
-      },
-      "embargoedRestricted": {
         "name": "Embargoed"
       },
       "public": {
@@ -133,7 +130,7 @@
     "cancel": "Cancel",
     "close": "Close",
     "embargoed": "Files are unavailable during the specified embargo",
-    "embargoedRestricted": "Files are unavailable during the specified embargo and restricted after that",
+    "embargoedThenRestricted": "Files are unavailable during the specified embargo and restricted after that",
     "requestNotAllowed": "Users may not request access to files",
     "accessRequested": "Access Requested"
   },

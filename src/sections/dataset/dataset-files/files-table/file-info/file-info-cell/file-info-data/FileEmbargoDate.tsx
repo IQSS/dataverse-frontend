@@ -16,7 +16,7 @@ export function FileEmbargoDate({ embargo, status }: FileEmbargoDateProps) {
   return (
     <div>
       <span>
-        {t(embargoTypeOfDate(embargo.active, status))} {embargo.date}
+        {t(embargoTypeOfDate(embargo.isActive, status))} {embargo.dateAvailable.toDateString()}
       </span>
     </div>
   )

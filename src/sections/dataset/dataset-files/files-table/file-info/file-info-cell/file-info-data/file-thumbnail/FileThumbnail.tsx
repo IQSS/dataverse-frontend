@@ -1,18 +1,17 @@
 import { FileThumbnailIcon } from './FileThumbnailIcon'
 import { FileThumbnailPreviewImage } from './FileThumbnailPreviewImage'
-import { FileLockStatus, FileType } from '../../../../../../../../files/domain/models/File'
+import { File } from '../../../../../../../../files/domain/models/File'
 import { FileThumbnailRestrictedIcon } from './FileThumbnailRestrictedIcon'
 import styles from './FileThumbnail.module.scss'
+import { useFileDownloadPermission } from '../../../../../../../file/file-permissions/useFileDownloadPermission'
 
 interface FileThumbnailProps {
-  thumbnail?: string | undefined
-  name: string
-  type: FileType
-  lockStatus: FileLockStatus
+  file: File
 }
 
-export function FileThumbnail({ thumbnail, name, type, lockStatus }: FileThumbnailProps) {
-  const showPreviewImage = thumbnail && lockStatus !== FileLockStatus.LOCKED
+export function FileThumbnail({ file }: FileThumbnailProps) {
+  const { sessionUserHasFileDownloadPermission } = useFileDownloadPermission(file)
+  const showPreviewImage = file.thumbnail && sessionUserHasFileDownloadPermission
 
   return (
     <div
@@ -20,11 +19,11 @@ export function FileThumbnail({ thumbnail, name, type, lockStatus }: FileThumbna
         showPreviewImage ? styles['container-preview-image'] : styles['container-icon']
       }`}>
       {showPreviewImage ? (
-        <FileThumbnailPreviewImage thumbnail={thumbnail} name={name} />
+        <FileThumbnailPreviewImage thumbnail={file.thumbnail} name={file.name} />
       ) : (
-        <FileThumbnailIcon type={type} />
+        <FileThumbnailIcon type={file.type} />
       )}
-      <FileThumbnailRestrictedIcon lockStatus={lockStatus} />
+      <FileThumbnailRestrictedIcon file={file} />
     </div>
   )
 }

@@ -1,50 +1,39 @@
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import styles from './AccessFileMenu.module.scss'
 import { RequestAccessModal } from './RequestAccessModal'
-import {
-  FileAccess,
-  FileAccessStatus,
-  FileStatus
-} from '../../../../../../../../files/domain/models/File'
+import { File, FileStatus } from '../../../../../../../../files/domain/models/File'
 import { useTranslation } from 'react-i18next'
+import { useFileDownloadPermission } from '../../../../../../../file/file-permissions/useFileDownloadPermission'
 
 interface RequestAccessButtonProps {
-  fileId: string
-  versionStatus: FileStatus
-  accessStatus: FileAccessStatus
-  access: FileAccess
+  file: File
 }
-export function RequestAccessOption({
-  fileId,
-  versionStatus,
-  accessStatus,
-  access
-}: RequestAccessButtonProps) {
+export function RequestAccessOption({ file }: RequestAccessButtonProps) {
   const { t } = useTranslation('files')
-  if (
-    versionStatus === FileStatus.DEACCESSIONED ||
-    accessStatus === FileAccessStatus.PUBLIC ||
-    accessStatus === FileAccessStatus.RESTRICTED_WITH_ACCESS
-  ) {
+  const { sessionUserHasFileDownloadPermission } = useFileDownloadPermission(file)
+
+  if (file.version.status === FileStatus.DEACCESSIONED || sessionUserHasFileDownloadPermission) {
     return <></>
   }
-  if (accessStatus === FileAccessStatus.EMBARGOED) {
+  if (file.isActivelyEmbargoed) {
+    if (file.access.restricted) {
+      return (
+        <DropdownButtonItem disabled>
+          {t('requestAccess.embargoedThenRestricted')}.
+        </DropdownButtonItem>
+      )
+    }
     return <DropdownButtonItem disabled>{t('requestAccess.embargoed')}.</DropdownButtonItem>
   }
-  if (accessStatus === FileAccessStatus.EMBARGOED_RESTRICTED) {
-    return (
-      <DropdownButtonItem disabled>{t('requestAccess.embargoedRestricted')}.</DropdownButtonItem>
-    )
-  }
-  if (!access.canBeRequested) {
+  if (!file.access.canBeRequested) {
     return <DropdownButtonItem disabled>{t('requestAccess.requestNotAllowed')}.</DropdownButtonItem>
   }
-  if (access.requested) {
+  if (file.access.requested) {
     return (
       <DropdownButtonItem disabled className={styles['access-requested-message']}>
         {t('requestAccess.accessRequested')}
       </DropdownButtonItem>
     )
   }
-  return <RequestAccessModal fileId={fileId} />
+  return <RequestAccessModal fileId={file.id} />
 }

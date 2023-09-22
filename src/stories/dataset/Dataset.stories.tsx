@@ -11,6 +11,8 @@ import { WithCitationMetadataBlockInfo } from './WithCitationMetadataBlockInfo'
 import { FileMockNoDataRepository } from '../files/FileMockNoDataRepository'
 import { WithSettings } from '../WithSettings'
 import { WithLoggedInUser } from '../WithLoggedInUser'
+import { WithFilePermissionsDenied } from '../files/file-permission/WithFilePermissionsDenied'
+import { WithFilePermissionsGranted } from '../files/file-permission/WithFilePermissionsGranted'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -26,7 +28,7 @@ export default meta
 type Story = StoryObj<typeof Dataset>
 
 export const Default: Story = {
-  decorators: [WithLayout],
+  decorators: [WithLayout, WithFilePermissionsDenied],
   render: () => (
     <Dataset
       datasetRepository={new DatasetMockRepository()}
@@ -36,7 +38,7 @@ export const Default: Story = {
   )
 }
 export const LoggedInAsOwner: Story = {
-  decorators: [WithLayout, WithLoggedInUser],
+  decorators: [WithLayout, WithLoggedInUser, WithFilePermissionsGranted],
   render: () => (
     <Dataset
       datasetRepository={new DatasetMockRepository()}
@@ -47,7 +49,7 @@ export const LoggedInAsOwner: Story = {
 }
 
 export const Loading: Story = {
-  decorators: [WithLayoutLoading],
+  decorators: [WithLayoutLoading, WithFilePermissionsDenied],
   render: () => (
     <Dataset
       datasetRepository={new DatasetMockRepository()}
@@ -58,7 +60,7 @@ export const Loading: Story = {
 }
 
 export const DatasetNotFound: Story = {
-  decorators: [WithLayout],
+  decorators: [WithLayout, WithFilePermissionsDenied],
   render: () => (
     <Dataset
       datasetRepository={new DatasetMockNoDataRepository()}
@@ -69,7 +71,7 @@ export const DatasetNotFound: Story = {
 }
 
 export const DatasetAnonymizedView: Story = {
-  decorators: [WithLayout, WithAnonymizedView],
+  decorators: [WithLayout, WithAnonymizedView, WithFilePermissionsGranted],
   render: () => (
     <Dataset
       datasetRepository={new DatasetMockRepository()}
@@ -80,7 +82,7 @@ export const DatasetAnonymizedView: Story = {
 }
 
 export const DatasetWithNoFiles: Story = {
-  decorators: [WithLayout, WithAnonymizedView],
+  decorators: [WithLayout, WithAnonymizedView, WithFilePermissionsDenied],
   render: () => (
     <Dataset
       datasetRepository={new DatasetMockRepository()}

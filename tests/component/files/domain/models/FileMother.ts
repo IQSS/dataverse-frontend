@@ -24,6 +24,17 @@ const createFakeFileLabel = (): FileLabel => ({
   value: faker.lorem.word()
 })
 
+export class FileEmbargoMother {
+  static create(): FileEmbargo {
+    const dateAvailable = faker.date.future()
+    return new FileEmbargo(dateAvailable)
+  }
+
+  static createNotActive(): FileEmbargo {
+    const dateAvailable = faker.date.past()
+    return new FileEmbargo(dateAvailable)
+  }
+}
 export class FileIngestMother {
   static create(props?: Partial<FileIngest>): FileIngest {
     return {
@@ -55,11 +66,9 @@ export class FileMother {
       name: faker.system.fileName(),
       access: {
         restricted: faker.datatype.boolean(),
+        latestVersionRestricted: faker.datatype.boolean(),
         canBeRequested: faker.datatype.boolean(),
         requested: faker.datatype.boolean()
-      },
-      permissions: {
-        canDownload: faker.datatype.boolean()
       },
       version: {
         majorNumber: faker.datatype.number(),
@@ -87,10 +96,7 @@ export class FileMother {
       checksum: checksum,
       thumbnail: thumbnail,
       directory: valueOrUndefined<string>(faker.system.directoryPath()),
-      embargo: valueOrUndefined<FileEmbargo>({
-        active: faker.datatype.boolean(),
-        date: faker.date.recent().toDateString()
-      }),
+      embargo: valueOrUndefined<FileEmbargo>(FileEmbargoMother.create()),
       tabularData:
         fileType === 'tabular data' && !checksum
           ? {
@@ -114,7 +120,6 @@ export class FileMother {
       ),
       fileMockedData.name,
       fileMockedData.access,
-      fileMockedData.permissions,
       fileMockedData.type,
       new FileSize(fileMockedData.size.value, fileMockedData.size.unit),
       fileMockedData.date,
@@ -143,7 +148,12 @@ export class FileMother {
         minorNumber: 0,
         status: FileStatus.RELEASED
       },
-      access: { restricted: false, canBeRequested: false, requested: false },
+      access: {
+        restricted: false,
+        latestVersionRestricted: false,
+        canBeRequested: false,
+        requested: false
+      },
       permissions: { canDownload: true },
       labels: [],
       checksum: undefined,
@@ -175,10 +185,7 @@ export class FileMother {
 
   static createWithEmbargo(): File {
     return this.createDefault({
-      embargo: {
-        active: true,
-        date: faker.date.future().toDateString()
-      }
+      embargo: FileEmbargoMother.create()
     })
   }
 
@@ -186,16 +193,11 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
+        latestVersionRestricted: true,
         canBeRequested: false,
         requested: false
       },
-      permissions: {
-        canDownload: false
-      },
-      embargo: {
-        active: true,
-        date: faker.date.future().toDateString()
-      }
+      embargo: FileEmbargoMother.create()
     })
   }
 
@@ -226,11 +228,21 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: false,
+        latestVersionRestricted: false,
         canBeRequested: false,
         requested: false
       },
-      permissions: {
-        canDownload: true
+      embargo: undefined
+    })
+  }
+
+  static createWithPublicAccessButLatestVersionRestricted(): File {
+    return this.createDefault({
+      access: {
+        restricted: false,
+        latestVersionRestricted: true,
+        canBeRequested: false,
+        requested: false
       },
       embargo: undefined
     })
@@ -240,11 +252,9 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
+        latestVersionRestricted: true,
         canBeRequested: false,
         requested: false
-      },
-      permissions: {
-        canDownload: false
       },
       embargo: undefined
     })
@@ -254,11 +264,9 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
+        latestVersionRestricted: true,
         canBeRequested: true,
         requested: false
-      },
-      permissions: {
-        canDownload: true
       },
       embargo: undefined
     })
@@ -268,11 +276,9 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
+        latestVersionRestricted: true,
         canBeRequested: true,
         requested: false
-      },
-      permissions: {
-        canDownload: false
       },
       embargo: undefined
     })
@@ -282,11 +288,9 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
+        latestVersionRestricted: true,
         canBeRequested: true,
         requested: true
-      },
-      permissions: {
-        canDownload: false
       },
       embargo: undefined
     })
@@ -302,11 +306,9 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
+        latestVersionRestricted: true,
         canBeRequested: true,
         requested: false
-      },
-      permissions: {
-        canDownload: true
       },
       thumbnail: faker.image.imageUrl(),
       type: new FileType('image')
@@ -317,17 +319,24 @@ export class FileMother {
     return this.createDefault({
       access: {
         restricted: true,
+        latestVersionRestricted: true,
         canBeRequested: false,
         requested: false
-      },
-      permissions: {
-        canDownload: false
       },
       thumbnail: faker.image.imageUrl(),
       type: new FileType('image')
     })
   }
 
+  static createDeaccessioned(): File {
+    return this.createDefault({
+      version: {
+        majorNumber: 1,
+        minorNumber: 0,
+        status: FileStatus.DEACCESSIONED
+      }
+    })
+  }
   static createDeleted(): File {
     return this.createDefault({
       isDeleted: true
