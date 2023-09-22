@@ -109,7 +109,8 @@ services:
     hostname: 'solr'
     image: solr:${SOLR_VERSION}
     depends_on:
-      - dev_solr_initializer
+      dev_solr_initializer:
+        condition: service_completed_successfully
     restart: on-failure
     expose:
       - '8983'
