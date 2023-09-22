@@ -6,7 +6,7 @@ export async function checkFileDownloadPermission(
   file: File
 ): Promise<boolean> {
   if (file.version.publishingStatus === FilePublishingStatus.DEACCESSIONED) {
-    return fileRepository.getFileUserPermissionsById(file.id).then((permissions) => {
+    return fileRepository.getUserPermissionsById(file.id).then((permissions) => {
       return permissions.canEditDataset
     })
   }
@@ -16,7 +16,7 @@ export async function checkFileDownloadPermission(
     return true
   }
 
-  return fileRepository.getFileUserPermissionsById(file.id).then((permissions) => {
+  return fileRepository.getUserPermissionsById(file.id).then((permissions) => {
     return permissions.canDownloadFile
   })
 }

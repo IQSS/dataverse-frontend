@@ -15,7 +15,7 @@ describe('FileActionsHeader', () => {
     userRepository.removeAuthenticated = cy.stub().resolves()
     const files = FileMother.createMany(2)
     const fileRepository: FileRepository = {} as FileRepository
-    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+    fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
         fileId: files[0].id,
         canEditDataset: true

@@ -8,7 +8,7 @@ export async function getFilesCountInfoByDatasetPersistentId(
   datasetVersion: DatasetVersion
 ): Promise<FilesCountInfo> {
   return fileRepository
-    .getCountInfoByDatasetPersistentId(datasetPersistentId, datasetVersion)
+    .getFilesCountInfoByDatasetPersistentId(datasetPersistentId, datasetVersion)
     .catch((error: Error) => {
       throw new Error(error.message)
     })

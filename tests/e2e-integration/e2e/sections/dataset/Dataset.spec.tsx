@@ -132,7 +132,7 @@ describe('Dataset', () => {
   })
 
   describe('Visualizing the Files Tab', () => {
-    it('successfully loads the files tab', () => {
+    it.only('successfully loads the files tab', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
         .then((persistentId: string) => {
@@ -152,31 +152,39 @@ describe('Dataset', () => {
 
           cy.findByText('Files').should('exist')
 
-          // cy.findByText('1 to 3 of 3 Files').should('exist') // TODO - Connect files count implementation
+          cy.findByText('1 to 3 of 3 Files').should('exist')
           cy.findByText('blob').should('exist')
           cy.findByText('blob-1').should('exist')
           cy.findByText('blob-2').should('exist')
         })
     })
 
-    it.skip('navigates to the next page of files', () => {
-      // TODO - Connect files count implementation to the pagination
-      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(20)), { timeout: 10000 })
+    it('navigates to the next page of files', () => {
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(30)), { timeout: 10000 })
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
           cy.findByText('Files').should('exist')
 
+          cy.findByRole('button', { name: /Sort/ }).click({ force: true })
+          cy.findByText('Name (A-Z)').should('exist').click({ force: true })
+
           cy.findByText('1 to 10 of 30 Files').should('exist')
           cy.findByText('blob').should('exist')
-          cy.findByText('blob-9').should('exist')
+          cy.findByText('blob-17').should('exist')
 
-          cy.findByText('Next').click()
+          cy.findByText('Next').click({ force: true })
 
           cy.findByText('11 to 20 of 30 Files').should('exist')
-          cy.findByText('blob-10').should('exist')
-          cy.findByText('blob-19').should('exist')
+          cy.findByText('blob-18').should('exist')
+          cy.findByText('blob-26').should('exist')
+
+          cy.findByText('Previous').click({ force: true })
+
+          cy.findByText('1 to 10 of 30 Files').should('exist')
+          cy.findByText('blob').should('exist')
+          cy.findByText('blob-17').should('exist')
         })
     })
 
@@ -287,7 +295,7 @@ describe('Dataset', () => {
     })
 
     it.skip('applies filters to the Files Table in the correct order', () => {
-      // TODO - Integrate fileCountInfo
+      // TODO - Restore this test once fileCountsInfo use case takes into account the filtered results https://github.com/IQSS/dataverse-frontend/issues/172
       const files = [
         FileHelper.create('csv', {
           description: 'Some description',
@@ -330,6 +338,7 @@ describe('Dataset', () => {
 
           cy.findByText('Files').should('exist')
 
+          cy.findByText('1 to 6 of 6 Files').should('exist')
           cy.findByText('blob').should('exist')
           cy.findByText('blob-1').should('exist')
           cy.findByText('blob-2').should('exist')
@@ -339,6 +348,7 @@ describe('Dataset', () => {
 
           cy.findByLabelText('Search').type('blob-{enter}', { force: true })
 
+          cy.findByText('1 to 5 of 5 Files').should('exist')
           cy.findByText('blob').should('not.exist')
           cy.findByText('blob-1').should('exist')
           cy.findByText('blob-2').should('exist')
@@ -347,8 +357,9 @@ describe('Dataset', () => {
           cy.findByText('blob-5').should('exist')
 
           cy.findByRole('button', { name: 'Filter Tag: All' }).click({ force: true })
-          cy.findByText('category').should('exist').click({ force: true })
+          cy.findByText('Category (4)').should('exist').click({ force: true })
 
+          cy.findByText('1 to 4 of 4 Files').should('exist')
           cy.findByText('blob').should('not.exist')
           cy.findByText('blob-1').should('not.exist')
           cy.findByText('blob-2').should('exist')
@@ -356,9 +367,10 @@ describe('Dataset', () => {
           cy.findByText('blob-4').should('exist')
           cy.findByText('blob-5').should('exist')
 
-          cy.findByRole('button', { name: 'Access: All' }).click()
-          cy.findByText('Restricted').should('exist').click()
+          cy.findByRole('button', { name: 'Access: All' }).click({ force: true })
+          cy.findByText('Restricted (3)').should('exist').click({ force: true })
 
+          cy.findByText('1 to 3 of 3 Files').should('exist')
           cy.findByText('blob').should('not.exist')
           cy.findByText('blob-1').should('not.exist')
           cy.findByText('blob-2').should('not.exist')
@@ -366,9 +378,10 @@ describe('Dataset', () => {
           cy.findByText('blob-4').should('exist')
           cy.findByText('blob-5').should('exist')
 
-          cy.findByRole('button', { name: 'Filter Type: All' }).click()
-          cy.findByText('text/csv').should('exist').click()
+          cy.findByRole('button', { name: 'Filter Type: All' }).click({ force: true })
+          cy.findByText('Text/csv (2)').should('exist').click({ force: true })
 
+          cy.findByText('1 to 2 of 2 Files').should('exist')
           cy.findByText('blob').should('not.exist')
           cy.findByText('blob-1').should('not.exist')
           cy.findByText('blob-2').should('not.exist')
@@ -376,8 +389,8 @@ describe('Dataset', () => {
           cy.findByText('blob-4').should('exist')
           cy.findByText('blob-5').should('exist')
 
-          cy.findByRole('button', { name: /Sort/ }).click()
-          cy.findByText('Name (Z-A)').should('exist').click()
+          cy.findByRole('button', { name: /Sort/ }).click({ force: true })
+          cy.findByText('Name (Z-A)').should('exist').click({ force: true })
 
           cy.findByText('blob').should('not.exist')
           cy.findByText('blob-1').should('not.exist')

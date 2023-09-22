@@ -4,7 +4,7 @@ import { FileRepository } from '../../../../../src/files/domain/repositories/Fil
 import { useFiles } from '../../../../../src/sections/dataset/dataset-files/useFiles'
 import { FileUserPermissionsMother } from '../../../files/domain/models/FileUserPermissionsMother'
 import { FilePermissionsProvider } from '../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 import {
   DatasetPublishingStatus,
@@ -18,23 +18,20 @@ const datasetVersion = new DatasetVersion(1, DatasetPublishingStatus.RELEASED, 1
 
 const FilesTableTestComponent = ({ datasetPersistentId }: { datasetPersistentId: string }) => {
   const [paginationInfo, setPaginationInfo] = useState<FilePaginationInfo>(new FilePaginationInfo())
-  const { isLoading, files, filesCountInfo } = useFiles(
+  const { isLoading, files } = useFiles(
     fileRepository,
     datasetPersistentId,
     datasetVersion,
+    setPaginationInfo,
     paginationInfo
   )
-
-  useEffect(() => {
-    setPaginationInfo(paginationInfo.withTotal(filesCountInfo.total))
-  }, [filesCountInfo])
 
   if (isLoading) {
     return <span>Loading...</span>
   }
   return (
     <>
-      <div>Files count: {filesCountInfo.total}</div>
+      <div>Files count: {paginationInfo.totalFiles}</div>
       <table>
         <tbody>
           {files.map((file) => (
@@ -51,8 +48,8 @@ const FilesTableTestComponent = ({ datasetPersistentId }: { datasetPersistentId:
 describe('useFiles', () => {
   beforeEach(() => {
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(files)
-    fileRepository.getCountInfoByDatasetPersistentId = cy.stub().resolves(filesCountInfo)
-    fileRepository.getFileUserPermissionsById = cy
+    fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(filesCountInfo)
+    fileRepository.getUserPermissionsById = cy
       .stub()
       .resolves(FileUserPermissionsMother.create({ fileId: files[0].id }))
   })
@@ -80,7 +77,7 @@ describe('useFiles', () => {
     cy.customMount(<FilesTableTestComponent datasetPersistentId="persistentId" />)
 
     cy.findByText('Loading...').should('exist')
-    cy.wrap(fileRepository.getCountInfoByDatasetPersistentId).should(
+    cy.wrap(fileRepository.getFilesCountInfoByDatasetPersistentId).should(
       'be.calledOnceWith',
       'persistentId'
     )
@@ -98,7 +95,7 @@ describe('useFiles', () => {
   it('calls the file repository to get the permissions before removing the loading', () => {
     const files = FileMother.createMany(5)
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(files)
-    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+    fileRepository.getUserPermissionsById = cy.stub().resolves(
       new Promise((resolve) => {
         setTimeout(() => {
           resolve(FileUserPermissionsMother.create({ fileId: files[0].id }))
@@ -116,14 +113,14 @@ describe('useFiles', () => {
     cy.wrap(fileRepository.getAllByDatasetPersistentId).should('be.calledOnceWith', 'persistentId')
 
     cy.findByText('Loading...').should('exist')
-    cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledWith', files[0].id)
+    cy.wrap(fileRepository.getUserPermissionsById).should('be.calledWith', files[0].id)
 
     cy.findByText('Loading...').should('exist')
     cy.findByText('Files count: 100').should('exist')
   })
 
   it('calls the file repository to get the files only if files count info is greater than 0', () => {
-    fileRepository.getCountInfoByDatasetPersistentId = cy
+    fileRepository.getFilesCountInfoByDatasetPersistentId = cy
       .stub()
       .resolves(FilesCountInfoMother.create({ total: 0 }))
 

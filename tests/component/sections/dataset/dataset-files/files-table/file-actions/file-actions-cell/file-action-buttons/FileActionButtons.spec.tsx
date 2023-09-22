@@ -22,7 +22,7 @@ describe('FileActionButtons', () => {
     userRepository.getAuthenticated = cy.stub().resolves(user)
     userRepository.removeAuthenticated = cy.stub().resolves()
     const fileRepository: FileRepository = {} as FileRepository
-    fileRepository.getFileUserPermissionsById = cy.stub().resolves(
+    fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
         fileId: file.id,
         canEditDataset: true

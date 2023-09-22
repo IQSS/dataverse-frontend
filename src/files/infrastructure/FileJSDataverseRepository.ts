@@ -1,10 +1,10 @@
 import { FileRepository } from '../domain/repositories/FileRepository'
 import { File, FilePublishingStatus } from '../domain/models/File'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
-import { FilesCountInfoMother } from '../../../tests/component/files/domain/models/FilesCountInfoMother'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
 import { FileUserPermissions } from '../domain/models/FileUserPermissions'
 import {
+  getDatasetFileCounts,
   getDatasetFiles,
   getFileDownloadCount,
   getFileUserPermissions,
@@ -62,21 +62,23 @@ export class FileJSDataverseRepository implements FileRepository {
     return Promise.resolve(0)
   }
 
-  getCountInfoByDatasetPersistentId(
-    // eslint-disable-next-line unused-imports/no-unused-vars
+  getFilesCountInfoByDatasetPersistentId(
     datasetPersistentId: string,
-    // eslint-disable-next-line unused-imports/no-unused-vars
     datasetVersion: DatasetVersion
   ): Promise<FilesCountInfo> {
-    // TODO - implement using js-dataverse
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(FilesCountInfoMother.create())
-      }, 1000)
-    })
+    // TODO - Take into account the FileCriteria https://github.com/IQSS/dataverse-frontend/issues/172
+    return getDatasetFileCounts
+      .execute(datasetPersistentId, datasetVersion.toString())
+      .then((jsFilesCountInfo) => {
+        return JSFileMapper.toFilesCountInfo(jsFilesCountInfo)
+      })
+      .catch((error: WriteError) => {
+        console.error('Error getting files count info from Dataverse', error)
+        throw new Error(error.message)
+      })
   }
 
-  getFileUserPermissionsById(id: number): Promise<FileUserPermissions> {
+  getUserPermissionsById(id: number): Promise<FileUserPermissions> {
     return getFileUserPermissions
       .execute(id)
       .then((jsFileUserPermissions) =>
