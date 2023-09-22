@@ -1,7 +1,7 @@
 import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
 import { Dataset } from '../../domain/models/Dataset'
 import {
-  getDatasetByPersistentId,
+  getDataset,
   getDatasetCitation,
   getDatasetSummaryFieldNames,
   WriteError,
@@ -13,7 +13,7 @@ import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
   getByPersistentId(persistentId: string, version?: string): Promise<Dataset | undefined> {
-    return getDatasetByPersistentId
+    return getDataset
       .execute(persistentId, this.versionToVersionId(version))
       .then((jsDataset) =>
         Promise.all([

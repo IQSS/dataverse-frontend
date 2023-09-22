@@ -8,7 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: beta-testing
 
     steps:
       - uses: actions/checkout@v3
@@ -33,7 +32,7 @@ jobs:
 
       - name: Create and populate .env file
         env:
-          DATAVERSE_BACKEND_URL: ${{ secrets.DATAVERSE_BACKEND_URL }}
+          DATAVERSE_BACKEND_URL: ${{ secrets.BETA_DATAVERSE_BACKEND_URL }}
         run: |
           touch .env
           echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
@@ -50,7 +49,6 @@ jobs:
   deploy-to-payara:
     needs: build
     runs-on: ubuntu-latest
-    environment: beta-testing
 
     steps:
       - uses: actions/checkout@v3
@@ -76,23 +74,23 @@ jobs:
       - name: Copy war file to remote instance
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.PAYARA_INSTANCE_HOST }}
-          username: ${{ secrets.PAYARA_INSTANCE_USERNAME }}
-          key: ${{ secrets.PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
+          host: ${{ secrets.BETA_PAYARA_INSTANCE_HOST }}
+          username: ${{ secrets.BETA_PAYARA_INSTANCE_USERNAME }}
+          key: ${{ secrets.BETA_PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
           source: './deployment/payara/target/dataverse-frontend.war'
-          target: '/home/${{ secrets.PAYARA_INSTANCE_USERNAME }}'
+          target: '/home/${{ secrets.BETA_PAYARA_INSTANCE_USERNAME }}'
           overwrite: true
 
       - name: Execute payara war deployment remotely
         uses: appleboy/ssh-action@v0.1.8
         with:
-          host: ${{ secrets.PAYARA_INSTANCE_HOST }}
-          username: ${{ secrets.PAYARA_INSTANCE_USERNAME }}
-          key: ${{ secrets.PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
+          host: ${{ secrets.BETA_PAYARA_INSTANCE_HOST }}
+          username: ${{ secrets.BETA_PAYARA_INSTANCE_USERNAME }}
+          key: ${{ secrets.BETA_PAYARA_INSTANCE_SSH_PRIVATE_KEY }}
           script: |
             APPLICATION_NAME=dataverse-frontend
             APPLICATION_WAR_PATH=deployment/payara/target/$APPLICATION_NAME.war
-            ASADMIN='/usr/local/payara5/bin/asadmin --user admin'
+            ASADMIN='/usr/local/payara6/bin/asadmin --user admin'
             DATAVERSE_FRONTEND=`$ASADMIN list-applications |grep $APPLICATION_NAME |awk '{print $1}'`
             $ASADMIN undeploy $DATAVERSE_FRONTEND
             $ASADMIN deploy --name $APPLICATION_NAME --contextroot /spa $APPLICATION_WAR_PATH

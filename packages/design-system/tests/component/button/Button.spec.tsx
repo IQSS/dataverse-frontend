@@ -54,4 +54,9 @@ describe('Button', () => {
     cy.mount(<Button icon={IconName.COLLECTION} />)
     cy.findByRole('img', { name: IconName.COLLECTION }).should('exist')
   })
+
+  it('renders a button with submit type', () => {
+    cy.mount(<Button type="submit">{clickMeText}</Button>)
+    cy.findByText(clickMeText).should('have.attr', 'type').and('eq', 'submit')
+  })
 })

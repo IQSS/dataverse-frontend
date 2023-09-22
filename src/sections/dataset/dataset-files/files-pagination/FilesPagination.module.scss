@@ -1,0 +1,18 @@
+.row {
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+    align-items: center;
+}
+
+.size-selector-container {
+  display:flex;
+  margin-bottom: 14px;
+  margin-left: 28px;
+
+  &__text {
+    margin-right: 14px;
+  }
+}

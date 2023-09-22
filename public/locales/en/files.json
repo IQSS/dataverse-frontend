@@ -29,12 +29,19 @@
     "fileAccess": {
       "title": "File Access",
       "restricted": {
-        "tooltip": "Restricted",
+        "name": "Restricted",
         "icon": "Restricted File Icon"
       },
       "restrictedWithAccess": {
-        "tooltip": "Restricted with Access Granted",
+        "name": "Restricted with Access Granted",
         "icon": "Restricted with access Icon"
+      },
+      "embargoed": {
+        "name": "Embargoed"
+      },
+      "public": {
+        "name": "Public",
+        "icon": "Public File Icon"
       }
     },
     "copyToClipboard": {
@@ -80,6 +87,61 @@
       "placeholder": "Search this dataset...",
       "label": "Search",
       "submit": "Submit search"
+    }
+  },
+  "actions": {
+    "title": "File Actions",
+    "buttons": "File Action Buttons",
+    "optionsMenu": {
+      "title": "File Options",
+      "headers": {
+        "editOptions": "Edit Options"
+      }
+    },
+    "alreadyDeletedAlert": {
+      "title": "Edit File",
+      "message": "This file has already been deleted (or replaced) in the current version. It may not be edited.",
+      "close": "Close"
+    },
+    "accessFileMenu": {
+      "title": "Access File",
+      "headers": {
+        "fileAccess": "File Access"
+      }
+    },
+    "editFilesMenu": {
+      "title": "Edit Files",
+      "options": {
+        "metadata": "Metadata",
+        "unrestrict": "Unrestrict",
+        "restrict": "Restrict",
+        "replace": "Replace",
+        "embargo": "Embargo",
+        "provenance": "Provenance",
+        "delete": "Delete"
+      }
+    }
+  },
+  "requestAccess": {
+    "title": "Request Access",
+    "askToAcceptTerms": "Please confirm and/or complete the information needed below in order to request access to files in this dataset",
+    "terms": "Terms of Access for Restricted Files",
+    "confirmation": "Accept",
+    "cancel": "Cancel",
+    "close": "Close",
+    "embargoed": "Files are unavailable during the specified embargo",
+    "embargoedThenRestricted": "Files are unavailable during the specified embargo and restricted after that",
+    "requestNotAllowed": "Users may not request access to files",
+    "accessRequested": "Access Requested"
+  },
+  "ingest": {
+    "inProgress": "Ingest in progress...",
+    "error": {
+      "info": "File available in original format only",
+      "tabularIngest": "Tabular ingest",
+      "tabularIngestGuide": "Tabular Data Files - Dataverse User Guide",
+      "reportMessage": "was unsuccessful. {{reportMessage}}",
+      "reportMessageDefault": "was unsuccessful. Ingest failed. No further information is available."
     }
   }
 }

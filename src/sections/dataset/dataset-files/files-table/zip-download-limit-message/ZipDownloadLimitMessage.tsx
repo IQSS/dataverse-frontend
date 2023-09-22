@@ -5,19 +5,18 @@ import { useSettings } from '../../../../settings/SettingsContext'
 import { SettingName } from '../../../../../settings/domain/models/Setting'
 import { ZipDownloadLimit } from '../../../../../settings/domain/models/ZipDownloadLimit'
 import { useEffect, useState } from 'react'
+import { FileSelection } from '../row-selection/useFileSelection'
 
 interface ZipDownloadLimitMessageProps {
-  selectedFiles: File[]
+  fileSelection: FileSelection
 }
 
 const MINIMUM_FILES_TO_SHOW_MESSAGE = 1
 
-export function ZipDownloadLimitMessage({ selectedFiles }: ZipDownloadLimitMessageProps) {
+export function ZipDownloadLimitMessage({ fileSelection }: ZipDownloadLimitMessageProps) {
   const { t } = useTranslation('files')
   const { getSettingByName } = useSettings()
   const [zipDownloadLimitInBytes, setZipDownloadLimitInBytes] = useState<number>()
-  const selectionTotalSizeInBytes = getFilesTotalSizeInBytes(selectedFiles)
-
   useEffect(() => {
     getSettingByName<ZipDownloadLimit>(SettingName.ZIP_DOWNLOAD_LIMIT)
       .then((zipDownloadLimit) => {
@@ -28,9 +27,11 @@ export function ZipDownloadLimitMessage({ selectedFiles }: ZipDownloadLimitMessa
       })
   }, [getSettingByName])
 
+  // TODO - When selecting all files, the size should come from a call to a use case that returns the total size of the dataset files. Check issue https://github.com/IQSS/dataverse-frontend/issues/170
+  const selectionTotalSizeInBytes = getFilesTotalSizeInBytes(Object.values(fileSelection))
   const showMessage =
     zipDownloadLimitInBytes &&
-    selectedFiles.length > MINIMUM_FILES_TO_SHOW_MESSAGE &&
+    Object.values(fileSelection).length > MINIMUM_FILES_TO_SHOW_MESSAGE &&
     selectionTotalSizeInBytes > zipDownloadLimitInBytes
 
   if (!showMessage) {
@@ -48,8 +49,10 @@ export function ZipDownloadLimitMessage({ selectedFiles }: ZipDownloadLimitMessa
   )
 }
 
-function getFilesTotalSizeInBytes(files: File[]) {
-  return files.map((file) => file.size).reduce((bytes, size) => bytes + size.toBytes(), 0)
+function getFilesTotalSizeInBytes(files: (File | undefined)[]) {
+  return files
+    .map((file) => file?.size)
+    .reduce((bytes, size) => bytes + (size ? size.toBytes() : 0), 0)
 }
 
 function bytesToHumanReadable(bytes: number) {

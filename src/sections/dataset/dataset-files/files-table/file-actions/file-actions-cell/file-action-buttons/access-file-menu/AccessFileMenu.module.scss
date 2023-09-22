@@ -1,0 +1,17 @@
+@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
+
+.success {
+  color: $dv-success-color;
+}
+
+.danger {
+  color: $dv-danger-color;
+}
+
+.access-requested-message {
+  font-style: italic;
+}
+
+.request-access-login-message {
+  color: $dv-danger-color;
+}

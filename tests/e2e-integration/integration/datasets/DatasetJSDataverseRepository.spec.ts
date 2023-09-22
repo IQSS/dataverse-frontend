@@ -8,6 +8,13 @@ import { DatasetStatus, DatasetVersion } from '../../../../src/dataset/domain/mo
 chai.use(chaiAsPromised)
 const expect = chai.expect
 
+function getCurrentDateInYYYYMMDDFormat() {
+  const date = new Date()
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
+    date.getDate()
+  ).padStart(2, '0')}`
+}
+
 const datasetData = (persistentId: string) => {
   const persistentIdUrl = `https://doi.org/${persistentId.replace('doi:', '')}`
   return {
@@ -86,6 +93,8 @@ describe('Dataset JSDataverse Repository', () => {
       expect(dataset.metadataBlocks).to.deep.equal(datasetExpected.metadataBlocks)
       expect(dataset.summaryFields).to.deep.equal(datasetExpected.summaryFields)
       expect(dataset.version).to.deep.equal(datasetExpected.version)
+      expect(dataset.metadataBlocks[0].fields.publicationDate).not.to.exist
+      expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
     })
   })
 
@@ -102,10 +111,21 @@ describe('Dataset JSDataverse Repository', () => {
           throw new Error('Dataset not found')
         }
         const datasetExpected = datasetData(dataset.persistentId)
-        const newVersion = new DatasetVersion(1, 0, DatasetStatus.RELEASED, false, false, false)
-
+        const newVersion = new DatasetVersion(
+          1,
+          0,
+          DatasetStatus.RELEASED,
+          false,
+          false,
+          DatasetStatus.RELEASED
+        )
+        const expectedPublicationDate = getCurrentDateInYYYYMMDDFormat()
         expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(newVersion)
+        expect(dataset.metadataBlocks[0].fields.publicationDate).to.deep.equal(
+          expectedPublicationDate
+        )
+        expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
       })
   })
 
@@ -138,5 +158,27 @@ describe('Dataset JSDataverse Repository', () => {
       expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
       expect(dataset.version).to.deep.equal(datasetExpected.version)
     })
+  })
+
+  it('gets the dataset after changing the citation date field type', async () => {
+    const datasetResponse = await DatasetHelper.createDataset()
+
+    await DatasetHelper.publishDataset(datasetResponse.persistentId)
+    await IntegrationTestsUtils.wait(1500)
+
+    await DatasetHelper.setCitationDateFieldType(datasetResponse.persistentId, 'dateOfDeposit')
+
+    await datasetRepository
+      .getByPersistentId(datasetResponse.persistentId, '1.0')
+      .then((dataset) => {
+        if (!dataset) {
+          throw new Error('Dataset not found')
+        }
+        const expectedPublicationDate = getCurrentDateInYYYYMMDDFormat()
+        expect(dataset.metadataBlocks[0].fields.publicationDate).to.deep.equal(
+          expectedPublicationDate
+        )
+        expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
+      })
   })
 })

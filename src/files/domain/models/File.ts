@@ -30,12 +30,15 @@ export class FileSize {
 
 export interface FileAccess {
   restricted: boolean
-  canDownload: boolean
+  latestVersionRestricted: boolean
+  canBeRequested: boolean
+  requested: boolean
 }
 
 export enum FileStatus {
   DRAFT = 'draft',
-  RELEASED = 'released'
+  RELEASED = 'released',
+  DEACCESSIONED = 'deaccessioned'
 }
 
 export class FileVersion {
@@ -66,9 +69,12 @@ export interface FileDate {
   date: string
 }
 
-export interface FileEmbargo {
-  active: boolean
-  date: string
+export class FileEmbargo {
+  constructor(readonly dateAvailable: Date) {}
+
+  get isActive(): boolean {
+    return this.dateAvailable > new Date()
+  }
 }
 
 export interface FileTabularData {
@@ -99,6 +105,18 @@ export class FileType {
   }
 }
 
+export enum FileIngestStatus {
+  NONE = 'none',
+  IN_PROGRESS = 'inProgress',
+  SCHEDULED = 'scheduled',
+  ERROR = 'error'
+}
+
+export interface FileIngest {
+  status: FileIngestStatus
+  reportMessage?: string
+}
+
 export class File {
   constructor(
     readonly id: string,
@@ -110,15 +128,24 @@ export class File {
     readonly date: FileDate,
     readonly downloads: number,
     readonly labels: FileLabel[],
+    public readonly isDeleted: boolean,
+    public readonly ingest: FileIngest,
     readonly checksum?: string,
-    readonly thumbnail?: string,
-    readonly directory?: string,
     readonly embargo?: FileEmbargo,
+    readonly directory?: string,
+    readonly description?: string,
     readonly tabularData?: FileTabularData,
-    readonly description?: string
+    readonly thumbnail?: string
   ) {}
 
   getLink(): string {
     return `/file?id=${this.id}&version=${this.version.toString()}`
+  }
+
+  get isActivelyEmbargoed(): boolean {
+    if (this.embargo) {
+      return this.embargo.isActive
+    }
+    return false
   }
 }

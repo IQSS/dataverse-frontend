@@ -54,6 +54,7 @@
     },
     "accessDataset": {
       "title": "Access Dataset"
-    }
+    },
+    "uploadFiles": "Upload Files"
   }
 }

@@ -2,16 +2,11 @@ import logo from '../../assets/logo.svg'
 import { useTranslation } from 'react-i18next'
 import { Navbar } from '@iqss/dataverse-design-system'
 import { Route } from '../../Route.enum'
-import { UserRepository } from '../../../users/domain/repositories/UserRepository'
-import { useUser } from './useUser'
+import { useSession } from '../../session/SessionContext'
 
-interface HeaderProps {
-  userRepository: UserRepository
-}
-
-export function Header({ userRepository }: HeaderProps) {
+export function Header() {
   const { t } = useTranslation('header')
-  const { user, submitLogOut } = useUser(userRepository)
+  const { user, logout } = useSession()
   const baseRemoteUrl = import.meta.env.VITE_DATAVERSE_BACKEND_URL as string
 
   return (
@@ -23,7 +18,7 @@ export function Header({ userRepository }: HeaderProps) {
       }}>
       {user ? (
         <Navbar.Dropdown title={user.name} id="dropdown-user">
-          <Navbar.Dropdown.Item href={Route.LOG_OUT} onClick={submitLogOut}>
+          <Navbar.Dropdown.Item href={Route.LOG_OUT} onClick={logout}>
             {t('logOut')}
           </Navbar.Dropdown.Item>
         </Navbar.Dropdown>

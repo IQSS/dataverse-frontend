@@ -15,4 +15,4 @@ export function makeFiles(len: number): File[] {
   })
 }
 
-export const FilesMockData = (): File[] => makeFiles(200)
+export const FilesMockData = (amount = 200): File[] => makeFiles(amount)
