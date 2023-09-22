@@ -1,6 +1,4 @@
 import { createSandbox, SinonSandbox } from 'sinon'
-import { HeaderFactory } from '../../../../src/sections/layout/header/HeaderFactory'
-import { HeaderMother } from './header/HeaderMother'
 import { FooterFactory } from '../../../../src/sections/layout/footer/FooterFactory'
 import { FooterMother } from './footer/FooterMother'
 import { Layout } from '../../../../src/sections/layout/Layout'
@@ -10,7 +8,6 @@ describe('Layout', () => {
 
   afterEach(() => {
     sandbox.restore()
-    sandbox.stub(HeaderFactory, 'create').returns(HeaderMother.withLoggedInUser(sandbox))
     sandbox.stub(FooterFactory, 'create').returns(FooterMother.withDataverseVersion(sandbox))
   })
 

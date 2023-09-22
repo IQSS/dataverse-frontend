@@ -3,6 +3,8 @@ import {
   File,
   FileDateType,
   FileEmbargo,
+  FileIngest,
+  FileIngestStatus,
   FileLabel,
   FileLabelType,
   FileSize,
@@ -22,6 +24,27 @@ const createFakeFileLabel = (): FileLabel => ({
   value: faker.lorem.word()
 })
 
+export class FileIngestMother {
+  static create(props?: Partial<FileIngest>): FileIngest {
+    return {
+      status: faker.helpers.arrayElement(Object.values(FileIngestStatus)),
+      reportMessage: valueOrUndefined<string>(faker.lorem.sentence()),
+      ...props
+    }
+  }
+
+  static createInProgress(): FileIngest {
+    return this.create({ status: FileIngestStatus.IN_PROGRESS })
+  }
+
+  static createIngestProblem(reportMessage?: string): FileIngest {
+    return this.create({
+      status: FileIngestStatus.ERROR,
+      reportMessage: reportMessage
+    })
+  }
+}
+
 export class FileMother {
   static create(props?: Partial<File>): File {
     const thumbnail = valueOrUndefined<string>(faker.image.imageUrl())
@@ -30,7 +53,14 @@ export class FileMother {
     const fileMockedData = {
       id: faker.datatype.uuid(),
       name: faker.system.fileName(),
-      access: { restricted: faker.datatype.boolean(), canDownload: faker.datatype.boolean() },
+      access: {
+        restricted: faker.datatype.boolean(),
+        canBeRequested: faker.datatype.boolean(),
+        requested: faker.datatype.boolean()
+      },
+      permissions: {
+        canDownload: faker.datatype.boolean()
+      },
       version: {
         majorNumber: faker.datatype.number(),
         minorNumber: faker.datatype.number(),
@@ -70,6 +100,8 @@ export class FileMother {
             }
           : undefined,
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
+      isDeleted: faker.datatype.boolean(),
+      ingest: { status: FileIngestStatus.NONE },
       ...props
     }
 
@@ -82,17 +114,20 @@ export class FileMother {
       ),
       fileMockedData.name,
       fileMockedData.access,
+      fileMockedData.permissions,
       fileMockedData.type,
       new FileSize(fileMockedData.size.value, fileMockedData.size.unit),
       fileMockedData.date,
       fileMockedData.downloads,
       fileMockedData.labels,
+      fileMockedData.isDeleted,
+      fileMockedData.ingest,
       fileMockedData.checksum,
-      fileMockedData.thumbnail,
-      fileMockedData.directory,
       fileMockedData.embargo,
+      fileMockedData.directory,
+      fileMockedData.description,
       fileMockedData.tabularData,
-      fileMockedData.description
+      fileMockedData.thumbnail
     )
   }
 
@@ -108,7 +143,8 @@ export class FileMother {
         minorNumber: 0,
         status: FileStatus.RELEASED
       },
-      access: { restricted: false, canDownload: true },
+      access: { restricted: false, canBeRequested: false, requested: false },
+      permissions: { canDownload: true },
       labels: [],
       checksum: undefined,
       thumbnail: undefined,
@@ -116,6 +152,7 @@ export class FileMother {
       embargo: undefined,
       tabularData: undefined,
       description: undefined,
+      isDeleted: false,
       ...props
     }
     return this.create(defaultFile)
@@ -145,6 +182,23 @@ export class FileMother {
     })
   }
 
+  static createWithEmbargoRestricted(): File {
+    return this.createDefault({
+      access: {
+        restricted: true,
+        canBeRequested: false,
+        requested: false
+      },
+      permissions: {
+        canDownload: false
+      },
+      embargo: {
+        active: true,
+        date: faker.date.future().toDateString()
+      }
+    })
+  }
+
   static createWithTabularData(): File {
     return this.createDefault({
       type: new FileType('tabular data'),
@@ -165,6 +219,130 @@ export class FileMother {
   static createWithChecksum(): File {
     return this.createDefault({
       checksum: faker.datatype.uuid()
+    })
+  }
+
+  static createWithPublicAccess(): File {
+    return this.createDefault({
+      access: {
+        restricted: false,
+        canBeRequested: false,
+        requested: false
+      },
+      permissions: {
+        canDownload: true
+      },
+      embargo: undefined
+    })
+  }
+
+  static createWithRestrictedAccess(): File {
+    return this.createDefault({
+      access: {
+        restricted: true,
+        canBeRequested: false,
+        requested: false
+      },
+      permissions: {
+        canDownload: false
+      },
+      embargo: undefined
+    })
+  }
+
+  static createWithRestrictedAccessWithAccessGranted(): File {
+    return this.createDefault({
+      access: {
+        restricted: true,
+        canBeRequested: true,
+        requested: false
+      },
+      permissions: {
+        canDownload: true
+      },
+      embargo: undefined
+    })
+  }
+
+  static createWithAccessRequestAllowed(): File {
+    return this.createDefault({
+      access: {
+        restricted: true,
+        canBeRequested: true,
+        requested: false
+      },
+      permissions: {
+        canDownload: false
+      },
+      embargo: undefined
+    })
+  }
+
+  static createWithAccessRequestPending(): File {
+    return this.createDefault({
+      access: {
+        restricted: true,
+        canBeRequested: true,
+        requested: true
+      },
+      permissions: {
+        canDownload: false
+      },
+      embargo: undefined
+    })
+  }
+
+  static createWithThumbnail(): File {
+    return this.createDefault({
+      thumbnail: faker.image.imageUrl()
+    })
+  }
+
+  static createWithThumbnailRestrictedWithAccessGranted(): File {
+    return this.createDefault({
+      access: {
+        restricted: true,
+        canBeRequested: true,
+        requested: false
+      },
+      permissions: {
+        canDownload: true
+      },
+      thumbnail: faker.image.imageUrl(),
+      type: new FileType('image')
+    })
+  }
+
+  static createWithThumbnailRestricted(): File {
+    return this.createDefault({
+      access: {
+        restricted: true,
+        canBeRequested: false,
+        requested: false
+      },
+      permissions: {
+        canDownload: false
+      },
+      thumbnail: faker.image.imageUrl(),
+      type: new FileType('image')
+    })
+  }
+
+  static createDeleted(): File {
+    return this.createDefault({
+      isDeleted: true
+    })
+  }
+
+  static createIngestInProgress(): File {
+    return this.createDefault({
+      ingest: FileIngestMother.createInProgress()
+    })
+  }
+
+  static createIngestProblem(reportMessage?: string): File {
+    return this.createDefault({
+      ingest: FileIngestMother.createIngestProblem(reportMessage)
     })
   }
 }

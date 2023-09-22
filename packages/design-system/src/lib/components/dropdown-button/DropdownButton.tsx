@@ -15,6 +15,7 @@ interface DropdownButtonProps {
   withSpacing?: boolean
   asButtonGroup?: boolean
   onSelect?: (eventKey: string | null) => void
+  disabled?: boolean
   children: ReactNode
 }
 
@@ -26,6 +27,7 @@ export function DropdownButton({
   withSpacing,
   asButtonGroup,
   onSelect,
+  disabled,
   children
 }: DropdownButtonProps) {
   return (
@@ -40,6 +42,7 @@ export function DropdownButton({
       }
       variant={variant}
       as={asButtonGroup ? ButtonGroup : undefined}
+      disabled={disabled}
       onSelect={onSelect}>
       {children}
     </DropdownButtonBS>

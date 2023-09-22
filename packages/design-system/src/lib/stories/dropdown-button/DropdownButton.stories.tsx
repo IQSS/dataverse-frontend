@@ -4,6 +4,7 @@ import { DropdownButton } from '../../components/dropdown-button/DropdownButton'
 import { IconName } from '../../components/icon/IconName'
 import { CanvasFixedHeight } from '../CanvasFixedHeight'
 import { DropdownSeparator } from '../../components/dropdown-button/dropdown-separator/DropdownSeparator'
+import { DropdownHeader } from '../../components/dropdown-button/dropdown-header/DropdownHeader'
 
 /**
  * ## Description
@@ -125,6 +126,34 @@ export const WithSeparatorBetweenOptions: Story = {
         <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
         <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
         <DropdownSeparator />
+        <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
+      </DropdownButton>
+    </CanvasFixedHeight>
+  )
+}
+
+export const WithSeparatorHeaderBetweenOptions: Story = {
+  render: () => (
+    <CanvasFixedHeight height={150}>
+      <DropdownButton withSpacing title="Dropdown Button" id="dropdown-1" variant="primary">
+        <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
+        <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
+        <DropdownHeader>Header</DropdownHeader>
+        <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
+      </DropdownButton>
+    </CanvasFixedHeight>
+  )
+}
+
+export const WithDisabledOptions: Story = {
+  render: () => (
+    <CanvasFixedHeight height={150}>
+      <DropdownButton withSpacing title="Dropdown Button" id="dropdown-1" variant="primary">
+        <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
+        <DropdownButtonItem href="/item-2" disabled>
+          Item 2
+        </DropdownButtonItem>
+        <DropdownHeader>Header</DropdownHeader>
         <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
       </DropdownButton>
     </CanvasFixedHeight>

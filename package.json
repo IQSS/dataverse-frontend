@@ -98,6 +98,10 @@
     ]
   },
   "devDependencies": {
+    "@auto-it/all-contributors": "10.46.0",
+    "@auto-it/first-time-contributor": "10.46.0",
+    "@auto-it/npm": "10.46.0",
+    "@auto-it/released": "10.46.0",
     "@csstools/postcss-cascade-layers": "3.0.1",
     "@cypress/code-coverage": "3.10.7",
     "@storybook/addon-a11y": "7.0.2",
@@ -116,6 +120,7 @@
     "@typescript-eslint/eslint-plugin": "5.51.0",
     "@typescript-eslint/parser": "5.51.0",
     "@vitejs/plugin-react": "3.1.0",
+    "auto": "10.46.0",
     "axe-playwright": "1.2.3",
     "axios": "1.4.0",
     "babel-plugin-named-exports-order": "0.0.2",
@@ -135,8 +140,7 @@
     "eslint-plugin-unused-imports": "2.0.0",
     "jsdom": "21.1.0",
     "lcov-result-merger": "3.3.0",
-    "msw": "1.2.1",
-    "msw-storybook-addon": "1.8.0",
+    "lerna": "7.1.1",
     "postcss": "8.4.23",
     "pre-commit": "1.2.2",
     "prettier": "2.8.4",
@@ -154,13 +158,7 @@
     "vite": "4.1.5",
     "vite-plugin-css-injected-by-js": "3.1.1",
     "vite-plugin-dts": "2.3.0",
-    "vite-plugin-libcss": "1.0.6",
-    "@auto-it/all-contributors": "10.46.0",
-    "@auto-it/first-time-contributor": "10.46.0",
-    "@auto-it/npm": "10.46.0",
-    "@auto-it/released": "10.46.0",
-    "auto": "10.46.0",
-    "lerna": "7.1.1"
+    "vite-plugin-libcss": "1.0.6"
   },
   "msw": {
     "workerDirectory": "public"

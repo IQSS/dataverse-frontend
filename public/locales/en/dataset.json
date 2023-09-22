@@ -17,5 +17,9 @@
     },
     "learnAbout": "Learn About",
     "standards": "Data Citation Standards"
+  },
+
+  "actions": {
+    "uploadFiles": "Upload Files"
   }
 }

@@ -136,4 +136,12 @@ describe('FilesTable', () => {
       'The overall size of the files selected (3.0 KB) for download exceeds the zip limit of 500.0 B. Please unselect some files to continue.'
     ).should('exist')
   })
+
+  it('renders the file actions column', () => {
+    cy.customMount(
+      <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
+    )
+
+    cy.findByRole('columnheader', { name: 'File Actions' }).should('exist')
+  })
 })

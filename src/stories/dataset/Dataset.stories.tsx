@@ -10,6 +10,7 @@ import { FileMockRepository } from '../files/FileMockRepository'
 import { WithCitationMetadataBlockInfo } from './WithCitationMetadataBlockInfo'
 import { FileMockNoDataRepository } from '../files/FileMockNoDataRepository'
 import { WithSettings } from '../WithSettings'
+import { WithLoggedInUser } from '../WithLoggedInUser'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -26,6 +27,16 @@ type Story = StoryObj<typeof Dataset>
 
 export const Default: Story = {
   decorators: [WithLayout],
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+      searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
+    />
+  )
+}
+export const LoggedInAsOwner: Story = {
+  decorators: [WithLayout, WithLoggedInUser],
   render: () => (
     <Dataset
       datasetRepository={new DatasetMockRepository()}

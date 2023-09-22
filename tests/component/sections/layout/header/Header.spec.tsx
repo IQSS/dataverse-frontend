@@ -1,17 +1,25 @@
-import { createSandbox, SinonSandbox } from 'sinon'
 import { UserMother } from '../../../users/domain/models/UserMother'
-import { HeaderMother } from './HeaderMother'
+import { UserRepository } from '../../../../../src/users/domain/repositories/UserRepository'
+import { Header } from '../../../../../src/sections/layout/header/Header'
+import { SessionProvider } from '../../../../../src/sections/session/SessionProvider'
 
+const testUser = UserMother.create()
+const userRepository: UserRepository = {} as UserRepository
 describe('Header component', () => {
-  const sandbox: SinonSandbox = createSandbox()
-  const testUser = UserMother.create()
-
-  afterEach(() => {
-    sandbox.restore()
+  beforeEach(() => {
+    userRepository.getAuthenticated = cy.stub().resolves(testUser)
+    userRepository.removeAuthenticated = cy.stub().resolves()
   })
 
   it('displays the user name when the user is logged in', () => {
-    cy.customMount(HeaderMother.withLoggedInUser(sandbox, testUser))
+    cy.customMount(
+      <SessionProvider repository={userRepository}>
+        <Header />
+      </SessionProvider>
+    )
+
+    cy.wrap(userRepository.getAuthenticated).should('be.calledOnce')
+
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.findByText(testUser.name).should('be.visible')
     cy.findByText(testUser.name).click()
@@ -19,7 +27,16 @@ describe('Header component', () => {
   })
 
   it('displays the Sign Up and Log In links when the user is not logged in', () => {
-    cy.customMount(HeaderMother.withGuestUser(sandbox))
+    userRepository.getAuthenticated = cy.stub().resolves()
+
+    cy.customMount(
+      <SessionProvider repository={userRepository}>
+        <Header />
+      </SessionProvider>
+    )
+
+    cy.wrap(userRepository.getAuthenticated).should('be.calledOnce')
+
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
     cy.findByRole('link', { name: 'Sign Up' }).should('exist')
     cy.contains('Sign Up')
@@ -27,13 +44,21 @@ describe('Header component', () => {
   })
 
   it('log outs the user after clicking Log Out', () => {
-    cy.customMount(HeaderMother.withLoggedInUser(sandbox, testUser))
+    cy.customMount(
+      <SessionProvider repository={userRepository}>
+        <Header />
+      </SessionProvider>
+    )
+
+    cy.wrap(userRepository.getAuthenticated).should('be.calledOnce')
 
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
 
     cy.findByText(testUser.name).click()
 
     cy.findByText('Log Out').click()
+
+    cy.wrap(userRepository.removeAuthenticated).should('be.calledOnce')
 
     cy.findByText(testUser.name).should('not.exist')
 

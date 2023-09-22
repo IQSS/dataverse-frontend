@@ -5,6 +5,7 @@ import { IconName } from '../icon/IconName'
 import { Icon } from '../icon/Icon'
 
 type ButtonVariant = 'primary' | 'secondary' | 'link'
+type ButtonType = 'button' | 'reset' | 'submit'
 
 interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
@@ -12,6 +13,7 @@ interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void
   icon?: IconName | ReactNode
   withSpacing?: boolean
+  type?: ButtonType
   children?: ReactNode
 }
 
@@ -21,6 +23,7 @@ export function Button({
   onClick,
   icon,
   withSpacing,
+  type,
   children,
   ...props
 }: ButtonProps) {
@@ -31,6 +34,7 @@ export function Button({
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
       aria-disabled={disabled}
+      type={type}
       {...props}>
       {typeof icon === 'string' ? <Icon name={icon} /> : icon}
       {children}
