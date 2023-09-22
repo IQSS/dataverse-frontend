@@ -28,7 +28,6 @@ export function useFiles(
       .then((filesCountInfo: FilesCountInfo) => {
         setFilesCountInfo(filesCountInfo)
         onPaginationInfoChange(paginationInfo.withTotal(filesCountInfo.total))
-        console.log(paginationInfo)
       })
       .catch((error) => {
         console.error('There was an error getting the files count info', error)

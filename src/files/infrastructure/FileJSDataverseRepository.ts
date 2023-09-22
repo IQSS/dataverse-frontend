@@ -73,7 +73,6 @@ export class FileJSDataverseRepository implements FileRepository {
         return JSFileMapper.toFilesCountInfo(jsFilesCountInfo)
       })
       .catch((error: WriteError) => {
-        console.error('Error getting files count info from Dataverse', error)
         throw new Error(error.message)
       })
   }
