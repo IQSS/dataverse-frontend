@@ -3,7 +3,6 @@ import { Search } from 'react-bootstrap-icons'
 import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
 import { ChangeEvent, useState, KeyboardEvent, MouseEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import SubmitEvent = JQuery.SubmitEvent
 
 interface FileCriteriaSearchTextProps {
   criteria: FileCriteria

@@ -1,10 +1,10 @@
-import { RowSelection } from './useRowSelection'
+import { FileSelection } from './useFileSelection'
 import { Button } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import styles from './RowSelectionMessage.module.scss'
 
 interface RowSelectionMessageProps {
-  rowSelection: RowSelection
+  fileSelection: FileSelection
   totalFilesCount: number
   selectAllRows: () => void
   clearRowSelection: () => void
@@ -14,13 +14,13 @@ const MINIMUM_SELECTED_FILES_TO_SHOW_MESSAGE = 0
 const MINIMUM_FILES_TO_SHOW_MESSAGE = 10
 
 export function RowSelectionMessage({
-  rowSelection,
+  fileSelection,
   totalFilesCount,
   selectAllRows,
   clearRowSelection
 }: RowSelectionMessageProps) {
   const { t } = useTranslation('files')
-  const selectedFilesCount = Object.keys(rowSelection).length
+  const selectedFilesCount = Object.keys(fileSelection).length
   const showMessage =
     totalFilesCount > MINIMUM_FILES_TO_SHOW_MESSAGE &&
     selectedFilesCount > MINIMUM_SELECTED_FILES_TO_SHOW_MESSAGE

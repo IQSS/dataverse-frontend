@@ -9,9 +9,8 @@ RUN npm run build
 
 WORKDIR /usr/src/app
 COPY package.json ./
-COPY package-lock.json ./
 COPY .npmrc ./
-RUN npm ci
+RUN npm install
 
 FROM node:19.6.1-alpine 
 

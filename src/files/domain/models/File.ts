@@ -22,7 +22,9 @@ export class FileSize {
   }
 
   toString(): string {
-    return `${this.value} ${this.unit}`
+    const formattedValue =
+      this.value % 1 === 0 ? this.value.toFixed(0) : (Math.round(this.value * 10) / 10).toString()
+    return `${formattedValue} ${this.unit}`
   }
 
   toBytes(): number {
@@ -134,6 +136,18 @@ export interface FileChecksum {
   value: string
 }
 
+export enum FileIngestStatus {
+  NONE = 'none',
+  IN_PROGRESS = 'inProgress',
+  SCHEDULED = 'scheduled',
+  ERROR = 'error'
+}
+
+export interface FileIngest {
+  status: FileIngestStatus
+  reportMessage?: string
+}
+
 export class File {
   constructor(
     readonly id: number,
@@ -145,6 +159,8 @@ export class File {
     readonly date: FileDate,
     public downloadCount: number,
     readonly labels: FileLabel[],
+    public readonly isDeleted: boolean,
+    public readonly ingest: FileIngest,
     readonly checksum?: FileChecksum,
     readonly thumbnail?: string,
     readonly directory?: string,

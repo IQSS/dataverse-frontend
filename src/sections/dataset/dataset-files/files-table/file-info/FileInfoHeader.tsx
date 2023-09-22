@@ -6,7 +6,7 @@ interface FileInfoHeaderProps {
 }
 
 export function FileInfoHeader({ paginationInfo }: FileInfoHeaderProps) {
-  const fileCount = paginationInfo.total
+  const fileCount = paginationInfo.totalFiles
   const startIndex = (paginationInfo.page - 1) * paginationInfo.pageSize + 1
   const endIndex = Math.min(startIndex + paginationInfo.pageSize - 1, fileCount)
 

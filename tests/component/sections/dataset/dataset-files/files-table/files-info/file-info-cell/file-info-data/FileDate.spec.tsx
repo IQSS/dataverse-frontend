@@ -2,9 +2,9 @@ import { FileDate } from '../../../../../../../../../src/sections/dataset/datase
 import { FileDateType } from '../../../../../../../../../src/files/domain/models/File'
 describe('FileDate', () => {
   it('renders the date', () => {
-    const date = { type: FileDateType.PUBLISHED, date: new Date() }
+    const date = { type: FileDateType.PUBLISHED, date: new Date('2023-09-18') }
     cy.customMount(<FileDate date={date} />)
 
-    cy.findByText(`Published ${date.date.toDateString()}`).should('exist')
+    cy.findByText(`Published Sep 18, 2023`).should('exist')
   })
 })

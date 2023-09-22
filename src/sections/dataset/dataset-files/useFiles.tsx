@@ -40,7 +40,7 @@ export function useFiles(
   useEffect(() => {
     setIsLoading(true)
 
-    if (filesCountInfo.total !== 0 && paginationInfo?.total !== 0) {
+    if (filesCountInfo.total !== 0 && paginationInfo?.totalFiles !== 0) {
       getFilesByDatasetPersistentId(
         filesRepository,
         datasetPersistentId,
