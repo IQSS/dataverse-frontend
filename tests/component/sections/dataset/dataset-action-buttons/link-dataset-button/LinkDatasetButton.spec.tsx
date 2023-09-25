@@ -11,12 +11,12 @@ describe('LinkDatasetButton', () => {
       isReleased: true
     })
 
-    cy.customMount(<LinkDatasetButton dataset={dataset} />)
+    cy.mountAuthenticated(<LinkDatasetButton dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Link Dataset' }).should('exist')
   })
 
-  it.skip('does not render the LinkDatasetButton if the user is not authenticated', () => {
+  it('does not render the LinkDatasetButton if the user is not authenticated', () => {
     // TODO - Add session context
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createDraft(),
@@ -34,7 +34,7 @@ describe('LinkDatasetButton', () => {
       isReleased: true
     })
 
-    cy.customMount(<LinkDatasetButton dataset={dataset} />)
+    cy.mountAuthenticated(<LinkDatasetButton dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Link Dataset' }).should('not.exist')
   })
@@ -45,7 +45,7 @@ describe('LinkDatasetButton', () => {
       isReleased: false
     })
 
-    cy.customMount(<LinkDatasetButton dataset={dataset} />)
+    cy.mountAuthenticated(<LinkDatasetButton dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Link Dataset' }).should('not.exist')
   })

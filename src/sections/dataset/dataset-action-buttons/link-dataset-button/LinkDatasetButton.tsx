@@ -1,13 +1,15 @@
 import { Button } from '@iqss/dataverse-design-system'
 import { Dataset, DatasetPublishingStatus } from '../../../../dataset/domain/models/Dataset'
 import { useTranslation } from 'react-i18next'
+import { useSession } from '../../../session/SessionContext'
 
 interface LinkDatasetButtonProps {
   dataset: Dataset
 }
 export function LinkDatasetButton({ dataset }: LinkDatasetButtonProps) {
-  // TODO - get session context
+  const { user } = useSession()
   if (
+    !user ||
     !dataset.isReleased ||
     dataset.version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
   ) {
