@@ -1,14 +1,13 @@
 import { StoryFn } from '@storybook/react'
-import {
-  DatasetMother,
-  DatasetPermissionsMother,
-  DatasetVersionMother
-} from '../../../tests/component/dataset/domain/models/DatasetMother'
+import { DatasetProvider } from '../../sections/dataset/DatasetProvider'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { Dataset } from '../../dataset/domain/models/Dataset'
-import { DatasetProvider } from '../../sections/dataset/DatasetProvider'
+import {
+  DatasetMother,
+  DatasetPermissionsMother
+} from '../../../tests/component/dataset/domain/models/DatasetMother'
 
-export const WithDatasetDraftAsOwner = (Story: StoryFn) => {
+export const WithDatasetAllPermissionsGranted = (Story: StoryFn) => {
   const datasetRepository = {} as DatasetRepository
   datasetRepository.getByPersistentId = (
     persistentId: string,
@@ -18,9 +17,7 @@ export const WithDatasetDraftAsOwner = (Story: StoryFn) => {
       setTimeout(() => {
         resolve(
           DatasetMother.createRealistic({
-            persistentId: persistentId,
-            permissions: DatasetPermissionsMother.createWithAllAllowed(),
-            version: DatasetVersionMother.createDraftAsLatestVersion()
+            permissions: DatasetPermissionsMother.createWithAllAllowed()
           })
         )
       }, 1000)

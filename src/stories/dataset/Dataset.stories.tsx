@@ -14,6 +14,7 @@ import { WithFilePermissionsGranted } from '../files/file-permission/WithFilePer
 import { WithDataset } from './WithDataset'
 import { WithDatasetDraftAsOwner } from './WithDatasetDraftAsOwner'
 import { WithDatasetNotFound } from './WithDatasetNotFound'
+import { WithDatasetAllPermissionsGranted } from './WithDatasetAllPermissionsGranted'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -32,13 +33,9 @@ export const Default: Story = {
   decorators: [WithLayout, WithDataset, WithFilePermissionsDenied],
   render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
-export const LoggedInAsOwner: Story = {
-  decorators: [WithLayout, WithDataset, WithLoggedInUser, WithFilePermissionsGranted],
-  render: () => <Dataset fileRepository={new FileMockRepository()} />
-}
 
 export const DraftWithAllDatasetPermissions: Story = {
-  decorators: [WithLayout, WithDatasetDraftAsOwner],
+  decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithFilePermissionsGranted],
   render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 
