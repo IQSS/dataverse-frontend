@@ -1,5 +1,8 @@
 import { FileMother } from '../../../../files/domain/models/FileMother'
-import { FilesTable } from '../../../../../../src/sections/dataset/dataset-files/files-table/FilesTable'
+import {
+  FilesTable,
+  getCellStyle
+} from '../../../../../../src/sections/dataset/dataset-files/files-table/FilesTable'
 import { FileSize, FileSizeUnit } from '../../../../../../src/files/domain/models/File'
 import { SettingMother } from '../../../../settings/domain/models/SettingMother'
 import { ZipDownloadLimit } from '../../../../../../src/settings/domain/models/ZipDownloadLimit'
@@ -143,5 +146,22 @@ describe('FilesTable', () => {
     )
 
     cy.findByRole('columnheader', { name: 'File Actions' }).should('exist')
+  })
+
+  describe('getCellStyle function', () => {
+    it('should return the correct style for status cell', () => {
+      const cellId = 'status'
+      cy.wrap(getCellStyle(cellId)).should('deep.equal', { borderWidth: '0 1px 0 0' })
+    })
+
+    it('should return the correct style for info cell', () => {
+      const cellId = 'info'
+      cy.wrap(getCellStyle(cellId)).should('deep.equal', { borderWidth: '0 0 0 1px' })
+    })
+
+    it('should return undefined for unknown cell', () => {
+      const cellId = 'unknown'
+      cy.wrap(getCellStyle(cellId)).should('be.undefined')
+    })
   })
 })
