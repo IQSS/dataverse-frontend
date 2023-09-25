@@ -14,8 +14,6 @@ const datasetWithUpdatePermissions = DatasetMother.create({
   permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed()
 })
 describe('DatasetUploadFilesButton', () => {
-  beforeEach(() => {})
-
   const withDataset = (component: ReactNode, dataset: DatasetModel | undefined) => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)

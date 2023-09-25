@@ -17,7 +17,7 @@ describe('Dataset', () => {
   const mountWithDataset = (
     component: ReactNode,
     dataset: DatasetModel | undefined,
-    anonymizedView: boolean = false
+    anonymizedView = false
   ) => {
     const searchParams = anonymizedView
       ? { privateUrlToken: 'some-private-url-token' }

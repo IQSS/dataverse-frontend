@@ -14,7 +14,6 @@ import { WithFilePermissionsGranted } from '../files/file-permission/WithFilePer
 import { WithDataset } from './WithDataset'
 import { WithDatasetDraftAsOwner } from './WithDatasetDraftAsOwner'
 import { WithDatasetNotFound } from './WithDatasetNotFound'
-import { WithDatasetAllPermissionsGranted } from './WithDatasetAllPermissionsGranted'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
