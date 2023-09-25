@@ -1,10 +1,10 @@
 import { FileRepository } from '../domain/repositories/FileRepository'
 import { File, FilePublishingStatus } from '../domain/models/File'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
-import { FilesCountInfoMother } from '../../../tests/component/files/domain/models/FilesCountInfoMother'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
 import { FileUserPermissions } from '../domain/models/FileUserPermissions'
 import {
+  getDatasetFileCounts,
   getDatasetFiles,
   getFileDownloadCount,
   getFileUserPermissions,
@@ -20,10 +20,9 @@ export class FileJSDataverseRepository implements FileRepository {
     datasetPersistentId: string,
     datasetVersion: DatasetVersion,
     paginationInfo: FilePaginationInfo = new FilePaginationInfo(),
-    criteria?: FileCriteria
+    criteria: FileCriteria = new FileCriteria()
   ): Promise<File[]> {
     const jsPagination = DomainFileMapper.toJSPagination(paginationInfo)
-    const jsFileOrderCriteria = DomainFileMapper.toJSFileOrderCriteria(criteria)
 
     return getDatasetFiles
       .execute(
@@ -31,28 +30,29 @@ export class FileJSDataverseRepository implements FileRepository {
         datasetVersion.toString(),
         jsPagination.limit,
         jsPagination.offset,
-        jsFileOrderCriteria
+        DomainFileMapper.toJSFileCriteria(criteria)
       )
       .then((jsFiles) => jsFiles.map((jsFile) => JSFileMapper.toFile(jsFile, datasetVersion)))
-      .then((files) =>
-        Promise.all(
-          files.map((file) =>
-            FileJSDataverseRepository.getFileDownloadCount(
-              file.id,
-              file.version.publishingStatus
-            ).then((downloadCount) => {
-              file.downloadCount = downloadCount
-              return file
-            })
-          )
-        )
-      )
+      .then((files) => FileJSDataverseRepository.getAllWithDownloadCount(files))
       .catch((error: WriteError) => {
         throw new Error(error.message)
       })
   }
 
-  private static getFileDownloadCount(
+  private static getAllWithDownloadCount(files: File[]): Promise<File[]> {
+    return Promise.all(
+      files.map((file) =>
+        FileJSDataverseRepository.getDownloadCountById(file.id, file.version.publishingStatus).then(
+          (downloadCount) => {
+            file.downloadCount = downloadCount
+            return file
+          }
+        )
+      )
+    )
+  }
+
+  private static getDownloadCountById(
     id: number,
     publishingStatus: FilePublishingStatus
   ): Promise<number> {
@@ -62,21 +62,22 @@ export class FileJSDataverseRepository implements FileRepository {
     return Promise.resolve(0)
   }
 
-  getCountInfoByDatasetPersistentId(
-    // eslint-disable-next-line unused-imports/no-unused-vars
+  getFilesCountInfoByDatasetPersistentId(
     datasetPersistentId: string,
-    // eslint-disable-next-line unused-imports/no-unused-vars
     datasetVersion: DatasetVersion
   ): Promise<FilesCountInfo> {
-    // TODO - implement using js-dataverse
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(FilesCountInfoMother.create())
-      }, 1000)
-    })
+    // TODO - Take into account the FileCriteria https://github.com/IQSS/dataverse-frontend/issues/172
+    return getDatasetFileCounts
+      .execute(datasetPersistentId, datasetVersion.toString())
+      .then((jsFilesCountInfo) => {
+        return JSFileMapper.toFilesCountInfo(jsFilesCountInfo)
+      })
+      .catch((error: WriteError) => {
+        throw new Error(error.message)
+      })
   }
 
-  getFileUserPermissionsById(id: number): Promise<FileUserPermissions> {
+  getUserPermissionsById(id: number): Promise<FileUserPermissions> {
     return getFileUserPermissions
       .execute(id)
       .then((jsFileUserPermissions) =>

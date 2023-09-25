@@ -24,14 +24,14 @@ function TestComponent({ file }: { file: File }) {
 describe('useFileEditDatasetPermission', () => {
   beforeEach(() => {
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves([])
-    fileRepository.getCountInfoByDatasetPersistentId = cy
+    fileRepository.getFilesCountInfoByDatasetPersistentId = cy
       .stub()
       .resolves(FilesCountInfoMother.create())
   })
 
   it('should return edit dataset permission', () => {
     const file = FileMother.createDefault()
-    fileRepository.getFileUserPermissionsById = cy
+    fileRepository.getUserPermissionsById = cy
       .stub()
       .resolves(FileUserPermissionsMother.create({ fileId: file.id, canEditDataset: true }))
 
@@ -41,13 +41,13 @@ describe('useFileEditDatasetPermission', () => {
       </FilePermissionsProvider>
     )
 
-    cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledWith', file.id)
+    cy.wrap(fileRepository.getUserPermissionsById).should('be.calledWith', file.id)
     cy.findByText('Has edit dataset permission').should('exist')
   })
 
   it('should return false for edit dataset permission if there is an error', () => {
     const file = FileMother.createDefault()
-    fileRepository.getFileUserPermissionsById = cy
+    fileRepository.getUserPermissionsById = cy
       .stub()
       .rejects(new Error('Error getting file user permissions'))
 
@@ -57,7 +57,7 @@ describe('useFileEditDatasetPermission', () => {
       </FilePermissionsProvider>
     )
 
-    cy.wrap(fileRepository.getFileUserPermissionsById).should('be.calledWith', file.id)
+    cy.wrap(fileRepository.getUserPermissionsById).should('be.calledWith', file.id)
     cy.findByText('Does not have edit dataset permission').should('exist')
   })
 })

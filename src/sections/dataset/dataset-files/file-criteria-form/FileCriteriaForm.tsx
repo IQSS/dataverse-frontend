@@ -10,7 +10,7 @@ import { DatasetUploadFilesButton } from '../dataset-upload-files-button/Dataset
 interface FileCriteriaInputsProps {
   criteria: FileCriteria
   onCriteriaChange: (criteria: FileCriteria) => void
-  filesCountInfo: FilesCountInfo
+  filesCountInfo: FilesCountInfo | undefined
 }
 const MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS = 2
 export function FileCriteriaForm({
@@ -18,7 +18,7 @@ export function FileCriteriaForm({
   onCriteriaChange,
   filesCountInfo
 }: FileCriteriaInputsProps) {
-  if (filesCountInfo.total < MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS) {
+  if (!filesCountInfo || filesCountInfo.total < MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS) {
     return <></>
   }
   return (

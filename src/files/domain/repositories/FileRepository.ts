@@ -12,9 +12,9 @@ export interface FileRepository {
     paginationInfo?: FilePaginationInfo,
     criteria?: FileCriteria
   ) => Promise<File[]>
-  getCountInfoByDatasetPersistentId: (
+  getFilesCountInfoByDatasetPersistentId: (
     datasetPersistentId: string,
     datasetVersion: DatasetVersion
   ) => Promise<FilesCountInfo>
-  getFileUserPermissionsById: (id: number) => Promise<FileUserPermissions>
+  getUserPermissionsById: (id: number) => Promise<FileUserPermissions>
 }

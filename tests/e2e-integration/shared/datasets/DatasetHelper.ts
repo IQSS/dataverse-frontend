@@ -1,5 +1,6 @@
 import newDatasetData from '../../fixtures/dataset-finch1.json'
 import { DataverseApiHelper } from '../DataverseApiHelper'
+import { FileData } from '../files/FileHelper'
 
 export interface DatasetResponse {
   persistentId: string
@@ -55,42 +56,10 @@ export class DatasetHelper extends DataverseApiHelper {
     )
   }
 
-  static async createWithFiles(
-    numberOfFiles: number,
-    useTabularFiles = false,
-    filesMetadata?: { [key: string]: string }
-  ): Promise<DatasetResponse> {
+  static async createWithFiles(filesData: FileData[]): Promise<DatasetResponse> {
     const datasetResponse = await this.create()
-    const files = await this.uploadFiles(
-      datasetResponse.persistentId,
-      numberOfFiles,
-      useTabularFiles,
-      filesMetadata
-    )
+    const files = await this.uploadFiles(datasetResponse.persistentId, filesData)
     return { ...datasetResponse, files: files }
-  }
-
-  static async createWithFilesRestricted(
-    numberOfFiles: number,
-    useTabularFiles = false
-  ): Promise<DatasetResponse> {
-    const datasetResponse = await this.createWithFiles(numberOfFiles, useTabularFiles, {
-      description: 'This is an example file',
-      restrict: 'true'
-    })
-    return datasetResponse
-  }
-
-  static async createWithFilesEmbargoed(
-    numberOfFiles: number,
-    useTabularFiles = false
-  ): Promise<DatasetResponse> {
-    const datasetResponse = await this.createWithFiles(numberOfFiles, useTabularFiles, {
-      description: 'This is an example file',
-      restrict: 'true',
-      embargoDate: '2021-01-01'
-    })
-    return datasetResponse
   }
 
   static async embargoFiles(
@@ -108,31 +77,25 @@ export class DatasetHelper extends DataverseApiHelper {
 
   private static async uploadFiles(
     datasetPersistentId: string,
-    numberOfFiles: number,
-    useTabularFile: boolean,
-    filesMetadata: { [key: string]: string } = { description: 'This is an example file' }
+    filesData: FileData[]
   ): Promise<DatasetFileResponse[]> {
     // TODO - Instead of uploading the files one by one, upload them all at once - do this refactor when integrating the pagination
     const files = []
-    for (let i = 0; i < numberOfFiles; i++) {
-      files.push(await this.uploadFile(datasetPersistentId, useTabularFile, filesMetadata))
+    for (const fileData of filesData) {
+      const file = await this.uploadFile(datasetPersistentId, fileData)
+      files.push(file)
     }
     return files
   }
 
   private static async uploadFile(
     datasetPersistentId: string,
-    useTabularFile: boolean,
-    filesMetadata: { [key: string]: string } = { description: 'This is an example file' }
+    fileData: FileData
   ): Promise<DatasetFileResponse> {
-    const data = {
-      file: this.generateFile(useTabularFile),
-      jsonData: JSON.stringify(filesMetadata)
-    }
     const { files } = await this.request<{ files: [{ dataFile: { id: number } }] }>(
       `/datasets/:persistentId/add?persistentId=${datasetPersistentId}`,
       'POST',
-      data,
+      fileData,
       'multipart/form-data'
     )
 
@@ -140,13 +103,6 @@ export class DatasetHelper extends DataverseApiHelper {
       throw new Error('No files returned')
     }
     return files[0].dataFile
-  }
-
-  private static generateFile(useTabularFile: boolean) {
-    if (useTabularFile) {
-      return new Blob([`Name,Age\nJohn,30\nJane,28`], { type: 'text/csv' })
-    }
-    return new Blob(['Hello, this is some data.'], { type: 'text/plain' })
   }
 
   static async setCitationDateFieldType(
