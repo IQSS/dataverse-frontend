@@ -46,6 +46,10 @@ export function getCellStyle(cellId: string) {
   const statusCellId = 'status'
   const infoCellId = 'info'
 
+  if (cellId == 'select') {
+    return { verticalAlign: 'middle' }
+  }
+
   if (cellId == statusCellId) {
     return { borderWidth: '0 1px 0 0' }
   }
