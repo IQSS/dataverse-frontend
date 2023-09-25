@@ -18,7 +18,9 @@ const jsDataset = {
     state: DatasetVersionState.DRAFT,
     createTime: new Date('2023-09-07T13:40:04.000Z'),
     lastUpdateTime: new Date('2023-09-07T13:40:04.000Z'),
-    releaseTime: undefined
+    releaseTime: undefined,
+    majorNumber: 0,
+    minorNumber: 0
   },
   metadataBlocks: [
     {
@@ -56,8 +58,8 @@ const expectedDataset = {
     isLatest: true,
     isInReview: false,
     latestVersionStatus: 'draft',
-    majorNumber: undefined,
-    minorNumber: undefined
+    majorNumber: 0,
+    minorNumber: 0
   },
   citation:
     'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
@@ -119,8 +121,6 @@ const expectedDataset = {
 
 describe('JS Dataset Mapper', () => {
   it('maps jsDataset model to the domain Dataset model', () => {
-    console.log('jsDataset', JSDatasetMapper.toDataset(jsDataset, citation, datasetSummaryFields))
-    console.log('expectedDataset', expectedDataset)
     expect(expectedDataset).to.deep.equal(
       JSDatasetMapper.toDataset(jsDataset, citation, datasetSummaryFields)
     )
