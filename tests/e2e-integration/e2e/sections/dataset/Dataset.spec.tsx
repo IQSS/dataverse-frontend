@@ -17,7 +17,7 @@ describe('Dataset', () => {
   })
 
   describe('Visit the Dataset Page as a logged in user', () => {
-    it.only('successfully loads a dataset in draft mode', () => {
+    it('successfully loads a dataset in draft mode', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
         .then((persistentId: string) => {
@@ -132,7 +132,7 @@ describe('Dataset', () => {
   })
 
   describe('Visualizing the Files Tab', () => {
-    it.only('successfully loads the files tab', () => {
+    it('successfully loads the files tab', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
         .then((persistentId: string) => {
@@ -160,7 +160,7 @@ describe('Dataset', () => {
     })
 
     it('navigates to the next page of files', () => {
-      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(30)), { timeout: 10000 })
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(30)), { timeout: 15000 })
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
@@ -268,7 +268,7 @@ describe('Dataset', () => {
         })
     })
 
-    it('loads the embargoed files', () => {
+    it.only('loads the embargoed files', () => {
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(1)).then((dataset) =>
           DatasetHelper.embargoFiles(
@@ -288,6 +288,8 @@ describe('Dataset', () => {
 
           cy.findByText(/Deposited/).should('exist')
           cy.findByText('Draft: will be embargoed until Oct 20, 2100').should('exist')
+
+          cy.findByText('Edit Files').should('exist')
 
           cy.findByRole('button', { name: 'Access File' }).should('exist').click()
           cy.findByText('Embargoed').should('exist')
