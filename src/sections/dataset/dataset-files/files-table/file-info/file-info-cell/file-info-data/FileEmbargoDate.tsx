@@ -17,7 +17,11 @@ export function FileEmbargoDate({ embargo, publishingStatus }: FileEmbargoDatePr
     <div>
       <span>
         {t(embargoTypeOfDate(embargo.isActive, publishingStatus))}{' '}
-        {embargo.dateAvailable.toDateString()}
+        {embargo.dateAvailable.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        })}
       </span>
     </div>
   )

@@ -95,8 +95,26 @@ describe('FileOptionsMenu', () => {
     // TODO: Implement this test
   })
 
-  it.skip('opens fileAlreadyDeletedPrevious modal if file is already deleted', () => {
-    // TODO: Implement this test
+  it('opens fileAlreadyDeletedPrevious modal if file is already deleted', () => {
+    userRepository.getAuthenticated = cy.stub().resolves(user)
+    userRepository.removeAuthenticated = cy.stub().resolves()
+
+    const file = FileMother.createDeleted()
+
+    cy.customMount(
+      <FilePermissionsProvider repository={fileRepository}>
+        <SessionProvider repository={userRepository}>
+          <FileOptionsMenu file={file} />
+        </SessionProvider>
+      </FilePermissionsProvider>
+    )
+    cy.findByRole('button', { name: 'File Options' }).should('exist').click()
+
+    cy.findByRole('dialog').should('exist')
+    cy.findAllByText('Edit File').should('exist')
+    cy.findAllByText(
+      'This file has already been deleted (or replaced) in the current version. It may not be edited.'
+    ).should('exist')
   })
 
   it('renders the menu options', () => {

@@ -30,6 +30,7 @@ export function DatasetMetadataField({
           metadataFieldName={metadataFieldName}
         />
         <DatasetMetadataFieldValue
+          metadataBlockName={metadataBlockName}
           metadataFieldName={metadataFieldName}
           metadataFieldValue={metadataFieldValue}
         />

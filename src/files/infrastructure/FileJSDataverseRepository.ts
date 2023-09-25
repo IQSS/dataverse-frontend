@@ -35,7 +35,6 @@ export class FileJSDataverseRepository implements FileRepository {
       .then((jsFiles) => jsFiles.map((jsFile) => JSFileMapper.toFile(jsFile, datasetVersion)))
       .then((files) => FileJSDataverseRepository.getAllWithDownloadCount(files))
       .catch((error: WriteError) => {
-        console.error('Error getting files from Dataverse', error)
         throw new Error(error.message)
       })
   }
@@ -74,7 +73,6 @@ export class FileJSDataverseRepository implements FileRepository {
         return JSFileMapper.toFilesCountInfo(jsFilesCountInfo)
       })
       .catch((error: WriteError) => {
-        console.error('Error getting files count info from Dataverse', error)
         throw new Error(error.message)
       })
   }
@@ -86,7 +84,6 @@ export class FileJSDataverseRepository implements FileRepository {
         JSFileMapper.toFileUserPermissions(id, jsFileUserPermissions)
       )
       .catch((error: WriteError) => {
-        console.error('Error getting the file user permissions from Dataverse', error)
         throw new Error(error.message)
       })
   }

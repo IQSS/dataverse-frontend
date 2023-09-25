@@ -96,12 +96,24 @@ export class DatasetHelper extends DataverseApiHelper {
       `/datasets/:persistentId/add?persistentId=${datasetPersistentId}`,
       'POST',
       fileData,
-      true
+      'multipart/form-data'
     )
 
     if (!files || !files[0].dataFile) {
       throw new Error('No files returned')
     }
     return files[0].dataFile
+  }
+
+  static async setCitationDateFieldType(
+    persistentId: string,
+    fieldType: string
+  ): Promise<{ status: string }> {
+    return this.request<{ status: string }>(
+      `/datasets/:persistentId/citationdate?persistentId=${persistentId}`,
+      'PUT',
+      fieldType,
+      'text/plain'
+    )
   }
 }

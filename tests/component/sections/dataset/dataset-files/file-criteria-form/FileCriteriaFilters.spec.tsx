@@ -31,9 +31,9 @@ describe('FilesCriteriaFilters', () => {
 
     cy.findByText('Filter by').should('exist')
 
-    cy.findByRole('button', { name: 'Filter Type: All' }).should('exist')
+    cy.findByRole('button', { name: 'File Type: All' }).should('exist')
     cy.findByRole('button', { name: 'Access: All' }).should('exist')
-    cy.findByRole('button', { name: 'Filter Tag: All' }).should('exist')
+    cy.findByRole('button', { name: 'File Tags: All' }).should('exist')
   })
 
   it('does not render filters by type options when there are no filters to be applied', () => {
@@ -50,8 +50,8 @@ describe('FilesCriteriaFilters', () => {
 
     cy.findByText('Filter by').should('not.exist')
 
-    cy.findByRole('button', { name: 'Filter Type: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'File Type: All' }).should('not.exist')
     cy.findByRole('button', { name: 'Access: All' }).should('not.exist')
-    cy.findByRole('button', { name: 'Filter Tag: All' }).should('not.exist')
+    cy.findByRole('button', { name: 'File Tags: All' }).should('not.exist')
   })
 })

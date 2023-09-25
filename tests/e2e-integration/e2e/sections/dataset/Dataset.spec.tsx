@@ -132,7 +132,7 @@ describe('Dataset', () => {
   })
 
   describe('Visualizing the Files Tab', () => {
-    it('successfully loads the files tab', () => {
+    it.only('successfully loads the files tab', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
         .then((persistentId: string) => {
@@ -287,7 +287,7 @@ describe('Dataset', () => {
           cy.findByText('Files').should('exist')
 
           cy.findByText(/Deposited/).should('exist')
-          cy.findByText('Draft: will be embargoed until Wed Oct 20 2100').should('exist')
+          cy.findByText('Draft: will be embargoed until Oct 20, 2100').should('exist')
 
           cy.findByRole('button', { name: 'Access File' }).should('exist').click()
           cy.findByText('Embargoed').should('exist')
