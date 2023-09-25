@@ -1,18 +1,28 @@
-import { useEffect, useState } from 'react'
+import { PropsWithChildren, useEffect, useState } from 'react'
+import { User } from '../../users/domain/models/User'
+import { DatasetContext } from './DatasetContext'
+import { getUser } from '../../users/domain/useCases/getUser'
+import { UserRepository } from '../../users/domain/repositories/UserRepository'
+import { logOut } from '../../users/domain/useCases/logOut'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { Dataset } from '../../dataset/domain/models/Dataset'
-import { getDatasetByPersistentId } from '../../dataset/domain/useCases/getDatasetByPersistentId'
 import { useLoading } from '../loading/LoadingContext'
+import { getDatasetByPersistentId } from '../../dataset/domain/useCases/getDatasetByPersistentId'
 import { getDatasetByPrivateUrlToken } from '../../dataset/domain/useCases/getDatasetByPrivateUrlToken'
 
-export function useDataset(
-  repository: DatasetRepository,
+interface DatasetProviderProps {
+  repository: DatasetRepository
   searchParams: {
     persistentId?: string
     privateUrlToken?: string
     version?: string
   }
-) {
+}
+export function DatasetProvider({
+  repository,
+  searchParams,
+  children
+}: PropsWithChildren<DatasetProviderProps>) {
   const [dataset, setDataset] = useState<Dataset>()
   const { setIsLoading } = useLoading()
   const getDataset = () => {
@@ -39,5 +49,5 @@ export function useDataset(
       })
   }, [repository, searchParams])
 
-  return { dataset }
+  return <DatasetContext.Provider value={{ dataset }}>{children}</DatasetContext.Provider>
 }

@@ -13,7 +13,7 @@ describe('DatasetActionButtons', () => {
       isReleased: true
     })
 
-    cy.customMount(<DatasetActionButtons dataset={dataset} />)
+    cy.mountAuthenticated(<DatasetActionButtons dataset={dataset} />)
 
     cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
@@ -33,7 +33,7 @@ describe('DatasetActionButtons', () => {
       isReleased: true
     })
 
-    cy.customMount(<DatasetActionButtons dataset={dataset} />)
+    cy.mountAuthenticated(<DatasetActionButtons dataset={dataset} />)
 
     cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')

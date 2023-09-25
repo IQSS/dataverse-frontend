@@ -75,7 +75,10 @@ const datasetData = (persistentId: string, versionId: number) => {
       id: versionId,
       majorNumber: undefined,
       minorNumber: undefined,
-      publishingStatus: 'draft'
+      publishingStatus: 'draft',
+      latestVersionStatus: 'draft',
+      isLatest: true,
+      isInReview: false
     }
   }
 }
@@ -100,6 +103,7 @@ describe('Dataset JSDataverse Repository', () => {
       expect(dataset.license).to.deep.equal(datasetExpected.license)
       expect(dataset.metadataBlocks).to.deep.equal(datasetExpected.metadataBlocks)
       expect(dataset.summaryFields).to.deep.equal(datasetExpected.summaryFields)
+      console.log(dataset.version)
       expect(dataset.version).to.deep.equal(datasetExpected.version)
       expect(dataset.metadataBlocks[0].fields.publicationDate).not.to.exist
       expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist

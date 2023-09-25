@@ -4,16 +4,16 @@ import { WithLayout } from '../WithLayout'
 import { Dataset } from '../../sections/dataset/Dataset'
 import { WithLayoutLoading } from '../WithLayoutLoading'
 import { WithAnonymizedView } from './WithAnonymizedView'
-import { DatasetMockRepository } from './DatasetMockRepository'
-import { DatasetMockNoDataRepository } from './DatasetMockNoDataRepository'
 import { FileMockRepository } from '../files/FileMockRepository'
 import { WithCitationMetadataBlockInfo } from './WithCitationMetadataBlockInfo'
 import { FileMockNoDataRepository } from '../files/FileMockNoDataRepository'
 import { WithSettings } from '../WithSettings'
 import { WithFilePermissionsDenied } from '../files/file-permission/WithFilePermissionsDenied'
 import { WithLoggedInUser } from '../WithLoggedInUser'
-import { DatasetDraftWithAllPermissionsMockRepository } from './DatasetDraftWithAllPermissionsMockRepository'
 import { WithFilePermissionsGranted } from '../files/file-permission/WithFilePermissionsGranted'
+import { WithDataset } from './WithDataset'
+import { WithDatasetDraftAsOwner } from './WithDatasetDraftAsOwner'
+import { WithDatasetNotFound } from './WithDatasetNotFound'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -29,77 +29,35 @@ export default meta
 type Story = StoryObj<typeof Dataset>
 
 export const Default: Story = {
-  decorators: [WithLayout, WithFilePermissionsDenied],
-  render: () => (
-    <Dataset
-      datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockRepository()}
-      searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
-    />
-  )
+  decorators: [WithLayout, WithDataset, WithFilePermissionsDenied],
+  render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 export const LoggedInAsOwner: Story = {
-  decorators: [WithLayout, WithLoggedInUser, WithFilePermissionsGranted],
-  render: () => (
-    <Dataset
-      datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockRepository()}
-      searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
-    />
-  )
+  decorators: [WithLayout, WithDataset, WithLoggedInUser, WithFilePermissionsGranted],
+  render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 
 export const DraftWithAllDatasetPermissions: Story = {
-  decorators: [WithLayout],
-  render: () => (
-    <Dataset
-      datasetRepository={new DatasetDraftWithAllPermissionsMockRepository()}
-      fileRepository={new FileMockRepository()}
-      searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
-    />
-  )
+  decorators: [WithLayout, WithDatasetDraftAsOwner],
+  render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 
 export const Loading: Story = {
-  decorators: [WithLayoutLoading, WithFilePermissionsDenied],
-  render: () => (
-    <Dataset
-      datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockRepository()}
-      searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
-    />
-  )
+  decorators: [WithLayoutLoading, WithDataset, WithFilePermissionsDenied],
+  render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 
 export const DatasetNotFound: Story = {
-  decorators: [WithLayout, WithFilePermissionsDenied],
-  render: () => (
-    <Dataset
-      datasetRepository={new DatasetMockNoDataRepository()}
-      fileRepository={new FileMockRepository()}
-      searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
-    />
-  )
+  decorators: [WithLayout, WithDatasetNotFound, WithFilePermissionsDenied],
+  render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 
 export const DatasetAnonymizedView: Story = {
-  decorators: [WithLayout, WithAnonymizedView, WithFilePermissionsGranted],
-  render: () => (
-    <Dataset
-      datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockRepository()}
-      searchParams={{ privateUrlToken: '123456' }}
-    />
-  )
+  decorators: [WithLayout, WithAnonymizedView, WithDataset, WithFilePermissionsGranted],
+  render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 
 export const DatasetWithNoFiles: Story = {
-  decorators: [WithLayout, WithAnonymizedView, WithFilePermissionsDenied],
-  render: () => (
-    <Dataset
-      datasetRepository={new DatasetMockRepository()}
-      fileRepository={new FileMockNoDataRepository()}
-      searchParams={{ privateUrlToken: '123456' }}
-    />
-  )
+  decorators: [WithLayout, WithAnonymizedView, WithDataset, WithFilePermissionsDenied],
+  render: () => <Dataset fileRepository={new FileMockNoDataRepository()} />
 }

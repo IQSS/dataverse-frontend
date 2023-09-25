@@ -1,5 +1,3 @@
-import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { useDataset } from './useDataset'
 import { Tabs, Col, Row } from '@iqss/dataverse-design-system'
 import styles from './Dataset.module.scss'
 import { DatasetLabels } from './dataset-labels/DatasetLabels'
@@ -13,19 +11,14 @@ import { DatasetCitation } from './dataset-citation/DatasetCitation'
 import { DatasetFiles } from './dataset-files/DatasetFiles'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { DatasetActionButtons } from './dataset-action-buttons/DatasetActionButtons'
+import { useDataset } from './DatasetContext'
 
 interface DatasetProps {
-  datasetRepository: DatasetRepository
   fileRepository: FileRepository
-  searchParams: {
-    persistentId?: string
-    privateUrlToken?: string
-    version?: string
-  }
 }
 
-export function Dataset({ datasetRepository, fileRepository, searchParams }: DatasetProps) {
-  const { dataset } = useDataset(datasetRepository, searchParams)
+export function Dataset({ fileRepository }: DatasetProps) {
+  const { dataset } = useDataset()
   const { isLoading } = useLoading()
   const { t } = useTranslation('dataset')
 

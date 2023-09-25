@@ -7,6 +7,7 @@ interface LinkDatasetButtonProps {
   dataset: Dataset
 }
 export function LinkDatasetButton({ dataset }: LinkDatasetButtonProps) {
+  const { t } = useTranslation('dataset')
   const { user } = useSession()
   if (
     !user ||
@@ -16,6 +17,5 @@ export function LinkDatasetButton({ dataset }: LinkDatasetButtonProps) {
     return <></>
   }
 
-  const { t } = useTranslation('dataset')
   return <Button variant="secondary">{t('datasetActionButtons.linkDataset.title')}</Button>
 }
