@@ -7,16 +7,15 @@ import { useTranslation } from 'react-i18next'
 import { useFileEditDatasetPermission } from '../../../../../../../file/file-permissions/useFileEditDatasetPermission'
 import { useState } from 'react'
 import { FileAlreadyDeletedModal } from './FileAlreadyDeletedModal'
+import { useDataset } from '../../../../../../DatasetContext'
 
 export function FileOptionsMenu({ file }: { file: File }) {
   const { t } = useTranslation('files')
   const { user } = useSession()
-  const { sessionUserHasEditDatasetPermission } = useFileEditDatasetPermission(file)
-  const datasetHasValidTermsOfAccess = true // TODO - Implement terms of access validation
-  const datasetLockedFromEdits = false // TODO - Ask Guillermo if this a dataset property coming from the api
+  const { dataset } = useDataset()
   const [showFileAlreadyDeletedModal, setShowFileAlreadyDeletedModal] = useState(false)
 
-  if (!user || !sessionUserHasEditDatasetPermission || !datasetHasValidTermsOfAccess) {
+  if (!user || !dataset?.permissions.canUpdateDataset || !dataset.hasValidTermsOfAccess) {
     return <></>
   }
 
@@ -26,7 +25,7 @@ export function FileOptionsMenu({ file }: { file: File }) {
         <Tooltip placement="top" overlay={<span>{t('actions.optionsMenu.title')}</span>}>
           <Button
             id={`file-options-file-${file.id}`}
-            disabled={datasetLockedFromEdits}
+            disabled={dataset.isLockedFromEdits}
             variant="secondary"
             icon={
               <ThreeDotsVertical
@@ -49,7 +48,7 @@ export function FileOptionsMenu({ file }: { file: File }) {
       <DropdownButton
         id={`file-options-file-${file.id}`}
         title=""
-        disabled={datasetLockedFromEdits}
+        disabled={dataset.isLockedFromEdits}
         asButtonGroup
         variant="secondary"
         icon={<ThreeDotsVertical aria-label={t('actions.optionsMenu.title')} />}>
