@@ -53,6 +53,10 @@ export class FileIngestMother {
       reportMessage: reportMessage
     })
   }
+
+  static createIngestNone(): FileIngest {
+    return this.create({ status: FileIngestStatus.NONE })
+  }
 }
 
 export class FileChecksumMother {
