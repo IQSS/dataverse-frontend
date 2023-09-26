@@ -133,6 +133,9 @@ jobs:
         working-directory: packages/design-system
         run: npm run build
 
+      - name: Install Playwright
+        run: npx playwright install
+
       - name: Build Storybook Design System
         working-directory: packages/design-system
         run: npm run build-storybook --quiet
