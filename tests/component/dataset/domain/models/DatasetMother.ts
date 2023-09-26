@@ -431,6 +431,7 @@ export class DatasetMother {
         canDeleteDataset: false
       },
       locks: [],
+      isReleased: true,
       ...props
     })
   }

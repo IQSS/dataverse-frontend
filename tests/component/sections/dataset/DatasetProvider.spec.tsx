@@ -3,11 +3,9 @@ import { DatasetRepository } from '../../../../src/dataset/domain/repositories/D
 import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
 import { useDataset } from '../../../../src/sections/dataset/DatasetContext'
 import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
-import { useLoading } from '../../../../src/sections/loading/LoadingContext'
 
 function TestComponent() {
-  const { dataset } = useDataset()
-  const { isLoading } = useLoading()
+  const { dataset, isLoading } = useDataset()
 
   return (
     <div>

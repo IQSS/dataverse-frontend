@@ -2,7 +2,6 @@ import { DatasetRepository } from '../../../../src/dataset/domain/repositories/D
 import { Dataset } from '../../../../src/sections/dataset/Dataset'
 import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
 import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
-import { useLoading } from '../../../../src/sections/loading/LoadingContext'
 import { ANONYMIZED_FIELD_VALUE } from '../../../../src/dataset/domain/models/Dataset'
 import { AnonymizedContext } from '../../../../src/sections/dataset/anonymized/AnonymizedContext'
 import { FileRepository } from '../../../../src/files/domain/repositories/FileRepository'
@@ -39,26 +38,7 @@ describe('Dataset', () => {
   it('renders skeleton while loading', () => {
     const testDataset = DatasetMother.create()
 
-    const buttonText = 'Toggle Loading'
-    const TestComponent = () => {
-      const { isLoading, setIsLoading } = useLoading()
-      return (
-        <>
-          <button onClick={() => setIsLoading(true)}>{buttonText}</button>
-          {isLoading && <div>Loading...</div>}
-        </>
-      )
-    }
-
-    mountWithDataset(
-      <>
-        <Dataset fileRepository={fileRepository} />
-        <TestComponent />
-      </>,
-      testDataset
-    )
-
-    cy.findByText(buttonText).click()
+    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
 
     cy.findByTestId('dataset-skeleton').should('exist')
     cy.findByText(testDataset.getTitle()).should('not.exist')

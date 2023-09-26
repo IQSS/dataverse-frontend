@@ -2,7 +2,6 @@ import { PropsWithChildren, useEffect, useState } from 'react'
 import { DatasetContext } from './DatasetContext'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { Dataset } from '../../dataset/domain/models/Dataset'
-import { useLoading } from '../loading/LoadingContext'
 import { getDatasetByPersistentId } from '../../dataset/domain/useCases/getDatasetByPersistentId'
 import { getDatasetByPrivateUrlToken } from '../../dataset/domain/useCases/getDatasetByPrivateUrlToken'
 
@@ -20,7 +19,7 @@ export function DatasetProvider({
   children
 }: PropsWithChildren<DatasetProviderProps>) {
   const [dataset, setDataset] = useState<Dataset>()
-  const { setIsLoading } = useLoading()
+  const [isLoading, setIsLoading] = useState(true)
   const getDataset = () => {
     if (searchParams.persistentId) {
       return getDatasetByPersistentId(repository, searchParams.persistentId, searchParams.version)
@@ -45,5 +44,7 @@ export function DatasetProvider({
       })
   }, [repository, searchParams])
 
-  return <DatasetContext.Provider value={{ dataset }}>{children}</DatasetContext.Provider>
+  return (
+    <DatasetContext.Provider value={{ dataset, isLoading }}>{children}</DatasetContext.Provider>
+  )
 }

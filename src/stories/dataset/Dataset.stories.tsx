@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { Dataset } from '../../sections/dataset/Dataset'
-import { WithLayoutLoading } from '../WithLayoutLoading'
 import { WithAnonymizedView } from './WithAnonymizedView'
 import { FileMockRepository } from '../files/FileMockRepository'
 import { WithCitationMetadataBlockInfo } from './WithCitationMetadataBlockInfo'
@@ -14,6 +13,7 @@ import { WithFilePermissionsGranted } from '../files/file-permission/WithFilePer
 import { WithDataset } from './WithDataset'
 import { WithDatasetDraftAsOwner } from './WithDatasetDraftAsOwner'
 import { WithDatasetNotFound } from './WithDatasetNotFound'
+import { WithDatasetLoading } from './WithDatasetLoading'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -39,7 +39,7 @@ export const DraftWithAllDatasetPermissions: Story = {
 }
 
 export const Loading: Story = {
-  decorators: [WithLayoutLoading, WithDataset, WithFilePermissionsDenied],
+  decorators: [WithLayout, WithDatasetLoading, WithFilePermissionsDenied],
   render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 

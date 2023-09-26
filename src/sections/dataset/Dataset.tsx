@@ -12,15 +12,20 @@ import { DatasetFiles } from './dataset-files/DatasetFiles'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { DatasetActionButtons } from './dataset-action-buttons/DatasetActionButtons'
 import { useDataset } from './DatasetContext'
+import { useEffect } from 'react'
 
 interface DatasetProps {
   fileRepository: FileRepository
 }
 
 export function Dataset({ fileRepository }: DatasetProps) {
-  const { dataset } = useDataset()
-  const { isLoading } = useLoading()
+  const { setIsLoading } = useLoading()
+  const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('dataset')
+
+  useEffect(() => {
+    setIsLoading(isLoading)
+  }, [isLoading])
 
   if (isLoading) {
     return <DatasetSkeleton />
