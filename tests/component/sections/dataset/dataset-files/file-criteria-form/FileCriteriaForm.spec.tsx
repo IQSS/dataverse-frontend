@@ -7,9 +7,12 @@ import {
 } from '../../../../../../src/files/domain/models/FileCriteria'
 import { FilesCountInfoMother } from '../../../../files/domain/models/FilesCountInfoMother'
 import { FileType } from '../../../../../../src/files/domain/models/File'
-import { UserMother } from '../../../../users/domain/models/UserMother'
-import { UserRepository } from '../../../../../../src/users/domain/repositories/UserRepository'
-import { SessionProvider } from '../../../../../../src/sections/session/SessionProvider'
+import { DatasetRepository } from '../../../../../../src/dataset/domain/repositories/DatasetRepository'
+import {
+  DatasetMother,
+  DatasetPermissionsMother
+} from '../../../../dataset/domain/models/DatasetMother'
+import { DatasetProvider } from '../../../../../../src/sections/dataset/DatasetProvider'
 
 let onCriteriaChange = () => {}
 const filesCountInfo = FilesCountInfoMother.create({
@@ -242,19 +245,23 @@ describe('FileCriteriaForm', () => {
   })
 
   it('renders the Upload Files button', () => {
-    const user = UserMother.create()
-    const userRepository = {} as UserRepository
-    userRepository.getAuthenticated = cy.stub().resolves(user)
-    userRepository.removeAuthenticated = cy.stub().resolves()
+    const datasetRepository: DatasetRepository = {} as DatasetRepository
+    const datasetWithUpdatePermissions = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed()
+    })
+    datasetRepository.getByPersistentId = cy.stub().resolves(datasetWithUpdatePermissions)
+    datasetRepository.getByPrivateUrlToken = cy.stub().resolves(datasetWithUpdatePermissions)
 
-    cy.customMount(
-      <SessionProvider repository={userRepository}>
+    cy.mountAuthenticated(
+      <DatasetProvider
+        repository={datasetRepository}
+        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
         <FileCriteriaForm
           criteria={new FileCriteria()}
           onCriteriaChange={onCriteriaChange}
           filesCountInfo={filesCountInfo}
         />
-      </SessionProvider>
+      </DatasetProvider>
     )
 
     cy.findByRole('button', { name: 'Upload Files' }).should('exist')

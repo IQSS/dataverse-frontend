@@ -327,7 +327,7 @@ export class Dataset {
         )
       }
 
-      if (this.version.publishingStatus !== DatasetPublishingStatus.RELEASED) {
+      if (!this.isReleased) {
         this.labels.push(
           new DatasetLabel(DatasetLabelSemanticMeaning.WARNING, DatasetLabelValue.UNPUBLISHED)
         )

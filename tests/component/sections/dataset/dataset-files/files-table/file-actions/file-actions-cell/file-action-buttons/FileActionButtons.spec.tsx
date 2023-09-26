@@ -1,11 +1,11 @@
 import { FileActionButtons } from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/FileActionButtons'
 import { FileMother } from '../../../../../../../files/domain/models/FileMother'
-import { UserMother } from '../../../../../../../users/domain/models/UserMother'
-import { UserRepository } from '../../../../../../../../../src/users/domain/repositories/UserRepository'
-import { SessionProvider } from '../../../../../../../../../src/sections/session/SessionProvider'
-import { FileRepository } from '../../../../../../../../../src/files/domain/repositories/FileRepository'
-import { FileUserPermissionsMother } from '../../../../../../../files/domain/models/FileUserPermissionsMother'
-import { FilePermissionsProvider } from '../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
+import { DatasetRepository } from '../../../../../../../../../src/dataset/domain/repositories/DatasetRepository'
+import {
+  DatasetMother,
+  DatasetPermissionsMother
+} from '../../../../../../../dataset/domain/models/DatasetMother'
+import { DatasetProvider } from '../../../../../../../../../src/sections/dataset/DatasetProvider'
 
 const file = FileMother.createDefault()
 describe('FileActionButtons', () => {
@@ -17,24 +17,20 @@ describe('FileActionButtons', () => {
   })
 
   it('renders the file action buttons with user logged in and edit dataset permissions', () => {
-    const user = UserMother.create()
-    const userRepository = {} as UserRepository
-    userRepository.getAuthenticated = cy.stub().resolves(user)
-    userRepository.removeAuthenticated = cy.stub().resolves()
-    const fileRepository: FileRepository = {} as FileRepository
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      FileUserPermissionsMother.create({
-        fileId: file.id,
-        canEditDataset: true
-      })
-    )
+    const datasetRepository: DatasetRepository = {} as DatasetRepository
+    const datasetWithUpdatePermissions = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed(),
+      hasValidTermsOfAccess: true
+    })
+    datasetRepository.getByPersistentId = cy.stub().resolves(datasetWithUpdatePermissions)
+    datasetRepository.getByPrivateUrlToken = cy.stub().resolves(datasetWithUpdatePermissions)
 
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <SessionProvider repository={userRepository}>
-          <FileActionButtons file={file} />
-        </SessionProvider>
-      </FilePermissionsProvider>
+    cy.mountAuthenticated(
+      <DatasetProvider
+        repository={datasetRepository}
+        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
+        <FileActionButtons file={file} />
+      </DatasetProvider>
     )
 
     cy.findByRole('group', { name: 'File Action Buttons' }).should('exist')
