@@ -31,12 +31,12 @@ export class JSDatasetMapper {
         jsDataset.citationDate
       ),
       {
-        canDownloadFiles: false,
-        canUpdateDataset: false,
-        canPublishDataset: false,
-        canManageDatasetPermissions: false,
-        canManageFilesPermissions: false,
-        canDeleteDataset: false
+        canDownloadFiles: true,
+        canUpdateDataset: true,
+        canPublishDataset: true,
+        canManageDatasetPermissions: true,
+        canManageFilesPermissions: true,
+        canDeleteDataset: true
       }, // TODO Connect with dataset permissions
       [], // TODO Connect with dataset locks
       true, // TODO Connect with dataset hasValidTermsOfAccess

@@ -106,12 +106,12 @@ const expectedDataset = {
     }
   ],
   permissions: {
-    canDownloadFiles: false,
-    canUpdateDataset: false,
-    canPublishDataset: false,
-    canManageDatasetPermissions: false,
-    canManageFilesPermissions: false,
-    canDeleteDataset: false
+    canDownloadFiles: true,
+    canUpdateDataset: true,
+    canPublishDataset: true,
+    canManageDatasetPermissions: true,
+    canManageFilesPermissions: true,
+    canDeleteDataset: true
   },
   locks: [],
   hasValidTermsOfAccess: true,
