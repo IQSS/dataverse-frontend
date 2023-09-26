@@ -5,36 +5,37 @@ import { FileAccessOption, FileTag } from '../../../../../src/files/domain/model
 
 export class FilesCountInfoMother {
   static create(props?: Partial<FilesCountInfo>): FilesCountInfo {
+    const total = props?.total ?? faker.datatype.number()
     return {
       total: faker.datatype.number(),
       perFileType: [
         {
           type: new FileType(faker.system.fileType()),
-          count: faker.datatype.number()
+          count: faker.datatype.number({ max: total })
         },
         {
           type: new FileType(faker.system.fileType()),
-          count: faker.datatype.number()
+          count: faker.datatype.number({ max: total })
         }
       ],
       perAccess: [
         {
           access: faker.helpers.arrayElement(Object.values(FileAccessOption)),
-          count: faker.datatype.number()
+          count: faker.datatype.number({ max: total })
         },
         {
           access: faker.helpers.arrayElement(Object.values(FileAccessOption)),
-          count: faker.datatype.number()
+          count: faker.datatype.number({ max: total })
         }
       ],
       perFileTag: [
         {
           tag: new FileTag(faker.lorem.word()),
-          count: faker.datatype.number()
+          count: faker.datatype.number({ max: total })
         },
         {
           tag: new FileTag(faker.lorem.word()),
-          count: faker.datatype.number()
+          count: faker.datatype.number({ max: total })
         }
       ],
       ...props

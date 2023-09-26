@@ -112,3 +112,17 @@ $navbar-brand-font-size: $dv-brand-font-size;
   background-color: $dropdown-link-hover-bg;
   border-color: transparent;
 }
+
+th {
+  vertical-align: middle;
+}
+
+.btn-group > div:not(:last-child) > .btn-group > .btn, .btn-group-vertical >div:not(:last-child) > .btn-group > .btn {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.btn-group > div:not(:first-child) > .btn-group > .btn, .btn-group-vertical > div:not(:first-child) > .btn-group > .btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
