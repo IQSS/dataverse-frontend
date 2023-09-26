@@ -17,7 +17,6 @@ describe('LinkDatasetButton', () => {
   })
 
   it('does not render the LinkDatasetButton if the user is not authenticated', () => {
-    // TODO - Add session context
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createDraft(),
       isReleased: true
