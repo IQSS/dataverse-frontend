@@ -5,7 +5,7 @@ import { Row } from '@tanstack/react-table'
 import { RowSelection } from '../useFilesTable'
 
 export type FileSelection = {
-  [key: string]: File | undefined
+  [key: string]: number | undefined
 }
 
 export function useFileSelection(
@@ -41,7 +41,7 @@ export function useFileSelection(
 
     Object.entries(currentPageSelectedRowModel).forEach(([string, Row]) => {
       const rowIndex = parseInt(string)
-      rowSelectionFixed[currentPageIndexes[rowIndex]] = Row.original
+      rowSelectionFixed[currentPageIndexes[rowIndex]] = Row.original.id
     })
     return rowSelectionFixed
   }

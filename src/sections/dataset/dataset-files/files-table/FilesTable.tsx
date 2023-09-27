@@ -31,7 +31,7 @@ export function FilesTable({ files, isLoading, paginationInfo }: FilesTableProps
         totalFilesCount={paginationInfo.totalFiles}
         clearRowSelection={clearFileSelection}
       />
-      <ZipDownloadLimitMessage fileSelection={fileSelection} />
+      <ZipDownloadLimitMessage fileSelection={fileSelection} files={files} />
       <Table>
         <FilesTableHeader headers={table.getHeaderGroups()} />
         <FilesTableBody rows={table.getRowModel().rows} />

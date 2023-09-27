@@ -1,5 +1,6 @@
 import { File } from '../../files/domain/models/File'
 import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
+import { FilePaginationInfo } from '../../files/domain/models/FilePaginationInfo'
 
 const range = (len: number) => {
   const arr = []
@@ -9,10 +10,12 @@ const range = (len: number) => {
   return arr
 }
 
-export function makeFiles(len: number): File[] {
-  return range(len).map(() => {
-    return FileMother.create()
+export function makeFiles(paginationInfo: FilePaginationInfo): File[] {
+  return range(paginationInfo.pageSize).map((value, index) => {
+    return FileMother.create({ id: (paginationInfo.page - 1) * paginationInfo.pageSize + index })
   })
 }
 
-export const FilesMockData = (amount = 200): File[] => makeFiles(amount)
+export const FilesMockData = (
+  paginationInfo: FilePaginationInfo = new FilePaginationInfo()
+): File[] => makeFiles(paginationInfo)

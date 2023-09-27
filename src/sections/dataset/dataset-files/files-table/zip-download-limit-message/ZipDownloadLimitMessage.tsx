@@ -9,11 +9,12 @@ import { FileSelection } from '../row-selection/useFileSelection'
 
 interface ZipDownloadLimitMessageProps {
   fileSelection: FileSelection
+  files: File[]
 }
 
 const MINIMUM_FILES_TO_SHOW_MESSAGE = 1
 
-export function ZipDownloadLimitMessage({ fileSelection }: ZipDownloadLimitMessageProps) {
+export function ZipDownloadLimitMessage({ fileSelection, files }: ZipDownloadLimitMessageProps) {
   const { t } = useTranslation('files')
   const { getSettingByName } = useSettings()
   const [zipDownloadLimitInBytes, setZipDownloadLimitInBytes] = useState<number>()
@@ -27,8 +28,9 @@ export function ZipDownloadLimitMessage({ fileSelection }: ZipDownloadLimitMessa
       })
   }, [getSettingByName])
 
+  console.log('fileSelection', fileSelection)
   // TODO - When selecting all files, the size should come from a call to a use case that returns the total size of the dataset files. Check issue https://github.com/IQSS/dataverse-frontend/issues/170
-  const selectionTotalSizeInBytes = getFilesTotalSizeInBytes(Object.values(fileSelection))
+  const selectionTotalSizeInBytes = getFileSelectionTotalSizeInBytes(fileSelection, files)
   const showMessage =
     zipDownloadLimitInBytes &&
     Object.values(fileSelection).length > MINIMUM_FILES_TO_SHOW_MESSAGE &&
@@ -49,10 +51,11 @@ export function ZipDownloadLimitMessage({ fileSelection }: ZipDownloadLimitMessa
   )
 }
 
-function getFilesTotalSizeInBytes(files: (File | undefined)[]) {
-  return files
-    .map((file) => file?.size)
-    .reduce((bytes, size) => bytes + (size ? size.toBytes() : 0), 0)
+function getFileSelectionTotalSizeInBytes(fileSelection: FileSelection, files: File[]) {
+  return Object.values(fileSelection)
+    .map((fileId) => files.find((file) => file.id == fileId))
+    .filter((file) => file != undefined)
+    .reduce((totalSize, file) => totalSize + file!.size.toBytes(), 0)
 }
 
 function bytesToHumanReadable(bytes: number) {

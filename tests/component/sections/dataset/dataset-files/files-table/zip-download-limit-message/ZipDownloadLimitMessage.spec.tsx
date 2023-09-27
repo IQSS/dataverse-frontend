@@ -5,10 +5,17 @@ import { SettingMother } from '../../../../../settings/domain/models/SettingMoth
 import { ZipDownloadLimit } from '../../../../../../../src/settings/domain/models/ZipDownloadLimit'
 import { SettingsContext } from '../../../../../../../src/sections/settings/SettingsContext'
 
+const file1Id = 123
+const file2Id = 323
 const fileSelection = {
-  '1': FileMother.create({ size: new FileSize(1024, FileSizeUnit.BYTES) }),
-  '2': FileMother.create({ size: new FileSize(2048, FileSizeUnit.BYTES) })
+  0: file1Id,
+  1: file2Id
 }
+const files = [
+  FileMother.create({ id: file1Id, size: new FileSize(1024, FileSizeUnit.BYTES) }),
+  FileMother.create({ id: file2Id, size: new FileSize(2048, FileSizeUnit.BYTES) }),
+  ...FileMother.createMany(8)
+]
 const zipDownloadLimit = new ZipDownloadLimit(500, FileSizeUnit.BYTES)
 describe('ZipDownloadLimitMessage', () => {
   it('should not render if there is less than 1 file selected', () => {
@@ -18,11 +25,7 @@ describe('ZipDownloadLimitMessage', () => {
 
     cy.customMount(
       <SettingsContext.Provider value={{ getSettingByName }}>
-        <ZipDownloadLimitMessage
-          fileSelection={{
-            '1': FileMother.create({ size: new FileSize(1024, FileSizeUnit.BYTES) })
-          }}
-        />
+        <ZipDownloadLimitMessage fileSelection={{ 0: file1Id }} files={files} />
       </SettingsContext.Provider>
     )
 
@@ -37,10 +40,12 @@ describe('ZipDownloadLimitMessage', () => {
     cy.customMount(
       <SettingsContext.Provider value={{ getSettingByName }}>
         <ZipDownloadLimitMessage
-          fileSelection={{
-            '1': FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
-            '2': FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) })
-          }}
+          files={[
+            FileMother.create({ id: file1Id, size: new FileSize(1, FileSizeUnit.BYTES) }),
+            FileMother.create({ id: file2Id, size: new FileSize(1, FileSizeUnit.BYTES) }),
+            ...FileMother.createMany(8)
+          ]}
+          fileSelection={fileSelection}
         />
       </SettingsContext.Provider>
     )
@@ -54,7 +59,7 @@ describe('ZipDownloadLimitMessage', () => {
       .resolves(SettingMother.createZipDownloadLimit(zipDownloadLimit))
     cy.customMount(
       <SettingsContext.Provider value={{ getSettingByName }}>
-        <ZipDownloadLimitMessage fileSelection={fileSelection} />
+        <ZipDownloadLimitMessage fileSelection={fileSelection} files={files} />
       </SettingsContext.Provider>
     )
 
@@ -67,13 +72,16 @@ describe('ZipDownloadLimitMessage', () => {
     const getSettingByName = cy
       .stub()
       .resolves(SettingMother.createZipDownloadLimit(zipDownloadLimit))
-    const fileSelection = {
-      '1': FileMother.create({ size: new FileSize(1000000, FileSizeUnit.PETABYTES) }),
-      '2': FileMother.create({ size: new FileSize(1000000, FileSizeUnit.PETABYTES) })
-    }
     cy.customMount(
       <SettingsContext.Provider value={{ getSettingByName }}>
-        <ZipDownloadLimitMessage fileSelection={fileSelection} />
+        <ZipDownloadLimitMessage
+          fileSelection={fileSelection}
+          files={[
+            FileMother.create({ id: file1Id, size: new FileSize(1000000, FileSizeUnit.PETABYTES) }),
+            FileMother.create({ id: file2Id, size: new FileSize(1000000, FileSizeUnit.PETABYTES) }),
+            ...FileMother.createMany(8)
+          ]}
+        />
       </SettingsContext.Provider>
     )
 

@@ -17,7 +17,7 @@ export class FileMockRepository implements FileRepository {
   ): Promise<File[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(FilesMockData(paginationInfo?.pageSize || 10))
+        resolve(FilesMockData(paginationInfo))
       }, 1000)
     })
   }
