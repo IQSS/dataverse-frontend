@@ -12,10 +12,16 @@ import { FilePaginationInfo } from '../../../../../../src/files/domain/models/Fi
 
 const testFiles = FileMother.createMany(10)
 const paginationInfo = new FilePaginationInfo(1, 10, 200)
+const testFilesTotalDownloadSize = 19900
 describe('FilesTable', () => {
   it('renders the files table', () => {
     cy.customMount(
-      <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
+      <FilesTable
+        files={testFiles}
+        paginationInfo={paginationInfo}
+        isLoading={false}
+        filesTotalDownloadSize={testFilesTotalDownloadSize}
+      />
     )
 
     cy.findByRole('table').should('exist')
@@ -29,14 +35,26 @@ describe('FilesTable', () => {
 
   it('renders the spinner when the data isLoading', () => {
     cy.customMount(
-      <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={true} />
+      <FilesTable
+        files={testFiles}
+        paginationInfo={paginationInfo}
+        isLoading={true}
+        filesTotalDownloadSize={testFilesTotalDownloadSize}
+      />
     )
 
     cy.findByLabelText('Files loading spinner symbol').should('exist')
   })
 
   it('renders the no files message when there are no files', () => {
-    cy.customMount(<FilesTable files={[]} paginationInfo={paginationInfo} isLoading={false} />)
+    cy.customMount(
+      <FilesTable
+        files={[]}
+        paginationInfo={paginationInfo}
+        isLoading={false}
+        filesTotalDownloadSize={testFilesTotalDownloadSize}
+      />
+    )
 
     cy.findByText('There are no files in this dataset.').should('exist')
   })
@@ -44,7 +62,12 @@ describe('FilesTable', () => {
   describe('Row selection', () => {
     it('selects all rows in the current page when the header checkbox is clicked', () => {
       cy.customMount(
-        <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
+        <FilesTable
+          files={testFiles}
+          paginationInfo={paginationInfo}
+          isLoading={false}
+          filesTotalDownloadSize={testFilesTotalDownloadSize}
+        />
       )
 
       cy.wait(1000) // wait for the table to load
@@ -58,7 +81,12 @@ describe('FilesTable', () => {
 
     it('clears row selection for the current page when the header checkbox is clicked', () => {
       cy.customMount(
-        <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
+        <FilesTable
+          files={testFiles}
+          paginationInfo={paginationInfo}
+          isLoading={false}
+          filesTotalDownloadSize={testFilesTotalDownloadSize}
+        />
       )
 
       cy.wait(1000) // wait for the table to load
@@ -76,7 +104,12 @@ describe('FilesTable', () => {
 
     it("selects all rows when the 'Select all' button is clicked", () => {
       cy.customMount(
-        <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
+        <FilesTable
+          files={testFiles}
+          paginationInfo={paginationInfo}
+          isLoading={false}
+          filesTotalDownloadSize={testFilesTotalDownloadSize}
+        />
       )
 
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
@@ -90,7 +123,12 @@ describe('FilesTable', () => {
 
     it('clears the selection when the clear selection button is clicked', () => {
       cy.customMount(
-        <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
+        <FilesTable
+          files={testFiles}
+          paginationInfo={paginationInfo}
+          isLoading={false}
+          filesTotalDownloadSize={testFilesTotalDownloadSize}
+        />
       )
 
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
@@ -106,7 +144,12 @@ describe('FilesTable', () => {
 
     it('highlights the selected rows', () => {
       cy.customMount(
-        <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
+        <FilesTable
+          files={testFiles}
+          paginationInfo={paginationInfo}
+          isLoading={false}
+          filesTotalDownloadSize={testFilesTotalDownloadSize}
+        />
       )
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
 
@@ -125,7 +168,12 @@ describe('FilesTable', () => {
 
     cy.customMount(
       <SettingsContext.Provider value={{ getSettingByName }}>
-        <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
+        <FilesTable
+          files={testFiles}
+          paginationInfo={paginationInfo}
+          isLoading={false}
+          filesTotalDownloadSize={testFilesTotalDownloadSize}
+        />
       </SettingsContext.Provider>
     )
 
@@ -142,7 +190,12 @@ describe('FilesTable', () => {
 
   it('renders the file actions column', () => {
     cy.customMount(
-      <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
+      <FilesTable
+        files={testFiles}
+        paginationInfo={paginationInfo}
+        isLoading={false}
+        filesTotalDownloadSize={testFilesTotalDownloadSize}
+      />
     )
 
     cy.findByRole('columnheader', { name: 'File Actions' }).should('exist')

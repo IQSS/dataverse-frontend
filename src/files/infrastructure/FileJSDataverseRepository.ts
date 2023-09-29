@@ -77,6 +77,15 @@ export class FileJSDataverseRepository implements FileRepository {
       })
   }
 
+  getFilesTotalDownloadSizeByDatasetPersistentId(
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    datasetPersistentId: string,
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    datasetVersion: DatasetVersion
+  ): Promise<number> {
+    return Promise.resolve(0)
+  }
+
   getUserPermissionsById(id: number): Promise<FileUserPermissions> {
     return getFileUserPermissions
       .execute(id)

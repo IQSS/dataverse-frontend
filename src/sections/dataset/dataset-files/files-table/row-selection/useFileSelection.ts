@@ -5,7 +5,7 @@ import { Row } from '@tanstack/react-table'
 import { RowSelection } from '../useFilesTable'
 
 export type FileSelection = {
-  [key: string]: number | undefined
+  [key: string]: File | undefined
 }
 
 export function useFileSelection(
@@ -41,7 +41,7 @@ export function useFileSelection(
 
     Object.entries(currentPageSelectedRowModel).forEach(([string, Row]) => {
       const rowIndex = parseInt(string)
-      rowSelectionFixed[currentPageIndexes[rowIndex]] = Row.original.id
+      rowSelectionFixed[currentPageIndexes[rowIndex]] = Row.original
     })
     return rowSelectionFixed
   }
@@ -60,7 +60,10 @@ export function useFileSelection(
   }
   const selectAllFiles = () => {
     setCurrentPageRowSelection(createRowSelection(paginationInfo.pageSize))
-    setFileSelection(createFileSelection(paginationInfo.totalFiles))
+
+    const totalFilesFileSelection = createFileSelection(paginationInfo.totalFiles)
+    const newFileSelection = { ...totalFilesFileSelection, ...fileSelection }
+    setFileSelection(newFileSelection)
   }
   const clearFileSelection = () => {
     setCurrentPageRowSelection({})
@@ -92,7 +95,7 @@ export function createRowSelection(numberOfRows: number) {
   return rowSelection
 }
 
-export function createFileSelection(numberOfRows: number) {
+export function createFileSelection(numberOfRows: number): FileSelection {
   const fileSelection: FileSelection = {}
 
   for (let i = 0; i < numberOfRows; i++) {

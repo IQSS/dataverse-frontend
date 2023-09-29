@@ -5,18 +5,12 @@ import { SettingMother } from '../../../../../settings/domain/models/SettingMoth
 import { ZipDownloadLimit } from '../../../../../../../src/settings/domain/models/ZipDownloadLimit'
 import { SettingsContext } from '../../../../../../../src/sections/settings/SettingsContext'
 
-const file1Id = 123
-const file2Id = 323
 const fileSelection = {
-  0: file1Id,
-  1: file2Id
+  0: FileMother.create({ size: new FileSize(1024, FileSizeUnit.BYTES) }),
+  1: FileMother.create({ size: new FileSize(2048, FileSizeUnit.BYTES) })
 }
-const files = [
-  FileMother.create({ id: file1Id, size: new FileSize(1024, FileSizeUnit.BYTES) }),
-  FileMother.create({ id: file2Id, size: new FileSize(2048, FileSizeUnit.BYTES) }),
-  ...FileMother.createMany(8)
-]
 const zipDownloadLimit = new ZipDownloadLimit(500, FileSizeUnit.BYTES)
+const filesTotalDownloadSize = 3072 // 3.0 KB
 describe('ZipDownloadLimitMessage', () => {
   it('should not render if there is less than 1 file selected', () => {
     const getSettingByName = cy
@@ -25,7 +19,11 @@ describe('ZipDownloadLimitMessage', () => {
 
     cy.customMount(
       <SettingsContext.Provider value={{ getSettingByName }}>
-        <ZipDownloadLimitMessage fileSelection={{ 0: file1Id }} files={files} />
+        <ZipDownloadLimitMessage
+          fileSelection={{ 0: FileMother.create({ size: new FileSize(1024, FileSizeUnit.BYTES) }) }}
+          visitedFiles={{}}
+          filesTotalDownloadSize={filesTotalDownloadSize}
+        />
       </SettingsContext.Provider>
     )
 
@@ -40,12 +38,12 @@ describe('ZipDownloadLimitMessage', () => {
     cy.customMount(
       <SettingsContext.Provider value={{ getSettingByName }}>
         <ZipDownloadLimitMessage
-          files={[
-            FileMother.create({ id: file1Id, size: new FileSize(1, FileSizeUnit.BYTES) }),
-            FileMother.create({ id: file2Id, size: new FileSize(1, FileSizeUnit.BYTES) }),
-            ...FileMother.createMany(8)
-          ]}
-          fileSelection={fileSelection}
+          fileSelection={{
+            0: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            1: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) })
+          }}
+          visitedFiles={{}}
+          filesTotalDownloadSize={filesTotalDownloadSize}
         />
       </SettingsContext.Provider>
     )
@@ -59,7 +57,11 @@ describe('ZipDownloadLimitMessage', () => {
       .resolves(SettingMother.createZipDownloadLimit(zipDownloadLimit))
     cy.customMount(
       <SettingsContext.Provider value={{ getSettingByName }}>
-        <ZipDownloadLimitMessage fileSelection={fileSelection} files={files} />
+        <ZipDownloadLimitMessage
+          fileSelection={fileSelection}
+          visitedFiles={{}}
+          filesTotalDownloadSize={filesTotalDownloadSize}
+        />
       </SettingsContext.Provider>
     )
 
@@ -75,18 +77,105 @@ describe('ZipDownloadLimitMessage', () => {
     cy.customMount(
       <SettingsContext.Provider value={{ getSettingByName }}>
         <ZipDownloadLimitMessage
-          fileSelection={fileSelection}
-          files={[
-            FileMother.create({ id: file1Id, size: new FileSize(1000000, FileSizeUnit.PETABYTES) }),
-            FileMother.create({ id: file2Id, size: new FileSize(1000000, FileSizeUnit.PETABYTES) }),
-            ...FileMother.createMany(8)
-          ]}
+          fileSelection={{
+            0: FileMother.create({ size: new FileSize(1000000, FileSizeUnit.PETABYTES) }),
+            1: FileMother.create({ size: new FileSize(1000000, FileSizeUnit.PETABYTES) })
+          }}
+          visitedFiles={{}}
+          filesTotalDownloadSize={filesTotalDownloadSize}
         />
       </SettingsContext.Provider>
     )
 
     cy.findByText(
       'The overall size of the files selected (more than 1024.0 PB) for download exceeds the zip limit of 500.0 B. Please unselect some files to continue.'
+    ).should('exist')
+  })
+
+  it('should show the total size of the files selected when there is a unknown File in the fileSelection', () => {
+    const getSettingByName = cy
+      .stub()
+      .resolves(SettingMother.createZipDownloadLimit(zipDownloadLimit))
+    cy.customMount(
+      <SettingsContext.Provider value={{ getSettingByName }}>
+        <ZipDownloadLimitMessage
+          fileSelection={{
+            0: FileMother.create({ size: new FileSize(1000000, FileSizeUnit.PETABYTES) }),
+            1: FileMother.create({ size: new FileSize(1000000, FileSizeUnit.PETABYTES) }),
+            2: undefined
+          }}
+          visitedFiles={{}}
+          filesTotalDownloadSize={filesTotalDownloadSize}
+        />
+      </SettingsContext.Provider>
+    )
+
+    cy.findByText(
+      'The overall size of the files selected (3.0 KB) for download exceeds the zip limit of 500.0 B. Please unselect some files to continue.'
+    ).should('exist')
+  })
+
+  it('should subtract the size of the files that are not in the fileSelection but they are in the visitedFiles when there is an unknown file', () => {
+    const zipDownloadLimit = new ZipDownloadLimit(1, FileSizeUnit.BYTES)
+    const getSettingByName = cy
+      .stub()
+      .resolves(SettingMother.createZipDownloadLimit(zipDownloadLimit))
+
+    const filesTotalDownloadSize = 4
+    cy.customMount(
+      <SettingsContext.Provider value={{ getSettingByName }}>
+        <ZipDownloadLimitMessage
+          fileSelection={{
+            0: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            1: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            3: undefined
+          }}
+          visitedFiles={{
+            0: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            1: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            2: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            3: undefined
+          }}
+          filesTotalDownloadSize={filesTotalDownloadSize}
+        />
+      </SettingsContext.Provider>
+    )
+
+    cy.findByText(
+      'The overall size of the files selected (3.0 B) for download exceeds the zip limit of 1.0 B. Please unselect some files to continue.'
+    ).should('exist')
+  })
+
+  it('should show the total size of files when there are more files in the fileSelection than in the visitedFiles', () => {
+    const zipDownloadLimit = new ZipDownloadLimit(1, FileSizeUnit.BYTES)
+    const getSettingByName = cy
+      .stub()
+      .resolves(SettingMother.createZipDownloadLimit(zipDownloadLimit))
+
+    const filesTotalDownloadSize = 4
+    cy.customMount(
+      <SettingsContext.Provider value={{ getSettingByName }}>
+        <ZipDownloadLimitMessage
+          fileSelection={{
+            0: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            1: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            2: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            3: undefined,
+            4: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) })
+          }}
+          visitedFiles={{
+            0: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            1: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            2: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            3: undefined
+          }}
+          filesTotalDownloadSize={filesTotalDownloadSize}
+        />
+      </SettingsContext.Provider>
+    )
+
+    cy.findByText(
+      'The overall size of the files selected (4.0 B) for download exceeds the zip limit of 1.0 B. Please unselect some files to continue.'
     ).should('exist')
   })
 })

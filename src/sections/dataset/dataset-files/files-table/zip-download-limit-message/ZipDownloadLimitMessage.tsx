@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import styles from './ZipLimitMessage.module.scss'
-import { File, FileSizeUnit } from '../../../../../files/domain/models/File'
+import { FileSizeUnit } from '../../../../../files/domain/models/File'
 import { useSettings } from '../../../../settings/SettingsContext'
 import { SettingName } from '../../../../../settings/domain/models/Setting'
 import { ZipDownloadLimit } from '../../../../../settings/domain/models/ZipDownloadLimit'
@@ -9,12 +9,17 @@ import { FileSelection } from '../row-selection/useFileSelection'
 
 interface ZipDownloadLimitMessageProps {
   fileSelection: FileSelection
-  files: File[]
+  visitedFiles: FileSelection
+  filesTotalDownloadSize: number
 }
 
 const MINIMUM_FILES_TO_SHOW_MESSAGE = 1
 
-export function ZipDownloadLimitMessage({ fileSelection, files }: ZipDownloadLimitMessageProps) {
+export function ZipDownloadLimitMessage({
+  fileSelection,
+  visitedFiles,
+  filesTotalDownloadSize
+}: ZipDownloadLimitMessageProps) {
   const { t } = useTranslation('files')
   const { getSettingByName } = useSettings()
   const [zipDownloadLimitInBytes, setZipDownloadLimitInBytes] = useState<number>()
@@ -28,13 +33,20 @@ export function ZipDownloadLimitMessage({ fileSelection, files }: ZipDownloadLim
       })
   }, [getSettingByName])
 
-  console.log('fileSelection', fileSelection)
-  // TODO - When selecting all files, the size should come from a call to a use case that returns the total size of the dataset files. Check issue https://github.com/IQSS/dataverse-frontend/issues/170
-  const selectionTotalSizeInBytes = getFileSelectionTotalSizeInBytes(fileSelection, files)
+  const [fileSelectionTotalSizeInInBytes, setFileSelectionTotalSizeInInBytes] = useState<number>(0)
+  useEffect(() => {
+    const totalSize = computeFileSelectionTotalSizeInBytes(
+      visitedFiles,
+      fileSelection,
+      filesTotalDownloadSize
+    )
+    setFileSelectionTotalSizeInInBytes(totalSize)
+  }, [fileSelection])
+
   const showMessage =
     zipDownloadLimitInBytes &&
     Object.values(fileSelection).length > MINIMUM_FILES_TO_SHOW_MESSAGE &&
-    selectionTotalSizeInBytes > zipDownloadLimitInBytes
+    fileSelectionTotalSizeInInBytes > zipDownloadLimitInBytes
 
   if (!showMessage) {
     return <></>
@@ -43,7 +55,7 @@ export function ZipDownloadLimitMessage({ fileSelection, files }: ZipDownloadLim
     <div className={styles.container}>
       <span className={styles.message}>
         {t('table.zipDownloadExceedsLimit', {
-          selectionTotalSize: bytesToHumanReadable(selectionTotalSizeInBytes),
+          selectionTotalSize: bytesToHumanReadable(fileSelectionTotalSizeInInBytes),
           zipDownloadSizeLimit: bytesToHumanReadable(zipDownloadLimitInBytes)
         })}
       </span>
@@ -51,11 +63,30 @@ export function ZipDownloadLimitMessage({ fileSelection, files }: ZipDownloadLim
   )
 }
 
-function getFileSelectionTotalSizeInBytes(fileSelection: FileSelection, files: File[]) {
+function computeFileSelectionTotalSizeInBytes(
+  visitedFiles: FileSelection,
+  fileSelection: FileSelection,
+  filesTotalDownloadSize: number
+) {
+  const selectAllHasBeenClicked = Object.values(fileSelection).some((file) => file == undefined)
+  if (selectAllHasBeenClicked) {
+    const differenceBetweenPreviousAndCurrentSelection =
+      getFilesTotalSize(visitedFiles) - getFilesTotalSize(fileSelection)
+
+    if (differenceBetweenPreviousAndCurrentSelection < 0) {
+      return filesTotalDownloadSize
+    }
+
+    return filesTotalDownloadSize - differenceBetweenPreviousAndCurrentSelection
+  }
+
+  return getFilesTotalSize(fileSelection)
+}
+
+function getFilesTotalSize(fileSelection: FileSelection) {
   return Object.values(fileSelection)
-    .map((fileId) => files.find((file) => file.id == fileId))
     .filter((file) => file != undefined)
-    .reduce((totalSize, file) => totalSize + file!.size.toBytes(), 0)
+    .reduce((totalSize, file) => totalSize + (file ? file.size.toBytes() : 0), 0)
 }
 
 function bytesToHumanReadable(bytes: number) {

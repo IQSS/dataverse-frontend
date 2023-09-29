@@ -34,6 +34,20 @@ export class FileMockRepository implements FileRepository {
       }, 1000)
     })
   }
+
+  getFilesTotalDownloadSizeByDatasetPersistentId(
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    datasetPersistentId: string,
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    datasetVersion: DatasetVersion
+  ): Promise<number> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(19900)
+      }, 1000)
+    })
+  }
+
   // eslint-disable-next-line unused-imports/no-unused-vars
   getUserPermissionsById(id: number): Promise<FileUserPermissions> {
     return new Promise((resolve) => {

@@ -1,4 +1,4 @@
-import { File } from '../../files/domain/models/File'
+import { File, FileSize, FileSizeUnit } from '../../files/domain/models/File'
 import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
 import { FilePaginationInfo } from '../../files/domain/models/FilePaginationInfo'
 
@@ -12,7 +12,13 @@ const range = (len: number) => {
 
 export function makeFiles(paginationInfo: FilePaginationInfo): File[] {
   return range(paginationInfo.pageSize).map((value, index) => {
-    return FileMother.create({ id: (paginationInfo.page - 1) * paginationInfo.pageSize + index })
+    return FileMother.create({
+      id: (paginationInfo.page - 1) * paginationInfo.pageSize + index,
+      size: new FileSize(
+        (paginationInfo.page - 1) * paginationInfo.pageSize + index,
+        FileSizeUnit.BYTES
+      )
+    })
   })
 }
 
