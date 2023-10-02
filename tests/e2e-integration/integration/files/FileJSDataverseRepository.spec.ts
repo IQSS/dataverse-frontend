@@ -523,7 +523,83 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getFilesCountInfoByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((filesCountInfo) => {
-          expect(filesCountInfo).to.deep.equal(expectedFilesCountInfo)
+          expect(filesCountInfo.total).to.deep.equal(expectedFilesCountInfo.total)
+
+          const filesCountInfoPerAccessSorted = filesCountInfo.perAccess.sort((a, b) =>
+            a.access.localeCompare(b.access)
+          )
+          const expectedFilesCountInfoPerAccessSorted = expectedFilesCountInfo.perAccess.sort(
+            (a, b) => a.access.localeCompare(b.access)
+          )
+          expect(filesCountInfoPerAccessSorted).to.deep.equal(expectedFilesCountInfoPerAccessSorted)
+
+          const filesCountInfoPerFileTypeSorted = filesCountInfo.perFileType.sort((a, b) =>
+            a.type.value.localeCompare(b.type.value)
+          )
+          const expectedFilesCountInfoPerFileTypeSorted = expectedFilesCountInfo.perFileType.sort(
+            (a, b) => a.type.value.localeCompare(b.type.value)
+          )
+          expect(filesCountInfoPerFileTypeSorted).to.deep.equal(
+            expectedFilesCountInfoPerFileTypeSorted
+          )
+
+          const filesCountInfoPerFileTagSorted = filesCountInfo.perFileTag.sort((a, b) =>
+            a.tag.value.localeCompare(b.tag.value)
+          )
+          const expectedFilesCountInfoPerFileTagSorted = expectedFilesCountInfo.perFileTag.sort(
+            (a, b) => a.tag.value.localeCompare(b.tag.value)
+          )
+          expect(filesCountInfoPerFileTagSorted).to.deep.equal(
+            expectedFilesCountInfoPerFileTagSorted
+          )
+        })
+    })
+  })
+
+  describe('getFilesTotalDownloadSizeByDatasetPersistentId', () => {
+    it('gets the total download size of all files in a dataset', async () => {
+      const files = [
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          categories: ['category_1']
+        }),
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category_1'],
+          restrict: 'true',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true',
+          tabIngest: 'false'
+        })
+      ]
+      const dataset = await DatasetHelper.createWithFiles(files).then((datasetResponse) =>
+        datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      )
+      if (!dataset) throw new Error('Dataset not found')
+
+      await fileRepository
+        .getFilesTotalDownloadSizeByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((totalDownloadSize) => {
+          expect(totalDownloadSize).to.deep.equal(3037)
         })
     })
   })
