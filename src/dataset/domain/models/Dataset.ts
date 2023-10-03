@@ -27,13 +27,13 @@ export class DatasetLabel {
 export enum DatasetAlertMessageKey {
   DRAFT_VERSION = 'draftVersion',
   REQUESTED_VERSION_NOT_FOUND = 'requestedVersionNotFound'
-  //TODO: add more
 }
 
 export class DatasetAlert {
   constructor(
     public readonly variant: AlertVariant,
     public readonly message: DatasetAlertMessageKey,
+    public readonly dynamicFields?: string[],
     public readonly customHeading?: string
   ) {}
 }
@@ -233,9 +233,8 @@ export class DatasetVersion {
     public readonly publishingStatus: DatasetPublishingStatus,
     public readonly majorNumber?: number,
     public readonly minorNumber?: number,
-    // isAlternateVersion will be set to true if the requested version did not exist,
-    // in this case the latest version will be sent instead
-    public readonly isAlternateVersion?: boolean
+    // requestedVersion will be set if the user requested a version that did not exist.
+    public readonly requestedVersion?: string
   ) {}
 
   toString(): string | DatasetNonNumericVersion {
@@ -325,11 +324,19 @@ export class Dataset {
 
     private withAlerts(): void {
       if (this.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
-        this.alerts.push(new DatasetAlert('warning', DatasetAlertMessageKey.DRAFT_VERSION, 'Info'))
-      }
-      if (this.version.isAlternateVersion) {
         this.alerts.push(
-          new DatasetAlert('info', DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND)
+          new DatasetAlert('warning', DatasetAlertMessageKey.DRAFT_VERSION, undefined, 'Info')
+        )
+      }
+      if (this.version.requestedVersion) {
+        const dynamicFields = [this.version.requestedVersion, `${this.version.toString()}`]
+
+        this.alerts.push(
+          new DatasetAlert(
+            'info',
+            DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND,
+            dynamicFields
+          )
         )
       }
     }

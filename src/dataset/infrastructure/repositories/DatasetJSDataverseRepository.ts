@@ -15,7 +15,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   getByPersistentId(
     persistentId: string,
     version?: string,
-    isAlternateVersion?: boolean
+    requestedVersion?: string
   ): Promise<Dataset | undefined> {
     return getDataset
       .execute(persistentId, this.versionToVersionId(version))
@@ -27,13 +27,13 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         ])
       )
       .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
-        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, isAlternateVersion)
+        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, requestedVersion)
       )
       .catch((error: WriteError) => {
         if (!version) {
           throw new Error(error.message)
         }
-        return this.getByPersistentId(persistentId, undefined, (isAlternateVersion = true))
+        return this.getByPersistentId(persistentId, undefined, (requestedVersion = version))
       })
   }
 

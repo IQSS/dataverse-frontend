@@ -21,11 +21,11 @@ export class JSDatasetMapper {
     jsDataset: JSDataset,
     citation: string,
     summaryFieldsNames: string[],
-    isAlternateVersion?: boolean
+    requestedVersion?: string
   ): Dataset {
     return new Dataset.Builder(
       jsDataset.persistentId,
-      JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo, isAlternateVersion),
+      JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo, requestedVersion),
       citation,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
@@ -41,14 +41,14 @@ export class JSDatasetMapper {
   static toVersion(
     jDatasetVersionId: number,
     jsDatasetVersionInfo: JSDatasetVersionInfo,
-    isAlternateVersion?: boolean
+    requestedVersion?: string
   ): DatasetVersion {
     return new DatasetVersion(
       jDatasetVersionId,
       JSDatasetMapper.toStatus(jsDatasetVersionInfo.state),
       jsDatasetVersionInfo.majorNumber,
       jsDatasetVersionInfo.minorNumber,
-      isAlternateVersion
+      requestedVersion
     )
   }
 

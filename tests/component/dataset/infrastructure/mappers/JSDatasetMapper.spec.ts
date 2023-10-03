@@ -57,7 +57,7 @@ const expectedDataset = {
     publishingStatus: 'draft',
     minorNumber: 0,
     majorNumber: 0,
-    isAlternateVersion: undefined
+    requestedVersion: undefined
   },
   citation:
     'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
@@ -65,7 +65,9 @@ const expectedDataset = {
     { semanticMeaning: 'dataset', value: 'Draft' },
     { semanticMeaning: 'warning', value: 'Unpublished' }
   ],
-  alerts: [{ variant: 'warning', message: 'draftVersion', customHeading: 'Info' }],
+  alerts: [
+    { variant: 'warning', message: 'draftVersion', dynamicFields: undefined, customHeading: 'Info' }
+  ],
   summaryFields: [
     {
       name: 'citation',
@@ -112,7 +114,7 @@ const expectedDatasetAlternateVersion = {
     publishingStatus: 'draft',
     minorNumber: 0,
     majorNumber: 0,
-    isAlternateVersion: true
+    requestedVersion: '4.0'
   },
   citation:
     'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
@@ -121,10 +123,16 @@ const expectedDatasetAlternateVersion = {
     { semanticMeaning: 'warning', value: 'Unpublished' }
   ],
   alerts: [
-    { variant: 'warning', message: 'draftVersion', customHeading: 'Info' },
+    {
+      variant: 'warning',
+      message: 'draftVersion',
+      dynamicFields: undefined,
+      customHeading: 'Info'
+    },
     {
       message: 'requestedVersionNotFound',
       variant: 'info',
+      dynamicFields: ['4.0', '0.0'],
       customHeading: undefined
     }
   ],
@@ -169,21 +177,17 @@ const expectedDatasetAlternateVersion = {
 }
 describe('JS Dataset Mapper', () => {
   it('maps jsDataset model to the domain Dataset model', () => {
-    expect(expectedDataset).to.deep.equal(
-      JSDatasetMapper.toDataset(jsDataset, citation, datasetSummaryFields)
-    )
+    const mapped = JSDatasetMapper.toDataset(jsDataset, citation, datasetSummaryFields)
+    expect(expectedDataset).to.deep.equal(mapped)
   })
   it('maps jsDataset model to the domain Dataset model for alternate version', () => {
     const mappedWithAlternate = JSDatasetMapper.toDataset(
       jsDataset,
       citation,
       datasetSummaryFields,
-      true
+      '4.0'
     )
-    expect(expectedDatasetAlternateVersion.version).to.deep.equal(mappedWithAlternate.version)
-    console.log(`expected ` + JSON.stringify(expectedDatasetAlternateVersion.alerts))
-    console.log(`mapped ` + JSON.stringify(mappedWithAlternate.alerts))
-    expect(expectedDatasetAlternateVersion.alerts).to.deep.equal(mappedWithAlternate.alerts)
+    expect(expectedDatasetAlternateVersion).to.deep.equal(mappedWithAlternate)
   })
 
   it('maps jsDataset model to the domain Dataset model when alternativePersistentId is provided', () => {
