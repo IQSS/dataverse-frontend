@@ -21,7 +21,8 @@ export class JSDatasetMapper {
     jsDataset: JSDataset,
     citation: string,
     summaryFieldsNames: string[],
-    requestedVersion?: string
+    requestedVersion?: string,
+    privateUrl?: string
   ): Dataset {
     return new Dataset.Builder(
       jsDataset.persistentId,
@@ -34,7 +35,8 @@ export class JSDatasetMapper {
         jsDataset.alternativePersistentId,
         jsDataset.publicationDate,
         jsDataset.citationDate
-      )
+      ),
+      privateUrl
     ).build()
   }
 

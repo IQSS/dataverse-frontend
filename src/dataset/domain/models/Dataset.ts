@@ -26,7 +26,8 @@ export class DatasetLabel {
 
 export enum DatasetAlertMessageKey {
   DRAFT_VERSION = 'draftVersion',
-  REQUESTED_VERSION_NOT_FOUND = 'requestedVersionNotFound'
+  REQUESTED_VERSION_NOT_FOUND = 'requestedVersionNotFound',
+  UNPUBLISHED_DATASET = 'unpublishedDataset'
 }
 
 export class DatasetAlert {
@@ -271,10 +272,11 @@ export class Dataset {
       public readonly citation: string,
       public readonly summaryFields: DatasetMetadataBlock[],
       public readonly license: DatasetLicense = defaultLicense,
-      public readonly metadataBlocks: DatasetMetadataBlocks
+      public readonly metadataBlocks: DatasetMetadataBlocks,
+      public readonly privateUrl?: string
     ) {
       this.withLabels()
-      this.withAlerts()
+      this.withAlerts(privateUrl)
     }
 
     withLabels() {
@@ -322,7 +324,7 @@ export class Dataset {
       }
     }
 
-    private withAlerts(): void {
+    private withAlerts(privateUrl?: string): void {
       if (this.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
         this.alerts.push(
           new DatasetAlert('warning', DatasetAlertMessageKey.DRAFT_VERSION, undefined, 'Info')
@@ -336,6 +338,17 @@ export class Dataset {
             'info',
             DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND,
             dynamicFields
+          )
+        )
+      }
+      if (privateUrl) {
+        const dynamicFields = [privateUrl]
+        this.alerts.push(
+          new DatasetAlert(
+            'info',
+            DatasetAlertMessageKey.UNPUBLISHED_DATASET,
+            dynamicFields,
+            'Unpublished Dataset Private URL'
           )
         )
       }
