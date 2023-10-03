@@ -18,8 +18,11 @@
     "learnAbout": "Learn About",
     "standards": "Data Citation Standards"
   },
-
   "actions": {
     "uploadFiles": "Upload Files"
+  },
+  "alerts": {
+    "draftVersion": "This is a draft version",
+    "requestedVersionNotFound": "Requested version not found"
   }
 }

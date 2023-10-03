@@ -52,13 +52,20 @@ const citation =
 const datasetSummaryFields = ['dsDescription', 'subject', 'keyword', 'publication', 'notesText']
 const expectedDataset = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
-  version: { id: 101, minorNumber: 0, majorNumber: 0, publishingStatus: 'draft' },
+  version: {
+    id: 101,
+    publishingStatus: 'draft',
+    minorNumber: 0,
+    majorNumber: 0,
+    isAlternateVersion: false
+  },
   citation:
     'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
   labels: [
     { semanticMeaning: 'dataset', value: 'Draft' },
     { semanticMeaning: 'warning', value: 'Unpublished' }
   ],
+  alerts: [{ variant: 'warning', message: 'draftVersion', customHeading: 'Info' }],
   summaryFields: [
     {
       name: 'citation',

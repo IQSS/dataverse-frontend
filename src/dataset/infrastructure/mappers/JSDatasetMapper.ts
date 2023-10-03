@@ -17,10 +17,19 @@ import {
 } from '../../domain/models/Dataset'
 
 export class JSDatasetMapper {
-  static toDataset(jsDataset: JSDataset, citation: string, summaryFieldsNames: string[]): Dataset {
+  static toDataset(
+    jsDataset: JSDataset,
+    citation: string,
+    summaryFieldsNames: string[],
+    isAlternateVersion?: boolean
+  ): Dataset {
+    let isAlternate = false
+    if (isAlternateVersion) {
+      isAlternate = true
+    }
     return new Dataset.Builder(
       jsDataset.persistentId,
-      JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo),
+      JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo, isAlternate),
       citation,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
@@ -35,13 +44,15 @@ export class JSDatasetMapper {
 
   static toVersion(
     jDatasetVersionId: number,
-    jsDatasetVersionInfo: JSDatasetVersionInfo
+    jsDatasetVersionInfo: JSDatasetVersionInfo,
+    isAlternateVersion?: boolean
   ): DatasetVersion {
     return new DatasetVersion(
       jDatasetVersionId,
       JSDatasetMapper.toStatus(jsDatasetVersionInfo.state),
       jsDatasetVersionInfo.majorNumber,
-      jsDatasetVersionInfo.minorNumber
+      jsDatasetVersionInfo.minorNumber,
+      isAlternateVersion
     )
   }
 
