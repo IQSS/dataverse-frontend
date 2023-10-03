@@ -57,7 +57,7 @@ const expectedDataset = {
     publishingStatus: 'draft',
     minorNumber: 0,
     majorNumber: 0,
-    isAlternateVersion: false
+    isAlternateVersion: undefined
   },
   citation:
     'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
@@ -105,12 +105,85 @@ const expectedDataset = {
     }
   ]
 }
-
+const expectedDatasetAlternateVersion = {
+  persistentId: 'doi:10.5072/FK2/B4B2MJ',
+  version: {
+    id: 101,
+    publishingStatus: 'draft',
+    minorNumber: 0,
+    majorNumber: 0,
+    isAlternateVersion: true
+  },
+  citation:
+    'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
+  labels: [
+    { semanticMeaning: 'dataset', value: 'Draft' },
+    { semanticMeaning: 'warning', value: 'Unpublished' }
+  ],
+  alerts: [
+    { variant: 'warning', message: 'draftVersion', customHeading: 'Info' },
+    {
+      message: 'requestedVersionNotFound',
+      variant: 'info',
+      customHeading: undefined
+    }
+  ],
+  summaryFields: [
+    {
+      name: 'citation',
+      fields: {
+        dsDescription: [
+          {
+            dsDescriptionValue:
+              "Darwin's finches (also known as the Galápagos finches) are a group of about fifteen species of passerine birds."
+          }
+        ],
+        subject: ['Medicine, Health and Life Sciences']
+      }
+    }
+  ],
+  license: {
+    name: 'CC0 1.0',
+    uri: 'http://creativecommons.org/publicdomain/zero/1.0',
+    iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+  },
+  metadataBlocks: [
+    {
+      name: 'citation',
+      fields: {
+        title: "Darwin's Finches",
+        author: [{ authorName: 'Finch, Fiona', authorAffiliation: 'Birds Inc.' }],
+        datasetContact: [
+          { datasetContactName: 'Finch, Fiona', datasetContactEmail: 'finch@mailinator.com' }
+        ],
+        dsDescription: [
+          {
+            dsDescriptionValue:
+              "Darwin's finches (also known as the Galápagos finches) are a group of about fifteen species of passerine birds."
+          }
+        ],
+        subject: ['Medicine, Health and Life Sciences']
+      }
+    }
+  ]
+}
 describe('JS Dataset Mapper', () => {
   it('maps jsDataset model to the domain Dataset model', () => {
     expect(expectedDataset).to.deep.equal(
       JSDatasetMapper.toDataset(jsDataset, citation, datasetSummaryFields)
     )
+  })
+  it('maps jsDataset model to the domain Dataset model for alternate version', () => {
+    const mappedWithAlternate = JSDatasetMapper.toDataset(
+      jsDataset,
+      citation,
+      datasetSummaryFields,
+      true
+    )
+    expect(expectedDatasetAlternateVersion.version).to.deep.equal(mappedWithAlternate.version)
+    console.log(`expected ` + JSON.stringify(expectedDatasetAlternateVersion.alerts))
+    console.log(`mapped ` + JSON.stringify(mappedWithAlternate.alerts))
+    expect(expectedDatasetAlternateVersion.alerts).to.deep.equal(mappedWithAlternate.alerts)
   })
 
   it('maps jsDataset model to the domain Dataset model when alternativePersistentId is provided', () => {

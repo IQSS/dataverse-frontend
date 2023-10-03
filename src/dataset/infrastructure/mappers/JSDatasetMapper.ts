@@ -23,13 +23,9 @@ export class JSDatasetMapper {
     summaryFieldsNames: string[],
     isAlternateVersion?: boolean
   ): Dataset {
-    let isAlternate = false
-    if (isAlternateVersion) {
-      isAlternate = true
-    }
     return new Dataset.Builder(
       jsDataset.persistentId,
-      JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo, isAlternate),
+      JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo, isAlternateVersion),
       citation,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
