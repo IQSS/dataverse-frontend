@@ -156,7 +156,7 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    it.skip('gets all the files by dataset persistentId after dataset deaccession', async () => {
+    it.only('gets all the files by dataset persistentId after dataset deaccession', async () => {
       const dataset = await DatasetHelper.createWithFiles(FileHelper.createMany(3)).then(
         (datasetResponse) => datasetRepository.getByPersistentId(datasetResponse.persistentId)
       )
@@ -170,7 +170,6 @@ describe('File JSDataverse Repository', () => {
       await TestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
       await TestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
 
-      // TODO - It always returns 404 when the dataset is deaccessioned, update the test when the issue is fixed
       await fileRepository
         .getAllByDatasetPersistentId(
           dataset.persistentId,
