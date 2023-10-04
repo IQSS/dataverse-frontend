@@ -42,6 +42,7 @@ export function DatasetFiles({
         isLoading={isLoading}
         paginationInfo={paginationInfo}
         filesTotalDownloadSize={filesTotalDownloadSize}
+        criteria={criteria}
       />
       <FilesPagination
         page={paginationInfo.page}

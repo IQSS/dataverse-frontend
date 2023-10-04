@@ -9,19 +9,22 @@ import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
 import { useEffect, useState } from 'react'
 import { FileSelection } from './row-selection/useFileSelection'
+import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
 
 interface FilesTableProps {
   files: File[]
   isLoading: boolean
   paginationInfo: FilePaginationInfo
   filesTotalDownloadSize: number
+  criteria: FileCriteria
 }
 
 export function FilesTable({
   files,
   isLoading,
   paginationInfo,
-  filesTotalDownloadSize
+  filesTotalDownloadSize,
+  criteria
 }: FilesTableProps) {
   const { table, fileSelection, selectAllFiles, clearFileSelection } = useFilesTable(
     files,
@@ -36,6 +39,14 @@ export function FilesTable({
     }
     setVisitedPagination(paginationInfo)
   }, [fileSelection])
+
+  const [previousCriteria, setPreviousCriteria] = useState<FileCriteria>(criteria)
+  useEffect(() => {
+    if (previousCriteria != criteria) {
+      clearFileSelection()
+    }
+    setPreviousCriteria(criteria)
+  })
 
   if (isLoading) {
     return <SpinnerSymbol />

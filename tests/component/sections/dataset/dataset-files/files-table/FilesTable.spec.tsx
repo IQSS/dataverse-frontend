@@ -9,10 +9,12 @@ import { ZipDownloadLimit } from '../../../../../../src/settings/domain/models/Z
 import { SettingsContext } from '../../../../../../src/sections/settings/SettingsContext'
 import styles from '../../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
 import { FilePaginationInfo } from '../../../../../../src/files/domain/models/FilePaginationInfo'
+import { FileCriteria } from '../../../../../../src/files/domain/models/FileCriteria'
 
 const testFiles = FileMother.createMany(10)
 const paginationInfo = new FilePaginationInfo(1, 10, 200)
 const testFilesTotalDownloadSize = 19900
+const defaultCriteria = new FileCriteria()
 describe('FilesTable', () => {
   it('renders the files table', () => {
     cy.customMount(
@@ -21,6 +23,7 @@ describe('FilesTable', () => {
         paginationInfo={paginationInfo}
         isLoading={false}
         filesTotalDownloadSize={testFilesTotalDownloadSize}
+        criteria={defaultCriteria}
       />
     )
 
@@ -40,6 +43,7 @@ describe('FilesTable', () => {
         paginationInfo={paginationInfo}
         isLoading={true}
         filesTotalDownloadSize={testFilesTotalDownloadSize}
+        criteria={defaultCriteria}
       />
     )
 
@@ -53,6 +57,7 @@ describe('FilesTable', () => {
         paginationInfo={paginationInfo}
         isLoading={false}
         filesTotalDownloadSize={testFilesTotalDownloadSize}
+        criteria={defaultCriteria}
       />
     )
 
@@ -67,6 +72,7 @@ describe('FilesTable', () => {
           paginationInfo={paginationInfo}
           isLoading={false}
           filesTotalDownloadSize={testFilesTotalDownloadSize}
+          criteria={defaultCriteria}
         />
       )
 
@@ -86,6 +92,7 @@ describe('FilesTable', () => {
           paginationInfo={paginationInfo}
           isLoading={false}
           filesTotalDownloadSize={testFilesTotalDownloadSize}
+          criteria={defaultCriteria}
         />
       )
 
@@ -109,6 +116,7 @@ describe('FilesTable', () => {
           paginationInfo={paginationInfo}
           isLoading={false}
           filesTotalDownloadSize={testFilesTotalDownloadSize}
+          criteria={defaultCriteria}
         />
       )
 
@@ -128,6 +136,7 @@ describe('FilesTable', () => {
           paginationInfo={paginationInfo}
           isLoading={false}
           filesTotalDownloadSize={testFilesTotalDownloadSize}
+          criteria={defaultCriteria}
         />
       )
 
@@ -149,6 +158,7 @@ describe('FilesTable', () => {
           paginationInfo={paginationInfo}
           isLoading={false}
           filesTotalDownloadSize={testFilesTotalDownloadSize}
+          criteria={defaultCriteria}
         />
       )
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
@@ -173,6 +183,7 @@ describe('FilesTable', () => {
           paginationInfo={paginationInfo}
           isLoading={false}
           filesTotalDownloadSize={testFilesTotalDownloadSize}
+          criteria={defaultCriteria}
         />
       </SettingsContext.Provider>
     )
@@ -195,6 +206,7 @@ describe('FilesTable', () => {
         paginationInfo={paginationInfo}
         isLoading={false}
         filesTotalDownloadSize={testFilesTotalDownloadSize}
+        criteria={defaultCriteria}
       />
     )
 

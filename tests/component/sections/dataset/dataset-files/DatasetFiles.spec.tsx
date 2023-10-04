@@ -173,6 +173,65 @@ describe('DatasetFiles', () => {
       cy.findByText('1 file is currently selected.').should('exist')
     })
 
+    it('removes the selection when the filters change', () => {
+      cy.customMount(
+        <DatasetFiles
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
+
+      cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
+
+      cy.findByText('1 file is currently selected.').should('exist')
+
+      cy.findByRole('button', { name: 'File Type: All' }).click()
+      cy.findByText('Image (485)').should('exist').click()
+
+      cy.findByText('1 file is currently selected.').should('not.exist')
+    })
+
+    it('removes the selection when the Sort by changes', () => {
+      cy.customMount(
+        <DatasetFiles
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
+
+      cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
+
+      cy.findByText('1 file is currently selected.').should('exist')
+
+      cy.findByRole('button', { name: /Sort/ }).click()
+      cy.findByText('Name (Z-A)').should('exist').click()
+
+      cy.findByText('1 file is currently selected.').should('not.exist')
+    })
+
+    it('removes the selection when the Search bar is used', () => {
+      cy.customMount(
+        <DatasetFiles
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
+
+      cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
+
+      cy.findByText('1 file is currently selected.').should('exist')
+
+      cy.findByLabelText('Search').type('test{enter}')
+
+      cy.findByText('1 file is currently selected.').should('not.exist')
+    })
+
     it('renders the zip download limit message when selecting rows from different pages', () => {
       testFiles[1] = FileMother.create({
         size: new FileSize(1, FileSizeUnit.BYTES)
