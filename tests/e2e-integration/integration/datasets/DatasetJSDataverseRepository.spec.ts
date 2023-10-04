@@ -75,7 +75,8 @@ const datasetData = (persistentId: string, versionId: number) => {
       id: versionId,
       majorNumber: undefined,
       minorNumber: undefined,
-      publishingStatus: 'draft'
+      publishingStatus: 'draft',
+      requestedVersion: undefined
     }
   }
 }
