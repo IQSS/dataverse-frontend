@@ -276,7 +276,7 @@ export class Dataset {
       public readonly privateUrl?: string
     ) {
       this.withLabels()
-      this.withAlerts(privateUrl)
+      this.withAlerts()
     }
 
     withLabels() {
@@ -324,7 +324,7 @@ export class Dataset {
       }
     }
 
-    private withAlerts(privateUrl?: string): void {
+    private withAlerts(): void {
       if (this.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
         this.alerts.push(
           new DatasetAlert('warning', DatasetAlertMessageKey.DRAFT_VERSION, undefined, 'Info')
@@ -341,8 +341,8 @@ export class Dataset {
           )
         )
       }
-      if (privateUrl) {
-        const dynamicFields = [privateUrl]
+      if (this.privateUrl) {
+        const dynamicFields = [this.privateUrl]
         this.alerts.push(
           new DatasetAlert(
             'info',
