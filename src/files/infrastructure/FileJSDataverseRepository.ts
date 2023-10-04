@@ -4,8 +4,10 @@ import { FilesCountInfo } from '../domain/models/FilesCountInfo'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
 import { FileUserPermissions } from '../domain/models/FileUserPermissions'
 import {
+  FileDownloadSizeMode,
   getDatasetFileCounts,
   getDatasetFiles,
+  getDatasetFilesTotalDownloadSize,
   getFileDownloadCount,
   getFileUserPermissions,
   WriteError
@@ -14,6 +16,8 @@ import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
 import { JSFileMapper } from './mappers/JSFileMapper'
 import { DatasetVersion } from '../../dataset/domain/models/Dataset'
+
+const includeDeaccessioned = true
 
 export class FileJSDataverseRepository implements FileRepository {
   getAllByDatasetPersistentId(
@@ -28,6 +32,7 @@ export class FileJSDataverseRepository implements FileRepository {
       .execute(
         datasetPersistentId,
         datasetVersion.toString(),
+        includeDeaccessioned,
         jsPagination.limit,
         jsPagination.offset,
         DomainFileMapper.toJSFileCriteria(criteria)
@@ -68,7 +73,7 @@ export class FileJSDataverseRepository implements FileRepository {
   ): Promise<FilesCountInfo> {
     // TODO - Take into account the FileCriteria https://github.com/IQSS/dataverse-frontend/issues/172
     return getDatasetFileCounts
-      .execute(datasetPersistentId, datasetVersion.toString())
+      .execute(datasetPersistentId, datasetVersion.toString(), includeDeaccessioned)
       .then((jsFilesCountInfo) => {
         return JSFileMapper.toFilesCountInfo(jsFilesCountInfo)
       })
@@ -78,12 +83,14 @@ export class FileJSDataverseRepository implements FileRepository {
   }
 
   getFilesTotalDownloadSizeByDatasetPersistentId(
-    // eslint-disable-next-line unused-imports/no-unused-vars
     datasetPersistentId: string,
-    // eslint-disable-next-line unused-imports/no-unused-vars
     datasetVersion: DatasetVersion
   ): Promise<number> {
-    return Promise.resolve(0)
+    return getDatasetFilesTotalDownloadSize
+      .execute(datasetPersistentId, datasetVersion.toString(), FileDownloadSizeMode.ARCHIVAL)
+      .catch((error: WriteError) => {
+        throw new Error(error.message)
+      })
   }
 
   getUserPermissionsById(id: number): Promise<FileUserPermissions> {

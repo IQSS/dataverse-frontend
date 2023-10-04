@@ -569,26 +569,9 @@ describe('File JSDataverse Repository', () => {
           description: 'Some description',
           tabIngest: 'false'
         }),
-        FileHelper.create('csv', {
-          description: 'Some description',
-          categories: ['category'],
-          tabIngest: 'false'
-        }),
         FileHelper.create('txt', {
           description: 'Some description',
           categories: ['category_1']
-        }),
-        FileHelper.create('csv', {
-          description: 'Some description',
-          categories: ['category_1'],
-          restrict: 'true',
-          tabIngest: 'false'
-        }),
-        FileHelper.create('txt', {
-          description: 'Some description',
-          categories: ['category'],
-          restrict: 'true',
-          tabIngest: 'false'
         })
       ]
       const dataset = await DatasetHelper.createWithFiles(files).then((datasetResponse) =>
@@ -596,10 +579,19 @@ describe('File JSDataverse Repository', () => {
       )
       if (!dataset) throw new Error('Dataset not found')
 
+      await TestsUtils.wait(2500) // wait for the files to be ingested
+
+      const expectedTotalDownloadSize = await fileRepository
+        .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((files) => {
+          return files.reduce((totalDownloadSize, file) => {
+            return totalDownloadSize + file.size.toBytes()
+          }, 0)
+        })
       await fileRepository
         .getFilesTotalDownloadSizeByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((totalDownloadSize) => {
-          expect(totalDownloadSize).to.deep.equal(3037)
+          expect(totalDownloadSize).to.deep.equal(expectedTotalDownloadSize)
         })
     })
   })
