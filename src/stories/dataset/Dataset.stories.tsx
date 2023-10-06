@@ -13,6 +13,7 @@ import { WithSettings } from '../WithSettings'
 import { WithLoggedInUser } from '../WithLoggedInUser'
 import { WithFilePermissionsDenied } from '../files/file-permission/WithFilePermissionsDenied'
 import { WithFilePermissionsGranted } from '../files/file-permission/WithFilePermissionsGranted'
+import { DatasetMockDraftVersionRepository } from './DatasetMockDraftVersionRepository'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -41,7 +42,7 @@ export const LoggedInAsOwner: Story = {
   decorators: [WithLayout, WithLoggedInUser, WithFilePermissionsGranted],
   render: () => (
     <Dataset
-      datasetRepository={new DatasetMockRepository()}
+      datasetRepository={new DatasetMockDraftVersionRepository()}
       fileRepository={new FileMockRepository()}
       searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
     />

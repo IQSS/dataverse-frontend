@@ -34,8 +34,7 @@ export class DatasetAlert {
   constructor(
     public readonly variant: AlertVariant,
     public readonly message: DatasetAlertMessageKey,
-    public readonly dynamicFields?: {},
-    public readonly customHeading?: string
+    public readonly dynamicFields?: object
   ) {}
 }
 
@@ -326,9 +325,7 @@ export class Dataset {
 
     private withAlerts(): void {
       if (this.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
-        this.alerts.push(
-          new DatasetAlert('warning', DatasetAlertMessageKey.DRAFT_VERSION, undefined, 'Info')
-        )
+        this.alerts.push(new DatasetAlert('warning', DatasetAlertMessageKey.DRAFT_VERSION))
       }
       if (this.version.requestedVersion) {
         const dynamicFields = {
@@ -347,12 +344,7 @@ export class Dataset {
       if (this.privateUrl) {
         const dynamicFields = { privateUrl: this.privateUrl }
         this.alerts.push(
-          new DatasetAlert(
-            'info',
-            DatasetAlertMessageKey.UNPUBLISHED_DATASET,
-            dynamicFields,
-            'Unpublished Dataset Private URL'
-          )
+          new DatasetAlert('info', DatasetAlertMessageKey.UNPUBLISHED_DATASET, dynamicFields)
         )
       }
     }

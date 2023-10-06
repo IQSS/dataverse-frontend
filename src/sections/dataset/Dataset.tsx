@@ -12,6 +12,7 @@ import { DatasetSummary } from './dataset-summary/DatasetSummary'
 import { DatasetCitation } from './dataset-citation/DatasetCitation'
 import { DatasetFiles } from './dataset-files/DatasetFiles'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
+import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -38,6 +39,7 @@ export function Dataset({ datasetRepository, fileRepository, searchParams }: Dat
         <PageNotFound />
       ) : (
         <article>
+          <DatasetAlerts alerts={dataset.alerts} />
           <header className={styles.header}>
             <h1>{dataset.getTitle()}</h1>
             <DatasetLabels labels={dataset.labels} />

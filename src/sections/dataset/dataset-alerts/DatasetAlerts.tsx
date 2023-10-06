@@ -13,14 +13,19 @@ export function DatasetAlerts({ alerts }: DatasetAlertsProps) {
 
   return (
     <div className={styles.container}>
-      {alerts.map((alert: DatasetAlert) => {
-        const translatedHTML = alert.dynamicFields
-          ? t(`alerts.${alert.message}`, alert.dynamicFields)
-          : t(`alerts.${alert.message}`)
-
+      {alerts.map((alert: DatasetAlert, index) => {
+        const translatedMsg = alert.dynamicFields
+          ? t(`alerts.${alert.message}.alertText`, alert.dynamicFields)
+          : t(`alerts.${alert.message}.alertText`)
+        const translatedHeading = t(`alerts.${alert.message}.heading`)
+        const alertKey = `alert-${index}`
         return (
-          <Alert variant={alert.variant} customHeading={alert.customHeading} dismissible={false}>
-            {parse(translatedHTML)}
+          <Alert
+            key={alertKey}
+            variant={alert.variant}
+            customHeading={translatedHeading}
+            dismissible={false}>
+            {parse(translatedMsg)}
           </Alert>
         )
       })}

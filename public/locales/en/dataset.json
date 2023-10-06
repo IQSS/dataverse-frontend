@@ -22,8 +22,17 @@
     "uploadFiles": "Upload Files"
   },
   "alerts": {
-    "draftVersion": "<b>This draft version needs to be published</b>. When ready for sharing, please <b>publish</b> it so that others can see these changes",
-    "requestedVersionNotFound": "Version {{requestedVersion}} was not found. This is version {{returnedVersion}}.",
-    "unpublishedDataset": "Privately share this dataset before it is published: {{privateUrl}}"
+    "draftVersion": {
+      "heading": "This draft version needs to be published",
+      "alertText": "When ready for sharing, please <b>publish</b> it so that others can see these changes"
+    },
+    "requestedVersionNotFound": {
+      "heading": "Information",
+      "alertText": "Version {{requestedVersion}} was not found. This is version {{returnedVersion}}."
+    },
+    "unpublishedDataset": {
+      "heading": "Unpublished Dataset Private URL",
+      "alertText": "Privately share this dataset before it is published: {{privateUrl}}"
+    }
   }
 }
