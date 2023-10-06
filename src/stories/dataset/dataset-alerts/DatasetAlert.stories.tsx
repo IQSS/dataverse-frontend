@@ -8,7 +8,6 @@ import {
 } from '../../../dataset/domain/models/Dataset'
 import { DatasetAlerts } from '../../../sections/dataset/dataset-alerts/DatasetAlerts'
 import { WithI18next } from '../../WithI18next'
-import { AlertVariant } from '@iqss/dataverse-design-system/dist/components/alert/AlertVariant'
 
 const meta: Meta<typeof DatasetAlerts> = {
   title: 'Sections/Dataset Page/DatasetAlerts',
