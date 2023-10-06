@@ -20,9 +20,7 @@ export function DatasetActionButtons({ dataset }: DatasetActionButtonsProps) {
       <PublishDatasetMenu dataset={dataset} />
       <SubmitForReviewButton dataset={dataset} />
       <EditDatasetMenu dataset={dataset} />
-      <ButtonGroup>
-        <LinkDatasetButton dataset={dataset} />
-      </ButtonGroup>
+      <LinkDatasetButton dataset={dataset} />
     </ButtonGroup>
   )
 }
