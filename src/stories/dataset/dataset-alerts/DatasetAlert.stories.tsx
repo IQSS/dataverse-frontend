@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { DatasetMockData } from '../DatasetMockData'
-import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
+import {
+  DatasetAlert,
+  DatasetAlertMessageKey,
+  DatasetPublishingStatus,
+  DatasetVersion
+} from '../../../dataset/domain/models/Dataset'
 import { DatasetAlerts } from '../../../sections/dataset/dataset-alerts/DatasetAlerts'
 import { WithI18next } from '../../WithI18next'
 import { AlertVariant } from '@iqss/dataverse-design-system/dist/components/alert/AlertVariant'
@@ -22,6 +27,39 @@ export const DraftVersion: Story = {
     return (
       <div>
         <DatasetAlerts alerts={dataset.alerts} />
+      </div>
+    )
+  }
+}
+export const VersionNotFound: Story = {
+  render: () => {
+    const dataset = DatasetMockData({
+      version: new DatasetVersion(1, DatasetPublishingStatus.RELEASED, 1, 0, '3.0')
+    })
+    return (
+      <div>
+        <DatasetAlerts alerts={dataset.alerts} />
+      </div>
+    )
+  }
+}
+export const PrivateUrl: Story = {
+  render: () => {
+    const alerts = [
+      new DatasetAlert(
+        'info',
+        DatasetAlertMessageKey.UNPUBLISHED_DATASET,
+        {
+          privateUrl:
+            'http://localhost:8080/privateurl.xhtml?token=f6815782-1227-4d80-a46d-91621c2d9386'
+        },
+        'Unpublished Dataset Private URL'
+      )
+    ]
+
+    return (
+      <div>
+        <DatasetAlerts alerts={alerts} />
       </div>
     )
   }

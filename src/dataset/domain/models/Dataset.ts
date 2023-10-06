@@ -34,7 +34,7 @@ export class DatasetAlert {
   constructor(
     public readonly variant: AlertVariant,
     public readonly message: DatasetAlertMessageKey,
-    public readonly dynamicFields?: string[],
+    public readonly dynamicFields?: {},
     public readonly customHeading?: string
   ) {}
 }
@@ -331,7 +331,10 @@ export class Dataset {
         )
       }
       if (this.version.requestedVersion) {
-        const dynamicFields = [this.version.requestedVersion, `${this.version.toString()}`]
+        const dynamicFields = {
+          requestedVersion: this.version.requestedVersion,
+          returnedVersion: `${this.version.toString()}`
+        }
 
         this.alerts.push(
           new DatasetAlert(
@@ -342,7 +345,7 @@ export class Dataset {
         )
       }
       if (this.privateUrl) {
-        const dynamicFields = [this.privateUrl]
+        const dynamicFields = { privateUrl: this.privateUrl }
         this.alerts.push(
           new DatasetAlert(
             'info',

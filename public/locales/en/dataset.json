@@ -23,7 +23,7 @@
   },
   "alerts": {
     "draftVersion": "<b>This draft version needs to be published</b>. When ready for sharing, please <b>publish</b> it so that others can see these changes",
-    "requestedVersionNotFound": "Info – Version {0} was not found. This is version {1}",
-    "unpublishedDataset": "Privately share this dataset before it is published: {0}"
+    "requestedVersionNotFound": "Version {{requestedVersion}} was not found. This is version {{returnedVersion}}.",
+    "unpublishedDataset": "Privately share this dataset before it is published: {{privateUrl}}"
   }
 }

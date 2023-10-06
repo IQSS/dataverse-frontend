@@ -14,7 +14,10 @@ export function DatasetAlerts({ alerts }: DatasetAlertsProps) {
   return (
     <div className={styles.container}>
       {alerts.map((alert: DatasetAlert, index) => {
-        const translatedHTML = t(`alerts.${alert.message}`)
+        const translatedHTML = alert.dynamicFields
+          ? t(`alerts.${alert.message}`, alert.dynamicFields)
+          : t(`alerts.${alert.message}`)
+
         return (
           <Alert variant={alert.variant} customHeading={alert.customHeading} dismissible={false}>
             {parse(translatedHTML)}
