@@ -156,7 +156,7 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    it.only('gets all the files by dataset persistentId after dataset deaccession', async () => {
+    it('gets all the files by dataset persistentId after dataset deaccession', async () => {
       const dataset = await DatasetHelper.createWithFiles(FileHelper.createMany(3)).then(
         (datasetResponse) => datasetRepository.getByPersistentId(datasetResponse.persistentId)
       )
