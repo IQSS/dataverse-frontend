@@ -69,7 +69,8 @@ export class FileJSDataverseRepository implements FileRepository {
 
   getFilesCountInfoByDatasetPersistentId(
     datasetPersistentId: string,
-    datasetVersion: DatasetVersion
+    datasetVersion: DatasetVersion,
+    criteria: FileCriteria
   ): Promise<FilesCountInfo> {
     // TODO - Take into account the FileCriteria https://github.com/IQSS/dataverse-frontend/issues/172
     return getDatasetFileCounts
