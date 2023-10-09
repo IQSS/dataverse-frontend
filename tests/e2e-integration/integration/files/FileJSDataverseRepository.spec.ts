@@ -156,7 +156,7 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    it.only('gets all the files by dataset persistentId after dataset deaccession', async () => {
+    it('gets all the files by dataset persistentId after dataset deaccession', async () => {
       const dataset = await DatasetHelper.createWithFiles(FileHelper.createMany(3)).then(
         (datasetResponse) => datasetRepository.getByPersistentId(datasetResponse.persistentId)
       )
@@ -446,7 +446,8 @@ describe('File JSDataverse Repository', () => {
   })
 
   describe('Get FilesCountInfo by dataset persistentId', () => {
-    it('gets FilesCountInfo by dataset persistentId', async () => {
+    let datasetPersistentId = ''
+    before(async () => {
       const files = [
         FileHelper.create('csv', {
           description: 'Some description',
@@ -480,9 +481,13 @@ describe('File JSDataverse Repository', () => {
           tabIngest: 'false'
         })
       ]
-      const dataset = await DatasetHelper.createWithFiles(files).then((datasetResponse) =>
-        datasetRepository.getByPersistentId(datasetResponse.persistentId)
-      )
+      await DatasetHelper.createWithFiles(files).then((datasetResponse) => {
+        datasetPersistentId = datasetResponse.persistentId
+      })
+    })
+
+    it('gets FilesCountInfo by dataset persistentId', async () => {
+      const dataset = await datasetRepository.getByPersistentId(datasetPersistentId)
       if (!dataset) throw new Error('Dataset not found')
 
       const expectedFilesCountInfo: FilesCountInfo = {
@@ -520,7 +525,84 @@ describe('File JSDataverse Repository', () => {
       }
 
       await fileRepository
-        .getFilesCountInfoByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .getFilesCountInfoByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version,
+          new FileCriteria()
+        )
+        .then((filesCountInfo) => {
+          expect(filesCountInfo.total).to.deep.equal(expectedFilesCountInfo.total)
+
+          const filesCountInfoPerAccessSorted = filesCountInfo.perAccess.sort((a, b) =>
+            a.access.localeCompare(b.access)
+          )
+          const expectedFilesCountInfoPerAccessSorted = expectedFilesCountInfo.perAccess.sort(
+            (a, b) => a.access.localeCompare(b.access)
+          )
+          expect(filesCountInfoPerAccessSorted).to.deep.equal(expectedFilesCountInfoPerAccessSorted)
+
+          const filesCountInfoPerFileTypeSorted = filesCountInfo.perFileType.sort((a, b) =>
+            a.type.value.localeCompare(b.type.value)
+          )
+          const expectedFilesCountInfoPerFileTypeSorted = expectedFilesCountInfo.perFileType.sort(
+            (a, b) => a.type.value.localeCompare(b.type.value)
+          )
+          expect(filesCountInfoPerFileTypeSorted).to.deep.equal(
+            expectedFilesCountInfoPerFileTypeSorted
+          )
+
+          const filesCountInfoPerFileTagSorted = filesCountInfo.perFileTag.sort((a, b) =>
+            a.tag.value.localeCompare(b.tag.value)
+          )
+          const expectedFilesCountInfoPerFileTagSorted = expectedFilesCountInfo.perFileTag.sort(
+            (a, b) => a.tag.value.localeCompare(b.tag.value)
+          )
+          expect(filesCountInfoPerFileTagSorted).to.deep.equal(
+            expectedFilesCountInfoPerFileTagSorted
+          )
+        })
+    })
+
+    it('gets FilesCountInfo by dataset persistentId when passing filterByType criteria', async () => {
+      const dataset = await datasetRepository.getByPersistentId(datasetPersistentId)
+      if (!dataset) throw new Error('Dataset not found')
+
+      const expectedFilesCountInfo: FilesCountInfo = {
+        total: 3,
+        perAccess: [
+          {
+            access: FileAccessOption.RESTRICTED,
+            count: 2
+          },
+          {
+            access: FileAccessOption.PUBLIC,
+            count: 1
+          }
+        ],
+        perFileType: [
+          {
+            type: new FileType('text/csv'),
+            count: 3
+          }
+        ],
+        perFileTag: [
+          {
+            tag: new FileTag('category_1'),
+            count: 2
+          },
+          {
+            tag: new FileTag('category'),
+            count: 1
+          }
+        ]
+      }
+
+      await fileRepository
+        .getFilesCountInfoByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version,
+          new FileCriteria().withFilterByType('text/csv')
+        )
         .then((filesCountInfo) => {
           expect(filesCountInfo.total).to.deep.equal(expectedFilesCountInfo.total)
 
