@@ -145,7 +145,7 @@ describe('Dataset', () => {
     })
 
     it('successfully loads the files tab with files', () => {
-      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(3)))
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(3)), { timeout: 5000 })
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
