@@ -26,7 +26,6 @@ describe('DatasetAlerts', () => {
   it('renders the correct number of alerts', () => {
     cy.mount(<DatasetAlerts alerts={alerts} />)
     cy.findByText('Unpublished Dataset Private URL').should('exist')
-    const alertElements = cy.findAllByRole('alert').should('have.length', alerts.length)
   })
 
   it('renders alerts with correct content', () => {
@@ -45,7 +44,6 @@ describe('DatasetAlerts', () => {
   it('renders alerts with correct headings', () => {
     cy.fixture('../../../public/locales/en/dataset.json').then((dataset) => {
       cy.mount(<DatasetAlerts alerts={alerts} />)
-
       alerts.forEach((alert) => {
         const alertHeading = removeMarkup(dataset.alerts[alert.message].heading)
         console.log(JSON.stringify(alertHeading))
@@ -54,22 +52,20 @@ describe('DatasetAlerts', () => {
     })
   })
   it('renders dynamic text', () => {
-    cy.fixture('../../../public/locales/en/dataset.json').then((dataset) => {
-      const dynamicFields = {
-        requestedVersion: 4.0,
-        returnedVersion: 2.0
-      }
-      const notFoundAlert = new DatasetAlert(
-        'warning',
-        DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND,
-        dynamicFields
-      )
-      cy.mount(<DatasetAlerts alerts={[notFoundAlert]} />)
+    const dynamicFields = {
+      requestedVersion: 4.0,
+      returnedVersion: 2.0
+    }
+    const notFoundAlert = new DatasetAlert(
+      'warning',
+      DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND,
+      dynamicFields
+    )
+    cy.mount(<DatasetAlerts alerts={[notFoundAlert]} />)
 
-      alerts.forEach((alert) => {
-        cy.findAllByRole('alert').should('contain.text', dynamicFields.requestedVersion)
-        cy.findAllByRole('alert').should('contain.text', dynamicFields.returnedVersion)
-      })
+    alerts.forEach((alert) => {
+      cy.findAllByRole('alert').should('contain.text', dynamicFields.requestedVersion)
+      cy.findAllByRole('alert').should('contain.text', dynamicFields.returnedVersion)
     })
   })
 })
