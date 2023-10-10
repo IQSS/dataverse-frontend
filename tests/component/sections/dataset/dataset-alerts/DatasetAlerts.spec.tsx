@@ -6,12 +6,29 @@ import {
   DatasetAlertMessageKey
 } from '../../../../../src/dataset/domain/models/Dataset'
 
-describe('DatasetAlerts', () => {
-  function removeMarkup(htmlString: string): string {
-    // Use a regular expression to match HTML tags and replace them with an empty string
-    return htmlString.replace(/<\/?[^>]+(>|$)/g, '')
-  }
+function removeMarkup(htmlString: string): string {
+  // Use a regular expression to match HTML tags and replace them with an empty string
+  return htmlString.replace(/<\/?[^>]+(>|$)/g, '')
+}
 
+interface DatasetTranslation {
+  alerts: {
+    draftVersion: {
+      heading: string
+      alertText: string
+    }
+    requestedVersionNotFound: {
+      heading: string
+      alertText: string
+    }
+    unpublishedDataset: {
+      heading: string
+      alertText: string
+    }
+  }
+}
+
+it('renders the correct number of alerts', () => {
   const alerts = [
     new DatasetAlert('warning', DatasetAlertMessageKey.DRAFT_VERSION),
     new DatasetAlert('warning', DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND, {
@@ -22,50 +39,48 @@ describe('DatasetAlerts', () => {
       privateUrl: faker.internet.url()
     })
   ]
-
-  it('renders the correct number of alerts', () => {
+  cy.fixture('../../../public/locales/en/dataset.json').then((dataset: DatasetTranslation) => {
     cy.mount(<DatasetAlerts alerts={alerts} />)
-    cy.findByText('Unpublished Dataset Private URL').should('exist')
-  })
-
-  it('renders alerts with correct content', () => {
-    cy.fixture('../../../public/locales/en/dataset.json').then((dataset) => {
-      cy.mount(<DatasetAlerts alerts={alerts} />)
-
-      cy.findAllByRole('alert').should('exist')
-      cy.findAllByRole('alert').should(
-        'contain.text',
-        removeMarkup(dataset.alerts.draftVersion.alertText)
-      )
-      cy.findByText('Information').should('exist')
+    const headingProps = [
+      dataset.alerts.draftVersion.heading,
+      dataset.alerts.requestedVersionNotFound.heading,
+      dataset.alerts.unpublishedDataset.heading
+    ]
+    cy.findAllByRole('alert').should('have.length', 3)
+    cy.findAllByRole('alert').each(($alert, index) => {
+      cy.wrap($alert).findByText(headingProps[index]).should('exist')
     })
   })
+})
 
-  it('renders alerts with correct headings', () => {
-    cy.fixture('../../../public/locales/en/dataset.json').then((dataset) => {
-      cy.mount(<DatasetAlerts alerts={alerts} />)
-      alerts.forEach((alert) => {
-        const alertHeading = removeMarkup(dataset.alerts[alert.message].heading)
-        console.log(JSON.stringify(alertHeading))
-        cy.findAllByRole('alert').should('contain.text', alertHeading)
-      })
+it('renders alerts with correct text', () => {
+  const draftAlert = new DatasetAlert('info', DatasetAlertMessageKey.DRAFT_VERSION)
+  const alerts = [draftAlert]
+
+  cy.fixture('../../../public/locales/en/dataset.json').then((dataset: DatasetTranslation) => {
+    cy.mount(<DatasetAlerts alerts={alerts} />)
+
+    const alertHeading = dataset.alerts[draftAlert.message].heading
+    const alertText = removeMarkup(dataset.alerts[draftAlert.message].alertText)
+    cy.findByText(alertHeading).should('exist')
+    cy.findByRole('alert').should(($element) => {
+      // text() removes markup, so we can compare to the expected text
+      const text = $element.text()
+      expect(text).to.include(alertText)
     })
   })
-  it('renders dynamic text', () => {
-    const dynamicFields = {
-      requestedVersion: 4.0,
-      returnedVersion: 2.0
-    }
-    const notFoundAlert = new DatasetAlert(
-      'warning',
-      DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND,
-      dynamicFields
-    )
-    cy.mount(<DatasetAlerts alerts={[notFoundAlert]} />)
-
-    alerts.forEach((alert) => {
-      cy.findAllByRole('alert').should('contain.text', dynamicFields.requestedVersion)
-      cy.findAllByRole('alert').should('contain.text', dynamicFields.returnedVersion)
-    })
-  })
+})
+it('renders dynamic text', () => {
+  const dynamicFields = {
+    requestedVersion: '4.0',
+    returnedVersion: '2.0'
+  }
+  const notFoundAlert = new DatasetAlert(
+    'warning',
+    DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND,
+    dynamicFields
+  )
+  cy.mount(<DatasetAlerts alerts={[notFoundAlert]} />)
+  cy.findByRole('alert').should('contain.text', dynamicFields.requestedVersion)
+  cy.findByRole('alert').should('contain.text', dynamicFields.returnedVersion)
 })
