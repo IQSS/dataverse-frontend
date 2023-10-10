@@ -7,7 +7,7 @@ import {
 } from '../../domain/models/FileCriteria'
 import {
   FileAccessStatus as JSFileAccessStatus,
-  FileCriteria as JSFileCriteria,
+  FileSearchCriteria as JSFileSearchCriteria,
   FileOrderCriteria as JSFileOrderCriteria
 } from '@iqss/dataverse-client-javascript'
 import { FileType } from '../../domain/models/File'
@@ -20,17 +20,17 @@ export class DomainFileMapper {
     }
   }
 
-  static toJSFileCriteria(criteria: FileCriteria): JSFileCriteria {
-    return new JSFileCriteria(
-      this.toJSOrderCriteria(criteria.sortBy),
+  static toJSFileSearchCriteria(criteria: FileCriteria): JSFileSearchCriteria {
+    return new JSFileSearchCriteria(
       this.toJSContentType(criteria.filterByType),
       this.toJSAccessStatus(criteria.filterByAccess),
       this.toJSCategoryName(criteria.filterByTag),
+      undefined, // This filter is not used in the UI
       this.toJSSearchText(criteria.searchText)
     )
   }
 
-  static toJSOrderCriteria(sortBy: FileSortByOption): JSFileOrderCriteria {
+  static toJSFileOrderCriteria(sortBy: FileSortByOption): JSFileOrderCriteria {
     switch (sortBy) {
       case FileSortByOption.NAME_AZ:
         return JSFileOrderCriteria.NAME_AZ

@@ -35,7 +35,8 @@ export class FileJSDataverseRepository implements FileRepository {
         includeDeaccessioned,
         jsPagination.limit,
         jsPagination.offset,
-        DomainFileMapper.toJSFileCriteria(criteria)
+        DomainFileMapper.toJSFileSearchCriteria(criteria),
+        DomainFileMapper.toJSFileOrderCriteria(criteria.sortBy)
       )
       .then((jsFiles) => jsFiles.map((jsFile) => JSFileMapper.toFile(jsFile, datasetVersion)))
       .then((files) => FileJSDataverseRepository.getAllWithDownloadCount(files))
