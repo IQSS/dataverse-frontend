@@ -73,9 +73,13 @@ export class FileJSDataverseRepository implements FileRepository {
     datasetVersion: DatasetVersion,
     criteria: FileCriteria
   ): Promise<FilesCountInfo> {
-    // TODO - Take into account the FileCriteria https://github.com/IQSS/dataverse-frontend/issues/172
     return getDatasetFileCounts
-      .execute(datasetPersistentId, datasetVersion.toString(), includeDeaccessioned)
+      .execute(
+        datasetPersistentId,
+        datasetVersion.toString(),
+        includeDeaccessioned,
+        DomainFileMapper.toJSFileSearchCriteria(criteria)
+      )
       .then((jsFilesCountInfo) => {
         return JSFileMapper.toFilesCountInfo(jsFilesCountInfo)
       })

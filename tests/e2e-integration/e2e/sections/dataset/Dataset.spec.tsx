@@ -300,8 +300,7 @@ describe('Dataset', () => {
         })
     })
 
-    it.skip('applies filters to the Files Table in the correct order', () => {
-      // TODO - Restore this test once fileCountsInfo use case takes into account the filtered results https://github.com/IQSS/dataverse-frontend/issues/172
+    it('applies filters to the Files Table in the correct order', () => {
       const files = [
         FileHelper.create('csv', {
           description: 'Some description',
@@ -362,7 +361,7 @@ describe('Dataset', () => {
           cy.findByText('blob-4').should('exist')
           cy.findByText('blob-5').should('exist')
 
-          cy.findByRole('button', { name: 'Filter Tag: All' }).click({ force: true })
+          cy.findByRole('button', { name: 'File Tags: All' }).click({ force: true })
           cy.findByText('Category (4)').should('exist').click({ force: true })
 
           cy.findByText('1 to 4 of 4 Files').should('exist')
@@ -384,7 +383,7 @@ describe('Dataset', () => {
           cy.findByText('blob-4').should('exist')
           cy.findByText('blob-5').should('exist')
 
-          cy.findByRole('button', { name: 'Filter Type: All' }).click({ force: true })
+          cy.findByRole('button', { name: 'File Type: All' }).click({ force: true })
           cy.findByText('Text/csv (2)').should('exist').click({ force: true })
 
           cy.findByText('1 to 2 of 2 Files').should('exist')

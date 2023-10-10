@@ -588,11 +588,11 @@ describe('File JSDataverse Repository', () => {
         perFileTag: [
           {
             tag: new FileTag('category_1'),
-            count: 2
+            count: 1
           },
           {
             tag: new FileTag('category'),
-            count: 1
+            count: 2
           }
         ]
       }
