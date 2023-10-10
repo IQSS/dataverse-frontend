@@ -16,6 +16,9 @@ import { JSFileMapper } from './mappers/JSFileMapper'
 import { DatasetVersion } from '../../dataset/domain/models/Dataset'
 
 export class FileJSDataverseRepository implements FileRepository {
+  static readonly DATAVERSE_BACKEND_URL =
+    (import.meta.env.VITE_DATAVERSE_BACKEND_URL as string) ?? ''
+
   getAllByDatasetPersistentId(
     datasetPersistentId: string,
     datasetVersion: DatasetVersion,
@@ -34,6 +37,7 @@ export class FileJSDataverseRepository implements FileRepository {
       )
       .then((jsFiles) => jsFiles.map((jsFile) => JSFileMapper.toFile(jsFile, datasetVersion)))
       .then((files) => FileJSDataverseRepository.getAllWithDownloadCount(files))
+      .then((files) => FileJSDataverseRepository.getAllWithThumbnail(files))
       .catch((error: WriteError) => {
         throw new Error(error.message)
       })
@@ -60,6 +64,33 @@ export class FileJSDataverseRepository implements FileRepository {
       return getFileDownloadCount.execute(id).then((downloadCount) => Number(downloadCount))
     }
     return Promise.resolve(0)
+  }
+
+  private static getAllWithThumbnail(files: File[]): Promise<File[]> {
+    return Promise.all(
+      files.map((file) =>
+        FileJSDataverseRepository.getThumbnailById(file.id).then((thumbnail) => {
+          file.thumbnail = thumbnail
+          return file
+        })
+      )
+    )
+  }
+
+  private static getThumbnailById(id: number): Promise<string | undefined> {
+    return fetch(`${this.DATAVERSE_BACKEND_URL}/api/access/datafile/${id}?imageThumb=400`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+        return response.blob()
+      })
+      .then((blob) => {
+        return URL.createObjectURL(blob)
+      })
+      .catch(() => {
+        return undefined
+      })
   }
 
   getFilesCountInfoByDatasetPersistentId(

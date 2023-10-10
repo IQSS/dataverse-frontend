@@ -28,6 +28,7 @@ import {
 import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
 import { FileData, FileHelper } from '../../shared/files/FileHelper'
 import { FilesCountInfo } from '../../../../src/files/domain/models/FilesCountInfo'
+import { faker } from '@faker-js/faker'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -237,8 +238,21 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    it.skip('gets all the files by dataset persistentId after adding a thumbnail to the files', async () => {
-      // TODO - Do this in thumbnails issue https://github.com/IQSS/dataverse-frontend/issues/160
+    it('gets all the files by dataset persistentId after adding a thumbnail to the files', async () => {
+      const datasetResponse = await FileHelper.createImage().then((file) =>
+        DatasetHelper.createWithFiles([file])
+      )
+      if (!datasetResponse.files) throw new Error('Files not found')
+
+      const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      if (!dataset) throw new Error('Dataset not found')
+
+      await fileRepository
+        .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((files) => {
+          console.log(files)
+          expect(files[0].thumbnail).to.not.be.undefined
+        })
     })
 
     it('gets all the files by dataset persistentId after embargo', async () => {

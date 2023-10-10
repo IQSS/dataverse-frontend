@@ -132,7 +132,7 @@ describe('Dataset', () => {
   })
 
   describe('Visualizing the Files Tab', () => {
-    it.only('successfully loads the files tab', () => {
+    it('successfully loads the files tab', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
         .then((persistentId: string) => {
@@ -398,6 +398,18 @@ describe('Dataset', () => {
           cy.findByText('blob-3').should('not.exist')
           cy.get('table > tbody > tr').eq(0).should('contain', 'blob-5')
           cy.get('table > tbody > tr').eq(1).should('contain', 'blob-4')
+        })
+    })
+
+    it('shows the thumbnail for a file', () => {
+      cy.wrap(FileHelper.createImage().then((file) => DatasetHelper.createWithFiles([file])))
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+
+          cy.findByText('Files').should('exist')
+
+          cy.findByAltText('blob').should('exist')
         })
     })
   })
