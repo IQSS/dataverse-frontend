@@ -28,7 +28,6 @@ import {
 import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
 import { FileData, FileHelper } from '../../shared/files/FileHelper'
 import { FilesCountInfo } from '../../../../src/files/domain/models/FilesCountInfo'
-import { faker } from '@faker-js/faker'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect

@@ -68,7 +68,7 @@ describe('FileThumbnail', () => {
     cy.customMount(<FileThumbnail file={file} />)
 
     cy.findByAltText(file.name).should('not.exist')
-    cy.findByText('icon-image').should('exist')
+    cy.findByText('icon-file').should('exist')
 
     cy.findByText('Restricted File Icon').should('exist').parent().trigger('mouseover')
     cy.findByText('File Access: Restricted').should('exist')
