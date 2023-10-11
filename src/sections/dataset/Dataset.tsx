@@ -39,7 +39,14 @@ export function Dataset({ datasetRepository, fileRepository, searchParams }: Dat
         <PageNotFound />
       ) : (
         <article>
-          <DatasetAlerts alerts={dataset.alerts} />
+          <div className={styles.container}>
+            <Row>
+              <Col sm={9}>
+                <DatasetAlerts alerts={dataset.alerts} />
+              </Col>
+            </Row>
+          </div>
+
           <header className={styles.header}>
             <h1>{dataset.getTitle()}</h1>
             <DatasetLabels labels={dataset.labels} />
