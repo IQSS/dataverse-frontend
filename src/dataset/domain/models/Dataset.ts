@@ -201,8 +201,7 @@ export enum DatasetPublishingStatus {
   RELEASED = 'released',
   DRAFT = 'draft',
   DEACCESSIONED = 'deaccessioned',
-  EMBARGOED = 'embargoed',
-  IN_REVIEW = 'inReview'
+  EMBARGOED = 'embargoed'
 }
 
 export enum DatasetNonNumericVersion {
@@ -214,6 +213,9 @@ export class DatasetVersion {
   constructor(
     public readonly id: number,
     public readonly publishingStatus: DatasetPublishingStatus,
+    public readonly isLatest: boolean,
+    public readonly isInReview: boolean,
+    public readonly latestVersionStatus: DatasetPublishingStatus,
     public readonly majorNumber?: number,
     public readonly minorNumber?: number
   ) {}
@@ -226,6 +228,32 @@ export class DatasetVersion {
   }
 }
 
+export interface DatasetPermissions {
+  canDownloadFiles: boolean
+  canUpdateDataset: boolean
+  canPublishDataset: boolean
+  canManageDatasetPermissions: boolean
+  canManageFilesPermissions: boolean
+  canDeleteDataset: boolean
+}
+
+export interface DatasetLock {
+  id: number
+  reason: DatasetLockReason
+}
+
+export enum DatasetLockReason {
+  INGEST = 'ingest',
+  WORKFLOW = 'workflow',
+  IN_REVIEW = 'inReview',
+  DCM_UPLOAD = 'dcmUpload',
+  GLOBUS_UPLOAD = 'globusUpload',
+  FINALIZE_PUBLICATION = 'finalizePublication',
+
+  EDIT_IN_PROGRESS = 'editInProgress',
+  FILE_VALIDATION_FAILED = 'fileValidationFailed'
+}
+
 export class Dataset {
   constructor(
     public readonly persistentId: string,
@@ -234,11 +262,38 @@ export class Dataset {
     public readonly labels: DatasetLabel[],
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
-    public readonly metadataBlocks: DatasetMetadataBlocks
+    public readonly metadataBlocks: DatasetMetadataBlocks,
+    public readonly permissions: DatasetPermissions,
+    public readonly locks: DatasetLock[],
+    public readonly hasValidTermsOfAccess: boolean,
+    public readonly isValid: boolean,
+    public readonly isReleased: boolean
   ) {}
 
   public getTitle(): string {
     return this.metadataBlocks[0].fields.title
+  }
+
+  public get isLockedFromPublishing(): boolean {
+    return this.isLockedFromEdits
+  }
+
+  public get isLocked(): boolean {
+    return this.locks.length > 0
+  }
+
+  public get isLockedInWorkflow(): boolean {
+    return this.locks.some((lock) => lock.reason === DatasetLockReason.WORKFLOW)
+  }
+
+  public get isLockedFromEdits(): boolean {
+    const lockedReasonIsInReview = this.locks.some(
+      (lock) => lock.reason === DatasetLockReason.IN_REVIEW
+    )
+    // If the lock reason is workflow and the workflow userId is the same as the current user, then the user can edit
+    // TODO - Ask how we want to manage pending workflows
+
+    return this.isLocked && !(lockedReasonIsInReview && this.permissions.canPublishDataset)
   }
 
   static Builder = class {
@@ -250,7 +305,12 @@ export class Dataset {
       public readonly citation: string,
       public readonly summaryFields: DatasetMetadataBlock[],
       public readonly license: DatasetLicense = defaultLicense,
-      public readonly metadataBlocks: DatasetMetadataBlocks
+      public readonly metadataBlocks: DatasetMetadataBlocks,
+      public readonly permissions: DatasetPermissions,
+      public readonly locks: DatasetLock[],
+      public readonly hasValidTermsOfAccess: boolean,
+      public readonly isValid: boolean,
+      public readonly isReleased: boolean
     ) {
       this.withLabels()
     }
@@ -267,7 +327,7 @@ export class Dataset {
         )
       }
 
-      if (this.version.publishingStatus !== DatasetPublishingStatus.RELEASED) {
+      if (!this.isReleased) {
         this.labels.push(
           new DatasetLabel(DatasetLabelSemanticMeaning.WARNING, DatasetLabelValue.UNPUBLISHED)
         )
@@ -285,7 +345,7 @@ export class Dataset {
         )
       }
 
-      if (this.version.publishingStatus === DatasetPublishingStatus.IN_REVIEW) {
+      if (this.version.isInReview) {
         this.labels.push(
           new DatasetLabel(DatasetLabelSemanticMeaning.SUCCESS, DatasetLabelValue.IN_REVIEW)
         )
@@ -308,7 +368,12 @@ export class Dataset {
         this.labels,
         this.summaryFields,
         this.license,
-        this.metadataBlocks
+        this.metadataBlocks,
+        this.permissions,
+        this.locks,
+        this.hasValidTermsOfAccess,
+        this.isValid,
+        this.isReleased
       )
     }
   }

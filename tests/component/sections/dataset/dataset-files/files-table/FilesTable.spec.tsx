@@ -56,7 +56,7 @@ describe('FilesTable', () => {
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).should('exist')
     })
 
-    it.only('clears row selection for the current page when the header checkbox is clicked', () => {
+    it('clears row selection for the current page when the header checkbox is clicked', () => {
       cy.customMount(
         <FilesTable files={testFiles} paginationInfo={paginationInfo} isLoading={false} />
       )

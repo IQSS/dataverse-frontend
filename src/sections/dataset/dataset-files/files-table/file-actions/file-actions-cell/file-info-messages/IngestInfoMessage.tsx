@@ -2,13 +2,14 @@ import { FileIngest, FileIngestStatus } from '../../../../../../../files/domain/
 import { QuestionMarkTooltip } from '@iqss/dataverse-design-system'
 import { InfoMessageBox } from './FileInfoMessages'
 import { useTranslation } from 'react-i18next'
+import { useDataset } from '../../../../../DatasetContext'
 
 interface IngestInfoMessageProps {
   ingest: FileIngest
 }
 export function IngestInfoMessage({ ingest }: IngestInfoMessageProps) {
   const { t } = useTranslation('files')
-  const userHasDatasetUpdatePermissions = true // TODO - Implement dataset permissions
+  const { dataset } = useDataset()
 
   if (ingest.status === FileIngestStatus.IN_PROGRESS) {
     return (
@@ -18,7 +19,7 @@ export function IngestInfoMessage({ ingest }: IngestInfoMessageProps) {
     )
   }
 
-  if (ingest.status === FileIngestStatus.ERROR && userHasDatasetUpdatePermissions) {
+  if (ingest.status === FileIngestStatus.ERROR && dataset?.permissions.canUpdateDataset) {
     return (
       <InfoMessageBox>
         <span>
@@ -43,5 +44,5 @@ export function IngestInfoMessage({ ingest }: IngestInfoMessageProps) {
     )
   }
 
-  return null
+  return <></>
 }

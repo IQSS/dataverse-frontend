@@ -101,6 +101,18 @@ $navbar-brand-font-size: $dv-brand-font-size;
   justify-content: end;
 }
 
+.dropdown-menu > .dropdown > .dropdown-toggle {
+  width: 100%;
+  text-align: start;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.dropdown-menu > .dropdown > .dropdown-toggle:hover {
+  background-color: $dropdown-link-hover-bg;
+  border-color: transparent;
+}
+
 th {
   vertical-align: middle;
 }

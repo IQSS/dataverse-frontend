@@ -15,4 +15,18 @@ export class SettingMother {
           )
     }
   }
+
+  static createExternalStatusesAllowed(value?: string[]): Setting<string[]> {
+    return {
+      name: SettingName.ALLOWED_EXTERNAL_STATUSES,
+      value: value ? value : [faker.datatype.string(), faker.datatype.string()]
+    }
+  }
+
+  static createHasPublicStore(value?: boolean): Setting<boolean> {
+    return {
+      name: SettingName.HAS_PUBLIC_STORE,
+      value: value ? value : faker.datatype.boolean()
+    }
+  }
 }

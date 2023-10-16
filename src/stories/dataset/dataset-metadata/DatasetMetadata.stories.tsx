@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { DatasetMetadata } from '../../../sections/dataset/dataset-metadata/DatasetMetadata'
-import { DatasetMockData } from '../DatasetMockData'
 import { WithAnonymizedView } from '../WithAnonymizedView'
 import { WithCitationMetadataBlockInfo } from '../WithCitationMetadataBlockInfo'
+import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 
 const meta: Meta<typeof DatasetMetadata> = {
   title: 'Sections/Dataset Page/DatasetMetadata',
@@ -14,8 +14,8 @@ const meta: Meta<typeof DatasetMetadata> = {
 export default meta
 type Story = StoryObj<typeof DatasetMetadata>
 
-const datasetMock = DatasetMockData()
-const datasetMockAnonymized = DatasetMockData({}, true)
+const datasetMock = DatasetMother.createRealistic()
+const datasetMockAnonymized = DatasetMother.createRealisticAnonymized()
 
 export const Default: Story = {
   render: () => (

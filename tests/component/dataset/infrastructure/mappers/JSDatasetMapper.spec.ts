@@ -16,11 +16,11 @@ const jsDataset = {
   versionId: 101,
   versionInfo: {
     state: DatasetVersionState.DRAFT,
-    majorNumber: 0,
-    minorNumber: 0,
     createTime: new Date('2023-09-07T13:40:04.000Z'),
     lastUpdateTime: new Date('2023-09-07T13:40:04.000Z'),
-    releaseTime: undefined
+    releaseTime: undefined,
+    majorNumber: 0,
+    minorNumber: 0
   },
   metadataBlocks: [
     {
@@ -52,7 +52,15 @@ const citation =
 const datasetSummaryFields = ['dsDescription', 'subject', 'keyword', 'publication', 'notesText']
 const expectedDataset = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
-  version: { id: 101, minorNumber: 0, majorNumber: 0, publishingStatus: 'draft' },
+  version: {
+    id: 101,
+    publishingStatus: 'draft',
+    isLatest: true,
+    isInReview: false,
+    latestVersionStatus: 'draft',
+    majorNumber: 0,
+    minorNumber: 0
+  },
   citation:
     'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
   labels: [
@@ -96,7 +104,19 @@ const expectedDataset = {
         subject: ['Medicine, Health and Life Sciences']
       }
     }
-  ]
+  ],
+  permissions: {
+    canDownloadFiles: true,
+    canUpdateDataset: true,
+    canPublishDataset: true,
+    canManageDatasetPermissions: true,
+    canManageFilesPermissions: true,
+    canDeleteDataset: true
+  },
+  locks: [],
+  hasValidTermsOfAccess: true,
+  isValid: true,
+  isReleased: false
 }
 
 describe('JS Dataset Mapper', () => {
