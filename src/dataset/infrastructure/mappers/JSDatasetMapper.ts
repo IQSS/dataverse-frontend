@@ -16,11 +16,41 @@ import {
   MetadataBlockName
 } from '../../domain/models/Dataset'
 
+/*
+
+  static Builder = class {
+    public readonly labels: DatasetLabel[] = []
+    public readonly alerts: DatasetAlert[] = []
+
+    constructor(
+      public readonly persistentId: string,
+      public readonly version: DatasetVersion,
+      public readonly citation: string,
+      public readonly summaryFields: DatasetMetadataBlock[],
+      public readonly license: DatasetLicense = defaultLicense,
+      public readonly metadataBlocks: DatasetMetadataBlocks,
+      public readonly permissions: DatasetPermissions,
+      public readonly locks: DatasetLock[],
+      public readonly hasValidTermsOfAccess: boolean,
+      public readonly isValid: boolean,
+      public readonly isReleased: boolean,
+      public readonly privateUrl?: string
+    ) {
+      this.withLabels()
+      this.withAlerts()
+    }
+ */
 export class JSDatasetMapper {
-  static toDataset(jsDataset: JSDataset, citation: string, summaryFieldsNames: string[]): Dataset {
+  static toDataset(
+    jsDataset: JSDataset,
+    citation: string,
+    summaryFieldsNames: string[],
+    requestedVersion?: string,
+    privateUrl?: string
+  ): Dataset {
     return new Dataset.Builder(
       jsDataset.persistentId,
-      JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo),
+      JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo, requestedVersion),
       citation,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
@@ -41,13 +71,15 @@ export class JSDatasetMapper {
       [], // TODO Connect with dataset locks
       true, // TODO Connect with dataset hasValidTermsOfAccess
       true, // TODO Connect with dataset isValid
-      !!jsDataset.versionInfo.releaseTime // TODO Connect with dataset isReleased
+      !!jsDataset.versionInfo.releaseTime, // TODO Connect with dataset isReleased,
+      privateUrl
     ).build()
   }
 
   static toVersion(
     jDatasetVersionId: number,
-    jsDatasetVersionInfo: JSDatasetVersionInfo
+    jsDatasetVersionInfo: JSDatasetVersionInfo,
+    requestedVersion?: string
   ): DatasetVersion {
     return new DatasetVersion(
       jDatasetVersionId,
@@ -56,7 +88,8 @@ export class JSDatasetMapper {
       false, // TODO Connect with dataset version isInReview
       JSDatasetMapper.toStatus(jsDatasetVersionInfo.state), // TODO Connect with dataset version latestVersionState
       jsDatasetVersionInfo.majorNumber,
-      jsDatasetVersionInfo.minorNumber
+      jsDatasetVersionInfo.minorNumber,
+      requestedVersion
     )
   }
 

@@ -36,6 +36,7 @@ declare global {
       mountAuthenticated: typeof mount
       loginAsAdmin(go?: string): Chainable<JQuery<HTMLElement>>
       getApiToken(): Chainable<string>
+      compareDate(date: Date, expectedDate: Date): Chainable
     }
   }
 }

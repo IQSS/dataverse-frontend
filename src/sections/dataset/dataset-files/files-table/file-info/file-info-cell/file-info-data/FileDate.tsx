@@ -7,7 +7,7 @@ export function FileDate({ date }: { date: FileDateModel }) {
     <div>
       <span>
         {t(`table.date.${date.type}`)}{' '}
-        {date.date.toLocaleDateString('en-US', {
+        {date.date.toLocaleDateString(Intl.DateTimeFormat().resolvedOptions().locale, {
           year: 'numeric',
           month: 'short',
           day: 'numeric'

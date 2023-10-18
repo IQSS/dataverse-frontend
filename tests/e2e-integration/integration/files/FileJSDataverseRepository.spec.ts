@@ -91,7 +91,7 @@ describe('File JSDataverse Repository', () => {
             expect(file.version).to.deep.equal(expectedFile.version)
             expect(file.access).to.deep.equal(expectedFile.access)
             expect(file.type).to.deep.equal(expectedFile.type)
-            expect(file.date).to.deep.equal(expectedFile.date)
+            cy.compareDate(file.date.date, expectedFile.date.date)
             expect(file.downloadCount).to.deep.equal(expectedFile.downloadCount)
             expect(file.labels).to.deep.equal(expectedFile.labels)
             expect(file.checksum?.algorithm).to.deep.equal(expectedFile.checksum?.algorithm)
@@ -151,7 +151,7 @@ describe('File JSDataverse Repository', () => {
 
           files.forEach((file) => {
             expect(file.version).to.deep.equal(expectedPublishedFile.version)
-            expect(file.date).to.deep.equal(expectedFile.date)
+            cy.compareDate(file.date.date, expectedFile.date.date)
           })
         })
     })

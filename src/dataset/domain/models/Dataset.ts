@@ -1,3 +1,5 @@
+import { AlertVariant } from '@iqss/dataverse-design-system/dist/components/alert/AlertVariant'
+
 export enum DatasetLabelSemanticMeaning {
   DATASET = 'dataset',
   FILE = 'file',
@@ -19,6 +21,21 @@ export class DatasetLabel {
   constructor(
     public readonly semanticMeaning: DatasetLabelSemanticMeaning,
     public readonly value: DatasetLabelValue | `Version ${string}`
+  ) {}
+}
+
+export enum DatasetAlertMessageKey {
+  DRAFT_VERSION = 'draftVersion',
+  REQUESTED_VERSION_NOT_FOUND = 'requestedVersionNotFound',
+  UNPUBLISHED_DATASET = 'unpublishedDataset'
+}
+
+export class DatasetAlert {
+  constructor(
+    public readonly variant: AlertVariant,
+    public readonly message: DatasetAlertMessageKey,
+    public readonly dynamicFields?: string[],
+    public readonly customHeading?: string
   ) {}
 }
 
@@ -191,6 +208,7 @@ export interface DatasetLicense {
   uri: string
   iconUri?: string
 }
+
 const defaultLicense: DatasetLicense = {
   name: 'CC0 1.0',
   uri: 'https://creativecommons.org/publicdomain/zero/1.0',
@@ -217,7 +235,9 @@ export class DatasetVersion {
     public readonly isInReview: boolean,
     public readonly latestVersionStatus: DatasetPublishingStatus,
     public readonly majorNumber?: number,
-    public readonly minorNumber?: number
+    public readonly minorNumber?: number,
+    // requestedVersion will be set if the user requested a version that did not exist.
+    public readonly requestedVersion?: string
   ) {}
 
   toString(): string | DatasetNonNumericVersion {
@@ -260,6 +280,7 @@ export class Dataset {
     public readonly version: DatasetVersion,
     public readonly citation: string,
     public readonly labels: DatasetLabel[],
+    public readonly alerts: DatasetAlert[],
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
     public readonly metadataBlocks: DatasetMetadataBlocks,
@@ -298,6 +319,7 @@ export class Dataset {
 
   static Builder = class {
     public readonly labels: DatasetLabel[] = []
+    public readonly alerts: DatasetAlert[] = []
 
     constructor(
       public readonly persistentId: string,
@@ -310,9 +332,11 @@ export class Dataset {
       public readonly locks: DatasetLock[],
       public readonly hasValidTermsOfAccess: boolean,
       public readonly isValid: boolean,
-      public readonly isReleased: boolean
+      public readonly isReleased: boolean,
+      public readonly privateUrl?: string
     ) {
       this.withLabels()
+      this.withAlerts()
     }
 
     withLabels() {
@@ -360,12 +384,43 @@ export class Dataset {
       }
     }
 
+    private withAlerts(): void {
+      if (this.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
+        this.alerts.push(
+          new DatasetAlert('warning', DatasetAlertMessageKey.DRAFT_VERSION, undefined, 'Info')
+        )
+      }
+      if (this.version.requestedVersion) {
+        const dynamicFields = [this.version.requestedVersion, `${this.version.toString()}`]
+
+        this.alerts.push(
+          new DatasetAlert(
+            'info',
+            DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND,
+            dynamicFields
+          )
+        )
+      }
+      if (this.privateUrl) {
+        const dynamicFields = [this.privateUrl]
+        this.alerts.push(
+          new DatasetAlert(
+            'info',
+            DatasetAlertMessageKey.UNPUBLISHED_DATASET,
+            dynamicFields,
+            'Unpublished Dataset Private URL'
+          )
+        )
+      }
+    }
+
     build(): Dataset {
       return new Dataset(
         this.persistentId,
         this.version,
         this.citation,
         this.labels,
+        this.alerts,
         this.summaryFields,
         this.license,
         this.metadataBlocks,

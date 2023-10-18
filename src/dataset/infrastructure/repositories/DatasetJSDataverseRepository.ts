@@ -12,7 +12,11 @@ import {
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
-  getByPersistentId(persistentId: string, version?: string): Promise<Dataset | undefined> {
+  getByPersistentId(
+    persistentId: string,
+    version?: string,
+    requestedVersion?: string
+  ): Promise<Dataset | undefined> {
     return getDataset
       .execute(persistentId, this.versionToVersionId(version))
       .then((jsDataset) =>
@@ -23,13 +27,13 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         ])
       )
       .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
-        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames)
+        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, requestedVersion)
       )
       .catch((error: WriteError) => {
         if (!version) {
           throw new Error(error.message)
         }
-        return this.getByPersistentId(persistentId)
+        return this.getByPersistentId(persistentId, undefined, (requestedVersion = version))
       })
   }
 

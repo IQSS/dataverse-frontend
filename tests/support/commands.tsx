@@ -85,3 +85,9 @@ Cypress.Commands.add('getApiToken', () => {
   cy.loginAsAdmin('/dataverseuser.xhtml?selectTab=dataRelatedToMe')
   return cy.findByRole('link', { name: 'API Token' }).click().get('#apiToken code').invoke('text')
 })
+
+Cypress.Commands.add('compareDate', (date, expectedDate) => {
+  expect(date.getUTCDate()).to.deep.equal(expectedDate.getUTCDate())
+  expect(date.getUTCMonth()).to.deep.equal(expectedDate.getUTCMonth())
+  expect(date.getUTCFullYear()).to.deep.equal(expectedDate.getUTCFullYear())
+})
