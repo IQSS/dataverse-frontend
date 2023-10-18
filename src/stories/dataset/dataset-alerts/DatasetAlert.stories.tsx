@@ -45,15 +45,10 @@ export const VersionNotFound: Story = {
 export const PrivateUrl: Story = {
   render: () => {
     const alerts = [
-      new DatasetAlert(
-        'info',
-        DatasetAlertMessageKey.UNPUBLISHED_DATASET,
-        {
-          privateUrl:
-            'http://localhost:8080/privateurl.xhtml?token=f6815782-1227-4d80-a46d-91621c2d9386'
-        },
-        'Unpublished Dataset Private URL'
-      )
+      new DatasetAlert('info', DatasetAlertMessageKey.UNPUBLISHED_DATASET, {
+        privateUrl:
+          'http://localhost:8080/privateurl.xhtml?token=f6815782-1227-4d80-a46d-91621c2d9386'
+      })
     ]
 
     return (
