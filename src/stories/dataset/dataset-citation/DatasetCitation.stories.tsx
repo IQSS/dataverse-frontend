@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { DatasetCitation } from '../../../sections/dataset/dataset-citation/DatasetCitation'
 import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
-import { DatasetMockData } from '../DatasetMockData'
+import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 
 const meta: Meta<typeof DatasetCitation> = {
   title: 'Sections/Dataset Page/DatasetCitation',
@@ -15,7 +15,7 @@ type Story = StoryObj<typeof DatasetCitation>
 
 export const Default: Story = {
   render: () => {
-    const dataset = DatasetMockData()
+    const dataset = DatasetMother.createRealistic()
     return (
       <div>
         <br></br>
@@ -28,10 +28,16 @@ export const Default: Story = {
 
 export const DraftVersion: Story = {
   render: () => {
-    const dataset = DatasetMockData({
+    const dataset = DatasetMother.createRealistic({
       citation:
         'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, DRAFT VERSION',
-      version: new DatasetVersion(1, DatasetPublishingStatus.DRAFT, 1, 0)
+      version: new DatasetVersion(
+        1,
+        DatasetPublishingStatus.DRAFT,
+        true,
+        false,
+        DatasetPublishingStatus.DRAFT
+      )
     })
 
     /*
@@ -49,10 +55,18 @@ export const DraftVersion: Story = {
 
 export const Deaccessioned: Story = {
   render: () => {
-    const dataset = DatasetMockData({
+    const dataset = DatasetMother.createRealistic({
       citation:
         'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1 DEACCESSIONED VERSION',
-      version: new DatasetVersion(1, DatasetPublishingStatus.DEACCESSIONED, 1, 0)
+      version: new DatasetVersion(
+        1,
+        DatasetPublishingStatus.DEACCESSIONED,
+        true,
+        false,
+        DatasetPublishingStatus.DEACCESSIONED,
+        1,
+        0
+      )
     })
 
     /*
@@ -70,7 +84,7 @@ export const Deaccessioned: Story = {
 
 export const Anonymized: Story = {
   render: () => {
-    const dataset = DatasetMockData({
+    const dataset = DatasetMother.createRealistic({
       citation:
         'Author name(s) withheld, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1'
     })

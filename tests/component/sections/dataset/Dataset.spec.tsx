@@ -2,42 +2,43 @@ import { DatasetRepository } from '../../../../src/dataset/domain/repositories/D
 import { Dataset } from '../../../../src/sections/dataset/Dataset'
 import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
 import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
-import { useLoading } from '../../../../src/sections/loading/LoadingContext'
 import { ANONYMIZED_FIELD_VALUE } from '../../../../src/dataset/domain/models/Dataset'
 import { AnonymizedContext } from '../../../../src/sections/dataset/anonymized/AnonymizedContext'
 import { FileRepository } from '../../../../src/files/domain/repositories/FileRepository'
+import { Dataset as DatasetModel } from '../../../../src/dataset/domain/models/Dataset'
+import { ReactNode } from 'react'
+import { DatasetProvider } from '../../../../src/sections/dataset/DatasetProvider'
 
+const setAnonymizedView = () => {}
+const fileRepository: FileRepository = {} as FileRepository
+const datasetRepository: DatasetRepository = {} as DatasetRepository
 describe('Dataset', () => {
-  const testDataset = DatasetMother.create()
-  const fileRepository: FileRepository = {} as FileRepository
-
-  it('renders skeleton while loading', () => {
-    const datasetRepository: DatasetRepository = {} as DatasetRepository
-    datasetRepository.getByPersistentId = cy.stub().resolves(testDataset)
-
-    const buttonText = 'Toggle Loading'
-    const TestComponent = () => {
-      const { isLoading, setIsLoading } = useLoading()
-      return (
-        <>
-          <button onClick={() => setIsLoading(true)}>{buttonText}</button>
-          {isLoading && <div>Loading...</div>}
-        </>
-      )
-    }
+  const mountWithDataset = (
+    component: ReactNode,
+    dataset: DatasetModel | undefined,
+    anonymizedView = false
+  ) => {
+    const searchParams = anonymizedView
+      ? { privateUrlToken: 'some-private-url-token' }
+      : { persistentId: 'some-persistent-id', version: 'some-version' }
+    datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
+    datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
 
     cy.customMount(
       <LoadingProvider>
-        <Dataset
-          datasetRepository={datasetRepository}
-          fileRepository={fileRepository}
-          searchParams={{ persistentId: testDataset.persistentId }}
-        />
-        <TestComponent />
+        <AnonymizedContext.Provider value={{ anonymizedView: anonymizedView, setAnonymizedView }}>
+          <DatasetProvider repository={datasetRepository} searchParams={searchParams}>
+            {component}
+          </DatasetProvider>
+        </AnonymizedContext.Provider>
       </LoadingProvider>
     )
+  }
 
-    cy.findByText(buttonText).click()
+  it('renders skeleton while loading', () => {
+    const testDataset = DatasetMother.create()
+
+    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
 
     cy.findByTestId('dataset-skeleton').should('exist')
     cy.findByText(testDataset.getTitle()).should('not.exist')
@@ -45,54 +46,16 @@ describe('Dataset', () => {
 
   it('renders page not found when dataset is null', () => {
     const emptyDataset = DatasetMother.createEmpty()
-    const datasetRepository: DatasetRepository = {} as DatasetRepository
-    datasetRepository.getByPersistentId = cy.stub().resolves(emptyDataset)
 
-    cy.customMount(
-      <LoadingProvider>
-        <Dataset
-          datasetRepository={datasetRepository}
-          fileRepository={fileRepository}
-          searchParams={{ persistentId: 'wrong-id' }}
-        />
-      </LoadingProvider>
-    )
-
-    cy.findByText('Page Not Found').should('exist')
-  })
-
-  it('renders page not found when no searchParam is passed', () => {
-    const datasetRepository: DatasetRepository = {} as DatasetRepository
-    datasetRepository.getByPersistentId = cy.stub().resolves(testDataset)
-
-    cy.customMount(
-      <LoadingProvider>
-        <Dataset
-          datasetRepository={datasetRepository}
-          fileRepository={fileRepository}
-          searchParams={{}}
-        />
-      </LoadingProvider>
-    )
+    mountWithDataset(<Dataset fileRepository={fileRepository} />, emptyDataset)
 
     cy.findByText('Page Not Found').should('exist')
   })
 
   it('renders the Dataset page title and labels', () => {
-    const datasetRepository: DatasetRepository = {} as DatasetRepository
-    datasetRepository.getByPersistentId = cy.stub().resolves(testDataset)
+    const testDataset = DatasetMother.create()
 
-    cy.customMount(
-      <LoadingProvider>
-        <Dataset
-          datasetRepository={datasetRepository}
-          fileRepository={fileRepository}
-          searchParams={{ persistentId: testDataset.persistentId }}
-        />
-      </LoadingProvider>
-    )
-
-    cy.wrap(datasetRepository.getByPersistentId).should('be.calledWith', testDataset.persistentId)
+    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
 
     cy.findAllByText(testDataset.getTitle()).should('exist')
 
@@ -102,18 +65,9 @@ describe('Dataset', () => {
   })
 
   it('renders the Dataset Metadata tab', () => {
-    const datasetRepository: DatasetRepository = {} as DatasetRepository
-    datasetRepository.getByPersistentId = cy.stub().resolves(testDataset)
+    const testDataset = DatasetMother.create()
 
-    cy.customMount(
-      <LoadingProvider>
-        <Dataset
-          datasetRepository={datasetRepository}
-          fileRepository={fileRepository}
-          searchParams={{ persistentId: testDataset.persistentId }}
-        />
-      </LoadingProvider>
-    )
+    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
 
     cy.findAllByText(testDataset.getTitle()).should('exist')
 
@@ -126,28 +80,20 @@ describe('Dataset', () => {
   })
 
   it('renders the Dataset in anonymized view', () => {
-    const setAnonymizedView = () => {}
     const testDatasetAnonymized = DatasetMother.createAnonymized()
-    const datasetRepository: DatasetRepository = {} as DatasetRepository
-    datasetRepository.getByPrivateUrlToken = cy.stub().resolves(testDatasetAnonymized)
-    const privateUrlToken = 'some-token'
 
-    cy.customMount(
-      <LoadingProvider>
-        <AnonymizedContext.Provider value={{ anonymizedView: true, setAnonymizedView }}>
-          <Dataset
-            datasetRepository={datasetRepository}
-            fileRepository={fileRepository}
-            searchParams={{ privateUrlToken: privateUrlToken }}
-          />
-        </AnonymizedContext.Provider>
-      </LoadingProvider>
-    )
-
-    cy.wrap(datasetRepository.getByPrivateUrlToken).should('be.calledWith', privateUrlToken)
+    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDatasetAnonymized)
 
     cy.findByRole('tab', { name: 'Metadata' }).click()
 
     cy.findAllByText(ANONYMIZED_FIELD_VALUE).should('exist')
+  })
+
+  it('renders the Dataset Action Buttons', () => {
+    const testDataset = DatasetMother.create()
+
+    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
+
+    cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
   })
 })

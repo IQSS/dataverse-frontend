@@ -134,7 +134,15 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getAllByDatasetPersistentId(
           dataset.persistentId,
-          new DatasetVersion(dataset.version.id, DatasetPublishingStatus.RELEASED, 1, 0)
+          new DatasetVersion(
+            dataset.version.id,
+            DatasetPublishingStatus.RELEASED,
+            true,
+            false,
+            DatasetPublishingStatus.RELEASED,
+            1,
+            0
+          )
         )
         .then((files) => {
           const expectedPublishedFile = expectedFile
@@ -166,7 +174,15 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getAllByDatasetPersistentId(
           dataset.persistentId,
-          new DatasetVersion(dataset.version.id, DatasetPublishingStatus.DEACCESSIONED, 1, 0)
+          new DatasetVersion(
+            dataset.version.id,
+            DatasetPublishingStatus.DEACCESSIONED,
+            true,
+            false,
+            DatasetPublishingStatus.DEACCESSIONED,
+            1,
+            0
+          )
         )
         .then((files) => {
           const expectedDeaccessionedFile = expectedFile
@@ -474,11 +490,11 @@ describe('File JSDataverse Repository', () => {
         total: 6,
         perAccess: [
           {
-            access: FileAccessOption.PUBLIC,
+            access: FileAccessOption.RESTRICTED,
             count: 3
           },
           {
-            access: FileAccessOption.RESTRICTED,
+            access: FileAccessOption.PUBLIC,
             count: 3
           }
         ],

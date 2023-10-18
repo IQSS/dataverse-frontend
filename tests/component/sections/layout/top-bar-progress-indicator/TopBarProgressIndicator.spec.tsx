@@ -5,7 +5,7 @@ describe('TopBarProgressIndicator', () => {
   it('should render without errors', () => {
     cy.mount(<TopBarProgressIndicator />)
 
-    cy.get('canvas').should('not.exist')
+    cy.get('canvas').should('exist')
   })
 
   it('should render the TopBarProgress when loading is true', () => {

@@ -7,9 +7,17 @@ interface ButtonGroupProps extends React.HTMLAttributes<HTMLElement> {
   vertical?: boolean
 }
 
-export function ButtonGroup({ vertical, children, ...props }: PropsWithChildren<ButtonGroupProps>) {
+export function ButtonGroup({
+  vertical,
+  children,
+  className,
+  ...props
+}: PropsWithChildren<ButtonGroupProps>) {
   return (
-    <ButtonGroupBS vertical={vertical} className={styles.border} {...props}>
+    <ButtonGroupBS
+      vertical={vertical}
+      className={`${styles.border} ${className ? className : ''}`}
+      {...props}>
       {children}
     </ButtonGroupBS>
   )
