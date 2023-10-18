@@ -55,8 +55,11 @@ const expectedDataset = {
   version: {
     id: 101,
     publishingStatus: 'draft',
-    minorNumber: 0,
+    isLatest: true,
+    isInReview: false,
+    latestVersionStatus: 'draft',
     majorNumber: 0,
+    minorNumber: 0,
     requestedVersion: undefined
   },
   citation:
@@ -103,19 +106,37 @@ const expectedDataset = {
         subject: ['Medicine, Health and Life Sciences']
       }
     }
-  ]
+  ],
+  permissions: {
+    canDownloadFiles: true,
+    canUpdateDataset: true,
+    canPublishDataset: true,
+    canManageDatasetPermissions: true,
+    canManageFilesPermissions: true,
+    canDeleteDataset: true
+  },
+  locks: [],
+  hasValidTermsOfAccess: true,
+  isValid: true,
+  isReleased: false
 }
 const expectedDatasetAlternateVersion = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
     id: 101,
     publishingStatus: 'draft',
+    isLatest: true,
+    isInReview: false,
+    latestVersionStatus: 'draft',
     minorNumber: 0,
     majorNumber: 0,
     requestedVersion: '4.0'
   },
   citation:
     'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
+  hasValidTermsOfAccess: true,
+  isReleased: false,
+  isValid: true,
   labels: [
     { semanticMeaning: 'dataset', value: 'Draft' },
     { semanticMeaning: 'warning', value: 'Unpublished' }
@@ -151,6 +172,7 @@ const expectedDatasetAlternateVersion = {
     uri: 'http://creativecommons.org/publicdomain/zero/1.0',
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
+  locks: [],
   metadataBlocks: [
     {
       name: 'citation',
@@ -169,7 +191,15 @@ const expectedDatasetAlternateVersion = {
         subject: ['Medicine, Health and Life Sciences']
       }
     }
-  ]
+  ],
+  permissions: {
+    canDeleteDataset: true,
+    canDownloadFiles: true,
+    canManageDatasetPermissions: true,
+    canManageFilesPermissions: true,
+    canPublishDataset: true,
+    canUpdateDataset: true
+  }
 }
 describe('JS Dataset Mapper', () => {
   it('maps jsDataset model to the domain Dataset model', () => {
@@ -183,6 +213,9 @@ describe('JS Dataset Mapper', () => {
       datasetSummaryFields,
       '4.0'
     )
+    console.log('mapped: ' + JSON.stringify(mappedWithAlternate))
+    console.log('expected: ' + JSON.stringify(expectedDatasetAlternateVersion))
+
     expect(expectedDatasetAlternateVersion).to.deep.equal(mappedWithAlternate)
   })
 

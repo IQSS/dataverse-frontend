@@ -6,7 +6,7 @@ interface LoadingContextProps {
 }
 
 export const LoadingContext = createContext<LoadingContextProps>({
-  isLoading: false,
+  isLoading: true,
   setIsLoading: /* istanbul ignore next */ () => {}
 })
 

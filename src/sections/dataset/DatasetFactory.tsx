@@ -10,6 +10,7 @@ import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-inf
 import { SettingJSDataverseRepository } from '../../settings/infrastructure/SettingJSDataverseRepository'
 import { FilePermissionsProvider } from '../file/file-permissions/FilePermissionsProvider'
 import { SettingsProvider } from '../settings/SettingsProvider'
+import { DatasetProvider } from './DatasetProvider'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
@@ -45,19 +46,19 @@ function DatasetWithSearchParams() {
 
   if (privateUrlToken) {
     return (
-      <Dataset
-        datasetRepository={datasetRepository}
-        fileRepository={fileRepository}
-        searchParams={{ privateUrlToken: privateUrlToken }}
-      />
+      <DatasetProvider
+        repository={datasetRepository}
+        searchParams={{ privateUrlToken: privateUrlToken }}>
+        <Dataset fileRepository={fileRepository} />
+      </DatasetProvider>
     )
   }
 
   return (
-    <Dataset
-      datasetRepository={datasetRepository}
-      fileRepository={fileRepository}
-      searchParams={{ persistentId: persistentId, version: version }}
-    />
+    <DatasetProvider
+      repository={datasetRepository}
+      searchParams={{ persistentId: persistentId, version: version }}>
+      <Dataset fileRepository={fileRepository} />
+    </DatasetProvider>
   )
 }

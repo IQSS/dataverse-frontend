@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { DatasetSummary } from '../../../sections/dataset/dataset-summary/DatasetSummary'
 import { DatasetMetadataBlock, DatasetLicense } from '../../../dataset/domain/models/Dataset'
-import { DatasetMockData } from '../DatasetMockData'
+import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 
 const meta: Meta<typeof DatasetSummary> = {
   title: 'Sections/Dataset Page/DatasetSummary',
@@ -10,8 +10,8 @@ const meta: Meta<typeof DatasetSummary> = {
   decorators: [WithI18next]
 }
 
-const licenseMock: DatasetLicense = DatasetMockData().license
-const summaryFieldsMock: DatasetMetadataBlock[] = DatasetMockData().summaryFields
+const licenseMock: DatasetLicense = DatasetMother.createRealistic().license
+const summaryFieldsMock: DatasetMetadataBlock[] = DatasetMother.createRealistic().summaryFields
 export default meta
 type Story = StoryObj<typeof DatasetSummary>
 

@@ -12,13 +12,13 @@ describe('LoadingProvider', () => {
     cy.findByText('Hello, world!').should('exist')
   })
 
-  it('should set isLoading to true when setIsLoading is called', () => {
+  it('should set isLoading to false when setIsLoading is called', () => {
     const buttonText = 'Toggle Loading'
     const TestComponent = () => {
       const { isLoading, setIsLoading } = useLoading()
       return (
         <>
-          <button onClick={() => setIsLoading(true)}>{buttonText}</button>
+          <button onClick={() => setIsLoading(false)}>{buttonText}</button>
           {isLoading && <div>Loading...</div>}
         </>
       )
@@ -32,10 +32,10 @@ describe('LoadingProvider', () => {
 
     cy.findByText(buttonText).should('exist')
 
-    cy.findByText('Loading...').should('not.exist')
+    cy.findByText('Loading...').should('exist')
 
     cy.findByText(buttonText).click()
 
-    cy.findByText('Loading...').should('exist')
+    cy.findByText('Loading...').should('not.exist')
   })
 })

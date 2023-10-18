@@ -3,12 +3,13 @@ import { WithI18next } from '../../../../../WithI18next'
 import { WithSettings } from '../../../../../WithSettings'
 import { FileInfoMessages } from '../../../../../../sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-info-messages/FileInfoMessages'
 import { FileMother } from '../../../../../../../tests/component/files/domain/models/FileMother'
+import { WithDatasetAllPermissionsGranted } from '../../../../WithDatasetAllPermissionsGranted'
 
 const meta: Meta<typeof FileInfoMessages> = {
   title:
     'Sections/Dataset Page/DatasetFiles/FilesTable/FileActionsCell/FileInfoMessages/FileInfoMessages',
   component: FileInfoMessages,
-  decorators: [WithI18next, WithSettings]
+  decorators: [WithI18next, WithSettings, WithDatasetAllPermissionsGranted]
 }
 
 export default meta

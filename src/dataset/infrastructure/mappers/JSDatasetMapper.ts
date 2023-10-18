@@ -1,7 +1,7 @@
 import {
   Dataset as JSDataset,
-  DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataBlock as JSDatasetMetadataBlock,
+  DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataFields as JSDatasetMetadataFields,
   DatasetVersionInfo as JSDatasetVersionInfo
 } from '@iqss/dataverse-client-javascript'
@@ -9,13 +9,37 @@ import { DatasetVersionState as JSDatasetVersionState } from '@iqss/dataverse-cl
 import {
   Dataset,
   DatasetPublishingStatus,
-  MetadataBlockName,
   DatasetMetadataBlock,
-  DatasetVersion,
+  DatasetMetadataBlocks,
   DatasetMetadataFields,
-  DatasetMetadataBlocks
+  DatasetVersion,
+  MetadataBlockName
 } from '../../domain/models/Dataset'
 
+/*
+
+  static Builder = class {
+    public readonly labels: DatasetLabel[] = []
+    public readonly alerts: DatasetAlert[] = []
+
+    constructor(
+      public readonly persistentId: string,
+      public readonly version: DatasetVersion,
+      public readonly citation: string,
+      public readonly summaryFields: DatasetMetadataBlock[],
+      public readonly license: DatasetLicense = defaultLicense,
+      public readonly metadataBlocks: DatasetMetadataBlocks,
+      public readonly permissions: DatasetPermissions,
+      public readonly locks: DatasetLock[],
+      public readonly hasValidTermsOfAccess: boolean,
+      public readonly isValid: boolean,
+      public readonly isReleased: boolean,
+      public readonly privateUrl?: string
+    ) {
+      this.withLabels()
+      this.withAlerts()
+    }
+ */
 export class JSDatasetMapper {
   static toDataset(
     jsDataset: JSDataset,
@@ -36,6 +60,18 @@ export class JSDatasetMapper {
         jsDataset.publicationDate,
         jsDataset.citationDate
       ),
+      {
+        canDownloadFiles: true,
+        canUpdateDataset: true,
+        canPublishDataset: true,
+        canManageDatasetPermissions: true,
+        canManageFilesPermissions: true,
+        canDeleteDataset: true
+      }, // TODO Connect with dataset permissions
+      [], // TODO Connect with dataset locks
+      true, // TODO Connect with dataset hasValidTermsOfAccess
+      true, // TODO Connect with dataset isValid
+      !!jsDataset.versionInfo.releaseTime, // TODO Connect with dataset isReleased,
       privateUrl
     ).build()
   }
@@ -48,6 +84,9 @@ export class JSDatasetMapper {
     return new DatasetVersion(
       jDatasetVersionId,
       JSDatasetMapper.toStatus(jsDatasetVersionInfo.state),
+      true, // TODO Connect with dataset version isLatest
+      false, // TODO Connect with dataset version isInReview
+      JSDatasetMapper.toStatus(jsDatasetVersionInfo.state), // TODO Connect with dataset version latestVersionState
       jsDatasetVersionInfo.majorNumber,
       jsDatasetVersionInfo.minorNumber,
       requestedVersion
