@@ -66,9 +66,13 @@
       "heading": "Information",
       "alertText": "Version {{requestedVersion}} was not found. This is version {{returnedVersion}}."
     },
-    "unpublishedDataset": {
+    "shareUnpublishedDataset": {
       "heading": "Unpublished Dataset Private URL",
       "alertText": "Privately share this dataset before it is published: {{privateUrl}}"
+    },
+    "unpublishedDataset": {
+      "heading": "Unpublished Dataset Private URL",
+      "alertText": "This unpublished dataset is being privately shared."
     }
   }
 }

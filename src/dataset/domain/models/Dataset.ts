@@ -27,6 +27,7 @@ export class DatasetLabel {
 export enum DatasetAlertMessageKey {
   DRAFT_VERSION = 'draftVersion',
   REQUESTED_VERSION_NOT_FOUND = 'requestedVersionNotFound',
+  SHARE_UNPUBLISHED_DATASET = 'shareUnpublishedDataset',
   UNPUBLISHED_DATASET = 'unpublishedDataset'
 }
 
@@ -384,7 +385,10 @@ export class Dataset {
     }
 
     private withAlerts(): void {
-      if (this.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
+      if (
+        this.version.publishingStatus === DatasetPublishingStatus.DRAFT &&
+        this.permissions.canPublishDataset
+      ) {
         this.alerts.push(new DatasetAlert('warning', DatasetAlertMessageKey.DRAFT_VERSION))
       }
       if (this.version.requestedVersion) {
@@ -392,7 +396,6 @@ export class Dataset {
           requestedVersion: this.version.requestedVersion,
           returnedVersion: `${this.version.toString()}`
         }
-
         this.alerts.push(
           new DatasetAlert(
             'info',
@@ -402,10 +405,18 @@ export class Dataset {
         )
       }
       if (this.privateUrl) {
-        const dynamicFields = { privateUrl: this.privateUrl }
-        this.alerts.push(
-          new DatasetAlert('info', DatasetAlertMessageKey.UNPUBLISHED_DATASET, dynamicFields)
-        )
+        if (this.permissions.canUpdateDataset) {
+          const dynamicFields = { privateUrl: this.privateUrl }
+          this.alerts.push(
+            new DatasetAlert(
+              'info',
+              DatasetAlertMessageKey.SHARE_UNPUBLISHED_DATASET,
+              dynamicFields
+            )
+          )
+        } else {
+          new DatasetAlert('warning', DatasetAlertMessageKey.UNPUBLISHED_DATASET)
+        }
       }
     }
 
