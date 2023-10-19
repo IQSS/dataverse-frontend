@@ -13,7 +13,6 @@ import { WithDataset } from './WithDataset'
 import { WithDatasetDraftAsOwner } from './WithDatasetDraftAsOwner'
 import { WithDatasetNotFound } from './WithDatasetNotFound'
 import { WithDatasetLoading } from './WithDatasetLoading'
-import { DatasetMockDraftVersionRepository } from './DatasetMockDraftVersionRepository'
 import { WithLoggedInUser } from '../WithLoggedInUser'
 
 const meta: Meta<typeof Dataset> = {
@@ -36,16 +35,11 @@ export const Default: Story = {
 
 export const DraftWithAllDatasetPermissions: Story = {
   decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithFilePermissionsGranted],
-  render: () => <Dataset fileRepository={new FileMockRepository()}/>
+  render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 export const LoggedInAsOwner: Story = {
   decorators: [WithDataset, WithLayout, WithLoggedInUser, WithFilePermissionsGranted],
-  render: () => (
-    <Dataset
-      fileRepository={new FileMockRepository()}
-      searchParams={{ persistentId: 'doi:10.5082/FK2/ABC123' }}
-    />
-  )
+  render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 
 export const Loading: Story = {

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { DatasetMockData } from '../DatasetMockData'
+
 import {
   DatasetAlert,
   DatasetAlertMessageKey,
@@ -8,6 +8,10 @@ import {
 } from '../../../dataset/domain/models/Dataset'
 import { DatasetAlerts } from '../../../sections/dataset/dataset-alerts/DatasetAlerts'
 import { WithI18next } from '../../WithI18next'
+
+import { WithDatasetDraftAsOwner } from '../WithDatasetDraftAsOwner'
+import { useDataset } from '../../../sections/dataset/DatasetContext'
+import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 
 const meta: Meta<typeof DatasetAlerts> = {
   title: 'Sections/Dataset Page/DatasetAlerts',
@@ -19,9 +23,16 @@ export default meta
 type Story = StoryObj<typeof DatasetAlerts>
 
 export const DraftVersion: Story = {
+  decorators: [WithDatasetDraftAsOwner],
   render: () => {
-    const dataset = DatasetMockData({
-      version: new DatasetVersion(1, DatasetPublishingStatus.DRAFT, 1, 0)
+    const dataset = DatasetMother.createRealistic({
+      version: new DatasetVersion(
+        1,
+        DatasetPublishingStatus.DRAFT,
+        true,
+        false,
+        DatasetPublishingStatus.DRAFT
+      )
     })
     return (
       <div>
@@ -30,11 +41,22 @@ export const DraftVersion: Story = {
     )
   }
 }
+
 export const VersionNotFound: Story = {
   render: () => {
-    const dataset = DatasetMockData({
-      version: new DatasetVersion(1, DatasetPublishingStatus.RELEASED, 1, 0, '3.0')
+    const dataset = DatasetMother.createRealistic({
+      version: new DatasetVersion(
+        1,
+        DatasetPublishingStatus.RELEASED,
+        true,
+        false,
+        DatasetPublishingStatus.RELEASED,
+        1,
+        0,
+        '3.0'
+      )
     })
+
     return (
       <div>
         <DatasetAlerts alerts={dataset.alerts} />
