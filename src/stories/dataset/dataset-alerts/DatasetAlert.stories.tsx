@@ -10,7 +10,6 @@ import { DatasetAlerts } from '../../../sections/dataset/dataset-alerts/DatasetA
 import { WithI18next } from '../../WithI18next'
 
 import { WithDatasetDraftAsOwner } from '../WithDatasetDraftAsOwner'
-import { useDataset } from '../../../sections/dataset/DatasetContext'
 import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 
 const meta: Meta<typeof DatasetAlerts> = {
