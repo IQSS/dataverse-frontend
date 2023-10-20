@@ -1,11 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import {
-  DatasetAlert,
-  DatasetAlertMessageKey,
-  DatasetPublishingStatus,
-  DatasetVersion
-} from '../../../dataset/domain/models/Dataset'
+import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { DatasetAlerts } from '../../../sections/dataset/dataset-alerts/DatasetAlerts'
 import { WithI18next } from '../../WithI18next'
 

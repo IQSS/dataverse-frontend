@@ -133,3 +133,22 @@ it('shows draft & share private url message if privateUrlToken exists', () => {
     })
   })
 })
+it('shows  private url message  only if privateUrlToken exists and user cannot edit', () => {
+  cy.fixture('../../../public/locales/en/dataset.json').then((datasetText: DatasetTranslation) => {
+    const privateUrlToken = '12345'
+    const dataset = DatasetMother.createWithPrivateUrlToken(privateUrlToken, {
+      version: DatasetVersionMother.createDraftAsLatestVersion(),
+      permissions: DatasetPermissionsMother.createWithNoneAllowed()
+    })
+    cy.customMount(<DatasetAlerts alerts={dataset.alerts} />)
+    const expectedMessageKeys = [DatasetAlertMessageKey.UNPUBLISHED_DATASET]
+
+    cy.findAllByRole('alert').should('have.length', 1)
+    cy.findAllByRole('alert').each(($alert, index) => {
+      const messageKey = expectedMessageKeys[index]
+      const itemText = datasetText.alerts[messageKey]
+      cy.wrap($alert).findByText(itemText.heading).should('exist')
+      expect($alert.text()).to.include(itemText.alertText)
+    })
+  })
+})

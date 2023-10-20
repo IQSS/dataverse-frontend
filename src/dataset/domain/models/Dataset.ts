@@ -416,7 +416,7 @@ export class Dataset {
             )
           )
         } else {
-          new DatasetAlert('warning', DatasetAlertMessageKey.UNPUBLISHED_DATASET)
+          this.alerts.push(new DatasetAlert('warning', DatasetAlertMessageKey.UNPUBLISHED_DATASET))
         }
       }
     }
