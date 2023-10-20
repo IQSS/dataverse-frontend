@@ -9,8 +9,10 @@ import {
 import { DatasetAlerts } from '../../../sections/dataset/dataset-alerts/DatasetAlerts'
 import { WithI18next } from '../../WithI18next'
 
-import { WithDatasetDraftAsOwner } from '../WithDatasetDraftAsOwner'
-import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
+import {
+  DatasetMother,
+  DatasetPermissionsMother
+} from '../../../../tests/component/dataset/domain/models/DatasetMother'
 
 const meta: Meta<typeof DatasetAlerts> = {
   title: 'Sections/Dataset Page/DatasetAlerts',
@@ -22,7 +24,6 @@ export default meta
 type Story = StoryObj<typeof DatasetAlerts>
 
 export const DraftVersion: Story = {
-  decorators: [WithDatasetDraftAsOwner],
   render: () => {
     const dataset = DatasetMother.createRealistic({
       version: new DatasetVersion(
@@ -31,7 +32,8 @@ export const DraftVersion: Story = {
         true,
         false,
         DatasetPublishingStatus.DRAFT
-      )
+      ),
+      permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed()
     })
     return (
       <div>
@@ -63,18 +65,51 @@ export const VersionNotFound: Story = {
     )
   }
 }
-export const PrivateUrl: Story = {
+export const SharePrivateUrl: Story = {
   render: () => {
-    const alerts = [
-      new DatasetAlert('info', DatasetAlertMessageKey.UNPUBLISHED_DATASET, {
-        privateUrl:
-          'http://localhost:8080/privateurl.xhtml?token=f6815782-1227-4d80-a46d-91621c2d9386'
-      })
-    ]
+    const dataset = DatasetMother.createWithPrivateUrlToken(
+      'http://localhost:8080/privateurl.xhtml?token=cd943c75-1cc7-4c1d-9717-98141d65d5cb',
+      {
+        version: new DatasetVersion(
+          1,
+          DatasetPublishingStatus.RELEASED,
+          true,
+          false,
+          DatasetPublishingStatus.DRAFT,
+          1,
+          0
+        ),
+        permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed()
+      }
+    )
 
     return (
       <div>
-        <DatasetAlerts alerts={alerts} />
+        <DatasetAlerts alerts={dataset.alerts} />
+      </div>
+    )
+  }
+}
+export const UsePrivateUrl: Story = {
+  render: () => {
+    const dataset = DatasetMother.createWithPrivateUrlToken(
+      'http://localhost:8080/privateurl.xhtml?token=cd943c75-1cc7-4c1d-9717-98141d65d5cb',
+      {
+        version: new DatasetVersion(
+          1,
+          DatasetPublishingStatus.RELEASED,
+          true,
+          false,
+          DatasetPublishingStatus.DRAFT,
+          1,
+          0
+        )
+      }
+    )
+
+    return (
+      <div>
+        <DatasetAlerts alerts={dataset.alerts} />
       </div>
     )
   }
