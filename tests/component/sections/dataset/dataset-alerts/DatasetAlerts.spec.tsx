@@ -141,12 +141,11 @@ it('shows  private url message  only if privateUrlToken exists and user cannot e
       permissions: DatasetPermissionsMother.createWithNoneAllowed()
     })
     cy.customMount(<DatasetAlerts alerts={dataset.alerts} />)
-    const expectedMessageKeys = [DatasetAlertMessageKey.UNPUBLISHED_DATASET]
+    const expectedMessageKey = DatasetAlertMessageKey.UNPUBLISHED_DATASET
 
     cy.findAllByRole('alert').should('have.length', 1)
-    cy.findAllByRole('alert').each(($alert, index) => {
-      const messageKey = expectedMessageKeys[index]
-      const itemText = datasetText.alerts[messageKey]
+    cy.findByRole('alert').then(($alert) => {
+      const itemText = datasetText.alerts[expectedMessageKey]
       cy.wrap($alert).findByText(itemText.heading).should('exist')
       expect($alert.text()).to.include(itemText.alertText)
     })
