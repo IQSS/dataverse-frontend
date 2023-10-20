@@ -333,7 +333,7 @@ export class Dataset {
       public readonly hasValidTermsOfAccess: boolean,
       public readonly isValid: boolean,
       public readonly isReleased: boolean,
-      public readonly privateUrl?: string
+      public readonly privateUrlToken?: string
     ) {
       this.withLabels()
       this.withAlerts()
@@ -404,9 +404,10 @@ export class Dataset {
           )
         )
       }
-      if (this.privateUrl) {
+      if (this.privateUrlToken) {
         if (this.permissions.canUpdateDataset) {
-          const dynamicFields = { privateUrl: this.privateUrl }
+          // TODO: set the whole Url, not just the token
+          const dynamicFields = { privateUrl: this.privateUrlToken }
           this.alerts.push(
             new DatasetAlert(
               'info',
