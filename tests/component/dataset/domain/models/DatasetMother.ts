@@ -190,7 +190,11 @@ export class DatasetMother {
     return undefined
   }
 
-  static create(props?: Partial<Dataset>): Dataset {
+  static createWithPrivateUrlToken(privateUrlToken: string, props?: Partial<Dataset>) {
+    return this.create(props, privateUrlToken)
+  }
+
+  static create(props?: Partial<Dataset>, privateUrlToken?: string): Dataset {
     const dataset = {
       persistentId: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
@@ -301,7 +305,8 @@ export class DatasetMother {
       dataset.locks,
       dataset.hasValidTermsOfAccess,
       dataset.isValid,
-      dataset.isReleased
+      dataset.isReleased,
+      privateUrlToken
     ).build()
   }
 
