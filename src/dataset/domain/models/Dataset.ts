@@ -27,6 +27,7 @@ export class DatasetLabel {
 export enum DatasetAlertMessageKey {
   DRAFT_VERSION = 'draftVersion',
   REQUESTED_VERSION_NOT_FOUND = 'requestedVersionNotFound',
+  REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT = 'requestedVersionNotFoundShowDraft',
   SHARE_UNPUBLISHED_DATASET = 'shareUnpublishedDataset',
   UNPUBLISHED_DATASET = 'unpublishedDataset'
 }
@@ -392,17 +393,30 @@ export class Dataset {
         this.alerts.push(new DatasetAlert('warning', DatasetAlertMessageKey.DRAFT_VERSION))
       }
       if (this.version.requestedVersion) {
-        const dynamicFields = {
-          requestedVersion: this.version.requestedVersion,
-          returnedVersion: `${this.version.toString()}`
-        }
-        this.alerts.push(
-          new DatasetAlert(
-            'info',
-            DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND,
-            dynamicFields
+        if (this.version.latestVersionStatus == DatasetPublishingStatus.RELEASED) {
+          const dynamicFields = {
+            requestedVersion: this.version.requestedVersion,
+            returnedVersion: `${this.version.toString()}`
+          }
+          this.alerts.push(
+            new DatasetAlert(
+              'warning',
+              DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND,
+              dynamicFields
+            )
           )
-        )
+        } else {
+          const dynamicFields = {
+            requestedVersion: this.version.requestedVersion
+          }
+          this.alerts.push(
+            new DatasetAlert(
+              'warning',
+              DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT,
+              dynamicFields
+            )
+          )
+        }
       }
       if (this.privateUrlToken) {
         if (this.permissions.canUpdateDataset) {

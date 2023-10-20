@@ -60,6 +60,28 @@ export const VersionNotFound: Story = {
     )
   }
 }
+export const VersionNotFoundShowDraft: Story = {
+  render: () => {
+    const dataset = DatasetMother.createRealistic({
+      version: new DatasetVersion(
+        1,
+        DatasetPublishingStatus.DRAFT,
+        true,
+        false,
+        DatasetPublishingStatus.DRAFT,
+        1,
+        0,
+        '3.0'
+      )
+    })
+
+    return (
+      <div>
+        <DatasetAlerts alerts={dataset.alerts} />
+      </div>
+    )
+  }
+}
 export const SharePrivateUrl: Story = {
   render: () => {
     const dataset = DatasetMother.createWithPrivateUrlToken(
@@ -98,7 +120,8 @@ export const UsePrivateUrl: Story = {
           DatasetPublishingStatus.DRAFT,
           1,
           0
-        )
+        ),
+        permissions: DatasetPermissionsMother.createWithNoneAllowed()
       }
     )
 

@@ -63,8 +63,12 @@
       "alertText": "When ready for sharing, please <b>publish</b> it so that others can see these changes"
     },
     "requestedVersionNotFound": {
-      "heading": "Information",
+      "heading": "Info",
       "alertText": "Version {{requestedVersion}} was not found. This is version {{returnedVersion}}."
+    },
+    "requestedVersionNotFoundShowDraft": {
+      "heading": "Info",
+      "alertText": "Version {{requestedVersion}} was not found. This is the DRAFT version."
     },
     "shareUnpublishedDataset": {
       "heading": "Unpublished Dataset Private URL",
