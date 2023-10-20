@@ -5,6 +5,11 @@ import {
   DatasetAlert,
   DatasetAlertMessageKey
 } from '../../../../../src/dataset/domain/models/Dataset'
+import {
+  DatasetMother,
+  DatasetPermissionsMother,
+  DatasetVersionMother
+} from '../../../dataset/domain/models/DatasetMother'
 
 function removeMarkup(htmlString: string): string {
   // Use a regular expression to match HTML tags and replace them with an empty string
@@ -25,6 +30,10 @@ interface DatasetTranslation {
       heading: string
       alertText: string
     }
+    shareUnpublishedDataset: {
+      heading: string
+      alertText: string
+    }
   }
 }
 
@@ -35,7 +44,7 @@ it('renders the correct number of alerts', () => {
       requestedVersion: 4.0,
       returnedVersion: 2.0
     }),
-    new DatasetAlert('info', DatasetAlertMessageKey.UNPUBLISHED_DATASET, {
+    new DatasetAlert('info', DatasetAlertMessageKey.SHARE_UNPUBLISHED_DATASET, {
       privateUrl: faker.internet.url()
     })
   ]
@@ -83,4 +92,44 @@ it('renders dynamic text', () => {
   cy.mount(<DatasetAlerts alerts={[notFoundAlert]} />)
   cy.findByRole('alert').should('contain.text', dynamicFields.requestedVersion)
   cy.findByRole('alert').should('contain.text', dynamicFields.returnedVersion)
+})
+it('shows draft alert if version is DRAFT', () => {
+  const dataset = DatasetMother.create({
+    version: DatasetVersionMother.createDraftAsLatestVersion(),
+    permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed()
+  })
+
+  cy.customMount(<DatasetAlerts alerts={dataset.alerts} />)
+
+  cy.findByRole('alert').should('contain.text', 'draft')
+})
+it('does not show draft alert if version is RELEASED', () => {
+  const dataset = DatasetMother.create({
+    version: DatasetVersionMother.createReleased(),
+    permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed()
+  })
+
+  cy.customMount(<DatasetAlerts alerts={dataset.alerts} />)
+  cy.findByRole('alert').should('not.exist')
+})
+
+it('shows draft & share private url message if privateUrlToken exists', () => {
+  cy.fixture('../../../public/locales/en/dataset.json').then((datasetText: DatasetTranslation) => {
+    const privateUrlToken = '12345'
+    const dataset = DatasetMother.createWithPrivateUrlToken(privateUrlToken, {
+      version: DatasetVersionMother.createDraftAsLatestVersion(),
+      permissions: DatasetPermissionsMother.createWithAllAllowed()
+    })
+    cy.customMount(<DatasetAlerts alerts={dataset.alerts} />)
+    const expectedMessageKeys = [
+      DatasetAlertMessageKey.DRAFT_VERSION,
+      DatasetAlertMessageKey.SHARE_UNPUBLISHED_DATASET
+    ]
+    cy.findAllByRole('alert').should('have.length', 2)
+    cy.findAllByRole('alert').each(($alert, index) => {
+      const messageKey = expectedMessageKeys[index]
+      const itemText = datasetText.alerts[messageKey]
+      cy.wrap($alert).findByText(itemText.heading).should('exist')
+    })
+  })
 })
