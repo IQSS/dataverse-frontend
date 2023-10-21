@@ -3,6 +3,7 @@ import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { Dataset } from '../../sections/dataset/Dataset'
 import { WithAnonymizedView } from './WithAnonymizedView'
+import { WithDatasetPrivateUrl } from './WithDatasetPrivateUrl'
 import { FileMockRepository } from '../files/FileMockRepository'
 import { WithCitationMetadataBlockInfo } from './WithCitationMetadataBlockInfo'
 import { FileMockNoDataRepository } from '../files/FileMockNoDataRepository'
@@ -53,7 +54,7 @@ export const DatasetNotFound: Story = {
 }
 
 export const DatasetAnonymizedView: Story = {
-  decorators: [WithLayout, WithAnonymizedView, WithDataset, WithFilePermissionsGranted],
+  decorators: [WithLayout, WithAnonymizedView, WithDatasetPrivateUrl, WithFilePermissionsGranted],
   render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 
