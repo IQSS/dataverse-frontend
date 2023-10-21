@@ -148,9 +148,9 @@ const expectedDatasetAlternateVersion = {
       dynamicFields: undefined
     },
     {
-      message: 'requestedVersionNotFound',
-      variant: 'info',
-      dynamicFields: { requestedVersion: '4.0', returnedVersion: '0.0' }
+      message: 'requestedVersionNotFoundShowDraft',
+      variant: 'warning',
+      dynamicFields: { requestedVersion: '4.0' }
     }
   ],
   summaryFields: [

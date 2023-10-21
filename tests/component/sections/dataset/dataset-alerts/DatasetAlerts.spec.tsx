@@ -16,24 +16,18 @@ function removeMarkup(htmlString: string): string {
   return htmlString.replace(/<\/?[^>]+(>|$)/g, '')
 }
 
+interface AlertTranslation {
+  heading: string
+  alertText: string
+}
+
 interface DatasetTranslation {
   alerts: {
-    draftVersion: {
-      heading: string
-      alertText: string
-    }
-    requestedVersionNotFound: {
-      heading: string
-      alertText: string
-    }
-    unpublishedDataset: {
-      heading: string
-      alertText: string
-    }
-    shareUnpublishedDataset: {
-      heading: string
-      alertText: string
-    }
+    [DatasetAlertMessageKey.DRAFT_VERSION]: AlertTranslation
+    [DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND]: AlertTranslation
+    [DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT]: AlertTranslation
+    [DatasetAlertMessageKey.UNPUBLISHED_DATASET]: AlertTranslation
+    [DatasetAlertMessageKey.SHARE_UNPUBLISHED_DATASET]: AlertTranslation
   }
 }
 
