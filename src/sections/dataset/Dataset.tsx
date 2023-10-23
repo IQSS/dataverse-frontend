@@ -40,7 +40,7 @@ export function Dataset({ fileRepository }: DatasetProps) {
         <article>
           <div className={styles.container}>
             <Row>
-              <Col sm={9}>
+              <Col>
                 <DatasetAlerts alerts={dataset.alerts} />
               </Col>
             </Row>
