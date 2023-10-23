@@ -215,8 +215,6 @@ describe('JS Dataset Mapper', () => {
       datasetSummaryFields,
       '4.0'
     )
-    console.log('mapped: ' + JSON.stringify(mappedWithAlternate))
-    console.log('expected: ' + JSON.stringify(expectedDatasetAlternateVersion))
 
     expect(expectedDatasetAlternateVersion).to.deep.equal(mappedWithAlternate)
   })

@@ -388,9 +388,6 @@ export class Dataset {
     }
 
     private withAlerts(): void {
-      console.log(
-        'withAlerts, privateUrl ' + this.privateUrl + ' privateUrlToken: ' + this.privateUrlToken
-      )
       if (
         this.version.publishingStatus === DatasetPublishingStatus.DRAFT &&
         this.permissions.canPublishDataset
