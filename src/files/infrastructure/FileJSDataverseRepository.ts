@@ -10,7 +10,7 @@ import {
   getDatasetFilesTotalDownloadSize,
   getFileDownloadCount,
   getFileUserPermissions,
-  WriteError
+  ReadError
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -39,7 +39,7 @@ export class FileJSDataverseRepository implements FileRepository {
       )
       .then((jsFiles) => jsFiles.map((jsFile) => JSFileMapper.toFile(jsFile, datasetVersion)))
       .then((files) => FileJSDataverseRepository.getAllWithDownloadCount(files))
-      .catch((error: WriteError) => {
+      .catch((error: ReadError) => {
         throw new Error(error.message)
       })
   }
@@ -77,7 +77,7 @@ export class FileJSDataverseRepository implements FileRepository {
       .then((jsFilesCountInfo) => {
         return JSFileMapper.toFilesCountInfo(jsFilesCountInfo)
       })
-      .catch((error: WriteError) => {
+      .catch((error: ReadError) => {
         throw new Error(error.message)
       })
   }
@@ -88,7 +88,7 @@ export class FileJSDataverseRepository implements FileRepository {
   ): Promise<number> {
     return getDatasetFilesTotalDownloadSize
       .execute(datasetPersistentId, datasetVersion.toString(), FileDownloadSizeMode.ARCHIVAL)
-      .catch((error: WriteError) => {
+      .catch((error: ReadError) => {
         throw new Error(error.message)
       })
   }
@@ -99,7 +99,7 @@ export class FileJSDataverseRepository implements FileRepository {
       .then((jsFileUserPermissions) =>
         JSFileMapper.toFileUserPermissions(id, jsFileUserPermissions)
       )
-      .catch((error: WriteError) => {
+      .catch((error: ReadError) => {
         throw new Error(error.message)
       })
   }

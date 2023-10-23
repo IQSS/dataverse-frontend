@@ -2,7 +2,8 @@ import { MetadataBlockInfoRepository } from '../../domain/repositories/MetadataB
 import { MetadataBlockInfo } from '../../domain/models/MetadataBlockInfo'
 import {
   getMetadataBlockByName,
-  MetadataBlock as JSMetadataBlockInfo
+  MetadataBlock as JSMetadataBlockInfo,
+  ReadError
 } from '@iqss/dataverse-client-javascript'
 import { JSMetadataBlockInfoMapper } from '../mappers/JSMetadataBlockInfoMapper'
 
@@ -13,5 +14,8 @@ export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfo
       .then((jsMetadataBlockInfo: JSMetadataBlockInfo) =>
         JSMetadataBlockInfoMapper.toMetadataBlockInfo(jsMetadataBlockInfo)
       )
+      .catch((error: ReadError) => {
+        throw new Error(error.message)
+      })
   }
 }
