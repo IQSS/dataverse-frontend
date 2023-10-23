@@ -118,7 +118,8 @@ const expectedDataset = {
   locks: [],
   hasValidTermsOfAccess: true,
   isValid: true,
-  isReleased: false
+  isReleased: false,
+  privateUrl: undefined
 }
 const expectedDatasetAlternateVersion = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -137,6 +138,7 @@ const expectedDatasetAlternateVersion = {
   hasValidTermsOfAccess: true,
   isReleased: false,
   isValid: true,
+  privateUrl: undefined,
   labels: [
     { semanticMeaning: 'dataset', value: 'Draft' },
     { semanticMeaning: 'warning', value: 'Unpublished' }

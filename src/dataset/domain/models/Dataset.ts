@@ -289,7 +289,8 @@ export class Dataset {
     public readonly locks: DatasetLock[],
     public readonly hasValidTermsOfAccess: boolean,
     public readonly isValid: boolean,
-    public readonly isReleased: boolean
+    public readonly isReleased: boolean,
+    public readonly privateUrl?: string
   ) {}
 
   public getTitle(): string {
@@ -334,6 +335,7 @@ export class Dataset {
       public readonly hasValidTermsOfAccess: boolean,
       public readonly isValid: boolean,
       public readonly isReleased: boolean,
+      public readonly privateUrl?: string,
       public readonly privateUrlToken?: string
     ) {
       this.withLabels()
@@ -386,6 +388,9 @@ export class Dataset {
     }
 
     private withAlerts(): void {
+      console.log(
+        'withAlerts, privateUrl ' + this.privateUrl + ' privateUrlToken: ' + this.privateUrlToken
+      )
       if (
         this.version.publishingStatus === DatasetPublishingStatus.DRAFT &&
         this.permissions.canPublishDataset
@@ -418,20 +423,15 @@ export class Dataset {
           )
         }
       }
+      if (this.privateUrl && !this.privateUrlToken) {
+        const dynamicFields = { privateUrl: this.privateUrl }
+        this.alerts.push(
+          new DatasetAlert('info', DatasetAlertMessageKey.SHARE_UNPUBLISHED_DATASET, dynamicFields)
+        )
+      }
+
       if (this.privateUrlToken) {
-        if (this.permissions.canUpdateDataset) {
-          // TODO: set the whole Url, not just the token
-          const dynamicFields = { privateUrl: this.privateUrlToken }
-          this.alerts.push(
-            new DatasetAlert(
-              'info',
-              DatasetAlertMessageKey.SHARE_UNPUBLISHED_DATASET,
-              dynamicFields
-            )
-          )
-        } else {
-          this.alerts.push(new DatasetAlert('warning', DatasetAlertMessageKey.UNPUBLISHED_DATASET))
-        }
+        this.alerts.push(new DatasetAlert('warning', DatasetAlertMessageKey.UNPUBLISHED_DATASET))
       }
     }
 

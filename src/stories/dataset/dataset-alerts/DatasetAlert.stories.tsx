@@ -84,21 +84,20 @@ export const VersionNotFoundShowDraft: Story = {
 }
 export const SharePrivateUrl: Story = {
   render: () => {
-    const dataset = DatasetMother.createWithPrivateUrlToken(
-      'http://localhost:8080/privateurl.xhtml?token=cd943c75-1cc7-4c1d-9717-98141d65d5cb',
-      {
-        version: new DatasetVersion(
-          1,
-          DatasetPublishingStatus.RELEASED,
-          true,
-          false,
-          DatasetPublishingStatus.DRAFT,
-          1,
-          0
-        ),
-        permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed()
-      }
-    )
+    const dataset = DatasetMother.createRealistic({
+      version: new DatasetVersion(
+        1,
+        DatasetPublishingStatus.RELEASED,
+        true,
+        false,
+        DatasetPublishingStatus.DRAFT,
+        1,
+        0
+      ),
+      permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed(),
+      privateUrl:
+        'http://localhost:8080/privateurl.xhtml?token=cd943c75-1cc7-4c1d-9717-98141d65d5cb'
+    })
 
     return (
       <div>
@@ -110,7 +109,7 @@ export const SharePrivateUrl: Story = {
 export const UsePrivateUrl: Story = {
   render: () => {
     const dataset = DatasetMother.createWithPrivateUrlToken(
-      'http://localhost:8080/privateurl.xhtml?token=cd943c75-1cc7-4c1d-9717-98141d65d5cb',
+      'cd943c75-1cc7-4c1d-9717-98141d65d5cb',
       {
         version: new DatasetVersion(
           1,
