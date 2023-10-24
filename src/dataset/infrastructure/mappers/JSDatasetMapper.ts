@@ -29,7 +29,8 @@ export class JSDatasetMapper {
         jsDataset.alternativePersistentId,
         jsDataset.publicationDate,
         jsDataset.citationDate
-      )
+      ),
+      undefined // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
     ).build()
   }
 
