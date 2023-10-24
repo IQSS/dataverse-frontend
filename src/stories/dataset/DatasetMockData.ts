@@ -95,6 +95,7 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
         }
       }
     ] as DatasetMetadataBlocks,
+    thumbnail: undefined,
     ...props
   }
   return new Dataset.Builder(
@@ -103,6 +104,7 @@ export const DatasetMockData = (props?: Partial<Dataset>, anonymized = false): D
     dataset.citation,
     dataset.summaryFields,
     dataset.license,
-    dataset.metadataBlocks
+    dataset.metadataBlocks,
+    dataset.thumbnail
   ).build()
 }
