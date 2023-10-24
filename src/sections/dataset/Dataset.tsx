@@ -45,7 +45,12 @@ export function Dataset({ datasetRepository, fileRepository, searchParams }: Dat
           <div className={styles.container}>
             <Row>
               <Col sm={9}>
-                <DatasetCitation citation={dataset.citation} version={dataset.version} />
+                <DatasetCitation
+                  title={dataset.getTitle()}
+                  thumbnail={dataset.thumbnail}
+                  citation={dataset.citation}
+                  version={dataset.version}
+                />
               </Col>
             </Row>
             <Row>

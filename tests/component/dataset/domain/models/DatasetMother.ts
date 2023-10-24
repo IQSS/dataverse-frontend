@@ -107,6 +107,7 @@ export class DatasetMother {
           }
         }
       ] as DatasetMetadataBlocks,
+      thumbnail: faker.image.imageUrl(),
       ...props
     }
 
@@ -116,7 +117,8 @@ export class DatasetMother {
       dataset.citation,
       dataset.summaryFields,
       dataset.license,
-      dataset.metadataBlocks
+      dataset.metadataBlocks,
+      dataset.thumbnail
     ).build()
   }
 

@@ -8,7 +8,13 @@ import {
 describe('DatasetCitation', () => {
   it('renders the DatasetCitation fields of released Dataset', () => {
     const dataset = DatasetMother.create()
-    cy.customMount(<DatasetCitation citation={dataset.citation} version={dataset.version} />)
+    cy.customMount(
+      <DatasetCitation
+        title="Dataset title"
+        citation={dataset.citation}
+        version={dataset.version}
+      />
+    )
 
     cy.findByText('Data Citation Standards.').should('exist')
     cy.findByText(/Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Dataset Title"/).should('exist')
@@ -20,13 +26,20 @@ describe('DatasetCitation', () => {
       .and('eq', 'https://dataverse.org/best-practices/data-citation')
     cy.findByText(/RELEASED/).should('not.exist')
     cy.findByText(/V1/).should('exist')
+    cy.findByLabelText('icon-dataset').should('exist')
   })
 
   it('shows the draft tooltip when version is draft', () => {
     const dataset = DatasetMother.create({
       version: new DatasetVersion(1, DatasetPublishingStatus.DRAFT, 1, 0)
     })
-    cy.customMount(<DatasetCitation citation={dataset.citation} version={dataset.version} />)
+    cy.customMount(
+      <DatasetCitation
+        title="Dataset title"
+        citation={dataset.citation}
+        version={dataset.version}
+      />
+    )
 
     cy.findByRole('img', { name: 'tooltip icon' }).should('exist').trigger('mouseover')
     cy.findByText(
@@ -38,7 +51,13 @@ describe('DatasetCitation', () => {
     const dataset = DatasetMother.create({
       version: new DatasetVersion(1, DatasetPublishingStatus.DEACCESSIONED, 1, 0)
     })
-    cy.customMount(<DatasetCitation citation={dataset.citation} version={dataset.version} />)
+    cy.customMount(
+      <DatasetCitation
+        title="Dataset title"
+        citation={dataset.citation}
+        version={dataset.version}
+      />
+    )
 
     cy.findByRole('img', { name: 'tooltip icon' }).should('exist').trigger('mouseover')
     cy.findByText(

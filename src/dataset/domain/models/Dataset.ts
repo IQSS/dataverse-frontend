@@ -234,7 +234,8 @@ export class Dataset {
     public readonly labels: DatasetLabel[],
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
-    public readonly metadataBlocks: DatasetMetadataBlocks
+    public readonly metadataBlocks: DatasetMetadataBlocks,
+    public readonly thumbnail?: string
   ) {}
 
   public getTitle(): string {
@@ -250,7 +251,8 @@ export class Dataset {
       public readonly citation: string,
       public readonly summaryFields: DatasetMetadataBlock[],
       public readonly license: DatasetLicense = defaultLicense,
-      public readonly metadataBlocks: DatasetMetadataBlocks
+      public readonly metadataBlocks: DatasetMetadataBlocks,
+      public readonly thumbnail?: string
     ) {
       this.withLabels()
     }
@@ -308,7 +310,8 @@ export class Dataset {
         this.labels,
         this.summaryFields,
         this.license,
-        this.metadataBlocks
+        this.metadataBlocks,
+        this.thumbnail
       )
     }
   }
