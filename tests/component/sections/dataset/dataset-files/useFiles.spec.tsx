@@ -10,6 +10,7 @@ import {
   DatasetPublishingStatus,
   DatasetVersion
 } from '../../../../../src/dataset/domain/models/Dataset'
+import { FileCriteria, FileSortByOption } from '../../../../../src/files/domain/models/FileCriteria'
 
 const files = FileMother.createMany(100)
 const filesCountInfo = FilesCountInfoMother.create({ total: 100 })
@@ -26,12 +27,14 @@ const datasetVersion = new DatasetVersion(
 
 const FilesTableTestComponent = ({ datasetPersistentId }: { datasetPersistentId: string }) => {
   const [paginationInfo, setPaginationInfo] = useState<FilePaginationInfo>(new FilePaginationInfo())
+  const [criteria, setCriteria] = useState<FileCriteria>(new FileCriteria())
   const { isLoading, files, filesTotalDownloadSize } = useFiles(
     fileRepository,
     datasetPersistentId,
     datasetVersion,
     setPaginationInfo,
-    paginationInfo
+    paginationInfo,
+    criteria
   )
 
   if (isLoading) {
@@ -39,6 +42,12 @@ const FilesTableTestComponent = ({ datasetPersistentId }: { datasetPersistentId:
   }
   return (
     <>
+      <button
+        onClick={() => {
+          setCriteria(criteria.withSortBy(FileSortByOption.NAME_ZA))
+        }}>
+        Sort by name Z-A
+      </button>
       <div>Files count: {paginationInfo.totalFiles}</div>
       <div>Files total download size: {filesTotalDownloadSize}</div>
       <table>
@@ -96,7 +105,7 @@ describe('useFiles', () => {
       'persistentId',
       datasetVersion,
       new FilePaginationInfo(1, 10, 100),
-      undefined
+      new FileCriteria()
     )
 
     cy.findByText('Files count: 100').should('exist')
@@ -147,6 +156,28 @@ describe('useFiles', () => {
     cy.wrap(fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId).should(
       'be.calledOnceWith',
       'persistentId'
+    )
+  })
+
+  it('calls the file repository to get the files total count on file criteria change', () => {
+    cy.customMount(<FilesTableTestComponent datasetPersistentId="persistentId" />)
+
+    cy.findByText('Files count: 100').should('exist')
+    cy.wrap(fileRepository.getFilesCountInfoByDatasetPersistentId).should(
+      'be.calledOnceWith',
+      'persistentId',
+      datasetVersion,
+      new FileCriteria()
+    )
+
+    cy.findByText('Sort by name Z-A').click()
+
+    cy.findByText('Files count: 100').should('exist')
+    cy.wrap(fileRepository.getFilesCountInfoByDatasetPersistentId).should(
+      'be.calledWith',
+      'persistentId',
+      datasetVersion,
+      new FileCriteria().withSortBy(FileSortByOption.NAME_ZA)
     )
   })
 })

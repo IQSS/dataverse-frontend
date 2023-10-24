@@ -35,7 +35,8 @@ export class FileJSDataverseRepository implements FileRepository {
         includeDeaccessioned,
         jsPagination.limit,
         jsPagination.offset,
-        DomainFileMapper.toJSFileCriteria(criteria)
+        DomainFileMapper.toJSFileSearchCriteria(criteria),
+        DomainFileMapper.toJSFileOrderCriteria(criteria.sortBy)
       )
       .then((jsFiles) => jsFiles.map((jsFile) => JSFileMapper.toFile(jsFile, datasetVersion)))
       .then((files) => FileJSDataverseRepository.getAllWithDownloadCount(files))
@@ -69,11 +70,16 @@ export class FileJSDataverseRepository implements FileRepository {
 
   getFilesCountInfoByDatasetPersistentId(
     datasetPersistentId: string,
-    datasetVersion: DatasetVersion
+    datasetVersion: DatasetVersion,
+    criteria: FileCriteria
   ): Promise<FilesCountInfo> {
-    // TODO - Take into account the FileCriteria https://github.com/IQSS/dataverse-frontend/issues/172
     return getDatasetFileCounts
-      .execute(datasetPersistentId, datasetVersion.toString(), includeDeaccessioned)
+      .execute(
+        datasetPersistentId,
+        datasetVersion.toString(),
+        includeDeaccessioned,
+        DomainFileMapper.toJSFileSearchCriteria(criteria)
+      )
       .then((jsFilesCountInfo) => {
         return JSFileMapper.toFilesCountInfo(jsFilesCountInfo)
       })
