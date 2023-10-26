@@ -4,10 +4,10 @@ import {
   getDataset,
   getDatasetCitation,
   getDatasetSummaryFieldNames,
-  WriteError,
   Dataset as JSDataset,
   getPrivateUrlDataset,
-  getPrivateUrlDatasetCitation
+  getPrivateUrlDatasetCitation,
+  ReadError
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 
@@ -29,7 +29,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
         JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, requestedVersion)
       )
-      .catch((error: WriteError) => {
+      .catch((error: ReadError) => {
         if (!version) {
           throw new Error(error.message)
         }
@@ -46,7 +46,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
         JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames)
       )
-      .catch((error: WriteError) => {
+      .catch((error: ReadError) => {
         throw new Error(error.message)
       })
   }

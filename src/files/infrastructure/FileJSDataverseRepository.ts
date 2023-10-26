@@ -4,16 +4,20 @@ import { FilesCountInfo } from '../domain/models/FilesCountInfo'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
 import { FileUserPermissions } from '../domain/models/FileUserPermissions'
 import {
+  FileDownloadSizeMode,
   getDatasetFileCounts,
   getDatasetFiles,
+  getDatasetFilesTotalDownloadSize,
   getFileDownloadCount,
   getFileUserPermissions,
-  WriteError
+  ReadError
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
 import { JSFileMapper } from './mappers/JSFileMapper'
 import { DatasetVersion } from '../../dataset/domain/models/Dataset'
+
+const includeDeaccessioned = true
 
 export class FileJSDataverseRepository implements FileRepository {
   getAllByDatasetPersistentId(
@@ -28,13 +32,14 @@ export class FileJSDataverseRepository implements FileRepository {
       .execute(
         datasetPersistentId,
         datasetVersion.toString(),
+        includeDeaccessioned,
         jsPagination.limit,
         jsPagination.offset,
         DomainFileMapper.toJSFileCriteria(criteria)
       )
       .then((jsFiles) => jsFiles.map((jsFile) => JSFileMapper.toFile(jsFile, datasetVersion)))
       .then((files) => FileJSDataverseRepository.getAllWithDownloadCount(files))
-      .catch((error: WriteError) => {
+      .catch((error: ReadError) => {
         throw new Error(error.message)
       })
   }
@@ -68,11 +73,22 @@ export class FileJSDataverseRepository implements FileRepository {
   ): Promise<FilesCountInfo> {
     // TODO - Take into account the FileCriteria https://github.com/IQSS/dataverse-frontend/issues/172
     return getDatasetFileCounts
-      .execute(datasetPersistentId, datasetVersion.toString())
+      .execute(datasetPersistentId, datasetVersion.toString(), includeDeaccessioned)
       .then((jsFilesCountInfo) => {
         return JSFileMapper.toFilesCountInfo(jsFilesCountInfo)
       })
-      .catch((error: WriteError) => {
+      .catch((error: ReadError) => {
+        throw new Error(error.message)
+      })
+  }
+
+  getFilesTotalDownloadSizeByDatasetPersistentId(
+    datasetPersistentId: string,
+    datasetVersion: DatasetVersion
+  ): Promise<number> {
+    return getDatasetFilesTotalDownloadSize
+      .execute(datasetPersistentId, datasetVersion.toString(), FileDownloadSizeMode.ARCHIVAL)
+      .catch((error: ReadError) => {
         throw new Error(error.message)
       })
   }
@@ -83,7 +99,7 @@ export class FileJSDataverseRepository implements FileRepository {
       .then((jsFileUserPermissions) =>
         JSFileMapper.toFileUserPermissions(id, jsFileUserPermissions)
       )
-      .catch((error: WriteError) => {
+      .catch((error: ReadError) => {
         throw new Error(error.message)
       })
   }
