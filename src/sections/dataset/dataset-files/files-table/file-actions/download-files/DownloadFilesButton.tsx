@@ -25,7 +25,8 @@ export function DownloadFilesButton({ files }: DownloadFilesButtonProps) {
         id="download-files"
         icon={<Download className={styles.icon} />}
         title="Download"
-        variant="secondary">
+        variant="secondary"
+        withSpacing>
         <DropdownButtonItem>Original Format</DropdownButtonItem>
         <DropdownButtonItem>Archival Format (.tab)</DropdownButtonItem>
       </DropdownButton>
@@ -33,7 +34,7 @@ export function DownloadFilesButton({ files }: DownloadFilesButtonProps) {
   }
 
   return (
-    <Button variant="secondary" icon={<Download className={styles.icon} />}>
+    <Button variant="secondary" icon={<Download className={styles.icon} />} withSpacing>
       Download
     </Button>
   )
