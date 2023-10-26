@@ -179,4 +179,8 @@ export class File {
     }
     return false
   }
+
+  get isTabularData(): boolean {
+    return this.tabularData !== undefined
+  }
 }
