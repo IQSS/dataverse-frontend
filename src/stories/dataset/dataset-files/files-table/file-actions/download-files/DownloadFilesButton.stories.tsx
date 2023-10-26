@@ -17,5 +17,19 @@ export default meta
 type Story = StoryObj<typeof EditFilesMenu>
 
 export const NonTabularFiles: Story = {
-  render: () => <DownloadFilesButton files={FileMother.createMany(2)} />
+  render: () => <DownloadFilesButton files={FileMother.createMany(2, { tabularData: undefined })} />
+}
+
+export const TabularFiles: Story = {
+  render: () => (
+    <DownloadFilesButton
+      files={FileMother.createMany(2, {
+        tabularData: {
+          variablesCount: 2,
+          observationsCount: 3,
+          unf: 'some-unf'
+        }
+      })}
+    />
+  )
 }
