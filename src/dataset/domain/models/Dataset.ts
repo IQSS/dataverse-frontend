@@ -275,6 +275,11 @@ export enum DatasetLockReason {
   FILE_VALIDATION_FAILED = 'fileValidationFailed'
 }
 
+export interface PrivateUrl {
+  token: string
+  urlSnippet: string
+}
+
 export class Dataset {
   constructor(
     public readonly persistentId: string,
@@ -290,7 +295,7 @@ export class Dataset {
     public readonly hasValidTermsOfAccess: boolean,
     public readonly isValid: boolean,
     public readonly isReleased: boolean,
-    public readonly privateUrl?: string
+    public readonly privateUrl?: PrivateUrl
   ) {}
 
   public getTitle(): string {
@@ -335,8 +340,7 @@ export class Dataset {
       public readonly hasValidTermsOfAccess: boolean,
       public readonly isValid: boolean,
       public readonly isReleased: boolean,
-      public readonly privateUrl?: string,
-      public readonly privateUrlToken?: string
+      public readonly privateUrl?: PrivateUrl
     ) {
       this.withLabels()
       this.withAlerts()
@@ -420,15 +424,19 @@ export class Dataset {
           )
         }
       }
-      if (this.privateUrl && !this.privateUrlToken) {
-        const dynamicFields = { privateUrl: this.privateUrl }
-        this.alerts.push(
-          new DatasetAlert('info', DatasetAlertMessageKey.SHARE_UNPUBLISHED_DATASET, dynamicFields)
-        )
-      }
-
-      if (this.privateUrlToken) {
-        this.alerts.push(new DatasetAlert('warning', DatasetAlertMessageKey.UNPUBLISHED_DATASET))
+      if (this.privateUrl) {
+        if (this.permissions.canPublishDataset) {
+          const dynamicFields = { privateUrl: this.privateUrl.urlSnippet + this.privateUrl.token }
+          this.alerts.push(
+            new DatasetAlert(
+              'info',
+              DatasetAlertMessageKey.SHARE_UNPUBLISHED_DATASET,
+              dynamicFields
+            )
+          )
+        } else {
+          this.alerts.push(new DatasetAlert('warning', DatasetAlertMessageKey.UNPUBLISHED_DATASET))
+        }
       }
     }
 

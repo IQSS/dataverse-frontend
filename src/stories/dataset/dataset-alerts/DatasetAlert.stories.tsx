@@ -94,9 +94,11 @@ export const SharePrivateUrl: Story = {
         1,
         0
       ),
-      permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed(),
-      privateUrl:
-        'http://localhost:8080/privateurl.xhtml?token=cd943c75-1cc7-4c1d-9717-98141d65d5cb'
+      permissions: DatasetPermissionsMother.createWithAllAllowed(),
+      privateUrl: {
+        urlSnippet: 'http://localhost:8080/privateurl.xhtml?token=',
+        token: 'cd943c75-1cc7-4c1d-9717-98141d65d5cb'
+      }
     })
 
     return (
@@ -108,21 +110,22 @@ export const SharePrivateUrl: Story = {
 }
 export const UsePrivateUrl: Story = {
   render: () => {
-    const dataset = DatasetMother.createWithPrivateUrlToken(
-      'cd943c75-1cc7-4c1d-9717-98141d65d5cb',
-      {
-        version: new DatasetVersion(
-          1,
-          DatasetPublishingStatus.RELEASED,
-          true,
-          false,
-          DatasetPublishingStatus.DRAFT,
-          1,
-          0
-        ),
-        permissions: DatasetPermissionsMother.createWithNoneAllowed()
+    const dataset = DatasetMother.createRealistic({
+      version: new DatasetVersion(
+        1,
+        DatasetPublishingStatus.RELEASED,
+        true,
+        false,
+        DatasetPublishingStatus.DRAFT,
+        1,
+        0
+      ),
+      permissions: DatasetPermissionsMother.createWithNoneAllowed(),
+      privateUrl: {
+        urlSnippet: 'http://localhost:8080/privateurl.xhtml?token=',
+        token: 'cd943c75-1cc7-4c1d-9717-98141d65d5cb'
       }
-    )
+    })
 
     return (
       <div>

@@ -12,7 +12,14 @@ export const WithDatasetPrivateUrl = (Story: StoryFn) => {
   ): Promise<Dataset | undefined> => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(DatasetMother.createWithPrivateUrlToken(privateUrlToken))
+        resolve(
+          DatasetMother.createRealistic({
+            privateUrl: {
+              urlSnippet: 'http://localhost:8080/privateurl.xhtml?token=',
+              token: 'cd943c75-1cc7-4c1d-9717-98141d65d5cb'
+            }
+          })
+        )
       }, 1000)
     })
   }

@@ -107,12 +107,15 @@ it('does not show draft alert if version is RELEASED', () => {
   cy.findByRole('alert').should('not.exist')
 })
 
-it('shows draft & share private url message if privateUrlToken exists', () => {
+it('shows draft & share private url message if privateUrl exists and user can edit', () => {
   cy.fixture('../../../public/locales/en/dataset.json').then((datasetText: DatasetTranslation) => {
-    const privateUrlToken = '12345'
-    const dataset = DatasetMother.createWithPrivateUrlToken(privateUrlToken, {
+    const dataset = DatasetMother.createRealistic({
       version: DatasetVersionMother.createDraftAsLatestVersion(),
-      permissions: DatasetPermissionsMother.createWithAllAllowed()
+      permissions: DatasetPermissionsMother.createWithAllAllowed(),
+      privateUrl: {
+        urlSnippet: 'http://localhost:8080/privateurl.xhtml?token=',
+        token: 'cd943c75-1cc7-4c1d-9717-98141d65d5cb'
+      }
     })
     cy.customMount(<DatasetAlerts alerts={dataset.alerts} />)
     const expectedMessageKeys = [
@@ -127,12 +130,15 @@ it('shows draft & share private url message if privateUrlToken exists', () => {
     })
   })
 })
-it('shows  private url message  only if privateUrlToken exists and user cannot edit', () => {
+it('shows  private url message  only if privateUrl exists and user cannot edit', () => {
   cy.fixture('../../../public/locales/en/dataset.json').then((datasetText: DatasetTranslation) => {
-    const privateUrlToken = '12345'
-    const dataset = DatasetMother.createWithPrivateUrlToken(privateUrlToken, {
+    const dataset = DatasetMother.createRealistic({
       version: DatasetVersionMother.createDraftAsLatestVersion(),
-      permissions: DatasetPermissionsMother.createWithNoneAllowed()
+      permissions: DatasetPermissionsMother.createWithNoneAllowed(),
+      privateUrl: {
+        urlSnippet: 'http://localhost:8080/privateurl.xhtml?token=',
+        token: 'cd943c75-1cc7-4c1d-9717-98141d65d5cb'
+      }
     })
     cy.customMount(<DatasetAlerts alerts={dataset.alerts} />)
     const expectedMessageKey = DatasetAlertMessageKey.UNPUBLISHED_DATASET
