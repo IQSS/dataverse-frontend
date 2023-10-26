@@ -120,6 +120,13 @@
         "provenance": "Provenance",
         "delete": "Delete"
       }
+    },
+    "downloadFiles": {
+        "title": "Download",
+        "options": {
+            "original": "Original Format",
+            "archival": "Archival Format (.tab)"
+        }
     }
   },
   "requestAccess": {

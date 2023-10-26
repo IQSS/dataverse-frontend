@@ -3,6 +3,7 @@ import { useDataset } from '../../../../DatasetContext'
 import { Button, DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { Download } from 'react-bootstrap-icons'
 import styles from './DownloadFilesButton.module.scss'
+import { useTranslation } from 'react-i18next'
 
 interface DownloadFilesButtonProps {
   files: File[]
@@ -10,6 +11,7 @@ interface DownloadFilesButtonProps {
 
 const MINIMUM_FILES_COUNT_TO_SHOW_DOWNLOAD_FILES_BUTTON = 1
 export function DownloadFilesButton({ files }: DownloadFilesButtonProps) {
+  const { t } = useTranslation('files')
   const { dataset } = useDataset()
 
   if (
@@ -24,18 +26,18 @@ export function DownloadFilesButton({ files }: DownloadFilesButtonProps) {
       <DropdownButton
         id="download-files"
         icon={<Download className={styles.icon} />}
-        title="Download"
+        title={t('actions.downloadFiles.title')}
         variant="secondary"
         withSpacing>
-        <DropdownButtonItem>Original Format</DropdownButtonItem>
-        <DropdownButtonItem>Archival Format (.tab)</DropdownButtonItem>
+        <DropdownButtonItem>{t('actions.downloadFiles.options.original')}</DropdownButtonItem>
+        <DropdownButtonItem>{t('actions.downloadFiles.options.archival')}</DropdownButtonItem>
       </DropdownButton>
     )
   }
 
   return (
     <Button variant="secondary" icon={<Download className={styles.icon} />} withSpacing>
-      Download
+      {t('actions.downloadFiles.title')}
     </Button>
   )
 }
