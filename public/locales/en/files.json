@@ -103,6 +103,11 @@
       "message": "This file has already been deleted (or replaced) in the current version. It may not be edited.",
       "close": "Close"
     },
+    "noSelectedFilesAlert": {
+      "title": "Select File(s)",
+      "message": "Please select one or more files.",
+      "close": "Close"
+    },
     "accessFileMenu": {
       "title": "Access File",
       "headers": {
@@ -122,11 +127,11 @@
       }
     },
     "downloadFiles": {
-        "title": "Download",
-        "options": {
-            "original": "Original Format",
-            "archival": "Archival Format (.tab)"
-        }
+      "title": "Download",
+      "options": {
+        "original": "Original Format",
+        "archival": "Archival Format (.tab)"
+      }
     }
   },
   "requestAccess": {

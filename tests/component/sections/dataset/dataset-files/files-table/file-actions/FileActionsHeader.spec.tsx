@@ -20,7 +20,7 @@ describe('FileActionsHeader', () => {
       <DatasetProvider
         repository={datasetRepository}
         searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
-        <FileActionsHeader files={files} />
+        <FileActionsHeader files={files} fileSelection={{}} />
       </DatasetProvider>
     )
 

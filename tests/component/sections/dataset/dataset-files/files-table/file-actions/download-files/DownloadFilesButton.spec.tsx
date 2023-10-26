@@ -30,7 +30,10 @@ describe('DownloadFilesButton', () => {
     })
     const files = FileMother.createMany(2)
     cy.mountAuthenticated(
-      withDataset(<DownloadFilesButton files={files} />, datasetWithDownloadFilesPermission)
+      withDataset(
+        <DownloadFilesButton files={files} fileSelection={{}} />,
+        datasetWithDownloadFilesPermission
+      )
     )
 
     cy.findByRole('button', { name: 'Download' }).should('exist')
@@ -42,7 +45,10 @@ describe('DownloadFilesButton', () => {
     })
     const files = FileMother.createMany(1)
     cy.mountAuthenticated(
-      withDataset(<DownloadFilesButton files={files} />, datasetWithDownloadFilesPermission)
+      withDataset(
+        <DownloadFilesButton files={files} fileSelection={{}} />,
+        datasetWithDownloadFilesPermission
+      )
     )
 
     cy.findByRole('button', { name: 'Download' }).should('not.exist')
@@ -54,7 +60,10 @@ describe('DownloadFilesButton', () => {
     })
     const files = FileMother.createMany(2)
     cy.mountAuthenticated(
-      withDataset(<DownloadFilesButton files={files} />, datasetWithoutDownloadFilesPermission)
+      withDataset(
+        <DownloadFilesButton files={files} fileSelection={{}} />,
+        datasetWithoutDownloadFilesPermission
+      )
     )
 
     cy.findByRole('button', { name: 'Download' }).should('not.exist')
@@ -72,7 +81,10 @@ describe('DownloadFilesButton', () => {
       }
     })
     cy.mountAuthenticated(
-      withDataset(<DownloadFilesButton files={files} />, datasetWithDownloadFilesPermission)
+      withDataset(
+        <DownloadFilesButton files={files} fileSelection={{}} />,
+        datasetWithDownloadFilesPermission
+      )
     )
 
     cy.findByRole('button', { name: 'Download' }).click()
@@ -86,11 +98,49 @@ describe('DownloadFilesButton', () => {
     })
     const files = FileMother.createMany(2, { tabularData: undefined })
     cy.mountAuthenticated(
-      withDataset(<DownloadFilesButton files={files} />, datasetWithDownloadFilesPermission)
+      withDataset(
+        <DownloadFilesButton files={files} fileSelection={{}} />,
+        datasetWithDownloadFilesPermission
+      )
     )
 
     cy.findByRole('button', { name: 'Download' }).click()
     cy.findByRole('button', { name: 'Original Format' }).should('not.exist')
     cy.findByRole('button', { name: 'Archival Format (.tab)' }).should('not.exist')
+  })
+
+  it('shows the No Selected Files modal if no files are selected', () => {
+    const datasetWithDownloadFilesPermission = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed()
+    })
+    const files = FileMother.createMany(2)
+    cy.mountAuthenticated(
+      withDataset(
+        <DownloadFilesButton files={files} fileSelection={{}} />,
+        datasetWithDownloadFilesPermission
+      )
+    )
+
+    cy.findByRole('button', { name: 'Download' }).click()
+    cy.findByText('Select File(s)').should('exist')
+  })
+
+  it('does not show the No Selected Files modal if files are selected', () => {
+    const datasetWithDownloadFilesPermission = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed()
+    })
+    const files = FileMother.createMany(2)
+    cy.mountAuthenticated(
+      withDataset(
+        <DownloadFilesButton
+          files={files}
+          fileSelection={{ 'some-file-id': FileMother.create() }}
+        />,
+        datasetWithDownloadFilesPermission
+      )
+    )
+
+    cy.findByRole('button', { name: 'Download' }).click()
+    cy.findByText('Select File(s)').should('not.exist')
   })
 })
