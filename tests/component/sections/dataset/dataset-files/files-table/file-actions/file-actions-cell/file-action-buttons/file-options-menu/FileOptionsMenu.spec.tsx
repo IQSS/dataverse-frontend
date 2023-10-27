@@ -1,46 +1,45 @@
 import { FileOptionsMenu } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/FileOptionsMenu'
 import { FileMother } from '../../../../../../../../files/domain/models/FileMother'
-import { UserMother } from '../../../../../../../../users/domain/models/UserMother'
-import { UserRepository } from '../../../../../../../../../../src/users/domain/repositories/UserRepository'
-import { SessionProvider } from '../../../../../../../../../../src/sections/session/SessionProvider'
-import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
-import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
-import { FilePermissionsProvider } from '../../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
+import { ReactNode } from 'react'
+import { Dataset as DatasetModel } from '../../../../../../../../../../src/dataset/domain/models/Dataset'
+import { DatasetProvider } from '../../../../../../../../../../src/sections/dataset/DatasetProvider'
+import { DatasetRepository } from '../../../../../../../../../../src/dataset/domain/repositories/DatasetRepository'
+import {
+  DatasetLockMother,
+  DatasetMother,
+  DatasetPermissionsMother
+} from '../../../../../../../../dataset/domain/models/DatasetMother'
 
 const file = FileMother.createDefault()
-const user = UserMother.create()
-const userRepository = {} as UserRepository
-const fileRepository: FileRepository = {} as FileRepository
+const datasetRepository: DatasetRepository = {} as DatasetRepository
+const datasetWithUpdatePermissions = DatasetMother.create({
+  permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed(),
+  hasValidTermsOfAccess: true
+})
 describe('FileOptionsMenu', () => {
-  beforeEach(() => {
-    userRepository.getAuthenticated = cy.stub().resolves(user)
-    userRepository.removeAuthenticated = cy.stub().resolves()
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      FileUserPermissionsMother.create({
-        fileId: file.id,
-        canEditDataset: true
-      })
+  const withDataset = (component: ReactNode, dataset: DatasetModel | undefined) => {
+    datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
+    datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
+
+    return (
+      <DatasetProvider
+        repository={datasetRepository}
+        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
+        {component}
+      </DatasetProvider>
     )
-  })
+  }
 
   it('renders the FileOptionsMenu', () => {
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <SessionProvider repository={userRepository}>
-          <FileOptionsMenu file={file} />
-        </SessionProvider>
-      </FilePermissionsProvider>
+    cy.mountAuthenticated(
+      withDataset(<FileOptionsMenu file={file} />, datasetWithUpdatePermissions)
     )
     cy.findByRole('button', { name: 'File Options' }).should('exist')
   })
 
   it('renders the file options menu with tooltip', () => {
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <SessionProvider repository={userRepository}>
-          <FileOptionsMenu file={file} />
-        </SessionProvider>
-      </FilePermissionsProvider>
+    cy.mountAuthenticated(
+      withDataset(<FileOptionsMenu file={file} />, datasetWithUpdatePermissions)
     )
 
     cy.findByRole('button', { name: 'File Options' }).trigger('mouseover')
@@ -48,12 +47,8 @@ describe('FileOptionsMenu', () => {
   })
 
   it('renders the dropdown header', () => {
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <SessionProvider repository={userRepository}>
-          <FileOptionsMenu file={file} />
-        </SessionProvider>
-      </FilePermissionsProvider>
+    cy.mountAuthenticated(
+      withDataset(<FileOptionsMenu file={file} />, datasetWithUpdatePermissions)
     )
 
     cy.findByRole('button', { name: 'File Options' }).should('exist').click()
@@ -61,52 +56,45 @@ describe('FileOptionsMenu', () => {
   })
 
   it('does not render is the user is not authenticated', () => {
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <FileOptionsMenu file={file} />
-      </FilePermissionsProvider>
-    )
+    cy.customMount(withDataset(<FileOptionsMenu file={file} />, datasetWithUpdatePermissions))
 
     cy.findByRole('button', { name: 'File Options' }).should('not.exist')
   })
 
   it('does not render is the user do not have permissions to update the dataset', () => {
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      FileUserPermissionsMother.create({
-        fileId: file.id,
-        canEditDataset: false
-      })
-    )
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <SessionProvider repository={userRepository}>
-          <FileOptionsMenu file={file} />
-        </SessionProvider>
-      </FilePermissionsProvider>
+    const datasetWithNoUpdatePermissions = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithUpdateDatasetNotAllowed()
+    })
+    cy.mountAuthenticated(
+      withDataset(<FileOptionsMenu file={file} />, datasetWithNoUpdatePermissions)
     )
     cy.findByRole('button', { name: 'File Options' }).should('not.exist')
   })
 
-  it.skip('does not render if there are not valid terms of access', () => {
-    // TODO: Implement this test
+  it('does not render if there are not valid terms of access', () => {
+    const datasetWithNoTermsOfAccess = DatasetMother.create({
+      hasValidTermsOfAccess: false
+    })
+    cy.mountAuthenticated(withDataset(<FileOptionsMenu file={file} />, datasetWithNoTermsOfAccess))
+    cy.findByRole('button', { name: 'File Options' }).should('not.exist')
   })
 
-  it.skip('renders disabled menu if dataset is locked from edits', () => {
-    // TODO: Implement this test
+  it('renders disabled menu if dataset is locked from edits', () => {
+    const datasetLockedFromEdits = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed(),
+      locks: [DatasetLockMother.createLockedInEditInProgress()],
+      hasValidTermsOfAccess: true
+    })
+    cy.mountAuthenticated(withDataset(<FileOptionsMenu file={file} />, datasetLockedFromEdits))
+
+    cy.findByRole('button', { name: 'File Options' }).should('exist').should('be.disabled')
   })
 
   it('opens fileAlreadyDeletedPrevious modal if file is already deleted', () => {
-    userRepository.getAuthenticated = cy.stub().resolves(user)
-    userRepository.removeAuthenticated = cy.stub().resolves()
-
     const file = FileMother.createDeleted()
 
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <SessionProvider repository={userRepository}>
-          <FileOptionsMenu file={file} />
-        </SessionProvider>
-      </FilePermissionsProvider>
+    cy.mountAuthenticated(
+      withDataset(<FileOptionsMenu file={file} />, datasetWithUpdatePermissions)
     )
     cy.findByRole('button', { name: 'File Options' }).should('exist').click()
 
@@ -118,14 +106,9 @@ describe('FileOptionsMenu', () => {
   })
 
   it('renders the menu options', () => {
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <SessionProvider repository={userRepository}>
-          <FileOptionsMenu file={file} />
-        </SessionProvider>
-      </FilePermissionsProvider>
+    cy.mountAuthenticated(
+      withDataset(<FileOptionsMenu file={file} />, datasetWithUpdatePermissions)
     )
-
     cy.findByRole('button', { name: 'File Options' }).click()
     cy.findByRole('button', { name: 'Metadata' }).should('exist')
   })

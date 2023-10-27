@@ -9,6 +9,7 @@ import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationI
 import { useFilePermissions } from '../../file/file-permissions/FilePermissionsContext'
 import { FilePermission } from '../../../files/domain/models/FileUserPermissions'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
+import { getFilesTotalDownloadSize } from '../../../files/domain/useCases/getFilesTotalDownloadSize'
 
 export function useFiles(
   filesRepository: FileRepository,
@@ -22,6 +23,7 @@ export function useFiles(
   const [files, setFiles] = useState<File[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [filesCountInfo, setFilesCountInfo] = useState<FilesCountInfo>()
+  const [filesTotalDownloadSize, setFilesTotalDownloadSize] = useState<number>(0)
 
   useEffect(() => {
     getFilesCountInfoByDatasetPersistentId(filesRepository, datasetPersistentId, datasetVersion)
@@ -65,9 +67,20 @@ export function useFiles(
     }
   }, [filesRepository, datasetPersistentId, datasetVersion, paginationInfo, criteria])
 
+  useEffect(() => {
+    getFilesTotalDownloadSize(filesRepository, datasetPersistentId, datasetVersion)
+      .then((filesTotalDownloadSize: number) => {
+        setFilesTotalDownloadSize(filesTotalDownloadSize)
+      })
+      .catch((error) => {
+        console.error('There was an error getting the files total download size', error)
+      })
+  }, [filesRepository, datasetPersistentId, datasetVersion])
+
   return {
     files,
     isLoading,
-    filesCountInfo
+    filesCountInfo,
+    filesTotalDownloadSize
   }
 }

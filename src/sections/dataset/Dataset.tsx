@@ -1,5 +1,3 @@
-import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { useDataset } from './useDataset'
 import { Tabs, Col, Row } from '@iqss/dataverse-design-system'
 import styles from './Dataset.module.scss'
 import { DatasetLabels } from './dataset-labels/DatasetLabels'
@@ -12,21 +10,22 @@ import { DatasetSummary } from './dataset-summary/DatasetSummary'
 import { DatasetCitation } from './dataset-citation/DatasetCitation'
 import { DatasetFiles } from './dataset-files/DatasetFiles'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
+import { DatasetActionButtons } from './dataset-action-buttons/DatasetActionButtons'
+import { useDataset } from './DatasetContext'
+import { useEffect } from 'react'
 
 interface DatasetProps {
-  datasetRepository: DatasetRepository
   fileRepository: FileRepository
-  searchParams: {
-    persistentId?: string
-    privateUrlToken?: string
-    version?: string
-  }
 }
 
-export function Dataset({ datasetRepository, fileRepository, searchParams }: DatasetProps) {
-  const { dataset } = useDataset(datasetRepository, searchParams)
-  const { isLoading } = useLoading()
+export function Dataset({ fileRepository }: DatasetProps) {
+  const { setIsLoading } = useLoading()
+  const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('dataset')
+
+  useEffect(() => {
+    setIsLoading(isLoading)
+  }, [isLoading])
 
   if (isLoading) {
     return <DatasetSkeleton />
@@ -51,6 +50,9 @@ export function Dataset({ datasetRepository, fileRepository, searchParams }: Dat
                   citation={dataset.citation}
                   version={dataset.version}
                 />
+              </Col>
+              <Col sm={3}>
+                <DatasetActionButtons dataset={dataset} />
               </Col>
             </Row>
             <Row>

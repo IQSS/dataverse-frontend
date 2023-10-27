@@ -1,7 +1,7 @@
 import {
   Dataset as JSDataset,
-  DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataBlock as JSDatasetMetadataBlock,
+  DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataFields as JSDatasetMetadataFields,
   DatasetVersionInfo as JSDatasetVersionInfo
 } from '@iqss/dataverse-client-javascript'
@@ -9,18 +9,24 @@ import { DatasetVersionState as JSDatasetVersionState } from '@iqss/dataverse-cl
 import {
   Dataset,
   DatasetPublishingStatus,
-  MetadataBlockName,
   DatasetMetadataBlock,
-  DatasetVersion,
+  DatasetMetadataBlocks,
   DatasetMetadataFields,
-  DatasetMetadataBlocks
+  DatasetVersion,
+  MetadataBlockName
 } from '../../domain/models/Dataset'
 
 export class JSDatasetMapper {
-  static toDataset(jsDataset: JSDataset, citation: string, summaryFieldsNames: string[]): Dataset {
+  static toDataset(
+    jsDataset: JSDataset,
+    citation: string,
+    summaryFieldsNames: string[],
+    requestedVersion?: string,
+    privateUrl?: string
+  ): Dataset {
     return new Dataset.Builder(
       jsDataset.persistentId,
-      JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo),
+      JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo, requestedVersion),
       citation,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
@@ -30,19 +36,37 @@ export class JSDatasetMapper {
         jsDataset.publicationDate,
         jsDataset.citationDate
       ),
+      {
+        canDownloadFiles: true,
+        canUpdateDataset: true,
+        canPublishDataset: true,
+        canManageDatasetPermissions: true,
+        canManageFilesPermissions: true,
+        canDeleteDataset: true
+      }, // TODO Connect with dataset permissions
+      [], // TODO Connect with dataset locks
+      true, // TODO Connect with dataset hasValidTermsOfAccess
+      true, // TODO Connect with dataset isValid
+      !!jsDataset.versionInfo.releaseTime, // TODO Connect with dataset isReleased,
+      privateUrl,
       undefined // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
     ).build()
   }
 
   static toVersion(
     jDatasetVersionId: number,
-    jsDatasetVersionInfo: JSDatasetVersionInfo
+    jsDatasetVersionInfo: JSDatasetVersionInfo,
+    requestedVersion?: string
   ): DatasetVersion {
     return new DatasetVersion(
       jDatasetVersionId,
       JSDatasetMapper.toStatus(jsDatasetVersionInfo.state),
+      true, // TODO Connect with dataset version isLatest
+      false, // TODO Connect with dataset version isInReview
+      JSDatasetMapper.toStatus(jsDatasetVersionInfo.state), // TODO Connect with dataset version latestVersionState
       jsDatasetVersionInfo.majorNumber,
-      jsDatasetVersionInfo.minorNumber
+      jsDatasetVersionInfo.minorNumber,
+      requestedVersion
     )
   }
 

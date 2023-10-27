@@ -18,8 +18,48 @@
     "learnAbout": "Learn About",
     "standards": "Data Citation Standards"
   },
-
-  "actions": {
+  "datasetActionButtons": {
+    "title": "Dataset Action Buttons",
+    "submitForReview": {
+      "enabled": "Submit for Review",
+      "disabled": "Submitted for Review"
+    },
+    "publish": {
+      "title": "Publish Dataset",
+      "publish": "Publish",
+      "returnToAuthor": "Return to Author",
+      "changeCurationStatus": "Change Curation Status",
+      "removeCurrentStatus": "Remove Current Status"
+    },
+    "linkDataset": {
+      "title": "Link Dataset"
+    },
+    "editDataset": {
+      "title": "Edit Dataset",
+      "filesUpload": "Files (Upload)",
+      "metadata": "Metadata",
+      "terms": "Terms",
+      "privateUrl": "Private URL",
+      "thumbnailsPlusWidgets": "Thumbnails + Widgets",
+      "delete": {
+        "draft": "Delete Draft Version",
+        "released": "Delete Dataset"
+      },
+      "deaccession": "Deaccession Dataset",
+      "permissions": {
+        "title": "Permissions",
+        "dataset": "Dataset",
+        "file": "File"
+      }
+    },
+    "accessDataset": {
+      "title": "Access Dataset"
+    },
     "uploadFiles": "Upload Files"
+  },
+  "alerts": {
+    "draftVersion": "<b>This draft version needs to be published</b>. When ready for sharing, please <b>publish</b> it so that others can see these changes",
+    "requestedVersionNotFound": "Info – Version {0} was not found. This is version {1}",
+    "unpublishedDataset": "Privately share this dataset before it is published: {0}"
   }
 }

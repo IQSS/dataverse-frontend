@@ -11,7 +11,7 @@ export class SettingJSDataverseRepository implements SettingRepository {
       setTimeout(() => {
         resolve({
           name: SettingName.ZIP_DOWNLOAD_LIMIT,
-          value: new ZipDownloadLimit(500, FileSizeUnit.BYTES)
+          value: new ZipDownloadLimit(1, FileSizeUnit.BYTES)
         } as Setting<T>)
       }, 1000)
     })

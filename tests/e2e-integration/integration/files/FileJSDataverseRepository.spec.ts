@@ -91,7 +91,7 @@ describe('File JSDataverse Repository', () => {
             expect(file.version).to.deep.equal(expectedFile.version)
             expect(file.access).to.deep.equal(expectedFile.access)
             expect(file.type).to.deep.equal(expectedFile.type)
-            expect(file.date).to.deep.equal(expectedFile.date)
+            cy.compareDate(file.date.date, expectedFile.date.date)
             expect(file.downloadCount).to.deep.equal(expectedFile.downloadCount)
             expect(file.labels).to.deep.equal(expectedFile.labels)
             expect(file.checksum?.algorithm).to.deep.equal(expectedFile.checksum?.algorithm)
@@ -134,7 +134,15 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getAllByDatasetPersistentId(
           dataset.persistentId,
-          new DatasetVersion(dataset.version.id, DatasetPublishingStatus.RELEASED, 1, 0)
+          new DatasetVersion(
+            dataset.version.id,
+            DatasetPublishingStatus.RELEASED,
+            true,
+            false,
+            DatasetPublishingStatus.RELEASED,
+            1,
+            0
+          )
         )
         .then((files) => {
           const expectedPublishedFile = expectedFile
@@ -143,12 +151,12 @@ describe('File JSDataverse Repository', () => {
 
           files.forEach((file) => {
             expect(file.version).to.deep.equal(expectedPublishedFile.version)
-            expect(file.date).to.deep.equal(expectedFile.date)
+            cy.compareDate(file.date.date, expectedFile.date.date)
           })
         })
     })
 
-    it.skip('gets all the files by dataset persistentId after dataset deaccession', async () => {
+    it('gets all the files by dataset persistentId after dataset deaccession', async () => {
       const dataset = await DatasetHelper.createWithFiles(FileHelper.createMany(3)).then(
         (datasetResponse) => datasetRepository.getByPersistentId(datasetResponse.persistentId)
       )
@@ -162,11 +170,18 @@ describe('File JSDataverse Repository', () => {
       await TestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
       await TestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
 
-      // TODO - It always returns 404 when the dataset is deaccessioned, update the test when the issue is fixed
       await fileRepository
         .getAllByDatasetPersistentId(
           dataset.persistentId,
-          new DatasetVersion(dataset.version.id, DatasetPublishingStatus.DEACCESSIONED, 1, 0)
+          new DatasetVersion(
+            dataset.version.id,
+            DatasetPublishingStatus.DEACCESSIONED,
+            true,
+            false,
+            DatasetPublishingStatus.DEACCESSIONED,
+            1,
+            0
+          )
         )
         .then((files) => {
           const expectedDeaccessionedFile = expectedFile
@@ -487,11 +502,11 @@ describe('File JSDataverse Repository', () => {
         total: 6,
         perAccess: [
           {
-            access: FileAccessOption.PUBLIC,
+            access: FileAccessOption.RESTRICTED,
             count: 3
           },
           {
-            access: FileAccessOption.RESTRICTED,
+            access: FileAccessOption.PUBLIC,
             count: 3
           }
         ],
@@ -520,7 +535,75 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getFilesCountInfoByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((filesCountInfo) => {
-          expect(filesCountInfo).to.deep.equal(expectedFilesCountInfo)
+          expect(filesCountInfo.total).to.deep.equal(expectedFilesCountInfo.total)
+
+          const filesCountInfoPerAccessSorted = filesCountInfo.perAccess.sort((a, b) =>
+            a.access.localeCompare(b.access)
+          )
+          const expectedFilesCountInfoPerAccessSorted = expectedFilesCountInfo.perAccess.sort(
+            (a, b) => a.access.localeCompare(b.access)
+          )
+          expect(filesCountInfoPerAccessSorted).to.deep.equal(expectedFilesCountInfoPerAccessSorted)
+
+          const filesCountInfoPerFileTypeSorted = filesCountInfo.perFileType.sort((a, b) =>
+            a.type.value.localeCompare(b.type.value)
+          )
+          const expectedFilesCountInfoPerFileTypeSorted = expectedFilesCountInfo.perFileType.sort(
+            (a, b) => a.type.value.localeCompare(b.type.value)
+          )
+          expect(filesCountInfoPerFileTypeSorted).to.deep.equal(
+            expectedFilesCountInfoPerFileTypeSorted
+          )
+
+          const filesCountInfoPerFileTagSorted = filesCountInfo.perFileTag.sort((a, b) =>
+            a.tag.value.localeCompare(b.tag.value)
+          )
+          const expectedFilesCountInfoPerFileTagSorted = expectedFilesCountInfo.perFileTag.sort(
+            (a, b) => a.tag.value.localeCompare(b.tag.value)
+          )
+          expect(filesCountInfoPerFileTagSorted).to.deep.equal(
+            expectedFilesCountInfoPerFileTagSorted
+          )
+        })
+    })
+  })
+
+  describe('getFilesTotalDownloadSizeByDatasetPersistentId', () => {
+    it('gets the total download size of all files in a dataset', async () => {
+      const files = [
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          categories: ['category_1']
+        })
+      ]
+      const dataset = await DatasetHelper.createWithFiles(files).then((datasetResponse) =>
+        datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      )
+      if (!dataset) throw new Error('Dataset not found')
+
+      await TestsUtils.wait(2500) // wait for the files to be ingested
+
+      const expectedTotalDownloadSize = await fileRepository
+        .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((files) => {
+          return files.reduce((totalDownloadSize, file) => {
+            return totalDownloadSize + file.size.toBytes()
+          }, 0)
+        })
+      await fileRepository
+        .getFilesTotalDownloadSizeByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((totalDownloadSize) => {
+          expect(totalDownloadSize).to.deep.equal(expectedTotalDownloadSize)
         })
     })
   })

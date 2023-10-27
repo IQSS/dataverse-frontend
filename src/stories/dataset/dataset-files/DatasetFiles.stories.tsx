@@ -1,12 +1,12 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { DatasetFiles } from '../../../sections/dataset/dataset-files/DatasetFiles'
-import { DatasetMockData } from '../DatasetMockData'
 import { FileMockRepository } from '../../files/FileMockRepository'
 import { FileMockLoadingRepository } from '../../files/FileMockLoadingRepository'
 import { FileMockNoDataRepository } from '../../files/FileMockNoDataRepository'
 import { WithSettings } from '../../WithSettings'
 import { FileMockNoFiltersRepository } from '../../files/FileMockNoFiltersRepository'
+import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 
 const meta: Meta<typeof DatasetFiles> = {
   title: 'Sections/Dataset Page/DatasetFiles',
@@ -17,7 +17,7 @@ const meta: Meta<typeof DatasetFiles> = {
 export default meta
 type Story = StoryObj<typeof DatasetFiles>
 
-const testDataset = DatasetMockData()
+const testDataset = DatasetMother.createRealistic()
 
 export const Default: Story = {
   render: () => (

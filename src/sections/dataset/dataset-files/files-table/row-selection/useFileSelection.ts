@@ -60,7 +60,10 @@ export function useFileSelection(
   }
   const selectAllFiles = () => {
     setCurrentPageRowSelection(createRowSelection(paginationInfo.pageSize))
-    setFileSelection(createFileSelection(paginationInfo.totalFiles))
+
+    const totalFilesFileSelection = createFileSelection(paginationInfo.totalFiles)
+    const newFileSelection = { ...totalFilesFileSelection, ...fileSelection }
+    setFileSelection(newFileSelection)
   }
   const clearFileSelection = () => {
     setCurrentPageRowSelection({})
@@ -92,7 +95,7 @@ export function createRowSelection(numberOfRows: number) {
   return rowSelection
 }
 
-export function createFileSelection(numberOfRows: number) {
+export function createFileSelection(numberOfRows: number): FileSelection {
   const fileSelection: FileSelection = {}
 
   for (let i = 0; i < numberOfRows; i++) {
