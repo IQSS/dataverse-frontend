@@ -1,3 +1,5 @@
+import { UserMother } from '../component/users/domain/models/UserMother'
+
 export {}
 /// <reference types="cypress" />
 // ***********************************************
@@ -41,6 +43,8 @@ import { ThemeProvider } from '@iqss/dataverse-design-system'
 import { ReactNode } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import i18next from '../../src/i18n'
+import { UserRepository } from '../../src/users/domain/repositories/UserRepository'
+import { SessionProvider } from '../../src/sections/session/SessionProvider'
 
 // Define your custom mount function
 
@@ -50,6 +54,15 @@ Cypress.Commands.add('customMount', (component: ReactNode) => {
       <I18nextProvider i18n={i18next}>{component}</I18nextProvider>
     </ThemeProvider>
   )
+})
+
+Cypress.Commands.add('mountAuthenticated', (component: ReactNode) => {
+  const user = UserMother.create()
+  const userRepository = {} as UserRepository
+  userRepository.getAuthenticated = cy.stub().resolves(user)
+  userRepository.removeAuthenticated = cy.stub().resolves()
+
+  return cy.customMount(<SessionProvider repository={userRepository}>{component}</SessionProvider>)
 })
 
 Cypress.Commands.add('loginAsAdmin', (go?: string) => {
@@ -71,4 +84,10 @@ Cypress.Commands.add('loginAsAdmin', (go?: string) => {
 Cypress.Commands.add('getApiToken', () => {
   cy.loginAsAdmin('/dataverseuser.xhtml?selectTab=dataRelatedToMe')
   return cy.findByRole('link', { name: 'API Token' }).click().get('#apiToken code').invoke('text')
+})
+
+Cypress.Commands.add('compareDate', (date, expectedDate) => {
+  expect(date.getUTCDate()).to.deep.equal(expectedDate.getUTCDate())
+  expect(date.getUTCMonth()).to.deep.equal(expectedDate.getUTCMonth())
+  expect(date.getUTCFullYear()).to.deep.equal(expectedDate.getUTCFullYear())
 })

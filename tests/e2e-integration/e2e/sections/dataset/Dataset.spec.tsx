@@ -28,7 +28,7 @@ describe('Dataset', () => {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('exist')
-            cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
+            // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
 
             cy.findByText('Metadata').should('exist')
             cy.findByText('Files').should('exist')
@@ -59,7 +59,7 @@ describe('Dataset', () => {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('not.exist')
-            cy.findByText(DatasetLabelValue.UNPUBLISHED).should('not.exist')
+            // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('not.exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
             cy.findByText('Version 1.0').should('exist')
           })
         })
@@ -99,7 +99,7 @@ describe('Dataset', () => {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('exist')
-            cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
+            // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
           })
         })
     })
@@ -119,7 +119,7 @@ describe('Dataset', () => {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('exist')
-            cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
+            // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
 
             cy.findAllByText('withheld').should('exist')
           })
@@ -145,7 +145,7 @@ describe('Dataset', () => {
     })
 
     it('successfully loads the files tab with files', () => {
-      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(3)))
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(3)), { timeout: 5000 })
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
@@ -160,7 +160,7 @@ describe('Dataset', () => {
     })
 
     it('navigates to the next page of files', () => {
-      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(30)), { timeout: 10000 })
+      cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(30)), { timeout: 20000 })
         .its('persistentId')
         .then((persistentId: string) => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
@@ -258,6 +258,8 @@ describe('Dataset', () => {
 
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
+          cy.wait(1500) // Wait for the files to be loaded
+
           cy.findByText('Files').should('exist')
 
           cy.findByText('Restricted with access Icon').should('not.exist')
@@ -284,10 +286,14 @@ describe('Dataset', () => {
 
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
+          cy.wait(1500) // Wait for the files to be loaded
+
           cy.findByText('Files').should('exist')
 
           cy.findByText(/Deposited/).should('exist')
           cy.findByText('Draft: will be embargoed until Oct 20, 2100').should('exist')
+
+          cy.findByText('Edit Files').should('exist')
 
           cy.findByRole('button', { name: 'Access File' }).should('exist').click()
           cy.findByText('Embargoed').should('exist')

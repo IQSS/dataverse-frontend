@@ -5,11 +5,27 @@ import { SettingMother } from '../../tests/component/settings/domain/models/Sett
 import { ZipDownloadLimit } from '../settings/domain/models/ZipDownloadLimit'
 import { FileSizeUnit } from '../files/domain/models/File'
 
-const zipDownloadLimitMock = new ZipDownloadLimit(500, FileSizeUnit.BYTES)
+const zipDownloadLimitMock = new ZipDownloadLimit(1, FileSizeUnit.BYTES)
 export const WithSettings = (Story: StoryFn) => {
   // eslint-disable-next-line unused-imports/no-unused-vars
   function getSettingByName<T>(name: SettingName): Promise<Setting<T>> {
-    return Promise.resolve(SettingMother.createZipDownloadLimit(zipDownloadLimitMock) as Setting<T>)
+    switch (name) {
+      case SettingName.ZIP_DOWNLOAD_LIMIT:
+        return Promise.resolve(
+          SettingMother.createZipDownloadLimit(zipDownloadLimitMock) as Setting<T>
+        )
+      case SettingName.ALLOWED_EXTERNAL_STATUSES:
+        return Promise.resolve(
+          SettingMother.createExternalStatusesAllowed([
+            'Author Contacted',
+            'Privacy Review',
+            'Awaiting Paper Publication',
+            'Final Approval'
+          ]) as Setting<T>
+        )
+      case SettingName.HAS_PUBLIC_STORE:
+        return Promise.resolve(SettingMother.createHasPublicStore(false) as Setting<T>)
+    }
   }
 
   return (

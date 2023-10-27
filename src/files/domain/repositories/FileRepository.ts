@@ -16,5 +16,9 @@ export interface FileRepository {
     datasetPersistentId: string,
     datasetVersion: DatasetVersion
   ) => Promise<FilesCountInfo>
+  getFilesTotalDownloadSizeByDatasetPersistentId: (
+    datasetPersistentId: string,
+    datasetVersion: DatasetVersion
+  ) => Promise<number>
   getUserPermissionsById: (id: number) => Promise<FileUserPermissions>
 }

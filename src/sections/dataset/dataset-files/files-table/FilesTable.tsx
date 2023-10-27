@@ -7,18 +7,46 @@ import { RowSelectionMessage } from './row-selection/RowSelectionMessage'
 import { ZipDownloadLimitMessage } from './zip-download-limit-message/ZipDownloadLimitMessage'
 import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
+import { useEffect, useState } from 'react'
+import { FileSelection } from './row-selection/useFileSelection'
+import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
 
 interface FilesTableProps {
   files: File[]
   isLoading: boolean
   paginationInfo: FilePaginationInfo
+  filesTotalDownloadSize: number
+  criteria: FileCriteria
 }
 
-export function FilesTable({ files, isLoading, paginationInfo }: FilesTableProps) {
+export function FilesTable({
+  files,
+  isLoading,
+  paginationInfo,
+  filesTotalDownloadSize,
+  criteria
+}: FilesTableProps) {
   const { table, fileSelection, selectAllFiles, clearFileSelection } = useFilesTable(
     files,
     paginationInfo
   )
+  const [visitedPagination, setVisitedPagination] = useState<FilePaginationInfo>(paginationInfo)
+  const [visitedFiles, setVisitedFiles] = useState<FileSelection>({})
+
+  useEffect(() => {
+    if (visitedPagination.page == paginationInfo.page) {
+      setVisitedFiles((visitedFiles) => ({ ...visitedFiles, ...fileSelection }))
+    }
+    setVisitedPagination(paginationInfo)
+  }, [fileSelection])
+
+  const [previousCriteria, setPreviousCriteria] = useState<FileCriteria>(criteria)
+  useEffect(() => {
+    if (previousCriteria != criteria) {
+      clearFileSelection()
+    }
+    setPreviousCriteria(criteria)
+  })
 
   if (isLoading) {
     return <SpinnerSymbol />
@@ -31,7 +59,11 @@ export function FilesTable({ files, isLoading, paginationInfo }: FilesTableProps
         totalFilesCount={paginationInfo.totalFiles}
         clearRowSelection={clearFileSelection}
       />
-      <ZipDownloadLimitMessage fileSelection={fileSelection} />
+      <ZipDownloadLimitMessage
+        fileSelection={fileSelection}
+        visitedFiles={visitedFiles}
+        filesTotalDownloadSize={filesTotalDownloadSize}
+      />
       <Table>
         <FilesTableHeader headers={table.getHeaderGroups()} />
         <FilesTableBody rows={table.getRowModel().rows} />
