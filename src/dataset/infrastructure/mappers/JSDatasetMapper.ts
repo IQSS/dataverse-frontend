@@ -48,7 +48,8 @@ export class JSDatasetMapper {
       [], // TODO Connect with dataset locks
       true, // TODO Connect with dataset hasValidTermsOfAccess
       true, // TODO Connect with dataset isValid
-      !!jsDataset.versionInfo.releaseTime, // TODO Connect with dataset isReleased,
+      jsDataset.versionInfo.releaseTime !== undefined &&
+        !isNaN(jsDataset.versionInfo.releaseTime.getTime()), // TODO Connect with dataset isReleased,
       privateUrl
     ).build()
   }
