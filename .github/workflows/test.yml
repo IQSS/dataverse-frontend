@@ -3,7 +3,7 @@ name: test
 on: push
 
 env:
-  E2E_DATAVERSE_IMAGE_TAG: unstable
+  E2E_DATAVERSE_IMAGE_TAG: develop
 
 jobs:
   e2e:
@@ -52,7 +52,7 @@ jobs:
         run: |
           timeout 360s sh -c 'while ! docker logs dev_dataverse_bootstrap 2>&1 | grep -q "your instance has been configured"; do 
             echo "Checking logs..."
-            docker logs dev_dataverse_bootstrap | tail -n 10
+            docker logs dev_dataverse_bootstrap | tail -n 5
             echo "Text not found, waiting for 2 seconds..."
             sleep 2
           done'
