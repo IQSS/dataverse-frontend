@@ -13,40 +13,17 @@ import {
   DatasetMetadataBlocks,
   DatasetMetadataFields,
   DatasetVersion,
-  MetadataBlockName
+  MetadataBlockName,
+  PrivateUrl
 } from '../../domain/models/Dataset'
 
-/*
-
-  static Builder = class {
-    public readonly labels: DatasetLabel[] = []
-    public readonly alerts: DatasetAlert[] = []
-
-    constructor(
-      public readonly persistentId: string,
-      public readonly version: DatasetVersion,
-      public readonly citation: string,
-      public readonly summaryFields: DatasetMetadataBlock[],
-      public readonly license: DatasetLicense = defaultLicense,
-      public readonly metadataBlocks: DatasetMetadataBlocks,
-      public readonly permissions: DatasetPermissions,
-      public readonly locks: DatasetLock[],
-      public readonly hasValidTermsOfAccess: boolean,
-      public readonly isValid: boolean,
-      public readonly isReleased: boolean,
-      public readonly privateUrl?: string
-    ) {
-      this.withLabels()
-      this.withAlerts()
-    }
- */
 export class JSDatasetMapper {
   static toDataset(
     jsDataset: JSDataset,
     citation: string,
     summaryFieldsNames: string[],
     requestedVersion?: string,
-    privateUrl?: string
+    privateUrl?: PrivateUrl
   ): Dataset {
     return new Dataset.Builder(
       jsDataset.persistentId,
@@ -71,7 +48,8 @@ export class JSDatasetMapper {
       [], // TODO Connect with dataset locks
       true, // TODO Connect with dataset hasValidTermsOfAccess
       true, // TODO Connect with dataset isValid
-      !!jsDataset.versionInfo.releaseTime, // TODO Connect with dataset isReleased,
+      jsDataset.versionInfo.releaseTime !== undefined &&
+        !isNaN(jsDataset.versionInfo.releaseTime.getTime()), // TODO Connect with dataset isReleased,
       privateUrl
     ).build()
   }
