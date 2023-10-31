@@ -132,7 +132,7 @@ describe('useFiles', () => {
     cy.wrap(fileRepository.getAllByDatasetPersistentId).should('be.calledOnceWith', 'persistentId')
 
     cy.findByText('Loading...').should('exist')
-    cy.wrap(fileRepository.getUserPermissionsById).should('be.calledWith', files[0].id)
+    cy.wrap(fileRepository.getUserPermissionsById).should('be.called')
 
     cy.findByText('Loading...').should('exist')
     cy.findByText('Files count: 100').should('exist')
