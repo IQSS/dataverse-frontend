@@ -423,7 +423,7 @@ export class DatasetMother {
         }
       ] as DatasetMetadataBlocks,
       permissions: {
-        canDownloadFiles: false,
+        canDownloadFiles: true,
         canUpdateDataset: false,
         canPublishDataset: false,
         canManageDatasetPermissions: false,
