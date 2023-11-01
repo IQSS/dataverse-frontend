@@ -113,9 +113,7 @@ describe('Dataset JSDataverse Repository', () => {
   it('gets the dataset by persistentId and version number', async () => {
     const datasetResponse = await DatasetHelper.create()
     await DatasetHelper.publish(datasetResponse.persistentId)
-
-    await TestsUtils.wait(1500)
-
+    await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, '1.0')
       .then((dataset) => {

@@ -17,11 +17,24 @@ export class DatasetHelper extends DataverseApiHelper {
     return this.request<DatasetResponse>(`/dataverses/root/datasets`, 'POST', newDatasetData)
   }
 
-  static async publish(persistentId: string): Promise<{ status: string; persistentId: string }> {
-    const response = await this.request<{ status: string }>(
-      `/datasets/:persistentId/actions/:publish?persistentId=${persistentId}&type=major`,
-      'POST'
-    )
+  static async publish(persistentId: string): Promise<{
+    status: string
+    persistentId: string
+  }> {
+    const response = await this.request<{
+      status: string
+    }>(`/datasets/:persistentId/actions/:publish?persistentId=${persistentId}&type=major`, 'POST')
+
+    return { ...response, persistentId }
+  }
+
+  static async getLocks(persistentId: string): Promise<{
+    status: string
+    persistentId: string
+  }> {
+    const response = await this.request<{
+      status: string
+    }>(`/datasets/:persistentId/locks?persistentId=${persistentId}`, 'GET')
 
     return { ...response, persistentId }
   }
@@ -45,15 +58,20 @@ export class DatasetHelper extends DataverseApiHelper {
       .click()
   }
 
-  static async createPrivateUrl(id: string): Promise<{ token: string }> {
-    return this.request<{ token: string }>(`/datasets/${id}/privateUrl`, 'POST')
+  static async createPrivateUrl(id: string): Promise<{
+    token: string
+  }> {
+    return this.request<{
+      token: string
+    }>(`/datasets/${id}/privateUrl`, 'POST')
   }
 
-  static async createPrivateUrlAnonymized(id: string): Promise<{ token: string }> {
-    return this.request<{ token: string }>(
-      `/datasets/${id}/privateUrl?anonymizedAccess=true`,
-      'POST'
-    )
+  static async createPrivateUrlAnonymized(id: string): Promise<{
+    token: string
+  }> {
+    return this.request<{
+      token: string
+    }>(`/datasets/${id}/privateUrl?anonymizedAccess=true`, 'POST')
   }
 
   static async createWithFiles(filesData: FileData[]): Promise<DatasetResponse> {
@@ -92,7 +110,15 @@ export class DatasetHelper extends DataverseApiHelper {
     datasetPersistentId: string,
     fileData: FileData
   ): Promise<DatasetFileResponse> {
-    const { files } = await this.request<{ files: [{ dataFile: { id: number } }] }>(
+    const { files } = await this.request<{
+      files: [
+        {
+          dataFile: {
+            id: number
+          }
+        }
+      ]
+    }>(
       `/datasets/:persistentId/add?persistentId=${datasetPersistentId}`,
       'POST',
       fileData,
@@ -108,8 +134,12 @@ export class DatasetHelper extends DataverseApiHelper {
   static async setCitationDateFieldType(
     persistentId: string,
     fieldType: string
-  ): Promise<{ status: string }> {
-    return this.request<{ status: string }>(
+  ): Promise<{
+    status: string
+  }> {
+    return this.request<{
+      status: string
+    }>(
       `/datasets/:persistentId/citationdate?persistentId=${persistentId}`,
       'PUT',
       fieldType,
