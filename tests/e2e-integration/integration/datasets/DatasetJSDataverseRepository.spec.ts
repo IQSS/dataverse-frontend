@@ -175,7 +175,7 @@ describe('Dataset JSDataverse Repository', () => {
     const datasetResponse = await DatasetHelper.create()
 
     await DatasetHelper.publish(datasetResponse.persistentId)
-    await TestsUtils.wait(1500)
+    await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
 
     await DatasetHelper.setCitationDateFieldType(datasetResponse.persistentId, 'dateOfDeposit')
 

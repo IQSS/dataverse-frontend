@@ -42,7 +42,7 @@ export class TestsUtils {
       const response = await DatasetHelper.getLocks(persistentId)
       console.log('Checking locks: ' + JSON.stringify(response))
 
-      // Check if response has a property "0"
+      // The response will have a single key if there are no locks
       if (Object.keys(response).length === 1) {
         console.log('No locks found.')
         return
