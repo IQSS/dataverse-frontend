@@ -62,9 +62,11 @@
     "storybook": "concurrently 'storybook dev -p 6006 && open \"http://localhost:6006\"' 'cd packages/design-system && npm run storybook'",
     "build-storybook": "storybook build",
     "test:storybook": "test-storybook",
-    "test:storybook-all": "concurrently 'test-storybook' 'cd packages/design-system && npm run test:storybook'"
+    "test:storybook-all": "concurrently 'test-storybook' 'cd packages/design-system && npm run test:storybook'",
+    "typecheck": "tsc --noEmit"
   },
   "pre-commit": [
+    "typecheck",
     "lint:fix",
     "git:add",
     "test:unit",
