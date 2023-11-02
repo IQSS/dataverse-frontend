@@ -6,8 +6,12 @@ import { FileInfoHeader } from './file-info/FileInfoHeader'
 import { FileActionsHeader } from './file-actions/FileActionsHeader'
 import { FileActionsCell } from './file-actions/file-actions-cell/FileActionsCell'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
+import { FileSelection } from './row-selection/useFileSelection'
 
-export const createColumnsDefinition = (paginationInfo: FilePaginationInfo): ColumnDef<File>[] => [
+export const createColumnsDefinition = (
+  paginationInfo: FilePaginationInfo,
+  fileSelection: FileSelection
+): ColumnDef<File>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -38,7 +42,10 @@ export const createColumnsDefinition = (paginationInfo: FilePaginationInfo): Col
   },
   {
     header: ({ table }) => (
-      <FileActionsHeader files={table.getRowModel().rows.map((row) => row.original)} />
+      <FileActionsHeader
+        files={table.getRowModel().rows.map((row) => row.original)}
+        fileSelection={fileSelection}
+      />
     ),
     accessorKey: 'status',
     cell: (props) => <FileActionsCell file={props.row.original} />
