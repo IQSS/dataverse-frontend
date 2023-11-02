@@ -14,7 +14,7 @@ export function Tooltip({ placement, overlay, children, maxWidth = 200 }: Overla
     <OverlayTriggerBS
       key={placement}
       placement={placement}
-      overlay={<TooltipBS style={{ maxWidth: maxWidth }}>{overlay}</TooltipBS>}>
+      overlay={<TooltipBS style={{ maxWidth: maxWidth, position: 'fixed' }}>{overlay}</TooltipBS>}>
       <div style={{ display: 'inline-block' }}>{children}</div>
     </OverlayTriggerBS>
   )

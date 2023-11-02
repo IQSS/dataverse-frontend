@@ -162,7 +162,7 @@ export class File {
     public readonly isDeleted: boolean,
     public readonly ingest: FileIngest,
     readonly checksum?: FileChecksum,
-    readonly thumbnail?: string,
+    public thumbnail?: string,
     readonly directory?: string,
     readonly embargo?: FileEmbargo,
     readonly tabularData?: FileTabularData,

@@ -406,5 +406,17 @@ describe('Dataset', () => {
           cy.get('table > tbody > tr').eq(1).should('contain', 'blob-4')
         })
     })
+
+    it('shows the thumbnail for a file', () => {
+      cy.wrap(FileHelper.createImage().then((file) => DatasetHelper.createWithFiles([file])))
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+
+          cy.findByText('Files').should('exist')
+
+          cy.findByAltText('blob').should('exist')
+        })
+    })
   })
 })
