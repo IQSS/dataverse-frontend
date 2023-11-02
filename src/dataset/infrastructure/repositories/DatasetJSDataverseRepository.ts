@@ -6,8 +6,10 @@ import {
   getDatasetSummaryFieldNames,
   WriteError,
   Dataset as JSDataset,
+  DatasetUserPermissions as JSDatasetPermissions,
   getPrivateUrlDataset,
-  getPrivateUrlDatasetCitation
+  getPrivateUrlDatasetCitation,
+  getDatasetUserPermissions
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 
@@ -19,11 +21,18 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         Promise.all([
           jsDataset,
           getDatasetSummaryFieldNames.execute(),
-          getDatasetCitation.execute(jsDataset.id, this.versionToVersionId(version))
+          getDatasetCitation.execute(jsDataset.id, this.versionToVersionId(version)),
+          getDatasetUserPermissions.execute(jsDataset.id)
         ])
       )
-      .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
-        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames)
+      .then(
+        ([jsDataset, summaryFieldsNames, citation, jsDatasetPermissions]: [
+          JSDataset,
+          string[],
+          string,
+          JSDatasetPermissions
+        ]) =>
+          JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, jsDatasetPermissions)
       )
       .catch((error: WriteError) => {
         if (!version) {
@@ -39,8 +48,15 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       getDatasetSummaryFieldNames.execute(),
       getPrivateUrlDatasetCitation.execute(privateUrlToken)
     ])
-      .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
-        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames)
+      .then(
+        ([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
+          JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, {
+            canEditDataset: true,
+            canPublishDataset: true,
+            canManageDatasetPermissions: true,
+            canDeleteDatasetDraft: true,
+            canViewUnpublishedDataset: true
+          }) // TODO Connect with JS dataset permissions
       )
       .catch((error: WriteError) => {
         throw new Error(error.message)

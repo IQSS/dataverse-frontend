@@ -30,6 +30,29 @@ describe('Dataset', () => {
             cy.findByText(DatasetLabelValue.DRAFT).should('exist')
             // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
 
+            cy.findByRole('button', { name: 'Edit Dataset' }).should('exist')
+            cy.findByRole('button', { name: 'Upload Files' }).should('exist')
+            cy.findByText('Metadata').should('exist')
+            cy.findByText('Files').should('exist')
+          })
+        })
+    })
+
+    it('successfully loads a published dataset when the user is not authenticated', () => {
+      cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.wrap(TestsUtils.logout())
+          cy.wait(1500) // Wait for the dataset to be published
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+
+          cy.fixture('dataset-finch1.json').then((dataset: Dataset) => {
+            cy.findByRole('heading', {
+              name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
+            }).should('exist')
+
+            cy.findByRole('button', { name: 'Edit Dataset' }).should('not.exist')
+            cy.findByRole('button', { name: 'Upload Files' }).should('not.exist')
             cy.findByText('Metadata').should('exist')
             cy.findByText('Files').should('exist')
           })
@@ -51,7 +74,7 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.wait(1500)
+          cy.wait(1500) // Wait for the dataset to be published
           cy.visit(`/spa/datasets?persistentId=${persistentId}&version=1.0`)
 
           cy.fixture('dataset-finch1.json').then((dataset: Dataset) => {

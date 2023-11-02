@@ -3,7 +3,8 @@ import {
   DatasetMetadataBlock as JSDatasetMetadataBlock,
   DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataFields as JSDatasetMetadataFields,
-  DatasetVersionInfo as JSDatasetVersionInfo
+  DatasetVersionInfo as JSDatasetVersionInfo,
+  DatasetUserPermissions as JSDatasetPermissions
 } from '@iqss/dataverse-client-javascript'
 import { DatasetVersionState as JSDatasetVersionState } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
 import {
@@ -13,11 +14,17 @@ import {
   DatasetMetadataBlocks,
   DatasetMetadataFields,
   DatasetVersion,
-  MetadataBlockName
+  MetadataBlockName,
+  DatasetPermissions
 } from '../../domain/models/Dataset'
 
 export class JSDatasetMapper {
-  static toDataset(jsDataset: JSDataset, citation: string, summaryFieldsNames: string[]): Dataset {
+  static toDataset(
+    jsDataset: JSDataset,
+    citation: string,
+    summaryFieldsNames: string[],
+    jsDatasetPermissions: JSDatasetPermissions
+  ): Dataset {
     return new Dataset.Builder(
       jsDataset.persistentId,
       JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo),
@@ -30,14 +37,7 @@ export class JSDatasetMapper {
         jsDataset.publicationDate,
         jsDataset.citationDate
       ),
-      {
-        canDownloadFiles: true,
-        canUpdateDataset: true,
-        canPublishDataset: true,
-        canManageDatasetPermissions: true,
-        canManageFilesPermissions: true,
-        canDeleteDataset: true
-      }, // TODO Connect with dataset permissions
+      JSDatasetMapper.toDatasetPermissions(jsDatasetPermissions),
       [], // TODO Connect with dataset locks
       true, // TODO Connect with dataset hasValidTermsOfAccess
       true, // TODO Connect with dataset isValid
@@ -172,5 +172,16 @@ export class JSDatasetMapper {
     }
 
     return extraFields
+  }
+
+  static toDatasetPermissions(jsDatasetPermissions: JSDatasetPermissions): DatasetPermissions {
+    return {
+      canDownloadFiles: true,
+      canUpdateDataset: jsDatasetPermissions.canEditDataset,
+      canPublishDataset: true,
+      canManageDatasetPermissions: true,
+      canManageFilesPermissions: true,
+      canDeleteDataset: true
+    }
   }
 }
