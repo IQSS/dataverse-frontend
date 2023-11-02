@@ -16,5 +16,5 @@ export default meta
 type Story = StoryObj<typeof EditFilesMenu>
 
 export const Default: Story = {
-  render: () => <EditFilesMenu files={FileMother.createMany(2)} />
+  render: () => <EditFilesMenu files={FileMother.createMany(2)} fileSelection={{}} />
 }

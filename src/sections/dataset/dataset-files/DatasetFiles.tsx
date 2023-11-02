@@ -21,7 +21,7 @@ export function DatasetFiles({
 }: DatasetFilesProps) {
   const [paginationInfo, setPaginationInfo] = useState<FilePaginationInfo>(new FilePaginationInfo())
   const [criteria, setCriteria] = useState<FileCriteria>(new FileCriteria())
-  const { files, isLoading, filesCountInfo } = useFiles(
+  const { files, isLoading, filesCountInfo, filesTotalDownloadSize } = useFiles(
     filesRepository,
     datasetPersistentId,
     datasetVersion,
@@ -37,7 +37,13 @@ export function DatasetFiles({
         onCriteriaChange={setCriteria}
         filesCountInfo={filesCountInfo}
       />
-      <FilesTable files={files} isLoading={isLoading} paginationInfo={paginationInfo} />
+      <FilesTable
+        files={files}
+        isLoading={isLoading}
+        paginationInfo={paginationInfo}
+        filesTotalDownloadSize={filesTotalDownloadSize}
+        criteria={criteria}
+      />
       <FilesPagination
         page={paginationInfo.page}
         pageSize={paginationInfo.pageSize}

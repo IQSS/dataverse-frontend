@@ -3,8 +3,7 @@ import {
   AuthenticatedUser,
   getCurrentAuthenticatedUser
 } from '@iqss/dataverse-client-javascript/dist/users'
-import { ReadError } from '@iqss/dataverse-client-javascript/dist/core'
-import { logout, WriteError } from '@iqss/dataverse-client-javascript'
+import { logout, ReadError, WriteError } from '@iqss/dataverse-client-javascript'
 import { UserRepository } from '../../domain/repositories/UserRepository'
 
 export class UserJSDataverseRepository implements UserRepository {

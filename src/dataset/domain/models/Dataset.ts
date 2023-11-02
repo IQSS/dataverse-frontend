@@ -27,6 +27,8 @@ export class DatasetLabel {
 export enum DatasetAlertMessageKey {
   DRAFT_VERSION = 'draftVersion',
   REQUESTED_VERSION_NOT_FOUND = 'requestedVersionNotFound',
+  REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT = 'requestedVersionNotFoundShowDraft',
+  SHARE_UNPUBLISHED_DATASET = 'shareUnpublishedDataset',
   UNPUBLISHED_DATASET = 'unpublishedDataset'
 }
 
@@ -34,8 +36,7 @@ export class DatasetAlert {
   constructor(
     public readonly variant: AlertVariant,
     public readonly message: DatasetAlertMessageKey,
-    public readonly dynamicFields?: string[],
-    public readonly customHeading?: string
+    public readonly dynamicFields?: object
   ) {}
 }
 
@@ -274,6 +275,11 @@ export enum DatasetLockReason {
   FILE_VALIDATION_FAILED = 'fileValidationFailed'
 }
 
+export interface PrivateUrl {
+  token: string
+  urlSnippet: string
+}
+
 export class Dataset {
   constructor(
     public readonly persistentId: string,
@@ -288,7 +294,8 @@ export class Dataset {
     public readonly locks: DatasetLock[],
     public readonly hasValidTermsOfAccess: boolean,
     public readonly isValid: boolean,
-    public readonly isReleased: boolean
+    public readonly isReleased: boolean,
+    public readonly privateUrl?: PrivateUrl
   ) {}
 
   public getTitle(): string {
@@ -333,7 +340,7 @@ export class Dataset {
       public readonly hasValidTermsOfAccess: boolean,
       public readonly isValid: boolean,
       public readonly isReleased: boolean,
-      public readonly privateUrl?: string
+      public readonly privateUrl?: PrivateUrl
     ) {
       this.withLabels()
       this.withAlerts()
@@ -385,32 +392,51 @@ export class Dataset {
     }
 
     private withAlerts(): void {
-      if (this.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
-        this.alerts.push(
-          new DatasetAlert('warning', DatasetAlertMessageKey.DRAFT_VERSION, undefined, 'Info')
-        )
+      if (
+        this.version.publishingStatus === DatasetPublishingStatus.DRAFT &&
+        this.permissions.canPublishDataset
+      ) {
+        this.alerts.push(new DatasetAlert('warning', DatasetAlertMessageKey.DRAFT_VERSION))
       }
       if (this.version.requestedVersion) {
-        const dynamicFields = [this.version.requestedVersion, `${this.version.toString()}`]
-
-        this.alerts.push(
-          new DatasetAlert(
-            'info',
-            DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND,
-            dynamicFields
+        if (this.version.latestVersionStatus == DatasetPublishingStatus.RELEASED) {
+          const dynamicFields = {
+            requestedVersion: this.version.requestedVersion,
+            returnedVersion: `${this.version.toString()}`
+          }
+          this.alerts.push(
+            new DatasetAlert(
+              'warning',
+              DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND,
+              dynamicFields
+            )
           )
-        )
+        } else {
+          const dynamicFields = {
+            requestedVersion: this.version.requestedVersion
+          }
+          this.alerts.push(
+            new DatasetAlert(
+              'warning',
+              DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT,
+              dynamicFields
+            )
+          )
+        }
       }
       if (this.privateUrl) {
-        const dynamicFields = [this.privateUrl]
-        this.alerts.push(
-          new DatasetAlert(
-            'info',
-            DatasetAlertMessageKey.UNPUBLISHED_DATASET,
-            dynamicFields,
-            'Unpublished Dataset Private URL'
+        if (this.permissions.canPublishDataset) {
+          const dynamicFields = { privateUrl: this.privateUrl.urlSnippet + this.privateUrl.token }
+          this.alerts.push(
+            new DatasetAlert(
+              'info',
+              DatasetAlertMessageKey.SHARE_UNPUBLISHED_DATASET,
+              dynamicFields
+            )
           )
-        )
+        } else {
+          this.alerts.push(new DatasetAlert('warning', DatasetAlertMessageKey.UNPUBLISHED_DATASET))
+        }
       }
     }
 

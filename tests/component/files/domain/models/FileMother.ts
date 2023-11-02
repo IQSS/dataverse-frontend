@@ -144,8 +144,8 @@ export class FileMother {
     )
   }
 
-  static createMany(quantity: number): File[] {
-    return Array.from({ length: quantity }).map(() => this.create())
+  static createMany(quantity: number, props?: Partial<File>): File[] {
+    return Array.from({ length: quantity }).map(() => this.create(props))
   }
 
   static createDefault(props?: Partial<File>): File {

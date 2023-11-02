@@ -9,7 +9,7 @@ import {
 } from '../../../../../src/files/domain/models/FileCriteria'
 import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
-import { FileSizeUnit, FileType } from '../../../../../src/files/domain/models/File'
+import { FileSize, FileSizeUnit, FileType } from '../../../../../src/files/domain/models/File'
 import styles from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { SettingMother } from '../../../settings/domain/models/SettingMother'
@@ -43,10 +43,16 @@ const testFilesCountInfo = FilesCountInfoMother.create({
   ]
 })
 const filePaginationInfo = new FilePaginationInfo(1, 10, 200)
+const settingsRepository = {} as SettingRepository
 describe('DatasetFiles', () => {
   beforeEach(() => {
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(testFiles)
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
+    fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(19900)
+
+    settingsRepository.getByName = cy
+      .stub()
+      .resolves(SettingMother.createZipDownloadLimit(new ZipDownloadLimit(1, FileSizeUnit.BYTES)))
   })
 
   it('renders the files table', () => {
@@ -167,11 +173,73 @@ describe('DatasetFiles', () => {
       cy.findByText('1 file is currently selected.').should('exist')
     })
 
+    it('removes the selection when the filters change', () => {
+      cy.customMount(
+        <DatasetFiles
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
+
+      cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
+
+      cy.findByText('1 file is currently selected.').should('exist')
+
+      cy.findByRole('button', { name: 'File Type: All' }).click()
+      cy.findByText('Image (485)').should('exist').click()
+
+      cy.findByText('1 file is currently selected.').should('not.exist')
+    })
+
+    it('removes the selection when the Sort by changes', () => {
+      cy.customMount(
+        <DatasetFiles
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
+
+      cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
+
+      cy.findByText('1 file is currently selected.').should('exist')
+
+      cy.findByRole('button', { name: /Sort/ }).click()
+      cy.findByText('Name (Z-A)').should('exist').click()
+
+      cy.findByText('1 file is currently selected.').should('not.exist')
+    })
+
+    it('removes the selection when the Search bar is used', () => {
+      cy.customMount(
+        <DatasetFiles
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByRole('columnheader', { name: '1 to 10 of 200 Files' }).should('exist')
+
+      cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
+
+      cy.findByText('1 file is currently selected.').should('exist')
+
+      cy.findByLabelText('Search').type('test{enter}')
+
+      cy.findByText('1 file is currently selected.').should('not.exist')
+    })
+
     it('renders the zip download limit message when selecting rows from different pages', () => {
-      const settingsRepository = {} as SettingRepository
-      settingsRepository.getByName = cy
-        .stub()
-        .resolves(SettingMother.createZipDownloadLimit(new ZipDownloadLimit(1, FileSizeUnit.BYTES)))
+      testFiles[1] = FileMother.create({
+        size: new FileSize(1, FileSizeUnit.BYTES)
+      })
+
+      testFiles[2] = FileMother.create({
+        size: new FileSize(2, FileSizeUnit.BYTES)
+      })
 
       cy.customMount(
         <SettingsProvider repository={settingsRepository}>
@@ -188,7 +256,7 @@ describe('DatasetFiles', () => {
       cy.get('table > tbody > tr:nth-child(3) > td:nth-child(1) > input[type=checkbox]').click()
 
       cy.findByText(
-        /exceeds the zip limit of 1.0 B. Please unselect some files to continue./
+        'The overall size of the files selected (3.0 B) for download exceeds the zip limit of 1.0 B. Please unselect some files to continue.'
       ).should('exist')
 
       cy.get('table > tbody > tr:nth-child(3) > td:nth-child(1) > input[type=checkbox]').click()
@@ -196,6 +264,43 @@ describe('DatasetFiles', () => {
       cy.findByText(
         /exceeds the zip limit of 1.0 B. Please unselect some files to continue./
       ).should('not.exist')
+    })
+
+    it('renders the zip download limit message when selecting all rows', () => {
+      cy.customMount(
+        <SettingsProvider repository={settingsRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </SettingsProvider>
+      )
+
+      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
+      cy.findByText(
+        'The overall size of the files selected (19.4 KB) for download exceeds the zip limit of 1.0 B. Please unselect some files to continue.'
+      ).should('exist')
+    })
+
+    it('renders the zip download limit message when selecting all rows and then navigating to other page', () => {
+      cy.customMount(
+        <SettingsProvider repository={settingsRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </SettingsProvider>
+      )
+
+      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
+      cy.findByRole('button', { name: 'Last' }).click()
+      cy.findByText(
+        'The overall size of the files selected (19.4 KB) for download exceeds the zip limit of 1.0 B. Please unselect some files to continue.'
+      ).should('exist')
     })
   })
 

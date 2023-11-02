@@ -82,12 +82,12 @@ export class JSFileMapper {
   ): FileVersion {
     const fileVersion = { number: jsVersion, publishingStatus: FilePublishingStatus.DRAFT }
 
-    if (datasetVersion.publishingStatus === DatasetPublishingStatus.DEACCESSIONED) {
-      fileVersion.publishingStatus = FilePublishingStatus.DEACCESSIONED
-    }
-
     if (jsPublicationDate) {
       fileVersion.publishingStatus = FilePublishingStatus.RELEASED
+    }
+
+    if (datasetVersion.publishingStatus === DatasetPublishingStatus.DEACCESSIONED) {
+      fileVersion.publishingStatus = FilePublishingStatus.DEACCESSIONED
     }
 
     return fileVersion
