@@ -164,5 +164,8 @@
     "workerDirectory": "public"
   },
   "readme": "ERROR: No README data found!",
-  "_id": "dataverse-frontend@0.1.0"
+  "_id": "dataverse-frontend@0.1.0",
+  "overrides": {
+    "@parcel/watcher": "2.1.0"
+  }
 }

@@ -3,6 +3,7 @@ import { FileMother } from '../../../../../../../../files/domain/models/FileMoth
 import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
 import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
 import { FilePermissionsProvider } from '../../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
+import { FileType } from '../../../../../../../../../../src/files/domain/models/File'
 
 const fileRepository: FileRepository = {} as FileRepository
 describe('FileThumbnail', () => {
@@ -68,7 +69,7 @@ describe('FileThumbnail', () => {
     cy.customMount(<FileThumbnail file={file} />)
 
     cy.findByAltText(file.name).should('not.exist')
-    cy.findByText('icon-image').should('exist')
+    cy.findByText('icon-other').should('exist')
 
     cy.findByText('Restricted File Icon').should('exist').parent().trigger('mouseover')
     cy.findByText('File Access: Restricted').should('exist')
@@ -76,11 +77,11 @@ describe('FileThumbnail', () => {
   })
 
   it('renders FileThumbnailIcon when thumbnail is not provided', () => {
-    const file = FileMother.createDefault()
+    const file = FileMother.createDefault({ type: new FileType('application/pdf') })
 
     cy.customMount(<FileThumbnail file={file} />)
 
-    cy.findByText('icon-file').should('exist')
+    cy.findByText('icon-document').should('exist')
 
     cy.findByText('Restricted File Icon').should('not.exist')
     cy.findByText('Restricted with access Icon').should('not.exist')
@@ -91,7 +92,7 @@ describe('FileThumbnail', () => {
 
     cy.customMount(<FileThumbnail file={file} />)
 
-    cy.findByText('icon-file').should('exist')
+    cy.findByText('icon-other').should('exist')
 
     cy.findByText('Restricted File Icon').should('exist')
     cy.findByText('Restricted File Icon').should('exist').parent().trigger('mouseover')
@@ -114,7 +115,7 @@ describe('FileThumbnail', () => {
       </FilePermissionsProvider>
     )
 
-    cy.findByText('icon-file').should('exist')
+    cy.findByText('icon-other').should('exist')
 
     cy.findByText('Restricted File Icon').should('not.exist')
     cy.findByText('Restricted with access Icon').should('exist').parent().trigger('mouseover')

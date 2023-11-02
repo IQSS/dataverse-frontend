@@ -13,6 +13,7 @@ import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { DatasetActionButtons } from './dataset-action-buttons/DatasetActionButtons'
 import { useDataset } from './DatasetContext'
 import { useEffect } from 'react'
+import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 
 interface DatasetProps {
   fileRepository: FileRepository
@@ -37,6 +38,14 @@ export function Dataset({ fileRepository }: DatasetProps) {
         <PageNotFound />
       ) : (
         <article>
+          <div className={styles.container}>
+            <Row>
+              <Col>
+                <DatasetAlerts alerts={dataset.alerts} />
+              </Col>
+            </Row>
+          </div>
+
           <header className={styles.header}>
             <h1>{dataset.getTitle()}</h1>
             <DatasetLabels labels={dataset.labels} />

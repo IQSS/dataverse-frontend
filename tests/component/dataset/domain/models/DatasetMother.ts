@@ -301,7 +301,8 @@ export class DatasetMother {
       dataset.locks,
       dataset.hasValidTermsOfAccess,
       dataset.isValid,
-      dataset.isReleased
+      dataset.isReleased,
+      dataset.privateUrl
     ).build()
   }
 
@@ -423,7 +424,7 @@ export class DatasetMother {
         }
       ] as DatasetMetadataBlocks,
       permissions: {
-        canDownloadFiles: false,
+        canDownloadFiles: true,
         canUpdateDataset: false,
         canPublishDataset: false,
         canManageDatasetPermissions: false,
@@ -432,6 +433,8 @@ export class DatasetMother {
       },
       locks: [],
       isReleased: true,
+      hasValidTermsOfAccess: true,
+      isValid: true,
       ...props
     })
   }

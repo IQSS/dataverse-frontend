@@ -11,7 +11,7 @@ describe('FileActionsHeader', () => {
   it('renders the file actions header', () => {
     const datasetRepository: DatasetRepository = {} as DatasetRepository
     const datasetWithUpdatePermissions = DatasetMother.create({
-      permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed(),
+      permissions: DatasetPermissionsMother.createWithAllAllowed(),
       hasValidTermsOfAccess: true
     })
     datasetRepository.getByPersistentId = cy.stub().resolves(datasetWithUpdatePermissions)
@@ -20,10 +20,11 @@ describe('FileActionsHeader', () => {
       <DatasetProvider
         repository={datasetRepository}
         searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
-        <FileActionsHeader files={files} />
+        <FileActionsHeader files={files} fileSelection={{}} />
       </DatasetProvider>
     )
 
     cy.findByRole('button', { name: 'Edit Files' }).should('exist')
+    cy.findByRole('button', { name: 'Download' }).should('exist')
   })
 })

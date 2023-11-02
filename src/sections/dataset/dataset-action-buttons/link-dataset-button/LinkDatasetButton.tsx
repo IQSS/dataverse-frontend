@@ -1,4 +1,4 @@
-import { Button } from '@iqss/dataverse-design-system'
+import { Button, ButtonGroup } from '@iqss/dataverse-design-system'
 import { Dataset, DatasetPublishingStatus } from '../../../../dataset/domain/models/Dataset'
 import { useTranslation } from 'react-i18next'
 import { useSession } from '../../../session/SessionContext'
@@ -17,5 +17,9 @@ export function LinkDatasetButton({ dataset }: LinkDatasetButtonProps) {
     return <></>
   }
 
-  return <Button variant="secondary">{t('datasetActionButtons.linkDataset.title')}</Button>
+  return (
+    <ButtonGroup>
+      <Button variant="secondary">{t('datasetActionButtons.linkDataset.title')}</Button>
+    </ButtonGroup>
+  )
 }

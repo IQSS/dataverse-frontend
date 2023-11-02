@@ -91,7 +91,7 @@ describe('File JSDataverse Repository', () => {
             expect(file.version).to.deep.equal(expectedFile.version)
             expect(file.access).to.deep.equal(expectedFile.access)
             expect(file.type).to.deep.equal(expectedFile.type)
-            expect(file.date).to.deep.equal(expectedFile.date)
+            cy.compareDate(file.date.date, expectedFile.date.date)
             expect(file.downloadCount).to.deep.equal(expectedFile.downloadCount)
             expect(file.labels).to.deep.equal(expectedFile.labels)
             expect(file.checksum?.algorithm).to.deep.equal(expectedFile.checksum?.algorithm)
@@ -151,7 +151,7 @@ describe('File JSDataverse Repository', () => {
 
           files.forEach((file) => {
             expect(file.version).to.deep.equal(expectedPublishedFile.version)
-            expect(file.date).to.deep.equal(expectedFile.date)
+            cy.compareDate(file.date.date, expectedFile.date.date)
           })
         })
     })
@@ -252,8 +252,21 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    it.skip('gets all the files by dataset persistentId after adding a thumbnail to the files', async () => {
-      // TODO - Do this in thumbnails issue https://github.com/IQSS/dataverse-frontend/issues/160
+    it('gets all the files by dataset persistentId after adding a thumbnail to the files', async () => {
+      const datasetResponse = await FileHelper.createImage().then((file) =>
+        DatasetHelper.createWithFiles([file])
+      )
+      if (!datasetResponse.files) throw new Error('Files not found')
+
+      const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      if (!dataset) throw new Error('Dataset not found')
+
+      await fileRepository
+        .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((files) => {
+          console.log(files)
+          expect(files[0].thumbnail).to.not.be.undefined
+        })
     })
 
     it('gets all the files by dataset persistentId after embargo', async () => {

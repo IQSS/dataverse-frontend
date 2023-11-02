@@ -76,6 +76,7 @@ const datasetData = (persistentId: string, versionId: number) => {
       majorNumber: undefined,
       minorNumber: undefined,
       publishingStatus: 'draft',
+      requestedVersion: undefined,
       latestVersionStatus: 'draft',
       isLatest: true,
       isInReview: false
