@@ -3,17 +3,18 @@ import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { Dataset } from '../../sections/dataset/Dataset'
 import { WithAnonymizedView } from './WithAnonymizedView'
+import { WithDatasetPrivateUrl } from './WithDatasetPrivateUrl'
 import { FileMockRepository } from '../files/FileMockRepository'
 import { WithCitationMetadataBlockInfo } from './WithCitationMetadataBlockInfo'
 import { FileMockNoDataRepository } from '../files/FileMockNoDataRepository'
 import { WithSettings } from '../WithSettings'
 import { WithFilePermissionsDenied } from '../files/file-permission/WithFilePermissionsDenied'
-import { WithLoggedInUser } from '../WithLoggedInUser'
 import { WithFilePermissionsGranted } from '../files/file-permission/WithFilePermissionsGranted'
 import { WithDataset } from './WithDataset'
 import { WithDatasetDraftAsOwner } from './WithDatasetDraftAsOwner'
 import { WithDatasetNotFound } from './WithDatasetNotFound'
 import { WithDatasetLoading } from './WithDatasetLoading'
+import { WithLoggedInUser } from '../WithLoggedInUser'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -37,6 +38,10 @@ export const DraftWithAllDatasetPermissions: Story = {
   decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithFilePermissionsGranted],
   render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
+export const LoggedInAsOwner: Story = {
+  decorators: [WithDataset, WithLayout, WithLoggedInUser, WithFilePermissionsGranted],
+  render: () => <Dataset fileRepository={new FileMockRepository()} />
+}
 
 export const Loading: Story = {
   decorators: [WithLayout, WithDatasetLoading, WithFilePermissionsDenied],
@@ -49,7 +54,7 @@ export const DatasetNotFound: Story = {
 }
 
 export const DatasetAnonymizedView: Story = {
-  decorators: [WithLayout, WithAnonymizedView, WithDataset, WithFilePermissionsGranted],
+  decorators: [WithLayout, WithAnonymizedView, WithDatasetPrivateUrl, WithFilePermissionsGranted],
   render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 

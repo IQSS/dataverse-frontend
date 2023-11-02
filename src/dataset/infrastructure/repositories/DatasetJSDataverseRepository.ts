@@ -44,7 +44,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       getPrivateUrlDatasetCitation.execute(privateUrlToken)
     ])
       .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
-        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames)
+        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, undefined)
       )
       .catch((error: ReadError) => {
         throw new Error(error.message)

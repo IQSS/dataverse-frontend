@@ -304,8 +304,8 @@ export class DatasetMother {
       dataset.hasValidTermsOfAccess,
       dataset.isValid,
       dataset.isReleased,
-      dataset.privateUrl,
-      dataset.thumbnail
+      dataset.thumbnail,
+      dataset.privateUrl
     ).build()
   }
 

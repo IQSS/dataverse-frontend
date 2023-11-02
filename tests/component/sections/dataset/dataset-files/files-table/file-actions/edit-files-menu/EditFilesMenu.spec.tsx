@@ -32,27 +32,31 @@ describe('EditFilesMenu', () => {
 
   it('renders the Edit Files menu', () => {
     cy.mountAuthenticated(
-      withDataset(<EditFilesMenu files={files} />, datasetWithUpdatePermissions)
+      withDataset(<EditFilesMenu files={files} fileSelection={{}} />, datasetWithUpdatePermissions)
     )
 
     cy.findByRole('button', { name: 'Edit Files' }).should('exist')
   })
 
   it('does not render the Edit Files menu when the user is not authenticated', () => {
-    cy.customMount(withDataset(<EditFilesMenu files={files} />, datasetWithUpdatePermissions))
+    cy.customMount(
+      withDataset(<EditFilesMenu files={files} fileSelection={{}} />, datasetWithUpdatePermissions)
+    )
 
     cy.findByRole('button', { name: 'Edit Files' }).should('not.exist')
   })
 
   it('does not render the Edit Files menu when there are no files in the dataset', () => {
-    cy.mountAuthenticated(withDataset(<EditFilesMenu files={[]} />, datasetWithUpdatePermissions))
+    cy.mountAuthenticated(
+      withDataset(<EditFilesMenu files={[]} fileSelection={{}} />, datasetWithUpdatePermissions)
+    )
 
     cy.findByRole('button', { name: 'Edit Files' }).should('not.exist')
   })
 
   it('renders the Edit Files options', () => {
     cy.mountAuthenticated(
-      withDataset(<EditFilesMenu files={files} />, datasetWithUpdatePermissions)
+      withDataset(<EditFilesMenu files={files} fileSelection={{}} />, datasetWithUpdatePermissions)
     )
 
     cy.findByRole('button', { name: 'Edit Files' }).click()
@@ -65,7 +69,10 @@ describe('EditFilesMenu', () => {
     })
 
     cy.mountAuthenticated(
-      withDataset(<EditFilesMenu files={files} />, datasetWithNoUpdatePermissions)
+      withDataset(
+        <EditFilesMenu files={files} fileSelection={{}} />,
+        datasetWithNoUpdatePermissions
+      )
     )
 
     cy.findByRole('button', { name: 'Edit Files' }).should('not.exist')
@@ -78,7 +85,7 @@ describe('EditFilesMenu', () => {
     })
 
     cy.mountAuthenticated(
-      withDataset(<EditFilesMenu files={files} />, datasetWithUpdatePermissions)
+      withDataset(<EditFilesMenu files={files} fileSelection={{}} />, datasetWithUpdatePermissions)
     )
 
     cy.findByRole('button', { name: 'Edit Files' }).should('be.disabled')
@@ -91,7 +98,7 @@ describe('EditFilesMenu', () => {
     })
 
     cy.mountAuthenticated(
-      withDataset(<EditFilesMenu files={files} />, datasetWithUpdatePermissions)
+      withDataset(<EditFilesMenu files={files} fileSelection={{}} />, datasetWithUpdatePermissions)
     )
 
     cy.findByRole('button', { name: 'Edit Files' }).should('be.disabled')

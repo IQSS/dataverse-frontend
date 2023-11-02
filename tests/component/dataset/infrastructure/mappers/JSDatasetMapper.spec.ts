@@ -69,9 +69,7 @@ const expectedDataset = {
     { semanticMeaning: 'dataset', value: 'Draft' },
     { semanticMeaning: 'warning', value: 'Unpublished' }
   ],
-  alerts: [
-    { variant: 'warning', message: 'draftVersion', dynamicFields: undefined, customHeading: 'Info' }
-  ],
+  alerts: [{ variant: 'warning', message: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
       name: 'citation',
@@ -122,7 +120,8 @@ const expectedDataset = {
   hasValidTermsOfAccess: true,
   isValid: true,
   isReleased: false,
-  thumbnail: undefined
+  thumbnail: undefined,
+  privateUrl: undefined
 }
 const expectedDatasetAlternateVersion = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -141,6 +140,7 @@ const expectedDatasetAlternateVersion = {
   hasValidTermsOfAccess: true,
   isReleased: false,
   isValid: true,
+  privateUrl: undefined,
   labels: [
     { semanticMeaning: 'dataset', value: 'Draft' },
     { semanticMeaning: 'warning', value: 'Unpublished' }
@@ -149,14 +149,12 @@ const expectedDatasetAlternateVersion = {
     {
       variant: 'warning',
       message: 'draftVersion',
-      dynamicFields: undefined,
-      customHeading: 'Info'
+      dynamicFields: undefined
     },
     {
-      message: 'requestedVersionNotFound',
-      variant: 'info',
-      dynamicFields: ['4.0', '0.0'],
-      customHeading: undefined
+      message: 'requestedVersionNotFoundShowDraft',
+      variant: 'warning',
+      dynamicFields: { requestedVersion: '4.0' }
     }
   ],
   summaryFields: [
@@ -220,8 +218,6 @@ describe('JS Dataset Mapper', () => {
       datasetSummaryFields,
       '4.0'
     )
-    console.log('mapped: ' + JSON.stringify(mappedWithAlternate))
-    console.log('expected: ' + JSON.stringify(expectedDatasetAlternateVersion))
 
     expect(expectedDatasetAlternateVersion).to.deep.equal(mappedWithAlternate)
   })

@@ -13,7 +13,8 @@ import {
   DatasetMetadataBlocks,
   DatasetMetadataFields,
   DatasetVersion,
-  MetadataBlockName
+  MetadataBlockName,
+  PrivateUrl
 } from '../../domain/models/Dataset'
 
 export class JSDatasetMapper {
@@ -22,7 +23,7 @@ export class JSDatasetMapper {
     citation: string,
     summaryFieldsNames: string[],
     requestedVersion?: string,
-    privateUrl?: string
+    privateUrl?: PrivateUrl
   ): Dataset {
     return new Dataset.Builder(
       jsDataset.persistentId,
@@ -47,9 +48,10 @@ export class JSDatasetMapper {
       [], // TODO Connect with dataset locks
       true, // TODO Connect with dataset hasValidTermsOfAccess
       true, // TODO Connect with dataset isValid
-      !!jsDataset.versionInfo.releaseTime, // TODO Connect with dataset isReleased,
-      privateUrl,
-      undefined // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
+      jsDataset.versionInfo.releaseTime !== undefined &&
+        !isNaN(jsDataset.versionInfo.releaseTime.getTime()), // TODO Connect with dataset isReleased,
+      undefined, // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
+      privateUrl
     ).build()
   }
 
