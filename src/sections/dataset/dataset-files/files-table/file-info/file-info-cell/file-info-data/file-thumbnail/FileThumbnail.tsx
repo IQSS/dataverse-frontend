@@ -11,14 +11,15 @@ interface FileThumbnailProps {
 
 export function FileThumbnail({ file }: FileThumbnailProps) {
   const { sessionUserHasFileDownloadPermission } = useFileDownloadPermission(file)
-  const showPreviewImage = file.thumbnail && sessionUserHasFileDownloadPermission
 
   return (
     <div
       className={`${
-        showPreviewImage ? styles['container-preview-image'] : styles['container-icon']
+        file.thumbnail && sessionUserHasFileDownloadPermission
+          ? styles['container-preview-image']
+          : styles['container-icon']
       }`}>
-      {showPreviewImage ? (
+      {file.thumbnail && sessionUserHasFileDownloadPermission ? (
         <FileThumbnailPreviewImage thumbnail={file.thumbnail} name={file.name} />
       ) : (
         <FileThumbnailIcon type={file.type} />

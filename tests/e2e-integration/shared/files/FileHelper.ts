@@ -33,7 +33,7 @@ export class FileHelper extends DataverseApiHelper {
 
   static createMany(
     count: number,
-    type: 'csv' | 'txt' = 'txt',
+    type: 'csv' | 'txt' | 'img' = 'txt',
     fileMetadata: FileMetadata = { description: 'This is an example file' }
   ): FileData[] {
     const files = []
@@ -44,7 +44,7 @@ export class FileHelper extends DataverseApiHelper {
   }
 
   static create(
-    type: 'csv' | 'txt' = 'txt',
+    type: 'csv' | 'txt' | 'img' = 'txt',
     fileMetadata: FileMetadata = { description: 'This is an example file' }
   ): FileData {
     let fileBinary = new Blob([this.generateTxtData()], { type: 'text/plain' })
@@ -56,6 +56,17 @@ export class FileHelper extends DataverseApiHelper {
     return {
       file: fileBinary,
       jsonData: JSON.stringify(fileMetadata)
+    }
+  }
+
+  static async createImage(): Promise<FileData> {
+    const fileBinary = await this.generateImgData()
+    if (!fileBinary) {
+      throw new Error('File could not be fetched')
+    }
+    return {
+      file: fileBinary,
+      jsonData: JSON.stringify({ description: 'This is an example file' })
     }
   }
 
@@ -81,6 +92,19 @@ export class FileHelper extends DataverseApiHelper {
 
   static generateTxtData(): string {
     return faker.lorem.sentence()
+  }
+
+  static async generateImgData(): Promise<Blob | void> {
+    return await fetch(faker.image.imageUrl())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+        return response.blob()
+      })
+      .catch(() => {
+        throw new Error('Files could not be fetched')
+      })
   }
 
   static async download(id: number) {

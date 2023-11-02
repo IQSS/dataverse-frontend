@@ -4,15 +4,19 @@ import {
   getDataset,
   getDatasetCitation,
   getDatasetSummaryFieldNames,
-  WriteError,
   Dataset as JSDataset,
   getPrivateUrlDataset,
-  getPrivateUrlDatasetCitation
+  getPrivateUrlDatasetCitation,
+  ReadError
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
-  getByPersistentId(persistentId: string, version?: string): Promise<Dataset | undefined> {
+  getByPersistentId(
+    persistentId: string,
+    version?: string,
+    requestedVersion?: string
+  ): Promise<Dataset | undefined> {
     return getDataset
       .execute(persistentId, this.versionToVersionId(version))
       .then((jsDataset) =>
@@ -23,13 +27,13 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         ])
       )
       .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
-        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames)
+        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, requestedVersion)
       )
-      .catch((error: WriteError) => {
+      .catch((error: ReadError) => {
         if (!version) {
           throw new Error(error.message)
         }
-        return this.getByPersistentId(persistentId)
+        return this.getByPersistentId(persistentId, undefined, (requestedVersion = version))
       })
   }
 
@@ -40,9 +44,9 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       getPrivateUrlDatasetCitation.execute(privateUrlToken)
     ])
       .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
-        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames)
+        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, undefined)
       )
-      .catch((error: WriteError) => {
+      .catch((error: ReadError) => {
         throw new Error(error.message)
       })
   }
