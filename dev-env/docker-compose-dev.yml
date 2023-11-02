@@ -74,7 +74,7 @@ services:
       - -c
       - 'fix-fs-perms.sh dv'
     volumes:
-      - ${RUNNER_TEMP}/dv/data:/dv
+      - ./docker-dev-volumes/app/data:/dv
 
   dev_dataverse_bootstrap:
     container_name: 'dev_dataverse_bootstrap'
