@@ -79,6 +79,14 @@ const datasetData = (persistentId: string, versionId: number) => {
       latestVersionStatus: 'draft',
       isLatest: true,
       isInReview: false
+    },
+    permissions: {
+      canDownloadFiles: true,
+      canUpdateDataset: true,
+      canPublishDataset: true,
+      canManageDatasetPermissions: true,
+      canManageFilesPermissions: true,
+      canDeleteDataset: true
     }
   }
 }
@@ -106,6 +114,7 @@ describe('Dataset JSDataverse Repository', () => {
       expect(dataset.version).to.deep.equal(datasetExpected.version)
       expect(dataset.metadataBlocks[0].fields.publicationDate).not.to.exist
       expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
+      expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
     })
   })
 
@@ -138,6 +147,7 @@ describe('Dataset JSDataverse Repository', () => {
           expectedPublicationDate
         )
         expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
+        expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
       })
   })
 
@@ -169,6 +179,7 @@ describe('Dataset JSDataverse Repository', () => {
 
       expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
       expect(dataset.version).to.deep.equal(datasetExpected.version)
+      expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
     })
   })
 
