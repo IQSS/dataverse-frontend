@@ -56,5 +56,27 @@
       "title": "Access Dataset"
     },
     "uploadFiles": "Upload Files"
+  },
+  "alerts": {
+    "draftVersion": {
+      "heading": "This draft version needs to be published",
+      "alertText": "When ready for sharing, please <b>publish</b> it so that others can see these changes"
+    },
+    "requestedVersionNotFound": {
+      "heading": "Info",
+      "alertText": "Version {{requestedVersion}} was not found. This is version {{returnedVersion}}."
+    },
+    "requestedVersionNotFoundShowDraft": {
+      "heading": "Info",
+      "alertText": "Version {{requestedVersion}} was not found. This is the DRAFT version."
+    },
+    "shareUnpublishedDataset": {
+      "heading": "Unpublished Dataset Private URL",
+      "alertText": "Privately share this dataset before it is published: {{privateUrl}}"
+    },
+    "unpublishedDataset": {
+      "heading": "Unpublished Dataset Private URL",
+      "alertText": "This unpublished dataset is being privately shared."
+    }
   }
 }

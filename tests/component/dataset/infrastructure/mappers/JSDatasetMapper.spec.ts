@@ -16,11 +16,11 @@ const jsDataset = {
   versionId: 101,
   versionInfo: {
     state: DatasetVersionState.DRAFT,
+    majorNumber: 0,
+    minorNumber: 0,
     createTime: new Date('2023-09-07T13:40:04.000Z'),
     lastUpdateTime: new Date('2023-09-07T13:40:04.000Z'),
-    releaseTime: undefined,
-    majorNumber: 0,
-    minorNumber: 0
+    releaseTime: undefined
   },
   metadataBlocks: [
     {
@@ -45,11 +45,19 @@ const jsDataset = {
     name: 'CC0 1.0',
     uri: 'http://creativecommons.org/publicdomain/zero/1.0',
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
-  }
+  },
+  thumbnail: undefined
 }
 const citation =
   'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
 const datasetSummaryFields = ['dsDescription', 'subject', 'keyword', 'publication', 'notesText']
+const jsDatasetPermissions = {
+  canEditDataset: true,
+  canPublishDataset: true,
+  canManageDatasetPermissions: true,
+  canDeleteDatasetDraft: true,
+  canViewUnpublishedDataset: true
+}
 const expectedDataset = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
@@ -59,7 +67,8 @@ const expectedDataset = {
     isInReview: false,
     latestVersionStatus: 'draft',
     majorNumber: 0,
-    minorNumber: 0
+    minorNumber: 0,
+    requestedVersion: undefined
   },
   citation:
     'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
@@ -67,6 +76,7 @@ const expectedDataset = {
     { semanticMeaning: 'dataset', value: 'Draft' },
     { semanticMeaning: 'warning', value: 'Unpublished' }
   ],
+  alerts: [{ variant: 'warning', message: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
       name: 'citation',
@@ -116,14 +126,113 @@ const expectedDataset = {
   locks: [],
   hasValidTermsOfAccess: true,
   isValid: true,
-  isReleased: false
+  isReleased: false,
+  thumbnail: undefined,
+  privateUrl: undefined
 }
-
+const expectedDatasetAlternateVersion = {
+  persistentId: 'doi:10.5072/FK2/B4B2MJ',
+  version: {
+    id: 101,
+    publishingStatus: 'draft',
+    isLatest: true,
+    isInReview: false,
+    latestVersionStatus: 'draft',
+    minorNumber: 0,
+    majorNumber: 0,
+    requestedVersion: '4.0'
+  },
+  citation:
+    'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
+  hasValidTermsOfAccess: true,
+  isReleased: false,
+  isValid: true,
+  privateUrl: undefined,
+  labels: [
+    { semanticMeaning: 'dataset', value: 'Draft' },
+    { semanticMeaning: 'warning', value: 'Unpublished' }
+  ],
+  alerts: [
+    {
+      variant: 'warning',
+      message: 'draftVersion',
+      dynamicFields: undefined
+    },
+    {
+      message: 'requestedVersionNotFoundShowDraft',
+      variant: 'warning',
+      dynamicFields: { requestedVersion: '4.0' }
+    }
+  ],
+  summaryFields: [
+    {
+      name: 'citation',
+      fields: {
+        dsDescription: [
+          {
+            dsDescriptionValue:
+              "Darwin's finches (also known as the Galápagos finches) are a group of about fifteen species of passerine birds."
+          }
+        ],
+        subject: ['Medicine, Health and Life Sciences']
+      }
+    }
+  ],
+  license: {
+    name: 'CC0 1.0',
+    uri: 'http://creativecommons.org/publicdomain/zero/1.0',
+    iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+  },
+  locks: [],
+  metadataBlocks: [
+    {
+      name: 'citation',
+      fields: {
+        title: "Darwin's Finches",
+        author: [{ authorName: 'Finch, Fiona', authorAffiliation: 'Birds Inc.' }],
+        datasetContact: [
+          { datasetContactName: 'Finch, Fiona', datasetContactEmail: 'finch@mailinator.com' }
+        ],
+        dsDescription: [
+          {
+            dsDescriptionValue:
+              "Darwin's finches (also known as the Galápagos finches) are a group of about fifteen species of passerine birds."
+          }
+        ],
+        subject: ['Medicine, Health and Life Sciences']
+      }
+    }
+  ],
+  permissions: {
+    canDeleteDataset: true,
+    canDownloadFiles: true,
+    canManageDatasetPermissions: true,
+    canManageFilesPermissions: true,
+    canPublishDataset: true,
+    canUpdateDataset: true
+  },
+  thumbnail: undefined
+}
 describe('JS Dataset Mapper', () => {
   it('maps jsDataset model to the domain Dataset model', () => {
-    expect(expectedDataset).to.deep.equal(
-      JSDatasetMapper.toDataset(jsDataset, citation, datasetSummaryFields)
+    const mapped = JSDatasetMapper.toDataset(
+      jsDataset,
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions
     )
+    expect(expectedDataset).to.deep.equal(mapped)
+  })
+  it('maps jsDataset model to the domain Dataset model for alternate version', () => {
+    const mappedWithAlternate = JSDatasetMapper.toDataset(
+      jsDataset,
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions,
+      '4.0'
+    )
+
+    expect(expectedDatasetAlternateVersion).to.deep.equal(mappedWithAlternate)
   })
 
   it('maps jsDataset model to the domain Dataset model when alternativePersistentId is provided', () => {
@@ -159,7 +268,8 @@ describe('JS Dataset Mapper', () => {
       JSDatasetMapper.toDataset(
         jsDatasetWithAlternativePersistentId,
         citation,
-        datasetSummaryFields
+        datasetSummaryFields,
+        jsDatasetPermissions
       )
     )
   })
@@ -194,7 +304,12 @@ describe('JS Dataset Mapper', () => {
     }
 
     expect(expectedDatasetWithCitationDate).to.deep.equal(
-      JSDatasetMapper.toDataset(jsDatasetWithCitationDate, citation, datasetSummaryFields)
+      JSDatasetMapper.toDataset(
+        jsDatasetWithCitationDate,
+        citation,
+        datasetSummaryFields,
+        jsDatasetPermissions
+      )
     )
   })
 
@@ -227,7 +342,12 @@ describe('JS Dataset Mapper', () => {
       ]
     }
     expect(expectedDatasetWithPublicationDate).to.deep.equal(
-      JSDatasetMapper.toDataset(jsDatasetWithPublicationDate, citation, datasetSummaryFields)
+      JSDatasetMapper.toDataset(
+        jsDatasetWithPublicationDate,
+        citation,
+        datasetSummaryFields,
+        jsDatasetPermissions
+      )
     )
   })
 })

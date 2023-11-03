@@ -91,7 +91,7 @@ describe('File JSDataverse Repository', () => {
             expect(file.version).to.deep.equal(expectedFile.version)
             expect(file.access).to.deep.equal(expectedFile.access)
             expect(file.type).to.deep.equal(expectedFile.type)
-            expect(file.date).to.deep.equal(expectedFile.date)
+            cy.compareDate(file.date.date, expectedFile.date.date)
             expect(file.downloadCount).to.deep.equal(expectedFile.downloadCount)
             expect(file.labels).to.deep.equal(expectedFile.labels)
             expect(file.checksum?.algorithm).to.deep.equal(expectedFile.checksum?.algorithm)
@@ -151,7 +151,7 @@ describe('File JSDataverse Repository', () => {
 
           files.forEach((file) => {
             expect(file.version).to.deep.equal(expectedPublishedFile.version)
-            expect(file.date).to.deep.equal(expectedFile.date)
+            cy.compareDate(file.date.date, expectedFile.date.date)
           })
         })
     })
@@ -252,8 +252,21 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    it.skip('gets all the files by dataset persistentId after adding a thumbnail to the files', async () => {
-      // TODO - Do this in thumbnails issue https://github.com/IQSS/dataverse-frontend/issues/160
+    it('gets all the files by dataset persistentId after adding a thumbnail to the files', async () => {
+      const datasetResponse = await FileHelper.createImage().then((file) =>
+        DatasetHelper.createWithFiles([file])
+      )
+      if (!datasetResponse.files) throw new Error('Files not found')
+
+      const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      if (!dataset) throw new Error('Dataset not found')
+
+      await fileRepository
+        .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((files) => {
+          console.log(files)
+          expect(files[0].thumbnail).to.not.be.undefined
+        })
     })
 
     it('gets all the files by dataset persistentId after embargo', async () => {
@@ -671,6 +684,53 @@ describe('File JSDataverse Repository', () => {
         })
       await fileRepository
         .getFilesTotalDownloadSizeByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((totalDownloadSize) => {
+          expect(totalDownloadSize).to.deep.equal(expectedTotalDownloadSize)
+        })
+    })
+
+    it('gets the total download size of all files in a dataset when passing files criteria', async () => {
+      const files = [
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          categories: ['category_1']
+        })
+      ]
+      const dataset = await DatasetHelper.createWithFiles(files).then((datasetResponse) =>
+        datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      )
+      if (!dataset) throw new Error('Dataset not found')
+
+      await TestsUtils.wait(2500) // wait for the files to be ingested
+
+      const expectedTotalDownloadSize = await fileRepository
+        .getAllByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version,
+          new FilePaginationInfo(1, 10, 3),
+          new FileCriteria().withFilterByType('csv')
+        )
+        .then((files) => {
+          return files.reduce((totalDownloadSize, file) => {
+            return totalDownloadSize + file.size.toBytes()
+          }, 0)
+        })
+      await fileRepository
+        .getFilesTotalDownloadSizeByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version,
+          new FileCriteria().withFilterByType('csv')
+        )
         .then((totalDownloadSize) => {
           expect(totalDownloadSize).to.deep.equal(expectedTotalDownloadSize)
         })

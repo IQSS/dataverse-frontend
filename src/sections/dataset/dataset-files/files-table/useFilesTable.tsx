@@ -21,7 +21,7 @@ export function useFilesTable(files: File[], paginationInfo: FilePaginationInfo)
   )
   const table = useReactTable({
     data: files,
-    columns: createColumnsDefinition(paginationInfo),
+    columns: createColumnsDefinition(paginationInfo, fileSelection),
     state: {
       rowSelection: currentPageRowSelection
     },

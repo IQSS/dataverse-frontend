@@ -65,6 +65,17 @@ services:
     mem_reservation: 1024m
     privileged: false
 
+  dv_initializer:
+    container_name: 'dv_initializer'
+    image: gdcc/configbaker:unstable
+    restart: 'no'
+    command:
+      - sh
+      - -c
+      - 'fix-fs-perms.sh dv'
+    volumes:
+      - ./docker-dev-volumes/app/data:/dv
+
   dev_dataverse_bootstrap:
     container_name: 'dev_dataverse_bootstrap'
     image: gdcc/configbaker:unstable

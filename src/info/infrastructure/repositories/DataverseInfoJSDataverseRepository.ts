@@ -1,4 +1,4 @@
-import { getDataverseVersion, WriteError } from '@iqss/dataverse-client-javascript'
+import { getDataverseVersion, ReadError } from '@iqss/dataverse-client-javascript'
 import { DataverseInfoRepository } from '../../domain/repositories/DataverseInfoRepository'
 import { DataverseVersion } from '../../domain/models/DataverseVersion'
 
@@ -22,7 +22,7 @@ export class DataverseInfoJSDataverseRepository implements DataverseInfoReposito
       .then((jsDataverseDataverseVersion: JSDataverseDataverseVersion) =>
         DataverseInfoJSDataverseRepository.formatVersion(jsDataverseDataverseVersion)
       )
-      .catch((error: WriteError) => {
+      .catch((error: ReadError) => {
         throw new Error(error.message)
       })
   }

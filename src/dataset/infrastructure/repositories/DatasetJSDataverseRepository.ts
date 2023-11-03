@@ -4,17 +4,21 @@ import {
   getDataset,
   getDatasetCitation,
   getDatasetSummaryFieldNames,
-  WriteError,
   Dataset as JSDataset,
   DatasetUserPermissions as JSDatasetPermissions,
   getPrivateUrlDataset,
   getPrivateUrlDatasetCitation,
-  getDatasetUserPermissions
+  getDatasetUserPermissions,
+  ReadError
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
-  getByPersistentId(persistentId: string, version?: string): Promise<Dataset | undefined> {
+  getByPersistentId(
+    persistentId: string,
+    version?: string,
+    requestedVersion?: string
+  ): Promise<Dataset | undefined> {
     return getDataset
       .execute(persistentId, this.versionToVersionId(version))
       .then((jsDataset) =>
@@ -32,13 +36,19 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           string,
           JSDatasetPermissions
         ]) =>
-          JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, jsDatasetPermissions)
+          JSDatasetMapper.toDataset(
+            jsDataset,
+            citation,
+            summaryFieldsNames,
+            jsDatasetPermissions,
+            requestedVersion
+          )
       )
-      .catch((error: WriteError) => {
+      .catch((error: ReadError) => {
         if (!version) {
           throw new Error(error.message)
         }
-        return this.getByPersistentId(persistentId)
+        return this.getByPersistentId(persistentId, undefined, (requestedVersion = version))
       })
   }
 
@@ -58,7 +68,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
             canViewUnpublishedDataset: true
           }) // TODO Connect with JS dataset permissions
       )
-      .catch((error: WriteError) => {
+      .catch((error: ReadError) => {
         throw new Error(error.message)
       })
   }

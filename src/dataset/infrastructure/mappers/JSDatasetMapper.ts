@@ -15,7 +15,8 @@ import {
   DatasetMetadataFields,
   DatasetVersion,
   MetadataBlockName,
-  DatasetPermissions
+  DatasetPermissions,
+  PrivateUrl
 } from '../../domain/models/Dataset'
 
 export class JSDatasetMapper {
@@ -23,11 +24,13 @@ export class JSDatasetMapper {
     jsDataset: JSDataset,
     citation: string,
     summaryFieldsNames: string[],
-    jsDatasetPermissions: JSDatasetPermissions
+    jsDatasetPermissions: JSDatasetPermissions,
+    requestedVersion?: string,
+    privateUrl?: PrivateUrl
   ): Dataset {
     return new Dataset.Builder(
       jsDataset.persistentId,
-      JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo),
+      JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo, requestedVersion),
       citation,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
@@ -41,13 +44,17 @@ export class JSDatasetMapper {
       [], // TODO Connect with dataset locks
       true, // TODO Connect with dataset hasValidTermsOfAccess
       true, // TODO Connect with dataset isValid
-      !!jsDataset.versionInfo.releaseTime // TODO Connect with dataset isReleased
+      jsDataset.versionInfo.releaseTime !== undefined &&
+        !isNaN(jsDataset.versionInfo.releaseTime.getTime()), // TODO Connect with dataset isReleased,
+      undefined, // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
+      privateUrl
     ).build()
   }
 
   static toVersion(
     jDatasetVersionId: number,
-    jsDatasetVersionInfo: JSDatasetVersionInfo
+    jsDatasetVersionInfo: JSDatasetVersionInfo,
+    requestedVersion?: string
   ): DatasetVersion {
     return new DatasetVersion(
       jDatasetVersionId,
@@ -56,7 +63,8 @@ export class JSDatasetMapper {
       false, // TODO Connect with dataset version isInReview
       JSDatasetMapper.toStatus(jsDatasetVersionInfo.state), // TODO Connect with dataset version latestVersionState
       jsDatasetVersionInfo.majorNumber,
-      jsDatasetVersionInfo.minorNumber
+      jsDatasetVersionInfo.minorNumber,
+      requestedVersion
     )
   }
 
