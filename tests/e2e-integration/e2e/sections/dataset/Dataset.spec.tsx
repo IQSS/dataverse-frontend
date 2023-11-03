@@ -36,6 +36,7 @@ describe('Dataset', () => {
             cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').click()
             cy.findByRole('button', { name: 'Permissions' }).should('exist').click()
             cy.findByRole('button', { name: 'Dataset' }).should('exist').click()
+            cy.findByRole('button', { name: 'Delete Dataset' }).should('exist')
             cy.findByRole('button', { name: 'Publish Dataset' }).should('exist')
           })
         })

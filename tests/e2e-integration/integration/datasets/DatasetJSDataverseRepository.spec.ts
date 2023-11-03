@@ -156,7 +156,7 @@ describe('Dataset JSDataverse Repository', () => {
           canPublishDataset: false,
           canManageDatasetPermissions: false,
           canManageFilesPermissions: true,
-          canDeleteDataset: true
+          canDeleteDataset: false
         })
       })
   })

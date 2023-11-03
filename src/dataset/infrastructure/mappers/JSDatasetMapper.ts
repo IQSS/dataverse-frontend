@@ -189,7 +189,7 @@ export class JSDatasetMapper {
       canPublishDataset: jsDatasetPermissions.canPublishDataset,
       canManageDatasetPermissions: jsDatasetPermissions.canManageDatasetPermissions,
       canManageFilesPermissions: true,
-      canDeleteDataset: true
+      canDeleteDataset: jsDatasetPermissions.canManageDatasetPermissions
     }
   }
 }
