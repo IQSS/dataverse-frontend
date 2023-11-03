@@ -28,14 +28,14 @@ describe('Dataset', () => {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('exist')
-            // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
+            cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
 
             cy.findByText('Metadata').should('exist')
             cy.findByText('Files').should('exist')
 
             cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').click()
             cy.findByRole('button', { name: 'Permissions' }).should('exist').click()
-            cy.findByRole('button', { name: 'Dataset' }).should('exist').click()
+            cy.findByRole('button', { name: 'Dataset' }).should('exist')
             cy.findByRole('button', { name: 'Delete Dataset' }).should('exist')
             cy.findByRole('button', { name: 'Publish Dataset' }).should('exist')
           })
@@ -87,7 +87,7 @@ describe('Dataset', () => {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('not.exist')
-            // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('not.exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
+            cy.findByText(DatasetLabelValue.UNPUBLISHED).should('not.exist')
             cy.findByText('Version 1.0').should('exist')
           })
         })
@@ -127,7 +127,7 @@ describe('Dataset', () => {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('exist')
-            // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
+            cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
           })
         })
     })
@@ -147,7 +147,7 @@ describe('Dataset', () => {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('exist')
-            // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
+            cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
 
             cy.findAllByText('withheld').should('exist')
           })

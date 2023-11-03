@@ -108,7 +108,7 @@ describe('Dataset JSDataverse Repository', () => {
 
       expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
       expect(dataset.citation).to.deep.equal(datasetExpected.citation)
-      // expect(dataset.labels).to.deep.equal(datasetExpected.labels) TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
+      expect(dataset.labels).to.deep.equal(datasetExpected.labels)
       expect(dataset.license).to.deep.equal(datasetExpected.license)
       expect(dataset.metadataBlocks).to.deep.equal(datasetExpected.metadataBlocks)
       expect(dataset.summaryFields).to.deep.equal(datasetExpected.summaryFields)
