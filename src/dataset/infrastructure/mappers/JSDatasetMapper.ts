@@ -187,7 +187,7 @@ export class JSDatasetMapper {
       canDownloadFiles: true,
       canUpdateDataset: jsDatasetPermissions.canEditDataset,
       canPublishDataset: jsDatasetPermissions.canPublishDataset,
-      canManageDatasetPermissions: true,
+      canManageDatasetPermissions: jsDatasetPermissions.canManageDatasetPermissions,
       canManageFilesPermissions: true,
       canDeleteDataset: true
     }

@@ -119,6 +119,48 @@ describe('Dataset JSDataverse Repository', () => {
     })
   })
 
+  it('gets a published dataset by persistentId without user authentication', async () => {
+    const datasetResponse = await DatasetHelper.create()
+    await DatasetHelper.publish(datasetResponse.persistentId)
+
+    await TestsUtils.wait(1500)
+
+    await TestsUtils.logout()
+
+    await datasetRepository
+      .getByPersistentId(datasetResponse.persistentId, '1.0')
+      .then((dataset) => {
+        if (!dataset) {
+          throw new Error('Dataset not found')
+        }
+        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
+        const newVersion = new DatasetVersion(
+          dataset.version.id,
+          DatasetPublishingStatus.RELEASED,
+          true,
+          false,
+          DatasetPublishingStatus.RELEASED,
+          1,
+          0
+        )
+        const expectedPublicationDate = getCurrentDateInYYYYMMDDFormat()
+        expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
+        expect(dataset.version).to.deep.equal(newVersion)
+        expect(dataset.metadataBlocks[0].fields.publicationDate).to.deep.equal(
+          expectedPublicationDate
+        )
+        expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
+        expect(dataset.permissions).to.deep.equal({
+          canDownloadFiles: true,
+          canUpdateDataset: false,
+          canPublishDataset: false,
+          canManageDatasetPermissions: false,
+          canManageFilesPermissions: true,
+          canDeleteDataset: true
+        })
+      })
+  })
+
   it('gets the dataset by persistentId and version number', async () => {
     const datasetResponse = await DatasetHelper.create()
     await DatasetHelper.publish(datasetResponse.persistentId)
