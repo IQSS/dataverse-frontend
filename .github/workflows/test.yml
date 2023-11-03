@@ -49,17 +49,7 @@ jobs:
         run: ./run-env.sh "$E2E_DATAVERSE_IMAGE_TAG"
 
       - name: Wait for containers to be ready
-        run: |
-          timeout 360s sh -c 'while ! docker logs dev_dataverse_bootstrap 2>&1 | grep -q "your instance has been configured"; do 
-            echo "Checking logs..."
-            docker logs dev_dataverse_bootstrap | tail -n 5
-            echo "Text not found, waiting for 2 seconds..."
-            sleep 2
-          done'
-
-      - name: Display Docker logs
-        run: |
-          docker logs dev_dataverse_bootstrap
+        run: timeout 600s sh -c 'while ! docker logs dev_dataverse_bootstrap 2>&1 | grep -q "your instance has been configured"; do sleep 2; done'
 
       - name: Run e2e tests
         run: npm run test:e2e

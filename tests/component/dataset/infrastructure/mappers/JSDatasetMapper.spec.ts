@@ -45,7 +45,8 @@ const jsDataset = {
     name: 'CC0 1.0',
     uri: 'http://creativecommons.org/publicdomain/zero/1.0',
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
-  }
+  },
+  thumbnail: undefined
 }
 const citation =
   'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
@@ -119,6 +120,7 @@ const expectedDataset = {
   hasValidTermsOfAccess: true,
   isValid: true,
   isReleased: false,
+  thumbnail: undefined,
   privateUrl: undefined
 }
 const expectedDatasetAlternateVersion = {
@@ -201,7 +203,8 @@ const expectedDatasetAlternateVersion = {
     canManageFilesPermissions: true,
     canPublishDataset: true,
     canUpdateDataset: true
-  }
+  },
+  thumbnail: undefined
 }
 describe('JS Dataset Mapper', () => {
   it('maps jsDataset model to the domain Dataset model', () => {

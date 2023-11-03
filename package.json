@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "7.6.0",
-    "@iqss/dataverse-client-javascript": "2.0.0-pr93.8996380",
+    "@iqss/dataverse-client-javascript": "2.0.0-pr97.418bf5e",
     "@iqss/dataverse-design-system": "*",
     "@istanbuljs/nyc-config-typescript": "1.0.2",
     "@tanstack/react-table": "8.9.2",
@@ -62,9 +62,11 @@
     "storybook": "concurrently 'storybook dev -p 6006 && open \"http://localhost:6006\"' 'cd packages/design-system && npm run storybook'",
     "build-storybook": "storybook build",
     "test:storybook": "test-storybook",
-    "test:storybook-all": "concurrently 'test-storybook' 'cd packages/design-system && npm run test:storybook'"
+    "test:storybook-all": "concurrently 'test-storybook' 'cd packages/design-system && npm run test:storybook'",
+    "typecheck": "tsc --noEmit"
   },
   "pre-commit": [
+    "typecheck",
     "lint:fix",
     "git:add",
     "test:unit",

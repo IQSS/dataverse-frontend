@@ -1,15 +1,18 @@
-import { Col, IconName, Icon, QuestionMarkTooltip, Row } from '@iqss/dataverse-design-system'
+import { Col, QuestionMarkTooltip, Row } from '@iqss/dataverse-design-system'
 import styles from './DatasetCitation.module.scss'
 import { useTranslation } from 'react-i18next'
 import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import parse from 'html-react-parser'
+import { CitationThumbnail } from './CitationThumbnail'
 
 interface DatasetCitationProps {
+  thumbnail?: string
+  title: string
   citation: string
   version: DatasetVersion
 }
 
-export function DatasetCitation({ citation, version }: DatasetCitationProps) {
+export function DatasetCitation({ thumbnail, title, citation, version }: DatasetCitationProps) {
   const { t } = useTranslation('dataset')
   return (
     <>
@@ -20,10 +23,12 @@ export function DatasetCitation({ citation, version }: DatasetCitationProps) {
             : styles.container
         }>
         <Row className={styles.row}>
-          <Col sm={3}>
-            <div className={styles.icon}>
-              <Icon name={IconName.DATASET} />
-            </div>
+          <Col sm={2}>
+            <CitationThumbnail
+              thumbnail={thumbnail}
+              title={title}
+              publishingStatus={version.publishingStatus}
+            />
           </Col>
           <Col>
             <Row>
@@ -48,7 +53,7 @@ export function DatasetCitation({ citation, version }: DatasetCitationProps) {
   )
 }
 
-function CitationDescription({ citation, version }: DatasetCitationProps) {
+function CitationDescription({ citation, version }: { citation: string; version: DatasetVersion }) {
   const citationAsReactElement = parse(citation)
 
   return (

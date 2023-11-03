@@ -50,6 +50,7 @@ export class JSDatasetMapper {
       true, // TODO Connect with dataset isValid
       jsDataset.versionInfo.releaseTime !== undefined &&
         !isNaN(jsDataset.versionInfo.releaseTime.getTime()), // TODO Connect with dataset isReleased,
+      undefined, // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl
     ).build()
   }

@@ -113,7 +113,7 @@ describe('DownloadFilesButton', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed()
     })
-    const files = FileMother.createMany(2)
+    const files = FileMother.createMany(2, { tabularData: undefined })
     cy.mountAuthenticated(
       withDataset(
         <DownloadFilesButton files={files} fileSelection={{}} />,
