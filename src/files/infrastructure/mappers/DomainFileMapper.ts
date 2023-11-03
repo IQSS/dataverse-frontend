@@ -7,7 +7,7 @@ import {
 } from '../../domain/models/FileCriteria'
 import {
   FileAccessStatus as JSFileAccessStatus,
-  FileCriteria as JSFileSearchCriteria,
+  FileSearchCriteria as JSFileSearchCriteria,
   FileOrderCriteria as JSFileOrderCriteria
 } from '@iqss/dataverse-client-javascript'
 import { FileType } from '../../domain/models/File'
