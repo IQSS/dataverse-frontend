@@ -688,5 +688,52 @@ describe('File JSDataverse Repository', () => {
           expect(totalDownloadSize).to.deep.equal(expectedTotalDownloadSize)
         })
     })
+
+    it('gets the total download size of all files in a dataset when passing files criteria', async () => {
+      const files = [
+        FileHelper.create('csv', {
+          description: 'Some description',
+          categories: ['category'],
+          restrict: 'true',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          tabIngest: 'false'
+        }),
+        FileHelper.create('txt', {
+          description: 'Some description',
+          categories: ['category_1']
+        })
+      ]
+      const dataset = await DatasetHelper.createWithFiles(files).then((datasetResponse) =>
+        datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      )
+      if (!dataset) throw new Error('Dataset not found')
+
+      await TestsUtils.wait(2500) // wait for the files to be ingested
+
+      const expectedTotalDownloadSize = await fileRepository
+        .getAllByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version,
+          new FilePaginationInfo(1, 10, 3),
+          new FileCriteria().withFilterByType('csv')
+        )
+        .then((files) => {
+          return files.reduce((totalDownloadSize, file) => {
+            return totalDownloadSize + file.size.toBytes()
+          }, 0)
+        })
+      await fileRepository
+        .getFilesTotalDownloadSizeByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version,
+          new FileCriteria().withFilterByType('csv')
+        )
+        .then((totalDownloadSize) => {
+          expect(totalDownloadSize).to.deep.equal(expectedTotalDownloadSize)
+        })
+    })
   })
 })

@@ -88,14 +88,14 @@ export function useFiles(
   ])
 
   useEffect(() => {
-    getFilesTotalDownloadSize(filesRepository, datasetPersistentId, datasetVersion)
+    getFilesTotalDownloadSize(filesRepository, datasetPersistentId, datasetVersion, criteria)
       .then((filesTotalDownloadSize: number) => {
         setFilesTotalDownloadSize(filesTotalDownloadSize)
       })
       .catch((error) => {
         console.error('There was an error getting the files total download size', error)
       })
-  }, [filesRepository, datasetPersistentId, datasetVersion])
+  }, [filesRepository, datasetPersistentId, datasetVersion, criteria])
 
   return {
     files,

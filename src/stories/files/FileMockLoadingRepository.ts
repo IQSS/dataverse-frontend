@@ -47,7 +47,9 @@ export class FileMockLoadingRepository implements FileRepository {
     // eslint-disable-next-line unused-imports/no-unused-vars
     datasetPersistentId: string,
     // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersion: DatasetVersion
+    datasetVersion: DatasetVersion,
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    criteria?: FileCriteria
   ): Promise<number> {
     return new Promise((resolve) => {
       setTimeout(() => {

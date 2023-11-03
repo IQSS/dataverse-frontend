@@ -6,7 +6,7 @@ export DATAVERSE_IMAGE_TAG=$1
 export COMPOSE_HTTP_TIMEOUT=200
 
 # Timeout for Dataverse bootstrap configbaker
-export DATAVERSE_BOOTSTRAP_TIMEOUT="5m"
+export DATAVERSE_BOOTSTRAP_TIMEOUT="10m"
 
 echo "INFO - Setting up Dataverse on image tag ${DATAVERSE_IMAGE_TAG}..."
 

@@ -121,10 +121,17 @@ export class FileJSDataverseRepository implements FileRepository {
 
   getFilesTotalDownloadSizeByDatasetPersistentId(
     datasetPersistentId: string,
-    datasetVersion: DatasetVersion
+    datasetVersion: DatasetVersion,
+    criteria: FileCriteria = new FileCriteria()
   ): Promise<number> {
     return getDatasetFilesTotalDownloadSize
-      .execute(datasetPersistentId, datasetVersion.toString(), FileDownloadSizeMode.ARCHIVAL)
+      .execute(
+        datasetPersistentId,
+        datasetVersion.toString(),
+        FileDownloadSizeMode.ARCHIVAL,
+        DomainFileMapper.toJSFileSearchCriteria(criteria),
+        includeDeaccessioned
+      )
       .catch((error: ReadError) => {
         throw new Error(error.message)
       })
