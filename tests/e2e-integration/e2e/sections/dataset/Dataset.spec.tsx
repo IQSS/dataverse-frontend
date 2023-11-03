@@ -2,6 +2,7 @@ import { DatasetLabelValue } from '../../../../../src/dataset/domain/models/Data
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
 import { FileHelper } from '../../../shared/files/FileHelper'
+import moment from 'moment-timezone'
 
 type Dataset = {
   datasetVersion: { metadataBlocks: { citation: { fields: { value: string }[] } } }
@@ -265,18 +266,28 @@ describe('Dataset', () => {
           cy.findByText('Restricted with access Icon').should('not.exist')
           cy.findByText('Restricted File Icon').should('exist')
 
-          cy.findByRole('button', { name: 'Access File' }).should('exist').click()
+          //  use alias below to avoid a timing error
+          cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+          cy.get('@accessButton').should('exist')
+          cy.get('@accessButton').click()
           cy.findByText('Restricted').should('exist')
         })
     })
 
     it('loads the embargoed files', () => {
+      // Create a moment object in UTC and set the time to 12 AM (midnight)
+      const utcDate = moment.utc().startOf('day')
+
+      // Add 100 years to the UTC date
+      utcDate.add(100, 'years')
+      const dateString = utcDate.format('YYYY-MM-DD')
+      const expectedDate = utcDate.local().format('MMM D, YYYY')
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(1)).then((dataset) =>
           DatasetHelper.embargoFiles(
             dataset.persistentId,
             [dataset.files ? dataset.files[0].id : 0],
-            '2100-10-20'
+            dateString
           )
         )
       )
@@ -291,7 +302,7 @@ describe('Dataset', () => {
           cy.findByText('Files').should('exist')
 
           cy.findByText(/Deposited/).should('exist')
-          cy.findByText('Draft: will be embargoed until Oct 20, 2100').should('exist')
+          cy.findByText(`Draft: will be embargoed until ${expectedDate}`).should('exist')
 
           cy.findByText('Edit Files').should('exist')
 
