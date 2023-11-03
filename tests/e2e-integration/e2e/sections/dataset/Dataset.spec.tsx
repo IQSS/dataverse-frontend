@@ -31,6 +31,8 @@ describe('Dataset', () => {
             // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
 
             cy.findByRole('button', { name: 'Edit Dataset' }).should('exist')
+            cy.findByRole('button', { name: 'Publish Dataset' }).should('exist')
+
             cy.findByText('Metadata').should('exist')
             cy.findByText('Files').should('exist')
           })
@@ -51,6 +53,7 @@ describe('Dataset', () => {
             }).should('exist')
 
             cy.findByRole('button', { name: 'Edit Dataset' }).should('not.exist')
+            cy.findByRole('button', { name: 'Publish Dataset' }).should('not.exist')
             cy.findByRole('button', { name: 'Upload Files' }).should('not.exist')
             cy.findByText('Metadata').should('exist')
             cy.findByText('Files').should('exist')
