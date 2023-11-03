@@ -54,7 +54,7 @@ export function FileOptionsMenu({ file }: { file: File }) {
         <DropdownHeader>
           <PencilFill /> {t('actions.optionsMenu.headers.editOptions')}
         </DropdownHeader>
-        <EditFilesOptions files={[file]} />
+        <EditFilesOptions files={[file]} fileSelection={{ [file.id]: file }} />
       </DropdownButton>
     </Tooltip>
   )

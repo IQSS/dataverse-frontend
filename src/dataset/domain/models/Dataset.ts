@@ -295,6 +295,7 @@ export class Dataset {
     public readonly hasValidTermsOfAccess: boolean,
     public readonly isValid: boolean,
     public readonly isReleased: boolean,
+    public readonly thumbnail?: string,
     public readonly privateUrl?: PrivateUrl
   ) {}
 
@@ -340,6 +341,7 @@ export class Dataset {
       public readonly hasValidTermsOfAccess: boolean,
       public readonly isValid: boolean,
       public readonly isReleased: boolean,
+      public readonly thumbnail?: string,
       public readonly privateUrl?: PrivateUrl
     ) {
       this.withLabels()
@@ -454,7 +456,9 @@ export class Dataset {
         this.locks,
         this.hasValidTermsOfAccess,
         this.isValid,
-        this.isReleased
+        this.isReleased,
+        this.thumbnail,
+        this.privateUrl
       )
     }
   }

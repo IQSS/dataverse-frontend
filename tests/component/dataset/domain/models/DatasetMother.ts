@@ -287,6 +287,8 @@ export class DatasetMother {
       hasValidTermsOfAccess: faker.datatype.boolean(),
       isValid: faker.datatype.boolean(),
       isReleased: faker.datatype.boolean(),
+      thumbnail: undefined,
+      privateUrl: undefined,
       ...props
     }
 
@@ -302,6 +304,7 @@ export class DatasetMother {
       dataset.hasValidTermsOfAccess,
       dataset.isValid,
       dataset.isReleased,
+      dataset.thumbnail,
       dataset.privateUrl
     ).build()
   }
