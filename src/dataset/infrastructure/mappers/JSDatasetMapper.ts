@@ -188,7 +188,7 @@ export class JSDatasetMapper {
       canUpdateDataset: jsDatasetPermissions.canEditDataset,
       canPublishDataset: jsDatasetPermissions.canPublishDataset,
       canManageDatasetPermissions: jsDatasetPermissions.canManageDatasetPermissions,
-      canManageFilesPermissions: true,
+      canManageFilesPermissions: true, // TODO: connect with js-dataverse DatasetPermissions.canManageFilesPermissions
       canDeleteDataset: jsDatasetPermissions.canManageDatasetPermissions
     }
   }
