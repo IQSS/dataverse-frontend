@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
+import {
+  DatasetAlert,
+  DatasetAlertMessageKey,
+  DatasetPublishingStatus,
+  DatasetVersion
+} from '../../../dataset/domain/models/Dataset'
 import { DatasetAlerts } from '../../../sections/dataset/dataset-alerts/DatasetAlerts'
 import { WithI18next } from '../../WithI18next'
 
@@ -8,15 +13,36 @@ import {
   DatasetMother,
   DatasetPermissionsMother
 } from '../../../../tests/component/dataset/domain/models/DatasetMother'
+import { DatasetAlertContext } from '../../../sections/dataset/DatasetAlertContext'
 
 const meta: Meta<typeof DatasetAlerts> = {
   title: 'Sections/Dataset Page/DatasetAlerts',
   component: DatasetAlerts,
   decorators: [WithI18next]
 }
+const editMetadataAlert = [
+  new DatasetAlert('success', DatasetAlertMessageKey.UPDATE_METADATA_SUCCESS)
+]
 
 export default meta
 type Story = StoryObj<typeof DatasetAlerts>
+export const EditMetadataSuccessful: Story = {
+  render: () => {
+    const dataset = DatasetMother.createRealistic()
+
+    return (
+      <DatasetAlertContext.Provider
+        value={{
+          datasetAlerts: editMetadataAlert,
+          setDatasetAlerts: () => {}
+        }}>
+        <div>
+          <DatasetAlerts alerts={dataset.alerts} />
+        </div>
+      </DatasetAlertContext.Provider>
+    )
+  }
+}
 
 export const DraftVersion: Story = {
   render: () => {

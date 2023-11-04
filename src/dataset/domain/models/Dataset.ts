@@ -29,7 +29,8 @@ export enum DatasetAlertMessageKey {
   REQUESTED_VERSION_NOT_FOUND = 'requestedVersionNotFound',
   REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT = 'requestedVersionNotFoundShowDraft',
   SHARE_UNPUBLISHED_DATASET = 'shareUnpublishedDataset',
-  UNPUBLISHED_DATASET = 'unpublishedDataset'
+  UNPUBLISHED_DATASET = 'unpublishedDataset',
+  UPDATE_METADATA_SUCCESS = 'updateMetadataSuccess'
 }
 
 export class DatasetAlert {

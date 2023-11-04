@@ -3,6 +3,7 @@ import { DatasetAlert } from '../../../dataset/domain/models/Dataset'
 import { useTranslation } from 'react-i18next'
 import styles from './DatasetAlerts.module.scss'
 import parse from 'html-react-parser'
+import { useDatasetAlertContext } from '../DatasetAlertContext'
 
 interface DatasetAlertsProps {
   alerts: DatasetAlert[]
@@ -10,7 +11,8 @@ interface DatasetAlertsProps {
 
 export function DatasetAlerts({ alerts }: DatasetAlertsProps) {
   const { t } = useTranslation('dataset')
-
+  const statusAlerts = useDatasetAlertContext()
+  alerts = alerts.concat(statusAlerts.datasetAlerts)
   return (
     <div className={styles.container}>
       {alerts.map((alert: DatasetAlert, index) => {

@@ -58,6 +58,10 @@
     "uploadFiles": "Upload Files"
   },
   "alerts": {
+    "updateMetadataSuccess": {
+      "heading": "Success!",
+      "alertText": "The metadata for this dataset has been updated."
+    },
     "draftVersion": {
       "heading": "This draft version needs to be published",
       "alertText": "When ready for sharing, please <b>publish</b> it so that others can see these changes"
