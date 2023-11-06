@@ -300,7 +300,7 @@ describe('Dataset', () => {
         })
     })
 
-    it('applies filters to the Files Table in the correct order', () => {
+    it.only('applies filters to the Files Table in the correct order', () => {
       const files = [
         FileHelper.create('csv', {
           description: 'Some description',
@@ -384,7 +384,7 @@ describe('Dataset', () => {
           cy.findByText('blob-5').should('exist')
 
           cy.findByRole('button', { name: 'File Type: All' }).click({ force: true })
-          cy.findByText('Text/csv (2)').should('exist').click({ force: true })
+          cy.findByText('Comma Separated Values (2)').should('exist').click({ force: true })
 
           cy.findByText('1 to 2 of 2 Files').should('exist')
           cy.findByText('blob').should('not.exist')
