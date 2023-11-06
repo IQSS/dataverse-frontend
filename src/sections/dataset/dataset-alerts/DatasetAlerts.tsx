@@ -1,5 +1,4 @@
 import { DatasetAlert } from '../../../dataset/domain/models/Dataset'
-import { useTranslation } from 'react-i18next'
 import { useDatasetAlertContext } from '../DatasetAlertContext'
 import { Alerts } from '../../alerts/Alerts'
 
