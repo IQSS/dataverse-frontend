@@ -28,6 +28,12 @@ interface DatasetTranslation {
     [DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT]: AlertTranslation
     [DatasetAlertMessageKey.UNPUBLISHED_DATASET]: AlertTranslation
     [DatasetAlertMessageKey.SHARE_UNPUBLISHED_DATASET]: AlertTranslation
+    [DatasetAlertMessageKey.METADATA_UPDATED]: AlertTranslation
+    [DatasetAlertMessageKey.FILES_UPDATED]: AlertTranslation
+    [DatasetAlertMessageKey.PUBLISH_IN_PROGRESS]: AlertTranslation
+    [DatasetAlertMessageKey.TERMS_UPDATED]: AlertTranslation
+    [DatasetAlertMessageKey.DATASET_DELETED]: AlertTranslation
+    [DatasetAlertMessageKey.THUMBNAIL_UPDATED]: AlertTranslation
   }
 }
 

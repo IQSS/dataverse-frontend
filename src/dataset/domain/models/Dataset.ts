@@ -30,14 +30,19 @@ export enum DatasetAlertMessageKey {
   REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT = 'requestedVersionNotFoundShowDraft',
   SHARE_UNPUBLISHED_DATASET = 'shareUnpublishedDataset',
   UNPUBLISHED_DATASET = 'unpublishedDataset',
-  UPDATE_METADATA_SUCCESS = 'updateMetadataSuccess'
+  METADATA_UPDATED = 'metadataUpdated',
+  FILES_UPDATED = 'filesUpdated',
+  TERMS_UPDATED = 'termsUpdated',
+  THUMBNAIL_UPDATED = 'thumbnailUpdated',
+  DATASET_DELETED = 'datasetDeleted',
+  PUBLISH_IN_PROGRESS = 'publishInProgress'
 }
 
 export class DatasetAlert {
   constructor(
     public readonly variant: AlertVariant,
     public readonly message: DatasetAlertMessageKey,
-    public readonly dynamicFields?: object
+    public dynamicFields?: object
   ) {}
 }
 
