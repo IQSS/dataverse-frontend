@@ -672,7 +672,7 @@ describe('File JSDataverse Repository', () => {
       )
       if (!dataset) throw new Error('Dataset not found')
 
-      await TestsUtils.wait(2500) // wait for the files to be ingested
+      await TestsUtils.waitForNoLocks(dataset.persistentId) // wait for the files to be ingested
 
       const expectedTotalDownloadSize = await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
@@ -710,7 +710,7 @@ describe('File JSDataverse Repository', () => {
       )
       if (!dataset) throw new Error('Dataset not found')
 
-      await TestsUtils.wait(2500) // wait for the files to be ingested
+      await TestsUtils.waitForNoLocks(dataset.persistentId) // wait for the files to be ingested
 
       const expectedTotalDownloadSize = await fileRepository
         .getAllByDatasetPersistentId(
