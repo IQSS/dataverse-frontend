@@ -5,7 +5,6 @@ import {
   DatasetPermissionsMother,
   DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
-import { DatasetLockReason } from '../../../../../../src/dataset/domain/models/Dataset'
 import { SettingRepository } from '../../../../../../src/settings/domain/repositories/SettingRepository'
 import { SettingMother } from '../../../../settings/domain/models/SettingMother'
 import { SettingsProvider } from '../../../../../../src/sections/settings/SettingsProvider'
@@ -20,7 +19,7 @@ describe('PublishDatasetMenu', () => {
       isValid: true
     })
 
-    cy.customMount(<PublishDatasetMenu dataset={dataset} />)
+    cy.mountAuthenticated(<PublishDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Publish Dataset' })
       .should('exist')
@@ -44,7 +43,7 @@ describe('PublishDatasetMenu', () => {
       .stub()
       .resolves(SettingMother.createExternalStatusesAllowed(['Author Contacted', 'Privacy Review']))
 
-    cy.customMount(
+    cy.mountAuthenticated(
       <SettingsProvider repository={settingRepository}>
         <PublishDatasetMenu dataset={dataset} />
       </SettingsProvider>
@@ -55,6 +54,20 @@ describe('PublishDatasetMenu', () => {
     cy.findByRole('button', { name: 'Change Curation Status' }).should('exist')
   })
 
+  it('does not render if the user is not authenticated', () => {
+    const dataset = DatasetMother.create({
+      version: DatasetVersionMother.createDraftAsLatestVersion(),
+      permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+      locks: [],
+      hasValidTermsOfAccess: true,
+      isValid: true
+    })
+
+    cy.customMount(<PublishDatasetMenu dataset={dataset} />)
+
+    cy.findByRole('button', { name: 'Publish Dataset' }).should('not.exist')
+  })
+
   it('does not render the PublishDatasetMenu if publishing is not allowed', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createDraftAsLatestVersion(),
@@ -62,7 +75,7 @@ describe('PublishDatasetMenu', () => {
       locks: []
     })
 
-    cy.customMount(<PublishDatasetMenu dataset={dataset} />)
+    cy.mountAuthenticated(<PublishDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('not.exist')
   })
@@ -74,7 +87,7 @@ describe('PublishDatasetMenu', () => {
       locks: []
     })
 
-    cy.customMount(<PublishDatasetMenu dataset={dataset} />)
+    cy.mountAuthenticated(<PublishDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('not.exist')
   })
@@ -86,7 +99,7 @@ describe('PublishDatasetMenu', () => {
       locks: []
     })
 
-    cy.customMount(<PublishDatasetMenu dataset={dataset} />)
+    cy.mountAuthenticated(<PublishDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('not.exist')
   })
@@ -100,7 +113,7 @@ describe('PublishDatasetMenu', () => {
       isValid: true
     })
 
-    cy.customMount(<PublishDatasetMenu dataset={dataset} />)
+    cy.mountAuthenticated(<PublishDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('be.enabled')
   })
@@ -109,17 +122,12 @@ describe('PublishDatasetMenu', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createDraftAsLatestVersion(),
       permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
-      locks: [
-        {
-          id: 1,
-          reason: DatasetLockReason.EDIT_IN_PROGRESS
-        }
-      ],
+      locks: [DatasetLockMother.createLockedInEditInProgress()],
       hasValidTermsOfAccess: true,
       isValid: true
     })
 
-    cy.customMount(<PublishDatasetMenu dataset={dataset} />)
+    cy.mountAuthenticated(<PublishDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('be.disabled')
   })
@@ -133,7 +141,7 @@ describe('PublishDatasetMenu', () => {
       isValid: true
     })
 
-    cy.customMount(<PublishDatasetMenu dataset={dataset} />)
+    cy.mountAuthenticated(<PublishDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('be.disabled')
   })
@@ -147,7 +155,7 @@ describe('PublishDatasetMenu', () => {
       isValid: false
     })
 
-    cy.customMount(<PublishDatasetMenu dataset={dataset} />)
+    cy.mountAuthenticated(<PublishDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Publish Dataset' }).should('be.disabled')
   })
@@ -161,7 +169,7 @@ describe('PublishDatasetMenu', () => {
       isValid: true
     })
 
-    cy.customMount(<PublishDatasetMenu dataset={dataset} />)
+    cy.mountAuthenticated(<PublishDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Publish Dataset' })
       .should('exist')

@@ -30,7 +30,7 @@ export function EditFilesMenu({ files, fileSelection }: EditFilesMenuProps) {
       variant="secondary"
       id="edit-files-menu"
       title={t('actions.editFilesMenu.title')}
-      disabled={dataset.isLockedFromEdits || !dataset.hasValidTermsOfAccess}
+      disabled={dataset.checkIsLockedFromEdits(user.persistentId) || !dataset.hasValidTermsOfAccess}
       icon={<PencilFill className={styles.icon} />}>
       <EditFilesOptions files={files} fileSelection={fileSelection} />
     </DropdownButton>

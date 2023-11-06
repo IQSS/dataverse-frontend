@@ -193,7 +193,7 @@ export class JSDatasetMapper {
   static toLocks(jsDatasetLocks: JSDatasetLock[]): DatasetLock[] {
     return jsDatasetLocks.map((jsDatasetLock) => {
       return {
-        id: 0,
+        userPersistentId: jsDatasetLock.userId,
         reason: jsDatasetLock.lockType as unknown as DatasetLockReason
       }
     })

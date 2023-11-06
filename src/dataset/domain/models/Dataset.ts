@@ -259,7 +259,7 @@ export interface DatasetPermissions {
 }
 
 export interface DatasetLock {
-  id: number
+  userPersistentId: string
   reason: DatasetLockReason
 }
 
@@ -302,8 +302,8 @@ export class Dataset {
     return this.metadataBlocks[0].fields.title
   }
 
-  public get isLockedFromPublishing(): boolean {
-    return this.isLockedFromEdits
+  public checkIsLockedFromPublishing(userPersistentId: string): boolean {
+    return this.checkIsLockedFromEdits(userPersistentId)
   }
 
   public get isLocked(): boolean {
@@ -314,12 +314,19 @@ export class Dataset {
     return this.locks.some((lock) => lock.reason === DatasetLockReason.WORKFLOW)
   }
 
-  public get isLockedFromEdits(): boolean {
+  public checkIsLockedFromEdits(userPersistentId: string): boolean {
     const lockedReasonIsInReview = this.locks.some(
       (lock) => lock.reason === DatasetLockReason.IN_REVIEW
     )
-    // If the lock reason is workflow and the workflow userId is the same as the current user, then the user can edit
-    // TODO - Ask how we want to manage pending workflows
+
+    if (
+      this.locks.some(
+        (lock) =>
+          lock.reason === DatasetLockReason.WORKFLOW && lock.userPersistentId === userPersistentId
+      )
+    ) {
+      return false
+    }
 
     return this.isLocked && !(lockedReasonIsInReview && this.permissions.canPublishDataset)
   }

@@ -5,7 +5,6 @@ import {
   DatasetPermissionsMother,
   DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
-import { DatasetLockReason } from '../../../../../../src/dataset/domain/models/Dataset'
 
 describe('SubmitForReviewButton', () => {
   it('renders the SubmitForReviewButton if is dataset latest version and it is a draft and the dataset is not locked in workflow and the user has dataset update permissions and the user do not have publish dataset permissions', () => {
@@ -20,9 +19,26 @@ describe('SubmitForReviewButton', () => {
       isValid: true
     })
 
-    cy.customMount(<SubmitForReviewButton dataset={dataset} />)
+    cy.mountAuthenticated(<SubmitForReviewButton dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Submit for Review' }).should('exist').should('be.enabled')
+  })
+
+  it('does not render if the user is not authenticated', () => {
+    const dataset = DatasetMother.create({
+      version: DatasetVersionMother.createDraftAsLatestVersion(),
+      permissions: DatasetPermissionsMother.create({
+        canUpdateDataset: true,
+        canPublishDataset: false
+      }),
+      locks: [],
+      hasValidTermsOfAccess: true,
+      isValid: true
+    })
+
+    cy.customMount(<SubmitForReviewButton dataset={dataset} />)
+
+    cy.findByRole('button', { name: 'Submit for Review' }).should('not.exist')
   })
 
   it('does not render the SubmitForReviewButton if is not dataset latest version', () => {
@@ -35,7 +51,7 @@ describe('SubmitForReviewButton', () => {
       locks: [DatasetLockMother.createLockedInWorkflow()]
     })
 
-    cy.customMount(<SubmitForReviewButton dataset={dataset} />)
+    cy.mountAuthenticated(<SubmitForReviewButton dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Submit for Review' }).should('not.exist')
   })
@@ -50,7 +66,7 @@ describe('SubmitForReviewButton', () => {
       locks: [DatasetLockMother.createLockedInWorkflow()]
     })
 
-    cy.customMount(<SubmitForReviewButton dataset={dataset} />)
+    cy.mountAuthenticated(<SubmitForReviewButton dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Submit for Review' }).should('not.exist')
   })
@@ -65,7 +81,7 @@ describe('SubmitForReviewButton', () => {
       locks: [DatasetLockMother.createLockedInWorkflow()]
     })
 
-    cy.customMount(<SubmitForReviewButton dataset={dataset} />)
+    cy.mountAuthenticated(<SubmitForReviewButton dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Submit for Review' }).should('not.exist')
   })
@@ -80,7 +96,7 @@ describe('SubmitForReviewButton', () => {
       locks: []
     })
 
-    cy.customMount(<SubmitForReviewButton dataset={dataset} />)
+    cy.mountAuthenticated(<SubmitForReviewButton dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Submit for Review' }).should('not.exist')
   })
@@ -95,7 +111,7 @@ describe('SubmitForReviewButton', () => {
       locks: []
     })
 
-    cy.customMount(<SubmitForReviewButton dataset={dataset} />)
+    cy.mountAuthenticated(<SubmitForReviewButton dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Submit for Review' }).should('not.exist')
   })
@@ -107,17 +123,12 @@ describe('SubmitForReviewButton', () => {
         canUpdateDataset: true,
         canPublishDataset: false
       }),
-      locks: [
-        {
-          id: 1,
-          reason: DatasetLockReason.EDIT_IN_PROGRESS
-        }
-      ],
+      locks: [DatasetLockMother.createLockedInEditInProgress()],
       hasValidTermsOfAccess: true,
       isValid: true
     })
 
-    cy.customMount(<SubmitForReviewButton dataset={dataset} />)
+    cy.mountAuthenticated(<SubmitForReviewButton dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Submit for Review' }).should('be.disabled')
   })
@@ -134,7 +145,7 @@ describe('SubmitForReviewButton', () => {
       isValid: true
     })
 
-    cy.customMount(<SubmitForReviewButton dataset={dataset} />)
+    cy.mountAuthenticated(<SubmitForReviewButton dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Submit for Review' }).should('be.disabled')
   })
@@ -151,7 +162,7 @@ describe('SubmitForReviewButton', () => {
       isValid: false
     })
 
-    cy.customMount(<SubmitForReviewButton dataset={dataset} />)
+    cy.mountAuthenticated(<SubmitForReviewButton dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Submit for Review' }).should('be.disabled')
   })
@@ -166,7 +177,7 @@ describe('SubmitForReviewButton', () => {
       locks: [DatasetLockMother.createLockedInReview()]
     })
 
-    cy.customMount(<SubmitForReviewButton dataset={dataset} />)
+    cy.mountAuthenticated(<SubmitForReviewButton dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Submitted for Review' }).should('be.disabled')
   })

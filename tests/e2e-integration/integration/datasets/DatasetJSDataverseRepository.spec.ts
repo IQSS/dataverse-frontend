@@ -209,7 +209,7 @@ describe('Dataset JSDataverse Repository', () => {
       expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
       expect(dataset.locks).to.deep.equal([
         {
-          id: 0,
+          userPersistentId: 'dataverseAdmin',
           reason: DatasetLockReason.FINALIZE_PUBLICATION
         }
       ])
