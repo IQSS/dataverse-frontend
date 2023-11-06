@@ -41,7 +41,7 @@ export enum DatasetAlertMessageKey {
 export class DatasetAlert {
   constructor(
     public readonly variant: AlertVariant,
-    public readonly message: DatasetAlertMessageKey,
+    public readonly messageKey: DatasetAlertMessageKey,
     public dynamicFields?: object
   ) {}
 }

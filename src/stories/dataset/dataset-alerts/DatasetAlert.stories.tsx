@@ -14,7 +14,6 @@ import {
   DatasetPermissionsMother
 } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 import { DatasetAlertContext } from '../../../sections/dataset/DatasetAlertContext'
-import { useEffect, useState } from 'react'
 
 const meta: Meta<typeof DatasetAlerts> = {
   title: 'Sections/Dataset Page/DatasetAlerts',
@@ -33,7 +32,9 @@ export const EditMetadataSuccessful: Story = {
       <DatasetAlertContext.Provider
         value={{
           datasetAlerts: editMetadataAlert,
-          setDatasetAlerts: () => {}
+          setDatasetAlerts: () => {},
+          addDatasetAlert: () => {},
+          removeDatasetAlert: () => {}
         }}>
         <div>
           <DatasetAlerts alerts={dataset.alerts} />
@@ -43,28 +44,18 @@ export const EditMetadataSuccessful: Story = {
   }
 }
 
-const publishAlert = [new DatasetAlert('warning', DatasetAlertMessageKey.PUBLISH_IN_PROGRESS)]
-
-export const PublishInProgress: StoryObj<typeof DatasetAlerts> = {
+const publishAlert = new DatasetAlert('warning', DatasetAlertMessageKey.PUBLISH_IN_PROGRESS)
+export const PublishInProgress: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic()
-    const [alerts, setAlerts] = useState(publishAlert)
-
-    // Set a timeout to remove the alert after 3 seconds
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        setAlerts([]) // This will clear the alert after 3 seconds
-      }, 3000) // Timeout of 3 seconds
-
-      // Clear the timer if the component unmounts
-      return () => clearTimeout(timer)
-    }, [])
 
     return (
       <DatasetAlertContext.Provider
         value={{
-          datasetAlerts: alerts,
-          setDatasetAlerts: setAlerts
+          datasetAlerts: [publishAlert],
+          setDatasetAlerts: () => {},
+          addDatasetAlert: () => {},
+          removeDatasetAlert: () => {}
         }}>
         <div>
           <DatasetAlerts alerts={dataset.alerts} />

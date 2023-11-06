@@ -69,8 +69,8 @@ it('renders alerts with correct text', () => {
   cy.fixture('../../../public/locales/en/dataset.json').then((dataset: DatasetTranslation) => {
     cy.mount(<DatasetAlerts alerts={alerts} />)
 
-    const alertHeading = dataset.alerts[draftAlert.message].heading
-    const alertText = removeMarkup(dataset.alerts[draftAlert.message].alertText)
+    const alertHeading = dataset.alerts[draftAlert.messageKey].heading
+    const alertText = removeMarkup(dataset.alerts[draftAlert.messageKey].alertText)
     cy.findByText(alertHeading).should('exist')
     cy.findByRole('alert').should(($element) => {
       // text() removes markup, so we can compare to the expected text
