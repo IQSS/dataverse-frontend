@@ -264,15 +264,14 @@ export interface DatasetLock {
 }
 
 export enum DatasetLockReason {
-  INGEST = 'ingest',
-  WORKFLOW = 'workflow',
-  IN_REVIEW = 'inReview',
-  DCM_UPLOAD = 'dcmUpload',
-  GLOBUS_UPLOAD = 'globusUpload',
+  INGEST = 'Ingest',
+  WORKFLOW = 'Workflow',
+  IN_REVIEW = 'InReview',
+  DCM_UPLOAD = 'DcmUpload',
+  GLOBUS_UPLOAD = 'GlobusUpload',
   FINALIZE_PUBLICATION = 'finalizePublication',
-
-  EDIT_IN_PROGRESS = 'editInProgress',
-  FILE_VALIDATION_FAILED = 'fileValidationFailed'
+  EDIT_IN_PROGRESS = 'EditInProgress',
+  FILE_VALIDATION_FAILED = 'FileValidationFailed'
 }
 
 export interface PrivateUrl {

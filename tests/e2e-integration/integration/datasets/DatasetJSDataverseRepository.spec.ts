@@ -196,7 +196,7 @@ describe('Dataset JSDataverse Repository', () => {
       })
   })
 
-  it('gets the dataset when is locked', async () => {
+  it('gets the dataset by persistentId when is locked', async () => {
     const datasetResponse = await DatasetHelper.create()
     await DatasetHelper.lock(datasetResponse.id, DatasetLockReason.FINALIZE_PUBLICATION)
 
