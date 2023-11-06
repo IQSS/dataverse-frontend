@@ -8,7 +8,6 @@ interface DatasetAlertsProps {
 }
 
 export function DatasetAlerts({ alerts }: DatasetAlertsProps) {
-  const { t } = useTranslation('dataset')
   const statusAlerts = useDatasetAlertContext()
   alerts = alerts.concat(statusAlerts.datasetAlerts)
   return <Alerts alerts={alerts}></Alerts>
