@@ -194,4 +194,22 @@ describe('Dataset JSDataverse Repository', () => {
         expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
       })
   })
+
+  it('gets the dataset by persistentId when the dataset is deaccessioned', async () => {
+    const datasetResponse = await DatasetHelper.create()
+
+    await DatasetHelper.publish(datasetResponse.persistentId)
+    await TestsUtils.wait(1500)
+
+    await DatasetHelper.deaccession(datasetResponse.id)
+
+    await datasetRepository.getByPersistentId(datasetResponse.persistentId).then((dataset) => {
+      if (!dataset) {
+        throw new Error('Dataset not found')
+      }
+      const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
+
+      expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
+    })
+  })
 })

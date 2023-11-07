@@ -157,19 +157,15 @@ describe('File JSDataverse Repository', () => {
     })
 
     it('gets all the files by dataset persistentId after dataset deaccession', async () => {
-      const dataset = await DatasetHelper.createWithFiles(FileHelper.createMany(3)).then(
-        (datasetResponse) => datasetRepository.getByPersistentId(datasetResponse.persistentId)
-      )
-      if (!dataset) throw new Error('Dataset not found')
+      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(3))
 
-      await DatasetHelper.publish(dataset.persistentId)
+      await DatasetHelper.publish(datasetResponse.persistentId)
       await TestsUtils.wait(1500) // Wait for the dataset to be published
 
-      DatasetHelper.deaccession(dataset.persistentId)
-      await TestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
-      await TestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
-      await TestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
+      await DatasetHelper.deaccession(datasetResponse.id)
 
+      const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      if (!dataset) throw new Error('Dataset not found')
       await fileRepository
         .getAllByDatasetPersistentId(
           dataset.persistentId,
