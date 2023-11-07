@@ -20,7 +20,6 @@ const meta: Meta<typeof DatasetAlerts> = {
   component: DatasetAlerts,
   decorators: [WithI18next]
 }
-const editMetadataAlert = [new DatasetAlert('success', DatasetAlertMessageKey.METADATA_UPDATED)]
 const allUpdateAlerts: DatasetAlert[] = [
   new DatasetAlert('success', DatasetAlertMessageKey.METADATA_UPDATED),
   new DatasetAlert('success', DatasetAlertMessageKey.THUMBNAIL_UPDATED),
