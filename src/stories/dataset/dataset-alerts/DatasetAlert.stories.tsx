@@ -21,17 +21,24 @@ const meta: Meta<typeof DatasetAlerts> = {
   decorators: [WithI18next]
 }
 const editMetadataAlert = [new DatasetAlert('success', DatasetAlertMessageKey.METADATA_UPDATED)]
+const allUpdateAlerts: DatasetAlert[] = [
+  new DatasetAlert('success', DatasetAlertMessageKey.METADATA_UPDATED),
+  new DatasetAlert('success', DatasetAlertMessageKey.THUMBNAIL_UPDATED),
+  new DatasetAlert('success', DatasetAlertMessageKey.TERMS_UPDATED),
+  new DatasetAlert('success', DatasetAlertMessageKey.FILES_UPDATED),
+  new DatasetAlert('success', DatasetAlertMessageKey.DATASET_DELETED)
+]
 
 export default meta
 type Story = StoryObj<typeof DatasetAlerts>
-export const EditMetadataSuccessful: Story = {
+export const UpdateAlerts: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic()
 
     return (
       <DatasetAlertContext.Provider
         value={{
-          datasetAlerts: editMetadataAlert,
+          datasetAlerts: allUpdateAlerts,
           setDatasetAlerts: () => {},
           addDatasetAlert: () => {},
           removeDatasetAlert: () => {}
