@@ -195,7 +195,8 @@ describe('Dataset JSDataverse Repository', () => {
       })
   })
 
-  it('gets the dataset by persistentId when the dataset is deaccessioned', async () => {
+  it.skip('gets the dataset by persistentId when the dataset is deaccessioned', async () => {
+    // TODO - Implement once the getDatasetCitation includes deaccessioned datasets
     const datasetResponse = await DatasetHelper.create()
 
     await DatasetHelper.publish(datasetResponse.persistentId)

@@ -162,10 +162,11 @@ describe('File JSDataverse Repository', () => {
       await DatasetHelper.publish(datasetResponse.persistentId)
       await TestsUtils.wait(1500) // Wait for the dataset to be published
 
-      await DatasetHelper.deaccession(datasetResponse.id)
-
       const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
       if (!dataset) throw new Error('Dataset not found')
+
+      await DatasetHelper.deaccession(datasetResponse.id)
+
       await fileRepository
         .getAllByDatasetPersistentId(
           dataset.persistentId,

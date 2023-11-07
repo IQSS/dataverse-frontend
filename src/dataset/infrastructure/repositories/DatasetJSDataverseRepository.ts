@@ -11,6 +11,8 @@ import {
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 
+const includeDeaccessioned = true
+
 export class DatasetJSDataverseRepository implements DatasetRepository {
   getByPersistentId(
     persistentId: string,
@@ -18,7 +20,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     requestedVersion?: string
   ): Promise<Dataset | undefined> {
     return getDataset
-      .execute(persistentId, this.versionToVersionId(version))
+      .execute(persistentId, this.versionToVersionId(version), includeDeaccessioned)
       .then((jsDataset) =>
         Promise.all([
           jsDataset,
