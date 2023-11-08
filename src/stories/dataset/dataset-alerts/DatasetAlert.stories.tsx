@@ -13,9 +13,8 @@ import {
   DatasetMother,
   DatasetPermissionsMother
 } from '../../../../tests/component/dataset/domain/models/DatasetMother'
-import { DatasetAlertContext, useAlertContext } from '../../../sections/dataset/DatasetAlertContext'
 import { DatasetAlertProvider } from '../../../sections/dataset/DatasetAlertProvider'
-import { useEffect } from 'react'
+import { useAlertContext } from '../../../sections/dataset/DatasetAlertContext'
 
 const meta: Meta<typeof DatasetAlerts> = {
   title: 'Sections/Dataset Page/DatasetAlerts',
@@ -65,7 +64,7 @@ export const PublishInProgress: Story = {
     )
   }
 }
-u
+
 export const DraftVersion: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic({
