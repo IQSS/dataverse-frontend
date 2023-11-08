@@ -2,14 +2,11 @@ import { DatasetAlerts } from '../../../../../src/sections/dataset/dataset-alert
 import { faker } from '@faker-js/faker'
 
 import {
-  DatasetAlert,
-  DatasetAlertMessageKey
-} from '../../../../../src/dataset/domain/models/Dataset'
-import {
   DatasetMother,
   DatasetPermissionsMother,
   DatasetVersionMother
 } from '../../../dataset/domain/models/DatasetMother'
+import { Alert, AlertMessageKey } from '../../../../../src/alert/domain/models/Alert'
 
 function removeMarkup(htmlString: string): string {
   // Use a regular expression to match HTML tags and replace them with an empty string
@@ -23,28 +20,28 @@ interface AlertTranslation {
 
 interface DatasetTranslation {
   alerts: {
-    [DatasetAlertMessageKey.DRAFT_VERSION]: AlertTranslation
-    [DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND]: AlertTranslation
-    [DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT]: AlertTranslation
-    [DatasetAlertMessageKey.UNPUBLISHED_DATASET]: AlertTranslation
-    [DatasetAlertMessageKey.SHARE_UNPUBLISHED_DATASET]: AlertTranslation
-    [DatasetAlertMessageKey.METADATA_UPDATED]: AlertTranslation
-    [DatasetAlertMessageKey.FILES_UPDATED]: AlertTranslation
-    [DatasetAlertMessageKey.PUBLISH_IN_PROGRESS]: AlertTranslation
-    [DatasetAlertMessageKey.TERMS_UPDATED]: AlertTranslation
-    [DatasetAlertMessageKey.DATASET_DELETED]: AlertTranslation
-    [DatasetAlertMessageKey.THUMBNAIL_UPDATED]: AlertTranslation
+    [AlertMessageKey.DRAFT_VERSION]: AlertTranslation
+    [AlertMessageKey.REQUESTED_VERSION_NOT_FOUND]: AlertTranslation
+    [AlertMessageKey.REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT]: AlertTranslation
+    [AlertMessageKey.UNPUBLISHED_DATASET]: AlertTranslation
+    [AlertMessageKey.SHARE_UNPUBLISHED_DATASET]: AlertTranslation
+    [AlertMessageKey.METADATA_UPDATED]: AlertTranslation
+    [AlertMessageKey.FILES_UPDATED]: AlertTranslation
+    [AlertMessageKey.PUBLISH_IN_PROGRESS]: AlertTranslation
+    [AlertMessageKey.TERMS_UPDATED]: AlertTranslation
+    [AlertMessageKey.DATASET_DELETED]: AlertTranslation
+    [AlertMessageKey.THUMBNAIL_UPDATED]: AlertTranslation
   }
 }
 
 it('renders the correct number of alerts', () => {
   const alerts = [
-    new DatasetAlert('warning', DatasetAlertMessageKey.DRAFT_VERSION),
-    new DatasetAlert('warning', DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND, {
+    new Alert('warning', AlertMessageKey.DRAFT_VERSION),
+    new Alert('warning', AlertMessageKey.REQUESTED_VERSION_NOT_FOUND, {
       requestedVersion: 4.0,
       returnedVersion: 2.0
     }),
-    new DatasetAlert('info', DatasetAlertMessageKey.SHARE_UNPUBLISHED_DATASET, {
+    new Alert('info', AlertMessageKey.SHARE_UNPUBLISHED_DATASET, {
       privateUrl: faker.internet.url()
     })
   ]
@@ -63,7 +60,7 @@ it('renders the correct number of alerts', () => {
 })
 
 it('renders alerts with correct text', () => {
-  const draftAlert = new DatasetAlert('info', DatasetAlertMessageKey.DRAFT_VERSION)
+  const draftAlert = new Alert('info', AlertMessageKey.DRAFT_VERSION)
   const alerts = [draftAlert]
 
   cy.fixture('../../../public/locales/en/dataset.json').then((dataset: DatasetTranslation) => {
@@ -84,9 +81,9 @@ it('renders dynamic text', () => {
     requestedVersion: '4.0',
     returnedVersion: '2.0'
   }
-  const notFoundAlert = new DatasetAlert(
+  const notFoundAlert = new Alert(
     'warning',
-    DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND,
+    AlertMessageKey.REQUESTED_VERSION_NOT_FOUND,
     dynamicFields
   )
   cy.mount(<DatasetAlerts alerts={[notFoundAlert]} />)
@@ -125,8 +122,8 @@ it('shows draft & share private url message if privateUrl exists and user can ed
     })
     cy.customMount(<DatasetAlerts alerts={dataset.alerts} />)
     const expectedMessageKeys = [
-      DatasetAlertMessageKey.DRAFT_VERSION,
-      DatasetAlertMessageKey.SHARE_UNPUBLISHED_DATASET
+      AlertMessageKey.DRAFT_VERSION,
+      AlertMessageKey.SHARE_UNPUBLISHED_DATASET
     ]
     cy.findAllByRole('alert').should('have.length', 2)
     cy.findAllByRole('alert').each(($alert, index) => {
@@ -147,7 +144,7 @@ it('shows  private url message  only if privateUrl exists and user cannot edit',
       }
     })
     cy.customMount(<DatasetAlerts alerts={dataset.alerts} />)
-    const expectedMessageKey = DatasetAlertMessageKey.UNPUBLISHED_DATASET
+    const expectedMessageKey = AlertMessageKey.UNPUBLISHED_DATASET
 
     cy.findAllByRole('alert').should('have.length', 1)
     cy.findByRole('alert').then(($alert) => {

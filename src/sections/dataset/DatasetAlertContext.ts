@@ -1,11 +1,11 @@
 import { createContext, useContext } from 'react'
 
-import { DatasetAlert, DatasetAlertMessageKey } from '../../dataset/domain/models/Dataset'
+import { Alert, AlertMessageKey } from '../../alert/domain/models/Alert'
 
 interface DatasetAlertContextProps {
-  datasetAlerts: DatasetAlert[]
-  addDatasetAlert: (newAlert: DatasetAlert) => void
-  removeDatasetAlert: (alertId: DatasetAlertMessageKey) => void
+  datasetAlerts: Alert[]
+  addDatasetAlert: (newAlert: Alert) => void
+  removeDatasetAlert: (alertId: AlertMessageKey) => void
 }
 
 export const DatasetAlertContext = createContext<DatasetAlertContextProps>({

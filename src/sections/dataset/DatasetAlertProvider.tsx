@@ -1,12 +1,12 @@
 import { PropsWithChildren, useState } from 'react'
 import { DatasetAlertContext } from './DatasetAlertContext'
 
-import { DatasetAlert, DatasetAlertMessageKey } from '../../dataset/domain/models/Dataset'
+import { Alert, AlertMessageKey } from '../../alert/domain/models/Alert'
 
 export const DatasetAlertProvider = ({ children }: PropsWithChildren) => {
-  const [datasetAlerts, setDatasetAlerts] = useState<DatasetAlert[]>([])
+  const [datasetAlerts, setDatasetAlerts] = useState<Alert[]>([])
 
-  const addDatasetAlert = (newAlert: DatasetAlert) => {
+  const addDatasetAlert = (newAlert: Alert) => {
     // Check if an alert with the same id already exists
     const alertExists = datasetAlerts.some((alert) => alert.messageKey === newAlert.messageKey)
 
@@ -14,7 +14,7 @@ export const DatasetAlertProvider = ({ children }: PropsWithChildren) => {
     if (!alertExists) datasetAlerts.push(newAlert)
   }
 
-  const removeDatasetAlert = (alertId: DatasetAlertMessageKey) => {
+  const removeDatasetAlert = (alertId: AlertMessageKey) => {
     setDatasetAlerts(datasetAlerts.filter((alert) => alert.messageKey !== alertId))
   }
 

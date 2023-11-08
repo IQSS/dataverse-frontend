@@ -1,9 +1,9 @@
-import { DatasetAlert } from '../../../dataset/domain/models/Dataset'
 import { useAlertContext } from '../DatasetAlertContext'
 import { Alerts } from '../../alerts/Alerts'
+import { Alert } from '../../../alert/domain/models/Alert'
 
 interface DatasetAlertsProps {
-  alerts: DatasetAlert[]
+  alerts: Alert[]
 }
 
 export function DatasetAlerts({ alerts }: DatasetAlertsProps) {

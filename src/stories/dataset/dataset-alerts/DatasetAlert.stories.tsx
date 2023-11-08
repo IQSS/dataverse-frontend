@@ -1,11 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import {
-  DatasetAlert,
-  DatasetAlertMessageKey,
-  DatasetPublishingStatus,
-  DatasetVersion
-} from '../../../dataset/domain/models/Dataset'
+import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { DatasetAlerts } from '../../../sections/dataset/dataset-alerts/DatasetAlerts'
 import { WithI18next } from '../../WithI18next'
 
@@ -15,18 +10,19 @@ import {
 } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 import { useAlertContext } from '../../../sections/dataset/DatasetAlertContext'
 import { WithAlerts } from '../../WithAlerts'
+import { Alert, AlertMessageKey } from '../../../alert/domain/models/Alert'
 
 const meta: Meta<typeof DatasetAlerts> = {
   title: 'Sections/Dataset Page/DatasetAlerts',
   component: DatasetAlerts,
   decorators: [WithI18next, WithAlerts]
 }
-const allUpdateAlerts: DatasetAlert[] = [
-  new DatasetAlert('success', DatasetAlertMessageKey.METADATA_UPDATED),
-  new DatasetAlert('success', DatasetAlertMessageKey.THUMBNAIL_UPDATED),
-  new DatasetAlert('success', DatasetAlertMessageKey.TERMS_UPDATED),
-  new DatasetAlert('success', DatasetAlertMessageKey.FILES_UPDATED),
-  new DatasetAlert('success', DatasetAlertMessageKey.DATASET_DELETED)
+const allUpdateAlerts: Alert[] = [
+  new Alert('success', AlertMessageKey.METADATA_UPDATED),
+  new Alert('success', AlertMessageKey.THUMBNAIL_UPDATED),
+  new Alert('success', AlertMessageKey.TERMS_UPDATED),
+  new Alert('success', AlertMessageKey.FILES_UPDATED),
+  new Alert('success', AlertMessageKey.DATASET_DELETED)
 ]
 
 export default meta
@@ -44,7 +40,7 @@ export const UpdateAlerts: Story = {
   }
 }
 
-const publishAlert = new DatasetAlert('warning', DatasetAlertMessageKey.PUBLISH_IN_PROGRESS)
+const publishAlert = new Alert('warning', AlertMessageKey.PUBLISH_IN_PROGRESS)
 export const PublishInProgress: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic()

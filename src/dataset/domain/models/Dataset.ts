@@ -1,4 +1,4 @@
-import { AlertVariant } from '@iqss/dataverse-design-system/dist/components/alert/AlertVariant'
+import { Alert, AlertMessageKey } from '../../../alert/domain/models/Alert'
 
 export enum DatasetLabelSemanticMeaning {
   DATASET = 'dataset',
@@ -21,28 +21,6 @@ export class DatasetLabel {
   constructor(
     public readonly semanticMeaning: DatasetLabelSemanticMeaning,
     public readonly value: DatasetLabelValue | `Version ${string}`
-  ) {}
-}
-
-export enum DatasetAlertMessageKey {
-  DRAFT_VERSION = 'draftVersion',
-  REQUESTED_VERSION_NOT_FOUND = 'requestedVersionNotFound',
-  REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT = 'requestedVersionNotFoundShowDraft',
-  SHARE_UNPUBLISHED_DATASET = 'shareUnpublishedDataset',
-  UNPUBLISHED_DATASET = 'unpublishedDataset',
-  METADATA_UPDATED = 'metadataUpdated',
-  FILES_UPDATED = 'filesUpdated',
-  TERMS_UPDATED = 'termsUpdated',
-  THUMBNAIL_UPDATED = 'thumbnailUpdated',
-  DATASET_DELETED = 'datasetDeleted',
-  PUBLISH_IN_PROGRESS = 'publishInProgress'
-}
-
-export class DatasetAlert {
-  constructor(
-    public readonly variant: AlertVariant,
-    public readonly messageKey: DatasetAlertMessageKey,
-    public dynamicFields?: object
   ) {}
 }
 
@@ -292,7 +270,7 @@ export class Dataset {
     public readonly version: DatasetVersion,
     public readonly citation: string,
     public readonly labels: DatasetLabel[],
-    public readonly alerts: DatasetAlert[],
+    public readonly alerts: Alert[],
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
     public readonly metadataBlocks: DatasetMetadataBlocks,
@@ -333,7 +311,7 @@ export class Dataset {
 
   static Builder = class {
     public readonly labels: DatasetLabel[] = []
-    public readonly alerts: DatasetAlert[] = []
+    public readonly alerts: Alert[] = []
 
     constructor(
       public readonly persistentId: string,
@@ -404,7 +382,7 @@ export class Dataset {
         this.version.publishingStatus === DatasetPublishingStatus.DRAFT &&
         this.permissions.canPublishDataset
       ) {
-        this.alerts.push(new DatasetAlert('warning', DatasetAlertMessageKey.DRAFT_VERSION))
+        this.alerts.push(new Alert('warning', AlertMessageKey.DRAFT_VERSION))
       }
       if (this.version.requestedVersion) {
         if (this.version.latestVersionStatus == DatasetPublishingStatus.RELEASED) {
@@ -413,20 +391,16 @@ export class Dataset {
             returnedVersion: `${this.version.toString()}`
           }
           this.alerts.push(
-            new DatasetAlert(
-              'warning',
-              DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND,
-              dynamicFields
-            )
+            new Alert('warning', AlertMessageKey.REQUESTED_VERSION_NOT_FOUND, dynamicFields)
           )
         } else {
           const dynamicFields = {
             requestedVersion: this.version.requestedVersion
           }
           this.alerts.push(
-            new DatasetAlert(
+            new Alert(
               'warning',
-              DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT,
+              AlertMessageKey.REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT,
               dynamicFields
             )
           )
@@ -436,14 +410,10 @@ export class Dataset {
         if (this.permissions.canPublishDataset) {
           const dynamicFields = { privateUrl: this.privateUrl.urlSnippet + this.privateUrl.token }
           this.alerts.push(
-            new DatasetAlert(
-              'info',
-              DatasetAlertMessageKey.SHARE_UNPUBLISHED_DATASET,
-              dynamicFields
-            )
+            new Alert('info', AlertMessageKey.SHARE_UNPUBLISHED_DATASET, dynamicFields)
           )
         } else {
-          this.alerts.push(new DatasetAlert('warning', DatasetAlertMessageKey.UNPUBLISHED_DATASET))
+          this.alerts.push(new Alert('warning', AlertMessageKey.UNPUBLISHED_DATASET))
         }
       }
     }
