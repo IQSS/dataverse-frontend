@@ -8,9 +8,9 @@ interface DatasetAlertContextProps {
   removeDatasetAlert: (alertId: AlertMessageKey) => void
 }
 
-export const DatasetAlertContext = createContext<DatasetAlertContextProps>({
+export const AlertContext = createContext<DatasetAlertContextProps>({
   datasetAlerts: [],
   addDatasetAlert: /* istanbul ignore next */ () => {},
   removeDatasetAlert: /* istanbul ignore next */ () => {}
 })
-export const useAlertContext = () => useContext(DatasetAlertContext)
+export const useAlertContext = () => useContext(AlertContext)

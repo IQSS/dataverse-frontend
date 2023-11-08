@@ -1,4 +1,4 @@
-import { useAlertContext } from '../DatasetAlertContext'
+import { useAlertContext } from '../../alerts/AlertContext'
 import { Alerts } from '../../alerts/Alerts'
 import { Alert } from '../../../alert/domain/models/Alert'
 

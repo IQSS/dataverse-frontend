@@ -1,10 +1,10 @@
 import { StoryFn } from '@storybook/react'
-import { DatasetAlertProvider } from '../sections/dataset/DatasetAlertProvider'
+import { AlertProvider } from '../sections/alerts/AlertProvider'
 
 export const WithAlerts = (Story: StoryFn) => {
   return (
-    <DatasetAlertProvider>
+    <AlertProvider>
       <Story />
-    </DatasetAlertProvider>
+    </AlertProvider>
   )
 }

@@ -8,7 +8,7 @@ import {
   DatasetMother,
   DatasetPermissionsMother
 } from '../../../../tests/component/dataset/domain/models/DatasetMother'
-import { useAlertContext } from '../../../sections/dataset/DatasetAlertContext'
+import { useAlertContext } from '../../../sections/alerts/AlertContext'
 import { WithAlerts } from '../../WithAlerts'
 import { Alert, AlertMessageKey } from '../../../alert/domain/models/Alert'
 

@@ -3,7 +3,7 @@ import { Alert as AlertComponent } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import styles from './Alerts.module.scss'
 import parse from 'html-react-parser'
-import { useAlertContext } from '../dataset/DatasetAlertContext'
+import { useAlertContext } from './AlertContext'
 import { Alert } from '../../alert/domain/models/Alert'
 
 export function Alerts() {

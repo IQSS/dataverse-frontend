@@ -1,9 +1,9 @@
 import { PropsWithChildren, useState } from 'react'
-import { DatasetAlertContext } from './DatasetAlertContext'
+import { AlertContext } from './AlertContext'
 
 import { Alert, AlertMessageKey } from '../../alert/domain/models/Alert'
 
-export const DatasetAlertProvider = ({ children }: PropsWithChildren) => {
+export const AlertProvider = ({ children }: PropsWithChildren) => {
   const [datasetAlerts, setDatasetAlerts] = useState<Alert[]>([])
 
   const addDatasetAlert = (newAlert: Alert) => {
@@ -19,13 +19,13 @@ export const DatasetAlertProvider = ({ children }: PropsWithChildren) => {
   }
 
   return (
-    <DatasetAlertContext.Provider
+    <AlertContext.Provider
       value={{
         datasetAlerts,
         addDatasetAlert,
         removeDatasetAlert
       }}>
       {children}
-    </DatasetAlertContext.Provider>
+    </AlertContext.Provider>
   )
 }
