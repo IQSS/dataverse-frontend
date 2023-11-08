@@ -3,7 +3,6 @@ import { createContext, useContext } from 'react'
 import { DatasetAlert, DatasetAlertMessageKey } from '../../dataset/domain/models/Dataset'
 
 interface DatasetAlertContextProps {
-  setDatasetAlerts: (datasetAlerts: DatasetAlert[]) => void
   datasetAlerts: DatasetAlert[]
   addDatasetAlert: (newAlert: DatasetAlert) => void
   removeDatasetAlert: (alertId: DatasetAlertMessageKey) => void
@@ -11,8 +10,7 @@ interface DatasetAlertContextProps {
 
 export const DatasetAlertContext = createContext<DatasetAlertContextProps>({
   datasetAlerts: [],
-  setDatasetAlerts: /* istanbul ignore next */ () => {},
-  addDatasetAlert: () => {},
-  removeDatasetAlert: () => {}
+  addDatasetAlert: /* istanbul ignore next */ () => {},
+  removeDatasetAlert: /* istanbul ignore next */ () => {}
 })
-export const useDatasetAlertContext = () => useContext(DatasetAlertContext)
+export const useAlertContext = () => useContext(DatasetAlertContext)
