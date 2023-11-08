@@ -13,12 +13,21 @@ import {
   DatasetMother,
   DatasetPermissionsMother
 } from '../../../../tests/component/dataset/domain/models/DatasetMother'
-import { DatasetAlertContext } from '../../../sections/dataset/DatasetAlertContext'
+import { DatasetAlertContext, useAlertContext } from '../../../sections/dataset/DatasetAlertContext'
+import { DatasetAlertProvider } from '../../../sections/dataset/DatasetAlertProvider'
+import { useEffect } from 'react'
 
 const meta: Meta<typeof DatasetAlerts> = {
   title: 'Sections/Dataset Page/DatasetAlerts',
   component: DatasetAlerts,
-  decorators: [WithI18next]
+  decorators: [
+    WithI18next,
+    (Story) => (
+      <DatasetAlertProvider>
+        <Story />
+      </DatasetAlertProvider>
+    )
+  ]
 }
 const allUpdateAlerts: DatasetAlert[] = [
   new DatasetAlert('success', DatasetAlertMessageKey.METADATA_UPDATED),
@@ -33,19 +42,12 @@ type Story = StoryObj<typeof DatasetAlerts>
 export const UpdateAlerts: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic()
-
+    const { addDatasetAlert } = useAlertContext()
+    allUpdateAlerts.forEach((alert) => addDatasetAlert(alert))
     return (
-      <DatasetAlertContext.Provider
-        value={{
-          datasetAlerts: allUpdateAlerts,
-          setDatasetAlerts: () => {},
-          addDatasetAlert: () => {},
-          removeDatasetAlert: () => {}
-        }}>
-        <div>
-          <DatasetAlerts alerts={dataset.alerts} />
-        </div>
-      </DatasetAlertContext.Provider>
+      <div>
+        <DatasetAlerts alerts={dataset.alerts} />
+      </div>
     )
   }
 }
@@ -54,23 +56,16 @@ const publishAlert = new DatasetAlert('warning', DatasetAlertMessageKey.PUBLISH_
 export const PublishInProgress: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic()
-
+    const { addDatasetAlert } = useAlertContext()
+    addDatasetAlert(publishAlert)
     return (
-      <DatasetAlertContext.Provider
-        value={{
-          datasetAlerts: [publishAlert],
-          setDatasetAlerts: () => {},
-          addDatasetAlert: () => {},
-          removeDatasetAlert: () => {}
-        }}>
-        <div>
-          <DatasetAlerts alerts={dataset.alerts} />
-        </div>
-      </DatasetAlertContext.Provider>
+      <div>
+        <DatasetAlerts alerts={dataset.alerts} />
+      </div>
     )
   }
 }
-
+u
 export const DraftVersion: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic({
