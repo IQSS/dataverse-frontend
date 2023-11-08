@@ -7,6 +7,7 @@ import {
   DatasetVersionMother
 } from '../../../dataset/domain/models/DatasetMother'
 import { Alert, AlertMessageKey } from '../../../../../src/alert/domain/models/Alert'
+import { DatasetAlertProvider } from '../../../../../src/sections/dataset/DatasetAlertProvider'
 
 function removeMarkup(htmlString: string): string {
   // Use a regular expression to match HTML tags and replace them with an empty string
@@ -46,7 +47,11 @@ it('renders the correct number of alerts', () => {
     })
   ]
   cy.fixture('../../../public/locales/en/dataset.json').then((dataset: DatasetTranslation) => {
-    cy.mount(<DatasetAlerts alerts={alerts} />)
+    cy.mount(
+      <DatasetAlertProvider>
+        <DatasetAlerts alerts={alerts} />
+      </DatasetAlertProvider>
+    )
     const headingProps = [
       dataset.alerts.draftVersion.heading,
       dataset.alerts.requestedVersionNotFound.heading,
@@ -64,8 +69,11 @@ it('renders alerts with correct text', () => {
   const alerts = [draftAlert]
 
   cy.fixture('../../../public/locales/en/dataset.json').then((dataset: DatasetTranslation) => {
-    cy.mount(<DatasetAlerts alerts={alerts} />)
-
+    cy.mount(
+      <DatasetAlertProvider>
+        <DatasetAlerts alerts={alerts} />
+      </DatasetAlertProvider>
+    )
     const alertHeading = dataset.alerts[draftAlert.messageKey].heading
     const alertText = removeMarkup(dataset.alerts[draftAlert.messageKey].alertText)
     cy.findByText(alertHeading).should('exist')
@@ -86,7 +94,12 @@ it('renders dynamic text', () => {
     AlertMessageKey.REQUESTED_VERSION_NOT_FOUND,
     dynamicFields
   )
-  cy.mount(<DatasetAlerts alerts={[notFoundAlert]} />)
+  cy.mount(
+    <DatasetAlertProvider>
+      <DatasetAlerts alerts={[notFoundAlert]} />
+    </DatasetAlertProvider>
+  )
+
   cy.findByRole('alert').should('contain.text', dynamicFields.requestedVersion)
   cy.findByRole('alert').should('contain.text', dynamicFields.returnedVersion)
 })
@@ -96,7 +109,11 @@ it('shows draft alert if version is DRAFT', () => {
     permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed()
   })
 
-  cy.customMount(<DatasetAlerts alerts={dataset.alerts} />)
+  cy.mount(
+    <DatasetAlertProvider>
+      <DatasetAlerts alerts={dataset.alerts} />
+    </DatasetAlertProvider>
+  )
 
   cy.findByRole('alert').should('contain.text', 'draft')
 })
@@ -106,7 +123,11 @@ it('does not show draft alert if version is RELEASED', () => {
     permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed()
   })
 
-  cy.customMount(<DatasetAlerts alerts={dataset.alerts} />)
+  cy.mount(
+    <DatasetAlertProvider>
+      <DatasetAlerts alerts={dataset.alerts} />
+    </DatasetAlertProvider>
+  )
   cy.findByRole('alert').should('not.exist')
 })
 
@@ -120,7 +141,11 @@ it('shows draft & share private url message if privateUrl exists and user can ed
         token: 'cd943c75-1cc7-4c1d-9717-98141d65d5cb'
       }
     })
-    cy.customMount(<DatasetAlerts alerts={dataset.alerts} />)
+    cy.mount(
+      <DatasetAlertProvider>
+        <DatasetAlerts alerts={dataset.alerts} />
+      </DatasetAlertProvider>
+    )
     const expectedMessageKeys = [
       AlertMessageKey.DRAFT_VERSION,
       AlertMessageKey.SHARE_UNPUBLISHED_DATASET
@@ -143,7 +168,11 @@ it('shows  private url message  only if privateUrl exists and user cannot edit',
         token: 'cd943c75-1cc7-4c1d-9717-98141d65d5cb'
       }
     })
-    cy.customMount(<DatasetAlerts alerts={dataset.alerts} />)
+    cy.mount(
+      <DatasetAlertProvider>
+        <DatasetAlerts alerts={dataset.alerts} />
+      </DatasetAlertProvider>
+    )
     const expectedMessageKey = AlertMessageKey.UNPUBLISHED_DATASET
 
     cy.findAllByRole('alert').should('have.length', 1)
