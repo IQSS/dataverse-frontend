@@ -4,16 +4,14 @@ import { useTranslation } from 'react-i18next'
 import styles from './Alerts.module.scss'
 import parse from 'html-react-parser'
 import { DatasetAlert } from '../../dataset/domain/models/Dataset'
+import { useAlertContext } from '../dataset/DatasetAlertContext'
 
-interface AlertsProps {
-  alerts: DatasetAlert[]
-}
-
-export function Alerts({ alerts }: AlertsProps) {
+export function Alerts() {
   const { t } = useTranslation('dataset')
+  const { datasetAlerts } = useAlertContext()
   return (
     <div className={styles.container}>
-      {alerts.map((alert: DatasetAlert, index) => {
+      {datasetAlerts.map((alert: DatasetAlert, index) => {
         const translatedMsg = alert.dynamicFields
           ? t(`alerts.${alert.messageKey}.alertText`, alert.dynamicFields)
           : t(`alerts.${alert.messageKey}.alertText`)
