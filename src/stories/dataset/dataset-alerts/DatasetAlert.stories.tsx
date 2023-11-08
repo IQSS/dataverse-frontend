@@ -13,20 +13,13 @@ import {
   DatasetMother,
   DatasetPermissionsMother
 } from '../../../../tests/component/dataset/domain/models/DatasetMother'
-import { DatasetAlertProvider } from '../../../sections/dataset/DatasetAlertProvider'
 import { useAlertContext } from '../../../sections/dataset/DatasetAlertContext'
+import { WithAlerts } from '../../WithAlerts'
 
 const meta: Meta<typeof DatasetAlerts> = {
   title: 'Sections/Dataset Page/DatasetAlerts',
   component: DatasetAlerts,
-  decorators: [
-    WithI18next,
-    (Story) => (
-      <DatasetAlertProvider>
-        <Story />
-      </DatasetAlertProvider>
-    )
-  ]
+  decorators: [WithI18next, WithAlerts]
 }
 const allUpdateAlerts: DatasetAlert[] = [
   new DatasetAlert('success', DatasetAlertMessageKey.METADATA_UPDATED),

@@ -7,7 +7,11 @@ export const DatasetAlertProvider = ({ children }: PropsWithChildren) => {
   const [datasetAlerts, setDatasetAlerts] = useState<DatasetAlert[]>([])
 
   const addDatasetAlert = (newAlert: DatasetAlert) => {
-    datasetAlerts.push(newAlert)
+    // Check if an alert with the same id already exists
+    const alertExists = datasetAlerts.some((alert) => alert.messageKey === newAlert.messageKey)
+
+    // If it doesn't exist, add it to the array
+    if (!alertExists) datasetAlerts.push(newAlert)
   }
 
   const removeDatasetAlert = (alertId: DatasetAlertMessageKey) => {
