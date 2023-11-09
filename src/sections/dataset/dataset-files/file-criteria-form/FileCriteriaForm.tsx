@@ -18,7 +18,10 @@ export function FileCriteriaForm({
   onCriteriaChange,
   filesCountInfo
 }: FileCriteriaInputsProps) {
-  if (!filesCountInfo || filesCountInfo.total < MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS) {
+  if (
+    !filesCountInfo ||
+    (filesCountInfo.total < MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS && !criteria.someFilterApplied)
+  ) {
     return <></>
   }
   return (
