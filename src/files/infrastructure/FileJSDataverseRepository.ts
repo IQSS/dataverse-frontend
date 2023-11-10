@@ -1,5 +1,5 @@
 import { FileRepository } from '../domain/repositories/FileRepository'
-import { File, FilePublishingStatus } from '../domain/models/File'
+import { File } from '../domain/models/File'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
 import { FileUserPermissions } from '../domain/models/FileUserPermissions'
@@ -10,7 +10,8 @@ import {
   getDatasetFilesTotalDownloadSize,
   getFileDownloadCount,
   getFileUserPermissions,
-  ReadError
+  ReadError,
+  File as JSFile
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -41,46 +42,33 @@ export class FileJSDataverseRepository implements FileRepository {
         DomainFileMapper.toJSFileSearchCriteria(criteria),
         DomainFileMapper.toJSFileOrderCriteria(criteria.sortBy)
       )
-      .then((jsFiles) => jsFiles.map((jsFile) => JSFileMapper.toFile(jsFile, datasetVersion)))
-      .then((files) => FileJSDataverseRepository.getAllWithDownloadCount(files))
-      .then((files) => FileJSDataverseRepository.getAllWithThumbnail(files))
+      .then((jsFiles) =>
+        Promise.all([
+          jsFiles,
+          FileJSDataverseRepository.getAllDownloadCount(jsFiles),
+          FileJSDataverseRepository.getAllThumbnails(jsFiles)
+        ])
+      )
+      .then(([jsFiles, downloadCounts, thumbnails]) =>
+        jsFiles.map((jsFile, index) =>
+          JSFileMapper.toFile(jsFile, datasetVersion, downloadCounts[index], thumbnails[index])
+        )
+      )
       .catch((error: ReadError) => {
         throw new Error(error.message)
       })
   }
 
-  private static getAllWithDownloadCount(files: File[]): Promise<File[]> {
+  private static getAllDownloadCount(jsFiles: JSFile[]): Promise<number[]> {
     return Promise.all(
-      files.map((file) =>
-        FileJSDataverseRepository.getDownloadCountById(file.id, file.version.publishingStatus).then(
-          (downloadCount) => {
-            file.downloadCount = downloadCount
-            return file
-          }
-        )
+      jsFiles.map((jsFile) =>
+        getFileDownloadCount.execute(jsFile.id).then((downloadCount) => Number(downloadCount))
       )
     )
   }
 
-  private static getDownloadCountById(
-    id: number,
-    publishingStatus: FilePublishingStatus
-  ): Promise<number> {
-    if (publishingStatus === FilePublishingStatus.RELEASED) {
-      return getFileDownloadCount.execute(id).then((downloadCount) => Number(downloadCount))
-    }
-    return Promise.resolve(0)
-  }
-
-  private static getAllWithThumbnail(files: File[]): Promise<File[]> {
-    return Promise.all(
-      files.map((file) =>
-        FileJSDataverseRepository.getThumbnailById(file.id).then((thumbnail) => {
-          file.thumbnail = thumbnail
-          return file
-        })
-      )
-    )
+  private static getAllThumbnails(jsFiles: JSFile[]): Promise<(string | undefined)[]> {
+    return Promise.all(jsFiles.map((jsFile) => this.getThumbnailById(jsFile.id)))
   }
 
   private static getThumbnailById(id: number): Promise<string | undefined> {

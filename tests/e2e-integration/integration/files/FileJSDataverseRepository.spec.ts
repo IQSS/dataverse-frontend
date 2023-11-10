@@ -264,7 +264,6 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
-          console.log(files)
           expect(files[0].thumbnail).to.not.be.undefined
         })
     })
@@ -293,7 +292,6 @@ describe('File JSDataverse Repository', () => {
     })
 
     it.skip('gets all the files by dataset persistentId when files are tabular data', async () => {
-      // TODO - Implement this when isTabularData flag is added to js-dataverse response
       const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1, 'csv'))
       if (!datasetResponse.files) throw new Error('Files not found')
 

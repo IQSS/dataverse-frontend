@@ -35,7 +35,12 @@ import {
 import { FileAccessOption, FileTag } from '../../domain/models/FileCriteria'
 
 export class JSFileMapper {
-  static toFile(jsFile: JSFile, datasetVersion: DatasetVersion): File {
+  static toFile(
+    jsFile: JSFile,
+    datasetVersion: DatasetVersion,
+    downloadsCount: number,
+    thumbnail?: string
+  ): File {
     return new File(
       this.toFileId(jsFile.id),
       this.toFileVersion(jsFile.version, datasetVersion, jsFile.publicationDate),
@@ -44,12 +49,12 @@ export class JSFileMapper {
       this.toFileType(jsFile.contentType),
       this.toFileSize(jsFile.sizeBytes),
       this.toFileDate(jsFile.creationDate, jsFile.publicationDate, jsFile.embargo),
-      this.toFileDownloads(),
+      this.toFileDownloads(downloadsCount),
       this.toFileLabels(jsFile.categories, jsFile.tabularTags),
       false, // TODO - Implement this when it is added to js-dataverse
       { status: FileIngestStatus.NONE }, // TODO - Implement this when it is added to js-dataverse
       this.toFileChecksum(jsFile.checksum),
-      this.toFileThumbnail(),
+      this.toFileThumbnail(thumbnail),
       this.toFileDirectory(jsFile.directoryLabel),
       this.toFileEmbargo(jsFile.embargo),
       this.toFileTabularData(),
@@ -132,8 +137,8 @@ export class JSFileMapper {
     throw new Error('File date not found')
   }
 
-  static toFileDownloads(): number {
-    return 0 // This is always 0 because the downloads come from a different endpoint
+  static toFileDownloads(downloadsCount: number): number {
+    return downloadsCount
   }
 
   static toFileLabels(jsFileCategories?: string[], jsFileTabularTags?: string[]): FileLabel[] {
@@ -159,8 +164,8 @@ export class JSFileMapper {
     return undefined
   }
 
-  static toFileThumbnail(): undefined {
-    return undefined // This is always undefined because the thumbnails come from a different endpoint
+  static toFileThumbnail(thumbnail?: string): string | undefined {
+    return thumbnail
   }
 
   static toFileDirectory(jsFileDirectory: string | undefined): string | undefined {
