@@ -11,7 +11,9 @@ import {
   getFileDownloadCount,
   getFileUserPermissions,
   ReadError,
-  File as JSFile
+  File as JSFile,
+  getFileDataTables,
+  FileDataTable as JSFileTabularData
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -31,7 +33,6 @@ export class FileJSDataverseRepository implements FileRepository {
     criteria: FileCriteria = new FileCriteria()
   ): Promise<File[]> {
     const jsPagination = DomainFileMapper.toJSPagination(paginationInfo)
-
     return getDatasetFiles
       .execute(
         datasetPersistentId,
@@ -46,12 +47,19 @@ export class FileJSDataverseRepository implements FileRepository {
         Promise.all([
           jsFiles,
           FileJSDataverseRepository.getAllDownloadCount(jsFiles),
-          FileJSDataverseRepository.getAllThumbnails(jsFiles)
+          FileJSDataverseRepository.getAllThumbnails(jsFiles),
+          FileJSDataverseRepository.getAllTabularData(jsFiles)
         ])
       )
-      .then(([jsFiles, downloadCounts, thumbnails]) =>
+      .then(([jsFiles, downloadCounts, thumbnails, jsTabularData]) =>
         jsFiles.map((jsFile, index) =>
-          JSFileMapper.toFile(jsFile, datasetVersion, downloadCounts[index], thumbnails[index])
+          JSFileMapper.toFile(
+            jsFile,
+            datasetVersion,
+            downloadCounts[index],
+            thumbnails[index],
+            jsTabularData[index]
+          )
         )
       )
       .catch((error: ReadError) => {
@@ -59,10 +67,22 @@ export class FileJSDataverseRepository implements FileRepository {
       })
   }
 
+  private static getAllTabularData(
+    jsFiles: JSFile[]
+  ): Promise<(JSFileTabularData[] | undefined)[]> {
+    return Promise.all(
+      jsFiles.map((jsFile) =>
+        jsFile.tabularData ? getFileDataTables.execute(jsFile.id) : undefined
+      )
+    )
+  }
+
   private static getAllDownloadCount(jsFiles: JSFile[]): Promise<number[]> {
     return Promise.all(
       jsFiles.map((jsFile) =>
-        getFileDownloadCount.execute(jsFile.id).then((downloadCount) => Number(downloadCount))
+        jsFile.publicationDate
+          ? getFileDownloadCount.execute(jsFile.id).then((downloadCount) => Number(downloadCount))
+          : 0
       )
     )
   }

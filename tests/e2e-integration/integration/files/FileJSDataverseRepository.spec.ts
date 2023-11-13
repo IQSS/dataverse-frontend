@@ -291,7 +291,7 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    it.skip('gets all the files by dataset persistentId when files are tabular data', async () => {
+    it('gets all the files by dataset persistentId when files are tabular data', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1, 'csv'))
       if (!datasetResponse.files) throw new Error('Files not found')
 
@@ -302,12 +302,17 @@ describe('File JSDataverse Repository', () => {
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
           const expectedTabularData = {
-            variablesCount: 1,
-            observationsCount: 0,
-            unf: 'some'
+            variablesCount: 7,
+            observationsCount: 10
           }
           files.forEach((file) => {
-            expect(file.tabularData).to.deep.equal(expectedTabularData)
+            expect(file.tabularData?.variablesCount).to.deep.equal(
+              expectedTabularData.variablesCount
+            )
+            expect(file.tabularData?.observationsCount).to.deep.equal(
+              expectedTabularData.observationsCount
+            )
+            expect(file.tabularData?.unf).to.not.be.undefined
           })
         })
     })

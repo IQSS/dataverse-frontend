@@ -11,6 +11,7 @@ import {
   FilePublishingStatus,
   FileSize,
   FileSizeUnit,
+  FileTabularData,
   FileType,
   FileVersion
 } from '../../domain/models/File'
@@ -22,7 +23,8 @@ import {
   FileContentTypeCount as JSFileContentTypeCount,
   FileCategoryNameCount as JSFileCategoryNameCount,
   FileAccessStatusCount as JSFileAccessStatusCount,
-  FileAccessStatus as JSFileAccessStatus
+  FileAccessStatus as JSFileAccessStatus,
+  FileDataTable as JSFileTabularData
 } from '@iqss/dataverse-client-javascript'
 import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FileUserPermissions } from '../../domain/models/FileUserPermissions'
@@ -39,7 +41,8 @@ export class JSFileMapper {
     jsFile: JSFile,
     datasetVersion: DatasetVersion,
     downloadsCount: number,
-    thumbnail?: string
+    thumbnail?: string,
+    jsTabularData?: JSFileTabularData[]
   ): File {
     return new File(
       this.toFileId(jsFile.id),
@@ -57,7 +60,7 @@ export class JSFileMapper {
       this.toFileThumbnail(thumbnail),
       this.toFileDirectory(jsFile.directoryLabel),
       this.toFileEmbargo(jsFile.embargo),
-      this.toFileTabularData(),
+      this.toFileTabularData(jsTabularData),
       this.toFileDescription(jsFile.description)
     )
   }
@@ -179,8 +182,15 @@ export class JSFileMapper {
     return undefined
   }
 
-  static toFileTabularData(): undefined {
-    return undefined // This is always undefined because the tabular data comes from a different endpoint
+  static toFileTabularData(jsTabularData?: JSFileTabularData[]): FileTabularData | undefined {
+    if (jsTabularData === undefined) {
+      return undefined
+    }
+    return {
+      variablesCount: jsTabularData[0].varQuantity ?? 0,
+      observationsCount: jsTabularData[0].caseQuantity ?? 0,
+      unf: jsTabularData[0].UNF
+    }
   }
 
   static toFileDescription(jsFileDescription?: string): string | undefined {

@@ -106,7 +106,7 @@ export class FileEmbargo {
 export interface FileTabularData {
   variablesCount: number
   observationsCount: number
-  unf: string
+  unf?: string
 }
 
 export enum FileLabelType {
