@@ -100,6 +100,7 @@ describe('File JSDataverse Repository', () => {
             expect(file.embargo).to.deep.equal(expectedFile.embargo)
             expect(file.tabularData).to.deep.equal(expectedFile.tabularData)
             expect(file.description).to.deep.equal(expectedFile.description)
+            expect(file.isDeleted).to.deep.equal(expectedFile.isDeleted)
           })
         })
     })
@@ -438,6 +439,29 @@ describe('File JSDataverse Repository', () => {
         )
         .then((files) => {
           expect(files.length).to.equal(1)
+        })
+    })
+
+    it.skip('gets all the files when they are deleted', async () => {
+      // This test is failing because js-dataverse deleted property always returns undefined
+      // TODO: Remove the skip once the issue is fixed
+      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1))
+
+      await DatasetHelper.publish(datasetResponse.persistentId)
+      await TestsUtils.wait(2000) // Wait for the dataset to be published
+
+      const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      if (!dataset) throw new Error('Dataset not found')
+
+      if (!datasetResponse.files) throw new Error('Files not found')
+      datasetResponse.files.map((file) => FileHelper.delete(file.id))
+
+      await fileRepository
+        .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((files) => {
+          files.forEach((file) => {
+            expect(file.isDeleted).to.equal(true)
+          })
         })
     })
   })

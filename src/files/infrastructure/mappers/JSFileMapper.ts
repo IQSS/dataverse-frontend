@@ -54,7 +54,7 @@ export class JSFileMapper {
       this.toFileDate(jsFile.creationDate, jsFile.publicationDate, jsFile.embargo),
       this.toFileDownloads(downloadsCount),
       this.toFileLabels(jsFile.categories, jsFile.tabularTags),
-      false, // TODO - Implement this when it is added to js-dataverse
+      this.toFileIsDeleted(jsFile.deleted),
       { status: FileIngestStatus.NONE }, // TODO - Implement this when it is added to js-dataverse
       this.toFileChecksum(jsFile.checksum),
       this.toFileThumbnail(thumbnail),
@@ -244,5 +244,9 @@ export class JSFileMapper {
       case JSFileAccessStatus.EMBARGOED_RESTRICTED:
         return FileAccessOption.EMBARGOED_RESTRICTED
     }
+  }
+
+  static toFileIsDeleted(jsFileIsDeleted: boolean | undefined): boolean {
+    return jsFileIsDeleted ?? false
   }
 }
