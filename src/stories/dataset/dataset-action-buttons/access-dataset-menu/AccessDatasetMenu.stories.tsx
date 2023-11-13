@@ -23,6 +23,19 @@ type Story = StoryObj<typeof AccessDatasetMenu>
 export const WithAllPermissions: Story = {
   render: () => (
     <AccessDatasetMenu
+      datasetContainsTabularFiles={false}
+      fileSize={'1.2 GB'}
+      version={DatasetVersionMother.createReleased()}
+      permissions={DatasetPermissionsMother.createWithAllAllowed()}
+    />
+  )
+}
+
+export const WithTabularFiles: Story = {
+  render: () => (
+    <AccessDatasetMenu
+      datasetContainsTabularFiles={true}
+      fileSize={'5 MB'}
       version={DatasetVersionMother.createReleased()}
       permissions={DatasetPermissionsMother.createWithAllAllowed()}
     />
