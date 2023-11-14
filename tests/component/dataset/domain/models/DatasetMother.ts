@@ -183,6 +183,10 @@ export class DatasetLockMother {
   static createLockedInEditInProgress(): DatasetLock {
     return this.create({ reason: DatasetLockReason.EDIT_IN_PROGRESS })
   }
+
+  static createLockedFromFileDownload(): DatasetLock {
+    return this.create({ reason: DatasetLockReason.INGEST })
+  }
 }
 
 export class DatasetMother {

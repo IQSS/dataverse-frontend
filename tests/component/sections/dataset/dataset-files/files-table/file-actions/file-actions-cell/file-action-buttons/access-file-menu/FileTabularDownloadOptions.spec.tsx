@@ -1,7 +1,17 @@
 import { FileDownloadOptions } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/FileDownloadOptions'
 import { FileMother } from '../../../../../../../../files/domain/models/FileMother'
-import { FileType } from '../../../../../../../../../../src/files/domain/models/File'
+import {
+  FileIngestStatus,
+  FileType
+} from '../../../../../../../../../../src/files/domain/models/File'
 import { FileTabularDownloadOptions } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/FileTabularDownloadOptions'
+import { FileNonTabularDownloadOptions } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/FileNonTabularDownloadOptions'
+import { DatasetRepository } from '../../../../../../../../../../src/dataset/domain/repositories/DatasetRepository'
+import {
+  DatasetLockMother,
+  DatasetMother
+} from '../../../../../../../../dataset/domain/models/DatasetMother'
+import { DatasetProvider } from '../../../../../../../../../../src/sections/dataset/DatasetProvider'
 
 const fileNonTabular = FileMother.create({
   tabularData: undefined,
@@ -18,14 +28,18 @@ describe('FileTabularDownloadOptions', () => {
     cy.findByRole('button', { name: 'Comma Separated Values (Original File Format)' }).should(
       'exist'
     )
-    cy.findByRole('button', { name: 'Tab-Delimited' }).should('exist')
+    cy.findByRole('button', { name: 'Tab-Delimited' })
+      .should('exist')
+      .should('not.have.class', 'disabled')
   })
 
   it('renders the download options for a tabular file of unknown original type', () => {
     cy.customMount(<FileDownloadOptions file={fileTabularUnknown} />)
 
     cy.findByRole('button', { name: /(Original File Format)/ }).should('not.exist')
-    cy.findByRole('button', { name: 'Tab-Delimited' }).should('exist')
+    cy.findByRole('button', { name: 'Tab-Delimited' })
+      .should('exist')
+      .should('not.have.class', 'disabled')
   })
 
   it('does not render the download options for a non-tabular file', () => {
@@ -33,5 +47,44 @@ describe('FileTabularDownloadOptions', () => {
 
     cy.findByRole('button', { name: /(Original File Format)/ }).should('not.exist')
     cy.findByRole('button', { name: 'Tab-Delimited' }).should('not.exist')
+  })
+
+  it('renders the options as disabled when the file ingest is in progress', () => {
+    const fileTabularInProgress = FileMother.createWithTabularData({
+      ingest: {
+        status: FileIngestStatus.IN_PROGRESS
+      }
+    })
+    cy.customMount(<FileTabularDownloadOptions file={fileTabularInProgress} />)
+
+    cy.findByRole('button', { name: 'Comma Separated Values (Original File Format)' })
+      .should('exist')
+      .should('have.class', 'disabled')
+    cy.findByRole('button', { name: 'Tab-Delimited' })
+      .should('exist')
+      .should('have.class', 'disabled')
+  })
+
+  it('renders the options as disabled when the dataset is locked from file download', () => {
+    const datasetRepository: DatasetRepository = {} as DatasetRepository
+    const datasetLockedFromFileDownload = DatasetMother.create({
+      locks: [DatasetLockMother.createLockedFromFileDownload()]
+    })
+    datasetRepository.getByPersistentId = cy.stub().resolves(datasetLockedFromFileDownload)
+
+    cy.customMount(
+      <DatasetProvider
+        repository={datasetRepository}
+        searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
+        <FileTabularDownloadOptions file={fileTabular} />
+      </DatasetProvider>
+    )
+
+    cy.findByRole('button', { name: 'Comma Separated Values (Original File Format)' })
+      .should('exist')
+      .should('have.class', 'disabled')
+    cy.findByRole('button', { name: 'Tab-Delimited' })
+      .should('exist')
+      .should('have.class', 'disabled')
   })
 })

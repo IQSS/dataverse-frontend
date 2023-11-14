@@ -1,12 +1,14 @@
-import { File } from '../../../../../../../../files/domain/models/File'
+import { File, FileIngestStatus } from '../../../../../../../../files/domain/models/File'
 import FileTypeToFriendlyTypeMap from '../../../../../../../../files/domain/models/FileTypeToFriendlyTypeMap'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
+import { useDataset } from '../../../../../../DatasetContext'
 
 interface FileNonTabularDownloadOptionsProps {
   file: File
 }
 
 export function FileNonTabularDownloadOptions({ file }: FileNonTabularDownloadOptionsProps) {
+  const { dataset } = useDataset()
   const originalFileFormatIsKnown =
     file.type.toDisplayFormat() !== FileTypeToFriendlyTypeMap.unknown
 
@@ -15,7 +17,11 @@ export function FileNonTabularDownloadOptions({ file }: FileNonTabularDownloadOp
   }
 
   return (
-    <DropdownButtonItem>
+    <DropdownButtonItem
+      disabled={
+        file.ingest.status === FileIngestStatus.IN_PROGRESS ||
+        (dataset && dataset.isLockedFromFileDownload)
+      }>
       {originalFileFormatIsKnown ? file.type.toDisplayFormat() : 'Original File Format'}
     </DropdownButtonItem>
   )

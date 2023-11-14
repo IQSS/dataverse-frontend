@@ -1,12 +1,15 @@
-import { File } from '../../../../../../../../files/domain/models/File'
+import { File, FileIngestStatus } from '../../../../../../../../files/domain/models/File'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
+import { useDataset } from '../../../../../../DatasetContext'
 
 interface FileTabularDownloadOptionsProps {
   file: File
 }
 
 export function FileTabularDownloadOptions({ file }: FileTabularDownloadOptionsProps) {
+  const { dataset } = useDataset()
   const originalFileFormatIsKnown = file.type.original && file.type.original !== 'Unknown'
+
   if (!file.tabularData) {
     return <></>
   }
@@ -14,9 +17,19 @@ export function FileTabularDownloadOptions({ file }: FileTabularDownloadOptionsP
   return (
     <>
       {originalFileFormatIsKnown && (
-        <DropdownButtonItem>{`${file.type.original} (Original File Format)`}</DropdownButtonItem>
+        <DropdownButtonItem
+          disabled={
+            file.ingest.status === FileIngestStatus.IN_PROGRESS ||
+            (dataset && dataset.isLockedFromFileDownload)
+          }>{`${file.type.original} (Original File Format)`}</DropdownButtonItem>
       )}
-      <DropdownButtonItem>{file.type.toDisplayFormat()}</DropdownButtonItem>
+      <DropdownButtonItem
+        disabled={
+          file.ingest.status === FileIngestStatus.IN_PROGRESS ||
+          (dataset && dataset.isLockedFromFileDownload)
+        }>
+        {file.type.toDisplayFormat()}
+      </DropdownButtonItem>
     </>
   )
 }
