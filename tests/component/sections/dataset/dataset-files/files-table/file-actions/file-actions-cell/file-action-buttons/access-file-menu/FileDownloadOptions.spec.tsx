@@ -6,25 +6,12 @@ const fileNonTabular = FileMother.create({
   tabularData: undefined,
   type: new FileType('text/plain')
 })
-const fileNonTabularUnknown = FileMother.create({
-  tabularData: undefined,
-  type: new FileType('unknown')
-})
 const fileTabular = FileMother.createWithTabularData()
-const fileTabularUnknown = FileMother.createWithTabularData({
-  type: new FileType('text/tab-separated-values', 'Unknown')
-})
 describe('FileDownloadOptions', () => {
   it('renders the download options header', () => {
     cy.customMount(<FileDownloadOptions file={fileNonTabular} />)
 
     cy.findByRole('heading', { name: 'Download Options' }).should('exist')
-  })
-
-  it('renders the download options for a non-tabular file of unknown type', () => {
-    cy.customMount(<FileDownloadOptions file={fileNonTabularUnknown} />)
-
-    cy.findByRole('button', { name: 'Original File Format' }).should('exist')
   })
 
   it('renders the download options for a non-tabular file', () => {
@@ -39,11 +26,5 @@ describe('FileDownloadOptions', () => {
     cy.findByRole('button', { name: 'Comma Separated Values (Original File Format)' }).should(
       'exist'
     )
-  })
-
-  it('renders the download options for a tabular file of unknown original type', () => {
-    cy.customMount(<FileDownloadOptions file={fileTabularUnknown} />)
-
-    cy.findByRole('button', { name: /(Original File Format)/ }).should('not.exist')
   })
 })

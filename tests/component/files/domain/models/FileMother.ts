@@ -13,6 +13,7 @@ import {
   FileType,
   FileChecksum
 } from '../../../../../src/files/domain/models/File'
+import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
 
 const valueOrUndefined: <T>(value: T) => T | undefined = (value) => {
   const shouldShowValue = faker.datatype.boolean()
@@ -72,10 +73,7 @@ export class FileChecksumMother {
 export class FileMother {
   static create(props?: Partial<File>): File {
     const thumbnail = valueOrUndefined<string>(faker.image.imageUrl())
-    const fileType = faker.helpers.arrayElement([
-      'text/tab-separated-values',
-      faker.system.fileType()
-    ])
+    const fileType = faker.helpers.arrayElement(Object.keys(FileTypeToFriendlyTypeMap))
     const checksum = valueOrUndefined<string>(faker.datatype.uuid())
     const fileMockedData = {
       id: faker.datatype.number(),
