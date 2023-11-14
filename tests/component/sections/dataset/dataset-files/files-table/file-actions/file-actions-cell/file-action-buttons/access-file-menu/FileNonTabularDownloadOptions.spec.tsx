@@ -8,8 +8,7 @@ import { DatasetProvider } from '../../../../../../../../../../src/sections/data
 import { DatasetRepository } from '../../../../../../../../../../src/dataset/domain/repositories/DatasetRepository'
 import {
   DatasetLockMother,
-  DatasetMother,
-  DatasetPermissionsMother
+  DatasetMother
 } from '../../../../../../../../dataset/domain/models/DatasetMother'
 
 const fileNonTabular = FileMother.create({

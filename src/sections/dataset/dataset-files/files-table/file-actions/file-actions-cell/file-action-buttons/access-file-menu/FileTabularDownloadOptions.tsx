@@ -30,6 +30,15 @@ export function FileTabularDownloadOptions({ file }: FileTabularDownloadOptionsP
         }>
         {file.type.toDisplayFormat()}
       </DropdownButtonItem>
+      {file.type.original !== 'R Data' && (
+        <DropdownButtonItem
+          disabled={
+            file.ingest.status === FileIngestStatus.IN_PROGRESS ||
+            (dataset && dataset.isLockedFromFileDownload)
+          }>
+          R Data
+        </DropdownButtonItem>
+      )}
     </>
   )
 }
