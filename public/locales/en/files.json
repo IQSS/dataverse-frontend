@@ -12,6 +12,7 @@
       "pageSize": "Files per page"
     },
     "tabularData": {
+      "name": "Tabular Data",
       "variables": "Variables",
       "observations": "Observations"
     },
