@@ -1,14 +1,19 @@
 import { File, FileIngestStatus } from '../../../../../../../../files/domain/models/File'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useDataset } from '../../../../../../DatasetContext'
+import { useTranslation } from 'react-i18next'
 
 interface FileTabularDownloadOptionsProps {
   file: File
 }
 
 export function FileTabularDownloadOptions({ file }: FileTabularDownloadOptionsProps) {
+  const { t } = useTranslation('files')
   const { dataset } = useDataset()
   const originalFileFormatIsKnown = file.type.original && file.type.original !== 'Unknown'
+  const downloadDisabled =
+    file.ingest.status === FileIngestStatus.IN_PROGRESS ||
+    (dataset && dataset.isLockedFromFileDownload)
 
   if (!file.tabularData) {
     return <></>
@@ -17,26 +22,16 @@ export function FileTabularDownloadOptions({ file }: FileTabularDownloadOptionsP
   return (
     <>
       {originalFileFormatIsKnown && (
-        <DropdownButtonItem
-          disabled={
-            file.ingest.status === FileIngestStatus.IN_PROGRESS ||
-            (dataset && dataset.isLockedFromFileDownload)
-          }>{`${file.type.original} (Original File Format)`}</DropdownButtonItem>
+        <DropdownButtonItem disabled={downloadDisabled}>{`${file.type.original} (${t(
+          'actions.accessFileMenu.downloadOptions.options.original'
+        )})`}</DropdownButtonItem>
       )}
-      <DropdownButtonItem
-        disabled={
-          file.ingest.status === FileIngestStatus.IN_PROGRESS ||
-          (dataset && dataset.isLockedFromFileDownload)
-        }>
-        {file.type.toDisplayFormat()}
+      <DropdownButtonItem disabled={downloadDisabled}>
+        {t('actions.accessFileMenu.downloadOptions.options.tabular')}
       </DropdownButtonItem>
       {file.type.original !== 'R Data' && (
-        <DropdownButtonItem
-          disabled={
-            file.ingest.status === FileIngestStatus.IN_PROGRESS ||
-            (dataset && dataset.isLockedFromFileDownload)
-          }>
-          R Data
+        <DropdownButtonItem disabled={downloadDisabled}>
+          {t('actions.accessFileMenu.downloadOptions.options.RData')}
         </DropdownButtonItem>
       )}
     </>

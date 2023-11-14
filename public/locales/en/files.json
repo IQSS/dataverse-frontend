@@ -113,6 +113,14 @@
       "title": "Access File",
       "headers": {
         "fileAccess": "File Access"
+      },
+      "downloadOptions": {
+        "title": "Download Options",
+        "options": {
+          "original": "Original File Format",
+          "RData": "R Data",
+          "tabular": "Tab-Delimited"
+        }
       }
     },
     "editFilesMenu": {
