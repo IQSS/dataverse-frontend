@@ -22,3 +22,6 @@ export function FileDownloadOptions({ file }: FileDownloadOptionsProps) {
     </>
   )
 }
+
+// TODO: Add guestbook support
+// TODO: Add file package support
