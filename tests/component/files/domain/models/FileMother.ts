@@ -154,7 +154,7 @@ export class FileMother {
 
   static createDefault(props?: Partial<File>): File {
     const defaultFile = {
-      type: new FileType('file'),
+      type: new FileType('text/plain'),
       version: {
         number: 1,
         publishingStatus: FilePublishingStatus.RELEASED
