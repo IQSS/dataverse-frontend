@@ -10,8 +10,10 @@ import {
   DatasetPermissions,
   DatasetPublishingStatus,
   DatasetVersion,
+  FileDownloadSize,
   MetadataBlockName
 } from '../../../../../src/dataset/domain/models/Dataset'
+import { FileDownloadSizeMode } from '@iqss/dataverse-client-javascript'
 
 export class DatasetVersionMother {
   static create(props?: Partial<DatasetVersion>): DatasetVersion {
@@ -185,6 +187,24 @@ export class DatasetLockMother {
   }
 }
 
+export class DatasetFileDownloadSizeMother {
+  static create(props?: Partial<FileDownloadSize>): FileDownloadSize {
+    return {
+      size: faker.datatype.number(),
+      fileDownloadSizeMode: faker.helpers.arrayElement(Object.values(FileDownloadSizeMode)),
+      ...props
+    }
+  }
+
+  static createArchival(): FileDownloadSize {
+    return this.create({ fileDownloadSizeMode: FileDownloadSizeMode.ARCHIVAL })
+  }
+
+  static createOriginal(): FileDownloadSize {
+    return this.create({ fileDownloadSizeMode: FileDownloadSizeMode.ORIGINAL })
+  }
+}
+
 export class DatasetMother {
   static createEmpty(): undefined {
     return undefined
@@ -285,10 +305,12 @@ export class DatasetMother {
       permissions: DatasetPermissionsMother.create(),
       locks: [],
       hasValidTermsOfAccess: faker.datatype.boolean(),
+      hasOneTabularFileAtLeast: faker.datatype.boolean(),
       isValid: faker.datatype.boolean(),
       isReleased: faker.datatype.boolean(),
       thumbnail: undefined,
       privateUrl: undefined,
+      fileDownloadSizes: undefined,
       ...props
     }
 
@@ -302,10 +324,12 @@ export class DatasetMother {
       dataset.permissions,
       dataset.locks,
       dataset.hasValidTermsOfAccess,
+      dataset.hasOneTabularFileAtLeast,
       dataset.isValid,
       dataset.isReleased,
       dataset.thumbnail,
-      dataset.privateUrl
+      dataset.privateUrl,
+      dataset.fileDownloadSizes
     ).build()
   }
 
@@ -437,6 +461,11 @@ export class DatasetMother {
       locks: [],
       isReleased: true,
       hasValidTermsOfAccess: true,
+      hasOneTabularFileAtLeast: true,
+      fileDownloadSizes: [
+        { size: 219829, fileDownloadSizeMode: FileDownloadSizeMode.ORIGINAL },
+        { size: 253629, fileDownloadSizeMode: FileDownloadSizeMode.ARCHIVAL }
+      ],
       isValid: true,
       ...props
     })

@@ -3,6 +3,7 @@ import { WithI18next } from '../../WithI18next'
 import { WithSettings } from '../../WithSettings'
 import { DatasetActionButtons } from '../../../sections/dataset/dataset-action-buttons/DatasetActionButtons'
 import {
+  DatasetFileDownloadSizeMother,
   DatasetMother,
   DatasetPermissionsMother,
   DatasetVersionMother
@@ -28,6 +29,11 @@ export const WithPublishPermissions: Story = {
         permissions: DatasetPermissionsMother.createWithAllAllowed(),
         version: DatasetVersionMother.createDraftAsLatestVersion(),
         hasValidTermsOfAccess: true,
+        hasOneTabularFileAtLeast: true,
+        fileDownloadSizes: [
+          DatasetFileDownloadSizeMother.createOriginal(),
+          DatasetFileDownloadSizeMother.createArchival()
+        ],
         isValid: true,
         isReleased: true
       })}
