@@ -4,6 +4,7 @@ import { EditDatasetPermissionsMenu } from './EditDatasetPermissionsMenu'
 import { DeleteDatasetButton } from './DeleteDatasetButton'
 import { DeaccessionDatasetButton } from './DeaccessionDatasetButton'
 import { useTranslation } from 'react-i18next'
+import { useNotImplementedModal } from '../../../not-implemented/NotImplementedModalContext'
 
 interface EditDatasetMenuProps {
   dataset: Dataset
@@ -13,10 +14,11 @@ export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
   if (!dataset.permissions.canUpdateDataset) {
     return <></>
   }
-
+  const { showModal } = useNotImplementedModal()
   const { t } = useTranslation('dataset')
   return (
     <DropdownButton
+      onSelect={showModal}
       id={`edit-dataset-menu`}
       title={t('datasetActionButtons.editDataset.title')}
       asButtonGroup

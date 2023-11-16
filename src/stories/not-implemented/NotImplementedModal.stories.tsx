@@ -1,12 +1,13 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { NotImplementedModal } from '../../sections/not-implemented/NotImplementedModal'
-
-import { useState } from 'react'
 import { Button } from '@iqss/dataverse-design-system'
+import { useNotImplementedModal } from '../../sections/not-implemented/NotImplementedModalContext'
+import { WIthNotImplementedModal } from '../WIthNotImplementedModal'
 
 const meta: Meta<typeof NotImplementedModal> = {
   title: 'Sections/NotImplementedModal',
-  component: NotImplementedModal
+  component: NotImplementedModal,
+  decorators: [WIthNotImplementedModal]
 }
 
 export default meta
@@ -14,15 +15,12 @@ export default meta
 type Story = StoryObj<typeof NotImplementedModal>
 
 function DefaultExample() {
-  const [show, setShow] = useState(false)
-
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
+  const { showModal, hideModal, isModalOpen } = useNotImplementedModal()
   return (
     <>
-      <Button onClick={handleShow}>Launch demo modal</Button>
+      <Button onClick={showModal}>Launch demo modal</Button>
 
-      <NotImplementedModal show={show} handleClose={handleClose} />
+      <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
     </>
   )
 }
