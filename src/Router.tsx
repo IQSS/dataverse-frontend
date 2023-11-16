@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { HelloDataverse } from './sections/hello-dataverse/HelloDataverse'
+import { Home } from './sections/home/Home'
 import { Layout } from './sections/layout/Layout'
 import { Route } from './sections/Route.enum'
 import { DatasetFactory } from './sections/dataset/DatasetFactory'
@@ -12,7 +12,7 @@ const router = createBrowserRouter(
       children: [
         {
           path: Route.HOME,
-          element: <HelloDataverse />
+          element: <Home />
         },
         {
           path: `${Route.DATASETS}`,

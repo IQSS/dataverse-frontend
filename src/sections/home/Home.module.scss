@@ -1,0 +1,17 @@
+@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
+@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module";
+@import "src/sections/assets/variables";
+
+.container {
+    padding:15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.title {
+  color: $dv-brand-color;
+}
+
+.results {
+  font-weight: $dv-font-weight-bold;
+}

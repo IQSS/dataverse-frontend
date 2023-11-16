@@ -1,4 +1,4 @@
-describe('Hello Dataverse', () => {
+describe('Home Page', () => {
   it('successfully loads', () => {
     cy.visit('/spa')
     cy.findAllByText(/Hello Dataverse/i).should('exist')
