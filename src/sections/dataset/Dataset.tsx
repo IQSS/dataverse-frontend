@@ -25,7 +25,7 @@ export function Dataset({ fileRepository }: DatasetProps) {
   const { setIsLoading } = useLoading()
   const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('dataset')
-  const { showModal, hideModal, isModalOpen } = useNotImplementedModal()
+  const { hideModal, isModalOpen } = useNotImplementedModal()
 
   useEffect(() => {
     setIsLoading(isLoading)
