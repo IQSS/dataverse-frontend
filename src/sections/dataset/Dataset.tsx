@@ -14,6 +14,8 @@ import { DatasetActionButtons } from './dataset-action-buttons/DatasetActionButt
 import { useDataset } from './DatasetContext'
 import { useEffect } from 'react'
 import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
+import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
+import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
 
 interface DatasetProps {
   fileRepository: FileRepository
@@ -23,6 +25,7 @@ export function Dataset({ fileRepository }: DatasetProps) {
   const { setIsLoading } = useLoading()
   const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('dataset')
+  const { showModal, hideModal, isModalOpen } = useNotImplementedModal()
 
   useEffect(() => {
     setIsLoading(isLoading)
@@ -34,6 +37,7 @@ export function Dataset({ fileRepository }: DatasetProps) {
 
   return (
     <>
+      <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
       {!dataset ? (
         <PageNotFound />
       ) : (
