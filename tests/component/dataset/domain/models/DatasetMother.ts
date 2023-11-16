@@ -190,6 +190,10 @@ export class DatasetMother {
     return undefined
   }
 
+  static createMany(count: number): Dataset[] {
+    return Array.from({ length: count }, () => this.create())
+  }
+
   static create(props?: Partial<Dataset>): Dataset {
     const dataset = {
       persistentId: faker.datatype.uuid(),

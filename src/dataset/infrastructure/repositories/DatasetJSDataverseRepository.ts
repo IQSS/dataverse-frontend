@@ -10,8 +10,18 @@ import {
   ReadError
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
+import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
+  getAll(): Promise<Dataset[]> {
+    // TODO - Implement using the js-dataverse-client
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(DatasetMother.createMany(200))
+      }, 1000)
+    })
+  }
+
   getByPersistentId(
     persistentId: string,
     version?: string,

@@ -1,9 +1,16 @@
 import styles from './Home.module.scss'
 import { Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
+import { useDatasets } from './useDatasets'
+import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 
-export function Home() {
+interface HomeProps {
+  datasetRepository: DatasetRepository
+}
+
+export function Home({ datasetRepository }: HomeProps) {
   const { t } = useTranslation('home')
+  const { datasets } = useDatasets(datasetRepository)
 
   return (
     <Row>
@@ -14,15 +21,11 @@ export function Home() {
         <div className={styles.results}>
           <p>1 to 10 of 41 Results</p>
         </div>
-        <article>
-          <a href="/datasets?persistentId=1">Dataset 1</a>
-        </article>
-        <article>
-          <a href="/datasets?persistentId=2">Dataset 2</a>
-        </article>
-        <article>
-          <a href="/datasets?persistentId=3">Dataset 3</a>
-        </article>
+        {datasets.map((dataset) => (
+          <article key={dataset.persistentId}>
+            <a href={`/datasets?persistentId=${dataset.persistentId}`}>{dataset.getTitle()}</a>
+          </article>
+        ))}
       </section>
     </Row>
   )
