@@ -15,7 +15,7 @@ describe('Datasets List', () => {
     cy.wrap(datasetRepository.getAll).should('be.calledOnce')
 
     datasets.forEach((dataset) => {
-      cy.findByRole('link', { name: dataset.getTitle() })
+      cy.findByRole('link', { name: dataset.title() })
         .should('exist')
         .should('have.attr', 'href', `/datasets?persistentId=${dataset.persistentId}`)
     })

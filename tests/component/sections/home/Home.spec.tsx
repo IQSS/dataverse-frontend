@@ -20,7 +20,7 @@ describe('Home page', () => {
     cy.wrap(datasetRepository.getAll).should('be.calledOnce')
 
     datasets.forEach((dataset) => {
-      cy.findByText(dataset.getTitle()).should('exist')
+      cy.findByText(dataset.title()).should('exist')
     })
   })
 })

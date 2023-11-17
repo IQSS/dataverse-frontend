@@ -15,7 +15,7 @@ export function DatasetsList({ datasetRepository }: DatasetsListProps) {
       </div>
       {datasets.map((dataset) => (
         <article key={dataset.persistentId}>
-          <a href={`/datasets?persistentId=${dataset.persistentId}`}>{dataset.getTitle()}</a>
+          <a href={`/datasets?persistentId=${dataset.persistentId}`}>{dataset.title}</a>
         </article>
       ))}
     </section>
