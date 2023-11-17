@@ -4,21 +4,27 @@ import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import { FileSelection } from '../../row-selection/useFileSelection'
 import { NoSelectedFilesModal } from '../no-selected-files-modal/NoSelectedFilesModal'
+import { useNotImplementedModal } from '../../../../../not-implemented/NotImplementedModalContext'
 
 interface EditFileOptionsProps {
   files: File[]
   fileSelection: FileSelection
 }
+
 const SELECTED_FILES_EMPTY = 0
+
 export function EditFilesOptions({ files, fileSelection }: EditFileOptionsProps) {
   const { t } = useTranslation('files')
   const [showNoFilesSelectedModal, setShowNoFilesSelectedModal] = useState(false)
   const settingsEmbargoAllowed = false // TODO - Ask Guillermo if this is included in the settings endpoint
   const provenanceEnabledByConfig = false // TODO - Ask Guillermo if this is included in the MVP and from which endpoint is coming from
-
+  const { showModal } = useNotImplementedModal()
   const onClick = () => {
     if (Object.keys(fileSelection).length === SELECTED_FILES_EMPTY) {
       setShowNoFilesSelectedModal(true)
+    } else {
+      // TODO - Implement edit files
+      showModal()
     }
   }
 
