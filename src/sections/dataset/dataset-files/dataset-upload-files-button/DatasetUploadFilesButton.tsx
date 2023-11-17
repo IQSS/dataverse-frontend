@@ -4,6 +4,7 @@ import { useSession } from '../../../session/SessionContext'
 import styles from './DatasetUploadFilesButton.module.scss'
 import { useTranslation } from 'react-i18next'
 import { useDataset } from '../../DatasetContext'
+import { useNotImplementedModal } from '../../../not-implemented/NotImplementedModalContext'
 
 export function DatasetUploadFilesButton() {
   const { t } = useTranslation('dataset')
@@ -11,8 +12,9 @@ export function DatasetUploadFilesButton() {
   const { dataset } = useDataset()
   const handleClick = () => {
     // TODO - Implement upload files
+    showModal()
   }
-
+  const { showModal } = useNotImplementedModal()
   if (!user || !dataset?.permissions.canUpdateDataset) {
     return <></>
   }

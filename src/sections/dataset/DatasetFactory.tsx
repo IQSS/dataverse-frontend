@@ -11,6 +11,7 @@ import { SettingJSDataverseRepository } from '../../settings/infrastructure/Sett
 import { FilePermissionsProvider } from '../file/file-permissions/FilePermissionsProvider'
 import { SettingsProvider } from '../settings/SettingsProvider'
 import { DatasetProvider } from './DatasetProvider'
+import { NotImplementedModalProvider } from '../not-implemented/NotImplementedModalProvider'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
@@ -22,11 +23,13 @@ export class DatasetFactory {
     return (
       <FilePermissionsProvider repository={fileRepository}>
         <SettingsProvider repository={settingRepository}>
-          <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
-            <AnonymizedProvider>
-              <DatasetWithSearchParams />
-            </AnonymizedProvider>
-          </MetadataBlockInfoProvider>
+          <NotImplementedModalProvider>
+            <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
+              <AnonymizedProvider>
+                <DatasetWithSearchParams />
+              </AnonymizedProvider>
+            </MetadataBlockInfoProvider>
+          </NotImplementedModalProvider>
         </SettingsProvider>
       </FilePermissionsProvider>
     )
