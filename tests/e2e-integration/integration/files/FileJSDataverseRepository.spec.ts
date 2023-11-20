@@ -18,7 +18,6 @@ import {
   DatasetPublishingStatus,
   DatasetVersion
 } from '../../../../src/dataset/domain/models/Dataset'
-import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePaginationInfo'
 import {
   FileAccessOption,
   FileCriteria,
@@ -28,6 +27,7 @@ import {
 import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
 import { FileData, FileHelper } from '../../shared/files/FileHelper'
 import { FilesCountInfo } from '../../../../src/files/domain/models/FilesCountInfo'
+import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePaginationInfo'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect

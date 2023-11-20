@@ -1,3 +1,5 @@
+@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module";
+
 .row {
   justify-content: center;
 }
@@ -15,4 +17,9 @@
   &__text {
     margin-right: 14px;
   }
+}
+
+.results {
+  font-weight: $dv-font-weight-bold;
+  margin-right: 4px;
 }

@@ -5,8 +5,8 @@ import { FileInfoCell } from './file-info/file-info-cell/FileInfoCell'
 import { FileInfoHeader } from './file-info/FileInfoHeader'
 import { FileActionsHeader } from './file-actions/FileActionsHeader'
 import { FileActionsCell } from './file-actions/file-actions-cell/FileActionsCell'
-import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
 import { FileSelection } from './row-selection/useFileSelection'
+import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
 
 export const createColumnsDefinition = (
   paginationInfo: FilePaginationInfo,

@@ -1,26 +1,32 @@
 import { Col, Pagination, Row } from '@iqss/dataverse-design-system'
 import { PageNumbersButtonsWithEllipsis } from './PageNumbersButtonsWithEllipsis'
 import { PageSizeSelector } from './PageSizeSelector'
-import styles from './FilesPagination.module.scss'
-import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
+import styles from './Pagination.module.scss'
+import { PaginationInfo } from '../../../shared/domain/models/PaginationInfo'
 import { useEffect, useState } from 'react'
+import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
+import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPaginationInfo'
 
-interface FilesPaginationProps {
-  onPaginationInfoChange: (paginationInfo: FilePaginationInfo) => void
+interface PaginationProps {
+  onPaginationInfoChange: (
+    paginationInfo: PaginationInfo<DatasetPaginationInfo | FilePaginationInfo>
+  ) => void
+  itemName: string
   page: number
   pageSize: number
   total: number
 }
 const NO_PAGES = 0
-export function FilesPagination({
+export function PaginationControls({
   onPaginationInfoChange,
+  itemName,
   page,
   pageSize,
   total
-}: FilesPaginationProps) {
-  const [paginationInfo, setPaginationInfo] = useState<FilePaginationInfo>(
-    new FilePaginationInfo(page, pageSize, total)
-  )
+}: PaginationProps) {
+  const [paginationInfo, setPaginationInfo] = useState<
+    PaginationInfo<DatasetPaginationInfo | FilePaginationInfo>
+  >(new PaginationInfo(page, pageSize, total))
   const goToPage = (newPage: number) => {
     setPaginationInfo(paginationInfo.goToPage(newPage))
   }
@@ -72,7 +78,11 @@ export function FilesPagination({
               disabled={!paginationInfo.hasNextPage}
             />
           </Pagination>
-          <PageSizeSelector pageSize={paginationInfo.pageSize} setPageSize={setPageSize} />
+          <PageSizeSelector
+            itemName={itemName}
+            pageSize={paginationInfo.pageSize}
+            setPageSize={setPageSize}
+          />
         </div>
       </Col>
     </Row>

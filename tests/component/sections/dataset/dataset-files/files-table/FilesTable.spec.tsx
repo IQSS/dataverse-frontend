@@ -8,8 +8,8 @@ import { SettingMother } from '../../../../settings/domain/models/SettingMother'
 import { ZipDownloadLimit } from '../../../../../../src/settings/domain/models/ZipDownloadLimit'
 import { SettingsContext } from '../../../../../../src/sections/settings/SettingsContext'
 import styles from '../../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
-import { FilePaginationInfo } from '../../../../../../src/files/domain/models/FilePaginationInfo'
 import { FileCriteria } from '../../../../../../src/files/domain/models/FileCriteria'
+import { FilePaginationInfo } from '../../../../../../src/files/domain/models/FilePaginationInfo'
 
 const testFiles = FileMother.createMany(10)
 const paginationInfo = new FilePaginationInfo(1, 10, 200)

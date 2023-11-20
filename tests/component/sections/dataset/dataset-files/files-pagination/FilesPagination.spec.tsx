@@ -1,4 +1,4 @@
-import { FilesPagination } from '../../../../../../src/sections/dataset/dataset-files/files-pagination/FilesPagination'
+import { PaginationControls } from '../../../../../../src/sections/shared/pagination/PaginationControls'
 import { FilePaginationInfo } from '../../../../../../src/files/domain/models/FilePaginationInfo'
 
 let paginationInfo: FilePaginationInfo
@@ -14,7 +14,7 @@ describe('FilesPagination', () => {
   it('clicking on the first page button calls goToPage 1', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
-      <FilesPagination
+      <PaginationControls
         page={page}
         pageSize={pageSize}
         total={total}
@@ -29,7 +29,7 @@ describe('FilesPagination', () => {
   it('clicking on the previous page button calls goToPreviousPage', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
-      <FilesPagination
+      <PaginationControls
         page={page}
         pageSize={pageSize}
         total={total}
@@ -47,7 +47,7 @@ describe('FilesPagination', () => {
   it('clicking on a page button calls goToPage with the correct number', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
-      <FilesPagination
+      <PaginationControls
         page={page}
         pageSize={pageSize}
         total={total}
@@ -62,7 +62,7 @@ describe('FilesPagination', () => {
   it('clicking on the next page button calls goToNextPage', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
-      <FilesPagination
+      <PaginationControls
         page={page}
         pageSize={pageSize}
         total={total}
@@ -77,7 +77,7 @@ describe('FilesPagination', () => {
   it('clicking on the last page button calls setPageIndex with the last index', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
-      <FilesPagination
+      <PaginationControls
         page={page}
         pageSize={pageSize}
         total={total}
@@ -92,7 +92,7 @@ describe('FilesPagination', () => {
   it('selecting a page size calls setPageSize with the selected value', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(
-      <FilesPagination
+      <PaginationControls
         page={page}
         pageSize={pageSize}
         total={total}

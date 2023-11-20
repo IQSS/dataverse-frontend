@@ -8,9 +8,6 @@
       "clearSelection": "Clear selection."
     },
     "zipDownloadExceedsLimit": "The overall size of the files selected ({{selectionTotalSize}}) for download exceeds the zip limit of {{zipDownloadSizeLimit}}. Please unselect some files to continue.",
-    "pagination": {
-      "pageSize": "Files per page"
-    },
     "tabularData": {
       "variables": "Variables",
       "observations": "Observations"

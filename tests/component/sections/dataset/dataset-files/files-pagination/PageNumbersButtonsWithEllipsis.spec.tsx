@@ -1,4 +1,4 @@
-import { PageNumbersButtonsWithEllipsis } from '../../../../../../src/sections/dataset/dataset-files/files-pagination/PageNumbersButtonsWithEllipsis'
+import { PageNumbersButtonsWithEllipsis } from '../../../../../../src/sections/shared/pagination/PageNumbersButtonsWithEllipsis'
 
 let goToPage: (pageIndex: number) => void
 const selectedPageIndex = 3

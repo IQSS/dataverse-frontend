@@ -11,13 +11,25 @@ import {
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
+import { TotalDatasetsCount } from '../../domain/models/TotalDatasetsCount'
+import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
-  getAll(): Promise<Dataset[]> {
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  getAll(paginationInfo: DatasetPaginationInfo): Promise<Dataset[]> {
     // TODO - Implement using the js-dataverse-client
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetMother.createMany(200))
+      }, 1000)
+    })
+  }
+
+  getTotalDatasetsCount(): Promise<TotalDatasetsCount> {
+    // TODO - Implement using the js-dataverse-client
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(200)
       }, 1000)
     })
   }

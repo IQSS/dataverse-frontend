@@ -4,9 +4,9 @@ import { FilesTable } from './files-table/FilesTable'
 import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 import { useFiles } from './useFiles'
-import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
-import { FilesPagination } from './files-pagination/FilesPagination'
+import { PaginationControls } from '../../shared/pagination/PaginationControls'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
+import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 
 interface DatasetFilesProps {
   filesRepository: FileRepository
@@ -44,10 +44,11 @@ export function DatasetFiles({
         filesTotalDownloadSize={filesTotalDownloadSize}
         criteria={criteria}
       />
-      <FilesPagination
+      <PaginationControls
+        itemName={paginationInfo.itemName}
         page={paginationInfo.page}
         pageSize={paginationInfo.pageSize}
-        total={paginationInfo.totalFiles}
+        total={paginationInfo.totalItems}
         onPaginationInfoChange={setPaginationInfo}
       />
     </>
