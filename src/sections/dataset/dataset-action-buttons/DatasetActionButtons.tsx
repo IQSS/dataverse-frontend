@@ -14,7 +14,6 @@ interface DatasetActionButtonsProps {
 
 export function DatasetActionButtons({ dataset }: DatasetActionButtonsProps) {
   const { t } = useTranslation('dataset')
-  console.log(JSON.stringify(dataset.fileDownloadSizes))
   return (
     <ButtonGroup aria-label={t('datasetActionButtons.title')} vertical className={styles.group}>
       <AccessDatasetMenu
