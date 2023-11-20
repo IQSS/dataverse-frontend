@@ -45,10 +45,7 @@ export function DatasetFiles({
         criteria={criteria}
       />
       <PaginationControls
-        itemName={paginationInfo.itemName}
-        page={paginationInfo.page}
-        pageSize={paginationInfo.pageSize}
-        total={paginationInfo.totalItems}
+        initialPaginationInfo={paginationInfo}
         onPaginationInfoChange={setPaginationInfo}
       />
     </>

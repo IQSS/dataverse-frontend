@@ -19,9 +19,11 @@ export class PaginationInfo<T extends PaginationInfo<T>> {
   }
 
   withTotal(total: number): T {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return new (this.constructor as new (...args: any[]) => T)(this.page, this.pageSize, total)
   }
   goToPage(page: number): T {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return new (this.constructor as new (...args: any[]) => T)(page, this.pageSize, this.totalItems)
   }
 
@@ -40,6 +42,7 @@ export class PaginationInfo<T extends PaginationInfo<T>> {
       const newPage = Math.ceil((this.page * oldPageSize) / newPageSize)
       return newPage > 0 ? newPage : 1
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return new (this.constructor as new (...args: any[]) => T)(
       getNewPage(this.pageSize, pageSize),
       pageSize,

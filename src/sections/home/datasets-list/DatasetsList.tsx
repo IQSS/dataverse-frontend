@@ -27,10 +27,7 @@ export function DatasetsList({ datasetRepository }: DatasetsListProps) {
       ))}
       <PaginationControls
         onPaginationInfoChange={setPaginationInfo}
-        itemName={paginationInfo.itemName}
-        page={paginationInfo.page}
-        pageSize={paginationInfo.pageSize}
-        total={paginationInfo.totalItems}
+        initialPaginationInfo={paginationInfo}
       />
     </section>
   )

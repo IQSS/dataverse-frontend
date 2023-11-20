@@ -11,22 +11,16 @@ interface PaginationProps {
   onPaginationInfoChange: (
     paginationInfo: PaginationInfo<DatasetPaginationInfo | FilePaginationInfo>
   ) => void
-  itemName: string
-  page: number
-  pageSize: number
-  total: number
+  initialPaginationInfo: PaginationInfo<DatasetPaginationInfo | FilePaginationInfo>
 }
 const NO_PAGES = 0
 export function PaginationControls({
   onPaginationInfoChange,
-  itemName,
-  page,
-  pageSize,
-  total
+  initialPaginationInfo
 }: PaginationProps) {
-  const [paginationInfo, setPaginationInfo] = useState<
-    PaginationInfo<DatasetPaginationInfo | FilePaginationInfo>
-  >(new PaginationInfo(page, pageSize, total))
+  const [paginationInfo, setPaginationInfo] = useState<DatasetPaginationInfo | FilePaginationInfo>(
+    initialPaginationInfo
+  )
   const goToPage = (newPage: number) => {
     setPaginationInfo(paginationInfo.goToPage(newPage))
   }
@@ -45,8 +39,9 @@ export function PaginationControls({
   }, [paginationInfo.pageSize, paginationInfo.page])
 
   useEffect(() => {
-    setPaginationInfo(paginationInfo.withTotal(total))
-  }, [total])
+    console.log(paginationInfo)
+    setPaginationInfo(paginationInfo.withTotal(initialPaginationInfo.totalItems))
+  }, [initialPaginationInfo.totalItems])
 
   if (paginationInfo.totalPages === NO_PAGES) {
     return <></>
@@ -79,7 +74,7 @@ export function PaginationControls({
             />
           </Pagination>
           <PageSizeSelector
-            itemName={itemName}
+            itemName={paginationInfo.itemName}
             pageSize={paginationInfo.pageSize}
             setPageSize={setPageSize}
           />

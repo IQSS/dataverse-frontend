@@ -98,7 +98,7 @@ describe('Dataset JSDataverse Repository', () => {
       }
       const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
-      expect(dataset.title()).to.deep.equal(datasetExpected.title)
+      expect(dataset.title).to.deep.equal(datasetExpected.title)
       expect(dataset.citation).to.deep.equal(datasetExpected.citation)
       // expect(dataset.labels).to.deep.equal(datasetExpected.labels) TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
       expect(dataset.license).to.deep.equal(datasetExpected.license)
@@ -133,7 +133,7 @@ describe('Dataset JSDataverse Repository', () => {
           0
         )
         const expectedPublicationDate = getCurrentDateInYYYYMMDDFormat()
-        expect(dataset.title()).to.deep.equal(datasetExpected.title)
+        expect(dataset.title).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(newVersion)
         expect(dataset.metadataBlocks[0].fields.publicationDate).to.deep.equal(
           expectedPublicationDate
@@ -153,7 +153,7 @@ describe('Dataset JSDataverse Repository', () => {
         }
         const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
-        expect(dataset.title()).to.deep.equal(datasetExpected.title)
+        expect(dataset.title).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(datasetExpected.version)
       })
   })
@@ -168,7 +168,7 @@ describe('Dataset JSDataverse Repository', () => {
       }
       const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
-      expect(dataset.title()).to.deep.equal(datasetExpected.title)
+      expect(dataset.title).to.deep.equal(datasetExpected.title)
       expect(dataset.version).to.deep.equal(datasetExpected.version)
     })
   })

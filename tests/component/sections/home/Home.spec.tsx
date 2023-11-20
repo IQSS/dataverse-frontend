@@ -3,10 +3,12 @@ import { DatasetRepository } from '../../../../src/dataset/domain/repositories/D
 import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
-const datasets = DatasetMother.createMany(10)
+const totalDatasetsCount = 10
+const datasets = DatasetMother.createMany(totalDatasetsCount)
 describe('Home page', () => {
   beforeEach(() => {
     datasetRepository.getAll = cy.stub().resolves(datasets)
+    datasetRepository.getTotalDatasetsCount = cy.stub().resolves(totalDatasetsCount)
   })
 
   it('renders hello dataverse title', () => {
@@ -20,7 +22,7 @@ describe('Home page', () => {
     cy.wrap(datasetRepository.getAll).should('be.calledOnce')
 
     datasets.forEach((dataset) => {
-      cy.findByText(dataset.title()).should('exist')
+      cy.findByText(dataset.title).should('exist')
     })
   })
 })

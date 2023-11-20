@@ -300,7 +300,7 @@ describe('Dataset', () => {
         })
     })
 
-    it('applies filters to the Files Table in the correct order', () => {
+    it.only('applies filters to the Files Table in the correct order', () => {
       const files = [
         FileHelper.create('csv', {
           description: 'Some description',
