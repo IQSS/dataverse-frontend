@@ -103,4 +103,17 @@ describe('PaginationControls', () => {
       paginationInfo.withPageSize(50).goToPage(4)
     )
   })
+
+  it('does not show the page size selector if the prop is false', () => {
+    const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
+    cy.customMount(
+      <PaginationControls
+        initialPaginationInfo={paginationInfo.withTotal(10)}
+        onPaginationInfoChange={onPaginationInfoChange}
+        showPageSizeSelector={false}
+      />
+    )
+
+    cy.findByLabelText('Items per page').should('not.exist')
+  })
 })

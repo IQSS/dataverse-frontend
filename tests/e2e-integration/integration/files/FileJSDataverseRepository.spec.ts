@@ -264,7 +264,6 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
-          console.log(files)
           expect(files[0].thumbnail).to.not.be.undefined
         })
     })

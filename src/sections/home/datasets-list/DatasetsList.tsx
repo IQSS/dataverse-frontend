@@ -28,6 +28,7 @@ export function DatasetsList({ datasetRepository }: DatasetsListProps) {
       <PaginationControls
         onPaginationInfoChange={setPaginationInfo}
         initialPaginationInfo={paginationInfo}
+        showPageSizeSelector={false}
       />
     </section>
   )
