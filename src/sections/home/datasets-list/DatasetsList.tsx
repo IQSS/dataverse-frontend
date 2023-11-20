@@ -1,5 +1,5 @@
 import { useDatasets } from '../useDatasets'
-import styles from '../Home.module.scss'
+import styles from './DatasetsList.module.scss'
 import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
 import { useState } from 'react'
 import { PaginationResultsInfo } from '../../shared/pagination/PaginationResultsInfo'

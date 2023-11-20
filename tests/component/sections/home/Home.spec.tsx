@@ -11,9 +11,9 @@ describe('Home page', () => {
     datasetRepository.getTotalDatasetsCount = cy.stub().resolves(totalDatasetsCount)
   })
 
-  it('renders hello dataverse title', () => {
+  it('renders Root title', () => {
     cy.customMount(<Home datasetRepository={datasetRepository} />)
-    cy.findByRole('heading').should('contain.text', 'Hello Dataverse')
+    cy.findByRole('heading').should('contain.text', 'Root')
   })
 
   it('renders the datasets list', () => {
