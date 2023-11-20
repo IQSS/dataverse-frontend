@@ -10,17 +10,18 @@ import {
   ReadError
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
-import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 import { TotalDatasetsCount } from '../../domain/models/TotalDatasetsCount'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
+import { DatasetPreview } from '../../domain/models/DatasetPreview'
+import { DatasetPreviewMother } from '../../../../tests/component/dataset/domain/models/DatasetPreviewMother'
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
   // eslint-disable-next-line unused-imports/no-unused-vars
-  getAll(paginationInfo: DatasetPaginationInfo): Promise<Dataset[]> {
+  getAll(paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
     // TODO - Implement using the js-dataverse-client
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(DatasetMother.createMany(200))
+        resolve(DatasetPreviewMother.createMany(200))
       }, 1000)
     })
   }

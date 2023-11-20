@@ -1,4 +1,4 @@
-import { useDatasets } from '../useDatasets'
+import { useDatasets } from './useDatasets'
 import styles from './DatasetsList.module.scss'
 import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
 import { useState } from 'react'

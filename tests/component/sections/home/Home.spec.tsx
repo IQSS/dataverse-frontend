@@ -1,10 +1,10 @@
 import { Home } from '../../../../src/sections/home/Home'
 import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
-import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
+import { DatasetPreviewMother } from '../../dataset/domain/models/DatasetPreviewMother'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const totalDatasetsCount = 10
-const datasets = DatasetMother.createMany(totalDatasetsCount)
+const datasets = DatasetPreviewMother.createMany(totalDatasetsCount)
 describe('Home page', () => {
   beforeEach(() => {
     datasetRepository.getAll = cy.stub().resolves(datasets)

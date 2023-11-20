@@ -3,13 +3,15 @@ import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepo
 import { DatasetMother } from '../../../tests/component/dataset/domain/models/DatasetMother'
 import { TotalDatasetsCount } from '../../dataset/domain/models/TotalDatasetsCount'
 import { DatasetPaginationInfo } from '../../dataset/domain/models/DatasetPaginationInfo'
+import { DatasetPreview } from '../../dataset/domain/models/DatasetPreview'
+import { DatasetPreviewMother } from '../../../tests/component/dataset/domain/models/DatasetPreviewMother'
 
 export class DatasetMockRepository implements DatasetRepository {
   // eslint-disable-next-line unused-imports/no-unused-vars
-  getAll(paginationInfo: DatasetPaginationInfo): Promise<Dataset[]> {
+  getAll(paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(DatasetMother.createMany(paginationInfo.pageSize))
+        resolve(DatasetPreviewMother.createMany(paginationInfo.pageSize))
       }, 1000)
     })
   }

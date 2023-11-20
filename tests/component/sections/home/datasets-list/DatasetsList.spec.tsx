@@ -1,11 +1,11 @@
 import { DatasetRepository } from '../../../../../src/dataset/domain/repositories/DatasetRepository'
-import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { DatasetsList } from '../../../../../src/sections/home/datasets-list/DatasetsList'
 import { DatasetPaginationInfo } from '../../../../../src/dataset/domain/models/DatasetPaginationInfo'
+import { DatasetPreviewMother } from '../../../dataset/domain/models/DatasetPreviewMother'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const totalDatasetsCount = 200
-const datasets = DatasetMother.createMany(totalDatasetsCount)
+const datasets = DatasetPreviewMother.createMany(totalDatasetsCount)
 describe('Datasets List', () => {
   beforeEach(() => {
     datasetRepository.getAll = cy.stub().resolves(datasets)

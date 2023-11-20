@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
-import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { Dataset } from '../../dataset/domain/models/Dataset'
-import { getDatasets } from '../../dataset/domain/useCases/getDatasets'
-import { getTotalDatasetsCount } from '../../dataset/domain/useCases/getTotalDatasetsCount'
-import { TotalDatasetsCount } from '../../dataset/domain/models/TotalDatasetsCount'
-import { DatasetPaginationInfo } from '../../dataset/domain/models/DatasetPaginationInfo'
+import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
+import { getDatasets } from '../../../dataset/domain/useCases/getDatasets'
+import { getTotalDatasetsCount } from '../../../dataset/domain/useCases/getTotalDatasetsCount'
+import { TotalDatasetsCount } from '../../../dataset/domain/models/TotalDatasetsCount'
+import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPaginationInfo'
+import { DatasetPreview } from '../../../dataset/domain/models/DatasetPreview'
 
 export function useDatasets(
   datasetRepository: DatasetRepository,
   onPaginationInfoChange: (paginationInfo: DatasetPaginationInfo) => void,
   paginationInfo: DatasetPaginationInfo
 ) {
-  const [datasets, setDatasets] = useState<Dataset[]>([])
+  const [datasets, setDatasets] = useState<DatasetPreview[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [totalDatasetsCount, setTotalDatasetsCount] = useState<TotalDatasetsCount>()
 
@@ -35,7 +35,7 @@ export function useDatasets(
         return
       }
       return getDatasets(datasetRepository, paginationInfo.withTotal(totalDatasetsCount))
-        .then((datasets: Dataset[]) => {
+        .then((datasets: DatasetPreview[]) => {
           setDatasets(datasets)
           setIsLoading(false)
           return datasets
