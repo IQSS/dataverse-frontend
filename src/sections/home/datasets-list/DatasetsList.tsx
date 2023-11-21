@@ -5,6 +5,8 @@ import { useState } from 'react'
 import { PaginationResultsInfo } from '../../shared/pagination/PaginationResultsInfo'
 import { PaginationControls } from '../../shared/pagination/PaginationControls'
 import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPaginationInfo'
+import { LinkToPage } from '../../shared/link-to-page/LinkToPage'
+import { Route } from '../../Route.enum'
 
 interface DatasetsListProps {
   datasetRepository: DatasetRepository
@@ -22,7 +24,9 @@ export function DatasetsList({ datasetRepository }: DatasetsListProps) {
       </div>
       {datasets.map((dataset) => (
         <article key={dataset.persistentId}>
-          <a href={`/datasets?persistentId=${dataset.persistentId}`}>{dataset.title}</a>
+          <LinkToPage page={Route.DATASETS} searchParams={{ persistentId: dataset.persistentId }}>
+            {dataset.title}
+          </LinkToPage>
         </article>
       ))}
       <PaginationControls

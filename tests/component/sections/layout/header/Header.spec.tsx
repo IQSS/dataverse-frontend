@@ -11,6 +11,17 @@ describe('Header component', () => {
     userRepository.removeAuthenticated = cy.stub().resolves()
   })
 
+  it('displays the brand', () => {
+    cy.customMount(
+      <SessionProvider repository={userRepository}>
+        <Header />
+      </SessionProvider>
+    )
+
+    cy.findByRole('link', { name: /Dataverse/ }).should('exist')
+    cy.findByRole('link').should('have.attr', 'href', '/spa/')
+  })
+
   it('displays the user name when the user is logged in', () => {
     cy.customMount(
       <SessionProvider repository={userRepository}>
