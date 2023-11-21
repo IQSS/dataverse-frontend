@@ -9,10 +9,12 @@ import { LinkToPage } from '../../shared/link-to-page/LinkToPage'
 import { Route } from '../../Route.enum'
 import { useLoading } from '../../loading/LoadingContext'
 import { DatasetsListSkeleton } from './DatasetsListSkeleton'
+import { NoDatasetsMessage } from './NoDatasetsMessage'
 
 interface DatasetsListProps {
   datasetRepository: DatasetRepository
 }
+const NO_DATASETS = 0
 export function DatasetsList({ datasetRepository }: DatasetsListProps) {
   const { setIsLoading } = useLoading()
   const [paginationInfo, setPaginationInfo] = useState<DatasetPaginationInfo>(
@@ -30,21 +32,29 @@ export function DatasetsList({ datasetRepository }: DatasetsListProps) {
 
   return (
     <section className={styles.container}>
-      <div>
-        <PaginationResultsInfo paginationInfo={paginationInfo} />
-      </div>
-      {datasets.map((dataset) => (
-        <article key={dataset.persistentId}>
-          <LinkToPage page={Route.DATASETS} searchParams={{ persistentId: dataset.persistentId }}>
-            {dataset.title}
-          </LinkToPage>
-        </article>
-      ))}
-      <PaginationControls
-        onPaginationInfoChange={setPaginationInfo}
-        initialPaginationInfo={paginationInfo}
-        showPageSizeSelector={false}
-      />
+      {datasets.length === NO_DATASETS ? (
+        <NoDatasetsMessage />
+      ) : (
+        <>
+          <div>
+            <PaginationResultsInfo paginationInfo={paginationInfo} />
+          </div>
+          {datasets.map((dataset) => (
+            <article key={dataset.persistentId}>
+              <LinkToPage
+                page={Route.DATASETS}
+                searchParams={{ persistentId: dataset.persistentId }}>
+                {dataset.title}
+              </LinkToPage>
+            </article>
+          ))}
+          <PaginationControls
+            onPaginationInfoChange={setPaginationInfo}
+            initialPaginationInfo={paginationInfo}
+            showPageSizeSelector={false}
+          />
+        </>
+      )}
     </section>
   )
 }

@@ -4,6 +4,7 @@ import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
 import { DatasetLoadingMockRepository } from '../dataset/DatasetLoadingMockRepository'
+import { NoDatasetsMockRepository } from '../dataset/NoDatasetsMockRepository'
 
 const meta: Meta<typeof Home> = {
   title: 'Pages/Home',
@@ -20,4 +21,8 @@ export const Default: Story = {
 
 export const Loading: Story = {
   render: () => <Home datasetRepository={new DatasetLoadingMockRepository()} />
+}
+
+export const NoResults: Story = {
+  render: () => <Home datasetRepository={new NoDatasetsMockRepository()} />
 }

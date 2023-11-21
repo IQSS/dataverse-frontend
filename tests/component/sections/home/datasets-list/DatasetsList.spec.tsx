@@ -21,6 +21,13 @@ describe('Datasets List', () => {
     })
   })
 
+  it('renders no datasets message when there are no datasets', () => {
+    datasetRepository.getAll = cy.stub().resolves([])
+    cy.customMount(<DatasetsList datasetRepository={datasetRepository} />)
+
+    cy.findByText(/This dataverse currently has no datasets./).should('exist')
+  })
+
   it('renders the datasets list', () => {
     cy.customMount(<DatasetsList datasetRepository={datasetRepository} />)
 

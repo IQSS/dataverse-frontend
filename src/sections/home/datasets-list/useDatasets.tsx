@@ -29,7 +29,7 @@ export function useDatasets(
       })
   }
   const fetchDatasets = (totalDatasetsCount: TotalDatasetsCount) => {
-    if (totalDatasetsCount) {
+    if (typeof totalDatasetsCount !== 'undefined') {
       if (totalDatasetsCount === 0) {
         setIsLoading(false)
         return
