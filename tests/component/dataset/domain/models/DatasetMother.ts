@@ -10,10 +10,13 @@ import {
   DatasetPermissions,
   DatasetPublishingStatus,
   DatasetVersion,
-  FileDownloadSize,
   MetadataBlockName
 } from '../../../../../src/dataset/domain/models/Dataset'
-import { FileDownloadSizeMode } from '@iqss/dataverse-client-javascript'
+import {
+  FileDownloadSize,
+  FileDownloadSizeMode,
+  FileSizeUnit
+} from '../../../../../src/files/domain/models/File'
 
 export class DatasetVersionMother {
   static create(props?: Partial<DatasetVersion>): DatasetVersion {
@@ -189,19 +192,19 @@ export class DatasetLockMother {
 
 export class DatasetFileDownloadSizeMother {
   static create(props?: Partial<FileDownloadSize>): FileDownloadSize {
-    return {
-      size: faker.datatype.number(),
-      fileDownloadSizeMode: faker.helpers.arrayElement(Object.values(FileDownloadSizeMode)),
-      ...props
-    }
+    return new FileDownloadSize(
+      props?.value ?? faker.datatype.number(),
+      props?.unit ?? faker.helpers.arrayElement(Object.values(FileSizeUnit)),
+      props?.mode ?? faker.helpers.arrayElement(Object.values(FileDownloadSizeMode))
+    )
   }
 
   static createArchival(): FileDownloadSize {
-    return this.create({ fileDownloadSizeMode: FileDownloadSizeMode.ARCHIVAL })
+    return this.create({ mode: FileDownloadSizeMode.ARCHIVAL })
   }
 
   static createOriginal(): FileDownloadSize {
-    return this.create({ fileDownloadSizeMode: FileDownloadSizeMode.ORIGINAL })
+    return this.create({ mode: FileDownloadSizeMode.ORIGINAL })
   }
 }
 
@@ -463,8 +466,8 @@ export class DatasetMother {
       hasValidTermsOfAccess: true,
       hasOneTabularFileAtLeast: true,
       fileDownloadSizes: [
-        { size: 219829, fileDownloadSizeMode: FileDownloadSizeMode.ORIGINAL },
-        { size: 253629, fileDownloadSizeMode: FileDownloadSizeMode.ARCHIVAL }
+        new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadSizeMode.ORIGINAL),
+        new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadSizeMode.ARCHIVAL)
       ],
       isValid: true,
       ...props

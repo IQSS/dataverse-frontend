@@ -1,4 +1,5 @@
 import { AlertVariant } from '@iqss/dataverse-design-system/dist/components/alert/AlertVariant'
+import { FileDownloadSize } from '../../../files/domain/models/File'
 
 export enum DatasetLabelSemanticMeaning {
   DATASET = 'dataset',
@@ -278,17 +279,6 @@ export enum DatasetLockReason {
 export interface PrivateUrl {
   token: string
   urlSnippet: string
-}
-
-export enum FileDownloadSizeMode {
-  ALL = 'All',
-  ORIGINAL = 'Original',
-  ARCHIVAL = 'Archival'
-}
-
-export interface FileDownloadSize {
-  size: number
-  fileDownloadSizeMode: FileDownloadSizeMode
 }
 
 export class Dataset {

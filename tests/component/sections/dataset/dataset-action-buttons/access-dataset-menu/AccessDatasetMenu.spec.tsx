@@ -85,7 +85,6 @@ describe('AccessDatasetMenu', () => {
     const version = DatasetVersionMother.createReleased()
     const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
     const fileDownloadSizes = [DatasetFileDownloadSizeMother.createOriginal()]
-    //  const menuItemName = 'Download ZIP' + ' (' + formatFileSize(fileDownloadSizes[0].size) + ')'
     cy.customMount(
       <AccessDatasetMenu
         fileDownloadSizes={fileDownloadSizes}
@@ -96,7 +95,7 @@ describe('AccessDatasetMenu', () => {
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Access Dataset' }).click()
-    cy.findByText(/Download ZIP \(\d+(\.\d+)? KB\)/).should('exist')
+    cy.findByText(/Download ZIP \(\d+(\.\d+)? (B|KB|MB|GB|TB|PB)\)/).should('exist')
   })
   it('displays two dropdown options if there is at least one', () => {
     const version = DatasetVersionMother.createReleased()
@@ -115,7 +114,7 @@ describe('AccessDatasetMenu', () => {
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Access Dataset' }).click()
-    cy.findByText(/Original Format ZIP \(\d+(\.\d+)? KB\)/).should('exist')
-    cy.findByText(/Archive Format \(\.tab\) ZIP \(\d+(\.\d+)? KB\)/).should('exist')
+    cy.findByText(/Original Format ZIP \(\d+(\.\d+)? (B|KB|MB|GB|TB|PB)\)/).should('exist')
+    cy.findByText(/Archive Format \(\.tab\) ZIP \(\d+(\.\d+)? (B|KB|MB|GB|TB|PB)\)/).should('exist')
   })
 })
