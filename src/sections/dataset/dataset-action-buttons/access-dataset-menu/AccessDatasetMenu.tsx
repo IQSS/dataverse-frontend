@@ -38,6 +38,7 @@ export function AccessDatasetMenu({
 
   const handleDownload = (type: FileDownloadSizeMode) => {
     //TODO: implement download feature
+    console.log('downloading file ' + type)
   }
 
   interface DatasetDownloadOptionsProps {
