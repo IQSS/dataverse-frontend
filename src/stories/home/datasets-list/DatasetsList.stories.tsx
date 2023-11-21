@@ -5,7 +5,6 @@ import { DatasetMockRepository } from '../../dataset/DatasetMockRepository'
 import { DatasetsList } from '../../../sections/home/datasets-list/DatasetsList'
 import { DatasetLoadingMockRepository } from '../../dataset/DatasetLoadingMockRepository'
 import { NoDatasetsMockRepository } from '../../dataset/NoDatasetsMockRepository'
-import { MemoryRouter } from 'react-router-dom'
 
 const meta: Meta<typeof Home> = {
   title: 'Sections/Home/DatasetsList',
@@ -17,11 +16,7 @@ export default meta
 type Story = StoryObj<typeof Home>
 
 export const Default: Story = {
-  render: () => (
-    <MemoryRouter>
-      <DatasetsList datasetRepository={new DatasetMockRepository()} />
-    </MemoryRouter>
-  )
+  render: () => <DatasetsList datasetRepository={new DatasetMockRepository()} />
 }
 
 export const Loading: Story = {

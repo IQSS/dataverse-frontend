@@ -408,7 +408,7 @@ export class DatasetMother {
             datasetContact: [
               {
                 datasetContactName: 'Admin, Dataverse',
-                datasetContactEmail: ''
+                datasetContactEmail: 'admin@dataverse.org'
               }
             ],
             dsDescription: [
