@@ -12,6 +12,15 @@ describe('Datasets List', () => {
     datasetRepository.getTotalDatasetsCount = cy.stub().resolves(totalDatasetsCount)
   })
 
+  it('renders skeleton while loading', () => {
+    cy.customMount(<DatasetsList datasetRepository={datasetRepository} />)
+
+    cy.findByTestId('datasets-list-skeleton').should('exist')
+    datasets.forEach((dataset) => {
+      cy.findByRole('link', { name: dataset.title }).should('not.exist')
+    })
+  })
+
   it('renders the datasets list', () => {
     cy.customMount(<DatasetsList datasetRepository={datasetRepository} />)
 

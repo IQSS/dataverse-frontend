@@ -1,21 +1,32 @@
 import { useDatasets } from './useDatasets'
 import styles from './DatasetsList.module.scss'
 import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PaginationResultsInfo } from '../../shared/pagination/PaginationResultsInfo'
 import { PaginationControls } from '../../shared/pagination/PaginationControls'
 import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPaginationInfo'
 import { LinkToPage } from '../../shared/link-to-page/LinkToPage'
 import { Route } from '../../Route.enum'
+import { useLoading } from '../../loading/LoadingContext'
+import { DatasetsListSkeleton } from './DatasetsListSkeleton'
 
 interface DatasetsListProps {
   datasetRepository: DatasetRepository
 }
 export function DatasetsList({ datasetRepository }: DatasetsListProps) {
+  const { setIsLoading } = useLoading()
   const [paginationInfo, setPaginationInfo] = useState<DatasetPaginationInfo>(
     new DatasetPaginationInfo()
   )
-  const { datasets } = useDatasets(datasetRepository, setPaginationInfo, paginationInfo)
+  const { datasets, isLoading } = useDatasets(datasetRepository, setPaginationInfo, paginationInfo)
+
+  useEffect(() => {
+    setIsLoading(isLoading)
+  }, [isLoading])
+
+  if (isLoading) {
+    return <DatasetsListSkeleton />
+  }
 
   return (
     <section className={styles.container}>
