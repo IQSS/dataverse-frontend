@@ -22,7 +22,6 @@ export function AccessDatasetMenu({
   hasOneTabularFileAtLeast,
   fileDownloadSizes
 }: AccessDatasetMenuProps) {
-  console.log('fileDownloadSizes' + JSON.stringify(fileDownloadSizes))
   if (
     !permissions.canDownloadFiles ||
     (version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED &&
