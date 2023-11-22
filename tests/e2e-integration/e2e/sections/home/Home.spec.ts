@@ -17,7 +17,7 @@ describe('Home Page', () => {
     cy.findAllByText(/Root/i).should('exist')
 
     cy.findByText(/Dataverse Admin/i).click()
-    cy.findByRole('link', { name: /Log Out/i }).click()
+    cy.findByRole('button', { name: /Log Out/i }).click()
     cy.findByText(/Dataverse Admin/i).should('not.exist')
   })
 })
