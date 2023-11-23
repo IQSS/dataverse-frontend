@@ -166,7 +166,7 @@ export class DatasetPermissionsMother {
 export class DatasetLockMother {
   static create(props?: Partial<DatasetLock>): DatasetLock {
     return {
-      id: faker.datatype.number(),
+      userPersistentId: faker.internet.userName(),
       reason: faker.helpers.arrayElement(Object.values(DatasetLockReason)),
       ...props
     }
@@ -404,7 +404,7 @@ export class DatasetMother {
             datasetContact: [
               {
                 datasetContactName: 'Admin, Dataverse',
-                datasetContactEmail: ''
+                datasetContactEmail: 'admin@dataverse.org'
               }
             ],
             dsDescription: [

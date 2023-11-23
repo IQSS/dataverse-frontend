@@ -1,6 +1,7 @@
 import newDatasetData from '../../fixtures/dataset-finch1.json'
 import { DataverseApiHelper } from '../DataverseApiHelper'
 import { FileData } from '../files/FileHelper'
+import { DatasetLockReason } from '../../../../src/dataset/domain/models/Dataset'
 
 export interface DatasetResponse {
   persistentId: string
@@ -145,5 +146,16 @@ export class DatasetHelper extends DataverseApiHelper {
       fieldType,
       'text/plain'
     )
+  }
+
+  static async lock(
+    id: string,
+    reason: DatasetLockReason
+  ): Promise<{
+    status: string
+  }> {
+    return this.request<{
+      status: string
+    }>(`/datasets/${id}/lock/${reason}`, 'POST')
   }
 }

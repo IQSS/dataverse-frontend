@@ -4,13 +4,16 @@ import { EditDatasetPermissionsMenu } from './EditDatasetPermissionsMenu'
 import { DeleteDatasetButton } from './DeleteDatasetButton'
 import { DeaccessionDatasetButton } from './DeaccessionDatasetButton'
 import { useTranslation } from 'react-i18next'
+import { useSession } from '../../../session/SessionContext'
 
 interface EditDatasetMenuProps {
   dataset: Dataset
 }
 
 export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
-  if (!dataset.permissions.canUpdateDataset) {
+  const { user } = useSession()
+
+  if (!user || !dataset.permissions.canUpdateDataset) {
     return <></>
   }
 
@@ -21,7 +24,7 @@ export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
       title={t('datasetActionButtons.editDataset.title')}
       asButtonGroup
       variant="secondary"
-      disabled={dataset.isLockedFromEdits}>
+      disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
       <DropdownButtonItem disabled={!dataset.hasValidTermsOfAccess}>
         {t('datasetActionButtons.editDataset.filesUpload')}
       </DropdownButtonItem>
