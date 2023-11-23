@@ -69,7 +69,7 @@ const expectedDataset = {
     { semanticMeaning: 'dataset', value: 'Draft' },
     { semanticMeaning: 'warning', value: 'Unpublished' }
   ],
-  alerts: [{ variant: 'warning', message: 'draftVersion', dynamicFields: undefined }],
+  alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
       name: 'citation',
@@ -148,11 +148,11 @@ const expectedDatasetAlternateVersion = {
   alerts: [
     {
       variant: 'warning',
-      message: 'draftVersion',
+      messageKey: 'draftVersion',
       dynamicFields: undefined
     },
     {
-      message: 'requestedVersionNotFoundShowDraft',
+      messageKey: 'requestedVersionNotFoundShowDraft',
       variant: 'warning',
       dynamicFields: { requestedVersion: '4.0' }
     }
