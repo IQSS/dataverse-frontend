@@ -148,7 +148,7 @@ export class FileJSDataverseRepository implements FileRepository {
       })
   }
 
-  getById(id: number): Promise<string | undefined> {
+  getOriginalFileById(id: number): Promise<string | undefined> {
     return fetch(`${FileJSDataverseRepository.DATAVERSE_BACKEND_URL}/api/access/datafile/${id}`)
       .then((response) => {
         if (!response.ok) {

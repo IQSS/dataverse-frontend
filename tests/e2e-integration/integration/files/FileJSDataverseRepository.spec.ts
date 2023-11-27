@@ -264,7 +264,6 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
-          console.log(files)
           expect(files[0].thumbnail).to.not.be.undefined
         })
     })
@@ -733,6 +732,36 @@ describe('File JSDataverse Repository', () => {
         )
         .then((totalDownloadSize) => {
           expect(totalDownloadSize).to.deep.equal(expectedTotalDownloadSize)
+        })
+    })
+  })
+
+  describe('getOriginalFileById', () => {
+    it('gets the original file by id', async () => {
+      const file = FileHelper.create('csv', {
+        description: 'Some description',
+        categories: ['category'],
+        tabIngest: 'true'
+      })
+      const dataset = await DatasetHelper.createWithFiles([file]).then((datasetResponse) =>
+        datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      )
+      if (!dataset) throw new Error('Dataset not found')
+
+      await TestsUtils.wait(2500) // wait for the files to be ingested
+
+      const files = await fileRepository.getAllByDatasetPersistentId(
+        dataset.persistentId,
+        dataset.version
+      )
+
+      await fileRepository
+        .getOriginalFileById(files[0].id)
+        .then((originalFile) => {
+          expect(originalFile).to.not.be.undefined
+        })
+        .catch((error) => {
+          throw error
         })
     })
   })

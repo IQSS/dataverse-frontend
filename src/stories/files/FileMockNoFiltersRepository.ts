@@ -62,7 +62,7 @@ export class FileMockNoFiltersRepository implements FileRepository {
   }
 
   // eslint-disable-next-line unused-imports/no-unused-vars
-  getById(id: number): Promise<string | undefined> {
+  getOriginalFileById(id: number): Promise<string | undefined> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FileMother.createToDownload())

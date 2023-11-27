@@ -80,7 +80,7 @@ describe('FileNonTabularDownloadOptions', () => {
   it('calls the file repository to get the original file', () => {
     const fileRepository: FileRepository = {} as FileRepository
     const fileToDownload = FileMother.createToDownload()
-    fileRepository.getById = cy.stub().resolves(fileToDownload)
+    fileRepository.getOriginalFileById = cy.stub().resolves(fileToDownload)
 
     cy.customMount(
       <FileDownloadHelperProvider repository={fileRepository}>
@@ -88,6 +88,6 @@ describe('FileNonTabularDownloadOptions', () => {
       </FileDownloadHelperProvider>
     )
 
-    cy.wrap(fileRepository.getById).should('be.calledOnceWith', fileNonTabular.id)
+    cy.wrap(fileRepository.getOriginalFileById).should('be.calledOnceWith', fileNonTabular.id)
   })
 })
