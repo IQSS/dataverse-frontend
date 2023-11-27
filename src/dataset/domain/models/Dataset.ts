@@ -315,6 +315,36 @@ export class Dataset {
     return this.isLocked && !(lockedReasonIsInReview && this.permissions.canPublishDataset)
   }
 
+  public get isLockedFromFileDownload(): boolean {
+    if (!this.isLocked) {
+      return false
+    }
+
+    if (
+      this.locks.some((lock) =>
+        [
+          DatasetLockReason.FINALIZE_PUBLICATION,
+          DatasetLockReason.DCM_UPLOAD,
+          DatasetLockReason.INGEST
+        ].includes(lock.reason)
+      )
+    ) {
+      return true
+    }
+
+    if (
+      this.locks.some((lock) => lock.reason === DatasetLockReason.IN_REVIEW) &&
+      !this.permissions.canUpdateDataset
+    ) {
+      return true
+    }
+
+    // If the lock reason is workflow and the workflow userId is different than the current user, then is locked
+    // TODO - Ask how we want to manage pending workflows
+
+    return false
+  }
+
   static Builder = class {
     public readonly labels: DatasetLabel[] = []
     public readonly alerts: Alert[] = []
