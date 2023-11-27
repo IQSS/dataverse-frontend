@@ -148,6 +148,13 @@ export class FileMother {
     )
   }
 
+  static createToDownload(): string {
+    const blob = new Blob(['Name,Age,Location\nJohn,25,New York\nJane,30,San Francisco'], {
+      type: 'text/csv'
+    })
+    return URL.createObjectURL(blob)
+  }
+
   static createMany(quantity: number, props?: Partial<File>): File[] {
     return Array.from({ length: quantity }).map(() => this.create(props))
   }

@@ -10,6 +10,8 @@ import {
   DatasetLockMother,
   DatasetMother
 } from '../../../../../../../../dataset/domain/models/DatasetMother'
+import { FileDownloadHelperProvider } from '../../../../../../../../../../src/sections/file/file-download-helper/FileDownloadHelperProvider'
+import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
 
 const fileNonTabular = FileMother.create({
   tabularData: undefined,
@@ -73,5 +75,19 @@ describe('FileNonTabularDownloadOptions', () => {
     )
 
     cy.findByRole('button', { name: 'Plain Text' }).should('have.class', 'disabled')
+  })
+
+  it('calls the file repository to get the original file', () => {
+    const fileRepository: FileRepository = {} as FileRepository
+    const fileToDownload = FileMother.createToDownload()
+    fileRepository.getById = cy.stub().resolves(fileToDownload)
+
+    cy.customMount(
+      <FileDownloadHelperProvider repository={fileRepository}>
+        <FileNonTabularDownloadOptions file={fileNonTabular} />
+      </FileDownloadHelperProvider>
+    )
+
+    cy.wrap(fileRepository.getById).should('be.calledOnceWith', fileNonTabular.id)
   })
 })

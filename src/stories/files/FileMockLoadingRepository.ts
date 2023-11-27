@@ -57,4 +57,13 @@ export class FileMockLoadingRepository implements FileRepository {
       }, 1000)
     })
   }
+
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  getById(id: number): Promise<undefined> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(undefined)
+      }, 1000)
+    })
+  }
 }

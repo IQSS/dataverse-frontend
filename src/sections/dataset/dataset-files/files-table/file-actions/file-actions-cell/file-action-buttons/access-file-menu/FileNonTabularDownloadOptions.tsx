@@ -3,6 +3,7 @@ import FileTypeToFriendlyTypeMap from '../../../../../../../../files/domain/mode
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useDataset } from '../../../../../../DatasetContext'
 import { useTranslation } from 'react-i18next'
+import { useFileDownload } from '../../../../../../../file/file-download-helper/useFileDownload'
 
 interface FileNonTabularDownloadOptionsProps {
   file: File
@@ -11,6 +12,7 @@ interface FileNonTabularDownloadOptionsProps {
 export function FileNonTabularDownloadOptions({ file }: FileNonTabularDownloadOptionsProps) {
   const { t } = useTranslation('files')
   const { dataset } = useDataset()
+  const { originalFile } = useFileDownload(file.id)
   const originalFileFormatIsKnown =
     file.type.toDisplayFormat() !== FileTypeToFriendlyTypeMap.unknown
 
@@ -20,6 +22,8 @@ export function FileNonTabularDownloadOptions({ file }: FileNonTabularDownloadOp
 
   return (
     <DropdownButtonItem
+      href={originalFile}
+      download={file.name}
       disabled={
         file.ingest.status === FileIngestStatus.IN_PROGRESS ||
         (dataset && dataset.isLockedFromFileDownload)
