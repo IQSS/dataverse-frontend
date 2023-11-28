@@ -28,8 +28,8 @@ export class DatasetFactory {
             <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
               <AnonymizedProvider>
                 <AlertProvider>
-                <DatasetWithSearchParams />
-              </AlertProvider>
+                  <DatasetWithSearchParams />
+                </AlertProvider>
               </AnonymizedProvider>
             </MetadataBlockInfoProvider>
           </NotImplementedModalProvider>

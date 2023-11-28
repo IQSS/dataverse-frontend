@@ -35,8 +35,8 @@ export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
       asButtonGroup
       variant="secondary"
       disabled={
-          dataset.checkIsLockedFromPublishing(user.persistentId) ||
-          !dataset.hasValidTermsOfAccess ||
+        dataset.checkIsLockedFromPublishing(user.persistentId) ||
+        !dataset.hasValidTermsOfAccess ||
         !dataset.isValid
       }>
       <DropdownButtonItem>{t('datasetActionButtons.publish.publish')}</DropdownButtonItem>
