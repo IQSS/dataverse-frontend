@@ -158,12 +158,13 @@ export class File {
     readonly labels: FileLabel[],
     public readonly isDeleted: boolean,
     public readonly ingest: FileIngest,
-    readonly checksum?: FileChecksum,
+    public readonly originalFileDownloadUrl: string,
     public thumbnail?: string,
     readonly directory?: string,
     readonly embargo?: FileEmbargo,
     readonly tabularData?: FileTabularData,
-    readonly description?: string
+    readonly description?: string,
+    readonly checksum?: FileChecksum
   ) {}
 
   getLink(): string {

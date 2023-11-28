@@ -8,7 +8,6 @@ import { FileUserPermissionsMother } from '../../../tests/component/files/domain
 import { FileUserPermissions } from '../../files/domain/models/FileUserPermissions'
 import { DatasetVersion } from '../../dataset/domain/models/Dataset'
 import { FileCriteria } from '../../files/domain/models/FileCriteria'
-import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
 
 export class FileMockRepository implements FileRepository {
   // eslint-disable-next-line unused-imports/no-unused-vars
@@ -57,15 +56,6 @@ export class FileMockRepository implements FileRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FileUserPermissionsMother.create())
-      }, 1000)
-    })
-  }
-
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  getOriginalFileById(id: number): Promise<string | undefined> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(FileMother.createToDownload())
       }, 1000)
     })
   }

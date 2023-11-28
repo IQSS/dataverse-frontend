@@ -36,36 +36,39 @@ const fileRepository = new FileJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
 const dateNow = new Date()
 dateNow.setHours(2, 0, 0, 0)
-const expectedFile = new File(
-  1,
-  { number: 1, publishingStatus: FilePublishingStatus.DRAFT },
-  'blob',
-  {
-    restricted: false,
-    latestVersionRestricted: false,
-    canBeRequested: false,
-    requested: false
-  },
-  new FileType('text/plain'),
-  new FileSize(25, FileSizeUnit.BYTES),
-  {
-    type: FileDateType.DEPOSITED,
-    date: dateNow
-  },
-  0,
-  [],
-  false,
-  { status: FileIngestStatus.NONE },
-  {
-    algorithm: 'MD5',
-    value: '0187a54071542738aa47939e8218e5f2'
-  },
-  undefined,
-  undefined,
-  undefined,
-  undefined,
-  'This is an example file'
-)
+const fileData = (id: number) => {
+  return new File(
+    id,
+    { number: 1, publishingStatus: FilePublishingStatus.DRAFT },
+    'blob',
+    {
+      restricted: false,
+      latestVersionRestricted: false,
+      canBeRequested: false,
+      requested: false
+    },
+    new FileType('text/plain'),
+    new FileSize(25, FileSizeUnit.BYTES),
+    {
+      type: FileDateType.DEPOSITED,
+      date: dateNow
+    },
+    0,
+    [],
+    false,
+    { status: FileIngestStatus.NONE },
+    `/api/access/datafile/${id}`,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    'This is an example file',
+    {
+      algorithm: 'MD5',
+      value: '0187a54071542738aa47939e8218e5f2'
+    }
+  )
+}
 
 describe('File JSDataverse Repository', () => {
   before(() => {
@@ -87,6 +90,7 @@ describe('File JSDataverse Repository', () => {
         .then((files) => {
           files.forEach((file, index) => {
             const expectedFileNames = ['blob', 'blob-1', 'blob-2']
+            const expectedFile = fileData(file.id)
             expect(file.name).to.deep.equal(expectedFileNames[index])
             expect(file.version).to.deep.equal(expectedFile.version)
             expect(file.access).to.deep.equal(expectedFile.access)
@@ -100,6 +104,7 @@ describe('File JSDataverse Repository', () => {
             expect(file.embargo).to.deep.equal(expectedFile.embargo)
             expect(file.tabularData).to.deep.equal(expectedFile.tabularData)
             expect(file.description).to.deep.equal(expectedFile.description)
+            expect(file.originalFileDownloadUrl).to.deep.equal(expectedFile.originalFileDownloadUrl)
           })
         })
     })
@@ -145,13 +150,13 @@ describe('File JSDataverse Repository', () => {
           )
         )
         .then((files) => {
-          const expectedPublishedFile = expectedFile
+          const expectedPublishedFile = fileData(files[0].id)
           expectedPublishedFile.version.publishingStatus = FilePublishingStatus.RELEASED
           expectedPublishedFile.date.type = FileDateType.PUBLISHED
 
           files.forEach((file) => {
             expect(file.version).to.deep.equal(expectedPublishedFile.version)
-            cy.compareDate(file.date.date, expectedFile.date.date)
+            cy.compareDate(file.date.date, fileData(file.id).date.date)
           })
         })
     })
@@ -184,7 +189,7 @@ describe('File JSDataverse Repository', () => {
           )
         )
         .then((files) => {
-          const expectedDeaccessionedFile = expectedFile
+          const expectedDeaccessionedFile = fileData(files[0].id)
           expectedDeaccessionedFile.version.publishingStatus = FilePublishingStatus.DEACCESSIONED
 
           files.forEach((file) => {
@@ -732,36 +737,6 @@ describe('File JSDataverse Repository', () => {
         )
         .then((totalDownloadSize) => {
           expect(totalDownloadSize).to.deep.equal(expectedTotalDownloadSize)
-        })
-    })
-  })
-
-  describe('getOriginalFileById', () => {
-    it('gets the original file by id', async () => {
-      const file = FileHelper.create('csv', {
-        description: 'Some description',
-        categories: ['category'],
-        tabIngest: 'true'
-      })
-      const dataset = await DatasetHelper.createWithFiles([file]).then((datasetResponse) =>
-        datasetRepository.getByPersistentId(datasetResponse.persistentId)
-      )
-      if (!dataset) throw new Error('Dataset not found')
-
-      await TestsUtils.wait(2500) // wait for the files to be ingested
-
-      const files = await fileRepository.getAllByDatasetPersistentId(
-        dataset.persistentId,
-        dataset.version
-      )
-
-      await fileRepository
-        .getOriginalFileById(files[0].id)
-        .then((originalFile) => {
-          expect(originalFile).to.not.be.undefined
-        })
-        .catch((error) => {
-          throw error
         })
     })
   })

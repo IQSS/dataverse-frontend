@@ -7,7 +7,6 @@ import { FileUserPermissions } from '../../files/domain/models/FileUserPermissio
 import { FileUserPermissionsMother } from '../../../tests/component/files/domain/models/FileUserPermissionsMother'
 import { DatasetVersion } from '../../dataset/domain/models/Dataset'
 import { FileCriteria } from '../../files/domain/models/FileCriteria'
-import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
 
 export class FileMockNoFiltersRepository implements FileRepository {
   getAllByDatasetPersistentId(
@@ -57,15 +56,6 @@ export class FileMockNoFiltersRepository implements FileRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(19900)
-      }, 1000)
-    })
-  }
-
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  getOriginalFileById(id: number): Promise<string | undefined> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(FileMother.createToDownload())
       }, 1000)
     })
   }

@@ -10,8 +10,6 @@ import {
   DatasetLockMother,
   DatasetMother
 } from '../../../../../../../../dataset/domain/models/DatasetMother'
-import { FileDownloadHelperProvider } from '../../../../../../../../../../src/sections/file/file-download-helper/FileDownloadHelperProvider'
-import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
 
 const fileNonTabular = FileMother.create({
   tabularData: undefined,
@@ -25,25 +23,27 @@ describe('FileNonTabularDownloadOptions', () => {
     })
     cy.customMount(<FileNonTabularDownloadOptions file={fileNonTabularUnknown} />)
 
-    cy.findByRole('button', { name: 'Original File Format' })
+    cy.findByRole('link', { name: 'Original File Format' })
       .should('exist')
       .should('not.have.class', 'disabled')
+      .should('have.attr', 'href', fileNonTabularUnknown.originalFileDownloadUrl)
   })
 
   it('renders the download options for a non-tabular file', () => {
     cy.customMount(<FileNonTabularDownloadOptions file={fileNonTabular} />)
 
-    cy.findByRole('button', { name: 'Plain Text' })
+    cy.findByRole('link', { name: 'Plain Text' })
       .should('exist')
       .should('not.have.class', 'disabled')
+      .should('have.attr', 'href', fileNonTabular.originalFileDownloadUrl)
   })
 
   it('does not render the download options for a tabular file', () => {
     const fileTabular = FileMother.createWithTabularData()
     cy.customMount(<FileNonTabularDownloadOptions file={fileTabular} />)
 
-    cy.findByRole('button', { name: 'Original File Format' }).should('not.exist')
-    cy.findByRole('button', { name: 'Tab-Delimited' }).should('not.exist')
+    cy.findByRole('link', { name: 'Original File Format' }).should('not.exist')
+    cy.findByRole('link', { name: 'Tab-Delimited' }).should('not.exist')
   })
 
   it('renders the options as disabled when the file ingest is in progress', () => {
@@ -56,7 +56,7 @@ describe('FileNonTabularDownloadOptions', () => {
     })
     cy.customMount(<FileNonTabularDownloadOptions file={fileNonTabularInProgress} />)
 
-    cy.findByRole('button', { name: 'Plain Text' }).should('have.class', 'disabled')
+    cy.findByRole('link', { name: 'Plain Text' }).should('have.class', 'disabled')
   })
 
   it('renders the options as disabled when the dataset is locked from file download', () => {
@@ -74,20 +74,6 @@ describe('FileNonTabularDownloadOptions', () => {
       </DatasetProvider>
     )
 
-    cy.findByRole('button', { name: 'Plain Text' }).should('have.class', 'disabled')
-  })
-
-  it('calls the file repository to get the original file', () => {
-    const fileRepository: FileRepository = {} as FileRepository
-    const fileToDownload = FileMother.createToDownload()
-    fileRepository.getOriginalFileById = cy.stub().resolves(fileToDownload)
-
-    cy.customMount(
-      <FileDownloadHelperProvider repository={fileRepository}>
-        <FileNonTabularDownloadOptions file={fileNonTabular} />
-      </FileDownloadHelperProvider>
-    )
-
-    cy.wrap(fileRepository.getOriginalFileById).should('be.calledOnceWith', fileNonTabular.id)
+    cy.findByRole('link', { name: 'Plain Text' }).should('have.class', 'disabled')
   })
 })

@@ -147,20 +147,4 @@ export class FileJSDataverseRepository implements FileRepository {
         throw new Error(error.message)
       })
   }
-
-  getOriginalFileById(id: number): Promise<string | undefined> {
-    return fetch(`${FileJSDataverseRepository.DATAVERSE_BACKEND_URL}/api/access/datafile/${id}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        return response.blob()
-      })
-      .then((blob) => {
-        return URL.createObjectURL(blob)
-      })
-      .catch(() => {
-        return undefined
-      })
-  }
 }

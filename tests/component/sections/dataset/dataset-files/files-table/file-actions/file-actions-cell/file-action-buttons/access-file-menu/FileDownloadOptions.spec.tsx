@@ -17,7 +17,7 @@ describe('FileDownloadOptions', () => {
   it('renders the download options for a non-tabular file', () => {
     cy.customMount(<FileDownloadOptions file={fileNonTabular} />)
 
-    cy.findByRole('button', { name: 'Plain Text' }).should('exist')
+    cy.findByRole('link', { name: 'Plain Text' }).should('exist')
   })
 
   it('renders the download options for a tabular file', () => {

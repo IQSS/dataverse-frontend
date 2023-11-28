@@ -23,5 +23,4 @@ export interface FileRepository {
     criteria?: FileCriteria
   ) => Promise<number>
   getUserPermissionsById: (id: number) => Promise<FileUserPermissions>
-  getOriginalFileById: (id: number) => Promise<string | undefined>
 }

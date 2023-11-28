@@ -57,13 +57,4 @@ export class FileMockNoDataRepository implements FileRepository {
       }, 1000)
     })
   }
-
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  getOriginalFileById(id: number): Promise<string | undefined> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(undefined)
-      }, 1000)
-    })
-  }
 }

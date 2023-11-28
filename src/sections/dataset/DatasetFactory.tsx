@@ -11,7 +11,6 @@ import { SettingJSDataverseRepository } from '../../settings/infrastructure/Sett
 import { FilePermissionsProvider } from '../file/file-permissions/FilePermissionsProvider'
 import { SettingsProvider } from '../settings/SettingsProvider'
 import { DatasetProvider } from './DatasetProvider'
-import { FileDownloadHelperProvider } from '../file/file-download-helper/FileDownloadHelperProvider'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
@@ -21,17 +20,15 @@ const settingRepository = new SettingJSDataverseRepository()
 export class DatasetFactory {
   static create(): ReactElement {
     return (
-      <FileDownloadHelperProvider repository={fileRepository}>
-        <FilePermissionsProvider repository={fileRepository}>
-          <SettingsProvider repository={settingRepository}>
-            <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
-              <AnonymizedProvider>
-                <DatasetWithSearchParams />
-              </AnonymizedProvider>
-            </MetadataBlockInfoProvider>
-          </SettingsProvider>
-        </FilePermissionsProvider>
-      </FileDownloadHelperProvider>
+      <FilePermissionsProvider repository={fileRepository}>
+        <SettingsProvider repository={settingRepository}>
+          <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
+            <AnonymizedProvider>
+              <DatasetWithSearchParams />
+            </AnonymizedProvider>
+          </MetadataBlockInfoProvider>
+        </SettingsProvider>
+      </FilePermissionsProvider>
     )
   }
 }

@@ -46,14 +46,15 @@ export class JSFileMapper {
       this.toFileDate(jsFile.creationDate, jsFile.publicationDate, jsFile.embargo),
       this.toFileDownloads(),
       this.toFileLabels(jsFile.categories, jsFile.tabularTags),
-      false, // TODO - Implement this when it is added to js-dataverse
-      { status: FileIngestStatus.NONE }, // TODO - Implement this when it is added to js-dataverse
-      this.toFileChecksum(jsFile.checksum),
+      false,
+      { status: FileIngestStatus.NONE },
+      this.toFileOriginalFileDownloadUrl(jsFile.id),
       this.toFileThumbnail(),
       this.toFileDirectory(jsFile.directoryLabel),
       this.toFileEmbargo(jsFile.embargo),
       this.toFileTabularData(),
-      this.toFileDescription(jsFile.description)
+      this.toFileDescription(jsFile.description),
+      this.toFileChecksum(jsFile.checksum)
     )
   }
 
@@ -157,6 +158,10 @@ export class JSFileMapper {
       return { algorithm: jsFileChecksum.type, value: jsFileChecksum.value }
     }
     return undefined
+  }
+
+  static toFileOriginalFileDownloadUrl(id: number): string {
+    return `/api/access/datafile/${id}`
   }
 
   static toFileThumbnail(): undefined {
