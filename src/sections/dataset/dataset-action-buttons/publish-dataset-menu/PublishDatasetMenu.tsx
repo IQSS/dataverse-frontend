@@ -2,6 +2,7 @@ import { Dataset, DatasetPublishingStatus } from '../../../../dataset/domain/mod
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { ChangeCurationStatusMenu } from './ChangeCurationStatusMenu'
 import { useTranslation } from 'react-i18next'
+import { useNotImplementedModal } from '../../../not-implemented/NotImplementedModalContext'
 
 interface PublishDatasetMenuProps {
   dataset: Dataset
@@ -17,10 +18,17 @@ export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
   }
 
   const { t } = useTranslation('dataset')
+  const handleSelect = () => {
+    // TODO - Implement upload files
+    showModal()
+  }
+  const { showModal } = useNotImplementedModal()
+
   return (
     <DropdownButton
       id={`publish-dataset-menu`}
       title={t('datasetActionButtons.publish.title')}
+      onSelect={handleSelect}
       asButtonGroup
       variant="secondary"
       disabled={
