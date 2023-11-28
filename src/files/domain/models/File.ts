@@ -121,10 +121,10 @@ export interface FileLabel {
 }
 
 export class FileType {
-  constructor(readonly value: string) {}
+  constructor(readonly value: string, readonly original?: string) {}
 
   toDisplayFormat(): string {
-    return FileTypeToFriendlyTypeMap[this.value] || this.value
+    return FileTypeToFriendlyTypeMap[this.value] || FileTypeToFriendlyTypeMap.unknown
   }
 }
 

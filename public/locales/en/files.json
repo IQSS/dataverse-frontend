@@ -12,6 +12,7 @@
       "pageSize": "Files per page"
     },
     "tabularData": {
+      "name": "Tabular Data",
       "variables": "Variables",
       "observations": "Observations"
     },
@@ -112,6 +113,14 @@
       "title": "Access File",
       "headers": {
         "fileAccess": "File Access"
+      },
+      "downloadOptions": {
+        "title": "Download Options",
+        "options": {
+          "original": "Original File Format",
+          "RData": "R Data",
+          "tabular": "Tab-Delimited"
+        }
       }
     },
     "editFilesMenu": {

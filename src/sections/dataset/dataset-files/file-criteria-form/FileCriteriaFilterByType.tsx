@@ -41,7 +41,9 @@ export function FileCriteriaFilterByType({
   return (
     <DropdownButton
       id="files-table-filter-by-type"
-      title={`${t('criteria.filterByType.title')}: ${selectedType.toDisplayFormat() ?? 'All'}`}
+      title={`${t('criteria.filterByType.title')}: ${
+        selectedType.value == 'All' ? 'All' : selectedType.toDisplayFormat()
+      }`}
       onSelect={handleTypeChange}
       withSpacing
       variant="secondary">

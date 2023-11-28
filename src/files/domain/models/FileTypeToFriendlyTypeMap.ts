@@ -221,7 +221,8 @@ const MimeTypeDisplay: Record<string, string> = {
   'application/x-docker-file': 'Docker Image File',
   'application/x-vagrant-file': 'Vagrant Image File',
   // Dataverse-specific
-  'application/vnd.dataverse.file-package': 'Dataverse Package'
+  'application/vnd.dataverse.file-package': 'Dataverse Package',
+  unknown: 'Unknown'
 }
 
 export default MimeTypeDisplay

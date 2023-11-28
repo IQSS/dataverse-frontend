@@ -1,11 +1,16 @@
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { JSDatasetMapper } from '../../../../../src/dataset/infrastructure/mappers/JSDatasetMapper'
-import { DatasetVersionState } from '@iqss/dataverse-client-javascript'
+import {
+  DatasetLockType,
+  DatasetVersionState,
+  DatasetLock as JSDatasetLock
+} from '@iqss/dataverse-client-javascript'
 import {
   CitationMetadataBlock,
   DatasetMetadataBlock
 } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
+import { DatasetLockReason } from '../../../../../src/dataset/domain/models/Dataset'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -58,6 +63,13 @@ const jsDatasetPermissions = {
   canDeleteDatasetDraft: true,
   canViewUnpublishedDataset: true
 }
+const jsDatasetLocks: JSDatasetLock[] = [
+  {
+    lockType: DatasetLockType.IN_REVIEW,
+    userId: 'dataverseAdmin',
+    datasetPersistentId: 'doi:10.5072/FK2/B4B2MJ'
+  }
+]
 const expectedDataset = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
@@ -76,7 +88,7 @@ const expectedDataset = {
     { semanticMeaning: 'dataset', value: 'Draft' },
     { semanticMeaning: 'warning', value: 'Unpublished' }
   ],
-  alerts: [{ variant: 'warning', message: 'draftVersion', dynamicFields: undefined }],
+  alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
       name: 'citation',
@@ -123,7 +135,12 @@ const expectedDataset = {
     canManageFilesPermissions: true,
     canDeleteDataset: true
   },
-  locks: [],
+  locks: [
+    {
+      userPersistentId: 'dataverseAdmin',
+      reason: DatasetLockReason.IN_REVIEW
+    }
+  ],
   hasValidTermsOfAccess: true,
   isValid: true,
   isReleased: false,
@@ -155,11 +172,11 @@ const expectedDatasetAlternateVersion = {
   alerts: [
     {
       variant: 'warning',
-      message: 'draftVersion',
+      messageKey: 'draftVersion',
       dynamicFields: undefined
     },
     {
-      message: 'requestedVersionNotFoundShowDraft',
+      messageKey: 'requestedVersionNotFoundShowDraft',
       variant: 'warning',
       dynamicFields: { requestedVersion: '4.0' }
     }
@@ -183,7 +200,12 @@ const expectedDatasetAlternateVersion = {
     uri: 'http://creativecommons.org/publicdomain/zero/1.0',
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
-  locks: [],
+  locks: [
+    {
+      userPersistentId: 'dataverseAdmin',
+      reason: DatasetLockReason.IN_REVIEW
+    }
+  ],
   metadataBlocks: [
     {
       name: 'citation',
@@ -219,7 +241,8 @@ describe('JS Dataset Mapper', () => {
       jsDataset,
       citation,
       datasetSummaryFields,
-      jsDatasetPermissions
+      jsDatasetPermissions,
+      jsDatasetLocks
     )
     expect(expectedDataset).to.deep.equal(mapped)
   })
@@ -229,6 +252,7 @@ describe('JS Dataset Mapper', () => {
       citation,
       datasetSummaryFields,
       jsDatasetPermissions,
+      jsDatasetLocks,
       '4.0'
     )
 
@@ -269,7 +293,8 @@ describe('JS Dataset Mapper', () => {
         jsDatasetWithAlternativePersistentId,
         citation,
         datasetSummaryFields,
-        jsDatasetPermissions
+        jsDatasetPermissions,
+        jsDatasetLocks
       )
     )
   })
@@ -308,7 +333,8 @@ describe('JS Dataset Mapper', () => {
         jsDatasetWithCitationDate,
         citation,
         datasetSummaryFields,
-        jsDatasetPermissions
+        jsDatasetPermissions,
+        jsDatasetLocks
       )
     )
   })
@@ -346,7 +372,8 @@ describe('JS Dataset Mapper', () => {
         jsDatasetWithPublicationDate,
         citation,
         datasetSummaryFields,
-        jsDatasetPermissions
+        jsDatasetPermissions,
+        jsDatasetLocks
       )
     )
   })

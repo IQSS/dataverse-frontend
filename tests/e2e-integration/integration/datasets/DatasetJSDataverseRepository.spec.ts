@@ -3,6 +3,7 @@ import chaiAsPromised from 'chai-as-promised'
 import { DatasetJSDataverseRepository } from '../../../../src/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { TestsUtils } from '../../shared/TestsUtils'
 import {
+  DatasetLockReason,
   DatasetPublishingStatus,
   DatasetVersion
 } from '../../../../src/dataset/domain/models/Dataset'
@@ -88,7 +89,8 @@ const datasetData = (persistentId: string, versionId: number) => {
       canManageDatasetPermissions: true,
       canManageFilesPermissions: true,
       canDeleteDataset: true
-    }
+    },
+    locks: []
   }
 }
 
@@ -116,6 +118,7 @@ describe('Dataset JSDataverse Repository', () => {
       expect(dataset.metadataBlocks[0].fields.publicationDate).not.to.exist
       expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
       expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
+      expect(dataset.locks).to.deep.equal(datasetExpected.locks)
     })
   })
 
@@ -164,9 +167,7 @@ describe('Dataset JSDataverse Repository', () => {
   it('gets the dataset by persistentId and version number', async () => {
     const datasetResponse = await DatasetHelper.create()
     await DatasetHelper.publish(datasetResponse.persistentId)
-
-    await TestsUtils.wait(1500)
-
+    await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, '1.0')
       .then((dataset) => {
@@ -230,7 +231,7 @@ describe('Dataset JSDataverse Repository', () => {
     const datasetResponse = await DatasetHelper.create()
 
     await DatasetHelper.publish(datasetResponse.persistentId)
-    await TestsUtils.wait(1500)
+    await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
 
     await DatasetHelper.setCitationDateFieldType(datasetResponse.persistentId, 'dateOfDeposit')
 
@@ -246,5 +247,25 @@ describe('Dataset JSDataverse Repository', () => {
         )
         expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
       })
+  })
+
+  it('gets the dataset by persistentId when is locked', async () => {
+    const datasetResponse = await DatasetHelper.create()
+    await DatasetHelper.lock(datasetResponse.id, DatasetLockReason.FINALIZE_PUBLICATION)
+
+    await datasetRepository.getByPersistentId(datasetResponse.persistentId).then((dataset) => {
+      if (!dataset) {
+        throw new Error('Dataset not found')
+      }
+      const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
+
+      expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
+      expect(dataset.locks).to.deep.equal([
+        {
+          userPersistentId: 'dataverseAdmin',
+          reason: DatasetLockReason.FINALIZE_PUBLICATION
+        }
+      ])
+    })
   })
 })

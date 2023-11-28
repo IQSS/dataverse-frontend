@@ -4,6 +4,7 @@ import { AccessStatus } from './AccessStatus'
 import { RequestAccessOption } from './RequestAccessOption'
 import { DropdownButton, DropdownHeader, Tooltip } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
+import { FileDownloadOptions } from './FileDownloadOptions'
 
 interface FileActionButtonAccessFileProps {
   file: File
@@ -23,6 +24,7 @@ export function AccessFileMenu({ file }: FileActionButtonAccessFileProps) {
         </DropdownHeader>
         <AccessStatus file={file} />
         <RequestAccessOption file={file} />
+        <FileDownloadOptions file={file} />
       </DropdownButton>
     </Tooltip>
   )
