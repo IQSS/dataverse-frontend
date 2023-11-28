@@ -20,8 +20,7 @@ export function FileNonTabularDownloadOptions({ file }: FileNonTabularDownloadOp
 
   return (
     <DropdownButtonItem
-      href={file.originalFileDownloadUrl}
-      download={file.name}
+      href={file.downloadUrls.original}
       disabled={
         file.ingest.status === FileIngestStatus.IN_PROGRESS ||
         (dataset && dataset.isLockedFromFileDownload)

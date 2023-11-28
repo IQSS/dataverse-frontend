@@ -124,7 +124,11 @@ export class FileMother {
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
       isDeleted: faker.datatype.boolean(),
       ingest: { status: FileIngestStatus.NONE },
-      originalFileDownloadUrl: this.createOriginalFileDownloadUrl(),
+      downloadUrls: {
+        original: this.createDownloadUrl(),
+        tabular: this.createDownloadUrl(),
+        rData: this.createDownloadUrl()
+      },
       ...props
     }
 
@@ -140,7 +144,7 @@ export class FileMother {
       fileMockedData.labels,
       fileMockedData.isDeleted,
       fileMockedData.ingest,
-      fileMockedData.originalFileDownloadUrl,
+      fileMockedData.downloadUrls,
       fileMockedData.thumbnail,
       fileMockedData.directory,
       fileMockedData.embargo,
@@ -150,7 +154,7 @@ export class FileMother {
     )
   }
 
-  static createOriginalFileDownloadUrl(): string {
+  static createDownloadUrl(): string {
     const blob = new Blob(['Name,Age,Location\nJohn,25,New York\nJane,30,San Francisco'], {
       type: 'text/csv'
     })

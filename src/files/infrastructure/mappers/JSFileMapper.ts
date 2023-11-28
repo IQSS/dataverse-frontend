@@ -4,6 +4,7 @@ import {
   FileChecksum,
   FileDate,
   FileDateType,
+  FileDownloadUrls,
   FileEmbargo,
   FileIngestStatus,
   FileLabel,
@@ -160,8 +161,12 @@ export class JSFileMapper {
     return undefined
   }
 
-  static toFileOriginalFileDownloadUrl(id: number): string {
-    return `/api/access/datafile/${id}`
+  static toFileOriginalFileDownloadUrl(id: number): FileDownloadUrls {
+    return {
+      original: `/api/access/datafile/${id}?format=original`,
+      tabular: `/api/access/datafile/${id}`,
+      rData: `/api/access/datafile/${id}?format=RData`
+    }
   }
 
   static toFileThumbnail(): undefined {

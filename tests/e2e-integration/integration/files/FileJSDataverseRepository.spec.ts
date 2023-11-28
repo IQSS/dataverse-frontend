@@ -57,7 +57,11 @@ const fileData = (id: number) => {
     [],
     false,
     { status: FileIngestStatus.NONE },
-    `/api/access/datafile/${id}`,
+    {
+      original: `/api/access/datafile/${id}?format=original`,
+      tabular: `/api/access/datafile/${id}`,
+      rData: `/api/access/datafile/${id}?format=RData`
+    },
     undefined,
     undefined,
     undefined,
@@ -104,7 +108,7 @@ describe('File JSDataverse Repository', () => {
             expect(file.embargo).to.deep.equal(expectedFile.embargo)
             expect(file.tabularData).to.deep.equal(expectedFile.tabularData)
             expect(file.description).to.deep.equal(expectedFile.description)
-            expect(file.originalFileDownloadUrl).to.deep.equal(expectedFile.originalFileDownloadUrl)
+            expect(file.downloadUrls).to.deep.equal(expectedFile.downloadUrls)
           })
         })
     })

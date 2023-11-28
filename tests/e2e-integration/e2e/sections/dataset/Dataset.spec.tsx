@@ -434,9 +434,18 @@ describe('Dataset', () => {
         cy.findByText('Files').should('exist')
 
         cy.findByRole('button', { name: 'Access File' }).should('exist').click()
-        cy.findByText('Plain Text').should('exist').click()
 
-        cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+        // Workaround for issue where Cypress gets stuck on the download
+        cy.window()
+          .document()
+          .then(function (doc) {
+            doc.addEventListener('click', () => {
+              setTimeout(function () {
+                doc.location.reload()
+              }, 5000)
+            })
+            cy.findByText('Plain Text').should('exist').click()
+          })
 
         cy.findByText('1 Downloads').should('exist')
       })

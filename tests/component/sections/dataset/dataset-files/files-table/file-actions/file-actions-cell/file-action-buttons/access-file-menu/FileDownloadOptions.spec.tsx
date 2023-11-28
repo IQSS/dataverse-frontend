@@ -63,8 +63,6 @@ describe('FileDownloadOptions', () => {
       </FilePermissionsProvider>
     )
 
-    cy.findByRole('button', { name: 'Comma Separated Values (Original File Format)' }).should(
-      'exist'
-    )
+    cy.findByRole('link', { name: 'Comma Separated Values (Original File Format)' }).should('exist')
   })
 })

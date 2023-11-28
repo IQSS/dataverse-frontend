@@ -26,7 +26,7 @@ describe('FileNonTabularDownloadOptions', () => {
     cy.findByRole('link', { name: 'Original File Format' })
       .should('exist')
       .should('not.have.class', 'disabled')
-      .should('have.attr', 'href', fileNonTabularUnknown.originalFileDownloadUrl)
+      .should('have.attr', 'href', fileNonTabularUnknown.downloadUrls.original)
   })
 
   it('renders the download options for a non-tabular file', () => {
@@ -35,7 +35,7 @@ describe('FileNonTabularDownloadOptions', () => {
     cy.findByRole('link', { name: 'Plain Text' })
       .should('exist')
       .should('not.have.class', 'disabled')
-      .should('have.attr', 'href', fileNonTabular.originalFileDownloadUrl)
+      .should('have.attr', 'href', fileNonTabular.downloadUrls.original)
   })
 
   it('does not render the download options for a tabular file', () => {
