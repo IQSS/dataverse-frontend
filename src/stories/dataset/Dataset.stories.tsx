@@ -15,7 +15,7 @@ import { WithDatasetDraftAsOwner } from './WithDatasetDraftAsOwner'
 import { WithDatasetNotFound } from './WithDatasetNotFound'
 import { WithDatasetLoading } from './WithDatasetLoading'
 import { WithLoggedInUser } from '../WithLoggedInUser'
-import { WIthNotImplementedModal } from '../WIthNotImplementedModal'
+import { WithNotImplementedModal } from '../WithNotImplementedModal'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -31,7 +31,7 @@ export default meta
 type Story = StoryObj<typeof Dataset>
 
 export const Default: Story = {
-  decorators: [WithLayout, WithDataset, WithFilePermissionsDenied],
+  decorators: [WithLayout, WithDataset, WithFilePermissionsDenied, WithNotImplementedModal],
   render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 
@@ -41,7 +41,7 @@ export const DraftWithAllDatasetPermissions: Story = {
     WithDatasetDraftAsOwner,
     WithLoggedInUser,
     WithFilePermissionsGranted,
-    WIthNotImplementedModal
+    WithNotImplementedModal
   ],
   render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
@@ -51,7 +51,7 @@ export const LoggedInAsOwner: Story = {
     WithLayout,
     WithLoggedInUser,
     WithFilePermissionsGranted,
-    WIthNotImplementedModal
+    WithNotImplementedModal
   ],
   render: () => <Dataset fileRepository={new FileMockRepository()} />
 }

@@ -2,12 +2,12 @@ import { Meta, StoryObj } from '@storybook/react'
 import { NotImplementedModal } from '../../sections/not-implemented/NotImplementedModal'
 import { Button } from '@iqss/dataverse-design-system'
 import { useNotImplementedModal } from '../../sections/not-implemented/NotImplementedModalContext'
-import { WIthNotImplementedModal } from '../WIthNotImplementedModal'
+import { WithNotImplementedModal } from '../WithNotImplementedModal'
 
 const meta: Meta<typeof NotImplementedModal> = {
   title: 'Sections/NotImplementedModal',
   component: NotImplementedModal,
-  decorators: [WIthNotImplementedModal]
+  decorators: [WithNotImplementedModal]
 }
 
 export default meta
