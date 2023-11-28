@@ -24,7 +24,7 @@ export function FileOptionsMenu({ file }: { file: File }) {
         <Tooltip placement="top" overlay={<span>{t('actions.optionsMenu.title')}</span>}>
           <Button
             id={`file-options-file-${file.id}`}
-            disabled={dataset.isLockedFromEdits}
+            disabled={dataset.checkIsLockedFromEdits(user.persistentId)}
             variant="secondary"
             icon={
               <ThreeDotsVertical
@@ -47,7 +47,7 @@ export function FileOptionsMenu({ file }: { file: File }) {
       <DropdownButton
         id={`file-options-file-${file.id}`}
         title=""
-        disabled={dataset.isLockedFromEdits}
+        disabled={dataset.checkIsLockedFromEdits(user.persistentId)}
         asButtonGroup
         variant="secondary"
         icon={<ThreeDotsVertical aria-label={t('actions.optionsMenu.title')} />}>

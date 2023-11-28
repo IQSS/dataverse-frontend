@@ -3,15 +3,18 @@ import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-syste
 import { ChangeCurationStatusMenu } from './ChangeCurationStatusMenu'
 import { useTranslation } from 'react-i18next'
 import { useNotImplementedModal } from '../../../not-implemented/NotImplementedModalContext'
+import { useSession } from '../../../session/SessionContext'
 
 interface PublishDatasetMenuProps {
   dataset: Dataset
 }
 
 export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
+  const { user } = useSession()
   if (
     !dataset.version.isLatest ||
     dataset.version.publishingStatus !== DatasetPublishingStatus.DRAFT ||
+    !user ||
     !dataset.permissions.canPublishDataset
   ) {
     return <></>
@@ -32,7 +35,9 @@ export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
       asButtonGroup
       variant="secondary"
       disabled={
-        dataset.isLockedFromPublishing || !dataset.hasValidTermsOfAccess || !dataset.isValid
+          dataset.checkIsLockedFromPublishing(user.persistentId) ||
+          !dataset.hasValidTermsOfAccess ||
+        !dataset.isValid
       }>
       <DropdownButtonItem>{t('datasetActionButtons.publish.publish')}</DropdownButtonItem>
       {dataset.version.isInReview && (

@@ -15,12 +15,13 @@ import { WithDatasetDraftAsOwner } from './WithDatasetDraftAsOwner'
 import { WithDatasetNotFound } from './WithDatasetNotFound'
 import { WithDatasetLoading } from './WithDatasetLoading'
 import { WithLoggedInUser } from '../WithLoggedInUser'
+import { WithAlerts } from '../WithAlerts'
 import { WithNotImplementedModal } from '../WithNotImplementedModal'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
   component: Dataset,
-  decorators: [WithI18next, WithCitationMetadataBlockInfo, WithSettings],
+  decorators: [WithI18next, WithCitationMetadataBlockInfo, WithSettings, WithAlerts],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
