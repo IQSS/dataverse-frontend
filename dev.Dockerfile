@@ -10,6 +10,7 @@ RUN npm run build
 
 WORKDIR /usr/src/app
 COPY package.json ./
+COPY package-lock.json ./
 COPY .npmrc ./
 RUN npm install
 

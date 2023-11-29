@@ -5,8 +5,10 @@ import {
   getDatasetCitation,
   getDatasetSummaryFieldNames,
   Dataset as JSDataset,
+  DatasetUserPermissions as JSDatasetPermissions,
   getPrivateUrlDataset,
   getPrivateUrlDatasetCitation,
+  getDatasetUserPermissions,
   ReadError,
   getDatasetLocks,
   DatasetLock as JSDatasetLock
@@ -26,20 +28,23 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           jsDataset,
           getDatasetSummaryFieldNames.execute(),
           getDatasetCitation.execute(jsDataset.id, this.versionToVersionId(version)),
+          getDatasetUserPermissions.execute(jsDataset.id),
           getDatasetLocks.execute(jsDataset.id)
         ])
       )
       .then(
-        ([jsDataset, summaryFieldsNames, citation, jsDatasetLocks]: [
+        ([jsDataset, summaryFieldsNames, citation, jsDatasetPermissions, jsDatasetLocks]: [
           JSDataset,
           string[],
           string,
+          JSDatasetPermissions,
           JSDatasetLock[]
         ]) =>
           JSDatasetMapper.toDataset(
             jsDataset,
             citation,
             summaryFieldsNames,
+            jsDatasetPermissions,
             jsDatasetLocks,
             requestedVersion
           )
@@ -57,10 +62,22 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       getPrivateUrlDataset.execute(privateUrlToken),
       getDatasetSummaryFieldNames.execute(),
       getPrivateUrlDatasetCitation.execute(privateUrlToken)
-    ]) // TODO - Add getDatasetLocks.execute(privateUrlToken) when it is available in js-dataverse
+    ])
       .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
-        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, [])
-      )
+        JSDatasetMapper.toDataset(
+          jsDataset,
+          citation,
+          summaryFieldsNames,
+          {
+            canEditDataset: true,
+            canPublishDataset: true,
+            canManageDatasetPermissions: true,
+            canDeleteDatasetDraft: true,
+            canViewUnpublishedDataset: true
+          },
+          []
+        )
+      ) // TODO Connect with JS dataset permissions and getDatasetLocks.execute(privateUrlToken) when it is available in js-dataverse
       .catch((error: ReadError) => {
         throw new Error(error.message)
       })
