@@ -237,7 +237,9 @@ describe('Dataset', () => {
           cy.findByText('Restricted File Icon').should('not.exist')
           cy.findByText('Restricted with access Icon').should('exist')
 
-          cy.findByRole('button', { name: 'Access File' }).should('exist').click()
+          cy.findByRole('button', { name: 'Access File' }).as('accessFileButton')
+          cy.get('@accessFileButton').should('be.visible')
+          cy.get('@accessFileButton').click()
           cy.findByText('Restricted with Access Granted').should('exist')
 
           cy.findByRole('button', { name: 'File Options' }).should('exist').click()
