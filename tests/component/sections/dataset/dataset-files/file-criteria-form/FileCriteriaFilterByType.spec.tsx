@@ -8,11 +8,11 @@ const defaultCriteria = new FileCriteria()
 const filesCountInfo = FilesCountInfoMother.create({
   perFileType: [
     {
-      type: new FileType('image'),
+      type: new FileType('image/png'),
       count: 5
     },
     {
-      type: new FileType('text'),
+      type: new FileType('text/plain'),
       count: 10
     }
   ]
@@ -33,8 +33,8 @@ describe('FilesCriteriaFilterByType', () => {
     cy.findByRole('button', { name: 'File Type: All' }).click()
 
     cy.findByText('All').should('exist')
-    cy.findByText('Image (5)').should('exist')
-    cy.findByText('Text (10)').should('exist')
+    cy.findByText('PNG Image (5)').should('exist')
+    cy.findByText('Plain Text (10)').should('exist')
   })
 
   it('calls onCriteriaChange with the selected filter by type value', () => {
@@ -49,17 +49,20 @@ describe('FilesCriteriaFilterByType', () => {
     )
 
     cy.findByRole('button', { name: 'File Type: All' }).click()
-    cy.findByText('Image (5)').click()
-    cy.wrap(onCriteriaChange).should('be.calledWith', defaultCriteria.withFilterByType('image'))
+    cy.findByText('PNG Image (5)').click()
+    cy.wrap(onCriteriaChange).should('be.calledWith', defaultCriteria.withFilterByType('image/png'))
 
-    cy.findByRole('button', { name: 'File Type: Image' }).click()
-    cy.findByText('Text (10)').click()
-    cy.wrap(onCriteriaChange).should('be.calledWith', defaultCriteria.withFilterByType('text'))
+    cy.findByRole('button', { name: 'File Type: PNG Image' }).click()
+    cy.findByText('Plain Text (10)').click()
+    cy.wrap(onCriteriaChange).should(
+      'be.calledWith',
+      defaultCriteria.withFilterByType('text/plain')
+    )
   })
 
   it('shows the selected filter in the dropdown title', () => {
     const onCriteriaChange = cy.stub().as('onCriteriaChange')
-    const criteria = defaultCriteria.withFilterByType('image')
+    const criteria = defaultCriteria.withFilterByType('image/png')
 
     cy.customMount(
       <FileCriteriaFilterByType
@@ -69,7 +72,7 @@ describe('FilesCriteriaFilterByType', () => {
       />
     )
 
-    cy.findByRole('button', { name: 'File Type: Image' }).click()
+    cy.findByRole('button', { name: 'File Type: PNG Image' }).click()
     cy.findByText('All').should('exist').click()
     cy.wrap(onCriteriaChange).should('be.calledWith', defaultCriteria.withFilterByType(undefined))
   })
@@ -88,13 +91,13 @@ describe('FilesCriteriaFilterByType', () => {
     cy.findByRole('button', { name: 'File Type: All' }).click()
     cy.findByText('All').should('have.class', styles['selected-option'])
 
-    cy.findByRole('button', { name: 'Image (5)' }).click()
-    cy.findByRole('button', { name: 'File Type: Image' }).click()
-    cy.findByText('Image (5)').should('have.class', styles['selected-option'])
+    cy.findByRole('button', { name: 'PNG Image (5)' }).click()
+    cy.findByRole('button', { name: 'File Type: PNG Image' }).click()
+    cy.findByText('PNG Image (5)').should('have.class', styles['selected-option'])
 
-    cy.findByRole('button', { name: 'Text (10)' }).click()
-    cy.findByRole('button', { name: 'File Type: Text' }).click()
-    cy.findByText('Text (10)').should('have.class', styles['selected-option'])
+    cy.findByRole('button', { name: 'Plain Text (10)' }).click()
+    cy.findByRole('button', { name: 'File Type: Plain Text' }).click()
+    cy.findByText('Plain Text (10)').should('have.class', styles['selected-option'])
   })
 
   it('does not render the filter by type dropdown if there are no filter options', () => {
@@ -109,6 +112,6 @@ describe('FilesCriteriaFilterByType', () => {
       />
     )
 
-    cy.findByRole('button', { name: 'File Type: Image' }).should('not.exist')
+    cy.findByRole('button', { name: 'File Type: PNG Image' }).should('not.exist')
   })
 })

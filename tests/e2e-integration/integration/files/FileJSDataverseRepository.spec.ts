@@ -129,7 +129,7 @@ describe('File JSDataverse Repository', () => {
       if (!dataset) throw new Error('Dataset not found')
 
       await DatasetHelper.publish(dataset.persistentId)
-      await TestsUtils.wait(1500) // Wait for the dataset to be published
+      await TestsUtils.waitForNoLocks(dataset.persistentId) // Wait for the dataset to be published
 
       await fileRepository
         .getAllByDatasetPersistentId(
@@ -160,7 +160,7 @@ describe('File JSDataverse Repository', () => {
       const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(3))
 
       await DatasetHelper.publish(datasetResponse.persistentId)
-      await TestsUtils.wait(1500) // Wait for the dataset to be published
+      await TestsUtils.waitForNoLocks(datasetResponse.persistentId) // Wait for the dataset to be published
 
       const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
       if (!dataset) throw new Error('Dataset not found')
@@ -195,7 +195,7 @@ describe('File JSDataverse Repository', () => {
       if (!datasetResponse.files) throw new Error('Files not found')
 
       await DatasetHelper.publish(datasetResponse.persistentId)
-      await TestsUtils.wait(1500) // Wait for the dataset to be published
+      await TestsUtils.waitForNoLocks(datasetResponse.persistentId) // Wait for the dataset to be published
 
       const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
       if (!dataset) throw new Error('Dataset not found')
@@ -234,8 +234,7 @@ describe('File JSDataverse Repository', () => {
     it('gets all the files by dataset persistentId after adding tag labels to the files', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1, 'csv'))
       if (!datasetResponse.files) throw new Error('Files not found')
-      await TestsUtils.wait(1500) // Wait for the tabular data to be ingested
-
+      await TestsUtils.waitForNoLocks(datasetResponse.persistentId) // Wait for the tabular data to be ingested
       const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
       if (!dataset) throw new Error('Dataset not found')
 
@@ -279,7 +278,7 @@ describe('File JSDataverse Repository', () => {
         [datasetResponse.files[0].id, datasetResponse.files[1].id, datasetResponse.files[2].id],
         embargoDate
       )
-      await TestsUtils.wait(1500) // Wait for the files to be embargoed
+      await TestsUtils.waitForNoLocks(datasetResponse.persistentId) // Wait for the files to be embargoed
 
       await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
@@ -504,11 +503,11 @@ describe('File JSDataverse Repository', () => {
         total: 6,
         perAccess: [
           {
-            access: FileAccessOption.RESTRICTED,
+            access: FileAccessOption.PUBLIC,
             count: 3
           },
           {
-            access: FileAccessOption.PUBLIC,
+            access: FileAccessOption.RESTRICTED,
             count: 3
           }
         ],
@@ -670,7 +669,7 @@ describe('File JSDataverse Repository', () => {
       )
       if (!dataset) throw new Error('Dataset not found')
 
-      await TestsUtils.wait(2500) // wait for the files to be ingested
+      await TestsUtils.waitForNoLocks(dataset.persistentId) // wait for the files to be ingested
 
       const expectedTotalDownloadSize = await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
@@ -708,7 +707,7 @@ describe('File JSDataverse Repository', () => {
       )
       if (!dataset) throw new Error('Dataset not found')
 
-      await TestsUtils.wait(2500) // wait for the files to be ingested
+      await TestsUtils.waitForNoLocks(dataset.persistentId) // wait for the files to be ingested
 
       const expectedTotalDownloadSize = await fileRepository
         .getAllByDatasetPersistentId(
