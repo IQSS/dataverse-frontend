@@ -21,6 +21,7 @@ export function DatasetUploadFilesButton() {
 
   return (
     <Button
+      type="button"
       onClick={handleClick}
       icon={<PlusLg className={styles.icon} />}
       disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
