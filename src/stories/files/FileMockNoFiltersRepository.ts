@@ -6,6 +6,7 @@ import { FilesMockData } from './FileMockData'
 import { FileUserPermissions } from '../../files/domain/models/FileUserPermissions'
 import { FileUserPermissionsMother } from '../../../tests/component/files/domain/models/FileUserPermissionsMother'
 import { DatasetVersion } from '../../dataset/domain/models/Dataset'
+import { FileCriteria } from '../../files/domain/models/FileCriteria'
 
 export class FileMockNoFiltersRepository implements FileRepository {
   getAllByDatasetPersistentId(
@@ -25,7 +26,9 @@ export class FileMockNoFiltersRepository implements FileRepository {
     // eslint-disable-next-line unused-imports/no-unused-vars
     datasetPersistentId: string,
     // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersion: DatasetVersion
+    datasetVersion: DatasetVersion,
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    criteria: FileCriteria
   ): Promise<FilesCountInfo> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -46,7 +49,9 @@ export class FileMockNoFiltersRepository implements FileRepository {
     // eslint-disable-next-line unused-imports/no-unused-vars
     datasetPersistentId: string,
     // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersion: DatasetVersion
+    datasetVersion: DatasetVersion,
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    criteria?: FileCriteria
   ): Promise<number> {
     return new Promise((resolve) => {
       setTimeout(() => {

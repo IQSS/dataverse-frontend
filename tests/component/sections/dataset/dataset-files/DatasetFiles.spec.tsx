@@ -25,11 +25,11 @@ const testFilesCountInfo = FilesCountInfoMother.create({
   total: 200,
   perFileType: [
     {
-      type: new FileType('text'),
+      type: new FileType('text/plain'),
       count: 5
     },
     {
-      type: new FileType('image'),
+      type: new FileType('image/png'),
       count: 485
     }
   ],
@@ -263,7 +263,7 @@ describe('DatasetFiles', () => {
       cy.findByText('1 file is currently selected.').should('exist')
 
       cy.findByRole('button', { name: 'File Type: All' }).click()
-      cy.findByText('Image (485)').should('exist').click()
+      cy.findByText('PNG Image (485)').should('exist').click()
 
       cy.findByText('1 file is currently selected.').should('not.exist')
     })
@@ -432,13 +432,13 @@ describe('DatasetFiles', () => {
       )
 
       cy.findByRole('button', { name: 'File Type: All' }).click()
-      cy.findByText('Image (485)').should('exist').click()
+      cy.findByText('PNG Image (485)').should('exist').click()
       cy.wrap(fileRepository.getAllByDatasetPersistentId).should(
         'be.calledWith',
         datasetPersistentId,
         datasetVersion,
         filePaginationInfo,
-        new FileCriteria().withFilterByType('image')
+        new FileCriteria().withFilterByType('image/png')
       )
     })
 
@@ -516,6 +516,33 @@ describe('DatasetFiles', () => {
         datasetPersistentId,
         datasetVersion,
         new FilePaginationInfo(5, 10, 200)
+      )
+    })
+
+    it('calls getFilesTotalDownloadSizeByDatasetPersistentId with the correct parameters when applying search file criteria', () => {
+      cy.customMount(
+        <SettingsProvider repository={settingsRepository}>
+          <DatasetFiles
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </SettingsProvider>
+      )
+
+      cy.findByRole('button', { name: 'File Type: All' }).click()
+      cy.findByText('PNG Image (485)').should('exist').click()
+      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
+      cy.findByText(
+        'The overall size of the files selected (19.4 KB) for download exceeds the zip limit of 1.0 B. Please unselect some files to continue.'
+      ).should('exist')
+
+      cy.wrap(fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId).should(
+        'be.calledWith',
+        datasetPersistentId,
+        datasetVersion,
+        new FileCriteria().withFilterByType('image/png')
       )
     })
   })

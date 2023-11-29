@@ -166,7 +166,7 @@ export class DatasetPermissionsMother {
 export class DatasetLockMother {
   static create(props?: Partial<DatasetLock>): DatasetLock {
     return {
-      id: faker.datatype.number(),
+      userPersistentId: faker.internet.userName(),
       reason: faker.helpers.arrayElement(Object.values(DatasetLockReason)),
       ...props
     }
@@ -182,6 +182,10 @@ export class DatasetLockMother {
 
   static createLockedInEditInProgress(): DatasetLock {
     return this.create({ reason: DatasetLockReason.EDIT_IN_PROGRESS })
+  }
+
+  static createLockedFromFileDownload(): DatasetLock {
+    return this.create({ reason: DatasetLockReason.INGEST })
   }
 }
 
@@ -287,6 +291,8 @@ export class DatasetMother {
       hasValidTermsOfAccess: faker.datatype.boolean(),
       isValid: faker.datatype.boolean(),
       isReleased: faker.datatype.boolean(),
+      thumbnail: undefined,
+      privateUrl: undefined,
       ...props
     }
 
@@ -302,6 +308,7 @@ export class DatasetMother {
       dataset.hasValidTermsOfAccess,
       dataset.isValid,
       dataset.isReleased,
+      dataset.thumbnail,
       dataset.privateUrl
     ).build()
   }
@@ -401,7 +408,7 @@ export class DatasetMother {
             datasetContact: [
               {
                 datasetContactName: 'Admin, Dataverse',
-                datasetContactEmail: ''
+                datasetContactEmail: 'admin@dataverse.org'
               }
             ],
             dsDescription: [

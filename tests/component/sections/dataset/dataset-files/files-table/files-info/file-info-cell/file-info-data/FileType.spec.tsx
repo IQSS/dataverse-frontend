@@ -14,7 +14,7 @@ describe('FileType', () => {
     })
     cy.customMount(<FileType type={file.type} size={file.size} />)
 
-    cy.findByText(`Text/plain - 123 B`).should('exist')
+    cy.findByText(`Plain Text - 123 B`).should('exist')
   })
 
   it('renders the type and size correctly when there are decimals', () => {
@@ -24,6 +24,16 @@ describe('FileType', () => {
     })
     cy.customMount(<FileType type={file.type} size={file.size} />)
 
-    cy.findByText(`Text/plain - 123.9 MB`).should('exist')
+    cy.findByText(`Plain Text - 123.9 MB`).should('exist')
+  })
+
+  it('renders the type correctly when is a tabular file', () => {
+    const file = FileMother.createWithTabularData({
+      size: new FileSize(123.03932894722, FileSizeUnit.BYTES)
+    })
+
+    cy.customMount(<FileType type={file.type} size={file.size} />)
+
+    cy.findByText(`Tabular Data - 123 B`).should('exist')
   })
 })

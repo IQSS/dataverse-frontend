@@ -13,6 +13,7 @@ import {
   FileType,
   FileChecksum
 } from '../../../../../src/files/domain/models/File'
+import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
 
 const valueOrUndefined: <T>(value: T) => T | undefined = (value) => {
   const shouldShowValue = faker.datatype.boolean()
@@ -72,7 +73,7 @@ export class FileChecksumMother {
 export class FileMother {
   static create(props?: Partial<File>): File {
     const thumbnail = valueOrUndefined<string>(faker.image.imageUrl())
-    const fileType = faker.helpers.arrayElement(['tabular data', faker.system.fileType()])
+    const fileType = faker.helpers.arrayElement(Object.keys(FileTypeToFriendlyTypeMap))
     const checksum = valueOrUndefined<string>(faker.datatype.uuid())
     const fileMockedData = {
       id: faker.datatype.number(),
@@ -87,7 +88,10 @@ export class FileMother {
         number: faker.datatype.number(),
         publishingStatus: faker.helpers.arrayElement(Object.values(FilePublishingStatus))
       },
-      type: new FileType(thumbnail ? 'image' : fileType),
+      type:
+        fileType === 'text/tab-separated-values'
+          ? new FileType('text/tab-separated-values', 'Comma Separated Values')
+          : new FileType(thumbnail ? 'image' : fileType),
       size: {
         value: faker.datatype.number({ max: 1024, precision: 2 }),
         unit: faker.helpers.arrayElement(Object.values(FileSizeUnit))
@@ -110,7 +114,7 @@ export class FileMother {
       directory: valueOrUndefined<string>(faker.system.directoryPath()),
       embargo: valueOrUndefined<FileEmbargo>(FileEmbargoMother.create()),
       tabularData:
-        fileType === 'tabular data' && !checksum
+        fileType === 'text/tab-separated-values' && !checksum
           ? {
               variablesCount: faker.datatype.number(100),
               observationsCount: faker.datatype.number(100),
@@ -144,13 +148,13 @@ export class FileMother {
     )
   }
 
-  static createMany(quantity: number): File[] {
-    return Array.from({ length: quantity }).map(() => this.create())
+  static createMany(quantity: number, props?: Partial<File>): File[] {
+    return Array.from({ length: quantity }).map(() => this.create(props))
   }
 
   static createDefault(props?: Partial<File>): File {
     const defaultFile = {
-      type: new FileType('file'),
+      type: new FileType('text/plain'),
       version: {
         number: 1,
         publishingStatus: FilePublishingStatus.RELEASED
@@ -208,14 +212,15 @@ export class FileMother {
     })
   }
 
-  static createWithTabularData(): File {
+  static createWithTabularData(props?: Partial<File>): File {
     return this.createDefault({
-      type: new FileType('tabular data'),
+      type: new FileType('text/tab-separated-values', 'Comma Separated Values'),
       tabularData: {
         variablesCount: faker.datatype.number(100),
         observationsCount: faker.datatype.number(100),
         unf: `UNF:${faker.datatype.uuid()}==`
-      }
+      },
+      ...props
     })
   }
 

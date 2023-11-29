@@ -51,4 +51,15 @@ describe('AccessFileMenu', () => {
     cy.findByRole('button', { name: 'Access File' }).click()
     cy.findByRole('button', { name: 'Request Access' }).should('exist')
   })
+
+  it('renders the download options header', () => {
+    cy.customMount(
+      <Suspense fallback="loading">
+        <AccessFileMenu file={file} />
+      </Suspense>
+    )
+
+    cy.findByRole('button', { name: 'Access File' }).click()
+    cy.findByRole('heading', { name: 'Download Options' }).should('exist')
+  })
 })

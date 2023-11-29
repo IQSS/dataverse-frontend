@@ -1,3 +1,5 @@
+import FileTypeToFriendlyTypeMap from './FileTypeToFriendlyTypeMap'
+
 export enum FileSizeUnit {
   BYTES = 'B',
   KILOBYTES = 'KB',
@@ -119,15 +121,10 @@ export interface FileLabel {
 }
 
 export class FileType {
-  constructor(readonly value: string) {}
+  constructor(readonly value: string, readonly original?: string) {}
 
   toDisplayFormat(): string {
-    const words = this.value.split(' ')
-    return words
-      .map((word) => {
-        return word[0].toUpperCase() + word.substring(1)
-      })
-      .join(' ')
+    return FileTypeToFriendlyTypeMap[this.value] || FileTypeToFriendlyTypeMap.unknown
   }
 }
 
@@ -162,7 +159,7 @@ export class File {
     public readonly isDeleted: boolean,
     public readonly ingest: FileIngest,
     readonly checksum?: FileChecksum,
-    readonly thumbnail?: string,
+    public thumbnail?: string,
     readonly directory?: string,
     readonly embargo?: FileEmbargo,
     readonly tabularData?: FileTabularData,
@@ -178,5 +175,9 @@ export class File {
       return this.embargo.isActive
     }
     return false
+  }
+
+  get isTabularData(): boolean {
+    return this.tabularData !== undefined
   }
 }
