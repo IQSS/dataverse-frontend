@@ -13,7 +13,10 @@ import { FileType } from '../../domain/models/File'
 import { FilePaginationInfo } from '../../domain/models/FilePaginationInfo'
 
 export class DomainFileMapper {
-  static toJSPagination(paginationInfo: FilePaginationInfo): { limit?: number; offset?: number } {
+  static toJSPagination(paginationInfo: FilePaginationInfo): {
+    limit?: number
+    offset?: number
+  } {
     return {
       limit: paginationInfo.pageSize,
       offset: (paginationInfo.page - 1) * paginationInfo.pageSize

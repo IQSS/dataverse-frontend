@@ -25,11 +25,11 @@ const testFilesCountInfo = FilesCountInfoMother.create({
   total: 200,
   perFileType: [
     {
-      type: new FileType('text'),
+      type: new FileType('text/plain'),
       count: 5
     },
     {
-      type: new FileType('image'),
+      type: new FileType('image/png'),
       count: 485
     }
   ],
@@ -188,7 +188,7 @@ describe('DatasetFiles', () => {
       cy.findByText('1 file is currently selected.').should('exist')
 
       cy.findByRole('button', { name: 'File Type: All' }).click()
-      cy.findByText('Image (485)').should('exist').click()
+      cy.findByText('PNG Image (485)').should('exist').click()
 
       cy.findByText('1 file is currently selected.').should('not.exist')
     })
@@ -357,13 +357,13 @@ describe('DatasetFiles', () => {
       )
 
       cy.findByRole('button', { name: 'File Type: All' }).click()
-      cy.findByText('Image (485)').should('exist').click()
+      cy.findByText('PNG Image (485)').should('exist').click()
       cy.wrap(fileRepository.getAllByDatasetPersistentId).should(
         'be.calledWith',
         datasetPersistentId,
         datasetVersion,
         paginationInfo,
-        new FileCriteria().withFilterByType('image')
+        new FileCriteria().withFilterByType('image/png')
       )
     })
 
@@ -456,7 +456,7 @@ describe('DatasetFiles', () => {
       )
 
       cy.findByRole('button', { name: 'File Type: All' }).click()
-      cy.findByText('Image (485)').should('exist').click()
+      cy.findByText('PNG Image (485)').should('exist').click()
       cy.get('table > thead > tr > th > input[type=checkbox]').click()
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
       cy.findByText(
@@ -467,7 +467,7 @@ describe('DatasetFiles', () => {
         'be.calledWith',
         datasetPersistentId,
         datasetVersion,
-        new FileCriteria().withFilterByType('image')
+        new FileCriteria().withFilterByType('image/png')
       )
     })
   })

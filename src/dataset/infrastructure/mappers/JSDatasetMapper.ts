@@ -3,7 +3,8 @@ import {
   DatasetMetadataBlock as JSDatasetMetadataBlock,
   DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataFields as JSDatasetMetadataFields,
-  DatasetVersionInfo as JSDatasetVersionInfo
+  DatasetVersionInfo as JSDatasetVersionInfo,
+  DatasetLock as JSDatasetLock
 } from '@iqss/dataverse-client-javascript'
 import { DatasetVersionState as JSDatasetVersionState } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
 import {
@@ -14,7 +15,9 @@ import {
   DatasetMetadataFields,
   DatasetVersion,
   MetadataBlockName,
-  PrivateUrl
+  PrivateUrl,
+  DatasetLock,
+  DatasetLockReason
 } from '../../domain/models/Dataset'
 
 export class JSDatasetMapper {
@@ -22,6 +25,7 @@ export class JSDatasetMapper {
     jsDataset: JSDataset,
     citation: string,
     summaryFieldsNames: string[],
+    jsDatasetLocks: JSDatasetLock[],
     requestedVersion?: string,
     privateUrl?: PrivateUrl
   ): Dataset {
@@ -45,7 +49,7 @@ export class JSDatasetMapper {
         canManageFilesPermissions: true,
         canDeleteDataset: true
       }, // TODO Connect with dataset permissions
-      [], // TODO Connect with dataset locks
+      JSDatasetMapper.toLocks(jsDatasetLocks),
       true, // TODO Connect with dataset hasValidTermsOfAccess
       true, // TODO Connect with dataset isValid
       jsDataset.versionInfo.releaseTime !== undefined &&
@@ -184,5 +188,14 @@ export class JSDatasetMapper {
     }
 
     return extraFields
+  }
+
+  static toLocks(jsDatasetLocks: JSDatasetLock[]): DatasetLock[] {
+    return jsDatasetLocks.map((jsDatasetLock) => {
+      return {
+        userPersistentId: jsDatasetLock.userId,
+        reason: jsDatasetLock.lockType as unknown as DatasetLockReason
+      }
+    })
   }
 }

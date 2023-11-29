@@ -7,7 +7,9 @@ import {
   Dataset as JSDataset,
   getPrivateUrlDataset,
   getPrivateUrlDatasetCitation,
-  ReadError
+  ReadError,
+  getDatasetLocks,
+  DatasetLock as JSDatasetLock
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { TotalDatasetsCount } from '../../domain/models/TotalDatasetsCount'
@@ -46,11 +48,24 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         Promise.all([
           jsDataset,
           getDatasetSummaryFieldNames.execute(),
-          getDatasetCitation.execute(jsDataset.id, this.versionToVersionId(version))
+          getDatasetCitation.execute(jsDataset.id, this.versionToVersionId(version)),
+          getDatasetLocks.execute(jsDataset.id)
         ])
       )
-      .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
-        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, requestedVersion)
+      .then(
+        ([jsDataset, summaryFieldsNames, citation, jsDatasetLocks]: [
+          JSDataset,
+          string[],
+          string,
+          JSDatasetLock[]
+        ]) =>
+          JSDatasetMapper.toDataset(
+            jsDataset,
+            citation,
+            summaryFieldsNames,
+            jsDatasetLocks,
+            requestedVersion
+          )
       )
       .catch((error: ReadError) => {
         if (!version) {
@@ -65,9 +80,9 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       getPrivateUrlDataset.execute(privateUrlToken),
       getDatasetSummaryFieldNames.execute(),
       getPrivateUrlDatasetCitation.execute(privateUrlToken)
-    ])
+    ]) // TODO - Add getDatasetLocks.execute(privateUrlToken) when it is available in js-dataverse
       .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
-        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, undefined)
+        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, [])
       )
       .catch((error: ReadError) => {
         throw new Error(error.message)

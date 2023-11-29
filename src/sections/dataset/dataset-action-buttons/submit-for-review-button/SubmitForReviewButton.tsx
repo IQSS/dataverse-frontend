@@ -1,17 +1,20 @@
 import { Dataset, DatasetPublishingStatus } from '../../../../dataset/domain/models/Dataset'
 import { Button } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
+import { useSession } from '../../../session/SessionContext'
 
 interface SubmitForReviewButtonProps {
   dataset: Dataset
 }
 
 export function SubmitForReviewButton({ dataset }: SubmitForReviewButtonProps) {
+  const { user } = useSession()
   if (
     !dataset.version.isLatest ||
     dataset.version.publishingStatus !== DatasetPublishingStatus.DRAFT ||
     dataset.isLockedInWorkflow ||
     dataset.permissions.canPublishDataset ||
+    !user ||
     !dataset.permissions.canUpdateDataset
   ) {
     return <></>
@@ -22,7 +25,9 @@ export function SubmitForReviewButton({ dataset }: SubmitForReviewButtonProps) {
     <Button
       variant="secondary"
       disabled={
-        dataset.isLockedFromPublishing || !dataset.hasValidTermsOfAccess || !dataset.isValid
+        dataset.checkIsLockedFromPublishing(user.persistentId) ||
+        !dataset.hasValidTermsOfAccess ||
+        !dataset.isValid
       }>
       {dataset.version.isInReview
         ? t('datasetActionButtons.submitForReview.disabled')
