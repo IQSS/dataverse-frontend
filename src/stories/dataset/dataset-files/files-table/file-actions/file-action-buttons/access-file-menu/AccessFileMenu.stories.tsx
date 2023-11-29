@@ -20,6 +20,14 @@ export const Default: Story = {
   render: () => <AccessFileMenu file={FileMother.createDefault()} />
 }
 
+export const NonTabularFiles: Story = {
+  render: () => <AccessFileMenu file={FileMother.createDefault()} />
+}
+
+export const TabularFiles: Story = {
+  render: () => <AccessFileMenu file={FileMother.createWithTabularData()} />
+}
+
 export const Restricted: Story = {
   render: () => <AccessFileMenu file={FileMother.createWithRestrictedAccess()} />
 }

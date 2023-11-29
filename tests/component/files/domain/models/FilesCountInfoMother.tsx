@@ -2,6 +2,7 @@ import { FileType } from '../../../../../src/files/domain/models/File'
 import { faker } from '@faker-js/faker'
 import { FilesCountInfo } from '../../../../../src/files/domain/models/FilesCountInfo'
 import { FileAccessOption, FileTag } from '../../../../../src/files/domain/models/FileCriteria'
+import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
 
 export class FilesCountInfoMother {
   static create(props?: Partial<FilesCountInfo>): FilesCountInfo {
@@ -10,11 +11,11 @@ export class FilesCountInfoMother {
       total: faker.datatype.number(),
       perFileType: [
         {
-          type: new FileType(faker.system.fileType()),
+          type: new FileType(faker.helpers.arrayElement(Object.keys(FileTypeToFriendlyTypeMap))),
           count: faker.datatype.number({ max: total })
         },
         {
-          type: new FileType(faker.system.fileType()),
+          type: new FileType(faker.helpers.arrayElement(Object.keys(FileTypeToFriendlyTypeMap))),
           count: faker.datatype.number({ max: total })
         }
       ],

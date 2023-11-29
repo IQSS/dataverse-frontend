@@ -49,7 +49,7 @@ export class JSFileMapper {
       this.toFileVersion(jsFile.version, datasetVersion, jsFile.publicationDate),
       this.toFileName(jsFile.name),
       this.toFileAccess(jsFile.restricted),
-      this.toFileType(jsFile.contentType),
+      this.toFileType(jsFile.contentType, jsFile.originalFormatLabel),
       this.toFileSize(jsFile.sizeBytes),
       this.toFileDate(jsFile.creationDate, jsFile.publicationDate, jsFile.embargo),
       this.toFileDownloads(downloadsCount),
@@ -115,8 +115,8 @@ export class JSFileMapper {
     }
   }
 
-  static toFileType(jsFileContentType: string): FileType {
-    return new FileType(jsFileContentType)
+  static toFileType(jsFileContentType: string, jsOriginalFormatLabel?: string): FileType {
+    return new FileType(jsFileContentType, jsOriginalFormatLabel)
   }
 
   static toFileSize(jsFileSize: number): FileSize {
