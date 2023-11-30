@@ -12,7 +12,13 @@ export class DatasetPreviewMother {
       persistentId: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
       labels: DatasetLabelsMother.create(),
+      isDeaccessioned: faker.datatype.boolean(),
+      thumbnail: faker.datatype.boolean() ? faker.image.imageUrl() : undefined,
       ...props
     }
+  }
+
+  static createWithThumbnail(): DatasetPreview {
+    return this.create({ thumbnail: faker.image.imageUrl(), isDeaccessioned: false })
   }
 }

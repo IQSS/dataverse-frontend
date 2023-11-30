@@ -3,7 +3,7 @@ import styles from './DatasetCitation.module.scss'
 import { useTranslation } from 'react-i18next'
 import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import parse from 'html-react-parser'
-import { CitationThumbnail } from './CitationThumbnail'
+import { DatasetThumbnail } from './DatasetThumbnail'
 
 interface DatasetCitationProps {
   thumbnail?: string
@@ -23,11 +23,11 @@ export function DatasetCitation({ thumbnail, title, citation, version }: Dataset
             : styles.container
         }>
         <Row className={styles.row}>
-          <Col sm={2}>
-            <CitationThumbnail
+          <Col sm={2} className={styles.thumbnail}>
+            <DatasetThumbnail
               thumbnail={thumbnail}
               title={title}
-              publishingStatus={version.publishingStatus}
+              isDeaccessioned={version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED}
             />
           </Col>
           <Col>
