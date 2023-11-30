@@ -7,5 +7,8 @@ describe('DatasetCard', () => {
     cy.customMount(<DatasetCard dataset={dataset} />)
 
     cy.findByRole('link', { name: dataset.title }).should('exist')
+    dataset.labels.forEach((label) => {
+      cy.findByText(label.value).should('exist')
+    })
   })
 })

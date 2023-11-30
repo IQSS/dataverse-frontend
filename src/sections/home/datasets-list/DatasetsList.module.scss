@@ -10,3 +10,16 @@
   padding: .5em 1em;
   background: $dv-warning-box-color;
 }
+
+.card {
+    margin: 6px 0;
+    border: 1px solid #428bca;
+    padding: 4px 10px;
+
+    .card-title {
+        display: flex;
+        > * {
+            margin-right: .5em;
+        }
+    }
+}

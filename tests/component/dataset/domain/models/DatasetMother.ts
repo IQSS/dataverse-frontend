@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 import {
   ANONYMIZED_FIELD_VALUE,
   Dataset,
+  DatasetLabel,
   DatasetLabelSemanticMeaning,
   DatasetLabelValue,
   DatasetLock,
@@ -189,6 +190,18 @@ export class DatasetLockMother {
   }
 }
 
+export class DatasetLabelsMother {
+  static create(): DatasetLabel[] {
+    return [
+      {
+        value: DatasetLabelValue.UNPUBLISHED,
+        semanticMeaning: DatasetLabelSemanticMeaning.WARNING
+      },
+      { value: DatasetLabelValue.DRAFT, semanticMeaning: DatasetLabelSemanticMeaning.DATASET }
+    ]
+  }
+}
+
 export class DatasetMother {
   static createEmpty(): undefined {
     return undefined
@@ -210,24 +223,7 @@ export class DatasetMother {
         uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
         iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
       },
-      labels: [
-        {
-          value: DatasetLabelValue.IN_REVIEW,
-          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
-        },
-        {
-          value: DatasetLabelValue.EMBARGOED,
-          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
-        },
-        {
-          value: DatasetLabelValue.UNPUBLISHED,
-          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
-        },
-        {
-          value: `Version ${faker.lorem.word()}`,
-          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
-        }
-      ],
+      labels: DatasetLabelsMother.create(),
       summaryFields: [
         {
           name: MetadataBlockName.CITATION,

@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { DatasetPreview } from '../../../../../src/dataset/domain/models/DatasetPreview'
+import { DatasetLabelsMother } from './DatasetMother'
 
 export class DatasetPreviewMother {
   static createMany(count: number): DatasetPreview[] {
@@ -10,6 +11,7 @@ export class DatasetPreviewMother {
     return {
       persistentId: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
+      labels: DatasetLabelsMother.create(),
       ...props
     }
   }
