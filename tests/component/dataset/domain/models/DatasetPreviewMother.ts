@@ -14,6 +14,7 @@ export class DatasetPreviewMother {
       labels: DatasetLabelsMother.create(),
       isDeaccessioned: faker.datatype.boolean(),
       thumbnail: faker.datatype.boolean() ? faker.image.imageUrl() : undefined,
+      releaseOrCreateDate: faker.date.past(),
       ...props
     }
   }

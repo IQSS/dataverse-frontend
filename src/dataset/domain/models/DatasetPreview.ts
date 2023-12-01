@@ -6,4 +6,5 @@ export interface DatasetPreview {
   labels: DatasetLabel[]
   thumbnail?: string
   isDeaccessioned: boolean
+  releaseOrCreateDate: Date
 }

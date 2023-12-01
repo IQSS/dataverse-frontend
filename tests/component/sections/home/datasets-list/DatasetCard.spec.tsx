@@ -1,5 +1,6 @@
 import { DatasetPreviewMother } from '../../../dataset/domain/models/DatasetPreviewMother'
 import { DatasetCard } from '../../../../../src/sections/home/datasets-list/DatasetCard'
+import { DateHelper } from '../../../../../src/shared/domain/helpers/DateHelper'
 
 describe('DatasetCard', () => {
   it('should render the card', () => {
@@ -16,5 +17,6 @@ describe('DatasetCard', () => {
       .should('exist')
       .parent('a')
       .should('have.attr', 'href', `/datasets?persistentId=${dataset.persistentId}`)
+    cy.findByText(DateHelper.toDisplayFormat(dataset.releaseOrCreateDate)).should('exist')
   })
 })
