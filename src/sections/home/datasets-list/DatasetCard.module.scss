@@ -16,8 +16,12 @@
 
 .thumbnail {
   width: 48px;
-  margin: 4px 12px 6px 0;
+  margin: 8px 12px 6px 0;
   font-size: 2.8em;
+
+  img {
+      vertical-align: top;
+  }
 }
 
 .info {
