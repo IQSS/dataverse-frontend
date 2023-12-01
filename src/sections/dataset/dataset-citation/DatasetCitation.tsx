@@ -53,7 +53,13 @@ export function DatasetCitation({ thumbnail, title, citation, version }: Dataset
   )
 }
 
-function CitationDescription({ citation, version }: { citation: string; version: DatasetVersion }) {
+export function CitationDescription({
+  citation,
+  version
+}: {
+  citation: string
+  version: DatasetVersion
+}) {
   const citationAsReactElement = parse(citation)
 
   return (
