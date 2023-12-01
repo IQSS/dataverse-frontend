@@ -8,7 +8,7 @@ export class DatasetPreviewMother {
   }
 
   static create(props?: Partial<DatasetPreview>): DatasetPreview {
-    return {
+    const datasetPreview = {
       persistentId: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
       labels: DatasetLabelsMother.create(),
@@ -18,8 +18,21 @@ export class DatasetPreviewMother {
       version: DatasetVersionMother.create(),
       citation:
         'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/0YFWKL" target="_blank">https://doi.org/10.5072/FK2/0YFWKL</a>, Root, DRAFT VERSION',
+      description: faker.lorem.paragraph(),
       ...props
     }
+
+    return new DatasetPreview(
+      datasetPreview.persistentId,
+      datasetPreview.title,
+      datasetPreview.version,
+      datasetPreview.citation,
+      datasetPreview.labels,
+      datasetPreview.isDeaccessioned,
+      datasetPreview.releaseOrCreateDate,
+      datasetPreview.description,
+      datasetPreview.thumbnail
+    )
   }
 
   static createWithThumbnail(): DatasetPreview {

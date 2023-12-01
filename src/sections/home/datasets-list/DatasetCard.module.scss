@@ -39,9 +39,13 @@
 .citation-box {
   background-color: lighten($dv-primary-color, 51%) ;
   padding: 4px;
+  margin-bottom: .5em;
+  margin-top: 4px;
 }
 
 .citation-box-deaccessioned {
   background-color: $dv-danger-box-color;
   padding: 4px;
+  margin-bottom: .5em;
+  margin-top: 4px;
 }

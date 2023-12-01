@@ -42,6 +42,7 @@ export function DatasetCard({ dataset }: DatasetCardProps) {
             }>
             <CitationDescription citation={dataset.citation} version={dataset.version} />
           </span>
+          <span>{dataset.abbreviatedDescription}</span>
         </div>
       </div>
     </article>

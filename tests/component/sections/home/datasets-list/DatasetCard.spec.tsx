@@ -23,6 +23,7 @@ describe('DatasetCard', () => {
       .should('exist')
       .parent()
       .should('have.class', styles['citation-box'])
+    cy.findByText(dataset.abbreviatedDescription).should('exist')
   })
 
   it('should render the citation with the deaccessioned background if the dataset is deaccessioned', () => {
