@@ -16,6 +16,7 @@ import { WithDatasetNotFound } from './WithDatasetNotFound'
 import { WithDatasetLoading } from './WithDatasetLoading'
 import { WithLoggedInUser } from '../WithLoggedInUser'
 import { WithAlerts } from '../WithAlerts'
+import { WithDeaccessionedDataset } from './WithDeaccessionedDataset'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -37,6 +38,10 @@ export const Default: Story = {
 
 export const DraftWithAllDatasetPermissions: Story = {
   decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithFilePermissionsGranted],
+  render: () => <Dataset fileRepository={new FileMockRepository()} />
+}
+export const Deaccessioned: Story = {
+  decorators: [WithLayout, WithDeaccessionedDataset, WithLoggedInUser, WithFilePermissionsGranted],
   render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 export const LoggedInAsOwner: Story = {

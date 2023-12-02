@@ -127,7 +127,7 @@ describe('Dataset', () => {
         })
     })
 
-    it.skip('successfully loads a dataset deaccessioned', () => {
+    it('successfully loads a dataset deaccessioned', () => {
       // TODO - Implement once the getDatasetCitation includes deaccessioned datasets
       cy.wrap(DatasetHelper.create())
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
