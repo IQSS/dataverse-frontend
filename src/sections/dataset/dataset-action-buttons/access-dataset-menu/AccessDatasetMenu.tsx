@@ -31,7 +31,6 @@ export function AccessDatasetMenu({ version, permissions }: AccessDatasetMenuPro
     </DropdownButton>
   )
 }
-
 // TODO: add download feature https://github.com/IQSS/dataverse-frontend/issues/63
 // TODO: add explore feature
 // TODO: add compute feature
