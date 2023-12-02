@@ -14,7 +14,8 @@ interface AccessDatasetMenuProps {
 export function AccessDatasetMenu({ version, permissions }: AccessDatasetMenuProps) {
   if (
     !permissions.canDownloadFiles ||
-    version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
+    (version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED &&
+      !permissions.canUpdateDataset)
   ) {
     return <></>
   }
