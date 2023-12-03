@@ -1,4 +1,4 @@
-import { AlertVariant } from '@iqss/dataverse-design-system/dist/components/alert/AlertVariant'
+import { Alert, AlertMessageKey } from '../../../alert/domain/models/Alert'
 import { FileDownloadSize } from '../../../files/domain/models/File'
 
 export enum DatasetLabelSemanticMeaning {
@@ -22,22 +22,6 @@ export class DatasetLabel {
   constructor(
     public readonly semanticMeaning: DatasetLabelSemanticMeaning,
     public readonly value: DatasetLabelValue | `Version ${string}`
-  ) {}
-}
-
-export enum DatasetAlertMessageKey {
-  DRAFT_VERSION = 'draftVersion',
-  REQUESTED_VERSION_NOT_FOUND = 'requestedVersionNotFound',
-  REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT = 'requestedVersionNotFoundShowDraft',
-  SHARE_UNPUBLISHED_DATASET = 'shareUnpublishedDataset',
-  UNPUBLISHED_DATASET = 'unpublishedDataset'
-}
-
-export class DatasetAlert {
-  constructor(
-    public readonly variant: AlertVariant,
-    public readonly message: DatasetAlertMessageKey,
-    public readonly dynamicFields?: object
   ) {}
 }
 
@@ -260,20 +244,19 @@ export interface DatasetPermissions {
 }
 
 export interface DatasetLock {
-  id: number
+  userPersistentId: string
   reason: DatasetLockReason
 }
 
 export enum DatasetLockReason {
-  INGEST = 'ingest',
-  WORKFLOW = 'workflow',
-  IN_REVIEW = 'inReview',
-  DCM_UPLOAD = 'dcmUpload',
-  GLOBUS_UPLOAD = 'globusUpload',
+  INGEST = 'Ingest',
+  WORKFLOW = 'Workflow',
+  IN_REVIEW = 'InReview',
+  DCM_UPLOAD = 'DcmUpload',
+  GLOBUS_UPLOAD = 'GlobusUpload',
   FINALIZE_PUBLICATION = 'finalizePublication',
-
-  EDIT_IN_PROGRESS = 'editInProgress',
-  FILE_VALIDATION_FAILED = 'fileValidationFailed'
+  EDIT_IN_PROGRESS = 'EditInProgress',
+  FILE_VALIDATION_FAILED = 'FileValidationFailed'
 }
 
 export interface PrivateUrl {
@@ -287,7 +270,7 @@ export class Dataset {
     public readonly version: DatasetVersion,
     public readonly citation: string,
     public readonly labels: DatasetLabel[],
-    public readonly alerts: DatasetAlert[],
+    public readonly alerts: Alert[],
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
     public readonly metadataBlocks: DatasetMetadataBlocks,
@@ -306,8 +289,8 @@ export class Dataset {
     return this.metadataBlocks[0].fields.title
   }
 
-  public get isLockedFromPublishing(): boolean {
-    return this.isLockedFromEdits
+  public checkIsLockedFromPublishing(userPersistentId: string): boolean {
+    return this.checkIsLockedFromEdits(userPersistentId)
   }
 
   public get isLocked(): boolean {
@@ -318,19 +301,56 @@ export class Dataset {
     return this.locks.some((lock) => lock.reason === DatasetLockReason.WORKFLOW)
   }
 
-  public get isLockedFromEdits(): boolean {
+  public checkIsLockedFromEdits(userPersistentId: string): boolean {
     const lockedReasonIsInReview = this.locks.some(
       (lock) => lock.reason === DatasetLockReason.IN_REVIEW
     )
-    // If the lock reason is workflow and the workflow userId is the same as the current user, then the user can edit
-    // TODO - Ask how we want to manage pending workflows
+
+    if (
+      this.locks.some(
+        (lock) =>
+          lock.reason === DatasetLockReason.WORKFLOW && lock.userPersistentId === userPersistentId
+      )
+    ) {
+      return false
+    }
 
     return this.isLocked && !(lockedReasonIsInReview && this.permissions.canPublishDataset)
   }
 
+  public get isLockedFromFileDownload(): boolean {
+    if (!this.isLocked) {
+      return false
+    }
+
+    if (
+      this.locks.some((lock) =>
+        [
+          DatasetLockReason.FINALIZE_PUBLICATION,
+          DatasetLockReason.DCM_UPLOAD,
+          DatasetLockReason.INGEST
+        ].includes(lock.reason)
+      )
+    ) {
+      return true
+    }
+
+    if (
+      this.locks.some((lock) => lock.reason === DatasetLockReason.IN_REVIEW) &&
+      !this.permissions.canUpdateDataset
+    ) {
+      return true
+    }
+
+    // If the lock reason is workflow and the workflow userId is different than the current user, then is locked
+    // TODO - Ask how we want to manage pending workflows
+
+    return false
+  }
+
   static Builder = class {
     public readonly labels: DatasetLabel[] = []
-    public readonly alerts: DatasetAlert[] = []
+    public readonly alerts: Alert[] = []
 
     constructor(
       public readonly persistentId: string,
@@ -403,7 +423,7 @@ export class Dataset {
         this.version.publishingStatus === DatasetPublishingStatus.DRAFT &&
         this.permissions.canPublishDataset
       ) {
-        this.alerts.push(new DatasetAlert('warning', DatasetAlertMessageKey.DRAFT_VERSION))
+        this.alerts.push(new Alert('warning', AlertMessageKey.DRAFT_VERSION))
       }
       if (this.version.requestedVersion) {
         if (this.version.latestVersionStatus == DatasetPublishingStatus.RELEASED) {
@@ -412,20 +432,16 @@ export class Dataset {
             returnedVersion: `${this.version.toString()}`
           }
           this.alerts.push(
-            new DatasetAlert(
-              'warning',
-              DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND,
-              dynamicFields
-            )
+            new Alert('warning', AlertMessageKey.REQUESTED_VERSION_NOT_FOUND, dynamicFields)
           )
         } else {
           const dynamicFields = {
             requestedVersion: this.version.requestedVersion
           }
           this.alerts.push(
-            new DatasetAlert(
+            new Alert(
               'warning',
-              DatasetAlertMessageKey.REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT,
+              AlertMessageKey.REQUESTED_VERSION_NOT_FOUND_SHOW_DRAFT,
               dynamicFields
             )
           )
@@ -435,14 +451,10 @@ export class Dataset {
         if (this.permissions.canPublishDataset) {
           const dynamicFields = { privateUrl: this.privateUrl.urlSnippet + this.privateUrl.token }
           this.alerts.push(
-            new DatasetAlert(
-              'info',
-              DatasetAlertMessageKey.SHARE_UNPUBLISHED_DATASET,
-              dynamicFields
-            )
+            new Alert('info', AlertMessageKey.SHARE_UNPUBLISHED_DATASET, dynamicFields)
           )
         } else {
-          this.alerts.push(new DatasetAlert('warning', DatasetAlertMessageKey.UNPUBLISHED_DATASET))
+          this.alerts.push(new Alert('warning', AlertMessageKey.UNPUBLISHED_DATASET))
         }
       }
     }

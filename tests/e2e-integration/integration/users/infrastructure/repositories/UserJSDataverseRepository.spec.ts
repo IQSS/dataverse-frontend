@@ -12,7 +12,7 @@ describe('User JSDataverse Repository', () => {
   beforeEach(() => TestsUtils.login())
 
   it('gets the authenticated user', async () => {
-    const expectedUser = { name: 'Dataverse Admin' }
+    const expectedUser = { name: 'Dataverse Admin', persistentId: 'dataverseAdmin' }
     const user = await userRepository.getAuthenticated()
 
     expect(user).to.deep.equal(expectedUser)

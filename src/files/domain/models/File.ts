@@ -1,3 +1,5 @@
+import FileTypeToFriendlyTypeMap from './FileTypeToFriendlyTypeMap'
+
 export enum FileSizeUnit {
   BYTES = 'B',
   KILOBYTES = 'KB',
@@ -136,15 +138,10 @@ export interface FileLabel {
 }
 
 export class FileType {
-  constructor(readonly value: string) {}
+  constructor(readonly value: string, readonly original?: string) {}
 
   toDisplayFormat(): string {
-    const words = this.value.split(' ')
-    return words
-      .map((word) => {
-        return word[0].toUpperCase() + word.substring(1)
-      })
-      .join(' ')
+    return FileTypeToFriendlyTypeMap[this.value] || FileTypeToFriendlyTypeMap.unknown
   }
 }
 

@@ -25,11 +25,11 @@ const testFilesCountInfo = FilesCountInfoMother.create({
   total: 200,
   perFileType: [
     {
-      type: new FileType('text'),
+      type: new FileType('text/plain'),
       count: 5
     },
     {
-      type: new FileType('image'),
+      type: new FileType('image/png'),
       count: 485
     }
   ],
@@ -98,7 +98,7 @@ describe('DatasetFiles', () => {
 
       cy.findByLabelText('Files per page').select('25')
 
-      cy.findByRole('columnheader', { name: '26 to 50 of 200 Files' }).should('exist')
+      cy.findByRole('columnheader', { name: '1 to 25 of 200 Files' }).should('exist')
     })
 
     it('renders the files table with the correct header with a different page size ', () => {
@@ -114,6 +114,81 @@ describe('DatasetFiles', () => {
       cy.findByRole('button', { name: '3' }).click()
 
       cy.findByRole('columnheader', { name: '101 to 150 of 200 Files' }).should('exist')
+    })
+
+    it('renders the first page if there is only one page and the user changes to a lower page size', () => {
+      const testFilesCountInfo = FilesCountInfoMother.create({
+        total: 32
+      })
+      fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(testFiles)
+      fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
+      fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(19900)
+
+      cy.customMount(
+        <DatasetFiles
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+
+      cy.findByRole('button', { name: '1' }).should('not.exist')
+      cy.findByRole('button', { name: '2' }).should('exist')
+      cy.findByRole('button', { name: '3' }).should('exist')
+      cy.findByRole('button', { name: '4' }).should('exist')
+
+      cy.findByLabelText('Files per page').select('50')
+
+      cy.findByRole('button', { name: '1' }).should('not.exist')
+      cy.findByRole('button', { name: '2' }).should('not.exist')
+      cy.findByRole('button', { name: '3' }).should('not.exist')
+      cy.findByRole('columnheader', { name: '1 to 32 of 32 Files' }).should('exist')
+
+      cy.findByLabelText('Files per page').select('10')
+
+      cy.findByRole('button', { name: '1' }).should('not.exist')
+      cy.findByRole('button', { name: '2' }).should('exist')
+      cy.findByRole('button', { name: '3' }).should('exist')
+      cy.findByRole('button', { name: '4' }).should('exist')
+      cy.findByRole('columnheader', { name: '1 to 10 of 32 Files' }).should('exist')
+    })
+
+    it('renders the page that includes the first element of the current page when changing the page size', () => {
+      const testFilesCountInfo = FilesCountInfoMother.create({
+        total: 32
+      })
+      fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(testFiles)
+      fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
+      fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(19900)
+
+      cy.customMount(
+        <DatasetFiles
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+
+      cy.findByRole('button', { name: '1' }).should('not.exist')
+      cy.findByRole('button', { name: '2' }).should('exist')
+      cy.findByRole('button', { name: '3' }).should('exist')
+      cy.findByRole('button', { name: '4' }).should('exist')
+
+      cy.findByLabelText('Files per page').select('25')
+
+      cy.findByRole('button', { name: '1' }).should('not.exist')
+      cy.findByRole('button', { name: '2' }).should('exist')
+      cy.findByRole('button', { name: '3' }).should('not.exist')
+      cy.findByRole('columnheader', { name: '1 to 25 of 32 Files' }).should('exist')
+
+      cy.findByRole('button', { name: '2' }).click()
+      cy.findByLabelText('Files per page').select('10')
+
+      cy.findByRole('button', { name: '1' }).should('exist')
+      cy.findByRole('button', { name: '2' }).should('exist')
+      cy.findByRole('button', { name: '3' }).should('not.exist')
+      cy.findByRole('button', { name: '4' }).should('exist')
+      cy.findByRole('columnheader', { name: '21 to 30 of 32 Files' }).should('exist')
     })
 
     it('maintains the selection when the page changes', () => {
@@ -188,7 +263,7 @@ describe('DatasetFiles', () => {
       cy.findByText('1 file is currently selected.').should('exist')
 
       cy.findByRole('button', { name: 'File Type: All' }).click()
-      cy.findByText('Image (485)').should('exist').click()
+      cy.findByText('PNG Image (485)').should('exist').click()
 
       cy.findByText('1 file is currently selected.').should('not.exist')
     })
@@ -357,13 +432,13 @@ describe('DatasetFiles', () => {
       )
 
       cy.findByRole('button', { name: 'File Type: All' }).click()
-      cy.findByText('Image (485)').should('exist').click()
+      cy.findByText('PNG Image (485)').should('exist').click()
       cy.wrap(fileRepository.getAllByDatasetPersistentId).should(
         'be.calledWith',
         datasetPersistentId,
         datasetVersion,
         filePaginationInfo,
-        new FileCriteria().withFilterByType('image')
+        new FileCriteria().withFilterByType('image/png')
       )
     })
 
@@ -456,7 +531,7 @@ describe('DatasetFiles', () => {
       )
 
       cy.findByRole('button', { name: 'File Type: All' }).click()
-      cy.findByText('Image (485)').should('exist').click()
+      cy.findByText('PNG Image (485)').should('exist').click()
       cy.get('table > thead > tr > th > input[type=checkbox]').click()
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
       cy.findByText(
@@ -467,7 +542,7 @@ describe('DatasetFiles', () => {
         'be.calledWith',
         datasetPersistentId,
         datasetVersion,
-        new FileCriteria().withFilterByType('image')
+        new FileCriteria().withFilterByType('image/png')
       )
     })
   })
