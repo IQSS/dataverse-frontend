@@ -1,14 +1,16 @@
+@use 'sass:color';
 @import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
 @import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module";
 
 .container {
   margin: 6px 0;
-  border: 1px solid $dv-info-border-color;
   padding: 4px 10px;
+  border: 1px solid $dv-info-border-color;
 }
 
 .header {
   display: flex;
+
   > * {
     margin-right: .5em;
   }
@@ -31,8 +33,8 @@
 .description {
   display: flex;
   flex-direction: column;
-  font-size: $dv-font-size-sm;
   width: 100%;
+  font-size: $dv-font-size-sm;
 }
 
 .date {
@@ -41,15 +43,15 @@
 }
 
 .citation-box {
-  background-color: lighten($dv-primary-color, 51%) ;
-  padding: 4px;
-  margin-bottom: .5em;
   margin-top: 4px;
+  margin-bottom: .5em;
+  padding: 4px;
+  background-color: color.adjust($dv-primary-color, $lightness: 51%) ;
 }
 
 .citation-box-deaccessioned {
-  background-color: $dv-danger-box-color;
-  padding: 4px;
-  margin-bottom: .5em;
   margin-top: 4px;
+  margin-bottom: .5em;
+  padding: 4px;
+  background-color: $dv-danger-box-color;
 }

@@ -200,6 +200,25 @@ export class DatasetLabelsMother {
       { value: DatasetLabelValue.DRAFT, semanticMeaning: DatasetLabelSemanticMeaning.DATASET }
     ]
   }
+
+  static createDeaccessioned(): DatasetLabel[] {
+    return [
+      {
+        value: DatasetLabelValue.DEACCESSIONED,
+        semanticMeaning: DatasetLabelSemanticMeaning.DANGER
+      }
+    ]
+  }
+}
+
+export class DatasetCitationMother {
+  static create(): string {
+    return 'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/0YFWKL" target="_blank">https://doi.org/10.5072/FK2/0YFWKL</a>, Root, DRAFT VERSION'
+  }
+
+  static createDeaccessioned(): string {
+    return 'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/0YFWKL" target="_blank">https://doi.org/10.5072/FK2/0YFWKL</a>, Root, V1, DEACCESSIONED VERSION'
+  }
 }
 
 export class DatasetMother {

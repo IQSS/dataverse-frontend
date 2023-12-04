@@ -8,7 +8,7 @@ import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPag
 import { useLoading } from '../../loading/LoadingContext'
 import { DatasetsListSkeleton } from './DatasetsListSkeleton'
 import { NoDatasetsMessage } from './NoDatasetsMessage'
-import { DatasetCard } from './DatasetCard'
+import { DatasetCard } from './dataset-card/DatasetCard'
 
 interface DatasetsListProps {
   datasetRepository: DatasetRepository

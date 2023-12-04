@@ -38,7 +38,7 @@ describe('Datasets List', () => {
 
     cy.findByText('1 to 10 of 200 Datasets').should('exist')
     datasets.forEach((dataset) => {
-      cy.findByRole('link', { name: dataset.title })
+      cy.findByText(dataset.title)
         .should('exist')
         .should('have.attr', 'href', `/datasets?persistentId=${dataset.persistentId}`)
     })

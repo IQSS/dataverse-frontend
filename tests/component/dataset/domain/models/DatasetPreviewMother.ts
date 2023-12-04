@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { DatasetPreview } from '../../../../../src/dataset/domain/models/DatasetPreview'
-import { DatasetLabelsMother, DatasetVersionMother } from './DatasetMother'
+import { DatasetCitationMother, DatasetLabelsMother, DatasetVersionMother } from './DatasetMother'
 
 export class DatasetPreviewMother {
   static createMany(count: number): DatasetPreview[] {
@@ -16,8 +16,7 @@ export class DatasetPreviewMother {
       thumbnail: faker.datatype.boolean() ? faker.image.imageUrl() : undefined,
       releaseOrCreateDate: faker.date.past(),
       version: DatasetVersionMother.create(),
-      citation:
-        'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/0YFWKL" target="_blank">https://doi.org/10.5072/FK2/0YFWKL</a>, Root, DRAFT VERSION',
+      citation: DatasetCitationMother.create(),
       description: faker.lorem.paragraph(),
       ...props
     }
@@ -39,7 +38,15 @@ export class DatasetPreviewMother {
     return this.create({ thumbnail: faker.image.imageUrl(), isDeaccessioned: false })
   }
 
+  static createWithNoThumbnail(): DatasetPreview {
+    return this.create({ thumbnail: undefined, isDeaccessioned: false })
+  }
+
   static createDeaccessioned(): DatasetPreview {
-    return this.create({ isDeaccessioned: true })
+    return this.create({
+      isDeaccessioned: true,
+      labels: DatasetLabelsMother.createDeaccessioned(),
+      citation: DatasetCitationMother.createDeaccessioned()
+    })
   }
 }
