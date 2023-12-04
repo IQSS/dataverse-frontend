@@ -53,5 +53,5 @@
   margin-top: 4px;
   margin-bottom: .5em;
   padding: 4px;
-  background-color: $dv-danger-box-color;
+  background-color: color.adjust($dv-danger-box-color, $lightness: 6%);
 }
