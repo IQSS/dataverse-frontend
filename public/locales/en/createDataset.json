@@ -1,0 +1,16 @@
+{
+  "pageTitle": "Create Dataset",
+  "metadataTip": {
+    "title": "Metadata Tip",
+    "content": "After adding the dataset, click the Edit Dataset button to add more metadata."
+  },
+  "datasetForm": {
+    "title": "Title"
+  },
+  "datasetFormStates": {
+    "submitting": "Form Submitting",
+    "submissionSuccess": "Form submission successful"
+  },
+  "saveButton": "Save Dataset",
+  "cancelButton": "Cancel"
+}

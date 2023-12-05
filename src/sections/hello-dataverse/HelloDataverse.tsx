@@ -1,4 +1,4 @@
-import logo from '../assets/logo.svg'
+import logo from '../../assets/logo.svg'
 import styles from './HelloDataverse.module.scss'
 import { Trans, useTranslation } from 'react-i18next'
 
