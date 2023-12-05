@@ -5,7 +5,15 @@ import { FileHelper } from '../../../shared/files/FileHelper'
 import moment from 'moment-timezone'
 
 type Dataset = {
-  datasetVersion: { metadataBlocks: { citation: { fields: { value: string }[] } } }
+  datasetVersion: {
+    metadataBlocks: {
+      citation: {
+        fields: {
+          value: string
+        }[]
+      }
+    }
+  }
 }
 
 describe('Dataset', () => {
@@ -283,28 +291,34 @@ describe('Dataset', () => {
       )
         .its('persistentId')
         .then((persistentId: string) => {
+          /*
+                                                                                                                                            http://localhost:8000/api/v1/access/datafile/894/userPermissions
+                                                                                                                                             */
           cy.wait(1500) // Wait for the dataset to be published
 
           cy.wrap(TestsUtils.logout())
 
+          cy.intercept('/api/v1/access/datafile/*/userPermissions').as('userPermissions')
+
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
-          cy.wait(1500) // Wait for the files to be loaded
+          cy.wait('@userPermissions').then(() => {
+            cy.wait('@userPermissions').then(() => {
+              cy.findByText('Files').should('exist')
 
-          cy.findByText('Files').should('exist')
+              cy.findByText('Restricted with access Icon').should('not.exist')
+              cy.findByText('Restricted File Icon').should('exist')
 
-          cy.findByText('Restricted with access Icon').should('not.exist')
-          cy.findByText('Restricted File Icon').should('exist')
-
-          //  use alias below to avoid a timing error
-          cy.findByRole('button', { name: 'Access File' }).as('accessButton')
-          cy.get('@accessButton').should('exist')
-          cy.get('@accessButton').click()
-          cy.findByText('Restricted').should('exist')
+              //  use alias below to avoid a timing error
+              cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+              cy.get('@accessButton').should('exist')
+              cy.get('@accessButton').click()
+              cy.findByText('Restricted').should('exist')
+            })
+          })
         })
     })
-
-    it('loads the embargoed files', () => {
+    it.only('loads the embargoed files', () => {
       cy.window().then((win) => {
         // Get the browser's locale from the window object
         const browserLocale = win.navigator.language
@@ -339,19 +353,23 @@ describe('Dataset', () => {
           .then((persistentId: string) => {
             cy.wait(1500) // Wait for the files to be embargoed
 
+            cy.intercept('/api/v1/access/datafile/*/userPermissions').as('userPermissions')
+
             cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
-            cy.wait(1500) // Wait for the files to be loaded
+            cy.wait('@userPermissions').then(() => {
+              cy.wait('@userPermissions').then(() => {
+                cy.findByText('Files').should('exist')
+                cy.findByText(/Deposited/).should('exist')
+                cy.findByText(`Draft: will be embargoed until ${expectedDate}`).should('exist')
 
-            cy.findByText('Files').should('exist')
+                cy.findByText('Edit Files').should('exist')
 
-            cy.findByText(/Deposited/).should('exist')
-            cy.findByText(`Draft: will be embargoed until ${expectedDate}`).should('exist')
-
-            cy.findByText('Edit Files').should('exist')
-
-            cy.findByRole('button', { name: 'Access File' }).should('exist').click()
-            cy.findByText('Embargoed').should('exist')
+                cy.findByRole('button', { name: 'Access File' }).should('be.visible')
+                cy.findByRole('button', { name: 'Access File' }).should('be.visible').click()
+                cy.findByText('Embargoed').should('exist')
+              })
+            })
           })
       })
     })

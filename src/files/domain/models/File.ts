@@ -1,4 +1,5 @@
 import FileTypeToFriendlyTypeMap from './FileTypeToFriendlyTypeMap'
+import { FileUserPermissions } from './FileUserPermissions'
 
 export enum FileSizeUnit {
   BYTES = 'B',
@@ -115,6 +116,7 @@ export enum FileLabelType {
   CATEGORY = 'category',
   TAG = 'tag'
 }
+
 export interface FileLabel {
   type: FileLabelType
   value: string
@@ -158,6 +160,7 @@ export class File {
     readonly labels: FileLabel[],
     public readonly isDeleted: boolean,
     public readonly ingest: FileIngest,
+    public userPermissions?: FileUserPermissions,
     readonly checksum?: FileChecksum,
     public thumbnail?: string,
     readonly directory?: string,

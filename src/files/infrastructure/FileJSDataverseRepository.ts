@@ -44,6 +44,7 @@ export class FileJSDataverseRepository implements FileRepository {
       .then((jsFiles) => jsFiles.map((jsFile) => JSFileMapper.toFile(jsFile, datasetVersion)))
       .then((files) => FileJSDataverseRepository.getAllWithDownloadCount(files))
       .then((files) => FileJSDataverseRepository.getAllWithThumbnail(files))
+      .then((files) => FileJSDataverseRepository.getAllWithPermissions(files))
       .catch((error: ReadError) => {
         throw new Error(error.message)
       })
@@ -77,6 +78,23 @@ export class FileJSDataverseRepository implements FileRepository {
       files.map((file) =>
         FileJSDataverseRepository.getThumbnailById(file.id).then((thumbnail) => {
           file.thumbnail = thumbnail
+          return file
+        })
+      )
+    )
+  }
+
+  private static getAllWithPermissions(files: File[]): Promise<File[]> {
+    console.log('BEGIN getAllWithPermissions')
+    return Promise.all(
+      files.map((file) =>
+        getFileUserPermissions.execute(file.id).then((jsFileUserPermissions) => {
+          file.userPermissions = {
+            fileId: file.id,
+            canDownloadFile: jsFileUserPermissions.canDownloadFile,
+            canEditDataset: jsFileUserPermissions.canEditOwnerDataset
+          }
+          console.log('jsFileUserPermissions', jsFileUserPermissions)
           return file
         })
       )

@@ -44,6 +44,7 @@ export function useFiles(
   }
 
   const getFiles = (filesCount: FilesCountInfo) => {
+    console.log('GET FILES', filesCount)
     if (filesCount) {
       if (filesCount.total === 0) {
         setIsLoading(false)
@@ -58,11 +59,9 @@ export function useFiles(
       )
         .then((files: File[]) => {
           setFiles(files)
+          setIsLoading(false)
           return files
         })
-        .then((files: File[]) =>
-          fetchFilesPermission(FilePermission.DOWNLOAD_FILE, files).then(() => setIsLoading(false))
-        )
         .catch(() => {
           throw new Error('There was an error getting the files')
         })
@@ -71,7 +70,15 @@ export function useFiles(
 
   useEffect(() => {
     setIsLoading(true)
-
+    console.log(
+      'USE EFFECT FILE COUNT INFO',
+      filesRepository,
+      datasetPersistentId,
+      datasetVersion,
+      paginationInfo.page,
+      paginationInfo.pageSize,
+      criteria
+    )
     getFilesCountInfo()
       .then((filesCount) => getFiles(filesCount))
       .catch(() => {
@@ -88,6 +95,13 @@ export function useFiles(
   ])
 
   useEffect(() => {
+    console.log(
+      'USE EFFECT FILE DOWNLOAD SIZE',
+      filesRepository,
+      datasetPersistentId,
+      datasetVersion,
+      criteria
+    )
     getFilesTotalDownloadSize(filesRepository, datasetPersistentId, datasetVersion, criteria)
       .then((filesTotalDownloadSize: number) => {
         setFilesTotalDownloadSize(filesTotalDownloadSize)

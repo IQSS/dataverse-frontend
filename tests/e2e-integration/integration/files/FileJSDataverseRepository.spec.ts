@@ -56,6 +56,7 @@ const expectedFile = new File(
   [],
   false,
   { status: FileIngestStatus.NONE },
+  undefined,
   {
     algorithm: 'MD5',
     value: '0187a54071542738aa47939e8218e5f2'

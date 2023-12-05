@@ -48,6 +48,7 @@ export class JSFileMapper {
       this.toFileLabels(jsFile.categories, jsFile.tabularTags),
       false, // TODO - Implement this when it is added to js-dataverse
       { status: FileIngestStatus.NONE }, // TODO - Implement this when it is added to js-dataverse
+      undefined, // TODO - revisit this, do I need to have a method here?
       this.toFileChecksum(jsFile.checksum),
       this.toFileThumbnail(),
       this.toFileDirectory(jsFile.directoryLabel),
