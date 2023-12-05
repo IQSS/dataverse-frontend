@@ -35,6 +35,7 @@ export class FileEmbargoMother {
     return new FileEmbargo(dateAvailable)
   }
 }
+
 export class FileIngestMother {
   static create(props?: Partial<FileIngest>): FileIngest {
     return {
@@ -139,6 +140,7 @@ export class FileMother {
       fileMockedData.labels,
       fileMockedData.isDeleted,
       fileMockedData.ingest,
+      fileMockedData.userPermissions,
       fileMockedData.checksum,
       fileMockedData.thumbnail,
       fileMockedData.directory,
@@ -348,6 +350,7 @@ export class FileMother {
       }
     })
   }
+
   static createDeleted(): File {
     return this.createDefault({
       isDeleted: true

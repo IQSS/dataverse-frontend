@@ -6,8 +6,6 @@ import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 import { FilesCountInfo } from '../../../files/domain/models/FilesCountInfo'
 import { getFilesCountInfoByDatasetPersistentId } from '../../../files/domain/useCases/getFilesCountInfoByDatasetPersistentId'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
-import { useFilePermissions } from '../../file/file-permissions/FilePermissionsContext'
-import { FilePermission } from '../../../files/domain/models/FileUserPermissions'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { getFilesTotalDownloadSize } from '../../../files/domain/useCases/getFilesTotalDownloadSize'
 
@@ -19,7 +17,6 @@ export function useFiles(
   paginationInfo: FilePaginationInfo,
   criteria?: FileCriteria
 ) {
-  const { fetchFilesPermission } = useFilePermissions()
   const [files, setFiles] = useState<File[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [filesCountInfo, setFilesCountInfo] = useState<FilesCountInfo>()
