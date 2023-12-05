@@ -25,6 +25,8 @@ export function CreateDataset() {
   const { isLoading } = useDataset()
   const { t } = useTranslation('createDataset')
   const [submitting, setSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState(false)
+
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading])
@@ -42,17 +44,20 @@ export function CreateDataset() {
     setState({ ...state, [e.target.id]: value })
   }
 
+  // TODO: Connect to API when ready
   const handleCreateDatasetSubmit = (event: FormEvent<HTMLFormElement>) => {
     setSubmitting(true)
     event.preventDefault()
     setTimeout(() => {
       setSubmitting(false)
       console.log('Form Submitted!')
+      setSubmitStatus(true)
     }, 3000)
     console.log(state)
     // TODO: Callback for form submission should be here.
   }
 
+  // TODO: Probably replace this with a FormSkeleton or remove entirely
   if (isLoading) {
     return <DatasetSkeleton />
   }
@@ -66,11 +71,13 @@ export function CreateDataset() {
         <RequiredFieldText />
         {submitting && <div>Submtting Form...</div>}
         <Form onSubmit={handleCreateDatasetSubmit}>
+          {submitStatus && <div>Form Submitted!</div>}
           <Row>
             <Col md={9}>
               <Form.Group controlId="createDatasetTitle" required>
                 <Form.Group.Label>{t('datasetForm.title')}</Form.Group.Label>
                 <Form.Group.Input
+                  data-cy="datasetFormInputTitle"
                   type="text"
                   placeholder="Dataset Title"
                   onChange={handleCreateDatasetFieldChange}
@@ -99,8 +106,10 @@ export function CreateDataset() {
             action="#{DatasetPage.save()}"
             update=":datasetForm,:messagePanel"
           /> */}
-          <Button type="submit">{t('saveButton')}</Button>
-          <Button withSpacing variant="secondary">
+          <Button type="submit" data-cy="datasetFormSubmit">
+            {t('saveButton')}
+          </Button>
+          <Button withSpacing variant="secondary" data-cy="datasetFormCancel">
             {t('cancelButton')}
           </Button>
         </Form>
