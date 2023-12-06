@@ -147,4 +147,8 @@ export class FileJSDataverseRepository implements FileRepository {
         throw new Error(error.message)
       })
   }
+
+  getMultipleFileDownloadUrl(ids: number[], downloadMode: string): string {
+    return `/api/access/datafiles/${ids.join(',')}?format=${downloadMode}`
+  }
 }

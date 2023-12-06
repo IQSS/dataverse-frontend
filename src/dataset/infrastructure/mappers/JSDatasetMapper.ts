@@ -14,7 +14,8 @@ import {
   DatasetMetadataFields,
   DatasetVersion,
   MetadataBlockName,
-  PrivateUrl
+  PrivateUrl,
+  DatasetDownloadUrls
 } from '../../domain/models/Dataset'
 
 export class JSDatasetMapper {
@@ -25,9 +26,14 @@ export class JSDatasetMapper {
     requestedVersion?: string,
     privateUrl?: PrivateUrl
   ): Dataset {
+    const version = JSDatasetMapper.toVersion(
+      jsDataset.versionId,
+      jsDataset.versionInfo,
+      requestedVersion
+    )
     return new Dataset.Builder(
       jsDataset.persistentId,
-      JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo, requestedVersion),
+      version,
       citation,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
@@ -50,6 +56,7 @@ export class JSDatasetMapper {
       true, // TODO Connect with dataset isValid
       jsDataset.versionInfo.releaseTime !== undefined &&
         !isNaN(jsDataset.versionInfo.releaseTime.getTime()), // TODO Connect with dataset isReleased,
+      JSDatasetMapper.toDownloadUrls(jsDataset.persistentId, version),
       undefined, // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl
     ).build()
@@ -184,5 +191,15 @@ export class JSDatasetMapper {
     }
 
     return extraFields
+  }
+
+  static toDownloadUrls(
+    jsDatasetPersistentId: string,
+    version: DatasetVersion
+  ): DatasetDownloadUrls {
+    return {
+      original: `/api/access/dataset/:persistentId/versions/${version.toString()}?persistentId=${jsDatasetPersistentId}&format=original`,
+      archival: `/api/access/dataset/:persistentId/versions/${version.toString()}?persistentId=${jsDatasetPersistentId}`
+    }
   }
 }
