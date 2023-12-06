@@ -291,6 +291,10 @@ export class DatasetMother {
       hasValidTermsOfAccess: faker.datatype.boolean(),
       isValid: faker.datatype.boolean(),
       isReleased: faker.datatype.boolean(),
+      downloadUrls: {
+        original: this.createDownloadUrl(),
+        archival: this.createDownloadUrl()
+      },
       thumbnail: undefined,
       privateUrl: undefined,
       ...props
@@ -308,9 +312,17 @@ export class DatasetMother {
       dataset.hasValidTermsOfAccess,
       dataset.isValid,
       dataset.isReleased,
+      dataset.downloadUrls,
       dataset.thumbnail,
       dataset.privateUrl
     ).build()
+  }
+
+  static createDownloadUrl(): string {
+    const blob = new Blob(['Name,Age,Location\nJohn,25,New York\nJane,30,San Francisco'], {
+      type: 'text/csv'
+    })
+    return URL.createObjectURL(blob)
   }
 
   static createAnonymized(): Dataset {

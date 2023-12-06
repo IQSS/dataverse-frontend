@@ -111,6 +111,11 @@ export interface FileTabularData {
   unf: string
 }
 
+export enum FileDownloadMode {
+  ARCHIVAL = 'archival',
+  ORIGINAL = 'original'
+}
+
 export enum FileLabelType {
   CATEGORY = 'category',
   TAG = 'tag'

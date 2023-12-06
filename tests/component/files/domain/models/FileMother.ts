@@ -29,11 +29,6 @@ export class FileEmbargoMother {
   static create(dateAvailable?: Date): FileEmbargo {
     return new FileEmbargo(dateAvailable ?? faker.date.future())
   }
-
-  static createNotActive(): FileEmbargo {
-    const dateAvailable = faker.date.past()
-    return new FileEmbargo(dateAvailable)
-  }
 }
 export class FileIngestMother {
   static create(props?: Partial<FileIngest>): FileIngest {

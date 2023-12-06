@@ -280,6 +280,11 @@ export interface PrivateUrl {
   urlSnippet: string
 }
 
+export interface DatasetDownloadUrls {
+  original: string
+  archival: string
+}
+
 export class Dataset {
   constructor(
     public readonly persistentId: string,
@@ -295,6 +300,7 @@ export class Dataset {
     public readonly hasValidTermsOfAccess: boolean,
     public readonly isValid: boolean,
     public readonly isReleased: boolean,
+    public readonly downloadUrls: DatasetDownloadUrls,
     public readonly thumbnail?: string,
     public readonly privateUrl?: PrivateUrl
   ) {}
@@ -371,6 +377,7 @@ export class Dataset {
       public readonly hasValidTermsOfAccess: boolean,
       public readonly isValid: boolean,
       public readonly isReleased: boolean,
+      public readonly downloadUrls: DatasetDownloadUrls,
       public readonly thumbnail?: string,
       public readonly privateUrl?: PrivateUrl
     ) {
@@ -487,6 +494,7 @@ export class Dataset {
         this.hasValidTermsOfAccess,
         this.isValid,
         this.isReleased,
+        this.downloadUrls,
         this.thumbnail,
         this.privateUrl
       )
