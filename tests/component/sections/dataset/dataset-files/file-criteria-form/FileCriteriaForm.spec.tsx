@@ -18,11 +18,11 @@ let onCriteriaChange = () => {}
 const filesCountInfo = FilesCountInfoMother.create({
   perFileType: [
     {
-      type: new FileType('image'),
+      type: new FileType('image/png'),
       count: 5
     },
     {
-      type: new FileType('text'),
+      type: new FileType('text/plain'),
       count: 10
     }
   ],
@@ -42,7 +42,7 @@ const filesCountInfo = FilesCountInfoMother.create({
       count: 5
     },
     {
-      tag: new FileType('data'),
+      tag: new FileTag('data'),
       count: 10
     }
   ]
@@ -112,7 +112,7 @@ describe('FileCriteriaForm', () => {
     const criteria = new FileCriteria()
       .withFilterByTag('document')
       .withFilterByAccess(FileAccessOption.PUBLIC)
-      .withFilterByType('image')
+      .withFilterByType('image/png')
       .withSearchText('search text')
 
     cy.customMount(
@@ -128,7 +128,7 @@ describe('FileCriteriaForm', () => {
 
     cy.wrap(onCriteriaChange).should('be.calledWith', criteria.withSortBy(FileSortByOption.OLDEST))
 
-    cy.findByRole('button', { name: 'File Type: Image' }).should('exist')
+    cy.findByRole('button', { name: 'File Type: PNG Image' }).should('exist')
     cy.findByRole('button', { name: 'Access: Public' }).should('exist')
     cy.findByRole('button', { name: 'File Tags: Document' }).should('exist')
     cy.findByLabelText('Search').should('have.value', 'search text')
@@ -139,7 +139,7 @@ describe('FileCriteriaForm', () => {
     const criteria = new FileCriteria()
       .withFilterByTag('document')
       .withFilterByAccess(FileAccessOption.PUBLIC)
-      .withFilterByType('image')
+      .withFilterByType('image/png')
       .withSearchText('search text')
 
     cy.customMount(
@@ -150,12 +150,12 @@ describe('FileCriteriaForm', () => {
       />
     )
 
-    cy.findByRole('button', { name: 'File Type: Image' }).click()
-    cy.findByText('Text (10)').click()
+    cy.findByRole('button', { name: 'File Type: PNG Image' }).click()
+    cy.findByText('Plain Text (10)').click()
 
-    cy.wrap(onCriteriaChange).should('be.calledWith', criteria.withFilterByType('text'))
+    cy.wrap(onCriteriaChange).should('be.calledWith', criteria.withFilterByType('text/plain'))
 
-    cy.findByRole('button', { name: 'File Type: Text' }).should('exist')
+    cy.findByRole('button', { name: 'File Type: Plain Text' }).should('exist')
     cy.findByRole('button', { name: 'Access: Public' }).should('exist')
     cy.findByRole('button', { name: 'File Tags: Document' }).should('exist')
     cy.findByLabelText('Search').should('have.value', 'search text')
@@ -166,7 +166,7 @@ describe('FileCriteriaForm', () => {
     const criteria = new FileCriteria()
       .withFilterByTag('document')
       .withFilterByAccess(FileAccessOption.PUBLIC)
-      .withFilterByType('image')
+      .withFilterByType('image/png')
       .withSearchText('search text')
 
     cy.customMount(
@@ -185,7 +185,7 @@ describe('FileCriteriaForm', () => {
       criteria.withFilterByAccess(FileAccessOption.RESTRICTED)
     )
 
-    cy.findByRole('button', { name: 'File Type: Image' }).should('exist')
+    cy.findByRole('button', { name: 'File Type: PNG Image' }).should('exist')
     cy.findByRole('button', { name: 'Access: Restricted' }).should('exist')
     cy.findByRole('button', { name: 'File Tags: Document' }).should('exist')
     cy.findByLabelText('Search').should('have.value', 'search text')
@@ -196,7 +196,7 @@ describe('FileCriteriaForm', () => {
     const criteria = new FileCriteria()
       .withFilterByTag('document')
       .withFilterByAccess(FileAccessOption.PUBLIC)
-      .withFilterByType('image')
+      .withFilterByType('image/png')
       .withSearchText('search text')
 
     cy.customMount(
@@ -212,7 +212,7 @@ describe('FileCriteriaForm', () => {
 
     cy.wrap(onCriteriaChange).should('be.calledWith', criteria.withFilterByTag('data'))
 
-    cy.findByRole('button', { name: 'File Type: Image' }).should('exist')
+    cy.findByRole('button', { name: 'File Type: PNG Image' }).should('exist')
     cy.findByRole('button', { name: 'Access: Public' }).should('exist')
     cy.findByRole('button', { name: 'File Tags: Data' }).should('exist')
     cy.findByLabelText('Search').should('have.value', 'search text')
@@ -223,7 +223,7 @@ describe('FileCriteriaForm', () => {
     const criteria = new FileCriteria()
       .withFilterByTag('document')
       .withFilterByAccess(FileAccessOption.PUBLIC)
-      .withFilterByType('image')
+      .withFilterByType('image/png')
       .withSearchText('search text')
 
     cy.customMount(
@@ -238,7 +238,7 @@ describe('FileCriteriaForm', () => {
 
     cy.wrap(onCriteriaChange).should('be.calledWith', criteria.withSearchText('new search'))
 
-    cy.findByRole('button', { name: 'File Type: Image' }).should('exist')
+    cy.findByRole('button', { name: 'File Type: PNG Image' }).should('exist')
     cy.findByRole('button', { name: 'Access: Public' }).should('exist')
     cy.findByRole('button', { name: 'File Tags: Document' }).should('exist')
     cy.findByLabelText('Search').should('have.value', 'new search')
@@ -272,7 +272,7 @@ describe('FileCriteriaForm', () => {
     const criteria = new FileCriteria()
       .withFilterByTag('document')
       .withFilterByAccess(FileAccessOption.PUBLIC)
-      .withFilterByType('image')
+      .withFilterByType('image/png')
 
     cy.customMount(
       <FileCriteriaForm
@@ -294,7 +294,7 @@ describe('FileCriteriaForm', () => {
     const criteria = new FileCriteria()
       .withFilterByTag('document')
       .withFilterByAccess(FileAccessOption.PUBLIC)
-      .withFilterByType('image')
+      .withFilterByType('image/png')
 
     cy.customMount(
       <FileCriteriaForm
@@ -304,7 +304,7 @@ describe('FileCriteriaForm', () => {
       />
     )
 
-    cy.findByRole('button', { name: 'File Type: Image' }).should('exist')
+    cy.findByRole('button', { name: 'File Type: PNG Image' }).should('exist')
     cy.findByRole('button', { name: 'Access: Public' }).should('exist')
     cy.findByRole('button', { name: 'File Tags: Document' }).should('exist')
   })

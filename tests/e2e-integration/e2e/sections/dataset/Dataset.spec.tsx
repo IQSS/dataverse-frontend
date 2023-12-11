@@ -2,6 +2,7 @@ import { DatasetLabelValue } from '../../../../../src/dataset/domain/models/Data
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
 import { FileHelper } from '../../../shared/files/FileHelper'
+import moment from 'moment-timezone'
 
 type Dataset = {
   datasetVersion: { metadataBlocks: { citation: { fields: { value: string }[] } } }
@@ -28,8 +29,36 @@ describe('Dataset', () => {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('exist')
-            // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
+            cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
 
+            cy.findByText('Metadata').should('exist')
+            cy.findByText('Files').should('exist')
+
+            cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').click()
+            cy.findByRole('button', { name: 'Permissions' }).should('exist').click()
+            cy.findByRole('button', { name: 'Dataset' }).should('exist')
+            cy.findByRole('button', { name: 'Delete Dataset' }).should('exist')
+            cy.findByRole('button', { name: 'Publish Dataset' }).should('exist')
+          })
+        })
+    })
+
+    it('successfully loads a published dataset when the user is not authenticated', () => {
+      cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.wrap(TestsUtils.logout())
+          cy.wait(1500) // Wait for the dataset to be published
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+
+          cy.fixture('dataset-finch1.json').then((dataset: Dataset) => {
+            cy.findByRole('heading', {
+              name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
+            }).should('exist')
+
+            cy.findByRole('button', { name: 'Edit Dataset' }).should('not.exist')
+            cy.findByRole('button', { name: 'Publish Dataset' }).should('not.exist')
+            cy.findByRole('button', { name: 'Upload Files' }).should('not.exist')
             cy.findByText('Metadata').should('exist')
             cy.findByText('Files').should('exist')
           })
@@ -51,7 +80,7 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.wait(1500)
+          cy.wait(1500) // Wait for the dataset to be published
           cy.visit(`/spa/datasets?persistentId=${persistentId}&version=1.0`)
 
           cy.fixture('dataset-finch1.json').then((dataset: Dataset) => {
@@ -59,7 +88,7 @@ describe('Dataset', () => {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('not.exist')
-            // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('not.exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
+            cy.findByText(DatasetLabelValue.UNPUBLISHED).should('not.exist')
             cy.findByText('Version 1.0').should('exist')
           })
         })
@@ -99,7 +128,7 @@ describe('Dataset', () => {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('exist')
-            // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
+            cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
           })
         })
     })
@@ -119,7 +148,7 @@ describe('Dataset', () => {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('exist')
-            // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
+            cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
 
             cy.findAllByText('withheld').should('exist')
           })
@@ -265,39 +294,64 @@ describe('Dataset', () => {
           cy.findByText('Restricted with access Icon').should('not.exist')
           cy.findByText('Restricted File Icon').should('exist')
 
-          cy.findByRole('button', { name: 'Access File' }).should('exist').click()
+          //  use alias below to avoid a timing error
+          cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+          cy.get('@accessButton').should('exist')
+          cy.get('@accessButton').click()
           cy.findByText('Restricted').should('exist')
         })
     })
 
     it('loads the embargoed files', () => {
-      cy.wrap(
-        DatasetHelper.createWithFiles(FileHelper.createMany(1)).then((dataset) =>
-          DatasetHelper.embargoFiles(
-            dataset.persistentId,
-            [dataset.files ? dataset.files[0].id : 0],
-            '2100-10-20'
+      cy.window().then((win) => {
+        // Get the browser's locale from the window object
+        const browserLocale = win.navigator.language
+
+        // Create a moment object in UTC and set the time to 12 AM (midnight)
+        const utcDate = moment.utc().startOf('day')
+
+        // Add 100 years to the UTC date
+        utcDate.add(100, 'years')
+        const dateString = utcDate.format('YYYY-MM-DD')
+
+        // Use the browser's locale to format the date using Intl.DateTimeFormat
+        const options: Intl.DateTimeFormatOptions = {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        }
+        const expectedDate = new Intl.DateTimeFormat(browserLocale, options).format(
+          utcDate.toDate()
+        )
+
+        cy.wrap(
+          DatasetHelper.createWithFiles(FileHelper.createMany(1)).then((dataset) =>
+            DatasetHelper.embargoFiles(
+              dataset.persistentId,
+              [dataset.files ? dataset.files[0].id : 0],
+              dateString
+            )
           )
         )
-      )
-        .its('persistentId')
-        .then((persistentId: string) => {
-          cy.wait(1500) // Wait for the files to be embargoed
+          .its('persistentId')
+          .then((persistentId: string) => {
+            cy.wait(1500) // Wait for the files to be embargoed
 
-          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+            cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
-          cy.wait(1500) // Wait for the files to be loaded
+            cy.wait(1500) // Wait for the files to be loaded
 
-          cy.findByText('Files').should('exist')
+            cy.findByText('Files').should('exist')
 
-          cy.findByText(/Deposited/).should('exist')
-          cy.findByText('Draft: will be embargoed until Oct 20, 2100').should('exist')
+            cy.findByText(/Deposited/).should('exist')
+            cy.findByText(`Draft: will be embargoed until ${expectedDate}`).should('exist')
 
-          cy.findByText('Edit Files').should('exist')
+            cy.findByText('Edit Files').should('exist')
 
-          cy.findByRole('button', { name: 'Access File' }).should('exist').click()
-          cy.findByText('Embargoed').should('exist')
-        })
+            cy.findByRole('button', { name: 'Access File' }).should('exist').click()
+            cy.findByText('Embargoed').should('exist')
+          })
+      })
     })
 
     it.only('applies filters to the Files Table in the correct order', () => {
@@ -384,7 +438,7 @@ describe('Dataset', () => {
           cy.findByText('blob-5').should('exist')
 
           cy.findByRole('button', { name: 'File Type: All' }).click({ force: true })
-          cy.findByText('Text/csv (2)').should('exist').click({ force: true })
+          cy.findByText('Comma Separated Values (2)').should('exist').click({ force: true })
 
           cy.findByText('1 to 2 of 2 Files').should('exist')
           cy.findByText('blob').should('not.exist')

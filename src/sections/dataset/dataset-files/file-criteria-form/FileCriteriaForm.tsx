@@ -18,34 +18,37 @@ export function FileCriteriaForm({
   onCriteriaChange,
   filesCountInfo
 }: FileCriteriaInputsProps) {
-  if (
-    !filesCountInfo ||
-    (filesCountInfo.total < MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS && !criteria.someFilterApplied)
-  ) {
-    return <></>
-  }
+  const showFileCriteriaInputs =
+    filesCountInfo &&
+    (filesCountInfo.total >= MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS || criteria.someFilterApplied)
   return (
-    <Form>
-      <Row>
-        <Col md={5}>
-          <FileCriteriaSearchText criteria={criteria} onCriteriaChange={onCriteriaChange} />
-        </Col>
-        <Col className={styles['upload-files-container']}>
-          <DatasetUploadFilesButton />
-        </Col>
-      </Row>
-      <Row className={styles['criteria-section']}>
-        <Col>
-          <FileCriteriaFilters
-            criteria={criteria}
-            onCriteriaChange={onCriteriaChange}
-            filesCountInfo={filesCountInfo}
-          />
-        </Col>
-        <Col className={styles['sort-container']}>
-          <FileCriteriaSortBy criteria={criteria} onCriteriaChange={onCriteriaChange} />
-        </Col>
-      </Row>
-    </Form>
+    <div className={styles['criteria-section']}>
+      <Form>
+        <Row>
+          {showFileCriteriaInputs && (
+            <Col md={5}>
+              <FileCriteriaSearchText criteria={criteria} onCriteriaChange={onCriteriaChange} />
+            </Col>
+          )}
+          <Col className={styles['upload-files-container']}>
+            <DatasetUploadFilesButton />
+          </Col>
+        </Row>
+        {showFileCriteriaInputs && (
+          <Row>
+            <Col>
+              <FileCriteriaFilters
+                criteria={criteria}
+                onCriteriaChange={onCriteriaChange}
+                filesCountInfo={filesCountInfo}
+              />
+            </Col>
+            <Col className={styles['sort-container']}>
+              <FileCriteriaSortBy criteria={criteria} onCriteriaChange={onCriteriaChange} />
+            </Col>
+          </Row>
+        )}
+      </Form>
+    </div>
   )
 }

@@ -3,7 +3,9 @@ import {
   DatasetMetadataBlock as JSDatasetMetadataBlock,
   DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataFields as JSDatasetMetadataFields,
-  DatasetVersionInfo as JSDatasetVersionInfo
+  DatasetVersionInfo as JSDatasetVersionInfo,
+  DatasetUserPermissions as JSDatasetPermissions,
+  DatasetLock as JSDatasetLock
 } from '@iqss/dataverse-client-javascript'
 import { DatasetVersionState as JSDatasetVersionState } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
 import {
@@ -14,6 +16,9 @@ import {
   DatasetMetadataFields,
   DatasetVersion,
   MetadataBlockName,
+  DatasetPermissions,
+  DatasetLock,
+  DatasetLockReason,
   PrivateUrl
 } from '../../domain/models/Dataset'
 
@@ -22,6 +27,8 @@ export class JSDatasetMapper {
     jsDataset: JSDataset,
     citation: string,
     summaryFieldsNames: string[],
+    jsDatasetPermissions: JSDatasetPermissions,
+    jsDatasetLocks: JSDatasetLock[],
     requestedVersion?: string,
     privateUrl?: PrivateUrl
   ): Dataset {
@@ -37,19 +44,11 @@ export class JSDatasetMapper {
         jsDataset.publicationDate,
         jsDataset.citationDate
       ),
-      {
-        canDownloadFiles: true,
-        canUpdateDataset: true,
-        canPublishDataset: true,
-        canManageDatasetPermissions: true,
-        canManageFilesPermissions: true,
-        canDeleteDataset: true
-      }, // TODO Connect with dataset permissions
-      [], // TODO Connect with dataset locks
+      JSDatasetMapper.toDatasetPermissions(jsDatasetPermissions),
+      JSDatasetMapper.toLocks(jsDatasetLocks),
       true, // TODO Connect with dataset hasValidTermsOfAccess
       true, // TODO Connect with dataset isValid
-      jsDataset.versionInfo.releaseTime !== undefined &&
-        !isNaN(jsDataset.versionInfo.releaseTime.getTime()), // TODO Connect with dataset isReleased,
+      JSDatasetMapper.toIsReleased(jsDataset.versionInfo),
       undefined, // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl
     ).build()
@@ -184,5 +183,31 @@ export class JSDatasetMapper {
     }
 
     return extraFields
+  }
+
+  static toIsReleased(jsDatasetVersionInfo: JSDatasetVersionInfo): boolean {
+    return (
+      jsDatasetVersionInfo.releaseTime !== undefined &&
+      !isNaN(jsDatasetVersionInfo.releaseTime.getTime())
+    )
+  }
+
+  static toDatasetPermissions(jsDatasetPermissions: JSDatasetPermissions): DatasetPermissions {
+    return {
+      canDownloadFiles: true, // TODO: connect with js-dataverse
+      canUpdateDataset: jsDatasetPermissions.canEditDataset,
+      canPublishDataset: jsDatasetPermissions.canPublishDataset,
+      canManageDatasetPermissions: jsDatasetPermissions.canManageDatasetPermissions,
+      canManageFilesPermissions: true, // TODO: connect with js-dataverse DatasetPermissions.canManageFilesPermissions
+      canDeleteDataset: jsDatasetPermissions.canManageDatasetPermissions
+    }
+  }
+  static toLocks(jsDatasetLocks: JSDatasetLock[]): DatasetLock[] {
+    return jsDatasetLocks.map((jsDatasetLock) => {
+      return {
+        userPersistentId: jsDatasetLock.userId,
+        reason: jsDatasetLock.lockType as unknown as DatasetLockReason
+      }
+    })
   }
 }

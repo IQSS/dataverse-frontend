@@ -23,13 +23,13 @@ export function FileCriteriaFilterByType({
 }: FileCriteriaFilterByTypeProps) {
   const { t } = useTranslation('files')
   const [selectedType, setSelectedType] = useState<FileType>(
-    criteria.filterByType ?? new FileType('all')
+    criteria.filterByType ?? new FileType('All')
   )
   const handleTypeChange = (eventKey: string | null) => {
     if (selectedType.value !== eventKey) {
       setSelectedType(new FileType(eventKey as string))
       onCriteriaChange(
-        criteria.withFilterByType(eventKey === 'all' ? undefined : (eventKey as string))
+        criteria.withFilterByType(eventKey === 'All' ? undefined : (eventKey as string))
       )
     }
   }
@@ -41,13 +41,15 @@ export function FileCriteriaFilterByType({
   return (
     <DropdownButton
       id="files-table-filter-by-type"
-      title={`${t('criteria.filterByType.title')}: ${selectedType.toDisplayFormat() ?? 'All'}`}
+      title={`${t('criteria.filterByType.title')}: ${
+        selectedType.value == 'All' ? 'All' : selectedType.toDisplayFormat()
+      }`}
       onSelect={handleTypeChange}
       withSpacing
       variant="secondary">
       <DropdownButtonItem
-        eventKey="all"
-        className={selectedType.value === 'all' ? styles['selected-option'] : ''}>
+        eventKey="All"
+        className={selectedType.value === 'All' ? styles['selected-option'] : ''}>
         All
       </DropdownButtonItem>
       <DropdownSeparator />
