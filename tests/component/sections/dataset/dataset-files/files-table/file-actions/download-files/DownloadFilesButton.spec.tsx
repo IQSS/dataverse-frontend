@@ -147,11 +147,9 @@ describe('DownloadFilesButton', () => {
       </MultipleFileDownloadProvider>
     )
 
-    cy.findByRole('button', { name: 'Download' }).should(
-      'have.attr',
-      'href',
-      'https://some-download-url'
-    )
+    cy.findByRole('button', { name: 'Download' })
+      .parent('a')
+      .should('have.attr', 'href', 'https://some-download-url')
   })
 
   it('renders the download url for the selected files when some files are selected and there are tabular files', () => {

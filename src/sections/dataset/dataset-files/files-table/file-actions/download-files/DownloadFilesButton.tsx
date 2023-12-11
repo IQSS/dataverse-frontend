@@ -70,14 +70,15 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
 
   return (
     <>
-      <Button
-        variant="secondary"
-        icon={<Download className={styles.icon} />}
-        withSpacing
-        onClick={onClick}
-        href={getDownloadUrl(FileDownloadMode.ORIGINAL)}>
-        {t('actions.downloadFiles.title')}
-      </Button>
+      <a href={getDownloadUrl(FileDownloadMode.ORIGINAL)}>
+        <Button
+          variant="secondary"
+          icon={<Download className={styles.icon} />}
+          withSpacing
+          onClick={onClick}>
+          {t('actions.downloadFiles.title')}
+        </Button>
+      </a>
       <NoSelectedFilesModal
         show={showNoFilesSelectedModal}
         handleClose={() => setShowNoFilesSelectedModal(false)}
