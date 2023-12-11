@@ -21,6 +21,20 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
   const { dataset } = useDataset()
   const [showNoFilesSelectedModal, setShowNoFilesSelectedModal] = useState(false)
   const { getMultipleFileDownloadUrl } = useMultipleFileDownload()
+  const onClick = (event: MouseEvent<HTMLButtonElement>) => {
+    if (Object.keys(fileSelection).length === SELECTED_FILES_EMPTY) {
+      event.preventDefault()
+      setShowNoFilesSelectedModal(true)
+    }
+  }
+  const getDownloadUrl = (downloadMode: FileDownloadMode): string => {
+    const allFilesSelected = Object.values(fileSelection).some((file) => file === undefined)
+    if (allFilesSelected) {
+      return dataset ? dataset.downloadUrls[downloadMode] : ''
+    }
+
+    return getMultipleFileDownloadUrl(getFileIdsFromSelection(fileSelection), downloadMode)
+  }
 
   if (
     files.length < MINIMUM_FILES_COUNT_TO_SHOW_DOWNLOAD_FILES_BUTTON ||
@@ -29,22 +43,7 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
     return <></>
   }
 
-  const onClick = (event: MouseEvent<HTMLButtonElement>) => {
-    if (Object.keys(fileSelection).length === SELECTED_FILES_EMPTY) {
-      event.preventDefault()
-      setShowNoFilesSelectedModal(true)
-    }
-  }
-  const getDownloadUrl = (downloadMode: FileDownloadMode) => {
-    const allFilesSelected = Object.values(fileSelection).some((file) => file === undefined)
-    if (allFilesSelected) {
-      return dataset.downloadUrls[downloadMode]
-    }
-
-    return getMultipleFileDownloadUrl(getFileIdsFromSelection(fileSelection), downloadMode)
-  }
-
-  if (files.some((file) => file.isTabularData)) {
+  if (dataset.hasOneTabularFileAtLeast) {
     return (
       <>
         <DropdownButton

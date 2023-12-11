@@ -118,10 +118,15 @@ const expectedDataset = {
   },
   locks: [],
   hasValidTermsOfAccess: true,
+  hasOneTabularFileAtLeast: true,
   isValid: true,
   isReleased: false,
   thumbnail: undefined,
-  privateUrl: undefined
+  privateUrl: undefined,
+  downloadUrls: {
+    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
+    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+  }
 }
 const expectedDatasetAlternateVersion = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -138,6 +143,7 @@ const expectedDatasetAlternateVersion = {
   citation:
     'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
   hasValidTermsOfAccess: true,
+  hasOneTabularFileAtLeast: true,
   isReleased: false,
   isValid: true,
   privateUrl: undefined,
@@ -204,11 +210,16 @@ const expectedDatasetAlternateVersion = {
     canPublishDataset: true,
     canUpdateDataset: true
   },
-  thumbnail: undefined
+  thumbnail: undefined,
+  downloadUrls: {
+    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
+    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+  }
 }
 describe('JS Dataset Mapper', () => {
   it('maps jsDataset model to the domain Dataset model', () => {
     const mapped = JSDatasetMapper.toDataset(jsDataset, citation, datasetSummaryFields)
+    console.log(mapped)
     expect(expectedDataset).to.deep.equal(mapped)
   })
   it('maps jsDataset model to the domain Dataset model for alternate version', () => {

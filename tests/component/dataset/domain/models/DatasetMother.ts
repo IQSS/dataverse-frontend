@@ -289,6 +289,7 @@ export class DatasetMother {
       permissions: DatasetPermissionsMother.create(),
       locks: [],
       hasValidTermsOfAccess: faker.datatype.boolean(),
+      hasOneTabularFileAtLeast: faker.datatype.boolean(),
       isValid: faker.datatype.boolean(),
       isReleased: faker.datatype.boolean(),
       downloadUrls: {
@@ -310,6 +311,7 @@ export class DatasetMother {
       dataset.permissions,
       dataset.locks,
       dataset.hasValidTermsOfAccess,
+      dataset.hasOneTabularFileAtLeast,
       dataset.isValid,
       dataset.isReleased,
       dataset.downloadUrls,
@@ -453,6 +455,7 @@ export class DatasetMother {
       locks: [],
       isReleased: true,
       hasValidTermsOfAccess: true,
+      hasOneTabularFileAtLeast: true,
       isValid: true,
       ...props
     })

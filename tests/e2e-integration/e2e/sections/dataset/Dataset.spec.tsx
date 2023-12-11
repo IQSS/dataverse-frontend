@@ -450,4 +450,23 @@ describe('Dataset', () => {
         cy.findByText('1 Downloads').should('exist')
       })
   })
+
+  it.only('downloads multiple files', () => {
+    cy.wrap(
+      DatasetHelper.createWithFiles(FileHelper.createMany(3)).then((dataset) =>
+        DatasetHelper.publish(dataset.persistentId)
+      )
+    )
+      .its('persistentId')
+      .then((persistentId: string) => {
+        cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+        cy.wait(1500) // Wait for the page to load
+
+        cy.findByText('Files').should('exist')
+
+        cy.get('table > thead > tr > th > input[type=checkbox]').click()
+
+        cy.findByRole('button', { name: 'Download' }).should('exist').click()
+      })
+  })
 })

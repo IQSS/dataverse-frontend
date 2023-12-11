@@ -74,7 +74,8 @@ describe('DownloadFilesButton', () => {
 
   it('renders the Download Files button as a dropdown if there are tabular files in the dataset', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
-      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed()
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: true
     })
     const files = FileMother.createMany(2, {
       tabularData: {
@@ -97,7 +98,8 @@ describe('DownloadFilesButton', () => {
 
   it('does not render the Download Files button as a dropdown if there are no tabular files in the dataset', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
-      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed()
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: false
     })
     const files = FileMother.createMany(2, { tabularData: undefined })
     cy.mountAuthenticated(
@@ -114,7 +116,8 @@ describe('DownloadFilesButton', () => {
 
   it('shows the No Selected Files modal if no files are selected', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
-      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed()
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: false
     })
     const files = FileMother.createMany(2, { tabularData: undefined })
     cy.mountAuthenticated(
@@ -130,7 +133,8 @@ describe('DownloadFilesButton', () => {
 
   it('renders the download url for the selected files when some files are selected and there are no tabular files', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
-      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed()
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: false
     })
     const files = FileMother.createMany(2, { tabularData: undefined })
     const fileSelection = {
@@ -154,7 +158,8 @@ describe('DownloadFilesButton', () => {
 
   it('renders the download url for the selected files when some files are selected and there are tabular files', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
-      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed()
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: true
     })
     const files = FileMother.createMany(2, {
       tabularData: {
@@ -193,6 +198,7 @@ describe('DownloadFilesButton', () => {
   it('renders the dataset download url when all the files are selected', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: true,
       downloadUrls: {
         original: 'https://some-download-url',
         archival: 'https://some-download-url'
