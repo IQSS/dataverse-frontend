@@ -1,6 +1,6 @@
 import { DatasetLabelValue } from '../../../../../src/dataset/domain/models/Dataset'
 import { TestsUtils } from '../../../shared/TestsUtils'
-import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
+import { DatasetHelper, DatasetResponse } from '../../../shared/datasets/DatasetHelper'
 import { FileHelper } from '../../../shared/files/FileHelper'
 import moment from 'moment-timezone'
 
@@ -156,7 +156,20 @@ describe('Dataset', () => {
     })
 
     it.skip('successfully loads a dataset deaccessioned', () => {
-      // TODO - Add test when deaccessioned endpoint works
+      // TODO - Implement once the getDatasetCitation includes deaccessioned datasets
+      cy.wrap(DatasetHelper.create())
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        .then((dataset) => Promise.all([dataset, DatasetHelper.publish(dataset.persistentId)]))
+        .then(([dataset]: [DatasetResponse]) => {
+          return cy
+            .wait(2500)
+            .then(() => Promise.all([dataset, DatasetHelper.deaccession(dataset.id)]))
+        })
+        .then(([dataset]: [DatasetResponse]) => {
+          cy.visit(`/spa/datasets?persistentId=${dataset.persistentId}`)
+
+          cy.findByText(DatasetLabelValue.DEACCESSIONED).should('exist')
+        })
     })
   })
 
