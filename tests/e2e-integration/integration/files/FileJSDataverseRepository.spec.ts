@@ -100,6 +100,7 @@ describe('File JSDataverse Repository', () => {
             expect(file.embargo).to.deep.equal(expectedFile.embargo)
             expect(file.tabularData).to.deep.equal(expectedFile.tabularData)
             expect(file.description).to.deep.equal(expectedFile.description)
+            expect(file.isDeleted).to.deep.equal(expectedFile.isDeleted)
           })
         })
     })
@@ -260,7 +261,6 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
-          console.log(files)
           expect(files[0].thumbnail).to.not.be.undefined
         })
     })
@@ -288,8 +288,7 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    it.skip('gets all the files by dataset persistentId when files are tabular data', async () => {
-      // TODO - Implement this when isTabularData flag is added to js-dataverse response
+    it('gets all the files by dataset persistentId when files are tabular data', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1, 'csv'))
       if (!datasetResponse.files) throw new Error('Files not found')
 
@@ -300,12 +299,17 @@ describe('File JSDataverse Repository', () => {
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
           const expectedTabularData = {
-            variablesCount: 1,
-            observationsCount: 0,
-            unf: 'some'
+            variablesCount: 7,
+            observationsCount: 10
           }
           files.forEach((file) => {
-            expect(file.tabularData).to.deep.equal(expectedTabularData)
+            expect(file.tabularData?.variablesCount).to.deep.equal(
+              expectedTabularData.variablesCount
+            )
+            expect(file.tabularData?.observationsCount).to.deep.equal(
+              expectedTabularData.observationsCount
+            )
+            expect(file.tabularData?.unf).to.not.be.undefined
           })
         })
     })
@@ -431,6 +435,29 @@ describe('File JSDataverse Repository', () => {
         )
         .then((files) => {
           expect(files.length).to.equal(1)
+        })
+    })
+
+    it.skip('gets all the files when they are deleted', async () => {
+      // This test is failing because js-dataverse deleted property always returns undefined
+      // TODO: Remove the skip once the issue is fixed
+      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1))
+
+      await DatasetHelper.publish(datasetResponse.persistentId)
+      await TestsUtils.wait(2000) // Wait for the dataset to be published
+
+      const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      if (!dataset) throw new Error('Dataset not found')
+
+      if (!datasetResponse.files) throw new Error('Files not found')
+      datasetResponse.files.map((file) => FileHelper.delete(file.id))
+
+      await fileRepository
+        .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((files) => {
+          files.forEach((file) => {
+            expect(file.isDeleted).to.equal(true)
+          })
         })
     })
   })

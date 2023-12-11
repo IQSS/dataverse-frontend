@@ -152,4 +152,8 @@ export class FileHelper extends DataverseApiHelper {
       'multipart/form-data'
     )
   }
+
+  static async delete(id: number) {
+    return this.request<FileResponse>(`/files/${id}`, 'DELETE')
+  }
 }
