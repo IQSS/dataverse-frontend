@@ -5,11 +5,17 @@ import {
   getDatasetCitation,
   getDatasetSummaryFieldNames,
   Dataset as JSDataset,
+  DatasetUserPermissions as JSDatasetPermissions,
   getPrivateUrlDataset,
   getPrivateUrlDatasetCitation,
-  ReadError
+  getDatasetUserPermissions,
+  ReadError,
+  getDatasetLocks,
+  DatasetLock as JSDatasetLock
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
+
+const includeDeaccessioned = true
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
   getByPersistentId(
@@ -18,16 +24,32 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     requestedVersion?: string
   ): Promise<Dataset | undefined> {
     return getDataset
-      .execute(persistentId, this.versionToVersionId(version))
+      .execute(persistentId, this.versionToVersionId(version), includeDeaccessioned)
       .then((jsDataset) =>
         Promise.all([
           jsDataset,
           getDatasetSummaryFieldNames.execute(),
-          getDatasetCitation.execute(jsDataset.id, this.versionToVersionId(version))
+          getDatasetCitation.execute(jsDataset.id, this.versionToVersionId(version)),
+          getDatasetUserPermissions.execute(jsDataset.id),
+          getDatasetLocks.execute(jsDataset.id)
         ])
       )
-      .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
-        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, requestedVersion)
+      .then(
+        ([jsDataset, summaryFieldsNames, citation, jsDatasetPermissions, jsDatasetLocks]: [
+          JSDataset,
+          string[],
+          string,
+          JSDatasetPermissions,
+          JSDatasetLock[]
+        ]) =>
+          JSDatasetMapper.toDataset(
+            jsDataset,
+            citation,
+            summaryFieldsNames,
+            jsDatasetPermissions,
+            jsDatasetLocks,
+            requestedVersion
+          )
       )
       .catch((error: ReadError) => {
         if (!version) {
@@ -44,8 +66,20 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       getPrivateUrlDatasetCitation.execute(privateUrlToken)
     ])
       .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
-        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, undefined)
-      )
+        JSDatasetMapper.toDataset(
+          jsDataset,
+          citation,
+          summaryFieldsNames,
+          {
+            canEditDataset: true,
+            canPublishDataset: true,
+            canManageDatasetPermissions: true,
+            canDeleteDatasetDraft: true,
+            canViewUnpublishedDataset: true
+          },
+          []
+        )
+      ) // TODO Connect with JS dataset permissions and getDatasetLocks.execute(privateUrlToken) when it is available in js-dataverse
       .catch((error: ReadError) => {
         throw new Error(error.message)
       })

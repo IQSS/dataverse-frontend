@@ -16,7 +16,7 @@ describe('EditDatasetMenu', () => {
       isReleased: true
     })
 
-    cy.customMount(<EditDatasetMenu dataset={dataset} />)
+    cy.mountAuthenticated(<EditDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').should('be.enabled').click()
 
@@ -30,13 +30,27 @@ describe('EditDatasetMenu', () => {
     cy.findByRole('button', { name: 'Deaccession Dataset' }).should('exist')
   })
 
+  it('does not render if the user is not authenticated', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithAllAllowed(),
+      locks: [],
+      hasValidTermsOfAccess: true,
+      version: DatasetVersionMother.createReleasedWithLatestVersionIsADraft(),
+      isReleased: true
+    })
+
+    cy.customMount(<EditDatasetMenu dataset={dataset} />)
+
+    cy.findByRole('button', { name: 'Edit Dataset' }).should('not.exist')
+  })
+
   it('does not render the EditDatasetMenu if the user does not have update dataset permissions', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithUpdateDatasetNotAllowed(),
       locks: []
     })
 
-    cy.customMount(<EditDatasetMenu dataset={dataset} />)
+    cy.mountAuthenticated(<EditDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Edit Dataset' }).should('not.exist')
   })
@@ -47,7 +61,7 @@ describe('EditDatasetMenu', () => {
       locks: [DatasetLockMother.createLockedInEditInProgress()]
     })
 
-    cy.customMount(<EditDatasetMenu dataset={dataset} />)
+    cy.mountAuthenticated(<EditDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').should('be.disabled')
   })
@@ -59,7 +73,7 @@ describe('EditDatasetMenu', () => {
       hasValidTermsOfAccess: true
     })
 
-    cy.customMount(<EditDatasetMenu dataset={dataset} />)
+    cy.mountAuthenticated(<EditDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
     cy.findByRole('button', { name: 'Files (Upload)' })
@@ -77,7 +91,7 @@ describe('EditDatasetMenu', () => {
       hasValidTermsOfAccess: false
     })
 
-    cy.customMount(<EditDatasetMenu dataset={dataset} />)
+    cy.mountAuthenticated(<EditDatasetMenu dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
     cy.findByRole('button', { name: 'Files (Upload)' })

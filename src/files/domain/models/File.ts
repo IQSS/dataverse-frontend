@@ -108,7 +108,7 @@ export class FileEmbargo {
 export interface FileTabularData {
   variablesCount: number
   observationsCount: number
-  unf: string
+  unf?: string
 }
 
 export enum FileLabelType {
@@ -160,7 +160,7 @@ export class File {
     readonly type: FileType,
     readonly size: FileSize,
     readonly date: FileDate,
-    public downloadCount: number,
+    readonly downloadCount: number,
     readonly labels: FileLabel[],
     public readonly isDeleted: boolean,
     public readonly ingest: FileIngest,

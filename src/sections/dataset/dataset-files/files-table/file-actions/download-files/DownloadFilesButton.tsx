@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { FileSelection } from '../../row-selection/useFileSelection'
 import { NoSelectedFilesModal } from '../no-selected-files-modal/NoSelectedFilesModal'
 import { useState } from 'react'
+import { useNotImplementedModal } from '../../../../../not-implemented/NotImplementedModalContext'
 
 interface DownloadFilesButtonProps {
   files: File[]
@@ -15,11 +16,16 @@ interface DownloadFilesButtonProps {
 
 const MINIMUM_FILES_COUNT_TO_SHOW_DOWNLOAD_FILES_BUTTON = 1
 const SELECTED_FILES_EMPTY = 0
+
 export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButtonProps) {
   const { t } = useTranslation('files')
   const { dataset } = useDataset()
   const [showNoFilesSelectedModal, setShowNoFilesSelectedModal] = useState(false)
-
+  const handleClick = () => {
+    // TODO - Implement upload files
+    showModal()
+  }
+  const { showModal } = useNotImplementedModal()
   if (
     files.length < MINIMUM_FILES_COUNT_TO_SHOW_DOWNLOAD_FILES_BUTTON ||
     !dataset?.permissions.canDownloadFiles
@@ -30,6 +36,8 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
   const onClick = () => {
     if (Object.keys(fileSelection).length === SELECTED_FILES_EMPTY) {
       setShowNoFilesSelectedModal(true)
+    } else {
+      handleClick()
     }
   }
 
