@@ -62,6 +62,15 @@ export class FileCriteria {
       searchText
     )
   }
+
+  get someFilterApplied(): boolean {
+    return (
+      this.filterByType !== undefined ||
+      this.filterByAccess !== undefined ||
+      this.filterByTag !== undefined ||
+      this.searchText !== undefined
+    )
+  }
 }
 
 export enum FileSortByOption {

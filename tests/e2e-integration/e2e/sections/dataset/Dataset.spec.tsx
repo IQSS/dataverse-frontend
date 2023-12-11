@@ -367,7 +367,7 @@ describe('Dataset', () => {
       })
     })
 
-    it('applies filters to the Files Table in the correct order', () => {
+    it.only('applies filters to the Files Table in the correct order', () => {
       const files = [
         FileHelper.create('csv', {
           description: 'Some description',
@@ -470,6 +470,25 @@ describe('Dataset', () => {
           cy.findByText('blob-3').should('not.exist')
           cy.get('table > tbody > tr').eq(0).should('contain', 'blob-5')
           cy.get('table > tbody > tr').eq(1).should('contain', 'blob-4')
+
+          cy.findByLabelText('Search').clear().type('blob-5{enter}', { force: true })
+
+          cy.findByText('1 to 1 of 1 Files').should('exist')
+          cy.findByText('blob').should('not.exist')
+          cy.findByText('blob-1').should('not.exist')
+          cy.findByText('blob-2').should('not.exist')
+          cy.findByText('blob-3').should('not.exist')
+          cy.findByText('blob-4').should('not.exist')
+          cy.findByText('blob-5').should('exist')
+
+          cy.findByLabelText('Search').clear().type('{enter}', { force: true })
+          cy.findByText('1 to 3 of 3 Files').should('exist')
+          cy.findByText('blob').should('exist')
+          cy.findByText('blob-1').should('not.exist')
+          cy.findByText('blob-2').should('not.exist')
+          cy.findByText('blob-3').should('not.exist')
+          cy.findByText('blob-4').should('exist')
+          cy.findByText('blob-5').should('exist')
         })
     })
 
