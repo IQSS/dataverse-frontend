@@ -56,6 +56,13 @@ const jsDataset = {
 const citation =
   'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
 const datasetSummaryFields = ['dsDescription', 'subject', 'keyword', 'publication', 'notesText']
+const jsDatasetPermissions = {
+  canEditDataset: true,
+  canPublishDataset: true,
+  canManageDatasetPermissions: true,
+  canDeleteDatasetDraft: true,
+  canViewUnpublishedDataset: true
+}
 const jsDatasetLocks: JSDatasetLock[] = [
   {
     lockType: DatasetLockType.IN_REVIEW,
@@ -234,6 +241,7 @@ describe('JS Dataset Mapper', () => {
       jsDataset,
       citation,
       datasetSummaryFields,
+      jsDatasetPermissions,
       jsDatasetLocks
     )
     expect(expectedDataset).to.deep.equal(mapped)
@@ -243,6 +251,7 @@ describe('JS Dataset Mapper', () => {
       jsDataset,
       citation,
       datasetSummaryFields,
+      jsDatasetPermissions,
       jsDatasetLocks,
       '4.0'
     )
@@ -284,6 +293,7 @@ describe('JS Dataset Mapper', () => {
         jsDatasetWithAlternativePersistentId,
         citation,
         datasetSummaryFields,
+        jsDatasetPermissions,
         jsDatasetLocks
       )
     )
@@ -323,6 +333,7 @@ describe('JS Dataset Mapper', () => {
         jsDatasetWithCitationDate,
         citation,
         datasetSummaryFields,
+        jsDatasetPermissions,
         jsDatasetLocks
       )
     )
@@ -361,6 +372,7 @@ describe('JS Dataset Mapper', () => {
         jsDatasetWithPublicationDate,
         citation,
         datasetSummaryFields,
+        jsDatasetPermissions,
         jsDatasetLocks
       )
     )

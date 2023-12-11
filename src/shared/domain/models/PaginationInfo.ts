@@ -39,7 +39,7 @@ export class PaginationInfo<T extends PaginationInfo<T>> {
 
   withPageSize(pageSize: number): T {
     const getNewPage = (oldPageSize: number, newPageSize: number) => {
-      const newPage = Math.ceil((this.page * oldPageSize) / newPageSize)
+      const newPage = Math.ceil(((this.page - 1) * oldPageSize + 1) / newPageSize)
       return newPage > 0 ? newPage : 1
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
