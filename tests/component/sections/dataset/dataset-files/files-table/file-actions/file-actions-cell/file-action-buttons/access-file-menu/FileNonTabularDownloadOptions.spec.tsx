@@ -39,7 +39,7 @@ describe('FileNonTabularDownloadOptions', () => {
   })
 
   it('does not render the download options for a tabular file', () => {
-    const fileTabular = FileMother.createWithTabularData()
+    const fileTabular = FileMother.createTabular()
     cy.customMount(<FileNonTabularDownloadOptions file={fileTabular} />)
 
     cy.findByRole('link', { name: 'Original File Format' }).should('not.exist')

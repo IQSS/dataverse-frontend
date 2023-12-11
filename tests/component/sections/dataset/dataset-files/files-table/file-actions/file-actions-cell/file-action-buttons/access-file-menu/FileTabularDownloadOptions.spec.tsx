@@ -15,8 +15,8 @@ const fileNonTabular = FileMother.create({
   tabularData: undefined,
   type: new FileType('text/plain')
 })
-const fileTabular = FileMother.createWithTabularData()
-const fileTabularUnknown = FileMother.createWithTabularData({
+const fileTabular = FileMother.createTabular()
+const fileTabularUnknown = FileMother.createTabular({
   type: new FileType('text/tab-separated-values', 'Unknown')
 })
 describe('FileTabularDownloadOptions', () => {
@@ -55,7 +55,7 @@ describe('FileTabularDownloadOptions', () => {
   })
 
   it('renders the options as disabled when the file ingest is in progress', () => {
-    const fileTabularInProgress = FileMother.createWithTabularData({
+    const fileTabularInProgress = FileMother.createTabular({
       ingest: {
         status: FileIngestStatus.IN_PROGRESS
       }
@@ -96,7 +96,7 @@ describe('FileTabularDownloadOptions', () => {
   })
 
   it('does not render the RData option if the file type is already R Data', () => {
-    const fileTabularRData = FileMother.createWithTabularData({
+    const fileTabularRData = FileMother.createTabular({
       type: new FileType('text/tab-separated-values', 'R Data')
     })
     cy.customMount(<FileTabularDownloadOptions file={fileTabularRData} />)

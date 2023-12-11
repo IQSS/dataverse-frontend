@@ -65,12 +65,11 @@ describe('AccessFileMenu', () => {
   })
 
   it('renders the download options header', () => {
+    const filePublic = FileMother.createWithPublicAccess()
     cy.customMount(
-      <Suspense fallback="loading">
-        <FilePermissionsProvider repository={fileRepository}>
-          <AccessFileMenu file={file} />
-        </FilePermissionsProvider>
-      </Suspense>
+      <FilePermissionsProvider repository={fileRepository}>
+        <AccessFileMenu file={filePublic} />
+      </FilePermissionsProvider>
     )
 
     cy.findByRole('button', { name: 'Access File' }).click()

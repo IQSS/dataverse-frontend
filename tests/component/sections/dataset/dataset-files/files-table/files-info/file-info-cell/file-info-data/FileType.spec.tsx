@@ -28,7 +28,7 @@ describe('FileType', () => {
   })
 
   it('renders the type correctly when is a tabular file', () => {
-    const file = FileMother.createWithTabularData({
+    const file = FileMother.createTabular({
       size: new FileSize(123.03932894722, FileSizeUnit.BYTES)
     })
 
