@@ -8,6 +8,11 @@ import {
   DatasetVersion
 } from '../../../../src/dataset/domain/models/Dataset'
 import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
+import {
+  FileDownloadMode,
+  FileDownloadSize,
+  FileSizeUnit
+} from '../../../../src/files/domain/models/File'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -94,7 +99,11 @@ const datasetData = (persistentId: string, versionId: number) => {
     downloadUrls: {
       original: `/api/access/dataset/:persistentId/versions/:draft?persistentId=${persistentId}&format=original`,
       archival: `/api/access/dataset/:persistentId/versions/:draft?persistentId=${persistentId}`
-    }
+    },
+    fileDownloadSizes: [
+      new FileDownloadSize(0, FileSizeUnit.BYTES, FileDownloadMode.ORIGINAL),
+      new FileDownloadSize(0, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
+    ]
   }
 }
 
@@ -124,6 +133,7 @@ describe('Dataset JSDataverse Repository', () => {
       expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
       expect(dataset.locks).to.deep.equal(datasetExpected.locks)
       expect(dataset.downloadUrls).to.deep.equal(datasetExpected.downloadUrls)
+      expect(dataset.fileDownloadSizes).to.deep.equal(datasetExpected.fileDownloadSizes)
     })
   })
 
