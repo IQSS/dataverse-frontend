@@ -1,4 +1,5 @@
 import { Alert, AlertMessageKey } from '../../../alert/domain/models/Alert'
+import { FileDownloadSize } from '../../../files/domain/models/File'
 
 export enum DatasetLabelSemanticMeaning {
   DATASET = 'dataset',
@@ -276,10 +277,12 @@ export class Dataset {
     public readonly permissions: DatasetPermissions,
     public readonly locks: DatasetLock[],
     public readonly hasValidTermsOfAccess: boolean,
+    public readonly hasOneTabularFileAtLeast: boolean,
     public readonly isValid: boolean,
     public readonly isReleased: boolean,
     public readonly thumbnail?: string,
-    public readonly privateUrl?: PrivateUrl
+    public readonly privateUrl?: PrivateUrl,
+    public readonly fileDownloadSizes?: FileDownloadSize[]
   ) {}
 
   public getTitle(): string {
@@ -359,10 +362,12 @@ export class Dataset {
       public readonly permissions: DatasetPermissions,
       public readonly locks: DatasetLock[],
       public readonly hasValidTermsOfAccess: boolean,
+      public readonly hasOneTabularFileAtLeast: boolean,
       public readonly isValid: boolean,
       public readonly isReleased: boolean,
       public readonly thumbnail?: string,
-      public readonly privateUrl?: PrivateUrl
+      public readonly privateUrl?: PrivateUrl,
+      public readonly fileDownloadSizes?: FileDownloadSize[]
     ) {
       this.withLabels()
       this.withAlerts()
@@ -467,10 +472,12 @@ export class Dataset {
         this.permissions,
         this.locks,
         this.hasValidTermsOfAccess,
+        this.hasOneTabularFileAtLeast,
         this.isValid,
         this.isReleased,
         this.thumbnail,
-        this.privateUrl
+        this.privateUrl,
+        this.fileDownloadSizes
       )
     }
   }
