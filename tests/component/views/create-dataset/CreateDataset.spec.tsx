@@ -1,15 +1,15 @@
-import { CreateDataset } from '../../../../src/views/create-dataset/CreateDataset'
+import CreateDatasetContainer from '../../../../src/views/create-dataset/CreateDatasetContainer'
 
 describe('Form component', () => {
   it('should render all form fields', () => {
-    cy.customMount(<CreateDataset />)
+    cy.customMount(<CreateDatasetContainer />)
     cy.get('[data-cy=datasetFormInputTitle]').should('be.visible')
     cy.get('[data-cy=datasetFormSubmit]').should('be.visible')
     cy.get('[data-cy=datasetFormCancel]').should('be.visible')
   })
 
   it('should submit the form with correct values', () => {
-    cy.customMount(<CreateDataset />)
+    cy.customMount(<CreateDatasetContainer />)
 
     cy.get('[data-cy=datasetFormInputTitle]').type('Test Dataset Title')
 

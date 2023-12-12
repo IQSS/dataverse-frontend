@@ -1,11 +1,12 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+// components/FormPresenter.tsx
+
+import { ChangeEvent, FormEvent } from 'react'
 import { Alert, Button, Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
-import { useDataset } from '../../sections/dataset/DatasetContext'
-import { DatasetSkeleton } from '../../sections/dataset/DatasetSkeleton'
-import { useLoading } from '../../sections/loading/LoadingContext'
+// import { DatasetSkeleton } from '../../sections/dataset/DatasetSkeleton'
+// import { useLoading } from '../../sections/loading/LoadingContext'
 import styles from '/src/sections/dataset/Dataset.module.scss'
-import { FormInputElement } from '@iqss/dataverse-design-system/src/lib/components/form/form-group/form-element/FormInput'
+// import { FormInputElement } from '@iqss/dataverse-design-system/src/lib/components/form/form-group/form-element/FormInput'
 import { SeparationLine } from '../../components/ui/SeparationLine/SeparationLine'
 import { RequiredFieldText } from '../../components/Forms/RequiredFieldText/RequiredFieldText'
 
@@ -15,52 +16,34 @@ import { RequiredFieldText } from '../../components/Forms/RequiredFieldText/Requ
  * Find submit action source
  * cleanup state objects and submit process
  * show submitted info in console
+ * Loading state management
  */
 
 // See comments about https://rjsf-team.github.io/react-jsonschema-form/
 // https://github.com/IQSS/dataverse-frontend/issues/231
 
-export function CreateDataset() {
-  const { setIsLoading } = useLoading()
-  const { isLoading } = useDataset()
+// const [submitting, setSubmitting] = useState(false)
+// const [submitStatus, setSubmitStatus] = useState(false)
+
+interface CreateDatasetFormPresenterProps {
+  formData: { createDatasetTitle: string }
+  handleCreateDatasetFieldChange: (event: ChangeEvent<HTMLInputElement>) => void
+  handleCreateDatasetSubmit: (event: FormEvent<HTMLFormElement>) => void
+  submitting: boolean
+  submitComplete: boolean
+}
+export default function CreateDatasetFormPresenter({
+  // formData,
+  handleCreateDatasetFieldChange,
+  handleCreateDatasetSubmit,
+  submitting,
+  submitComplete
+}: CreateDatasetFormPresenterProps) {
   const { t } = useTranslation('createDataset')
-  const [submitting, setSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState(false)
-
-  useEffect(() => {
-    setIsLoading(isLoading)
-  }, [isLoading])
-
-  const [state, setState] = useState({
-    createDatasetTitle: ''
-  })
-
-  const handleCreateDatasetFieldChange = (e: ChangeEvent<FormInputElement>) => {
-    let value: (typeof state)[keyof typeof state] = e.target.value
-    if (e.target.type === 'text') {
-      value = e.target.value
-    }
-
-    setState({ ...state, [e.target.id]: value })
-  }
-
-  // TODO: Connect to API when ready
-  const handleCreateDatasetSubmit = (event: FormEvent<HTMLFormElement>) => {
-    setSubmitting(true)
-    event.preventDefault()
-    setTimeout(() => {
-      setSubmitting(false)
-      console.log('Form Submitted!')
-      setSubmitStatus(true)
-    }, 3000)
-    console.log(state)
-    // TODO: Callback for form submission should be here.
-  }
-
   // TODO: Probably replace this with a FormSkeleton or remove entirely
-  if (isLoading) {
-    return <DatasetSkeleton />
-  }
+  // if (loading) {
+  //   return <DatasetSkeleton />
+  // }
   return (
     <article>
       <header className={styles.header}>
@@ -69,18 +52,21 @@ export function CreateDataset() {
       <SeparationLine />
       <div className={styles.container}>
         <RequiredFieldText />
-        {submitting && <div>Submtting Form...</div>}
         <Form onSubmit={handleCreateDatasetSubmit}>
-          {submitStatus && <div>Form Submitted!</div>}
+          {submitComplete && <div>Form Submitted!</div>}
           <Row>
             <Col md={9}>
               <Form.Group controlId="createDatasetTitle" required>
                 <Form.Group.Label>{t('datasetForm.title')}</Form.Group.Label>
                 <Form.Group.Input
+                  readOnly={submitting && true}
                   data-cy="datasetFormInputTitle"
                   type="text"
+                  // FIX: Err - Property 'name' does not exist on type 'IntrinsicAttributes & FormInputProps'.
+                  name="createDatasetTitle"
                   placeholder="Dataset Title"
                   onChange={handleCreateDatasetFieldChange}
+                  withinMultipleFieldsGroup={false}
                 />
               </Form.Group>
             </Col>
@@ -117,3 +103,5 @@ export function CreateDataset() {
     </article>
   )
 }
+
+// export default CreateDatasetFormPresenter
