@@ -50,9 +50,10 @@ export class JSDatasetMapper {
       true, // TODO Connect with dataset hasOneTabularFileAtLeast
       true, // TODO Connect with dataset isValid
       JSDatasetMapper.toIsReleased(jsDataset.versionInfo),
+      undefined,
+      [], // TODO: Connect with file download use case
       undefined, // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
-      privateUrl,
-      [] // TODO: Connect with file download use case
+      privateUrl
     ).build()
   }
 

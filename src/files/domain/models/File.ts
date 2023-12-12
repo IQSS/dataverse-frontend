@@ -63,17 +63,16 @@ export class FileSize {
   }
 }
 
-export enum FileDownloadSizeMode {
-  ALL = 'All',
-  ORIGINAL = 'Original',
-  ARCHIVAL = 'Archival'
+export enum FileDownloadMode {
+  ORIGINAL = 'original',
+  ARCHIVAL = 'archival'
 }
 
 export class FileDownloadSize extends FileSize {
   constructor(
     readonly value: number,
     readonly unit: FileSizeUnit,
-    readonly mode: FileDownloadSizeMode
+    readonly mode: FileDownloadMode
   ) {
     super(value, unit)
   }

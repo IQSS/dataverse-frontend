@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 import {
   ANONYMIZED_FIELD_VALUE,
   Dataset,
+  DatasetDownloadUrls,
   DatasetLabelSemanticMeaning,
   DatasetLabelValue,
   DatasetLock,
@@ -14,7 +15,7 @@ import {
 } from '../../../../../src/dataset/domain/models/Dataset'
 import {
   FileDownloadSize,
-  FileDownloadSizeMode,
+  FileDownloadMode,
   FileSizeUnit
 } from '../../../../../src/files/domain/models/File'
 
@@ -199,16 +200,33 @@ export class DatasetFileDownloadSizeMother {
     return new FileDownloadSize(
       props?.value ?? faker.datatype.number(),
       props?.unit ?? faker.helpers.arrayElement(Object.values(FileSizeUnit)),
-      props?.mode ?? faker.helpers.arrayElement(Object.values(FileDownloadSizeMode))
+      props?.mode ?? faker.helpers.arrayElement(Object.values(FileDownloadMode))
     )
   }
 
   static createArchival(): FileDownloadSize {
-    return this.create({ mode: FileDownloadSizeMode.ARCHIVAL })
+    return this.create({ mode: FileDownloadMode.ARCHIVAL })
   }
 
   static createOriginal(): FileDownloadSize {
-    return this.create({ mode: FileDownloadSizeMode.ORIGINAL })
+    return this.create({ mode: FileDownloadMode.ORIGINAL })
+  }
+}
+
+export class DatasetDownloadUrlsMother {
+  static create(props?: Partial<DatasetDownloadUrls>): DatasetDownloadUrls {
+    return {
+      original: this.createDownloadUrl(),
+      archival: this.createDownloadUrl(),
+      ...props
+    }
+  }
+
+  static createDownloadUrl(): string {
+    const blob = new Blob(['Name,Age,Location\nJohn,25,New York\nJane,30,San Francisco'], {
+      type: 'text/csv'
+    })
+    return URL.createObjectURL(blob)
   }
 }
 
@@ -315,9 +333,10 @@ export class DatasetMother {
       hasOneTabularFileAtLeast: faker.datatype.boolean(),
       isValid: faker.datatype.boolean(),
       isReleased: faker.datatype.boolean(),
+      downloadUrls: DatasetDownloadUrlsMother.create(),
       thumbnail: undefined,
       privateUrl: undefined,
-      fileDownloadSizes: undefined,
+      fileDownloadSizes: [],
       ...props
     }
 
@@ -334,9 +353,10 @@ export class DatasetMother {
       dataset.hasOneTabularFileAtLeast,
       dataset.isValid,
       dataset.isReleased,
+      dataset.downloadUrls,
+      dataset.fileDownloadSizes,
       dataset.thumbnail,
-      dataset.privateUrl,
-      dataset.fileDownloadSizes
+      dataset.privateUrl
     ).build()
   }
 
@@ -470,8 +490,8 @@ export class DatasetMother {
       hasValidTermsOfAccess: true,
       hasOneTabularFileAtLeast: true,
       fileDownloadSizes: [
-        new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadSizeMode.ORIGINAL),
-        new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadSizeMode.ARCHIVAL)
+        new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadMode.ORIGINAL),
+        new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadMode.ARCHIVAL)
       ],
       isValid: true,
       ...props

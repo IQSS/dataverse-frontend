@@ -1,10 +1,12 @@
 import { AccessDatasetMenu } from '../../../../../../src/sections/dataset/dataset-action-buttons/access-dataset-menu/AccessDatasetMenu'
 import {
+  DatasetDownloadUrlsMother,
   DatasetFileDownloadSizeMother,
   DatasetPermissionsMother,
   DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
 
+const downloadUrls = DatasetDownloadUrlsMother.create()
 describe('AccessDatasetMenu', () => {
   it('renders the AccessDatasetMenu if the user has download files permissions and the dataset is not deaccessioned', () => {
     const version = DatasetVersionMother.createReleased()
@@ -19,6 +21,7 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={true}
         version={version}
         permissions={permissions}
+        downloadUrls={downloadUrls}
       />
     )
 
@@ -41,6 +44,7 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={true}
         version={version}
         permissions={permissions}
+        downloadUrls={downloadUrls}
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
@@ -59,6 +63,7 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={true}
         version={version}
         permissions={permissions}
+        downloadUrls={downloadUrls}
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('not.exist')
@@ -77,10 +82,12 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={true}
         version={version}
         permissions={permissions}
+        downloadUrls={downloadUrls}
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('not.exist')
   })
+
   it('displays one dropdown option if there are no tabular files', () => {
     const version = DatasetVersionMother.createReleased()
     const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
@@ -91,12 +98,16 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={false}
         version={version}
         permissions={permissions}
+        downloadUrls={downloadUrls}
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Access Dataset' }).click()
-    cy.findByText(/Download ZIP \(\d+(\.\d+)? (B|KB|MB|GB|TB|PB)\)/).should('exist')
+    cy.findByText(/Download ZIP \(\d+(\.\d+)? (B|KB|MB|GB|TB|PB)\)/)
+      .should('exist')
+      .should('have.attr', 'href', downloadUrls.original)
   })
+
   it('displays two dropdown options if there is at least one', () => {
     const version = DatasetVersionMother.createReleased()
     const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
@@ -110,11 +121,16 @@ describe('AccessDatasetMenu', () => {
         hasOneTabularFileAtLeast={true}
         version={version}
         permissions={permissions}
+        downloadUrls={downloadUrls}
       />
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Access Dataset' }).click()
-    cy.findByText(/Original Format ZIP \(\d+(\.\d+)? (B|KB|MB|GB|TB|PB)\)/).should('exist')
-    cy.findByText(/Archive Format \(\.tab\) ZIP \(\d+(\.\d+)? (B|KB|MB|GB|TB|PB)\)/).should('exist')
+    cy.findByText(/Original Format ZIP \(\d+(\.\d+)? (B|KB|MB|GB|TB|PB)\)/)
+      .should('exist')
+      .should('have.attr', 'href', downloadUrls.original)
+    cy.findByText(/Archive Format \(\.tab\) ZIP \(\d+(\.\d+)? (B|KB|MB|GB|TB|PB)\)/)
+      .should('exist')
+      .should('have.attr', 'href', downloadUrls.archival)
   })
 })
