@@ -6,6 +6,54 @@ import {
 } from '../../../../dataset/domain/models/DatasetMother'
 
 describe('AccessDatasetMenu', () => {
+  it('returns the correct file size string', () => {
+    const version = DatasetVersionMother.createReleased()
+    const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
+    const originalFileDownloadSize = DatasetFileDownloadSizeMother.createOriginal()
+    const archivalDownloadSize = DatasetFileDownloadSizeMother.createArchival()
+    const fileDownloadSizes = [originalFileDownloadSize, archivalDownloadSize]
+    cy.customMount(
+      <AccessDatasetMenu
+        fileDownloadSizes={fileDownloadSizes}
+        hasOneTabularFileAtLeast={true}
+        version={version}
+        permissions={permissions}
+      />
+    )
+    cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
+    cy.findByRole('button', { name: 'Access Dataset' }).click()
+
+    cy.contains(originalFileDownloadSize.value.toString()).should('be.visible')
+    cy.contains(archivalDownloadSize.value.toString()).should('be.visible')
+    cy.contains(originalFileDownloadSize.unit.toString()).should('be.visible')
+    cy.contains(archivalDownloadSize.unit.toString()).should('be.visible')
+  })
+
+  it('logs the correct message when handleDownload is called', () => {
+    const version = DatasetVersionMother.createReleased()
+    const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
+    const fileDownloadSizes = [
+      DatasetFileDownloadSizeMother.createOriginal(),
+      DatasetFileDownloadSizeMother.createArchival()
+    ]
+    cy.customMount(
+      <AccessDatasetMenu
+        fileDownloadSizes={fileDownloadSizes}
+        hasOneTabularFileAtLeast={true}
+        version={version}
+        permissions={permissions}
+      />
+    )
+    const consoleLogStub = cy.stub(console, 'log').as('consoleLog')
+    cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
+    cy.findByRole('button', { name: 'Access Dataset' }).click()
+    cy.contains('Original Format ZIP').click()
+    cy.get('@consoleLog').should('have.been.calledWith', 'downloading file Original')
+    cy.findByRole('button', { name: 'Access Dataset' }).click()
+    cy.contains('Archive Format').click()
+    cy.get('@consoleLog').should('have.been.calledWith', 'downloading file Archival')
+  })
+
   it('renders the AccessDatasetMenu if the user has download files permissions and the dataset is not deaccessioned', () => {
     const version = DatasetVersionMother.createReleased()
     const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
