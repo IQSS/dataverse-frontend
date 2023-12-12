@@ -124,6 +124,11 @@ export class FileMother {
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
       isDeleted: faker.datatype.boolean(),
       ingest: { status: FileIngestStatus.NONE },
+      downloadUrls: {
+        original: this.createDownloadUrl(),
+        tabular: this.createDownloadUrl(),
+        rData: this.createDownloadUrl()
+      },
       ...props
     }
 
@@ -139,13 +144,21 @@ export class FileMother {
       fileMockedData.labels,
       fileMockedData.isDeleted,
       fileMockedData.ingest,
-      fileMockedData.checksum,
+      fileMockedData.downloadUrls,
       fileMockedData.thumbnail,
       fileMockedData.directory,
       fileMockedData.embargo,
       fileMockedData.tabularData,
-      fileMockedData.description
+      fileMockedData.description,
+      fileMockedData.checksum
     )
+  }
+
+  static createDownloadUrl(): string {
+    const blob = new Blob(['Name,Age,Location\nJohn,25,New York\nJane,30,San Francisco'], {
+      type: 'text/csv'
+    })
+    return URL.createObjectURL(blob)
   }
 
   static createMany(quantity: number, props?: Partial<File>): File[] {
@@ -212,7 +225,7 @@ export class FileMother {
     })
   }
 
-  static createWithTabularData(props?: Partial<File>): File {
+  static createTabular(props?: Partial<File>): File {
     return this.createDefault({
       type: new FileType('text/tab-separated-values', 'Comma Separated Values'),
       tabularData: {
@@ -220,6 +233,14 @@ export class FileMother {
         observationsCount: faker.datatype.number(100),
         unf: `UNF:${faker.datatype.uuid()}==`
       },
+      ...props
+    })
+  }
+
+  static createNonTabular(props?: Partial<File>): File {
+    return this.createDefault({
+      type: new FileType('text/plain'),
+      tabularData: undefined,
       ...props
     })
   }

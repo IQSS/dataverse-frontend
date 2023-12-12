@@ -4,6 +4,7 @@ import {
   FileChecksum,
   FileDate,
   FileDateType,
+  FileDownloadUrls,
   FileEmbargo,
   FileIngestStatus,
   FileLabel,
@@ -56,12 +57,13 @@ export class JSFileMapper {
       this.toFileLabels(jsFile.categories, jsFile.tabularTags),
       this.toFileIsDeleted(jsFile.deleted),
       { status: FileIngestStatus.NONE }, // TODO - Implement this when it is added to js-dataverse
-      this.toFileChecksum(jsFile.checksum),
+      this.toFileOriginalFileDownloadUrl(jsFile.id),
       this.toFileThumbnail(thumbnail),
       this.toFileDirectory(jsFile.directoryLabel),
       this.toFileEmbargo(jsFile.embargo),
       this.toFileTabularData(jsTabularData),
-      this.toFileDescription(jsFile.description)
+      this.toFileDescription(jsFile.description),
+      this.toFileChecksum(jsFile.checksum)
     )
   }
 
@@ -165,6 +167,14 @@ export class JSFileMapper {
       return { algorithm: jsFileChecksum.type, value: jsFileChecksum.value }
     }
     return undefined
+  }
+
+  static toFileOriginalFileDownloadUrl(id: number): FileDownloadUrls {
+    return {
+      original: `/api/access/datafile/${id}?format=original`,
+      tabular: `/api/access/datafile/${id}`,
+      rData: `/api/access/datafile/${id}?format=RData`
+    }
   }
 
   static toFileThumbnail(thumbnail?: string): string | undefined {
