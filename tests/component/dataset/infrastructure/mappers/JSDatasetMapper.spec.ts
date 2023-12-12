@@ -147,7 +147,11 @@ const expectedDataset = {
   isReleased: false,
   thumbnail: undefined,
   privateUrl: undefined,
-  fileDownloadSizes: []
+  fileDownloadSizes: [],
+  downloadUrls: {
+    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
+    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+  }
 }
 const expectedDatasetAlternateVersion = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -237,7 +241,11 @@ const expectedDatasetAlternateVersion = {
     canPublishDataset: true,
     canUpdateDataset: true
   },
-  thumbnail: undefined
+  thumbnail: undefined,
+  downloadUrls: {
+    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
+    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+  }
 }
 describe('JS Dataset Mapper', () => {
   it('maps jsDataset model to the domain Dataset model', () => {

@@ -19,7 +19,8 @@ import {
   DatasetPermissions,
   DatasetLock,
   DatasetLockReason,
-  PrivateUrl
+  PrivateUrl,
+  DatasetDownloadUrls
 } from '../../domain/models/Dataset'
 
 export class JSDatasetMapper {
@@ -32,9 +33,14 @@ export class JSDatasetMapper {
     requestedVersion?: string,
     privateUrl?: PrivateUrl
   ): Dataset {
+    const version = JSDatasetMapper.toVersion(
+      jsDataset.versionId,
+      jsDataset.versionInfo,
+      requestedVersion
+    )
     return new Dataset.Builder(
       jsDataset.persistentId,
-      JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo, requestedVersion),
+      version,
       citation,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
@@ -50,7 +56,7 @@ export class JSDatasetMapper {
       true, // TODO Connect with dataset hasOneTabularFileAtLeast
       true, // TODO Connect with dataset isValid
       JSDatasetMapper.toIsReleased(jsDataset.versionInfo),
-      undefined,
+      JSDatasetMapper.toDownloadUrls(jsDataset.persistentId, version),
       [], // TODO: Connect with file download use case
       undefined, // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl
@@ -212,5 +218,15 @@ export class JSDatasetMapper {
         reason: jsDatasetLock.lockType as unknown as DatasetLockReason
       }
     })
+  }
+
+  static toDownloadUrls(
+    jsDatasetPersistentId: string,
+    version: DatasetVersion
+  ): DatasetDownloadUrls {
+    return {
+      original: `/api/access/dataset/:persistentId/versions/${version.toString()}?persistentId=${jsDatasetPersistentId}&format=original`,
+      archival: `/api/access/dataset/:persistentId/versions/${version.toString()}?persistentId=${jsDatasetPersistentId}`
+    }
   }
 }

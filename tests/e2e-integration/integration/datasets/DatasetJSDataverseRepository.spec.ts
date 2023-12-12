@@ -90,7 +90,11 @@ const datasetData = (persistentId: string, versionId: number) => {
       canManageFilesPermissions: true,
       canDeleteDataset: true
     },
-    locks: []
+    locks: [],
+    downloadUrls: {
+      original: `/api/access/dataset/:persistentId/versions/:draft?persistentId=${persistentId}&format=original`,
+      archival: `/api/access/dataset/:persistentId/versions/:draft?persistentId=${persistentId}`
+    }
   }
 }
 
@@ -119,6 +123,7 @@ describe('Dataset JSDataverse Repository', () => {
       expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
       expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
       expect(dataset.locks).to.deep.equal(datasetExpected.locks)
+      expect(dataset.downloadUrls).to.deep.equal(datasetExpected.downloadUrls)
     })
   })
 
