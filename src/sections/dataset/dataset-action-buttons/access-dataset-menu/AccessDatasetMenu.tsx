@@ -53,7 +53,7 @@ export function AccessDatasetMenu({
         </DropdownButtonItem>
         <DropdownButtonItem onClick={() => handleDownload(FileDownloadSizeMode.ARCHIVAL)}>
           {t('datasetActionButtons.accessDataset.downloadArchiveZip')} (
-          {getFormattedFileSize(FileDownloadSizeMode.ARCHIVAL)}) )
+          {getFormattedFileSize(FileDownloadSizeMode.ARCHIVAL)})
         </DropdownButtonItem>
       </>
     ) : (
