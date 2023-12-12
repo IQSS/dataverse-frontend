@@ -48,6 +48,10 @@ export const WithNoDatasetPermissions: Story = {
         permissions: DatasetPermissionsMother.createWithNoDatasetPermissions(),
         version: DatasetVersionMother.createDraftAsLatestVersion(),
         hasValidTermsOfAccess: true,
+        fileDownloadSizes: [
+          DatasetFileDownloadSizeMother.createOriginal(),
+          DatasetFileDownloadSizeMother.createArchival()
+        ],
         isValid: true,
         isReleased: true
       })}
@@ -66,6 +70,10 @@ export const WithUpdateAndNoPublishDatasetPermissions: Story = {
         }),
         version: DatasetVersionMother.createDraftAsLatestVersion(),
         hasValidTermsOfAccess: true,
+        fileDownloadSizes: [
+          DatasetFileDownloadSizeMother.createOriginal(),
+          DatasetFileDownloadSizeMother.createArchival()
+        ],
         isValid: true,
         isReleased: true
       })}
