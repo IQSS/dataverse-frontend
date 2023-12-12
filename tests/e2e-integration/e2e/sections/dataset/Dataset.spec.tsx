@@ -1,6 +1,6 @@
 import { DatasetLabelValue } from '../../../../../src/dataset/domain/models/Dataset'
 import { TestsUtils } from '../../../shared/TestsUtils'
-import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
+import { DatasetHelper, DatasetResponse } from '../../../shared/datasets/DatasetHelper'
 import { FileHelper } from '../../../shared/files/FileHelper'
 import moment from 'moment-timezone'
 
@@ -156,7 +156,20 @@ describe('Dataset', () => {
     })
 
     it.skip('successfully loads a dataset deaccessioned', () => {
-      // TODO - Add test when deaccessioned endpoint works
+      // TODO - Implement once the getDatasetCitation includes deaccessioned datasets
+      cy.wrap(DatasetHelper.create())
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        .then((dataset) => Promise.all([dataset, DatasetHelper.publish(dataset.persistentId)]))
+        .then(([dataset]: [DatasetResponse]) => {
+          return cy
+            .wait(2500)
+            .then(() => Promise.all([dataset, DatasetHelper.deaccession(dataset.id)]))
+        })
+        .then(([dataset]: [DatasetResponse]) => {
+          cy.visit(`/spa/datasets?persistentId=${dataset.persistentId}`)
+
+          cy.findByText(DatasetLabelValue.DEACCESSIONED).should('exist')
+        })
     })
   })
 
@@ -354,7 +367,7 @@ describe('Dataset', () => {
       })
     })
 
-    it('applies filters to the Files Table in the correct order', () => {
+    it.only('applies filters to the Files Table in the correct order', () => {
       const files = [
         FileHelper.create('csv', {
           description: 'Some description',
@@ -457,6 +470,25 @@ describe('Dataset', () => {
           cy.findByText('blob-3').should('not.exist')
           cy.get('table > tbody > tr').eq(0).should('contain', 'blob-5')
           cy.get('table > tbody > tr').eq(1).should('contain', 'blob-4')
+
+          cy.findByLabelText('Search').clear().type('blob-5{enter}', { force: true })
+
+          cy.findByText('1 to 1 of 1 Files').should('exist')
+          cy.findByText('blob').should('not.exist')
+          cy.findByText('blob-1').should('not.exist')
+          cy.findByText('blob-2').should('not.exist')
+          cy.findByText('blob-3').should('not.exist')
+          cy.findByText('blob-4').should('not.exist')
+          cy.findByText('blob-5').should('exist')
+
+          cy.findByLabelText('Search').clear().type('{enter}', { force: true })
+          cy.findByText('1 to 3 of 3 Files').should('exist')
+          cy.findByText('blob').should('exist')
+          cy.findByText('blob-1').should('not.exist')
+          cy.findByText('blob-2').should('not.exist')
+          cy.findByText('blob-3').should('not.exist')
+          cy.findByText('blob-4').should('exist')
+          cy.findByText('blob-5').should('exist')
         })
     })
 

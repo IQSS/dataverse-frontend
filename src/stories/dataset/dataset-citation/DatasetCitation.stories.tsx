@@ -34,7 +34,6 @@ export const Default: Story = {
 export const WithThumbnail: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic({ thumbnail: faker.image.imageUrl() })
-    console.log(dataset)
     return (
       <div>
         <br></br>
