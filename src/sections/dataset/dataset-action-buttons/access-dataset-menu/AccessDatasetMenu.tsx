@@ -66,7 +66,7 @@ const DatasetDownloadOptions = ({
 }: DatasetDownloadOptionsProps) => {
   const { t } = useTranslation('dataset')
   function getFormattedFileSize(mode: FileDownloadMode): string {
-    const foundSize = fileDownloadSizes && fileDownloadSizes.find((size) => size.mode === mode)
+    const foundSize = fileDownloadSizes.find((size) => size.mode === mode)
     return foundSize ? foundSize.toString() : ''
   }
 
@@ -77,14 +77,14 @@ const DatasetDownloadOptions = ({
         {getFormattedFileSize(FileDownloadMode.ORIGINAL)})
       </DropdownButtonItem>
       <DropdownButtonItem href={downloadUrls[FileDownloadMode.ARCHIVAL]}>
-        {t('datasetActionButtons.accessDataset.downloadOptions.archiveZip')} (
+        {t('datasetActionButtons.accessDataset.downloadOptions.archivalZip')} (
         {getFormattedFileSize(FileDownloadMode.ARCHIVAL)})
       </DropdownButtonItem>
     </>
   ) : (
     <DropdownButtonItem href={downloadUrls[FileDownloadMode.ORIGINAL]}>
       {t('datasetActionButtons.accessDataset.downloadOptions.zip')} (
-      {getFormattedFileSize(FileDownloadMode.ORIGINAL)}) )
+      {getFormattedFileSize(FileDownloadMode.ORIGINAL)})
     </DropdownButtonItem>
   )
 }

@@ -204,12 +204,12 @@ export class DatasetFileDownloadSizeMother {
     )
   }
 
-  static createArchival(): FileDownloadSize {
-    return this.create({ mode: FileDownloadMode.ARCHIVAL })
+  static createArchival(props?: Partial<FileDownloadSize>): FileDownloadSize {
+    return this.create({ mode: FileDownloadMode.ARCHIVAL, ...props })
   }
 
-  static createOriginal(): FileDownloadSize {
-    return this.create({ mode: FileDownloadMode.ORIGINAL })
+  static createOriginal(props?: Partial<FileDownloadSize>): FileDownloadSize {
+    return this.create({ mode: FileDownloadMode.ORIGINAL, ...props })
   }
 }
 

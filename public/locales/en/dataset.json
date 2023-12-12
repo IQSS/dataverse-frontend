@@ -58,7 +58,7 @@
         "header": "Download Options",
         "zip": "Download ZIP",
         "originalZip": "Original Format ZIP",
-        "archiveZip": "Archive Format (.tab) ZIP"
+        "archivalZip": "Archival Format (.tab) ZIP"
       }
     },
     "uploadFiles": "Upload Files"

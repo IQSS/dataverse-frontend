@@ -5,6 +5,7 @@ import {
   DatasetPermissionsMother,
   DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
+import { FileSizeUnit } from '../../../../../../src/files/domain/models/File'
 
 const downloadUrls = DatasetDownloadUrlsMother.create()
 describe('AccessDatasetMenu', () => {
@@ -91,7 +92,9 @@ describe('AccessDatasetMenu', () => {
   it('displays one dropdown option if there are no tabular files', () => {
     const version = DatasetVersionMother.createReleased()
     const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
-    const fileDownloadSizes = [DatasetFileDownloadSizeMother.createOriginal()]
+    const fileDownloadSizes = [
+      DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES })
+    ]
     cy.customMount(
       <AccessDatasetMenu
         fileDownloadSizes={fileDownloadSizes}
@@ -103,7 +106,7 @@ describe('AccessDatasetMenu', () => {
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Access Dataset' }).click()
-    cy.findByText(/Download ZIP \(\d+(\.\d+)? (B|KB|MB|GB|TB|PB)\)/)
+    cy.findByText('Download ZIP (2 KB)')
       .should('exist')
       .should('have.attr', 'href', downloadUrls.original)
   })
@@ -112,8 +115,11 @@ describe('AccessDatasetMenu', () => {
     const version = DatasetVersionMother.createReleased()
     const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
     const fileDownloadSizes = [
-      DatasetFileDownloadSizeMother.createOriginal(),
-      DatasetFileDownloadSizeMother.createArchival()
+      DatasetFileDownloadSizeMother.createOriginal({ value: 2000, unit: FileSizeUnit.BYTES }),
+      DatasetFileDownloadSizeMother.createArchival({
+        value: 43483094340394,
+        unit: FileSizeUnit.BYTES
+      })
     ]
     cy.customMount(
       <AccessDatasetMenu
@@ -126,10 +132,10 @@ describe('AccessDatasetMenu', () => {
     )
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Access Dataset' }).click()
-    cy.findByText(/Original Format ZIP \(\d+(\.\d+)? (B|KB|MB|GB|TB|PB)\)/)
+    cy.findByText('Original Format ZIP (2 KB)')
       .should('exist')
       .should('have.attr', 'href', downloadUrls.original)
-    cy.findByText(/Archive Format \(\.tab\) ZIP \(\d+(\.\d+)? (B|KB|MB|GB|TB|PB)\)/)
+    cy.findByText('Archival Format (.tab) ZIP (39.5 TB)')
       .should('exist')
       .should('have.attr', 'href', downloadUrls.archival)
   })
