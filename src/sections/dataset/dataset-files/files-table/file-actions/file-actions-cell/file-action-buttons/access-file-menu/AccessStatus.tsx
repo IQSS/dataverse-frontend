@@ -1,4 +1,4 @@
-import { File } from '../../../../../../../../files/domain/models/File'
+import { FilePreview } from '../../../../../../../../files/domain/models/FilePreview'
 import { Globe, LockFill, UnlockFill } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
 import styles from './AccessFileMenu.module.scss'
@@ -6,7 +6,7 @@ import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useFileDownloadPermission } from '../../../../../../../file/file-permissions/useFileDownloadPermission'
 
 interface AccessStatusProps {
-  file: File
+  file: FilePreview
 }
 
 export function AccessStatus({ file }: AccessStatusProps) {
@@ -60,7 +60,7 @@ function AccessStatusText({
   file,
   sessionUserHasFileDownloadPermission
 }: {
-  file: File
+  file: FilePreview
   sessionUserHasFileDownloadPermission: boolean
 }) {
   const { t } = useTranslation('files')

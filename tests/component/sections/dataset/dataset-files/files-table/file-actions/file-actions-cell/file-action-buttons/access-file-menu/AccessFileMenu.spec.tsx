@@ -1,11 +1,11 @@
 import { AccessFileMenu } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessFileMenu'
-import { FileMother } from '../../../../../../../../files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { Suspense } from 'react'
 import { FilePermissionsProvider } from '../../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
 import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
 
-const file = FileMother.create()
+const file = FilePreviewMother.create()
 
 const fileRepository = {} as FileRepository
 describe('AccessFileMenu', () => {
@@ -41,7 +41,7 @@ describe('AccessFileMenu', () => {
   })
 
   it('renders the access status of the file', () => {
-    const filePublic = FileMother.createWithPublicAccess()
+    const filePublic = FilePreviewMother.createWithPublicAccess()
     cy.customMount(
       <Suspense fallback="loading">
         <AccessFileMenu file={filePublic} />
@@ -53,7 +53,8 @@ describe('AccessFileMenu', () => {
   })
 
   it('renders the request access button', () => {
-    const fileRestrictedWithAccessRequestAllowed = FileMother.createWithAccessRequestAllowed()
+    const fileRestrictedWithAccessRequestAllowed =
+      FilePreviewMother.createWithAccessRequestAllowed()
     cy.customMount(
       <Suspense fallback="loading">
         <AccessFileMenu file={fileRestrictedWithAccessRequestAllowed} />
@@ -65,7 +66,7 @@ describe('AccessFileMenu', () => {
   })
 
   it('renders the download options header', () => {
-    const filePublic = FileMother.createWithPublicAccess()
+    const filePublic = FilePreviewMother.createWithPublicAccess()
     cy.customMount(
       <FilePermissionsProvider repository={fileRepository}>
         <AccessFileMenu file={filePublic} />

@@ -1,5 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { File } from '../../../../files/domain/models/File'
+import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { RowSelectionCheckbox } from './row-selection/RowSelectionCheckbox'
 import { FileInfoCell } from './file-info/file-info-cell/FileInfoCell'
 import { FileInfoHeader } from './file-info/FileInfoHeader'
@@ -11,7 +11,7 @@ import { FileSelection } from './row-selection/useFileSelection'
 export const createColumnsDefinition = (
   paginationInfo: FilePaginationInfo,
   fileSelection: FileSelection
-): ColumnDef<File>[] => [
+): ColumnDef<FilePreview>[] => [
   {
     id: 'select',
     header: ({ table }) => (

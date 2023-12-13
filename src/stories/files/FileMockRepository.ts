@@ -1,6 +1,6 @@
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { FilesMockData } from './FileMockData'
-import { File } from '../../files/domain/models/File'
+import { FilePreview } from '../../files/domain/models/FilePreview'
 import { FilesCountInfo } from '../../files/domain/models/FilesCountInfo'
 import { FilesCountInfoMother } from '../../../tests/component/files/domain/models/FilesCountInfoMother'
 import { FilePaginationInfo } from '../../files/domain/models/FilePaginationInfo'
@@ -8,6 +8,8 @@ import { FileUserPermissionsMother } from '../../../tests/component/files/domain
 import { FileUserPermissions } from '../../files/domain/models/FileUserPermissions'
 import { DatasetVersion } from '../../dataset/domain/models/Dataset'
 import { FileCriteria } from '../../files/domain/models/FileCriteria'
+import { File } from '../../files/domain/models/File'
+import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
 
 export class FileMockRepository implements FileRepository {
   // eslint-disable-next-line unused-imports/no-unused-vars
@@ -15,7 +17,7 @@ export class FileMockRepository implements FileRepository {
     datasetPersistentId: string,
     datasetVersion: DatasetVersion,
     paginationInfo?: FilePaginationInfo
-  ): Promise<File[]> {
+  ): Promise<FilePreview[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FilesMockData(paginationInfo))
@@ -56,6 +58,15 @@ export class FileMockRepository implements FileRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FileUserPermissionsMother.create())
+      }, 1000)
+    })
+  }
+
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  getById(id: number): Promise<File> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(FileMother.createRealistic())
       }, 1000)
     })
   }

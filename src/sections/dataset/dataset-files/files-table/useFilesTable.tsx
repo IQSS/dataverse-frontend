@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { File } from '../../../../files/domain/models/File'
+import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { createColumnsDefinition } from './FilesTableColumnsDefinition'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
@@ -9,10 +9,10 @@ export type RowSelection = {
   [key: string]: boolean
 }
 
-export function useFilesTable(files: File[], paginationInfo: FilePaginationInfo) {
+export function useFilesTable(files: FilePreview[], paginationInfo: FilePaginationInfo) {
   const [currentPageRowSelection, setCurrentPageRowSelection] = useState<RowSelection>({})
   const [currentPageSelectedRowModel, setCurrentPageSelectedRowModel] = useState<
-    Record<string, Row<File>>
+    Record<string, Row<FilePreview>>
   >({})
   const { fileSelection, selectAllFiles, clearFileSelection } = useFileSelection(
     currentPageSelectedRowModel,

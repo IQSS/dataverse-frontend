@@ -1,7 +1,7 @@
 import { FileActionsCell } from '../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/FileActionsCell'
-import { FileMother } from '../../../../../../files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../../../../files/domain/models/FilePreviewMother'
 
-const file = FileMother.create()
+const file = FilePreviewMother.create()
 describe('FileActionsCell', () => {
   it('renders the file action buttons', () => {
     cy.customMount(<FileActionsCell file={file} />)

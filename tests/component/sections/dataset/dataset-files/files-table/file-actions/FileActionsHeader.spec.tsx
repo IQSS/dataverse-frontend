@@ -1,5 +1,5 @@
 import { FileActionsHeader } from '../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/FileActionsHeader'
-import { FileMother } from '../../../../../files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../../../files/domain/models/FilePreviewMother'
 import { DatasetProvider } from '../../../../../../../src/sections/dataset/DatasetProvider'
 import { DatasetRepository } from '../../../../../../../src/dataset/domain/repositories/DatasetRepository'
 import {
@@ -15,7 +15,7 @@ describe('FileActionsHeader', () => {
       hasValidTermsOfAccess: true
     })
     datasetRepository.getByPersistentId = cy.stub().resolves(datasetWithUpdatePermissions)
-    const files = FileMother.createMany(2)
+    const files = FilePreviewMother.createMany(2)
     cy.mountAuthenticated(
       <DatasetProvider
         repository={datasetRepository}

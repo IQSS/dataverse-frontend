@@ -1,7 +1,7 @@
 import { TestsUtils } from '../../shared/TestsUtils'
 import { FileJSDataverseRepository } from '../../../../src/files/infrastructure/FileJSDataverseRepository'
 import {
-  File,
+  FilePreview,
   FileDateType,
   FileEmbargo,
   FileIngestStatus,
@@ -10,7 +10,7 @@ import {
   FileSize,
   FileSizeUnit,
   FileType
-} from '../../../../src/files/domain/models/File'
+} from '../../../../src/files/domain/models/FilePreview'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { DatasetJSDataverseRepository } from '../../../../src/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
@@ -37,7 +37,7 @@ const datasetRepository = new DatasetJSDataverseRepository()
 const dateNow = new Date()
 dateNow.setHours(2, 0, 0, 0)
 const fileData = (id: number) => {
-  return new File(
+  return new FilePreview(
     id,
     { number: 1, publishingStatus: FilePublishingStatus.DRAFT },
     'blob',

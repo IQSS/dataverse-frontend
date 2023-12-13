@@ -1,5 +1,5 @@
 import { Alert, AlertMessageKey } from '../../../alert/domain/models/Alert'
-import { FileDownloadSize } from '../../../files/domain/models/File'
+import { FileDownloadSize } from '../../../files/domain/models/FilePreview'
 
 export enum DatasetLabelSemanticMeaning {
   DATASET = 'dataset',

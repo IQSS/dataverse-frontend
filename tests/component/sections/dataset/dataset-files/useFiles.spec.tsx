@@ -1,5 +1,5 @@
 import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
-import { FileMother } from '../../../files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
 import { useFiles } from '../../../../../src/sections/dataset/dataset-files/useFiles'
 import { FileUserPermissionsMother } from '../../../files/domain/models/FileUserPermissionsMother'
@@ -12,7 +12,7 @@ import {
 } from '../../../../../src/dataset/domain/models/Dataset'
 import { FileCriteria, FileSortByOption } from '../../../../../src/files/domain/models/FileCriteria'
 
-const files = FileMother.createMany(100)
+const files = FilePreviewMother.createMany(100)
 const filesCountInfo = FilesCountInfoMother.create({ total: 100 })
 const fileRepository: FileRepository = {} as FileRepository
 const datasetVersion = new DatasetVersion(
@@ -112,7 +112,7 @@ describe('useFiles', () => {
   })
 
   it('calls the file repository to get the permissions before removing the loading', () => {
-    const files = FileMother.createMany(5)
+    const files = FilePreviewMother.createMany(5)
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(files)
     fileRepository.getUserPermissionsById = cy.stub().resolves(
       new Promise((resolve) => {

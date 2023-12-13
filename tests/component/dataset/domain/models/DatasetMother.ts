@@ -16,7 +16,7 @@ import {
   FileDownloadSize,
   FileDownloadSizeMode,
   FileSizeUnit
-} from '../../../../../src/files/domain/models/File'
+} from '../../../../../src/files/domain/models/FilePreview'
 
 export class DatasetVersionMother {
   static create(props?: Partial<DatasetVersion>): DatasetVersion {

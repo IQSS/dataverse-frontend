@@ -1,4 +1,4 @@
-import { File } from '../../../../../../files/domain/models/File'
+import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import { useDataset } from '../../../../DatasetContext'
 import { Button, DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { Download } from 'react-bootstrap-icons'
@@ -10,7 +10,7 @@ import { useState } from 'react'
 import { useNotImplementedModal } from '../../../../../not-implemented/NotImplementedModalContext'
 
 interface DownloadFilesButtonProps {
-  files: File[]
+  files: FilePreview[]
   fileSelection: FileSelection
 }
 

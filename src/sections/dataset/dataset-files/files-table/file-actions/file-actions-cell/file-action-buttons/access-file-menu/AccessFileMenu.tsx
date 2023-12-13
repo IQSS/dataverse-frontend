@@ -1,4 +1,4 @@
-import { File } from '../../../../../../../../files/domain/models/File'
+import { FilePreview } from '../../../../../../../../files/domain/models/FilePreview'
 import { Download, FileEarmark } from 'react-bootstrap-icons'
 import { AccessStatus } from './AccessStatus'
 import { RequestAccessOption } from './RequestAccessOption'
@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { FileDownloadOptions } from './FileDownloadOptions'
 
 interface FileActionButtonAccessFileProps {
-  file: File
+  file: FilePreview
 }
 export function AccessFileMenu({ file }: FileActionButtonAccessFileProps) {
   const { t } = useTranslation('files')

@@ -1,4 +1,4 @@
-import { FileDate as FileDateModel } from '../../../../../../../files/domain/models/File'
+import { FileDate as FileDateModel } from '../../../../../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
 
 export function FileDate({ date }: { date: FileDateModel }) {

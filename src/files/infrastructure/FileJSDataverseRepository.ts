@@ -1,5 +1,5 @@
 import { FileRepository } from '../domain/repositories/FileRepository'
-import { File } from '../domain/models/File'
+import { FilePreview } from '../domain/models/FilePreview'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
 import { FileUserPermissions } from '../domain/models/FileUserPermissions'
@@ -19,6 +19,8 @@ import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
 import { JSFileMapper } from './mappers/JSFileMapper'
 import { DatasetVersion } from '../../dataset/domain/models/Dataset'
+import { File } from '../domain/models/File'
+import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
 
 const includeDeaccessioned = true
 
@@ -31,7 +33,7 @@ export class FileJSDataverseRepository implements FileRepository {
     datasetVersion: DatasetVersion,
     paginationInfo: FilePaginationInfo = new FilePaginationInfo(),
     criteria: FileCriteria = new FileCriteria()
-  ): Promise<File[]> {
+  ): Promise<FilePreview[]> {
     const jsPagination = DomainFileMapper.toJSPagination(paginationInfo)
     return getDatasetFiles
       .execute(
@@ -154,5 +156,14 @@ export class FileJSDataverseRepository implements FileRepository {
       .catch((error: ReadError) => {
         throw new Error(error.message)
       })
+  }
+
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  getById(id: number): Promise<File> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(FileMother.createRealistic())
+      }, 1000)
+    })
   }
 }

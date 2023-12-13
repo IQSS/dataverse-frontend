@@ -1,11 +1,14 @@
-import { File, FileIngestStatus } from '../../../../../../../../files/domain/models/File'
+import {
+  FilePreview,
+  FileIngestStatus
+} from '../../../../../../../../files/domain/models/FilePreview'
 import FileTypeToFriendlyTypeMap from '../../../../../../../../files/domain/models/FileTypeToFriendlyTypeMap'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useDataset } from '../../../../../../DatasetContext'
 import { useTranslation } from 'react-i18next'
 
 interface FileNonTabularDownloadOptionsProps {
-  file: File
+  file: FilePreview
 }
 
 export function FileNonTabularDownloadOptions({ file }: FileNonTabularDownloadOptionsProps) {

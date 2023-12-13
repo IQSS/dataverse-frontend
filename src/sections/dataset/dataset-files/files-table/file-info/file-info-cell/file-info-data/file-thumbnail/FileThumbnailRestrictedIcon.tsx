@@ -2,10 +2,10 @@ import { LockFill, UnlockFill } from 'react-bootstrap-icons'
 import styles from './FileThumbnail.module.scss'
 import { useTranslation } from 'react-i18next'
 import { Tooltip } from '@iqss/dataverse-design-system'
-import { File } from '../../../../../../../../files/domain/models/File'
+import { FilePreview } from '../../../../../../../../files/domain/models/FilePreview'
 import { useFileDownloadPermission } from '../../../../../../../file/file-permissions/useFileDownloadPermission'
 
-export function FileThumbnailRestrictedIcon({ file }: { file: File }) {
+export function FileThumbnailRestrictedIcon({ file }: { file: FilePreview }) {
   if (!file.access.restricted) {
     return <></>
   }

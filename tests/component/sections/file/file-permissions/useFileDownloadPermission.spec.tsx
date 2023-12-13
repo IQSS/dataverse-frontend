@@ -1,13 +1,13 @@
-import { FileMother } from '../../../files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
 import { FilePermissionsProvider } from '../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
-import { File } from '../../../../../src/files/domain/models/File'
+import { FilePreview } from '../../../../../src/files/domain/models/FilePreview'
 import { FileUserPermissionsMother } from '../../../files/domain/models/FileUserPermissionsMother'
 import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
 import { useFileDownloadPermission } from '../../../../../src/sections/file/file-permissions/useFileDownloadPermission'
 
 const fileRepository: FileRepository = {} as FileRepository
-function TestComponent({ file }: { file: File }) {
+function TestComponent({ file }: { file: FilePreview }) {
   const { sessionUserHasFileDownloadPermission } = useFileDownloadPermission(file)
 
   return (
@@ -30,7 +30,7 @@ describe('useFileDownloadPermission', () => {
   })
 
   it('should return file download permission', () => {
-    const file = FileMother.createDeaccessioned()
+    const file = FilePreviewMother.createDeaccessioned()
     fileRepository.getUserPermissionsById = cy
       .stub()
       .resolves(FileUserPermissionsMother.create({ fileId: file.id, canEditDataset: true }))
@@ -46,7 +46,7 @@ describe('useFileDownloadPermission', () => {
   })
 
   it('should return false for file download permission if there is an error', () => {
-    const file = FileMother.createDeaccessioned()
+    const file = FilePreviewMother.createDeaccessioned()
     fileRepository.getUserPermissionsById = cy
       .stub()
       .rejects(new Error('Error getting file user permissions'))

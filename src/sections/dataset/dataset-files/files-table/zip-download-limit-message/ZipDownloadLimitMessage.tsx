@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import styles from './ZipLimitMessage.module.scss'
-import { FileSizeUnit } from '../../../../../files/domain/models/File'
+import { FileSizeUnit } from '../../../../../files/domain/models/FilePreview'
 import { useSettings } from '../../../../settings/SettingsContext'
 import { SettingName } from '../../../../../settings/domain/models/Setting'
 import { ZipDownloadLimit } from '../../../../../settings/domain/models/ZipDownloadLimit'

@@ -1,5 +1,5 @@
 import { EditFilesMenu } from '../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/EditFilesMenu'
-import { FileMother } from '../../../../../../files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../../../../files/domain/models/FilePreviewMother'
 import { ReactNode } from 'react'
 import { Dataset as DatasetModel } from '../../../../../../../../src/dataset/domain/models/Dataset'
 import { DatasetProvider } from '../../../../../../../../src/sections/dataset/DatasetProvider'
@@ -15,7 +15,7 @@ const datasetWithUpdatePermissions = DatasetMother.create({
   permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed(),
   hasValidTermsOfAccess: true
 })
-const files = FileMother.createMany(2)
+const files = FilePreviewMother.createMany(2)
 describe('EditFilesMenu', () => {
   const withDataset = (component: ReactNode, dataset: DatasetModel | undefined) => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
