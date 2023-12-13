@@ -1,24 +1,22 @@
 import CreateDatasetContainer from '../../../../src/views/create-dataset/CreateDatasetContainer'
 
 describe('Form component', () => {
-  it('should render all form fields', () => {
+  beforeEach(() => {
     cy.customMount(<CreateDatasetContainer />)
-    cy.get('[data-cy=datasetFormInputTitle]').should('be.visible')
-    cy.get('[data-cy=datasetFormSubmit]').should('be.visible')
-    cy.get('[data-cy=datasetFormCancel]').should('be.visible')
   })
+  it('can submit a valid form', () => {
+    cy.findByText(/Create Dataset/i).should('exist')
+    cy.findByText(/Title/i).should('exist')
 
-  it('should submit the form with correct values', () => {
-    cy.customMount(<CreateDatasetContainer />)
-
-    cy.get('[data-cy=datasetFormInputTitle]').type('Test Dataset Title')
-
-    cy.get('[data-cy=datasetFormSubmit]').click()
-
-    // Wait for the form submission to complete (adjust the timeout as needed)
-    cy.wait(4000)
-
-    // Assert that the form was successfully submitted
-    cy.contains('Form Submitted!')
+    cy.get('input[name="createDatasetTitle"]')
+      .should('exist')
+      .type('Test Dataset Title')
+      .should('have.attr', 'required', 'required')
+      .and('have.value', 'Test Dataset Title')
+    cy.findByText(/Save Dataset/i).should('exist')
+    cy.findByText(/Cancel/i).should('exist')
+    cy.log('Submit form')
+    cy.findByText(/Save Dataset/i).click()
+    cy.findByText('Form Submitted!', { timeout: 5000 })
   })
 })
