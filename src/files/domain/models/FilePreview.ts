@@ -190,10 +190,6 @@ export class FilePreview {
     readonly checksum?: FileChecksum
   ) {}
 
-  getLink(): string {
-    return `/file?id=${this.id}&version=${this.version.number}`
-  }
-
   get isActivelyEmbargoed(): boolean {
     if (this.embargo) {
       return this.embargo.isActive

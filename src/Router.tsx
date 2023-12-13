@@ -3,6 +3,7 @@ import { HelloDataverse } from './sections/hello-dataverse/HelloDataverse'
 import { Layout } from './sections/layout/Layout'
 import { Route } from './sections/Route.enum'
 import { DatasetFactory } from './sections/dataset/DatasetFactory'
+import { FileFactory } from './sections/file/FileFactory'
 
 const router = createBrowserRouter(
   [
@@ -15,8 +16,12 @@ const router = createBrowserRouter(
           element: <HelloDataverse />
         },
         {
-          path: `${Route.DATASETS}`,
+          path: Route.DATASETS,
           element: DatasetFactory.create()
+        },
+        {
+          path: Route.FILES,
+          element: FileFactory.create()
         }
       ]
     }

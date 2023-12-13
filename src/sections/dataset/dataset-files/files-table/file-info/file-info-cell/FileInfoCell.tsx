@@ -19,7 +19,7 @@ export function FileInfoCell({ file }: { file: FilePreview }) {
         <FileThumbnail file={file} />
       </div>
       <div className={styles['body-container']}>
-        <FileTitle link={file.getLink()} name={file.name} />
+        <FileTitle id={file.id} name={file.name} />
         <div className={styles['body-container__subtext']}>
           <FileDirectory directory={file.directory} />
           <FileType type={file.type} size={file.size} />
