@@ -11,7 +11,7 @@ export function useFile(repository: FileRepository, id: number) {
     setIsLoading(true)
 
     getFileById(repository, id)
-      .then((file: File) => {
+      .then((file: File | undefined) => {
         setFile(file)
         setIsLoading(false)
       })

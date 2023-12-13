@@ -5,6 +5,7 @@ import { FilesCountInfoMother } from '../../../tests/component/files/domain/mode
 import { DatasetVersion } from '../../dataset/domain/models/Dataset'
 import { FileCriteria } from '../../files/domain/models/FileCriteria'
 import { FileMockRepository } from './FileMockRepository'
+import { File } from '../../files/domain/models/File'
 
 export class FileMockNoDataRepository extends FileMockRepository implements FileRepository {
   getAllByDatasetPersistentId(
@@ -44,6 +45,15 @@ export class FileMockNoDataRepository extends FileMockRepository implements File
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(0)
+      }, 1000)
+    })
+  }
+
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  getById(id: number): Promise<File | undefined> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(undefined)
       }, 1000)
     })
   }

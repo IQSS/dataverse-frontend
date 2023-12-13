@@ -63,7 +63,7 @@ export class FileMockRepository implements FileRepository {
   }
 
   // eslint-disable-next-line unused-imports/no-unused-vars
-  getById(id: number): Promise<File> {
+  getById(id: number): Promise<File | undefined> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FileMother.createRealistic())

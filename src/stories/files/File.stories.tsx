@@ -4,6 +4,7 @@ import { FileMockRepository } from './FileMockRepository'
 import { File } from '../../sections/file/File'
 import { WithLayout } from '../WithLayout'
 import { FileMockLoadingRepository } from './FileMockLoadingRepository'
+import { FileMockNoDataRepository } from './FileMockNoDataRepository'
 
 const meta: Meta<typeof File> = {
   title: 'Pages/File',
@@ -20,4 +21,8 @@ export const Default: Story = {
 
 export const Loading: Story = {
   render: () => <File repository={new FileMockLoadingRepository()} id={56} />
+}
+
+export const FileNotFound: Story = {
+  render: () => <File repository={new FileMockNoDataRepository()} id={56} />
 }

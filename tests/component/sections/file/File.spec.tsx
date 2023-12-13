@@ -27,4 +27,12 @@ describe('File', () => {
     cy.wrap(fileRepository.getById).should('be.calledWith', 19)
     cy.findByText(testFile.name).should('not.exist')
   })
+
+  it('renders page not found when file is not found', () => {
+    fileRepository.getById = cy.stub().resolves(undefined)
+
+    cy.customMount(<File repository={fileRepository} id={19} />)
+
+    cy.findByText('Page Not Found').should('exist')
+  })
 })
