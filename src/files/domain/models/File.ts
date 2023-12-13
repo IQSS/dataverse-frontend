@@ -162,6 +162,12 @@ export interface FileIngest {
   reportMessage?: string
 }
 
+export interface FileDownloadUrls {
+  original: string
+  tabular?: string
+  rData?: string
+}
+
 export class File {
   constructor(
     readonly id: number,
@@ -175,12 +181,13 @@ export class File {
     readonly labels: FileLabel[],
     public readonly isDeleted: boolean,
     public readonly ingest: FileIngest,
-    readonly checksum?: FileChecksum,
-    readonly thumbnail?: string,
+    public readonly downloadUrls: FileDownloadUrls,
+    public thumbnail?: string,
     readonly directory?: string,
     readonly embargo?: FileEmbargo,
     readonly tabularData?: FileTabularData,
-    readonly description?: string
+    readonly description?: string,
+    readonly checksum?: FileChecksum
   ) {}
 
   getLink(): string {

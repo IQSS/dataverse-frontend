@@ -29,7 +29,7 @@ export const WithEmbargo: Story = {
 }
 
 export const WithTabularData: Story = {
-  render: () => <FileInfoCell file={FileMother.createWithTabularData()} />
+  render: () => <FileInfoCell file={FileMother.createTabular()} />
 }
 
 export const WithDescription: Story = {

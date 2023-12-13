@@ -277,11 +277,14 @@ describe('Dataset', () => {
 
           cy.findByText('Restricted File Icon').should('not.exist')
           cy.findByText('Restricted with access Icon').should('exist')
-
-          cy.findByRole('button', { name: 'Access File' }).should('exist').click()
+          cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+          cy.get('@accessButton').should('exist')
+          cy.get('@accessButton').click()
           cy.findByText('Restricted with Access Granted').should('exist')
 
-          cy.findByRole('button', { name: 'File Options' }).should('exist').click()
+          cy.findByRole('button', { name: 'File Options' }).as('fileOptions')
+          cy.get('@fileOptions').should('exist')
+          cy.get('@fileOptions').click()
           cy.findByText('Unrestrict').should('exist')
         })
     })
@@ -361,7 +364,9 @@ describe('Dataset', () => {
 
             cy.findByText('Edit Files').should('exist')
 
-            cy.findByRole('button', { name: 'Access File' }).should('exist').click()
+            cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+            cy.get('@accessButton').should('exist')
+            cy.get('@accessButton').click()
             cy.findByText('Embargoed').should('exist')
           })
       })
@@ -536,6 +541,38 @@ describe('Dataset', () => {
           })
 
         cy.findAllByText('1 Downloads').should('exist')
+      })
+  })
+
+  it('downloads a file', () => {
+    cy.wrap(
+      DatasetHelper.createWithFiles(FileHelper.createMany(1)).then((dataset) =>
+        DatasetHelper.publish(dataset.persistentId)
+      )
+    )
+      .its('persistentId')
+      .then((persistentId: string) => {
+        cy.wait(1500) // Wait for the dataset to be published
+        cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+        cy.wait(1500) // Wait for the page to load
+
+        cy.findByText('Files').should('exist')
+
+        cy.findByRole('button', { name: 'Access File' }).should('exist').click()
+
+        // Workaround for issue where Cypress gets stuck on the download
+        cy.window()
+          .document()
+          .then(function (doc) {
+            doc.addEventListener('click', () => {
+              setTimeout(function () {
+                doc.location.reload()
+              }, 5000)
+            })
+            cy.findByText('Plain Text').should('exist').click()
+          })
+
+        cy.findByText('1 Downloads').should('exist')
       })
   })
 })
