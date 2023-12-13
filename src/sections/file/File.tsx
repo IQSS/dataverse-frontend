@@ -4,14 +4,26 @@ import styles from './File.module.scss'
 import { Tabs } from '@iqss/dataverse-design-system'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { useFile } from './useFile'
+import { useEffect } from 'react'
+import { useLoading } from '../loading/LoadingContext'
+import { FileSkeleton } from './FileSkeleton'
 
 interface FileProps {
   repository: FileRepository
   id: number
 }
 export function File({ repository, id }: FileProps) {
+  const { setIsLoading } = useLoading()
   const { t } = useTranslation('file')
-  const { file } = useFile(repository, id)
+  const { file, isLoading } = useFile(repository, id)
+
+  useEffect(() => {
+    setIsLoading(isLoading)
+  }, [isLoading])
+
+  if (isLoading) {
+    return <FileSkeleton />
+  }
 
   return (
     <>
@@ -26,8 +38,8 @@ export function File({ repository, id }: FileProps) {
             </span>
           </header>
           <div className={styles.container}>
-            <Tabs defaultActiveKey="files">
-              <Tabs.Tab eventKey="files" title={t('tabs.metadata')}>
+            <Tabs defaultActiveKey="metadata">
+              <Tabs.Tab eventKey="metadata" title={t('tabs.metadata')}>
                 <span></span>
               </Tabs.Tab>
             </Tabs>

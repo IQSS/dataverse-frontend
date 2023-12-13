@@ -16,4 +16,15 @@ describe('File', () => {
     cy.findAllByText(testFile.name).should('exist')
     cy.findByText(`This file is part of "${testFile.datasetTitle}".`).should('exist')
   })
+
+  it('renders skeleton while loading', () => {
+    const testFile = FileMother.createRealistic()
+    fileRepository.getById = cy.stub().resolves(testFile)
+
+    cy.customMount(<File repository={fileRepository} id={19} />)
+
+    cy.findByTestId('file-skeleton').should('exist')
+    cy.wrap(fileRepository.getById).should('be.calledWith', 19)
+    cy.findByText(testFile.name).should('not.exist')
+  })
 })

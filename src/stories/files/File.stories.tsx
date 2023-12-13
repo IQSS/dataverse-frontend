@@ -3,15 +3,12 @@ import { WithI18next } from '../WithI18next'
 import { FileMockRepository } from './FileMockRepository'
 import { File } from '../../sections/file/File'
 import { WithLayout } from '../WithLayout'
+import { FileMockLoadingRepository } from './FileMockLoadingRepository'
 
 const meta: Meta<typeof File> = {
   title: 'Pages/File',
   component: File,
-  decorators: [WithI18next, WithLayout],
-  parameters: {
-    // Sets the delay for all stories.
-    chromatic: { delay: 15000, pauseAnimationAtEnd: true }
-  }
+  decorators: [WithI18next, WithLayout]
 }
 
 export default meta
@@ -19,4 +16,8 @@ type Story = StoryObj<typeof File>
 
 export const Default: Story = {
   render: () => <File repository={new FileMockRepository()} id={56} />
+}
+
+export const Loading: Story = {
+  render: () => <File repository={new FileMockLoadingRepository()} id={56} />
 }
