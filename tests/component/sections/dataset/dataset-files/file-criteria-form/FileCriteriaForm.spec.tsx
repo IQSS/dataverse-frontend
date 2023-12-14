@@ -289,4 +289,23 @@ describe('FileCriteriaForm', () => {
 
     cy.findByLabelText('Search').should('have.value', 'test')
   })
+
+  it('renders the file criteria if there are less than 2 files but there is a filter applied', () => {
+    const criteria = new FileCriteria()
+      .withFilterByTag('document')
+      .withFilterByAccess(FileAccessOption.PUBLIC)
+      .withFilterByType('image/png')
+
+    cy.customMount(
+      <FileCriteriaForm
+        criteria={criteria}
+        onCriteriaChange={onCriteriaChange}
+        filesCountInfo={FilesCountInfoMother.create({ total: 1 })}
+      />
+    )
+
+    cy.findByRole('button', { name: 'File Type: PNG Image' }).should('exist')
+    cy.findByRole('button', { name: 'Access: Public' }).should('exist')
+    cy.findByRole('button', { name: 'File Tags: Document' }).should('exist')
+  })
 })

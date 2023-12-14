@@ -25,7 +25,7 @@ export const NonTabularFiles: Story = {
 }
 
 export const TabularFiles: Story = {
-  render: () => <AccessFileMenu file={FileMother.createWithTabularData()} />
+  render: () => <AccessFileMenu file={FileMother.createTabular()} />
 }
 
 export const Restricted: Story = {

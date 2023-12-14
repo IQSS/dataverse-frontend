@@ -47,10 +47,12 @@ export class JSDatasetMapper {
       JSDatasetMapper.toDatasetPermissions(jsDatasetPermissions),
       JSDatasetMapper.toLocks(jsDatasetLocks),
       true, // TODO Connect with dataset hasValidTermsOfAccess
+      true, // TODO Connect with dataset hasOneTabularFileAtLeast
       true, // TODO Connect with dataset isValid
       JSDatasetMapper.toIsReleased(jsDataset.versionInfo),
       undefined, // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
-      privateUrl
+      privateUrl,
+      [] // TODO: Connect with file download use case
     ).build()
   }
 

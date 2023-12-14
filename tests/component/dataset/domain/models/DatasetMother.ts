@@ -12,6 +12,11 @@ import {
   DatasetVersion,
   MetadataBlockName
 } from '../../../../../src/dataset/domain/models/Dataset'
+import {
+  FileDownloadSize,
+  FileDownloadSizeMode,
+  FileSizeUnit
+} from '../../../../../src/files/domain/models/File'
 
 export class DatasetVersionMother {
   static create(props?: Partial<DatasetVersion>): DatasetVersion {
@@ -189,6 +194,24 @@ export class DatasetLockMother {
   }
 }
 
+export class DatasetFileDownloadSizeMother {
+  static create(props?: Partial<FileDownloadSize>): FileDownloadSize {
+    return new FileDownloadSize(
+      props?.value ?? faker.datatype.number(),
+      props?.unit ?? faker.helpers.arrayElement(Object.values(FileSizeUnit)),
+      props?.mode ?? faker.helpers.arrayElement(Object.values(FileDownloadSizeMode))
+    )
+  }
+
+  static createArchival(): FileDownloadSize {
+    return this.create({ mode: FileDownloadSizeMode.ARCHIVAL })
+  }
+
+  static createOriginal(): FileDownloadSize {
+    return this.create({ mode: FileDownloadSizeMode.ORIGINAL })
+  }
+}
+
 export class DatasetMother {
   static createEmpty(): undefined {
     return undefined
@@ -289,10 +312,12 @@ export class DatasetMother {
       permissions: DatasetPermissionsMother.create(),
       locks: [],
       hasValidTermsOfAccess: faker.datatype.boolean(),
+      hasOneTabularFileAtLeast: faker.datatype.boolean(),
       isValid: faker.datatype.boolean(),
       isReleased: faker.datatype.boolean(),
       thumbnail: undefined,
       privateUrl: undefined,
+      fileDownloadSizes: undefined,
       ...props
     }
 
@@ -306,10 +331,12 @@ export class DatasetMother {
       dataset.permissions,
       dataset.locks,
       dataset.hasValidTermsOfAccess,
+      dataset.hasOneTabularFileAtLeast,
       dataset.isValid,
       dataset.isReleased,
       dataset.thumbnail,
-      dataset.privateUrl
+      dataset.privateUrl,
+      dataset.fileDownloadSizes
     ).build()
   }
 
@@ -441,6 +468,11 @@ export class DatasetMother {
       locks: [],
       isReleased: true,
       hasValidTermsOfAccess: true,
+      hasOneTabularFileAtLeast: true,
+      fileDownloadSizes: [
+        new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadSizeMode.ORIGINAL),
+        new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadSizeMode.ARCHIVAL)
+      ],
       isValid: true,
       ...props
     })

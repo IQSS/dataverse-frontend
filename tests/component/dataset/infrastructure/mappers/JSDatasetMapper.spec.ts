@@ -142,10 +142,12 @@ const expectedDataset = {
     }
   ],
   hasValidTermsOfAccess: true,
+  hasOneTabularFileAtLeast: true,
   isValid: true,
   isReleased: false,
   thumbnail: undefined,
-  privateUrl: undefined
+  privateUrl: undefined,
+  fileDownloadSizes: []
 }
 const expectedDatasetAlternateVersion = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -162,9 +164,11 @@ const expectedDatasetAlternateVersion = {
   citation:
     'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
   hasValidTermsOfAccess: true,
+  hasOneTabularFileAtLeast: true,
   isReleased: false,
   isValid: true,
   privateUrl: undefined,
+  fileDownloadSizes: [],
   labels: [
     { semanticMeaning: 'dataset', value: 'Draft' },
     { semanticMeaning: 'warning', value: 'Unpublished' }

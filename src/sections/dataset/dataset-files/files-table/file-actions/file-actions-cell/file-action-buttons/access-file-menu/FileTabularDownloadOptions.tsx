@@ -22,15 +22,15 @@ export function FileTabularDownloadOptions({ file }: FileTabularDownloadOptionsP
   return (
     <>
       {originalFileFormatIsKnown && (
-        <DropdownButtonItem disabled={downloadDisabled}>{`${file.type.original} (${t(
-          'actions.accessFileMenu.downloadOptions.options.original'
-        )})`}</DropdownButtonItem>
+        <DropdownButtonItem href={file.downloadUrls.original} disabled={downloadDisabled}>{`${
+          file.type.original
+        } (${t('actions.accessFileMenu.downloadOptions.options.original')})`}</DropdownButtonItem>
       )}
-      <DropdownButtonItem disabled={downloadDisabled}>
+      <DropdownButtonItem href={file.downloadUrls.tabular} disabled={downloadDisabled}>
         {t('actions.accessFileMenu.downloadOptions.options.tabular')}
       </DropdownButtonItem>
       {file.type.original !== 'R Data' && (
-        <DropdownButtonItem disabled={downloadDisabled}>
+        <DropdownButtonItem href={file.downloadUrls.rData} disabled={downloadDisabled}>
           {t('actions.accessFileMenu.downloadOptions.options.RData')}
         </DropdownButtonItem>
       )}
