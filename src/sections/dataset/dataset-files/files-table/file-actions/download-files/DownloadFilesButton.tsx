@@ -16,6 +16,7 @@ interface DownloadFilesButtonProps {
 
 const MINIMUM_FILES_COUNT_TO_SHOW_DOWNLOAD_FILES_BUTTON = 1
 const SELECTED_FILES_EMPTY = 0
+
 export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButtonProps) {
   const { t } = useTranslation('files')
   const { dataset } = useDataset()

@@ -53,11 +53,38 @@
       }
     },
     "accessDataset": {
-      "title": "Access Dataset"
+      "title": "Access Dataset",
+      "downloadZip": "Download ZIP",
+      "downloadOriginalZip": "Original Format ZIP",
+      "downloadArchiveZip": "Archive Format (.tab) ZIP"
     },
     "uploadFiles": "Upload Files"
   },
   "alerts": {
+    "publishInProgress": {
+      "heading": "Publish in Progress",
+      "alertText": "The dataset is locked while the persistent identifiers are being registered or updated, and/or the physical files are being validated."
+    },
+    "filesUpdated": {
+      "heading": "Success!",
+      "alertText": "One or more files have been updated."
+    },
+    "termsUpdated": {
+      "heading": "Success!",
+      "alertText": "The terms for this dataset have been updated."
+    },
+    "thumbnailUpdated": {
+      "heading": "Success!",
+      "alertText": "Dataset thumbnail updated."
+    },
+    "datasetDeleted": {
+      "heading": "Success!",
+      "alertText": "This dataset draft has been deleted."
+    },
+    "metadataUpdated": {
+      "heading": "Success!",
+      "alertText": "The metadata for this dataset has been updated."
+    },
     "draftVersion": {
       "heading": "This draft version needs to be published",
       "alertText": "When ready for sharing, please <b>publish</b> it so that others can see these changes"

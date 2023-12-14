@@ -63,6 +63,22 @@ export class FileSize {
   }
 }
 
+export enum FileDownloadSizeMode {
+  ALL = 'All',
+  ORIGINAL = 'Original',
+  ARCHIVAL = 'Archival'
+}
+
+export class FileDownloadSize extends FileSize {
+  constructor(
+    readonly value: number,
+    readonly unit: FileSizeUnit,
+    readonly mode: FileDownloadSizeMode
+  ) {
+    super(value, unit)
+  }
+}
+
 export interface FileAccess {
   restricted: boolean
   latestVersionRestricted: boolean
@@ -108,7 +124,7 @@ export class FileEmbargo {
 export interface FileTabularData {
   variablesCount: number
   observationsCount: number
-  unf: string
+  unf?: string
 }
 
 export enum FileDownloadMode {
@@ -120,6 +136,7 @@ export enum FileLabelType {
   CATEGORY = 'category',
   TAG = 'tag'
 }
+
 export interface FileLabel {
   type: FileLabelType
   value: string
@@ -165,7 +182,7 @@ export class File {
     readonly type: FileType,
     readonly size: FileSize,
     readonly date: FileDate,
-    public downloadCount: number,
+    readonly downloadCount: number,
     readonly labels: FileLabel[],
     public readonly isDeleted: boolean,
     public readonly ingest: FileIngest,

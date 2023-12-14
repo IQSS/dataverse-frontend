@@ -8,15 +8,51 @@ import {
   DatasetMother,
   DatasetPermissionsMother
 } from '../../../../tests/component/dataset/domain/models/DatasetMother'
+import { useAlertContext } from '../../../sections/alerts/AlertContext'
+import { WithAlerts } from '../../WithAlerts'
+import { Alert, AlertMessageKey } from '../../../alert/domain/models/Alert'
 
 const meta: Meta<typeof DatasetAlerts> = {
   title: 'Sections/Dataset Page/DatasetAlerts',
   component: DatasetAlerts,
-  decorators: [WithI18next]
+  decorators: [WithI18next, WithAlerts]
 }
+const allUpdateAlerts: Alert[] = [
+  new Alert('success', AlertMessageKey.METADATA_UPDATED),
+  new Alert('success', AlertMessageKey.THUMBNAIL_UPDATED),
+  new Alert('success', AlertMessageKey.TERMS_UPDATED),
+  new Alert('success', AlertMessageKey.FILES_UPDATED),
+  new Alert('success', AlertMessageKey.DATASET_DELETED)
+]
 
 export default meta
 type Story = StoryObj<typeof DatasetAlerts>
+export const UpdateAlerts: Story = {
+  render: () => {
+    const dataset = DatasetMother.createRealistic()
+    const { addDatasetAlert } = useAlertContext()
+    allUpdateAlerts.forEach((alert) => addDatasetAlert(alert))
+    return (
+      <div>
+        <DatasetAlerts alerts={dataset.alerts} />
+      </div>
+    )
+  }
+}
+
+const publishAlert = new Alert('warning', AlertMessageKey.PUBLISH_IN_PROGRESS)
+export const PublishInProgress: Story = {
+  render: () => {
+    const dataset = DatasetMother.createRealistic()
+    const { addDatasetAlert } = useAlertContext()
+    addDatasetAlert(publishAlert)
+    return (
+      <div>
+        <DatasetAlerts alerts={dataset.alerts} />
+      </div>
+    )
+  }
+}
 
 export const DraftVersion: Story = {
   render: () => {

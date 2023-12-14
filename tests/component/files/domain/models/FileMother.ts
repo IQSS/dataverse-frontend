@@ -220,7 +220,7 @@ export class FileMother {
     })
   }
 
-  static createWithTabularData(props?: Partial<File>): File {
+  static createTabular(props?: Partial<File>): File {
     return this.createDefault({
       type: new FileType('text/tab-separated-values', 'Comma Separated Values'),
       tabularData: {
@@ -228,6 +228,14 @@ export class FileMother {
         observationsCount: faker.datatype.number(100),
         unf: `UNF:${faker.datatype.uuid()}==`
       },
+      ...props
+    })
+  }
+
+  static createNonTabular(props?: Partial<File>): File {
+    return this.createDefault({
+      type: new FileType('text/plain'),
+      tabularData: undefined,
       ...props
     })
   }

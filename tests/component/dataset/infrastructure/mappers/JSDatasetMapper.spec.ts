@@ -1,11 +1,16 @@
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { JSDatasetMapper } from '../../../../../src/dataset/infrastructure/mappers/JSDatasetMapper'
-import { DatasetVersionState } from '@iqss/dataverse-client-javascript'
+import {
+  DatasetLockType,
+  DatasetVersionState,
+  DatasetLock as JSDatasetLock
+} from '@iqss/dataverse-client-javascript'
 import {
   CitationMetadataBlock,
   DatasetMetadataBlock
 } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
+import { DatasetLockReason } from '../../../../../src/dataset/domain/models/Dataset'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -51,6 +56,20 @@ const jsDataset = {
 const citation =
   'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
 const datasetSummaryFields = ['dsDescription', 'subject', 'keyword', 'publication', 'notesText']
+const jsDatasetPermissions = {
+  canEditDataset: true,
+  canPublishDataset: true,
+  canManageDatasetPermissions: true,
+  canDeleteDatasetDraft: true,
+  canViewUnpublishedDataset: true
+}
+const jsDatasetLocks: JSDatasetLock[] = [
+  {
+    lockType: DatasetLockType.IN_REVIEW,
+    userId: 'dataverseAdmin',
+    datasetPersistentId: 'doi:10.5072/FK2/B4B2MJ'
+  }
+]
 const expectedDataset = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
@@ -69,7 +88,7 @@ const expectedDataset = {
     { semanticMeaning: 'dataset', value: 'Draft' },
     { semanticMeaning: 'warning', value: 'Unpublished' }
   ],
-  alerts: [{ variant: 'warning', message: 'draftVersion', dynamicFields: undefined }],
+  alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
       name: 'citation',
@@ -116,7 +135,12 @@ const expectedDataset = {
     canManageFilesPermissions: true,
     canDeleteDataset: true
   },
-  locks: [],
+  locks: [
+    {
+      userPersistentId: 'dataverseAdmin',
+      reason: DatasetLockReason.IN_REVIEW
+    }
+  ],
   hasValidTermsOfAccess: true,
   hasOneTabularFileAtLeast: true,
   isValid: true,
@@ -126,7 +150,8 @@ const expectedDataset = {
   downloadUrls: {
     original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
     archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
-  }
+  },
+  fileDownloadSizes: []
 }
 const expectedDatasetAlternateVersion = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -147,6 +172,7 @@ const expectedDatasetAlternateVersion = {
   isReleased: false,
   isValid: true,
   privateUrl: undefined,
+  fileDownloadSizes: [],
   labels: [
     { semanticMeaning: 'dataset', value: 'Draft' },
     { semanticMeaning: 'warning', value: 'Unpublished' }
@@ -154,11 +180,11 @@ const expectedDatasetAlternateVersion = {
   alerts: [
     {
       variant: 'warning',
-      message: 'draftVersion',
+      messageKey: 'draftVersion',
       dynamicFields: undefined
     },
     {
-      message: 'requestedVersionNotFoundShowDraft',
+      messageKey: 'requestedVersionNotFoundShowDraft',
       variant: 'warning',
       dynamicFields: { requestedVersion: '4.0' }
     }
@@ -182,7 +208,12 @@ const expectedDatasetAlternateVersion = {
     uri: 'http://creativecommons.org/publicdomain/zero/1.0',
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
-  locks: [],
+  locks: [
+    {
+      userPersistentId: 'dataverseAdmin',
+      reason: DatasetLockReason.IN_REVIEW
+    }
+  ],
   metadataBlocks: [
     {
       name: 'citation',
@@ -218,7 +249,13 @@ const expectedDatasetAlternateVersion = {
 }
 describe('JS Dataset Mapper', () => {
   it('maps jsDataset model to the domain Dataset model', () => {
-    const mapped = JSDatasetMapper.toDataset(jsDataset, citation, datasetSummaryFields)
+    const mapped = JSDatasetMapper.toDataset(
+      jsDataset,
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions,
+      jsDatasetLocks
+    )
     expect(expectedDataset).to.deep.equal(mapped)
   })
   it('maps jsDataset model to the domain Dataset model for alternate version', () => {
@@ -226,6 +263,8 @@ describe('JS Dataset Mapper', () => {
       jsDataset,
       citation,
       datasetSummaryFields,
+      jsDatasetPermissions,
+      jsDatasetLocks,
       '4.0'
     )
 
@@ -265,7 +304,9 @@ describe('JS Dataset Mapper', () => {
       JSDatasetMapper.toDataset(
         jsDatasetWithAlternativePersistentId,
         citation,
-        datasetSummaryFields
+        datasetSummaryFields,
+        jsDatasetPermissions,
+        jsDatasetLocks
       )
     )
   })
@@ -300,7 +341,13 @@ describe('JS Dataset Mapper', () => {
     }
 
     expect(expectedDatasetWithCitationDate).to.deep.equal(
-      JSDatasetMapper.toDataset(jsDatasetWithCitationDate, citation, datasetSummaryFields)
+      JSDatasetMapper.toDataset(
+        jsDatasetWithCitationDate,
+        citation,
+        datasetSummaryFields,
+        jsDatasetPermissions,
+        jsDatasetLocks
+      )
     )
   })
 
@@ -333,7 +380,13 @@ describe('JS Dataset Mapper', () => {
       ]
     }
     expect(expectedDatasetWithPublicationDate).to.deep.equal(
-      JSDatasetMapper.toDataset(jsDatasetWithPublicationDate, citation, datasetSummaryFields)
+      JSDatasetMapper.toDataset(
+        jsDatasetWithPublicationDate,
+        citation,
+        datasetSummaryFields,
+        jsDatasetPermissions,
+        jsDatasetLocks
+      )
     )
   })
 })

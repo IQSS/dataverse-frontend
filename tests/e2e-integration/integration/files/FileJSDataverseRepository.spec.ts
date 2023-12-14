@@ -109,6 +109,7 @@ describe('File JSDataverse Repository', () => {
             expect(file.tabularData).to.deep.equal(expectedFile.tabularData)
             expect(file.description).to.deep.equal(expectedFile.description)
             expect(file.downloadUrls).to.deep.equal(expectedFile.downloadUrls)
+            expect(file.isDeleted).to.deep.equal(expectedFile.isDeleted)
           })
         })
     })
@@ -138,7 +139,7 @@ describe('File JSDataverse Repository', () => {
       if (!dataset) throw new Error('Dataset not found')
 
       await DatasetHelper.publish(dataset.persistentId)
-      await TestsUtils.wait(1500) // Wait for the dataset to be published
+      await TestsUtils.waitForNoLocks(dataset.persistentId) // Wait for the dataset to be published
 
       await fileRepository
         .getAllByDatasetPersistentId(
@@ -166,18 +167,15 @@ describe('File JSDataverse Repository', () => {
     })
 
     it('gets all the files by dataset persistentId after dataset deaccession', async () => {
-      const dataset = await DatasetHelper.createWithFiles(FileHelper.createMany(3)).then(
-        (datasetResponse) => datasetRepository.getByPersistentId(datasetResponse.persistentId)
-      )
+      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(3))
+
+      await DatasetHelper.publish(datasetResponse.persistentId)
+      await TestsUtils.waitForNoLocks(datasetResponse.persistentId) // Wait for the dataset to be published
+
+      const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
       if (!dataset) throw new Error('Dataset not found')
 
-      await DatasetHelper.publish(dataset.persistentId)
-      await TestsUtils.wait(1500) // Wait for the dataset to be published
-
-      DatasetHelper.deaccession(dataset.persistentId)
-      await TestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
-      await TestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
-      await TestsUtils.wait(1500) // Wait for the dataset to be deaccessioned
+      await DatasetHelper.deaccession(datasetResponse.id)
 
       await fileRepository
         .getAllByDatasetPersistentId(
@@ -207,7 +205,7 @@ describe('File JSDataverse Repository', () => {
       if (!datasetResponse.files) throw new Error('Files not found')
 
       await DatasetHelper.publish(datasetResponse.persistentId)
-      await TestsUtils.wait(1500) // Wait for the dataset to be published
+      await TestsUtils.waitForNoLocks(datasetResponse.persistentId) // Wait for the dataset to be published
 
       const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
       if (!dataset) throw new Error('Dataset not found')
@@ -246,8 +244,7 @@ describe('File JSDataverse Repository', () => {
     it('gets all the files by dataset persistentId after adding tag labels to the files', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1, 'csv'))
       if (!datasetResponse.files) throw new Error('Files not found')
-      await TestsUtils.wait(1500) // Wait for the tabular data to be ingested
-
+      await TestsUtils.waitForNoLocks(datasetResponse.persistentId) // Wait for the tabular data to be ingested
       const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
       if (!dataset) throw new Error('Dataset not found')
 
@@ -290,7 +287,7 @@ describe('File JSDataverse Repository', () => {
         [datasetResponse.files[0].id, datasetResponse.files[1].id, datasetResponse.files[2].id],
         embargoDate
       )
-      await TestsUtils.wait(1500) // Wait for the files to be embargoed
+      await TestsUtils.waitForNoLocks(datasetResponse.persistentId) // Wait for the files to be embargoed
 
       await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
@@ -300,8 +297,7 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    it.skip('gets all the files by dataset persistentId when files are tabular data', async () => {
-      // TODO - Implement this when isTabularData flag is added to js-dataverse response
+    it('gets all the files by dataset persistentId when files are tabular data', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1, 'csv'))
       if (!datasetResponse.files) throw new Error('Files not found')
 
@@ -312,12 +308,17 @@ describe('File JSDataverse Repository', () => {
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
           const expectedTabularData = {
-            variablesCount: 1,
-            observationsCount: 0,
-            unf: 'some'
+            variablesCount: 7,
+            observationsCount: 10
           }
           files.forEach((file) => {
-            expect(file.tabularData).to.deep.equal(expectedTabularData)
+            expect(file.tabularData?.variablesCount).to.deep.equal(
+              expectedTabularData.variablesCount
+            )
+            expect(file.tabularData?.observationsCount).to.deep.equal(
+              expectedTabularData.observationsCount
+            )
+            expect(file.tabularData?.unf).to.not.be.undefined
           })
         })
     })
@@ -445,6 +446,29 @@ describe('File JSDataverse Repository', () => {
           expect(files.length).to.equal(1)
         })
     })
+
+    it.skip('gets all the files when they are deleted', async () => {
+      // This test is failing because js-dataverse deleted property always returns undefined
+      // TODO: Remove the skip once the issue is fixed
+      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1))
+
+      await DatasetHelper.publish(datasetResponse.persistentId)
+      await TestsUtils.wait(2000) // Wait for the dataset to be published
+
+      const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
+      if (!dataset) throw new Error('Dataset not found')
+
+      if (!datasetResponse.files) throw new Error('Files not found')
+      datasetResponse.files.map((file) => FileHelper.delete(file.id))
+
+      await fileRepository
+        .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .then((files) => {
+          files.forEach((file) => {
+            expect(file.isDeleted).to.equal(true)
+          })
+        })
+    })
   })
 
   describe('Get file user permissions by id', () => {
@@ -515,11 +539,11 @@ describe('File JSDataverse Repository', () => {
         total: 6,
         perAccess: [
           {
-            access: FileAccessOption.RESTRICTED,
+            access: FileAccessOption.PUBLIC,
             count: 3
           },
           {
-            access: FileAccessOption.PUBLIC,
+            access: FileAccessOption.RESTRICTED,
             count: 3
           }
         ],
@@ -681,7 +705,7 @@ describe('File JSDataverse Repository', () => {
       )
       if (!dataset) throw new Error('Dataset not found')
 
-      await TestsUtils.wait(2500) // wait for the files to be ingested
+      await TestsUtils.waitForNoLocks(dataset.persistentId) // wait for the files to be ingested
 
       const expectedTotalDownloadSize = await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
@@ -719,7 +743,7 @@ describe('File JSDataverse Repository', () => {
       )
       if (!dataset) throw new Error('Dataset not found')
 
-      await TestsUtils.wait(2500) // wait for the files to be ingested
+      await TestsUtils.waitForNoLocks(dataset.persistentId) // wait for the files to be ingested
 
       const expectedTotalDownloadSize = await fileRepository
         .getAllByDatasetPersistentId(

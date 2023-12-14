@@ -12,6 +12,11 @@ import {
   DatasetVersion,
   MetadataBlockName
 } from '../../../../../src/dataset/domain/models/Dataset'
+import {
+  FileDownloadSize,
+  FileDownloadSizeMode,
+  FileSizeUnit
+} from '../../../../../src/files/domain/models/File'
 
 export class DatasetVersionMother {
   static create(props?: Partial<DatasetVersion>): DatasetVersion {
@@ -166,7 +171,7 @@ export class DatasetPermissionsMother {
 export class DatasetLockMother {
   static create(props?: Partial<DatasetLock>): DatasetLock {
     return {
-      id: faker.datatype.number(),
+      userPersistentId: faker.internet.userName(),
       reason: faker.helpers.arrayElement(Object.values(DatasetLockReason)),
       ...props
     }
@@ -186,6 +191,24 @@ export class DatasetLockMother {
 
   static createLockedFromFileDownload(): DatasetLock {
     return this.create({ reason: DatasetLockReason.INGEST })
+  }
+}
+
+export class DatasetFileDownloadSizeMother {
+  static create(props?: Partial<FileDownloadSize>): FileDownloadSize {
+    return new FileDownloadSize(
+      props?.value ?? faker.datatype.number(),
+      props?.unit ?? faker.helpers.arrayElement(Object.values(FileSizeUnit)),
+      props?.mode ?? faker.helpers.arrayElement(Object.values(FileDownloadSizeMode))
+    )
+  }
+
+  static createArchival(): FileDownloadSize {
+    return this.create({ mode: FileDownloadSizeMode.ARCHIVAL })
+  }
+
+  static createOriginal(): FileDownloadSize {
+    return this.create({ mode: FileDownloadSizeMode.ORIGINAL })
   }
 }
 
@@ -298,6 +321,7 @@ export class DatasetMother {
       },
       thumbnail: undefined,
       privateUrl: undefined,
+      fileDownloadSizes: undefined,
       ...props
     }
 
@@ -316,7 +340,8 @@ export class DatasetMother {
       dataset.isReleased,
       dataset.downloadUrls,
       dataset.thumbnail,
-      dataset.privateUrl
+      dataset.privateUrl,
+      dataset.fileDownloadSizes
     ).build()
   }
 
@@ -422,7 +447,7 @@ export class DatasetMother {
             datasetContact: [
               {
                 datasetContactName: 'Admin, Dataverse',
-                datasetContactEmail: ''
+                datasetContactEmail: 'admin@dataverse.org'
               }
             ],
             dsDescription: [
@@ -456,6 +481,10 @@ export class DatasetMother {
       isReleased: true,
       hasValidTermsOfAccess: true,
       hasOneTabularFileAtLeast: true,
+      fileDownloadSizes: [
+        new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadSizeMode.ORIGINAL),
+        new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadSizeMode.ARCHIVAL)
+      ],
       isValid: true,
       ...props
     })
