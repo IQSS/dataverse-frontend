@@ -1,7 +1,7 @@
 import styles from './DatasetCard.module.scss'
 import { DateHelper } from '../../../../shared/domain/helpers/DateHelper'
-import { CitationDescription } from '../../../dataset/dataset-citation/DatasetCitation'
 import { DatasetPreview } from '../../../../dataset/domain/models/DatasetPreview'
+import { CitationDescription } from '../../../shared/citation/CitationDescription'
 
 interface DatasetCardInfoProps {
   dataset: DatasetPreview

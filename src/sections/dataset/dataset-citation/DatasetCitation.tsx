@@ -1,9 +1,9 @@
-import { Col, QuestionMarkTooltip, Row } from '@iqss/dataverse-design-system'
+import { Col, Row } from '@iqss/dataverse-design-system'
 import styles from './DatasetCitation.module.scss'
 import { useTranslation } from 'react-i18next'
 import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
-import parse from 'html-react-parser'
 import { DatasetThumbnail } from './DatasetThumbnail'
+import { CitationDescription } from '../../shared/citation/CitationDescription'
 
 interface DatasetCitationProps {
   thumbnail?: string
@@ -51,42 +51,4 @@ export function DatasetCitation({ thumbnail, title, citation, version }: Dataset
       </Row>
     </>
   )
-}
-
-export function CitationDescription({
-  citation,
-  version
-}: {
-  citation: string
-  version: DatasetVersion
-}) {
-  const citationAsReactElement = parse(citation)
-
-  return (
-    <span className={styles.citation}>
-      {citationAsReactElement}
-      <CitationTooltip status={version.publishingStatus} />
-    </span>
-  )
-}
-
-interface CitationDatasetStatusProps {
-  status: DatasetPublishingStatus
-}
-
-function CitationTooltip({ status }: CitationDatasetStatusProps) {
-  const { t } = useTranslation('dataset')
-
-  if (status !== DatasetPublishingStatus.RELEASED) {
-    return (
-      <>
-        {' '}
-        <QuestionMarkTooltip
-          placement={'top'}
-          message={t(`citation.status.${status}.description`)}
-        />
-      </>
-    )
-  }
-  return <></>
 }
