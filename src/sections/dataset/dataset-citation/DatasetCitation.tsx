@@ -2,7 +2,7 @@ import { Col, Row } from '@iqss/dataverse-design-system'
 import styles from './DatasetCitation.module.scss'
 import { useTranslation } from 'react-i18next'
 import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
-import { DatasetThumbnail } from './DatasetThumbnail'
+import { DatasetThumbnail } from '../dataset-thumbnail/DatasetThumbnail'
 import { CitationDescription } from '../../shared/citation/CitationDescription'
 import { DatasetCitationTooltip } from './DatasetCitationTooltip'
 

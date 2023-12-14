@@ -2,7 +2,7 @@ import styles from './DatasetCard.module.scss'
 import { DatasetPreview } from '../../../../dataset/domain/models/DatasetPreview'
 import { LinkToPage } from '../../../shared/link-to-page/LinkToPage'
 import { Route } from '../../../Route.enum'
-import { DatasetThumbnail } from '../../../dataset/dataset-citation/DatasetThumbnail'
+import { DatasetThumbnail } from '../../../dataset/dataset-thumbnail/DatasetThumbnail'
 
 interface DatasetCardThumbnailProps {
   dataset: DatasetPreview

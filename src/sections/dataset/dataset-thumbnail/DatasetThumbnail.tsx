@@ -1,5 +1,5 @@
 import styles from './DatasetThumbnail.module.scss'
-import { Icon, IconName } from '@iqss/dataverse-design-system'
+import { DatasetIcon } from '../dataset-icon/DatasetIcon'
 
 interface DatasetThumbnailProps {
   thumbnail?: string
@@ -12,9 +12,5 @@ export function DatasetThumbnail({ thumbnail, title, isDeaccessioned }: DatasetT
     return <img className={styles['preview-image']} src={thumbnail} alt={title} />
   }
 
-  return (
-    <div className={styles.icon}>
-      <Icon name={IconName.DATASET} />
-    </div>
-  )
+  return <DatasetIcon />
 }

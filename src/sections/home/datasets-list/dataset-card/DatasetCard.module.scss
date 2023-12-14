@@ -10,9 +10,23 @@
 
 .header {
   display: flex;
+  justify-content: space-between;
+}
+
+.title {
+  display: flex;
 
   > * {
     margin-right: .5em;
+  }
+}
+
+.icon {
+  margin-top: 2px;
+  font-size: 1.3em;
+
+  > div >span {
+    margin-right: 0;
   }
 }
 

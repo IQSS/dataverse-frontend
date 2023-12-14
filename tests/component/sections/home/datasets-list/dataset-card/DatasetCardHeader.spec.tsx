@@ -12,5 +12,6 @@ describe('DatasetCardHeader', () => {
     dataset.labels.forEach((label) => {
       cy.findByText(label.value).should('exist')
     })
+    cy.findByLabelText('icon-dataset').should('exist')
   })
 })

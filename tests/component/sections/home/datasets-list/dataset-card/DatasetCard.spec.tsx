@@ -5,12 +5,12 @@ import styles from '../../../../../../src/sections/home/datasets-list/dataset-ca
 
 describe('DatasetCard', () => {
   it('should render the card', () => {
-    const dataset = DatasetPreviewMother.createDraft()
+    const dataset = DatasetPreviewMother.createWithThumbnail()
     cy.customMount(<DatasetCard dataset={dataset} />)
 
     cy.findByText(dataset.title).should('exist')
 
-    cy.findByRole('img').should('exist')
+    cy.findByRole('img', { name: dataset.title }).should('exist')
     cy.findByText(DateHelper.toDisplayFormat(dataset.releaseOrCreateDate)).should('exist')
     cy.findByText(/Finch, Fiona, 2023, "Darwin's Finches"/)
       .should('exist')

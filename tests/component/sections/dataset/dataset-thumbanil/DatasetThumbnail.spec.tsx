@@ -1,4 +1,4 @@
-import { DatasetThumbnail } from '../../../../../src/sections/dataset/dataset-citation/DatasetThumbnail'
+import { DatasetThumbnail } from '../../../../../src/sections/dataset/dataset-thumbnail/DatasetThumbnail'
 
 describe('DatasetThumbnail', () => {
   it('renders the dataset icon when there is no thumbnail', () => {
