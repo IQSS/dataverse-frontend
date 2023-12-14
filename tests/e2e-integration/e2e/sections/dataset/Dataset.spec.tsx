@@ -1,6 +1,6 @@
 import { DatasetLabelValue } from '../../../../../src/dataset/domain/models/Dataset'
 import { TestsUtils } from '../../../shared/TestsUtils'
-import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
+import { DatasetHelper, DatasetResponse } from '../../../shared/datasets/DatasetHelper'
 import { FileHelper } from '../../../shared/files/FileHelper'
 import moment from 'moment-timezone'
 
@@ -156,7 +156,20 @@ describe('Dataset', () => {
     })
 
     it.skip('successfully loads a dataset deaccessioned', () => {
-      // TODO - Add test when deaccessioned endpoint works
+      // TODO - Implement once the getDatasetCitation includes deaccessioned datasets
+      cy.wrap(DatasetHelper.create())
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        .then((dataset) => Promise.all([dataset, DatasetHelper.publish(dataset.persistentId)]))
+        .then(([dataset]: [DatasetResponse]) => {
+          return cy
+            .wait(2500)
+            .then(() => Promise.all([dataset, DatasetHelper.deaccession(dataset.id)]))
+        })
+        .then(([dataset]: [DatasetResponse]) => {
+          cy.visit(`/spa/datasets?persistentId=${dataset.persistentId}`)
+
+          cy.findByText(DatasetLabelValue.DEACCESSIONED).should('exist')
+        })
     })
   })
 
@@ -264,11 +277,14 @@ describe('Dataset', () => {
 
           cy.findByText('Restricted File Icon').should('not.exist')
           cy.findByText('Restricted with access Icon').should('exist')
-
-          cy.findByRole('button', { name: 'Access File' }).should('exist').click()
+          cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+          cy.get('@accessButton').should('exist')
+          cy.get('@accessButton').click()
           cy.findByText('Restricted with Access Granted').should('exist')
 
-          cy.findByRole('button', { name: 'File Options' }).should('exist').click()
+          cy.findByRole('button', { name: 'File Options' }).as('fileOptions')
+          cy.get('@fileOptions').should('exist')
+          cy.get('@fileOptions').click()
           cy.findByText('Unrestrict').should('exist')
         })
     })
@@ -348,13 +364,15 @@ describe('Dataset', () => {
 
             cy.findByText('Edit Files').should('exist')
 
-            cy.findByRole('button', { name: 'Access File' }).should('exist').click()
+            cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+            cy.get('@accessButton').should('exist')
+            cy.get('@accessButton').click()
             cy.findByText('Embargoed').should('exist')
           })
       })
     })
 
-    it('applies filters to the Files Table in the correct order', () => {
+    it.only('applies filters to the Files Table in the correct order', () => {
       const files = [
         FileHelper.create('csv', {
           description: 'Some description',
@@ -457,6 +475,25 @@ describe('Dataset', () => {
           cy.findByText('blob-3').should('not.exist')
           cy.get('table > tbody > tr').eq(0).should('contain', 'blob-5')
           cy.get('table > tbody > tr').eq(1).should('contain', 'blob-4')
+
+          cy.findByLabelText('Search').clear().type('blob-5{enter}', { force: true })
+
+          cy.findByText('1 to 1 of 1 Files').should('exist')
+          cy.findByText('blob').should('not.exist')
+          cy.findByText('blob-1').should('not.exist')
+          cy.findByText('blob-2').should('not.exist')
+          cy.findByText('blob-3').should('not.exist')
+          cy.findByText('blob-4').should('not.exist')
+          cy.findByText('blob-5').should('exist')
+
+          cy.findByLabelText('Search').clear().type('{enter}', { force: true })
+          cy.findByText('1 to 3 of 3 Files').should('exist')
+          cy.findByText('blob').should('exist')
+          cy.findByText('blob-1').should('not.exist')
+          cy.findByText('blob-2').should('not.exist')
+          cy.findByText('blob-3').should('not.exist')
+          cy.findByText('blob-4').should('exist')
+          cy.findByText('blob-5').should('exist')
         })
     })
 
@@ -471,5 +508,37 @@ describe('Dataset', () => {
           cy.findByAltText('blob').should('exist')
         })
     })
+  })
+
+  it('downloads a file', () => {
+    cy.wrap(
+      DatasetHelper.createWithFiles(FileHelper.createMany(1)).then((dataset) =>
+        DatasetHelper.publish(dataset.persistentId)
+      )
+    )
+      .its('persistentId')
+      .then((persistentId: string) => {
+        cy.wait(1500) // Wait for the dataset to be published
+        cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+        cy.wait(1500) // Wait for the page to load
+
+        cy.findByText('Files').should('exist')
+
+        cy.findByRole('button', { name: 'Access File' }).should('exist').click()
+
+        // Workaround for issue where Cypress gets stuck on the download
+        cy.window()
+          .document()
+          .then(function (doc) {
+            doc.addEventListener('click', () => {
+              setTimeout(function () {
+                doc.location.reload()
+              }, 5000)
+            })
+            cy.findByText('Plain Text').should('exist').click()
+          })
+
+        cy.findByText('1 Downloads').should('exist')
+      })
   })
 })

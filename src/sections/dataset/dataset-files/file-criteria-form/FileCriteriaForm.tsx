@@ -19,7 +19,8 @@ export function FileCriteriaForm({
   filesCountInfo
 }: FileCriteriaInputsProps) {
   const showFileCriteriaInputs =
-    filesCountInfo && filesCountInfo.total >= MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS
+    filesCountInfo &&
+    (filesCountInfo.total >= MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS || criteria.someFilterApplied)
   return (
     <div className={styles['criteria-section']}>
       <Form>
