@@ -1,6 +1,6 @@
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { FilesMockData } from './FileMockData'
-import { File } from '../../files/domain/models/File'
+import { File, FileDownloadMode } from '../../files/domain/models/File'
 import { FilesCountInfo } from '../../files/domain/models/FilesCountInfo'
 import { FilesCountInfoMother } from '../../../tests/component/files/domain/models/FilesCountInfoMother'
 import { FilePaginationInfo } from '../../files/domain/models/FilePaginationInfo'
@@ -62,7 +62,12 @@ export class FileMockRepository implements FileRepository {
   }
 
   // eslint-disable-next-line unused-imports/no-unused-vars
-  getMultipleFileDownloadUrl(ids: number[], downloadMode: string): string {
+  getMultipleFileDownloadUrl(ids: number[], downloadMode: FileDownloadMode): string {
+    return FileMother.createDownloadUrl()
+  }
+
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  getFileDownloadUrl(id: number, downloadMode: FileDownloadMode): string {
     return FileMother.createDownloadUrl()
   }
 }

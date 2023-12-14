@@ -22,8 +22,9 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
   const { dataset } = useDataset()
   const [showNoFilesSelectedModal, setShowNoFilesSelectedModal] = useState(false)
   const { getMultipleFileDownloadUrl } = useMultipleFileDownload()
+  const fileSelectionCount = Object.keys(fileSelection).length
   const onClick = (event: MouseEvent<HTMLButtonElement>) => {
-    if (Object.keys(fileSelection).length === SELECTED_FILES_EMPTY) {
+    if (fileSelectionCount === SELECTED_FILES_EMPTY) {
       event.preventDefault()
       setShowNoFilesSelectedModal(true)
     }

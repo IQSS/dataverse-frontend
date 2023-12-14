@@ -27,6 +27,12 @@ describe('DownloadFilesButton', () => {
     )
   }
 
+  beforeEach(() => {
+    fileRepository.getMultipleFileDownloadUrl = cy
+      .stub()
+      .returns('https://multiple-file-download-url')
+  })
+
   it('renders the Download Files button if there is more than 1 file in the dataset and the user has download files permission', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed()
@@ -141,7 +147,6 @@ describe('DownloadFilesButton', () => {
       'some-file-id': files[0],
       'some-other-file-id': files[1]
     }
-    fileRepository.getMultipleFileDownloadUrl = cy.stub().returns('https://some-download-url')
     cy.mountAuthenticated(
       <MultipleFileDownloadProvider repository={fileRepository}>
         {withDataset(
@@ -153,7 +158,7 @@ describe('DownloadFilesButton', () => {
 
     cy.findByRole('button', { name: 'Download' })
       .parent('a')
-      .should('have.attr', 'href', 'https://some-download-url')
+      .should('have.attr', 'href', 'https://multiple-file-download-url')
   })
 
   it('renders the download url for the selected files when some files are selected and there are tabular files', () => {
@@ -172,7 +177,6 @@ describe('DownloadFilesButton', () => {
       'some-file-id': files[0],
       'some-other-file-id': files[1]
     }
-    fileRepository.getMultipleFileDownloadUrl = cy.stub().returns('https://some-download-url')
     cy.mountAuthenticated(
       <MultipleFileDownloadProvider repository={fileRepository}>
         {withDataset(
@@ -186,12 +190,12 @@ describe('DownloadFilesButton', () => {
     cy.findByRole('link', { name: 'Original Format' }).should(
       'have.attr',
       'href',
-      'https://some-download-url'
+      'https://multiple-file-download-url'
     )
     cy.findByRole('link', { name: 'Archival Format (.tab)' }).should(
       'have.attr',
       'href',
-      'https://some-download-url'
+      'https://multiple-file-download-url'
     )
   })
 
@@ -200,8 +204,8 @@ describe('DownloadFilesButton', () => {
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
       hasOneTabularFileAtLeast: true,
       downloadUrls: {
-        original: 'https://some-download-url',
-        archival: 'https://some-download-url'
+        original: 'https://dataset-download-url-original',
+        archival: 'https://dataset-download-url-archival'
       }
     })
     const files = FileMother.createMany(2, {
@@ -226,12 +230,50 @@ describe('DownloadFilesButton', () => {
     cy.findByRole('link', { name: 'Original Format' }).should(
       'have.attr',
       'href',
-      'https://some-download-url'
+      'https://dataset-download-url-original'
     )
     cy.findByRole('link', { name: 'Archival Format (.tab)' }).should(
       'have.attr',
       'href',
-      'https://some-download-url'
+      'https://dataset-download-url-archival'
+    )
+  })
+
+  it('renders the dataset download url with the single file download url when one file is selected', () => {
+    const datasetWithDownloadFilesPermission = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: true
+    })
+    const files = FileMother.createMany(2, {
+      tabularData: {
+        variablesCount: 2,
+        observationsCount: 3,
+        unf: 'some-unf'
+      }
+    })
+    const fileSelection = {
+      'some-file-id': files[0]
+    }
+    fileRepository.getFileDownloadUrl = cy.stub().returns('https://single-file-download-url')
+    cy.mountAuthenticated(
+      <MultipleFileDownloadProvider repository={fileRepository}>
+        {withDataset(
+          <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+          datasetWithDownloadFilesPermission
+        )}
+      </MultipleFileDownloadProvider>
+    )
+
+    cy.findByRole('button', { name: 'Download' }).click()
+    cy.findByRole('link', { name: 'Original Format' }).should(
+      'have.attr',
+      'href',
+      'https://single-file-download-url'
+    )
+    cy.findByRole('link', { name: 'Archival Format (.tab)' }).should(
+      'have.attr',
+      'href',
+      'https://single-file-download-url'
     )
   })
 })

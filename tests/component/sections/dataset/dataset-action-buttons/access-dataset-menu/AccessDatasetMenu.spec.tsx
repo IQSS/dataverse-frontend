@@ -48,10 +48,10 @@ describe('AccessDatasetMenu', () => {
     cy.findByRole('button', { name: 'Access Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Access Dataset' }).click()
     cy.contains('Original Format ZIP').click()
-    cy.get('@consoleLog').should('have.been.calledWith', 'downloading file Original')
+    cy.get('@consoleLog').should('have.been.calledWith', 'downloading file original')
     cy.findByRole('button', { name: 'Access Dataset' }).click()
     cy.contains('Archive Format').click()
-    cy.get('@consoleLog').should('have.been.calledWith', 'downloading file Archival')
+    cy.get('@consoleLog').should('have.been.calledWith', 'downloading file archival')
   })
 
   it('renders the AccessDatasetMenu if the user has download files permissions and the dataset is not deaccessioned', () => {
