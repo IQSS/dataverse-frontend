@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { DatasetThumbnail } from './DatasetThumbnail'
 import { CitationDescription } from '../../shared/citation/CitationDescription'
+import { DatasetCitationTooltip } from './DatasetCitationTooltip'
 
 interface DatasetCitationProps {
   thumbnail?: string
@@ -32,7 +33,10 @@ export function DatasetCitation({ thumbnail, title, citation, version }: Dataset
           </Col>
           <Col>
             <Row>
-              <CitationDescription citation={citation} version={version} />
+              <span className={styles.citation}>
+                <CitationDescription citation={citation} />
+                <DatasetCitationTooltip status={version.publishingStatus} />
+              </span>
             </Row>
             <Row>
               <div>

@@ -15,7 +15,7 @@ export function DatasetCardInfo({ dataset }: DatasetCardInfoProps) {
         className={
           dataset.isDeaccessioned ? styles['citation-box-deaccessioned'] : styles['citation-box']
         }>
-        <CitationDescription citation={dataset.citation} version={dataset.version} />
+        <CitationDescription citation={dataset.citation} />
       </span>
       <span>{dataset.abbreviatedDescription}</span>
     </div>
