@@ -23,7 +23,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     // TODO - Implement using the js-dataverse-client
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(DatasetPreviewMother.createMany(10))
+        resolve(DatasetPreviewMother.createManyRealistic(10))
       }, 1000)
     })
   }

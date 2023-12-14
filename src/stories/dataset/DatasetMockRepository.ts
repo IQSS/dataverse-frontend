@@ -11,7 +11,7 @@ export class DatasetMockRepository implements DatasetRepository {
   getAll(paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(DatasetPreviewMother.createMany(paginationInfo.pageSize))
+        resolve(DatasetPreviewMother.createManyRealistic(paginationInfo.pageSize))
       }, 1000)
     })
   }

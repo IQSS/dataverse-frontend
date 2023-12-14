@@ -7,12 +7,16 @@ export class DatasetPreviewMother {
     return Array.from({ length: count }, () => this.create())
   }
 
+  static createManyRealistic(count: number): DatasetPreview[] {
+    return Array.from({ length: count }, () => this.createRealistic())
+  }
+
   static create(props?: Partial<DatasetPreview>): DatasetPreview {
     const datasetPreview = {
       persistentId: faker.datatype.uuid(),
       title: faker.lorem.sentence(),
       labels: DatasetLabelsMother.create(),
-      isDeaccessioned: false,
+      isDeaccessioned: faker.datatype.boolean(),
       thumbnail: faker.datatype.boolean() ? faker.image.imageUrl() : undefined,
       releaseOrCreateDate: faker.date.past(),
       version: DatasetVersionMother.create(),
@@ -32,6 +36,18 @@ export class DatasetPreviewMother {
       datasetPreview.description,
       datasetPreview.thumbnail
     )
+  }
+
+  static createRealistic(): DatasetPreview {
+    return faker.datatype.boolean() ? this.createDraft() : this.createDeaccessioned()
+  }
+
+  static createDraft(): DatasetPreview {
+    return this.create({
+      isDeaccessioned: false,
+      labels: DatasetLabelsMother.createDraft(),
+      citation: DatasetCitationMother.createDraft()
+    })
   }
 
   static createWithThumbnail(): DatasetPreview {

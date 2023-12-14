@@ -13,7 +13,7 @@ export default meta
 type Story = StoryObj<typeof DatasetCard>
 
 export const Default: Story = {
-  render: () => <DatasetCard dataset={DatasetPreviewMother.create()} />
+  render: () => <DatasetCard dataset={DatasetPreviewMother.createDraft()} />
 }
 
 export const Deaccessioned: Story = {

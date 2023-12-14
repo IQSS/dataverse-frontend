@@ -5,7 +5,7 @@ import styles from '../../../../../../src/sections/home/datasets-list/dataset-ca
 
 describe('DatasetCard', () => {
   it('should render the card', () => {
-    const dataset = DatasetPreviewMother.create()
+    const dataset = DatasetPreviewMother.createDraft()
     cy.customMount(<DatasetCard dataset={dataset} />)
 
     cy.findByText(dataset.title).should('exist')

@@ -192,6 +192,10 @@ export class DatasetLockMother {
 
 export class DatasetLabelsMother {
   static create(): DatasetLabel[] {
+    return [{ value: 'Version 1.0', semanticMeaning: DatasetLabelSemanticMeaning.FILE }]
+  }
+
+  static createDraft(): DatasetLabel[] {
     return [
       {
         value: DatasetLabelValue.UNPUBLISHED,
@@ -213,6 +217,10 @@ export class DatasetLabelsMother {
 
 export class DatasetCitationMother {
   static create(): string {
+    return 'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/0YFWKL" target="_blank">https://doi.org/10.5072/FK2/0YFWKL</a>, Root, V1'
+  }
+
+  static createDraft(): string {
     return 'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/0YFWKL" target="_blank">https://doi.org/10.5072/FK2/0YFWKL</a>, Root, DRAFT VERSION'
   }
 

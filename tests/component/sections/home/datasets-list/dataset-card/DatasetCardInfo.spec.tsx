@@ -5,7 +5,7 @@ import { DatasetCardInfo } from '../../../../../../src/sections/home/datasets-li
 
 describe('DatasetCardInfo', () => {
   it('should render the dataset info', () => {
-    const dataset = DatasetPreviewMother.create()
+    const dataset = DatasetPreviewMother.createDraft()
     cy.customMount(<DatasetCardInfo dataset={dataset} />)
 
     cy.findByText(DateHelper.toDisplayFormat(dataset.releaseOrCreateDate)).should('exist')
