@@ -14,8 +14,8 @@ import {
   MetadataBlockName
 } from '../../../../../src/dataset/domain/models/Dataset'
 import {
-  FileDownloadSize,
   FileDownloadMode,
+  FileDownloadSize,
   FileSizeUnit
 } from '../../../../../src/files/domain/models/File'
 

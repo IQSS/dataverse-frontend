@@ -510,69 +510,105 @@ describe('Dataset', () => {
     })
   })
 
-  it('downloads the dataset', () => {
-    cy.wrap(
-      DatasetHelper.createWithFiles(FileHelper.createMany(2)).then((dataset) =>
-        DatasetHelper.publish(dataset.persistentId)
+  describe('Downloading files', () => {
+    it('downloads the dataset', () => {
+      cy.wrap(
+        DatasetHelper.createWithFiles(FileHelper.createMany(2)).then((dataset) =>
+          DatasetHelper.publish(dataset.persistentId)
+        )
       )
-    )
-      .its('persistentId')
-      .then((persistentId: string) => {
-        cy.wait(1500) // Wait for the dataset to be published
-        cy.visit(`/spa/datasets?persistentId=${persistentId}`)
-        cy.wait(1500) // Wait for the page to load
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.wait(1500) // Wait for the dataset to be published
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.wait(1500) // Wait for the page to load
 
-        cy.findByText('Files').should('exist')
+          cy.findByText('Files').should('exist')
 
-        cy.findByRole('button', { name: 'Access Dataset' }).should('exist').click({ force: true })
+          cy.findByRole('button', { name: 'Access Dataset' }).should('exist').click({ force: true })
 
-        // Workaround for issue where Cypress gets stuck on the download
-        cy.window()
-          .document()
-          .then(function (doc) {
-            doc.addEventListener('click', () => {
-              setTimeout(function () {
-                doc.location.reload()
-              }, 5000)
+          // Workaround for issue where Cypress gets stuck on the download
+          cy.window()
+            .document()
+            .then(function (doc) {
+              doc.addEventListener('click', () => {
+                setTimeout(function () {
+                  doc.location.reload()
+                }, 5000)
+              })
+              cy.findByRole('link', { name: /Original Format ZIP/ })
+                .should('exist')
+                .click({ force: true })
             })
-            cy.findByRole('link', { name: /Original Format ZIP/ })
-              .should('exist')
-              .click({ force: true })
-          })
 
-        cy.findAllByText('1 Downloads').should('exist')
-      })
-  })
+          cy.findAllByText('1 Downloads').should('exist')
+        })
+    })
 
-  it('downloads a file', () => {
-    cy.wrap(
-      DatasetHelper.createWithFiles(FileHelper.createMany(1)).then((dataset) =>
-        DatasetHelper.publish(dataset.persistentId)
+    it('downloads a file', () => {
+      cy.wrap(
+        DatasetHelper.createWithFiles(FileHelper.createMany(1)).then((dataset) =>
+          DatasetHelper.publish(dataset.persistentId)
+        )
       )
-    )
-      .its('persistentId')
-      .then((persistentId: string) => {
-        cy.wait(1500) // Wait for the dataset to be published
-        cy.visit(`/spa/datasets?persistentId=${persistentId}`)
-        cy.wait(1500) // Wait for the page to load
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.wait(1500) // Wait for the dataset to be published
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.wait(1500) // Wait for the page to load
 
-        cy.findByText('Files').should('exist')
+          cy.findByText('Files').should('exist')
 
-        cy.findByRole('button', { name: 'Access File' }).should('exist').click()
+          cy.findByRole('button', { name: 'Access File' }).should('exist').click()
 
-        // Workaround for issue where Cypress gets stuck on the download
-        cy.window()
-          .document()
-          .then(function (doc) {
-            doc.addEventListener('click', () => {
-              setTimeout(function () {
-                doc.location.reload()
-              }, 5000)
+          // Workaround for issue where Cypress gets stuck on the download
+          cy.window()
+            .document()
+            .then(function (doc) {
+              doc.addEventListener('click', () => {
+                setTimeout(function () {
+                  doc.location.reload()
+                }, 5000)
+              })
+              cy.findByText('Plain Text').should('exist').click()
             })
-            cy.findByText('Plain Text').should('exist').click()
-          })
 
-        cy.findByText('1 Downloads').should('exist')
-      })
+          cy.findByText('1 Downloads').should('exist')
+        })
+    })
+
+    it('downloads multiple files', () => {
+      cy.wrap(
+        DatasetHelper.createWithFiles(FileHelper.createMany(3)).then((dataset) =>
+          DatasetHelper.publish(dataset.persistentId)
+        )
+      )
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.wait(1500) // Wait for the page to load
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.wait(1500) // Wait for the page to load
+
+          cy.findByText('Files').should('exist')
+
+          cy.get('table > thead > tr > th > input[type=checkbox]').click()
+
+          cy.findByRole('button', { name: 'Download' }).should('exist').click({ force: true })
+
+          // Workaround for issue where Cypress gets stuck on the download
+          cy.window()
+            .document()
+            .then(function (doc) {
+              doc.addEventListener('click', () => {
+                setTimeout(function () {
+                  doc.location.reload()
+                }, 5000)
+              })
+              cy.findByText('Original Format').should('exist').click()
+            })
+
+          cy.findAllByText('1 Downloads').should('exist')
+        })
+    })
   })
 })
