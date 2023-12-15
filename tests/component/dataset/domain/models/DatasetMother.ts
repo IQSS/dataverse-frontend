@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 import {
   ANONYMIZED_FIELD_VALUE,
   Dataset,
+  DatasetDownloadUrls,
   DatasetLabelSemanticMeaning,
   DatasetLabelValue,
   DatasetLock,
@@ -203,12 +204,29 @@ export class DatasetFileDownloadSizeMother {
     )
   }
 
-  static createArchival(): FileDownloadSize {
-    return this.create({ mode: FileDownloadMode.ARCHIVAL })
+  static createArchival(props?: Partial<FileDownloadSize>): FileDownloadSize {
+    return this.create({ mode: FileDownloadMode.ARCHIVAL, ...props })
   }
 
-  static createOriginal(): FileDownloadSize {
-    return this.create({ mode: FileDownloadMode.ORIGINAL })
+  static createOriginal(props?: Partial<FileDownloadSize>): FileDownloadSize {
+    return this.create({ mode: FileDownloadMode.ORIGINAL, ...props })
+  }
+}
+
+export class DatasetDownloadUrlsMother {
+  static create(props?: Partial<DatasetDownloadUrls>): DatasetDownloadUrls {
+    return {
+      original: this.createDownloadUrl(),
+      archival: this.createDownloadUrl(),
+      ...props
+    }
+  }
+
+  static createDownloadUrl(): string {
+    const blob = new Blob(['Name,Age,Location\nJohn,25,New York\nJane,30,San Francisco'], {
+      type: 'text/csv'
+    })
+    return URL.createObjectURL(blob)
   }
 }
 
@@ -315,13 +333,10 @@ export class DatasetMother {
       hasOneTabularFileAtLeast: faker.datatype.boolean(),
       isValid: faker.datatype.boolean(),
       isReleased: faker.datatype.boolean(),
-      downloadUrls: {
-        original: this.createDownloadUrl(),
-        archival: this.createDownloadUrl()
-      },
+      downloadUrls: DatasetDownloadUrlsMother.create(),
       thumbnail: undefined,
       privateUrl: undefined,
-      fileDownloadSizes: undefined,
+      fileDownloadSizes: [],
       ...props
     }
 
@@ -339,17 +354,10 @@ export class DatasetMother {
       dataset.isValid,
       dataset.isReleased,
       dataset.downloadUrls,
+      dataset.fileDownloadSizes,
       dataset.thumbnail,
-      dataset.privateUrl,
-      dataset.fileDownloadSizes
+      dataset.privateUrl
     ).build()
-  }
-
-  static createDownloadUrl(): string {
-    const blob = new Blob(['Name,Age,Location\nJohn,25,New York\nJane,30,San Francisco'], {
-      type: 'text/csv'
-    })
-    return URL.createObjectURL(blob)
   }
 
   static createAnonymized(): Dataset {

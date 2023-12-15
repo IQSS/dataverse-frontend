@@ -1,27 +1,31 @@
 import {
+  DatasetDownloadUrls,
   DatasetPermissions,
   DatasetPublishingStatus,
   DatasetVersion
 } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButton, DropdownButtonItem, DropdownHeader } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
-
-import { FileDownloadMode, FileDownloadSize } from '../../../../files/domain/models/File'
+import { FileDownloadSize, FileDownloadMode } from '../../../../files/domain/models/File'
 import { Download } from 'react-bootstrap-icons'
 
 interface AccessDatasetMenuProps {
   version: DatasetVersion
   permissions: DatasetPermissions
   hasOneTabularFileAtLeast: boolean
-  fileDownloadSizes?: FileDownloadSize[]
+  fileDownloadSizes: FileDownloadSize[]
+  downloadUrls: DatasetDownloadUrls
 }
 
 export function AccessDatasetMenu({
   version,
   permissions,
   hasOneTabularFileAtLeast,
-  fileDownloadSizes
+  fileDownloadSizes,
+  downloadUrls
 }: AccessDatasetMenuProps) {
+  const { t } = useTranslation('dataset')
+
   if (
     !permissions.canDownloadFiles ||
     (version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED &&
@@ -30,41 +34,6 @@ export function AccessDatasetMenu({
     return <></>
   }
 
-  function getFormattedFileSize(mode: FileDownloadMode): string {
-    const foundSize = fileDownloadSizes && fileDownloadSizes.find((size) => size.mode === mode)
-    return foundSize ? foundSize.toString() : ''
-  }
-
-  const handleDownload = (type: FileDownloadMode) => {
-    //TODO: implement download feature
-    console.log('downloading file ' + type)
-  }
-
-  interface DatasetDownloadOptionsProps {
-    datasetContainsTabularFiles: boolean
-  }
-
-  const DatasetDownloadOptions = ({ datasetContainsTabularFiles }: DatasetDownloadOptionsProps) => {
-    return datasetContainsTabularFiles ? (
-      <>
-        <DropdownButtonItem onClick={() => handleDownload(FileDownloadMode.ORIGINAL)}>
-          {t('datasetActionButtons.accessDataset.downloadOriginalZip')} (
-          {getFormattedFileSize(FileDownloadMode.ORIGINAL)})
-        </DropdownButtonItem>
-        <DropdownButtonItem onClick={() => handleDownload(FileDownloadMode.ARCHIVAL)}>
-          {t('datasetActionButtons.accessDataset.downloadArchiveZip')} (
-          {getFormattedFileSize(FileDownloadMode.ARCHIVAL)})
-        </DropdownButtonItem>
-      </>
-    ) : (
-      <DropdownButtonItem onClick={() => handleDownload(FileDownloadMode.ORIGINAL)}>
-        {t('datasetActionButtons.accessDataset.downloadZip')} (
-        {getFormattedFileSize(FileDownloadMode.ORIGINAL)})
-      </DropdownButtonItem>
-    )
-  }
-
-  const { t } = useTranslation('dataset')
   return (
     <DropdownButton
       id={`access-dataset-menu`}
@@ -72,10 +41,50 @@ export function AccessDatasetMenu({
       asButtonGroup
       variant="primary">
       <DropdownHeader>
-        Download Options <Download></Download>
+        {t('datasetActionButtons.accessDataset.downloadOptions.header')} <Download></Download>
       </DropdownHeader>
-      <DatasetDownloadOptions datasetContainsTabularFiles={hasOneTabularFileAtLeast} />
+      <DatasetDownloadOptions
+        hasOneTabularFileAtLeast={hasOneTabularFileAtLeast}
+        fileDownloadSizes={fileDownloadSizes}
+        downloadUrls={downloadUrls}
+      />
     </DropdownButton>
+  )
+}
+
+interface DatasetDownloadOptionsProps {
+  hasOneTabularFileAtLeast: boolean
+  fileDownloadSizes: FileDownloadSize[]
+  downloadUrls: DatasetDownloadUrls
+}
+
+const DatasetDownloadOptions = ({
+  hasOneTabularFileAtLeast,
+  fileDownloadSizes,
+  downloadUrls
+}: DatasetDownloadOptionsProps) => {
+  const { t } = useTranslation('dataset')
+  function getFormattedFileSize(mode: FileDownloadMode): string {
+    const foundSize = fileDownloadSizes.find((size) => size.mode === mode)
+    return foundSize ? foundSize.toString() : ''
+  }
+
+  return hasOneTabularFileAtLeast ? (
+    <>
+      <DropdownButtonItem href={downloadUrls[FileDownloadMode.ORIGINAL]}>
+        {t('datasetActionButtons.accessDataset.downloadOptions.originalZip')} (
+        {getFormattedFileSize(FileDownloadMode.ORIGINAL)})
+      </DropdownButtonItem>
+      <DropdownButtonItem href={downloadUrls[FileDownloadMode.ARCHIVAL]}>
+        {t('datasetActionButtons.accessDataset.downloadOptions.archivalZip')} (
+        {getFormattedFileSize(FileDownloadMode.ARCHIVAL)})
+      </DropdownButtonItem>
+    </>
+  ) : (
+    <DropdownButtonItem href={downloadUrls[FileDownloadMode.ORIGINAL]}>
+      {t('datasetActionButtons.accessDataset.downloadOptions.zip')} (
+      {getFormattedFileSize(FileDownloadMode.ORIGINAL)})
+    </DropdownButtonItem>
   )
 }
 

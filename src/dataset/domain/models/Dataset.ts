@@ -286,9 +286,9 @@ export class Dataset {
     public readonly isValid: boolean,
     public readonly isReleased: boolean,
     public readonly downloadUrls: DatasetDownloadUrls,
+    public readonly fileDownloadSizes: FileDownloadSize[],
     public readonly thumbnail?: string,
-    public readonly privateUrl?: PrivateUrl,
-    public readonly fileDownloadSizes?: FileDownloadSize[]
+    public readonly privateUrl?: PrivateUrl
   ) {}
 
   public getTitle(): string {
@@ -372,9 +372,9 @@ export class Dataset {
       public readonly isValid: boolean,
       public readonly isReleased: boolean,
       public readonly downloadUrls: DatasetDownloadUrls,
+      public readonly fileDownloadSizes: FileDownloadSize[],
       public readonly thumbnail?: string,
-      public readonly privateUrl?: PrivateUrl,
-      public readonly fileDownloadSizes?: FileDownloadSize[]
+      public readonly privateUrl?: PrivateUrl
     ) {
       this.withLabels()
       this.withAlerts()
@@ -483,9 +483,9 @@ export class Dataset {
         this.isValid,
         this.isReleased,
         this.downloadUrls,
+        this.fileDownloadSizes,
         this.thumbnail,
-        this.privateUrl,
-        this.fileDownloadSizes
+        this.privateUrl
       )
     }
   }
