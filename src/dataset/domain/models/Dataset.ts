@@ -220,9 +220,10 @@ export class DatasetVersion {
     public readonly isLatest: boolean,
     public readonly isInReview: boolean,
     public readonly latestVersionStatus: DatasetPublishingStatus,
+    public readonly citation: string,
     public readonly majorNumber?: number,
-    public readonly minorNumber?: number,
     // requestedVersion will be set if the user requested a version that did not exist.
+    public readonly minorNumber?: number,
     public readonly requestedVersion?: string
   ) {}
 
@@ -273,7 +274,6 @@ export class Dataset {
   constructor(
     public readonly persistentId: string,
     public readonly version: DatasetVersion,
-    public readonly citation: string,
     public readonly labels: DatasetLabel[],
     public readonly alerts: Alert[],
     public readonly summaryFields: DatasetMetadataBlock[],
@@ -361,7 +361,6 @@ export class Dataset {
     constructor(
       public readonly persistentId: string,
       public readonly version: DatasetVersion,
-      public readonly citation: string,
       public readonly summaryFields: DatasetMetadataBlock[],
       public readonly license: DatasetLicense = defaultLicense,
       public readonly metadataBlocks: DatasetMetadataBlocks,
@@ -470,7 +469,6 @@ export class Dataset {
       return new Dataset(
         this.persistentId,
         this.version,
-        this.citation,
         this.labels,
         this.alerts,
         this.summaryFields,

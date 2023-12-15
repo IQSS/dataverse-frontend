@@ -8,11 +8,10 @@ import { CitationThumbnail } from './CitationThumbnail'
 interface DatasetCitationProps {
   thumbnail?: string
   title: string
-  citation: string
   version: DatasetVersion
 }
 
-export function DatasetCitation({ thumbnail, title, citation, version }: DatasetCitationProps) {
+export function DatasetCitation({ thumbnail, title, version }: DatasetCitationProps) {
   const { t } = useTranslation('dataset')
   return (
     <>
@@ -32,7 +31,10 @@ export function DatasetCitation({ thumbnail, title, citation, version }: Dataset
           </Col>
           <Col>
             <Row>
-              <CitationDescription citation={citation} version={version} />
+              <CitationDescription
+                citation={version.citation}
+                publishingStatus={version.publishingStatus}
+              />
             </Row>
             <Row>
               <div>
@@ -53,13 +55,19 @@ export function DatasetCitation({ thumbnail, title, citation, version }: Dataset
   )
 }
 
-function CitationDescription({ citation, version }: { citation: string; version: DatasetVersion }) {
+function CitationDescription({
+  citation,
+  publishingStatus
+}: {
+  citation: string
+  publishingStatus: DatasetPublishingStatus
+}) {
   const citationAsReactElement = parse(citation)
 
   return (
     <span className={styles.citation}>
       {citationAsReactElement}
-      <CitationTooltip status={version.publishingStatus} />
+      <CitationTooltip status={publishingStatus} />
     </span>
   )
 }

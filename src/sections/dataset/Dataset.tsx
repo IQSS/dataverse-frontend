@@ -60,7 +60,6 @@ export function Dataset({ fileRepository }: DatasetProps) {
                 <DatasetCitation
                   title={dataset.getTitle()}
                   thumbnail={dataset.thumbnail}
-                  citation={dataset.citation}
                   version={dataset.version}
                 />
               </Col>

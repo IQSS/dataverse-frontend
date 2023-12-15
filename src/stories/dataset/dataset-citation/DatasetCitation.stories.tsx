@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { DatasetCitation } from '../../../sections/dataset/dataset-citation/DatasetCitation'
-import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { faker } from '@faker-js/faker'
-import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
+import {
+  DatasetMother,
+  DatasetVersionMother
+} from '../../../../tests/component/dataset/domain/models/DatasetMother'
 
 const meta: Meta<typeof DatasetCitation> = {
   title: 'Sections/Dataset Page/DatasetCitation',
@@ -21,11 +23,7 @@ export const Default: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          title={dataset.getTitle()}
-          citation={dataset.citation}
-          version={dataset.version}
-        />
+        <DatasetCitation title={dataset.getTitle()} version={dataset.version} />
       </div>
     )
   }
@@ -41,7 +39,6 @@ export const WithThumbnail: Story = {
         <DatasetCitation
           title={dataset.getTitle()}
           thumbnail={dataset.thumbnail}
-          citation={dataset.citation}
           version={dataset.version}
         />
       </div>
@@ -52,15 +49,7 @@ export const WithThumbnail: Story = {
 export const DraftVersion: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic({
-      citation:
-        'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, DRAFT VERSION',
-      version: new DatasetVersion(
-        1,
-        DatasetPublishingStatus.DRAFT,
-        true,
-        false,
-        DatasetPublishingStatus.DRAFT
-      )
+      version: DatasetVersionMother.createDraft()
     })
 
     /*
@@ -70,11 +59,7 @@ export const DraftVersion: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          title={dataset.getTitle()}
-          citation={dataset.citation}
-          version={dataset.version}
-        />
+        <DatasetCitation title={dataset.getTitle()} version={dataset.version} />
       </div>
     )
   }
@@ -83,17 +68,7 @@ export const DraftVersion: Story = {
 export const Deaccessioned: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic({
-      citation:
-        'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1 DEACCESSIONED VERSION',
-      version: new DatasetVersion(
-        1,
-        DatasetPublishingStatus.DEACCESSIONED,
-        true,
-        false,
-        DatasetPublishingStatus.DEACCESSIONED,
-        1,
-        0
-      )
+      version: DatasetVersionMother.createDeaccessioned()
     })
 
     /*
@@ -103,11 +78,7 @@ export const Deaccessioned: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          title={dataset.getTitle()}
-          citation={dataset.citation}
-          version={dataset.version}
-        />
+        <DatasetCitation title={dataset.getTitle()} version={dataset.version} />
       </div>
     )
   }
@@ -115,10 +86,7 @@ export const Deaccessioned: Story = {
 
 export const Anonymized: Story = {
   render: () => {
-    const dataset = DatasetMother.createRealistic({
-      citation:
-        'Author name(s) withheld, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1'
-    })
+    const dataset = DatasetMother.createRealisticAnonymized()
 
     /*
         Includes extra breaks, so you can see the DRAFT tooltip message
@@ -127,11 +95,7 @@ export const Anonymized: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          title={dataset.getTitle()}
-          citation={dataset.citation}
-          version={dataset.version}
-        />
+        <DatasetCitation title={dataset.getTitle()} version={dataset.version} />
       </div>
     )
   }

@@ -19,10 +19,13 @@ function getCurrentDateInYYYYMMDDFormat() {
   ).padStart(2, '0')}`
 }
 
+function getPersistentIdUrl(persistentId: string) {
+  return `https://doi.org/${persistentId.replace('doi:', '')}`
+}
+
 const datasetData = (persistentId: string, versionId: number) => {
-  const persistentIdUrl = `https://doi.org/${persistentId.replace('doi:', '')}`
+  const persistentIdUrl = getPersistentIdUrl(persistentId)
   return {
-    citation: `Finch, Fiona, 2023, "Darwin's Finches", <a href="${persistentIdUrl}" target="_blank">${persistentIdUrl}</a>, Root, DRAFT VERSION`,
     labels: [
       { semanticMeaning: 'dataset', value: 'Draft' },
       { semanticMeaning: 'warning', value: 'Unpublished' }
@@ -80,7 +83,8 @@ const datasetData = (persistentId: string, versionId: number) => {
       requestedVersion: undefined,
       latestVersionStatus: 'draft',
       isLatest: true,
-      isInReview: false
+      isInReview: false,
+      citation: `Finch, Fiona, 2023, "Darwin's Finches", <a href="${persistentIdUrl}" target="_blank">${persistentIdUrl}</a>, Root, DRAFT VERSION`
     },
     permissions: {
       canDownloadFiles: true,
@@ -109,7 +113,6 @@ describe('Dataset JSDataverse Repository', () => {
       const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
       expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
-      expect(dataset.citation).to.deep.equal(datasetExpected.citation)
       expect(dataset.labels).to.deep.equal(datasetExpected.labels)
       expect(dataset.license).to.deep.equal(datasetExpected.license)
       expect(dataset.metadataBlocks).to.deep.equal(datasetExpected.metadataBlocks)
@@ -143,6 +146,9 @@ describe('Dataset JSDataverse Repository', () => {
           true,
           false,
           DatasetPublishingStatus.RELEASED,
+          `Finch, Fiona, 2023, "Darwin's Finches", <a href="${getPersistentIdUrl(
+            dataset.persistentId
+          )}" target="_blank">${getPersistentIdUrl(dataset.persistentId)}</a>, Root, V1`,
           1,
           0
         )
@@ -181,6 +187,9 @@ describe('Dataset JSDataverse Repository', () => {
           true,
           false,
           DatasetPublishingStatus.RELEASED,
+          `Finch, Fiona, 2023, "Darwin's Finches", <a href="${getPersistentIdUrl(
+            dataset.persistentId
+          )}" target="_blank">${getPersistentIdUrl(dataset.persistentId)}</a>, Root, V1`,
           1,
           0
         )

@@ -150,6 +150,7 @@ describe('File JSDataverse Repository', () => {
             true,
             false,
             DatasetPublishingStatus.RELEASED,
+            '',
             1,
             0
           )
@@ -186,6 +187,7 @@ describe('File JSDataverse Repository', () => {
             true,
             false,
             DatasetPublishingStatus.DEACCESSIONED,
+            '',
             1,
             0
           )

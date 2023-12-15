@@ -21,6 +21,7 @@ const datasetVersion = new DatasetVersion(
   true,
   false,
   DatasetPublishingStatus.RELEASED,
+  '',
   1,
   0
 )

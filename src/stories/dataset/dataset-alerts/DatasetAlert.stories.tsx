@@ -62,7 +62,8 @@ export const DraftVersion: Story = {
         DatasetPublishingStatus.DRAFT,
         true,
         false,
-        DatasetPublishingStatus.DRAFT
+        DatasetPublishingStatus.DRAFT,
+        ''
       ),
       permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed()
     })
@@ -83,6 +84,7 @@ export const VersionNotFound: Story = {
         true,
         false,
         DatasetPublishingStatus.RELEASED,
+        '',
         1,
         0,
         '3.0'
@@ -105,6 +107,7 @@ export const VersionNotFoundShowDraft: Story = {
         true,
         false,
         DatasetPublishingStatus.DRAFT,
+        '',
         1,
         0,
         '3.0'
@@ -127,6 +130,7 @@ export const SharePrivateUrl: Story = {
         true,
         false,
         DatasetPublishingStatus.DRAFT,
+        '',
         1,
         0
       ),
@@ -153,6 +157,7 @@ export const UsePrivateUrl: Story = {
         true,
         false,
         DatasetPublishingStatus.DRAFT,
+        '',
         1,
         0
       ),

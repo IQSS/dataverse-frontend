@@ -26,8 +26,8 @@ import {
 export class JSDatasetMapper {
   static toDataset(
     jsDataset: JSDataset,
-    citation: string,
-    summaryFieldsNames: string[],
+    jsDatasetCitation: string,
+    jsDatasetSummaryFieldsNames: string[],
     jsDatasetPermissions: JSDatasetPermissions,
     jsDatasetLocks: JSDatasetLock[],
     requestedVersion?: string,
@@ -36,13 +36,13 @@ export class JSDatasetMapper {
     const version = JSDatasetMapper.toVersion(
       jsDataset.versionId,
       jsDataset.versionInfo,
+      jsDatasetCitation,
       requestedVersion
     )
     return new Dataset.Builder(
       jsDataset.persistentId,
       version,
-      citation,
-      JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
+      JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, jsDatasetSummaryFieldsNames),
       jsDataset.license,
       JSDatasetMapper.toMetadataBlocks(
         jsDataset.metadataBlocks,
@@ -66,14 +66,16 @@ export class JSDatasetMapper {
   static toVersion(
     jDatasetVersionId: number,
     jsDatasetVersionInfo: JSDatasetVersionInfo,
+    jsDatasetCitation: string,
     requestedVersion?: string
   ): DatasetVersion {
     return new DatasetVersion(
       jDatasetVersionId,
       JSDatasetMapper.toStatus(jsDatasetVersionInfo.state),
-      true, // TODO Connect with dataset version isLatest
-      false, // TODO Connect with dataset version isInReview
-      JSDatasetMapper.toStatus(jsDatasetVersionInfo.state), // TODO Connect with dataset version latestVersionState
+      true,
+      false,
+      JSDatasetMapper.toStatus(jsDatasetVersionInfo.state),
+      jsDatasetCitation,
       jsDatasetVersionInfo.majorNumber,
       jsDatasetVersionInfo.minorNumber,
       requestedVersion
