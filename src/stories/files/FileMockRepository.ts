@@ -1,6 +1,6 @@
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { FilesMockData } from './FileMockData'
-import { FilePreview } from '../../files/domain/models/FilePreview'
+import { FilePreview, FileDownloadMode } from '../../files/domain/models/FilePreview'
 import { FilesCountInfo } from '../../files/domain/models/FilesCountInfo'
 import { FilesCountInfoMother } from '../../../tests/component/files/domain/models/FilesCountInfoMother'
 import { FilePaginationInfo } from '../../files/domain/models/FilePaginationInfo'
@@ -8,8 +8,9 @@ import { FileUserPermissionsMother } from '../../../tests/component/files/domain
 import { FileUserPermissions } from '../../files/domain/models/FileUserPermissions'
 import { DatasetVersion } from '../../dataset/domain/models/Dataset'
 import { FileCriteria } from '../../files/domain/models/FileCriteria'
-import { File } from '../../files/domain/models/File'
+import { FilePreviewMother } from '../../../tests/component/files/domain/models/FilePreviewMother'
 import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
+import { File } from '../../files/domain/models/File'
 
 export class FileMockRepository implements FileRepository {
   // eslint-disable-next-line unused-imports/no-unused-vars
@@ -69,5 +70,15 @@ export class FileMockRepository implements FileRepository {
         resolve(FileMother.createRealistic())
       }, 1000)
     })
+  }
+
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  getMultipleFileDownloadUrl(ids: number[], downloadMode: FileDownloadMode): string {
+    return FilePreviewMother.createDownloadUrl()
+  }
+
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  getFileDownloadUrl(id: number, downloadMode: FileDownloadMode): string {
+    return FilePreviewMother.createDownloadUrl()
   }
 }

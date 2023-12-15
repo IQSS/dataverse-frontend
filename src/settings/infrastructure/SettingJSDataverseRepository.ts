@@ -20,7 +20,7 @@ function mockedSettingResponse<T>(name: SettingName): Setting<T> {
     case SettingName.ZIP_DOWNLOAD_LIMIT:
       return {
         name: SettingName.ZIP_DOWNLOAD_LIMIT,
-        value: new ZipDownloadLimit(1, FileSizeUnit.BYTES)
+        value: new ZipDownloadLimit(1, FileSizeUnit.TERABYTES)
       } as Setting<T>
     case SettingName.ALLOWED_EXTERNAL_STATUSES:
       return {

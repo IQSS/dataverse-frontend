@@ -5,8 +5,7 @@ import {
 } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButton, DropdownButtonItem, DropdownHeader } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
-
-import { FileDownloadSize, FileDownloadSizeMode } from '../../../../files/domain/models/FilePreview'
+import { FileDownloadSize, FileDownloadMode } from '../../../../files/domain/models/FilePreview'
 import { Download } from 'react-bootstrap-icons'
 
 interface AccessDatasetMenuProps {
@@ -30,12 +29,12 @@ export function AccessDatasetMenu({
     return <></>
   }
 
-  function getFormattedFileSize(mode: FileDownloadSizeMode): string {
+  function getFormattedFileSize(mode: FileDownloadMode): string {
     const foundSize = fileDownloadSizes && fileDownloadSizes.find((size) => size.mode === mode)
     return foundSize ? foundSize.toString() : ''
   }
 
-  const handleDownload = (type: FileDownloadSizeMode) => {
+  const handleDownload = (type: FileDownloadMode) => {
     //TODO: implement download feature
     console.log('downloading file ' + type)
   }
@@ -47,19 +46,19 @@ export function AccessDatasetMenu({
   const DatasetDownloadOptions = ({ datasetContainsTabularFiles }: DatasetDownloadOptionsProps) => {
     return datasetContainsTabularFiles ? (
       <>
-        <DropdownButtonItem onClick={() => handleDownload(FileDownloadSizeMode.ORIGINAL)}>
+        <DropdownButtonItem onClick={() => handleDownload(FileDownloadMode.ORIGINAL)}>
           {t('datasetActionButtons.accessDataset.downloadOriginalZip')} (
-          {getFormattedFileSize(FileDownloadSizeMode.ORIGINAL)})
+          {getFormattedFileSize(FileDownloadMode.ORIGINAL)})
         </DropdownButtonItem>
-        <DropdownButtonItem onClick={() => handleDownload(FileDownloadSizeMode.ARCHIVAL)}>
+        <DropdownButtonItem onClick={() => handleDownload(FileDownloadMode.ARCHIVAL)}>
           {t('datasetActionButtons.accessDataset.downloadArchiveZip')} (
-          {getFormattedFileSize(FileDownloadSizeMode.ARCHIVAL)})
+          {getFormattedFileSize(FileDownloadMode.ARCHIVAL)})
         </DropdownButtonItem>
       </>
     ) : (
-      <DropdownButtonItem onClick={() => handleDownload(FileDownloadSizeMode.ORIGINAL)}>
+      <DropdownButtonItem onClick={() => handleDownload(FileDownloadMode.ORIGINAL)}>
         {t('datasetActionButtons.accessDataset.downloadZip')} (
-        {getFormattedFileSize(FileDownloadSizeMode.ORIGINAL)})
+        {getFormattedFileSize(FileDownloadMode.ORIGINAL)})
       </DropdownButtonItem>
     )
   }

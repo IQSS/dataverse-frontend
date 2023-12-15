@@ -264,6 +264,11 @@ export interface PrivateUrl {
   urlSnippet: string
 }
 
+export interface DatasetDownloadUrls {
+  original: string
+  archival: string
+}
+
 export class Dataset {
   constructor(
     public readonly persistentId: string,
@@ -280,6 +285,7 @@ export class Dataset {
     public readonly hasOneTabularFileAtLeast: boolean,
     public readonly isValid: boolean,
     public readonly isReleased: boolean,
+    public readonly downloadUrls: DatasetDownloadUrls,
     public readonly thumbnail?: string,
     public readonly privateUrl?: PrivateUrl,
     public readonly fileDownloadSizes?: FileDownloadSize[]
@@ -365,6 +371,7 @@ export class Dataset {
       public readonly hasOneTabularFileAtLeast: boolean,
       public readonly isValid: boolean,
       public readonly isReleased: boolean,
+      public readonly downloadUrls: DatasetDownloadUrls,
       public readonly thumbnail?: string,
       public readonly privateUrl?: PrivateUrl,
       public readonly fileDownloadSizes?: FileDownloadSize[]
@@ -475,6 +482,7 @@ export class Dataset {
         this.hasOneTabularFileAtLeast,
         this.isValid,
         this.isReleased,
+        this.downloadUrls,
         this.thumbnail,
         this.privateUrl,
         this.fileDownloadSizes

@@ -1,19 +1,19 @@
 import { FileRepository } from '../domain/repositories/FileRepository'
-import { FilePreview } from '../domain/models/FilePreview'
+import { FilePreview, FileDownloadMode } from '../domain/models/FilePreview'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
 import { FileUserPermissions } from '../domain/models/FileUserPermissions'
 import {
+  File as JSFile,
+  FileDataTable as JSFileTabularData,
   FileDownloadSizeMode,
   getDatasetFileCounts,
   getDatasetFiles,
   getDatasetFilesTotalDownloadSize,
+  getFileDataTables,
   getFileDownloadCount,
   getFileUserPermissions,
-  ReadError,
-  File as JSFile,
-  getFileDataTables,
-  FileDataTable as JSFileTabularData
+  ReadError
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -165,5 +165,16 @@ export class FileJSDataverseRepository implements FileRepository {
         resolve(FileMother.createRealistic())
       }, 1000)
     })
+  }
+
+  getMultipleFileDownloadUrl(ids: number[], downloadMode: FileDownloadMode): string {
+    return `/api/access/datafiles/${ids.join(',')}?format=${downloadMode}`
+  }
+
+  getFileDownloadUrl(id: number, downloadMode: FileDownloadMode): string {
+    if (downloadMode === FileDownloadMode.ORIGINAL) {
+      return `/api/access/datafile/${id}?format=${downloadMode}`
+    }
+    return `/api/access/datafile/${id}`
   }
 }

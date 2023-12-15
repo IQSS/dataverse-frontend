@@ -63,17 +63,11 @@ export class FileSize {
   }
 }
 
-export enum FileDownloadSizeMode {
-  ALL = 'All',
-  ORIGINAL = 'Original',
-  ARCHIVAL = 'Archival'
-}
-
 export class FileDownloadSize extends FileSize {
   constructor(
     readonly value: number,
     readonly unit: FileSizeUnit,
-    readonly mode: FileDownloadSizeMode
+    readonly mode: FileDownloadMode
   ) {
     super(value, unit)
   }
@@ -125,6 +119,11 @@ export interface FileTabularData {
   variablesCount: number
   observationsCount: number
   unf?: string
+}
+
+export enum FileDownloadMode {
+  ARCHIVAL = 'archival',
+  ORIGINAL = 'original'
 }
 
 export enum FileLabelType {
@@ -195,9 +194,5 @@ export class FilePreview {
       return this.embargo.isActive
     }
     return false
-  }
-
-  get isTabularData(): boolean {
-    return this.tabularData !== undefined
   }
 }
