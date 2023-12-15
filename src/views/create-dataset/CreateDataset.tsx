@@ -37,7 +37,7 @@ export default function CreateDatasetFormPresenter({
         <h1>{t('pageTitle')}</h1>
       </header>
       <SeparationLine />
-      <div className={styles.container} id="foo">
+      <div className={styles.container}>
         <RequiredFieldText />
         <Form onSubmit={handleCreateDatasetSubmit} className={'create-dataset-form'}>
           {submitComplete && <div>Form Submitted!</div>}
@@ -47,9 +47,7 @@ export default function CreateDatasetFormPresenter({
                 <Form.Group.Label>{t('datasetForm.title')}</Form.Group.Label>
                 <Form.Group.Input
                   readOnly={submitting && true}
-                  data-cy="datasetFormInputTitle"
                   type="text"
-                  // FIX: Err - Property 'name' does not exist on type 'IntrinsicAttributes & FormInputProps'.
                   name="createDatasetTitle"
                   placeholder="Dataset Title"
                   onChange={handleCreateDatasetFieldChange}
@@ -62,10 +60,8 @@ export default function CreateDatasetFormPresenter({
           <Alert variant={'info'} customHeading={t('metadataTip.title')} dismissible={false}>
             {t('metadataTip.content')}
           </Alert>
-          <Button type="submit" data-cy="datasetFormSubmit">
-            {t('saveButton')}
-          </Button>
-          <Button withSpacing variant="secondary" data-cy="datasetFormCancel">
+          <Button type="submit">{t('saveButton')}</Button>
+          <Button withSpacing variant="secondary">
             {t('cancelButton')}
           </Button>
         </Form>
