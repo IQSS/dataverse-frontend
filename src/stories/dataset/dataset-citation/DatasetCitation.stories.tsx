@@ -18,12 +18,12 @@ type Story = StoryObj<typeof DatasetCitation>
 
 export const Default: Story = {
   render: () => {
-    const dataset = DatasetMother.createRealistic()
+    const version = DatasetVersionMother.createRealistic()
     return (
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation title={dataset.getTitle()} version={dataset.version} />
+        <DatasetCitation version={version} />
       </div>
     )
   }
@@ -36,11 +36,7 @@ export const WithThumbnail: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          title={dataset.getTitle()}
-          thumbnail={dataset.thumbnail}
-          version={dataset.version}
-        />
+        <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
       </div>
     )
   }
@@ -48,10 +44,7 @@ export const WithThumbnail: Story = {
 
 export const DraftVersion: Story = {
   render: () => {
-    const dataset = DatasetMother.createRealistic({
-      version: DatasetVersionMother.createDraft()
-    })
-
+    const version = DatasetVersionMother.createDraft()
     /*
       Includes extra breaks, so you can see the DRAFT tooltip message
        */
@@ -59,7 +52,7 @@ export const DraftVersion: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation title={dataset.getTitle()} version={dataset.version} />
+        <DatasetCitation version={version} />
       </div>
     )
   }
@@ -67,9 +60,7 @@ export const DraftVersion: Story = {
 
 export const Deaccessioned: Story = {
   render: () => {
-    const dataset = DatasetMother.createRealistic({
-      version: DatasetVersionMother.createDeaccessioned()
-    })
+    const version = DatasetVersionMother.createDeaccessioned()
 
     /*
         Includes extra breaks, so you can see the DRAFT tooltip message
@@ -78,7 +69,7 @@ export const Deaccessioned: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation title={dataset.getTitle()} version={dataset.version} />
+        <DatasetCitation version={version} />
       </div>
     )
   }
@@ -95,7 +86,7 @@ export const Anonymized: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation title={dataset.getTitle()} version={dataset.version} />
+        <DatasetCitation version={dataset.version} />
       </div>
     )
   }

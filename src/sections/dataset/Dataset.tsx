@@ -51,17 +51,13 @@ export function Dataset({ fileRepository }: DatasetProps) {
           </div>
 
           <header className={styles.header}>
-            <h1>{dataset.getTitle()}</h1>
+            <h1>{dataset.version.title}</h1>
             <DatasetLabels labels={dataset.labels} />
           </header>
           <div className={styles.container}>
             <Row>
               <Col sm={9}>
-                <DatasetCitation
-                  title={dataset.getTitle()}
-                  thumbnail={dataset.thumbnail}
-                  version={dataset.version}
-                />
+                <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
               </Col>
               <Col sm={3}>
                 <DatasetActionButtons dataset={dataset} />

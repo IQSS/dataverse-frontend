@@ -59,6 +59,7 @@ export const DraftVersion: Story = {
     const dataset = DatasetMother.createRealistic({
       version: new DatasetVersion(
         1,
+        '',
         DatasetPublishingStatus.DRAFT,
         true,
         false,
@@ -80,6 +81,7 @@ export const VersionNotFound: Story = {
     const dataset = DatasetMother.createRealistic({
       version: new DatasetVersion(
         1,
+        '',
         DatasetPublishingStatus.RELEASED,
         true,
         false,
@@ -103,6 +105,7 @@ export const VersionNotFoundShowDraft: Story = {
     const dataset = DatasetMother.createRealistic({
       version: new DatasetVersion(
         1,
+        '',
         DatasetPublishingStatus.DRAFT,
         true,
         false,
@@ -126,6 +129,7 @@ export const SharePrivateUrl: Story = {
     const dataset = DatasetMother.createRealistic({
       version: new DatasetVersion(
         1,
+        '',
         DatasetPublishingStatus.RELEASED,
         true,
         false,
@@ -153,6 +157,7 @@ export const UsePrivateUrl: Story = {
     const dataset = DatasetMother.createRealistic({
       version: new DatasetVersion(
         1,
+        '',
         DatasetPublishingStatus.RELEASED,
         true,
         false,

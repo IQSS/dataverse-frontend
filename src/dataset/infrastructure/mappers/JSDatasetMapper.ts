@@ -36,6 +36,7 @@ export class JSDatasetMapper {
     const version = JSDatasetMapper.toVersion(
       jsDataset.versionId,
       jsDataset.versionInfo,
+      jsDataset.metadataBlocks,
       jsDatasetCitation,
       requestedVersion
     )
@@ -66,11 +67,13 @@ export class JSDatasetMapper {
   static toVersion(
     jDatasetVersionId: number,
     jsDatasetVersionInfo: JSDatasetVersionInfo,
+    jsDatasetMetadataBlocks: JSDatasetMetadataBlocks,
     jsDatasetCitation: string,
     requestedVersion?: string
   ): DatasetVersion {
     return new DatasetVersion(
       jDatasetVersionId,
+      jsDatasetMetadataBlocks[0].fields.title,
       JSDatasetMapper.toStatus(jsDatasetVersionInfo.state),
       true,
       false,

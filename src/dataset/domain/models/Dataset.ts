@@ -216,13 +216,14 @@ export enum DatasetNonNumericVersion {
 export class DatasetVersion {
   constructor(
     public readonly id: number,
+    public readonly title: string,
     public readonly publishingStatus: DatasetPublishingStatus,
     public readonly isLatest: boolean,
     public readonly isInReview: boolean,
     public readonly latestVersionStatus: DatasetPublishingStatus,
     public readonly citation: string,
-    public readonly majorNumber?: number,
     // requestedVersion will be set if the user requested a version that did not exist.
+    public readonly majorNumber?: number,
     public readonly minorNumber?: number,
     public readonly requestedVersion?: string
   ) {}
@@ -290,10 +291,6 @@ export class Dataset {
     public readonly privateUrl?: PrivateUrl,
     public readonly fileDownloadSizes?: FileDownloadSize[]
   ) {}
-
-  public getTitle(): string {
-    return this.metadataBlocks[0].fields.title
-  }
 
   public checkIsLockedFromPublishing(userPersistentId: string): boolean {
     return this.checkIsLockedFromEdits(userPersistentId)

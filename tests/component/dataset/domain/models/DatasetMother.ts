@@ -22,6 +22,7 @@ export class DatasetVersionMother {
   static create(props?: Partial<DatasetVersion>): DatasetVersion {
     return new DatasetVersion(
       props?.id ?? faker.datatype.number(),
+      props?.title ?? faker.lorem.sentence(),
       props?.publishingStatus ?? DatasetPublishingStatus.RELEASED,
       props?.isLatest ?? false,
       props?.isInReview ?? false,
@@ -88,8 +89,24 @@ export class DatasetVersionMother {
     })
   }
 
-  static createAnonymized(): DatasetVersion {
+  static createRealistic(props?: Partial<DatasetVersion>): DatasetVersion {
     return this.create({
+      id: 1,
+      title: 'Dataset Title',
+      publishingStatus: DatasetPublishingStatus.RELEASED,
+      isLatest: true,
+      isInReview: false,
+      latestVersionStatus: DatasetPublishingStatus.RELEASED,
+      citation:
+        'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1',
+      majorNumber: 1,
+      minorNumber: 0,
+      ...props
+    })
+  }
+
+  static createAnonymized(): DatasetVersion {
+    return this.createRealistic({
       citation: `Author name(s) withheld, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1`
     })
   }
@@ -235,7 +252,6 @@ export class DatasetMother {
   static create(props?: Partial<Dataset>): Dataset {
     const dataset = {
       persistentId: faker.datatype.uuid(),
-      title: faker.lorem.sentence(),
       version: DatasetVersionMother.create(),
       license: {
         name: 'CC0 1.0',
@@ -396,16 +412,7 @@ export class DatasetMother {
   static createRealistic(props?: Partial<Dataset>): Dataset {
     return this.create({
       persistentId: 'doi:10.5072/FK2/ABC123',
-      version: new DatasetVersion(
-        1,
-        DatasetPublishingStatus.RELEASED,
-        false,
-        false,
-        DatasetPublishingStatus.RELEASED,
-        `Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1`,
-        1,
-        0
-      ),
+      version: DatasetVersionMother.createRealistic(),
       labels: [
         { value: 'Version 1.0', semanticMeaning: DatasetLabelSemanticMeaning.FILE },
         { value: DatasetLabelValue.DRAFT, semanticMeaning: DatasetLabelSemanticMeaning.DATASET }

@@ -17,6 +17,7 @@ const filesCountInfo = FilesCountInfoMother.create({ total: 100 })
 const fileRepository: FileRepository = {} as FileRepository
 const datasetVersion = new DatasetVersion(
   1,
+  '',
   DatasetPublishingStatus.RELEASED,
   true,
   false,

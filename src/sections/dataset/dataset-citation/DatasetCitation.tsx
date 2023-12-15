@@ -7,11 +7,10 @@ import { CitationThumbnail } from './CitationThumbnail'
 
 interface DatasetCitationProps {
   thumbnail?: string
-  title: string
   version: DatasetVersion
 }
 
-export function DatasetCitation({ thumbnail, title, version }: DatasetCitationProps) {
+export function DatasetCitation({ thumbnail, version }: DatasetCitationProps) {
   const { t } = useTranslation('dataset')
   return (
     <>
@@ -25,7 +24,7 @@ export function DatasetCitation({ thumbnail, title, version }: DatasetCitationPr
           <Col sm={2}>
             <CitationThumbnail
               thumbnail={thumbnail}
-              title={title}
+              title={version.title}
               publishingStatus={version.publishingStatus}
             />
           </Col>

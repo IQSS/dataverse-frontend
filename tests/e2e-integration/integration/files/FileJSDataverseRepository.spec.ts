@@ -146,6 +146,7 @@ describe('File JSDataverse Repository', () => {
           dataset.persistentId,
           new DatasetVersion(
             dataset.version.id,
+            '',
             DatasetPublishingStatus.RELEASED,
             true,
             false,
@@ -183,6 +184,7 @@ describe('File JSDataverse Repository', () => {
           dataset.persistentId,
           new DatasetVersion(
             dataset.version.id,
+            '',
             DatasetPublishingStatus.DEACCESSIONED,
             true,
             false,
