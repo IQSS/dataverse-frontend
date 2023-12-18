@@ -52,7 +52,7 @@ export function Dataset({ fileRepository }: DatasetProps) {
 
           <header className={styles.header}>
             <h1>{dataset.version.title}</h1>
-            <DatasetLabels labels={dataset.labels} />
+            <DatasetLabels labels={dataset.version.labels} />
           </header>
           <div className={styles.container}>
             <Row>

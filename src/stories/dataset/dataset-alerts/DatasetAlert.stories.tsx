@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { DatasetAlerts } from '../../../sections/dataset/dataset-alerts/DatasetAlerts'
 import { WithI18next } from '../../WithI18next'
 
 import {
   DatasetMother,
-  DatasetPermissionsMother
+  DatasetPermissionsMother,
+  DatasetVersionMother
 } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 import { useAlertContext } from '../../../sections/alerts/AlertContext'
 import { WithAlerts } from '../../WithAlerts'
@@ -57,15 +57,7 @@ export const PublishInProgress: Story = {
 export const DraftVersion: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic({
-      version: new DatasetVersion(
-        1,
-        '',
-        DatasetPublishingStatus.DRAFT,
-        true,
-        false,
-        DatasetPublishingStatus.DRAFT,
-        ''
-      ),
+      version: DatasetVersionMother.createDraft(),
       permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed()
     })
     return (
@@ -79,18 +71,8 @@ export const DraftVersion: Story = {
 export const VersionNotFound: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic({
-      version: new DatasetVersion(
-        1,
-        '',
-        DatasetPublishingStatus.RELEASED,
-        true,
-        false,
-        DatasetPublishingStatus.RELEASED,
-        '',
-        1,
-        0,
-        '3.0'
-      )
+      version: DatasetVersionMother.createReleased(),
+      requestedVersion: '3.0'
     })
 
     return (
@@ -103,18 +85,8 @@ export const VersionNotFound: Story = {
 export const VersionNotFoundShowDraft: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic({
-      version: new DatasetVersion(
-        1,
-        '',
-        DatasetPublishingStatus.DRAFT,
-        true,
-        false,
-        DatasetPublishingStatus.DRAFT,
-        '',
-        1,
-        0,
-        '3.0'
-      )
+      version: DatasetVersionMother.createDraft(),
+      requestedVersion: '3.0'
     })
 
     return (
@@ -127,17 +99,7 @@ export const VersionNotFoundShowDraft: Story = {
 export const SharePrivateUrl: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic({
-      version: new DatasetVersion(
-        1,
-        '',
-        DatasetPublishingStatus.RELEASED,
-        true,
-        false,
-        DatasetPublishingStatus.DRAFT,
-        '',
-        1,
-        0
-      ),
+      version: DatasetVersionMother.createDraft(),
       permissions: DatasetPermissionsMother.createWithAllAllowed(),
       privateUrl: {
         urlSnippet: 'http://localhost:8080/privateurl.xhtml?token=',
@@ -155,17 +117,7 @@ export const SharePrivateUrl: Story = {
 export const UsePrivateUrl: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic({
-      version: new DatasetVersion(
-        1,
-        '',
-        DatasetPublishingStatus.RELEASED,
-        true,
-        false,
-        DatasetPublishingStatus.DRAFT,
-        '',
-        1,
-        0
-      ),
+      version: DatasetVersionMother.createDraft(),
       permissions: DatasetPermissionsMother.createWithNoneAllowed(),
       privateUrl: {
         urlSnippet: 'http://localhost:8080/privateurl.xhtml?token=',

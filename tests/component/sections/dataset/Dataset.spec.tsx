@@ -59,7 +59,7 @@ describe('Dataset', () => {
 
     cy.findAllByText(testDataset.version.title).should('exist')
 
-    testDataset.labels.forEach((label) => {
+    testDataset.version.labels.forEach((label) => {
       cy.findAllByText(label.value).should('exist')
     })
   })

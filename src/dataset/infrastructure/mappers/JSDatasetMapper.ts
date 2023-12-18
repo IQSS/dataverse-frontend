@@ -20,7 +20,8 @@ import {
   DatasetDownloadUrls,
   DatasetPermissions,
   DatasetLock,
-  DatasetLockReason
+  DatasetLockReason,
+  DatasetVersionNumber
 } from '../../domain/models/Dataset'
 
 export class JSDatasetMapper {
@@ -37,8 +38,7 @@ export class JSDatasetMapper {
       jsDataset.versionId,
       jsDataset.versionInfo,
       jsDataset.metadataBlocks,
-      jsDatasetCitation,
-      requestedVersion
+      jsDatasetCitation
     )
     return new Dataset.Builder(
       jsDataset.persistentId,
@@ -56,11 +56,11 @@ export class JSDatasetMapper {
       true, // TODO Connect with dataset hasValidTermsOfAccess
       true, // TODO Connect with dataset hasOneTabularFileAtLeast
       true, // TODO Connect with dataset isValid
-      JSDatasetMapper.toIsReleased(jsDataset.versionInfo),
       JSDatasetMapper.toDownloadUrls(jsDataset.persistentId, version),
       undefined, // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl,
-      [] // TODO: Connect with file download use case
+      [], // TODO: Connect with file download use case,
+      requestedVersion
     ).build()
   }
 
@@ -68,20 +68,29 @@ export class JSDatasetMapper {
     jDatasetVersionId: number,
     jsDatasetVersionInfo: JSDatasetVersionInfo,
     jsDatasetMetadataBlocks: JSDatasetMetadataBlocks,
-    jsDatasetCitation: string,
-    requestedVersion?: string
+    jsDatasetCitation: string
   ): DatasetVersion {
-    return new DatasetVersion(
+    return new DatasetVersion.Builder(
       jDatasetVersionId,
-      jsDatasetMetadataBlocks[0].fields.title,
-      JSDatasetMapper.toStatus(jsDatasetVersionInfo.state),
-      true,
-      false,
+      JSDatasetMapper.toDatasetTitle(jsDatasetMetadataBlocks),
+      JSDatasetMapper.toVersionNumber(jsDatasetVersionInfo),
       JSDatasetMapper.toStatus(jsDatasetVersionInfo.state),
       jsDatasetCitation,
+      true, // TODO Connect with dataset version isLatest
+      false, // TODO Connect with dataset version isInReview
+      JSDatasetMapper.toStatus(jsDatasetVersionInfo.state),
+      JSDatasetMapper.toSomeDatasetVersionHasBeenReleased(jsDatasetVersionInfo)
+    )
+  }
+
+  static toDatasetTitle(jsDatasetMetadataBlocks: JSDatasetMetadataBlocks): string {
+    return jsDatasetMetadataBlocks[0].fields.title
+  }
+
+  static toVersionNumber(jsDatasetVersionInfo: JSDatasetVersionInfo): DatasetVersionNumber {
+    return new DatasetVersionNumber(
       jsDatasetVersionInfo.majorNumber,
-      jsDatasetVersionInfo.minorNumber,
-      requestedVersion
+      jsDatasetVersionInfo.minorNumber
     )
   }
 
@@ -204,11 +213,11 @@ export class JSDatasetMapper {
     version: DatasetVersion
   ): DatasetDownloadUrls {
     return {
-      original: `/api/access/dataset/:persistentId/versions/${version.toString()}?persistentId=${jsDatasetPersistentId}&format=original`,
-      archival: `/api/access/dataset/:persistentId/versions/${version.toString()}?persistentId=${jsDatasetPersistentId}`
+      original: `/api/access/dataset/:persistentId/versions/${version.number.toString()}?persistentId=${jsDatasetPersistentId}&format=original`,
+      archival: `/api/access/dataset/:persistentId/versions/${version.number.toString()}?persistentId=${jsDatasetPersistentId}`
     }
   }
-  static toIsReleased(jsDatasetVersionInfo: JSDatasetVersionInfo): boolean {
+  static toSomeDatasetVersionHasBeenReleased(jsDatasetVersionInfo: JSDatasetVersionInfo): boolean {
     return (
       jsDatasetVersionInfo.releaseTime !== undefined &&
       !isNaN(jsDatasetVersionInfo.releaseTime.getTime())

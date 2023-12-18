@@ -19,7 +19,7 @@ export function LinkDatasetButton({ dataset }: LinkDatasetButtonProps) {
 
   if (
     !user ||
-    !dataset.isReleased ||
+    !dataset.version.someDatasetVersionHasBeenReleased ||
     dataset.version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
   ) {
     return <></>

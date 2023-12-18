@@ -74,20 +74,24 @@ const expectedDataset = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
     id: 101,
+    title: "Darwin's Finches",
+    labels: [
+      { semanticMeaning: 'dataset', value: 'Draft' },
+      { semanticMeaning: 'warning', value: 'Unpublished' }
+    ],
     publishingStatus: 'draft',
     isLatest: true,
     isInReview: false,
-    latestVersionStatus: 'draft',
-    majorNumber: 0,
-    minorNumber: 0,
-    requestedVersion: undefined
+    latestVersionPublishingStatus: 'draft',
+    number: {
+      minorNumber: 0,
+      majorNumber: 0
+    },
+    someDatasetVersionHasBeenReleased: false,
+    citation:
+      'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
-  citation:
-    'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
-  labels: [
-    { semanticMeaning: 'dataset', value: 'Draft' },
-    { semanticMeaning: 'warning', value: 'Unpublished' }
-  ],
+  requestedVersion: undefined,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
@@ -144,7 +148,6 @@ const expectedDataset = {
   hasValidTermsOfAccess: true,
   hasOneTabularFileAtLeast: true,
   isValid: true,
-  isReleased: false,
   thumbnail: undefined,
   privateUrl: undefined,
   downloadUrls: {
@@ -157,26 +160,29 @@ const expectedDatasetAlternateVersion = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
     id: 101,
+    title: "Darwin's Finches",
+    labels: [
+      { semanticMeaning: 'dataset', value: 'Draft' },
+      { semanticMeaning: 'warning', value: 'Unpublished' }
+    ],
     publishingStatus: 'draft',
     isLatest: true,
     isInReview: false,
-    latestVersionStatus: 'draft',
-    minorNumber: 0,
-    majorNumber: 0,
-    requestedVersion: '4.0'
+    latestVersionPublishingStatus: 'draft',
+    number: {
+      minorNumber: 0,
+      majorNumber: 0
+    },
+    someDatasetVersionHasBeenReleased: false,
+    citation:
+      'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
-  citation:
-    'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
+  requestedVersion: '4.0',
   hasValidTermsOfAccess: true,
   hasOneTabularFileAtLeast: true,
-  isReleased: false,
   isValid: true,
   privateUrl: undefined,
   fileDownloadSizes: [],
-  labels: [
-    { semanticMeaning: 'dataset', value: 'Draft' },
-    { semanticMeaning: 'warning', value: 'Unpublished' }
-  ],
   alerts: [
     {
       variant: 'warning',

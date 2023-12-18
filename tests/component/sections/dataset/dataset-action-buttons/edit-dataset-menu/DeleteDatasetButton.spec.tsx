@@ -23,8 +23,7 @@ describe('DeleteDatasetButton', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithDeleteDatasetAllowed(),
       locks: [],
-      version: DatasetVersionMother.createDraftWithLatestVersionIsADraft(),
-      isReleased: false
+      version: DatasetVersionMother.createNotReleased()
     })
 
     cy.customMount(<DeleteDatasetButton dataset={dataset} />)
@@ -32,12 +31,11 @@ describe('DeleteDatasetButton', () => {
     cy.findByRole('button', { name: 'Delete Dataset' }).should('exist')
   })
 
-  it('renders the Delete Draft Version if the dataset is released', () => {
+  it('renders the Delete Draft Version if the dataset is released and the latest version is a draft', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithDeleteDatasetAllowed(),
       locks: [],
-      version: DatasetVersionMother.createReleasedWithLatestVersionIsADraft(),
-      isReleased: true
+      version: DatasetVersionMother.createReleasedWithLatestVersionIsADraft()
     })
 
     cy.customMount(<DeleteDatasetButton dataset={dataset} />)
@@ -61,7 +59,7 @@ describe('DeleteDatasetButton', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithDeleteDatasetAllowed(),
       locks: [],
-      version: DatasetVersionMother.createWithLatestVersionIsNotADraft()
+      version: DatasetVersionMother.createDraftWithLatestVersionIsReleased()
     })
 
     cy.customMount(<DeleteDatasetButton dataset={dataset} />)

@@ -147,13 +147,14 @@ describe('File JSDataverse Repository', () => {
           new DatasetVersion(
             dataset.version.id,
             '',
-            DatasetPublishingStatus.RELEASED,
+            [],
             true,
             false,
             DatasetPublishingStatus.RELEASED,
             '',
             1,
-            0
+            0,
+            false
           )
         )
         .then((files) => {
@@ -185,13 +186,14 @@ describe('File JSDataverse Repository', () => {
           new DatasetVersion(
             dataset.version.id,
             '',
-            DatasetPublishingStatus.DEACCESSIONED,
+            [],
             true,
             false,
             DatasetPublishingStatus.DEACCESSIONED,
             '',
             1,
-            0
+            0,
+            false
           )
         )
         .then((files) => {

@@ -18,13 +18,14 @@ const fileRepository: FileRepository = {} as FileRepository
 const datasetVersion = new DatasetVersion(
   1,
   '',
-  DatasetPublishingStatus.RELEASED,
+  [],
   true,
   false,
   DatasetPublishingStatus.RELEASED,
   '',
   1,
-  0
+  0,
+  false
 )
 
 const FilesTableTestComponent = ({ datasetPersistentId }: { datasetPersistentId: string }) => {

@@ -213,26 +213,107 @@ export enum DatasetNonNumericVersion {
   DRAFT = ':draft'
 }
 
-export class DatasetVersion {
-  constructor(
-    public readonly id: number,
-    public readonly title: string,
-    public readonly publishingStatus: DatasetPublishingStatus,
-    public readonly isLatest: boolean,
-    public readonly isInReview: boolean,
-    public readonly latestVersionStatus: DatasetPublishingStatus,
-    public readonly citation: string,
-    // requestedVersion will be set if the user requested a version that did not exist.
-    public readonly majorNumber?: number,
-    public readonly minorNumber?: number,
-    public readonly requestedVersion?: string
-  ) {}
+export class DatasetVersionNumber {
+  constructor(public readonly majorNumber?: number, public readonly minorNumber?: number) {}
 
   toString(): string | DatasetNonNumericVersion {
     if (this.majorNumber === undefined || this.minorNumber === undefined) {
       return DatasetNonNumericVersion.DRAFT
     }
     return `${this.majorNumber}.${this.minorNumber}`
+  }
+}
+
+export class DatasetVersion {
+  constructor(
+    public readonly id: number,
+    public readonly title: string,
+    public readonly number: DatasetVersionNumber,
+    public readonly publishingStatus: DatasetPublishingStatus,
+    public readonly citation: string,
+    public readonly labels: DatasetLabel[],
+    public readonly isLatest: boolean,
+    public readonly isInReview: boolean,
+    public readonly latestVersionPublishingStatus: DatasetPublishingStatus,
+    public readonly someDatasetVersionHasBeenReleased: boolean
+  ) {}
+
+  static Builder = class {
+    public readonly labels: DatasetLabel[] = []
+
+    constructor(
+      public readonly id: number,
+      public readonly title: string,
+      public readonly number: DatasetVersionNumber,
+      public readonly publishingStatus: DatasetPublishingStatus,
+      public readonly citation: string,
+      public readonly isLatest: boolean,
+      public readonly isInReview: boolean,
+      public readonly latestVersionPublishingStatus: DatasetPublishingStatus,
+      public readonly someDatasetVersionHasBeenReleased: boolean
+    ) {
+      this.withLabels()
+    }
+
+    withLabels() {
+      this.withStatusLabel()
+      this.withVersionLabel()
+    }
+
+    private withStatusLabel(): void {
+      if (this.publishingStatus === DatasetPublishingStatus.DRAFT) {
+        this.labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.DRAFT)
+        )
+      }
+
+      if (!this.someDatasetVersionHasBeenReleased) {
+        this.labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.WARNING, DatasetLabelValue.UNPUBLISHED)
+        )
+      }
+
+      if (this.publishingStatus === DatasetPublishingStatus.DEACCESSIONED) {
+        this.labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.DANGER, DatasetLabelValue.DEACCESSIONED)
+        )
+      }
+
+      if (this.publishingStatus === DatasetPublishingStatus.EMBARGOED) {
+        this.labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.EMBARGOED)
+        )
+      }
+
+      if (this.isInReview) {
+        this.labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.SUCCESS, DatasetLabelValue.IN_REVIEW)
+        )
+      }
+    }
+
+    private withVersionLabel(): void {
+      if (this.publishingStatus === DatasetPublishingStatus.RELEASED) {
+        this.labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.FILE, `Version ${this.number.toString()}`)
+        )
+      }
+    }
+
+    build(): DatasetVersion {
+      return new DatasetVersion(
+        this.id,
+        this.title,
+        this.number,
+        this.publishingStatus,
+        this.citation,
+        this.labels,
+        this.isLatest,
+        this.isInReview,
+        this.latestVersionPublishingStatus,
+        this.someDatasetVersionHasBeenReleased
+      )
+    }
   }
 }
 
@@ -275,7 +356,6 @@ export class Dataset {
   constructor(
     public readonly persistentId: string,
     public readonly version: DatasetVersion,
-    public readonly labels: DatasetLabel[],
     public readonly alerts: Alert[],
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
@@ -285,11 +365,11 @@ export class Dataset {
     public readonly hasValidTermsOfAccess: boolean,
     public readonly hasOneTabularFileAtLeast: boolean,
     public readonly isValid: boolean,
-    public readonly isReleased: boolean,
     public readonly downloadUrls: DatasetDownloadUrls,
     public readonly thumbnail?: string,
     public readonly privateUrl?: PrivateUrl,
-    public readonly fileDownloadSizes?: FileDownloadSize[]
+    public readonly fileDownloadSizes?: FileDownloadSize[],
+    public readonly requestedVersion?: string // will be set if the user requested a version that did not exist
   ) {}
 
   public checkIsLockedFromPublishing(userPersistentId: string): boolean {
@@ -352,7 +432,6 @@ export class Dataset {
   }
 
   static Builder = class {
-    public readonly labels: DatasetLabel[] = []
     public readonly alerts: Alert[] = []
 
     constructor(
@@ -366,59 +445,13 @@ export class Dataset {
       public readonly hasValidTermsOfAccess: boolean,
       public readonly hasOneTabularFileAtLeast: boolean,
       public readonly isValid: boolean,
-      public readonly isReleased: boolean,
       public readonly downloadUrls: DatasetDownloadUrls,
       public readonly thumbnail?: string,
       public readonly privateUrl?: PrivateUrl,
-      public readonly fileDownloadSizes?: FileDownloadSize[]
+      public readonly fileDownloadSizes?: FileDownloadSize[],
+      public readonly requestedVersion?: string // will be set if the user requested a version that did not exist
     ) {
-      this.withLabels()
       this.withAlerts()
-    }
-
-    withLabels() {
-      this.withStatusLabel()
-      this.withVersionLabel()
-    }
-
-    private withStatusLabel(): void {
-      if (this.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
-        this.labels.push(
-          new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.DRAFT)
-        )
-      }
-
-      if (!this.isReleased) {
-        this.labels.push(
-          new DatasetLabel(DatasetLabelSemanticMeaning.WARNING, DatasetLabelValue.UNPUBLISHED)
-        )
-      }
-
-      if (this.version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED) {
-        this.labels.push(
-          new DatasetLabel(DatasetLabelSemanticMeaning.DANGER, DatasetLabelValue.DEACCESSIONED)
-        )
-      }
-
-      if (this.version.publishingStatus === DatasetPublishingStatus.EMBARGOED) {
-        this.labels.push(
-          new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.EMBARGOED)
-        )
-      }
-
-      if (this.version.isInReview) {
-        this.labels.push(
-          new DatasetLabel(DatasetLabelSemanticMeaning.SUCCESS, DatasetLabelValue.IN_REVIEW)
-        )
-      }
-    }
-
-    private withVersionLabel(): void {
-      if (this.version.publishingStatus === DatasetPublishingStatus.RELEASED) {
-        this.labels.push(
-          new DatasetLabel(DatasetLabelSemanticMeaning.FILE, `Version ${this.version.toString()}`)
-        )
-      }
     }
 
     private withAlerts(): void {
@@ -428,18 +461,18 @@ export class Dataset {
       ) {
         this.alerts.push(new Alert('warning', AlertMessageKey.DRAFT_VERSION))
       }
-      if (this.version.requestedVersion) {
-        if (this.version.latestVersionStatus == DatasetPublishingStatus.RELEASED) {
+      if (this.requestedVersion) {
+        if (this.version.latestVersionPublishingStatus == DatasetPublishingStatus.RELEASED) {
           const dynamicFields = {
-            requestedVersion: this.version.requestedVersion,
-            returnedVersion: `${this.version.toString()}`
+            requestedVersion: this.requestedVersion,
+            returnedVersion: `${this.version.number.toString()}`
           }
           this.alerts.push(
             new Alert('warning', AlertMessageKey.REQUESTED_VERSION_NOT_FOUND, dynamicFields)
           )
         } else {
           const dynamicFields = {
-            requestedVersion: this.version.requestedVersion
+            requestedVersion: this.requestedVersion
           }
           this.alerts.push(
             new Alert(
@@ -466,7 +499,6 @@ export class Dataset {
       return new Dataset(
         this.persistentId,
         this.version,
-        this.labels,
         this.alerts,
         this.summaryFields,
         this.license,
@@ -476,11 +508,11 @@ export class Dataset {
         this.hasValidTermsOfAccess,
         this.hasOneTabularFileAtLeast,
         this.isValid,
-        this.isReleased,
         this.downloadUrls,
         this.thumbnail,
         this.privateUrl,
-        this.fileDownloadSizes
+        this.fileDownloadSizes,
+        this.requestedVersion
       )
     }
   }

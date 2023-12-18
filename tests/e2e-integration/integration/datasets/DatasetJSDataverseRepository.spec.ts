@@ -3,6 +3,8 @@ import chaiAsPromised from 'chai-as-promised'
 import { DatasetJSDataverseRepository } from '../../../../src/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { TestsUtils } from '../../shared/TestsUtils'
 import {
+  DatasetLabel,
+  DatasetLabelSemanticMeaning,
   DatasetLockReason,
   DatasetPublishingStatus,
   DatasetVersion
@@ -26,10 +28,6 @@ function getPersistentIdUrl(persistentId: string) {
 const datasetData = (persistentId: string, versionId: number) => {
   const persistentIdUrl = getPersistentIdUrl(persistentId)
   return {
-    labels: [
-      { semanticMeaning: 'dataset', value: 'Draft' },
-      { semanticMeaning: 'warning', value: 'Unpublished' }
-    ],
     license: {
       name: 'CC0 1.0',
       uri: 'http://creativecommons.org/publicdomain/zero/1.0',
@@ -77,15 +75,21 @@ const datasetData = (persistentId: string, versionId: number) => {
     title: "Darwin's Finches",
     version: {
       id: versionId,
-      majorNumber: undefined,
-      minorNumber: undefined,
+      number: {
+        majorNumber: undefined,
+        minorNumber: undefined
+      },
       publishingStatus: 'draft',
-      requestedVersion: undefined,
-      latestVersionStatus: 'draft',
+      latestVersionPublishingStatus: 'draft',
       isLatest: true,
       isInReview: false,
       citation: `Finch, Fiona, 2023, "Darwin's Finches", <a href="${persistentIdUrl}" target="_blank">${persistentIdUrl}</a>, Root, DRAFT VERSION`,
-      title: "Darwin's Finches"
+      title: "Darwin's Finches",
+      labels: [
+        { semanticMeaning: 'dataset', value: 'Draft' },
+        { semanticMeaning: 'warning', value: 'Unpublished' }
+      ],
+      someDatasetVersionHasBeenReleased: false
     },
     permissions: {
       canDownloadFiles: true,
@@ -113,8 +117,6 @@ describe('Dataset JSDataverse Repository', () => {
       }
       const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
-      expect(dataset.version.title).to.deep.equal(datasetExpected.title)
-      expect(dataset.labels).to.deep.equal(datasetExpected.labels)
       expect(dataset.license).to.deep.equal(datasetExpected.license)
       expect(dataset.metadataBlocks).to.deep.equal(datasetExpected.metadataBlocks)
       expect(dataset.summaryFields).to.deep.equal(datasetExpected.summaryFields)
@@ -140,22 +142,24 @@ describe('Dataset JSDataverse Repository', () => {
         if (!dataset) {
           throw new Error('Dataset not found')
         }
-        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
         const newVersion = new DatasetVersion(
           dataset.version.id,
           "Darwin's Finches",
-          DatasetPublishingStatus.RELEASED,
-          true,
-          false,
+          {
+            majorNumber: 1,
+            minorNumber: 0
+          },
           DatasetPublishingStatus.RELEASED,
           `Finch, Fiona, 2023, "Darwin's Finches", <a href="${getPersistentIdUrl(
             dataset.persistentId
           )}" target="_blank">${getPersistentIdUrl(dataset.persistentId)}</a>, Root, V1`,
-          1,
-          0
+          [new DatasetLabel(DatasetLabelSemanticMeaning.FILE, 'Version 1.0')],
+          true,
+          false,
+          DatasetPublishingStatus.RELEASED,
+          true
         )
         const expectedPublicationDate = getCurrentDateInYYYYMMDDFormat()
-        expect(dataset.version.title).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(newVersion)
         expect(dataset.metadataBlocks[0].fields.publicationDate).to.deep.equal(
           expectedPublicationDate
@@ -186,18 +190,21 @@ describe('Dataset JSDataverse Repository', () => {
         const newVersion = new DatasetVersion(
           dataset.version.id,
           "Darwin's Finches",
-          DatasetPublishingStatus.RELEASED,
-          true,
-          false,
+          {
+            majorNumber: 1,
+            minorNumber: 0
+          },
           DatasetPublishingStatus.RELEASED,
           `Finch, Fiona, 2023, "Darwin's Finches", <a href="${getPersistentIdUrl(
             dataset.persistentId
           )}" target="_blank">${getPersistentIdUrl(dataset.persistentId)}</a>, Root, V1`,
-          1,
-          0
+          [new DatasetLabel(DatasetLabelSemanticMeaning.FILE, 'Version 1.0')],
+          true,
+          false,
+          DatasetPublishingStatus.RELEASED,
+          true
         )
         const expectedPublicationDate = getCurrentDateInYYYYMMDDFormat()
-        expect(dataset.version.title).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(newVersion)
         expect(dataset.metadataBlocks[0].fields.publicationDate).to.deep.equal(
           expectedPublicationDate
