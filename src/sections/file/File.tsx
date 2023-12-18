@@ -34,7 +34,7 @@ export function File({ repository, id }: FileProps) {
           <header className={styles.header}>
             <h1>{file.name}</h1>
             <span className={styles.subtext}>
-              {t('subtext', { datasetTitle: file.datasetTitle })}
+              {t('subtext', { datasetTitle: file.datasetVersion.title })}
             </span>
           </header>
           <div className={styles.container}>

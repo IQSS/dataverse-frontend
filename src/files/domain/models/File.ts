@@ -1,4 +1,6 @@
+import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
+
 export interface File {
   name: string
-  datasetTitle: string
+  datasetVersion: DatasetVersion
 }

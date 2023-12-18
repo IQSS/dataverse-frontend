@@ -14,7 +14,7 @@ describe('File', () => {
     cy.wrap(fileRepository.getById).should('be.calledWith', 19)
 
     cy.findAllByText(testFile.name).should('exist')
-    cy.findByText(`This file is part of "${testFile.datasetTitle}".`).should('exist')
+    cy.findByText(`This file is part of "${testFile.datasetVersion.title}".`).should('exist')
   })
 
   it('renders skeleton while loading', () => {
