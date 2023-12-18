@@ -11,6 +11,8 @@ import { SettingJSDataverseRepository } from '../../settings/infrastructure/Sett
 import { FilePermissionsProvider } from '../file/file-permissions/FilePermissionsProvider'
 import { SettingsProvider } from '../settings/SettingsProvider'
 import { DatasetProvider } from './DatasetProvider'
+import { MultipleFileDownloadProvider } from '../file/multiple-file-download/MultipleFileDownloadProvider'
+import { NotImplementedModalProvider } from '../not-implemented/NotImplementedModalProvider'
 import { AlertProvider } from '../alerts/AlertProvider'
 
 const datasetRepository = new DatasetJSDataverseRepository()
@@ -21,17 +23,21 @@ const settingRepository = new SettingJSDataverseRepository()
 export class DatasetFactory {
   static create(): ReactElement {
     return (
-      <FilePermissionsProvider repository={fileRepository}>
-        <SettingsProvider repository={settingRepository}>
-          <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
-            <AnonymizedProvider>
-              <AlertProvider>
-                <DatasetWithSearchParams />
-              </AlertProvider>
-            </AnonymizedProvider>
-          </MetadataBlockInfoProvider>
-        </SettingsProvider>
-      </FilePermissionsProvider>
+      <MultipleFileDownloadProvider repository={fileRepository}>
+        <FilePermissionsProvider repository={fileRepository}>
+          <SettingsProvider repository={settingRepository}>
+            <NotImplementedModalProvider>
+              <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
+                <AnonymizedProvider>
+                  <AlertProvider>
+                    <DatasetWithSearchParams />
+                  </AlertProvider>
+                </AnonymizedProvider>
+              </MetadataBlockInfoProvider>
+            </NotImplementedModalProvider>
+          </SettingsProvider>
+        </FilePermissionsProvider>
+      </MultipleFileDownloadProvider>
     )
   }
 }

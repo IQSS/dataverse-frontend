@@ -7,10 +7,50 @@
 ## Demo videos
 
 - 2023-08-01: [View mode of the dataset page](https://groups.google.com/g/dataverse-community/c/cxZ3Bal_-uo/m/h3kh3iVNCwAJ)
+- 2023-12-13: [Files table on the dataset page](https://groups.google.com/g/dataverse-community/c/w_rEMddESYc/m/6F7QC1p-AgAJ)
 
 ## Getting Started
 
 First install node >=16 and npm >=8. Recommended versions `node v19` and `npm v9`.
+
+### Create a `.npmrc` file and add a token
+
+To install the [@iqss/dataverse-client-javascript](https://github.com/IQSS/dataverse-client-javascript/pkgs/npm/dataverse-client-javascript)
+from the GitHub registry, necessary for connecting with the Dataverse API, follow these steps to create an `.npmrc` file in
+the root of your project using your GitHub token.
+
+1. **Copy `.npmrc.example`**
+
+   Duplicate the `.npmrc.example` file in your project and save it as `.npmrc`.
+
+2. **Replace the Token**
+
+   Open the newly created `.npmrc` file and replace `YOUR_GITHUB_TOKEN` with your actual GitHub token.
+
+   ```plaintext
+   legacy-peer-deps=true
+
+    //npm.pkg.github.com/:_authToken=<YOUR_GITHUB_AUTH_TOKEN>
+    @iqss:registry=https://npm.pkg.github.com/
+   ```
+
+#### How to Get a GitHub Token
+
+If you don't have a GitHub token yet, follow these steps:
+
+1. Go to your GitHub account settings.
+
+2. Navigate to "Developer settings" -> "Personal access tokens."
+
+3. Click "Personal access tokens" -> "Tokens (classic)" -> "Generate new token (classic)".
+
+4. Give the token a name and select the "read:packages" scope.
+
+5. Copy the generated token.
+
+6. Replace `YOUR_GITHUB_AUTH_TOKEN` in the `.npmrc` file with the copied token.
+
+Now, you should be able to install the Dataverse JavaScript client using npm.
 
 ### `npm install`
 

@@ -8,6 +8,11 @@ import {
   DatasetVersion
 } from '../../../../src/dataset/domain/models/Dataset'
 import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
+import {
+  FileDownloadMode,
+  FileDownloadSize,
+  FileSizeUnit
+} from '../../../../src/files/domain/models/File'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -82,7 +87,23 @@ const datasetData = (persistentId: string, versionId: number) => {
       isLatest: true,
       isInReview: false
     },
-    locks: []
+    permissions: {
+      canDownloadFiles: true,
+      canUpdateDataset: true,
+      canPublishDataset: true,
+      canManageDatasetPermissions: true,
+      canManageFilesPermissions: true,
+      canDeleteDataset: true
+    },
+    locks: [],
+    downloadUrls: {
+      original: `/api/access/dataset/:persistentId/versions/:draft?persistentId=${persistentId}&format=original`,
+      archival: `/api/access/dataset/:persistentId/versions/:draft?persistentId=${persistentId}`
+    },
+    fileDownloadSizes: [
+      new FileDownloadSize(0, FileSizeUnit.BYTES, FileDownloadMode.ORIGINAL),
+      new FileDownloadSize(0, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
+    ]
   }
 }
 
@@ -102,15 +123,60 @@ describe('Dataset JSDataverse Repository', () => {
 
       expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
       expect(dataset.citation).to.deep.equal(datasetExpected.citation)
-      // expect(dataset.labels).to.deep.equal(datasetExpected.labels) TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
+      expect(dataset.labels).to.deep.equal(datasetExpected.labels)
       expect(dataset.license).to.deep.equal(datasetExpected.license)
       expect(dataset.metadataBlocks).to.deep.equal(datasetExpected.metadataBlocks)
       expect(dataset.summaryFields).to.deep.equal(datasetExpected.summaryFields)
       expect(dataset.version).to.deep.equal(datasetExpected.version)
       expect(dataset.metadataBlocks[0].fields.publicationDate).not.to.exist
       expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
+      expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
       expect(dataset.locks).to.deep.equal(datasetExpected.locks)
+      expect(dataset.downloadUrls).to.deep.equal(datasetExpected.downloadUrls)
+      expect(dataset.fileDownloadSizes).to.deep.equal(datasetExpected.fileDownloadSizes)
     })
+  })
+
+  it('gets a published dataset by persistentId without user authentication', async () => {
+    const datasetResponse = await DatasetHelper.create()
+    await DatasetHelper.publish(datasetResponse.persistentId)
+
+    await TestsUtils.wait(1500)
+
+    await TestsUtils.logout()
+
+    await datasetRepository
+      .getByPersistentId(datasetResponse.persistentId, '1.0')
+      .then((dataset) => {
+        if (!dataset) {
+          throw new Error('Dataset not found')
+        }
+        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
+        const newVersion = new DatasetVersion(
+          dataset.version.id,
+          DatasetPublishingStatus.RELEASED,
+          true,
+          false,
+          DatasetPublishingStatus.RELEASED,
+          1,
+          0
+        )
+        const expectedPublicationDate = getCurrentDateInYYYYMMDDFormat()
+        expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
+        expect(dataset.version).to.deep.equal(newVersion)
+        expect(dataset.metadataBlocks[0].fields.publicationDate).to.deep.equal(
+          expectedPublicationDate
+        )
+        expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
+        expect(dataset.permissions).to.deep.equal({
+          canDownloadFiles: true,
+          canUpdateDataset: false,
+          canPublishDataset: false,
+          canManageDatasetPermissions: false,
+          canManageFilesPermissions: true,
+          canDeleteDataset: false
+        })
+      })
   })
 
   it('gets the dataset by persistentId and version number', async () => {
@@ -140,6 +206,7 @@ describe('Dataset JSDataverse Repository', () => {
           expectedPublicationDate
         )
         expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
+        expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
       })
   })
 
@@ -171,6 +238,7 @@ describe('Dataset JSDataverse Repository', () => {
 
       expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
       expect(dataset.version).to.deep.equal(datasetExpected.version)
+      expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
     })
   })
 

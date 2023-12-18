@@ -5,16 +5,19 @@ import {
   getDatasetCitation,
   getDatasetSummaryFieldNames,
   Dataset as JSDataset,
+  DatasetUserPermissions as JSDatasetPermissions,
   getPrivateUrlDataset,
   getPrivateUrlDatasetCitation,
+  getDatasetUserPermissions,
   ReadError,
   getDatasetLocks,
-  DatasetLock as JSDatasetLock
+  DatasetLock as JSDatasetLock,
+  getDatasetFilesTotalDownloadSize,
+  FileDownloadSizeMode
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 
 const includeDeaccessioned = true
-
 export class DatasetJSDataverseRepository implements DatasetRepository {
   getByPersistentId(
     persistentId: string,
@@ -28,21 +31,42 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           jsDataset,
           getDatasetSummaryFieldNames.execute(),
           getDatasetCitation.execute(jsDataset.id, this.versionToVersionId(version)),
-          getDatasetLocks.execute(jsDataset.id)
+          getDatasetUserPermissions.execute(jsDataset.id),
+          getDatasetLocks.execute(jsDataset.id),
+          getDatasetFilesTotalDownloadSize.execute(
+            persistentId,
+            this.versionToVersionId(version),
+            FileDownloadSizeMode.ORIGINAL,
+            undefined,
+            includeDeaccessioned
+          ),
+          getDatasetFilesTotalDownloadSize.execute(
+            persistentId,
+            this.versionToVersionId(version),
+            FileDownloadSizeMode.ARCHIVAL,
+            undefined,
+            includeDeaccessioned
+          )
         ])
       )
       .then(
-        ([jsDataset, summaryFieldsNames, citation, jsDatasetLocks]: [
-          JSDataset,
-          string[],
-          string,
-          JSDatasetLock[]
-        ]) =>
+        ([
+          jsDataset,
+          summaryFieldsNames,
+          citation,
+          jsDatasetPermissions,
+          jsDatasetLocks,
+          jsDatasetFilesTotalOriginalDownloadSize,
+          jsDatasetFilesTotalArchivalDownloadSize
+        ]: [JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[], number, number]) =>
           JSDatasetMapper.toDataset(
             jsDataset,
             citation,
             summaryFieldsNames,
+            jsDatasetPermissions,
             jsDatasetLocks,
+            jsDatasetFilesTotalOriginalDownloadSize,
+            jsDatasetFilesTotalArchivalDownloadSize,
             requestedVersion
           )
       )
@@ -59,9 +83,23 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       getPrivateUrlDataset.execute(privateUrlToken),
       getDatasetSummaryFieldNames.execute(),
       getPrivateUrlDatasetCitation.execute(privateUrlToken)
-    ]) // TODO - Add getDatasetLocks.execute(privateUrlToken) when it is available in js-dataverse
+    ])
       .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
-        JSDatasetMapper.toDataset(jsDataset, citation, summaryFieldsNames, [])
+        JSDatasetMapper.toDataset(
+          jsDataset,
+          citation,
+          summaryFieldsNames,
+          {
+            canEditDataset: true,
+            canPublishDataset: true,
+            canManageDatasetPermissions: true,
+            canDeleteDatasetDraft: true,
+            canViewUnpublishedDataset: true
+          }, // TODO Connect with JS dataset permissions for privateUrl when it is available in js-dataverse
+          [], // TODO Connect with JS dataset locks for privateUrl when it is available in js-dataverse
+          0, // TODO Connect with JS dataset filesTotalDownloadSize for privateUrl when it is available in js-dataverse
+          0 // TODO Connect with JS dataset filesTotalDownloadSize for privateUrl when it is available in js-dataverse
+        )
       )
       .catch((error: ReadError) => {
         throw new Error(error.message)

@@ -1,37 +1,49 @@
 import {
   Dataset as JSDataset,
+  DatasetLock as JSDatasetLock,
   DatasetMetadataBlock as JSDatasetMetadataBlock,
   DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataFields as JSDatasetMetadataFields,
-  DatasetVersionInfo as JSDatasetVersionInfo,
-  DatasetLock as JSDatasetLock
+  DatasetUserPermissions as JSDatasetPermissions,
+  DatasetVersionInfo as JSDatasetVersionInfo
 } from '@iqss/dataverse-client-javascript'
 import { DatasetVersionState as JSDatasetVersionState } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
 import {
   Dataset,
-  DatasetPublishingStatus,
+  DatasetDownloadUrls,
+  DatasetLock,
+  DatasetLockReason,
   DatasetMetadataBlock,
   DatasetMetadataBlocks,
   DatasetMetadataFields,
+  DatasetPermissions,
+  DatasetPublishingStatus,
   DatasetVersion,
   MetadataBlockName,
-  PrivateUrl,
-  DatasetLock,
-  DatasetLockReason
+  PrivateUrl
 } from '../../domain/models/Dataset'
+import { FileDownloadMode, FileDownloadSize, FileSizeUnit } from '../../../files/domain/models/File'
 
 export class JSDatasetMapper {
   static toDataset(
     jsDataset: JSDataset,
     citation: string,
     summaryFieldsNames: string[],
+    jsDatasetPermissions: JSDatasetPermissions,
     jsDatasetLocks: JSDatasetLock[],
+    jsDatasetFilesTotalOriginalDownloadSize: number,
+    jsDatasetFilesTotalArchivalDownloadSize: number,
     requestedVersion?: string,
     privateUrl?: PrivateUrl
   ): Dataset {
+    const version = JSDatasetMapper.toVersion(
+      jsDataset.versionId,
+      jsDataset.versionInfo,
+      requestedVersion
+    )
     return new Dataset.Builder(
       jsDataset.persistentId,
-      JSDatasetMapper.toVersion(jsDataset.versionId, jsDataset.versionInfo, requestedVersion),
+      version,
       citation,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
       jsDataset.license,
@@ -41,19 +53,17 @@ export class JSDatasetMapper {
         jsDataset.publicationDate,
         jsDataset.citationDate
       ),
-      {
-        canDownloadFiles: true,
-        canUpdateDataset: true,
-        canPublishDataset: true,
-        canManageDatasetPermissions: true,
-        canManageFilesPermissions: true,
-        canDeleteDataset: true
-      }, // TODO Connect with dataset permissions
+      JSDatasetMapper.toDatasetPermissions(jsDatasetPermissions),
       JSDatasetMapper.toLocks(jsDatasetLocks),
       true, // TODO Connect with dataset hasValidTermsOfAccess
+      true, // TODO Connect with dataset hasOneTabularFileAtLeast
       true, // TODO Connect with dataset isValid
-      jsDataset.versionInfo.releaseTime !== undefined &&
-        !isNaN(jsDataset.versionInfo.releaseTime.getTime()), // TODO Connect with dataset isReleased,
+      JSDatasetMapper.toIsReleased(jsDataset.versionInfo),
+      JSDatasetMapper.toDownloadUrls(jsDataset.persistentId, version),
+      JSDatasetMapper.toFileDownloadSizes(
+        jsDatasetFilesTotalOriginalDownloadSize,
+        jsDatasetFilesTotalArchivalDownloadSize
+      ),
       undefined, // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl
     ).build()
@@ -190,6 +200,23 @@ export class JSDatasetMapper {
     return extraFields
   }
 
+  static toIsReleased(jsDatasetVersionInfo: JSDatasetVersionInfo): boolean {
+    return (
+      jsDatasetVersionInfo.releaseTime !== undefined &&
+      !isNaN(jsDatasetVersionInfo.releaseTime.getTime())
+    )
+  }
+
+  static toDatasetPermissions(jsDatasetPermissions: JSDatasetPermissions): DatasetPermissions {
+    return {
+      canDownloadFiles: true, // TODO: connect with js-dataverse
+      canUpdateDataset: jsDatasetPermissions.canEditDataset,
+      canPublishDataset: jsDatasetPermissions.canPublishDataset,
+      canManageDatasetPermissions: jsDatasetPermissions.canManageDatasetPermissions,
+      canManageFilesPermissions: true, // TODO: connect with js-dataverse DatasetPermissions.canManageFilesPermissions
+      canDeleteDataset: jsDatasetPermissions.canManageDatasetPermissions
+    }
+  }
   static toLocks(jsDatasetLocks: JSDatasetLock[]): DatasetLock[] {
     return jsDatasetLocks.map((jsDatasetLock) => {
       return {
@@ -197,5 +224,33 @@ export class JSDatasetMapper {
         reason: jsDatasetLock.lockType as unknown as DatasetLockReason
       }
     })
+  }
+
+  static toDownloadUrls(
+    jsDatasetPersistentId: string,
+    version: DatasetVersion
+  ): DatasetDownloadUrls {
+    return {
+      original: `/api/access/dataset/:persistentId/versions/${version.toString()}?persistentId=${jsDatasetPersistentId}&format=original`,
+      archival: `/api/access/dataset/:persistentId/versions/${version.toString()}?persistentId=${jsDatasetPersistentId}`
+    }
+  }
+
+  static toFileDownloadSizes(
+    jsDatasetFilesTotalOriginalDownloadSize: number,
+    jsDatasetFilesTotalArchivalDownloadSize: number
+  ): FileDownloadSize[] {
+    return [
+      new FileDownloadSize(
+        jsDatasetFilesTotalOriginalDownloadSize,
+        FileSizeUnit.BYTES,
+        FileDownloadMode.ORIGINAL
+      ),
+      new FileDownloadSize(
+        jsDatasetFilesTotalArchivalDownloadSize,
+        FileSizeUnit.BYTES,
+        FileDownloadMode.ARCHIVAL
+      )
+    ]
   }
 }

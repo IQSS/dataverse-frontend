@@ -11,6 +11,11 @@ import {
   DatasetMetadataBlock
 } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
 import { DatasetLockReason } from '../../../../../src/dataset/domain/models/Dataset'
+import {
+  FileDownloadMode,
+  FileDownloadSize,
+  FileSizeUnit
+} from '../../../../../src/files/domain/models/File'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -56,6 +61,13 @@ const jsDataset = {
 const citation =
   'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
 const datasetSummaryFields = ['dsDescription', 'subject', 'keyword', 'publication', 'notesText']
+const jsDatasetPermissions = {
+  canEditDataset: true,
+  canPublishDataset: true,
+  canManageDatasetPermissions: true,
+  canDeleteDatasetDraft: true,
+  canViewUnpublishedDataset: true
+}
 const jsDatasetLocks: JSDatasetLock[] = [
   {
     lockType: DatasetLockType.IN_REVIEW,
@@ -63,6 +75,8 @@ const jsDatasetLocks: JSDatasetLock[] = [
     datasetPersistentId: 'doi:10.5072/FK2/B4B2MJ'
   }
 ]
+const jsDatasetFilesTotalOriginalDownloadSize = 5
+const jsDatasetFilesTotalArchivalDownloadSize = 7
 const expectedDataset = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
@@ -135,10 +149,19 @@ const expectedDataset = {
     }
   ],
   hasValidTermsOfAccess: true,
+  hasOneTabularFileAtLeast: true,
   isValid: true,
   isReleased: false,
   thumbnail: undefined,
-  privateUrl: undefined
+  privateUrl: undefined,
+  fileDownloadSizes: [
+    new FileDownloadSize(5, FileSizeUnit.BYTES, FileDownloadMode.ORIGINAL),
+    new FileDownloadSize(7, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
+  ],
+  downloadUrls: {
+    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
+    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+  }
 }
 const expectedDatasetAlternateVersion = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -155,9 +178,14 @@ const expectedDatasetAlternateVersion = {
   citation:
     'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION',
   hasValidTermsOfAccess: true,
+  hasOneTabularFileAtLeast: true,
   isReleased: false,
   isValid: true,
   privateUrl: undefined,
+  fileDownloadSizes: [
+    new FileDownloadSize(5, FileSizeUnit.BYTES, FileDownloadMode.ORIGINAL),
+    new FileDownloadSize(7, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
+  ],
   labels: [
     { semanticMeaning: 'dataset', value: 'Draft' },
     { semanticMeaning: 'warning', value: 'Unpublished' }
@@ -226,7 +254,11 @@ const expectedDatasetAlternateVersion = {
     canPublishDataset: true,
     canUpdateDataset: true
   },
-  thumbnail: undefined
+  thumbnail: undefined,
+  downloadUrls: {
+    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
+    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+  }
 }
 describe('JS Dataset Mapper', () => {
   it('maps jsDataset model to the domain Dataset model', () => {
@@ -234,7 +266,10 @@ describe('JS Dataset Mapper', () => {
       jsDataset,
       citation,
       datasetSummaryFields,
-      jsDatasetLocks
+      jsDatasetPermissions,
+      jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize
     )
     expect(expectedDataset).to.deep.equal(mapped)
   })
@@ -243,7 +278,10 @@ describe('JS Dataset Mapper', () => {
       jsDataset,
       citation,
       datasetSummaryFields,
+      jsDatasetPermissions,
       jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize,
       '4.0'
     )
 
@@ -284,7 +322,10 @@ describe('JS Dataset Mapper', () => {
         jsDatasetWithAlternativePersistentId,
         citation,
         datasetSummaryFields,
-        jsDatasetLocks
+        jsDatasetPermissions,
+        jsDatasetLocks,
+        jsDatasetFilesTotalOriginalDownloadSize,
+        jsDatasetFilesTotalArchivalDownloadSize
       )
     )
   })
@@ -323,7 +364,10 @@ describe('JS Dataset Mapper', () => {
         jsDatasetWithCitationDate,
         citation,
         datasetSummaryFields,
-        jsDatasetLocks
+        jsDatasetPermissions,
+        jsDatasetLocks,
+        jsDatasetFilesTotalOriginalDownloadSize,
+        jsDatasetFilesTotalArchivalDownloadSize
       )
     )
   })
@@ -361,7 +405,10 @@ describe('JS Dataset Mapper', () => {
         jsDatasetWithPublicationDate,
         citation,
         datasetSummaryFields,
-        jsDatasetLocks
+        jsDatasetPermissions,
+        jsDatasetLocks,
+        jsDatasetFilesTotalOriginalDownloadSize,
+        jsDatasetFilesTotalArchivalDownloadSize
       )
     )
   })

@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 import {
   ANONYMIZED_FIELD_VALUE,
   Dataset,
+  DatasetDownloadUrls,
   DatasetLabelSemanticMeaning,
   DatasetLabelValue,
   DatasetLock,
@@ -12,6 +13,11 @@ import {
   DatasetVersion,
   MetadataBlockName
 } from '../../../../../src/dataset/domain/models/Dataset'
+import {
+  FileDownloadMode,
+  FileDownloadSize,
+  FileSizeUnit
+} from '../../../../../src/files/domain/models/File'
 
 export class DatasetVersionMother {
   static create(props?: Partial<DatasetVersion>): DatasetVersion {
@@ -189,6 +195,41 @@ export class DatasetLockMother {
   }
 }
 
+export class DatasetFileDownloadSizeMother {
+  static create(props?: Partial<FileDownloadSize>): FileDownloadSize {
+    return new FileDownloadSize(
+      props?.value ?? faker.datatype.number(),
+      props?.unit ?? faker.helpers.arrayElement(Object.values(FileSizeUnit)),
+      props?.mode ?? faker.helpers.arrayElement(Object.values(FileDownloadMode))
+    )
+  }
+
+  static createArchival(props?: Partial<FileDownloadSize>): FileDownloadSize {
+    return this.create({ mode: FileDownloadMode.ARCHIVAL, ...props })
+  }
+
+  static createOriginal(props?: Partial<FileDownloadSize>): FileDownloadSize {
+    return this.create({ mode: FileDownloadMode.ORIGINAL, ...props })
+  }
+}
+
+export class DatasetDownloadUrlsMother {
+  static create(props?: Partial<DatasetDownloadUrls>): DatasetDownloadUrls {
+    return {
+      original: this.createDownloadUrl(),
+      archival: this.createDownloadUrl(),
+      ...props
+    }
+  }
+
+  static createDownloadUrl(): string {
+    const blob = new Blob(['Name,Age,Location\nJohn,25,New York\nJane,30,San Francisco'], {
+      type: 'text/csv'
+    })
+    return URL.createObjectURL(blob)
+  }
+}
+
 export class DatasetMother {
   static createEmpty(): undefined {
     return undefined
@@ -289,10 +330,13 @@ export class DatasetMother {
       permissions: DatasetPermissionsMother.create(),
       locks: [],
       hasValidTermsOfAccess: faker.datatype.boolean(),
+      hasOneTabularFileAtLeast: faker.datatype.boolean(),
       isValid: faker.datatype.boolean(),
       isReleased: faker.datatype.boolean(),
+      downloadUrls: DatasetDownloadUrlsMother.create(),
       thumbnail: undefined,
       privateUrl: undefined,
+      fileDownloadSizes: [],
       ...props
     }
 
@@ -306,8 +350,11 @@ export class DatasetMother {
       dataset.permissions,
       dataset.locks,
       dataset.hasValidTermsOfAccess,
+      dataset.hasOneTabularFileAtLeast,
       dataset.isValid,
       dataset.isReleased,
+      dataset.downloadUrls,
+      dataset.fileDownloadSizes,
       dataset.thumbnail,
       dataset.privateUrl
     ).build()
@@ -441,6 +488,11 @@ export class DatasetMother {
       locks: [],
       isReleased: true,
       hasValidTermsOfAccess: true,
+      hasOneTabularFileAtLeast: true,
+      fileDownloadSizes: [
+        new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadMode.ORIGINAL),
+        new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadMode.ARCHIVAL)
+      ],
       isValid: true,
       ...props
     })

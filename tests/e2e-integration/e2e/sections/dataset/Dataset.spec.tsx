@@ -29,8 +29,36 @@ describe('Dataset', () => {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('exist')
-            // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
+            cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
 
+            cy.findByText('Metadata').should('exist')
+            cy.findByText('Files').should('exist')
+
+            cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').click()
+            cy.findByRole('button', { name: 'Permissions' }).should('exist').click()
+            cy.findByRole('button', { name: 'Dataset' }).should('exist')
+            cy.findByRole('button', { name: 'Delete Dataset' }).should('exist')
+            cy.findByRole('button', { name: 'Publish Dataset' }).should('exist')
+          })
+        })
+    })
+
+    it('successfully loads a published dataset when the user is not authenticated', () => {
+      cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.wrap(TestsUtils.logout())
+          cy.wait(1500) // Wait for the dataset to be published
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+
+          cy.fixture('dataset-finch1.json').then((dataset: Dataset) => {
+            cy.findByRole('heading', {
+              name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
+            }).should('exist')
+
+            cy.findByRole('button', { name: 'Edit Dataset' }).should('not.exist')
+            cy.findByRole('button', { name: 'Publish Dataset' }).should('not.exist')
+            cy.findByRole('button', { name: 'Upload Files' }).should('not.exist')
             cy.findByText('Metadata').should('exist')
             cy.findByText('Files').should('exist')
           })
@@ -52,7 +80,7 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.wait(1500)
+          cy.wait(1500) // Wait for the dataset to be published
           cy.visit(`/spa/datasets?persistentId=${persistentId}&version=1.0`)
 
           cy.fixture('dataset-finch1.json').then((dataset: Dataset) => {
@@ -60,7 +88,7 @@ describe('Dataset', () => {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('not.exist')
-            // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('not.exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
+            cy.findByText(DatasetLabelValue.UNPUBLISHED).should('not.exist')
             cy.findByText('Version 1.0').should('exist')
           })
         })
@@ -100,7 +128,7 @@ describe('Dataset', () => {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('exist')
-            // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
+            cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
           })
         })
     })
@@ -120,7 +148,7 @@ describe('Dataset', () => {
               name: dataset.datasetVersion.metadataBlocks.citation.fields[0].value
             }).should('exist')
             cy.findByText(DatasetLabelValue.DRAFT).should('exist')
-            // cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist') TODO - Implemnent isReleased property in js-dataverse to get the Unpublished label
+            cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
 
             cy.findAllByText('withheld').should('exist')
           })
@@ -249,11 +277,14 @@ describe('Dataset', () => {
 
           cy.findByText('Restricted File Icon').should('not.exist')
           cy.findByText('Restricted with access Icon').should('exist')
-
-          cy.findByRole('button', { name: 'Access File' }).should('exist').click()
+          cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+          cy.get('@accessButton').should('exist')
+          cy.get('@accessButton').click()
           cy.findByText('Restricted with Access Granted').should('exist')
 
-          cy.findByRole('button', { name: 'File Options' }).should('exist').click()
+          cy.findByRole('button', { name: 'File Options' }).as('fileOptions')
+          cy.get('@fileOptions').should('exist')
+          cy.get('@fileOptions').click()
           cy.findByText('Unrestrict').should('exist')
         })
     })
@@ -333,7 +364,9 @@ describe('Dataset', () => {
 
             cy.findByText('Edit Files').should('exist')
 
-            cy.findByRole('button', { name: 'Access File' }).should('exist').click()
+            cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+            cy.get('@accessButton').should('exist')
+            cy.get('@accessButton').click()
             cy.findByText('Embargoed').should('exist')
           })
       })
@@ -442,6 +475,25 @@ describe('Dataset', () => {
           cy.findByText('blob-3').should('not.exist')
           cy.get('table > tbody > tr').eq(0).should('contain', 'blob-5')
           cy.get('table > tbody > tr').eq(1).should('contain', 'blob-4')
+
+          cy.findByLabelText('Search').clear().type('blob-5{enter}', { force: true })
+
+          cy.findByText('1 to 1 of 1 Files').should('exist')
+          cy.findByText('blob').should('not.exist')
+          cy.findByText('blob-1').should('not.exist')
+          cy.findByText('blob-2').should('not.exist')
+          cy.findByText('blob-3').should('not.exist')
+          cy.findByText('blob-4').should('not.exist')
+          cy.findByText('blob-5').should('exist')
+
+          cy.findByLabelText('Search').clear().type('{enter}', { force: true })
+          cy.findByText('1 to 3 of 3 Files').should('exist')
+          cy.findByText('blob').should('exist')
+          cy.findByText('blob-1').should('not.exist')
+          cy.findByText('blob-2').should('not.exist')
+          cy.findByText('blob-3').should('not.exist')
+          cy.findByText('blob-4').should('exist')
+          cy.findByText('blob-5').should('exist')
         })
     })
 
@@ -454,6 +506,108 @@ describe('Dataset', () => {
           cy.findByText('Files').should('exist')
 
           cy.findByAltText('blob').should('exist')
+        })
+    })
+  })
+
+  describe('Downloading files', () => {
+    it('downloads the dataset', () => {
+      cy.wrap(
+        DatasetHelper.createWithFiles(FileHelper.createMany(2)).then((dataset) =>
+          DatasetHelper.publish(dataset.persistentId)
+        )
+      )
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.wait(1500) // Wait for the dataset to be published
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.wait(1500) // Wait for the page to load
+
+          cy.findByText('Files').should('exist')
+
+          cy.findByRole('button', { name: 'Access Dataset' }).should('exist').click({ force: true })
+
+          // Workaround for issue where Cypress gets stuck on the download
+          cy.window()
+            .document()
+            .then(function (doc) {
+              doc.addEventListener('click', () => {
+                setTimeout(function () {
+                  doc.location.reload()
+                }, 5000)
+              })
+              cy.findByRole('link', { name: /Original Format ZIP/ })
+                .should('exist')
+                .click({ force: true })
+            })
+
+          cy.findAllByText('1 Downloads').should('exist')
+        })
+    })
+
+    it('downloads a file', () => {
+      cy.wrap(
+        DatasetHelper.createWithFiles(FileHelper.createMany(1)).then((dataset) =>
+          DatasetHelper.publish(dataset.persistentId)
+        )
+      )
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.wait(1500) // Wait for the dataset to be published
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.wait(1500) // Wait for the page to load
+
+          cy.findByText('Files').should('exist')
+
+          cy.findByRole('button', { name: 'Access File' }).should('exist').click()
+
+          // Workaround for issue where Cypress gets stuck on the download
+          cy.window()
+            .document()
+            .then(function (doc) {
+              doc.addEventListener('click', () => {
+                setTimeout(function () {
+                  doc.location.reload()
+                }, 5000)
+              })
+              cy.findByText('Plain Text').should('exist').click()
+            })
+
+          cy.findByText('1 Downloads').should('exist')
+        })
+    })
+
+    it('downloads multiple files', () => {
+      cy.wrap(
+        DatasetHelper.createWithFiles(FileHelper.createMany(3)).then((dataset) =>
+          DatasetHelper.publish(dataset.persistentId)
+        )
+      )
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.wait(1500) // Wait for the page to load
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.wait(1500) // Wait for the page to load
+
+          cy.findByText('Files').should('exist')
+
+          cy.get('table > thead > tr > th > input[type=checkbox]').click()
+
+          cy.findByRole('button', { name: 'Download' }).should('exist').click({ force: true })
+
+          // Workaround for issue where Cypress gets stuck on the download
+          cy.window()
+            .document()
+            .then(function (doc) {
+              doc.addEventListener('click', () => {
+                setTimeout(function () {
+                  doc.location.reload()
+                }, 5000)
+              })
+              cy.findByText('Original Format').should('exist').click()
+            })
+
+          cy.findAllByText('1 Downloads').should('exist')
         })
     })
   })

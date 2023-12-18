@@ -9,11 +9,33 @@ export class SettingJSDataverseRepository implements SettingRepository {
     // TODO - implement using js-dataverse
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve({
-          name: SettingName.ZIP_DOWNLOAD_LIMIT,
-          value: new ZipDownloadLimit(1, FileSizeUnit.BYTES)
-        } as Setting<T>)
+        resolve(mockedSettingResponse<T>(name))
       }, 1000)
     })
+  }
+}
+
+function mockedSettingResponse<T>(name: SettingName): Setting<T> {
+  switch (name) {
+    case SettingName.ZIP_DOWNLOAD_LIMIT:
+      return {
+        name: SettingName.ZIP_DOWNLOAD_LIMIT,
+        value: new ZipDownloadLimit(1, FileSizeUnit.TERABYTES)
+      } as Setting<T>
+    case SettingName.ALLOWED_EXTERNAL_STATUSES:
+      return {
+        name: SettingName.ALLOWED_EXTERNAL_STATUSES,
+        value: [
+          'Author Contacted',
+          'Privacy Review',
+          'Awaiting Paper Publication',
+          'Final Approval'
+        ]
+      } as Setting<T>
+    case SettingName.HAS_PUBLIC_STORE:
+      return {
+        name: SettingName.HAS_PUBLIC_STORE,
+        value: false
+      } as Setting<T>
   }
 }

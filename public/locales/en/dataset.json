@@ -53,7 +53,13 @@
       }
     },
     "accessDataset": {
-      "title": "Access Dataset"
+      "title": "Access Dataset",
+      "downloadOptions": {
+        "header": "Download Options",
+        "zip": "Download ZIP",
+        "originalZip": "Original Format ZIP",
+        "archivalZip": "Archival Format (.tab) ZIP"
+      }
     },
     "uploadFiles": "Upload Files"
   },

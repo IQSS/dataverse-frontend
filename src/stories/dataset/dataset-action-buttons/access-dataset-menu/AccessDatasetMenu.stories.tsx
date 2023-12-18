@@ -2,6 +2,8 @@ import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../../WithI18next'
 import { WithSettings } from '../../../WithSettings'
 import {
+  DatasetDownloadUrlsMother,
+  DatasetFileDownloadSizeMother,
   DatasetPermissionsMother,
   DatasetVersionMother
 } from '../../../../../tests/component/dataset/domain/models/DatasetMother'
@@ -20,11 +22,39 @@ const meta: Meta<typeof AccessDatasetMenu> = {
 export default meta
 type Story = StoryObj<typeof AccessDatasetMenu>
 
-export const WithAllPermissions: Story = {
+export const WithDownloadNotAllowed: Story = {
   render: () => (
     <AccessDatasetMenu
+      hasOneTabularFileAtLeast={false}
+      version={DatasetVersionMother.createReleased()}
+      permissions={DatasetPermissionsMother.createWithFilesDownloadNotAllowed()}
+      fileDownloadSizes={[DatasetFileDownloadSizeMother.createOriginal()]}
+      downloadUrls={DatasetDownloadUrlsMother.create()}
+    />
+  )
+}
+export const WithoutTabularFiles: Story = {
+  render: () => (
+    <AccessDatasetMenu
+      hasOneTabularFileAtLeast={false}
       version={DatasetVersionMother.createReleased()}
       permissions={DatasetPermissionsMother.createWithAllAllowed()}
+      fileDownloadSizes={[DatasetFileDownloadSizeMother.createOriginal()]}
+      downloadUrls={DatasetDownloadUrlsMother.create()}
+    />
+  )
+}
+export const WithTabularFiles: Story = {
+  render: () => (
+    <AccessDatasetMenu
+      hasOneTabularFileAtLeast={true}
+      version={DatasetVersionMother.createReleased()}
+      permissions={DatasetPermissionsMother.createWithAllAllowed()}
+      fileDownloadSizes={[
+        DatasetFileDownloadSizeMother.createArchival(),
+        DatasetFileDownloadSizeMother.createOriginal()
+      ]}
+      downloadUrls={DatasetDownloadUrlsMother.create()}
     />
   )
 }
