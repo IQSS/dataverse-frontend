@@ -6,27 +6,13 @@ import { FileUserPermissionsMother } from '../../../files/domain/models/FileUser
 import { FilePermissionsProvider } from '../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 import { useState } from 'react'
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
-import {
-  DatasetPublishingStatus,
-  DatasetVersion
-} from '../../../../../src/dataset/domain/models/Dataset'
 import { FileCriteria, FileSortByOption } from '../../../../../src/files/domain/models/FileCriteria'
+import { DatasetVersionMother } from '../../../dataset/domain/models/DatasetMother'
 
 const files = FilePreviewMother.createMany(100)
 const filesCountInfo = FilesCountInfoMother.create({ total: 100 })
 const fileRepository: FileRepository = {} as FileRepository
-const datasetVersion = new DatasetVersion(
-  1,
-  '',
-  [],
-  true,
-  false,
-  DatasetPublishingStatus.RELEASED,
-  '',
-  1,
-  0,
-  false
-)
+const datasetVersion = DatasetVersionMother.createReleased()
 
 const FilesTableTestComponent = ({ datasetPersistentId }: { datasetPersistentId: string }) => {
   const [paginationInfo, setPaginationInfo] = useState<FilePaginationInfo>(new FilePaginationInfo())
@@ -169,7 +155,7 @@ describe('useFiles', () => {
     cy.wrap(fileRepository.getFilesCountInfoByDatasetPersistentId).should(
       'be.calledOnceWith',
       'persistentId',
-      datasetVersion,
+      datasetVersion.number,
       new FileCriteria()
     )
 
@@ -179,7 +165,7 @@ describe('useFiles', () => {
     cy.wrap(fileRepository.getFilesCountInfoByDatasetPersistentId).should(
       'be.calledWith',
       'persistentId',
-      datasetVersion,
+      datasetVersion.number,
       new FileCriteria().withSortBy(FileSortByOption.NAME_ZA)
     )
   })

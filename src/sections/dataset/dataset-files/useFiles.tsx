@@ -28,7 +28,7 @@ export function useFiles(
     return getFilesCountInfoByDatasetPersistentId(
       filesRepository,
       datasetPersistentId,
-      datasetVersion,
+      datasetVersion.number,
       criteria
     )
       .then((filesCountInfo: FilesCountInfo) => {
@@ -88,7 +88,7 @@ export function useFiles(
   ])
 
   useEffect(() => {
-    getFilesTotalDownloadSize(filesRepository, datasetPersistentId, datasetVersion, criteria)
+    getFilesTotalDownloadSize(filesRepository, datasetPersistentId, datasetVersion.number, criteria)
       .then((filesTotalDownloadSize: number) => {
         setFilesTotalDownloadSize(filesTotalDownloadSize)
       })

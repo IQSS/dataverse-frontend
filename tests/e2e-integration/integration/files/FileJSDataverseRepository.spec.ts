@@ -14,10 +14,6 @@ import {
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { DatasetJSDataverseRepository } from '../../../../src/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
-import {
-  DatasetPublishingStatus,
-  DatasetVersion
-} from '../../../../src/dataset/domain/models/Dataset'
 import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePaginationInfo'
 import {
   FileAccessOption,
@@ -28,6 +24,7 @@ import {
 import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
 import { FileData, FileHelper } from '../../shared/files/FileHelper'
 import { FilesCountInfo } from '../../../../src/files/domain/models/FilesCountInfo'
+import { DatasetVersionMother } from '../../../component/dataset/domain/models/DatasetMother'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -144,18 +141,7 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getAllByDatasetPersistentId(
           dataset.persistentId,
-          new DatasetVersion(
-            dataset.version.id,
-            '',
-            [],
-            true,
-            false,
-            DatasetPublishingStatus.RELEASED,
-            '',
-            1,
-            0,
-            false
-          )
+          DatasetVersionMother.createReleased({ id: dataset.version.id })
         )
         .then((files) => {
           const expectedPublishedFile = fileData(files[0].id)
@@ -183,18 +169,7 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getAllByDatasetPersistentId(
           dataset.persistentId,
-          new DatasetVersion(
-            dataset.version.id,
-            '',
-            [],
-            true,
-            false,
-            DatasetPublishingStatus.DEACCESSIONED,
-            '',
-            1,
-            0,
-            false
-          )
+          DatasetVersionMother.createDeaccessioned({ id: dataset.version.id })
         )
         .then((files) => {
           const expectedDeaccessionedFile = fileData(files[0].id)
@@ -578,7 +553,7 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getFilesCountInfoByDatasetPersistentId(
           dataset.persistentId,
-          dataset.version,
+          dataset.version.number,
           new FileCriteria()
         )
         .then((filesCountInfo) => {
@@ -651,7 +626,7 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getFilesCountInfoByDatasetPersistentId(
           dataset.persistentId,
-          dataset.version,
+          dataset.version.number,
           new FileCriteria().withFilterByType('text/csv')
         )
         .then((filesCountInfo) => {
@@ -721,7 +696,10 @@ describe('File JSDataverse Repository', () => {
           }, 0)
         })
       await fileRepository
-        .getFilesTotalDownloadSizeByDatasetPersistentId(dataset.persistentId, dataset.version)
+        .getFilesTotalDownloadSizeByDatasetPersistentId(
+          dataset.persistentId,
+          dataset.version.number
+        )
         .then((totalDownloadSize) => {
           expect(totalDownloadSize).to.deep.equal(expectedTotalDownloadSize)
         })
@@ -766,7 +744,7 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getFilesTotalDownloadSizeByDatasetPersistentId(
           dataset.persistentId,
-          dataset.version,
+          dataset.version.number,
           new FileCriteria().withFilterByType('csv')
         )
         .then((totalDownloadSize) => {

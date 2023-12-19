@@ -6,7 +6,7 @@ import { FilesCountInfoMother } from '../../../tests/component/files/domain/mode
 import { FilePaginationInfo } from '../../files/domain/models/FilePaginationInfo'
 import { FileUserPermissionsMother } from '../../../tests/component/files/domain/models/FileUserPermissionsMother'
 import { FileUserPermissions } from '../../files/domain/models/FileUserPermissions'
-import { DatasetVersion } from '../../dataset/domain/models/Dataset'
+import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/models/Dataset'
 import { FileCriteria } from '../../files/domain/models/FileCriteria'
 import { FilePreviewMother } from '../../../tests/component/files/domain/models/FilePreviewMother'
 import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
@@ -30,7 +30,7 @@ export class FileMockRepository implements FileRepository {
     // eslint-disable-next-line unused-imports/no-unused-vars
     datasetPersistentId: string,
     // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersion: DatasetVersion
+    datasetVersionNumber: DatasetVersionNumber
   ): Promise<FilesCountInfo> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -43,7 +43,7 @@ export class FileMockRepository implements FileRepository {
     // eslint-disable-next-line unused-imports/no-unused-vars
     datasetPersistentId: string,
     // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersion: DatasetVersion,
+    datasetVersionNumber: DatasetVersionNumber,
     // eslint-disable-next-line unused-imports/no-unused-vars
     criteria?: FileCriteria
   ): Promise<number> {

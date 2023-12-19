@@ -4,7 +4,7 @@ import { FileCriteria } from '../models/FileCriteria'
 import { FilesCountInfo } from '../models/FilesCountInfo'
 import { FilePaginationInfo } from '../models/FilePaginationInfo'
 import { FileUserPermissions } from '../models/FileUserPermissions'
-import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
+import { DatasetVersion, DatasetVersionNumber } from '../../../dataset/domain/models/Dataset'
 
 export interface FileRepository {
   getAllByDatasetPersistentId: (
@@ -15,12 +15,12 @@ export interface FileRepository {
   ) => Promise<FilePreview[]>
   getFilesCountInfoByDatasetPersistentId: (
     datasetPersistentId: string,
-    datasetVersion: DatasetVersion,
+    datasetVersionNumber: DatasetVersionNumber,
     criteria: FileCriteria
   ) => Promise<FilesCountInfo>
   getFilesTotalDownloadSizeByDatasetPersistentId: (
     datasetPersistentId: string,
-    datasetVersion: DatasetVersion,
+    datasetVersionNumber: DatasetVersionNumber,
     criteria?: FileCriteria
   ) => Promise<number>
   getUserPermissionsById: (id: number) => Promise<FileUserPermissions>

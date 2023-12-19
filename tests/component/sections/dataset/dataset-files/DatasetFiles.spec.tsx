@@ -402,7 +402,7 @@ describe('DatasetFiles', () => {
       cy.wrap(fileRepository.getFilesCountInfoByDatasetPersistentId).should(
         'be.calledWith',
         datasetPersistentId,
-        datasetVersion
+        datasetVersion.number
       )
     })
 
@@ -545,7 +545,7 @@ describe('DatasetFiles', () => {
       cy.wrap(fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId).should(
         'be.calledWith',
         datasetPersistentId,
-        datasetVersion,
+        datasetVersion.number,
         new FileCriteria().withFilterByType('image/png')
       )
     })

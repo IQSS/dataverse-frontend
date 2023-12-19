@@ -18,7 +18,7 @@ import {
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
 import { JSFileMapper } from './mappers/JSFileMapper'
-import { DatasetVersion } from '../../dataset/domain/models/Dataset'
+import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/models/Dataset'
 import { File } from '../domain/models/File'
 import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
 
@@ -38,7 +38,7 @@ export class FileJSDataverseRepository implements FileRepository {
     return getDatasetFiles
       .execute(
         datasetPersistentId,
-        datasetVersion.toString(),
+        datasetVersion.number.toString(),
         includeDeaccessioned,
         jsPagination.limit,
         jsPagination.offset,
@@ -111,13 +111,13 @@ export class FileJSDataverseRepository implements FileRepository {
 
   getFilesCountInfoByDatasetPersistentId(
     datasetPersistentId: string,
-    datasetVersion: DatasetVersion,
+    datasetVersionNumber: DatasetVersionNumber,
     criteria: FileCriteria
   ): Promise<FilesCountInfo> {
     return getDatasetFileCounts
       .execute(
         datasetPersistentId,
-        datasetVersion.toString(),
+        datasetVersionNumber.toString(),
         includeDeaccessioned,
         DomainFileMapper.toJSFileSearchCriteria(criteria)
       )
@@ -131,13 +131,13 @@ export class FileJSDataverseRepository implements FileRepository {
 
   getFilesTotalDownloadSizeByDatasetPersistentId(
     datasetPersistentId: string,
-    datasetVersion: DatasetVersion,
+    datasetVersionNumber: DatasetVersionNumber,
     criteria: FileCriteria = new FileCriteria()
   ): Promise<number> {
     return getDatasetFilesTotalDownloadSize
       .execute(
         datasetPersistentId,
-        datasetVersion.toString(),
+        datasetVersionNumber.toString(),
         FileDownloadSizeMode.ARCHIVAL,
         DomainFileMapper.toJSFileSearchCriteria(criteria),
         includeDeaccessioned

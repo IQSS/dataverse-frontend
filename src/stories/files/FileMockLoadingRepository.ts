@@ -1,7 +1,7 @@
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { FilePreview } from '../../files/domain/models/FilePreview'
 import { FilesCountInfo } from '../../files/domain/models/FilesCountInfo'
-import { DatasetVersion } from '../../dataset/domain/models/Dataset'
+import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/models/Dataset'
 import { FileCriteria } from '../../files/domain/models/FileCriteria'
 import { FileMockRepository } from './FileMockRepository'
 import { File } from '../../files/domain/models/File'
@@ -24,7 +24,7 @@ export class FileMockLoadingRepository extends FileMockRepository implements Fil
     // eslint-disable-next-line unused-imports/no-unused-vars
     datasetPersistentId: string,
     // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersion: DatasetVersion,
+    datasetVersionNumber: DatasetVersionNumber,
     // eslint-disable-next-line unused-imports/no-unused-vars
     criteria?: FileCriteria
   ): Promise<FilesCountInfo> {
