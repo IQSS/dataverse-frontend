@@ -16,7 +16,13 @@ export function DatasetActionButtons({ dataset }: DatasetActionButtonsProps) {
   const { t } = useTranslation('dataset')
   return (
     <ButtonGroup aria-label={t('datasetActionButtons.title')} vertical className={styles.group}>
-      <AccessDatasetMenu version={dataset.version} permissions={dataset.permissions} />
+      <AccessDatasetMenu
+        version={dataset.version}
+        permissions={dataset.permissions}
+        hasOneTabularFileAtLeast={dataset.hasOneTabularFileAtLeast}
+        fileDownloadSizes={dataset.fileDownloadSizes}
+        downloadUrls={dataset.downloadUrls}
+      />
       <PublishDatasetMenu dataset={dataset} />
       <SubmitForReviewButton dataset={dataset} />
       <EditDatasetMenu dataset={dataset} />

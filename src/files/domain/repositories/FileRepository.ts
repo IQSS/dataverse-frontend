@@ -1,4 +1,4 @@
-import { File } from '../models/File'
+import { File, FileDownloadMode } from '../models/File'
 import { FileCriteria } from '../models/FileCriteria'
 import { FilesCountInfo } from '../models/FilesCountInfo'
 import { FileUserPermissions } from '../models/FileUserPermissions'
@@ -23,4 +23,6 @@ export interface FileRepository {
     criteria?: FileCriteria
   ) => Promise<number>
   getUserPermissionsById: (id: number) => Promise<FileUserPermissions>
+  getMultipleFileDownloadUrl: (ids: number[], downloadMode: FileDownloadMode) => string
+  getFileDownloadUrl: (id: number, downloadMode: FileDownloadMode) => string
 }

@@ -20,7 +20,7 @@ export class FileSize {
   }
 
   constructor(readonly value: number, readonly unit: FileSizeUnit) {
-    ;[this.value, this.unit] = this.convertToLargestUnit(value, unit)
+    ;[this.value, this.unit] = FileSize.convertToLargestUnit(value, unit)
   }
 
   toString(): string {
@@ -33,7 +33,7 @@ export class FileSize {
     return this.value * FileSize.multiplier[this.unit]
   }
 
-  private convertToLargestUnit(value: number, unit: FileSizeUnit): [number, FileSizeUnit] {
+  static convertToLargestUnit(value: number, unit: FileSizeUnit): [number, FileSizeUnit] {
     let convertedValue = value
     let convertedUnit = unit
 
@@ -45,7 +45,7 @@ export class FileSize {
     return [convertedValue, convertedUnit]
   }
 
-  private getNextUnit(unit: FileSizeUnit): FileSizeUnit {
+  static getNextUnit(unit: FileSizeUnit): FileSizeUnit {
     switch (unit) {
       case FileSizeUnit.BYTES:
         return FileSizeUnit.KILOBYTES
@@ -60,6 +60,22 @@ export class FileSize {
       default:
         return unit
     }
+  }
+}
+
+export enum FileDownloadMode {
+  ORIGINAL = 'original',
+  ARCHIVAL = 'archival'
+}
+
+export class FileDownloadSize extends FileSize {
+  constructor(
+    readonly value: number,
+    readonly unit: FileSizeUnit,
+    readonly mode: FileDownloadMode
+  ) {
+    super(value, unit)
+    ;[this.value, this.unit] = FileDownloadSize.convertToLargestUnit(value, unit)
   }
 }
 
@@ -115,6 +131,7 @@ export enum FileLabelType {
   CATEGORY = 'category',
   TAG = 'tag'
 }
+
 export interface FileLabel {
   type: FileLabelType
   value: string
@@ -145,6 +162,12 @@ export interface FileIngest {
   reportMessage?: string
 }
 
+export interface FileDownloadUrls {
+  original: string
+  tabular?: string
+  rData?: string
+}
+
 export class File {
   constructor(
     readonly id: number,
@@ -158,12 +181,13 @@ export class File {
     readonly labels: FileLabel[],
     public readonly isDeleted: boolean,
     public readonly ingest: FileIngest,
-    readonly checksum?: FileChecksum,
-    readonly thumbnail?: string,
+    public readonly downloadUrls: FileDownloadUrls,
+    public thumbnail?: string,
     readonly directory?: string,
     readonly embargo?: FileEmbargo,
     readonly tabularData?: FileTabularData,
-    readonly description?: string
+    readonly description?: string,
+    readonly checksum?: FileChecksum
   ) {}
 
   getLink(): string {
