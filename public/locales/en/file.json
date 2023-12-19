@@ -2,5 +2,6 @@
   "tabs": {
     "metadata": "Metadata"
   },
-  "subtext": "This file is part of \"{{datasetTitle}}\"."
+  "subtext": "This file is part of \"{{datasetTitle}}\".",
+  "datasetCitation":  "Dataset Citation"
 }

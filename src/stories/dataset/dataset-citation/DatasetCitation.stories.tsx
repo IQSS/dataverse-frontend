@@ -29,7 +29,7 @@ export const Default: Story = {
   }
 }
 
-export const WithThumbnail: Story = {
+export const WithThumbnailImage: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic({ thumbnail: faker.image.imageUrl() })
     return (
@@ -89,5 +89,12 @@ export const Anonymized: Story = {
         <DatasetCitation version={dataset.version} />
       </div>
     )
+  }
+}
+
+export const WithoutThumbnail: Story = {
+  render: () => {
+    const dataset = DatasetMother.createRealistic()
+    return <DatasetCitation withoutThumbnail version={dataset.version} />
   }
 }
