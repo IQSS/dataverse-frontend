@@ -9,16 +9,16 @@ export function DatasetsListSkeleton() {
           <Skeleton width="14%" />
         </div>
         <article>
-          <Skeleton width="50%" />
-          <Skeleton width="50%" />
-          <Skeleton width="50%" />
-          <Skeleton width="50%" />
-          <Skeleton width="50%" />
-          <Skeleton width="50%" />
-          <Skeleton width="50%" />
-          <Skeleton width="50%" />
-          <Skeleton width="50%" />
-          <Skeleton width="50%" />
+          <Skeleton height="109px" style={{ marginBottom: 6 }} />
+          <Skeleton height="109px" style={{ marginBottom: 6 }} />
+          <Skeleton height="109px" style={{ marginBottom: 6 }} />
+          <Skeleton height="109px" style={{ marginBottom: 6 }} />
+          <Skeleton height="109px" style={{ marginBottom: 6 }} />
+          <Skeleton height="109px" style={{ marginBottom: 6 }} />
+          <Skeleton height="109px" style={{ marginBottom: 6 }} />
+          <Skeleton height="109px" style={{ marginBottom: 6 }} />
+          <Skeleton height="109px" style={{ marginBottom: 6 }} />
+          <Skeleton height="109px" style={{ marginBottom: 6 }} />
         </article>
       </section>
     </SkeletonTheme>

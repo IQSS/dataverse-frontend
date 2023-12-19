@@ -5,11 +5,10 @@ import { useEffect, useState } from 'react'
 import { PaginationResultsInfo } from '../../shared/pagination/PaginationResultsInfo'
 import { PaginationControls } from '../../shared/pagination/PaginationControls'
 import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPaginationInfo'
-import { LinkToPage } from '../../shared/link-to-page/LinkToPage'
-import { Route } from '../../Route.enum'
 import { useLoading } from '../../loading/LoadingContext'
 import { DatasetsListSkeleton } from './DatasetsListSkeleton'
 import { NoDatasetsMessage } from './NoDatasetsMessage'
+import { DatasetCard } from './dataset-card/DatasetCard'
 
 interface DatasetsListProps {
   datasetRepository: DatasetRepository
@@ -40,13 +39,7 @@ export function DatasetsList({ datasetRepository }: DatasetsListProps) {
             <PaginationResultsInfo paginationInfo={paginationInfo} />
           </div>
           {datasets.map((dataset) => (
-            <article key={dataset.persistentId}>
-              <LinkToPage
-                page={Route.DATASETS}
-                searchParams={{ persistentId: dataset.persistentId }}>
-                {dataset.title}
-              </LinkToPage>
-            </article>
+            <DatasetCard dataset={dataset} key={dataset.persistentId} />
           ))}
           <PaginationControls
             onPaginationInfoChange={setPaginationInfo}
