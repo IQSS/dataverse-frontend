@@ -18,6 +18,7 @@ import {
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 
 const includeDeaccessioned = true
+
 export class DatasetJSDataverseRepository implements DatasetRepository {
   getByPersistentId(
     persistentId: string,
@@ -30,7 +31,11 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         Promise.all([
           jsDataset,
           getDatasetSummaryFieldNames.execute(),
-          getDatasetCitation.execute(jsDataset.id, this.versionToVersionId(version)),
+          getDatasetCitation.execute(
+            jsDataset.id,
+            this.versionToVersionId(version),
+            includeDeaccessioned
+          ),
           getDatasetUserPermissions.execute(jsDataset.id),
           getDatasetLocks.execute(jsDataset.id),
           getDatasetFilesTotalDownloadSize.execute(
