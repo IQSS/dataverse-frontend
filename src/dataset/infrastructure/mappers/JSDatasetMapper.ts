@@ -1,28 +1,33 @@
 import {
   Dataset as JSDataset,
+  DatasetLock as JSDatasetLock,
   DatasetMetadataBlock as JSDatasetMetadataBlock,
   DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataFields as JSDatasetMetadataFields,
-  DatasetVersionInfo as JSDatasetVersionInfo,
   DatasetUserPermissions as JSDatasetPermissions,
-  DatasetLock as JSDatasetLock
+  DatasetVersionInfo as JSDatasetVersionInfo
 } from '@iqss/dataverse-client-javascript'
 import { DatasetVersionState as JSDatasetVersionState } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
 import {
   Dataset,
-  DatasetPublishingStatus,
+  DatasetDownloadUrls,
+  DatasetLock,
+  DatasetLockReason,
   DatasetMetadataBlock,
   DatasetMetadataBlocks,
   DatasetMetadataFields,
+  DatasetPermissions,
+  DatasetPublishingStatus,
   DatasetVersion,
   MetadataBlockName,
   PrivateUrl,
-  DatasetDownloadUrls,
-  DatasetPermissions,
-  DatasetLock,
-  DatasetLockReason,
   DatasetVersionNumber
 } from '../../domain/models/Dataset'
+import {
+  FileDownloadMode,
+  FileDownloadSize,
+  FileSizeUnit
+} from '../../../files/domain/models/FilePreview'
 
 export class JSDatasetMapper {
   static toDataset(
@@ -31,6 +36,8 @@ export class JSDatasetMapper {
     jsDatasetSummaryFieldsNames: string[],
     jsDatasetPermissions: JSDatasetPermissions,
     jsDatasetLocks: JSDatasetLock[],
+    jsDatasetFilesTotalOriginalDownloadSize: number,
+    jsDatasetFilesTotalArchivalDownloadSize: number,
     requestedVersion?: string,
     privateUrl?: PrivateUrl
   ): Dataset {
@@ -57,9 +64,12 @@ export class JSDatasetMapper {
       true, // TODO Connect with dataset hasOneTabularFileAtLeast
       true, // TODO Connect with dataset isValid
       JSDatasetMapper.toDownloadUrls(jsDataset.persistentId, version),
+      JSDatasetMapper.toFileDownloadSizes(
+        jsDatasetFilesTotalOriginalDownloadSize,
+        jsDatasetFilesTotalArchivalDownloadSize
+      ),
       undefined, // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl,
-      [], // TODO: Connect with file download use case,
       requestedVersion
     ).build()
   }
@@ -217,6 +227,7 @@ export class JSDatasetMapper {
       archival: `/api/access/dataset/:persistentId/versions/${version.number.toString()}?persistentId=${jsDatasetPersistentId}`
     }
   }
+
   static toSomeDatasetVersionHasBeenReleased(jsDatasetVersionInfo: JSDatasetVersionInfo): boolean {
     return (
       jsDatasetVersionInfo.releaseTime !== undefined &&
@@ -241,5 +252,23 @@ export class JSDatasetMapper {
         reason: jsDatasetLock.lockType as unknown as DatasetLockReason
       }
     })
+  }
+
+  static toFileDownloadSizes(
+    jsDatasetFilesTotalOriginalDownloadSize: number,
+    jsDatasetFilesTotalArchivalDownloadSize: number
+  ): FileDownloadSize[] {
+    return [
+      new FileDownloadSize(
+        jsDatasetFilesTotalOriginalDownloadSize,
+        FileSizeUnit.BYTES,
+        FileDownloadMode.ORIGINAL
+      ),
+      new FileDownloadSize(
+        jsDatasetFilesTotalArchivalDownloadSize,
+        FileSizeUnit.BYTES,
+        FileDownloadMode.ARCHIVAL
+      )
+    ]
   }
 }

@@ -366,9 +366,9 @@ export class Dataset {
     public readonly hasOneTabularFileAtLeast: boolean,
     public readonly isValid: boolean,
     public readonly downloadUrls: DatasetDownloadUrls,
+    public readonly fileDownloadSizes: FileDownloadSize[],
     public readonly thumbnail?: string,
     public readonly privateUrl?: PrivateUrl,
-    public readonly fileDownloadSizes?: FileDownloadSize[],
     public readonly requestedVersion?: string // will be set if the user requested a version that did not exist
   ) {}
 
@@ -446,9 +446,9 @@ export class Dataset {
       public readonly hasOneTabularFileAtLeast: boolean,
       public readonly isValid: boolean,
       public readonly downloadUrls: DatasetDownloadUrls,
+      public readonly fileDownloadSizes: FileDownloadSize[],
       public readonly thumbnail?: string,
       public readonly privateUrl?: PrivateUrl,
-      public readonly fileDownloadSizes?: FileDownloadSize[],
       public readonly requestedVersion?: string // will be set if the user requested a version that did not exist
     ) {
       this.withAlerts()
@@ -509,9 +509,9 @@ export class Dataset {
         this.hasOneTabularFileAtLeast,
         this.isValid,
         this.downloadUrls,
+        this.fileDownloadSizes,
         this.thumbnail,
         this.privateUrl,
-        this.fileDownloadSizes,
         this.requestedVersion
       )
     }
