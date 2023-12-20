@@ -4,8 +4,8 @@ import { ChangeEvent, FormEvent } from 'react'
 import { Alert, Button, Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import styles from '/src/sections/dataset/Dataset.module.scss'
-import { SeparationLine } from '../../components/ui/SeparationLine/SeparationLine'
-import { RequiredFieldText } from '../../components/Forms/RequiredFieldText/RequiredFieldText'
+import { SeparationLine } from '../../components/layout/SeparationLine/SeparationLine'
+import { RequiredFieldText } from '../../components/forms/RequiredFieldText/RequiredFieldText'
 
 /*
  * TODO:
@@ -27,7 +27,7 @@ export default function CreateDatasetFormPresenter({
   submitComplete
 }: CreateDatasetFormPresenterProps) {
   const { t } = useTranslation('createDataset')
-  // TODO: Probably replace this with a FormSkeleton or remove entirely
+  // TODO: Replace this with a FormSkeleton or remove entirely
   // if (loading) {
   //   return <DatasetSkeleton />
   // }

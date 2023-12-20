@@ -1,4 +1,4 @@
-import CreateDatasetContainer from '../../../../src/views/create-dataset/CreateDatasetContainer'
+import CreateDatasetContainer from '../../../../src/sections/create-dataset/CreateDatasetContext'
 
 describe('Form component', () => {
   beforeEach(() => {

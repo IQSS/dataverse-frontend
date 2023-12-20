@@ -1,5 +1,3 @@
-// usecases/FormUseCase.js
-
 'use strict'
 
 interface CreateDatasetFormData {

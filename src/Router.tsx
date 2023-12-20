@@ -4,7 +4,7 @@ import { Layout } from './sections/layout/Layout'
 import { Route } from './sections/Route.enum'
 import { DatasetFactory } from './sections/dataset/DatasetFactory'
 import { PageNotFound } from './sections/page-not-found/PageNotFound'
-import CreateDatasetContainer from './views/create-dataset/CreateDatasetContainer'
+import CreateDatasetContainer from './sections/create-dataset/CreateDatasetContext'
 
 const router = createBrowserRouter(
   [
