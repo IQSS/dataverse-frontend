@@ -1,23 +1,10 @@
 import { StoryFn } from '@storybook/react'
 import { DatasetProvider } from '../../sections/dataset/DatasetProvider'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { Dataset } from '../../dataset/domain/models/Dataset'
-import { DatasetMother } from '../../../tests/component/dataset/domain/models/DatasetMother'
+import { DatasetMockRepository } from './DatasetMockRepository'
 
 export const WithDataset = (Story: StoryFn) => {
-  const datasetRepository = {} as DatasetRepository
-  datasetRepository.getByPersistentId = (
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    persistentId: string,
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    version?: string | undefined
-  ): Promise<Dataset | undefined> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(DatasetMother.createRealistic())
-      }, 1000)
-    })
-  }
+  const datasetRepository: DatasetRepository = new DatasetMockRepository()
   return (
     <DatasetProvider
       repository={datasetRepository}

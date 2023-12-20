@@ -16,9 +16,32 @@ import {
   FileDownloadSizeMode
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
+import { TotalDatasetsCount } from '../../domain/models/TotalDatasetsCount'
+import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
+import { DatasetPreview } from '../../domain/models/DatasetPreview'
+import { DatasetPreviewMother } from '../../../../tests/component/dataset/domain/models/DatasetPreviewMother'
 
 const includeDeaccessioned = true
 export class DatasetJSDataverseRepository implements DatasetRepository {
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  getAll(paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
+    // TODO - Implement using the js-dataverse-client
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(DatasetPreviewMother.createManyRealistic(10))
+      }, 1000)
+    })
+  }
+
+  getTotalDatasetsCount(): Promise<TotalDatasetsCount> {
+    // TODO - Implement using the js-dataverse-client
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(200)
+      }, 1000)
+    })
+  }
+
   getByPersistentId(
     persistentId: string,
     version?: string,

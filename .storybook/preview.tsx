@@ -1,5 +1,6 @@
 import type { Preview } from '@storybook/react'
 import { ThemeProvider } from '@iqss/dataverse-design-system'
+import { MemoryRouter } from 'react-router-dom'
 
 const preview: Preview = {
   parameters: {
@@ -14,7 +15,9 @@ const preview: Preview = {
   decorators: [
     (Story) => (
       <ThemeProvider>
-        <Story />
+        <MemoryRouter>
+          <Story />
+        </MemoryRouter>
       </ThemeProvider>
     )
   ]

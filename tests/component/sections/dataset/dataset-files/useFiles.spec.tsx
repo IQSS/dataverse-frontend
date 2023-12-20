@@ -5,12 +5,12 @@ import { useFiles } from '../../../../../src/sections/dataset/dataset-files/useF
 import { FileUserPermissionsMother } from '../../../files/domain/models/FileUserPermissionsMother'
 import { FilePermissionsProvider } from '../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 import { useState } from 'react'
-import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 import {
   DatasetPublishingStatus,
   DatasetVersion
 } from '../../../../../src/dataset/domain/models/Dataset'
 import { FileCriteria, FileSortByOption } from '../../../../../src/files/domain/models/FileCriteria'
+import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 
 const files = FileMother.createMany(100)
 const filesCountInfo = FilesCountInfoMother.create({ total: 100 })
@@ -48,7 +48,7 @@ const FilesTableTestComponent = ({ datasetPersistentId }: { datasetPersistentId:
         }}>
         Sort by name Z-A
       </button>
-      <div>Files count: {paginationInfo.totalFiles}</div>
+      <div>Files count: {paginationInfo.totalItems}</div>
       <div>Files total download size: {filesTotalDownloadSize}</div>
       <table>
         <tbody>

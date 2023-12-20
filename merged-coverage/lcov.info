@@ -7,7 +7,7 @@ DA:5,108
 BRDA:1,0,0,108
 BRDA:1,0,1,108
 end_of_record
-SF:src/sections/hello-dataverse/HelloDataverse.tsx
+SF:src/sections/hello-dataverse/Home.tsx
 DA:5,76
 DA:6,76
 DA:8,38
