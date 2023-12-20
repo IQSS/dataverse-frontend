@@ -1,4 +1,3 @@
-import { FilePaginationInfo } from '../../domain/models/FilePaginationInfo'
 import {
   FileAccessOption,
   FileCriteria,
@@ -11,6 +10,7 @@ import {
   FileOrderCriteria as JSFileOrderCriteria
 } from '@iqss/dataverse-client-javascript'
 import { FileType } from '../../domain/models/FilePreview'
+import { FilePaginationInfo } from '../../domain/models/FilePaginationInfo'
 
 export class DomainFileMapper {
   static toJSPagination(paginationInfo: FilePaginationInfo): {

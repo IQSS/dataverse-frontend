@@ -14,7 +14,6 @@ import {
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { DatasetJSDataverseRepository } from '../../../../src/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
-import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePaginationInfo'
 import {
   FileAccessOption,
   FileCriteria,
@@ -25,6 +24,7 @@ import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
 import { FileData, FileHelper } from '../../shared/files/FileHelper'
 import { FilesCountInfo } from '../../../../src/files/domain/models/FilesCountInfo'
 import { DatasetVersionMother } from '../../../component/dataset/domain/models/DatasetMother'
+import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePaginationInfo'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect

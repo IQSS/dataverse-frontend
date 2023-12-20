@@ -3,6 +3,7 @@ import {
   FilePublishingStatus
 } from '../../../../../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
+import { DateHelper } from '../../../../../../../shared/domain/helpers/DateHelper'
 
 interface FileEmbargoDateProps {
   embargo: FileEmbargo | undefined
@@ -20,11 +21,7 @@ export function FileEmbargoDate({ embargo, publishingStatus }: FileEmbargoDatePr
     <div>
       <span>
         {t(embargoTypeOfDate(embargo.isActive, publishingStatus))}{' '}
-        {embargo.dateAvailable.toLocaleDateString(Intl.DateTimeFormat().resolvedOptions().locale, {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
-        })}
+        {DateHelper.toDisplayFormat(embargo.dateAvailable)}
       </span>
     </div>
   )

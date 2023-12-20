@@ -32,11 +32,14 @@ describe('useSession', () => {
   it('should unset user after calling logOut on repository', () => {
     function TestComponent() {
       const { user, logout } = useSession()
+      const onLogoutClick = () => {
+        void logout()
+      }
 
       return (
         <div>
           {user ? <span>{user.name}</span> : <></>}
-          <Button onClick={logout}>Log Out</Button>
+          <Button onClick={onLogoutClick}>Log Out</Button>
         </div>
       )
     }

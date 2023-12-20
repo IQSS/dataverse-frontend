@@ -1,7 +1,6 @@
 import { FileRepository } from '../domain/repositories/FileRepository'
 import { FilePreview, FileDownloadMode } from '../domain/models/FilePreview'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
-import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
 import { FileUserPermissions } from '../domain/models/FileUserPermissions'
 import {
   File as JSFile,
@@ -21,6 +20,7 @@ import { JSFileMapper } from './mappers/JSFileMapper'
 import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/models/Dataset'
 import { File } from '../domain/models/File'
 import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
+import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
 
 const includeDeaccessioned = true
 
