@@ -5,11 +5,11 @@ import { getFilesByDatasetPersistentId } from '../../../files/domain/useCases/ge
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 import { FilesCountInfo } from '../../../files/domain/models/FilesCountInfo'
 import { getFilesCountInfoByDatasetPersistentId } from '../../../files/domain/useCases/getFilesCountInfoByDatasetPersistentId'
-import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 import { useFilePermissions } from '../../file/file-permissions/FilePermissionsContext'
 import { FilePermission } from '../../../files/domain/models/FileUserPermissions'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { getFilesTotalDownloadSize } from '../../../files/domain/useCases/getFilesTotalDownloadSize'
+import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 
 export function useFiles(
   filesRepository: FileRepository,
@@ -33,7 +33,7 @@ export function useFiles(
     )
       .then((filesCountInfo: FilesCountInfo) => {
         setFilesCountInfo(filesCountInfo)
-        if (filesCountInfo.total !== paginationInfo.totalFiles) {
+        if (filesCountInfo.total !== paginationInfo.totalItems) {
           onPaginationInfoChange(paginationInfo.withTotal(filesCountInfo.total))
         }
         return filesCountInfo

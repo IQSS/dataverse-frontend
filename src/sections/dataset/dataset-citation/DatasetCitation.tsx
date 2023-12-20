@@ -1,9 +1,10 @@
-import { Col, QuestionMarkTooltip, Row } from '@iqss/dataverse-design-system'
+import { Col, Row } from '@iqss/dataverse-design-system'
 import styles from './DatasetCitation.module.scss'
 import { useTranslation } from 'react-i18next'
 import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
-import parse from 'html-react-parser'
-import { CitationThumbnail } from './CitationThumbnail'
+import { DatasetThumbnail } from '../dataset-thumbnail/DatasetThumbnail'
+import { CitationDescription } from '../../shared/citation/CitationDescription'
+import { DatasetCitationTooltip } from './DatasetCitationTooltip'
 
 interface DatasetCitationProps {
   thumbnail?: string
@@ -21,19 +22,19 @@ export function DatasetCitation({ thumbnail, version }: DatasetCitationProps) {
             : styles.container
         }>
         <Row className={styles.row}>
-          <Col sm={2}>
-            <CitationThumbnail
+          <Col sm={2} className={styles.thumbnail}>
+            <DatasetThumbnail
               thumbnail={thumbnail}
               title={version.title}
-              publishingStatus={version.publishingStatus}
+              isDeaccessioned={version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED}
             />
           </Col>
           <Col>
             <Row>
-              <CitationDescription
-                citation={version.citation}
-                publishingStatus={version.publishingStatus}
-              />
+              <span className={styles.citation}>
+                <CitationDescription citation={version.citation} />
+                <DatasetCitationTooltip status={version.publishingStatus} />
+              </span>
             </Row>
             <Row>
               <div>
@@ -52,42 +53,4 @@ export function DatasetCitation({ thumbnail, version }: DatasetCitationProps) {
       </Row>
     </>
   )
-}
-
-function CitationDescription({
-  citation,
-  publishingStatus
-}: {
-  citation: string
-  publishingStatus: DatasetPublishingStatus
-}) {
-  const citationAsReactElement = parse(citation)
-
-  return (
-    <span className={styles.citation}>
-      {citationAsReactElement}
-      <CitationTooltip status={publishingStatus} />
-    </span>
-  )
-}
-
-interface CitationDatasetStatusProps {
-  status: DatasetPublishingStatus
-}
-
-function CitationTooltip({ status }: CitationDatasetStatusProps) {
-  const { t } = useTranslation('dataset')
-
-  if (status !== DatasetPublishingStatus.RELEASED) {
-    return (
-      <>
-        {' '}
-        <QuestionMarkTooltip
-          placement={'top'}
-          message={t(`citation.status.${status}.description`)}
-        />
-      </>
-    )
-  }
-  return <></>
 }

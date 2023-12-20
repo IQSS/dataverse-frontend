@@ -20,7 +20,7 @@ export function SessionProvider({ repository, children }: PropsWithChildren<Sess
   }, [repository])
 
   const submitLogOut = () => {
-    logOut(repository)
+    return logOut(repository)
       .then(() => {
         setUser(null)
       })

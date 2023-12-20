@@ -8,7 +8,6 @@ import {
   FileTag
 } from '../../../../../src/files/domain/models/FileCriteria'
 import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
-import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 import {
   FileSize,
   FileSizeUnit,
@@ -20,6 +19,7 @@ import { SettingMother } from '../../../settings/domain/models/SettingMother'
 import { ZipDownloadLimit } from '../../../../../src/settings/domain/models/ZipDownloadLimit'
 import { SettingsProvider } from '../../../../../src/sections/settings/SettingsProvider'
 import { SettingRepository } from '../../../../../src/settings/domain/repositories/SettingRepository'
+import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 
 const testFiles = FilePreviewMother.createMany(10)
 const datasetPersistentId = 'test-dataset-persistent-id'
@@ -46,7 +46,7 @@ const testFilesCountInfo = FilesCountInfoMother.create({
     { tag: new FileTag('code'), count: 10 }
   ]
 })
-const filePaginationInfo = new FilePaginationInfo(1, 10, 200)
+const paginationInfo: FilePaginationInfo = new FilePaginationInfo(1, 10, 200)
 const settingsRepository = {} as SettingRepository
 describe('DatasetFiles', () => {
   beforeEach(() => {
@@ -421,7 +421,7 @@ describe('DatasetFiles', () => {
         'be.calledWith',
         datasetPersistentId,
         datasetVersion,
-        filePaginationInfo,
+        paginationInfo,
         new FileCriteria().withSortBy(FileSortByOption.NAME_AZ)
       )
     })
@@ -441,7 +441,7 @@ describe('DatasetFiles', () => {
         'be.calledWith',
         datasetPersistentId,
         datasetVersion,
-        filePaginationInfo,
+        paginationInfo,
         new FileCriteria().withFilterByType('image/png')
       )
     })
@@ -461,7 +461,7 @@ describe('DatasetFiles', () => {
         'be.calledWith',
         datasetPersistentId,
         datasetVersion,
-        filePaginationInfo,
+        paginationInfo,
         new FileCriteria().withFilterByAccess(FileAccessOption.PUBLIC)
       )
     })
@@ -481,7 +481,7 @@ describe('DatasetFiles', () => {
         'be.calledWith',
         datasetPersistentId,
         datasetVersion,
-        filePaginationInfo,
+        paginationInfo,
         new FileCriteria().withFilterByTag('document')
       )
     })
@@ -500,7 +500,7 @@ describe('DatasetFiles', () => {
         'be.calledWith',
         datasetPersistentId,
         datasetVersion,
-        filePaginationInfo,
+        paginationInfo,
         new FileCriteria().withSearchText('test')
       )
     })

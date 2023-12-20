@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { FilePaginationInfo } from '../../../../../files/domain/models/FilePaginationInfo'
 import { FilePreview } from '../../../../../files/domain/models/FilePreview'
 import { Row } from '@tanstack/react-table'
 import { RowSelection } from '../useFilesTable'
+import { FilePaginationInfo } from '../../../../../files/domain/models/FilePaginationInfo'
 
 export type FileSelection = {
   [key: string]: FilePreview | undefined
@@ -61,7 +61,7 @@ export function useFileSelection(
   const selectAllFiles = () => {
     setCurrentPageRowSelection(createRowSelection(paginationInfo.pageSize))
 
-    const totalFilesFileSelection = createFileSelection(paginationInfo.totalFiles)
+    const totalFilesFileSelection = createFileSelection(paginationInfo.totalItems)
     const newFileSelection = { ...totalFilesFileSelection, ...fileSelection }
     setFileSelection(newFileSelection)
   }

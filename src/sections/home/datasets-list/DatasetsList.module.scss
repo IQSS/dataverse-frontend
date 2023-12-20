@@ -1,0 +1,13 @@
+@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
+
+.container {
+  min-height: calc(100vh + 100px);
+  padding:15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.empty-message-container {
+  padding: .5em 1em;
+  background: $dv-warning-box-color;
+}

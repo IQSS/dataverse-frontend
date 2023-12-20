@@ -1,0 +1,71 @@
+@use 'sass:color';
+@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
+@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module";
+
+.container {
+  margin: 6px 0;
+  padding: 4px 10px;
+  border: 1px solid $dv-info-border-color;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.title {
+  display: flex;
+
+  > * {
+    margin-right: .5em;
+  }
+}
+
+.icon {
+  margin-top: 2px;
+  font-size: 1.3em;
+
+  > div >span {
+    margin-right: 0;
+  }
+}
+
+.thumbnail {
+  width: 48px;
+  margin: 8px 12px 6px 0;
+  font-size: 2.8em;
+
+  img {
+      vertical-align: top;
+  }
+}
+
+.info {
+  display: flex;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-size: $dv-font-size-sm;
+}
+
+.date {
+  color: $dv-subtext-color;
+
+}
+
+.citation-box {
+  margin-top: 4px;
+  margin-bottom: .5em;
+  padding: 4px;
+  background-color: color.adjust($dv-primary-color, $lightness: 51%) ;
+}
+
+.citation-box-deaccessioned {
+  margin-top: 4px;
+  margin-bottom: .5em;
+  padding: 4px;
+  background-color: color.adjust($dv-danger-box-color, $lightness: 6%);
+}

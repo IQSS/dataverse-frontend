@@ -1,8 +1,8 @@
 import { FileRepository } from '../repositories/FileRepository'
 import { FilePreview } from '../models/FilePreview'
 import { FileCriteria } from '../models/FileCriteria'
-import { FilePaginationInfo } from '../models/FilePaginationInfo'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
+import { FilePaginationInfo } from '../models/FilePaginationInfo'
 
 export async function getFilesByDatasetPersistentId(
   fileRepository: FileRepository,

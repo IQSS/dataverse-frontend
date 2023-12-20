@@ -37,7 +37,7 @@ const FilesTableTestComponent = ({ datasetPersistentId }: { datasetPersistentId:
         }}>
         Sort by name Z-A
       </button>
-      <div>Files count: {paginationInfo.totalFiles}</div>
+      <div>Files count: {paginationInfo.totalItems}</div>
       <div>Files total download size: {filesTotalDownloadSize}</div>
       <table>
         <tbody>

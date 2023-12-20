@@ -6,10 +6,10 @@ import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { RowSelectionMessage } from './row-selection/RowSelectionMessage'
 import { ZipDownloadLimitMessage } from './zip-download-limit-message/ZipDownloadLimitMessage'
 import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
-import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
 import { useEffect, useState } from 'react'
 import { FileSelection } from './row-selection/useFileSelection'
 import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
+import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
 
 interface FilesTableProps {
   files: FilePreview[]
@@ -56,7 +56,7 @@ export function FilesTable({
       <RowSelectionMessage
         fileSelection={fileSelection}
         selectAllRows={selectAllFiles}
-        totalFilesCount={paginationInfo.totalFiles}
+        totalFilesCount={paginationInfo.totalItems}
         clearRowSelection={clearFileSelection}
       />
       <ZipDownloadLimitMessage
