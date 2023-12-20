@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 import {
   ANONYMIZED_FIELD_VALUE,
   Dataset,
+  DatasetLabel,
   DatasetDownloadUrls,
   DatasetLabelSemanticMeaning,
   DatasetLabelValue,
@@ -195,6 +196,45 @@ export class DatasetLockMother {
   }
 }
 
+export class DatasetLabelsMother {
+  static create(): DatasetLabel[] {
+    return [{ value: 'Version 1.0', semanticMeaning: DatasetLabelSemanticMeaning.FILE }]
+  }
+
+  static createDraft(): DatasetLabel[] {
+    return [
+      {
+        value: DatasetLabelValue.UNPUBLISHED,
+        semanticMeaning: DatasetLabelSemanticMeaning.WARNING
+      },
+      { value: DatasetLabelValue.DRAFT, semanticMeaning: DatasetLabelSemanticMeaning.DATASET }
+    ]
+  }
+
+  static createDeaccessioned(): DatasetLabel[] {
+    return [
+      {
+        value: DatasetLabelValue.DEACCESSIONED,
+        semanticMeaning: DatasetLabelSemanticMeaning.DANGER
+      }
+    ]
+  }
+}
+
+export class DatasetCitationMother {
+  static create(): string {
+    return 'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/0YFWKL" target="_blank">https://doi.org/10.5072/FK2/0YFWKL</a>, Root, V1'
+  }
+
+  static createDraft(): string {
+    return 'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/0YFWKL" target="_blank">https://doi.org/10.5072/FK2/0YFWKL</a>, Root, DRAFT VERSION'
+  }
+
+  static createDeaccessioned(): string {
+    return 'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/0YFWKL" target="_blank">https://doi.org/10.5072/FK2/0YFWKL</a>, Root, V1, DEACCESSIONED VERSION'
+  }
+}
+
 export class DatasetFileDownloadSizeMother {
   static create(props?: Partial<FileDownloadSize>): FileDownloadSize {
     return new FileDownloadSize(
@@ -235,6 +275,10 @@ export class DatasetMother {
     return undefined
   }
 
+  static createMany(count: number): Dataset[] {
+    return Array.from({ length: count }, () => this.create())
+  }
+
   static create(props?: Partial<Dataset>): Dataset {
     const dataset = {
       persistentId: faker.datatype.uuid(),
@@ -247,24 +291,7 @@ export class DatasetMother {
         uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
         iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
       },
-      labels: [
-        {
-          value: DatasetLabelValue.IN_REVIEW,
-          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
-        },
-        {
-          value: DatasetLabelValue.EMBARGOED,
-          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
-        },
-        {
-          value: DatasetLabelValue.UNPUBLISHED,
-          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
-        },
-        {
-          value: `Version ${faker.lorem.word()}`,
-          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
-        }
-      ],
+      labels: DatasetLabelsMother.create(),
       summaryFields: [
         {
           name: MetadataBlockName.CITATION,

@@ -3,11 +3,11 @@ import { FilesMockData } from './FileMockData'
 import { File, FileDownloadMode } from '../../files/domain/models/File'
 import { FilesCountInfo } from '../../files/domain/models/FilesCountInfo'
 import { FilesCountInfoMother } from '../../../tests/component/files/domain/models/FilesCountInfoMother'
-import { FilePaginationInfo } from '../../files/domain/models/FilePaginationInfo'
 import { FileUserPermissionsMother } from '../../../tests/component/files/domain/models/FileUserPermissionsMother'
 import { FileUserPermissions } from '../../files/domain/models/FileUserPermissions'
 import { DatasetVersion } from '../../dataset/domain/models/Dataset'
 import { FileCriteria } from '../../files/domain/models/FileCriteria'
+import { FilePaginationInfo } from '../../files/domain/models/FilePaginationInfo'
 import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
 
 export class FileMockRepository implements FileRepository {

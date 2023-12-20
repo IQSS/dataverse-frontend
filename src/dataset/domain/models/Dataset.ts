@@ -291,7 +291,7 @@ export class Dataset {
     public readonly privateUrl?: PrivateUrl
   ) {}
 
-  public getTitle(): string {
+  public get title(): string {
     return this.metadataBlocks[0].fields.title
   }
 

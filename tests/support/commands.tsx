@@ -45,14 +45,17 @@ import { I18nextProvider } from 'react-i18next'
 import i18next from '../../src/i18n'
 import { UserRepository } from '../../src/users/domain/repositories/UserRepository'
 import { SessionProvider } from '../../src/sections/session/SessionProvider'
+import { MemoryRouter } from 'react-router-dom'
 
 // Define your custom mount function
 
 Cypress.Commands.add('customMount', (component: ReactNode) => {
   return cy.mount(
-    <ThemeProvider>
-      <I18nextProvider i18n={i18next}>{component}</I18nextProvider>
-    </ThemeProvider>
+    <MemoryRouter>
+      <ThemeProvider>
+        <I18nextProvider i18n={i18next}>{component}</I18nextProvider>
+      </ThemeProvider>
+    </MemoryRouter>
   )
 })
 

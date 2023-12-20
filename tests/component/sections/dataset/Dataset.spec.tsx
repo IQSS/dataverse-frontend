@@ -41,7 +41,7 @@ describe('Dataset', () => {
     mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
 
     cy.findByTestId('dataset-skeleton').should('exist')
-    cy.findByText(testDataset.getTitle()).should('not.exist')
+    cy.findByText(testDataset.title).should('not.exist')
   })
 
   it('renders page not found when dataset is null', () => {
@@ -57,7 +57,7 @@ describe('Dataset', () => {
 
     mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
 
-    cy.findAllByText(testDataset.getTitle()).should('exist')
+    cy.findAllByText(testDataset.title).should('exist')
 
     testDataset.labels.forEach((label) => {
       cy.findAllByText(label.value).should('exist')
@@ -69,7 +69,7 @@ describe('Dataset', () => {
 
     mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
 
-    cy.findAllByText(testDataset.getTitle()).should('exist')
+    cy.findAllByText(testDataset.title).should('exist')
 
     const metadataTab = cy.findByRole('tab', { name: 'Metadata' })
     metadataTab.should('exist')
