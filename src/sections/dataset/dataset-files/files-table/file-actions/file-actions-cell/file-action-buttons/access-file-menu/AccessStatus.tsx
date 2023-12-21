@@ -35,7 +35,7 @@ function AccessStatusIcon({
   sessionUserHasFileDownloadPermission: boolean
   restricted: boolean
 }) {
-  const { t } = useTranslation('files')
+  const { t } = useTranslation('file')
   if (restricted) {
     if (sessionUserHasFileDownloadPermission) {
       return (
@@ -63,7 +63,7 @@ function AccessStatusText({
   file: FilePreview
   sessionUserHasFileDownloadPermission: boolean
 }) {
-  const { t } = useTranslation('files')
+  const { t } = useTranslation('file')
   const getAccessStatus = () => {
     if (file.isActivelyEmbargoed) {
       return 'embargoed'
