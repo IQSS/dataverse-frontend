@@ -1,5 +1,3 @@
-// components/FormPresenter.tsx
-
 import { ChangeEvent, FormEvent } from 'react'
 import { Alert, Button, Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
@@ -31,6 +29,10 @@ export default function CreateDatasetFormPresenter({
   // if (loading) {
   //   return <DatasetSkeleton />
   // }
+
+  // TODO:
+  // Conversion from form => dataset object for post
+  // => Possible translation from form object
   return (
     <article>
       <header className={styles.header}>

@@ -19,3 +19,5 @@ class CreateDatasetUseCase {
 }
 
 export default CreateDatasetUseCase
+
+// Move to domain entity
