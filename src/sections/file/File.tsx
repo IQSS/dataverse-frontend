@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import { useLoading } from '../loading/LoadingContext'
 import { FileSkeleton } from './FileSkeleton'
 import { DatasetCitation } from '../dataset/dataset-citation/DatasetCitation'
+import { FileCitation } from './file-citation/FileCitation'
 
 interface FileProps {
   repository: FileRepository
@@ -41,7 +42,9 @@ export function File({ repository, id }: FileProps) {
           <div className={styles.container}>
             <Row>
               <Col sm={9}>
-                <span className={styles['citation-title']}>{t('datasetCitation')}</span>
+                <span className={styles['citation-title']}>{t('fileCitationTitle')}</span>
+                <FileCitation citation={file.citation} datasetVersion={file.datasetVersion} />
+                <span className={styles['citation-title']}>{t('datasetCitationTitle')}</span>
                 <DatasetCitation version={file.datasetVersion} withoutThumbnail />
               </Col>
             </Row>

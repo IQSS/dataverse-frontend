@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import { AccessFileMenu } from '../../../../../../../sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessFileMenu'
 import { WithI18next } from '../../../../../../WithI18next'
 import { WithSettings } from '../../../../../../WithSettings'
-import { WithFilePermissionsGranted } from '../../../../../../files/file-permission/WithFilePermissionsGranted'
+import { WithFilePermissionsGranted } from '../../../../../../file/file-permission/WithFilePermissionsGranted'
 import { FilePreviewMother } from '../../../../../../../../tests/component/files/domain/models/FilePreviewMother'
 
 const meta: Meta<typeof AccessFileMenu> = {

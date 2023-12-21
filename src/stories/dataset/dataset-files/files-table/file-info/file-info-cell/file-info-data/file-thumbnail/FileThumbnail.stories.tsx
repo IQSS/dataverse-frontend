@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import { FileThumbnail } from '../../../../../../../../sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/file-thumbnail/FileThumbnail'
 import { WithI18next } from '../../../../../../../WithI18next'
 import { FilePreviewMother } from '../../../../../../../../../tests/component/files/domain/models/FilePreviewMother'
-import { WithFilePermissionsGranted } from '../../../../../../../files/file-permission/WithFilePermissionsGranted'
+import { WithFilePermissionsGranted } from '../../../../../../../file/file-permission/WithFilePermissionsGranted'
 
 const meta: Meta<typeof FileThumbnail> = {
   title: 'Sections/Dataset Page/DatasetFiles/FilesTable/FileInfoCell/FileThumbnail',
