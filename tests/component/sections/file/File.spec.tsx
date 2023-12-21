@@ -15,6 +15,7 @@ describe('File', () => {
 
     cy.findAllByText(testFile.name).should('exist')
     cy.findByText(`This file is part of "${testFile.datasetVersion.title}".`).should('exist')
+    cy.findByText('Version 1.0').should('exist')
   })
 
   it('renders skeleton while loading', () => {
