@@ -1,23 +1,31 @@
 import styles from './DatasetCard.module.scss'
 import { DateHelper } from '../../../../shared/domain/helpers/DateHelper'
-import { DatasetPreview } from '../../../../dataset/domain/models/DatasetPreview'
 import { CitationDescription } from '../../../shared/citation/CitationDescription'
+import { DatasetPublishingStatus, DatasetVersion } from '../../../../dataset/domain/models/Dataset'
 
 interface DatasetCardInfoProps {
-  dataset: DatasetPreview
+  version: DatasetVersion
+  releaseOrCreateDate: Date
+  abbreviatedDescription: string
 }
 
-export function DatasetCardInfo({ dataset }: DatasetCardInfoProps) {
+export function DatasetCardInfo({
+  version,
+  releaseOrCreateDate,
+  abbreviatedDescription
+}: DatasetCardInfoProps) {
   return (
     <div className={styles.description}>
-      <span className={styles.date}>{DateHelper.toDisplayFormat(dataset.releaseOrCreateDate)}</span>
+      <span className={styles.date}>{DateHelper.toDisplayFormat(releaseOrCreateDate)}</span>
       <span
         className={
-          dataset.isDeaccessioned ? styles['citation-box-deaccessioned'] : styles['citation-box']
+          version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
+            ? styles['citation-box-deaccessioned']
+            : styles['citation-box']
         }>
-        <CitationDescription citation={dataset.citation} />
+        <CitationDescription citation={version.citation} />
       </span>
-      <span>{dataset.abbreviatedDescription}</span>
+      <span>{abbreviatedDescription}</span>
     </div>
   )
 }

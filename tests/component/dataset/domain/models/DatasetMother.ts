@@ -29,7 +29,7 @@ export class DatasetVersionMother {
       props?.number ?? new DatasetVersionNumber(1, 0),
       props?.publishingStatus ?? DatasetPublishingStatus.RELEASED,
       props?.citation ??
-        'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1',
+        'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1',
       props?.isLatest ?? false,
       props?.isInReview ?? false,
       props?.latestVersionPublishingStatus ?? DatasetPublishingStatus.RELEASED,
