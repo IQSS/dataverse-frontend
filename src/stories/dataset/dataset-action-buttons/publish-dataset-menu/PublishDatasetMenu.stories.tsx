@@ -7,11 +7,12 @@ import {
   DatasetVersionMother
 } from '../../../../../tests/component/dataset/domain/models/DatasetMother'
 import { PublishDatasetMenu } from '../../../../sections/dataset/dataset-action-buttons/publish-dataset-menu/PublishDatasetMenu'
+import { WithLoggedInUser } from '../../../WithLoggedInUser'
 
 const meta: Meta<typeof PublishDatasetMenu> = {
   title: 'Sections/Dataset Page/DatasetActionButtons/PublishDatasetMenu',
   component: PublishDatasetMenu,
-  decorators: [WithI18next, WithSettings],
+  decorators: [WithI18next, WithSettings, WithLoggedInUser],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }

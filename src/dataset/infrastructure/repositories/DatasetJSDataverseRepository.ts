@@ -22,6 +22,7 @@ import { DatasetPreview } from '../../domain/models/DatasetPreview'
 import { DatasetPreviewMother } from '../../../../tests/component/dataset/domain/models/DatasetPreviewMother'
 
 const includeDeaccessioned = true
+
 export class DatasetJSDataverseRepository implements DatasetRepository {
   // eslint-disable-next-line unused-imports/no-unused-vars
   getAll(paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
@@ -53,7 +54,11 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         Promise.all([
           jsDataset,
           getDatasetSummaryFieldNames.execute(),
-          getDatasetCitation.execute(jsDataset.id, this.versionToVersionId(version)),
+          getDatasetCitation.execute(
+            jsDataset.id,
+            this.versionToVersionId(version),
+            includeDeaccessioned
+          ),
           getDatasetUserPermissions.execute(jsDataset.id),
           getDatasetLocks.execute(jsDataset.id),
           getDatasetFilesTotalDownloadSize.execute(
