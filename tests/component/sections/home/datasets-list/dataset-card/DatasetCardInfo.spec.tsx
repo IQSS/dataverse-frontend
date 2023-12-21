@@ -12,6 +12,7 @@ describe('DatasetCardInfo', () => {
     cy.findByText(/Finch, Fiona, 2023, "Darwin's Finches"/)
       .should('exist')
       .parent()
+      .parent()
       .should('have.class', styles['citation-box'])
     cy.findByText(dataset.abbreviatedDescription).should('exist')
   })
@@ -22,6 +23,7 @@ describe('DatasetCardInfo', () => {
 
     cy.findByText(/Finch, Fiona, 2023, "Darwin's Finches"/)
       .should('exist')
+      .parent()
       .parent()
       .should('have.class', styles['citation-box-deaccessioned'])
   })
