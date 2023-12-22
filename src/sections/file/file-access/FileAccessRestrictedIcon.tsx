@@ -4,16 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { Tooltip } from '@iqss/dataverse-design-system'
 
 interface FileAccessInfoIconProps {
-  isRestricted: boolean
+  restricted: boolean
   canDownloadFile: boolean
 }
-export function FileAccessRestrictedIcon({
-  isRestricted,
-  canDownloadFile
-}: FileAccessInfoIconProps) {
+export function FileAccessRestrictedIcon({ restricted, canDownloadFile }: FileAccessInfoIconProps) {
   const { t } = useTranslation('file')
 
-  if (!isRestricted) {
+  if (!restricted) {
     return <></>
   }
 

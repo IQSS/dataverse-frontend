@@ -36,4 +36,13 @@ describe('File', () => {
 
     cy.findByText('Page Not Found').should('exist')
   })
+
+  it('renders the restricted icon if the file is restricted', () => {
+    const testFile = FileMother.createRestricted()
+    fileRepository.getById = cy.stub().resolves(testFile)
+
+    cy.customMount(<File repository={fileRepository} id={19} />)
+
+    cy.findByText('Restricted File Icon').should('exist')
+  })
 })

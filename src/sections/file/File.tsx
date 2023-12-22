@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import { useLoading } from '../loading/LoadingContext'
 import { FileSkeleton } from './FileSkeleton'
 import { DatasetLabels } from '../dataset/dataset-labels/DatasetLabels'
+import { FileAccessRestrictedIcon } from './file-access/FileAccessRestrictedIcon'
 
 interface FileProps {
   repository: FileRepository
@@ -37,7 +38,17 @@ export function File({ repository, id }: FileProps) {
             <p className={styles.subtext}>
               {t('subtext', { datasetTitle: file.datasetVersion.title })}
             </p>
-            <DatasetLabels labels={file.datasetVersion.labels} />
+            <div className={styles.labels}>
+              {file.restricted && (
+                <div className={styles['restricted-icon']}>
+                  <FileAccessRestrictedIcon
+                    restricted={file.restricted}
+                    canDownloadFile={file.permissions.canDownloadFile}
+                  />
+                </div>
+              )}
+              <DatasetLabels labels={file.datasetVersion.labels} />
+            </div>
           </header>
           <div className={styles.container}>
             <Tabs defaultActiveKey="metadata">

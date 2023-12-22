@@ -13,6 +13,8 @@ import { FileMother } from '../../../tests/component/files/domain/models/FileMot
 import { File } from '../../files/domain/models/File'
 
 export class FileMockRepository implements FileRepository {
+  constructor(public readonly fileMock?: File) {}
+
   // eslint-disable-next-line unused-imports/no-unused-vars
   getAllByDatasetPersistentId(
     datasetPersistentId: string,
@@ -67,7 +69,7 @@ export class FileMockRepository implements FileRepository {
   getById(id: number): Promise<File | undefined> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(FileMother.createRealistic())
+        resolve(this.fileMock ?? FileMother.createRealistic())
       }, 1000)
     })
   }

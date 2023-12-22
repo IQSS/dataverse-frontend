@@ -24,10 +24,12 @@ export function FileThumbnail({ file }: FileThumbnailProps) {
       ) : (
         <FileThumbnailIcon type={file.type} />
       )}
-      <FileAccessRestrictedIcon
-        isRestricted={file.access.restricted}
-        canDownloadFile={sessionUserHasFileDownloadPermission}
-      />
+      <div className={styles['restricted-icon']}>
+        <FileAccessRestrictedIcon
+          restricted={file.access.restricted}
+          canDownloadFile={sessionUserHasFileDownloadPermission}
+        />
+      </div>
     </div>
   )
 }

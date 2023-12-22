@@ -7,6 +7,10 @@ export class FileMother {
     return {
       name: faker.system.fileName(),
       datasetVersion: DatasetVersionMother.create(),
+      restricted: faker.datatype.boolean(),
+      permissions: {
+        canDownloadFile: faker.datatype.boolean()
+      },
       ...props
     }
   }
@@ -15,6 +19,29 @@ export class FileMother {
     return this.create({
       name: 'file.csv',
       datasetVersion: DatasetVersionMother.createRealistic(),
+      restricted: false,
+      permissions: {
+        canDownloadFile: true
+      },
+      ...props
+    })
+  }
+
+  static createRestricted(props?: Partial<File>): File {
+    return this.createRealistic({
+      restricted: true,
+      permissions: {
+        canDownloadFile: false
+      },
+      ...props
+    })
+  }
+
+  static createRestrictedWithAccessGranted(props?: Partial<File>): File {
+    return this.createRestricted({
+      permissions: {
+        canDownloadFile: true
+      },
       ...props
     })
   }
