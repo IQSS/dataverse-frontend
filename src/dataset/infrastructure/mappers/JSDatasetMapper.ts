@@ -11,6 +11,9 @@ import { DatasetVersionState as JSDatasetVersionState } from '@iqss/dataverse-cl
 import {
   Dataset,
   DatasetDownloadUrls,
+  DatasetLabel,
+  DatasetLabelSemanticMeaning,
+  DatasetLabelValue,
   DatasetLock,
   DatasetLockReason,
   DatasetMetadataBlock,
@@ -23,8 +26,34 @@ import {
   PrivateUrl
 } from '../../domain/models/Dataset'
 import { FileDownloadMode, FileDownloadSize, FileSizeUnit } from '../../../files/domain/models/File'
+import { DatasetPreview } from '../../domain/models/DatasetPreview'
 
 export class JSDatasetMapper {
+  static toDatasetPreview(jsDatasetPreview: {
+    persistentId: string
+    title: string
+    versionId: number
+    versionInfo: JSDatasetVersionInfo
+    citation: string
+    description: string
+  }): DatasetPreview {
+    const version = JSDatasetMapper.toVersion(
+      jsDatasetPreview.versionId,
+      jsDatasetPreview.versionInfo
+    )
+    return new DatasetPreview(
+      jsDatasetPreview.persistentId,
+      jsDatasetPreview.title,
+      version,
+      jsDatasetPreview.citation,
+      [],
+      true,
+      new Date(),
+      jsDatasetPreview.description,
+      'thumbnail'
+    )
+  }
+
   static toDataset(
     jsDataset: JSDataset,
     citation: string,
@@ -217,6 +246,7 @@ export class JSDatasetMapper {
       canDeleteDataset: jsDatasetPermissions.canManageDatasetPermissions
     }
   }
+
   static toLocks(jsDatasetLocks: JSDatasetLock[]): DatasetLock[] {
     return jsDatasetLocks.map((jsDatasetLock) => {
       return {

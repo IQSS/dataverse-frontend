@@ -2,9 +2,11 @@ import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
 import { Dataset } from '../../domain/models/Dataset'
 import {
   getDataset,
+  getAllDatasetPreviews,
   getDatasetCitation,
   getDatasetSummaryFieldNames,
   Dataset as JSDataset,
+  DatasetPreview as JSDatasetPreview,
   DatasetUserPermissions as JSDatasetPermissions,
   getPrivateUrlDataset,
   getPrivateUrlDatasetCitation,
@@ -13,25 +15,26 @@ import {
   getDatasetLocks,
   DatasetLock as JSDatasetLock,
   getDatasetFilesTotalDownloadSize,
-  FileDownloadSizeMode
+  FileDownloadSizeMode,
+  DatasetPreviewSubset
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { TotalDatasetsCount } from '../../domain/models/TotalDatasetsCount'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
 import { DatasetPreview } from '../../domain/models/DatasetPreview'
-import { DatasetPreviewMother } from '../../../../tests/component/dataset/domain/models/DatasetPreviewMother'
 
 const includeDeaccessioned = true
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
   // eslint-disable-next-line unused-imports/no-unused-vars
   getAll(paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
-    // TODO - Implement using the js-dataverse-client
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(DatasetPreviewMother.createManyRealistic(10))
-      }, 1000)
-    })
+    return getAllDatasetPreviews
+      .execute(paginationInfo.pageSize, paginationInfo.offset)
+      .then((subset: DatasetPreviewSubset) => {
+        return subset.datasetPreviews.map((datasetPreview: JSDatasetPreview) =>
+          JSDatasetMapper.toDatasetPreview(datasetPreview)
+        )
+      })
   }
 
   getTotalDatasetsCount(): Promise<TotalDatasetsCount> {
