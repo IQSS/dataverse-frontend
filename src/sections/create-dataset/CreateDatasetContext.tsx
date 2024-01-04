@@ -54,7 +54,6 @@ const CreateDatasetContainer: React.FC = () => {
           submitComplete={submitComplete}
           formData={formData}
           handleCreateDatasetFieldChange={handleCreateDatasetFieldChange}
-          // TODO: Fix using IIFE (Immediately-invoked Function Expression)
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           handleCreateDatasetSubmit={handleCreateDatasetSubmit}
           submitting={submitting}

@@ -26,9 +26,6 @@ export default function CreateDatasetFormPresenter({
 }: CreateDatasetFormPresenterProps) {
   const { t } = useTranslation('createDataset')
   // TODO: Replace this with a FormSkeleton or remove entirely
-  // if (loading) {
-  //   return <DatasetSkeleton />
-  // }
 
   // TODO:
   // Conversion from form => dataset object for post
