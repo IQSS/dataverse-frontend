@@ -22,7 +22,6 @@ import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { TotalDatasetsCount } from '../../domain/models/TotalDatasetsCount'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
 import { DatasetPreview } from '../../domain/models/DatasetPreview'
-import { getTotalDatasetsCount } from '../../domain/useCases/getTotalDatasetsCount'
 
 const includeDeaccessioned = true
 
