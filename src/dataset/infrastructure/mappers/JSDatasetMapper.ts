@@ -1,6 +1,7 @@
 import {
   Dataset as JSDataset,
   DatasetLock as JSDatasetLock,
+  DatasetPreview as JSDatasetPreview,
   DatasetMetadataBlock as JSDatasetMetadataBlock,
   DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataFields as JSDatasetMetadataFields,
@@ -11,9 +12,6 @@ import { DatasetVersionState as JSDatasetVersionState } from '@iqss/dataverse-cl
 import {
   Dataset,
   DatasetDownloadUrls,
-  DatasetLabel,
-  DatasetLabelSemanticMeaning,
-  DatasetLabelValue,
   DatasetLock,
   DatasetLockReason,
   DatasetMetadataBlock,
@@ -29,14 +27,7 @@ import { FileDownloadMode, FileDownloadSize, FileSizeUnit } from '../../../files
 import { DatasetPreview } from '../../domain/models/DatasetPreview'
 
 export class JSDatasetMapper {
-  static toDatasetPreview(jsDatasetPreview: {
-    persistentId: string
-    title: string
-    versionId: number
-    versionInfo: JSDatasetVersionInfo
-    citation: string
-    description: string
-  }): DatasetPreview {
+  static toDatasetPreview(jsDatasetPreview: JSDatasetPreview): DatasetPreview {
     const version = JSDatasetMapper.toVersion(
       jsDatasetPreview.versionId,
       jsDatasetPreview.versionInfo
@@ -47,11 +38,15 @@ export class JSDatasetMapper {
       version,
       jsDatasetPreview.citation,
       [],
-      true,
-      new Date(),
+      jsDatasetPreview.versionInfo.state === JSDatasetVersionState.DEACCESSIONED,
+      JSDatasetMapper.toPreviewDate(jsDatasetPreview.versionInfo),
       jsDatasetPreview.description,
-      'thumbnail'
+      undefined // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
     )
+  }
+
+  static toPreviewDate(jsVersionInfo: JSDatasetVersionInfo): Date {
+    return jsVersionInfo.releaseTime ? jsVersionInfo.releaseTime : jsVersionInfo.createTime
   }
 
   static toDataset(

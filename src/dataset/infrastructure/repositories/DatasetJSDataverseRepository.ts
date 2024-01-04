@@ -26,7 +26,6 @@ import { DatasetPreview } from '../../domain/models/DatasetPreview'
 const includeDeaccessioned = true
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
-  // eslint-disable-next-line unused-imports/no-unused-vars
   getAll(paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
     return getAllDatasetPreviews
       .execute(paginationInfo.pageSize, paginationInfo.offset)
