@@ -2,8 +2,8 @@
 
 import React, { useState, ChangeEvent, FormEvent } from 'react'
 import { FormInputElement } from '@iqss/dataverse-design-system/src/lib/components/form/form-group/form-element/FormInput'
-import CreateDatasetUseCase from './CreateDatasetUseCase'
-import CreateDatasetFormPresenter from './CreateDataset'
+import CreateDatasetFormPresenter from './CreateDatasetForm'
+import { createDataset } from '../../dataset/domain/useCases/createDataset'
 
 const CreateDatasetContainer: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -22,42 +22,31 @@ const CreateDatasetContainer: React.FC = () => {
     }))
   }
 
-  // SettingJSDataverseRepository Mock
-  const handleCreateDatasetSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleCreateDatasetSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    const formUseCase = new CreateDatasetUseCase()
+    try {
+      const addNewDataset = await createDataset(formData)
 
-    console.log('handleCreateDatasetSubmit() formData | ', formData)
-
-    if (formUseCase.validateCreateDatasetFormData(formData)) {
-      try {
+      if (addNewDataset.validateCreateDatasetFormData(formData)) {
         setSubmitting(true)
-        console.log('Status: Submitting | ', submitting)
-
         // Simulate an asynchronous operation, e.g., API call
         await new Promise((resolve) => setTimeout(resolve, 3000))
-        const result = await formUseCase.submitCreateDatasetFormData(formData)
+        const result = await addNewDataset.submitCreateDatasetFormData()
         console.log(result)
         setSubmitComplete(true)
-        // Handle success, e.g., show a success message
-      } catch (error) {
-        console.error('Error submitting form:', error)
-        // Handle error, e.g., show an error message
-      } finally {
-        setSubmitting(false)
+      } else {
+        console.error('Form validation failed')
       }
-    } else {
-      // Handle validation error, e.g., show validation messages
-      console.error('Form validation failed')
+    } catch (error: any) {
+      console.error('Error submitting form:', error)
+    } finally {
+      setSubmitting(false)
     }
-    // Explicitly return a Promise<void>
-    return Promise.resolve()
   }
 
   return (
-    // TODO: conditional view, needs to be lower in the component heirarchy
-    // {submitting && <div>Submtting Form...</div>}
     <>
       {submitting && <p>Submitting...</p>}
       {!submitting && (

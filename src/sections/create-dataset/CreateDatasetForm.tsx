@@ -2,8 +2,8 @@ import { ChangeEvent, FormEvent } from 'react'
 import { Alert, Button, Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import styles from '/src/sections/dataset/Dataset.module.scss'
-import { SeparationLine } from '../../components/layout/SeparationLine/SeparationLine'
 import { RequiredFieldText } from '../../components/forms/RequiredFieldText/RequiredFieldText'
+import { SeparationLine } from '../../components/layout/SeparationLine/SeparationLine'
 
 /*
  * TODO:
