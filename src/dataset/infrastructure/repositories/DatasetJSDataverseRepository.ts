@@ -22,6 +22,7 @@ import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { TotalDatasetsCount } from '../../domain/models/TotalDatasetsCount'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
 import { DatasetPreview } from '../../domain/models/DatasetPreview'
+import { getTotalDatasetsCount } from '../../domain/useCases/getTotalDatasetsCount'
 
 const includeDeaccessioned = true
 
@@ -37,11 +38,9 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   }
 
   getTotalDatasetsCount(): Promise<TotalDatasetsCount> {
-    // TODO - Implement using the js-dataverse-client
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(200)
-      }, 1000)
+    // TODO: refactor this so we don't make the same call twice
+    return getAllDatasetPreviews.execute(10, 1).then((subset: DatasetPreviewSubset) => {
+      return subset.totalDatasetCount
     })
   }
 
