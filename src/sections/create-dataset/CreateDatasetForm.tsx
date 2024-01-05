@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import { Alert, Button, Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
-import { RequiredFieldText } from '../../components/forms/RequiredFieldText/RequiredFieldText'
+import { RequiredFieldText } from '../../components/form/RequiredFieldText/RequiredFieldText'
 import { SeparationLine } from '../../components/layout/SeparationLine/SeparationLine'
 import { useDataset } from './CreateDatasetContext'
 import { FormInputElement } from '@iqss/dataverse-design-system/src/lib/components/form/form-group/form-element/FormInput'
