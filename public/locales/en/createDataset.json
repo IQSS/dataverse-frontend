@@ -4,6 +4,7 @@
     "title": "Metadata Tip",
     "content": "After adding the dataset, click the Edit Dataset button to add more metadata."
   },
+  "requiredFields": "Asterisks indicate required fields",
   "datasetForm": {
     "title": "Title"
   },
