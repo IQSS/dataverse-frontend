@@ -26,8 +26,9 @@ function getCurrentDateInYYYYMMDDFormat() {
 
 const datasetData = (persistentId: string, versionId: number) => {
   const persistentIdUrl = `https://doi.org/${persistentId.replace('doi:', '')}`
+  const year = new Date().getFullYear()
   return {
-    citation: `Finch, Fiona, 2023, "Darwin's Finches", <a href="${persistentIdUrl}" target="_blank">${persistentIdUrl}</a>, Root, DRAFT VERSION`,
+    citation: `Finch, Fiona, ${year}, "Darwin's Finches", <a href="${persistentIdUrl}" target="_blank">${persistentIdUrl}</a>, Root, DRAFT VERSION`,
     labels: [
       { semanticMeaning: 'dataset', value: 'Draft' },
       { semanticMeaning: 'warning', value: 'Unpublished' }
@@ -262,6 +263,12 @@ describe('Dataset JSDataverse Repository', () => {
         )
         expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
       })
+  })
+  it.only('gets the total dataset count', async () => {
+    const datasetResponse = await DatasetHelper.create()
+    await datasetRepository.getTotalDatasetsCount().then((count) => {
+      expect(count).to.equal(1)
+    })
   })
 
   it.skip('gets the dataset by persistentId when the dataset is deaccessioned', async () => {
