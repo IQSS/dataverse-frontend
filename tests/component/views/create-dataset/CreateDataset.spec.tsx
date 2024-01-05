@@ -1,9 +1,9 @@
-import CreateDatasetContainer from '../../../../src/sections/create-dataset/CreateDatasetContext'
+import DatasetCreateMaster from '../../../../src/sections/create-dataset/CreateDatasetContext'
 import { mount } from 'cypress/react18'
 
 describe('Form component', () => {
   it('renders the Create Dataset page and its contents', () => {
-    mount(<CreateDatasetContainer />)
+    mount(<DatasetCreateMaster />)
     cy.findByText(/Create Dataset/i).should('exist')
 
     cy.findByText(/Title/i).should('exist')
@@ -21,7 +21,7 @@ describe('Form component', () => {
 
   it('can submit a valid form', () => {
     cy.log('Submit form')
-    mount(<CreateDatasetContainer />)
+    mount(<DatasetCreateMaster />)
     cy.get('input[name="createDatasetTitle"]')
       .should('exist')
       .type('Test Dataset Title')

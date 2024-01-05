@@ -1,17 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { WithLayout } from '../../WithLayout'
-import CreateDatasetContainer from '../../../sections/create-dataset/CreateDatasetContext'
+import DatasetCreateMaster from '../../../sections/create-dataset/CreateDatasetContext'
 
-const meta: Meta<typeof CreateDatasetContainer> = {
+const meta: Meta<typeof DatasetCreateMaster> = {
   title: 'Pages/Create Dataset',
-  component: CreateDatasetContainer,
+  component: DatasetCreateMaster,
   decorators: [WithI18next, WithLayout]
 }
 
 export default meta
-type Story = StoryObj<typeof CreateDatasetContainer>
+type Story = StoryObj<typeof DatasetCreateMaster>
 
 export const Default: Story = {
-  render: () => <CreateDatasetContainer />
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  render: () => <DatasetCreateMaster />
 }

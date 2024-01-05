@@ -1,9 +1,11 @@
-import { ChangeEvent, FormEvent } from 'react'
+/* eslint-disable @typescript-eslint/no-misused-promises */
+import React, { useState } from 'react'
 import { Alert, Button, Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
-import styles from '/src/sections/dataset/Dataset.module.scss'
 import { RequiredFieldText } from '../../components/forms/RequiredFieldText/RequiredFieldText'
 import { SeparationLine } from '../../components/layout/SeparationLine/SeparationLine'
+import { useDataset } from './CreateDatasetContext'
+import { FormInputElement } from '@iqss/dataverse-design-system/src/lib/components/form/form-group/form-element/FormInput'
 
 /*
  * TODO:
@@ -11,60 +13,72 @@ import { SeparationLine } from '../../components/layout/SeparationLine/Separatio
  * out-of-scope: Loading state management
  */
 
-interface CreateDatasetFormPresenterProps {
-  formData: { createDatasetTitle: string }
-  handleCreateDatasetFieldChange: (event: ChangeEvent<HTMLInputElement>) => void
-  handleCreateDatasetSubmit: (event: FormEvent<HTMLFormElement>) => void
-  submitting: boolean
-  submitComplete: boolean
-}
-export default function CreateDatasetFormPresenter({
-  handleCreateDatasetFieldChange,
-  handleCreateDatasetSubmit,
-  submitting,
-  submitComplete
-}: CreateDatasetFormPresenterProps) {
+const CreateDatasetFormPresenter: React.FC = () => {
   const { t } = useTranslation('createDataset')
-  // TODO: Replace this with a FormSkeleton or remove entirely
+  const [formData, setFormData] = useState({ createDatasetTitle: '' })
+  const { submitDataset, validateCreateDatasetFormData } = useDataset()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
 
-  // TODO:
-  // Conversion from form => dataset object for post
-  // => Possible translation from form object
+  const handleCreateDatasetFieldChange = (event: React.ChangeEvent<FormInputElement>): void => {
+    const { name, value } = event.target
+    setFormData((formData) => ({
+      ...formData,
+      [name]: value
+    }))
+  }
+
+  const handleCreateDatasetSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
+    setSubmitSuccess(false)
+    if (validateCreateDatasetFormData(formData)) {
+      setIsSubmitting(true)
+      try {
+        await submitDataset(formData)
+        // setFormData({ createDatasetTitle: '') // Reset form fields
+        setSubmitSuccess(true)
+      } catch (error) {
+        console.error('Error during submission:', error)
+        // Optionally handle the error state here
+      } finally {
+        setIsSubmitting(false)
+      }
+    } else {
+      console.error('Validation failed: Title is required.')
+      // Optionally handle the validation error state here
+    }
+  }
+
   return (
-    <article>
-      <header className={styles.header}>
-        <h1>{t('pageTitle')}</h1>
-      </header>
-      <SeparationLine />
-      <div className={styles.container}>
-        <RequiredFieldText />
-        <Form onSubmit={handleCreateDatasetSubmit} className={'create-dataset-form'}>
-          {submitComplete && <div>Form Submitted!</div>}
-          <Row>
-            <Col md={9}>
-              <Form.Group controlId="createDatasetTitle" required>
-                <Form.Group.Label>{t('datasetForm.title')}</Form.Group.Label>
-                <Form.Group.Input
-                  readOnly={submitting && true}
-                  type="text"
-                  name="createDatasetTitle"
-                  placeholder="Dataset Title"
-                  onChange={handleCreateDatasetFieldChange}
-                  withinMultipleFieldsGroup={false}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <SeparationLine />
-          <Alert variant={'info'} customHeading={t('metadataTip.title')} dismissible={false}>
-            {t('metadataTip.content')}
-          </Alert>
-          <Button type="submit">{t('saveButton')}</Button>
-          <Button withSpacing variant="secondary">
-            {t('cancelButton')}
-          </Button>
-        </Form>
-      </div>
-    </article>
+    <>
+      <RequiredFieldText />
+      <Form onSubmit={handleCreateDatasetSubmit} className={'create-dataset-form'}>
+        {submitSuccess && <div>Form Submitted!</div>}
+        <Row>
+          <Col md={9}>
+            <Form.Group controlId="createDatasetTitle" required>
+              <Form.Group.Label>{t('datasetForm.title')}</Form.Group.Label>
+              <Form.Group.Input
+                readOnly={isSubmitting && true}
+                type="text"
+                name="createDatasetTitle"
+                placeholder="Dataset Title"
+                onChange={handleCreateDatasetFieldChange}
+                withinMultipleFieldsGroup={false}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <SeparationLine />
+        <Alert variant={'info'} customHeading={t('metadataTip.title')} dismissible={false}>
+          {t('metadataTip.content')}
+        </Alert>
+        <Button type="submit">{t('saveButton')}</Button>
+        <Button withSpacing variant="secondary">
+          {t('cancelButton')}
+        </Button>
+      </Form>
+    </>
   )
 }
+export default CreateDatasetFormPresenter
