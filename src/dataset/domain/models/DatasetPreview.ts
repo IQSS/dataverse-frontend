@@ -12,7 +12,7 @@ export class DatasetPreview {
     public description: string,
     public thumbnail?: string
   ) {
-    this.labels = Dataset.withDatasetLabels(version)
+    this.labels = Dataset.withStatusLabel(version.publishingStatus, version.isInReview)
   }
 
   get abbreviatedDescription(): string {
