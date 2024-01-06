@@ -37,8 +37,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   }
 
   getTotalDatasetsCount(): Promise<TotalDatasetsCount> {
-    // TODO: refactor this so we don't make the same call twice
-    return getAllDatasetPreviews.execute(10, 1).then((subset: DatasetPreviewSubset) => {
+    // TODO: refactor this so we don't make the same call twice?
+    return getAllDatasetPreviews.execute(10, 0).then((subset: DatasetPreviewSubset) => {
       return subset.totalDatasetCount
     })
   }
