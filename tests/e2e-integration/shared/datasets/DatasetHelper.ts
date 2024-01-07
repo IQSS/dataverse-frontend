@@ -18,6 +18,10 @@ export class DatasetHelper extends DataverseApiHelper {
   static async create(): Promise<DatasetResponse> {
     return this.request<DatasetResponse>(`/dataverses/root/datasets`, 'POST', newDatasetData)
   }
+  static async createWithTitle(title: string): Promise<DatasetResponse> {
+    newDatasetData.datasetVersion.metadataBlocks.citation.fields[0].value = title
+    return this.request<DatasetResponse>(`/dataverses/root/datasets`, 'POST', newDatasetData)
+  }
   static async destroy(persistentId: string): Promise<DatasetResponse> {
     return this.request<DatasetResponse>(
       `/datasets/:persistentId/destroy/?persistentId=${persistentId}`,
