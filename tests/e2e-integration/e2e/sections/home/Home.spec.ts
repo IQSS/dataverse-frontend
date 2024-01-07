@@ -14,10 +14,11 @@ describe('Home Page', () => {
     cy.findAllByText(/Root/i).should('exist')
   })
 
-  it('goes to dataset page', () => {
-    cy.loginAsAdmin('/spa')
-    DatasetHelper.destroyAll()
-    DatasetHelper.createWithTitle(title)
+  it('goes to dataset page from list', () => {
+    void DatasetHelper.destroyAll()
+    void DatasetHelper.createWithTitle(title)
+    cy.loginAsAdmin()
+    cy.findByText(/Dataverse Admin/i).should('exist')
     cy.findByText(title).should('be.visible')
     cy.findByText(title).click({ force: true })
     cy.url().should('include', 'persistentId')
