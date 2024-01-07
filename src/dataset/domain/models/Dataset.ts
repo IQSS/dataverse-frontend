@@ -365,28 +365,27 @@ export class Dataset {
     isInReview: boolean
   ): DatasetLabel[] {
     const labels: DatasetLabel[] = []
-    if (publishingStatus === DatasetPublishingStatus.DRAFT) {
-      labels.push(new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.DRAFT))
-    }
-    const isReleased = publishingStatus === DatasetPublishingStatus.RELEASED
-    if (!isReleased) {
-      labels.push(
-        new DatasetLabel(DatasetLabelSemanticMeaning.WARNING, DatasetLabelValue.UNPUBLISHED)
-      )
-    }
 
     if (publishingStatus === DatasetPublishingStatus.DEACCESSIONED) {
       labels.push(
         new DatasetLabel(DatasetLabelSemanticMeaning.DANGER, DatasetLabelValue.DEACCESSIONED)
       )
+    } else {
+      if (publishingStatus === DatasetPublishingStatus.DRAFT) {
+        labels.push(new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.DRAFT))
+      }
+      const isReleased = publishingStatus === DatasetPublishingStatus.RELEASED
+      if (!isReleased) {
+        labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.WARNING, DatasetLabelValue.UNPUBLISHED)
+        )
+      }
+      if (publishingStatus === DatasetPublishingStatus.EMBARGOED) {
+        labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.EMBARGOED)
+        )
+      }
     }
-
-    if (publishingStatus === DatasetPublishingStatus.EMBARGOED) {
-      labels.push(
-        new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.EMBARGOED)
-      )
-    }
-
     if (isInReview) {
       labels.push(
         new DatasetLabel(DatasetLabelSemanticMeaning.SUCCESS, DatasetLabelValue.IN_REVIEW)
