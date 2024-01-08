@@ -18,6 +18,7 @@ import {
 } from '../../domain/models/File'
 import {
   File as JSFile,
+  FileUserPermissions as JSFileUserPermissions,
   FileEmbargo as JSFileEmbargo,
   FileChecksum as JSFileChecksum,
   FileCounts as JSFilesCountInfo,
@@ -42,6 +43,7 @@ export class JSFileMapper {
     jsFile: JSFile,
     datasetVersion: DatasetVersion,
     downloadsCount: number,
+    fileUserPermissions: JSFileUserPermissions,
     thumbnail?: string,
     jsTabularData?: JSFileTabularData[]
   ): File {
@@ -58,6 +60,7 @@ export class JSFileMapper {
       this.toFileIsDeleted(jsFile.deleted),
       { status: FileIngestStatus.NONE }, // TODO - Implement this when it is added to js-dataverse
       this.toFileOriginalFileDownloadUrl(jsFile.id),
+      this.toFileUserPermissions(jsFile.id, fileUserPermissions),
       this.toFileThumbnail(thumbnail),
       this.toFileDirectory(jsFile.directoryLabel),
       this.toFileEmbargo(jsFile.embargo),
