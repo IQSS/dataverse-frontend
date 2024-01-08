@@ -1,5 +1,4 @@
 import FileTypeToFriendlyTypeMap from './FileTypeToFriendlyTypeMap'
-import { FileUserPermissions } from './FileUserPermissions'
 
 export enum FileSizeUnit {
   BYTES = 'B',
@@ -8,6 +7,10 @@ export enum FileSizeUnit {
   GIGABYTES = 'GB',
   TERABYTES = 'TB',
   PETABYTES = 'PB'
+}
+export interface FilePermissions {
+  canDownloadFile: boolean
+  canEditDataset: boolean
 }
 
 export class FileSize {
@@ -183,7 +186,7 @@ export class File {
     public readonly isDeleted: boolean,
     public readonly ingest: FileIngest,
     public readonly downloadUrls: FileDownloadUrls,
-    public userPermissions?: FileUserPermissions,
+    public filePermissions?: FilePermissions,
     public thumbnail?: string,
     readonly directory?: string,
     readonly embargo?: FileEmbargo,
@@ -196,7 +199,7 @@ export class File {
     return `/file?id=${this.id}&version=${this.version.number}`
   }
   get userHasDownloadPermission(): boolean {
-    return this.userPermissions?.canDownloadFile || false
+    return this.filePermissions?.canDownloadFile || false
   }
 
   get isActivelyEmbargoed(): boolean {
