@@ -1,6 +1,7 @@
 import { FileRepository } from '../domain/repositories/FileRepository'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
 import { FileUserPermissions } from '../domain/models/FileUserPermissions'
+import { File, FileDownloadMode } from '../domain/models/File'
 import {
   File as JSFile,
   FileDataTable as JSFileTabularData,
