@@ -8,6 +8,11 @@ import {
   DatasetVersion
 } from '../../../../src/dataset/domain/models/Dataset'
 import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
+import {
+  FileDownloadMode,
+  FileDownloadSize,
+  FileSizeUnit
+} from '../../../../src/files/domain/models/File'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -90,7 +95,15 @@ const datasetData = (persistentId: string, versionId: number) => {
       canManageFilesPermissions: true,
       canDeleteDataset: true
     },
-    locks: []
+    locks: [],
+    downloadUrls: {
+      original: `/api/access/dataset/:persistentId/versions/:draft?persistentId=${persistentId}&format=original`,
+      archival: `/api/access/dataset/:persistentId/versions/:draft?persistentId=${persistentId}`
+    },
+    fileDownloadSizes: [
+      new FileDownloadSize(0, FileSizeUnit.BYTES, FileDownloadMode.ORIGINAL),
+      new FileDownloadSize(0, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
+    ]
   }
 }
 
@@ -108,7 +121,7 @@ describe('Dataset JSDataverse Repository', () => {
       }
       const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
-      expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
+      expect(dataset.title).to.deep.equal(datasetExpected.title)
       expect(dataset.citation).to.deep.equal(datasetExpected.citation)
       expect(dataset.labels).to.deep.equal(datasetExpected.labels)
       expect(dataset.license).to.deep.equal(datasetExpected.license)
@@ -119,6 +132,8 @@ describe('Dataset JSDataverse Repository', () => {
       expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
       expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
       expect(dataset.locks).to.deep.equal(datasetExpected.locks)
+      expect(dataset.downloadUrls).to.deep.equal(datasetExpected.downloadUrls)
+      expect(dataset.fileDownloadSizes).to.deep.equal(datasetExpected.fileDownloadSizes)
     })
   })
 
@@ -147,7 +162,7 @@ describe('Dataset JSDataverse Repository', () => {
           0
         )
         const expectedPublicationDate = getCurrentDateInYYYYMMDDFormat()
-        expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
+        expect(dataset.title).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(newVersion)
         expect(dataset.metadataBlocks[0].fields.publicationDate).to.deep.equal(
           expectedPublicationDate
@@ -185,7 +200,7 @@ describe('Dataset JSDataverse Repository', () => {
           0
         )
         const expectedPublicationDate = getCurrentDateInYYYYMMDDFormat()
-        expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
+        expect(dataset.title).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(newVersion)
         expect(dataset.metadataBlocks[0].fields.publicationDate).to.deep.equal(
           expectedPublicationDate
@@ -206,7 +221,7 @@ describe('Dataset JSDataverse Repository', () => {
         }
         const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
-        expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
+        expect(dataset.title).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(datasetExpected.version)
       })
   })
@@ -221,7 +236,7 @@ describe('Dataset JSDataverse Repository', () => {
       }
       const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
-      expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
+      expect(dataset.title).to.deep.equal(datasetExpected.title)
       expect(dataset.version).to.deep.equal(datasetExpected.version)
       expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
     })
@@ -263,7 +278,7 @@ describe('Dataset JSDataverse Repository', () => {
       }
       const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
-      expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
+      expect(dataset.title).to.deep.equal(datasetExpected.title)
     })
   })
   it('gets the dataset by persistentId when is locked', async () => {
@@ -276,7 +291,7 @@ describe('Dataset JSDataverse Repository', () => {
       }
       const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
-      expect(dataset.getTitle()).to.deep.equal(datasetExpected.title)
+      expect(dataset.title).to.deep.equal(datasetExpected.title)
       expect(dataset.locks).to.deep.equal([
         {
           userPersistentId: 'dataverseAdmin',

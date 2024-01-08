@@ -11,6 +11,11 @@ import {
   DatasetMetadataBlock
 } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
 import { DatasetLockReason } from '../../../../../src/dataset/domain/models/Dataset'
+import {
+  FileDownloadMode,
+  FileDownloadSize,
+  FileSizeUnit
+} from '../../../../../src/files/domain/models/File'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -70,6 +75,8 @@ const jsDatasetLocks: JSDatasetLock[] = [
     datasetPersistentId: 'doi:10.5072/FK2/B4B2MJ'
   }
 ]
+const jsDatasetFilesTotalOriginalDownloadSize = 5
+const jsDatasetFilesTotalArchivalDownloadSize = 7
 const expectedDataset = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
@@ -147,7 +154,14 @@ const expectedDataset = {
   isReleased: false,
   thumbnail: undefined,
   privateUrl: undefined,
-  fileDownloadSizes: []
+  fileDownloadSizes: [
+    new FileDownloadSize(5, FileSizeUnit.BYTES, FileDownloadMode.ORIGINAL),
+    new FileDownloadSize(7, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
+  ],
+  downloadUrls: {
+    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
+    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+  }
 }
 const expectedDatasetAlternateVersion = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -168,7 +182,10 @@ const expectedDatasetAlternateVersion = {
   isReleased: false,
   isValid: true,
   privateUrl: undefined,
-  fileDownloadSizes: [],
+  fileDownloadSizes: [
+    new FileDownloadSize(5, FileSizeUnit.BYTES, FileDownloadMode.ORIGINAL),
+    new FileDownloadSize(7, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
+  ],
   labels: [
     { semanticMeaning: 'dataset', value: 'Draft' },
     { semanticMeaning: 'warning', value: 'Unpublished' }
@@ -237,7 +254,11 @@ const expectedDatasetAlternateVersion = {
     canPublishDataset: true,
     canUpdateDataset: true
   },
-  thumbnail: undefined
+  thumbnail: undefined,
+  downloadUrls: {
+    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
+    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+  }
 }
 describe('JS Dataset Mapper', () => {
   it('maps jsDataset model to the domain Dataset model', () => {
@@ -246,7 +267,9 @@ describe('JS Dataset Mapper', () => {
       citation,
       datasetSummaryFields,
       jsDatasetPermissions,
-      jsDatasetLocks
+      jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize
     )
     expect(expectedDataset).to.deep.equal(mapped)
   })
@@ -257,6 +280,8 @@ describe('JS Dataset Mapper', () => {
       datasetSummaryFields,
       jsDatasetPermissions,
       jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize,
       '4.0'
     )
 
@@ -298,7 +323,9 @@ describe('JS Dataset Mapper', () => {
         citation,
         datasetSummaryFields,
         jsDatasetPermissions,
-        jsDatasetLocks
+        jsDatasetLocks,
+        jsDatasetFilesTotalOriginalDownloadSize,
+        jsDatasetFilesTotalArchivalDownloadSize
       )
     )
   })
@@ -338,7 +365,9 @@ describe('JS Dataset Mapper', () => {
         citation,
         datasetSummaryFields,
         jsDatasetPermissions,
-        jsDatasetLocks
+        jsDatasetLocks,
+        jsDatasetFilesTotalOriginalDownloadSize,
+        jsDatasetFilesTotalArchivalDownloadSize
       )
     )
   })
@@ -377,7 +406,9 @@ describe('JS Dataset Mapper', () => {
         citation,
         datasetSummaryFields,
         jsDatasetPermissions,
-        jsDatasetLocks
+        jsDatasetLocks,
+        jsDatasetFilesTotalOriginalDownloadSize,
+        jsDatasetFilesTotalArchivalDownloadSize
       )
     )
   })

@@ -22,7 +22,7 @@ export const Default: Story = {
         <br></br>
         <br></br>
         <DatasetCitation
-          title={dataset.getTitle()}
+          title={dataset.title}
           citation={dataset.citation}
           version={dataset.version}
         />
@@ -39,7 +39,7 @@ export const WithThumbnail: Story = {
         <br></br>
         <br></br>
         <DatasetCitation
-          title={dataset.getTitle()}
+          title={dataset.title}
           thumbnail={dataset.thumbnail}
           citation={dataset.citation}
           version={dataset.version}
@@ -71,7 +71,7 @@ export const DraftVersion: Story = {
         <br></br>
         <br></br>
         <DatasetCitation
-          title={dataset.getTitle()}
+          title={dataset.title}
           citation={dataset.citation}
           version={dataset.version}
         />
@@ -104,7 +104,7 @@ export const Deaccessioned: Story = {
         <br></br>
         <br></br>
         <DatasetCitation
-          title={dataset.getTitle()}
+          title={dataset.title}
           citation={dataset.citation}
           version={dataset.version}
         />
@@ -128,7 +128,7 @@ export const Anonymized: Story = {
         <br></br>
         <br></br>
         <DatasetCitation
-          title={dataset.getTitle()}
+          title={dataset.title}
           citation={dataset.citation}
           version={dataset.version}
         />

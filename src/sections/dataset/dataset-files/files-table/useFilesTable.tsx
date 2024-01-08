@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { File } from '../../../../files/domain/models/File'
 import { getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { createColumnsDefinition } from './FilesTableColumnsDefinition'
-import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
 import { useFileSelection } from './row-selection/useFileSelection'
+import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
 
 export type RowSelection = {
   [key: string]: boolean

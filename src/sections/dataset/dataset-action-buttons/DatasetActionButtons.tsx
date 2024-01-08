@@ -21,6 +21,7 @@ export function DatasetActionButtons({ dataset }: DatasetActionButtonsProps) {
         permissions={dataset.permissions}
         hasOneTabularFileAtLeast={dataset.hasOneTabularFileAtLeast}
         fileDownloadSizes={dataset.fileDownloadSizes}
+        downloadUrls={dataset.downloadUrls}
       />
       <PublishDatasetMenu dataset={dataset} />
       <SubmitForReviewButton dataset={dataset} />

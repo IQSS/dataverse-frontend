@@ -52,14 +52,14 @@ export function Dataset({ fileRepository }: DatasetProps) {
           </div>
 
           <header className={styles.header}>
-            <h1>{dataset.getTitle()}</h1>
+            <h1>{dataset.title}</h1>
             <DatasetLabels labels={dataset.labels} />
           </header>
           <div className={styles.container}>
             <Row>
               <Col sm={9}>
                 <DatasetCitation
-                  title={dataset.getTitle()}
+                  title={dataset.title}
                   thumbnail={dataset.thumbnail}
                   citation={dataset.citation}
                   version={dataset.version}

@@ -1,0 +1,4 @@
+{
+  "results": "{{start}} to {{end}} of {{total}} {{item}}s",
+  "pageSize": "{{item}}s per page"
+}

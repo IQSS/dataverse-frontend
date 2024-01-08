@@ -20,7 +20,7 @@ export class FileSize {
   }
 
   constructor(readonly value: number, readonly unit: FileSizeUnit) {
-    ;[this.value, this.unit] = this.convertToLargestUnit(value, unit)
+    ;[this.value, this.unit] = FileSize.convertToLargestUnit(value, unit)
   }
 
   toString(): string {
@@ -33,7 +33,7 @@ export class FileSize {
     return this.value * FileSize.multiplier[this.unit]
   }
 
-  private convertToLargestUnit(value: number, unit: FileSizeUnit): [number, FileSizeUnit] {
+  static convertToLargestUnit(value: number, unit: FileSizeUnit): [number, FileSizeUnit] {
     let convertedValue = value
     let convertedUnit = unit
 
@@ -45,7 +45,7 @@ export class FileSize {
     return [convertedValue, convertedUnit]
   }
 
-  private getNextUnit(unit: FileSizeUnit): FileSizeUnit {
+  static getNextUnit(unit: FileSizeUnit): FileSizeUnit {
     switch (unit) {
       case FileSizeUnit.BYTES:
         return FileSizeUnit.KILOBYTES
@@ -63,19 +63,19 @@ export class FileSize {
   }
 }
 
-export enum FileDownloadSizeMode {
-  ALL = 'All',
-  ORIGINAL = 'Original',
-  ARCHIVAL = 'Archival'
+export enum FileDownloadMode {
+  ORIGINAL = 'original',
+  ARCHIVAL = 'archival'
 }
 
 export class FileDownloadSize extends FileSize {
   constructor(
     readonly value: number,
     readonly unit: FileSizeUnit,
-    readonly mode: FileDownloadSizeMode
+    readonly mode: FileDownloadMode
   ) {
     super(value, unit)
+    ;[this.value, this.unit] = FileDownloadSize.convertToLargestUnit(value, unit)
   }
 }
 

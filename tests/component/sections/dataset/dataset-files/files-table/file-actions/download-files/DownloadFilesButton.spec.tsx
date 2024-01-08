@@ -8,8 +8,11 @@ import {
 } from '../../../../../../dataset/domain/models/DatasetMother'
 import { DownloadFilesButton } from '../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/download-files/DownloadFilesButton'
 import { FileMother } from '../../../../../../files/domain/models/FileMother'
+import { MultipleFileDownloadProvider } from '../../../../../../../../src/sections/file/multiple-file-download/MultipleFileDownloadProvider'
+import { FileRepository } from '../../../../../../../../src/files/domain/repositories/FileRepository'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
+const fileRepository = {} as FileRepository
 describe('DownloadFilesButton', () => {
   const withDataset = (component: ReactNode, dataset: DatasetModel | undefined) => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
@@ -23,6 +26,12 @@ describe('DownloadFilesButton', () => {
       </DatasetProvider>
     )
   }
+
+  beforeEach(() => {
+    fileRepository.getMultipleFileDownloadUrl = cy
+      .stub()
+      .returns('https://multiple-file-download-url')
+  })
 
   it('renders the Download Files button if there is more than 1 file in the dataset and the user has download files permission', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
@@ -71,7 +80,8 @@ describe('DownloadFilesButton', () => {
 
   it('renders the Download Files button as a dropdown if there are tabular files in the dataset', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
-      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed()
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: true
     })
     const files = FileMother.createMany(2, {
       tabularData: {
@@ -94,7 +104,8 @@ describe('DownloadFilesButton', () => {
 
   it('does not render the Download Files button as a dropdown if there are no tabular files in the dataset', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
-      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed()
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: false
     })
     const files = FileMother.createMany(2, { tabularData: undefined })
     cy.mountAuthenticated(
@@ -111,7 +122,8 @@ describe('DownloadFilesButton', () => {
 
   it('shows the No Selected Files modal if no files are selected', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
-      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed()
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: false
     })
     const files = FileMother.createMany(2, { tabularData: undefined })
     cy.mountAuthenticated(
@@ -125,22 +137,143 @@ describe('DownloadFilesButton', () => {
     cy.findByText('Select File(s)').should('exist')
   })
 
-  it('does not show the No Selected Files modal if files are selected', () => {
+  it('renders the download url for the selected files when some files are selected and there are no tabular files', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
-      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed()
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: false
     })
-    const files = FileMother.createMany(2)
+    const files = FileMother.createMany(2, { tabularData: undefined })
+    const fileSelection = {
+      'some-file-id': files[0],
+      'some-other-file-id': files[1]
+    }
+    cy.mountAuthenticated(
+      <MultipleFileDownloadProvider repository={fileRepository}>
+        {withDataset(
+          <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+          datasetWithDownloadFilesPermission
+        )}
+      </MultipleFileDownloadProvider>
+    )
+
+    cy.findByRole('button', { name: 'Download' })
+      .parent('a')
+      .should('have.attr', 'href', 'https://multiple-file-download-url')
+  })
+
+  it('renders the download url for the selected files when some files are selected and there are tabular files', () => {
+    const datasetWithDownloadFilesPermission = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: true
+    })
+    const files = FileMother.createMany(2, {
+      tabularData: {
+        variablesCount: 2,
+        observationsCount: 3,
+        unf: 'some-unf'
+      }
+    })
+    const fileSelection = {
+      'some-file-id': files[0],
+      'some-other-file-id': files[1]
+    }
+    cy.mountAuthenticated(
+      <MultipleFileDownloadProvider repository={fileRepository}>
+        {withDataset(
+          <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+          datasetWithDownloadFilesPermission
+        )}
+      </MultipleFileDownloadProvider>
+    )
+
+    cy.findByRole('button', { name: 'Download' }).click()
+    cy.findByRole('link', { name: 'Original Format' }).should(
+      'have.attr',
+      'href',
+      'https://multiple-file-download-url'
+    )
+    cy.findByRole('link', { name: 'Archival Format (.tab)' }).should(
+      'have.attr',
+      'href',
+      'https://multiple-file-download-url'
+    )
+  })
+
+  it('renders the dataset download url when all the files are selected', () => {
+    const datasetWithDownloadFilesPermission = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: true,
+      downloadUrls: {
+        original: 'https://dataset-download-url-original',
+        archival: 'https://dataset-download-url-archival'
+      }
+    })
+    const files = FileMother.createMany(2, {
+      tabularData: {
+        variablesCount: 2,
+        observationsCount: 3,
+        unf: 'some-unf'
+      }
+    })
+    const fileSelection = {
+      'some-file-id': undefined,
+      'some-other-file-id': undefined
+    }
     cy.mountAuthenticated(
       withDataset(
-        <DownloadFilesButton
-          files={files}
-          fileSelection={{ 'some-file-id': FileMother.create() }}
-        />,
+        <DownloadFilesButton files={files} fileSelection={fileSelection} />,
         datasetWithDownloadFilesPermission
       )
     )
 
     cy.findByRole('button', { name: 'Download' }).click()
-    cy.findByText('Select File(s)').should('not.exist')
+    cy.findByRole('link', { name: 'Original Format' }).should(
+      'have.attr',
+      'href',
+      'https://dataset-download-url-original'
+    )
+    cy.findByRole('link', { name: 'Archival Format (.tab)' }).should(
+      'have.attr',
+      'href',
+      'https://dataset-download-url-archival'
+    )
+  })
+
+  it('renders the dataset download url with the single file download url when one file is selected', () => {
+    const datasetWithDownloadFilesPermission = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
+      hasOneTabularFileAtLeast: true
+    })
+    const files = FileMother.createMany(2, {
+      tabularData: {
+        variablesCount: 2,
+        observationsCount: 3,
+        unf: 'some-unf'
+      }
+    })
+    const fileSelection = {
+      'some-file-id': files[0]
+    }
+    fileRepository.getFileDownloadUrl = cy.stub().returns('https://single-file-download-url')
+    cy.mountAuthenticated(
+      <MultipleFileDownloadProvider repository={fileRepository}>
+        {withDataset(
+          <DownloadFilesButton files={files} fileSelection={fileSelection} />,
+          datasetWithDownloadFilesPermission
+        )}
+      </MultipleFileDownloadProvider>
+    )
+
+    cy.findByRole('button', { name: 'Download' }).click()
+    cy.findByRole('link', { name: 'Original Format' }).should(
+      'have.attr',
+      'href',
+      'https://single-file-download-url'
+    )
+    cy.findByRole('link', { name: 'Archival Format (.tab)' }).should(
+      'have.attr',
+      'href',
+      'https://single-file-download-url'
+    )
   })
 })

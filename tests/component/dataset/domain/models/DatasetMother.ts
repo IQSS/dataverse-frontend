@@ -2,6 +2,8 @@ import { faker } from '@faker-js/faker'
 import {
   ANONYMIZED_FIELD_VALUE,
   Dataset,
+  DatasetLabel,
+  DatasetDownloadUrls,
   DatasetLabelSemanticMeaning,
   DatasetLabelValue,
   DatasetLock,
@@ -13,8 +15,8 @@ import {
   MetadataBlockName
 } from '../../../../../src/dataset/domain/models/Dataset'
 import {
+  FileDownloadMode,
   FileDownloadSize,
-  FileDownloadSizeMode,
   FileSizeUnit
 } from '../../../../../src/files/domain/models/File'
 
@@ -194,27 +196,87 @@ export class DatasetLockMother {
   }
 }
 
+export class DatasetLabelsMother {
+  static create(): DatasetLabel[] {
+    return [{ value: 'Version 1.0', semanticMeaning: DatasetLabelSemanticMeaning.FILE }]
+  }
+
+  static createDraft(): DatasetLabel[] {
+    return [
+      {
+        value: DatasetLabelValue.UNPUBLISHED,
+        semanticMeaning: DatasetLabelSemanticMeaning.WARNING
+      },
+      { value: DatasetLabelValue.DRAFT, semanticMeaning: DatasetLabelSemanticMeaning.DATASET }
+    ]
+  }
+
+  static createDeaccessioned(): DatasetLabel[] {
+    return [
+      {
+        value: DatasetLabelValue.DEACCESSIONED,
+        semanticMeaning: DatasetLabelSemanticMeaning.DANGER
+      }
+    ]
+  }
+}
+
+export class DatasetCitationMother {
+  static create(): string {
+    return 'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/0YFWKL" target="_blank">https://doi.org/10.5072/FK2/0YFWKL</a>, Root, V1'
+  }
+
+  static createDraft(): string {
+    return 'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/0YFWKL" target="_blank">https://doi.org/10.5072/FK2/0YFWKL</a>, Root, DRAFT VERSION'
+  }
+
+  static createDeaccessioned(): string {
+    return 'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/0YFWKL" target="_blank">https://doi.org/10.5072/FK2/0YFWKL</a>, Root, V1, DEACCESSIONED VERSION'
+  }
+}
+
 export class DatasetFileDownloadSizeMother {
   static create(props?: Partial<FileDownloadSize>): FileDownloadSize {
     return new FileDownloadSize(
       props?.value ?? faker.datatype.number(),
       props?.unit ?? faker.helpers.arrayElement(Object.values(FileSizeUnit)),
-      props?.mode ?? faker.helpers.arrayElement(Object.values(FileDownloadSizeMode))
+      props?.mode ?? faker.helpers.arrayElement(Object.values(FileDownloadMode))
     )
   }
 
-  static createArchival(): FileDownloadSize {
-    return this.create({ mode: FileDownloadSizeMode.ARCHIVAL })
+  static createArchival(props?: Partial<FileDownloadSize>): FileDownloadSize {
+    return this.create({ mode: FileDownloadMode.ARCHIVAL, ...props })
   }
 
-  static createOriginal(): FileDownloadSize {
-    return this.create({ mode: FileDownloadSizeMode.ORIGINAL })
+  static createOriginal(props?: Partial<FileDownloadSize>): FileDownloadSize {
+    return this.create({ mode: FileDownloadMode.ORIGINAL, ...props })
+  }
+}
+
+export class DatasetDownloadUrlsMother {
+  static create(props?: Partial<DatasetDownloadUrls>): DatasetDownloadUrls {
+    return {
+      original: this.createDownloadUrl(),
+      archival: this.createDownloadUrl(),
+      ...props
+    }
+  }
+
+  static createDownloadUrl(): string {
+    const blob = new Blob(['Name,Age,Location\nJohn,25,New York\nJane,30,San Francisco'], {
+      type: 'text/csv'
+    })
+    return URL.createObjectURL(blob)
   }
 }
 
 export class DatasetMother {
   static createEmpty(): undefined {
     return undefined
+  }
+
+  static createMany(count: number): Dataset[] {
+    return Array.from({ length: count }, () => this.create())
   }
 
   static create(props?: Partial<Dataset>): Dataset {
@@ -229,24 +291,7 @@ export class DatasetMother {
         uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
         iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
       },
-      labels: [
-        {
-          value: DatasetLabelValue.IN_REVIEW,
-          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
-        },
-        {
-          value: DatasetLabelValue.EMBARGOED,
-          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
-        },
-        {
-          value: DatasetLabelValue.UNPUBLISHED,
-          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
-        },
-        {
-          value: `Version ${faker.lorem.word()}`,
-          semanticMeaning: faker.helpers.arrayElement(Object.values(DatasetLabelSemanticMeaning))
-        }
-      ],
+      labels: DatasetLabelsMother.create(),
       summaryFields: [
         {
           name: MetadataBlockName.CITATION,
@@ -315,9 +360,10 @@ export class DatasetMother {
       hasOneTabularFileAtLeast: faker.datatype.boolean(),
       isValid: faker.datatype.boolean(),
       isReleased: faker.datatype.boolean(),
+      downloadUrls: DatasetDownloadUrlsMother.create(),
       thumbnail: undefined,
       privateUrl: undefined,
-      fileDownloadSizes: undefined,
+      fileDownloadSizes: [],
       ...props
     }
 
@@ -334,9 +380,10 @@ export class DatasetMother {
       dataset.hasOneTabularFileAtLeast,
       dataset.isValid,
       dataset.isReleased,
+      dataset.downloadUrls,
+      dataset.fileDownloadSizes,
       dataset.thumbnail,
-      dataset.privateUrl,
-      dataset.fileDownloadSizes
+      dataset.privateUrl
     ).build()
   }
 
@@ -470,8 +517,8 @@ export class DatasetMother {
       hasValidTermsOfAccess: true,
       hasOneTabularFileAtLeast: true,
       fileDownloadSizes: [
-        new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadSizeMode.ORIGINAL),
-        new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadSizeMode.ARCHIVAL)
+        new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadMode.ORIGINAL),
+        new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadMode.ARCHIVAL)
       ],
       isValid: true,
       ...props
