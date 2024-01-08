@@ -1,5 +1,4 @@
 import { FileRepository } from '../domain/repositories/FileRepository'
-import { File, FileDownloadMode, FilePermissions } from '../domain/models/File'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
 import { FileUserPermissions } from '../domain/models/FileUserPermissions'
 import {
