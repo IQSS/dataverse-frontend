@@ -5,6 +5,7 @@
 }
 
 .subtext {
+  margin-bottom: 10px;
  color: $dv-subtext-color;
 }
 
@@ -15,4 +16,13 @@
 .separation-line {
   margin: 1em 0;
   border-bottom: 1px solid #dee2e6;
+}
+
+.labels {
+  display: flex;
+  align-items: center;
+}
+
+.restricted-icon {
+  margin-right: 6px;
 }
