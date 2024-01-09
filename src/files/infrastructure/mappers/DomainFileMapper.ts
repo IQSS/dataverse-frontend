@@ -10,7 +10,6 @@ import {
   FileOrderCriteria as JSFileOrderCriteria
 } from '@iqss/dataverse-client-javascript'
 import { FileType } from '../../domain/models/File'
-import { FilePaginationInfo } from '../../domain/models/FilePaginationInfo'
 
 export class DomainFileMapper {
   static toJSFileSearchCriteria(criteria: FileCriteria): JSFileSearchCriteria {
