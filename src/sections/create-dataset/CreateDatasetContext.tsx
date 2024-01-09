@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode } from 'react'
+import React, { createContext, useContext, ReactNode } from 'react'
 import CreateDatasetFormPresenter from './CreateDatasetForm'
 import { useTranslation } from 'react-i18next'
 import { CreateDataset, CreateDatasetFormData } from '../../dataset/domain/useCases/createDataset'
@@ -14,17 +14,13 @@ const DatasetContext = createContext<CreateDatasetFormProps>({} as CreateDataset
 interface DatasetProviderProps {
   children: ReactNode
 }
-// eslint-disable-next-line react/prop-types
 export const DatasetProvider: React.FC<DatasetProviderProps> = ({ children }) => {
   const createDatasetUseCase = new CreateDataset()
 
   return (
-    // eslint-disable-next-line @typescript-eslint/unbound-method
     <DatasetContext.Provider
       value={{
-        // eslint-disable-next-line @typescript-eslint/unbound-method
         submitDataset: createDatasetUseCase.submitDataset,
-        // eslint-disable-next-line @typescript-eslint/unbound-method
         validateCreateDatasetFormData: createDatasetUseCase.validateCreateDatasetFormData
       }}>
       {children}

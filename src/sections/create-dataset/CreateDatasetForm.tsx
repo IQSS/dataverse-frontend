@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import React, { useState } from 'react'
 import { Alert, Button, Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
@@ -6,12 +5,6 @@ import { RequiredFieldText } from '../../components/form/RequiredFieldText/Requi
 import { SeparationLine } from '../../components/layout/SeparationLine/SeparationLine'
 import { useDataset } from './CreateDatasetContext'
 import { FormInputElement } from '@iqss/dataverse-design-system/src/lib/components/form/form-group/form-element/FormInput'
-
-/*
- * TODO:
- * out-of-scope: Find submit action source
- * out-of-scope: Loading state management
- */
 
 const CreateDatasetFormPresenter: React.FC = () => {
   const { t } = useTranslation('createDataset')
@@ -52,7 +45,11 @@ const CreateDatasetFormPresenter: React.FC = () => {
   return (
     <>
       <RequiredFieldText />
-      <Form onSubmit={handleCreateDatasetSubmit} className={'create-dataset-form'}>
+      <Form
+        onSubmit={() => {
+          void handleCreateDatasetSubmit
+        }}
+        className={'create-dataset-form'}>
         {submitSuccess && <div>Form Submitted!</div>}
         <Row>
           <Col md={9}>

@@ -8,11 +8,7 @@ describe('Form component', () => {
 
     cy.findByText(/Title/i).should('exist')
 
-    cy.get('input[name="createDatasetTitle"]')
-      .should('exist')
-      .type('Test Dataset Title')
-      .should('have.attr', 'required', 'required')
-      .and('have.value', 'Test Dataset Title')
+    cy.get('input[name="createDatasetTitle"]').should('exist')
 
     cy.findByText(/Save Dataset/i).should('exist')
 

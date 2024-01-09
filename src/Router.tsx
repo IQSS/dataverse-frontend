@@ -3,7 +3,7 @@ import { Layout } from './sections/layout/Layout'
 import { Route } from './sections/Route.enum'
 import { DatasetFactory } from './sections/dataset/DatasetFactory'
 import { PageNotFound } from './sections/page-not-found/PageNotFound'
-import DatasetCreateMaster from './sections/create-dataset/CreateDatasetContext'
+import { CreateDatasetFactory } from './sections/create-dataset/CreateDatasetFactory'
 import { HomeFactory } from './sections/home/HomeFactory'
 
 const router = createBrowserRouter(
@@ -22,8 +22,8 @@ const router = createBrowserRouter(
           element: DatasetFactory.create()
         },
         {
-          path: `${Route.DATASETS}/${Route.CREATE}`,
-          element: <DatasetCreateMaster />
+          path: `${Route.CREATE}`,
+          element: CreateDatasetFactory.create()
         }
       ]
     }
