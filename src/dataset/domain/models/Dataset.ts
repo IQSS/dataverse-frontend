@@ -434,7 +434,7 @@ export class Dataset {
       public readonly thumbnail?: string,
       public readonly privateUrl?: PrivateUrl
     ) {
-      this.labels = Dataset.(version, isReleased)
+      this.labels = Dataset.createDatasetLabels(version, isReleased)
       this.withAlerts()
     }
 
