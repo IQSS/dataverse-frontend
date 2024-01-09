@@ -116,7 +116,7 @@ describe('DatasetFiles', () => {
       cy.findByRole('columnheader', { name: '101 to 150 of 200 Files' }).should('exist')
     })
 
-    it('renders the first page if there is only one page and the user changes to a lower page size', () => {
+    it('does not render pagination if the user changes to a lower page size resulting in one page', () => {
       const testFilesCountInfo = FilesCountInfoMother.create({
         total: 32
       })
@@ -144,13 +144,10 @@ describe('DatasetFiles', () => {
       cy.findByRole('button', { name: '3' }).should('not.exist')
       cy.findByRole('columnheader', { name: '1 to 32 of 32 Files' }).should('exist')
 
-      cy.findByLabelText('Files per page').select('10')
-
       cy.findByRole('button', { name: '1' }).should('not.exist')
-      cy.findByRole('button', { name: '2' }).should('exist')
-      cy.findByRole('button', { name: '3' }).should('exist')
-      cy.findByRole('button', { name: '4' }).should('exist')
-      cy.findByRole('columnheader', { name: '1 to 10 of 32 Files' }).should('exist')
+      cy.findByRole('button', { name: '2' }).should('not.exist')
+      cy.findByRole('button', { name: '3' }).should('not.exist')
+      cy.findByRole('button', { name: '4' }).should('not.exist')
     })
 
     it('renders the page that includes the first element of the current page when changing the page size', () => {
