@@ -355,12 +355,12 @@ export class Dataset {
   }
 
   static withDatasetLabels(version: DatasetVersion): DatasetLabel[] {
-    const statusLabels = Dataset.withStatusLabel(version.publishingStatus, version.isInReview)
+    const statusLabels = Dataset.createStatusLabels(version.publishingStatus, version.isInReview)
     const versionLabels = Dataset.withVersionLabel(version)
     return [...statusLabels, ...versionLabels] // combine and return
   }
 
-  static withStatusLabel(
+  static createStatusLabels(
     publishingStatus: DatasetPublishingStatus,
     isInReview: boolean
   ): DatasetLabel[] {

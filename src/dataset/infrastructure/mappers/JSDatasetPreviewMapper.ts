@@ -16,7 +16,6 @@ export class JSDatasetPreviewMapper {
         jsDatasetPreview.versionInfo
       ),
       jsDatasetPreview.citation,
-      [],
       jsDatasetPreview.versionInfo.state === JSDatasetVersionState.DEACCESSIONED,
       JSDatasetPreviewMapper.toPreviewDate(jsDatasetPreview.versionInfo),
       jsDatasetPreview.description,
