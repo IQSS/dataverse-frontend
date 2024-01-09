@@ -17,7 +17,7 @@ describe('Home Page', () => {
   it('goes to dataset page from list', () => {
     void DatasetHelper.destroyAll()
     void DatasetHelper.createWithTitle(title)
-    cy.loginAsAdmin()
+    TestsUtils.login()
     cy.findByText(/Dataverse Admin/i).should('exist')
     cy.findByText(title).should('be.visible')
     cy.findByText(title).click({ force: true })
