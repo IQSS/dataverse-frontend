@@ -354,13 +354,13 @@ export class Dataset {
     return false
   }
 
-  static withDatasetLabels(version: DatasetVersion, isReleased: boolean): DatasetLabel[] {
+  static createDatasetLabels(version: DatasetVersion, isReleased: boolean): DatasetLabel[] {
     const statusLabels = Dataset.createStatusLabels(
       version.publishingStatus,
       version.isInReview,
       isReleased
     )
-    const versionLabels = Dataset.withVersionLabel(version)
+    const versionLabels = Dataset.createVersionLabel(version)
     return [...statusLabels, ...versionLabels] // combine and return
   }
 
@@ -402,7 +402,7 @@ export class Dataset {
     return labels
   }
 
-  static withVersionLabel(version: DatasetVersion): DatasetLabel[] {
+  static createVersionLabel(version: DatasetVersion): DatasetLabel[] {
     const labels: DatasetLabel[] = []
     if (version.publishingStatus === DatasetPublishingStatus.RELEASED) {
       labels.push(
@@ -434,7 +434,7 @@ export class Dataset {
       public readonly thumbnail?: string,
       public readonly privateUrl?: PrivateUrl
     ) {
-      this.labels = Dataset.withDatasetLabels(version, isReleased)
+      this.labels = Dataset.(version, isReleased)
       this.withAlerts()
     }
 
