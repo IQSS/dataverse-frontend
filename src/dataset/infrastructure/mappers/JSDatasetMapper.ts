@@ -1,14 +1,12 @@
 import {
   Dataset as JSDataset,
   DatasetLock as JSDatasetLock,
-  DatasetPreview as JSDatasetPreview,
   DatasetMetadataBlock as JSDatasetMetadataBlock,
   DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataFields as JSDatasetMetadataFields,
   DatasetUserPermissions as JSDatasetPermissions,
   DatasetVersionInfo as JSDatasetVersionInfo
 } from '@iqss/dataverse-client-javascript'
-import { DatasetVersionState as JSDatasetVersionState } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
 import {
   Dataset,
   DatasetDownloadUrls,
@@ -18,37 +16,14 @@ import {
   DatasetMetadataBlocks,
   DatasetMetadataFields,
   DatasetPermissions,
-  DatasetPublishingStatus,
   DatasetVersion,
   MetadataBlockName,
   PrivateUrl
 } from '../../domain/models/Dataset'
 import { FileDownloadMode, FileDownloadSize, FileSizeUnit } from '../../../files/domain/models/File'
-import { DatasetPreview } from '../../domain/models/DatasetPreview'
+import { JSDatasetVersionMapper } from './JSDatasetVersionMapper'
 
 export class JSDatasetMapper {
-  static toDatasetPreview(jsDatasetPreview: JSDatasetPreview): DatasetPreview {
-    const version = JSDatasetMapper.toVersion(
-      jsDatasetPreview.versionId,
-      jsDatasetPreview.versionInfo
-    )
-    return new DatasetPreview(
-      jsDatasetPreview.persistentId,
-      jsDatasetPreview.title,
-      version,
-      jsDatasetPreview.citation,
-      [],
-      jsDatasetPreview.versionInfo.state === JSDatasetVersionState.DEACCESSIONED,
-      JSDatasetMapper.toPreviewDate(jsDatasetPreview.versionInfo),
-      jsDatasetPreview.description,
-      undefined // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
-    )
-  }
-
-  static toPreviewDate(jsVersionInfo: JSDatasetVersionInfo): Date {
-    return jsVersionInfo.releaseTime ? jsVersionInfo.releaseTime : jsVersionInfo.createTime
-  }
-
   static toDataset(
     jsDataset: JSDataset,
     citation: string,
@@ -60,7 +35,7 @@ export class JSDatasetMapper {
     requestedVersion?: string,
     privateUrl?: PrivateUrl
   ): Dataset {
-    const version = JSDatasetMapper.toVersion(
+    const version = JSDatasetVersionMapper.toDatasetVersion(
       jsDataset.versionId,
       jsDataset.versionInfo,
       requestedVersion
@@ -91,36 +66,6 @@ export class JSDatasetMapper {
       undefined, // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl
     ).build()
-  }
-
-  static toVersion(
-    jDatasetVersionId: number,
-    jsDatasetVersionInfo: JSDatasetVersionInfo,
-    requestedVersion?: string
-  ): DatasetVersion {
-    return new DatasetVersion(
-      jDatasetVersionId,
-      JSDatasetMapper.toStatus(jsDatasetVersionInfo.state),
-      true, // TODO Connect with dataset version isLatest
-      false, // TODO Connect with dataset version isInReview
-      JSDatasetMapper.toStatus(jsDatasetVersionInfo.state), // TODO Connect with dataset version latestVersionState
-      jsDatasetVersionInfo.majorNumber,
-      jsDatasetVersionInfo.minorNumber,
-      requestedVersion
-    )
-  }
-
-  static toStatus(jsDatasetVersionState: JSDatasetVersionState): DatasetPublishingStatus {
-    switch (jsDatasetVersionState) {
-      case JSDatasetVersionState.DRAFT:
-        return DatasetPublishingStatus.DRAFT
-      case JSDatasetVersionState.DEACCESSIONED:
-        return DatasetPublishingStatus.DEACCESSIONED
-      case JSDatasetVersionState.RELEASED:
-        return DatasetPublishingStatus.RELEASED
-      default:
-        return DatasetPublishingStatus.DRAFT
-    }
   }
 
   static toSummaryFields(

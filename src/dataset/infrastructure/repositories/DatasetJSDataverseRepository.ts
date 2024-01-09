@@ -22,6 +22,7 @@ import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { TotalDatasetsCount } from '../../domain/models/TotalDatasetsCount'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
 import { DatasetPreview } from '../../domain/models/DatasetPreview'
+import { JSDatasetPreviewMapper } from '../mappers/JSDatasetPreviewMapper'
 
 const includeDeaccessioned = true
 
@@ -31,7 +32,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .execute(paginationInfo.pageSize, paginationInfo.offset)
       .then((subset: DatasetPreviewSubset) => {
         return subset.datasetPreviews.map((datasetPreview: JSDatasetPreview) =>
-          JSDatasetMapper.toDatasetPreview(datasetPreview)
+          JSDatasetPreviewMapper.toDatasetPreview(datasetPreview)
         )
       })
   }
