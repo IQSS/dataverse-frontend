@@ -26,8 +26,9 @@ function getCurrentDateInYYYYMMDDFormat() {
 
 const datasetData = (persistentId: string, versionId: number) => {
   const persistentIdUrl = `https://doi.org/${persistentId.replace('doi:', '')}`
+  const year = new Date().getFullYear()
   return {
-    citation: `Finch, Fiona, 2023, "Darwin's Finches", <a href="${persistentIdUrl}" target="_blank">${persistentIdUrl}</a>, Root, DRAFT VERSION`,
+    citation: `Finch, Fiona, ${year}, "Darwin's Finches", <a href="${persistentIdUrl}" target="_blank">${persistentIdUrl}</a>, Root, DRAFT VERSION`,
     labels: [
       { semanticMeaning: 'dataset', value: 'Draft' },
       { semanticMeaning: 'warning', value: 'Unpublished' }
