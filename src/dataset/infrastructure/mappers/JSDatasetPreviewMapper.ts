@@ -15,7 +15,7 @@ export class JSDatasetPreviewMapper {
         jsDatasetPreview.versionId,
         jsDatasetPreview.versionInfo
       ),
-      jsDatasetPreview.versionInfo.releaseTime == undefined ? true : false,
+      jsDatasetPreview.versionInfo.releaseTime != undefined,
       jsDatasetPreview.citation,
       jsDatasetPreview.versionInfo.state === JSDatasetVersionState.DEACCESSIONED,
       JSDatasetPreviewMapper.toPreviewDate(jsDatasetPreview.versionInfo),
