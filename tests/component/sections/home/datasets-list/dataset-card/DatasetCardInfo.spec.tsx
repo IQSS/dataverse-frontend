@@ -6,10 +6,16 @@ import { DatasetCardInfo } from '../../../../../../src/sections/home/datasets-li
 describe('DatasetCardInfo', () => {
   it('should render the dataset info', () => {
     const dataset = DatasetPreviewMother.createDraft()
-    cy.customMount(<DatasetCardInfo dataset={dataset} />)
+    cy.customMount(
+      <DatasetCardInfo
+        version={dataset.version}
+        releaseOrCreateDate={dataset.releaseOrCreateDate}
+        abbreviatedDescription={dataset.abbreviatedDescription}
+      />
+    )
 
     cy.findByText(DateHelper.toDisplayFormat(dataset.releaseOrCreateDate)).should('exist')
-    cy.findByText(/Finch, Fiona, 2023, "Darwin's Finches"/)
+    cy.findByText(/Admin, Dataverse, 2023, "Dataset Title",/)
       .should('exist')
       .parent()
       .parent()
@@ -19,9 +25,15 @@ describe('DatasetCardInfo', () => {
 
   it('should render the citation with the deaccessioned background if the dataset is deaccessioned', () => {
     const dataset = DatasetPreviewMother.createDeaccessioned()
-    cy.customMount(<DatasetCardInfo dataset={dataset} />)
+    cy.customMount(
+      <DatasetCardInfo
+        version={dataset.version}
+        releaseOrCreateDate={dataset.releaseOrCreateDate}
+        abbreviatedDescription={dataset.abbreviatedDescription}
+      />
+    )
 
-    cy.findByText(/Finch, Fiona, 2023, "Darwin's Finches"/)
+    cy.findByText(/Admin, Dataverse, 2023, "Dataset Title",/)
       .should('exist')
       .parent()
       .parent()

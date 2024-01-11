@@ -38,22 +38,8 @@
   max-width: 390px;
 }
 
-%restricted-icon {
+.restricted-icon {
   position: absolute;
   right: -14px;
   bottom: -5px;
-  font-size: 20px;
-}
-
-.restricted-icon-restricted {
-    @extend %restricted-icon;
-
-    color: $dv-danger-color;
-}
-
-.restricted-icon-restrictedWithAccess {
-    @extend %restricted-icon;
-
-  right: -16px;
-    color: $dv-success-color;
 }

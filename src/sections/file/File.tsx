@@ -9,6 +9,8 @@ import { useLoading } from '../loading/LoadingContext'
 import { FileSkeleton } from './FileSkeleton'
 import { DatasetCitation } from '../dataset/dataset-citation/DatasetCitation'
 import { FileCitation } from './file-citation/FileCitation'
+import { DatasetLabels } from '../dataset/dataset-labels/DatasetLabels'
+import { FileAccessRestrictedIcon } from './file-access/FileAccessRestrictedIcon'
 
 interface FileProps {
   repository: FileRepository
@@ -35,9 +37,20 @@ export function File({ repository, id }: FileProps) {
         <article>
           <header className={styles.header}>
             <h1>{file.name}</h1>
-            <span className={styles.subtext}>
+            <p className={styles.subtext}>
               {t('subtext', { datasetTitle: file.datasetVersion.title })}
-            </span>
+            </p>
+            <div className={styles.labels}>
+              {file.restricted && (
+                <div className={styles['restricted-icon']}>
+                  <FileAccessRestrictedIcon
+                    restricted={file.restricted}
+                    canDownloadFile={file.permissions.canDownloadFile}
+                  />
+                </div>
+              )}
+              <DatasetLabels labels={file.datasetVersion.labels} />
+            </div>
           </header>
           <div className={styles.container}>
             <Row>

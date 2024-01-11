@@ -1,13 +1,9 @@
-import { DatasetLabel, DatasetVersion } from './Dataset'
+import { DatasetVersion } from './Dataset'
 
 export class DatasetPreview {
   constructor(
     public persistentId: string,
-    public title: string,
     public version: DatasetVersion,
-    public citation: string,
-    public labels: DatasetLabel[],
-    public isDeaccessioned: boolean,
     public releaseOrCreateDate: Date,
     public description: string,
     public thumbnail?: string

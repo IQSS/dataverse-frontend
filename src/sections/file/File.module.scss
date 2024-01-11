@@ -6,7 +6,8 @@
 }
 
 .subtext {
- color: $dv-subtext-color;
+  margin-bottom: 10px;
+  color: $dv-subtext-color;
 }
 
 .container {
@@ -20,4 +21,13 @@
 
 .citation-title {
   font-weight: $dv-font-weight-bold;
+}
+
+.labels {
+  display: flex;
+  align-items: center;
+}
+
+.restricted-icon {
+  margin-right: 6px;
 }

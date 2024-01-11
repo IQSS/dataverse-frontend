@@ -9,6 +9,10 @@ export class FileMother {
       name: faker.system.fileName(),
       datasetVersion: DatasetVersionMother.create(),
       citation: FileCitationMother.create(name),
+      restricted: faker.datatype.boolean(),
+      permissions: {
+        canDownloadFile: faker.datatype.boolean()
+      },
       ...props
     }
   }
@@ -18,6 +22,29 @@ export class FileMother {
       name: 'File Title',
       datasetVersion: DatasetVersionMother.createRealistic(),
       citation: FileCitationMother.create('File Title'),
+      restricted: false,
+      permissions: {
+        canDownloadFile: true
+      },
+      ...props
+    })
+  }
+
+  static createRestricted(props?: Partial<File>): File {
+    return this.createRealistic({
+      restricted: true,
+      permissions: {
+        canDownloadFile: false
+      },
+      ...props
+    })
+  }
+
+  static createRestrictedWithAccessGranted(props?: Partial<File>): File {
+    return this.createRestricted({
+      permissions: {
+        canDownloadFile: true
+      },
       ...props
     })
   }

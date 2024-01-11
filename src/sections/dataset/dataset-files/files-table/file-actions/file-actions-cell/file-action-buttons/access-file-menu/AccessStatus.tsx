@@ -35,25 +35,16 @@ function AccessStatusIcon({
   sessionUserHasFileDownloadPermission: boolean
   restricted: boolean
 }) {
-  const { t } = useTranslation('files')
+  const { t } = useTranslation('file')
   if (restricted) {
     if (sessionUserHasFileDownloadPermission) {
       return (
-        <UnlockFill
-          title={t('table.fileAccess.restrictedWithAccess.icon')}
-          className={styles.success}
-        />
+        <UnlockFill title={t('fileAccess.restrictedWithAccess.icon')} className={styles.success} />
       )
     }
-    return (
-      <LockFill
-        role="img"
-        title={t('table.fileAccess.restricted.icon')}
-        className={styles.danger}
-      />
-    )
+    return <LockFill role="img" title={t('fileAccess.restricted.icon')} className={styles.danger} />
   }
-  return <Globe role="img" title={t('table.fileAccess.public.icon')} className={styles.success} />
+  return <Globe role="img" title={t('fileAccess.public.icon')} className={styles.success} />
 }
 
 function AccessStatusText({
@@ -63,7 +54,7 @@ function AccessStatusText({
   file: FilePreview
   sessionUserHasFileDownloadPermission: boolean
 }) {
-  const { t } = useTranslation('files')
+  const { t } = useTranslation('file')
   const getAccessStatus = () => {
     if (file.isActivelyEmbargoed) {
       return 'embargoed'
@@ -89,7 +80,7 @@ function AccessStatusText({
             : 'danger'
         ]
       }>
-      {t(`table.fileAccess.${getAccessStatus()}.name`)}
+      {t(`fileAccess.${getAccessStatus()}.name`)}
     </span>
   )
 }

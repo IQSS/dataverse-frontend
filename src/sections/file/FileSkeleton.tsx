@@ -12,7 +12,10 @@ export function FileSkeleton() {
           <h1>
             <Skeleton width="15%" />
           </h1>
-          <Skeleton width="20%" />
+          <p className={styles.subtext}>
+            <Skeleton width="20%" />
+          </p>
+          <Skeleton width="10%" />
         </header>
         <div className={styles.container}>
           <Row>

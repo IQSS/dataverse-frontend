@@ -30,8 +30,14 @@ function getPersistentIdUrl(persistentId: string) {
   return `https://doi.org/${persistentId.replace('doi:', '')}`
 }
 
+function getCitationString(persistentId: string, version: 'DRAFT VERSION' | 'V1') {
+  const year = new Date().getFullYear()
+  return `Finch, Fiona, ${year}, "Darwin's Finches", <a href="${getPersistentIdUrl(
+    persistentId
+  )}" target="_blank">${getPersistentIdUrl(persistentId)}</a>, Root, ${version}`
+}
+
 const datasetData = (persistentId: string, versionId: number) => {
-  const persistentIdUrl = getPersistentIdUrl(persistentId)
   return {
     license: {
       name: 'CC0 1.0',
@@ -88,7 +94,7 @@ const datasetData = (persistentId: string, versionId: number) => {
       latestVersionPublishingStatus: 'draft',
       isLatest: true,
       isInReview: false,
-      citation: `Finch, Fiona, 2023, "Darwin's Finches", <a href="${persistentIdUrl}" target="_blank">${persistentIdUrl}</a>, Root, DRAFT VERSION`,
+      citation: getCitationString(persistentId, 'DRAFT VERSION'),
       title: "Darwin's Finches",
       labels: [
         { semanticMeaning: 'dataset', value: 'Draft' },
@@ -165,9 +171,7 @@ describe('Dataset JSDataverse Repository', () => {
             minorNumber: 0
           },
           DatasetPublishingStatus.RELEASED,
-          `Finch, Fiona, 2023, "Darwin's Finches", <a href="${getPersistentIdUrl(
-            dataset.persistentId
-          )}" target="_blank">${getPersistentIdUrl(dataset.persistentId)}</a>, Root, V1`,
+          getCitationString(dataset.persistentId, 'V1'),
           [new DatasetLabel(DatasetLabelSemanticMeaning.FILE, 'Version 1.0')],
           true,
           false,
@@ -210,9 +214,7 @@ describe('Dataset JSDataverse Repository', () => {
             minorNumber: 0
           },
           DatasetPublishingStatus.RELEASED,
-          `Finch, Fiona, 2023, "Darwin's Finches", <a href="${getPersistentIdUrl(
-            dataset.persistentId
-          )}" target="_blank">${getPersistentIdUrl(dataset.persistentId)}</a>, Root, V1`,
+          getCitationString(dataset.persistentId, 'V1'),
           [new DatasetLabel(DatasetLabelSemanticMeaning.FILE, 'Version 1.0')],
           true,
           false,

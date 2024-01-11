@@ -17,7 +17,7 @@ describe('Datasets List', () => {
 
     cy.findByTestId('datasets-list-skeleton').should('exist')
     datasets.forEach((dataset) => {
-      cy.findByRole('link', { name: dataset.title }).should('not.exist')
+      cy.findByRole('link', { name: dataset.version.title }).should('not.exist')
     })
   })
 
@@ -38,7 +38,7 @@ describe('Datasets List', () => {
 
     cy.findByText('1 to 10 of 200 Datasets').should('exist')
     datasets.forEach((dataset) => {
-      cy.findByText(dataset.title)
+      cy.findByText(dataset.version.title)
         .should('exist')
         .should('have.attr', 'href', `/datasets?persistentId=${dataset.persistentId}`)
     })
