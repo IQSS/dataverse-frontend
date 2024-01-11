@@ -16,6 +16,8 @@ describe('File', () => {
     cy.findAllByText(testFile.name).should('exist')
     cy.findByText(`This file is part of "${testFile.datasetVersion.title}".`).should('exist')
     cy.findByText('Version 1.0').should('exist')
+    cy.findByRole('tab', { name: 'Metadata' }).should('exist')
+    cy.findByRole('button', { name: 'File Metadata' }).should('exist')
   })
 
   it('renders skeleton while loading', () => {
