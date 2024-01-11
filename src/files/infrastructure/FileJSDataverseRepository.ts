@@ -32,14 +32,13 @@ export class FileJSDataverseRepository implements FileRepository {
     paginationInfo: FilePaginationInfo = new FilePaginationInfo(),
     criteria: FileCriteria = new FileCriteria()
   ): Promise<File[]> {
-    const jsPagination = DomainFileMapper.toJSPagination(paginationInfo)
     return getDatasetFiles
       .execute(
         datasetPersistentId,
         datasetVersion.toString(),
         includeDeaccessioned,
-        jsPagination.limit,
-        jsPagination.offset,
+        paginationInfo.pageSize,
+        paginationInfo.offset,
         DomainFileMapper.toJSFileSearchCriteria(criteria),
         DomainFileMapper.toJSFileOrderCriteria(criteria.sortBy)
       )
