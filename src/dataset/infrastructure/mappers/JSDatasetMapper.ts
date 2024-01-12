@@ -7,7 +7,6 @@ import {
   DatasetUserPermissions as JSDatasetPermissions,
   DatasetVersionInfo as JSDatasetVersionInfo
 } from '@iqss/dataverse-client-javascript'
-import { DatasetVersionState as JSDatasetVersionState } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
 import {
   Dataset,
   DatasetDownloadUrls,
@@ -17,12 +16,12 @@ import {
   DatasetMetadataBlocks,
   DatasetMetadataFields,
   DatasetPermissions,
-  DatasetPublishingStatus,
   DatasetVersion,
   MetadataBlockName,
   PrivateUrl
 } from '../../domain/models/Dataset'
 import { FileDownloadMode, FileDownloadSize, FileSizeUnit } from '../../../files/domain/models/File'
+import { JSDatasetVersionMapper } from './JSDatasetVersionMapper'
 
 export class JSDatasetMapper {
   static toDataset(
@@ -36,7 +35,7 @@ export class JSDatasetMapper {
     requestedVersion?: string,
     privateUrl?: PrivateUrl
   ): Dataset {
-    const version = JSDatasetMapper.toVersion(
+    const version = JSDatasetVersionMapper.toDatasetVersion(
       jsDataset.versionId,
       jsDataset.versionInfo,
       requestedVersion
@@ -67,36 +66,6 @@ export class JSDatasetMapper {
       undefined, // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl
     ).build()
-  }
-
-  static toVersion(
-    jDatasetVersionId: number,
-    jsDatasetVersionInfo: JSDatasetVersionInfo,
-    requestedVersion?: string
-  ): DatasetVersion {
-    return new DatasetVersion(
-      jDatasetVersionId,
-      JSDatasetMapper.toStatus(jsDatasetVersionInfo.state),
-      true, // TODO Connect with dataset version isLatest
-      false, // TODO Connect with dataset version isInReview
-      JSDatasetMapper.toStatus(jsDatasetVersionInfo.state), // TODO Connect with dataset version latestVersionState
-      jsDatasetVersionInfo.majorNumber,
-      jsDatasetVersionInfo.minorNumber,
-      requestedVersion
-    )
-  }
-
-  static toStatus(jsDatasetVersionState: JSDatasetVersionState): DatasetPublishingStatus {
-    switch (jsDatasetVersionState) {
-      case JSDatasetVersionState.DRAFT:
-        return DatasetPublishingStatus.DRAFT
-      case JSDatasetVersionState.DEACCESSIONED:
-        return DatasetPublishingStatus.DEACCESSIONED
-      case JSDatasetVersionState.RELEASED:
-        return DatasetPublishingStatus.RELEASED
-      default:
-        return DatasetPublishingStatus.DRAFT
-    }
   }
 
   static toSummaryFields(
@@ -217,6 +186,7 @@ export class JSDatasetMapper {
       canDeleteDataset: jsDatasetPermissions.canManageDatasetPermissions
     }
   }
+
   static toLocks(jsDatasetLocks: JSDatasetLock[]): DatasetLock[] {
     return jsDatasetLocks.map((jsDatasetLock) => {
       return {

@@ -13,6 +13,7 @@ import {
   FileDownloadSize,
   FileSizeUnit
 } from '../../../../src/files/domain/models/File'
+import { DatasetPaginationInfo } from '../../../../src/dataset/domain/models/DatasetPaginationInfo'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -111,7 +112,9 @@ const datasetData = (persistentId: string, versionId: number) => {
 const datasetRepository = new DatasetJSDataverseRepository()
 describe('Dataset JSDataverse Repository', () => {
   before(() => TestsUtils.setup())
-  beforeEach(() => TestsUtils.login())
+  beforeEach(() => {
+    TestsUtils.login()
+  })
 
   it('gets the dataset by persistentId', async () => {
     const datasetResponse = await DatasetHelper.create()
@@ -263,6 +266,29 @@ describe('Dataset JSDataverse Repository', () => {
         )
         expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
       })
+  })
+  it('gets the total dataset count', async () => {
+    await DatasetHelper.destroyAll()
+    await datasetRepository.getTotalDatasetsCount().then((count) => {
+      expect(count).to.equal(0)
+    })
+    await DatasetHelper.createAndPublish()
+
+    await datasetRepository.getTotalDatasetsCount().then((count) => {
+      expect(count).to.equal(1)
+    })
+  })
+  it('gets the DatasetPreview', async () => {
+    await DatasetHelper.destroyAll()
+
+    const datasetResponse = await DatasetHelper.createAndPublish()
+    const paginationInfo = new DatasetPaginationInfo(1, 20)
+
+    await datasetRepository.getAll(paginationInfo).then((datasetPreview) => {
+      expect(datasetPreview.length).to.equal(1)
+      expect(datasetPreview[0].title).to.equal("Darwin's Finches")
+      expect(datasetPreview[0].persistentId).to.equal(datasetResponse.persistentId)
+    })
   })
 
   it.skip('gets the dataset by persistentId when the dataset is deaccessioned', async () => {

@@ -354,6 +354,64 @@ export class Dataset {
     return false
   }
 
+  static createDatasetLabels(version: DatasetVersion, isReleased: boolean): DatasetLabel[] {
+    const statusLabels = Dataset.createStatusLabels(
+      version.publishingStatus,
+      version.isInReview,
+      isReleased
+    )
+    const versionLabels = Dataset.createVersionLabel(version)
+    return [...statusLabels, ...versionLabels] // combine and return
+  }
+
+  static createStatusLabels(
+    publishingStatus: DatasetPublishingStatus,
+    isInReview: boolean,
+    isReleased: boolean
+  ): DatasetLabel[] {
+    const labels: DatasetLabel[] = []
+
+    if (publishingStatus === DatasetPublishingStatus.DRAFT) {
+      labels.push(new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.DRAFT))
+    }
+
+    if (!isReleased) {
+      labels.push(
+        new DatasetLabel(DatasetLabelSemanticMeaning.WARNING, DatasetLabelValue.UNPUBLISHED)
+      )
+    }
+
+    if (publishingStatus === DatasetPublishingStatus.DEACCESSIONED) {
+      labels.push(
+        new DatasetLabel(DatasetLabelSemanticMeaning.DANGER, DatasetLabelValue.DEACCESSIONED)
+      )
+    }
+
+    if (publishingStatus === DatasetPublishingStatus.EMBARGOED) {
+      labels.push(
+        new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.EMBARGOED)
+      )
+    }
+
+    if (isInReview) {
+      labels.push(
+        new DatasetLabel(DatasetLabelSemanticMeaning.SUCCESS, DatasetLabelValue.IN_REVIEW)
+      )
+    }
+
+    return labels
+  }
+
+  static createVersionLabel(version: DatasetVersion): DatasetLabel[] {
+    const labels: DatasetLabel[] = []
+    if (version.publishingStatus === DatasetPublishingStatus.RELEASED) {
+      labels.push(
+        new DatasetLabel(DatasetLabelSemanticMeaning.FILE, `Version ${version.toString()}`)
+      )
+    }
+    return labels
+  }
+
   static Builder = class {
     public readonly labels: DatasetLabel[] = []
     public readonly alerts: Alert[] = []
@@ -376,53 +434,8 @@ export class Dataset {
       public readonly thumbnail?: string,
       public readonly privateUrl?: PrivateUrl
     ) {
-      this.withLabels()
+      this.labels = Dataset.createDatasetLabels(version, isReleased)
       this.withAlerts()
-    }
-
-    withLabels() {
-      this.withStatusLabel()
-      this.withVersionLabel()
-    }
-
-    private withStatusLabel(): void {
-      if (this.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
-        this.labels.push(
-          new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.DRAFT)
-        )
-      }
-
-      if (!this.isReleased) {
-        this.labels.push(
-          new DatasetLabel(DatasetLabelSemanticMeaning.WARNING, DatasetLabelValue.UNPUBLISHED)
-        )
-      }
-
-      if (this.version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED) {
-        this.labels.push(
-          new DatasetLabel(DatasetLabelSemanticMeaning.DANGER, DatasetLabelValue.DEACCESSIONED)
-        )
-      }
-
-      if (this.version.publishingStatus === DatasetPublishingStatus.EMBARGOED) {
-        this.labels.push(
-          new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.EMBARGOED)
-        )
-      }
-
-      if (this.version.isInReview) {
-        this.labels.push(
-          new DatasetLabel(DatasetLabelSemanticMeaning.SUCCESS, DatasetLabelValue.IN_REVIEW)
-        )
-      }
-    }
-
-    private withVersionLabel(): void {
-      if (this.version.publishingStatus === DatasetPublishingStatus.RELEASED) {
-        this.labels.push(
-          new DatasetLabel(DatasetLabelSemanticMeaning.FILE, `Version ${this.version.toString()}`)
-        )
-      }
     }
 
     private withAlerts(): void {
