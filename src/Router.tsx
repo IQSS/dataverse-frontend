@@ -22,7 +22,7 @@ const router = createBrowserRouter(
           element: DatasetFactory.create()
         },
         {
-          path: `${Route.CREATE}`,
+          path: `${Route.CREATE_DATASET}`,
           element: CreateDatasetFactory.create()
         }
       ]

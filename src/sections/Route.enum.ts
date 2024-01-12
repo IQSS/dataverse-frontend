@@ -4,5 +4,5 @@ export enum Route {
   LOG_IN = '/loginpage.xhtml?redirectPage=%2Fdataverse.xhtml',
   LOG_OUT = '/',
   DATASETS = 'datasets',
-  CREATE = 'datasets/create'
+  CREATE_DATASET = 'datasets/create'
 }
