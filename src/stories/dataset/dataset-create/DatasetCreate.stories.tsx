@@ -12,6 +12,5 @@ export default meta
 type Story = StoryObj<typeof CreateDatasetForm>
 
 export const Default: Story = {
-  decorators: [WithLayout, WithI18next],
   render: () => <CreateDatasetForm />
 }
