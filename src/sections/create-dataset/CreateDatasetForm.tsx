@@ -1,56 +1,79 @@
-import React, { useState } from 'react'
+import React, { FormEvent, ChangeEvent, useState } from 'react'
 import { Alert, Button, Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { RequiredFieldText } from '../../components/form/RequiredFieldText/RequiredFieldText'
 import { SeparationLine } from '../../components/layout/SeparationLine/SeparationLine'
-import { useDataset } from './CreateDatasetContext'
-import { FormInputElement } from '@iqss/dataverse-design-system/src/lib/components/form/form-group/form-element/FormInput'
+import { useFormContext } from './CreateDatasetContext'
+import {
+  CreateDatasetFormFields,
+  FormValidationService,
+  FormValidationResult
+} from '../../dataset/domain/useCases/createDataset'
+import { FormSubmissionService } from '../../dataset/domain/useCases/createDataset'
 
-const CreateDatasetFormPresenter: React.FC = () => {
+type CreateDatasetFormProps = {
+  formValidationService: FormValidationService
+  formSubmissionService: FormSubmissionService
+}
+
+enum SubmissionStatus {
+  Unsubmitted,
+  Submitted,
+  Errored
+}
+
+export const CreateDatasetFormPresenter: React.FC<CreateDatasetFormProps> = ({
+  formValidationService,
+  formSubmissionService
+}) => {
+  const { formState, updateFormState } = useFormContext()
+  const [submissionStatus, setSubmissionStatus] = React.useState<SubmissionStatus>(
+    SubmissionStatus.Unsubmitted
+  )
+  const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
+  const [formErrors, setFormErrors] = useState<
+    Record<keyof CreateDatasetFormFields, string | undefined>
+  >({
+    createDatasetTitle: undefined
+  })
   const { t } = useTranslation('createDataset')
-  const [formData, setFormData] = useState({ createDatasetTitle: '' })
-  const { submitDataset, validateCreateDatasetFormData } = useDataset()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitSuccess, setSubmitSuccess] = useState(false)
 
-  const handleCreateDatasetFieldChange = (event: React.ChangeEvent<FormInputElement>): void => {
+  const handleCreateDatasetFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
-    setFormData((formData) => ({
-      ...formData,
-      [name]: value
-    }))
+    updateFormState({ ...formState, [name]: value })
   }
 
-  const handleCreateDatasetSubmit = async (event: React.FormEvent) => {
+  const handleCreateDatasetSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    setSubmitSuccess(false)
-    if (validateCreateDatasetFormData(formData)) {
-      setIsSubmitting(true)
-      try {
-        await submitDataset(formData)
-        // setFormData({ createDatasetTitle: '') // Reset form fields
-        setSubmitSuccess(true)
-      } catch (error) {
-        console.error('Error during submission:', error)
-        // Optionally handle the error state here
-      } finally {
-        setIsSubmitting(false)
-      }
+    setIsSubmitting(true)
+    setSubmissionStatus(SubmissionStatus.Unsubmitted)
+
+    const validationResult: FormValidationResult = formValidationService.validateForm(formState)
+
+    if (validationResult.isValid) {
+      formSubmissionService
+        .submitFormData(formState)
+        .then(() => setSubmissionStatus(SubmissionStatus.Submitted))
+        .catch(() => setSubmissionStatus(SubmissionStatus.Errored))
+        .finally(() => setIsSubmitting(false))
     } else {
-      console.error('Validation failed: Title is required.')
-      // Optionally handle the validation error state here
+      setFormErrors(validationResult.errors)
+      setSubmissionStatus(SubmissionStatus.Errored)
+      setIsSubmitting(false)
     }
   }
 
   return (
     <>
       <RequiredFieldText />
+      {isSubmitting && <p>Submitting...</p>}
+      {submissionStatus === SubmissionStatus.Submitted && <p>Form submitted successfully!</p>}
+      {submissionStatus === SubmissionStatus.Errored && <p>Error: Submission failed.</p>}
       <Form
-        onSubmit={() => {
-          void handleCreateDatasetSubmit
+        onSubmit={(event) => {
+          handleCreateDatasetSubmit(event)
         }}
         className={'create-dataset-form'}>
-        {submitSuccess && <div>Form Submitted!</div>}
         <Row>
           <Col md={9}>
             <Form.Group controlId="createDatasetTitle" required>
@@ -64,13 +87,16 @@ const CreateDatasetFormPresenter: React.FC = () => {
                 withinMultipleFieldsGroup={false}
               />
             </Form.Group>
+            {formErrors.createDatasetTitle && <span>{formErrors.createDatasetTitle}</span>}
           </Col>
         </Row>
         <SeparationLine />
         <Alert variant={'info'} customHeading={t('metadataTip.title')} dismissible={false}>
           {t('metadataTip.content')}
         </Alert>
-        <Button type="submit">{t('saveButton')}</Button>
+        <Button type="submit" disabled={isSubmitting}>
+          {t('saveButton')}
+        </Button>
         <Button withSpacing variant="secondary">
           {t('cancelButton')}
         </Button>
@@ -78,4 +104,3 @@ const CreateDatasetFormPresenter: React.FC = () => {
     </>
   )
 }
-export default CreateDatasetFormPresenter

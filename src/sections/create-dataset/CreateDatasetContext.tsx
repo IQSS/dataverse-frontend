@@ -1,57 +1,30 @@
-import React, { createContext, useContext, ReactNode } from 'react'
-import CreateDatasetFormPresenter from './CreateDatasetForm'
-import { useTranslation } from 'react-i18next'
-import { CreateDataset, CreateDatasetFormData } from '../../dataset/domain/useCases/createDataset'
-import styles from '/src/sections/dataset/Dataset.module.scss'
-import { SeparationLine } from '../../components/layout/SeparationLine/SeparationLine'
+import { createContext, useContext } from 'react'
+import { CreateDatasetFormFields } from '../../dataset/domain/useCases/createDataset' // Importing the FormFields type
 
-interface CreateDatasetFormProps {
-  submitDataset: (formData: CreateDatasetFormData) => Promise<string>
-  validateCreateDatasetFormData: (formData: CreateDatasetFormData) => boolean
+// Define the context and its interface
+interface FormContextInterface {
+  formState: CreateDatasetFormFields
+  updateFormState: (newState: CreateDatasetFormFields) => void
 }
 
-const DatasetContext = createContext<CreateDatasetFormProps>({} as CreateDatasetFormProps)
-interface DatasetProviderProps {
-  children: ReactNode
-}
-export const DatasetProvider: React.FC<DatasetProviderProps> = ({ children }) => {
-  const createDatasetUseCase = new CreateDataset()
-
-  return (
-    <DatasetContext.Provider
-      value={{
-        submitDataset: createDatasetUseCase.submitDataset,
-        validateCreateDatasetFormData: createDatasetUseCase.validateCreateDatasetFormData
-      }}>
-      {children}
-    </DatasetContext.Provider>
-  )
-}
-// Hook for easy consumption of the context
-export const useDataset = () => useContext(DatasetContext)
-
-export function CreateDatasetContainer() {
-  const { t } = useTranslation('createDataset')
-  return (
-    <>
-      <article>
-        <header className={styles.header}>
-          <h1>{t('pageTitle')}</h1>
-        </header>
-        <SeparationLine />
-        <div className={styles.container}>
-          <CreateDatasetFormPresenter />
-        </div>
-      </article>
-    </>
-  )
+// Define default values for the context
+const defaultFormState: CreateDatasetFormFields = {
+  // Initialize with default values for your form fields
+  createDatasetTitle: ''
 }
 
-export const DatasetCreateMaster: React.FC = () => {
-  return (
-    <DatasetProvider>
-      <CreateDatasetContainer />
-    </DatasetProvider>
-  )
+const defaultContext: FormContextInterface = {
+  formState: defaultFormState,
+  updateFormState: () => {
+    // This is a no-op function since the default context shouldn't update anything
+  }
 }
-export default DatasetCreateMaster
+export const FormContext = createContext<FormContextInterface>(defaultContext)
+// Custom hook to use the form context
+export const useFormContext = () => {
+  const context = useContext(FormContext)
+  if (!context) {
+    throw new Error('useFormContext must be used within a FormProvider')
+  }
+  return context
+}
