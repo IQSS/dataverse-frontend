@@ -112,6 +112,14 @@ export function FileMetadata({ file }: FileMetadataProps) {
               </Col>
             </Row>
           )}
+          {file.embargo && file.embargo.reason && (
+            <Row className={styles.row}>
+              <Col sm={3}>
+                <strong>Embargo Reason</strong>
+              </Col>
+              <Col>{file.embargo.reason}</Col>
+            </Row>
+          )}
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>

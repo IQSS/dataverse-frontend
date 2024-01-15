@@ -149,7 +149,7 @@ describe('FileMetadata', () => {
     )
 
     cy.findByText('Metadata Release Date').should('exist')
-    cy.findByText(DateHelper.toDisplayFormatYYYYMMDD(date)).should('exist')
+    cy.findAllByText(DateHelper.toDisplayFormatYYYYMMDD(date)).should('exist')
   })
 
   it('does not render the file Metadata Release Date if the publication date does not exist', () => {
@@ -179,7 +179,7 @@ describe('FileMetadata', () => {
       <FileMetadata
         file={FileMother.create({
           publicationDate: date,
-          embargo: FileEmbargoMother.create(date)
+          embargo: FileEmbargoMother.create({ dateAvailable: date })
         })}
       />
     )
@@ -194,5 +194,36 @@ describe('FileMetadata', () => {
     )
 
     cy.findByText('Publication Date').should('not.exist')
+  })
+
+  it('renders the file Embargo Reason', () => {
+    cy.customMount(
+      <FileMetadata
+        file={FileMother.create({
+          embargo: FileEmbargoMother.create({ reason: 'Some reason' })
+        })}
+      />
+    )
+
+    cy.findByText('Embargo Reason').should('exist')
+    cy.findByText('Some reason').should('exist')
+  })
+
+  it('does not render the file Embargo Reason if the embargo does not exist', () => {
+    cy.customMount(<FileMetadata file={FileMother.create({ embargo: undefined })} />)
+
+    cy.findByText('Embargo Reason').should('not.exist')
+  })
+
+  it('does not render the file Embargo Reason if the embargo reason does not exist', () => {
+    cy.customMount(
+      <FileMetadata
+        file={FileMother.create({
+          embargo: FileEmbargoMother.createWithNoReason({ reason: undefined })
+        })}
+      />
+    )
+
+    cy.findByText('Embargo Reason').should('not.exist')
   })
 })

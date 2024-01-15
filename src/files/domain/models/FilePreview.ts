@@ -114,7 +114,7 @@ export interface FileDate {
 }
 
 export class FileEmbargo {
-  constructor(readonly dateAvailable: Date) {}
+  constructor(readonly dateAvailable: Date, readonly reason?: string) {}
 
   get isActive(): boolean {
     return this.dateAvailable > new Date()

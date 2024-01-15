@@ -34,7 +34,7 @@ export class FileMother {
       },
       tabularData: faker.datatype.boolean() ? FileTabularDataMother.create() : undefined,
       checksum: faker.datatype.boolean() ? FileChecksumMother.create() : undefined,
-      embargo: FileEmbargoMother.create(),
+      embargo: faker.datatype.boolean() ? FileEmbargoMother.create() : undefined,
       ...props
     }
   }
