@@ -116,7 +116,7 @@ describe('DatasetFiles', () => {
       cy.findByRole('columnheader', { name: '101 to 150 of 200 Files' }).should('exist')
     })
 
-    it('does not render pagination if the user changes to a lower page size resulting in one page', () => {
+    it('does not render pagination if the user changes to a larger page size resulting in one page', () => {
       const testFilesCountInfo = FilesCountInfoMother.create({
         total: 32
       })
