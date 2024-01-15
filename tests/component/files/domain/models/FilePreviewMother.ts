@@ -5,13 +5,13 @@ import {
   FileEmbargo,
   FileIngest,
   FileIngestStatus,
-  FileLabel,
-  FileLabelType,
   FileSize,
   FileSizeUnit,
   FilePublishingStatus,
   FileType,
-  FileChecksum
+  FileChecksum,
+  FileLabel,
+  FileLabelType
 } from '../../../../../src/files/domain/models/FilePreview'
 import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
 
@@ -20,10 +20,19 @@ const valueOrUndefined: <T>(value: T) => T | undefined = (value) => {
   return shouldShowValue ? value : undefined
 }
 
-const createFakeFileLabel = (): FileLabel => ({
-  type: faker.helpers.arrayElement(Object.values(FileLabelType)),
-  value: faker.lorem.word()
-})
+export class FileLabelMother {
+  static create(props?: Partial<FileLabel>): FileLabel {
+    return {
+      type: faker.helpers.arrayElement(Object.values(FileLabelType)),
+      value: faker.lorem.word(),
+      ...props
+    }
+  }
+
+  static createMany(count: number): FileLabel[] {
+    return Array.from({ length: count }).map(() => this.create())
+  }
+}
 
 export class FileEmbargoMother {
   static create(dateAvailable?: Date): FileEmbargo {
@@ -96,14 +105,7 @@ export class FilePreviewMother {
         date: faker.date.recent()
       },
       downloadCount: faker.datatype.number(40),
-      labels: faker.datatype.boolean()
-        ? faker.helpers.arrayElements<FileLabel>([
-            createFakeFileLabel(),
-            createFakeFileLabel(),
-            createFakeFileLabel(),
-            createFakeFileLabel()
-          ])
-        : [],
+      labels: faker.datatype.boolean() ? FileLabelMother.createMany(3) : [],
       checksum: FileChecksumMother.create(),
       thumbnail: thumbnail,
       directory: valueOrUndefined<string>(faker.system.directoryPath()),
@@ -188,14 +190,7 @@ export class FilePreviewMother {
   }
 
   static createWithLabels(): FilePreview {
-    return this.createDefault({
-      labels: faker.helpers.arrayElements<FileLabel>([
-        createFakeFileLabel(),
-        createFakeFileLabel(),
-        createFakeFileLabel(),
-        createFakeFileLabel()
-      ])
-    })
+    return this.createDefault({ labels: FileLabelMother.createMany(4) })
   }
 
   static createWithDirectory(): FilePreview {

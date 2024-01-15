@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker'
 import { DatasetVersionMother } from '../../../dataset/domain/models/DatasetMother'
 import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
 import { FileType } from '../../../../../src/files/domain/models/FilePreview'
+import { FileLabelMother } from './FilePreviewMother'
 
 export class FileMother {
   static create(props?: Partial<File>): File {
@@ -14,6 +15,7 @@ export class FileMother {
       permissions: {
         canDownloadFile: faker.datatype.boolean()
       },
+      labels: faker.datatype.boolean() ? FileLabelMother.createMany(3) : [],
       thumbnail: faker.datatype.boolean() ? faker.image.imageUrl() : undefined,
       ...props
     }

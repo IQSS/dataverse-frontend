@@ -1,5 +1,5 @@
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
-import { FileType } from './FilePreview'
+import { FileLabel, FileType } from './FilePreview'
 
 export interface FilePermissions {
   canDownloadFile: boolean
@@ -11,5 +11,6 @@ export interface File {
   type: FileType
   restricted: boolean
   permissions: FilePermissions
+  labels: FileLabel[]
   thumbnail?: string
 }
