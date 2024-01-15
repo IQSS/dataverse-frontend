@@ -17,6 +17,7 @@ export class FileMother {
       },
       labels: faker.datatype.boolean() ? FileLabelMother.createMany(3) : [],
       depositDate: faker.date.past(),
+      publicationDate: faker.datatype.boolean() ? faker.date.past() : undefined,
       thumbnail: faker.datatype.boolean() ? faker.image.imageUrl() : undefined,
       persistentId: faker.datatype.boolean() ? faker.datatype.uuid() : undefined,
       downloadUrls: {
@@ -25,7 +26,7 @@ export class FileMother {
         rData: '/api/access/datafile/107'
       },
       tabularData: faker.datatype.boolean() ? FileTabularDataMother.create() : undefined,
-      checksum: FileChecksumMother.create(),
+      checksum: faker.datatype.boolean() ? FileChecksumMother.create() : undefined,
       ...props
     }
   }

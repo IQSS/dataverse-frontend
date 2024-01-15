@@ -85,6 +85,14 @@ export function FileMetadata({ file }: FileMetadataProps) {
             </Col>
             <Col>{DateHelper.toDisplayFormatYYYYMMDD(file.depositDate)}</Col>
           </Row>
+          {file.publicationDate && (
+            <Row className={styles.row}>
+              <Col sm={3}>
+                <strong>Metadata Release Date</strong>
+              </Col>
+              <Col>{DateHelper.toDisplayFormatYYYYMMDD(file.publicationDate)}</Col>
+            </Row>
+          )}
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>

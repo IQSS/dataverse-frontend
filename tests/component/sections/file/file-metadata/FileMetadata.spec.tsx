@@ -134,4 +134,24 @@ describe('FileMetadata', () => {
     cy.findByText('Deposit Date').should('exist')
     cy.findByText(DateHelper.toDisplayFormatYYYYMMDD(date)).should('exist')
   })
+
+  it('renders the file Metadata Release Date', () => {
+    const date = new Date('2021-01-01')
+    cy.customMount(
+      <FileMetadata
+        file={FileMother.create({
+          publicationDate: date
+        })}
+      />
+    )
+
+    cy.findByText('Metadata Release Date').should('exist')
+    cy.findByText(DateHelper.toDisplayFormatYYYYMMDD(date)).should('exist')
+  })
+
+  it('does not render the file Metadata Release Date if the publication date does not exist', () => {
+    cy.customMount(<FileMetadata file={FileMother.create({ publicationDate: undefined })} />)
+
+    cy.findByText('Metadata Release Date').should('not.exist')
+  })
 })

@@ -14,6 +14,7 @@ export interface File {
   labels: FileLabel[]
   downloadUrls: FileDownloadUrls
   depositDate: Date
+  publicationDate?: Date
   persistentId?: string
   thumbnail?: string
   tabularData?: FileTabularData
