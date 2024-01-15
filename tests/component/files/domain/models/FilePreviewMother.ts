@@ -12,7 +12,8 @@ import {
   FileChecksum,
   FileLabel,
   FileLabelType,
-  FileTabularData
+  FileTabularData,
+  FileVersion
 } from '../../../../../src/files/domain/models/FilePreview'
 import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
 
@@ -94,6 +95,30 @@ export class FileChecksumMother {
   }
 }
 
+export class FileVersionMother {
+  static create(props?: Partial<FileVersion>): FileVersion {
+    return {
+      number: faker.datatype.number(),
+      publishingStatus: faker.helpers.arrayElement(Object.values(FilePublishingStatus)),
+      ...props
+    }
+  }
+
+  static createReleased(props?: Partial<FileVersion>): FileVersion {
+    return this.create({
+      publishingStatus: FilePublishingStatus.RELEASED,
+      ...props
+    })
+  }
+
+  static createDeaccessioned(props?: Partial<FileVersion>): FileVersion {
+    return this.create({
+      publishingStatus: FilePublishingStatus.DEACCESSIONED,
+      ...props
+    })
+  }
+}
+
 export class FilePreviewMother {
   static create(props?: Partial<FilePreview>): FilePreview {
     const thumbnail = valueOrUndefined<string>(faker.image.imageUrl())
@@ -108,10 +133,7 @@ export class FilePreviewMother {
         canBeRequested: faker.datatype.boolean(),
         requested: faker.datatype.boolean()
       },
-      version: {
-        number: faker.datatype.number(),
-        publishingStatus: faker.helpers.arrayElement(Object.values(FilePublishingStatus))
-      },
+      version: FileVersionMother.create(),
       type:
         fileType === 'text/tab-separated-values'
           ? new FileType('text/tab-separated-values', 'Comma Separated Values')
@@ -181,10 +203,7 @@ export class FilePreviewMother {
   static createDefault(props?: Partial<FilePreview>): FilePreview {
     const defaultFile = {
       type: new FileType('text/plain'),
-      version: {
-        number: 1,
-        publishingStatus: FilePublishingStatus.RELEASED
-      },
+      version: FileVersionMother.createReleased(),
       access: {
         restricted: false,
         latestVersionRestricted: false,
@@ -365,10 +384,7 @@ export class FilePreviewMother {
 
   static createDeaccessioned(): FilePreview {
     return this.createDefault({
-      version: {
-        number: 1,
-        publishingStatus: FilePublishingStatus.DEACCESSIONED
-      }
+      version: FileVersionMother.createDeaccessioned()
     })
   }
   static createDeleted(): FilePreview {

@@ -63,4 +63,22 @@ describe('FileEmbargoDate', () => {
     cy.findByText(/Embargoed until/).should('not.exist')
     cy.findByText(/Was embargoed until/).should('not.exist')
   })
+
+  it('renders the embargo date in YYYY-MM-DD format', () => {
+    const embargoDate = new Date('2123-09-18')
+    const embargo = FileEmbargoMother.create(embargoDate)
+    const status = FilePublishingStatus.RELEASED
+    cy.customMount(
+      <FileEmbargoDate embargo={embargo} publishingStatus={status} format="YYYY-MM-DD" />
+    )
+    const dateString = embargoDate.toLocaleDateString(
+      Intl.DateTimeFormat().resolvedOptions().locale,
+      {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }
+    )
+    cy.findByText(`Embargoed until ` + dateString).should('exist')
+  })
 })

@@ -1,5 +1,8 @@
 export class DateHelper {
-  static toDisplayFormat(date: Date): string {
+  static toDisplayFormat(date: Date | undefined): string {
+    if (!date) {
+      return ''
+    }
     return date.toLocaleDateString(Intl.DateTimeFormat().resolvedOptions().locale, {
       year: 'numeric',
       month: 'short',
@@ -7,7 +10,10 @@ export class DateHelper {
     })
   }
 
-  static toDisplayFormatYYYYMMDD(date: Date): string {
+  static toDisplayFormatYYYYMMDD(date: Date | undefined): string {
+    if (!date) {
+      return ''
+    }
     return date.toLocaleDateString(Intl.DateTimeFormat().resolvedOptions().locale, {
       year: 'numeric',
       month: '2-digit',

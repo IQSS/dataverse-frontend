@@ -4,6 +4,7 @@ import { FilePreview } from '../file-preview/FilePreview'
 import { FileLabels } from '../../dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileLabels'
 import styles from './FileMetadata.module.scss'
 import { DateHelper } from '../../../shared/domain/helpers/DateHelper'
+import { FileEmbargoDate } from '../../dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileEmbargoDate'
 
 interface FileMetadataProps {
   file: File
@@ -91,6 +92,24 @@ export function FileMetadata({ file }: FileMetadataProps) {
                 <strong>Metadata Release Date</strong>
               </Col>
               <Col>{DateHelper.toDisplayFormatYYYYMMDD(file.publicationDate)}</Col>
+            </Row>
+          )}
+          {(file.publicationDate || file.embargo) && (
+            <Row className={styles.row}>
+              <Col sm={3}>
+                <strong>Publication Date</strong>
+              </Col>
+              <Col>
+                {file.embargo ? (
+                  <FileEmbargoDate
+                    embargo={file.embargo}
+                    publishingStatus={file.version.publishingStatus}
+                    format="YYYY-MM-DD"
+                  />
+                ) : (
+                  DateHelper.toDisplayFormatYYYYMMDD(file.publicationDate)
+                )}
+              </Col>
             </Row>
           )}
         </Accordion.Body>

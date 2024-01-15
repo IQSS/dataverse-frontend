@@ -3,12 +3,19 @@ import { faker } from '@faker-js/faker'
 import { DatasetVersionMother } from '../../../dataset/domain/models/DatasetMother'
 import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
 import { FileType } from '../../../../../src/files/domain/models/FilePreview'
-import { FileChecksumMother, FileLabelMother, FileTabularDataMother } from './FilePreviewMother'
+import {
+  FileChecksumMother,
+  FileEmbargoMother,
+  FileLabelMother,
+  FileTabularDataMother,
+  FileVersionMother
+} from './FilePreviewMother'
 
 export class FileMother {
   static create(props?: Partial<File>): File {
     return {
       name: faker.system.fileName(),
+      version: FileVersionMother.create(),
       datasetVersion: DatasetVersionMother.create(),
       type: new FileType(faker.helpers.arrayElement(Object.keys(FileTypeToFriendlyTypeMap))),
       restricted: faker.datatype.boolean(),
@@ -27,6 +34,7 @@ export class FileMother {
       },
       tabularData: faker.datatype.boolean() ? FileTabularDataMother.create() : undefined,
       checksum: faker.datatype.boolean() ? FileChecksumMother.create() : undefined,
+      embargo: FileEmbargoMother.create(),
       ...props
     }
   }

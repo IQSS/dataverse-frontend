@@ -1,5 +1,13 @@
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
-import { FileChecksum, FileDownloadUrls, FileLabel, FileTabularData, FileType } from './FilePreview'
+import {
+  FileChecksum,
+  FileDownloadUrls,
+  FileEmbargo,
+  FileLabel,
+  FileTabularData,
+  FileType,
+  FileVersion
+} from './FilePreview'
 
 export interface FilePermissions {
   canDownloadFile: boolean
@@ -7,6 +15,7 @@ export interface FilePermissions {
 
 export interface File {
   name: string
+  version: FileVersion
   datasetVersion: DatasetVersion
   type: FileType
   restricted: boolean
@@ -19,4 +28,5 @@ export interface File {
   thumbnail?: string
   tabularData?: FileTabularData
   checksum?: FileChecksum
+  embargo?: FileEmbargo
 }

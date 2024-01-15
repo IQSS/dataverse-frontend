@@ -1,7 +1,10 @@
 import { FileMetadata } from '../../../../../src/sections/file/file-metadata/FileMetadata'
 import { FileMother } from '../../../files/domain/models/FileMother'
 import { FileLabelType } from '../../../../../src/files/domain/models/FilePreview'
-import { FileTabularDataMother } from '../../../files/domain/models/FilePreviewMother'
+import {
+  FileEmbargoMother,
+  FileTabularDataMother
+} from '../../../files/domain/models/FilePreviewMother'
 import { DateHelper } from '../../../../../src/shared/domain/helpers/DateHelper'
 
 describe('FileMetadata', () => {
@@ -153,5 +156,43 @@ describe('FileMetadata', () => {
     cy.customMount(<FileMetadata file={FileMother.create({ publicationDate: undefined })} />)
 
     cy.findByText('Metadata Release Date').should('not.exist')
+  })
+
+  it('renders the file Publication Date', () => {
+    const date = new Date('2021-10-01')
+    cy.customMount(
+      <FileMetadata
+        file={FileMother.create({
+          embargo: undefined,
+          publicationDate: date
+        })}
+      />
+    )
+
+    cy.findByText('Publication Date').should('exist')
+    cy.findAllByText(DateHelper.toDisplayFormatYYYYMMDD(date)).should('exist')
+  })
+
+  it('renders the file Publication Date with embargo', () => {
+    const date = new Date('2021-05-01')
+    cy.customMount(
+      <FileMetadata
+        file={FileMother.create({
+          publicationDate: date,
+          embargo: FileEmbargoMother.create(date)
+        })}
+      />
+    )
+
+    cy.findByText('Publication Date').should('exist')
+    cy.findByText(DateHelper.toDisplayFormatYYYYMMDD(date)).should('exist')
+  })
+
+  it('does not render the file Publication Date if the publication date and embargo do not exist', () => {
+    cy.customMount(
+      <FileMetadata file={FileMother.create({ publicationDate: undefined, embargo: undefined })} />
+    )
+
+    cy.findByText('Publication Date').should('not.exist')
   })
 })
