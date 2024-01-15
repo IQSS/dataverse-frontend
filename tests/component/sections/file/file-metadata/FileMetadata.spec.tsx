@@ -1,6 +1,7 @@
 import { FileMetadata } from '../../../../../src/sections/file/file-metadata/FileMetadata'
 import { FileMother } from '../../../files/domain/models/FileMother'
 import { FileLabelType } from '../../../../../src/files/domain/models/FilePreview'
+import { FileTabularDataMother } from '../../../files/domain/models/FilePreviewMother'
 
 describe('FileMetadata', () => {
   it('renders the File Metadata tab', () => {
@@ -69,5 +70,34 @@ describe('FileMetadata', () => {
       'href',
       'https://guides.dataverse.org/en/6.1/user/find-use-data.html#downloading-via-url'
     )
+  })
+
+  it('does not render the download url if the user does not have file download permissions', () => {
+    cy.customMount(
+      <FileMetadata
+        file={FileMother.createWithDownloadPermissionDenied({
+          downloadUrls: { original: '/api/access/datafile/123' }
+        })}
+      />
+    )
+
+    cy.findByText('Download URL').should('not.exist')
+  })
+
+  it('renders the file unf if it exists', () => {
+    cy.customMount(
+      <FileMetadata
+        file={FileMother.create({ tabularData: FileTabularDataMother.create({ unf: 'some-unf' }) })}
+      />
+    )
+
+    cy.findByText('File UNF').should('exist')
+    cy.findByText('some-unf').should('exist')
+  })
+
+  it('does not render the file unf if it does not exist', () => {
+    cy.customMount(<FileMetadata file={FileMother.create({ tabularData: undefined })} />)
+
+    cy.findByText('File UNF').should('not.exist')
   })
 })

@@ -11,13 +11,25 @@ import {
   FileType,
   FileChecksum,
   FileLabel,
-  FileLabelType
+  FileLabelType,
+  FileTabularData
 } from '../../../../../src/files/domain/models/FilePreview'
 import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
 
 const valueOrUndefined: <T>(value: T) => T | undefined = (value) => {
   const shouldShowValue = faker.datatype.boolean()
   return shouldShowValue ? value : undefined
+}
+
+export class FileTabularDataMother {
+  static create(props?: Partial<FileTabularData>): FileTabularData {
+    return {
+      variablesCount: faker.datatype.number(100),
+      observationsCount: faker.datatype.number(100),
+      unf: `UNF:6:${faker.datatype.uuid()}==`,
+      ...props
+    }
+  }
 }
 
 export class FileLabelMother {
@@ -112,11 +124,7 @@ export class FilePreviewMother {
       embargo: valueOrUndefined<FileEmbargo>(FileEmbargoMother.create()),
       tabularData:
         fileType === 'text/tab-separated-values' && !checksum
-          ? {
-              variablesCount: faker.datatype.number(100),
-              observationsCount: faker.datatype.number(100),
-              unf: `UNF:6:${faker.datatype.uuid()}==`
-            }
+          ? FileTabularDataMother.create()
           : undefined,
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
       isDeleted: faker.datatype.boolean(),
@@ -218,11 +226,7 @@ export class FilePreviewMother {
   static createTabular(props?: Partial<FilePreview>): FilePreview {
     return this.createDefault({
       type: new FileType('text/tab-separated-values', 'Comma Separated Values'),
-      tabularData: {
-        variablesCount: faker.datatype.number(100),
-        observationsCount: faker.datatype.number(100),
-        unf: `UNF:${faker.datatype.uuid()}==`
-      },
+      tabularData: FileTabularDataMother.create(),
       ...props
     })
   }

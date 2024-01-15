@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker'
 import { DatasetVersionMother } from '../../../dataset/domain/models/DatasetMother'
 import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
 import { FileType } from '../../../../../src/files/domain/models/FilePreview'
-import { FileLabelMother } from './FilePreviewMother'
+import { FileLabelMother, FileTabularDataMother } from './FilePreviewMother'
 
 export class FileMother {
   static create(props?: Partial<File>): File {
@@ -23,6 +23,7 @@ export class FileMother {
         tabular: '/api/access/datafile/107',
         rData: '/api/access/datafile/107'
       },
+      tabularData: faker.datatype.boolean() ? FileTabularDataMother.create() : undefined,
       ...props
     }
   }
@@ -41,13 +42,9 @@ export class FileMother {
   }
 
   static createRestricted(props?: Partial<File>): File {
-    return this.createRealistic({
-      restricted: true,
-      permissions: {
-        canDownloadFile: false
-      },
-      ...props
-    })
+    return this.createRealistic(
+      this.createWithDownloadPermissionDenied({ restricted: true, ...props })
+    )
   }
 
   static createRestrictedWithAccessGranted(props?: Partial<File>): File {
@@ -72,6 +69,15 @@ export class FileMother {
     return this.create({
       permissions: {
         canDownloadFile: true
+      },
+      ...props
+    })
+  }
+
+  static createWithDownloadPermissionDenied(props?: Partial<File>): File {
+    return this.create({
+      permissions: {
+        canDownloadFile: false
       },
       ...props
     })

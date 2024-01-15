@@ -62,6 +62,14 @@ export function FileMetadata({ file }: FileMetadataProps) {
               </Col>
             </Row>
           )}
+          {file.tabularData?.unf && (
+            <Row className={styles.row}>
+              <Col sm={3}>
+                <strong>File UNF</strong>
+              </Col>
+              <Col>{file.tabularData.unf}</Col>
+            </Row>
+          )}
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>
