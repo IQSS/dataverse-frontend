@@ -18,6 +18,11 @@ export class FileMother {
       labels: faker.datatype.boolean() ? FileLabelMother.createMany(3) : [],
       thumbnail: faker.datatype.boolean() ? faker.image.imageUrl() : undefined,
       persistentId: faker.datatype.boolean() ? faker.datatype.uuid() : undefined,
+      downloadUrls: {
+        original: '/api/access/datafile/107',
+        tabular: '/api/access/datafile/107',
+        rData: '/api/access/datafile/107'
+      },
       ...props
     }
   }
@@ -46,12 +51,7 @@ export class FileMother {
   }
 
   static createRestrictedWithAccessGranted(props?: Partial<File>): File {
-    return this.createRestricted({
-      permissions: {
-        canDownloadFile: true
-      },
-      ...props
-    })
+    return this.createRestricted(this.createWithDownloadPermissionGranted(props))
   }
 
   static createWithThumbnail(props?: Partial<File>): File {
@@ -64,6 +64,15 @@ export class FileMother {
   static createWithoutThumbnail(props?: Partial<File>): File {
     return this.create({
       thumbnail: undefined,
+      ...props
+    })
+  }
+
+  static createWithDownloadPermissionGranted(props?: Partial<File>): File {
+    return this.create({
+      permissions: {
+        canDownloadFile: true
+      },
       ...props
     })
   }

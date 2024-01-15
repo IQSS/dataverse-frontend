@@ -8,6 +8,8 @@ interface FileMetadataProps {
   file: File
 }
 
+const BASE_URL = (import.meta.env.VITE_DATAVERSE_BACKEND_URL as string) ?? ''
+
 export function FileMetadata({ file }: FileMetadataProps) {
   return (
     <Accordion defaultActiveKey="0">
@@ -38,6 +40,26 @@ export function FileMetadata({ file }: FileMetadataProps) {
                 <strong>File Persistent ID</strong>
               </Col>
               <Col>{file.persistentId}</Col>
+            </Row>
+          )}
+          {file.permissions.canDownloadFile && (
+            <Row className={styles.row}>
+              <Col sm={3}>
+                <strong>Download URL</strong>
+              </Col>
+              <Col>
+                <p className={styles['help-text']}>
+                  Use the Download URL in a Wget command or a download manager to avoid interrupted
+                  downloads, time outs or other failures.{' '}
+                  <a href="https://guides.dataverse.org/en/6.1/user/find-use-data.html#downloading-via-url">
+                    User Guide - Downloading via URL
+                  </a>
+                </p>
+                <code className={styles.code}>
+                  {BASE_URL}
+                  {file.downloadUrls.original}
+                </code>
+              </Col>
             </Row>
           )}
         </Accordion.Body>

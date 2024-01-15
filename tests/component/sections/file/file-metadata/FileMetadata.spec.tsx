@@ -43,4 +43,31 @@ describe('FileMetadata', () => {
     cy.findByText('File Persistent ID').should('exist')
     cy.findByText('doi:10.5072/FK2/ABC123').should('exist')
   })
+
+  it('does not render the file persistent id when there is no persistent id', () => {
+    cy.customMount(<FileMetadata file={FileMother.create({ persistentId: undefined })} />)
+
+    cy.findByText('File Persistent ID').should('not.exist')
+  })
+
+  it('renders the download url if the user has file download permissions', () => {
+    cy.customMount(
+      <FileMetadata
+        file={FileMother.createWithDownloadPermissionGranted({
+          downloadUrls: { original: '/api/access/datafile/123' }
+        })}
+      />
+    )
+
+    cy.findByText('Download URL').should('exist')
+    cy.findByText('/api/access/datafile/123', { exact: false }).should('exist')
+    cy.findByText(
+      'Use the Download URL in a Wget command or a download manager to avoid interrupted downloads, time outs or other failures.'
+    ).should('exist')
+    cy.findByRole('link', { name: 'User Guide - Downloading via URL' }).should(
+      'have.attr',
+      'href',
+      'https://guides.dataverse.org/en/6.1/user/find-use-data.html#downloading-via-url'
+    )
+  })
 })
