@@ -12,5 +12,6 @@ export interface File {
   restricted: boolean
   permissions: FilePermissions
   labels: FileLabel[]
+  persistentId?: string
   thumbnail?: string
 }

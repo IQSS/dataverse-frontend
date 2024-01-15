@@ -17,6 +17,7 @@ export class FileMother {
       },
       labels: faker.datatype.boolean() ? FileLabelMother.createMany(3) : [],
       thumbnail: faker.datatype.boolean() ? faker.image.imageUrl() : undefined,
+      persistentId: faker.datatype.boolean() ? faker.datatype.uuid() : undefined,
       ...props
     }
   }
@@ -29,6 +30,7 @@ export class FileMother {
       permissions: {
         canDownloadFile: true
       },
+      persistentId: 'doi:10.5072/FK2/ABC123',
       ...props
     })
   }

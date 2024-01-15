@@ -34,4 +34,13 @@ describe('FileMetadata', () => {
 
     cy.findByText('File Tags').should('not.exist')
   })
+
+  it('renders the file persistent id', () => {
+    cy.customMount(
+      <FileMetadata file={FileMother.create({ persistentId: 'doi:10.5072/FK2/ABC123' })} />
+    )
+
+    cy.findByText('File Persistent ID').should('exist')
+    cy.findByText('doi:10.5072/FK2/ABC123').should('exist')
+  })
 })
