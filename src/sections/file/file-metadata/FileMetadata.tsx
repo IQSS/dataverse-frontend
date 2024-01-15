@@ -1,6 +1,12 @@
 import { Accordion, Col, Row } from '@iqss/dataverse-design-system'
+import { File } from '../../../files/domain/models/File'
+import { FilePreview } from '../file-preview/FilePreview'
 
-export function FileMetadata() {
+interface FileMetadataProps {
+  file: File
+}
+
+export function FileMetadata({ file }: FileMetadataProps) {
   return (
     <Accordion defaultActiveKey="0">
       <Accordion.Item eventKey="0">
@@ -11,7 +17,7 @@ export function FileMetadata() {
               <strong>Preview</strong>
             </Col>
             <Col>
-              <span>Preview Image</span>
+              <FilePreview thumbnail={file.thumbnail} type={file.type} name={file.name} />
             </Col>
           </Row>
         </Accordion.Body>

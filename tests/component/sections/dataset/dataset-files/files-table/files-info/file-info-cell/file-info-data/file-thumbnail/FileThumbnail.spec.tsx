@@ -7,7 +7,7 @@ import { FileType } from '../../../../../../../../../../src/files/domain/models/
 
 const fileRepository: FileRepository = {} as FileRepository
 describe('FileThumbnail', () => {
-  it('renders FileThumbnailPreviewImage when thumbnail is provided and file can be downloaded', () => {
+  it('renders FilePreviewImage when thumbnail is provided and file can be downloaded', () => {
     const file = FilePreviewMother.createWithThumbnail()
     fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
@@ -30,7 +30,7 @@ describe('FileThumbnail', () => {
     cy.findByText('Restricted with access Icon').should('not.exist')
   })
 
-  it('does not render FileThumbnailPreviewImage when thumbnail is provided and file cannot be downloaded', () => {
+  it('does not render FilePreviewImage when thumbnail is provided and file cannot be downloaded', () => {
     const file = FilePreviewMother.createWithThumbnail()
     cy.customMount(<FileThumbnail file={file} />)
 
@@ -39,7 +39,7 @@ describe('FileThumbnail', () => {
     cy.findByText('Restricted with access Icon').should('not.exist')
   })
 
-  it('renders FileThumbnailPreviewImage when thumbnail is provided with unlocked icon if restricted with access', () => {
+  it('renders FilePreviewImage when thumbnail is provided with unlocked icon if restricted with access', () => {
     const file = FilePreviewMother.createWithThumbnailRestrictedWithAccessGranted()
     fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
@@ -63,7 +63,7 @@ describe('FileThumbnail', () => {
     cy.findByText('File Access: Restricted with Access Granted').should('exist')
   })
 
-  it('does not render FileThumbnailPreviewImage when thumbnail is provided if restricted with no access', () => {
+  it('does not render FilePreviewImage when thumbnail is provided if restricted with no access', () => {
     const file = FilePreviewMother.createWithThumbnailRestricted()
 
     cy.customMount(<FileThumbnail file={file} />)
@@ -76,7 +76,7 @@ describe('FileThumbnail', () => {
     cy.findByText('Restricted with access Icon').should('not.exist')
   })
 
-  it('renders FileThumbnailIcon when thumbnail is not provided', () => {
+  it('renders FileIcon when thumbnail is not provided', () => {
     const file = FilePreviewMother.createDefault({ type: new FileType('application/pdf') })
 
     cy.customMount(<FileThumbnail file={file} />)
@@ -87,7 +87,7 @@ describe('FileThumbnail', () => {
     cy.findByText('Restricted with access Icon').should('not.exist')
   })
 
-  it('renders FileThumbnailIcon when thumbnail is not provided with lock icon when restricted with no access', () => {
+  it('renders FileIcon when thumbnail is not provided with lock icon when restricted with no access', () => {
     const file = FilePreviewMother.createWithRestrictedAccess()
 
     cy.customMount(<FileThumbnail file={file} />)
@@ -100,7 +100,7 @@ describe('FileThumbnail', () => {
     cy.findByText('Restricted with access Icon').should('not.exist')
   })
 
-  it('renders FileThumbnailIcon when thumbnail is not provided with unlock icon when restricted with access', () => {
+  it('renders FileIcon when thumbnail is not provided with unlock icon when restricted with access', () => {
     const file = FilePreviewMother.createWithRestrictedAccessWithAccessGranted()
     fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({

@@ -55,7 +55,7 @@ export function File({ repository, id }: FileProps) {
             <Tabs defaultActiveKey="metadata">
               <Tabs.Tab eventKey="metadata" title={t('tabs.metadata')}>
                 <div className={styles['tab-container']}>
-                  <FileMetadata />
+                  <FileMetadata file={file} />
                 </div>
               </Tabs.Tab>
             </Tabs>
