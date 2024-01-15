@@ -2,6 +2,7 @@ import { FileMetadata } from '../../../../../src/sections/file/file-metadata/Fil
 import { FileMother } from '../../../files/domain/models/FileMother'
 import { FileLabelType } from '../../../../../src/files/domain/models/FilePreview'
 import { FileTabularDataMother } from '../../../files/domain/models/FilePreviewMother'
+import { DateHelper } from '../../../../../src/shared/domain/helpers/DateHelper'
 
 describe('FileMetadata', () => {
   it('renders the File Metadata tab', () => {
@@ -118,5 +119,19 @@ describe('FileMetadata', () => {
     cy.customMount(<FileMetadata file={FileMother.create({ checksum: undefined })} />)
 
     cy.findByText('SHA-1').should('not.exist')
+  })
+
+  it('renders the file deposit date', () => {
+    const date = new Date('2021-01-01')
+    cy.customMount(
+      <FileMetadata
+        file={FileMother.create({
+          depositDate: date
+        })}
+      />
+    )
+
+    cy.findByText('Deposit Date').should('exist')
+    cy.findByText(DateHelper.toDisplayFormatYYYYMMDD(date)).should('exist')
   })
 })

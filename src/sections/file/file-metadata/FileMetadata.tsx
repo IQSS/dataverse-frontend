@@ -3,6 +3,7 @@ import { File } from '../../../files/domain/models/File'
 import { FilePreview } from '../file-preview/FilePreview'
 import { FileLabels } from '../../dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileLabels'
 import styles from './FileMetadata.module.scss'
+import { DateHelper } from '../../../shared/domain/helpers/DateHelper'
 
 interface FileMetadataProps {
   file: File
@@ -78,6 +79,12 @@ export function FileMetadata({ file }: FileMetadataProps) {
               <Col>{file.checksum.value}</Col>
             </Row>
           )}
+          <Row className={styles.row}>
+            <Col sm={3}>
+              <strong>Deposit Date</strong>
+            </Col>
+            <Col>{DateHelper.toDisplayFormatYYYYMMDD(file.depositDate)}</Col>
+          </Row>
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>

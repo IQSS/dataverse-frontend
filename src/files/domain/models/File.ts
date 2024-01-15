@@ -13,6 +13,7 @@ export interface File {
   permissions: FilePermissions
   labels: FileLabel[]
   downloadUrls: FileDownloadUrls
+  depositDate: Date
   persistentId?: string
   thumbnail?: string
   tabularData?: FileTabularData

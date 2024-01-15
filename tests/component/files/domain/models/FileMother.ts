@@ -16,6 +16,7 @@ export class FileMother {
         canDownloadFile: faker.datatype.boolean()
       },
       labels: faker.datatype.boolean() ? FileLabelMother.createMany(3) : [],
+      depositDate: faker.date.past(),
       thumbnail: faker.datatype.boolean() ? faker.image.imageUrl() : undefined,
       persistentId: faker.datatype.boolean() ? faker.datatype.uuid() : undefined,
       downloadUrls: {
