@@ -1,5 +1,5 @@
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
-import { FileDownloadUrls, FileLabel, FileTabularData, FileType } from './FilePreview'
+import { FileChecksum, FileDownloadUrls, FileLabel, FileTabularData, FileType } from './FilePreview'
 
 export interface FilePermissions {
   canDownloadFile: boolean
@@ -16,4 +16,5 @@ export interface File {
   persistentId?: string
   thumbnail?: string
   tabularData?: FileTabularData
+  checksum?: FileChecksum
 }

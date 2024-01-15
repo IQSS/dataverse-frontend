@@ -26,7 +26,7 @@ export class FileTabularDataMother {
     return {
       variablesCount: faker.datatype.number(100),
       observationsCount: faker.datatype.number(100),
-      unf: `UNF:6:${faker.datatype.uuid()}==`,
+      unf: `UNF:6:xXw6cIZnwHWvmRdwhYCQZA==`,
       ...props
     }
   }
@@ -81,6 +81,14 @@ export class FileChecksumMother {
     return {
       algorithm: faker.lorem.word(),
       value: faker.datatype.uuid(),
+      ...props
+    }
+  }
+
+  static createRealistic(props?: Partial<FileChecksum>): FileChecksum {
+    return {
+      algorithm: 'MD5',
+      value: 'd41d8cd98f00b204e9800998ecf8427e',
       ...props
     }
   }

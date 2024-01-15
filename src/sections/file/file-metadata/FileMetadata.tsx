@@ -70,6 +70,14 @@ export function FileMetadata({ file }: FileMetadataProps) {
               <Col>{file.tabularData.unf}</Col>
             </Row>
           )}
+          {file.checksum && (
+            <Row className={styles.row}>
+              <Col sm={3}>
+                <strong>{file.checksum.algorithm}</strong>
+              </Col>
+              <Col>{file.checksum.value}</Col>
+            </Row>
+          )}
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>

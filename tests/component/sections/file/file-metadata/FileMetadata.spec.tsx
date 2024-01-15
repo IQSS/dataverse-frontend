@@ -100,4 +100,23 @@ describe('FileMetadata', () => {
 
     cy.findByText('File UNF').should('not.exist')
   })
+
+  it('renders the file checksum', () => {
+    cy.customMount(
+      <FileMetadata
+        file={FileMother.create({
+          checksum: { algorithm: 'SHA-1', value: 'some-checksum' }
+        })}
+      />
+    )
+
+    cy.findByText('SHA-1').should('exist')
+    cy.findByText('some-checksum').should('exist')
+  })
+
+  it('does not render the file checksum if it does not exist', () => {
+    cy.customMount(<FileMetadata file={FileMother.create({ checksum: undefined })} />)
+
+    cy.findByText('SHA-1').should('not.exist')
+  })
 })
