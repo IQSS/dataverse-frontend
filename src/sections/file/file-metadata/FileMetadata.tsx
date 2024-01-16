@@ -132,6 +132,22 @@ export function FileMetadata({ file }: FileMetadataProps) {
             </Col>
             <Col>{file.type.toDisplayFormat()}</Col>
           </Row>
+          {file.tabularData && (
+            <>
+              <Row className={styles.row}>
+                <Col sm={3}>
+                  <strong>Variables</strong>
+                </Col>
+                <Col>{file.tabularData.variablesCount}</Col>
+              </Row>
+              <Row className={styles.row}>
+                <Col sm={3}>
+                  <strong>Observations</strong>
+                </Col>
+                <Col>{file.tabularData.observationsCount}</Col>
+              </Row>
+            </>
+          )}
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>

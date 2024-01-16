@@ -254,4 +254,26 @@ describe('FileMetadata', () => {
     cy.findByText('Type').should('exist')
     cy.findByText('Plain Text').should('exist')
   })
+
+  it('renders the tabular data if it exists', () => {
+    cy.customMount(
+      <FileMetadata
+        file={FileMother.create({
+          tabularData: FileTabularDataMother.create({ variablesCount: 123, observationsCount: 321 })
+        })}
+      />
+    )
+
+    cy.findByText('Variables').should('exist')
+    cy.findByText('123').should('exist')
+    cy.findByText('Observations').should('exist')
+    cy.findByText('321').should('exist')
+  })
+
+  it('does not render the tabular data if it does not exist', () => {
+    cy.customMount(<FileMetadata file={FileMother.create({ tabularData: undefined })} />)
+
+    cy.findByText('Variables').should('not.exist')
+    cy.findByText('Observations').should('not.exist')
+  })
 })
