@@ -120,6 +120,12 @@ export function FileMetadata({ file }: FileMetadataProps) {
               <Col>{file.embargo.reason}</Col>
             </Row>
           )}
+          <Row className={styles.row}>
+            <Col sm={3}>
+              <strong>Size</strong>
+            </Col>
+            <Col>{file.size.toString()}</Col>
+          </Row>
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>

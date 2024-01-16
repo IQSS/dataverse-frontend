@@ -7,6 +7,7 @@ import {
   FileChecksumMother,
   FileEmbargoMother,
   FileLabelMother,
+  FileSizeMother,
   FileTabularDataMother,
   FileVersionMother
 } from './FilePreviewMother'
@@ -18,6 +19,7 @@ export class FileMother {
       version: FileVersionMother.create(),
       datasetVersion: DatasetVersionMother.create(),
       type: new FileType(faker.helpers.arrayElement(Object.keys(FileTypeToFriendlyTypeMap))),
+      size: FileSizeMother.create(),
       restricted: faker.datatype.boolean(),
       permissions: {
         canDownloadFile: faker.datatype.boolean()

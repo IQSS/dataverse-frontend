@@ -127,6 +127,18 @@ export class FileVersionMother {
   }
 }
 
+export class FileSizeMother {
+  static create(props?: Partial<FileSize>): FileSize {
+    const size = {
+      value: faker.datatype.number({ max: 1024, precision: 2 }),
+      unit: faker.helpers.arrayElement(Object.values(FileSizeUnit)),
+      ...props
+    }
+
+    return new FileSize(size.value, size.unit)
+  }
+}
+
 export class FilePreviewMother {
   static create(props?: Partial<FilePreview>): FilePreview {
     const thumbnail = valueOrUndefined<string>(faker.image.imageUrl())
@@ -146,10 +158,7 @@ export class FilePreviewMother {
         fileType === 'text/tab-separated-values'
           ? new FileType('text/tab-separated-values', 'Comma Separated Values')
           : new FileType(thumbnail ? 'image' : fileType),
-      size: {
-        value: faker.datatype.number({ max: 1024, precision: 2 }),
-        unit: faker.helpers.arrayElement(Object.values(FileSizeUnit))
-      },
+      size: FileSizeMother.create(),
       date: {
         type: faker.helpers.arrayElement(Object.values(FileDateType)),
         date: faker.date.recent()
@@ -181,7 +190,7 @@ export class FilePreviewMother {
       fileMockedData.name,
       fileMockedData.access,
       fileMockedData.type,
-      new FileSize(fileMockedData.size.value, fileMockedData.size.unit),
+      fileMockedData.size,
       fileMockedData.date,
       fileMockedData.downloadCount,
       fileMockedData.labels,

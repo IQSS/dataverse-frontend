@@ -4,6 +4,7 @@ import {
   FileDownloadUrls,
   FileEmbargo,
   FileLabel,
+  FileSize,
   FileTabularData,
   FileType,
   FileVersion
@@ -18,6 +19,7 @@ export interface File {
   version: FileVersion
   datasetVersion: DatasetVersion
   type: FileType
+  size: FileSize
   restricted: boolean
   permissions: FilePermissions
   labels: FileLabel[]

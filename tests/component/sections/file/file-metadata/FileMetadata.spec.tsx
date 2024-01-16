@@ -1,8 +1,9 @@
 import { FileMetadata } from '../../../../../src/sections/file/file-metadata/FileMetadata'
 import { FileMother } from '../../../files/domain/models/FileMother'
-import { FileLabelType } from '../../../../../src/files/domain/models/FilePreview'
+import { FileLabelType, FileSizeUnit } from '../../../../../src/files/domain/models/FilePreview'
 import {
   FileEmbargoMother,
+  FileSizeMother,
   FileTabularDataMother
 } from '../../../files/domain/models/FilePreviewMother'
 import { DateHelper } from '../../../../../src/shared/domain/helpers/DateHelper'
@@ -225,5 +226,18 @@ describe('FileMetadata', () => {
     )
 
     cy.findByText('Embargo Reason').should('not.exist')
+  })
+
+  it('renders the file size', () => {
+    cy.customMount(
+      <FileMetadata
+        file={FileMother.create({
+          size: FileSizeMother.create({ value: 123.03932894722, unit: FileSizeUnit.BYTES })
+        })}
+      />
+    )
+
+    cy.findByText('Size').should('exist')
+    cy.findByText('123 B').should('exist')
   })
 })
