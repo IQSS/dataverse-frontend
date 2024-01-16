@@ -20,5 +20,28 @@
       "name": "Public",
       "icon": "Public File Icon"
     }
+  },
+  "metadata": {
+    "title": "File Metadata",
+    "fields": {
+      "preview": "Preview",
+      "labels": "File Tags",
+      "persistentId": "File Persistent ID",
+      "downloadUrl": {
+        "title": "Download URL",
+        "description": "Use the Download URL in a Wget command or a download manager to avoid interrupted downloads, time outs or other failures. <1>User Guide - Downloading via URL</1>"
+      },
+      "unf": "File UNF",
+      "depositDate": "Deposit Date",
+      "metadataReleaseDate": "Metadata Release Date",
+      "publicationDate": "Publication Date",
+      "embargoReason": "Embargo Reason",
+      "size": "Size",
+      "type": "Type",
+      "variables": "Variables",
+      "observations": "Observations",
+      "directory": "File Path",
+      "description": "Description"
+    }
   }
 }

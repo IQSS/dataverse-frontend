@@ -6,20 +6,22 @@ import styles from './FileMetadata.module.scss'
 import { DateHelper } from '../../../shared/domain/helpers/DateHelper'
 import { FileEmbargoDate } from '../file-embargo/FileEmbargoDate'
 import { BASE_URL } from '../../../config'
+import { Trans, useTranslation } from 'react-i18next'
 
 interface FileMetadataProps {
   file: File
 }
 
 export function FileMetadata({ file }: FileMetadataProps) {
+  const { t } = useTranslation('file')
   return (
     <Accordion defaultActiveKey="0">
       <Accordion.Item eventKey="0">
-        <Accordion.Header>File Metadata</Accordion.Header>
+        <Accordion.Header>{t('metadata.title')}</Accordion.Header>
         <Accordion.Body>
           <Row className={styles.row}>
             <Col sm={3}>
-              <strong>Preview</strong>
+              <strong>{t('metadata.fields.preview')}</strong>
             </Col>
             <Col>
               <FilePreview thumbnail={file.thumbnail} type={file.type} name={file.name} />
@@ -28,7 +30,7 @@ export function FileMetadata({ file }: FileMetadataProps) {
           {file.labels.length > 0 && (
             <Row className={styles.row}>
               <Col sm={3}>
-                <strong>File Tags</strong>
+                <strong>{t('metadata.fields.labels')}</strong>
               </Col>
               <Col>
                 <FileLabels labels={file.labels} />
@@ -38,7 +40,7 @@ export function FileMetadata({ file }: FileMetadataProps) {
           {file.persistentId && (
             <Row className={styles.row}>
               <Col sm={3}>
-                <strong>File Persistent ID</strong>
+                <strong>{t('metadata.fields.persistentId')}</strong>
               </Col>
               <Col>{file.persistentId}</Col>
             </Row>
@@ -46,16 +48,18 @@ export function FileMetadata({ file }: FileMetadataProps) {
           {file.permissions.canDownloadFile && (
             <Row className={styles.row}>
               <Col sm={3}>
-                <strong>Download URL</strong>
+                <strong>{t('metadata.fields.downloadUrl.title')}</strong>
               </Col>
               <Col>
-                <p className={styles['help-text']}>
-                  Use the Download URL in a Wget command or a download manager to avoid interrupted
-                  downloads, time outs or other failures.{' '}
-                  <a href="https://guides.dataverse.org/en/6.1/user/find-use-data.html#downloading-via-url">
-                    User Guide - Downloading via URL
-                  </a>
-                </p>
+                <Trans i18nKey="metadata.fields.downloadUrl.description">
+                  <p className={styles['help-text']}>
+                    Use the Download URL in a Wget command or a download manager to avoid
+                    interrupted downloads, time outs or other failures.{' '}
+                    <a href="https://guides.dataverse.org/en/6.1/user/find-use-data.html#downloading-via-url">
+                      User Guide - Downloading via URL
+                    </a>
+                  </p>
+                </Trans>
                 <code className={styles.code}>
                   {BASE_URL}
                   {file.downloadUrls.original}
@@ -66,7 +70,7 @@ export function FileMetadata({ file }: FileMetadataProps) {
           {file.tabularData?.unf && (
             <Row className={styles.row}>
               <Col sm={3}>
-                <strong>File UNF</strong>
+                <strong>{t('metadata.fields.unf')}</strong>
               </Col>
               <Col>{file.tabularData.unf}</Col>
             </Row>
@@ -81,14 +85,14 @@ export function FileMetadata({ file }: FileMetadataProps) {
           )}
           <Row className={styles.row}>
             <Col sm={3}>
-              <strong>Deposit Date</strong>
+              <strong>{t('metadata.fields.depositDate')}</strong>
             </Col>
             <Col>{DateHelper.toDisplayFormatYYYYMMDD(file.depositDate)}</Col>
           </Row>
           {file.publicationDate && (
             <Row className={styles.row}>
               <Col sm={3}>
-                <strong>Metadata Release Date</strong>
+                <strong>{t('metadata.fields.metadataReleaseDate')}</strong>
               </Col>
               <Col>{DateHelper.toDisplayFormatYYYYMMDD(file.publicationDate)}</Col>
             </Row>
@@ -96,7 +100,7 @@ export function FileMetadata({ file }: FileMetadataProps) {
           {(file.publicationDate || file.embargo) && (
             <Row className={styles.row}>
               <Col sm={3}>
-                <strong>Publication Date</strong>
+                <strong>{t('metadata.fields.publicationDate')}</strong>
               </Col>
               <Col>
                 {file.embargo ? (
@@ -114,20 +118,20 @@ export function FileMetadata({ file }: FileMetadataProps) {
           {file.embargo && file.embargo.reason && (
             <Row className={styles.row}>
               <Col sm={3}>
-                <strong>Embargo Reason</strong>
+                <strong>{t('metadata.fields.embargoReason')}</strong>
               </Col>
               <Col>{file.embargo.reason}</Col>
             </Row>
           )}
           <Row className={styles.row}>
             <Col sm={3}>
-              <strong>Size</strong>
+              <strong>{t('metadata.fields.size')}</strong>
             </Col>
             <Col>{file.size.toString()}</Col>
           </Row>
           <Row className={styles.row}>
             <Col sm={3}>
-              <strong>Type</strong>
+              <strong>{t('metadata.fields.type')}</strong>
             </Col>
             <Col>{file.type.toDisplayFormat()}</Col>
           </Row>
@@ -135,13 +139,13 @@ export function FileMetadata({ file }: FileMetadataProps) {
             <>
               <Row className={styles.row}>
                 <Col sm={3}>
-                  <strong>Variables</strong>
+                  <strong>{t('metadata.fields.variables')}</strong>
                 </Col>
                 <Col>{file.tabularData.variablesCount}</Col>
               </Row>
               <Row className={styles.row}>
                 <Col sm={3}>
-                  <strong>Observations</strong>
+                  <strong>{t('metadata.fields.observations')}</strong>
                 </Col>
                 <Col>{file.tabularData.observationsCount}</Col>
               </Row>
@@ -150,7 +154,7 @@ export function FileMetadata({ file }: FileMetadataProps) {
           {file.directory && (
             <Row className={styles.row}>
               <Col sm={3}>
-                <strong>File Path</strong>
+                <strong>{t('metadata.fields.directory')}</strong>
               </Col>
               <Col>{file.directory}</Col>
             </Row>
@@ -158,7 +162,7 @@ export function FileMetadata({ file }: FileMetadataProps) {
           {file.description && (
             <Row className={styles.row}>
               <Col sm={3}>
-                <strong>Description</strong>
+                <strong>{t('metadata.fields.description')}</strong>
               </Col>
               <Col>{file.description}</Col>
             </Row>
