@@ -28,7 +28,7 @@ describe('File', () => {
 
     cy.findByTestId('file-skeleton').should('exist')
     cy.wrap(fileRepository.getById).should('be.calledWith', 19)
-    cy.findByText(testFile.name).should('not.exist')
+    cy.findByText(testFile.name).should('exist')
   })
 
   it('renders page not found when file is not found', () => {
