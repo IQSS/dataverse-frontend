@@ -4,7 +4,8 @@ import { FileLabelType, FileSizeUnit } from '../../../../../src/files/domain/mod
 import {
   FileEmbargoMother,
   FileSizeMother,
-  FileTabularDataMother
+  FileTabularDataMother,
+  FileTypeMother
 } from '../../../files/domain/models/FilePreviewMother'
 import { DateHelper } from '../../../../../src/shared/domain/helpers/DateHelper'
 
@@ -239,5 +240,18 @@ describe('FileMetadata', () => {
 
     cy.findByText('Size').should('exist')
     cy.findByText('123 B').should('exist')
+  })
+
+  it('renders the file type', () => {
+    cy.customMount(
+      <FileMetadata
+        file={FileMother.create({
+          type: FileTypeMother.createText()
+        })}
+      />
+    )
+
+    cy.findByText('Type').should('exist')
+    cy.findByText('Plain Text').should('exist')
   })
 })

@@ -126,6 +126,12 @@ export function FileMetadata({ file }: FileMetadataProps) {
             </Col>
             <Col>{file.size.toString()}</Col>
           </Row>
+          <Row className={styles.row}>
+            <Col sm={3}>
+              <strong>Type</strong>
+            </Col>
+            <Col>{file.type.toDisplayFormat()}</Col>
+          </Row>
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>

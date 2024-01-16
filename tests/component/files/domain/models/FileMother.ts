@@ -1,14 +1,13 @@
 import { File } from '../../../../../src/files/domain/models/File'
 import { faker } from '@faker-js/faker'
 import { DatasetVersionMother } from '../../../dataset/domain/models/DatasetMother'
-import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
-import { FileType } from '../../../../../src/files/domain/models/FilePreview'
 import {
   FileChecksumMother,
   FileEmbargoMother,
   FileLabelMother,
   FileSizeMother,
   FileTabularDataMother,
+  FileTypeMother,
   FileVersionMother
 } from './FilePreviewMother'
 
@@ -18,7 +17,7 @@ export class FileMother {
       name: faker.system.fileName(),
       version: FileVersionMother.create(),
       datasetVersion: DatasetVersionMother.create(),
-      type: new FileType(faker.helpers.arrayElement(Object.keys(FileTypeToFriendlyTypeMap))),
+      type: FileTypeMother.create(),
       size: FileSizeMother.create(),
       restricted: faker.datatype.boolean(),
       permissions: {

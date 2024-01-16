@@ -22,6 +22,31 @@ const valueOrUndefined: <T>(value: T) => T | undefined = (value) => {
   return shouldShowValue ? value : undefined
 }
 
+export class FileTypeMother {
+  static create(props?: Partial<FileType>): FileType {
+    return new FileType(
+      props?.value ?? faker.helpers.arrayElement(Object.keys(FileTypeToFriendlyTypeMap)),
+      props?.original
+    )
+  }
+
+  static createTabular(): FileType {
+    return new FileType('text/tab-separated-values', 'Comma Separated Values')
+  }
+
+  static createText(): FileType {
+    return new FileType('text/plain')
+  }
+
+  static createImage(): FileType {
+    return new FileType('image')
+  }
+
+  static createRealistic(): FileType {
+    return new FileType('text/csv', 'Comma Separated Values')
+  }
+}
+
 export class FileTabularDataMother {
   static create(props?: Partial<FileTabularData>): FileTabularData {
     return {
@@ -142,7 +167,7 @@ export class FileSizeMother {
 export class FilePreviewMother {
   static create(props?: Partial<FilePreview>): FilePreview {
     const thumbnail = valueOrUndefined<string>(faker.image.imageUrl())
-    const fileType = faker.helpers.arrayElement(Object.keys(FileTypeToFriendlyTypeMap))
+    const tabularFile = faker.datatype.boolean()
     const checksum = valueOrUndefined<string>(faker.datatype.uuid())
     const fileMockedData = {
       id: faker.datatype.number(),
@@ -154,10 +179,7 @@ export class FilePreviewMother {
         requested: faker.datatype.boolean()
       },
       version: FileVersionMother.create(),
-      type:
-        fileType === 'text/tab-separated-values'
-          ? new FileType('text/tab-separated-values', 'Comma Separated Values')
-          : new FileType(thumbnail ? 'image' : fileType),
+      type: tabularFile ? FileTypeMother.createTabular() : FileTypeMother.create(),
       size: FileSizeMother.create(),
       date: {
         type: faker.helpers.arrayElement(Object.values(FileDateType)),
@@ -169,10 +191,7 @@ export class FilePreviewMother {
       thumbnail: thumbnail,
       directory: valueOrUndefined<string>(faker.system.directoryPath()),
       embargo: valueOrUndefined<FileEmbargo>(FileEmbargoMother.create()),
-      tabularData:
-        fileType === 'text/tab-separated-values' && !checksum
-          ? FileTabularDataMother.create()
-          : undefined,
+      tabularData: tabularFile && !checksum ? FileTabularDataMother.create() : undefined,
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
       isDeleted: faker.datatype.boolean(),
       ingest: { status: FileIngestStatus.NONE },
@@ -219,7 +238,7 @@ export class FilePreviewMother {
 
   static createDefault(props?: Partial<FilePreview>): FilePreview {
     const defaultFile = {
-      type: new FileType('text/plain'),
+      type: FileTypeMother.createText(),
       version: FileVersionMother.createReleased(),
       access: {
         restricted: false,
@@ -269,7 +288,7 @@ export class FilePreviewMother {
 
   static createTabular(props?: Partial<FilePreview>): FilePreview {
     return this.createDefault({
-      type: new FileType('text/tab-separated-values', 'Comma Separated Values'),
+      type: FileTypeMother.createTabular(),
       tabularData: FileTabularDataMother.create(),
       ...props
     })
@@ -277,7 +296,7 @@ export class FilePreviewMother {
 
   static createNonTabular(props?: Partial<FilePreview>): FilePreview {
     return this.createDefault({
-      type: new FileType('text/plain'),
+      type: FileTypeMother.createText(),
       tabularData: undefined,
       ...props
     })
@@ -382,7 +401,7 @@ export class FilePreviewMother {
         requested: false
       },
       thumbnail: faker.image.imageUrl(),
-      type: new FileType('image')
+      type: FileTypeMother.createImage()
     })
   }
 
@@ -395,7 +414,7 @@ export class FilePreviewMother {
         requested: false
       },
       thumbnail: faker.image.imageUrl(),
-      type: new FileType('image')
+      type: FileTypeMother.createImage()
     })
   }
 
