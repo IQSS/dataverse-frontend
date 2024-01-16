@@ -5,7 +5,7 @@ import { FileEmbargoMother } from '../../../files/domain/models/FilePreviewMothe
 describe('FileEmbargoDate', () => {
   it('renders the embargo date when embargo exists', () => {
     const embargoDate = new Date('2123-09-18')
-    const embargo = FileEmbargoMother.create(embargoDate)
+    const embargo = FileEmbargoMother.create({ dateAvailable: embargoDate })
     const status = FilePublishingStatus.RELEASED
     cy.customMount(<FileEmbargoDate embargo={embargo} publishingStatus={status} />)
     const dateString = embargoDate.toLocaleDateString(
@@ -21,7 +21,7 @@ describe('FileEmbargoDate', () => {
 
   it('renders the until embargo date when embargo is not active and the file is not released', () => {
     const embargoDate = new Date('2023-09-15')
-    const embargo = FileEmbargoMother.create(embargoDate)
+    const embargo = FileEmbargoMother.create({ dateAvailable: embargoDate })
     const status = FilePublishingStatus.RELEASED
 
     cy.customMount(<FileEmbargoDate embargo={embargo} publishingStatus={status} />)
@@ -38,7 +38,7 @@ describe('FileEmbargoDate', () => {
 
   it('renders the draft until embargo date when embargo is active and the file is not released', () => {
     const embargoDate = new Date('2123-09-18')
-    const embargo = FileEmbargoMother.create(embargoDate)
+    const embargo = FileEmbargoMother.create({ dateAvailable: embargoDate })
     const status = FilePublishingStatus.DRAFT
 
     cy.customMount(<FileEmbargoDate embargo={embargo} publishingStatus={status} />)
@@ -66,7 +66,7 @@ describe('FileEmbargoDate', () => {
 
   it('renders the embargo date in YYYY-MM-DD format', () => {
     const embargoDate = new Date('2123-09-18')
-    const embargo = FileEmbargoMother.create(embargoDate)
+    const embargo = FileEmbargoMother.create({ dateAvailable: embargoDate })
     const status = FilePublishingStatus.RELEASED
     cy.customMount(
       <FileEmbargoDate embargo={embargo} publishingStatus={status} format="YYYY-MM-DD" />

@@ -26,7 +26,7 @@ export class FileMother {
       labels: faker.datatype.boolean() ? FileLabelMother.createMany(3) : [],
       depositDate: faker.date.past(),
       publicationDate: faker.datatype.boolean() ? faker.date.past() : undefined,
-      thumbnail: faker.datatype.boolean() ? faker.image.imageUrl() : undefined,
+      thumbnail: faker.datatype.boolean() ? faker.image.imageUrl(400) : undefined,
       directory: faker.datatype.boolean() ? faker.system.directoryPath() : undefined,
       persistentId: faker.datatype.boolean() ? faker.datatype.uuid() : undefined,
       downloadUrls: {

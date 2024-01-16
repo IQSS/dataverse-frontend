@@ -23,7 +23,7 @@ export function FileMetadata({ file }: FileMetadataProps) {
             <Col sm={3}>
               <strong>{t('metadata.fields.preview')}</strong>
             </Col>
-            <Col>
+            <Col className={styles.preview}>
               <FilePreview thumbnail={file.thumbnail} type={file.type} name={file.name} />
             </Col>
           </Row>
