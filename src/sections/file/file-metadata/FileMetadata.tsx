@@ -1,10 +1,10 @@
 import { Accordion, Col, Row } from '@iqss/dataverse-design-system'
 import { File } from '../../../files/domain/models/File'
 import { FilePreview } from '../file-preview/FilePreview'
-import { FileLabels } from '../../dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileLabels'
+import { FileLabels } from '../file-labels/FileLabels'
 import styles from './FileMetadata.module.scss'
 import { DateHelper } from '../../../shared/domain/helpers/DateHelper'
-import { FileEmbargoDate } from '../../dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileEmbargoDate'
+import { FileEmbargoDate } from '../file-embargo/FileEmbargoDate'
 import { BASE_URL } from '../../../config'
 
 interface FileMetadataProps {

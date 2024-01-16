@@ -5,12 +5,12 @@ import { FileTitle } from './file-info-data/FileTitle'
 import { FileDirectory } from './file-info-data/FileDirectory'
 import { FileType } from './file-info-data/FileType'
 import { FileDate } from './file-info-data/FileDate'
-import { FileEmbargoDate } from './file-info-data/FileEmbargoDate'
+import { FileEmbargoDate } from '../../../../../file/file-embargo/FileEmbargoDate'
 import { FileDownloads } from './file-info-data/FileDownloads'
 import { FileChecksum } from './file-info-data/FileChecksum'
 import { FileTabularData } from './file-info-data/FileTabularData'
 import { FileDescription } from './file-info-data/FileDescription'
-import { FileLabels } from './file-info-data/FileLabels'
+import { FileLabels } from '../../../../../file/file-labels/FileLabels'
 
 export function FileInfoCell({ file }: { file: FilePreview }) {
   return (
