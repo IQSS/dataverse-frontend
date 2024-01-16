@@ -276,4 +276,23 @@ describe('FileMetadata', () => {
     cy.findByText('Variables').should('not.exist')
     cy.findByText('Observations').should('not.exist')
   })
+
+  it('renders the file directory', () => {
+    cy.customMount(
+      <FileMetadata
+        file={FileMother.create({
+          directory: '/some/path'
+        })}
+      />
+    )
+
+    cy.findByText('File Path').should('exist')
+    cy.findByText('/some/path').should('exist')
+  })
+
+  it('does not render the file directory if it does not exist', () => {
+    cy.customMount(<FileMetadata file={FileMother.create({ directory: undefined })} />)
+
+    cy.findByText('File Path').should('not.exist')
+  })
 })

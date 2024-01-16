@@ -28,6 +28,7 @@ export interface File {
   publicationDate?: Date
   persistentId?: string
   thumbnail?: string
+  directory?: string
   tabularData?: FileTabularData
   checksum?: FileChecksum
   embargo?: FileEmbargo

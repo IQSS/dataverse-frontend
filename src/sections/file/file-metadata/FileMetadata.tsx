@@ -148,6 +148,14 @@ export function FileMetadata({ file }: FileMetadataProps) {
               </Row>
             </>
           )}
+          {file.directory && (
+            <Row className={styles.row}>
+              <Col sm={3}>
+                <strong>File Path</strong>
+              </Col>
+              <Col>{file.directory}</Col>
+            </Row>
+          )}
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>
