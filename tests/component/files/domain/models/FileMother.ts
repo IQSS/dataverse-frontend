@@ -35,6 +35,7 @@ export class FileMother {
         rData: '/api/access/datafile/107'
       },
       tabularData: faker.datatype.boolean() ? FileTabularDataMother.create() : undefined,
+      description: faker.datatype.boolean() ? faker.lorem.sentence() : undefined,
       checksum: faker.datatype.boolean() ? FileChecksumMother.create() : undefined,
       embargo: faker.datatype.boolean() ? FileEmbargoMother.create() : undefined,
       ...props

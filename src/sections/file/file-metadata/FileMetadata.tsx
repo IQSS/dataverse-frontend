@@ -5,12 +5,11 @@ import { FileLabels } from '../../dataset/dataset-files/files-table/file-info/fi
 import styles from './FileMetadata.module.scss'
 import { DateHelper } from '../../../shared/domain/helpers/DateHelper'
 import { FileEmbargoDate } from '../../dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileEmbargoDate'
+import { BASE_URL } from '../../../config'
 
 interface FileMetadataProps {
   file: File
 }
-
-const BASE_URL = (import.meta.env.VITE_DATAVERSE_BACKEND_URL as string) ?? ''
 
 export function FileMetadata({ file }: FileMetadataProps) {
   return (
@@ -154,6 +153,14 @@ export function FileMetadata({ file }: FileMetadataProps) {
                 <strong>File Path</strong>
               </Col>
               <Col>{file.directory}</Col>
+            </Row>
+          )}
+          {file.description && (
+            <Row className={styles.row}>
+              <Col sm={3}>
+                <strong>Description</strong>
+              </Col>
+              <Col>{file.description}</Col>
             </Row>
           )}
         </Accordion.Body>

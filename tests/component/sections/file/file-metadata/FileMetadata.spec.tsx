@@ -295,4 +295,23 @@ describe('FileMetadata', () => {
 
     cy.findByText('File Path').should('not.exist')
   })
+
+  it('renders the file description', () => {
+    cy.customMount(
+      <FileMetadata
+        file={FileMother.create({
+          description: 'Some description'
+        })}
+      />
+    )
+
+    cy.findByText('Description').should('exist')
+    cy.findByText('Some description').should('exist')
+  })
+
+  it('does not render the file description if it does not exist', () => {
+    cy.customMount(<FileMetadata file={FileMother.create({ description: undefined })} />)
+
+    cy.findByText('Description').should('not.exist')
+  })
 })

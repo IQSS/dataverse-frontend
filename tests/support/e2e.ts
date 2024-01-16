@@ -17,6 +17,6 @@
 import '../../tests/support/commands'
 import { ApiConfig } from '@iqss/dataverse-client-javascript/dist/core'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
+import { BASE_URL } from '../../src/config'
 
-const VITE_DATAVERSE_BACKEND_URL = (import.meta.env.VITE_DATAVERSE_BACKEND_URL as string) ?? ''
-ApiConfig.init(`${VITE_DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.SESSION_COOKIE)
+ApiConfig.init(`${BASE_URL}/api/v1`, DataverseApiAuthMechanism.SESSION_COOKIE)

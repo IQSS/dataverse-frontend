@@ -30,6 +30,7 @@ export interface File {
   thumbnail?: string
   directory?: string
   tabularData?: FileTabularData
+  description?: string
   checksum?: FileChecksum
   embargo?: FileEmbargo
 }
