@@ -155,8 +155,7 @@ describe('Dataset', () => {
         })
     })
 
-    it.skip('successfully loads a dataset deaccessioned', () => {
-      // TODO - Implement once the getDatasetCitation includes deaccessioned datasets
+    it('successfully loads a dataset deaccessioned', () => {
       cy.wrap(DatasetHelper.create())
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         .then((dataset) => Promise.all([dataset, DatasetHelper.publish(dataset.persistentId)]))

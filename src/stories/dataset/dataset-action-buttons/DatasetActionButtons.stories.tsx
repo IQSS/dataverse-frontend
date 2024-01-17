@@ -8,11 +8,12 @@ import {
   DatasetPermissionsMother,
   DatasetVersionMother
 } from '../../../../tests/component/dataset/domain/models/DatasetMother'
+import { WithLoggedInUser } from '../../WithLoggedInUser'
 
 const meta: Meta<typeof DatasetActionButtons> = {
   title: 'Sections/Dataset Page/DatasetActionButtons',
   component: DatasetActionButtons,
-  decorators: [WithI18next, WithSettings],
+  decorators: [WithI18next, WithSettings, WithLoggedInUser],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
