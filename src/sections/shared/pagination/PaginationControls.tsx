@@ -23,7 +23,7 @@ export function PaginationControls({
   showPageSizeSelector = true,
   updateQueryParam = false
 }: PaginationProps) {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [, setSearchParams] = useSearchParams()
   const [paginationInfo, setPaginationInfo] = useState<DatasetPaginationInfo | FilePaginationInfo>(
     initialPaginationInfo
   )
