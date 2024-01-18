@@ -6,6 +6,7 @@ import { PaginationInfo } from '../../../shared/domain/models/PaginationInfo'
 import { useEffect, useState } from 'react'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPaginationInfo'
+import { useSearchParams } from 'react-router-dom'
 
 interface PaginationProps {
   onPaginationInfoChange: (
@@ -13,13 +14,16 @@ interface PaginationProps {
   ) => void
   initialPaginationInfo: PaginationInfo<DatasetPaginationInfo | FilePaginationInfo>
   showPageSizeSelector?: boolean
+  updateQueryParam?: boolean
 }
 const NO_PAGES = 0
 export function PaginationControls({
   onPaginationInfoChange,
   initialPaginationInfo,
-  showPageSizeSelector = true
+  showPageSizeSelector = true,
+  updateQueryParam = false
 }: PaginationProps) {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [paginationInfo, setPaginationInfo] = useState<DatasetPaginationInfo | FilePaginationInfo>(
     initialPaginationInfo
   )
@@ -38,7 +42,12 @@ export function PaginationControls({
 
   useEffect(() => {
     onPaginationInfoChange(paginationInfo)
-  }, [paginationInfo.pageSize, paginationInfo.page])
+  }, [paginationInfo.pageSize])
+
+  useEffect(() => {
+    onPaginationInfoChange(paginationInfo)
+    updateQueryParam && setSearchParams({ page: paginationInfo.page.toString() })
+  }, [paginationInfo.page])
 
   useEffect(() => {
     setPaginationInfo(paginationInfo.withTotal(initialPaginationInfo.totalItems))

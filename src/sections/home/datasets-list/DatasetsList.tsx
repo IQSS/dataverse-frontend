@@ -47,6 +47,7 @@ export function DatasetsList({ datasetRepository, page }: DatasetsListProps) {
             onPaginationInfoChange={setPaginationInfo}
             initialPaginationInfo={paginationInfo}
             showPageSizeSelector={false}
+            updateQueryParam
           />
         </>
       )}
