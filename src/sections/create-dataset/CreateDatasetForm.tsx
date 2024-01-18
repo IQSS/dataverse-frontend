@@ -47,7 +47,7 @@ export const CreateDatasetFormPresenter: React.FC<FormPresenterProps> = ({
             className={'create-dataset-form'}>
             <Row>
               <Col md={9}>
-                <Form.Group controlId="createDatasetTitle">
+                <Form.Group controlId="createDatasetTitle" required>
                   <Form.Group.Label>{t('datasetForm.title')}</Form.Group.Label>
                   <Form.Group.Input
                     readOnly={submissionStatus === SubmissionStatusEnums.IsSubmitting && true}
