@@ -55,4 +55,14 @@ describe('Datasets List', () => {
     )
     cy.findByText('51 to 60 of 200 Datasets').should('exist')
   })
+
+  it('renders the datasets list correct page when passing the page number as a query param', () => {
+    cy.customMount(<DatasetsList datasetRepository={datasetRepository} page={5} />)
+
+    cy.wrap(datasetRepository.getAll).should(
+      'be.calledWith',
+      new DatasetPaginationInfo(1, 10, totalDatasetsCount).goToPage(5)
+    )
+    cy.findByText('41 to 50 of 200 Datasets').should('exist')
+  })
 })

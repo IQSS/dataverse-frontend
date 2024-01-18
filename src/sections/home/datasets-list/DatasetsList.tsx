@@ -12,12 +12,14 @@ import { DatasetCard } from './dataset-card/DatasetCard'
 
 interface DatasetsListProps {
   datasetRepository: DatasetRepository
+  page?: number
 }
+
 const NO_DATASETS = 0
-export function DatasetsList({ datasetRepository }: DatasetsListProps) {
+export function DatasetsList({ datasetRepository, page }: DatasetsListProps) {
   const { setIsLoading } = useLoading()
   const [paginationInfo, setPaginationInfo] = useState<DatasetPaginationInfo>(
-    new DatasetPaginationInfo()
+    new DatasetPaginationInfo(page)
   )
   const { datasets, isLoading } = useDatasets(datasetRepository, setPaginationInfo, paginationInfo)
 
