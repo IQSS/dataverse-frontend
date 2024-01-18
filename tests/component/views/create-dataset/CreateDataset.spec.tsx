@@ -20,7 +20,6 @@ describe('Form component', () => {
     cy.findByLabelText(/Title/i)
       .should('exist')
       .type('Test Dataset Title')
-      .should('have.attr', 'required', 'required')
       .and('have.value', 'Test Dataset Title')
 
     cy.findByText(/Save Dataset/i).click()

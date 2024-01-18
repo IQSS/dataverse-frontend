@@ -1,30 +1,102 @@
-import { createContext, useContext } from 'react'
-import { CreateDatasetFormFields } from '../../dataset/domain/useCases/createDataset' // Importing the FormFields type
+import React, { ChangeEvent, FormEvent, useState } from 'react'
+import {
+  CreateDatasetFormFields,
+  FormSubmissionService,
+  FormValidationService,
+  FormValidationResult
+} from '../../dataset/domain/useCases/createDataset'
 
-// Define the context and its interface
 interface FormContextInterface {
-  formState: CreateDatasetFormFields
-  updateFormState: (newState: CreateDatasetFormFields) => void
+  fields: CreateDatasetFormFields
 }
 
-// Define default values for the context
 const defaultFormState: CreateDatasetFormFields = {
-  // Initialize with default values for your form fields
   createDatasetTitle: ''
 }
 
-const defaultContext: FormContextInterface = {
-  formState: defaultFormState,
-  updateFormState: () => {
-    // This is a no-op function since the default context shouldn't update anything
+interface CreateDatasetFormProps {
+  formValidationService: FormValidationService
+  formSubmissionService: FormSubmissionService
+}
+
+export enum SubmissionStatusEnums {
+  NotSubmitted = 'NotSubmitted',
+  IsSubmitting = 'IsSubmitting',
+  SubmitComplete = 'SubmitComplete',
+  Errored = 'Errored'
+}
+
+export function useCreateDatasetForm({
+  formValidationService,
+  formSubmissionService
+}: CreateDatasetFormProps) {
+  const [formState, setFormState] = useState<FormContextInterface>({
+    fields: defaultFormState
+  })
+  const [submissionStatus, setSubmissionStatus] = React.useState<SubmissionStatusEnums>(
+    SubmissionStatusEnums.NotSubmitted
+  )
+  const [formErrors, setFormErrors] = useState<
+    Record<keyof CreateDatasetFormFields, string | undefined>
+  >({ createDatasetTitle: undefined })
+
+  const handleCreateDatasetFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target
+    setFormState((prevState) => ({
+      ...prevState,
+      fields: { ...prevState.fields, [name]: value }
+    }))
+  }
+
+  const handleCreateDatasetSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setSubmissionStatus(SubmissionStatusEnums.IsSubmitting)
+
+    const validationResult: FormValidationResult = formValidationService.validateForm(
+      formState.fields
+    )
+
+    if (validationResult.isValid) {
+      formSubmissionService
+        .submitFormData(formState.fields)
+        .then(() => setSubmissionStatus(SubmissionStatusEnums.IsSubmitting))
+        .catch(() => setSubmissionStatus(SubmissionStatusEnums.Errored))
+        .finally(() => setSubmissionStatus(SubmissionStatusEnums.SubmitComplete))
+    } else {
+      setFormErrors(validationResult.errors)
+      setSubmissionStatus(SubmissionStatusEnums.Errored)
+    }
+  }
+
+  return {
+    formState,
+    formErrors,
+    submissionStatus,
+    handleCreateDatasetFieldChange,
+    handleCreateDatasetSubmit
   }
 }
-export const FormContext = createContext<FormContextInterface>(defaultContext)
-// Custom hook to use the form context
-export const useFormContext = () => {
-  const context = useContext(FormContext)
-  if (!context) {
-    throw new Error('useFormContext must be used within a FormProvider')
-  }
-  return context
-}
+
+// type FormProviderProps = {
+//   children: ReactNode
+// }
+// // Context Provider Component
+// export const CreateDatasetProvider: React.FC<FormProviderProps> = ({
+//   children
+// }: PropsWithChildren) => {
+//   return (
+//     <>
+//       <article>
+//         <header className={styles.header}>
+//           <h1>{t('pageTitle')}</h1>
+//         </header>
+//         <SeparationLine />
+//         <div className={styles.container}>
+//           <FormContext.Provider value={{ formState, updateFormState }}>
+//             {children}
+//           </FormContext.Provider>
+//         </div>
+//       </article>
+//     </>
+//   )
+// }

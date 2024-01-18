@@ -28,19 +28,14 @@ export const formValidationService: FormValidationService = {
   }
 }
 
-// formSubmissionService
 export interface FormSubmissionService {
   submitFormData: (fields: CreateDatasetFormFields) => Promise<void>
 }
 export const formSubmissionService: FormSubmissionService = {
-  // If there's an asynchronous operation, use `await` here.
   submitFormData: async (fields: CreateDatasetFormFields): Promise<void> => {
-    // For example, if submitting data to a server:
     console.log('Submitting form data:', fields)
     const sendDataMock = (fields: CreateDatasetFormFields) => {
-      // Simulate a network delay, for example, 2 seconds
       const delay = 2000
-
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve('Form Data Submitted: ' + JSON.stringify(fields))
