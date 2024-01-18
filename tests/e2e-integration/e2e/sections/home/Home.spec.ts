@@ -6,39 +6,59 @@ describe('Home Page', () => {
   const title = faker.lorem.sentence()
   before(() => {
     TestsUtils.setup()
+    TestsUtils.login()
   })
 
-  beforeEach(() => {})
+  beforeEach(() => {
+    TestsUtils.login()
+  })
+
   it('successfully loads', () => {
     cy.visit('/spa')
     cy.findAllByText(/Root/i).should('exist')
   })
 
-  it('goes to dataset page from list', () => {
-    void DatasetHelper.destroyAll()
-    void DatasetHelper.createWithTitle(title)
-    TestsUtils.login()
-    cy.findByText(/Dataverse Admin/i).should('exist')
-    cy.findByText(title).should('be.visible')
-    cy.findByText(title).click({ force: true })
-    cy.url().should('include', 'persistentId')
-    cy.findAllByText(title).should('be.visible')
+  it('navigates to a dataset from the list when clicking the title', () => {
+    cy.wrap(DatasetHelper.destroyAll().then(() => DatasetHelper.createWithTitle(title))).then(
+      () => {
+        cy.visit('/spa')
+
+        cy.findByText(/Dataverse Admin/i).should('exist')
+
+        cy.findByText(title).should('be.visible')
+        cy.findByText(title).click({ force: true })
+
+        cy.url().should('include', 'persistentId')
+        cy.findAllByText(title).should('be.visible')
+      }
+    )
   })
 
   it('log in Dataverse Admin user', () => {
-    cy.loginAsAdmin('/spa')
+    cy.visit('/spa')
 
     cy.findAllByText(/Root/i).should('exist')
     cy.findByText(/Dataverse Admin/i).should('exist')
   })
 
   it('log out Dataverse Admin user', () => {
-    cy.loginAsAdmin('/spa')
+    cy.visit('/spa')
 
     cy.findAllByText(/Root/i).should('exist')
 
     cy.findByText(/Dataverse Admin/i).click()
     cy.findByRole('button', { name: /Log Out/i }).click()
     cy.findByText(/Dataverse Admin/i).should('not.exist')
+  })
+
+  it('displays the correct page of the datasets list when passing the page query param', () => {
+    cy.wrap(DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12))).then(() => {
+      cy.visit('/spa?page=2')
+
+      cy.findByText(/Root/i).should('exist')
+      cy.findByText(/Dataverse Admin/i).should('exist')
+
+      cy.findByText('11 to 12 of 12 Datasets').should('exist')
+    })
   })
 })
