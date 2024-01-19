@@ -1,5 +1,5 @@
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
-import { File } from '../../../../../../files/domain/models/File'
+import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import { FileSelection } from '../../row-selection/useFileSelection'
@@ -7,7 +7,7 @@ import { NoSelectedFilesModal } from '../no-selected-files-modal/NoSelectedFiles
 import { useNotImplementedModal } from '../../../../../not-implemented/NotImplementedModalContext'
 
 interface EditFileOptionsProps {
-  files: File[]
+  files: FilePreview[]
   fileSelection: FileSelection
 }
 

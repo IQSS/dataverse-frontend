@@ -1,11 +1,11 @@
 import { flexRender, Row } from '@tanstack/react-table'
-import { File } from '../../../../files/domain/models/File'
+import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
 import styles from './FilesTable.module.scss'
 import { getCellStyle } from './FilesTable'
 
 interface FilesTableBodyProps {
-  rows: Row<File>[]
+  rows: Row<FilePreview>[]
 }
 export function FilesTableBody({ rows }: FilesTableBodyProps) {
   if (rows.length === 0) {

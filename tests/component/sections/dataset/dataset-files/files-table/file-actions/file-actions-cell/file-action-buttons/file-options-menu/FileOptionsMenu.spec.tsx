@@ -1,5 +1,5 @@
 import { FileOptionsMenu } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/file-options-menu/FileOptionsMenu'
-import { FileMother } from '../../../../../../../../files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { ReactNode } from 'react'
 import { Dataset as DatasetModel } from '../../../../../../../../../../src/dataset/domain/models/Dataset'
 import { DatasetProvider } from '../../../../../../../../../../src/sections/dataset/DatasetProvider'
@@ -10,7 +10,7 @@ import {
   DatasetPermissionsMother
 } from '../../../../../../../../dataset/domain/models/DatasetMother'
 
-const file = FileMother.createDefault()
+const file = FilePreviewMother.createDefault()
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const datasetWithUpdatePermissions = DatasetMother.create({
   permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed(),
@@ -91,7 +91,7 @@ describe('FileOptionsMenu', () => {
   })
 
   it('opens fileAlreadyDeletedPrevious modal if file is already deleted', () => {
-    const file = FileMother.createDeleted()
+    const file = FilePreviewMother.createDeleted()
 
     cy.mountAuthenticated(
       withDataset(<FileOptionsMenu file={file} />, datasetWithUpdatePermissions)

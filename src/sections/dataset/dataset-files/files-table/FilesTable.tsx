@@ -2,7 +2,7 @@ import { Table } from '@iqss/dataverse-design-system'
 import { FilesTableHeader } from './FilesTableHeader'
 import { FilesTableBody } from './FilesTableBody'
 import { useFilesTable } from './useFilesTable'
-import { File } from '../../../../files/domain/models/File'
+import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { RowSelectionMessage } from './row-selection/RowSelectionMessage'
 import { ZipDownloadLimitMessage } from './zip-download-limit-message/ZipDownloadLimitMessage'
 import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
@@ -12,7 +12,7 @@ import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
 
 interface FilesTableProps {
-  files: File[]
+  files: FilePreview[]
   isLoading: boolean
   paginationInfo: FilePaginationInfo
   filesTotalDownloadSize: number

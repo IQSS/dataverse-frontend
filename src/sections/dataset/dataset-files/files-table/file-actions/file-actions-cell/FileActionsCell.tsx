@@ -1,10 +1,10 @@
-import { File } from '../../../../../../files/domain/models/File'
+import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import { FileActionButtons } from './file-action-buttons/FileActionButtons'
 import { FileInfoMessages } from './file-info-messages/FileInfoMessages'
 import styles from './FileActionsCell.module.scss'
 
 interface FileActionsCellProps {
-  file: File
+  file: FilePreview
 }
 export function FileActionsCell({ file }: FileActionsCellProps) {
   return (

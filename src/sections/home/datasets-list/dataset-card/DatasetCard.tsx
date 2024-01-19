@@ -11,10 +11,18 @@ interface DatasetCardProps {
 export function DatasetCard({ dataset }: DatasetCardProps) {
   return (
     <article className={styles.container}>
-      <DatasetCardHeader dataset={dataset} />
+      <DatasetCardHeader persistentId={dataset.persistentId} version={dataset.version} />
       <div className={styles.info}>
-        <DatasetCardThumbnail dataset={dataset} />
-        <DatasetCardInfo dataset={dataset} />
+        <DatasetCardThumbnail
+          persistentId={dataset.persistentId}
+          version={dataset.version}
+          thumbnail={dataset.thumbnail}
+        />
+        <DatasetCardInfo
+          version={dataset.version}
+          releaseOrCreateDate={dataset.releaseOrCreateDate}
+          abbreviatedDescription={dataset.abbreviatedDescription}
+        />
       </div>
     </article>
   )

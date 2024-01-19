@@ -1,8 +1,15 @@
+import { LinkToPage } from '../../../../../../shared/link-to-page/LinkToPage'
+import { Route } from '../../../../../../Route.enum'
+
 interface FileTitleProps {
-  link: string
+  id: number
   name: string
 }
 
-export function FileTitle({ link, name }: FileTitleProps) {
-  return <a href={link}>{name}</a>
+export function FileTitle({ id, name }: FileTitleProps) {
+  return (
+    <LinkToPage page={Route.FILES} searchParams={{ id: id.toString() }}>
+      {name}
+    </LinkToPage>
+  )
 }

@@ -1,12 +1,12 @@
 import styles from './FileInfoMessages.module.scss'
 import { ReactNode } from 'react'
 import { InfoCircleFill } from 'react-bootstrap-icons'
-import { File } from '../../../../../../../files/domain/models/File'
+import { FilePreview } from '../../../../../../../files/domain/models/FilePreview'
 import { IngestInfoMessage } from './IngestInfoMessage'
 import { AccessRequestedInfoMessage } from './AccessRequestedInfoMessage'
 
 interface FileInfoMessagesProps {
-  file: File
+  file: FilePreview
 }
 
 export function FileInfoMessages({ file }: FileInfoMessagesProps) {

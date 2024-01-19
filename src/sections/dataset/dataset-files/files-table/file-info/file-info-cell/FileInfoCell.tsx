@@ -1,4 +1,4 @@
-import { File } from '../../../../../../files/domain/models/File'
+import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import styles from './FileInfoCell.module.scss'
 import { FileThumbnail } from './file-info-data/file-thumbnail/FileThumbnail'
 import { FileTitle } from './file-info-data/FileTitle'
@@ -12,14 +12,14 @@ import { FileTabularData } from './file-info-data/FileTabularData'
 import { FileDescription } from './file-info-data/FileDescription'
 import { FileLabels } from './file-info-data/FileLabels'
 
-export function FileInfoCell({ file }: { file: File }) {
+export function FileInfoCell({ file }: { file: FilePreview }) {
   return (
     <div className={styles.container}>
       <div className={styles['thumbnail-container']}>
         <FileThumbnail file={file} />
       </div>
       <div className={styles['body-container']}>
-        <FileTitle link={file.getLink()} name={file.name} />
+        <FileTitle id={file.id} name={file.name} />
         <div className={styles['body-container__subtext']}>
           <FileDirectory directory={file.directory} />
           <FileType type={file.type} size={file.size} />

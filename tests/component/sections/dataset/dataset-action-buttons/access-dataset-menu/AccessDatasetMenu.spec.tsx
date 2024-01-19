@@ -5,7 +5,7 @@ import {
   DatasetPermissionsMother,
   DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
-import { FileSizeUnit } from '../../../../../../src/files/domain/models/File'
+import { FileSizeUnit } from '../../../../../../src/files/domain/models/FilePreview'
 
 const downloadUrls = DatasetDownloadUrlsMother.create()
 describe('AccessDatasetMenu', () => {

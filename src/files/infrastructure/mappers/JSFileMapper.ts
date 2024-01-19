@@ -1,5 +1,5 @@
 import {
-  File,
+  FilePreview,
   FileAccess,
   FileChecksum,
   FileDate,
@@ -15,7 +15,7 @@ import {
   FileTabularData,
   FileType,
   FileVersion
-} from '../../domain/models/File'
+} from '../../domain/models/FilePreview'
 import {
   File as JSFile,
   FileEmbargo as JSFileEmbargo,
@@ -44,8 +44,8 @@ export class JSFileMapper {
     downloadsCount: number,
     thumbnail?: string,
     jsTabularData?: JSFileTabularData[]
-  ): File {
-    return new File(
+  ): FilePreview {
+    return new FilePreview(
       this.toFileId(jsFile.id),
       this.toFileVersion(jsFile.version, datasetVersion, jsFile.publicationDate),
       this.toFileName(jsFile.name),

@@ -1,4 +1,4 @@
-import { FilePublishingStatus } from '../../../../../../../files/domain/models/File'
+import { FilePublishingStatus } from '../../../../../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
 
 interface FileDownloadsProps {

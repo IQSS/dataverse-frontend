@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react'
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
 import { FilePermission } from '../../../files/domain/models/FileUserPermissions'
 import { FilePermissionsContext } from './FilePermissionsContext'
-import { File } from '../../../files/domain/models/File'
+import { FilePreview } from '../../../files/domain/models/FilePreview'
 import { checkFileDownloadPermission } from '../../../files/domain/useCases/checkFileDownloadPermission'
 import { checkFileEditDatasetPermission } from '../../../files/domain/useCases/checkFileEditDatasetPermission'
 import { useAnonymized } from '../../dataset/anonymized/AnonymizedContext'
@@ -35,7 +35,7 @@ export function FilePermissionsProvider({
       filePermissionsMap.set(fileIdToUpdate, newValue)
     }
   }
-  const checkSessionUserHasFileDownloadPermission = (file: File): Promise<boolean> => {
+  const checkSessionUserHasFileDownloadPermission = (file: FilePreview): Promise<boolean> => {
     if (anonymizedView) {
       return Promise.resolve(true) // If the user is in anonymized view, they can always download the file
     }
@@ -49,7 +49,7 @@ export function FilePermissionsProvider({
         return false
       })
   }
-  const checkSessionUserHasEditDatasetPermission = (file: File): Promise<boolean> => {
+  const checkSessionUserHasEditDatasetPermission = (file: FilePreview): Promise<boolean> => {
     return checkFileEditDatasetPermission(repository, file)
       .then((canEditDataset) => {
         updateFilePermissionsMap(file.id, FilePermission.EDIT_DATASET, canEditDataset)
@@ -63,7 +63,7 @@ export function FilePermissionsProvider({
 
   function checkSessionUserHasFilePermission(
     permission: FilePermission,
-    file: File
+    file: FilePreview
   ): Promise<boolean> {
     if (filePermissionsMap.has(file.id)) {
       const savedPermission = filePermissionsMap.get(file.id)?.[permission]
@@ -80,7 +80,10 @@ export function FilePermissionsProvider({
     }
   }
 
-  function fetchFilesPermission(permission: FilePermission, files: File[]): Promise<boolean[]> {
+  function fetchFilesPermission(
+    permission: FilePermission,
+    files: FilePreview[]
+  ): Promise<boolean[]> {
     return Promise.all(
       files.map((file) =>
         checkSessionUserHasFilePermission(permission, file)

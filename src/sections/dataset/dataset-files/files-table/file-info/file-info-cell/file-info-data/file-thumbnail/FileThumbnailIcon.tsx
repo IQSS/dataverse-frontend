@@ -1,5 +1,5 @@
 import styles from './FileThumbnail.module.scss'
-import { FileType } from '../../../../../../../../files/domain/models/File'
+import { FileType } from '../../../../../../../../files/domain/models/FilePreview'
 import { FileTypeToFileIconMap } from './FileTypeToFileIconMap'
 import { IconName } from '@iqss/dataverse-design-system'
 

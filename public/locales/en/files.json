@@ -24,24 +24,6 @@
       "published": "Published",
       "deposited": "Deposited"
     },
-    "fileAccess": {
-      "title": "File Access",
-      "restricted": {
-        "name": "Restricted",
-        "icon": "Restricted File Icon"
-      },
-      "restrictedWithAccess": {
-        "name": "Restricted with Access Granted",
-        "icon": "Restricted with access Icon"
-      },
-      "embargoed": {
-        "name": "Embargoed"
-      },
-      "public": {
-        "name": "Public",
-        "icon": "Public File Icon"
-      }
-    },
     "copyToClipboard": {
       "clickToCopy": "Click to copy",
       "correctlyCopiedIcon": "Correctly copied to clipboard icon",

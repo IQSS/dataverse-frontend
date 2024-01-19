@@ -1,13 +1,13 @@
-import { FileMother } from '../../../../../files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../../../files/domain/models/FilePreviewMother'
 import { ZipDownloadLimitMessage } from '../../../../../../../src/sections/dataset/dataset-files/files-table/zip-download-limit-message/ZipDownloadLimitMessage'
-import { FileSize, FileSizeUnit } from '../../../../../../../src/files/domain/models/File'
+import { FileSize, FileSizeUnit } from '../../../../../../../src/files/domain/models/FilePreview'
 import { SettingMother } from '../../../../../settings/domain/models/SettingMother'
 import { ZipDownloadLimit } from '../../../../../../../src/settings/domain/models/ZipDownloadLimit'
 import { SettingsContext } from '../../../../../../../src/sections/settings/SettingsContext'
 
 const fileSelection = {
-  0: FileMother.create({ size: new FileSize(1024, FileSizeUnit.BYTES) }),
-  1: FileMother.create({ size: new FileSize(2048, FileSizeUnit.BYTES) })
+  0: FilePreviewMother.create({ size: new FileSize(1024, FileSizeUnit.BYTES) }),
+  1: FilePreviewMother.create({ size: new FileSize(2048, FileSizeUnit.BYTES) })
 }
 const zipDownloadLimit = new ZipDownloadLimit(500, FileSizeUnit.BYTES)
 const filesTotalDownloadSize = 3072 // 3.0 KB
@@ -20,7 +20,9 @@ describe('ZipDownloadLimitMessage', () => {
     cy.customMount(
       <SettingsContext.Provider value={{ getSettingByName }}>
         <ZipDownloadLimitMessage
-          fileSelection={{ 0: FileMother.create({ size: new FileSize(1024, FileSizeUnit.BYTES) }) }}
+          fileSelection={{
+            0: FilePreviewMother.create({ size: new FileSize(1024, FileSizeUnit.BYTES) })
+          }}
           visitedFiles={{}}
           filesTotalDownloadSize={filesTotalDownloadSize}
         />
@@ -39,8 +41,8 @@ describe('ZipDownloadLimitMessage', () => {
       <SettingsContext.Provider value={{ getSettingByName }}>
         <ZipDownloadLimitMessage
           fileSelection={{
-            0: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
-            1: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) })
+            0: FilePreviewMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            1: FilePreviewMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) })
           }}
           visitedFiles={{}}
           filesTotalDownloadSize={filesTotalDownloadSize}
@@ -78,8 +80,8 @@ describe('ZipDownloadLimitMessage', () => {
       <SettingsContext.Provider value={{ getSettingByName }}>
         <ZipDownloadLimitMessage
           fileSelection={{
-            0: FileMother.create({ size: new FileSize(1000000, FileSizeUnit.PETABYTES) }),
-            1: FileMother.create({ size: new FileSize(1000000, FileSizeUnit.PETABYTES) })
+            0: FilePreviewMother.create({ size: new FileSize(1000000, FileSizeUnit.PETABYTES) }),
+            1: FilePreviewMother.create({ size: new FileSize(1000000, FileSizeUnit.PETABYTES) })
           }}
           visitedFiles={{}}
           filesTotalDownloadSize={filesTotalDownloadSize}
@@ -100,8 +102,8 @@ describe('ZipDownloadLimitMessage', () => {
       <SettingsContext.Provider value={{ getSettingByName }}>
         <ZipDownloadLimitMessage
           fileSelection={{
-            0: FileMother.create({ size: new FileSize(1000000, FileSizeUnit.PETABYTES) }),
-            1: FileMother.create({ size: new FileSize(1000000, FileSizeUnit.PETABYTES) }),
+            0: FilePreviewMother.create({ size: new FileSize(1000000, FileSizeUnit.PETABYTES) }),
+            1: FilePreviewMother.create({ size: new FileSize(1000000, FileSizeUnit.PETABYTES) }),
             2: undefined
           }}
           visitedFiles={{}}
@@ -126,14 +128,14 @@ describe('ZipDownloadLimitMessage', () => {
       <SettingsContext.Provider value={{ getSettingByName }}>
         <ZipDownloadLimitMessage
           fileSelection={{
-            0: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
-            1: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            0: FilePreviewMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            1: FilePreviewMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
             3: undefined
           }}
           visitedFiles={{
-            0: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
-            1: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
-            2: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            0: FilePreviewMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            1: FilePreviewMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            2: FilePreviewMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
             3: undefined
           }}
           filesTotalDownloadSize={filesTotalDownloadSize}
@@ -157,16 +159,16 @@ describe('ZipDownloadLimitMessage', () => {
       <SettingsContext.Provider value={{ getSettingByName }}>
         <ZipDownloadLimitMessage
           fileSelection={{
-            0: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
-            1: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
-            2: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            0: FilePreviewMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            1: FilePreviewMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            2: FilePreviewMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
             3: undefined,
-            4: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) })
+            4: FilePreviewMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) })
           }}
           visitedFiles={{
-            0: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
-            1: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
-            2: FileMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            0: FilePreviewMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            1: FilePreviewMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
+            2: FilePreviewMother.create({ size: new FileSize(1, FileSizeUnit.BYTES) }),
             3: undefined
           }}
           filesTotalDownloadSize={filesTotalDownloadSize}

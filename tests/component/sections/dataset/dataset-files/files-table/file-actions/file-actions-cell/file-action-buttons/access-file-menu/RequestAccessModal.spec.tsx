@@ -1,19 +1,19 @@
 import { RequestAccessModal } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/RequestAccessModal'
-import { FileMother } from '../../../../../../../../files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { UserMother } from '../../../../../../../../users/domain/models/UserMother'
 import { UserRepository } from '../../../../../../../../../../src/users/domain/repositories/UserRepository'
 import { SessionProvider } from '../../../../../../../../../../src/sections/session/SessionProvider'
 import { Route } from '../../../../../../../../../../src/sections/Route.enum'
 describe('RequestAccessModal', () => {
   it('renders the RequestAccessModal', () => {
-    const file = FileMother.create()
+    const file = FilePreviewMother.create()
     cy.customMount(<RequestAccessModal fileId={file.id} />)
 
     cy.findByRole('button', { name: 'Request Access' }).should('exist')
   })
 
   it('shows login modal when button is clicked and user is not logged in', () => {
-    const file = FileMother.create()
+    const file = FilePreviewMother.create()
     cy.customMount(<RequestAccessModal fileId={file.id} />)
 
     cy.findByRole('button', { name: 'Request Access' }).click()
@@ -33,7 +33,7 @@ describe('RequestAccessModal', () => {
   })
 
   it('shows request access modal when button is clicked and user is logged in', () => {
-    const file = FileMother.create()
+    const file = FilePreviewMother.create()
     const user = UserMother.create()
     const userRepository = {} as UserRepository
     userRepository.getAuthenticated = cy.stub().resolves(user)

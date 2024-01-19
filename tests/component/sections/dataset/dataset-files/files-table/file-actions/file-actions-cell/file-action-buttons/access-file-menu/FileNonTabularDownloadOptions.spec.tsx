@@ -1,8 +1,8 @@
-import { FileMother } from '../../../../../../../../files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import {
   FileIngestStatus,
   FileType
-} from '../../../../../../../../../../src/files/domain/models/File'
+} from '../../../../../../../../../../src/files/domain/models/FilePreview'
 import { FileNonTabularDownloadOptions } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/FileNonTabularDownloadOptions'
 import { DatasetProvider } from '../../../../../../../../../../src/sections/dataset/DatasetProvider'
 import { DatasetRepository } from '../../../../../../../../../../src/dataset/domain/repositories/DatasetRepository'
@@ -11,13 +11,13 @@ import {
   DatasetMother
 } from '../../../../../../../../dataset/domain/models/DatasetMother'
 
-const fileNonTabular = FileMother.create({
+const fileNonTabular = FilePreviewMother.create({
   tabularData: undefined,
   type: new FileType('text/plain')
 })
 describe('FileNonTabularDownloadOptions', () => {
   it('renders the download options for a non-tabular file of unknown type', () => {
-    const fileNonTabularUnknown = FileMother.create({
+    const fileNonTabularUnknown = FilePreviewMother.create({
       tabularData: undefined,
       type: new FileType('unknown')
     })
@@ -39,7 +39,7 @@ describe('FileNonTabularDownloadOptions', () => {
   })
 
   it('does not render the download options for a tabular file', () => {
-    const fileTabular = FileMother.createTabular()
+    const fileTabular = FilePreviewMother.createTabular()
     cy.customMount(<FileNonTabularDownloadOptions file={fileTabular} />)
 
     cy.findByRole('link', { name: 'Original File Format' }).should('not.exist')
@@ -47,7 +47,7 @@ describe('FileNonTabularDownloadOptions', () => {
   })
 
   it('renders the options as disabled when the file ingest is in progress', () => {
-    const fileNonTabularInProgress = FileMother.create({
+    const fileNonTabularInProgress = FilePreviewMother.create({
       tabularData: undefined,
       type: new FileType('text/plain'),
       ingest: {

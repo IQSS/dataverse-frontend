@@ -2,22 +2,35 @@ import {
   DatasetVersionInfo as JSDatasetVersionInfo,
   DatasetVersionState as JSDatasetVersionState
 } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
-import { DatasetPublishingStatus, DatasetVersion } from '../../domain/models/Dataset'
+import {
+  DatasetPublishingStatus,
+  DatasetVersion,
+  DatasetVersionNumber
+} from '../../domain/models/Dataset'
 export class JSDatasetVersionMapper {
-  static toDatasetVersion(
+  static toVersion(
     jDatasetVersionId: number,
     jsDatasetVersionInfo: JSDatasetVersionInfo,
-    requestedVersion?: string
+    jsDatasetTitle: string,
+    jsDatasetCitation: string
   ): DatasetVersion {
-    return new DatasetVersion(
+    return new DatasetVersion.Builder(
       jDatasetVersionId,
-      JSDatasetVersionMapper.toStatus(jsDatasetVersionInfo.state),
+      jsDatasetTitle,
+      this.toVersionNumber(jsDatasetVersionInfo),
+      this.toStatus(jsDatasetVersionInfo.state),
+      jsDatasetCitation,
       true, // TODO Connect with dataset version isLatest
       false, // TODO Connect with dataset version isInReview
-      JSDatasetVersionMapper.toStatus(jsDatasetVersionInfo.state), // TODO Connect with dataset version latestVersionState
+      this.toStatus(jsDatasetVersionInfo.state),
+      this.toSomeDatasetVersionHasBeenReleased(jsDatasetVersionInfo)
+    )
+  }
+
+  static toVersionNumber(jsDatasetVersionInfo: JSDatasetVersionInfo): DatasetVersionNumber {
+    return new DatasetVersionNumber(
       jsDatasetVersionInfo.majorNumber,
-      jsDatasetVersionInfo.minorNumber,
-      requestedVersion
+      jsDatasetVersionInfo.minorNumber
     )
   }
 
@@ -32,5 +45,12 @@ export class JSDatasetVersionMapper {
       default:
         return DatasetPublishingStatus.DRAFT
     }
+  }
+
+  static toSomeDatasetVersionHasBeenReleased(jsDatasetVersionInfo: JSDatasetVersionInfo): boolean {
+    return (
+      jsDatasetVersionInfo.releaseTime !== undefined &&
+      !isNaN(jsDatasetVersionInfo.releaseTime.getTime())
+    )
   }
 }

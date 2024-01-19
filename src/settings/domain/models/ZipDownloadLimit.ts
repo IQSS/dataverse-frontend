@@ -1,3 +1,3 @@
-import { FileSize } from '../../../files/domain/models/File'
+import { FileSize } from '../../../files/domain/models/FilePreview'
 
 export class ZipDownloadLimit extends FileSize {}

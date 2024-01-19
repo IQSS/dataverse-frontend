@@ -1,8 +1,8 @@
-import { FileMother } from '../../../../../../../../files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import {
   FileIngestStatus,
   FileType
-} from '../../../../../../../../../../src/files/domain/models/File'
+} from '../../../../../../../../../../src/files/domain/models/FilePreview'
 import { FileTabularDownloadOptions } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/FileTabularDownloadOptions'
 import { DatasetRepository } from '../../../../../../../../../../src/dataset/domain/repositories/DatasetRepository'
 import {
@@ -11,12 +11,12 @@ import {
 } from '../../../../../../../../dataset/domain/models/DatasetMother'
 import { DatasetProvider } from '../../../../../../../../../../src/sections/dataset/DatasetProvider'
 
-const fileNonTabular = FileMother.create({
+const fileNonTabular = FilePreviewMother.create({
   tabularData: undefined,
   type: new FileType('text/plain')
 })
-const fileTabular = FileMother.createTabular()
-const fileTabularUnknown = FileMother.createTabular({
+const fileTabular = FilePreviewMother.createTabular()
+const fileTabularUnknown = FilePreviewMother.createTabular({
   type: new FileType('text/tab-separated-values', 'Unknown')
 })
 describe('FileTabularDownloadOptions', () => {
@@ -55,7 +55,7 @@ describe('FileTabularDownloadOptions', () => {
   })
 
   it('renders the options as disabled when the file ingest is in progress', () => {
-    const fileTabularInProgress = FileMother.createTabular({
+    const fileTabularInProgress = FilePreviewMother.createTabular({
       ingest: {
         status: FileIngestStatus.IN_PROGRESS
       }
@@ -96,7 +96,7 @@ describe('FileTabularDownloadOptions', () => {
   })
 
   it('does not render the RData option if the file type is already R Data', () => {
-    const fileTabularRData = FileMother.createTabular({
+    const fileTabularRData = FilePreviewMother.createTabular({
       type: new FileType('text/tab-separated-values', 'R Data')
     })
     cy.customMount(<FileTabularDownloadOptions file={fileTabularRData} />)

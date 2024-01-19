@@ -1,10 +1,13 @@
 import { createContext, useContext } from 'react'
 import { FilePermission } from '../../../files/domain/models/FileUserPermissions'
-import { File } from '../../../files/domain/models/File'
+import { FilePreview } from '../../../files/domain/models/FilePreview'
 
 interface FilePermissionsContextProps {
-  checkSessionUserHasFilePermission: (permission: FilePermission, file: File) => Promise<boolean>
-  fetchFilesPermission: (permission: FilePermission, files: File[]) => Promise<boolean[]>
+  checkSessionUserHasFilePermission: (
+    permission: FilePermission,
+    file: FilePreview
+  ) => Promise<boolean>
+  fetchFilesPermission: (permission: FilePermission, files: FilePreview[]) => Promise<boolean[]>
 }
 
 export const FilePermissionsContext = createContext<FilePermissionsContextProps>({

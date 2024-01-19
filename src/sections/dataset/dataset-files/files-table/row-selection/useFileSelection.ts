@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
-import { File } from '../../../../../files/domain/models/File'
+import { FilePreview } from '../../../../../files/domain/models/FilePreview'
 import { Row } from '@tanstack/react-table'
 import { RowSelection } from '../useFilesTable'
 import { FilePaginationInfo } from '../../../../../files/domain/models/FilePaginationInfo'
 
 export type FileSelection = {
-  [key: string]: File | undefined
+  [key: string]: FilePreview | undefined
 }
 
 export function useFileSelection(
-  currentPageSelectedRowModel: Record<string, Row<File>>,
+  currentPageSelectedRowModel: Record<string, Row<FilePreview>>,
   setCurrentPageRowSelection: (rowSelection: RowSelection) => void,
   paginationInfo: FilePaginationInfo
 ) {

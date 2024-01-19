@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { DatasetPreview } from '../../../../../src/dataset/domain/models/DatasetPreview'
-import { DatasetCitationMother, DatasetLabelsMother, DatasetVersionMother } from './DatasetMother'
+import { DatasetVersionMother } from './DatasetMother'
 
 export class DatasetPreviewMother {
   static createMany(count: number): DatasetPreview[] {
@@ -14,25 +14,16 @@ export class DatasetPreviewMother {
   static create(props?: Partial<DatasetPreview>): DatasetPreview {
     const datasetPreview = {
       persistentId: faker.datatype.uuid(),
-      title: faker.lorem.sentence(),
-      labels: DatasetLabelsMother.create(),
-      isReleased: faker.datatype.boolean(),
-      isDeaccessioned: faker.datatype.boolean(),
-      thumbnail: faker.datatype.boolean() ? faker.image.imageUrl() : undefined,
-      releaseOrCreateDate: faker.date.past(),
       version: DatasetVersionMother.create(),
-      citation: DatasetCitationMother.create(),
+      releaseOrCreateDate: faker.date.past(),
       description: faker.lorem.paragraph(),
+      thumbnail: faker.datatype.boolean() ? faker.image.imageUrl() : undefined,
       ...props
     }
 
     return new DatasetPreview(
       datasetPreview.persistentId,
-      datasetPreview.title,
       datasetPreview.version,
-      datasetPreview.isReleased,
-      datasetPreview.citation,
-      datasetPreview.isDeaccessioned,
       datasetPreview.releaseOrCreateDate,
       datasetPreview.description,
       datasetPreview.thumbnail
@@ -45,25 +36,21 @@ export class DatasetPreviewMother {
 
   static createDraft(): DatasetPreview {
     return this.create({
-      isDeaccessioned: false,
-      labels: DatasetLabelsMother.createDraft(),
-      citation: DatasetCitationMother.createDraft()
+      version: DatasetVersionMother.createDraft()
     })
   }
 
   static createWithThumbnail(): DatasetPreview {
-    return this.create({ thumbnail: faker.image.imageUrl(), isDeaccessioned: false })
+    return this.create({ thumbnail: faker.image.imageUrl() })
   }
 
   static createWithNoThumbnail(): DatasetPreview {
-    return this.create({ thumbnail: undefined, isDeaccessioned: false })
+    return this.create({ thumbnail: undefined })
   }
 
   static createDeaccessioned(): DatasetPreview {
     return this.create({
-      isDeaccessioned: true,
-      labels: DatasetLabelsMother.createDeaccessioned(),
-      citation: DatasetCitationMother.createDeaccessioned()
+      version: DatasetVersionMother.createDeaccessioned()
     })
   }
 }

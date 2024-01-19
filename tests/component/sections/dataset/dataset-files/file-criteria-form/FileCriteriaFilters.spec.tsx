@@ -1,7 +1,7 @@
 import { FileCriteria } from '../../../../../../src/files/domain/models/FileCriteria'
 import { FileCriteriaFilters } from '../../../../../../src/sections/dataset/dataset-files/file-criteria-form/FileCriteriaFilters'
 import { FilesCountInfoMother } from '../../../../files/domain/models/FilesCountInfoMother'
-import { FileType } from '../../../../../../src/files/domain/models/File'
+import { FileType } from '../../../../../../src/files/domain/models/FilePreview'
 
 const defaultCriteria = new FileCriteria()
 const filesCountInfo = FilesCountInfoMother.create({

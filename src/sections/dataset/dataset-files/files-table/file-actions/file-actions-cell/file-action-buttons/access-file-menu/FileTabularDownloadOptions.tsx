@@ -1,10 +1,13 @@
-import { File, FileIngestStatus } from '../../../../../../../../files/domain/models/File'
+import {
+  FilePreview,
+  FileIngestStatus
+} from '../../../../../../../../files/domain/models/FilePreview'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useDataset } from '../../../../../../DatasetContext'
 import { useTranslation } from 'react-i18next'
 
 interface FileTabularDownloadOptionsProps {
-  file: File
+  file: FilePreview
 }
 
 export function FileTabularDownloadOptions({ file }: FileTabularDownloadOptionsProps) {
