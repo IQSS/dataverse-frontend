@@ -1,4 +1,4 @@
-import { File } from '../../../../../../../../files/domain/models/File'
+import { FilePreview } from '../../../../../../../../files/domain/models/FilePreview'
 import { Globe, LockFill, UnlockFill } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
 import styles from './AccessFileMenu.module.scss'
@@ -6,7 +6,7 @@ import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useFileDownloadPermission } from '../../../../../../../file/file-permissions/useFileDownloadPermission'
 
 interface AccessStatusProps {
-  file: File
+  file: FilePreview
 }
 
 export function AccessStatus({ file }: AccessStatusProps) {
@@ -35,35 +35,26 @@ function AccessStatusIcon({
   sessionUserHasFileDownloadPermission: boolean
   restricted: boolean
 }) {
-  const { t } = useTranslation('files')
+  const { t } = useTranslation('file')
   if (restricted) {
     if (sessionUserHasFileDownloadPermission) {
       return (
-        <UnlockFill
-          title={t('table.fileAccess.restrictedWithAccess.icon')}
-          className={styles.success}
-        />
+        <UnlockFill title={t('fileAccess.restrictedWithAccess.icon')} className={styles.success} />
       )
     }
-    return (
-      <LockFill
-        role="img"
-        title={t('table.fileAccess.restricted.icon')}
-        className={styles.danger}
-      />
-    )
+    return <LockFill role="img" title={t('fileAccess.restricted.icon')} className={styles.danger} />
   }
-  return <Globe role="img" title={t('table.fileAccess.public.icon')} className={styles.success} />
+  return <Globe role="img" title={t('fileAccess.public.icon')} className={styles.success} />
 }
 
 function AccessStatusText({
   file,
   sessionUserHasFileDownloadPermission
 }: {
-  file: File
+  file: FilePreview
   sessionUserHasFileDownloadPermission: boolean
 }) {
-  const { t } = useTranslation('files')
+  const { t } = useTranslation('file')
   const getAccessStatus = () => {
     if (file.isActivelyEmbargoed) {
       return 'embargoed'
@@ -89,7 +80,7 @@ function AccessStatusText({
             : 'danger'
         ]
       }>
-      {t(`table.fileAccess.${getAccessStatus()}.name`)}
+      {t(`fileAccess.${getAccessStatus()}.name`)}
     </span>
   )
 }

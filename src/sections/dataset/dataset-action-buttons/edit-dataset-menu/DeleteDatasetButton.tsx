@@ -8,7 +8,7 @@ interface DeleteDatasetButtonProps {
 export function DeleteDatasetButton({ dataset }: DeleteDatasetButtonProps) {
   if (
     !dataset.permissions.canDeleteDataset ||
-    dataset.version.latestVersionStatus !== DatasetPublishingStatus.DRAFT
+    dataset.version.latestVersionPublishingStatus !== DatasetPublishingStatus.DRAFT
   ) {
     return <></>
   }
@@ -18,7 +18,7 @@ export function DeleteDatasetButton({ dataset }: DeleteDatasetButtonProps) {
     <>
       <DropdownSeparator />
       <DropdownButtonItem>
-        {dataset.isReleased
+        {dataset.version.someDatasetVersionHasBeenReleased
           ? t('datasetActionButtons.editDataset.delete.draft')
           : t('datasetActionButtons.editDataset.delete.released')}
       </DropdownButtonItem>

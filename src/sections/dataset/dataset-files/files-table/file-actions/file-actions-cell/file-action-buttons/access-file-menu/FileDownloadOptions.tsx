@@ -1,13 +1,13 @@
 import { DropdownHeader } from '@iqss/dataverse-design-system'
 import { Download } from 'react-bootstrap-icons'
-import { File } from '../../../../../../../../files/domain/models/File'
+import { FilePreview } from '../../../../../../../../files/domain/models/FilePreview'
 import { FileTabularDownloadOptions } from './FileTabularDownloadOptions'
 import { FileNonTabularDownloadOptions } from './FileNonTabularDownloadOptions'
 import { useTranslation } from 'react-i18next'
 import { useFileDownloadPermission } from '../../../../../../../file/file-permissions/useFileDownloadPermission'
 
 interface FileDownloadOptionsProps {
-  file: File
+  file: FilePreview
 }
 
 export function FileDownloadOptions({ file }: FileDownloadOptionsProps) {

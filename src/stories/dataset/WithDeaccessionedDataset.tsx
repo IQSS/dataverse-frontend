@@ -1,12 +1,11 @@
 import { StoryFn } from '@storybook/react'
 import { DatasetProvider } from '../../sections/dataset/DatasetProvider'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
+import { Dataset } from '../../dataset/domain/models/Dataset'
 import {
-  Dataset,
-  DatasetPublishingStatus,
-  DatasetVersion
-} from '../../dataset/domain/models/Dataset'
-import { DatasetMother } from '../../../tests/component/dataset/domain/models/DatasetMother'
+  DatasetMother,
+  DatasetVersionMother
+} from '../../../tests/component/dataset/domain/models/DatasetMother'
 
 export const WithDeaccessionedDataset = (Story: StoryFn) => {
   const datasetRepository = {} as DatasetRepository
@@ -20,15 +19,7 @@ export const WithDeaccessionedDataset = (Story: StoryFn) => {
       setTimeout(() => {
         resolve(
           DatasetMother.createRealistic({
-            version: new DatasetVersion(
-              1,
-              DatasetPublishingStatus.DEACCESSIONED,
-              true,
-              false,
-              DatasetPublishingStatus.DEACCESSIONED,
-              1,
-              0
-            )
+            version: DatasetVersionMother.createDeaccessioned()
           })
         )
       }, 1000)

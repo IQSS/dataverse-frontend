@@ -1,5 +1,5 @@
 import { FileRepository } from '../repositories/FileRepository'
-import { FileDownloadMode } from '../models/File'
+import { FileDownloadMode } from '../models/FilePreview'
 
 const ONLY_ONE_FILE = 1
 export function getMultipleFileDownloadUrl(

@@ -6,7 +6,7 @@ import {
   FileTag
 } from '../../../../../../src/files/domain/models/FileCriteria'
 import { FilesCountInfoMother } from '../../../../files/domain/models/FilesCountInfoMother'
-import { FileType } from '../../../../../../src/files/domain/models/File'
+import { FileType } from '../../../../../../src/files/domain/models/FilePreview'
 import { DatasetRepository } from '../../../../../../src/dataset/domain/repositories/DatasetRepository'
 import {
   DatasetMother,

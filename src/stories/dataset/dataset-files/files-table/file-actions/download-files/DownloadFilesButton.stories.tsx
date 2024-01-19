@@ -4,7 +4,7 @@ import { WithI18next } from '../../../../../WithI18next'
 import { WithSettings } from '../../../../../WithSettings'
 import { WithLoggedInUser } from '../../../../../WithLoggedInUser'
 import { WithDatasetAllPermissionsGranted } from '../../../../WithDatasetAllPermissionsGranted'
-import { FileMother } from '../../../../../../../tests/component/files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../../../../../tests/component/files/domain/models/FilePreviewMother'
 import { DownloadFilesButton } from '../../../../../../sections/dataset/dataset-files/files-table/file-actions/download-files/DownloadFilesButton'
 
 const meta: Meta<typeof EditFilesMenu> = {
@@ -19,7 +19,7 @@ type Story = StoryObj<typeof EditFilesMenu>
 export const NonTabularFiles: Story = {
   render: () => (
     <DownloadFilesButton
-      files={FileMother.createMany(2, { tabularData: undefined })}
+      files={FilePreviewMother.createMany(2, { tabularData: undefined })}
       fileSelection={{}}
     />
   )
@@ -28,7 +28,7 @@ export const NonTabularFiles: Story = {
 export const TabularFiles: Story = {
   render: () => (
     <DownloadFilesButton
-      files={FileMother.createMany(2, {
+      files={FilePreviewMother.createMany(2, {
         tabularData: {
           variablesCount: 2,
           observationsCount: 3,

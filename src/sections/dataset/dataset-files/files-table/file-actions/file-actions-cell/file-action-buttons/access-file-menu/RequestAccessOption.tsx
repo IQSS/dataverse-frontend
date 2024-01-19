@@ -1,12 +1,15 @@
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import styles from './AccessFileMenu.module.scss'
 import { RequestAccessModal } from './RequestAccessModal'
-import { File, FilePublishingStatus } from '../../../../../../../../files/domain/models/File'
+import {
+  FilePreview,
+  FilePublishingStatus
+} from '../../../../../../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
 import { useFileDownloadPermission } from '../../../../../../../file/file-permissions/useFileDownloadPermission'
 
 interface RequestAccessButtonProps {
-  file: File
+  file: FilePreview
 }
 export function RequestAccessOption({ file }: RequestAccessButtonProps) {
   const { t } = useTranslation('files')

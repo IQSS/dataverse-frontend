@@ -1,7 +1,7 @@
 import { EditFilesOptions } from '../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/EditFilesOptions'
-import { FileMother } from '../../../../../../files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../../../../files/domain/models/FilePreviewMother'
 
-const files = FileMother.createMany(2)
+const files = FilePreviewMother.createMany(2)
 describe('EditFilesOptions', () => {
   it('renders the EditFilesOptions', () => {
     cy.customMount(<EditFilesOptions files={files} fileSelection={{}} />)
@@ -14,7 +14,7 @@ describe('EditFilesOptions', () => {
   })
 
   it('renders the restrict option if some file is unrestricted', () => {
-    const fileUnrestricted = FileMother.createDefault()
+    const fileUnrestricted = FilePreviewMother.createDefault()
     cy.customMount(<EditFilesOptions files={[fileUnrestricted]} fileSelection={{}} />)
 
     cy.findByRole('button', { name: 'Restrict' }).should('exist').click()
@@ -23,7 +23,7 @@ describe('EditFilesOptions', () => {
   })
 
   it('renders the unrestrict option if some file is restricted', () => {
-    const fileRestricted = FileMother.createWithRestrictedAccess()
+    const fileRestricted = FilePreviewMother.createWithRestrictedAccess()
     cy.customMount(<EditFilesOptions files={[fileRestricted]} fileSelection={{}} />)
 
     cy.findByRole('button', { name: 'Unrestrict' }).should('exist').click()
@@ -65,7 +65,10 @@ describe('EditFilesOptions', () => {
 
   it('does not show the No Selected Files message when files are selected and one option is clicked', () => {
     cy.customMount(
-      <EditFilesOptions files={files} fileSelection={{ 'some-file-id': FileMother.create() }} />
+      <EditFilesOptions
+        files={files}
+        fileSelection={{ 'some-file-id': FilePreviewMother.create() }}
+      />
     )
 
     cy.findByRole('button', { name: 'Metadata' }).click()

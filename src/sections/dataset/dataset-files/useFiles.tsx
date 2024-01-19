@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
-import { File } from '../../../files/domain/models/File'
+import { FilePreview } from '../../../files/domain/models/FilePreview'
 import { getFilesByDatasetPersistentId } from '../../../files/domain/useCases/getFilesByDatasetPersistentId'
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 import { FilesCountInfo } from '../../../files/domain/models/FilesCountInfo'
@@ -20,7 +20,7 @@ export function useFiles(
   criteria?: FileCriteria
 ) {
   const { fetchFilesPermission } = useFilePermissions()
-  const [files, setFiles] = useState<File[]>([])
+  const [files, setFiles] = useState<FilePreview[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [filesCountInfo, setFilesCountInfo] = useState<FilesCountInfo>()
   const [filesTotalDownloadSize, setFilesTotalDownloadSize] = useState<number>(0)
@@ -28,7 +28,7 @@ export function useFiles(
     return getFilesCountInfoByDatasetPersistentId(
       filesRepository,
       datasetPersistentId,
-      datasetVersion,
+      datasetVersion.number,
       criteria
     )
       .then((filesCountInfo: FilesCountInfo) => {
@@ -56,11 +56,11 @@ export function useFiles(
         paginationInfo.withTotal(filesCount.total),
         criteria
       )
-        .then((files: File[]) => {
+        .then((files: FilePreview[]) => {
           setFiles(files)
           return files
         })
-        .then((files: File[]) =>
+        .then((files: FilePreview[]) =>
           fetchFilesPermission(FilePermission.DOWNLOAD_FILE, files).then(() => setIsLoading(false))
         )
         .catch(() => {
@@ -88,7 +88,7 @@ export function useFiles(
   ])
 
   useEffect(() => {
-    getFilesTotalDownloadSize(filesRepository, datasetPersistentId, datasetVersion, criteria)
+    getFilesTotalDownloadSize(filesRepository, datasetPersistentId, datasetVersion.number, criteria)
       .then((filesTotalDownloadSize: number) => {
         setFilesTotalDownloadSize(filesTotalDownloadSize)
       })

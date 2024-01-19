@@ -3,7 +3,7 @@ import { FileOptionsMenu } from '../../../../../../../sections/dataset/dataset-f
 import { WithI18next } from '../../../../../../WithI18next'
 import { WithSettings } from '../../../../../../WithSettings'
 import { WithLoggedInUser } from '../../../../../../WithLoggedInUser'
-import { FileMother } from '../../../../../../../../tests/component/files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../../../../../../tests/component/files/domain/models/FilePreviewMother'
 import { WithDatasetAllPermissionsGranted } from '../../../../../WithDatasetAllPermissionsGranted'
 import { WithDatasetLockedFromEdits } from '../../../../../WithDatasetLockedFromEdits'
 
@@ -19,22 +19,22 @@ type Story = StoryObj<typeof FileOptionsMenu>
 
 export const DefaultWithLoggedInUser: Story = {
   decorators: [WithDatasetAllPermissionsGranted],
-  render: () => <FileOptionsMenu file={FileMother.createDefault()} />
+  render: () => <FileOptionsMenu file={FilePreviewMother.createDefault()} />
 }
 
 export const Restricted: Story = {
   decorators: [WithDatasetAllPermissionsGranted],
-  render: () => <FileOptionsMenu file={FileMother.createWithRestrictedAccess()} />
+  render: () => <FileOptionsMenu file={FilePreviewMother.createWithRestrictedAccess()} />
 }
 
 export const WithDatasetLocked: Story = {
   decorators: [WithDatasetLockedFromEdits],
-  render: () => <FileOptionsMenu file={FileMother.createDefault()} />
+  render: () => <FileOptionsMenu file={FilePreviewMother.createDefault()} />
 }
 
 export const WithFileAlreadyDeleted: Story = {
   decorators: [WithDatasetAllPermissionsGranted],
-  render: () => <FileOptionsMenu file={FileMother.createDeleted()} />
+  render: () => <FileOptionsMenu file={FilePreviewMother.createDeleted()} />
 }
 
 //

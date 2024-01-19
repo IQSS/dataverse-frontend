@@ -8,12 +8,10 @@ import { DatasetCitationTooltip } from './DatasetCitationTooltip'
 
 interface DatasetCitationProps {
   thumbnail?: string
-  title: string
-  citation: string
   version: DatasetVersion
 }
 
-export function DatasetCitation({ thumbnail, title, citation, version }: DatasetCitationProps) {
+export function DatasetCitation({ thumbnail, version }: DatasetCitationProps) {
   const { t } = useTranslation('dataset')
   return (
     <>
@@ -27,14 +25,14 @@ export function DatasetCitation({ thumbnail, title, citation, version }: Dataset
           <Col sm={2} className={styles.thumbnail}>
             <DatasetThumbnail
               thumbnail={thumbnail}
-              title={title}
+              title={version.title}
               isDeaccessioned={version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED}
             />
           </Col>
           <Col>
             <Row>
               <span className={styles.citation}>
-                <CitationDescription citation={citation} />
+                <CitationDescription citation={version.citation} />
                 <DatasetCitationTooltip status={version.publishingStatus} />
               </span>
             </Row>

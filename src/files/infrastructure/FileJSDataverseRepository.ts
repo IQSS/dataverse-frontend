@@ -1,5 +1,5 @@
 import { FileRepository } from '../domain/repositories/FileRepository'
-import { File, FileDownloadMode } from '../domain/models/File'
+import { FilePreview, FileDownloadMode } from '../domain/models/FilePreview'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
 import { FileUserPermissions } from '../domain/models/FileUserPermissions'
 import {
@@ -17,7 +17,9 @@ import {
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
 import { JSFileMapper } from './mappers/JSFileMapper'
-import { DatasetVersion } from '../../dataset/domain/models/Dataset'
+import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/models/Dataset'
+import { File } from '../domain/models/File'
+import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
 
 const includeDeaccessioned = true
@@ -31,11 +33,11 @@ export class FileJSDataverseRepository implements FileRepository {
     datasetVersion: DatasetVersion,
     paginationInfo: FilePaginationInfo = new FilePaginationInfo(),
     criteria: FileCriteria = new FileCriteria()
-  ): Promise<File[]> {
+  ): Promise<FilePreview[]> {
     return getDatasetFiles
       .execute(
         datasetPersistentId,
-        datasetVersion.toString(),
+        datasetVersion.number.toString(),
         includeDeaccessioned,
         paginationInfo.pageSize,
         paginationInfo.offset,
@@ -108,13 +110,13 @@ export class FileJSDataverseRepository implements FileRepository {
 
   getFilesCountInfoByDatasetPersistentId(
     datasetPersistentId: string,
-    datasetVersion: DatasetVersion,
+    datasetVersionNumber: DatasetVersionNumber,
     criteria: FileCriteria
   ): Promise<FilesCountInfo> {
     return getDatasetFileCounts
       .execute(
         datasetPersistentId,
-        datasetVersion.toString(),
+        datasetVersionNumber.toString(),
         includeDeaccessioned,
         DomainFileMapper.toJSFileSearchCriteria(criteria)
       )
@@ -128,13 +130,13 @@ export class FileJSDataverseRepository implements FileRepository {
 
   getFilesTotalDownloadSizeByDatasetPersistentId(
     datasetPersistentId: string,
-    datasetVersion: DatasetVersion,
+    datasetVersionNumber: DatasetVersionNumber,
     criteria: FileCriteria = new FileCriteria()
   ): Promise<number> {
     return getDatasetFilesTotalDownloadSize
       .execute(
         datasetPersistentId,
-        datasetVersion.toString(),
+        datasetVersionNumber.toString(),
         FileDownloadSizeMode.ARCHIVAL,
         DomainFileMapper.toJSFileSearchCriteria(criteria),
         includeDeaccessioned
@@ -153,6 +155,15 @@ export class FileJSDataverseRepository implements FileRepository {
       .catch((error: ReadError) => {
         throw new Error(error.message)
       })
+  }
+
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  getById(id: number): Promise<File> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(FileMother.createRealistic())
+      }, 1000)
+    })
   }
 
   getMultipleFileDownloadUrl(ids: number[], downloadMode: FileDownloadMode): string {

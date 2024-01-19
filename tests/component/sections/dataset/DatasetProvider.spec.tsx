@@ -9,7 +9,7 @@ function TestComponent() {
 
   return (
     <div>
-      {dataset ? <span>{dataset.title}</span> : <span>Dataset Not Found</span>}
+      {dataset ? <span>{dataset.version.title}</span> : <span>Dataset Not Found</span>}
       {isLoading && <div>Loading...</div>}
     </div>
   )
@@ -39,7 +39,7 @@ describe('DatasetProvider', () => {
 
     cy.findByText('Loading...').should('exist')
     cy.wrap(datasetRepository.getByPersistentId).should('be.calledOnceWith', dataset.persistentId)
-    cy.findByText(dataset.title).should('exist')
+    cy.findByText(dataset.version.title).should('exist')
     cy.findByText('Loading...').should('not.exist')
   })
 
@@ -60,7 +60,7 @@ describe('DatasetProvider', () => {
       dataset.persistentId,
       'draft'
     )
-    cy.findByText(dataset.title).should('exist')
+    cy.findByText(dataset.version.title).should('exist')
     cy.findByText('Loading...').should('not.exist')
   })
 
@@ -80,7 +80,7 @@ describe('DatasetProvider', () => {
       'be.calledOnce',
       'some-private-url-token'
     )
-    cy.findByText(dataset.title).should('exist')
+    cy.findByText(dataset.version.title).should('exist')
     cy.findByText('Loading...').should('not.exist')
   })
 

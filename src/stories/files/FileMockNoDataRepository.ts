@@ -1,10 +1,11 @@
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
-import { File } from '../../files/domain/models/File'
+import { FilePreview } from '../../files/domain/models/FilePreview'
 import { FilesCountInfo } from '../../files/domain/models/FilesCountInfo'
 import { FilesCountInfoMother } from '../../../tests/component/files/domain/models/FilesCountInfoMother'
-import { DatasetVersion } from '../../dataset/domain/models/Dataset'
+import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/models/Dataset'
 import { FileCriteria } from '../../files/domain/models/FileCriteria'
 import { FileMockRepository } from './FileMockRepository'
+import { File } from '../../files/domain/models/File'
 
 export class FileMockNoDataRepository extends FileMockRepository implements FileRepository {
   getAllByDatasetPersistentId(
@@ -12,7 +13,7 @@ export class FileMockNoDataRepository extends FileMockRepository implements File
     datasetPersistentId: string,
     // eslint-disable-next-line unused-imports/no-unused-vars
     datasetVersion: DatasetVersion
-  ): Promise<File[]> {
+  ): Promise<FilePreview[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve([])
@@ -24,7 +25,7 @@ export class FileMockNoDataRepository extends FileMockRepository implements File
     // eslint-disable-next-line unused-imports/no-unused-vars
     datasetPersistentId: string,
     // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersion: DatasetVersion
+    datasetVersionNumber: DatasetVersionNumber
   ): Promise<FilesCountInfo> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -37,13 +38,22 @@ export class FileMockNoDataRepository extends FileMockRepository implements File
     // eslint-disable-next-line unused-imports/no-unused-vars
     datasetPersistentId: string,
     // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersion: DatasetVersion,
+    datasetVersionNumber: DatasetVersionNumber,
     // eslint-disable-next-line unused-imports/no-unused-vars
     criteria?: FileCriteria
   ): Promise<number> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(0)
+      }, 1000)
+    })
+  }
+
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  getById(id: number): Promise<File | undefined> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(undefined)
       }, 1000)
     })
   }

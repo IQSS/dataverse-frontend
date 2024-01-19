@@ -1,4 +1,7 @@
-import { FileSize, FileType as FileTypeModel } from '../../../../../../../files/domain/models/File'
+import {
+  FileSize,
+  FileType as FileTypeModel
+} from '../../../../../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
 
 interface FileTypeProps {

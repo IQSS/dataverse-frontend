@@ -1,4 +1,4 @@
-import { FileLabelType } from '../../../../../../../../../src/files/domain/models/File'
+import { FileLabelType } from '../../../../../../../../../src/files/domain/models/FilePreview'
 import { FileLabels } from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileLabels'
 import styles from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info/file-info-cell/FileInfoCell.module.scss'
 

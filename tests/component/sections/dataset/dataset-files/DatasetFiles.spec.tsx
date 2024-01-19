@@ -1,4 +1,4 @@
-import { FileMother } from '../../../files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
 import { DatasetFiles } from '../../../../../src/sections/dataset/dataset-files/DatasetFiles'
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
 import {
@@ -8,7 +8,11 @@ import {
   FileTag
 } from '../../../../../src/files/domain/models/FileCriteria'
 import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
-import { FileSize, FileSizeUnit, FileType } from '../../../../../src/files/domain/models/File'
+import {
+  FileSize,
+  FileSizeUnit,
+  FileType
+} from '../../../../../src/files/domain/models/FilePreview'
 import styles from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { SettingMother } from '../../../settings/domain/models/SettingMother'
@@ -17,7 +21,7 @@ import { SettingsProvider } from '../../../../../src/sections/settings/SettingsP
 import { SettingRepository } from '../../../../../src/settings/domain/repositories/SettingRepository'
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 
-const testFiles = FileMother.createMany(10)
+const testFiles = FilePreviewMother.createMany(10)
 const datasetPersistentId = 'test-dataset-persistent-id'
 const datasetVersion = DatasetMother.create().version
 const fileRepository: FileRepository = {} as FileRepository
@@ -308,11 +312,11 @@ describe('DatasetFiles', () => {
     })
 
     it('renders the zip download limit message when selecting rows from different pages', () => {
-      testFiles[1] = FileMother.create({
+      testFiles[1] = FilePreviewMother.create({
         size: new FileSize(1, FileSizeUnit.BYTES)
       })
 
-      testFiles[2] = FileMother.create({
+      testFiles[2] = FilePreviewMother.create({
         size: new FileSize(2, FileSizeUnit.BYTES)
       })
 
@@ -398,7 +402,7 @@ describe('DatasetFiles', () => {
       cy.wrap(fileRepository.getFilesCountInfoByDatasetPersistentId).should(
         'be.calledWith',
         datasetPersistentId,
-        datasetVersion
+        datasetVersion.number
       )
     })
 
@@ -541,7 +545,7 @@ describe('DatasetFiles', () => {
       cy.wrap(fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId).should(
         'be.calledWith',
         datasetPersistentId,
-        datasetVersion,
+        datasetVersion.number,
         new FileCriteria().withFilterByType('image/png')
       )
     })

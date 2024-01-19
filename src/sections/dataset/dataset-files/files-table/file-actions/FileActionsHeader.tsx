@@ -1,11 +1,11 @@
 import { EditFilesMenu } from './edit-files-menu/EditFilesMenu'
-import { File } from '../../../../../files/domain/models/File'
+import { FilePreview } from '../../../../../files/domain/models/FilePreview'
 import styles from './FileActionsHeader.module.scss'
 import { useTranslation } from 'react-i18next'
 import { DownloadFilesButton } from './download-files/DownloadFilesButton'
 import { FileSelection } from '../row-selection/useFileSelection'
 interface FileActionsHeaderProps {
-  files: File[]
+  files: FilePreview[]
   fileSelection: FileSelection
 }
 export function FileActionsHeader({ files, fileSelection }: FileActionsHeaderProps) {

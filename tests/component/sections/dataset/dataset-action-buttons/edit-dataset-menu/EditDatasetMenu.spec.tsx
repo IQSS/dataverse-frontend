@@ -12,8 +12,7 @@ describe('EditDatasetMenu', () => {
       permissions: DatasetPermissionsMother.createWithAllAllowed(),
       locks: [],
       hasValidTermsOfAccess: true,
-      version: DatasetVersionMother.createReleasedWithLatestVersionIsADraft(),
-      isReleased: true
+      version: DatasetVersionMother.createReleasedWithLatestVersionIsADraft()
     })
 
     cy.mountAuthenticated(<EditDatasetMenu dataset={dataset} />)
@@ -35,8 +34,7 @@ describe('EditDatasetMenu', () => {
       permissions: DatasetPermissionsMother.createWithAllAllowed(),
       locks: [],
       hasValidTermsOfAccess: true,
-      version: DatasetVersionMother.createReleasedWithLatestVersionIsADraft(),
-      isReleased: true
+      version: DatasetVersionMother.createReleasedWithLatestVersionIsADraft()
     })
 
     cy.customMount(<EditDatasetMenu dataset={dataset} />)
