@@ -17,6 +17,7 @@ describe('DatasetCitation', () => {
     cy.findByText(/RELEASED/).should('not.exist')
     cy.findByText(/V1/).should('exist')
     cy.findByLabelText('icon-dataset').should('exist')
+    cy.findByLabelText('icon-dataset').should('exist')
   })
 
   it('shows the draft tooltip when version is draft', () => {
@@ -37,5 +38,12 @@ describe('DatasetCitation', () => {
     cy.findByText(
       /DEACCESSIONED VERSION has been added to the citation for this version since it is no longer available./
     ).should('exist')
+  })
+
+  it('does not render the thumbnail when withoutThumbnail prop is true', () => {
+    const version = DatasetVersionMother.createRealistic()
+    cy.customMount(<DatasetCitation version={version} withoutThumbnail={true} />)
+
+    cy.findByLabelText('icon-dataset').should('not.exist')
   })
 })

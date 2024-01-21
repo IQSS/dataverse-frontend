@@ -3,6 +3,8 @@
     "metadata": "Metadata"
   },
   "subtext": "This file is part of \"{{datasetTitle}}\".",
+  "datasetCitationTitle": "Dataset Citation",
+  "fileCitationTitle": "File Citation",
   "fileAccess": {
     "title": "File Access",
     "restricted": {

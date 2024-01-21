@@ -18,6 +18,7 @@ describe('DatasetCardInfo', () => {
     cy.findByText(/Admin, Dataverse, 2023, "Dataset Title",/)
       .should('exist')
       .parent()
+      .parent()
       .should('have.class', styles['citation-box'])
     cy.findByText(dataset.abbreviatedDescription).should('exist')
   })
@@ -34,6 +35,7 @@ describe('DatasetCardInfo', () => {
 
     cy.findByText(/Admin, Dataverse, 2023, "Dataset Title",/)
       .should('exist')
+      .parent()
       .parent()
       .should('have.class', styles['citation-box-deaccessioned'])
   })

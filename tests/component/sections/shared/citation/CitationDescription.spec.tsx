@@ -9,4 +9,12 @@ describe('CitationDescription', () => {
     cy.findByText(/Finch, Fiona, 2023, "Darwin's Finches",/).should('exist')
     cy.findByRole('link', { name: 'https://doi.org/10.5072/FK2/0YFWKL' }).should('exist')
   })
+
+  it('renders the tooltip', () => {
+    const citation = 'Finch, Fiona, 2023, "Darwin\'s Finches"'
+    const tooltip = <span>This is a tooltip</span>
+    cy.customMount(<CitationDescription citation={citation} tooltip={tooltip} />)
+
+    cy.findByText('This is a tooltip').should('exist')
+  })
 })

@@ -7,6 +7,7 @@ export interface FilePermissions {
 export interface File {
   name: string
   datasetVersion: DatasetVersion
+  citation: string
   restricted: boolean
   permissions: FilePermissions
 }
