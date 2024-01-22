@@ -2,6 +2,7 @@ import newDatasetData from '../../fixtures/dataset-finch1.json'
 import { DataverseApiHelper } from '../DataverseApiHelper'
 import { FileData } from '../files/FileHelper'
 import { DatasetLockReason } from '../../../../src/dataset/domain/models/Dataset'
+import { TestsUtils } from '../TestsUtils'
 
 export interface DatasetResponse {
   persistentId: string
@@ -16,6 +17,30 @@ export interface DatasetFileResponse {
 export class DatasetHelper extends DataverseApiHelper {
   static async create(): Promise<DatasetResponse> {
     return this.request<DatasetResponse>(`/dataverses/root/datasets`, 'POST', newDatasetData)
+  }
+  static async createWithTitle(title: string): Promise<DatasetResponse> {
+    newDatasetData.datasetVersion.metadataBlocks.citation.fields[0].value = title
+    return this.request<DatasetResponse>(`/dataverses/root/datasets`, 'POST', newDatasetData)
+  }
+  static async destroy(persistentId: string): Promise<DatasetResponse> {
+    return this.request<DatasetResponse>(
+      `/datasets/:persistentId/destroy/?persistentId=${persistentId}`,
+      'DELETE'
+    )
+  }
+  static async createAndPublish(): Promise<DatasetResponse> {
+    const datasetResponse = await DatasetHelper.create()
+    await DatasetHelper.publish(datasetResponse.persistentId)
+    await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
+    return datasetResponse
+  }
+  static async destroyAll(): Promise<void> {
+    const response = await this.request<{
+      items: Array<{ global_id: string }>
+    }>('/search?q=*&type=dataset&sort=date&order=desc&per_page=500&start=0', 'GET')
+    for (const dataset of response.items as Array<{ global_id: string }>) {
+      await this.destroy(dataset.global_id)
+    }
   }
 
   static async publish(persistentId: string): Promise<{

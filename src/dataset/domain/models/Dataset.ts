@@ -252,52 +252,57 @@ export class DatasetVersion {
       public readonly latestVersionPublishingStatus: DatasetPublishingStatus,
       public readonly someDatasetVersionHasBeenReleased: boolean
     ) {
-      this.withLabels()
+      this.createLabels()
     }
 
-    withLabels() {
-      this.withStatusLabel()
-      this.withVersionLabel()
+    createLabels() {
+      const statusLabels = this.createStatusLabels()
+      const versionLabels = this.createVersionNumberLabel()
+      this.labels.push(...statusLabels, ...versionLabels)
     }
 
-    private withStatusLabel(): void {
+    createStatusLabels(): DatasetLabel[] {
+      const labels: DatasetLabel[] = []
+
       if (this.publishingStatus === DatasetPublishingStatus.DRAFT) {
-        this.labels.push(
-          new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.DRAFT)
-        )
+        labels.push(new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.DRAFT))
       }
 
       if (!this.someDatasetVersionHasBeenReleased) {
-        this.labels.push(
+        labels.push(
           new DatasetLabel(DatasetLabelSemanticMeaning.WARNING, DatasetLabelValue.UNPUBLISHED)
         )
       }
 
       if (this.publishingStatus === DatasetPublishingStatus.DEACCESSIONED) {
-        this.labels.push(
+        labels.push(
           new DatasetLabel(DatasetLabelSemanticMeaning.DANGER, DatasetLabelValue.DEACCESSIONED)
         )
       }
 
       if (this.publishingStatus === DatasetPublishingStatus.EMBARGOED) {
-        this.labels.push(
+        labels.push(
           new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.EMBARGOED)
         )
       }
 
       if (this.isInReview) {
-        this.labels.push(
+        labels.push(
           new DatasetLabel(DatasetLabelSemanticMeaning.SUCCESS, DatasetLabelValue.IN_REVIEW)
         )
       }
+
+      return labels
     }
 
-    private withVersionLabel(): void {
+    createVersionNumberLabel(): DatasetLabel[] {
+      const labels: DatasetLabel[] = []
       if (this.publishingStatus === DatasetPublishingStatus.RELEASED) {
-        this.labels.push(
+        labels.push(
           new DatasetLabel(DatasetLabelSemanticMeaning.FILE, `Version ${this.number.toString()}`)
         )
       }
+      return labels
     }
 
     build(): DatasetVersion {

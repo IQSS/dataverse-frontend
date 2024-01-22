@@ -1,0 +1,9 @@
+@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
+
+.description {
+  margin-bottom: 1em;
+}
+
+.text {
+  color: $dv-subtext-color
+}

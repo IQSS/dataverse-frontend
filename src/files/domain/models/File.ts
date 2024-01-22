@@ -20,6 +20,7 @@ export interface File {
   datasetVersion: DatasetVersion
   type: FileType
   size: FileSize
+  citation: string
   restricted: boolean
   permissions: FilePermissions
   labels: FileLabel[]

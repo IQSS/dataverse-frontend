@@ -18,6 +18,14 @@ export function FileSkeleton() {
           <Skeleton width="10%" />
         </header>
         <div className={styles.container}>
+          <Row>
+            <Col sm={9}>
+              <span className={styles['citation-title']}>{t('fileCitationTitle')}</span>
+              <Skeleton height="80px" style={{ marginBottom: 20 }} />
+              <span className={styles['citation-title']}>{t('datasetCitationTitle')}</span>
+              <Skeleton height="80px" style={{ marginBottom: 20 }} />
+            </Col>
+          </Row>
           <Tabs defaultActiveKey="metadata">
             <Tabs.Tab eventKey="metadata" title={t('tabs.metadata')}>
               <div className={styles['tab-container']}>
@@ -53,6 +61,7 @@ export function FileSkeleton() {
               </div>
             </Tabs.Tab>
           </Tabs>
+          <div className={styles['separation-line']}></div>
         </div>
       </article>
     </SkeletonTheme>

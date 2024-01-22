@@ -14,9 +14,7 @@
       "deaccessioned": {
         "description": "DEACCESSIONED VERSION has been added to the citation for this version since it is no longer available."
       }
-    },
-    "learnAbout": "Learn About",
-    "standards": "Data Citation Standards"
+    }
   },
   "datasetActionButtons": {
     "title": "Dataset Action Buttons",
