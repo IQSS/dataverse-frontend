@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent } from 'react'
+import { ChangeEvent, FormEvent } from 'react'
 import { Alert, Button, Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { RequiredFieldText } from '../../components/form/RequiredFieldText/RequiredFieldText'
@@ -6,7 +6,7 @@ import { SeparationLine } from '../../components/layout/SeparationLine/Separatio
 import { useCreateDatasetForm, SubmissionStatusEnums } from './useCreateDatasetForm'
 import styles from '/src/sections/dataset/Dataset.module.scss'
 
-export const CreateDatasetForm: React.FC = () => {
+export function CreateDatasetForm() {
   const { formErrors, submissionStatus, updateFormData, submitFormData } = useCreateDatasetForm()
 
   const { t } = useTranslation('createDataset')

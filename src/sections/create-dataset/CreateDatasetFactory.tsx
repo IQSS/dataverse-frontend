@@ -1,6 +1,6 @@
 import { CreateDatasetForm } from './CreateDatasetForm'
 import { ReactElement } from 'react'
-export const CreateDatasetFormPresenter: React.FC = () => {
+export function CreateDatasetFormPresenter() {
   return <CreateDatasetForm />
 }
 
