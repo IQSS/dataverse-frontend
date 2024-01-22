@@ -1,16 +1,16 @@
 import type { StoryObj, Meta } from '@storybook/react'
-import { CreateDatasetForm } from '../../../sections/create-dataset/CreateDatasetFactory'
+import { CreateDatasetFormPresenter } from '../../../sections/create-dataset/CreateDatasetFactory'
 import { WithLayout } from '../../WithLayout'
 import { WithI18next } from '../../WithI18next'
 
-const meta: Meta<typeof CreateDatasetForm> = {
+const meta: Meta<typeof CreateDatasetFormPresenter> = {
   title: 'Pages/Create Dataset',
-  component: CreateDatasetForm,
+  component: CreateDatasetFormPresenter,
   decorators: [WithI18next, WithLayout]
 }
 export default meta
-type Story = StoryObj<typeof CreateDatasetForm>
+type Story = StoryObj<typeof CreateDatasetFormPresenter>
 
 export const Default: Story = {
-  render: () => <CreateDatasetForm />
+  render: () => <CreateDatasetFormPresenter />
 }

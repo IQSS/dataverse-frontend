@@ -7,11 +7,11 @@ export interface FormValidationResult {
   errors: Record<keyof CreateDatasetFormFields, string | undefined>
 }
 
-export interface FormValidationService {
+export interface FormValidation {
   validateForm: (fields: CreateDatasetFormFields) => FormValidationResult
 }
 
-export const formValidationService: FormValidationService = {
+export const formValidation: FormValidation = {
   validateForm: (fields: CreateDatasetFormFields): FormValidationResult => {
     const errors: Record<keyof CreateDatasetFormFields, string | undefined> = {
       createDatasetTitle: undefined
@@ -28,10 +28,10 @@ export const formValidationService: FormValidationService = {
   }
 }
 
-export interface FormSubmissionService {
+export interface FormSubmission {
   submitFormData: (fields: CreateDatasetFormFields) => Promise<void>
 }
-export const formSubmissionService: FormSubmissionService = {
+export const formSubmission: FormSubmission = {
   submitFormData: async (fields: CreateDatasetFormFields): Promise<void> => {
     console.log('Submitting form data:', fields)
     const sendDataMock = (fields: CreateDatasetFormFields) => {

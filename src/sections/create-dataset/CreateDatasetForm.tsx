@@ -1,30 +1,25 @@
-import React from 'react'
+import React, { ChangeEvent, FormEvent } from 'react'
 import { Alert, Button, Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { RequiredFieldText } from '../../components/form/RequiredFieldText/RequiredFieldText'
 import { SeparationLine } from '../../components/layout/SeparationLine/SeparationLine'
-import { useCreateDatasetForm, SubmissionStatusEnums } from './CreateDatasetContext'
-import {
-  FormValidationService,
-  FormSubmissionService
-} from '../../dataset/domain/useCases/createDataset'
+import { useCreateDatasetForm, SubmissionStatusEnums } from './useCreateDatasetForm'
 import styles from '/src/sections/dataset/Dataset.module.scss'
-interface FormPresenterProps {
-  formValidationService: FormValidationService
-  formSubmissionService: FormSubmissionService
-}
-export const CreateDatasetFormPresenter: React.FC<FormPresenterProps> = ({
-  formValidationService,
-  formSubmissionService
-}: FormPresenterProps) => {
-  const {
-    formErrors,
-    submissionStatus,
-    handleCreateDatasetFieldChange,
-    handleCreateDatasetSubmit
-  } = useCreateDatasetForm({ formValidationService, formSubmissionService })
+
+export const CreateDatasetForm: React.FC = () => {
+  const { formErrors, submissionStatus, updateFormData, submitFormData } = useCreateDatasetForm()
 
   const { t } = useTranslation('createDataset')
+
+  const handleCreateDatasetFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target
+    updateFormData({ [name]: value })
+  }
+
+  const handleCreateDatasetSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    submitFormData()
+  }
 
   return (
     <>
@@ -35,11 +30,15 @@ export const CreateDatasetFormPresenter: React.FC<FormPresenterProps> = ({
         <SeparationLine />
         <div className={styles.container}>
           <RequiredFieldText />
-          {submissionStatus === SubmissionStatusEnums.IsSubmitting && <p>Submitting...</p>}
-          {submissionStatus === SubmissionStatusEnums.SubmitComplete && (
-            <p>Form submitted successfully!</p>
+          {submissionStatus === SubmissionStatusEnums.IsSubmitting && (
+            <p>{t('datasetForm.status.submitting')}</p>
           )}
-          {submissionStatus === SubmissionStatusEnums.Errored && <p>Error: Submission failed.</p>}
+          {submissionStatus === SubmissionStatusEnums.SubmitComplete && (
+            <p>{t('datasetForm.status.success')}</p>
+          )}
+          {submissionStatus === SubmissionStatusEnums.Errored && (
+            <p>{t('datasetForm.status.fail')}</p>
+          )}
           <Form
             onSubmit={(event) => {
               handleCreateDatasetSubmit(event)

@@ -6,7 +6,12 @@
   },
   "requiredFields": "Asterisks indicate required fields",
   "datasetForm": {
-    "title": "Title"
+    "title": "Title",
+    "status": {
+      "submitting": "Submitting...",
+      "success": "Form submitted successfully!",
+      "failed": "Error: Submission failed."
+    }
   },
   "datasetFormStates": {
     "submitting": "Form Submitting",
