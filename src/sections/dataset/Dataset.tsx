@@ -16,7 +16,7 @@ import { useEffect } from 'react'
 import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
 import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
-import { SeparationLine } from '../../components/layout/SeparationLine/SeparationLine'
+import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 
 interface DatasetProps {
   fileRepository: FileRepository
