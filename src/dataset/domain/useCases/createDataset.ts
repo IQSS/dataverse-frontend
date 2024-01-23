@@ -2,17 +2,17 @@ export interface CreateDatasetFormFields {
   createDatasetTitle: string
 }
 
-export interface FormValidationResult {
+export interface ValidateCreateDataset {
   isValid: boolean
   errors: Record<keyof CreateDatasetFormFields, string | undefined>
 }
 
 export interface FormValidation {
-  validateForm: (fields: CreateDatasetFormFields) => FormValidationResult
+  validateCreateDataset: (fields: CreateDatasetFormFields) => ValidateCreateDataset
 }
 
 export const formValidation: FormValidation = {
-  validateForm: (fields: CreateDatasetFormFields): FormValidationResult => {
+  validateCreateDataset: (fields: CreateDatasetFormFields): ValidateCreateDataset => {
     const errors: Record<keyof CreateDatasetFormFields, string | undefined> = {
       createDatasetTitle: undefined
     }
@@ -29,10 +29,10 @@ export const formValidation: FormValidation = {
 }
 
 export interface FormSubmission {
-  submitFormData: (fields: CreateDatasetFormFields) => Promise<void>
+  createDataset: (fields: CreateDatasetFormFields) => Promise<void>
 }
 export const formSubmission: FormSubmission = {
-  submitFormData: async (fields: CreateDatasetFormFields): Promise<void> => {
+  createDataset: async (fields: CreateDatasetFormFields): Promise<void> => {
     console.log('Submitting form data:', fields)
     const sendDataMock = (fields: CreateDatasetFormFields) => {
       const delay = 2000

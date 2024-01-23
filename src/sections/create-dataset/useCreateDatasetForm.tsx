@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import {
   CreateDatasetFormFields,
-  FormValidationResult,
+  ValidateCreateDataset,
   formSubmission,
   formValidation
 } from '../../dataset/domain/useCases/createDataset'
@@ -42,11 +42,13 @@ export function useCreateDatasetForm() {
   const submitFormData = () => {
     setSubmissionStatus(SubmissionStatusEnums.IsSubmitting)
 
-    const validationResult: FormValidationResult = formValidation.validateForm(formState.fields)
+    const validationResult: ValidateCreateDataset = formValidation.validateCreateDataset(
+      formState.fields
+    )
 
     if (validationResult.isValid) {
       formSubmission
-        .submitFormData(formState.fields)
+        .createDataset(formState.fields)
         .then(() => setSubmissionStatus(SubmissionStatusEnums.IsSubmitting))
         .catch(() => setSubmissionStatus(SubmissionStatusEnums.Errored))
         .finally(() => setSubmissionStatus(SubmissionStatusEnums.SubmitComplete))
