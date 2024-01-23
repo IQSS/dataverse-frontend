@@ -10,8 +10,14 @@ import { DatasetProvider } from '../../../../../../../../../../src/sections/data
 import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { FileIngestMother } from '../../../../../../../../files/domain/models/FileIngestMother'
 
-const fileNonTabular = FilePreviewMother.createNonTabular()
-const fileTabular = FilePreviewMother.createTabular()
+const fileNonTabular = FilePreviewMother.create({
+  metadata: FileMetadataMother.createNonTabular(),
+  ingest: FileIngestMother.createIngestNone()
+})
+const fileTabular = FilePreviewMother.create({
+  metadata: FileMetadataMother.createTabular(),
+  ingest: FileIngestMother.createIngestNone()
+})
 const fileTabularUnknown = FilePreviewMother.create({
   metadata: FileMetadataMother.createTabular({
     type: new FileType('text/tab-separated-values', 'Unknown')
@@ -96,7 +102,8 @@ describe('FileTabularDownloadOptions', () => {
     const fileTabularRData = FilePreviewMother.create({
       metadata: FileMetadataMother.createTabular({
         type: new FileType('application/octet-stream', 'R Data')
-      })
+      }),
+      ingest: FileIngestMother.createIngestNone()
     })
     cy.customMount(<FileTabularDownloadOptions file={fileTabularRData} />)
 
