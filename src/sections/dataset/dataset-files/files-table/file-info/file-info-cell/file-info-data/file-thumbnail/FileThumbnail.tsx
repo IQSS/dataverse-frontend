@@ -15,14 +15,14 @@ export function FileThumbnail({ file }: FileThumbnailProps) {
   return (
     <div
       className={`${
-        file.thumbnail && sessionUserHasFileDownloadPermission
+        file.metadata.thumbnail && sessionUserHasFileDownloadPermission
           ? styles['container-preview-image']
           : styles['container-icon']
       }`}>
-      {file.thumbnail && sessionUserHasFileDownloadPermission ? (
-        <FilePreviewImage thumbnail={file.thumbnail} name={file.name} />
+      {file.metadata.thumbnail && sessionUserHasFileDownloadPermission ? (
+        <FilePreviewImage thumbnail={file.metadata.thumbnail} name={file.name} />
       ) : (
-        <FileIcon type={file.type} />
+        <FileIcon type={file.metadata.type} />
       )}
       <div className={styles['restricted-icon']}>
         <FileAccessRestrictedIcon

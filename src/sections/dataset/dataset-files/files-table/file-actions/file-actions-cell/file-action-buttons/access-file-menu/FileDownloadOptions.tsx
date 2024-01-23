@@ -24,7 +24,7 @@ export function FileDownloadOptions({ file }: FileDownloadOptionsProps) {
         {t('actions.accessFileMenu.downloadOptions.title')}
         <Download />
       </DropdownHeader>
-      {file.tabularData ? (
+      {file.metadata.tabularData ? (
         <FileTabularDownloadOptions file={file} />
       ) : (
         <FileNonTabularDownloadOptions file={file} />

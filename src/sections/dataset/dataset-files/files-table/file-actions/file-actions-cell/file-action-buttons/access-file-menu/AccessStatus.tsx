@@ -56,7 +56,7 @@ function AccessStatusText({
 }) {
   const { t } = useTranslation('file')
   const getAccessStatus = () => {
-    if (file.isActivelyEmbargoed) {
+    if (file.metadata.isActivelyEmbargoed) {
       return 'embargoed'
     }
 

@@ -1,4 +1,4 @@
-import { FileIngest, FileIngestStatus } from '../../../../../../../files/domain/models/FilePreview'
+import { FileIngest, FileIngestStatus } from '../../../../../../../files/domain/models/FileIngest'
 import { QuestionMarkTooltip } from '@iqss/dataverse-design-system'
 import { InfoMessageBox } from './FileInfoMessages'
 import { useTranslation } from 'react-i18next'

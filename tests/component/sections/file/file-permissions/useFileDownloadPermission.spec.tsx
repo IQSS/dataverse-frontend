@@ -1,10 +1,10 @@
-import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
 import { FilePermissionsProvider } from '../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
 import { FilePreview } from '../../../../../src/files/domain/models/FilePreview'
 import { FileUserPermissionsMother } from '../../../files/domain/models/FileUserPermissionsMother'
 import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
 import { useFileDownloadPermission } from '../../../../../src/sections/file/file-permissions/useFileDownloadPermission'
+import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
 
 const fileRepository: FileRepository = {} as FileRepository
 function TestComponent({ file }: { file: FilePreview }) {

@@ -1,35 +1,56 @@
 import { FileMetadata } from '../../../../../src/sections/file/file-metadata/FileMetadata'
 import { FileMother } from '../../../files/domain/models/FileMother'
-import { FileLabelType, FileSizeUnit } from '../../../../../src/files/domain/models/FilePreview'
+import { FileSizeUnit } from '../../../../../src/files/domain/models/FileMetadata'
 import {
   FileEmbargoMother,
+  FileMetadataMother,
   FileSizeMother,
   FileTabularDataMother,
   FileTypeMother
-} from '../../../files/domain/models/FilePreviewMother'
+} from '../../../files/domain/models/FileMetadataMother'
 import { DateHelper } from '../../../../../src/shared/domain/helpers/DateHelper'
+import { FileUserPermissionsMother } from '../../../files/domain/models/FileUserPermissionsMother'
+import { FilePublishingStatus } from '../../../../../src/files/domain/models/FileVersion'
 
+const file = FileMother.create()
 describe('FileMetadata', () => {
   it('renders the File Metadata tab', () => {
-    cy.customMount(<FileMetadata file={FileMother.create()} />)
+    cy.customMount(
+      <FileMetadata
+        name={file.name}
+        metadata={file.metadata}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
+      />
+    )
 
     cy.findByRole('button', { name: 'File Metadata' }).should('exist')
   })
 
   it('renders the file preview', () => {
-    cy.customMount(<FileMetadata file={FileMother.create()} />)
+    cy.customMount(
+      <FileMetadata
+        name={file.name}
+        metadata={file.metadata}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
+      />
+    )
 
     cy.findByText('Preview').should('exist')
     cy.findByRole('img').should('exist')
   })
 
   it('renders the file labels', () => {
-    const labels = [
-      { value: 'Category 1', type: FileLabelType.CATEGORY },
-      { value: 'Tag 1', type: FileLabelType.TAG },
-      { value: 'Tag 2', type: FileLabelType.TAG }
-    ]
-    cy.customMount(<FileMetadata file={FileMother.create({ labels: labels })} />)
+    const metadataWithLabels = FileMetadataMother.createWithLabelsRealistic()
+    cy.customMount(
+      <FileMetadata
+        name={file.name}
+        metadata={metadataWithLabels}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
+      />
+    )
 
     cy.findByText('File Tags').should('exist')
     cy.findByText('Category 1').should('have.class', 'bg-secondary')
@@ -37,14 +58,30 @@ describe('FileMetadata', () => {
   })
 
   it('does not render the file labels when there are no labels', () => {
-    cy.customMount(<FileMetadata file={FileMother.create({ labels: [] })} />)
+    const metadataWithoutLabels = FileMetadataMother.createWithNoLabels()
+    cy.customMount(
+      <FileMetadata
+        name={file.name}
+        metadata={metadataWithoutLabels}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
+      />
+    )
 
     cy.findByText('File Tags').should('not.exist')
   })
 
   it('renders the file persistent id', () => {
+    const metadataWithPersistentId = FileMetadataMother.create({
+      persistentId: 'doi:10.5072/FK2/ABC123'
+    })
     cy.customMount(
-      <FileMetadata file={FileMother.create({ persistentId: 'doi:10.5072/FK2/ABC123' })} />
+      <FileMetadata
+        name={file.name}
+        metadata={metadataWithPersistentId}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
+      />
     )
 
     cy.findByText('File Persistent ID').should('exist')
@@ -52,22 +89,33 @@ describe('FileMetadata', () => {
   })
 
   it('does not render the file persistent id when there is no persistent id', () => {
-    cy.customMount(<FileMetadata file={FileMother.create({ persistentId: undefined })} />)
+    const metadataWithoutPersistentId = FileMetadataMother.createWithNoPersistentId()
+    cy.customMount(
+      <FileMetadata
+        name={file.name}
+        metadata={metadataWithoutPersistentId}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
+      />
+    )
 
     cy.findByText('File Persistent ID').should('not.exist')
   })
 
   it('renders the download url if the user has file download permissions', () => {
+    const permissions = FileUserPermissionsMother.createWithDownloadFileGranted()
+
     cy.customMount(
       <FileMetadata
-        file={FileMother.createWithDownloadPermissionGranted({
-          downloadUrls: { original: '/api/access/datafile/123' }
-        })}
+        name={file.name}
+        metadata={file.metadata}
+        permissions={permissions}
+        publishingStatus={file.version.publishingStatus}
       />
     )
 
     cy.findByText('Download URL').should('exist')
-    cy.findByText('/api/access/datafile/123', { exact: false }).should('exist')
+    cy.findByText(file.metadata.downloadUrls.original, { exact: false }).should('exist')
     cy.findByText(
       'Use the Download URL in a Wget command or a download manager to avoid interrupted downloads, time outs or other failures.'
     ).should('exist')
@@ -79,11 +127,13 @@ describe('FileMetadata', () => {
   })
 
   it('does not render the download url if the user does not have file download permissions', () => {
+    const permissions = FileUserPermissionsMother.createWithDownloadFileDenied()
     cy.customMount(
       <FileMetadata
-        file={FileMother.createWithDownloadPermissionDenied({
-          downloadUrls: { original: '/api/access/datafile/123' }
-        })}
+        name={file.name}
+        metadata={file.metadata}
+        permissions={permissions}
+        publishingStatus={file.version.publishingStatus}
       />
     )
 
@@ -91,9 +141,15 @@ describe('FileMetadata', () => {
   })
 
   it('renders the file unf if it exists', () => {
+    const metadataWithUnf = FileMetadataMother.create({
+      tabularData: FileTabularDataMother.create({ unf: 'some-unf' })
+    })
     cy.customMount(
       <FileMetadata
-        file={FileMother.create({ tabularData: FileTabularDataMother.create({ unf: 'some-unf' }) })}
+        name={file.name}
+        metadata={metadataWithUnf}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
       />
     )
 
@@ -102,17 +158,29 @@ describe('FileMetadata', () => {
   })
 
   it('does not render the file unf if it does not exist', () => {
-    cy.customMount(<FileMetadata file={FileMother.create({ tabularData: undefined })} />)
+    const metadataWithoutTabularData = FileMetadataMother.createNonTabular()
+    cy.customMount(
+      <FileMetadata
+        name={file.name}
+        metadata={metadataWithoutTabularData}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
+      />
+    )
 
     cy.findByText('File UNF').should('not.exist')
   })
 
   it('renders the file checksum', () => {
+    const metadataWithChecksum = FileMetadataMother.create({
+      checksum: { algorithm: 'SHA-1', value: 'some-checksum' }
+    })
     cy.customMount(
       <FileMetadata
-        file={FileMother.create({
-          checksum: { algorithm: 'SHA-1', value: 'some-checksum' }
-        })}
+        name={file.name}
+        metadata={metadataWithChecksum}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
       />
     )
 
@@ -121,89 +189,128 @@ describe('FileMetadata', () => {
   })
 
   it('does not render the file checksum if it does not exist', () => {
-    cy.customMount(<FileMetadata file={FileMother.create({ checksum: undefined })} />)
+    const metadataWithoutChecksum = FileMetadataMother.createWithNoChecksum()
+    cy.customMount(
+      <FileMetadata
+        name={file.name}
+        metadata={metadataWithoutChecksum}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
+      />
+    )
 
     cy.findByText('SHA-1').should('not.exist')
   })
 
   it('renders the file deposit date', () => {
-    const date = new Date('2021-01-01')
     cy.customMount(
       <FileMetadata
-        file={FileMother.create({
-          depositDate: date
-        })}
+        name={file.name}
+        metadata={file.metadata}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
       />
     )
 
     cy.findByText('Deposit Date').should('exist')
-    cy.findByText(DateHelper.toDisplayFormatYYYYMMDD(date)).should('exist')
+    cy.findByText(DateHelper.toDisplayFormatYYYYMMDD(file.metadata.depositDate)).should('exist')
   })
 
   it('renders the file Metadata Release Date', () => {
-    const date = new Date('2021-01-01')
+    const metadataWithPublicationDate = FileMetadataMother.createWithPublicationDate()
     cy.customMount(
       <FileMetadata
-        file={FileMother.create({
-          publicationDate: date
-        })}
+        name={file.name}
+        metadata={metadataWithPublicationDate}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
       />
     )
 
     cy.findByText('Metadata Release Date').should('exist')
-    cy.findAllByText(DateHelper.toDisplayFormatYYYYMMDD(date)).should('exist')
+    cy.findAllByText(
+      DateHelper.toDisplayFormatYYYYMMDD(metadataWithPublicationDate.publicationDate)
+    ).should('exist')
   })
 
   it('does not render the file Metadata Release Date if the publication date does not exist', () => {
-    cy.customMount(<FileMetadata file={FileMother.create({ publicationDate: undefined })} />)
+    const metadataWithNoPublicationDate = FileMetadataMother.createWithNoPublicationDate()
+    cy.customMount(
+      <FileMetadata
+        name={file.name}
+        metadata={metadataWithNoPublicationDate}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
+      />
+    )
 
     cy.findByText('Metadata Release Date').should('not.exist')
   })
 
   it('renders the file Publication Date', () => {
-    const date = new Date('2021-10-01')
+    const metadataWithPublicationDate = FileMetadataMother.createWithPublicationDateNotEmbargoed()
     cy.customMount(
       <FileMetadata
-        file={FileMother.create({
-          embargo: undefined,
-          publicationDate: date
-        })}
+        name={file.name}
+        metadata={metadataWithPublicationDate}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
       />
     )
 
     cy.findByText('Publication Date').should('exist')
-    cy.findAllByText(DateHelper.toDisplayFormatYYYYMMDD(date)).should('exist')
+    cy.findAllByText(
+      DateHelper.toDisplayFormatYYYYMMDD(metadataWithPublicationDate.publicationDate)
+    ).should('exist')
   })
 
   it('renders the file Publication Date with embargo', () => {
-    const date = new Date('2021-05-01')
+    const metadataWithPublicationDateEmbargoed =
+      FileMetadataMother.createWithPublicationDateEmbargoed()
     cy.customMount(
       <FileMetadata
-        file={FileMother.create({
-          publicationDate: date,
-          embargo: FileEmbargoMother.create({ dateAvailable: date })
-        })}
+        name={file.name}
+        metadata={metadataWithPublicationDateEmbargoed}
+        permissions={file.permissions}
+        publishingStatus={FilePublishingStatus.RELEASED}
       />
     )
 
     cy.findByText('Publication Date').should('exist')
-    cy.findByText(DateHelper.toDisplayFormatYYYYMMDD(date)).should('exist')
+    cy.findByText(
+      `Embargoed until ${DateHelper.toDisplayFormatYYYYMMDD(
+        metadataWithPublicationDateEmbargoed.embargo?.dateAvailable
+      )}`
+    ).should('exist')
   })
 
   it('does not render the file Publication Date if the publication date and embargo do not exist', () => {
+    const metadataWithNoPublicationDate = FileMetadataMother.create({
+      publicationDate: undefined,
+      embargo: undefined
+    })
     cy.customMount(
-      <FileMetadata file={FileMother.create({ publicationDate: undefined, embargo: undefined })} />
+      <FileMetadata
+        name={file.name}
+        metadata={metadataWithNoPublicationDate}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
+      />
     )
 
     cy.findByText('Publication Date').should('not.exist')
   })
 
   it('renders the file Embargo Reason', () => {
+    const metadataWithEmbargoReason = FileMetadataMother.create({
+      embargo: FileEmbargoMother.create({ reason: 'Some reason' })
+    })
     cy.customMount(
       <FileMetadata
-        file={FileMother.create({
-          embargo: FileEmbargoMother.create({ reason: 'Some reason' })
-        })}
+        name={file.name}
+        metadata={metadataWithEmbargoReason}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
       />
     )
 
@@ -212,17 +319,29 @@ describe('FileMetadata', () => {
   })
 
   it('does not render the file Embargo Reason if the embargo does not exist', () => {
-    cy.customMount(<FileMetadata file={FileMother.create({ embargo: undefined })} />)
+    const metadataWithNoEmbargo = FileMetadataMother.createNotEmbargoed()
+    cy.customMount(
+      <FileMetadata
+        name={file.name}
+        metadata={metadataWithNoEmbargo}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
+      />
+    )
 
     cy.findByText('Embargo Reason').should('not.exist')
   })
 
   it('does not render the file Embargo Reason if the embargo reason does not exist', () => {
+    const metadataWithNoEmbargoReason = FileMetadataMother.create({
+      embargo: FileEmbargoMother.createWithNoReason({ reason: undefined })
+    })
     cy.customMount(
       <FileMetadata
-        file={FileMother.create({
-          embargo: FileEmbargoMother.createWithNoReason({ reason: undefined })
-        })}
+        name={file.name}
+        metadata={metadataWithNoEmbargoReason}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
       />
     )
 
@@ -230,11 +349,15 @@ describe('FileMetadata', () => {
   })
 
   it('renders the file size', () => {
+    const metadataWithFileSize = FileMetadataMother.create({
+      size: FileSizeMother.create({ value: 123.03932894722, unit: FileSizeUnit.BYTES })
+    })
     cy.customMount(
       <FileMetadata
-        file={FileMother.create({
-          size: FileSizeMother.create({ value: 123.03932894722, unit: FileSizeUnit.BYTES })
-        })}
+        name={file.name}
+        metadata={metadataWithFileSize}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
       />
     )
 
@@ -243,11 +366,15 @@ describe('FileMetadata', () => {
   })
 
   it('renders the file type', () => {
+    const metadataWithFileType = FileMetadataMother.create({
+      type: FileTypeMother.createText()
+    })
     cy.customMount(
       <FileMetadata
-        file={FileMother.create({
-          type: FileTypeMother.createText()
-        })}
+        name={file.name}
+        metadata={metadataWithFileType}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
       />
     )
 
@@ -256,11 +383,15 @@ describe('FileMetadata', () => {
   })
 
   it('renders the tabular data if it exists', () => {
+    const metadataWithTabularData = FileMetadataMother.create({
+      tabularData: FileTabularDataMother.create({ variablesCount: 123, observationsCount: 321 })
+    })
     cy.customMount(
       <FileMetadata
-        file={FileMother.create({
-          tabularData: FileTabularDataMother.create({ variablesCount: 123, observationsCount: 321 })
-        })}
+        name={file.name}
+        metadata={metadataWithTabularData}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
       />
     )
 
@@ -271,18 +402,30 @@ describe('FileMetadata', () => {
   })
 
   it('does not render the tabular data if it does not exist', () => {
-    cy.customMount(<FileMetadata file={FileMother.create({ tabularData: undefined })} />)
+    const metadataWithoutTabularData = FileMetadataMother.createNonTabular()
+    cy.customMount(
+      <FileMetadata
+        name={file.name}
+        metadata={metadataWithoutTabularData}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
+      />
+    )
 
     cy.findByText('Variables').should('not.exist')
     cy.findByText('Observations').should('not.exist')
   })
 
   it('renders the file directory', () => {
+    const metadataWithDirectory = FileMetadataMother.create({
+      directory: '/some/path'
+    })
     cy.customMount(
       <FileMetadata
-        file={FileMother.create({
-          directory: '/some/path'
-        })}
+        name={file.name}
+        metadata={metadataWithDirectory}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
       />
     )
 
@@ -291,17 +434,30 @@ describe('FileMetadata', () => {
   })
 
   it('does not render the file directory if it does not exist', () => {
-    cy.customMount(<FileMetadata file={FileMother.create({ directory: undefined })} />)
+    const metadataWithoutDirectory = FileMetadataMother.createWithNoDirectory()
+    cy.customMount(
+      <FileMetadata
+        name={file.name}
+        metadata={metadataWithoutDirectory}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
+      />
+    )
 
     cy.findByText('File Path').should('not.exist')
   })
 
   it('renders the file description', () => {
+    const metadataWithDescription = FileMetadataMother.create({
+      description: 'Some description'
+    })
+
     cy.customMount(
       <FileMetadata
-        file={FileMother.create({
-          description: 'Some description'
-        })}
+        name={file.name}
+        metadata={metadataWithDescription}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
       />
     )
 
@@ -310,7 +466,16 @@ describe('FileMetadata', () => {
   })
 
   it('does not render the file description if it does not exist', () => {
-    cy.customMount(<FileMetadata file={FileMother.create({ description: undefined })} />)
+    const metadataWithoutDescription = FileMetadataMother.createWithNoDescription()
+
+    cy.customMount(
+      <FileMetadata
+        name={file.name}
+        metadata={metadataWithoutDescription}
+        permissions={file.permissions}
+        publishingStatus={file.version.publishingStatus}
+      />
+    )
 
     cy.findByText('Description').should('not.exist')
   })

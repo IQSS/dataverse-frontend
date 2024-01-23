@@ -42,10 +42,10 @@ export function File({ repository, id }: FileProps) {
               {t('subtext', { datasetTitle: file.datasetVersion.title })}
             </p>
             <div className={styles.labels}>
-              {file.restricted && (
+              {file.access.restricted && (
                 <div className={styles['restricted-icon']}>
                   <FileAccessRestrictedIcon
-                    restricted={file.restricted}
+                    restricted={file.access.restricted}
                     canDownloadFile={file.permissions.canDownloadFile}
                   />
                 </div>
@@ -65,7 +65,12 @@ export function File({ repository, id }: FileProps) {
             <Tabs defaultActiveKey="metadata">
               <Tabs.Tab eventKey="metadata" title={t('tabs.metadata')}>
                 <div className={styles['tab-container']}>
-                  <FileMetadata file={file} />
+                  <FileMetadata
+                    name={file.name}
+                    metadata={file.metadata}
+                    permissions={file.permissions}
+                    publishingStatus={file.version.publishingStatus}
+                  />
                 </div>
               </Tabs.Tab>
             </Tabs>

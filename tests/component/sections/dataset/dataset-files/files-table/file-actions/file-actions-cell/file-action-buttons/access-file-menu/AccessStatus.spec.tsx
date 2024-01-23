@@ -1,9 +1,9 @@
-import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { AccessStatus } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessStatus'
 import styles from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessFileMenu.module.scss'
 import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
 import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
 import { FilePermissionsProvider } from '../../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
+import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 
 describe('AccessStatus', () => {
   it('renders the access status  public', () => {
@@ -15,7 +15,7 @@ describe('AccessStatus', () => {
   })
 
   it('renders the access status restricted', () => {
-    const fileRestricted = FilePreviewMother.createWithRestrictedAccess()
+    const fileRestricted = FilePreviewMother.createRestricted()
     cy.customMount(<AccessStatus file={fileRestricted} />)
 
     cy.findByText('Restricted').should('exist').should('have.class', styles.danger)
@@ -23,7 +23,7 @@ describe('AccessStatus', () => {
   })
 
   it('renders the access status restricted with access', () => {
-    const fileRestrictedWithAccess = FilePreviewMother.createWithRestrictedAccessWithAccessGranted()
+    const fileRestrictedWithAccess = FilePreviewMother.createRestrictedWithAccessGranted()
     const fileRepository: FileRepository = {} as FileRepository
     fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
@@ -45,7 +45,7 @@ describe('AccessStatus', () => {
   })
 
   it('renders the access status embargoed', () => {
-    const fileRestrictedWithAccess = FilePreviewMother.createWithRestrictedAccessWithAccessGranted()
+    const fileRestrictedWithAccess = FilePreviewMother.createRestrictedWithAccessGranted()
     const fileRepository: FileRepository = {} as FileRepository
     fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
@@ -73,7 +73,7 @@ describe('AccessStatus', () => {
   })
 
   it('renders the access status embargoed restricted with access', () => {
-    const fileRestrictedWithAccess = FilePreviewMother.createWithRestrictedAccessWithAccessGranted()
+    const fileRestrictedWithAccess = FilePreviewMother.createRestrictedWithAccessGranted()
     const fileRepository: FileRepository = {} as FileRepository
     fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({

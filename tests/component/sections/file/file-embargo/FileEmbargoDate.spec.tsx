@@ -1,6 +1,6 @@
 import { FileEmbargoDate } from '../../../../../src/sections/file/file-embargo/FileEmbargoDate'
-import { FilePublishingStatus } from '../../../../../src/files/domain/models/FilePreview'
-import { FileEmbargoMother } from '../../../files/domain/models/FilePreviewMother'
+import { FilePublishingStatus } from '../../../../../src/files/domain/models/FileVersion'
+import { FileEmbargoMother } from '../../../files/domain/models/FileMetadataMother'
 
 describe('FileEmbargoDate', () => {
   it('renders the embargo date when embargo exists', () => {

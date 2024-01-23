@@ -1,8 +1,5 @@
-import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
-import {
-  FileIngestStatus,
-  FileType
-} from '../../../../../../../../../../src/files/domain/models/FilePreview'
+import { FileMetadataMother } from '../../../../../../../../files/domain/models/FileMetadataMother'
+
 import { FileNonTabularDownloadOptions } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/FileNonTabularDownloadOptions'
 import { DatasetProvider } from '../../../../../../../../../../src/sections/dataset/DatasetProvider'
 import { DatasetRepository } from '../../../../../../../../../../src/dataset/domain/repositories/DatasetRepository'
@@ -10,23 +7,25 @@ import {
   DatasetLockMother,
   DatasetMother
 } from '../../../../../../../../dataset/domain/models/DatasetMother'
+import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
+import { FileIngestMother } from '../../../../../../../../files/domain/models/FileIngestMother'
 
 const fileNonTabular = FilePreviewMother.create({
-  tabularData: undefined,
-  type: new FileType('text/plain')
+  metadata: FileMetadataMother.createNonTabular(),
+  ingest: FileIngestMother.createIngestNone()
 })
 describe('FileNonTabularDownloadOptions', () => {
   it('renders the download options for a non-tabular file of unknown type', () => {
     const fileNonTabularUnknown = FilePreviewMother.create({
-      tabularData: undefined,
-      type: new FileType('unknown')
+      metadata: FileMetadataMother.createNonTabularUnknown(),
+      ingest: FileIngestMother.createIngestNone()
     })
     cy.customMount(<FileNonTabularDownloadOptions file={fileNonTabularUnknown} />)
 
     cy.findByRole('link', { name: 'Original File Format' })
       .should('exist')
       .should('not.have.class', 'disabled')
-      .should('have.attr', 'href', fileNonTabularUnknown.downloadUrls.original)
+      .should('have.attr', 'href', fileNonTabularUnknown.metadata.downloadUrls.original)
   })
 
   it('renders the download options for a non-tabular file', () => {
@@ -35,7 +34,7 @@ describe('FileNonTabularDownloadOptions', () => {
     cy.findByRole('link', { name: 'Plain Text' })
       .should('exist')
       .should('not.have.class', 'disabled')
-      .should('have.attr', 'href', fileNonTabular.downloadUrls.original)
+      .should('have.attr', 'href', fileNonTabular.metadata.downloadUrls.original)
   })
 
   it('does not render the download options for a tabular file', () => {
@@ -48,11 +47,8 @@ describe('FileNonTabularDownloadOptions', () => {
 
   it('renders the options as disabled when the file ingest is in progress', () => {
     const fileNonTabularInProgress = FilePreviewMother.create({
-      tabularData: undefined,
-      type: new FileType('text/plain'),
-      ingest: {
-        status: FileIngestStatus.IN_PROGRESS
-      }
+      metadata: FileMetadataMother.createNonTabular(),
+      ingest: FileIngestMother.createInProgress()
     })
     cy.customMount(<FileNonTabularDownloadOptions file={fileNonTabularInProgress} />)
 

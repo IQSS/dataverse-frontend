@@ -1,8 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { FileThumbnail } from '../../../../../../../../sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/file-thumbnail/FileThumbnail'
 import { WithI18next } from '../../../../../../../WithI18next'
-import { FilePreviewMother } from '../../../../../../../../../tests/component/files/domain/models/FilePreviewMother'
 import { WithFilePermissionsGranted } from '../../../../../../../file/file-permission/WithFilePermissionsGranted'
+import { FilePreviewMother } from '../../../../../../../../../tests/component/files/domain/models/FilePreviewMother'
 
 const meta: Meta<typeof FileThumbnail> = {
   title: 'Sections/Dataset Page/DatasetFiles/FilesTable/FileInfoCell/FileThumbnail',
@@ -31,7 +31,7 @@ export const WithThumbnailPreview: Story = {
 
 export const WithThumbnailRestrictedLockedIcon: Story = {
   render: () => {
-    const file = FilePreviewMother.createWithRestrictedAccess()
+    const file = FilePreviewMother.createRestricted()
     return <FileThumbnail file={file} />
   }
 }
@@ -39,7 +39,7 @@ export const WithThumbnailRestrictedLockedIcon: Story = {
 export const WithThumbnailRestrictedUnlockedIcon: Story = {
   decorators: [WithFilePermissionsGranted],
   render: () => {
-    const file = FilePreviewMother.createWithRestrictedAccessWithAccessGranted()
+    const file = FilePreviewMother.createRestrictedWithAccessGranted()
     return <FileThumbnail file={file} />
   }
 }

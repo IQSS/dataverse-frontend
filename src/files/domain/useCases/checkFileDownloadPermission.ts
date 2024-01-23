@@ -1,5 +1,6 @@
 import { FileRepository } from '../repositories/FileRepository'
-import { FilePreview, FilePublishingStatus } from '../models/FilePreview'
+import { FilePreview } from '../models/FilePreview'
+import { FilePublishingStatus } from '../models/FileVersion'
 
 export async function checkFileDownloadPermission(
   fileRepository: FileRepository,
@@ -12,7 +13,7 @@ export async function checkFileDownloadPermission(
   }
 
   const isRestricted = file.access.restricted || file.access.latestVersionRestricted
-  if (!isRestricted && !file.isActivelyEmbargoed) {
+  if (!isRestricted && !file.metadata.isActivelyEmbargoed) {
     return true
   }
 

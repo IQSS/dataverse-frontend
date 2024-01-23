@@ -1,6 +1,6 @@
 import { FileImage } from './FileImage'
 import { FileIcon } from './FileIcon'
-import { FileType } from '../../../files/domain/models/FilePreview'
+import { FileType } from '../../../files/domain/models/FileMetadata'
 
 interface FilePreviewProps {
   thumbnail?: string

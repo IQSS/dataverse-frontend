@@ -1,7 +1,7 @@
 import {
   FileSize,
   FileType as FileTypeModel
-} from '../../../../../../../files/domain/models/FilePreview'
+} from '../../../../../../../files/domain/models/FileMetadata'
 import { useTranslation } from 'react-i18next'
 
 interface FileTypeProps {

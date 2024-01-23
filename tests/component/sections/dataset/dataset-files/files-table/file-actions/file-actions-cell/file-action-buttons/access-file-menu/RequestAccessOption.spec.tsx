@@ -1,8 +1,8 @@
 import { RequestAccessOption } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/RequestAccessOption'
-import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
 import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
 import { FilePermissionsProvider } from '../../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
+import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 
 describe('RequestAccessOption', () => {
   it('renders the embargoed message when the file is embargoed', () => {
@@ -26,7 +26,7 @@ describe('RequestAccessOption', () => {
   })
 
   it('renders the Users may not request access to files. message when the file is restricted and access request is not allowed', () => {
-    const fileRestricted = FilePreviewMother.createWithRestrictedAccess()
+    const fileRestricted = FilePreviewMother.createRestricted()
     cy.customMount(<RequestAccessOption file={fileRestricted} />)
 
     cy.findByRole('button', { name: 'Users may not request access to files.' })
@@ -94,7 +94,7 @@ describe('RequestAccessOption', () => {
   })
 
   it('does not render the request access button when the file status is restricted with access granted', () => {
-    const fileRestrictedWithAccess = FilePreviewMother.createWithRestrictedAccessWithAccessGranted()
+    const fileRestrictedWithAccess = FilePreviewMother.createRestrictedWithAccessGranted()
     const fileRepository: FileRepository = {} as FileRepository
     fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({

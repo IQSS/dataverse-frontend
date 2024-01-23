@@ -1,8 +1,8 @@
 import { FileDownloadOptions } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/FileDownloadOptions'
-import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
 import { FilePermissionsProvider } from '../../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
+import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 
 const fileNonTabular = FilePreviewMother.createNonTabular()
 const fileTabular = FilePreviewMother.createTabular()

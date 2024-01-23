@@ -29,7 +29,7 @@ export const TabularFiles: Story = {
 }
 
 export const Restricted: Story = {
-  render: () => <AccessFileMenu file={FilePreviewMother.createWithRestrictedAccess()} />
+  render: () => <AccessFileMenu file={FilePreviewMother.createRestricted()} />
 }
 
 export const RestrictedWithAccessRequestAllowed: Story = {
@@ -42,9 +42,7 @@ export const RestrictedWithAccessRequestPending: Story = {
 
 export const RestrictedWithAccessGranted: Story = {
   decorators: [WithFilePermissionsGranted],
-  render: () => (
-    <AccessFileMenu file={FilePreviewMother.createWithRestrictedAccessWithAccessGranted()} />
-  )
+  render: () => <AccessFileMenu file={FilePreviewMother.createRestrictedWithAccessGranted()} />
 }
 
 export const WithEmbargo: Story = {

@@ -1,15 +1,16 @@
-import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMother'
+import { FileMetadataMother } from '../../../../files/domain/models/FileMetadataMother'
 import {
   FilesTable,
   getCellStyle
 } from '../../../../../../src/sections/dataset/dataset-files/files-table/FilesTable'
-import { FileSize, FileSizeUnit } from '../../../../../../src/files/domain/models/FilePreview'
+import { FileSize, FileSizeUnit } from '../../../../../../src/files/domain/models/FileMetadata'
 import { SettingMother } from '../../../../settings/domain/models/SettingMother'
 import { ZipDownloadLimit } from '../../../../../../src/settings/domain/models/ZipDownloadLimit'
 import { SettingsContext } from '../../../../../../src/sections/settings/SettingsContext'
 import styles from '../../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
 import { FileCriteria } from '../../../../../../src/files/domain/models/FileCriteria'
 import { FilePaginationInfo } from '../../../../../../src/files/domain/models/FilePaginationInfo'
+import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMother'
 
 const testFiles = FilePreviewMother.createMany(10)
 const paginationInfo = new FilePaginationInfo(1, 10, 200)
@@ -169,8 +170,12 @@ describe('FilesTable', () => {
 
   it('renders the zip download limit message when the zip download limit is reached', () => {
     const testFiles = [
-      FilePreviewMother.create({ size: new FileSize(1024, FileSizeUnit.BYTES) }),
-      FilePreviewMother.create({ size: new FileSize(2048, FileSizeUnit.BYTES) })
+      FilePreviewMother.create({
+        metadata: FileMetadataMother.create({ size: new FileSize(1024, FileSizeUnit.BYTES) })
+      }),
+      FilePreviewMother.create({
+        metadata: FileMetadataMother.create({ size: new FileSize(2048, FileSizeUnit.BYTES) })
+      })
     ]
     const getSettingByName = cy
       .stub()
