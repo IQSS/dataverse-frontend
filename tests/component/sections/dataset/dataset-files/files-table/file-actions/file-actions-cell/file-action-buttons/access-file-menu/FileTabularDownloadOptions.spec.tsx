@@ -15,7 +15,8 @@ const fileTabular = FilePreviewMother.createTabular()
 const fileTabularUnknown = FilePreviewMother.create({
   metadata: FileMetadataMother.createTabular({
     type: new FileType('text/tab-separated-values', 'Unknown')
-  })
+  }),
+  ingest: FileIngestMother.createIngestNone()
 })
 describe('FileTabularDownloadOptions', () => {
   it('renders the download options for a tabular file', () => {
