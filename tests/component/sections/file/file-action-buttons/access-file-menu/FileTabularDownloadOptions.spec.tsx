@@ -1,45 +1,46 @@
-import { FileMetadataMother } from '../../../../files/domain/models/FileMetadataMother'
-import { FileType } from '../../../../../../src/files/domain/models/FileMetadata'
+import {
+  FileDownloadUrlsMother,
+  FileTypeMother
+} from '../../../../files/domain/models/FileMetadataMother'
 import { FileTabularDownloadOptions } from '../../../../../../src/sections/file/file-action-buttons/access-file-menu/FileTabularDownloadOptions'
 import { DatasetRepository } from '../../../../../../src/dataset/domain/repositories/DatasetRepository'
 import { DatasetLockMother, DatasetMother } from '../../../../dataset/domain/models/DatasetMother'
 import { DatasetProvider } from '../../../../../../src/sections/dataset/DatasetProvider'
-import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMother'
-import { FileIngestMother } from '../../../../files/domain/models/FileIngestMother'
 
-const fileNonTabular = FilePreviewMother.create({
-  metadata: FileMetadataMother.createNonTabular(),
-  ingest: FileIngestMother.createIngestNone()
-})
-const fileTabular = FilePreviewMother.create({
-  metadata: FileMetadataMother.createTabular(),
-  ingest: FileIngestMother.createIngestNone()
-})
-const fileTabularUnknown = FilePreviewMother.create({
-  metadata: FileMetadataMother.createTabular({
-    type: new FileType('text/tab-separated-values', 'Unknown')
-  }),
-  ingest: FileIngestMother.createIngestNone()
-})
+const tabularType = FileTypeMother.createTabular()
+const downloadUrls = FileDownloadUrlsMother.create()
 describe('FileTabularDownloadOptions', () => {
   it('renders the download options for a tabular file', () => {
-    cy.customMount(<FileTabularDownloadOptions file={fileTabular} />)
+    cy.customMount(
+      <FileTabularDownloadOptions
+        type={tabularType}
+        downloadUrls={downloadUrls}
+        ingestInProgress={false}
+      />
+    )
 
     cy.findByRole('link', { name: 'Comma Separated Values (Original File Format)' })
       .should('exist')
-      .should('have.attr', 'href', fileTabular.metadata.downloadUrls.original)
+      .should('have.attr', 'href', downloadUrls.original)
     cy.findByRole('link', { name: 'Tab-Delimited' })
       .should('exist')
-      .should('have.attr', 'href', fileTabular.metadata.downloadUrls.tabular)
+      .should('have.attr', 'href', downloadUrls.tabular)
       .should('not.have.class', 'disabled')
     cy.findByRole('link', { name: 'R Data' })
       .should('exist')
       .should('not.have.class', 'disabled')
-      .should('have.attr', 'href', fileTabular.metadata.downloadUrls.rData)
+      .should('have.attr', 'href', downloadUrls.rData)
   })
 
   it('renders the download options for a tabular file of unknown original type', () => {
-    cy.customMount(<FileTabularDownloadOptions file={fileTabularUnknown} />)
+    const unknownType = FileTypeMother.createTabularUnknown()
+    cy.customMount(
+      <FileTabularDownloadOptions
+        type={unknownType}
+        downloadUrls={downloadUrls}
+        ingestInProgress={false}
+      />
+    )
 
     cy.findByRole('link', { name: /(Original File Format)/ }).should('not.exist')
     cy.findByRole('link', { name: 'Tab-Delimited' })
@@ -48,19 +49,10 @@ describe('FileTabularDownloadOptions', () => {
     cy.findByRole('link', { name: 'R Data' }).should('exist').should('not.have.class', 'disabled')
   })
 
-  it('does not render the download options for a non-tabular file', () => {
-    cy.customMount(<FileTabularDownloadOptions file={fileNonTabular} />)
-
-    cy.findByRole('link', { name: /(Original File Format)/ }).should('not.exist')
-    cy.findByRole('link', { name: 'Tab-Delimited' }).should('not.exist')
-    cy.findByRole('link', { name: 'R Data' }).should('not.exist')
-  })
-
   it('renders the options as disabled when the file ingest is in progress', () => {
-    const fileTabularInProgress = FilePreviewMother.createTabular({
-      ingest: FileIngestMother.createInProgress()
-    })
-    cy.customMount(<FileTabularDownloadOptions file={fileTabularInProgress} />)
+    cy.customMount(
+      <FileTabularDownloadOptions type={tabularType} downloadUrls={downloadUrls} ingestInProgress />
+    )
 
     cy.findByRole('link', { name: 'Comma Separated Values (Original File Format)' })
       .should('exist')
@@ -82,7 +74,11 @@ describe('FileTabularDownloadOptions', () => {
       <DatasetProvider
         repository={datasetRepository}
         searchParams={{ persistentId: 'some-persistent-id', version: 'some-version' }}>
-        <FileTabularDownloadOptions file={fileTabular} />
+        <FileTabularDownloadOptions
+          type={tabularType}
+          downloadUrls={downloadUrls}
+          ingestInProgress={false}
+        />
       </DatasetProvider>
     )
 
@@ -96,13 +92,14 @@ describe('FileTabularDownloadOptions', () => {
   })
 
   it('does not render the RData option if the file type is already R Data', () => {
-    const fileTabularRData = FilePreviewMother.create({
-      metadata: FileMetadataMother.createTabular({
-        type: new FileType('application/octet-stream', 'R Data')
-      }),
-      ingest: FileIngestMother.createIngestNone()
-    })
-    cy.customMount(<FileTabularDownloadOptions file={fileTabularRData} />)
+    const rDataType = FileTypeMother.createRData()
+    cy.customMount(
+      <FileTabularDownloadOptions
+        type={rDataType}
+        downloadUrls={downloadUrls}
+        ingestInProgress={false}
+      />
+    )
 
     cy.findByRole('link', { name: 'R Data (Original File Format)' })
       .should('exist')

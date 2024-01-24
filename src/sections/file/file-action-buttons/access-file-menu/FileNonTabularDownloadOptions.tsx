@@ -22,8 +22,8 @@ export function FileNonTabularDownloadOptions({
       href={downloadUrlOriginal}
       disabled={ingestIsInProgress || (dataset && dataset.isLockedFromFileDownload)}>
       {type.displayFormatIsUnknown
-        ? type.toDisplayFormat()
-        : t('actions.accessFileMenu.downloadOptions.options.original')}
+        ? t('actions.accessFileMenu.downloadOptions.options.original')
+        : type.toDisplayFormat()}
     </DropdownButtonItem>
   )
 }

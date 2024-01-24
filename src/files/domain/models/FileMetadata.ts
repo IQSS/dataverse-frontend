@@ -124,6 +124,10 @@ export class FileType {
   get displayFormatIsUnknown(): boolean {
     return this.toDisplayFormat() === FileTypeToFriendlyTypeMap.unknown
   }
+
+  get originalFormatIsUnknown(): boolean {
+    return this.original === undefined || this.original === FileTypeToFriendlyTypeMap.unknown
+  }
 }
 
 export interface FileChecksum {

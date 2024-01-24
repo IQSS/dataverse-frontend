@@ -1,38 +1,36 @@
-import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useDataset } from '../../../dataset/DatasetContext'
 import { useTranslation } from 'react-i18next'
-import { FileIngestStatus } from '../../../../files/domain/models/FileIngest'
+import { FileDownloadUrls, FileType } from '../../../../files/domain/models/FileMetadata'
+import FileTypeToFriendlyTypeMap from '../../../../files/domain/models/FileTypeToFriendlyTypeMap'
 
 interface FileTabularDownloadOptionsProps {
-  file: FilePreview
+  type: FileType
+  ingestInProgress: boolean
+  downloadUrls: FileDownloadUrls
 }
 
-export function FileTabularDownloadOptions({ file }: FileTabularDownloadOptionsProps) {
+export function FileTabularDownloadOptions({
+  type,
+  ingestInProgress,
+  downloadUrls
+}: FileTabularDownloadOptionsProps) {
   const { t } = useTranslation('files')
   const { dataset } = useDataset()
-  const downloadDisabled =
-    file.ingest.status === FileIngestStatus.IN_PROGRESS ||
-    (dataset && dataset.isLockedFromFileDownload)
-
-  if (!file.metadata.tabularData) {
-    return <></>
-  }
+  const downloadDisabled = ingestInProgress || (dataset && dataset.isLockedFromFileDownload)
 
   return (
     <>
-      {file.metadata.type.original && file.metadata.type.original !== 'Unknown' && (
-        <DropdownButtonItem
-          href={file.metadata.downloadUrls.original}
-          disabled={downloadDisabled}>{`${file.metadata.type.original} (${t(
-          'actions.accessFileMenu.downloadOptions.options.original'
-        )})`}</DropdownButtonItem>
+      {!type.originalFormatIsUnknown && (
+        <DropdownButtonItem href={downloadUrls.original} disabled={downloadDisabled}>{`${
+          type.original || ''
+        } (${t('actions.accessFileMenu.downloadOptions.options.original')})`}</DropdownButtonItem>
       )}
-      <DropdownButtonItem href={file.metadata.downloadUrls.tabular} disabled={downloadDisabled}>
+      <DropdownButtonItem href={downloadUrls.tabular} disabled={downloadDisabled}>
         {t('actions.accessFileMenu.downloadOptions.options.tabular')}
       </DropdownButtonItem>
-      {file.metadata.type.original !== 'R Data' && (
-        <DropdownButtonItem href={file.metadata.downloadUrls.rData} disabled={downloadDisabled}>
+      {type.original !== FileTypeToFriendlyTypeMap['application/x-r-data'] && (
+        <DropdownButtonItem href={downloadUrls.rData} disabled={downloadDisabled}>
           {t('actions.accessFileMenu.downloadOptions.options.RData')}
         </DropdownButtonItem>
       )}

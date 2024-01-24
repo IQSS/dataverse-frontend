@@ -25,7 +25,11 @@ export function FileDownloadOptions({ file }: FileDownloadOptionsProps) {
         <Download />
       </DropdownHeader>
       {file.metadata.tabularData ? (
-        <FileTabularDownloadOptions file={file} />
+        <FileTabularDownloadOptions
+          type={file.metadata.type}
+          ingestInProgress={file.ingest.isInProgress}
+          downloadUrls={file.metadata.downloadUrls}
+        />
       ) : (
         <FileNonTabularDownloadOptions
           type={file.metadata.type}

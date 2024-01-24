@@ -31,6 +31,10 @@ export class FileTypeMother {
     return new FileType('text/tab-separated-values', 'Comma Separated Values')
   }
 
+  static createTabularUnknown(): FileType {
+    return new FileType('text/tab-separated-values', 'Unknown')
+  }
+
   static createText(): FileType {
     return new FileType('text/plain')
   }
@@ -45,6 +49,10 @@ export class FileTypeMother {
 
   static createUnknown(): FileType {
     return new FileType('unknown')
+  }
+
+  static createRData(): FileType {
+    return new FileType('text/tab-separated-values', 'R Data')
   }
 }
 
