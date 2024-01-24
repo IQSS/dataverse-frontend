@@ -3,21 +3,20 @@ import { FileIngest, FileIngestStatus } from '../../../../../src/files/domain/mo
 
 export class FileIngestMother {
   static create(props?: Partial<FileIngest>): FileIngest {
-    return {
-      status: faker.helpers.arrayElement(Object.values(FileIngestStatus)),
-      reportMessage: faker.datatype.boolean() ? faker.lorem.sentence() : undefined,
-      ...props
-    }
+    return new FileIngest(
+      props?.status ?? faker.helpers.arrayElement(Object.values(FileIngestStatus)),
+      props?.message
+    )
   }
 
   static createInProgress(): FileIngest {
     return this.create({ status: FileIngestStatus.IN_PROGRESS })
   }
 
-  static createIngestProblem(reportMessage?: string): FileIngest {
+  static createIngestProblem(message?: string): FileIngest {
     return this.create({
       status: FileIngestStatus.ERROR,
-      reportMessage: reportMessage
+      message: message
     })
   }
 

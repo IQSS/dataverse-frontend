@@ -192,6 +192,13 @@ export class FileMetadataMother {
     )
   }
 
+  static createDownloadUrl(): string {
+    const blob = new Blob(['Name,Age,Location\nJohn,25,New York\nJane,30,San Francisco'], {
+      type: 'text/csv'
+    })
+    return URL.createObjectURL(blob)
+  }
+
   static createDefault(props?: Partial<FileMetadata>): FileMetadata {
     const defaultFile = {
       type: FileTypeMother.createText(),
