@@ -1,27 +1,30 @@
-import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { Globe, LockFill, UnlockFill } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
 import styles from './AccessFileMenu.module.scss'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
-import { useFileDownloadPermission } from '../../file-permissions/useFileDownloadPermission'
 
 interface AccessStatusProps {
-  file: FilePreview
+  userHasDownloadPermission: boolean
+  isRestricted: boolean
+  isActivelyEmbargoed: boolean
 }
 
-export function AccessStatus({ file }: AccessStatusProps) {
-  const { sessionUserHasFileDownloadPermission } = useFileDownloadPermission(file)
-
+export function AccessStatus({
+  userHasDownloadPermission,
+  isRestricted,
+  isActivelyEmbargoed
+}: AccessStatusProps) {
   return (
     <DropdownButtonItem disabled>
       <span>
         <AccessStatusIcon
-          sessionUserHasFileDownloadPermission={sessionUserHasFileDownloadPermission}
-          restricted={file.access.restricted}
+          userHasDownloadPermission={userHasDownloadPermission}
+          isRestricted={isRestricted}
         />{' '}
         <AccessStatusText
-          file={file}
-          sessionUserHasFileDownloadPermission={sessionUserHasFileDownloadPermission}
+          isRestricted={isRestricted}
+          isActivelyEmbargoed={isActivelyEmbargoed}
+          userHasDownloadPermission={userHasDownloadPermission}
         />
       </span>
     </DropdownButtonItem>
@@ -29,15 +32,15 @@ export function AccessStatus({ file }: AccessStatusProps) {
 }
 
 function AccessStatusIcon({
-  sessionUserHasFileDownloadPermission,
-  restricted
+  userHasDownloadPermission,
+  isRestricted
 }: {
-  sessionUserHasFileDownloadPermission: boolean
-  restricted: boolean
+  userHasDownloadPermission: boolean
+  isRestricted: boolean
 }) {
   const { t } = useTranslation('file')
-  if (restricted) {
-    if (sessionUserHasFileDownloadPermission) {
+  if (isRestricted) {
+    if (userHasDownloadPermission) {
       return (
         <UnlockFill title={t('fileAccess.restrictedWithAccess.icon')} className={styles.success} />
       )
@@ -48,20 +51,22 @@ function AccessStatusIcon({
 }
 
 function AccessStatusText({
-  file,
-  sessionUserHasFileDownloadPermission
+  isActivelyEmbargoed,
+  isRestricted,
+  userHasDownloadPermission
 }: {
-  file: FilePreview
-  sessionUserHasFileDownloadPermission: boolean
+  isActivelyEmbargoed: boolean
+  isRestricted: boolean
+  userHasDownloadPermission: boolean
 }) {
   const { t } = useTranslation('file')
   const getAccessStatus = () => {
-    if (file.metadata.isActivelyEmbargoed) {
+    if (isActivelyEmbargoed) {
       return 'embargoed'
     }
 
-    if (file.access.restricted) {
-      if (!sessionUserHasFileDownloadPermission) {
+    if (isRestricted) {
+      if (!userHasDownloadPermission) {
         return 'restricted'
       }
 
@@ -74,11 +79,7 @@ function AccessStatusText({
   return (
     <span
       className={
-        styles[
-          getAccessStatus() === 'public' || sessionUserHasFileDownloadPermission
-            ? 'success'
-            : 'danger'
-        ]
+        styles[getAccessStatus() === 'public' || userHasDownloadPermission ? 'success' : 'danger']
       }>
       {t(`fileAccess.${getAccessStatus()}.name`)}
     </span>

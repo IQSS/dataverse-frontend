@@ -27,7 +27,11 @@ export function AccessFileMenu({ file }: FileActionButtonAccessFileProps) {
         <DropdownHeader>
           {t('actions.accessFileMenu.headers.fileAccess')} <FileEarmark />
         </DropdownHeader>
-        <AccessStatus file={file} />
+        <AccessStatus
+          isRestricted={file.access.restricted}
+          isActivelyEmbargoed={file.metadata.isActivelyEmbargoed}
+          userHasDownloadPermission={sessionUserHasFileDownloadPermission}
+        />
         <RequestAccessOption
           id={file.id}
           access={file.access}
