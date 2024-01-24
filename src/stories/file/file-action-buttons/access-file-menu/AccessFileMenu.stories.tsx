@@ -28,6 +28,20 @@ export const Default: Story = {
   )
 }
 
+export const AsIcon: Story = {
+  render: () => (
+    <AccessFileMenu
+      id={1}
+      access={FileAccessMother.createPublic()}
+      metadata={FileMetadataMother.create()}
+      userHasDownloadPermission
+      isDeaccessioned={false}
+      ingestInProgress={false}
+      asIcon
+    />
+  )
+}
+
 export const NonTabularFiles: Story = {
   render: () => (
     <AccessFileMenu
