@@ -1,9 +1,9 @@
-import { AccessStatus } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessStatus'
-import styles from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessFileMenu.module.scss'
-import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
-import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
-import { FilePermissionsProvider } from '../../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
-import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
+import { AccessStatus } from '../../../../../../src/sections/file/file-action-buttons/access-file-menu/AccessStatus'
+import styles from '../../../../../../src/sections/file/file-action-buttons/access-file-menu/AccessFileMenu.module.scss'
+import { FileRepository } from '../../../../../../src/files/domain/repositories/FileRepository'
+import { FileUserPermissionsMother } from '../../../../files/domain/models/FileUserPermissionsMother'
+import { FilePermissionsProvider } from '../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
+import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMother'
 
 describe('AccessStatus', () => {
   it('renders the access status  public', () => {

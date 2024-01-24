@@ -1,13 +1,12 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { AccessFileMenu } from '../../../../../../../sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessFileMenu'
-import { WithI18next } from '../../../../../../WithI18next'
-import { WithSettings } from '../../../../../../WithSettings'
-import { WithFilePermissionsGranted } from '../../../../../../file/file-permission/WithFilePermissionsGranted'
-import { FilePreviewMother } from '../../../../../../../../tests/component/files/domain/models/FilePreviewMother'
+import { AccessFileMenu } from '../../../../sections/file/file-action-buttons/access-file-menu/AccessFileMenu'
+import { WithI18next } from '../../../WithI18next'
+import { WithSettings } from '../../../WithSettings'
+import { WithFilePermissionsGranted } from '../../file-permission/WithFilePermissionsGranted'
+import { FilePreviewMother } from '../../../../../tests/component/files/domain/models/FilePreviewMother'
 
 const meta: Meta<typeof AccessFileMenu> = {
-  title:
-    'Sections/Dataset Page/DatasetFiles/FilesTable/FileActionsCell/FileActionButtons/AccessFileMenu',
+  title: 'Sections/File Page/Action Buttons/AccessFileMenu',
   component: AccessFileMenu,
   decorators: [WithI18next, WithSettings]
 }

@@ -1,8 +1,8 @@
-import { RequestAccessOption } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/RequestAccessOption'
-import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
-import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
-import { FilePermissionsProvider } from '../../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
-import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
+import { RequestAccessOption } from '../../../../../../src/sections/file/file-action-buttons/access-file-menu/RequestAccessOption'
+import { FileRepository } from '../../../../../../src/files/domain/repositories/FileRepository'
+import { FileUserPermissionsMother } from '../../../../files/domain/models/FileUserPermissionsMother'
+import { FilePermissionsProvider } from '../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
+import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMother'
 
 describe('RequestAccessOption', () => {
   it('renders the embargoed message when the file is embargoed', () => {

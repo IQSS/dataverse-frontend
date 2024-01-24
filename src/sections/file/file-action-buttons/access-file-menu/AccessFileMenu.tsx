@@ -1,4 +1,4 @@
-import { FilePreview } from '../../../../../../../../files/domain/models/FilePreview'
+import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { Download, FileEarmark } from 'react-bootstrap-icons'
 import { AccessStatus } from './AccessStatus'
 import { RequestAccessOption } from './RequestAccessOption'

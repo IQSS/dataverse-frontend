@@ -1,14 +1,11 @@
-import { FileMetadataMother } from '../../../../../../../../files/domain/models/FileMetadataMother'
+import { FileMetadataMother } from '../../../../files/domain/models/FileMetadataMother'
 
-import { FileNonTabularDownloadOptions } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/FileNonTabularDownloadOptions'
-import { DatasetProvider } from '../../../../../../../../../../src/sections/dataset/DatasetProvider'
-import { DatasetRepository } from '../../../../../../../../../../src/dataset/domain/repositories/DatasetRepository'
-import {
-  DatasetLockMother,
-  DatasetMother
-} from '../../../../../../../../dataset/domain/models/DatasetMother'
-import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
-import { FileIngestMother } from '../../../../../../../../files/domain/models/FileIngestMother'
+import { FileNonTabularDownloadOptions } from '../../../../../../src/sections/file/file-action-buttons/access-file-menu/FileNonTabularDownloadOptions'
+import { DatasetProvider } from '../../../../../../src/sections/dataset/DatasetProvider'
+import { DatasetRepository } from '../../../../../../src/dataset/domain/repositories/DatasetRepository'
+import { DatasetLockMother, DatasetMother } from '../../../../dataset/domain/models/DatasetMother'
+import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMother'
+import { FileIngestMother } from '../../../../files/domain/models/FileIngestMother'
 
 const fileNonTabular = FilePreviewMother.create({
   metadata: FileMetadataMother.createNonTabular(),

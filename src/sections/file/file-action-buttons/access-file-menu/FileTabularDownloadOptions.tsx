@@ -1,8 +1,8 @@
-import { FilePreview } from '../../../../../../../../files/domain/models/FilePreview'
+import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
-import { useDataset } from '../../../../../../DatasetContext'
+import { useDataset } from '../../../dataset/DatasetContext'
 import { useTranslation } from 'react-i18next'
-import { FileIngestStatus } from '../../../../../../../../files/domain/models/FileIngest'
+import { FileIngestStatus } from '../../../../files/domain/models/FileIngest'
 
 interface FileTabularDownloadOptionsProps {
   file: FilePreview

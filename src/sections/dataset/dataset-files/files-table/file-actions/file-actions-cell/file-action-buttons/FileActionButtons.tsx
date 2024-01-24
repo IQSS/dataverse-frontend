@@ -1,4 +1,4 @@
-import { AccessFileMenu } from './access-file-menu/AccessFileMenu'
+import { AccessFileMenu } from '../../../../../../file/file-action-buttons/access-file-menu/AccessFileMenu'
 import { FilePreview } from '../../../../../../../files/domain/models/FilePreview'
 import { FileOptionsMenu } from './file-options-menu/FileOptionsMenu'
 import { ButtonGroup } from '@iqss/dataverse-design-system'

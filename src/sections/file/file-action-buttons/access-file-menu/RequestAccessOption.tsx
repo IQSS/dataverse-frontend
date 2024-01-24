@@ -1,10 +1,10 @@
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import styles from './AccessFileMenu.module.scss'
 import { RequestAccessModal } from './RequestAccessModal'
-import { FilePreview } from '../../../../../../../../files/domain/models/FilePreview'
+import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
-import { useFileDownloadPermission } from '../../../../../../../file/file-permissions/useFileDownloadPermission'
-import { FilePublishingStatus } from '../../../../../../../../files/domain/models/FileVersion'
+import { useFileDownloadPermission } from '../../file-permissions/useFileDownloadPermission'
+import { FilePublishingStatus } from '../../../../files/domain/models/FileVersion'
 
 interface RequestAccessButtonProps {
   file: FilePreview
