@@ -19,7 +19,7 @@ describe('AccessFileMenu', () => {
     cy.findByRole('button', { name: 'Access File' }).should('exist')
   })
 
-  it('renders the access file menu with tooltip', () => {
+  it('renders the access file menu with tooltip when asIcon is true', () => {
     cy.customMount(
       <AccessFileMenu
         id={1}
@@ -28,11 +28,29 @@ describe('AccessFileMenu', () => {
         userHasDownloadPermission
         ingestInProgress={false}
         isDeaccessioned={false}
+        asIcon
       />
     )
 
     cy.findByRole('button', { name: 'Access File' }).trigger('mouseover')
     cy.findByRole('tooltip', { name: 'Access File' }).should('exist')
+  })
+
+  it('does not render the access file menu with tooltip when asIcon is false', () => {
+    cy.customMount(
+      <AccessFileMenu
+        id={1}
+        access={FileAccessMother.create()}
+        metadata={FileMetadataMother.create()}
+        userHasDownloadPermission
+        ingestInProgress={false}
+        isDeaccessioned={false}
+        asIcon={false}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Access File' }).trigger('mouseover')
+    cy.findByRole('tooltip', { name: 'Access File' }).should('not.exist')
   })
 
   it('renders the menu headers', () => {
@@ -99,5 +117,22 @@ describe('AccessFileMenu', () => {
 
     cy.findByRole('button', { name: 'Access File' }).click()
     cy.findByRole('heading', { name: 'Download Options' }).should('exist')
+  })
+
+  it('renders the button as an icon when asIcon is true', () => {
+    cy.customMount(
+      <AccessFileMenu
+        id={1}
+        access={FileAccessMother.createPublic()}
+        metadata={FileMetadataMother.create()}
+        userHasDownloadPermission
+        ingestInProgress={false}
+        isDeaccessioned={false}
+        asIcon
+      />
+    )
+
+    cy.findByRole('button', { name: 'Access File' }).should('exist')
+    cy.get('svg').should('exist')
   })
 })

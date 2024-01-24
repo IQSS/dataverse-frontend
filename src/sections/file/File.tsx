@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import styles from './File.module.scss'
-import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
+import { ButtonGroup, Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { useFile } from './useFile'
 import { useEffect } from 'react'
@@ -64,16 +64,21 @@ export function File({ repository, id }: FileProps) {
                 <DatasetCitation version={file.datasetVersion} withoutThumbnail />
               </Col>
               <Col sm={3}>
-                <AccessFileMenu
-                  id={file.id}
-                  access={file.access}
-                  userHasDownloadPermission={file.permissions.canDownloadFile}
-                  metadata={file.metadata}
-                  ingestInProgress={file.ingest.isInProgress}
-                  isDeaccessioned={
-                    file.version.publishingStatus === FilePublishingStatus.DEACCESSIONED
-                  }
-                />
+                <ButtonGroup
+                  aria-label={t('actionButtons.title')}
+                  vertical
+                  className={styles.group}>
+                  <AccessFileMenu
+                    id={file.id}
+                    access={file.access}
+                    userHasDownloadPermission={file.permissions.canDownloadFile}
+                    metadata={file.metadata}
+                    ingestInProgress={file.ingest.isInProgress}
+                    isDeaccessioned={
+                      file.version.publishingStatus === FilePublishingStatus.DEACCESSIONED
+                    }
+                  />
+                </ButtonGroup>
               </Col>
             </Row>
             <Tabs defaultActiveKey="metadata">

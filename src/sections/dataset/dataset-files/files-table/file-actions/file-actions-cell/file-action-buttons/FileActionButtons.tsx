@@ -22,6 +22,7 @@ export function FileActionButtons({ file }: FileActionButtonsProps) {
         metadata={file.metadata}
         isDeaccessioned={file.version.publishingStatus === FilePublishingStatus.DEACCESSIONED}
         ingestInProgress={file.ingest.isInProgress}
+        asIcon
       />
       <FileOptionsMenu file={file} />
     </ButtonGroup>

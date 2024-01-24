@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { FileDownloadOptions } from './FileDownloadOptions'
 import { FileAccess } from '../../../../files/domain/models/FileAccess'
 import { FileMetadata } from '../../../../files/domain/models/FileMetadata'
+import { ReactElement } from 'react'
 
 interface FileActionButtonAccessFileProps {
   id: number
@@ -14,6 +15,7 @@ interface FileActionButtonAccessFileProps {
   metadata: FileMetadata
   ingestInProgress: boolean
   isDeaccessioned: boolean
+  asIcon?: boolean
 }
 
 export function AccessFileMenu({
@@ -22,18 +24,29 @@ export function AccessFileMenu({
   userHasDownloadPermission,
   metadata,
   ingestInProgress,
-  isDeaccessioned
+  isDeaccessioned,
+  asIcon = false
 }: FileActionButtonAccessFileProps) {
   const { t } = useTranslation('files')
+  function MenuWrapper({ children }: { children: ReactElement }) {
+    if (asIcon) {
+      return (
+        <Tooltip placement="top" overlay={t('actions.accessFileMenu.title')}>
+          {children}
+        </Tooltip>
+      )
+    }
+    return children
+  }
 
   return (
-    <Tooltip placement="top" overlay={t('actions.accessFileMenu.title')}>
+    <MenuWrapper>
       <DropdownButton
         id={`action-button-access-file-${id}`}
-        title=""
+        title={asIcon ? '' : t('actions.accessFileMenu.title')}
         asButtonGroup
-        variant="secondary"
-        icon={<Download aria-label={t('actions.accessFileMenu.title')} />}>
+        variant={asIcon ? 'secondary' : 'primary'}
+        icon={asIcon ? <Download aria-label={t('actions.accessFileMenu.title')} /> : undefined}>
         <DropdownHeader>
           {t('actions.accessFileMenu.headers.fileAccess')} <FileEarmark />
         </DropdownHeader>
@@ -57,6 +70,6 @@ export function AccessFileMenu({
           userHasDownloadPermission={userHasDownloadPermission}
         />
       </DropdownButton>
-    </Tooltip>
+    </MenuWrapper>
   )
 }

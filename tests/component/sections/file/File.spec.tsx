@@ -24,7 +24,7 @@ describe('File', () => {
     cy.findByText('Version 1.0').should('exist')
     cy.findByRole('tab', { name: 'Metadata' }).should('exist')
     cy.findByRole('button', { name: 'File Metadata' }).should('exist')
-    cy.findByRole('button', { name: 'Access File' }).should('exist')
+    cy.findByRole('group', { name: 'File Action Buttons' }).should('exist')
   })
 
   it('renders skeleton while loading', () => {
