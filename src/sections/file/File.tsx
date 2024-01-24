@@ -12,6 +12,8 @@ import { FileCitation } from './file-citation/FileCitation'
 import { DatasetLabels } from '../dataset/dataset-labels/DatasetLabels'
 import { FileAccessRestrictedIcon } from './file-access/FileAccessRestrictedIcon'
 import { FileMetadata } from './file-metadata/FileMetadata'
+import { AccessFileMenu } from './file-action-buttons/access-file-menu/AccessFileMenu'
+import { FilePublishingStatus } from '../../files/domain/models/FileVersion'
 
 interface FileProps {
   repository: FileRepository
@@ -60,6 +62,18 @@ export function File({ repository, id }: FileProps) {
                 <FileCitation citation={file.citation} datasetVersion={file.datasetVersion} />
                 <span className={styles['citation-title']}>{t('datasetCitationTitle')}</span>
                 <DatasetCitation version={file.datasetVersion} withoutThumbnail />
+              </Col>
+              <Col sm={3}>
+                <AccessFileMenu
+                  id={file.id}
+                  access={file.access}
+                  userHasDownloadPermission={file.permissions.canDownloadFile}
+                  metadata={file.metadata}
+                  ingestInProgress={file.ingest.isInProgress}
+                  isDeaccessioned={
+                    file.version.publishingStatus === FilePublishingStatus.DEACCESSIONED
+                  }
+                />
               </Col>
             </Row>
             <Tabs defaultActiveKey="metadata">

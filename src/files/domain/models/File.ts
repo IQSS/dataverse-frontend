@@ -3,8 +3,10 @@ import { FileMetadata } from './FileMetadata'
 import { FileVersion } from './FileVersion'
 import { FileAccess } from './FileAccess'
 import { FileUserPermissions } from './FileUserPermissions'
+import { FileIngest } from './FileIngest'
 
 export interface File {
+  id: number
   version: FileVersion
   name: string
   access: FileAccess
@@ -12,4 +14,5 @@ export interface File {
   citation: string
   permissions: FileUserPermissions
   metadata: FileMetadata
+  ingest: FileIngest
 }

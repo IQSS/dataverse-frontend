@@ -5,10 +5,12 @@ import { FileVersionMother } from './FileVersionMother'
 import { FileAccessMother } from './FileAccessMother'
 import { FileUserPermissionsMother } from './FileUserPermissionsMother'
 import { faker } from '@faker-js/faker'
+import { FileIngestMother } from './FileIngestMother'
 
 export class FileMother {
   static create(props?: Partial<File>): File {
     return {
+      id: faker.datatype.number(),
       name: faker.system.fileName(),
       version: FileVersionMother.create(),
       datasetVersion: DatasetVersionMother.create(),
@@ -16,6 +18,7 @@ export class FileMother {
       access: FileAccessMother.create(),
       metadata: FileMetadataMother.create(),
       permissions: FileUserPermissionsMother.create(),
+      ingest: FileIngestMother.create(),
       ...props
     }
   }
