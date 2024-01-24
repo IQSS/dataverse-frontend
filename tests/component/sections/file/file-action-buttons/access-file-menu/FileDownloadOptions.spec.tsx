@@ -1,42 +1,35 @@
 import { FileDownloadOptions } from '../../../../../../src/sections/file/file-action-buttons/access-file-menu/FileDownloadOptions'
-import { FileUserPermissionsMother } from '../../../../files/domain/models/FileUserPermissionsMother'
-import { FilePermissionsProvider } from '../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
-import { FileRepository } from '../../../../../../src/files/domain/repositories/FileRepository'
-import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMother'
+import {
+  FileDownloadUrlsMother,
+  FileTypeMother
+} from '../../../../files/domain/models/FileMetadataMother'
 
-const fileNonTabular = FilePreviewMother.createNonTabular()
-const fileTabular = FilePreviewMother.createTabular()
-const fileRepository = {} as FileRepository
+const nonTabularType = FileTypeMother.createText()
+const downloadUrls = FileDownloadUrlsMother.create()
 describe('FileDownloadOptions', () => {
-  beforeEach(() => {
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      FileUserPermissionsMother.create({
-        canDownloadFile: true
-      })
-    )
-  })
-
   it('renders the download options header', () => {
     cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <FileDownloadOptions file={fileNonTabular} />
-      </FilePermissionsProvider>
+      <FileDownloadOptions
+        type={nonTabularType}
+        downloadUrls={downloadUrls}
+        isTabular={false}
+        ingestInProgress={false}
+        userHasDownloadPermission
+      />
     )
 
     cy.findByRole('heading', { name: 'Download Options' }).should('exist')
   })
 
   it('does not render the download options if the user does not have permissions', () => {
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      FileUserPermissionsMother.create({
-        canDownloadFile: false
-      })
-    )
-
     cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <FileDownloadOptions file={fileNonTabular} />
-      </FilePermissionsProvider>
+      <FileDownloadOptions
+        type={nonTabularType}
+        downloadUrls={downloadUrls}
+        isTabular={false}
+        ingestInProgress={false}
+        userHasDownloadPermission={false}
+      />
     )
 
     cy.findByRole('heading', { name: 'Download Options' }).should('not.exist')
@@ -44,19 +37,28 @@ describe('FileDownloadOptions', () => {
 
   it('renders the download options for a non-tabular file', () => {
     cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <FileDownloadOptions file={fileNonTabular} />{' '}
-      </FilePermissionsProvider>
+      <FileDownloadOptions
+        type={nonTabularType}
+        downloadUrls={downloadUrls}
+        isTabular={false}
+        ingestInProgress={false}
+        userHasDownloadPermission
+      />
     )
 
     cy.findByRole('link', { name: 'Plain Text' }).should('exist')
   })
 
   it('renders the download options for a tabular file', () => {
+    const tabularType = FileTypeMother.createTabular()
     cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <FileDownloadOptions file={fileTabular} />
-      </FilePermissionsProvider>
+      <FileDownloadOptions
+        type={tabularType}
+        downloadUrls={downloadUrls}
+        isTabular={true}
+        ingestInProgress={false}
+        userHasDownloadPermission
+      />
     )
 
     cy.findByRole('link', { name: 'Comma Separated Values (Original File Format)' }).should('exist')

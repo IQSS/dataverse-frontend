@@ -1,20 +1,28 @@
 import { DropdownHeader } from '@iqss/dataverse-design-system'
 import { Download } from 'react-bootstrap-icons'
-import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { FileTabularDownloadOptions } from './FileTabularDownloadOptions'
 import { FileNonTabularDownloadOptions } from './FileNonTabularDownloadOptions'
 import { useTranslation } from 'react-i18next'
-import { useFileDownloadPermission } from '../../file-permissions/useFileDownloadPermission'
+import { FileDownloadUrls, FileType } from '../../../../files/domain/models/FileMetadata'
 
 interface FileDownloadOptionsProps {
-  file: FilePreview
+  type: FileType
+  isTabular: boolean
+  ingestInProgress: boolean
+  downloadUrls: FileDownloadUrls
+  userHasDownloadPermission: boolean
 }
 
-export function FileDownloadOptions({ file }: FileDownloadOptionsProps) {
+export function FileDownloadOptions({
+  type,
+  isTabular,
+  ingestInProgress,
+  downloadUrls,
+  userHasDownloadPermission
+}: FileDownloadOptionsProps) {
   const { t } = useTranslation('files')
-  const { sessionUserHasFileDownloadPermission } = useFileDownloadPermission(file)
 
-  if (!sessionUserHasFileDownloadPermission) {
+  if (!userHasDownloadPermission) {
     return <></>
   }
 
@@ -24,17 +32,17 @@ export function FileDownloadOptions({ file }: FileDownloadOptionsProps) {
         {t('actions.accessFileMenu.downloadOptions.title')}
         <Download />
       </DropdownHeader>
-      {file.metadata.tabularData ? (
+      {isTabular ? (
         <FileTabularDownloadOptions
-          type={file.metadata.type}
-          ingestInProgress={file.ingest.isInProgress}
-          downloadUrls={file.metadata.downloadUrls}
+          type={type}
+          ingestInProgress={ingestInProgress}
+          downloadUrls={downloadUrls}
         />
       ) : (
         <FileNonTabularDownloadOptions
-          type={file.metadata.type}
-          ingestIsInProgress={file.ingest.isInProgress}
-          downloadUrlOriginal={file.metadata.downloadUrls.original}
+          type={type}
+          ingestIsInProgress={ingestInProgress}
+          downloadUrlOriginal={downloadUrls.original}
         />
       )}
     </>

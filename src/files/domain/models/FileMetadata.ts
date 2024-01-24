@@ -167,4 +167,8 @@ export class FileMetadata {
     }
     return false
   }
+
+  get isTabular(): boolean {
+    return this.tabularData !== undefined
+  }
 }
