@@ -120,6 +120,10 @@ export class FileType {
   toDisplayFormat(): string {
     return FileTypeToFriendlyTypeMap[this.value] || FileTypeToFriendlyTypeMap.unknown
   }
+
+  get displayFormatIsUnknown(): boolean {
+    return this.toDisplayFormat() === FileTypeToFriendlyTypeMap.unknown
+  }
 }
 
 export interface FileChecksum {
