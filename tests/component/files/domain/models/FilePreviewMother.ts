@@ -26,7 +26,7 @@ export class FilePreviewMother {
     return this.create({
       name: 'File Title',
       version: FileVersionMother.createReleased(),
-      access: FileAccessMother.createNotRestricted(),
+      access: FileAccessMother.createPublic(),
       ingest: FileIngestMother.createIngestNone(),
       metadata: FileMetadataMother.createDefault(),
       ...props
@@ -48,7 +48,7 @@ export class FilePreviewMother {
 
   static createWithPublicAccess(): FilePreview {
     return this.createDefault({
-      access: FileAccessMother.createNotRestricted(),
+      access: FileAccessMother.createPublic(),
       metadata: FileMetadataMother.createNotEmbargoed()
     })
   }

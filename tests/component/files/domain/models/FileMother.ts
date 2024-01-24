@@ -25,7 +25,7 @@ export class FileMother {
       name: 'File Title',
       datasetVersion: DatasetVersionMother.createRealistic(),
       citation: FileCitationMother.create('File Title'),
-      access: FileAccessMother.createNotRestricted(),
+      access: FileAccessMother.createPublic(),
       permissions: FileUserPermissionsMother.createWithAllPermissionsGranted(),
       metadata: FileMetadataMother.createDefault(),
       ...props
