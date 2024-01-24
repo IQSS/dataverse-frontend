@@ -67,13 +67,6 @@ export class FilePreviewMother {
     })
   }
 
-  static createRestrictedWithAccessGranted(): FilePreview {
-    return this.createDefault({
-      access: FileAccessMother.createWithAccessGranted(),
-      metadata: FileMetadataMother.createNotEmbargoed()
-    })
-  }
-
   static createWithAccessRequestAllowed(): FilePreview {
     return this.createDefault({
       access: FileAccessMother.createWithAccessRequestAllowed(),
@@ -90,13 +83,6 @@ export class FilePreviewMother {
 
   static createWithThumbnail(): FilePreview {
     return this.createDefault({
-      metadata: FileMetadataMother.createWithThumbnail()
-    })
-  }
-
-  static createWithThumbnailRestrictedWithAccessGranted(): FilePreview {
-    return this.createDefault({
-      access: FileAccessMother.createWithAccessGranted(),
       metadata: FileMetadataMother.createWithThumbnail()
     })
   }

@@ -1,29 +1,35 @@
 import { AccessFileMenu } from '../../../../../../src/sections/file/file-action-buttons/access-file-menu/AccessFileMenu'
+import { FileAccessMother } from '../../../../files/domain/models/FileAccessMother'
+import { FileMetadataMother } from '../../../../files/domain/models/FileMetadataMother'
 import { Suspense } from 'react'
-import { FilePermissionsProvider } from '../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
-import { FileRepository } from '../../../../../../src/files/domain/repositories/FileRepository'
-import { FileUserPermissionsMother } from '../../../../files/domain/models/FileUserPermissionsMother'
-import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMother'
 
-const file = FilePreviewMother.create()
-
-const fileRepository = {} as FileRepository
 describe('AccessFileMenu', () => {
-  beforeEach(() => {
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      FileUserPermissionsMother.create({
-        canDownloadFile: true
-      })
-    )
-  })
   it('renders the access file menu', () => {
-    cy.customMount(<AccessFileMenu file={file} />)
+    cy.customMount(
+      <AccessFileMenu
+        id={1}
+        access={FileAccessMother.create()}
+        metadata={FileMetadataMother.create()}
+        userHasDownloadPermission
+        ingestInProgress={false}
+        isDeaccessioned={false}
+      />
+    )
 
     cy.findByRole('button', { name: 'Access File' }).should('exist')
   })
 
   it('renders the access file menu with tooltip', () => {
-    cy.customMount(<AccessFileMenu file={file} />)
+    cy.customMount(
+      <AccessFileMenu
+        id={1}
+        access={FileAccessMother.create()}
+        metadata={FileMetadataMother.create()}
+        userHasDownloadPermission
+        ingestInProgress={false}
+        isDeaccessioned={false}
+      />
+    )
 
     cy.findByRole('button', { name: 'Access File' }).trigger('mouseover')
     cy.findByRole('tooltip', { name: 'Access File' }).should('exist')
@@ -32,7 +38,14 @@ describe('AccessFileMenu', () => {
   it('renders the menu headers', () => {
     cy.customMount(
       <Suspense fallback="loading">
-        <AccessFileMenu file={file} />
+        <AccessFileMenu
+          id={1}
+          access={FileAccessMother.create()}
+          metadata={FileMetadataMother.create()}
+          userHasDownloadPermission
+          ingestInProgress={false}
+          isDeaccessioned={false}
+        />
       </Suspense>
     )
 
@@ -41,11 +54,15 @@ describe('AccessFileMenu', () => {
   })
 
   it('renders the access status of the file', () => {
-    const filePublic = FilePreviewMother.createWithPublicAccess()
     cy.customMount(
-      <Suspense fallback="loading">
-        <AccessFileMenu file={filePublic} />
-      </Suspense>
+      <AccessFileMenu
+        id={1}
+        access={FileAccessMother.createPublic()}
+        metadata={FileMetadataMother.createNotEmbargoed()}
+        userHasDownloadPermission
+        ingestInProgress={false}
+        isDeaccessioned={false}
+      />
     )
 
     cy.findByRole('button', { name: 'Access File' }).click()
@@ -53,12 +70,15 @@ describe('AccessFileMenu', () => {
   })
 
   it('renders the request access button', () => {
-    const fileRestrictedWithAccessRequestAllowed =
-      FilePreviewMother.createWithAccessRequestAllowed()
     cy.customMount(
-      <Suspense fallback="loading">
-        <AccessFileMenu file={fileRestrictedWithAccessRequestAllowed} />
-      </Suspense>
+      <AccessFileMenu
+        id={1}
+        access={FileAccessMother.createWithAccessRequestAllowed()}
+        metadata={FileMetadataMother.createNotEmbargoed()}
+        userHasDownloadPermission={false}
+        ingestInProgress={false}
+        isDeaccessioned={false}
+      />
     )
 
     cy.findByRole('button', { name: 'Access File' }).click()
@@ -66,11 +86,15 @@ describe('AccessFileMenu', () => {
   })
 
   it('renders the download options header', () => {
-    const filePublic = FilePreviewMother.createWithPublicAccess()
     cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <AccessFileMenu file={filePublic} />
-      </FilePermissionsProvider>
+      <AccessFileMenu
+        id={1}
+        access={FileAccessMother.createPublic()}
+        metadata={FileMetadataMother.create()}
+        userHasDownloadPermission
+        ingestInProgress={false}
+        isDeaccessioned={false}
+      />
     )
 
     cy.findByRole('button', { name: 'Access File' }).click()

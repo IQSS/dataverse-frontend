@@ -39,7 +39,7 @@ export const WithThumbnailRestrictedLockedIcon: Story = {
 export const WithThumbnailRestrictedUnlockedIcon: Story = {
   decorators: [WithFilePermissionsGranted],
   render: () => {
-    const file = FilePreviewMother.createRestrictedWithAccessGranted()
+    const file = FilePreviewMother.createRestricted()
     return <FileThumbnail file={file} />
   }
 }
@@ -47,7 +47,7 @@ export const WithThumbnailRestrictedUnlockedIcon: Story = {
 export const WithThumbnailPreviewRestrictedUnlockedIcon: Story = {
   decorators: [WithFilePermissionsGranted],
   render: () => {
-    const file = FilePreviewMother.createWithThumbnailRestrictedWithAccessGranted()
+    const file = FilePreviewMother.createWithThumbnailRestricted()
     return <FileThumbnail file={file} />
   }
 }

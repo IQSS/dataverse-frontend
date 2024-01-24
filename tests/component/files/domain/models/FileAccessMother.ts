@@ -39,15 +39,6 @@ export class FileAccessMother {
     })
   }
 
-  static createWithAccessGranted(): FileAccess {
-    return this.create({
-      restricted: true,
-      latestVersionRestricted: true,
-      canBeRequested: true,
-      requested: false
-    })
-  }
-
   static createWithAccessRequestAllowed(): FileAccess {
     return this.create({
       restricted: true,

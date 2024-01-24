@@ -41,7 +41,7 @@ describe('FileThumbnail', () => {
   })
 
   it('renders FilePreviewImage when thumbnail is provided with unlocked icon if restricted with access', () => {
-    const file = FilePreviewMother.createWithThumbnailRestrictedWithAccessGranted()
+    const file = FilePreviewMother.createWithThumbnailRestricted()
     fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
         fileId: file.id,
@@ -104,7 +104,7 @@ describe('FileThumbnail', () => {
   })
 
   it('renders FileIcon when thumbnail is not provided with unlock icon when restricted with access', () => {
-    const file = FilePreviewMother.createRestrictedWithAccessGranted()
+    const file = FilePreviewMother.createRestricted()
     fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
         fileId: file.id,

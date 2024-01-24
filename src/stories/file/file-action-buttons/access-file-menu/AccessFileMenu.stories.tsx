@@ -3,7 +3,8 @@ import { AccessFileMenu } from '../../../../sections/file/file-action-buttons/ac
 import { WithI18next } from '../../../WithI18next'
 import { WithSettings } from '../../../WithSettings'
 import { WithFilePermissionsGranted } from '../../file-permission/WithFilePermissionsGranted'
-import { FilePreviewMother } from '../../../../../tests/component/files/domain/models/FilePreviewMother'
+import { FileAccessMother } from '../../../../../tests/component/files/domain/models/FileAccessMother'
+import { FileMetadataMother } from '../../../../../tests/component/files/domain/models/FileMetadataMother'
 
 const meta: Meta<typeof AccessFileMenu> = {
   title: 'Sections/File Page/Action Buttons/AccessFileMenu',
@@ -15,40 +16,133 @@ export default meta
 type Story = StoryObj<typeof AccessFileMenu>
 
 export const Default: Story = {
-  decorators: [WithFilePermissionsGranted],
-  render: () => <AccessFileMenu file={FilePreviewMother.createDefault()} />
+  render: () => (
+    <AccessFileMenu
+      id={1}
+      access={FileAccessMother.createPublic()}
+      metadata={FileMetadataMother.create()}
+      userHasDownloadPermission
+      isDeaccessioned={false}
+      ingestInProgress={false}
+    />
+  )
 }
 
 export const NonTabularFiles: Story = {
-  render: () => <AccessFileMenu file={FilePreviewMother.createDefault()} />
+  render: () => (
+    <AccessFileMenu
+      id={1}
+      access={FileAccessMother.createPublic()}
+      metadata={FileMetadataMother.createNonTabular()}
+      userHasDownloadPermission
+      isDeaccessioned={false}
+      ingestInProgress={false}
+    />
+  )
 }
 
 export const TabularFiles: Story = {
-  render: () => <AccessFileMenu file={FilePreviewMother.createTabular()} />
+  render: () => (
+    <AccessFileMenu
+      id={1}
+      access={FileAccessMother.createPublic()}
+      metadata={FileMetadataMother.createTabular()}
+      userHasDownloadPermission
+      isDeaccessioned={false}
+      ingestInProgress={false}
+    />
+  )
 }
 
 export const Restricted: Story = {
-  render: () => <AccessFileMenu file={FilePreviewMother.createRestricted()} />
+  render: () => (
+    <AccessFileMenu
+      id={1}
+      access={FileAccessMother.createRestricted()}
+      metadata={FileMetadataMother.createTabular()}
+      userHasDownloadPermission={false}
+      isDeaccessioned={false}
+      ingestInProgress={false}
+    />
+  )
 }
 
 export const RestrictedWithAccessRequestAllowed: Story = {
-  render: () => <AccessFileMenu file={FilePreviewMother.createWithAccessRequestAllowed()} />
+  render: () => (
+    <AccessFileMenu
+      id={1}
+      access={FileAccessMother.createWithAccessRequestAllowed()}
+      metadata={FileMetadataMother.createTabular()}
+      userHasDownloadPermission={false}
+      isDeaccessioned={false}
+      ingestInProgress={false}
+    />
+  )
 }
 
 export const RestrictedWithAccessRequestPending: Story = {
-  render: () => <AccessFileMenu file={FilePreviewMother.createWithAccessRequestPending()} />
+  render: () => (
+    <AccessFileMenu
+      id={1}
+      access={FileAccessMother.createWithAccessRequestPending()}
+      metadata={FileMetadataMother.createTabular()}
+      userHasDownloadPermission={false}
+      isDeaccessioned={false}
+      ingestInProgress={false}
+    />
+  )
 }
 
 export const RestrictedWithAccessGranted: Story = {
   decorators: [WithFilePermissionsGranted],
-  render: () => <AccessFileMenu file={FilePreviewMother.createRestrictedWithAccessGranted()} />
+  render: () => (
+    <AccessFileMenu
+      id={1}
+      access={FileAccessMother.createRestricted()}
+      metadata={FileMetadataMother.createTabular()}
+      userHasDownloadPermission
+      isDeaccessioned={false}
+      ingestInProgress={false}
+    />
+  )
 }
 
 export const WithEmbargo: Story = {
   decorators: [WithFilePermissionsGranted],
-  render: () => <AccessFileMenu file={FilePreviewMother.createWithEmbargo()} />
+  render: () => (
+    <AccessFileMenu
+      id={1}
+      access={FileAccessMother.createPublic()}
+      metadata={FileMetadataMother.createWithEmbargo()}
+      userHasDownloadPermission
+      isDeaccessioned={false}
+      ingestInProgress={false}
+    />
+  )
 }
 
 export const WithEmbargoAndRestricted: Story = {
-  render: () => <AccessFileMenu file={FilePreviewMother.createWithEmbargoRestricted()} />
+  render: () => (
+    <AccessFileMenu
+      id={1}
+      access={FileAccessMother.createRestricted()}
+      metadata={FileMetadataMother.createWithEmbargo()}
+      userHasDownloadPermission={false}
+      isDeaccessioned={false}
+      ingestInProgress={false}
+    />
+  )
+}
+
+export const WithEmbargoAndRestrictedWithAccessGranted: Story = {
+  render: () => (
+    <AccessFileMenu
+      id={1}
+      access={FileAccessMother.createRestricted()}
+      metadata={FileMetadataMother.createWithEmbargo()}
+      userHasDownloadPermission
+      isDeaccessioned={false}
+      ingestInProgress={false}
+    />
+  )
 }

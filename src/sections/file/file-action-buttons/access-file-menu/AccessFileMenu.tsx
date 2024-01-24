@@ -1,25 +1,35 @@
-import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { Download, FileEarmark } from 'react-bootstrap-icons'
 import { AccessStatus } from './AccessStatus'
 import { RequestAccessOption } from './RequestAccessOption'
 import { DropdownButton, DropdownHeader, Tooltip } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { FileDownloadOptions } from './FileDownloadOptions'
-import { useFileDownloadPermission } from '../../file-permissions/useFileDownloadPermission'
-import { FilePublishingStatus } from '../../../../files/domain/models/FileVersion'
+import { FileAccess } from '../../../../files/domain/models/FileAccess'
+import { FileMetadata } from '../../../../files/domain/models/FileMetadata'
 
 interface FileActionButtonAccessFileProps {
-  file: FilePreview
+  id: number
+  access: FileAccess
+  userHasDownloadPermission: boolean
+  metadata: FileMetadata
+  ingestInProgress: boolean
+  isDeaccessioned: boolean
 }
 
-export function AccessFileMenu({ file }: FileActionButtonAccessFileProps) {
+export function AccessFileMenu({
+  id,
+  access,
+  userHasDownloadPermission,
+  metadata,
+  ingestInProgress,
+  isDeaccessioned
+}: FileActionButtonAccessFileProps) {
   const { t } = useTranslation('files')
-  const { sessionUserHasFileDownloadPermission } = useFileDownloadPermission(file)
 
   return (
     <Tooltip placement="top" overlay={t('actions.accessFileMenu.title')}>
       <DropdownButton
-        id={`action-button-access-file-${file.id}`}
+        id={`action-button-access-file-${id}`}
         title=""
         asButtonGroup
         variant="secondary"
@@ -28,23 +38,23 @@ export function AccessFileMenu({ file }: FileActionButtonAccessFileProps) {
           {t('actions.accessFileMenu.headers.fileAccess')} <FileEarmark />
         </DropdownHeader>
         <AccessStatus
-          isRestricted={file.access.restricted}
-          isActivelyEmbargoed={file.metadata.isActivelyEmbargoed}
-          userHasDownloadPermission={sessionUserHasFileDownloadPermission}
+          isRestricted={access.restricted}
+          isActivelyEmbargoed={metadata.isActivelyEmbargoed}
+          userHasDownloadPermission={userHasDownloadPermission}
         />
         <RequestAccessOption
-          id={file.id}
-          access={file.access}
-          userHasDownloadPermission={sessionUserHasFileDownloadPermission}
-          isDeaccessioned={file.version.publishingStatus === FilePublishingStatus.DEACCESSIONED}
-          isActivelyEmbargoed={file.metadata.isActivelyEmbargoed}
+          id={id}
+          access={access}
+          userHasDownloadPermission={userHasDownloadPermission}
+          isDeaccessioned={isDeaccessioned}
+          isActivelyEmbargoed={metadata.isActivelyEmbargoed}
         />
         <FileDownloadOptions
-          type={file.metadata.type}
-          downloadUrls={file.metadata.downloadUrls}
-          ingestInProgress={file.ingest.isInProgress}
-          isTabular={file.metadata.isTabular}
-          userHasDownloadPermission={sessionUserHasFileDownloadPermission}
+          type={metadata.type}
+          downloadUrls={metadata.downloadUrls}
+          ingestInProgress={ingestInProgress}
+          isTabular={metadata.isTabular}
+          userHasDownloadPermission={userHasDownloadPermission}
         />
       </DropdownButton>
     </Tooltip>
