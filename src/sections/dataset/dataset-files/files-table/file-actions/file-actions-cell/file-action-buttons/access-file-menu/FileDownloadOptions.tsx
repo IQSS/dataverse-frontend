@@ -4,7 +4,6 @@ import { FilePreview } from '../../../../../../../../files/domain/models/FilePre
 import { FileTabularDownloadOptions } from './FileTabularDownloadOptions'
 import { FileNonTabularDownloadOptions } from './FileNonTabularDownloadOptions'
 import { useTranslation } from 'react-i18next'
-import { useFileDownloadPermission } from '../../../../../../../file/file-permissions/useFileDownloadPermission'
 
 interface FileDownloadOptionsProps {
   file: FilePreview
@@ -12,9 +11,8 @@ interface FileDownloadOptionsProps {
 
 export function FileDownloadOptions({ file }: FileDownloadOptionsProps) {
   const { t } = useTranslation('files')
-  const { sessionUserHasFileDownloadPermission } = useFileDownloadPermission(file)
 
-  if (!sessionUserHasFileDownloadPermission) {
+  if (!file.permissions.canDownloadFile) {
     return <></>
   }
 

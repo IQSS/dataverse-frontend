@@ -14,6 +14,7 @@ import {
   FileChecksum
 } from '../../../../../src/files/domain/models/FilePreview'
 import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
+import { FilePermissions } from '../../../../../src/files/domain/models/File'
 
 const valueOrUndefined: <T>(value: T) => T | undefined = (value) => {
   const shouldShowValue = faker.datatype.boolean()
@@ -24,7 +25,22 @@ const createFakeFileLabel = (): FileLabel => ({
   type: faker.helpers.arrayElement(Object.values(FileLabelType)),
   value: faker.lorem.word()
 })
+export class FilePermissionsMother {
+  static create(props?: Partial<FilePermissions>): FilePermissions {
+    return {
+      canDownloadFile: faker.datatype.boolean(),
+      ...props
+    }
+  }
 
+  static createWithFileDownloadAllowed(): FilePermissions {
+    return this.create({ canDownloadFile: true })
+  }
+
+  static createWithFileDownloadNotAllowed(): FilePermissions {
+    return this.create({ canDownloadFile: false })
+  }
+}
 export class FileEmbargoMother {
   static create(dateAvailable?: Date): FileEmbargo {
     return new FileEmbargo(dateAvailable ?? faker.date.future())
@@ -106,6 +122,7 @@ export class FilePreviewMother {
         : [],
       checksum: FileChecksumMother.create(),
       thumbnail: thumbnail,
+      permissions: FilePermissionsMother.create(),
       directory: valueOrUndefined<string>(faker.system.directoryPath()),
       embargo: valueOrUndefined<FileEmbargo>(FileEmbargoMother.create()),
       tabularData:
@@ -140,6 +157,7 @@ export class FilePreviewMother {
       fileMockedData.isDeleted,
       fileMockedData.ingest,
       fileMockedData.downloadUrls,
+      fileMockedData.permissions,
       fileMockedData.thumbnail,
       fileMockedData.directory,
       fileMockedData.embargo,
@@ -173,7 +191,7 @@ export class FilePreviewMother {
         canBeRequested: false,
         requested: false
       },
-      permissions: { canDownload: true },
+      permissions: { canDownloadFile: true },
       labels: [],
       checksum: undefined,
       thumbnail: undefined,

@@ -21,6 +21,7 @@ import {
   FileEmbargo as JSFileEmbargo,
   FileChecksum as JSFileChecksum,
   FileCounts as JSFilesCountInfo,
+  FileUserPermissions as JSFileUserPermissions,
   FileContentTypeCount as JSFileContentTypeCount,
   FileCategoryNameCount as JSFileCategoryNameCount,
   FileAccessStatusCount as JSFileAccessStatusCount,
@@ -36,12 +37,14 @@ import {
   FileTypeCount
 } from '../../domain/models/FilesCountInfo'
 import { FileAccessOption, FileTag } from '../../domain/models/FileCriteria'
+import { FilePermissions } from '../../domain/models/File'
 
 export class JSFileMapper {
   static toFile(
     jsFile: JSFile,
     datasetVersion: DatasetVersion,
     downloadsCount: number,
+    fileUserPermissions: JSFileUserPermissions,
     thumbnail?: string,
     jsTabularData?: JSFileTabularData[]
   ): FilePreview {
@@ -58,6 +61,7 @@ export class JSFileMapper {
       this.toFileIsDeleted(jsFile.deleted),
       { status: FileIngestStatus.NONE }, // TODO - Implement this when it is added to js-dataverse
       this.toFileOriginalFileDownloadUrl(jsFile.id),
+      this.toFilePermissions(fileUserPermissions),
       this.toFileThumbnail(thumbnail),
       this.toFileDirectory(jsFile.directoryLabel),
       this.toFileEmbargo(jsFile.embargo),
@@ -66,7 +70,14 @@ export class JSFileMapper {
       this.toFileChecksum(jsFile.checksum)
     )
   }
-
+  static toFilePermissions(jsFileUserPermissions: {
+    canDownloadFile: boolean
+    canEditOwnerDataset: boolean
+  }): FilePermissions {
+    return {
+      canDownloadFile: jsFileUserPermissions.canDownloadFile
+    }
+  }
   static toFileUserPermissions(
     jsFileId: number,
     jsFileUserPermissions: {

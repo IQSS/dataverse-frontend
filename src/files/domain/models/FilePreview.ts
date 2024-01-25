@@ -1,4 +1,5 @@
 import FileTypeToFriendlyTypeMap from './FileTypeToFriendlyTypeMap'
+import { FilePermissions } from './File'
 
 export enum FileSizeUnit {
   BYTES = 'B',
@@ -182,6 +183,7 @@ export class FilePreview {
     public readonly isDeleted: boolean,
     public readonly ingest: FileIngest,
     public readonly downloadUrls: FileDownloadUrls,
+    public readonly permissions: FilePermissions,
     public thumbnail?: string,
     readonly directory?: string,
     readonly embargo?: FileEmbargo,

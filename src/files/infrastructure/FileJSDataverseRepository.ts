@@ -6,6 +6,7 @@ import {
   File as JSFile,
   FileDataTable as JSFileTabularData,
   FileDownloadSizeMode,
+  FileUserPermissions as JSFileUserPermissions,
   getDatasetFileCounts,
   getDatasetFiles,
   getDatasetFilesTotalDownloadSize,
@@ -49,15 +50,17 @@ export class FileJSDataverseRepository implements FileRepository {
           jsFiles,
           FileJSDataverseRepository.getAllDownloadCount(jsFiles),
           FileJSDataverseRepository.getAllThumbnails(jsFiles),
+          FileJSDataverseRepository.getAllWithPermissions(jsFiles),
           FileJSDataverseRepository.getAllTabularData(jsFiles)
         ])
       )
-      .then(([jsFiles, downloadCounts, thumbnails, jsTabularData]) =>
+      .then(([jsFiles, downloadCounts, thumbnails, jsFileUserPermissions, jsTabularData]) =>
         jsFiles.map((jsFile, index) =>
           JSFileMapper.toFile(
             jsFile,
             datasetVersion,
             downloadCounts[index],
+            jsFileUserPermissions[index],
             thumbnails[index],
             jsTabularData[index]
           )
@@ -87,7 +90,15 @@ export class FileJSDataverseRepository implements FileRepository {
       )
     )
   }
+  private static getAllWithPermissions(files: JSFile[]): Promise<JSFileUserPermissions[]> {
+    return Promise.all(files.map((jsFile) => this.getFileUserPermissionById(jsFile.id)))
+  }
 
+  private static getFileUserPermissionById(id: number): Promise<JSFileUserPermissions> {
+    return getFileUserPermissions.execute(id).then((jsFileUserPermissions) => {
+      return jsFileUserPermissions
+    })
+  }
   private static getAllThumbnails(jsFiles: JSFile[]): Promise<(string | undefined)[]> {
     return Promise.all(jsFiles.map((jsFile) => this.getThumbnailById(jsFile.id)))
   }
