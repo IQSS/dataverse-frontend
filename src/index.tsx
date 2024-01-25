@@ -9,7 +9,7 @@ import { ThemeProvider } from '@iqss/dataverse-design-system'
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
-    <React.Suspense fallback="loading">
+    <React.Suspense>
       <LoadingProvider>
         <ThemeProvider>
           <App />
