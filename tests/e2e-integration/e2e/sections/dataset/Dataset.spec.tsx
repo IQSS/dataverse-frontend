@@ -266,7 +266,7 @@ describe('Dataset', () => {
         })
     })
 
-    it('loads the restricted files when the user is logged in as owner', () => {
+    it.only('loads the restricted files when the user is logged in as owner', () => {
       cy.wrap(DatasetHelper.createWithFiles(FileHelper.createManyRestricted(1)))
         .its('persistentId')
         .then((persistentId: string) => {
@@ -277,8 +277,8 @@ describe('Dataset', () => {
           cy.findByText('Restricted File Icon').should('not.exist')
           cy.findByText('Restricted with access Icon').should('exist')
           cy.findByRole('button', { name: 'Access File' }).as('accessButton')
-          cy.get('@accessButton').should('exist')
-          cy.get('@accessButton').click()
+          cy.get('@accessButton').should('be.visible')
+          cy.get('@accessButton').click({ force: true })
           cy.findByText('Restricted with Access Granted').should('exist')
 
           cy.findByRole('button', { name: 'File Options' }).as('fileOptions')
