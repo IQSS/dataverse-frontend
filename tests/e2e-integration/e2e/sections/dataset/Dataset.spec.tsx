@@ -270,14 +270,16 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.createWithFiles(FileHelper.createManyRestricted(1)))
         .its('persistentId')
         .then((persistentId: string) => {
+          //TODO: replace the hard-coded wait with the pipe() method
           // cypress-pipe does not retry any Cypress commands
           // so we need to click on the element using
           // jQuery method "$el.click()" and not "cy.click()"
-          let count = 0
+          /*  let count = 0
           const click = ($el) => {
             count += 1
             return $el.click()
-          }
+          }*/
+
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
           cy.findByText('Files').should('exist')
