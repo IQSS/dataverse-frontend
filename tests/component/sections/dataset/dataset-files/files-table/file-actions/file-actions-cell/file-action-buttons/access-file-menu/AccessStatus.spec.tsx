@@ -3,7 +3,6 @@ import { AccessStatus } from '../../../../../../../../../../src/sections/dataset
 import styles from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessFileMenu.module.scss'
 import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
 import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
-import { FilePermissionsProvider } from '../../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 
 describe('AccessStatus', () => {
   it('renders the access status  public', () => {
@@ -25,18 +24,8 @@ describe('AccessStatus', () => {
   it('renders the access status restricted with access', () => {
     const fileRestrictedWithAccess = FilePreviewMother.createWithRestrictedAccessWithAccessGranted()
     const fileRepository: FileRepository = {} as FileRepository
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      FileUserPermissionsMother.create({
-        fileId: fileRestrictedWithAccess.id,
-        canDownloadFile: true
-      })
-    )
 
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <AccessStatus file={fileRestrictedWithAccess} />
-      </FilePermissionsProvider>
-    )
+    cy.customMount(<AccessStatus file={fileRestrictedWithAccess} />)
 
     cy.findByText('Restricted with Access Granted')
       .should('exist')
@@ -45,20 +34,8 @@ describe('AccessStatus', () => {
   })
 
   it('renders the access status embargoed', () => {
-    const fileRestrictedWithAccess = FilePreviewMother.createWithRestrictedAccessWithAccessGranted()
-    const fileRepository: FileRepository = {} as FileRepository
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      FileUserPermissionsMother.create({
-        fileId: fileRestrictedWithAccess.id,
-        canDownloadFile: true
-      })
-    )
     const fileEmbargoed = FilePreviewMother.createWithEmbargo()
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <AccessStatus file={fileEmbargoed} />{' '}
-      </FilePermissionsProvider>
-    )
+    cy.customMount(<AccessStatus file={fileEmbargoed} />)
 
     cy.findByText('Embargoed').should('exist').should('have.class', styles.success)
     cy.findByText('Public File Icon').should('exist')

@@ -2,8 +2,6 @@ import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInf
 import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
 import { useFiles } from '../../../../../src/sections/dataset/dataset-files/useFiles'
-import { FileUserPermissionsMother } from '../../../files/domain/models/FileUserPermissionsMother'
-import { FilePermissionsProvider } from '../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 import { useState } from 'react'
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 import { FileCriteria, FileSortByOption } from '../../../../../src/files/domain/models/FileCriteria'

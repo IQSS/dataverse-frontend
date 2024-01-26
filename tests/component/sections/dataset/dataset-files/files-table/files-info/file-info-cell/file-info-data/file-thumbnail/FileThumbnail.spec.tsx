@@ -2,7 +2,6 @@ import { FileThumbnail } from '../../../../../../../../../../src/sections/datase
 import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
 import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
-import { FilePermissionsProvider } from '../../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 import { FileType } from '../../../../../../../../../../src/files/domain/models/FilePreview'
 
 const fileRepository: FileRepository = {} as FileRepository
@@ -30,18 +29,7 @@ describe('FileThumbnail', () => {
 
   it('renders FileThumbnailPreviewImage when thumbnail is provided with unlocked icon if restricted with access', () => {
     const file = FilePreviewMother.createWithThumbnailRestrictedWithAccessGranted()
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      FileUserPermissionsMother.create({
-        fileId: file.id,
-        canDownloadFile: true
-      })
-    )
-
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <FileThumbnail file={file} />
-      </FilePermissionsProvider>
-    )
+    cy.customMount(<FileThumbnail file={file} />)
 
     cy.findByAltText(file.name).should('exist')
     cy.findByAltText(file.name).trigger('mouseover')
@@ -91,18 +79,8 @@ describe('FileThumbnail', () => {
 
   it('renders FileThumbnailIcon when thumbnail is not provided with unlock icon when restricted with access', () => {
     const file = FilePreviewMother.createWithRestrictedAccessWithAccessGranted()
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      FileUserPermissionsMother.create({
-        fileId: file.id,
-        canDownloadFile: true
-      })
-    )
 
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <FileThumbnail file={file} />
-      </FilePermissionsProvider>
-    )
+    cy.customMount(<FileThumbnail file={file} />)
 
     cy.findByText('icon-document').should('exist')
 

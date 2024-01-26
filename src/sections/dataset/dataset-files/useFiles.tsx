@@ -5,7 +5,6 @@ import { getFilesByDatasetPersistentId } from '../../../files/domain/useCases/ge
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 import { FilesCountInfo } from '../../../files/domain/models/FilesCountInfo'
 import { getFilesCountInfoByDatasetPersistentId } from '../../../files/domain/useCases/getFilesCountInfoByDatasetPersistentId'
-import { FilePermission } from '../../../files/domain/models/FileUserPermissions'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { getFilesTotalDownloadSize } from '../../../files/domain/useCases/getFilesTotalDownloadSize'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'

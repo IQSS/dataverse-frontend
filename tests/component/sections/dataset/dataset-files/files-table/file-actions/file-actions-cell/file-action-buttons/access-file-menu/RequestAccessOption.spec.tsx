@@ -5,7 +5,6 @@ import {
 } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
 import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
-import { FilePermissionsProvider } from '../../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 
 describe('RequestAccessOption', () => {
   it('renders the embargoed message when the file is embargoed', () => {
@@ -74,19 +73,8 @@ describe('RequestAccessOption', () => {
 
   it('does not render the request access button when the file status is public', () => {
     const filePublic = FilePreviewMother.createWithPublicAccess()
-    const fileRepository: FileRepository = {} as FileRepository
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      FileUserPermissionsMother.create({
-        fileId: filePublic.id,
-        canDownloadFile: true
-      })
-    )
 
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <RequestAccessOption file={filePublic} />
-      </FilePermissionsProvider>
-    )
+    cy.customMount(<RequestAccessOption file={filePublic} />)
 
     cy.findByRole('button', { name: 'Users may not request access to files.' }).should('not.exist')
     cy.findByRole('button', { name: 'Request Access' }).should('not.exist')
@@ -101,19 +89,8 @@ describe('RequestAccessOption', () => {
 
   it('does not render the request access button when the file status is restricted with access granted', () => {
     const fileRestrictedWithAccess = FilePreviewMother.createWithRestrictedAccessWithAccessGranted()
-    const fileRepository: FileRepository = {} as FileRepository
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      FileUserPermissionsMother.create({
-        fileId: fileRestrictedWithAccess.id,
-        canDownloadFile: true
-      })
-    )
 
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <RequestAccessOption file={fileRestrictedWithAccess} />
-      </FilePermissionsProvider>
-    )
+    cy.customMount(<RequestAccessOption file={fileRestrictedWithAccess} />)
 
     cy.findByRole('button', { name: 'Users may not request access to files.' }).should('not.exist')
     cy.findByRole('button', { name: 'Request Access' }).should('not.exist')
