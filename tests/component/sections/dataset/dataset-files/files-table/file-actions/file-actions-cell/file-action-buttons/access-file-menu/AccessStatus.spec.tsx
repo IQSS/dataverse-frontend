@@ -73,20 +73,9 @@ describe('AccessStatus', () => {
   })
 
   it('renders the access status embargoed restricted with access', () => {
-    const fileRestrictedWithAccess = FilePreviewMother.createWithRestrictedAccessWithAccessGranted()
-    const fileRepository: FileRepository = {} as FileRepository
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      FileUserPermissionsMother.create({
-        fileId: fileRestrictedWithAccess.id,
-        canDownloadFile: true
-      })
-    )
-    const fileEmbargoedRestricted = FilePreviewMother.createWithEmbargoRestricted()
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <AccessStatus file={fileEmbargoedRestricted} />{' '}
-      </FilePermissionsProvider>
-    )
+    const fileEmbargoedRestrictedWithAccessGranted =
+      FilePreviewMother.createWithEmbargoRestrictedWithAccessGranted()
+    cy.customMount(<AccessStatus file={fileEmbargoedRestrictedWithAccessGranted} />)
 
     cy.findByText('Embargoed').should('exist').should('have.class', styles.success)
     cy.findByText('Restricted with access Icon').should('exist')

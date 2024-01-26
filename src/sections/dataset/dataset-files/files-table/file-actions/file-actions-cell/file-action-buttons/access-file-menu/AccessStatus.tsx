@@ -3,25 +3,22 @@ import { Globe, LockFill, UnlockFill } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
 import styles from './AccessFileMenu.module.scss'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
-import { useFileDownloadPermission } from '../../../../../../../file/file-permissions/useFileDownloadPermission'
 
 interface AccessStatusProps {
   file: FilePreview
 }
 
 export function AccessStatus({ file }: AccessStatusProps) {
-  const { sessionUserHasFileDownloadPermission } = useFileDownloadPermission(file)
-
   return (
     <DropdownButtonItem disabled>
       <span>
         <AccessStatusIcon
-          sessionUserHasFileDownloadPermission={sessionUserHasFileDownloadPermission}
+          sessionUserHasFileDownloadPermission={file.permissions.canDownloadFile}
           restricted={file.access.restricted}
         />{' '}
         <AccessStatusText
           file={file}
-          sessionUserHasFileDownloadPermission={sessionUserHasFileDownloadPermission}
+          sessionUserHasFileDownloadPermission={file.permissions.canDownloadFile}
         />
       </span>
     </DropdownButtonItem>

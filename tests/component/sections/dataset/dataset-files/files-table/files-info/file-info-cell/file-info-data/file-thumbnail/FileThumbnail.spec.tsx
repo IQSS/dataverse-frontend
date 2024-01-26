@@ -8,19 +8,8 @@ import { FileType } from '../../../../../../../../../../src/files/domain/models/
 const fileRepository: FileRepository = {} as FileRepository
 describe('FileThumbnail', () => {
   it('renders FileThumbnailPreviewImage when thumbnail is provided and file can be downloaded', () => {
-    const file = FilePreviewMother.createWithThumbnail()
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      FileUserPermissionsMother.create({
-        fileId: file.id,
-        canDownloadFile: true
-      })
-    )
-
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <FileThumbnail file={file} />
-      </FilePermissionsProvider>
-    )
+    const file = FilePreviewMother.createWithThumbnailWithDownloadPermission()
+    cy.customMount(<FileThumbnail file={file} />)
 
     cy.findByAltText(file.name).should('exist')
     cy.findByAltText(file.name).trigger('mouseover')
@@ -31,7 +20,7 @@ describe('FileThumbnail', () => {
   })
 
   it('does not render FileThumbnailPreviewImage when thumbnail is provided and file cannot be downloaded', () => {
-    const file = FilePreviewMother.createWithThumbnail()
+    const file = FilePreviewMother.createWithThumbnailWithoutDownloadPermission()
     cy.customMount(<FileThumbnail file={file} />)
 
     cy.findByAltText(file.name).should('not.exist')

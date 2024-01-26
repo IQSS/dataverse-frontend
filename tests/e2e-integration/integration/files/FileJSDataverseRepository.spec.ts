@@ -59,7 +59,7 @@ const fileData = (id: number) => {
       tabular: `/api/access/datafile/${id}`,
       rData: `/api/access/datafile/${id}?format=RData`
     },
-    undefined,
+    { canDownloadFile: true },
     undefined,
     undefined,
     undefined,

@@ -11,6 +11,7 @@ export async function getFilesByDatasetPersistentId(
   paginationInfo?: FilePaginationInfo,
   criteria?: FileCriteria
 ): Promise<FilePreview[]> {
+  console.log('getFilesByDatasetPersistentId', datasetPersistentId, datasetVersion)
   return fileRepository
     .getAllByDatasetPersistentId(datasetPersistentId, datasetVersion, paginationInfo, criteria)
     .catch((error: Error) => {

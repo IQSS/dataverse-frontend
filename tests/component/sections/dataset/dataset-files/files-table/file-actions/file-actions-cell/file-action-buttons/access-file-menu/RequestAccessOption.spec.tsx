@@ -1,12 +1,18 @@
 import { RequestAccessOption } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/RequestAccessOption'
-import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
+import {
+  FileEmbargoMother,
+  FilePreviewMother
+} from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
 import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
 import { FilePermissionsProvider } from '../../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 
 describe('RequestAccessOption', () => {
   it('renders the embargoed message when the file is embargoed', () => {
-    const fileEmbargoed = FilePreviewMother.createWithEmbargo()
+    const fileEmbargoed = FilePreviewMother.createDefault({
+      embargo: FileEmbargoMother.create(),
+      permissions: { canDownloadFile: false }
+    })
     cy.customMount(<RequestAccessOption file={fileEmbargoed} />)
 
     cy.findByRole('button', { name: 'Files are unavailable during the specified embargo.' })

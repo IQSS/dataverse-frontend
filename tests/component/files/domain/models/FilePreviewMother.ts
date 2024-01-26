@@ -234,7 +234,20 @@ export class FilePreviewMother {
         canBeRequested: false,
         requested: false
       },
-      embargo: FileEmbargoMother.create()
+      embargo: FileEmbargoMother.create(),
+      permissions: { canDownloadFile: false }
+    })
+  }
+  static createWithEmbargoRestrictedWithAccessGranted(): FilePreview {
+    return this.createDefault({
+      access: {
+        restricted: true,
+        latestVersionRestricted: true,
+        canBeRequested: false,
+        requested: false
+      },
+      embargo: FileEmbargoMother.create(),
+      permissions: { canDownloadFile: true }
     })
   }
 
@@ -302,7 +315,8 @@ export class FilePreviewMother {
         canBeRequested: false,
         requested: false
       },
-      embargo: undefined
+      embargo: undefined,
+      permissions: { canDownloadFile: false }
     })
   }
 
@@ -314,7 +328,8 @@ export class FilePreviewMother {
         canBeRequested: true,
         requested: false
       },
-      embargo: undefined
+      embargo: undefined,
+      permissions: { canDownloadFile: true }
     })
   }
 
@@ -326,7 +341,8 @@ export class FilePreviewMother {
         canBeRequested: true,
         requested: false
       },
-      embargo: undefined
+      embargo: undefined,
+      permissions: { canDownloadFile: false }
     })
   }
 
@@ -338,13 +354,26 @@ export class FilePreviewMother {
         canBeRequested: true,
         requested: true
       },
-      embargo: undefined
+      embargo: undefined,
+      permissions: { canDownloadFile: false }
     })
   }
 
   static createWithThumbnail(): FilePreview {
     return this.createDefault({
       thumbnail: faker.image.imageUrl()
+    })
+  }
+  static createWithThumbnailWithoutDownloadPermission(): FilePreview {
+    return this.createDefault({
+      thumbnail: faker.image.imageUrl(),
+      permissions: { canDownloadFile: false }
+    })
+  }
+  static createWithThumbnailWithDownloadPermission(): FilePreview {
+    return this.createDefault({
+      thumbnail: faker.image.imageUrl(),
+      permissions: { canDownloadFile: true }
     })
   }
 
@@ -357,7 +386,8 @@ export class FilePreviewMother {
         requested: false
       },
       thumbnail: faker.image.imageUrl(),
-      type: new FileType('image')
+      type: new FileType('image'),
+      permissions: { canDownloadFile: true }
     })
   }
 
@@ -370,7 +400,8 @@ export class FilePreviewMother {
         requested: false
       },
       thumbnail: faker.image.imageUrl(),
-      type: new FileType('image')
+      type: new FileType('image'),
+      permissions: { canDownloadFile: false }
     })
   }
 

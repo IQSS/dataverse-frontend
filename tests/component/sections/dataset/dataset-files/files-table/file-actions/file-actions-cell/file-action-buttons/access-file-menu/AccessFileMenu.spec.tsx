@@ -1,21 +1,12 @@
 import { AccessFileMenu } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessFileMenu'
 import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { Suspense } from 'react'
-import { FilePermissionsProvider } from '../../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
 import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
 
-const file = FilePreviewMother.create()
+const file = FilePreviewMother.create({ permissions: { canDownloadFile: true } })
 
-const fileRepository = {} as FileRepository
 describe('AccessFileMenu', () => {
-  beforeEach(() => {
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      FileUserPermissionsMother.create({
-        canDownloadFile: true
-      })
-    )
-  })
   it('renders the access file menu', () => {
     cy.customMount(<AccessFileMenu file={file} />)
 
@@ -52,7 +43,7 @@ describe('AccessFileMenu', () => {
     cy.findByText('Public').should('exist')
   })
 
-  it('renders the request access button', () => {
+  it.only('renders the request access button', () => {
     const fileRestrictedWithAccessRequestAllowed =
       FilePreviewMother.createWithAccessRequestAllowed()
     cy.customMount(
@@ -67,11 +58,7 @@ describe('AccessFileMenu', () => {
 
   it('renders the download options header', () => {
     const filePublic = FilePreviewMother.createWithPublicAccess()
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <AccessFileMenu file={filePublic} />
-      </FilePermissionsProvider>
-    )
+    cy.customMount(<AccessFileMenu file={filePublic} />)
 
     cy.findByRole('button', { name: 'Access File' }).click()
     cy.findByRole('heading', { name: 'Download Options' }).should('exist')

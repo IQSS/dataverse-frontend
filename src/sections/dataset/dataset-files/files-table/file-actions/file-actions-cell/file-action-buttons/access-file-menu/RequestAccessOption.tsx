@@ -6,18 +6,16 @@ import {
   FilePublishingStatus
 } from '../../../../../../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
-import { useFileDownloadPermission } from '../../../../../../../file/file-permissions/useFileDownloadPermission'
 
 interface RequestAccessButtonProps {
   file: FilePreview
 }
 export function RequestAccessOption({ file }: RequestAccessButtonProps) {
   const { t } = useTranslation('files')
-  const { sessionUserHasFileDownloadPermission } = useFileDownloadPermission(file)
-
+  console.log(file.permissions.canDownloadFile)
   if (
     file.version.publishingStatus === FilePublishingStatus.DEACCESSIONED ||
-    sessionUserHasFileDownloadPermission
+    file.permissions.canDownloadFile
   ) {
     return <></>
   }
