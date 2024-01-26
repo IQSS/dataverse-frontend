@@ -63,6 +63,7 @@ const fileData = (id: number) => {
     undefined,
     undefined,
     undefined,
+    undefined,
     'This is an example file',
     {
       algorithm: 'MD5',
@@ -90,6 +91,7 @@ describe('File JSDataverse Repository', () => {
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
           files.forEach((file, index) => {
+            console.log('algorithm', file.checksum?.algorithm)
             const expectedFileNames = ['blob', 'blob-1', 'blob-2']
             const expectedFile = fileData(file.id)
             expect(file.name).to.deep.equal(expectedFileNames[index])
@@ -99,6 +101,8 @@ describe('File JSDataverse Repository', () => {
             cy.compareDate(file.date.date, expectedFile.date.date)
             expect(file.downloadCount).to.deep.equal(expectedFile.downloadCount)
             expect(file.labels).to.deep.equal(expectedFile.labels)
+            console.log('algorithm', file.checksum?.algorithm)
+            console.log('expectedFile', expectedFile.checksum?.algorithm)
             expect(file.checksum?.algorithm).to.deep.equal(expectedFile.checksum?.algorithm)
             expect(file.thumbnail).to.deep.equal(expectedFile.thumbnail)
             expect(file.directory).to.deep.equal(expectedFile.directory)
