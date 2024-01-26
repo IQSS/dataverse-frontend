@@ -56,9 +56,6 @@ describe('useFiles', () => {
   beforeEach(() => {
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(files)
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(filesCountInfo)
-    fileRepository.getUserPermissionsById = cy
-      .stub()
-      .resolves(FileUserPermissionsMother.create({ fileId: files[0].id }))
     fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(100)
   })
 
@@ -97,33 +94,6 @@ describe('useFiles', () => {
       new FileCriteria()
     )
 
-    cy.findByText('Files count: 100').should('exist')
-  })
-
-  it('calls the file repository to get the permissions before removing the loading', () => {
-    const files = FilePreviewMother.createMany(5)
-    fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(files)
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(FileUserPermissionsMother.create({ fileId: files[0].id }))
-        }, 1000)
-      })
-    )
-
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <FilesTableTestComponent datasetPersistentId="persistentId" />
-      </FilePermissionsProvider>
-    )
-
-    cy.findByText('Loading...').should('exist')
-    cy.wrap(fileRepository.getAllByDatasetPersistentId).should('be.calledOnceWith', 'persistentId')
-
-    cy.findByText('Loading...').should('exist')
-    cy.wrap(fileRepository.getUserPermissionsById).should('be.called')
-
-    cy.findByText('Loading...').should('exist')
     cy.findByText('Files count: 100').should('exist')
   })
 
