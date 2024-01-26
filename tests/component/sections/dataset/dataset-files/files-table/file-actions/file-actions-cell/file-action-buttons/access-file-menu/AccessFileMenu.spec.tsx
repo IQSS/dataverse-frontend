@@ -1,8 +1,6 @@
 import { AccessFileMenu } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessFileMenu'
 import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { Suspense } from 'react'
-import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
-import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
 
 const file = FilePreviewMother.create({ permissions: { canDownloadFile: true } })
 
