@@ -1,5 +1,4 @@
-import { CreateDatasetFormPresenter } from '../../../../src/sections/create-dataset/CreateDatasetFactory'
-import { mount } from 'cypress/react18'
+import { CreateDatasetFormPresenter } from '../../../src/sections/create-dataset/CreateDatasetFactory'
 
 describe('Form component', () => {
   it('renders the Create Dataset page and its contents', () => {
@@ -14,8 +13,7 @@ describe('Form component', () => {
   })
 
   it('can submit a valid form', () => {
-    // cy.log('Submit form')
-    mount(<CreateDatasetFormPresenter />)
+    cy.customMount(<CreateDatasetFormPresenter />)
     cy.findByLabelText(/Title/i)
       .should('exist')
       .type('Test Dataset Title')
