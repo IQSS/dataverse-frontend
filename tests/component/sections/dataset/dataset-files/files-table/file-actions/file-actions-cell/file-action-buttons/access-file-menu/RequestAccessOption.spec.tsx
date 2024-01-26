@@ -3,9 +3,6 @@ import {
   FileEmbargoMother,
   FilePreviewMother
 } from '../../../../../../../../files/domain/models/FilePreviewMother'
-import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
-import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
-
 describe('RequestAccessOption', () => {
   it('renders the embargoed message when the file is embargoed', () => {
     const fileEmbargoed = FilePreviewMother.createDefault({

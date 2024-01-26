@@ -1,8 +1,6 @@
 import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { AccessStatus } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessStatus'
 import styles from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessFileMenu.module.scss'
-import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
-import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
 
 describe('AccessStatus', () => {
   it('renders the access status  public', () => {
@@ -23,7 +21,6 @@ describe('AccessStatus', () => {
 
   it('renders the access status restricted with access', () => {
     const fileRestrictedWithAccess = FilePreviewMother.createWithRestrictedAccessWithAccessGranted()
-    const fileRepository: FileRepository = {} as FileRepository
 
     cy.customMount(<AccessStatus file={fileRestrictedWithAccess} />)
 

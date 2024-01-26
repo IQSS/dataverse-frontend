@@ -1,10 +1,7 @@
 import { FileThumbnail } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/file-thumbnail/FileThumbnail'
 import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
-import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
-import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
 import { FileType } from '../../../../../../../../../../src/files/domain/models/FilePreview'
 
-const fileRepository: FileRepository = {} as FileRepository
 describe('FileThumbnail', () => {
   it('renders FileThumbnailPreviewImage when thumbnail is provided and file can be downloaded', () => {
     const file = FilePreviewMother.createWithThumbnailWithDownloadPermission()
