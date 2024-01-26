@@ -35,13 +35,6 @@ export class FileJSDataverseRepository implements FileRepository {
     paginationInfo: FilePaginationInfo = new FilePaginationInfo(),
     criteria: FileCriteria = new FileCriteria()
   ): Promise<FilePreview[]> {
-    console.log(
-      'getAllByDatasetPersistentId',
-      datasetPersistentId,
-      datasetVersion,
-      paginationInfo,
-      criteria
-    )
     return getDatasetFiles
       .execute(
         datasetPersistentId,
@@ -98,7 +91,6 @@ export class FileJSDataverseRepository implements FileRepository {
     )
   }
   private static getAllWithPermissions(files: JSFile[]): Promise<JSFileUserPermissions[]> {
-    console.log('getAllWithPermissions', files)
     return Promise.all(files.map((jsFile) => this.getFileUserPermissionById(jsFile.id)))
   }
 

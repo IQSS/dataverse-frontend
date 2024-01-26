@@ -12,7 +12,6 @@ interface RequestAccessButtonProps {
 }
 export function RequestAccessOption({ file }: RequestAccessButtonProps) {
   const { t } = useTranslation('files')
-  console.log(file.permissions.canDownloadFile)
   if (
     file.version.publishingStatus === FilePublishingStatus.DEACCESSIONED ||
     file.permissions.canDownloadFile
