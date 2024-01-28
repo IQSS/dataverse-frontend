@@ -20,3 +20,9 @@ import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dis
 
 const VITE_DATAVERSE_BACKEND_URL = (import.meta.env.VITE_DATAVERSE_BACKEND_URL as string) ?? ''
 ApiConfig.init(`${VITE_DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.SESSION_COOKIE)
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import registerCypressGrep from '@cypress/grep'
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+registerCypressGrep()

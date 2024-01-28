@@ -266,20 +266,10 @@ describe('Dataset', () => {
         })
     })
 
-    it.only('loads the restricted files when the user is logged in as owner', () => {
+    it('loads the restricted files when the user is logged in as owner', () => {
       cy.wrap(DatasetHelper.createWithFiles(FileHelper.createManyRestricted(1)))
         .its('persistentId')
         .then((persistentId: string) => {
-          //TODO: replace the hard-coded wait with the pipe() method
-          // cypress-pipe does not retry any Cypress commands
-          // so we need to click on the element using
-          // jQuery method "$el.click()" and not "cy.click()"
-          /*  let count = 0
-          const click = ($el) => {
-            count += 1
-            return $el.click()
-          }*/
-
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
           cy.findByText('Files').should('exist')
@@ -288,25 +278,13 @@ describe('Dataset', () => {
           cy.findByText('Restricted with access Icon').should('exist')
           cy.findByRole('button', { name: 'Access File' }).as('accessButton')
           cy.get('@accessButton').should('be.visible')
-          /*
-          cy.get('@accessButton')
-            .pipe(click)
-            .should(($el) => {
-              console.log($el)
-              expect($el).to.be.visible
-
-              })
-            })
-            .then(() => {
-              cy.log(`clicked ${count} times`)
-            })
-*/
-          //TODO: replace the hard-coded wait with the pipe() method
-          cy.wait(500)
+          // TODO: replace the hard-coded wait with the pipe() method?
+          // see https://www.cypress.io/blog/2019/01/22/when-can-the-test-click
+          cy.wait(500) // wait for the event handler to attach to the button
           cy.get('@accessButton').click()
-          cy.findByRole('button', { name: 'File Options' }).as('fileOptions')
-          cy.get('@fileOptions').should('exist')
-          cy.get('@fileOptions').click()
+          cy.findByText('Restricted with Access Granted').should('exist')
+
+          cy.findByRole('button', { name: 'File Options' }).should('exist').click()
           cy.findByText('Unrestrict').should('exist')
         })
     })
