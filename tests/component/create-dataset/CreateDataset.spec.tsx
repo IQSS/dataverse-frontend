@@ -1,8 +1,8 @@
-import { CreateDatasetFormPresenter } from '../../../src/sections/create-dataset/CreateDatasetFactory'
+import { CreateDatasetForm } from '../../../src/sections/create-dataset/CreateDatasetForm'
 
 describe('Form component', () => {
   it('renders the Create Dataset page and its contents', () => {
-    cy.customMount(<CreateDatasetFormPresenter />)
+    cy.customMount(<CreateDatasetForm />)
     cy.findByText(/Create Dataset/i).should('exist')
 
     cy.findByLabelText(/Title/i).should('exist')
@@ -13,7 +13,7 @@ describe('Form component', () => {
   })
 
   it('can submit a valid form', () => {
-    cy.customMount(<CreateDatasetFormPresenter />)
+    cy.customMount(<CreateDatasetForm />)
     cy.findByLabelText(/Title/i)
       .should('exist')
       .type('Test Dataset Title')
