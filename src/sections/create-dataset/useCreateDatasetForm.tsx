@@ -3,6 +3,8 @@ import { DatasetFormFields } from '../../dataset/domain/models/DatasetFormFields
 import { createDataset } from '../../dataset/domain/useCases/createDataset'
 import { validateDataset } from '../../dataset/domain/useCases/validateDataset'
 import { DatasetValidationResponse } from '../../dataset/domain/models/DatasetValidationResponse'
+import { useNavigate } from 'react-router-dom'
+import { Route } from '../Route.enum'
 interface FormContextInterface {
   fields: DatasetFormFields
 }
@@ -52,12 +54,18 @@ export function useCreateDatasetForm() {
       setSubmissionStatus(SubmissionStatusEnums.Errored)
     }
   }
+  const navigate = useNavigate()
+  const cancelFormSubmit = () => {
+    const path = Route.HOME
+    navigate(path)
+  }
 
   return {
     formState,
     formErrors,
     submissionStatus,
     updateFormData,
-    submitFormData
+    submitFormData,
+    cancelFormSubmit
   }
 }

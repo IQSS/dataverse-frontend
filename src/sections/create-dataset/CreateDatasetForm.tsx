@@ -1,13 +1,16 @@
-import { ChangeEvent, FormEvent } from 'react'
+import { ChangeEvent, FormEvent, MouseEvent, useEffect } from 'react'
 import { Alert, Button, Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { useCreateDatasetForm, SubmissionStatusEnums } from './useCreateDatasetForm'
 import styles from '/src/sections/dataset/Dataset.module.scss'
+import { useLoading } from '../loading/LoadingContext'
 
 export function CreateDatasetForm() {
-  const { formErrors, submissionStatus, updateFormData, submitFormData } = useCreateDatasetForm()
+  const { isLoading, setIsLoading } = useLoading()
+  const { formErrors, submissionStatus, updateFormData, submitFormData, cancelFormSubmit } =
+    useCreateDatasetForm()
 
   const { t } = useTranslation('createDataset')
 
@@ -20,6 +23,14 @@ export function CreateDatasetForm() {
     event.preventDefault()
     submitFormData()
   }
+
+  const handleFormCancel = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    cancelFormSubmit()
+  }
+  useEffect(() => {
+    setIsLoading(false)
+  }, [isLoading])
 
   return (
     <article>
@@ -66,7 +77,7 @@ export function CreateDatasetForm() {
           <Button type="submit" disabled={submissionStatus === SubmissionStatusEnums.IsSubmitting}>
             {t('saveButton')}
           </Button>
-          <Button withSpacing variant="secondary">
+          <Button withSpacing variant="secondary" type="button" onClick={handleFormCancel}>
             {t('cancelButton')}
           </Button>
         </Form>
