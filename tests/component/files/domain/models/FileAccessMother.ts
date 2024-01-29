@@ -12,7 +12,7 @@ export class FileAccessMother {
     }
   }
 
-  static createNotRestricted(): FileAccess {
+  static createPublic(): FileAccess {
     return this.create({
       restricted: false,
       latestVersionRestricted: false,
@@ -39,7 +39,7 @@ export class FileAccessMother {
     })
   }
 
-  static createWithAccessGranted(): FileAccess {
+  static createWithAccessRequestAllowed(): FileAccess {
     return this.create({
       restricted: true,
       latestVersionRestricted: true,
@@ -48,11 +48,11 @@ export class FileAccessMother {
     })
   }
 
-  static createWithAccessRequestAllowed(): FileAccess {
+  static createWithAccessRequestNotAllowed(): FileAccess {
     return this.create({
       restricted: true,
       latestVersionRestricted: true,
-      canBeRequested: true,
+      canBeRequested: false,
       requested: false
     })
   }

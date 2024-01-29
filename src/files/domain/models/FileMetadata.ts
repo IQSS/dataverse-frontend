@@ -120,6 +120,14 @@ export class FileType {
   toDisplayFormat(): string {
     return FileTypeToFriendlyTypeMap[this.value] || FileTypeToFriendlyTypeMap.unknown
   }
+
+  get displayFormatIsUnknown(): boolean {
+    return this.toDisplayFormat() === FileTypeToFriendlyTypeMap.unknown
+  }
+
+  get originalFormatIsUnknown(): boolean {
+    return this.original === undefined || this.original === FileTypeToFriendlyTypeMap.unknown
+  }
 }
 
 export interface FileChecksum {
@@ -158,5 +166,9 @@ export class FileMetadata {
       return this.embargo.isActive
     }
     return false
+  }
+
+  get isTabular(): boolean {
+    return this.tabularData !== undefined
   }
 }

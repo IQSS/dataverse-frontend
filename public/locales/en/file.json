@@ -45,5 +45,8 @@
       "directory": "File Path",
       "description": "Description"
     }
+  },
+  "actionButtons": {
+    "title": "File Action Buttons"
   }
 }

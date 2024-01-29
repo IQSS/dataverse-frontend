@@ -26,7 +26,7 @@ export class FilePreviewMother {
     return this.create({
       name: 'File Title',
       version: FileVersionMother.createReleased(),
-      access: FileAccessMother.createNotRestricted(),
+      access: FileAccessMother.createPublic(),
       ingest: FileIngestMother.createIngestNone(),
       metadata: FileMetadataMother.createDefault(),
       ...props
@@ -48,7 +48,7 @@ export class FilePreviewMother {
 
   static createWithPublicAccess(): FilePreview {
     return this.createDefault({
-      access: FileAccessMother.createNotRestricted(),
+      access: FileAccessMother.createPublic(),
       metadata: FileMetadataMother.createNotEmbargoed()
     })
   }
@@ -63,13 +63,6 @@ export class FilePreviewMother {
   static createRestricted(): FilePreview {
     return this.createDefault({
       access: FileAccessMother.createRestricted(),
-      metadata: FileMetadataMother.createNotEmbargoed()
-    })
-  }
-
-  static createRestrictedWithAccessGranted(): FilePreview {
-    return this.createDefault({
-      access: FileAccessMother.createWithAccessGranted(),
       metadata: FileMetadataMother.createNotEmbargoed()
     })
   }
@@ -90,13 +83,6 @@ export class FilePreviewMother {
 
   static createWithThumbnail(): FilePreview {
     return this.createDefault({
-      metadata: FileMetadataMother.createWithThumbnail()
-    })
-  }
-
-  static createWithThumbnailRestrictedWithAccessGranted(): FilePreview {
-    return this.createDefault({
-      access: FileAccessMother.createWithAccessGranted(),
       metadata: FileMetadataMother.createWithThumbnail()
     })
   }

@@ -9,7 +9,8 @@ import {
   FileLabel,
   FileLabelType,
   FileTabularData,
-  FileMetadata
+  FileMetadata,
+  FileDownloadUrls
 } from '../../../../../src/files/domain/models/FileMetadata'
 import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
 
@@ -30,6 +31,10 @@ export class FileTypeMother {
     return new FileType('text/tab-separated-values', 'Comma Separated Values')
   }
 
+  static createTabularUnknown(): FileType {
+    return new FileType('text/tab-separated-values', 'Unknown')
+  }
+
   static createText(): FileType {
     return new FileType('text/plain')
   }
@@ -44,6 +49,10 @@ export class FileTypeMother {
 
   static createUnknown(): FileType {
     return new FileType('unknown')
+  }
+
+  static createRData(): FileType {
+    return new FileType('text/tab-separated-values', 'R Data')
   }
 }
 
@@ -123,6 +132,17 @@ export class FileSizeMother {
   }
 }
 
+export class FileDownloadUrlsMother {
+  static create(props?: Partial<FileDownloadUrls>): FileDownloadUrls {
+    return {
+      original: faker.internet.url(),
+      tabular: faker.internet.url(),
+      rData: faker.internet.url(),
+      ...props
+    }
+  }
+}
+
 export class FileMetadataMother {
   static create(props?: Partial<FileMetadata>): FileMetadata {
     const thumbnail = valueOrUndefined<string>(faker.image.imageUrl(400))
@@ -145,11 +165,7 @@ export class FileMetadataMother {
       tabularData: tabularFile && !checksum ? FileTabularDataMother.create() : undefined,
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
       isDeleted: faker.datatype.boolean(),
-      downloadUrls: {
-        original: this.createDownloadUrl(),
-        tabular: this.createDownloadUrl(),
-        rData: this.createDownloadUrl()
-      },
+      downloadUrls: FileDownloadUrlsMother.create(),
       depositDate: faker.date.past(),
       publicationDate: faker.datatype.boolean() ? faker.date.past() : undefined,
       persistentId: faker.datatype.uuid(),
