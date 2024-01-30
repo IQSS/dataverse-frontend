@@ -2,7 +2,9 @@ import { AccessFileMenu } from '../../../../../../../../../../src/sections/datas
 import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { Suspense } from 'react'
 
-const file = FilePreviewMother.create({ permissions: { canDownloadFile: true } })
+const file = FilePreviewMother.create({
+  permissions: { canDownloadFile: true }
+})
 
 describe('AccessFileMenu', () => {
   it('renders the access file menu', () => {
@@ -41,7 +43,7 @@ describe('AccessFileMenu', () => {
     cy.findByText('Public').should('exist')
   })
 
-  it.only('renders the request access button', () => {
+  it('renders the request access button', () => {
     const fileRestrictedWithAccessRequestAllowed =
       FilePreviewMother.createWithAccessRequestAllowed()
     cy.customMount(
