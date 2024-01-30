@@ -107,7 +107,7 @@
     "@auto-it/released": "10.46.0",
     "@csstools/postcss-cascade-layers": "3.0.1",
     "@cypress/code-coverage": "3.10.7",
-    "@cypress/grep": "^4.0.1",
+    "@cypress/grep": "4.0.1",
     "@storybook/addon-a11y": "7.0.2",
     "@storybook/addon-essentials": "7.0.2",
     "@storybook/addon-interactions": "7.0.2",
