@@ -1,13 +1,13 @@
 import { FileEmbargoDate } from '../../../../../src/sections/file/file-embargo/FileEmbargoDate'
-import { FilePublishingStatus } from '../../../../../src/files/domain/models/FileVersion'
+import { DatasetPublishingStatus } from '../../../../../src/dataset/domain/models/Dataset'
 import { FileEmbargoMother } from '../../../files/domain/models/FileMetadataMother'
 
 describe('FileEmbargoDate', () => {
   it('renders the embargo date when embargo exists', () => {
     const embargoDate = new Date('2123-09-18')
     const embargo = FileEmbargoMother.create({ dateAvailable: embargoDate })
-    const status = FilePublishingStatus.RELEASED
-    cy.customMount(<FileEmbargoDate embargo={embargo} publishingStatus={status} />)
+    const status = DatasetPublishingStatus.RELEASED
+    cy.customMount(<FileEmbargoDate embargo={embargo} datasetPublishingStatus={status} />)
     const dateString = embargoDate.toLocaleDateString(
       Intl.DateTimeFormat().resolvedOptions().locale,
       {
@@ -22,9 +22,9 @@ describe('FileEmbargoDate', () => {
   it('renders the until embargo date when embargo is not active and the file is not released', () => {
     const embargoDate = new Date('2023-09-15')
     const embargo = FileEmbargoMother.create({ dateAvailable: embargoDate })
-    const status = FilePublishingStatus.RELEASED
+    const status = DatasetPublishingStatus.RELEASED
 
-    cy.customMount(<FileEmbargoDate embargo={embargo} publishingStatus={status} />)
+    cy.customMount(<FileEmbargoDate embargo={embargo} datasetPublishingStatus={status} />)
     const dateString = embargoDate.toLocaleDateString(
       Intl.DateTimeFormat().resolvedOptions().locale,
       {
@@ -39,9 +39,9 @@ describe('FileEmbargoDate', () => {
   it('renders the draft until embargo date when embargo is active and the file is not released', () => {
     const embargoDate = new Date('2123-09-18')
     const embargo = FileEmbargoMother.create({ dateAvailable: embargoDate })
-    const status = FilePublishingStatus.DRAFT
+    const status = DatasetPublishingStatus.DRAFT
 
-    cy.customMount(<FileEmbargoDate embargo={embargo} publishingStatus={status} />)
+    cy.customMount(<FileEmbargoDate embargo={embargo} datasetPublishingStatus={status} />)
     const dateString = embargoDate.toLocaleDateString(
       Intl.DateTimeFormat().resolvedOptions().locale,
       {
@@ -55,9 +55,9 @@ describe('FileEmbargoDate', () => {
 
   it('renders an empty fragment when embargo is undefined', () => {
     const embargo = undefined
-    const status = FilePublishingStatus.RELEASED
+    const status = DatasetPublishingStatus.RELEASED
 
-    cy.customMount(<FileEmbargoDate embargo={embargo} publishingStatus={status} />)
+    cy.customMount(<FileEmbargoDate embargo={embargo} datasetPublishingStatus={status} />)
 
     cy.findByText(/Draft: will be embargoed until/).should('not.exist')
     cy.findByText(/Embargoed until/).should('not.exist')
@@ -67,9 +67,9 @@ describe('FileEmbargoDate', () => {
   it('renders the embargo date in YYYY-MM-DD format', () => {
     const embargoDate = new Date('2123-09-18')
     const embargo = FileEmbargoMother.create({ dateAvailable: embargoDate })
-    const status = FilePublishingStatus.RELEASED
+    const status = DatasetPublishingStatus.RELEASED
     cy.customMount(
-      <FileEmbargoDate embargo={embargo} publishingStatus={status} format="YYYY-MM-DD" />
+      <FileEmbargoDate embargo={embargo} datasetPublishingStatus={status} format="YYYY-MM-DD" />
     )
     const dateString = embargoDate.toLocaleDateString(
       Intl.DateTimeFormat().resolvedOptions().locale,

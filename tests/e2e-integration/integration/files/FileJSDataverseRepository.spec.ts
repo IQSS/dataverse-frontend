@@ -23,8 +23,8 @@ import { FilesCountInfo } from '../../../../src/files/domain/models/FilesCountIn
 import { DatasetVersionMother } from '../../../component/dataset/domain/models/DatasetMother'
 import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePaginationInfo'
 import { FilePreview } from '../../../../src/files/domain/models/FilePreview'
-import { FilePublishingStatus } from '../../../../src/files/domain/models/FileVersion'
 import { FileIngestStatus } from '../../../../src/files/domain/models/FileIngest'
+import { DatasetPublishingStatus } from '../../../../src/dataset/domain/models/Dataset'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -37,14 +37,14 @@ const fileData = (id: number): FilePreview => {
   return {
     id: id,
     name: 'blob',
-    version: { number: 1, publishingStatus: FilePublishingStatus.DRAFT },
+    datasetPublishingStatus: DatasetPublishingStatus.DRAFT,
     access: {
       restricted: false,
       latestVersionRestricted: false,
       canBeRequested: false,
       requested: false
     },
-    ingest: { status: FileIngestStatus.NONE },
+    ingest: { status: FileIngestStatus.NONE, isInProgress: false },
     metadata: {
       type: new FileType('text/plain'),
       size: new FileSize(25, FileSizeUnit.BYTES),
@@ -99,7 +99,7 @@ describe('File JSDataverse Repository', () => {
             const expectedFileNames = ['blob', 'blob-1', 'blob-2']
             const expectedFile = fileData(file.id)
             expect(file.name).to.deep.equal(expectedFileNames[index])
-            expect(file.version).to.deep.equal(expectedFile.version)
+            expect(file.datasetPublishingStatus).to.deep.equal(expectedFile.datasetPublishingStatus)
             expect(file.access).to.deep.equal(expectedFile.access)
             expect(file.metadata.type).to.deep.equal(expectedFile.metadata.type)
             cy.compareDate(file.metadata.date.date, expectedFile.metadata.date.date)
@@ -153,11 +153,13 @@ describe('File JSDataverse Repository', () => {
         )
         .then((files) => {
           const expectedPublishedFile = fileData(files[0].id)
-          expectedPublishedFile.version.publishingStatus = FilePublishingStatus.RELEASED
+          expectedPublishedFile.datasetPublishingStatus = DatasetPublishingStatus.RELEASED
           expectedPublishedFile.metadata.date.type = FileDateType.PUBLISHED
 
           files.forEach((file) => {
-            expect(file.version).to.deep.equal(expectedPublishedFile.version)
+            expect(file.datasetPublishingStatus).to.deep.equal(
+              expectedPublishedFile.datasetPublishingStatus
+            )
             cy.compareDate(file.metadata.date.date, fileData(file.id).metadata.date.date)
           })
         })
@@ -181,10 +183,12 @@ describe('File JSDataverse Repository', () => {
         )
         .then((files) => {
           const expectedDeaccessionedFile = fileData(files[0].id)
-          expectedDeaccessionedFile.version.publishingStatus = FilePublishingStatus.DEACCESSIONED
+          expectedDeaccessionedFile.datasetPublishingStatus = DatasetPublishingStatus.DEACCESSIONED
 
           files.forEach((file) => {
-            expect(file.version).to.deep.equal(expectedDeaccessionedFile.version)
+            expect(file.datasetPublishingStatus).to.deep.equal(
+              expectedDeaccessionedFile.datasetPublishingStatus
+            )
           })
         })
     })

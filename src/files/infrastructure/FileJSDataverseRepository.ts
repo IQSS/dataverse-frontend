@@ -57,7 +57,7 @@ export class FileJSDataverseRepository implements FileRepository {
       )
       .then(([jsFiles, downloadCounts, thumbnails, jsTabularData]) =>
         jsFiles.map((jsFile, index) =>
-          JSFileMapper.toFile(
+          JSFileMapper.toFilePreview(
             jsFile,
             datasetVersion,
             downloadCounts[index],

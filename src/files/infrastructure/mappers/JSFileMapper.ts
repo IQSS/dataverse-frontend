@@ -5,12 +5,11 @@ import {
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FilePreview } from '../../domain/models/FilePreview'
 import { JSFileMetadataMapper } from './JSFileMetadataMapper'
-import { JSFileVersionMapper } from './JSFileVersionMapper'
 import { JSFileAccessMapper } from './JSFileAccessMapper'
 import { JSFileIngestMapper } from './JSFileIngestMapper'
 
 export class JSFileMapper {
-  static toFile(
+  static toFilePreview(
     jsFile: JSFile,
     datasetVersion: DatasetVersion,
     downloadsCount: number,
@@ -20,11 +19,7 @@ export class JSFileMapper {
     return {
       id: this.toFileId(jsFile.id),
       name: this.toFileName(jsFile.name),
-      version: JSFileVersionMapper.toFileVersion(
-        jsFile.version,
-        datasetVersion,
-        jsFile.publicationDate
-      ),
+      datasetPublishingStatus: datasetVersion.publishingStatus,
       access: JSFileAccessMapper.toFileAccess(jsFile.restricted),
       ingest: JSFileIngestMapper.toFileIngest(),
       metadata: JSFileMetadataMapper.toFileMetadata(

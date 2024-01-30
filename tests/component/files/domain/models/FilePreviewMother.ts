@@ -2,15 +2,16 @@ import { FilePreview } from '../../../../../src/files/domain/models/FilePreview'
 import { FileMetadataMother } from './FileMetadataMother'
 import { faker } from '@faker-js/faker'
 import { FileAccessMother } from './FileAccessMother'
-import { FileVersionMother } from './FileVersionMother'
 import { FileIngestMother } from './FileIngestMother'
+import { DatasetVersionMother } from '../../../dataset/domain/models/DatasetMother'
+import { DatasetPublishingStatus } from '../../../../../src/dataset/domain/models/Dataset'
 
 export class FilePreviewMother {
   static create(props?: Partial<FilePreview>): FilePreview {
     return {
       id: faker.datatype.number(),
       name: faker.system.fileName(),
-      version: FileVersionMother.create(),
+      datasetPublishingStatus: DatasetVersionMother.create().publishingStatus,
       access: FileAccessMother.create(),
       ingest: FileIngestMother.create(),
       metadata: FileMetadataMother.create(),
@@ -25,7 +26,7 @@ export class FilePreviewMother {
   static createDefault(props?: Partial<FilePreview>): FilePreview {
     return this.create({
       name: 'File Title',
-      version: FileVersionMother.createReleased(),
+      datasetPublishingStatus: DatasetPublishingStatus.RELEASED,
       access: FileAccessMother.createPublic(),
       ingest: FileIngestMother.createIngestNone(),
       metadata: FileMetadataMother.createDefault(),
@@ -96,7 +97,7 @@ export class FilePreviewMother {
 
   static createDeaccessioned(): FilePreview {
     return this.createDefault({
-      version: FileVersionMother.createDeaccessioned()
+      datasetPublishingStatus: DatasetPublishingStatus.DEACCESSIONED
     })
   }
 

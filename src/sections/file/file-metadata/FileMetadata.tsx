@@ -7,17 +7,22 @@ import { FileEmbargoDate } from '../file-embargo/FileEmbargoDate'
 import { BASE_URL } from '../../../config'
 import { Trans, useTranslation } from 'react-i18next'
 import { FileMetadata as FileMetadataModel } from '../../../files/domain/models/FileMetadata'
-import { FilePublishingStatus } from '../../../files/domain/models/FileVersion'
+import { DatasetPublishingStatus } from '../../../dataset/domain/models/Dataset'
 import { FileUserPermissions } from '../../../files/domain/models/FileUserPermissions'
 
 interface FileMetadataProps {
   name: string
   metadata: FileMetadataModel
   permissions: FileUserPermissions
-  publishingStatus: FilePublishingStatus
+  datasetPublishingStatus: DatasetPublishingStatus
 }
 
-export function FileMetadata({ name, metadata, permissions, publishingStatus }: FileMetadataProps) {
+export function FileMetadata({
+  name,
+  metadata,
+  permissions,
+  datasetPublishingStatus
+}: FileMetadataProps) {
   const { t } = useTranslation('file')
   return (
     <Accordion defaultActiveKey="0">
@@ -111,7 +116,7 @@ export function FileMetadata({ name, metadata, permissions, publishingStatus }: 
                 {metadata.embargo ? (
                   <FileEmbargoDate
                     embargo={metadata.embargo}
-                    publishingStatus={publishingStatus}
+                    datasetPublishingStatus={datasetPublishingStatus}
                     format="YYYY-MM-DD"
                   />
                 ) : (

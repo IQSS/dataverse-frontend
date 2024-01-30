@@ -3,7 +3,7 @@ import { FilePreview } from '../../../../../../../files/domain/models/FilePrevie
 import { FileOptionsMenu } from './file-options-menu/FileOptionsMenu'
 import { ButtonGroup } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
-import { FilePublishingStatus } from '../../../../../../../files/domain/models/FileVersion'
+import { DatasetPublishingStatus } from '../../../../../../../dataset/domain/models/Dataset'
 import { useFileDownloadPermission } from '../../../../../../file/file-permissions/useFileDownloadPermission'
 
 interface FileActionButtonsProps {
@@ -20,7 +20,7 @@ export function FileActionButtons({ file }: FileActionButtonsProps) {
         access={file.access}
         userHasDownloadPermission={sessionUserHasFileDownloadPermission}
         metadata={file.metadata}
-        isDeaccessioned={file.version.publishingStatus === FilePublishingStatus.DEACCESSIONED}
+        isDeaccessioned={file.datasetPublishingStatus === DatasetPublishingStatus.DEACCESSIONED}
         ingestInProgress={file.ingest.isInProgress}
         asIcon
       />

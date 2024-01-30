@@ -26,11 +26,11 @@ export function FileInfoCell({ file }: { file: FilePreview }) {
           <FileDate date={file.metadata.date} />
           <FileEmbargoDate
             embargo={file.metadata.embargo}
-            publishingStatus={file.version.publishingStatus}
+            datasetPublishingStatus={file.datasetPublishingStatus}
           />
           <FileDownloads
             downloadCount={file.metadata.downloadCount}
-            publishingStatus={file.version.publishingStatus}
+            datasetPublishingStatus={file.datasetPublishingStatus}
           />
           <FileChecksum checksum={file.metadata.checksum} />
           <FileTabularData tabularData={file.metadata.tabularData} />

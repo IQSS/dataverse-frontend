@@ -1,12 +1,12 @@
 import { FileMetadata } from './FileMetadata'
-import { FileVersion } from './FileVersion'
 import { FileIngest } from './FileIngest'
 import { FileAccess } from './FileAccess'
+import { DatasetPublishingStatus } from '../../../dataset/domain/models/Dataset'
 
 export interface FilePreview {
   id: number
   name: string
-  version: FileVersion
+  datasetPublishingStatus: DatasetPublishingStatus
   access: FileAccess
   ingest: FileIngest
   metadata: FileMetadata
