@@ -28,7 +28,6 @@ export class FilePermissionsMother {
   static create(props?: Partial<FilePermissions>): FilePermissions {
     return {
       canDownloadFile: faker.datatype.boolean(),
-      canEditDataset: faker.datatype.boolean(),
       ...props
     }
   }
@@ -191,7 +190,7 @@ export class FilePreviewMother {
         canBeRequested: false,
         requested: false
       },
-      permissions: { canDownloadFile: true },
+      permissions: { canDownloadFile: true, canEditDataset: true },
       labels: [],
       checksum: undefined,
       thumbnail: undefined,
