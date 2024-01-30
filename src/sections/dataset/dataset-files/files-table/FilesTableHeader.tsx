@@ -1,10 +1,10 @@
 import { flexRender, HeaderGroup } from '@tanstack/react-table'
-import { File } from '../../../../files/domain/models/File'
+import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import styles from './FilesTable.module.scss'
 import { getCellStyle } from './FilesTable'
 
 interface FilesTableHeaderProps {
-  headers: HeaderGroup<File>[]
+  headers: HeaderGroup<FilePreview>[]
 }
 
 export function FilesTableHeader({ headers }: FilesTableHeaderProps) {

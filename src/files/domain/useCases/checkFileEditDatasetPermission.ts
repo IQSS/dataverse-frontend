@@ -1,9 +1,9 @@
 import { FileRepository } from '../repositories/FileRepository'
-import { File } from '../models/File'
+import { FilePreview } from '../models/FilePreview'
 
 export async function checkFileEditDatasetPermission(
   fileRepository: FileRepository,
-  file: File
+  file: FilePreview
 ): Promise<boolean> {
   return fileRepository.getUserPermissionsById(file.id).then((permissions) => {
     return permissions.canEditDataset

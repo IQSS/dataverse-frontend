@@ -1,11 +1,11 @@
 import { FileDownloadOptions } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/FileDownloadOptions'
-import { FileMother } from '../../../../../../../../files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { FileUserPermissionsMother } from '../../../../../../../../files/domain/models/FileUserPermissionsMother'
 import { FilePermissionsProvider } from '../../../../../../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
 
-const fileNonTabular = FileMother.createNonTabular()
-const fileTabular = FileMother.createTabular()
+const fileNonTabular = FilePreviewMother.createNonTabular()
+const fileTabular = FilePreviewMother.createTabular()
 const fileRepository = {} as FileRepository
 describe('FileDownloadOptions', () => {
   beforeEach(() => {

@@ -1,6 +1,6 @@
 import { FileEmbargoDate } from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileEmbargoDate'
-import { FilePublishingStatus } from '../../../../../../../../../src/files/domain/models/File'
-import { FileEmbargoMother } from '../../../../../../../files/domain/models/FileMother'
+import { FilePublishingStatus } from '../../../../../../../../../src/files/domain/models/FilePreview'
+import { FileEmbargoMother } from '../../../../../../../files/domain/models/FilePreviewMother'
 
 describe('FileEmbargoDate', () => {
   it('renders the embargo date when embargo exists', () => {

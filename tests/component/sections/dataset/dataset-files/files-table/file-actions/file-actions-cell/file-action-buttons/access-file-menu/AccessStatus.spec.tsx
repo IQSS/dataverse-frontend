@@ -1,4 +1,4 @@
-import { FileMother } from '../../../../../../../../files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
 import { AccessStatus } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessStatus'
 import styles from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessFileMenu.module.scss'
 import { FileRepository } from '../../../../../../../../../../src/files/domain/repositories/FileRepository'
@@ -7,7 +7,7 @@ import { FilePermissionsProvider } from '../../../../../../../../../../src/secti
 
 describe('AccessStatus', () => {
   it('renders the access status  public', () => {
-    const filePublic = FileMother.createWithPublicAccess()
+    const filePublic = FilePreviewMother.createWithPublicAccess()
     cy.customMount(<AccessStatus file={filePublic} />)
 
     cy.findByText('Public').should('exist').should('have.class', styles.success)
@@ -15,7 +15,7 @@ describe('AccessStatus', () => {
   })
 
   it('renders the access status restricted', () => {
-    const fileRestricted = FileMother.createWithRestrictedAccess()
+    const fileRestricted = FilePreviewMother.createWithRestrictedAccess()
     cy.customMount(<AccessStatus file={fileRestricted} />)
 
     cy.findByText('Restricted').should('exist').should('have.class', styles.danger)
@@ -23,7 +23,7 @@ describe('AccessStatus', () => {
   })
 
   it('renders the access status restricted with access', () => {
-    const fileRestrictedWithAccess = FileMother.createWithRestrictedAccessWithAccessGranted()
+    const fileRestrictedWithAccess = FilePreviewMother.createWithRestrictedAccessWithAccessGranted()
     const fileRepository: FileRepository = {} as FileRepository
     fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
@@ -45,7 +45,7 @@ describe('AccessStatus', () => {
   })
 
   it('renders the access status embargoed', () => {
-    const fileRestrictedWithAccess = FileMother.createWithRestrictedAccessWithAccessGranted()
+    const fileRestrictedWithAccess = FilePreviewMother.createWithRestrictedAccessWithAccessGranted()
     const fileRepository: FileRepository = {} as FileRepository
     fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
@@ -53,7 +53,7 @@ describe('AccessStatus', () => {
         canDownloadFile: true
       })
     )
-    const fileEmbargoed = FileMother.createWithEmbargo()
+    const fileEmbargoed = FilePreviewMother.createWithEmbargo()
     cy.customMount(
       <FilePermissionsProvider repository={fileRepository}>
         <AccessStatus file={fileEmbargoed} />{' '}
@@ -65,7 +65,7 @@ describe('AccessStatus', () => {
   })
 
   it('renders the access status embargoed restricted', () => {
-    const fileEmbargoedRestricted = FileMother.createWithEmbargoRestricted()
+    const fileEmbargoedRestricted = FilePreviewMother.createWithEmbargoRestricted()
     cy.customMount(<AccessStatus file={fileEmbargoedRestricted} />)
 
     cy.findByText('Embargoed').should('exist').should('have.class', styles.danger)
@@ -73,7 +73,7 @@ describe('AccessStatus', () => {
   })
 
   it('renders the access status embargoed restricted with access', () => {
-    const fileRestrictedWithAccess = FileMother.createWithRestrictedAccessWithAccessGranted()
+    const fileRestrictedWithAccess = FilePreviewMother.createWithRestrictedAccessWithAccessGranted()
     const fileRepository: FileRepository = {} as FileRepository
     fileRepository.getUserPermissionsById = cy.stub().resolves(
       FileUserPermissionsMother.create({
@@ -81,7 +81,7 @@ describe('AccessStatus', () => {
         canDownloadFile: true
       })
     )
-    const fileEmbargoedRestricted = FileMother.createWithEmbargoRestricted()
+    const fileEmbargoedRestricted = FilePreviewMother.createWithEmbargoRestricted()
     cy.customMount(
       <FilePermissionsProvider repository={fileRepository}>
         <AccessStatus file={fileEmbargoedRestricted} />{' '}

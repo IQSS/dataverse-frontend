@@ -1,7 +1,28 @@
+import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
+import { TestsUtils } from '../../../shared/TestsUtils'
+import { faker } from '@faker-js/faker'
+
 describe('Home Page', () => {
+  const title = faker.lorem.sentence()
+  before(() => {
+    TestsUtils.setup()
+  })
+
+  beforeEach(() => {})
   it('successfully loads', () => {
     cy.visit('/spa')
     cy.findAllByText(/Root/i).should('exist')
+  })
+
+  it('goes to dataset page from list', () => {
+    void DatasetHelper.destroyAll()
+    void DatasetHelper.createWithTitle(title)
+    TestsUtils.login()
+    cy.findByText(/Dataverse Admin/i).should('exist')
+    cy.findByText(title).should('be.visible')
+    cy.findByText(title).click({ force: true })
+    cy.url().should('include', 'persistentId')
+    cy.findAllByText(title).should('be.visible')
   })
 
   it('log in Dataverse Admin user', () => {

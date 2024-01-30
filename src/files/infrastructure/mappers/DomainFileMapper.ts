@@ -9,20 +9,9 @@ import {
   FileSearchCriteria as JSFileSearchCriteria,
   FileOrderCriteria as JSFileOrderCriteria
 } from '@iqss/dataverse-client-javascript'
-import { FileType } from '../../domain/models/File'
-import { FilePaginationInfo } from '../../domain/models/FilePaginationInfo'
+import { FileType } from '../../domain/models/FilePreview'
 
 export class DomainFileMapper {
-  static toJSPagination(paginationInfo: FilePaginationInfo): {
-    limit?: number
-    offset?: number
-  } {
-    return {
-      limit: paginationInfo.pageSize,
-      offset: (paginationInfo.page - 1) * paginationInfo.pageSize
-    }
-  }
-
   static toJSFileSearchCriteria(criteria: FileCriteria): JSFileSearchCriteria {
     return new JSFileSearchCriteria(
       this.toJSContentType(criteria.filterByType),

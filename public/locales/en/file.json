@@ -1,0 +1,26 @@
+{
+  "tabs": {
+    "metadata": "Metadata"
+  },
+  "subtext": "This file is part of \"{{datasetTitle}}\".",
+  "datasetCitationTitle": "Dataset Citation",
+  "fileCitationTitle": "File Citation",
+  "fileAccess": {
+    "title": "File Access",
+    "restricted": {
+      "name": "Restricted",
+      "icon": "Restricted File Icon"
+    },
+    "restrictedWithAccess": {
+      "name": "Restricted with Access Granted",
+      "icon": "Restricted with access Icon"
+    },
+    "embargoed": {
+      "name": "Embargoed"
+    },
+    "public": {
+      "name": "Public",
+      "icon": "Public File Icon"
+    }
+  }
+}

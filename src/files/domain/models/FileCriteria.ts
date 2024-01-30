@@ -1,4 +1,4 @@
-import { FileType } from './File'
+import { FileType } from './FilePreview'
 
 export class FileCriteria {
   constructor(

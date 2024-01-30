@@ -1,22 +1,26 @@
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { FilesMockData } from './FileMockData'
-import { File, FileDownloadMode } from '../../files/domain/models/File'
+import { FilePreview, FileDownloadMode } from '../../files/domain/models/FilePreview'
 import { FilesCountInfo } from '../../files/domain/models/FilesCountInfo'
 import { FilesCountInfoMother } from '../../../tests/component/files/domain/models/FilesCountInfoMother'
 import { FileUserPermissionsMother } from '../../../tests/component/files/domain/models/FileUserPermissionsMother'
 import { FileUserPermissions } from '../../files/domain/models/FileUserPermissions'
-import { DatasetVersion } from '../../dataset/domain/models/Dataset'
+import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/models/Dataset'
 import { FileCriteria } from '../../files/domain/models/FileCriteria'
+import { FilePreviewMother } from '../../../tests/component/files/domain/models/FilePreviewMother'
 import { FilePaginationInfo } from '../../files/domain/models/FilePaginationInfo'
 import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
+import { File } from '../../files/domain/models/File'
 
 export class FileMockRepository implements FileRepository {
+  constructor(public readonly fileMock?: File) {}
+
   // eslint-disable-next-line unused-imports/no-unused-vars
   getAllByDatasetPersistentId(
     datasetPersistentId: string,
     datasetVersion: DatasetVersion,
     paginationInfo?: FilePaginationInfo
-  ): Promise<File[]> {
+  ): Promise<FilePreview[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FilesMockData(paginationInfo))
@@ -28,7 +32,7 @@ export class FileMockRepository implements FileRepository {
     // eslint-disable-next-line unused-imports/no-unused-vars
     datasetPersistentId: string,
     // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersion: DatasetVersion
+    datasetVersionNumber: DatasetVersionNumber
   ): Promise<FilesCountInfo> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -41,7 +45,7 @@ export class FileMockRepository implements FileRepository {
     // eslint-disable-next-line unused-imports/no-unused-vars
     datasetPersistentId: string,
     // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersion: DatasetVersion,
+    datasetVersionNumber: DatasetVersionNumber,
     // eslint-disable-next-line unused-imports/no-unused-vars
     criteria?: FileCriteria
   ): Promise<number> {
@@ -62,12 +66,21 @@ export class FileMockRepository implements FileRepository {
   }
 
   // eslint-disable-next-line unused-imports/no-unused-vars
+  getById(id: number): Promise<File | undefined> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(this.fileMock ?? FileMother.createRealistic())
+      }, 1000)
+    })
+  }
+
+  // eslint-disable-next-line unused-imports/no-unused-vars
   getMultipleFileDownloadUrl(ids: number[], downloadMode: FileDownloadMode): string {
-    return FileMother.createDownloadUrl()
+    return FilePreviewMother.createDownloadUrl()
   }
 
   // eslint-disable-next-line unused-imports/no-unused-vars
   getFileDownloadUrl(id: number, downloadMode: FileDownloadMode): string {
-    return FileMother.createDownloadUrl()
+    return FilePreviewMother.createDownloadUrl()
   }
 }

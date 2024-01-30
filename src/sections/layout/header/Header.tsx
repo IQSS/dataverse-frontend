@@ -1,4 +1,4 @@
-import logo from '../../assets/logo.svg'
+import logo from '../../../assets/logo.svg'
 import { useTranslation } from 'react-i18next'
 import { Navbar } from '@iqss/dataverse-design-system'
 import { Route } from '../../Route.enum'

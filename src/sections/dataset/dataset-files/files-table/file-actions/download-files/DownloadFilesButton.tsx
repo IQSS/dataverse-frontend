@@ -1,4 +1,4 @@
-import { File, FileDownloadMode } from '../../../../../../files/domain/models/File'
+import { FilePreview, FileDownloadMode } from '../../../../../../files/domain/models/FilePreview'
 import { useDataset } from '../../../../DatasetContext'
 import { Button, DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { Download } from 'react-bootstrap-icons'
@@ -10,7 +10,7 @@ import { MouseEvent, useState } from 'react'
 import { useMultipleFileDownload } from '../../../../../file/multiple-file-download/MultipleFileDownloadContext'
 
 interface DownloadFilesButtonProps {
-  files: File[]
+  files: FilePreview[]
   fileSelection: FileSelection
 }
 
@@ -90,6 +90,6 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
 
 const getFileIdsFromSelection = (fileSelection: FileSelection): number[] => {
   return Object.values(fileSelection)
-    .filter((file): file is File => file !== undefined)
+    .filter((file): file is FilePreview => file !== undefined)
     .map((file) => file.id)
 }

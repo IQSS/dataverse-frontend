@@ -2,8 +2,8 @@ import { Meta, StoryObj } from '@storybook/react'
 import { AccessFileMenu } from '../../../../../../../sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/AccessFileMenu'
 import { WithI18next } from '../../../../../../WithI18next'
 import { WithSettings } from '../../../../../../WithSettings'
-import { WithFilePermissionsGranted } from '../../../../../../files/file-permission/WithFilePermissionsGranted'
-import { FileMother } from '../../../../../../../../tests/component/files/domain/models/FileMother'
+import { WithFilePermissionsGranted } from '../../../../../../file/file-permission/WithFilePermissionsGranted'
+import { FilePreviewMother } from '../../../../../../../../tests/component/files/domain/models/FilePreviewMother'
 
 const meta: Meta<typeof AccessFileMenu> = {
   title:
@@ -17,39 +17,41 @@ type Story = StoryObj<typeof AccessFileMenu>
 
 export const Default: Story = {
   decorators: [WithFilePermissionsGranted],
-  render: () => <AccessFileMenu file={FileMother.createDefault()} />
+  render: () => <AccessFileMenu file={FilePreviewMother.createDefault()} />
 }
 
 export const NonTabularFiles: Story = {
-  render: () => <AccessFileMenu file={FileMother.createDefault()} />
+  render: () => <AccessFileMenu file={FilePreviewMother.createDefault()} />
 }
 
 export const TabularFiles: Story = {
-  render: () => <AccessFileMenu file={FileMother.createTabular()} />
+  render: () => <AccessFileMenu file={FilePreviewMother.createTabular()} />
 }
 
 export const Restricted: Story = {
-  render: () => <AccessFileMenu file={FileMother.createWithRestrictedAccess()} />
+  render: () => <AccessFileMenu file={FilePreviewMother.createWithRestrictedAccess()} />
 }
 
 export const RestrictedWithAccessRequestAllowed: Story = {
-  render: () => <AccessFileMenu file={FileMother.createWithAccessRequestAllowed()} />
+  render: () => <AccessFileMenu file={FilePreviewMother.createWithAccessRequestAllowed()} />
 }
 
 export const RestrictedWithAccessRequestPending: Story = {
-  render: () => <AccessFileMenu file={FileMother.createWithAccessRequestPending()} />
+  render: () => <AccessFileMenu file={FilePreviewMother.createWithAccessRequestPending()} />
 }
 
 export const RestrictedWithAccessGranted: Story = {
   decorators: [WithFilePermissionsGranted],
-  render: () => <AccessFileMenu file={FileMother.createWithRestrictedAccessWithAccessGranted()} />
+  render: () => (
+    <AccessFileMenu file={FilePreviewMother.createWithRestrictedAccessWithAccessGranted()} />
+  )
 }
 
 export const WithEmbargo: Story = {
   decorators: [WithFilePermissionsGranted],
-  render: () => <AccessFileMenu file={FileMother.createWithEmbargo()} />
+  render: () => <AccessFileMenu file={FilePreviewMother.createWithEmbargo()} />
 }
 
 export const WithEmbargoAndRestricted: Story = {
-  render: () => <AccessFileMenu file={FileMother.createWithEmbargoRestricted()} />
+  render: () => <AccessFileMenu file={FilePreviewMother.createWithEmbargoRestricted()} />
 }

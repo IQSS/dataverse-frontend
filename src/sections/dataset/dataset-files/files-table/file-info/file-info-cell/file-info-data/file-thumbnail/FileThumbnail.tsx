@@ -1,12 +1,12 @@
 import { FileThumbnailIcon } from './FileThumbnailIcon'
 import { FileThumbnailPreviewImage } from './FileThumbnailPreviewImage'
-import { File } from '../../../../../../../../files/domain/models/File'
-import { FileThumbnailRestrictedIcon } from './FileThumbnailRestrictedIcon'
+import { FilePreview } from '../../../../../../../../files/domain/models/FilePreview'
+import { FileAccessRestrictedIcon } from '../../../../../../../file/file-access/FileAccessRestrictedIcon'
 import styles from './FileThumbnail.module.scss'
 import { useFileDownloadPermission } from '../../../../../../../file/file-permissions/useFileDownloadPermission'
 
 interface FileThumbnailProps {
-  file: File
+  file: FilePreview
 }
 
 export function FileThumbnail({ file }: FileThumbnailProps) {
@@ -24,7 +24,12 @@ export function FileThumbnail({ file }: FileThumbnailProps) {
       ) : (
         <FileThumbnailIcon type={file.type} />
       )}
-      <FileThumbnailRestrictedIcon file={file} />
+      <div className={styles['restricted-icon']}>
+        <FileAccessRestrictedIcon
+          restricted={file.access.restricted}
+          canDownloadFile={sessionUserHasFileDownloadPermission}
+        />
+      </div>
     </div>
   )
 }

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { FilePermission } from '../../../files/domain/models/FileUserPermissions'
 import { useFilePermissions } from './FilePermissionsContext'
-import { File } from '../../../files/domain/models/File'
+import { FilePreview } from '../../../files/domain/models/FilePreview'
 
-export function useFileDownloadPermission(file: File) {
+export function useFileDownloadPermission(file: FilePreview) {
   const { checkSessionUserHasFilePermission } = useFilePermissions()
   const [sessionUserHasFileDownloadPermission, setSessionUserHasFileDownloadPermission] =
     useState<boolean>(false)

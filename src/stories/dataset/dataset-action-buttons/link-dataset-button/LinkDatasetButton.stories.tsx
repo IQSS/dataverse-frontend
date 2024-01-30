@@ -1,7 +1,10 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../../WithI18next'
 import { WithSettings } from '../../../WithSettings'
-import { DatasetMother } from '../../../../../tests/component/dataset/domain/models/DatasetMother'
+import {
+  DatasetMother,
+  DatasetVersionMother
+} from '../../../../../tests/component/dataset/domain/models/DatasetMother'
 import { LinkDatasetButton } from '../../../../sections/dataset/dataset-action-buttons/link-dataset-button/LinkDatasetButton'
 
 const meta: Meta<typeof LinkDatasetButton> = {
@@ -18,5 +21,9 @@ export default meta
 type Story = StoryObj<typeof LinkDatasetButton>
 
 export const ReleasedDataset: Story = {
-  render: () => <LinkDatasetButton dataset={DatasetMother.create({ isReleased: true })} />
+  render: () => (
+    <LinkDatasetButton
+      dataset={DatasetMother.create({ version: DatasetVersionMother.createReleased() })}
+    />
+  )
 }

@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import { FileDownloadMode } from '../../../files/domain/models/File'
+import { FileDownloadMode } from '../../../files/domain/models/FilePreview'
 
 interface MultipleFileDownloadContextProps {
   getMultipleFileDownloadUrl: (ids: number[], downloadMode: FileDownloadMode) => string

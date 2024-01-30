@@ -6,7 +6,10 @@ interface DeaccessionDatasetButtonProps {
   dataset: Dataset
 }
 export function DeaccessionDatasetButton({ dataset }: DeaccessionDatasetButtonProps) {
-  if (!dataset.isReleased || !dataset.permissions.canPublishDataset) {
+  if (
+    !dataset.version.someDatasetVersionHasBeenReleased ||
+    !dataset.permissions.canPublishDataset
+  ) {
     return <></>
   }
 

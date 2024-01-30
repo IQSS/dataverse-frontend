@@ -1,10 +1,10 @@
 import { useFilePermissions } from '../../../../../src/sections/file/file-permissions/FilePermissionsContext'
 import { FilePermission } from '../../../../../src/files/domain/models/FileUserPermissions'
-import { FileMother } from '../../../files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
 import { useEffect, useState } from 'react'
 import { FilePermissionsProvider } from '../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
-import { File } from '../../../../../src/files/domain/models/File'
+import { FilePreview } from '../../../../../src/files/domain/models/FilePreview'
 import { FileUserPermissionsMother } from '../../../files/domain/models/FileUserPermissionsMother'
 import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
 import { AnonymizedContext } from '../../../../../src/sections/dataset/anonymized/AnonymizedContext'
@@ -15,7 +15,7 @@ function SavedPermissionsTestComponent({
   file,
   permission
 }: {
-  file: File
+  file: FilePreview
   permission: FilePermission
 }) {
   const { checkSessionUserHasFilePermission } = useFilePermissions()
@@ -52,7 +52,7 @@ function SavedPermissionsTestComponent({
   )
 }
 
-function TestComponent({ file, permission }: { file: File; permission: FilePermission }) {
+function TestComponent({ file, permission }: { file: FilePreview; permission: FilePermission }) {
   const { checkSessionUserHasFilePermission } = useFilePermissions()
   const [hasFilePermission, setHasFilePermission] = useState<boolean>(false)
   useEffect(() => {
@@ -86,7 +86,7 @@ describe('useFilePermissions', () => {
 
   describe('Download permission', () => {
     it('should not call getFileUserPermissionsById when the file is not deaccessioned nor restricted nor embargoed', () => {
-      const file = FileMother.createDefault()
+      const file = FilePreviewMother.createDefault()
       fileRepository.getUserPermissionsById = cy
         .stub()
         .resolves(FileUserPermissionsMother.create({ fileId: file.id }))
@@ -101,7 +101,7 @@ describe('useFilePermissions', () => {
     })
 
     it('should call getFileUserPermissionsById when the file is deaccessioned', () => {
-      const file = FileMother.createDeaccessioned()
+      const file = FilePreviewMother.createDeaccessioned()
       fileRepository.getUserPermissionsById = cy
         .stub()
         .resolves(FileUserPermissionsMother.create({ fileId: file.id, canEditDataset: true }))
@@ -117,7 +117,7 @@ describe('useFilePermissions', () => {
     })
 
     it('should call getFileUserPermissionsById when the file is restricted', () => {
-      const file = FileMother.createWithRestrictedAccess()
+      const file = FilePreviewMother.createWithRestrictedAccess()
       fileRepository.getUserPermissionsById = cy
         .stub()
         .resolves(FileUserPermissionsMother.create({ fileId: file.id, canDownloadFile: true }))
@@ -132,7 +132,7 @@ describe('useFilePermissions', () => {
     })
 
     it('should call getFileUserPermissionsById when the file is public but latest version is restricted', () => {
-      const file = FileMother.createWithPublicAccessButLatestVersionRestricted()
+      const file = FilePreviewMother.createWithPublicAccessButLatestVersionRestricted()
       fileRepository.getUserPermissionsById = cy
         .stub()
         .resolves(FileUserPermissionsMother.create({ fileId: file.id, canDownloadFile: true }))
@@ -147,7 +147,7 @@ describe('useFilePermissions', () => {
     })
 
     it('should call getFileUserPermissionsById when the file is embargoed', () => {
-      const file = FileMother.createWithEmbargo()
+      const file = FilePreviewMother.createWithEmbargo()
       fileRepository.getUserPermissionsById = cy
         .stub()
         .resolves(FileUserPermissionsMother.create({ fileId: file.id, canDownloadFile: true }))
@@ -162,7 +162,7 @@ describe('useFilePermissions', () => {
     })
 
     it('should return false if there is an error in the use case request', () => {
-      const file = FileMother.createWithEmbargo()
+      const file = FilePreviewMother.createWithEmbargo()
       fileRepository.getUserPermissionsById = cy
         .stub()
         .rejects(new Error('There was an error getting the file user permissions'))
@@ -177,7 +177,7 @@ describe('useFilePermissions', () => {
     })
 
     it('should use the saved state of the permission the second time the file is being consulted', () => {
-      const file = FileMother.createWithRestrictedAccess()
+      const file = FilePreviewMother.createWithRestrictedAccess()
       fileRepository.getUserPermissionsById = cy
         .stub()
         .resolves(FileUserPermissionsMother.create({ fileId: file.id, canDownloadFile: true }))
@@ -193,7 +193,7 @@ describe('useFilePermissions', () => {
     })
 
     it('should always allow to download if the user is in anonymized view (privateUrl)', () => {
-      const file = FileMother.createWithRestrictedAccess()
+      const file = FilePreviewMother.createWithRestrictedAccess()
       fileRepository.getUserPermissionsById = cy
         .stub()
         .resolves(FileUserPermissionsMother.create({ fileId: file.id, canDownloadFile: false }))
@@ -215,7 +215,7 @@ describe('useFilePermissions', () => {
 
   describe('Edit dataset permission', () => {
     it('should call getFileUserPermissionsById when asking for edit dataset permission', () => {
-      const file = FileMother.createDefault()
+      const file = FilePreviewMother.createDefault()
       fileRepository.getUserPermissionsById = cy
         .stub()
         .resolves(FileUserPermissionsMother.create({ fileId: file.id, canEditDataset: true }))
@@ -231,7 +231,7 @@ describe('useFilePermissions', () => {
     })
 
     it('should return false if there is an error in the use case request', () => {
-      const file = FileMother.createDefault()
+      const file = FilePreviewMother.createDefault()
       fileRepository.getUserPermissionsById = cy
         .stub()
         .rejects(new Error('There was an error getting the file user permissions'))
@@ -246,7 +246,7 @@ describe('useFilePermissions', () => {
     })
 
     it('should use the saved state of the edit dataset permission the second time the file is being consulted', () => {
-      const file = FileMother.createDefault()
+      const file = FilePreviewMother.createDefault()
       fileRepository.getUserPermissionsById = cy
         .stub()
         .resolves(FileUserPermissionsMother.create({ fileId: file.id, canEditDataset: true }))

@@ -4,12 +4,14 @@ import { DatasetPreviewMother } from '../../../../dataset/domain/models/DatasetP
 describe('DatasetCardHeader', () => {
   it('should render the header', () => {
     const dataset = DatasetPreviewMother.create()
-    cy.customMount(<DatasetCardHeader dataset={dataset} />)
+    cy.customMount(
+      <DatasetCardHeader persistentId={dataset.persistentId} version={dataset.version} />
+    )
 
-    cy.findByText(dataset.title)
+    cy.findByText(dataset.version.title)
       .should('exist')
       .should('have.attr', 'href', `/datasets?persistentId=${dataset.persistentId}`)
-    dataset.labels.forEach((label) => {
+    dataset.version.labels.forEach((label) => {
       cy.findByText(label.value).should('exist')
     })
     cy.findByLabelText('icon-dataset').should('exist')

@@ -1,7 +1,7 @@
 import { SettingRepository } from '../domain/repositories/SettingRepository'
 import { Setting, SettingName } from '../domain/models/Setting'
 import { ZipDownloadLimit } from '../domain/models/ZipDownloadLimit'
-import { FileSizeUnit } from '../../files/domain/models/File'
+import { FileSizeUnit } from '../../files/domain/models/FilePreview'
 
 export class SettingJSDataverseRepository implements SettingRepository {
   // eslint-disable-next-line unused-imports/no-unused-vars

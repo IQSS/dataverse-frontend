@@ -1,11 +1,11 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { DatasetFiles } from '../../../sections/dataset/dataset-files/DatasetFiles'
-import { FileMockRepository } from '../../files/FileMockRepository'
-import { FileMockLoadingRepository } from '../../files/FileMockLoadingRepository'
-import { FileMockNoDataRepository } from '../../files/FileMockNoDataRepository'
+import { FileMockRepository } from '../../file/FileMockRepository'
+import { FileMockLoadingRepository } from '../../file/FileMockLoadingRepository'
+import { FileMockNoDataRepository } from '../../file/FileMockNoDataRepository'
 import { WithSettings } from '../../WithSettings'
-import { FileMockNoFiltersRepository } from '../../files/FileMockNoFiltersRepository'
+import { FileMockNoFiltersRepository } from '../../file/FileMockNoFiltersRepository'
 import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 
 const meta: Meta<typeof DatasetFiles> = {

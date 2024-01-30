@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { DatasetCitation } from '../../../sections/dataset/dataset-citation/DatasetCitation'
-import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { faker } from '@faker-js/faker'
-import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
+import {
+  DatasetMother,
+  DatasetVersionMother
+} from '../../../../tests/component/dataset/domain/models/DatasetMother'
 
 const meta: Meta<typeof DatasetCitation> = {
   title: 'Sections/Dataset Page/DatasetCitation',
@@ -16,34 +18,25 @@ type Story = StoryObj<typeof DatasetCitation>
 
 export const Default: Story = {
   render: () => {
-    const dataset = DatasetMother.createRealistic()
+    const version = DatasetVersionMother.createRealistic()
     return (
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          title={dataset.title}
-          citation={dataset.citation}
-          version={dataset.version}
-        />
+        <DatasetCitation version={version} />
       </div>
     )
   }
 }
 
-export const WithThumbnail: Story = {
+export const WithThumbnailImage: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic({ thumbnail: faker.image.imageUrl() })
     return (
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          title={dataset.title}
-          thumbnail={dataset.thumbnail}
-          citation={dataset.citation}
-          version={dataset.version}
-        />
+        <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
       </div>
     )
   }
@@ -51,18 +44,7 @@ export const WithThumbnail: Story = {
 
 export const DraftVersion: Story = {
   render: () => {
-    const dataset = DatasetMother.createRealistic({
-      citation:
-        'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, DRAFT VERSION',
-      version: new DatasetVersion(
-        1,
-        DatasetPublishingStatus.DRAFT,
-        true,
-        false,
-        DatasetPublishingStatus.DRAFT
-      )
-    })
-
+    const version = DatasetVersionMother.createDraft()
     /*
       Includes extra breaks, so you can see the DRAFT tooltip message
        */
@@ -70,11 +52,7 @@ export const DraftVersion: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          title={dataset.title}
-          citation={dataset.citation}
-          version={dataset.version}
-        />
+        <DatasetCitation version={version} />
       </div>
     )
   }
@@ -82,19 +60,7 @@ export const DraftVersion: Story = {
 
 export const Deaccessioned: Story = {
   render: () => {
-    const dataset = DatasetMother.createRealistic({
-      citation:
-        'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1 DEACCESSIONED VERSION',
-      version: new DatasetVersion(
-        1,
-        DatasetPublishingStatus.DEACCESSIONED,
-        true,
-        false,
-        DatasetPublishingStatus.DEACCESSIONED,
-        1,
-        0
-      )
-    })
+    const version = DatasetVersionMother.createDeaccessioned()
 
     /*
         Includes extra breaks, so you can see the DRAFT tooltip message
@@ -103,11 +69,7 @@ export const Deaccessioned: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          title={dataset.title}
-          citation={dataset.citation}
-          version={dataset.version}
-        />
+        <DatasetCitation version={version} />
       </div>
     )
   }
@@ -115,10 +77,7 @@ export const Deaccessioned: Story = {
 
 export const Anonymized: Story = {
   render: () => {
-    const dataset = DatasetMother.createRealistic({
-      citation:
-        'Author name(s) withheld, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1'
-    })
+    const dataset = DatasetMother.createRealisticAnonymized()
 
     /*
         Includes extra breaks, so you can see the DRAFT tooltip message
@@ -127,12 +86,15 @@ export const Anonymized: Story = {
       <div>
         <br></br>
         <br></br>
-        <DatasetCitation
-          title={dataset.title}
-          citation={dataset.citation}
-          version={dataset.version}
-        />
+        <DatasetCitation version={dataset.version} />
       </div>
     )
+  }
+}
+
+export const WithoutThumbnail: Story = {
+  render: () => {
+    const dataset = DatasetMother.createRealistic()
+    return <DatasetCitation withoutThumbnail version={dataset.version} />
   }
 }

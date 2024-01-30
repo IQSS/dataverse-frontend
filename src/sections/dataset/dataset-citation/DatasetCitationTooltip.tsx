@@ -9,16 +9,11 @@ interface DatasetCitationTooltipProps {
 export function DatasetCitationTooltip({ status }: DatasetCitationTooltipProps) {
   const { t } = useTranslation('dataset')
 
-  if (status !== DatasetPublishingStatus.RELEASED) {
-    return (
-      <>
-        {' '}
-        <QuestionMarkTooltip
-          placement={'top'}
-          message={t(`citation.status.${status}.description`)}
-        />
-      </>
-    )
+  if (status === DatasetPublishingStatus.RELEASED) {
+    return <></>
   }
-  return <></>
+
+  return (
+    <QuestionMarkTooltip placement={'top'} message={t(`citation.status.${status}.description`)} />
+  )
 }

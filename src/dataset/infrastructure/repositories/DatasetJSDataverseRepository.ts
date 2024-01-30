@@ -2,9 +2,11 @@ import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
 import { Dataset } from '../../domain/models/Dataset'
 import {
   getDataset,
+  getAllDatasetPreviews,
   getDatasetCitation,
   getDatasetSummaryFieldNames,
   Dataset as JSDataset,
+  DatasetPreview as JSDatasetPreview,
   DatasetUserPermissions as JSDatasetPermissions,
   getPrivateUrlDataset,
   getPrivateUrlDatasetCitation,
@@ -13,33 +15,33 @@ import {
   getDatasetLocks,
   DatasetLock as JSDatasetLock,
   getDatasetFilesTotalDownloadSize,
-  FileDownloadSizeMode
+  FileDownloadSizeMode,
+  DatasetPreviewSubset
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { TotalDatasetsCount } from '../../domain/models/TotalDatasetsCount'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
 import { DatasetPreview } from '../../domain/models/DatasetPreview'
-import { DatasetPreviewMother } from '../../../../tests/component/dataset/domain/models/DatasetPreviewMother'
+import { JSDatasetPreviewMapper } from '../mappers/JSDatasetPreviewMapper'
+import { DatasetFormFields } from '../../domain/models/DatasetFormFields'
 
 const includeDeaccessioned = true
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
-  // eslint-disable-next-line unused-imports/no-unused-vars
   getAll(paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
-    // TODO - Implement using the js-dataverse-client
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(DatasetPreviewMother.createManyRealistic(10))
-      }, 1000)
-    })
+    return getAllDatasetPreviews
+      .execute(paginationInfo.pageSize, paginationInfo.offset)
+      .then((subset: DatasetPreviewSubset) => {
+        return subset.datasetPreviews.map((datasetPreview: JSDatasetPreview) =>
+          JSDatasetPreviewMapper.toDatasetPreview(datasetPreview)
+        )
+      })
   }
 
   getTotalDatasetsCount(): Promise<TotalDatasetsCount> {
-    // TODO - Implement using the js-dataverse-client
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(200)
-      }, 1000)
+    // TODO: refactor this so we don't make the same call twice?
+    return getAllDatasetPreviews.execute(10, 0).then((subset: DatasetPreviewSubset) => {
+      return subset.totalDatasetCount
     })
   }
 
@@ -132,6 +134,15 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .catch((error: ReadError) => {
         throw new Error(error.message)
       })
+  }
+
+  createDataset(fields: DatasetFormFields): Promise<string> {
+    const returnMsg = 'Form Data Submitted: ' + JSON.stringify(fields)
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(returnMsg)
+      }, 1000)
+    })
   }
 
   versionToVersionId(version?: string): string | undefined {

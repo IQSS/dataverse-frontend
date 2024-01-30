@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../../../../WithI18next'
 import { WithSettings } from '../../../../../WithSettings'
-import { FileMother } from '../../../../../../../tests/component/files/domain/models/FileMother'
+import { FilePreviewMother } from '../../../../../../../tests/component/files/domain/models/FilePreviewMother'
 import { EditFilesMenu } from '../../../../../../sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/EditFilesMenu'
 import { WithLoggedInUser } from '../../../../../WithLoggedInUser'
 import { WithDatasetAllPermissionsGranted } from '../../../../WithDatasetAllPermissionsGranted'
@@ -16,5 +16,5 @@ export default meta
 type Story = StoryObj<typeof EditFilesMenu>
 
 export const Default: Story = {
-  render: () => <EditFilesMenu files={FileMother.createMany(2)} fileSelection={{}} />
+  render: () => <EditFilesMenu files={FilePreviewMother.createMany(2)} fileSelection={{}} />
 }
