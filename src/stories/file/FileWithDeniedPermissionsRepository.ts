@@ -1,5 +1,5 @@
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
-import { FileUserPermissionsMother } from '../../../tests/component/files/domain/models/FileUserPermissionsMother'
+import { FilePermissionsMother } from '../../../tests/component/files/domain/models/FilePermissionsMother'
 import { FilePermissions } from '../../files/domain/models/FilePermissions'
 import { FileMockRepository } from './FileMockRepository'
 
@@ -11,7 +11,7 @@ export class FileWithDeniedPermissionsRepository
   getUserPermissionsById(id: number): Promise<FilePermissions> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(FileUserPermissionsMother.createWithDeniedPermissions())
+        resolve(FilePermissionsMother.createWithDeniedPermissions())
       }, 1000)
     })
   }

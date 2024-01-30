@@ -37,7 +37,6 @@ import {
   FileTypeCount
 } from '../../domain/models/FilesCountInfo'
 import { FileAccessOption, FileTag } from '../../domain/models/FileCriteria'
-import { FilePermissions } from '../../domain/models/File'
 
 export class JSFileMapper {
   static toFile(
@@ -86,9 +85,7 @@ export class JSFileMapper {
     }
   ): FilePermissions {
     return {
-      fileId: jsFileId,
-      canDownloadFile: jsFileUserPermissions.canDownloadFile,
-      canEditDataset: jsFileUserPermissions.canEditOwnerDataset
+      canDownloadFile: jsFileUserPermissions.canDownloadFile
     }
   }
 
