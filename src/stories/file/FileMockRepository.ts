@@ -4,7 +4,7 @@ import { FilePreview, FileDownloadMode } from '../../files/domain/models/FilePre
 import { FilesCountInfo } from '../../files/domain/models/FilesCountInfo'
 import { FilesCountInfoMother } from '../../../tests/component/files/domain/models/FilesCountInfoMother'
 import { FileUserPermissionsMother } from '../../../tests/component/files/domain/models/FileUserPermissionsMother'
-import { FileUserPermissions } from '../../files/domain/models/FileUserPermissions'
+import { FilePermissions } from '../../files/domain/models/FilePermissions'
 import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/models/Dataset'
 import { FileCriteria } from '../../files/domain/models/FileCriteria'
 import { FilePreviewMother } from '../../../tests/component/files/domain/models/FilePreviewMother'
@@ -57,7 +57,7 @@ export class FileMockRepository implements FileRepository {
   }
 
   // eslint-disable-next-line unused-imports/no-unused-vars
-  getUserPermissionsById(id: number): Promise<FileUserPermissions> {
+  getUserPermissionsById(id: number): Promise<FilePermissions> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FileUserPermissionsMother.create())

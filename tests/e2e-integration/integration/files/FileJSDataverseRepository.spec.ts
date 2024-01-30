@@ -456,25 +456,6 @@ describe('File JSDataverse Repository', () => {
     })
   })
 
-  describe('Get file user permissions by id', () => {
-    it('gets file user permissions by id', async () => {
-      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1))
-      if (!datasetResponse.files) throw new Error('Files not found')
-
-      const expectedFileUserPermissions = {
-        fileId: datasetResponse.files[0].id,
-        canDownloadFile: true,
-        canEditDataset: true
-      }
-
-      await fileRepository
-        .getUserPermissionsById(datasetResponse.files[0].id)
-        .then((fileUserPermissions) => {
-          expect(fileUserPermissions).to.deep.equal(expectedFileUserPermissions)
-        })
-    })
-  })
-
   describe('Get FilesCountInfo by dataset persistentId', () => {
     let datasetPersistentId = ''
     before(async () => {

@@ -1,5 +1,5 @@
 import FileTypeToFriendlyTypeMap from './FileTypeToFriendlyTypeMap'
-import { FilePermissions } from './File'
+import { FilePermissions } from './FilePermissions'
 
 export enum FileSizeUnit {
   BYTES = 'B',

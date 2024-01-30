@@ -14,8 +14,7 @@ import {
   FileChecksum
 } from '../../../../../src/files/domain/models/FilePreview'
 import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
-import { FilePermissions } from '../../../../../src/files/domain/models/File'
-
+import { FilePermissions } from '../../../../../src/files/domain/models/FilePermissions'
 const valueOrUndefined: <T>(value: T) => T | undefined = (value) => {
   const shouldShowValue = faker.datatype.boolean()
   return shouldShowValue ? value : undefined
@@ -29,6 +28,7 @@ export class FilePermissionsMother {
   static create(props?: Partial<FilePermissions>): FilePermissions {
     return {
       canDownloadFile: faker.datatype.boolean(),
+      canEditDataset: faker.datatype.boolean(),
       ...props
     }
   }

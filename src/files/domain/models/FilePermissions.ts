@@ -1,5 +1,4 @@
-export interface FileUserPermissions {
-  fileId: number
+export interface FilePermissions {
   canDownloadFile: boolean
   canEditDataset: boolean
 }

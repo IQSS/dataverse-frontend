@@ -1,6 +1,6 @@
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { FileUserPermissionsMother } from '../../../tests/component/files/domain/models/FileUserPermissionsMother'
-import { FileUserPermissions } from '../../files/domain/models/FileUserPermissions'
+import { FilePermissions } from '../../files/domain/models/FilePermissions'
 import { FileMockRepository } from './FileMockRepository'
 
 export class FileWithDeniedPermissionsRepository
@@ -8,7 +8,7 @@ export class FileWithDeniedPermissionsRepository
   implements FileRepository
 {
   // eslint-disable-next-line unused-imports/no-unused-vars
-  getUserPermissionsById(id: number): Promise<FileUserPermissions> {
+  getUserPermissionsById(id: number): Promise<FilePermissions> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FileUserPermissionsMother.createWithDeniedPermissions())

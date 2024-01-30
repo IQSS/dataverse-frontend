@@ -1,8 +1,8 @@
-import { FileUserPermissions } from '../../../../../src/files/domain/models/FileUserPermissions'
+import { FilePermissions } from '../../../../../src/files/domain/models/FilePermissions'
 import { faker } from '@faker-js/faker'
 
 export class FileUserPermissionsMother {
-  static create(props?: Partial<FileUserPermissions>): FileUserPermissions {
+  static create(props?: Partial<FilePermissions>): FilePermissions {
     return {
       fileId: faker.datatype.number(),
       canDownloadFile: faker.datatype.boolean(),
@@ -11,14 +11,14 @@ export class FileUserPermissionsMother {
     }
   }
 
-  static createWithGrantedPermissions(): FileUserPermissions {
+  static createWithGrantedPermissions(): FilePermissions {
     return FileUserPermissionsMother.create({
       canDownloadFile: true,
       canEditDataset: true
     })
   }
 
-  static createWithDeniedPermissions(): FileUserPermissions {
+  static createWithDeniedPermissions(): FilePermissions {
     return FileUserPermissionsMother.create({
       canDownloadFile: false,
       canEditDataset: false

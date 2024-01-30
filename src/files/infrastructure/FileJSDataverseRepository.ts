@@ -1,7 +1,7 @@
 import { FileRepository } from '../domain/repositories/FileRepository'
 import { FilePreview, FileDownloadMode } from '../domain/models/FilePreview'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
-import { FileUserPermissions } from '../domain/models/FileUserPermissions'
+
 import {
   File as JSFile,
   FileDataTable as JSFileTabularData,
@@ -151,17 +151,6 @@ export class FileJSDataverseRepository implements FileRepository {
         FileDownloadSizeMode.ARCHIVAL,
         DomainFileMapper.toJSFileSearchCriteria(criteria),
         includeDeaccessioned
-      )
-      .catch((error: ReadError) => {
-        throw new Error(error.message)
-      })
-  }
-
-  getUserPermissionsById(id: number): Promise<FileUserPermissions> {
-    return getFileUserPermissions
-      .execute(id)
-      .then((jsFileUserPermissions) =>
-        JSFileMapper.toFileUserPermissions(id, jsFileUserPermissions)
       )
       .catch((error: ReadError) => {
         throw new Error(error.message)

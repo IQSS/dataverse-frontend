@@ -1,8 +1,5 @@
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
-
-export interface FilePermissions {
-  canDownloadFile: boolean
-}
+import { FilePermissions } from './FilePermissions'
 
 export interface File {
   name: string

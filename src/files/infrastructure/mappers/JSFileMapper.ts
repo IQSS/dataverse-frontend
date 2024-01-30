@@ -29,7 +29,7 @@ import {
   FileDataTable as JSFileTabularData
 } from '@iqss/dataverse-client-javascript'
 import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
-import { FileUserPermissions } from '../../domain/models/FileUserPermissions'
+import { FilePermissions } from '../../domain/models/FilePermissions'
 import {
   FileAccessCount,
   FilesCountInfo,
@@ -84,7 +84,7 @@ export class JSFileMapper {
       canDownloadFile: boolean
       canEditOwnerDataset: boolean
     }
-  ): FileUserPermissions {
+  ): FilePermissions {
     return {
       fileId: jsFileId,
       canDownloadFile: jsFileUserPermissions.canDownloadFile,
