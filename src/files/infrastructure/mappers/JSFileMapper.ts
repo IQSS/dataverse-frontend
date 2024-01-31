@@ -1,12 +1,12 @@
-import {
-  File as JSFile,
-  FileDataTable as JSFileTabularData
-} from '@iqss/dataverse-client-javascript'
+import { File as JSFile } from '@iqss/dataverse-client-javascript'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FilePreview } from '../../domain/models/FilePreview'
 import { JSFileMetadataMapper } from './JSFileMetadataMapper'
 import { JSFileAccessMapper } from './JSFileAccessMapper'
 import { JSFileIngestMapper } from './JSFileIngestMapper'
+import { File } from '../../domain/models/File'
+import { FileUserPermissions } from '../../domain/models/FileUserPermissions'
+import { FileTabularData } from '../../domain/models/FileMetadata'
 
 export class JSFileMapper {
   static toFilePreview(
@@ -14,7 +14,7 @@ export class JSFileMapper {
     datasetVersion: DatasetVersion,
     downloadsCount: number,
     thumbnail?: string,
-    jsTabularData?: JSFileTabularData[]
+    tabularData?: FileTabularData
   ): FilePreview {
     return {
       id: this.toFileId(jsFile.id),
@@ -22,12 +22,28 @@ export class JSFileMapper {
       datasetPublishingStatus: datasetVersion.publishingStatus,
       access: JSFileAccessMapper.toFileAccess(jsFile.restricted),
       ingest: JSFileIngestMapper.toFileIngest(),
-      metadata: JSFileMetadataMapper.toFileMetadata(
-        jsFile,
-        downloadsCount,
-        thumbnail,
-        jsTabularData
-      )
+      metadata: JSFileMetadataMapper.toFileMetadata(jsFile, downloadsCount, thumbnail, tabularData)
+    }
+  }
+
+  static toFile(
+    jsFile: JSFile,
+    datasetVersion: DatasetVersion,
+    citation: string,
+    downloadsCount: number,
+    userPermissions: FileUserPermissions,
+    thumbnail?: string,
+    tabularData?: FileTabularData
+  ): File {
+    return {
+      id: this.toFileId(jsFile.id),
+      name: this.toFileName(jsFile.name),
+      access: JSFileAccessMapper.toFileAccess(jsFile.restricted),
+      datasetVersion: datasetVersion,
+      citation: citation,
+      permissions: userPermissions,
+      metadata: JSFileMetadataMapper.toFileMetadata(jsFile, downloadsCount, thumbnail, tabularData),
+      ingest: JSFileIngestMapper.toFileIngest()
     }
   }
 

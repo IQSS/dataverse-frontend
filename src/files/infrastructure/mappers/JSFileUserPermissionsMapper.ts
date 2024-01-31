@@ -1,12 +1,10 @@
+import { FileUserPermissions as JSFileUserPermissions } from '@iqss/dataverse-client-javascript'
 import { FileUserPermissions } from '../../domain/models/FileUserPermissions'
 
 export class JSFileUserPermissionsMapper {
   static toFileUserPermissions(
     jsFileId: number,
-    jsFileUserPermissions: {
-      canDownloadFile: boolean
-      canEditOwnerDataset: boolean
-    }
+    jsFileUserPermissions: JSFileUserPermissions
   ): FileUserPermissions {
     return {
       fileId: jsFileId,
