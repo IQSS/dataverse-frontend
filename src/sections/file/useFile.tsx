@@ -16,7 +16,7 @@ export function useFile(repository: FileRepository, id: number) {
         setIsLoading(false)
       })
       .catch(() => {
-        throw new Error('There was an error getting the file')
+        console.error('There was an error getting the file')
         setIsLoading(false)
       })
   }, [repository, id])

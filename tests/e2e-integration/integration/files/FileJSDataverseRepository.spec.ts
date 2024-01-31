@@ -4,6 +4,7 @@ import {
   FileDateType,
   FileEmbargo,
   FileLabelType,
+  FileMetadata,
   FileSize,
   FileSizeUnit,
   FileType
@@ -139,6 +140,21 @@ describe('File JSDataverse Repository', () => {
     TestsUtils.login()
   })
 
+  const compareMetadata = (fileMetadata: FileMetadata, expectedFileMetadata: FileMetadata) => {
+    expect(fileMetadata.type).to.deep.equal(expectedFileMetadata.type)
+    cy.compareDate(fileMetadata.date.date, expectedFileMetadata.date.date)
+    expect(fileMetadata.downloadCount).to.deep.equal(expectedFileMetadata.downloadCount)
+    expect(fileMetadata.labels).to.deep.equal(expectedFileMetadata.labels)
+    expect(fileMetadata.checksum?.algorithm).to.deep.equal(expectedFileMetadata.checksum?.algorithm)
+    expect(fileMetadata.thumbnail).to.deep.equal(expectedFileMetadata.thumbnail)
+    expect(fileMetadata.directory).to.deep.equal(expectedFileMetadata.directory)
+    expect(fileMetadata.embargo).to.deep.equal(expectedFileMetadata.embargo)
+    expect(fileMetadata.tabularData).to.deep.equal(expectedFileMetadata.tabularData)
+    expect(fileMetadata.description).to.deep.equal(expectedFileMetadata.description)
+    expect(fileMetadata.downloadUrls).to.deep.equal(expectedFileMetadata.downloadUrls)
+    expect(fileMetadata.isDeleted).to.deep.equal(expectedFileMetadata.isDeleted)
+  }
+
   describe('Get all files by dataset persistentId', () => {
     it('gets all the files by dataset persistentId with the basic information', async () => {
       const dataset = await DatasetHelper.createWithFiles(FileHelper.createMany(3)).then(
@@ -155,20 +171,7 @@ describe('File JSDataverse Repository', () => {
             expect(file.name).to.deep.equal(expectedFileNames[index])
             expect(file.datasetPublishingStatus).to.deep.equal(expectedFile.datasetPublishingStatus)
             expect(file.access).to.deep.equal(expectedFile.access)
-            expect(file.metadata.type).to.deep.equal(expectedFile.metadata.type)
-            cy.compareDate(file.metadata.date.date, expectedFile.metadata.date.date)
-            expect(file.metadata.downloadCount).to.deep.equal(expectedFile.metadata.downloadCount)
-            expect(file.metadata.labels).to.deep.equal(expectedFile.metadata.labels)
-            expect(file.metadata.checksum?.algorithm).to.deep.equal(
-              expectedFile.metadata.checksum?.algorithm
-            )
-            expect(file.metadata.thumbnail).to.deep.equal(expectedFile.metadata.thumbnail)
-            expect(file.metadata.directory).to.deep.equal(expectedFile.metadata.directory)
-            expect(file.metadata.embargo).to.deep.equal(expectedFile.metadata.embargo)
-            expect(file.metadata.tabularData).to.deep.equal(expectedFile.metadata.tabularData)
-            expect(file.metadata.description).to.deep.equal(expectedFile.metadata.description)
-            expect(file.metadata.downloadUrls).to.deep.equal(expectedFile.metadata.downloadUrls)
-            expect(file.metadata.isDeleted).to.deep.equal(expectedFile.metadata.isDeleted)
+            compareMetadata(file.metadata, expectedFile.metadata)
           })
         })
     })
@@ -824,34 +827,19 @@ describe('File JSDataverse Repository', () => {
 
   describe('getById', () => {
     it('gets a file by id', async () => {
-      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1))
-      if (!datasetResponse.files) throw new Error('Files not found')
+      const datasetResponse = await DatasetHelper.createWithFile(FileHelper.create())
+      if (!datasetResponse.file) throw new Error('File not found')
 
-      const expectedFile = fileExpectedData(datasetResponse.files[0].id)
+      const expectedFile = fileExpectedData(datasetResponse.file.id)
 
-      await fileRepository.getById(datasetResponse.files[0].id).then((file) => {
-        console.log('file', file)
-        console.log('expectedFile', expectedFile)
+      await fileRepository.getById(datasetResponse.file.id).then((file) => {
         expect(file.name).to.deep.equal(expectedFile.name)
         expect(file.ingest).to.deep.equal(expectedFile.ingest)
         expect(file.access).to.deep.equal(expectedFile.access)
         expect(file.permissions).to.deep.equal(expectedFile.permissions)
         expect(file.datasetVersion).to.deep.equal(expectedFile.datasetVersion)
         expect(file.citation).to.deep.equal(expectedFile.citation)
-        expect(file.metadata.type).to.deep.equal(expectedFile.metadata.type)
-        cy.compareDate(file.metadata.date.date, expectedFile.metadata.date.date)
-        expect(file.metadata.downloadCount).to.deep.equal(expectedFile.metadata.downloadCount)
-        expect(file.metadata.labels).to.deep.equal(expectedFile.metadata.labels)
-        expect(file.metadata.checksum?.algorithm).to.deep.equal(
-          expectedFile.metadata.checksum?.algorithm
-        )
-        expect(file.metadata.thumbnail).to.deep.equal(expectedFile.metadata.thumbnail)
-        expect(file.metadata.directory).to.deep.equal(expectedFile.metadata.directory)
-        expect(file.metadata.embargo).to.deep.equal(expectedFile.metadata.embargo)
-        expect(file.metadata.tabularData).to.deep.equal(expectedFile.metadata.tabularData)
-        expect(file.metadata.description).to.deep.equal(expectedFile.metadata.description)
-        expect(file.metadata.downloadUrls).to.deep.equal(expectedFile.metadata.downloadUrls)
-        expect(file.metadata.isDeleted).to.deep.equal(expectedFile.metadata.isDeleted)
+        compareMetadata(file.metadata, expectedFile.metadata)
       })
     })
   })
