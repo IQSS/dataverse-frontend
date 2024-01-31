@@ -16,7 +16,6 @@ import { WithLoggedInUser } from '../WithLoggedInUser'
 import { WithAlerts } from '../WithAlerts'
 import { WithDeaccessionedDataset } from './WithDeaccessionedDataset'
 import { WithNotImplementedModal } from '../WithNotImplementedModal'
-import { FileWithDeniedPermissionsRepository } from '../file/FileWithDeniedPermissionsRepository'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -33,7 +32,7 @@ type Story = StoryObj<typeof Dataset>
 
 export const Default: Story = {
   decorators: [WithLayout, WithDataset, WithNotImplementedModal],
-  render: () => <Dataset fileRepository={new FileWithDeniedPermissionsRepository()} />
+  render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 
 export const DraftWithAllDatasetPermissions: Story = {
@@ -51,12 +50,12 @@ export const LoggedInAsOwner: Story = {
 
 export const Loading: Story = {
   decorators: [WithLayout, WithDatasetLoading],
-  render: () => <Dataset fileRepository={new FileWithDeniedPermissionsRepository()} />
+  render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 
 export const DatasetNotFound: Story = {
   decorators: [WithLayout, WithDatasetNotFound],
-  render: () => <Dataset fileRepository={new FileWithDeniedPermissionsRepository()} />
+  render: () => <Dataset fileRepository={new FileMockRepository()} />
 }
 
 export const DatasetAnonymizedView: Story = {
