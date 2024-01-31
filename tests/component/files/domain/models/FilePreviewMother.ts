@@ -14,7 +14,8 @@ import {
   FileChecksum
 } from '../../../../../src/files/domain/models/FilePreview'
 import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
-import { FilePermissions } from '../../../../../src/files/domain/models/FilePermissions'
+import { FilePermissionsMother } from './FilePermissionsMother'
+
 const valueOrUndefined: <T>(value: T) => T | undefined = (value) => {
   const shouldShowValue = faker.datatype.boolean()
   return shouldShowValue ? value : undefined
@@ -24,22 +25,7 @@ const createFakeFileLabel = (): FileLabel => ({
   type: faker.helpers.arrayElement(Object.values(FileLabelType)),
   value: faker.lorem.word()
 })
-export class FilePermissionsMother {
-  static create(props?: Partial<FilePermissions>): FilePermissions {
-    return {
-      canDownloadFile: faker.datatype.boolean(),
-      ...props
-    }
-  }
 
-  static createWithFileDownloadAllowed(): FilePermissions {
-    return this.create({ canDownloadFile: true })
-  }
-
-  static createWithFileDownloadNotAllowed(): FilePermissions {
-    return this.create({ canDownloadFile: false })
-  }
-}
 export class FileEmbargoMother {
   static create(dateAvailable?: Date): FileEmbargo {
     return new FileEmbargo(dateAvailable ?? faker.date.future())
