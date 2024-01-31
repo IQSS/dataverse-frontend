@@ -5,7 +5,7 @@ import { StoryFn } from '@storybook/react'
 
 export const WithI18next = (Story: StoryFn) => {
   return (
-    <Suspense fallback={<div>loading translations...</div>}>
+    <Suspense>
       <I18nextProvider i18n={i18next}>
         <Story />
       </I18nextProvider>
