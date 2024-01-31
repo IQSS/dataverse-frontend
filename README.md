@@ -115,6 +115,17 @@ Note that both Storybook instances are also published to Chromatic:
 - [Dataverse Frontend](https://www.chromatic.com/builds?appId=646f68aa9beb01b35c599acd)
 - [Dataverse Design System](https://www.chromatic.com/builds?appId=646fbe232a8d3b501a1943f3)
 
+### Cypress Testing Tool
+The project includes [@cypress/grep](https://www.npmjs.com/package/@cypress/grep) for running specific tests. 
+To run the tests, use --env grep="your test name" in the command line.
+
+To run a specific test multiple times, use --env burn=10 in the command line.
+Running tests multilpe times is useful for detecting flaky tests.
+
+For example:
+
+```npx cypress run --spec tests/e2e-integration/e2e/sections/dataset/Dataset.spec.tsx --env grep="loads the restricted files when the user is logged in as owner",burn=10```
+
 ## Local development environment
 
 A containerized environment, oriented to local development, is available to be run from the repository.
