@@ -1,6 +1,6 @@
 import { FileEmbargo, FilePublishingStatus } from '../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
-import { DateHelper } from '../../../shared/domain/helpers/DateHelper'
+import { DateHelper } from '../../../shared/helpers/DateHelper'
 
 interface FileEmbargoDateProps {
   embargo: FileEmbargo | undefined

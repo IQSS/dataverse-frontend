@@ -7,7 +7,7 @@ import {
   FileTabularDataMother,
   FileTypeMother
 } from '../../../files/domain/models/FilePreviewMother'
-import { DateHelper } from '../../../../../src/shared/domain/helpers/DateHelper'
+import { DateHelper } from '../../../../../src/shared/helpers/DateHelper'
 
 describe('FileMetadata', () => {
   it('renders the File Metadata tab', () => {
