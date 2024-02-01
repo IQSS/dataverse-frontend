@@ -1,6 +1,6 @@
-import { FileLabelType } from '../../../../../../../../../src/files/domain/models/FilePreview'
-import { FileLabels } from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileLabels'
-import styles from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info/file-info-cell/FileInfoCell.module.scss'
+import { FileLabelType } from '../../../../../src/files/domain/models/FilePreview'
+import { FileLabels } from '../../../../../src/sections/file/file-labels/FileLabels'
+import styles from '../../../../../src/sections/dataset/dataset-files/files-table/file-info/file-info-cell/FileInfoCell.module.scss'
 
 describe('FileLabels', () => {
   it('renders labels with correct variants and values', () => {

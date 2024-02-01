@@ -11,6 +11,7 @@ import { DatasetCitation } from '../dataset/dataset-citation/DatasetCitation'
 import { FileCitation } from './file-citation/FileCitation'
 import { DatasetLabels } from '../dataset/dataset-labels/DatasetLabels'
 import { FileAccessRestrictedIcon } from './file-access/FileAccessRestrictedIcon'
+import { FileMetadata } from './file-metadata/FileMetadata'
 
 interface FileProps {
   repository: FileRepository
@@ -63,7 +64,9 @@ export function File({ repository, id }: FileProps) {
             </Row>
             <Tabs defaultActiveKey="metadata">
               <Tabs.Tab eventKey="metadata" title={t('tabs.metadata')}>
-                <span></span>
+                <div className={styles['tab-container']}>
+                  <FileMetadata file={file} />
+                </div>
               </Tabs.Tab>
             </Tabs>
             <div className={styles['separation-line']}></div>

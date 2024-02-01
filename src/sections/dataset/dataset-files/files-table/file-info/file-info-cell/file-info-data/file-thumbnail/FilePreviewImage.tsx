@@ -1,12 +1,13 @@
 import styles from './FileThumbnail.module.scss'
 import { Tooltip } from '@iqss/dataverse-design-system'
+import { FileImage } from '../../../../../../../file/file-preview/FileImage'
 
-interface FileThumbnailPreviewImageProps {
+interface FilePreviewImageProps {
   thumbnail: string
   name: string
 }
 
-export function FileThumbnailPreviewImage({ thumbnail, name }: FileThumbnailPreviewImageProps) {
+export function FilePreviewImage({ thumbnail, name }: FilePreviewImageProps) {
   return (
     <Tooltip
       overlay={
@@ -16,7 +17,7 @@ export function FileThumbnailPreviewImage({ thumbnail, name }: FileThumbnailPrev
       }
       placement="top"
       maxWidth={430}>
-      <img className={styles['preview-image']} src={thumbnail} alt={name} />
+      <FileImage thumbnail={thumbnail} name={name} maxHeight={64} maxWidth={64} />
     </Tooltip>
   )
 }

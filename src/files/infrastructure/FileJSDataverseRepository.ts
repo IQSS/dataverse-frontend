@@ -21,12 +21,12 @@ import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/model
 import { File } from '../domain/models/File'
 import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
+import { BASE_URL } from '../../config'
 
 const includeDeaccessioned = true
 
 export class FileJSDataverseRepository implements FileRepository {
-  static readonly DATAVERSE_BACKEND_URL =
-    (import.meta.env.VITE_DATAVERSE_BACKEND_URL as string) ?? ''
+  static readonly DATAVERSE_BACKEND_URL = BASE_URL
 
   getAllByDatasetPersistentId(
     datasetPersistentId: string,

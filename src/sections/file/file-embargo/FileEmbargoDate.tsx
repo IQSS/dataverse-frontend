@@ -1,16 +1,18 @@
-import {
-  FileEmbargo,
-  FilePublishingStatus
-} from '../../../../../../../files/domain/models/FilePreview'
+import { FileEmbargo, FilePublishingStatus } from '../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
-import { DateHelper } from '../../../../../../../shared/domain/helpers/DateHelper'
+import { DateHelper } from '../../../shared/domain/helpers/DateHelper'
 
 interface FileEmbargoDateProps {
   embargo: FileEmbargo | undefined
   publishingStatus: FilePublishingStatus
+  format?: 'YYYY-MM-DD' | 'short'
 }
 
-export function FileEmbargoDate({ embargo, publishingStatus }: FileEmbargoDateProps) {
+export function FileEmbargoDate({
+  embargo,
+  publishingStatus,
+  format = 'short'
+}: FileEmbargoDateProps) {
   const { t } = useTranslation('files')
 
   if (!embargo) {
@@ -21,7 +23,9 @@ export function FileEmbargoDate({ embargo, publishingStatus }: FileEmbargoDatePr
     <div>
       <span>
         {t(embargoTypeOfDate(embargo.isActive, publishingStatus))}{' '}
-        {DateHelper.toDisplayFormat(embargo.dateAvailable)}
+        {format === 'YYYY-MM-DD'
+          ? DateHelper.toDisplayFormatYYYYMMDD(embargo.dateAvailable)
+          : DateHelper.toDisplayFormat(embargo.dateAvailable)}
       </span>
     </div>
   )

@@ -5,13 +5,15 @@ import {
   FileEmbargo,
   FileIngest,
   FileIngestStatus,
-  FileLabel,
-  FileLabelType,
   FileSize,
   FileSizeUnit,
   FilePublishingStatus,
   FileType,
-  FileChecksum
+  FileChecksum,
+  FileLabel,
+  FileLabelType,
+  FileTabularData,
+  FileVersion
 } from '../../../../../src/files/domain/models/FilePreview'
 import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
 
@@ -20,16 +22,69 @@ const valueOrUndefined: <T>(value: T) => T | undefined = (value) => {
   return shouldShowValue ? value : undefined
 }
 
-const createFakeFileLabel = (): FileLabel => ({
-  type: faker.helpers.arrayElement(Object.values(FileLabelType)),
-  value: faker.lorem.word()
-})
+export class FileTypeMother {
+  static create(props?: Partial<FileType>): FileType {
+    return new FileType(
+      props?.value ?? faker.helpers.arrayElement(Object.keys(FileTypeToFriendlyTypeMap)),
+      props?.original
+    )
+  }
 
-export class FileEmbargoMother {
-  static create(dateAvailable?: Date): FileEmbargo {
-    return new FileEmbargo(dateAvailable ?? faker.date.future())
+  static createTabular(): FileType {
+    return new FileType('text/tab-separated-values', 'Comma Separated Values')
+  }
+
+  static createText(): FileType {
+    return new FileType('text/plain')
+  }
+
+  static createImage(): FileType {
+    return new FileType('image')
+  }
+
+  static createRealistic(): FileType {
+    return new FileType('text/csv', 'Comma Separated Values')
   }
 }
+
+export class FileTabularDataMother {
+  static create(props?: Partial<FileTabularData>): FileTabularData {
+    return {
+      variablesCount: faker.datatype.number(100),
+      observationsCount: faker.datatype.number(100),
+      unf: `UNF:6:xXw6cIZnwHWvmRdwhYCQZA==`,
+      ...props
+    }
+  }
+}
+
+export class FileLabelMother {
+  static create(props?: Partial<FileLabel>): FileLabel {
+    return {
+      type: faker.helpers.arrayElement(Object.values(FileLabelType)),
+      value: faker.lorem.word(),
+      ...props
+    }
+  }
+
+  static createMany(count: number): FileLabel[] {
+    return Array.from({ length: count }).map(() => this.create())
+  }
+}
+
+export class FileEmbargoMother {
+  static create(props?: Partial<FileEmbargo>): FileEmbargo {
+    return new FileEmbargo(
+      props?.dateAvailable ?? faker.date.future(),
+      props?.reason ?? faker.lorem.sentence()
+    )
+  }
+
+  static createWithNoReason(props?: Partial<FileEmbargo>): FileEmbargo {
+    return new FileEmbargo(props?.dateAvailable ?? faker.date.future(), undefined)
+  }
+}
+
 export class FileIngestMother {
   static create(props?: Partial<FileIngest>): FileIngest {
     return {
@@ -63,12 +118,56 @@ export class FileChecksumMother {
       ...props
     }
   }
+
+  static createRealistic(props?: Partial<FileChecksum>): FileChecksum {
+    return {
+      algorithm: 'MD5',
+      value: 'd41d8cd98f00b204e9800998ecf8427e',
+      ...props
+    }
+  }
+}
+
+export class FileVersionMother {
+  static create(props?: Partial<FileVersion>): FileVersion {
+    return {
+      number: faker.datatype.number(),
+      publishingStatus: faker.helpers.arrayElement(Object.values(FilePublishingStatus)),
+      ...props
+    }
+  }
+
+  static createReleased(props?: Partial<FileVersion>): FileVersion {
+    return this.create({
+      publishingStatus: FilePublishingStatus.RELEASED,
+      ...props
+    })
+  }
+
+  static createDeaccessioned(props?: Partial<FileVersion>): FileVersion {
+    return this.create({
+      publishingStatus: FilePublishingStatus.DEACCESSIONED,
+      ...props
+    })
+  }
+}
+
+export class FileSizeMother {
+  static create(props?: Partial<FileSize>): FileSize {
+    const size = {
+      value: faker.datatype.number({ max: 1024, precision: 2 }),
+      unit: faker.helpers.arrayElement(Object.values(FileSizeUnit)),
+      ...props
+    }
+
+    return new FileSize(size.value, size.unit)
+  }
 }
 
 export class FilePreviewMother {
   static create(props?: Partial<FilePreview>): FilePreview {
     const thumbnail = valueOrUndefined<string>(faker.image.imageUrl())
-    const fileType = faker.helpers.arrayElement(Object.keys(FileTypeToFriendlyTypeMap))
+    const tabularFile = faker.datatype.boolean()
     const checksum = valueOrUndefined<string>(faker.datatype.uuid())
     const fileMockedData = {
       id: faker.datatype.number(),
@@ -79,43 +178,20 @@ export class FilePreviewMother {
         canBeRequested: faker.datatype.boolean(),
         requested: faker.datatype.boolean()
       },
-      version: {
-        number: faker.datatype.number(),
-        publishingStatus: faker.helpers.arrayElement(Object.values(FilePublishingStatus))
-      },
-      type:
-        fileType === 'text/tab-separated-values'
-          ? new FileType('text/tab-separated-values', 'Comma Separated Values')
-          : new FileType(thumbnail ? 'image' : fileType),
-      size: {
-        value: faker.datatype.number({ max: 1024, precision: 2 }),
-        unit: faker.helpers.arrayElement(Object.values(FileSizeUnit))
-      },
+      version: FileVersionMother.create(),
+      type: tabularFile ? FileTypeMother.createTabular() : FileTypeMother.create(),
+      size: FileSizeMother.create(),
       date: {
         type: faker.helpers.arrayElement(Object.values(FileDateType)),
         date: faker.date.recent()
       },
       downloadCount: faker.datatype.number(40),
-      labels: faker.datatype.boolean()
-        ? faker.helpers.arrayElements<FileLabel>([
-            createFakeFileLabel(),
-            createFakeFileLabel(),
-            createFakeFileLabel(),
-            createFakeFileLabel()
-          ])
-        : [],
+      labels: faker.datatype.boolean() ? FileLabelMother.createMany(3) : [],
       checksum: FileChecksumMother.create(),
       thumbnail: thumbnail,
       directory: valueOrUndefined<string>(faker.system.directoryPath()),
       embargo: valueOrUndefined<FileEmbargo>(FileEmbargoMother.create()),
-      tabularData:
-        fileType === 'text/tab-separated-values' && !checksum
-          ? {
-              variablesCount: faker.datatype.number(100),
-              observationsCount: faker.datatype.number(100),
-              unf: `UNF:6:${faker.datatype.uuid()}==`
-            }
-          : undefined,
+      tabularData: tabularFile && !checksum ? FileTabularDataMother.create() : undefined,
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
       isDeleted: faker.datatype.boolean(),
       ingest: { status: FileIngestStatus.NONE },
@@ -133,7 +209,7 @@ export class FilePreviewMother {
       fileMockedData.name,
       fileMockedData.access,
       fileMockedData.type,
-      new FileSize(fileMockedData.size.value, fileMockedData.size.unit),
+      fileMockedData.size,
       fileMockedData.date,
       fileMockedData.downloadCount,
       fileMockedData.labels,
@@ -162,11 +238,8 @@ export class FilePreviewMother {
 
   static createDefault(props?: Partial<FilePreview>): FilePreview {
     const defaultFile = {
-      type: new FileType('text/plain'),
-      version: {
-        number: 1,
-        publishingStatus: FilePublishingStatus.RELEASED
-      },
+      type: FileTypeMother.createText(),
+      version: FileVersionMother.createReleased(),
       access: {
         restricted: false,
         latestVersionRestricted: false,
@@ -188,14 +261,7 @@ export class FilePreviewMother {
   }
 
   static createWithLabels(): FilePreview {
-    return this.createDefault({
-      labels: faker.helpers.arrayElements<FileLabel>([
-        createFakeFileLabel(),
-        createFakeFileLabel(),
-        createFakeFileLabel(),
-        createFakeFileLabel()
-      ])
-    })
+    return this.createDefault({ labels: FileLabelMother.createMany(4) })
   }
 
   static createWithDirectory(): FilePreview {
@@ -222,19 +288,15 @@ export class FilePreviewMother {
 
   static createTabular(props?: Partial<FilePreview>): FilePreview {
     return this.createDefault({
-      type: new FileType('text/tab-separated-values', 'Comma Separated Values'),
-      tabularData: {
-        variablesCount: faker.datatype.number(100),
-        observationsCount: faker.datatype.number(100),
-        unf: `UNF:${faker.datatype.uuid()}==`
-      },
+      type: FileTypeMother.createTabular(),
+      tabularData: FileTabularDataMother.create(),
       ...props
     })
   }
 
   static createNonTabular(props?: Partial<FilePreview>): FilePreview {
     return this.createDefault({
-      type: new FileType('text/plain'),
+      type: FileTypeMother.createText(),
       tabularData: undefined,
       ...props
     })
@@ -339,7 +401,7 @@ export class FilePreviewMother {
         requested: false
       },
       thumbnail: faker.image.imageUrl(),
-      type: new FileType('image')
+      type: FileTypeMother.createImage()
     })
   }
 
@@ -352,16 +414,13 @@ export class FilePreviewMother {
         requested: false
       },
       thumbnail: faker.image.imageUrl(),
-      type: new FileType('image')
+      type: FileTypeMother.createImage()
     })
   }
 
   static createDeaccessioned(): FilePreview {
     return this.createDefault({
-      version: {
-        number: 1,
-        publishingStatus: FilePublishingStatus.DEACCESSIONED
-      }
+      version: FileVersionMother.createDeaccessioned()
     })
   }
   static createDeleted(): FilePreview {

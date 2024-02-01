@@ -1,6 +1,6 @@
-import { FileLabel, FileLabelType } from '../../../../../../../files/domain/models/FilePreview'
+import { FileLabel, FileLabelType } from '../../../files/domain/models/FilePreview'
 import { Badge } from '@iqss/dataverse-design-system'
-import styles from '../FileInfoCell.module.scss'
+import styles from './FileLabels.module.scss'
 
 const VARIANT_BY_LABEL_TYPE: Record<FileLabelType, 'secondary' | 'info'> = {
   [FileLabelType.CATEGORY]: 'secondary',
@@ -9,7 +9,7 @@ const VARIANT_BY_LABEL_TYPE: Record<FileLabelType, 'secondary' | 'info'> = {
 
 export function FileLabels({ labels }: { labels: FileLabel[] }) {
   return (
-    <div className={styles['labels-container']}>
+    <div className={styles.container}>
       {labels.map((label, index) => (
         <Badge key={`${label.value}-${index}`} variant={VARIANT_BY_LABEL_TYPE[label.type]}>
           {label.value}

@@ -22,6 +22,8 @@ describe('File', () => {
       'exist'
     )
     cy.findByText('Version 1.0').should('exist')
+    cy.findByRole('tab', { name: 'Metadata' }).should('exist')
+    cy.findByRole('button', { name: 'File Metadata' }).should('exist')
   })
 
   it('renders skeleton while loading', () => {
@@ -32,7 +34,7 @@ describe('File', () => {
 
     cy.findByTestId('file-skeleton').should('exist')
     cy.wrap(fileRepository.getById).should('be.calledWith', 19)
-    cy.findByText(testFile.name).should('not.exist')
+    cy.findByText(testFile.name).should('exist')
   })
 
   it('renders page not found when file is not found', () => {
