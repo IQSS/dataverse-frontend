@@ -25,7 +25,7 @@ export interface FileRepository {
     criteria?: FileCriteria
   ) => Promise<number>
   getUserPermissionsById: (id: number) => Promise<FileUserPermissions>
-  getById: (id: number) => Promise<File | undefined>
+  getById: (id: number, datasetVersionNumber?: string) => Promise<File | undefined>
   getMultipleFileDownloadUrl: (ids: number[], downloadMode: FileDownloadMode) => string
   getFileDownloadUrl: (id: number, downloadMode: FileDownloadMode) => string
 }

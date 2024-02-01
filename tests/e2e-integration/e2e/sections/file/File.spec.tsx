@@ -73,7 +73,8 @@ describe('File', () => {
         })
     })
 
-    it('successfully loads a file when passing the id and datasetVersion', () => {
+    it.skip('successfully loads a file when passing the id and datasetVersion', () => {
+      // TODO: remove the skip when js-dataverse accepts dataset version
       cy.wrap(
         DatasetHelper.createWithFileAndPublish(FileHelper.create()).then(
           (datasetResponse) => datasetResponse.file

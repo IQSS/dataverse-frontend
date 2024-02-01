@@ -175,9 +175,9 @@ export class FileJSDataverseRepository implements FileRepository {
       })
   }
 
-  getById(id: number): Promise<File> {
+  getById(id: number, datasetVersionNumber?: string): Promise<File> {
     return getFile
-      .execute(id)
+      .execute(id, datasetVersionNumber)
       .then((jsFile) =>
         Promise.all([
           jsFile,

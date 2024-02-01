@@ -18,11 +18,12 @@ import { DatasetPublishingStatus } from '../../dataset/domain/models/Dataset'
 interface FileProps {
   repository: FileRepository
   id: number
+  datasetVersionNumber?: string
 }
-export function File({ repository, id }: FileProps) {
+export function File({ repository, id, datasetVersionNumber }: FileProps) {
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('file')
-  const { file, isLoading } = useFile(repository, id)
+  const { file, isLoading } = useFile(repository, id, datasetVersionNumber)
 
   useEffect(() => {
     setIsLoading(isLoading)
