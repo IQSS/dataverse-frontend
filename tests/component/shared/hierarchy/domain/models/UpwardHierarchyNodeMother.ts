@@ -26,14 +26,17 @@ export class UpwardHierarchyNodeMother {
   static createDataset(props?: Partial<UpwardHierarchyNode>): UpwardHierarchyNode {
     return this.create({
       ...props,
-      type: DvObjectType.DATASET
+      type: DvObjectType.DATASET,
+      parent: props?.parent ?? this.createCollection()
     })
   }
 
   static createCollection(props?: Partial<UpwardHierarchyNode>): UpwardHierarchyNode {
     return this.create({
       ...props,
-      type: DvObjectType.COLLECTION
+      type: DvObjectType.COLLECTION,
+      name: props?.name ?? 'Root',
+      id: props?.id ?? 'root'
     })
   }
 }
