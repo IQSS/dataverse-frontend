@@ -9,7 +9,8 @@ export class UpwardHierarchyNode {
     public readonly id: string,
     public readonly name: string,
     public readonly type: DvObjectType,
-    public readonly parent?: UpwardHierarchyNode
+    public readonly parent?: UpwardHierarchyNode,
+    public readonly version?: string
   ) {}
 
   public toArray(): UpwardHierarchyNode[] {

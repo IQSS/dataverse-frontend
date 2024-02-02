@@ -3,13 +3,25 @@ import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/mode
 
 describe('BreadcrumbsGenerator', () => {
   it('shows the hierarchy items as breadcrumbs', () => {
-    const grandparent = UpwardHierarchyNodeMother.create({ name: 'Grandparent' })
-    const parent = UpwardHierarchyNodeMother.create({ name: 'Parent', parent: grandparent })
-    const root = UpwardHierarchyNodeMother.create({ name: 'Root', parent: parent })
+    const collection = UpwardHierarchyNodeMother.createCollection({
+      name: 'Collection',
+      id: 'collection'
+    })
+    const dataset = UpwardHierarchyNodeMother.createDataset({
+      name: 'Dataset',
+      parent: collection,
+      version: '1.0',
+      id: 'dataset'
+    })
+    const file = UpwardHierarchyNodeMother.createFile({ name: 'File', parent: dataset })
 
-    cy.customMount(<BreadcrumbsGenerator hierarchy={root} />)
-    cy.findByText('Root').should('have.class', 'active')
-    cy.findByRole('button', { name: 'Parent' }).should('exist')
-    cy.findByRole('button', { name: 'Grandparent' }).should('exist')
+    cy.customMount(<BreadcrumbsGenerator hierarchy={file} />)
+    cy.findByText('File').should('have.class', 'active')
+    cy.findByRole('link', { name: 'Dataset' })
+      .should('exist')
+      .should('have.attr', 'href', '/datasets?id=dataset&version=1.0')
+    cy.findByRole('link', { name: 'Collection' })
+      .should('exist')
+      .should('have.attr', 'href', '/collections?id=collection')
   })
 })
