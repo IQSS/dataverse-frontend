@@ -18,14 +18,13 @@ export function BreadcrumbsGenerator({ hierarchy }: BreadcrumbGeneratorProps) {
             {isLast ? (
               item.name
             ) : (
-              <LinkToPage
-                page={dvObjectTypeToRoute[item.type]}
-                searchParams={{
-                  id: item.id,
-                  ...(item.version ? { version: item.version } : {})
-                }}>
-                {item.name}
-              </LinkToPage>
+              <LinkToDvObject
+                name={item.name}
+                type={item.type}
+                id={item.id}
+                persistentId={item.persistentId}
+                version={item.version}
+              />
             )}
           </Breadcrumb.Item>
         )
@@ -38,4 +37,30 @@ const dvObjectTypeToRoute: Record<string, Route> = {
   dataset: Route.DATASETS,
   collection: Route.COLLECTIONS,
   file: Route.FILES
+}
+
+const LinkToDvObject = ({
+  name,
+  type,
+  id,
+  persistentId,
+  version
+}: {
+  name: string
+  type: string
+  id?: string
+  persistentId?: string
+  version?: string
+}) => {
+  return (
+    <LinkToPage
+      page={dvObjectTypeToRoute[type]}
+      searchParams={{
+        ...(id ? { id } : {}),
+        ...(persistentId ? { persistentId } : {}),
+        ...(version ? { version } : {})
+      }}>
+      {name}
+    </LinkToPage>
+  )
 }

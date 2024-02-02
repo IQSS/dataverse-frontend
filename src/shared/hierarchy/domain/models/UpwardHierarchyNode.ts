@@ -6,11 +6,12 @@ export enum DvObjectType {
 
 export class UpwardHierarchyNode {
   constructor(
-    public readonly id: string,
     public readonly name: string,
     public readonly type: DvObjectType,
-    public readonly parent?: UpwardHierarchyNode,
-    public readonly version?: string
+    public readonly id?: string,
+    public readonly persistentId?: string,
+    public readonly version?: string,
+    public readonly parent?: UpwardHierarchyNode
   ) {}
 
   public toArray(): UpwardHierarchyNode[] {
