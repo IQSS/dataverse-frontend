@@ -7,6 +7,7 @@ export function FileSkeleton() {
   const { t } = useTranslation('file')
   return (
     <SkeletonTheme>
+      <Skeleton width="20%" style={{ marginBottom: 16 }} />
       <article data-testid="file-skeleton">
         <header className={styles.header}>
           <h1>
