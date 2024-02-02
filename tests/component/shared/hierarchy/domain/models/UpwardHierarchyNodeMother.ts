@@ -19,7 +19,8 @@ export class UpwardHierarchyNodeMother {
   static createFile(props?: Partial<UpwardHierarchyNode>): UpwardHierarchyNode {
     return this.create({
       ...props,
-      type: DvObjectType.FILE
+      type: DvObjectType.FILE,
+      parent: props?.parent ?? this.createDataset()
     })
   }
 
@@ -27,6 +28,7 @@ export class UpwardHierarchyNodeMother {
     return this.create({
       ...props,
       type: DvObjectType.DATASET,
+      name: props?.name ?? 'Dataset Title',
       parent: props?.parent ?? this.createCollection()
     })
   }

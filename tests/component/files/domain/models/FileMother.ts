@@ -10,6 +10,7 @@ import {
   FileTypeMother,
   FileVersionMother
 } from './FilePreviewMother'
+import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 
 export class FileMother {
   static create(props?: Partial<File>): File {
@@ -27,6 +28,7 @@ export class FileMother {
       },
       labels: faker.datatype.boolean() ? FileLabelMother.createMany(3) : [],
       depositDate: faker.date.past(),
+      hierarchy: UpwardHierarchyNodeMother.createFile(),
       publicationDate: faker.datatype.boolean() ? faker.date.past() : undefined,
       thumbnail: faker.datatype.boolean() ? faker.image.imageUrl(400) : undefined,
       directory: faker.datatype.boolean() ? faker.system.directoryPath() : undefined,
@@ -55,6 +57,7 @@ export class FileMother {
       },
       persistentId: 'doi:10.5072/FK2/ABC123',
       checksum: FileChecksumMother.createRealistic(),
+      hierarchy: UpwardHierarchyNodeMother.createFile({ name: 'File Title' }),
       ...props
     })
   }

@@ -9,6 +9,7 @@ import {
   FileType,
   FileVersion
 } from './FilePreview'
+import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 export interface FilePermissions {
   canDownloadFile: boolean
@@ -26,6 +27,7 @@ export interface File {
   labels: FileLabel[]
   downloadUrls: FileDownloadUrls
   depositDate: Date
+  hierarchy: UpwardHierarchyNode
   publicationDate?: Date
   persistentId?: string
   thumbnail?: string
