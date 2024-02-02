@@ -13,6 +13,8 @@ describe('File', () => {
 
     cy.wrap(fileRepository.getById).should('be.calledWith', 19)
 
+    cy.findByRole('link', { name: 'Dataset Title' }).should('exist')
+    cy.findByRole('link', { name: 'Root' }).should('exist')
     cy.findAllByText(testFile.name).should('exist')
     cy.findByText(`This file is part of "${testFile.datasetVersion.title}".`).should('exist')
     cy.findByText('File Citation').should('exist')
@@ -34,7 +36,7 @@ describe('File', () => {
 
     cy.findByTestId('file-skeleton').should('exist')
     cy.wrap(fileRepository.getById).should('be.calledWith', 19)
-    cy.findByText(testFile.name).should('exist')
+    cy.findAllByText(testFile.name).should('exist')
   })
 
   it('renders page not found when file is not found', () => {
