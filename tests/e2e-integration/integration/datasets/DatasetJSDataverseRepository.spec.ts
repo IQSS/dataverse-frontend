@@ -14,7 +14,7 @@ import {
   FileDownloadMode,
   FileDownloadSize,
   FileSizeUnit
-} from '../../../../src/files/domain/models/FilePreview'
+} from '../../../../src/files/domain/models/FileMetadata'
 import { DatasetPaginationInfo } from '../../../../src/dataset/domain/models/DatasetPaginationInfo'
 
 chai.use(chaiAsPromised)

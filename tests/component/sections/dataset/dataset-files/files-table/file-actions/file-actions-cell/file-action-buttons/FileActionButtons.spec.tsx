@@ -1,11 +1,11 @@
 import { FileActionButtons } from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/FileActionButtons'
-import { FilePreviewMother } from '../../../../../../../files/domain/models/FilePreviewMother'
 import { DatasetRepository } from '../../../../../../../../../src/dataset/domain/repositories/DatasetRepository'
 import {
   DatasetMother,
   DatasetPermissionsMother
 } from '../../../../../../../dataset/domain/models/DatasetMother'
 import { DatasetProvider } from '../../../../../../../../../src/sections/dataset/DatasetProvider'
+import { FilePreviewMother } from '../../../../../../../files/domain/models/FilePreviewMother'
 
 const file = FilePreviewMother.createDefault()
 describe('FileActionButtons', () => {

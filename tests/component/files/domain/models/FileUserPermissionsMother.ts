@@ -11,17 +11,25 @@ export class FileUserPermissionsMother {
     }
   }
 
-  static createWithGrantedPermissions(): FileUserPermissions {
-    return FileUserPermissionsMother.create({
+  static createWithAllPermissionsGranted(): FileUserPermissions {
+    return this.create({
       canDownloadFile: true,
       canEditDataset: true
     })
   }
 
-  static createWithDeniedPermissions(): FileUserPermissions {
-    return FileUserPermissionsMother.create({
+  static createWithAllPermissionsDenied(): FileUserPermissions {
+    return this.create({
       canDownloadFile: false,
       canEditDataset: false
     })
+  }
+
+  static createWithDownloadFileGranted(): FileUserPermissions {
+    return this.create({ canDownloadFile: true })
+  }
+
+  static createWithDownloadFileDenied(): FileUserPermissions {
+    return this.create({ canDownloadFile: false })
   }
 }

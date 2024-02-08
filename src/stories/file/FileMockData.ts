@@ -1,6 +1,8 @@
-import { FilePreview, FileSize, FileSizeUnit } from '../../files/domain/models/FilePreview'
-import { FilePreviewMother } from '../../../tests/component/files/domain/models/FilePreviewMother'
+import { FileSize, FileSizeUnit } from '../../files/domain/models/FileMetadata'
+import { FileMetadataMother } from '../../../tests/component/files/domain/models/FileMetadataMother'
 import { FilePaginationInfo } from '../../files/domain/models/FilePaginationInfo'
+import { FilePreview } from '../../files/domain/models/FilePreview'
+import { FilePreviewMother } from '../../../tests/component/files/domain/models/FilePreviewMother'
 
 const range = (len: number) => {
   const arr = []
@@ -14,10 +16,12 @@ export function makeFiles(paginationInfo: FilePaginationInfo): FilePreview[] {
   return range(paginationInfo.pageSize).map((value, index) => {
     return FilePreviewMother.create({
       id: (paginationInfo.page - 1) * paginationInfo.pageSize + index,
-      size: new FileSize(
-        (paginationInfo.page - 1) * paginationInfo.pageSize + index,
-        FileSizeUnit.BYTES
-      )
+      metadata: FileMetadataMother.createDefault({
+        size: new FileSize(
+          (paginationInfo.page - 1) * paginationInfo.pageSize + index,
+          FileSizeUnit.BYTES
+        )
+      })
     })
   })
 }

@@ -1,9 +1,9 @@
 import { Button, DropdownButtonItem, Modal } from '@iqss/dataverse-design-system'
-import { useSession } from '../../../../../../../session/SessionContext'
+import { useSession } from '../../../session/SessionContext'
 import { FormEvent, useState } from 'react'
 import { Form } from '@iqss/dataverse-design-system'
 import { ExclamationTriangle } from 'react-bootstrap-icons'
-import { Route } from '../../../../../../../Route.enum'
+import { Route } from '../../../Route.enum'
 import styles from './AccessFileMenu.module.scss'
 import { useTranslation } from 'react-i18next'
 

@@ -9,7 +9,7 @@ import {
   FileSearchCriteria as JSFileSearchCriteria,
   FileOrderCriteria as JSFileOrderCriteria
 } from '@iqss/dataverse-client-javascript'
-import { FileType } from '../../domain/models/FilePreview'
+import { FileType } from '../../domain/models/FileMetadata'
 
 export class DomainFileMapper {
   static toJSFileSearchCriteria(criteria: FileCriteria): JSFileSearchCriteria {

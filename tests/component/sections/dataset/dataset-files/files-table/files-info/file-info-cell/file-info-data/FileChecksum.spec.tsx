@@ -1,6 +1,6 @@
 import { FileChecksum } from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileChecksum'
 import styles from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info/file-info-cell/FileInfoCell.module.scss'
-import { FileChecksumMother } from '../../../../../../../files/domain/models/FilePreviewMother'
+import { FileChecksumMother } from '../../../../../../../files/domain/models/FileMetadataMother'
 
 describe('FileChecksum', () => {
   it('renders the checksum and CopyToClipboardButton when checksum is provided', () => {

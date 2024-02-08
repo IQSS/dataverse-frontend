@@ -1,4 +1,4 @@
-import { FilePreview, FileDownloadMode } from '../../../../../../files/domain/models/FilePreview'
+import { FileDownloadMode } from '../../../../../../files/domain/models/FileMetadata'
 import { useDataset } from '../../../../DatasetContext'
 import { Button, DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { Download } from 'react-bootstrap-icons'
@@ -8,6 +8,7 @@ import { FileSelection } from '../../row-selection/useFileSelection'
 import { NoSelectedFilesModal } from '../no-selected-files-modal/NoSelectedFilesModal'
 import { MouseEvent, useState } from 'react'
 import { useMultipleFileDownload } from '../../../../../file/multiple-file-download/MultipleFileDownloadContext'
+import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 
 interface DownloadFilesButtonProps {
   files: FilePreview[]

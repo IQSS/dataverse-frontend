@@ -3,9 +3,9 @@ import { FileOptionsMenu } from '../../../../../../../sections/dataset/dataset-f
 import { WithI18next } from '../../../../../../WithI18next'
 import { WithSettings } from '../../../../../../WithSettings'
 import { WithLoggedInUser } from '../../../../../../WithLoggedInUser'
-import { FilePreviewMother } from '../../../../../../../../tests/component/files/domain/models/FilePreviewMother'
 import { WithDatasetAllPermissionsGranted } from '../../../../../WithDatasetAllPermissionsGranted'
 import { WithDatasetLockedFromEdits } from '../../../../../WithDatasetLockedFromEdits'
+import { FilePreviewMother } from '../../../../../../../../tests/component/files/domain/models/FilePreviewMother'
 
 const meta: Meta<typeof FileOptionsMenu> = {
   title:
@@ -24,7 +24,7 @@ export const DefaultWithLoggedInUser: Story = {
 
 export const Restricted: Story = {
   decorators: [WithDatasetAllPermissionsGranted],
-  render: () => <FileOptionsMenu file={FilePreviewMother.createWithRestrictedAccess()} />
+  render: () => <FileOptionsMenu file={FilePreviewMother.createRestricted()} />
 }
 
 export const WithDatasetLocked: Story = {

@@ -1,6 +1,5 @@
 import { useFilePermissions } from '../../../../../src/sections/file/file-permissions/FilePermissionsContext'
 import { FilePermission } from '../../../../../src/files/domain/models/FileUserPermissions'
-import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
 import { useEffect, useState } from 'react'
 import { FilePermissionsProvider } from '../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
@@ -8,6 +7,7 @@ import { FilePreview } from '../../../../../src/files/domain/models/FilePreview'
 import { FileUserPermissionsMother } from '../../../files/domain/models/FileUserPermissionsMother'
 import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
 import { AnonymizedContext } from '../../../../../src/sections/dataset/anonymized/AnonymizedContext'
+import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
 
 const fileRepository: FileRepository = {} as FileRepository
 
@@ -117,7 +117,7 @@ describe('useFilePermissions', () => {
     })
 
     it('should call getFileUserPermissionsById when the file is restricted', () => {
-      const file = FilePreviewMother.createWithRestrictedAccess()
+      const file = FilePreviewMother.createRestricted()
       fileRepository.getUserPermissionsById = cy
         .stub()
         .resolves(FileUserPermissionsMother.create({ fileId: file.id, canDownloadFile: true }))
@@ -177,7 +177,7 @@ describe('useFilePermissions', () => {
     })
 
     it('should use the saved state of the permission the second time the file is being consulted', () => {
-      const file = FilePreviewMother.createWithRestrictedAccess()
+      const file = FilePreviewMother.createRestricted()
       fileRepository.getUserPermissionsById = cy
         .stub()
         .resolves(FileUserPermissionsMother.create({ fileId: file.id, canDownloadFile: true }))
@@ -193,7 +193,7 @@ describe('useFilePermissions', () => {
     })
 
     it('should always allow to download if the user is in anonymized view (privateUrl)', () => {
-      const file = FilePreviewMother.createWithRestrictedAccess()
+      const file = FilePreviewMother.createRestricted()
       fileRepository.getUserPermissionsById = cy
         .stub()
         .resolves(FileUserPermissionsMother.create({ fileId: file.id, canDownloadFile: false }))

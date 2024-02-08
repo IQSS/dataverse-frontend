@@ -1,28 +1,31 @@
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import styles from './AccessFileMenu.module.scss'
 import { RequestAccessModal } from './RequestAccessModal'
-import {
-  FilePreview,
-  FilePublishingStatus
-} from '../../../../../../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
-import { useFileDownloadPermission } from '../../../../../../../file/file-permissions/useFileDownloadPermission'
+import { FileAccess } from '../../../../files/domain/models/FileAccess'
 
 interface RequestAccessButtonProps {
-  file: FilePreview
+  id: number
+  userHasDownloadPermission: boolean
+  access: FileAccess
+  isActivelyEmbargoed: boolean
+  isDeaccessioned: boolean
 }
-export function RequestAccessOption({ file }: RequestAccessButtonProps) {
-  const { t } = useTranslation('files')
-  const { sessionUserHasFileDownloadPermission } = useFileDownloadPermission(file)
 
-  if (
-    file.version.publishingStatus === FilePublishingStatus.DEACCESSIONED ||
-    sessionUserHasFileDownloadPermission
-  ) {
+export function RequestAccessOption({
+  id,
+  access,
+  userHasDownloadPermission,
+  isActivelyEmbargoed,
+  isDeaccessioned
+}: RequestAccessButtonProps) {
+  const { t } = useTranslation('files')
+
+  if (isDeaccessioned || userHasDownloadPermission) {
     return <></>
   }
-  if (file.isActivelyEmbargoed) {
-    if (file.access.restricted) {
+  if (isActivelyEmbargoed) {
+    if (access.restricted) {
       return (
         <DropdownButtonItem disabled>
           {t('requestAccess.embargoedThenRestricted')}.
@@ -31,15 +34,15 @@ export function RequestAccessOption({ file }: RequestAccessButtonProps) {
     }
     return <DropdownButtonItem disabled>{t('requestAccess.embargoed')}.</DropdownButtonItem>
   }
-  if (!file.access.canBeRequested) {
+  if (!access.canBeRequested) {
     return <DropdownButtonItem disabled>{t('requestAccess.requestNotAllowed')}.</DropdownButtonItem>
   }
-  if (file.access.requested) {
+  if (access.requested) {
     return (
       <DropdownButtonItem disabled className={styles['access-requested-message']}>
         {t('requestAccess.accessRequested')}
       </DropdownButtonItem>
     )
   }
-  return <RequestAccessModal fileId={file.id} />
+  return <RequestAccessModal fileId={id} />
 }

@@ -1,14 +1,14 @@
-import { FilePreviewMother } from '../../../../../../../files/domain/models/FilePreviewMother'
+import { FileMetadataMother } from '../../../../../../../files/domain/models/FileMetadataMother'
 import { FileType } from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileType'
 import {
   FileSize,
   FileSizeUnit,
   FileType as FileTypeModel
-} from '../../../../../../../../../src/files/domain/models/FilePreview'
+} from '../../../../../../../../../src/files/domain/models/FileMetadata'
 
 describe('FileType', () => {
   it('renders the type and size correctly when there are no decimals', () => {
-    const file = FilePreviewMother.create({
+    const file = FileMetadataMother.create({
       type: new FileTypeModel('text/plain'),
       size: new FileSize(123.03932894722, FileSizeUnit.BYTES)
     })
@@ -18,7 +18,7 @@ describe('FileType', () => {
   })
 
   it('renders the type and size correctly when there are decimals', () => {
-    const file = FilePreviewMother.create({
+    const file = FileMetadataMother.create({
       type: new FileTypeModel('text/plain'),
       size: new FileSize(123.932894722, FileSizeUnit.MEGABYTES)
     })
@@ -28,7 +28,7 @@ describe('FileType', () => {
   })
 
   it('renders the type correctly when is a tabular file', () => {
-    const file = FilePreviewMother.createTabular({
+    const file = FileMetadataMother.createTabular({
       size: new FileSize(123.03932894722, FileSizeUnit.BYTES)
     })
 
