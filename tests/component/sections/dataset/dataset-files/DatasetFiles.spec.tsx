@@ -1,4 +1,4 @@
-import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
+import { FileMetadataMother } from '../../../files/domain/models/FileMetadataMother'
 import { DatasetFiles } from '../../../../../src/sections/dataset/dataset-files/DatasetFiles'
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
 import {
@@ -12,7 +12,7 @@ import {
   FileSize,
   FileSizeUnit,
   FileType
-} from '../../../../../src/files/domain/models/FilePreview'
+} from '../../../../../src/files/domain/models/FileMetadata'
 import styles from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { SettingMother } from '../../../settings/domain/models/SettingMother'
@@ -20,8 +20,10 @@ import { ZipDownloadLimit } from '../../../../../src/settings/domain/models/ZipD
 import { SettingsProvider } from '../../../../../src/sections/settings/SettingsProvider'
 import { SettingRepository } from '../../../../../src/settings/domain/repositories/SettingRepository'
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
+import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
+import { FilePreview } from '../../../../../src/files/domain/models/FilePreview'
 
-const testFiles = FilePreviewMother.createMany(10)
+const testFiles: FilePreview[] = FilePreviewMother.createMany(10)
 const datasetPersistentId = 'test-dataset-persistent-id'
 const datasetVersion = DatasetMother.create().version
 const fileRepository: FileRepository = {} as FileRepository
@@ -120,7 +122,7 @@ describe('DatasetFiles', () => {
       cy.findByRole('columnheader', { name: '101 to 150 of 200 Files' }).should('exist')
     })
 
-    it('renders the first page if there is only one page and the user changes to a lower page size', () => {
+    it('does not render pagination if the user changes to a larger page size resulting in one page', () => {
       const testFilesCountInfo = FilesCountInfoMother.create({
         total: 32
       })
@@ -148,13 +150,10 @@ describe('DatasetFiles', () => {
       cy.findByRole('button', { name: '3' }).should('not.exist')
       cy.findByRole('columnheader', { name: '1 to 32 of 32 Files' }).should('exist')
 
-      cy.findByLabelText('Files per page').select('10')
-
       cy.findByRole('button', { name: '1' }).should('not.exist')
-      cy.findByRole('button', { name: '2' }).should('exist')
-      cy.findByRole('button', { name: '3' }).should('exist')
-      cy.findByRole('button', { name: '4' }).should('exist')
-      cy.findByRole('columnheader', { name: '1 to 10 of 32 Files' }).should('exist')
+      cy.findByRole('button', { name: '2' }).should('not.exist')
+      cy.findByRole('button', { name: '3' }).should('not.exist')
+      cy.findByRole('button', { name: '4' }).should('not.exist')
     })
 
     it('renders the page that includes the first element of the current page when changing the page size', () => {
@@ -313,11 +312,13 @@ describe('DatasetFiles', () => {
 
     it('renders the zip download limit message when selecting rows from different pages', () => {
       testFiles[1] = FilePreviewMother.create({
-        size: new FileSize(1, FileSizeUnit.BYTES)
+        metadata: FileMetadataMother.create({
+          size: new FileSize(1, FileSizeUnit.BYTES)
+        })
       })
 
       testFiles[2] = FilePreviewMother.create({
-        size: new FileSize(2, FileSizeUnit.BYTES)
+        metadata: FileMetadataMother.create({ size: new FileSize(2, FileSizeUnit.BYTES) })
       })
 
       cy.customMount(

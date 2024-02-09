@@ -1,4 +1,4 @@
-import { FilePublishingStatus } from '../../../../../../../../../src/files/domain/models/FilePreview'
+import { FilePublishingStatus } from '../../../../../../../../../src/files/domain/models/FileVersion'
 import { FileDownloads } from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileDownloads'
 
 describe('FileDownloads', () => {

@@ -5,13 +5,14 @@ import { FormGroupWithMultipleFields } from './form-group-multiple-fields/FormGr
 import { FormInputGroup } from './form-group/form-input-group/FormInputGroup'
 
 interface FormProps {
+  className?: string
   validated?: boolean
   onSubmit?: (event: FormEvent<HTMLFormElement>) => void
 }
 
-function Form({ validated, onSubmit, children }: PropsWithChildren<FormProps>) {
+function Form({ validated, onSubmit, children, className }: PropsWithChildren<FormProps>) {
   return (
-    <FormBS validated={validated} onSubmit={onSubmit}>
+    <FormBS validated={validated} onSubmit={onSubmit} className={className}>
       {children}
     </FormBS>
   )

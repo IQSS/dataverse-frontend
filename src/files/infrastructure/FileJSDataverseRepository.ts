@@ -1,12 +1,11 @@
 import { FileRepository } from '../domain/repositories/FileRepository'
-import { FilePreview, FileDownloadMode } from '../domain/models/FilePreview'
+import { FileDownloadMode } from '../domain/models/FileMetadata'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
 
 import {
   File as JSFile,
   FileDataTable as JSFileTabularData,
   FileDownloadSizeMode,
-  FileUserPermissions as JSFileUserPermissions,
   getDatasetFileCounts,
   getDatasetFiles,
   getDatasetFilesTotalDownloadSize,
@@ -22,12 +21,16 @@ import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/model
 import { File } from '../domain/models/File'
 import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
+import { BASE_URL } from '../../config'
+import { FilePreview } from '../domain/models/FilePreview'
+import { JSFilesCountInfoMapper } from './mappers/JSFilesCountInfoMapper'
+import { FilePermissions } from '../domain/models/FilePermissions'
+import { JSFilePermissionsMapper } from './mappers/JSFilePermissionsMapper'
 
 const includeDeaccessioned = true
 
 export class FileJSDataverseRepository implements FileRepository {
-  static readonly DATAVERSE_BACKEND_URL =
-    (import.meta.env.VITE_DATAVERSE_BACKEND_URL as string) ?? ''
+  static readonly DATAVERSE_BACKEND_URL = BASE_URL
 
   getAllByDatasetPersistentId(
     datasetPersistentId: string,
@@ -54,13 +57,13 @@ export class FileJSDataverseRepository implements FileRepository {
           FileJSDataverseRepository.getAllTabularData(jsFiles)
         ])
       )
-      .then(([jsFiles, downloadCounts, thumbnails, jsFileUserPermissions, jsTabularData]) =>
+      .then(([jsFiles, downloadCounts, thumbnails, permissions, jsTabularData]) =>
         jsFiles.map((jsFile, index) =>
           JSFileMapper.toFile(
             jsFile,
             datasetVersion,
             downloadCounts[index],
-            jsFileUserPermissions[index],
+            permissions[index],
             thumbnails[index],
             jsTabularData[index]
           )
@@ -90,15 +93,16 @@ export class FileJSDataverseRepository implements FileRepository {
       )
     )
   }
-  private static getAllWithPermissions(files: JSFile[]): Promise<JSFileUserPermissions[]> {
-    return Promise.all(files.map((jsFile) => this.getFileUserPermissionById(jsFile.id)))
+  private static getAllWithPermissions(files: JSFile[]): Promise<FilePermissions[]> {
+    return Promise.all(files.map((jsFile) => this.getPermissionsById(jsFile.id)))
   }
 
-  private static getFileUserPermissionById(id: number): Promise<JSFileUserPermissions> {
-    return getFileUserPermissions.execute(id).then((jsFileUserPermissions) => {
-      return jsFileUserPermissions
-    })
+  private static getPermissionsById(id: number): Promise<FilePermissions> {
+    return getFileUserPermissions
+      .execute(id)
+      .then((jsFilePermissions) => JSFilePermissionsMapper.toFilePermissions(jsFilePermissions))
   }
+
   private static getAllThumbnails(jsFiles: JSFile[]): Promise<(string | undefined)[]> {
     return Promise.all(jsFiles.map((jsFile) => this.getThumbnailById(jsFile.id)))
   }
@@ -132,7 +136,7 @@ export class FileJSDataverseRepository implements FileRepository {
         DomainFileMapper.toJSFileSearchCriteria(criteria)
       )
       .then((jsFilesCountInfo) => {
-        return JSFileMapper.toFilesCountInfo(jsFilesCountInfo)
+        return JSFilesCountInfoMapper.toFilesCountInfo(jsFilesCountInfo)
       })
       .catch((error: ReadError) => {
         throw new Error(error.message)

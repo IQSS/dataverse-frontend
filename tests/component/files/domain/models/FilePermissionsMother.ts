@@ -20,4 +20,12 @@ export class FilePermissionsMother {
       canDownloadFile: false
     })
   }
+
+  static createWithDownloadFileGranted(): FilePermissions {
+    return this.create({ canDownloadFile: true })
+  }
+
+  static createWithDownloadFileDenied(): FilePermissions {
+    return this.create({ canDownloadFile: false })
+  }
 }

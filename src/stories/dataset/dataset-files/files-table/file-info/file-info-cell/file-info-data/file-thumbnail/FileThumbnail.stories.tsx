@@ -28,21 +28,21 @@ export const WithThumbnailPreview: Story = {
 
 export const WithThumbnailRestrictedLockedIcon: Story = {
   render: () => {
-    const file = FilePreviewMother.createWithRestrictedAccess()
+    const file = FilePreviewMother.createRestricted()
     return <FileThumbnail file={file} />
   }
 }
 
 export const WithThumbnailRestrictedUnlockedIcon: Story = {
   render: () => {
-    const file = FilePreviewMother.createWithRestrictedAccessWithAccessGranted()
+    const file = FilePreviewMother.createRestricted()
     return <FileThumbnail file={file} />
   }
 }
 
 export const WithThumbnailPreviewRestrictedUnlockedIcon: Story = {
   render: () => {
-    const file = FilePreviewMother.createWithThumbnailRestrictedWithAccessGranted()
+    const file = FilePreviewMother.createWithThumbnailRestricted()
     return <FileThumbnail file={file} />
   }
 }

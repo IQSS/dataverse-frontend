@@ -1,5 +1,5 @@
-import { FileThumbnailIcon } from './FileThumbnailIcon'
-import { FileThumbnailPreviewImage } from './FileThumbnailPreviewImage'
+import { FileIcon } from '../../../../../../../file/file-preview/FileIcon'
+import { FilePreviewImage } from './FilePreviewImage'
 import { FilePreview } from '../../../../../../../../files/domain/models/FilePreview'
 import { FileAccessRestrictedIcon } from '../../../../../../../file/file-access/FileAccessRestrictedIcon'
 import styles from './FileThumbnail.module.scss'
@@ -12,14 +12,14 @@ export function FileThumbnail({ file }: FileThumbnailProps) {
   return (
     <div
       className={`${
-        file.thumbnail && file.permissions.canDownloadFile
+        file.metadata.thumbnail && file.permissions.canDownloadFile
           ? styles['container-preview-image']
           : styles['container-icon']
       }`}>
-      {file.thumbnail && file.permissions.canDownloadFile ? (
-        <FileThumbnailPreviewImage thumbnail={file.thumbnail} name={file.name} />
+      {file.metadata.thumbnail && file.permissions.canDownloadFile ? (
+        <FilePreviewImage thumbnail={file.metadata.thumbnail} name={file.name} />
       ) : (
-        <FileThumbnailIcon type={file.type} />
+        <FileIcon type={file.metadata.type} />
       )}
       <div className={styles['restricted-icon']}>
         <FileAccessRestrictedIcon

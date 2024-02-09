@@ -1,14 +1,15 @@
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { FilesMockData } from './FileMockData'
-import { FilePreview, FileDownloadMode } from '../../files/domain/models/FilePreview'
+import { FileDownloadMode } from '../../files/domain/models/FileMetadata'
 import { FilesCountInfo } from '../../files/domain/models/FilesCountInfo'
 import { FilesCountInfoMother } from '../../../tests/component/files/domain/models/FilesCountInfoMother'
 import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/models/Dataset'
 import { FileCriteria } from '../../files/domain/models/FileCriteria'
-import { FilePreviewMother } from '../../../tests/component/files/domain/models/FilePreviewMother'
+import { FileMetadataMother } from '../../../tests/component/files/domain/models/FileMetadataMother'
 import { FilePaginationInfo } from '../../files/domain/models/FilePaginationInfo'
 import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
 import { File } from '../../files/domain/models/File'
+import { FilePreview } from '../../files/domain/models/FilePreview'
 
 export class FileMockRepository implements FileRepository {
   constructor(public readonly fileMock?: File) {}
@@ -67,11 +68,11 @@ export class FileMockRepository implements FileRepository {
 
   // eslint-disable-next-line unused-imports/no-unused-vars
   getMultipleFileDownloadUrl(ids: number[], downloadMode: FileDownloadMode): string {
-    return FilePreviewMother.createDownloadUrl()
+    return FileMetadataMother.createDownloadUrl()
   }
 
   // eslint-disable-next-line unused-imports/no-unused-vars
   getFileDownloadUrl(id: number, downloadMode: FileDownloadMode): string {
-    return FilePreviewMother.createDownloadUrl()
+    return FileMetadataMother.createDownloadUrl()
   }
 }

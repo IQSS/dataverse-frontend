@@ -23,7 +23,7 @@ describe('EditFilesOptions', () => {
   })
 
   it('renders the unrestrict option if some file is restricted', () => {
-    const fileRestricted = FilePreviewMother.createWithRestrictedAccess()
+    const fileRestricted = FilePreviewMother.createRestricted()
     cy.customMount(<EditFilesOptions files={[fileRestricted]} fileSelection={{}} />)
 
     cy.findByRole('button', { name: 'Unrestrict' }).should('exist').click()

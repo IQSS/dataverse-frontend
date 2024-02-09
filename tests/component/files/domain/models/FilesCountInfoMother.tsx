@@ -1,4 +1,4 @@
-import { FileType } from '../../../../../src/files/domain/models/FilePreview'
+import { FileType } from '../../../../../src/files/domain/models/FileMetadata'
 import { faker } from '@faker-js/faker'
 import { FilesCountInfo } from '../../../../../src/files/domain/models/FilesCountInfo'
 import { FileAccessOption, FileTag } from '../../../../../src/files/domain/models/FileCriteria'
