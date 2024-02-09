@@ -24,7 +24,7 @@ import { DatasetVersionMother } from '../../../component/dataset/domain/models/D
 import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePaginationInfo'
 import { FilePreview } from '../../../../src/files/domain/models/FilePreview'
 import { FilePublishingStatus } from '../../../../src/files/domain/models/FileVersion'
-import { FileIngestStatus } from '../../../../src/files/domain/models/FileIngest'
+import { FileIngest, FileIngestStatus } from '../../../../src/files/domain/models/FileIngest'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -44,7 +44,7 @@ const fileData = (id: number): FilePreview => {
       canBeRequested: false,
       requested: false
     },
-    ingest: { status: FileIngestStatus.NONE, isInProgress: false },
+    ingest: new FileIngest(FileIngestStatus.NONE),
     metadata: {
       type: new FileType('text/plain'),
       size: new FileSize(25, FileSizeUnit.BYTES),

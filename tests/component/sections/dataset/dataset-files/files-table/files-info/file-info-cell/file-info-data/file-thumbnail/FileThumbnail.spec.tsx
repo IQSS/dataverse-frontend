@@ -46,7 +46,7 @@ describe('FileThumbnail', () => {
 
   it('renders FileIcon when thumbnail is not provided', () => {
     const file = FilePreviewMother.createDefault({
-      metadata: FileMetadataMother.create({ type: new FileType('application/pdf') })
+      metadata: FileMetadataMother.createWithoutThumbnail({ type: new FileType('application/pdf') })
     })
 
     cy.customMount(<FileThumbnail file={file} />)
