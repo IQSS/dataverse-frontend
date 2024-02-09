@@ -1,4 +1,5 @@
 {
-  "results": "{{start}} to {{end}} of {{total}} {{item}}s",
+  "results_one": "1 {{item}}",
+  "results_other": "{{start}} to {{end}} of {{count}} {{item}}s",
   "pageSize": "{{item}}s per page"
 }

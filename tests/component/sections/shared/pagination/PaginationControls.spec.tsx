@@ -17,6 +17,40 @@ describe('PaginationControls', () => {
     )
   })
 
+  it('does not show the pagination controls if the total number of pages is less than 2', () => {
+    cy.customMount(
+      <PaginationControls
+        initialPaginationInfo={
+          new PaginationInfo<FilePaginationInfo | DatasetPaginationInfo>(1, pageSize, 10)
+        }
+        onPaginationInfoChange={() => {}}
+      />
+    )
+
+    cy.findByRole('button', { name: 'First' }).should('not.exist')
+    cy.findByRole('button', { name: 'Previous' }).should('not.exist')
+    cy.findByRole('button', { name: 'Next' }).should('not.exist')
+    cy.findByRole('button', { name: 'Last' }).should('not.exist')
+    cy.findByLabelText('Items per page').should('not.exist')
+  })
+
+  it('shows the pagination controls if the total number of pages is greater than 1', () => {
+    cy.customMount(
+      <PaginationControls
+        initialPaginationInfo={
+          new PaginationInfo<FilePaginationInfo | DatasetPaginationInfo>(1, pageSize, 11)
+        }
+        onPaginationInfoChange={() => {}}
+      />
+    )
+
+    cy.findByRole('button', { name: 'First' }).should('not.exist')
+    cy.findByRole('button', { name: 'Previous' }).should('not.exist')
+    cy.findByRole('button', { name: 'Next' }).should('exist')
+    cy.findByRole('button', { name: 'Last' }).should('exist')
+    cy.findByLabelText('Items per page').should('exist')
+  })
+
   it('clicking on the first page button calls goToPage 1', () => {
     const onPaginationInfoChange = cy.stub().as('onPaginationInfoChange')
     cy.customMount(

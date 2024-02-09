@@ -477,7 +477,7 @@ describe('Dataset', () => {
 
           cy.findByLabelText('Search').clear().type('blob-5{enter}', { force: true })
 
-          cy.findByText('1 to 1 of 1 Files').should('exist')
+          cy.findByText('1 File').should('exist')
           cy.findByText('blob').should('not.exist')
           cy.findByText('blob-1').should('not.exist')
           cy.findByText('blob-2').should('not.exist')

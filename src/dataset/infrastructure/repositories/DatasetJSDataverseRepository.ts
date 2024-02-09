@@ -23,6 +23,7 @@ import { TotalDatasetsCount } from '../../domain/models/TotalDatasetsCount'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
 import { DatasetPreview } from '../../domain/models/DatasetPreview'
 import { JSDatasetPreviewMapper } from '../mappers/JSDatasetPreviewMapper'
+import { DatasetFormFields } from '../../domain/models/DatasetFormFields'
 
 const includeDeaccessioned = true
 
@@ -129,5 +130,14 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .catch((error: ReadError) => {
         throw new Error(error.message)
       })
+  }
+
+  createDataset(fields: DatasetFormFields): Promise<string> {
+    const returnMsg = 'Form Data Submitted: ' + JSON.stringify(fields)
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(returnMsg)
+      }, 1000)
+    })
   }
 }
