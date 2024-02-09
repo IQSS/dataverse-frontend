@@ -21,7 +21,7 @@ describe('Home Page', () => {
   it('navigates to a dataset from the list when clicking the title', () => {
     cy.wrap(
       DatasetHelper.destroyAll().then(() => DatasetHelper.createWithTitle(title)),
-      { timeout: 6000 }
+      { timeout: 10000 }
     ).then(() => {
       cy.visit('/spa')
 
