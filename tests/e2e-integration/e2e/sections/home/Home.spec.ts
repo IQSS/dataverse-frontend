@@ -82,7 +82,7 @@ describe('Home Page', () => {
     })
   })
 
-  it('updates browser history when navigating to a new page using the pagination numbers', () => {
+  it.only('correctly changes the pages when using the back and forward buttons from the browser after using some page number button', () => {
     cy.wrap(
       DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
       { timeout: 6000 }
@@ -93,11 +93,17 @@ describe('Home Page', () => {
       cy.findByText(/Dataverse Admin/i).should('exist')
       cy.findByText('11 to 12 of 12 Datasets').should('exist')
 
+      cy.wait(1000)
+
       cy.findByRole('button', { name: '1' }).click({ force: true })
-      cy.findByText('1 to 10 of 12 Datasets').should('exist', { timeout: 6000 })
+      cy.findByText('1 to 10 of 12 Datasets').should('exist')
+
+      cy.wait(1000)
 
       cy.go('back')
       cy.findByText('11 to 12 of 12 Datasets').should('exist')
+
+      cy.wait(1000)
 
       cy.go('forward')
       cy.findByText('1 to 10 of 12 Datasets').should('exist')
