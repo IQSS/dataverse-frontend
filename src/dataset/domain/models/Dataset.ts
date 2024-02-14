@@ -1,6 +1,6 @@
 import { Alert, AlertMessageKey } from '../../../alert/domain/models/Alert'
-import { FileDownloadSize } from '../../../files/domain/models/FilePreview'
 import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { FileDownloadSize } from '../../../files/domain/models/FileMetadata'
 
 export enum DatasetLabelSemanticMeaning {
   DATASET = 'dataset',

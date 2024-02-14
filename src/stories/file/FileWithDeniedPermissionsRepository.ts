@@ -11,7 +11,7 @@ export class FileWithDeniedPermissionsRepository
   getUserPermissionsById(id: number): Promise<FileUserPermissions> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(FileUserPermissionsMother.createWithDeniedPermissions())
+        resolve(FileUserPermissionsMother.createWithAllPermissionsDenied())
       }, 1000)
     })
   }

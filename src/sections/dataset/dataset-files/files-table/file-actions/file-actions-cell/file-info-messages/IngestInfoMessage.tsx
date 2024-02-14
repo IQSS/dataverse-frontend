@@ -1,4 +1,4 @@
-import { FileIngest, FileIngestStatus } from '../../../../../../../files/domain/models/FilePreview'
+import { FileIngest, FileIngestStatus } from '../../../../../../../files/domain/models/FileIngest'
 import { QuestionMarkTooltip } from '@iqss/dataverse-design-system'
 import { InfoMessageBox } from './FileInfoMessages'
 import { useTranslation } from 'react-i18next'
@@ -31,9 +31,9 @@ export function IngestInfoMessage({ ingest }: IngestInfoMessageProps) {
                 <a href="#" title={t('ingest.error.tabularIngestGuide')} target="_blank">
                   {t('ingest.error.tabularIngest')}
                 </a>{' '}
-                {ingest.reportMessage
+                {ingest.message
                   ? t('ingest.error.reportMessage', {
-                      reportMessage: ingest.reportMessage
+                      reportMessage: ingest.message
                     })
                   : t('ingest.error.reportMessageDefault')}
               </p>

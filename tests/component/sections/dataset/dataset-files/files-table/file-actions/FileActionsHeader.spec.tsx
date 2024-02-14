@@ -1,11 +1,11 @@
 import { FileActionsHeader } from '../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/FileActionsHeader'
-import { FilePreviewMother } from '../../../../../files/domain/models/FilePreviewMother'
 import { DatasetProvider } from '../../../../../../../src/sections/dataset/DatasetProvider'
 import { DatasetRepository } from '../../../../../../../src/dataset/domain/repositories/DatasetRepository'
 import {
   DatasetMother,
   DatasetPermissionsMother
 } from '../../../../../dataset/domain/models/DatasetMother'
+import { FilePreviewMother } from '../../../../../files/domain/models/FilePreviewMother'
 
 describe('FileActionsHeader', () => {
   it('renders the file actions header', () => {

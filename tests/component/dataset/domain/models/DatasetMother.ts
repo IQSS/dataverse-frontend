@@ -19,7 +19,7 @@ import {
   FileDownloadMode,
   FileDownloadSize,
   FileSizeUnit
-} from '../../../../../src/files/domain/models/FilePreview'
+} from '../../../../../src/files/domain/models/FileMetadata'
 import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 
 export class DatasetVersionMother {

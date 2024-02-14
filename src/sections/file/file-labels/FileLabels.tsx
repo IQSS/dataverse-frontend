@@ -1,4 +1,4 @@
-import { FileLabel, FileLabelType } from '../../../files/domain/models/FilePreview'
+import { FileLabel, FileLabelType } from '../../../files/domain/models/FileMetadata'
 import { Badge } from '@iqss/dataverse-design-system'
 import styles from './FileLabels.module.scss'
 

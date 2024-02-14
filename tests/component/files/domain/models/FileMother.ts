@@ -1,47 +1,26 @@
 import { File } from '../../../../../src/files/domain/models/File'
-import { faker } from '@faker-js/faker'
 import { DatasetVersionMother } from '../../../dataset/domain/models/DatasetMother'
-import {
-  FileChecksumMother,
-  FileEmbargoMother,
-  FileLabelMother,
-  FileSizeMother,
-  FileTabularDataMother,
-  FileTypeMother,
-  FileVersionMother
-} from './FilePreviewMother'
+import { FileMetadataMother } from './FileMetadataMother'
+import { FileVersionMother } from './FileVersionMother'
+import { FileAccessMother } from './FileAccessMother'
+import { FileUserPermissionsMother } from './FileUserPermissionsMother'
+import { faker } from '@faker-js/faker'
+import { FileIngestMother } from './FileIngestMother'
 import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 
 export class FileMother {
   static create(props?: Partial<File>): File {
-    const name = props?.name ?? faker.system.fileName()
     return {
+      id: faker.datatype.number(),
       name: faker.system.fileName(),
       version: FileVersionMother.create(),
       datasetVersion: DatasetVersionMother.create(),
-      type: FileTypeMother.create(),
-      size: FileSizeMother.create(),
-      citation: FileCitationMother.create(name),
-      restricted: faker.datatype.boolean(),
-      permissions: {
-        canDownloadFile: faker.datatype.boolean()
-      },
-      labels: faker.datatype.boolean() ? FileLabelMother.createMany(3) : [],
-      depositDate: faker.date.past(),
       hierarchy: UpwardHierarchyNodeMother.createFile(),
-      publicationDate: faker.datatype.boolean() ? faker.date.past() : undefined,
-      thumbnail: faker.datatype.boolean() ? faker.image.imageUrl(400) : undefined,
-      directory: faker.datatype.boolean() ? faker.system.directoryPath() : undefined,
-      persistentId: faker.datatype.boolean() ? faker.datatype.uuid() : undefined,
-      downloadUrls: {
-        original: '/api/access/datafile/107',
-        tabular: '/api/access/datafile/107',
-        rData: '/api/access/datafile/107'
-      },
-      tabularData: faker.datatype.boolean() ? FileTabularDataMother.create() : undefined,
-      description: faker.datatype.boolean() ? faker.lorem.sentence() : undefined,
-      checksum: faker.datatype.boolean() ? FileChecksumMother.create() : undefined,
-      embargo: faker.datatype.boolean() ? FileEmbargoMother.create() : undefined,
+      citation: FileCitationMother.create('File Title'),
+      access: FileAccessMother.create(),
+      metadata: FileMetadataMother.create(),
+      permissions: FileUserPermissionsMother.create(),
+      ingest: FileIngestMother.create(),
       ...props
     }
   }
@@ -51,55 +30,54 @@ export class FileMother {
       name: 'File Title',
       datasetVersion: DatasetVersionMother.createRealistic(),
       citation: FileCitationMother.create('File Title'),
-      restricted: false,
-      permissions: {
-        canDownloadFile: true
-      },
-      persistentId: 'doi:10.5072/FK2/ABC123',
-      checksum: FileChecksumMother.createRealistic(),
       hierarchy: UpwardHierarchyNodeMother.createFile({ name: 'File Title' }),
+      access: FileAccessMother.createPublic(),
+      permissions: FileUserPermissionsMother.createWithAllPermissionsGranted(),
+      metadata: FileMetadataMother.createDefault(),
       ...props
     })
   }
 
   static createRestricted(props?: Partial<File>): File {
-    return this.createRealistic(
-      this.createWithDownloadPermissionDenied({ restricted: true, ...props })
-    )
+    return this.createRealistic({
+      access: FileAccessMother.createRestricted(),
+      permissions: FileUserPermissionsMother.createWithAllPermissionsDenied(),
+      ...props
+    })
   }
 
   static createRestrictedWithAccessGranted(props?: Partial<File>): File {
-    return this.createRestricted(this.createWithDownloadPermissionGranted(props))
+    return this.createRealistic({
+      access: FileAccessMother.createRestricted(),
+      permissions: FileUserPermissionsMother.createWithAllPermissionsGranted(),
+      ...props
+    })
   }
 
   static createWithThumbnail(props?: Partial<File>): File {
     return this.create({
-      thumbnail: faker.image.imageUrl(),
+      metadata: FileMetadataMother.createWithThumbnail(),
       ...props
     })
   }
 
   static createWithoutThumbnail(props?: Partial<File>): File {
     return this.create({
-      thumbnail: undefined,
+      metadata: FileMetadataMother.createWithoutThumbnail(),
       ...props
     })
   }
 
   static createWithDownloadPermissionGranted(props?: Partial<File>): File {
     return this.create({
-      permissions: {
-        canDownloadFile: true
-      },
+      permissions: FileUserPermissionsMother.createWithDownloadFileGranted(),
       ...props
     })
   }
 
   static createWithDownloadPermissionDenied(props?: Partial<File>): File {
     return this.create({
-      permissions: {
-        canDownloadFile: false
-      },
+      permissions: FileUserPermissionsMother.createWithDownloadFileDenied(),
       ...props
     })
   }

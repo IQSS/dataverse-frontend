@@ -23,7 +23,7 @@ import {
   FileDownloadMode,
   FileDownloadSize,
   FileSizeUnit
-} from '../../../files/domain/models/FilePreview'
+} from '../../../files/domain/models/FileMetadata'
 import { JSDatasetVersionMapper } from './JSDatasetVersionMapper'
 import {
   DvObjectType,

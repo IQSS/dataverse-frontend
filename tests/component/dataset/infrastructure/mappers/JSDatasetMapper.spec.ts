@@ -15,7 +15,7 @@ import {
   FileDownloadMode,
   FileDownloadSize,
   FileSizeUnit
-} from '../../../../../src/files/domain/models/FilePreview'
+} from '../../../../../src/files/domain/models/FileMetadata'
 import {
   DvObjectType,
   UpwardHierarchyNode

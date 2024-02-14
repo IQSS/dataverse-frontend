@@ -1,9 +1,10 @@
-import { RequestAccessModal } from '../../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/access-file-menu/RequestAccessModal'
-import { FilePreviewMother } from '../../../../../../../../files/domain/models/FilePreviewMother'
-import { UserMother } from '../../../../../../../../users/domain/models/UserMother'
-import { UserRepository } from '../../../../../../../../../../src/users/domain/repositories/UserRepository'
-import { SessionProvider } from '../../../../../../../../../../src/sections/session/SessionProvider'
-import { Route } from '../../../../../../../../../../src/sections/Route.enum'
+import { RequestAccessModal } from '../../../../../../src/sections/file/file-action-buttons/access-file-menu/RequestAccessModal'
+import { UserMother } from '../../../../users/domain/models/UserMother'
+import { UserRepository } from '../../../../../../src/users/domain/repositories/UserRepository'
+import { SessionProvider } from '../../../../../../src/sections/session/SessionProvider'
+import { Route } from '../../../../../../src/sections/Route.enum'
+import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMother'
+
 describe('RequestAccessModal', () => {
   it('renders the RequestAccessModal', () => {
     const file = FilePreviewMother.create()

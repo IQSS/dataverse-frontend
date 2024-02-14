@@ -1,5 +1,5 @@
 import { FileRepository } from '../domain/repositories/FileRepository'
-import { FilePreview, FileDownloadMode } from '../domain/models/FilePreview'
+import { FileDownloadMode } from '../domain/models/FileMetadata'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
 import { FileUserPermissions } from '../domain/models/FileUserPermissions'
 import {
@@ -22,6 +22,9 @@ import { File } from '../domain/models/File'
 import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
 import { BASE_URL } from '../../config'
+import { FilePreview } from '../domain/models/FilePreview'
+import { JSFileUserPermissionsMapper } from './mappers/JSFileUserPermissionsMapper'
+import { JSFilesCountInfoMapper } from './mappers/JSFilesCountInfoMapper'
 
 const includeDeaccessioned = true
 
@@ -121,7 +124,7 @@ export class FileJSDataverseRepository implements FileRepository {
         DomainFileMapper.toJSFileSearchCriteria(criteria)
       )
       .then((jsFilesCountInfo) => {
-        return JSFileMapper.toFilesCountInfo(jsFilesCountInfo)
+        return JSFilesCountInfoMapper.toFilesCountInfo(jsFilesCountInfo)
       })
       .catch((error: ReadError) => {
         throw new Error(error.message)
@@ -150,7 +153,7 @@ export class FileJSDataverseRepository implements FileRepository {
     return getFileUserPermissions
       .execute(id)
       .then((jsFileUserPermissions) =>
-        JSFileMapper.toFileUserPermissions(id, jsFileUserPermissions)
+        JSFileUserPermissionsMapper.toFileUserPermissions(id, jsFileUserPermissions)
       )
       .catch((error: ReadError) => {
         throw new Error(error.message)
