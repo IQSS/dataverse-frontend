@@ -2,7 +2,7 @@ import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FileMetadata } from './FileMetadata'
 import { FileVersion } from './FileVersion'
 import { FileAccess } from './FileAccess'
-import { FileUserPermissions } from './FileUserPermissions'
+import { FilePermissions } from './FilePermissions'
 import { FileIngest } from './FileIngest'
 
 export interface File {
@@ -12,7 +12,7 @@ export interface File {
   access: FileAccess
   datasetVersion: DatasetVersion
   citation: string
-  permissions: FileUserPermissions
+  permissions: FilePermissions
   metadata: FileMetadata
   ingest: FileIngest
 }

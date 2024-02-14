@@ -8,12 +8,14 @@ import { JSFileMetadataMapper } from './JSFileMetadataMapper'
 import { JSFileVersionMapper } from './JSFileVersionMapper'
 import { JSFileAccessMapper } from './JSFileAccessMapper'
 import { JSFileIngestMapper } from './JSFileIngestMapper'
+import { FilePermissions } from '../../domain/models/FilePermissions'
 
 export class JSFileMapper {
   static toFile(
     jsFile: JSFile,
     datasetVersion: DatasetVersion,
     downloadsCount: number,
+    permissions: FilePermissions,
     thumbnail?: string,
     jsTabularData?: JSFileTabularData[]
   ): FilePreview {
@@ -32,7 +34,8 @@ export class JSFileMapper {
         downloadsCount,
         thumbnail,
         jsTabularData
-      )
+      ),
+      permissions: permissions
     }
   }
 

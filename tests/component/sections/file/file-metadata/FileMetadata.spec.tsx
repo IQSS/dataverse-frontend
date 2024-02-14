@@ -9,8 +9,8 @@ import {
   FileTypeMother
 } from '../../../files/domain/models/FileMetadataMother'
 import { DateHelper } from '../../../../../src/shared/domain/helpers/DateHelper'
-import { FileUserPermissionsMother } from '../../../files/domain/models/FileUserPermissionsMother'
 import { FilePublishingStatus } from '../../../../../src/files/domain/models/FileVersion'
+import { FilePermissionsMother } from '../../../files/domain/models/FilePermissionsMother'
 
 const file = FileMother.create()
 describe('FileMetadata', () => {
@@ -103,7 +103,7 @@ describe('FileMetadata', () => {
   })
 
   it('renders the download url if the user has file download permissions', () => {
-    const permissions = FileUserPermissionsMother.createWithDownloadFileGranted()
+    const permissions = FilePermissionsMother.createWithDownloadFileGranted()
 
     cy.customMount(
       <FileMetadata
@@ -127,7 +127,7 @@ describe('FileMetadata', () => {
   })
 
   it('does not render the download url if the user does not have file download permissions', () => {
-    const permissions = FileUserPermissionsMother.createWithDownloadFileDenied()
+    const permissions = FilePermissionsMother.createWithDownloadFileDenied()
     cy.customMount(
       <FileMetadata
         name={file.name}
