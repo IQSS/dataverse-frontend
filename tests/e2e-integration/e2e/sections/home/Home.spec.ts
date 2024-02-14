@@ -81,4 +81,26 @@ describe('Home Page', () => {
       cy.location('search').should('eq', '?page=2')
     })
   })
+
+  it('updates browser history when navigating to a new page using the pagination numbers', () => {
+    cy.wrap(
+      DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
+      { timeout: 6000 }
+    ).then(() => {
+      cy.visit('/spa?page=2')
+
+      cy.findByText(/Root/i).should('exist')
+      cy.findByText(/Dataverse Admin/i).should('exist')
+      cy.findByText('11 to 12 of 12 Datasets').should('exist')
+
+      cy.findByRole('button', { name: '1' }).click({ force: true })
+      cy.findByText('1 to 10 of 12 Datasets').should('exist', { timeout: 6000 })
+
+      cy.go('back')
+      cy.findByText('11 to 12 of 12 Datasets').should('exist')
+
+      cy.go('forward')
+      cy.findByText('1 to 10 of 12 Datasets').should('exist')
+    })
+  })
 })

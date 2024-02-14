@@ -23,7 +23,7 @@ export function PaginationControls({
   showPageSizeSelector = true,
   updateQueryParam = false
 }: PaginationProps) {
-  const [, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [paginationInfo, setPaginationInfo] = useState<DatasetPaginationInfo | FilePaginationInfo>(
     initialPaginationInfo
   )
@@ -46,12 +46,26 @@ export function PaginationControls({
 
   useEffect(() => {
     onPaginationInfoChange(paginationInfo)
-    updateQueryParam && setSearchParams({ page: paginationInfo.page.toString() })
+    if (updateQueryParam) {
+      if (searchParams.get('page') !== paginationInfo.page.toString()) {
+        setSearchParams({ page: paginationInfo.page.toString() })
+      }
+    }
   }, [paginationInfo.page])
 
   useEffect(() => {
     setPaginationInfo(paginationInfo.withTotal(initialPaginationInfo.totalItems))
   }, [initialPaginationInfo.totalItems])
+
+  useEffect(() => {
+    if (updateQueryParam) {
+      if (searchParams.get('page') !== paginationInfo.page.toString()) {
+        const page = searchParams.get('page') ? parseInt(searchParams.get('page') as string) : 1
+        setSearchParams({ page: page.toString() }, { replace: true })
+        goToPage(page)
+      }
+    }
+  }, [searchParams])
 
   if (paginationInfo.totalPages === NO_PAGES) {
     return <></>
