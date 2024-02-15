@@ -2,7 +2,7 @@ import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FileMetadata } from './FileMetadata'
 import { FileVersion } from './FileVersion'
 import { FileAccess } from './FileAccess'
-import { FileUserPermissions } from './FileUserPermissions'
+import { FilePermissions } from './FilePermissions'
 import { FileIngest } from './FileIngest'
 import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 
@@ -14,7 +14,7 @@ export interface File {
   datasetVersion: DatasetVersion
   citation: string
   hierarchy: UpwardHierarchyNode
-  permissions: FileUserPermissions
+  permissions: FilePermissions
   metadata: FileMetadata
   ingest: FileIngest
 }

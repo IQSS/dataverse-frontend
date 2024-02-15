@@ -24,7 +24,7 @@ import { DatasetVersionMother } from '../../../component/dataset/domain/models/D
 import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePaginationInfo'
 import { FilePreview } from '../../../../src/files/domain/models/FilePreview'
 import { FilePublishingStatus } from '../../../../src/files/domain/models/FileVersion'
-import { FileIngestStatus } from '../../../../src/files/domain/models/FileIngest'
+import { FileIngest, FileIngestStatus } from '../../../../src/files/domain/models/FileIngest'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -44,7 +44,7 @@ const fileData = (id: number): FilePreview => {
       canBeRequested: false,
       requested: false
     },
-    ingest: { status: FileIngestStatus.NONE },
+    ingest: new FileIngest(FileIngestStatus.NONE),
     metadata: {
       type: new FileType('text/plain'),
       size: new FileSize(25, FileSizeUnit.BYTES),
@@ -72,8 +72,10 @@ const fileData = (id: number): FilePreview => {
         value: '0187a54071542738aa47939e8218e5f2'
       },
       persistentId: undefined,
-      isActivelyEmbargoed: false
-    }
+      isActivelyEmbargoed: false,
+      isTabular: false
+    },
+    permissions: { canDownloadFile: true }
   }
 }
 
@@ -101,6 +103,8 @@ describe('File JSDataverse Repository', () => {
             expect(file.name).to.deep.equal(expectedFileNames[index])
             expect(file.version).to.deep.equal(expectedFile.version)
             expect(file.access).to.deep.equal(expectedFile.access)
+            expect(file.ingest).to.deep.equal(expectedFile.ingest)
+            expect(file.permissions).to.deep.equal(expectedFile.permissions)
             expect(file.metadata.type).to.deep.equal(expectedFile.metadata.type)
             cy.compareDate(file.metadata.date.date, expectedFile.metadata.date.date)
             expect(file.metadata.downloadCount).to.deep.equal(expectedFile.metadata.downloadCount)
@@ -456,25 +460,6 @@ describe('File JSDataverse Repository', () => {
           files.forEach((file) => {
             expect(file.metadata.isDeleted).to.equal(true)
           })
-        })
-    })
-  })
-
-  describe('Get file user permissions by id', () => {
-    it('gets file user permissions by id', async () => {
-      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1))
-      if (!datasetResponse.files) throw new Error('Files not found')
-
-      const expectedFileUserPermissions = {
-        fileId: datasetResponse.files[0].id,
-        canDownloadFile: true,
-        canEditDataset: true
-      }
-
-      await fileRepository
-        .getUserPermissionsById(datasetResponse.files[0].id)
-        .then((fileUserPermissions) => {
-          expect(fileUserPermissions).to.deep.equal(expectedFileUserPermissions)
         })
     })
   })

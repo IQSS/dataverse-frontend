@@ -8,12 +8,12 @@ import { BASE_URL } from '../../../config'
 import { Trans, useTranslation } from 'react-i18next'
 import { FileMetadata as FileMetadataModel } from '../../../files/domain/models/FileMetadata'
 import { FilePublishingStatus } from '../../../files/domain/models/FileVersion'
-import { FileUserPermissions } from '../../../files/domain/models/FileUserPermissions'
+import { FilePermissions } from '../../../files/domain/models/FilePermissions'
 
 interface FileMetadataProps {
   name: string
   metadata: FileMetadataModel
-  permissions: FileUserPermissions
+  permissions: FilePermissions
   publishingStatus: FilePublishingStatus
 }
 
