@@ -9,6 +9,7 @@ import { useLoading } from '../../loading/LoadingContext'
 import { DatasetsListSkeleton } from './DatasetsListSkeleton'
 import { NoDatasetsMessage } from './NoDatasetsMessage'
 import { DatasetCard } from './dataset-card/DatasetCard'
+import { PageNumberNotFound } from './PageNumberNotFound'
 
 interface DatasetsListProps {
   datasetRepository: DatasetRepository
@@ -21,7 +22,11 @@ export function DatasetsList({ datasetRepository, page }: DatasetsListProps) {
   const [paginationInfo, setPaginationInfo] = useState<DatasetPaginationInfo>(
     new DatasetPaginationInfo(page)
   )
-  const { datasets, isLoading } = useDatasets(datasetRepository, setPaginationInfo, paginationInfo)
+  const { datasets, isLoading, pageNumberNotFound } = useDatasets(
+    datasetRepository,
+    setPaginationInfo,
+    paginationInfo
+  )
 
   useEffect(() => {
     setIsLoading(isLoading)
@@ -29,6 +34,14 @@ export function DatasetsList({ datasetRepository, page }: DatasetsListProps) {
 
   if (isLoading) {
     return <DatasetsListSkeleton />
+  }
+
+  if (pageNumberNotFound) {
+    return (
+      <section className={styles.container}>
+        <PageNumberNotFound />
+      </section>
+    )
   }
 
   return (

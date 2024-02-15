@@ -65,4 +65,10 @@ describe('Datasets List', () => {
     )
     cy.findByText('41 to 50 of 200 Datasets').should('exist')
   })
+
+  it('renders the page not found message when the page number is not found', () => {
+    cy.customMount(<DatasetsList datasetRepository={datasetRepository} page={100} />)
+
+    cy.findByText('Page Number Not Found').should('exist')
+  })
 })
