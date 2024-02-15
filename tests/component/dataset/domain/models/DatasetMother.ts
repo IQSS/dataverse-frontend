@@ -12,72 +12,121 @@ import {
   DatasetPermissions,
   DatasetPublishingStatus,
   DatasetVersion,
+  DatasetVersionNumber,
   MetadataBlockName
 } from '../../../../../src/dataset/domain/models/Dataset'
 import {
   FileDownloadMode,
   FileDownloadSize,
   FileSizeUnit
-} from '../../../../../src/files/domain/models/File'
+} from '../../../../../src/files/domain/models/FileMetadata'
 
 export class DatasetVersionMother {
   static create(props?: Partial<DatasetVersion>): DatasetVersion {
-    return new DatasetVersion(
+    return new DatasetVersion.Builder(
       props?.id ?? faker.datatype.number(),
+      props?.title ?? faker.lorem.sentence(),
+      props?.number ?? new DatasetVersionNumber(1, 0),
       props?.publishingStatus ?? DatasetPublishingStatus.RELEASED,
+      props?.citation ??
+        'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1',
       props?.isLatest ?? false,
       props?.isInReview ?? false,
-      props?.latestVersionStatus ?? DatasetPublishingStatus.RELEASED,
-      props?.majorNumber ?? 1,
-      props?.minorNumber ?? 0
+      props?.latestVersionPublishingStatus ?? DatasetPublishingStatus.RELEASED,
+      props?.someDatasetVersionHasBeenReleased ?? faker.datatype.boolean()
     )
   }
 
-  static createReleased(): DatasetVersion {
-    return this.create({ publishingStatus: DatasetPublishingStatus.RELEASED })
+  static createDeaccessioned(props?: Partial<DatasetVersion>): DatasetVersion {
+    return this.create({
+      publishingStatus: DatasetPublishingStatus.DEACCESSIONED,
+      isLatest: false,
+      citation:
+        'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1 DEACCESSIONED VERSION',
+      someDatasetVersionHasBeenReleased: true,
+      ...props
+    })
   }
 
-  static createDeaccessioned(): DatasetVersion {
-    return this.create({ publishingStatus: DatasetPublishingStatus.DEACCESSIONED })
+  static createDraft(props?: Partial<DatasetVersion>): DatasetVersion {
+    return this.create({
+      publishingStatus: DatasetPublishingStatus.DRAFT,
+      isLatest: false,
+      number: new DatasetVersionNumber(undefined, undefined),
+      citation:
+        'Admin, Dataverse, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, DRAFT VERSION',
+      ...props
+    })
   }
 
-  static createDraftAsLatestVersion(): DatasetVersion {
-    return this.create({ publishingStatus: DatasetPublishingStatus.DRAFT, isLatest: true })
+  static createDraftAsLatestVersion(props?: Partial<DatasetVersion>): DatasetVersion {
+    return this.createDraft({
+      latestVersionPublishingStatus: DatasetPublishingStatus.DRAFT,
+      isLatest: true,
+      ...props
+    })
   }
 
-  static createDraft(): DatasetVersion {
-    return this.create({ publishingStatus: DatasetPublishingStatus.DRAFT })
+  static createDraftAsLatestVersionWithSomeVersionHasBeenReleased(): DatasetVersion {
+    return this.createDraftAsLatestVersion({
+      someDatasetVersionHasBeenReleased: true
+    })
   }
 
   static createDraftAsLatestVersionInReview(): DatasetVersion {
-    return this.create({
-      publishingStatus: DatasetPublishingStatus.DRAFT,
-      isLatest: true,
+    return this.createDraftAsLatestVersion({
       isInReview: true
     })
   }
 
-  static createReleasedWithLatestVersionIsADraft(): DatasetVersion {
+  static createDraftWithLatestVersionIsReleased(): DatasetVersion {
+    return this.createDraft({
+      latestVersionPublishingStatus: DatasetPublishingStatus.RELEASED,
+      someDatasetVersionHasBeenReleased: true
+    })
+  }
+
+  static createNotReleased(): DatasetVersion {
+    return this.createDraft({
+      someDatasetVersionHasBeenReleased: false,
+      latestVersionPublishingStatus: DatasetPublishingStatus.DRAFT
+    })
+  }
+
+  static createReleased(props?: Partial<DatasetVersion>): DatasetVersion {
     return this.create({
       publishingStatus: DatasetPublishingStatus.RELEASED,
-      isLatest: true,
-      latestVersionStatus: DatasetPublishingStatus.DRAFT
+      someDatasetVersionHasBeenReleased: true,
+      isLatest: false,
+      ...props
     })
   }
 
-  static createDraftWithLatestVersionIsADraft(): DatasetVersion {
-    return this.create({
-      publishingStatus: DatasetPublishingStatus.DRAFT,
-      isLatest: true,
-      latestVersionStatus: DatasetPublishingStatus.DRAFT
+  static createReleasedWithLatestVersionIsADraft(): DatasetVersion {
+    return this.createReleased({
+      latestVersionPublishingStatus: DatasetPublishingStatus.DRAFT
     })
   }
 
-  static createWithLatestVersionIsNotADraft(): DatasetVersion {
+  static createRealistic(props?: Partial<DatasetVersion>): DatasetVersion {
     return this.create({
-      publishingStatus: DatasetPublishingStatus.DRAFT,
+      id: 1,
+      title: 'Dataset Title',
+      publishingStatus: DatasetPublishingStatus.RELEASED,
       isLatest: true,
-      latestVersionStatus: DatasetPublishingStatus.RELEASED
+      isInReview: false,
+      latestVersionPublishingStatus: DatasetPublishingStatus.RELEASED,
+      citation:
+        'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1',
+      number: new DatasetVersionNumber(1, 0),
+      someDatasetVersionHasBeenReleased: true,
+      ...props
+    })
+  }
+
+  static createAnonymized(): DatasetVersion {
+    return this.createRealistic({
+      citation: `Author name(s) withheld, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1`
     })
   }
 }
@@ -282,10 +331,7 @@ export class DatasetMother {
   static create(props?: Partial<Dataset>): Dataset {
     const dataset = {
       persistentId: faker.datatype.uuid(),
-      title: faker.lorem.sentence(),
       version: DatasetVersionMother.create(),
-      citation:
-        'Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1',
       license: {
         name: 'CC0 1.0',
         uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
@@ -359,18 +405,17 @@ export class DatasetMother {
       hasValidTermsOfAccess: faker.datatype.boolean(),
       hasOneTabularFileAtLeast: faker.datatype.boolean(),
       isValid: faker.datatype.boolean(),
-      isReleased: faker.datatype.boolean(),
       downloadUrls: DatasetDownloadUrlsMother.create(),
       thumbnail: undefined,
       privateUrl: undefined,
       fileDownloadSizes: [],
+      requestedVersion: undefined,
       ...props
     }
 
     return new Dataset.Builder(
       dataset.persistentId,
       dataset.version,
-      dataset.citation,
       dataset.summaryFields,
       dataset.license,
       dataset.metadataBlocks,
@@ -379,18 +424,17 @@ export class DatasetMother {
       dataset.hasValidTermsOfAccess,
       dataset.hasOneTabularFileAtLeast,
       dataset.isValid,
-      dataset.isReleased,
       dataset.downloadUrls,
       dataset.fileDownloadSizes,
       dataset.thumbnail,
-      dataset.privateUrl
+      dataset.privateUrl,
+      dataset.requestedVersion
     ).build()
   }
 
   static createAnonymized(): Dataset {
     return this.create({
-      citation:
-        'Author name(s) withheld, 2023, "citation", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1',
+      version: DatasetVersionMother.createAnonymized(),
       metadataBlocks: [
         {
           name: MetadataBlockName.CITATION,
@@ -420,20 +464,7 @@ export class DatasetMother {
   static createRealistic(props?: Partial<Dataset>): Dataset {
     return this.create({
       persistentId: 'doi:10.5072/FK2/ABC123',
-      citation: `Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1`,
-      version: new DatasetVersion(
-        1,
-        DatasetPublishingStatus.RELEASED,
-        false,
-        false,
-        DatasetPublishingStatus.RELEASED,
-        1,
-        0
-      ),
-      labels: [
-        { value: 'Version 1.0', semanticMeaning: DatasetLabelSemanticMeaning.FILE },
-        { value: DatasetLabelValue.DRAFT, semanticMeaning: DatasetLabelSemanticMeaning.DATASET }
-      ],
+      version: DatasetVersionMother.createRealistic(),
       license: {
         name: 'CC0 1.0',
         uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
@@ -513,7 +544,6 @@ export class DatasetMother {
         canDeleteDataset: false
       },
       locks: [],
-      isReleased: true,
       hasValidTermsOfAccess: true,
       hasOneTabularFileAtLeast: true,
       fileDownloadSizes: [
@@ -527,7 +557,7 @@ export class DatasetMother {
 
   static createRealisticAnonymized(): Dataset {
     return this.createRealistic({
-      citation: `Author name(s) withheld, 2023, "Dataset Title", <a href="https://doi.org/10.5072/FK2/BUDNRV" target="_blank">https://doi.org/10.5072/FK2/BUDNRV</a>, Root, V1`,
+      version: DatasetVersionMother.createAnonymized(),
       metadataBlocks: [
         {
           name: MetadataBlockName.CITATION,

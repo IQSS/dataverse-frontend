@@ -1,21 +1,29 @@
 import styles from './DatasetCard.module.scss'
-import { DatasetPreview } from '../../../../dataset/domain/models/DatasetPreview'
 import { LinkToPage } from '../../../shared/link-to-page/LinkToPage'
 import { Route } from '../../../Route.enum'
 import { DatasetThumbnail } from '../../../dataset/dataset-thumbnail/DatasetThumbnail'
+import { DatasetPublishingStatus, DatasetVersion } from '../../../../dataset/domain/models/Dataset'
 
 interface DatasetCardThumbnailProps {
-  dataset: DatasetPreview
+  persistentId: string
+  version: DatasetVersion
+  thumbnail?: string
 }
 
-export function DatasetCardThumbnail({ dataset }: DatasetCardThumbnailProps) {
+export function DatasetCardThumbnail({
+  persistentId,
+  version,
+  thumbnail
+}: DatasetCardThumbnailProps) {
   return (
     <div className={styles.thumbnail}>
-      <LinkToPage page={Route.DATASETS} searchParams={{ persistentId: dataset.persistentId }}>
+      <LinkToPage page={Route.DATASETS} searchParams={{ persistentId: persistentId }}>
         <DatasetThumbnail
-          title={dataset.title}
-          thumbnail={dataset.thumbnail}
-          isDeaccessioned={dataset.isDeaccessioned}
+          title={version.title}
+          thumbnail={thumbnail}
+          isDeaccessioned={
+            version.latestVersionPublishingStatus === DatasetPublishingStatus.DEACCESSIONED
+          }
         />
       </LinkToPage>
     </div>

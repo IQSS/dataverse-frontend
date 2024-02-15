@@ -16,7 +16,7 @@ interface PaginationProps {
   showPageSizeSelector?: boolean
   updateQueryParam?: boolean
 }
-const NO_PAGES = 0
+const MINIMUM_NUMBER_OF_PAGES_TO_DISPLAY_PAGINATION = 2
 export function PaginationControls({
   onPaginationInfoChange,
   initialPaginationInfo,
@@ -67,7 +67,7 @@ export function PaginationControls({
     }
   }, [searchParams])
 
-  if (paginationInfo.totalPages === NO_PAGES) {
+  if (paginationInfo.totalPages < MINIMUM_NUMBER_OF_PAGES_TO_DISPLAY_PAGINATION) {
     return <></>
   }
   return (

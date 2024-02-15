@@ -8,9 +8,8 @@ import {
 describe('DatasetActionButtons', () => {
   it('renders the DatasetActionButtons with the Publish button', () => {
     const dataset = DatasetMother.create({
-      version: DatasetVersionMother.createDraftAsLatestVersion(),
-      permissions: DatasetPermissionsMother.createWithAllAllowed(),
-      isReleased: true
+      version: DatasetVersionMother.createDraftAsLatestVersionWithSomeVersionHasBeenReleased(),
+      permissions: DatasetPermissionsMother.createWithAllAllowed()
     })
 
     cy.mountAuthenticated(<DatasetActionButtons dataset={dataset} />)
@@ -24,13 +23,12 @@ describe('DatasetActionButtons', () => {
 
   it('renders the DatasetActionButtons with the Submit for Review button', () => {
     const dataset = DatasetMother.create({
-      version: DatasetVersionMother.createDraftAsLatestVersion(),
+      version: DatasetVersionMother.createDraftAsLatestVersionWithSomeVersionHasBeenReleased(),
       permissions: DatasetPermissionsMother.create({
         canDownloadFiles: true,
         canUpdateDataset: true,
         canPublishDataset: false
-      }),
-      isReleased: true
+      })
     })
 
     cy.mountAuthenticated(<DatasetActionButtons dataset={dataset} />)

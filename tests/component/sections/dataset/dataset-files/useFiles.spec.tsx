@@ -1,29 +1,16 @@
 import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
-import { FileMother } from '../../../files/domain/models/FileMother'
 import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
 import { useFiles } from '../../../../../src/sections/dataset/dataset-files/useFiles'
-import { FileUserPermissionsMother } from '../../../files/domain/models/FileUserPermissionsMother'
-import { FilePermissionsProvider } from '../../../../../src/sections/file/file-permissions/FilePermissionsProvider'
 import { useState } from 'react'
-import {
-  DatasetPublishingStatus,
-  DatasetVersion
-} from '../../../../../src/dataset/domain/models/Dataset'
-import { FileCriteria, FileSortByOption } from '../../../../../src/files/domain/models/FileCriteria'
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
+import { FileCriteria, FileSortByOption } from '../../../../../src/files/domain/models/FileCriteria'
+import { DatasetVersionMother } from '../../../dataset/domain/models/DatasetMother'
+import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
 
-const files = FileMother.createMany(100)
+const files = FilePreviewMother.createMany(100)
 const filesCountInfo = FilesCountInfoMother.create({ total: 100 })
 const fileRepository: FileRepository = {} as FileRepository
-const datasetVersion = new DatasetVersion(
-  1,
-  DatasetPublishingStatus.RELEASED,
-  true,
-  false,
-  DatasetPublishingStatus.RELEASED,
-  1,
-  0
-)
+const datasetVersion = DatasetVersionMother.createReleased()
 
 const FilesTableTestComponent = ({ datasetPersistentId }: { datasetPersistentId: string }) => {
   const [paginationInfo, setPaginationInfo] = useState<FilePaginationInfo>(new FilePaginationInfo())
@@ -67,9 +54,6 @@ describe('useFiles', () => {
   beforeEach(() => {
     fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(files)
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(filesCountInfo)
-    fileRepository.getUserPermissionsById = cy
-      .stub()
-      .resolves(FileUserPermissionsMother.create({ fileId: files[0].id }))
     fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(100)
   })
 
@@ -111,33 +95,6 @@ describe('useFiles', () => {
     cy.findByText('Files count: 100').should('exist')
   })
 
-  it('calls the file repository to get the permissions before removing the loading', () => {
-    const files = FileMother.createMany(5)
-    fileRepository.getAllByDatasetPersistentId = cy.stub().resolves(files)
-    fileRepository.getUserPermissionsById = cy.stub().resolves(
-      new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(FileUserPermissionsMother.create({ fileId: files[0].id }))
-        }, 1000)
-      })
-    )
-
-    cy.customMount(
-      <FilePermissionsProvider repository={fileRepository}>
-        <FilesTableTestComponent datasetPersistentId="persistentId" />
-      </FilePermissionsProvider>
-    )
-
-    cy.findByText('Loading...').should('exist')
-    cy.wrap(fileRepository.getAllByDatasetPersistentId).should('be.calledOnceWith', 'persistentId')
-
-    cy.findByText('Loading...').should('exist')
-    cy.wrap(fileRepository.getUserPermissionsById).should('be.called')
-
-    cy.findByText('Loading...').should('exist')
-    cy.findByText('Files count: 100').should('exist')
-  })
-
   it('calls the file repository to get the files only if files count info is greater than 0', () => {
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy
       .stub()
@@ -166,7 +123,7 @@ describe('useFiles', () => {
     cy.wrap(fileRepository.getFilesCountInfoByDatasetPersistentId).should(
       'be.calledOnceWith',
       'persistentId',
-      datasetVersion,
+      datasetVersion.number,
       new FileCriteria()
     )
 
@@ -176,7 +133,7 @@ describe('useFiles', () => {
     cy.wrap(fileRepository.getFilesCountInfoByDatasetPersistentId).should(
       'be.calledWith',
       'persistentId',
-      datasetVersion,
+      datasetVersion.number,
       new FileCriteria().withSortBy(FileSortByOption.NAME_ZA)
     )
   })

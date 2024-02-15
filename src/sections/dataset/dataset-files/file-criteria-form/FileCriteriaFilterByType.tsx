@@ -7,7 +7,7 @@ import {
 import { FilesCountInfo } from '../../../../files/domain/models/FilesCountInfo'
 import styles from './FileCriteriaForm.module.scss'
 import { useState } from 'react'
-import { FileType } from '../../../../files/domain/models/File'
+import { FileType } from '../../../../files/domain/models/FileMetadata'
 import { useTranslation } from 'react-i18next'
 
 interface FileCriteriaFilterByTypeProps {

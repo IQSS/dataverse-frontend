@@ -1,5 +1,5 @@
 import { FileDate } from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileDate'
-import { FileDateType } from '../../../../../../../../../src/files/domain/models/File'
+import { FileDateType } from '../../../../../../../../../src/files/domain/models/FileMetadata'
 import { DateHelper } from '../../../../../../../../../src/shared/domain/helpers/DateHelper'
 
 describe('FileDate', () => {

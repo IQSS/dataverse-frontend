@@ -1,42 +1,42 @@
-import { File } from '../../../../../../files/domain/models/File'
+import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import styles from './FileInfoCell.module.scss'
 import { FileThumbnail } from './file-info-data/file-thumbnail/FileThumbnail'
 import { FileTitle } from './file-info-data/FileTitle'
 import { FileDirectory } from './file-info-data/FileDirectory'
 import { FileType } from './file-info-data/FileType'
 import { FileDate } from './file-info-data/FileDate'
-import { FileEmbargoDate } from './file-info-data/FileEmbargoDate'
+import { FileEmbargoDate } from '../../../../../file/file-embargo/FileEmbargoDate'
 import { FileDownloads } from './file-info-data/FileDownloads'
 import { FileChecksum } from './file-info-data/FileChecksum'
 import { FileTabularData } from './file-info-data/FileTabularData'
 import { FileDescription } from './file-info-data/FileDescription'
-import { FileLabels } from './file-info-data/FileLabels'
+import { FileLabels } from '../../../../../file/file-labels/FileLabels'
 
-export function FileInfoCell({ file }: { file: File }) {
+export function FileInfoCell({ file }: { file: FilePreview }) {
   return (
     <div className={styles.container}>
       <div className={styles['thumbnail-container']}>
         <FileThumbnail file={file} />
       </div>
       <div className={styles['body-container']}>
-        <FileTitle link={file.getLink()} name={file.name} />
+        <FileTitle id={file.id} name={file.name} />
         <div className={styles['body-container__subtext']}>
-          <FileDirectory directory={file.directory} />
-          <FileType type={file.type} size={file.size} />
-          <FileDate date={file.date} />
+          <FileDirectory directory={file.metadata.directory} />
+          <FileType type={file.metadata.type} size={file.metadata.size} />
+          <FileDate date={file.metadata.date} />
           <FileEmbargoDate
-            embargo={file.embargo}
+            embargo={file.metadata.embargo}
             publishingStatus={file.version.publishingStatus}
           />
           <FileDownloads
-            downloadCount={file.downloadCount}
+            downloadCount={file.metadata.downloadCount}
             publishingStatus={file.version.publishingStatus}
           />
-          <FileChecksum checksum={file.checksum} />
-          <FileTabularData tabularData={file.tabularData} />
+          <FileChecksum checksum={file.metadata.checksum} />
+          <FileTabularData tabularData={file.metadata.tabularData} />
         </div>
-        <FileDescription description={file.description} />
-        <FileLabels labels={file.labels} />
+        <FileDescription description={file.metadata.description} />
+        <FileLabels labels={file.metadata.labels} />
       </div>
     </div>
   )

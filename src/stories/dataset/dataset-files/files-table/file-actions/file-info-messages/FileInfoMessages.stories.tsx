@@ -2,8 +2,8 @@ import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../../../../WithI18next'
 import { WithSettings } from '../../../../../WithSettings'
 import { FileInfoMessages } from '../../../../../../sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-info-messages/FileInfoMessages'
-import { FileMother } from '../../../../../../../tests/component/files/domain/models/FileMother'
 import { WithDatasetAllPermissionsGranted } from '../../../../WithDatasetAllPermissionsGranted'
+import { FilePreviewMother } from '../../../../../../../tests/component/files/domain/models/FilePreviewMother'
 
 const meta: Meta<typeof FileInfoMessages> = {
   title:
@@ -16,13 +16,13 @@ export default meta
 type Story = StoryObj<typeof FileInfoMessages>
 
 export const IngestInProgress: Story = {
-  render: () => <FileInfoMessages file={FileMother.createIngestInProgress()} />
+  render: () => <FileInfoMessages file={FilePreviewMother.createIngestInProgress()} />
 }
 
 export const IngestProblemDefaultReportMessage: Story = {
   render: () => (
     <div style={{ height: 300, alignItems: 'center', display: 'flex' }}>
-      <FileInfoMessages file={FileMother.createIngestProblem()} />
+      <FileInfoMessages file={FilePreviewMother.createIngestProblem()} />
     </div>
   )
 }
@@ -31,12 +31,12 @@ export const IngestProblemCustomReportMessage: Story = {
   render: () => (
     <div style={{ height: 300, alignItems: 'center', display: 'flex' }}>
       <FileInfoMessages
-        file={FileMother.createIngestProblem('The header contains a duplicate name.')}
+        file={FilePreviewMother.createIngestProblem('The header contains a duplicate name.')}
       />
     </div>
   )
 }
 
 export const AccessRequested: Story = {
-  render: () => <FileInfoMessages file={FileMother.createWithAccessRequestPending()} />
+  render: () => <FileInfoMessages file={FilePreviewMother.createWithAccessRequestPending()} />
 }

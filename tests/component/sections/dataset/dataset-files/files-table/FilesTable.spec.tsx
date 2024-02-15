@@ -1,17 +1,18 @@
-import { FileMother } from '../../../../files/domain/models/FileMother'
+import { FileMetadataMother } from '../../../../files/domain/models/FileMetadataMother'
 import {
   FilesTable,
   getCellStyle
 } from '../../../../../../src/sections/dataset/dataset-files/files-table/FilesTable'
-import { FileSize, FileSizeUnit } from '../../../../../../src/files/domain/models/File'
+import { FileSize, FileSizeUnit } from '../../../../../../src/files/domain/models/FileMetadata'
 import { SettingMother } from '../../../../settings/domain/models/SettingMother'
 import { ZipDownloadLimit } from '../../../../../../src/settings/domain/models/ZipDownloadLimit'
 import { SettingsContext } from '../../../../../../src/sections/settings/SettingsContext'
 import styles from '../../../../../../src/sections/dataset/dataset-files/files-table/FilesTable.module.scss'
 import { FileCriteria } from '../../../../../../src/files/domain/models/FileCriteria'
 import { FilePaginationInfo } from '../../../../../../src/files/domain/models/FilePaginationInfo'
+import { FilePreviewMother } from '../../../../files/domain/models/FilePreviewMother'
 
-const testFiles = FileMother.createMany(10)
+const testFiles = FilePreviewMother.createMany(10)
 const paginationInfo = new FilePaginationInfo(1, 10, 200)
 const testFilesTotalDownloadSize = 19900
 const defaultCriteria = new FileCriteria()
@@ -169,8 +170,12 @@ describe('FilesTable', () => {
 
   it('renders the zip download limit message when the zip download limit is reached', () => {
     const testFiles = [
-      FileMother.create({ size: new FileSize(1024, FileSizeUnit.BYTES) }),
-      FileMother.create({ size: new FileSize(2048, FileSizeUnit.BYTES) })
+      FilePreviewMother.create({
+        metadata: FileMetadataMother.create({ size: new FileSize(1024, FileSizeUnit.BYTES) })
+      }),
+      FilePreviewMother.create({
+        metadata: FileMetadataMother.create({ size: new FileSize(2048, FileSizeUnit.BYTES) })
+      })
     ]
     const getSettingByName = cy
       .stub()

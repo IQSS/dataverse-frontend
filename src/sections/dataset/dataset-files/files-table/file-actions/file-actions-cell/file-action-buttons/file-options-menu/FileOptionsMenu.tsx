@@ -1,4 +1,4 @@
-import { File } from '../../../../../../../../files/domain/models/File'
+import { FilePreview } from '../../../../../../../../files/domain/models/FilePreview'
 import { Button, DropdownButton, DropdownHeader, Tooltip } from '@iqss/dataverse-design-system'
 import { PencilFill, ThreeDotsVertical } from 'react-bootstrap-icons'
 import { useSession } from '../../../../../../../session/SessionContext'
@@ -8,7 +8,7 @@ import { useState } from 'react'
 import { FileAlreadyDeletedModal } from './FileAlreadyDeletedModal'
 import { useDataset } from '../../../../../../DatasetContext'
 
-export function FileOptionsMenu({ file }: { file: File }) {
+export function FileOptionsMenu({ file }: { file: FilePreview }) {
   const { t } = useTranslation('files')
   const { user } = useSession()
   const { dataset } = useDataset()
@@ -18,7 +18,7 @@ export function FileOptionsMenu({ file }: { file: File }) {
     return <></>
   }
 
-  if (file.isDeleted) {
+  if (file.metadata.isDeleted) {
     return (
       <>
         <Tooltip placement="top" overlay={<span>{t('actions.optionsMenu.title')}</span>}>

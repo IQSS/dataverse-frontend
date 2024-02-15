@@ -1,20 +1,10 @@
 import { DatasetCitation } from '../../../../../src/sections/dataset/dataset-citation/DatasetCitation'
-import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
-import {
-  DatasetPublishingStatus,
-  DatasetVersion
-} from '../../../../../src/dataset/domain/models/Dataset'
+import { DatasetVersionMother } from '../../../dataset/domain/models/DatasetMother'
 
 describe('DatasetCitation', () => {
   it('renders the DatasetCitation fields of released Dataset', () => {
-    const dataset = DatasetMother.create()
-    cy.customMount(
-      <DatasetCitation
-        title="Dataset title"
-        citation={dataset.citation}
-        version={dataset.version}
-      />
-    )
+    const version = DatasetVersionMother.createRealistic()
+    cy.customMount(<DatasetCitation version={version} />)
 
     cy.findByText('Data Citation Standards.').should('exist')
     cy.findByText(/Bennet, Elizabeth; Darcy, Fitzwilliam, 2023, "Dataset Title"/).should('exist')
@@ -27,25 +17,12 @@ describe('DatasetCitation', () => {
     cy.findByText(/RELEASED/).should('not.exist')
     cy.findByText(/V1/).should('exist')
     cy.findByLabelText('icon-dataset').should('exist')
+    cy.findByLabelText('icon-dataset').should('exist')
   })
 
   it('shows the draft tooltip when version is draft', () => {
-    const dataset = DatasetMother.create({
-      version: new DatasetVersion(
-        1,
-        DatasetPublishingStatus.DRAFT,
-        true,
-        false,
-        DatasetPublishingStatus.DRAFT
-      )
-    })
-    cy.customMount(
-      <DatasetCitation
-        title="Dataset title"
-        citation={dataset.citation}
-        version={dataset.version}
-      />
-    )
+    const version = DatasetVersionMother.createDraft()
+    cy.customMount(<DatasetCitation version={version} />)
 
     cy.findByRole('img', { name: 'tooltip icon' }).should('exist').trigger('mouseover')
     cy.findByText(
@@ -54,28 +31,19 @@ describe('DatasetCitation', () => {
   })
 
   it('shows the deaccessioned tooltip when version is deaccessioned', () => {
-    const dataset = DatasetMother.create({
-      version: new DatasetVersion(
-        1,
-        DatasetPublishingStatus.DEACCESSIONED,
-        true,
-        false,
-        DatasetPublishingStatus.DEACCESSIONED,
-        1,
-        0
-      )
-    })
-    cy.customMount(
-      <DatasetCitation
-        title="Dataset title"
-        citation={dataset.citation}
-        version={dataset.version}
-      />
-    )
+    const version = DatasetVersionMother.createDeaccessioned()
+    cy.customMount(<DatasetCitation version={version} />)
 
     cy.findByRole('img', { name: 'tooltip icon' }).should('exist').trigger('mouseover')
     cy.findByText(
       /DEACCESSIONED VERSION has been added to the citation for this version since it is no longer available./
     ).should('exist')
+  })
+
+  it('does not render the thumbnail when withoutThumbnail prop is true', () => {
+    const version = DatasetVersionMother.createRealistic()
+    cy.customMount(<DatasetCitation version={version} withoutThumbnail={true} />)
+
+    cy.findByLabelText('icon-dataset').should('not.exist')
   })
 })

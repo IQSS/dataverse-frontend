@@ -3,13 +3,13 @@ import { PencilFill } from 'react-bootstrap-icons'
 import { useSession } from '../../../../../session/SessionContext'
 import styles from './EditFilesMenu.module.scss'
 import { EditFilesOptions } from './EditFilesOptions'
-import { File } from '../../../../../../files/domain/models/File'
+import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
 import { useDataset } from '../../../../DatasetContext'
 import { FileSelection } from '../../row-selection/useFileSelection'
 
 interface EditFilesMenuProps {
-  files: File[]
+  files: FilePreview[]
   fileSelection: FileSelection
 }
 const MINIMUM_FILES_COUNT_TO_SHOW_EDIT_FILES_BUTTON = 1

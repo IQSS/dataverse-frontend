@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { Setting, SettingName } from '../../../../../src/settings/domain/models/Setting'
 import { ZipDownloadLimit } from '../../../../../src/settings/domain/models/ZipDownloadLimit'
-import { FileSizeUnit } from '../../../../../src/files/domain/models/File'
+import { FileSizeUnit } from '../../../../../src/files/domain/models/FileMetadata'
 
 export class SettingMother {
   static createZipDownloadLimit(value?: ZipDownloadLimit): Setting<ZipDownloadLimit> {

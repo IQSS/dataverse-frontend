@@ -7,8 +7,7 @@ import { LinkDatasetButton } from '../../../../../../src/sections/dataset/datase
 describe('LinkDatasetButton', () => {
   it('renders the LinkDatasetButton if the user is authenticated and the dataset version is not deaccessioned and the dataset is released', () => {
     const dataset = DatasetMother.create({
-      version: DatasetVersionMother.createDraft(),
-      isReleased: true
+      version: DatasetVersionMother.createReleased()
     })
 
     cy.mountAuthenticated(<LinkDatasetButton dataset={dataset} />)
@@ -18,8 +17,7 @@ describe('LinkDatasetButton', () => {
 
   it('does not render the LinkDatasetButton if the user is not authenticated', () => {
     const dataset = DatasetMother.create({
-      version: DatasetVersionMother.createDraft(),
-      isReleased: true
+      version: DatasetVersionMother.createReleased()
     })
 
     cy.customMount(<LinkDatasetButton dataset={dataset} />)
@@ -29,8 +27,7 @@ describe('LinkDatasetButton', () => {
 
   it('does not render the LinkDatasetButton if the dataset version is deaccessioned', () => {
     const dataset = DatasetMother.create({
-      version: DatasetVersionMother.createDeaccessioned(),
-      isReleased: true
+      version: DatasetVersionMother.createDeaccessioned()
     })
 
     cy.mountAuthenticated(<LinkDatasetButton dataset={dataset} />)
@@ -40,8 +37,7 @@ describe('LinkDatasetButton', () => {
 
   it('does not render the LinkDatasetButton if the dataset is not released', () => {
     const dataset = DatasetMother.create({
-      version: DatasetVersionMother.createDraft(),
-      isReleased: false
+      version: DatasetVersionMother.createNotReleased()
     })
 
     cy.mountAuthenticated(<LinkDatasetButton dataset={dataset} />)

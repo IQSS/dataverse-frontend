@@ -1,13 +1,13 @@
 import { FileActionButtons } from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-action-buttons/FileActionButtons'
-import { FileMother } from '../../../../../../../files/domain/models/FileMother'
 import { DatasetRepository } from '../../../../../../../../../src/dataset/domain/repositories/DatasetRepository'
 import {
   DatasetMother,
   DatasetPermissionsMother
 } from '../../../../../../../dataset/domain/models/DatasetMother'
 import { DatasetProvider } from '../../../../../../../../../src/sections/dataset/DatasetProvider'
+import { FilePreviewMother } from '../../../../../../../files/domain/models/FilePreviewMother'
 
-const file = FileMother.createDefault()
+const file = FilePreviewMother.createDefault()
 describe('FileActionButtons', () => {
   it('renders the file action buttons', () => {
     cy.customMount(<FileActionButtons file={file} />)

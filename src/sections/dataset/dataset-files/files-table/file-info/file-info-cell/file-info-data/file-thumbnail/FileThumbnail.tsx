@@ -1,30 +1,32 @@
-import { FileThumbnailIcon } from './FileThumbnailIcon'
-import { FileThumbnailPreviewImage } from './FileThumbnailPreviewImage'
-import { File } from '../../../../../../../../files/domain/models/File'
-import { FileThumbnailRestrictedIcon } from './FileThumbnailRestrictedIcon'
+import { FileIcon } from '../../../../../../../file/file-preview/FileIcon'
+import { FilePreviewImage } from './FilePreviewImage'
+import { FilePreview } from '../../../../../../../../files/domain/models/FilePreview'
+import { FileAccessRestrictedIcon } from '../../../../../../../file/file-access/FileAccessRestrictedIcon'
 import styles from './FileThumbnail.module.scss'
-import { useFileDownloadPermission } from '../../../../../../../file/file-permissions/useFileDownloadPermission'
 
 interface FileThumbnailProps {
-  file: File
+  file: FilePreview
 }
 
 export function FileThumbnail({ file }: FileThumbnailProps) {
-  const { sessionUserHasFileDownloadPermission } = useFileDownloadPermission(file)
-
   return (
     <div
       className={`${
-        file.thumbnail && sessionUserHasFileDownloadPermission
+        file.metadata.thumbnail && file.permissions.canDownloadFile
           ? styles['container-preview-image']
           : styles['container-icon']
       }`}>
-      {file.thumbnail && sessionUserHasFileDownloadPermission ? (
-        <FileThumbnailPreviewImage thumbnail={file.thumbnail} name={file.name} />
+      {file.metadata.thumbnail && file.permissions.canDownloadFile ? (
+        <FilePreviewImage thumbnail={file.metadata.thumbnail} name={file.name} />
       ) : (
-        <FileThumbnailIcon type={file.type} />
+        <FileIcon type={file.metadata.type} />
       )}
-      <FileThumbnailRestrictedIcon file={file} />
+      <div className={styles['restricted-icon']}>
+        <FileAccessRestrictedIcon
+          restricted={file.access.restricted}
+          canDownloadFile={file.permissions.canDownloadFile}
+        />
+      </div>
     </div>
   )
 }

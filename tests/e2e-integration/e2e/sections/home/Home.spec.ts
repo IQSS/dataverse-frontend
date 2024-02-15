@@ -55,7 +55,7 @@ describe('Home Page', () => {
   it('displays the correct page of the datasets list when passing the page query param', () => {
     cy.wrap(
       DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
-      { timeout: 6000 }
+      { timeout: 10000 }
     ).then(() => {
       cy.visit('/spa?page=2')
 
@@ -69,7 +69,7 @@ describe('Home Page', () => {
   it('updates the query param when updateQueryParam is true', () => {
     cy.wrap(
       DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
-      { timeout: 6000 }
+      { timeout: 10000 }
     ).then(() => {
       cy.visit('/spa')
 
@@ -82,10 +82,10 @@ describe('Home Page', () => {
     })
   })
 
-  it.only('correctly changes the pages when using the back and forward buttons from the browser after using some page number button', () => {
+  it('correctly changes the pages when using the back and forward buttons from the browser after using some page number button', () => {
     cy.wrap(
       DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
-      { timeout: 6000 }
+      { timeout: 10000 }
     ).then(() => {
       cy.visit('/spa?page=2')
 

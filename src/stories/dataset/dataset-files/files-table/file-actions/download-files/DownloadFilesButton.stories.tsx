@@ -4,8 +4,9 @@ import { WithI18next } from '../../../../../WithI18next'
 import { WithSettings } from '../../../../../WithSettings'
 import { WithLoggedInUser } from '../../../../../WithLoggedInUser'
 import { WithDatasetAllPermissionsGranted } from '../../../../WithDatasetAllPermissionsGranted'
-import { FileMother } from '../../../../../../../tests/component/files/domain/models/FileMother'
+import { FileMetadataMother } from '../../../../../../../tests/component/files/domain/models/FileMetadataMother'
 import { DownloadFilesButton } from '../../../../../../sections/dataset/dataset-files/files-table/file-actions/download-files/DownloadFilesButton'
+import { FilePreviewMother } from '../../../../../../../tests/component/files/domain/models/FilePreviewMother'
 
 const meta: Meta<typeof EditFilesMenu> = {
   title: 'Sections/Dataset Page/DatasetFiles/FilesTable/DownloadFilesButton',
@@ -19,7 +20,9 @@ type Story = StoryObj<typeof EditFilesMenu>
 export const NonTabularFiles: Story = {
   render: () => (
     <DownloadFilesButton
-      files={FileMother.createMany(2, { tabularData: undefined })}
+      files={FilePreviewMother.createMany(2, {
+        metadata: FileMetadataMother.createWithoutThumbnail()
+      })}
       fileSelection={{}}
     />
   )
@@ -28,12 +31,8 @@ export const NonTabularFiles: Story = {
 export const TabularFiles: Story = {
   render: () => (
     <DownloadFilesButton
-      files={FileMother.createMany(2, {
-        tabularData: {
-          variablesCount: 2,
-          observationsCount: 3,
-          unf: 'some-unf'
-        }
+      files={FilePreviewMother.createMany(2, {
+        metadata: FileMetadataMother.createTabular()
       })}
       fileSelection={{}}
     />

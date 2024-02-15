@@ -1,4 +1,4 @@
-import { FileType } from './File'
+import { FileType } from './FileMetadata'
 
 export class FileCriteria {
   constructor(

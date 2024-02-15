@@ -3,6 +3,8 @@ import chaiAsPromised from 'chai-as-promised'
 import { DatasetJSDataverseRepository } from '../../../../src/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { TestsUtils } from '../../shared/TestsUtils'
 import {
+  DatasetLabel,
+  DatasetLabelSemanticMeaning,
   DatasetLockReason,
   DatasetPublishingStatus,
   DatasetVersion
@@ -12,7 +14,7 @@ import {
   FileDownloadMode,
   FileDownloadSize,
   FileSizeUnit
-} from '../../../../src/files/domain/models/File'
+} from '../../../../src/files/domain/models/FileMetadata'
 import { DatasetPaginationInfo } from '../../../../src/dataset/domain/models/DatasetPaginationInfo'
 
 chai.use(chaiAsPromised)
@@ -25,15 +27,19 @@ function getCurrentDateInYYYYMMDDFormat() {
   ).padStart(2, '0')}`
 }
 
-const datasetData = (persistentId: string, versionId: number) => {
-  const persistentIdUrl = `https://doi.org/${persistentId.replace('doi:', '')}`
+function getPersistentIdUrl(persistentId: string) {
+  return `https://doi.org/${persistentId.replace('doi:', '')}`
+}
+
+function getCitationString(persistentId: string, version: 'DRAFT VERSION' | 'V1') {
   const year = new Date().getFullYear()
+  return `Finch, Fiona, ${year}, "Darwin's Finches", <a href="${getPersistentIdUrl(
+    persistentId
+  )}" target="_blank">${getPersistentIdUrl(persistentId)}</a>, Root, ${version}`
+}
+
+const datasetData = (persistentId: string, versionId: number) => {
   return {
-    citation: `Finch, Fiona, ${year}, "Darwin's Finches", <a href="${persistentIdUrl}" target="_blank">${persistentIdUrl}</a>, Root, DRAFT VERSION`,
-    labels: [
-      { semanticMeaning: 'dataset', value: 'Draft' },
-      { semanticMeaning: 'warning', value: 'Unpublished' }
-    ],
     license: {
       name: 'CC0 1.0',
       uri: 'http://creativecommons.org/publicdomain/zero/1.0',
@@ -81,13 +87,21 @@ const datasetData = (persistentId: string, versionId: number) => {
     title: "Darwin's Finches",
     version: {
       id: versionId,
-      majorNumber: undefined,
-      minorNumber: undefined,
+      number: {
+        majorNumber: undefined,
+        minorNumber: undefined
+      },
       publishingStatus: 'draft',
-      requestedVersion: undefined,
-      latestVersionStatus: 'draft',
+      latestVersionPublishingStatus: 'draft',
       isLatest: true,
-      isInReview: false
+      isInReview: false,
+      citation: getCitationString(persistentId, 'DRAFT VERSION'),
+      title: "Darwin's Finches",
+      labels: [
+        { semanticMeaning: 'dataset', value: 'Draft' },
+        { semanticMeaning: 'warning', value: 'Unpublished' }
+      ],
+      someDatasetVersionHasBeenReleased: false
     },
     permissions: {
       canDownloadFiles: true,
@@ -125,9 +139,6 @@ describe('Dataset JSDataverse Repository', () => {
       }
       const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
-      expect(dataset.title).to.deep.equal(datasetExpected.title)
-      expect(dataset.citation).to.deep.equal(datasetExpected.citation)
-      expect(dataset.labels).to.deep.equal(datasetExpected.labels)
       expect(dataset.license).to.deep.equal(datasetExpected.license)
       expect(dataset.metadataBlocks).to.deep.equal(datasetExpected.metadataBlocks)
       expect(dataset.summaryFields).to.deep.equal(datasetExpected.summaryFields)
@@ -155,18 +166,22 @@ describe('Dataset JSDataverse Repository', () => {
         if (!dataset) {
           throw new Error('Dataset not found')
         }
-        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
         const newVersion = new DatasetVersion(
           dataset.version.id,
+          "Darwin's Finches",
+          {
+            majorNumber: 1,
+            minorNumber: 0
+          },
           DatasetPublishingStatus.RELEASED,
+          getCitationString(dataset.persistentId, 'V1'),
+          [new DatasetLabel(DatasetLabelSemanticMeaning.FILE, 'Version 1.0')],
           true,
           false,
           DatasetPublishingStatus.RELEASED,
-          1,
-          0
+          true
         )
         const expectedPublicationDate = getCurrentDateInYYYYMMDDFormat()
-        expect(dataset.title).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(newVersion)
         expect(dataset.metadataBlocks[0].fields.publicationDate).to.deep.equal(
           expectedPublicationDate
@@ -196,15 +211,20 @@ describe('Dataset JSDataverse Repository', () => {
         const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
         const newVersion = new DatasetVersion(
           dataset.version.id,
+          "Darwin's Finches",
+          {
+            majorNumber: 1,
+            minorNumber: 0
+          },
           DatasetPublishingStatus.RELEASED,
+          getCitationString(dataset.persistentId, 'V1'),
+          [new DatasetLabel(DatasetLabelSemanticMeaning.FILE, 'Version 1.0')],
           true,
           false,
           DatasetPublishingStatus.RELEASED,
-          1,
-          0
+          true
         )
         const expectedPublicationDate = getCurrentDateInYYYYMMDDFormat()
-        expect(dataset.title).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(newVersion)
         expect(dataset.metadataBlocks[0].fields.publicationDate).to.deep.equal(
           expectedPublicationDate
@@ -225,7 +245,7 @@ describe('Dataset JSDataverse Repository', () => {
         }
         const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
-        expect(dataset.title).to.deep.equal(datasetExpected.title)
+        expect(dataset.version.title).to.deep.equal(datasetExpected.title)
         expect(dataset.version).to.deep.equal(datasetExpected.version)
       })
   })
@@ -240,7 +260,7 @@ describe('Dataset JSDataverse Repository', () => {
       }
       const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
-      expect(dataset.title).to.deep.equal(datasetExpected.title)
+      expect(dataset.version.title).to.deep.equal(datasetExpected.title)
       expect(dataset.version).to.deep.equal(datasetExpected.version)
       expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
     })
@@ -286,7 +306,7 @@ describe('Dataset JSDataverse Repository', () => {
 
     await datasetRepository.getAll(paginationInfo).then((datasetPreview) => {
       expect(datasetPreview.length).to.equal(1)
-      expect(datasetPreview[0].title).to.equal("Darwin's Finches")
+      expect(datasetPreview[0].version.title).to.equal("Darwin's Finches")
       expect(datasetPreview[0].persistentId).to.equal(datasetResponse.persistentId)
     })
   })
@@ -305,7 +325,7 @@ describe('Dataset JSDataverse Repository', () => {
       }
       const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
-      expect(dataset.title).to.deep.equal(datasetExpected.title)
+      expect(dataset.version.title).to.deep.equal(datasetExpected.title)
     })
   })
   it('gets the dataset by persistentId when is locked', async () => {
@@ -318,7 +338,7 @@ describe('Dataset JSDataverse Repository', () => {
       }
       const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
-      expect(dataset.title).to.deep.equal(datasetExpected.title)
+      expect(dataset.version.title).to.deep.equal(datasetExpected.title)
       expect(dataset.locks).to.deep.equal([
         {
           userPersistentId: 'dataverseAdmin',

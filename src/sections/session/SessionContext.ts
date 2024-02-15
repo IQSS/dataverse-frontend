@@ -8,8 +8,8 @@ interface SessionContextProps {
 }
 export const SessionContext = createContext<SessionContextProps>({
   user: null,
-  setUser: () => {},
-  logout: () => Promise.resolve()
+  setUser: /* istanbul ignore next */ () => {},
+  logout: /* istanbul ignore next */ () => Promise.resolve()
 })
 
 export const useSession = () => useContext(SessionContext)

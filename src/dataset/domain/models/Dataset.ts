@@ -1,5 +1,5 @@
 import { Alert, AlertMessageKey } from '../../../alert/domain/models/Alert'
-import { FileDownloadSize } from '../../../files/domain/models/File'
+import { FileDownloadSize } from '../../../files/domain/models/FileMetadata'
 
 export enum DatasetLabelSemanticMeaning {
   DATASET = 'dataset',
@@ -213,24 +213,112 @@ export enum DatasetNonNumericVersion {
   DRAFT = ':draft'
 }
 
-export class DatasetVersion {
-  constructor(
-    public readonly id: number,
-    public readonly publishingStatus: DatasetPublishingStatus,
-    public readonly isLatest: boolean,
-    public readonly isInReview: boolean,
-    public readonly latestVersionStatus: DatasetPublishingStatus,
-    public readonly majorNumber?: number,
-    public readonly minorNumber?: number,
-    // requestedVersion will be set if the user requested a version that did not exist.
-    public readonly requestedVersion?: string
-  ) {}
+export class DatasetVersionNumber {
+  constructor(public readonly majorNumber?: number, public readonly minorNumber?: number) {}
 
   toString(): string | DatasetNonNumericVersion {
     if (this.majorNumber === undefined || this.minorNumber === undefined) {
       return DatasetNonNumericVersion.DRAFT
     }
     return `${this.majorNumber}.${this.minorNumber}`
+  }
+}
+
+export class DatasetVersion {
+  constructor(
+    public readonly id: number,
+    public readonly title: string,
+    public readonly number: DatasetVersionNumber,
+    public readonly publishingStatus: DatasetPublishingStatus,
+    public readonly citation: string,
+    public readonly labels: DatasetLabel[],
+    public readonly isLatest: boolean,
+    public readonly isInReview: boolean,
+    public readonly latestVersionPublishingStatus: DatasetPublishingStatus,
+    public readonly someDatasetVersionHasBeenReleased: boolean
+  ) {}
+
+  static Builder = class {
+    public readonly labels: DatasetLabel[] = []
+
+    constructor(
+      public readonly id: number,
+      public readonly title: string,
+      public readonly number: DatasetVersionNumber,
+      public readonly publishingStatus: DatasetPublishingStatus,
+      public readonly citation: string,
+      public readonly isLatest: boolean,
+      public readonly isInReview: boolean,
+      public readonly latestVersionPublishingStatus: DatasetPublishingStatus,
+      public readonly someDatasetVersionHasBeenReleased: boolean
+    ) {
+      this.createLabels()
+    }
+
+    createLabels() {
+      const statusLabels = this.createStatusLabels()
+      const versionLabels = this.createVersionNumberLabel()
+      this.labels.push(...statusLabels, ...versionLabels)
+    }
+
+    createStatusLabels(): DatasetLabel[] {
+      const labels: DatasetLabel[] = []
+
+      if (this.publishingStatus === DatasetPublishingStatus.DRAFT) {
+        labels.push(new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.DRAFT))
+      }
+
+      if (!this.someDatasetVersionHasBeenReleased) {
+        labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.WARNING, DatasetLabelValue.UNPUBLISHED)
+        )
+      }
+
+      if (this.publishingStatus === DatasetPublishingStatus.DEACCESSIONED) {
+        labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.DANGER, DatasetLabelValue.DEACCESSIONED)
+        )
+      }
+
+      if (this.publishingStatus === DatasetPublishingStatus.EMBARGOED) {
+        labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.EMBARGOED)
+        )
+      }
+
+      if (this.isInReview) {
+        labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.SUCCESS, DatasetLabelValue.IN_REVIEW)
+        )
+      }
+
+      return labels
+    }
+
+    createVersionNumberLabel(): DatasetLabel[] {
+      const labels: DatasetLabel[] = []
+      if (this.publishingStatus === DatasetPublishingStatus.RELEASED) {
+        labels.push(
+          new DatasetLabel(DatasetLabelSemanticMeaning.FILE, `Version ${this.number.toString()}`)
+        )
+      }
+      return labels
+    }
+
+    build(): DatasetVersion {
+      return new DatasetVersion(
+        this.id,
+        this.title,
+        this.number,
+        this.publishingStatus,
+        this.citation,
+        this.labels,
+        this.isLatest,
+        this.isInReview,
+        this.latestVersionPublishingStatus,
+        this.someDatasetVersionHasBeenReleased
+      )
+    }
   }
 }
 
@@ -273,8 +361,6 @@ export class Dataset {
   constructor(
     public readonly persistentId: string,
     public readonly version: DatasetVersion,
-    public readonly citation: string,
-    public readonly labels: DatasetLabel[],
     public readonly alerts: Alert[],
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
@@ -284,16 +370,12 @@ export class Dataset {
     public readonly hasValidTermsOfAccess: boolean,
     public readonly hasOneTabularFileAtLeast: boolean,
     public readonly isValid: boolean,
-    public readonly isReleased: boolean,
     public readonly downloadUrls: DatasetDownloadUrls,
     public readonly fileDownloadSizes: FileDownloadSize[],
     public readonly thumbnail?: string,
-    public readonly privateUrl?: PrivateUrl
+    public readonly privateUrl?: PrivateUrl,
+    public readonly requestedVersion?: string // will be set if the user requested a version that did not exist
   ) {}
-
-  public get title(): string {
-    return this.metadataBlocks[0].fields.title
-  }
 
   public checkIsLockedFromPublishing(userPersistentId: string): boolean {
     return this.checkIsLockedFromEdits(userPersistentId)
@@ -354,72 +436,12 @@ export class Dataset {
     return false
   }
 
-  static createDatasetLabels(version: DatasetVersion, isReleased: boolean): DatasetLabel[] {
-    const statusLabels = Dataset.createStatusLabels(
-      version.publishingStatus,
-      version.isInReview,
-      isReleased
-    )
-    const versionLabels = Dataset.createVersionLabel(version)
-    return [...statusLabels, ...versionLabels] // combine and return
-  }
-
-  static createStatusLabels(
-    publishingStatus: DatasetPublishingStatus,
-    isInReview: boolean,
-    isReleased: boolean
-  ): DatasetLabel[] {
-    const labels: DatasetLabel[] = []
-
-    if (publishingStatus === DatasetPublishingStatus.DRAFT) {
-      labels.push(new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.DRAFT))
-    }
-
-    if (!isReleased) {
-      labels.push(
-        new DatasetLabel(DatasetLabelSemanticMeaning.WARNING, DatasetLabelValue.UNPUBLISHED)
-      )
-    }
-
-    if (publishingStatus === DatasetPublishingStatus.DEACCESSIONED) {
-      labels.push(
-        new DatasetLabel(DatasetLabelSemanticMeaning.DANGER, DatasetLabelValue.DEACCESSIONED)
-      )
-    }
-
-    if (publishingStatus === DatasetPublishingStatus.EMBARGOED) {
-      labels.push(
-        new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.EMBARGOED)
-      )
-    }
-
-    if (isInReview) {
-      labels.push(
-        new DatasetLabel(DatasetLabelSemanticMeaning.SUCCESS, DatasetLabelValue.IN_REVIEW)
-      )
-    }
-
-    return labels
-  }
-
-  static createVersionLabel(version: DatasetVersion): DatasetLabel[] {
-    const labels: DatasetLabel[] = []
-    if (version.publishingStatus === DatasetPublishingStatus.RELEASED) {
-      labels.push(
-        new DatasetLabel(DatasetLabelSemanticMeaning.FILE, `Version ${version.toString()}`)
-      )
-    }
-    return labels
-  }
-
   static Builder = class {
-    public readonly labels: DatasetLabel[] = []
     public readonly alerts: Alert[] = []
 
     constructor(
       public readonly persistentId: string,
       public readonly version: DatasetVersion,
-      public readonly citation: string,
       public readonly summaryFields: DatasetMetadataBlock[],
       public readonly license: DatasetLicense = defaultLicense,
       public readonly metadataBlocks: DatasetMetadataBlocks,
@@ -428,13 +450,12 @@ export class Dataset {
       public readonly hasValidTermsOfAccess: boolean,
       public readonly hasOneTabularFileAtLeast: boolean,
       public readonly isValid: boolean,
-      public readonly isReleased: boolean,
       public readonly downloadUrls: DatasetDownloadUrls,
       public readonly fileDownloadSizes: FileDownloadSize[],
       public readonly thumbnail?: string,
-      public readonly privateUrl?: PrivateUrl
+      public readonly privateUrl?: PrivateUrl,
+      public readonly requestedVersion?: string // will be set if the user requested a version that did not exist
     ) {
-      this.labels = Dataset.createDatasetLabels(version, isReleased)
       this.withAlerts()
     }
 
@@ -445,18 +466,18 @@ export class Dataset {
       ) {
         this.alerts.push(new Alert('warning', AlertMessageKey.DRAFT_VERSION))
       }
-      if (this.version.requestedVersion) {
-        if (this.version.latestVersionStatus == DatasetPublishingStatus.RELEASED) {
+      if (this.requestedVersion) {
+        if (this.version.latestVersionPublishingStatus == DatasetPublishingStatus.RELEASED) {
           const dynamicFields = {
-            requestedVersion: this.version.requestedVersion,
-            returnedVersion: `${this.version.toString()}`
+            requestedVersion: this.requestedVersion,
+            returnedVersion: `${this.version.number.toString()}`
           }
           this.alerts.push(
             new Alert('warning', AlertMessageKey.REQUESTED_VERSION_NOT_FOUND, dynamicFields)
           )
         } else {
           const dynamicFields = {
-            requestedVersion: this.version.requestedVersion
+            requestedVersion: this.requestedVersion
           }
           this.alerts.push(
             new Alert(
@@ -483,8 +504,6 @@ export class Dataset {
       return new Dataset(
         this.persistentId,
         this.version,
-        this.citation,
-        this.labels,
         this.alerts,
         this.summaryFields,
         this.license,
@@ -494,11 +513,11 @@ export class Dataset {
         this.hasValidTermsOfAccess,
         this.hasOneTabularFileAtLeast,
         this.isValid,
-        this.isReleased,
         this.downloadUrls,
         this.fileDownloadSizes,
         this.thumbnail,
-        this.privateUrl
+        this.privateUrl,
+        this.requestedVersion
       )
     }
   }

@@ -28,15 +28,14 @@ export const WithPublishPermissions: Story = {
     <DatasetActionButtons
       dataset={DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithAllAllowed(),
-        version: DatasetVersionMother.createDraftAsLatestVersion(),
+        version: DatasetVersionMother.createDraftAsLatestVersionWithSomeVersionHasBeenReleased(),
         hasValidTermsOfAccess: true,
         hasOneTabularFileAtLeast: true,
         fileDownloadSizes: [
           DatasetFileDownloadSizeMother.createOriginal(),
           DatasetFileDownloadSizeMother.createArchival()
         ],
-        isValid: true,
-        isReleased: true
+        isValid: true
       })}
     />
   )
@@ -47,14 +46,13 @@ export const WithNoDatasetPermissions: Story = {
     <DatasetActionButtons
       dataset={DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithNoDatasetPermissions(),
-        version: DatasetVersionMother.createDraftAsLatestVersion(),
+        version: DatasetVersionMother.createDraftAsLatestVersionWithSomeVersionHasBeenReleased(),
         hasValidTermsOfAccess: true,
         fileDownloadSizes: [
           DatasetFileDownloadSizeMother.createOriginal(),
           DatasetFileDownloadSizeMother.createArchival()
         ],
-        isValid: true,
-        isReleased: true
+        isValid: true
       })}
     />
   )
@@ -69,14 +67,13 @@ export const WithUpdateAndNoPublishDatasetPermissions: Story = {
           canPublishDataset: false,
           canUpdateDataset: true
         }),
-        version: DatasetVersionMother.createDraftAsLatestVersion(),
+        version: DatasetVersionMother.createDraftAsLatestVersionWithSomeVersionHasBeenReleased(),
         hasValidTermsOfAccess: true,
         fileDownloadSizes: [
           DatasetFileDownloadSizeMother.createOriginal(),
           DatasetFileDownloadSizeMother.createArchival()
         ],
-        isValid: true,
-        isReleased: true
+        isValid: true
       })}
     />
   )

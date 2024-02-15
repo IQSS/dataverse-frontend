@@ -7,9 +7,10 @@ import {
   DatasetPermissionsMother
 } from '../../../../../../dataset/domain/models/DatasetMother'
 import { DownloadFilesButton } from '../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/download-files/DownloadFilesButton'
-import { FileMother } from '../../../../../../files/domain/models/FileMother'
+import { FileMetadataMother } from '../../../../../../files/domain/models/FileMetadataMother'
 import { MultipleFileDownloadProvider } from '../../../../../../../../src/sections/file/multiple-file-download/MultipleFileDownloadProvider'
 import { FileRepository } from '../../../../../../../../src/files/domain/repositories/FileRepository'
+import { FilePreviewMother } from '../../../../../../files/domain/models/FilePreviewMother'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const fileRepository = {} as FileRepository
@@ -37,7 +38,7 @@ describe('DownloadFilesButton', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed()
     })
-    const files = FileMother.createMany(2)
+    const files = FilePreviewMother.createMany(2)
     cy.mountAuthenticated(
       withDataset(
         <DownloadFilesButton files={files} fileSelection={{}} />,
@@ -52,7 +53,7 @@ describe('DownloadFilesButton', () => {
     const datasetWithDownloadFilesPermission = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed()
     })
-    const files = FileMother.createMany(1)
+    const files = FilePreviewMother.createMany(1)
     cy.mountAuthenticated(
       withDataset(
         <DownloadFilesButton files={files} fileSelection={{}} />,
@@ -67,7 +68,7 @@ describe('DownloadFilesButton', () => {
     const datasetWithoutDownloadFilesPermission = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithFilesDownloadNotAllowed()
     })
-    const files = FileMother.createMany(2)
+    const files = FilePreviewMother.createMany(2)
     cy.mountAuthenticated(
       withDataset(
         <DownloadFilesButton files={files} fileSelection={{}} />,
@@ -83,12 +84,8 @@ describe('DownloadFilesButton', () => {
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
       hasOneTabularFileAtLeast: true
     })
-    const files = FileMother.createMany(2, {
-      tabularData: {
-        variablesCount: 2,
-        observationsCount: 3,
-        unf: 'some-unf'
-      }
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createTabular()
     })
     cy.mountAuthenticated(
       withDataset(
@@ -107,7 +104,9 @@ describe('DownloadFilesButton', () => {
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
       hasOneTabularFileAtLeast: false
     })
-    const files = FileMother.createMany(2, { tabularData: undefined })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createNonTabular()
+    })
     cy.mountAuthenticated(
       withDataset(
         <DownloadFilesButton files={files} fileSelection={{}} />,
@@ -125,7 +124,9 @@ describe('DownloadFilesButton', () => {
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
       hasOneTabularFileAtLeast: false
     })
-    const files = FileMother.createMany(2, { tabularData: undefined })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createNonTabular()
+    })
     cy.mountAuthenticated(
       withDataset(
         <DownloadFilesButton files={files} fileSelection={{}} />,
@@ -142,7 +143,9 @@ describe('DownloadFilesButton', () => {
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
       hasOneTabularFileAtLeast: false
     })
-    const files = FileMother.createMany(2, { tabularData: undefined })
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createNonTabular()
+    })
     const fileSelection = {
       'some-file-id': files[0],
       'some-other-file-id': files[1]
@@ -166,12 +169,8 @@ describe('DownloadFilesButton', () => {
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
       hasOneTabularFileAtLeast: true
     })
-    const files = FileMother.createMany(2, {
-      tabularData: {
-        variablesCount: 2,
-        observationsCount: 3,
-        unf: 'some-unf'
-      }
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createTabular()
     })
     const fileSelection = {
       'some-file-id': files[0],
@@ -208,12 +207,8 @@ describe('DownloadFilesButton', () => {
         archival: 'https://dataset-download-url-archival'
       }
     })
-    const files = FileMother.createMany(2, {
-      tabularData: {
-        variablesCount: 2,
-        observationsCount: 3,
-        unf: 'some-unf'
-      }
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createTabular()
     })
     const fileSelection = {
       'some-file-id': undefined,
@@ -244,12 +239,8 @@ describe('DownloadFilesButton', () => {
       permissions: DatasetPermissionsMother.createWithFilesDownloadAllowed(),
       hasOneTabularFileAtLeast: true
     })
-    const files = FileMother.createMany(2, {
-      tabularData: {
-        variablesCount: 2,
-        observationsCount: 3,
-        unf: 'some-unf'
-      }
+    const files = FilePreviewMother.createMany(2, {
+      metadata: FileMetadataMother.createTabular()
     })
     const fileSelection = {
       'some-file-id': files[0]

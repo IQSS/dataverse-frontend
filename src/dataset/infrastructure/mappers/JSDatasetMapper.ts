@@ -4,8 +4,7 @@ import {
   DatasetMetadataBlock as JSDatasetMetadataBlock,
   DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataFields as JSDatasetMetadataFields,
-  DatasetUserPermissions as JSDatasetPermissions,
-  DatasetVersionInfo as JSDatasetVersionInfo
+  DatasetUserPermissions as JSDatasetPermissions
 } from '@iqss/dataverse-client-javascript'
 import {
   Dataset,
@@ -20,14 +19,18 @@ import {
   MetadataBlockName,
   PrivateUrl
 } from '../../domain/models/Dataset'
-import { FileDownloadMode, FileDownloadSize, FileSizeUnit } from '../../../files/domain/models/File'
+import {
+  FileDownloadMode,
+  FileDownloadSize,
+  FileSizeUnit
+} from '../../../files/domain/models/FileMetadata'
 import { JSDatasetVersionMapper } from './JSDatasetVersionMapper'
 
 export class JSDatasetMapper {
   static toDataset(
     jsDataset: JSDataset,
-    citation: string,
-    summaryFieldsNames: string[],
+    jsDatasetCitation: string,
+    jsDatasetSummaryFieldsNames: string[],
     jsDatasetPermissions: JSDatasetPermissions,
     jsDatasetLocks: JSDatasetLock[],
     jsDatasetFilesTotalOriginalDownloadSize: number,
@@ -35,16 +38,16 @@ export class JSDatasetMapper {
     requestedVersion?: string,
     privateUrl?: PrivateUrl
   ): Dataset {
-    const version = JSDatasetVersionMapper.toDatasetVersion(
+    const version = JSDatasetVersionMapper.toVersion(
       jsDataset.versionId,
       jsDataset.versionInfo,
-      requestedVersion
+      JSDatasetMapper.toDatasetTitle(jsDataset.metadataBlocks),
+      jsDatasetCitation
     )
     return new Dataset.Builder(
       jsDataset.persistentId,
       version,
-      citation,
-      JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, summaryFieldsNames),
+      JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, jsDatasetSummaryFieldsNames),
       jsDataset.license,
       JSDatasetMapper.toMetadataBlocks(
         jsDataset.metadataBlocks,
@@ -57,15 +60,19 @@ export class JSDatasetMapper {
       true, // TODO Connect with dataset hasValidTermsOfAccess
       true, // TODO Connect with dataset hasOneTabularFileAtLeast
       true, // TODO Connect with dataset isValid
-      JSDatasetMapper.toIsReleased(jsDataset.versionInfo),
       JSDatasetMapper.toDownloadUrls(jsDataset.persistentId, version),
       JSDatasetMapper.toFileDownloadSizes(
         jsDatasetFilesTotalOriginalDownloadSize,
         jsDatasetFilesTotalArchivalDownloadSize
       ),
       undefined, // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
-      privateUrl
+      privateUrl,
+      requestedVersion
     ).build()
+  }
+
+  static toDatasetTitle(jsDatasetMetadataBlocks: JSDatasetMetadataBlocks): string {
+    return jsDatasetMetadataBlocks[0].fields.title
   }
 
   static toSummaryFields(
@@ -169,11 +176,14 @@ export class JSDatasetMapper {
     return extraFields
   }
 
-  static toIsReleased(jsDatasetVersionInfo: JSDatasetVersionInfo): boolean {
-    return (
-      jsDatasetVersionInfo.releaseTime !== undefined &&
-      !isNaN(jsDatasetVersionInfo.releaseTime.getTime())
-    )
+  static toDownloadUrls(
+    jsDatasetPersistentId: string,
+    version: DatasetVersion
+  ): DatasetDownloadUrls {
+    return {
+      original: `/api/access/dataset/:persistentId/versions/${version.number.toString()}?persistentId=${jsDatasetPersistentId}&format=original`,
+      archival: `/api/access/dataset/:persistentId/versions/${version.number.toString()}?persistentId=${jsDatasetPersistentId}`
+    }
   }
 
   static toDatasetPermissions(jsDatasetPermissions: JSDatasetPermissions): DatasetPermissions {
@@ -194,16 +204,6 @@ export class JSDatasetMapper {
         reason: jsDatasetLock.lockType as unknown as DatasetLockReason
       }
     })
-  }
-
-  static toDownloadUrls(
-    jsDatasetPersistentId: string,
-    version: DatasetVersion
-  ): DatasetDownloadUrls {
-    return {
-      original: `/api/access/dataset/:persistentId/versions/${version.toString()}?persistentId=${jsDatasetPersistentId}&format=original`,
-      archival: `/api/access/dataset/:persistentId/versions/${version.toString()}?persistentId=${jsDatasetPersistentId}`
-    }
   }
 
   static toFileDownloadSizes(

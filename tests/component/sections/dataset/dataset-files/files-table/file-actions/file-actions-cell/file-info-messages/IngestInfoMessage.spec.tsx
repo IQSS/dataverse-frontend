@@ -1,5 +1,5 @@
 import { IngestInfoMessage } from '../../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/file-actions-cell/file-info-messages/IngestInfoMessage'
-import { FileIngestMother } from '../../../../../../../files/domain/models/FileMother'
+import { FileIngestMother } from '../../../../../../../files/domain/models/FileIngestMother'
 import { ReactNode } from 'react'
 import { Dataset as DatasetModel } from '../../../../../../../../../src/dataset/domain/models/Dataset'
 import { DatasetProvider } from '../../../../../../../../../src/sections/dataset/DatasetProvider'

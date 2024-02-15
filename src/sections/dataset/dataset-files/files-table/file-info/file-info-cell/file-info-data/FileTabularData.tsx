@@ -1,4 +1,4 @@
-import { FileTabularData as FileTabularDataModel } from '../../../../../../../files/domain/models/File'
+import { FileTabularData as FileTabularDataModel } from '../../../../../../../files/domain/models/FileMetadata'
 import { CopyToClipboardButton } from './copy-to-clipboard-button/CopyToClipboardButton'
 import { useTranslation } from 'react-i18next'
 

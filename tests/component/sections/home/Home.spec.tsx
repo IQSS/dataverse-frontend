@@ -22,7 +22,7 @@ describe('Home page', () => {
     cy.findByText('1 to 10 of 200 Datasets').should('exist')
 
     datasets.forEach((dataset) => {
-      cy.findByText(dataset.title).should('exist')
+      cy.findByText(dataset.version.title).should('exist')
     })
   })
 

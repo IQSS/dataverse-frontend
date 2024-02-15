@@ -1,4 +1,4 @@
-import { FileType } from './File'
+import { FileType } from './FileMetadata'
 import { FileAccessOption, FileTag } from './FileCriteria'
 
 export interface FilesCountInfo {

@@ -15,8 +15,8 @@ export function PaginationResultsInfo({ paginationInfo }: PaginationResultsInfoP
       {t('results', {
         start: paginationInfo.pageStartItem,
         end: paginationInfo.pageEndItem,
-        total: paginationInfo.totalItems,
-        item: paginationInfo.itemName
+        item: paginationInfo.itemName,
+        count: paginationInfo.totalItems
       })}
     </span>
   )

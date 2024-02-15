@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react'
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
 import { MultipleFileDownloadContext } from './MultipleFileDownloadContext'
-import { FileDownloadMode } from '../../../files/domain/models/File'
+import { FileDownloadMode } from '../../../files/domain/models/FileMetadata'
 import { getMultipleFileDownloadUrl } from '../../../files/domain/useCases/getMultipleFileDownloadUrl'
 
 interface MultipleFileDownloadProviderProps {

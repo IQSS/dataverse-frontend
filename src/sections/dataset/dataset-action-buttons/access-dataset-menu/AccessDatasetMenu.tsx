@@ -6,7 +6,7 @@ import {
 } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButton, DropdownButtonItem, DropdownHeader } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
-import { FileDownloadSize, FileDownloadMode } from '../../../../files/domain/models/File'
+import { FileDownloadSize, FileDownloadMode } from '../../../../files/domain/models/FileMetadata'
 import { Download } from 'react-bootstrap-icons'
 
 interface AccessDatasetMenuProps {

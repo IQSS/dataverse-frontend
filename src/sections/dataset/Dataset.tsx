@@ -16,6 +16,7 @@ import { useEffect } from 'react'
 import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
 import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
+import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 
 interface DatasetProps {
   fileRepository: FileRepository
@@ -51,18 +52,13 @@ export function Dataset({ fileRepository }: DatasetProps) {
           </div>
 
           <header className={styles.header}>
-            <h1>{dataset.title}</h1>
-            <DatasetLabels labels={dataset.labels} />
+            <h1>{dataset.version.title}</h1>
+            <DatasetLabels labels={dataset.version.labels} />
           </header>
           <div className={styles.container}>
             <Row>
               <Col sm={9}>
-                <DatasetCitation
-                  title={dataset.title}
-                  thumbnail={dataset.thumbnail}
-                  citation={dataset.citation}
-                  version={dataset.version}
-                />
+                <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
               </Col>
               <Col sm={3}>
                 <DatasetActionButtons dataset={dataset} />
@@ -92,7 +88,7 @@ export function Dataset({ fileRepository }: DatasetProps) {
                 </div>
               </Tabs.Tab>
             </Tabs>
-            <div className={styles['separation-line']}></div>
+            <SeparationLine />
           </div>
         </article>
       )}
