@@ -7,13 +7,13 @@ import { FileEmbargoDate } from '../file-embargo/FileEmbargoDate'
 import { BASE_URL } from '../../../config'
 import { Trans, useTranslation } from 'react-i18next'
 import { FileMetadata as FileMetadataModel } from '../../../files/domain/models/FileMetadata'
+import { FilePermissions } from '../../../files/domain/models/FilePermissions'
 import { DatasetPublishingStatus } from '../../../dataset/domain/models/Dataset'
-import { FileUserPermissions } from '../../../files/domain/models/FileUserPermissions'
 
 interface FileMetadataProps {
   name: string
   metadata: FileMetadataModel
-  permissions: FileUserPermissions
+  permissions: FilePermissions
   datasetPublishingStatus: DatasetPublishingStatus
 }
 

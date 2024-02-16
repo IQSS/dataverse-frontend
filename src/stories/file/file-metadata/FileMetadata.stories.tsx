@@ -3,7 +3,7 @@ import { WithI18next } from '../../WithI18next'
 import { FileMetadata } from '../../../sections/file/file-metadata/FileMetadata'
 import { FileMetadataMother } from '../../../../tests/component/files/domain/models/FileMetadataMother'
 import { DatasetPublishingStatus } from '../../../dataset/domain/models/Dataset'
-import { FileUserPermissionsMother } from '../../../../tests/component/files/domain/models/FileUserPermissionsMother'
+import { FilePermissionsMother } from '../../../../tests/component/files/domain/models/FilePermissionsMother'
 
 const meta: Meta<typeof FileMetadata> = {
   title: 'Sections/File Page/FileMetadata',
@@ -19,7 +19,7 @@ export const Default: Story = {
     <FileMetadata
       name="File Title"
       metadata={FileMetadataMother.createDefault()}
-      permissions={FileUserPermissionsMother.create()}
+      permissions={FilePermissionsMother.create()}
       datasetPublishingStatus={DatasetPublishingStatus.RELEASED}
     />
   )

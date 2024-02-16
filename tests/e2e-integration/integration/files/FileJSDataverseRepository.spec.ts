@@ -24,10 +24,10 @@ import { FilesCountInfo } from '../../../../src/files/domain/models/FilesCountIn
 import { DatasetVersionMother } from '../../../component/dataset/domain/models/DatasetMother'
 import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePaginationInfo'
 import { FilePreview } from '../../../../src/files/domain/models/FilePreview'
-import { FileIngestStatus } from '../../../../src/files/domain/models/FileIngest'
 import { DatasetPublishingStatus } from '../../../../src/dataset/domain/models/Dataset'
 import { File } from '../../../../src/files/domain/models/File'
 import { FileCitationMother } from '../../../component/files/domain/models/FileMother'
+import { FileIngest, FileIngestStatus } from '../../../../src/files/domain/models/FileIngest'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -47,7 +47,7 @@ const filePreviewExpectedData = (id: number): FilePreview => {
       canBeRequested: false,
       requested: false
     },
-    ingest: { status: FileIngestStatus.NONE, isInProgress: false },
+    ingest: new FileIngest(FileIngestStatus.NONE),
     metadata: {
       type: new FileType('text/plain'),
       size: new FileSize(25, FileSizeUnit.BYTES),
@@ -77,7 +77,8 @@ const filePreviewExpectedData = (id: number): FilePreview => {
       persistentId: undefined,
       isActivelyEmbargoed: false,
       isTabular: false
-    }
+    },
+    permissions: { canDownloadFile: true }
   }
 }
 
@@ -98,7 +99,7 @@ const fileExpectedData = (id: number): File => {
       canDownloadFile: true,
       canEditDataset: true
     },
-    ingest: { status: FileIngestStatus.NONE, message: undefined },
+    ingest: new FileIngest(FileIngestStatus.NONE),
     metadata: {
       type: new FileType('text/plain'),
       size: new FileSize(25, FileSizeUnit.BYTES),
@@ -128,7 +129,8 @@ const fileExpectedData = (id: number): File => {
       persistentId: undefined,
       isActivelyEmbargoed: false,
       isTabular: false
-    }
+    },
+    permissions: { canDownloadFile: true }
   }
 }
 
@@ -172,6 +174,8 @@ describe('File JSDataverse Repository', () => {
             expect(file.datasetPublishingStatus).to.deep.equal(expectedFile.datasetPublishingStatus)
             expect(file.access).to.deep.equal(expectedFile.access)
             compareMetadata(file.metadata, expectedFile.metadata)
+            expect(file.ingest).to.deep.equal(expectedFile.ingest)
+            expect(file.permissions).to.deep.equal(expectedFile.permissions)
           })
         })
     })
@@ -520,25 +524,6 @@ describe('File JSDataverse Repository', () => {
           files.forEach((file) => {
             expect(file.metadata.isDeleted).to.equal(true)
           })
-        })
-    })
-  })
-
-  describe('Get file user permissions by id', () => {
-    it('gets file user permissions by id', async () => {
-      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1))
-      if (!datasetResponse.files) throw new Error('Files not found')
-
-      const expectedFileUserPermissions = {
-        fileId: datasetResponse.files[0].id,
-        canDownloadFile: true,
-        canEditDataset: true
-      }
-
-      await fileRepository
-        .getUserPermissionsById(datasetResponse.files[0].id)
-        .then((fileUserPermissions) => {
-          expect(fileUserPermissions).to.deep.equal(expectedFileUserPermissions)
         })
     })
   })

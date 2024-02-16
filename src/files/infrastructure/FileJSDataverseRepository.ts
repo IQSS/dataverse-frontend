@@ -1,7 +1,7 @@
 import { FileRepository } from '../domain/repositories/FileRepository'
 import { FileDownloadMode, FileTabularData } from '../domain/models/FileMetadata'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
-import { FileUserPermissions } from '../domain/models/FileUserPermissions'
+
 import {
   File as JSFile,
   FileDownloadSizeMode,
@@ -22,11 +22,12 @@ import { File } from '../domain/models/File'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
 import { BASE_URL } from '../../config'
 import { FilePreview } from '../domain/models/FilePreview'
-import { JSFileUserPermissionsMapper } from './mappers/JSFileUserPermissionsMapper'
 import { JSFilesCountInfoMapper } from './mappers/JSFilesCountInfoMapper'
 import { JSFileMetadataMapper } from './mappers/JSFileMetadataMapper'
 import { DatasetVersionMother } from '../../../tests/component/dataset/domain/models/DatasetMother'
 import { FileCitationMother } from '../../../tests/component/files/domain/models/FileMother'
+import { FilePermissions } from '../domain/models/FilePermissions'
+import { JSFilePermissionsMapper } from './mappers/JSFilePermissionsMapper'
 
 const includeDeaccessioned = true
 
@@ -54,15 +55,17 @@ export class FileJSDataverseRepository implements FileRepository {
           jsFiles,
           FileJSDataverseRepository.getAllDownloadCount(jsFiles),
           FileJSDataverseRepository.getAllThumbnails(jsFiles),
+          FileJSDataverseRepository.getAllWithPermissions(jsFiles),
           FileJSDataverseRepository.getAllTabularData(jsFiles)
         ])
       )
-      .then(([jsFiles, downloadCounts, thumbnails, tabularData]) =>
+      .then(([jsFiles, downloadCounts, thumbnails, permissions, tabularData]) =>
         jsFiles.map((jsFile, index) =>
           JSFileMapper.toFilePreview(
             jsFile,
             datasetVersion,
             downloadCounts[index],
+            permissions[index],
             thumbnails[index],
             tabularData[index]
           )
@@ -98,6 +101,15 @@ export class FileJSDataverseRepository implements FileRepository {
         FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate)
       )
     )
+  }
+  private static getAllWithPermissions(files: JSFile[]): Promise<FilePermissions[]> {
+    return Promise.all(files.map((jsFile) => this.getPermissionsById(jsFile.id)))
+  }
+
+  private static getPermissionsById(id: number): Promise<FilePermissions> {
+    return getFileUserPermissions
+      .execute(id)
+      .then((jsFilePermissions) => JSFilePermissionsMapper.toFilePermissions(jsFilePermissions))
   }
 
   private static getDownloadCountById(id: number, publicationDate?: Date): Promise<number> {
@@ -164,17 +176,6 @@ export class FileJSDataverseRepository implements FileRepository {
       })
   }
 
-  getUserPermissionsById(id: number): Promise<FileUserPermissions> {
-    return getFileUserPermissions
-      .execute(id)
-      .then((jsFileUserPermissions) =>
-        JSFileUserPermissionsMapper.toFileUserPermissions(id, jsFileUserPermissions)
-      )
-      .catch((error: ReadError) => {
-        throw new Error(error.message)
-      })
-  }
-
   getById(id: number, datasetVersionNumber?: string): Promise<File> {
     return getFile
       .execute(id, datasetVersionNumber)
@@ -183,18 +184,18 @@ export class FileJSDataverseRepository implements FileRepository {
           jsFile,
           FileJSDataverseRepository.getCitationById(jsFile.id),
           FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate),
-          this.getUserPermissionsById(jsFile.id),
+          FileJSDataverseRepository.getPermissionsById(jsFile.id),
           FileJSDataverseRepository.getThumbnailById(jsFile.id),
           FileJSDataverseRepository.getTabularDataById(jsFile.id, jsFile.tabularData)
         ])
       )
-      .then(([jsFile, citation, downloadsCount, userPermissions, thumbnail, tabularData]) =>
+      .then(([jsFile, citation, downloadsCount, permissions, thumbnail, tabularData]) =>
         JSFileMapper.toFile(
           jsFile,
           DatasetVersionMother.createRealistic(), // TODO: add dataset version to get file
           citation,
           downloadsCount,
-          userPermissions,
+          permissions,
           thumbnail,
           tabularData
         )

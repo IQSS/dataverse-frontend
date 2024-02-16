@@ -2,9 +2,9 @@ import { File } from '../../../../../src/files/domain/models/File'
 import { DatasetVersionMother } from '../../../dataset/domain/models/DatasetMother'
 import { FileMetadataMother } from './FileMetadataMother'
 import { FileAccessMother } from './FileAccessMother'
-import { FileUserPermissionsMother } from './FileUserPermissionsMother'
 import { faker } from '@faker-js/faker'
 import { FileIngestMother } from './FileIngestMother'
+import { FilePermissionsMother } from './FilePermissionsMother'
 
 export class FileMother {
   static create(props?: Partial<File>): File {
@@ -15,7 +15,7 @@ export class FileMother {
       citation: FileCitationMother.create('File Title'),
       access: FileAccessMother.create(),
       metadata: FileMetadataMother.create(),
-      permissions: FileUserPermissionsMother.create(),
+      permissions: FilePermissionsMother.create(),
       ingest: FileIngestMother.create(),
       ...props
     }
@@ -27,7 +27,7 @@ export class FileMother {
       datasetVersion: DatasetVersionMother.createRealistic(),
       citation: FileCitationMother.create('File Title'),
       access: FileAccessMother.createPublic(),
-      permissions: FileUserPermissionsMother.createWithAllPermissionsGranted(),
+      permissions: FilePermissionsMother.createWithGrantedPermissions(),
       metadata: FileMetadataMother.createDefault(),
       ...props
     })
@@ -36,7 +36,7 @@ export class FileMother {
   static createRestricted(props?: Partial<File>): File {
     return this.createRealistic({
       access: FileAccessMother.createRestricted(),
-      permissions: FileUserPermissionsMother.createWithAllPermissionsDenied(),
+      permissions: FilePermissionsMother.createWithDeniedPermissions(),
       ...props
     })
   }
@@ -44,7 +44,7 @@ export class FileMother {
   static createRestrictedWithAccessGranted(props?: Partial<File>): File {
     return this.createRealistic({
       access: FileAccessMother.createRestricted(),
-      permissions: FileUserPermissionsMother.createWithAllPermissionsGranted(),
+      permissions: FilePermissionsMother.createWithGrantedPermissions(),
       ...props
     })
   }
@@ -65,14 +65,14 @@ export class FileMother {
 
   static createWithDownloadPermissionGranted(props?: Partial<File>): File {
     return this.create({
-      permissions: FileUserPermissionsMother.createWithDownloadFileGranted(),
+      permissions: FilePermissionsMother.createWithDownloadFileGranted(),
       ...props
     })
   }
 
   static createWithDownloadPermissionDenied(props?: Partial<File>): File {
     return this.create({
-      permissions: FileUserPermissionsMother.createWithDownloadFileDenied(),
+      permissions: FilePermissionsMother.createWithDownloadFileDenied(),
       ...props
     })
   }

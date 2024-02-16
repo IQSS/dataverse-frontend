@@ -277,13 +277,14 @@ describe('Dataset', () => {
           cy.findByText('Restricted File Icon').should('not.exist')
           cy.findByText('Restricted with access Icon').should('exist')
           cy.findByRole('button', { name: 'Access File' }).as('accessButton')
-          cy.get('@accessButton').should('exist')
+          cy.get('@accessButton').should('be.visible')
+          // TODO: replace the hard-coded wait with the pipe() method?
+          // see https://www.cypress.io/blog/2019/01/22/when-can-the-test-click
+          cy.wait(500) // wait for the event handler to attach to the button
           cy.get('@accessButton').click()
           cy.findByText('Restricted with Access Granted').should('exist')
 
-          cy.findByRole('button', { name: 'File Options' }).as('fileOptions')
-          cy.get('@fileOptions').should('exist')
-          cy.get('@fileOptions').click()
+          cy.findByRole('button', { name: 'File Options' }).should('exist').click()
           cy.findByText('Unrestrict').should('exist')
         })
     })

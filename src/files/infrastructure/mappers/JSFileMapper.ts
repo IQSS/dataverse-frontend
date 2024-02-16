@@ -5,14 +5,15 @@ import { JSFileMetadataMapper } from './JSFileMetadataMapper'
 import { JSFileAccessMapper } from './JSFileAccessMapper'
 import { JSFileIngestMapper } from './JSFileIngestMapper'
 import { File } from '../../domain/models/File'
-import { FileUserPermissions } from '../../domain/models/FileUserPermissions'
 import { FileTabularData } from '../../domain/models/FileMetadata'
+import { FilePermissions } from '../../domain/models/FilePermissions'
 
 export class JSFileMapper {
   static toFilePreview(
     jsFile: JSFile,
     datasetVersion: DatasetVersion,
     downloadsCount: number,
+    permissions: FilePermissions,
     thumbnail?: string,
     tabularData?: FileTabularData
   ): FilePreview {
@@ -22,7 +23,8 @@ export class JSFileMapper {
       datasetPublishingStatus: datasetVersion.publishingStatus,
       access: JSFileAccessMapper.toFileAccess(jsFile.restricted),
       ingest: JSFileIngestMapper.toFileIngest(),
-      metadata: JSFileMetadataMapper.toFileMetadata(jsFile, downloadsCount, thumbnail, tabularData)
+      metadata: JSFileMetadataMapper.toFileMetadata(jsFile, downloadsCount, thumbnail, tabularData),
+      permissions: permissions
     }
   }
 
@@ -31,7 +33,7 @@ export class JSFileMapper {
     datasetVersion: DatasetVersion,
     citation: string,
     downloadsCount: number,
-    userPermissions: FileUserPermissions,
+    permissions: FilePermissions,
     thumbnail?: string,
     tabularData?: FileTabularData
   ): File {
@@ -41,9 +43,9 @@ export class JSFileMapper {
       access: JSFileAccessMapper.toFileAccess(jsFile.restricted),
       datasetVersion: datasetVersion,
       citation: citation,
-      permissions: userPermissions,
       metadata: JSFileMetadataMapper.toFileMetadata(jsFile, downloadsCount, thumbnail, tabularData),
-      ingest: JSFileIngestMapper.toFileIngest()
+      ingest: JSFileIngestMapper.toFileIngest(),
+      permissions: permissions
     }
   }
 

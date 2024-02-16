@@ -5,6 +5,7 @@ import { FileAccessMother } from './FileAccessMother'
 import { FileIngestMother } from './FileIngestMother'
 import { DatasetVersionMother } from '../../../dataset/domain/models/DatasetMother'
 import { DatasetPublishingStatus } from '../../../../../src/dataset/domain/models/Dataset'
+import { FilePermissionsMother } from './FilePermissionsMother'
 
 export class FilePreviewMother {
   static create(props?: Partial<FilePreview>): FilePreview {
@@ -15,6 +16,7 @@ export class FilePreviewMother {
       access: FileAccessMother.create(),
       ingest: FileIngestMother.create(),
       metadata: FileMetadataMother.create(),
+      permissions: FilePermissionsMother.create(),
       ...props
     }
   }
@@ -30,6 +32,7 @@ export class FilePreviewMother {
       access: FileAccessMother.createPublic(),
       ingest: FileIngestMother.createIngestNone(),
       metadata: FileMetadataMother.createDefault(),
+      permissions: FilePermissionsMother.createWithGrantedPermissions(),
       ...props
     })
   }
@@ -64,7 +67,16 @@ export class FilePreviewMother {
   static createRestricted(): FilePreview {
     return this.createDefault({
       access: FileAccessMother.createRestricted(),
-      metadata: FileMetadataMother.createNotEmbargoed()
+      metadata: FileMetadataMother.createNotEmbargoed(),
+      permissions: FilePermissionsMother.createWithDeniedPermissions()
+    })
+  }
+
+  static createRestrictedWithAccessGranted(): FilePreview {
+    return this.createDefault({
+      access: FileAccessMother.createRestricted(),
+      metadata: FileMetadataMother.createNotEmbargoed(),
+      permissions: FilePermissionsMother.createWithGrantedPermissions()
     })
   }
 
@@ -84,14 +96,24 @@ export class FilePreviewMother {
 
   static createWithThumbnail(): FilePreview {
     return this.createDefault({
-      metadata: FileMetadataMother.createWithThumbnail()
+      metadata: FileMetadataMother.createWithThumbnail(),
+      access: FileAccessMother.createPublic()
     })
   }
 
   static createWithThumbnailRestricted(): FilePreview {
     return this.createDefault({
       access: FileAccessMother.createRestricted(),
-      metadata: FileMetadataMother.createWithThumbnail()
+      metadata: FileMetadataMother.createWithThumbnail(),
+      permissions: FilePermissionsMother.createWithDeniedPermissions()
+    })
+  }
+
+  static createWithThumbnailRestrictedWithAccessGranted(): FilePreview {
+    return this.createDefault({
+      access: FileAccessMother.createRestricted(),
+      metadata: FileMetadataMother.createWithThumbnail(),
+      permissions: FilePermissionsMother.createWithGrantedPermissions()
     })
   }
 

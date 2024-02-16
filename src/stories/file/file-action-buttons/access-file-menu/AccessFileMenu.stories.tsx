@@ -2,7 +2,6 @@ import { Meta, StoryObj } from '@storybook/react'
 import { AccessFileMenu } from '../../../../sections/file/file-action-buttons/access-file-menu/AccessFileMenu'
 import { WithI18next } from '../../../WithI18next'
 import { WithSettings } from '../../../WithSettings'
-import { WithFilePermissionsGranted } from '../../file-permission/WithFilePermissionsGranted'
 import { FileAccessMother } from '../../../../../tests/component/files/domain/models/FileAccessMother'
 import { FileMetadataMother } from '../../../../../tests/component/files/domain/models/FileMetadataMother'
 
@@ -108,7 +107,6 @@ export const RestrictedWithAccessRequestPending: Story = {
 }
 
 export const RestrictedWithAccessGranted: Story = {
-  decorators: [WithFilePermissionsGranted],
   render: () => (
     <AccessFileMenu
       id={1}
@@ -122,7 +120,6 @@ export const RestrictedWithAccessGranted: Story = {
 }
 
 export const WithEmbargo: Story = {
-  decorators: [WithFilePermissionsGranted],
   render: () => (
     <AccessFileMenu
       id={1}
