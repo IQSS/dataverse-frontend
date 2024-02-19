@@ -6,6 +6,7 @@ import { PaginationInfo } from '../../../shared/domain/models/PaginationInfo'
 import { useEffect, useState } from 'react'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPaginationInfo'
+import { useSearchParams } from 'react-router-dom'
 
 interface PaginationProps {
   onPaginationInfoChange: (
@@ -13,13 +14,16 @@ interface PaginationProps {
   ) => void
   initialPaginationInfo: PaginationInfo<DatasetPaginationInfo | FilePaginationInfo>
   showPageSizeSelector?: boolean
+  updateQueryParam?: boolean
 }
 const MINIMUM_NUMBER_OF_PAGES_TO_DISPLAY_PAGINATION = 2
 export function PaginationControls({
   onPaginationInfoChange,
   initialPaginationInfo,
-  showPageSizeSelector = true
+  showPageSizeSelector = true,
+  updateQueryParam = false
 }: PaginationProps) {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [paginationInfo, setPaginationInfo] = useState<DatasetPaginationInfo | FilePaginationInfo>(
     initialPaginationInfo
   )
@@ -38,11 +42,30 @@ export function PaginationControls({
 
   useEffect(() => {
     onPaginationInfoChange(paginationInfo)
-  }, [paginationInfo.pageSize, paginationInfo.page])
+  }, [paginationInfo.pageSize])
+
+  useEffect(() => {
+    onPaginationInfoChange(paginationInfo)
+    if (updateQueryParam) {
+      if (searchParams.get('page') !== paginationInfo.page.toString()) {
+        setSearchParams({ page: paginationInfo.page.toString() })
+      }
+    }
+  }, [paginationInfo.page])
 
   useEffect(() => {
     setPaginationInfo(paginationInfo.withTotal(initialPaginationInfo.totalItems))
   }, [initialPaginationInfo.totalItems])
+
+  useEffect(() => {
+    if (updateQueryParam) {
+      if (searchParams.get('page') !== paginationInfo.page.toString()) {
+        const page = searchParams.get('page') ? parseInt(searchParams.get('page') as string) : 1
+        setSearchParams({ page: page.toString() }, { replace: true })
+        goToPage(page)
+      }
+    }
+  }, [searchParams])
 
   if (paginationInfo.totalPages < MINIMUM_NUMBER_OF_PAGES_TO_DISPLAY_PAGINATION) {
     return <></>

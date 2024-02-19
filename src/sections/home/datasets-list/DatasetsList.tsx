@@ -9,17 +9,24 @@ import { useLoading } from '../../loading/LoadingContext'
 import { DatasetsListSkeleton } from './DatasetsListSkeleton'
 import { NoDatasetsMessage } from './NoDatasetsMessage'
 import { DatasetCard } from './dataset-card/DatasetCard'
+import { PageNumberNotFound } from './PageNumberNotFound'
 
 interface DatasetsListProps {
   datasetRepository: DatasetRepository
+  page?: number
 }
+
 const NO_DATASETS = 0
-export function DatasetsList({ datasetRepository }: DatasetsListProps) {
+export function DatasetsList({ datasetRepository, page }: DatasetsListProps) {
   const { setIsLoading } = useLoading()
   const [paginationInfo, setPaginationInfo] = useState<DatasetPaginationInfo>(
-    new DatasetPaginationInfo()
+    new DatasetPaginationInfo(page)
   )
-  const { datasets, isLoading } = useDatasets(datasetRepository, setPaginationInfo, paginationInfo)
+  const { datasets, isLoading, pageNumberNotFound } = useDatasets(
+    datasetRepository,
+    setPaginationInfo,
+    paginationInfo
+  )
 
   useEffect(() => {
     setIsLoading(isLoading)
@@ -27,6 +34,14 @@ export function DatasetsList({ datasetRepository }: DatasetsListProps) {
 
   if (isLoading) {
     return <DatasetsListSkeleton />
+  }
+
+  if (pageNumberNotFound) {
+    return (
+      <section className={styles.container}>
+        <PageNumberNotFound />
+      </section>
+    )
   }
 
   return (
@@ -45,6 +60,7 @@ export function DatasetsList({ datasetRepository }: DatasetsListProps) {
             onPaginationInfoChange={setPaginationInfo}
             initialPaginationInfo={paginationInfo}
             showPageSizeSelector={false}
+            updateQueryParam
           />
         </>
       )}
