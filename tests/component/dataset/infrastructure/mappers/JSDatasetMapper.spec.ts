@@ -174,7 +174,8 @@ const expectedDataset = {
     DvObjectType.DATASET,
     undefined,
     'doi:10.5072/FK2/B4B2MJ',
-    '0.0'
+    '0.0',
+    new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
   )
 }
 const expectedDatasetAlternateVersion = {
@@ -281,7 +282,8 @@ const expectedDatasetAlternateVersion = {
     DvObjectType.DATASET,
     undefined,
     'doi:10.5072/FK2/B4B2MJ',
-    '0.0'
+    '0.0',
+    new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
   )
 }
 describe('JS Dataset Mapper', () => {
