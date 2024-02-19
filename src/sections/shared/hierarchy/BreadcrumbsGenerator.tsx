@@ -13,19 +13,33 @@ export function BreadcrumbsGenerator({ hierarchy }: BreadcrumbGeneratorProps) {
     <Breadcrumb>
       {hierarchyArray.map((item, index) => {
         const isLast = index === hierarchyArray.length - 1
+        const isFirst = index === 0
+
+        if (isLast) {
+          return (
+            <Breadcrumb.Item key={index} active>
+              {item.name}
+            </Breadcrumb.Item>
+          )
+        }
+
+        if (isFirst) {
+          return (
+            <Breadcrumb.Item key={index}>
+              <LinkToPage page={Route.HOME}>{item.name}</LinkToPage>
+            </Breadcrumb.Item>
+          )
+        }
+
         return (
-          <Breadcrumb.Item key={index} active={isLast}>
-            {isLast ? (
-              item.name
-            ) : (
-              <LinkToDvObject
-                name={item.name}
-                type={item.type}
-                id={item.id}
-                persistentId={item.persistentId}
-                version={item.version}
-              />
-            )}
+          <Breadcrumb.Item key={index}>
+            <LinkToDvObject
+              name={item.name}
+              type={item.type}
+              id={item.id}
+              persistentId={item.persistentId}
+              version={item.version}
+            />
           </Breadcrumb.Item>
         )
       })}

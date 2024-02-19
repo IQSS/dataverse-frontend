@@ -288,7 +288,7 @@ describe('Dataset JSDataverse Repository', () => {
       })
   })
   it('gets the total dataset count', async () => {
-    await DatasetHelper.destroyAll()
+    // await DatasetHelper.destroyAll()
     await datasetRepository.getTotalDatasetsCount().then((count) => {
       expect(count).to.equal(0)
     })
@@ -299,7 +299,7 @@ describe('Dataset JSDataverse Repository', () => {
     })
   })
   it('gets the DatasetPreview', async () => {
-    await DatasetHelper.destroyAll()
+    // await DatasetHelper.destroyAll()
 
     const datasetResponse = await DatasetHelper.createAndPublish()
     const paginationInfo = new DatasetPaginationInfo(1, 20)
