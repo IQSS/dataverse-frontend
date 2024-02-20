@@ -18,6 +18,25 @@ export function Header() {
     })
   }
 
+  const routesToRender = [
+    {
+      id: 0,
+      name: t('navigation.newDataverse'),
+      page: Route.DATASETS
+    },
+    {
+      id: 1,
+      name: t('navigation.newDataset'),
+      page: Route.CREATE_DATASET
+    }
+  ]
+
+  const list = routesToRender.map((option) => (
+    <Navbar.Dropdown.Item href={option.page} key={option.id}>
+      {option.name}
+    </Navbar.Dropdown.Item>
+  ))
+
   return (
     <Navbar
       brand={{
@@ -26,11 +45,16 @@ export function Header() {
         logoImgSrc: logo
       }}>
       {user ? (
-        <Navbar.Dropdown title={user.name} id="dropdown-user">
-          <Navbar.Dropdown.Item href="#" onClick={onLogoutClick}>
-            {t('logOut')}
-          </Navbar.Dropdown.Item>
-        </Navbar.Dropdown>
+        <>
+          <Navbar.Dropdown title="Add Data" id="dropdown-addData">
+            {list}
+          </Navbar.Dropdown>
+          <Navbar.Dropdown title={user.name} id="dropdown-user">
+            <Navbar.Dropdown.Item href="#" onClick={onLogoutClick}>
+              {t('logOut')}
+            </Navbar.Dropdown.Item>
+          </Navbar.Dropdown>
+        </>
       ) : (
         <>
           <Navbar.Link href={`${BASE_URL}${Route.LOG_IN}`}>{t('logIn')}</Navbar.Link>
@@ -40,3 +64,5 @@ export function Header() {
     </Navbar>
   )
 }
+
+// TODO: AddData Navigation item needs proper permissions checking, see spike #XXX

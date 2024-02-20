@@ -3,5 +3,10 @@
   "logIn": "Log In",
   "logOut": "Log Out",
   "brandTitle": "Dataverse",
-  "brandLogoImage": "Dataverse brand logo"
+  "brandLogoImage": "Dataverse brand logo",
+  "navigation": {
+    "addData": "Add Data",
+    "newDataverse": "New Dataverse",
+    "newDataset": "New Dataset"
+  }
 }
