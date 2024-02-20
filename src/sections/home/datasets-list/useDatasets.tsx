@@ -11,6 +11,7 @@ export function useDatasets(
   onPaginationInfoChange: (paginationInfo: DatasetPaginationInfo) => void,
   paginationInfo: DatasetPaginationInfo
 ) {
+  const [pageNumberNotFound, setPageNumberNotFound] = useState<boolean>(false)
   const [datasets, setDatasets] = useState<DatasetPreview[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [totalDatasetsCount, setTotalDatasetsCount] = useState<TotalDatasetsCount>()
@@ -20,7 +21,8 @@ export function useDatasets(
       .then((totalDatasetsCount: TotalDatasetsCount) => {
         setTotalDatasetsCount(totalDatasetsCount)
         if (totalDatasetsCount !== paginationInfo.totalItems) {
-          onPaginationInfoChange(paginationInfo.withTotal(totalDatasetsCount))
+          paginationInfo = paginationInfo.withTotal(totalDatasetsCount)
+          onPaginationInfoChange(paginationInfo)
         }
         return totalDatasetsCount
       })
@@ -34,7 +36,12 @@ export function useDatasets(
         setIsLoading(false)
         return
       }
-      return getDatasets(datasetRepository, paginationInfo.withTotal(totalDatasetsCount))
+      if (paginationInfo.page > paginationInfo.totalPages) {
+        setPageNumberNotFound(true)
+        setIsLoading(false)
+        return
+      }
+      return getDatasets(datasetRepository, paginationInfo)
         .then((datasets: DatasetPreview[]) => {
           setDatasets(datasets)
           setIsLoading(false)
@@ -60,6 +67,7 @@ export function useDatasets(
   return {
     datasets,
     totalDatasetsCount,
-    isLoading
+    isLoading,
+    pageNumberNotFound
   }
 }

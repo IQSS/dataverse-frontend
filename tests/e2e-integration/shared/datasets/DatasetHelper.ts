@@ -19,21 +19,33 @@ export class DatasetHelper extends DataverseApiHelper {
   static async create(): Promise<DatasetResponse> {
     return this.request<DatasetResponse>(`/dataverses/root/datasets`, 'POST', newDatasetData)
   }
+
   static async createWithTitle(title: string): Promise<DatasetResponse> {
     newDatasetData.datasetVersion.metadataBlocks.citation.fields[0].value = title
     return this.request<DatasetResponse>(`/dataverses/root/datasets`, 'POST', newDatasetData)
   }
+
   static async destroy(persistentId: string): Promise<DatasetResponse> {
     return this.request<DatasetResponse>(
       `/datasets/:persistentId/destroy/?persistentId=${persistentId}`,
       'DELETE'
     )
   }
+
   static async createAndPublish(): Promise<DatasetResponse> {
     const datasetResponse = await DatasetHelper.create()
     await DatasetHelper.publish(datasetResponse.persistentId)
     await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
     return datasetResponse
+  }
+
+  static async createMany(amount: number): Promise<DatasetResponse[]> {
+    const datasets = []
+    for (let i = 0; i < amount; i++) {
+      const datasetResponse = await this.create()
+      datasets.push(datasetResponse)
+    }
+    return datasets
   }
 
   static async destroyAll(): Promise<void> {
