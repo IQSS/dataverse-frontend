@@ -267,6 +267,12 @@ a lighter shade of grey than what it used to be.
 
 We changed the citation block to be white with a colored border, to make the text in the box more accessible.
 
+#### Breadcrumbs
+We have introduced an update to the breadcrumb navigation UI. Unlike in the original JSF application, where breadcrumbs
+did not reflect the user's current location within the site, our new SPA design now includes this feature in the breadcrumbs.
+
+This update gives users a clear indication of their current position within the application's hierarchy.
+
 ### Changes in functionality behavior
 
 Our main goal is to replicate the behavior of the original JSF application in all its functionalities, although during development we have found opportunities to review certain behaviors and apply changes where we find appropriate.
