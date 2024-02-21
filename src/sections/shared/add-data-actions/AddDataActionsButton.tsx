@@ -38,6 +38,6 @@ export default function AddDataActionsButton() {
   )
 }
 
-// TODO: AddData Dropdown item needs proper permissions checking, see Spike #XXX
-// TODO: Add page for "New Dataverse", see Issue #XXX
-// TODO: Dropdown styles - Add PlusLg icon to right side of button per wireframe
+// TODO: AddData Dropdown item needs proper permissions checking, see Spike #318
+// TODO: Add page for "New Dataverse", see Issue #319
+// TODO: [Q?]Dropdown styles - Add PlusLg icon to right side of button per wireframe
