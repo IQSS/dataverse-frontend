@@ -22,12 +22,14 @@ export function Header() {
     {
       id: 0,
       name: t('navigation.newDataverse'),
-      page: `/spa${Route.DATASETS}`
+      page: `/spa${Route.DATASETS}`,
+      disabled: true
     },
     {
       id: 1,
       name: t('navigation.newDataset'),
-      page: `/spa${Route.CREATE_DATASET}`
+      page: `/spa${Route.CREATE_DATASET}`,
+      disabled: false
     }
   ]
 

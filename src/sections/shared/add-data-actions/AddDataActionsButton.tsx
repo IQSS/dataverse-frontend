@@ -9,19 +9,21 @@ const routesToRender = [
   {
     id: 0,
     name: 'New Dataverse',
-    page: `/spa${Route.DATASETS}`
+    page: `/spa${Route.DATASETS}`,
+    disabled: true
   },
   {
     id: 1,
     name: 'New Dataset',
-    page: `/spa${Route.CREATE_DATASET}`
+    page: `/spa${Route.CREATE_DATASET}`,
+    disabled: false
   }
 ]
 
 export default function AddDataActionsButton() {
   const { t } = useTranslation('header')
   const list = routesToRender.map((option) => (
-    <Dropdown.Item href={option.page} disabled={false} key={option.id}>
+    <Dropdown.Item href={option.page} disabled={option.disabled} key={option.id}>
       {option.name}
     </Dropdown.Item>
   ))
