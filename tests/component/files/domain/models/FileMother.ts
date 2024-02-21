@@ -1,7 +1,6 @@
 import { File } from '../../../../../src/files/domain/models/File'
 import { DatasetVersionMother } from '../../../dataset/domain/models/DatasetMother'
 import { FileMetadataMother } from './FileMetadataMother'
-import { FileVersionMother } from './FileVersionMother'
 import { FileAccessMother } from './FileAccessMother'
 import { faker } from '@faker-js/faker'
 import { FileIngestMother } from './FileIngestMother'
@@ -12,7 +11,6 @@ export class FileMother {
     return {
       id: faker.datatype.number(),
       name: faker.system.fileName(),
-      version: FileVersionMother.create(),
       datasetVersion: DatasetVersionMother.create(),
       citation: FileCitationMother.create('File Title'),
       access: FileAccessMother.create(),

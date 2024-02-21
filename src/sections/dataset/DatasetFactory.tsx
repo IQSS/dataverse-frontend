@@ -13,6 +13,7 @@ import { DatasetProvider } from './DatasetProvider'
 import { MultipleFileDownloadProvider } from '../file/multiple-file-download/MultipleFileDownloadProvider'
 import { NotImplementedModalProvider } from '../not-implemented/NotImplementedModalProvider'
 import { AlertProvider } from '../alerts/AlertProvider'
+import { searchParamVersionToDomainVersion } from '../../Router'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
@@ -44,7 +45,8 @@ function DatasetWithSearchParams() {
   const [searchParams] = useSearchParams()
   const persistentId = searchParams.get('persistentId') ?? undefined
   const privateUrlToken = searchParams.get('privateUrlToken')
-  const version = searchParams.get('version') ?? undefined
+  const searchParamVersion = searchParams.get('version') ?? undefined
+  const version = searchParamVersionToDomainVersion(searchParamVersion)
 
   useEffect(() => {
     if (privateUrlToken) setAnonymizedView(true)

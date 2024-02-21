@@ -8,6 +8,7 @@ export interface DatasetResponse {
   persistentId: string
   id: string
   files?: DatasetFileResponse[]
+  file?: DatasetFileResponse
 }
 
 export interface DatasetFileResponse {
@@ -108,6 +109,20 @@ export class DatasetHelper extends DataverseApiHelper {
     const datasetResponse = await this.create()
     const files = await this.uploadFiles(datasetResponse.persistentId, filesData)
     return { ...datasetResponse, files: files }
+  }
+
+  static async createWithFile(fileData: FileData): Promise<DatasetResponse> {
+    const datasetResponse = await this.create()
+    const file = await this.uploadFile(datasetResponse.persistentId, fileData)
+    return { ...datasetResponse, file: file }
+  }
+
+  static async createWithFileAndPublish(fileData: FileData): Promise<DatasetResponse> {
+    const datasetResponse = await DatasetHelper.createWithFile(fileData)
+    await DatasetHelper.publish(datasetResponse.persistentId)
+    await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
+
+    return datasetResponse
   }
 
   static async embargoFiles(

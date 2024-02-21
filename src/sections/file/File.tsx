@@ -13,16 +13,17 @@ import { DatasetLabels } from '../dataset/dataset-labels/DatasetLabels'
 import { FileAccessRestrictedIcon } from './file-access/FileAccessRestrictedIcon'
 import { FileMetadata } from './file-metadata/FileMetadata'
 import { AccessFileMenu } from './file-action-buttons/access-file-menu/AccessFileMenu'
-import { FilePublishingStatus } from '../../files/domain/models/FileVersion'
+import { DatasetPublishingStatus } from '../../dataset/domain/models/Dataset'
 
 interface FileProps {
   repository: FileRepository
   id: number
+  datasetVersionNumber?: string
 }
-export function File({ repository, id }: FileProps) {
+export function File({ repository, id, datasetVersionNumber }: FileProps) {
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('file')
-  const { file, isLoading } = useFile(repository, id)
+  const { file, isLoading } = useFile(repository, id, datasetVersionNumber)
 
   useEffect(() => {
     setIsLoading(isLoading)
@@ -75,7 +76,7 @@ export function File({ repository, id }: FileProps) {
                     metadata={file.metadata}
                     ingestInProgress={file.ingest.isInProgress}
                     isDeaccessioned={
-                      file.version.publishingStatus === FilePublishingStatus.DEACCESSIONED
+                      file.datasetVersion.publishingStatus === DatasetPublishingStatus.DEACCESSIONED
                     }
                   />
                 </ButtonGroup>
@@ -88,7 +89,7 @@ export function File({ repository, id }: FileProps) {
                     name={file.name}
                     metadata={file.metadata}
                     permissions={file.permissions}
-                    publishingStatus={file.version.publishingStatus}
+                    datasetPublishingStatus={file.datasetVersion.publishingStatus}
                   />
                 </div>
               </Tabs.Tab>

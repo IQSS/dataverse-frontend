@@ -287,6 +287,7 @@ describe('Dataset JSDataverse Repository', () => {
         expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
       })
   })
+
   it('gets the total dataset count', async () => {
     await DatasetHelper.destroyAll()
     await datasetRepository.getTotalDatasetsCount().then((count) => {
@@ -298,6 +299,7 @@ describe('Dataset JSDataverse Repository', () => {
       expect(count).to.equal(1)
     })
   })
+
   it('gets the DatasetPreview', async () => {
     await DatasetHelper.destroyAll()
 

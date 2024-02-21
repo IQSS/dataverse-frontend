@@ -1,17 +1,17 @@
 import { FileEmbargo } from '../../../files/domain/models/FileMetadata'
 import { useTranslation } from 'react-i18next'
 import { DateHelper } from '../../../shared/domain/helpers/DateHelper'
-import { FilePublishingStatus } from '../../../files/domain/models/FileVersion'
+import { DatasetPublishingStatus } from '../../../dataset/domain/models/Dataset'
 
 interface FileEmbargoDateProps {
   embargo: FileEmbargo | undefined
-  publishingStatus: FilePublishingStatus
+  datasetPublishingStatus: DatasetPublishingStatus
   format?: 'YYYY-MM-DD' | 'short'
 }
 
 export function FileEmbargoDate({
   embargo,
-  publishingStatus,
+  datasetPublishingStatus,
   format = 'short'
 }: FileEmbargoDateProps) {
   const { t } = useTranslation('files')
@@ -23,7 +23,7 @@ export function FileEmbargoDate({
   return (
     <div>
       <span>
-        {t(embargoTypeOfDate(embargo.isActive, publishingStatus))}{' '}
+        {t(embargoTypeOfDate(embargo.isActive, datasetPublishingStatus))}{' '}
         {format === 'YYYY-MM-DD'
           ? DateHelper.toDisplayFormatYYYYMMDD(embargo.dateAvailable)
           : DateHelper.toDisplayFormat(embargo.dateAvailable)}
@@ -32,8 +32,11 @@ export function FileEmbargoDate({
   )
 }
 
-const embargoTypeOfDate = (embargoIsActive: boolean, publishingStatus: FilePublishingStatus) => {
-  if (publishingStatus === FilePublishingStatus.RELEASED) {
+const embargoTypeOfDate = (
+  embargoIsActive: boolean,
+  datasetPublishingStatus: DatasetPublishingStatus
+) => {
+  if (datasetPublishingStatus === DatasetPublishingStatus.RELEASED) {
     return embargoIsActive
       ? 'table.embargoDate.embargoedUntil'
       : 'table.embargoDate.embargoedWasThrough'
