@@ -26,7 +26,6 @@ import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePagi
 import { FilePreview } from '../../../../src/files/domain/models/FilePreview'
 import { DatasetPublishingStatus } from '../../../../src/dataset/domain/models/Dataset'
 import { File } from '../../../../src/files/domain/models/File'
-import { FileCitationMother } from '../../../component/files/domain/models/FileMother'
 import { FileIngest, FileIngestStatus } from '../../../../src/files/domain/models/FileIngest'
 
 chai.use(chaiAsPromised)
@@ -82,6 +81,9 @@ const filePreviewExpectedData = (id: number): FilePreview => {
   }
 }
 
+const expectedFileCitationRegex = new RegExp(
+  `^Finch, Fiona, ${new Date().getFullYear()}, "Darwin's Finches", <a href="https:\\/\\/doi\\.org\\/10\\.5072\\/FK2\\/[A-Z0-9]+" target="_blank">https:\\/\\/doi\\.org\\/10\\.5072\\/FK2\\/[A-Z0-9]+<\\/a>, Root, DRAFT VERSION; blob \\[fileName\\]$`
+)
 const fileExpectedData = (id: number): File => {
   return {
     id: id,
@@ -93,12 +95,7 @@ const fileExpectedData = (id: number): File => {
       canBeRequested: false,
       requested: false
     },
-    citation: FileCitationMother.create('File Title'), // TODO: Implement once get citation is implemented in js-dataverse
-    permissions: {
-      fileId: id,
-      canDownloadFile: true,
-      canEditDataset: true
-    },
+    citation: '',
     ingest: new FileIngest(FileIngestStatus.NONE),
     metadata: {
       type: new FileType('text/plain'),
@@ -823,7 +820,7 @@ describe('File JSDataverse Repository', () => {
         expect(file.access).to.deep.equal(expectedFile.access)
         expect(file.permissions).to.deep.equal(expectedFile.permissions)
         expect(file.datasetVersion).to.deep.equal(expectedFile.datasetVersion)
-        expect(file.citation).to.deep.equal(expectedFile.citation)
+        expect(file.citation).to.match(expectedFileCitationRegex)
         compareMetadata(file.metadata, expectedFile.metadata)
       })
     })
