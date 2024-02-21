@@ -8,6 +8,7 @@ export interface DatasetResponse {
   persistentId: string
   id: string
   files?: DatasetFileResponse[]
+  file?: DatasetFileResponse
 }
 
 export interface DatasetFileResponse {
@@ -18,22 +19,35 @@ export class DatasetHelper extends DataverseApiHelper {
   static async create(): Promise<DatasetResponse> {
     return this.request<DatasetResponse>(`/dataverses/root/datasets`, 'POST', newDatasetData)
   }
+
   static async createWithTitle(title: string): Promise<DatasetResponse> {
     newDatasetData.datasetVersion.metadataBlocks.citation.fields[0].value = title
     return this.request<DatasetResponse>(`/dataverses/root/datasets`, 'POST', newDatasetData)
   }
+
   static async destroy(persistentId: string): Promise<DatasetResponse> {
     return this.request<DatasetResponse>(
       `/datasets/:persistentId/destroy/?persistentId=${persistentId}`,
       'DELETE'
     )
   }
+
   static async createAndPublish(): Promise<DatasetResponse> {
     const datasetResponse = await DatasetHelper.create()
     await DatasetHelper.publish(datasetResponse.persistentId)
     await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
     return datasetResponse
   }
+
+  static async createMany(amount: number): Promise<DatasetResponse[]> {
+    const datasets = []
+    for (let i = 0; i < amount; i++) {
+      const datasetResponse = await this.create()
+      datasets.push(datasetResponse)
+    }
+    return datasets
+  }
+
   static async destroyAll(): Promise<void> {
     const response = await this.request<{
       items: Array<{ global_id: string }>
@@ -95,6 +109,20 @@ export class DatasetHelper extends DataverseApiHelper {
     const datasetResponse = await this.create()
     const files = await this.uploadFiles(datasetResponse.persistentId, filesData)
     return { ...datasetResponse, files: files }
+  }
+
+  static async createWithFile(fileData: FileData): Promise<DatasetResponse> {
+    const datasetResponse = await this.create()
+    const file = await this.uploadFile(datasetResponse.persistentId, fileData)
+    return { ...datasetResponse, file: file }
+  }
+
+  static async createWithFileAndPublish(fileData: FileData): Promise<DatasetResponse> {
+    const datasetResponse = await DatasetHelper.createWithFile(fileData)
+    await DatasetHelper.publish(datasetResponse.persistentId)
+    await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
+
+    return datasetResponse
   }
 
   static async embargoFiles(

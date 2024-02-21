@@ -10,9 +10,10 @@ import {
 
 interface HomeProps {
   datasetRepository: DatasetRepository
+  page?: number
 }
 
-export function Home({ datasetRepository }: HomeProps) {
+export function Home({ datasetRepository, page }: HomeProps) {
   const { t } = useTranslation('home')
 
   return (
@@ -21,7 +22,7 @@ export function Home({ datasetRepository }: HomeProps) {
       <header>
         <h1>{t('title')}</h1>
       </header>
-      <DatasetsList datasetRepository={datasetRepository} />
+      <DatasetsList datasetRepository={datasetRepository} page={page} />
     </Row>
   )
 }

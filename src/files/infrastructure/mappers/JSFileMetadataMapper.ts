@@ -24,7 +24,7 @@ export class JSFileMetadataMapper {
     jsFile: JSFile,
     downloadsCount: number,
     thumbnail?: string,
-    jsTabularData?: JSFileTabularData[]
+    tabularData?: FileTabularData
   ): FileMetadata {
     return new FileMetadata(
       this.toFileType(jsFile.contentType, jsFile.originalFormatLabel),
@@ -39,7 +39,7 @@ export class JSFileMetadataMapper {
       this.toFileThumbnail(thumbnail),
       this.toFileDirectory(jsFile.directoryLabel),
       this.toFileEmbargo(jsFile.embargo),
-      this.toFileTabularData(jsTabularData),
+      tabularData,
       this.toFileDescription(jsFile.description),
       this.toFileChecksum(jsFile.checksum),
       jsFile.persistentId
@@ -121,10 +121,7 @@ export class JSFileMetadataMapper {
     return undefined
   }
 
-  static toFileTabularData(jsTabularData?: JSFileTabularData[]): FileTabularData | undefined {
-    if (jsTabularData === undefined) {
-      return undefined
-    }
+  static toFileTabularData(jsTabularData: JSFileTabularData[]): FileTabularData {
     return {
       variablesCount: jsTabularData[0].varQuantity ?? 0,
       observationsCount: jsTabularData[0].caseQuantity ?? 0,
