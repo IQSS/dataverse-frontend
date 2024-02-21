@@ -52,11 +52,6 @@ describe('Header component', () => {
     addDataBtn.click()
     cy.findByText('New Dataverse').should('be.visible')
     cy.findByText('New Dataset').should('be.visible')
-
-    // cy.findByRole('button', { name: 'Toggle navigation' }).click()
-    // cy.findByText(testUser.name).should('be.visible')
-    // cy.findByText(testUser.name).click()
-    // cy.findByText('Log Out').should('be.visible')
   })
 
   it('displays the Sign Up and Log In links when the user is not logged in', () => {

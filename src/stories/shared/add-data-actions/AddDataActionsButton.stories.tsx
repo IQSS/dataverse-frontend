@@ -11,7 +11,6 @@ const meta: Meta<typeof AddDataActionsButton> = {
 export default meta
 type Story = StoryObj<typeof AddDataActionsButton>
 
-// const emptyFunction = () => {}
 export const Default: Story = {
   render: () => <AddDataActionsButton />
 }

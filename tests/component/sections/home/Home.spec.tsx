@@ -37,9 +37,9 @@ describe('Home page', () => {
       </SessionProvider>
     )
     cy.wrap(userRepository.getAuthenticated).should('be.calledOnce')
-
-    cy.findByRole('button', { name: /Add Data/i }).should('exist')
-    cy.findByRole('button', { name: /Add Data/i }).click()
+    const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
+    addDataBtn.should('exist')
+    addDataBtn.click()
     cy.findByText('New Dataverse').should('be.visible')
     cy.findByText('New Dataset').should('be.visible')
   })
