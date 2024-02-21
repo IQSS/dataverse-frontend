@@ -22,12 +22,12 @@ export function Header() {
     {
       id: 0,
       name: t('navigation.newDataverse'),
-      page: Route.DATASETS
+      page: `/spa${Route.DATASETS}`
     },
     {
       id: 1,
       name: t('navigation.newDataset'),
-      page: Route.CREATE_DATASET
+      page: `/spa${Route.CREATE_DATASET}`
     }
   ]
 
@@ -65,4 +65,5 @@ export function Header() {
   )
 }
 
-// TODO: AddData Navigation item needs proper permissions checking, see spike #XXX
+// TODO: AddData Navigation item needs proper permissions checking, see Spike #XXX
+// TODO: Add page for "New Dataverse", see Issue #XXX

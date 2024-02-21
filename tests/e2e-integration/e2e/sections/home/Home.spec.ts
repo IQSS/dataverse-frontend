@@ -32,6 +32,20 @@ describe('Home Page', () => {
     cy.findByText(/Dataverse Admin/i).should('exist')
   })
 
+  it('finds the "Add Data" button', () => {
+    cy.loginAsAdmin('/spa')
+
+    const addDataBtnNav = cy.get('nav').findByRole('button', { name: /Add Data/i })
+    addDataBtnNav.should('exist')
+    addDataBtnNav.click()
+    cy.get('nav').findByText('New Dataverse').should('be.visible')
+    cy.get('nav').findByText('New Dataset').should('be.visible')
+
+    cy.findByLabelText('Application Body').within(() => {
+      cy.findByRole('button', { name: /Add Data/i }).should('exist')
+    })
+  })
+
   it('log out Dataverse Admin user', () => {
     cy.loginAsAdmin('/spa')
 

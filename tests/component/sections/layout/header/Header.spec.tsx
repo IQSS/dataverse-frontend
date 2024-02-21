@@ -37,6 +37,28 @@ describe('Header component', () => {
     cy.findByText('Log Out').should('be.visible')
   })
 
+  it('displays the Add Data Button when the user is logged in', () => {
+    cy.customMount(
+      <SessionProvider repository={userRepository}>
+        <Header />
+      </SessionProvider>
+    )
+
+    cy.wrap(userRepository.getAuthenticated).should('be.calledOnce')
+
+    cy.findByRole('button', { name: 'Toggle navigation' }).click()
+    const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
+    addDataBtn.should('exist')
+    addDataBtn.click()
+    cy.findByText('New Dataverse').should('be.visible')
+    cy.findByText('New Dataset').should('be.visible')
+
+    // cy.findByRole('button', { name: 'Toggle navigation' }).click()
+    // cy.findByText(testUser.name).should('be.visible')
+    // cy.findByText(testUser.name).click()
+    // cy.findByText('Log Out').should('be.visible')
+  })
+
   it('displays the Sign Up and Log In links when the user is not logged in', () => {
     userRepository.getAuthenticated = cy.stub().resolves()
 

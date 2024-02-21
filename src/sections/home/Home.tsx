@@ -1,4 +1,4 @@
-import { Container } from '@iqss/dataverse-design-system'
+import { Col, Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { DatasetsList } from './datasets-list/DatasetsList'
@@ -13,16 +13,19 @@ export function Home({ datasetRepository }: HomeProps) {
   const { t } = useTranslation('home')
 
   return (
-    <Container>
+    <>
       <header>
         <h1>{t('title')}</h1>
       </header>
+
       {user && (
-        <div className="mx-auto">
-          <AddDataActionsButton />
-        </div>
+        <Row>
+          <Col className="flex-end">
+            <AddDataActionsButton />
+          </Col>
+        </Row>
       )}
       <DatasetsList datasetRepository={datasetRepository} />
-    </Container>
+    </>
   )
 }
