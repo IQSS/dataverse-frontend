@@ -11,7 +11,7 @@ export function Layout() {
       <TopBarProgressIndicator />
       <Header />
       <main>
-        <Container className={styles['body-container']} aria-label="Application Body">
+        <Container className={styles['body-container']}>
           <Outlet />
         </Container>
       </main>
