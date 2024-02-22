@@ -50,13 +50,13 @@ export class FileJSDataverseRepository implements FileRepository {
         DomainFileMapper.toJSFileSearchCriteria(criteria),
         DomainFileMapper.toJSFileOrderCriteria(criteria.sortBy)
       )
-      .then((jsFiles) =>
+      .then((jsFilesSubset) =>
         Promise.all([
-          jsFiles,
-          FileJSDataverseRepository.getAllDownloadCount(jsFiles),
-          FileJSDataverseRepository.getAllThumbnails(jsFiles),
-          FileJSDataverseRepository.getAllWithPermissions(jsFiles),
-          FileJSDataverseRepository.getAllTabularData(jsFiles)
+          jsFilesSubset.files,
+          FileJSDataverseRepository.getAllDownloadCount(jsFilesSubset.files),
+          FileJSDataverseRepository.getAllThumbnails(jsFilesSubset.files),
+          FileJSDataverseRepository.getAllWithPermissions(jsFilesSubset.files),
+          FileJSDataverseRepository.getAllTabularData(jsFilesSubset.files)
         ])
       )
       .then(([jsFiles, downloadCounts, thumbnails, permissions, tabularData]) =>
