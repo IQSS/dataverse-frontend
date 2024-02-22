@@ -8,7 +8,7 @@ import { SessionProvider } from '../../../../src/sections/session/SessionProvide
 const testUser = UserMother.create()
 const userRepository: UserRepository = {} as UserRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
-const totalDatasetsCount = 10
+const totalDatasetsCount = 200
 const datasets = DatasetPreviewMother.createMany(totalDatasetsCount)
 describe('Home page', () => {
   beforeEach(() => {
@@ -47,10 +47,16 @@ describe('Home page', () => {
   it('renders the datasets list', () => {
     cy.customMount(<Home datasetRepository={datasetRepository} />)
 
-    cy.wrap(datasetRepository.getAll).should('be.calledOnce')
+    cy.findByText('1 to 10 of 200 Datasets').should('exist')
 
     datasets.forEach((dataset) => {
       cy.findByText(dataset.version.title).should('exist')
     })
+  })
+
+  it('renders the home correct page when passing the page number as a query param', () => {
+    cy.customMount(<Home datasetRepository={datasetRepository} page={5} />)
+
+    cy.findByText('41 to 50 of 200 Datasets').should('exist')
   })
 })

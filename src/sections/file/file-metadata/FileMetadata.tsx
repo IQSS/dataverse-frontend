@@ -2,22 +2,27 @@ import { Accordion, Col, Row } from '@iqss/dataverse-design-system'
 import { FilePreview } from '../file-preview/FilePreview'
 import { FileLabels } from '../file-labels/FileLabels'
 import styles from './FileMetadata.module.scss'
-import { DateHelper } from '../../../shared/domain/helpers/DateHelper'
+import { DateHelper } from '../../../shared/helpers/DateHelper'
 import { FileEmbargoDate } from '../file-embargo/FileEmbargoDate'
 import { BASE_URL } from '../../../config'
 import { Trans, useTranslation } from 'react-i18next'
 import { FileMetadata as FileMetadataModel } from '../../../files/domain/models/FileMetadata'
-import { FilePublishingStatus } from '../../../files/domain/models/FileVersion'
-import { FileUserPermissions } from '../../../files/domain/models/FileUserPermissions'
+import { FilePermissions } from '../../../files/domain/models/FilePermissions'
+import { DatasetPublishingStatus } from '../../../dataset/domain/models/Dataset'
 
 interface FileMetadataProps {
   name: string
   metadata: FileMetadataModel
-  permissions: FileUserPermissions
-  publishingStatus: FilePublishingStatus
+  permissions: FilePermissions
+  datasetPublishingStatus: DatasetPublishingStatus
 }
 
-export function FileMetadata({ name, metadata, permissions, publishingStatus }: FileMetadataProps) {
+export function FileMetadata({
+  name,
+  metadata,
+  permissions,
+  datasetPublishingStatus
+}: FileMetadataProps) {
   const { t } = useTranslation('file')
   return (
     <Accordion defaultActiveKey="0">
@@ -111,7 +116,7 @@ export function FileMetadata({ name, metadata, permissions, publishingStatus }: 
                 {metadata.embargo ? (
                   <FileEmbargoDate
                     embargo={metadata.embargo}
-                    publishingStatus={publishingStatus}
+                    datasetPublishingStatus={datasetPublishingStatus}
                     format="YYYY-MM-DD"
                   />
                 ) : (

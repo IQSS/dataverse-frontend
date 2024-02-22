@@ -6,6 +6,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 export function DatasetSkeleton() {
   return (
     <SkeletonTheme>
+      <Skeleton width="10%" style={{ marginBottom: 16 }} />
       <article data-testid="dataset-skeleton">
         <header className={styles.header}>
           <h1>

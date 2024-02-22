@@ -2,8 +2,8 @@ import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { FileMetadata } from '../../../sections/file/file-metadata/FileMetadata'
 import { FileMetadataMother } from '../../../../tests/component/files/domain/models/FileMetadataMother'
-import { FilePublishingStatus } from '../../../files/domain/models/FileVersion'
-import { FileUserPermissionsMother } from '../../../../tests/component/files/domain/models/FileUserPermissionsMother'
+import { DatasetPublishingStatus } from '../../../dataset/domain/models/Dataset'
+import { FilePermissionsMother } from '../../../../tests/component/files/domain/models/FilePermissionsMother'
 
 const meta: Meta<typeof FileMetadata> = {
   title: 'Sections/File Page/FileMetadata',
@@ -19,8 +19,8 @@ export const Default: Story = {
     <FileMetadata
       name="File Title"
       metadata={FileMetadataMother.createDefault()}
-      permissions={FileUserPermissionsMother.create()}
-      publishingStatus={FilePublishingStatus.RELEASED}
+      permissions={FilePermissionsMother.create()}
+      datasetPublishingStatus={DatasetPublishingStatus.RELEASED}
     />
   )
 }

@@ -1,7 +1,7 @@
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 import { DatasetPaginationInfo } from '../../../../../src/dataset/domain/models/DatasetPaginationInfo'
 import { PaginationResultsInfo } from '../../../../../src/sections/shared/pagination/PaginationResultsInfo'
-import { PaginationInfo } from '../../../../../src/shared/domain/models/PaginationInfo'
+import { PaginationInfo } from '../../../../../src/shared/pagination/domain/models/PaginationInfo'
 
 describe('PaginationResultsInfo', () => {
   it('shows the correct results info', () => {

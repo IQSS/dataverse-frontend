@@ -8,9 +8,9 @@ import {
   FileTabularDataMother,
   FileTypeMother
 } from '../../../files/domain/models/FileMetadataMother'
-import { DateHelper } from '../../../../../src/shared/domain/helpers/DateHelper'
-import { FileUserPermissionsMother } from '../../../files/domain/models/FileUserPermissionsMother'
-import { FilePublishingStatus } from '../../../../../src/files/domain/models/FileVersion'
+import { DatasetPublishingStatus } from '../../../../../src/dataset/domain/models/Dataset'
+import { FilePermissionsMother } from '../../../files/domain/models/FilePermissionsMother'
+import { DateHelper } from '../../../../../src/shared/helpers/DateHelper'
 
 const file = FileMother.create()
 describe('FileMetadata', () => {
@@ -20,7 +20,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={file.metadata}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -33,7 +33,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={file.metadata}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -48,7 +48,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithLabels}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -64,7 +64,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithoutLabels}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -80,7 +80,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithPersistentId}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -95,7 +95,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithoutPersistentId}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -103,14 +103,14 @@ describe('FileMetadata', () => {
   })
 
   it('renders the download url if the user has file download permissions', () => {
-    const permissions = FileUserPermissionsMother.createWithDownloadFileGranted()
+    const permissions = FilePermissionsMother.createWithDownloadFileGranted()
 
     cy.customMount(
       <FileMetadata
         name={file.name}
         metadata={file.metadata}
         permissions={permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -127,13 +127,13 @@ describe('FileMetadata', () => {
   })
 
   it('does not render the download url if the user does not have file download permissions', () => {
-    const permissions = FileUserPermissionsMother.createWithDownloadFileDenied()
+    const permissions = FilePermissionsMother.createWithDownloadFileDenied()
     cy.customMount(
       <FileMetadata
         name={file.name}
         metadata={file.metadata}
         permissions={permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -149,7 +149,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithUnf}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -164,7 +164,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithoutTabularData}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -180,7 +180,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithChecksum}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -195,7 +195,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithoutChecksum}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -208,7 +208,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={file.metadata}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -223,7 +223,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithPublicationDate}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -240,7 +240,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithNoPublicationDate}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -254,7 +254,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithPublicationDate}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -272,7 +272,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithPublicationDateEmbargoed}
         permissions={file.permissions}
-        publishingStatus={FilePublishingStatus.RELEASED}
+        datasetPublishingStatus={DatasetPublishingStatus.RELEASED}
       />
     )
 
@@ -294,7 +294,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithNoPublicationDate}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -310,7 +310,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithEmbargoReason}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -325,7 +325,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithNoEmbargo}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -341,7 +341,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithNoEmbargoReason}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -357,7 +357,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithFileSize}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -374,7 +374,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithFileType}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -391,7 +391,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithTabularData}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -408,7 +408,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithoutTabularData}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -425,7 +425,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithDirectory}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -440,7 +440,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithoutDirectory}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -457,7 +457,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithDescription}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 
@@ -473,7 +473,7 @@ describe('FileMetadata', () => {
         name={file.name}
         metadata={metadataWithoutDescription}
         permissions={file.permissions}
-        publishingStatus={file.version.publishingStatus}
+        datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
 

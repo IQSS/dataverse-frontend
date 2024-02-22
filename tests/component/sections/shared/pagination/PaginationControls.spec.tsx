@@ -1,5 +1,5 @@
 import { PaginationControls } from '../../../../../src/sections/shared/pagination/PaginationControls'
-import { PaginationInfo } from '../../../../../src/shared/domain/models/PaginationInfo'
+import { PaginationInfo } from '../../../../../src/shared/pagination/domain/models/PaginationInfo'
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 import { DatasetPaginationInfo } from '../../../../../src/dataset/domain/models/DatasetPaginationInfo'
 

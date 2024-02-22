@@ -51,28 +51,24 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     requestedVersion?: string
   ): Promise<Dataset | undefined> {
     return getDataset
-      .execute(persistentId, this.versionToVersionId(version), includeDeaccessioned)
+      .execute(persistentId, version, includeDeaccessioned)
       .then((jsDataset) =>
         Promise.all([
           jsDataset,
           getDatasetSummaryFieldNames.execute(),
-          getDatasetCitation.execute(
-            jsDataset.id,
-            this.versionToVersionId(version),
-            includeDeaccessioned
-          ),
+          getDatasetCitation.execute(jsDataset.id, version, includeDeaccessioned),
           getDatasetUserPermissions.execute(jsDataset.id),
           getDatasetLocks.execute(jsDataset.id),
           getDatasetFilesTotalDownloadSize.execute(
             persistentId,
-            this.versionToVersionId(version),
+            version,
             FileDownloadSizeMode.ORIGINAL,
             undefined,
             includeDeaccessioned
           ),
           getDatasetFilesTotalDownloadSize.execute(
             persistentId,
-            this.versionToVersionId(version),
+            version,
             FileDownloadSizeMode.ARCHIVAL,
             undefined,
             includeDeaccessioned
@@ -143,13 +139,5 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         resolve(returnMsg)
       }, 1000)
     })
-  }
-
-  versionToVersionId(version?: string): string | undefined {
-    if (version === 'DRAFT') {
-      return ':draft'
-    }
-
-    return version
   }
 }

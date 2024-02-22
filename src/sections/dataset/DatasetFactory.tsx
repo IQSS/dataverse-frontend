@@ -8,12 +8,12 @@ import { FileJSDataverseRepository } from '../../files/infrastructure/FileJSData
 import { MetadataBlockInfoProvider } from './metadata-block-info/MetadataBlockProvider'
 import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
 import { SettingJSDataverseRepository } from '../../settings/infrastructure/SettingJSDataverseRepository'
-import { FilePermissionsProvider } from '../file/file-permissions/FilePermissionsProvider'
 import { SettingsProvider } from '../settings/SettingsProvider'
 import { DatasetProvider } from './DatasetProvider'
 import { MultipleFileDownloadProvider } from '../file/multiple-file-download/MultipleFileDownloadProvider'
 import { NotImplementedModalProvider } from '../not-implemented/NotImplementedModalProvider'
 import { AlertProvider } from '../alerts/AlertProvider'
+import { searchParamVersionToDomainVersion } from '../../Router'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
@@ -24,19 +24,17 @@ export class DatasetFactory {
   static create(): ReactElement {
     return (
       <MultipleFileDownloadProvider repository={fileRepository}>
-        <FilePermissionsProvider repository={fileRepository}>
-          <SettingsProvider repository={settingRepository}>
-            <NotImplementedModalProvider>
-              <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
-                <AnonymizedProvider>
-                  <AlertProvider>
-                    <DatasetWithSearchParams />
-                  </AlertProvider>
-                </AnonymizedProvider>
-              </MetadataBlockInfoProvider>
-            </NotImplementedModalProvider>
-          </SettingsProvider>
-        </FilePermissionsProvider>
+        <SettingsProvider repository={settingRepository}>
+          <NotImplementedModalProvider>
+            <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
+              <AnonymizedProvider>
+                <AlertProvider>
+                  <DatasetWithSearchParams />
+                </AlertProvider>
+              </AnonymizedProvider>
+            </MetadataBlockInfoProvider>
+          </NotImplementedModalProvider>
+        </SettingsProvider>
       </MultipleFileDownloadProvider>
     )
   }
@@ -47,7 +45,8 @@ function DatasetWithSearchParams() {
   const [searchParams] = useSearchParams()
   const persistentId = searchParams.get('persistentId') ?? undefined
   const privateUrlToken = searchParams.get('privateUrlToken')
-  const version = searchParams.get('version') ?? undefined
+  const searchParamVersion = searchParams.get('version') ?? undefined
+  const version = searchParamVersionToDomainVersion(searchParamVersion)
 
   useEffect(() => {
     if (privateUrlToken) setAnonymizedView(true)

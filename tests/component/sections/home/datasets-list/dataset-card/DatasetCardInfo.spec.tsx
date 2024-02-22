@@ -1,5 +1,5 @@
 import { DatasetPreviewMother } from '../../../../dataset/domain/models/DatasetPreviewMother'
-import { DateHelper } from '../../../../../../src/shared/domain/helpers/DateHelper'
+import { DateHelper } from '../../../../../../src/shared/helpers/DateHelper'
 import styles from '../../../../../../src/sections/home/datasets-list/dataset-card/DatasetCard.module.scss'
 import { DatasetCardInfo } from '../../../../../../src/sections/home/datasets-list/dataset-card/DatasetCardInfo'
 

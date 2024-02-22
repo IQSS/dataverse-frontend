@@ -1,5 +1,5 @@
 import styles from './DatasetCard.module.scss'
-import { DateHelper } from '../../../../shared/domain/helpers/DateHelper'
+import { DateHelper } from '../../../../shared/helpers/DateHelper'
 import { CitationDescription } from '../../../shared/citation/CitationDescription'
 import { DatasetPublishingStatus, DatasetVersion } from '../../../../dataset/domain/models/Dataset'
 

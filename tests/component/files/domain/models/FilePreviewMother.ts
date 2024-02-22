@@ -2,18 +2,21 @@ import { FilePreview } from '../../../../../src/files/domain/models/FilePreview'
 import { FileMetadataMother } from './FileMetadataMother'
 import { faker } from '@faker-js/faker'
 import { FileAccessMother } from './FileAccessMother'
-import { FileVersionMother } from './FileVersionMother'
 import { FileIngestMother } from './FileIngestMother'
+import { DatasetVersionMother } from '../../../dataset/domain/models/DatasetMother'
+import { DatasetPublishingStatus } from '../../../../../src/dataset/domain/models/Dataset'
+import { FilePermissionsMother } from './FilePermissionsMother'
 
 export class FilePreviewMother {
   static create(props?: Partial<FilePreview>): FilePreview {
     return {
       id: faker.datatype.number(),
       name: faker.system.fileName(),
-      version: FileVersionMother.create(),
+      datasetPublishingStatus: DatasetVersionMother.create().publishingStatus,
       access: FileAccessMother.create(),
       ingest: FileIngestMother.create(),
       metadata: FileMetadataMother.create(),
+      permissions: FilePermissionsMother.create(),
       ...props
     }
   }
@@ -25,10 +28,11 @@ export class FilePreviewMother {
   static createDefault(props?: Partial<FilePreview>): FilePreview {
     return this.create({
       name: 'File Title',
-      version: FileVersionMother.createReleased(),
+      datasetPublishingStatus: DatasetPublishingStatus.RELEASED,
       access: FileAccessMother.createPublic(),
       ingest: FileIngestMother.createIngestNone(),
       metadata: FileMetadataMother.createDefault(),
+      permissions: FilePermissionsMother.createWithGrantedPermissions(),
       ...props
     })
   }
@@ -63,7 +67,16 @@ export class FilePreviewMother {
   static createRestricted(): FilePreview {
     return this.createDefault({
       access: FileAccessMother.createRestricted(),
-      metadata: FileMetadataMother.createNotEmbargoed()
+      metadata: FileMetadataMother.createNotEmbargoed(),
+      permissions: FilePermissionsMother.createWithDeniedPermissions()
+    })
+  }
+
+  static createRestrictedWithAccessGranted(): FilePreview {
+    return this.createDefault({
+      access: FileAccessMother.createRestricted(),
+      metadata: FileMetadataMother.createNotEmbargoed(),
+      permissions: FilePermissionsMother.createWithGrantedPermissions()
     })
   }
 
@@ -83,20 +96,30 @@ export class FilePreviewMother {
 
   static createWithThumbnail(): FilePreview {
     return this.createDefault({
-      metadata: FileMetadataMother.createWithThumbnail()
+      metadata: FileMetadataMother.createWithThumbnail(),
+      access: FileAccessMother.createPublic()
     })
   }
 
   static createWithThumbnailRestricted(): FilePreview {
     return this.createDefault({
       access: FileAccessMother.createRestricted(),
-      metadata: FileMetadataMother.createWithThumbnail()
+      metadata: FileMetadataMother.createWithThumbnail(),
+      permissions: FilePermissionsMother.createWithDeniedPermissions()
+    })
+  }
+
+  static createWithThumbnailRestrictedWithAccessGranted(): FilePreview {
+    return this.createDefault({
+      access: FileAccessMother.createRestricted(),
+      metadata: FileMetadataMother.createWithThumbnail(),
+      permissions: FilePermissionsMother.createWithGrantedPermissions()
     })
   }
 
   static createDeaccessioned(): FilePreview {
     return this.createDefault({
-      version: FileVersionMother.createDeaccessioned()
+      datasetPublishingStatus: DatasetPublishingStatus.DEACCESSIONED
     })
   }
 
