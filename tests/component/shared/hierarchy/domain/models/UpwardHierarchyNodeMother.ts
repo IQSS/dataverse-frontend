@@ -10,8 +10,7 @@ export class UpwardHierarchyNodeMother {
       props?.name ?? faker.lorem.word(),
       props?.type ?? faker.helpers.arrayElement(Object.values(DvObjectType)),
       props?.id ?? undefined,
-      props?.persistentId ?? undefined,
-      props?.version ?? undefined,
+      undefined,
       props?.parent ?? undefined
     )
   }

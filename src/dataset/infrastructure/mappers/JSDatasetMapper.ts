@@ -239,7 +239,6 @@ export class JSDatasetMapper {
     return new UpwardHierarchyNode(
       version.title,
       DvObjectType.DATASET,
-      undefined,
       persistentId,
       version.number.toString(),
       JSUpwardHierarchyNodeMapper.toUpwardHierarchyNode(jsUpwardHierarchyNode)

@@ -18,7 +18,9 @@ export function Home({ datasetRepository, page }: HomeProps) {
 
   return (
     <Row>
-      <BreadcrumbsGenerator hierarchy={new UpwardHierarchyNode('Root', DvObjectType.COLLECTION)} />
+      <BreadcrumbsGenerator
+        hierarchy={new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, undefined, undefined)}
+      />
       <header>
         <h1>{t('title')}</h1>
       </header>

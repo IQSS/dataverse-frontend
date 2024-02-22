@@ -12,8 +12,7 @@ export class JSUpwardHierarchyNodeMapper {
       jsUpwardHierarchyNode.displayName,
       JSUpwardHierarchyNodeMapper.toDvObjectType(jsUpwardHierarchyNode.type),
       jsUpwardHierarchyNode.identifier,
-      undefined,
-      undefined,
+      undefined, // TODO: get from JSUpwardHierarchyNode once it's implemented
       JSUpwardHierarchyNodeMapper.toUpwardHierarchyNode(jsUpwardHierarchyNode.isPartOf)
     )
   }

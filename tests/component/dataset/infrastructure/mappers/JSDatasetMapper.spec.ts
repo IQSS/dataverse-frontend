@@ -173,8 +173,7 @@ const expectedDataset = {
     "Darwin's Finches",
     DvObjectType.DATASET,
     undefined,
-    'doi:10.5072/FK2/B4B2MJ',
-    '0.0',
+    undefined,
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
   )
 }
@@ -281,8 +280,7 @@ const expectedDatasetAlternateVersion = {
     "Darwin's Finches",
     DvObjectType.DATASET,
     undefined,
-    'doi:10.5072/FK2/B4B2MJ',
-    '0.0',
+    undefined,
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
   )
 }
