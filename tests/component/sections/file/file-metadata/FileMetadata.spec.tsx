@@ -8,9 +8,9 @@ import {
   FileTabularDataMother,
   FileTypeMother
 } from '../../../files/domain/models/FileMetadataMother'
-import { DateHelper } from '../../../../../src/shared/domain/helpers/DateHelper'
 import { DatasetPublishingStatus } from '../../../../../src/dataset/domain/models/Dataset'
 import { FilePermissionsMother } from '../../../files/domain/models/FilePermissionsMother'
+import { DateHelper } from '../../../../../src/shared/helpers/DateHelper'
 
 const file = FileMother.create()
 describe('FileMetadata', () => {

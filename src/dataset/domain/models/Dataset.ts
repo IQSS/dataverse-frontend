@@ -1,4 +1,5 @@
 import { Alert, AlertMessageKey } from '../../../alert/domain/models/Alert'
+import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { FileDownloadSize } from '../../../files/domain/models/FileMetadata'
 
 export enum DatasetLabelSemanticMeaning {
@@ -372,9 +373,10 @@ export class Dataset {
     public readonly isValid: boolean,
     public readonly downloadUrls: DatasetDownloadUrls,
     public readonly fileDownloadSizes: FileDownloadSize[],
+    public readonly hierarchy: UpwardHierarchyNode,
     public readonly thumbnail?: string,
-    public readonly privateUrl?: PrivateUrl,
-    public readonly requestedVersion?: string // will be set if the user requested a version that did not exist
+    public readonly privateUrl?: PrivateUrl, // will be set if the user requested a version that did not exist
+    public readonly requestedVersion?: string
   ) {}
 
   public checkIsLockedFromPublishing(userPersistentId: string): boolean {
@@ -452,9 +454,10 @@ export class Dataset {
       public readonly isValid: boolean,
       public readonly downloadUrls: DatasetDownloadUrls,
       public readonly fileDownloadSizes: FileDownloadSize[],
+      public readonly hierarchy: UpwardHierarchyNode,
       public readonly thumbnail?: string,
-      public readonly privateUrl?: PrivateUrl,
-      public readonly requestedVersion?: string // will be set if the user requested a version that did not exist
+      public readonly privateUrl?: PrivateUrl, // will be set if the user requested a version that did not exist
+      public readonly requestedVersion?: string
     ) {
       this.withAlerts()
     }
@@ -515,6 +518,7 @@ export class Dataset {
         this.isValid,
         this.downloadUrls,
         this.fileDownloadSizes,
+        this.hierarchy,
         this.thumbnail,
         this.privateUrl,
         this.requestedVersion

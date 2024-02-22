@@ -4,6 +4,7 @@ import { FileMetadataMother } from './FileMetadataMother'
 import { FileAccessMother } from './FileAccessMother'
 import { faker } from '@faker-js/faker'
 import { FileIngestMother } from './FileIngestMother'
+import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 import { FilePermissionsMother } from './FilePermissionsMother'
 
 export class FileMother {
@@ -12,6 +13,7 @@ export class FileMother {
       id: faker.datatype.number(),
       name: faker.system.fileName(),
       datasetVersion: DatasetVersionMother.create(),
+      hierarchy: UpwardHierarchyNodeMother.createFile(),
       citation: FileCitationMother.create('File Title'),
       access: FileAccessMother.create(),
       metadata: FileMetadataMother.create(),
@@ -26,6 +28,7 @@ export class FileMother {
       name: 'File Title',
       datasetVersion: DatasetVersionMother.createRealistic(),
       citation: FileCitationMother.create('File Title'),
+      hierarchy: UpwardHierarchyNodeMother.createFile({ name: 'File Title' }),
       access: FileAccessMother.createPublic(),
       permissions: FilePermissionsMother.createWithGrantedPermissions(),
       metadata: FileMetadataMother.createDefault(),

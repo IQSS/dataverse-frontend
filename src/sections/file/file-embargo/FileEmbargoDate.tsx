@@ -1,7 +1,7 @@
 import { FileEmbargo } from '../../../files/domain/models/FileMetadata'
 import { useTranslation } from 'react-i18next'
-import { DateHelper } from '../../../shared/domain/helpers/DateHelper'
 import { DatasetPublishingStatus } from '../../../dataset/domain/models/Dataset'
+import { DateHelper } from '../../../shared/helpers/DateHelper'
 
 interface FileEmbargoDateProps {
   embargo: FileEmbargo | undefined

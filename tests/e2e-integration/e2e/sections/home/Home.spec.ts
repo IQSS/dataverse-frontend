@@ -59,7 +59,7 @@ describe('Home Page', () => {
     ).then(() => {
       cy.visit('/spa?page=2')
 
-      cy.findByText(/Root/i).should('exist')
+      cy.findAllByText(/Root/i).should('exist')
       cy.findByText(/Dataverse Admin/i).should('exist')
 
       cy.findByText('11 to 12 of 12 Datasets').should('exist')
@@ -73,7 +73,7 @@ describe('Home Page', () => {
     ).then(() => {
       cy.visit('/spa')
 
-      cy.findByText(/Root/i).should('exist')
+      cy.findAllByText(/Root/i).should('exist')
       cy.findByText(/Dataverse Admin/i).should('exist')
 
       cy.findByRole('button', { name: 'Next' }).click()
@@ -89,7 +89,7 @@ describe('Home Page', () => {
     ).then(() => {
       cy.visit('/spa?page=2')
 
-      cy.findByText(/Root/i).should('exist')
+      cy.findAllByText(/Root/i).should('exist')
       cy.findByText(/Dataverse Admin/i).should('exist')
       cy.findByText('11 to 12 of 12 Datasets').should('exist')
 

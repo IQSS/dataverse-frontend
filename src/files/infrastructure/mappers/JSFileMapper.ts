@@ -7,6 +7,10 @@ import { JSFileIngestMapper } from './JSFileIngestMapper'
 import { File } from '../../domain/models/File'
 import { FileTabularData } from '../../domain/models/FileMetadata'
 import { FilePermissions } from '../../domain/models/FilePermissions'
+import {
+  DvObjectType,
+  UpwardHierarchyNode
+} from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 export class JSFileMapper {
   static toFilePreview(
@@ -45,7 +49,8 @@ export class JSFileMapper {
       citation: citation,
       metadata: JSFileMetadataMapper.toFileMetadata(jsFile, downloadsCount, thumbnail, tabularData),
       ingest: JSFileIngestMapper.toFileIngest(),
-      permissions: permissions
+      permissions: permissions,
+      hierarchy: JSFileMapper.toHierarchyNode(jsFile.name, jsFile.id, datasetVersion) // TODO: get hierarchy from js-dataverse https://github.com/IQSS/dataverse-client-javascript/issues/122
     }
   }
 
@@ -55,5 +60,29 @@ export class JSFileMapper {
 
   static toFileName(jsFileName: string): string {
     return jsFileName
+  }
+
+  static toHierarchyNode(
+    name: string,
+    id: number,
+    datasetVersion: DatasetVersion
+  ): UpwardHierarchyNode {
+    const rootNode = new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
+    const datasetNode = new UpwardHierarchyNode(
+      datasetVersion.title,
+      DvObjectType.DATASET,
+      datasetVersion.number.toString(),
+      undefined,
+      undefined,
+      rootNode
+    )
+    return new UpwardHierarchyNode(
+      name,
+      DvObjectType.FILE,
+      id.toString(),
+      undefined,
+      undefined,
+      datasetNode
+    )
   }
 }

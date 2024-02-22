@@ -3,6 +3,7 @@ import { FileMetadata } from './FileMetadata'
 import { FileAccess } from './FileAccess'
 import { FilePermissions } from './FilePermissions'
 import { FileIngest } from './FileIngest'
+import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 export interface File {
   id: number
@@ -10,6 +11,7 @@ export interface File {
   access: FileAccess
   datasetVersion: DatasetVersion
   citation: string
+  hierarchy: UpwardHierarchyNode
   permissions: FilePermissions
   metadata: FileMetadata
   ingest: FileIngest
