@@ -10,9 +10,12 @@ export function Layout() {
     <>
       <TopBarProgressIndicator />
       <Header />
-      <Container className={styles['body-container']} aria-label="Application Body">
-        <Outlet />
-      </Container>
+      <main>
+        <Container className={styles['body-container']} aria-label="Application Body">
+          <Outlet />
+        </Container>
+      </main>
+
       {FooterFactory.create()}
     </>
   )
