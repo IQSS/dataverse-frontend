@@ -1,10 +1,10 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
-import { DatasetCard } from '../../../sections/home/datasets-list/dataset-card/DatasetCard'
+import { DatasetCard } from '../../../sections/collection/datasets-list/dataset-card/DatasetCard'
 import { DatasetPreviewMother } from '../../../../tests/component/dataset/domain/models/DatasetPreviewMother'
 
 const meta: Meta<typeof DatasetCard> = {
-  title: 'Sections/Home/DatasetCard',
+  title: 'Sections/Collection/DatasetCard',
   component: DatasetCard,
   decorators: [WithI18next]
 }

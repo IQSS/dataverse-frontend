@@ -1,12 +1,12 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { DatasetMockRepository } from '../../dataset/DatasetMockRepository'
-import { DatasetsList } from '../../../sections/home/datasets-list/DatasetsList'
+import { DatasetsList } from '../../../sections/collection/datasets-list/DatasetsList'
 import { DatasetLoadingMockRepository } from '../../dataset/DatasetLoadingMockRepository'
 import { NoDatasetsMockRepository } from '../../dataset/NoDatasetsMockRepository'
 
 const meta: Meta<typeof DatasetsList> = {
-  title: 'Sections/Home/DatasetsList',
+  title: 'Sections/Collection/DatasetsList',
   component: DatasetsList,
   decorators: [WithI18next]
 }

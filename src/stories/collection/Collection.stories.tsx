@@ -1,28 +1,30 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Home } from '../../sections/home/Home'
+import { Collection } from '../../sections/collection/Collection'
 import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
 import { DatasetLoadingMockRepository } from '../dataset/DatasetLoadingMockRepository'
 import { NoDatasetsMockRepository } from '../dataset/NoDatasetsMockRepository'
 
-const meta: Meta<typeof Home> = {
-  title: 'Pages/Home',
-  component: Home,
+const meta: Meta<typeof Collection> = {
+  title: 'Pages/Collection',
+  component: Collection,
   decorators: [WithI18next, WithLayout]
 }
 
 export default meta
-type Story = StoryObj<typeof Home>
+type Story = StoryObj<typeof Collection>
 
 export const Default: Story = {
-  render: () => <Home datasetRepository={new DatasetMockRepository()} />
+  render: () => <Collection datasetRepository={new DatasetMockRepository()} id="collection" />
 }
 
 export const Loading: Story = {
-  render: () => <Home datasetRepository={new DatasetLoadingMockRepository()} />
+  render: () => (
+    <Collection datasetRepository={new DatasetLoadingMockRepository()} id="collection" />
+  )
 }
 
 export const NoResults: Story = {
-  render: () => <Home datasetRepository={new NoDatasetsMockRepository()} />
+  render: () => <Collection datasetRepository={new NoDatasetsMockRepository()} id="collection" />
 }

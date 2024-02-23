@@ -1,5 +1,5 @@
 import { DatasetRepository } from '../../../../../src/dataset/domain/repositories/DatasetRepository'
-import { DatasetsList } from '../../../../../src/sections/home/datasets-list/DatasetsList'
+import { DatasetsList } from '../../../../../src/sections/collection/datasets-list/DatasetsList'
 import { DatasetPaginationInfo } from '../../../../../src/dataset/domain/models/DatasetPaginationInfo'
 import { DatasetPreviewMother } from '../../../dataset/domain/models/DatasetPreviewMother'
 

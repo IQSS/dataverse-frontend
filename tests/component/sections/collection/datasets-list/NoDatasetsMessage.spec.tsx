@@ -1,4 +1,4 @@
-import { NoDatasetsMessage } from '../../../../../src/sections/home/datasets-list/NoDatasetsMessage'
+import { NoDatasetsMessage } from '../../../../../src/sections/collection/datasets-list/NoDatasetsMessage'
 
 describe('No Datasets Message', () => {
   it('renders the message for anonymous user', () => {
