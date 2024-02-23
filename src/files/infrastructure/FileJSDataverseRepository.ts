@@ -9,6 +9,7 @@ import {
   getDatasetFiles,
   getDatasetFilesTotalDownloadSize,
   getFile,
+  getFileCitation,
   getFileDataTables,
   getFileDownloadCount,
   getFileUserPermissions,
@@ -25,7 +26,6 @@ import { FilePreview } from '../domain/models/FilePreview'
 import { JSFilesCountInfoMapper } from './mappers/JSFilesCountInfoMapper'
 import { JSFileMetadataMapper } from './mappers/JSFileMetadataMapper'
 import { DatasetVersionMother } from '../../../tests/component/dataset/domain/models/DatasetMother'
-import { FileCitationMother } from '../../../tests/component/files/domain/models/FileMother'
 import { FilePermissions } from '../domain/models/FilePermissions'
 import { JSFilePermissionsMapper } from './mappers/JSFilePermissionsMapper'
 
@@ -50,13 +50,13 @@ export class FileJSDataverseRepository implements FileRepository {
         DomainFileMapper.toJSFileSearchCriteria(criteria),
         DomainFileMapper.toJSFileOrderCriteria(criteria.sortBy)
       )
-      .then((jsFiles) =>
+      .then((jsFilesSubset) =>
         Promise.all([
-          jsFiles,
-          FileJSDataverseRepository.getAllDownloadCount(jsFiles),
-          FileJSDataverseRepository.getAllThumbnails(jsFiles),
-          FileJSDataverseRepository.getAllWithPermissions(jsFiles),
-          FileJSDataverseRepository.getAllTabularData(jsFiles)
+          jsFilesSubset.files,
+          FileJSDataverseRepository.getAllDownloadCount(jsFilesSubset.files),
+          FileJSDataverseRepository.getAllThumbnails(jsFilesSubset.files),
+          FileJSDataverseRepository.getAllWithPermissions(jsFilesSubset.files),
+          FileJSDataverseRepository.getAllTabularData(jsFilesSubset.files)
         ])
       )
       .then(([jsFiles, downloadCounts, thumbnails, permissions, tabularData]) =>
@@ -205,10 +205,12 @@ export class FileJSDataverseRepository implements FileRepository {
       })
   }
 
-  // eslint-disable-next-line unused-imports/no-unused-vars
   private static getCitationById(id: number): Promise<string> {
-    // TODO: Implement once get citation is implemented in js-dataverse https://github.com/IQSS/dataverse-client-javascript/issues/117
-    return Promise.resolve(FileCitationMother.create('File Title'))
+    return getFileCitation
+      .execute(id, undefined, includeDeaccessioned)
+      .catch((error: ReadError) => {
+        throw new Error(error.message)
+      })
   }
 
   getMultipleFileDownloadUrl(ids: number[], downloadMode: FileDownloadMode): string {
