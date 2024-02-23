@@ -3,6 +3,7 @@ import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetHelper, DatasetResponse } from '../../../shared/datasets/DatasetHelper'
 import { FileHelper } from '../../../shared/files/FileHelper'
 import moment from 'moment-timezone'
+import { CollectionHelper } from '../../../shared/collection/CollectionHelper'
 
 type Dataset = {
   datasetVersion: { metadataBlocks: { citation: { fields: { value: string }[] } } }
@@ -168,6 +169,23 @@ describe('Dataset', () => {
           cy.visit(`/spa/datasets?persistentId=${dataset.persistentId}`)
 
           cy.findByText(DatasetLabelValue.DEACCESSIONED).should('exist')
+        })
+    })
+
+    it('loads correctly the breadcrumbs when the dataset is part of a subcollection', () => {
+      cy.wrap(
+        CollectionHelper.create('subcollection').then((collection) =>
+          DatasetHelper.create(collection.id)
+        )
+      )
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+
+          cy.findByText('Root').should('exist')
+          cy.findByRole('link', { name: 'Subcollection' }).should('exist').click()
+
+          cy.findAllByText('Subcollection').should('exist')
         })
     })
   })

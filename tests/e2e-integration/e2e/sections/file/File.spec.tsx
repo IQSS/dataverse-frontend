@@ -95,5 +95,22 @@ describe('File', () => {
       cy.visit(`/spa/files?id=wrong-id`)
       cy.findByText('Page Not Found').should('exist')
     })
+
+    it('loads correctly the breadcrumbs', () => {
+      cy.wrap(
+        DatasetHelper.createWithFile(FileHelper.create()).then(
+          (datasetResponse) => datasetResponse.file
+        )
+      )
+        .its('id')
+        .then((id: string) => {
+          cy.visit(`/spa/files?id=${id}`)
+
+          cy.findByText('Root').should('exist')
+          cy.findByRole('link', { name: "Darwin's Finches" }).should('exist').click({ force: true })
+
+          cy.findByRole('heading', { name: "Darwin's Finches" }).should('exist')
+        })
+    })
   })
 })

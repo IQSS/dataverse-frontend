@@ -69,7 +69,7 @@ const LinkToDvObject = ({
   return (
     <LinkToPage
       page={dvObjectTypeToRoute[type]}
-      searchParams={{ ...(version ? { version } : {}), ...idParam }}>
+      searchParams={{ ...idParam, ...(version ? { version } : {}) }}>
       {name}
     </LinkToPage>
   )

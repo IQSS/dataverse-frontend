@@ -60,7 +60,12 @@ const jsDataset = {
     uri: 'http://creativecommons.org/publicdomain/zero/1.0',
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
-  thumbnail: undefined
+  thumbnail: undefined,
+  isPartOf: {
+    type: 'DATAVERSE',
+    identifier: 'root',
+    displayName: 'Root'
+  }
 }
 const citation =
   'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
@@ -172,8 +177,8 @@ const expectedDataset = {
   hierarchy: new UpwardHierarchyNode(
     "Darwin's Finches",
     DvObjectType.DATASET,
-    undefined,
-    undefined,
+    'doi:10.5072/FK2/B4B2MJ',
+    '0.0',
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
   )
 }
@@ -279,8 +284,8 @@ const expectedDatasetAlternateVersion = {
   hierarchy: new UpwardHierarchyNode(
     "Darwin's Finches",
     DvObjectType.DATASET,
-    undefined,
-    undefined,
+    'doi:10.5072/FK2/B4B2MJ',
+    '0.0',
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
   )
 }
@@ -295,6 +300,7 @@ describe('JS Dataset Mapper', () => {
       jsDatasetFilesTotalOriginalDownloadSize,
       jsDatasetFilesTotalArchivalDownloadSize
     )
+
     expect(expectedDataset).to.deep.equal(mapped)
   })
   it('maps jsDataset model to the domain Dataset model for alternate version', () => {
