@@ -10,7 +10,11 @@ import { FileMother } from '../../../tests/component/files/domain/models/FileMot
 const meta: Meta<typeof File> = {
   title: 'Pages/File',
   component: File,
-  decorators: [WithI18next, WithLayout]
+  decorators: [WithI18next, WithLayout],
+  parameters: {
+    // Sets the delay for all stories.
+    chromatic: { delay: 15000, pauseAnimationAtEnd: true }
+  }
 }
 
 export default meta
