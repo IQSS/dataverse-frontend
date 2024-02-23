@@ -1,6 +1,10 @@
 import type { Preview } from '@storybook/react'
 import { ThemeProvider } from '@iqss/dataverse-design-system'
 import { MemoryRouter } from 'react-router-dom'
+import { faker } from '@faker-js/faker'
+
+
+
 
 const preview: Preview = {
   parameters: {
@@ -13,13 +17,17 @@ const preview: Preview = {
     }
   },
   decorators: [
-    (Story) => (
-      <ThemeProvider>
-        <MemoryRouter>
-          <Story />
-        </MemoryRouter>
-      </ThemeProvider>
-    )
+    (Story) => {
+      if (import.meta.env.STORYBOOK_USE_FAKER_SEED === 'true' ) {
+        faker.seed(123) // Use a specific seed during Chromatic runs
+      }return (
+        <ThemeProvider>
+          <MemoryRouter>
+            <Story />
+          </MemoryRouter>
+        </ThemeProvider>
+      )
+    }
   ]
 }
 
