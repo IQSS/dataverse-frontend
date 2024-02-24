@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { DatasetPreview } from '../../../../../src/dataset/domain/models/DatasetPreview'
 import { DatasetVersionMother } from './DatasetMother'
+import { getImageUrl } from '../../../shared/ImageHelper'
 
 export class DatasetPreviewMother {
   static createMany(count: number): DatasetPreview[] {
@@ -17,7 +18,7 @@ export class DatasetPreviewMother {
       version: DatasetVersionMother.create(),
       releaseOrCreateDate: faker.date.past(),
       description: faker.lorem.paragraph(),
-      thumbnail: faker.datatype.boolean() ? faker.image.imageUrl() : undefined,
+      thumbnail: faker.datatype.boolean() ? getImageUrl() : undefined,
       ...props
     }
 
@@ -41,7 +42,7 @@ export class DatasetPreviewMother {
   }
 
   static createWithThumbnail(): DatasetPreview {
-    return this.create({ thumbnail: faker.image.imageUrl() })
+    return this.create({ thumbnail: getImageUrl() })
   }
 
   static createWithNoThumbnail(): DatasetPreview {

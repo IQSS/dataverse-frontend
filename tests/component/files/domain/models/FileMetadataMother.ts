@@ -13,6 +13,7 @@ import {
   FileDownloadUrls
 } from '../../../../../src/files/domain/models/FileMetadata'
 import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
+import { getImageUrl } from '../../../shared/ImageHelper'
 
 const valueOrUndefined: <T>(value: T) => T | undefined = (value) => {
   const shouldShowValue = faker.datatype.boolean()
@@ -296,7 +297,7 @@ export class FileMetadataMother {
 
   static createWithThumbnail(): FileMetadata {
     return this.createDefault({
-      thumbnail: faker.image.imageUrl(400),
+      thumbnail: getImageUrl(400),
       type: FileTypeMother.createImage()
     })
   }
