@@ -6,6 +6,7 @@ import {
   DatasetMother,
   DatasetVersionMother
 } from '../../../../tests/component/dataset/domain/models/DatasetMother'
+import { getImageUrl } from '../../../../tests/component/shared/ImageHelper'
 
 const meta: Meta<typeof DatasetCitation> = {
   title: 'Sections/Dataset Page/DatasetCitation',
@@ -31,7 +32,7 @@ export const Default: Story = {
 
 export const WithThumbnailImage: Story = {
   render: () => {
-    const dataset = DatasetMother.createRealistic({ thumbnail: faker.image.imageUrl() })
+    const dataset = DatasetMother.createRealistic({ thumbnail: getImageUrl() })
     return (
       <div>
         <br></br>

@@ -27,7 +27,7 @@ jobs:
       - name: Publish to Chromatic
         uses: chromaui/action@v1
         env:
-          STORYBOOK_USE_FAKER_SEED: "true"
+          STORYBOOK_CHROMATIC_BUILD: "true"
 
         # Chromatic GitHub Action options
         with:
