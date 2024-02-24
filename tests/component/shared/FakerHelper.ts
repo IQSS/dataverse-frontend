@@ -5,6 +5,7 @@ import {
   FileSize,
   FileSizeUnit
 } from '../../../src/files/domain/models/FileMetadata'
+
 // Helps to generate reproducible fake data
 
 export class FakerHelper {
