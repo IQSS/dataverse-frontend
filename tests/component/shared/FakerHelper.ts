@@ -1,10 +1,30 @@
 import { faker } from '@faker-js/faker'
-import { FileSize, FileSizeUnit } from '../../../src/files/domain/models/FileMetadata'
+import {
+  FileLabel,
+  FileLabelType,
+  FileSize,
+  FileSizeUnit
+} from '../../../src/files/domain/models/FileMetadata'
 // Helps to generate reproducible fake data
 
 export class FakerHelper {
   static chromaticBuild() {
     return import.meta.env.STORYBOOK_CHROMATIC_BUILD === 'true'
+  }
+  static fileLabel(props?: Partial<FileLabel>) {
+    if (this.chromaticBuild()) {
+      return {
+        type: FileLabelType.TAG,
+        value: faker.lorem.word(),
+        ...props
+      }
+    } else {
+      return {
+        type: faker.helpers.arrayElement(Object.values(FileLabelType)),
+        value: faker.lorem.word(),
+        ...props
+      }
+    }
   }
   static fileSize(props?: Partial<FileSize>) {
     if (this.chromaticBuild()) {

@@ -69,11 +69,7 @@ export class FileTabularDataMother {
 
 export class FileLabelMother {
   static create(props?: Partial<FileLabel>): FileLabel {
-    return {
-      type: faker.helpers.arrayElement(Object.values(FileLabelType)),
-      value: faker.lorem.word(),
-      ...props
-    }
+    return FakerHelper.fileLabel(props)
   }
 
   static createMany(count: number): FileLabel[] {
