@@ -7,7 +7,7 @@ import {
   FileDateType
 } from '../../../src/files/domain/models/FileMetadata'
 
-// Helps to generate reproducible fake data
+// Helps to generate reproducible fake data for tests
 
 export class FakerHelper {
   static setFakerSeed() {
