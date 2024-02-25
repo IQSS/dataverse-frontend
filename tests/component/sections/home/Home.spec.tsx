@@ -40,7 +40,7 @@ describe('Home page', () => {
     const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
     addDataBtn.should('exist')
     addDataBtn.click()
-    cy.findByText('New Dataverse').should('be.visible')
+    cy.findByText('New Collection').should('be.visible')
     cy.findByText('New Dataset').should('be.visible')
   })
 

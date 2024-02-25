@@ -6,7 +6,7 @@
   "brandLogoImage": "Dataverse brand logo",
   "navigation": {
     "addData": "Add Data",
-    "newDataverse": "New Dataverse",
+    "newCollection": "New Collection",
     "newDataset": "New Dataset"
   }
 }

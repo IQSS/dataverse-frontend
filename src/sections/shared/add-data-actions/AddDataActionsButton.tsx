@@ -5,41 +5,24 @@ import { DropdownButton } from '@iqss/dataverse-design-system'
 import { PlusLg } from 'react-bootstrap-icons'
 import styles from './AddDataActionsButton.module.scss'
 
-const routesToRender = [
-  {
-    id: 0,
-    name: 'New Dataverse',
-    page: `/spa${Route.DATASETS}`,
-    disabled: true
-  },
-  {
-    id: 1,
-    name: 'New Dataset',
-    page: `/spa${Route.CREATE_DATASET}`,
-    disabled: false
-  }
-]
-
 export default function AddDataActionsButton() {
   const { t } = useTranslation('header')
-  const list = routesToRender.map((option) => (
-    <Dropdown.Item href={option.page} disabled={option.disabled} key={option.id}>
-      {option.name}
-    </Dropdown.Item>
-  ))
+
   return (
-    <div className={'d-flex justify-content-end mb-3'}>
-      <DropdownButton
-        id={'addDataBtn'}
-        title={t('navigation.addData')}
-        variant="secondary"
-        icon={<PlusLg className={styles.icon} />}>
-        <>{list}</>
-      </DropdownButton>
-    </div>
+    <DropdownButton
+      id={'addDataBtn'}
+      title={t('navigation.addData')}
+      variant="secondary"
+      icon={<PlusLg className={styles.icon} />}>
+      <Dropdown.Item href={`/spa${Route.DATASETS}`} disabled={true}>
+        {t('navigation.newCollection')}
+      </Dropdown.Item>
+      <Dropdown.Item href={`/spa${Route.CREATE_DATASET}`} disabled={false}>
+        {t('navigation.newDataset')}
+      </Dropdown.Item>
+    </DropdownButton>
   )
 }
 
 // TODO: AddData Dropdown item needs proper permissions checking, see Spike #318
-// TODO: Add page for "New Dataverse", see Issue #319
-// TODO: [Q?]Dropdown styles - Add PlusLg icon to right side of button per wireframe
+// TODO: Add page for "New Collection", see Issue #319

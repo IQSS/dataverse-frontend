@@ -48,7 +48,7 @@ describe('Home Page', () => {
     const addDataBtnNav = cy.get('nav').findByRole('button', { name: /Add Data/i })
     addDataBtnNav.should('exist')
     addDataBtnNav.click()
-    cy.get('nav').findByText('New Dataverse').should('be.visible')
+    cy.get('nav').findByText('New Collection').should('be.visible')
     cy.get('nav').findByText('New Dataset').should('be.visible')
     cy.get('main')
       .findByText(/Add Data/i)

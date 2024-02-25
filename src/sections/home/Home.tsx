@@ -1,4 +1,4 @@
-import { Col, Row } from '@iqss/dataverse-design-system'
+import { Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { DatasetsList } from './datasets-list/DatasetsList'
@@ -26,11 +26,9 @@ export function Home({ datasetRepository, page }: HomeProps) {
         <h1>{t('title')}</h1>
       </header>
       {user && (
-        <Row>
-          <Col className="flex-end">
-            <AddDataActionsButton />
-          </Col>
-        </Row>
+        <div className={'d-flex justify-content-end mb-3'}>
+          <AddDataActionsButton />
+        </div>
       )}
       <DatasetsList datasetRepository={datasetRepository} page={page} />
     </Row>

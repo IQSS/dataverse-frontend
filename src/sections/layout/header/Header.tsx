@@ -18,27 +18,6 @@ export function Header() {
     })
   }
 
-  const routesToRender = [
-    {
-      id: 0,
-      name: t('navigation.newDataverse'),
-      page: `/spa${Route.DATASETS}`,
-      disabled: true
-    },
-    {
-      id: 1,
-      name: t('navigation.newDataset'),
-      page: `/spa${Route.CREATE_DATASET}`,
-      disabled: false
-    }
-  ]
-
-  const list = routesToRender.map((option) => (
-    <Navbar.Dropdown.Item href={option.page} key={option.id}>
-      {option.name}
-    </Navbar.Dropdown.Item>
-  ))
-
   return (
     <Navbar
       brand={{
@@ -48,8 +27,13 @@ export function Header() {
       }}>
       {user ? (
         <>
-          <Navbar.Dropdown title="Add Data" id="dropdown-addData">
-            {list}
+          <Navbar.Dropdown title={t('navigation.addData')} id="dropdown-addData">
+            <Navbar.Dropdown.Item href={`/spa${Route.DATASETS}`} disabled={true}>
+              {t('navigation.newCollection')}
+            </Navbar.Dropdown.Item>
+            <Navbar.Dropdown.Item href={`/spa${Route.CREATE_DATASET}`} disabled={false}>
+              {t('navigation.newDataset')}
+            </Navbar.Dropdown.Item>
           </Navbar.Dropdown>
           <Navbar.Dropdown title={user.name} id="dropdown-user">
             <Navbar.Dropdown.Item href="#" onClick={onLogoutClick}>
@@ -67,5 +51,5 @@ export function Header() {
   )
 }
 
-// TODO: AddData Navigation item needs proper permissions checking, see Spike #XXX
-// TODO: Add page for "New Dataverse", see Issue #XXX
+// TODO: AddData Dropdown item needs proper permissions checking, see Spike #318
+// TODO: Add page for "New Collection", see Issue #319
