@@ -143,7 +143,7 @@ export class FileMetadataMother {
       type: tabularFile ? FileTypeMother.createTabular() : FileTypeMother.create(),
       size: FileSizeMother.create(),
       date: {
-        type: faker.helpers.arrayElement(Object.values(FileDateType)),
+        type: FakerHelper.fileDateType(),
         date: FakerHelper.recentDate()
       },
       downloadCount: faker.datatype.number(40),

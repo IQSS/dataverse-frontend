@@ -3,7 +3,8 @@ import {
   FileLabel,
   FileLabelType,
   FileSize,
-  FileSizeUnit
+  FileSizeUnit,
+  FileDateType
 } from '../../../src/files/domain/models/FileMetadata'
 
 // Helps to generate reproducible fake data
@@ -30,6 +31,13 @@ export class FakerHelper {
         value: faker.lorem.word(),
         ...props
       }
+    }
+  }
+  static fileDateType() {
+    if (this.chromaticBuild()) {
+      return FileDateType.PUBLISHED
+    } else {
+      return faker.helpers.arrayElement(Object.values(FileDateType))
     }
   }
   static fileSize(props?: Partial<FileSize>) {
