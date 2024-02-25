@@ -88,13 +88,13 @@ export class FileLabelMother {
 export class FileEmbargoMother {
   static create(props?: Partial<FileEmbargo>): FileEmbargo {
     return new FileEmbargo(
-      props?.dateAvailable ?? faker.date.future(),
+      props?.dateAvailable ?? FakerHelper.futureDate(),
       props?.reason ?? faker.lorem.sentence()
     )
   }
 
   static createWithNoReason(props?: Partial<FileEmbargo>): FileEmbargo {
-    return new FileEmbargo(props?.dateAvailable ?? faker.date.future(), undefined)
+    return new FileEmbargo(props?.dateAvailable ?? FakerHelper.futureDate(), undefined)
   }
 }
 
