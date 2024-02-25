@@ -73,7 +73,7 @@ export class FakerHelper {
   }
   static futureDate() {
     if (this.chromaticBuild()) {
-      return faker.date.future(10, '2024-01-01T10:00:00.000Z')
+      return new Date('2030-06-11T10:00:00.000Z')
     } else {
       return faker.date.future()
     }
