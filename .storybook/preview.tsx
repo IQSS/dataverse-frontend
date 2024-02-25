@@ -2,6 +2,7 @@ import type { Preview } from '@storybook/react'
 import { ThemeProvider } from '@iqss/dataverse-design-system'
 import { MemoryRouter } from 'react-router-dom'
 import { faker } from '@faker-js/faker'
+import { FakerHelper } from '../tests/component/shared/FakerHelper'
 
 const preview: Preview = {
   parameters: {
@@ -15,9 +16,7 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => {
-      if (import.meta.env.STORYBOOK_CHROMATIC_BUILD === 'true') {
-        faker.seed(123) // Use a specific seed during Chromatic runs
-      }
+      FakerHelper.setFakerSeed()
       return (
         <ThemeProvider>
           <MemoryRouter>

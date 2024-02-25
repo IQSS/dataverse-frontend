@@ -9,6 +9,11 @@ import {
 // Helps to generate reproducible fake data
 
 export class FakerHelper {
+  static setFakerSeed() {
+    if (this.chromaticBuild()) {
+      faker.seed(123) // Use a specific seed during Chromatic runs
+    }
+  }
   static chromaticBuild() {
     return import.meta.env.STORYBOOK_CHROMATIC_BUILD === 'true'
   }
