@@ -18,6 +18,13 @@ export class FakerHelper {
   static chromaticBuild() {
     return import.meta.env.STORYBOOK_CHROMATIC_BUILD === 'true'
   }
+  static smallNumber(max: number) {
+    if (this.chromaticBuild()) {
+      return 12
+    } else {
+      return faker.datatype.number(max)
+    }
+  }
   static fileLabel(props?: Partial<FileLabel>) {
     if (this.chromaticBuild()) {
       return {

@@ -146,7 +146,7 @@ export class FileMetadataMother {
         type: FakerHelper.fileDateType(),
         date: FakerHelper.recentDate()
       },
-      downloadCount: faker.datatype.number(40),
+      downloadCount: FakerHelper.smallNumber(40),
       labels: faker.datatype.boolean() ? FileLabelMother.createMany(3) : [],
       checksum: FileChecksumMother.create(),
       thumbnail: thumbnail,
