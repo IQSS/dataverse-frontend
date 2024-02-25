@@ -66,7 +66,7 @@ export class FakerHelper {
   }
   static pastDate() {
     if (this.chromaticBuild()) {
-      return faker.date.past(10, '2020-01-01T10:00:00.000Z')
+      return new Date('2020-01-01T10:00:00.000Z')
     } else {
       return faker.date.past()
     }
@@ -80,7 +80,7 @@ export class FakerHelper {
   }
   static recentDate() {
     if (this.chromaticBuild()) {
-      return faker.date.recent(1, '2024-02-01T10:00:00.000Z')
+      return new Date('2024-02-01T10:00:00.000Z')
     } else {
       return faker.date.recent()
     }
