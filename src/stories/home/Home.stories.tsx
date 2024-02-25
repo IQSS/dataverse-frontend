@@ -9,7 +9,11 @@ import { NoDatasetsMockRepository } from '../dataset/NoDatasetsMockRepository'
 const meta: Meta<typeof Home> = {
   title: 'Pages/Home',
   component: Home,
-  decorators: [WithI18next, WithLayout]
+  decorators: [WithI18next, WithLayout],
+  parameters: {
+    // Sets the delay for all stories.
+    chromatic: { delay: 15000, pauseAnimationAtEnd: true }
+  }
 }
 
 export default meta

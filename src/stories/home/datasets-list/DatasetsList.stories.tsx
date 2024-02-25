@@ -8,7 +8,11 @@ import { NoDatasetsMockRepository } from '../../dataset/NoDatasetsMockRepository
 const meta: Meta<typeof DatasetsList> = {
   title: 'Sections/Home/DatasetsList',
   component: DatasetsList,
-  decorators: [WithI18next]
+  decorators: [WithI18next],
+  parameters: {
+    // Sets the delay for all stories.
+    chromatic: { delay: 15000, pauseAnimationAtEnd: true }
+  }
 }
 
 export default meta

@@ -1,6 +1,7 @@
 import type { Preview } from '@storybook/react'
 import { ThemeProvider } from '@iqss/dataverse-design-system'
 import { MemoryRouter } from 'react-router-dom'
+import { FakerHelper } from '../tests/component/shared/FakerHelper'
 
 const preview: Preview = {
   parameters: {
@@ -13,13 +14,16 @@ const preview: Preview = {
     }
   },
   decorators: [
-    (Story) => (
-      <ThemeProvider>
-        <MemoryRouter>
-          <Story />
-        </MemoryRouter>
-      </ThemeProvider>
-    )
+    (Story) => {
+      FakerHelper.setFakerSeed()
+      return (
+        <ThemeProvider>
+          <MemoryRouter>
+            <Story />
+          </MemoryRouter>
+        </ThemeProvider>
+      )
+    }
   ]
 }
 

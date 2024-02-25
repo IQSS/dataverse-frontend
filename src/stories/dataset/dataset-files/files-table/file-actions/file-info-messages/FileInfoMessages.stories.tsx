@@ -9,7 +9,11 @@ const meta: Meta<typeof FileInfoMessages> = {
   title:
     'Sections/Dataset Page/DatasetFiles/FilesTable/FileActionsCell/FileInfoMessages/FileInfoMessages',
   component: FileInfoMessages,
-  decorators: [WithI18next, WithSettings, WithDatasetAllPermissionsGranted]
+  decorators: [WithI18next, WithSettings, WithDatasetAllPermissionsGranted],
+  parameters: {
+    // Sets the delay for all stories.
+    chromatic: { delay: 15000, pauseAnimationAtEnd: true }
+  }
 }
 
 export default meta
