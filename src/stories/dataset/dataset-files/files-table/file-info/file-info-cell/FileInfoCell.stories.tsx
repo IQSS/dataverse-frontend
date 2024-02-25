@@ -2,11 +2,12 @@ import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../../../../WithI18next'
 import { FileInfoCell } from '../../../../../../sections/dataset/dataset-files/files-table/file-info/file-info-cell/FileInfoCell'
 import { FilePreviewMother } from '../../../../../../../tests/component/files/domain/models/FilePreviewMother'
+import { WithFakerSeed } from '../../../../../WithFakerSeed'
 
 const meta: Meta<typeof FileInfoCell> = {
   title: 'Sections/Dataset Page/DatasetFiles/FilesTable/FileInfoCell',
   component: FileInfoCell,
-  decorators: [WithI18next]
+  decorators: [WithI18next, WithFakerSeed]
 }
 
 export default meta

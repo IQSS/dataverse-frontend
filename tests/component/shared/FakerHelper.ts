@@ -56,6 +56,13 @@ export class FakerHelper {
       return faker.date.past()
     }
   }
+  static futureDate() {
+    if (this.chromaticBuild()) {
+      return faker.date.future(10, '2024-01-01T10:00:00.000Z')
+    } else {
+      return faker.date.future()
+    }
+  }
   static recentDate() {
     if (this.chromaticBuild()) {
       return faker.date.recent(1, '2024-02-01T10:00:00.000Z')
