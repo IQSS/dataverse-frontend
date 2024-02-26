@@ -1,8 +1,8 @@
-// @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles';
-@import 'node_modules/bootstrap/dist/css/bootstrap-utilities';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
 
-.add-data-dropdown-container {
-  @extend %d-flex !optional;
-  @extend %justify-content-end !optional;
-  @extend %mb-3 !optional;
+.container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: $spacer;
 }

@@ -9,7 +9,7 @@ import {
   DvObjectType,
   UpwardHierarchyNode
 } from '../../shared/hierarchy/domain/models/UpwardHierarchyNode'
-
+import styles from './Home.module.scss'
 interface HomeProps {
   datasetRepository: DatasetRepository
   page?: number
@@ -26,7 +26,7 @@ export function Home({ datasetRepository, page }: HomeProps) {
         <h1>{t('title')}</h1>
       </header>
       {user && (
-        <div className={'d-flex justify-content-end mb-3'}>
+        <div className={styles.container}>
           <AddDataActionsButton />
         </div>
       )}
