@@ -3,31 +3,40 @@ import { Alert, Button, Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
-import { useCreateDatasetForm, SubmissionStatusEnums } from './useCreateDatasetForm'
+import { useCreateDatasetForm, SubmissionStatus } from './useCreateDatasetForm'
 import styles from '/src/sections/dataset/Dataset.module.scss'
 import { useLoading } from '../loading/LoadingContext'
+import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
+import { useDatasetFormData } from './useDatasetFormData'
+import { Route } from '../Route.enum'
+import { useNavigate } from 'react-router-dom'
 
-export function CreateDatasetForm() {
-  const { isLoading, setIsLoading } = useLoading()
-  const { formErrors, submissionStatus, updateFormData, submitFormData, cancelFormSubmit } =
-    useCreateDatasetForm()
+interface CreateDatasetFormProps {
+  repository: DatasetRepository
+}
 
+export function CreateDatasetForm({ repository }: CreateDatasetFormProps) {
+  const navigate = useNavigate()
   const { t } = useTranslation('createDataset')
+  const { isLoading, setIsLoading } = useLoading()
+  const { formData, formDataErrors, updateFormData } = useDatasetFormData()
+  const { submissionStatus, submitForm } = useCreateDatasetForm(repository)
 
-  const handleCreateDatasetFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     updateFormData({ [name]: value })
   }
 
-  const handleCreateDatasetSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    submitFormData()
+    submitForm(formData)
   }
 
-  const handleFormCancel = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
-    cancelFormSubmit()
+    navigate(Route.HOME)
   }
+
   useEffect(() => {
     setIsLoading(false)
   }, [isLoading])
@@ -40,18 +49,16 @@ export function CreateDatasetForm() {
       <SeparationLine />
       <div className={styles.container}>
         <RequiredFieldText />
-        {submissionStatus === SubmissionStatusEnums.IsSubmitting && (
+        {submissionStatus === SubmissionStatus.IsSubmitting && (
           <p>{t('datasetForm.status.submitting')}</p>
         )}
-        {submissionStatus === SubmissionStatusEnums.SubmitComplete && (
+        {submissionStatus === SubmissionStatus.SubmitComplete && (
           <p>{t('datasetForm.status.success')}</p>
         )}
-        {submissionStatus === SubmissionStatusEnums.Errored && (
-          <p>{t('datasetForm.status.fail')}</p>
-        )}
+        {submissionStatus === SubmissionStatus.Errored && <p>{t('datasetForm.status.fail')}</p>}
         <Form
           onSubmit={(event: FormEvent<HTMLFormElement>) => {
-            handleCreateDatasetSubmit(event)
+            handleSubmit(event)
           }}
           className={'create-dataset-form'}>
           <Row>
@@ -59,25 +66,25 @@ export function CreateDatasetForm() {
               <Form.Group controlId="createDatasetTitle" required>
                 <Form.Group.Label>{t('datasetForm.title')}</Form.Group.Label>
                 <Form.Group.Input
-                  readOnly={submissionStatus === SubmissionStatusEnums.IsSubmitting && true}
+                  readOnly={submissionStatus === SubmissionStatus.IsSubmitting && true}
                   type="text"
-                  name="createDatasetTitle"
+                  name="title"
                   placeholder="Dataset Title"
-                  onChange={handleCreateDatasetFieldChange}
+                  onChange={handleFieldChange}
                   withinMultipleFieldsGroup={false}
                 />
               </Form.Group>
-              {formErrors.createDatasetTitle && <span>{formErrors.createDatasetTitle}</span>}
+              {formDataErrors.title && <span>{formDataErrors.title}</span>}
             </Col>
           </Row>
           <SeparationLine />
           <Alert variant={'info'} customHeading={t('metadataTip.title')} dismissible={false}>
             {t('metadataTip.content')}
           </Alert>
-          <Button type="submit" disabled={submissionStatus === SubmissionStatusEnums.IsSubmitting}>
+          <Button type="submit" disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
             {t('saveButton')}
           </Button>
-          <Button withSpacing variant="secondary" type="button" onClick={handleFormCancel}>
+          <Button withSpacing variant="secondary" type="button" onClick={handleCancel}>
             {t('cancelButton')}
           </Button>
         </Form>

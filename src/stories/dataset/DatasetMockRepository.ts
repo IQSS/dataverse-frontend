@@ -5,7 +5,7 @@ import { TotalDatasetsCount } from '../../dataset/domain/models/TotalDatasetsCou
 import { DatasetPaginationInfo } from '../../dataset/domain/models/DatasetPaginationInfo'
 import { DatasetPreview } from '../../dataset/domain/models/DatasetPreview'
 import { DatasetPreviewMother } from '../../../tests/component/dataset/domain/models/DatasetPreviewMother'
-import { DatasetFormFields } from '../../dataset/domain/models/DatasetFormFields'
+import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
 export class DatasetMockRepository implements DatasetRepository {
   // eslint-disable-next-line unused-imports/no-unused-vars
   getAll(paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
@@ -47,8 +47,8 @@ export class DatasetMockRepository implements DatasetRepository {
     })
   }
 
-  createDataset(fields: DatasetFormFields): Promise<string> {
-    const returnMsg = 'Form Data Submitted: ' + JSON.stringify(fields)
+  create(dataset: DatasetDTO): Promise<string> {
+    const returnMsg = 'Form Data Submitted: ' + JSON.stringify(dataset)
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(returnMsg)

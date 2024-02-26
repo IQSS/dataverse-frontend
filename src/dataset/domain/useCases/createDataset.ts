@@ -1,17 +1,11 @@
-import { DatasetFormFields } from '../models/DatasetFormFields'
 import { DatasetRepository } from '../repositories/DatasetRepository'
-import { DatasetJSDataverseRepository } from '../../infrastructure/repositories/DatasetJSDataverseRepository'
+import { DatasetDTO } from './DTOs/DatasetDTO'
 
-const repo = new DatasetJSDataverseRepository()
-function createDatasetMockHelper(
+export function createDataset(
   datasetRepository: DatasetRepository,
-  formFieldsToSubmit: DatasetFormFields
+  dataset: DatasetDTO
 ): Promise<string> {
-  return datasetRepository.createDataset(formFieldsToSubmit).catch((error: Error) => {
+  return datasetRepository.create(dataset).catch((error: Error) => {
     throw new Error(error.message)
   })
-}
-
-export function createDataset(fields: DatasetFormFields): Promise<string> {
-  return createDatasetMockHelper(repo, fields)
 }

@@ -1,19 +1,22 @@
-import { DatasetFormFields } from '../models/DatasetFormFields'
-import { DatasetValidationResponse } from '../models/DatasetValidationResponse'
+import { DatasetDTO, initialDatasetDTO } from './DTOs/DatasetDTO'
 const NAME_REQUIRED = 'Name is required'
 
-export function validateDataset(fieldsToSubmit: DatasetFormFields) {
-  const errors: Record<keyof DatasetFormFields, string | undefined> = {
-    createDatasetTitle: undefined
-  }
+export interface DatasetValidationResponse {
+  isValid: boolean
+  errors: DatasetDTO
+}
 
-  if (!fieldsToSubmit.createDatasetTitle) {
-    errors.createDatasetTitle = NAME_REQUIRED
+export function validateDataset(dataset: DatasetDTO) {
+  const errors: DatasetDTO = { ...initialDatasetDTO }
+
+  if (!dataset.title) {
+    errors.title = NAME_REQUIRED
   }
 
   const validationResponse: DatasetValidationResponse = {
-    isValid: Object.values(errors).every((error) => error === undefined),
+    isValid: Object.values(errors).every((error) => error !== ''),
     errors
   }
+
   return validationResponse
 }
