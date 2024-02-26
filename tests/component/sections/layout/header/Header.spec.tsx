@@ -70,6 +70,7 @@ describe('Header component', () => {
     cy.contains('Sign Up')
     cy.contains('Log In')
   })
+
   it('does not display the Add Data button when the user is not logged in', () => {
     userRepository.getAuthenticated = cy.stub().resolves()
 

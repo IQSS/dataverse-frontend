@@ -6,6 +6,4 @@ describe('AddDataActionsButton', () => {
 
     cy.findByRole('button', { name: /Add Data/i }).should('exist')
   })
-
-  // it('renders the tooltip', () => {  })
 })

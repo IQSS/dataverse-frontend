@@ -10,6 +10,7 @@ const userRepository: UserRepository = {} as UserRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const totalDatasetsCount = 200
 const datasets = DatasetPreviewMother.createMany(totalDatasetsCount)
+
 describe('Home page', () => {
   beforeEach(() => {
     datasetRepository.getAll = cy.stub().resolves(datasets)
@@ -23,7 +24,7 @@ describe('Home page', () => {
 
   it('does not render the Add Data dropdown button', () => {
     cy.customMount(<Home datasetRepository={datasetRepository} />)
-    cy.findByText('Add Data').should('not.exist')
+    cy.findByRole('button', { name: /Add Data/i }).should('not.exist')
   })
 
   before(() => {
