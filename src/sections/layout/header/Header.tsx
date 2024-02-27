@@ -26,11 +26,21 @@ export function Header() {
         logoImgSrc: logo
       }}>
       {user ? (
-        <Navbar.Dropdown title={user.name} id="dropdown-user">
-          <Navbar.Dropdown.Item href="#" onClick={onLogoutClick}>
-            {t('logOut')}
-          </Navbar.Dropdown.Item>
-        </Navbar.Dropdown>
+        <>
+          <Navbar.Dropdown title={t('navigation.addData')} id="dropdown-addData">
+            <Navbar.Dropdown.Item href={`/spa${Route.DATASETS}`} disabled={true}>
+              {t('navigation.newCollection')}
+            </Navbar.Dropdown.Item>
+            <Navbar.Dropdown.Item href={`/spa${Route.CREATE_DATASET}`} disabled={false}>
+              {t('navigation.newDataset')}
+            </Navbar.Dropdown.Item>
+          </Navbar.Dropdown>
+          <Navbar.Dropdown title={user.name} id="dropdown-user">
+            <Navbar.Dropdown.Item href="#" onClick={onLogoutClick}>
+              {t('logOut')}
+            </Navbar.Dropdown.Item>
+          </Navbar.Dropdown>
+        </>
       ) : (
         <>
           <Navbar.Link href={`${BASE_URL}${Route.LOG_IN}`}>{t('logIn')}</Navbar.Link>
@@ -40,3 +50,6 @@ export function Header() {
     </Navbar>
   )
 }
+
+// TODO: AddData Dropdown item needs proper permissions checking, see Spike #318
+// TODO: Add page for "New Collection", see Issue #319

@@ -1,0 +1,8 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+
+.container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: $spacer;
+}
