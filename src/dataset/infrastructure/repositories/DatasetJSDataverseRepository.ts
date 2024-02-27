@@ -16,7 +16,10 @@ import {
   DatasetLock as JSDatasetLock,
   getDatasetFilesTotalDownloadSize,
   FileDownloadSizeMode,
-  DatasetPreviewSubset
+  DatasetPreviewSubset,
+  createDataset,
+  CreatedDatasetIdentifiers as JSDatasetIdentifiers,
+  WriteError
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { TotalDatasetsCount } from '../../domain/models/TotalDatasetsCount'
@@ -24,6 +27,7 @@ import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo
 import { DatasetPreview } from '../../domain/models/DatasetPreview'
 import { JSDatasetPreviewMapper } from '../mappers/JSDatasetPreviewMapper'
 import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
+import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
 
 const includeDeaccessioned = true
 
@@ -132,12 +136,14 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
   }
 
-  create(dataset: DatasetDTO): Promise<string> {
-    const returnMsg = 'Form Data Submitted: ' + JSON.stringify(dataset)
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(returnMsg)
-      }, 1000)
-    })
+  create(dataset: DatasetDTO): Promise<{ persistentId: string }> {
+    return createDataset
+      .execute(DatasetDTOMapper.toJSDatasetDTO(dataset))
+      .then((jsDatasetIdentifiers: JSDatasetIdentifiers) => ({
+        persistentId: jsDatasetIdentifiers.persistentId
+      }))
+      .catch((error: WriteError) => {
+        throw new Error(error.message)
+      })
   }
 }

@@ -47,11 +47,11 @@ export class DatasetMockRepository implements DatasetRepository {
     })
   }
 
-  create(dataset: DatasetDTO): Promise<string> {
-    const returnMsg = 'Form Data Submitted: ' + JSON.stringify(dataset)
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  create(dataset: DatasetDTO): Promise<{ persistentId: string }> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(returnMsg)
+        resolve({ persistentId: 'some-persistent-id' })
       }, 1000)
     })
   }

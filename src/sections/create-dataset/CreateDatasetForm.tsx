@@ -24,7 +24,7 @@ export function CreateDatasetForm({ repository }: CreateDatasetFormProps) {
 
   const handleFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
-    updateFormData({ [name]: value })
+    updateFormData(name, value)
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -66,15 +66,17 @@ export function CreateDatasetForm({ repository }: CreateDatasetFormProps) {
               <Form.Group controlId="createDatasetTitle" required>
                 <Form.Group.Label>{t('datasetForm.title')}</Form.Group.Label>
                 <Form.Group.Input
-                  readOnly={submissionStatus === SubmissionStatus.IsSubmitting && true}
+                  readOnly={submissionStatus === SubmissionStatus.IsSubmitting}
                   type="text"
-                  name="title"
+                  name="metadataBlocks[0].fields.title"
                   placeholder="Dataset Title"
                   onChange={handleFieldChange}
                   withinMultipleFieldsGroup={false}
                 />
               </Form.Group>
-              {formDataErrors.title && <span>{formDataErrors.title}</span>}
+              {formDataErrors.metadataBlocks[0].fields.title && (
+                <span>{String(formDataErrors.metadataBlocks[0].fields.title)}</span>
+              )}
             </Col>
           </Row>
           <SeparationLine />
