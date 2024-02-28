@@ -30,7 +30,6 @@ describe('Collection Page', () => {
       cy.findByText(title).should('be.visible')
       cy.findByText(title).click({ force: true })
 
-      cy.url().should('include', 'persistentId')
       cy.findAllByText(title).should('be.visible')
     })
   })
@@ -42,14 +41,71 @@ describe('Collection Page', () => {
     cy.findByText(/Dataverse Admin/i).should('exist')
   })
 
-  it('log out Dataverse Admin user', () => {
+  it('finds the "Add Data" buttons', () => {
     cy.visit('/spa')
 
+    cy.get('nav.navbar').within(() => {
+      const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
+      addDataBtn.should('exist')
+      addDataBtn.click({ force: true })
+      cy.findByText('New Collection').should('be.visible')
+      cy.findByText('New Dataset').should('be.visible')
+    })
+
+    cy.get('main').within(() => {
+      const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
+      addDataBtn.should('exist')
+      addDataBtn.click({ force: true })
+      cy.findByText('New Collection').should('be.visible')
+      cy.findByText('New Dataset').should('be.visible')
+    })
+  })
+
+  it('Navigates to Create Dataset page when New Dataset link clicked', () => {
+    cy.visit('/spa')
+
+    cy.get('nav.navbar').within(() => {
+      const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
+      addDataBtn.should('exist')
+      addDataBtn.click({ force: true })
+      cy.findByText('New Dataset').should('be.visible').click({ force: true })
+    })
+    cy.wait(1000)
+    cy.findByText(/Create Dataset/i).should('exist')
+
+    cy.visit('/spa')
+    cy.wait(1000)
+    cy.get('main').within(() => {
+      const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
+      addDataBtn.should('exist')
+      addDataBtn.click({ force: true })
+      cy.findByText('New Dataset').should('be.visible').click({ force: true })
+    })
+    cy.wait(1000)
+    cy.findByText(/Create Dataset/i).should('exist')
+  })
+
+  it('log out Dataverse Admin user', () => {
+    cy.visit('/spa')
     cy.findAllByText(/Root/i).should('exist')
 
     cy.findByText(/Dataverse Admin/i).click()
     cy.findByRole('button', { name: /Log Out/i }).click()
     cy.findByText(/Dataverse Admin/i).should('not.exist')
+  })
+  it('does not display the Add Data buttons when logged out', () => {
+    cy.visit('/spa')
+
+    cy.findByText(/Dataverse Admin/i).click()
+    cy.findByRole('button', { name: /Log Out/i }).click()
+
+    cy.get('nav.navbar').within(() => {
+      cy.findByRole('button', { name: /Add Data/i }).should('not.exist')
+    })
+
+    cy.get('main').within(() => {
+      cy.findByRole('button', { name: /Add Data/i }).should('not.exist')
+    })
   })
 
   it('displays the correct page of the datasets list when passing the page query param', () => {

@@ -5,6 +5,7 @@ import { WithLayout } from '../WithLayout'
 import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
 import { DatasetLoadingMockRepository } from '../dataset/DatasetLoadingMockRepository'
 import { NoDatasetsMockRepository } from '../dataset/NoDatasetsMockRepository'
+import { WithLoggedInUser } from '../WithLoggedInUser'
 
 const meta: Meta<typeof Collection> = {
   title: 'Pages/Collection',
@@ -27,4 +28,9 @@ export const Loading: Story = {
 
 export const NoResults: Story = {
   render: () => <Collection datasetRepository={new NoDatasetsMockRepository()} id="collection" />
+}
+
+export const LoggedIn: Story = {
+  decorators: [WithLoggedInUser],
+  render: () => <Collection datasetRepository={new DatasetMockRepository()} id="collection" />
 }

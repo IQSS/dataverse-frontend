@@ -6,6 +6,9 @@ import {
   DvObjectType,
   UpwardHierarchyNode
 } from '../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import styles from './Collection.module.scss'
+import AddDataActionsButton from '../shared/add-data-actions/AddDataActionsButton'
+import { useSession } from '../session/SessionContext'
 
 interface CollectionProps {
   datasetRepository: DatasetRepository
@@ -14,6 +17,8 @@ interface CollectionProps {
 }
 const rootNode = new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root', undefined)
 export function Collection({ datasetRepository, id, page }: CollectionProps) {
+  const { user } = useSession()
+
   return (
     <Row>
       <BreadcrumbsGenerator
@@ -30,6 +35,11 @@ export function Collection({ datasetRepository, id, page }: CollectionProps) {
       <header>
         <h1>{capitalizeFirstLetter(id)}</h1>
       </header>
+      {user && (
+        <div className={styles.container}>
+          <AddDataActionsButton />
+        </div>
+      )}
       <DatasetsList datasetRepository={datasetRepository} page={page} />
     </Row>
   )

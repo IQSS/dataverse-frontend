@@ -37,6 +37,23 @@ describe('Header component', () => {
     cy.findByText('Log Out').should('be.visible')
   })
 
+  it('displays the Add Data Button when the user is logged in', () => {
+    cy.customMount(
+      <SessionProvider repository={userRepository}>
+        <Header />
+      </SessionProvider>
+    )
+
+    cy.wrap(userRepository.getAuthenticated).should('be.calledOnce')
+
+    cy.findByRole('button', { name: 'Toggle navigation' }).click()
+    const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
+    addDataBtn.should('exist')
+    addDataBtn.click()
+    cy.findByRole('link', { name: 'New Collection' }).should('be.visible')
+    cy.findByRole('link', { name: 'New Dataset' }).should('be.visible')
+  })
+
   it('displays the Sign Up and Log In links when the user is not logged in', () => {
     userRepository.getAuthenticated = cy.stub().resolves()
 
@@ -52,6 +69,21 @@ describe('Header component', () => {
     cy.findByRole('link', { name: 'Sign Up' }).should('exist')
     cy.contains('Sign Up')
     cy.contains('Log In')
+  })
+
+  it('does not display the Add Data button when the user is not logged in', () => {
+    userRepository.getAuthenticated = cy.stub().resolves()
+
+    cy.customMount(
+      <SessionProvider repository={userRepository}>
+        <Header />
+      </SessionProvider>
+    )
+
+    cy.wrap(userRepository.getAuthenticated).should('be.calledOnce')
+
+    cy.findByRole('button', { name: 'Toggle navigation' }).click()
+    cy.findByRole('button', { name: /Add Data/i }).should('not.exist')
   })
 
   it('log outs the user after clicking Log Out', () => {
