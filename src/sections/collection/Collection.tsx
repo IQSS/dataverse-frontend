@@ -15,7 +15,15 @@ interface CollectionProps {
   id: string
   page?: number
 }
-const rootNode = new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root', undefined)
+const rootNode = new UpwardHierarchyNode(
+  'Root',
+  DvObjectType.COLLECTION,
+  'root',
+  undefined,
+  undefined,
+  undefined
+)
+
 export function Collection({ datasetRepository, id, page }: CollectionProps) {
   const { user } = useSession()
 
@@ -27,6 +35,7 @@ export function Collection({ datasetRepository, id, page }: CollectionProps) {
             capitalizeFirstLetter(id),
             DvObjectType.COLLECTION,
             id,
+            undefined,
             undefined,
             id !== rootNode.id ? rootNode : undefined
           )

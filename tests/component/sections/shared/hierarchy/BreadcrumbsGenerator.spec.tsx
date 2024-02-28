@@ -16,7 +16,7 @@ describe('BreadcrumbsGenerator', () => {
       name: 'Dataset',
       parent: collection,
       version: '1.0',
-      id: 'doi:10.5072/FK2/ABC123'
+      persistentId: 'doi:10.5072/FK2/ABC123'
     })
     const file = UpwardHierarchyNodeMother.createFile({ name: 'File', parent: dataset })
 

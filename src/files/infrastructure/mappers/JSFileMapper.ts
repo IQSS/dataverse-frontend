@@ -76,6 +76,7 @@ export class JSFileMapper {
       DvObjectType.FILE,
       id.toString(),
       undefined,
+      undefined,
       JSUpwardHierarchyNodeMapper.toUpwardHierarchyNode(jsUpwardHierarchyNode)
     )
   }

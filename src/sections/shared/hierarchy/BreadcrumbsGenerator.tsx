@@ -1,8 +1,5 @@
 import { Breadcrumb } from '@iqss/dataverse-design-system'
-import {
-  DvObjectType,
-  UpwardHierarchyNode
-} from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { LinkToPage } from '../link-to-page/LinkToPage'
 import { Route } from '../../Route.enum'
 
@@ -41,7 +38,13 @@ export function BreadcrumbsGenerator({ hierarchy }: BreadcrumbGeneratorProps) {
           <Breadcrumb.Item
             key={index}
             linkAs={LinkToDvObject}
-            linkProps={{ name: item.name, type: item.type, id: item.id, version: item.version }}>
+            linkProps={{
+              name: item.name,
+              type: item.type,
+              id: item.id,
+              persistentId: item.persistentId,
+              version: item.version
+            }}>
             {item.name}
           </Breadcrumb.Item>
         )
@@ -60,22 +63,22 @@ const LinkToDvObject = ({
   name,
   type,
   id,
+  persistentId,
   version
 }: {
   name: string
   type: string
   id: string
+  persistentId?: string
   version?: string
 }) => {
-  const idParam =
-    type === DvObjectType.DATASET
-      ? { ...(id ? { persistentId: id } : {}) }
-      : { ...(id ? { id } : {}) }
-
   return (
     <LinkToPage
       page={dvObjectTypeToRoute[type]}
-      searchParams={{ ...idParam, ...(version ? { version } : {}) }}>
+      searchParams={{
+        ...(persistentId ? { persistentId } : { id }),
+        ...(version ? { version } : {})
+      }}>
       {name}
     </LinkToPage>
   )

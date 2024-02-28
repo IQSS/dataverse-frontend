@@ -1,4 +1,7 @@
-import { DvObjectOwnerNode as JSUpwardHierarchyNode } from '@iqss/dataverse-client-javascript'
+import {
+  DvObjectOwnerNode as JSUpwardHierarchyNode,
+  DvObjectType as JSDvObjectType
+} from '@iqss/dataverse-client-javascript'
 import { DvObjectType, UpwardHierarchyNode } from '../../domain/models/UpwardHierarchyNode'
 
 export class JSUpwardHierarchyNodeMapper {
@@ -12,12 +15,13 @@ export class JSUpwardHierarchyNodeMapper {
       jsUpwardHierarchyNode.displayName,
       JSUpwardHierarchyNodeMapper.toDvObjectType(jsUpwardHierarchyNode.type),
       jsUpwardHierarchyNode.identifier,
-      undefined, // TODO: get from JSUpwardHierarchyNode once it's implemented
+      jsUpwardHierarchyNode.persistentIdentifier,
+      jsUpwardHierarchyNode.version,
       JSUpwardHierarchyNodeMapper.toUpwardHierarchyNode(jsUpwardHierarchyNode.isPartOf)
     )
   }
 
-  private static toDvObjectType(type: string): DvObjectType {
+  private static toDvObjectType(type: JSDvObjectType): DvObjectType {
     switch (type) {
       case 'DATAVERSE':
         return DvObjectType.COLLECTION

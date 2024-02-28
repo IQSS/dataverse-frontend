@@ -9,6 +9,7 @@ export class UpwardHierarchyNode {
     public readonly name: string,
     public readonly type: DvObjectType,
     public readonly id: string,
+    public readonly persistentId?: string,
     public readonly version?: string,
     public readonly parent?: UpwardHierarchyNode
   ) {}
