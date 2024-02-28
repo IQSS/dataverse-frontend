@@ -1,4 +1,4 @@
-import { File as JSFile } from '@iqss/dataverse-client-javascript'
+import { File as JSFile, Dataset as JSDataset } from '@iqss/dataverse-client-javascript'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FilePreview } from '../../domain/models/FilePreview'
 import { JSFileMetadataMapper } from './JSFileMetadataMapper'
@@ -11,6 +11,8 @@ import {
   DvObjectType,
   UpwardHierarchyNode
 } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { JSDatasetVersionMapper } from '../../../dataset/infrastructure/mappers/JSDatasetVersionMapper'
+import { JSDatasetMapper } from '../../../dataset/infrastructure/mappers/JSDatasetMapper'
 
 export class JSFileMapper {
   static toFilePreview(
@@ -34,13 +36,20 @@ export class JSFileMapper {
 
   static toFile(
     jsFile: JSFile,
-    datasetVersion: DatasetVersion,
+    jsDataset: JSDataset,
+    datasetCitation: string,
     citation: string,
     downloadsCount: number,
     permissions: FilePermissions,
     thumbnail?: string,
     tabularData?: FileTabularData
   ): File {
+    const datasetVersion = JSDatasetVersionMapper.toVersion(
+      jsDataset.versionId,
+      jsDataset.versionInfo,
+      JSDatasetMapper.toDatasetTitle(jsDataset.metadataBlocks),
+      datasetCitation
+    )
     return {
       id: this.toFileId(jsFile.id),
       name: this.toFileName(jsFile.name),

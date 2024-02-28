@@ -88,7 +88,25 @@ const fileExpectedData = (id: number): File => {
   return {
     id: id,
     name: 'blob',
-    datasetVersion: DatasetVersionMother.createRealistic(), // TODO: add dataset version to get file
+    datasetVersion: {
+      labels: [
+        { semanticMeaning: 'dataset', value: 'Draft' },
+        { semanticMeaning: 'warning', value: 'Unpublished' }
+      ],
+      id: 74,
+      title: "Darwin's Finches",
+      number: {
+        majorNumber: undefined,
+        minorNumber: undefined
+      },
+      publishingStatus: DatasetPublishingStatus.DRAFT,
+      citation:
+        'Finch, Fiona, 2024, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/M6AWUM" target="_blank">https://doi.org/10.5072/FK2/M6AWUM</a>, Root, DRAFT VERSION',
+      isLatest: true,
+      isInReview: false,
+      latestVersionPublishingStatus: DatasetPublishingStatus.DRAFT,
+      someDatasetVersionHasBeenReleased: false
+    },
     access: {
       restricted: false,
       latestVersionRestricted: false,
@@ -819,7 +837,12 @@ describe('File JSDataverse Repository', () => {
         expect(file.ingest).to.deep.equal(expectedFile.ingest)
         expect(file.access).to.deep.equal(expectedFile.access)
         expect(file.permissions).to.deep.equal(expectedFile.permissions)
-        expect(file.datasetVersion).to.deep.equal(expectedFile.datasetVersion)
+        expect(file.datasetVersion.number).to.deep.equal(expectedFile.datasetVersion.number)
+        expect(file.datasetVersion.title).to.deep.equal(expectedFile.datasetVersion.title)
+        expect(file.datasetVersion.publishingStatus).to.deep.equal(
+          expectedFile.datasetVersion.publishingStatus
+        )
+        expect(file.datasetVersion.labels).to.deep.equal(expectedFile.datasetVersion.labels)
         expect(file.citation).to.match(expectedFileCitationRegex)
         compareMetadata(file.metadata, expectedFile.metadata)
       })
