@@ -290,12 +290,12 @@ describe('Dataset JSDataverse Repository', () => {
 
   it('gets the total dataset count', async () => {
     await DatasetHelper.destroyAll()
-    await datasetRepository.getTotalDatasetsCount().then((count) => {
+    await datasetRepository.getTotalDatasetsCount('root').then((count) => {
       expect(count).to.equal(0)
     })
     await DatasetHelper.createAndPublish()
 
-    await datasetRepository.getTotalDatasetsCount().then((count) => {
+    await datasetRepository.getTotalDatasetsCount('root').then((count) => {
       expect(count).to.equal(1)
     })
   })
@@ -306,7 +306,7 @@ describe('Dataset JSDataverse Repository', () => {
     const datasetResponse = await DatasetHelper.createAndPublish()
     const paginationInfo = new DatasetPaginationInfo(1, 20)
 
-    await datasetRepository.getAll(paginationInfo).then((datasetPreview) => {
+    await datasetRepository.getAll('root', paginationInfo).then((datasetPreview) => {
       expect(datasetPreview.length).to.equal(1)
       expect(datasetPreview[0].version.title).to.equal("Darwin's Finches")
       expect(datasetPreview[0].persistentId).to.equal(datasetResponse.persistentId)
