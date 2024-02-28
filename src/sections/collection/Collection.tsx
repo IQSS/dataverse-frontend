@@ -49,7 +49,7 @@ export function Collection({ datasetRepository, id, page }: CollectionProps) {
           <AddDataActionsButton />
         </div>
       )}
-      <DatasetsList datasetRepository={datasetRepository} page={page} />
+      <DatasetsList datasetRepository={datasetRepository} page={page} collectionId={id} />
     </Row>
   )
 }

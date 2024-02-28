@@ -15,13 +15,17 @@ export default meta
 type Story = StoryObj<typeof DatasetsList>
 
 export const Default: Story = {
-  render: () => <DatasetsList datasetRepository={new DatasetMockRepository()} />
+  render: () => <DatasetsList datasetRepository={new DatasetMockRepository()} collectionId="root" />
 }
 
 export const Loading: Story = {
-  render: () => <DatasetsList datasetRepository={new DatasetLoadingMockRepository()} />
+  render: () => (
+    <DatasetsList datasetRepository={new DatasetLoadingMockRepository()} collectionId="root" />
+  )
 }
 
 export const NoResults: Story = {
-  render: () => <DatasetsList datasetRepository={new NoDatasetsMockRepository()} />
+  render: () => (
+    <DatasetsList datasetRepository={new NoDatasetsMockRepository()} collectionId="root" />
+  )
 }
