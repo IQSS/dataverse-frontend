@@ -28,14 +28,14 @@
   </a>
   <h3 align="center">Dataverse Frontend</h3>
   <p align="center">
-    _Tagline_
+    <em>A New Way To Create and View Datasets &amp; Collections!</em>
     <br />
     <a href="https://guides.dataverse.org/en/latest/user/index.html"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/">View Demo</a>·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Report Bug</a>·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Request Feature</a>.
+    <a href="https://beta.dataverse.org/spa">View Demo (BETA)</a>·
+    <a href="https://github.com/IQSS/dataverse-frontend/issues">Report Bug</a>·
+    <a href="https://github.com/IQSS/dataverse-frontend/issues">Request Feature</a>.
   </p>
 </div>
 
@@ -46,31 +46,28 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="#built-with">What is Dataverse?</a></li>
-        <li><a href="#built-with">What is Dataverse Frontend & How do they differ?</a></li>
-        <li><a href="#built-with">How existing Dataverse installations may be affected</a></li>
+        <li><a href="#demo-videos">Demo Videos</a></li>
+        <li><a href="#what-is-dataverse">What is Dataverse?</a></li>
+        <li><a href="#what-is-dataverse-frontend">What is Dataverse Frontend & How do they differ?</a></li>
+        <li><a href="#beta-testing-environemtn">Beta Testing Environment</a></li>
       </ul>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation & Setup</a></li>
-        <li><a href="#prerequisites">Running the environment</a></li>
+        <li><a href="#installation-setup">Installation & Setup</a></li>
+        <li><a href="#running-the-project-locally">Running the Project Locally</a></li>
       </ul>
     </li>
-    <li><a href="#installation">Additional Configurations</a>
+    <li><a href="#deployment">Deployment</a>
       <ul>
-        <li><a href="#prerequisites">Available Scripts</a></li>
-        <li><a href="#prerequisites">Deployment (AWS & Payara)</a></li>
-        <li><a href="#installation">Running Tests</a></li>
-        <li><a href="#installation">Storybook</a></li>
+        <li><a href="#examples-for-aws-and-payara">Examples for AWS and Payara</a></li>
       </ul>
     </li>
-    <li><a href="#installation">Development</a></li>
-    <li><a href="#installation">Components</a></li>
-    <li><a href="#installation">Code</a></li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#components">Components</a></li>
+    <li><a href="#code">Code</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -98,7 +95,8 @@
 
 The Dataverse Project is an open source web application to share, preserve, cite, explore, and analyze research data. It facilitates making data available to others, and allows you to replicate others' work more easily. Researchers, journals, data authors, publishers, data distributors, and affiliated institutions all receive academic credit and web visibility. Read more on the [![Dataverse Website][dataverse-web-link]](https://dataverse.org/about)
 
-### What is Dataverse Frontend & How do they differ?
+### What is Dataverse Frontend?
+__**&amp; How do they differ?**__
 
 The Dataverse Frontend repository is an initiative undertaken in 2023 to modernize the UI and design of the Dataverse Project by creating a stand-alone interface to allow users and organizations to implement their own Dataverse installations and utilize the JavaScript framework of their choice.
 
@@ -123,15 +121,30 @@ The Dataverse Frontend repository is an initiative undertaken in 2023 to moderni
 - Cypress testing automation
 - Storybook for UI Component Library
 
+
+### Beta Testing Environment
+
+_Track our progress and compare it to the current Dataverse application!_
+
+To make the SPA Frontend accesible and testable by people interested in the project, there is a remote beta testing environment that includes the latest changes developed both for the frontend application and the Dataverse backend application (develop branches).
+
+This environment follows the "all-in-one" solution described above, where both applications coexist on a Payara server.
+
+Environment updates are carried out automatically through GitHub actions, present both in this repository and in the Dataverse backend repository, which deploy the develop branches when any change is pushed to them.
+
+The environment is accessible through the following URLs:
+
+ - Dataverse Frontend SPA @ [beta.dataverse.org/spa](https://beta.dataverse.org/spa)
+ - Dataverse JSF @ [beta.dataverse.org](https://beta.dataverse.org)
+
+
 ### How existing Dataverse installations may be affected
 
 - The existing Dataverse API will be added to and extended from the present backend architecture while the existing UI and current Dataverse functionalities are preserved.
 - The SPA will continue its life as a separate application, supported on its own maintenance schedule.
 - When the SPA has matured enough for an official release, we will switch to the new version and the old backend (Link to repository) will be moved into maintenance mode with no new features being introduced and focusing only on critical bugfixes.
 
-<!-- DIFFERENCES FROM DATAVERSE -->
-
-#### Changes from the original JSF application
+#### Changes from the original Dataverse JSF application
 
 <details>
 <summary>Expand</summary>
@@ -174,12 +187,12 @@ The decision of this change is made on the assumption that Solr may not be requi
 
 <!-- TODO:  -->
 
-To get a local copy up and running follow these simple example steps.
+_To get a local copy up and running follow these simple example steps._
 
 ### Prerequisites
 
 1. Node **node >=16** and NPM **npm >=8**. Recommended versions for this project are `node v19` and `npm v9`.
-1. Docker. We use [![DockerDesktop][DockerBadge]][Docker-url].
+1. Docker. We use Docker Desktop, but the Docker CLI will also work! [![DockerDesktop][DockerDesktop-badge]][DockerDesktop-url].
 
 1. Add your NPM and GitHub Tokens. In order to connect with the Dataverse API, develoeprs will need to install [@iqss/dataverse-client-javascript](https://github.com/IQSS/dataverse-client-javascript/pkgs/npm/dataverse-client-javascript) from the GitHub registry by following the steps outlined below:
 1. Navigate to the project directory root and duplicate the `.npmrc.example` file, saving the copy as `.npmrc`.
@@ -422,25 +435,25 @@ We are working to provide different preconfigured automated deployment options, 
 
 The current automated deployment options are available within the GitHub **`deploy`** workflow, which is designed to be run manually from GitHub Actions. The deployment option is selected via a dropdown menu, as well as the target environment.
 
-#### Examples of deployment environments
+#### Examples for AWS and Payara
 
 <details>
-<summary><strong>AWS S3 Deployment</strong></summary>
+<summary><strong>AWS S3 Deployment [Expand]</strong></summary>
 
 This option will build and deploy the application to a remote S3 bucket.
 
 For this workflow to work, a GitHub environment must be configured with the following environment secrets:
 
- - AWS_ACCESS_KEY_ID
- - AWS_SECRET_ACCESS_KEY
- - AWS_S3_BUCKET_NAME
- - AWS_DEFAULT_REGION
+ - `AWS_ACCESS_KEY_ID`
+ - `AWS_SECRET_ACCESS_KEY`
+ - `AWS_S3_BUCKET_NAME`
+ - `AWS_DEFAULT_REGION`
 
 Note that for the deployment to the S3 bucket to succeed, you must make the following changes to the bucket via the S3 web interface (or equivalent changes using aws-cli or similar tools):
 
  - Under "Permissions", "Permissions overview", "Block public access (bucket settings)", click "Edit", then uncheck "Block all public access" and save.
  - Under "Properties", "Static website hosting", click "Edit" and enable it. Change "Index document" and "Error document" to "index.html".
- - Under "Bucket policy", click "Edit" and paste the following policy (changing <BUCKET_NAME> to your bucket name) and save.
+ - Under "Bucket policy", click "Edit" and paste the following policy (changing `<BUCKET_NAME>` to your bucket name) and save.
 
 ```json
 {
@@ -465,7 +478,7 @@ You should see the deployed app at `http://[BUCKET-NAME].s3-website-[REGION].ama
 </details>
 
 <details>
-<summary><strong>Payara Deployment</strong></summary>
+<summary><strong>Payara Deployment [Expand]</strong></summary>
 
 This option will build and deploy the application to a remote Payara server.
 
@@ -473,50 +486,16 @@ This option is intended for an "all-in-one" solution, where the Dataverse backen
 
 For this workflow to work, a GitHub environment must be configured with the following environment secrets:
 
- - PAYARA_INSTANCE_HOST
- - PAYARA_INSTANCE_USERNAME
- - PAYARA_INSTANCE_SSH_PRIVATE_KEY
+ - `PAYARA_INSTANCE_HOST`
+ - `PAYARA_INSTANCE_USERNAME`
+ - `PAYARA_INSTANCE_SSH_PRIVATE_KEY`
 
 It is important that the remote instance is correctly pre-configured, with the Payara server running, and a service account for Dataverse with the corresponding SSH key pair established.
 
 A base path for the frontend application can be established on the remote server by setting the corresponding field in the workflow inputs. This mechanism prevents conflicts between the frontend application and any pre-existing deployed application running on Payara, which can potentially be a Dataverse backend. This way, only the routes with the base path included will redirect to the frontend application.
 
-```json
-{
-	"Version": "2012-10-17",
-	"Statement": [
-		{
-			"Sid": "PublicReadGetObject",
-			"Principal": "*",
-			"Effect": "Allow",
-			"Action": [
-				"s3:GetObject"
-			],
-			"Resource": [
-				"arn:aws:s3:::<BUCKET_NAME>/*"
-			]
-		}
-	]
-}
-```
-You should see the deployed app at `http://[BUCKET-NAME].s3-website-[REGION].amazonaws.com`, for example; `http://my-dataverse-bucket.s3-website-us-east-1.amazonaws.com/`
-
 </details>
 
-### Beta Testing Environment
-
-_Easily set up a local development environment!_
-
-To make the SPA Frontend accesible and testable by people interested in the project, there is a remote beta testing environment that includes the latest changes developed both for the frontend application and the Dataverse backend application (develop branches).
-
-This environment follows the "all-in-one" solution described above, where both applications coexist on a Payara server.
-
-Environment updates are carried out automatically through GitHub actions, present both in this repository and in the Dataverse backend repository, which deploy the develop branches when any change is pushed to them.
-
-The environment is accessible through the following URLs:
-
- - SPA: https://beta.dataverse.org/spa
- - JSF: https://beta.dataverse.org
 
 <!-- USAGE EXAMPLES -->
 
@@ -528,30 +507,24 @@ _For more examples, please refer to the [Documentation](https://guides.dataverse
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- COMPONENTS -->
+<!-- TODO: COMPONENTS -->
 
-## Components
+<!-- ## Components -->
 
-<!-- CODE -->
+<!-- TODO: CODE -->
 
-## Code
+<!-- ## Code -->
 
-<!-- TESTING -->
-
-<!-- KNOWN ISSUES -->
-
-<!-- GETTING HELP -->
+<!-- TODO: KNOWN ISSUES -->
 
 <!-- ROADMAP -->
 
 ## Roadmap
 
-<!--TODO: Roadmap-->
-
 - [ ] Add Changelog
-- [ ] Add back to top links
 - [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
+- [ ] Add "Components" document to easily copy & paste sections of the readme
+- [ ] More...
 
 
 See the [open issues](https://github.com/IQSS/dataverse-frontend/issues) for a full list of proposed features (and known issues).
@@ -566,13 +539,13 @@ Contributions are what make the open source community such an amazing place to l
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 
-We love PRs! Read the Contributor Guidelines for more info. Say hello, share your tips/work, and spread the love on <!--TODO-->
+We love PRs! Read the Contributor Guidelines for more info. Say hello, share your tips/work, and spread the love on ... <!--TODO-->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- RELATED & OFFICIAL PROJECTS  -->
+<!-- TODO: RELATED & OFFICIAL PROJECTS  -->
 
-<!-- HELPFUL LINKS -->
+<!-- TODO: HELPFUL LINKS -->
 
 <!-- LICENSE -->
 
@@ -588,7 +561,7 @@ Distributed under the Apache License, Version 2.0. See `LICENSE` for more inform
 
 Email us with software installation questions. Please note our response time is generally 24 business hours.
 
-<!-- Social Links -->
+<!-- TODO: Social Links -->
 
 ### For developers and Dataverse Repositories
 
@@ -600,17 +573,13 @@ Chat with us at chat.dataverse.org.
 
 Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+Project Link: [https://github.com/IQSS/dataverse-frontend](https://github.com/IQSS/dataverse-frontend)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ACKNOWLEDGMENTS -->
 
 ## Acknowledgments
-
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
-
-- [Img Shields](https://shields.io)
 
 <a href="https://www.chromatic.com/"><img src="https://user-images.githubusercontent.com/321738/84662277-e3db4f80-af1b-11ea-88f5-91d67a5e59f6.png" width="153" height="30" alt="Chromatic" /></a>
 
@@ -739,5 +708,93 @@ This section should list any major frameworks/libraries used to bootstrap your p
 [issue-badge]: https://img.shields.io/github/issues/IQSS/dataverse-frontend?style=for-the-badge
 [issue-url]: https://github.com/IQSS/dataverse-frontend/issues
 
+<!-- Docker Desktop -->
+
+[DockerDesktop-badge]: https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
+[DockerDesktop-url]: https://www.docker.com/products/docker-desktop/
+
+
+[AmazonS3-badge]: https://img.shields.io/badge/AmazonS3-569A31?style=for-the-badge&logo=amazons3&logoColor=white
+[AmazonS3-url]: https://aws.amazon.com/
+
+[Payara-url]: https://www.payara.fish/
+
+
+
 [product-screenshot]: images/screenshot.png
 
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
+
+[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
+[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
+[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
+[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
+[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
+[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/othneildrew
+[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
+[JQuery-url]: https://jquery.com
+
+<!-- [![npm version][npm-badge]][npm-url]
+[![npm downloads][downloads-badge]][npm-url]
+[![npm bundle size][size-badge]][size-url]
+[![Open issues][issues-badge]][issues-url]
+
+[![semantic-release][semantic-badge]][semantic-url]
+
+[![CI][lint-badge]][lint-url]
+[![CI][tsc-badge]][tsc-url]
+[![CI][build-badge]][build-url]
+[![CI][test-badge]][test-url]
+[![CI][test-e2e-badge]][test-e2e-url]
+
+
+
+[![CI][deploy-storybook-badge]][deploy-storybook-url]
+[![CI][npm-release-badge]][npm-release-url] -->
+
+[npm-url]: https://www.npmjs.com/package/react-parallax-tilt
+[npm-badge]: https://img.shields.io/npm/v/react-parallax-tilt.svg
+[size-url]: https://bundlephobia.com/package/react-parallax-tilt
+[size-badge]: https://badgen.net/bundlephobia/minzip/react-parallax-tilt
+[downloads-badge]: https://img.shields.io/npm/dm/react-parallax-tilt.svg?color=blue
+[lint-badge]: https://github.com/mkosir/react-parallax-tilt/actions/workflows/lint.yml/badge.svg
+[lint-url]: https://github.com/mkosir/react-parallax-tilt/actions/workflows/lint.yml
+[tsc-badge]: https://github.com/mkosir/react-parallax-tilt/actions/workflows/tsc.yml/badge.svg
+[tsc-url]: https://github.com/mkosir/react-parallax-tilt/actions/workflows/tsc.yml
+[build-badge]: https://github.com/mkosir/react-parallax-tilt/actions/workflows/build.yml/badge.svg
+[build-url]: https://github.com/mkosir/react-parallax-tilt/actions/workflows/build.yml
+[test-badge]: https://github.com/mkosir/react-parallax-tilt/actions/workflows/test.yml/badge.svg
+[test-url]: https://react-parallax-tilt-test-unit-report.netlify.app/
+[test-e2e-badge]: https://github.com/mkosir/react-parallax-tilt/actions/workflows/test-e2e.yml/badge.svg
+[test-e2e-url]: https://react-parallax-tilt-test-e2e-report.netlify.app/
+[deploy-storybook-badge]: https://github.com/mkosir/react-parallax-tilt/actions/workflows/deploy-storybook.yml/badge.svg
+[deploy-storybook-url]: https://github.com/mkosir/react-parallax-tilt/actions/workflows/deploy-storybook.yml
+[npm-release-badge]: https://github.com/mkosir/react-parallax-tilt/actions/workflows/npm-release.yml/badge.svg
+[npm-release-url]: https://github.com/mkosir/react-parallax-tilt/actions/workflows/npm-release.yml
+[semantic-badge]: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
+[semantic-url]: https://github.com/semantic-release/semantic-release
+
+<!-- https://github.com/IQSS/dataverse-frontend/forks -->
+<!-- https://github.com/IQSS/dataverse-frontend/custom-properties -->
+<!-- https://github.com/IQSS/dataverse-frontend/tags  -->
+<!--  -->
+<!-- https://www.npmjs.com/package/@iqss/dataverse-design-system -->
+
+<!-- NOTES -->
+<!-- TODO: https://keepachangelog.com/en/1.1.0/ -->
+<!-- TODO: https://github.com/cfpb/open-source-project-template/blob/main/opensource-checklist.md -->
+<!-- TODO: MAKEFILE -->
+<!-- TODO: API Docs -->
+<!-- TODO: https://github.com/monicahq/monica?tab=readme-ov-file#contribute -->
+<!-- TODO: Class Reference Documentation | https://github.com/vhesener/Closures/blob/master/README.md#--class-reference-documentation -->
+<!-- TODO: Documentation: https://github.com/timber/timber?tab=readme-ov-file#documentation-1 -->
+<!-- https://github.com/timber/docs -->
+<!-- TODO: Multiple installation avenues?  -->
+<!-- TODO: Credits: https://github.com/cfpb/open-source-project-template -->
+<!-- TODO: Links -->
+
+<!-- TODO: Developer Guide | https://www.codenameone.com/developer-guide.html -->
