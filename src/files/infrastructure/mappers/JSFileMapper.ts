@@ -1,6 +1,7 @@
 import {
-  DvObjectOwnerNode as JSUpwardHierarchyNode,
-  File as JSFile
+  File as JSFile,
+  Dataset as JSDataset,
+  DvObjectOwnerNode as JSUpwardHierarchyNode
 } from '@iqss/dataverse-client-javascript'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FilePreview } from '../../domain/models/FilePreview'
@@ -14,6 +15,8 @@ import {
   DvObjectType,
   UpwardHierarchyNode
 } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { JSDatasetVersionMapper } from '../../../dataset/infrastructure/mappers/JSDatasetVersionMapper'
+import { JSDatasetMapper } from '../../../dataset/infrastructure/mappers/JSDatasetMapper'
 import { JSUpwardHierarchyNodeMapper } from '../../../shared/hierarchy/infrastructure/mappers/JSUpwardHierarchyNodeMapper'
 
 export class JSFileMapper {
@@ -38,13 +41,20 @@ export class JSFileMapper {
 
   static toFile(
     jsFile: JSFile,
-    datasetVersion: DatasetVersion,
+    jsDataset: JSDataset,
+    datasetCitation: string,
     citation: string,
     downloadsCount: number,
     permissions: FilePermissions,
     thumbnail?: string,
     tabularData?: FileTabularData
   ): File {
+    const datasetVersion = JSDatasetVersionMapper.toVersion(
+      jsDataset.versionId,
+      jsDataset.versionInfo,
+      JSDatasetMapper.toDatasetTitle(jsDataset.metadataBlocks),
+      datasetCitation
+    )
     return {
       id: this.toFileId(jsFile.id),
       name: this.toFileName(jsFile.name),

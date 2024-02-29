@@ -13,8 +13,7 @@ describe('File', () => {
   })
 
   describe('Visit the File Page as a logged in user', () => {
-    it.skip('successfully loads a file in draft mode', () => {
-      // TODO: remove the skip when js-dataverse retrieves dataset version info
+    it('successfully loads a file in draft mode', () => {
       cy.wrap(
         DatasetHelper.createWithFile(FileHelper.create()).then(
           (datasetResponse) => datasetResponse.file
@@ -73,8 +72,7 @@ describe('File', () => {
         })
     })
 
-    it.skip('successfully loads a file when passing the id and datasetVersion', () => {
-      // TODO: remove the skip when js-dataverse accepts dataset version
+    it('successfully loads a file when passing the id and datasetVersion', () => {
       cy.wrap(
         DatasetHelper.createWithFileAndPublish(FileHelper.create()).then(
           (datasetResponse) => datasetResponse.file
