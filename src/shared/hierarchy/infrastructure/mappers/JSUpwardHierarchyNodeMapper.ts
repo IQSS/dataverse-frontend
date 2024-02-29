@@ -23,14 +23,12 @@ export class JSUpwardHierarchyNodeMapper {
 
   private static toDvObjectType(type: JSDvObjectType): DvObjectType {
     switch (type) {
-      case 'DATAVERSE':
+      case JSDvObjectType.DATAVERSE:
         return DvObjectType.COLLECTION
-      case 'DATASET':
+      case JSDvObjectType.DATASET:
         return DvObjectType.DATASET
-      case 'FILE':
+      case JSDvObjectType.FILE:
         return DvObjectType.FILE
-      default:
-        throw new Error(`Unknown DvObjectType: ${type}`)
     }
   }
 }
