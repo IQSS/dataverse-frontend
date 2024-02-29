@@ -25,21 +25,27 @@ export function BreadcrumbsGenerator({ hierarchy }: BreadcrumbGeneratorProps) {
 
         if (isFirst) {
           return (
-            <Breadcrumb.Item key={index}>
-              <LinkToPage page={Route.HOME}>{item.name}</LinkToPage>
+            <Breadcrumb.Item
+              key={index}
+              linkAs={LinkToPage}
+              linkProps={{ page: Route.HOME, children: <>{item.name}</> }}>
+              {item.name}
             </Breadcrumb.Item>
           )
         }
 
         return (
-          <Breadcrumb.Item key={index}>
-            <LinkToDvObject
-              name={item.name}
-              type={item.type}
-              id={item.id}
-              persistentId={item.persistentId}
-              version={item.version}
-            />
+          <Breadcrumb.Item
+            key={index}
+            linkAs={LinkToDvObject}
+            linkProps={{
+              name: item.name,
+              type: item.type,
+              id: item.id,
+              persistentId: item.persistentId,
+              version: item.version
+            }}>
+            {item.name}
           </Breadcrumb.Item>
         )
       })}
@@ -62,7 +68,7 @@ const LinkToDvObject = ({
 }: {
   name: string
   type: string
-  id?: string
+  id: string
   persistentId?: string
   version?: string
 }) => {
@@ -70,8 +76,7 @@ const LinkToDvObject = ({
     <LinkToPage
       page={dvObjectTypeToRoute[type]}
       searchParams={{
-        ...(id ? { id } : {}),
-        ...(persistentId ? { persistentId } : {}),
+        ...(persistentId ? { persistentId } : { id }),
         ...(version ? { version } : {})
       }}>
       {name}

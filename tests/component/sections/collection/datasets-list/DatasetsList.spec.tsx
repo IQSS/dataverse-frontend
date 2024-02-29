@@ -1,5 +1,5 @@
 import { DatasetRepository } from '../../../../../src/dataset/domain/repositories/DatasetRepository'
-import { DatasetsList } from '../../../../../src/sections/home/datasets-list/DatasetsList'
+import { DatasetsList } from '../../../../../src/sections/collection/datasets-list/DatasetsList'
 import { DatasetPaginationInfo } from '../../../../../src/dataset/domain/models/DatasetPaginationInfo'
 import { DatasetPreviewMother } from '../../../dataset/domain/models/DatasetPreviewMother'
 
@@ -13,7 +13,7 @@ describe('Datasets List', () => {
   })
 
   it('renders skeleton while loading', () => {
-    cy.customMount(<DatasetsList datasetRepository={datasetRepository} />)
+    cy.customMount(<DatasetsList datasetRepository={datasetRepository} collectionId="root" />)
 
     cy.findByTestId('datasets-list-skeleton').should('exist')
     datasets.forEach((dataset) => {
@@ -23,16 +23,17 @@ describe('Datasets List', () => {
 
   it('renders no datasets message when there are no datasets', () => {
     datasetRepository.getAll = cy.stub().resolves([])
-    cy.customMount(<DatasetsList datasetRepository={datasetRepository} />)
+    cy.customMount(<DatasetsList datasetRepository={datasetRepository} collectionId="root" />)
 
     cy.findByText(/This dataverse currently has no datasets./).should('exist')
   })
 
   it('renders the datasets list', () => {
-    cy.customMount(<DatasetsList datasetRepository={datasetRepository} />)
+    cy.customMount(<DatasetsList datasetRepository={datasetRepository} collectionId="root" />)
 
     cy.wrap(datasetRepository.getAll).should(
       'be.calledOnceWith',
+      'root',
       new DatasetPaginationInfo(1, 10, totalDatasetsCount)
     )
 
@@ -45,29 +46,35 @@ describe('Datasets List', () => {
   })
 
   it('renders the datasets list with the correct header on a page different than the first one ', () => {
-    cy.customMount(<DatasetsList datasetRepository={datasetRepository} />)
+    cy.customMount(<DatasetsList datasetRepository={datasetRepository} collectionId="root" />)
 
     cy.findByRole('button', { name: '6' }).click()
 
     cy.wrap(datasetRepository.getAll).should(
       'be.calledWith',
+      'root',
       new DatasetPaginationInfo(1, 10, totalDatasetsCount).goToPage(6)
     )
     cy.findByText('51 to 60 of 200 Datasets').should('exist')
   })
 
   it('renders the datasets list correct page when passing the page number as a query param', () => {
-    cy.customMount(<DatasetsList datasetRepository={datasetRepository} page={5} />)
+    cy.customMount(
+      <DatasetsList datasetRepository={datasetRepository} page={5} collectionId="root" />
+    )
 
     cy.wrap(datasetRepository.getAll).should(
       'be.calledWith',
+      'root',
       new DatasetPaginationInfo(1, 10, totalDatasetsCount).goToPage(5)
     )
     cy.findByText('41 to 50 of 200 Datasets').should('exist')
   })
 
   it('renders the page not found message when the page number is not found', () => {
-    cy.customMount(<DatasetsList datasetRepository={datasetRepository} page={100} />)
+    cy.customMount(
+      <DatasetsList datasetRepository={datasetRepository} page={100} collectionId="root" />
+    )
 
     cy.findByText('Page Number Not Found').should('exist')
   })

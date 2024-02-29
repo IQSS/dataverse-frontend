@@ -8,6 +8,7 @@ import { DatasetPreview } from '../../../dataset/domain/models/DatasetPreview'
 
 export function useDatasets(
   datasetRepository: DatasetRepository,
+  collectionId: string,
   onPaginationInfoChange: (paginationInfo: DatasetPaginationInfo) => void,
   paginationInfo: DatasetPaginationInfo
 ) {
@@ -17,7 +18,7 @@ export function useDatasets(
   const [totalDatasetsCount, setTotalDatasetsCount] = useState<TotalDatasetsCount>()
 
   const fetchTotalDatasetsCount: () => Promise<TotalDatasetsCount> = () => {
-    return getTotalDatasetsCount(datasetRepository)
+    return getTotalDatasetsCount(datasetRepository, collectionId)
       .then((totalDatasetsCount: TotalDatasetsCount) => {
         setTotalDatasetsCount(totalDatasetsCount)
         if (totalDatasetsCount !== paginationInfo.totalItems) {
@@ -41,7 +42,7 @@ export function useDatasets(
         setIsLoading(false)
         return
       }
-      return getDatasets(datasetRepository, paginationInfo)
+      return getDatasets(datasetRepository, collectionId, paginationInfo)
         .then((datasets: DatasetPreview[]) => {
           setDatasets(datasets)
           setIsLoading(false)

@@ -2,7 +2,7 @@ import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { faker } from '@faker-js/faker'
 
-describe('Home Page', () => {
+describe('Collection Page', () => {
   const title = faker.lorem.sentence()
   before(() => {
     TestsUtils.setup()
@@ -13,7 +13,7 @@ describe('Home Page', () => {
     TestsUtils.login()
   })
 
-  it('successfully loads', () => {
+  it('successfully loads root collection when accessing the home', () => {
     cy.visit('/spa')
     cy.findAllByText(/Root/i).should('exist')
   })
@@ -164,5 +164,12 @@ describe('Home Page', () => {
       cy.go('forward')
       cy.findByText('1 to 10 of 12 Datasets').should('exist')
     })
+  })
+
+  it('displays a collection different from the root when accessing a subcollection', () => {
+    cy.visit('/spa/collections?id=subcollection')
+
+    cy.findAllByText(/Subcollection/i).should('exist')
+    cy.findByText(/Dataverse Admin/i).should('exist')
   })
 })

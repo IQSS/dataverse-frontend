@@ -4,7 +4,8 @@ import {
   DatasetMetadataBlock as JSDatasetMetadataBlock,
   DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataFields as JSDatasetMetadataFields,
-  DatasetUserPermissions as JSDatasetPermissions
+  DatasetUserPermissions as JSDatasetPermissions,
+  DvObjectOwnerNode as JSUpwardHierarchyNode
 } from '@iqss/dataverse-client-javascript'
 import {
   Dataset,
@@ -29,6 +30,7 @@ import {
   DvObjectType,
   UpwardHierarchyNode
 } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { JSUpwardHierarchyNodeMapper } from '../../../shared/hierarchy/infrastructure/mappers/JSUpwardHierarchyNodeMapper'
 
 export class JSDatasetMapper {
   static toDataset(
@@ -69,7 +71,7 @@ export class JSDatasetMapper {
         jsDatasetFilesTotalOriginalDownloadSize,
         jsDatasetFilesTotalArchivalDownloadSize
       ),
-      JSDatasetMapper.toHierarchyNode(jsDataset.persistentId, version), // TODO: get hierarchy from js-dataverse https://github.com/IQSS/dataverse-client-javascript/issues/122
+      JSDatasetMapper.toHierarchy(jsDataset.persistentId, version, jsDataset.isPartOf),
       undefined, // TODO: get dataset thumbnail from js-dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl,
       requestedVersion
@@ -229,15 +231,18 @@ export class JSDatasetMapper {
     ]
   }
 
-  static toHierarchyNode(persistentId: string, version: DatasetVersion): UpwardHierarchyNode {
-    const rootCollection = new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
+  static toHierarchy(
+    persistentId: string,
+    version: DatasetVersion,
+    jsUpwardHierarchyNode: JSUpwardHierarchyNode
+  ): UpwardHierarchyNode {
     return new UpwardHierarchyNode(
       version.title,
       DvObjectType.DATASET,
-      undefined,
       persistentId,
+      undefined,
       version.number.toString(),
-      rootCollection
+      JSUpwardHierarchyNodeMapper.toUpwardHierarchyNode(jsUpwardHierarchyNode)
     )
   }
 }

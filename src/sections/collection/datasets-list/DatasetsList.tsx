@@ -13,17 +13,19 @@ import { PageNumberNotFound } from './PageNumberNotFound'
 
 interface DatasetsListProps {
   datasetRepository: DatasetRepository
+  collectionId: string
   page?: number
 }
 
 const NO_DATASETS = 0
-export function DatasetsList({ datasetRepository, page }: DatasetsListProps) {
+export function DatasetsList({ datasetRepository, page, collectionId }: DatasetsListProps) {
   const { setIsLoading } = useLoading()
   const [paginationInfo, setPaginationInfo] = useState<DatasetPaginationInfo>(
     new DatasetPaginationInfo(page)
   )
   const { datasets, isLoading, pageNumberNotFound } = useDatasets(
     datasetRepository,
+    collectionId,
     setPaginationInfo,
     paginationInfo
   )

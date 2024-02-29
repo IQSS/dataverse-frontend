@@ -1,5 +1,5 @@
 import { DatasetPreviewMother } from '../../../../dataset/domain/models/DatasetPreviewMother'
-import { DatasetCardThumbnail } from '../../../../../../src/sections/home/datasets-list/dataset-card/DatasetCardThumbnail'
+import { DatasetCardThumbnail } from '../../../../../../src/sections/collection/datasets-list/dataset-card/DatasetCardThumbnail'
 
 describe('DatasetCardThumbnail', () => {
   it('should render the thumbnail', () => {

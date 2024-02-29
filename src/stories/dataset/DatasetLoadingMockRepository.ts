@@ -4,7 +4,7 @@ import { DatasetPreview } from '../../dataset/domain/models/DatasetPreview'
 
 export class DatasetLoadingMockRepository extends DatasetMockRepository {
   // eslint-disable-next-line unused-imports/no-unused-vars
-  getAll(paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
+  getAll(collectionId: string, paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
     return new Promise(() => {})
   }
 }

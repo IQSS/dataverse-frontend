@@ -1,4 +1,4 @@
-import { DatasetCardHeader } from '../../../../../../src/sections/home/datasets-list/dataset-card/DatasetCardHeader'
+import { DatasetCardHeader } from '../../../../../../src/sections/collection/datasets-list/dataset-card/DatasetCardHeader'
 import { DatasetPreviewMother } from '../../../../dataset/domain/models/DatasetPreviewMother'
 
 describe('DatasetCardHeader', () => {

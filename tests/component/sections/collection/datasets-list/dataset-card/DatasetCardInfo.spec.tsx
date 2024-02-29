@@ -1,7 +1,7 @@
 import { DatasetPreviewMother } from '../../../../dataset/domain/models/DatasetPreviewMother'
 import { DateHelper } from '../../../../../../src/shared/helpers/DateHelper'
-import styles from '../../../../../../src/sections/home/datasets-list/dataset-card/DatasetCard.module.scss'
-import { DatasetCardInfo } from '../../../../../../src/sections/home/datasets-list/dataset-card/DatasetCardInfo'
+import styles from '../../../../../../src/sections/collection/datasets-list/dataset-card/DatasetCard.module.scss'
+import { DatasetCardInfo } from '../../../../../../src/sections/collection/datasets-list/dataset-card/DatasetCardInfo'
 
 describe('DatasetCardInfo', () => {
   it('should render the dataset info', () => {

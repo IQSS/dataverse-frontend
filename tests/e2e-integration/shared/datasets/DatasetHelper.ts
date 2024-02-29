@@ -16,8 +16,12 @@ export interface DatasetFileResponse {
 }
 
 export class DatasetHelper extends DataverseApiHelper {
-  static async create(): Promise<DatasetResponse> {
-    return this.request<DatasetResponse>(`/dataverses/root/datasets`, 'POST', newDatasetData)
+  static async create(collectionId = 'root'): Promise<DatasetResponse> {
+    return this.request<DatasetResponse>(
+      `/dataverses/${collectionId}/datasets`,
+      'POST',
+      newDatasetData
+    )
   }
 
   static async createWithTitle(title: string): Promise<DatasetResponse> {

@@ -1,17 +1,17 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { Home } from '../../../sections/home/Home'
+import { Collection } from '../../../sections/collection/Collection'
 import { WithI18next } from '../../WithI18next'
-import { NoDatasetsMessage } from '../../../sections/home/datasets-list/NoDatasetsMessage'
+import { NoDatasetsMessage } from '../../../sections/collection/datasets-list/NoDatasetsMessage'
 import { WithLoggedInUser } from '../../WithLoggedInUser'
 
-const meta: Meta<typeof Home> = {
-  title: 'Sections/Home/NoDatasetsMessage',
-  component: Home,
+const meta: Meta<typeof Collection> = {
+  title: 'Sections/Collection/NoDatasetsMessage',
+  component: Collection,
   decorators: [WithI18next]
 }
 
 export default meta
-type Story = StoryObj<typeof Home>
+type Story = StoryObj<typeof Collection>
 
 export const AnonymousUser: Story = {
   render: () => <NoDatasetsMessage />
