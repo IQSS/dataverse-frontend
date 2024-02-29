@@ -5,7 +5,7 @@ import { DatasetFactory } from './sections/dataset/DatasetFactory'
 import { PageNotFound } from './sections/page-not-found/PageNotFound'
 import { CreateDatasetFactory } from './sections/create-dataset/CreateDatasetFactory'
 import { FileFactory } from './sections/file/FileFactory'
-import { HomeFactory } from './sections/home/HomeFactory'
+import { CollectionFactory } from './sections/collection/CollectionFactory'
 import { DatasetNonNumericVersion } from './dataset/domain/models/Dataset'
 
 const router = createBrowserRouter(
@@ -17,7 +17,11 @@ const router = createBrowserRouter(
       children: [
         {
           path: Route.HOME,
-          element: HomeFactory.create()
+          element: CollectionFactory.create()
+        },
+        {
+          path: Route.COLLECTIONS,
+          element: CollectionFactory.create()
         },
         {
           path: Route.DATASETS,

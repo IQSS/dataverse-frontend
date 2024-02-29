@@ -72,7 +72,7 @@ export function FileMetadata({
                 </Trans>
                 <code className={styles.code}>
                   {BASE_URL}
-                  {metadata.downloadUrls.original}
+                  {removeQueryParams(metadata.downloadUrls.original)}
                 </code>
               </Col>
             </Row>
@@ -181,4 +181,8 @@ export function FileMetadata({
       </Accordion.Item>
     </Accordion>
   )
+}
+
+function removeQueryParams(urlString: string): string {
+  return urlString.split('?')[0]
 }

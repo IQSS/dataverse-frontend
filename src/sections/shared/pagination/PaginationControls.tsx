@@ -48,7 +48,8 @@ export function PaginationControls({
     onPaginationInfoChange(paginationInfo)
     if (updateQueryParam) {
       if (searchParams.get('page') !== paginationInfo.page.toString()) {
-        setSearchParams({ page: paginationInfo.page.toString() })
+        searchParams.set('page', paginationInfo.page.toString())
+        setSearchParams(searchParams)
       }
     }
   }, [paginationInfo.page])
@@ -61,7 +62,8 @@ export function PaginationControls({
     if (updateQueryParam) {
       if (searchParams.get('page') !== paginationInfo.page.toString()) {
         const page = searchParams.get('page') ? parseInt(searchParams.get('page') as string) : 1
-        setSearchParams({ page: page.toString() }, { replace: true })
+        searchParams.set('page', page.toString())
+        setSearchParams(searchParams, { replace: true })
         goToPage(page)
       }
     }

@@ -8,15 +8,15 @@ import { DatasetPreviewMother } from '../../../tests/component/dataset/domain/mo
 import { DatasetFormFields } from '../../dataset/domain/models/DatasetFormFields'
 export class DatasetMockRepository implements DatasetRepository {
   // eslint-disable-next-line unused-imports/no-unused-vars
-  getAll(paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
+  getAll(collectionId: string, paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetPreviewMother.createManyRealistic(paginationInfo.pageSize))
       }, 1000)
     })
   }
-
-  getTotalDatasetsCount(): Promise<TotalDatasetsCount> {
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  getTotalDatasetsCount(collectionId: string): Promise<TotalDatasetsCount> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(200)
