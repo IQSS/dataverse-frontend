@@ -103,6 +103,7 @@ describe('FileMetadata', () => {
   })
 
   it('renders the download url if the user has file download permissions', () => {
+    cy.viewport(1200, 900)
     const permissions = FilePermissionsMother.createWithDownloadFileGranted()
 
     file.metadata.downloadUrls.original = '/api/datafile/3?format=original'
