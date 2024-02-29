@@ -1,4 +1,8 @@
-import { File as JSFile, Dataset as JSDataset } from '@iqss/dataverse-client-javascript'
+import {
+  File as JSFile,
+  Dataset as JSDataset,
+  DvObjectOwnerNode as JSUpwardHierarchyNode
+} from '@iqss/dataverse-client-javascript'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FilePreview } from '../../domain/models/FilePreview'
 import { JSFileMetadataMapper } from './JSFileMetadataMapper'
@@ -13,6 +17,7 @@ import {
 } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { JSDatasetVersionMapper } from '../../../dataset/infrastructure/mappers/JSDatasetVersionMapper'
 import { JSDatasetMapper } from '../../../dataset/infrastructure/mappers/JSDatasetMapper'
+import { JSUpwardHierarchyNodeMapper } from '../../../shared/hierarchy/infrastructure/mappers/JSUpwardHierarchyNodeMapper'
 
 export class JSFileMapper {
   static toFilePreview(
@@ -59,7 +64,7 @@ export class JSFileMapper {
       metadata: JSFileMetadataMapper.toFileMetadata(jsFile, downloadsCount, thumbnail, tabularData),
       ingest: JSFileIngestMapper.toFileIngest(),
       permissions: permissions,
-      hierarchy: JSFileMapper.toHierarchyNode(jsFile.name, jsFile.id, datasetVersion) // TODO: get hierarchy from js-dataverse https://github.com/IQSS/dataverse-client-javascript/issues/122
+      hierarchy: JSFileMapper.toHierarchy(jsFile.name, jsFile.id, jsFile.isPartOf)
     }
   }
 
@@ -71,27 +76,18 @@ export class JSFileMapper {
     return jsFileName
   }
 
-  static toHierarchyNode(
+  static toHierarchy(
     name: string,
     id: number,
-    datasetVersion: DatasetVersion
+    jsUpwardHierarchyNode: JSUpwardHierarchyNode | undefined
   ): UpwardHierarchyNode {
-    const rootNode = new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
-    const datasetNode = new UpwardHierarchyNode(
-      datasetVersion.title,
-      DvObjectType.DATASET,
-      datasetVersion.number.toString(),
-      undefined,
-      undefined,
-      rootNode
-    )
     return new UpwardHierarchyNode(
       name,
       DvObjectType.FILE,
       id.toString(),
       undefined,
       undefined,
-      datasetNode
+      JSUpwardHierarchyNodeMapper.toUpwardHierarchyNode(jsUpwardHierarchyNode)
     )
   }
 }

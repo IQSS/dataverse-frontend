@@ -4,7 +4,7 @@ import { useSession } from '../../session/SessionContext'
 import { Route } from '../../Route.enum'
 
 export function NoDatasetsMessage() {
-  const { t } = useTranslation('home')
+  const { t } = useTranslation('collection')
   const { user } = useSession()
 
   return (
