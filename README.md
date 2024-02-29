@@ -88,15 +88,15 @@
 
 ### Demo videos
 
-- 2023-08-01: [View mode of the dataset page](https://groups.google.com/g/dataverse-community/c/cxZ3Bal_-uo/m/h3kh3iVNCwAJ)
-- 2023-12-13: [Files table on the dataset page](https://groups.google.com/g/dataverse-community/c/w_rEMddESYc/m/6F7QC1p-AgAJ)
+- [Dataset Page General Overview](https://groups.google.com/g/dataverse-community/c/cxZ3Bal_-uo/m/h3kh3iVNCwAJ) (August, 2023)
+- [Dataset Page Files Table](https://groups.google.com/g/dataverse-community/c/w_rEMddESYc/m/6F7QC1p-AgAJ) (December, 2023)
 
 ### What is Dataverse?
 
 The Dataverse Project is an open source web application to share, preserve, cite, explore, and analyze research data. It facilitates making data available to others, and allows you to replicate others' work more easily. Researchers, journals, data authors, publishers, data distributors, and affiliated institutions all receive academic credit and web visibility. Read more on the [![Dataverse Website][dataverse-web-link]](https://dataverse.org/about)
 
 ### What is Dataverse Frontend?
-__**&amp; How do they differ?**__
+_&amp; How do they differ?_
 
 The Dataverse Frontend repository is an initiative undertaken in 2023 to modernize the UI and design of the Dataverse Project by creating a stand-alone interface to allow users and organizations to implement their own Dataverse installations and utilize the JavaScript framework of their choice.
 
@@ -134,8 +134,8 @@ Environment updates are carried out automatically through GitHub actions, presen
 
 The environment is accessible through the following URLs:
 
- - Dataverse Frontend SPA @ [beta.dataverse.org/spa](https://beta.dataverse.org/spa)
- - Dataverse JSF @ [beta.dataverse.org](https://beta.dataverse.org)
+ - Dataverse Frontend SPA: [beta.dataverse.org/spa](https://beta.dataverse.org/spa)
+ - Dataverse JSF: [beta.dataverse.org](https://beta.dataverse.org)
 
 
 ### How existing Dataverse installations may be affected
@@ -190,30 +190,32 @@ The decision of this change is made on the assumption that Solr may not be requi
 _To get a local copy up and running follow these simple example steps._
 
 ### Prerequisites
+[![DockerDesktop][DockerDesktop-badge]][DockerDesktop-url]
 
 1. Node **node >=16** and NPM **npm >=8**. Recommended versions for this project are `node v19` and `npm v9`.
-1. Docker. We use Docker Desktop, but the Docker CLI will also work! [![DockerDesktop][DockerDesktop-badge]][DockerDesktop-url].
+2. Docker! We use Docker Desktop, but the Docker CLI will also work!
+3. Add your NPM and GitHub Tokens. In order to connect with the Dataverse API, develoeprs will need to install [@iqss/dataverse-client-javascript](https://github.com/IQSS/dataverse-client-javascript/pkgs/npm/dataverse-client-javascript) from the GitHub registry by following the steps outlined below:
+4. Navigate to the project directory root and duplicate the `.npmrc.example` file, saving the copy as `.npmrc`.
+    >   ```sh
+    >   # root project directory
+    >   cp .npmrc.example .npmrc
+    >   ```
+5. Follow the steps outlined below to generate a personal access token used to interface with the GitHub API. Read more about access tokens on [GitHub Docs](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app)
 
-1. Add your NPM and GitHub Tokens. In order to connect with the Dataverse API, develoeprs will need to install [@iqss/dataverse-client-javascript](https://github.com/IQSS/dataverse-client-javascript/pkgs/npm/dataverse-client-javascript) from the GitHub registry by following the steps outlined below:
-1. Navigate to the project directory root and duplicate the `.npmrc.example` file, saving the copy as `.npmrc`.
-   >   ```sh
-   >      # root project directory
-   >       cp .npmrc.example .npmrc
-   >   ```
-1. Follow the steps outlined below to generate a [personal access token](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app) used to interface with the GitHub API.
+    >  __Getting a GitHub token__
+    >  1. Go to your GitHub **[Personal Access Tokens](https://github.com/settings/tokens)** settings
+    >  2. Select **_Generate new token (classic)_**
+    >  3. Give the token a name and select scope **_`read:packages`_**
+    >  4. Copy the generated token and replace the string _**`YOUR_GITHUB_AUTH_TOKEN`**_ in the **_`.npmrc`_** file in the project base.
+    >       Now, you should be able to install the [Dataverse JavaScript](https://github.com/IQSS/dataverse-client-javascript/pkgs/npm/dataverse-client-javascript) client using npm.
 
-> 1. Getting a GitHub token
->    1. Go to your GitHub **[Personal Access Tokens](https://github.com/settings/tokens)** settings
->    2. Select **_Generate new token (classic)_**
->    3. Give the token a name and select scope **_`read:packages`_**
->    4. Copy the generated token and replace the string _**`YOUR_GITHUB_AUTH_TOKEN`**_ in the **_`.npmrc`_** file in the project base.
->       Now, you should be able to install the [Dataverse JavaScript](https://github.com/IQSS/dataverse-client-javascript/pkgs/npm/dataverse-client-javascript) client using npm.
+```properties
+# .npmrc
 
-```plaintext
 legacy-peer-deps=true
-
- //npm.pkg.github.com/:_authToken=<YOUR_GITHUB_AUTH_TOKEN>
- @iqss:registry=https://npm.pkg.github.com/
+# js-dataverse registry
+//npm.pkg.github.com/:_authToken=<YOUR_GITHUB_AUTH_TOKEN>
+@iqss:registry=https://npm.pkg.github.com/
 ```
 
 ### Installation & Setup
@@ -234,10 +236,12 @@ Please check this announcement from Create React App repository [facebook/create
 2. Build the UI Library, needed for running the application.
 
 ```sh
-  cd packages/design-system && npm run build
+# root project directory
+cd packages/design-system && npm run build
 ```
 
-#### Additional scrips available
+### Additional scrips available
+
 
 **Running &amp; building the app:**
 
@@ -263,23 +267,30 @@ npm run preview
 
 Runs the Storybook in the development mode.
 
-There are 2 Storybook instances, one for the general Design System and one for the Dataverse Frontend component specifications.
+There are 2 Storybook instances, one for the general Design System and one for the Dataverse Frontend component specifications. Both should be started automatically and available at:
+- Dataverse Frontend Storybook: [http://localhost:6006/](http://localhost:6006/)
+- Dataverse Design System Storybook: [http://localhost:6007/](http://localhost:6007/)
 
 ```sh
 # $ cd packages/design-system
-npm run [build-]storybook
+npm run storybook
 
-# 'npm run storybook` should automatically open the following urls in your default browser
-# Dataverse Frontend Storybook at: http://localhost:6006/
-# Dataverse Design System Storybook at: http://localhost:6007/
+# 'npm run storybook` should automatically open in your default browser
+
+# $ cd packages/design-system
+npm run build-storybook
+
 ```
+
 
 Note that both Storybook instances are also published to Chromatic as part of the build and merge processes, located at:
 
 [![DataverseFrontend][DataverseFrontend-Chromatic]][DataverseFrontend-Chromatic-url]
+
 <!-- https://www.chromatic.com/builds?appId=646f68aa9beb01b35c599acd -->
 
 [![DataverseDesignSystem][DataverseDesignSystem-Chromatic]][DataverseDesignSystem-Chromatic-url]
+
 <!-- https://www.chromatic.com/builds?appId=646fbe232a8d3b501a1943f3 -->
 
 <!-- ```sh
@@ -306,33 +317,39 @@ npm run test:coverage
 
 The project includes [@cypress/grep](https://www.npmjs.com/package/@cypress/grep) for running specific tests.
 
-
 Some examples used by the grep library are below for reference:
 
 ```sh
-    # run only the tests with "auth user" in the title
-    $ npx cypress run --env grep="auth user"
-    # run tests with "hello" or "auth user" in their titles
-    # by separating them with ";" character
-    $ npx cypress run --env grep="hello; auth user"
+# root project directory
+
+# run only the tests with "auth user" in the title
+$ npx cypress run --env grep="auth user"
+# run tests with "hello" or "auth user" in their titles
+# by separating them with ";" character
+$ npx cypress run --env grep="hello; auth user"
 ```
-To really target specific tests, add `--spec ...` argument
+
+
+To really target specific tests, add `--spec` argument
 
 ```sh
-    $ npx cypress run --env grep="loads the restricted files when the user is logged in as owner"
-    \ --spec tests/e2e-integration/e2e/sections/dataset/Dataset.spec.tsx
-```
-**Repeat and burn tests**
+# root project directory
 
+$ npx cypress run --env grep="loads the restricted files when the user is logged in as owner"
+\ --spec tests/e2e-integration/e2e/sections/dataset/Dataset.spec.tsx
+```
+
+
+**Repeat and burn tests**
 You can run the selected tests multiple times by using the `burn=N` parameter. For example, run all all the tests in the spec A five times using:
 
 ```sh
-    $ npx cypress run --env burn=5 --spec tests/e2e-integration/e2e/sections/dataset/Dataset.spec.tsx
+# root project directory
+$ npx cypress run --env burn=5 --spec tests/e2e-integration/e2e/sections/dataset/Dataset.spec.tsx
 ```
 
 
 **Formatting and Linting:**
-
 Launch the linter. To attempt to automatically fix any errors found, use `npm run lint:fix`
 
 ```sh
@@ -342,7 +359,9 @@ npm run lint
 npm run lint:fix
 ```
 
-Launch the prettier formatter. We recommend you to configure your IDE to run prettier on save. See the official IDE setups used by the IQSS team at [LINK TO REPO](#)
+
+Launch the prettier formatter. We recommend you to configure your IDE to run prettier on save. See the official IDE setups used by the IQSS team at [vscode-settings](https://github.com/IQSS/vscode-settings) on GitHub.
+
 
 ```sh
 # root project directory
@@ -359,7 +378,7 @@ npm run format
 
 A containerized environment, oriented to local development, is available to be run from the repository.
 
-This environment contains a dockerized instance of the Dataverse backend with its dependent services (database, mailserver, etc), as well as an npm development server running the SPA frontend (With code autoupdating).
+This environment contains a dockerized instance of the Dataverse backend with its dependent services (database, mailserver, etc), as well as an npm development server running the SPA frontend (With code watching).
 
 This environment is intended for locally testing any functionality that requires access to the Dataverse API from the SPA frontend.
 
@@ -378,21 +397,25 @@ Foo
 </details> -->
 
 **Run the environment**
+As the script argument, add the name of the Dataverse image tag you want to deploy.
 
 ```sh
 # /dev-env/ directory
-./run-env.sh <dataverse_image_tag>
+
+# Installs and runs project off latest tagged container image
+$ ./run-env.sh <DATAVERSE_IMAGE_TAG>
+
+# Removes ...
+$ ./rm-env.sh
 ```
-As the script argument, add the name of the Dataverse image tag you want to deploy.
+Note that the image tag in the docker registry must to be pre pushed, otherwise the script will fail. You can find the existing tags on DockerHub [@gdcc/dataverse](https://hub.docker.com/r/gdcc/dataverse/tags)
 
-Note that the image tag in the docker registry must to be pre pushed, otherwise the script will fail.
-
-If you are running the script for the first time, it may take a while, since npm install has to install all the dependencies. This can also happen if you added new dependencies to package.json.
+If you are running the script for the first time, it may take a while, since npm has to install all project dependencies. This can also happen if you added new dependencies to `package.json`, or used the _uninstall_ script to remove current project files and shut down any running containers.
 
 Once the script has finished, you will be able to access Dataverse via:
 
-[http://localhost:8000/spa](http://localhost:8000/spa): SPA Frontend
-[http://localhost:8000](http://localhost:8000): Dataverse Backend and JSF Frontend
+- Dataverse SPA Frontend: [http://localhost:8000/spa](http://localhost:8000/spa)
+- Dataverse JSF Application: [http://localhost:8000](http://localhost:8000)
 
 Note: The Dataverse configbaker takes some time to start the application, so the application will not be accessible until the bootstrapping is complete.
 
@@ -401,31 +424,17 @@ If you want to add test data (collections and datasets) to the Dataverse instanc
 
 ```sh
 # /dev-env/ directory
-./add-env-data.sh
+$ ./add-env-data.sh
 ```
-Note: The above command uses the dataverse-sample-data repository whose scripts occasionally fail, so some of the test data may not be added.
+Note: The above command uses the [dataverse-sample-data](https://github.com/IQSS/dataverse-sample-data) repository whose scripts occasionally fail, so some of the test data may not be added.
 
 <!-- ### Running Tests
 
 <details>
-<summary>Or setup with npm link</summary>
-Clone this repo on your machine, navigate to its location in the terminal and run:
+<summary>TODO</summary>
 
-```bash
-npm install
-npm link # link your local repo to your global packages
-npm run build:watch # build the files and watch for changes
-```
-
-Clone project repo that you wish to test with react-parallax-tilt library and run:
-
-```bash
-npm install
-npm link react-parallax-tilt # link your local copy into this project's node_modules
-npm start
-```
-
-</details> -->
+</details>
+-->
 
 ### Deployment
 
@@ -451,7 +460,7 @@ For this workflow to work, a GitHub environment must be configured with the foll
 
 Note that for the deployment to the S3 bucket to succeed, you must make the following changes to the bucket via the S3 web interface (or equivalent changes using aws-cli or similar tools):
 
- - Under "Permissions", "Permissions overview", "Block public access (bucket settings)", click "Edit", then uncheck "Block all public access" and save.
+ - Under "_Permissions_", "_Permissions overview_", "_Block public access (bucket settings)_", click "_Edit_", then __uncheck__ "_Block all public access_" and save.
  - Under "Properties", "Static website hosting", click "Edit" and enable it. Change "Index document" and "Error document" to "index.html".
  - Under "Bucket policy", click "Edit" and paste the following policy (changing `<BUCKET_NAME>` to your bucket name) and save.
 
@@ -537,7 +546,7 @@ See the [open issues](https://github.com/IQSS/dataverse-frontend/issues) for a f
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "`enhancement`".
 
 We love PRs! Read the Contributor Guidelines for more info. Say hello, share your tips/work, and spread the love on ... <!--TODO-->
 
