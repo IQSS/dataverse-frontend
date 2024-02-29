@@ -105,6 +105,7 @@ describe('FileMetadata', () => {
   it('renders the download url if the user has file download permissions', () => {
     const permissions = FilePermissionsMother.createWithDownloadFileGranted()
 
+    file.metadata.downloadUrls.original = '/api/datafile/3?format=original'
     cy.customMount(
       <FileMetadata
         name={file.name}
@@ -115,7 +116,7 @@ describe('FileMetadata', () => {
     )
 
     cy.findByText('Download URL').should('exist')
-    cy.findByText(file.metadata.downloadUrls.original, { exact: false }).should('exist')
+    cy.findByText('http://localhost:8000/api/datafile/3').should('exist')
     cy.findByText(
       'Use the Download URL in a Wget command or a download manager to avoid interrupted downloads, time outs or other failures.'
     ).should('exist')
