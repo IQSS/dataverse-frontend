@@ -99,6 +99,8 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           component: true
+        env:
+          CYPRESS_BASE_URL: http://localhost:8000
 
       - name: Cypress run Design System
         uses: cypress-io/github-action@v5
