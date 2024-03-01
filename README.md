@@ -209,7 +209,7 @@ _To get a local copy up and running follow these simple example steps._
     >  4. Copy the generated token and replace the string _**`YOUR_GITHUB_AUTH_TOKEN`**_ in the **_`.npmrc`_** file in the project base.
     >       Now, you should be able to install the [Dataverse JavaScript](https://github.com/IQSS/dataverse-client-javascript/pkgs/npm/dataverse-client-javascript) client using npm.
 
-```properties
+```npmrc
 # .npmrc
 
 legacy-peer-deps=true
@@ -228,10 +228,14 @@ _Below is an example of how you can instruct your audience on installing and set
 # root project directory
 npm install
 ```
+> [!WARNING]
+> You may see a message about vulnerabilities after running this command.
+>
+> Please check this announcement from Create React App repository [facebook/create-react-app#11174](https://github.com/facebook/create-react-app/issues/11174). These vulnerabilities will not be included in the production build since they come from libraries only used during development.
 
-You may see a message about vulnerabilities after running this command.
 
-Please check this announcement from Create React App repository [facebook/create-react-app#11174](https://github.com/facebook/create-react-app/issues/11174). These vulnerabilities will not be included in the production build since they come from libraries only used during development.
+
+
 
 2. Build the UI Library, needed for running the application.
 
@@ -611,7 +615,7 @@ This section should list any major frameworks/libraries used to bootstrap your p
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
+<center>
 <!-- NodeJS -->
 
 [![Node][Node.js]][Node-url]
@@ -633,6 +637,7 @@ This section should list any major frameworks/libraries used to bootstrap your p
 [TypeScript]: https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
 [Typescript-url]: https://typescriptlang.org/
 
+</center>
 <!-- Bootstrap -->
 
 [![Bootstrap][Bootstrap.com]][Bootstrap-url]
@@ -807,3 +812,12 @@ This section should list any major frameworks/libraries used to bootstrap your p
 <!-- TODO: Links -->
 
 <!-- TODO: Developer Guide | https://www.codenameone.com/developer-guide.html -->
+
+<!-- INFO: -->
+<!-- https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax -->
+<!-- https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting -->
+<!-- https://github.github.com/gfm/#introduction -->
+  <!-- https://github.github.com/gfm/#html-blocks -->
+  <!-- https://github.github.com/gfm/#link-reference-definitions -->
+
+***
