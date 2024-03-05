@@ -94,7 +94,7 @@ For more information and a list of additional resources, please visit this [disc
 
 ### What is Dataverse?
 
-The Dataverse Project is an open source web application to share, preserve, cite, explore, and analyze research data. It facilitates making data available to others, and allows you to replicate others' work more easily. Researchers, journals, data authors, publishers, data distributors, and affiliated institutions all receive academic credit and web visibility. Read more on the [Dataverse Website][dv_docs_dataverse_url]
+The Dataverse Project is an open source web application to share, preserve, cite, explore, and analyze research data. It facilitates making data available to others, and allows you to replicate others' work more easily. Researchers, journals, data authors, publishers, data distributors, and affiliated institutions all receive academic credit and web visibility. Read more on the [Dataverse Website][dv_docs_dataverse_url].
 
 <a name="what-is-dataverse-frontend"></a>
 
@@ -147,7 +147,6 @@ The environment is accessible through the following URLs:
 - The existing Dataverse API will be added to and extended from the present backend architecture while the existing UI and current Dataverse functionalities are preserved.
 - The SPA will continue its life as a separate application, supported on its own maintenance schedule.
 - When the SPA has matured enough for an official release, we will switch to the new version and the old backend (Link to repository) will be moved into maintenance mode with no new features being introduced and focusing only on critical bugfixes.
-
 
 <details>
   <summary><strong>Changes from the original Dataverse JSF application</strong></summary>
@@ -245,8 +244,7 @@ npm install
 cd packages/design-system && npm run build
 ```
 
-### Additional scrips available
-
+***
 
 **Running &amp; building the app:**
 
@@ -263,6 +261,7 @@ The application will actively watch the directory for changes and reload when ch
 ```bash
 # Build the app for production to the `/dist/` directory:
 npm run build
+
 # Locally preview the production build:
 npm run preview
 
@@ -297,74 +296,86 @@ Use the following commands to ensure your build passes checks for coding standar
 
 ```bash
 # root project directory
+
 # Launches the Cypress test runner for the end-to-end [or unit] tests:
 npm run test:e2e [test:unit]
+
 # If you prefer to see the tests executing in Cypress you can run:
 npm run cy:open-e2e [cy:open-unit]
+
 # See current code coverage
 npm run test:coverage
 
 ```
 
 
-**Using `grep` with Cypress**
+<details>
+<summary><strong>Using `grep` with Cypress</strong></summary>
 
-The project includes [@cypress/grep][_uses_lib_grep_url] for running specific tests.
+>The project includes [@cypress/grep][_uses_lib_grep_url] for running specific tests.
+>
+>Some examples used by the grep library are below for reference:
+>
+>```bash
+># root project directory
+>
+># run only the tests with "auth user" in the title
+>$ npx cypress run --env grep="auth user"
+>
+># run tests with "hello" or "auth user" in their titles by separating them with ";" character
+>$ npx cypress run --env grep="hello; auth user"
+>```
+>
+>To target specific tests, add `--spec` argument
+>
+>```bash
+># root project directory
+>
+>$ npx cypress run --env grep="loads the restricted files when the user is logged in as owner"
+>\ --spec tests/e2e-integration/e2e/sections/dataset/Dataset.spec.tsx
+>```
+>
+>
+>**Repeat and burn tests**
+>You can run the selected tests multiple times by using the `burn=N` parameter. For example, run all all the tests in the spec A five times using:
+>
+>```bash
+># root project directory
+>
+>$ npx cypress run --env burn=5 --spec tests/e2e-integration/e2e/sections/dataset/Dataset.spec.tsx
+>```
+>
 
-Some examples used by the grep library are below for reference:
-
-```bash
-# root project directory
-
-# run only the tests with "auth user" in the title
-$ npx cypress run --env grep="auth user"
-# run tests with "hello" or "auth user" in their titles
-# by separating them with ";" character
-$ npx cypress run --env grep="hello; auth user"
-```
-
-To target specific tests, add `--spec` argument
-
-```bash
-# root project directory
-
-$ npx cypress run --env grep="loads the restricted files when the user is logged in as owner"
-\ --spec tests/e2e-integration/e2e/sections/dataset/Dataset.spec.tsx
-```
-
-
-**Repeat and burn tests**
-You can run the selected tests multiple times by using the `burn=N` parameter. For example, run all all the tests in the spec A five times using:
-
-```bash
-# root project directory
-$ npx cypress run --env burn=5 --spec tests/e2e-integration/e2e/sections/dataset/Dataset.spec.tsx
-```
+</details>
 
 
 **Formatting and Linting:**
 
-Launch the linter. To attempt to automatically fix any errors found, use `npm run lint:fix`
+Launch the linter.
+
+To attempt to automatically fix any errors found, use `npm run lint:fix`
 
 ```bash
 # root project directory
+
 npm run lint
+
 # Find and fix linting errors automatically
 npm run lint:fix
 ```
 
-Launch the prettier formatter. We recommend you to configure your IDE to run prettier on save. See the official IDE setups used by the IQSS team at [vscode-settings][dv_repo_vscode_url] on GitHub.
+Launch the prettier formatter.
+
+We recommend you to configure your IDE to run prettier on save. See the official IDE setups used by the IQSS team at [vscode-settings][dv_repo_vscode_url] on GitHub.
 
 
 ```bash
 # root project directory
+
 npm run format
 ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <br>
-***
 
 ### Running the project Locally
 
@@ -405,12 +416,11 @@ If you want to add test data (collections and datasets) to the Dataverse instanc
 
 ```bash
 # /dev-env/ directory
+
 $ ./add-env-data.sh
 ```
 Note: The above command uses the [dataverse-sample-data][dv_repo_dvsampledata_url] repository whose scripts occasionally fail, so some of the test data may not be added.
 
-
-***
 
 ### Deployment
 
@@ -480,6 +490,9 @@ A base path for the frontend application can be established on the remote server
 
 </details>
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<br>
+
 
 ## Usage
 
@@ -533,22 +546,18 @@ Got Questions? Join the conversation in FOO.
 Find FOO videos and release overviews on our YouTube Channel, and check out the resources on our FOO org.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+<br>
 
 <!-- TODO: RELATED & OFFICIAL PROJECTS  -->
-
 <!-- TODO: HELPFUL LINKS -->
-
-<br />
-***
 
 ## License
 
 Distributed under the Apache License, Version 2.0. See `LICENSE` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+<br>
 
-<br />
-***
 
 ## Contact
 
@@ -572,8 +581,6 @@ Project Link: [https://github.com/IQSS/dataverse-frontend](https://github.com/IQ
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-<br />
-***
 
 <!-- ACKNOWLEDGMENTS -->
 
@@ -584,7 +591,7 @@ Project Link: [https://github.com/IQSS/dataverse-frontend](https://github.com/IQ
 Thanks to [Chromatic][_uses_chromatic_url] for providing the visual testing platform that helps us review UI changes and catch visual regressions.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
+<br>
 
 ***
 
@@ -593,12 +600,10 @@ Thanks to [Chromatic][_uses_chromatic_url] for providing the visual testing plat
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
+<br>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-
-
 
 
 <!-- Dataverse SPA -->
