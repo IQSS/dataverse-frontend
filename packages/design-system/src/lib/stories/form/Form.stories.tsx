@@ -254,11 +254,12 @@ export const FormValidation: Story = {
             </Form.Group.Label>
             <Form.Group.Input type="text" placeholder="Name" />
           </Form.Group>
-          <Form.Group as={Col} controlId="basic-form-affiliation">
+          <Form.Group as={Col} controlId="basic-form-affiliation" required>
             <Form.Group.Label message="The name of the entity affiliated with the author, e.g. an organization's name">
               Affiliation
             </Form.Group.Label>
             <Form.Group.Input type="text" placeholder="Affiliation" />
+            <Form.Group.Feedback type="invalid">Please provide an affiliation</Form.Group.Feedback>
           </Form.Group>
         </Row>
         <Row>

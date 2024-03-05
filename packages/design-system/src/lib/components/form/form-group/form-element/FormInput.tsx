@@ -9,18 +9,33 @@ interface FormInputProps extends React.HTMLAttributes<FormInputElement> {
   readOnly?: boolean
   withinMultipleFieldsGroup?: boolean
   name?: string
+  isValid?: boolean
+  isInvalid?: boolean
 }
 
 export function FormInput({
   type = 'text',
   name,
   readOnly,
+  isValid,
+  isInvalid,
   withinMultipleFieldsGroup,
   ...props
 }: FormInputProps) {
   return (
-    <FormElementLayout withinMultipleFieldsGroup={withinMultipleFieldsGroup}>
-      <FormBS.Control name={name} type={type} readOnly={readOnly} plaintext={readOnly} {...props} />
+    <FormElementLayout
+      withinMultipleFieldsGroup={withinMultipleFieldsGroup}
+      isInvalid={isInvalid}
+      isValid={isValid}>
+      <FormBS.Control
+        name={name}
+        type={type}
+        readOnly={readOnly}
+        plaintext={readOnly}
+        isValid={isValid}
+        isInvalid={isInvalid}
+        {...props}
+      />
     </FormElementLayout>
   )
 }
