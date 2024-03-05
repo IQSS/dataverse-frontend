@@ -23,4 +23,16 @@ describe('PaginationResultsInfo', () => {
 
     cy.findByText('1 Item').should('exist')
   })
+
+  it('shows the correct results info for infinite scrolling mode', () => {
+    cy.customMount(
+      <PaginationResultsInfo
+        paginationInfo={{ accumulated: 10, totalItems: 11, itemName: 'Dataset' } as any} // TODO:ME: Change this after making a custom class or something
+        forInfiniteScrolling
+      />
+    )
+    cy.findByText('10 of 11 Datasets seen').should('exist')
+  })
+
+  // TODO:ME Add test for when there are no items
 })

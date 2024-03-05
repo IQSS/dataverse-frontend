@@ -6,18 +6,29 @@ import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationI
 
 interface PaginationResultsInfoProps {
   paginationInfo: PaginationInfo<DatasetPaginationInfo | FilePaginationInfo>
+  forInfiniteScrolling?: boolean
 }
 
-export function PaginationResultsInfo({ paginationInfo }: PaginationResultsInfoProps) {
+export function PaginationResultsInfo({
+  paginationInfo,
+  forInfiniteScrolling = false
+}: PaginationResultsInfoProps) {
   const { t } = useTranslation('pagination')
+
   return (
     <span className={styles.results}>
-      {t('results', {
-        start: paginationInfo.pageStartItem,
-        end: paginationInfo.pageEndItem,
-        item: paginationInfo.itemName,
-        count: paginationInfo.totalItems
-      })}
+      {!forInfiniteScrolling
+        ? t('results', {
+            start: paginationInfo.pageStartItem,
+            end: paginationInfo.pageEndItem,
+            item: paginationInfo.itemName,
+            count: paginationInfo.totalItems
+          })
+        : t('accumulated', {
+            accumulated: paginationInfo.page * paginationInfo.pageSize,
+            count: paginationInfo.totalItems,
+            item: paginationInfo.itemName
+          })}
     </span>
   )
 }
