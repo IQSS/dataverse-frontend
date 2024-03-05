@@ -24,6 +24,8 @@ const rootNode = new UpwardHierarchyNode(
   undefined
 )
 
+const INFINITE_SCROLL_ENABLED = true
+
 export function Collection({ datasetRepository, id, page }: CollectionProps) {
   const { user } = useSession()
 
@@ -49,7 +51,12 @@ export function Collection({ datasetRepository, id, page }: CollectionProps) {
           <AddDataActionsButton />
         </div>
       )}
-      <DatasetsList datasetRepository={datasetRepository} page={page} collectionId={id} />
+      <DatasetsList
+        datasetRepository={datasetRepository}
+        page={page}
+        collectionId={id}
+        infiniteScrollEnabled={INFINITE_SCROLL_ENABLED}
+      />
     </Row>
   )
 }
