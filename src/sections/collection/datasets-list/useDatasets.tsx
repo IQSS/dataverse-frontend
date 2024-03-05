@@ -14,6 +14,7 @@ export function useDatasets(
 ) {
   const [pageNumberNotFound, setPageNumberNotFound] = useState<boolean>(false)
   const [datasets, setDatasets] = useState<DatasetPreview[]>([])
+  const [accumulatedDatasets, setAccumulatedDatasets] = useState<DatasetPreview[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [totalDatasetsCount, setTotalDatasetsCount] = useState<TotalDatasetsCount>()
 
@@ -45,6 +46,7 @@ export function useDatasets(
       return getDatasets(datasetRepository, collectionId, paginationInfo)
         .then((datasets: DatasetPreview[]) => {
           setDatasets(datasets)
+          setAccumulatedDatasets((currentDatasets) => [...currentDatasets, ...datasets])
           setIsLoading(false)
           return datasets
         })
@@ -67,6 +69,7 @@ export function useDatasets(
 
   return {
     datasets,
+    accumulatedDatasets,
     totalDatasetsCount,
     isLoading,
     pageNumberNotFound
