@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { createDataset } from '../../dataset/domain/useCases/createDataset'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { DatasetFormData } from './useDatasetFormData'
+import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
 
 export enum SubmissionStatus {
   NotSubmitted = 'NotSubmitted',
@@ -10,16 +10,25 @@ export enum SubmissionStatus {
   Errored = 'Errored'
 }
 
-export function useCreateDatasetForm(repository: DatasetRepository): {
+export function useCreateDatasetForm(
+  repository: DatasetRepository,
+  datasetIsValid: (formData: DatasetDTO) => boolean
+): {
   submissionStatus: SubmissionStatus
-  submitForm: (formData: DatasetFormData) => void
+  submitForm: (formData: DatasetDTO) => void
 } {
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
   )
 
-  const submitForm = (formData: DatasetFormData): void => {
+  const submitForm = (formData: DatasetDTO): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
+
+    console.log(datasetIsValid(formData))
+    if (!datasetIsValid(formData)) {
+      setSubmissionStatus(SubmissionStatus.Errored)
+      return
+    }
 
     createDataset(repository, formData)
       .then(() => setSubmissionStatus(SubmissionStatus.SubmitComplete))

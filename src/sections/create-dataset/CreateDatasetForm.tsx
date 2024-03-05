@@ -10,6 +10,7 @@ import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepo
 import { useDatasetFormData } from './useDatasetFormData'
 import { Route } from '../Route.enum'
 import { useNavigate } from 'react-router-dom'
+import { useDatasetValidator } from './useDatasetValidator'
 
 interface CreateDatasetFormProps {
   repository: DatasetRepository
@@ -19,8 +20,9 @@ export function CreateDatasetForm({ repository }: CreateDatasetFormProps) {
   const navigate = useNavigate()
   const { t } = useTranslation('createDataset')
   const { isLoading, setIsLoading } = useLoading()
-  const { formData, formDataErrors, updateFormData } = useDatasetFormData()
-  const { submissionStatus, submitForm } = useCreateDatasetForm(repository)
+  const { validationErrors, datasetIsValid } = useDatasetValidator()
+  const { formData, updateFormData } = useDatasetFormData(datasetIsValid)
+  const { submissionStatus, submitForm } = useCreateDatasetForm(repository, datasetIsValid)
 
   const handleFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
@@ -55,7 +57,7 @@ export function CreateDatasetForm({ repository }: CreateDatasetFormProps) {
         {submissionStatus === SubmissionStatus.SubmitComplete && (
           <p>{t('datasetForm.status.success')}</p>
         )}
-        {submissionStatus === SubmissionStatus.Errored && <p>{t('datasetForm.status.fail')}</p>}
+        {submissionStatus === SubmissionStatus.Errored && <p>{t('datasetForm.status.failed')}</p>}
         <Form
           onSubmit={(event: FormEvent<HTMLFormElement>) => {
             handleSubmit(event)
@@ -66,17 +68,18 @@ export function CreateDatasetForm({ repository }: CreateDatasetFormProps) {
               <Form.Group controlId="createDatasetTitle" required>
                 <Form.Group.Label>{t('datasetForm.title')}</Form.Group.Label>
                 <Form.Group.Input
-                  readOnly={submissionStatus === SubmissionStatus.IsSubmitting}
+                  disabled={submissionStatus === SubmissionStatus.IsSubmitting}
                   type="text"
                   name="metadataBlocks[0].fields.title"
                   placeholder="Dataset Title"
                   onChange={handleFieldChange}
                   withinMultipleFieldsGroup={false}
+                  isInvalid={validationErrors.metadataBlocks[0].fields.title !== ''}
                 />
+                <Form.Group.Feedback type="invalid">
+                  {String(validationErrors.metadataBlocks[0].fields.title)}
+                </Form.Group.Feedback>
               </Form.Group>
-              {formDataErrors.metadataBlocks[0].fields.title && (
-                <span>{String(formDataErrors.metadataBlocks[0].fields.title)}</span>
-              )}
             </Col>
           </Row>
           <SeparationLine />

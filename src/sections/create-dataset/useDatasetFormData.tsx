@@ -1,37 +1,23 @@
 import { useState } from 'react'
-import {
-  DatasetValidationResponse,
-  validateDataset
-} from '../../dataset/domain/useCases/validateDataset'
 import { DatasetDTO, initialDatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
 
-export type DatasetFormData = DatasetDTO
-export const initialState: DatasetFormData = JSON.parse(
-  JSON.stringify(initialDatasetDTO)
-) as DatasetFormData
-
-export const useDatasetFormData = (): {
-  formData: DatasetFormData
-  formDataErrors: DatasetFormData
+const initialState: DatasetDTO = JSON.parse(JSON.stringify(initialDatasetDTO)) as DatasetDTO
+export const useDatasetFormData = (
+  datasetIsValid: (formData: DatasetDTO) => boolean
+): {
+  formData: DatasetDTO
   updateFormData: (name: string, value: string) => void
 } => {
   const [formData, setFormData] = useState(initialState)
-  const [formDataErrors, setFormDataErrors] = useState(initialState)
 
   const updateFormData = (name: string, value: string) => {
     const updatedFormData = getUpdatedFormData(name, value)
+
     setFormData(updatedFormData)
-
-    validateFormData(updatedFormData)
+    datasetIsValid(updatedFormData)
   }
 
-  const validateFormData = (formData: DatasetFormData) => {
-    const validationResult: DatasetValidationResponse = validateDataset(formData)
-
-    setFormDataErrors(validationResult.errors)
-  }
-
-  const getUpdatedFormData = (name: string, value: string): DatasetFormData => {
+  const getUpdatedFormData = (name: string, value: string): DatasetDTO => {
     const matches = name.match(/metadataBlocks\[(\d+)\]\.fields\.(.+)/)
 
     if (matches) {
@@ -50,7 +36,6 @@ export const useDatasetFormData = (): {
 
   return {
     formData,
-    formDataErrors,
     updateFormData
   }
 }

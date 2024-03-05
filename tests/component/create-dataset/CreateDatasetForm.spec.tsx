@@ -2,7 +2,7 @@ import { CreateDatasetForm } from '../../../src/sections/create-dataset/CreateDa
 import { DatasetRepository } from '../../../src/dataset/domain/repositories/DatasetRepository'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
-describe('Form component', () => {
+describe('Create Dataset', () => {
   beforeEach(() => {
     datasetRepository.create = cy.stub().resolves()
   })
@@ -28,5 +28,15 @@ describe('Form component', () => {
 
     cy.findByText(/Save Dataset/i).click()
     cy.findByText('Form submitted successfully!')
+  })
+
+  it('shows an error message when the title is not provided', () => {
+    cy.customMount(<CreateDatasetForm repository={datasetRepository} />)
+
+    cy.findByText(/Save Dataset/i).click()
+
+    cy.findByText('Title is required.').should('exist')
+
+    cy.findByText('Error: Submission failed.').should('exist')
   })
 })
