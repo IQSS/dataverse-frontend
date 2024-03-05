@@ -11,6 +11,7 @@ interface FormInputProps extends React.HTMLAttributes<FormInputElement> {
   name?: string
   isValid?: boolean
   isInvalid?: boolean
+  disabled?: boolean
 }
 
 export function FormInput({
@@ -19,6 +20,7 @@ export function FormInput({
   readOnly,
   isValid,
   isInvalid,
+  disabled,
   withinMultipleFieldsGroup,
   ...props
 }: FormInputProps) {
@@ -34,6 +36,7 @@ export function FormInput({
         plaintext={readOnly}
         isValid={isValid}
         isInvalid={isInvalid}
+        disabled={disabled}
         {...props}
       />
     </FormElementLayout>

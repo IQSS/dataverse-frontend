@@ -12,7 +12,7 @@ interface FormProps {
 
 function Form({ validated, onSubmit, children, className }: PropsWithChildren<FormProps>) {
   return (
-    <FormBS validated={validated} onSubmit={onSubmit} className={className}>
+    <FormBS validated={validated} onSubmit={onSubmit} className={className} noValidate={true}>
       {children}
     </FormBS>
   )

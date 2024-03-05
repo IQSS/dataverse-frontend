@@ -121,4 +121,17 @@ describe('FormInput', () => {
     cy.findByText('Invalid username').should('not.be.visible')
     cy.findByText('Valid username').should('be.visible')
   })
+
+  it('renders the input disabled if the disabled prop is true', () => {
+    cy.mount(
+      <Form>
+        <Form.Group controlId="username">
+          <Form.Group.Label>Username</Form.Group.Label>
+          <Form.Group.Input type="text" disabled />
+        </Form.Group>
+      </Form>
+    )
+
+    cy.findByLabelText('Username').should('be.disabled')
+  })
 })

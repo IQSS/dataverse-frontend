@@ -113,6 +113,17 @@ export const ReadOnlyInput: Story = {
   )
 }
 
+export const DisabledInput: Story = {
+  render: () => (
+    <Form>
+      <Form.Group controlId="basic-form-email">
+        <Form.Group.Label>Email</Form.Group.Label>
+        <Form.Group.Input type="email" disabled defaultValue="text.email@example.com" />
+      </Form.Group>
+    </Form>
+  )
+}
+
 export const InputWithPrefix: Story = {
   render: () => (
     <Form>
