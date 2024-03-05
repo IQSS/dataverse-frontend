@@ -11,23 +11,12 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-<!-- TODO: Chat | Follow | GoogleGroups | Community of Practice | ?? -->
-<!-- https://github.com/flutter/flutter?tab=readme-ov-file -->
-<!--  [![Coverage][coverage-shield]][coverage-url]
-      [![Contributors][contributors-shield]][contributors-url]
-      [![Forks][forks-shield]][forks-url]
-      [![Stargazers][stars-shield]][stars-url]
-      [![Issues][issues-shield]][issues-url]
-      [![MIT License][license-shield]][license-url]
-      [![LinkedIn][linkedin-shield]][linkedin-url]  -->
-<!-- /Users/mattmangan/Desktop/SVG/Dataverse_Logo_Background2.png -->
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="#">
     <img src="https://github.com/IQSS/dataverse-frontend/assets/7512607/6c4d79e4-7be5-4102-88bd-dfa167dc79d3" alt="Logo" width="500">
-    <img src="https://github.com/IQSS/dataverse-frontend/assets/7512607/6986476f-39ba-46a4-9be0-f05cd8e92244" alt="Logo" width="500">
   </a>
   <h2 align="center">Dataverse Frontend</h2>
   <p align="center">
@@ -41,11 +30,11 @@
     <a href="https://github.com/IQSS/dataverse-frontend/issues">Report Bug</a> |
     <a href="https://github.com/IQSS/dataverse-frontend/issues">Request Feature</a>
   </p>
-<hr>
+<br>
 <h3>Progress Demo Videos</h3>
 <p align="center">
-  <a href="https://groups.google.com/g/dataverse-community/c/cxZ3Bal_-uo/m/h3kh3iVNCwAJ">Dataset Overview Page (Aug. '23)</a> |
-  <a href="https://groups.google.com/g/dataverse-community/c/w_rEMddESYc/m/6F7QC1p-AgAJ">Dataset Files Table (Dec. '23)</a>
+  <a href="https://groups.google.com/g/dataverse-community/c/cxZ3Bal_-uo/m/h3kh3iVNCwAJ">Dataset Overview Page </a><small>(Aug. '23)</small> |
+  <a href="https://groups.google.com/g/dataverse-community/c/w_rEMddESYc/m/6F7QC1p-AgAJ">Dataset Files Table </a><small>(Dec. '23)</small>
 </p>
 </div>
 
@@ -107,14 +96,12 @@ For more information and a list of additional resources, please visit this [disc
 
 The Dataverse Project is an open source web application to share, preserve, cite, explore, and analyze research data. It facilitates making data available to others, and allows you to replicate others' work more easily. Researchers, journals, data authors, publishers, data distributors, and affiliated institutions all receive academic credit and web visibility. Read more on the [Dataverse Website][dv_docs_dataverse_url]
 
-<br />
 <a name="what-is-dataverse-frontend"></a>
 
-### What is Dataverse Frontend _&amp; How do they differ?_
+### What is Dataverse Frontend _&amp; How is it different?_
 
 The Dataverse Frontend repository is an initiative undertaken in 2023 to modernize the UI and design of the Dataverse Project by creating a stand-alone interface to allow users and organizations to implement their own Dataverse installations and utilize the JavaScript framework of their choice.
 
-<br />
 
 **The goals of Dataverse Frontend:**
 
@@ -137,7 +124,6 @@ The Dataverse Frontend repository is an initiative undertaken in 2023 to moderni
 - Cypress testing automation
 - Storybook for UI Component Library
 
-<br />
 ***
 
 ### Beta Testing Environment
@@ -164,18 +150,18 @@ The environment is accessible through the following URLs:
 
 
 <details>
-  <summary>Changes from the original Dataverse JSF application</summary>
+  <summary><strong>Changes from the original Dataverse JSF application</strong></summary>
 
 
-  >##### Changes from the Style Guide
+  >### Changes from the Style Guide
   >
   >The design system and frontend in this repo are inspired by the Dataverse Project [Style Guide](https://guides.dataverse.org/en/latest/style/index.html), but the following changes have been made, especially for accessibility.
   >
-  >###### Links
+  >#### Links
   >
   >We added an underline to links to make them accessible.
   >
-  >###### File label
+  >#### File label
   >
   >Now we are using Bootstrap with a theme, so there is only one definition for the secondary color. Since Bootstrap applies
   the secondary color to the labels automatically, the color of the file label is now the global secondary color which is
@@ -183,11 +169,11 @@ The environment is accessible through the following URLs:
   >
   >We changed the citation block to be white with a colored border, to make the text in the box more accessible.
   >
-  >##### Changes in functionality behavior
+  >### Changes in functionality behavior
   >
   >Our main goal is to replicate the behavior of the original JSF application in all its functionalities, although during development we have found opportunities to review certain behaviors and apply changes where we find appropriate.
   >
-  >###### Dataset files tab search
+  >#### Dataset files tab search
   >
   >The original Dataset JSF page uses Solr to search for files based on the available filters. Past dataset versions are not indexed in Solr, so the filter option is not available (hidden) for such versions. When a version is indexed, the search text is searched in Solr, and Solr grammar can be applied. When the version is not indexed, the search text is searched in the database.
   >
@@ -199,25 +185,25 @@ The environment is accessible through the following URLs:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<br />
-***
 
 ## Getting Started
 
 _To get a local copy up and running follow these simple example steps._
 
 ### Prerequisites
-[![DockerDesktop][_shield_docker]][_uses_docker_url-url]
+
+[![DockerDesktop][_shield_docker]][_uses_docker_url]
 
 1. **Node &amp; NPM**: `node >= v16` and `npm >= v8`. Recommended versions for this project are `node v19` and `npm v9`.
-2. **Docker**: We use Docker Desktop, but the Docker CLI will also work!
-3. **Create and add your NPM and GitHub Tokens**: In order to connect with the Dataverse API, developers will need to install [@iqss/dataverse-client-javascript][dv_repo_dvclientjs_npm_url] from the GitHub registry by following the steps outlined below:
-4. Navigate to the project directory root and duplicate `.npmrc.example`, saving the copy as `.npmrc`.
+2. **Docker**: We use Docker Desktop, but the Docker CLI will also work.
+3. **Create a copy of .npmrc**: In the project directory root, duplicate `.npmrc.example`, saving the copy as `.npmrc`.
+
     >   ```bash
     >   # root project directory
     >   cp .npmrc.example .npmrc
     >   ```
-5. Follow the steps outlined below to generate a personal access token used to interface with the GitHub API. Read more about access tokens on [GitHub Docs][dv_docs_github_userauthtoken_url]
+
+4. **Create and add your NPM and GitHub Tokens**: In order to connect with the Dataverse API, developers will need to install [@iqss/dataverse-client-javascript][dv_repo_dvclientjs_npm_url] from the GitHub registry by following the steps outlined below. Read more about access tokens on [GitHub Docs][dv_docs_github_userauthtoken_url].
 
     >  **Getting a GitHub token**
     >  1. Go to your GitHub [Personal Access Tokens][dv_docs_github_token_url] settings
@@ -226,7 +212,9 @@ _To get a local copy up and running follow these simple example steps._
     >  4. Copy the generated token and replace the string `YOUR_GITHUB_AUTH_TOKEN` in the previously created `.npmrc` file.
     >       Now, you should be able to install the [Dataverse JavaScript][dv_repo_dvclientjs_url] client using npm.
 
-```.npmrc
+Your .npmrc file should resemble the following:
+
+```properties
 # .npmrc
 
 legacy-peer-deps=true
@@ -237,8 +225,6 @@ legacy-peer-deps=true
 <br>
 
 ### Installation & Setup
-
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
 
 1. Install the project &amp; its dependencies
 
@@ -302,14 +288,8 @@ npm run build-storybook
 
 Note that both Storybook instances are also published to Chromatic as part of the build and merge processes, located at:
 
-[![DataverseFrontend][DataverseFrontend-Chromatic]][DataverseFrontend-Chromatic-url]
-
-<!-- https://www.chromatic.com/builds?appId=646f68aa9beb01b35c599acd -->
-
-[![DataverseDesignSystem][DataverseDesignSystem-Chromatic]][DataverseDesignSystem-Chromatic-url]
-
-<!-- https://www.chromatic.com/builds?appId=646fbe232a8d3b501a1943f3 -->
-
+- [DataverseFrontend-Chromatic](https://www.chromatic.com/builds?appId=646f68aa9beb01b35c599acd)
+- [DataverseDesignSystem-Chromatic](https://www.chromatic.com/builds?appId=646fbe232a8d3b501a1943f3)
 
 **Testing with Cypress:**
 
@@ -373,7 +353,7 @@ npm run lint
 npm run lint:fix
 ```
 
-Launch the prettier formatter. We recommend you to configure your IDE to run prettier on save. See the official IDE setups used by the IQSS team at [vscode-settings]dv_repo_vscode_url on GitHub.
+Launch the prettier formatter. We recommend you to configure your IDE to run prettier on save. See the official IDE setups used by the IQSS team at [vscode-settings][dv_repo_vscode_url] on GitHub.
 
 
 ```bash
@@ -500,8 +480,6 @@ A base path for the frontend application can be established on the remote server
 
 </details>
 
-<br />
-***
 
 ## Usage
 
@@ -526,9 +504,6 @@ This project uses Atomic Design for it's Components. Here are several resources 
 
 <!-- ROADMAP -->
 
-<br />
-***
-
 ## Roadmap
 
 - [ ] Add Changelog
@@ -542,8 +517,6 @@ See the [open issues][dv_repo_issues_url] for a full list of proposed features (
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<br />
-***
 
 <!-- CONTRIBUTING -->
 
