@@ -1,6 +1,7 @@
 import { Row } from '@iqss/dataverse-design-system'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { DatasetsList } from './datasets-list/DatasetsList'
+import { DatasetsListWithInfiniteScroll } from './datasets-list/DatasetsListWithInfiniteScroll'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import {
   DvObjectType,
@@ -14,6 +15,7 @@ interface CollectionProps {
   datasetRepository: DatasetRepository
   id: string
   page?: number
+  infiniteScrollEnabled?: boolean
 }
 const rootNode = new UpwardHierarchyNode(
   'Root',
@@ -24,9 +26,12 @@ const rootNode = new UpwardHierarchyNode(
   undefined
 )
 
-const INFINITE_SCROLL_ENABLED = true
-
-export function Collection({ datasetRepository, id, page }: CollectionProps) {
+export function Collection({
+  datasetRepository,
+  id,
+  page,
+  infiniteScrollEnabled = false
+}: CollectionProps) {
   const { user } = useSession()
 
   return (
@@ -51,12 +56,15 @@ export function Collection({ datasetRepository, id, page }: CollectionProps) {
           <AddDataActionsButton />
         </div>
       )}
-      <DatasetsList
-        datasetRepository={datasetRepository}
-        page={page}
-        collectionId={id}
-        infiniteScrollEnabled={INFINITE_SCROLL_ENABLED}
-      />
+      {infiniteScrollEnabled ? (
+        <DatasetsListWithInfiniteScroll
+          datasetRepository={datasetRepository}
+          page={page}
+          collectionId={id}
+        />
+      ) : (
+        <DatasetsList datasetRepository={datasetRepository} page={page} collectionId={id} />
+      )}
     </Row>
   )
 }
