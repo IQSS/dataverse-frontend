@@ -96,6 +96,26 @@ export function CreateDatasetForm({ repository }: CreateDatasetFormProps) {
               {t('datasetForm.fields.authorName.feedback')}
             </Form.Group.Feedback>
           </Form.Group>
+          <Form.Group controlId="description-text" required>
+            <Form.Group.Label message={t('datasetForm.fields.dsDescriptionValue.tooltip')}>
+              {t('datasetForm.fields.dsDescriptionValue.label')}
+            </Form.Group.Label>
+            <Form.Group.Input
+              disabled={submissionStatus === SubmissionStatus.IsSubmitting}
+              type="text"
+              name="metadataBlocks.0.fields.dsDescription.0.dsDescriptionValue"
+              onChange={handleFieldChange}
+              isInvalid={
+                !!(
+                  validationErrors.metadataBlocks[0].fields
+                    .dsDescription as DatasetMetadataSubField[]
+                )[0].dsDescriptionValue
+              }
+            />
+            <Form.Group.Feedback type="invalid">
+              {t('datasetForm.fields.dsDescriptionValue.feedback')}
+            </Form.Group.Feedback>
+          </Form.Group>
           <SeparationLine />
           <Alert variant={'info'} customHeading={t('metadataTip.title')} dismissible={false}>
             {t('metadataTip.content')}

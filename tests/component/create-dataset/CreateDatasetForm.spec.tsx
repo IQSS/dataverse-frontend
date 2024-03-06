@@ -23,6 +23,14 @@ describe('Create Dataset', () => {
       "The name of the author, such as the person's name or the name of an organization"
     ).should('exist')
 
+    cy.findByLabelText(/Description Text/i)
+      .should('exist')
+      .should('have.attr', 'required', 'required')
+    cy.findByText('Description Text').children('div').trigger('mouseover')
+    cy.findByText('A summary describing the purpose, nature and scope of the Dataset').should(
+      'exist'
+    )
+
     cy.findByText(/Save Dataset/i).should('exist')
 
     cy.findByText(/Cancel/i).should('exist')
@@ -48,13 +56,28 @@ describe('Create Dataset', () => {
     cy.findByText('Error: Submission failed.').should('exist')
   })
 
+  it('shows an error message when the description text is not provided', () => {
+    cy.customMount(<CreateDatasetForm repository={datasetRepository} />)
+
+    cy.findByText(/Save Dataset/i).click()
+
+    cy.findByText('Description Text is required.').should('exist')
+
+    cy.findByText('Error: Submission failed.').should('exist')
+  })
+
   it('can submit a valid form', () => {
     cy.customMount(<CreateDatasetForm repository={datasetRepository} />)
 
     cy.findByLabelText(/Title/i).type('Test Dataset Title').and('have.value', 'Test Dataset Title')
+
     cy.findByLabelText(/Author Name/i)
       .type('Test author name')
       .and('have.value', 'Test author name')
+
+    cy.findByLabelText(/Description Text/i)
+      .type('Test description text')
+      .and('have.value', 'Test description text')
 
     cy.findByText(/Save Dataset/i).click()
     cy.findByText('Form submitted successfully!')
@@ -68,6 +91,9 @@ describe('Create Dataset', () => {
     cy.findByLabelText(/Author Name/i)
       .type('Test author name')
       .and('have.value', 'Test author name')
+    cy.findByLabelText(/Description Text/i)
+      .type('Test description text')
+      .and('have.value', 'Test description text')
 
     cy.findByText(/Save Dataset/i).click()
     cy.findByText('Error: Submission failed.').should('exist')

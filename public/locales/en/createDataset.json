@@ -16,6 +16,11 @@
         "label": "Author Name",
         "tooltip": "The name of the author, such as the person's name or the name of an organization",
         "feedback": "Author name is required."
+      },
+      "dsDescriptionValue": {
+        "label": "Description Text",
+        "tooltip": "A summary describing the purpose, nature and scope of the Dataset",
+        "feedback": "Description Text is required."
       }
     },
     "status": {

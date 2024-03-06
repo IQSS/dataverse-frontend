@@ -3,6 +3,7 @@ import { DatasetMetadataFieldValue, DatasetMetadataSubField } from '../models/Da
 
 const TITLE_REQUIRED = 'Title is required.'
 const AUTHOR_NAME_REQUIRED = 'Author name is required.'
+const DESCRIPTION_TEXT_REQUIRED = 'Description text is required.'
 
 export interface DatasetValidationResponse {
   isValid: boolean
@@ -24,6 +25,17 @@ export function validateDataset(dataset: DatasetDTO) {
   ) {
     if (isArrayOfSubfieldValue(errors.metadataBlocks[0].fields.author)) {
       errors.metadataBlocks[0].fields.author[0].authorName = AUTHOR_NAME_REQUIRED
+      isValid = false
+    }
+  }
+
+  if (
+    isArrayOfSubfieldValue(dataset.metadataBlocks[0].fields.dsDescription) &&
+    !dataset.metadataBlocks[0].fields.dsDescription[0].dsDescriptionValue
+  ) {
+    if (isArrayOfSubfieldValue(errors.metadataBlocks[0].fields.dsDescription)) {
+      errors.metadataBlocks[0].fields.dsDescription[0].dsDescriptionValue =
+        DESCRIPTION_TEXT_REQUIRED
       isValid = false
     }
   }
