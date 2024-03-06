@@ -13,7 +13,11 @@ export const initialDatasetDTO: DatasetDTO = {
       fields: {
         title: '',
         subject: [],
-        author: [],
+        author: [
+          {
+            authorName: ''
+          }
+        ],
         datasetContact: [],
         dsDescription: [
           {

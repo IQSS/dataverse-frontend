@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, MouseEvent, useEffect } from 'react'
-import { Alert, Button, Col, Form, Row } from '@iqss/dataverse-design-system'
+import { Alert, Button, Form } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
@@ -11,6 +11,7 @@ import { useDatasetFormData } from './useDatasetFormData'
 import { Route } from '../Route.enum'
 import { useNavigate } from 'react-router-dom'
 import { useDatasetValidator } from './useDatasetValidator'
+import { DatasetMetadataSubField } from '../../dataset/domain/models/Dataset'
 
 interface CreateDatasetFormProps {
   repository: DatasetRepository
@@ -61,27 +62,40 @@ export function CreateDatasetForm({ repository }: CreateDatasetFormProps) {
         <Form
           onSubmit={(event: FormEvent<HTMLFormElement>) => {
             handleSubmit(event)
-          }}
-          className={'create-dataset-form'}>
-          <Row>
-            <Col md={9}>
-              <Form.Group controlId="createDatasetTitle" required>
-                <Form.Group.Label>{t('datasetForm.title')}</Form.Group.Label>
-                <Form.Group.Input
-                  disabled={submissionStatus === SubmissionStatus.IsSubmitting}
-                  type="text"
-                  name="metadataBlocks[0].fields.title"
-                  placeholder="Dataset Title"
-                  onChange={handleFieldChange}
-                  withinMultipleFieldsGroup={false}
-                  isInvalid={validationErrors.metadataBlocks[0].fields.title !== ''}
-                />
-                <Form.Group.Feedback type="invalid">
-                  {String(validationErrors.metadataBlocks[0].fields.title)}
-                </Form.Group.Feedback>
-              </Form.Group>
-            </Col>
-          </Row>
+          }}>
+          <Form.Group controlId="dataset-title" required>
+            <Form.Group.Label message={t('datasetForm.fields.title.tooltip')}>
+              {t('datasetForm.fields.title.label')}
+            </Form.Group.Label>
+            <Form.Group.Input
+              disabled={submissionStatus === SubmissionStatus.IsSubmitting}
+              type="text"
+              name="metadataBlocks.0.fields.title"
+              onChange={handleFieldChange}
+              isInvalid={!!validationErrors.metadataBlocks[0].fields.title}
+            />
+            <Form.Group.Feedback type="invalid">
+              {t('datasetForm.fields.title.feedback')}
+            </Form.Group.Feedback>
+          </Form.Group>
+          <Form.Group controlId="author-name" required>
+            <Form.Group.Label message={t('datasetForm.fields.authorName.tooltip')}>
+              {t('datasetForm.fields.authorName.label')}
+            </Form.Group.Label>
+            <Form.Group.Input
+              disabled={submissionStatus === SubmissionStatus.IsSubmitting}
+              type="text"
+              name="metadataBlocks.0.fields.author.0.authorName"
+              onChange={handleFieldChange}
+              isInvalid={
+                !!(validationErrors.metadataBlocks[0].fields.author as DatasetMetadataSubField[])[0]
+                  .authorName
+              }
+            />
+            <Form.Group.Feedback type="invalid">
+              {t('datasetForm.fields.authorName.feedback')}
+            </Form.Group.Feedback>
+          </Form.Group>
           <SeparationLine />
           <Alert variant={'info'} customHeading={t('metadataTip.title')} dismissible={false}>
             {t('metadataTip.content')}

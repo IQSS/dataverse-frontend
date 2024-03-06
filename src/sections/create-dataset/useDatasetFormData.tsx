@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { DatasetDTO, initialDatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
+import _ from 'lodash'
 
 const initialState: DatasetDTO = JSON.parse(JSON.stringify(initialDatasetDTO)) as DatasetDTO
 export const useDatasetFormData = (
@@ -18,20 +19,9 @@ export const useDatasetFormData = (
   }
 
   const getUpdatedFormData = (name: string, value: string): DatasetDTO => {
-    const matches = name.match(/metadataBlocks\[(\d+)\]\.fields\.(.+)/)
-
-    if (matches) {
-      const [_, blockIndex, fieldName] = matches
-      const updatedFormData = { ...formData }
-
-      updatedFormData.metadataBlocks = updatedFormData.metadataBlocks.map((block, index) => {
-        return index === parseInt(blockIndex, 10)
-          ? { ...block, fields: { ...block.fields, [fieldName]: value } }
-          : block
-      })
-      return updatedFormData
-    }
-    return { ...formData, [name]: value }
+    const objectFromPath: DatasetDTO = initialState
+    _.set(objectFromPath, name, value)
+    return _.merge({}, formData, objectFromPath)
   }
 
   return {

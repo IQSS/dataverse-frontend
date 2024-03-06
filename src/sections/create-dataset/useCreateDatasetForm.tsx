@@ -24,7 +24,6 @@ export function useCreateDatasetForm(
   const submitForm = (formData: DatasetDTO): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
-    console.log(datasetIsValid(formData))
     if (!datasetIsValid(formData)) {
       setSubmissionStatus(SubmissionStatus.Errored)
       return

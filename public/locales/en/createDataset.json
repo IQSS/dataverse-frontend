@@ -6,7 +6,18 @@
   },
   "requiredFields": "Asterisks indicate required fields",
   "datasetForm": {
-    "title": "Title",
+    "fields": {
+      "title": {
+        "label": "Title",
+        "tooltip": "The main title of the Dataset",
+        "feedback": "Title is required."
+      },
+      "authorName": {
+        "label": "Author Name",
+        "tooltip": "The name of the author, such as the person's name or the name of an organization",
+        "feedback": "Author name is required."
+      }
+    },
     "status": {
       "submitting": "Submitting...",
       "success": "Form submitted successfully!",
