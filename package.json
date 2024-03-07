@@ -63,6 +63,7 @@
     "test:coverage-merge": "lcov-result-merger '**/*/lcov.info' 'merged-coverage/lcov.info' && perl -pi -e 's/src\\/lib/packages\\/design-system\\/src\\/lib/g' merged-coverage/lcov.info",
     "git:add": "git add .",
     "storybook": "concurrently 'storybook dev -p 6006 && open \"http://localhost:6006\"' 'cd packages/design-system && npm run storybook'",
+    "storybook:windows": "concurrently \"storybook dev -p 6006\" \"npm run storybook -w packages/design-system\"",
     "build-storybook": "storybook build",
     "test:storybook": "test-storybook",
     "test:storybook-all": "concurrently 'test-storybook' 'cd packages/design-system && npm run test:storybook'",
