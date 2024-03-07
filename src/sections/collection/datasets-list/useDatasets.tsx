@@ -16,7 +16,10 @@ export function useDatasets(
   const [datasets, setDatasets] = useState<DatasetPreview[]>([])
   const [accumulatedDatasets, setAccumulatedDatasets] = useState<DatasetPreview[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
   const [totalDatasetsCount, setTotalDatasetsCount] = useState<TotalDatasetsCount>()
+
+  // TODO:ASK Why double api call?
 
   const fetchTotalDatasetsCount: () => Promise<TotalDatasetsCount> = () => {
     return getTotalDatasetsCount(datasetRepository, collectionId)
@@ -61,8 +64,11 @@ export function useDatasets(
 
     fetchTotalDatasetsCount()
       .then((totalDatasetsCount) => fetchDatasets(totalDatasetsCount))
-      .catch(() => {
-        console.error('There was an error getting the datasets')
+      .catch((err) => {
+        const message =
+          err instanceof Error ? err.message : 'Something went wrong getting the datasets'
+
+        setError(new Error(message).message)
         setIsLoading(false)
       })
   }, [datasetRepository, paginationInfo.page])
@@ -72,6 +78,7 @@ export function useDatasets(
     accumulatedDatasets,
     totalDatasetsCount,
     isLoading,
+    error,
     pageNumberNotFound
   }
 }

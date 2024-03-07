@@ -11,35 +11,38 @@ import { NoDatasetsMessage } from './NoDatasetsMessage'
 import { DatasetCard } from './dataset-card/DatasetCard'
 import { PageNumberNotFound } from './PageNumberNotFound'
 import styles from './DatasetsList.module.scss'
+import 'react-loading-skeleton/dist/skeleton.css'
+import { ErrorDatasetsMessage } from './ErrorDatasetsMessage'
 
 interface DatasetsListWithInfiniteScrollProps {
   datasetRepository: DatasetRepository
   collectionId: string
-  page?: number
 }
 const NO_DATASETS = 0
 
 export function DatasetsListWithInfiniteScroll({
   datasetRepository,
-  page,
   collectionId
 }: DatasetsListWithInfiniteScrollProps) {
   const { setIsLoading } = useLoading()
   const [paginationInfo, setPaginationInfo] = useState<DatasetPaginationInfo>(
-    new DatasetPaginationInfo(page)
+    new DatasetPaginationInfo()
   )
-  const { accumulatedDatasets, isLoading, pageNumberNotFound } = useDatasets(
+  const { accumulatedDatasets, isLoading, error, pageNumberNotFound } = useDatasets(
     datasetRepository,
     collectionId,
     setPaginationInfo,
     paginationInfo
   )
 
-  const hasNextPage = accumulatedDatasets.length < paginationInfo.totalItems
   const emptyDatasets = accumulatedDatasets.length === NO_DATASETS
+  const isDatasetsAvailable = !emptyDatasets && !error
+  const isEmptyDatasets = emptyDatasets && !isLoading && !error
+  const isErrorAfterLoading = !!error && !isLoading
+
+  const hasNextPage = accumulatedDatasets.length < paginationInfo.totalItems
 
   const loadMore = () => {
-    console.log('time to load more')
     setPaginationInfo(paginationInfo.goToNextPage())
   }
 
@@ -47,8 +50,8 @@ export function DatasetsListWithInfiniteScroll({
     loading: isLoading,
     hasNextPage: hasNextPage,
     onLoadMore: loadMore,
-    // disabled: !!error,
-    rootMargin: '0px 0px 400px 0px'
+    disabled: !!error,
+    rootMargin: '0px 0px 250px 0px'
   })
 
   useEffect(() => {
@@ -66,11 +69,14 @@ export function DatasetsListWithInfiniteScroll({
   return (
     <section
       className={cn(styles['scrollable-container'], {
-        [styles['scrollable-container--empty-datasets']]: emptyDatasets && !isLoading
+        [styles['scrollable-container--empty-or-error']]: isEmptyDatasets || isErrorAfterLoading
       })}
       ref={rootRef}>
-      {emptyDatasets && !isLoading ? <NoDatasetsMessage /> : null}
-      {!emptyDatasets ? (
+      {isEmptyDatasets && <NoDatasetsMessage />}
+
+      {isErrorAfterLoading && <ErrorDatasetsMessage errorMessage={error} />}
+
+      {isDatasetsAvailable && (
         <>
           <div className={styles['sticky-pagination-results']}>
             <PaginationResultsInfo paginationInfo={paginationInfo} forInfiniteScrolling />
@@ -79,26 +85,36 @@ export function DatasetsListWithInfiniteScroll({
             <DatasetCard dataset={dataset} key={dataset.persistentId} />
           ))}
         </>
-      ) : null}
-      {(isLoading || hasNextPage) && (
-        <div ref={sentryRef}>
+      )}
+
+      {(isLoading || hasNextPage) && !error && (
+        <div ref={sentryRef} data-testid="datasets-list-infinite-scroll-skeleton">
           <SkeletonTheme>
             {emptyDatasets && (
-              <div className={styles['sticky-pagination-results']}>
-                <Skeleton width="14%" />
+              <div
+                className={styles['sticky-pagination-results']}
+                data-testid="datasets-list-infinite-scroll-skeleton-header">
+                <Skeleton width="17%" />
               </div>
             )}
-
+            {/* Show 3 skeletons when reaching to the bottom if has next page or is loading */}
             <Skeleton height="109px" style={{ marginBottom: 6 }} />
             <Skeleton height="109px" style={{ marginBottom: 6 }} />
             <Skeleton height="109px" style={{ marginBottom: 6 }} />
-            <Skeleton height="109px" style={{ marginBottom: 6 }} />
-            <Skeleton height="109px" style={{ marginBottom: 6 }} />
-            <Skeleton height="109px" style={{ marginBottom: 6 }} />
-            <Skeleton height="109px" style={{ marginBottom: 6 }} />
-            <Skeleton height="109px" style={{ marginBottom: 6 }} />
-            <Skeleton height="109px" style={{ marginBottom: 6 }} />
-            <Skeleton height="109px" style={{ marginBottom: 6 }} />
+            {/* Show all 10 skeletons on first loading */}
+            {emptyDatasets && (
+              <>
+                <Skeleton height="109px" style={{ marginBottom: 6 }} />
+                <Skeleton height="109px" style={{ marginBottom: 6 }} />
+                <Skeleton height="109px" style={{ marginBottom: 6 }} />
+                <Skeleton height="109px" style={{ marginBottom: 6 }} />
+                <Skeleton height="109px" style={{ marginBottom: 6 }} />
+                <Skeleton height="109px" style={{ marginBottom: 6 }} />
+                <Skeleton height="109px" style={{ marginBottom: 6 }} />
+                <Skeleton height="109px" style={{ marginBottom: 6 }} />
+                <Skeleton height="109px" style={{ marginBottom: 6 }} />
+              </>
+            )}
           </SkeletonTheme>
         </div>
       )}

@@ -4,6 +4,7 @@ import { DatasetMockRepository } from '../../dataset/DatasetMockRepository'
 import { DatasetsListWithInfiniteScroll } from '../../../sections/collection/datasets-list/DatasetsListWithInfiniteScroll'
 import { DatasetLoadingMockRepository } from '../../dataset/DatasetLoadingMockRepository'
 import { NoDatasetsMockRepository } from '../../dataset/NoDatasetsMockRepository'
+import { DatasetErrorMockRepository } from '../../dataset/DatasetErrorMockRepository'
 
 const meta: Meta<typeof DatasetsListWithInfiniteScroll> = {
   title: 'Sections/Collection/DatasetsListWithInfiniteScroll',
@@ -36,6 +37,15 @@ export const NoResults: Story = {
   render: () => (
     <DatasetsListWithInfiniteScroll
       datasetRepository={new NoDatasetsMockRepository()}
+      collectionId="root"
+    />
+  )
+}
+
+export const Error: Story = {
+  render: () => (
+    <DatasetsListWithInfiniteScroll
+      datasetRepository={new DatasetErrorMockRepository()}
       collectionId="root"
     />
   )
