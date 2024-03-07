@@ -12,16 +12,21 @@ export const useDatasetFormData = (
   const [formData, setFormData] = useState(initialState)
 
   const updateFormData = (name: string, value: string) => {
-    const updatedFormData = getUpdatedFormData(name, value)
+    const updatedFormData = _.cloneDeep(getUpdatedFormData(formData, name, value))
 
     setFormData(updatedFormData)
     datasetIsValid(updatedFormData)
   }
 
-  const getUpdatedFormData = (name: string, value: string): DatasetDTO => {
+  const getUpdatedFormData = (
+    currentFormData: DatasetDTO,
+    name: string,
+    value: string
+  ): DatasetDTO => {
     const objectFromPath: DatasetDTO = initialState
     _.set(objectFromPath, name, value)
-    return _.merge({}, formData, objectFromPath)
+
+    return objectFromPath
   }
 
   return {

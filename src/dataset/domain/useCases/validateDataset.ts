@@ -4,6 +4,7 @@ import { DatasetMetadataFieldValue, DatasetMetadataSubField } from '../models/Da
 const TITLE_REQUIRED = 'Title is required.'
 const AUTHOR_NAME_REQUIRED = 'Author name is required.'
 const DESCRIPTION_TEXT_REQUIRED = 'Description text is required.'
+const SUBJECT_REQUIRED = 'Subject is required.'
 
 export interface DatasetValidationResponse {
   isValid: boolean
@@ -40,6 +41,16 @@ export function validateDataset(dataset: DatasetDTO) {
     }
   }
 
+  if (
+    isArrayOfString(dataset.metadataBlocks[0].fields.subject) &&
+    !dataset.metadataBlocks[0].fields.subject.some((subject) => !!subject)
+  ) {
+    if (isArrayOfString(errors.metadataBlocks[0].fields.subject)) {
+      errors.metadataBlocks[0].fields.subject[0] = SUBJECT_REQUIRED
+      isValid = false
+    }
+  }
+
   const validationResponse: DatasetValidationResponse = {
     isValid: isValid,
     errors
@@ -53,6 +64,15 @@ function isArrayOfSubfieldValue(
 ): metadataFieldValue is DatasetMetadataSubField[] {
   if (Array.isArray(metadataFieldValue)) {
     return metadataFieldValue.length > 0 && typeof metadataFieldValue[0] !== 'string'
+  }
+  return false
+}
+
+function isArrayOfString(
+  metadataFieldValue: DatasetMetadataFieldValue
+): metadataFieldValue is string[] {
+  if (Array.isArray(metadataFieldValue)) {
+    return metadataFieldValue.some((field) => typeof field === 'string')
   }
   return false
 }

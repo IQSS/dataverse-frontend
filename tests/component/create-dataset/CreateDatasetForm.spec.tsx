@@ -26,10 +26,14 @@ describe('Create Dataset', () => {
     cy.findByLabelText(/Description Text/i)
       .should('exist')
       .should('have.attr', 'required', 'required')
-    cy.findByText('Description Text').children('div').trigger('mouseover')
+    cy.findByText('Description Text').children('div').trigger('mouseover', { force: true })
     cy.findByText('A summary describing the purpose, nature and scope of the Dataset').should(
       'exist'
     )
+
+    cy.findByText('Subject').should('exist')
+    cy.findByText('Subject').children('div').trigger('mouseover')
+    cy.findByText('The area of study relevant to the Dataset').should('exist')
 
     cy.findByText(/Save Dataset/i).should('exist')
 
@@ -66,6 +70,16 @@ describe('Create Dataset', () => {
     cy.findByText('Error: Submission failed.').should('exist')
   })
 
+  it('shows an error message when the subject is not provided', () => {
+    cy.customMount(<CreateDatasetForm repository={datasetRepository} />)
+
+    cy.findByText(/Save Dataset/i).click()
+
+    cy.findByText('Subject is required.').should('exist')
+
+    cy.findByText('Error: Submission failed.').should('exist')
+  })
+
   it('can submit a valid form', () => {
     cy.customMount(<CreateDatasetForm repository={datasetRepository} />)
 
@@ -79,6 +93,10 @@ describe('Create Dataset', () => {
       .type('Test description text')
       .and('have.value', 'Test description text')
 
+    cy.findByLabelText(/Arts and Humanities/i)
+      .check()
+      .should('be.checked')
+
     cy.findByText(/Save Dataset/i).click()
     cy.findByText('Form submitted successfully!')
   })
@@ -87,13 +105,10 @@ describe('Create Dataset', () => {
     datasetRepository.create = cy.stub().rejects()
     cy.customMount(<CreateDatasetForm repository={datasetRepository} />)
 
-    cy.findByLabelText(/Title/i).type('Test Dataset Title').and('have.value', 'Test Dataset Title')
-    cy.findByLabelText(/Author Name/i)
-      .type('Test author name')
-      .and('have.value', 'Test author name')
-    cy.findByLabelText(/Description Text/i)
-      .type('Test description text')
-      .and('have.value', 'Test description text')
+    cy.findByLabelText(/Title/i).type('Test Dataset Title')
+    cy.findByLabelText(/Author Name/i).type('Test author name')
+    cy.findByLabelText(/Description Text/i).type('Test description text')
+    cy.findByLabelText(/Arts and Humanities/i).check()
 
     cy.findByText(/Save Dataset/i).click()
     cy.findByText('Error: Submission failed.').should('exist')

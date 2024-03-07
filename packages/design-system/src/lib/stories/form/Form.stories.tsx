@@ -180,7 +180,7 @@ export const TextArea: Story = {
 export const Checkbox: Story = {
   render: () => (
     <Form>
-      <Form.GroupWithMultipleFields title="Metadata Fields">
+      <Form.CheckboxGroup title="Metadata Fields">
         <Form.Group.Checkbox
           defaultChecked
           name="metadata-field"
@@ -198,7 +198,7 @@ export const Checkbox: Story = {
           label="Social Science and Humanities Metadata"
           id="basic-form-social-science-metadata"
         />
-      </Form.GroupWithMultipleFields>
+      </Form.CheckboxGroup>
     </Form>
   )
 }

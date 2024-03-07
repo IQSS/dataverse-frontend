@@ -26,12 +26,15 @@ export function CreateDatasetForm({ repository }: CreateDatasetFormProps) {
   const { submissionStatus, submitForm } = useCreateDatasetForm(repository, datasetIsValid)
 
   const handleFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
+    const { name, checked } = event.target
+    const value = event.target.type === 'checkbox' && !checked ? '' : event.target.value
+
     updateFormData(name, value)
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
     submitForm(formData)
   }
 
@@ -116,6 +119,113 @@ export function CreateDatasetForm({ repository }: CreateDatasetFormProps) {
               {t('datasetForm.fields.dsDescriptionValue.feedback')}
             </Form.Group.Feedback>
           </Form.Group>
+          <Form.CheckboxGroup
+            title={t('datasetForm.fields.subject.label')}
+            required
+            message={t('datasetForm.fields.subject.tooltip')}
+            isInvalid={!!(validationErrors.metadataBlocks[0].fields.subject as string[])[0]}>
+            <Form.Group.Checkbox
+              name="metadataBlocks.0.fields.subject.0"
+              label="Agricultural Sciences"
+              id="subject-agricultural-sciences"
+              value="Agricultural Sciences"
+              onChange={handleFieldChange}
+            />
+            <Form.Group.Checkbox
+              name="metadataBlocks.0.fields.subject.1"
+              label="Arts and Humanities"
+              id="subject-arts-and-humanities"
+              value="Arts and Humanities"
+              onChange={handleFieldChange}
+            />
+            <Form.Group.Checkbox
+              name="metadataBlocks.0.fields.subject.2"
+              label="Astronomy and Astrophysics"
+              id="subject-astronomy-and-astrophysics"
+              value="Astronomy and Astrophysics"
+              onChange={handleFieldChange}
+            />
+            <Form.Group.Checkbox
+              name="metadataBlocks.0.fields.subject.3"
+              label="Business and Management"
+              id="subject-business-and-management"
+              value="Business and Management"
+              onChange={handleFieldChange}
+            />
+            <Form.Group.Checkbox
+              name="metadataBlocks.0.fields.subject.4"
+              label="Chemistry"
+              id="subject-chemistry"
+              value="Chemistry"
+              onChange={handleFieldChange}
+            />
+            <Form.Group.Checkbox
+              name="metadataBlocks.0.fields.subject.5"
+              label="Computer and Information Science"
+              id="subject-computer-and-information-science"
+              value="Computer and Information Science"
+              onChange={handleFieldChange}
+            />
+            <Form.Group.Checkbox
+              name="metadataBlocks.0.fields.subject.6"
+              label="Earth and Environmental Sciences"
+              id="subject-earth-and-environmental-sciences"
+              value="Earth and Environmental Sciences"
+              onChange={handleFieldChange}
+            />
+            <Form.Group.Checkbox
+              name="metadataBlocks.0.fields.subject.7"
+              label="Engineering"
+              id="subject-engineering"
+              value="Engineering"
+              onChange={handleFieldChange}
+            />
+            <Form.Group.Checkbox
+              name="metadataBlocks.0.fields.subject.8"
+              label="Law"
+              id="subject-law"
+              value="Law"
+              onChange={handleFieldChange}
+            />
+            <Form.Group.Checkbox
+              name="metadataBlocks.0.fields.subject.9"
+              label="Mathematical Sciences"
+              id="subject-mathematical-sciences"
+              value="Mathematical Sciences"
+              onChange={handleFieldChange}
+            />
+            <Form.Group.Checkbox
+              name="metadataBlocks.0.fields.subject.10"
+              label="Medicine, Health and Life Sciences"
+              id="subject-medicine-health-and-life-sciences"
+              value="Medicine, Health and Life Sciences"
+              onChange={handleFieldChange}
+            />
+            <Form.Group.Checkbox
+              name="metadataBlocks.0.fields.subject.11"
+              label="Physics"
+              id="subject-physics"
+              value="Physics"
+              onChange={handleFieldChange}
+            />
+            <Form.Group.Checkbox
+              name="metadataBlocks.0.fields.subject.12"
+              label="Social Sciences"
+              id="subject-social-sciences"
+              value="Social Sciences"
+              onChange={handleFieldChange}
+            />
+            <Form.Group.Checkbox
+              name="metadataBlocks.0.fields.subject.13"
+              label="Other"
+              id="subject-other"
+              value="Other"
+              onChange={handleFieldChange}
+            />
+            <Form.Group.Feedback type="invalid" withinMultipleFieldsGroup>
+              {t('datasetForm.fields.subject.feedback')}
+            </Form.Group.Feedback>
+          </Form.CheckboxGroup>
           <SeparationLine />
           <Alert variant={'info'} customHeading={t('metadataTip.title')} dismissible={false}>
             {t('metadataTip.content')}

@@ -21,6 +21,11 @@
         "label": "Description Text",
         "tooltip": "A summary describing the purpose, nature and scope of the Dataset",
         "feedback": "Description Text is required."
+      },
+      "subject": {
+        "label": "Subject",
+        "tooltip": "The area of study relevant to the Dataset",
+        "feedback": "Subject is required."
       }
     },
     "status": {
