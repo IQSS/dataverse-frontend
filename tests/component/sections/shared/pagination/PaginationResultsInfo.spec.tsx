@@ -24,15 +24,33 @@ describe('PaginationResultsInfo', () => {
     cy.findByText('1 Item').should('exist')
   })
 
-  it('shows the correct results info for infinite scrolling mode', () => {
+  it('shows the correct results when accumulated prop passed and only one result', () => {
     cy.customMount(
       <PaginationResultsInfo
-        paginationInfo={new PaginationInfo<FilePaginationInfo | DatasetPaginationInfo>(1, 10, 15)}
-        forInfiniteScrolling
+        paginationInfo={new PaginationInfo<DatasetPaginationInfo>(1, 10, 1)}
+        accumulated={1}
       />
     )
-    cy.findByText('10 of 15 Datasets seen').should('exist')
+    cy.findByText('1 Item').should('exist')
   })
 
-  // TODO:ME Add test for when there are no items
+  it('shows the correct results when accumulated prop passed and results are more than one and less than page size', () => {
+    cy.customMount(
+      <PaginationResultsInfo
+        paginationInfo={new PaginationInfo<DatasetPaginationInfo>(1, 10, 6)}
+        accumulated={6}
+      />
+    )
+    cy.findByText('6 Items').should('exist')
+  })
+
+  it('shows the correct results when accumulated prop passed and results are more than page size', () => {
+    cy.customMount(
+      <PaginationResultsInfo
+        paginationInfo={new PaginationInfo<DatasetPaginationInfo>(1, 10, 15)}
+        accumulated={10}
+      />
+    )
+    cy.findByText('10 of 15 Items seen').should('exist')
+  })
 })

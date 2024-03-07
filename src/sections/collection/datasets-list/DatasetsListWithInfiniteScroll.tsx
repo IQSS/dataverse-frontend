@@ -34,13 +34,14 @@ export function DatasetsListWithInfiniteScroll({
     setPaginationInfo,
     paginationInfo
   )
+  const accumulatedCount = accumulatedDatasets.length
 
-  const emptyDatasets = accumulatedDatasets.length === NO_DATASETS
+  const emptyDatasets = accumulatedCount === NO_DATASETS
   const isDatasetsAvailable = !emptyDatasets && !error
   const isEmptyDatasets = emptyDatasets && !isLoading && !error
   const isErrorAfterLoading = !!error && !isLoading
 
-  const hasNextPage = accumulatedDatasets.length < paginationInfo.totalItems
+  const hasNextPage = accumulatedCount < paginationInfo.totalItems
 
   const loadMore = () => {
     setPaginationInfo(paginationInfo.goToNextPage())
@@ -79,7 +80,7 @@ export function DatasetsListWithInfiniteScroll({
       {isDatasetsAvailable && (
         <>
           <div className={styles['sticky-pagination-results']}>
-            <PaginationResultsInfo paginationInfo={paginationInfo} forInfiniteScrolling />
+            <PaginationResultsInfo paginationInfo={paginationInfo} accumulated={accumulatedCount} />
           </div>
           {accumulatedDatasets.map((dataset) => (
             <DatasetCard dataset={dataset} key={dataset.persistentId} />
