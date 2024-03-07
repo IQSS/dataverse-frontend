@@ -6,8 +6,7 @@ import { DatasetPreview } from '../../dataset/domain/models/DatasetPreview'
 import { DatasetFormFields } from '../../dataset/domain/models/DatasetFormFields'
 
 export class DatasetErrorMockRepository implements DatasetRepository {
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  getAll(collectionId: string, paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
+  getAll(_collectionId: string, _paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')
@@ -15,8 +14,7 @@ export class DatasetErrorMockRepository implements DatasetRepository {
     })
   }
 
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  getTotalDatasetsCount(collectionId: string): Promise<TotalDatasetsCount> {
+  getTotalDatasetsCount(_collectionId: string): Promise<TotalDatasetsCount> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')
@@ -25,10 +23,8 @@ export class DatasetErrorMockRepository implements DatasetRepository {
   }
 
   getByPersistentId(
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    persistentId: string,
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    version?: string | undefined
+    _persistentId: string,
+    _version?: string | undefined
   ): Promise<Dataset | undefined> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
@@ -36,10 +32,7 @@ export class DatasetErrorMockRepository implements DatasetRepository {
       }, 1000)
     })
   }
-  getByPrivateUrlToken(
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    privateUrlToken: string
-  ): Promise<Dataset | undefined> {
+  getByPrivateUrlToken(_privateUrlToken: string): Promise<Dataset | undefined> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')
@@ -47,7 +40,7 @@ export class DatasetErrorMockRepository implements DatasetRepository {
     })
   }
 
-  createDataset(fields: DatasetFormFields): Promise<string> {
+  createDataset(_fields: DatasetFormFields): Promise<string> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')
