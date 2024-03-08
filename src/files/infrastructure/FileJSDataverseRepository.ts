@@ -5,10 +5,11 @@ import { FilesCountInfo } from '../domain/models/FilesCountInfo'
 import {
   File as JSFile,
   FileDownloadSizeMode,
+  getDatasetCitation,
   getDatasetFileCounts,
   getDatasetFiles,
   getDatasetFilesTotalDownloadSize,
-  getFile,
+  getFileAndDataset,
   getFileCitation,
   getFileDataTables,
   getFileDownloadCount,
@@ -25,7 +26,6 @@ import { BASE_URL } from '../../config'
 import { FilePreview } from '../domain/models/FilePreview'
 import { JSFilesCountInfoMapper } from './mappers/JSFilesCountInfoMapper'
 import { JSFileMetadataMapper } from './mappers/JSFileMetadataMapper'
-import { DatasetVersionMother } from '../../../tests/component/dataset/domain/models/DatasetMother'
 import { FilePermissions } from '../domain/models/FilePermissions'
 import { JSFilePermissionsMapper } from './mappers/JSFilePermissionsMapper'
 
@@ -177,11 +177,13 @@ export class FileJSDataverseRepository implements FileRepository {
   }
 
   getById(id: number, datasetVersionNumber?: string): Promise<File> {
-    return getFile
+    return getFileAndDataset
       .execute(id, datasetVersionNumber)
-      .then((jsFile) =>
+      .then(([jsFile, jsDataset]) =>
         Promise.all([
           jsFile,
+          jsDataset,
+          getDatasetCitation.execute(jsDataset.id, datasetVersionNumber, includeDeaccessioned),
           FileJSDataverseRepository.getCitationById(jsFile.id),
           FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate),
           FileJSDataverseRepository.getPermissionsById(jsFile.id),
@@ -189,16 +191,27 @@ export class FileJSDataverseRepository implements FileRepository {
           FileJSDataverseRepository.getTabularDataById(jsFile.id, jsFile.tabularData)
         ])
       )
-      .then(([jsFile, citation, downloadsCount, permissions, thumbnail, tabularData]) =>
-        JSFileMapper.toFile(
+      .then(
+        ([
           jsFile,
-          DatasetVersionMother.createRealistic(), // TODO: add dataset version to get file
+          jsDataset,
+          datasetCitation,
           citation,
           downloadsCount,
           permissions,
           thumbnail,
           tabularData
-        )
+        ]) =>
+          JSFileMapper.toFile(
+            jsFile,
+            jsDataset,
+            datasetCitation,
+            citation,
+            downloadsCount,
+            permissions,
+            thumbnail,
+            tabularData
+          )
       )
       .catch((error: ReadError) => {
         throw new Error(error.message)

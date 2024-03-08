@@ -88,6 +88,14 @@ jobs:
           sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
           sed -i -e 's/<YOUR_NPM_AUTH_TOKEN>/${{ secrets.NPM_AUTH_TOKEN }}/g' .npmrc
 
+      - name: Create and populate .env file
+        env:
+          DATAVERSE_BACKEND_URL: 'http://localhost:8000'
+        run: |
+          touch .env
+          echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
+        shell: bash
+
       - name: Install Dependencies
         run: npm install
 

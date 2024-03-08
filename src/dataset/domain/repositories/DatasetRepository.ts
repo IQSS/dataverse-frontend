@@ -7,7 +7,7 @@ import { DatasetDTO } from '../useCases/DTOs/DatasetDTO'
 export interface DatasetRepository {
   getByPersistentId: (persistentId: string, version?: string) => Promise<Dataset | undefined>
   getByPrivateUrlToken: (privateUrlToken: string) => Promise<Dataset | undefined>
-  getAll: (paginationInfo: DatasetPaginationInfo) => Promise<DatasetPreview[]>
-  getTotalDatasetsCount: () => Promise<TotalDatasetsCount>
+  getAll: (collectionId: string, paginationInfo: DatasetPaginationInfo) => Promise<DatasetPreview[]>
+  getTotalDatasetsCount: (collectionId: string) => Promise<TotalDatasetsCount>
   create: (dataset: DatasetDTO) => Promise<{ persistentId: string }>
 }

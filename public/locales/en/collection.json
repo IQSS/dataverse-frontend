@@ -1,0 +1,6 @@
+{
+  "noDatasetsMessage": {
+    "authenticated": "This dataverse currently has no datasets. You can add to it by using the Add Data button on this page.",
+    "anonymous": "This dataverse currently has no datasets. Please <1>log in</1> to see if you are able to add to it."
+  }
+}
