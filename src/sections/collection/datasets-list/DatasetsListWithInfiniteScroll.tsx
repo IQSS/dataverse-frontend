@@ -9,7 +9,6 @@ import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPag
 import { useLoading } from '../../loading/LoadingContext'
 import { NoDatasetsMessage } from './NoDatasetsMessage'
 import { DatasetCard } from './dataset-card/DatasetCard'
-import { PageNumberNotFound } from './PageNumberNotFound'
 import styles from './DatasetsList.module.scss'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { ErrorDatasetsMessage } from './ErrorDatasetsMessage'
@@ -28,7 +27,7 @@ export function DatasetsListWithInfiniteScroll({
   const [paginationInfo, setPaginationInfo] = useState<DatasetPaginationInfo>(
     new DatasetPaginationInfo()
   )
-  const { accumulatedDatasets, isLoading, error, pageNumberNotFound } = useDatasets(
+  const { accumulatedDatasets, isLoading, error } = useDatasets(
     datasetRepository,
     collectionId,
     setPaginationInfo,
@@ -58,14 +57,6 @@ export function DatasetsListWithInfiniteScroll({
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading])
-
-  if (pageNumberNotFound) {
-    return (
-      <section className={styles.container}>
-        <PageNumberNotFound />
-      </section>
-    )
-  }
 
   return (
     <section
