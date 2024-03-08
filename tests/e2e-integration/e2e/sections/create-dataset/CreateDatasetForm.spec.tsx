@@ -31,4 +31,12 @@ describe('Create Dataset', () => {
     cy.findByText(DatasetLabelValue.DRAFT).should('exist')
     cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
   })
+
+  it('navigates to the home if the user cancels the form', () => {
+    cy.visit('/spa/datasets/create')
+
+    cy.findByText(/Cancel/i).click()
+
+    cy.findByRole('heading', { name: 'Root' }).should('exist')
+  })
 })
