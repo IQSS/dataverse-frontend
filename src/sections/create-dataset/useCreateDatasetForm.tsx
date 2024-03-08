@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { createDataset } from '../../dataset/domain/useCases/createDataset'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
+import { useNavigate } from 'react-router-dom'
+import { Route } from '../Route.enum'
 
 export enum SubmissionStatus {
   NotSubmitted = 'NotSubmitted',
@@ -20,6 +22,7 @@ export function useCreateDatasetForm(
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
   )
+  const navigate = useNavigate()
 
   const submitForm = (formData: DatasetDTO): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
@@ -30,8 +33,14 @@ export function useCreateDatasetForm(
     }
 
     createDataset(repository, formData)
-      .then(() => setSubmissionStatus(SubmissionStatus.SubmitComplete))
-      .catch(() => setSubmissionStatus(SubmissionStatus.Errored))
+      .then(({ persistentId }) => {
+        setSubmissionStatus(SubmissionStatus.SubmitComplete)
+        navigate(`${Route.DATASETS}?persistentId=${persistentId}`)
+        return
+      })
+      .catch((error) => {
+        setSubmissionStatus(SubmissionStatus.Errored)
+      })
   }
 
   return {

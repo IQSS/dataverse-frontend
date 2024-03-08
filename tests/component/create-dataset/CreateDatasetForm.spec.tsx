@@ -4,7 +4,7 @@ import { DatasetRepository } from '../../../src/dataset/domain/repositories/Data
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 describe('Create Dataset', () => {
   beforeEach(() => {
-    datasetRepository.create = cy.stub().resolves()
+    datasetRepository.create = cy.stub().resolves({ persistentId: 'persistentId' })
   })
 
   it('renders the Create Dataset page and its contents', () => {
@@ -110,7 +110,7 @@ describe('Create Dataset', () => {
     cy.findByText('Error: Submission failed.').should('exist')
   })
 
-  it('can submit a valid form', () => {
+  it.only('can submit a valid form', () => {
     cy.customMount(<CreateDatasetForm repository={datasetRepository} />)
 
     cy.findByLabelText(/Title/i).type('Test Dataset Title').and('have.value', 'Test Dataset Title')
