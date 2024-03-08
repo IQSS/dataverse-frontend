@@ -17,6 +17,11 @@
         "tooltip": "The name of the author, such as the person's name or the name of an organization",
         "feedback": "Author name is required."
       },
+      "datasetContactEmail": {
+        "label": "Point of Contact E-mail",
+        "tooltip": "The point of contact's e-mail address",
+        "feedback": "Point of Contact E-mail is required."
+      },
       "dsDescriptionValue": {
         "label": "Description Text",
         "tooltip": "A summary describing the purpose, nature and scope of the Dataset",

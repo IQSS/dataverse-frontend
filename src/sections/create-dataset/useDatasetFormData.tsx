@@ -24,7 +24,9 @@ export const useDatasetFormData = (
     value: string
   ): DatasetDTO => {
     const objectFromPath: DatasetDTO = initialState
+
     _.set(objectFromPath, name, value)
+    cleanArray(objectFromPath, name)
 
     return objectFromPath
   }
@@ -32,5 +34,15 @@ export const useDatasetFormData = (
   return {
     formData,
     updateFormData
+  }
+}
+
+function cleanArray(object: DatasetDTO, path: string) {
+  const arrayPath = path.split('.').slice(0, -1).join('.')
+  const existingArray: string[] = _.get(object, arrayPath) as string[]
+
+  if (Array.isArray(existingArray)) {
+    const cleanedArray = existingArray.filter((item) => item !== undefined && item !== '')
+    _.set(object, arrayPath, cleanedArray)
   }
 }

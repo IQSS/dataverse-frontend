@@ -99,6 +99,26 @@ export function CreateDatasetForm({ repository }: CreateDatasetFormProps) {
               {t('datasetForm.fields.authorName.feedback')}
             </Form.Group.Feedback>
           </Form.Group>
+          <Form.Group controlId="contact-email" required>
+            <Form.Group.Label message={t('datasetForm.fields.datasetContactEmail.tooltip')}>
+              {t('datasetForm.fields.datasetContactEmail.label')}
+            </Form.Group.Label>
+            <Form.Group.Input
+              disabled={submissionStatus === SubmissionStatus.IsSubmitting}
+              type="email"
+              name="metadataBlocks.0.fields.datasetContact.0.datasetContactEmail"
+              onChange={handleFieldChange}
+              isInvalid={
+                !!(
+                  validationErrors.metadataBlocks[0].fields
+                    .datasetContact as DatasetMetadataSubField[]
+                )[0].datasetContactEmail
+              }
+            />
+            <Form.Group.Feedback type="invalid">
+              {t('datasetForm.fields.datasetContactEmail.feedback')}
+            </Form.Group.Feedback>
+          </Form.Group>
           <Form.Group controlId="description-text" required>
             <Form.Group.Label message={t('datasetForm.fields.dsDescriptionValue.tooltip')}>
               {t('datasetForm.fields.dsDescriptionValue.label')}

@@ -5,6 +5,7 @@ const TITLE_REQUIRED = 'Title is required.'
 const AUTHOR_NAME_REQUIRED = 'Author name is required.'
 const DESCRIPTION_TEXT_REQUIRED = 'Description text is required.'
 const SUBJECT_REQUIRED = 'Subject is required.'
+const DATASET_CONTACT_EMAIL_REQUIRED = 'Dataset contact email is required.'
 
 export interface DatasetValidationResponse {
   isValid: boolean
@@ -26,6 +27,18 @@ export function validateDataset(dataset: DatasetDTO) {
   ) {
     if (isArrayOfSubfieldValue(errors.metadataBlocks[0].fields.author)) {
       errors.metadataBlocks[0].fields.author[0].authorName = AUTHOR_NAME_REQUIRED
+      isValid = false
+    }
+  }
+
+  if (
+    isArrayOfSubfieldValue(dataset.metadataBlocks[0].fields.datasetContact) &&
+    (!dataset.metadataBlocks[0].fields.datasetContact[0].datasetContactEmail ||
+      !emailIsValid(dataset.metadataBlocks[0].fields.datasetContact[0].datasetContactEmail))
+  ) {
+    if (isArrayOfSubfieldValue(errors.metadataBlocks[0].fields.datasetContact)) {
+      errors.metadataBlocks[0].fields.datasetContact[0].datasetContactEmail =
+        DATASET_CONTACT_EMAIL_REQUIRED
       isValid = false
     }
   }
@@ -75,4 +88,9 @@ function isArrayOfString(
     return metadataFieldValue.some((field) => typeof field === 'string')
   }
   return false
+}
+
+function emailIsValid(email: string): boolean {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return regex.test(email)
 }

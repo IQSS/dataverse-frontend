@@ -20,6 +20,11 @@ export const initialDatasetDTO: DatasetDTO = {
           {
             dsDescriptionValue: ''
           }
+        ],
+        datasetContact: [
+          {
+            datasetContactEmail: ''
+          }
         ]
       }
     }
