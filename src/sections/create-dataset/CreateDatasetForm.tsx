@@ -123,9 +123,8 @@ export function CreateDatasetForm({ repository }: CreateDatasetFormProps) {
             <Form.Group.Label message={t('datasetForm.fields.dsDescriptionValue.tooltip')}>
               {t('datasetForm.fields.dsDescriptionValue.label')}
             </Form.Group.Label>
-            <Form.Group.Input
+            <Form.Group.TextArea
               disabled={submissionStatus === SubmissionStatus.IsSubmitting}
-              type="text"
               name="metadataBlocks.0.fields.dsDescription.0.dsDescriptionValue"
               onChange={handleFieldChange}
               isInvalid={

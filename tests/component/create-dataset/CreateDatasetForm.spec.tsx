@@ -110,7 +110,7 @@ describe('Create Dataset', () => {
     cy.findByText('Error: Submission failed.').should('exist')
   })
 
-  it.only('can submit a valid form', () => {
+  it('can submit a valid form', () => {
     cy.customMount(<CreateDatasetForm repository={datasetRepository} />)
 
     cy.findByLabelText(/Title/i).type('Test Dataset Title').and('have.value', 'Test Dataset Title')
