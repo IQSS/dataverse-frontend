@@ -38,7 +38,7 @@ export function useCreateDatasetForm(
         navigate(`${Route.DATASETS}?persistentId=${persistentId}`)
         return
       })
-      .catch((error) => {
+      .catch(() => {
         setSubmissionStatus(SubmissionStatus.Errored)
       })
   }
