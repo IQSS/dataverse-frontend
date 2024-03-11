@@ -6,17 +6,17 @@ import { DatasetPaginationInfo } from '../../dataset/domain/models/DatasetPagina
 import { DatasetPreview } from '../../dataset/domain/models/DatasetPreview'
 import { DatasetPreviewMother } from '../../../tests/component/dataset/domain/models/DatasetPreviewMother'
 import { DatasetFormFields } from '../../dataset/domain/models/DatasetFormFields'
+import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount'
 export class DatasetMockRepository implements DatasetRepository {
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  getAll(collectionId: string, paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
+  getAll(_collectionId: string, paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetPreviewMother.createManyRealistic(paginationInfo.pageSize))
       }, 1000)
     })
   }
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  getTotalDatasetsCount(collectionId: string): Promise<TotalDatasetsCount> {
+
+  getTotalDatasetsCount(_collectionId: string): Promise<TotalDatasetsCount> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(200)
@@ -24,11 +24,26 @@ export class DatasetMockRepository implements DatasetRepository {
     })
   }
 
+  getDatasetsWithCount: (
+    collectionId: string,
+    paginationInfo: DatasetPaginationInfo
+  ) => Promise<DatasetsWithCount> = (
+    _collectionId: string,
+    paginationInfo: DatasetPaginationInfo
+  ) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          datasetPreviews: DatasetPreviewMother.createManyRealistic(paginationInfo.pageSize),
+          totalCount: 200
+        })
+      }, 1000)
+    })
+  }
+
   getByPersistentId(
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    persistentId: string,
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    version?: string | undefined
+    _persistentId: string,
+    _version?: string | undefined
   ): Promise<Dataset | undefined> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -36,10 +51,7 @@ export class DatasetMockRepository implements DatasetRepository {
       }, 1000)
     })
   }
-  getByPrivateUrlToken(
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    privateUrlToken: string
-  ): Promise<Dataset | undefined> {
+  getByPrivateUrlToken(_privateUrlToken: string): Promise<Dataset | undefined> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetMother.createRealistic())
