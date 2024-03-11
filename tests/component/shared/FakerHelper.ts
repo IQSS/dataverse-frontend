@@ -18,6 +18,18 @@ export class FakerHelper {
   static chromaticBuild() {
     return import.meta.env.STORYBOOK_CHROMATIC_BUILD === 'true'
   }
+  /*
+  The loadingTimout method is used to simulate a delay in the response of a promise.
+  We set it to zero when running in Chromatic, so that calls to Faker happen in a
+  predictable way, and the Faker data is reproducible.
+   */
+  static loadingTimout() {
+    if (this.chromaticBuild()) {
+      return 0
+    } else {
+      return 1000
+    }
+  }
   static smallNumber(max: number) {
     if (this.chromaticBuild()) {
       return 12

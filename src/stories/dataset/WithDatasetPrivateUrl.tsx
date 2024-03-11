@@ -3,6 +3,7 @@ import { DatasetProvider } from '../../sections/dataset/DatasetProvider'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { Dataset } from '../../dataset/domain/models/Dataset'
 import { DatasetMother } from '../../../tests/component/dataset/domain/models/DatasetMother'
+import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 
 export const WithDatasetPrivateUrl = (Story: StoryFn) => {
   const datasetRepository = {} as DatasetRepository
@@ -20,7 +21,7 @@ export const WithDatasetPrivateUrl = (Story: StoryFn) => {
             }
           })
         )
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
   return (

@@ -6,6 +6,7 @@ import {
   DatasetMother,
   DatasetPermissionsMother
 } from '../../../tests/component/dataset/domain/models/DatasetMother'
+import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 
 export const WithDatasetAllPermissionsGranted = (Story: StoryFn) => {
   const datasetRepository = {} as DatasetRepository
@@ -23,7 +24,7 @@ export const WithDatasetAllPermissionsGranted = (Story: StoryFn) => {
             hasValidTermsOfAccess: true
           })
         )
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
   return (

@@ -6,6 +6,7 @@ import {
   DatasetMother,
   DatasetVersionMother
 } from '../../../tests/component/dataset/domain/models/DatasetMother'
+import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 
 export const WithDeaccessionedDataset = (Story: StoryFn) => {
   const datasetRepository = {} as DatasetRepository
@@ -22,7 +23,7 @@ export const WithDeaccessionedDataset = (Story: StoryFn) => {
             version: DatasetVersionMother.createDeaccessioned()
           })
         )
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
   return (

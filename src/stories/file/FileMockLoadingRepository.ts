@@ -5,6 +5,7 @@ import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/model
 import { FileCriteria } from '../../files/domain/models/FileCriteria'
 import { FileMockRepository } from './FileMockRepository'
 import { File } from '../../files/domain/models/File'
+import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 
 export class FileMockLoadingRepository extends FileMockRepository implements FileRepository {
   getAllByDatasetPersistentId(
@@ -31,7 +32,7 @@ export class FileMockLoadingRepository extends FileMockRepository implements Fil
     return new Promise(() => {
       setTimeout(() => {
         // Do nothing
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 
@@ -40,7 +41,7 @@ export class FileMockLoadingRepository extends FileMockRepository implements Fil
     return new Promise(() => {
       setTimeout(() => {
         // Do nothing
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 }
