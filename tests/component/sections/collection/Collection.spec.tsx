@@ -63,7 +63,11 @@ describe('Collection page', () => {
 
   it('renders the datasets list with infinite scrolling enabled', () => {
     const first10Elements = datasets.slice(0, 10)
-    datasetRepository.getAll = cy.stub().resolves(first10Elements)
+
+    datasetRepository.getDatasetsWithCount = cy.stub().resolves({
+      datasetPreviews: first10Elements,
+      totalCount: totalDatasetsCount
+    })
 
     cy.customMount(
       <Collection datasetRepository={datasetRepository} id="collection" infiniteScrollEnabled />
