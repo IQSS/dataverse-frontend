@@ -217,7 +217,7 @@ export class FileMetadataMother {
   }
 
   static createWithDirectory(): FileMetadata {
-    return this.createDefault({ directory: faker.system.directoryPath() })
+    return this.createDefault({ directory: FakerHelper.directoryPath() })
   }
 
   static createWithNoDirectory(): FileMetadata {
@@ -261,7 +261,7 @@ export class FileMetadataMother {
 
   static createWithDescription(): FileMetadata {
     return this.createDefault({
-      description: faker.lorem.paragraph()
+      description: FakerHelper.paragraph()
     })
   }
 

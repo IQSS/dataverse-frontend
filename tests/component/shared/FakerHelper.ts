@@ -76,6 +76,20 @@ export class FakerHelper {
       return new FileSize(size.value, size.unit)
     }
   }
+  static directoryPath() {
+    if (this.chromaticBuild()) {
+      return '/usr/X11R6'
+    } else {
+      return faker.system.directoryPath()
+    }
+  }
+  static paragraph() {
+    if (this.chromaticBuild()) {
+      return 'Voluptas amet consectetur dolore doloribus. Cumque et quo eum voluptatem eum dolores dignissimos. Vel inventore quaerat officiis. Nobis debitis quidem hic laudantium blanditiis. Error excepturi dicta aliquam enim ducimus.'
+    } else {
+      return faker.lorem.paragraph()
+    }
+  }
   static pastDate() {
     if (this.chromaticBuild()) {
       return new Date('2020-01-01T10:00:00.000Z')
