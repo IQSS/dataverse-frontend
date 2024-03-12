@@ -68,7 +68,8 @@ export function DatasetsListWithInfiniteScroll({
         [styles['scrollable-container--empty-or-error']]: isEmptyDatasets || error
       })}
       ref={rootRef}
-      tabIndex={0}>
+      tabIndex={0}
+      data-testid="scrollable-container">
       {isEmptyDatasets && <NoDatasetsMessage />}
 
       {error && <ErrorDatasetsMessage errorMessage={error} />}
