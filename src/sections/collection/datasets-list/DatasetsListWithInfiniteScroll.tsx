@@ -67,7 +67,8 @@ export function DatasetsListWithInfiniteScroll({
       className={cn(styles['scrollable-container'], {
         [styles['scrollable-container--empty-or-error']]: isEmptyDatasets || error
       })}
-      ref={rootRef}>
+      ref={rootRef}
+      tabIndex={0}>
       {isEmptyDatasets && <NoDatasetsMessage />}
 
       {error && <ErrorDatasetsMessage errorMessage={error} />}

@@ -84,4 +84,14 @@ describe('Datasets List with Infinite Scroll', () => {
     })
     cy.findByTestId('datasets-list-infinite-scroll-skeleton').should('not.exist')
   })
+
+  it('renders error message when there is an error', () => {
+    datasetRepository.getDatasetsWithCount = cy.stub().rejects(new Error('some error'))
+
+    cy.customMount(
+      <DatasetsListWithInfiniteScroll datasetRepository={datasetRepository} collectionId="root" />
+    )
+
+    cy.findByText('Error').should('exist')
+  })
 })
