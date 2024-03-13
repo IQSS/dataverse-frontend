@@ -1,9 +1,7 @@
 import { faker } from '@faker-js/faker'
 import {
-  FileDateType,
   FileEmbargo,
   FileSize,
-  FileSizeUnit,
   FileType,
   FileChecksum,
   FileLabel,
@@ -13,6 +11,7 @@ import {
   FileDownloadUrls
 } from '../../../../../src/files/domain/models/FileMetadata'
 import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
+import { FakerHelper } from '../../../shared/FakerHelper'
 
 const valueOrUndefined: <T>(value: T) => T | undefined = (value) => {
   const shouldShowValue = faker.datatype.boolean()
@@ -69,11 +68,7 @@ export class FileTabularDataMother {
 
 export class FileLabelMother {
   static create(props?: Partial<FileLabel>): FileLabel {
-    return {
-      type: faker.helpers.arrayElement(Object.values(FileLabelType)),
-      value: faker.lorem.word(),
-      ...props
-    }
+    return FakerHelper.fileLabel(props)
   }
 
   static createMany(count: number): FileLabel[] {
@@ -92,13 +87,13 @@ export class FileLabelMother {
 export class FileEmbargoMother {
   static create(props?: Partial<FileEmbargo>): FileEmbargo {
     return new FileEmbargo(
-      props?.dateAvailable ?? faker.date.future(),
+      props?.dateAvailable ?? FakerHelper.futureDate(),
       props?.reason ?? faker.lorem.sentence()
     )
   }
 
   static createWithNoReason(props?: Partial<FileEmbargo>): FileEmbargo {
-    return new FileEmbargo(props?.dateAvailable ?? faker.date.future(), undefined)
+    return new FileEmbargo(props?.dateAvailable ?? FakerHelper.futureDate(), undefined)
   }
 }
 
@@ -122,13 +117,7 @@ export class FileChecksumMother {
 
 export class FileSizeMother {
   static create(props?: Partial<FileSize>): FileSize {
-    const size = {
-      value: faker.datatype.number({ max: 1024, precision: 2 }),
-      unit: faker.helpers.arrayElement(Object.values(FileSizeUnit)),
-      ...props
-    }
-
-    return new FileSize(size.value, size.unit)
+    return FakerHelper.fileSize(props)
   }
 }
 
@@ -153,10 +142,10 @@ export class FileMetadataMother {
       type: tabularFile ? FileTypeMother.createTabular() : FileTypeMother.create(),
       size: FileSizeMother.create(),
       date: {
-        type: faker.helpers.arrayElement(Object.values(FileDateType)),
-        date: faker.date.recent()
+        type: FakerHelper.fileDateType(),
+        date: FakerHelper.recentDate()
       },
-      downloadCount: faker.datatype.number(40),
+      downloadCount: FakerHelper.smallNumber(40),
       labels: faker.datatype.boolean() ? FileLabelMother.createMany(3) : [],
       checksum: FileChecksumMother.create(),
       thumbnail: thumbnail,
@@ -166,8 +155,8 @@ export class FileMetadataMother {
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
       isDeleted: faker.datatype.boolean(),
       downloadUrls: FileDownloadUrlsMother.create(),
-      depositDate: faker.date.past(),
-      publicationDate: faker.datatype.boolean() ? faker.date.past() : undefined,
+      depositDate: FakerHelper.pastDate(),
+      publicationDate: faker.datatype.boolean() ? FakerHelper.pastDate() : undefined,
       persistentId: faker.datatype.uuid(),
       ...props
     }
@@ -228,7 +217,7 @@ export class FileMetadataMother {
   }
 
   static createWithDirectory(): FileMetadata {
-    return this.createDefault({ directory: faker.system.directoryPath() })
+    return this.createDefault({ directory: FakerHelper.directoryPath() })
   }
 
   static createWithNoDirectory(): FileMetadata {
@@ -272,7 +261,7 @@ export class FileMetadataMother {
 
   static createWithDescription(): FileMetadata {
     return this.createDefault({
-      description: faker.lorem.paragraph()
+      description: FakerHelper.paragraph()
     })
   }
 
@@ -296,7 +285,7 @@ export class FileMetadataMother {
 
   static createWithThumbnail(): FileMetadata {
     return this.createDefault({
-      thumbnail: faker.image.imageUrl(400),
+      thumbnail: FakerHelper.getImageUrl(400),
       type: FileTypeMother.createImage()
     })
   }
@@ -322,7 +311,7 @@ export class FileMetadataMother {
 
   static createWithPublicationDate(props?: Partial<FileMetadata>): FileMetadata {
     return this.createDefault({
-      publicationDate: faker.date.past(),
+      publicationDate: FakerHelper.pastDate(),
       ...props
     })
   }

@@ -10,6 +10,7 @@ import { FilePaginationInfo } from '../../files/domain/models/FilePaginationInfo
 import { FileMother } from '../../../tests/component/files/domain/models/FileMother'
 import { File } from '../../files/domain/models/File'
 import { FilePreview } from '../../files/domain/models/FilePreview'
+import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 
 export class FileMockRepository implements FileRepository {
   constructor(public readonly fileMock?: File) {}
@@ -23,7 +24,7 @@ export class FileMockRepository implements FileRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FilesMockData(paginationInfo))
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 
@@ -36,7 +37,7 @@ export class FileMockRepository implements FileRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FilesCountInfoMother.create({ total: 200 }))
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 
@@ -51,7 +52,7 @@ export class FileMockRepository implements FileRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(19900)
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 
@@ -62,7 +63,7 @@ export class FileMockRepository implements FileRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(this.fileMock ?? FileMother.createRealistic())
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 

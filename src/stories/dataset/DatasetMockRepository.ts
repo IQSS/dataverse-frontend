@@ -7,12 +7,13 @@ import { DatasetPreview } from '../../dataset/domain/models/DatasetPreview'
 import { DatasetPreviewMother } from '../../../tests/component/dataset/domain/models/DatasetPreviewMother'
 import { DatasetFormFields } from '../../dataset/domain/models/DatasetFormFields'
 import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount'
+import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 export class DatasetMockRepository implements DatasetRepository {
   getAll(_collectionId: string, paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetPreviewMother.createManyRealistic(paginationInfo.pageSize))
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 
@@ -20,7 +21,7 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(200)
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 
@@ -37,7 +38,7 @@ export class DatasetMockRepository implements DatasetRepository {
           datasetPreviews: DatasetPreviewMother.createManyRealistic(paginationInfo.pageSize),
           totalCount: 200
         })
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 
@@ -48,14 +49,14 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetMother.createRealistic())
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
   getByPrivateUrlToken(_privateUrlToken: string): Promise<Dataset | undefined> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetMother.createRealistic())
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 
@@ -64,7 +65,7 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(returnMsg)
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 }
