@@ -7,6 +7,7 @@ import {
   DatasetPermissionsMother
 } from '../../../tests/component/dataset/domain/models/DatasetMother'
 import { DatasetProvider } from '../../sections/dataset/DatasetProvider'
+import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 
 export const WithDatasetLockedFromEdits = (Story: StoryFn) => {
   const datasetRepository = {} as DatasetRepository
@@ -24,7 +25,7 @@ export const WithDatasetLockedFromEdits = (Story: StoryFn) => {
             locks: [DatasetLockMother.createLockedInEditInProgress()]
           })
         )
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
   return (

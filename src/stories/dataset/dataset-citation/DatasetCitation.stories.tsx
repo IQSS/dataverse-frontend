@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { DatasetCitation } from '../../../sections/dataset/dataset-citation/DatasetCitation'
-import { faker } from '@faker-js/faker'
 import {
   DatasetMother,
   DatasetVersionMother
 } from '../../../../tests/component/dataset/domain/models/DatasetMother'
+import { FakerHelper } from '../../../../tests/component/shared/FakerHelper'
 
 const meta: Meta<typeof DatasetCitation> = {
   title: 'Sections/Dataset Page/DatasetCitation',
@@ -31,7 +31,7 @@ export const Default: Story = {
 
 export const WithThumbnailImage: Story = {
   render: () => {
-    const dataset = DatasetMother.createRealistic({ thumbnail: faker.image.imageUrl() })
+    const dataset = DatasetMother.createRealistic({ thumbnail: FakerHelper.getImageUrl() })
     return (
       <div>
         <br></br>
