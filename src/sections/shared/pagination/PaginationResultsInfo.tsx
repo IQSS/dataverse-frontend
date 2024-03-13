@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPaginationInfo'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 
-type PaginationResultsInfoProps = {
+interface PaginationResultsInfoProps {
   paginationInfo: PaginationInfo<DatasetPaginationInfo | FilePaginationInfo>
   accumulated?: number
 }
