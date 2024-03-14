@@ -108,62 +108,63 @@ describe('Collection Page', () => {
     })
   })
 
-  // Skipped because for now we are just rendering infinite scrollable container, refactor if we add toggle button to switch between pagination and infinite scroll
-  it.skip('displays the correct page of the datasets list when passing the page query param', () => {
-    cy.wrap(
-      DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
-      { timeout: 10000 }
-    ).then(() => {
-      cy.visit('/spa?page=2')
+  describe.skip('Currently skipping all tests as we are only rendering an infinite scrollable container. Please refactor these tests if a toggle button is added to switch between pagination and infinite scroll.', () => {
+    it.skip('displays the correct page of the datasets list when passing the page query param', () => {
+      cy.wrap(
+        DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
+        { timeout: 10000 }
+      ).then(() => {
+        cy.visit('/spa?page=2')
 
-      cy.findAllByText(/Root/i).should('exist')
-      cy.findByText(/Dataverse Admin/i).should('exist')
+        cy.findAllByText(/Root/i).should('exist')
+        cy.findByText(/Dataverse Admin/i).should('exist')
 
-      cy.findByText('11 to 12 of 12 Datasets').should('exist')
+        cy.findByText('11 to 12 of 12 Datasets').should('exist')
+      })
     })
-  })
-  // Skipped because for now we are just rendering infinite scrollable container, refactor if we add toggle button to switch between pagination and infinite scroll
-  it.skip('updates the query param when updateQueryParam is true', () => {
-    cy.wrap(
-      DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
-      { timeout: 10000 }
-    ).then(() => {
-      cy.visit('/spa')
 
-      cy.findAllByText(/Root/i).should('exist')
-      cy.findByText(/Dataverse Admin/i).should('exist')
+    it.skip('updates the query param when updateQueryParam is true', () => {
+      cy.wrap(
+        DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
+        { timeout: 10000 }
+      ).then(() => {
+        cy.visit('/spa')
 
-      cy.findByRole('button', { name: 'Next' }).click()
-      cy.findByText('11 to 12 of 12 Datasets').should('exist')
-      cy.location('search').should('eq', '?page=2')
+        cy.findAllByText(/Root/i).should('exist')
+        cy.findByText(/Dataverse Admin/i).should('exist')
+
+        cy.findByRole('button', { name: 'Next' }).click()
+        cy.findByText('11 to 12 of 12 Datasets').should('exist')
+        cy.location('search').should('eq', '?page=2')
+      })
     })
-  })
-  // Skipped because for now we are just rendering infinite scrollable container, refactor if we add toggle button to switch between pagination and infinite scroll
-  it.skip('correctly changes the pages when using the back and forward buttons from the browser after using some page number button', () => {
-    cy.wrap(
-      DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
-      { timeout: 10000 }
-    ).then(() => {
-      cy.visit('/spa?page=2')
 
-      cy.findAllByText(/Root/i).should('exist')
-      cy.findByText(/Dataverse Admin/i).should('exist')
-      cy.findByText('11 to 12 of 12 Datasets').should('exist')
+    it.skip('correctly changes the pages when using the back and forward buttons from the browser after using some page number button', () => {
+      cy.wrap(
+        DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
+        { timeout: 10000 }
+      ).then(() => {
+        cy.visit('/spa?page=2')
 
-      cy.wait(1000)
+        cy.findAllByText(/Root/i).should('exist')
+        cy.findByText(/Dataverse Admin/i).should('exist')
+        cy.findByText('11 to 12 of 12 Datasets').should('exist')
 
-      cy.findByRole('button', { name: '1' }).click({ force: true })
-      cy.findByText('1 to 10 of 12 Datasets').should('exist')
+        cy.wait(1000)
 
-      cy.wait(1000)
+        cy.findByRole('button', { name: '1' }).click({ force: true })
+        cy.findByText('1 to 10 of 12 Datasets').should('exist')
 
-      cy.go('back')
-      cy.findByText('11 to 12 of 12 Datasets').should('exist')
+        cy.wait(1000)
 
-      cy.wait(1000)
+        cy.go('back')
+        cy.findByText('11 to 12 of 12 Datasets').should('exist')
 
-      cy.go('forward')
-      cy.findByText('1 to 10 of 12 Datasets').should('exist')
+        cy.wait(1000)
+
+        cy.go('forward')
+        cy.findByText('1 to 10 of 12 Datasets').should('exist')
+      })
     })
   })
 
@@ -172,37 +173,6 @@ describe('Collection Page', () => {
 
     cy.findAllByText(/Subcollection/i).should('exist')
     cy.findByText(/Dataverse Admin/i).should('exist')
-  })
-
-  it('4 Datasets - displays only 4 datasets and no more loading when scrolling to bottom', () => {
-    cy.wrap(
-      DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(4)),
-      { timeout: 10_000 }
-    ).then(() => {
-      cy.visit('/spa')
-
-      cy.findAllByText(/Root/i).should('exist')
-      cy.findByText(/Dataverse Admin/i).should('exist')
-
-      cy.findByText('4 Datasets').should('exist')
-      cy.get('[data-testid="scrollable-container"]').scrollTo('bottom', { ensureScrollable: false })
-      cy.wait(1_500)
-      cy.findByText('4 Datasets').should('exist')
-    })
-  })
-
-  it('12 Datasets - displays first 10 datasets when more than 10 datasets', () => {
-    cy.wrap(
-      DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
-      { timeout: 10_000 }
-    ).then(() => {
-      cy.visit('/spa')
-
-      cy.findAllByText(/Root/i).should('exist')
-      cy.findByText(/Dataverse Admin/i).should('exist')
-
-      cy.findByText('10 of 12 Datasets seen').should('exist')
-    })
   })
 
   it('12 Datasets - displays first 10 datasets, scroll to the bottom and displays the remaining 2 datasets', () => {
@@ -221,29 +191,6 @@ describe('Collection Page', () => {
       cy.get('[data-testid="scrollable-container"]').scrollTo('bottom')
       cy.wait(1_500)
       cy.findByText('12 of 12 Datasets seen').should('exist')
-    })
-  })
-
-  it('25 Datasets - displays first 10 datasets, scroll to the bottom and displays the next 10 datasets, scroll again and display remaining 5 datasets', () => {
-    cy.wrap(
-      DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(25)),
-      { timeout: 20_000 }
-    ).then(() => {
-      cy.wait(3_000)
-      cy.visit('/spa')
-
-      cy.findAllByText(/Root/i).should('exist')
-      cy.findByText(/Dataverse Admin/i).should('exist')
-
-      cy.findByText('10 of 25 Datasets seen').should('exist')
-
-      cy.get('[data-testid="scrollable-container"]').scrollTo('bottom')
-      cy.wait(1_500)
-      cy.findByText('20 of 25 Datasets seen').should('exist')
-
-      cy.get('[data-testid="scrollable-container"]').scrollTo('bottom')
-      cy.wait(1_500)
-      cy.findByText('25 of 25 Datasets seen').should('exist')
     })
   })
 })

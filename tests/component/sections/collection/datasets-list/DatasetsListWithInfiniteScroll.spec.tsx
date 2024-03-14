@@ -52,7 +52,7 @@ describe('Datasets List with Infinite Scroll', () => {
     })
   })
 
-  it('renders the first 10 datasets and more to load so loading bottom skeleton visible but not skeleton header', () => {
+  it('renders the first 10 datasets with more to load, showing the bottom loading skeleton but not the header skeleton', () => {
     cy.customMount(
       <DatasetsListWithInfiniteScroll datasetRepository={datasetRepository} collectionId="root" />
     )
@@ -66,7 +66,7 @@ describe('Datasets List with Infinite Scroll', () => {
     cy.findByTestId('datasets-list-infinite-scroll-skeleton').should('exist')
   })
 
-  it('renders 4 datasets and no more to load and correct results in header and bottom skeleton loader shouldn´t exist', () => {
+  it('renders 4 datasets with no more to load, correct results in header, and no bottom skeleton loader', () => {
     const first4Elements = datasets.slice(0, only4DatasetsCount)
     datasetRepository.getAllWithCount = cy.stub().resolves({
       datasetPreviews: first4Elements,
