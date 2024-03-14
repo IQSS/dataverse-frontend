@@ -10,10 +10,8 @@ import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 
 export class FileMockNoFiltersRepository extends FileMockRepository implements FileRepository {
   getAllByDatasetPersistentId(
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetPersistentId: string,
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersion: DatasetVersion
+    _datasetPersistentId: string,
+    _datasetVersion: DatasetVersion
   ): Promise<FilePreview[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -23,12 +21,9 @@ export class FileMockNoFiltersRepository extends FileMockRepository implements F
   }
 
   getFilesCountInfoByDatasetPersistentId(
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetPersistentId: string,
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersionNumber: DatasetVersionNumber,
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    criteria?: FileCriteria
+    _datasetPersistentId: string,
+    _datasetVersionNumber: DatasetVersionNumber,
+    _criteria?: FileCriteria
   ): Promise<FilesCountInfo> {
     return new Promise((resolve) => {
       setTimeout(() => {
