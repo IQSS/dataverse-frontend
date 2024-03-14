@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { getAllWithCount } from '../../../dataset/domain/useCases/getDatasetsWithCount'
+import { getDatasetsWithCount } from '../../../dataset/domain/useCases/getDatasetsWithCount'
 import { DatasetPreview } from '../../../dataset/domain/models/DatasetPreview'
 import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
 import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPaginationInfo'
@@ -12,7 +12,7 @@ async function loadNextDatasets(
   collectionId: string,
   paginationInfo: DatasetPaginationInfo
 ): Promise<DatasetsWithCount> {
-  return getAllWithCount(datasetRepository, collectionId, paginationInfo).catch((_err) => {
+  return getDatasetsWithCount(datasetRepository, collectionId, paginationInfo).catch((_err) => {
     throw new Error('Something went wrong getting the datasets')
   })
 }
