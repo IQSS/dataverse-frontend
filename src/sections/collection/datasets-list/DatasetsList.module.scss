@@ -28,6 +28,11 @@
     --inline-padding: 8px;
   }
 
+  @media screen and (min-width: 1280px) {
+    height: 60vh;
+    max-height: 60vh;
+  }
+
   &--empty-or-error {
     padding-block: 1rem;
   }

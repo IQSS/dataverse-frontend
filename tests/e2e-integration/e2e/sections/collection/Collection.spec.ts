@@ -188,7 +188,7 @@ describe('Collection Page', () => {
 
       cy.findByText('10 of 12 Datasets seen').should('exist')
 
-      cy.get('[data-testid="scrollable-container"]').scrollTo('bottom')
+      cy.get('[data-testid="scrollable-container"]').scrollTo('bottom', { ensureScrollable: false })
       cy.wait(1_500)
       cy.findByText('12 of 12 Datasets seen').should('exist')
     })
