@@ -103,7 +103,6 @@ jobs:
         working-directory: packages/design-system
         run: npm run build
 
-
   interaction-and-accessibility:
     runs-on: ubuntu-latest
 
