@@ -1,25 +1,20 @@
-import { useState } from 'react'
-import { getDatasetsWithCount } from '../../../dataset/domain/useCases/getDatasetsWithCount'
+import { useMemo, useState } from 'react'
+import { getAllWithCount } from '../../../dataset/domain/useCases/getDatasetsWithCount'
 import { DatasetPreview } from '../../../dataset/domain/models/DatasetPreview'
 import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
 import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPaginationInfo'
 import { DatasetsWithCount } from '../../../dataset/domain/models/DatasetsWithCount'
+
+export const NO_DATASETS = 0
 
 async function loadNextDatasets(
   datasetRepository: DatasetRepository,
   collectionId: string,
   paginationInfo: DatasetPaginationInfo
 ): Promise<DatasetsWithCount> {
-  try {
-    const datasetsWithCount = await getDatasetsWithCount(
-      datasetRepository,
-      collectionId,
-      paginationInfo
-    )
-    return datasetsWithCount
-  } catch (err) {
+  return getAllWithCount(datasetRepository, collectionId, paginationInfo).catch((_err) => {
     throw new Error('Something went wrong getting the datasets')
-  }
+  })
 }
 
 export function useLoadDatasets(
@@ -32,6 +27,12 @@ export function useLoadDatasets(
   const [hasNextPage, setHasNextPage] = useState<boolean>(true)
   const [totalAvailable, setTotalAvailable] = useState<number | undefined>(undefined)
   const [error, setError] = useState<string | null>(null)
+
+  const isEmptyDatasets = useMemo(() => totalAvailable === NO_DATASETS, [totalAvailable])
+  const areDatasetsAvailable = useMemo(() => {
+    return typeof totalAvailable === 'number' && totalAvailable > NO_DATASETS && !error
+  }, [totalAvailable, error])
+  const accumulatedCount = useMemo(() => accumulatedDatasets.length, [accumulatedDatasets])
 
   const loadMore = async () => {
     setLoading(true)
@@ -51,8 +52,6 @@ export function useLoadDatasets(
       if (!isNextPage) {
         setLoading(false)
       }
-
-      return totalCount
     } catch (err) {
       const errorMessage =
         err instanceof Error && err.message
@@ -64,5 +63,15 @@ export function useLoadDatasets(
     }
   }
 
-  return { isLoading, accumulatedDatasets, totalAvailable, hasNextPage, error, loadMore }
+  return {
+    isLoading,
+    accumulatedDatasets,
+    totalAvailable,
+    hasNextPage,
+    error,
+    loadMore,
+    isEmptyDatasets,
+    areDatasetsAvailable,
+    accumulatedCount
+  }
 }
