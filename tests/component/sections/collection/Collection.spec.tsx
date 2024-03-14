@@ -64,7 +64,7 @@ describe('Collection page', () => {
   it('renders the datasets list with infinite scrolling enabled', () => {
     const first10Elements = datasets.slice(0, 10)
 
-    datasetRepository.getDatasetsWithCount = cy.stub().resolves({
+    datasetRepository.getAllWithCount = cy.stub().resolves({
       datasetPreviews: first10Elements,
       totalCount: totalDatasetsCount
     })

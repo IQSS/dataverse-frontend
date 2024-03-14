@@ -48,7 +48,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
   }
 
-  getDatasetsWithCount(
+  getAllWithCount(
     collectionId: string,
     paginationInfo: DatasetPaginationInfo
   ): Promise<DatasetsWithCount> {

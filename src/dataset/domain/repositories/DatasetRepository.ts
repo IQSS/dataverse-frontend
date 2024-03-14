@@ -10,7 +10,7 @@ export interface DatasetRepository {
   getByPrivateUrlToken: (privateUrlToken: string) => Promise<Dataset | undefined>
   getAll: (collectionId: string, paginationInfo: DatasetPaginationInfo) => Promise<DatasetPreview[]>
   getTotalDatasetsCount: (collectionId: string) => Promise<TotalDatasetsCount>
-  getDatasetsWithCount: (
+  getAllWithCount: (
     collectionId: string,
     paginationInfo: DatasetPaginationInfo
   ) => Promise<DatasetsWithCount>

@@ -10,7 +10,7 @@ const only4DatasetsCount = 4
 
 describe('Datasets List with Infinite Scroll', () => {
   beforeEach(() => {
-    datasetRepository.getDatasetsWithCount = cy.stub().resolves({
+    datasetRepository.getAllWithCount = cy.stub().resolves({
       datasetPreviews: first10Elements,
       totalCount: totalDatasetsCount
     })
@@ -27,7 +27,7 @@ describe('Datasets List with Infinite Scroll', () => {
   })
 
   it('renders no datasets message when there are no datasets', () => {
-    datasetRepository.getDatasetsWithCount = cy.stub().resolves({
+    datasetRepository.getAllWithCount = cy.stub().resolves({
       datasetPreviews: [],
       totalCount: 0
     })
@@ -68,7 +68,7 @@ describe('Datasets List with Infinite Scroll', () => {
 
   it('renders 4 datasets and no more to load and correct results in header and bottom skeleton loader shouldn´t exist', () => {
     const first4Elements = datasets.slice(0, only4DatasetsCount)
-    datasetRepository.getDatasetsWithCount = cy.stub().resolves({
+    datasetRepository.getAllWithCount = cy.stub().resolves({
       datasetPreviews: first4Elements,
       totalCount: only4DatasetsCount
     })
@@ -86,7 +86,7 @@ describe('Datasets List with Infinite Scroll', () => {
   })
 
   it('renders error message when there is an error', () => {
-    datasetRepository.getDatasetsWithCount = cy.stub().rejects(new Error('some error'))
+    datasetRepository.getAllWithCount = cy.stub().rejects(new Error('some error'))
 
     cy.customMount(
       <DatasetsListWithInfiniteScroll datasetRepository={datasetRepository} collectionId="root" />

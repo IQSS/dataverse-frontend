@@ -23,7 +23,7 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
     })
   }
 
-  getDatasetsWithCount: (
+  getAllWithCount: (
     collectionId: string,
     paginationInfo: DatasetPaginationInfo
   ) => Promise<DatasetsWithCount> = (
