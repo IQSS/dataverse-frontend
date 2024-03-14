@@ -2,8 +2,7 @@ import { ReactElement } from 'react'
 import { Collection } from './Collection'
 import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { useSearchParams } from 'react-router-dom'
-
-const INFINITE_SCROLL_ENABLED = true
+import { INFINITE_SCROLL_ENABLED } from './config'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 export class CollectionFactory {
