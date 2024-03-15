@@ -10,7 +10,11 @@ import { WithLoggedInUser } from '../WithLoggedInUser'
 const meta: Meta<typeof Collection> = {
   title: 'Pages/Collection',
   component: Collection,
-  decorators: [WithI18next, WithLayout]
+  decorators: [WithI18next, WithLayout],
+  parameters: {
+    // Sets the delay for all stories.
+    chromatic: { delay: 15000, pauseAnimationAtEnd: true }
+  }
 }
 
 export default meta

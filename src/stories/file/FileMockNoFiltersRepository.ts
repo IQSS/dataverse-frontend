@@ -6,6 +6,7 @@ import { FilesMockData } from './FileMockData'
 import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/models/Dataset'
 import { FileCriteria } from '../../files/domain/models/FileCriteria'
 import { FileMockRepository } from './FileMockRepository'
+import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 
 export class FileMockNoFiltersRepository extends FileMockRepository implements FileRepository {
   getAllByDatasetPersistentId(
@@ -17,7 +18,7 @@ export class FileMockNoFiltersRepository extends FileMockRepository implements F
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FilesMockData())
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 
@@ -32,7 +33,7 @@ export class FileMockNoFiltersRepository extends FileMockRepository implements F
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FilesCountInfoMother.createOnlyTotal())
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 }

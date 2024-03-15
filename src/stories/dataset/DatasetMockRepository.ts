@@ -6,13 +6,14 @@ import { DatasetPaginationInfo } from '../../dataset/domain/models/DatasetPagina
 import { DatasetPreview } from '../../dataset/domain/models/DatasetPreview'
 import { DatasetPreviewMother } from '../../../tests/component/dataset/domain/models/DatasetPreviewMother'
 import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
+import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 export class DatasetMockRepository implements DatasetRepository {
   // eslint-disable-next-line unused-imports/no-unused-vars
   getAll(collectionId: string, paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetPreviewMother.createManyRealistic(paginationInfo.pageSize))
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
   // eslint-disable-next-line unused-imports/no-unused-vars
@@ -20,7 +21,7 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(200)
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 
@@ -33,7 +34,7 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetMother.createRealistic())
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
   getByPrivateUrlToken(
@@ -43,7 +44,7 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetMother.createRealistic())
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 
@@ -52,7 +53,7 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({ persistentId: 'some-persistent-id' })
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 }
