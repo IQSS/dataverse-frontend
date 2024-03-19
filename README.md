@@ -547,6 +547,28 @@ describe('Dataset JSDataverse Repository', () => {
 
 </details>
 
+<details>
+<summary><strong>Wait for no locks</strong></summary>
+
+Some integration tests require waiting for no locks to be present in the dataset. This is done using the `waitForNoLocks`
+method from the `TestsUtils` class.
+
+```javascript
+it('waits for no locks', async () => {
+  const datasetResponse = await DatasetHelper.create()
+
+  await DatasetHelper.publish(datasetResponse.persistentId)
+  await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
+
+  await datasetRepository.getByPersistentId(datasetResponse.persistentId).then((dataset) => {
+    if (!dataset) {
+      throw new Error('Dataset not found')
+    }
+    expect(dataset.locks).to.deep.equal([])
+  })
+})
+```
+
 ### 3. **End-to-End (e2e) Tests:**
 
 End-to-end tests simulate real user scenarios, covering the complete flow of the application:
@@ -590,7 +612,13 @@ describe('Create Dataset', () => {
 })
 ```
 
-</details>
+> **Note:** The current e2e tests are failing due to the following reasons:
+>
+> - **Dataset JSDataverse Repository -> gets the total dataset count**: Calling `destroyAll()` before the "gets the total
+> - dataset count" test in `DatasetJSDataverseRepository.spec.ts` causes an optimistic lock exception in Dataverse.
+>
+> **Solution:** We need to either reset the database after each test or find an alternative method to avoid the optimistic
+> lock exception. Check the issue [here](https://github.com/IQSS/dataverse-frontend/issues/294).
 
 ### Patterns and Conventions
 
@@ -685,6 +713,17 @@ independently.
 We run tests on every pull request and merge to ensure that the application is always stable and functional. You can
 find the CI workflow in the `.github/workflows/test.yml` file.
 
+CI checks include:
+
+- **Unit Tests:** We run all unit tests to ensure that the application's components work as expected.
+- **Integration Tests:** We run integration tests to ensure that the application communicates correctly with external
+  systems.
+- **E2E Tests:** We run e2e tests to ensure that the application's behavior is correct from the user's perspective.
+- **Accessibility Tests:** We run checks to ensure that the application is accessible and that it meets the highest standards
+  for accessibility compliance.
+- **Code Coverage:** We check the test coverage to ensure that the application is well-tested and that new code is
+  covered by tests.
+
 ### Test coverage
 
 We aim for high test coverage, especially in critical areas of the application, like user workflows or complex components.
@@ -692,12 +731,12 @@ However, we prioritize user-centric testing over coverage numbers.
 
 - **Coverage Threshold:** We aim for a test coverage of 95% for the unit tests. This threshold is set in the `.nycrc.json` file.
 - **Coverage Reports:** We use [nyc](https://www.npmjs.com/package/nyc) to generate coverage reports, which are available
-in the `coverage` folder after running the tests. These reports are also published to [Coveralls](https://coveralls.io/github/IQSS/dataverse-frontend?branch=develop) 
-with every pull request and merge. The coverage badge is displayed at the top of the README.
+  in the `coverage` folder after running the tests. These reports are also published to [Coveralls](https://coveralls.io/github/IQSS/dataverse-frontend?branch=develop)
+  with every pull request and merge. The coverage badge is displayed at the top of the README.
 - **Tests included in the coverage:** We include all unit tests in the coverage report.
 - **Pre-commit hook:** We use [pre-commit](https://www.npmjs.com/package/pre-commit) to run the unit tests before every commit,
-ensuring that no code is committed without passing the tests. It also runs the coverage checks to ensure that the coverage
-threshold is met.
+  ensuring that no code is committed without passing the tests. It also runs the coverage checks to ensure that the coverage
+  threshold is met.
 
 #### How to run the code coverage
 
