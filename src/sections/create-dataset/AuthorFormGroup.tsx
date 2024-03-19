@@ -2,13 +2,16 @@ import { Form } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { SubmissionStatus } from './useCreateDatasetForm'
 import { DatasetMetadataSubField } from '../../dataset/domain/models/Dataset'
-import { useDatasetValidator } from './useDatasetValidator'
+//import { useDatasetValidator } from './useDatasetValidator'
 import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
+import { useDatasetFormData } from './useDatasetFormData'
+import { useDatasetValidator } from './useDatasetValidator'
 
 interface AuthorFormGroupProps {
   submissionStatus: SubmissionStatus
-  handleFieldChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  handleFieldChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
   validationErrors: DatasetDTO
+
 }
 
 export function AuthorFormGroup({
@@ -17,7 +20,11 @@ export function AuthorFormGroup({
   validationErrors
 }: AuthorFormGroupProps) {
   const { t } = useTranslation('createDataset')
+  const { datasetIsValid } = useDatasetValidator()
+  const { formData, updateFormData } = useDatasetFormData(datasetIsValid)
+
   console.log(JSON.stringify(validationErrors))
+  const index = 0
   return (
     <Form.Group controlId="author-name" required>
       <Form.Group.Label message={t('datasetForm.fields.authorName.tooltip')}>
@@ -26,11 +33,12 @@ export function AuthorFormGroup({
       <Form.Group.Input
         disabled={submissionStatus === SubmissionStatus.IsSubmitting}
         type="text"
-        name="metadataBlocks.0.fields.author.0.authorName"
+        name={`metadataBlocks.0.fields.author.${index}.authorName`}
         onChange={handleFieldChange}
         isInvalid={
-          !!(validationErrors.metadataBlocks[0].fields.author as DatasetMetadataSubField[])[0]
-            .authorName
+          !!(validationErrors.metadataBlocks[index].fields.author as DatasetMetadataSubField[])[
+            index
+          ].authorName
         }
       />
       <Form.Group.Feedback type="invalid">
