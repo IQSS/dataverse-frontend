@@ -331,7 +331,7 @@ npm run test:coverage
 <br>
 
 <details>
-<summary><strong>Using `grep` with Cypress</strong></summary>
+<summary><strong>Running specific tests</strong></summary>
 
 > The project includes [@cypress/grep][_uses_lib_grep_url] for running specific tests.
 >
@@ -687,9 +687,36 @@ find the CI workflow in the `.github/workflows/test.yml` file.
 
 ### Test coverage
 
-We aim for high test coverage, especially in critical areas of the application, like user workflows
-or complex components. However, we prioritize user-centric testing over coverage numbers. The threshold for test coverage
-is 95%. It only includes the coverage of the unit tests.
+We aim for high test coverage, especially in critical areas of the application, like user workflows or complex components.
+However, we prioritize user-centric testing over coverage numbers.
+
+- **Coverage Threshold:** We aim for a test coverage of 95% for the unit tests. This threshold is set in the `.nycrc.json` file.
+- **Coverage Reports:** We use [nyc](https://www.npmjs.com/package/nyc) to generate coverage reports, which are available
+in the `coverage` folder after running the tests. These reports are also published to [Coveralls](https://coveralls.io/github/IQSS/dataverse-frontend?branch=develop) 
+with every pull request and merge. The coverage badge is displayed at the top of the README.
+- **Tests included in the coverage:** We include all unit tests in the coverage report.
+- **Pre-commit hook:** We use [pre-commit](https://www.npmjs.com/package/pre-commit) to run the unit tests before every commit,
+ensuring that no code is committed without passing the tests. It also runs the coverage checks to ensure that the coverage
+threshold is met.
+
+#### How to run the code coverage
+
+To generate the code coverage, you first need to run the tests with the `test:unit` script. After running the tests, you
+can check the coverage with the `test:coverage` script.
+
+If you want to see the coverage report in the browser, you can open the `coverage/lcov-report/index.html` file in the browser.
+
+```bash
+# root project directory
+
+# Run the unit tests and generate the coverage report
+
+npm run test:unit
+
+# Check the coverage
+
+npm run test:coverage
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
