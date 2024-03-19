@@ -11,9 +11,13 @@ interface AuthorFormGroupProps {
   validationErrors: DatasetDTO
 }
 
-export function AuthorFormGroup({ submissionStatus, handleFieldChange }: AuthorFormGroupProps) {
+export function AuthorFormGroup({
+  submissionStatus,
+  handleFieldChange,
+  validationErrors
+}: AuthorFormGroupProps) {
   const { t } = useTranslation('createDataset')
-  const { validationErrors, datasetIsValid } = useDatasetValidator()
+  console.log(JSON.stringify(validationErrors))
   return (
     <Form.Group controlId="author-name" required>
       <Form.Group.Label message={t('datasetForm.fields.authorName.tooltip')}>
