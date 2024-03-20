@@ -1,6 +1,6 @@
 export interface Collection {
   id: string
   name: string
-  description: string
-  affiliation: string
+  description?: string
+  affiliation?: string
 }

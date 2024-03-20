@@ -1,4 +1,4 @@
-import { Row } from '@iqss/dataverse-design-system'
+import { Col, Row } from '@iqss/dataverse-design-system'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { DatasetsList } from './datasets-list/DatasetsList'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
@@ -13,6 +13,7 @@ import { useCollection } from './useCollection'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CollectionSkeleton } from './CollectionSkeleton'
+import { CollectionInfo } from './CollectionInfo'
 
 interface CollectionProps {
   repository: CollectionRepository
@@ -39,33 +40,33 @@ export function Collection({ repository, id, datasetRepository, page }: Collecti
 
   return (
     <Row>
-      {!collection ? (
-        <CollectionSkeleton />
-      ) : (
-        <>
-          <BreadcrumbsGenerator
-            hierarchy={
-              new UpwardHierarchyNode(
-                collection.name,
-                DvObjectType.COLLECTION,
-                id,
-                undefined,
-                undefined,
-                id !== rootNode.id ? rootNode : undefined
-              )
-            }
-          />
-          <header>
-            <h1>{collection.name}</h1>
-          </header>
-          {user && (
-            <div className={styles.container}>
-              <AddDataActionsButton />
-            </div>
-          )}
-        </>
-      )}
-      <DatasetsList datasetRepository={datasetRepository} page={page} collectionId={id} />
+      <Col>
+        {!collection ? (
+          <CollectionSkeleton />
+        ) : (
+          <>
+            <BreadcrumbsGenerator
+              hierarchy={
+                new UpwardHierarchyNode(
+                  collection.name,
+                  DvObjectType.COLLECTION,
+                  id,
+                  undefined,
+                  undefined,
+                  id !== rootNode.id ? rootNode : undefined
+                )
+              }
+            />
+            <CollectionInfo collection={collection} />
+            {user && (
+              <div className={styles.container}>
+                <AddDataActionsButton />
+              </div>
+            )}
+          </>
+        )}
+        <DatasetsList datasetRepository={datasetRepository} page={page} collectionId={id} />
+      </Col>
     </Row>
   )
 }
