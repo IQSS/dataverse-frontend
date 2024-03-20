@@ -6,6 +6,9 @@ import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
 import { DatasetLoadingMockRepository } from '../dataset/DatasetLoadingMockRepository'
 import { NoDatasetsMockRepository } from '../dataset/NoDatasetsMockRepository'
 import { WithLoggedInUser } from '../WithLoggedInUser'
+import { CollectionMockRepository } from './CollectionMockRepository'
+import { CollectionLoadingMockRepository } from './CollectionLoadingMockRepository'
+import { NoCollectionMockRepository } from './NoCollectionMockRepository'
 
 const meta: Meta<typeof Collection> = {
   title: 'Pages/Collection',
@@ -21,20 +24,42 @@ export default meta
 type Story = StoryObj<typeof Collection>
 
 export const Default: Story = {
-  render: () => <Collection datasetRepository={new DatasetMockRepository()} id="collection" />
+  render: () => (
+    <Collection
+      repository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}
+      id="collection"
+    />
+  )
 }
 
 export const Loading: Story = {
   render: () => (
-    <Collection datasetRepository={new DatasetLoadingMockRepository()} id="collection" />
+    <Collection
+      repository={new CollectionLoadingMockRepository()}
+      datasetRepository={new DatasetLoadingMockRepository()}
+      id="collection"
+    />
   )
 }
 
 export const NoResults: Story = {
-  render: () => <Collection datasetRepository={new NoDatasetsMockRepository()} id="collection" />
+  render: () => (
+    <Collection
+      repository={new NoCollectionMockRepository()}
+      datasetRepository={new NoDatasetsMockRepository()}
+      id="collection"
+    />
+  )
 }
 
 export const LoggedIn: Story = {
   decorators: [WithLoggedInUser],
-  render: () => <Collection datasetRepository={new DatasetMockRepository()} id="collection" />
+  render: () => (
+    <Collection
+      repository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}
+      id="collection"
+    />
+  )
 }

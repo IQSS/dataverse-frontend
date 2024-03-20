@@ -9,8 +9,12 @@ import {
 import styles from './Collection.module.scss'
 import AddDataActionsButton from '../shared/add-data-actions/AddDataActionsButton'
 import { useSession } from '../session/SessionContext'
+import { useCollection } from './useCollection'
+import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
+import { PageNotFound } from '../page-not-found/PageNotFound'
 
 interface CollectionProps {
+  repository: CollectionRepository
   datasetRepository: DatasetRepository
   id: string
   page?: number
@@ -24,15 +28,20 @@ const rootNode = new UpwardHierarchyNode(
   undefined
 )
 
-export function Collection({ datasetRepository, id, page }: CollectionProps) {
+export function Collection({ repository, id, datasetRepository, page }: CollectionProps) {
   const { user } = useSession()
+  const { collection } = useCollection(repository, id)
+
+  if (!collection) {
+    return <PageNotFound />
+  }
 
   return (
     <Row>
       <BreadcrumbsGenerator
         hierarchy={
           new UpwardHierarchyNode(
-            capitalizeFirstLetter(id),
+            collection.name,
             DvObjectType.COLLECTION,
             id,
             undefined,
@@ -42,7 +51,7 @@ export function Collection({ datasetRepository, id, page }: CollectionProps) {
         }
       />
       <header>
-        <h1>{capitalizeFirstLetter(id)}</h1>
+        <h1>{collection.name}</h1>
       </header>
       {user && (
         <div className={styles.container}>
@@ -52,8 +61,4 @@ export function Collection({ datasetRepository, id, page }: CollectionProps) {
       <DatasetsList datasetRepository={datasetRepository} page={page} collectionId={id} />
     </Row>
   )
-}
-
-function capitalizeFirstLetter(text: string): string {
-  return text.charAt(0).toUpperCase() + text.slice(1)
 }
