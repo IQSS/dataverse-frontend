@@ -12,6 +12,7 @@ import { useSession } from '../session/SessionContext'
 import { useCollection } from './useCollection'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { PageNotFound } from '../page-not-found/PageNotFound'
+import { CollectionSkeleton } from './CollectionSkeleton'
 
 interface CollectionProps {
   repository: CollectionRepository
@@ -30,33 +31,39 @@ const rootNode = new UpwardHierarchyNode(
 
 export function Collection({ repository, id, datasetRepository, page }: CollectionProps) {
   const { user } = useSession()
-  const { collection } = useCollection(repository, id)
+  const { collection, isLoading } = useCollection(repository, id)
 
-  if (!collection) {
+  if (!isLoading && !collection) {
     return <PageNotFound />
   }
 
   return (
     <Row>
-      <BreadcrumbsGenerator
-        hierarchy={
-          new UpwardHierarchyNode(
-            collection.name,
-            DvObjectType.COLLECTION,
-            id,
-            undefined,
-            undefined,
-            id !== rootNode.id ? rootNode : undefined
-          )
-        }
-      />
-      <header>
-        <h1>{collection.name}</h1>
-      </header>
-      {user && (
-        <div className={styles.container}>
-          <AddDataActionsButton />
-        </div>
+      {!collection ? (
+        <CollectionSkeleton />
+      ) : (
+        <>
+          <BreadcrumbsGenerator
+            hierarchy={
+              new UpwardHierarchyNode(
+                collection.name,
+                DvObjectType.COLLECTION,
+                id,
+                undefined,
+                undefined,
+                id !== rootNode.id ? rootNode : undefined
+              )
+            }
+          />
+          <header>
+            <h1>{collection.name}</h1>
+          </header>
+          {user && (
+            <div className={styles.container}>
+              <AddDataActionsButton />
+            </div>
+          )}
+        </>
       )}
       <DatasetsList datasetRepository={datasetRepository} page={page} collectionId={id} />
     </Row>

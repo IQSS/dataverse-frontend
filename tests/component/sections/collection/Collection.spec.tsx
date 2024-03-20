@@ -16,6 +16,32 @@ describe('Collection page', () => {
     collectionRepository.getById = cy.stub().resolves(collection)
   })
 
+  it('renders skeleton while loading', () => {
+    cy.customMount(
+      <Collection
+        repository={collectionRepository}
+        id="collection"
+        datasetRepository={datasetRepository}
+      />
+    )
+
+    cy.findByTestId('collection-skeleton').should('exist')
+    cy.findByRole('heading', { name: 'Collection Name' }).should('not.exist')
+  })
+
+  it('renders page not found when collection is undefined', () => {
+    collectionRepository.getById = cy.stub().resolves(undefined)
+    cy.customMount(
+      <Collection
+        repository={collectionRepository}
+        id="collection"
+        datasetRepository={datasetRepository}
+      />
+    )
+
+    cy.findByText('Page Not Found').should('exist')
+  })
+
   it('renders collection title', () => {
     cy.customMount(
       <Collection
@@ -24,7 +50,7 @@ describe('Collection page', () => {
         datasetRepository={datasetRepository}
       />
     )
-    cy.findByRole('heading').should('contain.text', 'Collection Name')
+    cy.findByRole('heading', { name: 'Collection Name' }).should('exist')
   })
 
   it('does not render the Add Data dropdown button', () => {

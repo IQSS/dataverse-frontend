@@ -4,9 +4,12 @@ import { useEffect, useState } from 'react'
 import { getCollectionById } from '../../collection/domain/useCases/getCollectionById'
 
 export function useCollection(collectionRepository: CollectionRepository, collectionId: string) {
+  const [isLoading, setIsLoading] = useState(true)
   const [collection, setCollection] = useState<Collection>()
 
   useEffect(() => {
+    setIsLoading(true)
+
     getCollectionById(collectionRepository, collectionId)
       .then((collection: Collection | undefined) => {
         setCollection(collection)
@@ -14,7 +17,10 @@ export function useCollection(collectionRepository: CollectionRepository, collec
       .catch((error) => {
         console.error('There was an error getting the collection', error)
       })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }, [collectionRepository, collectionId])
 
-  return { collection }
+  return { collection, isLoading }
 }
