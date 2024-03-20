@@ -7,23 +7,32 @@ import { useCreateDatasetForm, SubmissionStatus } from './useCreateDatasetForm'
 import styles from '/src/sections/dataset/Dataset.module.scss'
 import { useLoading } from '../loading/LoadingContext'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
+import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useDatasetFormData } from './useDatasetFormData'
 import { Route } from '../Route.enum'
 import { useNavigate } from 'react-router-dom'
 import { useDatasetValidator } from './useDatasetValidator'
 import { DatasetMetadataSubField } from '../../dataset/domain/models/Dataset'
+import { useDefineDatasetMetadataFormFields } from './useDefineDatasetMetadataFormFields'
 
 interface CreateDatasetFormProps {
   repository: DatasetRepository
+  metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
 
-export function CreateDatasetForm({ repository }: CreateDatasetFormProps) {
+export function CreateDatasetForm({
+  repository,
+  metadataBlockInfoRepository
+}: CreateDatasetFormProps) {
   const navigate = useNavigate()
   const { t } = useTranslation('createDataset')
   const { isLoading, setIsLoading } = useLoading()
   const { validationErrors, datasetIsValid } = useDatasetValidator()
   const { formData, updateFormData } = useDatasetFormData(datasetIsValid)
   const { submissionStatus, submitForm } = useCreateDatasetForm(repository, datasetIsValid)
+  const { fieldsToRender, isLoading: isLoadingFieldsToRender } = useDefineDatasetMetadataFormFields(
+    metadataBlockInfoRepository
+  )
 
   const handleFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = event.target
