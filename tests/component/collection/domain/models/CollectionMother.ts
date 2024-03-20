@@ -1,6 +1,7 @@
 import { Collection } from '../../../../../src/collection/domain/models/Collection'
 import { faker } from '@faker-js/faker'
 import { FakerHelper } from '../../../shared/FakerHelper'
+import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 
 export class CollectionMother {
   static create(props?: Partial<Collection>): Collection {
@@ -9,6 +10,7 @@ export class CollectionMother {
       name: faker.lorem.words(3),
       description: faker.datatype.boolean() ? faker.lorem.paragraph() : undefined,
       affiliation: faker.datatype.boolean() ? faker.lorem.words(3) : undefined,
+      hierarchy: UpwardHierarchyNodeMother.createCollection(),
       ...props
     }
   }

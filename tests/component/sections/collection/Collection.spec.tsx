@@ -42,6 +42,18 @@ describe('Collection page', () => {
     cy.findByText('Page Not Found').should('exist')
   })
 
+  it('renders the breadcrumbs', () => {
+    cy.customMount(
+      <Collection
+        repository={collectionRepository}
+        id="collection"
+        datasetRepository={datasetRepository}
+      />
+    )
+
+    cy.findByText('Root').should('exist')
+  })
+
   it('renders collection title', () => {
     cy.customMount(
       <Collection
