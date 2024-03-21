@@ -4,6 +4,7 @@ import { WithI18next } from '../WithI18next'
 import { AuthorFormGroup } from '../../sections/create-dataset/AuthorFormGroup'
 import { SubmissionStatus } from '../../sections/create-dataset/useCreateDatasetForm'
 import { initialState } from '../../sections/create-dataset/useDatasetValidator'
+import { DatasetMetadataSubField } from '../../dataset/domain/models/Dataset'
 
 const meta: Meta<typeof AuthorFormGroup> = {
   title: 'Pages/Create Dataset/Author Form Group',
@@ -17,8 +18,9 @@ export const Default: Story = {
   render: () => (
     <AuthorFormGroup
       submissionStatus={SubmissionStatus.NotSubmitted}
-      handleFieldChange={() => {}}
-      validationErrors={initialState}
+      initialAuthorFields={
+        initialState.metadataBlocks[0].fields['author'] as DatasetMetadataSubField[]
+      }
     />
   )
 }

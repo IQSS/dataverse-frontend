@@ -2,35 +2,35 @@ import { Form } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { SubmissionStatus } from './useCreateDatasetForm'
 import { DatasetMetadataSubField } from '../../dataset/domain/models/Dataset'
-import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
-import { useDatasetFormData } from './useDatasetFormData'
-import { useDatasetValidator } from './useDatasetValidator'
 import { Col, Row } from '@iqss/dataverse-design-system'
 import { DynamicFieldsButtons } from './dynamic-fields-buttons/DynamicFieldsButtons'
+
+import { FormEvent } from 'react'
+import _ from 'lodash'
+import { FormInputElement } from '@iqss/dataverse-design-system/dist/components/form/form-group/form-element/FormInput'
+import { useMultipleFields } from './useMultipleFields'
 interface AuthorFormGroupProps {
   submissionStatus: SubmissionStatus
-  handleFieldChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  validationErrors: DatasetDTO
+  initialAuthorFields: DatasetMetadataSubField[]
 }
 
-export function AuthorFormGroup({
-  submissionStatus,
-  handleFieldChange,
-  validationErrors
-}: AuthorFormGroupProps) {
+export function AuthorFormGroup({ submissionStatus, initialAuthorFields }: AuthorFormGroupProps) {
   const { t } = useTranslation('createDataset')
-  const { datasetIsValid, addErrorField, removeErrorField } = useDatasetValidator()
-  const { formData, updateFormData, addField, removeField } = useDatasetFormData(datasetIsValid)
-  const authorFields = formData.metadataBlocks[0].fields.author as DatasetMetadataSubField[]
+  const { multipleFields, setMultipleFields, addField, removeField } =
+    useMultipleFields(initialAuthorFields)
+
   const isAuthorValid = (index: number) => {
-    //  !!(validationErrors.metadataBlocks[0].fields.author as DatasetMetadataSubField[])[
-    //    index
-    //  ].authorName
-    return false
+    return !!multipleFields[index].authorName
   }
+  const handleFieldChange = (index: number, event: FormEvent<FormInputElement>) => {
+    const updatedAuthorFields = _.cloneDeep(multipleFields)
+    updatedAuthorFields[index].authorName = (event.target as HTMLInputElement).value
+    setMultipleFields(updatedAuthorFields)
+  }
+
   return (
     <>
-      {authorFields.map((author, index) => (
+      {multipleFields.map((author, index) => (
         <Form.Group controlId={`author-name-${index}`} required key={index}>
           <Row>
             <Col sm={3}>
@@ -45,8 +45,9 @@ export function AuthorFormGroup({
                 disabled={submissionStatus === SubmissionStatus.IsSubmitting}
                 type="text"
                 name={`metadataBlocks.0.fields.author.${index}.authorName`}
-                onChange={handleFieldChange}
-                isInvalid={isAuthorValid(index)}
+                onChange={(event) => handleFieldChange(index, event)}
+                isInvalid={!isAuthorValid(index)}
+                value={author.authorName}
               />
               <Form.Group.Feedback type="invalid">
                 {t('datasetForm.fields.authorName.feedback')}
@@ -56,12 +57,10 @@ export function AuthorFormGroup({
               <DynamicFieldsButtons
                 originalField={index === 0}
                 onAddButtonClick={() => {
-                  addErrorField(`metadataBlocks.0.fields.author`, index)
-                  addField(`metadataBlocks.0.fields.author`, index)
+                  addField(index, { authorName: '' })
                 }}
                 onRemoveButtonClick={() => {
-                  removeErrorField(`metadataBlocks.0.fields.author`, index)
-                  removeField(`metadataBlocks.0.fields.author`, index)
+                  removeField(index)
                 }}
               />
             </Col>
