@@ -21,7 +21,6 @@ export const useDatasetFormData = (
     datasetIsValid(updatedFormData)
   }
   const addField = (path: string, index: number) => {
-    console.log(`addField` + path + ',' + index)
     const updatedFormData = _.cloneDeep(formData)
     const arrayAtPath: DatasetMetadataSubField[] = _.get(
       updatedFormData,
