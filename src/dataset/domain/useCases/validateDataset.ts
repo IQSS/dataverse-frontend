@@ -21,13 +21,14 @@ export function validateDataset(dataset: DatasetDTO) {
     isValid = false
   }
 
-  if (
-    isArrayOfSubfieldValue(dataset.metadataBlocks[0].fields.author) &&
-    !dataset.metadataBlocks[0].fields.author[0].authorName
-  ) {
-    if (isArrayOfSubfieldValue(errors.metadataBlocks[0].fields.author)) {
-      errors.metadataBlocks[0].fields.author[0].authorName = AUTHOR_NAME_REQUIRED
-      isValid = false
+  if (isArrayOfSubfieldValue(dataset.metadataBlocks[0].fields.author)) {
+    for (let i = 0; i < dataset.metadataBlocks[0].fields.author.length; i++) {
+      if (!dataset.metadataBlocks[0].fields.author[i].authorName) {
+        if (isArrayOfSubfieldValue(errors.metadataBlocks[0].fields.author)) {
+          errors.metadataBlocks[0].fields.author[i].authorName = AUTHOR_NAME_REQUIRED
+          isValid = false
+        }
+      }
     }
   }
 
