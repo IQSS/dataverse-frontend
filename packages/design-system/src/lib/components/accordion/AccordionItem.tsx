@@ -1,11 +1,13 @@
-import { ReactNode } from 'react'
+import { ElementType, ReactNode } from 'react'
 import { Accordion as AccordionBS } from 'react-bootstrap'
 
-interface AccordionItemProps {
+export interface AccordionItemProps extends React.HTMLAttributes<HTMLElement> {
   eventKey: string
   children: ReactNode
+  bsPrefix?: string
+  as?: ElementType
 }
 
-export function AccordionItem({ eventKey, children }: AccordionItemProps) {
-  return <AccordionBS.Item eventKey={eventKey}>{children}</AccordionBS.Item>
+export function AccordionItem({ children, ...rest }: AccordionItemProps) {
+  return <AccordionBS.Item {...rest}>{children}</AccordionBS.Item>
 }
