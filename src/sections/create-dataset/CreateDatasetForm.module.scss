@@ -1,0 +1,36 @@
+.header {
+  margin: 0.5em 0;
+}
+
+.container {
+  //   margin: 0.5rem 0;
+}
+
+.metadataAccordionContainer {
+  // border: solid 2px blue;
+
+  .customAccordion {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .customAccordionItem {
+    border: var(--bs-accordion-border-width) solid var(--bs-accordion-border-color);
+    border-radius: var(--bs-accordion-border-radius);
+
+    &:not(:first-of-type) {
+      border-top: var(--bs-accordion-border-width) solid var(--bs-accordion-border-color);
+    }
+
+    button {
+      background-image: linear-gradient(to bottom, var(--bs-gray-100) 0, var(--bs-gray-300) 100%);
+      border-radius: calc(var(--bs-accordion-border-radius) - var(--bs-accordion-border-width));
+
+      &[aria-expanded='true'] {
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+  }
+}

@@ -1,10 +1,9 @@
 import { ChangeEvent, FormEvent, MouseEvent, useEffect } from 'react'
-import { Alert, Button, Form } from '@iqss/dataverse-design-system'
+import { Accordion } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { useCreateDatasetForm, SubmissionStatus } from './useCreateDatasetForm'
-import styles from '/src/sections/dataset/Dataset.module.scss'
 import { useLoading } from '../loading/LoadingContext'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
@@ -12,8 +11,9 @@ import { useDatasetFormData } from './useDatasetFormData'
 import { Route } from '../Route.enum'
 import { useNavigate } from 'react-router-dom'
 import { useDatasetValidator } from './useDatasetValidator'
-import { DatasetMetadataSubField } from '../../dataset/domain/models/Dataset'
-import { useDefineDatasetMetadataFormFields } from './useDefineDatasetMetadataFormFields'
+import { useGetMetadataBlocksInfo } from './useGetMetadataBlocksInfo'
+// import { DatasetMetadataSubField } from '../../dataset/domain/models/Dataset'
+import styles from './CreateDatasetForm.module.scss'
 
 interface CreateDatasetFormProps {
   repository: DatasetRepository
@@ -27,12 +27,16 @@ export function CreateDatasetForm({
   const navigate = useNavigate()
   const { t } = useTranslation('createDataset')
   const { isLoading, setIsLoading } = useLoading()
+  const { metadataBlocks, isLoading: isLoadingMetadataBlocksToRender } = useGetMetadataBlocksInfo(
+    metadataBlockInfoRepository,
+    'someCollectionId', // TODO:ME Get collection id from url?
+    'create'
+  )
   const { validationErrors, datasetIsValid } = useDatasetValidator()
   const { formData, updateFormData } = useDatasetFormData(datasetIsValid)
   const { submissionStatus, submitForm } = useCreateDatasetForm(repository, datasetIsValid)
-  const { fieldsToRender, isLoading: isLoadingFieldsToRender } = useDefineDatasetMetadataFormFields(
-    metadataBlockInfoRepository
-  )
+
+  console.log({ metadataBlocks, isLoadingMetadataBlocksToRender })
 
   const handleFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = event.target
@@ -71,7 +75,20 @@ export function CreateDatasetForm({
           <p>{t('datasetForm.status.success')}</p>
         )}
         {submissionStatus === SubmissionStatus.Errored && <p>{t('datasetForm.status.failed')}</p>}
-        <Form
+        <div className={styles.metadataAccordionContainer}>
+          <Accordion bsPrefix={`accordion ${styles.customAccordion}`}>
+            {metadataBlocks.map((metadataBlock) => (
+              <Accordion.Item
+                eventKey={metadataBlock.name}
+                bsPrefix={`accordion-item ${styles.customAccordionItem}`}
+                key={metadataBlock.id}>
+                <Accordion.Header>{metadataBlock.displayName}</Accordion.Header>
+                <Accordion.Body>{`Body content for ${metadataBlock.name}`}</Accordion.Body>
+              </Accordion.Item>
+            ))}
+          </Accordion>
+        </div>
+        {/* <Form
           onSubmit={(event: FormEvent<HTMLFormElement>) => {
             handleSubmit(event)
           }}>
@@ -264,7 +281,7 @@ export function CreateDatasetForm({
           <Button withSpacing variant="secondary" type="button" onClick={handleCancel}>
             {t('cancelButton')}
           </Button>
-        </Form>
+        </Form> */}
       </div>
     </article>
   )

@@ -34,7 +34,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         multiple: false,
         isControlledVocabulary: false,
         displayFormat: '',
-        displayOnCreate: true,
+        displayOnCreate: false,
         isRequired: false,
         displayOrder: 1
       },
@@ -51,7 +51,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOnCreate: true,
+        displayOnCreate: false,
         displayOrder: 2
       },
       alternativeURL: {
@@ -67,7 +67,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '<a href="#VALUE" target="_blank">#VALUE</a>',
         isRequired: false,
-        displayOnCreate: true,
+        displayOnCreate: false,
         displayOrder: 3
       },
       otherId: {
@@ -84,7 +84,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: ':',
         isRequired: false,
         displayOrder: 4,
-        displayOnCreate: true,
+        displayOnCreate: false,
         childMetadataFields: {
           otherIdAgency: {
             name: 'otherIdAgency',
@@ -129,7 +129,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: true,
         displayOrder: 7,
-        displayOnCreate: true,
+        displayOnCreate: false,
         childMetadataFields: {
           authorName: {
             name: 'authorName',
@@ -216,7 +216,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: true,
         displayOrder: 12,
-        displayOnCreate: true,
+        displayOnCreate: false,
         childMetadataFields: {
           datasetContactName: {
             name: 'datasetContactName',
@@ -277,7 +277,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: true,
         displayOrder: 16,
-        displayOnCreate: true,
+        displayOnCreate: false,
         childMetadataFields: {
           dsDescriptionValue: {
             name: 'dsDescriptionValue',
@@ -323,7 +323,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: true,
         displayOrder: 19,
-        displayOnCreate: true,
+        displayOnCreate: false,
         controlledVocabularyValues: [
           'Agricultural Sciences',
           'Arts and Humanities',
@@ -355,7 +355,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 20,
-        displayOnCreate: true,
+        displayOnCreate: false,
         childMetadataFields: {
           keywordValue: {
             name: 'keywordValue',
@@ -416,7 +416,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 24,
-        displayOnCreate: true,
+        displayOnCreate: false,
         childMetadataFields: {
           topicClassValue: {
             name: 'topicClassValue',
@@ -477,7 +477,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 28,
-        displayOnCreate: true,
+        displayOnCreate: false,
         childMetadataFields: {
           publicationCitation: {
             name: 'publicationCitation',
@@ -572,7 +572,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 33,
-        displayOnCreate: true
+        displayOnCreate: false
       },
       language: {
         name: 'language',
@@ -587,7 +587,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 34,
-        displayOnCreate: true,
+        displayOnCreate: false,
         controlledVocabularyValues: [
           'Abkhaz',
           'Afar',
@@ -791,7 +791,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 35,
-        displayOnCreate: true,
+        displayOnCreate: false,
         childMetadataFields: {
           producerName: {
             name: 'producerName',
@@ -880,7 +880,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOnCreate: true,
+        displayOnCreate: false,
         displayOrder: 41
       },
       productionPlace: {
@@ -896,7 +896,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOnCreate: true,
+        displayOnCreate: false,
         displayOrder: 42
       },
       contributor: {
@@ -913,6 +913,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: ':',
         isRequired: false,
         displayOrder: 43,
+        displayOnCreate: false,
         childMetadataFields: {
           contributorType: {
             name: 'contributorType',
@@ -977,6 +978,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: ':',
         isRequired: false,
         displayOrder: 46,
+        displayOnCreate: false,
         childMetadataFields: {
           grantNumberAgency: {
             name: 'grantNumberAgency',
@@ -1023,6 +1025,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 49,
+        displayOnCreate: false,
         childMetadataFields: {
           distributorName: {
             name: 'distributorName',
@@ -1111,7 +1114,8 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOrder: 55
+        displayOrder: 55,
+        displayOnCreate: false
       },
       depositor: {
         name: 'depositor',
@@ -1126,7 +1130,8 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOrder: 56
+        displayOrder: 56,
+        displayOnCreate: false
       },
       dateOfDeposit: {
         name: 'dateOfDeposit',
@@ -1140,7 +1145,8 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOrder: 57
+        displayOrder: 57,
+        displayOnCreate: false
       },
       timePeriodCovered: {
         name: 'timePeriodCovered',
@@ -1156,6 +1162,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: ';',
         isRequired: false,
         displayOrder: 58,
+        displayOnCreate: false,
         childMetadataFields: {
           timePeriodCoveredStart: {
             name: 'timePeriodCoveredStart',
@@ -1200,6 +1207,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: ';',
         isRequired: false,
         displayOrder: 61,
+        displayOnCreate: false,
         childMetadataFields: {
           dateOfCollectionStart: {
             name: 'dateOfCollectionStart',
@@ -1244,7 +1252,8 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOrder: 64
+        displayOrder: 64,
+        displayOnCreate: false
       },
       series: {
         name: 'series',
@@ -1259,6 +1268,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: ':',
         isRequired: false,
         displayOrder: 65,
+        displayOnCreate: false,
         childMetadataFields: {
           seriesName: {
             name: 'seriesName',
@@ -1304,6 +1314,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: ',',
         isRequired: false,
         displayOrder: 68,
+        displayOnCreate: false,
         childMetadataFields: {
           softwareName: {
             name: 'softwareName',
@@ -1348,7 +1359,8 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOrder: 71
+        displayOrder: 71,
+        displayOnCreate: false
       },
       relatedDatasets: {
         name: 'relatedDatasets',
@@ -1363,7 +1375,8 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOrder: 72
+        displayOrder: 72,
+        displayOnCreate: false
       },
       otherReferences: {
         name: 'otherReferences',
@@ -1378,7 +1391,8 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOrder: 73
+        displayOrder: 73,
+        displayOnCreate: false
       },
       dataSources: {
         name: 'dataSources',
@@ -1393,7 +1407,8 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOrder: 74
+        displayOrder: 74,
+        displayOnCreate: false
       },
       originOfSources: {
         name: 'originOfSources',
@@ -1408,7 +1423,8 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOrder: 75
+        displayOrder: 75,
+        displayOnCreate: false
       },
       characteristicOfSources: {
         name: 'characteristicOfSources',
@@ -1422,7 +1438,8 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOrder: 76
+        displayOrder: 76,
+        displayOnCreate: false
       },
       accessToSources: {
         name: 'accessToSources',
@@ -1437,7 +1454,8 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOrder: 77
+        displayOrder: 77,
+        displayOnCreate: false
       }
     }
   },
@@ -1445,7 +1463,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
     id: 2,
     name: 'geospatial',
     displayName: 'Geospatial Metadata',
-    displayOnCreate: false,
+    displayOnCreate: true,
     metadataFields: {
       geographicCoverage: {
         name: 'geographicCoverage',
