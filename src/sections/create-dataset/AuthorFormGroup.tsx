@@ -5,9 +5,8 @@ import { DatasetMetadataSubField } from '../../dataset/domain/models/Dataset'
 import { Col, Row } from '@iqss/dataverse-design-system'
 import { DynamicFieldsButtons } from './dynamic-fields-buttons/DynamicFieldsButtons'
 
-import { FormEvent } from 'react'
+import { ChangeEvent } from 'react'
 import _ from 'lodash'
-import { FormInputElement } from '@iqss/dataverse-design-system/dist/components/form/form-group/form-element/FormInput'
 import { useMultipleFields } from './useMultipleFields'
 interface AuthorFormGroupProps {
   submissionStatus: SubmissionStatus
@@ -22,7 +21,7 @@ export function AuthorFormGroup({ submissionStatus, initialAuthorFields }: Autho
   const isAuthorValid = (index: number) => {
     return !!multipleFields[index].authorName
   }
-  const handleFieldChange = (index: number, event: FormEvent<FormInputElement>) => {
+  const handleFieldChange = (index: number, event: ChangeEvent<HTMLInputElement>) => {
     const updatedAuthorFields = _.cloneDeep(multipleFields)
     updatedAuthorFields[index].authorName = (event.target as HTMLInputElement).value
     setMultipleFields(updatedAuthorFields)
@@ -31,11 +30,11 @@ export function AuthorFormGroup({ submissionStatus, initialAuthorFields }: Autho
   return (
     <>
       {multipleFields.map((author, index) => (
-        <Form.Group controlId={`author-name-${index}`} required key={index}>
+        <Form.Group controlId="author-name" required key={index}>
           <Row>
             <Col sm={3}>
               {index === 0 && (
-                <Form.Group.Label message={t('datasetForm.fields.authorName.tooltip')}>
+                <Form.Group.Label required message={t('datasetForm.fields.authorName.tooltip')}>
                   {t('datasetForm.fields.authorName.label')}
                 </Form.Group.Label>
               )}
@@ -45,7 +44,7 @@ export function AuthorFormGroup({ submissionStatus, initialAuthorFields }: Autho
                 disabled={submissionStatus === SubmissionStatus.IsSubmitting}
                 type="text"
                 name={`metadataBlocks.0.fields.author.${index}.authorName`}
-                onChange={(event) => handleFieldChange(index, event)}
+                onChange={(event: ChangeEvent<HTMLInputElement>) => handleFieldChange(index, event)}
                 isInvalid={!isAuthorValid(index)}
                 value={author.authorName}
               />
