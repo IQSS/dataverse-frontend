@@ -53,6 +53,7 @@ export function AuthorFormGroup({
                 onChange={(event: ChangeEvent<HTMLInputElement>) => handleFieldChange(index, event)}
                 isInvalid={!isAuthorValid(index)}
                 value={author.authorName}
+                required
               />
               <Form.Group.Feedback type="invalid">
                 {t('datasetForm.fields.authorName.feedback')}
