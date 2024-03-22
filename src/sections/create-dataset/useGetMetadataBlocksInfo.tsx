@@ -3,6 +3,11 @@ import { getMetadataBlockInfoByCollectionId } from '../../metadata-block-info/do
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfo2 } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
 
+interface Props {
+  metadataBlockInfoRepository: MetadataBlockInfoRepository
+  collectionId: string
+  mode: 'create' | 'edit'
+}
 /**
  * Hook to get the metadata blocks to show and its info, based on the parent collection id of the dataset
  *
@@ -10,12 +15,11 @@ import { MetadataBlockInfo2 } from '../../metadata-block-info/domain/models/Meta
  * @param collectionId The id of the collection that the dataset belongs to
  * @param mode The mode of the form (create or edit), if edit mode, this hook will return only the metadata blocks that have displayOnCreate set to true
  */
-
-export const useGetMetadataBlocksInfo = (
-  metadataBlockInfoRepository: MetadataBlockInfoRepository,
-  collectionId: string,
-  mode: 'create' | 'edit'
-) => {
+export const useGetMetadataBlocksInfo = ({
+  metadataBlockInfoRepository,
+  collectionId,
+  mode
+}: Props) => {
   const [metadataBlocks, setMetadataBlocks] = useState<MetadataBlockInfo2[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)

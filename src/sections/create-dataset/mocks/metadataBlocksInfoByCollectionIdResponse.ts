@@ -34,7 +34,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         multiple: false,
         isControlledVocabulary: false,
         displayFormat: '',
-        displayOnCreate: false,
+        displayOnCreate: true,
         isRequired: false,
         displayOrder: 1
       },
@@ -67,7 +67,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '<a href="#VALUE" target="_blank">#VALUE</a>',
         isRequired: false,
-        displayOnCreate: false,
+        displayOnCreate: true,
         displayOrder: 3
       },
       otherId: {
@@ -129,7 +129,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: true,
         displayOrder: 7,
-        displayOnCreate: false,
+        displayOnCreate: true,
         childMetadataFields: {
           authorName: {
             name: 'authorName',
@@ -323,7 +323,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: true,
         displayOrder: 19,
-        displayOnCreate: false,
+        displayOnCreate: true,
         controlledVocabularyValues: [
           'Agricultural Sciences',
           'Arts and Humanities',
@@ -1463,7 +1463,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
     id: 2,
     name: 'geospatial',
     displayName: 'Geospatial Metadata',
-    displayOnCreate: true,
+    displayOnCreate: false,
     metadataFields: {
       geographicCoverage: {
         name: 'geographicCoverage',
