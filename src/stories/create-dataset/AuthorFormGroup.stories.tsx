@@ -7,7 +7,7 @@ import { initialState } from '../../sections/create-dataset/useDatasetValidator'
 import { DatasetMetadataSubField } from '../../dataset/domain/models/Dataset'
 
 const meta: Meta<typeof AuthorFormGroup> = {
-  title: 'Pages/Create Dataset/Author Form Group',
+  title: 'Sections/Create Dataset Page/AuthorFormGroup',
   component: AuthorFormGroup,
   decorators: [WithI18next, WithLayout]
 }
