@@ -4,7 +4,7 @@ import { DatasetCard } from '../../../sections/collection/datasets-list/dataset-
 import { DatasetPreviewMother } from '../../../../tests/component/dataset/domain/models/DatasetPreviewMother'
 
 const meta: Meta<typeof DatasetCard> = {
-  title: 'Sections/Collection/DatasetCard',
+  title: 'Sections/Collection Page/DatasetCard',
   component: DatasetCard,
   decorators: [WithI18next]
 }

@@ -1,4 +1,4 @@
-import { CreateDatasetForm } from '../../../src/sections/create-dataset/CreateDatasetForm'
+import { CreateDatasetForm } from '../../../../src/sections/create-dataset/CreateDatasetForm'
 
 describe('Form component', () => {
   it('renders the Create Dataset page and its contents', () => {

@@ -6,7 +6,7 @@ import { DatasetLoadingMockRepository } from '../../dataset/DatasetLoadingMockRe
 import { NoDatasetsMockRepository } from '../../dataset/NoDatasetsMockRepository'
 
 const meta: Meta<typeof DatasetsList> = {
-  title: 'Sections/Collection/DatasetsList',
+  title: 'Sections/Collection Page/DatasetsList',
   component: DatasetsList,
   decorators: [WithI18next],
   parameters: {

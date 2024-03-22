@@ -5,7 +5,7 @@ import { NoDatasetsMessage } from '../../../sections/collection/datasets-list/No
 import { WithLoggedInUser } from '../../WithLoggedInUser'
 
 const meta: Meta<typeof Collection> = {
-  title: 'Sections/Collection/NoDatasetsMessage',
+  title: 'Sections/Collection Page/NoDatasetsMessage',
   component: Collection,
   decorators: [WithI18next]
 }

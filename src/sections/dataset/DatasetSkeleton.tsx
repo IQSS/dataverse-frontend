@@ -2,11 +2,12 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import styles from './Dataset.module.scss'
 import { Row, Col, Tabs } from '@iqss/dataverse-design-system'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { BreadcrumbsSkeleton } from '../shared/hierarchy/BreadcrumbsSkeleton'
 
 export function DatasetSkeleton() {
   return (
     <SkeletonTheme>
-      <Skeleton width="10%" style={{ marginBottom: 16 }} />
+      <BreadcrumbsSkeleton />
       <article data-testid="dataset-skeleton">
         <header className={styles.header}>
           <h1>

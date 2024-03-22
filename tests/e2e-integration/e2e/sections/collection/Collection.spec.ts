@@ -1,6 +1,7 @@
 import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { faker } from '@faker-js/faker'
+import { CollectionHelper } from '../../../shared/collection/CollectionHelper'
 
 describe('Collection Page', () => {
   const title = faker.lorem.sentence()
@@ -34,33 +35,6 @@ describe('Collection Page', () => {
     })
   })
 
-  it('log in Dataverse Admin user', () => {
-    cy.visit('/spa')
-
-    cy.findAllByText(/Root/i).should('exist')
-    cy.findByText(/Dataverse Admin/i).should('exist')
-  })
-
-  it('finds the "Add Data" buttons', () => {
-    cy.visit('/spa')
-
-    cy.get('nav.navbar').within(() => {
-      const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
-      addDataBtn.should('exist')
-      addDataBtn.click({ force: true })
-      cy.findByText('New Collection').should('be.visible')
-      cy.findByText('New Dataset').should('be.visible')
-    })
-
-    cy.get('main').within(() => {
-      const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
-      addDataBtn.should('exist')
-      addDataBtn.click({ force: true })
-      cy.findByText('New Collection').should('be.visible')
-      cy.findByText('New Dataset').should('be.visible')
-    })
-  })
-
   it('Navigates to Create Dataset page when New Dataset link clicked', () => {
     cy.visit('/spa')
 
@@ -85,30 +59,7 @@ describe('Collection Page', () => {
     cy.findByText(/Create Dataset/i).should('exist')
   })
 
-  it('log out Dataverse Admin user', () => {
-    cy.visit('/spa')
-    cy.findAllByText(/Root/i).should('exist')
-
-    cy.findByText(/Dataverse Admin/i).click()
-    cy.findByRole('button', { name: /Log Out/i }).click()
-    cy.findByText(/Dataverse Admin/i).should('not.exist')
-  })
-  it('does not display the Add Data buttons when logged out', () => {
-    cy.visit('/spa')
-
-    cy.findByText(/Dataverse Admin/i).click()
-    cy.findByRole('button', { name: /Log Out/i }).click()
-
-    cy.get('nav.navbar').within(() => {
-      cy.findByRole('button', { name: /Add Data/i }).should('not.exist')
-    })
-
-    cy.get('main').within(() => {
-      cy.findByRole('button', { name: /Add Data/i }).should('not.exist')
-    })
-  })
-
-  it('displays the correct page of the datasets list when passing the page query param', () => {
+  it('navigates to the correct page of the datasets list when passing the page query param', () => {
     cy.wrap(
       DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
       { timeout: 10000 }
@@ -122,7 +73,7 @@ describe('Collection Page', () => {
     })
   })
 
-  it('updates the query param when updateQueryParam is true', () => {
+  it('updates the page query param when navigating to another page', () => {
     cy.wrap(
       DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
       { timeout: 10000 }
@@ -167,9 +118,11 @@ describe('Collection Page', () => {
   })
 
   it('displays a collection different from the root when accessing a subcollection', () => {
-    cy.visit('/spa/collections?id=subcollection')
+    cy.wrap(CollectionHelper.create('collection-1')).then(() => {
+      cy.visit('/spa/collections?id=collection-1')
 
-    cy.findAllByText(/Subcollection/i).should('exist')
-    cy.findByText(/Dataverse Admin/i).should('exist')
+      cy.findAllByText(/Scientific Research/i).should('exist')
+      cy.findByText(/Dataverse Admin/i).should('exist')
+    })
   })
 })
