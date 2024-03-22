@@ -1,19 +1,19 @@
 import { useState } from 'react'
 import { DatasetDTO, initialDatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
 import _ from 'lodash'
+import { DatasetMetadataSubField } from '../../dataset/domain/models/Dataset'
 
 const initialState: DatasetDTO = JSON.parse(JSON.stringify(initialDatasetDTO)) as DatasetDTO
 export const useDatasetFormData = (
   datasetIsValid: (formData: DatasetDTO) => boolean
 ): {
   formData: DatasetDTO
-  updateFormData: (name: string, value: string) => void
+  updateFormData: (name: string, value: string | DatasetMetadataSubField[]) => void
 } => {
   const [formData, setFormData] = useState(initialState)
 
-  const updateFormData = (name: string, value: string) => {
+  const updateFormData = (name: string, value: string | DatasetMetadataSubField[]) => {
     const updatedFormData = _.cloneDeep(getUpdatedFormData(formData, name, value))
-
     setFormData(updatedFormData)
     datasetIsValid(updatedFormData)
   }
@@ -21,7 +21,7 @@ export const useDatasetFormData = (
   const getUpdatedFormData = (
     currentFormData: DatasetDTO,
     name: string,
-    value: string
+    value: string | DatasetMetadataSubField[]
   ): DatasetDTO => {
     const objectFromPath: DatasetDTO = initialState
 
