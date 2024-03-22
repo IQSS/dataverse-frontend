@@ -76,12 +76,9 @@ export function CreateDatasetForm({
         )}
         {submissionStatus === SubmissionStatus.Errored && <p>{t('datasetForm.status.failed')}</p>}
         <div className={styles.metadataAccordionContainer}>
-          <Accordion bsPrefix={`accordion ${styles.customAccordion}`}>
+          <Accordion>
             {metadataBlocks.map((metadataBlock) => (
-              <Accordion.Item
-                eventKey={metadataBlock.name}
-                bsPrefix={`accordion-item ${styles.customAccordionItem}`}
-                key={metadataBlock.id}>
+              <Accordion.Item eventKey={metadataBlock.name} key={metadataBlock.id}>
                 <Accordion.Header>{metadataBlock.displayName}</Accordion.Header>
                 <Accordion.Body>{`Body content for ${metadataBlock.name}`}</Accordion.Body>
               </Accordion.Item>
