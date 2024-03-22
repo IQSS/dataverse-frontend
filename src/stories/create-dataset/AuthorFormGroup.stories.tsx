@@ -18,6 +18,7 @@ export const Default: Story = {
   render: () => (
     <AuthorFormGroup
       submissionStatus={SubmissionStatus.NotSubmitted}
+      updateFormData={() => {}}
       initialAuthorFields={
         initialState.metadataBlocks[0].fields['author'] as DatasetMetadataSubField[]
       }

@@ -8,44 +8,20 @@ export const useDatasetFormData = (
   datasetIsValid: (formData: DatasetDTO) => boolean
 ): {
   formData: DatasetDTO
-  updateFormData: (name: string, value: string) => void
-  addField: (path: string, index: number) => void
-  removeField: (path: string, index: number) => void
+  updateFormData: (name: string, value: string | DatasetMetadataSubField[]) => void
 } => {
   const [formData, setFormData] = useState(initialState)
 
-  const updateFormData = (name: string, value: string) => {
+  const updateFormData = (name: string, value: string | DatasetMetadataSubField[]) => {
     const updatedFormData = _.cloneDeep(getUpdatedFormData(formData, name, value))
-    console.log('updatedFormData' + JSON.stringify(updatedFormData))
     setFormData(updatedFormData)
     datasetIsValid(updatedFormData)
-  }
-  const addField = (path: string, index: number) => {
-    const updatedFormData = _.cloneDeep(formData)
-    const arrayAtPath: DatasetMetadataSubField[] = _.get(
-      updatedFormData,
-      path
-    ) as DatasetMetadataSubField[]
-
-    arrayAtPath.splice(index, 0, { authorName: '' })
-    _.set(updatedFormData, path, arrayAtPath)
-
-    setFormData(updatedFormData)
-    console.log('added field' + JSON.stringify(updatedFormData.metadataBlocks[0].fields['author']))
-  }
-  const removeField = (path: string, index: number) => {
-    const updatedFormData = _.cloneDeep(formData)
-    const arrayAtPath: string[] = _.get(updatedFormData, path) as string[]
-    arrayAtPath.splice(index, 1)
-    _.set(updatedFormData, path, arrayAtPath)
-    setFormData(updatedFormData)
-    // datasetIsValid(updatedFormData)
   }
 
   const getUpdatedFormData = (
     currentFormData: DatasetDTO,
     name: string,
-    value: string
+    value: string | DatasetMetadataSubField[]
   ): DatasetDTO => {
     const objectFromPath: DatasetDTO = initialState
 
@@ -57,9 +33,7 @@ export const useDatasetFormData = (
 
   return {
     formData,
-    updateFormData,
-    addField,
-    removeField
+    updateFormData
   }
 }
 

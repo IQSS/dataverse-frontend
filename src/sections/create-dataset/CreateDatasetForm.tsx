@@ -84,6 +84,7 @@ export function CreateDatasetForm({ repository }: CreateDatasetFormProps) {
           </Form.Group>
           <AuthorFormGroup
             submissionStatus={submissionStatus}
+            updateFormData={updateFormData}
             initialAuthorFields={
               formData.metadataBlocks[0].fields['author'] as DatasetMetadataSubField[]
             }></AuthorFormGroup>

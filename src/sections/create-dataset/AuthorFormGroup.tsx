@@ -11,9 +11,14 @@ import { useMultipleFields } from './useMultipleFields'
 interface AuthorFormGroupProps {
   submissionStatus: SubmissionStatus
   initialAuthorFields: DatasetMetadataSubField[]
+  updateFormData: (name: string, value: string | DatasetMetadataSubField[]) => void
 }
 
-export function AuthorFormGroup({ submissionStatus, initialAuthorFields }: AuthorFormGroupProps) {
+export function AuthorFormGroup({
+  submissionStatus,
+  initialAuthorFields,
+  updateFormData
+}: AuthorFormGroupProps) {
   const { t } = useTranslation('createDataset')
   const { multipleFields, setMultipleFields, addField, removeField } =
     useMultipleFields(initialAuthorFields)
@@ -25,6 +30,7 @@ export function AuthorFormGroup({ submissionStatus, initialAuthorFields }: Autho
     const updatedAuthorFields = _.cloneDeep(multipleFields)
     updatedAuthorFields[index].authorName = (event.target as HTMLInputElement).value
     setMultipleFields(updatedAuthorFields)
+    updateFormData('metadataBlocks.0.fields.author', multipleFields)
   }
 
   return (
