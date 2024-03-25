@@ -569,6 +569,8 @@ it('waits for no locks', async () => {
 })
 ```
 
+</details>
+
 ### 3. **End-to-End (e2e) Tests:**
 
 End-to-end tests simulate real user scenarios, covering the complete flow of the application:
