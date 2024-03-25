@@ -1,6 +1,6 @@
 import { MetadataBlockInfo2 } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 
-export const metadataBlocksInfoByCollectionIdResponse = [
+export const metadataBlocksInfoByCollectionIdResponse: MetadataBlockInfo2[] = [
   {
     id: 1,
     name: 'citation',
@@ -51,7 +51,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOnCreate: false,
+        displayOnCreate: true,
         displayOrder: 2
       },
       alternativeURL: {
@@ -84,7 +84,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: ':',
         isRequired: false,
         displayOrder: 4,
-        displayOnCreate: false,
+        displayOnCreate: true,
         childMetadataFields: {
           otherIdAgency: {
             name: 'otherIdAgency',
@@ -98,6 +98,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 5
           },
           otherIdValue: {
@@ -112,6 +113,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 6
           }
         }
@@ -144,6 +146,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: true,
+            displayOnCreate: true,
             displayOrder: 8
           },
           authorAffiliation: {
@@ -159,6 +162,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '(#VALUE)',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 9
           },
           authorIdentifierScheme: {
@@ -174,6 +178,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: true,
             displayFormat: '- #VALUE:',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 10,
             controlledVocabularyValues: [
               'ORCID',
@@ -198,6 +203,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 11
           }
         }
@@ -216,7 +222,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: true,
         displayOrder: 12,
-        displayOnCreate: false,
+        displayOnCreate: true,
         childMetadataFields: {
           datasetContactName: {
             name: 'datasetContactName',
@@ -231,6 +237,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 13
           },
           datasetContactAffiliation: {
@@ -246,6 +253,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '(#VALUE)',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 14
           },
           datasetContactEmail: {
@@ -260,6 +268,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#EMAIL',
             isRequired: true,
+            displayOnCreate: true,
             displayOrder: 15
           }
         }
@@ -277,7 +286,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: true,
         displayOrder: 16,
-        displayOnCreate: false,
+        displayOnCreate: true,
         childMetadataFields: {
           dsDescriptionValue: {
             name: 'dsDescriptionValue',
@@ -291,6 +300,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: true,
+            displayOnCreate: true,
             displayOrder: 17
           },
           dsDescriptionDate: {
@@ -306,6 +316,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '(#VALUE)',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 18
           }
         }
@@ -355,7 +366,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 20,
-        displayOnCreate: false,
+        displayOnCreate: true,
         childMetadataFields: {
           keywordValue: {
             name: 'keywordValue',
@@ -369,6 +380,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 21
           },
           keywordVocabulary: {
@@ -383,6 +395,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '(#VALUE)',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 22
           },
           keywordVocabularyURI: {
@@ -398,6 +411,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 23
           }
         }
@@ -416,7 +430,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 24,
-        displayOnCreate: false,
+        displayOnCreate: true,
         childMetadataFields: {
           topicClassValue: {
             name: 'topicClassValue',
@@ -430,6 +444,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 25
           },
           topicClassVocab: {
@@ -444,6 +459,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '(#VALUE)',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 26
           },
           topicClassVocabURI: {
@@ -459,6 +475,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 27
           }
         }
@@ -477,7 +494,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 28,
-        displayOnCreate: false,
+        displayOnCreate: true,
         childMetadataFields: {
           publicationCitation: {
             name: 'publicationCitation',
@@ -491,6 +508,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 29
           },
           publicationIDType: {
@@ -506,6 +524,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             displayFormat: '#VALUE: ',
             isRequired: false,
             displayOrder: 30,
+            displayOnCreate: true,
             controlledVocabularyValues: [
               'ark',
               'arXiv',
@@ -540,6 +559,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 31
           },
           publicationURL: {
@@ -555,6 +575,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 32
           }
         }
@@ -572,7 +593,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 33,
-        displayOnCreate: false
+        displayOnCreate: true
       },
       language: {
         name: 'language',
@@ -587,7 +608,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 34,
-        displayOnCreate: false,
+        displayOnCreate: true,
         controlledVocabularyValues: [
           'Abkhaz',
           'Afar',
@@ -791,7 +812,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 35,
-        displayOnCreate: false,
+        displayOnCreate: true,
         childMetadataFields: {
           producerName: {
             name: 'producerName',
@@ -806,6 +827,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: true,
+            displayOnCreate: true,
             displayOrder: 36
           },
           producerAffiliation: {
@@ -821,6 +843,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '(#VALUE)',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 37
           },
           producerAbbreviation: {
@@ -835,6 +858,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '(#VALUE)',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 38
           },
           producerURL: {
@@ -849,6 +873,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 39
           },
           producerLogoURL: {
@@ -863,6 +888,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '<img src="#VALUE" alt="#NAME" class="metadata-logo"/><br/>',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 40
           }
         }
@@ -880,7 +906,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOnCreate: false,
+        displayOnCreate: true,
         displayOrder: 41
       },
       productionPlace: {
@@ -896,7 +922,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
-        displayOnCreate: false,
+        displayOnCreate: true,
         displayOrder: 42
       },
       contributor: {
@@ -913,7 +939,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: ':',
         isRequired: false,
         displayOrder: 43,
-        displayOnCreate: false,
+        displayOnCreate: true,
         childMetadataFields: {
           contributorType: {
             name: 'contributorType',
@@ -928,6 +954,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             displayFormat: '#VALUE ',
             isRequired: false,
             displayOrder: 44,
+            displayOnCreate: true,
             controlledVocabularyValues: [
               'Data Collector',
               'Data Curator',
@@ -961,6 +988,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 45
           }
         }
@@ -978,7 +1006,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: ':',
         isRequired: false,
         displayOrder: 46,
-        displayOnCreate: false,
+        displayOnCreate: true,
         childMetadataFields: {
           grantNumberAgency: {
             name: 'grantNumberAgency',
@@ -992,6 +1020,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 47
           },
           grantNumberValue: {
@@ -1007,6 +1036,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 48
           }
         }
@@ -1025,7 +1055,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 49,
-        displayOnCreate: false,
+        displayOnCreate: true,
         childMetadataFields: {
           distributorName: {
             name: 'distributorName',
@@ -1040,6 +1070,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 50
           },
           distributorAffiliation: {
@@ -1055,6 +1086,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '(#VALUE)',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 51
           },
           distributorAbbreviation: {
@@ -1069,6 +1101,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '(#VALUE)',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 52
           },
           distributorURL: {
@@ -1083,6 +1116,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 53
           },
           distributorLogoURL: {
@@ -1098,6 +1132,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '<img src="#VALUE" alt="#NAME" class="metadata-logo"/><br/>',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 54
           }
         }
@@ -1162,7 +1197,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: ';',
         isRequired: false,
         displayOrder: 58,
-        displayOnCreate: false,
+        displayOnCreate: true,
         childMetadataFields: {
           timePeriodCoveredStart: {
             name: 'timePeriodCoveredStart',
@@ -1176,6 +1211,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#NAME: #VALUE ',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 59
           },
           timePeriodCoveredEnd: {
@@ -1190,6 +1226,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#NAME: #VALUE ',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 60
           }
         }
@@ -1207,7 +1244,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: ';',
         isRequired: false,
         displayOrder: 61,
-        displayOnCreate: false,
+        displayOnCreate: true,
         childMetadataFields: {
           dateOfCollectionStart: {
             name: 'dateOfCollectionStart',
@@ -1221,6 +1258,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#NAME: #VALUE ',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 62
           },
           dateOfCollectionEnd: {
@@ -1235,6 +1273,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#NAME: #VALUE ',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 63
           }
         }
@@ -1268,7 +1307,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: ':',
         isRequired: false,
         displayOrder: 65,
-        displayOnCreate: false,
+        displayOnCreate: true,
         childMetadataFields: {
           seriesName: {
             name: 'seriesName',
@@ -1282,6 +1321,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 66
           },
           seriesInformation: {
@@ -1297,6 +1337,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 67
           }
         }
@@ -1314,7 +1355,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: ',',
         isRequired: false,
         displayOrder: 68,
-        displayOnCreate: false,
+        displayOnCreate: true,
         childMetadataFields: {
           softwareName: {
             name: 'softwareName',
@@ -1328,6 +1369,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 69
           },
           softwareVersion: {
@@ -1342,6 +1384,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#NAME: #VALUE',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 70
           }
         }
@@ -1463,7 +1506,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
     id: 2,
     name: 'geospatial',
     displayName: 'Geospatial Metadata',
-    displayOnCreate: false,
+    displayOnCreate: true,
     metadataFields: {
       geographicCoverage: {
         name: 'geographicCoverage',
@@ -1479,6 +1522,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 0,
+        displayOnCreate: true,
         childMetadataFields: {
           country: {
             name: 'country',
@@ -1493,6 +1537,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             displayFormat: '#VALUE, ',
             isRequired: false,
             displayOrder: 1,
+            displayOnCreate: true,
             controlledVocabularyValues: [
               'Afghanistan',
               'Albania',
@@ -1758,6 +1803,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE, ',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 2
           },
           city: {
@@ -1773,6 +1819,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE, ',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 3
           },
           otherGeographicCoverage: {
@@ -1787,318 +1834,10 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '#VALUE, ',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 4
           }
         }
-      },
-      country: {
-        name: 'country',
-        displayName: 'Geographic Coverage Country / Nation',
-        title: 'Country / Nation',
-        type: 'TEXT',
-        typeClass: 'controlledVocabulary',
-        watermark: '',
-        description: 'The country or nation that the Dataset is about.',
-        multiple: false,
-        isControlledVocabulary: true,
-        displayFormat: '#VALUE, ',
-        isRequired: false,
-        displayOrder: 1,
-        controlledVocabularyValues: [
-          'Afghanistan',
-          'Albania',
-          'Algeria',
-          'American Samoa',
-          'Andorra',
-          'Angola',
-          'Anguilla',
-          'Antarctica',
-          'Antigua and Barbuda',
-          'Argentina',
-          'Armenia',
-          'Aruba',
-          'Australia',
-          'Austria',
-          'Azerbaijan',
-          'Bahamas',
-          'Bahrain',
-          'Bangladesh',
-          'Barbados',
-          'Belarus',
-          'Belgium',
-          'Belize',
-          'Benin',
-          'Bermuda',
-          'Bhutan',
-          'Bolivia, Plurinational State of',
-          'Bonaire, Sint Eustatius and Saba',
-          'Bosnia and Herzegovina',
-          'Botswana',
-          'Bouvet Island',
-          'Brazil',
-          'British Indian Ocean Territory',
-          'Brunei Darussalam',
-          'Bulgaria',
-          'Burkina Faso',
-          'Burundi',
-          'Cambodia',
-          'Cameroon',
-          'Canada',
-          'Cape Verde',
-          'Cayman Islands',
-          'Central African Republic',
-          'Chad',
-          'Chile',
-          'China',
-          'Christmas Island',
-          'Cocos (Keeling) Islands',
-          'Colombia',
-          'Comoros',
-          'Congo',
-          'Congo, the Democratic Republic of the',
-          'Cook Islands',
-          'Costa Rica',
-          'Croatia',
-          'Cuba',
-          'Curaçao',
-          'Cyprus',
-          'Czech Republic',
-          "Côte d'Ivoire",
-          'Denmark',
-          'Djibouti',
-          'Dominica',
-          'Dominican Republic',
-          'Ecuador',
-          'Egypt',
-          'El Salvador',
-          'Equatorial Guinea',
-          'Eritrea',
-          'Estonia',
-          'Ethiopia',
-          'Falkland Islands (Malvinas)',
-          'Faroe Islands',
-          'Fiji',
-          'Finland',
-          'France',
-          'French Guiana',
-          'French Polynesia',
-          'French Southern Territories',
-          'Gabon',
-          'Gambia',
-          'Georgia',
-          'Germany',
-          'Ghana',
-          'Gibraltar',
-          'Greece',
-          'Greenland',
-          'Grenada',
-          'Guadeloupe',
-          'Guam',
-          'Guatemala',
-          'Guernsey',
-          'Guinea',
-          'Guinea-Bissau',
-          'Guyana',
-          'Haiti',
-          'Heard Island and Mcdonald Islands',
-          'Holy See (Vatican City State)',
-          'Honduras',
-          'Hong Kong',
-          'Hungary',
-          'Iceland',
-          'India',
-          'Indonesia',
-          'Iran, Islamic Republic of',
-          'Iraq',
-          'Ireland',
-          'Isle of Man',
-          'Israel',
-          'Italy',
-          'Jamaica',
-          'Japan',
-          'Jersey',
-          'Jordan',
-          'Kazakhstan',
-          'Kenya',
-          'Kiribati',
-          "Korea, Democratic People's Republic of",
-          'Korea, Republic of',
-          'Kuwait',
-          'Kyrgyzstan',
-          "Lao People's Democratic Republic",
-          'Latvia',
-          'Lebanon',
-          'Lesotho',
-          'Liberia',
-          'Libya',
-          'Liechtenstein',
-          'Lithuania',
-          'Luxembourg',
-          'Macao',
-          'Macedonia, the Former Yugoslav Republic of',
-          'Madagascar',
-          'Malawi',
-          'Malaysia',
-          'Maldives',
-          'Mali',
-          'Malta',
-          'Marshall Islands',
-          'Martinique',
-          'Mauritania',
-          'Mauritius',
-          'Mayotte',
-          'Mexico',
-          'Micronesia, Federated States of',
-          'Moldova, Republic of',
-          'Monaco',
-          'Mongolia',
-          'Montenegro',
-          'Montserrat',
-          'Morocco',
-          'Mozambique',
-          'Myanmar',
-          'Namibia',
-          'Nauru',
-          'Nepal',
-          'Netherlands',
-          'New Caledonia',
-          'New Zealand',
-          'Nicaragua',
-          'Niger',
-          'Nigeria',
-          'Niue',
-          'Norfolk Island',
-          'Northern Mariana Islands',
-          'Norway',
-          'Oman',
-          'Pakistan',
-          'Palau',
-          'Palestine, State of',
-          'Panama',
-          'Papua New Guinea',
-          'Paraguay',
-          'Peru',
-          'Philippines',
-          'Pitcairn',
-          'Poland',
-          'Portugal',
-          'Puerto Rico',
-          'Qatar',
-          'Romania',
-          'Russian Federation',
-          'Rwanda',
-          'Réunion',
-          'Saint Barthélemy',
-          'Saint Helena, Ascension and Tristan da Cunha',
-          'Saint Kitts and Nevis',
-          'Saint Lucia',
-          'Saint Martin (French part)',
-          'Saint Pierre and Miquelon',
-          'Saint Vincent and the Grenadines',
-          'Samoa',
-          'San Marino',
-          'Sao Tome and Principe',
-          'Saudi Arabia',
-          'Senegal',
-          'Serbia',
-          'Seychelles',
-          'Sierra Leone',
-          'Singapore',
-          'Sint Maarten (Dutch part)',
-          'Slovakia',
-          'Slovenia',
-          'Solomon Islands',
-          'Somalia',
-          'South Africa',
-          'South Georgia and the South Sandwich Islands',
-          'South Sudan',
-          'Spain',
-          'Sri Lanka',
-          'Sudan',
-          'Suriname',
-          'Svalbard and Jan Mayen',
-          'Swaziland',
-          'Sweden',
-          'Switzerland',
-          'Syrian Arab Republic',
-          'Taiwan, Province of China',
-          'Tajikistan',
-          'Tanzania, United Republic of',
-          'Thailand',
-          'Timor-Leste',
-          'Togo',
-          'Tokelau',
-          'Tonga',
-          'Trinidad and Tobago',
-          'Tunisia',
-          'Turkey',
-          'Turkmenistan',
-          'Turks and Caicos Islands',
-          'Tuvalu',
-          'Uganda',
-          'Ukraine',
-          'United Arab Emirates',
-          'United Kingdom',
-          'United States',
-          'United States Minor Outlying Islands',
-          'Uruguay',
-          'Uzbekistan',
-          'Vanuatu',
-          'Venezuela, Bolivarian Republic of',
-          'Viet Nam',
-          'Virgin Islands, British',
-          'Virgin Islands, U.S.',
-          'Wallis and Futuna',
-          'Western Sahara',
-          'Yemen',
-          'Zambia',
-          'Zimbabwe',
-          'Åland Islands'
-        ]
-      },
-      state: {
-        name: 'state',
-        displayName: 'Geographic Coverage State / Province',
-        title: 'State / Province',
-        type: 'TEXT',
-        typeClass: 'primitive',
-        watermark: '',
-        description:
-          'The state or province that the Dataset is about. Use GeoNames for correct spelling and avoid abbreviations.',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '#VALUE, ',
-        isRequired: false,
-        displayOrder: 2
-      },
-      city: {
-        name: 'city',
-        displayName: 'Geographic Coverage City',
-        title: 'City',
-        type: 'TEXT',
-        typeClass: 'primitive',
-        watermark: '',
-        description:
-          'The name of the city that the Dataset is about. Use GeoNames for correct spelling and avoid abbreviations.',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '#VALUE, ',
-        isRequired: false,
-        displayOrder: 3
-      },
-      otherGeographicCoverage: {
-        name: 'otherGeographicCoverage',
-        displayName: 'Geographic Coverage Other',
-        title: 'Other',
-        type: 'TEXT',
-        typeClass: 'primitive',
-        watermark: '',
-        description: 'Other information on the geographic coverage of the data.',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '#VALUE, ',
-        isRequired: false,
-        displayOrder: 4
       },
       geographicUnit: {
         name: 'geographicUnit',
@@ -2113,6 +1852,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 5
       },
       geographicBoundingBox: {
@@ -2128,6 +1868,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 6,
         childMetadataFields: {
           westLongitude: {
@@ -2143,6 +1884,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 7
           },
           eastLongitude: {
@@ -2158,6 +1900,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 8
           },
           northLatitude: {
@@ -2173,6 +1916,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 9
           },
           southLatitude: {
@@ -2188,69 +1932,10 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 10
           }
         }
-      },
-      westLongitude: {
-        name: 'westLongitude',
-        displayName: 'Geographic Bounding Box Westernmost (Left) Longitude',
-        title: 'Westernmost (Left) Longitude',
-        type: 'TEXT',
-        typeClass: 'primitive',
-        watermark: '',
-        description:
-          'Westernmost coordinate delimiting the geographic extent of the Dataset. A valid range of values,  expressed in decimal degrees, is -180,0 <= West  Bounding Longitude Value <= 180,0.',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 7
-      },
-      eastLongitude: {
-        name: 'eastLongitude',
-        displayName: 'Geographic Bounding Box Easternmost (Right) Longitude',
-        title: 'Easternmost (Right) Longitude',
-        type: 'TEXT',
-        typeClass: 'primitive',
-        watermark: '',
-        description:
-          'Easternmost coordinate delimiting the geographic extent of the Dataset. A valid range of values,  expressed in decimal degrees, is -180,0 <= East Bounding Longitude Value <= 180,0.',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 8
-      },
-      northLatitude: {
-        name: 'northLatitude',
-        displayName: 'Geographic Bounding Box Northernmost (Top) Latitude',
-        title: 'Northernmost (Top) Latitude',
-        type: 'TEXT',
-        typeClass: 'primitive',
-        watermark: '',
-        description:
-          'Northernmost coordinate delimiting the geographic extent of the Dataset. A valid range of values,  expressed in decimal degrees, is -90,0 <= North Bounding Latitude Value <= 90,0.',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 9
-      },
-      southLatitude: {
-        name: 'southLatitude',
-        displayName: 'Geographic Bounding Box Southernmost (Bottom) Latitude',
-        title: 'Southernmost (Bottom) Latitude',
-        type: 'TEXT',
-        typeClass: 'primitive',
-        watermark: '',
-        description:
-          'Southernmost coordinate delimiting the geographic extent of the Dataset. A valid range of values,  expressed in decimal degrees, is -90,0 <= South Bounding Latitude Value <= 90,0.',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 10
       }
     }
   },
@@ -2258,7 +1943,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
     id: 4,
     name: 'astrophysics',
     displayName: 'Astronomy and Astrophysics Metadata',
-    displayOnCreate: false,
+    displayOnCreate: true,
     metadataFields: {
       astroType: {
         name: 'astroType',
@@ -2273,6 +1958,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 0,
+        displayOnCreate: true,
         controlledVocabularyValues: [
           'Image',
           'Mosaic',
@@ -2312,6 +1998,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 1
       },
       astroInstrument: {
@@ -2326,6 +2013,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 2
       },
       astroObject: {
@@ -2341,6 +2029,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 3
       },
       'resolution.Spatial': {
@@ -2356,6 +2045,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 4
       },
       'resolution.Spectral': {
@@ -2371,6 +2061,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 5
       },
       'resolution.Temporal': {
@@ -2386,6 +2077,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 6
       },
       'coverage.Spectral.Bandpass': {
@@ -2400,6 +2092,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 7
       },
       'coverage.Spectral.CentralWavelength': {
@@ -2414,6 +2107,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 8
       },
       'coverage.Spectral.Wavelength': {
@@ -2428,6 +2122,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 9,
         childMetadataFields: {
           'coverage.Spectral.MinimumWavelength': {
@@ -2442,6 +2137,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 10
           },
           'coverage.Spectral.MaximumWavelength': {
@@ -2456,37 +2152,10 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 11
           }
         }
-      },
-      'coverage.Spectral.MinimumWavelength': {
-        name: 'coverage.Spectral.MinimumWavelength',
-        displayName: 'Wavelength Range Minimum (m)',
-        title: 'Minimum (m)',
-        type: 'FLOAT',
-        typeClass: 'primitive',
-        watermark: 'Enter a floating-point number.',
-        description: 'The minimum wavelength of the spectral bandpass, in meters.',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 10
-      },
-      'coverage.Spectral.MaximumWavelength': {
-        name: 'coverage.Spectral.MaximumWavelength',
-        displayName: 'Wavelength Range Maximum (m)',
-        title: 'Maximum (m)',
-        type: 'FLOAT',
-        typeClass: 'primitive',
-        watermark: 'Enter a floating-point number.',
-        description: 'The maximum wavelength of the spectral bandpass, in meters.',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 11
       },
       'coverage.Temporal': {
         name: 'coverage.Temporal',
@@ -2500,6 +2169,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 12,
         childMetadataFields: {
           'coverage.Temporal.StartTime': {
@@ -2514,6 +2184,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 13
           },
           'coverage.Temporal.StopTime': {
@@ -2528,37 +2199,10 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 14
           }
         }
-      },
-      'coverage.Temporal.StartTime': {
-        name: 'coverage.Temporal.StartTime',
-        displayName: 'Dataset Date Range Start',
-        title: 'Start',
-        type: 'DATE',
-        typeClass: 'primitive',
-        watermark: 'YYYY-MM-DD',
-        description: 'Dataset Start Date',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 13
-      },
-      'coverage.Temporal.StopTime': {
-        name: 'coverage.Temporal.StopTime',
-        displayName: 'Dataset Date Range End',
-        title: 'End',
-        type: 'DATE',
-        typeClass: 'primitive',
-        watermark: 'YYYY-MM-DD',
-        description: 'Dataset End Date',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 14
       },
       'coverage.Spatial': {
         name: 'coverage.Spatial',
@@ -2572,6 +2216,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 15
       },
       'coverage.Depth': {
@@ -2586,6 +2231,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 16
       },
       'coverage.ObjectDensity': {
@@ -2601,6 +2247,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 17
       },
       'coverage.ObjectCount': {
@@ -2615,6 +2262,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 18
       },
       'coverage.SkyFraction': {
@@ -2630,6 +2278,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 19
       },
       'coverage.Polarization': {
@@ -2644,6 +2293,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 20
       },
       redshiftType: {
@@ -2659,6 +2309,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 21
       },
       'resolution.Redshift': {
@@ -2674,6 +2325,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 22
       },
       'coverage.RedshiftValue': {
@@ -2689,6 +2341,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 23,
         childMetadataFields: {
           'coverage.Redshift.MinimumValue': {
@@ -2704,6 +2357,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 24
           },
           'coverage.Redshift.MaximumValue': {
@@ -2719,39 +2373,10 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 25
           }
         }
-      },
-      'coverage.Redshift.MinimumValue': {
-        name: 'coverage.Redshift.MinimumValue',
-        displayName: 'Redshift Value Minimum',
-        title: 'Minimum',
-        type: 'FLOAT',
-        typeClass: 'primitive',
-        watermark: 'Enter a floating-point number.',
-        description:
-          'The minimum value of the redshift (unitless) or Doppler velocity (km/s in the data object.',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 24
-      },
-      'coverage.Redshift.MaximumValue': {
-        name: 'coverage.Redshift.MaximumValue',
-        displayName: 'Redshift Value Maximum',
-        title: 'Maximum',
-        type: 'FLOAT',
-        typeClass: 'primitive',
-        watermark: 'Enter a floating-point number.',
-        description:
-          'The maximum value of the redshift (unitless) or Doppler velocity (km/s in the data object.',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 25
       }
     }
   },
@@ -2759,7 +2384,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
     id: 5,
     name: 'biomedical',
     displayName: 'Life Sciences Metadata',
-    displayOnCreate: false,
+    displayOnCreate: true,
     metadataFields: {
       studyDesignType: {
         name: 'studyDesignType',
@@ -2774,6 +2399,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 0,
+        displayOnCreate: true,
         controlledVocabularyValues: [
           'Case Control',
           'Cross Sectional',
@@ -2800,6 +2426,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 1
       },
       studyFactorType: {
@@ -2814,6 +2441,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: true,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 2,
         controlledVocabularyValues: [
           'Age',
@@ -2851,6 +2479,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 3
       },
       studyAssayOrganism: {
@@ -2867,6 +2496,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 4,
+        displayOnCreate: true,
         controlledVocabularyValues: [
           'Arabidopsis thaliana',
           'Bos taurus',
@@ -2908,6 +2538,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 5
       },
       studyAssayMeasurementType: {
@@ -2924,6 +2555,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 6,
+        displayOnCreate: true,
         controlledVocabularyValues: [
           'cell sorting',
           'clinical chemistry analysis',
@@ -2969,6 +2601,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 7
       },
       studyAssayTechnologyType: {
@@ -2985,6 +2618,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 8,
+        displayOnCreate: true,
         controlledVocabularyValues: [
           'culture based drug susceptibility testing, single concentration',
           'culture based drug susceptibility testing, two concentrations',
@@ -3014,6 +2648,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 9
       },
       studyAssayPlatform: {
@@ -3029,6 +2664,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: true,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 10,
         controlledVocabularyValues: [
           '210-MS GC Ion Trap (Varian)',
@@ -3230,6 +2866,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 11
       },
       studyAssayCellType: {
@@ -3244,6 +2881,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 12
       }
     }
@@ -3252,7 +2890,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
     id: 6,
     name: 'journal',
     displayName: 'Journal Metadata',
-    displayOnCreate: false,
+    displayOnCreate: true,
     metadataFields: {
       journalVolumeIssue: {
         name: 'journalVolumeIssue',
@@ -3268,6 +2906,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 0,
+        displayOnCreate: true,
         childMetadataFields: {
           journalVolume: {
             name: 'journalVolume',
@@ -3282,6 +2921,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 1
           },
           journalIssue: {
@@ -3297,6 +2937,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 2
           },
           journalPubDate: {
@@ -3312,53 +2953,10 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 3
           }
         }
-      },
-      journalVolume: {
-        name: 'journalVolume',
-        displayName: 'Journal Volume',
-        title: 'Volume',
-        type: 'TEXT',
-        typeClass: 'primitive',
-        watermark: '',
-        description: 'The journal volume which this Dataset is associated with (e.g., Volume 4).',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 1
-      },
-      journalIssue: {
-        name: 'journalIssue',
-        displayName: 'Journal Issue',
-        title: 'Issue',
-        type: 'TEXT',
-        typeClass: 'primitive',
-        watermark: '',
-        description:
-          'The journal issue number which this Dataset is associated with (e.g., Number 2, Autumn).',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 2
-      },
-      journalPubDate: {
-        name: 'journalPubDate',
-        displayName: 'Journal Publication Date',
-        title: 'Publication Date',
-        type: 'DATE',
-        typeClass: 'primitive',
-        watermark: 'YYYY or YYYY-MM or YYYY-MM-DD',
-        description:
-          'The publication date for this journal volume/issue, which this Dataset is associated with (e.g., 1999).',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 3
       },
       journalArticleType: {
         name: 'journalArticleType',
@@ -3374,6 +2972,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         displayFormat: '',
         isRequired: false,
         displayOrder: 4,
+        displayOnCreate: true,
         controlledVocabularyValues: [
           'abstract',
           'addendum',
@@ -3415,7 +3014,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
     id: 3,
     name: 'socialscience',
     displayName: 'Social Science and Humanities Metadata',
-    displayOnCreate: false,
+    displayOnCreate: true,
     metadataFields: {
       unitOfAnalysis: {
         name: 'unitOfAnalysis',
@@ -3430,6 +3029,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 0
       },
       universe: {
@@ -3445,6 +3045,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 1
       },
       timeMethod: {
@@ -3460,6 +3061,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 2
       },
       dataCollector: {
@@ -3475,6 +3077,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 3
       },
       collectorTraining: {
@@ -3489,6 +3092,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 4
       },
       frequencyOfDataCollection: {
@@ -3504,6 +3108,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 5
       },
       samplingProcedure: {
@@ -3519,6 +3124,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 6
       },
       targetSampleSize: {
@@ -3534,6 +3140,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 7,
         childMetadataFields: {
           targetSampleActualSize: {
@@ -3548,6 +3155,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 8
           },
           targetSampleSizeFormula: {
@@ -3562,37 +3170,10 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 9
           }
         }
-      },
-      targetSampleActualSize: {
-        name: 'targetSampleActualSize',
-        displayName: 'Target Sample Size Actual',
-        title: 'Actual',
-        type: 'INT',
-        typeClass: 'primitive',
-        watermark: 'Enter an integer...',
-        description: 'Actual sample size.',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 8
-      },
-      targetSampleSizeFormula: {
-        name: 'targetSampleSizeFormula',
-        displayName: 'Target Sample Size Formula',
-        title: 'Formula',
-        type: 'TEXT',
-        typeClass: 'primitive',
-        watermark: '',
-        description: 'Formula used to determine target sample size.',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 9
       },
       deviationsFromSampleDesign: {
         name: 'deviationsFromSampleDesign',
@@ -3607,6 +3188,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 10
       },
       collectionMode: {
@@ -3622,6 +3204,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 11
       },
       researchInstrument: {
@@ -3637,6 +3220,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 12
       },
       dataCollectionSituation: {
@@ -3652,6 +3236,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 13
       },
       actionsToMinimizeLoss: {
@@ -3667,6 +3252,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 14
       },
       controlOperations: {
@@ -3682,6 +3268,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 15
       },
       weighting: {
@@ -3697,6 +3284,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 16
       },
       cleaningOperations: {
@@ -3712,6 +3300,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 17
       },
       datasetLevelErrorNotes: {
@@ -3727,6 +3316,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 18
       },
       responseRate: {
@@ -3741,6 +3331,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 19
       },
       samplingErrorEstimates: {
@@ -3756,6 +3347,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 20
       },
       otherDataAppraisal: {
@@ -3771,6 +3363,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 21
       },
       socialScienceNotes: {
@@ -3785,6 +3378,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
         isControlledVocabulary: false,
         displayFormat: '',
         isRequired: false,
+        displayOnCreate: true,
         displayOrder: 22,
         childMetadataFields: {
           socialScienceNotesType: {
@@ -3799,6 +3393,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 23
           },
           socialScienceNotesSubject: {
@@ -3813,6 +3408,7 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 24
           },
           socialScienceNotesText: {
@@ -3827,52 +3423,11 @@ export const metadataBlocksInfoByCollectionIdResponse = [
             isControlledVocabulary: false,
             displayFormat: '',
             isRequired: false,
+            displayOnCreate: true,
             displayOrder: 25
           }
         }
-      },
-      socialScienceNotesType: {
-        name: 'socialScienceNotesType',
-        displayName: 'Notes Type',
-        title: 'Type',
-        type: 'TEXT',
-        typeClass: 'primitive',
-        watermark: '',
-        description: 'Type of note.',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 23
-      },
-      socialScienceNotesSubject: {
-        name: 'socialScienceNotesSubject',
-        displayName: 'Notes Subject',
-        title: 'Subject',
-        type: 'TEXT',
-        typeClass: 'primitive',
-        watermark: '',
-        description: 'Note subject.',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 24
-      },
-      socialScienceNotesText: {
-        name: 'socialScienceNotesText',
-        displayName: 'Notes Text',
-        title: 'Text',
-        type: 'TEXTBOX',
-        typeClass: 'primitive',
-        watermark: '',
-        description: 'Text for this note.',
-        multiple: false,
-        isControlledVocabulary: false,
-        displayFormat: '',
-        isRequired: false,
-        displayOrder: 25
       }
     }
   }
-] as MetadataBlockInfo2[]
+]
