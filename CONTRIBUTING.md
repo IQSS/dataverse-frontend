@@ -132,6 +132,7 @@ We use a [CODEOWNERS](https://github.com/iqss/dataverse-frontend/blob/master/.gi
 By contributing code you are granting _(`Dataverse`)_ shared ownership of your work. You still own it but _(`Dataverse`)_ will have the right to relicense your work based on our needs & treat this work as if it was developed by a _(`Dataverse`)_ engineer.
 
 ## Browser support
+
 <!-- TODO: ? -->
 <!-- We configure our build chain tools
 (typically [Autoprefixer](https://github.com/postcss/autoprefixer)
