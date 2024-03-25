@@ -3,8 +3,9 @@ import { DatasetMockRepository } from './DatasetMockRepository'
 import { TotalDatasetsCount } from '../../dataset/domain/models/TotalDatasetsCount'
 import { DatasetPaginationInfo } from '../../dataset/domain/models/DatasetPaginationInfo'
 import { DatasetPreview } from '../../dataset/domain/models/DatasetPreview'
-import { DatasetFormFields } from '../../dataset/domain/models/DatasetFormFields'
 import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount'
+import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
+import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 
 export class DatasetErrorMockRepository implements DatasetMockRepository {
   getAll(_collectionId: string, _paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
@@ -55,11 +56,11 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
     })
   }
 
-  createDataset(_fields: DatasetFormFields): Promise<string> {
+  create(_dataset: DatasetDTO): Promise<{ persistentId: string }> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
 }

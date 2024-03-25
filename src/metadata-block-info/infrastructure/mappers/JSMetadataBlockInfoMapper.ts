@@ -15,13 +15,26 @@ export class JSMetadataBlockInfoMapper {
   static toFields(
     jsMetadataBlockInfoFields: Record<string, JSMetadataFieldInfo>
   ): MetadataBlockInfoFields {
-    return Object.entries(jsMetadataBlockInfoFields).reduce(
-      (fields: MetadataBlockInfoFields, [key, value]) => {
-        fields[key] = { displayFormat: this.toDisplayFormat(value.displayFormat) }
-        return fields
-      },
-      {}
-    )
+    const fields: MetadataBlockInfoFields = {}
+
+    Object.entries(jsMetadataBlockInfoFields).forEach(([key, value]) => {
+      fields[key] = { displayFormat: this.toDisplayFormat(value.displayFormat) }
+
+      if (value.typeClass === 'compound' && value.childMetadataFields) {
+        this.processCompoundFields(value.childMetadataFields, fields)
+      }
+    })
+
+    return fields
+  }
+
+  static processCompoundFields(
+    jsFields: Record<string, JSMetadataFieldInfo>,
+    result: MetadataBlockInfoFields
+  ): void {
+    Object.entries(jsFields).forEach(([key, value]) => {
+      result[key] = { displayFormat: this.toDisplayFormat(value.displayFormat) }
+    })
   }
 
   static toDisplayFormat(jsDisplayFormat: string): string {
