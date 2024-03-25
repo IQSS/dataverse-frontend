@@ -1,36 +1,35 @@
-import { Form } from '@iqss/dataverse-design-system'
+import { Col, Form } from '@iqss/dataverse-design-system'
 import {
   MetadataField2,
-  TypeClassMetadataField,
-  TypeMetadataField
+  TypeClassMetadataFieldOptions,
+  TypeMetadataFieldOptions
 } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-
-export enum TypeMetadataFieldxx {
-  Date = 'DATE',
-  Email = 'EMAIL',
-  Float = 'FLOAT',
-  Int = 'INT',
-  None = 'NONE',
-  Text = 'TEXT',
-  Textbox = 'TEXTBOX',
-  URL = 'URL'
-}
-
-export enum TypeClassMetadataFieldxx {
-  Compound = 'compound',
-  ControlledVocabulary = 'controlledVocabulary',
-  Primitive = 'primitive'
-}
+import {
+  DateField,
+  EmailField,
+  FloatField,
+  IntField,
+  TextBoxField,
+  TextField,
+  UrlField,
+  Vocabulary
+} from './Fields'
+import styles from './index.module.scss'
 
 interface Props {
   metadataFieldInfo: MetadataField2
+  withinMultipleFieldsGroup?: boolean
 }
 
-export const MetadataFormField = ({ metadataFieldInfo }: Props) => {
+export const MetadataFormField = ({
+  metadataFieldInfo,
+  withinMultipleFieldsGroup = false
+}: Props) => {
   console.log(metadataFieldInfo)
   const {
     name,
     type,
+    title,
     multiple,
     typeClass,
     isRequired,
@@ -41,77 +40,167 @@ export const MetadataFormField = ({ metadataFieldInfo }: Props) => {
   } = metadataFieldInfo
 
   const isSafeCompound =
-    typeClass === TypeClassMetadataField.Compound &&
+    typeClass === TypeClassMetadataFieldOptions.Compound &&
     childMetadataFields !== undefined &&
     Object.keys(childMetadataFields).length > 0
 
   const isSafeControlledVocabulary =
-    typeClass === TypeClassMetadataField.ControlledVocabulary &&
+    typeClass === TypeClassMetadataFieldOptions.ControlledVocabulary &&
     controlledVocabularyValues !== undefined &&
     controlledVocabularyValues.length > 0
 
-  const isSafePrimitive = typeClass === TypeClassMetadataField.Primitive
-
-  if (isSafePrimitive) {
-    return (
-      <p>
-        <b>{`name: ${name} `}</b>
-        ---isSafePrimitive--- {`type: ${type} typeClass: ${typeClass}`}
-      </p>
-    )
-  }
+  const isSafePrimitive = typeClass === TypeClassMetadataFieldOptions.Primitive
 
   if (isSafeCompound) {
     return (
-      <p>
-        <b>{`name: ${name} `}</b>
-        ---isSafeCompound--- {`type: ${type} typeClass: ${typeClass}`}
-        <ul>
+      <Form.GroupWithMultipleFields
+        title={title}
+        message={description}
+        required={isRequired}
+        withDynamicFields={false}>
+        <div className={styles['multiple-fields-grid']}>
           {Object.entries(childMetadataFields).map(
             ([childMetadataFieldKey, childMetadataFieldInfo]) => {
               return (
-                <li key={childMetadataFieldKey}>
-                  <MetadataFormField metadataFieldInfo={childMetadataFieldInfo} />
-                </li>
+                <MetadataFormField
+                  metadataFieldInfo={childMetadataFieldInfo}
+                  withinMultipleFieldsGroup
+                  key={childMetadataFieldKey}
+                />
               )
             }
           )}
-        </ul>
-      </p>
+        </div>
+      </Form.GroupWithMultipleFields>
+    )
+  }
+
+  if (isSafePrimitive) {
+    return (
+      <Form.Group
+        controlId={name}
+        required={isRequired}
+        as={withinMultipleFieldsGroup ? Col : undefined}>
+        <Form.Group.Label message={description}>{title}</Form.Group.Label>
+        <>
+          {type === TypeMetadataFieldOptions.Text && (
+            <TextField
+              name="someName"
+              onChange={(e) => console.log(e)}
+              disabled={false}
+              isInvalid={false}
+              isInFieldGroup={withinMultipleFieldsGroup}
+            />
+          )}
+          {type === TypeMetadataFieldOptions.Textbox && (
+            <TextBoxField
+              name="someName"
+              onChange={(e) => console.log(e)}
+              disabled={false}
+              isInvalid={false}
+              isInFieldGroup={withinMultipleFieldsGroup}
+            />
+          )}
+          {type === TypeMetadataFieldOptions.URL && (
+            <UrlField
+              name="someName"
+              onChange={(e) => console.log(e)}
+              disabled={false}
+              isInvalid={false}
+              isInFieldGroup={withinMultipleFieldsGroup}
+            />
+          )}
+          {type === TypeMetadataFieldOptions.Email && (
+            <EmailField
+              name="someName"
+              onChange={(e) => console.log(e)}
+              disabled={false}
+              isInvalid={false}
+              isInFieldGroup={withinMultipleFieldsGroup}
+            />
+          )}
+          {type === TypeMetadataFieldOptions.Int && (
+            <IntField
+              name="someName"
+              onChange={(e) => console.log(e)}
+              disabled={false}
+              isInvalid={false}
+              isInFieldGroup={withinMultipleFieldsGroup}
+            />
+          )}
+          {type === TypeMetadataFieldOptions.Float && (
+            <FloatField
+              name="someName"
+              onChange={(e) => console.log(e)}
+              disabled={false}
+              isInvalid={false}
+              isInFieldGroup={withinMultipleFieldsGroup}
+            />
+          )}
+          {type === TypeMetadataFieldOptions.Date && (
+            <DateField
+              name="someName"
+              onChange={(e) => console.log(e)}
+              disabled={false}
+              isInvalid={false}
+              isInFieldGroup={withinMultipleFieldsGroup}
+            />
+          )}
+        </>
+        <Form.Group.Feedback type="invalid">
+          Automatically get error from the validation library (Field is required, Field should have
+          bla blah, etc.)
+        </Form.Group.Feedback>
+      </Form.Group>
     )
   }
 
   if (isSafeControlledVocabulary) {
+    if (multiple) {
+      return (
+        <Form.CheckboxGroup
+          title={title}
+          message={description}
+          required={isRequired}
+          isInvalid={false}>
+          <div className={styles['checkbox-list-grid']}>
+            {controlledVocabularyValues.map((value) => {
+              return (
+                <Form.Group.Checkbox
+                  name="someNameForThisCheckbox"
+                  label={value}
+                  id={`${title}-checkbox-${value}`}
+                  value={value}
+                  onChange={(e) => console.log(e)}
+                  key={value}
+                />
+              )
+            })}
+          </div>
+        </Form.CheckboxGroup>
+      )
+    }
     return (
-      <p>
-        <b>{`name: ${name} `}</b>
-        ---isSafeControlledVocabulary--- {`type: ${type} typeClass: ${typeClass}`}
-        <ul>
-          {controlledVocabularyValues.map((controlledVocabularyValue, index) => {
-            return <li key={index}>{controlledVocabularyValue}</li>
-          })}
-        </ul>
-      </p>
+      <Form.Group
+        controlId={name}
+        required={isRequired}
+        as={withinMultipleFieldsGroup ? Col : undefined}>
+        <Form.Group.Label message={description}>{title}</Form.Group.Label>
+        <Vocabulary
+          name="someName"
+          onChange={(e) => console.log(e)}
+          disabled={false}
+          isInvalid={false}
+          isInFieldGroup={withinMultipleFieldsGroup}
+          options={controlledVocabularyValues}
+        />
+        <Form.Group.Feedback type="invalid">
+          Automatically get error from the validation library (Field is required, Field should have
+          bla blah, etc.)
+        </Form.Group.Feedback>
+      </Form.Group>
     )
   }
 
   return <p>Not implemented</p>
 }
-
-//   return (
-//     <Form.Group controlId={metadataFieldInfo.name} required={metadataFieldInfo.isRequired}>
-//       <Form.Group.Label message={metadataFieldInfo.description}>
-//         {metadataFieldInfo.displayName}
-//       </Form.Group.Label>
-//       <Form.Group.Input
-//         // disabled={submissionStatus === SubmissionStatus.IsSubmitting}
-//         type="text"
-//         name="metadataBlocks.0.fields.title"
-//         // onChange={handleFieldChange}
-//         // isInvalid={!!validationErrors.metadataBlocks[0].fields.title}
-//       />
-//       <Form.Group.Feedback type="invalid">
-//         {/* {t('datasetForm.fields.title.feedback')} */}
-//       </Form.Group.Feedback>
-//     </Form.Group>
-//   )
