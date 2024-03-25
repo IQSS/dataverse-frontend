@@ -7,7 +7,6 @@ import { FileSizeUnit } from '../files/domain/models/FileMetadata'
 
 const zipDownloadLimitMock = new ZipDownloadLimit(1, FileSizeUnit.BYTES)
 export const WithSettings = (Story: StoryFn) => {
-  // eslint-disable-next-line unused-imports/no-unused-vars
   function getSettingByName<T>(name: SettingName): Promise<Setting<T>> {
     switch (name) {
       case SettingName.ZIP_DOWNLOAD_LIMIT:

@@ -4,7 +4,6 @@ import { ZipDownloadLimit } from '../domain/models/ZipDownloadLimit'
 import { FileSizeUnit } from '../../files/domain/models/FileMetadata'
 
 export class SettingJSDataverseRepository implements SettingRepository {
-  // eslint-disable-next-line unused-imports/no-unused-vars
   getByName<T>(name: SettingName): Promise<Setting<T>> {
     // TODO - implement using js-dataverse
     return new Promise((resolve) => {

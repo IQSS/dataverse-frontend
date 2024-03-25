@@ -288,6 +288,11 @@ The new SPA does not use Solr as the API endpoint it uses performs all queries o
 
 The decision of this change is made on the assumption that Solr may not be required in the context of files tab search, whose search facets are reduced compared to other in-application searches. Therefore, if we find evidence that the assumption is incorrect, we will work on extending the search capabilities to support Solr.
 
+#### Dataverses/Datasets list
+
+The original JSF Dataverses/Datasets list on the home page uses normal paging buttons at the bottom of the list.
+We have implemented infinite scrolling in this list, replacing the normal paging buttons, but the goal would be to be able to toggle between normal paging and infinite scrolling via a toggle setting or button.
+
 ## Publishing the Design System
 
 The Design System is published to the npm Package Registry. To publish a new version, follow these steps:
