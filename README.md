@@ -457,7 +457,8 @@ Integration tests, and End-to-End (e2e) tests. In this section, we'll describe e
 ### 1. **Unit Tests or Component tests:**
 
 Unit tests are designed to test individual React components in isolation. In our approach, we focus on testing components
-from the user's perspective, following the principles of the Testing Library. This means:
+from the user's perspective, following the principles of the [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/).
+This means:
 
 - **Test What Users See:** Focus on the output of the components, such as text, interactions, and the DOM, rather than
   internal implementation details like classes or functions.
@@ -469,8 +470,7 @@ from the user's perspective, following the principles of the Testing Library. Th
 - **Mocking:** We use mocks to isolate components from their dependencies, ensuring that tests are focused on the component
   itself and not on its dependencies.
 - **Tools and Frameworks:** We use [Cypress Component testing](https://docs.cypress.io/guides/component-testing/overview)
-  alongside [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) to render components in
-  isolation and test their behavior.
+  alongside React Testing Library to render components in isolation and test their behavior.
 
 <details>
 <summary><strong>Example of a Unit Test</strong></summary>
