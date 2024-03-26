@@ -1506,7 +1506,7 @@ export const metadataBlocksInfoByCollectionIdResponse: MetadataBlockInfo2[] = [
     id: 2,
     name: 'geospatial',
     displayName: 'Geospatial Metadata',
-    displayOnCreate: true,
+    displayOnCreate: false,
     metadataFields: {
       geographicCoverage: {
         name: 'geographicCoverage',
@@ -1943,7 +1943,7 @@ export const metadataBlocksInfoByCollectionIdResponse: MetadataBlockInfo2[] = [
     id: 4,
     name: 'astrophysics',
     displayName: 'Astronomy and Astrophysics Metadata',
-    displayOnCreate: true,
+    displayOnCreate: false,
     metadataFields: {
       astroType: {
         name: 'astroType',
@@ -2384,7 +2384,7 @@ export const metadataBlocksInfoByCollectionIdResponse: MetadataBlockInfo2[] = [
     id: 5,
     name: 'biomedical',
     displayName: 'Life Sciences Metadata',
-    displayOnCreate: true,
+    displayOnCreate: false,
     metadataFields: {
       studyDesignType: {
         name: 'studyDesignType',
@@ -2890,7 +2890,7 @@ export const metadataBlocksInfoByCollectionIdResponse: MetadataBlockInfo2[] = [
     id: 6,
     name: 'journal',
     displayName: 'Journal Metadata',
-    displayOnCreate: true,
+    displayOnCreate: false,
     metadataFields: {
       journalVolumeIssue: {
         name: 'journalVolumeIssue',
@@ -3014,7 +3014,7 @@ export const metadataBlocksInfoByCollectionIdResponse: MetadataBlockInfo2[] = [
     id: 3,
     name: 'socialscience',
     displayName: 'Social Science and Humanities Metadata',
-    displayOnCreate: true,
+    displayOnCreate: false,
     metadataFields: {
       unitOfAnalysis: {
         name: 'unitOfAnalysis',

@@ -7,7 +7,7 @@ interface Props {
   isInvalid: boolean
   disabled: boolean
   isInFieldGroup?: boolean
-  //   allowMultiple?: boolean
+  // allowMultiple?: boolean
 }
 // TODO: Implement a multiple select with autocomplete like in JSF version
 export const Vocabulary = ({
@@ -16,7 +16,7 @@ export const Vocabulary = ({
   onChange,
   isInvalid,
   disabled,
-  //   allowMultiple,
+  // allowMultiple,
   isInFieldGroup = false
 }: Props) => {
   return (

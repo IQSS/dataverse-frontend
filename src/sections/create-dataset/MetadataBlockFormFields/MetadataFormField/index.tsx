@@ -83,7 +83,7 @@ export const MetadataFormField = ({
         <>
           {type === TypeMetadataFieldOptions.Text && (
             <TextField
-              name="someName"
+              name={name}
               onChange={(e) => console.log(e)}
               disabled={false}
               isInvalid={false}
@@ -92,7 +92,7 @@ export const MetadataFormField = ({
           )}
           {type === TypeMetadataFieldOptions.Textbox && (
             <TextBoxField
-              name="someName"
+              name={name}
               onChange={(e) => console.log(e)}
               disabled={false}
               isInvalid={false}
@@ -101,7 +101,7 @@ export const MetadataFormField = ({
           )}
           {type === TypeMetadataFieldOptions.URL && (
             <UrlField
-              name="someName"
+              name={name}
               onChange={(e) => console.log(e)}
               disabled={false}
               isInvalid={false}
@@ -110,7 +110,7 @@ export const MetadataFormField = ({
           )}
           {type === TypeMetadataFieldOptions.Email && (
             <EmailField
-              name="someName"
+              name={name}
               onChange={(e) => console.log(e)}
               disabled={false}
               isInvalid={false}
@@ -119,7 +119,7 @@ export const MetadataFormField = ({
           )}
           {type === TypeMetadataFieldOptions.Int && (
             <IntField
-              name="someName"
+              name={name}
               onChange={(e) => console.log(e)}
               disabled={false}
               isInvalid={false}
@@ -128,7 +128,7 @@ export const MetadataFormField = ({
           )}
           {type === TypeMetadataFieldOptions.Float && (
             <FloatField
-              name="someName"
+              name={name}
               onChange={(e) => console.log(e)}
               disabled={false}
               isInvalid={false}
@@ -137,7 +137,7 @@ export const MetadataFormField = ({
           )}
           {type === TypeMetadataFieldOptions.Date && (
             <DateField
-              name="someName"
+              name={name}
               onChange={(e) => console.log(e)}
               disabled={false}
               isInvalid={false}
@@ -165,9 +165,9 @@ export const MetadataFormField = ({
             {controlledVocabularyValues.map((value) => {
               return (
                 <Form.Group.Checkbox
-                  name="someNameForThisCheckbox"
+                  name={name}
                   label={value}
-                  id={`${title}-checkbox-${value}`}
+                  id={`${name}-checkbox-${value}`}
                   value={value}
                   onChange={(e) => console.log(e)}
                   key={value}
@@ -185,7 +185,7 @@ export const MetadataFormField = ({
         as={withinMultipleFieldsGroup ? Col : undefined}>
         <Form.Group.Label message={description}>{title}</Form.Group.Label>
         <Vocabulary
-          name="someName"
+          name={name}
           onChange={(e) => console.log(e)}
           disabled={false}
           isInvalid={false}
