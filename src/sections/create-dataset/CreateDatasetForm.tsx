@@ -14,7 +14,9 @@ import { useDatasetValidator } from './useDatasetValidator'
 import { useGetMetadataBlocksInfo } from './useGetMetadataBlocksInfo'
 // import { DatasetMetadataSubField } from '../../dataset/domain/models/Dataset'
 import { MetadataBlockFormFields } from './MetadataBlockFormFields'
+import { MetadataBlocksSkeleton } from './MetadataBlocksSkeleton'
 import styles from './CreateDatasetForm.module.scss'
+
 interface CreateDatasetFormProps {
   repository: DatasetRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
@@ -81,16 +83,20 @@ export function CreateDatasetForm({
             handleSubmit(event)
           }}>
           {/* METADATA BLOCKS */}
-          <Accordion defaultActiveKey="0">
-            {metadataBlocks.map((metadataBlock, index) => (
-              <Accordion.Item eventKey={index.toString()} key={metadataBlock.id}>
-                <Accordion.Header>{metadataBlock.displayName}</Accordion.Header>
-                <Accordion.Body>
-                  <MetadataBlockFormFields metadataBlock={metadataBlock} />
-                </Accordion.Body>
-              </Accordion.Item>
-            ))}
-          </Accordion>
+          {isLoadingMetadataBlocksToRender && <MetadataBlocksSkeleton />}
+          {!isLoadingMetadataBlocksToRender && metadataBlocks.length > 0 && (
+            <Accordion defaultActiveKey="0">
+              {metadataBlocks.map((metadataBlock, index) => (
+                <Accordion.Item eventKey={index.toString()} key={metadataBlock.id}>
+                  <Accordion.Header>{metadataBlock.displayName}</Accordion.Header>
+                  <Accordion.Body>
+                    <MetadataBlockFormFields metadataBlock={metadataBlock} />
+                  </Accordion.Body>
+                </Accordion.Item>
+              ))}
+            </Accordion>
+          )}
+
           <SeparationLine />
           <Alert variant={'info'} customHeading={t('metadataTip.title')} dismissible={false}>
             {t('metadataTip.content')}
