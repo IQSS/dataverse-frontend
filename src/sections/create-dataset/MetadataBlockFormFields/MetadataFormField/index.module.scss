@@ -12,9 +12,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  border: solid 1px var(--bs-gray-400);
-  padding: 1rem;
   max-height: 260px;
+  padding: 1rem;
   overflow-y: auto;
+  border: solid 1px var(--bs-gray-400);
   border-radius: var(--bs-border-radius-lg);
 }

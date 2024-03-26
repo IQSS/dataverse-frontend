@@ -25,7 +25,6 @@ export const MetadataFormField = ({
   metadataFieldInfo,
   withinMultipleFieldsGroup = false
 }: Props) => {
-  console.log(metadataFieldInfo)
   const {
     name,
     type,
@@ -33,7 +32,6 @@ export const MetadataFormField = ({
     multiple,
     typeClass,
     isRequired,
-    displayName,
     description,
     childMetadataFields,
     controlledVocabularyValues

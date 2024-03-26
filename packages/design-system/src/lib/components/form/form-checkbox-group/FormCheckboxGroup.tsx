@@ -23,7 +23,7 @@ export function FormCheckboxGroup({
 }: PropsWithChildren<FormCheckboxGroupProps>) {
   const validationClass = isInvalid ? 'is-invalid' : isValid ? 'is-valid' : ''
   return (
-    <Row>
+    <Row className="mb-3">
       <Col sm={3}>
         <span className={styles.title}>
           {title} {required && <RequiredInputSymbol />}{' '}
