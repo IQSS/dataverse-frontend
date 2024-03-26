@@ -9,10 +9,8 @@ import { File } from '../../files/domain/models/File'
 
 export class FileMockNoDataRepository extends FileMockRepository implements FileRepository {
   getAllByDatasetPersistentId(
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetPersistentId: string,
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersion: DatasetVersion
+    _datasetPersistentId: string,
+    _datasetVersion: DatasetVersion
   ): Promise<FilePreview[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -22,10 +20,8 @@ export class FileMockNoDataRepository extends FileMockRepository implements File
   }
 
   getFilesCountInfoByDatasetPersistentId(
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetPersistentId: string,
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersionNumber: DatasetVersionNumber
+    _datasetPersistentId: string,
+    _datasetVersionNumber: DatasetVersionNumber
   ): Promise<FilesCountInfo> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -35,12 +31,9 @@ export class FileMockNoDataRepository extends FileMockRepository implements File
   }
 
   getFilesTotalDownloadSizeByDatasetPersistentId(
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetPersistentId: string,
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersionNumber: DatasetVersionNumber,
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    criteria?: FileCriteria
+    _datasetPersistentId: string,
+    _datasetVersionNumber: DatasetVersionNumber,
+    _criteria?: FileCriteria
   ): Promise<number> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -49,8 +42,7 @@ export class FileMockNoDataRepository extends FileMockRepository implements File
     })
   }
 
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  getById(id: number): Promise<File | undefined> {
+  getById(_id: number): Promise<File | undefined> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(undefined)

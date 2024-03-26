@@ -24,6 +24,16 @@ export const Default: Story = {
   render: () => <Collection datasetRepository={new DatasetMockRepository()} id="collection" />
 }
 
+export const InfiniteScrollingEnabled: Story = {
+  render: () => (
+    <Collection
+      datasetRepository={new DatasetMockRepository()}
+      id="collection"
+      infiniteScrollEnabled={true}
+    />
+  )
+}
+
 export const Loading: Story = {
   render: () => (
     <Collection datasetRepository={new DatasetLoadingMockRepository()} id="collection" />

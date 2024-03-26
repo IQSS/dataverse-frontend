@@ -8,8 +8,7 @@ import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 export const WithDatasetPrivateUrl = (Story: StoryFn) => {
   const datasetRepository = {} as DatasetRepository
   datasetRepository.getByPrivateUrlToken = (
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    privateUrlToken: string
+    _privateUrlToken: string
   ): Promise<Dataset | undefined> => {
     return new Promise((resolve) => {
       setTimeout(() => {

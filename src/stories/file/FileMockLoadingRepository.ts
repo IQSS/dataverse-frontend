@@ -9,10 +9,8 @@ import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 
 export class FileMockLoadingRepository extends FileMockRepository implements FileRepository {
   getAllByDatasetPersistentId(
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetPersistentId: string,
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersion: DatasetVersion
+    _datasetPersistentId: string,
+    _datasetVersion: DatasetVersion
   ): Promise<FilePreview[]> {
     return new Promise(() => {
       setTimeout(() => {
@@ -22,12 +20,9 @@ export class FileMockLoadingRepository extends FileMockRepository implements Fil
   }
 
   getFilesCountInfoByDatasetPersistentId(
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetPersistentId: string,
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    datasetVersionNumber: DatasetVersionNumber,
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    criteria?: FileCriteria
+    _datasetPersistentId: string,
+    _datasetVersionNumber: DatasetVersionNumber,
+    _criteria?: FileCriteria
   ): Promise<FilesCountInfo> {
     return new Promise(() => {
       setTimeout(() => {
@@ -36,8 +31,7 @@ export class FileMockLoadingRepository extends FileMockRepository implements Fil
     })
   }
 
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  getById(id: number): Promise<File> {
+  getById(_id: number): Promise<File> {
     return new Promise(() => {
       setTimeout(() => {
         // Do nothing
