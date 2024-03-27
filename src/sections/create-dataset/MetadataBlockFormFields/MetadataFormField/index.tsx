@@ -87,7 +87,6 @@ export const MetadataFormField = ({
               onChange={(e) => console.log(e)}
               disabled={false}
               isInvalid={false}
-              isInFieldGroup={withinMultipleFieldsGroup}
             />
           )}
           {type === TypeMetadataFieldOptions.Textbox && (
@@ -96,7 +95,6 @@ export const MetadataFormField = ({
               onChange={(e) => console.log(e)}
               disabled={false}
               isInvalid={false}
-              isInFieldGroup={withinMultipleFieldsGroup}
             />
           )}
           {type === TypeMetadataFieldOptions.URL && (
@@ -105,7 +103,6 @@ export const MetadataFormField = ({
               onChange={(e) => console.log(e)}
               disabled={false}
               isInvalid={false}
-              isInFieldGroup={withinMultipleFieldsGroup}
             />
           )}
           {type === TypeMetadataFieldOptions.Email && (
@@ -114,7 +111,6 @@ export const MetadataFormField = ({
               onChange={(e) => console.log(e)}
               disabled={false}
               isInvalid={false}
-              isInFieldGroup={withinMultipleFieldsGroup}
             />
           )}
           {type === TypeMetadataFieldOptions.Int && (
@@ -123,7 +119,6 @@ export const MetadataFormField = ({
               onChange={(e) => console.log(e)}
               disabled={false}
               isInvalid={false}
-              isInFieldGroup={withinMultipleFieldsGroup}
             />
           )}
           {type === TypeMetadataFieldOptions.Float && (
@@ -132,7 +127,6 @@ export const MetadataFormField = ({
               onChange={(e) => console.log(e)}
               disabled={false}
               isInvalid={false}
-              isInFieldGroup={withinMultipleFieldsGroup}
             />
           )}
           {type === TypeMetadataFieldOptions.Date && (
@@ -141,10 +135,10 @@ export const MetadataFormField = ({
               onChange={(e) => console.log(e)}
               disabled={false}
               isInvalid={false}
-              isInFieldGroup={withinMultipleFieldsGroup}
             />
           )}
         </>
+
         <Form.Group.Feedback type="invalid">
           Automatically get error from the validation library (Field is required, Field should have
           bla blah, etc.)

@@ -5,16 +5,9 @@ interface Props {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   isInvalid: boolean
   disabled: boolean
-  isInFieldGroup?: boolean
 }
 //TODO:ME  Add validation for urls?
-export const UrlField = ({
-  name,
-  onChange,
-  isInvalid,
-  disabled,
-  isInFieldGroup = false
-}: Props) => {
+export const UrlField = ({ name, onChange, isInvalid, disabled, ...props }: Props) => {
   return (
     <Form.Group.Input
       type="text"
@@ -22,7 +15,7 @@ export const UrlField = ({
       disabled={disabled}
       onChange={onChange}
       isInvalid={isInvalid}
-      withinMultipleFieldsGroup={isInFieldGroup}
+      {...props}
     />
   )
 }

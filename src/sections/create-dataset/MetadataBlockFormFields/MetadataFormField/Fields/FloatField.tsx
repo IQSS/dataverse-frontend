@@ -5,16 +5,9 @@ interface Props {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   isInvalid: boolean
   disabled: boolean
-  isInFieldGroup?: boolean
 }
 //TODO:ME  Add validation for floating numbers?
-export const FloatField = ({
-  name,
-  onChange,
-  isInvalid,
-  disabled,
-  isInFieldGroup = false
-}: Props) => {
+export const FloatField = ({ name, onChange, isInvalid, disabled, ...props }: Props) => {
   return (
     <Form.Group.Input
       type="text"
@@ -22,7 +15,7 @@ export const FloatField = ({
       disabled={disabled}
       onChange={onChange}
       isInvalid={isInvalid}
-      withinMultipleFieldsGroup={isInFieldGroup}
+      {...props}
     />
   )
 }

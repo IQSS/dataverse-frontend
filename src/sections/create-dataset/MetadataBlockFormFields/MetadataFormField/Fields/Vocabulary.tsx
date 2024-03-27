@@ -6,7 +6,6 @@ interface Props {
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void
   isInvalid: boolean
   disabled: boolean
-  isInFieldGroup?: boolean
   // allowMultiple?: boolean
 }
 // TODO: Implement a multiple select with autocomplete like in JSF version
@@ -17,7 +16,7 @@ export const Vocabulary = ({
   isInvalid,
   disabled,
   // allowMultiple,
-  isInFieldGroup = false
+  ...props
 }: Props) => {
   return (
     <Form.Group.Select
@@ -25,7 +24,7 @@ export const Vocabulary = ({
       disabled={disabled}
       onChange={onChange}
       isInvalid={isInvalid}
-      withinMultipleFieldsGroup={isInFieldGroup}>
+      {...props}>
       <option value="">Select</option>
       {options.map((option) => (
         <option key={option} value={option}>
