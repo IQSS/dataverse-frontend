@@ -36,7 +36,7 @@ export function useCreateDatasetForm(
       .then(({ persistentId }) => {
         setSubmissionStatus(SubmissionStatus.SubmitComplete)
         navigate(`${Route.DATASETS}?persistentId=${persistentId}`, {
-          state: { createSuccess: true }
+          state: { created: true }
         })
         return
       })

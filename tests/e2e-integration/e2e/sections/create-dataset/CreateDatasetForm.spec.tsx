@@ -1,5 +1,6 @@
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetLabelValue } from '../../../../../src/dataset/domain/models/Dataset'
+import { AlertMessageKey } from '../../../../../src/alert/domain/models/Alert'
 
 describe('Create Dataset', () => {
   before(() => {
@@ -28,6 +29,8 @@ describe('Create Dataset', () => {
     cy.findByText(/Save Dataset/i).click()
 
     cy.findByRole('heading', { name: 'Test Dataset Title' }).should('exist')
+    cy.findByText('Success!').should('exist')
+    cy.contains('This dataset has been created.').should('exist')
     cy.findByText(DatasetLabelValue.DRAFT).should('exist')
     cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
   })
