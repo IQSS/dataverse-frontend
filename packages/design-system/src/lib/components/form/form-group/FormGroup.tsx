@@ -25,12 +25,7 @@ function FormGroup({
   children,
   ...props
 }: PropsWithChildren<FormGroupProps>) {
-  const childrenWithRequiredProp = React.Children.map(children as JSX.Element, (child) => {
-    return React.cloneElement(child, {
-      required: required,
-      withinMultipleFieldsGroup: as === Col
-    })
-  })
+  const childrenWithRequiredProp = cloneThroughFragments(children, required, as)
 
   return (
     <FormBS.Group
@@ -41,6 +36,29 @@ function FormGroup({
       {childrenWithRequiredProp}
     </FormBS.Group>
   )
+}
+function cloneThroughFragments(
+  children: React.ReactNode,
+  required?: boolean,
+  as?: typeof Col | typeof Row
+): React.ReactNode {
+  return React.Children.map(children, (child) => {
+    if (React.isValidElement(child)) {
+      if (child.type === React.Fragment) {
+        const hasChildren = (props: unknown): props is { children: React.ReactNode } =>
+          typeof props === 'object' && Object.hasOwnProperty.call(props, 'children')
+
+        if (hasChildren(child.props)) {
+          return cloneThroughFragments(child.props.children, required, as)
+        }
+      }
+      return React.cloneElement(child as React.ReactElement, {
+        required: required,
+        withinMultipleFieldsGroup: as === Col
+      })
+    }
+    return child
+  })
 }
 
 FormGroup.Label = FormLabel
