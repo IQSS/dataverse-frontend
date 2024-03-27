@@ -82,6 +82,10 @@
       "heading": "Success!",
       "alertText": "This dataset draft has been deleted."
     },
+    "datasetCreated": {
+      "heading": "Success!",
+      "alertText": "This dataset has been created."
+    },
     "metadataUpdated": {
       "heading": "Success!",
       "alertText": "The metadata for this dataset has been updated."

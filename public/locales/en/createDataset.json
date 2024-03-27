@@ -5,6 +5,10 @@
     "content": "After adding the dataset, click the Edit Dataset button to add more metadata."
   },
   "requiredFields": "Asterisks indicate required fields",
+  "validationAlert": {
+    "title": "Validation Error",
+    "content": "Required fields were missed or there was a validation error. Please scroll down to see details."
+  },
   "datasetForm": {
     "fields": {
       "title": {

@@ -1,4 +1,4 @@
-import { Tabs, Col, Row } from '@iqss/dataverse-design-system'
+import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import styles from './Dataset.module.scss'
 import { DatasetLabels } from './dataset-labels/DatasetLabels'
 import { useLoading } from '../loading/LoadingContext'
@@ -18,17 +18,24 @@ import { useNotImplementedModal } from '../not-implemented/NotImplementedModalCo
 import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
+import { useAlertContext } from '../alerts/AlertContext'
+import { AlertMessageKey } from '../../alert/domain/models/Alert'
 
 interface DatasetProps {
   fileRepository: FileRepository
+  created?: boolean
 }
 
-export function Dataset({ fileRepository }: DatasetProps) {
+export function Dataset({ fileRepository, created }: DatasetProps) {
   const { setIsLoading } = useLoading()
   const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('dataset')
   const { hideModal, isModalOpen } = useNotImplementedModal()
+  const { addDatasetAlert } = useAlertContext()
 
+  if (created) {
+    addDatasetAlert({ messageKey: AlertMessageKey.DATASET_CREATED, variant: 'success' })
+  }
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading])
