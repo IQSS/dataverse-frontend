@@ -1,6 +1,5 @@
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetLabelValue } from '../../../../../src/dataset/domain/models/Dataset'
-import { AlertMessageKey } from '../../../../../src/alert/domain/models/Alert'
 
 describe('Create Dataset', () => {
   before(() => {
