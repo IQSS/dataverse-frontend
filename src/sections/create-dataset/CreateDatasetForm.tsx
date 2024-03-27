@@ -85,7 +85,7 @@ export function CreateDatasetForm({
           {/* METADATA BLOCKS */}
           {isLoadingMetadataBlocksToRender && <MetadataBlocksSkeleton />}
           {!isLoadingMetadataBlocksToRender && metadataBlocks.length > 0 && (
-            <Accordion defaultActiveKey="0">
+            <Accordion defaultActiveKey="0" data-testid="metadatablocks-accordion">
               {metadataBlocks.map((metadataBlock, index) => (
                 <Accordion.Item eventKey={index.toString()} key={metadataBlock.id}>
                   <Accordion.Header>{metadataBlock.displayName}</Accordion.Header>
@@ -101,10 +101,7 @@ export function CreateDatasetForm({
           <Alert variant={'info'} customHeading={t('metadataTip.title')} dismissible={false}>
             {t('metadataTip.content')}
           </Alert>
-          <Button
-            type="submit"
-            // disabled={submissionStatus === SubmissionStatus.IsSubmitting}
-          >
+          <Button type="submit" disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
             {t('saveButton')}
           </Button>
           <Button withSpacing variant="secondary" type="button" onClick={handleCancel}>

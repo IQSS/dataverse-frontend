@@ -3,7 +3,7 @@ import { Form } from '@iqss/dataverse-design-system'
 interface Props {
   name: string
   options: string[]
-  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void
   isInvalid: boolean
   disabled: boolean
   // allowMultiple?: boolean

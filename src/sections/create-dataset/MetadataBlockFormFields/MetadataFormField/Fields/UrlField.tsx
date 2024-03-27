@@ -2,7 +2,7 @@ import { Form } from '@iqss/dataverse-design-system'
 
 interface Props {
   name: string
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   isInvalid: boolean
   disabled: boolean
 }
@@ -15,6 +15,7 @@ export const UrlField = ({ name, onChange, isInvalid, disabled, ...props }: Prop
       disabled={disabled}
       onChange={onChange}
       isInvalid={isInvalid}
+      data-testid="url-field"
       {...props}
     />
   )

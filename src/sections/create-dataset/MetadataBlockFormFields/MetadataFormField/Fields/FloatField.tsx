@@ -2,7 +2,7 @@ import { Form } from '@iqss/dataverse-design-system'
 
 interface Props {
   name: string
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   isInvalid: boolean
   disabled: boolean
 }
@@ -15,6 +15,7 @@ export const FloatField = ({ name, onChange, isInvalid, disabled, ...props }: Pr
       disabled={disabled}
       onChange={onChange}
       isInvalid={isInvalid}
+      data-testid="float-field"
       {...props}
     />
   )
