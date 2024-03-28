@@ -3,19 +3,17 @@ import { Form } from '@iqss/dataverse-design-system'
 interface Props {
   name: string
   options: string[]
-  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void
+  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void
   isInvalid: boolean
   disabled: boolean
-  // allowMultiple?: boolean
 }
 // TODO: Implement a multiple select with autocomplete like in JSF version
 export const Vocabulary = ({
   name,
   options,
   onChange,
-  isInvalid,
+  isInvalid: _isInvalid, //TODO:ME: Why isInvalid complaining?
   disabled,
-  // allowMultiple,
   ...props
 }: Props) => {
   return (
@@ -23,7 +21,7 @@ export const Vocabulary = ({
       name={name}
       disabled={disabled}
       onChange={onChange}
-      isInvalid={isInvalid}
+      // isInvalid={isInvalid}
       {...props}>
       <option value="">Select</option>
       {options.map((option) => (
