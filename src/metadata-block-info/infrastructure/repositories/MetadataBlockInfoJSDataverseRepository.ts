@@ -6,7 +6,7 @@ import {
   ReadError
 } from '@iqss/dataverse-client-javascript'
 import { JSMetadataBlockInfoMapper } from '../mappers/JSMetadataBlockInfoMapper'
-import { metadataBlocksInfoByCollectionIdResponse } from '../../../sections/create-dataset/mocks/metadataBlocksInfoByCollectionIdResponse'
+import { MetadataBlockInfoMother } from '../../../../tests/component/metadata-block-info/domain/models/MetadataBlockInfoMother'
 
 export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfoRepository {
   getByName(name: string): Promise<MetadataBlockInfo | undefined> {
@@ -23,7 +23,7 @@ export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfo
   getByColecctionId(_collectionId: string, _create: boolean): Promise<MetadataBlockInfo2[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(metadataBlocksInfoByCollectionIdResponse)
+        resolve(MetadataBlockInfoMother.getByCollectionIdFullResponse())
       }, 1_000)
     })
   }

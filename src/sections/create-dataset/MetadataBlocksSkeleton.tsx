@@ -3,7 +3,7 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 
 export const MetadataBlocksSkeleton = () => {
   return (
-    <Accordion defaultActiveKey="0">
+    <Accordion defaultActiveKey="0" data-testid="metadata-blocks-skeleton">
       <SkeletonTheme>
         <Accordion.Item eventKey="0">
           <Accordion.Header>

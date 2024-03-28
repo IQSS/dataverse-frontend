@@ -69,7 +69,7 @@ export const useGetMetadataBlocksInfo = ({
         const errorMessage =
           err instanceof Error && err.message
             ? err.message
-            : 'Something went wrong getting the datasets'
+            : 'Something went wrong getting the information from the metadata blocks. Try again later.'
         setError(errorMessage)
       } finally {
         setIsLoading(false)
