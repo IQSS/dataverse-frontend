@@ -114,12 +114,54 @@ describe('Create Dataset', () => {
       cy.findByLabelText(/Integer Something/).should('exist')
       cy.findByTestId('int-field').should('exist')
 
-      // TODO:ME: Check the multiple select (checbox being rendered when voacabullary multiple)
+      // Multiple Vocabulary field - VOCABULARY and MULTIPLE
+      cy.findByText('Multiple Vocabulary').should('exist')
+      cy.findAllByTestId('vocabulary-multiple').should('exist')
+      cy.findByTestId('vocabulary-multiple').should('exist')
     })
 
     cy.findByText(/Save Dataset/i).should('exist')
 
     cy.findByText(/Cancel/i).should('exist')
+  })
+
+  it('renders skeleton while loading', () => {
+    cy.customMount(
+      <CreateDatasetForm
+        repository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+
+    cy.findByTestId('metadata-blocks-skeleton').should('exist')
+  })
+
+  describe('When getting collection metadata blocks info fails', () => {
+    it('renders error message', () => {
+      metadataBlockInfoRepository.getByColecctionId = cy.stub().rejects(new Error('some error'))
+
+      cy.customMount(
+        <CreateDatasetForm
+          repository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+
+      cy.findByText('Error').should('exist')
+    })
+
+    it('disables save button', () => {
+      metadataBlockInfoRepository.getByColecctionId = cy.stub().rejects(new Error('some error'))
+
+      cy.customMount(
+        <CreateDatasetForm
+          repository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+
+      cy.findByText(/Save Dataset/i).should('be.disabled')
+    })
   })
 
   // it.skip('shows an error message when the title is not provided', () => {
