@@ -113,6 +113,17 @@ export const ReadOnlyInput: Story = {
   )
 }
 
+export const DisabledInput: Story = {
+  render: () => (
+    <Form>
+      <Form.Group controlId="basic-form-email">
+        <Form.Group.Label>Email</Form.Group.Label>
+        <Form.Group.Input type="email" disabled defaultValue="text.email@example.com" />
+      </Form.Group>
+    </Form>
+  )
+}
+
 export const InputWithPrefix: Story = {
   render: () => (
     <Form>
@@ -169,7 +180,7 @@ export const TextArea: Story = {
 export const Checkbox: Story = {
   render: () => (
     <Form>
-      <Form.GroupWithMultipleFields title="Metadata Fields">
+      <Form.CheckboxGroup title="Metadata Fields">
         <Form.Group.Checkbox
           defaultChecked
           name="metadata-field"
@@ -187,7 +198,7 @@ export const Checkbox: Story = {
           label="Social Science and Humanities Metadata"
           id="basic-form-social-science-metadata"
         />
-      </Form.GroupWithMultipleFields>
+      </Form.CheckboxGroup>
     </Form>
   )
 }
@@ -254,11 +265,12 @@ export const FormValidation: Story = {
             </Form.Group.Label>
             <Form.Group.Input type="text" placeholder="Name" />
           </Form.Group>
-          <Form.Group as={Col} controlId="basic-form-affiliation">
+          <Form.Group as={Col} controlId="basic-form-affiliation" required>
             <Form.Group.Label message="The name of the entity affiliated with the author, e.g. an organization's name">
               Affiliation
             </Form.Group.Label>
             <Form.Group.Input type="text" placeholder="Affiliation" />
+            <Form.Group.Feedback type="invalid">Please provide an affiliation</Form.Group.Feedback>
           </Form.Group>
         </Row>
         <Row>

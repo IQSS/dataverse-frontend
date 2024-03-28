@@ -5,7 +5,7 @@ import { TotalDatasetsCount } from '../../dataset/domain/models/TotalDatasetsCou
 import { DatasetPaginationInfo } from '../../dataset/domain/models/DatasetPaginationInfo'
 import { DatasetPreview } from '../../dataset/domain/models/DatasetPreview'
 import { DatasetPreviewMother } from '../../../tests/component/dataset/domain/models/DatasetPreviewMother'
-import { DatasetFormFields } from '../../dataset/domain/models/DatasetFormFields'
+import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
 import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 export class DatasetMockRepository implements DatasetRepository {
@@ -60,11 +60,10 @@ export class DatasetMockRepository implements DatasetRepository {
     })
   }
 
-  createDataset(fields: DatasetFormFields): Promise<string> {
-    const returnMsg = 'Form Data Submitted: ' + JSON.stringify(fields)
+  create(_dataset: DatasetDTO): Promise<{ persistentId: string }> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(returnMsg)
+        resolve({ persistentId: 'some-persistent-id' })
       }, FakerHelper.loadingTimout())
     })
   }
