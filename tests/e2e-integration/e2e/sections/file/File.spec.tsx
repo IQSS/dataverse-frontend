@@ -11,8 +11,11 @@ describe('File', () => {
   beforeEach(() => {
     TestsUtils.login()
   })
-
   describe('Visit the File Page as a logged in user', () => {
+    beforeEach(async () => {
+      await DatasetHelper.destroyAll()
+    })
+
     it('successfully loads a file in draft mode', () => {
       cy.wrap(
         DatasetHelper.createWithFile(FileHelper.create()).then(

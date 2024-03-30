@@ -19,6 +19,9 @@ describe('Dataset', () => {
   })
 
   describe('Visit the Dataset Page as a logged in user', () => {
+    beforeEach(async () => {
+      await DatasetHelper.destroyAll()
+    })
     it('successfully loads a dataset in draft mode', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
@@ -191,6 +194,9 @@ describe('Dataset', () => {
   })
 
   describe('Visualizing the Files Tab', () => {
+    beforeEach(async () => {
+      await DatasetHelper.destroyAll()
+    })
     it('successfully loads the files tab', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
@@ -529,6 +535,9 @@ describe('Dataset', () => {
   })
 
   describe('Downloading files', () => {
+    beforeEach(async () => {
+      await DatasetHelper.destroyAll()
+    })
     it('downloads the dataset', () => {
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(2)).then((dataset) =>
@@ -577,7 +586,10 @@ describe('Dataset', () => {
 
           cy.findByText('Files').should('exist')
 
-          cy.findByRole('button', { name: 'Access File' }).should('exist').click()
+          cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+          cy.get('@accessButton').should('be.visible')
+          cy.wait(500) // wait for the event handler to attach to the button, see https://www.cypress.io/blog/2019/01/22/when-can-the-test-click
+          cy.get('@accessButton').click()
 
           // Workaround for issue where Cypress gets stuck on the download
           cy.window()

@@ -130,6 +130,7 @@ describe('Dataset JSDataverse Repository', () => {
   before(() => TestsUtils.setup())
   beforeEach(() => {
     TestsUtils.login()
+    void DatasetHelper.destroyAll()
   })
 
   it('gets the dataset by persistentId', async () => {
