@@ -414,10 +414,5 @@ Distributed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for mo
 
 [_video_demo_filetable_url]: https://groups.google.com/g/dataverse-community/c/w_rEMddESYc/m/6F7QC1p-AgAJ
 
-<!-- Social -->
-<!-- [_social_] -->
-
-[_social_twitter]: https://twitter.com/your_username
-
 <!--  -->
 <!--  -->

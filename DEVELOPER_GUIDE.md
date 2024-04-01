@@ -819,39 +819,16 @@ The Design System is published to the npm Package Registry. To publish a new ver
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-<!-- Dataverse SPA -->
-<!-- https://github.com/IQSS/dataverse-frontend/custom-properties -->
-<!-- [dv_repo_] -->
-
-[dv_repo_url]: https://github.com/IQSS/dataverse-frontend
-[dv_repo_issues_url]: https://github.com/IQSS/dataverse-frontend/issues
-[dv_repo_sprint_url]: https://github.com/orgs/IQSS/projects/34/views/23
-[dv_repo_contributors_url]: https://github.com/IQSS/dataverse-frontend/graphs/contributors
-[dv_repo_stargazers_url]: https://github.com/IQSS/dataverse-frontend/stargazers
-[dv_repo_coveralls_url]: https://coveralls.io/github/IQSS/dataverse-frontend?branch=develop
-[dv_repo_workflow_url]: https://github.com/IQSS/dataverse-frontend/actions
-[dv_repo_forks_url]: https://github.com/IQSS/dataverse-frontend/forks
-[dv_repo_tag_url]: https://github.com/IQSS/dataverse-frontend/tags
-[dv_repo_projectstatus_url]: https://www.repostatus.org/#wip
-[dv_repo_releases_url]: https://github.com/IQSS/dataverse-frontend/releases
-
 <!-- Datavserse Associated Repositories -->
 <!-- @iqss/dataverse-client-javascript -->
 
 [dv_repo_dvclientjs_url]: https://github.com/IQSS/dataverse-client-javascript/pkgs/npm/dataverse-client-javascript
 [dv_repo_dvclientjs_npm_url]: https://www.npmjs.com/package/js-dataverse
 [dv_repo_dvsampledata_url]: https://github.com/IQSS/dataverse-sample-data
-[dv_repo_legacyjsf_url]: https://github.com/IQSS/dataverse/
-[dv_repo_legacyjsf_releases_url]: https://github.com/IQSS/dataverse/releases
-[dv_repo_legacyjsf_issues_url]: https://github.com/IQSS/dataverse/issues
-[dv_repo_vscode_url]: https://github.com/IQSS/vscode-settings
 
 <!-- Application Instances -->
 <!-- [dv_app_] -->
 
-[dv_app_beta_spa_url]: https://beta.dataverse.org/spa
-[dv_app_beta_legacyjsf_url]: https://beta.dataverse.org
-[dv_app_legacyjsf_demo_url]: https://demo.dataverse.org/
 [dv_app_localhost_build_url]: http://localhost:5173
 [dv_app_localhost_storybook_url]: http://localhost:6006/
 [dv_app_localhost_designsystem_url]: http://localhost:6007/
@@ -862,50 +839,17 @@ The Design System is published to the npm Package Registry. To publish a new ver
 
 [dv_app_docker_image_url]: https://hub.docker.com/r/gdcc/dataverse/tags
 
-<!-- Community and Affiliate sites -->
-<!-- [dv_community_] -->
-
-[dv_community_gdcc_url]: https://www.gdcc.io/
-[dv_community_gdcc_ui_url]: https://ui.gdcc.io/
-[dv_community_gdcc_containers_url]: https://ct.gdcc.io/
-[dv_community_google_devs_url]: https://groups.google.com/g/dataverse-dev
-[dv_community_google_users_url]: https://groups.google.com/g/dataverse-community
-[dv_community_zulip_url]: https://dataverse.zulipchat.com/#narrow/stream/410361-ui-dev
-
-<!-- Dataverse @ Harvard University & IQSS -->
-<!-- [hvd_] -->
-
-[hvd_iqss_url]: https://www.iq.harvard.edu/
-[hvd_iqss_roadmap_url]: https://www.iq.harvard.edu/roadmap-dataverse-project
-[hvd_legacyjsf_url]: https://dataverse.harvard.edu/
-
 <!-- Documentation -->
 <!-- [dv_docs_] -->
 
-[dv_docs_dataverse_url]: https://dataverse.org/
-[dv_docs_about_url]: https://dataverse.org/about
-[dv_docs_styleguide_url]: https://guides.dataverse.org/en/latest/style/index.html
-[dv_docs_api_url]: http://guides.dataverse.org/en/latest/api/index.html
-[dv_docs_devs_url]: https://guides.dataverse.org/en/latest/developers/index.html
 [dv_docs_github_userauthtoken_url]: https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app
 [dv_docs_github_token_url]: https://github.com/settings/tokens
 
 <!-- 3rd Party Resources/References -->
 <!-- [_uses_] -->
 
-[_uses_reactjs_url]: https://reactjs.org/
-[_uses_nodejs_url]: https://nodejs.org/
-[_uses_typescript_url]: https://typescriptlang.org/
-[_uses_bootstrap_url]: https://getbootstrap.com
-[_uses_cypress_url]: https://cypress.io/
-[_uses_testinglibrary_url]: https://testing-library.com/docs/react-testing-library/intro/
-[_uses_storybook_url]: https://storybook.js.org/
-[_uses_payara_url]: https://www.payara.fish/
 [_uses_docker_url]: https://www.docker.com/products/docker-desktop/
-[_uses_aws3_url]: https://aws.amazon.com/
-[_uses_chromatic_url]: https://www.chromatic.com/
 [_uses_repo_cra_error_url]: https://github.com/facebook/create-react-app/issues/11174
-[_uses_tool_chromatic_url]: https://www.chromatic.com/builds?appId=646f68aa9beb01b35c599acd
 
 <!-- @cypress/grep -->
 
@@ -916,53 +860,7 @@ The Design System is published to the npm Package Registry. To publish a new ver
 <!-- Shield Images -->
 <!-- [_shield_] -->
 
-[_shield_reactjs]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[_shield_nodejs]: https://img.shields.io/badge/node.js-000000?style=for-the-badge&logo=nodedotjs&logoColor=white
-[_shield_typescript]: https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
-[_shield_bootstrap]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
-[_shield_cypress]: https://img.shields.io/badge/Cypress-69D3A7?style=for-the-badge&logo=cypress&logoColor=black
-[_shield_testinglibrary]: https://img.shields.io/badge/TestingLibrary-E33332?style=for-the-badge&logo=testinglibrary&logoColor=white
-[_shield_storybook]: https://img.shields.io/badge/Storybook-FF4785?style=for-the-badge&logo=storybook&logoColor=white
 [_shield_docker]: https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
-[_shield_amazons3]: https://img.shields.io/badge/AmazonS3-569A31?style=for-the-badge&logo=amazons3&logoColor=white
-[_shield_zulip]: https://img.shields.io/badge/zulip-chat?style=for-the-badge&logo=zulip&logoColor=%236492FE
-[_shield_googledevs]: https://img.shields.io/badge/Developer_Group-white?style=for-the-badge&logo=google
-[_shield_googleusers]: https://img.shields.io/badge/User_Group-white?style=for-the-badge&logo=google
-
-<!--  -->
-
-[_shield_projectstatus]: https://img.shields.io/badge/repo_status-WIP-yellow?style=for-the-badge
-[_shield_contributors]: https://img.shields.io/github/contributors/IQSS/dataverse-frontend?branch=develop&style=for-the-badge
-[_shield_stargazers]: https://img.shields.io/github/stars/iqss/dataverse-frontend?style=for-the-badge
-[_shield_coveralls]: https://img.shields.io/coverallsCoverage/github/IQSS/dataverse-frontend?branch=develop&style=for-the-badge
-
-<!-- [_shield_releases]: -->
-
-[_shield_workflow]: https://img.shields.io/github/actions/workflow/status/IQSS/dataverse-frontend/test.yml?branch=develop&style=for-the-badge
-[_shield_issues]: https://img.shields.io/github/issues/IQSS/dataverse-frontend?style=for-the-badge
-[_shield_forks]: https://img.shields.io/github/forks/IQSS/dataverse-frontend?style=for-the-badge
-[_shield_tag]: https://img.shields.io/github/v/tag/iqss/dataverse-frontend?style=for-the-badge
-
-<!-- Images -->
-<!-- [_img_] -->
-
-[_img_dv_logo_withbackground]: https://github.com/IQSS/dataverse-frontend/assets/7512607/6986476f-39ba-46a4-9be0-f05cd8e92244
-[_img_dv_logo_nobackground]: https://github.com/IQSS/dataverse-frontend/assets/7512607/6c4d79e4-7be5-4102-88bd-dfa167dc79d3
-[_img_screenshot]: images/screenshot.png
-
-<!-- Video Links -->
-<!-- August, 2023 -->
-
-[_video_demo_datasetpage_url]: https://groups.google.com/g/dataverse-community/c/cxZ3Bal_-uo/m/h3kh3iVNCwAJ
-
-<!-- December, 2023 -->
-
-[_video_demo_filetable_url]: https://groups.google.com/g/dataverse-community/c/w_rEMddESYc/m/6F7QC1p-AgAJ
-
-<!-- Social -->
-<!-- [_social_] -->
-
-[_social_twitter]: https://twitter.com/your_username
 
 <!--  -->
 <!--  -->
