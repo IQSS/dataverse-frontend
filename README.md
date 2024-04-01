@@ -1,7 +1,3 @@
-<!-- Badges here! -->
-
-<!-- NEW DOCS START -->
-
 [![CI][_shield_projectstatus]][dv_repo_projectstatus_url]
 [![CI][_shield_contributors]][dv_repo_contributors_url]
 [![CI][_shield_stargazers]][dv_repo_stargazers_url]
@@ -11,6 +7,7 @@
 [![CI][_shield_forks]][dv_repo_forks_url]
 
 <a name="readme-top"></a>
+
 <!-- PROJECT SHIELDS -->
 <!--
 *** I'm using markdown "reference style" links for readability.
@@ -54,16 +51,15 @@
 ---
 
 ### ⚠️ Important Information About the Dataverse Frontend ⚠️
+
 > Dataverse Frontend is currently in beta and under active development. While it offers exciting new features, please note that it may not be stable for production use. We recommend sticking to the latest stable [Dataverse][dv_repo_legacyjsf_url] release for mission-critical applications. If you choose to use this repository in production, be prepared for potential bugs and breaking changes. Always check the official documentation and release notes for updates and proceed with caution.
 
-<!-- TODO: Discussion/Newsfeed to watch? -->
-For more information and a list of additional resources, please visit this [discussion](#).
+To stay up-to-date with all the latest changes, join the [Google Group][dv_community_google_users_url]
 
 ---
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
+## Table of Contents
+
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
@@ -83,46 +79,43 @@ For more information and a list of additional resources, please visit this [disc
       </ul>
     </li>
     <li><a href="#deployment">Deployment</a></li>
-    <!-- <li><a href="#usage">Usage</a></li> -->
-    <!-- <li><a href="#components">Components</a></li> -->
-    <!-- <li><a href="#code">Code</a></li> -->
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
-</details>
-
-<!-- ABOUT THE PROJECT -->
-
-## About the Project
-
-[![Product Name Screen Shot][_img_screenshot]][_img_screenshot]
 
 ---
 
+## About the Project
+
 ### What is Dataverse?
 
-The Dataverse Project is an open source web application to share, preserve, cite, explore, and analyze research data. It facilitates making data available to others, and allows you to replicate others' work more easily. Researchers, journals, data authors, publishers, data distributors, and affiliated institutions all receive academic credit and web visibility. Read more on the [Dataverse Website][dv_docs_dataverse_url].
+The Dataverse Project is an open source web application to share, preserve, cite, explore, and analyze research data. It
+facilitates making data available to others, and allows you to replicate others' work more easily. Researchers, journals,
+data authors, publishers, data distributors, and affiliated institutions all receive academic credit and web visibility.
+Read more on the [Dataverse Website][dv_docs_dataverse_url].
 
 <a name="what-is-dataverse-frontend"></a>
 
 ### What is Dataverse Frontend _&amp; How is it different?_
 
-The Dataverse Frontend repository is an initiative undertaken in 2023 to modernize the UI and design of the Dataverse Project by creating a stand-alone interface to allow users and organizations to implement their own Dataverse installations and utilize the JavaScript framework of their choice.
-
+The Dataverse Frontend repository is an initiative undertaken in 2023 to modernize the UI and design of the Dataverse
+Project by creating a stand-alone interface to allow users and organizations to implement their own Dataverse installations
+and utilize the JavaScript framework of their choice.
 
 **The goals of Dataverse Frontend:**
 
 - Modernize the application
 - Separate the frontend and backend logic, transition away from Monolithic Architecture
-- Reimagine the current Dataverse backend as a headess API-first instance.
+- Reimagine the current Dataverse backend as a headless API-first instance.
 - The Dataverse Frontend becomes a stand-alone SPA (Single Page Application)
 - Modularize the UI to allow third-party extension of the base project
 - Increase cadence of development, decrease time between release cycles to implement new features
 - Introduce testing automation
-- Give priority and transparency to coding and design to support Harvard University's commitment to ensuring the highest standards for Accessibility Compliance
+- Give priority and transparency to coding and design to support Harvard University's commitment to ensuring the highest
+  standards for Accessibility Compliance
 - Empower the community to create, contribute, and improve.
 
 **New Features:**
@@ -134,66 +127,77 @@ The Dataverse Frontend repository is an initiative undertaken in 2023 to moderni
 - Cypress testing automation
 - Storybook for UI Component Library
 
-***
+---
 
 ### Beta Testing Environment
 
 _Track our progress and compare it to the current Dataverse application!_
 
-To make the SPA Frontend accesible and testable by people interested in the project, there is a remote beta testing environment that includes the latest changes developed both for the frontend application and the Dataverse backend application (develop branches).
+To make the SPA Frontend accessible and testable by people interested in the project, there is a remote beta testing
+environment that includes the latest changes developed both for the frontend application and the Dataverse backend
+application (develop branches).
 
 This environment follows the "all-in-one" solution described above, where both applications coexist on a Payara server.
 
-Environment updates are carried out automatically through GitHub actions, present both in this repository and in the Dataverse backend repository, which deploy the develop branches when any change is pushed to them.
+Environment updates are carried out automatically through GitHub actions, present both in this repository and in the
+Dataverse backend repository, which deploy the develop branches when any change is pushed to them.
 
 The environment is accessible through the following URLs:
 
- - Dataverse Frontend SPA: [beta.dataverse.org/spa][dv_app_beta_spa_url]
- - Dataverse JSF: [beta.dataverse.org][dv_app_beta_legacyjsf_url]
-
+- Dataverse Frontend SPA: [beta.dataverse.org/spa][dv_app_beta_spa_url]
+- Dataverse JSF: [beta.dataverse.org][dv_app_beta_legacyjsf_url]
 
 ### How Existing Dataverse Installations May Be Affected
 
-- The existing Dataverse API will be added to and extended from the present backend architecture while the existing UI and current Dataverse functionalities are preserved.
+- The existing Dataverse API will be added to and extended from the present backend architecture while the existing UI
+  and current Dataverse functionalities are preserved.
 - The SPA will continue its life as a separate application, supported on its own maintenance schedule.
-- When the SPA has matured enough for an official release, we will switch to the new version and the old backend (Link to repository) will be moved into maintenance mode with no new features being introduced and focusing only on critical bugfixes.
+- When the SPA has matured enough for an official release, we will switch to the new version and the [old backend][dv_repo_legacyjsf_url]
+  will be moved into maintenance mode with no new features being introduced and focusing only on critical bugfixes.
 
 <details>
   <summary><strong>Changes from the original Dataverse JSF application</strong></summary>
 
-
-  >### Changes From the Style Guide
-  >
-  >The design system and frontend in this repo are inspired by the Dataverse Project [Style Guide](https://guides.dataverse.org/en/latest/style/index.html), but the following changes have been made, especially for accessibility.
-  >
-  >#### Links
-  >
-  >We added an underline to links to make them accessible.
-  >
-  >#### File Labels
-  >
-  >Now we are using Bootstrap with a theme, so there is only one definition for the secondary color. Since Bootstrap applies
-  the secondary color to the labels automatically, the color of the file label is now the global secondary color which is
-  a lighter shade of grey than what it used to be.
-  >
-  >We changed the citation block to be white with a colored border, to make the text in the box more accessible.
-  >
-  >### Changes in Functionality &amp; Behavior
-  >
-  >Our main goal is to replicate the behavior of the original JSF application in all its functionalities, although during development we have found opportunities to review certain behaviors and apply changes where we find appropriate.
-  >
-  >#### Dataset Files Tab Search
-  >
-  >The original Dataset JSF page uses Solr to search for files based on the available filters. Past dataset versions are not indexed in Solr, so the filter option is not available (hidden) for such versions. When a version is indexed, the search text is searched in Solr, and Solr grammar can be applied. When the version is not indexed, the search text is searched in the database.
-  >
-  >The new SPA does not use Solr as the API endpoint it uses performs all queries on the database. Filters and search options are available for all versions in the same way, homogenizing behavior, although losing the possibility of using the Solr grammar.
-  >
-  >The decision of this change is made on the assumption that Solr may not be required in the context of files tab search, whose search facets are reduced compared to other in-application searches. Therefore, if we find evidence that the assumption is incorrect, we will work on extending the search capabilities to support Solr.
+> ### Changes From the Style Guide
+>
+> The design system and frontend in this repo are inspired by the Dataverse Project [Style Guide][dv_docs_styleguide_url],
+> but the following changes have been made, especially for accessibility.
+>
+> #### Links
+>
+> We added an underline to links to make them accessible.
+>
+> #### File Labels
+>
+> Now we are using Bootstrap with a theme, so there is only one definition for the secondary color. Since Bootstrap applies
+> the secondary color to the labels automatically, the color of the file label is now the global secondary color which is
+> a lighter shade of grey than what it used to be.
+>
+> We changed the citation block to be white with a colored border, to make the text in the box more accessible.
+>
+> ### Changes in Functionality &amp; Behavior
+>
+> Our main goal is to replicate the behavior of the original JSF application in all its functionalities, although during
+> development we have found opportunities to review certain behaviors and apply changes where we find appropriate.
+>
+> #### Dataset Files Tab Search
+>
+> The original Dataset JSF page uses Solr to search for files based on the available filters. Past dataset versions are
+> not indexed in Solr, so the filter option is not available (hidden) for such versions. When a version is indexed, the
+> search text is searched in Solr, and Solr grammar can be applied. When the version is not indexed, the search text is
+> searched in the database.
+>
+> The new SPA does not use Solr as the API endpoint it uses performs all queries on the database. Filters and search
+> options are available for all versions in the same way, homogenizing behavior, although losing the possibility of
+> using the Solr grammar.
+>
+> The decision of this change is made on the assumption that Solr may not be required in the context of files tab
+> search, whose search facets are reduced compared to other in-application searches. Therefore, if we find evidence that
+> the assumption is incorrect, we will work on extending the search capabilities to support Solr.
 
 </details>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 ## Getting Started
 
@@ -207,31 +211,33 @@ _To get a local copy up and running follow these simple example steps._
 2. **Docker**: We use Docker Desktop, but the Docker CLI will also work.
 3. **Create a Copy of .npmrc**: In the project directory root, duplicate `.npmrc.example`, saving the copy as `.npmrc`.
 
-    >   ```bash
-    >   # root project directory
-    >   cp .npmrc.example .npmrc
-    >   ```
+   > ```bash
+   > # root project directory
+   > cp .npmrc.example .npmrc
+   > ```
 
-4. **Create and Add Your Npm and GitHub Tokens**: In order to connect with the Dataverse API, developers will need to install [@iqss/dataverse-client-javascript][dv_repo_dvclientjs_npm_url] from the GitHub registry by following the steps outlined below. Read more about access tokens on [GitHub Docs][dv_docs_github_userauthtoken_url].
+4. **Create and Add Your Npm and GitHub Tokens**: In order to connect with the Dataverse API, developers will need to
+   install [@iqss/dataverse-client-javascript][dv_repo_dvclientjs_npm_url] from the GitHub registry by following the steps
+   outlined below. Read more about access tokens on [GitHub Docs][dv_docs_github_userauthtoken_url].
 
-    >  **Getting a GitHub Token**
-    >  1. Go to your GitHub [Personal Access Tokens][dv_docs_github_token_url] settings
-    >  2. Select `Generate new token (classic)`
-    >  3. Give the token a name and select scope `read:packages`
-    >  4. Copy the generated token and replace the string `YOUR_GITHUB_AUTH_TOKEN` in the previously created `.npmrc` file.
-    >       Now, you should be able to install the [Dataverse JavaScript][dv_repo_dvclientjs_url] client using npm.
+   > **Getting a GitHub Token**
+   >
+   > 1. Go to your GitHub [Personal Access Tokens][dv_docs_github_token_url] settings
+   > 2. Select `Generate new token (classic)`
+   > 3. Give the token a name and select scope `read:packages`
+   > 4. Copy the generated token and replace the string `YOUR_GITHUB_AUTH_TOKEN` in the previously created `.npmrc` file.
+   >    Now, you should be able to install the [Dataverse JavaScript][dv_repo_dvclientjs_url] client using npm.
 
 Afterwards, your .npmrc file should resemble the following:
 
 ```properties
-
 # .npmrc
-
 legacy-peer-deps=true
 # js-dataverse registry
 //npm.pkg.github.com/:_authToken=<YOUR_GITHUB_AUTH_TOKEN>
 @iqss:registry=https://npm.pkg.github.com/
 ```
+
 <br>
 
 ### Installation & Setup
@@ -240,14 +246,15 @@ legacy-peer-deps=true
 
 ```bash
 # root project directory
-
 npm install
 ```
+
 > [!WARNING]
 > You may see a message about vulnerabilities after running this command.
 >
-> Please check this announcement from Create React App repository [facebook/create-react-app#11174][_uses_repo_cra_error_url]. These vulnerabilities will not be included in the production build since they come from libraries only used during development.
-
+> Please check this announcement from Create React App repository
+> [facebook/create-react-app#11174][_uses_repo_cra_error_url]. These vulnerabilities will not be included in the
+> production build since they come from libraries only used during development.
 
 2. Build the UI Library, needed for running the application.
 
@@ -256,20 +263,17 @@ npm install
 cd packages/design-system && npm run build
 ```
 
-
-
 **Running &amp; Building the App:**
 
 Run the app in the development mode. Open [http://localhost:5173][dv_app_localhost_build_url] to view it in your browser.
 
 ```bash
 # root project directory
-
 npm start
 ```
 
-The application will actively watch the directory for changes and reload when changes are saved. You may also see any existing linting errors in the console.
-
+The application will actively watch the directory for changes and reload when changes are saved. You may also see any
+existing linting errors in the console.
 
 ```bash
 # root project directory
@@ -281,13 +285,16 @@ npm run build
 npm run preview
 
 ```
+
 <br>
 
 **Storybook:**
 
 Runs the Storybook in the development mode.
 
-There are 2 Storybook instances, one for the general Design System and one for the Dataverse Frontend component specifications. Both should be started automatically and available at:
+There are 2 Storybook instances, one for the general Design System and one for the Dataverse Frontend component
+specifications. Both should be started automatically and available at:
+
 - Dataverse Frontend Storybook: [http://localhost:6006/][dv_app_localhost_storybook_url]
 - Dataverse Design System Storybook: [http://localhost:6007/][dv_app_localhost_designsystem_url]
 
@@ -303,6 +310,7 @@ npm run build-storybook
 ```
 
 Note that both Storybook instances are also published to Chromatic as part of the build and merge processes, located at:
+
 - [DataverseFrontend-Chromatic](https://www.chromatic.com/builds?appId=646f68aa9beb01b35c599acd)
 - [DataverseDesignSystem-Chromatic](https://www.chromatic.com/builds?appId=646fbe232a8d3b501a1943f3)
 
@@ -325,44 +333,44 @@ npm run cy:open-e2e [cy:open-unit]
 npm run test:coverage
 
 ```
+
 <br>
 
 <details>
 <summary><strong>Using `grep` with Cypress</strong></summary>
 
->The project includes [@cypress/grep][_uses_lib_grep_url] for running specific tests.
+> The project includes [@cypress/grep][_uses_lib_grep_url] for running specific tests.
 >
->Some examples used by the grep library are below for reference:
+> Some examples used by the grep library are below for reference:
 >
->```bash
-># root project directory
+> ```bash
+> # root project directory
 >
-># run only the tests with "auth user" in the title
->$ npx cypress run --env grep="auth user"
+> # run only the tests with "auth user" in the title
+> $ npx cypress run --env grep="auth user"
 >
-># run tests with "hello" or "auth user" in their titles by separating them with ";" character
->$ npx cypress run --env grep="hello; auth user"
->```
+> # run tests with "hello" or "auth user" in their titles by separating them with ";" character
+> $ npx cypress run --env grep="hello; auth user"
+> ```
 >
->To target specific tests, add `--spec` argument
+> To target specific tests, add `--spec` argument
 >
->```bash
-># root project directory
+> ```bash
+> # root project directory
 >
->$ npx cypress run --env grep="loads the restricted files when the user is logged in as owner"
->\ --spec tests/e2e-integration/e2e/sections/dataset/Dataset.spec.tsx
->```
+> $ npx cypress run --env grep="loads the restricted files when the user is logged in as owner"
+> \ --spec tests/e2e-integration/e2e/sections/dataset/Dataset.spec.tsx
+> ```
 >
+> **Repeat and burn tests**
+> You can run the selected tests multiple times by using the `burn=N` parameter. For example, run all all the tests in
+> the spec Five times using:
 >
->**Repeat and burn tests**
->You can run the selected tests multiple times by using the `burn=N` parameter. For example, run all all the tests in the spec A five times using:
+> ```bash
+> # root project directory
 >
->```bash
-># root project directory
->
->$ npx cypress run --env burn=5 --spec tests/e2e-integration/e2e/sections/dataset/Dataset.spec.tsx
->```
->
+> $ npx cypress run --env burn=5 --spec tests/e2e-integration/e2e/sections/dataset/Dataset.spec.tsx
+> ```
 
 </details>
 
@@ -385,8 +393,8 @@ npm run lint:fix
 
 Launch the prettier formatter.
 
-We recommend you to configure your IDE to run prettier on save. See the official IDE setups used by the IQSS team at [vscode-settings][dv_repo_vscode_url] on GitHub.
-
+We recommend you to configure your IDE to run prettier on save. See the official IDE setups used by the IQSS team at
+[vscode-settings][dv_repo_vscode_url] on GitHub.
 
 ```bash
 # root project directory
@@ -400,11 +408,14 @@ npm run format
 
 A containerized environment, oriented to local development, is available to be run from the repository.
 
-This environment contains a dockerized instance of the Dataverse backend with its dependent services (database, mailserver, etc), as well as an npm development server running the SPA frontend (With code watching).
+This environment contains a dockerized instance of the Dataverse backend with its dependent services (database,
+mail server, etc.), as well as a npm development server running the SPA frontend (With code watching).
 
-This environment is intended for locally testing any functionality that requires access to the Dataverse API from the SPA frontend.
+This environment is intended for locally testing any functionality that requires access to the Dataverse API from the
+SPA frontend.
 
-There is an Nginx reverse proxy container on top of the frontend and backend containers to avoid CORS issues while testing the application.
+There is a Nginx reverse proxy container on top of the frontend and backend containers to avoid CORS issues while
+testing the application.
 
 <br>
 
@@ -421,15 +432,21 @@ $ ./run-env.sh <DATAVERSE_IMAGE_TAG>
 # Removes the project and its dependencies
 $ ./rm-env.sh
 ```
-Note that the image tag in the docker registry must to be pre pushed, otherwise the script will fail. You can find the existing tags on DockerHub [@gdcc/dataverse][dv_app_docker_image_url]
 
-If you are running the script for the first time, it may take a while, since npm has to install all project dependencies. This can also happen if you added new dependencies to `package.json`, or used the _uninstall_ script to remove current project files and shut down any running containers.
+Note that the image tag in the docker registry must be pre pushed, otherwise the script will fail. You can find the
+existing tags on DockerHub [@gdcc/dataverse][dv_app_docker_image_url]
+
+If you are running the script for the first time, it may take a while, since npm has to install all project dependencies.
+This can also happen if you added new dependencies to `package.json`, or used the _uninstall_ script to remove current
+project files and shut down any running containers.
 
 Once the script has finished, you will be able to access Dataverse via:
+
 - Dataverse SPA Frontend: [http://localhost:8000/spa][dv_app_localhost_spa_url]
 - Dataverse JSF Application: [http://localhost:8000][dv_app_localhost_legacy_url]
 
-Note: The Dataverse configbaker takes some time to start the application, so the application will not be accessible until the bootstrapping is complete.
+Note: The Dataverse configbaker takes some time to start the application, so the application will not be accessible until
+the bootstrapping is complete.
 
 <br>
 
@@ -442,18 +459,22 @@ If you want to add test data (collections and datasets) to the Dataverse instanc
 
 $ ./add-env-data.sh
 ```
-Note: The above command uses the [dataverse-sample-data][dv_repo_dvsampledata_url] repository whose scripts occasionally fail, so some of the test data may not be added.
+
+Note: The above command uses the [dataverse-sample-data][dv_repo_dvsampledata_url] repository whose scripts occasionally
+fail, so some test data may not be added.
 
 <br>
 
-### Deployment
+## Deployment
 
-Once the site is built through the `npm run build` command, it can be deployed in different ways to different types of infrastructure, depending the needs of the installation.
+Once the site is built through the `npm run build` command, it can be deployed in different ways to different types of
+infrastructure, depending on the needs of the installation.
 
-We are working to provide different preconfigured automated deployment options, seeking to support common use cases today for installing applications of this nature.
+We are working to provide different preconfigured automated deployment options, seeking to support common use cases
+today for installing applications of this nature.
 
-The current automated deployment options are available within the GitHub `deploy` workflow, which is designed to be run manually from GitHub Actions. The deployment option is selected via a dropdown menu, as well as the target environment.
-
+The current automated deployment options are available within the GitHub `deploy` workflow, which is designed to be run
+manually from GitHub Actions. The deployment option is selected via a dropdown menu, as well as the target environment.
 
 <details>
 <summary><strong>Examples for AWS and Payara</strong></summary>
@@ -464,171 +485,132 @@ This option will build and deploy the application to a remote S3 bucket.
 
 For this workflow to work, a GitHub environment must be configured with the following environment secrets:
 
- - `AWS_ACCESS_KEY_ID`
- - `AWS_SECRET_ACCESS_KEY`
- - `AWS_S3_BUCKET_NAME`
- - `AWS_DEFAULT_REGION`
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_S3_BUCKET_NAME`
+- `AWS_DEFAULT_REGION`
 
-Note that for the deployment to the S3 bucket to succeed, you must make the following changes to the bucket via the S3 web interface (or equivalent changes using aws-cli or similar tools):
+Note that for the deployment to the S3 bucket to succeed, you must make the following changes to the bucket via the S3
+web interface (or equivalent changes using aws-cli or similar tools):
 
- - Under _`Permissions`_ ⏵ _`Permissions Overview`_ ⏵ _`Block public access (bucket settings)`_ ⏵ click _`Edit`_, then __uncheck__ _`Block all public access`_ and save.
- - Under _`Properties`_ ⏵ _`Static website hosting`_ ⏵ click _`Edit`_ and enable it. Change _`Index document`_ and _`Error document`_ to `index.html`.
- - Under _`Bucket Policy`_, click _`Edit`_ and paste the following policy (changing `<BUCKET_NAME>` to your bucket name) and save.
+- Under _`Permissions`_ ⏵ _`Permissions Overview`_ ⏵ _`Block public access (bucket settings)`_ ⏵ click _`Edit`_, then
+  **uncheck** _`Block all public access`_ and save.
+- Under _`Properties`_ ⏵ _`Static website hosting`_ ⏵ click _`Edit`_ and enable it. Change _`Index document`_ and
+  _`Error document`_ to `index.html`.
+- Under _`Bucket Policy`_, click _`Edit`_ and paste the following policy (changing `<BUCKET_NAME>` to your bucket name)
+  and save.
 
 ```json
 {
-	"Version": "2012-10-17",
-	"Statement": [
-		{
-			"Sid": "PublicReadGetObject",
-			"Principal": "*",
-			"Effect": "Allow",
-			"Action": [
-				"s3:GetObject"
-			],
-			"Resource": [
-				"arn:aws:s3:::<BUCKET_NAME>/*"
-			]
-		}
-	]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicReadGetObject",
+      "Principal": "*",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject"],
+      "Resource": ["arn:aws:s3:::<BUCKET_NAME>/*"]
+    }
+  ]
 }
 ```
-You should see the deployed app at `http://[BUCKET-NAME].s3-website-[REGION].amazonaws.com`, for example; `http://my-dataverse-bucket.s3-website-us-east-1.amazonaws.com/`
 
+You should see the deployed app at `http://[BUCKET-NAME].s3-website-[REGION].amazonaws.com`, for example;
+`http://my-dataverse-bucket.s3-website-us-east-1.amazonaws.com/`
 
 #### Deployment with Payara
 
 This option will build and deploy the application to a remote Payara server.
 
-This option is intended for an "all-in-one" solution, where the Dataverse backend application and the frontend application run on the same Payara server.
+This option is intended for an "all-in-one" solution, where the Dataverse backend application and the frontend
+application run on the same Payara server.
 
 For this workflow to work, a GitHub environment must be configured with the following environment secrets:
 
- - `PAYARA_INSTANCE_HOST`
- - `PAYARA_INSTANCE_USERNAME`
- - `PAYARA_INSTANCE_SSH_PRIVATE_KEY`
+- `PAYARA_INSTANCE_HOST`
+- `PAYARA_INSTANCE_USERNAME`
+- `PAYARA_INSTANCE_SSH_PRIVATE_KEY`
 
-It is important that the remote instance is correctly pre-configured, with the Payara server running, and a service account for Dataverse with the corresponding SSH key pair established.
+It is important that the remote instance is correctly pre-configured, with the Payara server running, and a service
+account for Dataverse with the corresponding SSH key pair established.
 
-A base path for the frontend application can be established on the remote server by setting the corresponding field in the workflow inputs. This mechanism prevents conflicts between the frontend application and any pre-existing deployed application running on Payara, which can potentially be a Dataverse backend. This way, only the routes with the base path included will redirect to the frontend application.
+A base path for the frontend application can be established on the remote server by setting the corresponding field in
+the workflow inputs. This mechanism prevents conflicts between the frontend application and any pre-existing deployed
+application running on Payara, which can potentially be a Dataverse backend. This way, only the routes with the base
+path included will redirect to the frontend application.
 
 </details>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
 
-
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation][dv_docs_devs_url]_
-
-
-
-<!-- TODO: COMPONENTS & Component Design -->
-
-This project uses Atomic Design for it's Components. Here are several resources for Atomic Design if you are unfamiliar:
-<!-- https://bradfrost.com/blog/post/atomic-web-design/ -->
-<!-- https://www.youtube.com/watch?v=W3A33dmp17E -->
-
-<!-- TODO: CODE & Styleguides -->
-<!-- TODO: KNOWN ISSUES -->
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-<br>
-
 ## Roadmap
 
-Interested in what's being developed currently? See the [open issues][dv_repo_issues_url] for a full list of proposed features (and known issues), and what we are working on in the [currently planned sprint][dv_repo_sprint_url].
+Interested in what's being developed currently? See the [open issues][dv_repo_issues_url] for a full list of proposed
+features (and known issues), and what we are working on in the [currently planned sprint][dv_repo_sprint_url].
 
-Keep an eye out on [The Institute for Quantitative Social Science (IQSS) Dataverse Roadmap][hvd_iqss_roadmap_url] at Harvard University to get a look at upcoming initiatives for the project.
-
-<!-- TODO: Keep checklist? -->
-<!-- - [ ] Add Changelog
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "Components" document to easily copy & paste sections of the readme
-- [ ] More... -->
+Keep an eye out on [The Institute for Quantitative Social Science (IQSS) Dataverse Roadmap][hvd_iqss_roadmap_url] at
+Harvard University to get a look at upcoming initiatives for the project.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
-
-<!-- CONTRIBUTING -->
 
 ## Contributing
 
-We love PRs! Read the Contributor Guidelines for more info. Any contributions you make are **greatly appreciated**.
+We love PRs! Read the [Contributor Guidelines](CONTRIBUTING) for more info. Any contributions you make are **greatly appreciated**.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the `enhancement` tag.
-
-Got Questions? Join the conversation on [Zulip][dv_community_zulip_url], or our Google Groups for [Developers][dv_community_google_devs_url] and [Users][dv_community_google_users_url]. Or attend community meetings, hosted by the The Global Dataverse Community Consortium to collaborate with the interest groups for [Frontend Development][dv_community_gdcc_ui_url] and [Containerization][dv_community_gdcc_containers_url], learn and share with communities around the world!
-
-<!-- TODO: YouTube Channel -->
-Find videos and release overviews on our YouTube Channel, and check out the resources on our [website][dv_docs_dataverse_url].
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-<br>
-
-<!-- TODO: RELATED & OFFICIAL PROJECTS  -->
-<!-- TODO: HELPFUL LINKS -->
-
-
-## Contact
-
-Email us with software installation questions. Please note our response time is generally 24 business hours.
-
-<!-- TODO: Social Links -->
-<!-- TODO: Join the Dataverse community -->
-
-### For Developers and Dataverse Repositories
-
-**Report issues and contribute to our code**:
-
-Report bugs and add feature requests in GitHub Issues or use GitHub pull requests, if you have some code, scripts or documentation that you'd like to share. If you have a security issue to report, please email <a href="mailto:security@dataverse.org">security@dataverse.org</a>.
-
-Ask a question or start a discussion: A great place to publicly share feedback, ideas, feature requests, and troubleshoot any issues is in the dataverse-community mailing list. Additional mailing lists are available, including language-specific ones.
-
-
+Got Questions? Join the conversation on [Zulip][dv_community_zulip_url], or our Google Groups for
+[Developers][dv_community_google_devs_url] and [Users][dv_community_google_users_url]. Or attend community meetings,
+hosted by the Global Dataverse Community Consortium to collaborate with the interest groups for
+[Frontend Development][dv_community_gdcc_ui_url] and [Containerization][dv_community_gdcc_containers_url],
+learn and share with communities around the world!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
-
 
 ## Acknowledgments
 
 <a href="https://www.chromatic.com/"><img src="https://user-images.githubusercontent.com/321738/84662277-e3db4f80-af1b-11ea-88f5-91d67a5e59f6.png" width="153" height="30" alt="Chromatic" /></a>
 
-Thanks to [Chromatic][_uses_chromatic_url] for providing the visual testing platform that helps us review UI changes and catch visual regressions.
+Thanks to [Chromatic][_uses_chromatic_url] for providing the visual testing platform that helps us review UI changes
+and catch visual regressions.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
 
-***
+---
 
 ### Built With
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+- [![ReactJS][_shield_reactjs]][_uses_reactjs_url]
+- [![NodeJS][_shield_nodejs]][_uses_nodejs_url]
+- [![TypeScript][_shield_typescript]][_uses_typescript_url]
+- [![Bootstrap][_shield_bootstrap]][_uses_bootstrap_url]
+- [![Cypress][_shield_cypress]][_uses_cypress_url]
+- [![TestingLibrary][_shield_testinglibrary]][_uses_testinglibrary_url]
+- [![Storybook][_shield_storybook]][_uses_storybook_url]
+- [![AmazonS3][_shield_amazons3]][_uses_aws3_url]
+- [![Docker][_shield_docker]][_uses_docker_url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
 
-***
+---
 
 ## License
 
-Distributed under the Apache License, Version 2.0. See `LICENSE` for more information.
+Distributed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-
 <!-- Dataverse SPA -->
 <!-- https://github.com/IQSS/dataverse-frontend/custom-properties -->
 <!-- [dv_repo_] -->
+
 [dv_repo_url]: https://github.com/IQSS/dataverse-frontend
 [dv_repo_issues_url]: https://github.com/IQSS/dataverse-frontend/issues
 [dv_repo_sprint_url]: https://github.com/orgs/IQSS/projects/34/views/23
@@ -643,6 +625,7 @@ Distributed under the Apache License, Version 2.0. See `LICENSE` for more inform
 
 <!-- Datavserse Associated Repositories -->
 <!-- @iqss/dataverse-client-javascript -->
+
 [dv_repo_dvclientjs_url]: https://github.com/IQSS/dataverse-client-javascript/pkgs/npm/dataverse-client-javascript
 [dv_repo_dvclientjs_npm_url]: https://www.npmjs.com/package/js-dataverse
 [dv_repo_dvsampledata_url]: https://github.com/IQSS/dataverse-sample-data
@@ -653,6 +636,7 @@ Distributed under the Apache License, Version 2.0. See `LICENSE` for more inform
 
 <!-- Application Instances -->
 <!-- [dv_app_] -->
+
 [dv_app_beta_spa_url]: https://beta.dataverse.org/spa
 [dv_app_beta_legacyjsf_url]: https://beta.dataverse.org
 [dv_app_legacyjsf_demo_url]: https://demo.dataverse.org/
@@ -661,26 +645,31 @@ Distributed under the Apache License, Version 2.0. See `LICENSE` for more inform
 [dv_app_localhost_designsystem_url]: http://localhost:6007/
 [dv_app_localhost_spa_url]: http://localhost:8000/spa
 [dv_app_localhost_legacy_url]: http://localhost:8000/
+
 <!-- @gdcc/dataverse -->
+
 [dv_app_docker_image_url]: https://hub.docker.com/r/gdcc/dataverse/tags
 
 <!-- Community and Affiliate sites -->
 <!-- [dv_community_] -->
+
 [dv_community_gdcc_url]: https://www.gdcc.io/
 [dv_community_gdcc_ui_url]: https://ui.gdcc.io/
 [dv_community_gdcc_containers_url]: https://ct.gdcc.io/
 [dv_community_google_devs_url]: https://groups.google.com/g/dataverse-dev
 [dv_community_google_users_url]: https://groups.google.com/g/dataverse-community
-[dv_community_zulip_url]: https://dataverse.zulipchat.com/
+[dv_community_zulip_url]: https://dataverse.zulipchat.com/#narrow/stream/410361-ui-dev
 
 <!-- Dataverse @ Harvard University & IQSS -->
 <!-- [hvd_] -->
+
 [hvd_iqss_url]: https://www.iq.harvard.edu/
 [hvd_iqss_roadmap_url]: https://www.iq.harvard.edu/roadmap-dataverse-project
 [hvd_legacyjsf_url]: https://dataverse.harvard.edu/
 
 <!-- Documentation -->
 <!-- [dv_docs_] -->
+
 [dv_docs_dataverse_url]: https://dataverse.org/
 [dv_docs_about_url]: https://dataverse.org/about
 [dv_docs_styleguide_url]: https://guides.dataverse.org/en/latest/style/index.html
@@ -691,6 +680,7 @@ Distributed under the Apache License, Version 2.0. See `LICENSE` for more inform
 
 <!-- 3rd Party Resources/References -->
 <!-- [_uses_] -->
+
 [_uses_reactjs_url]: https://reactjs.org/
 [_uses_nodejs_url]: https://nodejs.org/
 [_uses_typescript_url]: https://typescriptlang.org/
@@ -704,12 +694,16 @@ Distributed under the Apache License, Version 2.0. See `LICENSE` for more inform
 [_uses_chromatic_url]: https://www.chromatic.com/
 [_uses_repo_cra_error_url]: https://github.com/facebook/create-react-app/issues/11174
 [_uses_tool_chromatic_url]: https://www.chromatic.com/builds?appId=646f68aa9beb01b35c599acd
+
 <!-- @cypress/grep -->
+
 [_uses_lib_grep_url]: https://www.npmjs.com/package/@cypress/grep
+
 <!-- [_uses_lib_grep_url]:  -->
 
 <!-- Shield Images -->
 <!-- [_shield_] -->
+
 [_shield_reactjs]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [_shield_nodejs]: https://img.shields.io/badge/node.js-000000?style=for-the-badge&logo=nodedotjs&logoColor=white
 [_shield_typescript]: https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
@@ -722,12 +716,16 @@ Distributed under the Apache License, Version 2.0. See `LICENSE` for more inform
 [_shield_zulip]: https://img.shields.io/badge/zulip-chat?style=for-the-badge&logo=zulip&logoColor=%236492FE
 [_shield_googledevs]: https://img.shields.io/badge/Developer_Group-white?style=for-the-badge&logo=google
 [_shield_googleusers]: https://img.shields.io/badge/User_Group-white?style=for-the-badge&logo=google
+
 <!--  -->
+
 [_shield_projectstatus]: https://img.shields.io/badge/repo_status-WIP-yellow?style=for-the-badge
 [_shield_contributors]: https://img.shields.io/github/contributors/IQSS/dataverse-frontend?branch=develop&style=for-the-badge
 [_shield_stargazers]: https://img.shields.io/github/stars/iqss/dataverse-frontend?style=for-the-badge
 [_shield_coveralls]: https://img.shields.io/coverallsCoverage/github/IQSS/dataverse-frontend?branch=develop&style=for-the-badge
+
 <!-- [_shield_releases]: -->
+
 [_shield_workflow]: https://img.shields.io/github/actions/workflow/status/IQSS/dataverse-frontend/test.yml?branch=develop&style=for-the-badge
 [_shield_issues]: https://img.shields.io/github/issues/IQSS/dataverse-frontend?style=for-the-badge
 [_shield_forks]: https://img.shields.io/github/forks/IQSS/dataverse-frontend?style=for-the-badge
@@ -735,18 +733,24 @@ Distributed under the Apache License, Version 2.0. See `LICENSE` for more inform
 
 <!-- Images -->
 <!-- [_img_] -->
+
 [_img_dv_logo_withbackground]: https://github.com/IQSS/dataverse-frontend/assets/7512607/6986476f-39ba-46a4-9be0-f05cd8e92244
 [_img_dv_logo_nobackground]: https://github.com/IQSS/dataverse-frontend/assets/7512607/6c4d79e4-7be5-4102-88bd-dfa167dc79d3
 [_img_screenshot]: images/screenshot.png
 
 <!-- Video Links -->
 <!-- August, 2023 -->
+
 [_video_demo_datasetpage_url]: https://groups.google.com/g/dataverse-community/c/cxZ3Bal_-uo/m/h3kh3iVNCwAJ
+
 <!-- December, 2023 -->
+
 [_video_demo_filetable_url]: https://groups.google.com/g/dataverse-community/c/w_rEMddESYc/m/6F7QC1p-AgAJ
 
 <!-- Social -->
 <!-- [_social_] -->
+
 [_social_twitter]: https://twitter.com/your_username
+
 <!--  -->
 <!--  -->
