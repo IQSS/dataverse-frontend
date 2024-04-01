@@ -68,6 +68,10 @@ legacy-peer-deps=true
 @iqss:registry=https://npm.pkg.github.com/
 ```
 
+> **Note:** The .npmrc file is not identical to .npmrc.example, as the latter contains the registry to publish the design
+> system, see [Publishing the Design System](#publishing-the-design-system) for more information. To run the project you only
+> need the above configuration.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
 
