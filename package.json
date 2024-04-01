@@ -33,6 +33,7 @@
     "moment-timezone": "0.5.43",
     "react-bootstrap": "2.7.2",
     "react-bootstrap-icons": "1.10.3",
+    "react-hook-form": "7.51.2",
     "react-i18next": "12.1.5",
     "react-infinite-scroll-hook": "4.1.1",
     "react-loader-spinner": "5.3.4",
