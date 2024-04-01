@@ -1,13 +1,30 @@
-## Overview of the Feature Request
+---
+name: Feature request
+about: Suggest an idea or new feature for the Dataverse software!
+title: 'Feature Request/Idea:'
+labels: 'Type: Feature'
+assignees: ''
+---
 
-## What kind of user is the feature intended for?
+<!--
+Thank you for contributing to the Dataverse Project through the creation of a feature request!
 
-(Example users roles: Curator, Depositor, Guest, Superuser, Sysadmin)
+More information on ideas/feature requests and contributions can be found in the "Contributing to Dataverse" page:
+https://github.com/IQSS/dataverse/blob/develop/CONTRIBUTING.md#ideasfeature-requests
 
-## What inspired the request?
+Please fill out as much of the template as you can.
+Start below this comment section.
+-->
 
-## What existing behavior do you want changed?
+**Overview of the Feature Request**
 
-## Any brand new behavior do you want to add to Dataverse?
+**What kind of user is the feature intended for?**
+(Example users roles: API User, Curator, Depositor, Guest, Superuser, Sysadmin)
 
-## Any open or closed issues related to this feature request?
+**What inspired the request?**
+
+**What existing behavior do you want changed?**
+
+**Any brand-new behavior do you want to add to Dataverse?**
+
+**Any open or closed issues related to this feature request?**
