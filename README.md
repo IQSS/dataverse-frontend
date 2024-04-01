@@ -222,7 +222,7 @@ Harvard University to get a look at upcoming initiatives for the project.
 
 ## Contributing
 
-We love PRs! Read the [Contributor Guidelines](CONTRIBUTING.md) for more info. Any contributions you make are **greatly appreciated**.
+We love PRs! Read the [Contributor Guidelines](.github/CONTRIBUTING.md) for more info. Any contributions you make are **greatly appreciated**.
 
 Got Questions? Join the conversation on [Zulip][dv_community_zulip_url], or our Google Groups for
 [Developers][dv_community_google_devs_url] and [Users][dv_community_google_users_url]. Or attend community meetings,

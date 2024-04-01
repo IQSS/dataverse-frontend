@@ -1,20 +1,19 @@
 ---
 name: Bug report
-about: Did you encounter something unexpected or incorrect in the Dataverse software?
-We'd like to hear about it!
+about: Did you encounter something unexpected or incorrect in the Dataverse Frontend?
+  We'd like to hear about it!
 title: ''
 labels: 'Type: Bug'
 assignees: ''
-
 ---
 
 <!--
-Thank you for contributing to the Dataverse Project through the creation of a bug report!
+Thank you for contributing to the Dataverse Frontend through the creation of a bug report!
 
 WARNING: If this is a security issue it should be reported privately to security@dataverse.org
 
 More information on bug issues and contributions can be found in the "Contributing to Dataverse Frontend" page:
-https://github.com/IQSS/dataverse-frontend/blob/develop/CONTRIBUTING.md
+https://github.com/IQSS/dataverse-frontend/blob/develop/CONTRIBUTING.md#bug-reportsissues
 
 Please fill out as much of the template as you can.
 Start below this comment section.
@@ -43,4 +42,3 @@ No matter the issue, screenshots are always welcome.
 To add a screenshot, please use one of the following formats and/or methods described here:
 
 - https://help.github.com/en/articles/file-attachments-on-issues-and-pull-requests
--
