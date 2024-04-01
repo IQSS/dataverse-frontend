@@ -78,83 +78,10 @@ guidelines to help:
 4. **Small > big** – Better to have a few small pull requests that address specific parts of the code, than one big pull request that jumps all over.
 5. **Comply with Coding Standards** – See next section.
 
-## Preparations
+### How to start
 
 After you’ve forked the Dataverse Frontend repository, you should follow the Getting Started instructions in the
-[Getting Started Section] to get your local environment up and running.
-
-## Coding Standards
-
-This project adheres to the following coding standards to ensure consistency, readability, and maintainability of the codebase.
-
-### General Principles
-
-- Code should be self-documenting. Choose descriptive names for variables and functions.
-- Comment your code when necessary. Comments should explain the 'why' and not the 'what'.
-- Keep functions small and focused. A function should ideally do one thing.
-- Follow the DRY (Don't Repeat Yourself) principle. Reuse code as much as possible. But don't over-engineer, sometimes
-  it's better to duplicate code than to overcomplicate it.
-
-### TypeScript
-
-- Follow the [TypeScript Deep Dive Style Guide].
-- Use `PascalCase` for class names, `camelCase` for variables and functions, `UPPERCASE` for constants.
-- Always specify the type when declaring variables, parameters, and return types.
-
-### JavaScript Standards
-
-- Use ES6+ syntax whenever possible.
-- Prefer const and let to var for variable declarations.
-- Use arrow functions () => {} for anonymous functions.
-
-### React Standards
-
-- Component Design: Prefer functional components with hooks over class components.
-- State Management: Use local state (useState, useReducer) where possible and consider context or Redux for global state.
-- Event Handlers: Prefix handler names with handle, e.g., handleClick.
-- JSX: Keep JSX clean and readable. Split into smaller components if necessary.
-
-### CSS/SASS Standards
-
-Modularization: Store stylesheets near their respective components and import them as modules.
-
-### Linting
-
-We use ESLint to automatically check and apply the coding standards to our codebase, reducing the manual work to a minimum
-
-To run all checks, you can run the `lint` script.
-
-```bash
-npm run lint
-```
-
-You can also apply coding style fixes automatically.
-
-```bash
-npm run lint:fix
-```
-
-### Check and apply formatting standards
-
-Launches the prettier formatter. We recommend you to configure your IDE to run prettier on save.
-
-```bash
-npm run format
-```
-
-### Enforcing coding standards using pre-commit hooks
-
-We use [pre-commit] library to add pre-commit hooks which automatically check the committed
-code changes for any coding standard violations.
-
-### Tests
-
-`npm run test:unit` Launches the test runner for the unit tests in the interactive watch mode.
-If you prefer to see the tests executing in cypress you can run `npm run cy:open-unit`
-You can check the coverage with `npm run test:coverage`
-
-`npm run test:e2e` Launches the Cypress test runner for the end-to-end tests.
-If you prefer to see the tests executing in cypress you can run `npm run cy:open-e2e`
+[Developer Guide](DEVELOPER_GUIDE.md) to get your local environment up and running.
 
 ### GitHub reviews & assignments
 
