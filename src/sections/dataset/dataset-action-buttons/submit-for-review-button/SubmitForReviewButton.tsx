@@ -9,6 +9,8 @@ interface SubmitForReviewButtonProps {
 
 export function SubmitForReviewButton({ dataset }: SubmitForReviewButtonProps) {
   const { user } = useSession()
+  const { t } = useTranslation('dataset')
+
   if (
     !dataset.version.isLatest ||
     dataset.version.publishingStatus !== DatasetPublishingStatus.DRAFT ||
@@ -20,7 +22,6 @@ export function SubmitForReviewButton({ dataset }: SubmitForReviewButtonProps) {
     return <></>
   }
 
-  const { t } = useTranslation('dataset')
   return (
     <Button
       variant="secondary"

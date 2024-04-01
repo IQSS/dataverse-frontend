@@ -13,12 +13,13 @@ interface EditDatasetMenuProps {
 
 export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
   const { user } = useSession()
+  const { showModal } = useNotImplementedModal()
+  const { t } = useTranslation('dataset')
 
   if (!user || !dataset.permissions.canUpdateDataset) {
     return <></>
   }
-  const { showModal } = useNotImplementedModal()
-  const { t } = useTranslation('dataset')
+
   return (
     <DropdownButton
       onSelect={showModal}

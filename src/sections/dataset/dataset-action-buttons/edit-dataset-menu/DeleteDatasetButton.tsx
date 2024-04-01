@@ -6,6 +6,8 @@ interface DeleteDatasetButtonProps {
   dataset: Dataset
 }
 export function DeleteDatasetButton({ dataset }: DeleteDatasetButtonProps) {
+  const { t } = useTranslation('dataset')
+
   if (
     !dataset.permissions.canDeleteDataset ||
     dataset.version.latestVersionPublishingStatus !== DatasetPublishingStatus.DRAFT
@@ -13,7 +15,6 @@ export function DeleteDatasetButton({ dataset }: DeleteDatasetButtonProps) {
     return <></>
   }
 
-  const { t } = useTranslation('dataset')
   return (
     <>
       <DropdownSeparator />
