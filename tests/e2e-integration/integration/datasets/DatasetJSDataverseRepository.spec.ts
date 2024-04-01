@@ -7,15 +7,17 @@ import {
   DatasetLabelSemanticMeaning,
   DatasetLockReason,
   DatasetPublishingStatus,
-  DatasetVersion
+  DatasetVersion,
+  MetadataBlockName
 } from '../../../../src/dataset/domain/models/Dataset'
 import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
 import {
   FileDownloadMode,
   FileDownloadSize,
   FileSizeUnit
-} from '../../../../src/files/domain/models/FilePreview'
+} from '../../../../src/files/domain/models/FileMetadata'
 import { DatasetPaginationInfo } from '../../../../src/dataset/domain/models/DatasetPaginationInfo'
+import { DatasetDTO } from '../../../../src/dataset/domain/useCases/DTOs/DatasetDTO'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -287,24 +289,26 @@ describe('Dataset JSDataverse Repository', () => {
         expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
       })
   })
+
   it('gets the total dataset count', async () => {
     await DatasetHelper.destroyAll()
-    await datasetRepository.getTotalDatasetsCount().then((count) => {
+    await datasetRepository.getTotalDatasetsCount('root').then((count) => {
       expect(count).to.equal(0)
     })
     await DatasetHelper.createAndPublish()
 
-    await datasetRepository.getTotalDatasetsCount().then((count) => {
+    await datasetRepository.getTotalDatasetsCount('root').then((count) => {
       expect(count).to.equal(1)
     })
   })
+
   it('gets the DatasetPreview', async () => {
     await DatasetHelper.destroyAll()
 
     const datasetResponse = await DatasetHelper.createAndPublish()
     const paginationInfo = new DatasetPaginationInfo(1, 20)
 
-    await datasetRepository.getAll(paginationInfo).then((datasetPreview) => {
+    await datasetRepository.getAll('root', paginationInfo).then((datasetPreview) => {
       expect(datasetPreview.length).to.equal(1)
       expect(datasetPreview[0].version.title).to.equal("Darwin's Finches")
       expect(datasetPreview[0].persistentId).to.equal(datasetResponse.persistentId)
@@ -345,6 +349,40 @@ describe('Dataset JSDataverse Repository', () => {
           reason: DatasetLockReason.FINALIZE_PUBLICATION
         }
       ])
+    })
+  })
+
+  it('creates a new dataset from DatasetDTO', async () => {
+    const datasetDTO: DatasetDTO = {
+      metadataBlocks: [
+        {
+          name: MetadataBlockName.CITATION,
+          fields: {
+            title: "Darwin's Finches",
+            subject: ['Medicine, Health and Life Sciences'],
+            author: [
+              {
+                authorName: 'Finch, Fiona'
+              }
+            ],
+            dsDescription: [
+              {
+                dsDescriptionValue:
+                  "Darwin's finches (also known as the Galápagos finches) are a group of about fifteen species of passerine birds."
+              }
+            ],
+            datasetContact: [
+              {
+                datasetContactEmail: 'finch@mailinator.com'
+              }
+            ]
+          }
+        }
+      ]
+    }
+
+    await datasetRepository.create(datasetDTO).then((response) => {
+      expect(response.persistentId).to.exist
     })
   })
 })

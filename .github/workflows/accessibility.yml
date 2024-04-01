@@ -1,0 +1,51 @@
+name: accessibility
+
+on: push
+
+jobs:
+  interaction-and-accessibility:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Create .npmrc
+        run: |
+          cp .npmrc.example .npmrc
+          sed -i -e 's/<YOUR_GITHUB_AUTH_TOKEN>/${{ secrets.GITHUB_TOKEN }}/g' .npmrc
+          sed -i -e 's/<YOUR_NPM_AUTH_TOKEN>/${{ secrets.NPM_AUTH_TOKEN }}/g' .npmrc
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Dataverse Design System
+        working-directory: packages/design-system
+        run: npm run build
+
+      - name: Install Playwright
+        run: npx playwright install
+
+      - name: Build Storybook Design System
+        working-directory: packages/design-system
+        run: npm run build-storybook --quiet
+
+      - name: Serve Storybook Design System and run tests
+        working-directory: packages/design-system
+        run: |
+          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+            "npx http-server storybook-static --port 6006 --silent" \
+            "npx wait-on http://127.0.0.1:6006 --l && npx test-storybook --url http://127.0.0.1:6006"
+
+      - name: Build Storybook
+        run: npm run build-storybook --quiet
+
+      - name: Serve Storybook and run tests
+        run: |
+          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+            "npx http-server storybook-static --port 6006 --silent" \
+            "npx wait-on http://127.0.0.1:6006 --l && npx test-storybook --url http://127.0.0.1:6006"

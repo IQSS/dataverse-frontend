@@ -3,12 +3,12 @@ import { DatasetProvider } from '../../sections/dataset/DatasetProvider'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { Dataset } from '../../dataset/domain/models/Dataset'
 import { DatasetMother } from '../../../tests/component/dataset/domain/models/DatasetMother'
+import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 
 export const WithDatasetPrivateUrl = (Story: StoryFn) => {
   const datasetRepository = {} as DatasetRepository
   datasetRepository.getByPrivateUrlToken = (
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    privateUrlToken: string
+    _privateUrlToken: string
   ): Promise<Dataset | undefined> => {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -20,7 +20,7 @@ export const WithDatasetPrivateUrl = (Story: StoryFn) => {
             }
           })
         )
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
   return (

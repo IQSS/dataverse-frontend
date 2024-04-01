@@ -3,6 +3,7 @@ import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetHelper, DatasetResponse } from '../../../shared/datasets/DatasetHelper'
 import { FileHelper } from '../../../shared/files/FileHelper'
 import moment from 'moment-timezone'
+import { CollectionHelper } from '../../../shared/collection/CollectionHelper'
 
 type Dataset = {
   datasetVersion: { metadataBlocks: { citation: { fields: { value: string }[] } } }
@@ -170,6 +171,23 @@ describe('Dataset', () => {
           cy.findByText(DatasetLabelValue.DEACCESSIONED).should('exist')
         })
     })
+
+    it('loads correctly the breadcrumbs when the dataset is part of a subcollection', () => {
+      cy.wrap(
+        CollectionHelper.create('subcollection').then((collection) =>
+          DatasetHelper.create(collection.id)
+        )
+      )
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+
+          cy.findByText('Root').should('exist')
+          cy.findByRole('link', { name: 'Subcollection' }).should('exist').click()
+
+          cy.findAllByText('Subcollection').should('exist')
+        })
+    })
   })
 
   describe('Visualizing the Files Tab', () => {
@@ -277,13 +295,14 @@ describe('Dataset', () => {
           cy.findByText('Restricted File Icon').should('not.exist')
           cy.findByText('Restricted with access Icon').should('exist')
           cy.findByRole('button', { name: 'Access File' }).as('accessButton')
-          cy.get('@accessButton').should('exist')
+          cy.get('@accessButton').should('be.visible')
+          // TODO: replace the hard-coded wait with the pipe() method?
+          // see https://www.cypress.io/blog/2019/01/22/when-can-the-test-click
+          cy.wait(500) // wait for the event handler to attach to the button
           cy.get('@accessButton').click()
           cy.findByText('Restricted with Access Granted').should('exist')
 
-          cy.findByRole('button', { name: 'File Options' }).as('fileOptions')
-          cy.get('@fileOptions').should('exist')
-          cy.get('@fileOptions').click()
+          cy.findByRole('button', { name: 'File Options' }).should('exist').click()
           cy.findByText('Unrestrict').should('exist')
         })
     })

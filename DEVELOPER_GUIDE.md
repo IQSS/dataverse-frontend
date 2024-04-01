@@ -24,6 +24,7 @@
     <li><a href="#coding-standards">Coding Standards</a></li>
     <li><a href="#writing-test-cases">Writing test cases</a></li>
     <li><a href="#deployment">Deployment</a></li>
+    <li><a href="#publishing-the-design-system">Publishing the Design System</a></li>
   </ol>
 
 ---
@@ -731,6 +732,82 @@ application running on Payara, which can potentially be a Dataverse backend. Thi
 path included will redirect to the frontend application.
 
 </details>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<br>
+
+## Publishing the Design System
+
+The Design System is published to the npm Package Registry. To publish a new version, follow these steps:
+
+1. **Update the version**
+
+   Update the version running the lerna command:
+
+   ```shell
+   lerna version --no-push
+   ```
+
+   This command will ask you for the new version and will update the `package.json` files and create a new commit with the changes.
+
+2. **Review the auto generated CHANGELOG.md**
+
+   The lerna command will generate a new `CHANGELOG.md` file with the changes for the new version. Review the changes and make sure that the file is correct.
+
+   If it looks good, you can push the changes to the repository.
+
+   ```shell
+   git push && git push --tags
+   ```
+
+   Optional:
+
+   If you need to make any changes to the `CHANGELOG.md` file, you can do it manually.
+
+   After manually updating the `CHANGELOG.md` file, you can commit the changes.
+
+   ```shell
+   git add .
+   git commit --amend --no-edit
+   git push --force && git push --tags --force
+   ```
+
+   This command will amend the lerna commit and push the changes to the repository.
+
+3. **Review the new tag in GitHub**
+
+   After pushing the changes, you can review the new tag in the [GitHub repository](https://github.com/IQSS/dataverse-frontend/tags).
+
+   The tag should be created with the new version.
+
+4. **Publish the package**
+
+   After the version is updated, you can publish the package running the lerna command:
+
+   ```shell
+   lerna publish from-package
+   ```
+
+   This command will publish the package to the npm registry.
+
+   Remember that you need a valid npm token to publish the packages.
+
+   Get a new token from the npm website and update the `.npmrc` file with the new token.
+
+   Open the `.npmrc` file and replace `YOUR_NPM_TOKEN ` with your actual npm token.
+
+   ```plaintext
+   legacy-peer-deps=true
+
+    //npm.pkg.github.com/:_authToken=YOUR_NPM_TOKEN
+    @iqss:registry=https://npm.pkg.github.com/
+   ```
+
+5. **Review the new version in the npm registry**
+
+   After publishing the packages, you can review the new version in the [npm registry](https://www.npmjs.com/package/@iqss/dataverse-design-system?activeTab=versions).
+
+   The new version should be available in the npm registry.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>

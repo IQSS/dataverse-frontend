@@ -1,5 +1,5 @@
 import { DataverseApiHelper } from '../DataverseApiHelper'
-import { FileLabel, FileLabelType } from '../../../../src/files/domain/models/FilePreview'
+import { FileLabel, FileLabelType } from '../../../../src/files/domain/models/FileMetadata'
 import { faker } from '@faker-js/faker'
 
 interface FileResponse {

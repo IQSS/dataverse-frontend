@@ -52,6 +52,15 @@ describe('Dataset', () => {
     cy.findByText('Page Not Found').should('exist')
   })
 
+  it('renders the breadcrumbs', () => {
+    const testDataset = DatasetMother.create()
+
+    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
+
+    cy.findByText('Dataset Title').should('exist').should('have.class', 'active')
+    cy.findByRole('link', { name: 'Root' }).should('exist')
+  })
+
   it('renders the Dataset page title and labels', () => {
     const testDataset = DatasetMother.create()
 

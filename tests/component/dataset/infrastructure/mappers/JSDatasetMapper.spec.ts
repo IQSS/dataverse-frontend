@@ -15,7 +15,11 @@ import {
   FileDownloadMode,
   FileDownloadSize,
   FileSizeUnit
-} from '../../../../../src/files/domain/models/FilePreview'
+} from '../../../../../src/files/domain/models/FileMetadata'
+import {
+  DvObjectType,
+  UpwardHierarchyNode
+} from '../../../../../src/shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -56,7 +60,12 @@ const jsDataset = {
     uri: 'http://creativecommons.org/publicdomain/zero/1.0',
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
-  thumbnail: undefined
+  thumbnail: undefined,
+  isPartOf: {
+    type: 'DATAVERSE',
+    identifier: 'root',
+    displayName: 'Root'
+  }
 }
 const citation =
   'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
@@ -164,7 +173,15 @@ const expectedDataset = {
   downloadUrls: {
     original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
     archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
-  }
+  },
+  hierarchy: new UpwardHierarchyNode(
+    "Darwin's Finches",
+    DvObjectType.DATASET,
+    'doi:10.5072/FK2/B4B2MJ',
+    undefined,
+    '0.0',
+    new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
+  )
 }
 const expectedDatasetAlternateVersion = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -264,7 +281,15 @@ const expectedDatasetAlternateVersion = {
   downloadUrls: {
     original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
     archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
-  }
+  },
+  hierarchy: new UpwardHierarchyNode(
+    "Darwin's Finches",
+    DvObjectType.DATASET,
+    'doi:10.5072/FK2/B4B2MJ',
+    undefined,
+    '0.0',
+    new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
+  )
 }
 describe('JS Dataset Mapper', () => {
   it('maps jsDataset model to the domain Dataset model', () => {
@@ -277,6 +302,7 @@ describe('JS Dataset Mapper', () => {
       jsDatasetFilesTotalOriginalDownloadSize,
       jsDatasetFilesTotalArchivalDownloadSize
     )
+
     expect(expectedDataset).to.deep.equal(mapped)
   })
   it('maps jsDataset model to the domain Dataset model for alternate version', () => {

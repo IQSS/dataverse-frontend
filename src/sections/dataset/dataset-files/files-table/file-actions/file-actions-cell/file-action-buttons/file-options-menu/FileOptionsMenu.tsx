@@ -18,7 +18,7 @@ export function FileOptionsMenu({ file }: { file: FilePreview }) {
     return <></>
   }
 
-  if (file.isDeleted) {
+  if (file.metadata.isDeleted) {
     return (
       <>
         <Tooltip placement="top" overlay={<span>{t('actions.optionsMenu.title')}</span>}>

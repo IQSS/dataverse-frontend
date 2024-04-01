@@ -1,13 +1,18 @@
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
-
-export interface FilePermissions {
-  canDownloadFile: boolean
-}
+import { FileMetadata } from './FileMetadata'
+import { FileAccess } from './FileAccess'
+import { FilePermissions } from './FilePermissions'
+import { FileIngest } from './FileIngest'
+import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 export interface File {
+  id: number
   name: string
+  access: FileAccess
   datasetVersion: DatasetVersion
   citation: string
-  restricted: boolean
+  hierarchy: UpwardHierarchyNode
   permissions: FilePermissions
+  metadata: FileMetadata
+  ingest: FileIngest
 }

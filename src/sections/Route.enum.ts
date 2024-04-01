@@ -5,5 +5,6 @@ export enum Route {
   LOG_OUT = '/',
   DATASETS = '/datasets',
   CREATE_DATASET = '/datasets/create',
-  FILES = '/files'
+  FILES = '/files',
+  COLLECTIONS = '/collections'
 }

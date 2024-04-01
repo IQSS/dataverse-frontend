@@ -4,7 +4,8 @@ import {
   DatasetMetadataBlock as JSDatasetMetadataBlock,
   DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataFields as JSDatasetMetadataFields,
-  DatasetUserPermissions as JSDatasetPermissions
+  DatasetUserPermissions as JSDatasetPermissions,
+  DvObjectOwnerNode as JSUpwardHierarchyNode
 } from '@iqss/dataverse-client-javascript'
 import {
   Dataset,
@@ -23,8 +24,13 @@ import {
   FileDownloadMode,
   FileDownloadSize,
   FileSizeUnit
-} from '../../../files/domain/models/FilePreview'
+} from '../../../files/domain/models/FileMetadata'
 import { JSDatasetVersionMapper } from './JSDatasetVersionMapper'
+import {
+  DvObjectType,
+  UpwardHierarchyNode
+} from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { JSUpwardHierarchyNodeMapper } from '../../../shared/hierarchy/infrastructure/mappers/JSUpwardHierarchyNodeMapper'
 
 export class JSDatasetMapper {
   static toDataset(
@@ -65,7 +71,8 @@ export class JSDatasetMapper {
         jsDatasetFilesTotalOriginalDownloadSize,
         jsDatasetFilesTotalArchivalDownloadSize
       ),
-      undefined, // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
+      JSDatasetMapper.toHierarchy(jsDataset.persistentId, version, jsDataset.isPartOf),
+      undefined, // TODO: get dataset thumbnail from js-dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl,
       requestedVersion
     ).build()
@@ -222,5 +229,20 @@ export class JSDatasetMapper {
         FileDownloadMode.ARCHIVAL
       )
     ]
+  }
+
+  static toHierarchy(
+    persistentId: string,
+    version: DatasetVersion,
+    jsUpwardHierarchyNode: JSUpwardHierarchyNode
+  ): UpwardHierarchyNode {
+    return new UpwardHierarchyNode(
+      version.title,
+      DvObjectType.DATASET,
+      persistentId,
+      undefined,
+      version.number.toString(),
+      JSUpwardHierarchyNodeMapper.toUpwardHierarchyNode(jsUpwardHierarchyNode)
+    )
   }
 }

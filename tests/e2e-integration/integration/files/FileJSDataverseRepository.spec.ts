@@ -1,16 +1,14 @@
 import { TestsUtils } from '../../shared/TestsUtils'
 import { FileJSDataverseRepository } from '../../../../src/files/infrastructure/FileJSDataverseRepository'
 import {
-  FilePreview,
   FileDateType,
   FileEmbargo,
-  FileIngestStatus,
   FileLabelType,
-  FilePublishingStatus,
+  FileMetadata,
   FileSize,
   FileSizeUnit,
   FileType
-} from '../../../../src/files/domain/models/FilePreview'
+} from '../../../../src/files/domain/models/FileMetadata'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { DatasetJSDataverseRepository } from '../../../../src/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
@@ -25,6 +23,10 @@ import { FileData, FileHelper } from '../../shared/files/FileHelper'
 import { FilesCountInfo } from '../../../../src/files/domain/models/FilesCountInfo'
 import { DatasetVersionMother } from '../../../component/dataset/domain/models/DatasetMother'
 import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePaginationInfo'
+import { FilePreview } from '../../../../src/files/domain/models/FilePreview'
+import { DatasetPublishingStatus } from '../../../../src/dataset/domain/models/Dataset'
+import { File } from '../../../../src/files/domain/models/File'
+import { FileIngest, FileIngestStatus } from '../../../../src/files/domain/models/FileIngest'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -33,42 +35,118 @@ const fileRepository = new FileJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
 const dateNow = new Date()
 dateNow.setHours(2, 0, 0, 0)
-const fileData = (id: number) => {
-  return new FilePreview(
-    id,
-    { number: 1, publishingStatus: FilePublishingStatus.DRAFT },
-    'blob',
-    {
+const filePreviewExpectedData = (id: number): FilePreview => {
+  return {
+    id: id,
+    name: 'blob',
+    datasetPublishingStatus: DatasetPublishingStatus.DRAFT,
+    access: {
       restricted: false,
       latestVersionRestricted: false,
       canBeRequested: false,
       requested: false
     },
-    new FileType('text/plain'),
-    new FileSize(25, FileSizeUnit.BYTES),
-    {
-      type: FileDateType.DEPOSITED,
-      date: dateNow
+    ingest: new FileIngest(FileIngestStatus.NONE),
+    metadata: {
+      type: new FileType('text/plain'),
+      size: new FileSize(25, FileSizeUnit.BYTES),
+      date: {
+        type: FileDateType.DEPOSITED,
+        date: dateNow
+      },
+      downloadCount: 0,
+      labels: [],
+      isDeleted: false,
+      downloadUrls: {
+        original: `/api/access/datafile/${id}?format=original`,
+        tabular: `/api/access/datafile/${id}`,
+        rData: `/api/access/datafile/${id}?format=RData`
+      },
+      depositDate: dateNow,
+      publicationDate: undefined,
+      thumbnail: undefined,
+      directory: undefined,
+      embargo: undefined,
+      tabularData: undefined,
+      description: 'This is an example file',
+      checksum: {
+        algorithm: 'MD5',
+        value: '0187a54071542738aa47939e8218e5f2'
+      },
+      persistentId: undefined,
+      isActivelyEmbargoed: false,
+      isTabular: false
     },
-    0,
-    [],
-    false,
-    { status: FileIngestStatus.NONE },
-    {
-      original: `/api/access/datafile/${id}?format=original`,
-      tabular: `/api/access/datafile/${id}`,
-      rData: `/api/access/datafile/${id}?format=RData`
+    permissions: { canDownloadFile: true }
+  }
+}
+
+const expectedFileCitationRegex = new RegExp(
+  `^Finch, Fiona, ${new Date().getFullYear()}, "Darwin's Finches", <a href="https:\\/\\/doi\\.org\\/10\\.5072\\/FK2\\/[A-Z0-9]+" target="_blank">https:\\/\\/doi\\.org\\/10\\.5072\\/FK2\\/[A-Z0-9]+<\\/a>, Root, DRAFT VERSION; blob \\[fileName\\]$`
+)
+const fileExpectedData = (id: number): File => {
+  return {
+    id: id,
+    name: 'blob',
+    datasetVersion: {
+      labels: [
+        { semanticMeaning: 'dataset', value: 'Draft' },
+        { semanticMeaning: 'warning', value: 'Unpublished' }
+      ],
+      id: 74,
+      title: "Darwin's Finches",
+      number: {
+        majorNumber: undefined,
+        minorNumber: undefined
+      },
+      publishingStatus: DatasetPublishingStatus.DRAFT,
+      citation:
+        'Finch, Fiona, 2024, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/M6AWUM" target="_blank">https://doi.org/10.5072/FK2/M6AWUM</a>, Root, DRAFT VERSION',
+      isLatest: true,
+      isInReview: false,
+      latestVersionPublishingStatus: DatasetPublishingStatus.DRAFT,
+      someDatasetVersionHasBeenReleased: false
     },
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    'This is an example file',
-    {
-      algorithm: 'MD5',
-      value: '0187a54071542738aa47939e8218e5f2'
-    }
-  )
+    access: {
+      restricted: false,
+      latestVersionRestricted: false,
+      canBeRequested: false,
+      requested: false
+    },
+    citation: '',
+    ingest: new FileIngest(FileIngestStatus.NONE),
+    metadata: {
+      type: new FileType('text/plain'),
+      size: new FileSize(25, FileSizeUnit.BYTES),
+      date: {
+        type: FileDateType.DEPOSITED,
+        date: dateNow
+      },
+      downloadCount: 0,
+      labels: [],
+      isDeleted: false,
+      downloadUrls: {
+        original: `/api/access/datafile/${id}?format=original`,
+        tabular: `/api/access/datafile/${id}`,
+        rData: `/api/access/datafile/${id}?format=RData`
+      },
+      depositDate: dateNow,
+      publicationDate: undefined,
+      thumbnail: undefined,
+      directory: undefined,
+      embargo: undefined,
+      tabularData: undefined,
+      description: 'This is an example file',
+      checksum: {
+        algorithm: 'MD5',
+        value: '0187a54071542738aa47939e8218e5f2'
+      },
+      persistentId: undefined,
+      isActivelyEmbargoed: false,
+      isTabular: false
+    },
+    permissions: { canDownloadFile: true }
+  }
 }
 
 describe('File JSDataverse Repository', () => {
@@ -78,6 +156,21 @@ describe('File JSDataverse Repository', () => {
   beforeEach(() => {
     TestsUtils.login()
   })
+
+  const compareMetadata = (fileMetadata: FileMetadata, expectedFileMetadata: FileMetadata) => {
+    expect(fileMetadata.type).to.deep.equal(expectedFileMetadata.type)
+    cy.compareDate(fileMetadata.date.date, expectedFileMetadata.date.date)
+    expect(fileMetadata.downloadCount).to.deep.equal(expectedFileMetadata.downloadCount)
+    expect(fileMetadata.labels).to.deep.equal(expectedFileMetadata.labels)
+    expect(fileMetadata.checksum?.algorithm).to.deep.equal(expectedFileMetadata.checksum?.algorithm)
+    expect(fileMetadata.thumbnail).to.deep.equal(expectedFileMetadata.thumbnail)
+    expect(fileMetadata.directory).to.deep.equal(expectedFileMetadata.directory)
+    expect(fileMetadata.embargo).to.deep.equal(expectedFileMetadata.embargo)
+    expect(fileMetadata.tabularData).to.deep.equal(expectedFileMetadata.tabularData)
+    expect(fileMetadata.description).to.deep.equal(expectedFileMetadata.description)
+    expect(fileMetadata.downloadUrls).to.deep.equal(expectedFileMetadata.downloadUrls)
+    expect(fileMetadata.isDeleted).to.deep.equal(expectedFileMetadata.isDeleted)
+  }
 
   describe('Get all files by dataset persistentId', () => {
     it('gets all the files by dataset persistentId with the basic information', async () => {
@@ -91,22 +184,13 @@ describe('File JSDataverse Repository', () => {
         .then((files) => {
           files.forEach((file, index) => {
             const expectedFileNames = ['blob', 'blob-1', 'blob-2']
-            const expectedFile = fileData(file.id)
+            const expectedFile = filePreviewExpectedData(file.id)
             expect(file.name).to.deep.equal(expectedFileNames[index])
-            expect(file.version).to.deep.equal(expectedFile.version)
+            expect(file.datasetPublishingStatus).to.deep.equal(expectedFile.datasetPublishingStatus)
             expect(file.access).to.deep.equal(expectedFile.access)
-            expect(file.type).to.deep.equal(expectedFile.type)
-            cy.compareDate(file.date.date, expectedFile.date.date)
-            expect(file.downloadCount).to.deep.equal(expectedFile.downloadCount)
-            expect(file.labels).to.deep.equal(expectedFile.labels)
-            expect(file.checksum?.algorithm).to.deep.equal(expectedFile.checksum?.algorithm)
-            expect(file.thumbnail).to.deep.equal(expectedFile.thumbnail)
-            expect(file.directory).to.deep.equal(expectedFile.directory)
-            expect(file.embargo).to.deep.equal(expectedFile.embargo)
-            expect(file.tabularData).to.deep.equal(expectedFile.tabularData)
-            expect(file.description).to.deep.equal(expectedFile.description)
-            expect(file.downloadUrls).to.deep.equal(expectedFile.downloadUrls)
-            expect(file.isDeleted).to.deep.equal(expectedFile.isDeleted)
+            compareMetadata(file.metadata, expectedFile.metadata)
+            expect(file.ingest).to.deep.equal(expectedFile.ingest)
+            expect(file.permissions).to.deep.equal(expectedFile.permissions)
           })
         })
     })
@@ -125,7 +209,7 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
-          expect(files[0].size).to.deep.equal(expectedSize)
+          expect(files[0].metadata.size).to.deep.equal(expectedSize)
         })
     })
 
@@ -144,13 +228,18 @@ describe('File JSDataverse Repository', () => {
           DatasetVersionMother.createReleased({ id: dataset.version.id })
         )
         .then((files) => {
-          const expectedPublishedFile = fileData(files[0].id)
-          expectedPublishedFile.version.publishingStatus = FilePublishingStatus.RELEASED
-          expectedPublishedFile.date.type = FileDateType.PUBLISHED
+          const expectedPublishedFile = filePreviewExpectedData(files[0].id)
+          expectedPublishedFile.datasetPublishingStatus = DatasetPublishingStatus.RELEASED
+          expectedPublishedFile.metadata.date.type = FileDateType.PUBLISHED
 
           files.forEach((file) => {
-            expect(file.version).to.deep.equal(expectedPublishedFile.version)
-            cy.compareDate(file.date.date, fileData(file.id).date.date)
+            expect(file.datasetPublishingStatus).to.deep.equal(
+              expectedPublishedFile.datasetPublishingStatus
+            )
+            cy.compareDate(
+              file.metadata.date.date,
+              filePreviewExpectedData(file.id).metadata.date.date
+            )
           })
         })
     })
@@ -172,11 +261,13 @@ describe('File JSDataverse Repository', () => {
           DatasetVersionMother.createDeaccessioned({ id: dataset.version.id })
         )
         .then((files) => {
-          const expectedDeaccessionedFile = fileData(files[0].id)
-          expectedDeaccessionedFile.version.publishingStatus = FilePublishingStatus.DEACCESSIONED
+          const expectedDeaccessionedFile = filePreviewExpectedData(files[0].id)
+          expectedDeaccessionedFile.datasetPublishingStatus = DatasetPublishingStatus.DEACCESSIONED
 
           files.forEach((file) => {
-            expect(file.version).to.deep.equal(expectedDeaccessionedFile.version)
+            expect(file.datasetPublishingStatus).to.deep.equal(
+              expectedDeaccessionedFile.datasetPublishingStatus
+            )
           })
         })
     })
@@ -198,7 +289,7 @@ describe('File JSDataverse Repository', () => {
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
           const expectedDownloadCount = 1
-          expect(files[0].downloadCount).to.deep.equal(expectedDownloadCount)
+          expect(files[0].metadata.downloadCount).to.deep.equal(expectedDownloadCount)
         })
     })
 
@@ -218,7 +309,7 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
-          expect(files[0].labels).to.deep.equal(expectedLabels)
+          expect(files[0].metadata.labels).to.deep.equal(expectedLabels)
         })
     })
 
@@ -235,7 +326,7 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
-          expect(files[0].labels).to.deep.equal(expectedLabels)
+          expect(files[0].metadata.labels).to.deep.equal(expectedLabels)
         })
     })
 
@@ -251,7 +342,7 @@ describe('File JSDataverse Repository', () => {
       await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
-          expect(files[0].thumbnail).to.not.be.undefined
+          expect(files[0].metadata.thumbnail).to.not.be.undefined
         })
     })
 
@@ -274,7 +365,7 @@ describe('File JSDataverse Repository', () => {
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
           const expectedEmbargo = new FileEmbargo(new Date(embargoDate))
-          expect(files[0].embargo).to.deep.equal(expectedEmbargo)
+          expect(files[0].metadata.embargo).to.deep.equal(expectedEmbargo)
         })
     })
 
@@ -293,13 +384,13 @@ describe('File JSDataverse Repository', () => {
             observationsCount: 10
           }
           files.forEach((file) => {
-            expect(file.tabularData?.variablesCount).to.deep.equal(
+            expect(file.metadata.tabularData?.variablesCount).to.deep.equal(
               expectedTabularData.variablesCount
             )
-            expect(file.tabularData?.observationsCount).to.deep.equal(
+            expect(file.metadata.tabularData?.observationsCount).to.deep.equal(
               expectedTabularData.observationsCount
             )
-            expect(file.tabularData?.unf).to.not.be.undefined
+            expect(file.metadata.tabularData?.unf).to.not.be.undefined
           })
         })
     })
@@ -446,27 +537,8 @@ describe('File JSDataverse Repository', () => {
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
           files.forEach((file) => {
-            expect(file.isDeleted).to.equal(true)
+            expect(file.metadata.isDeleted).to.equal(true)
           })
-        })
-    })
-  })
-
-  describe('Get file user permissions by id', () => {
-    it('gets file user permissions by id', async () => {
-      const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1))
-      if (!datasetResponse.files) throw new Error('Files not found')
-
-      const expectedFileUserPermissions = {
-        fileId: datasetResponse.files[0].id,
-        canDownloadFile: true,
-        canEditDataset: true
-      }
-
-      await fileRepository
-        .getUserPermissionsById(datasetResponse.files[0].id)
-        .then((fileUserPermissions) => {
-          expect(fileUserPermissions).to.deep.equal(expectedFileUserPermissions)
         })
     })
   })
@@ -692,7 +764,7 @@ describe('File JSDataverse Repository', () => {
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
           return files.reduce((totalDownloadSize, file) => {
-            return totalDownloadSize + file.size.toBytes()
+            return totalDownloadSize + file.metadata.size.toBytes()
           }, 0)
         })
       await fileRepository
@@ -738,7 +810,7 @@ describe('File JSDataverse Repository', () => {
         )
         .then((files) => {
           return files.reduce((totalDownloadSize, file) => {
-            return totalDownloadSize + file.size.toBytes()
+            return totalDownloadSize + file.metadata.size.toBytes()
           }, 0)
         })
       await fileRepository
@@ -750,6 +822,30 @@ describe('File JSDataverse Repository', () => {
         .then((totalDownloadSize) => {
           expect(totalDownloadSize).to.deep.equal(expectedTotalDownloadSize)
         })
+    })
+  })
+
+  describe('getById', () => {
+    it('gets a file by id', async () => {
+      const datasetResponse = await DatasetHelper.createWithFile(FileHelper.create())
+      if (!datasetResponse.file) throw new Error('File not found')
+
+      const expectedFile = fileExpectedData(datasetResponse.file.id)
+
+      await fileRepository.getById(datasetResponse.file.id).then((file) => {
+        expect(file.name).to.deep.equal(expectedFile.name)
+        expect(file.ingest).to.deep.equal(expectedFile.ingest)
+        expect(file.access).to.deep.equal(expectedFile.access)
+        expect(file.permissions).to.deep.equal(expectedFile.permissions)
+        expect(file.datasetVersion.number).to.deep.equal(expectedFile.datasetVersion.number)
+        expect(file.datasetVersion.title).to.deep.equal(expectedFile.datasetVersion.title)
+        expect(file.datasetVersion.publishingStatus).to.deep.equal(
+          expectedFile.datasetVersion.publishingStatus
+        )
+        expect(file.datasetVersion.labels).to.deep.equal(expectedFile.datasetVersion.labels)
+        expect(file.citation).to.match(expectedFileCitationRegex)
+        compareMetadata(file.metadata, expectedFile.metadata)
+      })
     })
   })
 })

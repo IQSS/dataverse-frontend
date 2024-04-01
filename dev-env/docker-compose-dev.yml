@@ -44,10 +44,16 @@ services:
     restart: on-failure
     user: payara
     environment:
-      - DATAVERSE_DB_HOST=postgres
-      - DATAVERSE_DB_PASSWORD=secret
-      - DATAVERSE_DB_USER=${DATAVERSE_DB_USER}
-      - DATAVERSE_FEATURE_API_SESSION_AUTH=1
+      DATAVERSE_DB_HOST: postgres
+      DATAVERSE_DB_PASSWORD: secret
+      DATAVERSE_DB_USER: ${DATAVERSE_DB_USER}
+      DATAVERSE_FEATURE_API_SESSION_AUTH: 1
+      JVM_ARGS: -Ddataverse.pid.providers=fake
+        -Ddataverse.pid.default-provider=fake
+        -Ddataverse.pid.fake.type=FAKE
+        -Ddataverse.pid.fake.label=FakeDOIProvider
+        -Ddataverse.pid.fake.authority=10.5072
+        -Ddataverse.pid.fake.shoulder=FK2/
     expose:
       - '8080'
     networks:

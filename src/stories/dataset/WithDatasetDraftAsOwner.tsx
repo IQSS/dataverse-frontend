@@ -7,13 +7,13 @@ import {
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { Dataset } from '../../dataset/domain/models/Dataset'
 import { DatasetProvider } from '../../sections/dataset/DatasetProvider'
+import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 
 export const WithDatasetDraftAsOwner = (Story: StoryFn) => {
   const datasetRepository = {} as DatasetRepository
   datasetRepository.getByPersistentId = (
     persistentId: string,
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    version?: string | undefined
+    _version?: string | undefined
   ): Promise<Dataset | undefined> => {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -24,7 +24,7 @@ export const WithDatasetDraftAsOwner = (Story: StoryFn) => {
             version: DatasetVersionMother.createDraftAsLatestVersion()
           })
         )
-      }, 1000)
+      }, FakerHelper.loadingTimout())
     })
   }
   return (

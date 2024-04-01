@@ -17,6 +17,7 @@ import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
 import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
+import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 
 interface DatasetProps {
   fileRepository: FileRepository
@@ -42,55 +43,58 @@ export function Dataset({ fileRepository }: DatasetProps) {
       {!dataset ? (
         <PageNotFound />
       ) : (
-        <article>
-          <div className={styles.container}>
-            <Row>
-              <Col>
-                <DatasetAlerts alerts={dataset.alerts} />
-              </Col>
-            </Row>
-          </div>
+        <>
+          <BreadcrumbsGenerator hierarchy={dataset.hierarchy} />
+          <article>
+            <div className={styles.container}>
+              <Row>
+                <Col>
+                  <DatasetAlerts alerts={dataset.alerts} />
+                </Col>
+              </Row>
+            </div>
 
-          <header className={styles.header}>
-            <h1>{dataset.version.title}</h1>
-            <DatasetLabels labels={dataset.version.labels} />
-          </header>
-          <div className={styles.container}>
-            <Row>
-              <Col sm={9}>
-                <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
-              </Col>
-              <Col sm={3}>
-                <DatasetActionButtons dataset={dataset} />
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={9} className={styles['summary-container']}>
-                <DatasetSummary summaryFields={dataset.summaryFields} license={dataset.license} />
-              </Col>
-            </Row>
-            <Tabs defaultActiveKey="files">
-              <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
-                <div className={styles['tab-container']}>
-                  <DatasetFiles
-                    filesRepository={fileRepository}
-                    datasetPersistentId={dataset.persistentId}
-                    datasetVersion={dataset.version}
-                  />
-                </div>
-              </Tabs.Tab>
-              <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
-                <div className={styles['tab-container']}>
-                  <DatasetMetadata
-                    persistentId={dataset.persistentId}
-                    metadataBlocks={dataset.metadataBlocks}
-                  />
-                </div>
-              </Tabs.Tab>
-            </Tabs>
-            <SeparationLine />
-          </div>
-        </article>
+            <header className={styles.header}>
+              <h1>{dataset.version.title}</h1>
+              <DatasetLabels labels={dataset.version.labels} />
+            </header>
+            <div className={styles.container}>
+              <Row>
+                <Col sm={9}>
+                  <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
+                </Col>
+                <Col sm={3}>
+                  <DatasetActionButtons dataset={dataset} />
+                </Col>
+              </Row>
+              <Row>
+                <Col sm={9} className={styles['summary-container']}>
+                  <DatasetSummary summaryFields={dataset.summaryFields} license={dataset.license} />
+                </Col>
+              </Row>
+              <Tabs defaultActiveKey="files">
+                <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
+                  <div className={styles['tab-container']}>
+                    <DatasetFiles
+                      filesRepository={fileRepository}
+                      datasetPersistentId={dataset.persistentId}
+                      datasetVersion={dataset.version}
+                    />
+                  </div>
+                </Tabs.Tab>
+                <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
+                  <div className={styles['tab-container']}>
+                    <DatasetMetadata
+                      persistentId={dataset.persistentId}
+                      metadataBlocks={dataset.metadataBlocks}
+                    />
+                  </div>
+                </Tabs.Tab>
+              </Tabs>
+              <SeparationLine />
+            </div>
+          </article>
+        </>
       )}
     </>
   )

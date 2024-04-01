@@ -1,5 +1,5 @@
-@import "src/lib/assets/styles/design-tokens/typography.module";
-@import "src/lib/assets/styles/design-tokens/colors.module";
+@import "design-tokens/typography.module";
+@import "design-tokens/colors.module";
 
 // Theme
 
@@ -17,6 +17,7 @@ $danger: $dv-danger-color;
 // Body
 $body-color: $dv-text-color;
 $headings-color: $dv-headings-color;
+$code-color: $dv-text-color;
 
 // Typography
 $font-family-base: $dv-font-family;

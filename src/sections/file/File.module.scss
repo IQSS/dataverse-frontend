@@ -5,6 +5,10 @@
   margin: 0.5em 0;
 }
 
+.row {
+  margin: 12px 0;
+}
+
 .subtext {
   margin-bottom: 10px;
   color: $dv-subtext-color;
@@ -12,6 +16,10 @@
 
 .container {
   margin: 0.5rem 0;
+}
+
+.tab-container {
+  padding: 1em 0;
 }
 
 .separation-line {
@@ -30,4 +38,10 @@
 
 .restricted-icon {
   margin-right: 6px;
+}
+
+.group {
+  display: flex;
+  width: 100%;
+  margin: 0.5rem 0;
 }

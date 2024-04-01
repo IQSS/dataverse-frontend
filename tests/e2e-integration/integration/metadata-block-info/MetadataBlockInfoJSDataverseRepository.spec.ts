@@ -18,7 +18,6 @@ describe('Metadata Block Info JSDataverse Repository', () => {
       if (!metadataBlockInfo) {
         throw new Error('Metadata Block Info not found')
       }
-
       expect(metadataBlockInfo).to.deep.equal(metadataBlockInfoExpected)
     })
   })

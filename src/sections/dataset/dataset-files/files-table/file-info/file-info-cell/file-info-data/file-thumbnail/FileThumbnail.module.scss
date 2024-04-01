@@ -1,6 +1,3 @@
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module";
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
-
 %container {
   position: relative;
   display: inline-block;
@@ -15,16 +12,6 @@
 
   width: 55px;
   height: 80px;
-}
-
-.preview-image {
-  max-width: 64px;
-  max-height: 64px;
-}
-
-.icon {
-  color: $dv-subtext-color;
-  font-size: 64px;
 }
 
 .tooltip  {

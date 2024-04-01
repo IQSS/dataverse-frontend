@@ -1,13 +1,13 @@
-import { FilePublishingStatus } from '../../../../../../../files/domain/models/FilePreview'
+import { DatasetPublishingStatus } from '../../../../../../../dataset/domain/models/Dataset'
 import { useTranslation } from 'react-i18next'
 
 interface FileDownloadsProps {
   downloadCount: number
-  publishingStatus: FilePublishingStatus
+  datasetPublishingStatus: DatasetPublishingStatus
 }
-export function FileDownloads({ downloadCount, publishingStatus }: FileDownloadsProps) {
+export function FileDownloads({ downloadCount, datasetPublishingStatus }: FileDownloadsProps) {
   const { t } = useTranslation('files')
-  if (publishingStatus !== FilePublishingStatus.RELEASED) {
+  if (datasetPublishingStatus !== DatasetPublishingStatus.RELEASED) {
     return <></>
   }
 

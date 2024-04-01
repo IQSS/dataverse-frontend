@@ -1,5 +1,4 @@
 import { EditFilesMenu } from '../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/EditFilesMenu'
-import { FilePreviewMother } from '../../../../../../files/domain/models/FilePreviewMother'
 import { ReactNode } from 'react'
 import { Dataset as DatasetModel } from '../../../../../../../../src/dataset/domain/models/Dataset'
 import { DatasetProvider } from '../../../../../../../../src/sections/dataset/DatasetProvider'
@@ -9,6 +8,7 @@ import {
   DatasetMother,
   DatasetPermissionsMother
 } from '../../../../../../dataset/domain/models/DatasetMother'
+import { FilePreviewMother } from '../../../../../../files/domain/models/FilePreviewMother'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const datasetWithUpdatePermissions = DatasetMother.create({

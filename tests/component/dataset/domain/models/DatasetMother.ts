@@ -19,7 +19,8 @@ import {
   FileDownloadMode,
   FileDownloadSize,
   FileSizeUnit
-} from '../../../../../src/files/domain/models/FilePreview'
+} from '../../../../../src/files/domain/models/FileMetadata'
+import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 
 export class DatasetVersionMother {
   static create(props?: Partial<DatasetVersion>): DatasetVersion {
@@ -410,6 +411,7 @@ export class DatasetMother {
       privateUrl: undefined,
       fileDownloadSizes: [],
       requestedVersion: undefined,
+      hierarchy: UpwardHierarchyNodeMother.createDataset(),
       ...props
     }
 
@@ -426,6 +428,7 @@ export class DatasetMother {
       dataset.isValid,
       dataset.downloadUrls,
       dataset.fileDownloadSizes,
+      dataset.hierarchy,
       dataset.thumbnail,
       dataset.privateUrl,
       dataset.requestedVersion
@@ -551,6 +554,7 @@ export class DatasetMother {
         new FileDownloadSize(21.98, FileSizeUnit.KILOBYTES, FileDownloadMode.ARCHIVAL)
       ],
       isValid: true,
+      hierarchy: UpwardHierarchyNodeMother.createDataset({ name: 'Dataset Title' }),
       ...props
     })
   }

@@ -3,6 +3,7 @@
 [![CI][_shield_stargazers]][dv_repo_stargazers_url]
 [![CI][_shield_coveralls]][dv_repo_coveralls_url]
 [![CI][_shield_workflow]][dv_repo_workflow_url]
+[![CI][_shield_accessibility]][dv_repo_accessibility_url]
 [![CI][_shield_issues]][dv_repo_issues_url]
 [![CI][_shield_forks]][dv_repo_forks_url]
 
@@ -64,9 +65,9 @@ To stay up-to-date with all the latest changes, join the [Google Group][dv_commu
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="#demo-videos">Demo Videos</a></li>
         <li><a href="#what-is-dataverse">What is Dataverse?</a></li>
         <li><a href="#what-is-dataverse-frontend">What Is Dataverse Frontend &amp; How Do They Differ?</a></li>
+        <li><a href="#demo-videos">Demo Videos</a></li>
         <li><a href="#beta-testing-environemtn">Beta Testing Environment</a></li>
       </ul>
     </li>
@@ -120,6 +121,11 @@ and utilize the JavaScript framework of their choice.
 
 ---
 
+#### Demo videos
+
+- 2023-08-01: [View mode of the dataset page](https://groups.google.com/g/dataverse-community/c/cxZ3Bal_-uo/m/h3kh3iVNCwAJ)
+- 2023-12-13: [Files table on the dataset page](https://groups.google.com/g/dataverse-community/c/w_rEMddESYc/m/6F7QC1p-AgAJ)
+
 ### Beta Testing Environment
 
 _Track our progress and compare it to the current Dataverse application!_
@@ -166,6 +172,13 @@ The environment is accessible through the following URLs:
 >
 > We changed the citation block to be white with a colored border, to make the text in the box more accessible.
 >
+> #### Breadcrumbs
+>
+> We have introduced an update to the breadcrumb navigation UI. Unlike in the original JSF application, where breadcrumbs
+> did not reflect the user's current location within the site, our new SPA design now includes this feature in the breadcrumbs.
+>
+> This update gives users a clear indication of their current position within the application's hierarchy.
+>
 > ### Changes in Functionality &amp; Behavior
 >
 > Our main goal is to replicate the behavior of the original JSF application in all its functionalities, although during
@@ -185,6 +198,12 @@ The environment is accessible through the following URLs:
 > The decision of this change is made on the assumption that Solr may not be required in the context of files tab
 > search, whose search facets are reduced compared to other in-application searches. Therefore, if we find evidence that
 > the assumption is incorrect, we will work on extending the search capabilities to support Solr.
+>
+> #### Dataverses/Datasets list
+>
+> The original JSF Dataverses/Datasets list on the home page uses normal paging buttons at the bottom of the list.
+> We have implemented infinite scrolling in this list, replacing the normal paging buttons, but the goal would be to be
+> able to toggle between normal paging and infinite scrolling via a toggle setting or button.
 
 </details>
 
@@ -264,6 +283,7 @@ Distributed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for mo
 [dv_repo_stargazers_url]: https://github.com/IQSS/dataverse-frontend/stargazers
 [dv_repo_coveralls_url]: https://coveralls.io/github/IQSS/dataverse-frontend?branch=develop
 [dv_repo_workflow_url]: https://github.com/IQSS/dataverse-frontend/actions
+[dv_repo_accessibility_url]: https://github.com/IQSS/dataverse-frontend/actions/workflows/accessibility.yml
 [dv_repo_forks_url]: https://github.com/IQSS/dataverse-frontend/forks
 [dv_repo_tag_url]: https://github.com/IQSS/dataverse-frontend/tags
 [dv_repo_projectstatus_url]: https://www.repostatus.org/#wip
@@ -373,6 +393,7 @@ Distributed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for mo
 <!-- [_shield_releases]: -->
 
 [_shield_workflow]: https://img.shields.io/github/actions/workflow/status/IQSS/dataverse-frontend/test.yml?branch=develop&style=for-the-badge
+[_shield_accessibility]: https://img.shields.io/github/actions/workflow/status/IQSS/dataverse-frontend/accessibility.yml?branch=develop&style=for-the-badge&label=Accessibility
 [_shield_issues]: https://img.shields.io/github/issues/IQSS/dataverse-frontend?style=for-the-badge
 [_shield_forks]: https://img.shields.io/github/forks/IQSS/dataverse-frontend?style=for-the-badge
 [_shield_tag]: https://img.shields.io/github/v/tag/iqss/dataverse-frontend?style=for-the-badge

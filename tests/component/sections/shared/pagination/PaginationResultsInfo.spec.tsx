@@ -1,7 +1,7 @@
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 import { DatasetPaginationInfo } from '../../../../../src/dataset/domain/models/DatasetPaginationInfo'
 import { PaginationResultsInfo } from '../../../../../src/sections/shared/pagination/PaginationResultsInfo'
-import { PaginationInfo } from '../../../../../src/shared/domain/models/PaginationInfo'
+import { PaginationInfo } from '../../../../../src/shared/pagination/domain/models/PaginationInfo'
 
 describe('PaginationResultsInfo', () => {
   it('shows the correct results info', () => {
@@ -22,5 +22,35 @@ describe('PaginationResultsInfo', () => {
     )
 
     cy.findByText('1 Item').should('exist')
+  })
+
+  it('shows the correct results when accumulated prop passed and only one result', () => {
+    cy.customMount(
+      <PaginationResultsInfo
+        paginationInfo={new PaginationInfo<DatasetPaginationInfo>(1, 10, 1)}
+        accumulated={1}
+      />
+    )
+    cy.findByText('1 Item').should('exist')
+  })
+
+  it('shows the correct results when accumulated prop passed and results are more than one and less than page size', () => {
+    cy.customMount(
+      <PaginationResultsInfo
+        paginationInfo={new PaginationInfo<DatasetPaginationInfo>(1, 10, 6)}
+        accumulated={6}
+      />
+    )
+    cy.findByText('6 Items').should('exist')
+  })
+
+  it('shows the correct results when accumulated prop passed and results are more than page size', () => {
+    cy.customMount(
+      <PaginationResultsInfo
+        paginationInfo={new PaginationInfo<DatasetPaginationInfo>(1, 10, 15)}
+        accumulated={10}
+      />
+    )
+    cy.findByText('10 of 15 Items seen').should('exist')
   })
 })

@@ -1,18 +1,24 @@
 import { File } from '../../../../../src/files/domain/models/File'
-import { faker } from '@faker-js/faker'
 import { DatasetVersionMother } from '../../../dataset/domain/models/DatasetMother'
+import { FileMetadataMother } from './FileMetadataMother'
+import { FileAccessMother } from './FileAccessMother'
+import { faker } from '@faker-js/faker'
+import { FileIngestMother } from './FileIngestMother'
+import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
+import { FilePermissionsMother } from './FilePermissionsMother'
 
 export class FileMother {
   static create(props?: Partial<File>): File {
-    const name = props?.name ?? faker.system.fileName()
     return {
+      id: faker.datatype.number(),
       name: faker.system.fileName(),
       datasetVersion: DatasetVersionMother.create(),
-      citation: FileCitationMother.create(name),
-      restricted: faker.datatype.boolean(),
-      permissions: {
-        canDownloadFile: faker.datatype.boolean()
-      },
+      hierarchy: UpwardHierarchyNodeMother.createFile(),
+      citation: FileCitationMother.create('File Title'),
+      access: FileAccessMother.create(),
+      metadata: FileMetadataMother.create(),
+      permissions: FilePermissionsMother.create(),
+      ingest: FileIngestMother.create(),
       ...props
     }
   }
@@ -22,29 +28,54 @@ export class FileMother {
       name: 'File Title',
       datasetVersion: DatasetVersionMother.createRealistic(),
       citation: FileCitationMother.create('File Title'),
-      restricted: false,
-      permissions: {
-        canDownloadFile: true
-      },
+      hierarchy: UpwardHierarchyNodeMother.createFile({ name: 'File Title' }),
+      access: FileAccessMother.createPublic(),
+      permissions: FilePermissionsMother.createWithGrantedPermissions(),
+      metadata: FileMetadataMother.createDefault(),
       ...props
     })
   }
 
   static createRestricted(props?: Partial<File>): File {
     return this.createRealistic({
-      restricted: true,
-      permissions: {
-        canDownloadFile: false
-      },
+      access: FileAccessMother.createRestricted(),
+      permissions: FilePermissionsMother.createWithDeniedPermissions(),
       ...props
     })
   }
 
   static createRestrictedWithAccessGranted(props?: Partial<File>): File {
-    return this.createRestricted({
-      permissions: {
-        canDownloadFile: true
-      },
+    return this.createRealistic({
+      access: FileAccessMother.createRestricted(),
+      permissions: FilePermissionsMother.createWithGrantedPermissions(),
+      ...props
+    })
+  }
+
+  static createWithThumbnail(props?: Partial<File>): File {
+    return this.create({
+      metadata: FileMetadataMother.createWithThumbnail(),
+      ...props
+    })
+  }
+
+  static createWithoutThumbnail(props?: Partial<File>): File {
+    return this.create({
+      metadata: FileMetadataMother.createWithoutThumbnail(),
+      ...props
+    })
+  }
+
+  static createWithDownloadPermissionGranted(props?: Partial<File>): File {
+    return this.create({
+      permissions: FilePermissionsMother.createWithDownloadFileGranted(),
+      ...props
+    })
+  }
+
+  static createWithDownloadPermissionDenied(props?: Partial<File>): File {
+    return this.create({
+      permissions: FilePermissionsMother.createWithDownloadFileDenied(),
       ...props
     })
   }

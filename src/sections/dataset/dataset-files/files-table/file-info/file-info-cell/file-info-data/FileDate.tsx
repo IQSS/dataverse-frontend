@@ -1,6 +1,6 @@
-import { FileDate as FileDateModel } from '../../../../../../../files/domain/models/FilePreview'
+import { FileDate as FileDateModel } from '../../../../../../../files/domain/models/FileMetadata'
 import { useTranslation } from 'react-i18next'
-import { DateHelper } from '../../../../../../../shared/domain/helpers/DateHelper'
+import { DateHelper } from '../../../../../../../shared/helpers/DateHelper'
 
 export function FileDate({ date }: { date: FileDateModel }) {
   const { t } = useTranslation('files')

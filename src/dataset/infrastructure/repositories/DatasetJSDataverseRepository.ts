@@ -16,21 +16,26 @@ import {
   DatasetLock as JSDatasetLock,
   getDatasetFilesTotalDownloadSize,
   FileDownloadSizeMode,
-  DatasetPreviewSubset
+  DatasetPreviewSubset,
+  createDataset,
+  CreatedDatasetIdentifiers as JSDatasetIdentifiers,
+  WriteError
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { TotalDatasetsCount } from '../../domain/models/TotalDatasetsCount'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
 import { DatasetPreview } from '../../domain/models/DatasetPreview'
 import { JSDatasetPreviewMapper } from '../mappers/JSDatasetPreviewMapper'
-import { DatasetFormFields } from '../../domain/models/DatasetFormFields'
+import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
+import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
+import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 
 const includeDeaccessioned = true
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
-  getAll(paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
+  getAll(collectionId: string, paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
     return getAllDatasetPreviews
-      .execute(paginationInfo.pageSize, paginationInfo.offset)
+      .execute(paginationInfo.pageSize, paginationInfo.offset, collectionId)
       .then((subset: DatasetPreviewSubset) => {
         return subset.datasetPreviews.map((datasetPreview: JSDatasetPreview) =>
           JSDatasetPreviewMapper.toDatasetPreview(datasetPreview)
@@ -38,11 +43,31 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
   }
 
-  getTotalDatasetsCount(): Promise<TotalDatasetsCount> {
+  getTotalDatasetsCount(collectionId: string): Promise<TotalDatasetsCount> {
     // TODO: refactor this so we don't make the same call twice?
-    return getAllDatasetPreviews.execute(10, 0).then((subset: DatasetPreviewSubset) => {
-      return subset.totalDatasetCount
-    })
+    return getAllDatasetPreviews
+      .execute(10, 0, collectionId)
+      .then((subset: DatasetPreviewSubset) => {
+        return subset.totalDatasetCount
+      })
+  }
+
+  getAllWithCount(
+    collectionId: string,
+    paginationInfo: DatasetPaginationInfo
+  ): Promise<DatasetsWithCount> {
+    return getAllDatasetPreviews
+      .execute(paginationInfo.pageSize, paginationInfo.offset, collectionId)
+      .then((subset: DatasetPreviewSubset) => {
+        const datasetPreviewsMapped = subset.datasetPreviews.map(
+          (datasetPreview: JSDatasetPreview) =>
+            JSDatasetPreviewMapper.toDatasetPreview(datasetPreview)
+        )
+        return {
+          datasetPreviews: datasetPreviewsMapped,
+          totalCount: subset.totalDatasetCount
+        }
+      })
   }
 
   getByPersistentId(
@@ -51,28 +76,24 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     requestedVersion?: string
   ): Promise<Dataset | undefined> {
     return getDataset
-      .execute(persistentId, this.versionToVersionId(version), includeDeaccessioned)
+      .execute(persistentId, version, includeDeaccessioned)
       .then((jsDataset) =>
         Promise.all([
           jsDataset,
           getDatasetSummaryFieldNames.execute(),
-          getDatasetCitation.execute(
-            jsDataset.id,
-            this.versionToVersionId(version),
-            includeDeaccessioned
-          ),
+          getDatasetCitation.execute(jsDataset.id, version, includeDeaccessioned),
           getDatasetUserPermissions.execute(jsDataset.id),
           getDatasetLocks.execute(jsDataset.id),
           getDatasetFilesTotalDownloadSize.execute(
             persistentId,
-            this.versionToVersionId(version),
+            version,
             FileDownloadSizeMode.ORIGINAL,
             undefined,
             includeDeaccessioned
           ),
           getDatasetFilesTotalDownloadSize.execute(
             persistentId,
-            this.versionToVersionId(version),
+            version,
             FileDownloadSizeMode.ARCHIVAL,
             undefined,
             includeDeaccessioned
@@ -136,20 +157,14 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
   }
 
-  createDataset(fields: DatasetFormFields): Promise<string> {
-    const returnMsg = 'Form Data Submitted: ' + JSON.stringify(fields)
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(returnMsg)
-      }, 1000)
-    })
-  }
-
-  versionToVersionId(version?: string): string | undefined {
-    if (version === 'DRAFT') {
-      return ':draft'
-    }
-
-    return version
+  create(dataset: DatasetDTO): Promise<{ persistentId: string }> {
+    return createDataset
+      .execute(DatasetDTOMapper.toJSDatasetDTO(dataset))
+      .then((jsDatasetIdentifiers: JSDatasetIdentifiers) => ({
+        persistentId: jsDatasetIdentifiers.persistentId
+      }))
+      .catch((error: WriteError) => {
+        throw new Error(error.message)
+      })
   }
 }

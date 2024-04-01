@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { PaginationControls } from '../../../sections/shared/pagination/PaginationControls'
-import { PaginationInfo } from '../../../shared/domain/models/PaginationInfo'
+import { PaginationInfo } from '../../../shared/pagination/domain/models/PaginationInfo'
 import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPaginationInfo'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 
