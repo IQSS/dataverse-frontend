@@ -5,9 +5,10 @@ interface Props {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   isInvalid: boolean
   disabled: boolean
+  placeholder: string
 }
 //TODO:ME  Add validation for integers?
-export const IntField = ({ name, onChange, isInvalid, disabled, ...props }: Props) => {
+export const IntField = ({ name, onChange, isInvalid, disabled, placeholder, ...props }: Props) => {
   return (
     <Form.Group.Input
       type="text"
@@ -15,6 +16,7 @@ export const IntField = ({ name, onChange, isInvalid, disabled, ...props }: Prop
       disabled={disabled}
       onChange={onChange}
       isInvalid={isInvalid}
+      placeholder={placeholder}
       data-testid="int-field"
       {...props}
     />

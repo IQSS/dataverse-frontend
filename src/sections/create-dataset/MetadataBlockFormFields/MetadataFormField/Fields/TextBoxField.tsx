@@ -5,15 +5,24 @@ interface Props {
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
   isInvalid: boolean
   disabled: boolean
+  placeholder: string
 }
 
-export const TextBoxField = ({ name, onChange, isInvalid, disabled, ...props }: Props) => {
+export const TextBoxField = ({
+  name,
+  onChange,
+  isInvalid,
+  disabled,
+  placeholder,
+  ...props
+}: Props) => {
   return (
     <Form.Group.TextArea
       name={name}
       disabled={disabled}
       onChange={onChange}
       isInvalid={isInvalid}
+      placeholder={placeholder}
       {...props}
     />
   )
