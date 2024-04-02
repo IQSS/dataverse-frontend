@@ -1,4 +1,5 @@
 import { Form } from '@iqss/dataverse-design-system'
+import { forwardRef } from 'react'
 
 interface Props {
   name: string
@@ -8,14 +9,10 @@ interface Props {
   placeholder: string
 }
 // TODO:ME Add validation for emails
-export const EmailField = ({
-  name,
-  onChange,
-  isInvalid,
-  disabled,
-  placeholder,
-  ...props
-}: Props) => {
+export const EmailField = forwardRef(function EmailField(
+  { name, onChange, isInvalid, disabled, placeholder, ...props }: Props,
+  ref
+) {
   return (
     <Form.Group.Input
       type="text"
@@ -24,8 +21,9 @@ export const EmailField = ({
       onChange={onChange}
       isInvalid={isInvalid}
       placeholder={placeholder}
+      ref={ref}
       data-testid="email-field"
       {...props}
     />
   )
-}
+})

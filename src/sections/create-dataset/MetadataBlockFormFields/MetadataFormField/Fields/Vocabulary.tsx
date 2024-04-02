@@ -1,4 +1,5 @@
 import { Form } from '@iqss/dataverse-design-system'
+import { forwardRef } from 'react'
 
 interface Props {
   name: string
@@ -8,20 +9,17 @@ interface Props {
   disabled: boolean
 }
 // TODO: Implement a multiple select with autocomplete like in JSF version
-export const Vocabulary = ({
-  name,
-  options,
-  onChange,
-  isInvalid: _isInvalid, //TODO:ME: Why isInvalid complaining?
-  disabled,
-  ...props
-}: Props) => {
+export const Vocabulary = forwardRef(function Vocabulary(
+  { name, options, onChange, isInvalid, disabled, ...props }: Props,
+  ref
+) {
   return (
     <Form.Group.Select
       name={name}
       disabled={disabled}
       onChange={onChange}
-      // isInvalid={isInvalid}
+      isInvalid={isInvalid}
+      ref={ref}
       {...props}>
       <option value="">Select</option>
       {options.map((option) => (
@@ -31,4 +29,4 @@ export const Vocabulary = ({
       ))}
     </Form.Group.Select>
   )
-}
+})

@@ -1,4 +1,5 @@
 import { Form } from '@iqss/dataverse-design-system'
+import { forwardRef } from 'react'
 
 interface Props {
   name: string
@@ -8,14 +9,10 @@ interface Props {
   placeholder: string
 }
 //TODO:ME Date component?? Add validation for dates?
-export const DateField = ({
-  name,
-  onChange,
-  isInvalid,
-  disabled,
-  placeholder,
-  ...props
-}: Props) => {
+export const DateField = forwardRef(function DateField(
+  { name, onChange, isInvalid, disabled, placeholder, ...props }: Props,
+  ref
+) {
   return (
     <Form.Group.Input
       type="text"
@@ -24,8 +21,9 @@ export const DateField = ({
       onChange={onChange}
       isInvalid={isInvalid}
       placeholder={placeholder}
+      ref={ref}
       data-testid="date-field"
       {...props}
     />
   )
-}
+})

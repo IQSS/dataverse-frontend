@@ -1,4 +1,5 @@
 import { Form } from '@iqss/dataverse-design-system'
+import { forwardRef } from 'react'
 
 interface Props {
   name: string
@@ -8,7 +9,10 @@ interface Props {
   placeholder: string
 }
 //TODO:ME  Add validation for integers?
-export const IntField = ({ name, onChange, isInvalid, disabled, placeholder, ...props }: Props) => {
+export const IntField = forwardRef(function IntField(
+  { name, onChange, isInvalid, disabled, placeholder, ...props }: Props,
+  ref
+) {
   return (
     <Form.Group.Input
       type="text"
@@ -17,8 +21,9 @@ export const IntField = ({ name, onChange, isInvalid, disabled, placeholder, ...
       onChange={onChange}
       isInvalid={isInvalid}
       placeholder={placeholder}
+      ref={ref}
       data-testid="int-field"
       {...props}
     />
   )
-}
+})

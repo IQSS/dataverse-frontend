@@ -1,4 +1,5 @@
 import { Form } from '@iqss/dataverse-design-system'
+import { forwardRef } from 'react'
 
 interface Props {
   name: string
@@ -8,14 +9,10 @@ interface Props {
   placeholder: string
 }
 
-export const TextBoxField = ({
-  name,
-  onChange,
-  isInvalid,
-  disabled,
-  placeholder,
-  ...props
-}: Props) => {
+export const TextBoxField = forwardRef(function TextBoxField(
+  { name, onChange, isInvalid, disabled, placeholder, ...props }: Props,
+  ref
+) {
   return (
     <Form.Group.TextArea
       name={name}
@@ -23,7 +20,8 @@ export const TextBoxField = ({
       onChange={onChange}
       isInvalid={isInvalid}
       placeholder={placeholder}
+      ref={ref}
       {...props}
     />
   )
-}
+})

@@ -37,6 +37,7 @@ export const VocabularyMultiple = ({
             value={value}
             onChange={onChange}
             disabled={disabled}
+            isInvalid={isInvalid}
             key={value}
           />
         ))}
