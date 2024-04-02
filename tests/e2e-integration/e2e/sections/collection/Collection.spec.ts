@@ -11,6 +11,7 @@ describe('Collection Page', () => {
 
   beforeEach(() => {
     TestsUtils.login()
+    void DatasetHelper.destroyAll()
   })
 
   it('successfully loads root collection when accessing the home', () => {
@@ -19,10 +20,7 @@ describe('Collection Page', () => {
   })
 
   it('navigates to a dataset from the list when clicking the title', () => {
-    cy.wrap(
-      DatasetHelper.destroyAll().then(() => DatasetHelper.createWithTitle(title)),
-      { timeout: 10000 }
-    ).then(() => {
+    cy.wrap(DatasetHelper.createWithTitle(title), { timeout: 10000 }).then(() => {
       cy.visit('/spa')
 
       cy.findByText(/Dataverse Admin/i).should('exist')
@@ -110,10 +108,7 @@ describe('Collection Page', () => {
 
   describe.skip('Currently skipping all tests as we are only rendering an infinite scrollable container. Please refactor these tests if a toggle button is added to switch between pagination and infinite scroll.', () => {
     it.skip('displays the correct page of the datasets list when passing the page query param', () => {
-      cy.wrap(
-        DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
-        { timeout: 10000 }
-      ).then(() => {
+      cy.wrap(DatasetHelper.createMany(12), { timeout: 10000 }).then(() => {
         cy.visit('/spa?page=2')
 
         cy.findAllByText(/Root/i).should('exist')
@@ -124,10 +119,7 @@ describe('Collection Page', () => {
     })
 
     it.skip('updates the query param when updateQueryParam is true', () => {
-      cy.wrap(
-        DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
-        { timeout: 10000 }
-      ).then(() => {
+      cy.wrap(DatasetHelper.createMany(12), { timeout: 10000 }).then(() => {
         cy.visit('/spa')
 
         cy.findAllByText(/Root/i).should('exist')
@@ -140,10 +132,7 @@ describe('Collection Page', () => {
     })
 
     it.skip('correctly changes the pages when using the back and forward buttons from the browser after using some page number button', () => {
-      cy.wrap(
-        DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
-        { timeout: 10000 }
-      ).then(() => {
+      cy.wrap(DatasetHelper.createMany(12), { timeout: 10000 }).then(() => {
         cy.visit('/spa?page=2')
 
         cy.findAllByText(/Root/i).should('exist')
@@ -176,10 +165,7 @@ describe('Collection Page', () => {
   })
 
   it('12 Datasets - displays first 10 datasets, scroll to the bottom and displays the remaining 2 datasets', () => {
-    cy.wrap(
-      DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
-      { timeout: 10_000 }
-    ).then(() => {
+    cy.wrap(DatasetHelper.createMany(12), { timeout: 10000 }).then(() => {
       cy.wait(1_500)
       cy.visit('/spa')
 
