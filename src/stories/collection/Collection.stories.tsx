@@ -33,6 +33,17 @@ export const Default: Story = {
   )
 }
 
+export const InfiniteScrollingEnabled: Story = {
+  render: () => (
+    <Collection
+      repository={new CollectionMockRepository()}
+      datasetRepository={new DatasetMockRepository()}
+      id="collection"
+      infiniteScrollEnabled={true}
+    />
+  )
+}
+
 export const Loading: Story = {
   render: () => (
     <Collection

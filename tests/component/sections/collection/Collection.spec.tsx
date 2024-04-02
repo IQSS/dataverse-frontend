@@ -120,4 +120,28 @@ describe('Collection page', () => {
 
     cy.findByText('41 to 50 of 200 Datasets').should('exist')
   })
+
+  it('renders the datasets list with infinite scrolling enabled', () => {
+    const first10Elements = datasets.slice(0, 10)
+
+    datasetRepository.getAllWithCount = cy.stub().resolves({
+      datasetPreviews: first10Elements,
+      totalCount: totalDatasetsCount
+    })
+
+    cy.customMount(
+      <Collection
+        repository={collectionRepository}
+        datasetRepository={datasetRepository}
+        id="collection"
+        infiniteScrollEnabled
+      />
+    )
+
+    cy.findByText('10 of 200 Datasets seen').should('exist')
+
+    first10Elements.forEach((dataset) => {
+      cy.findByText(dataset.version.title).should('exist')
+    })
+  })
 })

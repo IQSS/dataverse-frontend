@@ -1,6 +1,7 @@
 import { Col, Row } from '@iqss/dataverse-design-system'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { DatasetsList } from './datasets-list/DatasetsList'
+import { DatasetsListWithInfiniteScroll } from './datasets-list/DatasetsListWithInfiniteScroll'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 
 import styles from './Collection.module.scss'
@@ -17,9 +18,16 @@ interface CollectionProps {
   datasetRepository: DatasetRepository
   id: string
   page?: number
+  infiniteScrollEnabled?: boolean
 }
 
-export function Collection({ repository, id, datasetRepository, page }: CollectionProps) {
+export function Collection({
+  repository,
+  id,
+  datasetRepository,
+  page,
+  infiniteScrollEnabled = false
+}: CollectionProps) {
   const { user } = useSession()
   const { collection, isLoading } = useCollection(repository, id)
 
@@ -43,7 +51,11 @@ export function Collection({ repository, id, datasetRepository, page }: Collecti
             )}
           </>
         )}
-        <DatasetsList datasetRepository={datasetRepository} page={page} collectionId={id} />
+        {infiniteScrollEnabled ? (
+          <DatasetsListWithInfiniteScroll datasetRepository={datasetRepository} collectionId={id} />
+        ) : (
+          <DatasetsList datasetRepository={datasetRepository} page={page} collectionId={id} />
+        )}
       </Col>
     </Row>
   )

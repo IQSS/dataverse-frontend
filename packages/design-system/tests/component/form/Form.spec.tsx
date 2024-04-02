@@ -15,7 +15,11 @@ describe('Form', () => {
   it('should call onSubmit when the form is submitted', () => {
     const handleSubmit = cy.stub().as('handleSubmit')
     cy.mount(
-      <Form onSubmit={handleSubmit}>
+      <Form
+        onSubmit={(e) => {
+          e.preventDefault()
+          handleSubmit()
+        }}>
         <button type="submit">Submit Form</button>
       </Form>
     )
