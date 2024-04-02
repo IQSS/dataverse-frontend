@@ -1,5 +1,7 @@
 import { Form } from '@iqss/dataverse-design-system'
+import cn from 'classnames'
 import styles from '../index.module.scss'
+import { ForwardedRef, forwardRef } from 'react'
 
 interface Props {
   title: string
@@ -12,23 +14,24 @@ interface Props {
   disabled: boolean
 }
 
-export const VocabularyMultiple = ({
-  title,
-  name,
-  description,
-  options,
-  onChange,
-  isRequired,
-  isInvalid,
-  disabled
-}: Props) => {
+export const VocabularyMultiple = forwardRef(function VocabularyMultiple(
+  { title, name, description, options, onChange, isRequired, isInvalid, disabled }: Props,
+  ref
+) {
+  console.log(ref)
   return (
     <Form.CheckboxGroup
       title={title}
       message={description}
       required={isRequired}
       isInvalid={isInvalid}>
-      <div className={styles['checkbox-list-grid']} data-testid="vocabulary-multiple">
+      <div
+        className={cn(styles['checkbox-list-grid'], {
+          [styles['invalid']]: isInvalid
+        })}
+        data-testid="vocabulary-multiple"
+        tabIndex={0}
+        ref={ref as ForwardedRef<HTMLDivElement>}>
         {options.map((value) => (
           <Form.Group.Checkbox
             name={name}
@@ -44,4 +47,4 @@ export const VocabularyMultiple = ({
       </div>
     </Form.CheckboxGroup>
   )
-}
+})

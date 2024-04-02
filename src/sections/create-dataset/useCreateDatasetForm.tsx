@@ -1,8 +1,7 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { createDataset } from '../../dataset/domain/useCases/createDataset'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
-import { useNavigate } from 'react-router-dom'
 import { Route } from '../Route.enum'
 
 export enum SubmissionStatus {
@@ -12,35 +11,29 @@ export enum SubmissionStatus {
   Errored = 'Errored'
 }
 
-export function useCreateDatasetForm(
-  repository: DatasetRepository,
-  datasetIsValid: (formData: DatasetDTO) => boolean
-): {
+export function useCreateDatasetForm(repository: DatasetRepository): {
   submissionStatus: SubmissionStatus
-  submitForm: (formData: DatasetDTO) => void
+  submitForm: (formData: Record<string, unknown>) => void
 } {
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
   )
   const navigate = useNavigate()
 
-  const submitForm = (formData: DatasetDTO): void => {
+  const submitForm = (formData: Record<string, unknown>): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
-    if (!datasetIsValid(formData)) {
-      setSubmissionStatus(SubmissionStatus.Errored)
-      return
-    }
+    console.log({ formData })
 
-    createDataset(repository, formData)
-      .then(({ persistentId }) => {
-        setSubmissionStatus(SubmissionStatus.SubmitComplete)
-        navigate(`${Route.DATASETS}?persistentId=${persistentId}`)
-        return
-      })
-      .catch(() => {
-        setSubmissionStatus(SubmissionStatus.Errored)
-      })
+    // createDataset(repository, formData)
+    //   .then(({ persistentId }) => {
+    //     setSubmissionStatus(SubmissionStatus.SubmitComplete)
+    //     navigate(`${Route.DATASETS}?persistentId=${persistentId}`)
+    //     return
+    //   })
+    //   .catch(() => {
+    //     setSubmissionStatus(SubmissionStatus.Errored)
+    //   })
   }
 
   return {
