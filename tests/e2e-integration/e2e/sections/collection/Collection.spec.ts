@@ -74,6 +74,8 @@ describe('Collection Page', () => {
         DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
         { timeout: 10000 }
       ).then(() => {
+        cy.wait(1500) // Wait for the datasets to be created
+
         cy.visit('/spa?page=2')
         cy.findAllByText(/Root/i).should('exist')
         cy.findByText(/Dataverse Admin/i).should('exist')
@@ -87,6 +89,8 @@ describe('Collection Page', () => {
         DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
         { timeout: 10000 }
       ).then(() => {
+        cy.wait(2000) // Wait for the datasets to be created
+
         cy.visit('/spa')
 
         cy.findAllByText(/Root/i).should('exist')
@@ -103,6 +107,8 @@ describe('Collection Page', () => {
         DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
         { timeout: 10000 }
       ).then(() => {
+        cy.wait(1500) // Wait for the datasets to be created
+
         cy.visit('/spa?page=2')
 
         cy.findAllByText(/Root/i).should('exist')
@@ -141,7 +147,7 @@ describe('Collection Page', () => {
       DatasetHelper.destroyAll().then(() => DatasetHelper.createMany(12)),
       { timeout: 10_000 }
     ).then(() => {
-      cy.wait(1_500)
+      cy.wait(2_000) // Wait for the datasets to be created
       cy.visit('/spa')
 
       cy.findAllByText(/Root/i).should('exist')
