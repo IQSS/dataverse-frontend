@@ -6,13 +6,14 @@ describe('CollectionInfo', () => {
     const collection = CollectionMother.create({
       name: 'Collection Name',
       affiliation: 'Affiliation',
-      description: 'Description'
+      description: 'Here is a description with [a link](https://dataverse.org)'
     })
     cy.customMount(<CollectionInfo collection={collection} />)
 
     cy.findByRole('heading', { name: 'Collection Name' }).should('exist')
     cy.findByText('(Affiliation)').should('exist')
-    cy.findByText('Description').should('exist')
+    cy.findByText(/Here is a description with/).should('exist')
+    cy.findByRole('link', { name: 'a link' }).should('exist')
   })
 
   it('does not render affiliation when it is not present', () => {

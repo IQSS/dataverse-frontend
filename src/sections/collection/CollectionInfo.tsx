@@ -1,5 +1,6 @@
 import { Collection } from '../../collection/domain/models/Collection'
 import styles from './Collection.module.scss'
+import { MarkdownComponent } from '../dataset/markdown/MarkdownComponent'
 
 interface CollectionInfoProps {
   collection: Collection
@@ -16,7 +17,7 @@ export function CollectionInfo({ collection }: CollectionInfoProps) {
       </header>
       {collection.description && (
         <div>
-          <p>{collection.description}</p>
+          <MarkdownComponent markdown={collection.description} />
         </div>
       )}
     </>

@@ -8,7 +8,9 @@ export class CollectionMother {
     return {
       id: faker.datatype.uuid(),
       name: faker.lorem.words(3),
-      description: faker.datatype.boolean() ? faker.lorem.paragraph() : undefined,
+      description: faker.datatype.boolean()
+        ? `${faker.lorem.paragraph()} **${faker.lorem.sentence()}** ${faker.lorem.paragraph()}`
+        : undefined,
       affiliation: faker.datatype.boolean() ? faker.lorem.words(3) : undefined,
       hierarchy: UpwardHierarchyNodeMother.createCollection(),
       ...props
