@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { createDataset } from '../../dataset/domain/useCases/createDataset'
+// import { createDataset } from '../../dataset/domain/useCases/createDataset'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { Route } from '../Route.enum'
+// import { Route } from '../Route.enum'
 
 export enum SubmissionStatus {
   NotSubmitted = 'NotSubmitted',
@@ -11,14 +11,14 @@ export enum SubmissionStatus {
   Errored = 'Errored'
 }
 
-export function useCreateDatasetForm(repository: DatasetRepository): {
+export function useCreateDatasetForm(_repository: DatasetRepository): {
   submissionStatus: SubmissionStatus
   submitForm: (formData: Record<string, unknown>) => void
 } {
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
   )
-  const navigate = useNavigate()
+  const _navigate = useNavigate()
 
   const submitForm = (formData: Record<string, unknown>): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
