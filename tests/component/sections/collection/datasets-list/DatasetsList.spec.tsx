@@ -2,14 +2,17 @@ import { DatasetRepository } from '../../../../../src/dataset/domain/repositorie
 import { DatasetsList } from '../../../../../src/sections/collection/datasets-list/DatasetsList'
 import { DatasetPaginationInfo } from '../../../../../src/dataset/domain/models/DatasetPaginationInfo'
 import { DatasetPreviewMother } from '../../../dataset/domain/models/DatasetPreviewMother'
+import { DatasetsWithCount } from '../../../../../src/dataset/domain/models/DatasetsWithCount'
+import { DatasetPreview } from '@iqss/dataverse-client-javascript'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const totalDatasetsCount = 200
 const datasets = DatasetPreviewMother.createMany(totalDatasetsCount)
+const datasetsWithCount = { datasetPreviews: datasets, totalCount: totalDatasetsCount }
 describe('Datasets List', () => {
   beforeEach(() => {
     datasetRepository.getAll = cy.stub().resolves(datasets)
-    datasetRepository.getTotalDatasetsCount = cy.stub().resolves(totalDatasetsCount)
+    datasetRepository.getAllWithCount = cy.stub().resolves(datasetsWithCount)
   })
 
   it('renders skeleton while loading', () => {
@@ -22,16 +25,18 @@ describe('Datasets List', () => {
   })
 
   it('renders no datasets message when there are no datasets', () => {
-    datasetRepository.getAll = cy.stub().resolves([])
+    const emptyDatasets: DatasetPreview[] = []
+    const emptyDatasetsWithCount = { datasetPreviews: emptyDatasets, totalCount: 0 }
+    datasetRepository.getAllWithCount = cy.stub().resolves(emptyDatasetsWithCount)
     cy.customMount(<DatasetsList datasetRepository={datasetRepository} collectionId="root" />)
 
     cy.findByText(/This dataverse currently has no datasets./).should('exist')
   })
 
-  it('renders the datasets list', () => {
+  it.only('renders the datasets list', () => {
     cy.customMount(<DatasetsList datasetRepository={datasetRepository} collectionId="root" />)
 
-    cy.wrap(datasetRepository.getAll).should(
+    cy.wrap(datasetRepository.getAllWithCount).should(
       'be.calledOnceWith',
       'root',
       new DatasetPaginationInfo(1, 10, totalDatasetsCount)
@@ -50,7 +55,7 @@ describe('Datasets List', () => {
 
     cy.findByRole('button', { name: '6' }).click()
 
-    cy.wrap(datasetRepository.getAll).should(
+    cy.wrap(datasetRepository.getAllWithCount).should(
       'be.calledWith',
       'root',
       new DatasetPaginationInfo(1, 10, totalDatasetsCount).goToPage(6)
@@ -63,7 +68,7 @@ describe('Datasets List', () => {
       <DatasetsList datasetRepository={datasetRepository} page={5} collectionId="root" />
     )
 
-    cy.wrap(datasetRepository.getAll).should(
+    cy.wrap(datasetRepository.getAllWithCount).should(
       'be.calledWith',
       'root',
       new DatasetPaginationInfo(1, 10, totalDatasetsCount).goToPage(5)
