@@ -21,6 +21,7 @@
         <li><a href="#running-the-project-locally">Running the Project Locally</a></li>
       </ul>
     </li>
+    <li><a href="#breakdown-of-architecture-design-methodology">Breakdown of Architecture Design Methodology</a></li>
     <li><a href="#coding-standards">Coding Standards</a></li>
     <li><a href="#writing-test-cases">Writing test cases</a></li>
     <li><a href="#deployment">Deployment</a></li>
@@ -210,6 +211,152 @@ $ ./add-env-data.sh
 
 > Note: The above command uses the [dataverse-sample-data][dv_repo_dvsampledata_url] repository whose scripts occasionally
 > fail, so some test data may not be added.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<br>
+
+## Breakdown of Architecture Design Methodology
+
+The Dataverse SPA (Single Page Application) represents a significant leap forward in the Dataverse project's aim to
+provide a more dynamic, efficient, and user-friendly interface for data management and sharing. This section of the
+README outlines the key components of the SPA's design architecture, focusing on its modular, domain-driven design, and
+the technology stack underpinning it.
+
+### The SPA Re-architecture Vision
+
+The SPA architecture is centered around several key goals designed to address the re-architecture challenges:
+
+- API Extension: Enhancing the Dataverse API to serve as the backbone of the platform, facilitating rich, programmatic
+  interactions with data. The API changes are addressed in the main [Dataverse repository][dv_repo_url].
+- Modern Frontend Technologies: Transitioning to React and a suite of modern JavaScript tooling, aligning with
+  contemporary web development practices for better performance, scalability, and developer experience.
+- Modular and Reusable Components: Creating a library of reusable components and a design system specific to
+  Dataverse's needs, ensuring consistency across the platform and easing the development of new features.
+- Community Engagement and Growth: Lowering the barrier to entry for new contributors and enabling the community to
+  play a more active role in the platform's development.
+
+For more information on the motivations behind the SPA re-architecture, see the document [Restructuring the UI as a Single Page Application]
+
+### Core Components of the SPA Architecture
+
+#### Dataverse API
+
+The foundation of the SPA is the Dataverse API, significantly expanded to support a wide range of functionalities. The
+API facilitates interactions with datasets, files, collections, users, and permissions, and is designed with future
+expansion in mind to accommodate evolving data management needs. The code can be found in the [Dataverse repository][dv_repo_url].
+
+#### js-dataverse Library
+
+The js-dataverse library abstracts the Dataverse APIs functionalities, providing developers with higher-level JavaScript
+interfaces to interact with the API. This library is crucial for SPA development, offering a simplified, efficient way to
+build frontend functionalities that interact with Dataverse data. The code can be found in the [js-dataverse repository][dv_repo_dvclientjs_url].
+
+<img src="https://github.com/IQSS/dataverse-frontend/assets/23359572/300fa76e-9dd9-425b-867d-d8272c4154f9" alt="js-dataverse architecture">
+
+#### Dataverse Design System
+
+A cornerstone of the SPA's UI consistency is the Dataverse Design System, a collection of reusable UI components that
+adhere to Dataverse's visual and usability standards. This system allows for the rapid development of new features and
+ensures a cohesive user experience across the platform. You can find the deployed version of the design system at
+[Dataverse Design System Storybook][dv_app_localhost_designsystem_url].
+
+<img src="https://github.com/IQSS/dataverse-frontend/assets/23359572/ddf86c2a-5930-4519-948b-57fcd136b04d" alt="Design system architecture">
+
+### Design and Architecture Principles
+
+The SPA's design is guided by Domain-Driven Design (DDD) principles, focusing on the core concepts of the Dataverse
+platform. This approach ensures a clean separation of concerns, with dependencies pointing inward to prevent leakage of
+implementation details.
+
+<img src="https://github.com/IQSS/dataverse-frontend/assets/23359572/78f2c642-ceaa-4e52-92b9-2c5a06a12ffb" alt="Domain Driven Design">
+
+#### Domain Layer
+
+This layer consists of models, repositories, and use cases, representing the application's core functionalities. Models
+and interfaces define the structure of entities like Datasets, Files, Collections, and Users, while repositories provide
+abstract interfaces to external resources. Use cases encapsulate the application logic, employing abstract repositories
+for their implementation.
+
+```
+dataset/
+├── domain/
+│   ├── models/
+│   │   ├── Dataset.ts
+│   │   ├── DatasetFormFields.ts
+│   │   ├── DatasetPaginationInfo.ts
+│   │   ├── DatasetPreview.ts
+│   │   ├── DatasetValidationResponse.ts
+│   │   └── TotalDatasetsCount.ts
+│   └── repositories/
+│       └── DatasetRepository.ts
+└── useCases/
+├── createDataset.ts
+├── getDatasetByPersistentId.ts
+├── getDatasetPrivateUrlToken.ts
+├── getDatasets.ts
+├── getTotalDatasetsCount.ts
+└── validateDataset.ts
+```
+
+#### Infrastructure Layer
+
+The Infrastructure Layer connects to external data sources, implementing the repositories defined in the Domain Layer.
+It includes mappers for translating external data into domain objects, facilitating a decoupled architecture that allows
+for flexible data management strategies.
+
+```
+infrastructure/
+├── mappers/
+│   ├── JSDatasetMapper.ts
+│   ├── JSDatasetPreviewMapper.ts
+│   └── JSDatasetVersionMapper.ts
+└── repositories/
+└── DatasetJSDataverseRepository.ts
+```
+
+#### Presentation Layer
+
+The Presentation Layer is where the SPA's UI comes to life, consisting of React components and hooks that utilize the
+use cases defined in the Domain Layer. This layer adopts a clean architecture pattern, ensuring that UI components are
+decoupled from the business logic and can be developed and tested independently.
+
+```
+src/
+├── dataset/
+├── files/
+├── info/
+├── metadata-block-info/
+└── sections/
+    ├── collection/
+    ├── create-dataset/
+    ├── dataset/
+    ├── file/
+    └── layout/
+```
+
+### Development and Testing Tools
+
+To support a robust development process, the SPA employs several tools:
+
+- Storybook: Facilitates component design and accessibility testing, allowing developers to work on UI components in
+  isolation.
+- Cypress: Provides component unit and end-to-end testing capabilities, ensuring the reliability and functionality of
+  the SPA.
+- Chromatic: Used for visual regression testing, helping maintain visual consistency across component updates.
+- Coveralls: Offers code coverage analysis, ensuring high code quality and identifying areas needing additional testing.
+
+### Future Directions
+
+The design architecture of the Dataverse SPA is not static; it is envisioned to evolve as new technologies emerge and as
+the community's needs grow. Future directions may include further API extensions, enhancements to the design system, and
+the incorporation of artificial intelligence and machine learning tools to facilitate data discovery and analysis.
+
+### Conclusion
+
+The re-architected Dataverse SPA represents a significant step forward in making research data management more accessible,
+efficient, and community-driven. Through its modular design, modern technology stack, and focus on developer engagement,
+the Dataverse SPA sets a new standard for open-source research data platforms. We invite the community to contribute,
+build upon, and share in the continued growth of the Dataverse project.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
@@ -825,6 +972,7 @@ The Design System is published to the npm Package Registry. To publish a new ver
 [dv_repo_dvclientjs_url]: https://github.com/IQSS/dataverse-client-javascript/pkgs/npm/dataverse-client-javascript
 [dv_repo_dvclientjs_npm_url]: https://www.npmjs.com/package/js-dataverse
 [dv_repo_dvsampledata_url]: https://github.com/IQSS/dataverse-sample-data
+[dv_repo_url]: https://github.com/IQSS/dataverse
 
 <!-- Application Instances -->
 <!-- [dv_app_] -->
@@ -844,6 +992,7 @@ The Design System is published to the npm Package Registry. To publish a new ver
 
 [dv_docs_github_userauthtoken_url]: https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app
 [dv_docs_github_token_url]: https://github.com/settings/tokens
+[Restructuring the UI as a Single Page Application]: https://docs.google.com/document/d/19pbENuYyHErEmblbFGQ47_uJpTfqVKbn9O0QftVqeeU/edit#heading=h.9b7lzr4a7odc
 
 <!-- 3rd Party Resources/References -->
 <!-- [_uses_] -->
