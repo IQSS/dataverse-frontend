@@ -32,43 +32,52 @@ export function AuthorFormGroup({
     setMultipleFields(updatedAuthorFields)
     updateFormData('metadataBlocks.0.fields.author', multipleFields)
   }
-
+  const FIRST_AUTHOR = 0
+  const initialAuthorFieldState = { authorName: '' }
   return (
     <>
       {multipleFields.map((author, index) => (
         <Form.Group controlId="author-name" required key={index}>
           <Row>
             <Col sm={3}>
-              {index === 0 && (
-                <Form.Group.Label required message={t('datasetForm.fields.authorName.tooltip')}>
-                  {t('datasetForm.fields.authorName.label')}
-                </Form.Group.Label>
+              {index === FIRST_AUTHOR && (
+                <Form.Group required controlId={'author-title'} as={Col}>
+                  <Form.Group.Label required message={t('datasetForm.fields.authorName.tooltip')}>
+                    {t('datasetForm.fields.authorName.label')}
+                  </Form.Group.Label>
+                </Form.Group>
               )}
             </Col>
             <Col sm={6}>
-              <Form.Group.Input
-                disabled={submissionStatus === SubmissionStatus.IsSubmitting}
-                type="text"
-                name={`metadataBlocks.0.fields.author.${index}.authorName`}
-                onChange={(event: ChangeEvent<HTMLInputElement>) => handleFieldChange(index, event)}
-                isInvalid={!isAuthorValid(index)}
-                value={author.authorName}
-                required
-              />
-              <Form.Group.Feedback type="invalid">
-                {t('datasetForm.fields.authorName.feedback')}
-              </Form.Group.Feedback>
+              <Form.Group controlId={'author-name'} as={Col} required>
+                <Form.Group.Input
+                  disabled={submissionStatus === SubmissionStatus.IsSubmitting}
+                  type="text"
+                  name={`metadataBlocks.0.fields.author.${index}.authorName`}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                    handleFieldChange(index, event)
+                  }
+                  isInvalid={!isAuthorValid(index)}
+                  value={author.authorName}
+                  required
+                />
+                <Form.Group.Feedback type="invalid">
+                  {t('datasetForm.fields.authorName.feedback')}
+                </Form.Group.Feedback>
+              </Form.Group>
             </Col>
             <Col sm={3}>
-              <DynamicFieldsButtons
-                originalField={index === 0}
-                onAddButtonClick={() => {
-                  addField(index, { authorName: '' })
-                }}
-                onRemoveButtonClick={() => {
-                  removeField(index)
-                }}
-              />
+              <Form.Group controlId={'author-button'} as={Col} required>
+                <DynamicFieldsButtons
+                  originalField={index === FIRST_AUTHOR}
+                  onAddButtonClick={() => {
+                    addField(index, initialAuthorFieldState)
+                  }}
+                  onRemoveButtonClick={() => {
+                    removeField(index)
+                  }}
+                />
+              </Form.Group>
             </Col>
           </Row>
         </Form.Group>
