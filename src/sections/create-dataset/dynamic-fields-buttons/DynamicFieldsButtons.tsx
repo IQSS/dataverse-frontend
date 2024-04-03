@@ -3,6 +3,7 @@ import styles from './DynamicFieldsButtons.module.scss'
 import { MouseEvent } from 'react'
 import { Dash, Plus } from 'react-bootstrap-icons'
 import { Tooltip } from '@iqss/dataverse-design-system'
+import { useTranslation } from 'react-i18next'
 
 interface AddFieldButtonsProps {
   originalField?: boolean
@@ -15,9 +16,10 @@ export function DynamicFieldsButtons({
   onAddButtonClick,
   onRemoveButtonClick
 }: AddFieldButtonsProps) {
+  const { t } = useTranslation('createDataset')
   return (
     <div className={styles.container}>
-      <Tooltip placement="top" overlay="Add">
+      <Tooltip placement="top" overlay={t('datasetForm.addRowButton')}>
         <div className={styles['overlay-container']}>
           <Button variant="secondary" onClick={onAddButtonClick}>
             <Plus className={styles.icon} title="Add" />
@@ -25,7 +27,7 @@ export function DynamicFieldsButtons({
         </div>
       </Tooltip>
       {!originalField && (
-        <Tooltip placement="top" overlay="Delete">
+        <Tooltip placement="top" overlay={t('datasetForm.deleteRowButton')}>
           <div className={styles['overlay-container']}>
             <Button variant="secondary" withSpacing onClick={onRemoveButtonClick}>
               <Dash className={styles.icon} title="Delete" />

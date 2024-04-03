@@ -37,7 +37,9 @@
       "submitting": "Submitting...",
       "success": "Form submitted successfully!",
       "failed": "Error: Submission failed."
-    }
+    },
+    "addRowButton": "Add",
+    "deleteRowButton": "Delete"
   },
   "datasetFormStates": {
     "submitting": "Form Submitting",
