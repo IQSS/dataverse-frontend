@@ -42,13 +42,16 @@ export function AuthorFormGroup({
             <Col sm={3}>
               {index === FIRST_AUTHOR && (
                 <Form.Group required controlId={'author-title'} as={Col}>
-                  <Form.Group.Label required message={t('datasetForm.fields.authorName.tooltip')}>
+                  <Form.Group.Label message={t('datasetForm.fields.authorName.tooltip')}>
                     {t('datasetForm.fields.authorName.label')}
                   </Form.Group.Label>
                 </Form.Group>
               )}
             </Col>
             <Col sm={6}>
+              <Form.Group.Label required message={t('datasetForm.fields.authorName.tooltip')}>
+                Name
+              </Form.Group.Label>
               <Form.Group controlId={'author-name'} as={Col} required>
                 <Form.Group.Input
                   disabled={submissionStatus === SubmissionStatus.IsSubmitting}
