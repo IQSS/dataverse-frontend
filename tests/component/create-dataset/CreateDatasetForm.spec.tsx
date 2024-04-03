@@ -15,9 +15,7 @@ describe('Create Dataset', () => {
     cy.findByText('Title').children('div').trigger('mouseover')
     cy.findByText('The main title of the Dataset').should('exist')
 
-    cy.findByLabelText(/Author Name/i)
-      .should('exist')
-      .should('have.attr', 'required', 'required')
+    cy.findByLabelText(/Name/i).should('exist').should('have.attr', 'required', 'required')
     cy.findByText('Author Name').children('div').trigger('mouseover')
     cy.findByText(
       "The name of the author, such as the person's name or the name of an organization"
@@ -115,9 +113,7 @@ describe('Create Dataset', () => {
 
     cy.findByLabelText(/Title/i).type('Test Dataset Title').and('have.value', 'Test Dataset Title')
 
-    cy.findByLabelText(/Author Name/i)
-      .type('Test author name')
-      .and('have.value', 'Test author name')
+    cy.findByLabelText(/Name/i).type('Test author name').and('have.value', 'Test author name')
 
     cy.findByLabelText(/Point of Contact E-mail/i)
       .type('email@test.com')
@@ -140,7 +136,7 @@ describe('Create Dataset', () => {
     cy.customMount(<CreateDatasetForm repository={datasetRepository} />)
 
     cy.findByLabelText(/Title/i).type('Test Dataset Title')
-    cy.findByLabelText(/Author Name/i).type('Test author name')
+    cy.findByLabelText(/Name/i).type('Test author name')
     cy.findByLabelText(/Point of Contact E-mail/i).type('email@test.com')
     cy.findByLabelText(/Description Text/i).type('Test description text')
     cy.findByLabelText(/Arts and Humanities/i).check()
