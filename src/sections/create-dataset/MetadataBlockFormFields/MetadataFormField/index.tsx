@@ -1,7 +1,8 @@
 import { ChangeEvent } from 'react'
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, UseControllerProps } from 'react-hook-form'
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import {
+  DateFormatsOptions,
   MetadataField2,
   TypeClassMetadataFieldOptions,
   TypeMetadataFieldOptions
@@ -18,6 +19,13 @@ import {
   VocabularyMultiple
 } from './Fields'
 import styles from './index.module.scss'
+import {
+  isValidDateFormat,
+  isValidEmail,
+  isValidFloat,
+  isValidInteger,
+  isValidURL
+} from '../../../../metadata-block-info/domain/models/fieldValidations'
 
 interface Props {
   metadataFieldInfo: MetadataField2
@@ -59,6 +67,36 @@ export const MetadataFormField = ({
     controlledVocabularyValues.length > 0
 
   const isSafePrimitive = typeClass === TypeClassMetadataFieldOptions.Primitive
+
+  const rulesToApply: UseControllerProps['rules'] = {
+    required: isRequired ? `${displayName} is required` : false,
+    validate: (value: string) => {
+      if (!value) {
+        return true
+      }
+      if (isSafePrimitive) {
+        if (type === TypeMetadataFieldOptions.URL) {
+          return isValidURL(value)
+        }
+        if (type === TypeMetadataFieldOptions.Date) {
+          const acceptedDateFormat =
+            watermark === 'YYYY-MM-DD' ? DateFormatsOptions.YYYYMMDD : undefined
+          return isValidDateFormat(value, acceptedDateFormat)
+        }
+        if (type === TypeMetadataFieldOptions.Email) {
+          return isValidEmail(value)
+        }
+        if (type === TypeMetadataFieldOptions.Int) {
+          return isValidInteger(value)
+        }
+        if (type === TypeMetadataFieldOptions.Float) {
+          return isValidFloat(value)
+        }
+      }
+
+      return true
+    }
+  }
 
   if (isSafeCompound) {
     return (
@@ -133,15 +171,7 @@ export const MetadataFormField = ({
       <Controller
         name={name}
         control={control}
-        rules={{
-          required: isRequired ? `${displayName} is required` : false
-          // pattern
-          // min
-          // max
-          // minLength
-          // maxLength
-          // validate
-        }}
+        rules={rulesToApply}
         render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => (
           <Form.Group
             controlId={name}

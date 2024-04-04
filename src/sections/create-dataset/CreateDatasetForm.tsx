@@ -21,6 +21,10 @@ interface CreateDatasetFormProps {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
 
+// TODO:ME: Check validations for each field type, search on JSF version and check if can be implemented here
+// TODO:ME: Dont add alerts, they are done in another issue
+// TODO:ME: Ask GP how backend need to receive the data, check guides first
+
 export function CreateDatasetForm({
   repository,
   metadataBlockInfoRepository

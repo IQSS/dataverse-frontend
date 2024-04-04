@@ -18,7 +18,6 @@ export const VocabularyMultiple = forwardRef(function VocabularyMultiple(
   { title, name, description, options, onChange, isRequired, isInvalid, disabled }: Props,
   ref
 ) {
-  console.log(ref)
   return (
     <Form.CheckboxGroup
       title={title}
