@@ -5,8 +5,6 @@ import { TotalDatasetsCount } from '../../../dataset/domain/models/TotalDatasets
 import { DatasetPaginationInfo } from '../../../dataset/domain/models/DatasetPaginationInfo'
 import { DatasetPreview } from '../../../dataset/domain/models/DatasetPreview'
 import { DatasetsWithCount } from '../../../dataset/domain/models/DatasetsWithCount'
-import { getTotalDatasetsCount } from '../../../dataset/domain/useCases/getTotalDatasetsCount'
-import { getDatasets } from '../../../dataset/domain/useCases/getDatasets'
 
 export function useDatasets(
   datasetRepository: DatasetRepository,
@@ -20,8 +18,8 @@ export function useDatasets(
   const [totalDatasetsCount, setTotalDatasetsCount] = useState<TotalDatasetsCount>()
 
   const fetchDatasetsWithCount = () => {
-    return getDatasetsWithCount(datasetRepository, collectionId, paginationInfo)
-      .then((datasetsWithCount: DatasetsWithCount) => {
+    return getDatasetsWithCount(datasetRepository, collectionId, paginationInfo).then(
+      (datasetsWithCount: DatasetsWithCount) => {
         setTotalDatasetsCount(totalDatasetsCount)
         if (datasetsWithCount.totalCount === 0) {
           setIsLoading(false)
@@ -39,10 +37,8 @@ export function useDatasets(
           setDatasets(datasetsWithCount.datasetPreviews)
           setIsLoading(false)
         }
-      })
-      .catch((error) => {
-        throw new Error('There was an error getting the datasets')
-      })
+      }
+    )
   }
 
   useEffect(() => {

@@ -1,8 +1,6 @@
 import { DatasetRepository } from '../../../../../src/dataset/domain/repositories/DatasetRepository'
 import { DatasetsList } from '../../../../../src/sections/collection/datasets-list/DatasetsList'
-import { DatasetPaginationInfo } from '../../../../../src/dataset/domain/models/DatasetPaginationInfo'
 import { DatasetPreviewMother } from '../../../dataset/domain/models/DatasetPreviewMother'
-import { DatasetsWithCount } from '../../../../../src/dataset/domain/models/DatasetsWithCount'
 import { DatasetPreview } from '@iqss/dataverse-client-javascript'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
