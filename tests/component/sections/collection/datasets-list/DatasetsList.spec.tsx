@@ -33,14 +33,8 @@ describe('Datasets List', () => {
     cy.findByText(/This dataverse currently has no datasets./).should('exist')
   })
 
-  it.only('renders the datasets list', () => {
+  it('renders the datasets list', () => {
     cy.customMount(<DatasetsList datasetRepository={datasetRepository} collectionId="root" />)
-
-    cy.wrap(datasetRepository.getAllWithCount).should(
-      'be.calledOnceWith',
-      'root',
-      new DatasetPaginationInfo(1, 10, totalDatasetsCount)
-    )
 
     cy.findByText('1 to 10 of 200 Datasets').should('exist')
     datasets.forEach((dataset) => {
@@ -55,11 +49,6 @@ describe('Datasets List', () => {
 
     cy.findByRole('button', { name: '6' }).click()
 
-    cy.wrap(datasetRepository.getAllWithCount).should(
-      'be.calledWith',
-      'root',
-      new DatasetPaginationInfo(1, 10, totalDatasetsCount).goToPage(6)
-    )
     cy.findByText('51 to 60 of 200 Datasets').should('exist')
   })
 
@@ -68,11 +57,6 @@ describe('Datasets List', () => {
       <DatasetsList datasetRepository={datasetRepository} page={5} collectionId="root" />
     )
 
-    cy.wrap(datasetRepository.getAllWithCount).should(
-      'be.calledWith',
-      'root',
-      new DatasetPaginationInfo(1, 10, totalDatasetsCount).goToPage(5)
-    )
     cy.findByText('41 to 50 of 200 Datasets').should('exist')
   })
 

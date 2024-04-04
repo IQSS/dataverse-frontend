@@ -10,11 +10,13 @@ const userRepository: UserRepository = {} as UserRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const totalDatasetsCount = 200
 const datasets = DatasetPreviewMother.createMany(totalDatasetsCount)
+const datasetsWithCount = { datasetPreviews: datasets, totalCount: totalDatasetsCount }
 
 describe('Collection page', () => {
   beforeEach(() => {
     datasetRepository.getAll = cy.stub().resolves(datasets)
     datasetRepository.getTotalDatasetsCount = cy.stub().resolves(totalDatasetsCount)
+    datasetRepository.getAllWithCount = cy.stub().resolves(datasetsWithCount)
   })
 
   it('renders collection title', () => {
