@@ -219,7 +219,7 @@ $ ./add-env-data.sh
 
 The Dataverse SPA (Single Page Application) represents a significant leap forward in the Dataverse project's aim to
 provide a more dynamic, efficient, and user-friendly interface for data management and sharing. This section of the
-README outlines the key components of the SPA's design architecture, focusing on its modular, domain-driven design, and
+Developer Guide outlines the key components of the SPA's design architecture, focusing on its modular, domain-driven design, and
 the technology stack underpinning it.
 
 ### The SPA Re-architecture Vision
@@ -280,22 +280,22 @@ for their implementation.
 ```
 dataset/
 ├── domain/
-│   ├── models/
-│   │   ├── Dataset.ts
-│   │   ├── DatasetFormFields.ts
-│   │   ├── DatasetPaginationInfo.ts
-│   │   ├── DatasetPreview.ts
-│   │   ├── DatasetValidationResponse.ts
-│   │   └── TotalDatasetsCount.ts
-│   └── repositories/
-│       └── DatasetRepository.ts
-└── useCases/
-├── createDataset.ts
-├── getDatasetByPersistentId.ts
-├── getDatasetPrivateUrlToken.ts
-├── getDatasets.ts
-├── getTotalDatasetsCount.ts
-└── validateDataset.ts
+    ├── models/
+    │   ├── Dataset.ts
+    │   ├── DatasetFormFields.ts
+    │   ├── DatasetPaginationInfo.ts
+    │   ├── DatasetPreview.ts
+    │   ├── DatasetValidationResponse.ts
+    │   └── TotalDatasetsCount.ts
+    └── repositories/
+    │   └── DatasetRepository.ts
+    └── useCases/
+        ├── createDataset.ts
+        ├── getDatasetByPersistentId.ts
+        ├── getDatasetPrivateUrlToken.ts
+        ├── getDatasets.ts
+        ├── getTotalDatasetsCount.ts
+        └── validateDataset.ts
 ```
 
 #### Infrastructure Layer
@@ -311,21 +311,59 @@ infrastructure/
 │   ├── JSDatasetPreviewMapper.ts
 │   └── JSDatasetVersionMapper.ts
 └── repositories/
-└── DatasetJSDataverseRepository.ts
+    └── DatasetJSDataverseRepository.ts
 ```
+
+#### Data flow in the Domain and Infrastructure Layers
+
+The Domain and Infrastructure Layers work together to manage data flow in the SPA, ensuring that business logic is
+separated from external data sources. This separation allows for easier testing, maintenance, and scalability of the
+application. The following diagram illustrates the flow of data between these layers for dataset operations:
+
+<img src="https://github.com/IQSS/dataverse-frontend/assets/23359572/3fe6f588-555d-4e37-835b-5f338ae41581" alt="Datasets use cases flow of data">
+
+Here's a breakdown of the architecture components as depicted in the diagram:
+
+- **Dataset Use Case**: This is the high-level functional component that encapsulates the business logic related to
+  datasets. It serves as an entry point for any dataset operations and communicates with a dataset repository to fulfill
+  these operations.
+
+- **<<Abstract>> DatasetRepository**: This is an abstract interface declaring the methods that must be implemented for
+  dataset interactions. By defining an abstract layer, we decouple the use cases from the concrete implementation,
+  allowing for greater flexibility and easier testing.
+
+- **Dataset[JSDataverse]Repository**: This represents the concrete implementation of the `DatasetRepository`. It's where
+  the actual logic for interacting with the data source lives. In this case, the data source is the Dataverse API, and the
+  repository implementation uses the `js-dataverse` library to interact with it.
+
+- **js-dataverse (npm package)**: It provides the functions necessary to communicate with the Dataverse API. It
+  abstracts the HTTP requests into JavaScript functions that return the data in a format that's easy to manage within a JavaScript application.
+
+- **Dataverse API**: The ultimate endpoint for data, the Dataverse API is a backend service that manages and serves the
+  dataset information. The API provides endpoints for CRUD operations and more, which `js-dataverse` will call.
+
+##### Flow of Data
+
+1. The `Dataset Use Case` receives a request from the application layer (like a UI component or another service) to
+   perform an operation related to datasets.
+
+2. It then uses the `DatasetRepository` interface to interact with the datasets. This interface is implemented
+   specifically for the Dataverse API by the `Dataset[JSDataverse]Repository`, which translates the abstract methods into
+   concrete actions using `js-dataverse`.
+
+3. `js-dataverse` makes the necessary API calls to the `Dataverse API`. If the API call is successful, the data flows
+   back through the layers to the original caller, or an error is thrown if something goes wrong, like if a dataset is not found.
+
+By adhering to this architecture, the application ensures that the use cases (business logic) are kept separate from the
+external data sources, making the system more robust, easier to test, and flexible to changes in the data source layer.
 
 #### Presentation Layer
 
-The Presentation Layer is where the SPA's UI comes to life, consisting of React components and hooks that utilize the
-use cases defined in the Domain Layer. This layer adopts a clean architecture pattern, ensuring that UI components are
-decoupled from the business logic and can be developed and tested independently.
+The Presentation Layer in our application architecture is where the user interface (UI) logic resides. It's responsible
+for rendering the user interface, handling user interactions, and managing the state of the UI components.
 
 ```
 src/
-├── dataset/
-├── files/
-├── info/
-├── metadata-block-info/
 └── sections/
     ├── collection/
     ├── create-dataset/
@@ -334,16 +372,51 @@ src/
     └── layout/
 ```
 
-### Development and Testing Tools
+Let's break down the components of the Presentation Layer using the Dataset section as an example:
 
-To support a robust development process, the SPA employs several tools:
+<img src="https://github.com/IQSS/dataverse-frontend/assets/23359572/4b167284-fd15-48f4-90ff-e0e07af79c61" alt="Model View Presenter Diagram">
 
-- Storybook: Facilitates component design and accessibility testing, allowing developers to work on UI components in
-  isolation.
-- Cypress: Provides component unit and end-to-end testing capabilities, ensuring the reliability and functionality of
-  the SPA.
-- Chromatic: Used for visual regression testing, helping maintain visual consistency across component updates.
-- Coveralls: Offers code coverage analysis, ensuring high code quality and identifying areas needing additional testing.
+##### View
+
+The View is represented by the React component (`<Dataset/>`), which is responsible for rendering the UI. It is designed
+to be as simple as possible, with the sole responsibility of presenting data to the user. It can be divided into smaller
+components for better organization and reusability.
+
+The View communicates user actions to the Presenter but does not directly handle any state or business logic.
+
+##### Presenter
+
+The Presenter acts as the intermediary between the View and the Domain. In our implementation, this is where the
+`useDataset` and `useFiles` hooks come into play. These hooks act as Presenters that handle the interaction logic and
+state management. They retrieve data from the use cases (Domain), handle any necessary transformations or logic, and
+pass it to the View.
+
+##### Custom Hooks as Presenters
+
+In the React ecosystem, hooks provide a way to use state and other React features without writing a class. Our custom
+hooks (`useDataset` and `useFiles`) embrace the Presenter’s responsibilities by managing the state and preparing the
+data for the View:
+
+- `useDataset` **Hook**: Manages the state and logic for get-dataset-related operations, interacting with the
+  `getDataset()` use case and updating the View accordingly.
+
+- `useFiles` **Hook**: Similar to `useDataset`, it manages the state and logic for get-files-related operations,
+  interacting with the `getFiles()` use case.
+
+Both hooks encapsulate the "Presenter" logic, translating user actions into Use Cases calls and preparing data to
+be displayed by the View.
+
+Calling the `getDataset()` and `getFiles()` use cases can be considered part of the Presenter as well. They directly
+interact with the Domain to retrieve data, enforce business rules, and then pass that data back to the Presenter hooks,
+which in turn update the View.
+
+##### Data Flow in the Presentation Layer
+
+1. **User Interactions**: User actions are captured by the View.
+2. **Presenter Logic**: The Presenter (custom hooks) receives these actions and communicates with the Use Cases to retrieve
+   or update the data.
+3. **Data Processing**: The Use Cases interact with the Domain to perform the necessary operations.
+4. **View Updates**: The View renders the UI based on the data provided by the Presenter.
 
 ### Future Directions
 
