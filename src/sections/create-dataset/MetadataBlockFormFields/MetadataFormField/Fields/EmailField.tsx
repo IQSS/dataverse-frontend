@@ -8,7 +8,7 @@ interface Props {
   disabled: boolean
   placeholder: string
 }
-// TODO:ME Add validation for emails
+
 export const EmailField = forwardRef(function EmailField(
   { name, onChange, isInvalid, disabled, placeholder, ...props }: Props,
   ref

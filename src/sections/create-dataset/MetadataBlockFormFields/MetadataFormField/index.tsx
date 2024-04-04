@@ -1,8 +1,8 @@
 import { ChangeEvent } from 'react'
-import { Controller, useFormContext, UseControllerProps } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
+import { useDefineRules } from './useDefineRules'
 import {
-  DateFormatsOptions,
   MetadataField2,
   TypeClassMetadataFieldOptions,
   TypeMetadataFieldOptions
@@ -19,21 +19,12 @@ import {
   VocabularyMultiple
 } from './Fields'
 import styles from './index.module.scss'
-import {
-  isValidDateFormat,
-  isValidEmail,
-  isValidFloat,
-  isValidInteger,
-  isValidURL
-} from '../../../../metadata-block-info/domain/models/fieldValidations'
 
 interface Props {
   metadataFieldInfo: MetadataField2
   onChangeField: <T extends HTMLElement>(event: ChangeEvent<T>) => void
   withinMultipleFieldsGroup?: boolean
 }
-
-// TODO:ME - Check validations for each field type, search on JSF version and check if can be implemented here
 
 export const MetadataFormField = ({
   metadataFieldInfo,
@@ -44,7 +35,6 @@ export const MetadataFormField = ({
     name,
     type,
     title,
-    displayName,
     multiple,
     typeClass,
     isRequired,
@@ -68,35 +58,7 @@ export const MetadataFormField = ({
 
   const isSafePrimitive = typeClass === TypeClassMetadataFieldOptions.Primitive
 
-  const rulesToApply: UseControllerProps['rules'] = {
-    required: isRequired ? `${displayName} is required` : false,
-    validate: (value: string) => {
-      if (!value) {
-        return true
-      }
-      if (isSafePrimitive) {
-        if (type === TypeMetadataFieldOptions.URL) {
-          return isValidURL(value)
-        }
-        if (type === TypeMetadataFieldOptions.Date) {
-          const acceptedDateFormat =
-            watermark === 'YYYY-MM-DD' ? DateFormatsOptions.YYYYMMDD : undefined
-          return isValidDateFormat(value, acceptedDateFormat)
-        }
-        if (type === TypeMetadataFieldOptions.Email) {
-          return isValidEmail(value)
-        }
-        if (type === TypeMetadataFieldOptions.Int) {
-          return isValidInteger(value)
-        }
-        if (type === TypeMetadataFieldOptions.Float) {
-          return isValidFloat(value)
-        }
-      }
-
-      return true
-    }
-  }
+  const rulesToApply = useDefineRules({ metadataFieldInfo, isSafePrimitive })
 
   if (isSafeCompound) {
     return (
@@ -128,9 +90,7 @@ export const MetadataFormField = ({
       <Controller
         name={name}
         control={control}
-        rules={{
-          required: isRequired ? `${displayName} is required` : false
-        }}
+        rules={rulesToApply}
         render={({ field: { onChange, ref }, fieldState: { invalid, error } }) =>
           multiple ? (
             <VocabularyMultiple

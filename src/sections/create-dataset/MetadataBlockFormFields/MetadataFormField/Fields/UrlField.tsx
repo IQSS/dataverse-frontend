@@ -8,7 +8,7 @@ interface Props {
   disabled: boolean
   placeholder: string
 }
-//TODO:ME  Add validation for urls?
+
 export const UrlField = forwardRef(function UrlField(
   { name, onChange, isInvalid, disabled, placeholder, ...props }: Props,
   ref

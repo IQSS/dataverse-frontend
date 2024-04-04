@@ -8,7 +8,7 @@ interface Props {
   disabled: boolean
   placeholder: string
 }
-//TODO:ME  Add validation for integers?
+
 export const IntField = forwardRef(function IntField(
   { name, onChange, isInvalid, disabled, placeholder, ...props }: Props,
   ref

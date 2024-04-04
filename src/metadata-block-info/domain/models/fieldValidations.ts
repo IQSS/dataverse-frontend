@@ -19,25 +19,49 @@ export function isValidFloat(value: string): boolean {
 /**
  *  Check if the URL is valid
  * @param url The URL to validate
- * @param acceptedSchemes The accepted schemes that the URL could have - optional
+ * @param specificProtocols The specific protocols that the URL could have - optional, could be 'http' | 'https' | 'ftp' or a combination of them
  * @returns boolean
  * @example
  * isValidURL('https://www.google.com') // true
  * isValidURL('http://www.google.com', ['https']) // false
  */
-export function isValidURL(url: string, acceptedSchemes?: string[]): boolean {
+type AcceptedProtocols = 'http' | 'https' | 'ftp'
+export function isValidURL(url: string, specificProtocols?: AcceptedProtocols[]): boolean {
   try {
     const urlObj = new URL(url)
 
-    if (acceptedSchemes) {
-      return acceptedSchemes.includes(urlObj.protocol.slice(0, -1))
+    const acceptedProtocols: AcceptedProtocols[] = ['http', 'https', 'ftp']
+
+    // First check if the protocol is one of the accepted
+    if (!acceptedProtocols.includes(urlObj.protocol.slice(0, -1) as AcceptedProtocols)) {
+      return false // Protocol not accepted
     }
+
+    // Check if specific protocols are passed and if the URL has one of them
+    if (
+      specificProtocols &&
+      !specificProtocols.includes(urlObj.protocol.slice(0, -1) as AcceptedProtocols)
+    ) {
+      return false // Protocol not accepted
+    }
+
+    // Check for valid hostname
+    if (!isValidHostname(urlObj.hostname)) {
+      return false
+    }
+
+    return true
   } catch (_error) {
     return false
   }
-
-  return true
 }
+
+function isValidHostname(hostname: string): boolean {
+  // Use regex to check for valid hostname format
+  const hostnameRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  return hostnameRegex.test(hostname)
+}
+
 /**
  * Validates that string is specific format passed as argument otherwise that matches any of 'YYYY-MM-DD' | 'YYYY-MM' | 'YYYY'
  * @param dateString The date string to validate

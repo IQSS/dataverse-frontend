@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent, useEffect } from 'react'
+import { ChangeEvent, MouseEvent, useEffect, useMemo } from 'react'
 import { Form, Accordion, Alert, Button } from '@iqss/dataverse-design-system'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -21,8 +21,6 @@ interface CreateDatasetFormProps {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
 
-// TODO:ME: Check validations for each field type, search on JSF version and check if can be implemented here
-// TODO:ME: Dont add alerts, they are done in another issue
 // TODO:ME: Ask GP how backend need to receive the data, check guides first
 
 export function CreateDatasetForm({
@@ -43,8 +41,6 @@ export function CreateDatasetForm({
   })
   const isErrorLoadingMetadataBlocksToRender = Boolean(errorLoadingMetadataBlocksToRender)
   const { submissionStatus, submitForm } = useCreateDatasetForm(repository)
-
-  console.log(submissionStatus)
 
   const form = useForm({
     mode: 'onChange'
@@ -75,6 +71,14 @@ export function CreateDatasetForm({
     setIsLoading(false)
   }, [isLoading])
 
+  const disableSubmitButton = useMemo(() => {
+    return (
+      isErrorLoadingMetadataBlocksToRender ||
+      isLoadingMetadataBlocksToRender ||
+      submissionStatus === SubmissionStatus.IsSubmitting
+    )
+  }, [isErrorLoadingMetadataBlocksToRender, isLoadingMetadataBlocksToRender, submissionStatus])
+
   return (
     <FormProvider {...form}>
       <article>
@@ -93,13 +97,13 @@ export function CreateDatasetForm({
           {submissionStatus === SubmissionStatus.IsSubmitting && (
             <p>{t('datasetForm.status.submitting')}</p>
           )}
-          {/* 
-        {submissionStatus === SubmissionStatus.SubmitComplete && (
-          <p>{t('datasetForm.status.success')}</p>
-        )}
-        {submissionStatus === SubmissionStatus.Errored && <p>{t('datasetForm.status.failed')}</p>} */}
+
+          {submissionStatus === SubmissionStatus.SubmitComplete && (
+            <p>{t('datasetForm.status.success')}</p>
+          )}
+          {submissionStatus === SubmissionStatus.Errored && <p>{t('datasetForm.status.failed')}</p>}
+
           <Form onSubmit={form.handleSubmit(submitForm)}>
-            {/* METADATA BLOCKS */}
             {isLoadingMetadataBlocksToRender && <MetadataBlocksSkeleton />}
             {!isLoadingMetadataBlocksToRender && metadataBlocks.length > 0 && (
               <Accordion defaultActiveKey="0" data-testid="metadatablocks-accordion">
@@ -121,14 +125,15 @@ export function CreateDatasetForm({
             <Alert variant={'info'} customHeading={t('metadataTip.title')} dismissible={false}>
               {t('metadataTip.content')}
             </Alert>
-            <Button
-              type="submit"
-              disabled={isErrorLoadingMetadataBlocksToRender || isLoadingMetadataBlocksToRender}
-              // disabled={submissionStatus === SubmissionStatus.IsSubmitting}
-            >
+            <Button type="submit" disabled={disableSubmitButton}>
               {t('saveButton')}
             </Button>
-            <Button withSpacing variant="secondary" type="button" onClick={handleCancel}>
+            <Button
+              withSpacing
+              variant="secondary"
+              type="button"
+              onClick={handleCancel}
+              disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
               {t('cancelButton')}
             </Button>
           </Form>

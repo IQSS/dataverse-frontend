@@ -8,7 +8,7 @@ interface Props {
   disabled: boolean
   placeholder: string
 }
-//TODO:ME  Add validation for floating numbers?
+
 export const FloatField = forwardRef(function FloatField(
   { name, onChange, isInvalid, disabled, placeholder, ...props }: Props,
   ref

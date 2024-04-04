@@ -13,7 +13,7 @@ interface Props {
   isInvalid: boolean
   disabled: boolean
 }
-
+// TODO: Change for a multiple select with search
 export const VocabularyMultiple = forwardRef(function VocabularyMultiple(
   { title, name, description, options, onChange, isRequired, isInvalid, disabled }: Props,
   ref

@@ -8,7 +8,7 @@ interface Props {
   disabled: boolean
   placeholder: string
 }
-//TODO:ME Date component?? Add validation for dates?
+
 export const DateField = forwardRef(function DateField(
   { name, onChange, isInvalid, disabled, placeholder, ...props }: Props,
   ref
