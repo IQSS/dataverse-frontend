@@ -3,7 +3,7 @@ import { MetadataBlockInfoRepository } from '../repositories/MetadataBlockInfoRe
 
 export async function getMetadataBlockInfoByCollectionId(
   metadataBlockInfoRepository: MetadataBlockInfoRepository,
-  collectionId: string,
+  collectionId: number | string,
   onlyDisplayedOnCreate: boolean
 ): Promise<MetadataBlockInfo2[]> {
   return metadataBlockInfoRepository

@@ -3,7 +3,7 @@ import { MetadataBlockInfo, MetadataBlockInfo2 } from '../models/MetadataBlockIn
 export interface MetadataBlockInfoRepository {
   getByName: (name: string) => Promise<MetadataBlockInfo | undefined>
   getByColecctionId: (
-    collectionId: string,
+    collectionId: number | string,
     onlyDisplayedOnCreate?: boolean
   ) => Promise<MetadataBlockInfo2[]>
 }

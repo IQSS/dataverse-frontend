@@ -14,7 +14,10 @@ export class MetadataBlockInfoMockRepository implements MetadataBlockInfoReposit
     })
   }
 
-  getByColecctionId(_collectionId: string, _create: boolean): Promise<MetadataBlockInfo2[]> {
+  getByColecctionId(
+    _collectionId: number | string,
+    _onlyDisplayedOnCreate?: boolean
+  ): Promise<MetadataBlockInfo2[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(MetadataBlockInfoMother.getByCollectionIdFullResponse())

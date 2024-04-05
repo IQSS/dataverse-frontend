@@ -21,7 +21,7 @@ export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfo
   }
 
   getByColecctionId(
-    collectionIdOrAlias: string,
+    collectionIdOrAlias: number | string,
     onlyDisplayedOnCreate?: boolean
   ): Promise<MetadataBlockInfo2[]> {
     return getCollectionMetadataBlocks
