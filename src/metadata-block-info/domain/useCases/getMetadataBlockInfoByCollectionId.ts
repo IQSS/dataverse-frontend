@@ -4,10 +4,10 @@ import { MetadataBlockInfoRepository } from '../repositories/MetadataBlockInfoRe
 export async function getMetadataBlockInfoByCollectionId(
   metadataBlockInfoRepository: MetadataBlockInfoRepository,
   collectionId: string,
-  create: boolean
+  onlyDisplayedOnCreate: boolean
 ): Promise<MetadataBlockInfo2[]> {
   return metadataBlockInfoRepository
-    .getByColecctionId(collectionId, create)
+    .getByColecctionId(collectionId, onlyDisplayedOnCreate)
     .catch((error: Error) => {
       throw new Error(error.message)
     })

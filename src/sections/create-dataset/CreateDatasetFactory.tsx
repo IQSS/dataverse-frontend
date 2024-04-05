@@ -1,20 +1,27 @@
-import { CreateDatasetForm } from './CreateDatasetForm'
 import { ReactElement } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { CreateDatasetForm } from './CreateDatasetForm'
 import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
-import { MetadataBlockInfoMockRepository } from '../../stories/create-dataset/MetadataBlockInfoMockRepository'
 
 const repository = new DatasetJSDataverseRepository()
-const _metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
-const metadataBlockInfoMockRepository = new MetadataBlockInfoMockRepository()
+const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
 
 export class CreateDatasetFactory {
   static create(): ReactElement {
-    return (
-      <CreateDatasetForm
-        repository={repository}
-        metadataBlockInfoRepository={metadataBlockInfoMockRepository}
-      />
-    )
+    return <CreateDatasetFormWithSearchParams />
   }
+}
+
+function CreateDatasetFormWithSearchParams() {
+  const [searchParams] = useSearchParams()
+  const collectionId = searchParams.get('collectionId') ?? undefined
+
+  return (
+    <CreateDatasetForm
+      repository={repository}
+      metadataBlockInfoRepository={metadataBlockInfoRepository}
+      collectionId={collectionId}
+    />
+  )
 }

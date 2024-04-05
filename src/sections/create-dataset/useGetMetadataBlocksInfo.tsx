@@ -26,29 +26,6 @@ export const useGetMetadataBlocksInfo = ({
 
   const onCreateMode = mode === 'create'
 
-  // Filter the metadata blocks to show only the ones that have displayOnCreate set to true and its metadata fields that also have displayOnCreate set to true
-  const filterMetadataBlocksOnCreateMode = (metadataBlocks: MetadataBlockInfo2[]) => {
-    return metadataBlocks
-      .filter((metadataBlockInfo) => metadataBlockInfo.displayOnCreate === true)
-      .map((metadataBlockInfo) => {
-        const filteredMetadataFields: MetadataBlockInfo2['metadataFields'] = {}
-
-        for (const field in metadataBlockInfo.metadataFields) {
-          if (
-            field in metadataBlockInfo.metadataFields &&
-            metadataBlockInfo.metadataFields[field].displayOnCreate === true
-          ) {
-            filteredMetadataFields[field] = metadataBlockInfo.metadataFields[field]
-          }
-        }
-
-        return {
-          ...metadataBlockInfo,
-          metadataFields: filteredMetadataFields
-        }
-      })
-  }
-
   useEffect(() => {
     const handleGetDatasetMetadataBlockFields = async () => {
       setIsLoading(true)
@@ -59,11 +36,7 @@ export const useGetMetadataBlocksInfo = ({
           onCreateMode
         )
 
-        setMetadataBlocks(
-          mode === 'create'
-            ? filterMetadataBlocksOnCreateMode(metadataBlocksInfo)
-            : metadataBlocksInfo
-        )
+        setMetadataBlocks(metadataBlocksInfo)
       } catch (err) {
         console.error(err)
         const errorMessage =

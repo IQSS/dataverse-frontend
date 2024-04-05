@@ -1,4 +1,3 @@
-import { ChangeEvent } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useDefineRules } from './useDefineRules'
@@ -22,13 +21,11 @@ import styles from './index.module.scss'
 
 interface Props {
   metadataFieldInfo: MetadataField2
-  onChangeField: <T extends HTMLElement>(event: ChangeEvent<T>) => void
   withinMultipleFieldsGroup?: boolean
 }
 
 export const MetadataFormField = ({
   metadataFieldInfo,
-  onChangeField,
   withinMultipleFieldsGroup = false
 }: Props) => {
   const {
@@ -73,7 +70,6 @@ export const MetadataFormField = ({
               return (
                 <MetadataFormField
                   metadataFieldInfo={childMetadataFieldInfo}
-                  onChangeField={onChangeField}
                   withinMultipleFieldsGroup
                   key={childMetadataFieldKey}
                 />

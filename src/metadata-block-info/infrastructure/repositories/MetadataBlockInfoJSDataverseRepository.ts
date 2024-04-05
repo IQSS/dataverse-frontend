@@ -2,11 +2,11 @@ import { MetadataBlockInfoRepository } from '../../domain/repositories/MetadataB
 import { MetadataBlockInfo, MetadataBlockInfo2 } from '../../domain/models/MetadataBlockInfo'
 import {
   getMetadataBlockByName,
+  getCollectionMetadataBlocks,
   MetadataBlock as JSMetadataBlockInfo,
   ReadError
 } from '@iqss/dataverse-client-javascript'
 import { JSMetadataBlockInfoMapper } from '../mappers/JSMetadataBlockInfoMapper'
-import { MetadataBlockInfoMother } from '../../../../tests/component/metadata-block-info/domain/models/MetadataBlockInfoMother'
 
 export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfoRepository {
   getByName(name: string): Promise<MetadataBlockInfo | undefined> {
@@ -20,11 +20,17 @@ export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfo
       })
   }
 
-  getByColecctionId(_collectionId: string, _create: boolean): Promise<MetadataBlockInfo2[]> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(MetadataBlockInfoMother.getByCollectionIdFullResponse())
-      }, 1_000)
-    })
+  getByColecctionId(
+    collectionIdOrAlias: string,
+    onlyDisplayedOnCreate?: boolean
+  ): Promise<MetadataBlockInfo2[]> {
+    return getCollectionMetadataBlocks
+      .execute(collectionIdOrAlias, onlyDisplayedOnCreate)
+      .then((metadataBlocks: MetadataBlockInfo2[]) => {
+        return metadataBlocks
+      })
+      .catch((error: ReadError) => {
+        throw new Error(error.message)
+      })
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent, useEffect, useMemo } from 'react'
+import { MouseEvent, useEffect, useMemo } from 'react'
 import { Form, Accordion, Alert, Button } from '@iqss/dataverse-design-system'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -19,14 +19,17 @@ import styles from './CreateDatasetForm.module.scss'
 interface CreateDatasetFormProps {
   repository: DatasetRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
+  collectionId?: string
 }
 
 // TODO:ME: Ask GP how backend need to receive the data, check guides first
 
 export function CreateDatasetForm({
   repository,
-  metadataBlockInfoRepository
+  metadataBlockInfoRepository,
+  collectionId = 'root'
 }: CreateDatasetFormProps) {
+  console.log({ collectionId })
   const navigate = useNavigate()
   const { t } = useTranslation('createDataset')
   const { isLoading, setIsLoading } = useLoading()
@@ -36,7 +39,7 @@ export function CreateDatasetForm({
     error: errorLoadingMetadataBlocksToRender
   } = useGetMetadataBlocksInfo({
     metadataBlockInfoRepository,
-    collectionId: 'someCollectionId', // TODO:ME Get collection id from url?
+    collectionId,
     mode: 'create'
   })
   const isErrorLoadingMetadataBlocksToRender = Boolean(errorLoadingMetadataBlocksToRender)
@@ -45,22 +48,6 @@ export function CreateDatasetForm({
   const form = useForm({
     mode: 'onChange'
   })
-
-  // console.log('dirtyFields: ', form.formState.dirtyFields)
-  // console.log('errors: ', form.formState.errors)
-  // console.log('isDirty: ', form.formState.isDirty)
-
-  const handleFieldChange = <T extends HTMLElement>(event: ChangeEvent<T>) => {
-    // Cast event.target to HTMLInputElement or HTMLSelectElement or HTMLTextAreaElement
-    const target = event.target as unknown as
-      | HTMLInputElement
-      | HTMLSelectElement
-      | HTMLTextAreaElement
-    const { name: _name, type } = target
-    const _value = type === 'checkbox' && 'checked' in target && !target.checked ? '' : target.value
-
-    // updateFormData(name, value)
-  }
 
   const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
@@ -111,10 +98,7 @@ export function CreateDatasetForm({
                   <Accordion.Item eventKey={index.toString()} key={metadataBlock.id}>
                     <Accordion.Header>{metadataBlock.displayName}</Accordion.Header>
                     <Accordion.Body>
-                      <MetadataBlockFormFields
-                        metadataBlock={metadataBlock}
-                        onChangeField={handleFieldChange}
-                      />
+                      <MetadataBlockFormFields metadataBlock={metadataBlock} />
                     </Accordion.Body>
                   </Accordion.Item>
                 ))}
