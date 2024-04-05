@@ -2,7 +2,7 @@ import { DatasetRepository } from '../../../../../src/dataset/domain/repositorie
 import { DatasetsList } from '../../../../../src/sections/collection/datasets-list/DatasetsList'
 import { DatasetPreviewMother } from '../../../dataset/domain/models/DatasetPreviewMother'
 import { DatasetPreview } from '@iqss/dataverse-client-javascript'
-import { DatasetPaginationInfo } from '../../../../../src/dataset/domain/models/DatasetPaginationInfo'
+//import { DatasetPaginationInfo } from '../../../../../src/dataset/domain/models/DatasetPaginationInfo'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const totalDatasetsCount = 200
