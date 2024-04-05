@@ -69,6 +69,11 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         }
       })
   }
+  /*
+    getDatasetUserPermissions.execute(jsDataset.id).then((jsDatasetPermissions) => {
+        const userPermissions = JSDatasetMapper.toDatasetPermissions(jsDatasetPermissions)
+
+   */
 
   getByPersistentId(
     persistentId: string,
@@ -83,22 +88,52 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           getDatasetSummaryFieldNames.execute(),
           getDatasetCitation.execute(jsDataset.id, version, includeDeaccessioned),
           getDatasetUserPermissions.execute(jsDataset.id),
-          getDatasetLocks.execute(jsDataset.id),
-          getDatasetFilesTotalDownloadSize.execute(
-            persistentId,
-            version,
-            FileDownloadSizeMode.ORIGINAL,
-            undefined,
-            includeDeaccessioned
-          ),
-          getDatasetFilesTotalDownloadSize.execute(
-            persistentId,
-            version,
-            FileDownloadSizeMode.ARCHIVAL,
-            undefined,
-            includeDeaccessioned
-          )
+          getDatasetLocks.execute(jsDataset.id)
         ])
+      )
+      .then(
+        ([jsDataset, summaryFieldsNames, citation, jsDatasetPermissions, jsDatasetLocks]: [
+          JSDataset,
+          string[],
+          string,
+          JSDatasetPermissions,
+          JSDatasetLock[]
+        ]) => {
+          // can't use canDownloadFiles here because it's not retrieved from the API
+          if (jsDatasetPermissions.canEditDataset) {
+            return Promise.all([
+              jsDataset,
+              summaryFieldsNames,
+              citation,
+              jsDatasetPermissions,
+              jsDatasetLocks,
+              getDatasetFilesTotalDownloadSize.execute(
+                persistentId,
+                version,
+                FileDownloadSizeMode.ORIGINAL,
+                undefined,
+                includeDeaccessioned
+              ),
+              getDatasetFilesTotalDownloadSize.execute(
+                persistentId,
+                version,
+                FileDownloadSizeMode.ARCHIVAL,
+                undefined,
+                includeDeaccessioned
+              )
+            ])
+          } else {
+            return [
+              jsDataset,
+              summaryFieldsNames,
+              citation,
+              jsDatasetPermissions,
+              jsDatasetLocks,
+              0,
+              0
+            ]
+          }
+        }
       )
       .then(
         ([
@@ -109,26 +144,44 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           jsDatasetLocks,
           jsDatasetFilesTotalOriginalDownloadSize,
           jsDatasetFilesTotalArchivalDownloadSize
-        ]: [JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[], number, number]) =>
-          JSDatasetMapper.toDataset(
+        ]: any) => {
+          const tuple: [
+            JSDataset,
+            string[],
+            string,
+            JSDatasetPermissions,
+            JSDatasetLock[],
+            number,
+            number
+          ] = [
             jsDataset,
-            citation,
             summaryFieldsNames,
+            citation,
             jsDatasetPermissions,
             jsDatasetLocks,
             jsDatasetFilesTotalOriginalDownloadSize,
-            jsDatasetFilesTotalArchivalDownloadSize,
+            jsDatasetFilesTotalArchivalDownloadSize
+          ] as [JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[], number, number]
+          return JSDatasetMapper.toDataset(
+            tuple[0],
+            tuple[2],
+            tuple[1],
+            tuple[3],
+            tuple[4],
+            tuple[5],
+            tuple[6],
             requestedVersion
           )
+        }
       )
       .catch((error: ReadError) => {
+        console.error(error)
         if (!version) {
-          throw new Error(error.message)
+          throw new Error(`Failed to get dataset by persistent ID: ${error.message}`)
         }
         return this.getByPersistentId(persistentId, undefined, (requestedVersion = version))
       })
   }
-
   getByPrivateUrlToken(privateUrlToken: string): Promise<Dataset | undefined> {
     return Promise.all([
       getPrivateUrlDataset.execute(privateUrlToken),
