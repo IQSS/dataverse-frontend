@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import { getMetadataBlockInfoByCollectionId } from '../../metadata-block-info/domain/useCases/getMetadataBlockInfoByCollectionId'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { MetadataBlockInfo2 } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
+import {
+  MetadataBlockInfo2,
+  MetadataField2
+} from '../../metadata-block-info/domain/models/MetadataBlockInfo'
 
 interface Props {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
@@ -26,6 +29,31 @@ export const useGetMetadataBlocksInfo = ({
 
   const onCreateMode = mode === 'create'
 
+  // TODO:ME : Do the opposite of this function when saving the metadata and sending it to the backend (replace slashes with dots)
+  function replaceDotsWithSlashes(metadataFields: Record<string, MetadataField2> | undefined) {
+    if (!metadataFields) return
+
+    for (const key in metadataFields) {
+      const field = metadataFields[key]
+      if (field.name.includes('.')) {
+        field.name = field.name.replace(/\./g, '/')
+      }
+      if (field.childMetadataFields) {
+        replaceDotsWithSlashes(field.childMetadataFields)
+      }
+    }
+  }
+
+  // Function to modify name properties in the array of objects
+  function modifyNames(metadataBlocks: MetadataBlockInfo2[]): MetadataBlockInfo2[] {
+    for (const block of metadataBlocks) {
+      if (block.metadataFields) {
+        replaceDotsWithSlashes(block.metadataFields)
+      }
+    }
+    return metadataBlocks
+  }
+
   useEffect(() => {
     const handleGetDatasetMetadataBlockFields = async () => {
       setIsLoading(true)
@@ -36,6 +64,11 @@ export const useGetMetadataBlocksInfo = ({
           onCreateMode
         )
 
+        const mappedMetadataBlocks = modifyNames(metadataBlocksInfo)
+
+        console.log({ mappedMetadataBlocks })
+
+        // console.log({ mappedMetadataBlocks })
         setMetadataBlocks(metadataBlocksInfo)
       } catch (err) {
         console.error(err)

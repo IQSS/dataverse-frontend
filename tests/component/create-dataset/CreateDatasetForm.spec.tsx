@@ -6,7 +6,8 @@ import { MetadataBlockInfoMother } from '../metadata-block-info/domain/models/Me
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
 
-const collectionMetadataBlocksInfo = MetadataBlockInfoMother.getByCollectionIdResponse()
+const collectionMetadataBlocksInfo =
+  MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue()
 
 describe('Create Dataset', () => {
   beforeEach(() => {

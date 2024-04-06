@@ -16,11 +16,15 @@ export class MetadataBlockInfoMockRepository implements MetadataBlockInfoReposit
 
   getByColecctionId(
     _collectionId: number | string,
-    _onlyDisplayedOnCreate?: boolean
+    onlyDisplayedOnCreate?: boolean
   ): Promise<MetadataBlockInfo2[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(MetadataBlockInfoMother.getByCollectionIdFullResponse())
+        if (onlyDisplayedOnCreate) {
+          resolve(MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue())
+        } else {
+          resolve(MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateFalse())
+        }
       }, 1_000)
     })
   }
