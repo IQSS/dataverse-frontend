@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useDefineRules } from './useDefineRules'
@@ -21,12 +22,16 @@ import styles from './index.module.scss'
 
 interface Props {
   metadataFieldInfo: MetadataField2
+  metadataBlockName: string
   withinMultipleFieldsGroup?: boolean
+  compoundParentName?: string
 }
 
 export const MetadataFormField = ({
   metadataFieldInfo,
-  withinMultipleFieldsGroup = false
+  metadataBlockName,
+  withinMultipleFieldsGroup = false,
+  compoundParentName
 }: Props) => {
   const {
     name,
@@ -42,6 +47,15 @@ export const MetadataFormField = ({
   } = metadataFieldInfo
 
   const { control } = useFormContext()
+  // Field Name is built by the metadataBlockName (e.g. 'citation') and the metadataField name (e.g. title), and if compound parent name is present, it will be added to the name also
+  // e.g. citation.title or citation.author.authorName
+  const builtFieldName = useMemo(
+    () =>
+      compoundParentName
+        ? `${metadataBlockName}.${compoundParentName}.${name}`
+        : `${metadataBlockName}.${name}`,
+    [metadataBlockName, compoundParentName, name]
+  )
 
   const isSafeCompound =
     typeClass === TypeClassMetadataFieldOptions.Compound &&
@@ -70,6 +84,8 @@ export const MetadataFormField = ({
               return (
                 <MetadataFormField
                   metadataFieldInfo={childMetadataFieldInfo}
+                  metadataBlockName={metadataBlockName}
+                  compoundParentName={name}
                   withinMultipleFieldsGroup
                   key={childMetadataFieldKey}
                 />
@@ -86,18 +102,17 @@ export const MetadataFormField = ({
       return (
         <VocabularyMultiple
           title={title}
-          mainName={name}
+          name={builtFieldName}
           description={description}
           options={controlledVocabularyValues}
           isRequired={isRequired}
-          disabled={false}
           control={control}
         />
       )
     }
     return (
       <Controller
-        name={name}
+        name={builtFieldName}
         control={control}
         rules={rulesToApply}
         render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => (
@@ -107,9 +122,7 @@ export const MetadataFormField = ({
             as={withinMultipleFieldsGroup ? Col : Row}>
             <Form.Group.Label message={description}>{title}</Form.Group.Label>
             <Vocabulary
-              name={name}
               onChange={onChange}
-              disabled={false}
               isInvalid={invalid}
               options={controlledVocabularyValues}
               ref={ref}
@@ -124,7 +137,7 @@ export const MetadataFormField = ({
   if (isSafePrimitive) {
     return (
       <Controller
-        name={name}
+        name={builtFieldName}
         control={control}
         rules={rulesToApply}
         render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => (
@@ -137,9 +150,7 @@ export const MetadataFormField = ({
             <>
               {type === TypeMetadataFieldOptions.Text && (
                 <TextField
-                  name={name}
                   onChange={onChange}
-                  disabled={false}
                   isInvalid={invalid}
                   placeholder={watermark}
                   ref={ref}
@@ -147,9 +158,7 @@ export const MetadataFormField = ({
               )}
               {type === TypeMetadataFieldOptions.Textbox && (
                 <TextBoxField
-                  name={name}
                   onChange={onChange}
-                  disabled={false}
                   isInvalid={invalid}
                   placeholder={watermark}
                   ref={ref}
@@ -157,9 +166,7 @@ export const MetadataFormField = ({
               )}
               {type === TypeMetadataFieldOptions.URL && (
                 <UrlField
-                  name={name}
                   onChange={onChange}
-                  disabled={false}
                   isInvalid={invalid}
                   placeholder={watermark}
                   ref={ref}
@@ -167,9 +174,7 @@ export const MetadataFormField = ({
               )}
               {type === TypeMetadataFieldOptions.Email && (
                 <EmailField
-                  name={name}
                   onChange={onChange}
-                  disabled={false}
                   isInvalid={invalid}
                   placeholder={watermark}
                   ref={ref}
@@ -177,9 +182,7 @@ export const MetadataFormField = ({
               )}
               {type === TypeMetadataFieldOptions.Int && (
                 <IntField
-                  name={name}
                   onChange={onChange}
-                  disabled={false}
                   isInvalid={invalid}
                   placeholder={watermark}
                   ref={ref}
@@ -187,9 +190,7 @@ export const MetadataFormField = ({
               )}
               {type === TypeMetadataFieldOptions.Float && (
                 <FloatField
-                  name={name}
                   onChange={onChange}
-                  disabled={false}
                   isInvalid={invalid}
                   placeholder={watermark}
                   ref={ref}
@@ -197,9 +198,7 @@ export const MetadataFormField = ({
               )}
               {type === TypeMetadataFieldOptions.Date && (
                 <DateField
-                  name={name}
                   onChange={onChange}
-                  disabled={false}
                   isInvalid={invalid}
                   placeholder={watermark}
                   ref={ref}

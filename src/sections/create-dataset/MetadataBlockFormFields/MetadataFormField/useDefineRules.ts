@@ -45,8 +45,9 @@ export const useDefineRules = ({ metadataFieldInfo, isSafePrimitive }: Props) =>
         if (type === TypeMetadataFieldOptions.Date) {
           const acceptedDateFormat =
             watermark === 'YYYY-MM-DD' ? DateFormatsOptions.YYYYMMDD : undefined
+
           if (!isValidDateFormat(value, acceptedDateFormat)) {
-            return `${displayName} is not a valid date`
+            return `${displayName} must be format ${watermark}`
           }
           return true
         }

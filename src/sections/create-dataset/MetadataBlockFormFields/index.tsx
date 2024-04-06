@@ -6,12 +6,18 @@ interface Props {
 }
 
 export const MetadataBlockFormFields = ({ metadataBlock }: Props) => {
-  const { metadataFields } = metadataBlock
+  const { metadataFields, name } = metadataBlock
 
   return (
     <>
       {Object.entries(metadataFields).map(([metadataFieldKey, metadataFieldInfo]) => {
-        return <MetadataFormField key={metadataFieldKey} metadataFieldInfo={metadataFieldInfo} />
+        return (
+          <MetadataFormField
+            key={metadataFieldKey}
+            metadataFieldInfo={metadataFieldInfo}
+            metadataBlockName={name}
+          />
+        )
       })}
     </>
   )

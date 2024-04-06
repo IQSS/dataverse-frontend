@@ -5,16 +5,15 @@ import styles from '../index.module.scss'
 
 interface Props {
   title: string
-  mainName: string
+  name: string
   description: string
   options: string[]
   control: Control<FieldValues, unknown>
   isRequired: boolean
-  disabled: boolean
 }
 // TODO: Change for a multiple select with search
 export const VocabularyMultiple = forwardRef(function VocabularyMultiple(
-  { title, mainName, description, options, control, isRequired, disabled }: Props,
+  { title, name, description, options, control, isRequired }: Props,
   ref
 ) {
   const [checkedOptions, setCheckedOptions] = useState<string[]>([])
@@ -39,7 +38,7 @@ export const VocabularyMultiple = forwardRef(function VocabularyMultiple(
         {options.map((value) => (
           <Controller
             key={value}
-            name={mainName}
+            name={name}
             control={control}
             rules={{
               required: isRequired,
@@ -53,11 +52,11 @@ export const VocabularyMultiple = forwardRef(function VocabularyMultiple(
             render={({ field, fieldState: { invalid } }) => (
               <Form.Group.Checkbox
                 label={value}
-                id={`${mainName}-checkbox-${value}`}
+                id={`${name}-checkbox-${value}`}
                 value={value}
                 onChange={() => handleChange(value, (newValue) => field.onChange(newValue))}
-                disabled={disabled}
                 isInvalid={invalid}
+                ref={field.ref}
                 key={value}
               />
             )}
