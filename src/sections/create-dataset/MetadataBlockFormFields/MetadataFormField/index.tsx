@@ -82,42 +82,41 @@ export const MetadataFormField = ({
   }
 
   if (isSafeControlledVocabulary) {
+    if (multiple) {
+      return (
+        <VocabularyMultiple
+          title={title}
+          mainName={name}
+          description={description}
+          options={controlledVocabularyValues}
+          isRequired={isRequired}
+          disabled={false}
+          control={control}
+        />
+      )
+    }
     return (
       <Controller
         name={name}
         control={control}
         rules={rulesToApply}
-        render={({ field: { onChange, ref }, fieldState: { invalid, error } }) =>
-          multiple ? (
-            <VocabularyMultiple
-              title={title}
+        render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => (
+          <Form.Group
+            controlId={name}
+            required={isRequired}
+            as={withinMultipleFieldsGroup ? Col : Row}>
+            <Form.Group.Label message={description}>{title}</Form.Group.Label>
+            <Vocabulary
               name={name}
-              description={description}
-              options={controlledVocabularyValues}
               onChange={onChange}
-              isRequired={isRequired}
-              isInvalid={invalid}
               disabled={false}
+              isInvalid={invalid}
+              options={controlledVocabularyValues}
               ref={ref}
             />
-          ) : (
-            <Form.Group
-              controlId={name}
-              required={isRequired}
-              as={withinMultipleFieldsGroup ? Col : Row}>
-              <Form.Group.Label message={description}>{title}</Form.Group.Label>
-              <Vocabulary
-                name={name}
-                onChange={onChange}
-                disabled={false}
-                isInvalid={invalid}
-                options={controlledVocabularyValues}
-                ref={ref}
-              />
-              <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
-            </Form.Group>
-          )
-        }
+            <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+          </Form.Group>
+        )}
       />
     )
   }
