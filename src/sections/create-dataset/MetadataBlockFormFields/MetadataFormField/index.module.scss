@@ -8,6 +8,7 @@
   }
 }
 
+// Checkbox group styles
 .checkbox-list-grid {
   display: flex;
   flex-wrap: wrap;
@@ -19,8 +20,20 @@
   border-radius: var(--bs-border-radius-lg);
 }
 
+.checkbox-group-feedback {
+  display: none;
+  width: 100%;
+  margin-top: 0.25rem;
+  color: var(--bs-danger);
+  font-size: 0.875em;
+}
+
 .checkbox-list-grid:has(:global .form-check-input.is-invalid) {
   border-color: var(--bs-danger);
+
+  + .checkbox-group-feedback {
+    display: block;
+  }
 }
 
 .checkbox-list-grid:focus:not(:global .form-check-input.is-invalid),

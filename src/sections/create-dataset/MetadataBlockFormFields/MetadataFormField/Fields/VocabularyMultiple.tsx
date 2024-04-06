@@ -1,11 +1,13 @@
 import { ForwardedRef, forwardRef, useState } from 'react'
 import { Control, Controller, FieldValues } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { Form } from '@iqss/dataverse-design-system'
 import styles from '../index.module.scss'
 
 interface Props {
   title: string
   name: string
+  displayName: string
   description: string
   options: string[]
   control: Control<FieldValues, unknown>
@@ -13,9 +15,10 @@ interface Props {
 }
 // TODO: Change for a multiple select with search
 export const VocabularyMultiple = forwardRef(function VocabularyMultiple(
-  { title, name, description, options, control, isRequired }: Props,
+  { title, name, displayName, description, options, control, isRequired }: Props,
   ref
 ) {
+  const { t } = useTranslation('createDataset')
   const [checkedOptions, setCheckedOptions] = useState<string[]>([])
 
   const handleChange = (value: string, fieldOnChange: (value: string[]) => void) => {
@@ -63,6 +66,9 @@ export const VocabularyMultiple = forwardRef(function VocabularyMultiple(
           />
         ))}
       </div>
+      <p className={styles['checkbox-group-feedback']}>
+        {t('datasetForm.field.required', { displayName })}
+      </p>
     </Form.CheckboxGroup>
   )
 })

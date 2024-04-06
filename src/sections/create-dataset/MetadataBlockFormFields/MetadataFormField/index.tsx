@@ -37,6 +37,7 @@ export const MetadataFormField = ({
     name,
     type,
     title,
+    displayName,
     multiple,
     typeClass,
     isRequired,
@@ -103,6 +104,7 @@ export const MetadataFormField = ({
         <VocabularyMultiple
           title={title}
           name={builtFieldName}
+          displayName={displayName}
           description={description}
           options={controlledVocabularyValues}
           isRequired={isRequired}
