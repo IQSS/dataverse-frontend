@@ -69,7 +69,7 @@ export const MetadataFormField = ({
 
   const isSafePrimitive = typeClass === TypeClassMetadataFieldOptions.Primitive
 
-  const rulesToApply = useDefineRules({ metadataFieldInfo, isSafePrimitive })
+  const rulesToApply = useDefineRules({ metadataFieldInfo })
 
   if (isSafeCompound) {
     return (
