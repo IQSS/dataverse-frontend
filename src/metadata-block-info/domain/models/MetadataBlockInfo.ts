@@ -13,6 +13,7 @@ export const METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER = '#VALUE'
 export const METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER = '#NAME'
 
 // 👇👇 New types for #336
+// TODO:ME : What to do with types above which are used in dataset page?
 
 export interface MetadataBlockInfo2 {
   id: number

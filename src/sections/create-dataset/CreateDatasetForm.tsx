@@ -11,7 +11,6 @@ import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepo
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { Route } from '../Route.enum'
 import { useGetMetadataBlocksInfo } from './useGetMetadataBlocksInfo'
-// import { DatasetMetadataSubField } from '../../dataset/domain/models/Dataset'
 import { MetadataBlockFormFields } from './MetadataBlockFormFields'
 import { MetadataBlocksSkeleton } from './MetadataBlocksSkeleton'
 import styles from './CreateDatasetForm.module.scss'
@@ -22,14 +21,13 @@ interface CreateDatasetFormProps {
   collectionId?: string
 }
 
-// TODO:ME: Ask GP how backend need to receive the data, check guides first
+// TODO:ME : Warns in design system build about namings
 
 export function CreateDatasetForm({
   repository,
   metadataBlockInfoRepository,
   collectionId = 'root'
 }: CreateDatasetFormProps) {
-  console.log({ collectionId })
   const navigate = useNavigate()
   const { t } = useTranslation('createDataset')
   const { isLoading, setIsLoading } = useLoading()
@@ -42,12 +40,11 @@ export function CreateDatasetForm({
     collectionId,
     mode: 'create'
   })
+
   const isErrorLoadingMetadataBlocksToRender = Boolean(errorLoadingMetadataBlocksToRender)
   const { submissionStatus, submitForm } = useCreateDatasetForm(repository)
 
-  const form = useForm({
-    mode: 'onChange'
-  })
+  const form = useForm({ mode: 'onChange' })
 
   const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
@@ -65,7 +62,7 @@ export function CreateDatasetForm({
       submissionStatus === SubmissionStatus.IsSubmitting
     )
   }, [isErrorLoadingMetadataBlocksToRender, isLoadingMetadataBlocksToRender, submissionStatus])
-
+  // TODO:ME:  Move FormProvider to wrapp form only?
   return (
     <FormProvider {...form}>
       <article>
