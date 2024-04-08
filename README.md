@@ -250,12 +250,13 @@ and catch visual regressions.
 - [![ReactJS][_shield_reactjs]][_uses_reactjs_url]
 - [![NodeJS][_shield_nodejs]][_uses_nodejs_url]
 - [![TypeScript][_shield_typescript]][_uses_typescript_url]
+- [![SAAS][_shield_saas]][_uses_saas_url]
 - [![Bootstrap][_shield_bootstrap]][_uses_bootstrap_url]
 - [![Cypress][_shield_cypress]][_uses_cypress_url]
 - [![TestingLibrary][_shield_testinglibrary]][_uses_testinglibrary_url]
 - [![Storybook][_shield_storybook]][_uses_storybook_url]
-- [![AmazonS3][_shield_amazons3]][_uses_aws3_url]
 - [![Docker][_shield_docker]][_uses_docker_url]
+- [![Chromatic][_shield_chromatic]][_uses_chromatic_url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
@@ -360,6 +361,7 @@ Distributed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for mo
 [_uses_chromatic_url]: https://www.chromatic.com/
 [_uses_repo_cra_error_url]: https://github.com/facebook/create-react-app/issues/11174
 [_uses_tool_chromatic_url]: https://www.chromatic.com/builds?appId=646f68aa9beb01b35c599acd
+[_uses_saas_url]: https://sass-lang.com/
 
 <!-- @cypress/grep -->
 
@@ -382,6 +384,8 @@ Distributed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for mo
 [_shield_zulip]: https://img.shields.io/badge/zulip-chat?style=for-the-badge&logo=zulip&logoColor=%236492FE
 [_shield_googledevs]: https://img.shields.io/badge/Developer_Group-white?style=for-the-badge&logo=google
 [_shield_googleusers]: https://img.shields.io/badge/User_Group-white?style=for-the-badge&logo=google
+[_shield_chromatic]: https://img.shields.io/badge/Chromatic-FC521F?style=for-the-badge&logo=chromatic&logoColor=white
+[_shield_saas]: https://img.shields.io/badge/SASS-CC6699?style=for-the-badge&logo=sass&logoColor=white
 
 <!--  -->
 

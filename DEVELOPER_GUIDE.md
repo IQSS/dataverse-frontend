@@ -428,18 +428,28 @@ which in turn update the View.
 3. **Data Processing**: The Use Cases interact with the Domain to perform the necessary operations.
 4. **View Updates**: The View renders the UI based on the data provided by the Presenter.
 
+### Technology Stack
+
+Our project leverages a robust stack of modern development tools and frameworks to ensure high-quality application
+architecture and user experience. Below is a breakdown of our primary technologies:
+
+| Technology                                                            | Description                                                                                                                                                                                                                |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![ReactJS][_shield_reactjs]][_uses_reactjs_url]                      | A JavaScript library for building user interfaces, React provides a declarative, component-based approach to UI development, making it easier to build and maintain complex applications.                                  |
+| [![TypeScript][_shield_typescript]][_uses_typescript_url]             | An extension of JavaScript adding static types. TypeScript enhances code quality and robustness with compile-time error checking.                                                                                          |
+| [![SAAS][_shield_saas]][_uses_saas_url]                               | A CSS preprocessor that extends CSS with features like variables, nesting, and mixins, SASS allows developers to write more maintainable and reusable stylesheets.                                                         |
+| [![Bootstrap][_shield_bootstrap]][_uses_bootstrap_url]                | A popular CSS framework that provides a set of responsive, mobile-first components and utilities, Bootstrap helps developers build consistent, visually appealing interfaces quickly.                                      |
+| [![Cypress][_shield_cypress]][_uses_cypress_url]                      | An end-to-end testing framework for web applications, Cypress allows developers to write and run tests that simulate user interactions and ensure the application works as expected.                                       |
+| [![TestingLibrary][_shield_testinglibrary]][_uses_testinglibrary_url] | A suite of testing utilities that help developers write tests that focus on user behavior, Testing Library ensures that tests are more robust, maintainable, and aligned with user expectations.                           |
+| [![Storybook][_shield_storybook]][_uses_storybook_url]                | A tool for developing UI components in isolation, Storybook allows developers to build, test, and document components independently of the application, improving component reusability and consistency.                   |
+| [![Docker][_shield_docker]][_uses_docker_url]                         | A containerization platform that allows developers to package applications and their dependencies into lightweight, portable containers, Docker simplifies the development, deployment, and scaling of applications.       |
+| [![Chromatic][_shield_chromatic]][_uses_chromatic_url]                | A visual testing platform that helps developers catch UI bugs and regressions early in the development process, Chromatic integrates with Storybook to provide visual snapshots of components and track changes over time. |
+
 ### Future Directions
 
 The design architecture of the Dataverse SPA is not static; it is envisioned to evolve as new technologies emerge and as
 the community's needs grow. Future directions may include further API extensions, enhancements to the design system, and
 the incorporation of artificial intelligence and machine learning tools to facilitate data discovery and analysis.
-
-### Conclusion
-
-The re-architected Dataverse SPA represents a significant step forward in making research data management more accessible,
-efficient, and community-driven. Through its modular design, modern technology stack, and focus on developer engagement,
-the Dataverse SPA sets a new standard for open-source research data platforms. We invite the community to contribute,
-build upon, and share in the continued growth of the Dataverse project.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
@@ -1082,6 +1092,17 @@ The Design System is published to the npm Package Registry. To publish a new ver
 
 [_uses_docker_url]: https://www.docker.com/products/docker-desktop/
 [_uses_repo_cra_error_url]: https://github.com/facebook/create-react-app/issues/11174
+[_uses_reactjs_url]: https://reactjs.org/
+[_uses_typescript_url]: https://typescriptlang.org/
+[_uses_bootstrap_url]: https://getbootstrap.com
+[_uses_cypress_url]: https://cypress.io/
+[_uses_testinglibrary_url]: https://testing-library.com/docs/react-testing-library/intro/
+[_uses_storybook_url]: https://storybook.js.org/
+[_uses_payara_url]: https://www.payara.fish/
+[_uses_docker_url]: https://www.docker.com/products/docker-desktop/
+[_uses_aws3_url]: https://aws.amazon.com/
+[_uses_saas_url]: https://sass-lang.com/
+[_uses_chromatic_url]: https://www.chromatic.com/
 
 <!-- @cypress/grep -->
 
@@ -1093,6 +1114,15 @@ The Design System is published to the npm Package Registry. To publish a new ver
 <!-- [_shield_] -->
 
 [_shield_docker]: https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
+[_shield_reactjs]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[_shield_typescript]: https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
+[_shield_bootstrap]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
+[_shield_cypress]: https://img.shields.io/badge/Cypress-69D3A7?style=for-the-badge&logo=cypress&logoColor=black
+[_shield_testinglibrary]: https://img.shields.io/badge/TestingLibrary-E33332?style=for-the-badge&logo=testinglibrary&logoColor=white
+[_shield_storybook]: https://img.shields.io/badge/Storybook-FF4785?style=for-the-badge&logo=storybook&logoColor=white
+[_shield_amazons3]: https://img.shields.io/badge/AmazonS3-569A31?style=for-the-badge&logo=amazons3&logoColor=white
+[_shield_chromatic]: https://img.shields.io/badge/Chromatic-FC521F?style=for-the-badge&logo=chromatic&logoColor=white
+[_shield_saas]: https://img.shields.io/badge/SASS-CC6699?style=for-the-badge&logo=sass&logoColor=white
 
 <!--  -->
 <!--  -->
