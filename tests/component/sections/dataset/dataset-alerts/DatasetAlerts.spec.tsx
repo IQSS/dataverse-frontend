@@ -32,6 +32,7 @@ interface DatasetTranslation {
     [AlertMessageKey.TERMS_UPDATED]: AlertTranslation
     [AlertMessageKey.DATASET_DELETED]: AlertTranslation
     [AlertMessageKey.THUMBNAIL_UPDATED]: AlertTranslation
+    [AlertMessageKey.DATASET_CREATED]: AlertTranslation
   }
 }
 
