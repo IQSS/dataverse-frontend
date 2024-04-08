@@ -251,7 +251,9 @@ The js-dataverse library abstracts the Dataverse APIs functionalities, providing
 interfaces to interact with the API. This library is crucial for SPA development, offering a simplified, efficient way to
 build frontend functionalities that interact with Dataverse data. The code can be found in the [js-dataverse repository][dv_repo_dvclientjs_url].
 
-<img src="https://github.com/IQSS/dataverse-frontend/assets/23359572/300fa76e-9dd9-425b-867d-d8272c4154f9" alt="js-dataverse architecture">
+<p align="center">
+<img  src="https://github.com/IQSS/dataverse-frontend/assets/23359572/300fa76e-9dd9-425b-867d-d8272c4154f9" alt="js-dataverse architecture">
+</p>
 
 #### Dataverse Design System
 
@@ -260,7 +262,9 @@ adhere to Dataverse's visual and usability standards. This system allows for the
 ensures a cohesive user experience across the platform. You can find the deployed version of the design system at
 [Dataverse Design System Storybook][dv_app_localhost_designsystem_url].
 
+<p align="center">
 <img src="https://github.com/IQSS/dataverse-frontend/assets/23359572/ddf86c2a-5930-4519-948b-57fcd136b04d" alt="Design system architecture">
+</p>
 
 ### Design and Architecture Principles
 
@@ -268,7 +272,9 @@ The SPA's design is guided by Domain-Driven Design (DDD) principles, focusing on
 platform. This approach ensures a clean separation of concerns, with dependencies pointing inward to prevent leakage of
 implementation details.
 
+<p align="center">
 <img src="https://github.com/IQSS/dataverse-frontend/assets/23359572/78f2c642-ceaa-4e52-92b9-2c5a06a12ffb" alt="Domain Driven Design">
+</p>
 
 #### Domain Layer
 
@@ -320,7 +326,9 @@ The Domain and Infrastructure Layers work together to manage data flow in the SP
 separated from external data sources. This separation allows for easier testing, maintenance, and scalability of the
 application. The following diagram illustrates the flow of data between these layers for dataset operations:
 
+<p align="center">
 <img src="https://github.com/IQSS/dataverse-frontend/assets/23359572/3fe6f588-555d-4e37-835b-5f338ae41581" alt="Datasets use cases flow of data">
+</p>
 
 Here's a breakdown of the architecture components as depicted in the diagram:
 
@@ -374,7 +382,9 @@ src/
 
 Let's break down the components of the Presentation Layer using the Dataset section as an example:
 
+<p align="center">
 <img src="https://github.com/IQSS/dataverse-frontend/assets/23359572/4b167284-fd15-48f4-90ff-e0e07af79c61" alt="Model View Presenter Diagram">
+</p>
 
 ##### View
 
