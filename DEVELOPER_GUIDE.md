@@ -21,9 +21,44 @@
         <li><a href="#running-the-project-locally">Running the Project Locally</a></li>
       </ul>
     </li>
-    <li><a href="#breakdown-of-architecture-design-methodology">Breakdown of Architecture Design Methodology</a></li>
-    <li><a href="#coding-standards">Coding Standards</a></li>
-    <li><a href="#writing-test-cases">Writing test cases</a></li>
+    <li><a href="#breakdown-of-architecture-design-methodology">Breakdown of Architecture Design Methodology</a>
+        <ul>
+            <li><a href="#the-spa-re-architecture-vision">The SPA Re-architecture Vision</a></li>
+            <li><a href="#core-components-of-the-spa-architecture">Core Components of the SPA Architecture</a></li>
+            <li><a href="#design-and-architecture-principles">Design and Architecture Principles</a></li>
+            <li><a href="#domain-layer">Domain Layer</a></li>
+            <li><a href="#infrastructure-layer">Infrastructure Layer</a></li>
+            <li><a href="#data-flow-in-the-domain-and-infrastructure-layers">Data flow in the Domain and Infrastructure Layers</a></li>
+            <li><a href="#presentation-layer">Presentation Layer</a></li>
+            <li><a href="#technology-stack">Technology Stack</a></li>
+            <li><a href="#future-directions">Future Directions</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#coding-standards">Coding Standards</a>
+        <ul>
+            <li><a href="#general-principles">General Principles</a></li>
+            <li><a href="#typescript">TypeScript</a></li>
+            <li><a href="#javascript-standards">JavaScript Standards</a></li>
+            <li><a href="#react-standards">React Standards</a></li>
+            <li><a href="#csssass-standards">CSS/SASS Standards</a></li>
+            <li><a href="#linting">Linting</a></li>
+            <li><a href="#check-and-apply-formatting-standards">Check and apply formatting standards</a></li>
+            <li><a href="#enforcing-coding-standards-using-pre-commit-hooks">Enforcing coding standards using pre-commit hooks</a></li>
+            <li><a href="#running-tests">Running Tests</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#writing-test-cases">Writing test cases</a>
+        <ul>
+            <li><a href="#1-unit-tests-or-component-tests">Unit Tests or Component tests</a></li>
+            <li><a href="#2-integration-tests">Integration Tests</a></li>
+            <li><a href="#3-end-to-end-e2e-tests">End-to-End (e2e) Tests</a></li>
+            <li><a href="#patterns-and-conventions">Patterns and Conventions</a></li>
+            <li><a href="#continuous-integration-ci">Continuous Integration (CI)</a></li>
+            <li><a href="#test-coverage">Test Coverage</a></li>
+        </ul>
+    </li>
     <li><a href="#deployment">Deployment</a></li>
     <li><a href="#publishing-the-design-system">Publishing the Design System</a></li>
   </ol>
@@ -518,7 +553,7 @@ npm run format
 We use [pre-commit] library to add pre-commit hooks which automatically check the committed
 code changes for any coding standard violations.
 
-### Tests
+### Running Tests
 
 Use the following commands to ensure your build passes checks for coding standards and coverage:
 
