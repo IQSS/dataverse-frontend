@@ -4,7 +4,7 @@ import { Collection } from '../../collection/domain/models/Collection'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 
 export class CollectionMockRepository implements CollectionRepository {
-  getById(_id: string): Promise<Collection | undefined> {
+  getById(_id: string): Promise<Collection> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(CollectionMother.createRealistic())
