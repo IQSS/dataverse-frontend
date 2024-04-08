@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 // import { createDataset } from '../../dataset/domain/useCases/createDataset'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
+import { replaceSlashKeysWithDot } from './utils'
 // import { Route } from '../Route.enum'
 
 export enum SubmissionStatus {
@@ -22,8 +23,9 @@ export function useCreateDatasetForm(_repository: DatasetRepository): {
 
   const submitForm = (formData: Record<string, unknown>): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
+    const formDataBackToOriginalKeys = replaceSlashKeysWithDot(formData)
 
-    console.log({ formData })
+    console.log(formDataBackToOriginalKeys)
 
     // createDataset(repository, formData)
     //   .then(({ persistentId }) => {
