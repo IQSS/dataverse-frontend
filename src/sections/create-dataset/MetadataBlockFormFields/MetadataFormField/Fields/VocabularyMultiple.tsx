@@ -44,13 +44,7 @@ export const VocabularyMultiple = forwardRef(function VocabularyMultiple(
             name={name}
             control={control}
             rules={{
-              required: isRequired,
-              validate: (value) => {
-                if (isRequired && Array.isArray(value) && value.length === 0) {
-                  return 'This field is required'
-                }
-                return true
-              }
+              required: isRequired
             }}
             render={({ field, fieldState: { invalid } }) => (
               <Form.Group.Checkbox

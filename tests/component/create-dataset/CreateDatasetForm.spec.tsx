@@ -185,6 +185,8 @@ describe('Create Dataset', () => {
       .closest('.row')
       .within(() => {
         cy.findByLabelText(/^Arts and Humanities/i).check()
+        cy.findByLabelText(/^Arts and Humanities/i).uncheck()
+        cy.findByLabelText(/^Arts and Humanities/i).check()
       })
 
     cy.findByText(/Save Dataset/i).click()

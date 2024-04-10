@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { getMetadataBlockInfoByCollectionId } from '../../metadata-block-info/domain/useCases/getMetadataBlockInfoByCollectionId'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfo } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { replaceDotKeysWithSlash } from './utils'
+import { replaceDotNamesKeysWithSlash } from './utils'
 
 interface Props {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
@@ -37,8 +37,7 @@ export const useGetMetadataBlocksInfo = ({
           onCreateMode
         )
 
-        const mappedMetadataBlocks = replaceDotKeysWithSlash(metadataBlocksInfo)
-        console.log(mappedMetadataBlocks)
+        const mappedMetadataBlocks = replaceDotNamesKeysWithSlash(metadataBlocksInfo)
 
         setMetadataBlocks(mappedMetadataBlocks)
       } catch (err) {
