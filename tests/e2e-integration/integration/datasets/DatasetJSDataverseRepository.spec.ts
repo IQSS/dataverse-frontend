@@ -290,18 +290,21 @@ describe('Dataset JSDataverse Repository', () => {
       })
   })
 
-  it('gets the DatasetPreview', async () => {
-    await DatasetHelper.destroyAll()
+  it('gets the DatasetPreview', () => {
+    cy.wrap(DatasetHelper.destroyAll()).then(() => {
+      return DatasetHelper.createAndPublish().then((datasetResponse) => {
+        const paginationInfo = new DatasetPaginationInfo(1, 20)
 
-    const datasetResponse = await DatasetHelper.createAndPublish()
-    const paginationInfo = new DatasetPaginationInfo(1, 20)
-
-    await datasetRepository.getAllWithCount('root', paginationInfo).then((datasetsWithCount) => {
-      expect(datasetsWithCount.totalCount).to.equal(1)
-      expect(datasetsWithCount.datasetPreviews[0].version.title).to.equal("Darwin's Finches")
-      expect(datasetsWithCount.datasetPreviews[0].persistentId).to.equal(
-        datasetResponse.persistentId
-      )
+        return datasetRepository
+          .getAllWithCount('root', paginationInfo)
+          .then((datasetsWithCount) => {
+            expect(datasetsWithCount.totalCount).to.equal(1)
+            expect(datasetsWithCount.datasetPreviews[0].version.title).to.equal("Darwin's Finches")
+            expect(datasetsWithCount.datasetPreviews[0].persistentId).to.equal(
+              datasetResponse.persistentId
+            )
+          })
+      })
     })
   })
 
