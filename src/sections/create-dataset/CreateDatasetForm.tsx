@@ -46,6 +46,8 @@ export function CreateDatasetForm({
 
   const form = useForm({ mode: 'onChange' })
 
+  const isSubmitting = form.formState.isSubmitting
+
   const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     navigate(Route.HOME)
@@ -56,11 +58,7 @@ export function CreateDatasetForm({
   }, [isLoading])
 
   const disableSubmitButton = useMemo(() => {
-    return (
-      isErrorLoadingMetadataBlocksToRender ||
-      isLoadingMetadataBlocksToRender ||
-      submissionStatus === SubmissionStatus.IsSubmitting
-    )
+    return isErrorLoadingMetadataBlocksToRender || isLoadingMetadataBlocksToRender || isSubmitting
   }, [isErrorLoadingMetadataBlocksToRender, isLoadingMetadataBlocksToRender, submissionStatus])
 
   return (
@@ -77,7 +75,7 @@ export function CreateDatasetForm({
             {errorLoadingMetadataBlocksToRender}
           </Alert>
         )}
-        {form.formState.isSubmitting && <p>{t('datasetForm.status.submitting')}</p>}
+        {isSubmitting && <p>{t('datasetForm.status.submitting')}</p>}
 
         {submissionStatus === SubmissionStatus.SubmitComplete && (
           <p>{t('datasetForm.status.success')}</p>
@@ -112,7 +110,7 @@ export function CreateDatasetForm({
               variant="secondary"
               type="button"
               onClick={handleCancel}
-              disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
+              disabled={isSubmitting}>
               {t('cancelButton')}
             </Button>
           </Form>
