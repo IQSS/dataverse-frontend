@@ -54,7 +54,7 @@ describe('Datasets List', () => {
     cy.wrap(datasetRepository.getAllWithCount).should(
       'be.calledWith',
       'root',
-      new DatasetPaginationInfo(1, 10, 0).goToPage(6)
+      new DatasetPaginationInfo(1, 10, 200).goToPage(6)
     )
     cy.findByText('51 to 60 of 200 Datasets').should('exist')
   })
