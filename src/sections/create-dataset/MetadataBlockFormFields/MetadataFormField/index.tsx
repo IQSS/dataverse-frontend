@@ -48,6 +48,9 @@ export const MetadataFormField = ({
   } = metadataFieldInfo
 
   const { control } = useFormContext()
+
+  const rulesToApply = useDefineRules({ metadataFieldInfo })
+
   // Field Name is built by the metadataBlockName (e.g. 'citation') and the metadataField name (e.g. title), and if compound parent name is present, it will be added to the name also
   // e.g. citation.title or citation.author.authorName
   const builtFieldName = useMemo(
@@ -69,8 +72,6 @@ export const MetadataFormField = ({
     controlledVocabularyValues.length > 0
 
   const isSafePrimitive = typeClass === TypeClassMetadataFieldOptions.Primitive
-
-  const rulesToApply = useDefineRules({ metadataFieldInfo })
 
   if (isSafeCompound) {
     return (

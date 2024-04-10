@@ -845,6 +845,21 @@ export class MetadataBlockInfoMother {
                 displayOrder: 54
               }
             }
+          },
+          notesText: {
+            name: 'notesText',
+            displayName: 'Notes',
+            title: 'Notes',
+            type: 'TEXTBOX',
+            typeClass: 'primitive',
+            watermark: '',
+            description: 'Additional information about the Dataset',
+            multiple: false,
+            isControlledVocabulary: false,
+            displayFormat: '',
+            isRequired: false,
+            displayOrder: 33,
+            displayOnCreate: true
           }
         }
       },
@@ -852,7 +867,7 @@ export class MetadataBlockInfoMother {
         id: 4,
         name: 'astrophysics',
         displayName: 'Astronomy and Astrophysics Metadata',
-        displayOnCreate: false,
+        displayOnCreate: true,
         metadataFields: {
           astroType: {
             name: 'astroType',
