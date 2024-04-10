@@ -2,7 +2,7 @@ import { DatasetRepository } from '../../../../../src/dataset/domain/repositorie
 import { DatasetsList } from '../../../../../src/sections/collection/datasets-list/DatasetsList'
 import { DatasetPreviewMother } from '../../../dataset/domain/models/DatasetPreviewMother'
 import { DatasetPreview } from '@iqss/dataverse-client-javascript'
-//import { DatasetPaginationInfo } from '../../../../../src/dataset/domain/models/DatasetPaginationInfo'
+import { DatasetPaginationInfo } from '../../../../../src/dataset/domain/models/DatasetPaginationInfo'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const totalDatasetsCount = 200
@@ -10,7 +10,6 @@ const datasets = DatasetPreviewMother.createMany(totalDatasetsCount)
 const datasetsWithCount = { datasetPreviews: datasets, totalCount: totalDatasetsCount }
 describe('Datasets List', () => {
   beforeEach(() => {
-    datasetRepository.getAll = cy.stub().resolves(datasets)
     datasetRepository.getAllWithCount = cy.stub().resolves(datasetsWithCount)
   })
 
@@ -34,13 +33,12 @@ describe('Datasets List', () => {
 
   it('renders the datasets list', () => {
     cy.customMount(<DatasetsList datasetRepository={datasetRepository} collectionId="root" />)
-    /*  Commented out because of the assertion fails, even though the test passes,
-        and the stub is called
+
     cy.wrap(datasetRepository.getAllWithCount).should(
       'be.calledOnceWith',
       'root',
-      new DatasetPaginationInfo(1, 10, totalDatasetsCount)
-    ) */
+      new DatasetPaginationInfo(1, 10, 0)
+    )
     cy.findByText('1 to 10 of 200 Datasets').should('exist')
     datasets.forEach((dataset) => {
       cy.findByText(dataset.version.title)
@@ -53,7 +51,11 @@ describe('Datasets List', () => {
     cy.customMount(<DatasetsList datasetRepository={datasetRepository} collectionId="root" />)
 
     cy.findByRole('button', { name: '6' }).click()
-
+    cy.wrap(datasetRepository.getAllWithCount).should(
+      'be.calledWith',
+      'root',
+      new DatasetPaginationInfo(1, 10, 0).goToPage(6)
+    )
     cy.findByText('51 to 60 of 200 Datasets').should('exist')
   })
 
@@ -61,7 +63,11 @@ describe('Datasets List', () => {
     cy.customMount(
       <DatasetsList datasetRepository={datasetRepository} page={5} collectionId="root" />
     )
-
+    cy.wrap(datasetRepository.getAllWithCount).should(
+      'be.calledWith',
+      'root',
+      new DatasetPaginationInfo(1, 10, 0).goToPage(5)
+    )
     cy.findByText('41 to 50 of 200 Datasets').should('exist')
   })
 
