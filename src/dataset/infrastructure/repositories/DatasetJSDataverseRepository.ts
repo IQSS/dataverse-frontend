@@ -22,9 +22,7 @@ import {
   WriteError
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
-import { TotalDatasetsCount } from '../../domain/models/TotalDatasetsCount'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
-import { DatasetPreview } from '../../domain/models/DatasetPreview'
 import { JSDatasetPreviewMapper } from '../mappers/JSDatasetPreviewMapper'
 import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
 import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
@@ -33,25 +31,6 @@ import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 const includeDeaccessioned = true
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
-  getAll(collectionId: string, paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
-    return getAllDatasetPreviews
-      .execute(paginationInfo.pageSize, paginationInfo.offset, collectionId)
-      .then((subset: DatasetPreviewSubset) => {
-        return subset.datasetPreviews.map((datasetPreview: JSDatasetPreview) =>
-          JSDatasetPreviewMapper.toDatasetPreview(datasetPreview)
-        )
-      })
-  }
-
-  getTotalDatasetsCount(collectionId: string): Promise<TotalDatasetsCount> {
-    // TODO: refactor this so we don't make the same call twice?
-    return getAllDatasetPreviews
-      .execute(10, 0, collectionId)
-      .then((subset: DatasetPreviewSubset) => {
-        return subset.totalDatasetCount
-      })
-  }
-
   getAllWithCount(
     collectionId: string,
     paginationInfo: DatasetPaginationInfo
