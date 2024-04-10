@@ -77,9 +77,7 @@ export function CreateDatasetForm({
             {errorLoadingMetadataBlocksToRender}
           </Alert>
         )}
-        {submissionStatus === SubmissionStatus.IsSubmitting && (
-          <p>{t('datasetForm.status.submitting')}</p>
-        )}
+        {form.formState.isSubmitting && <p>{t('datasetForm.status.submitting')}</p>}
 
         {submissionStatus === SubmissionStatus.SubmitComplete && (
           <p>{t('datasetForm.status.success')}</p>

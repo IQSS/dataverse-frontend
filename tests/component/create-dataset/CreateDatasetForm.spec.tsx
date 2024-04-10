@@ -9,6 +9,39 @@ const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataB
 const collectionMetadataBlocksInfo =
   MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue()
 
+const fillRequiredFields = () => {
+  cy.findByLabelText(/^Title/i).type('Test Dataset Title')
+  cy.findByText('Author')
+    .closest('.row')
+    .within(() => {
+      cy.findByLabelText(/^Name/i).type('Test author name')
+    })
+
+  cy.findByText('Point of Contact')
+    .closest('.row')
+    .within(() => {
+      cy.findByLabelText(/^E-mail/i).type('test@test.com')
+    })
+
+  cy.findByText('Description')
+    .closest('.row')
+    .within(() => {
+      cy.findByLabelText(/^Text/i).type('Test description text')
+    })
+  cy.findByText('Subject')
+    .closest('.row')
+    .within(() => {
+      cy.findByLabelText(/^Arts and Humanities/i).check()
+      cy.findByLabelText(/^Arts and Humanities/i).uncheck()
+      cy.findByLabelText(/^Arts and Humanities/i).check()
+    })
+  cy.findByText('Producer')
+    .closest('.row')
+    .within(() => {
+      cy.findByLabelText(/^Name/i).type('Test producer name')
+    })
+}
+
 describe('Create Dataset', () => {
   beforeEach(() => {
     datasetRepository.create = cy.stub().resolves({ persistentId: 'persistentId' })
@@ -153,6 +186,7 @@ describe('Create Dataset', () => {
     cy.findByText('Point of Contact E-mail is required').should('exist')
     cy.findByText('Description Text is required').should('exist')
     cy.findByText('Subject is required').should('exist')
+    cy.findByText('Producer Name is required').should('exist')
   })
 
   it('should not display required errors when submitting the form with those fields filled', () => {
@@ -163,31 +197,7 @@ describe('Create Dataset', () => {
       />
     )
 
-    cy.findByLabelText(/^Title/i).type('Test Dataset Title')
-    cy.findByText('Author')
-      .closest('.row')
-      .within(() => {
-        cy.findByLabelText(/^Name/i).type('Test author name')
-      })
-
-    cy.findByText('Point of Contact')
-      .closest('.row')
-      .within(() => {
-        cy.findByLabelText(/^E-mail/i).type('test@test.com')
-      })
-
-    cy.findByText('Description')
-      .closest('.row')
-      .within(() => {
-        cy.findByLabelText(/^Text/i).type('Test description text')
-      })
-    cy.findByText('Subject')
-      .closest('.row')
-      .within(() => {
-        cy.findByLabelText(/^Arts and Humanities/i).check()
-        cy.findByLabelText(/^Arts and Humanities/i).uncheck()
-        cy.findByLabelText(/^Arts and Humanities/i).check()
-      })
+    fillRequiredFields()
 
     cy.findByText(/Save Dataset/i).click()
 
@@ -195,6 +205,7 @@ describe('Create Dataset', () => {
     cy.findByText('Point of Contact E-mail is required').should('not.exist')
     cy.findByText('Description Text is required').should('not.exist')
     cy.findByText('Subject is required').should('not.be.visible')
+    cy.findByText('Producer Name is required').should('not.exist')
   })
 
   it('should show correct errors when filling inputs with invalid formats', () => {
@@ -316,45 +327,34 @@ describe('Create Dataset', () => {
     })
   })
 
-  // it.skip('can submit a valid form', () => {
-  //   cy.customMount(
-  //     <CreateDatasetForm
-  //       repository={datasetRepository}
-  //       metadataBlockInfoRepository={metadataBlockInfoRepository}
-  //     />
-  //   )
+  it('can submit a valid form', () => {
+    // TODO:ME: Can't delay the stub resolve to look for the Submitting... message
 
-  //   cy.findByLabelText(/Title/i).type('Test Dataset Title').and('have.value', 'Test Dataset Title')
+    cy.customMount(
+      <CreateDatasetForm
+        repository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
 
-  //   cy.findByLabelText(/Author Name/i)
-  //     .type('Test author name')
-  //     .and('have.value', 'Test author name')
+    fillRequiredFields()
 
-  //   cy.findByLabelText(/Point of Contact E-mail/i)
-  //     .type('email@test.com')
-  //     .and('have.value', 'email@test.com')
+    cy.findByText(/Save Dataset/i).click()
+    cy.findByText('Form submitted successfully!').should('exist')
+  })
 
-  //   cy.findByLabelText(/Description Text/i)
-  //     .type('Test description text')
-  //     .and('have.value', 'Test description text')
+  it('shows an error message when the submission fails', () => {
+    datasetRepository.create = cy.stub().rejects(new Error('some error'))
+    cy.customMount(
+      <CreateDatasetForm
+        repository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
 
-  //   cy.findByLabelText(/Arts and Humanities/i)
-  //     .check()
-  //     .should('be.checked')
+    fillRequiredFields()
 
-  //   cy.findByText(/Save Dataset/i).click()
-  //   cy.findByText('Form submitted successfully!')
-  // })
-
-  // it.skip('shows an error message when the submission fails', () => {
-  //   datasetRepository.create = cy.stub().rejects()
-  //   cy.customMount(
-  //     <CreateDatasetForm
-  //       repository={datasetRepository}
-  //       metadataBlockInfoRepository={metadataBlockInfoRepository}
-  //     />
-  //   )
-  //   cy.findByText(/Save Dataset/i).click()
-  //   cy.findByText('Error: Submission failed.').should('exist')
-  // })
+    cy.findByText(/Save Dataset/i).click()
+    cy.findByText('Error: Submission failed.').should('exist')
+  })
 })
