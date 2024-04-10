@@ -1,29 +1,12 @@
 export interface MetadataBlockInfo {
-  name: string
-  fields: MetadataBlockInfoFields
-}
-
-export type MetadataBlockInfoFields = Record<string, MetadataFieldInfo>
-
-export interface MetadataFieldInfo {
-  displayFormat: string
-}
-
-export const METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER = '#VALUE'
-export const METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER = '#NAME'
-
-// 👇👇 New types for #336
-// TODO:ME : What to do with types above which are used in dataset page?
-
-export interface MetadataBlockInfo2 {
   id: number
   name: string
   displayName: string
-  metadataFields: Record<string, MetadataField2>
+  metadataFields: Record<string, MetadataField>
   displayOnCreate: boolean // If true, the block will be displayed on the create dataset form
 }
 
-export interface MetadataField2 {
+export interface MetadataField {
   name: string
   displayName: string
   title: string
@@ -37,8 +20,8 @@ export interface MetadataField2 {
   isRequired: boolean
   displayOrder: number
   controlledVocabularyValues?: string[]
-  childMetadataFields?: Record<string, MetadataField2>
-  displayOnCreate: boolean // If true, the field will be displayed on the create metadata block
+  childMetadataFields?: Record<string, MetadataField>
+  displayOnCreate: boolean
 }
 
 export const TypeMetadataFieldOptions = {
@@ -89,3 +72,15 @@ export const DateFormatsOptions = {
 } as const
 
 export type DateFormats = (typeof DateFormatsOptions)[keyof typeof DateFormatsOptions]
+
+export interface MetadataBlockInfoDisplayFormat {
+  name: string
+  fields: MetadataBlockInfoDisplayFormatFields
+}
+
+export type MetadataBlockInfoDisplayFormatFields = Record<string, MetadataFieldInfo>
+
+export type MetadataFieldInfo = Pick<MetadataField, 'displayFormat'>
+
+export const METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER = '#VALUE'
+export const METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER = '#NAME'

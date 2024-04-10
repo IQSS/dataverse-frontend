@@ -3,7 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useDefineRules } from './useDefineRules'
 import {
-  MetadataField2,
+  MetadataField,
   TypeClassMetadataFieldOptions,
   TypeMetadataFieldOptions
 } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
@@ -21,7 +21,7 @@ import {
 import styles from './index.module.scss'
 
 interface Props {
-  metadataFieldInfo: MetadataField2
+  metadataFieldInfo: MetadataField
   metadataBlockName: string
   withinMultipleFieldsGroup?: boolean
   compoundParentName?: string

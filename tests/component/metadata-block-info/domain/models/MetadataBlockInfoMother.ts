@@ -1,11 +1,11 @@
 import {
-  MetadataBlockInfo,
-  MetadataBlockInfo2
+  MetadataBlockInfoDisplayFormat,
+  MetadataBlockInfo
 } from '../../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Dataset'
 
 export class MetadataBlockInfoMother {
-  static create(props?: Partial<MetadataBlockInfo>): MetadataBlockInfo {
+  static create(props?: Partial<MetadataBlockInfoDisplayFormat>): MetadataBlockInfoDisplayFormat {
     return {
       name: MetadataBlockName.CITATION,
       fields: {
@@ -34,7 +34,7 @@ export class MetadataBlockInfoMother {
   }
 
   // Only metadata blocks with displayOnCreate in true
-  static getByCollectionIdDisplayedOnCreateTrue(): MetadataBlockInfo2[] {
+  static getByCollectionIdDisplayedOnCreateTrue(): MetadataBlockInfo[] {
     return [
       {
         id: 1,
@@ -1307,7 +1307,7 @@ export class MetadataBlockInfoMother {
     ]
   }
 
-  static getByCollectionIdDisplayedOnCreateFalse(): MetadataBlockInfo2[] {
+  static getByCollectionIdDisplayedOnCreateFalse(): MetadataBlockInfo[] {
     return [
       {
         id: 1,

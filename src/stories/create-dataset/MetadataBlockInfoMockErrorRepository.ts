@@ -1,11 +1,11 @@
 import {
-  MetadataBlockInfo,
-  MetadataBlockInfo2
+  MetadataBlockInfoDisplayFormat,
+  MetadataBlockInfo
 } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataBlockInfoMockRepository } from './MetadataBlockInfoMockRepository'
 
 export class MetadataBlockInfoMockErrorRepository implements MetadataBlockInfoMockRepository {
-  getByName(_name: string): Promise<MetadataBlockInfo | undefined> {
+  getByName(_name: string): Promise<MetadataBlockInfoDisplayFormat | undefined> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')
@@ -16,7 +16,7 @@ export class MetadataBlockInfoMockErrorRepository implements MetadataBlockInfoMo
   getByColecctionId(
     _collectionId: number | string,
     _onlyDisplayedOnCreate?: boolean
-  ): Promise<MetadataBlockInfo2[]> {
+  ): Promise<MetadataBlockInfo[]> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')

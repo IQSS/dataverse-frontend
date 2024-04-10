@@ -1,12 +1,12 @@
 import { MetadataBlockInfoMother } from '../../../tests/component/metadata-block-info/domain/models/MetadataBlockInfoMother'
 import {
-  MetadataBlockInfo,
-  MetadataBlockInfo2
+  MetadataBlockInfoDisplayFormat,
+  MetadataBlockInfo
 } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 
 export class MetadataBlockInfoMockRepository implements MetadataBlockInfoRepository {
-  getByName(_name: string): Promise<MetadataBlockInfo | undefined> {
+  getByName(_name: string): Promise<MetadataBlockInfoDisplayFormat | undefined> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(MetadataBlockInfoMother.create())
@@ -17,7 +17,7 @@ export class MetadataBlockInfoMockRepository implements MetadataBlockInfoReposit
   getByColecctionId(
     _collectionId: number | string,
     onlyDisplayedOnCreate?: boolean
-  ): Promise<MetadataBlockInfo2[]> {
+  ): Promise<MetadataBlockInfo[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (onlyDisplayedOnCreate) {

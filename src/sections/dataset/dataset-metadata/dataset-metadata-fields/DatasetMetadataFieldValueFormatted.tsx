@@ -2,7 +2,7 @@ import { useMetadataBlockInfo } from '../../metadata-block-info/MetadataBlockInf
 import {
   METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
   METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER,
-  MetadataBlockInfo
+  MetadataBlockInfoDisplayFormat
 } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MarkdownComponent } from '../../markdown/MarkdownComponent'
 import {
@@ -40,7 +40,7 @@ export function DatasetMetadataFieldValueFormatted({
 export function metadataFieldValueToDisplayFormat(
   metadataFieldName: string,
   metadataFieldValue: DatasetMetadataFieldValueModel,
-  metadataBlockInfo?: MetadataBlockInfo
+  metadataBlockInfo?: MetadataBlockInfoDisplayFormat
 ): string {
   const separator = metadataBlockInfo?.fields[metadataFieldName]?.displayFormat ?? ''
 
@@ -75,7 +75,7 @@ function joinObjectValues(obj: object, separator: string): string {
 
 function joinSubFields(
   metadataSubField: DatasetMetadataSubField,
-  metadataBlockInfo?: MetadataBlockInfo
+  metadataBlockInfo?: MetadataBlockInfoDisplayFormat
 ): string {
   return Object.entries(metadataSubField)
     .map(([subFieldName, subFieldValue]) =>

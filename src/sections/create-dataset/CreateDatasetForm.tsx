@@ -62,31 +62,31 @@ export function CreateDatasetForm({
       submissionStatus === SubmissionStatus.IsSubmitting
     )
   }, [isErrorLoadingMetadataBlocksToRender, isLoadingMetadataBlocksToRender, submissionStatus])
-  // TODO:ME:  Move FormProvider to wrapp form only?
+
   return (
-    <FormProvider {...form}>
-      <article>
-        <header className={styles.header}>
-          <h1>{t('pageTitle')}</h1>
-        </header>
-        <SeparationLine />
+    <article>
+      <header className={styles.header}>
+        <h1>{t('pageTitle')}</h1>
+      </header>
+      <SeparationLine />
 
-        <div className={styles.container}>
-          <RequiredFieldText />
-          {isErrorLoadingMetadataBlocksToRender && (
-            <Alert variant="danger" dismissible={false}>
-              {errorLoadingMetadataBlocksToRender}
-            </Alert>
-          )}
-          {submissionStatus === SubmissionStatus.IsSubmitting && (
-            <p>{t('datasetForm.status.submitting')}</p>
-          )}
+      <div className={styles.container}>
+        <RequiredFieldText />
+        {isErrorLoadingMetadataBlocksToRender && (
+          <Alert variant="danger" dismissible={false}>
+            {errorLoadingMetadataBlocksToRender}
+          </Alert>
+        )}
+        {submissionStatus === SubmissionStatus.IsSubmitting && (
+          <p>{t('datasetForm.status.submitting')}</p>
+        )}
 
-          {submissionStatus === SubmissionStatus.SubmitComplete && (
-            <p>{t('datasetForm.status.success')}</p>
-          )}
-          {submissionStatus === SubmissionStatus.Errored && <p>{t('datasetForm.status.failed')}</p>}
+        {submissionStatus === SubmissionStatus.SubmitComplete && (
+          <p>{t('datasetForm.status.success')}</p>
+        )}
+        {submissionStatus === SubmissionStatus.Errored && <p>{t('datasetForm.status.failed')}</p>}
 
+        <FormProvider {...form}>
           <Form onSubmit={form.handleSubmit(submitForm)}>
             {isLoadingMetadataBlocksToRender && <MetadataBlocksSkeleton />}
             {!isLoadingMetadataBlocksToRender && metadataBlocks.length > 0 && (
@@ -118,8 +118,8 @@ export function CreateDatasetForm({
               {t('cancelButton')}
             </Button>
           </Form>
-        </div>
-      </article>
-    </FormProvider>
+        </FormProvider>
+      </div>
+    </article>
   )
 }

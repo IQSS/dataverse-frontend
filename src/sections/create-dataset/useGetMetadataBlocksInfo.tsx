@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getMetadataBlockInfoByCollectionId } from '../../metadata-block-info/domain/useCases/getMetadataBlockInfoByCollectionId'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { MetadataBlockInfo2 } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { MetadataBlockInfo } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { replaceDotKeysWithSlash } from './utils'
 
 interface Props {
@@ -21,7 +21,7 @@ export const useGetMetadataBlocksInfo = ({
   collectionId,
   mode
 }: Props) => {
-  const [metadataBlocks, setMetadataBlocks] = useState<MetadataBlockInfo2[]>([])
+  const [metadataBlocks, setMetadataBlocks] = useState<MetadataBlockInfo[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 

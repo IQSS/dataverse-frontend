@@ -1,5 +1,8 @@
 import { MetadataBlockInfoRepository } from '../../domain/repositories/MetadataBlockInfoRepository'
-import { MetadataBlockInfo, MetadataBlockInfo2 } from '../../domain/models/MetadataBlockInfo'
+import {
+  MetadataBlockInfoDisplayFormat,
+  MetadataBlockInfo
+} from '../../domain/models/MetadataBlockInfo'
 import {
   getMetadataBlockByName,
   getCollectionMetadataBlocks,
@@ -9,7 +12,7 @@ import {
 import { JSMetadataBlockInfoMapper } from '../mappers/JSMetadataBlockInfoMapper'
 
 export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfoRepository {
-  getByName(name: string): Promise<MetadataBlockInfo | undefined> {
+  getByName(name: string): Promise<MetadataBlockInfoDisplayFormat | undefined> {
     return getMetadataBlockByName
       .execute(name)
       .then((jsMetadataBlockInfo: JSMetadataBlockInfo) =>
@@ -23,10 +26,10 @@ export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfo
   getByColecctionId(
     collectionIdOrAlias: number | string,
     onlyDisplayedOnCreate?: boolean
-  ): Promise<MetadataBlockInfo2[]> {
+  ): Promise<MetadataBlockInfo[]> {
     return getCollectionMetadataBlocks
       .execute(collectionIdOrAlias, onlyDisplayedOnCreate)
-      .then((metadataBlocks: MetadataBlockInfo2[]) => {
+      .then((metadataBlocks: MetadataBlockInfo[]) => {
         return metadataBlocks
       })
       .catch((error: ReadError) => {

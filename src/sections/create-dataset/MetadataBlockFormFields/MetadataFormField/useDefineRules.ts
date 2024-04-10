@@ -2,7 +2,7 @@ import { UseControllerProps } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import {
   DateFormatsOptions,
-  MetadataField2,
+  MetadataField,
   TypeMetadataFieldOptions
 } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import {
@@ -14,7 +14,7 @@ import {
 } from '../../../../metadata-block-info/domain/models/fieldValidations'
 
 interface Props {
-  metadataFieldInfo: MetadataField2
+  metadataFieldInfo: MetadataField
 }
 
 /**

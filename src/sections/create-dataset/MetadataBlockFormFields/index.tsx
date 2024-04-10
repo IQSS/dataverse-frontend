@@ -1,8 +1,8 @@
-import { MetadataBlockInfo2 } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { MetadataBlockInfo } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataFormField } from './MetadataFormField'
 
 interface Props {
-  metadataBlock: MetadataBlockInfo2
+  metadataBlock: MetadataBlockInfo
 }
 
 export const MetadataBlockFormFields = ({ metadataBlock }: Props) => {
