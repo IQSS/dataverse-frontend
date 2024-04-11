@@ -69,11 +69,51 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         }
       })
   }
-  /*
-    getDatasetUserPermissions.execute(jsDataset.id).then((jsDatasetPermissions) => {
-        const userPermissions = JSDatasetMapper.toDatasetPermissions(jsDatasetPermissions)
 
-   */
+  private async fetchDatasetDetails(
+    jsDataset: JSDataset,
+    version?: string
+  ): Promise<[JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[]]> {
+    return Promise.all([
+      jsDataset,
+      getDatasetSummaryFieldNames.execute(),
+      getDatasetCitation.execute(jsDataset.id, version, includeDeaccessioned),
+      getDatasetUserPermissions.execute(jsDataset.id),
+      getDatasetLocks.execute(jsDataset.id)
+    ])
+  }
+
+  private async fetchDownloadSizesWithDetails(
+    jsDataset: JSDataset,
+    summaryFieldsNames: string[],
+    citation: string,
+    jsDatasetPermissions: JSDatasetPermissions,
+    jsDatasetLocks: JSDatasetLock[],
+    persistentId: string,
+    version?: string
+  ): Promise<[JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[], number, number]> {
+    return Promise.all([
+      jsDataset,
+      summaryFieldsNames,
+      citation,
+      jsDatasetPermissions,
+      jsDatasetLocks,
+      getDatasetFilesTotalDownloadSize.execute(
+        persistentId,
+        version,
+        FileDownloadSizeMode.ORIGINAL,
+        undefined,
+        includeDeaccessioned
+      ),
+      getDatasetFilesTotalDownloadSize.execute(
+        persistentId,
+        version,
+        FileDownloadSizeMode.ARCHIVAL,
+        undefined,
+        includeDeaccessioned
+      )
+    ])
+  }
 
   getByPersistentId(
     persistentId: string,
@@ -82,15 +122,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   ): Promise<Dataset | undefined> {
     return getDataset
       .execute(persistentId, version, includeDeaccessioned)
-      .then((jsDataset) =>
-        Promise.all([
-          jsDataset,
-          getDatasetSummaryFieldNames.execute(),
-          getDatasetCitation.execute(jsDataset.id, version, includeDeaccessioned),
-          getDatasetUserPermissions.execute(jsDataset.id),
-          getDatasetLocks.execute(jsDataset.id)
-        ])
-      )
+      .then((jsDataset) => this.fetchDatasetDetails(jsDataset, version))
       .then(
         ([jsDataset, summaryFieldsNames, citation, jsDatasetPermissions, jsDatasetLocks]: [
           JSDataset,
@@ -101,27 +133,15 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         ]) => {
           // can't use canDownloadFiles here because it's not retrieved from the API
           if (jsDatasetPermissions.canEditDataset) {
-            return Promise.all([
+            return this.fetchDownloadSizesWithDetails(
               jsDataset,
               summaryFieldsNames,
               citation,
               jsDatasetPermissions,
               jsDatasetLocks,
-              getDatasetFilesTotalDownloadSize.execute(
-                persistentId,
-                version,
-                FileDownloadSizeMode.ORIGINAL,
-                undefined,
-                includeDeaccessioned
-              ),
-              getDatasetFilesTotalDownloadSize.execute(
-                persistentId,
-                version,
-                FileDownloadSizeMode.ARCHIVAL,
-                undefined,
-                includeDeaccessioned
-              )
-            ])
+              persistentId,
+              requestedVersion
+            )
           } else {
             return [
               jsDataset,
