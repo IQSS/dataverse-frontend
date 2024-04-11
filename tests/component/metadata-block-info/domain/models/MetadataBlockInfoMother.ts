@@ -33,7 +33,6 @@ export class MetadataBlockInfoMother {
     }
   }
 
-  // Only metadata blocks with displayOnCreate in true
   static getByCollectionIdDisplayedOnCreateTrue(): MetadataBlockInfo[] {
     return [
       {
