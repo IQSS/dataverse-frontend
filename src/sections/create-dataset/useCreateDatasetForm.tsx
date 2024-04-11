@@ -7,6 +7,7 @@ import { Route } from '../Route.enum'
 
 export enum SubmissionStatus {
   NotSubmitted = 'NotSubmitted',
+  IsSubmitting = 'IsSubmitting',
   SubmitComplete = 'SubmitComplete',
   Errored = 'Errored'
 }
@@ -27,6 +28,8 @@ export function useCreateDatasetForm(repository: DatasetRepository): {
   const navigate = useNavigate()
 
   const submitForm = (formData: FormCollectedValues): void => {
+    setSubmissionStatus(SubmissionStatus.IsSubmitting)
+
     const formDataBackToOriginalKeys = replaceSlashKeysWithDot(formData) as FormCollectedValues
     const formattedFormValues = formatFormValuesToCreateDatasetDTO(formDataBackToOriginalKeys)
 

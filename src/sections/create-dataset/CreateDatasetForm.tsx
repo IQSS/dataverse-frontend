@@ -21,8 +21,6 @@ interface CreateDatasetFormProps {
   collectionId?: string
 }
 
-// TODO:ME : Warns in design system build about namings
-
 export function CreateDatasetForm({
   repository,
   metadataBlockInfoRepository,
@@ -46,8 +44,6 @@ export function CreateDatasetForm({
 
   const form = useForm({ mode: 'onChange' })
 
-  const isSubmitting = form.formState.isSubmitting
-
   const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     navigate(Route.HOME)
@@ -58,7 +54,11 @@ export function CreateDatasetForm({
   }, [isLoading])
 
   const disableSubmitButton = useMemo(() => {
-    return isErrorLoadingMetadataBlocksToRender || isLoadingMetadataBlocksToRender || isSubmitting
+    return (
+      isErrorLoadingMetadataBlocksToRender ||
+      isLoadingMetadataBlocksToRender ||
+      submissionStatus === SubmissionStatus.IsSubmitting
+    )
   }, [isErrorLoadingMetadataBlocksToRender, isLoadingMetadataBlocksToRender, submissionStatus])
 
   return (
@@ -75,7 +75,9 @@ export function CreateDatasetForm({
             {errorLoadingMetadataBlocksToRender}
           </Alert>
         )}
-        {isSubmitting && <p>{t('datasetForm.status.submitting')}</p>}
+        {submissionStatus === SubmissionStatus.IsSubmitting && (
+          <p>{t('datasetForm.status.submitting')}</p>
+        )}
 
         {submissionStatus === SubmissionStatus.SubmitComplete && (
           <p>{t('datasetForm.status.success')}</p>
@@ -110,7 +112,7 @@ export function CreateDatasetForm({
               variant="secondary"
               type="button"
               onClick={handleCancel}
-              disabled={isSubmitting}>
+              disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
               {t('cancelButton')}
             </Button>
           </Form>

@@ -328,8 +328,6 @@ describe('Create Dataset', () => {
   })
 
   it('can submit a valid form', () => {
-    // TODO: Can't delay the stub resolve to asserr the "Submitting..." message
-
     cy.customMount(
       <CreateDatasetForm
         repository={datasetRepository}
