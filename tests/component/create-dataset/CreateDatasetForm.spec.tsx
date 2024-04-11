@@ -169,7 +169,7 @@ describe('Create Dataset', () => {
     })
   })
 
-  it('should display required errors when submitting the form with required fields empty', () => {
+  it('should display required errors and error alert when submitting the form with required fields empty', () => {
     cy.customMount(
       <CreateDatasetForm
         repository={datasetRepository}
@@ -187,9 +187,11 @@ describe('Create Dataset', () => {
     cy.findByText('Description Text is required').should('exist')
     cy.findByText('Subject is required').should('exist')
     cy.findByText('Producer Name is required').should('exist')
+
+    cy.findByText('Validation Error').should('exist')
   })
 
-  it('should not display required errors when submitting the form with those fields filled', () => {
+  it('should not display required errors when submitting the form with required fields filled', () => {
     cy.customMount(
       <CreateDatasetForm
         repository={datasetRepository}
@@ -206,6 +208,8 @@ describe('Create Dataset', () => {
     cy.findByText('Description Text is required').should('not.exist')
     cy.findByText('Subject is required').should('not.be.visible')
     cy.findByText('Producer Name is required').should('not.exist')
+
+    cy.findByText('Validation Error').should('not.exist')
   })
 
   it('should show correct errors when filling inputs with invalid formats', () => {
@@ -243,6 +247,8 @@ describe('Create Dataset', () => {
     // Object Count
     cy.findByLabelText(/Object Count/).type('30.5')
     cy.findByText('Object Count is not a valid integer').should('exist')
+
+    cy.findByText('Validation Error').should('exist')
   })
 
   it('should not show errors when filling inputs with valid formats', () => {
@@ -286,6 +292,8 @@ describe('Create Dataset', () => {
     // Object Count
     cy.findByLabelText(/Object Count/).type('30')
     cy.findByText('Object Count is not a valid integer').should('not.exist')
+
+    cy.findByText('Validation Error').should('not.exist')
   })
 
   it('renders skeleton while loading', () => {

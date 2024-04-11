@@ -43,6 +43,7 @@ export function CreateDatasetForm({
   const { submissionStatus, submitForm } = useCreateDatasetForm(repository)
 
   const form = useForm({ mode: 'onChange' })
+  const formHasErrors = Object.keys(form.formState.errors).length > 0
 
   const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
@@ -82,7 +83,7 @@ export function CreateDatasetForm({
         {submissionStatus === SubmissionStatus.SubmitComplete && (
           <p>{t('datasetForm.status.success')}</p>
         )}
-        {submissionStatus === SubmissionStatus.Errored && (
+        {(submissionStatus === SubmissionStatus.Errored || formHasErrors) && (
           <Alert variant={'danger'} customHeading={t('validationAlert.title')} dismissible={false}>
             {t('validationAlert.content')}
           </Alert>
