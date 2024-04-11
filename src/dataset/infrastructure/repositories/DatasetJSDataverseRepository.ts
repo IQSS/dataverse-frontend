@@ -31,6 +31,17 @@ import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
 import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 
 const includeDeaccessioned = true
+type DatasetDetails = [JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[]]
+
+interface IDatasetDetails {
+  jsDataset: JSDataset
+  summaryFieldsNames: string[]
+  citation: string
+  jsDatasetPermissions: JSDatasetPermissions
+  jsDatasetLocks: JSDatasetLock[]
+  jsDatasetFilesTotalOriginalDownloadSize: number
+  jsDatasetFilesTotalArchivalDownloadSize: number
+}
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
   getAll(collectionId: string, paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
@@ -73,31 +84,39 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   private async fetchDatasetDetails(
     jsDataset: JSDataset,
     version?: string
-  ): Promise<[JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[]]> {
+  ): Promise<IDatasetDetails> {
     return Promise.all([
       jsDataset,
       getDatasetSummaryFieldNames.execute(),
       getDatasetCitation.execute(jsDataset.id, version, includeDeaccessioned),
       getDatasetUserPermissions.execute(jsDataset.id),
       getDatasetLocks.execute(jsDataset.id)
-    ])
+    ]).then(
+      ([
+        jsDataset,
+        summaryFieldsNames,
+        citation,
+        jsDatasetPermissions,
+        jsDatasetLocks
+      ]: DatasetDetails) => {
+        return {
+          jsDataset,
+          summaryFieldsNames,
+          citation,
+          jsDatasetPermissions,
+          jsDatasetLocks,
+          jsDatasetFilesTotalOriginalDownloadSize: 0,
+          jsDatasetFilesTotalArchivalDownloadSize: 0
+        }
+      }
+    )
   }
 
-  private async fetchDownloadSizesWithDetails(
-    jsDataset: JSDataset,
-    summaryFieldsNames: string[],
-    citation: string,
-    jsDatasetPermissions: JSDatasetPermissions,
-    jsDatasetLocks: JSDatasetLock[],
+  private async fetchDownloadSizes(
     persistentId: string,
     version?: string
-  ): Promise<[JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[], number, number]> {
+  ): Promise<[number, number]> {
     return Promise.all([
-      jsDataset,
-      summaryFieldsNames,
-      citation,
-      jsDatasetPermissions,
-      jsDatasetLocks,
       getDatasetFilesTotalDownloadSize.execute(
         persistentId,
         version,
@@ -123,77 +142,29 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     return getDataset
       .execute(persistentId, version, includeDeaccessioned)
       .then((jsDataset) => this.fetchDatasetDetails(jsDataset, version))
-      .then(
-        ([jsDataset, summaryFieldsNames, citation, jsDatasetPermissions, jsDatasetLocks]: [
-          JSDataset,
-          string[],
-          string,
-          JSDatasetPermissions,
-          JSDatasetLock[]
-        ]) => {
-          // can't use canDownloadFiles here because it's not retrieved from the API
-          if (jsDatasetPermissions.canEditDataset) {
-            return this.fetchDownloadSizesWithDetails(
-              jsDataset,
-              summaryFieldsNames,
-              citation,
-              jsDatasetPermissions,
-              jsDatasetLocks,
-              persistentId,
-              requestedVersion
-            )
-          } else {
-            return [
-              jsDataset,
-              summaryFieldsNames,
-              citation,
-              jsDatasetPermissions,
-              jsDatasetLocks,
-              0,
-              0
-            ]
-          }
+      .then((datasetDetails) => {
+        if (datasetDetails.jsDatasetPermissions.canEditDataset) {
+          return this.fetchDownloadSizes(persistentId, version).then((downloadSizes) => {
+            datasetDetails.jsDatasetFilesTotalOriginalDownloadSize = downloadSizes[0]
+            datasetDetails.jsDatasetFilesTotalArchivalDownloadSize = downloadSizes[1]
+            return datasetDetails
+          })
+        } else {
+          return datasetDetails
         }
-      )
-      .then(
-        ([
-          jsDataset,
-          summaryFieldsNames,
-          citation,
-          jsDatasetPermissions,
-          jsDatasetLocks,
-          jsDatasetFilesTotalOriginalDownloadSize,
-          jsDatasetFilesTotalArchivalDownloadSize
-        ]: any) => {
-          const tuple: [
-            JSDataset,
-            string[],
-            string,
-            JSDatasetPermissions,
-            JSDatasetLock[],
-            number,
-            number
-          ] = [
-            jsDataset,
-            summaryFieldsNames,
-            citation,
-            jsDatasetPermissions,
-            jsDatasetLocks,
-            jsDatasetFilesTotalOriginalDownloadSize,
-            jsDatasetFilesTotalArchivalDownloadSize
-          ] as [JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[], number, number]
-          return JSDatasetMapper.toDataset(
-            tuple[0],
-            tuple[2],
-            tuple[1],
-            tuple[3],
-            tuple[4],
-            tuple[5],
-            tuple[6],
-            requestedVersion
-          )
-        }
-      )
+      })
+      .then((datasetDetails) => {
+        return JSDatasetMapper.toDataset(
+          datasetDetails.jsDataset,
+          datasetDetails.citation,
+          datasetDetails.summaryFieldsNames,
+          datasetDetails.jsDatasetPermissions,
+          datasetDetails.jsDatasetLocks,
+          datasetDetails.jsDatasetFilesTotalOriginalDownloadSize,
+          datasetDetails.jsDatasetFilesTotalArchivalDownloadSize,
+          requestedVersion
+        )
+      })
       .catch((error: ReadError) => {
         console.error(error)
         if (!version) {
