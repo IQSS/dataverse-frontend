@@ -5,6 +5,7 @@ import { AuthorFormGroup } from '../../sections/create-dataset/AuthorFormGroup'
 import { SubmissionStatus } from '../../sections/create-dataset/useCreateDatasetForm'
 import { initialState } from '../../sections/create-dataset/useDatasetValidator'
 import { DatasetMetadataSubField } from '../../dataset/domain/models/Dataset'
+import { initialDatasetDTO } from '../../../src/dataset/domain/useCases/DTOs/DatasetDTO'
 
 const meta: Meta<typeof AuthorFormGroup> = {
   title: 'Sections/Create Dataset Page/AuthorFormGroup',
@@ -22,6 +23,7 @@ export const Default: Story = {
       initialAuthorFields={
         initialState.metadataBlocks[0].fields['author'] as DatasetMetadataSubField[]
       }
+      validationErrors={initialDatasetDTO}
     />
   )
 }

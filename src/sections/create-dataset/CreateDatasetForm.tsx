@@ -87,7 +87,8 @@ export function CreateDatasetForm({ repository }: CreateDatasetFormProps) {
             updateFormData={updateFormData}
             initialAuthorFields={
               formData.metadataBlocks[0].fields['author'] as DatasetMetadataSubField[]
-            }></AuthorFormGroup>
+            }
+            validationErrors={validationErrors}></AuthorFormGroup>
           <Form.Group controlId="contact-email" required>
             <Form.Group.Label message={t('datasetForm.fields.datasetContactEmail.tooltip')}>
               {t('datasetForm.fields.datasetContactEmail.label')}

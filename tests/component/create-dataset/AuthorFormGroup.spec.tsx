@@ -1,8 +1,9 @@
 import { AuthorFormGroup } from '../../../src/sections/create-dataset/AuthorFormGroup'
 import { SubmissionStatus } from '../../../src/sections/create-dataset/useCreateDatasetForm'
+import { initialDatasetDTO } from '../../../src/dataset/domain/useCases/DTOs/DatasetDTO'
 describe('AuthorFormGroup', () => {
   const initialAuthorFields = [{ authorName: '' }]
-
+  const datasetDTO = initialDatasetDTO
   it('renders and allows adding and removing author fields', () => {
     const updateFormDataMock = cy.stub()
 
@@ -11,6 +12,7 @@ describe('AuthorFormGroup', () => {
         submissionStatus={SubmissionStatus.NotSubmitted}
         initialAuthorFields={initialAuthorFields}
         updateFormData={updateFormDataMock}
+        validationErrors={datasetDTO}
       />
     )
     cy.findByLabelText(/Name/i).should('exist')

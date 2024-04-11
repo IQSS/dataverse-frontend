@@ -8,29 +8,35 @@ import { DynamicFieldsButtons } from './dynamic-fields-buttons/DynamicFieldsButt
 import { ChangeEvent } from 'react'
 import _ from 'lodash'
 import { useMultipleFields } from './useMultipleFields'
+import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
 interface AuthorFormGroupProps {
   submissionStatus: SubmissionStatus
   initialAuthorFields: DatasetMetadataSubField[]
   updateFormData: (name: string, value: string | DatasetMetadataSubField[]) => void
+  validationErrors: DatasetDTO
 }
 
 export function AuthorFormGroup({
   submissionStatus,
   initialAuthorFields,
-  updateFormData
+  updateFormData,
+  validationErrors
 }: AuthorFormGroupProps) {
   const { t } = useTranslation('createDataset')
   const { multipleFields, setMultipleFields, addField, removeField } =
     useMultipleFields(initialAuthorFields)
 
-  const isAuthorValid = (index: number) => {
-    return !!multipleFields[index].authorName
+  const isAuthorInvalid = (index: number) => {
+    const subfieldArray = validationErrors.metadataBlocks[0].fields
+      .author as DatasetMetadataSubField[]
+    const retValue = subfieldArray[index] ? !!subfieldArray[index].authorName : false
+    return retValue
   }
   const handleFieldChange = (index: number, event: ChangeEvent<HTMLInputElement>) => {
     const updatedAuthorFields = _.cloneDeep(multipleFields)
-    updatedAuthorFields[index].authorName = (event.target as HTMLInputElement).value
+    updatedAuthorFields[index].authorName = event.target.value
     setMultipleFields(updatedAuthorFields)
-    updateFormData('metadataBlocks.0.fields.author', multipleFields)
+    updateFormData('metadataBlocks.0.fields.author', updatedAuthorFields)
   }
   const FIRST_AUTHOR = 0
   const initialAuthorFieldState = { authorName: '' }
@@ -60,7 +66,7 @@ export function AuthorFormGroup({
                   onChange={(event: ChangeEvent<HTMLInputElement>) =>
                     handleFieldChange(index, event)
                   }
-                  isInvalid={!isAuthorValid(index)}
+                  isInvalid={isAuthorInvalid(index)}
                   value={author.authorName}
                   required
                 />
