@@ -1,7 +1,9 @@
-import { ChangeEvent } from 'react'
+import { useMemo } from 'react'
+import { Controller, useFormContext } from 'react-hook-form'
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
+import { useDefineRules } from './useDefineRules'
 import {
-  MetadataField2,
+  MetadataField,
   TypeClassMetadataFieldOptions,
   TypeMetadataFieldOptions
 } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
@@ -19,27 +21,45 @@ import {
 import styles from './index.module.scss'
 
 interface Props {
-  metadataFieldInfo: MetadataField2
-  onChangeField: <T extends HTMLElement>(event: ChangeEvent<T>) => void
+  metadataFieldInfo: MetadataField
+  metadataBlockName: string
   withinMultipleFieldsGroup?: boolean
+  compoundParentName?: string
 }
 
 export const MetadataFormField = ({
   metadataFieldInfo,
-  onChangeField,
-  withinMultipleFieldsGroup = false
+  metadataBlockName,
+  withinMultipleFieldsGroup = false,
+  compoundParentName
 }: Props) => {
   const {
     name,
     type,
     title,
+    displayName,
     multiple,
     typeClass,
     isRequired,
     description,
+    watermark,
     childMetadataFields,
     controlledVocabularyValues
   } = metadataFieldInfo
+
+  const { control } = useFormContext()
+
+  const rulesToApply = useDefineRules({ metadataFieldInfo })
+
+  // Field Name is built by the metadataBlockName (e.g. 'citation') and the metadataField name (e.g. title), and if compound parent name is present, it will be added to the name also
+  // e.g. citation.title or citation.author.authorName
+  const builtFieldName = useMemo(
+    () =>
+      compoundParentName
+        ? `${metadataBlockName}.${compoundParentName}.${name}`
+        : `${metadataBlockName}.${name}`,
+    [metadataBlockName, compoundParentName, name]
+  )
 
   const isSafeCompound =
     typeClass === TypeClassMetadataFieldOptions.Compound &&
@@ -66,7 +86,8 @@ export const MetadataFormField = ({
               return (
                 <MetadataFormField
                   metadataFieldInfo={childMetadataFieldInfo}
-                  onChangeField={onChangeField}
+                  metadataBlockName={metadataBlockName}
+                  compoundParentName={name}
                   withinMultipleFieldsGroup
                   key={childMetadataFieldKey}
                 />
@@ -83,106 +104,115 @@ export const MetadataFormField = ({
       return (
         <VocabularyMultiple
           title={title}
-          name={name}
+          name={builtFieldName}
+          displayName={displayName}
           description={description}
           options={controlledVocabularyValues}
-          onChange={onChangeField<HTMLInputElement>}
           isRequired={isRequired}
-          isInvalid={false}
-          disabled={false}
+          control={control}
         />
       )
     }
     return (
-      <Form.Group controlId={name} required={isRequired} as={withinMultipleFieldsGroup ? Col : Row}>
-        <Form.Group.Label message={description}>{title}</Form.Group.Label>
-        <Vocabulary
-          name={name}
-          onChange={onChangeField<HTMLSelectElement>}
-          disabled={false}
-          isInvalid={false}
-          options={controlledVocabularyValues}
-        />
-        <Form.Group.Feedback type="invalid">
-          Automatically get error from the validation library (Field is required, Field should have
-          bla blah, etc.)
-        </Form.Group.Feedback>
-      </Form.Group>
+      <Controller
+        name={builtFieldName}
+        control={control}
+        rules={rulesToApply}
+        render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => (
+          <Form.Group
+            controlId={name}
+            required={isRequired}
+            as={withinMultipleFieldsGroup ? Col : Row}>
+            <Form.Group.Label message={description}>{title}</Form.Group.Label>
+            <Vocabulary
+              onChange={onChange}
+              isInvalid={invalid}
+              options={controlledVocabularyValues}
+              ref={ref}
+            />
+            <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+          </Form.Group>
+        )}
+      />
     )
   }
 
   if (isSafePrimitive) {
-    // Default to a primitive always
     return (
-      <Form.Group
-        controlId={name}
-        required={isRequired}
-        as={withinMultipleFieldsGroup ? Col : undefined}>
-        <Form.Group.Label message={description}>{title}</Form.Group.Label>
-        <>
-          {type === TypeMetadataFieldOptions.Text && (
-            <TextField
-              name={name}
-              onChange={onChangeField<HTMLInputElement>}
-              disabled={false}
-              isInvalid={false}
-            />
-          )}
-          {type === TypeMetadataFieldOptions.Textbox && (
-            <TextBoxField
-              name={name}
-              onChange={onChangeField<HTMLTextAreaElement>}
-              disabled={false}
-              isInvalid={false}
-            />
-          )}
-          {type === TypeMetadataFieldOptions.URL && (
-            <UrlField
-              name={name}
-              onChange={onChangeField<HTMLInputElement>}
-              disabled={false}
-              isInvalid={false}
-            />
-          )}
-          {type === TypeMetadataFieldOptions.Email && (
-            <EmailField
-              name={name}
-              onChange={onChangeField<HTMLInputElement>}
-              disabled={false}
-              isInvalid={false}
-            />
-          )}
-          {type === TypeMetadataFieldOptions.Int && (
-            <IntField
-              name={name}
-              onChange={onChangeField<HTMLInputElement>}
-              disabled={false}
-              isInvalid={false}
-            />
-          )}
-          {type === TypeMetadataFieldOptions.Float && (
-            <FloatField
-              name={name}
-              onChange={onChangeField<HTMLInputElement>}
-              disabled={false}
-              isInvalid={false}
-            />
-          )}
-          {type === TypeMetadataFieldOptions.Date && (
-            <DateField
-              name={name}
-              onChange={onChangeField<HTMLInputElement>}
-              disabled={false}
-              isInvalid={false}
-            />
-          )}
-        </>
+      <Controller
+        name={builtFieldName}
+        control={control}
+        rules={rulesToApply}
+        render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => (
+          <Form.Group
+            controlId={name}
+            required={isRequired}
+            as={withinMultipleFieldsGroup ? Col : undefined}>
+            <Form.Group.Label message={description}>{title}</Form.Group.Label>
 
-        <Form.Group.Feedback type="invalid">
-          Automatically get error from the validation library (Field is required, Field should have
-          bla blah, etc.)
-        </Form.Group.Feedback>
-      </Form.Group>
+            <>
+              {type === TypeMetadataFieldOptions.Text && (
+                <TextField
+                  onChange={onChange}
+                  isInvalid={invalid}
+                  placeholder={watermark}
+                  ref={ref}
+                />
+              )}
+              {type === TypeMetadataFieldOptions.Textbox && (
+                <TextBoxField
+                  onChange={onChange}
+                  isInvalid={invalid}
+                  placeholder={watermark}
+                  ref={ref}
+                />
+              )}
+              {type === TypeMetadataFieldOptions.URL && (
+                <UrlField
+                  onChange={onChange}
+                  isInvalid={invalid}
+                  placeholder={watermark}
+                  ref={ref}
+                />
+              )}
+              {type === TypeMetadataFieldOptions.Email && (
+                <EmailField
+                  onChange={onChange}
+                  isInvalid={invalid}
+                  placeholder={watermark}
+                  ref={ref}
+                />
+              )}
+              {type === TypeMetadataFieldOptions.Int && (
+                <IntField
+                  onChange={onChange}
+                  isInvalid={invalid}
+                  placeholder={watermark}
+                  ref={ref}
+                />
+              )}
+              {type === TypeMetadataFieldOptions.Float && (
+                <FloatField
+                  onChange={onChange}
+                  isInvalid={invalid}
+                  placeholder={watermark}
+                  ref={ref}
+                />
+              )}
+              {type === TypeMetadataFieldOptions.Date && (
+                <DateField
+                  onChange={onChange}
+                  isInvalid={invalid}
+                  placeholder={watermark}
+                  ref={ref}
+                />
+              )}
+            </>
+
+            <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+          </Form.Group>
+        )}
+      />
     )
   }
 

@@ -1,21 +1,24 @@
 import { Form } from '@iqss/dataverse-design-system'
+import { forwardRef } from 'react'
 
 interface Props {
-  name: string
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   isInvalid: boolean
-  disabled: boolean
+  placeholder: string
 }
 
-export const TextField = ({ name, onChange, isInvalid, disabled, ...props }: Props) => {
+export const TextField = forwardRef(function TextField(
+  { onChange, isInvalid, placeholder, ...props }: Props,
+  ref
+) {
   return (
     <Form.Group.Input
       type="text"
-      name={name}
-      disabled={disabled}
       onChange={onChange}
       isInvalid={isInvalid}
+      placeholder={placeholder}
+      ref={ref}
       {...props}
     />
   )
-}
+})

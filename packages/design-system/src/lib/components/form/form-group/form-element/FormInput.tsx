@@ -14,16 +14,19 @@ interface FormInputProps extends React.HTMLAttributes<FormInputElement> {
   disabled?: boolean
 }
 
-export function FormInput({
-  type = 'text',
-  name,
-  readOnly,
-  isValid,
-  isInvalid,
-  disabled,
-  withinMultipleFieldsGroup,
-  ...props
-}: FormInputProps) {
+export const FormInput = React.forwardRef(function FormInput(
+  {
+    type = 'text',
+    name,
+    readOnly,
+    isValid,
+    isInvalid,
+    disabled,
+    withinMultipleFieldsGroup,
+    ...props
+  }: FormInputProps,
+  ref
+) {
   return (
     <FormElementLayout
       withinMultipleFieldsGroup={withinMultipleFieldsGroup}
@@ -37,8 +40,9 @@ export function FormInput({
         isValid={isValid}
         isInvalid={isInvalid}
         disabled={disabled}
+        ref={ref as React.ForwardedRef<HTMLInputElement>}
         {...props}
       />
     </FormElementLayout>
   )
-}
+})

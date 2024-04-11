@@ -1,18 +1,16 @@
-import { ChangeEvent, FormEvent, MouseEvent, useEffect } from 'react'
+import { MouseEvent, useEffect, useMemo } from 'react'
 import { Form, Accordion, Alert, Button } from '@iqss/dataverse-design-system'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { FormProvider, useForm } from 'react-hook-form'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
-// import { useCreateDatasetForm, SubmissionStatus } from './useCreateDatasetForm'
+import { useCreateDatasetForm, SubmissionStatus } from './useCreateDatasetForm'
 import { useLoading } from '../loading/LoadingContext'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-// import { useDatasetFormData } from './useDatasetFormData'
 import { Route } from '../Route.enum'
-// import { useDatasetValidator } from './useDatasetValidator'
 import { useGetMetadataBlocksInfo } from './useGetMetadataBlocksInfo'
-// import { DatasetMetadataSubField } from '../../dataset/domain/models/Dataset'
 import { MetadataBlockFormFields } from './MetadataBlockFormFields'
 import { MetadataBlocksSkeleton } from './MetadataBlocksSkeleton'
 import styles from './CreateDatasetForm.module.scss'
@@ -20,11 +18,13 @@ import styles from './CreateDatasetForm.module.scss'
 interface CreateDatasetFormProps {
   repository: DatasetRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
+  collectionId?: string
 }
 
 export function CreateDatasetForm({
-  repository: _repository,
-  metadataBlockInfoRepository
+  repository,
+  metadataBlockInfoRepository,
+  collectionId = 'root'
 }: CreateDatasetFormProps) {
   const navigate = useNavigate()
   const { t } = useTranslation('createDataset')
@@ -35,29 +35,14 @@ export function CreateDatasetForm({
     error: errorLoadingMetadataBlocksToRender
   } = useGetMetadataBlocksInfo({
     metadataBlockInfoRepository,
-    collectionId: 'someCollectionId', // TODO:ME Get collection id from url?
+    collectionId,
     mode: 'create'
   })
+
   const isErrorLoadingMetadataBlocksToRender = Boolean(errorLoadingMetadataBlocksToRender)
-  // const { validationErrors, datasetIsValid } = useDatasetValidator()
-  // const { formData, updateFormData } = useDatasetFormData(datasetIsValid)
-  // const { submissionStatus, submitForm } = useCreateDatasetForm(repository, datasetIsValid)
+  const { submissionStatus, submitForm } = useCreateDatasetForm(repository)
 
-  const handleFieldChange = <T extends HTMLElement>(event: ChangeEvent<T>) => {
-    // Cast event.target to HTMLInputElement or HTMLSelectElement or HTMLTextAreaElement
-    const target = event.target as unknown as
-      | HTMLInputElement
-      | HTMLSelectElement
-      | HTMLTextAreaElement
-    const { name: _name, type } = target
-    const _value = type === 'checkbox' && 'checked' in target && !target.checked ? '' : target.value
-
-    // updateFormData(name, value)
-  }
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-  }
+  const form = useForm({ mode: 'onChange' })
 
   const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
@@ -67,6 +52,14 @@ export function CreateDatasetForm({
   useEffect(() => {
     setIsLoading(false)
   }, [isLoading])
+
+  const disableSubmitButton = useMemo(() => {
+    return (
+      isErrorLoadingMetadataBlocksToRender ||
+      isLoadingMetadataBlocksToRender ||
+      submissionStatus === SubmissionStatus.IsSubmitting
+    )
+  }, [isErrorLoadingMetadataBlocksToRender, isLoadingMetadataBlocksToRender, submissionStatus])
 
   return (
     <article>
@@ -82,47 +75,48 @@ export function CreateDatasetForm({
             {errorLoadingMetadataBlocksToRender}
           </Alert>
         )}
-        {/* {submissionStatus === SubmissionStatus.IsSubmitting && (
+        {submissionStatus === SubmissionStatus.IsSubmitting && (
           <p>{t('datasetForm.status.submitting')}</p>
         )}
+
         {submissionStatus === SubmissionStatus.SubmitComplete && (
           <p>{t('datasetForm.status.success')}</p>
         )}
-        {submissionStatus === SubmissionStatus.Errored && <p>{t('datasetForm.status.failed')}</p>} */}
-        <Form onSubmit={handleSubmit}>
-          {/* METADATA BLOCKS */}
-          {isLoadingMetadataBlocksToRender && <MetadataBlocksSkeleton />}
-          {!isLoadingMetadataBlocksToRender && metadataBlocks.length > 0 && (
-            <Accordion defaultActiveKey="0" data-testid="metadatablocks-accordion">
-              {metadataBlocks.map((metadataBlock, index) => (
-                <Accordion.Item eventKey={index.toString()} key={metadataBlock.id}>
-                  <Accordion.Header>{metadataBlock.displayName}</Accordion.Header>
-                  <Accordion.Body>
-                    <MetadataBlockFormFields
-                      metadataBlock={metadataBlock}
-                      onChangeField={handleFieldChange}
-                    />
-                  </Accordion.Body>
-                </Accordion.Item>
-              ))}
-            </Accordion>
-          )}
+        {submissionStatus === SubmissionStatus.Errored && <p>{t('datasetForm.status.failed')}</p>}
 
-          <SeparationLine />
-          <Alert variant={'info'} customHeading={t('metadataTip.title')} dismissible={false}>
-            {t('metadataTip.content')}
-          </Alert>
-          <Button
-            type="submit"
-            disabled={isErrorLoadingMetadataBlocksToRender || isLoadingMetadataBlocksToRender}
-            // disabled={submissionStatus === SubmissionStatus.IsSubmitting}
-          >
-            {t('saveButton')}
-          </Button>
-          <Button withSpacing variant="secondary" type="button" onClick={handleCancel}>
-            {t('cancelButton')}
-          </Button>
-        </Form>
+        <FormProvider {...form}>
+          <Form onSubmit={form.handleSubmit(submitForm)}>
+            {isLoadingMetadataBlocksToRender && <MetadataBlocksSkeleton />}
+            {!isLoadingMetadataBlocksToRender && metadataBlocks.length > 0 && (
+              <Accordion defaultActiveKey="0" data-testid="metadatablocks-accordion">
+                {metadataBlocks.map((metadataBlock, index) => (
+                  <Accordion.Item eventKey={index.toString()} key={metadataBlock.id}>
+                    <Accordion.Header>{metadataBlock.displayName}</Accordion.Header>
+                    <Accordion.Body>
+                      <MetadataBlockFormFields metadataBlock={metadataBlock} />
+                    </Accordion.Body>
+                  </Accordion.Item>
+                ))}
+              </Accordion>
+            )}
+
+            <SeparationLine />
+            <Alert variant={'info'} customHeading={t('metadataTip.title')} dismissible={false}>
+              {t('metadataTip.content')}
+            </Alert>
+            <Button type="submit" disabled={disableSubmitButton}>
+              {t('saveButton')}
+            </Button>
+            <Button
+              withSpacing
+              variant="secondary"
+              type="button"
+              onClick={handleCancel}
+              disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
+              {t('cancelButton')}
+            </Button>
+          </Form>
+        </FormProvider>
       </div>
     </article>
   )
