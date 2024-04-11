@@ -21,7 +21,7 @@ export function DynamicFieldsButtons({
     <div className={styles.container}>
       <Tooltip placement="top" overlay={t('datasetForm.addRowButton')}>
         <div className={styles['overlay-container']}>
-          <Button variant="secondary" onClick={onAddButtonClick}>
+          <Button type="button" variant="secondary" onClick={onAddButtonClick}>
             <Plus className={styles.icon} title="Add" />
           </Button>
         </div>
@@ -29,7 +29,7 @@ export function DynamicFieldsButtons({
       {!originalField && (
         <Tooltip placement="top" overlay={t('datasetForm.deleteRowButton')}>
           <div className={styles['overlay-container']}>
-            <Button variant="secondary" withSpacing onClick={onRemoveButtonClick}>
+            <Button type="button" variant="secondary" withSpacing onClick={onRemoveButtonClick}>
               <Dash className={styles.icon} title="Delete" />
             </Button>
           </div>
