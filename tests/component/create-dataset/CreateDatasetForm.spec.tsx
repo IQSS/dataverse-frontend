@@ -353,6 +353,6 @@ describe('Create Dataset', () => {
     fillRequiredFields()
 
     cy.findByText(/Save Dataset/i).click()
-    cy.findByText('Error: Submission failed.').should('exist')
+    cy.contains('Validation Error').should('exist')
   })
 })

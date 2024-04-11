@@ -11,6 +11,7 @@ export enum AlertMessageKey {
   TERMS_UPDATED = 'termsUpdated',
   THUMBNAIL_UPDATED = 'thumbnailUpdated',
   DATASET_DELETED = 'datasetDeleted',
+  DATASET_CREATED = 'datasetCreated',
   PUBLISH_IN_PROGRESS = 'publishInProgress'
 }
 

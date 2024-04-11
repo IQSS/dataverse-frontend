@@ -1,5 +1,6 @@
 import { ReactElement, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { Dataset } from './Dataset'
 import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { useAnonymized } from './anonymized/AnonymizedContext'
@@ -47,6 +48,9 @@ function DatasetWithSearchParams() {
   const privateUrlToken = searchParams.get('privateUrlToken')
   const searchParamVersion = searchParams.get('version') ?? undefined
   const version = searchParamVersionToDomainVersion(searchParamVersion)
+  const location = useLocation()
+  const state = location.state as { created: boolean } | undefined
+  const created = state?.created ?? false
 
   useEffect(() => {
     if (privateUrlToken) setAnonymizedView(true)
@@ -66,7 +70,7 @@ function DatasetWithSearchParams() {
     <DatasetProvider
       repository={datasetRepository}
       searchParams={{ persistentId: persistentId, version: version }}>
-      <Dataset fileRepository={fileRepository} />
+      <Dataset fileRepository={fileRepository} created={created} />
     </DatasetProvider>
   )
 }
