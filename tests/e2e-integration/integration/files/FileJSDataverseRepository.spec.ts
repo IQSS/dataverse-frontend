@@ -155,7 +155,7 @@ describe('File JSDataverse Repository', () => {
   })
   beforeEach(() => {
     TestsUtils.login()
-    void DatasetHelper.destroyAll()
+    cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
   })
 
   const compareMetadata = (fileMetadata: FileMetadata, expectedFileMetadata: FileMetadata) => {

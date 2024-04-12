@@ -13,7 +13,7 @@ describe('File', () => {
   })
   describe('Visit the File Page as a logged in user', () => {
     beforeEach(async () => {
-      await DatasetHelper.destroyAll()
+      cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
     })
 
     it('successfully loads a file in draft mode', () => {

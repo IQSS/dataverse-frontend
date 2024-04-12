@@ -59,7 +59,7 @@ export class DatasetHelper extends DataverseApiHelper {
     return datasets
   }
 
-  static async destroyAll(): Promise<void> {
+  static async destroyAllDatasets(): Promise<void> {
     const response = await this.request<{
       items: Array<{ global_id: string }>
     }>('/search?q=*&type=dataset&sort=date&order=desc&per_page=500&start=0', 'GET')
@@ -67,6 +67,22 @@ export class DatasetHelper extends DataverseApiHelper {
       await this.destroy(dataset.global_id)
     }
     await this.request<DatasetResponse>('/admin/index/clear-orphans', 'GET')
+  }
+
+  static async destroyAll(): Promise<void> {
+    await this.destroyAllUntilEmpty()
+  }
+  static async destroyAllUntilEmpty(): Promise<void> {
+    let datasetsCount = 0
+    do {
+      await this.destroyAllDatasets()
+      await TestsUtils.wait(1500) // wait for 1.5 seconds
+      const response = await this.request<{ items: Array<{ global_id: string }> }>(
+        '/search?q=*&type=dataset&sort=date&order=desc&per_page=500&start=0',
+        'GET'
+      )
+      datasetsCount = response.items.length
+    } while (datasetsCount > 0)
   }
 
   static async publish(persistentId: string): Promise<{
