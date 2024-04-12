@@ -12,7 +12,7 @@ describe('File', () => {
     TestsUtils.login()
   })
   describe('Visit the File Page as a logged in user', () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
     })
 
