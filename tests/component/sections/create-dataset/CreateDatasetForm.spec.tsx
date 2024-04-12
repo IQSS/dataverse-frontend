@@ -1,5 +1,5 @@
-import { CreateDatasetForm } from '../../../src/sections/create-dataset/CreateDatasetForm'
-import { DatasetRepository } from '../../../src/dataset/domain/repositories/DatasetRepository'
+import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
+import { CreateDatasetForm } from '../../../../src/sections/create-dataset/CreateDatasetForm'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 describe('Create Dataset', () => {
