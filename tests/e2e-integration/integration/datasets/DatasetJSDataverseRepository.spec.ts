@@ -291,7 +291,7 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets the DatasetPreview', () => {
-    cy.wrap(DatasetHelper.destroyAll()).then(() => {
+    cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 }).then(() => {
       return DatasetHelper.createAndPublish().then((datasetResponse) => {
         const paginationInfo = new DatasetPaginationInfo(1, 20)
 
