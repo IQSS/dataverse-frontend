@@ -1,10 +1,18 @@
-import { Accordion as AccordionBS, AccordionProps as AccordionPropsBS } from 'react-bootstrap'
+import { ReactNode } from 'react'
+import { Accordion as AccordionBS } from 'react-bootstrap'
 import { AccordionItem } from './AccordionItem'
 import { AccordionBody } from './AccordionBody'
 import { AccordionHeader } from './AccordionHeader'
-function Accordion({ alwaysOpen = false, children, ...rest }: AccordionPropsBS) {
+
+interface AccordionProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
+  defaultActiveKey?: string[] | string
+  alwaysOpen?: boolean
+  children: ReactNode
+}
+
+function Accordion({ defaultActiveKey, alwaysOpen = false, children, ...rest }: AccordionProps) {
   return (
-    <AccordionBS alwaysOpen={alwaysOpen} {...rest}>
+    <AccordionBS defaultActiveKey={defaultActiveKey} alwaysOpen={alwaysOpen} {...rest}>
       {children}
     </AccordionBS>
   )
