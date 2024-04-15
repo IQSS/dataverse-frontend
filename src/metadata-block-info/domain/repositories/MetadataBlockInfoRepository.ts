@@ -2,8 +2,8 @@ import { MetadataBlockInfoDisplayFormat, MetadataBlockInfo } from '../models/Met
 
 export interface MetadataBlockInfoRepository {
   getByName: (name: string) => Promise<MetadataBlockInfoDisplayFormat | undefined>
-  getByColecctionId: (
-    collectionId: number | string,
-    onlyDisplayedOnCreate?: boolean
+  getDisplayedOnCreateByCollectionId: (
+    collectionId: number | string
   ) => Promise<MetadataBlockInfo[]>
+  getByColecctionId: (collectionId: number | string) => Promise<MetadataBlockInfo[]>
 }

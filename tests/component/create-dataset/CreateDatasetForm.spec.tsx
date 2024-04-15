@@ -46,7 +46,9 @@ const fillRequiredFields = () => {
 describe('Create Dataset', () => {
   beforeEach(() => {
     datasetRepository.create = cy.stub().resolves({ persistentId: 'persistentId' })
-    metadataBlockInfoRepository.getByColecctionId = cy.stub().resolves(collectionMetadataBlocksInfo)
+    metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
+      .stub()
+      .resolves(collectionMetadataBlocksInfo)
   })
 
   it('renders the Create Dataset page and its metadata blocks sections', () => {
@@ -314,7 +316,9 @@ describe('Create Dataset', () => {
 
   describe('When getting collection metadata blocks info fails', () => {
     it('renders error message', () => {
-      metadataBlockInfoRepository.getByColecctionId = cy.stub().rejects(new Error('some error'))
+      metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
+        .stub()
+        .rejects(new Error('some error'))
 
       cy.customMount(
         <CreateDatasetForm
@@ -327,7 +331,9 @@ describe('Create Dataset', () => {
     })
 
     it('disables save button', () => {
-      metadataBlockInfoRepository.getByColecctionId = cy.stub().rejects(new Error('some error'))
+      metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
+        .stub()
+        .rejects(new Error('some error'))
 
       cy.customMount(
         <CreateDatasetForm

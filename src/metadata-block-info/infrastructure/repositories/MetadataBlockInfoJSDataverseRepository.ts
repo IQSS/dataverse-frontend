@@ -23,12 +23,22 @@ export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfo
       })
   }
 
-  getByColecctionId(
-    collectionIdOrAlias: number | string,
-    onlyDisplayedOnCreate?: boolean
+  getByColecctionId(collectionIdOrAlias: number | string): Promise<MetadataBlockInfo[]> {
+    return getCollectionMetadataBlocks
+      .execute(collectionIdOrAlias)
+      .then((metadataBlocks: MetadataBlockInfo[]) => {
+        return metadataBlocks
+      })
+      .catch((error: ReadError) => {
+        throw new Error(error.message)
+      })
+  }
+
+  getDisplayedOnCreateByCollectionId(
+    collectionIdOrAlias: number | string
   ): Promise<MetadataBlockInfo[]> {
     return getCollectionMetadataBlocks
-      .execute(collectionIdOrAlias, onlyDisplayedOnCreate)
+      .execute(collectionIdOrAlias, true)
       .then((metadataBlocks: MetadataBlockInfo[]) => {
         return metadataBlocks
       })

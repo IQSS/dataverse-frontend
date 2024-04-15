@@ -9,10 +9,11 @@ export class MetadataBlockInfoMockLoadingRepository implements MetadataBlockInfo
     return new Promise(() => {})
   }
 
-  getByColecctionId(
-    _collectionId: number | string,
-    _onlyDisplayedOnCreate?: boolean
-  ): Promise<MetadataBlockInfo[]> {
+  getByColecctionId(_collectionId: number | string): Promise<MetadataBlockInfo[]> {
+    return new Promise(() => {})
+  }
+
+  getDisplayedOnCreateByCollectionId(_collectionId: number | string): Promise<MetadataBlockInfo[]> {
     return new Promise(() => {})
   }
 }

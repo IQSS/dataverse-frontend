@@ -13,10 +13,15 @@ export class MetadataBlockInfoMockErrorRepository implements MetadataBlockInfoMo
     })
   }
 
-  getByColecctionId(
-    _collectionId: number | string,
-    _onlyDisplayedOnCreate?: boolean
-  ): Promise<MetadataBlockInfo[]> {
+  getByColecctionId(_collectionId: number | string): Promise<MetadataBlockInfo[]> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, 1000)
+    })
+  }
+
+  getDisplayedOnCreateByCollectionId(_collectionId: number | string): Promise<MetadataBlockInfo[]> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')

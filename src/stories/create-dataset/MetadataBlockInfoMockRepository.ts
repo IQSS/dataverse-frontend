@@ -14,17 +14,18 @@ export class MetadataBlockInfoMockRepository implements MetadataBlockInfoReposit
     })
   }
 
-  getByColecctionId(
-    _collectionId: number | string,
-    onlyDisplayedOnCreate?: boolean
-  ): Promise<MetadataBlockInfo[]> {
+  getByColecctionId(_collectionId: number | string): Promise<MetadataBlockInfo[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        if (onlyDisplayedOnCreate) {
-          resolve(MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue())
-        } else {
-          resolve(MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateFalse())
-        }
+        resolve(MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateFalse())
+      }, 1_000)
+    })
+  }
+
+  getDisplayedOnCreateByCollectionId(_collectionId: number | string): Promise<MetadataBlockInfo[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue())
       }, 1_000)
     })
   }
