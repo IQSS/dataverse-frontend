@@ -37,7 +37,7 @@ describe('Collection JSDataverse Repository', () => {
 
   it('gets the collection by id', async () => {
     const collectionResponse = await CollectionHelper.create('new-collection')
-
+    console.log('collectionResponse', collectionResponse.id)
     await collectionRepository.getById(collectionResponse.id).then((collection) => {
       if (!collection) {
         throw new Error('Collection not found')
