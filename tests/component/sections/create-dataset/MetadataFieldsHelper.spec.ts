@@ -1,7 +1,7 @@
-import { DatasetDTO } from '../../../src/dataset/domain/useCases/DTOs/DatasetDTO'
-import { MetadataBlockInfo } from '../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
-import { MetadataFieldsHelper } from '../../../src/sections/create-dataset/MetadataFieldsHelper'
-import { FormCollectedValues } from '../../../src/sections/create-dataset/useCreateDatasetForm'
+import { DatasetDTO } from '../../../../src/dataset/domain/useCases/DTOs/DatasetDTO'
+import { MetadataBlockInfo } from '../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
+import { MetadataFieldsHelper } from '../../../../src/sections/create-dataset/MetadataFieldsHelper'
+import { FormCollectedValues } from '../../../../src/sections/create-dataset/useCreateDatasetForm'
 
 const sampleObjectWithSlashKeys: FormCollectedValues = {
   blockOne: {
