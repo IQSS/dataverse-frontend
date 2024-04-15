@@ -1,13 +1,50 @@
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
 .container {
   min-height: calc(100vh + 100px);
-  padding:15px;
+  padding: 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
 .empty-message-container {
-  padding: .5em 1em;
+  padding: 0.5em 1em;
   background: $dv-warning-box-color;
+}
+
+// Infinite scroll enabled
+.scrollable-container {
+  --inline-padding: 1rem;
+
+  height: 650px;
+  max-height: 650px;
+  padding-inline: var(--inline-padding);
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+
+  @media screen and (max-width: 768px) {
+    --inline-padding: 8px;
+  }
+
+  @media screen and (min-width: 1280px) {
+    height: 60vh;
+    max-height: 60vh;
+  }
+
+  &--empty-or-error {
+    padding-block: 1rem;
+  }
+
+  .sticky-pagination-results {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    width: calc(100% + (var(--inline-padding) * 2));
+    padding: 1rem var(--inline-padding) 0.5rem;
+    background-color: var(--bs-white);
+    box-shadow: 0 0 10px 0 rgba(0 0 0 / 30%);
+    transform: translateX(calc(var(--inline-padding) * -1));
+  }
 }

@@ -1,10 +1,15 @@
 import { DatasetMockRepository } from './DatasetMockRepository'
 import { DatasetPaginationInfo } from '../../dataset/domain/models/DatasetPaginationInfo'
-import { DatasetPreview } from '../../dataset/domain/models/DatasetPreview'
+import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount'
 
 export class DatasetLoadingMockRepository extends DatasetMockRepository {
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  getAll(collectionId: string, paginationInfo: DatasetPaginationInfo): Promise<DatasetPreview[]> {
+  getDatasetsWithCount: (
+    collectionId: string,
+    paginationInfo: DatasetPaginationInfo
+  ) => Promise<DatasetsWithCount> = (
+    _collectionId: string,
+    _paginationInfo: DatasetPaginationInfo
+  ) => {
     return new Promise(() => {})
   }
 }

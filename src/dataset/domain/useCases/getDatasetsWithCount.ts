@@ -1,13 +1,13 @@
 import { DatasetRepository } from '../repositories/DatasetRepository'
 import { DatasetPaginationInfo } from '../models/DatasetPaginationInfo'
-import { DatasetPreview } from '../models/DatasetPreview'
+import { DatasetsWithCount } from '../models/DatasetsWithCount'
 
-export async function getDatasets(
+export async function getDatasetsWithCount(
   datasetRepository: DatasetRepository,
   collectionId: string,
   paginationInfo: DatasetPaginationInfo
-): Promise<DatasetPreview[]> {
-  return datasetRepository.getAll(collectionId, paginationInfo).catch((error: Error) => {
+): Promise<DatasetsWithCount> {
+  return datasetRepository.getAllWithCount(collectionId, paginationInfo).catch((error: Error) => {
     throw new Error(error.message)
   })
 }

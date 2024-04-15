@@ -62,7 +62,11 @@ export function CreateDatasetForm({ repository }: CreateDatasetFormProps) {
         {submissionStatus === SubmissionStatus.SubmitComplete && (
           <p>{t('datasetForm.status.success')}</p>
         )}
-        {submissionStatus === SubmissionStatus.Errored && <p>{t('datasetForm.status.failed')}</p>}
+        {submissionStatus === SubmissionStatus.Errored && (
+          <Alert variant={'danger'} customHeading={t('validationAlert.title')} dismissible={false}>
+            {t('validationAlert.content')}
+          </Alert>
+        )}
         <Form
           onSubmit={(event: FormEvent<HTMLFormElement>) => {
             handleSubmit(event)

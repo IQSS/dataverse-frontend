@@ -6,10 +6,8 @@ import { DatasetProvider } from '../../sections/dataset/DatasetProvider'
 export const WithDatasetNotFound = (Story: StoryFn) => {
   const datasetRepository = {} as DatasetRepository
   datasetRepository.getByPersistentId = (
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    persistentId: string,
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    version?: string | undefined
+    _persistentId: string,
+    _version?: string | undefined
   ): Promise<Dataset | undefined> => {
     return new Promise((resolve) => {
       setTimeout(() => {

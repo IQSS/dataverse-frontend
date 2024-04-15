@@ -2,6 +2,7 @@
 
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![Tests](https://github.com/IQSS/dataverse-frontend/actions/workflows/test.yml/badge.svg)](https://github.com/IQSS/dataverse-frontend/actions/workflows/test.yml)
+[![Accessibility](https://github.com/IQSS/dataverse-frontend/actions/workflows/accessibility.yml/badge.svg)](https://github.com/IQSS/dataverse-frontend/actions/workflows/accessibility.yml)
 [![Unit Tests Coverage](https://coveralls.io/repos/github/IQSS/dataverse-frontend/badge.svg?branch=develop)](https://coveralls.io/github/IQSS/dataverse-frontend?branch=develop)
 
 ## Demo videos
@@ -272,6 +273,7 @@ We changed the citation block to be white with a colored border, to make the tex
 
 We have introduced an update to the breadcrumb navigation UI. Unlike in the original JSF application, where breadcrumbs
 did not reflect the user's current location within the site, our new SPA design now includes this feature in the breadcrumbs.
+Additionally, we have aligned with best practices by positioning all breadcrumbs at the top, before anything else in the UI.
 
 This update gives users a clear indication of their current position within the application's hierarchy.
 
@@ -286,6 +288,11 @@ The original Dataset JSF page uses Solr to search for files based on the availab
 The new SPA does not use Solr as the API endpoint it uses performs all queries on the database. Filters and search options are available for all versions in the same way, homogenizing behavior, although losing the possibility of using the Solr grammar.
 
 The decision of this change is made on the assumption that Solr may not be required in the context of files tab search, whose search facets are reduced compared to other in-application searches. Therefore, if we find evidence that the assumption is incorrect, we will work on extending the search capabilities to support Solr.
+
+#### Dataverses/Datasets list
+
+The original JSF Dataverses/Datasets list on the home page uses normal paging buttons at the bottom of the list.
+We have implemented infinite scrolling in this list, replacing the normal paging buttons, but the goal would be to be able to toggle between normal paging and infinite scrolling via a toggle setting or button.
 
 ## Publishing the Design System
 
