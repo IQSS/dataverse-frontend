@@ -186,9 +186,9 @@ describe('Dataset', () => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
           cy.findByText('Root').should('exist')
-          cy.findByRole('link', { name: 'Subcollection' }).should('exist').click()
+          cy.findByRole('link', { name: 'Scientific Research' }).should('exist').click()
 
-          cy.findAllByText('Subcollection').should('exist')
+          cy.findAllByText('Scientific Research').should('exist')
         })
     })
   })

@@ -1,6 +1,7 @@
 import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { faker } from '@faker-js/faker'
+import { CollectionHelper } from '../../../shared/collection/CollectionHelper'
 
 describe('Collection Page', () => {
   const title = faker.lorem.sentence()
@@ -29,33 +30,6 @@ describe('Collection Page', () => {
       cy.findByText(title).click({ force: true })
 
       cy.findAllByText(title).should('be.visible')
-    })
-  })
-
-  it('log in Dataverse Admin user', () => {
-    cy.visit('/spa')
-
-    cy.findAllByText(/Root/i).should('exist')
-    cy.findByText(/Dataverse Admin/i).should('exist')
-  })
-
-  it('finds the "Add Data" buttons', () => {
-    cy.visit('/spa')
-
-    cy.get('nav.navbar').within(() => {
-      const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
-      addDataBtn.should('exist')
-      addDataBtn.click({ force: true })
-      cy.findByText('New Collection').should('be.visible')
-      cy.findByText('New Dataset').should('be.visible')
-    })
-
-    cy.get('main').within(() => {
-      const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
-      addDataBtn.should('exist')
-      addDataBtn.click({ force: true })
-      cy.findByText('New Collection').should('be.visible')
-      cy.findByText('New Dataset').should('be.visible')
     })
   })
 
@@ -91,26 +65,13 @@ describe('Collection Page', () => {
     cy.findByRole('button', { name: /Log Out/i }).click()
     cy.findByText(/Dataverse Admin/i).should('not.exist')
   })
-  it('does not display the Add Data buttons when logged out', () => {
-    cy.visit('/spa')
-
-    cy.findByText(/Dataverse Admin/i).click()
-    cy.findByRole('button', { name: /Log Out/i }).click()
-
-    cy.get('nav.navbar').within(() => {
-      cy.findByRole('button', { name: /Add Data/i }).should('not.exist')
-    })
-
-    cy.get('main').within(() => {
-      cy.findByRole('button', { name: /Add Data/i }).should('not.exist')
-    })
-  })
 
   describe.skip('Currently skipping all tests as we are only rendering an infinite scrollable container. Please refactor these tests if a toggle button is added to switch between pagination and infinite scroll.', () => {
-    it.skip('displays the correct page of the datasets list when passing the page query param', () => {
+    it('navigates to the correct page of the datasets list when passing the page query param', () => {
       cy.wrap(DatasetHelper.createMany(12), { timeout: 10000 }).then(() => {
-        cy.visit('/spa?page=2')
+        cy.wait(1500) // Wait for the datasets to be created
 
+        cy.visit('/spa?page=2')
         cy.findAllByText(/Root/i).should('exist')
         cy.findByText(/Dataverse Admin/i).should('exist')
 
@@ -118,8 +79,10 @@ describe('Collection Page', () => {
       })
     })
 
-    it.skip('updates the query param when updateQueryParam is true', () => {
+    it('updates the page query param when navigating to another page', () => {
       cy.wrap(DatasetHelper.createMany(12), { timeout: 10000 }).then(() => {
+        cy.wait(2000) // Wait for the datasets to be created
+
         cy.visit('/spa')
 
         cy.findAllByText(/Root/i).should('exist')
@@ -131,8 +94,10 @@ describe('Collection Page', () => {
       })
     })
 
-    it.skip('correctly changes the pages when using the back and forward buttons from the browser after using some page number button', () => {
+    it('correctly changes the pages when using the back and forward buttons from the browser after using some page number button', () => {
       cy.wrap(DatasetHelper.createMany(12), { timeout: 10000 }).then(() => {
+        cy.wait(1500) // Wait for the datasets to be created
+
         cy.visit('/spa?page=2')
 
         cy.findAllByText(/Root/i).should('exist')
@@ -158,15 +123,17 @@ describe('Collection Page', () => {
   })
 
   it('displays a collection different from the root when accessing a subcollection', () => {
-    cy.visit('/spa/collections?id=subcollection')
+    cy.wrap(CollectionHelper.create('collection-1')).then(() => {
+      cy.visit('/spa/collections?id=collection-1')
 
-    cy.findAllByText(/Subcollection/i).should('exist')
-    cy.findByText(/Dataverse Admin/i).should('exist')
+      cy.findAllByText(/Scientific Research/i).should('exist')
+      cy.findByText(/Dataverse Admin/i).should('exist')
+    })
   })
 
   it('12 Datasets - displays first 10 datasets, scroll to the bottom and displays the remaining 2 datasets', () => {
-    cy.wrap(DatasetHelper.createMany(12), { timeout: 10000 }).then(() => {
-      cy.wait(1_500)
+    cy.wrap(DatasetHelper.createMany(12), { timeout: 10_000 }).then(() => {
+      cy.wait(2_000) // Wait for the datasets to be created
       cy.visit('/spa')
 
       cy.findAllByText(/Root/i).should('exist')

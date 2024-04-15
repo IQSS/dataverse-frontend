@@ -2,12 +2,13 @@ import styles from './File.module.scss'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { Accordion, Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
+import { BreadcrumbsSkeleton } from '../shared/hierarchy/BreadcrumbsSkeleton'
 
 export function FileSkeleton() {
   const { t } = useTranslation('file')
   return (
     <SkeletonTheme>
-      <Skeleton width="20%" style={{ marginBottom: 16 }} />
+      <BreadcrumbsSkeleton />
       <article data-testid="file-skeleton">
         <header className={styles.header}>
           <h1>
