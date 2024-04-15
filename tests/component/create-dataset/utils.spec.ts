@@ -1,11 +1,7 @@
 import { DatasetDTO } from '../../../src/dataset/domain/useCases/DTOs/DatasetDTO'
 import { MetadataBlockInfo } from '../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
+import { MetadataFieldsHelper } from '../../../src/sections/create-dataset/MetadataFieldsHelper'
 import { FormCollectedValues } from '../../../src/sections/create-dataset/useCreateDatasetForm'
-import {
-  formatFormValuesToCreateDatasetDTO,
-  replaceDotNamesKeysWithSlash,
-  replaceSlashKeysWithDot
-} from '../../../src/sections/create-dataset/utils'
 
 const sampleObjectWithSlashKeys: FormCollectedValues = {
   blockOne: {
@@ -287,19 +283,22 @@ const expectedDatasetDTO: DatasetDTO = {
 
 describe('Test create dataset utils', () => {
   it('should replace dot keys with slash', () => {
-    const replacedToSlashObject = replaceDotNamesKeysWithSlash(sampleArrayOfMetadataBlocksInfo)
+    const replacedToSlashObject = MetadataFieldsHelper.replaceDotNamesKeysWithSlash(
+      sampleArrayOfMetadataBlocksInfo
+    )
 
     expect(replacedToSlashObject).to.deep.equal(sampleArrayOfMetadataBlocksInfoWithSlashNames)
   })
 
   it('should replace slash keys with dot', () => {
-    const replacedToKeysObject = replaceSlashKeysWithDot(sampleObjectWithSlashKeys)
+    const replacedToKeysObject =
+      MetadataFieldsHelper.replaceSlashKeysWithDot(sampleObjectWithSlashKeys)
 
     expect(replacedToKeysObject).to.deep.equal(replacedSampleObjectWithSlashKeys)
   })
 
   it('should format form values to create dataset DTO', () => {
-    const datasetDTO = formatFormValuesToCreateDatasetDTO(formValues)
+    const datasetDTO = MetadataFieldsHelper.formatFormValuesToCreateDatasetDTO(formValues)
 
     expect(datasetDTO).to.deep.equal(expectedDatasetDTO)
   })

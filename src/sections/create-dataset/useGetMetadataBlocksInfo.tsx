@@ -3,7 +3,7 @@ import { getMetadataBlockInfoByCollectionId } from '../../metadata-block-info/do
 import { getDisplayedOnCreateMetadataBlockInfoByCollectionId } from '../../metadata-block-info/domain/useCases/getDisplayedOnCreateMetadataBlockInfoByCollectionId'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfo } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { replaceDotNamesKeysWithSlash } from './utils'
+import { MetadataFieldsHelper } from './MetadataFieldsHelper'
 
 interface Props {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
@@ -46,7 +46,8 @@ export const useGetMetadataBlocksInfo = ({
           )
         }
 
-        const mappedMetadataBlocks = replaceDotNamesKeysWithSlash(metadataBlocksInfo)
+        const mappedMetadataBlocks =
+          MetadataFieldsHelper.replaceDotNamesKeysWithSlash(metadataBlocksInfo)
 
         setMetadataBlocks(mappedMetadataBlocks)
       } catch (err) {
