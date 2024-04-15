@@ -3,7 +3,7 @@ export interface MetadataBlockInfo {
   name: string
   displayName: string
   metadataFields: Record<string, MetadataField>
-  displayOnCreate: boolean // If true, the block will be displayed on the create dataset form
+  displayOnCreate: boolean
 }
 
 export interface MetadataField {

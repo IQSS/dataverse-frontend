@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getMetadataBlockInfoByCollectionId } from '../../metadata-block-info/domain/useCases/getMetadataBlockInfoByCollectionId'
+import { getDisplayedOnCreateMetadataBlockInfoByCollectionId } from '../../metadata-block-info/domain/useCases/getDisplayedOnCreateMetadataBlockInfoByCollectionId'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfo } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { replaceDotNamesKeysWithSlash } from './utils'
@@ -9,18 +10,18 @@ interface Props {
   collectionId: string
   mode: 'create' | 'edit'
 }
-/**
- * Hook to get the metadata blocks to show and its info, based on the parent collection id of the dataset
- *
- * @param metadataBlockInfoRepository The repository to get the metadata block info
- * @param collectionId The id of the collection that the dataset belongs to
- * @param mode The mode of the form (create or edit), if edit mode, this hook will return only the metadata blocks that have displayOnCreate set to true
- */
+
+interface UseGetMetadataBlocksInfoReturn {
+  metadataBlocks: MetadataBlockInfo[]
+  error: string | null
+  isLoading: boolean
+}
+
 export const useGetMetadataBlocksInfo = ({
   metadataBlockInfoRepository,
   collectionId,
   mode
-}: Props) => {
+}: Props): UseGetMetadataBlocksInfoReturn => {
   const [metadataBlocks, setMetadataBlocks] = useState<MetadataBlockInfo[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
@@ -31,11 +32,19 @@ export const useGetMetadataBlocksInfo = ({
     const handleGetDatasetMetadataBlockFields = async () => {
       setIsLoading(true)
       try {
-        const metadataBlocksInfo = await getMetadataBlockInfoByCollectionId(
-          metadataBlockInfoRepository,
-          collectionId,
-          onCreateMode
-        )
+        let metadataBlocksInfo: MetadataBlockInfo[]
+
+        if (onCreateMode) {
+          metadataBlocksInfo = await getDisplayedOnCreateMetadataBlockInfoByCollectionId(
+            metadataBlockInfoRepository,
+            collectionId
+          )
+        } else {
+          metadataBlocksInfo = await getMetadataBlockInfoByCollectionId(
+            metadataBlockInfoRepository,
+            collectionId
+          )
+        }
 
         const mappedMetadataBlocks = replaceDotNamesKeysWithSlash(metadataBlocksInfo)
 

@@ -17,13 +17,7 @@ interface Props {
   metadataFieldInfo: MetadataField
 }
 
-/**
- * Define the rules to apply to the metadata field
- * @param metadataFieldInfo Information about the metadata field
- * @returns The rules to apply to the metadata field
- */
-
-export const useDefineRules = ({ metadataFieldInfo }: Props) => {
+export const useDefineRules = ({ metadataFieldInfo }: Props): UseControllerProps['rules'] => {
   const { t } = useTranslation('createDataset')
   const { type, displayName, isRequired, watermark } = metadataFieldInfo
 
