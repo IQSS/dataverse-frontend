@@ -69,7 +69,7 @@ export function CreateDatasetForm({
       </header>
       <SeparationLine />
 
-      <div className={styles.container}>
+      <div>
         <RequiredFieldText />
         {isErrorLoadingMetadataBlocksToRender && (
           <Alert variant="danger" dismissible={false}>
@@ -93,7 +93,7 @@ export function CreateDatasetForm({
           <Form onSubmit={form.handleSubmit(submitForm)}>
             {isLoadingMetadataBlocksToRender && <MetadataBlocksSkeleton />}
             {!isLoadingMetadataBlocksToRender && metadataBlocks.length > 0 && (
-              <Accordion defaultActiveKey="0" data-testid="metadatablocks-accordion">
+              <Accordion defaultActiveKey="0">
                 {metadataBlocks.map((metadataBlock, index) => (
                   <Accordion.Item eventKey={index.toString()} key={metadataBlock.id}>
                     <Accordion.Header>{metadataBlock.displayName}</Accordion.Header>

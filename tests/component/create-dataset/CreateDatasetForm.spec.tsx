@@ -2,6 +2,7 @@ import { CreateDatasetForm } from '../../../src/sections/create-dataset/CreateDa
 import { DatasetRepository } from '../../../src/dataset/domain/repositories/DatasetRepository'
 import { MetadataBlockInfoRepository } from '../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfoMother } from '../metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { TypeMetadataFieldOptions } from '../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -57,16 +58,8 @@ describe('Create Dataset', () => {
     )
     cy.findByText(/Create Dataset/i).should('exist')
 
-    cy.findByTestId('metadatablocks-accordion').should('exist')
-    cy.findByTestId('metadatablocks-accordion').children().should('have.length', 2)
-
-    cy.get('[data-testid="metadatablocks-accordion"] > :nth-child(1)').within((_$accordionItem) => {
-      cy.findByText(/Citation Metadata/i).should('exist')
-    })
-
-    cy.get('[data-testid="metadatablocks-accordion"] > :nth-child(2)').within((_$accordionItem) => {
-      cy.findByText(/Astronomy and Astrophysics Metadata/i).should('exist')
-    })
+    cy.findByText(/Citation Metadata/i).should('exist')
+    cy.findByText(/Astronomy and Astrophysics Metadata/i).should('exist')
   })
 
   it('renders the Citation Meatadata Form Fields correctly', () => {
@@ -77,20 +70,26 @@ describe('Create Dataset', () => {
       />
     )
     // Check the first accordion item content
-    cy.get('[data-testid="metadatablocks-accordion"] > :nth-child(1)').within((_$accordionItem) => {
+    cy.get('.accordion > :nth-child(1)').within((_$accordionItem) => {
       cy.findByText(/Citation Metadata/i).should('exist')
 
       // Title field - required
       cy.findByText('Title').should('exist')
-      cy.findByLabelText(/^Title/i).should('exist')
+
+      cy.findByLabelText(/^Title/i)
+        .should('exist')
+        .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
       cy.findByText('Title').children('div').trigger('mouseover')
       cy.document().its('body').findByText('The main title of the Dataset').should('exist')
 
       // Subtitle field - not required
       cy.findByText('Subtitle').should('exist')
+
       cy.findByLabelText(/^Subtitle/i)
         .should('exist')
-        .should('not.have.attr', 'required')
+        .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
+
+      cy.findByLabelText(/^Subtitle/i).should('not.have.attr', 'required')
       cy.findByText('Subtitle').children('div').trigger('mouseover')
       cy.document()
         .its('body')
@@ -118,28 +117,32 @@ describe('Create Dataset', () => {
 
       // Notes field - TEXTBOX
       cy.findByText('Notes').should('exist')
-      cy.findByLabelText(/Notes/).should('exist')
+      cy.findByLabelText(/Notes/)
+        .should('exist')
+        .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Textbox)
       cy.findByLabelText(/Notes/).should('have.prop', 'tagName', 'TEXTAREA')
 
       // Alternative URL field - URL
       cy.findByText('Alternative URL').should('exist')
-      cy.findByLabelText(/Alternative URL/).should('exist')
-      cy.findAllByTestId('url-field').should('exist')
+      cy.findByLabelText(/Alternative URL/)
+        .should('exist')
+        .should('have.data', 'fieldtype', TypeMetadataFieldOptions.URL)
 
       // E-mail field - EMAIL
       cy.findByText('E-mail').should('exist')
-      cy.findByLabelText(/E-mail/).should('exist')
-      cy.findByTestId('email-field').should('exist')
+      cy.findByLabelText(/E-mail/)
+        .should('exist')
+        .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Email)
 
       // Description.Date field - DATE
       cy.findByText('Date').should('exist')
-      cy.findByLabelText(/Date/).should('exist')
-      cy.findByTestId('date-field').should('exist')
+      cy.findByLabelText(/Date/)
+        .should('exist')
+        .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Date)
     })
 
     // Subject field - VOCABULARY and MULTIPLE
     cy.findByText('Subject').should('exist')
-    cy.findAllByTestId('vocabulary-multiple').should('exist')
 
     cy.findByText(/Save Dataset/i).should('exist')
 
@@ -154,18 +157,20 @@ describe('Create Dataset', () => {
       />
     )
 
-    cy.get('[data-testid="metadatablocks-accordion"] > :nth-child(2)').within((_$accordionItem) => {
+    cy.get('.accordion > :nth-child(2)').within((_$accordionItem) => {
       cy.findByText(/Astronomy and Astrophysics Metadata/i).should('exist')
 
       // Depth Coverage field - FLOAT
       cy.findByText('Depth Coverage').should('exist')
-      cy.findByLabelText(/Depth Coverage/).should('exist')
-      cy.findAllByTestId('float-field').should('exist')
+      cy.findByLabelText(/Depth Coverage/)
+        .should('exist')
+        .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Float)
 
       // Integer Something field - INT
       cy.findByText('Object Count').should('exist')
-      cy.findByLabelText(/Object Count/).should('exist')
-      cy.findByTestId('int-field').should('exist')
+      cy.findByLabelText(/Object Count/)
+        .should('exist')
+        .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Int)
     })
   })
 
