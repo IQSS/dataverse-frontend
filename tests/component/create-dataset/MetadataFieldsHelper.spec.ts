@@ -281,7 +281,7 @@ const expectedDatasetDTO: DatasetDTO = {
   ]
 }
 
-describe('Test create dataset utils', () => {
+describe('Test MetadataFieldsHelper', () => {
   it('should replace dot keys with slash', () => {
     const replacedToSlashObject = MetadataFieldsHelper.replaceDotNamesKeysWithSlash(
       sampleArrayOfMetadataBlocksInfo
