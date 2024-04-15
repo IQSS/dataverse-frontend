@@ -7,17 +7,8 @@ import {
   TypeClassMetadataFieldOptions,
   TypeMetadataFieldOptions
 } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import {
-  DateField,
-  EmailField,
-  FloatField,
-  IntField,
-  TextBoxField,
-  TextField,
-  UrlField,
-  Vocabulary,
-  VocabularyMultiple
-} from './Fields'
+import { Vocabulary } from './Fields/Vocabulary'
+import { VocabularyMultiple } from './Fields/VocabularyMultiple'
 import styles from './index.module.scss'
 
 interface Props {
@@ -51,8 +42,6 @@ export const MetadataFormField = ({
 
   const rulesToApply = useDefineRules({ metadataFieldInfo })
 
-  // Field Name is built by the metadataBlockName (e.g. 'citation') and the metadataField name (e.g. title), and if compound parent name is present, it will be added to the name also
-  // e.g. citation.title or citation.author.authorName
   const builtFieldName = useMemo(
     () =>
       compoundParentName
@@ -151,59 +140,21 @@ export const MetadataFormField = ({
             <Form.Group.Label message={description}>{title}</Form.Group.Label>
 
             <>
-              {type === TypeMetadataFieldOptions.Text && (
-                <TextField
+              {type === TypeMetadataFieldOptions.Textbox ? (
+                <Form.Group.TextArea
                   onChange={onChange}
                   isInvalid={invalid}
                   placeholder={watermark}
+                  data-fieldtype={type}
                   ref={ref}
                 />
-              )}
-              {type === TypeMetadataFieldOptions.Textbox && (
-                <TextBoxField
+              ) : (
+                <Form.Group.Input
+                  type="text"
                   onChange={onChange}
                   isInvalid={invalid}
                   placeholder={watermark}
-                  ref={ref}
-                />
-              )}
-              {type === TypeMetadataFieldOptions.URL && (
-                <UrlField
-                  onChange={onChange}
-                  isInvalid={invalid}
-                  placeholder={watermark}
-                  ref={ref}
-                />
-              )}
-              {type === TypeMetadataFieldOptions.Email && (
-                <EmailField
-                  onChange={onChange}
-                  isInvalid={invalid}
-                  placeholder={watermark}
-                  ref={ref}
-                />
-              )}
-              {type === TypeMetadataFieldOptions.Int && (
-                <IntField
-                  onChange={onChange}
-                  isInvalid={invalid}
-                  placeholder={watermark}
-                  ref={ref}
-                />
-              )}
-              {type === TypeMetadataFieldOptions.Float && (
-                <FloatField
-                  onChange={onChange}
-                  isInvalid={invalid}
-                  placeholder={watermark}
-                  ref={ref}
-                />
-              )}
-              {type === TypeMetadataFieldOptions.Date && (
-                <DateField
-                  onChange={onChange}
-                  isInvalid={invalid}
-                  placeholder={watermark}
+                  data-fieldtype={type}
                   ref={ref}
                 />
               )}
