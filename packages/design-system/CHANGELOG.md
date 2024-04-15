@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# Non Published Changes
+
+- **Accordion:** extend Props Interface to accept HTML Attributes props.
+- **AccordionBody:** extend Props Interface to accept HTML Attributes, `bsPrefix` and `as` props.
+- **AccordionHeader:** extend Props Interface to accept HTML Attributes, `onClick`, `bsPrefix` and `as` props.
+- **AccordionItem:** extend Props Interface to accept HTML Attributes, `bsPrefix` and `as` props.
+- **FormChecboxGroup:** refactor styles.
+- **FormGroupWithMultipleFields:** refactor styles and conditional render logic.
+- **FormGroup:** ability to clone children wrapped by react fragments.
+- **FormCheckbox:** ability to forward react ref to input.
+- **FormInput:** ability to forward react ref to input.
+- **FormSelect:** ability to forward react ref to input.
+- **FormTextArea:** ability to forward react ref to input.
+- **FormFeedback:** remove `span: 9` from styles.
+
 # [1.1.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@1.0.1...@iqss/dataverse-design-system@1.1.0) (2024-03-12)
 
 ### Bug Fixes
