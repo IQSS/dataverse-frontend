@@ -844,6 +844,7 @@ The Design System is published to the npm Package Registry. To publish a new ver
 
 [dv_docs_github_userauthtoken_url]: https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app
 [dv_docs_github_token_url]: https://github.com/settings/tokens
+[TypeScript Deep Dive Style Guide]: https://basarat.gitbook.io/typescript/styleguide
 
 <!-- 3rd Party Resources/References -->
 <!-- [_uses_] -->
