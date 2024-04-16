@@ -181,8 +181,11 @@ $ ./run-env.sh <DATAVERSE_IMAGE_TAG>
 $ ./rm-env.sh
 ```
 
-Note that the image tag in the docker registry must be pre pushed, otherwise the script will fail. You can find the
-existing tags on DockerHub [@gdcc/dataverse][dv_app_docker_image_url]
+Please note that the image tag must be pre-pushed to the Docker registry; otherwise, the script will fail. You can find
+the existing tags for alpha and unstable versions on DockerHub at [@gdcc/dataverse][dv_app_docker_image_url]. Images
+associated with pull requests (PRs) are available in the [GitHub Container Registry].
+
+````bash
 
 If you are running the script for the first time, it may take a while, since npm has to install all project dependencies.
 This can also happen if you added new dependencies to `package.json`, or used the _uninstall_ script to remove current
@@ -206,7 +209,7 @@ If you want to add test data (collections and datasets) to the Dataverse instanc
 # /dev-env/ directory
 
 $ ./add-env-data.sh
-```
+````
 
 > Note: The above command uses the [dataverse-sample-data][dv_repo_dvsampledata_url] repository whose scripts occasionally
 > fail, so some test data may not be added.
@@ -838,6 +841,7 @@ The Design System is published to the npm Package Registry. To publish a new ver
 <!-- @gdcc/dataverse -->
 
 [dv_app_docker_image_url]: https://hub.docker.com/r/gdcc/dataverse/tags
+[Github Container Registry]: https://github.com/orgs/gdcc/packages/container/package/dataverse
 
 <!-- Documentation -->
 <!-- [dv_docs_] -->
