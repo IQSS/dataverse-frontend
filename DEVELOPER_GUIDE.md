@@ -516,13 +516,11 @@ describe('Create Dataset', () => {
 
 </details>
 
-> **Note:** The current e2e tests are failing due to the following reasons:
+> **Note:** Some end-to-end (e2e) tests are failing in local development environments despite passing in GitHub Actions.
+> This discrepancy appears to be due to variations in machine resources.
 >
-> - **Dataset JSDataverse Repository -> gets the total dataset count**: Calling `destroyAll()` before the "gets the total
-> - dataset count" test in `DatasetJSDataverseRepository.spec.ts` causes an optimistic lock exception in Dataverse.
->
-> **Solution:** We need to either reset the database after each test or find an alternative method to avoid the optimistic
-> lock exception. Check the issue [here](https://github.com/IQSS/dataverse-frontend/issues/294).
+> We need to investigate and potentially optimize several aspects of our local setup. Check the issue
+> [here](https://github.com/IQSS/dataverse-frontend/issues/371).
 
 ### Patterns and Conventions
 
