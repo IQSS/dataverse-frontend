@@ -1,20 +1,17 @@
-import { Button } from '@iqss/dataverse-design-system'
-import { PlusLg } from 'react-bootstrap-icons'
-import { useSession } from '../../../session/SessionContext'
-import styles from './DatasetUploadFilesButton.module.scss'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { PlusLg } from 'react-bootstrap-icons'
+import { Button } from '@iqss/dataverse-design-system'
+import { useSession } from '../../../session/SessionContext'
 import { useDataset } from '../../DatasetContext'
-import { useNotImplementedModal } from '../../../not-implemented/NotImplementedModalContext'
+import { Route } from '../../../Route.enum'
+import styles from './DatasetUploadFilesButton.module.scss'
 
 export function DatasetUploadFilesButton() {
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const { dataset } = useDataset()
-  const handleClick = () => {
-    // TODO - Implement upload files
-    showModal()
-  }
-  const { showModal } = useNotImplementedModal()
+
   if (!user || !dataset?.permissions.canUpdateDataset) {
     return <></>
   }
@@ -22,9 +19,10 @@ export function DatasetUploadFilesButton() {
   return (
     <Button
       type="button"
-      onClick={handleClick}
       icon={<PlusLg className={styles.icon} />}
-      disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
+      disabled={dataset.checkIsLockedFromEdits(user.persistentId)}
+      as={Link}
+      to={`${Route.EDIT_DATASET_FILES}?persistendId=${dataset.persistentId}`}>
       {t('datasetActionButtons.uploadFiles')}
     </Button>
   )

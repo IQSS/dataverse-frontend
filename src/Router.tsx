@@ -6,6 +6,7 @@ import { PageNotFound } from './sections/page-not-found/PageNotFound'
 import { CreateDatasetFactory } from './sections/create-dataset/CreateDatasetFactory'
 import { FileFactory } from './sections/file/FileFactory'
 import { CollectionFactory } from './sections/collection/CollectionFactory'
+import { EditDatasetFilesFactory } from './sections/edit-dataset-files/EditDatasetFilesFactory'
 import { DatasetNonNumericVersion } from './dataset/domain/models/Dataset'
 
 const router = createBrowserRouter(
@@ -30,6 +31,10 @@ const router = createBrowserRouter(
         {
           path: Route.CREATE_DATASET,
           element: CreateDatasetFactory.create()
+        },
+        {
+          path: Route.EDIT_DATASET_FILES,
+          element: EditDatasetFilesFactory.create()
         },
         {
           path: Route.FILES,
