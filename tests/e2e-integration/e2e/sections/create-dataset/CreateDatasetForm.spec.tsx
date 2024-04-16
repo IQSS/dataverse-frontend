@@ -19,8 +19,8 @@ describe('Create Dataset', () => {
   it('navigates to the new dataset after submitting a valid form', () => {
     cy.visit('/spa/datasets/create')
 
-    cy.findByLabelText(/Title/i).type('Test Dataset Title')
-    cy.findByLabelText(/Author Name/i).type('Test author name', { force: true })
+    cy.findByLabelText(/Title/i).type('Test Dataset Title', { force: true })
+    cy.findByLabelText(/Name/i).type('Test author name', { force: true })
     cy.findByLabelText(/Point of Contact E-mail/i).type('email@test.com')
     cy.findByLabelText(/Description Text/i).type('Test description text')
     cy.findByLabelText(/Arts and Humanities/i).check()
