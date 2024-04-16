@@ -15,14 +15,14 @@ export function DatasetUploadFilesButton() {
   if (!user || !dataset?.permissions.canUpdateDataset) {
     return <></>
   }
-
+  // TODO:ME : Fix Property 'as' does not exist on type 'IntrinsicAttributes & ButtonProps'.
   return (
     <Button
       type="button"
       icon={<PlusLg className={styles.icon} />}
       disabled={dataset.checkIsLockedFromEdits(user.persistentId)}
       as={Link}
-      to={`${Route.EDIT_DATASET_FILES}?persistendId=${dataset.persistentId}`}>
+      to={`${Route.EDIT_DATASET_FILES}?persistentId=${dataset.persistentId}`}>
       {t('datasetActionButtons.uploadFiles')}
     </Button>
   )
