@@ -118,4 +118,20 @@ export class FakerHelper {
       return faker.image.imageUrl(width, height)
     }
   }
+
+  static affiliation() {
+    if (this.chromaticBuild()) {
+      return 'Scientific Research University'
+    } else {
+      return faker.lorem.words(3)
+    }
+  }
+
+  static collectionName() {
+    if (this.chromaticBuild()) {
+      return 'Collection Name'
+    } else {
+      return faker.lorem.words(3)
+    }
+  }
 }

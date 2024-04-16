@@ -1,5 +1,5 @@
-import { CreateDatasetForm } from '../../../src/sections/create-dataset/CreateDatasetForm'
-import { DatasetRepository } from '../../../src/dataset/domain/repositories/DatasetRepository'
+import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
+import { CreateDatasetForm } from '../../../../src/sections/create-dataset/CreateDatasetForm'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 describe('Create Dataset', () => {
@@ -53,7 +53,7 @@ describe('Create Dataset', () => {
 
     cy.findByText('Title is required.').should('exist')
 
-    cy.findByText('Error: Submission failed.').should('exist')
+    cy.findByText('Validation Error').should('exist')
   })
 
   it('shows an error message when the author name is not provided', () => {
@@ -63,7 +63,7 @@ describe('Create Dataset', () => {
 
     cy.findByText('Author name is required.').should('exist')
 
-    cy.findByText('Error: Submission failed.').should('exist')
+    cy.findByText('Validation Error').should('exist')
   })
 
   it('shows an error message when the point of contact email is not provided', () => {
@@ -73,7 +73,7 @@ describe('Create Dataset', () => {
 
     cy.findByText('Point of Contact E-mail is required.').should('exist')
 
-    cy.findByText('Error: Submission failed.').should('exist')
+    cy.findByText('Validation Error').should('exist')
   })
 
   it('shows an error message when the point of contact email is not a valid email', () => {
@@ -87,7 +87,7 @@ describe('Create Dataset', () => {
 
     cy.findByText('Point of Contact E-mail is required.').should('exist')
 
-    cy.findByText('Error: Submission failed.').should('exist')
+    cy.findByText('Validation Error').should('exist')
   })
 
   it('shows an error message when the description text is not provided', () => {
@@ -97,7 +97,7 @@ describe('Create Dataset', () => {
 
     cy.findByText('Description Text is required.').should('exist')
 
-    cy.findByText('Error: Submission failed.').should('exist')
+    cy.findByText('Validation Error').should('exist')
   })
 
   it('shows an error message when the subject is not provided', () => {
@@ -107,7 +107,7 @@ describe('Create Dataset', () => {
 
     cy.findByText('Subject is required.').should('exist')
 
-    cy.findByText('Error: Submission failed.').should('exist')
+    cy.findByText('Validation Error').should('exist')
   })
 
   it('can submit a valid form', () => {
@@ -146,6 +146,6 @@ describe('Create Dataset', () => {
     cy.findByLabelText(/Arts and Humanities/i).check()
 
     cy.findByText(/Save Dataset/i).click()
-    cy.findByText('Error: Submission failed.').should('exist')
+    cy.contains('Validation Error').should('exist')
   })
 })
