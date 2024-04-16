@@ -29,13 +29,20 @@ export class DatasetHelper extends DataverseApiHelper {
     return this.request<DatasetResponse>(`/dataverses/root/datasets`, 'POST', newDatasetData)
   }
 
-  static async destroy(persistentId: string): Promise<DatasetResponse> {
-    return this.request<DatasetResponse>(
-      `/datasets/:persistentId/destroy/?persistentId=${persistentId}`,
-      'DELETE'
-    )
+  static async destroy(persistentId: string): Promise<DatasetResponse | undefined> {
+    try {
+      return await this.request<DatasetResponse>(
+        `/datasets/:persistentId/destroy/?persistentId=${persistentId}`,
+        'DELETE'
+      )
+    } catch (error) {
+      if (error instanceof Error && error.message === 'Request failed with status code 404') {
+        console.error('Dataset does not exist:', persistentId)
+        return undefined
+      }
+      throw error
+    }
   }
-
   static async createAndPublish(): Promise<DatasetResponse> {
     const datasetResponse = await DatasetHelper.create()
     await DatasetHelper.publish(datasetResponse.persistentId)
@@ -52,13 +59,30 @@ export class DatasetHelper extends DataverseApiHelper {
     return datasets
   }
 
-  static async destroyAll(): Promise<void> {
+  static async destroyAllDatasets(): Promise<void> {
     const response = await this.request<{
       items: Array<{ global_id: string }>
     }>('/search?q=*&type=dataset&sort=date&order=desc&per_page=500&start=0', 'GET')
     for (const dataset of response.items as Array<{ global_id: string }>) {
       await this.destroy(dataset.global_id)
     }
+    await this.request<DatasetResponse>('/admin/index/clear-orphans', 'GET')
+  }
+
+  static async destroyAll(): Promise<void> {
+    await this.destroyAllUntilEmpty()
+  }
+  static async destroyAllUntilEmpty(): Promise<void> {
+    let datasetsCount = 0
+    do {
+      await this.destroyAllDatasets()
+      await TestsUtils.wait(1500) // wait for 1.5 seconds
+      const response = await this.request<{ items: Array<{ global_id: string }> }>(
+        '/search?q=*&type=dataset&sort=date&order=desc&per_page=500&start=0',
+        'GET'
+      )
+      datasetsCount = response.items.length
+    } while (datasetsCount > 0)
   }
 
   static async publish(persistentId: string): Promise<{
