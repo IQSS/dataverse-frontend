@@ -218,15 +218,8 @@ features (and known issues), and what we are working on in the [currently planne
 Keep an eye out on [The Institute for Quantitative Social Science (IQSS) Dataverse Roadmap][hvd_iqss_roadmap_url] at
 Harvard University to get a look at upcoming initiatives for the project.
 
-<<<<<<< HEAD
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <br>
-=======
-We have introduced an update to the breadcrumb navigation UI. Unlike in the original JSF application, where breadcrumbs
-did not reflect the user's current location within the site, our new SPA design now includes this feature in the breadcrumbs.
-Additionally, we have aligned with best practices by positioning all breadcrumbs at the top, before anything else in the UI.
->>>>>>> 3aa4685da974fdc9328c44866237bd8173e31cda
 
 ## Contributing
 
