@@ -12,6 +12,7 @@ const collectionExpected = {
   id: 'new-collection',
   name: 'Scientific Research',
   description: 'We do all the science.',
+  isReleased: true,
   affiliation: 'Scientific Research University',
   hierarchy: new UpwardHierarchyNode(
     'Scientific Research',
