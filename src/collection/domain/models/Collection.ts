@@ -4,6 +4,7 @@ export interface Collection {
   id: string
   name: string
   hierarchy: UpwardHierarchyNode
+  isReleased: boolean
   description?: string
   affiliation?: string
 }
