@@ -13,12 +13,14 @@ export function CollectionInfo({ collection }: CollectionInfoProps) {
     <>
       <header className={styles.header}>
         <h1>{collection.name}</h1>
-        {collection.affiliation && (
-          <span className={styles.subtext}>({collection.affiliation})</span>
-        )}
-        {!collection.isReleased && (
-          <Badge variant={DatasetLabelSemanticMeaning.WARNING}>Unpublished</Badge>
-        )}
+        <div className={styles.infoContainer}>
+          {collection.affiliation && (
+            <span className={styles.subtext}>({collection.affiliation})</span>
+          )}
+          {!collection.isReleased && (
+            <Badge variant={DatasetLabelSemanticMeaning.WARNING}>Unpublished</Badge>
+          )}
+        </div>
       </header>
       {collection.description && (
         <div>
