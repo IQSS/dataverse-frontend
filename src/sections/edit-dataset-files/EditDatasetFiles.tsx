@@ -13,8 +13,6 @@ export const EditDatasetFiles = ({ fileRepository: _fileRepository }: EditDatase
   const { setIsLoading } = useLoading()
   const { dataset, isLoading } = useDataset()
 
-  console.log(dataset)
-
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading])

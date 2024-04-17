@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { PlusLg } from 'react-bootstrap-icons'
 import { Button } from '@iqss/dataverse-design-system'
@@ -11,18 +11,22 @@ export function DatasetUploadFilesButton() {
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const { dataset } = useDataset()
+  const navigate = useNavigate()
 
   if (!user || !dataset?.permissions.canUpdateDataset) {
     return <></>
   }
-  // TODO:ME : Fix Property 'as' does not exist on type 'IntrinsicAttributes & ButtonProps'.
+
+  const handleClick = () => {
+    navigate(`${Route.EDIT_DATASET_FILES}?persistentId=${dataset.persistentId}`)
+  }
+
   return (
     <Button
       type="button"
+      onClick={handleClick}
       icon={<PlusLg className={styles.icon} />}
-      disabled={dataset.checkIsLockedFromEdits(user.persistentId)}
-      as={Link}
-      to={`${Route.EDIT_DATASET_FILES}?persistentId=${dataset.persistentId}`}>
+      disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
       {t('datasetActionButtons.uploadFiles')}
     </Button>
   )
