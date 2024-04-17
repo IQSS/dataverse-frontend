@@ -7,14 +7,15 @@ interface FormSelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElem
   withinMultipleFieldsGroup?: boolean
 }
 
-export function FormSelect({
-  withinMultipleFieldsGroup,
-  children,
-  ...props
-}: PropsWithChildren<FormSelectProps>) {
+export const FormSelect = React.forwardRef(function FormSelect(
+  { withinMultipleFieldsGroup, children, ...props }: PropsWithChildren<FormSelectProps>,
+  ref
+) {
   return (
     <FormElementLayout withinMultipleFieldsGroup={withinMultipleFieldsGroup}>
-      <FormBS.Select {...props}>{children}</FormBS.Select>
+      <FormBS.Select ref={ref as React.ForwardedRef<HTMLSelectElement>} {...props}>
+        {children}
+      </FormBS.Select>
     </FormElementLayout>
   )
-}
+})

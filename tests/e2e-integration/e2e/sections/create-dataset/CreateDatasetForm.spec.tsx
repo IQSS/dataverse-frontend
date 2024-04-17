@@ -19,11 +19,29 @@ describe('Create Dataset', () => {
   it('navigates to the new dataset after submitting a valid form', () => {
     cy.visit('/spa/datasets/create')
 
-    cy.findByLabelText(/Title/i).type('Test Dataset Title', { force: true })
-    cy.findByLabelText(/Name/i).type('Test author name', { force: true })
-    cy.findByLabelText(/Point of Contact E-mail/i).type('email@test.com')
-    cy.findByLabelText(/Description Text/i).type('Test description text')
-    cy.findByLabelText(/Arts and Humanities/i).check()
+    cy.findByLabelText(/^Title/i).type('Test Dataset Title', { force: true })
+    cy.findByText('Author')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^Name/i).type('Test author name', { force: true })
+      })
+
+    cy.findByText('Point of Contact')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^E-mail/i).type('test@test.com', { force: true })
+      })
+
+    cy.findByText('Description')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^Text/i).type('Test description text', { force: true })
+      })
+    cy.findByText('Subject')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^Arts and Humanities/i).check({ force: true })
+      })
 
     cy.findByText(/Save Dataset/i).click()
 

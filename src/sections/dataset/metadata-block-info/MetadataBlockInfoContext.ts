@@ -1,9 +1,9 @@
 import { createContext, useContext } from 'react'
 import { MetadataBlockName } from '../../../dataset/domain/models/Dataset'
-import { MetadataBlockInfo } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { MetadataBlockInfoDisplayFormat } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 
 interface MetadataBlockInfoContextProps {
-  metadataBlockInfo: MetadataBlockInfo | undefined
+  metadataBlockInfo: MetadataBlockInfoDisplayFormat | undefined
   setMetadataBlockName: (metadataBlockName: MetadataBlockName) => void
 }
 

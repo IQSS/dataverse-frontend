@@ -1,10 +1,13 @@
-import { ReactNode } from 'react'
+import { ElementType, ReactNode } from 'react'
 import { Accordion as AccordionBS } from 'react-bootstrap'
 
-interface AccordionHeaderProps {
+interface AccordionHeaderProps extends React.HTMLAttributes<HTMLElement> {
   children: ReactNode
+  onClick?: () => void
+  bsPrefix?: string
+  as?: ElementType
 }
 
-export function AccordionHeader({ children }: AccordionHeaderProps) {
-  return <AccordionBS.Header>{children}</AccordionBS.Header>
+export function AccordionHeader({ children, ...rest }: AccordionHeaderProps) {
+  return <AccordionBS.Header {...rest}>{children}</AccordionBS.Header>
 }
