@@ -217,8 +217,11 @@ $ ./run-env.sh <DATAVERSE_IMAGE_TAG>
 $ ./rm-env.sh
 ```
 
-Note that the image tag in the docker registry must be pre pushed, otherwise the script will fail. You can find the
-existing tags on DockerHub [@gdcc/dataverse][dv_app_docker_image_url]
+Please note that the image tag must be pre-pushed to the Docker registry; otherwise, the script will fail. You can find
+the existing tags for alpha and unstable versions on DockerHub at [@gdcc/dataverse][dv_app_docker_image_url]. Images
+associated with pull requests (PRs) are available in the [GitHub Container Registry].
+
+````bash
 
 If you are running the script for the first time, it may take a while, since npm has to install all project dependencies.
 This can also happen if you added new dependencies to `package.json`, or used the _uninstall_ script to remove current
@@ -242,7 +245,7 @@ If you want to add test data (collections and datasets) to the Dataverse instanc
 # /dev-env/ directory
 
 $ ./add-env-data.sh
-```
+````
 
 > Note: The above command uses the [dataverse-sample-data][dv_repo_dvsampledata_url] repository whose scripts occasionally
 > fail, so some test data may not be added.
@@ -788,13 +791,11 @@ describe('Create Dataset', () => {
 
 </details>
 
-> **Note:** The current e2e tests are failing due to the following reasons:
+> **Note:** Some end-to-end (e2e) tests are failing in local development environments despite passing in GitHub Actions.
+> This discrepancy appears to be due to variations in machine resources.
 >
-> - **Dataset JSDataverse Repository -> gets the total dataset count**: Calling `destroyAll()` before the "gets the total
-> - dataset count" test in `DatasetJSDataverseRepository.spec.ts` causes an optimistic lock exception in Dataverse.
->
-> **Solution:** We need to either reset the database after each test or find an alternative method to avoid the optimistic
-> lock exception. Check the issue [here](https://github.com/IQSS/dataverse-frontend/issues/294).
+> We need to investigate and potentially optimize several aspects of our local setup. Check the issue
+> [here](https://github.com/IQSS/dataverse-frontend/issues/371).
 
 ### Patterns and Conventions
 
@@ -1114,6 +1115,7 @@ The Design System is published to the npm Package Registry. To publish a new ver
 <!-- @gdcc/dataverse -->
 
 [dv_app_docker_image_url]: https://hub.docker.com/r/gdcc/dataverse/tags
+[Github Container Registry]: https://github.com/orgs/gdcc/packages/container/package/dataverse
 
 <!-- Documentation -->
 <!-- [dv_docs_] -->
@@ -1121,6 +1123,7 @@ The Design System is published to the npm Package Registry. To publish a new ver
 [dv_docs_github_userauthtoken_url]: https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app
 [dv_docs_github_token_url]: https://github.com/settings/tokens
 [Restructuring the UI as a Single Page Application]: https://docs.google.com/document/d/19pbENuYyHErEmblbFGQ47_uJpTfqVKbn9O0QftVqeeU/edit#heading=h.9b7lzr4a7odc
+[TypeScript Deep Dive Style Guide]: https://basarat.gitbook.io/typescript/styleguide
 
 <!-- 3rd Party Resources/References -->
 <!-- [_uses_] -->

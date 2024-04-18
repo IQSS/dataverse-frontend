@@ -176,6 +176,7 @@ The environment is accessible through the following URLs:
 >
 > We have introduced an update to the breadcrumb navigation UI. Unlike in the original JSF application, where breadcrumbs
 > did not reflect the user's current location within the site, our new SPA design now includes this feature in the breadcrumbs.
+> Additionally, we have aligned with best practices by positioning all breadcrumbs at the top, before anything else in the UI.
 >
 > This update gives users a clear indication of their current position within the application's hierarchy.
 >

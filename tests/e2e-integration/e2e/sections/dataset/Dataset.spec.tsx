@@ -19,6 +19,9 @@ describe('Dataset', () => {
   })
 
   describe('Visit the Dataset Page as a logged in user', () => {
+    beforeEach(() => {
+      cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
+    })
     it('successfully loads a dataset in draft mode', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
@@ -183,14 +186,17 @@ describe('Dataset', () => {
           cy.visit(`/spa/datasets?persistentId=${persistentId}`)
 
           cy.findByText('Root').should('exist')
-          cy.findByRole('link', { name: 'Subcollection' }).should('exist').click()
+          cy.findByRole('link', { name: 'Scientific Research' }).should('exist').click()
 
-          cy.findAllByText('Subcollection').should('exist')
+          cy.findAllByText('Scientific Research').should('exist')
         })
     })
   })
 
   describe('Visualizing the Files Tab', () => {
+    beforeEach(() => {
+      cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
+    })
     it('successfully loads the files tab', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
@@ -529,6 +535,9 @@ describe('Dataset', () => {
   })
 
   describe('Downloading files', () => {
+    beforeEach(() => {
+      cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
+    })
     it('downloads the dataset', () => {
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(2)).then((dataset) =>
@@ -577,7 +586,10 @@ describe('Dataset', () => {
 
           cy.findByText('Files').should('exist')
 
-          cy.findByRole('button', { name: 'Access File' }).should('exist').click()
+          cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+          cy.get('@accessButton').should('be.visible')
+          cy.wait(500) // wait for the event handler to attach to the button, see https://www.cypress.io/blog/2019/01/22/when-can-the-test-click
+          cy.get('@accessButton').click()
 
           // Workaround for issue where Cypress gets stuck on the download
           cy.window()

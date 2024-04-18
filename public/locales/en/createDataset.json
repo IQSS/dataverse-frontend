@@ -5,39 +5,28 @@
     "content": "After adding the dataset, click the Edit Dataset button to add more metadata."
   },
   "requiredFields": "Asterisks indicate required fields",
+  "validationAlert": {
+    "title": "Validation Error",
+    "content": "Required fields were missed or there was a validation error. Please scroll down to see details."
+  },
   "datasetForm": {
-    "fields": {
-      "title": {
-        "label": "Title",
-        "tooltip": "The main title of the Dataset",
-        "feedback": "Title is required."
-      },
-      "authorName": {
-        "label": "Author Name",
-        "tooltip": "The name of the author, such as the person's name or the name of an organization",
-        "feedback": "Author name is required."
-      },
-      "datasetContactEmail": {
-        "label": "Point of Contact E-mail",
-        "tooltip": "The point of contact's e-mail address",
-        "feedback": "Point of Contact E-mail is required."
-      },
-      "dsDescriptionValue": {
-        "label": "Description Text",
-        "tooltip": "A summary describing the purpose, nature and scope of the Dataset",
-        "feedback": "Description Text is required."
-      },
-      "subject": {
-        "label": "Subject",
-        "tooltip": "The area of study relevant to the Dataset",
-        "feedback": "Subject is required."
+    "field": {
+      "required": "{{displayName}} is required",
+      "invalid": {
+        "url": "{{displayName}} is not a valid URL",
+        "email": "{{displayName}} is not a valid email",
+        "int": "{{displayName}} is not a valid integer",
+        "float": "{{displayName}} is not a valid float",
+        "date": "{{displayName}} is not a valid date. Please use the format {{dateFormat}}"
       }
     },
     "status": {
       "submitting": "Submitting...",
       "success": "Form submitted successfully!",
       "failed": "Error: Submission failed."
-    }
+    },
+    "addRowButton": "Add",
+    "deleteRowButton": "Delete"
   },
   "datasetFormStates": {
     "submitting": "Form Submitting",

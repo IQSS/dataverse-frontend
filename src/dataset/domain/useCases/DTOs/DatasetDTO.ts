@@ -1,32 +1,18 @@
-import { DatasetMetadataBlock, MetadataBlockName } from '../../models/Dataset'
-
 export interface DatasetDTO {
-  metadataBlocks: DatasetMetadataBlock[]
+  metadataBlocks: DatasetMetadataBlockValuesDTO[]
 }
 
-export const initialDatasetDTO: DatasetDTO = {
-  metadataBlocks: [
-    {
-      name: MetadataBlockName.CITATION,
-      fields: {
-        title: '',
-        subject: [''],
-        author: [
-          {
-            authorName: ''
-          }
-        ],
-        dsDescription: [
-          {
-            dsDescriptionValue: ''
-          }
-        ],
-        datasetContact: [
-          {
-            datasetContactEmail: ''
-          }
-        ]
-      }
-    }
-  ]
+export interface DatasetMetadataBlockValuesDTO {
+  name: string
+  fields: DatasetMetadataFieldsDTO
 }
+
+type DatasetMetadataFieldsDTO = Record<string, DatasetMetadataFieldValueDTO>
+
+type DatasetMetadataFieldValueDTO =
+  | string
+  | string[]
+  | DatasetMetadataChildFieldValueDTO
+  | DatasetMetadataChildFieldValueDTO[]
+
+export type DatasetMetadataChildFieldValueDTO = Record<string, string>

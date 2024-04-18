@@ -130,6 +130,7 @@ describe('Dataset JSDataverse Repository', () => {
   before(() => TestsUtils.setup())
   beforeEach(() => {
     TestsUtils.login()
+    cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
   })
 
   it('gets the dataset by persistentId', async () => {
@@ -290,28 +291,17 @@ describe('Dataset JSDataverse Repository', () => {
       })
   })
 
-  it('gets the total dataset count', async () => {
-    await DatasetHelper.destroyAll()
-    await datasetRepository.getTotalDatasetsCount('root').then((count) => {
-      expect(count).to.equal(0)
-    })
-    await DatasetHelper.createAndPublish()
+  it('gets the DatasetPreview', () => {
+    return DatasetHelper.createAndPublish().then((datasetResponse) => {
+      const paginationInfo = new DatasetPaginationInfo(1, 20)
 
-    await datasetRepository.getTotalDatasetsCount('root').then((count) => {
-      expect(count).to.equal(1)
-    })
-  })
-
-  it('gets the DatasetPreview', async () => {
-    await DatasetHelper.destroyAll()
-
-    const datasetResponse = await DatasetHelper.createAndPublish()
-    const paginationInfo = new DatasetPaginationInfo(1, 20)
-
-    await datasetRepository.getAll('root', paginationInfo).then((datasetPreview) => {
-      expect(datasetPreview.length).to.equal(1)
-      expect(datasetPreview[0].version.title).to.equal("Darwin's Finches")
-      expect(datasetPreview[0].persistentId).to.equal(datasetResponse.persistentId)
+      return datasetRepository.getAllWithCount('root', paginationInfo).then((datasetsWithCount) => {
+        expect(datasetsWithCount.totalCount).to.equal(1)
+        expect(datasetsWithCount.datasetPreviews[0].version.title).to.equal("Darwin's Finches")
+        expect(datasetsWithCount.datasetPreviews[0].persistentId).to.equal(
+          datasetResponse.persistentId
+        )
+      })
     })
   })
 

@@ -1,6 +1,6 @@
 import { PropsWithChildren, useEffect, useState } from 'react'
 import { MetadataBlockInfoContext } from './MetadataBlockInfoContext'
-import { MetadataBlockInfo } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { MetadataBlockInfoDisplayFormat } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataBlockInfoRepository } from '../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { getMetadataBlockInfoByName } from '../../../metadata-block-info/domain/useCases/getMetadataBlockInfoByName'
 import { MetadataBlockName } from '../../../dataset/domain/models/Dataset'
@@ -10,7 +10,7 @@ export function MetadataBlockInfoProvider({
   repository
 }: PropsWithChildren<{ repository: MetadataBlockInfoRepository }>) {
   const [metadataBlockName, setMetadataBlockName] = useState<string>(MetadataBlockName.CITATION)
-  const [metadataBlockInfo, setMetadataBlockInfo] = useState<MetadataBlockInfo>()
+  const [metadataBlockInfo, setMetadataBlockInfo] = useState<MetadataBlockInfoDisplayFormat>()
 
   useEffect(() => {
     getMetadataBlockInfoByName(repository, metadataBlockName)
