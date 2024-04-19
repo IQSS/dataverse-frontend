@@ -20,7 +20,7 @@ export function PaginationResultsInfo({ paginationInfo, accumulated }: Paginatio
         : accumulated < paginationInfo.pageSize
         ? 'accumulated.lessThanPageSize'
         : 'accumulated.moreThanPageSize',
-    [accumulated, paginationInfo.pageSize]
+    [paginationInfo.pageSize]
   )
 
   return (
