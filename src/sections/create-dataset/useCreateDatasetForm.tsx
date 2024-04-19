@@ -1,8 +1,8 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { createDataset } from '../../dataset/domain/useCases/createDataset'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
-import { useNavigate } from 'react-router-dom'
+import { MetadataFieldsHelper } from './MetadataFieldsHelper'
 import { Route } from '../Route.enum'
 
 export enum SubmissionStatus {
@@ -12,27 +12,32 @@ export enum SubmissionStatus {
   Errored = 'Errored'
 }
 
-export function useCreateDatasetForm(
-  repository: DatasetRepository,
-  datasetIsValid: (formData: DatasetDTO) => boolean
-): {
+export type FormCollectedValues = Record<
+  string,
+  Record<string, string | string[] | FormCollectedComposedFields>
+>
+export type FormCollectedComposedFields = Record<string, string>
+
+export function useCreateDatasetForm(repository: DatasetRepository): {
   submissionStatus: SubmissionStatus
-  submitForm: (formData: DatasetDTO) => void
+  submitForm: (formData: FormCollectedValues) => void
 } {
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
   )
   const navigate = useNavigate()
 
-  const submitForm = (formData: DatasetDTO): void => {
+  const submitForm = (formData: FormCollectedValues): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
-    if (!datasetIsValid(formData)) {
-      setSubmissionStatus(SubmissionStatus.Errored)
-      return
-    }
+    const formDataBackToOriginalKeys = MetadataFieldsHelper.replaceSlashKeysWithDot(
+      formData
+    ) as FormCollectedValues
+    const formattedFormValues = MetadataFieldsHelper.formatFormValuesToCreateDatasetDTO(
+      formDataBackToOriginalKeys
+    )
 
-    createDataset(repository, formData)
+    createDataset(repository, formattedFormValues)
       .then(({ persistentId }) => {
         setSubmissionStatus(SubmissionStatus.SubmitComplete)
         navigate(`${Route.DATASETS}?persistentId=${persistentId}`, {
@@ -40,7 +45,8 @@ export function useCreateDatasetForm(
         })
         return
       })
-      .catch(() => {
+      .catch((e) => {
+        console.error(e)
         setSubmissionStatus(SubmissionStatus.Errored)
       })
   }

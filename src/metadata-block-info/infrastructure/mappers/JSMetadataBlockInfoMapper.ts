@@ -2,10 +2,15 @@ import {
   MetadataBlock as JSMetadataBlockInfo,
   MetadataFieldInfo as JSMetadataFieldInfo
 } from '@iqss/dataverse-client-javascript'
-import { MetadataBlockInfo, MetadataBlockInfoFields } from '../../domain/models/MetadataBlockInfo'
+import {
+  MetadataBlockInfoDisplayFormat,
+  MetadataBlockInfoDisplayFormatFields
+} from '../../domain/models/MetadataBlockInfo'
 
 export class JSMetadataBlockInfoMapper {
-  static toMetadataBlockInfo(jsMetadataBlockInfo: JSMetadataBlockInfo): MetadataBlockInfo {
+  static toMetadataBlockInfo(
+    jsMetadataBlockInfo: JSMetadataBlockInfo
+  ): MetadataBlockInfoDisplayFormat {
     return {
       name: jsMetadataBlockInfo.name,
       fields: this.toFields(jsMetadataBlockInfo.metadataFields)
@@ -14,8 +19,8 @@ export class JSMetadataBlockInfoMapper {
 
   static toFields(
     jsMetadataBlockInfoFields: Record<string, JSMetadataFieldInfo>
-  ): MetadataBlockInfoFields {
-    const fields: MetadataBlockInfoFields = {}
+  ): MetadataBlockInfoDisplayFormatFields {
+    const fields: MetadataBlockInfoDisplayFormatFields = {}
 
     Object.entries(jsMetadataBlockInfoFields).forEach(([key, value]) => {
       fields[key] = { displayFormat: this.toDisplayFormat(value.displayFormat) }
@@ -30,7 +35,7 @@ export class JSMetadataBlockInfoMapper {
 
   static processCompoundFields(
     jsFields: Record<string, JSMetadataFieldInfo>,
-    result: MetadataBlockInfoFields
+    result: MetadataBlockInfoDisplayFormatFields
   ): void {
     Object.entries(jsFields).forEach(([key, value]) => {
       result[key] = { displayFormat: this.toDisplayFormat(value.displayFormat) }
