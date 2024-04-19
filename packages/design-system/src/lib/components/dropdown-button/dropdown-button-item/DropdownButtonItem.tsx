@@ -1,5 +1,5 @@
 import { Dropdown as DropdownBS } from 'react-bootstrap'
-import React, { ReactNode } from 'react'
+import React, { ElementType, ReactNode } from 'react'
 
 interface DropdownItemProps extends React.HTMLAttributes<HTMLElement> {
   href?: string
@@ -7,6 +7,7 @@ interface DropdownItemProps extends React.HTMLAttributes<HTMLElement> {
   disabled?: boolean
   download?: string
   children: ReactNode
+  as?: ElementType
 }
 
 export function DropdownButtonItem({
@@ -15,6 +16,7 @@ export function DropdownButtonItem({
   disabled,
   download,
   children,
+  as,
   ...props
 }: DropdownItemProps) {
   return (
@@ -23,6 +25,7 @@ export function DropdownButtonItem({
       eventKey={eventKey}
       disabled={disabled}
       download={download}
+      as={as}
       {...props}>
       {children}
     </DropdownBS.Item>
