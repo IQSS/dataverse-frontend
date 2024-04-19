@@ -30,7 +30,7 @@ export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
 
   const handleOnSelect = (eventKey: EditDatasetMenuItems | string | null) => {
     if (eventKey === EditDatasetMenuItems.FILES_UPLOAD) {
-      navigate(`${Route.EDIT_DATASET_FILES}?persistentId=${dataset.persistentId}`)
+      navigate(`${Route.UPLOAD_DATASET_FILES}?persistentId=${dataset.persistentId}`)
       return
     }
     showModal()
@@ -50,25 +50,27 @@ export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
       disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
       <DropdownButtonItem
         eventKey={EditDatasetMenuItems.FILES_UPLOAD}
+        as="button"
         disabled={!dataset.hasValidTermsOfAccess}>
         {t('datasetActionButtons.editDataset.filesUpload')}
       </DropdownButtonItem>
       <DropdownButtonItem
         eventKey={EditDatasetMenuItems.METADATA}
+        as="button"
         disabled={!dataset.hasValidTermsOfAccess}>
         {t('datasetActionButtons.editDataset.metadata')}
       </DropdownButtonItem>
-      <DropdownButtonItem eventKey={EditDatasetMenuItems.TERMS}>
+      <DropdownButtonItem eventKey={EditDatasetMenuItems.TERMS} as="button">
         {t('datasetActionButtons.editDataset.terms')}
       </DropdownButtonItem>
       <EditDatasetPermissionsMenu dataset={dataset} />
       {(dataset.permissions.canManageDatasetPermissions ||
         dataset.permissions.canManageFilesPermissions) && (
-        <DropdownButtonItem eventKey={EditDatasetMenuItems.PRIVATE_URL}>
+        <DropdownButtonItem eventKey={EditDatasetMenuItems.PRIVATE_URL} as="button">
           {t('datasetActionButtons.editDataset.privateUrl')}
         </DropdownButtonItem>
       )}
-      <DropdownButtonItem eventKey={EditDatasetMenuItems.THUMBNAILS_PLUS_WIDGETS}>
+      <DropdownButtonItem eventKey={EditDatasetMenuItems.THUMBNAILS_PLUS_WIDGETS} as="button">
         {t('datasetActionButtons.editDataset.thumbnailsPlusWidgets')}
       </DropdownButtonItem>
       <DeleteDatasetButton dataset={dataset} />

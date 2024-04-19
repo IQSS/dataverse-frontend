@@ -5,11 +5,13 @@ import { useDataset } from '../dataset/DatasetContext'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 
-interface EditDatasetFilesProps {
+interface UploadDatasetFilesProps {
   fileRepository: FileRepository
 }
 
-export const EditDatasetFiles = ({ fileRepository: _fileRepository }: EditDatasetFilesProps) => {
+export const UploadDatasetFiles = ({
+  fileRepository: _fileRepository
+}: UploadDatasetFilesProps) => {
   const { setIsLoading } = useLoading()
   const { dataset, isLoading } = useDataset()
 

@@ -18,7 +18,7 @@ export function DatasetUploadFilesButton() {
   }
 
   const handleClick = () => {
-    navigate(`${Route.EDIT_DATASET_FILES}?persistentId=${dataset.persistentId}`)
+    navigate(`${Route.UPLOAD_DATASET_FILES}?persistentId=${dataset.persistentId}`)
   }
 
   return (
