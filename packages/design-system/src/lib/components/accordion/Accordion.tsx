@@ -4,15 +4,15 @@ import { AccordionItem } from './AccordionItem'
 import { AccordionBody } from './AccordionBody'
 import { AccordionHeader } from './AccordionHeader'
 
-interface AccordionProps {
+interface AccordionProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
   defaultActiveKey?: string[] | string
   alwaysOpen?: boolean
   children: ReactNode
 }
 
-function Accordion({ defaultActiveKey, children, alwaysOpen = false }: AccordionProps) {
+function Accordion({ defaultActiveKey, alwaysOpen = false, children, ...rest }: AccordionProps) {
   return (
-    <AccordionBS defaultActiveKey={defaultActiveKey} alwaysOpen={alwaysOpen}>
+    <AccordionBS defaultActiveKey={defaultActiveKey} alwaysOpen={alwaysOpen} {...rest}>
       {children}
     </AccordionBS>
   )

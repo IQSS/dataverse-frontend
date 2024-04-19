@@ -155,6 +155,7 @@ describe('File JSDataverse Repository', () => {
   })
   beforeEach(() => {
     TestsUtils.login()
+    cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
   })
 
   const compareMetadata = (fileMetadata: FileMetadata, expectedFileMetadata: FileMetadata) => {
@@ -545,7 +546,7 @@ describe('File JSDataverse Repository', () => {
 
   describe('Get FilesCountInfo by dataset persistentId', () => {
     let datasetPersistentId = ''
-    before(async () => {
+    beforeEach(async () => {
       const files = [
         FileHelper.create('csv', {
           description: 'Some description',

@@ -1,20 +1,41 @@
-# What steps does it take to reproduce the issue?
+---
+name: Bug report
+about: Did you encounter something unexpected or incorrect in the Dataverse Frontend?
+  We'd like to hear about it!
+title: ''
+labels: 'Type: Bug'
+assignees: ''
+---
 
-## When does this issue occur?
+<!--
+Thank you for contributing to the Dataverse Frontend through the creation of a bug report!
 
-## Which section(s) does it occurs on?
+WARNING: If this is a security issue it should be reported privately to security@dataverse.org
 
-## What happens?
+More information on bug issues and contributions can be found in the "Contributing to Dataverse Frontend" page:
+https://github.com/IQSS/dataverse-frontend/blob/develop/CONTRIBUTING.md#bug-reportsissues
 
-## To whom does it occur (all users, curators, superusers)?
+Please fill out as much of the template as you can.
+Start below this comment section.
+-->
 
-## What did you expect to happen?
+**What steps does it take to reproduce the issue?**
 
-## Which version of Dataverse Frontend are you using?
+- When does this issue occur?
 
-## Any related open or closed issues to this bug report?
+- Which page(s) does it occur on?
 
-# Screenshots:
+- What happens?
+
+- To whom does it occur (all users, curators, superusers)?
+
+- What did you expect to happen?
+
+**Which version of Dataverse Frontend are you using?**
+
+**Any related open or closed issues to this bug report?**
+
+**Screenshots:**
 
 No matter the issue, screenshots are always welcome.
 

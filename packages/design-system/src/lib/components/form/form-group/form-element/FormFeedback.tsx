@@ -15,7 +15,7 @@ export function FormFeedback({
   return withinMultipleFieldsGroup ? (
     <FormControl.Feedback type={type}>{children}</FormControl.Feedback>
   ) : (
-    <FormControl.Feedback as={Col} sm={{ offset: 3, span: 9 }} type={type}>
+    <FormControl.Feedback as={Col} sm={{ offset: 3 }} type={type}>
       {children}
     </FormControl.Feedback>
   )

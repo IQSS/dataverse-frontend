@@ -36,20 +36,21 @@ export function FormGroupWithMultipleFields({
         const isFirstField = index == 0
 
         return (
-          <Row key={index}>
+          <Row key={index} className="mb-3">
             <Col sm={3}>
               {isFirstField && <Title title={title} required={required} message={message} />}
             </Col>
-            <Col sm={6}>{field}</Col>
-            <Col sm={3}>
-              {withDynamicFields && (
+            <Col sm={withDynamicFields ? 6 : 9}>{field}</Col>
+
+            {withDynamicFields && (
+              <Col sm={3}>
                 <DynamicFieldsButtons
                   originalField={isFirstField}
                   onAddButtonClick={() => addField(field)}
                   onRemoveButtonClick={() => removeField(index)}
                 />
-              )}
-            </Col>
+              </Col>
+            )}
           </Row>
         )
       })}
