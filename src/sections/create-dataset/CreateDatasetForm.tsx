@@ -52,7 +52,7 @@ export function CreateDatasetForm({
 
   useEffect(() => {
     setIsLoading(false)
-  }, [isLoading])
+  }, [isLoading, setIsLoading])
 
   const disableSubmitButton = useMemo(() => {
     return (

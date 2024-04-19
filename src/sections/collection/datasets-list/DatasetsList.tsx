@@ -32,7 +32,7 @@ export function DatasetsList({ datasetRepository, page, collectionId }: Datasets
 
   useEffect(() => {
     setIsLoading(isLoading)
-  }, [isLoading])
+  }, [isLoading, setIsLoading])
 
   if (isLoading) {
     return <DatasetsListSkeleton />
