@@ -12,6 +12,11 @@
   margin-bottom: $spacer;
 }
 
+.infoContainer {
+  display: flex;
+  gap: 10px;
+}
+
 .subtext {
   color: $dv-subtext-color;
 }

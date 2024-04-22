@@ -6,6 +6,7 @@ describe('CollectionInfo', () => {
     const collection = CollectionMother.create({
       name: 'Collection Name',
       affiliation: 'Affiliation',
+      isReleased: true,
       description: 'Here is a description with [a link](https://dataverse.org)'
     })
     cy.customMount(<CollectionInfo collection={collection} />)
@@ -14,6 +15,7 @@ describe('CollectionInfo', () => {
     cy.findByText('(Affiliation)').should('exist')
     cy.findByText(/Here is a description with/).should('exist')
     cy.findByRole('link', { name: 'a link' }).should('exist')
+    cy.findByText('Unpublished').should('not.exist')
   })
 
   it('does not render affiliation when it is not present', () => {
@@ -32,5 +34,11 @@ describe('CollectionInfo', () => {
     cy.customMount(<CollectionInfo collection={collection} />)
 
     cy.findByText('Description').should('not.exist')
+  })
+  it('renders unpublished label when isReleased is false', () => {
+    const collection = CollectionMother.createUnpublished()
+    cy.customMount(<CollectionInfo collection={collection} />)
+
+    cy.findByText('Unpublished').should('exist')
   })
 })

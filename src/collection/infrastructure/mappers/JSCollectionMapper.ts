@@ -14,6 +14,7 @@ export class JSCollectionMapper {
     return {
       id: jsCollection.alias,
       name: jsCollection.name,
+      isReleased: true, // TODO: replace with real value, waiting for https://github.com/IQSS/dataverse-client-javascript/issues/139
       description: jsCollection.description,
       affiliation: jsCollection.affiliation,
       hierarchy: JSCollectionMapper.toHierarchy(
