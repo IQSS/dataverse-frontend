@@ -18,7 +18,6 @@ export function DatasetMetadataFields({
   useEffect(() => {
     setMetadataBlockName(metadataBlockName)
   }, [metadataBlockName, setMetadataBlockName])
-  console.log('PEPE')
 
   return (
     <>

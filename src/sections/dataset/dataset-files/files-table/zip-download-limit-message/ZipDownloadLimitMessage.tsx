@@ -41,7 +41,7 @@ export function ZipDownloadLimitMessage({
       filesTotalDownloadSize
     )
     setFileSelectionTotalSizeInInBytes(totalSize)
-  }, [fileSelection])
+  }, [fileSelection, visitedFiles, filesTotalDownloadSize])
 
   const showMessage =
     zipDownloadLimitInBytes &&
