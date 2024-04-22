@@ -53,4 +53,15 @@ describe('PaginationResultsInfo', () => {
     )
     cy.findByText('10 of 15 Items seen').should('exist')
   })
+
+  it('shows the correct formatted results when accumulated prop passed and results are more than page size', () => {
+    cy.customMount(
+      <PaginationResultsInfo
+        paginationInfo={new PaginationInfo<DatasetPaginationInfo>(1, 100, 1500)}
+        accumulated={500}
+      />
+    )
+    cy.findByText('500 of 1,500 Items seen').should('exist')
+  })
+
 })
