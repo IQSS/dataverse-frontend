@@ -2,8 +2,7 @@ export const selectMultipleInitialState: SelectMultipleState = {
   options: [],
   selectedOptions: [],
   filteredOptions: [],
-  searchValue: '',
-  isMenuOpen: false
+  searchValue: ''
 }
 
 interface SelectMultipleState {
@@ -11,7 +10,6 @@ interface SelectMultipleState {
   selectedOptions: string[]
   filteredOptions: string[]
   searchValue: string
-  isMenuOpen: boolean
 }
 
 type SelectMultipleActions =
@@ -24,11 +22,11 @@ type SelectMultipleActions =
       payload: string
     }
   | {
-      type: 'SEARCH'
-      payload: string
+      type: 'TOGGLE_ALL_OPTIONS'
     }
   | {
-      type: 'TOGGLE_MENU'
+      type: 'SEARCH'
+      payload: string
     }
 
 export const selectMultipleReducer = (
@@ -44,7 +42,12 @@ export const selectMultipleReducer = (
     case 'REMOVE_OPTION':
       return {
         ...state,
-        options: state.selectedOptions.filter((option) => option !== action.payload)
+        selectedOptions: state.selectedOptions.filter((option) => option !== action.payload)
+      }
+    case 'TOGGLE_ALL_OPTIONS':
+      return {
+        ...state,
+        selectedOptions: state.selectedOptions.length === state.options.length ? [] : state.options
       }
     case 'SEARCH':
       return {
@@ -55,11 +58,6 @@ export const selectMultipleReducer = (
             )
           : state.options,
         searchValue: action.payload
-      }
-    case 'TOGGLE_MENU':
-      return {
-        ...state,
-        isMenuOpen: !state.isMenuOpen
       }
     default:
       return state

@@ -1,0 +1,128 @@
+@use 'sass:color';
+@import 'src/lib/assets/styles/design-tokens/colors.module';
+@import 'src/lib/assets/styles/design-tokens/typography.module';
+
+:root {
+  --select-multiple-max-width: 500px;
+  --select-multiple-min-width: 300px;
+  --select-multiple-menu-max-height: 300px;
+}
+
+// 👇👇👇 SelectMultipleToggle 👇👇👇
+
+.select-multiple-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: var(--select-multiple-min-width);
+  max-width: var(--select-multiple-max-width);
+  padding: 0.25rem 0.5rem;
+  border: solid 1px $dv-secondary-color;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &.invalid {
+    border-color: $dv-danger-color;
+  }
+
+  &:focus-within,
+  &:focus {
+    border-color: color.adjust($dv-primary-color, $alpha: -0.4);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem color.adjust($dv-primary-color, $alpha: -0.7);
+  }
+
+  &.invalid:focus-within,
+  &.invalid:focus {
+    border-color: color.adjust($dv-danger-color, $alpha: -0.4);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem color.adjust($dv-danger-color, $alpha: -0.7);
+  }
+
+  &::after {
+    margin-left: 1rem;
+  }
+
+  //  TODO: Wrappear aca tmb las clases?
+
+  // &::before {
+  //   position: absolute;
+  //   top: 0;
+  //   right: 12px;
+  //   z-index: 1;
+  //   width: calc(0.6em + 12px);
+  //   height: 100%;
+  //   border-left: solid 1px rgb(0 0 0 / 15%);
+  //   content: '';
+  // }
+}
+
+.selected-options-container {
+  display: inline-flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.selected-option-item {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  color: $dv-text-color;
+  font-weight: $dv-font-weight-bold;
+  font-size: $dv-font-size-sm;
+  background-color: $dv-secondary-color;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+// 👇👇👇 SelectMultipleMenu 👇👇👇
+
+.select-multiple-menu {
+  width: 100%;
+  min-width: var(--select-multiple-min-width);
+  max-width: var(--select-multiple-max-width);
+  max-height: var(--select-multiple-menu-max-height);
+  padding-top: 0;
+  overflow-y: auto;
+
+  &__header {
+    position: sticky;
+    top: 0;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.25rem;
+    font-size: 18px;
+    background-color: $dv-secondary-color;
+
+    span {
+      font-size: $dv-font-size;
+    }
+  }
+
+  &__option-item {
+    padding-block: 0;
+    transition: background-color 0.1s ease-in-out;
+
+    &:active,
+    &:hover {
+      color: $dv-text-color;
+      background-color: color.adjust($dv-secondary-color, $alpha: -0.7);
+    }
+
+    &:has(input[type='checkbox']:checked) {
+      background-color: color.adjust($dv-secondary-color, $alpha: -0.4);
+    }
+
+    & .checkbox {
+      padding-block: 0.25rem;
+
+      label {
+        width: 100%;
+      }
+    }
+  }
+}
