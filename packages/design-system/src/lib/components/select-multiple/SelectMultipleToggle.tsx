@@ -1,6 +1,5 @@
-import { Dropdown as DropdownBS } from 'react-bootstrap'
+import { Dropdown as DropdownBS, Button as ButtonBS } from 'react-bootstrap'
 import { X as CloseIcon } from 'react-bootstrap-icons'
-import { Button } from '../button/Button'
 import styles from './SelectMultiple.module.scss'
 
 interface SelectMultipleToggleProps {
@@ -9,15 +8,11 @@ interface SelectMultipleToggleProps {
   isInvalid?: boolean
 }
 
-const MIN_WIDTH = 300
-const MAX_WIDTH = 500
-
 export const SelectMultipleToggle = ({
   selectedOptions,
   handleRemoveSelectedOption,
   isInvalid
 }: SelectMultipleToggleProps) => {
-  console.log({ isInvalid })
   return (
     <DropdownBS.Toggle
       as="header"
@@ -27,11 +22,11 @@ export const SelectMultipleToggle = ({
         <div className={styles['selected-options-container']}>
           {selectedOptions.map((selectedOption) => (
             <div
-              className={styles['selected-option-item']}
+              className={styles['selected-options-container__item']}
               onClick={(e) => e.stopPropagation()}
               key={`selected-option-${selectedOption}`}>
               <span className="me-2">{selectedOption}</span>
-              <Button
+              <ButtonBS
                 variant="primary"
                 className="rounded-circle p-0"
                 onClick={() => handleRemoveSelectedOption(selectedOption)}
@@ -39,7 +34,7 @@ export const SelectMultipleToggle = ({
                 <div style={{ display: 'grid', placeContent: 'center' }}>
                   <CloseIcon size={14} />
                 </div>
-              </Button>
+              </ButtonBS>
             </div>
           ))}
         </div>

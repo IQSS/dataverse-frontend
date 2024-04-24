@@ -11,8 +11,6 @@ interface SelectMultipleMenuProps {
   handleCheck: (e: React.ChangeEvent<HTMLInputElement>) => void
   isSearchable: boolean
 }
-const MIN_WIDTH = 300
-const MAX_WIDTH = 500
 
 export const SelectMultipleMenu = ({
   options,
@@ -30,16 +28,15 @@ export const SelectMultipleMenu = ({
   const allOptionsSelected = selectedOptions.length === options.length
 
   return (
-    <DropdownBS.Menu as="ul" className={styles['select-multiple-menu']}>
+    <DropdownBS.Menu as="menu" className={styles['select-multiple-menu']}>
       {/* SEARCH INPUT */}
-      <DropdownBS.Header className={styles['select-multiple-menu__header']}>
+      <DropdownBS.Header className={styles['menu-header']} aria-level={1}>
         {/* Toggle All Options */}
         <FormBS.Check
           type="checkbox"
           aria-label="Toggle all options"
           id={toggleAllControlID}
           onChange={handleToggleAllOptions}
-          defaultChecked={allOptionsSelected}
           checked={allOptionsSelected}
         />
         {/* Search input */}
@@ -53,16 +50,13 @@ export const SelectMultipleMenu = ({
             onChange={handleSearch}
           />
         ) : (
-          <span>{selectedOptions.length} selected</span>
+          <p className={styles['selected-count']}>{selectedOptions.length} selected</p>
         )}
       </DropdownBS.Header>
 
       {/* List of options */}
       {filteredOptions.map((option) => (
-        <DropdownBS.Item
-          as="li"
-          className={styles['select-multiple-menu__option-item']}
-          key={option}>
+        <DropdownBS.Item as="li" className={styles['option-item']} key={option}>
           <FormBS.Check
             type="checkbox"
             value={option}
@@ -70,8 +64,7 @@ export const SelectMultipleMenu = ({
             onChange={handleCheck}
             id={`check-item-${option}`}
             checked={selectedOptions.includes(option)}
-            defaultChecked={selectedOptions.includes(option)}
-            className={styles['checkbox']}
+            className={styles['option-item__checkbox-input']}
           />
         </DropdownBS.Item>
       ))}

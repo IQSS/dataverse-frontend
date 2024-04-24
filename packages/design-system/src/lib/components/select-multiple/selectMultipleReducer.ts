@@ -63,3 +63,22 @@ export const selectMultipleReducer = (
       return state
   }
 }
+
+export const selectOption = (option: string): SelectMultipleActions => ({
+  type: 'SELECT_OPTION',
+  payload: option
+})
+
+export const removeOption = (option: string): SelectMultipleActions => ({
+  type: 'REMOVE_OPTION',
+  payload: option
+})
+
+export const toggleAllOptions = (): SelectMultipleActions => ({
+  type: 'TOGGLE_ALL_OPTIONS'
+})
+
+export const searchOptions = (value: string): SelectMultipleActions => ({
+  type: 'SEARCH',
+  payload: value
+})
