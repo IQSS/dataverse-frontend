@@ -28,7 +28,19 @@ export const SelectMultipleMenu = ({
   const allOptionsSelected = selectedOptions.length === options.length
 
   return (
-    <DropdownBS.Menu as="menu" className={styles['select-multiple-menu']}>
+    <DropdownBS.Menu
+      as="menu"
+      className={styles['select-multiple-menu']}
+      popperConfig={{
+        modifiers: [
+          {
+            name: 'offset',
+            options: {
+              offset: () => [0, 0]
+            }
+          }
+        ]
+      }}>
       {/* SEARCH INPUT */}
       <DropdownBS.Header className={styles['menu-header']} aria-level={1}>
         {/* Toggle All Options */}
