@@ -64,6 +64,7 @@ export const SelectMultiple = ({
         selectedOptions={selectedOptions}
         handleRemoveSelectedOption={handleRemoveSelectedOption}
         isInvalid={isInvalid}
+        isDisabled={isDisabled}
       />
       <SelectMultipleMenu
         options={options}

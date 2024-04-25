@@ -6,18 +6,23 @@ interface SelectMultipleToggleProps {
   selectedOptions: string[]
   handleRemoveSelectedOption: (option: string) => void
   isInvalid?: boolean
+  isDisabled?: boolean
 }
 
 export const SelectMultipleToggle = ({
   selectedOptions,
   handleRemoveSelectedOption,
-  isInvalid
+  isInvalid,
+  isDisabled
 }: SelectMultipleToggleProps) => {
   return (
     <DropdownBS.Toggle
       as="header"
-      className={`${styles['select-multiple-toggle']} ${isInvalid ? styles['invalid'] : ''}`}
-      tabIndex={0}>
+      tabIndex={0}
+      aria-disabled={isDisabled}
+      className={`${styles['select-multiple-toggle']} ${isInvalid ? styles['invalid'] : ''} ${
+        isDisabled ? styles['disabled'] : ''
+      }`}>
       {selectedOptions.length > 0 ? (
         <div className={styles['selected-options-container']}>
           {selectedOptions.map((selectedOption) => (

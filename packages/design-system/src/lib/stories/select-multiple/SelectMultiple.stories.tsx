@@ -50,3 +50,7 @@ export const NotSearchable: Story = {
 export const Invalid: Story = {
   render: () => <SelectMultiple options={exampleOptions} isInvalid />
 }
+
+export const Disabled: Story = {
+  render: () => <SelectMultiple options={exampleOptions} isDisabled />
+}

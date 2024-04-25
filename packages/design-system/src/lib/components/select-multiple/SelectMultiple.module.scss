@@ -39,6 +39,11 @@
     box-shadow: 0 0 0 0.25rem color.adjust($dv-danger-color, $alpha: -0.7);
   }
 
+  &.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
   &::after {
     margin-left: 1rem;
   }
