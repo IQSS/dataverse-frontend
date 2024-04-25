@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { SelectMultiple } from '../../components/select-multiple/SelectMultiple'
 
@@ -53,4 +54,24 @@ export const Invalid: Story = {
 
 export const Disabled: Story = {
   render: () => <SelectMultiple options={exampleOptions} isDisabled />
+}
+
+export const SelectMultipleFocused: Story = {
+  render: () => <SelectMultipleWithRef />
+}
+
+export const SelectMultipleFocusedInvalid: Story = {
+  render: () => <SelectMultipleWithRef isInvalid />
+}
+
+const SelectMultipleWithRef = ({ isInvalid }: { isInvalid?: boolean }) => {
+  const ref = useRef<HTMLElement | null>(null)
+
+  useEffect(() => {
+    setTimeout(() => {
+      ref.current?.focus()
+    }, 250)
+  }, [])
+
+  return <SelectMultiple options={exampleOptions} isInvalid={isInvalid} ref={ref} />
 }
