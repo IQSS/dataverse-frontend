@@ -167,6 +167,20 @@ export const Select: Story = {
   )
 }
 
+export const SelectMultiple: Story = {
+  render: () => (
+    <Form>
+      <Form.Group controlId="basic-form-select-multiple">
+        <Form.Group.Label>Hobbies</Form.Group.Label>
+        <Form.Group.SelectMultiple
+          options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
+          ariaLabelledby="basic-form-select-multiple"
+        />
+      </Form.Group>
+    </Form>
+  )
+}
+
 export const TextArea: Story = {
   render: () => (
     <Form>

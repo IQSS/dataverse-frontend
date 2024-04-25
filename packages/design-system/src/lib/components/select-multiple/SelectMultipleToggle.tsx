@@ -8,6 +8,7 @@ interface SelectMultipleToggleProps {
   handleRemoveSelectedOption: (option: string) => void
   isInvalid?: boolean
   isDisabled?: boolean
+  ariaLabelledby?: string
 }
 
 export const SelectMultipleToggle = forwardRef(
@@ -16,7 +17,8 @@ export const SelectMultipleToggle = forwardRef(
       selectedOptions,
       handleRemoveSelectedOption,
       isInvalid,
-      isDisabled
+      isDisabled,
+      ariaLabelledby
     }: SelectMultipleToggleProps,
     ref: ForwardedRef<HTMLElement | null>
   ) => {
@@ -25,6 +27,7 @@ export const SelectMultipleToggle = forwardRef(
         as="header"
         tabIndex={0}
         ref={ref}
+        aria-labelledby={ariaLabelledby}
         aria-disabled={isDisabled}
         className={`${styles['select-multiple-toggle']} ${isInvalid ? styles['invalid'] : ''} ${
           isDisabled ? styles['disabled'] : ''
@@ -50,7 +53,7 @@ export const SelectMultipleToggle = forwardRef(
             ))}
           </div>
         ) : (
-          'Select'
+          'Select...'
         )}
       </DropdownBS.Toggle>
     )

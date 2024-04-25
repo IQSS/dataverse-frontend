@@ -13,16 +13,18 @@ import { SelectMultipleMenu } from './SelectMultipleMenu'
 import { debounce } from './utils'
 // import styles from './SelectMultiple.module.scss'
 
-interface SelectMultipleProps {
+export interface SelectMultipleProps {
   options: string[]
   defaultValue?: string[]
   isSearchable?: boolean
   isDisabled?: boolean
   isInvalid?: boolean
+  ariaLabelledby?: string
 }
 
 /*
-  TODO: Set max selected options to show, default to 6.
+  TODO:ME: How to focus on header element when label is clicked? Aria is ok but focus is not happening.
+  TODO:ME: Set max selected options to show, default to 6.
 */
 
 export const SelectMultiple = forwardRef(
@@ -32,7 +34,8 @@ export const SelectMultiple = forwardRef(
       defaultValue,
       isSearchable = true,
       isDisabled = false,
-      isInvalid = false
+      isInvalid = false,
+      ariaLabelledby
     }: SelectMultipleProps,
     ref: ForwardedRef<HTMLElement | null>
   ) => {
@@ -69,6 +72,7 @@ export const SelectMultiple = forwardRef(
           handleRemoveSelectedOption={handleRemoveSelectedOption}
           isInvalid={isInvalid}
           isDisabled={isDisabled}
+          ariaLabelledby={ariaLabelledby}
           ref={ref}
         />
         <SelectMultipleMenu

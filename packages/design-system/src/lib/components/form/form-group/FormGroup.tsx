@@ -9,6 +9,7 @@ import { Col, ColProps } from '../../grid/Col'
 import { Row } from '../../grid/Row'
 import { FormCheckbox } from './form-element/FormCheckbox'
 import { FormFeedback } from './form-element/FormFeedback'
+import { FormSelectMultiple } from './form-element/FormSelectMultiple'
 
 interface FormGroupProps extends ColProps {
   as?: typeof Col | typeof Row
@@ -64,6 +65,7 @@ function cloneThroughFragments(
 FormGroup.Label = FormLabel
 FormGroup.Input = FormInput
 FormGroup.Select = FormSelect
+FormGroup.SelectMultiple = FormSelectMultiple
 FormGroup.TextArea = FormTextArea
 FormGroup.Text = FormText
 FormGroup.Checkbox = FormCheckbox
