@@ -7,7 +7,6 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { Accordion, Form, Tabs } from '@iqss/dataverse-design-system'
 import styles from '../dataset/Dataset.module.scss'
 import { useTranslation } from 'react-i18next'
-import { useForm } from 'react-hook-form'
 
 interface UploadDatasetFilesProps {
   fileRepository: FileRepository
@@ -19,7 +18,6 @@ export const UploadDatasetFiles = ({
   const { setIsLoading } = useLoading()
   const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('uploadDatasetFiles')
-  const form = useForm({ mode: 'onChange' })
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading])
