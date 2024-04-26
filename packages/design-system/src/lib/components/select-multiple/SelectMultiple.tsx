@@ -19,13 +19,8 @@ export interface SelectMultipleProps {
   isSearchable?: boolean
   isDisabled?: boolean
   isInvalid?: boolean
-  ariaLabelledby?: string
+  inputButtonId?: string
 }
-
-/*
-  TODO:ME: How to focus on header element when label is clicked? Aria is ok but focus is not happening.
-  TODO:ME: Set max selected options to show, default to 6.
-*/
 
 export const SelectMultiple = forwardRef(
   (
@@ -35,9 +30,9 @@ export const SelectMultiple = forwardRef(
       isSearchable = true,
       isDisabled = false,
       isInvalid = false,
-      ariaLabelledby
+      inputButtonId
     }: SelectMultipleProps,
-    ref: ForwardedRef<HTMLElement | null>
+    ref: ForwardedRef<HTMLInputElement | null>
   ) => {
     const [{ selectedOptions, filteredOptions }, dispatch] = useReducer(selectMultipleReducer, {
       ...selectMultipleInitialState,
@@ -72,7 +67,7 @@ export const SelectMultiple = forwardRef(
           handleRemoveSelectedOption={handleRemoveSelectedOption}
           isInvalid={isInvalid}
           isDisabled={isDisabled}
-          ariaLabelledby={ariaLabelledby}
+          inputButtonId={inputButtonId}
           ref={ref}
         />
         <SelectMultipleMenu

@@ -3,78 +3,114 @@
 @import 'src/lib/assets/styles/design-tokens/typography.module';
 
 :root {
-  --select-multiple-max-width: 500px;
-  --select-multiple-min-width: 300px;
   --select-multiple-menu-max-height: 300px;
+  --toggle-padding: 6px 36px 6px 12px;
 }
-
-// TODO:ME - Check widths, width should be 100% for the header, and fit-content for the menu?
 
 .select-multiple-toggle {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-width: var(--select-multiple-min-width);
-  max-width: var(--select-multiple-max-width);
-  padding: 6px 12px;
-  border: solid 1px $dv-secondary-color;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-
-  &.invalid {
-    border-color: $dv-danger-color;
-  }
-
-  &:focus-within,
-  &:focus {
-    border-color: color.adjust($dv-primary-color, $alpha: -0.4);
-    outline: 0;
-    box-shadow: 0 0 0 0.25rem color.adjust($dv-primary-color, $alpha: -0.7);
-  }
-
-  &.invalid:focus-within,
-  &.invalid:focus {
-    border-color: color.adjust($dv-danger-color, $alpha: -0.4);
-    outline: 0;
-    box-shadow: 0 0 0 0.25rem color.adjust($dv-danger-color, $alpha: -0.7);
-  }
+  display: grid;
+  background-color: #fff;
 
   &.disabled {
     opacity: 0.6;
     pointer-events: none;
   }
 
+  // Chevron icon
   &::after {
-    margin-left: 1rem;
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    display: inline-block;
+    width: 0.45em;
+    height: 0.45em;
+    border-color: rgb(0 0 0 / 75%);
+    border-style: solid;
+    border-width: 2px 2px 0 0;
+    transform: translateY(-60%) rotate(-225deg);
+    content: '';
   }
 
-  .selected-options-container {
-    display: inline-flex;
-    flex: 1;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+  &__input-button {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    grid-area: 1 / 1;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--toggle-padding);
+    background-color: transparent;
+    border: solid 1px $dv-secondary-color;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
-    &__item {
-      display: flex;
-      align-items: center;
-      padding: 0.25rem 0.5rem;
-      color: $dv-text-color;
-      font-weight: $dv-font-weight-bold;
-      font-size: $dv-font-size-sm;
-      background-color: $dv-secondary-color;
-      border-radius: 0.25rem;
-      cursor: pointer;
-      transition: background-color 0.2s;
+    &::after {
+      display: none;
+    }
+
+    &.invalid {
+      border-color: $dv-danger-color;
+    }
+
+    &:focus-within,
+    &:focus {
+      border-color: color.adjust($dv-primary-color, $alpha: -0.4);
+      outline: 0;
+      box-shadow: 0 0 0 0.25rem color.adjust($dv-primary-color, $alpha: -0.7);
+    }
+
+    &.invalid:focus-within,
+    &.invalid:focus {
+      border-color: color.adjust($dv-danger-color, $alpha: -0.4);
+      outline: 0;
+      box-shadow: 0 0 0 0.25rem color.adjust($dv-danger-color, $alpha: -0.7);
+    }
+  }
+
+  &__inner-content {
+    position: relative;
+    z-index: 2;
+    grid-area: 1 / 1;
+    padding: var(--toggle-padding);
+    pointer-events: none;
+
+    .selected-options-container {
+      display: inline-flex;
+      flex: 1;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      pointer-events: none;
+
+      &__item {
+        display: flex;
+        align-items: center;
+        padding: 0.25rem 0.5rem;
+        color: $dv-text-color;
+        font-weight: $dv-font-weight-bold;
+        font-size: $dv-font-size-sm;
+        background-color: $dv-secondary-color;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        pointer-events: all;
+
+        button {
+          display: grid;
+          place-items: center;
+          padding: 0;
+          border-radius: 50%;
+        }
+      }
     }
   }
 }
 
 .select-multiple-menu {
   width: 100%;
-  min-width: var(--select-multiple-min-width);
-  max-width: var(--select-multiple-max-width);
+  max-width: 100%;
   max-height: var(--select-multiple-menu-max-height);
   padding-top: 0;
   overflow-x: hidden;

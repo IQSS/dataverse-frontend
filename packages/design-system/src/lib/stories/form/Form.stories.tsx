@@ -174,7 +174,7 @@ export const SelectMultiple: Story = {
         <Form.Group.Label>Hobbies</Form.Group.Label>
         <Form.Group.SelectMultiple
           options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
-          ariaLabelledby="basic-form-select-multiple"
+          inputButtonId="basic-form-select-multiple"
         />
       </Form.Group>
     </Form>

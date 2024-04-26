@@ -4,14 +4,14 @@ import { SelectMultiple, SelectMultipleProps } from '../../../select-multiple/Se
 
 interface FormSelectMultipleProps extends SelectMultipleProps {
   withinMultipleFieldsGroup?: boolean
-  ariaLabelledby: string
+  inputButtonId: string
 }
 
 export const FormSelectMultiple = forwardRef(
   ({ withinMultipleFieldsGroup, ...props }: PropsWithChildren<FormSelectMultipleProps>, ref) => {
     return (
       <FormElementLayout withinMultipleFieldsGroup={withinMultipleFieldsGroup}>
-        <SelectMultiple ref={ref as React.ForwardedRef<HTMLSelectElement>} {...props} />
+        <SelectMultiple ref={ref as React.ForwardedRef<HTMLInputElement>} {...props} />
       </FormElementLayout>
     )
   }

@@ -8,7 +8,7 @@ interface SelectMultipleToggleProps {
   handleRemoveSelectedOption: (option: string) => void
   isInvalid?: boolean
   isDisabled?: boolean
-  ariaLabelledby?: string
+  inputButtonId?: string
 }
 
 export const SelectMultipleToggle = forwardRef(
@@ -18,44 +18,47 @@ export const SelectMultipleToggle = forwardRef(
       handleRemoveSelectedOption,
       isInvalid,
       isDisabled,
-      ariaLabelledby
+      inputButtonId
     }: SelectMultipleToggleProps,
-    ref: ForwardedRef<HTMLElement | null>
+    ref: ForwardedRef<HTMLInputElement | null>
   ) => {
     return (
-      <DropdownBS.Toggle
-        as="header"
-        tabIndex={0}
-        ref={ref}
-        aria-labelledby={ariaLabelledby}
-        aria-disabled={isDisabled}
-        className={`${styles['select-multiple-toggle']} ${isInvalid ? styles['invalid'] : ''} ${
-          isDisabled ? styles['disabled'] : ''
-        }`}>
-        {selectedOptions.length > 0 ? (
-          <div className={styles['selected-options-container']}>
-            {selectedOptions.map((selectedOption) => (
-              <div
-                className={styles['selected-options-container__item']}
-                onClick={(e) => e.stopPropagation()}
-                key={`selected-option-${selectedOption}`}>
-                <span className="me-2">{selectedOption}</span>
-                <ButtonBS
-                  variant="primary"
-                  className="rounded-circle p-0"
-                  onClick={() => handleRemoveSelectedOption(selectedOption)}
-                  aria-label="Remove selected option">
-                  <div style={{ display: 'grid', placeContent: 'center' }}>
+      <div
+        className={`${styles['select-multiple-toggle']} ${isDisabled ? styles['disabled'] : ''}`}>
+        <DropdownBS.Toggle
+          ref={ref}
+          as="input"
+          type="button"
+          id={inputButtonId}
+          disabled={isDisabled}
+          aria-disabled={isDisabled}
+          className={`${styles['select-multiple-toggle__input-button']} ${
+            isInvalid ? styles['invalid'] : ''
+          }`}
+        />
+        <div className={styles['select-multiple-toggle__inner-content']}>
+          {selectedOptions.length > 0 ? (
+            <div className={styles['selected-options-container']}>
+              {selectedOptions.map((selectedOption) => (
+                <div
+                  className={styles['selected-options-container__item']}
+                  onClick={(e) => e.stopPropagation()}
+                  key={`selected-option-${selectedOption}`}>
+                  <span className="me-2">{selectedOption}</span>
+                  <ButtonBS
+                    variant="primary"
+                    aria-label="Remove selected option"
+                    onClick={() => handleRemoveSelectedOption(selectedOption)}>
                     <CloseIcon size={14} />
-                  </div>
-                </ButtonBS>
-              </div>
-            ))}
-          </div>
-        ) : (
-          'Select...'
-        )}
-      </DropdownBS.Toggle>
+                  </ButtonBS>
+                </div>
+              ))}
+            </div>
+          ) : (
+            'Select...'
+          )}
+        </div>
+      </div>
     )
   }
 )

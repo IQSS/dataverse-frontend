@@ -48,24 +48,16 @@ export const NotSearchable: Story = {
   render: () => <SelectMultiple options={exampleOptions} isSearchable={false} />
 }
 
-export const Invalid: Story = {
-  render: () => <SelectMultiple options={exampleOptions} isInvalid />
+export const InvalidAndFocused: Story = {
+  render: () => <SelectMultipleWithRef isInvalid />
 }
 
 export const Disabled: Story = {
   render: () => <SelectMultiple options={exampleOptions} isDisabled />
 }
 
-export const SelectMultipleFocused: Story = {
-  render: () => <SelectMultipleWithRef />
-}
-
-export const SelectMultipleFocusedInvalid: Story = {
-  render: () => <SelectMultipleWithRef isInvalid />
-}
-
 const SelectMultipleWithRef = ({ isInvalid }: { isInvalid?: boolean }) => {
-  const ref = useRef<HTMLElement | null>(null)
+  const ref = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
     setTimeout(() => {
