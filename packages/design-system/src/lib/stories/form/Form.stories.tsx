@@ -61,6 +61,10 @@ export const AllInputTypes: Story = {
         <Form.Group.Label>Password</Form.Group.Label>
         <Form.Group.Input type="password" placeholder="Password" />
       </Form.Group>
+      <Form.Group controlId="basic-form-password">
+        <Form.Group.Label>File</Form.Group.Label>
+        <Form.Group.Input type="file" placeholder="File" />
+      </Form.Group>
     </Form>
   )
 }
