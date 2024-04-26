@@ -57,7 +57,7 @@ export const SelectMultipleMenu = ({
             id={searchInputControlID}
             type="text"
             placeholder="Search..."
-            aria-label="Search"
+            aria-label="Search for an option"
             size="sm"
             onChange={handleSearch}
           />

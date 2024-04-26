@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef, useId, useReducer } from 'react'
+import { ForwardedRef, forwardRef, useEffect, useId, useReducer } from 'react'
 import { Dropdown as DropdownBS } from 'react-bootstrap'
 import {
   selectMultipleInitialState,
@@ -11,9 +11,13 @@ import {
 import { SelectMultipleToggle } from './SelectMultipleToggle'
 import { SelectMultipleMenu } from './SelectMultipleMenu'
 import { debounce } from './utils'
+import { useIsFirstRender } from './useIsFirstRender'
+
+export const SELECT_MENU_SEARCH_DEBOUNCE_TIME = 400
 
 export interface SelectMultipleProps {
   options: string[]
+  onChange?: (selectedOptions: string[]) => void
   defaultValue?: string[]
   isSearchable?: boolean
   isDisabled?: boolean
@@ -25,6 +29,7 @@ export const SelectMultiple = forwardRef(
   (
     {
       options,
+      onChange,
       defaultValue,
       isSearchable = true,
       isDisabled = false,
@@ -33,19 +38,25 @@ export const SelectMultiple = forwardRef(
     }: SelectMultipleProps,
     ref: ForwardedRef<HTMLInputElement | null>
   ) => {
-    const menuId = useId()
-
     const [{ selectedOptions, filteredOptions }, dispatch] = useReducer(selectMultipleReducer, {
       ...selectMultipleInitialState,
       options: options,
       filteredOptions: options,
       selectedOptions: defaultValue || []
     })
+    const isFirstRender = useIsFirstRender()
+    const menuId = useId()
+
+    useEffect(() => {
+      if (!isFirstRender && onChange) {
+        onChange(selectedOptions)
+      }
+    }, [selectedOptions])
 
     const handleSearch = debounce((e: React.ChangeEvent<HTMLInputElement>): void => {
       const { value } = e.target
       dispatch(searchOptions(value))
-    }, 400)
+    }, SELECT_MENU_SEARCH_DEBOUNCE_TIME)
 
     const handleCheck = (e: React.ChangeEvent<HTMLInputElement>): void => {
       const { value, checked } = e.target

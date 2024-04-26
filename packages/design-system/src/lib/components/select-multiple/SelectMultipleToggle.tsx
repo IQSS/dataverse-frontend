@@ -34,6 +34,7 @@ export const SelectMultipleToggle = forwardRef(
           id={inputButtonId}
           disabled={isDisabled}
           aria-disabled={isDisabled}
+          aria-invalid={isInvalid}
           aria-label="Toggle options menu"
           aria-controls={menuId}
           className={`${styles['select-multiple-toggle__input-button']} ${
@@ -42,7 +43,9 @@ export const SelectMultipleToggle = forwardRef(
         />
         <div className={styles['select-multiple-toggle__inner-content']}>
           {selectedOptions.length > 0 ? (
-            <div className={styles['selected-options-container']}>
+            <div
+              className={styles['selected-options-container']}
+              aria-label="List of selected options">
               {selectedOptions.map((selectedOption) => (
                 <div
                   className={styles['selected-options-container__item']}
@@ -51,7 +54,7 @@ export const SelectMultipleToggle = forwardRef(
                   <span className="me-2">{selectedOption}</span>
                   <ButtonBS
                     variant="primary"
-                    aria-label="Remove selected option"
+                    aria-label={`Remove ${selectedOption} option`}
                     onClick={() => handleRemoveSelectedOption(selectedOption)}>
                     <CloseIcon size={14} />
                   </ButtonBS>
