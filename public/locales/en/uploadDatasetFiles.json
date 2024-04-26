@@ -1,0 +1,5 @@
+{
+  "filesTabTitle": "Files",
+  "fileTypeSupport": "All file types are supported for upload and download in their original format. If you are uploading Excel, CSV, TSV, RData, Stata, or SPSS files, see the guides for tabular support and limitations.",
+  "accordionHeader": "Upload with HTTP via your browser"
+}
