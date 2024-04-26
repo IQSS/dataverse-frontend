@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef, useReducer } from 'react'
+import { ForwardedRef, forwardRef, useId, useReducer } from 'react'
 import { Dropdown as DropdownBS } from 'react-bootstrap'
 import {
   selectMultipleInitialState,
@@ -11,7 +11,6 @@ import {
 import { SelectMultipleToggle } from './SelectMultipleToggle'
 import { SelectMultipleMenu } from './SelectMultipleMenu'
 import { debounce } from './utils'
-// import styles from './SelectMultiple.module.scss'
 
 export interface SelectMultipleProps {
   options: string[]
@@ -34,6 +33,8 @@ export const SelectMultiple = forwardRef(
     }: SelectMultipleProps,
     ref: ForwardedRef<HTMLInputElement | null>
   ) => {
+    const menuId = useId()
+
     const [{ selectedOptions, filteredOptions }, dispatch] = useReducer(selectMultipleReducer, {
       ...selectMultipleInitialState,
       options: options,
@@ -68,6 +69,7 @@ export const SelectMultiple = forwardRef(
           isInvalid={isInvalid}
           isDisabled={isDisabled}
           inputButtonId={inputButtonId}
+          menuId={menuId}
           ref={ref}
         />
         <SelectMultipleMenu
@@ -78,6 +80,7 @@ export const SelectMultiple = forwardRef(
           handleSearch={handleSearch}
           handleCheck={handleCheck}
           isSearchable={isSearchable}
+          menuId={menuId}
         />
       </DropdownBS>
     )

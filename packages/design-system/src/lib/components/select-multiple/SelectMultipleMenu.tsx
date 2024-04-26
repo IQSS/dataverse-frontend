@@ -10,6 +10,7 @@ interface SelectMultipleMenuProps {
   handleSearch: (e: React.ChangeEvent<HTMLInputElement>) => void
   handleCheck: (e: React.ChangeEvent<HTMLInputElement>) => void
   isSearchable: boolean
+  menuId: string
 }
 
 export const SelectMultipleMenu = ({
@@ -19,7 +20,8 @@ export const SelectMultipleMenu = ({
   handleToggleAllOptions,
   handleSearch,
   handleCheck,
-  isSearchable
+  isSearchable,
+  menuId
 }: SelectMultipleMenuProps) => {
   const searchInputControlID = useId()
   const toggleAllControlID = useId()
@@ -30,6 +32,7 @@ export const SelectMultipleMenu = ({
   return (
     <DropdownBS.Menu
       as="menu"
+      id={menuId}
       className={styles['select-multiple-menu']}
       popperConfig={{
         modifiers: [
@@ -41,9 +44,7 @@ export const SelectMultipleMenu = ({
           }
         ]
       }}>
-      {/* SEARCH INPUT */}
       <DropdownBS.Header className={styles['menu-header']} aria-level={1}>
-        {/* Toggle All Options */}
         <FormBS.Check
           type="checkbox"
           aria-label="Toggle all options"
@@ -51,7 +52,6 @@ export const SelectMultipleMenu = ({
           onChange={handleToggleAllOptions}
           checked={allOptionsSelected}
         />
-        {/* Search input */}
         {isSearchable ? (
           <FormBS.Control
             id={searchInputControlID}
@@ -66,7 +66,6 @@ export const SelectMultipleMenu = ({
         )}
       </DropdownBS.Header>
 
-      {/* List of options */}
       {filteredOptions.map((option) => (
         <DropdownBS.Item as="li" className={styles['option-item']} key={option}>
           <FormBS.Check
@@ -80,7 +79,7 @@ export const SelectMultipleMenu = ({
           />
         </DropdownBS.Item>
       ))}
-      {/* No Option founded */}
+
       {noOptionsFound && (
         <DropdownBS.Item as="li" disabled>
           No options found

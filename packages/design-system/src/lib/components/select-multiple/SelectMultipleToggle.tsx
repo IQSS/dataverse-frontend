@@ -9,6 +9,7 @@ interface SelectMultipleToggleProps {
   isInvalid?: boolean
   isDisabled?: boolean
   inputButtonId?: string
+  menuId: string
 }
 
 export const SelectMultipleToggle = forwardRef(
@@ -18,7 +19,8 @@ export const SelectMultipleToggle = forwardRef(
       handleRemoveSelectedOption,
       isInvalid,
       isDisabled,
-      inputButtonId
+      inputButtonId,
+      menuId
     }: SelectMultipleToggleProps,
     ref: ForwardedRef<HTMLInputElement | null>
   ) => {
@@ -32,6 +34,8 @@ export const SelectMultipleToggle = forwardRef(
           id={inputButtonId}
           disabled={isDisabled}
           aria-disabled={isDisabled}
+          aria-label="Toggle options menu"
+          aria-controls={menuId}
           className={`${styles['select-multiple-toggle__input-button']} ${
             isInvalid ? styles['invalid'] : ''
           }`}
