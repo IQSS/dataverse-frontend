@@ -10,10 +10,15 @@ const fileRepository: FileRepository = {} as FileRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 
 describe('Dataset', () => {
-  const mountWithDataset = (component: ReactNode, dataset: DatasetModel | undefined) => {
+  const mountWithDataset = (
+    component: ReactNode,
+    dataset: DatasetModel | undefined,
+    timeout = 0
+  ) => {
     const searchParams = { persistentId: 'some-persistent-id' }
-    datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
-
+    datasetRepository.getByPersistentId = cy
+      .stub()
+      .resolves(new Promise((resolve) => setTimeout(() => resolve(dataset), timeout)))
     cy.customMount(
       <DatasetProvider repository={datasetRepository} searchParams={searchParams}>
         {component}
@@ -24,7 +29,8 @@ describe('Dataset', () => {
   it('renders skeleton while loading', () => {
     const testDataset = DatasetMother.create()
 
-    mountWithDataset(<UploadDatasetFiles fileRepository={fileRepository} />, testDataset)
+    // wait for a timeout before resolving the promise, in order to test the rendering of the skeleton
+    mountWithDataset(<UploadDatasetFiles fileRepository={fileRepository} />, testDataset, 1000)
 
     cy.findByText('Temporary Loading until having shape of skeleton').should('exist')
     cy.findByText(testDataset.version.title).should('not.exist')
