@@ -56,7 +56,7 @@ describe('PaginationResultsInfo', () => {
 
   it('shows the correct formatted results when accumulated prop passed and results are more than page size', () => {
     const totalCount = 1500
-    const expectedFormattedTotalCount = '1,500'
+    const expectedFormattedTotalCount = new Intl.NumberFormat().format(totalCount)
 
     cy.customMount(
       <PaginationResultsInfo
