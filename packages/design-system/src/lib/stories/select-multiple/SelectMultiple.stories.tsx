@@ -1,10 +1,10 @@
-import { useEffect, useRef } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { SelectMultiple } from '../../components/select-multiple/SelectMultiple'
 
 /**
  * ## Description
  * The select multiple component is a user interface element that allows users to select multiple options from a list of items.
+ * They can also search for items in the list, select all items, and clear the selection.
  */
 const meta: Meta<typeof SelectMultiple> = {
   title: 'Select Multiple',
@@ -48,22 +48,10 @@ export const NotSearchable: Story = {
   render: () => <SelectMultiple options={exampleOptions} isSearchable={false} />
 }
 
-export const InvalidAndFocused: Story = {
-  render: () => <SelectMultipleWithRef isInvalid />
+export const Invalid: Story = {
+  render: () => <SelectMultiple options={exampleOptions} isInvalid />
 }
 
 export const Disabled: Story = {
   render: () => <SelectMultiple options={exampleOptions} isDisabled />
-}
-
-const SelectMultipleWithRef = ({ isInvalid }: { isInvalid?: boolean }) => {
-  const ref = useRef<HTMLInputElement | null>(null)
-
-  useEffect(() => {
-    setTimeout(() => {
-      ref.current?.focus()
-    }, 250)
-  }, [])
-
-  return <SelectMultiple options={exampleOptions} isInvalid={isInvalid} ref={ref} />
 }
