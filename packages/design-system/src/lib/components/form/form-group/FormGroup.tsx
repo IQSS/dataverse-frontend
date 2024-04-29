@@ -14,7 +14,7 @@ import { FormSelectMultiple } from './form-element/FormSelectMultiple'
 interface FormGroupProps extends ColProps {
   as?: typeof Col | typeof Row
   required?: boolean
-  controlId: string
+  controlId?: string
   fieldIndex?: string
 }
 
@@ -30,7 +30,7 @@ function FormGroup({
 
   return (
     <FormBS.Group
-      controlId={fieldIndex ? `${controlId}-${fieldIndex}` : controlId}
+      controlId={controlId ? (fieldIndex ? `${controlId}-${fieldIndex}` : controlId) : undefined}
       className="mb-3"
       as={as}
       {...props}>
