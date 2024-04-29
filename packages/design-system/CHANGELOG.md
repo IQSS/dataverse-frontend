@@ -12,11 +12,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **FormChecboxGroup:** refactor styles.
 - **FormGroupWithMultipleFields:** refactor styles and conditional render logic.
 - **FormGroup:** ability to clone children wrapped by react fragments.
-- **FormCheckbox:** ability to forward react ref to input.
-- **FormInput:** ability to forward react ref to input.
-- **FormSelect:** ability to forward react ref to input.
-- **FormTextArea:** ability to forward react ref to input.
+- **FormCheckbox:** ability to forward react ref to input and export FormCheckboxProps interface.
+- **FormInput:** ability to forward react ref to input and export FormInputProps interface.
+- **FormSelect:** ability to forward react ref to input, add `isInvalid` `isValid` & `disabled` props and export FormSelectProps interface.
+- **FormTextArea:** ability to forward react ref to input and export FormTextAreaProps interface.
 - **FormFeedback:** remove `span: 9` from styles.
+- **FormGroup:** controlId is now optional.
+- **FormLabel:** extend Props Interface to accept `htmlFor` prop.
+- **SelectMultiple:** NEW multiple selector for occasions when you can choose more than one option.
+- **FormSelectMultiple:** The new multiple selector is added to the "FormGroup" components.
 
 # [1.1.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@1.0.1...@iqss/dataverse-design-system@1.1.0) (2024-03-12)
 
