@@ -1,22 +1,24 @@
-import { Button } from '@iqss/dataverse-design-system'
-import { PlusLg } from 'react-bootstrap-icons'
-import { useSession } from '../../../session/SessionContext'
-import styles from './DatasetUploadFilesButton.module.scss'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { PlusLg } from 'react-bootstrap-icons'
+import { Button } from '@iqss/dataverse-design-system'
+import { useSession } from '../../../session/SessionContext'
 import { useDataset } from '../../DatasetContext'
-import { useNotImplementedModal } from '../../../not-implemented/NotImplementedModalContext'
+import { Route } from '../../../Route.enum'
+import styles from './DatasetUploadFilesButton.module.scss'
 
 export function DatasetUploadFilesButton() {
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const { dataset } = useDataset()
-  const handleClick = () => {
-    // TODO - Implement upload files
-    showModal()
-  }
-  const { showModal } = useNotImplementedModal()
+  const navigate = useNavigate()
+
   if (!user || !dataset?.permissions.canUpdateDataset) {
     return <></>
+  }
+
+  const handleClick = () => {
+    navigate(`${Route.UPLOAD_DATASET_FILES}?persistentId=${dataset.persistentId}`)
   }
 
   return (

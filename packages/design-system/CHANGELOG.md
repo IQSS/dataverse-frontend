@@ -21,6 +21,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **FormLabel:** extend Props Interface to accept `htmlFor` prop.
 - **SelectMultiple:** NEW multiple selector for occasions when you can choose more than one option.
 - **FormSelectMultiple:** The new multiple selector is added to the "FormGroup" components.
+- **DropdownButtonItem:** extend Props Interface to accept `as` prop.
 
 # [1.1.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@1.0.1...@iqss/dataverse-design-system@1.1.0) (2024-03-12)
 
