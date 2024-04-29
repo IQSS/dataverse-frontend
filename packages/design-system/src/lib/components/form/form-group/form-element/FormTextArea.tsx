@@ -3,7 +3,7 @@ import { FormElementLayout } from './FormElementLayout'
 import * as React from 'react'
 
 export type FormInputElement = HTMLInputElement | HTMLTextAreaElement
-interface FormTextAreaProps extends Omit<React.HTMLAttributes<FormInputElement>, 'rows'> {
+export interface FormTextAreaProps extends Omit<React.HTMLAttributes<FormInputElement>, 'rows'> {
   withinMultipleFieldsGroup?: boolean
   name?: string
   disabled?: boolean

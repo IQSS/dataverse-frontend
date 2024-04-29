@@ -2,7 +2,7 @@ import { PropsWithChildren, forwardRef } from 'react'
 import { FormElementLayout } from './FormElementLayout'
 import { SelectMultiple, SelectMultipleProps } from '../../../select-multiple/SelectMultiple'
 
-interface FormSelectMultipleProps extends SelectMultipleProps {
+export interface FormSelectMultipleProps extends SelectMultipleProps {
   withinMultipleFieldsGroup?: boolean
   inputButtonId: string
 }

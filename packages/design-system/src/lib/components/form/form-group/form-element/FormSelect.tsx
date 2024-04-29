@@ -3,7 +3,8 @@ import { Form as FormBS } from 'react-bootstrap'
 import { FormElementLayout } from './FormElementLayout'
 import * as React from 'react'
 
-interface FormSelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
+export interface FormSelectProps
+  extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
   withinMultipleFieldsGroup?: boolean
 }
 
