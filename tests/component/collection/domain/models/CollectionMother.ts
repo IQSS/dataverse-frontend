@@ -8,6 +8,7 @@ export class CollectionMother {
     return {
       id: faker.datatype.uuid(),
       name: faker.lorem.words(3),
+      isReleased: faker.datatype.boolean(),
       description: faker.datatype.boolean()
         ? `${faker.lorem.paragraph()} **${faker.lorem.sentence()}** ${faker.lorem.paragraph()}`
         : undefined,
@@ -20,6 +21,7 @@ export class CollectionMother {
   static createRealistic(): Collection {
     return CollectionMother.create({
       id: 'science',
+      isReleased: true,
       name: 'Collection Name',
       description: 'We do all the science.',
       affiliation: 'Scientific Research University'
@@ -30,6 +32,7 @@ export class CollectionMother {
     return CollectionMother.create({
       id: faker.datatype.uuid(),
       name: FakerHelper.collectionName(),
+      isReleased: faker.datatype.boolean(),
       affiliation: undefined,
       description: undefined,
       ...props
@@ -39,12 +42,18 @@ export class CollectionMother {
   static createComplete(): Collection {
     return CollectionMother.create({
       id: faker.datatype.uuid(),
+      isReleased: faker.datatype.boolean(),
       name: FakerHelper.collectionName(),
       description: FakerHelper.paragraph(),
       affiliation: FakerHelper.affiliation()
     })
   }
-
+  static createUnpublished(): Collection {
+    return CollectionMother.createWithOnlyRequiredFields({
+      isReleased: false,
+      affiliation: FakerHelper.affiliation()
+    })
+  }
   static createWithDescription(): Collection {
     return CollectionMother.createWithOnlyRequiredFields({
       description: FakerHelper.paragraph()

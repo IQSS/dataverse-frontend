@@ -1,20 +1,40 @@
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { Dataset } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { EditDatasetPermissionsMenu } from './EditDatasetPermissionsMenu'
 import { DeleteDatasetButton } from './DeleteDatasetButton'
 import { DeaccessionDatasetButton } from './DeaccessionDatasetButton'
-import { useTranslation } from 'react-i18next'
 import { useNotImplementedModal } from '../../../not-implemented/NotImplementedModalContext'
 import { useSession } from '../../../session/SessionContext'
+import { Route } from '../../../Route.enum'
 
 interface EditDatasetMenuProps {
   dataset: Dataset
+}
+
+enum EditDatasetMenuItems {
+  FILES_UPLOAD = 'filesUpload',
+  METADATA = 'metadata',
+  TERMS = 'terms',
+  PERMISSIONS = 'permissions',
+  PRIVATE_URL = 'privateUrl',
+  THUMBNAILS_PLUS_WIDGETS = 'thumbnailsPlusWidgets'
 }
 
 export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
   const { user } = useSession()
   const { showModal } = useNotImplementedModal()
   const { t } = useTranslation('dataset')
+  const navigate = useNavigate()
+
+  const handleOnSelect = (eventKey: EditDatasetMenuItems | string | null) => {
+    if (eventKey === EditDatasetMenuItems.FILES_UPLOAD) {
+      navigate(`${Route.UPLOAD_DATASET_FILES}?persistentId=${dataset.persistentId}`)
+      return
+    }
+    showModal()
+  }
 
   if (!user || !dataset.permissions.canUpdateDataset) {
     return <></>
@@ -22,25 +42,35 @@ export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
 
   return (
     <DropdownButton
-      onSelect={showModal}
+      onSelect={handleOnSelect}
       id={`edit-dataset-menu`}
       title={t('datasetActionButtons.editDataset.title')}
       asButtonGroup
       variant="secondary"
       disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
-      <DropdownButtonItem disabled={!dataset.hasValidTermsOfAccess}>
+      <DropdownButtonItem
+        eventKey={EditDatasetMenuItems.FILES_UPLOAD}
+        as="button"
+        disabled={!dataset.hasValidTermsOfAccess}>
         {t('datasetActionButtons.editDataset.filesUpload')}
       </DropdownButtonItem>
-      <DropdownButtonItem disabled={!dataset.hasValidTermsOfAccess}>
+      <DropdownButtonItem
+        eventKey={EditDatasetMenuItems.METADATA}
+        as="button"
+        disabled={!dataset.hasValidTermsOfAccess}>
         {t('datasetActionButtons.editDataset.metadata')}
       </DropdownButtonItem>
-      <DropdownButtonItem>{t('datasetActionButtons.editDataset.terms')}</DropdownButtonItem>
+      <DropdownButtonItem eventKey={EditDatasetMenuItems.TERMS} as="button">
+        {t('datasetActionButtons.editDataset.terms')}
+      </DropdownButtonItem>
       <EditDatasetPermissionsMenu dataset={dataset} />
       {(dataset.permissions.canManageDatasetPermissions ||
         dataset.permissions.canManageFilesPermissions) && (
-        <DropdownButtonItem>{t('datasetActionButtons.editDataset.privateUrl')}</DropdownButtonItem>
+        <DropdownButtonItem eventKey={EditDatasetMenuItems.PRIVATE_URL} as="button">
+          {t('datasetActionButtons.editDataset.privateUrl')}
+        </DropdownButtonItem>
       )}
-      <DropdownButtonItem>
+      <DropdownButtonItem eventKey={EditDatasetMenuItems.THUMBNAILS_PLUS_WIDGETS} as="button">
         {t('datasetActionButtons.editDataset.thumbnailsPlusWidgets')}
       </DropdownButtonItem>
       <DeleteDatasetButton dataset={dataset} />

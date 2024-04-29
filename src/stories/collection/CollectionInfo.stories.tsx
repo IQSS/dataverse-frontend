@@ -24,6 +24,9 @@ export const WithAffiliation: Story = {
   render: () => <CollectionInfo collection={CollectionMother.createWithAffiliation()} />
 }
 
+export const Unpublished: Story = {
+  render: () => <CollectionInfo collection={CollectionMother.createUnpublished()} />
+}
 export const WithDescription: Story = {
   render: () => <CollectionInfo collection={CollectionMother.createWithDescription()} />
 }

@@ -112,7 +112,7 @@ repo we are using the [JavaScript Dataverse API client library] in which you can
 [Dataverse main repo]: https://github.com/IQSS/dataverse/blob/develop/CONTRIBUTING.md
 [Star]: https://github.com/iqss/dataverse-frontend/stargazers
 [Report a bug]: https://github.com/iqss/dataverse-frontend/issues/new?assignees=&labels=&projects=&title=%5BBUG%5D+Your+title
-["help wanted"]: https://github.com/iqss/dataverse-frontend/labels/help%20wanted:
+["help wanted"]: https://github.com/iqss/dataverse-frontend/labels/help%20wanted
 ["good first issue"]: https://github.com/iqss/dataverse-frontend/labels/good%20first%20issue
 [Zulip UI Dev Stream]: https://dataverse.zulipchat.com/#narrow/stream/410361-ui-dev
 [5 people]: https://github.com/iqss/dataverse-frontend/graphs/contributors
