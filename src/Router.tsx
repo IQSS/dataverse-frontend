@@ -1,13 +1,45 @@
+import { lazy, Suspense } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Layout } from './sections/layout/Layout'
 import { Route } from './sections/Route.enum'
-import { DatasetFactory } from './sections/dataset/DatasetFactory'
-import { PageNotFound } from './sections/page-not-found/PageNotFound'
-import { CreateDatasetFactory } from './sections/create-dataset/CreateDatasetFactory'
-import { FileFactory } from './sections/file/FileFactory'
-import { CollectionFactory } from './sections/collection/CollectionFactory'
-import { UploadDatasetFilesFactory } from './sections/upload-dataset-files/UploadDatasetFilesFactory'
 import { DatasetNonNumericVersion } from './dataset/domain/models/Dataset'
+import { AppLoader } from './sections/shared/layout/AppLoader/AppLoader'
+import { PageNotFound } from './sections/page-not-found/PageNotFound'
+
+const DatasetPage = lazy(() =>
+  import('./sections/dataset/DatasetFactory').then(({ DatasetFactory }) => ({
+    default: () => DatasetFactory.create()
+  }))
+)
+
+const CreateDatasetPage = lazy(() =>
+  import('./sections/create-dataset/CreateDatasetFactory').then(({ CreateDatasetFactory }) => ({
+    default: () => CreateDatasetFactory.create()
+  }))
+)
+
+const FilePage = lazy(() =>
+  import('./sections/file/FileFactory').then(({ FileFactory }) => ({
+    default: () => FileFactory.create()
+  }))
+)
+
+const CollectionPage = lazy(() =>
+  import('./sections/collection/CollectionFactory').then(({ CollectionFactory }) => ({
+    default: () => CollectionFactory.create()
+  }))
+)
+
+const UploadDatasetFilesPage = lazy(() =>
+  import('./sections/upload-dataset-files/UploadDatasetFilesFactory').then(
+    ({ UploadDatasetFilesFactory }) => ({
+      default: () => UploadDatasetFilesFactory.create()
+    })
+  )
+)
+
+// TODO:ME Build and check how lazy loaded files look
+// TODO:ME Preview build and check performance
 
 const router = createBrowserRouter(
   [
@@ -18,27 +50,51 @@ const router = createBrowserRouter(
       children: [
         {
           path: Route.HOME,
-          element: CollectionFactory.create()
+          element: (
+            <Suspense fallback={<AppLoader />}>
+              <CollectionPage />
+            </Suspense>
+          )
         },
         {
           path: Route.COLLECTIONS,
-          element: CollectionFactory.create()
+          element: (
+            <Suspense fallback={<AppLoader />}>
+              <CollectionPage />
+            </Suspense>
+          )
         },
         {
           path: Route.DATASETS,
-          element: DatasetFactory.create()
+          element: (
+            <Suspense fallback={<AppLoader />}>
+              <DatasetPage />
+            </Suspense>
+          )
         },
         {
           path: Route.CREATE_DATASET,
-          element: CreateDatasetFactory.create()
+          element: (
+            <Suspense fallback={<AppLoader />}>
+              <CreateDatasetPage />
+            </Suspense>
+          )
         },
         {
           path: Route.UPLOAD_DATASET_FILES,
-          element: UploadDatasetFilesFactory.create()
+          element: (
+            <Suspense fallback={<AppLoader />}>
+              <UploadDatasetFilesPage />
+            </Suspense>
+          )
         },
         {
           path: Route.FILES,
-          element: FileFactory.create()
+          element: (
+            <Suspense fallback={<AppLoader />}>
+              <FilePage />
+            </Suspense>
+          )
         }
       ]
     }
