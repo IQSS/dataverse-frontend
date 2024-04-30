@@ -12,7 +12,7 @@ describe('Collection Page', () => {
 
   beforeEach(() => {
     TestsUtils.login()
-    cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
+    cy.wrap(DatasetHelper.destroyAll())
   })
 
   it('successfully loads root collection when accessing the home', () => {

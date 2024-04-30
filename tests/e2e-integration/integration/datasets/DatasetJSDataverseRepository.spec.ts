@@ -130,7 +130,7 @@ describe('Dataset JSDataverse Repository', () => {
   before(() => TestsUtils.setup())
   beforeEach(() => {
     TestsUtils.login()
-    cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
+    cy.wrap(DatasetHelper.destroyAll())
   })
 
   it('gets the dataset by persistentId', async () => {

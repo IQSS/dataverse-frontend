@@ -20,7 +20,7 @@ describe('Dataset', () => {
 
   describe('Visit the Dataset Page as a logged in user', () => {
     beforeEach(() => {
-      cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
+      cy.wrap(DatasetHelper.destroyAll())
     })
     it('successfully loads a dataset in draft mode', () => {
       cy.wrap(DatasetHelper.create())
@@ -195,7 +195,7 @@ describe('Dataset', () => {
 
   describe('Visualizing the Files Tab', () => {
     beforeEach(() => {
-      cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
+      cy.wrap(DatasetHelper.destroyAll())
     })
     it('successfully loads the files tab', () => {
       cy.wrap(DatasetHelper.create())
@@ -536,7 +536,7 @@ describe('Dataset', () => {
 
   describe('Downloading files', () => {
     beforeEach(() => {
-      cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
+      cy.wrap(DatasetHelper.destroyAll())
     })
     it('downloads the dataset', () => {
       cy.wrap(
