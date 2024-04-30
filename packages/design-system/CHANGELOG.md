@@ -18,6 +18,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **FormTextArea:** ability to forward react ref to input.
 - **FormFeedback:** remove `span: 9` from styles.
 - **DropdownButtonItem:** extend Props Interface to accept `as` prop.
+- **Spinner:** New Spinner component.
 
 # [1.1.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@1.0.1...@iqss/dataverse-design-system@1.1.0) (2024-03-12)
 
