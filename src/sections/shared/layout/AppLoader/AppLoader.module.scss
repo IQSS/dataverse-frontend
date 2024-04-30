@@ -1,6 +1,7 @@
 @import 'src/assets/variables';
 
-.body-container {
+.app-loader {
+  display: grid;
+  place-content: center;
   min-height: $body-available-height;
-  margin-top: $header-height;
 }
