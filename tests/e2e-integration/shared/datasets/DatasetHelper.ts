@@ -66,7 +66,7 @@ export class DatasetHelper extends DataverseApiHelper {
     for (const dataset of response.items as Array<{ global_id: string }>) {
       await this.destroy(dataset.global_id)
     }
-    await this.request<DatasetResponse>('/admin/index/clear-orphans', 'GET')
+    await this.request<DatasetResponse>('/admin/index/clear-orphans?sync=true', 'GET')
   }
 
   static async destroyAll(): Promise<void> {
