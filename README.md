@@ -215,15 +215,15 @@ The environment is accessible through the following URLs:
 Interested in what's being developed currently? See the [open issues][dv_repo_issues_url] for a full list of proposed
 features (and known issues), and what we are working on in the [currently planned sprint][dv_repo_sprint_url].
 
-We are developing the new Dataverse Frontend in quarterly milestones. 
+We are developing the new Dataverse Frontend in quarterly milestones.
 <br>
 The current milestone for Frontend Development is described in [Proposal: SPA Beta Features for Q2 2024][dv_docs_SPA_Q2_milestones_url].
-
 
 Keep an eye out on [The Institute for Quantitative Social Science (IQSS) Dataverse Roadmap][hvd_iqss_roadmap_url] at
 Harvard University to get a look at upcoming initiatives for the project.
 
 ## References
+
 For more information on the Dataverse re-architecture project, see the original documentation, [Restructuring the Dataverse UI as a Single-Page Application][dv_docs_rearchitecture_url].
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -355,6 +355,7 @@ Distributed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for mo
 [dv_docs_github_token_url]: https://github.com/settings/tokens
 [dv_docs_SPA_Q2_milestones_url]: https://docs.google.com/document/d/1uE0s-XxL-cLzcXJ3buyrbpc95bqKIewagaOtVAsMPGI/edit?usp=sharing
 [dv_docs_rearchitecture_url]: https://docs.google.com/document/d/19pbENuYyHErEmblbFGQ47_uJpTfqVKbn9O0QftVqeeU/edit?usp=sharing
+
 <!-- 3rd Party Resources/References -->
 <!-- [_uses_] -->
 
