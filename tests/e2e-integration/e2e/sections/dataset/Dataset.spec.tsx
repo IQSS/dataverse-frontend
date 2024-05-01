@@ -191,9 +191,6 @@ describe('Dataset', () => {
   })
 
   describe('Visualizing the Files Tab', () => {
-    beforeEach(() => {
-      cy.wrap(DatasetHelper.destroyAll())
-    })
     it('successfully loads the files tab', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
@@ -532,9 +529,6 @@ describe('Dataset', () => {
   })
 
   describe('Downloading files', () => {
-    beforeEach(() => {
-      cy.wrap(DatasetHelper.destroyAll())
-    })
     it('downloads the dataset', () => {
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(2)).then((dataset) =>
