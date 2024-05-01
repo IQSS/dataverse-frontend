@@ -50,10 +50,10 @@ export class DatasetHelper extends DataverseApiHelper {
     return datasetResponse
   }
 
-  static async createMany(amount: number): Promise<DatasetResponse[]> {
+  static async createMany(amount: number, collectionId = 'root'): Promise<DatasetResponse[]> {
     const datasets = []
     for (let i = 0; i < amount; i++) {
-      const datasetResponse = await this.create()
+      const datasetResponse = await this.create(collectionId)
       datasets.push(datasetResponse)
     }
     return datasets
