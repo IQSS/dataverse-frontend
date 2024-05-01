@@ -19,9 +19,6 @@ describe('Dataset', () => {
   })
 
   describe('Visit the Dataset Page as a logged in user', () => {
-    beforeEach(() => {
-      cy.wrap(DatasetHelper.destroyAll())
-    })
     it('successfully loads a dataset in draft mode', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
