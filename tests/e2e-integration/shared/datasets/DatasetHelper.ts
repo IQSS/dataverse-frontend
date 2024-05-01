@@ -43,8 +43,8 @@ export class DatasetHelper extends DataverseApiHelper {
       throw error
     }
   }
-  static async createAndPublish(): Promise<DatasetResponse> {
-    const datasetResponse = await DatasetHelper.create()
+  static async createAndPublish(collectionId = 'root'): Promise<DatasetResponse> {
+    const datasetResponse = await DatasetHelper.create(collectionId)
     await DatasetHelper.publish(datasetResponse.persistentId)
     await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
     return datasetResponse
@@ -133,20 +133,26 @@ export class DatasetHelper extends DataverseApiHelper {
     }>(`/datasets/${id}/privateUrl?anonymizedAccess=true`, 'POST')
   }
 
-  static async createWithFiles(filesData: FileData[]): Promise<DatasetResponse> {
-    const datasetResponse = await this.create()
+  static async createWithFiles(
+    filesData: FileData[],
+    collectionId = 'root'
+  ): Promise<DatasetResponse> {
+    const datasetResponse = await this.create(collectionId)
     const files = await this.uploadFiles(datasetResponse.persistentId, filesData)
     return { ...datasetResponse, files: files }
   }
 
-  static async createWithFile(fileData: FileData): Promise<DatasetResponse> {
-    const datasetResponse = await this.create()
+  static async createWithFile(fileData: FileData, collectionId = 'root'): Promise<DatasetResponse> {
+    const datasetResponse = await this.create(collectionId)
     const file = await this.uploadFile(datasetResponse.persistentId, fileData)
     return { ...datasetResponse, file: file }
   }
 
-  static async createWithFileAndPublish(fileData: FileData): Promise<DatasetResponse> {
-    const datasetResponse = await DatasetHelper.createWithFile(fileData)
+  static async createWithFileAndPublish(
+    fileData: FileData,
+    collectionId = 'root'
+  ): Promise<DatasetResponse> {
+    const datasetResponse = await DatasetHelper.createWithFile(fileData, collectionId)
     await DatasetHelper.publish(datasetResponse.persistentId)
     await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
 
