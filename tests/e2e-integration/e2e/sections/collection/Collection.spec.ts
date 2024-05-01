@@ -2,7 +2,7 @@ import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { faker } from '@faker-js/faker'
 import { CollectionHelper } from '../../../shared/collection/CollectionHelper'
-
+const collectionId = 'CollectionPageTest' + Date.now().toString()
 describe('Collection Page', () => {
   const title = faker.lorem.sentence()
   before(() => {
@@ -12,7 +12,6 @@ describe('Collection Page', () => {
 
   beforeEach(() => {
     TestsUtils.login()
-    cy.wrap(DatasetHelper.destroyAll())
   })
 
   it('successfully loads root collection when accessing the home', () => {
@@ -132,18 +131,23 @@ describe('Collection Page', () => {
   })
 
   it('12 Datasets - displays first 10 datasets, scroll to the bottom and displays the remaining 2 datasets', () => {
-    cy.wrap(DatasetHelper.createMany(12), { timeout: 10_000 }).then(() => {
-      cy.wait(2_000) // Wait for the datasets to be created
-      cy.visit('/spa')
+    const collectionId = 'collection-1' + Date.now().toString()
+    cy.wrap(CollectionHelper.create(collectionId)).then(() => {
+      cy.wrap(DatasetHelper.createMany(12, collectionId), { timeout: 10_000 }).then(() => {
+        cy.wait(2_000) // Wait for the datasets to be created
+        cy.visit(`/spa/collections?id=${collectionId}`)
 
-      cy.findAllByText(/Root/i).should('exist')
-      cy.findByText(/Dataverse Admin/i).should('exist')
+        cy.findAllByText(/Scientific Research/i).should('exist')
+        cy.findByText(/Dataverse Admin/i).should('exist')
 
-      cy.findByText('10 of 12 Datasets seen').should('exist')
+        cy.findByText('10 of 12 Datasets seen').should('exist')
 
-      cy.get('[data-testid="scrollable-container"]').scrollTo('bottom', { ensureScrollable: false })
-      cy.wait(1_500)
-      cy.findByText('12 of 12 Datasets seen').should('exist')
+        cy.get('[data-testid="scrollable-container"]').scrollTo('bottom', {
+          ensureScrollable: false
+        })
+        cy.wait(1_500)
+        cy.findByText('12 of 12 Datasets seen').should('exist')
+      })
     })
   })
 })
