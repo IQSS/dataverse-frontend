@@ -2,7 +2,7 @@ import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { faker } from '@faker-js/faker'
 import { CollectionHelper } from '../../../shared/collection/CollectionHelper'
-const collectionId = 'CollectionPageTest' + Date.now().toString()
+
 describe('Collection Page', () => {
   const title = faker.lorem.sentence()
   before(() => {
