@@ -38,9 +38,6 @@ const UploadDatasetFilesPage = lazy(() =>
   )
 )
 
-// TODO:ME Build and check how lazy loaded files look
-// TODO:ME Preview build and check performance
-
 const router = createBrowserRouter(
   [
     {
