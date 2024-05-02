@@ -3,7 +3,7 @@ name: 'Deploy to Beta Testing'
 on:
   push:
     branches:
-      - feature/381-implement-lazy-loading
+      - develop
 
 jobs:
   build:
