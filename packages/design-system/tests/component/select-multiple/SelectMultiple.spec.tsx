@@ -90,7 +90,7 @@ describe('SelectMultiple', () => {
     cy.get('@onChange').should('not.have.been.called')
   })
 
-  it('selects an option is shown as selected both in the menu as well as in the selected options', () => {
+  it('should select an option and be shown as selected both in the menu as well as in the selected options', () => {
     cy.mount(
       <SelectMultiple
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
@@ -124,7 +124,7 @@ describe('SelectMultiple', () => {
     })
   })
 
-  it('selects all options when the toggle all checkbox is checked while been unchecked before', () => {
+  it('selects all options', () => {
     cy.mount(
       <SelectMultiple
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
@@ -154,7 +154,7 @@ describe('SelectMultiple', () => {
     cy.findByText('Select...').should('not.exist')
   })
 
-  it('deselects all options when the toggle all checkbox is unchecked while been checked before', () => {
+  it('deselects all options', () => {
     cy.mount(
       <SelectMultiple
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
@@ -174,6 +174,84 @@ describe('SelectMultiple', () => {
 
     cy.findByLabelText('List of selected options').should('not.exist')
     cy.findByText('Select...').should('exist')
+  })
+
+  it('should select all filtered options', () => {
+    cy.mount(
+      <SelectMultiple
+        options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
+      />
+    )
+    cy.clock()
+
+    cy.findByLabelText('Toggle options menu').click()
+    cy.findByPlaceholderText('Search...').type('Read')
+
+    cy.tick(SELECT_MENU_SEARCH_DEBOUNCE_TIME)
+
+    cy.findByLabelText('Reading').should('exist')
+    cy.findByLabelText('Swimming').should('not.exist')
+    cy.findByLabelText('Running').should('not.exist')
+    cy.findByLabelText('Cycling').should('not.exist')
+    cy.findByLabelText('Cooking').should('not.exist')
+    cy.findByLabelText('Gardening').should('not.exist')
+
+    cy.findByLabelText('Toggle all options').click()
+
+    cy.findByLabelText('List of selected options')
+      .should('exist')
+      .within(() => {
+        cy.findByText('Reading').should('exist')
+        cy.findByText('Swimming').should('not.exist')
+        cy.findByText('Running').should('not.exist')
+        cy.findByText('Cycling').should('not.exist')
+        cy.findByText('Cooking').should('not.exist')
+        cy.findByText('Gardening').should('not.exist')
+      })
+    cy.findByText('Select...').should('not.exist')
+  })
+
+  it('should unselect only filtered options', () => {
+    cy.mount(
+      <SelectMultiple
+        options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
+      />
+    )
+    cy.clock()
+
+    cy.findByLabelText('Toggle options menu').click()
+    cy.findByLabelText('Toggle all options').click()
+
+    cy.findByLabelText('Reading').should('be.checked')
+    cy.findByLabelText('Swimming').should('be.checked')
+    cy.findByLabelText('Running').should('be.checked')
+    cy.findByLabelText('Cycling').should('be.checked')
+    cy.findByLabelText('Cooking').should('be.checked')
+    cy.findByLabelText('Gardening').should('be.checked')
+
+    cy.findByPlaceholderText('Search...').type('Read')
+
+    cy.tick(SELECT_MENU_SEARCH_DEBOUNCE_TIME)
+
+    cy.findByLabelText('Reading').should('exist')
+    cy.findByLabelText('Swimming').should('not.exist')
+    cy.findByLabelText('Running').should('not.exist')
+    cy.findByLabelText('Cycling').should('not.exist')
+    cy.findByLabelText('Cooking').should('not.exist')
+    cy.findByLabelText('Gardening').should('not.exist')
+
+    cy.findByLabelText('Toggle all options').click()
+
+    cy.findByLabelText('List of selected options')
+      .should('exist')
+      .within(() => {
+        cy.findByText('Reading').should('not.exist')
+        cy.findByText('Swimming').should('exist')
+        cy.findByText('Running').should('exist')
+        cy.findByText('Cycling').should('exist')
+        cy.findByText('Cooking').should('exist')
+        cy.findByText('Gardening').should('exist')
+      })
   })
 
   it('should show correct filtered options when searching for a value', () => {
@@ -241,7 +319,7 @@ describe('SelectMultiple', () => {
     cy.findByText('2 selected').should('exist')
   })
 
-  it('should show No Options Found when search does not match any option', () => {
+  it('should show No Options Found and toggle all chebox be disabled when search does not match any option', () => {
     cy.mount(
       <SelectMultiple
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
@@ -252,6 +330,7 @@ describe('SelectMultiple', () => {
     cy.findByPlaceholderText('Search...').type('Yoga')
 
     cy.findByText('No options found').should('exist')
+    cy.findByLabelText('Toggle all options').should('be.disabled')
   })
 
   it('should be disabled when isDisabled is true', () => {

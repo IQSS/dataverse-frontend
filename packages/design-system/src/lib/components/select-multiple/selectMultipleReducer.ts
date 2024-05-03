@@ -22,7 +22,10 @@ type SelectMultipleActions =
       payload: string
     }
   | {
-      type: 'TOGGLE_ALL_OPTIONS'
+      type: 'SELECT_ALL_OPTIONS'
+    }
+  | {
+      type: 'DESELECT_ALL_OPTIONS'
     }
   | {
       type: 'SEARCH'
@@ -44,19 +47,32 @@ export const selectMultipleReducer = (
         ...state,
         selectedOptions: state.selectedOptions.filter((option) => option !== action.payload)
       }
-    case 'TOGGLE_ALL_OPTIONS':
+    case 'SELECT_ALL_OPTIONS':
       return {
         ...state,
-        selectedOptions: state.selectedOptions.length === state.options.length ? [] : state.options
+        selectedOptions:
+          state.filteredOptions.length > 0
+            ? Array.from(new Set([...state.selectedOptions, ...state.filteredOptions]))
+            : state.options
       }
+    case 'DESELECT_ALL_OPTIONS':
+      return {
+        ...state,
+        selectedOptions:
+          state.filteredOptions.length > 0
+            ? state.selectedOptions.filter((option) => !state.filteredOptions.includes(option))
+            : []
+      }
+
     case 'SEARCH':
       return {
         ...state,
-        filteredOptions: action.payload
-          ? state.options.filter((option) =>
-              option.toLowerCase().includes(action.payload.toLowerCase())
-            )
-          : state.options,
+        filteredOptions:
+          action.payload !== ''
+            ? state.options.filter((option) =>
+                option.toLowerCase().includes(action.payload.toLowerCase())
+              )
+            : [],
         searchValue: action.payload
       }
     default:
@@ -74,8 +90,12 @@ export const removeOption = /* istanbul ignore next */ (option: string): SelectM
   payload: option
 })
 
-export const toggleAllOptions = /* istanbul ignore next */ (): SelectMultipleActions => ({
-  type: 'TOGGLE_ALL_OPTIONS'
+export const selectAllOptions = /* istanbul ignore next */ (): SelectMultipleActions => ({
+  type: 'SELECT_ALL_OPTIONS'
+})
+
+export const deselectAllOptions = /* istanbul ignore next */ (): SelectMultipleActions => ({
+  type: 'DESELECT_ALL_OPTIONS'
 })
 
 export const searchOptions = /* istanbul ignore next */ (value: string): SelectMultipleActions => ({

@@ -6,7 +6,8 @@ interface SelectMultipleMenuProps {
   options: string[]
   selectedOptions: string[]
   filteredOptions: string[]
-  handleToggleAllOptions: () => void
+  searchValue: string
+  handleToggleAllOptions: (e: React.ChangeEvent<HTMLInputElement>) => void
   handleSearch: (e: React.ChangeEvent<HTMLInputElement>) => void
   handleCheck: (e: React.ChangeEvent<HTMLInputElement>) => void
   isSearchable: boolean
@@ -17,6 +18,7 @@ export const SelectMultipleMenu = ({
   options,
   selectedOptions,
   filteredOptions,
+  searchValue,
   handleToggleAllOptions,
   handleSearch,
   handleCheck,
@@ -26,8 +28,15 @@ export const SelectMultipleMenu = ({
   const searchInputControlID = useId()
   const toggleAllControlID = useId()
 
-  const noOptionsFound = filteredOptions.length === 0
-  const allOptionsSelected = selectedOptions.length === options.length
+  const menuOptions = filteredOptions.length > 0 ? filteredOptions : options
+
+  const noOptionsFound = searchValue !== '' && filteredOptions.length === 0
+
+  const allOptionsShownAreSelected = !noOptionsFound
+    ? filteredOptions.length > 0
+      ? filteredOptions.every((option) => selectedOptions.includes(option))
+      : options.every((option) => selectedOptions.includes(option))
+    : false
 
   return (
     <DropdownBS.Menu
@@ -50,7 +59,8 @@ export const SelectMultipleMenu = ({
           aria-label="Toggle all options"
           id={toggleAllControlID}
           onChange={handleToggleAllOptions}
-          checked={allOptionsSelected}
+          checked={allOptionsShownAreSelected}
+          disabled={noOptionsFound}
         />
         {isSearchable ? (
           <FormBS.Control
@@ -66,19 +76,20 @@ export const SelectMultipleMenu = ({
         )}
       </DropdownBS.Header>
 
-      {filteredOptions.map((option) => (
-        <DropdownBS.Item as="li" className={styles['option-item']} key={option}>
-          <FormBS.Check
-            type="checkbox"
-            value={option}
-            label={option}
-            onChange={handleCheck}
-            id={`check-item-${option}`}
-            checked={selectedOptions.includes(option)}
-            className={styles['option-item__checkbox-input']}
-          />
-        </DropdownBS.Item>
-      ))}
+      {!noOptionsFound &&
+        menuOptions.map((option) => (
+          <DropdownBS.Item as="li" className={styles['option-item']} key={option}>
+            <FormBS.Check
+              type="checkbox"
+              value={option}
+              label={option}
+              onChange={handleCheck}
+              id={`check-item-${option}`}
+              checked={selectedOptions.includes(option)}
+              className={styles['option-item__checkbox-input']}
+            />
+          </DropdownBS.Item>
+        ))}
 
       {noOptionsFound && (
         <DropdownBS.Item as="li" disabled>

@@ -5,7 +5,8 @@ import {
   selectMultipleReducer,
   selectOption,
   removeOption,
-  toggleAllOptions,
+  selectAllOptions,
+  deselectAllOptions,
   searchOptions
 } from './selectMultipleReducer'
 import { SelectMultipleToggle } from './SelectMultipleToggle'
@@ -38,12 +39,14 @@ export const SelectMultiple = forwardRef(
     }: SelectMultipleProps,
     ref: ForwardedRef<HTMLInputElement | null>
   ) => {
-    const [{ selectedOptions, filteredOptions }, dispatch] = useReducer(selectMultipleReducer, {
-      ...selectMultipleInitialState,
-      options: options,
-      filteredOptions: options,
-      selectedOptions: defaultValue || []
-    })
+    const [{ selectedOptions, filteredOptions, searchValue }, dispatch] = useReducer(
+      selectMultipleReducer,
+      {
+        ...selectMultipleInitialState,
+        options: options,
+        selectedOptions: defaultValue || []
+      }
+    )
     const isFirstRender = useIsFirstRender()
     const menuId = useId()
 
@@ -70,7 +73,13 @@ export const SelectMultiple = forwardRef(
 
     const handleRemoveSelectedOption = (option: string): void => dispatch(removeOption(option))
 
-    const handleToggleAllOptions = (): void => dispatch(toggleAllOptions())
+    const handleToggleAllOptions = (e: React.ChangeEvent<HTMLInputElement>): void => {
+      if (e.target.checked) {
+        dispatch(selectAllOptions())
+      } else {
+        dispatch(deselectAllOptions())
+      }
+    }
 
     return (
       <DropdownBS autoClose="outside">
@@ -87,6 +96,7 @@ export const SelectMultiple = forwardRef(
           options={options}
           selectedOptions={selectedOptions}
           filteredOptions={filteredOptions}
+          searchValue={searchValue}
           handleToggleAllOptions={handleToggleAllOptions}
           handleSearch={handleSearch}
           handleCheck={handleCheck}

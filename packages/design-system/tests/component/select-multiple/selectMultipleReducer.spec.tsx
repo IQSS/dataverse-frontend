@@ -13,7 +13,7 @@ describe('selectMultipleReducer', () => {
     expect(state).deep.equal(selectMultipleInitialState)
   })
 
-  it('it should select an option', () => {
+  it('should select an option', () => {
     const state = selectMultipleReducer(selectMultipleInitialState, {
       type: 'SELECT_OPTION',
       payload: 'Reading'
@@ -22,7 +22,7 @@ describe('selectMultipleReducer', () => {
     expect(state.selectedOptions).to.include('Reading')
   })
 
-  it('it should remove an option', () => {
+  it('should remove an option', () => {
     const state = selectMultipleReducer(
       { ...selectMultipleInitialState, selectedOptions: ['Reading'] },
       {
@@ -34,18 +34,18 @@ describe('selectMultipleReducer', () => {
     expect(state.selectedOptions).to.not.include('Reading')
   })
 
-  it('it should toggle all options', () => {
+  it('should select all available options when there are no current filtered options', () => {
     const state = selectMultipleReducer(
       { ...selectMultipleInitialState, options: ['Reading', 'Swimming'] },
       {
-        type: 'TOGGLE_ALL_OPTIONS'
+        type: 'SELECT_ALL_OPTIONS'
       }
     )
 
-    expect(state.selectedOptions).to.include('Reading', 'Swimming')
+    expect(state.selectedOptions).to.deep.equal(['Reading', 'Swimming'])
   })
 
-  it('it should unselect all options', () => {
+  it('should deselect all available options when there are no current filtered options', () => {
     const state = selectMultipleReducer(
       {
         ...selectMultipleInitialState,
@@ -53,14 +53,61 @@ describe('selectMultipleReducer', () => {
         selectedOptions: ['Reading', 'Swimming']
       },
       {
-        type: 'TOGGLE_ALL_OPTIONS'
+        type: 'DESELECT_ALL_OPTIONS'
       }
     )
 
     expect(state.selectedOptions).to.be.empty
   })
 
-  it('it should filter options', () => {
+  it('should select all filtered options', () => {
+    const state = selectMultipleReducer(
+      {
+        ...selectMultipleInitialState,
+        options: ['Reading', 'Swimming', 'Running'],
+        filteredOptions: ['Reading', 'Swimming']
+      },
+      {
+        type: 'SELECT_ALL_OPTIONS'
+      }
+    )
+
+    expect(state.selectedOptions).to.deep.equal(['Reading', 'Swimming'])
+  })
+
+  it('should deselect all filtered options', () => {
+    const state = selectMultipleReducer(
+      {
+        ...selectMultipleInitialState,
+        options: ['Reading', 'Swimming', 'Running'],
+        selectedOptions: ['Reading', 'Swimming'],
+        filteredOptions: ['Reading', 'Swimming']
+      },
+      {
+        type: 'DESELECT_ALL_OPTIONS'
+      }
+    )
+
+    expect(state.selectedOptions).to.be.empty
+  })
+
+  it('should add filtered options to selected options when selecting all if filtered options are present', () => {
+    const state = selectMultipleReducer(
+      {
+        ...selectMultipleInitialState,
+        options: ['Reading', 'Swimming', 'Running'],
+        selectedOptions: ['Reading', 'Swimming'],
+        filteredOptions: ['Running']
+      },
+      {
+        type: 'SELECT_ALL_OPTIONS'
+      }
+    )
+
+    expect(state.selectedOptions).to.deep.equal(['Reading', 'Swimming', 'Running'])
+  })
+
+  it('should filter options', () => {
     const state = selectMultipleReducer(
       { ...selectMultipleInitialState, options: ['Reading', 'Swimming', 'Running'] },
       {
