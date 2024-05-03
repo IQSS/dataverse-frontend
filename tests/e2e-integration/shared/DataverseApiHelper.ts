@@ -17,14 +17,6 @@ export class DataverseApiHelper {
       'PUT',
       'author, datasetContact, contributor, depositor, grantNumber, publication'
     )
-    // In case a previous test run has left some orphans, clear them out
-    cy.request({
-      url: `${this.API_URL}/admin/index/clear-orphans?sync=true`,
-      method: 'GET',
-      headers: {
-        'X-Dataverse-key': this.API_TOKEN
-      }
-    })
   }
 
   static async request<T>(
