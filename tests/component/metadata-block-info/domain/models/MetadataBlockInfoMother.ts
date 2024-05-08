@@ -84,7 +84,7 @@ export class MetadataBlockInfoMother {
             multiple: true,
             isControlledVocabulary: false,
             displayFormat: '',
-            isRequired: false,
+            isRequired: true,
             displayOnCreate: true,
             displayOrder: 2
           },

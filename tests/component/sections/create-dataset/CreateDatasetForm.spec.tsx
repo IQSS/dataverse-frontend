@@ -64,7 +64,7 @@ describe('Create Dataset', () => {
     cy.findByText(/Astronomy and Astrophysics Metadata/i).should('exist')
   })
 
-  it('renders the Citation Meatadata Form Fields correctly', () => {
+  it('renders the Citation Metadata Form Fields correctly', () => {
     cy.customMount(
       <CreateDatasetForm
         repository={datasetRepository}

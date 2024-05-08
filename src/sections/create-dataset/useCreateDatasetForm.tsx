@@ -12,6 +12,13 @@ export enum SubmissionStatus {
   Errored = 'Errored'
 }
 
+// TODO:ME FormDefaultValues not matching FormCollectedValues, refactor
+
+type FormDefaultValues = Record<
+  string,
+  Record<string, string | Record<string, string> | Record<string, string>[]>
+>
+
 export type FormCollectedValues = Record<
   string,
   Record<string, string | string[] | FormCollectedComposedFields>
@@ -28,27 +35,28 @@ export function useCreateDatasetForm(repository: DatasetRepository): {
   const navigate = useNavigate()
 
   const submitForm = (formData: FormCollectedValues): void => {
-    setSubmissionStatus(SubmissionStatus.IsSubmitting)
+    console.log({ formData })
+    // setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
-    const formDataBackToOriginalKeys = MetadataFieldsHelper.replaceSlashKeysWithDot(
-      formData
-    ) as FormCollectedValues
-    const formattedFormValues = MetadataFieldsHelper.formatFormValuesToCreateDatasetDTO(
-      formDataBackToOriginalKeys
-    )
+    // const formDataBackToOriginalKeys = MetadataFieldsHelper.replaceSlashKeysWithDot(
+    //   formData
+    // ) as FormCollectedValues
+    // const formattedFormValues = MetadataFieldsHelper.formatFormValuesToCreateDatasetDTO(
+    //   formDataBackToOriginalKeys
+    // )
 
-    createDataset(repository, formattedFormValues)
-      .then(({ persistentId }) => {
-        setSubmissionStatus(SubmissionStatus.SubmitComplete)
-        navigate(`${Route.DATASETS}?persistentId=${persistentId}`, {
-          state: { created: true }
-        })
-        return
-      })
-      .catch((e) => {
-        console.error(e)
-        setSubmissionStatus(SubmissionStatus.Errored)
-      })
+    // createDataset(repository, formattedFormValues)
+    //   .then(({ persistentId }) => {
+    //     setSubmissionStatus(SubmissionStatus.SubmitComplete)
+    //     navigate(`${Route.DATASETS}?persistentId=${persistentId}`, {
+    //       state: { created: true }
+    //     })
+    //     return
+    //   })
+    //   .catch((e) => {
+    //     console.error(e)
+    //     setSubmissionStatus(SubmissionStatus.Errored)
+    //   })
   }
 
   return {

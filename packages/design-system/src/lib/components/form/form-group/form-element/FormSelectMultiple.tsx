@@ -5,13 +5,30 @@ import { SelectMultiple, SelectMultipleProps } from '../../../select-multiple/Se
 export interface FormSelectMultipleProps extends SelectMultipleProps {
   withinMultipleFieldsGroup?: boolean
   inputButtonId: string
+  isValid?: boolean
+  isInvalid?: boolean
 }
 
 export const FormSelectMultiple = forwardRef(
-  ({ withinMultipleFieldsGroup, ...props }: PropsWithChildren<FormSelectMultipleProps>, ref) => {
+  (
+    {
+      withinMultipleFieldsGroup,
+      isInvalid,
+      isValid,
+      ...props
+    }: PropsWithChildren<FormSelectMultipleProps>,
+    ref
+  ) => {
     return (
-      <FormElementLayout withinMultipleFieldsGroup={withinMultipleFieldsGroup}>
-        <SelectMultiple ref={ref as React.ForwardedRef<HTMLInputElement>} {...props} />
+      <FormElementLayout
+        withinMultipleFieldsGroup={withinMultipleFieldsGroup}
+        isInvalid={isInvalid}
+        isValid={isValid}>
+        <SelectMultiple
+          ref={ref as React.ForwardedRef<HTMLInputElement>}
+          isInvalid={isInvalid}
+          {...props}
+        />
       </FormElementLayout>
     )
   }

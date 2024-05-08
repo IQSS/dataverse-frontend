@@ -6,7 +6,7 @@ interface Props {
 }
 
 export const MetadataBlockFormFields = ({ metadataBlock }: Props) => {
-  const { metadataFields, name } = metadataBlock
+  const { metadataFields, name: metadataBlockName } = metadataBlock
 
   return (
     <>
@@ -15,7 +15,7 @@ export const MetadataBlockFormFields = ({ metadataBlock }: Props) => {
           <MetadataFormField
             key={metadataFieldKey}
             metadataFieldInfo={metadataFieldInfo}
-            metadataBlockName={name}
+            metadataBlockName={metadataBlockName}
           />
         )
       })}
