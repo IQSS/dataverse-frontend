@@ -1,4 +1,3 @@
-export * from './CheckboxMultipleUnused'
 export * from './ComposeFieldMultiple'
 export * from './ComposedField'
 export * from './Primitive'
