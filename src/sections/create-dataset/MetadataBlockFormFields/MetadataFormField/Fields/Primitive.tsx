@@ -6,8 +6,8 @@ import { type CommonFieldProps } from '..'
 import { MetadataFieldsHelper } from '../../../MetadataFieldsHelper'
 
 interface PrimitiveProps extends CommonFieldProps {
-  compoundParentName?: string
   metadataBlockName: string
+  compoundParentName?: string
   fieldsArrayIndex?: number
 }
 export const Primitive = ({

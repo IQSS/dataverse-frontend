@@ -1,4 +1,4 @@
-import { CreateDatasetForm } from '../../../../src/sections/create-dataset/CreateDatasetForm'
+import { CreateDataset } from '../../../../src/sections/create-dataset/CreateDataset'
 import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
 import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
@@ -53,7 +53,7 @@ describe('Create Dataset', () => {
 
   it('renders the Create Dataset page and its metadata blocks sections', () => {
     cy.customMount(
-      <CreateDatasetForm
+      <CreateDataset
         repository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
@@ -66,7 +66,7 @@ describe('Create Dataset', () => {
 
   it('renders the Citation Metadata Form Fields correctly', () => {
     cy.customMount(
-      <CreateDatasetForm
+      <CreateDataset
         repository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
@@ -153,7 +153,7 @@ describe('Create Dataset', () => {
 
   it('renders the Astronomy and Astrophysics Metadata Form Fields correctly', () => {
     cy.customMount(
-      <CreateDatasetForm
+      <CreateDataset
         repository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
@@ -178,7 +178,7 @@ describe('Create Dataset', () => {
 
   it('should display required errors and error alert when submitting the form with required fields empty', () => {
     cy.customMount(
-      <CreateDatasetForm
+      <CreateDataset
         repository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
@@ -200,7 +200,7 @@ describe('Create Dataset', () => {
 
   it('should not display required errors when submitting the form with required fields filled', () => {
     cy.customMount(
-      <CreateDatasetForm
+      <CreateDataset
         repository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
@@ -221,7 +221,7 @@ describe('Create Dataset', () => {
 
   it('should show correct errors when filling inputs with invalid formats', () => {
     cy.customMount(
-      <CreateDatasetForm
+      <CreateDataset
         repository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
@@ -260,13 +260,13 @@ describe('Create Dataset', () => {
 
   it('should not show errors when filling inputs with valid formats', () => {
     cy.customMount(
-      <CreateDatasetForm
+      <CreateDataset
         repository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     )
     cy.customMount(
-      <CreateDatasetForm
+      <CreateDataset
         repository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
@@ -305,7 +305,7 @@ describe('Create Dataset', () => {
 
   it('renders skeleton while loading', () => {
     cy.customMount(
-      <CreateDatasetForm
+      <CreateDataset
         repository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
@@ -321,7 +321,7 @@ describe('Create Dataset', () => {
         .rejects(new Error('some error'))
 
       cy.customMount(
-        <CreateDatasetForm
+        <CreateDataset
           repository={datasetRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
         />
@@ -336,7 +336,7 @@ describe('Create Dataset', () => {
         .rejects(new Error('some error'))
 
       cy.customMount(
-        <CreateDatasetForm
+        <CreateDataset
           repository={datasetRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
         />
@@ -348,7 +348,7 @@ describe('Create Dataset', () => {
 
   it('can submit a valid form', () => {
     cy.customMount(
-      <CreateDatasetForm
+      <CreateDataset
         repository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
@@ -363,7 +363,7 @@ describe('Create Dataset', () => {
   it('shows an error message when the submission fails', () => {
     datasetRepository.create = cy.stub().rejects(new Error('some error'))
     cy.customMount(
-      <CreateDatasetForm
+      <CreateDataset
         repository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />

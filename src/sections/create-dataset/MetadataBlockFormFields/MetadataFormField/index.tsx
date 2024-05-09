@@ -8,9 +8,9 @@ import {
   Primitive,
   PrimitiveMultiple,
   Vocabulary,
-  VocabularyMultiple
-  // ComposedField,
-  // ComposedFieldMultiple
+  VocabularyMultiple,
+  ComposedField,
+  ComposedFieldMultiple
 } from './Fields'
 
 export interface CommonFieldProps {
@@ -21,7 +21,7 @@ export interface CommonFieldProps {
   watermark: string
   type: TypeMetadataField
   isRequired: boolean
-  withinMultipleFieldsGroup: boolean
+  withinMultipleFieldsGroup?: boolean
 }
 
 interface Props {
@@ -29,19 +29,20 @@ interface Props {
   metadataBlockName: string
   withinMultipleFieldsGroup?: boolean
   compoundParentName?: string
+  fieldsArrayIndex?: number
 }
 
 export const MetadataFormField = ({
   metadataFieldInfo,
   metadataBlockName,
   withinMultipleFieldsGroup = false,
-  compoundParentName
+  compoundParentName,
+  fieldsArrayIndex
 }: Props) => {
   const {
     name,
     type,
     title,
-    displayName,
     multiple,
     typeClass,
     isRequired,
@@ -77,7 +78,6 @@ export const MetadataFormField = ({
           watermark={watermark}
           type={type}
           isRequired={isRequired}
-          withinMultipleFieldsGroup={withinMultipleFieldsGroup}
         />
       )
     }
@@ -93,6 +93,7 @@ export const MetadataFormField = ({
         type={type}
         isRequired={isRequired}
         withinMultipleFieldsGroup={withinMultipleFieldsGroup}
+        fieldsArrayIndex={fieldsArrayIndex}
       />
     )
   }
@@ -111,7 +112,6 @@ export const MetadataFormField = ({
           watermark={watermark}
           type={type}
           isRequired={isRequired}
-          withinMultipleFieldsGroup={withinMultipleFieldsGroup}
         />
       )
     }
@@ -128,41 +128,32 @@ export const MetadataFormField = ({
         type={type}
         isRequired={isRequired}
         withinMultipleFieldsGroup={withinMultipleFieldsGroup}
+        fieldsArrayIndex={fieldsArrayIndex}
       />
     )
   }
 
+  if (isSafeCompound) {
+    if (multiple) {
+      return (
+        <ComposedFieldMultiple
+          name={name}
+          compoundParentName={compoundParentName}
+          metadataBlockName={metadataBlockName}
+          childMetadataFields={childMetadataFields}
+          rulesToApply={rulesToApply}
+          description={description}
+          title={title}
+          watermark={watermark}
+          type={type}
+          isRequired={isRequired}
+          withinMultipleFieldsGroup={withinMultipleFieldsGroup}
+        />
+      )
+    }
+
+    return <ComposedField />
+  }
+
   return null
-
-  // if (isSafeCompound) {
-  //   if (multiple) {
-  //     return <ComposedFieldMultiple />
-  //   }
-
-  //   return <ComposedField />
-
-  //   // return (
-  //   //   <Form.GroupWithMultipleFields
-  //   //     title={title}
-  //   //     message={description}
-  //   //     required={isRequired}
-  //   //     withDynamicFields={false}>
-  //   //     <div className={styles['multiple-fields-grid']}>
-  //   //       {Object.entries(childMetadataFields).map(
-  //   //         ([childMetadataFieldKey, childMetadataFieldInfo]) => {
-  //   //           return (
-  //   //             <MetadataFormField
-  //   //               metadataFieldInfo={childMetadataFieldInfo}
-  //   //               metadataBlockName={metadataBlockName}
-  //   //               compoundParentName={name}
-  //   //               withinMultipleFieldsGroup
-  //   //               key={childMetadataFieldKey}
-  //   //             />
-  //   //           )
-  //   //         }
-  //   //       )}
-  //   //     </div>
-  //   //   </Form.GroupWithMultipleFields>
-  //   // )
-  // }
 }

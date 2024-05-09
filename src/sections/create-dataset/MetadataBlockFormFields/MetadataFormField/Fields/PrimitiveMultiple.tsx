@@ -7,8 +7,8 @@ import { DynamicFieldsButtons } from '../../../dynamic-fields-buttons/DynamicFie
 import { MetadataFieldsHelper } from '../../../MetadataFieldsHelper'
 
 interface PrimitiveMultipleProps extends CommonFieldProps {
-  compoundParentName?: string
   metadataBlockName: string
+  compoundParentName?: string
   fieldsArrayIndex?: number
 }
 
@@ -28,23 +28,12 @@ export const PrimitiveMultiple = ({
   const {
     fields: fieldsArray,
     append,
+    insert,
     remove
   } = useFieldArray({
     name: `${metadataBlockName}.${name}`,
     control: control
   })
-
-  const handleOnAddField = (index: number) => {
-    append(
-      { value: '' },
-      {
-        shouldFocus: true,
-        focusName: `${metadataBlockName}.${index + 1}.${name}`
-      }
-    )
-  }
-
-  const handleOnRemoveField = (index: number) => remove(index)
 
   const builtFieldNameWithIndex = (fieldIndex: number) => {
     return MetadataFieldsHelper.defineFieldName(
@@ -61,9 +50,22 @@ export const PrimitiveMultiple = ({
     [name, metadataBlockName, compoundParentName]
   )
 
+  const handleOnAddField = (index: number) => {
+    insert(
+      index + 1,
+      { value: '' },
+      {
+        shouldFocus: true,
+        focusName: builtFieldNameWithIndex(index + 1)
+      }
+    )
+  }
+
+  const handleOnRemoveField = (index: number) => remove(index)
+
   return (
-    <Form.Group controlId={controlID} required={isRequired} as={Row}>
-      <Form.Group.Label message={description} required={true}>
+    <Form.Group required={isRequired} as={Row}>
+      <Form.Group.Label message={description} required={isRequired} htmlFor={controlID}>
         {title}
       </Form.Group.Label>
       <Col sm={9}>
@@ -82,6 +84,7 @@ export const PrimitiveMultiple = ({
                       placeholder={watermark}
                       data-fieldtype={type}
                       ref={ref}
+                      id={builtFieldNameWithIndex(index)}
                     />
                   ) : (
                     <Form.Group.Input
@@ -92,6 +95,7 @@ export const PrimitiveMultiple = ({
                       data-fieldtype={type}
                       required={isRequired}
                       ref={ref}
+                      id={builtFieldNameWithIndex(index)}
                     />
                   )}
 

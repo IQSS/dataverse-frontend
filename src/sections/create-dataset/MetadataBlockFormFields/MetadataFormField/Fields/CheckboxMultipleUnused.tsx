@@ -2,7 +2,6 @@ import { ForwardedRef, forwardRef, useState } from 'react'
 import { Control, Controller, FieldValues } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Form } from '@iqss/dataverse-design-system'
-import styles from '../index.module.scss'
 
 interface Props {
   title: string
@@ -34,7 +33,7 @@ export const CheckboxMultiple = forwardRef(function CheckboxMultiple(
   return (
     <Form.CheckboxGroup title={title} message={description} required={isRequired}>
       <div
-        className={styles['checkbox-list-grid']}
+        // className={styles['checkbox-list-grid']}
         data-testid="vocabulary-multiple"
         tabIndex={0}
         ref={ref as ForwardedRef<HTMLDivElement>}>
@@ -60,9 +59,55 @@ export const CheckboxMultiple = forwardRef(function CheckboxMultiple(
           />
         ))}
       </div>
-      <p className={styles['checkbox-group-feedback']}>
+      <p
+      // className={styles['checkbox-group-feedback']}
+      >
         {t('datasetForm.field.required', { displayName })}
       </p>
     </Form.CheckboxGroup>
   )
 })
+
+/*
+ Styles👇
+ .checkbox-list-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  max-height: 260px;
+  padding: 1rem;
+  overflow-y: auto;
+  border: solid 1px var(--bs-gray-400);
+  border-radius: var(--bs-border-radius-lg);
+}
+
+.checkbox-group-feedback {
+  display: none;
+  width: 100%;
+  margin-top: 0.25rem;
+  color: var(--bs-danger);
+  font-size: 0.875em;
+}
+
+.checkbox-list-grid:has(:global .form-check-input.is-invalid) {
+  border-color: var(--bs-danger);
+
+  + .checkbox-group-feedback {
+    display: block;
+  }
+}
+
+.checkbox-list-grid:focus:not(:global .form-check-input.is-invalid),
+.checkbox-list-grid:focus-within:not(:global .form-check-input.is-invalid) {
+  border-color: rgba(#{var(--bs-primary-rgb)}, 0.5);
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(#{var(--bs-primary-rgb)}, 0.25);
+}
+
+.checkbox-list-grid:has(:global .form-check-input.is-invalid):focus,
+.checkbox-list-grid:has(:global .form-check-input.is-invalid):focus-within {
+  border-color: var(--bs-danger);
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(#{var(--bs-danger-rgb)}, 0.25);
+}
+*/

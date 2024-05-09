@@ -1,13 +1,4 @@
 .container {
   display: flex;
-  // margin: 2.5em;
-}
-
-.icon {
-  display: inline-block;
-  vertical-align: -0.125em;
-}
-
-.overlay-container {
-  width: fit-content;
+  gap: 1rem;
 }

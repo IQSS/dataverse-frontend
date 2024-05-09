@@ -6,20 +6,19 @@ import { MetadataFieldsHelper } from './MetadataFieldsHelper'
 import { type DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { type MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
-import { MetadataBlocksForm } from './MetadataBlocksForm'
-import styles from './CreateDatasetForm.module.scss'
+import { DatasetForm } from './DatasetForm'
 
-interface CreateDatasetFormProps {
+interface CreateDatasetProps {
   repository: DatasetRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
   collectionId?: string
 }
 
-export function CreateDatasetForm({
+export function CreateDataset({
   repository,
   metadataBlockInfoRepository,
   collectionId = 'root'
-}: CreateDatasetFormProps) {
+}: CreateDatasetProps) {
   const { t } = useTranslation('createDataset')
   const { isLoading, setIsLoading } = useLoading()
 
@@ -30,14 +29,18 @@ export function CreateDatasetForm({
   } = useGetMetadataBlocksInfo({
     metadataBlockInfoRepository,
     collectionId,
-    mode: 'create'
+    mode: 'edit'
   })
 
   const formDefaultValues = MetadataFieldsHelper.getFormDefaultValues(metadataBlocks)
 
-  useEffect(() => setIsLoading(false), [isLoading])
+  useEffect(() => {
+    if (!isLoadingMetadataBlocksToRender) {
+      setIsLoading(false)
+    }
+  }, [isLoading, isLoadingMetadataBlocksToRender])
 
-  if (isLoadingMetadataBlocksToRender || Object.keys(formDefaultValues).length === 0) {
+  if (isLoadingMetadataBlocksToRender || isLoading) {
     {
       /* TODO:ME Add skeleton  */
     }
@@ -49,12 +52,12 @@ export function CreateDatasetForm({
 
   return (
     <article>
-      <header className={styles.header}>
+      <header>
         <h1>{t('pageTitle')}</h1>
       </header>
       <SeparationLine />
 
-      <MetadataBlocksForm
+      <DatasetForm
         repository={repository}
         metadataBlocks={metadataBlocks}
         formDefaultValues={formDefaultValues}

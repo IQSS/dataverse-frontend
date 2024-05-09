@@ -1,6 +1,6 @@
 import { MouseEvent, useMemo } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
+import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { SubmissionStatus, useCreateDatasetForm } from './useCreateDatasetForm'
 import { type DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
@@ -12,19 +12,19 @@ import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { MetadataBlockFormFields } from './MetadataBlockFormFields'
 import { Route } from '../Route.enum'
 
-interface MetadataBlocksFormProps {
+interface DatasetFormProps {
   repository: DatasetRepository
   metadataBlocks: MetadataBlockInfo[]
   errorLoadingMetadataBlocks: string | null
   formDefaultValues: FormDefaultValues
 }
 
-export const MetadataBlocksForm = ({
+export const DatasetForm = ({
   repository,
   metadataBlocks,
   errorLoadingMetadataBlocks,
   formDefaultValues
-}: MetadataBlocksFormProps) => {
+}: DatasetFormProps) => {
   const navigate = useNavigate()
   const { t } = useTranslation('createDataset')
 

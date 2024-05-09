@@ -5,10 +5,10 @@ import { type CommonFieldProps } from '..'
 import { MetadataFieldsHelper } from '../../../MetadataFieldsHelper'
 
 interface VocabularyProps extends CommonFieldProps {
-  compoundParentName?: string
   metadataBlockName: string
-  fieldsArrayIndex?: number
   options: string[]
+  compoundParentName?: string
+  fieldsArrayIndex?: number
 }
 export const VocabularyMultiple = ({
   name,
@@ -40,13 +40,14 @@ export const VocabularyMultiple = ({
       name={builtFieldName}
       control={control}
       rules={rulesToApply}
-      render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => (
+      render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
         <Form.Group required={isRequired} as={withinMultipleFieldsGroup ? Col : Row}>
           <Form.Group.Label message={description} htmlFor={builtFieldName}>
             {title}
           </Form.Group.Label>
 
           <Form.Group.SelectMultiple
+            defaultValue={value}
             options={options}
             onChange={onChange}
             isInvalid={invalid}

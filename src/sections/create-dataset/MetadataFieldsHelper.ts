@@ -11,7 +11,14 @@ import { FormCollectedComposedFields, FormCollectedValues } from './useCreateDat
 
 export type FormDefaultValues = Record<
   string,
-  Record<string, string | string[] | Record<string, string> | Record<string, string>[]>
+  Record<
+    string,
+    | string
+    | string[]
+    | { value: string }[]
+    | Record<string, string | string[] | { value: string }[]>
+    | Record<string, string | string[] | { value: string }[]>[]
+  >
 >
 
 export class MetadataFieldsHelper {
@@ -111,23 +118,40 @@ export class MetadataFieldsHelper {
     return { metadataBlocks }
   }
 
+  //TODO:ME Maybe change the type of FormDefaultValues to not include the case where a primitive multiple field or a multiple vocabulary could be inside of a composed field
   public static getFormDefaultValues(metadataBlocks: MetadataBlockInfo[]): FormDefaultValues {
     const formDefaultValues: FormDefaultValues = {}
 
     for (const block of metadataBlocks) {
       const blockValues: Record<
         string,
-        string | string[] | Record<string, string> | Record<string, string>[]
+        | string
+        | string[]
+        | { value: string }[]
+        | Record<string, string | string[] | { value: string }[]>
+        | Record<string, string | string[] | { value: string }[]>[]
       > = {}
 
       for (const field of Object.values(block.metadataFields)) {
         const fieldName = field.name
 
         if (field.typeClass === 'compound') {
-          const childFieldsWithEmptyValues: Record<string, string> = {}
+          const childFieldsWithEmptyValues: Record<
+            string,
+            string | string[] | { value: string }[]
+          > = {}
+
           if (field.childMetadataFields) {
             for (const childField of Object.values(field.childMetadataFields)) {
-              childFieldsWithEmptyValues[childField.name] = ''
+              if (childField.typeClass === 'primitive') {
+                childFieldsWithEmptyValues[childField.name] = childField.multiple
+                  ? [{ value: '' }]
+                  : ''
+              }
+
+              if (childField.typeClass === 'controlledVocabulary') {
+                childFieldsWithEmptyValues[childField.name] = childField.multiple ? [] : ''
+              }
             }
           }
 
