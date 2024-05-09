@@ -29,7 +29,7 @@ export function CreateDataset({
   } = useGetMetadataBlocksInfo({
     metadataBlockInfoRepository,
     collectionId,
-    mode: 'edit'
+    mode: 'create'
   })
 
   const formDefaultValues = MetadataFieldsHelper.getFormDefaultValues(metadataBlocks)

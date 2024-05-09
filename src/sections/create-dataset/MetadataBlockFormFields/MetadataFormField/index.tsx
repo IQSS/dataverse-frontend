@@ -152,7 +152,21 @@ export const MetadataFormField = ({
       )
     }
 
-    return <ComposedField />
+    return (
+      <ComposedField
+        name={name}
+        compoundParentName={compoundParentName}
+        metadataBlockName={metadataBlockName}
+        childMetadataFields={childMetadataFields}
+        rulesToApply={rulesToApply}
+        description={description}
+        title={title}
+        watermark={watermark}
+        type={type}
+        isRequired={isRequired}
+        withinMultipleFieldsGroup={withinMultipleFieldsGroup}
+      />
+    )
   }
 
   return null
