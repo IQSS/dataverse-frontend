@@ -5,6 +5,8 @@ import { TypeMetadataFieldOptions } from '../../../../../metadata-block-info/dom
 import { type CommonFieldProps } from '..'
 import { DynamicFieldsButtons } from '../../../dynamic-fields-buttons/DynamicFieldsButtons'
 import { MetadataFieldsHelper } from '../../../MetadataFieldsHelper'
+import cn from 'classnames'
+import styles from '../index.module.scss'
 
 interface PrimitiveMultipleProps extends CommonFieldProps {
   metadataBlockName: string
@@ -63,9 +65,16 @@ export const PrimitiveMultiple = ({
 
   const handleOnRemoveField = (index: number) => remove(index)
 
+  const isTextArea = type === TypeMetadataFieldOptions.Textbox
+
   return (
-    <Form.Group required={isRequired} as={Row}>
-      <Form.Group.Label message={description} required={isRequired} htmlFor={controlID}>
+    <Form.Group as={Row}>
+      <Form.Group.Label
+        message={description}
+        required={isRequired}
+        htmlFor={controlID}
+        column
+        sm={3}>
         {title}
       </Form.Group.Label>
       <Col sm={9}>
@@ -77,39 +86,43 @@ export const PrimitiveMultiple = ({
               rules={rulesToApply}
               render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => (
                 <>
-                  {type === TypeMetadataFieldOptions.Textbox ? (
-                    <Form.Group.TextArea
-                      onChange={onChange}
-                      isInvalid={invalid}
-                      placeholder={watermark}
-                      data-fieldtype={type}
-                      ref={ref}
-                      id={builtFieldNameWithIndex(index)}
-                    />
-                  ) : (
-                    <Form.Group.Input
-                      type="text"
-                      onChange={onChange}
-                      isInvalid={invalid}
-                      placeholder={watermark}
-                      data-fieldtype={type}
-                      required={isRequired}
-                      ref={ref}
-                      id={builtFieldNameWithIndex(index)}
-                    />
-                  )}
+                  <Col sm={9}>
+                    {isTextArea ? (
+                      <Form.Group.TextArea
+                        onChange={onChange}
+                        isInvalid={invalid}
+                        placeholder={watermark}
+                        data-fieldtype={type}
+                        ref={ref}
+                        id={builtFieldNameWithIndex(index)}
+                      />
+                    ) : (
+                      <Form.Group.Input
+                        type="text"
+                        onChange={onChange}
+                        isInvalid={invalid}
+                        placeholder={watermark}
+                        data-fieldtype={type}
+                        required={isRequired}
+                        ref={ref}
+                        id={builtFieldNameWithIndex(index)}
+                      />
+                    )}
+                    <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+                  </Col>
 
-                  <Col sm={3}>
+                  <Col
+                    sm={3}
+                    className={cn(
+                      styles['dynamic-fields-button-container'],
+                      styles['on-primitive-multiple']
+                    )}>
                     <DynamicFieldsButtons
                       onAddButtonClick={() => handleOnAddField(index)}
                       onRemoveButtonClick={() => handleOnRemoveField(index)}
                       originalField={index === 0}
                     />
                   </Col>
-
-                  <Form.Group.Feedback type="invalid" withinMultipleFieldsGroup>
-                    {error?.message}
-                  </Form.Group.Feedback>
                 </>
               )}
             />

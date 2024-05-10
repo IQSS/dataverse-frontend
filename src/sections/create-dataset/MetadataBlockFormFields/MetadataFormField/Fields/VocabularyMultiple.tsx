@@ -41,20 +41,30 @@ export const VocabularyMultiple = ({
       control={control}
       rules={rulesToApply}
       render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
-        <Form.Group required={isRequired} as={withinMultipleFieldsGroup ? Col : Row}>
-          <Form.Group.Label message={description} htmlFor={builtFieldName}>
+        <Form.Group>
+          <Form.Group.Label
+            message={description}
+            htmlFor={builtFieldName}
+            required={isRequired}
+            column
+            sm={3}>
             {title}
           </Form.Group.Label>
-
-          <Form.Group.SelectMultiple
-            defaultValue={value}
-            options={options}
-            onChange={onChange}
-            isInvalid={invalid}
-            ref={ref}
-            inputButtonId={builtFieldName}
-          />
-          <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+          <Col sm={9}>
+            <Row>
+              <Col sm={9}>
+                <Form.Group.SelectMultiple
+                  defaultValue={value as string[]}
+                  options={options}
+                  onChange={onChange}
+                  isInvalid={invalid}
+                  ref={ref}
+                  inputButtonId={builtFieldName}
+                />
+                <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+              </Col>
+            </Row>
+          </Col>
         </Form.Group>
       )}
     />

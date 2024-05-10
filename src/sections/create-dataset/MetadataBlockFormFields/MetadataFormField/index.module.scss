@@ -2,23 +2,30 @@
   display: grid;
   grid-template-columns: 1fr;
 
-  // TODO: Workaround fix because of the following issue:
-  // withinMultipleField prop is not reaching ElementLayout so this one keeps applying col-sm-9
-  // This is due to cloning childrens not working with Controller element from react hook form
-  :global .col-sm-9 {
-    width: 100%;
-  }
-
   @media screen and (min-width: 768px) {
     grid-template-columns: 1fr 1fr;
     column-gap: 1rem;
   }
 
-  :global .invalid-feedback {
-    margin-left: 0;
+  & > div:has(textarea) {
+    grid-column: span 2;
   }
 }
 
 .dynamic-fields-button-container {
   margin-top: calc(24px + 8px); // 24px text label height & 8px its margin bottom
+
+  &.on-composed-multiple {
+    @media screen and (max-width: 575px) {
+      margin-top: 0;
+    }
+  }
+
+  &.on-primitive-multiple {
+    margin-top: 0;
+
+    @media screen and (max-width: 575px) {
+      margin-top: 1rem;
+    }
+  }
 }

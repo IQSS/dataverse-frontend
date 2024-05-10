@@ -3,6 +3,7 @@ import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { type MetadataField } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { DynamicFieldsButtons } from '../../../dynamic-fields-buttons/DynamicFieldsButtons'
 import { MetadataFormField, type CommonFieldProps } from '..'
+import cn from 'classnames'
 import styles from '../index.module.scss'
 
 interface ComposedFieldMultipleProps extends CommonFieldProps {
@@ -68,7 +69,12 @@ export const ComposedFieldMultiple = ({
                 }
               )}
             </Col>
-            <Col sm={3} className={styles['dynamic-fields-button-container']}>
+            <Col
+              sm={3}
+              className={cn(
+                styles['dynamic-fields-button-container'],
+                styles['on-composed-multiple']
+              )}>
               <DynamicFieldsButtons
                 onAddButtonClick={() => handleOnAddField(index)}
                 onRemoveButtonClick={() => handleOnRemoveField(index)}

@@ -41,21 +41,29 @@ export const Vocabulary = ({
       control={control}
       rules={rulesToApply}
       render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => (
-        <Form.Group
-          controlId={builtFieldName}
-          required={isRequired}
-          as={withinMultipleFieldsGroup ? Col : Row}>
-          <Form.Group.Label message={description}>{title}</Form.Group.Label>
-
-          <Form.Group.Select onChange={onChange} isInvalid={invalid} ref={ref}>
-            <option value="">Select</option>
-            {options.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </Form.Group.Select>
-          <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+        <Form.Group controlId={builtFieldName} as={withinMultipleFieldsGroup ? Col : Row}>
+          <Form.Group.Label
+            message={description}
+            required={isRequired}
+            column={!withinMultipleFieldsGroup}
+            sm={3}>
+            {title}
+          </Form.Group.Label>
+          <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
+            <Row>
+              <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
+                <Form.Group.Select onChange={onChange} isInvalid={invalid} ref={ref}>
+                  <option value="">Select</option>
+                  {options.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </Form.Group.Select>
+                <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+              </Col>
+            </Row>
+          </Col>
         </Form.Group>
       )}
     />

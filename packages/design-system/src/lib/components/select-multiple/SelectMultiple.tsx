@@ -82,7 +82,7 @@ export const SelectMultiple = forwardRef(
     }
 
     return (
-      <DropdownBS autoClose="outside">
+      <DropdownBS autoClose="outside" className={isInvalid ? 'is-invalid' : ''}>
         <SelectMultipleToggle
           selectedOptions={selectedOptions}
           handleRemoveSelectedOption={handleRemoveSelectedOption}
