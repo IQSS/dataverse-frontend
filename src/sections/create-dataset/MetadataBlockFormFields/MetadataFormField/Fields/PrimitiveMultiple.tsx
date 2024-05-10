@@ -29,7 +29,6 @@ export const PrimitiveMultiple = ({
 
   const {
     fields: fieldsArray,
-    append,
     insert,
     remove
   } = useFieldArray({

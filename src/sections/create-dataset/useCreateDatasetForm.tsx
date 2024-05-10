@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createDataset } from '../../dataset/domain/useCases/createDataset'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { MetadataFieldsHelper } from './MetadataFieldsHelper'
+import { type CreateDatasetFormValues, MetadataFieldsHelper } from './MetadataFieldsHelper'
 import { Route } from '../Route.enum'
 
 export enum SubmissionStatus {
@@ -12,38 +12,27 @@ export enum SubmissionStatus {
   Errored = 'Errored'
 }
 
-// TODO:ME FormDefaultValues not matching FormCollectedValues, refactor
-
-type FormDefaultValues = Record<
-  string,
-  Record<string, string | Record<string, string> | Record<string, string>[]>
->
-
-export type FormCollectedValues = Record<
-  string,
-  Record<string, string | string[] | FormCollectedComposedFields>
->
-export type FormCollectedComposedFields = Record<string, string>
-
 export function useCreateDatasetForm(repository: DatasetRepository): {
   submissionStatus: SubmissionStatus
-  submitForm: (formData: FormCollectedValues) => void
+  submitForm: (formData: CreateDatasetFormValues) => void
 } {
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
   )
   const navigate = useNavigate()
 
-  const submitForm = (formData: FormCollectedValues): void => {
+  const submitForm = (formData: CreateDatasetFormValues): void => {
     console.log({ formData })
     // setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
-    // const formDataBackToOriginalKeys = MetadataFieldsHelper.replaceSlashKeysWithDot(
-    //   formData
-    // ) as FormCollectedValues
+    const formDataBackToOriginalKeys = MetadataFieldsHelper.replaceSlashKeysWithDot(formData)
+
+    console.log({ formDataBackToOriginalKeys })
+
     // const formattedFormValues = MetadataFieldsHelper.formatFormValuesToCreateDatasetDTO(
     //   formDataBackToOriginalKeys
     // )
+    // console.log({ formattedFormValues })
 
     // createDataset(repository, formattedFormValues)
     //   .then(({ persistentId }) => {

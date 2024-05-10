@@ -7,19 +7,20 @@ import {
   DatasetMetadataBlockValuesDTO,
   DatasetMetadataChildFieldValueDTO
 } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
-import { FormCollectedComposedFields, FormCollectedValues } from './useCreateDatasetForm'
 
-export type FormDefaultValues = Record<
+export type CreateDatasetFormValues = Record<string, MetadataBlockFormValues>
+
+export type MetadataBlockFormValues = Record<
   string,
-  Record<
-    string,
-    | string
-    | string[]
-    | { value: string }[]
-    | Record<string, string | string[] | { value: string }[]>
-    | Record<string, string | string[] | { value: string }[]>[]
-  >
+  string | PrimitiveMultipleFormValue | VocabullaryMultipleFormValue | ComposedFieldValues
 >
+type VocabullaryMultipleFormValue = string[]
+type PrimitiveMultipleFormValue = { value: string }[]
+
+export type ComposedFieldValues = ComposedSingleFieldValue | ComposedMultipleFieldValue
+
+type ComposedSingleFieldValue = Record<string, string | string[]>
+type ComposedMultipleFieldValue = Record<string, string | string[]>[]
 
 export class MetadataFieldsHelper {
   public static replaceDotNamesKeysWithSlash(
@@ -47,121 +48,135 @@ export class MetadataFieldsHelper {
     }
   }
 
-  public static replaceSlashKeysWithDot(
-    obj: FormCollectedValues | FormCollectedComposedFields
-  ): FormCollectedValues | FormCollectedComposedFields {
-    const newObj: FormCollectedValues | FormCollectedComposedFields = {}
+  public static replaceSlashKeysWithDot(obj: CreateDatasetFormValues): CreateDatasetFormValues {
+    const formattedNewObject: CreateDatasetFormValues = {}
 
     for (const key in obj) {
       if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        const newKey = key.replace(/\//g, '.')
-        if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
-          const replacedFields = this.replaceSlashKeysWithDot(
-            obj[key] as FormCollectedComposedFields
-          ) as FormCollectedComposedFields
-          newObj[newKey] = replacedFields
-        } else {
-          newObj[newKey] = obj[key]
-        }
-      }
-    }
+        const blockKey = key.replace(/\//g, '.')
+        const metadataBlockFormValues = obj[key]
 
-    return newObj
-  }
+        formattedNewObject[blockKey] = {}
 
-  public static formatFormValuesToCreateDatasetDTO(formValues: FormCollectedValues): DatasetDTO {
-    const metadataBlocks: DatasetDTO['metadataBlocks'] = []
+        Object.entries(metadataBlockFormValues).forEach(([fieldName, fieldValue]) => {
+          const newFieldName = fieldName.replace(/\//g, '.')
 
-    for (const metadataBlockName in formValues) {
-      const formattedMetadataBlock: DatasetMetadataBlockValuesDTO = {
-        name: metadataBlockName,
-        fields: {}
-      }
-
-      Object.entries(formValues[metadataBlockName]).forEach(
-        ([fieldName, fieldValue]: [
-          fieldName: string,
-          fieldValue: string | string[] | Record<string, string>
-        ]) => {
-          if (fieldValue !== undefined && fieldValue !== '') {
-            if (typeof fieldValue === 'string') {
-              formattedMetadataBlock.fields[fieldName] = fieldValue
-            }
-            if (Array.isArray(fieldValue) && fieldValue.length > 0) {
-              formattedMetadataBlock.fields[fieldName] = fieldValue
-            }
-
-            if (
-              typeof fieldValue === 'object' &&
-              !Array.isArray(fieldValue) &&
-              fieldValue !== null
-            ) {
-              const nestedFieldValues: DatasetMetadataChildFieldValueDTO = {}
-              for (const nestedKey in fieldValue) {
-                const nestedFieldValue = fieldValue[nestedKey]
-
-                if (nestedFieldValue !== undefined && nestedFieldValue !== '') {
-                  nestedFieldValues[nestedKey] = nestedFieldValue
-                }
-              }
-              if (Object.keys(nestedFieldValues).length > 0) {
-                formattedMetadataBlock.fields[fieldName] = [nestedFieldValues]
-              }
-            }
+          if (
+            this.isPrimitiveFieldValue(fieldValue) ||
+            this.isVocabularyMultipleFieldValue(fieldValue) ||
+            this.isPrimitiveMultipleFieldValue(fieldValue)
+          ) {
+            formattedNewObject[blockKey][newFieldName] = fieldValue
+            return
           }
-        }
-      )
 
-      metadataBlocks.push(formattedMetadataBlock)
+          if (this.isComposedSingleFieldValue(fieldValue)) {
+            formattedNewObject[blockKey][newFieldName] = {}
+            Object.entries(fieldValue).forEach(([nestedFieldName, nestedFieldValue]) => {
+              const newNestedFieldName = nestedFieldName.replace(/\//g, '.')
+              const parentOfNestedField = formattedNewObject[blockKey][
+                newFieldName
+              ] as ComposedSingleFieldValue
+
+              parentOfNestedField[newNestedFieldName] = nestedFieldValue
+            })
+            return
+          }
+
+          if (this.isComposedMultipleFieldValue(fieldValue)) {
+            formattedNewObject[blockKey][newFieldName] = fieldValue.map((composedFieldValues) => {
+              const composedField: ComposedSingleFieldValue = {}
+
+              Object.entries(composedFieldValues).forEach(([nestedFieldName, nestedFieldValue]) => {
+                const newNestedFieldName = nestedFieldName.replace(/\//g, '.')
+
+                composedField[newNestedFieldName] = nestedFieldValue
+              })
+
+              return composedField
+            })
+          }
+        })
+      }
     }
 
-    return { metadataBlocks }
+    return formattedNewObject
   }
 
-  //TODO:ME Maybe change the type of FormDefaultValues to not include the case where a primitive multiple field or a multiple vocabulary could be inside of a composed field
-  public static getFormDefaultValues(metadataBlocks: MetadataBlockInfo[]): FormDefaultValues {
-    const formDefaultValues: FormDefaultValues = {}
+  public static formatFormValuesToCreateDatasetDTO(
+    formValues: CreateDatasetFormValues
+  ): DatasetDTO {
+    // const metadataBlocks: DatasetDTO['metadataBlocks'] = []
+    // for (const metadataBlockName in formValues) {
+    //   const formattedMetadataBlock: DatasetMetadataBlockValuesDTO = {
+    //     name: metadataBlockName,
+    //     fields: {}
+    //   }
+    //   Object.entries(formValues[metadataBlockName]).forEach(
+    //     ([fieldName, fieldValue]: [
+    //       fieldName: string,
+    //       fieldValue: string | string[] | Record<string, string>
+    //     ]) => {
+    //       if (fieldValue !== undefined && fieldValue !== '') {
+    //         if (typeof fieldValue === 'string') {
+    //           formattedMetadataBlock.fields[fieldName] = fieldValue
+    //         }
+    //         if (Array.isArray(fieldValue) && fieldValue.length > 0) {
+    //           formattedMetadataBlock.fields[fieldName] = fieldValue
+    //         }
+    //         if (
+    //           typeof fieldValue === 'object' &&
+    //           !Array.isArray(fieldValue) &&
+    //           fieldValue !== null
+    //         ) {
+    //           const nestedFieldValues: DatasetMetadataChildFieldValueDTO = {}
+    //           for (const nestedKey in fieldValue) {
+    //             const nestedFieldValue = fieldValue[nestedKey]
+    //             if (nestedFieldValue !== undefined && nestedFieldValue !== '') {
+    //               nestedFieldValues[nestedKey] = nestedFieldValue
+    //             }
+    //           }
+    //           if (Object.keys(nestedFieldValues).length > 0) {
+    //             formattedMetadataBlock.fields[fieldName] = [nestedFieldValues]
+    //           }
+    //         }
+    //       }
+    //     }
+    //   )
+    //   metadataBlocks.push(formattedMetadataBlock)
+    // }
+    // return { metadataBlocks }
+  }
+
+  public static getFormDefaultValues(metadataBlocks: MetadataBlockInfo[]): CreateDatasetFormValues {
+    const formDefaultValues: CreateDatasetFormValues = {}
 
     for (const block of metadataBlocks) {
-      const blockValues: Record<
-        string,
-        | string
-        | string[]
-        | { value: string }[]
-        | Record<string, string | string[] | { value: string }[]>
-        | Record<string, string | string[] | { value: string }[]>[]
-      > = {}
+      const blockValues: MetadataBlockFormValues = {}
 
       for (const field of Object.values(block.metadataFields)) {
         const fieldName = field.name
 
         if (field.typeClass === 'compound') {
-          const childFieldsWithEmptyValues: Record<
-            string,
-            string | string[] | { value: string }[]
-          > = {}
+          const childFieldsWithEmptyValues: Record<string, string | string[]> = {}
 
           if (field.childMetadataFields) {
             for (const childField of Object.values(field.childMetadataFields)) {
               if (childField.typeClass === 'primitive') {
-                childFieldsWithEmptyValues[childField.name] = childField.multiple
-                  ? [{ value: '' }]
-                  : ''
+                childFieldsWithEmptyValues[childField.name] = ''
               }
 
               if (childField.typeClass === 'controlledVocabulary') {
-                childFieldsWithEmptyValues[childField.name] = childField.multiple ? [] : ''
+                childFieldsWithEmptyValues[childField.name] = ''
               }
             }
           }
-
           blockValues[fieldName] = field.multiple
             ? [childFieldsWithEmptyValues]
             : childFieldsWithEmptyValues
         }
 
         if (field.typeClass === 'primitive') {
-          // A primitive that can be multiplied e.g: Alternative Title: ['titleone', 'titletwo'] or just 'title'
           blockValues[fieldName] = field.multiple ? [{ value: '' }] : ''
         }
 
@@ -200,5 +215,30 @@ export class MetadataFieldsHelper {
       return `${metadataBlockName}.${compoundParentName}.${name}`
     }
     return `${metadataBlockName}.${name}`
+  }
+
+  private static isPrimitiveFieldValue = (value: unknown): value is string => {
+    return typeof value === 'string'
+  }
+  private static isPrimitiveMultipleFieldValue = (
+    value: unknown
+  ): value is PrimitiveMultipleFormValue => {
+    return Array.isArray(value) && value.every((v) => typeof v === 'object' && 'value' in v)
+  }
+  private static isVocabularyMultipleFieldValue = (
+    value: unknown
+  ): value is VocabullaryMultipleFormValue => {
+    return Array.isArray(value) && value.every((v) => typeof v === 'string')
+  }
+
+  private static isComposedSingleFieldValue = (
+    value: unknown
+  ): value is ComposedSingleFieldValue => {
+    return typeof value === 'object' && !Array.isArray(value)
+  }
+  private static isComposedMultipleFieldValue = (
+    value: unknown
+  ): value is ComposedMultipleFieldValue => {
+    return Array.isArray(value) && value.every((v) => typeof v === 'object')
   }
 }

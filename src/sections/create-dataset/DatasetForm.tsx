@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { SubmissionStatus, useCreateDatasetForm } from './useCreateDatasetForm'
 import { type DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { type MetadataBlockInfo } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { type FormDefaultValues } from './MetadataFieldsHelper'
+import { type CreateDatasetFormValues } from './MetadataFieldsHelper'
 import { Form, Accordion, Alert, Button } from '@iqss/dataverse-design-system'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
@@ -16,7 +16,7 @@ interface DatasetFormProps {
   repository: DatasetRepository
   metadataBlocks: MetadataBlockInfo[]
   errorLoadingMetadataBlocks: string | null
-  formDefaultValues: FormDefaultValues
+  formDefaultValues: CreateDatasetFormValues
 }
 
 export const DatasetForm = ({
@@ -74,7 +74,6 @@ export const DatasetForm = ({
       )}
 
       <FormProvider {...form}>
-        {/* TODO:ME: Fix inconsistency between FormCollectedValues and FormDefaultValues structure */}
         <Form onSubmit={form.handleSubmit(submitForm)}>
           {/* TODO:ME Open accordion with error inputs when submitting */}
           {metadataBlocks.length > 0 && (
