@@ -1,9 +1,11 @@
 import { DatasetDTO } from '../../../../src/dataset/domain/useCases/DTOs/DatasetDTO'
 import { MetadataBlockInfo } from '../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
-import { MetadataFieldsHelper } from '../../../../src/sections/create-dataset/MetadataFieldsHelper'
-import { FormCollectedValues } from '../../../../src/sections/create-dataset/useCreateDatasetForm'
+import {
+  CreateDatasetFormValues,
+  MetadataFieldsHelper
+} from '../../../../src/sections/create-dataset/MetadataFieldsHelper'
 
-const sampleObjectWithSlashKeys: FormCollectedValues = {
+const sampleObjectWithSlashKeys: CreateDatasetFormValues = {
   blockOne: {
     'key/one': 'value1',
     'key/two': {
@@ -20,7 +22,7 @@ const sampleObjectWithSlashKeys: FormCollectedValues = {
   }
 }
 
-const replacedSampleObjectWithSlashKeys: FormCollectedValues = {
+const replacedSampleObjectWithSlashKeys: CreateDatasetFormValues = {
   blockOne: {
     'key.one': 'value1',
     'key.two': {
@@ -231,7 +233,7 @@ const sampleArrayOfMetadataBlocksInfoWithSlashNames: MetadataBlockInfo[] = [
   }
 ]
 
-const formValues: FormCollectedValues = {
+const formValues: CreateDatasetFormValues = {
   citation: {
     title: 'Dataset Title',
     subtitle: '',

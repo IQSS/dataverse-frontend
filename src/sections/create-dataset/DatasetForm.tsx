@@ -36,10 +36,6 @@ export const DatasetForm = ({
     mode: 'onChange',
     defaultValues: formDefaultValues
   })
-  // console.group('form')
-  // console.log(form.getValues())
-  // console.log(form.watch('citation.subject'))
-  // console.groupEnd()
 
   const formHasErrors = Object.keys(form.formState.errors).length > 0
 

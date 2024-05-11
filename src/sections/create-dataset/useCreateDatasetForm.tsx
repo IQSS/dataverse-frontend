@@ -22,30 +22,26 @@ export function useCreateDatasetForm(repository: DatasetRepository): {
   const navigate = useNavigate()
 
   const submitForm = (formData: CreateDatasetFormValues): void => {
-    console.log({ formData })
-    // setSubmissionStatus(SubmissionStatus.IsSubmitting)
+    setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
     const formDataBackToOriginalKeys = MetadataFieldsHelper.replaceSlashKeysWithDot(formData)
 
-    console.log({ formDataBackToOriginalKeys })
+    const formattedFormValues = MetadataFieldsHelper.formatFormValuesToCreateDatasetDTO(
+      formDataBackToOriginalKeys
+    )
 
-    // const formattedFormValues = MetadataFieldsHelper.formatFormValuesToCreateDatasetDTO(
-    //   formDataBackToOriginalKeys
-    // )
-    // console.log({ formattedFormValues })
-
-    // createDataset(repository, formattedFormValues)
-    //   .then(({ persistentId }) => {
-    //     setSubmissionStatus(SubmissionStatus.SubmitComplete)
-    //     navigate(`${Route.DATASETS}?persistentId=${persistentId}`, {
-    //       state: { created: true }
-    //     })
-    //     return
-    //   })
-    //   .catch((e) => {
-    //     console.error(e)
-    //     setSubmissionStatus(SubmissionStatus.Errored)
-    //   })
+    createDataset(repository, formattedFormValues)
+      .then(({ persistentId }) => {
+        setSubmissionStatus(SubmissionStatus.SubmitComplete)
+        navigate(`${Route.DATASETS}?persistentId=${persistentId}`, {
+          state: { created: true }
+        })
+        return
+      })
+      .catch((e) => {
+        console.error(e)
+        setSubmissionStatus(SubmissionStatus.Errored)
+      })
   }
 
   return {
