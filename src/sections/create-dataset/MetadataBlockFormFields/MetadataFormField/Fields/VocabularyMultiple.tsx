@@ -33,7 +33,7 @@ export const VocabularyMultiple = ({
       ),
     [name, metadataBlockName, compoundParentName, fieldsArrayIndex]
   )
-  //TODO:ME Check if needed to add data-testid="vocabulary-multiple"
+
   return (
     <Controller
       name={builtFieldName}

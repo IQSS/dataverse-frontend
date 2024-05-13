@@ -12,6 +12,9 @@ const collectionMetadataBlocksInfo =
 
 const fillRequiredFields = () => {
   cy.findByLabelText(/^Title/i).type('Test Dataset Title')
+
+  cy.findByLabelText(/^Alternative Title/i).type('Alternative Title 1')
+
   cy.findByText('Author')
     .closest('.row')
     .within(() => {
@@ -29,17 +32,27 @@ const fillRequiredFields = () => {
     .within(() => {
       cy.findByLabelText(/^Text/i).type('Test description text')
     })
+
   cy.findByText('Subject')
     .closest('.row')
     .within(() => {
-      cy.findByLabelText(/^Arts and Humanities/i).check()
-      cy.findByLabelText(/^Arts and Humanities/i).uncheck()
-      cy.findByLabelText(/^Arts and Humanities/i).check()
+      cy.findByLabelText('Toggle options menu').click()
+
+      cy.findByText('Agricultural Sciences').should('exist')
+      cy.findByLabelText('Agricultural Sciences').click()
     })
+
   cy.findByText('Producer')
     .closest('.row')
     .within(() => {
       cy.findByLabelText(/^Name/i).type('Test producer name')
+    })
+
+  // Compose field not multiple
+  cy.findByText('Composed field not multiple')
+    .closest('.row')
+    .within(() => {
+      cy.findByLabelText(/^Foo/i).type('Test foo name')
     })
 }
 
@@ -145,6 +158,7 @@ describe('Create Dataset', () => {
 
     // Subject field - VOCABULARY and MULTIPLE
     cy.findByText('Subject').should('exist')
+    cy.findByLabelText(/Subject/).should('exist')
 
     cy.findByText(/Save Dataset/i).should('exist')
 
@@ -213,7 +227,7 @@ describe('Create Dataset', () => {
     cy.findByText('Author Name is required').should('not.exist')
     cy.findByText('Point of Contact E-mail is required').should('not.exist')
     cy.findByText('Description Text is required').should('not.exist')
-    cy.findByText('Subject is required').should('not.be.visible')
+    cy.findByText('Subject is required').should('not.exist')
     cy.findByText('Producer Name is required').should('not.exist')
 
     cy.findByText('Validation Error').should('not.exist')
@@ -265,12 +279,6 @@ describe('Create Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     )
-    cy.customMount(
-      <CreateDataset
-        repository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-      />
-    )
 
     cy.findByLabelText(/Alternative URL/).type('https://test.com')
     cy.findByText('Alternative URL is not a valid URL').should('not.exist')
@@ -311,7 +319,7 @@ describe('Create Dataset', () => {
       />
     )
 
-    cy.findByTestId('metadata-blocks-skeleton').should('exist')
+    cy.findByTestId('dataset-form-skeleton').should('exist')
   })
 
   describe('When getting collection metadata blocks info fails', () => {
@@ -373,5 +381,87 @@ describe('Create Dataset', () => {
 
     cy.findByText(/Save Dataset/i).click()
     cy.contains('Validation Error').should('exist')
+  })
+
+  it('cancel button is clickable', () => {
+    cy.customMount(
+      <CreateDataset
+        repository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+
+    cy.findByText(/Cancel/i).click()
+  })
+
+  it('open closed accordion that has fields with errors on it and scrolls to the focused field', () => {
+    cy.customMount(
+      <CreateDataset
+        repository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+
+    cy.get(':nth-child(1) > .accordion-header > .accordion-button').click()
+
+    cy.findByText('Save Dataset').click()
+
+    cy.findByText('Title is required').should('exist')
+    cy.findByLabelText(/^Title/i)
+      .should('have.focus')
+      .should('be.visible')
+
+    cy.findByLabelText(/^Title/i).type('Test Dataset Title')
+
+    cy.get(':nth-child(1) > .accordion-header > .accordion-button').click()
+
+    cy.findByText('Save Dataset').click()
+
+    cy.findByText('Alternative Title is required').should('exist')
+    cy.findByLabelText(/^Alternative Title/i)
+      .should('have.focus')
+      .should('be.visible')
+  })
+
+  it('adds a new field and removes a field to composed field multiple', () => {
+    cy.customMount(
+      <CreateDataset
+        repository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+
+    cy.findByText('Author')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^Name/i).type('Test foo name')
+
+        cy.findByLabelText(`Add Author`).click()
+
+        cy.findByLabelText(`Delete Author`).should('exist')
+
+        cy.findByLabelText(`Delete Author`).click()
+
+        cy.findByLabelText(`Delete Author`).should('not.exist')
+      })
+  })
+
+  it('adds a new field and removes a field to a primitive multiple field', () => {
+    cy.customMount(
+      <CreateDataset
+        repository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+
+    cy.findByLabelText(/^Alternative Title/i).type('Alternative Title 1')
+
+    cy.findByLabelText(`Add Alternative Title`).click()
+
+    cy.findByLabelText(`Delete Alternative Title`).should('exist')
+
+    cy.findByLabelText(`Delete Alternative Title`).click()
+
+    cy.findByLabelText(`Delete Alternative Title`).should('not.exist')
   })
 })

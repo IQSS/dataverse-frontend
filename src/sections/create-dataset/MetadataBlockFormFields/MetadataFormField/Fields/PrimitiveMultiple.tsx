@@ -117,6 +117,7 @@ export const PrimitiveMultiple = ({
                       styles['on-primitive-multiple']
                     )}>
                     <DynamicFieldsButtons
+                      fieldName={title}
                       onAddButtonClick={() => handleOnAddField(index)}
                       onRemoveButtonClick={() => handleOnRemoveField(index)}
                       originalField={index === 0}

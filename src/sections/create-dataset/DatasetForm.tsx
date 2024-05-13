@@ -69,10 +69,13 @@ export const DatasetForm = ({
       if (itemBlockName === firstMetadataBlockNameWithError && buttonIsCollapsed) {
         button.click()
 
-        setTimeout(() => {
-          const focusedElement = document.activeElement
-          focusedElement?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-        }, 800)
+        setTimeout(
+          /* istanbul ignore next */ () => {
+            const focusedElement = document.activeElement
+            focusedElement?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          },
+          800
+        )
       }
     })
   }

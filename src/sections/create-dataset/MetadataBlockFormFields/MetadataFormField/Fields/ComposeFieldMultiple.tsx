@@ -76,6 +76,7 @@ export const ComposedFieldMultiple = ({
                 styles['on-composed-multiple']
               )}>
               <DynamicFieldsButtons
+                fieldName={title}
                 onAddButtonClick={() => handleOnAddField(index)}
                 onRemoveButtonClick={() => handleOnRemoveField(index)}
                 originalField={index === 0}

@@ -7,6 +7,7 @@ import { type DatasetRepository } from '../../dataset/domain/repositories/Datase
 import { type MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { DatasetForm } from './DatasetForm'
+import { DatasetFormSkeleton } from './DatasetFormSkeleton'
 
 interface CreateDatasetProps {
   repository: DatasetRepository
@@ -24,31 +25,20 @@ export function CreateDataset({
 
   const {
     metadataBlocks,
-    isLoading: isLoadingMetadataBlocksToRender,
+    isLoading: isLoadingMetadataBlocksConfiguration,
     error: errorLoadingMetadataBlocksToRender
   } = useGetMetadataBlocksInfo({
     metadataBlockInfoRepository,
-    collectionId,
-    mode: 'create'
+    collectionId
   })
 
   const formDefaultValues = MetadataFieldsHelper.getFormDefaultValues(metadataBlocks)
 
   useEffect(() => {
-    if (!isLoadingMetadataBlocksToRender) {
+    if (!isLoadingMetadataBlocksConfiguration) {
       setIsLoading(false)
     }
-  }, [isLoading, isLoadingMetadataBlocksToRender])
-
-  if (isLoadingMetadataBlocksToRender || isLoading) {
-    {
-      /* TODO:ME Add skeleton  */
-    }
-    {
-      /* {isLoadingMetadataBlocksToRender && <MetadataBlocksSkeleton />} */
-    }
-    return <p>Loading metadatablocks configuration</p>
-  }
+  }, [isLoading, isLoadingMetadataBlocksConfiguration])
 
   return (
     <article>
@@ -56,13 +46,16 @@ export function CreateDataset({
         <h1>{t('pageTitle')}</h1>
       </header>
       <SeparationLine />
-
-      <DatasetForm
-        repository={repository}
-        metadataBlocks={metadataBlocks}
-        formDefaultValues={formDefaultValues}
-        errorLoadingMetadataBlocks={errorLoadingMetadataBlocksToRender}
-      />
+      {isLoadingMetadataBlocksConfiguration ? (
+        <DatasetFormSkeleton />
+      ) : (
+        <DatasetForm
+          repository={repository}
+          metadataBlocks={metadataBlocks}
+          formDefaultValues={formDefaultValues}
+          errorLoadingMetadataBlocks={errorLoadingMetadataBlocksToRender}
+        />
+      )}
     </article>
   )
 }
