@@ -1,4 +1,4 @@
-import { Button, DropdownButtonItem, Modal } from '@iqss/dataverse-design-system'
+import { Button, Col, DropdownButtonItem, Modal } from '@iqss/dataverse-design-system'
 import { useSession } from '../../../session/SessionContext'
 import { FormEvent, useState } from 'react'
 import { Form } from '@iqss/dataverse-design-system'
@@ -58,8 +58,12 @@ const RequestAccessForm = ({
       <Modal.Body>
         <Form.Group controlId="basic-form-username">
           <p>{t('requestAccess.askToAcceptTerms')}.</p>
-          <Form.Group.Label>{t('requestAccess.terms')}</Form.Group.Label>
-          <Form.Group.Input type="text" readOnly defaultValue="Some terms" />
+          <Form.Group.Label column sm={3}>
+            {t('requestAccess.terms')}
+          </Form.Group.Label>
+          <Col sm={9}>
+            <Form.Group.Input type="text" readOnly defaultValue="Some terms" />
+          </Col>
         </Form.Group>
       </Modal.Body>
       <Modal.Footer>

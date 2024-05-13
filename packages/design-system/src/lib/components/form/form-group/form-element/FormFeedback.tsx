@@ -19,11 +19,4 @@ export function FormFeedback({
       {children}
     </FormControl.Feedback>
   )
-  // return withinMultipleFieldsGroup ? (
-  //   <FormControl.Feedback type={type}>{children}</FormControl.Feedback>
-  // ) : (
-  //   <FormControl.Feedback as={Col} sm={{ offset: 3 }} type={type}>
-  //     {children}
-  //   </FormControl.Feedback>
-  // )
 }
