@@ -1,6 +1,6 @@
-import { MouseEvent, useMemo } from 'react'
+import { MouseEvent, useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FormProvider, useForm } from 'react-hook-form'
+import { FieldErrors, FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { SubmissionStatus, useCreateDatasetForm } from './useCreateDatasetForm'
 import { type DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
@@ -27,6 +27,7 @@ export const DatasetForm = ({
 }: DatasetFormProps) => {
   const navigate = useNavigate()
   const { t } = useTranslation('createDataset')
+  const accordionRef = useRef<HTMLDivElement>(null)
 
   const { submissionStatus, submitForm } = useCreateDatasetForm(repository)
 
@@ -47,6 +48,34 @@ export const DatasetForm = ({
   const disableSubmitButton = useMemo(() => {
     return isErrorLoadingMetadataBlocks || submissionStatus === SubmissionStatus.IsSubmitting
   }, [isErrorLoadingMetadataBlocks, submissionStatus])
+
+  const onInvalidSubmit = (errors: FieldErrors<CreateDatasetFormValues>) => {
+    if (!accordionRef.current) return
+    /*
+    Get the first metadata block accordion item with an error, and if it's collapsed, open it
+    Only for the case when accordion is closed, otherwise focus is already handled by react-hook-form
+    */
+    const firstMetadataBlockNameWithError = Object.keys(errors)[0]
+
+    const accordionItemsButtons: HTMLButtonElement[] = Array.from(
+      accordionRef.current.querySelectorAll('button.accordion-button')
+    )
+
+    accordionItemsButtons.forEach((button) => {
+      const parentItem = button.closest('.accordion-item')
+      const itemBlockName = parentItem?.id.split('-').pop()
+      const buttonIsCollapsed = button.classList.contains('collapsed')
+
+      if (itemBlockName === firstMetadataBlockNameWithError && buttonIsCollapsed) {
+        button.click()
+
+        setTimeout(() => {
+          const focusedElement = document.activeElement
+          focusedElement?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }, 800)
+      }
+    })
+  }
 
   return (
     <div>
@@ -70,12 +99,14 @@ export const DatasetForm = ({
       )}
 
       <FormProvider {...form}>
-        <Form onSubmit={form.handleSubmit(submitForm)}>
-          {/* TODO:ME Open accordion with error inputs when submitting */}
+        <Form onSubmit={form.handleSubmit(submitForm, onInvalidSubmit)}>
           {metadataBlocks.length > 0 && (
-            <Accordion defaultActiveKey="0">
+            <Accordion defaultActiveKey="0" ref={accordionRef}>
               {metadataBlocks.map((metadataBlock, index) => (
-                <Accordion.Item eventKey={index.toString()} key={metadataBlock.id}>
+                <Accordion.Item
+                  eventKey={index.toString()}
+                  id={`metadata-block-item-${metadataBlock.name}`}
+                  key={metadataBlock.id}>
                   <Accordion.Header>{metadataBlock.displayName}</Accordion.Header>
                   <Accordion.Body>
                     <MetadataBlockFormFields metadataBlock={metadataBlock} />

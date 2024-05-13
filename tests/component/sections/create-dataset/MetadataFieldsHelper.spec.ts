@@ -14,7 +14,13 @@ const sampleObjectWithSlashKeys: CreateDatasetFormValues = {
     },
     key5: {
       key6: 'value6'
-    }
+    },
+    key6: [
+      {
+        'key/childOne': 'value3',
+        'key/childTwo': 'value4'
+      }
+    ]
   },
   blockTwo: {
     'key/three': 'value7',
@@ -31,7 +37,13 @@ const replacedSampleObjectWithSlashKeys: CreateDatasetFormValues = {
     },
     key5: {
       key6: 'value6'
-    }
+    },
+    key6: [
+      {
+        'key.childOne': 'value3',
+        'key.childTwo': 'value4'
+      }
+    ]
   },
   blockTwo: {
     'key.three': 'value7',
@@ -237,18 +249,30 @@ const formValues: CreateDatasetFormValues = {
   citation: {
     title: 'Dataset Title',
     subtitle: '',
-    author: {
-      authorName: 'Author Name',
-      authorAffiliation: 'Author Affiliation'
-    },
+    aPrimitiveMultiple: [{ value: 'something' }, { value: '' }],
+    anEmptyPrimitiveMultiple: [{ value: '' }],
+    author: [
+      {
+        authorName: 'Author Name',
+        authorAffiliation: 'Author Affiliation',
+        someEmptyField: ''
+      },
+      {
+        authorName: '',
+        authorAffiliation: '',
+        someEmptyField: ''
+      }
+    ],
     subject: ['Subject 1', 'Subject 2'],
     anEmptyVocabulary: []
   },
   astrophysics: {
-    'coverage.Temporal': {
-      'coverage.Temporal.StartTime': '2022-01-01',
-      'coverage.Temporal.StopTime': '2022-12-31'
-    },
+    'coverage.Temporal': [
+      {
+        'coverage.Temporal.StartTime': '2022-01-01',
+        'coverage.Temporal.StopTime': '2022-12-31'
+      }
+    ],
     'resolution.Spatial': '100'
   }
 }
@@ -259,6 +283,7 @@ const expectedDatasetDTO: DatasetDTO = {
       name: 'citation',
       fields: {
         title: 'Dataset Title',
+        aPrimitiveMultiple: ['something'],
         author: [
           {
             authorName: 'Author Name',

@@ -186,7 +186,6 @@ export class MetadataFieldsHelper {
         }
 
         if (this.isComposedSingleFieldValue(fieldValue)) {
-          console.log({ fieldName, fieldValue })
           const formattedMetadataChildFieldValue: DatasetMetadataChildFieldValueDTO = {}
 
           Object.entries(fieldValue).forEach(([nestedFieldName, nestedFieldValue]) => {
