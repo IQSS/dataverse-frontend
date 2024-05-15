@@ -272,7 +272,7 @@ describe('File JSDataverse Repository', () => {
         })
     })
 
-    it.only('gets all the files by dataset persistentId after file has been downloaded', async () => {
+    it('gets all the files by dataset persistentId after file has been downloaded', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(3))
       if (!datasetResponse.files) throw new Error('Files not found')
 
