@@ -19,9 +19,6 @@ describe('Dataset', () => {
   })
 
   describe('Visit the Dataset Page as a logged in user', () => {
-    beforeEach(() => {
-      cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
-    })
     it('successfully loads a dataset in draft mode', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
@@ -194,9 +191,6 @@ describe('Dataset', () => {
   })
 
   describe('Visualizing the Files Tab', () => {
-    beforeEach(() => {
-      cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
-    })
     it('successfully loads the files tab', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
@@ -535,9 +529,6 @@ describe('Dataset', () => {
   })
 
   describe('Downloading files', () => {
-    beforeEach(() => {
-      cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
-    })
     it('downloads the dataset', () => {
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(2)).then((dataset) =>

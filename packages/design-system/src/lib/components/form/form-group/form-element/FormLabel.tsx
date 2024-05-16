@@ -7,18 +7,20 @@ interface FormLabelProps {
   required?: boolean
   message?: string
   withinMultipleFieldsGroup?: boolean
+  htmlFor?: string
 }
 
 export function FormLabel({
   required,
   message,
   withinMultipleFieldsGroup,
+  htmlFor,
   children
 }: PropsWithChildren<FormLabelProps>) {
   const layoutProps = withinMultipleFieldsGroup ? {} : { column: true, sm: 3 }
 
   return (
-    <FormBS.Label {...layoutProps}>
+    <FormBS.Label htmlFor={htmlFor} {...layoutProps}>
       {children}
       {required && <RequiredInputSymbol />}{' '}
       {message && <QuestionMarkTooltip placement="right" message={message}></QuestionMarkTooltip>}

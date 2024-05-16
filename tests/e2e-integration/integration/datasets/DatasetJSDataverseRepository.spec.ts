@@ -18,6 +18,7 @@ import {
 } from '../../../../src/files/domain/models/FileMetadata'
 import { DatasetPaginationInfo } from '../../../../src/dataset/domain/models/DatasetPaginationInfo'
 import { DatasetDTO } from '../../../../src/dataset/domain/useCases/DTOs/DatasetDTO'
+import { CollectionHelper } from '../../shared/collection/CollectionHelper'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -124,17 +125,19 @@ const datasetData = (persistentId: string, versionId: number) => {
     ]
   }
 }
-
+const collectionId = 'DatasetJSDataverseRepository'
 const datasetRepository = new DatasetJSDataverseRepository()
 describe('Dataset JSDataverse Repository', () => {
-  before(() => TestsUtils.setup())
+  before(() => {
+    TestsUtils.setup()
+    TestsUtils.login().then(() => CollectionHelper.createAndPublish(collectionId))
+  })
   beforeEach(() => {
     TestsUtils.login()
-    cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
   })
 
   it('gets the dataset by persistentId', async () => {
-    const datasetResponse = await DatasetHelper.create()
+    const datasetResponse = await DatasetHelper.create(collectionId)
 
     await datasetRepository.getByPersistentId(datasetResponse.persistentId).then((dataset) => {
       if (!dataset) {
@@ -156,7 +159,7 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets a published dataset by persistentId without user authentication', async () => {
-    const datasetResponse = await DatasetHelper.create()
+    const datasetResponse = await DatasetHelper.create(collectionId)
     await DatasetHelper.publish(datasetResponse.persistentId)
 
     await TestsUtils.wait(1500)
@@ -202,7 +205,7 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets the dataset by persistentId and version number', async () => {
-    const datasetResponse = await DatasetHelper.create()
+    const datasetResponse = await DatasetHelper.create(collectionId)
     await DatasetHelper.publish(datasetResponse.persistentId)
     await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
     await datasetRepository
@@ -238,7 +241,7 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets the dataset by persistentId and version DRAFT keyword', async () => {
-    const datasetResponse = await DatasetHelper.create()
+    const datasetResponse = await DatasetHelper.create(collectionId)
 
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, 'DRAFT')
@@ -254,7 +257,7 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets the dataset by privateUrlToken', async () => {
-    const datasetResponse = await DatasetHelper.create()
+    const datasetResponse = await DatasetHelper.create(collectionId)
     const privateUrlResponse = await DatasetHelper.createPrivateUrl(datasetResponse.id)
 
     await datasetRepository.getByPrivateUrlToken(privateUrlResponse.token).then((dataset) => {
@@ -270,7 +273,7 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets the dataset after changing the citation date field type', async () => {
-    const datasetResponse = await DatasetHelper.create()
+    const datasetResponse = await DatasetHelper.create(collectionId)
 
     await DatasetHelper.publish(datasetResponse.persistentId)
     await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
@@ -292,22 +295,28 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets the DatasetPreview', () => {
-    return DatasetHelper.createAndPublish().then((datasetResponse) => {
-      const paginationInfo = new DatasetPaginationInfo(1, 20)
+    const previewCollectionId = 'DatasetJSDataverseRepositoryPreview' + Date.now().toString()
 
-      return datasetRepository.getAllWithCount('root', paginationInfo).then((datasetsWithCount) => {
-        expect(datasetsWithCount.totalCount).to.equal(1)
-        expect(datasetsWithCount.datasetPreviews[0].version.title).to.equal("Darwin's Finches")
-        expect(datasetsWithCount.datasetPreviews[0].persistentId).to.equal(
-          datasetResponse.persistentId
-        )
+    cy.wrap(CollectionHelper.createAndPublish(previewCollectionId)).then(() => {
+      return DatasetHelper.createAndPublish(previewCollectionId).then((datasetResponse) => {
+        const paginationInfo = new DatasetPaginationInfo(1, 20)
+
+        return datasetRepository
+          .getAllWithCount(previewCollectionId, paginationInfo)
+          .then((datasetsWithCount) => {
+            expect(datasetsWithCount.totalCount).to.equal(1)
+            expect(datasetsWithCount.datasetPreviews[0].version.title).to.equal("Darwin's Finches")
+            expect(datasetsWithCount.datasetPreviews[0].persistentId).to.equal(
+              datasetResponse.persistentId
+            )
+          })
       })
     })
   })
 
   it.skip('gets the dataset by persistentId when the dataset is deaccessioned', async () => {
     // TODO - Implement once the getDatasetCitation includes deaccessioned datasets
-    const datasetResponse = await DatasetHelper.create()
+    const datasetResponse = await DatasetHelper.create(collectionId)
 
     await DatasetHelper.publish(datasetResponse.persistentId)
     await TestsUtils.wait(1500)
@@ -323,7 +332,7 @@ describe('Dataset JSDataverse Repository', () => {
     })
   })
   it('gets the dataset by persistentId when is locked', async () => {
-    const datasetResponse = await DatasetHelper.create()
+    const datasetResponse = await DatasetHelper.create(collectionId)
     await DatasetHelper.lock(datasetResponse.id, DatasetLockReason.FINALIZE_PUBLICATION)
 
     await datasetRepository.getByPersistentId(datasetResponse.persistentId).then((dataset) => {

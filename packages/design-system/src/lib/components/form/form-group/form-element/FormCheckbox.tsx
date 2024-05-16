@@ -1,7 +1,8 @@
 import { Form as FormBS } from 'react-bootstrap'
 import * as React from 'react'
 
-interface FormCheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
+export interface FormCheckboxProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   id: string
   label: string
   isValid?: boolean
