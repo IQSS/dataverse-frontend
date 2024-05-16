@@ -111,7 +111,7 @@ export class FileHelper extends DataverseApiHelper {
     cy.visit(`/file.xhtml?fileId=${id}`)
       .get('#actionButtonBlock > div:nth-child(1) > div > button')
       .click()
-      .get('#fileForm\\:j_idt273')
+      .get('#fileForm\\:j_idt274')
       .click()
     return Promise.resolve()
   }
