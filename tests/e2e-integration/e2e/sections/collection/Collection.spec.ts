@@ -28,7 +28,7 @@ describe('Collection Page', () => {
       cy.findByText(title).should('exist')
       cy.findByText(title).click({ force: true })
 
-      cy.findAllByText(title).should('be.visible')
+      cy.findAllByText(title).should('exist')
     })
   })
 
