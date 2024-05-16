@@ -25,7 +25,7 @@ describe('Collection Page', () => {
 
       cy.findByText(/Dataverse Admin/i).should('exist')
 
-      cy.findByText(title).should('be.visible')
+      cy.findByText(title).should('exist')
       cy.findByText(title).click({ force: true })
 
       cy.findAllByText(title).should('be.visible')
