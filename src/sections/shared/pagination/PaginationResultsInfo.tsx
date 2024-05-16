@@ -18,8 +18,8 @@ export function PaginationResultsInfo({ paginationInfo, accumulated }: Paginatio
       accumulated === 1
         ? 'accumulated.one'
         : accumulated < paginationInfo.pageSize
-          ? 'accumulated.lessThanPageSize'
-          : 'accumulated.moreThanPageSize',
+        ? 'accumulated.lessThanPageSize'
+        : 'accumulated.moreThanPageSize',
     [accumulated, paginationInfo.pageSize]
   )
 
@@ -32,18 +32,18 @@ export function PaginationResultsInfo({ paginationInfo, accumulated }: Paginatio
     <span className={styles.results}>
       {typeof accumulated === 'number'
         ? t(defineLocale(accumulated), {
-          accumulated: accumulated,
-          count: paginationInfo.totalItems,
-          formattedCount: formattedCount,
-          item: paginationInfo.itemName
-        })
+            accumulated: accumulated,
+            count: paginationInfo.totalItems,
+            formattedCount: formattedCount,
+            item: paginationInfo.itemName
+          })
         : t('results', {
-          start: paginationInfo.pageStartItem,
-          end: paginationInfo.pageEndItem,
-          item: paginationInfo.itemName,
-          count: paginationInfo.totalItems,
-          formattedCount: formattedCount,
-        })}
+            start: paginationInfo.pageStartItem,
+            end: paginationInfo.pageEndItem,
+            item: paginationInfo.itemName,
+            count: paginationInfo.totalItems,
+            formattedCount: formattedCount
+          })}
     </span>
   )
 }
