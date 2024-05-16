@@ -260,7 +260,6 @@ describe('Create Dataset', () => {
 
     // We need to open the Astronomy and Astrophysics Metadata accordion to fill the fields first, in this metadatablock we have ints and floats fields
     cy.get(':nth-child(2) > .accordion-header > .accordion-button').click()
-    cy.wait(250) // Maybe not needed?
 
     cy.findByLabelText(/Depth Coverage/).type('30L')
     cy.findByText('Depth Coverage is not a valid float').should('exist')
@@ -299,7 +298,6 @@ describe('Create Dataset', () => {
 
     // We need to open the Astronomy and Astrophysics Metadata accordion to fill the fields first, in this metadatablock we have ints and floats fields
     cy.get(':nth-child(2) > .accordion-header > .accordion-button').click()
-    cy.wait(250) // Maybe not needed?
 
     cy.findByLabelText(/Depth Coverage/).type('3.14159265')
     cy.findByText('Depth Coverage is not a valid float').should('not.exist')
