@@ -8,6 +8,7 @@ import { type MetadataBlockInfoRepository } from '../../metadata-block-info/doma
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { DatasetForm } from './DatasetForm'
 import { DatasetFormSkeleton } from './DatasetFormSkeleton'
+import { HostCollectionForm } from './HostCollectionForm/HostCollectionForm'
 
 interface CreateDatasetProps {
   repository: DatasetRepository
@@ -46,7 +47,8 @@ export function CreateDataset({
         <h1>{t('pageTitle')}</h1>
       </header>
       <SeparationLine />
-      Host Collection alias: {collectionId}
+      <HostCollectionForm collectionId={collectionId} />
+
       {isLoadingMetadataBlocksConfiguration ? (
         <DatasetFormSkeleton />
       ) : (
