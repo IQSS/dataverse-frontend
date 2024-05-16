@@ -27,7 +27,7 @@ import { JSDatasetPreviewMapper } from '../mappers/JSDatasetPreviewMapper'
 import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
 import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
 import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
-
+const defaultCollectionId = 'root'
 const includeDeaccessioned = true
 type DatasetDetails = [JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[]]
 
@@ -180,9 +180,12 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
   }
 
-  create(dataset: DatasetDTO): Promise<{ persistentId: string }> {
+  create(
+    dataset: DatasetDTO,
+    collectionId = defaultCollectionId
+  ): Promise<{ persistentId: string }> {
     return createDataset
-      .execute(DatasetDTOMapper.toJSDatasetDTO(dataset))
+      .execute(DatasetDTOMapper.toJSDatasetDTO(dataset), collectionId)
       .then((jsDatasetIdentifiers: JSDatasetIdentifiers) => ({
         persistentId: jsDatasetIdentifiers.persistentId
       }))

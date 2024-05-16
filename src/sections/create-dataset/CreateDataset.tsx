@@ -46,11 +46,13 @@ export function CreateDataset({
         <h1>{t('pageTitle')}</h1>
       </header>
       <SeparationLine />
+      Host Collection alias: {collectionId}
       {isLoadingMetadataBlocksConfiguration ? (
         <DatasetFormSkeleton />
       ) : (
         <DatasetForm
           repository={repository}
+          collectionId={collectionId}
           metadataBlocks={metadataBlocks}
           formDefaultValues={formDefaultValues}
           errorLoadingMetadataBlocks={errorLoadingMetadataBlocksToRender}
