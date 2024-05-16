@@ -1,0 +1,49 @@
+@import 'src/lib/assets/styles/design-tokens/colors.module';
+
+.fileuploader {
+    min-height: 5em;
+}
+
+.files {
+    display: table;
+}
+
+.group {
+    display: table-row-group;
+}
+
+.file {
+    display: table-row;
+    vertical-align: middle;
+}
+
+.cell {
+    display: table-cell;
+    padding: 0.25em 0.5em 0.25em 0.5;
+    vertical-align: middle;
+}
+
+.failed {
+    display: table-cell;
+    padding: 0.25em 0.5em 0.25em 0.5;
+    color: $dv-danger-color;
+    text-decoration: line-through;
+    vertical-align: middle;
+}
+
+.progress {
+    width: 10em;
+    margin-left: 1em
+}
+
+.icon {
+    display: inline-block;
+    vertical-align: -0.125em;
+}
+
+.info {
+    padding: 0.5em;
+    color: $dv-subtext-color;
+    font-size: 1.3em;
+    text-align: center;
+}
