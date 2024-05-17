@@ -3,6 +3,7 @@ import { DatasetRepository } from '../../../../src/dataset/domain/repositories/D
 import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { TypeMetadataFieldOptions } from '../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
+import { NotImplementedModalProvider } from '../../../../src/sections/not-implemented/NotImplementedModalProvider'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -63,7 +64,25 @@ describe('Create Dataset', () => {
       .stub()
       .resolves(collectionMetadataBlocksInfo)
   })
-
+  it('renders the Host Collection Form', () => {
+    cy.customMount(
+      <NotImplementedModalProvider>
+        <CreateDataset
+          repository={datasetRepository}
+          collectionId={'test-collectionId'}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </NotImplementedModalProvider>
+    )
+    cy.findByText(/^Host Collection/i).should('exist')
+    cy.findByDisplayValue('test-collectionId').should('exist')
+    cy.findByText(/^Edit Host Collection/i)
+      .should('exist')
+      .click()
+      .then(() => {
+        cy.findByText('Not Implemented').should('exist')
+      })
+  })
   it('renders the Create Dataset page and its metadata blocks sections', () => {
     cy.customMount(
       <CreateDataset
@@ -72,7 +91,6 @@ describe('Create Dataset', () => {
       />
     )
     cy.findByText(/Create Dataset/i).should('exist')
-
     cy.findByText(/Citation Metadata/i).should('exist')
     cy.findByText(/Astronomy and Astrophysics Metadata/i).should('exist')
   })
