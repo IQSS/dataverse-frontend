@@ -6,6 +6,7 @@ import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
 import { MetadataBlockInfoMockRepository } from './MetadataBlockInfoMockRepository'
 import { MetadataBlockInfoMockLoadingRepository } from './MetadataBlockInfoMockLoadingRepository'
 import { MetadataBlockInfoMockErrorRepository } from './MetadataBlockInfoMockErrorRepository'
+import { NotImplementedModalProvider } from '../../sections/not-implemented/NotImplementedModalProvider'
 
 const meta: Meta<typeof CreateDataset> = {
   title: 'Pages/Create Dataset',
@@ -17,10 +18,12 @@ type Story = StoryObj<typeof CreateDataset>
 
 export const Default: Story = {
   render: () => (
-    <CreateDataset
-      repository={new DatasetMockRepository()}
-      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-    />
+    <NotImplementedModalProvider>
+      <CreateDataset
+        repository={new DatasetMockRepository()}
+        metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+      />
+    </NotImplementedModalProvider>
   )
 }
 
