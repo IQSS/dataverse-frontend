@@ -4,7 +4,7 @@
     "title": "Metadata Tip",
     "content": "After adding the dataset, click the Edit Dataset button to add more metadata."
   },
-  "hostCollection" : {
+  "hostCollection": {
     "label": "Host Collection",
     "description": "The collection which contains this data.",
     "helpText": "Changing the host dataverse will clear any fields you may have entered data into.",
