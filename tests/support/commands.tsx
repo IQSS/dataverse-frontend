@@ -78,7 +78,7 @@ Cypress.Commands.add('loginAsAdmin', (go?: string) => {
       cy.findByLabelText('Username/Email').type('dataverseAdmin')
       cy.findByLabelText('Password').type('admin1')
       cy.findByRole('button', { name: /Log In/i }).click()
-      cy.findByText(/Dataverse Admin/i).should('exist')
+      cy.findAllByText(/Dataverse Admin/i).should('exist')
       if (go) cy.visit(go)
     }
   })

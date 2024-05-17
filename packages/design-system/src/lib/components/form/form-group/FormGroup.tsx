@@ -9,11 +9,12 @@ import { Col, ColProps } from '../../grid/Col'
 import { Row } from '../../grid/Row'
 import { FormCheckbox } from './form-element/FormCheckbox'
 import { FormFeedback } from './form-element/FormFeedback'
+import { FormSelectMultiple } from './form-element/FormSelectMultiple'
 
 interface FormGroupProps extends ColProps {
   as?: typeof Col | typeof Row
   required?: boolean
-  controlId: string
+  controlId?: string
   fieldIndex?: string
 }
 
@@ -29,7 +30,7 @@ function FormGroup({
 
   return (
     <FormBS.Group
-      controlId={fieldIndex ? `${controlId}-${fieldIndex}` : controlId}
+      controlId={controlId ? (fieldIndex ? `${controlId}-${fieldIndex}` : controlId) : undefined}
       className="mb-3"
       as={as}
       {...props}>
@@ -64,6 +65,7 @@ function cloneThroughFragments(
 FormGroup.Label = FormLabel
 FormGroup.Input = FormInput
 FormGroup.Select = FormSelect
+FormGroup.SelectMultiple = FormSelectMultiple
 FormGroup.TextArea = FormTextArea
 FormGroup.Text = FormText
 FormGroup.Checkbox = FormCheckbox

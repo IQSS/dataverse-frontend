@@ -4,7 +4,7 @@ import * as React from 'react'
 
 export type FormInputElement = HTMLInputElement | HTMLTextAreaElement
 
-interface FormInputProps extends React.HTMLAttributes<FormInputElement> {
+export interface FormInputProps extends React.HTMLAttributes<FormInputElement> {
   type?: 'text' | 'email' | 'password'
   readOnly?: boolean
   withinMultipleFieldsGroup?: boolean

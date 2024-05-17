@@ -1,10 +1,10 @@
 {
   "results_one": "1 {{item}}",
-  "results_other": "{{start}} to {{end}} of {{count}} {{item}}s",
+  "results_other": "{{start}} to {{end}} of {{formattedCount}} {{item}}s",
   "accumulated": {
-    "one": "{{count}} {{item}}",
-    "lessThanPageSize": "{{count}} {{item}}s",
-    "moreThanPageSize": "{{accumulated}} of {{count}} {{item}}s seen"
+    "one": "{{formattedCount}} {{item}}",
+    "lessThanPageSize": "{{formattedCount}} {{item}}s",
+    "moreThanPageSize": "{{accumulated}} of {{formattedCount}} {{item}}s seen"
   },
   "pageSize": "{{item}}s per page"
 }
