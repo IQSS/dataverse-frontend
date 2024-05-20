@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ForwardedRef, ReactNode, forwardRef } from 'react'
 import { Accordion as AccordionBS } from 'react-bootstrap'
 import { AccordionItem } from './AccordionItem'
 import { AccordionBody } from './AccordionBody'
@@ -10,16 +10,25 @@ interface AccordionProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSele
   children: ReactNode
 }
 
-function Accordion({ defaultActiveKey, alwaysOpen = false, children, ...rest }: AccordionProps) {
-  return (
-    <AccordionBS defaultActiveKey={defaultActiveKey} alwaysOpen={alwaysOpen} {...rest}>
-      {children}
-    </AccordionBS>
-  )
-}
+const Accordion = forwardRef(
+  ({ defaultActiveKey, alwaysOpen = false, children, ...rest }: AccordionProps, ref) => {
+    return (
+      <AccordionBS
+        defaultActiveKey={defaultActiveKey}
+        alwaysOpen={alwaysOpen}
+        ref={ref as ForwardedRef<HTMLDivElement>}
+        {...rest}>
+        {children}
+      </AccordionBS>
+    )
+  }
+)
+Accordion.displayName = 'Accordion'
 
-Accordion.Item = AccordionItem
-Accordion.Body = AccordionBody
-Accordion.Header = AccordionHeader
+const AccordionNamespace = Object.assign(Accordion, {
+  Item: AccordionItem,
+  Body: AccordionBody,
+  Header: AccordionHeader
+})
 
-export { Accordion }
+export { AccordionNamespace as Accordion }

@@ -1,68 +1,70 @@
-import { ForwardedRef, forwardRef, useState } from 'react'
-import { Control, Controller, FieldValues } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
-import { Form } from '@iqss/dataverse-design-system'
-import styles from '../index.module.scss'
+import { useMemo } from 'react'
+import { Controller, useFormContext } from 'react-hook-form'
+import { Form, Row, Col } from '@iqss/dataverse-design-system'
+import { type CommonFieldProps } from '..'
+import { MetadataFieldsHelper } from '../../../MetadataFieldsHelper'
 
-interface Props {
-  title: string
-  name: string
-  displayName: string
-  description: string
+interface VocabularyProps extends CommonFieldProps {
+  metadataBlockName: string
   options: string[]
-  control: Control<FieldValues, unknown>
-  isRequired: boolean
+  compoundParentName?: string
+  fieldsArrayIndex?: number
 }
-// TODO: Change for a multiple select with search
-export const VocabularyMultiple = forwardRef(function VocabularyMultiple(
-  { title, name, displayName, description, options, control, isRequired }: Props,
-  ref
-) {
-  const { t } = useTranslation('createDataset')
-  const [checkedOptions, setCheckedOptions] = useState<string[]>([])
+export const VocabularyMultiple = ({
+  name,
+  compoundParentName,
+  metadataBlockName,
+  rulesToApply,
+  description,
+  title,
+  options,
+  isRequired,
+  fieldsArrayIndex
+}: VocabularyProps) => {
+  const { control } = useFormContext()
 
-  const handleChange = (value: string, fieldOnChange: (value: string[]) => void) => {
-    if (checkedOptions.includes(value)) {
-      setCheckedOptions(checkedOptions.filter((option) => option !== value))
-      fieldOnChange(checkedOptions.filter((option) => option !== value))
-    } else {
-      setCheckedOptions([...checkedOptions, value])
-      fieldOnChange([...checkedOptions, value])
-    }
-  }
+  const builtFieldName = useMemo(
+    () =>
+      MetadataFieldsHelper.defineFieldName(
+        name,
+        metadataBlockName,
+        compoundParentName,
+        fieldsArrayIndex
+      ),
+    [name, metadataBlockName, compoundParentName, fieldsArrayIndex]
+  )
 
   return (
-    <Form.CheckboxGroup title={title} message={description} required={isRequired}>
-      <div
-        className={styles['checkbox-list-grid']}
-        data-testid="vocabulary-multiple"
-        tabIndex={0}
-        ref={ref as ForwardedRef<HTMLDivElement>}>
-        {options.map((value) => (
-          <Controller
-            key={value}
-            name={name}
-            control={control}
-            rules={{
-              required: isRequired
-            }}
-            render={({ field, fieldState: { invalid } }) => (
-              <Form.Group.Checkbox
-                label={value}
-                id={`${name}-checkbox-${value}`}
-                value={value}
-                onChange={() => handleChange(value, (newValue) => field.onChange(newValue))}
-                isInvalid={invalid}
-                ref={field.ref}
-                key={value}
-              />
-            )}
-          />
-        ))}
-      </div>
-      <p className={styles['checkbox-group-feedback']}>
-        {t('datasetForm.field.required', { displayName })}
-      </p>
-    </Form.CheckboxGroup>
+    <Controller
+      name={builtFieldName}
+      control={control}
+      rules={rulesToApply}
+      render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => (
+        <Form.Group>
+          <Form.Group.Label
+            message={description}
+            htmlFor={builtFieldName}
+            required={isRequired}
+            column
+            sm={3}>
+            {title}
+          </Form.Group.Label>
+          <Col sm={9}>
+            <Row>
+              <Col sm={9}>
+                <Form.Group.SelectMultiple
+                  options={options}
+                  onChange={onChange}
+                  isInvalid={invalid}
+                  ref={ref}
+                  inputButtonId={builtFieldName}
+                />
+                <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+              </Col>
+            </Row>
+          </Col>
+        </Form.Group>
+      )}
+    />
   )
-})
+}

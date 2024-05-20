@@ -19,6 +19,15 @@ describe('FormGroupWithMultipleFields', () => {
     cy.findByRole('img', { name: 'Required input symbol' }).should('not.exist')
   })
 
+  it('renders the question mark tooltip if message prop is passed', () => {
+    cy.mount(<FormGroupWithMultipleFields title="Test Title" message="Test Message" />)
+    const title = cy.findByText(/Test Title/)
+    const questionMarkTooltip = cy.findByLabelText('tooltip icon')
+
+    title.should('exist')
+    questionMarkTooltip.should('exist')
+  })
+
   it('renders with children', () => {
     cy.mount(
       <FormGroupWithMultipleFields title="Test Title">
@@ -29,38 +38,5 @@ describe('FormGroupWithMultipleFields', () => {
 
     const children = cy.findByText('Test Children')
     children.should('exist')
-  })
-
-  it('adds and removes fields dynamically when enabled', () => {
-    cy.mount(
-      <FormGroupWithMultipleFields title="Test Group" withDynamicFields>
-        <FormGroup controlId="username">
-          <FormGroup.Label>Username</FormGroup.Label>
-          <FormGroup.Input type="text" />
-        </FormGroup>
-      </FormGroupWithMultipleFields>
-    )
-
-    cy.findAllByLabelText('Username')
-      .then((inputs) => {
-        return inputs.length
-      })
-      .should('equal', 1)
-
-    cy.contains('Add').click()
-
-    cy.findAllByLabelText('Username')
-      .then((inputs) => {
-        return inputs.length
-      })
-      .should('equal', 2)
-
-    cy.contains('Delete').click()
-
-    cy.findAllByLabelText('Username')
-      .then((inputs) => {
-        return inputs.length
-      })
-      .should('equal', 1)
   })
 })
