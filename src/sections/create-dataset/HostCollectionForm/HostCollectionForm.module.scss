@@ -1,0 +1,13 @@
+
+
+.edit-button-wrapper {
+    display: flex ;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  border: 1px red solid;
+}
+.input-button-wrapper {
+  display: flex;
+  gap: 1rem;
+}

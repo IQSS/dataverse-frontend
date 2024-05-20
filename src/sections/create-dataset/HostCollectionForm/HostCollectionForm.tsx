@@ -19,20 +19,15 @@ export function HostCollectionForm({ collectionId }: HostCollectionFormProps) {
           {t('hostCollection.label')}
         </Form.Group.Label>
         <Col sm={9}>
-          <Row>
-            <Col sm={9}>
+          <Row className={styles['input-button-wrapper']}>
+            <Col sm={6}>
               {t('hostCollection.helpText')}
               <Form.Group.Input type="text" disabled defaultValue={collectionId} />
             </Col>
-            <Col sm={3}>
-              <Row>&nbsp;</Row> {/* Empty row to align the button */}
-              <Row>
-                <Col>
-                  <Button type={'button'} onClick={onClick} variant="secondary">
-                    {t('hostCollection.buttonLabel')}
-                  </Button>
-                </Col>
-              </Row>
+            <Col className={styles['edit-button-wrapper']} sm={3}>
+              <Button type={'button'} onClick={showModal} variant="secondary">
+                {t('hostCollection.buttonLabel')}
+              </Button>
             </Col>
           </Row>
         </Col>
