@@ -9,6 +9,8 @@ import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { DatasetForm } from './DatasetForm'
 import { DatasetFormSkeleton } from './DatasetFormSkeleton'
 import { HostCollectionForm } from './HostCollectionForm/HostCollectionForm'
+import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
+import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
 
 interface CreateDatasetProps {
   repository: DatasetRepository
@@ -23,7 +25,7 @@ export function CreateDataset({
 }: CreateDatasetProps) {
   const { t } = useTranslation('createDataset')
   const { isLoading, setIsLoading } = useLoading()
-
+  const { isModalOpen, hideModal } = useNotImplementedModal()
   const {
     metadataBlocks,
     isLoading: isLoadingMetadataBlocksConfiguration,
@@ -43,6 +45,8 @@ export function CreateDataset({
 
   return (
     <article>
+      <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
+
       <header>
         <h1>{t('pageTitle')}</h1>
       </header>

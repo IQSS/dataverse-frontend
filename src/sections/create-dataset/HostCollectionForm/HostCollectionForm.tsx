@@ -2,7 +2,7 @@ import { Button, Col, Row } from '@iqss/dataverse-design-system'
 import { Form } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { useNotImplementedModal } from '../../not-implemented/NotImplementedModalContext'
-import { NotImplementedModal } from '../../not-implemented/NotImplementedModal'
+import styles from './HostCollectionForm.module.scss'
 
 interface HostCollectionFormProps {
   collectionId: string
@@ -10,13 +10,10 @@ interface HostCollectionFormProps {
 
 export function HostCollectionForm({ collectionId }: HostCollectionFormProps) {
   const { t } = useTranslation('createDataset')
-  const { hideModal, isModalOpen, showModal } = useNotImplementedModal()
-  const onClick = () => {
-    showModal()
-  }
+  const { showModal } = useNotImplementedModal()
+
   return (
     <>
-      <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
       <Form.Group controlId="host-collection">
         <Form.Group.Label message={t('hostCollection.description')} column sm={3} required>
           {t('hostCollection.label')}
