@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { createDataset } from '../../dataset/domain/useCases/createDataset'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { type CreateDatasetFormValues, MetadataFieldsHelper } from './MetadataFieldsHelper'
+import { getValidationFailedFieldError } from '../../metadata-block-info/domain/models/fieldValidations'
 import { Route } from '../Route.enum'
 
 export enum SubmissionStatus {
@@ -12,14 +14,33 @@ export enum SubmissionStatus {
   Errored = 'Errored'
 }
 
-export function useCreateDatasetForm(repository: DatasetRepository): {
-  submissionStatus: SubmissionStatus
-  submitForm: (formData: CreateDatasetFormValues) => void
-} {
+type UseCreateDatasetFormReturnType =
+  | {
+      submissionStatus:
+        | SubmissionStatus.NotSubmitted
+        | SubmissionStatus.IsSubmitting
+        | SubmissionStatus.SubmitComplete
+      submitForm: (formData: CreateDatasetFormValues) => void
+      createError: null
+    }
+  | {
+      submissionStatus: SubmissionStatus.Errored
+      submitForm: (formData: CreateDatasetFormValues) => void
+      createError: string
+    }
+
+export function useCreateDatasetForm(
+  repository: DatasetRepository,
+  onCreateErrorCallback: () => void
+): UseCreateDatasetFormReturnType {
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
   )
+  const [createError, setCreateError] = useState<string | null>(null)
+
   const navigate = useNavigate()
+
+  const { t } = useTranslation('createDataset')
 
   const submitForm = (formData: CreateDatasetFormValues): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
@@ -32,20 +53,29 @@ export function useCreateDatasetForm(repository: DatasetRepository): {
 
     createDataset(repository, formattedFormValues)
       .then(({ persistentId }) => {
+        setCreateError(null)
         setSubmissionStatus(SubmissionStatus.SubmitComplete)
         navigate(`${Route.DATASETS}?persistentId=${persistentId}`, {
           state: { created: true }
         })
         return
       })
-      .catch((e) => {
-        console.error(e)
+      .catch((err) => {
+        const errorMessage =
+          err instanceof Error && err.message
+            ? getValidationFailedFieldError(err.message) ?? err.message
+            : t('validationAlert.content')
+
+        setCreateError(errorMessage)
         setSubmissionStatus(SubmissionStatus.Errored)
+
+        onCreateErrorCallback()
       })
   }
 
   return {
     submissionStatus,
-    submitForm
-  }
+    submitForm,
+    createError
+  } as UseCreateDatasetFormReturnType
 }
