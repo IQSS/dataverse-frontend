@@ -7,7 +7,7 @@
   "hostCollection": {
     "label": "Host Collection",
     "description": "The collection which contains this data.",
-    "helpText": "Changing the host dataverse will clear any fields you may have entered data into.",
+    "helpText": "Changing the host collection will clear any fields you may have entered data into.",
     "buttonLabel": "Edit Host Collection"
   },
   "requiredFields": "Asterisks indicate required fields",
