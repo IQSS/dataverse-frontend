@@ -32,7 +32,7 @@ export function useCreateDatasetForm(
     const formattedFormValues = MetadataFieldsHelper.formatFormValuesToCreateDatasetDTO(
       formDataBackToOriginalKeys
     )
-    console.log('submitting, collectionId = ' + collectionId)
+
     createDataset(repository, formattedFormValues, collectionId)
       .then(({ persistentId }) => {
         setSubmissionStatus(SubmissionStatus.SubmitComplete)
