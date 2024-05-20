@@ -49,7 +49,7 @@ export const useGetMetadataBlocksInfo = ({
       }
     }
     void handleGetDatasetMetadataBlockFields()
-  }, [collectionId, metadataBlockInfoRepository, onCreateMode])
+  }, [collectionId, metadataBlockInfoRepository])
 
   return {
     metadataBlocks,
