@@ -44,26 +44,27 @@ export function CreateDataset({
   }, [isLoading, isLoadingMetadataBlocksConfiguration])
 
   return (
-    <article>
+    <>
       <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
+      <article>
+        <header>
+          <h1>{t('pageTitle')}</h1>
+        </header>
+        <SeparationLine />
+        <HostCollectionForm collectionId={collectionId} />
 
-      <header>
-        <h1>{t('pageTitle')}</h1>
-      </header>
-      <SeparationLine />
-      <HostCollectionForm collectionId={collectionId} />
-
-      {isLoadingMetadataBlocksConfiguration ? (
-        <DatasetFormSkeleton />
-      ) : (
-        <DatasetForm
-          repository={repository}
-          collectionId={collectionId}
-          metadataBlocks={metadataBlocks}
-          formDefaultValues={formDefaultValues}
-          errorLoadingMetadataBlocks={errorLoadingMetadataBlocksToRender}
-        />
-      )}
-    </article>
+        {isLoadingMetadataBlocksConfiguration ? (
+          <DatasetFormSkeleton />
+        ) : (
+          <DatasetForm
+            repository={repository}
+            collectionId={collectionId}
+            metadataBlocks={metadataBlocks}
+            formDefaultValues={formDefaultValues}
+            errorLoadingMetadataBlocks={errorLoadingMetadataBlocksToRender}
+          />
+        )}
+      </article>
+    </>
   )
 }
