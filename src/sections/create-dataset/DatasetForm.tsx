@@ -14,6 +14,7 @@ import { Route } from '../Route.enum'
 
 interface DatasetFormProps {
   repository: DatasetRepository
+  collectionId?: string
   metadataBlocks: MetadataBlockInfo[]
   errorLoadingMetadataBlocks: string | null
   formDefaultValues: CreateDatasetFormValues
@@ -21,6 +22,7 @@ interface DatasetFormProps {
 
 export const DatasetForm = ({
   repository,
+  collectionId = 'root',
   metadataBlocks,
   errorLoadingMetadataBlocks,
   formDefaultValues
@@ -29,7 +31,7 @@ export const DatasetForm = ({
   const { t } = useTranslation('createDataset')
   const accordionRef = useRef<HTMLDivElement>(null)
 
-  const { submissionStatus, submitForm } = useCreateDatasetForm(repository)
+  const { submissionStatus, submitForm } = useCreateDatasetForm(repository, collectionId)
 
   const isErrorLoadingMetadataBlocks = Boolean(errorLoadingMetadataBlocks)
 

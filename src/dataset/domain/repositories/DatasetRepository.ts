@@ -6,7 +6,7 @@ import { DatasetsWithCount } from '../models/DatasetsWithCount'
 export interface DatasetRepository {
   getByPersistentId: (persistentId: string, version?: string) => Promise<Dataset | undefined>
   getByPrivateUrlToken: (privateUrlToken: string) => Promise<Dataset | undefined>
-  create: (dataset: DatasetDTO) => Promise<{ persistentId: string }>
+  create: (dataset: DatasetDTO, collectionId?: string) => Promise<{ persistentId: string }>
   getAllWithCount: (
     collectionId: string,
     paginationInfo: DatasetPaginationInfo
