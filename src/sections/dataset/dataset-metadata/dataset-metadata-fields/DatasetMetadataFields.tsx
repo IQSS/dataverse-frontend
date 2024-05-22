@@ -17,7 +17,7 @@ export function DatasetMetadataFields({
 
   useEffect(() => {
     setMetadataBlockName(metadataBlockName)
-  }, [metadataBlockName])
+  }, [metadataBlockName, setMetadataBlockName])
 
   return (
     <>

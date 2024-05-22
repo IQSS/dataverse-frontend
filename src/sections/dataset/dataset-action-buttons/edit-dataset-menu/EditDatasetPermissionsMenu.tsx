@@ -10,13 +10,6 @@ interface EditDatasetPermissionsMenuProps {
   dataset: Dataset
 }
 export function EditDatasetPermissionsMenu({ dataset }: EditDatasetPermissionsMenuProps) {
-  if (
-    !dataset.permissions.canManageDatasetPermissions &&
-    !dataset.permissions.canManageFilesPermissions
-  ) {
-    return <></>
-  }
-
   const { t } = useTranslation('dataset')
   const { getSettingByName } = useSettings()
   const [hasPublicStore, setHasPublicStore] = useState<HasPublicStore>(false)
@@ -30,6 +23,13 @@ export function EditDatasetPermissionsMenu({ dataset }: EditDatasetPermissionsMe
         console.error(error)
       })
   }, [getSettingByName])
+
+  if (
+    !dataset.permissions.canManageDatasetPermissions &&
+    !dataset.permissions.canManageFilesPermissions
+  ) {
+    return <></>
+  }
 
   if (hasPublicStore) {
     return (
