@@ -31,6 +31,7 @@ type UseCreateDatasetFormReturnType =
 
 export function useCreateDatasetForm(
   repository: DatasetRepository,
+  collectionId: string,
   onCreateErrorCallback: () => void
 ): UseCreateDatasetFormReturnType {
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
@@ -51,7 +52,7 @@ export function useCreateDatasetForm(
       formDataBackToOriginalKeys
     )
 
-    createDataset(repository, formattedFormValues)
+    createDataset(repository, formattedFormValues, collectionId)
       .then(({ persistentId }) => {
         setCreateError(null)
         setSubmissionStatus(SubmissionStatus.SubmitComplete)

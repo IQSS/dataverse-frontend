@@ -15,6 +15,7 @@ import styles from './DatasetForm.module.scss'
 
 interface DatasetFormProps {
   repository: DatasetRepository
+  collectionId?: string
   metadataBlocks: MetadataBlockInfo[]
   errorLoadingMetadataBlocks: string | null
   formDefaultValues: CreateDatasetFormValues
@@ -22,6 +23,7 @@ interface DatasetFormProps {
 
 export const DatasetForm = ({
   repository,
+  collectionId = 'root',
   metadataBlocks,
   errorLoadingMetadataBlocks,
   formDefaultValues
@@ -34,6 +36,7 @@ export const DatasetForm = ({
 
   const { submissionStatus, createError, submitForm } = useCreateDatasetForm(
     repository,
+    collectionId,
     onCreateDatasetError
   )
 

@@ -54,7 +54,7 @@ function DatasetWithSearchParams() {
 
   useEffect(() => {
     if (privateUrlToken) setAnonymizedView(true)
-  }, [privateUrlToken])
+  }, [privateUrlToken, setAnonymizedView])
 
   if (privateUrlToken) {
     return (

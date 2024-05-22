@@ -32,21 +32,21 @@ export function FilesTable({
   )
   const [visitedPagination, setVisitedPagination] = useState<FilePaginationInfo>(paginationInfo)
   const [visitedFiles, setVisitedFiles] = useState<FileSelection>({})
+  const [previousCriteria, setPreviousCriteria] = useState<FileCriteria>(criteria)
 
   useEffect(() => {
     if (visitedPagination.page == paginationInfo.page) {
       setVisitedFiles((visitedFiles) => ({ ...visitedFiles, ...fileSelection }))
     }
     setVisitedPagination(paginationInfo)
-  }, [fileSelection])
+  }, [fileSelection, paginationInfo, visitedPagination.page])
 
-  const [previousCriteria, setPreviousCriteria] = useState<FileCriteria>(criteria)
   useEffect(() => {
     if (previousCriteria != criteria) {
       clearFileSelection()
     }
     setPreviousCriteria(criteria)
-  })
+  }, [criteria, previousCriteria, clearFileSelection])
 
   if (isLoading) {
     return <SpinnerSymbol />

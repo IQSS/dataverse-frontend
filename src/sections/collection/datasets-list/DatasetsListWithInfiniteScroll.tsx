@@ -52,7 +52,7 @@ export function DatasetsListWithInfiniteScroll({
 
   useEffect(() => {
     setIsLoading(isLoading)
-  }, [isLoading])
+  }, [isLoading, setIsLoading])
 
   useEffect(() => {
     const updatePaginationTotalItems = () => {

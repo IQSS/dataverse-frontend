@@ -11,6 +11,9 @@ interface PublishDatasetMenuProps {
 
 export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
   const { user } = useSession()
+  const { t } = useTranslation('dataset')
+  const { showModal } = useNotImplementedModal()
+
   if (
     !dataset.version.isLatest ||
     dataset.version.publishingStatus !== DatasetPublishingStatus.DRAFT ||
@@ -20,12 +23,10 @@ export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
     return <></>
   }
 
-  const { t } = useTranslation('dataset')
   const handleSelect = () => {
     // TODO - Implement upload files
     showModal()
   }
-  const { showModal } = useNotImplementedModal()
 
   return (
     <DropdownButton
