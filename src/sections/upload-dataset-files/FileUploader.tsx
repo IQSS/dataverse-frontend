@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { ChangeEventHandler, DragEventHandler, useEffect, useState } from 'react'
 import { ProgressBar, Card } from 'react-bootstrap'
-import { Button } from '../button/Button'
+import { Button } from '../../../packages/design-system/src/lib/components/button/Button'
 import { Plus, X } from 'react-bootstrap-icons'
 import styles from './FileUploader.module.scss'
 import React from 'react'
+import { useTheme } from '@iqss/dataverse-design-system'
 
 export interface FileUploaderProps {
   upload: (files: File[]) => Map<string, FileUploadState>
@@ -22,8 +22,10 @@ export interface FileUploadState {
 }
 
 export function FileUploader({ upload, cancelTitle, info, selectText }: FileUploaderProps) {
+  const theme = useTheme()
   const [files, setFiles] = useState<File[]>([])
   const [progress, setProgress] = useState(new Map<string, FileUploadState>())
+  const [bgColor, setBackgroundColor] = useState(theme.color.primaryTextColor)
 
   const addFiles = (selectedFiles: FileList | null) => {
     if (selectedFiles && selectedFiles.length > 0) {
@@ -67,8 +69,22 @@ export function FileUploader({ upload, cancelTitle, info, selectText }: FileUplo
     addFiles(event.target.files)
   }
 
-  const handleDrag: DragEventHandler<HTMLDivElement> = (event) => {
+  const handleDragEnter: DragEventHandler<HTMLDivElement> = () => {
+    setBackgroundColor(theme.color.infoBoxColor)
+  }
+
+  const handleDragLeave: DragEventHandler<HTMLDivElement> = () => {
+    setBackgroundColor(theme.color.primaryTextColor)
+  }
+
+  const handleDragOver: DragEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault()
+    setBackgroundColor(theme.color.infoBoxColor)
+  }
+
+  const handleDrop: DragEventHandler<HTMLDivElement> = (event) => {
+    event.preventDefault()
+    setBackgroundColor(theme.color.primaryTextColor)
     const droppedItems = event.dataTransfer.items
     let ok = false
     if (droppedItems.length > 0) {
@@ -103,20 +119,22 @@ export function FileUploader({ upload, cancelTitle, info, selectText }: FileUplo
     }
   }, [files, upload])
 
-  const inputRef = React.useRef(null)
+  const inputRef = React.useRef<HTMLInputElement>(null)
 
   return (
     <Card>
       <Card.Header>
-        <Button variant="secondary" onClick={() => (inputRef.current! as HTMLInputElement).click()}>
+        <Button variant="secondary" onClick={() => inputRef.current?.click()}>
           <Plus></Plus> {selectText}
         </Button>
       </Card.Header>
-      <Card.Body>
+      <Card.Body style={{ backgroundColor: bgColor }}>
         <div
           className={styles.fileuploader}
-          onDrop={handleDrag}
-          onDragOver={(event) => event.preventDefault()}>
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}>
           <div>
             <input
               ref={inputRef}
