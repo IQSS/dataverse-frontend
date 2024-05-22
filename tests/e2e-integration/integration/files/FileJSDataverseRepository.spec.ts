@@ -155,7 +155,6 @@ describe('File JSDataverse Repository', () => {
   })
   beforeEach(() => {
     TestsUtils.login()
-    cy.wrap(DatasetHelper.destroyAll(), { timeout: 10000 })
   })
 
   const compareMetadata = (fileMetadata: FileMetadata, expectedFileMetadata: FileMetadata) => {
@@ -284,7 +283,7 @@ describe('File JSDataverse Repository', () => {
       if (!dataset) throw new Error('Dataset not found')
 
       await FileHelper.download(datasetResponse.files[0].id)
-      await TestsUtils.wait(1500) // Wait for the file to be downloaded
+      await TestsUtils.wait(3000) // Wait for the file to be downloaded
 
       await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)

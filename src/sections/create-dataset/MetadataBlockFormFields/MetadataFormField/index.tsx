@@ -1,34 +1,48 @@
-import { useMemo } from 'react'
-import { Controller, useFormContext } from 'react-hook-form'
-import { Col, Form, Row } from '@iqss/dataverse-design-system'
-import { useDefineRules } from './useDefineRules'
+import { DefinedRules, useDefineRules } from './useDefineRules'
 import {
   MetadataField,
   TypeClassMetadataFieldOptions,
-  TypeMetadataFieldOptions
+  TypeMetadataField
 } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { Vocabulary } from './Fields/Vocabulary'
-import { VocabularyMultiple } from './Fields/VocabularyMultiple'
-import styles from './index.module.scss'
+import {
+  Primitive,
+  PrimitiveMultiple,
+  Vocabulary,
+  VocabularyMultiple,
+  ComposedField,
+  ComposedFieldMultiple
+} from './Fields'
+
+export interface CommonFieldProps {
+  name: string
+  rulesToApply: DefinedRules
+  description: string
+  title: string
+  watermark: string
+  type: TypeMetadataField
+  isRequired: boolean
+  withinMultipleFieldsGroup?: boolean
+}
 
 interface Props {
   metadataFieldInfo: MetadataField
   metadataBlockName: string
   withinMultipleFieldsGroup?: boolean
   compoundParentName?: string
+  fieldsArrayIndex?: number
 }
 
 export const MetadataFormField = ({
   metadataFieldInfo,
   metadataBlockName,
   withinMultipleFieldsGroup = false,
-  compoundParentName
+  compoundParentName,
+  fieldsArrayIndex
 }: Props) => {
   const {
     name,
     type,
     title,
-    displayName,
     multiple,
     typeClass,
     isRequired,
@@ -38,17 +52,7 @@ export const MetadataFormField = ({
     controlledVocabularyValues
   } = metadataFieldInfo
 
-  const { control } = useFormContext()
-
   const rulesToApply = useDefineRules({ metadataFieldInfo })
-
-  const builtFieldName = useMemo(
-    () =>
-      compoundParentName
-        ? `${metadataBlockName}.${compoundParentName}.${name}`
-        : `${metadataBlockName}.${name}`,
-    [metadataBlockName, compoundParentName, name]
-  )
 
   const isSafeCompound =
     typeClass === TypeClassMetadataFieldOptions.Compound &&
@@ -62,29 +66,35 @@ export const MetadataFormField = ({
 
   const isSafePrimitive = typeClass === TypeClassMetadataFieldOptions.Primitive
 
-  if (isSafeCompound) {
+  if (isSafePrimitive) {
+    if (multiple) {
+      return (
+        <PrimitiveMultiple
+          rulesToApply={rulesToApply}
+          metadataBlockName={metadataBlockName}
+          name={name}
+          description={description}
+          title={title}
+          watermark={watermark}
+          type={type}
+          isRequired={isRequired}
+        />
+      )
+    }
     return (
-      <Form.GroupWithMultipleFields
+      <Primitive
+        name={name}
+        compoundParentName={compoundParentName}
+        metadataBlockName={metadataBlockName}
+        rulesToApply={rulesToApply}
+        description={description}
         title={title}
-        message={description}
-        required={isRequired}
-        withDynamicFields={false}>
-        <div className={styles['multiple-fields-grid']}>
-          {Object.entries(childMetadataFields).map(
-            ([childMetadataFieldKey, childMetadataFieldInfo]) => {
-              return (
-                <MetadataFormField
-                  metadataFieldInfo={childMetadataFieldInfo}
-                  metadataBlockName={metadataBlockName}
-                  compoundParentName={name}
-                  withinMultipleFieldsGroup
-                  key={childMetadataFieldKey}
-                />
-              )
-            }
-          )}
-        </div>
-      </Form.GroupWithMultipleFields>
+        watermark={watermark}
+        type={type}
+        isRequired={isRequired}
+        withinMultipleFieldsGroup={withinMultipleFieldsGroup}
+        fieldsArrayIndex={fieldsArrayIndex}
+      />
     )
   }
 
@@ -92,77 +102,69 @@ export const MetadataFormField = ({
     if (multiple) {
       return (
         <VocabularyMultiple
-          title={title}
-          name={builtFieldName}
-          displayName={displayName}
-          description={description}
+          name={name}
+          compoundParentName={compoundParentName}
+          metadataBlockName={metadataBlockName}
           options={controlledVocabularyValues}
+          rulesToApply={rulesToApply}
+          description={description}
+          title={title}
+          watermark={watermark}
+          type={type}
           isRequired={isRequired}
-          control={control}
         />
       )
     }
     return (
-      <Controller
-        name={builtFieldName}
-        control={control}
-        rules={rulesToApply}
-        render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => (
-          <Form.Group
-            controlId={name}
-            required={isRequired}
-            as={withinMultipleFieldsGroup ? Col : Row}>
-            <Form.Group.Label message={description}>{title}</Form.Group.Label>
-            <Vocabulary
-              onChange={onChange}
-              isInvalid={invalid}
-              options={controlledVocabularyValues}
-              ref={ref}
-            />
-            <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
-          </Form.Group>
-        )}
+      <Vocabulary
+        name={name}
+        compoundParentName={compoundParentName}
+        metadataBlockName={metadataBlockName}
+        options={controlledVocabularyValues}
+        rulesToApply={rulesToApply}
+        description={description}
+        title={title}
+        watermark={watermark}
+        type={type}
+        isRequired={isRequired}
+        withinMultipleFieldsGroup={withinMultipleFieldsGroup}
+        fieldsArrayIndex={fieldsArrayIndex}
       />
     )
   }
 
-  if (isSafePrimitive) {
+  if (isSafeCompound) {
+    if (multiple) {
+      return (
+        <ComposedFieldMultiple
+          name={name}
+          compoundParentName={compoundParentName}
+          metadataBlockName={metadataBlockName}
+          childMetadataFields={childMetadataFields}
+          rulesToApply={rulesToApply}
+          description={description}
+          title={title}
+          watermark={watermark}
+          type={type}
+          isRequired={isRequired}
+          withinMultipleFieldsGroup={withinMultipleFieldsGroup}
+        />
+      )
+    }
+
     return (
-      <Controller
-        name={builtFieldName}
-        control={control}
-        rules={rulesToApply}
-        render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => (
-          <Form.Group
-            controlId={name}
-            required={isRequired}
-            as={withinMultipleFieldsGroup ? Col : undefined}>
-            <Form.Group.Label message={description}>{title}</Form.Group.Label>
-
-            <>
-              {type === TypeMetadataFieldOptions.Textbox ? (
-                <Form.Group.TextArea
-                  onChange={onChange}
-                  isInvalid={invalid}
-                  placeholder={watermark}
-                  data-fieldtype={type}
-                  ref={ref}
-                />
-              ) : (
-                <Form.Group.Input
-                  type="text"
-                  onChange={onChange}
-                  isInvalid={invalid}
-                  placeholder={watermark}
-                  data-fieldtype={type}
-                  ref={ref}
-                />
-              )}
-            </>
-
-            <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
-          </Form.Group>
-        )}
+      <ComposedField
+        name={name}
+        compoundParentName={compoundParentName}
+        metadataBlockName={metadataBlockName}
+        childMetadataFields={childMetadataFields}
+        rulesToApply={rulesToApply}
+        description={description}
+        title={title}
+        watermark={watermark}
+        type={type}
+        isRequired={isRequired}
+        withinMultipleFieldsGroup={withinMultipleFieldsGroup}
       />
     )
   }

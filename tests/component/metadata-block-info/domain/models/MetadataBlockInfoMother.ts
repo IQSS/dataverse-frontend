@@ -84,7 +84,7 @@ export class MetadataBlockInfoMother {
             multiple: true,
             isControlledVocabulary: false,
             displayFormat: '',
-            isRequired: false,
+            isRequired: true,
             displayOnCreate: true,
             displayOrder: 2
           },
@@ -859,6 +859,101 @@ export class MetadataBlockInfoMother {
             isRequired: false,
             displayOrder: 33,
             displayOnCreate: true
+          },
+          someComposeFieldNotMultiple: {
+            name: 'someComposeFieldNotMultiple',
+            displayName: 'Composed field not multiple',
+            title: 'Composed field not multiple',
+            type: 'NONE',
+            typeClass: 'compound',
+            watermark: '',
+            description: 'Some composed field not multiple',
+            multiple: false,
+            isControlledVocabulary: false,
+            displayFormat: '',
+            isRequired: true,
+            displayOrder: 7,
+            displayOnCreate: true,
+            childMetadataFields: {
+              foo: {
+                name: 'foo',
+                displayName: 'Foo',
+                title: 'Foo',
+                type: 'TEXT',
+                typeClass: 'primitive',
+                watermark: '1) Family Name, Given Name or 2) Organization XYZ',
+                description: 'Some foo',
+                multiple: false,
+                isControlledVocabulary: false,
+                displayFormat: '#VALUE',
+                isRequired: true,
+                displayOnCreate: true,
+                displayOrder: 99
+              },
+              bar: {
+                name: 'bar',
+                displayName: 'Bar',
+                title: 'Bar',
+                type: 'TEXT',
+                typeClass: 'primitive',
+                watermark: '1) Family Name, Given Name or 2) Organization XYZ',
+                description: 'Some bar',
+                multiple: false,
+                isControlledVocabulary: false,
+                displayFormat: '#VALUE',
+                isRequired: false,
+                displayOnCreate: true,
+                displayOrder: 98
+              }
+            }
+          },
+          somePrimitiveMultipleField: {
+            name: 'primitiveMultipleField',
+            displayName: 'Primitive Multiple Field',
+            title: 'Primitive Multiple Field',
+            type: 'TEXT',
+            typeClass: 'primitive',
+            watermark: '',
+            description:
+              'Either 1) a title commonly used to refer to the Dataset or 2) an abbreviation of the main title',
+            multiple: true,
+            isControlledVocabulary: false,
+            displayFormat: '',
+            isRequired: false,
+            displayOnCreate: true,
+            displayOrder: 2
+          },
+          somePrimitiveMultipleFieldTextarea: {
+            name: 'primitiveMultipleField Textarea',
+            displayName: 'Primitive Multiple Field Textarea',
+            title: 'Primitive Multiple Field Textarea',
+            type: 'TEXTBOX',
+            typeClass: 'primitive',
+            watermark: '',
+            description:
+              'Either 1) a title commonly used to refer to the Dataset or 2) an abbreviation of the main title',
+            multiple: true,
+            isControlledVocabulary: false,
+            displayFormat: '',
+            isRequired: false,
+            displayOnCreate: true,
+            displayOrder: 2
+          },
+          someControlledVocabularyFieldNotMultiple: {
+            name: 'someControlledVocabularyFieldNotMultiple',
+            displayName: 'Controlled Vocabulary Field Not Multiple',
+            title: 'Controlled Vocabulary Field Not Multiple',
+            type: 'TEXT',
+            typeClass: 'controlledVocabulary',
+            watermark: '',
+            description: 'Some controlled vocabulary field not multiple',
+            multiple: false,
+            isControlledVocabulary: true,
+            displayFormat: '',
+            isRequired: false,
+            displayOnCreate: true,
+            displayOrder: 3,
+            controlledVocabularyValues: ['value1', 'value2', 'value3']
           }
         }
       },

@@ -2,25 +2,25 @@ import { PropsWithChildren } from 'react'
 import { Form as FormBS } from 'react-bootstrap'
 import { RequiredInputSymbol } from '../../required-input-symbol/RequiredInputSymbol'
 import { QuestionMarkTooltip } from '../../../tooltip/question-mark-tooltip/QuestionMarkTooltip'
+import { ColProps } from '../../../grid/Col'
 
-interface FormLabelProps {
+interface FormLabelProps extends ColProps {
   required?: boolean
   message?: string
-  withinMultipleFieldsGroup?: boolean
   htmlFor?: string
+  column?: boolean
 }
 
 export function FormLabel({
   required,
   message,
-  withinMultipleFieldsGroup,
   htmlFor,
-  children
+  column,
+  children,
+  ...rest
 }: PropsWithChildren<FormLabelProps>) {
-  const layoutProps = withinMultipleFieldsGroup ? {} : { column: true, sm: 3 }
-
   return (
-    <FormBS.Label htmlFor={htmlFor} {...layoutProps}>
+    <FormBS.Label htmlFor={htmlFor} column={column} {...rest}>
       {children}
       {required && <RequiredInputSymbol />}{' '}
       {message && <QuestionMarkTooltip placement="right" message={message}></QuestionMarkTooltip>}

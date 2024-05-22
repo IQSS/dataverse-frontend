@@ -7,11 +7,4 @@ describe('FormText component', () => {
     const text = cy.findByText('Test text')
     text.should('exist')
   })
-
-  it('renders with withinMultipleFieldsGroup prop', () => {
-    cy.mount(<FormGroup.Text withinMultipleFieldsGroup>Test text</FormGroup.Text>)
-
-    const text = cy.findByText('Test text')
-    text.should('exist')
-  })
 })
