@@ -5,50 +5,46 @@ import { Plus, X } from 'react-bootstrap-icons'
 import styles from './FileUploader.module.scss'
 import React from 'react'
 import { useTheme } from '@iqss/dataverse-design-system'
+import { FileUploadTools, FileUploaderState } from '../../files/domain/models/FileUploadState'
 
 export interface FileUploaderProps {
-  upload: (files: File[]) => Map<string, FileUploadState>
+  upload: (files: File[]) => void
   cancelTitle: string
   info: string
   selectText: string
+  fileUploaderState: FileUploaderState
+  cancelUpload: (file: File) => void
 }
 
-export interface FileUploadState {
-  progress: number
-  fileSizeString: string
-  failed: boolean
-  done: boolean
-  removed: boolean
-}
-
-export function FileUploader({ upload, cancelTitle, info, selectText }: FileUploaderProps) {
+export function FileUploader({
+  upload,
+  cancelTitle,
+  info,
+  selectText,
+  fileUploaderState,
+  cancelUpload
+}: FileUploaderProps) {
   const theme = useTheme()
   const [files, setFiles] = useState<File[]>([])
-  const [progress, setProgress] = useState(new Map<string, FileUploadState>())
   const [bgColor, setBackgroundColor] = useState(theme.color.primaryTextColor)
 
   const addFiles = (selectedFiles: FileList | null) => {
     if (selectedFiles && selectedFiles.length > 0) {
       setFiles((alreadyAdded) => {
         const selectedFilesArray = Array.from(selectedFiles)
-        const selectedFilesSet = new Set(
-          selectedFilesArray.map((x) => x.webkitRelativePath + x.name)
+        const selectedFilesSet = new Set(selectedFilesArray.map((x) => FileUploadTools.key(x)))
+        const alreadyAddedFiltered = alreadyAdded.filter(
+          (x) => !selectedFilesSet.has(FileUploadTools.key(x))
         )
-        const allreadyAddedFiltered = alreadyAdded.filter(
-          (x) => !selectedFilesSet.has(x.webkitRelativePath + x.name)
-        )
-        return [...allreadyAddedFiltered, ...selectedFilesArray]
+        return [...alreadyAddedFiltered, ...selectedFilesArray]
       })
     }
   }
 
-  const addFile = (f: File) => {
-    setFiles((alreadyAdded) => {
-      const allreadyAddedFiltered = alreadyAdded.filter(
-        (x) => x.webkitRelativePath + x.name !== f.webkitRelativePath + f.name
-      )
-      return [...allreadyAddedFiltered, f]
-    })
+  const addFile = (file: File) => {
+    if (!files.some((x) => FileUploadTools.key(x) === FileUploadTools.key(file))) {
+      setFiles((oldFiles) => [...oldFiles, file])
+    }
   }
 
   const addFromDir = (dir: FileSystemDirectoryEntry) => {
@@ -106,18 +102,15 @@ export function FileUploader({ upload, cancelTitle, info, selectText }: FileUplo
   }
 
   const handleRemoveFile = (f: File) => {
-    setFiles((alreadyAdded) => [...alreadyAdded].filter((x) => x !== f))
+    cancelUpload(f)
+    setFiles((newFiles) =>
+      newFiles.filter((x) => !FileUploadTools.get(x, fileUploaderState).removed)
+    )
   }
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress(upload(files))
-      setFiles([...files].filter((x) => !progress.get(x.webkitRelativePath + x.name)?.removed))
-    }, 1000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [files, upload])
+    upload(files)
+  }, [files, fileUploaderState, upload])
 
   const inputRef = React.useRef<HTMLInputElement>(null)
 
@@ -130,7 +123,7 @@ export function FileUploader({ upload, cancelTitle, info, selectText }: FileUplo
       </Card.Header>
       <Card.Body style={{ backgroundColor: bgColor }}>
         <div
-          className={styles.fileuploader}
+          className={styles.file_uploader}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragEnter={handleDragEnter}
@@ -139,7 +132,7 @@ export function FileUploader({ upload, cancelTitle, info, selectText }: FileUplo
             <input
               ref={inputRef}
               type="file"
-              id="filepicker"
+              id="filePicker"
               onChange={handleChange}
               multiple
               hidden
@@ -149,14 +142,20 @@ export function FileUploader({ upload, cancelTitle, info, selectText }: FileUplo
             <div className={styles.files}>
               <div className={styles.group}>
                 {files
-                  .filter((x) => !progress.get(x.webkitRelativePath + x.name)?.done)
+                  .filter(
+                    (x) =>
+                      !(
+                        FileUploadTools.get(x, fileUploaderState).done ||
+                        FileUploadTools.get(x, fileUploaderState).removed
+                      )
+                  )
                   .map((file) => (
                     <>
-                      <div className={styles.file} key={file.webkitRelativePath + file.name}>
+                      <div className={styles.file} key={FileUploadTools.key(file)}>
                         <div className={styles.cell}></div>
                         <div
                           className={
-                            progress.get(file.webkitRelativePath + file.name)?.failed
+                            FileUploadTools.get(file, fileUploaderState).failed
                               ? styles.failed
                               : styles.cell
                           }>
@@ -164,12 +163,12 @@ export function FileUploader({ upload, cancelTitle, info, selectText }: FileUplo
                           {file.name}
                         </div>
                         <div className={styles.cell}>
-                          {progress.get(file.webkitRelativePath + file.name)?.fileSizeString}
+                          {FileUploadTools.get(file, fileUploaderState).fileSizeString}
                         </div>
                         <div className={styles.cell}>
                           <ProgressBar
                             className={styles.progress}
-                            now={progress.get(file.webkitRelativePath + file.name)?.progress}
+                            now={FileUploadTools.get(file, fileUploaderState).progress}
                           />
                         </div>
                         <div className={styles.cell}>

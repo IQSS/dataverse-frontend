@@ -1,6 +1,6 @@
 @import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
 
-.fileuploader {
+.file_uploader {
     min-height: 5em;
 }
 
@@ -19,13 +19,13 @@
 
 .cell {
     display: table-cell;
-    padding: 0.25em 0.5em 0.25em 0.5;
+    padding: 0.25em;
     vertical-align: middle;
 }
 
 .failed {
     display: table-cell;
-    padding: 0.25em 0.5em 0.25em 0.5;
+    padding: 0.25em;
     color: $dv-danger-color;
     text-decoration: line-through;
     vertical-align: middle;
