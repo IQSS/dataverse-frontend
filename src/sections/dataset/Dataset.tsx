@@ -38,7 +38,7 @@ export function Dataset({ fileRepository, created }: DatasetProps) {
   }
   useEffect(() => {
     setIsLoading(isLoading)
-  }, [isLoading])
+  }, [isLoading, setIsLoading])
 
   if (isLoading) {
     return <DatasetSkeleton />

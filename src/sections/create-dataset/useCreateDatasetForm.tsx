@@ -12,7 +12,10 @@ export enum SubmissionStatus {
   Errored = 'Errored'
 }
 
-export function useCreateDatasetForm(repository: DatasetRepository): {
+export function useCreateDatasetForm(
+  repository: DatasetRepository,
+  collectionId: string
+): {
   submissionStatus: SubmissionStatus
   submitForm: (formData: CreateDatasetFormValues) => void
 } {
@@ -30,7 +33,7 @@ export function useCreateDatasetForm(repository: DatasetRepository): {
       formDataBackToOriginalKeys
     )
 
-    createDataset(repository, formattedFormValues)
+    createDataset(repository, formattedFormValues, collectionId)
       .then(({ persistentId }) => {
         setSubmissionStatus(SubmissionStatus.SubmitComplete)
         navigate(`${Route.DATASETS}?persistentId=${persistentId}`, {

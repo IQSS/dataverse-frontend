@@ -6,6 +6,8 @@ interface DeaccessionDatasetButtonProps {
   dataset: Dataset
 }
 export function DeaccessionDatasetButton({ dataset }: DeaccessionDatasetButtonProps) {
+  const { t } = useTranslation('dataset')
+
   if (
     !dataset.version.someDatasetVersionHasBeenReleased ||
     !dataset.permissions.canPublishDataset
@@ -13,7 +15,6 @@ export function DeaccessionDatasetButton({ dataset }: DeaccessionDatasetButtonPr
     return <></>
   }
 
-  const { t } = useTranslation('dataset')
   return (
     <>
       <DropdownSeparator />
