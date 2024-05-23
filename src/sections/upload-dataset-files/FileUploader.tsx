@@ -138,17 +138,11 @@ export function FileUploader({
               hidden
             />
           </div>
-          {files.length > 0 ? (
+          {files.filter((x) => !FileUploadTools.get(x, fileUploaderState).done).length > 0 ? (
             <div className={styles.files}>
               <div className={styles.group}>
                 {files
-                  .filter(
-                    (x) =>
-                      !(
-                        FileUploadTools.get(x, fileUploaderState).done ||
-                        FileUploadTools.get(x, fileUploaderState).removed
-                      )
-                  )
+                  .filter((x) => !FileUploadTools.get(x, fileUploaderState).done)
                   .map((file) => (
                     <div className={styles.file} key={FileUploadTools.key(file)}>
                       <div className={styles.cell}></div>
