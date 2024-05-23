@@ -37,10 +37,13 @@ describe('Create Dataset', () => {
       .within(() => {
         cy.findByLabelText(/^Text/i).type('Test description text', { force: true })
       })
+
     cy.findByText('Subject')
       .closest('.row')
       .within(() => {
-        cy.findByLabelText(/^Arts and Humanities/i).check({ force: true })
+        cy.findByLabelText('Toggle options menu').click({ force: true })
+
+        cy.findByLabelText('Agricultural Sciences').click()
       })
 
     cy.findByText(/Save Dataset/i).click()

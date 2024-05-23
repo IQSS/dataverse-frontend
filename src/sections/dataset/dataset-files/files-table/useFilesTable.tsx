@@ -32,14 +32,16 @@ export function useFilesTable(files: FilePreview[], paginationInfo: FilePaginati
     pageCount: paginationInfo.totalPages
   })
 
+  const selectedRowsById = table.getSelectedRowModel().rowsById
+
   useEffect(() => {
     table.setPageSize(paginationInfo.pageSize)
     table.setPageIndex(paginationInfo.page - 1)
-  }, [paginationInfo])
+  }, [paginationInfo, table])
 
   useEffect(() => {
-    setCurrentPageSelectedRowModel(table.getSelectedRowModel().rowsById)
-  }, [table.getSelectedRowModel().rowsById])
+    setCurrentPageSelectedRowModel(selectedRowsById)
+  }, [selectedRowsById])
 
   return {
     table,

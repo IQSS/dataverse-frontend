@@ -17,11 +17,13 @@ interface Props {
   metadataFieldInfo: MetadataField
 }
 
-export const useDefineRules = ({ metadataFieldInfo }: Props): UseControllerProps['rules'] => {
+export type DefinedRules = UseControllerProps['rules']
+
+export const useDefineRules = ({ metadataFieldInfo }: Props): DefinedRules => {
   const { t } = useTranslation('createDataset')
   const { type, displayName, isRequired, watermark } = metadataFieldInfo
 
-  const rulesToApply: UseControllerProps['rules'] = {
+  const rulesToApply: DefinedRules = {
     required: isRequired ? t('datasetForm.field.required', { displayName }) : false,
     validate: (value: string) => {
       if (!value) {

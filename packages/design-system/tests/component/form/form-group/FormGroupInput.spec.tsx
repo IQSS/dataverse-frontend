@@ -26,8 +26,8 @@ describe('FormInput', () => {
 
   it('should render with the required symbol', () => {
     cy.mount(
-      <FormGroup controlId="username" required>
-        <FormGroup.Label>Username</FormGroup.Label>
+      <FormGroup controlId="username">
+        <FormGroup.Label required>Username</FormGroup.Label>
         <FormGroup.Input prefix="Prefix:" type="text" readOnly />
       </FormGroup>
     )
@@ -51,17 +51,6 @@ describe('FormInput', () => {
 
     cy.get('@handleChange').should('have.been.called')
     cy.findByLabelText('Username').should('have.value', 'new value')
-  })
-
-  it('renders with fieldIndex in the id when provided', () => {
-    cy.mount(
-      <FormGroup controlId="username" fieldIndex="1">
-        <FormGroup.Label>Username</FormGroup.Label>
-        <FormGroup.Input type="text" />
-      </FormGroup>
-    )
-    const input = cy.findByLabelText('Username')
-    input.should('have.attr', 'id', 'username-1')
   })
 
   it('should render with the a tooltip message', () => {

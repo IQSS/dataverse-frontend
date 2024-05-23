@@ -30,6 +30,7 @@ type Story = StoryObj<typeof DatasetAlerts>
 export const UpdateAlerts: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic()
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { addDatasetAlert } = useAlertContext()
     allUpdateAlerts.forEach((alert) => addDatasetAlert(alert))
     return (
@@ -44,6 +45,7 @@ const publishAlert = new Alert('warning', AlertMessageKey.PUBLISH_IN_PROGRESS)
 export const PublishInProgress: Story = {
   render: () => {
     const dataset = DatasetMother.createRealistic()
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { addDatasetAlert } = useAlertContext()
     addDatasetAlert(publishAlert)
     return (

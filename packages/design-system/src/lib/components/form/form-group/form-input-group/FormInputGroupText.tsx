@@ -1,6 +1,6 @@
-import { PropsWithChildren } from 'react'
+import { ReactNode } from 'react'
 import { InputGroup } from 'react-bootstrap'
 
-export function FormInputGroupText({ children }: PropsWithChildren) {
+export function FormInputGroupText({ children }: { children: ReactNode }) {
   return <InputGroup.Text>{children}</InputGroup.Text>
 }
