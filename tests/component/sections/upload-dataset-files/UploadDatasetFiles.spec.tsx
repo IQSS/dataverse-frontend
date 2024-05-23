@@ -29,8 +29,9 @@ describe('UploadDatasetFiles', () => {
 
     mountWithDataset(<UploadDatasetFiles fileRepository={fileRepository} />, testDataset)
 
-    cy.findByText('Upload Files').should('exist').should('have.class', 'active')
     cy.findByRole('link', { name: 'Root' }).should('exist')
+    cy.findByRole('link', { name: 'Dataset Title' }).should('exist')
+    cy.findByText('Upload Files').should('exist').should('have.class', 'active')
   })
 
   it('renders skeleton while loading', () => {
