@@ -20,6 +20,7 @@ import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useAlertContext } from '../alerts/AlertContext'
 import { AlertMessageKey } from '../../alert/domain/models/Alert'
+import { DatasetJsonLd } from './dataset-json-ld/DatasetJsonLd'
 
 interface DatasetProps {
   fileRepository: FileRepository
@@ -46,6 +47,7 @@ export function Dataset({ fileRepository, created }: DatasetProps) {
 
   return (
     <>
+      <DatasetJsonLd persistentId={dataset?.persistentId}></DatasetJsonLd>
       <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
       {!dataset ? (
         <PageNotFound />
