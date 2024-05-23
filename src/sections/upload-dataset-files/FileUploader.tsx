@@ -150,38 +150,36 @@ export function FileUploader({
                       )
                   )
                   .map((file) => (
-                    <>
-                      <div className={styles.file} key={FileUploadTools.key(file)}>
-                        <div className={styles.cell}></div>
-                        <div
-                          className={
-                            FileUploadTools.get(file, fileUploaderState).failed
-                              ? styles.failed
-                              : styles.cell
-                          }>
-                          {file.webkitRelativePath}
-                          {file.name}
-                        </div>
-                        <div className={styles.cell}>
-                          {FileUploadTools.get(file, fileUploaderState).fileSizeString}
-                        </div>
-                        <div className={styles.cell}>
-                          <ProgressBar
-                            className={styles.progress}
-                            now={FileUploadTools.get(file, fileUploaderState).progress}
-                          />
-                        </div>
-                        <div className={styles.cell}>
-                          <Button
-                            variant="secondary"
-                            {...{ size: 'sm' }}
-                            withSpacing
-                            onClick={() => handleRemoveFile(file)}>
-                            <X className={styles.icon} title={cancelTitle} />
-                          </Button>
-                        </div>
+                    <div className={styles.file} key={FileUploadTools.key(file)}>
+                      <div className={styles.cell}></div>
+                      <div
+                        className={
+                          FileUploadTools.get(file, fileUploaderState).failed
+                            ? styles.failed
+                            : styles.cell
+                        }>
+                        {file.webkitRelativePath}
+                        {file.name}
                       </div>
-                    </>
+                      <div className={styles.cell}>
+                        {FileUploadTools.get(file, fileUploaderState).fileSizeString}
+                      </div>
+                      <div className={styles.cell}>
+                        <ProgressBar
+                          className={styles.progress}
+                          now={FileUploadTools.get(file, fileUploaderState).progress}
+                        />
+                      </div>
+                      <div className={styles.cell}>
+                        <Button
+                          variant="secondary"
+                          {...{ size: 'sm' }}
+                          withSpacing
+                          onClick={() => handleRemoveFile(file)}>
+                          <X className={styles.icon} title={cancelTitle} />
+                        </Button>
+                      </div>
+                    </div>
                   ))}
               </div>
             </div>
