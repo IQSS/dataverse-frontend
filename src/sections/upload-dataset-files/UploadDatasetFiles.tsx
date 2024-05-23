@@ -18,6 +18,26 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
   const [fileUploaderState, setState] = useState(FileUploadTools.createNewState([]))
   const [uploadingToCancelMap, setUploadingToCancelMap] = useState(new Map<string, () => void>())
   const [uploadFinished, setUploadFinished] = useState(new Set<string>())
+  const [semaphore, setSemaphore] = useState(new Set<string>())
+
+  const timeout = (delay: number) => new Promise((res) => setTimeout(res, delay))
+  const limit = 10
+
+  const acquireSemaphore = async (file: File) => {
+    const key = FileUploadTools.key(file)
+    setSemaphore((x) => (x.size >= limit ? x : x.add(key)))
+    while (!semaphore.has(key)) {
+      await timeout(500)
+      setSemaphore((x) => (x.size >= limit ? x : x.add(key)))
+    }
+  }
+
+  const releaseSemaphore = (file: File) => {
+    setSemaphore((x) => {
+      x.delete(FileUploadTools.key(file))
+      return x
+    })
+  }
 
   const fileUploadFinished = (file: File) => {
     const key = FileUploadTools.key(file)
@@ -26,6 +46,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
       x.delete(key)
       return x
     })
+    releaseSemaphore(file)
   }
 
   const uploadOneFile = (file: File) => {
@@ -53,10 +74,11 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     setUploadingToCancelMap((x) => x.set(key, cancel))
   }
 
-  const upload = (files: File[]) => {
+  const upload = async (files: File[]) => {
     for (const file of files) {
       const key = FileUploadTools.key(file)
       if (!uploadingToCancelMap.has(key) && !uploadFinished.has(key)) {
+        await acquireSemaphore(file)
         uploadOneFile(file)
       }
     }
@@ -67,6 +89,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     const cancel = uploadingToCancelMap.get(key)
     if (cancel) {
       cancel()
+      releaseSemaphore(file)
     }
     setUploadingToCancelMap((x) => {
       x.delete(key)

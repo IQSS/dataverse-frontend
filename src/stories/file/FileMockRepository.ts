@@ -80,8 +80,8 @@ export class FileMockRepository implements FileRepository {
     const res = async () => {
       let now = 0
       while (now < 100) {
-        await timeout(1000)
-        now += 10
+        await timeout(500)
+        now += 20
         progress(now)
         console.log(FileUploadTools.key(file.file) + ': ' + String(now))
       }
