@@ -20,6 +20,8 @@ import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useAlertContext } from '../alerts/AlertContext'
 import { AlertMessageKey } from '../../alert/domain/models/Alert'
+import { DatasetFilesWithInfiniteScroll } from './dataset-files/DatasetFilesWithInfiniteScroll'
+import { FILES_TAB_INFINITE_SCROLL_ENABLED } from './config'
 
 interface DatasetProps {
   fileRepository: FileRepository
@@ -82,11 +84,19 @@ export function Dataset({ fileRepository, created }: DatasetProps) {
               <Tabs defaultActiveKey="files">
                 <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
                   <div className={styles['tab-container']}>
-                    <DatasetFiles
-                      filesRepository={fileRepository}
-                      datasetPersistentId={dataset.persistentId}
-                      datasetVersion={dataset.version}
-                    />
+                    {FILES_TAB_INFINITE_SCROLL_ENABLED ? (
+                      <DatasetFilesWithInfiniteScroll
+                        filesRepository={fileRepository}
+                        datasetPersistentId={dataset.persistentId}
+                        datasetVersion={dataset.version}
+                      />
+                    ) : (
+                      <DatasetFiles
+                        filesRepository={fileRepository}
+                        datasetPersistentId={dataset.persistentId}
+                        datasetVersion={dataset.version}
+                      />
+                    )}
                   </div>
                 </Tabs.Tab>
                 <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
