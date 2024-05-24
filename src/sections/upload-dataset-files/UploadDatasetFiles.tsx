@@ -7,12 +7,14 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { FileUploader } from './FileUploader'
 import { FileUploadTools } from '../../files/domain/models/FileUploadState'
 import { uploadFile } from '../../files/domain/useCases/uploadFile'
+import { useTranslation } from 'react-i18next'
 
 interface UploadDatasetFilesProps {
   fileRepository: FileRepository
 }
 
 export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDatasetFilesProps) => {
+  const { t } = useTranslation('files')
   const { setIsLoading } = useLoading()
   const { dataset, isLoading } = useDataset()
   const [fileUploaderState, setState] = useState(FileUploadTools.createNewState([]))
@@ -116,9 +118,9 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
           <article>
             <FileUploader
               upload={upload}
-              cancelTitle={'Cancel upload'}
-              info={'Drag and drop files here.'}
-              selectText={'Select Files to Add'}
+              cancelTitle={t('upload.cancel')}
+              info={t('upload.info')}
+              selectText={t('upload.select')}
               fileUploaderState={fileUploaderState}
               cancelUpload={cancelUpload}
             />
