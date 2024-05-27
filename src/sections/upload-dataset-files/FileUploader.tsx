@@ -1,6 +1,6 @@
 import { ChangeEventHandler, DragEventHandler, useEffect, useState } from 'react'
 import { ProgressBar, Card } from 'react-bootstrap'
-import { Button } from '../../../packages/design-system/src/lib/components/button/Button'
+import { Button } from '@iqss/dataverse-design-system'
 import { Plus, X } from 'react-bootstrap-icons'
 import styles from './FileUploader.module.scss'
 import React from 'react'
