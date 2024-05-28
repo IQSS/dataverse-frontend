@@ -1,17 +1,20 @@
+import { useEffect, useRef, useState } from 'react'
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
-import { useRef, useState } from 'react'
 import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
-import { useFiles } from './useFiles'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 import { useLoadFiles } from './useLoadFiles'
+import { FilesTable } from './files-table/FilesTable'
+import { Row } from '@iqss/dataverse-design-system'
 
 interface DatasetFilesProps {
   filesRepository: FileRepository
   datasetPersistentId: string
   datasetVersion: DatasetVersion
 }
+
+const PAGE_SIZE = 10
 
 export function DatasetFilesWithInfiniteScroll({
   filesRepository,
@@ -21,37 +24,80 @@ export function DatasetFilesWithInfiniteScroll({
   const criteriaContainerRef = useRef<HTMLDivElement | null>(null)
   const criteriaContainerHeight = criteriaContainerRef.current?.clientHeight
 
-  const [paginationInfo, setPaginationInfo] = useState<FilePaginationInfo>(new FilePaginationInfo())
+  const [paginationInfo, setPaginationInfo] = useState<FilePaginationInfo>(
+    () => new FilePaginationInfo()
+  )
   const [criteria, setCriteria] = useState<FileCriteria>(new FileCriteria())
-  const { files, isLoading, filesCountInfo, filesTotalDownloadSize } = useFiles(
+
+  const {
+    isLoading,
+    accumulatedFiles,
+    totalAvailable,
+    hasNextPage,
+    error,
+    loadMore,
+    loadFilesWithNewCriteria,
+    isEmptyFiles,
+    areFilesAvailable,
+    accumulatedCount,
+    filesCountInfo,
+    filesTotalDownloadSize
+  } = useLoadFiles({
     filesRepository,
     datasetPersistentId,
     datasetVersion,
-    setPaginationInfo,
     paginationInfo,
     criteria
-  )
-  const data = useLoadFiles()
+  })
+
+  useEffect(() => {
+    const updatePaginationTotalItems = () => {
+      if (totalAvailable && totalAvailable !== paginationInfo.totalItems) {
+        setPaginationInfo(paginationInfo.withTotal(totalAvailable))
+      }
+    }
+
+    updatePaginationTotalItems()
+  }, [totalAvailable, paginationInfo])
+
+  useEffect(() => {
+    const updatePaginationPageNumber = () => {
+      setPaginationInfo((currentPagination) =>
+        currentPagination.goToPage(accumulatedCount / PAGE_SIZE + 1)
+      )
+    }
+
+    updatePaginationPageNumber()
+  }, [accumulatedCount])
+
+  const handleCriteriaChange = (criteria: FileCriteria) => {
+    setCriteria(criteria)
+    const newPaginationInfo = new FilePaginationInfo()
+
+    void loadFilesWithNewCriteria(criteria, newPaginationInfo)
+  }
+
+  console.log({ accumulatedFiles })
 
   return (
-    <div style={{ border: 'solid 1px red', maxHeight: 600, overflowY: 'auto' }}>
+    <Row style={{ maxHeight: 600, overflow: 'auto' }}>
       <div
         ref={criteriaContainerRef}
         style={{
-          border: 'solid 2px blue',
           position: 'sticky',
           top: 0,
-          background: 'white'
+          background: 'white',
+          zIndex: 1000
         }}>
         <FileCriteriaForm
           criteria={criteria}
-          onCriteriaChange={setCriteria}
+          onCriteriaChange={handleCriteriaChange}
           filesCountInfo={filesCountInfo}
         />
+        <button onClick={loadMore}>Fetch more +</button>
       </div>
 
-      <div>
-        <header
+      {/* <header
           style={{
             position: 'sticky',
             top: criteriaContainerHeight,
@@ -60,46 +106,18 @@ export function DatasetFilesWithInfiniteScroll({
             padding: '1rem'
           }}>
           Header
-        </header>
-        <div style={{ border: 'dotted 2px black', marginBlock: '4px' }}>
-          <div style={{ border: 'solid 2px violet', marginBlock: '4px' }}>
-            <p>Holo</p>
-          </div>
-          <div style={{ border: 'solid 2px violet', marginBlock: '4px' }}>
-            <p>Holo</p>
-          </div>
-          <div style={{ border: 'solid 2px violet', marginBlock: '4px' }}>
-            <p>Holo</p>
-          </div>
-          <div style={{ border: 'solid 2px violet', marginBlock: '4px' }}>
-            <p>Holo</p>
-          </div>
-          <div style={{ border: 'solid 2px violet', marginBlock: '4px' }}>
-            <p>Holo</p>
-          </div>
-          <div style={{ border: 'solid 2px violet', marginBlock: '4px' }}>
-            <p>Holo</p>
-          </div>
-          <div style={{ border: 'solid 2px violet', marginBlock: '4px' }}>
-            <p>Holo</p>
-          </div>
-          <div style={{ border: 'solid 2px violet', marginBlock: '4px' }}>
-            <p>Holo</p>
-          </div>
-          <div style={{ border: 'solid 2px violet', marginBlock: '4px' }}>
-            <p>Holo</p>
-          </div>
-          <div style={{ border: 'solid 2px violet', marginBlock: '4px' }}>
-            <p>Holo</p>
-          </div>
-          <div style={{ border: 'solid 2px violet', marginBlock: '4px' }}>
-            <p>Holo</p>
-          </div>
-          <div style={{ border: 'solid 2px violet', marginBlock: '4px' }}>
-            <p>Holo</p>
-          </div>
-        </div>
+        </header> */}
+
+      <div style={{ position: 'relative', zIndex: 999 }}>
+        <FilesTable
+          files={accumulatedFiles}
+          isLoading={isLoading}
+          paginationInfo={paginationInfo}
+          filesTotalDownloadSize={filesTotalDownloadSize}
+          criteria={criteria}
+          criteriaContainerHeight={criteriaContainerHeight}
+        />
       </div>
-    </div>
+    </Row>
   )
 }
