@@ -158,10 +158,12 @@ export function FileUploader({
                         {FileUploadTools.get(file, fileUploaderState).fileSizeString}
                       </div>
                       <div className={styles.cell}>
-                        <ProgressBar
-                          className={styles.progress}
-                          now={FileUploadTools.get(file, fileUploaderState).progress}
-                        />
+                        {FileUploadTools.get(file, fileUploaderState).progressHidden ? null : (
+                          <ProgressBar
+                            className={styles.progress}
+                            now={FileUploadTools.get(file, fileUploaderState).progress}
+                          />
+                        )}
                       </div>
                       <div className={styles.cell}>
                         <Button

@@ -59,6 +59,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     if (uploadingToCancelMap.has(key) || uploadFinished.has(key)) {
       return
     }
+    setState(FileUploadTools.showProgressBar(file, fileUploaderState))
     const cancel = uploadFile(
       fileRepository,
       dataset.persistentId,
@@ -102,7 +103,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
 
   useEffect(() => {
     setIsLoading(isLoading)
-  }, [isLoading])
+  }, [isLoading, setIsLoading])
 
   if (isLoading) {
     return <p>Temporary Loading until having shape of skeleton</p>

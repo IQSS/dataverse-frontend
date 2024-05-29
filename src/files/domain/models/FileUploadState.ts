@@ -2,6 +2,7 @@ import { FileSize, FileSizeUnit } from './FileMetadata'
 
 export interface FileUploadState {
   progress: number
+  progressHidden: boolean
   fileSizeString: string
   failed: boolean
   done: boolean
@@ -19,6 +20,7 @@ export class FileUploadTools {
       const key = this.key(file)
       const newValue: FileUploadState = {
         progress: 0,
+        progressHidden: true,
         fileSizeString: new FileSize(file.size, FileSizeUnit.BYTES).toString(),
         failed: false,
         done: false,
@@ -40,6 +42,7 @@ export class FileUploadTools {
     }
     return {
       progress: 0,
+      progressHidden: true,
       fileSizeString: new FileSize(file.size, FileSizeUnit.BYTES).toString(),
       failed: false,
       done: false,
@@ -68,6 +71,12 @@ export class FileUploadTools {
   static removed(file: File, oldState: FileUploaderState): FileUploaderState {
     const [newState, newValue] = this.toNewState(file, oldState)
     newValue.removed = true
+    return newState
+  }
+
+  static showProgressBar(file: File, oldState: FileUploaderState): FileUploaderState {
+    const [newState, newValue] = this.toNewState(file, oldState)
+    newValue.progressHidden = false
     return newState
   }
 
