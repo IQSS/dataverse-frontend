@@ -104,7 +104,6 @@ export class FileJSDataverseRepository implements FileRepository {
         ])
       )
       .then(([jsFiles, totalFilesCount, downloadCounts, thumbnails, permissions, tabularData]) => {
-        console.log({ jsFiles, downloadCounts, thumbnails, permissions, tabularData })
         const mappedFiles = jsFiles.map((jsFile, index) =>
           JSFileMapper.toFilePreview(
             jsFile,

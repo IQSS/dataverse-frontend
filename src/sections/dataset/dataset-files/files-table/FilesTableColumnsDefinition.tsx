@@ -10,7 +10,8 @@ import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginati
 
 export const createColumnsDefinition = (
   paginationInfo: FilePaginationInfo,
-  fileSelection: FileSelection
+  fileSelection: FileSelection,
+  accumulatedFilesCount?: number
 ): ColumnDef<FilePreview>[] => [
   {
     id: 'select',
@@ -36,7 +37,12 @@ export const createColumnsDefinition = (
     )
   },
   {
-    header: () => <FileInfoHeader paginationInfo={paginationInfo} />,
+    header: () => (
+      <FileInfoHeader
+        paginationInfo={paginationInfo}
+        accumulatedFilesCount={accumulatedFilesCount}
+      />
+    ),
     accessorKey: 'info',
     cell: (props) => <FileInfoCell file={props.row.original} />
   },

@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import useInfiniteScroll, { UseInfiniteScrollHookRefCallback } from 'react-infinite-scroll-hook'
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
 import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
@@ -6,13 +7,15 @@ import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 import { useLoadFiles } from './useLoadFiles'
 import { FilesTable } from './files-table/FilesTable'
-import { Row } from '@iqss/dataverse-design-system'
+import { useObserveElementSize } from '../../../shared/hooks/useObserveElementSize'
 
-interface DatasetFilesProps {
+interface DatasetFilesWithInfiniteScrollProps {
   filesRepository: FileRepository
   datasetPersistentId: string
   datasetVersion: DatasetVersion
 }
+
+export type SentryRef = UseInfiniteScrollHookRefCallback
 
 const PAGE_SIZE = 10
 
@@ -20,9 +23,9 @@ export function DatasetFilesWithInfiniteScroll({
   filesRepository,
   datasetPersistentId,
   datasetVersion
-}: DatasetFilesProps) {
+}: DatasetFilesWithInfiniteScrollProps) {
   const criteriaContainerRef = useRef<HTMLDivElement | null>(null)
-  const criteriaContainerHeight = criteriaContainerRef.current?.clientHeight
+  const criteriaContainerSize = useObserveElementSize(criteriaContainerRef)
 
   const [paginationInfo, setPaginationInfo] = useState<FilePaginationInfo>(
     () => new FilePaginationInfo()
@@ -48,6 +51,14 @@ export function DatasetFilesWithInfiniteScroll({
     datasetVersion,
     paginationInfo,
     criteria
+  })
+
+  const [sentryRef, { rootRef }] = useInfiniteScroll({
+    loading: isLoading,
+    hasNextPage: hasNextPage,
+    onLoadMore: loadMore as VoidFunction,
+    disabled: !!error,
+    rootMargin: '0px 0px 250px 0px'
   })
 
   useEffect(() => {
@@ -77,37 +88,33 @@ export function DatasetFilesWithInfiniteScroll({
     void loadFilesWithNewCriteria(criteria, newPaginationInfo)
   }
 
-  console.log({ accumulatedFiles })
+  const showSentryRef = useMemo(
+    () => hasNextPage && !error && !isEmptyFiles,
+    [hasNextPage, error, isEmptyFiles]
+  )
+
+  // console.log(criteriaContainerSize)
+
+  //TODO:ME Check responsiveness of elements inside FileCriteriaForm
 
   return (
-    <Row style={{ maxHeight: 600, overflow: 'auto' }}>
-      <div
+    <section ref={rootRef} style={{ maxHeight: 600, overflow: 'auto' }}>
+      <header
         ref={criteriaContainerRef}
         style={{
           position: 'sticky',
           top: 0,
           background: 'white',
-          zIndex: 1000
+          zIndex: 1000,
+          paddingBlock: '1rem',
+          paddingInline: '0.25rem'
         }}>
         <FileCriteriaForm
           criteria={criteria}
           onCriteriaChange={handleCriteriaChange}
           filesCountInfo={filesCountInfo}
         />
-        <button onClick={loadMore}>Fetch more +</button>
-      </div>
-
-      {/* <header
-          style={{
-            position: 'sticky',
-            top: criteriaContainerHeight,
-            background: 'brown',
-            color: 'white',
-            padding: '1rem'
-          }}>
-          Header
-        </header> */}
-
+      </header>
       <div style={{ position: 'relative', zIndex: 999 }}>
         <FilesTable
           files={accumulatedFiles}
@@ -115,9 +122,14 @@ export function DatasetFilesWithInfiniteScroll({
           paginationInfo={paginationInfo}
           filesTotalDownloadSize={filesTotalDownloadSize}
           criteria={criteria}
-          criteriaContainerHeight={criteriaContainerHeight}
+          onInfiniteScrollMode
+          criteriaContainerHeight={criteriaContainerSize.height}
+          sentryRef={sentryRef}
+          showSentryRef={showSentryRef}
+          isEmptyFiles={isEmptyFiles}
+          accumulatedCount={accumulatedCount}
         />
       </div>
-    </Row>
+    </section>
   )
 }

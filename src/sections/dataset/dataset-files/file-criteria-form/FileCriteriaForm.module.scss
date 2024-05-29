@@ -1,8 +1,8 @@
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module";
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
 
 .criteria-section {
-    margin-bottom: 1em;
+  // margin-bottom: 1em;
 }
 
 .sort-container {
@@ -12,7 +12,7 @@
 }
 
 .icon {
-  margin-right:  0.3em;
+  margin-right: 0.3em;
   margin-bottom: 0.2em;
 }
 
@@ -23,7 +23,7 @@
 }
 
 .selected-option {
-    font-weight: $dv-font-weight-bold;
+  font-weight: $dv-font-weight-bold;
 }
 
 .filters-container {

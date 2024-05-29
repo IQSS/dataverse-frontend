@@ -10,25 +10,53 @@ import { useEffect, useState } from 'react'
 import { FileSelection } from './row-selection/useFileSelection'
 import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
+import { SentryRef } from '../DatasetFilesWithInfiniteScroll'
 
-interface FilesTableProps {
-  files: FilePreview[]
-  isLoading: boolean
-  paginationInfo: FilePaginationInfo
-  filesTotalDownloadSize: number
-  criteria: FileCriteria
-}
+type FilesTableProps =
+  | {
+      files: FilePreview[]
+      isLoading: boolean
+      paginationInfo: FilePaginationInfo
+      filesTotalDownloadSize: number
+      criteria: FileCriteria
+      onInfiniteScrollMode?: false
+      criteriaContainerHeight?: never
+      sentryRef?: never
+      showSentryRef?: never
+      isEmptyFiles?: never
+      accumulatedCount?: never
+    }
+  | {
+      files: FilePreview[]
+      isLoading: boolean
+      paginationInfo: FilePaginationInfo
+      filesTotalDownloadSize: number
+      criteria: FileCriteria
+      onInfiniteScrollMode: true
+      criteriaContainerHeight: number
+      sentryRef: SentryRef
+      showSentryRef: boolean
+      isEmptyFiles: boolean
+      accumulatedCount: number
+    }
 
 export function FilesTable({
   files,
   isLoading,
   paginationInfo,
   filesTotalDownloadSize,
-  criteria
+  criteria,
+  onInfiniteScrollMode,
+  criteriaContainerHeight,
+  sentryRef,
+  showSentryRef,
+  isEmptyFiles,
+  accumulatedCount
 }: FilesTableProps) {
   const { table, fileSelection, selectAllFiles, clearFileSelection } = useFilesTable(
     files,
-    paginationInfo
+    paginationInfo,
+    accumulatedCount
   )
   const [visitedPagination, setVisitedPagination] = useState<FilePaginationInfo>(paginationInfo)
   const [visitedFiles, setVisitedFiles] = useState<FileSelection>({})
@@ -48,7 +76,7 @@ export function FilesTable({
     setPreviousCriteria(criteria)
   }, [criteria, previousCriteria, clearFileSelection])
 
-  if (isLoading) {
+  if (!onInfiniteScrollMode && isLoading) {
     return <SpinnerSymbol />
   }
   return (
@@ -65,8 +93,21 @@ export function FilesTable({
         filesTotalDownloadSize={filesTotalDownloadSize}
       />
       <Table>
-        <FilesTableHeader headers={table.getHeaderGroups()} />
-        <FilesTableBody rows={table.getRowModel().rows} />
+        <FilesTableHeader
+          headers={table.getHeaderGroups()}
+          criteriaContainerHeight={criteriaContainerHeight}
+        />
+        {onInfiniteScrollMode ? (
+          <FilesTableBody
+            rows={table.getRowModel().rows}
+            onInfiniteScrollMode={true}
+            sentryRef={sentryRef}
+            showSentryRef={showSentryRef}
+            isEmptyFiles={isEmptyFiles}
+          />
+        ) : (
+          <FilesTableBody rows={table.getRowModel().rows} />
+        )}
       </Table>
     </>
   )
