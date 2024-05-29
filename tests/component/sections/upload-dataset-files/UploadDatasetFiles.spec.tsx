@@ -5,21 +5,34 @@ import { Dataset as DatasetModel } from '../../../../src/dataset/domain/models/D
 import { ReactNode } from 'react'
 import { DatasetProvider } from '../../../../src/sections/dataset/DatasetProvider'
 import { UploadDatasetFiles } from '../../../../src/sections/upload-dataset-files/UploadDatasetFiles'
+import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
 
 const fileRepository: FileRepository = {} as FileRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 
-describe('Dataset', () => {
+describe('UploadDatasetFiles', () => {
   const mountWithDataset = (component: ReactNode, dataset: DatasetModel | undefined) => {
     const searchParams = { persistentId: 'some-persistent-id' }
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
 
     cy.customMount(
-      <DatasetProvider repository={datasetRepository} searchParams={searchParams}>
-        {component}
-      </DatasetProvider>
+      <LoadingProvider>
+        <DatasetProvider repository={datasetRepository} searchParams={searchParams}>
+          {component}
+        </DatasetProvider>
+      </LoadingProvider>
     )
   }
+
+  it('renders the breadcrumbs', () => {
+    const testDataset = DatasetMother.create()
+
+    mountWithDataset(<UploadDatasetFiles fileRepository={fileRepository} />, testDataset)
+
+    cy.findByRole('link', { name: 'Root' }).should('exist')
+    cy.findByRole('link', { name: 'Dataset Title' }).should('exist')
+    cy.findByText('Upload Files').should('exist').should('have.class', 'active')
+  })
 
   it('renders skeleton while loading', () => {
     const testDataset = DatasetMother.create()
@@ -36,14 +49,5 @@ describe('Dataset', () => {
     mountWithDataset(<UploadDatasetFiles fileRepository={fileRepository} />, emptyDataset)
 
     cy.findByText('Page Not Found').should('exist')
-  })
-
-  it('renders the breadcrumbs', () => {
-    const testDataset = DatasetMother.create()
-
-    mountWithDataset(<UploadDatasetFiles fileRepository={fileRepository} />, testDataset)
-
-    cy.findByText('Dataset Title').should('exist').should('have.class', 'active')
-    cy.findByRole('link', { name: 'Root' }).should('exist')
   })
 })

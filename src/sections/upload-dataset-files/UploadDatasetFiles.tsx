@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { useLoading } from '../loading/LoadingContext'
 import { useDataset } from '../dataset/DatasetContext'
@@ -14,6 +15,7 @@ export const UploadDatasetFiles = ({
 }: UploadDatasetFilesProps) => {
   const { setIsLoading } = useLoading()
   const { dataset, isLoading } = useDataset()
+  const { t } = useTranslation('uploadDatasetFiles')
 
   useEffect(() => {
     setIsLoading(isLoading)
@@ -29,7 +31,11 @@ export const UploadDatasetFiles = ({
         <PageNotFound />
       ) : (
         <>
-          <BreadcrumbsGenerator hierarchy={dataset.hierarchy} />
+          <BreadcrumbsGenerator
+            hierarchy={dataset.hierarchy}
+            withActionItem
+            actionItemText={t('breadcrumbActionItem')}
+          />
           <article>
             <p>Metadata Files uploading goes here</p>
           </article>

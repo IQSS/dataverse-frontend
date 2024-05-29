@@ -1,4 +1,4 @@
-import logo from '../../../assets/logo.svg'
+import dataverse_logo from '../../../assets/dataverse_brand_icon.svg'
 import { useTranslation } from 'react-i18next'
 import { Navbar } from '@iqss/dataverse-design-system'
 import { Route } from '../../Route.enum'
@@ -23,7 +23,7 @@ export function Header() {
       brand={{
         title: t('brandTitle'),
         href: `/spa${Route.HOME}`,
-        logoImgSrc: logo
+        logoImgSrc: dataverse_logo
       }}>
       {user ? (
         <>
