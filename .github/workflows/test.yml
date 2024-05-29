@@ -1,6 +1,6 @@
 name: test
 
-on: push
+on: [push, pull_request]
 
 env:
   E2E_DATAVERSE_IMAGE_TAG: unstable
