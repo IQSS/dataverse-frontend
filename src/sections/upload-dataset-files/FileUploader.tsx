@@ -1,10 +1,10 @@
 import { ChangeEventHandler, DragEventHandler, useEffect, useRef, useState } from 'react'
-import { ProgressBar, Card } from 'react-bootstrap'
 import { Button } from '@iqss/dataverse-design-system'
 import { Plus, X } from 'react-bootstrap-icons'
 import styles from './FileUploader.module.scss'
 import { useTheme } from '@iqss/dataverse-design-system'
 import { FileUploadTools, FileUploaderState } from '../../files/domain/models/FileUploadState'
+import { Card, ProgressBar } from '@iqss/dataverse-design-system/src/lib'
 
 export interface FileUploaderProps {
   upload: (files: File[]) => void
