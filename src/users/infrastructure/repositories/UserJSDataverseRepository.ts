@@ -14,7 +14,11 @@ export class UserJSDataverseRepository implements UserRepository {
         console.log('AuthenticatedUser: ' + JSON.stringify(authenticatedUser))
         return {
           displayName: authenticatedUser.displayName,
-          persistentId: authenticatedUser.persistentUserId
+          persistentId: authenticatedUser.persistentUserId,
+          firstName: authenticatedUser.firstName,
+          lastName: authenticatedUser.lastName,
+          email: authenticatedUser.email,
+          affiliation: authenticatedUser.affiliation
         }
       })
       .catch((error: ReadError) => {

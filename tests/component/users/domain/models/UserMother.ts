@@ -4,7 +4,10 @@ export class UserMother {
   static create(): User {
     return {
       displayName: 'James D. Potts',
-      persistentId: 'jamesPotts'
+      persistentId: 'jamesPotts',
+      firstName: 'James',
+      lastName: 'Potts',
+      email: 'jamesPotts@g.harvard.edu'
     }
   }
 }
