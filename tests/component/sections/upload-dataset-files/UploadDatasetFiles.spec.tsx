@@ -5,6 +5,7 @@ import { Dataset as DatasetModel } from '../../../../src/dataset/domain/models/D
 import { ReactNode } from 'react'
 import { DatasetProvider } from '../../../../src/sections/dataset/DatasetProvider'
 import { UploadDatasetFiles } from '../../../../src/sections/upload-dataset-files/UploadDatasetFiles'
+import { FileMockLoadingRepository } from '../../../../src/stories/file/FileMockLoadingRepository'
 
 const fileRepository: FileRepository = {} as FileRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
@@ -45,5 +46,25 @@ describe('Dataset', () => {
 
     cy.findByText('Dataset Title').should('exist').should('have.class', 'active')
     cy.findByRole('link', { name: 'Root' }).should('exist')
+  })
+
+  it('renders the file uploader', () => {
+    const testDataset = DatasetMother.create()
+
+    mountWithDataset(
+      <UploadDatasetFiles fileRepository={new FileMockLoadingRepository()} />,
+      testDataset
+    )
+
+    cy.findByText('Select Files to Add').should('exist')
+    cy.findByText('Drag and drop files here.').should('exist')
+    cy.findByText('Drag and drop files here.').selectFile(
+      {
+        fileName: 'users.json',
+        contents: [{ name: 'John Doe' }]
+      },
+      { action: 'drag-drop' }
+    )
+    cy.findByText('users.json').should('exist')
   })
 })
