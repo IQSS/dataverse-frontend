@@ -1,9 +1,9 @@
-import { ProgressBar as CProgressBarBS } from 'react-bootstrap'
+import { ProgressBar as ProgressBarBS } from 'react-bootstrap'
 
 interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
   now?: number
 }
 
 export function ProgressBar({ now }: ProgressBarProps) {
-  return <CProgressBarBS now={now} />
+  return <ProgressBarBS now={now} />
 }
