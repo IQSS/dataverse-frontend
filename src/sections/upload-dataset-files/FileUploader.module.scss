@@ -31,9 +31,11 @@
     vertical-align: middle;
 }
 
-.progress {
+.upload_progress {
+    display: table-cell;
+    padding: 0em 0em 0.25em 0.5em;
+    vertical-align: middle;
     width: 10em;
-    margin-left: 1em
 }
 
 .icon {
