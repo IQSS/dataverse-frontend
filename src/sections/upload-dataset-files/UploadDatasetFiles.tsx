@@ -13,9 +13,7 @@ interface UploadDatasetFilesProps {
   fileRepository: FileRepository
 }
 
-export const UploadDatasetFiles = ({
-  fileRepository: fileRepository
-}: UploadDatasetFilesProps) => {
+export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDatasetFilesProps) => {
   const { setIsLoading } = useLoading()
   const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('uploadDatasetFiles')
