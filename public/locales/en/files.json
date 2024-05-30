@@ -143,10 +143,5 @@
       "reportMessage": "was unsuccessful. {{reportMessage}}",
       "reportMessageDefault": "was unsuccessful. Ingest failed. No further information is available."
     }
-  },
-  "upload": {
-    "cancel": "Cancel upload",
-    "info": "Drag and drop files here.",
-    "select": "Select Files to Add"
   }
 }

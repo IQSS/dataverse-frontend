@@ -13,10 +13,12 @@ interface UploadDatasetFilesProps {
   fileRepository: FileRepository
 }
 
-export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDatasetFilesProps) => {
-  const { t } = useTranslation('files')
+export const UploadDatasetFiles = ({
+  fileRepository: fileRepository
+}: UploadDatasetFilesProps) => {
   const { setIsLoading } = useLoading()
   const { dataset, isLoading } = useDataset()
+  const { t } = useTranslation('uploadDatasetFiles')
   const [fileUploaderState, setState] = useState(FileUploadTools.createNewState([]))
   const [uploadingToCancelMap, setUploadingToCancelMap] = useState(new Map<string, () => void>())
   const [uploadFinished, setUploadFinished] = useState(new Set<string>())
@@ -123,9 +125,9 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
           <article>
             <FileUploader
               upload={upload}
-              cancelTitle={t('upload.cancel')}
-              info={t('upload.info')}
-              selectText={t('upload.select')}
+              cancelTitle={t('cancel')}
+              info={t('info')}
+              selectText={t('select')}
               fileUploaderState={fileUploaderState}
               cancelUpload={cancelUpload}
             />
