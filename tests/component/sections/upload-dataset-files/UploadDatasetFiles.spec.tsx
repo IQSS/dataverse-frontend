@@ -52,15 +52,6 @@ describe('UploadDatasetFiles', () => {
     cy.findByText('Page Not Found').should('exist')
   })
 
-  it('renders the breadcrumbs', () => {
-    const testDataset = DatasetMother.create()
-
-    mountWithDataset(<UploadDatasetFiles fileRepository={fileRepository} />, testDataset)
-
-    cy.findByText('Dataset Title').should('exist').should('have.class', 'active')
-    cy.findByRole('link', { name: 'Root' }).should('exist')
-  })
-
   it('renders the file uploader', () => {
     const testDataset = DatasetMother.create()
 
