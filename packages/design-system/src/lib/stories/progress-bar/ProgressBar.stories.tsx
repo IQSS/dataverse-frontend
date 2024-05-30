@@ -10,5 +10,5 @@ export default meta
 type Story = StoryObj<typeof ProgressBar>
 
 export const Default: Story = {
-  render: () => <ProgressBar now={30} aria-progressbar-name="Loading progress" />
+  render: () => <ProgressBar now={30} />
 }
