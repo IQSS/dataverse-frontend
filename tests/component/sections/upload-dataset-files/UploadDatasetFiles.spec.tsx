@@ -70,5 +70,8 @@ describe('UploadDatasetFiles', () => {
       { action: 'drag-drop' }
     )
     cy.findByText('users.json').should('exist')
+    cy.findByTitle('Cancel upload').should('exist')
+    cy.findByRole('progressbar').should('exist')
+    cy.findByText('Select Files to Add').should('exist')
   })
 })
