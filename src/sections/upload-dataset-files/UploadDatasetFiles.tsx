@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { useLoading } from '../loading/LoadingContext'
 import { useDataset } from '../dataset/DatasetContext'
@@ -7,7 +8,6 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { FileUploader } from './FileUploader'
 import { FileUploadTools } from '../../files/domain/models/FileUploadState'
 import { uploadFile } from '../../files/domain/useCases/uploadFile'
-import { useTranslation } from 'react-i18next'
 
 interface UploadDatasetFilesProps {
   fileRepository: FileRepository
@@ -115,7 +115,11 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
         <PageNotFound />
       ) : (
         <>
-          <BreadcrumbsGenerator hierarchy={dataset.hierarchy} />
+          <BreadcrumbsGenerator
+            hierarchy={dataset.hierarchy}
+            withActionItem
+            actionItemText={t('breadcrumbActionItem')}
+          />
           <article>
             <FileUploader
               upload={upload}
