@@ -4,7 +4,7 @@ import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
 import styles from './FilesTable.module.scss'
 import { getCellStyle } from './FilesTable'
-import { SentryRef } from '../DatasetFilesWithInfiniteScroll'
+import { SentryRef } from '../DatasetFilesScrollable'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 type FilesTableBodyProps =

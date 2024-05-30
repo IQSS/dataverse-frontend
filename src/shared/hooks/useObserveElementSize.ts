@@ -4,7 +4,6 @@ export const useObserveElementSize = (elementRef: React.RefObject<HTMLElement>) 
   const [size, setSize] = useState({ width: 0, height: 0 })
 
   useEffect(() => {
-    console.log('useGetElementSize')
     let resizeObserverEntries: ResizeObserverEntry[] = []
 
     const observer = new ResizeObserver((entries) => {

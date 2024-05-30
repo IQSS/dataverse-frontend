@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import { FileSelection } from './row-selection/useFileSelection'
 import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
-import { SentryRef } from '../DatasetFilesWithInfiniteScroll'
+import { SentryRef } from '../DatasetFilesScrollable'
 
 type FilesTableProps =
   | {

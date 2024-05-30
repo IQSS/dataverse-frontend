@@ -1,23 +1,6 @@
-.file-info-header {
-  display: flex;
-  align-items: flex-start;
-}
-
-.selected-row {
-  background-color: #ffc;
-}
-
-.select {
-  width: 2%;
-}
-
-.info {
-  width: 65%;
-}
-
 .table-sticky-header {
   position: sticky;
-  z-index: 10;
+  z-index: 1;
   background-color: var(--bs-white);
 
   &::before {
@@ -40,4 +23,21 @@
     content: '';
     pointer-events: none;
   }
+}
+
+.file-info-header {
+  display: flex;
+  align-items: flex-start;
+}
+
+.selected-row {
+  background-color: #ffc;
+}
+
+.select {
+  width: 2%;
+}
+
+.info {
+  width: 65%;
 }

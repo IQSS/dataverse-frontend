@@ -20,7 +20,7 @@ import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useAlertContext } from '../alerts/AlertContext'
 import { AlertMessageKey } from '../../alert/domain/models/Alert'
-import { DatasetFilesWithInfiniteScroll } from './dataset-files/DatasetFilesWithInfiniteScroll'
+import { DatasetFilesScrollable } from './dataset-files/DatasetFilesScrollable'
 import { FILES_TAB_INFINITE_SCROLL_ENABLED } from './config'
 
 interface DatasetProps {
@@ -85,7 +85,7 @@ export function Dataset({ fileRepository, created }: DatasetProps) {
                 <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
                   <div className={styles['tab-container']}>
                     {FILES_TAB_INFINITE_SCROLL_ENABLED ? (
-                      <DatasetFilesWithInfiniteScroll
+                      <DatasetFilesScrollable
                         filesRepository={fileRepository}
                         datasetPersistentId={dataset.persistentId}
                         datasetVersion={dataset.version}

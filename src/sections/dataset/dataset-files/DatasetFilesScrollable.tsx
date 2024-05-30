@@ -1,15 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import useInfiniteScroll, { UseInfiniteScrollHookRefCallback } from 'react-infinite-scroll-hook'
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
-import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
 import { useLoadFiles } from './useLoadFiles'
-import { FilesTable } from './files-table/FilesTable'
 import { useObserveElementSize } from '../../../shared/hooks/useObserveElementSize'
+import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
+import { FilesTable } from './files-table/FilesTable'
 
-interface DatasetFilesWithInfiniteScrollProps {
+import styles from './DatasetFilesScrollable.module.scss'
+import cn from 'classnames'
+
+interface DatasetFilesScrollableProps {
   filesRepository: FileRepository
   datasetPersistentId: string
   datasetVersion: DatasetVersion
@@ -19,11 +22,11 @@ export type SentryRef = UseInfiniteScrollHookRefCallback
 
 const PAGE_SIZE = 10
 
-export function DatasetFilesWithInfiniteScroll({
+export function DatasetFilesScrollable({
   filesRepository,
   datasetPersistentId,
   datasetVersion
-}: DatasetFilesWithInfiniteScrollProps) {
+}: DatasetFilesScrollableProps) {
   const criteriaContainerRef = useRef<HTMLDivElement | null>(null)
   const criteriaContainerSize = useObserveElementSize(criteriaContainerRef)
 
@@ -58,7 +61,7 @@ export function DatasetFilesWithInfiniteScroll({
     hasNextPage: hasNextPage,
     onLoadMore: loadMore as VoidFunction,
     disabled: !!error,
-    rootMargin: '0px 0px 250px 0px'
+    rootMargin: '0px 0px 150px 0px'
   })
 
   useEffect(() => {
@@ -93,43 +96,36 @@ export function DatasetFilesWithInfiniteScroll({
     [hasNextPage, error, isEmptyFiles]
   )
 
-  // console.log(criteriaContainerSize)
-
-  //TODO:ME Check responsiveness of elements inside FileCriteriaForm
+  //TODO:ME Check download only downloading 10 files. Check sticky also for this ones
 
   return (
-    <section ref={rootRef} style={{ maxHeight: 600, overflow: 'auto' }}>
-      <header
-        ref={criteriaContainerRef}
-        style={{
-          position: 'sticky',
-          top: 0,
-          background: 'white',
-          zIndex: 1000,
-          paddingBlock: '1rem',
-          paddingInline: '0.25rem'
-        }}>
+    <section
+      ref={rootRef}
+      className={cn(styles['files-scrollable-container'], {
+        [styles['files-scrollable-container--empty']]: !areFilesAvailable
+      })}>
+      <header ref={criteriaContainerRef} className={styles['criteria-form-container']}>
         <FileCriteriaForm
           criteria={criteria}
           onCriteriaChange={handleCriteriaChange}
           filesCountInfo={filesCountInfo}
+          onInfiniteScrollMode
         />
       </header>
-      <div style={{ position: 'relative', zIndex: 999 }}>
-        <FilesTable
-          files={accumulatedFiles}
-          isLoading={isLoading}
-          paginationInfo={paginationInfo}
-          filesTotalDownloadSize={filesTotalDownloadSize}
-          criteria={criteria}
-          onInfiniteScrollMode
-          criteriaContainerHeight={criteriaContainerSize.height}
-          sentryRef={sentryRef}
-          showSentryRef={showSentryRef}
-          isEmptyFiles={isEmptyFiles}
-          accumulatedCount={accumulatedCount}
-        />
-      </div>
+
+      <FilesTable
+        files={accumulatedFiles}
+        isLoading={isLoading}
+        paginationInfo={paginationInfo}
+        filesTotalDownloadSize={filesTotalDownloadSize}
+        criteria={criteria}
+        onInfiniteScrollMode
+        criteriaContainerHeight={criteriaContainerSize.height}
+        sentryRef={sentryRef}
+        showSentryRef={showSentryRef}
+        isEmptyFiles={isEmptyFiles}
+        accumulatedCount={accumulatedCount}
+      />
     </section>
   )
 }
