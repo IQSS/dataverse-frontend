@@ -4,7 +4,7 @@ import { Plus, X } from 'react-bootstrap-icons'
 import styles from './FileUploader.module.scss'
 import { useTheme } from '@iqss/dataverse-design-system'
 import { FileUploadTools, FileUploaderState } from '../../files/domain/models/FileUploadState'
-import { Card, ProgressBar } from '@iqss/dataverse-design-system/src/lib'
+import { Card, ProgressBar } from '@iqss/dataverse-design-system'
 
 export interface FileUploaderProps {
   upload: (files: File[]) => void
