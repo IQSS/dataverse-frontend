@@ -16,7 +16,7 @@ describe('useSession', () => {
     function TestComponent() {
       const { user } = useSession()
 
-      return <div>{user ? <span>{user.name}</span> : <></>}</div>
+      return <div>{user ? <span>{user.displayName}</span> : <></>}</div>
     }
 
     cy.mount(
@@ -26,7 +26,7 @@ describe('useSession', () => {
     )
 
     cy.wrap(userRepository.getAuthenticated).should('be.calledOnce')
-    cy.findByText(testUser.name).should('exist')
+    cy.findByText(testUser.displayName).should('exist')
   })
 
   it('should unset user after calling logOut on repository', () => {
@@ -38,7 +38,7 @@ describe('useSession', () => {
 
       return (
         <div>
-          {user ? <span>{user.name}</span> : <></>}
+          {user ? <span>{user.displayName}</span> : <></>}
           <Button onClick={onLogoutClick}>Log Out</Button>
         </div>
       )
@@ -52,12 +52,12 @@ describe('useSession', () => {
 
     cy.wrap(userRepository.getAuthenticated).should('be.calledOnce')
 
-    cy.findByText(testUser.name).should('exist')
+    cy.findByText(testUser.displayName).should('exist')
 
     cy.findByText('Log Out').click()
 
     cy.wrap(userRepository.removeAuthenticated).should('be.calledOnce')
 
-    cy.findByText(testUser.name).should('not.exist')
+    cy.findByText(testUser.displayName).should('not.exist')
   })
 })
