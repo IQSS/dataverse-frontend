@@ -49,16 +49,20 @@ export function FileUploader({
   // waiting on the possibility to test folder drop: https://github.com/cypress-io/cypress/issues/19696
   const addFromDir = /* istanbul ignore next */ (dir: FileSystemDirectoryEntry) => {
     const reader = dir.createReader()
-    reader.readEntries((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isFile) {
-          const fse = entry as FileSystemFileEntry
-          fse.file((f) => addFile(f))
-        } else if (entry.isDirectory) {
-          addFromDir(entry as FileSystemDirectoryEntry)
-        }
-      })
-    })
+    reader.readEntries(
+      /* istanbul ignore next */ (entries) => {
+        entries.forEach(
+          /* istanbul ignore next */ (entry) => {
+            if (entry.isFile) {
+              const fse = entry as FileSystemFileEntry
+              fse.file(/* istanbul ignore next */ (f) => addFile(f))
+            } else if (entry.isDirectory) {
+              addFromDir(entry as FileSystemDirectoryEntry)
+            }
+          }
+        )
+      }
+    )
   }
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
