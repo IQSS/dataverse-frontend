@@ -18,11 +18,11 @@ type UseLoadFilesReturnType = {
   totalAvailable: number | undefined
   hasNextPage: boolean
   error: string | null
-  loadMore: () => Promise<void>
-  loadFilesWithNewCriteria: (
-    newCriteria: FileCriteria,
-    resetedPagination: FilePaginationInfo
-  ) => Promise<void>
+  loadMore: (
+    paginationInfo: FilePaginationInfo,
+    criteria: FileCriteria,
+    resetAccumulated?: boolean
+  ) => Promise<number | undefined>
   isEmptyFiles: boolean
   areFilesAvailable: boolean
   accumulatedCount: number
@@ -34,7 +34,6 @@ type UseLoadFilesParams = {
   filesRepository: FileRepository
   datasetPersistentId: string
   datasetVersion: DatasetVersion
-  paginationInfo: FilePaginationInfo
   criteria?: FileCriteria
 }
 
@@ -42,7 +41,6 @@ export const useLoadFiles = ({
   filesRepository,
   datasetPersistentId,
   datasetVersion,
-  paginationInfo,
   criteria
 }: UseLoadFilesParams): UseLoadFilesReturnType => {
   const [isLoading, setLoading] = useState(false)
@@ -62,65 +60,39 @@ export const useLoadFiles = ({
 
   // TODO:ME If Criteria changes, we should reset the whole state
 
-  const loadMore = async () => {
+  const loadMore = async (
+    pagination: FilePaginationInfo,
+    criteria: FileCriteria,
+    resetAccumulated = false
+  ): Promise<number | undefined> => {
     setLoading(true)
+
     try {
       const { files, totalFilesCount } = await loadNextFiles(
         filesRepository,
         datasetPersistentId,
         datasetVersion,
-        paginationInfo,
+        pagination,
         criteria
       )
 
-      const isNextPage = paginationInfo.page * paginationInfo.pageSize < totalFilesCount
+      const newAccumulatedFiles = !resetAccumulated ? [...accumulatedFiles, ...files] : files
 
-      setAccumulatedFiles((current) => [...current, ...files])
+      setAccumulatedFiles(newAccumulatedFiles)
 
       setTotalAvailable(totalFilesCount)
+
+      const isNextPage = !resetAccumulated
+        ? newAccumulatedFiles.length < totalFilesCount
+        : files.length < totalFilesCount
 
       setHasNextPage(isNextPage)
 
       if (!isNextPage) {
         setLoading(false)
       }
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error && err.message
-          ? err.message
-          : 'Something went wrong getting the datasets'
-      setError(errorMessage)
-    } finally {
-      setLoading(false)
-    }
-  }
-  // When criteria is changed, we should reset the state and load the files with the new criteria and reseted pagination
-  const loadFilesWithNewCriteria = async (
-    newCriteria: FileCriteria,
-    resetedPagination: FilePaginationInfo
-  ) => {
-    setLoading(true)
 
-    try {
-      const { files, totalFilesCount } = await loadNextFiles(
-        filesRepository,
-        datasetPersistentId,
-        datasetVersion,
-        resetedPagination,
-        newCriteria
-      )
-
-      const isNextPage = resetedPagination.page * resetedPagination.pageSize < totalFilesCount
-
-      setAccumulatedFiles(files)
-
-      setTotalAvailable(totalFilesCount)
-
-      setHasNextPage(isNextPage)
-
-      if (!isNextPage) {
-        setLoading(false)
-      }
+      return totalFilesCount
     } catch (err) {
       const errorMessage =
         err instanceof Error && err.message
@@ -170,7 +142,6 @@ export const useLoadFiles = ({
     hasNextPage,
     error,
     loadMore,
-    loadFilesWithNewCriteria,
     isEmptyFiles,
     areFilesAvailable,
     accumulatedCount,

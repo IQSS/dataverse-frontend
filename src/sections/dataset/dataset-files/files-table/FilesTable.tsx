@@ -79,6 +79,8 @@ export function FilesTable({
   if (!onInfiniteScrollMode && isLoading) {
     return <SpinnerSymbol />
   }
+
+  //TODO:ME Another size observer to FilesTableHeader to sticky top RowSelectionMessage ? and ZipDownloadLimitMessage?
   return (
     <>
       <RowSelectionMessage
