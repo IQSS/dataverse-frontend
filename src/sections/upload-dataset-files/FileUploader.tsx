@@ -46,6 +46,8 @@ export function FileUploader({
     }
   }
 
+  // waiting on the possibility to test folder drop: https://github.com/cypress-io/cypress/issues/19696
+  /* istanbul ignore next */
   const addFromDir = (dir: FileSystemDirectoryEntry) => {
     const reader = dir.createReader()
     reader.readEntries((entries) => {
