@@ -310,6 +310,7 @@ describe('UploadDatasetFiles', () => {
     cy.findByText('users20.json').should('exist')
     cy.findAllByRole('progressbar').should('have.length', 6)
     cy.findAllByTitle('Cancel upload').should('have.length', 20)
+    cy.findAllByRole('progressbar').should('have.length', 6)
     cy.findByText('Select Files to Add').should('exist')
   })
 })
