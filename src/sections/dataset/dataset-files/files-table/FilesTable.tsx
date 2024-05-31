@@ -1,16 +1,19 @@
+import { useEffect, useRef, useState } from 'react'
 import { Table } from '@iqss/dataverse-design-system'
+import { useFilesTable } from './useFilesTable'
+import { useObserveElementSize } from '../../../../shared/hooks/useObserveElementSize'
 import { FilesTableHeader } from './FilesTableHeader'
 import { FilesTableBody } from './FilesTableBody'
-import { useFilesTable } from './useFilesTable'
 import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { RowSelectionMessage } from './row-selection/RowSelectionMessage'
 import { ZipDownloadLimitMessage } from './zip-download-limit-message/ZipDownloadLimitMessage'
 import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
-import { useEffect, useState } from 'react'
 import { FileSelection } from './row-selection/useFileSelection'
 import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
-import { SentryRef } from '../DatasetFilesScrollable'
+import { type SentryRef } from '../DatasetFilesScrollable'
+import cn from 'classnames'
+import styles from './FilesTable.module.scss'
 
 type FilesTableProps =
   | {
@@ -62,6 +65,13 @@ export function FilesTable({
   const [visitedFiles, setVisitedFiles] = useState<FileSelection>({})
   const [previousCriteria, setPreviousCriteria] = useState<FileCriteria>(criteria)
 
+  const tableTopMessagesRef = useRef<HTMLDivElement | null>(null)
+  const tableTopMessagesSize = useObserveElementSize(tableTopMessagesRef)
+
+  const tableHeaderStickyTopValue = onInfiniteScrollMode
+    ? criteriaContainerHeight + tableTopMessagesSize.height
+    : undefined
+
   useEffect(() => {
     if (visitedPagination.page == paginationInfo.page) {
       setVisitedFiles((visitedFiles) => ({ ...visitedFiles, ...fileSelection }))
@@ -80,24 +90,31 @@ export function FilesTable({
     return <SpinnerSymbol />
   }
 
-  //TODO:ME Another size observer to FilesTableHeader to sticky top RowSelectionMessage ? and ZipDownloadLimitMessage?
   return (
     <>
-      <RowSelectionMessage
-        fileSelection={fileSelection}
-        selectAllRows={selectAllFiles}
-        totalFilesCount={paginationInfo.totalItems}
-        clearRowSelection={clearFileSelection}
-      />
-      <ZipDownloadLimitMessage
-        fileSelection={fileSelection}
-        visitedFiles={visitedFiles}
-        filesTotalDownloadSize={filesTotalDownloadSize}
-      />
+      <div
+        ref={tableTopMessagesRef}
+        className={cn({
+          [styles['table-top-messages']]: onInfiniteScrollMode
+        })}
+        style={{ top: onInfiniteScrollMode ? criteriaContainerHeight : 'unset' }}>
+        <RowSelectionMessage
+          fileSelection={fileSelection}
+          selectAllRows={selectAllFiles}
+          totalFilesCount={paginationInfo.totalItems}
+          clearRowSelection={clearFileSelection}
+        />
+        <ZipDownloadLimitMessage
+          fileSelection={fileSelection}
+          visitedFiles={visitedFiles}
+          filesTotalDownloadSize={filesTotalDownloadSize}
+        />
+      </div>
+
       <Table>
         <FilesTableHeader
           headers={table.getHeaderGroups()}
-          criteriaContainerHeight={criteriaContainerHeight}
+          topStickyValue={tableHeaderStickyTopValue}
         />
         {onInfiniteScrollMode ? (
           <FilesTableBody

@@ -25,6 +25,11 @@
   }
 }
 
+.table-top-messages {
+  position: sticky;
+  z-index: 1;
+}
+
 .file-info-header {
   display: flex;
   align-items: flex-start;

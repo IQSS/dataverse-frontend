@@ -124,8 +124,9 @@ export function DatasetFilesScrollable({
     [hasNextPage, error, isEmptyFiles]
   )
 
-  //TODO:ME Check download only downloading 10 files. Check sticky also for this ones
+  // TODO:ME Check download only downloading 10 files. Check sticky also for this ones
   // TODO:ME If there is some error show it some how?
+  // TODO:ME Check styles of table on Safari (horizontal scrollbar is shown and linear gradient not working)
 
   return (
     <section ref={rootRef}>
