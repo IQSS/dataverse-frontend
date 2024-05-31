@@ -52,9 +52,6 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
   }
 
   const uploadOneFile = (file: File) => {
-    if (!dataset) {
-      throw new Error('upload failed: dataset undefined')
-    }
     const key = FileUploadTools.key(file)
     if (uploadingToCancelMap.has(key) || uploadFinished.has(key)) {
       return
@@ -62,7 +59,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     setState(FileUploadTools.showProgressBar(file, fileUploaderState))
     const cancel = uploadFile(
       fileRepository,
-      dataset.persistentId,
+      dataset!.persistentId,
       file,
       () => {
         setState(FileUploadTools.done(file, fileUploaderState))
