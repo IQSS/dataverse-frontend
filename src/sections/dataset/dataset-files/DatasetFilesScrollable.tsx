@@ -11,6 +11,8 @@ import { FilesTable } from './files-table/FilesTable'
 
 import styles from './DatasetFilesScrollable.module.scss'
 import cn from 'classnames'
+import { useGetFilesCountInfo } from './useGetFilesCountInfo'
+import { useGetFilesTotalDownloadSize } from './useGetFilesTotalDownloadSize'
 
 interface DatasetFilesScrollableProps {
   filesRepository: FileRepository
@@ -35,22 +37,41 @@ export function DatasetFilesScrollable({
   const [criteria, setCriteria] = useState<FileCriteria>(() => new FileCriteria())
 
   const {
-    isLoading,
-    accumulatedFiles,
-    totalAvailable,
-    hasNextPage,
-    error,
-    loadMore,
-    isEmptyFiles,
-    areFilesAvailable,
-    accumulatedCount,
     filesCountInfo,
-    filesTotalDownloadSize
-  } = useLoadFiles({
+    isLoading: _isLoadingFilesCountInfo,
+    error: _errorFilesCountInfo
+  } = useGetFilesCountInfo({
     filesRepository,
     datasetPersistentId,
     datasetVersion,
     criteria
+  })
+
+  const {
+    filesTotalDownloadSize,
+    isLoading: _isLoadingFilesTotalDownloadSize,
+    error: _errorFilesTotalDownloadSize
+  } = useGetFilesTotalDownloadSize({
+    filesRepository,
+    datasetPersistentId,
+    datasetVersion,
+    criteria
+  })
+
+  const {
+    loadMore,
+    accumulatedFiles,
+    accumulatedCount,
+    isLoading,
+    error,
+    areFilesAvailable,
+    totalAvailable,
+    hasNextPage,
+    isEmptyFiles
+  } = useLoadFiles({
+    filesRepository,
+    datasetPersistentId,
+    datasetVersion
   })
 
   const [sentryRef, { rootRef }] = useInfiniteScroll({
@@ -104,6 +125,7 @@ export function DatasetFilesScrollable({
   )
 
   //TODO:ME Check download only downloading 10 files. Check sticky also for this ones
+  // TODO:ME If there is some error show it some how?
 
   return (
     <section ref={rootRef}>
