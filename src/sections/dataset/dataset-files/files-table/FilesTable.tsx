@@ -1,76 +1,39 @@
-import { useEffect, useRef, useState } from 'react'
 import { Table } from '@iqss/dataverse-design-system'
-import { useFilesTable } from './useFilesTable'
-import { useObserveElementSize } from '../../../../shared/hooks/useObserveElementSize'
 import { FilesTableHeader } from './FilesTableHeader'
 import { FilesTableBody } from './FilesTableBody'
+import { useFilesTable } from './useFilesTable'
 import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { RowSelectionMessage } from './row-selection/RowSelectionMessage'
 import { ZipDownloadLimitMessage } from './zip-download-limit-message/ZipDownloadLimitMessage'
 import { SpinnerSymbol } from './spinner-symbol/SpinnerSymbol'
+import { useEffect, useState } from 'react'
 import { FileSelection } from './row-selection/useFileSelection'
 import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
-import { type SentryRef } from '../DatasetFilesScrollable'
-import cn from 'classnames'
-import styles from './FilesTable.module.scss'
 
-type FilesTableProps =
-  | {
-      files: FilePreview[]
-      isLoading: boolean
-      paginationInfo: FilePaginationInfo
-      filesTotalDownloadSize: number
-      criteria: FileCriteria
-      onInfiniteScrollMode?: false
-      criteriaContainerHeight?: never
-      sentryRef?: never
-      showSentryRef?: never
-      isEmptyFiles?: never
-      accumulatedCount?: never
-    }
-  | {
-      files: FilePreview[]
-      isLoading: boolean
-      paginationInfo: FilePaginationInfo
-      filesTotalDownloadSize: number
-      criteria: FileCriteria
-      onInfiniteScrollMode: true
-      criteriaContainerHeight: number
-      sentryRef: SentryRef
-      showSentryRef: boolean
-      isEmptyFiles: boolean
-      accumulatedCount: number
-    }
+interface FilesTableProps {
+  files: FilePreview[]
+  isLoading: boolean
+  paginationInfo: FilePaginationInfo
+  filesTotalDownloadSize: number
+  criteria: FileCriteria
+}
 
 export function FilesTable({
   files,
   isLoading,
   paginationInfo,
   filesTotalDownloadSize,
-  criteria,
-  onInfiniteScrollMode,
-  criteriaContainerHeight,
-  sentryRef,
-  showSentryRef,
-  isEmptyFiles,
-  accumulatedCount
+  criteria
 }: FilesTableProps) {
   const { table, fileSelection, selectAllFiles, clearFileSelection } = useFilesTable(
     files,
-    paginationInfo,
-    accumulatedCount
+    paginationInfo
   )
+
   const [visitedPagination, setVisitedPagination] = useState<FilePaginationInfo>(paginationInfo)
   const [visitedFiles, setVisitedFiles] = useState<FileSelection>({})
   const [previousCriteria, setPreviousCriteria] = useState<FileCriteria>(criteria)
-
-  const tableTopMessagesRef = useRef<HTMLDivElement | null>(null)
-  const tableTopMessagesSize = useObserveElementSize(tableTopMessagesRef)
-
-  const tableHeaderStickyTopValue = onInfiniteScrollMode
-    ? criteriaContainerHeight + tableTopMessagesSize.height
-    : undefined
 
   useEffect(() => {
     if (visitedPagination.page == paginationInfo.page) {
@@ -86,47 +49,25 @@ export function FilesTable({
     setPreviousCriteria(criteria)
   }, [criteria, previousCriteria, clearFileSelection])
 
-  if (!onInfiniteScrollMode && isLoading) {
+  if (isLoading) {
     return <SpinnerSymbol />
   }
-
   return (
     <>
-      <div
-        ref={tableTopMessagesRef}
-        className={cn({
-          [styles['table-top-messages']]: onInfiniteScrollMode
-        })}
-        style={{ top: onInfiniteScrollMode ? criteriaContainerHeight : 'unset' }}>
-        <RowSelectionMessage
-          fileSelection={fileSelection}
-          selectAllRows={selectAllFiles}
-          totalFilesCount={paginationInfo.totalItems}
-          clearRowSelection={clearFileSelection}
-        />
-        <ZipDownloadLimitMessage
-          fileSelection={fileSelection}
-          visitedFiles={visitedFiles}
-          filesTotalDownloadSize={filesTotalDownloadSize}
-        />
-      </div>
-
+      <RowSelectionMessage
+        fileSelection={fileSelection}
+        selectAllRows={selectAllFiles}
+        totalFilesCount={paginationInfo.totalItems}
+        clearRowSelection={clearFileSelection}
+      />
+      <ZipDownloadLimitMessage
+        fileSelection={fileSelection}
+        visitedFiles={visitedFiles}
+        filesTotalDownloadSize={filesTotalDownloadSize}
+      />
       <Table>
-        <FilesTableHeader
-          headers={table.getHeaderGroups()}
-          topStickyValue={tableHeaderStickyTopValue}
-        />
-        {onInfiniteScrollMode ? (
-          <FilesTableBody
-            rows={table.getRowModel().rows}
-            onInfiniteScrollMode={true}
-            sentryRef={sentryRef}
-            showSentryRef={showSentryRef}
-            isEmptyFiles={isEmptyFiles}
-          />
-        ) : (
-          <FilesTableBody rows={table.getRowModel().rows} />
-        )}
+        <FilesTableHeader headers={table.getHeaderGroups()} />
+        <FilesTableBody rows={table.getRowModel().rows} />
       </Table>
     </>
   )

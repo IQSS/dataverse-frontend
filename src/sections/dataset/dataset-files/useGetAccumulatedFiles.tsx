@@ -9,7 +9,7 @@ import { FilesWithCount } from '../../../files/domain/models/FilesWithCount'
 
 const NO_FILES = 0
 
-type UseLoadFilesReturnType = {
+type UseGetAccumulatedFilesReturnType = {
   isLoading: boolean
   accumulatedFiles: FilePreview[]
   totalAvailable: number | undefined
@@ -25,17 +25,17 @@ type UseLoadFilesReturnType = {
   accumulatedCount: number
 }
 
-type UseLoadFilesParams = {
+type UseGetAccumulatedFilesParams = {
   filesRepository: FileRepository
   datasetPersistentId: string
   datasetVersion: DatasetVersion
 }
 
-export const useLoadFiles = ({
+export const useGetAccumulatedFiles = ({
   filesRepository,
   datasetPersistentId,
   datasetVersion
-}: UseLoadFilesParams): UseLoadFilesReturnType => {
+}: UseGetAccumulatedFilesParams): UseGetAccumulatedFilesReturnType => {
   const [isLoading, setIsLoading] = useState(false)
   const [accumulatedFiles, setAccumulatedFiles] = useState<FilePreview[]>([])
   const [hasNextPage, setHasNextPage] = useState<boolean>(true)

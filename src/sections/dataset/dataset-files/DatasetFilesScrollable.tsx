@@ -4,15 +4,14 @@ import { FileRepository } from '../../../files/domain/repositories/FileRepositor
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { FilePaginationInfo } from '../../../files/domain/models/FilePaginationInfo'
-import { useLoadFiles } from './useLoadFiles'
-import { useObserveElementSize } from '../../../shared/hooks/useObserveElementSize'
-import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
-import { FilesTable } from './files-table/FilesTable'
-
-import styles from './DatasetFilesScrollable.module.scss'
-import cn from 'classnames'
+import { useGetAccumulatedFiles } from './useGetAccumulatedFiles'
 import { useGetFilesCountInfo } from './useGetFilesCountInfo'
 import { useGetFilesTotalDownloadSize } from './useGetFilesTotalDownloadSize'
+import { useObserveElementSize } from '../../../shared/hooks/useObserveElementSize'
+import { FilesTableScrollable } from './files-table/FilesTableScrollable'
+import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
+import cn from 'classnames'
+import styles from './DatasetFilesScrollable.module.scss'
 
 interface DatasetFilesScrollableProps {
   filesRepository: FileRepository
@@ -68,7 +67,7 @@ export function DatasetFilesScrollable({
     totalAvailable,
     hasNextPage,
     isEmptyFiles
-  } = useLoadFiles({
+  } = useGetAccumulatedFiles({
     filesRepository,
     datasetPersistentId,
     datasetVersion
@@ -127,6 +126,7 @@ export function DatasetFilesScrollable({
   // TODO:ME Check download only downloading 10 files. Check sticky also for this ones
   // TODO:ME If there is some error show it some how?
   // TODO:ME Check styles of table on Safari (horizontal scrollbar is shown and linear gradient not working)
+  // TODO:ME Persist state in session storage to avoid losing state when navigating back and forth?
 
   return (
     <section ref={rootRef}>
@@ -144,13 +144,10 @@ export function DatasetFilesScrollable({
           />
         </header>
 
-        <FilesTable
+        <FilesTableScrollable
           files={accumulatedFiles}
-          isLoading={isLoading}
           paginationInfo={paginationInfo}
           filesTotalDownloadSize={filesTotalDownloadSize}
-          criteria={criteria}
-          onInfiniteScrollMode
           criteriaContainerHeight={criteriaContainerSize.height}
           sentryRef={sentryRef}
           showSentryRef={showSentryRef}
