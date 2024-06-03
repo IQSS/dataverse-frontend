@@ -50,7 +50,6 @@ export const DatasetForm = ({
   })
   const { setValue, reset } = form
   useEffect(() => {
-    console.log('calling setValue')
     if (user) {
       setValue('citation.author.0.authorName', user.displayName)
       setValue('citation.datasetContact.0.datasetContactName', user.displayName)
