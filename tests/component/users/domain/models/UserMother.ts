@@ -7,7 +7,8 @@ export class UserMother {
       persistentId: 'jamesPotts',
       firstName: 'James',
       lastName: 'Potts',
-      email: 'jamesPotts@g.harvard.edu'
+      email: 'jamesPotts@g.harvard.edu',
+      affiliation: 'Harvard University'
     }
   }
 }
