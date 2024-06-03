@@ -11,7 +11,6 @@ export class UserJSDataverseRepository implements UserRepository {
     return getCurrentAuthenticatedUser
       .execute()
       .then((authenticatedUser: AuthenticatedUser) => {
-        console.log('AuthenticatedUser: ' + JSON.stringify(authenticatedUser))
         return {
           displayName: authenticatedUser.displayName,
           persistentId: authenticatedUser.persistentUserId,
