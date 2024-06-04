@@ -59,7 +59,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     setState(FileUploadTools.showProgressBar(file, fileUploaderState))
     const cancel = uploadFile(
       fileRepository,
-      dataset!.persistentId,
+      dataset?.persistentId as string,
       file,
       () => {
         setState(FileUploadTools.done(file, fileUploaderState))
