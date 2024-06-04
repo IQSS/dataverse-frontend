@@ -1,82 +1,64 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FilePreview } from '../../../../../files/domain/models/FilePreview'
 import { Row } from '@tanstack/react-table'
 import { RowSelection } from '../useFilesTable'
 import { FilePaginationInfo } from '../../../../../files/domain/models/FilePaginationInfo'
+import { useDeepCompareCallback } from 'use-deep-compare'
 
 export type FileSelection = {
   [key: string]: FilePreview | undefined
 }
 
 export const useFileSelectionScrollable = (
-  currentPageSelectedRowModel: Record<string, Row<FilePreview>>,
-  setCurrentPageRowSelection: (rowSelection: RowSelection) => void,
+  selectedRowsModels: Record<string, Row<FilePreview>>,
+  setRowSelection: (rowSelection: RowSelection) => void,
   paginationInfo: FilePaginationInfo
 ) => {
   const [fileSelection, setFileSelection] = useState<FileSelection>({})
-  const updateFileSelection = () => {
-    const currentPageFileSelection = getCurrentPageFileSelection()
-    const currentPageIndexes = getCurrentPageIndexes()
+  const justClearedAll = useRef<boolean>(false)
+  const justSelectedAll = useRef<boolean>(false)
 
-    Object.keys(fileSelection).forEach((key) => {
-      const rowIndex = parseInt(key)
-      if (currentPageIndexes.includes(rowIndex)) {
-        if (!currentPageFileSelection[key]) {
-          delete fileSelection[key]
-        }
-      }
-    })
+  const updateFileSelection = useDeepCompareCallback(() => {
+    const newFileSelection: FileSelection = {}
 
-    return { ...fileSelection, ...currentPageFileSelection }
-  }
-  const getCurrentPageIndexes = () => {
-    return Array.from(
-      { length: paginationInfo.pageSize },
-      (_, i) => i + (paginationInfo.page - 1) * paginationInfo.pageSize
-    )
-  }
-  const getCurrentPageFileSelection = () => {
-    const rowSelectionFixed: FileSelection = {}
-    const currentPageIndexes = getCurrentPageIndexes()
-
-    Object.entries(currentPageSelectedRowModel).forEach(([string, Row]) => {
+    Object.entries(selectedRowsModels).forEach(([string, Row]) => {
       const rowIndex = parseInt(string)
-      rowSelectionFixed[currentPageIndexes[rowIndex]] = Row.original
-    })
-    return rowSelectionFixed
-  }
-  const computeCurrentPageRowSelection = () => {
-    const rowSelectionOfCurrentPage: RowSelection = {}
-    const currentPageIndexes = getCurrentPageIndexes()
-
-    Object.keys(fileSelection).forEach((key) => {
-      const rowIndex = parseInt(key)
-      if (currentPageIndexes.includes(rowIndex)) {
-        rowSelectionOfCurrentPage[currentPageIndexes.indexOf(rowIndex)] = true
-      }
+      newFileSelection[rowIndex] = Row.original
     })
 
-    return rowSelectionOfCurrentPage
-  }
+    return newFileSelection
+  }, [selectedRowsModels])
+
   const selectAllFiles = () => {
-    setCurrentPageRowSelection(createRowSelection(paginationInfo.pageSize))
+    setRowSelection(createRowSelection(paginationInfo.totalItems))
 
     const totalFilesFileSelection = createFileSelection(paginationInfo.totalItems)
+
     const newFileSelection = { ...totalFilesFileSelection, ...fileSelection }
     setFileSelection(newFileSelection)
+
+    justSelectedAll.current = true
   }
   const clearFileSelection = () => {
-    setCurrentPageRowSelection({})
+    setRowSelection({})
     setFileSelection({})
+    justClearedAll.current = true
   }
 
   useEffect(() => {
-    setFileSelection(updateFileSelection())
-  }, [currentPageSelectedRowModel])
+    if (justClearedAll.current) {
+      justClearedAll.current = false
+      return
+    }
 
-  useEffect(() => {
-    setCurrentPageRowSelection(computeCurrentPageRowSelection())
-  }, [paginationInfo])
+    if (justSelectedAll.current) {
+      justSelectedAll.current = false
+      return
+    }
+
+    const updatedFileSelection = updateFileSelection()
+    setFileSelection(updatedFileSelection)
+  }, [updateFileSelection])
 
   return {
     fileSelection,

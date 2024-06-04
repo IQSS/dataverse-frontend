@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { Table } from '@iqss/dataverse-design-system'
 import { useFilesTableScrollable } from './useFilesTableScrollable'
 import { useObserveElementSize } from '../../../../shared/hooks/useObserveElementSize'
@@ -7,8 +7,6 @@ import { FilesTableBody } from './FilesTableBody'
 import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { RowSelectionMessage } from './row-selection/RowSelectionMessage'
 import { ZipDownloadLimitMessage } from './zip-download-limit-message/ZipDownloadLimitMessage'
-import { FileSelection } from './row-selection/useFileSelection'
-// import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
 import { type SentryRef } from '../DatasetFilesScrollable'
 import styles from './FilesTable.module.scss'
@@ -17,7 +15,6 @@ interface FilesTableScrollableProps {
   files: FilePreview[]
   paginationInfo: FilePaginationInfo
   filesTotalDownloadSize: number
-  //   criteria: FileCriteria
   criteriaContainerHeight: number
   sentryRef: SentryRef
   showSentryRef: boolean
@@ -29,7 +26,6 @@ export const FilesTableScrollable = ({
   files,
   paginationInfo,
   filesTotalDownloadSize,
-  //   criteria,
   criteriaContainerHeight,
   sentryRef,
   showSentryRef,
@@ -41,12 +37,6 @@ export const FilesTableScrollable = ({
     paginationInfo,
     accumulatedCount
   )
-
-  console.log('File selection: ', fileSelection)
-
-  const [visitedFiles, setVisitedFiles] = useState<FileSelection>({})
-  //   const [visitedPagination, setVisitedPagination] = useState<FilePaginationInfo>(paginationInfo)
-  //   const [previousCriteria, setPreviousCriteria] = useState<FileCriteria>(criteria)
 
   const tableTopMessagesRef = useRef<HTMLDivElement | null>(null)
   const tableTopMessagesSize = useObserveElementSize(tableTopMessagesRef)
@@ -67,7 +57,6 @@ export const FilesTableScrollable = ({
         />
         <ZipDownloadLimitMessage
           fileSelection={fileSelection}
-          visitedFiles={visitedFiles}
           filesTotalDownloadSize={filesTotalDownloadSize}
         />
       </div>

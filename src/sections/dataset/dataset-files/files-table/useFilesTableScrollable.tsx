@@ -9,28 +9,32 @@ export type RowSelection = {
   [key: string]: boolean
 }
 
+export type FileSelection = {
+  [key: string]: FilePreview | undefined
+}
+
 export function useFilesTableScrollable(
   files: FilePreview[],
   paginationInfo: FilePaginationInfo,
-  accumulatedFilesCount?: number
+  accumulatedFilesCount: number
 ) {
-  const [currentPageRowSelection, setCurrentPageRowSelection] = useState<RowSelection>({})
-  const [currentPageSelectedRowModel, setCurrentPageSelectedRowModel] = useState<
-    Record<string, Row<FilePreview>>
-  >({})
+  const [rowSelection, setRowSelection] = useState<RowSelection>({})
+  const [selectedRowsModels, setSelectedRowsModels] = useState<Record<string, Row<FilePreview>>>({})
+
   const { fileSelection, selectAllFiles, clearFileSelection } = useFileSelectionScrollable(
-    currentPageSelectedRowModel,
-    setCurrentPageRowSelection,
+    selectedRowsModels,
+    setRowSelection,
     paginationInfo
   )
+
   const table = useReactTable({
     data: files,
     columns: createColumnsDefinition(paginationInfo, fileSelection, accumulatedFilesCount),
     state: {
-      rowSelection: currentPageRowSelection
+      rowSelection: rowSelection
     },
     enableRowSelection: true,
-    onRowSelectionChange: setCurrentPageRowSelection,
+    onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     pageCount: paginationInfo.totalPages
@@ -38,15 +42,13 @@ export function useFilesTableScrollable(
 
   const selectedRowsById = table.getSelectedRowModel().rowsById
 
-  console.log('Selected Rows: ', selectedRowsById)
-
   useEffect(() => {
     table.setPageSize(paginationInfo.pageSize)
     table.setPageIndex(paginationInfo.page - 1)
   }, [paginationInfo, table])
 
   useEffect(() => {
-    setCurrentPageSelectedRowModel(selectedRowsById)
+    setSelectedRowsModels(selectedRowsById)
   }, [selectedRowsById])
 
   return {

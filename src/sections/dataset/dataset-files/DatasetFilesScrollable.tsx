@@ -123,9 +123,8 @@ export function DatasetFilesScrollable({
     [hasNextPage, error, isEmptyFiles]
   )
 
-  // TODO:ME Check download only downloading 10 files. Check sticky also for this ones
   // TODO:ME If there is some error show it some how?
-  // TODO:ME Check styles of table on Safari (horizontal scrollbar is shown and linear gradient not working)
+  // TODO:ME Check styles of table on Safari (horizontal scrollbar is shown and linear gradient not working) Maybe an empty styled div with same top value as sticky header??
   // TODO:ME Persist state in session storage to avoid losing state when navigating back and forth?
 
   return (

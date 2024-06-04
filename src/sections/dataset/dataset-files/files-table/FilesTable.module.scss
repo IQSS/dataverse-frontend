@@ -2,6 +2,7 @@
   position: sticky;
   z-index: 1;
   background-color: var(--bs-white);
+  transition: top 100ms ease-in-out;
 
   &::before {
     position: absolute;
