@@ -22,14 +22,14 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
   const [uploadFinished, setUploadFinished] = useState(new Set<string>())
   const [semaphore, setSemaphore] = useState(new Set<string>())
 
-  const timeout = (delay: number) => new Promise((res) => setTimeout(res, delay))
+  const sleep = (delay: number) => new Promise((res) => setTimeout(res, delay))
   const limit = 6
 
   const acquireSemaphore = async (file: File) => {
     const key = FileUploadTools.key(file)
     setSemaphore((x) => (x.size >= limit ? x : x.add(key)))
     while (!semaphore.has(key)) {
-      await timeout(500)
+      await sleep(500)
       setSemaphore((x) => (x.size >= limit ? x : x.add(key)))
     }
   }
