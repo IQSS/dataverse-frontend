@@ -1,3 +1,9 @@
+/**
+ * ## Description
+ * The progress bar component is a bar that visually shows the progress of a process.
+ * For example, a progress bar can show progress of a file upload (bytes uploaded vs. bytes remaining).
+ * Progress bar takes as a parameter the current progress as percentage (now is between 0 and 100).
+ */
 interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
   now?: number
 }
