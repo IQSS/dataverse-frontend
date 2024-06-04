@@ -75,12 +75,12 @@ export class FileMockRepository implements FileRepository {
     abortController: AbortController
   ): Promise<void> {
     let t: NodeJS.Timeout
-    const timeout = (delay: number) => new Promise((res) => (t = setTimeout(res, delay)))
+    const sleep = (delay: number) => new Promise((res) => (t = setTimeout(res, delay)))
     abortController.signal.addEventListener('abort', () => clearTimeout(t))
     const res = async () => {
       let now = 0
       while (now < 100) {
-        await timeout(500)
+        await sleep(500)
         now += 20
         progress(now)
         //console.log(FileUploadTools.key(_file.file) + ': ' + String(now))
