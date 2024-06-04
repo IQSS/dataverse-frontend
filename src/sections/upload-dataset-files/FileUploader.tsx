@@ -143,40 +143,36 @@ export function FileUploader({
           </div>
           {files.filter((x) => !FileUploadTools.get(x, fileUploaderState).done).length > 0 ? (
             <div className={styles.files}>
-              <div className={styles.group}>
-                {files
-                  .filter((x) => !FileUploadTools.get(x, fileUploaderState).done)
-                  .map((file) => (
-                    <div className={styles.file} key={FileUploadTools.key(file)}>
-                      <div
-                        className={cn(styles.cell, {
-                          [styles.failed]: FileUploadTools.get(file, fileUploaderState).failed
-                        })}>
-                        {file.webkitRelativePath}
-                        {file.name}
-                      </div>
-                      <div className={styles.cell}>
-                        {FileUploadTools.get(file, fileUploaderState).fileSizeString}
-                      </div>
-                      <div className={styles.upload_progress}>
-                        {FileUploadTools.get(file, fileUploaderState).progressHidden ? null : (
-                          <ProgressBar
-                            now={FileUploadTools.get(file, fileUploaderState).progress}
-                          />
-                        )}
-                      </div>
-                      <div className={styles.cell}>
-                        <Button
-                          variant="secondary"
-                          {...{ size: 'sm' }}
-                          withSpacing
-                          onClick={() => handleRemoveFile(file)}>
-                          <X className={styles.icon} title={cancelTitle} />
-                        </Button>
-                      </div>
+              {files
+                .filter((x) => !FileUploadTools.get(x, fileUploaderState).done)
+                .map((file) => (
+                  <div className={styles.file} key={FileUploadTools.key(file)}>
+                    <div
+                      className={cn(styles.cell, {
+                        [styles.failed]: FileUploadTools.get(file, fileUploaderState).failed
+                      })}>
+                      {file.webkitRelativePath}
+                      {file.name}
                     </div>
-                  ))}
-              </div>
+                    <div className={styles.cell}>
+                      {FileUploadTools.get(file, fileUploaderState).fileSizeString}
+                    </div>
+                    <div className={styles.upload_progress}>
+                      {FileUploadTools.get(file, fileUploaderState).progressHidden ? null : (
+                        <ProgressBar now={FileUploadTools.get(file, fileUploaderState).progress} />
+                      )}
+                    </div>
+                    <div className={styles.cell}>
+                      <Button
+                        variant="secondary"
+                        {...{ size: 'sm' }}
+                        withSpacing
+                        onClick={() => handleRemoveFile(file)}>
+                        <X className={styles.icon} title={cancelTitle} />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
             </div>
           ) : (
             <div className={styles.info}>{info}</div>
