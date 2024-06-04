@@ -70,7 +70,7 @@ export class FileMockRepository implements FileRepository {
 
   uploadFile(
     _datasetId: number | string,
-    file: FileHolder,
+    _file: FileHolder,
     progress: (now: number) => void,
     abortController: AbortController
   ): Promise<void> {
@@ -83,7 +83,7 @@ export class FileMockRepository implements FileRepository {
         await timeout(500)
         now += 20
         progress(now)
-        console.log(FileUploadTools.key(file.file) + ': ' + String(now))
+        //console.log(FileUploadTools.key(_file.file) + ': ' + String(now))
       }
     }
     return res()
