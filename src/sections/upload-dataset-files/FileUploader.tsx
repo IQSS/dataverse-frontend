@@ -148,7 +148,6 @@ export function FileUploader({
                   .filter((x) => !FileUploadTools.get(x, fileUploaderState).done)
                   .map((file) => (
                     <div className={styles.file} key={FileUploadTools.key(file)}>
-                      <div className={styles.cell}></div>
                       <div
                         className={cn(styles.cell, {
                           [styles.failed]: FileUploadTools.get(file, fileUploaderState).failed
