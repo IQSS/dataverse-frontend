@@ -166,7 +166,7 @@ describe('UploadDatasetFiles', () => {
     cy.findByText('users1.json').should('exist') //.should('have.class', 'failed')
   })
 
-  it('prevents double uploads', () => {
+  it('prevents double re-uploads', () => {
     const testDataset = DatasetMother.create()
 
     mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
