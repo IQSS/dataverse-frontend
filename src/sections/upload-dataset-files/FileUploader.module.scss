@@ -5,50 +5,40 @@
 }
 
 .files {
-    display: table;
+    display: grid;
+    grid-template-columns: repeat(4, auto);
 }
 
 .file {
-    display: table-row;
-    vertical-align: middle;
+    display: contents;
 }
 
 .file_name {
-    display: table-cell;
     padding: 0.25em;
-    vertical-align: middle;
 }
 
 .failed {
-    display: table-cell;
     padding: 0.25em;
     color: $dv-danger-color;
     text-decoration: line-through;
-    vertical-align: middle;
 }
 
 .file_size {
-    display: table-cell;
     padding: 0.25em;
-    vertical-align: middle;
 }
 
 .cancel_upload {
-    display: table-cell;
     padding: 0.25em;
-    vertical-align: middle;
 }
 
 .upload_progress {
-    display: table-cell;
     width: 10em;
-    padding: 0 0 0.25em 0.5em;
-    vertical-align: middle;
+    margin-top: 0.25em;
+    padding: 0.25em;
 }
 
 .icon {
     display: inline-block;
-    vertical-align: -0.125em;
 }
 
 .info {
