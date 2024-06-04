@@ -1,4 +1,5 @@
 import { Button, Card, ProgressBar, useTheme } from '@iqss/dataverse-design-system'
+import cn from 'classnames'
 import { ChangeEventHandler, DragEventHandler, useEffect, useRef, useState } from 'react'
 import { Plus, X } from 'react-bootstrap-icons'
 import { FileUploadTools, FileUploaderState } from '../../files/domain/models/FileUploadState'
@@ -149,11 +150,9 @@ export function FileUploader({
                     <div className={styles.file} key={FileUploadTools.key(file)}>
                       <div className={styles.cell}></div>
                       <div
-                        className={
-                          FileUploadTools.get(file, fileUploaderState).failed
-                            ? styles.failed
-                            : styles.cell
-                        }>
+                        className={cn(styles.cell, {
+                          [styles.failed]: FileUploadTools.get(file, fileUploaderState).failed
+                        })}>
                         {file.webkitRelativePath}
                         {file.name}
                       </div>

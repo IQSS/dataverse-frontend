@@ -12,7 +12,6 @@ import { File } from '../../files/domain/models/File'
 import { FilePreview } from '../../files/domain/models/FilePreview'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { FileHolder } from '../../files/domain/repositories/File'
-import { FileUploadTools } from '../../files/domain/models/FileUploadState'
 
 export class FileMockRepository implements FileRepository {
   constructor(public readonly fileMock?: File) {}
