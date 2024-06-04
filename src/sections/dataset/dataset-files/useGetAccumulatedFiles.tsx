@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FilePreview } from '../../../files/domain/models/FilePreview'
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
@@ -36,6 +37,7 @@ export const useGetAccumulatedFiles = ({
   datasetPersistentId,
   datasetVersion
 }: UseGetAccumulatedFilesParams): UseGetAccumulatedFilesReturnType => {
+  const { t } = useTranslation('files')
   const [isLoading, setIsLoading] = useState(false)
   const [accumulatedFiles, setAccumulatedFiles] = useState<FilePreview[]>([])
   const [hasNextPage, setHasNextPage] = useState<boolean>(true)
@@ -83,9 +85,7 @@ export const useGetAccumulatedFiles = ({
       return totalFilesCount
     } catch (err) {
       const errorMessage =
-        err instanceof Error && err.message
-          ? err.message
-          : 'Something went wrong getting the datasets'
+        err instanceof Error && err.message ? err.message : t('errorUnkownGetFilesFromDataset')
       setError(errorMessage)
     } finally {
       setIsLoading(false)
@@ -118,7 +118,7 @@ async function loadNextFiles(
     datasetVersion,
     paginationInfo,
     criteria
-  ).catch((_err) => {
-    throw new Error('There was an error getting the files')
+  ).catch((error: Error) => {
+    throw new Error(error.message)
   })
 }

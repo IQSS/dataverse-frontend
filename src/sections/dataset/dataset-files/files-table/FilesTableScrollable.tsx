@@ -1,10 +1,11 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Table } from '@iqss/dataverse-design-system'
 import { useFilesTableScrollable } from './useFilesTableScrollable'
 import { useObserveElementSize } from '../../../../shared/hooks/useObserveElementSize'
 import { FilesTableHeader } from './FilesTableHeader'
 import { FilesTableBody } from './FilesTableBody'
 import { FilePreview } from '../../../../files/domain/models/FilePreview'
+import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
 import { RowSelectionMessage } from './row-selection/RowSelectionMessage'
 import { ZipDownloadLimitMessage } from './zip-download-limit-message/ZipDownloadLimitMessage'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
@@ -14,6 +15,7 @@ import styles from './FilesTable.module.scss'
 interface FilesTableScrollableProps {
   files: FilePreview[]
   paginationInfo: FilePaginationInfo
+  criteria: FileCriteria
   filesTotalDownloadSize: number
   criteriaContainerHeight: number
   sentryRef: SentryRef
@@ -25,6 +27,7 @@ interface FilesTableScrollableProps {
 export const FilesTableScrollable = ({
   files,
   paginationInfo,
+  criteria,
   filesTotalDownloadSize,
   criteriaContainerHeight,
   sentryRef,
@@ -38,10 +41,19 @@ export const FilesTableScrollable = ({
     accumulatedCount
   )
 
+  const [previousCriteria, setPreviousCriteria] = useState<FileCriteria>(criteria)
+
   const tableTopMessagesRef = useRef<HTMLDivElement | null>(null)
   const tableTopMessagesSize = useObserveElementSize(tableTopMessagesRef)
 
   const tableHeaderStickyTopValue = criteriaContainerHeight + tableTopMessagesSize.height
+
+  useEffect(() => {
+    if (previousCriteria != criteria) {
+      clearFileSelection()
+    }
+    setPreviousCriteria(criteria)
+  }, [criteria, previousCriteria, clearFileSelection])
 
   return (
     <>

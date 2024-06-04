@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { getFilesCountInfoByDatasetPersistentId } from '../../../files/domain/useCases/getFilesCountInfoByDatasetPersistentId'
 import { FilesCountInfo } from '../../../files/domain/models/FilesCountInfo'
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
@@ -18,6 +19,7 @@ export const useGetFilesCountInfo = ({
   datasetVersion,
   criteria
 }: UseLoadFilesCountInfoParams) => {
+  const { t } = useTranslation('files')
   const [filesCountInfo, setFilesCountInfo] = useState<FilesCountInfo>()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -35,14 +37,12 @@ export const useGetFilesCountInfo = ({
       setFilesCountInfo(filesCountInfo)
     } catch (err) {
       const errorMessage =
-        err instanceof Error && err.message
-          ? err.message
-          : 'There was an error getting the files count info'
+        err instanceof Error && err.message ? err.message : t('errorUnkownGetFilesCountInfo')
       setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
-  }, [filesRepository, datasetPersistentId, datasetVersion.number, criteria])
+  }, [filesRepository, datasetPersistentId, datasetVersion.number, criteria, t])
 
   useEffect(() => {
     void getFilesCountInfo()

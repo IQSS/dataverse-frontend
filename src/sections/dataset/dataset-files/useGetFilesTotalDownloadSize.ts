@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { getFilesTotalDownloadSize } from '../../../files/domain/useCases/getFilesTotalDownloadSize'
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
@@ -17,6 +18,7 @@ export const useGetFilesTotalDownloadSize = ({
   datasetVersion,
   criteria
 }: UseGetFilesTotalDownloadSizeParams) => {
+  const { t } = useTranslation('files')
   const [filesTotalDownloadSize, setFilesTotalDownloadSize] = useState<number>(0)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -36,12 +38,12 @@ export const useGetFilesTotalDownloadSize = ({
       const errorMessage =
         err instanceof Error && err.message
           ? err.message
-          : 'There was an error getting the files total download size'
+          : t('errorUnkownGetFilesTotalDownloadSize')
       setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
-  }, [filesRepository, datasetPersistentId, datasetVersion.number, criteria])
+  }, [filesRepository, datasetPersistentId, datasetVersion.number, criteria, t])
 
   useEffect(() => {
     void getTotalDownloadSize()

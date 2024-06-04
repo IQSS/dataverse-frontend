@@ -12,6 +12,7 @@ import { FilesTableScrollable } from './files-table/FilesTableScrollable'
 import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
 import cn from 'classnames'
 import styles from './DatasetFilesScrollable.module.scss'
+import { Alert } from '@iqss/dataverse-design-system'
 
 interface DatasetFilesScrollableProps {
   filesRepository: FileRepository
@@ -38,7 +39,7 @@ export function DatasetFilesScrollable({
   const {
     filesCountInfo,
     isLoading: _isLoadingFilesCountInfo,
-    error: _errorFilesCountInfo
+    error: errorFilesCountInfo
   } = useGetFilesCountInfo({
     filesRepository,
     datasetPersistentId,
@@ -49,7 +50,7 @@ export function DatasetFilesScrollable({
   const {
     filesTotalDownloadSize,
     isLoading: _isLoadingFilesTotalDownloadSize,
-    error: _errorFilesTotalDownloadSize
+    error: errorFilesTotalDownloadSize
   } = useGetFilesTotalDownloadSize({
     filesRepository,
     datasetPersistentId,
@@ -62,7 +63,7 @@ export function DatasetFilesScrollable({
     accumulatedFiles,
     accumulatedCount,
     isLoading,
-    error,
+    error: errorGetAccumulatedFiles,
     areFilesAvailable,
     totalAvailable,
     hasNextPage,
@@ -77,25 +78,23 @@ export function DatasetFilesScrollable({
     loading: isLoading,
     hasNextPage: hasNextPage,
     onLoadMore: () => void handleOnLoadMore(paginationInfo),
-    disabled: !!error,
+    disabled: !!errorGetAccumulatedFiles,
     rootMargin: '0px 0px 150px 0px'
   })
 
   async function handleOnLoadMore(currentPagination: FilePaginationInfo) {
-    try {
-      let paginationInfoToSend = currentPagination
+    let paginationInfoToSend = currentPagination
 
-      if (totalAvailable !== undefined) {
-        paginationInfoToSend = currentPagination.goToNextPage()
-      }
+    if (totalAvailable !== undefined) {
+      paginationInfoToSend = currentPagination.goToNextPage()
+    }
 
-      const totalFilesCount = await loadMore(paginationInfoToSend, criteria)
+    const totalFilesCount = await loadMore(paginationInfoToSend, criteria)
 
-      const paginationInfoUpdated = paginationInfoToSend.withTotal(totalFilesCount as number)
+    if (totalFilesCount !== undefined) {
+      const paginationInfoUpdated = paginationInfoToSend.withTotal(totalFilesCount)
 
       setPaginationInfo(paginationInfoUpdated)
-    } catch (error) {
-      console.error(error)
     }
   }
 
@@ -107,23 +106,42 @@ export function DatasetFilesScrollable({
     const resetedPaginationInfo = new FilePaginationInfo()
     setPaginationInfo(resetedPaginationInfo)
 
-    try {
-      const totalFilesCount = await loadMore(resetedPaginationInfo, newCriteria, true)
+    const totalFilesCount = await loadMore(resetedPaginationInfo, newCriteria, true)
 
-      const paginationInfoUpdated = resetedPaginationInfo.withTotal(totalFilesCount as number)
+    if (totalFilesCount !== undefined) {
+      const paginationInfoUpdated = resetedPaginationInfo.withTotal(totalFilesCount)
 
       setPaginationInfo(paginationInfoUpdated)
-    } catch (error) {
-      console.error(error)
     }
   }
 
   const showSentryRef = useMemo(
-    () => hasNextPage && !error && !isEmptyFiles,
-    [hasNextPage, error, isEmptyFiles]
+    () => hasNextPage && !errorGetAccumulatedFiles && !isEmptyFiles,
+    [hasNextPage, errorGetAccumulatedFiles, isEmptyFiles]
   )
 
-  // TODO:ME If there is some error show it some how?
+  const errors = useMemo(
+    () => [errorGetAccumulatedFiles, errorFilesCountInfo, errorFilesTotalDownloadSize],
+    [errorGetAccumulatedFiles, errorFilesCountInfo, errorFilesTotalDownloadSize]
+  )
+
+  if (errors.some(Boolean)) {
+    return (
+      <>
+        {errors.map((error, index) => {
+          if (error) {
+            return (
+              <Alert key={index} variant="danger" dismissible={false}>
+                {error}
+              </Alert>
+            )
+          }
+        })}
+      </>
+    )
+  }
+
+  // TODO:ME Check mobile styles, overflow x criteria form and table
   // TODO:ME Check styles of table on Safari (horizontal scrollbar is shown and linear gradient not working) Maybe an empty styled div with same top value as sticky header??
   // TODO:ME Persist state in session storage to avoid losing state when navigating back and forth?
 
@@ -133,7 +151,8 @@ export function DatasetFilesScrollable({
         className={cn(styles['files-scrollable-container'], {
           [styles['files-scrollable-container--empty']]: !areFilesAvailable
         })}
-        ref={scrollableContainerRef}>
+        ref={scrollableContainerRef}
+        data-testid="scrollable-files-container">
         <header ref={criteriaContainerRef} className={styles['criteria-form-container']}>
           <FileCriteriaForm
             criteria={criteria}
@@ -147,6 +166,7 @@ export function DatasetFilesScrollable({
           files={accumulatedFiles}
           paginationInfo={paginationInfo}
           filesTotalDownloadSize={filesTotalDownloadSize}
+          criteria={criteria}
           criteriaContainerHeight={criteriaContainerSize.height}
           sentryRef={sentryRef}
           showSentryRef={showSentryRef}
