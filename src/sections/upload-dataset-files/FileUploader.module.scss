@@ -13,7 +13,27 @@
     vertical-align: middle;
 }
 
-.cell {
+.file_name {
+    display: table-cell;
+    padding: 0.25em;
+    vertical-align: middle;
+}
+
+.failed {
+    display: table-cell;
+    padding: 0.25em;
+    color: $dv-danger-color;
+    text-decoration: line-through;
+    vertical-align: middle;
+}
+
+.file_size {
+    display: table-cell;
+    padding: 0.25em;
+    vertical-align: middle;
+}
+
+.cancel_upload {
     display: table-cell;
     padding: 0.25em;
     vertical-align: middle;

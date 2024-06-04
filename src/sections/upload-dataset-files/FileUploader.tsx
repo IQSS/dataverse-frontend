@@ -148,13 +148,13 @@ export function FileUploader({
                 .map((file) => (
                   <div className={styles.file} key={FileUploadTools.key(file)}>
                     <div
-                      className={cn(styles.cell, {
+                      className={cn(styles.file_name, {
                         [styles.failed]: FileUploadTools.get(file, fileUploaderState).failed
                       })}>
                       {file.webkitRelativePath}
                       {file.name}
                     </div>
-                    <div className={styles.cell}>
+                    <div className={styles.file_size}>
                       {FileUploadTools.get(file, fileUploaderState).fileSizeString}
                     </div>
                     <div className={styles.upload_progress}>
@@ -162,7 +162,7 @@ export function FileUploader({
                         <ProgressBar now={FileUploadTools.get(file, fileUploaderState).progress} />
                       )}
                     </div>
-                    <div className={styles.cell}>
+                    <div className={styles.cancel_upload}>
                       <Button
                         variant="secondary"
                         {...{ size: 'sm' }}
