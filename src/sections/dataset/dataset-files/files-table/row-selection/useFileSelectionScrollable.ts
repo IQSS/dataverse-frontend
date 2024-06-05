@@ -39,10 +39,13 @@ export const useFileSelectionScrollable = (
 
     justSelectedAll.current = true
   }
-  const clearFileSelection = () => {
+  const clearFileSelection = (withFlag = true) => {
     setRowSelection({})
     setFileSelection({})
-    justClearedAll.current = true
+
+    if (withFlag) {
+      justClearedAll.current = true
+    }
   }
 
   useEffect(() => {

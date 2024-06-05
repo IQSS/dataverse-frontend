@@ -267,6 +267,34 @@ describe('DatasetFilesScrollable', () => {
   //   })
 
   describe('File selection', () => {
+    it('selects first 10 files when clicking the top header checkbox', () => {
+      cy.customMount(
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByRole('columnheader', { name: '10 of 200 Files seen' }).should('exist')
+      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.findByText('10 files are currently selected.').should('exist')
+    })
+
+    it('selects all files when clicking the select all button', () => {
+      cy.customMount(
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByRole('columnheader', { name: '10 of 200 Files seen' }).should('exist')
+      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.findByText('10 files are currently selected.').should('exist')
+      cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
+      cy.findByText('200 files are currently selected.').should('exist')
+    })
+
     it('maintains the selection when scrolling to bottom and loading more files', () => {
       cy.customMount(
         <DatasetFilesScrollable
@@ -519,7 +547,7 @@ describe('DatasetFilesScrollable', () => {
         new FileCriteria().withSearchText('test')
       )
     })
-    it.only('calls the useGetAccumulatedFiles hook with the correct parameters when scrolling to bottom', () => {
+    it('calls the useGetAccumulatedFiles hook with the correct parameters when scrolling to bottom', () => {
       cy.customMount(
         <DatasetFilesScrollable
           filesRepository={fileRepository}
@@ -549,29 +577,32 @@ describe('DatasetFilesScrollable', () => {
         new FileCriteria().withSortBy(FileSortByOption.NAME_AZ)
       )
     })
-    //     it('calls getFilesTotalDownloadSizeByDatasetPersistentId with the correct parameters when applying search file criteria', () => {
-    //       cy.customMount(
-    //         <SettingsProvider repository={settingsRepository}>
-    //           <DatasetFiles
-    //             filesRepository={fileRepository}
-    //             datasetPersistentId={datasetPersistentId}
-    //             datasetVersion={datasetVersion}
-    //           />
-    //         </SettingsProvider>
-    //       )
-    //       cy.findByRole('button', { name: 'File Type: All' }).click()
-    //       cy.findByText('PNG Image (485)').should('exist').click()
-    //       cy.get('table > thead > tr > th > input[type=checkbox]').click()
-    //       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
-    //       cy.findByText(
-    //         'The overall size of the files selected (19.4 KB) for download exceeds the zip limit of 1.0 B. Please unselect some files to continue.'
-    //       ).should('exist')
-    //       cy.wrap(fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId).should(
-    //         'be.calledWith',
-    //         datasetPersistentId,
-    //         datasetVersion.number,
-    //         new FileCriteria().withFilterByType('image/png')
-    //       )
-    //     })
+    it('calls getFilesTotalDownloadSizeByDatasetPersistentId with the correct parameters when applying search file criteria', () => {
+      cy.customMount(
+        <SettingsProvider repository={settingsRepository}>
+          <DatasetFilesScrollable
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        </SettingsProvider>
+      )
+
+      cy.findByRole('button', { name: 'File Type: All' }).click()
+      cy.findByText('PNG Image (485)').should('exist').click()
+      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
+
+      cy.findByText(
+        'The overall size of the files selected (19.4 KB) for download exceeds the zip limit of 1.0 B. Please unselect some files to continue.'
+      ).should('exist')
+
+      cy.wrap(fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId).should(
+        'be.calledWith',
+        datasetPersistentId,
+        datasetVersion.number,
+        new FileCriteria().withFilterByType('image/png')
+      )
+    })
   })
 })

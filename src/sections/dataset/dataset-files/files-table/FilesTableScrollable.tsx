@@ -50,7 +50,7 @@ export const FilesTableScrollable = ({
 
   useEffect(() => {
     if (previousCriteria != criteria) {
-      clearFileSelection()
+      clearFileSelection(false)
     }
     setPreviousCriteria(criteria)
   }, [criteria, previousCriteria, clearFileSelection])
