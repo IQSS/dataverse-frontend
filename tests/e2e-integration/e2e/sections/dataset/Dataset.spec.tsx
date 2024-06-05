@@ -675,7 +675,7 @@ describe('Dataset', () => {
 
           cy.get('table > thead > tr > th > input[type=checkbox]').click()
 
-          cy.findByRole('button', { name: 'Download' }).should('exist').click({ force: true })
+          cy.get('#download-files').should('exist').click({ force: true })
 
           // Workaround for issue where Cypress gets stuck on the download
           cy.window()

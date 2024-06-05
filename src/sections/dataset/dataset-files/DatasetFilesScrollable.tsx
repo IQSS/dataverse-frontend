@@ -141,9 +141,6 @@ export function DatasetFilesScrollable({
     )
   }
 
-  // TODO:ME Check styles of table on Safari (horizontal scrollbar is shown and linear gradient not working) Maybe an empty styled div with same top value as sticky header??
-  // TODO:ME Persist state in session storage to avoid losing state when navigating back and forth?
-
   return (
     <section ref={rootRef}>
       <div

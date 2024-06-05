@@ -26,6 +26,8 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
   const { getMultipleFileDownloadUrl } = useMultipleFileDownload()
   const isBelow768px = useMediaQuery('(max-width: 768px)')
 
+  console.log({ isBelow768px })
+
   const fileSelectionCount = Object.keys(fileSelection).length
   const onClick = (event: MouseEvent<HTMLButtonElement>) => {
     if (fileSelectionCount === SELECTED_FILES_EMPTY) {
@@ -78,11 +80,13 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
     <>
       <a href={getDownloadUrl(FileDownloadMode.ORIGINAL)}>
         <Button
+          id="download-files"
           variant="secondary"
           icon={<Download className={styles.icon} />}
+          aria-label={t('actions.downloadFiles.title')}
           withSpacing
           onClick={onClick}>
-          {t('actions.downloadFiles.title')}
+          {isBelow768px ? '' : t('actions.downloadFiles.title')}
         </Button>
       </a>
       <NoSelectedFilesModal
