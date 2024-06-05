@@ -73,13 +73,11 @@ describe('UploadDatasetFiles', () => {
 
     const dnd = cy.findByText('Drag and drop files here.')
     dnd.should('exist')
-    dnd.selectFile(
-      {
-        fileName: 'users1.json',
-        contents: [{ name: 'John Doe the 1st' }]
-      },
-      { action: 'drag-drop' }
-    )
+    const uploadFile = (fileName: string, contents: unknown) => {
+      dnd.selectFile({ fileName: fileName, contents: contents }, { action: 'drag-drop' })
+    }
+
+    uploadFile('users1.json', [{ name: 'John Doe the 1st' }])
     cy.findByText('users1.json').should('exist')
     cy.findByTitle('Cancel upload').should('exist')
     cy.findByRole('progressbar').should('exist')
@@ -93,27 +91,13 @@ describe('UploadDatasetFiles', () => {
 
     const dnd = cy.findByText('Drag and drop files here.')
     dnd.should('exist')
-    dnd.selectFile(
-      {
-        fileName: 'users1.json',
-        contents: [{ name: 'John Doe the 1st' }]
-      },
-      { action: 'drag-drop' }
-    )
-    dnd.selectFile(
-      {
-        fileName: 'users2.json',
-        contents: [{ name: 'John Doe the 2nd' }]
-      },
-      { action: 'drag-drop' }
-    )
-    dnd.selectFile(
-      {
-        fileName: 'users3.json',
-        contents: [{ name: 'John Doe the 3rd' }]
-      },
-      { action: 'drag-drop' }
-    )
+    const uploadFile = (fileName: string, contents: unknown) => {
+      dnd.selectFile({ fileName: fileName, contents: contents }, { action: 'drag-drop' })
+    }
+
+    uploadFile('users1.json', [{ name: 'John Doe the 1st' }])
+    uploadFile('users2.json', [{ name: 'John Doe the 2nd' }])
+    uploadFile('users3.json', [{ name: 'John Doe the 3rd' }])
     cy.findAllByTitle('Cancel upload').first().parent().click()
     cy.findByText('users1.json').should('not.exist')
     cy.findByText('users2.json').should('exist')
@@ -156,13 +140,11 @@ describe('UploadDatasetFiles', () => {
 
     const dnd = cy.findByText('Drag and drop files here.')
     dnd.should('exist')
-    dnd.selectFile(
-      {
-        fileName: 'users1.json',
-        contents: [{ name: 'John Doe the 1st' }]
-      },
-      { action: 'drag-drop' }
-    )
+    const uploadFile = (fileName: string, contents: unknown) => {
+      dnd.selectFile({ fileName: fileName, contents: contents }, { action: 'drag-drop' })
+    }
+
+    uploadFile('users1.json', [{ name: 'John Doe the 1st' }])
     cy.findByText('users1.json').should('exist') //.should('have.class', 'failed')
   })
 
@@ -173,27 +155,13 @@ describe('UploadDatasetFiles', () => {
 
     const dnd = cy.findByText('Drag and drop files here.')
     dnd.should('exist')
-    dnd.selectFile(
-      {
-        fileName: 'users1.json',
-        contents: [{ name: 'John Doe the 1st' }]
-      },
-      { action: 'drag-drop' }
-    )
-    dnd.selectFile(
-      {
-        fileName: 'users1.json',
-        contents: [{ name: 'John Doe the 1st' }]
-      },
-      { action: 'drag-drop' }
-    )
-    dnd.selectFile(
-      {
-        fileName: 'users3.json',
-        contents: [{ name: 'John Doe the 3rd' }]
-      },
-      { action: 'drag-drop' }
-    )
+    const uploadFile = (fileName: string, contents: unknown) => {
+      dnd.selectFile({ fileName: fileName, contents: contents }, { action: 'drag-drop' })
+    }
+
+    uploadFile('users1.json', [{ name: 'John Doe the 1st' }])
+    uploadFile('users1.json', [{ name: 'John Doe the 1st' }])
+    uploadFile('users3.json', [{ name: 'John Doe the 3rd' }])
     cy.findByText('users3.json').should('exist')
     cy.findByText('users1.json').should('exist')
     cy.findAllByTitle('Cancel upload').should('have.length', 2)
@@ -202,20 +170,8 @@ describe('UploadDatasetFiles', () => {
     // wait for upload to finish
     cy.findByText('users3.json').should('not.exist')
     cy.findByText('users1.json').should('not.exist')
-    dnd.selectFile(
-      {
-        fileName: 'users1.json',
-        contents: [{ name: 'John Doe the 1st' }]
-      },
-      { action: 'drag-drop' }
-    )
-    dnd.selectFile(
-      {
-        fileName: 'users3.json',
-        contents: [{ name: 'John Doe the 3rd' }]
-      },
-      { action: 'drag-drop' }
-    )
+    uploadFile('users1.json', [{ name: 'John Doe the 1st' }])
+    uploadFile('users3.json', [{ name: 'John Doe the 3rd' }])
     cy.findByText('users3.json').should('not.exist')
     cy.findByText('users1.json').should('not.exist')
   })
@@ -227,27 +183,13 @@ describe('UploadDatasetFiles', () => {
 
     const dnd = cy.findByText('Drag and drop files here.')
     dnd.should('exist')
-    dnd.selectFile(
-      {
-        fileName: 'users1.json',
-        contents: [{ name: 'John Doe the 1st' }]
-      },
-      { action: 'drag-drop' }
-    )
-    dnd.selectFile(
-      {
-        fileName: 'users1.json',
-        contents: [{ name: 'John Doe the 1st' }]
-      },
-      { action: 'drag-drop' }
-    )
-    dnd.selectFile(
-      {
-        fileName: 'users3.json',
-        contents: [{ name: 'John Doe the 3rd' }]
-      },
-      { action: 'drag-drop' }
-    )
+    const uploadFile = (fileName: string, contents: unknown) => {
+      dnd.selectFile({ fileName: fileName, contents: contents }, { action: 'drag-drop' })
+    }
+
+    uploadFile('users1.json', [{ name: 'John Doe the 1st' }])
+    uploadFile('users1.json', [{ name: 'John Doe the 1st' }])
+    uploadFile('users3.json', [{ name: 'John Doe the 3rd' }])
     cy.findByText('users3.json').should('exist')
     cy.findByText('users1.json').should('exist')
     cy.findAllByTitle('Cancel upload').should('have.length', 2)
@@ -262,6 +204,10 @@ describe('UploadDatasetFiles', () => {
 
     const dnd = cy.findByText('Drag and drop files here.')
     dnd.should('exist')
+    const uploadFile = (fileName: string, contents: unknown) => {
+      dnd.selectFile({ fileName: fileName, contents: contents }, { action: 'drag-drop' })
+    }
+
     const filenames: string[] = [
       'users1.json',
       'users2.json',
@@ -275,13 +221,7 @@ describe('UploadDatasetFiles', () => {
       'users10.json'
     ]
     filenames.forEach((element) => {
-      dnd.selectFile(
-        {
-          fileName: element,
-          contents: [{ name: 'John Doe' }]
-        },
-        { action: 'drag-drop' }
-      )
+      uploadFile(element, [{ name: 'John Doe' }])
     })
     cy.findAllByTitle('Cancel upload').should('have.length', 10)
     cy.findAllByRole('progressbar').should('have.length', 6)
@@ -299,13 +239,7 @@ describe('UploadDatasetFiles', () => {
       'users20.json'
     ]
     filenames2.forEach((element) => {
-      dnd.selectFile(
-        {
-          fileName: element,
-          contents: [{ name: 'John Doe' }]
-        },
-        { action: 'drag-drop' }
-      )
+      uploadFile(element, [{ name: 'John Doe' }])
     })
     cy.findByText('users20.json').should('exist')
     cy.findAllByRole('progressbar').should('have.length', 6)
