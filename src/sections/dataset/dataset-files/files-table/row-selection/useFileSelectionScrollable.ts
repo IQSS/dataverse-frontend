@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
+import { useDeepCompareCallback } from 'use-deep-compare'
 import { FilePreview } from '../../../../../files/domain/models/FilePreview'
 import { Row } from '@tanstack/react-table'
 import { RowSelection } from '../useFilesTable'
 import { FilePaginationInfo } from '../../../../../files/domain/models/FilePaginationInfo'
-import { useDeepCompareCallback } from 'use-deep-compare'
 
 export type FileSelection = {
   [key: string]: FilePreview | undefined
@@ -16,6 +16,7 @@ export const useFileSelectionScrollable = (
 ) => {
   const [fileSelection, setFileSelection] = useState<FileSelection>({})
   const justClearedAll = useRef<boolean>(false)
+  const justSelectedAll = useRef<boolean>(false)
 
   const updateFileSelection = useDeepCompareCallback(
     (currentFileSelection: FileSelection) => {
@@ -46,6 +47,7 @@ export const useFileSelectionScrollable = (
 
     const newFileSelection = { ...totalFilesFileSelection, ...fileSelection }
     setFileSelection(newFileSelection)
+    justSelectedAll.current = true
   }
   const clearFileSelection = (withFlag = true) => {
     setRowSelection({})
@@ -59,6 +61,11 @@ export const useFileSelectionScrollable = (
   useEffect(() => {
     if (justClearedAll.current) {
       justClearedAll.current = false
+      return
+    }
+
+    if (justSelectedAll.current) {
+      justSelectedAll.current = false
       return
     }
 

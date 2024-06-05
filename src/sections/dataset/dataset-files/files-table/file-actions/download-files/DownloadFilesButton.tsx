@@ -26,8 +26,6 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
   const { getMultipleFileDownloadUrl } = useMultipleFileDownload()
   const isBelow768px = useMediaQuery('(max-width: 768px)')
 
-  console.log({ isBelow768px })
-
   const fileSelectionCount = Object.keys(fileSelection).length
   const onClick = (event: MouseEvent<HTMLButtonElement>) => {
     if (fileSelectionCount === SELECTED_FILES_EMPTY) {
