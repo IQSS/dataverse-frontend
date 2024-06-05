@@ -37,7 +37,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **FormInputGroup:** remove hasVisibleLabel prop.
 - **FormInputGroupText:** refactor type.
 - **Select Multiple:** add is-invalid classname if isInvalid prop is true.
-- **Container:** ability to forward react ref.
 
 # [1.1.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@1.0.1...@iqss/dataverse-design-system@1.1.0) (2024-03-12)
 
