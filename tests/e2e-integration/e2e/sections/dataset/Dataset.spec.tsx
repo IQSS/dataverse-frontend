@@ -287,7 +287,7 @@ describe('Dataset', () => {
           cy.findByText('Files').should('exist')
 
           cy.findByText('Upload Files').should('exist')
-          cy.findByText('Edit Files').should('exist')
+          cy.get('#edit-files-menu').should('exist')
           cy.findAllByRole('button', { name: 'Access File' }).should('exist')
           cy.findAllByRole('button', { name: 'File Options' }).should('exist')
         })
@@ -309,7 +309,7 @@ describe('Dataset', () => {
           cy.findByText('Files').should('exist')
 
           cy.findByText('Upload Files').should('not.exist')
-          cy.findByText('Edit Files').should('not.exist')
+          cy.get('#edit-files-menu').should('not.exist')
           cy.findAllByRole('button', { name: 'Access File' }).should('exist')
           cy.findAllByRole('button', { name: 'File Options' }).should('not.exist')
         })
@@ -411,7 +411,7 @@ describe('Dataset', () => {
             cy.findByText(/Deposited/).should('exist')
             cy.findByText(`Draft: will be embargoed until ${expectedDate}`).should('exist')
 
-            cy.findByText('Edit Files').should('exist')
+            cy.get('#edit-files-menu').should('exist')
 
             cy.findByRole('button', { name: 'Access File' }).as('accessButton')
             cy.get('@accessButton').should('exist')

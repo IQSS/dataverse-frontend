@@ -17,6 +17,7 @@ interface DropdownButtonProps {
   onSelect?: (eventKey: string | null) => void
   disabled?: boolean
   children: ReactNode
+  ariaLabel?: string
 }
 
 export function DropdownButton({
@@ -28,6 +29,7 @@ export function DropdownButton({
   asButtonGroup,
   onSelect,
   disabled,
+  ariaLabel,
   children
 }: DropdownButtonProps) {
   return (
@@ -40,6 +42,7 @@ export function DropdownButton({
           {title}
         </>
       }
+      aria-label={ariaLabel || title}
       variant={variant}
       as={asButtonGroup ? ButtonGroup : undefined}
       disabled={disabled}

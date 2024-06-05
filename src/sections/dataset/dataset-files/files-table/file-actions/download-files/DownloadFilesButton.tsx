@@ -9,6 +9,7 @@ import { NoSelectedFilesModal } from '../no-selected-files-modal/NoSelectedFiles
 import { MouseEvent, useState } from 'react'
 import { useMultipleFileDownload } from '../../../../../file/multiple-file-download/MultipleFileDownloadContext'
 import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
+import { useMediaQuery } from '../../../../../../shared/hooks/useMediaQuery'
 
 interface DownloadFilesButtonProps {
   files: FilePreview[]
@@ -23,6 +24,8 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
   const { dataset } = useDataset()
   const [showNoFilesSelectedModal, setShowNoFilesSelectedModal] = useState(false)
   const { getMultipleFileDownloadUrl } = useMultipleFileDownload()
+  const isBelow768px = useMediaQuery('(max-width: 768px)')
+
   const fileSelectionCount = Object.keys(fileSelection).length
   const onClick = (event: MouseEvent<HTMLButtonElement>) => {
     if (fileSelectionCount === SELECTED_FILES_EMPTY) {
@@ -52,7 +55,8 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
         <DropdownButton
           id="download-files"
           icon={<Download className={styles.icon} />}
-          title={t('actions.downloadFiles.title')}
+          title={isBelow768px ? '' : t('actions.downloadFiles.title')}
+          ariaLabel={t('actions.downloadFiles.title')}
           variant="secondary"
           withSpacing>
           <DropdownButtonItem onClick={onClick} href={getDownloadUrl(FileDownloadMode.ORIGINAL)}>
