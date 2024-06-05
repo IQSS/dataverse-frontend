@@ -34,7 +34,7 @@ describe('UploadDatasetFiles', () => {
 
     cy.findByRole('link', { name: 'Root' }).should('exist')
     cy.findByRole('link', { name: 'Dataset Title' }).should('exist')
-    cy.findByText('Upload Files').should('exist').should('have.class', 'active')
+    cy.findByText('Upload files').should('exist').should('have.class', 'active')
   })
 
   it('renders skeleton while loading', () => {
@@ -62,7 +62,7 @@ describe('UploadDatasetFiles', () => {
       testDataset
     )
 
-    cy.findByText('Select Files to Add').should('exist')
+    cy.findByText('Select files to add').should('exist')
     cy.findByText('Drag and drop files here.').should('exist')
   })
 
@@ -81,7 +81,7 @@ describe('UploadDatasetFiles', () => {
     cy.findByText('users1.json').should('exist')
     cy.findByTitle('Cancel upload').should('exist')
     cy.findByRole('progressbar').should('exist')
-    cy.findByText('Select Files to Add').should('exist')
+    cy.findByText('Select files to add').should('exist')
   })
 
   it('cancels one upload and leaves other uploads', () => {
@@ -104,7 +104,7 @@ describe('UploadDatasetFiles', () => {
     cy.findByText('users3.json').should('exist')
     cy.findAllByTitle('Cancel upload').should('exist')
     cy.findAllByRole('progressbar').should('exist')
-    cy.findByText('Select Files to Add').should('exist')
+    cy.findByText('Select files to add').should('exist')
     cy.findByText('Drag and drop files here.').should('not.exist')
     // wait for upload to finish
     cy.findByText('users2.json').should('not.exist')
@@ -119,7 +119,7 @@ describe('UploadDatasetFiles', () => {
       testDataset
     )
 
-    cy.findByText('Select Files to Add').should('exist').click()
+    cy.findByText('Select files to add').should('exist').click()
     cy.get('input[type=file]').selectFile(
       {
         fileName: 'users1.json',
@@ -166,7 +166,7 @@ describe('UploadDatasetFiles', () => {
     cy.findByText('users1.json').should('exist')
     cy.findAllByTitle('Cancel upload').should('have.length', 2)
     cy.findAllByRole('progressbar').should('have.length', 2)
-    cy.findByText('Select Files to Add').should('exist')
+    cy.findByText('Select files to add').should('exist')
     // wait for upload to finish
     cy.findByText('users3.json').should('not.exist')
     cy.findByText('users1.json').should('not.exist')
@@ -194,7 +194,7 @@ describe('UploadDatasetFiles', () => {
     cy.findByText('users1.json').should('exist')
     cy.findAllByTitle('Cancel upload').should('have.length', 2)
     cy.findAllByRole('progressbar').should('have.length', 2)
-    cy.findByText('Select Files to Add').should('exist')
+    cy.findByText('Select files to add').should('exist')
   })
 
   it('prevents more than 6 simultaneous uploads', () => {
@@ -225,7 +225,7 @@ describe('UploadDatasetFiles', () => {
     })
     cy.findAllByTitle('Cancel upload').should('have.length', 10)
     cy.findAllByRole('progressbar').should('have.length', 6)
-    cy.findByText('Select Files to Add').should('exist')
+    cy.findByText('Select files to add').should('exist')
     const filenames2: string[] = [
       'users11.json',
       'users12.json',
@@ -245,6 +245,6 @@ describe('UploadDatasetFiles', () => {
     cy.findAllByRole('progressbar').should('have.length', 6)
     cy.findAllByTitle('Cancel upload').should('have.length', 20)
     cy.findAllByRole('progressbar').should('have.length', 6)
-    cy.findByText('Select Files to Add').should('exist')
+    cy.findByText('Select files to add').should('exist')
   })
 })
