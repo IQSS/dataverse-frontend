@@ -20,9 +20,9 @@ import { SettingsProvider } from '../../../../../src/sections/settings/SettingsP
 import { SettingRepository } from '../../../../../src/settings/domain/repositories/SettingRepository'
 import { FilePaginationInfo } from '../../../../../src/files/domain/models/FilePaginationInfo'
 import { FilePreviewMother } from '../../../files/domain/models/FilePreviewMother'
-// import { FilePreview } from '../../../../../src/files/domain/models/FilePreview'
 import { DatasetFilesScrollable } from '../../../../../src/sections/dataset/dataset-files/DatasetFilesScrollable'
 import { FilesWithCount } from '../../../../../src/files/domain/models/FilesWithCount'
+import { getCellStyle } from '../../../../../src/sections/dataset/dataset-files/files-table/FilesTableScrollable'
 
 const TOTAL_FILES_COUNT = 200
 const ONLY_4_FILES_COUNT = 4
@@ -63,8 +63,9 @@ const testFilesCountInfo = FilesCountInfoMother.create({
     { tag: new FileTag('code'), count: 10 }
   ]
 })
-const paginationInfo: FilePaginationInfo = new FilePaginationInfo(1, 10, 200)
 const settingsRepository = {} as SettingRepository
+
+// TODO:ME Test everything here, to difficult to test passing ref of sentry
 
 describe('DatasetFilesScrollable', () => {
   beforeEach(() => {
@@ -105,9 +106,11 @@ describe('DatasetFilesScrollable', () => {
     })
   })
 
-  it('renders 4 files with no more to load, correct results in header, and no bottom skeleton loader', () => {
-    fileRepository.getAllByDatasetPersistentIdWithCount = cy.stub().resolves(only4Files)
-
+  it('renders the no files message when there are no files', () => {
+    fileRepository.getAllByDatasetPersistentIdWithCount = cy.stub().resolves({
+      files: [],
+      totalFilesCount: 0
+    })
     cy.customMount(
       <DatasetFilesScrollable
         filesRepository={fileRepository}
@@ -116,155 +119,226 @@ describe('DatasetFilesScrollable', () => {
       />
     )
 
-    cy.findByText(`${ONLY_4_FILES_COUNT} Files`).should('exist')
-    only4Files.files.forEach((file) => {
-      cy.findByText(file.name).should('exist').should('have.attr', 'href', `/files?id=${file.id}`)
-    })
-    cy.findByTestId('table-row-loading-skeleton').should('not.exist')
+    cy.findByText('There are no files in this dataset.').should('exist')
   })
 
-  it('loads more files when scrolling to the bottom ', () => {
-    cy.customMount(
-      <DatasetFilesScrollable
-        filesRepository={fileRepository}
-        datasetPersistentId={datasetPersistentId}
-        datasetVersion={datasetVersion}
-      />
-    )
+  describe('Infinite Scrolling', () => {
+    it('renders 4 files with no more to load, correct results in header, and no bottom skeleton loader', () => {
+      fileRepository.getAllByDatasetPersistentIdWithCount = cy.stub().resolves(only4Files)
 
-    cy.findByText('10 of 200 Files seen').should('exist')
+      cy.customMount(
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
 
-    cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
-    cy.get('@scrollableFilesContainer').scrollTo('bottom')
+      cy.findByText(`${ONLY_4_FILES_COUNT} Files`).should('exist')
+      only4Files.files.forEach((file) => {
+        cy.findByText(file.name).should('exist').should('have.attr', 'href', `/files?id=${file.id}`)
+      })
+      cy.findByTestId('table-row-loading-skeleton').should('not.exist')
+    })
 
-    cy.findByText('20 of 200 Files seen').should('exist')
+    it('loads more files when scrolling to the bottom ', () => {
+      cy.customMount(
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
 
-    cy.get('@scrollableFilesContainer').scrollTo('bottom')
+      cy.findByText('10 of 200 Files seen').should('exist')
 
-    cy.findByText('30 of 200 Files seen').should('exist')
+      cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
+      cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+      cy.findByText('20 of 200 Files seen').should('exist')
+
+      cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+      cy.findByText('30 of 200 Files seen').should('exist')
+    })
+
+    it('scrolls to the top when criteria changes', () => {
+      cy.customMount(
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+
+      cy.findByText('10 of 200 Files seen').should('exist')
+      cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
+      cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+      cy.findByText('20 of 200 Files seen').should('exist')
+
+      cy.findByRole('button', { name: /Sort/ }).click()
+      cy.findByText('Name (Z-A)').should('exist').click()
+
+      cy.get('@scrollableFilesContainer').then(($el) => {
+        expect($el[0].scrollTop).to.equal(0)
+      })
+    })
+
+    describe('Sticky elements', () => {
+      it('should stick the header table when scrolling down', () => {
+        cy.customMount(
+          <DatasetFilesScrollable
+            filesRepository={fileRepository}
+            datasetPersistentId={datasetPersistentId}
+            datasetVersion={datasetVersion}
+          />
+        )
+
+        cy.findByText('10 of 200 Files seen').should('exist')
+
+        cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
+        cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+        cy.findByText('20 of 200 Files seen').should('exist')
+
+        cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+        cy.findByText('30 of 200 Files seen').should('exist')
+
+        cy.get('@scrollableFilesContainer').scrollTo('top')
+
+        cy.get('thead').should('have.css', 'position', 'sticky').should('be.visible')
+      })
+
+      it('should stick the table top messages on top of the table header when scrolling down with selected files', () => {
+        cy.customMount(
+          <SettingsProvider repository={settingsRepository}>
+            <DatasetFilesScrollable
+              filesRepository={fileRepository}
+              datasetPersistentId={datasetPersistentId}
+              datasetVersion={datasetVersion}
+            />
+          </SettingsProvider>
+        )
+
+        cy.findByText('10 of 200 Files seen').should('exist')
+
+        cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
+        cy.findByText('1 file is currently selected.').should('exist')
+
+        cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
+        cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+        cy.findByText('20 of 200 Files seen').should('exist')
+
+        cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+        cy.findByText('30 of 200 Files seen').should('exist')
+
+        cy.get('@scrollableFilesContainer').scrollTo('top')
+
+        cy.findByTestId('table-top-messages')
+          .should('have.css', 'position', 'sticky')
+          .should('be.visible')
+        cy.get('thead').should('have.css', 'position', 'sticky').should('be.visible')
+      })
+
+      it('table header should have css top value according to criteria container height', () => {
+        cy.customMount(
+          <SettingsProvider repository={settingsRepository}>
+            <DatasetFilesScrollable
+              filesRepository={fileRepository}
+              datasetPersistentId={datasetPersistentId}
+              datasetVersion={datasetVersion}
+            />
+          </SettingsProvider>
+        )
+
+        cy.findByText('10 of 200 Files seen').should('exist')
+
+        cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
+        cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+        cy.findByText('20 of 200 Files seen').should('exist')
+
+        cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+        cy.findByText('30 of 200 Files seen').should('exist')
+
+        cy.get('@scrollableFilesContainer').scrollTo('top')
+
+        cy.findByTestId('criteria-form-container').as('criteriaFormContainer')
+        cy.get('@criteriaFormContainer').then(($el) => {
+          const criteriaContainerHeight = $el[0].clientHeight
+
+          cy.get('thead').then(($el) => {
+            const tableHeaderTopValue = $el[0].getBoundingClientRect().top
+
+            expect(tableHeaderTopValue).to.equal(criteriaContainerHeight)
+          })
+        })
+      })
+
+      it('table header should have css top value according to criteria container height + top messages container height when selected files ,top messages container should have top value only according to criteria container height', () => {
+        cy.customMount(
+          <SettingsProvider repository={settingsRepository}>
+            <DatasetFilesScrollable
+              filesRepository={fileRepository}
+              datasetPersistentId={datasetPersistentId}
+              datasetVersion={datasetVersion}
+            />
+          </SettingsProvider>
+        )
+
+        cy.findByRole('columnheader', { name: '10 of 200 Files seen' }).should('exist')
+        cy.get('table > thead > tr > th > input[type=checkbox]').click()
+        cy.findByText('10 files are currently selected.').should('exist')
+
+        cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
+        cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+        cy.findByText('20 of 200 Files seen').should('exist')
+
+        cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+        cy.findByText('30 of 200 Files seen').should('exist')
+
+        cy.get('@scrollableFilesContainer').scrollTo('top')
+
+        cy.findByTestId('criteria-form-container').as('criteriaFormContainer')
+        cy.get('@criteriaFormContainer')
+          .then(($el) => {
+            const criteriaContainerHeight = $el[0].clientHeight
+
+            return criteriaContainerHeight
+          })
+          .then((criteriaContainerHeight) => {
+            cy.findByTestId('table-top-messages').should(
+              'have.css',
+              'top',
+              `${criteriaContainerHeight}px`
+            )
+
+            cy.findByTestId('table-top-messages')
+              .then(($el) => {
+                const tableTopMessagesHeight = $el[0].clientHeight
+
+                return tableTopMessagesHeight
+              })
+              .then((tableTopMessagesHeight) => {
+                const totalTopHeight = criteriaContainerHeight + tableTopMessagesHeight
+
+                cy.get('thead').then(($el) => {
+                  const tableHeaderTopValue = $el[0].getBoundingClientRect().top
+
+                  expect(tableHeaderTopValue).to.equal(totalTopHeight)
+                })
+              })
+          })
+      })
+    })
   })
-
-  it('scrolls to the top when criteria changes', () => {
-    cy.customMount(
-      <DatasetFilesScrollable
-        filesRepository={fileRepository}
-        datasetPersistentId={datasetPersistentId}
-        datasetVersion={datasetVersion}
-      />
-    )
-
-    cy.findByText('10 of 200 Files seen').should('exist')
-    cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
-    cy.get('@scrollableFilesContainer').scrollTo('bottom')
-
-    cy.findByText('20 of 200 Files seen').should('exist')
-
-    cy.findByRole('button', { name: /Sort/ }).click()
-    cy.findByText('Name (Z-A)').should('exist').click()
-
-    cy.get('@scrollableFilesContainer').then(($el) => {
-      expect($el[0].scrollTop).to.equal(0)
-    })
-  })
-
-  describe('Error handling', () => {
-    it('shows error banner if there is an error getting files', () => {
-      fileRepository.getAllByDatasetPersistentIdWithCount = cy
-        .stub()
-        .rejects(new Error('Some error on getAllByDatasetPersistentIdWithCount'))
-
-      cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-        />
-      )
-      cy.findByText('Error').should('exist')
-    })
-
-    it('shows fallback error message if there is an unknown error getting files', () => {
-      fileRepository.getAllByDatasetPersistentIdWithCount = cy.stub().rejects(new Error())
-
-      cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-        />
-      )
-      cy.findByText(/There was an error getting the files total download size/).should('exist')
-    })
-
-    it('shows error banner if there is an error getting total download size', () => {
-      fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy
-        .stub()
-        .rejects(new Error('Some error on getFilesTotalDownloadSizeByDatasetPersistentId'))
-
-      cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-        />
-      )
-      cy.findByText('Error').should('exist')
-    })
-
-    it('shows fallback error message if there is an unknown error getting total download size', () => {
-      fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().rejects(new Error())
-
-      cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-        />
-      )
-      cy.findByText(/There was an error getting the files total download size/).should('exist')
-    })
-
-    it('shows error banner if there is an error getting files info count', () => {
-      fileRepository.getFilesCountInfoByDatasetPersistentId = cy
-        .stub()
-        .rejects(new Error('Some error on getFilesCountInfoByDatasetPersistentId'))
-
-      cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-        />
-      )
-      cy.findByText('Error').should('exist')
-    })
-
-    it('shows fallback error message if there is an unknown error getting files info count', () => {
-      fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().rejects(new Error())
-
-      cy.customMount(
-        <DatasetFilesScrollable
-          filesRepository={fileRepository}
-          datasetPersistentId={datasetPersistentId}
-          datasetVersion={datasetVersion}
-        />
-      )
-      cy.findByText(/There was an error getting the files count info/).should('exist')
-    })
-  })
-
-  //TODO:ME Maybe add this test in the FilesTableScrollable.spec.tsx file?
-  //   it('renders skeleton while loading', () => {
-  //     cy.customMount(
-  //       <DatasetFilesScrollable
-  //         filesRepository={fileRepository}
-  //         datasetPersistentId={datasetPersistentId}
-  //         datasetVersion={datasetVersion}
-  //       />
-  //     )
-
-  //     cy.findByTestId('table-row-loading-skeleton').should('exist')
-  //   })
 
   describe('File selection', () => {
     it('selects first 10 files when clicking the top header checkbox', () => {
@@ -320,6 +394,66 @@ describe('DatasetFilesScrollable', () => {
       //   cy.findByText('2 files are currently selected.').should('exist')
     })
 
+    it('removes the selection when the header checkbox is clicked again', () => {
+      cy.customMount(
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByRole('columnheader', { name: '10 of 200 Files seen' }).should('exist')
+      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.findByText('10 files are currently selected.').should('exist')
+      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.findByText('10 files are currently selected.').should('not.exist')
+    })
+
+    it('selects all loaded by scroll files when clicking the header checkbox', () => {
+      cy.customMount(
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+
+      cy.findByText('10 of 200 Files seen').should('exist')
+
+      cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
+      cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+      cy.findByText('20 of 200 Files seen').should('exist')
+
+      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+
+      cy.findByText('20 files are currently selected.').should('exist')
+    })
+
+    it('all new loaded files should be checked if selecting all files when only seen 10 and then scrolling to bottom to load 10 more files', () => {
+      cy.customMount(
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByRole('columnheader', { name: '10 of 200 Files seen' }).should('exist')
+      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.findByText('10 files are currently selected.').should('exist')
+      cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
+      cy.findByText('200 files are currently selected.').should('exist')
+
+      cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
+      cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+      cy.findByRole('columnheader', { name: '20 of 200 Files seen' }).should('exist')
+
+      cy.get('table > tbody > tr').each(() => {
+        cy.get('table > tbody > tr > td:nth-child(1) > input[type=checkbox]').should('be.checked')
+      })
+    })
+
     it('removes the selection when the filters change', () => {
       cy.customMount(
         <DatasetFilesScrollable
@@ -364,6 +498,21 @@ describe('DatasetFilesScrollable', () => {
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
       cy.findByText('1 file is currently selected.').should('exist')
       cy.findByLabelText('Search').type('test{enter}')
+      cy.findByText('1 file is currently selected.').should('not.exist')
+    })
+
+    it('removes the selection when the clear all button is clicked', () => {
+      cy.customMount(
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByRole('columnheader', { name: '10 of 200 Files seen' }).should('exist')
+      cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
+      cy.findByText('1 file is currently selected.').should('exist')
+      cy.findByRole('button', { name: 'Clear selection.' }).click()
       cy.findByText('1 file is currently selected.').should('not.exist')
     })
 
@@ -438,6 +587,7 @@ describe('DatasetFilesScrollable', () => {
       ).should('exist')
     })
   })
+
   describe('Calling use cases', () => {
     it('calls the useGetAccumulatedFiles hook with the correct parameters', () => {
       cy.customMount(
@@ -603,6 +753,114 @@ describe('DatasetFilesScrollable', () => {
         datasetVersion.number,
         new FileCriteria().withFilterByType('image/png')
       )
+    })
+  })
+
+  describe('Error handling', () => {
+    it('shows error banner if there is an error getting files', () => {
+      fileRepository.getAllByDatasetPersistentIdWithCount = cy
+        .stub()
+        .rejects(new Error('Some error on getAllByDatasetPersistentIdWithCount'))
+
+      cy.customMount(
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByText('Error').should('exist')
+    })
+
+    it('shows fallback error message if there is an unknown error getting files', () => {
+      fileRepository.getAllByDatasetPersistentIdWithCount = cy.stub().rejects(new Error())
+
+      cy.customMount(
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByText(/There was an error getting the files total download size/).should('exist')
+    })
+
+    it('shows error banner if there is an error getting total download size', () => {
+      fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy
+        .stub()
+        .rejects(new Error('Some error on getFilesTotalDownloadSizeByDatasetPersistentId'))
+
+      cy.customMount(
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByText('Error').should('exist')
+    })
+
+    it('shows fallback error message if there is an unknown error getting total download size', () => {
+      fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().rejects(new Error())
+
+      cy.customMount(
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByText(/There was an error getting the files total download size/).should('exist')
+    })
+
+    it('shows error banner if there is an error getting files info count', () => {
+      fileRepository.getFilesCountInfoByDatasetPersistentId = cy
+        .stub()
+        .rejects(new Error('Some error on getFilesCountInfoByDatasetPersistentId'))
+
+      cy.customMount(
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByText('Error').should('exist')
+    })
+
+    it('shows fallback error message if there is an unknown error getting files info count', () => {
+      fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().rejects(new Error())
+
+      cy.customMount(
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByText(/There was an error getting the files count info/).should('exist')
+    })
+  })
+
+  describe('getCellStyle function', () => {
+    it('should return the correct style for status cell', () => {
+      const cellId = 'status'
+      cy.wrap(getCellStyle(cellId)).should('deep.equal', { borderWidth: '0 1px 0 0' })
+    })
+
+    it('should return the correct style for info cell', () => {
+      const cellId = 'info'
+      cy.wrap(getCellStyle(cellId)).should('deep.equal', { borderWidth: '0 0 0 1px' })
+    })
+
+    it('should return undefined for unknown cell', () => {
+      const cellId = 'unknown'
+      cy.wrap(getCellStyle(cellId)).should('be.undefined')
+    })
+
+    it('should return the correct style for the select cell', () => {
+      const cellId = 'select'
+      cy.wrap(getCellStyle(cellId)).should('deep.equal', { verticalAlign: 'middle' })
     })
   })
 })

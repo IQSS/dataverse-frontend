@@ -153,7 +153,10 @@ export function DatasetFilesScrollable({
         })}
         ref={scrollableContainerRef}
         data-testid="scrollable-files-container">
-        <header ref={criteriaContainerRef} className={styles['criteria-form-container']}>
+        <header
+          ref={criteriaContainerRef}
+          className={styles['criteria-form-container']}
+          data-testid="criteria-form-container">
           <FileCriteriaForm
             criteria={criteria}
             onCriteriaChange={handleCriteriaChange}

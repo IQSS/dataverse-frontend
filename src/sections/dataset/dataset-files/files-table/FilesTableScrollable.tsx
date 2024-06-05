@@ -60,7 +60,8 @@ export const FilesTableScrollable = ({
       <div
         ref={tableTopMessagesRef}
         className={styles['table-top-messages']}
-        style={{ top: criteriaContainerHeight }}>
+        style={{ top: criteriaContainerHeight }}
+        data-testid="table-top-messages">
         <RowSelectionMessage
           fileSelection={fileSelection}
           selectAllRows={selectAllFiles}

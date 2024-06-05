@@ -16,18 +16,28 @@ export const useFileSelectionScrollable = (
 ) => {
   const [fileSelection, setFileSelection] = useState<FileSelection>({})
   const justClearedAll = useRef<boolean>(false)
-  const justSelectedAll = useRef<boolean>(false)
 
-  const updateFileSelection = useDeepCompareCallback(() => {
-    const newFileSelection: FileSelection = {}
+  const updateFileSelection = useDeepCompareCallback(
+    (currentFileSelection: FileSelection) => {
+      const newFileSelection: FileSelection = {}
 
-    Object.entries(selectedRowsModels).forEach(([string, Row]) => {
-      const rowIndex = parseInt(string)
-      newFileSelection[rowIndex] = Row.original
-    })
+      Object.entries(selectedRowsModels).forEach(([string, Row]) => {
+        const rowIndex = parseInt(string)
+        newFileSelection[rowIndex] = Row.original
+      })
 
-    return newFileSelection
-  }, [selectedRowsModels])
+      const currentSelectionCount = Object.keys(currentFileSelection).length
+      const newSelectionCount = Object.keys(newFileSelection).length
+
+      // WHY: This condition means that the user has deselected some rows and we shouldn't merge the selections
+      if (newSelectionCount < currentSelectionCount) {
+        return newFileSelection
+      }
+
+      return { ...currentFileSelection, ...newFileSelection }
+    },
+    [selectedRowsModels]
+  )
 
   const selectAllFiles = () => {
     setRowSelection(createRowSelection(paginationInfo.totalItems))
@@ -36,8 +46,6 @@ export const useFileSelectionScrollable = (
 
     const newFileSelection = { ...totalFilesFileSelection, ...fileSelection }
     setFileSelection(newFileSelection)
-
-    justSelectedAll.current = true
   }
   const clearFileSelection = (withFlag = true) => {
     setRowSelection({})
@@ -54,13 +62,7 @@ export const useFileSelectionScrollable = (
       return
     }
 
-    if (justSelectedAll.current) {
-      justSelectedAll.current = false
-      return
-    }
-
-    const updatedFileSelection = updateFileSelection()
-    setFileSelection(updatedFileSelection)
+    setFileSelection((current) => updateFileSelection(current))
   }, [updateFileSelection])
 
   return {
