@@ -71,7 +71,12 @@ export class JSDatasetMapper {
         jsDatasetFilesTotalOriginalDownloadSize,
         jsDatasetFilesTotalArchivalDownloadSize
       ),
-      JSDatasetMapper.toHierarchy(jsDataset.persistentId, version, jsDataset.isPartOf),
+      JSDatasetMapper.toHierarchy(
+        jsDataset.id,
+        jsDataset.persistentId,
+        version,
+        jsDataset.isPartOf
+      ),
       undefined, // TODO: get dataset thumbnail from js-dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl,
       requestedVersion
@@ -232,6 +237,7 @@ export class JSDatasetMapper {
   }
 
   static toHierarchy(
+    id: number,
     persistentId: string,
     version: DatasetVersion,
     jsUpwardHierarchyNode: JSUpwardHierarchyNode
@@ -239,8 +245,8 @@ export class JSDatasetMapper {
     return new UpwardHierarchyNode(
       version.title,
       DvObjectType.DATASET,
+      id.toString(),
       persistentId,
-      undefined,
       version.number.toString(),
       JSUpwardHierarchyNodeMapper.toUpwardHierarchyNode(jsUpwardHierarchyNode)
     )

@@ -69,20 +69,4 @@ describe('FormSelect', () => {
     cy.get('@onChange').should('have.been.called')
     cy.findByLabelText('Selector').should('have.value', '2')
   })
-
-  it('renders with fieldIndex in the id when provided', () => {
-    cy.mount(
-      <FormGroup controlId="selector" fieldIndex="3">
-        <FormGroup.Label>Selector</FormGroup.Label>
-        <FormGroup.Select>
-          <option>Select...</option>
-          <option value="1">Option 1</option>
-          <option value="2">Option 2</option>
-          <option value="3">Option 3</option>
-        </FormGroup.Select>
-      </FormGroup>
-    )
-
-    cy.findByLabelText('Selector').should('have.attr', 'id', 'selector-3')
-  })
 })

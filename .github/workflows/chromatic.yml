@@ -1,7 +1,7 @@
 name: 'Chromatic'
 
 # Event for the workflow
-on: push
+on: [push, pull_request]
 
 # List of jobs
 jobs:

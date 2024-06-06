@@ -23,6 +23,20 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **FormSelectMultiple:** The new multiple selector is added to the "FormGroup" components.
 - **DropdownButtonItem:** extend Props Interface to accept `as` prop.
 - **Spinner:** New Spinner component.
+- **Accordion:** ability to forward react ref.
+- **DynamicFieldsButtons:** Removed from design system.
+- **FormGroupWithMultipleFields:** remove withDynamicFields prop and remove logic to handle adding or removing fields.
+- **FormGroup:** remove the required and fieldIndex props, remove the cloning of child elements to pass them the withinMultipleFieldsGroup and required props.
+- **FormFeedback:** remove withinMultipleFieldsGroup prop.
+- **FormInput:** remove withinMultipleFieldsGroup prop.
+- **FormLabel:** remove withinMultipleFieldsGroup prop extend interface to accept ColProps.
+- **FormSelect:** remove withinMultipleFieldsGroup prop.
+- **FormSelectMultiple:** remove withinMultipleFieldsGroup prop.
+- **FormText:** remove withinMultipleFieldsGroup prop.
+- **FormTextArea:** remove withinMultipleFieldsGroup prop.
+- **FormInputGroup:** remove hasVisibleLabel prop.
+- **FormInputGroupText:** refactor type.
+- **Select Multiple:** add is-invalid classname if isInvalid prop is true.
 
 # [1.1.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@1.0.1...@iqss/dataverse-design-system@1.1.0) (2024-03-12)
 

@@ -3,16 +3,29 @@ import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/Upw
 import { LinkToPage } from '../link-to-page/LinkToPage'
 import { Route } from '../../Route.enum'
 
-interface BreadcrumbGeneratorProps {
-  hierarchy: UpwardHierarchyNode
-}
+type BreadcrumbGeneratorProps =
+  | {
+      hierarchy: UpwardHierarchyNode
+      withActionItem?: false
+      actionItemText?: never
+    }
+  | {
+      hierarchy: UpwardHierarchyNode
+      withActionItem: true
+      actionItemText: string
+    }
 
-export function BreadcrumbsGenerator({ hierarchy }: BreadcrumbGeneratorProps) {
+export function BreadcrumbsGenerator({
+  hierarchy,
+  withActionItem,
+  actionItemText
+}: BreadcrumbGeneratorProps) {
   const hierarchyArray = hierarchy.toArray()
+
   return (
     <Breadcrumb>
       {hierarchyArray.map((item, index) => {
-        const isLast = index === hierarchyArray.length - 1
+        const isLast = withActionItem ? false : index === hierarchyArray.length - 1
         const isFirst = index === 0
 
         if (isLast) {
@@ -49,6 +62,7 @@ export function BreadcrumbsGenerator({ hierarchy }: BreadcrumbGeneratorProps) {
           </Breadcrumb.Item>
         )
       })}
+      {withActionItem && <Breadcrumb.Item active>{actionItemText}</Breadcrumb.Item>}
     </Breadcrumb>
   )
 }

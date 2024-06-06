@@ -40,4 +40,23 @@ describe('BreadcrumbsGenerator', () => {
     cy.customMount(<BreadcrumbsGenerator hierarchy={root} />)
     cy.findByText('Root').should('have.class', 'active')
   })
+
+  it('shows the action item active when withActionItem is true', () => {
+    const root = UpwardHierarchyNodeMother.createCollection({
+      name: 'Root',
+      id: 'root'
+    })
+    const dataset = UpwardHierarchyNodeMother.createDataset({
+      name: 'Dataset',
+      parent: root,
+      version: '1.0',
+      persistentId: 'doi:10.5072/FK2/ABC123'
+    })
+
+    cy.customMount(
+      <BreadcrumbsGenerator hierarchy={dataset} withActionItem actionItemText="Action Item Text" />
+    )
+    cy.findByText('Action Item Text').should('exist').should('have.class', 'active')
+    cy.findByText('Dataset').should('exist').should('not.have.class', 'active')
+  })
 })

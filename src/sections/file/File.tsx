@@ -28,7 +28,7 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
 
   useEffect(() => {
     setIsLoading(isLoading)
-  }, [isLoading])
+  }, [isLoading, setIsLoading])
 
   if (isLoading) {
     return <FileSkeleton />

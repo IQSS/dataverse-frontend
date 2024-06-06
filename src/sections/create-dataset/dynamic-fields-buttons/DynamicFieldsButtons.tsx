@@ -6,12 +6,14 @@ import { Tooltip } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 
 interface AddFieldButtonsProps {
+  fieldName: string
   originalField?: boolean
   onAddButtonClick: (event: MouseEvent<HTMLButtonElement>) => void
   onRemoveButtonClick: (event: MouseEvent<HTMLButtonElement>) => void
 }
 
 export function DynamicFieldsButtons({
+  fieldName,
   originalField,
   onAddButtonClick,
   onRemoveButtonClick
@@ -20,19 +22,25 @@ export function DynamicFieldsButtons({
   return (
     <div className={styles.container}>
       <Tooltip placement="top" overlay={t('datasetForm.addRowButton')}>
-        <div className={styles['overlay-container']}>
-          <Button type="button" variant="secondary" onClick={onAddButtonClick}>
-            <Plus className={styles.icon} title="Add" />
-          </Button>
-        </div>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={onAddButtonClick}
+          className="px-2"
+          aria-label={`${t('datasetForm.addRowButton')} ${fieldName}`}>
+          <Plus title="Add" size={24} />
+        </Button>
       </Tooltip>
       {!originalField && (
         <Tooltip placement="top" overlay={t('datasetForm.deleteRowButton')}>
-          <div className={styles['overlay-container']}>
-            <Button type="button" variant="secondary" withSpacing onClick={onRemoveButtonClick}>
-              <Dash className={styles.icon} title="Delete" />
-            </Button>
-          </div>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={onRemoveButtonClick}
+            className="px-2"
+            aria-label={`${t('datasetForm.deleteRowButton')} ${fieldName}`}>
+            <Dash title="Delete" size={24} />
+          </Button>
         </Tooltip>
       )}
     </div>
