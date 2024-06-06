@@ -41,7 +41,7 @@ export function CreateDataset({
     if (!isLoadingMetadataBlocksConfiguration) {
       setIsLoading(false)
     }
-  }, [isLoading, isLoadingMetadataBlocksConfiguration])
+  }, [isLoading, isLoadingMetadataBlocksConfiguration, setIsLoading])
 
   return (
     <>

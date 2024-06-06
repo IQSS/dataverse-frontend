@@ -11,6 +11,7 @@ import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFiel
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { MetadataBlockFormFields } from './MetadataBlockFormFields'
 import { Route } from '../Route.enum'
+import styles from './DatasetForm.module.scss'
 
 interface DatasetFormProps {
   repository: DatasetRepository
@@ -29,9 +30,15 @@ export const DatasetForm = ({
 }: DatasetFormProps) => {
   const navigate = useNavigate()
   const { t } = useTranslation('createDataset')
-  const accordionRef = useRef<HTMLDivElement>(null)
 
-  const { submissionStatus, submitForm } = useCreateDatasetForm(repository, collectionId)
+  const accordionRef = useRef<HTMLDivElement>(null)
+  const formContainerRef = useRef<HTMLDivElement>(null)
+
+  const { submissionStatus, createError, submitForm } = useCreateDatasetForm(
+    repository,
+    collectionId,
+    onCreateDatasetError
+  )
 
   const isErrorLoadingMetadataBlocks = Boolean(errorLoadingMetadataBlocks)
 
@@ -40,16 +47,10 @@ export const DatasetForm = ({
     defaultValues: formDefaultValues
   })
 
-  const formHasErrors = Object.keys(form.formState.errors).length > 0
-
   const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     navigate(Route.HOME)
   }
-
-  const disableSubmitButton = useMemo(() => {
-    return isErrorLoadingMetadataBlocks || submissionStatus === SubmissionStatus.IsSubmitting
-  }, [isErrorLoadingMetadataBlocks, submissionStatus])
 
   const onInvalidSubmit = (errors: FieldErrors<CreateDatasetFormValues>) => {
     if (!accordionRef.current) return
@@ -82,8 +83,18 @@ export const DatasetForm = ({
     })
   }
 
+  function onCreateDatasetError() {
+    if (formContainerRef.current) {
+      formContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
+  const disableSubmitButton = useMemo(() => {
+    return isErrorLoadingMetadataBlocks || submissionStatus === SubmissionStatus.IsSubmitting
+  }, [isErrorLoadingMetadataBlocks, submissionStatus])
+
   return (
-    <div>
+    <div className={styles['form-container']} ref={formContainerRef}>
       <RequiredFieldText />
       {isErrorLoadingMetadataBlocks && (
         <Alert variant="danger" dismissible={false}>
@@ -97,9 +108,9 @@ export const DatasetForm = ({
       {submissionStatus === SubmissionStatus.SubmitComplete && (
         <p>{t('datasetForm.status.success')}</p>
       )}
-      {(submissionStatus === SubmissionStatus.Errored || formHasErrors) && (
+      {submissionStatus === SubmissionStatus.Errored && (
         <Alert variant={'danger'} customHeading={t('validationAlert.title')} dismissible={false}>
-          {t('validationAlert.content')}
+          {createError}
         </Alert>
       )}
 

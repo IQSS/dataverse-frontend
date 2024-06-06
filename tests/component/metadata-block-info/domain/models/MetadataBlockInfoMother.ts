@@ -4838,4 +4838,32 @@ export class MetadataBlockInfoMother {
       }
     ]
   }
+
+  static wrongCollectionMetadataBlocksInfo(): MetadataBlockInfo[] {
+    return [
+      {
+        id: 1,
+        name: 'citation',
+        displayName: 'Citation Metadata',
+        displayOnCreate: true,
+        metadataFields: {
+          title: {
+            name: 'title',
+            displayName: 'Title',
+            title: 'Title',
+            type: 'TEXT',
+            typeClass: 'primitive',
+            watermark: '',
+            description: 'The main title of the Dataset',
+            multiple: false,
+            isControlledVocabulary: false,
+            displayFormat: '',
+            isRequired: false,
+            displayOnCreate: true,
+            displayOrder: 0
+          }
+        }
+      }
+    ]
+  }
 }
