@@ -11,7 +11,11 @@ import { DatasetMother } from '../../../../tests/component/dataset/domain/models
 const meta: Meta<typeof DatasetFilesScrollable> = {
   title: 'Sections/Dataset Page/DatasetFilesScrollable',
   component: DatasetFilesScrollable,
-  decorators: [WithI18next, WithSettings]
+  decorators: [WithI18next, WithSettings],
+  parameters: {
+    // Sets the delay for all stories.
+    chromatic: { delay: 15000, pauseAnimationAtEnd: true }
+  }
 }
 
 export default meta

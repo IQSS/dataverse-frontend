@@ -11,7 +11,11 @@ export function FileInfoHeader({ paginationInfo, accumulatedFilesCount }: FileIn
   const fileCount = paginationInfo.totalItems
 
   if (fileCount === 0) {
-    return <></>
+    return (
+      <span className={styles['file-info-header--sr-only']}>
+        {`${fileCount} ${paginationInfo.itemName}`}
+      </span>
+    )
   }
   return (
     <span className={styles['file-info-header']}>
