@@ -130,7 +130,8 @@ export function FileUploader({
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragEnter={handleDragEnter}
-          onDragLeave={handleDragLeave}>
+          onDragLeave={handleDragLeave}
+          data-testid="drag-and-drop">
           <div>
             <input
               ref={inputRef}

@@ -71,13 +71,13 @@ describe('UploadDatasetFiles', () => {
 
     mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
 
-    const dnd = cy.findByText('Drag and drop files here.')
-    dnd.should('exist')
-    const uploadFile = (fileName: string, contents: unknown) => {
-      dnd.selectFile({ fileName: fileName, contents: contents }, { action: 'drag-drop' })
-    }
+    cy.findByTestId('drag-and-drop').as('dnd')
+    cy.get('@dnd').should('exist')
 
-    uploadFile('users1.json', [{ name: 'John Doe the 1st' }])
+    cy.get('@dnd').selectFile(
+      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+      { action: 'drag-drop' }
+    )
     cy.findByText('users1.json').should('exist')
     cy.findByTitle('Cancel upload').should('exist')
     cy.findByRole('progressbar').should('exist')
@@ -89,15 +89,21 @@ describe('UploadDatasetFiles', () => {
 
     mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
 
-    const dnd = cy.findByText('Drag and drop files here.')
-    dnd.should('exist')
-    const uploadFile = (fileName: string, contents: unknown) => {
-      dnd.selectFile({ fileName: fileName, contents: contents }, { action: 'drag-drop' })
-    }
+    cy.findByTestId('drag-and-drop').as('dnd')
+    cy.get('@dnd').should('exist')
 
-    uploadFile('users1.json', [{ name: 'John Doe the 1st' }])
-    uploadFile('users2.json', [{ name: 'John Doe the 2nd' }])
-    uploadFile('users3.json', [{ name: 'John Doe the 3rd' }])
+    cy.get('@dnd').selectFile(
+      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+      { action: 'drag-drop' }
+    )
+    cy.get('@dnd').selectFile(
+      { fileName: 'users2.json', contents: [{ name: 'John Doe the 2nd' }] },
+      { action: 'drag-drop' }
+    )
+    cy.get('@dnd').selectFile(
+      { fileName: 'users3.json', contents: [{ name: 'John Doe the 3rd' }] },
+      { action: 'drag-drop' }
+    )
     cy.findAllByTitle('Cancel upload').first().parent().click()
     cy.findByText('users1.json').should('not.exist')
     cy.findByText('users2.json').should('exist')
@@ -138,13 +144,13 @@ describe('UploadDatasetFiles', () => {
       testDataset
     )
 
-    const dnd = cy.findByText('Drag and drop files here.')
-    dnd.should('exist')
-    const uploadFile = (fileName: string, contents: unknown) => {
-      dnd.selectFile({ fileName: fileName, contents: contents }, { action: 'drag-drop' })
-    }
+    cy.findByTestId('drag-and-drop').as('dnd')
+    cy.get('@dnd').should('exist')
 
-    uploadFile('users1.json', [{ name: 'John Doe the 1st' }])
+    cy.get('@dnd').selectFile(
+      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+      { action: 'drag-drop' }
+    )
     cy.findByText('users1.json').should('exist') //.should('have.class', 'failed')
   })
 
@@ -153,15 +159,21 @@ describe('UploadDatasetFiles', () => {
 
     mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
 
-    const dnd = cy.findByText('Drag and drop files here.')
-    dnd.should('exist')
-    const uploadFile = (fileName: string, contents: unknown) => {
-      dnd.selectFile({ fileName: fileName, contents: contents }, { action: 'drag-drop' })
-    }
+    cy.findByTestId('drag-and-drop').as('dnd')
+    cy.get('@dnd').should('exist')
 
-    uploadFile('users1.json', [{ name: 'John Doe the 1st' }])
-    uploadFile('users1.json', [{ name: 'John Doe the 1st' }])
-    uploadFile('users3.json', [{ name: 'John Doe the 3rd' }])
+    cy.get('@dnd').selectFile(
+      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+      { action: 'drag-drop' }
+    )
+    cy.get('@dnd').selectFile(
+      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+      { action: 'drag-drop' }
+    )
+    cy.get('@dnd').selectFile(
+      { fileName: 'users3.json', contents: [{ name: 'John Doe the 3rd' }] },
+      { action: 'drag-drop' }
+    )
     cy.findByText('users3.json').should('exist')
     cy.findByText('users1.json').should('exist')
     cy.findAllByTitle('Cancel upload').should('have.length', 2)
@@ -170,8 +182,14 @@ describe('UploadDatasetFiles', () => {
     // wait for upload to finish
     cy.findByText('users3.json').should('not.exist')
     cy.findByText('users1.json').should('not.exist')
-    uploadFile('users1.json', [{ name: 'John Doe the 1st' }])
-    uploadFile('users3.json', [{ name: 'John Doe the 3rd' }])
+    cy.get('@dnd').selectFile(
+      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+      { action: 'drag-drop' }
+    )
+    cy.get('@dnd').selectFile(
+      { fileName: 'users3.json', contents: [{ name: 'John Doe the 3rd' }] },
+      { action: 'drag-drop' }
+    )
     cy.findByText('users3.json').should('not.exist')
     cy.findByText('users1.json').should('not.exist')
   })
@@ -181,15 +199,21 @@ describe('UploadDatasetFiles', () => {
 
     mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
 
-    const dnd = cy.findByText('Drag and drop files here.')
-    dnd.should('exist')
-    const uploadFile = (fileName: string, contents: unknown) => {
-      dnd.selectFile({ fileName: fileName, contents: contents }, { action: 'drag-drop' })
-    }
+    cy.findByTestId('drag-and-drop').as('dnd')
+    cy.get('@dnd').should('exist')
 
-    uploadFile('users1.json', [{ name: 'John Doe the 1st' }])
-    uploadFile('users1.json', [{ name: 'John Doe the 1st' }])
-    uploadFile('users3.json', [{ name: 'John Doe the 3rd' }])
+    cy.get('@dnd').selectFile(
+      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+      { action: 'drag-drop' }
+    )
+    cy.get('@dnd').selectFile(
+      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+      { action: 'drag-drop' }
+    )
+    cy.get('@dnd').selectFile(
+      { fileName: 'users3.json', contents: [{ name: 'John Doe the 3rd' }] },
+      { action: 'drag-drop' }
+    )
     cy.findByText('users3.json').should('exist')
     cy.findByText('users1.json').should('exist')
     cy.findAllByTitle('Cancel upload').should('have.length', 2)
@@ -202,11 +226,8 @@ describe('UploadDatasetFiles', () => {
 
     mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
 
-    const dnd = cy.findByText('Drag and drop files here.')
-    dnd.should('exist')
-    const uploadFile = (fileName: string, contents: unknown) => {
-      dnd.selectFile({ fileName: fileName, contents: contents }, { action: 'drag-drop' })
-    }
+    cy.findByTestId('drag-and-drop').as('dnd')
+    cy.get('@dnd').should('exist')
 
     const filenames: string[] = [
       'users1.json',
@@ -221,7 +242,10 @@ describe('UploadDatasetFiles', () => {
       'users10.json'
     ]
     filenames.forEach((element) => {
-      uploadFile(element, [{ name: 'John Doe' }])
+      cy.get('@dnd').selectFile(
+        { fileName: element, contents: [{ name: 'John Doe' }] },
+        { action: 'drag-drop' }
+      )
     })
     cy.findAllByTitle('Cancel upload').should('have.length', 10)
     cy.findAllByRole('progressbar').should('have.length', 6)
@@ -239,7 +263,10 @@ describe('UploadDatasetFiles', () => {
       'users20.json'
     ]
     filenames2.forEach((element) => {
-      uploadFile(element, [{ name: 'John Doe' }])
+      cy.get('@dnd').selectFile(
+        { fileName: element, contents: [{ name: 'John Doe' }] },
+        { action: 'drag-drop' }
+      )
     })
     cy.findByText('users20.json').should('exist')
     cy.findAllByRole('progressbar').should('have.length', 6)
