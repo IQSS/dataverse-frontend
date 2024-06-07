@@ -12,7 +12,11 @@ import { WithLoggedInUser } from '../WithLoggedInUser'
 const meta: Meta<typeof CreateDataset> = {
   title: 'Pages/Create Dataset',
   component: CreateDataset,
-  decorators: [WithI18next, WithLayout, WithLoggedInUser]
+  decorators: [WithI18next, WithLayout, WithLoggedInUser],
+  parameters: {
+    // Sets the delay for all stories.
+    chromatic: { delay: 15000, pauseAnimationAtEnd: true }
+  }
 }
 export default meta
 type Story = StoryObj<typeof CreateDataset>

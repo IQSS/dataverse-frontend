@@ -52,9 +52,18 @@ export function Collection({
           </>
         )}
         {infiniteScrollEnabled ? (
-          <DatasetsListWithInfiniteScroll datasetRepository={datasetRepository} collectionId={id} />
+          <DatasetsListWithInfiniteScroll
+            datasetRepository={datasetRepository}
+            collectionId={id}
+            key={id}
+          />
         ) : (
-          <DatasetsList datasetRepository={datasetRepository} page={page} collectionId={id} />
+          <DatasetsList
+            datasetRepository={datasetRepository}
+            page={page}
+            collectionId={id}
+            key={id}
+          />
         )}
       </Col>
     </Row>
