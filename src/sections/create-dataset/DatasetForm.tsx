@@ -57,7 +57,7 @@ export const DatasetForm = ({
         shouldValidate: true
       })
       if (user.affiliation) {
-        setValue('citation.datasetContact.0.datasetAffiliation', user.affiliation)
+        setValue('citation.datasetContact.0.datasetContactAffiliation', user.affiliation)
         setValue('citation.author.0.authorAffiliation', user.affiliation)
       }
     }
