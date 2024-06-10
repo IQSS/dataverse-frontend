@@ -37,6 +37,10 @@ const router = createBrowserRouter(
           element: UploadDatasetFilesFactory.create()
         },
         {
+          path: Route.EDIT_DATASET_METADATA,
+          element: <div>Edit dataset metadata</div>
+        },
+        {
           path: Route.FILES,
           element: FileFactory.create()
         }

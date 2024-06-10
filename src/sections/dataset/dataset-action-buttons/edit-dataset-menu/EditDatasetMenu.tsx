@@ -33,6 +33,10 @@ export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
       navigate(`${Route.UPLOAD_DATASET_FILES}?persistentId=${dataset.persistentId}`)
       return
     }
+    if (eventKey === EditDatasetMenuItems.METADATA) {
+      navigate(`${Route.EDIT_DATASET_METADATA}?persistentId=${dataset.persistentId}`)
+      return
+    }
     showModal()
   }
 
