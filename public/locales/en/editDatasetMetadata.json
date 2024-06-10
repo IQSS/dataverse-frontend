@@ -1,4 +1,13 @@
 {
-  "pageTitle": "Edit Dataset Metadata",
-  "breadcrumbActionItem": "Edit Metadata"
+  "breadcrumbActionItem": "Edit Metadata",
+  "infoAlert": {
+    "heading": "Edit Dataset Metadata",
+    "text": "Add more metadata about this dataset to help others easily find it."
+  },
+  "hostCollection": {
+    "label": "Host Collection",
+    "description": "The collection which contains this dataset."
+  },
+  "metadata": "Metadata",
+  "requiredFields": "Asterisks indicate required fields"
 }
