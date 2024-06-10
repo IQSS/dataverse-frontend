@@ -93,7 +93,7 @@ describe('Create Dataset', () => {
         cy.findByText('Not Implemented').should('exist')
       })
   })
-  it.only('pre-fills the form with user data', () => {
+  it('pre-fills the form with user data', () => {
     cy.customMount(
       <SessionProvider repository={userRepository}>
         <NotImplementedModalProvider>
