@@ -19,7 +19,8 @@ import {
   DatasetPreviewSubset,
   createDataset,
   CreatedDatasetIdentifiers as JSDatasetIdentifiers,
-  WriteError
+  WriteError,
+  publishDataset
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -27,6 +28,7 @@ import { JSDatasetPreviewMapper } from '../mappers/JSDatasetPreviewMapper'
 import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
 import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
 import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
+import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
 const defaultCollectionId = 'root'
 const includeDeaccessioned = true
 type DatasetDetails = [JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[]]
@@ -192,5 +194,13 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .catch((error: WriteError) => {
         throw new Error(error.message)
       })
+  }
+  publish(
+    persistentId: string,
+    versionUpdateType: VersionUpdateType = VersionUpdateType.MAJOR
+  ): Promise<void> {
+    return publishDataset.execute(persistentId, versionUpdateType).catch((error: WriteError) => {
+      throw new Error(error.message)
+    })
   }
 }
