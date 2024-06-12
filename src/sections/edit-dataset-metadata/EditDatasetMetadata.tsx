@@ -40,7 +40,7 @@ export const EditDatasetMetadata = ({ who: _who }: EditDatasetMetadataProps) => 
           <Alert variant="info" customHeading={t('infoAlert.heading')}>
             {t('infoAlert.text')}
           </Alert>
-          <HostCollection dataset={dataset} />
+          <HostCollection datasetHierarchy={dataset.hierarchy} />
           <SeparationLine />
           <Tabs defaultActiveKey="metadata">
             <Tabs.Tab eventKey="metadata" title={t('metadata')}>

@@ -10,6 +10,8 @@ import { UploadDatasetFilesFactory } from './sections/upload-dataset-files/Uploa
 import { EditDatasetMetadataFactory } from './sections/edit-dataset-metadata/EditDatasetMetadataFactory'
 import { DatasetNonNumericVersion } from './dataset/domain/models/Dataset'
 
+// TODO: Implement scroll restoration on navigation
+
 const router = createBrowserRouter(
   [
     {
