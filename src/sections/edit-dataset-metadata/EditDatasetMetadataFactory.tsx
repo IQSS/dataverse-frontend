@@ -1,12 +1,12 @@
 import { ReactElement } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { EditDatasetMetadata } from './EditDatasetMetadata'
+import { EditDatasetMetadataSection } from './EditDatasetMetadataSection'
 import { DatasetProvider } from '../dataset/DatasetProvider'
 import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repositories/DatasetJSDataverseRepository'
-// import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
+import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
 
 const datasetRepository = new DatasetJSDataverseRepository()
-// const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
+const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
 
 export class EditDatasetMetadataFactory {
   static create(): ReactElement {
@@ -20,7 +20,10 @@ function EditDatasetMetadataWithParams() {
 
   return (
     <DatasetProvider repository={datasetRepository} searchParams={{ persistentId: persistentId }}>
-      <EditDatasetMetadata />
+      <EditDatasetMetadataSection
+        datasetRepository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
     </DatasetProvider>
   )
 }

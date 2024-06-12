@@ -1,23 +1,12 @@
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Col, Form } from '@iqss/dataverse-design-system'
-import { UpwardHierarchyNode } from '../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 interface HostCollectionProps {
-  datasetHierarchy: UpwardHierarchyNode
+  collectionName: string
 }
 
-export const HostCollection = ({ datasetHierarchy }: HostCollectionProps) => {
+export const HostCollection = ({ collectionName }: HostCollectionProps) => {
   const { t } = useTranslation('editDatasetMetadata')
-
-  const datasetParentCollectionName = useMemo(
-    () =>
-      datasetHierarchy
-        .toArray()
-        .filter((item) => item.type === 'collection')
-        .at(-1)?.name,
-    [datasetHierarchy]
-  )
 
   return (
     <Form.Group>
@@ -25,10 +14,7 @@ export const HostCollection = ({ datasetHierarchy }: HostCollectionProps) => {
         {t('hostCollection.label')}
       </Form.Group.Label>
       <Col sm={9}>
-        <Form.Group.Input
-          readOnly
-          defaultValue={datasetParentCollectionName ?? 'Host collection name not found'}
-        />
+        <Form.Group.Input readOnly defaultValue={collectionName} />
       </Col>
     </Form.Group>
   )

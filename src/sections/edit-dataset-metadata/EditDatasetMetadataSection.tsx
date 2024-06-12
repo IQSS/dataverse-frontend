@@ -1,19 +1,27 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Tabs } from '@iqss/dataverse-design-system'
+import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
+import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useDataset } from '../dataset/DatasetContext'
 import { useLoading } from '../loading/LoadingContext'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { HostCollection } from './HostCollection'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
+import { DatasetMetadataForm } from '../shared/form/DatasetMetadataForm'
+import { UpwardHierarchyNode } from '../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import styles from './EditDatasetMetadata.module.scss'
 
 interface EditDatasetMetadataProps {
-  who?: string
+  datasetRepository: DatasetRepository
+  metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
 
-export const EditDatasetMetadata = ({ who: _who }: EditDatasetMetadataProps) => {
+export const EditDatasetMetadataSection = ({
+  datasetRepository,
+  metadataBlockInfoRepository
+}: EditDatasetMetadataProps) => {
   const { t } = useTranslation('editDatasetMetadata')
   const { dataset, isLoading } = useDataset()
   const { setIsLoading } = useLoading()
@@ -21,6 +29,15 @@ export const EditDatasetMetadata = ({ who: _who }: EditDatasetMetadataProps) => 
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])
+
+  const datasetParentCollection: UpwardHierarchyNode = useMemo(
+    () =>
+      dataset?.hierarchy
+        .toArray()
+        .filter((item) => item.type === 'collection')
+        .at(-1) as UpwardHierarchyNode,
+    [dataset]
+  )
 
   if (isLoading) {
     return <p>Loading...</p>
@@ -40,19 +57,17 @@ export const EditDatasetMetadata = ({ who: _who }: EditDatasetMetadataProps) => 
           <Alert variant="info" customHeading={t('infoAlert.heading')}>
             {t('infoAlert.text')}
           </Alert>
-          <HostCollection datasetHierarchy={dataset.hierarchy} />
+          <HostCollection collectionName={datasetParentCollection?.name} />
           <SeparationLine />
           <Tabs defaultActiveKey="metadata">
             <Tabs.Tab eventKey="metadata" title={t('metadata')}>
               <div className={styles['tab-container']}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi saepe iure
-                consequatur asperiores doloribus sapiente eius aspernatur hic officia illum
-                veritatis dolor molestiae ex perspiciatis accusamus ipsam minus animi, minima
-                molestias natus quaerat aliquam ea. Eius nisi ut hic laudantium quam, veniam porro
-                consequatur iure animi tenetur quod incidunt error harum debitis, pariatur
-                temporibus ipsa nobis cupiditate quas nihil rerum distinctio ullam! Fugit amet ipsum
-                omnis veniam, ad neque inventore. Laboriosam maiores autem officiis, aut atque natus
-                fugit.
+                <DatasetMetadataForm
+                  mode="edit"
+                  collectionId={datasetParentCollection?.id}
+                  datasetRepository={datasetRepository}
+                  metadataBlockInfoRepository={metadataBlockInfoRepository}
+                />
               </div>
             </Tabs.Tab>
           </Tabs>
