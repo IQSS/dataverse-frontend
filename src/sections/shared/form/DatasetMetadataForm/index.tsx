@@ -1,7 +1,11 @@
+import { useEffect } from 'react'
+import { useLoading } from '../../../loading/LoadingContext'
 import { useGetMetadataBlocksInfo } from './useGetMetadataBlocksInfo'
 import { DatasetRepository } from '../../../../dataset/domain/repositories/DatasetRepository'
 import { MetadataBlockInfoRepository } from '../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { Form } from './Form'
+import { MetadataFieldsHelper } from './MetadataFieldsHelper'
+import { MetadataFormSkeleton } from './MetadataForm/MetadataFormSkeleton'
+import { MetadataForm } from './MetadataForm'
 
 type DatasetMetadataFormProps = {
   mode: DatasetMetadataFormMode
@@ -18,6 +22,8 @@ export const DatasetMetadataForm = ({
   datasetRepository,
   metadataBlockInfoRepository
 }: DatasetMetadataFormProps) => {
+  const { setIsLoading } = useLoading()
+
   const {
     metadataBlocksInfo,
     isLoading: isLoadingMetadataBlocksInfo,
@@ -28,14 +34,24 @@ export const DatasetMetadataForm = ({
     metadataBlockInfoRepository
   })
 
-  console.log({ metadataBlocksInfo, isLoadingMetadataBlocksInfo, errorLoadingMetadataBlocksInfo })
+  const formDefaultValues = MetadataFieldsHelper.getFormDefaultValues(metadataBlocksInfo)
 
-  // formDefaultValues here
+  useEffect(() => {
+    setIsLoading(isLoadingMetadataBlocksInfo)
+  }, [isLoadingMetadataBlocksInfo, setIsLoading])
+
+  if (isLoadingMetadataBlocksInfo) {
+    return <MetadataFormSkeleton />
+  }
+
   return (
-    <>
-      {/* is loading && skeleton else show form */}
-
-      <Form />
-    </>
+    <MetadataForm
+      mode={mode}
+      collectionId={collectionId}
+      formDefaultValues={formDefaultValues}
+      metadataBlocksInfo={metadataBlocksInfo}
+      errorLoadingMetadataBlocksInfo={errorLoadingMetadataBlocksInfo}
+      datasetRepository={datasetRepository}
+    />
   )
 }

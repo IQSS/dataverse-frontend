@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { getMetadataBlockInfoByCollectionId } from '../../../../metadata-block-info/domain/useCases/getMetadataBlockInfoByCollectionId'
 import { getDisplayedOnCreateMetadataBlockInfoByCollectionId } from '../../../../metadata-block-info/domain/useCases/getDisplayedOnCreateMetadataBlockInfoByCollectionId'
 import { MetadataBlockInfoRepository } from '../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfo } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
@@ -26,22 +27,28 @@ export const useGetMetadataBlocksInfo = ({
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
-  console.log({ mode, collectionId })
-
   useEffect(() => {
     const handleGetDatasetMetadataBlockFields = async () => {
       setIsLoading(true)
       try {
-        const metadataBlocks: MetadataBlockInfo[] =
-          await getDisplayedOnCreateMetadataBlockInfoByCollectionId(
+        let metadataBlocks: MetadataBlockInfo[] = []
+
+        if (mode === 'edit') {
+          metadataBlocks = await getMetadataBlockInfoByCollectionId(
             metadataBlockInfoRepository,
             collectionId
           )
+        } else {
+          metadataBlocks = await getDisplayedOnCreateMetadataBlockInfoByCollectionId(
+            metadataBlockInfoRepository,
+            collectionId
+          )
+        }
+
         const mappedMetadataBlocks =
           MetadataFieldsHelper.replaceDotNamesKeysWithSlash(metadataBlocks)
         setMetadataBlocksInfo(mappedMetadataBlocks)
       } catch (err) {
-        console.error(err)
         const errorMessage =
           err instanceof Error && err.message
             ? err.message
@@ -51,8 +58,9 @@ export const useGetMetadataBlocksInfo = ({
         setIsLoading(false)
       }
     }
+
     void handleGetDatasetMetadataBlockFields()
-  }, [collectionId, metadataBlockInfoRepository])
+  }, [collectionId, metadataBlockInfoRepository, mode])
 
   return {
     metadataBlocksInfo,
