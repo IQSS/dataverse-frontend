@@ -6,6 +6,7 @@ import { DatasetPreviewMother } from '../../../tests/component/dataset/domain/mo
 import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
 import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
+import { VersionUpdateType } from '../../dataset/domain/models/VersionUpdateType'
 export class DatasetMockRepository implements DatasetRepository {
   getAllWithCount: (
     collectionId: string,
@@ -46,6 +47,13 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({ persistentId: 'some-persistent-id' })
+      }, FakerHelper.loadingTimout())
+    })
+  }
+  publish(persistentId: string, versionUpdateType: VersionUpdateType): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
       }, FakerHelper.loadingTimout())
     })
   }
