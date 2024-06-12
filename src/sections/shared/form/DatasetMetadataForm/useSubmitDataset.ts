@@ -37,7 +37,7 @@ export function useSubmitDataset(
   onSubmitErrorCallback: () => void
 ): UseSubmitDatasetReturnType {
   const navigate = useNavigate()
-  const { t } = useTranslation('createDataset')
+  const { t } = useTranslation('datasetMetadataForm')
 
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted

@@ -32,24 +32,22 @@ export const MetadataForm = ({
   datasetRepository
 }: FormProps) => {
   const navigate = useNavigate()
-  const { t } = useTranslation('createDataset')
+  const { t } = useTranslation('datasetMetadataForm')
 
   const accordionRef = useRef<HTMLDivElement>(null)
   const formContainerRef = useRef<HTMLDivElement>(null)
+
+  const onCreateMode = mode === 'create'
+  const isErrorLoadingMetadataBlocks = Boolean(errorLoadingMetadataBlocksInfo)
+
+  const form = useForm({ mode: 'onChange', defaultValues: formDefaultValues })
 
   const { submissionStatus, submitError, submitForm } = useSubmitDataset(
     mode,
     collectionId,
     datasetRepository,
-    onCreateDatasetError
+    onSubmitDatasetError
   )
-
-  const isErrorLoadingMetadataBlocks = Boolean(errorLoadingMetadataBlocksInfo)
-
-  const form = useForm({
-    mode: 'onChange',
-    defaultValues: formDefaultValues
-  })
 
   const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
@@ -87,7 +85,7 @@ export const MetadataForm = ({
     })
   }
 
-  function onCreateDatasetError() {
+  function onSubmitDatasetError() {
     if (formContainerRef.current) {
       formContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
@@ -100,18 +98,16 @@ export const MetadataForm = ({
   return (
     <div className={styles['form-container']} ref={formContainerRef}>
       <RequiredFieldText />
+
       {isErrorLoadingMetadataBlocks && (
         <Alert variant="danger" dismissible={false}>
           {errorLoadingMetadataBlocksInfo}
         </Alert>
       )}
-      {submissionStatus === SubmissionStatus.IsSubmitting && (
-        <p>{t('datasetForm.status.submitting')}</p>
-      )}
+      {submissionStatus === SubmissionStatus.IsSubmitting && <p>{t('status.submitting')}</p>}
 
-      {submissionStatus === SubmissionStatus.SubmitComplete && (
-        <p>{t('datasetForm.status.success')}</p>
-      )}
+      {submissionStatus === SubmissionStatus.SubmitComplete && <p>{t('status.success')}</p>}
+
       {submissionStatus === SubmissionStatus.Errored && (
         <Alert variant={'danger'} customHeading={t('validationAlert.title')} dismissible={false}>
           {submitError}
@@ -138,14 +134,14 @@ export const MetadataForm = ({
 
           <SeparationLine />
 
-          {mode === 'create' && (
+          {onCreateMode && (
             <Alert variant={'info'} customHeading={t('metadataTip.title')} dismissible={false}>
               {t('metadataTip.content')}
             </Alert>
           )}
 
           <Button type="submit" disabled={disableSubmitButton}>
-            {t('saveButton')}
+            {onCreateMode ? t('saveButton.createMode') : t('saveButton.editMode')}
           </Button>
           <Button
             withSpacing

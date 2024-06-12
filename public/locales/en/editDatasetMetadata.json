@@ -6,8 +6,7 @@
   },
   "hostCollection": {
     "label": "Host Collection",
-    "description": "The collection which contains this dataset."
+    "description": "The collection which contains this data."
   },
-  "metadata": "Metadata",
-  "requiredFields": "Asterisks indicate required fields"
+  "metadata": "Metadata"
 }

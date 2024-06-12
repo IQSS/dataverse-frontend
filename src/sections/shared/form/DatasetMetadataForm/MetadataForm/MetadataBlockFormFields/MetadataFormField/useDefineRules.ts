@@ -20,11 +20,11 @@ interface Props {
 export type DefinedRules = UseControllerProps['rules']
 
 export const useDefineRules = ({ metadataFieldInfo }: Props): DefinedRules => {
-  const { t } = useTranslation('createDataset')
+  const { t } = useTranslation('datasetMetadataForm')
   const { type, displayName, isRequired, watermark } = metadataFieldInfo
 
   const rulesToApply: DefinedRules = {
-    required: isRequired ? t('datasetForm.field.required', { displayName }) : false,
+    required: isRequired ? t('field.required', { displayName }) : false,
     validate: (value: string) => {
       if (!value) {
         return true
@@ -32,7 +32,7 @@ export const useDefineRules = ({ metadataFieldInfo }: Props): DefinedRules => {
 
       if (type === TypeMetadataFieldOptions.URL) {
         if (!isValidURL(value)) {
-          return t('datasetForm.field.invalid.url', { displayName })
+          return t('field.invalid.url', { displayName })
         }
         return true
       }
@@ -41,25 +41,25 @@ export const useDefineRules = ({ metadataFieldInfo }: Props): DefinedRules => {
           watermark === 'YYYY-MM-DD' ? DateFormatsOptions.YYYYMMDD : undefined
 
         if (!isValidDateFormat(value, acceptedDateFormat)) {
-          return t('datasetForm.field.invalid.date', { displayName, dateFormat: watermark })
+          return t('field.invalid.date', { displayName, dateFormat: watermark })
         }
         return true
       }
       if (type === TypeMetadataFieldOptions.Email) {
         if (!isValidEmail(value)) {
-          return t('datasetForm.field.invalid.email', { displayName })
+          return t('field.invalid.email', { displayName })
         }
         return true
       }
       if (type === TypeMetadataFieldOptions.Int) {
         if (!isValidInteger(value)) {
-          return t('datasetForm.field.invalid.int', { displayName })
+          return t('field.invalid.int', { displayName })
         }
         return true
       }
       if (type === TypeMetadataFieldOptions.Float) {
         if (!isValidFloat(value)) {
-          return t('datasetForm.field.invalid.float', { displayName })
+          return t('field.invalid.float', { displayName })
         }
         return true
       }

@@ -17,27 +17,27 @@ export function DynamicFieldsButtons({
   onAddButtonClick,
   onRemoveButtonClick
 }: AddFieldButtonsProps) {
-  const { t } = useTranslation('createDataset')
+  const { t } = useTranslation('datasetMetadataForm')
   return (
     <div className={styles.container}>
-      <Tooltip placement="top" overlay={t('datasetForm.addRowButton')}>
+      <Tooltip placement="top" overlay={t('addRowButton')}>
         <Button
           type="button"
           variant="secondary"
           onClick={onAddButtonClick}
           className="px-2"
-          aria-label={`${t('datasetForm.addRowButton')} ${fieldName}`}>
+          aria-label={`${t('addRowButton')} ${fieldName}`}>
           <Plus title="Add" size={24} />
         </Button>
       </Tooltip>
       {!originalField && (
-        <Tooltip placement="top" overlay={t('datasetForm.deleteRowButton')}>
+        <Tooltip placement="top" overlay={t('deleteRowButton')}>
           <Button
             type="button"
             variant="secondary"
             onClick={onRemoveButtonClick}
             className="px-2"
-            aria-label={`${t('datasetForm.deleteRowButton')} ${fieldName}`}>
+            aria-label={`${t('deleteRowButton')} ${fieldName}`}>
             <Dash title="Delete" size={24} />
           </Button>
         </Tooltip>
