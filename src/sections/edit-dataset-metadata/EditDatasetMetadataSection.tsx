@@ -10,6 +10,7 @@ import { HostCollection } from './HostCollection'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { DatasetMetadataForm } from '../shared/form/DatasetMetadataForm'
+import { EditDatasetMetadataSkeleton } from './EditDatasetMetadataSkeleton'
 import { UpwardHierarchyNode } from '../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import styles from './EditDatasetMetadata.module.scss'
 
@@ -40,7 +41,7 @@ export const EditDatasetMetadataSection = ({
   )
 
   if (isLoading) {
-    return <p>Loading...</p>
+    return <EditDatasetMetadataSkeleton />
   }
 
   return (

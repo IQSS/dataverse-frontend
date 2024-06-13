@@ -16,6 +16,7 @@ type DatasetMetadataFormProps = {
 
 export type DatasetMetadataFormMode = 'create' | 'edit'
 
+// TODO:ME Ask about collection name and labels on top? is needed?
 // TODO:ME Keep both accordions open as in JSF version ?
 // TODO:ME Add Save and cancel button on top also but where ? and only on edit mode ?
 // TODO:ME After removing form from create-dataset also remove unused translations
