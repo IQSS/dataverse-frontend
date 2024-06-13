@@ -1,7 +1,8 @@
-import { MouseEvent, useMemo, useRef } from 'react'
+import { MouseEvent, useEffect, useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FieldErrors, FormProvider, useForm } from 'react-hook-form'
+import { useSession } from '../../../../session/SessionContext'
 import { Form, Accordion, Alert, Button } from '@iqss/dataverse-design-system'
 import { type DatasetRepository } from '../../../../../dataset/domain/repositories/DatasetRepository'
 import { type MetadataBlockInfo } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
@@ -31,6 +32,7 @@ export const MetadataForm = ({
   errorLoadingMetadataBlocksInfo,
   datasetRepository
 }: FormProps) => {
+  const { user } = useSession()
   const navigate = useNavigate()
   const { t } = useTranslation('datasetMetadataForm')
 
@@ -41,6 +43,7 @@ export const MetadataForm = ({
   const isErrorLoadingMetadataBlocks = Boolean(errorLoadingMetadataBlocksInfo)
 
   const form = useForm({ mode: 'onChange', defaultValues: formDefaultValues })
+  const { setValue } = form
 
   const { submissionStatus, submitError, submitForm } = useSubmitDataset(
     mode,
@@ -48,6 +51,21 @@ export const MetadataForm = ({
     datasetRepository,
     onSubmitDatasetError
   )
+
+  useEffect(() => {
+    // Only on create mode, lets prefill specific fields with user data
+    if (mode === 'create' && user) {
+      setValue('citation.author.0.authorName', user.displayName)
+      setValue('citation.datasetContact.0.datasetContactName', user.displayName)
+      setValue('citation.datasetContact.0.datasetContactEmail', user.email, {
+        shouldValidate: true
+      })
+      if (user.affiliation) {
+        setValue('citation.datasetContact.0.datasetContactAffiliation', user.affiliation)
+        setValue('citation.author.0.authorAffiliation', user.affiliation)
+      }
+    }
+  }, [setValue, user, mode])
 
   const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
