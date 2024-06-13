@@ -6,7 +6,6 @@ import { TypeMetadataFieldOptions } from '../../../../src/metadata-block-info/do
 import { NotImplementedModalProvider } from '../../../../src/sections/not-implemented/NotImplementedModalProvider'
 import { UserMother } from '../../users/domain/models/UserMother'
 import { UserRepository } from '../../../../src/users/domain/repositories/UserRepository'
-import { SessionProvider } from '../../../../src/sections/session/SessionProvider'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
