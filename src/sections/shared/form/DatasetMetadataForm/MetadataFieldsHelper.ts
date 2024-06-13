@@ -7,6 +7,10 @@ import {
   DatasetMetadataBlockValuesDTO,
   DatasetMetadataChildFieldValueDTO
 } from '../../../../dataset/domain/useCases/DTOs/DatasetDTO'
+import {
+  DatasetMetadataBlocks,
+  DatasetMetadataFields
+} from '../../../../dataset/domain/models/Dataset'
 
 export type DatasetMetadataFormValues = Record<string, MetadataBlockFormValues>
 
@@ -29,27 +33,28 @@ export class MetadataFieldsHelper {
   ): MetadataBlockInfo[] {
     for (const block of metadataBlocks) {
       if (block.metadataFields) {
-        this.dotReplacer(block.metadataFields)
+        this.metadataBlocksInfoDotReplacer(block.metadataFields)
       }
     }
     return metadataBlocks
   }
-
-  private static dotReplacer(metadataFields: Record<string, MetadataField> | undefined) {
+  private static metadataBlocksInfoDotReplacer(
+    metadataFields: Record<string, MetadataField> | undefined
+  ) {
     if (!metadataFields) return
 
     for (const key in metadataFields) {
       const field = metadataFields[key]
       if (field.name.includes('.')) {
-        field.name = field.name.replace(/\./g, '/')
+        field.name = this.replaceDotWithSlash(field.name)
       }
       if (field.childMetadataFields) {
-        this.dotReplacer(field.childMetadataFields)
+        this.metadataBlocksInfoDotReplacer(field.childMetadataFields)
       }
     }
   }
 
-  public static getFormDefaultValues(
+  public static getCreateFormDefaultValues(
     metadataBlocks: MetadataBlockInfo[]
   ): DatasetMetadataFormValues {
     const formDefaultValues: DatasetMetadataFormValues = {}
@@ -98,13 +103,13 @@ export class MetadataFieldsHelper {
     const formattedNewObject: DatasetMetadataFormValues = {}
 
     for (const key in obj) {
-      const blockKey = key.replace(/\//g, '.')
+      const blockKey = this.replaceSlashWithDot(key)
       const metadataBlockFormValues = obj[key]
 
       formattedNewObject[blockKey] = {}
 
       Object.entries(metadataBlockFormValues).forEach(([fieldName, fieldValue]) => {
-        const newFieldName = fieldName.replace(/\//g, '.')
+        const newFieldName = this.replaceSlashWithDot(fieldName)
 
         if (
           this.isPrimitiveFieldValue(fieldValue) ||
@@ -118,7 +123,7 @@ export class MetadataFieldsHelper {
         if (this.isComposedSingleFieldValue(fieldValue)) {
           formattedNewObject[blockKey][newFieldName] = {}
           Object.entries(fieldValue).forEach(([nestedFieldName, nestedFieldValue]) => {
-            const newNestedFieldName = nestedFieldName.replace(/\//g, '.')
+            const newNestedFieldName = this.replaceSlashWithDot(nestedFieldName)
             const parentOfNestedField = formattedNewObject[blockKey][
               newFieldName
             ] as ComposedSingleFieldValue
@@ -133,7 +138,7 @@ export class MetadataFieldsHelper {
             const composedField: ComposedSingleFieldValue = {}
 
             Object.entries(composedFieldValues).forEach(([nestedFieldName, nestedFieldValue]) => {
-              const newNestedFieldName = nestedFieldName.replace(/\//g, '.')
+              const newNestedFieldName = this.replaceSlashWithDot(nestedFieldName)
 
               composedField[newNestedFieldName] = nestedFieldValue
             })
@@ -226,6 +231,42 @@ export class MetadataFieldsHelper {
     }
     return { metadataBlocks }
   }
+
+  public static addFieldValuesToMetadataBlocksInfo(
+    metadataBlocksInfo: MetadataBlockInfo[],
+    datasetMetadaBlocksCurrentValues: DatasetMetadataBlocks
+  ): MetadataBlockInfo[] {
+    // To avoid mutating the original metadataBlocksInfo object
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const clonedMetadataBlocksInfo: MetadataBlockInfo[] = structuredClone(metadataBlocksInfo)
+
+    const currentValuesMap: Record<string, DatasetMetadataFields> =
+      datasetMetadaBlocksCurrentValues.reduce((map, block) => {
+        map[block.name] = block.fields
+        return map
+      }, {} as Record<string, DatasetMetadataFields>)
+
+    // Add the current values to the metadata fields
+    clonedMetadataBlocksInfo.forEach((block) => {
+      const currentBlockValues = currentValuesMap[block.name]
+
+      if (currentBlockValues) {
+        // TODO:ME Check if we need to test also without dots slash
+        Object.keys(block.metadataFields).forEach((fieldName) => {
+          const field = block.metadataFields[fieldName]
+
+          if (fieldName in currentBlockValues) {
+            field.value = currentBlockValues[fieldName]
+          }
+        })
+      }
+    })
+
+    return clonedMetadataBlocksInfo
+  }
+
+  private static replaceDotWithSlash = (str: string) => str.replace(/\./g, '/')
+  private static replaceSlashWithDot = (str: string) => str.replace(/\//g, '.')
 
   /*
    * To define the field name that will be used to register the field in the form

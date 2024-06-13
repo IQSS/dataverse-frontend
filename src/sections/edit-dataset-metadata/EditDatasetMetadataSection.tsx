@@ -68,6 +68,7 @@ export const EditDatasetMetadataSection = ({
                   collectionId={datasetParentCollection?.id}
                   datasetRepository={datasetRepository}
                   metadataBlockInfoRepository={metadataBlockInfoRepository}
+                  datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
                 />
               </div>
             </Tabs.Tab>

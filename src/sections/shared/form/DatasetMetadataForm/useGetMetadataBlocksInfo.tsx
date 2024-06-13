@@ -3,7 +3,7 @@ import { getMetadataBlockInfoByCollectionId } from '../../../../metadata-block-i
 import { getDisplayedOnCreateMetadataBlockInfoByCollectionId } from '../../../../metadata-block-info/domain/useCases/getDisplayedOnCreateMetadataBlockInfoByCollectionId'
 import { MetadataBlockInfoRepository } from '../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfo } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { MetadataFieldsHelper } from '../../../create-dataset/MetadataFieldsHelper'
+import { MetadataFieldsHelper } from './MetadataFieldsHelper'
 import { DatasetMetadataFormMode } from '.'
 
 interface Props {
@@ -47,6 +47,7 @@ export const useGetMetadataBlocksInfo = ({
 
         const mappedMetadataBlocks =
           MetadataFieldsHelper.replaceDotNamesKeysWithSlash(metadataBlocks)
+
         setMetadataBlocksInfo(mappedMetadataBlocks)
       } catch (err) {
         const errorMessage =
