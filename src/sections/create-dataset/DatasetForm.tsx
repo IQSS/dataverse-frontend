@@ -48,7 +48,7 @@ export const DatasetForm = ({
     mode: 'onChange',
     defaultValues: formDefaultValues
   })
-  const { setValue, reset } = form
+  const { setValue } = form
   useEffect(() => {
     if (user) {
       setValue('citation.author.0.authorName', user.displayName)
@@ -61,7 +61,7 @@ export const DatasetForm = ({
         setValue('citation.author.0.authorAffiliation', user.affiliation)
       }
     }
-  }, [form, user])
+  }, [setValue, user])
   const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     navigate(Route.HOME)
