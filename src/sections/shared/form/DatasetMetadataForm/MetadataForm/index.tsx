@@ -113,8 +113,6 @@ export const MetadataForm = ({
     return isErrorLoadingMetadataBlocks || submissionStatus === SubmissionStatus.IsSubmitting
   }, [isErrorLoadingMetadataBlocks, submissionStatus])
 
-  console.log({ formDefaultValues })
-
   return (
     <div className={styles['form-container']} ref={formContainerRef}>
       <RequiredFieldText />

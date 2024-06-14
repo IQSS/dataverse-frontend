@@ -11,7 +11,8 @@ import {
 } from '../../../../dataset/domain/useCases/DTOs/DatasetDTO'
 import {
   DatasetMetadataBlocks,
-  DatasetMetadataFields
+  DatasetMetadataFields,
+  DatasetMetadataSubField
 } from '../../../../dataset/domain/models/Dataset'
 
 export type DatasetMetadataFormValues = Record<string, MetadataBlockFormValues>
@@ -30,16 +31,20 @@ type ComposedFieldValues = ComposedSingleFieldValue | ComposedSingleFieldValue[]
 type ComposedSingleFieldValue = Record<string, string>
 
 export class MetadataFieldsHelper {
-  public static replaceDotNamesKeysWithSlash(
+  public static replaceMetadataBlocksInfoDotNamesKeysWithSlash(
     metadataBlocks: MetadataBlockInfo[]
   ): MetadataBlockInfo[] {
-    for (const block of metadataBlocks) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const metadataBlocksCopy: MetadataBlockInfo[] = structuredClone(metadataBlocks)
+
+    for (const block of metadataBlocksCopy) {
       if (block.metadataFields) {
         this.metadataBlocksInfoDotReplacer(block.metadataFields)
       }
     }
-    return metadataBlocks
+    return metadataBlocksCopy
   }
+
   private static metadataBlocksInfoDotReplacer(
     metadataFields: Record<string, MetadataField> | undefined
   ) {
@@ -56,6 +61,71 @@ export class MetadataFieldsHelper {
     }
   }
 
+  public static replaceDatasetMetadataBlocksCurrentValuesDotKeysWithSlash(
+    datasetMetadataBlocks: DatasetMetadataBlocks
+  ): DatasetMetadataBlocks {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const datasetMetadataBlocksCopy: DatasetMetadataBlocks = structuredClone(datasetMetadataBlocks)
+    const dataWithoutKeysWithDots: DatasetMetadataBlocks = [] as unknown as DatasetMetadataBlocks
+
+    for (const block of datasetMetadataBlocksCopy) {
+      const newBlockFields: DatasetMetadataFields =
+        this.datasetMetadataBlocksCurrentValuesDotReplacer(block.fields)
+
+      const newBlock = {
+        name: block.name,
+        fields: newBlockFields
+      }
+
+      dataWithoutKeysWithDots.push(newBlock)
+    }
+
+    return dataWithoutKeysWithDots
+  }
+
+  private static datasetMetadataBlocksCurrentValuesDotReplacer(
+    datasetMetadataFields: DatasetMetadataFields
+  ): DatasetMetadataFields {
+    const datasetMetadataFieldsNormalized: DatasetMetadataFields = {}
+
+    for (const key in datasetMetadataFields) {
+      const newKey = key.includes('.') ? this.replaceDotWithSlash(key) : key
+
+      const value = datasetMetadataFields[key]
+
+      // Case of DatasetMetadataSubField
+      if (typeof value === 'object' && !Array.isArray(value)) {
+        const nestedKeysMapped = Object.entries(value).reduce((acc, [nestedKey, nestedValue]) => {
+          const newNestedKey = nestedKey.includes('.')
+            ? this.replaceDotWithSlash(nestedKey)
+            : nestedKey
+
+          acc[newNestedKey] = nestedValue
+          return acc
+        }, {} as DatasetMetadataSubField)
+
+        datasetMetadataFieldsNormalized[newKey] = nestedKeysMapped
+      } else if (Array.isArray(value) && value.every((v) => typeof v === 'object')) {
+        // Case of DatasetMetadataSubField[]
+        const nestedKeysMapped = value.map((subFields) => {
+          return Object.entries(subFields).reduce((acc, [nestedKey, nestedValue]) => {
+            const newNestedKey = nestedKey.includes('.')
+              ? this.replaceDotWithSlash(nestedKey)
+              : nestedKey
+
+            acc[newNestedKey] = nestedValue
+            return acc
+          }, {} as DatasetMetadataSubField)
+        })
+        datasetMetadataFieldsNormalized[newKey] = nestedKeysMapped
+      } else {
+        datasetMetadataFieldsNormalized[newKey] = value
+      }
+    }
+
+    return datasetMetadataFieldsNormalized
+  }
+
   public static getFormDefaultValues(
     metadataBlocks: MetadataBlockInfoWithMaybeValues[]
   ): DatasetMetadataFormValues {
@@ -66,6 +136,7 @@ export class MetadataFieldsHelper {
 
       for (const field of Object.values(block.metadataFields)) {
         const fieldName = field.name
+        const fieldValue = field.value
 
         if (field.typeClass === 'compound') {
           const childFieldsWithEmptyValues: Record<string, string> = {}
@@ -81,19 +152,63 @@ export class MetadataFieldsHelper {
               }
             }
           }
-          blockValues[fieldName] = field.multiple
-            ? [childFieldsWithEmptyValues]
-            : childFieldsWithEmptyValues
+
+          if (fieldValue) {
+            // At this point we now that the field.value is a DatasetMetadataSubField[]
+            const castedFieldValue = fieldValue as
+              | DatasetMetadataSubField
+              | DatasetMetadataSubField[]
+
+            let fieldValues: ComposedFieldValues
+
+            if (Array.isArray(castedFieldValue)) {
+              const subFieldsWithValuesPlusEmptyOnes = castedFieldValue.map((subFields) => {
+                const fieldsValueNormalized: Record<string, string> = Object.entries(
+                  subFields
+                ).reduce((acc, [key, value]) => {
+                  if (value !== undefined) {
+                    acc[key] = value
+                  }
+                  return acc
+                }, {} as Record<string, string>)
+
+                return {
+                  ...childFieldsWithEmptyValues,
+                  ...fieldsValueNormalized
+                }
+              })
+
+              fieldValues = subFieldsWithValuesPlusEmptyOnes
+            } else {
+              const fieldsValueNormalized: Record<string, string> = Object.entries(
+                castedFieldValue
+              ).reduce((acc, [key, value]) => {
+                if (value !== undefined) {
+                  acc[key] = value
+                }
+                return acc
+              }, {} as Record<string, string>)
+
+              fieldValues = {
+                ...childFieldsWithEmptyValues,
+                ...fieldsValueNormalized
+              }
+            }
+
+            blockValues[fieldName] = fieldValues
+          } else {
+            blockValues[fieldName] = field.multiple
+              ? [childFieldsWithEmptyValues]
+              : childFieldsWithEmptyValues
+          }
         }
 
         if (field.typeClass === 'primitive') {
-          console.log(fieldName, field.value)
-
           blockValues[fieldName] = this.getPrimitiveFieldDefaultFormValue(field)
         }
 
         if (field.typeClass === 'controlledVocabulary') {
-          blockValues[fieldName] = field.multiple ? [] : ''
+          blockValues[fieldName] = this.getControlledVocabFieldDefaultFormValue(field)
         }
       }
 
@@ -107,11 +222,25 @@ export class MetadataFieldsHelper {
     field: MetadataFieldWithMaybeValue
   ): string | PrimitiveMultipleFormValue {
     if (field.multiple) {
-      const castedFieldValue = field.value as string[]
+      const castedFieldValue = field.value as string[] | undefined
 
       if (!castedFieldValue) return [{ value: '' }]
 
       return castedFieldValue.map((stringValue) => ({ value: stringValue }))
+    }
+    const castedFieldValue = field.value as string | undefined
+    return castedFieldValue ?? ''
+  }
+
+  private static getControlledVocabFieldDefaultFormValue(
+    field: MetadataFieldWithMaybeValue
+  ): string | VocabularyMultipleFormValue {
+    if (field.multiple) {
+      const castedFieldValue = field.value as string[] | undefined
+
+      if (!castedFieldValue) return []
+
+      return castedFieldValue
     }
     const castedFieldValue = field.value as string | undefined
     return castedFieldValue ?? ''
@@ -251,34 +380,35 @@ export class MetadataFieldsHelper {
   }
 
   public static addFieldValuesToMetadataBlocksInfo(
-    metadataBlocksInfo: MetadataBlockInfo[],
-    datasetMetadaBlocksCurrentValues: DatasetMetadataBlocks
+    normalizedMetadataBlocksInfo: MetadataBlockInfo[],
+    normalizedDatasetMetadaBlocksCurrentValues: DatasetMetadataBlocks
   ): MetadataBlockInfoWithMaybeValues[] {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const clonedMetadataBlocksInfo: MetadataBlockInfoWithMaybeValues[] =
-      structuredClone(metadataBlocksInfo)
+    const normalizedMetadataBlocksInfoCopy: MetadataBlockInfoWithMaybeValues[] = structuredClone(
+      normalizedMetadataBlocksInfo
+    )
 
-    const currentValuesMap: Record<string, DatasetMetadataFields> =
-      datasetMetadaBlocksCurrentValues.reduce((map, block) => {
+    const normalizedCurrentValuesMap: Record<string, DatasetMetadataFields> =
+      normalizedDatasetMetadaBlocksCurrentValues.reduce((map, block) => {
         map[block.name] = block.fields
         return map
       }, {} as Record<string, DatasetMetadataFields>)
 
-    clonedMetadataBlocksInfo.forEach((block) => {
-      const currentBlockValues = currentValuesMap[block.name]
+    normalizedMetadataBlocksInfoCopy.forEach((block) => {
+      const currentBlockValues = normalizedCurrentValuesMap[block.name]
 
       if (currentBlockValues) {
         Object.keys(block.metadataFields).forEach((fieldName) => {
           const field = block.metadataFields[fieldName]
 
-          if (fieldName in currentBlockValues) {
-            field.value = currentBlockValues[fieldName]
+          if (this.replaceDotWithSlash(fieldName) in currentBlockValues) {
+            field.value = currentBlockValues[this.replaceDotWithSlash(fieldName)]
           }
         })
       }
     })
 
-    return clonedMetadataBlocksInfo
+    return normalizedMetadataBlocksInfoCopy
   }
 
   private static replaceDotWithSlash = (str: string) => str.replace(/\./g, '/')
