@@ -20,7 +20,6 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
   const { t } = useTranslation('uploadDatasetFiles')
   const [fileUploaderState, setState] = useState(FileUploadTools.createNewState([]))
   const [uploadingToCancelMap, setUploadingToCancelMap] = useState(new Map<string, () => void>())
-  const [uploadFinished, setUploadFinished] = useState(new Set<string>())
   const [semaphore, setSemaphore] = useState(new Set<string>())
 
   const sleep = (delay: number) => new Promise((res) => setTimeout(res, delay))
@@ -44,7 +43,6 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
 
   const fileUploadFinished = (file: File) => {
     const key = FileUploadTools.key(file)
-    setUploadFinished((x) => x.add(key))
     setUploadingToCancelMap((x) => {
       x.delete(key)
       return x
@@ -52,9 +50,14 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     releaseSemaphore(file)
   }
 
+  const canUpload = (file: File) =>
+    !uploadingToCancelMap.has(FileUploadTools.key(file)) &&
+    !FileUploadTools.get(file, fileUploaderState).failed &&
+    !FileUploadTools.get(file, fileUploaderState).done
+
   const uploadOneFile = (file: File) => {
     const key = FileUploadTools.key(file)
-    if (uploadingToCancelMap.has(key) || uploadFinished.has(key)) {
+    if (!canUpload(file)) {
       return
     }
     setState(FileUploadTools.showProgressBar(file, fileUploaderState))
@@ -78,29 +81,40 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
 
   const upload = async (files: File[]) => {
     for (const file of files) {
-      const key = FileUploadTools.key(file)
-      if (!uploadingToCancelMap.has(key) && !uploadFinished.has(key)) {
+      if (canUpload(file)) {
         await acquireSemaphore(file)
         uploadOneFile(file)
       }
     }
   }
 
-  const cancelUpload = (file: File) => {
+  const cleanup = (file: File) => {
     const key = FileUploadTools.key(file)
     const cancel = uploadingToCancelMap.get(key)
     if (cancel) {
       cancel()
-      releaseSemaphore(file)
     }
     setUploadingToCancelMap((x) => {
       x.delete(key)
       return x
     })
+    releaseSemaphore(file)
+  }
+
+  const cancelUpload = (file: File) => {
+    cleanup(file)
     setState(FileUploadTools.removed(file, fileUploaderState))
   }
 
-  const deleteFile = (file: FileUploadState) => {
+  const deleteFile = (fileUploadState: FileUploadState) => {
+    setState((x) => {
+      fileUploadState.removed = true
+      return { state: x.state, uploaded: x.uploaded }
+    })
+  }
+
+  const cleanFileState = (file: File) => {
+    cleanup(file)
     setState(FileUploadTools.delete(file, fileUploaderState))
   }
 
@@ -131,6 +145,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
               selectText={t('select')}
               fileUploaderState={fileUploaderState}
               cancelUpload={cancelUpload}
+              cleanFileState={cleanFileState}
             />
             <UploadedFiles
               fileUploadState={fileUploaderState.uploaded}

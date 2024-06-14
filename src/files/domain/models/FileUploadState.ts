@@ -66,27 +66,35 @@ export class FileUploadTools {
   }
 
   static progress(file: File, now: number, oldState: FileUploaderState): FileUploaderState {
-    const [newState, newValue] = this.toNewState(file, oldState)
-    newValue.progress = now
-    return newState
+    const fileUploadState = oldState.state.get(this.key(file))
+    if (fileUploadState) {
+      fileUploadState.progress = now
+    }
+    return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
   }
 
   static storageId(file: File, id: string, oldState: FileUploaderState): FileUploaderState {
-    const [newState, newValue] = this.toNewState(file, oldState)
-    newValue.storageId = id
-    return newState
+    const fileUploadState = oldState.state.get(this.key(file))
+    if (fileUploadState) {
+      fileUploadState.storageId = id
+    }
+    return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
   }
 
   static failed(file: File, oldState: FileUploaderState): FileUploaderState {
-    const [newState, newValue] = this.toNewState(file, oldState)
-    newValue.failed = true
-    return newState
+    const fileUploadState = oldState.state.get(this.key(file))
+    if (fileUploadState) {
+      fileUploadState.failed = true
+    }
+    return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
   }
 
   static done(file: File, oldState: FileUploaderState): FileUploaderState {
-    const [newState, newValue] = this.toNewState(file, oldState)
-    newValue.done = true
-    return newState
+    const fileUploadState = oldState.state.get(this.key(file))
+    if (fileUploadState) {
+      fileUploadState.done = true
+    }
+    return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
   }
 
   static removed(file: File, oldState: FileUploaderState): FileUploaderState {
@@ -113,8 +121,8 @@ export class FileUploadTools {
     return newState
   }
 
-  static delete(fileUploadState: FileUploadState, oldState: FileUploaderState): FileUploaderState {
-    fileUploadState.removed = true
+  static delete(file: File, oldState: FileUploaderState): FileUploaderState {
+    oldState.state.delete(this.key(file))
     return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
   }
 
@@ -129,7 +137,7 @@ export class FileUploadTools {
 
   private static toUploaded(state: Map<string, FileUploadState>): FileUploadState[] {
     return Array.from(state.values())
-      .filter((x) => x.done)
+      .filter((x) => !x.removed && x.done)
       .sort((a, b) => (a.fileDir + a.fileName).localeCompare(b.fileDir + b.fileName))
   }
 }

@@ -12,6 +12,7 @@ export interface FileUploaderProps {
   selectText: string
   fileUploaderState: FileUploaderState
   cancelUpload: (file: File) => void
+  cleanFileState: (file: File) => void
 }
 
 export function FileUploader({
@@ -20,7 +21,8 @@ export function FileUploader({
   info,
   selectText,
   fileUploaderState,
-  cancelUpload
+  cancelUpload,
+  cleanFileState
 }: FileUploaderProps) {
   const theme = useTheme()
   const [files, setFiles] = useState<File[]>([])
@@ -104,16 +106,21 @@ export function FileUploader({
     }
   }
 
-  const handleRemoveFile = (f: File) => {
-    cancelUpload(f)
-    setFiles((newFiles) =>
-      newFiles.filter((x) => !FileUploadTools.get(x, fileUploaderState).removed)
-    )
-  }
-
   useEffect(() => {
     upload(files)
-  }, [files, fileUploaderState, upload])
+  }, [files, upload])
+
+  useEffect(() => {
+    setFiles((newFiles) =>
+      newFiles.filter((x) => {
+        const res = !FileUploadTools.get(x, fileUploaderState).removed
+        if (!res) {
+          cleanFileState(x)
+        }
+        return res
+      })
+    )
+  }, [fileUploaderState, cleanFileState])
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -168,7 +175,7 @@ export function FileUploader({
                         variant="secondary"
                         {...{ size: 'sm' }}
                         withSpacing
-                        onClick={() => handleRemoveFile(file)}>
+                        onClick={() => cancelUpload(file)}>
                         <X className={styles.icon} title={cancelTitle} />
                       </Button>
                     </div>
