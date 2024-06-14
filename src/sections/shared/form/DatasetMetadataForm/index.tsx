@@ -49,28 +49,24 @@ export const DatasetMetadataForm = ({
     metadataBlockInfoRepository
   })
 
-  console.log({ metadataBlocksInfo, datasetMetadaBlocksCurrentValues })
+  // If we are in edit mode, we need to add the values to the metadata blocks info
+  const metadataBlocksInfoWithValues = useMemo(() => {
+    if (metadataBlocksInfo.length === 0) return null
 
-  //TODO:ME Remove 'as' and only run this if onEditMode
-  const withAddedFieldsValues = MetadataFieldsHelper.addFieldValuesToMetadataBlocksInfo(
-    metadataBlocksInfo,
-    datasetMetadaBlocksCurrentValues as DatasetMetadataBlocks
-  )
-
-  console.log({ withAddedFieldsValues })
-
-  const formDefaultValues = useMemo(() => {
-    if (metadataBlocksInfo.length === 0) return undefined
-
-    // if (onEditMode) {
-    //   return MetadataFieldsHelper.getEditFormDefaultValues(
-    //     metadataBlocksInfo,
-    //     datasetMetadaBlocksCurrentValues
-    //   )
-    // }
-
-    return MetadataFieldsHelper.getCreateFormDefaultValues(metadataBlocksInfo)
+    return onEditMode
+      ? MetadataFieldsHelper.addFieldValuesToMetadataBlocksInfo(
+          metadataBlocksInfo,
+          datasetMetadaBlocksCurrentValues
+        )
+      : null
   }, [metadataBlocksInfo, datasetMetadaBlocksCurrentValues, onEditMode])
+
+  // Set the form default values object based on the metadata blocks info
+  const formDefaultValues = useMemo(() => {
+    return onEditMode && metadataBlocksInfoWithValues !== null
+      ? MetadataFieldsHelper.getFormDefaultValues(metadataBlocksInfoWithValues)
+      : MetadataFieldsHelper.getFormDefaultValues(metadataBlocksInfo)
+  }, [metadataBlocksInfo, metadataBlocksInfoWithValues, onEditMode])
 
   useEffect(() => {
     setIsLoading(isLoadingMetadataBlocksInfo)

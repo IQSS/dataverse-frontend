@@ -8,6 +8,10 @@ export interface MetadataBlockInfo {
   displayOnCreate: boolean
 }
 
+export interface MetadataBlockInfoWithMaybeValues extends MetadataBlockInfo {
+  metadataFields: Record<string, MetadataFieldWithMaybeValue>
+}
+
 export interface MetadataField {
   name: string
   displayName: string
@@ -24,7 +28,10 @@ export interface MetadataField {
   controlledVocabularyValues?: string[]
   childMetadataFields?: Record<string, MetadataField>
   displayOnCreate: boolean
-  value?: DatasetMetadataFieldValue // Only present after adding values to the metadata fields
+}
+
+export interface MetadataFieldWithMaybeValue extends MetadataField {
+  value?: DatasetMetadataFieldValue
 }
 
 export const TypeMetadataFieldOptions = {

@@ -1,6 +1,8 @@
 import {
   MetadataBlockInfo,
-  MetadataField
+  MetadataBlockInfoWithMaybeValues,
+  MetadataField,
+  MetadataFieldWithMaybeValue
 } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import {
   DatasetDTO,
@@ -54,8 +56,8 @@ export class MetadataFieldsHelper {
     }
   }
 
-  public static getCreateFormDefaultValues(
-    metadataBlocks: MetadataBlockInfo[]
+  public static getFormDefaultValues(
+    metadataBlocks: MetadataBlockInfoWithMaybeValues[]
   ): DatasetMetadataFormValues {
     const formDefaultValues: DatasetMetadataFormValues = {}
 
@@ -85,7 +87,9 @@ export class MetadataFieldsHelper {
         }
 
         if (field.typeClass === 'primitive') {
-          blockValues[fieldName] = field.multiple ? [{ value: '' }] : ''
+          console.log(fieldName, field.value)
+
+          blockValues[fieldName] = this.getPrimitiveFieldDefaultFormValue(field)
         }
 
         if (field.typeClass === 'controlledVocabulary') {
@@ -97,6 +101,20 @@ export class MetadataFieldsHelper {
     }
 
     return formDefaultValues
+  }
+
+  private static getPrimitiveFieldDefaultFormValue(
+    field: MetadataFieldWithMaybeValue
+  ): string | PrimitiveMultipleFormValue {
+    if (field.multiple) {
+      const castedFieldValue = field.value as string[]
+
+      if (!castedFieldValue) return [{ value: '' }]
+
+      return castedFieldValue.map((stringValue) => ({ value: stringValue }))
+    }
+    const castedFieldValue = field.value as string | undefined
+    return castedFieldValue ?? ''
   }
 
   public static replaceSlashKeysWithDot(obj: DatasetMetadataFormValues): DatasetMetadataFormValues {
@@ -235,10 +253,10 @@ export class MetadataFieldsHelper {
   public static addFieldValuesToMetadataBlocksInfo(
     metadataBlocksInfo: MetadataBlockInfo[],
     datasetMetadaBlocksCurrentValues: DatasetMetadataBlocks
-  ): MetadataBlockInfo[] {
-    // To avoid mutating the original metadataBlocksInfo object
+  ): MetadataBlockInfoWithMaybeValues[] {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const clonedMetadataBlocksInfo: MetadataBlockInfo[] = structuredClone(metadataBlocksInfo)
+    const clonedMetadataBlocksInfo: MetadataBlockInfoWithMaybeValues[] =
+      structuredClone(metadataBlocksInfo)
 
     const currentValuesMap: Record<string, DatasetMetadataFields> =
       datasetMetadaBlocksCurrentValues.reduce((map, block) => {
@@ -246,12 +264,10 @@ export class MetadataFieldsHelper {
         return map
       }, {} as Record<string, DatasetMetadataFields>)
 
-    // Add the current values to the metadata fields
     clonedMetadataBlocksInfo.forEach((block) => {
       const currentBlockValues = currentValuesMap[block.name]
 
       if (currentBlockValues) {
-        // TODO:ME Check if we need to test also without dots slash
         Object.keys(block.metadataFields).forEach((fieldName) => {
           const field = block.metadataFields[fieldName]
 
