@@ -6,8 +6,9 @@ import { useDataset } from '../dataset/DatasetContext'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { FileUploader } from './FileUploader'
-import { FileUploadTools } from '../../files/domain/models/FileUploadState'
+import { FileUploadState, FileUploadTools } from '../../files/domain/models/FileUploadState'
 import { uploadFile } from '../../files/domain/useCases/uploadFile'
+import { UploadedFiles } from './UploadedFiles'
 
 interface UploadDatasetFilesProps {
   fileRepository: FileRepository
@@ -99,6 +100,10 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     setState(FileUploadTools.removed(file, fileUploaderState))
   }
 
+  const deleteFile = (file: FileUploadState) => {
+    setState(FileUploadTools.delete(file, fileUploaderState))
+  }
+
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])
@@ -126,6 +131,11 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
               selectText={t('select')}
               fileUploaderState={fileUploaderState}
               cancelUpload={cancelUpload}
+            />
+            <UploadedFiles
+              fileUploadState={fileUploaderState.uploaded}
+              cancelTitle={t('cancel')}
+              deleteFile={deleteFile}
             />
           </article>
         </>
