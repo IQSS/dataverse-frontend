@@ -69,7 +69,8 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
         setState(FileUploadTools.failed(file, fileUploaderState))
         fileUploadFinished(file)
       },
-      (now) => setState(FileUploadTools.progress(file, now, fileUploaderState))
+      (now) => setState(FileUploadTools.progress(file, now, fileUploaderState)),
+      (storageId) => setState(FileUploadTools.storageId(file, storageId, fileUploaderState))
     )
     setUploadingToCancelMap((x) => x.set(key, cancel))
   }

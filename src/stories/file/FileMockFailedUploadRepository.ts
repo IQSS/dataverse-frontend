@@ -7,7 +7,8 @@ export class FileMocFailedRepository extends FileMockRepository implements FileR
     _datasetId: number | string,
     _file: FileHolder,
     _progress: (now: number) => void,
-    _abortController: AbortController
+    _abortController: AbortController,
+    _storageIdSetter: (storageId: string) => void
   ): Promise<void> {
     return Promise.reject(new Error('fail'))
   }

@@ -31,6 +31,7 @@ export interface FileRepository {
     datasetId: number | string,
     file: FileHolder,
     progress: (now: number) => void,
-    abortController: AbortController
+    abortController: AbortController,
+    storageIdSetter: (storageId: string) => void
   ) => Promise<void>
 }

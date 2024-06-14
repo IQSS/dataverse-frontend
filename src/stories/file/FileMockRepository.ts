@@ -71,7 +71,8 @@ export class FileMockRepository implements FileRepository {
     _datasetId: number | string,
     _file: FileHolder,
     progress: (now: number) => void,
-    abortController: AbortController
+    abortController: AbortController,
+    storageIdSetter: (storageId: string) => void
   ): Promise<void> {
     let t: NodeJS.Timeout
     const sleep = (delay: number) => new Promise((res) => (t = setTimeout(res, delay)))
@@ -84,6 +85,7 @@ export class FileMockRepository implements FileRepository {
         progress(now)
         //console.log(FileUploadTools.key(_file.file) + ': ' + String(now))
       }
+      storageIdSetter('some-storage-identifier')
     }
     return res()
   }
