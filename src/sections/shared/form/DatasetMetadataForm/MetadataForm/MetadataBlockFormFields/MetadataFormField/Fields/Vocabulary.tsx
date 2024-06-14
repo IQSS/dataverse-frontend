@@ -40,7 +40,7 @@ export const Vocabulary = ({
       name={builtFieldName}
       control={control}
       rules={rulesToApply}
-      render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => (
+      render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
         <Form.Group controlId={builtFieldName} as={withinMultipleFieldsGroup ? Col : Row}>
           <Form.Group.Label
             message={description}
@@ -52,7 +52,11 @@ export const Vocabulary = ({
           <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
             <Row>
               <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
-                <Form.Group.Select onChange={onChange} isInvalid={invalid} ref={ref}>
+                <Form.Group.Select
+                  onChange={onChange}
+                  value={value as string}
+                  isInvalid={invalid}
+                  ref={ref}>
                   <option value="">Select</option>
                   {options.map((option) => (
                     <option key={option} value={option}>

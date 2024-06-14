@@ -39,7 +39,7 @@ export const VocabularyMultiple = ({
       name={builtFieldName}
       control={control}
       rules={rulesToApply}
-      render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => (
+      render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
         <Form.Group>
           <Form.Group.Label
             message={description}
@@ -53,6 +53,7 @@ export const VocabularyMultiple = ({
             <Row>
               <Col sm={9}>
                 <Form.Group.SelectMultiple
+                  defaultValue={value as string[]}
                   options={options}
                   onChange={onChange}
                   isInvalid={invalid}

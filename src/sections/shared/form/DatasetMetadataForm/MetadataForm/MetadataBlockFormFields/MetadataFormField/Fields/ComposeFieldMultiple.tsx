@@ -52,7 +52,7 @@ export const ComposedFieldMultiple = ({
     <Form.GroupWithMultipleFields title={title} message={description} required={isRequired}>
       {fieldsArray.map((field, index) => {
         return (
-          <Row key={field.id}>
+          <Row key={field.id} className={styles['composed-fields-multiple-row']}>
             <Col sm={9} className={styles['composed-fields-grid']}>
               {Object.entries(childMetadataFields).map(
                 ([childMetadataFieldKey, childMetadataFieldInfo]) => {

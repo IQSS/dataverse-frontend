@@ -83,11 +83,12 @@ export const PrimitiveMultiple = ({
               name={builtFieldNameWithIndex(index)}
               control={control}
               rules={rulesToApply}
-              render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => (
+              render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
                 <>
                   <Col sm={9}>
                     {isTextArea ? (
                       <Form.Group.TextArea
+                        value={value as string}
                         onChange={onChange}
                         isInvalid={invalid}
                         placeholder={watermark}
@@ -98,6 +99,7 @@ export const PrimitiveMultiple = ({
                     ) : (
                       <Form.Group.Input
                         type="text"
+                        value={value as string}
                         onChange={onChange}
                         isInvalid={invalid}
                         placeholder={watermark}

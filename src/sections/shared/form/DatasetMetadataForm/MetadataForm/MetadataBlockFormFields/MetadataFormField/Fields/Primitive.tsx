@@ -58,6 +58,7 @@ export const Primitive = ({
               <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
                 {isTextArea ? (
                   <Form.Group.TextArea
+                    value={value as string}
                     onChange={onChange}
                     isInvalid={invalid}
                     placeholder={watermark}
