@@ -14,9 +14,7 @@ import {
   getFileDataTables,
   getFileDownloadCount,
   getFileUserPermissions,
-  ReadError,
-  uploadFile as jsUploadFile,
-  addUploadedFileToDataset
+  ReadError
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -31,6 +29,7 @@ import { JSFileMetadataMapper } from './mappers/JSFileMetadataMapper'
 import { FilePermissions } from '../domain/models/FilePermissions'
 import { JSFilePermissionsMapper } from './mappers/JSFilePermissionsMapper'
 import { FileHolder } from '../domain/repositories/File'
+import { FileUploadState } from '../domain/models/FileUploadState'
 
 const includeDeaccessioned = true
 
@@ -241,18 +240,50 @@ export class FileJSDataverseRepository implements FileRepository {
   }
 
   uploadFile(
-    datasetId: number | string,
-    file: FileHolder,
-    progress: (now: number) => void,
-    abortController: AbortController,
-    storageIdSetter: (storageId: string) => void
+    _datasetId: number | string,
+    _file: FileHolder,
+    _progress: (now: number) => void,
+    _abortController: AbortController,
+    _storageIdSetter: (storageId: string) => void
   ): Promise<void> {
-    return jsUploadFile
+    /*return jsUploadFile
       .execute(datasetId, file.file, progress, abortController)
-      .then(storageIdSetter)
+      .then(storageIdSetter)*/
+    return new Promise(() => {})
   }
 
-  addUploadedFile(datasetId: number | string, file: FileHolder, storageId: string): Promise<void> {
-    return addUploadedFileToDataset.execute(datasetId, file.file, storageId)
+  addUploadedFile(
+    _datasetId: number | string,
+    file: FileUploadState,
+    _storageId: string
+  ): Promise<void> {
+    const f: FileHolder = {
+      file: {
+        lastModified: file.fileLastModified,
+        name: file.fileName,
+        webkitRelativePath: file.fileDir,
+        size: file.fileSize,
+        type: file.fileType,
+        arrayBuffer: function (): Promise<ArrayBuffer> {
+          throw new Error('Function not implemented.')
+        },
+        slice: function (
+          _start?: number | undefined,
+          _end?: number | undefined,
+          _contentType?: string | undefined
+        ): Blob {
+          throw new Error('Function not implemented.')
+        },
+        stream: function (): ReadableStream<Uint8Array> {
+          throw new Error('Function not implemented.')
+        },
+        text: function (): Promise<string> {
+          throw new Error('Function not implemented.')
+        }
+      }
+    }
+    console.log(f.file.name)
+    return new Promise(() => {})
+    //return addUploadedFileToDataset.execute(datasetId, f.file, storageId, description)
   }
 }

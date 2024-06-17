@@ -5,6 +5,8 @@ export interface FileUploadState {
   storageId?: string
   progressHidden: boolean
   fileSizeString: string
+  fileSize: number
+  fileLastModified: number
   failed: boolean
   done: boolean
   removed: boolean
@@ -12,6 +14,7 @@ export interface FileUploadState {
   fileDir: string
   fileType: string
   key: string
+  description?: string
 }
 
 export interface FileUploaderState {
@@ -29,6 +32,8 @@ export class FileUploadTools {
         storageId: undefined,
         progressHidden: true,
         fileSizeString: new FileSize(file.size, FileSizeUnit.BYTES).toString(),
+        fileSize: file.size,
+        fileLastModified: file.lastModified,
         failed: false,
         done: false,
         removed: false,
@@ -55,6 +60,8 @@ export class FileUploadTools {
       progress: 0,
       progressHidden: true,
       fileSizeString: new FileSize(file.size, FileSizeUnit.BYTES).toString(),
+      fileSize: file.size,
+      fileLastModified: file.lastModified,
       failed: false,
       done: false,
       removed: false,

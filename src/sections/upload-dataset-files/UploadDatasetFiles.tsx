@@ -119,30 +119,17 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     setState(FileUploadTools.delete(file, fileUploaderState))
   }
 
-  /*type MutableFile = {
-    -readonly [K in keyof File]: File[K]
-  }*/
-
-  const stateToFiles = (state: FileUploadState[]) =>
-    state.map((x) => {
-      //TODO: pass label and description, preferably use multiple files add
-      /*const f = new File([], x.fileName, { type: x.fileType })
-      const mutable: MutableFile = f
-      mutable.webkitRelativePath = x.fileDir
-      const res: File = mutable
-      return res*/
-      return new File([], x.fileName, { type: x.fileType })
-    })
-
   const cleanAllState = () => {
-    stateToFiles(Array.from(fileUploaderState.state.values())).forEach((file) => {
-      cleanup(file)
-      setState(FileUploadTools.delete(file, fileUploaderState))
+    setState((x) => {
+      Array.from(x.state.values()).forEach((fileUploadState) => {
+        fileUploadState.removed = true
+      })
+      return { state: x.state, uploaded: x.uploaded }
     })
   }
 
   const addFiles = (state: FileUploadState[]) => {
-    stateToFiles(state).forEach((file, index) =>
+    state.forEach((file, index) =>
       addUploadedFile(
         fileRepository,
         dataset?.persistentId as string,

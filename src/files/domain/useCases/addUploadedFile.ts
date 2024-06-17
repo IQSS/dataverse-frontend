@@ -1,13 +1,14 @@
+import { FileUploadState } from '../models/FileUploadState'
 import { FileRepository } from '../repositories/FileRepository'
 
 export function addUploadedFile(
   fileRepository: FileRepository,
   datasetId: number | string,
-  file: File,
+  file: FileUploadState,
   storageId: string
 ): void {
   fileRepository
-    .addUploadedFile(datasetId, { file: file }, storageId)
+    .addUploadedFile(datasetId, file, storageId)
     .then(() => {
       // console.log('File added to the dataset successfully.')
     })

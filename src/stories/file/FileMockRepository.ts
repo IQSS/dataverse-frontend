@@ -12,6 +12,7 @@ import { File } from '../../files/domain/models/File'
 import { FilePreview } from '../../files/domain/models/FilePreview'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { FileHolder } from '../../files/domain/repositories/File'
+import { FileUploadState } from '../../files/domain/models/FileUploadState'
 
 export class FileMockRepository implements FileRepository {
   constructor(public readonly fileMock?: File) {}
@@ -92,7 +93,7 @@ export class FileMockRepository implements FileRepository {
 
   addUploadedFile(
     _datasetId: number | string,
-    _file: FileHolder,
+    _file: FileUploadState,
     _storageId: string
   ): Promise<void> {
     return new Promise(() => {})

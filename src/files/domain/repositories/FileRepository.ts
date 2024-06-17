@@ -6,6 +6,7 @@ import { DatasetVersion, DatasetVersionNumber } from '../../../dataset/domain/mo
 import { FilePaginationInfo } from '../models/FilePaginationInfo'
 import { FilePreview } from '../models/FilePreview'
 import { FileHolder } from './File'
+import { FileUploadState } from '../models/FileUploadState'
 
 export interface FileRepository {
   getAllByDatasetPersistentId: (
@@ -36,7 +37,7 @@ export interface FileRepository {
   ) => Promise<void>
   addUploadedFile: (
     datasetId: number | string,
-    file: FileHolder,
+    file: FileUploadState,
     storageId: string
   ) => Promise<void>
 }
