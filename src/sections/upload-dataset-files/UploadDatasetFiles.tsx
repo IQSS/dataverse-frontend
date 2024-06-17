@@ -129,7 +129,9 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
   }
 
   const addFiles = (state: FileUploadState[]) => {
-    addUploadedFile(fileRepository, dataset?.persistentId as string, state)
+    setIsLoading(true)
+    const done = () => setIsLoading(false)
+    addUploadedFile(fileRepository, dataset?.persistentId as string, state, done)
     cleanAllState()
   }
 

@@ -252,7 +252,8 @@ export class FileJSDataverseRepository implements FileRepository {
     return new Promise(() => {})
   }
 
-  addUploadedFile(_datasetId: number | string, files: FileUploadState[]): Promise<void> {
+  addUploadedFile(_datasetId: number | string, files: FileUploadState[]): Promise<void[]> {
+    const all: Promise<void>[] = []
     files.forEach((file) => {
       const f: FileHolder = {
         file: {
@@ -280,8 +281,9 @@ export class FileJSDataverseRepository implements FileRepository {
         }
       }
       console.log(f.file.name)
+      all.push(new Promise(() => {}))
       //addUploadedFileToDataset.execute(datasetId, f.file, file.storageId as string, file.description)
     })
-    return new Promise(() => {})
+    return Promise.all(all)
   }
 }
