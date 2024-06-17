@@ -150,6 +150,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
         state[index].storageId as string
       )
     )
+    cleanAllState()
   }
 
   useEffect(() => {
