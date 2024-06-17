@@ -20,13 +20,15 @@ import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useAlertContext } from '../alerts/AlertContext'
 import { AlertMessageKey } from '../../alert/domain/models/Alert'
+import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 
 interface DatasetProps {
   fileRepository: FileRepository
+  datasetRepository: DatasetRepository
   created?: boolean
 }
 
-export function Dataset({ fileRepository, created }: DatasetProps) {
+export function Dataset({ fileRepository, datasetRepository, created }: DatasetProps) {
   const { setIsLoading } = useLoading()
   const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('dataset')
@@ -71,7 +73,7 @@ export function Dataset({ fileRepository, created }: DatasetProps) {
                   <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
                 </Col>
                 <Col sm={3}>
-                  <DatasetActionButtons dataset={dataset} />
+                  <DatasetActionButtons datasetRepository={datasetRepository} dataset={dataset} />
                 </Col>
               </Row>
               <Row>

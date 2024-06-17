@@ -61,7 +61,7 @@ function DatasetWithSearchParams() {
       <DatasetProvider
         repository={datasetRepository}
         searchParams={{ privateUrlToken: privateUrlToken }}>
-        <Dataset fileRepository={fileRepository} />
+        <Dataset datasetRepository={datasetRepository} fileRepository={fileRepository} />
       </DatasetProvider>
     )
   }
@@ -70,7 +70,11 @@ function DatasetWithSearchParams() {
     <DatasetProvider
       repository={datasetRepository}
       searchParams={{ persistentId: persistentId, version: version }}>
-      <Dataset fileRepository={fileRepository} created={created} />
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        created={created}
+      />
     </DatasetProvider>
   )
 }

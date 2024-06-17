@@ -43,7 +43,7 @@ export function usePublishDataset(
       .then(() => {
         setPublishError(null)
         setSubmissionStatus(SubmissionStatus.SubmitComplete)
-        navigate(`${Route.DATASETS}?persistentId=${persistentId}`, {
+        navigate(`${Route.DATASETS}?persistentId=${persistentId}&Version=DRAFT`, {
           state: { publishInProgress: true }
         })
         return
