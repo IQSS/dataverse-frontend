@@ -17,4 +17,14 @@ describe('DatasetCardHeader', () => {
     })
     cy.findByLabelText('icon-dataset').should('exist')
   })
+  it('should render the correct search param for draft version', () => {
+    const dataset = DatasetPreviewMother.createDraft()
+    cy.customMount(
+      <DatasetCardHeader persistentId={dataset.persistentId} version={dataset.version} />
+    )
+
+    cy.findByText(dataset.version.title)
+      .should('exist')
+      .should('have.attr', 'href', `/datasets?persistentId=${dataset.persistentId}&version=DRAFT`)
+  })
 })
