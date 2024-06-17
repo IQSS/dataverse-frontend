@@ -128,6 +128,12 @@ export class FileUploadTools {
     return newState
   }
 
+  static fileDescription(file: File, txt: string, oldState: FileUploaderState): FileUploaderState {
+    const [newState, newValue] = this.toNewState(file, oldState)
+    newValue.description = txt
+    return newState
+  }
+
   static delete(file: File, oldState: FileUploaderState): FileUploaderState {
     oldState.state.delete(this.key(file))
     return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
