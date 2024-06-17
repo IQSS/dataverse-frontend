@@ -91,11 +91,7 @@ export class FileMockRepository implements FileRepository {
     return res()
   }
 
-  addUploadedFile(
-    _datasetId: number | string,
-    _file: FileUploadState,
-    _storageId: string
-  ): Promise<void> {
+  addUploadedFile(_datasetId: number | string, _files: FileUploadState[]): Promise<void> {
     return new Promise(() => {})
   }
 }

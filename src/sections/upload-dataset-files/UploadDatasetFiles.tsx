@@ -129,14 +129,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
   }
 
   const addFiles = (state: FileUploadState[]) => {
-    state.forEach((file, index) =>
-      addUploadedFile(
-        fileRepository,
-        dataset?.persistentId as string,
-        file,
-        state[index].storageId as string
-      )
-    )
+    addUploadedFile(fileRepository, dataset?.persistentId as string, state)
     cleanAllState()
   }
 

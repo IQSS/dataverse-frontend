@@ -252,38 +252,36 @@ export class FileJSDataverseRepository implements FileRepository {
     return new Promise(() => {})
   }
 
-  addUploadedFile(
-    _datasetId: number | string,
-    file: FileUploadState,
-    _storageId: string
-  ): Promise<void> {
-    const f: FileHolder = {
-      file: {
-        lastModified: file.fileLastModified,
-        name: file.fileName,
-        webkitRelativePath: file.fileDir,
-        size: file.fileSize,
-        type: file.fileType,
-        arrayBuffer: function (): Promise<ArrayBuffer> {
-          throw new Error('Function not implemented.')
-        },
-        slice: function (
-          _start?: number | undefined,
-          _end?: number | undefined,
-          _contentType?: string | undefined
-        ): Blob {
-          throw new Error('Function not implemented.')
-        },
-        stream: function (): ReadableStream<Uint8Array> {
-          throw new Error('Function not implemented.')
-        },
-        text: function (): Promise<string> {
-          throw new Error('Function not implemented.')
+  addUploadedFile(_datasetId: number | string, files: FileUploadState[]): Promise<void> {
+    files.forEach((file) => {
+      const f: FileHolder = {
+        file: {
+          lastModified: file.fileLastModified,
+          name: file.fileName,
+          webkitRelativePath: file.fileDir,
+          size: file.fileSize,
+          type: file.fileType,
+          arrayBuffer: function (): Promise<ArrayBuffer> {
+            throw new Error('Function not implemented.')
+          },
+          slice: function (
+            _start?: number | undefined,
+            _end?: number | undefined,
+            _contentType?: string | undefined
+          ): Blob {
+            throw new Error('Function not implemented.')
+          },
+          stream: function (): ReadableStream<Uint8Array> {
+            throw new Error('Function not implemented.')
+          },
+          text: function (): Promise<string> {
+            throw new Error('Function not implemented.')
+          }
         }
       }
-    }
-    console.log(f.file.name)
+      console.log(f.file.name)
+      //addUploadedFileToDataset.execute(datasetId, f.file, file.storageId as string, file.description)
+    })
     return new Promise(() => {})
-    //return addUploadedFileToDataset.execute(datasetId, f.file, storageId, description)
   }
 }

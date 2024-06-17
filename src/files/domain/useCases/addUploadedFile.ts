@@ -4,11 +4,10 @@ import { FileRepository } from '../repositories/FileRepository'
 export function addUploadedFile(
   fileRepository: FileRepository,
   datasetId: number | string,
-  file: FileUploadState,
-  storageId: string
+  files: FileUploadState[]
 ): void {
   fileRepository
-    .addUploadedFile(datasetId, file, storageId)
+    .addUploadedFile(datasetId, files)
     .then(() => {
       // console.log('File added to the dataset successfully.')
     })

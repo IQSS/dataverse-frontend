@@ -35,9 +35,5 @@ export interface FileRepository {
     abortController: AbortController,
     storageIdSetter: (storageId: string) => void
   ) => Promise<void>
-  addUploadedFile: (
-    datasetId: number | string,
-    file: FileUploadState,
-    storageId: string
-  ) => Promise<void>
+  addUploadedFile: (datasetId: number | string, files: FileUploadState[]) => Promise<void>
 }
