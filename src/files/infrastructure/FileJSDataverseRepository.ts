@@ -248,7 +248,10 @@ export class FileJSDataverseRepository implements FileRepository {
   ): Promise<void> {
     /*return jsUploadFile
       .execute(datasetId, file.file, progress, abortController)
-      .then(storageIdSetter)*/
+      .then(storageIdSetter)
+      .catch((error: ReadError) => {
+        throw new Error(error.message)
+      })*/
     return new Promise(() => {})
   }
 
@@ -282,7 +285,7 @@ export class FileJSDataverseRepository implements FileRepository {
       }
       console.log(f.file.name)
       all.push(new Promise(() => {}))
-      //addUploadedFileToDataset.execute(datasetId, f.file, file.storageId as string, file.description)
+      //all.push(addUploadedFileToDataset.execute(datasetId, f.file, file.storageId as string, file.description))
     })
     return Promise.all(all)
   }
