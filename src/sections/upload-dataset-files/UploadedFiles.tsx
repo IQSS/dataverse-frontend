@@ -2,22 +2,42 @@ import { Button, Card } from '@iqss/dataverse-design-system'
 import { X } from 'react-bootstrap-icons'
 import { FileUploadState } from '../../files/domain/models/FileUploadState'
 import styles from './FileUploader.module.scss'
+import { useState } from 'react'
 
 interface DatasetFilesProps {
   fileUploadState: FileUploadState[]
   cancelTitle: string
   deleteFile: (file: FileUploadState) => void
+  cleanup: () => void
+  addFiles: (fileUploadState: FileUploadState[]) => void
 }
 
-export function UploadedFiles({ fileUploadState, cancelTitle, deleteFile }: DatasetFilesProps) {
+export function UploadedFiles({
+  fileUploadState,
+  cancelTitle,
+  deleteFile,
+  cleanup,
+  addFiles
+}: DatasetFilesProps) {
+  const [saving, setSaving] = useState(false)
+  const save = () => {
+    setSaving(true)
+    addFiles(fileUploadState)
+    cleanup()
+    setSaving(false)
+  }
+
   return (
     <div hidden={fileUploadState.length === 0}>
       <Card>
         <Card.Header>
-          <Button withSpacing onClick={() => {}}>
+          <Button
+            withSpacing
+            onClick={save}
+            disabled={fileUploadState.some((x) => !(x.failed || x.done || x.removed))}>
             Save
           </Button>
-          <Button withSpacing variant="secondary" onClick={() => {}}>
+          <Button withSpacing variant="secondary" onClick={cleanup} disabled={saving}>
             Cancel
           </Button>
           <span className={styles.uploaded}>

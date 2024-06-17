@@ -9,6 +9,7 @@ import { FileUploader } from './FileUploader'
 import { FileUploadState, FileUploadTools } from '../../files/domain/models/FileUploadState'
 import { uploadFile } from '../../files/domain/useCases/uploadFile'
 import { UploadedFiles } from './UploadedFiles'
+import { addUploadedFile } from '../../files/domain/useCases/addUploadedFile'
 
 interface UploadDatasetFilesProps {
   fileRepository: FileRepository
@@ -118,6 +119,37 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     setState(FileUploadTools.delete(file, fileUploaderState))
   }
 
+  type MutableFile = {
+    -readonly [K in keyof File]: File[K]
+  }
+
+  const stateToFiles = (state: FileUploadState[]) =>
+    state.map((x) => {
+      const f = new File([], x.fileName, { type: x.fileType })
+      const mutable: MutableFile = f
+      mutable.webkitRelativePath = x.fileDir
+      const res: File = mutable
+      return res
+    })
+
+  const cleanAllState = () => {
+    stateToFiles(Array.from(fileUploaderState.state.values())).forEach((file) => {
+      cleanup(file)
+      setState(FileUploadTools.delete(file, fileUploaderState))
+    })
+  }
+
+  const addFiles = (state: FileUploadState[]) => {
+    stateToFiles(state).forEach((file, index) =>
+      addUploadedFile(
+        fileRepository,
+        dataset?.persistentId as string,
+        file,
+        state[index].storageId as string
+      )
+    )
+  }
+
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])
@@ -151,6 +183,8 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
               fileUploadState={fileUploaderState.uploaded}
               cancelTitle={t('cancel')}
               deleteFile={deleteFile}
+              cleanup={cleanAllState}
+              addFiles={addFiles}
             />
           </article>
         </>

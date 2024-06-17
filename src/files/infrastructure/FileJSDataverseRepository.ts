@@ -15,7 +15,8 @@ import {
   getFileDownloadCount,
   getFileUserPermissions,
   ReadError,
-  uploadFile as jsUploadFile
+  uploadFile as jsUploadFile,
+  addUploadedFileToDataset
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -249,5 +250,9 @@ export class FileJSDataverseRepository implements FileRepository {
     return jsUploadFile
       .execute(datasetId, file.file, progress, abortController)
       .then(storageIdSetter)
+  }
+
+  addUploadedFile(datasetId: number | string, file: FileHolder, storageId: string): Promise<void> {
+    return addUploadedFileToDataset.execute(datasetId, file.file, storageId)
   }
 }
