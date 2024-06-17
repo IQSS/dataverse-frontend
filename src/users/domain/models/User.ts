@@ -1,4 +1,8 @@
 export interface User {
-  name: string
+  displayName: string
   persistentId: string
+  firstName: string
+  lastName: string
+  email: string
+  affiliation?: string
 }

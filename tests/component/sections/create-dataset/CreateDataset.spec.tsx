@@ -4,15 +4,19 @@ import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { TypeMetadataFieldOptions } from '../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
 import { NotImplementedModalProvider } from '../../../../src/sections/not-implemented/NotImplementedModalProvider'
+import { UserMother } from '../../users/domain/models/UserMother'
+import { UserRepository } from '../../../../src/users/domain/repositories/UserRepository'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
+const userRepository: UserRepository = {} as UserRepository
 
 const collectionMetadataBlocksInfo =
   MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue()
 
 const wrongCollectionMetadataBlocksInfo =
   MetadataBlockInfoMother.wrongCollectionMetadataBlocksInfo()
+const testUser = UserMother.create()
 
 const fillRequiredFields = () => {
   cy.findByLabelText(/^Title/i).type('Test Dataset Title')
@@ -66,7 +70,9 @@ describe('Create Dataset', () => {
     metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
       .stub()
       .resolves(collectionMetadataBlocksInfo)
+    userRepository.getAuthenticated = cy.stub().resolves(testUser)
   })
+
   it('renders the Host Collection Form', () => {
     cy.customMount(
       <NotImplementedModalProvider>
@@ -85,6 +91,38 @@ describe('Create Dataset', () => {
       .then(() => {
         cy.findByText('Not Implemented').should('exist')
       })
+  })
+  it('pre-fills the form with user data', () => {
+    cy.mountAuthenticated(
+      <NotImplementedModalProvider>
+        <CreateDataset
+          repository={datasetRepository}
+          collectionId={'test-collectionId'}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </NotImplementedModalProvider>
+    )
+    cy.findByText('Author')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^Name/i).should('have.value', testUser.displayName)
+      })
+    cy.findByText('Author')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^Affiliation/i).should('have.value', testUser.affiliation)
+      })
+    cy.findByText('Point of Contact')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^Name/i).should('have.value', testUser.displayName)
+      })
+    cy.findByText('Point of Contact')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^Affiliation/i).should('have.value', testUser.affiliation)
+      })
+    cy.findByLabelText(/^E-mail/i).should('have.value', testUser.email)
   })
   it('renders the Create Dataset page and its metadata blocks sections', () => {
     cy.customMount(

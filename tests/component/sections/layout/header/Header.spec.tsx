@@ -32,8 +32,8 @@ describe('Header component', () => {
     cy.wrap(userRepository.getAuthenticated).should('be.calledOnce')
 
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
-    cy.findByText(testUser.name).should('be.visible')
-    cy.findByText(testUser.name).click()
+    cy.findByText(testUser.displayName).should('be.visible')
+    cy.findByText(testUser.displayName).click()
     cy.findByText('Log Out').should('be.visible')
   })
 
@@ -97,13 +97,13 @@ describe('Header component', () => {
 
     cy.findByRole('button', { name: 'Toggle navigation' }).click()
 
-    cy.findByText(testUser.name).click()
+    cy.findByText(testUser.displayName).click()
 
     cy.findByText('Log Out').click()
 
     cy.wrap(userRepository.removeAuthenticated).should('be.calledOnce')
 
-    cy.findByText(testUser.name).should('not.exist')
+    cy.findByText(testUser.displayName).should('not.exist')
 
     cy.findByText('Log In').should('exist')
     cy.findByText('Sign Up').should('exist')

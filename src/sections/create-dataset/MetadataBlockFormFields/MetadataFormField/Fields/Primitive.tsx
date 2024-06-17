@@ -52,7 +52,7 @@ export const Primitive = ({
         name={builtFieldName}
         control={control}
         rules={rulesToApply}
-        render={({ field: { onChange, ref }, fieldState: { invalid, error } }) => (
+        render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
           <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
             <Row>
               <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
@@ -67,6 +67,7 @@ export const Primitive = ({
                 ) : (
                   <Form.Group.Input
                     type="text"
+                    value={value as string}
                     onChange={onChange}
                     isInvalid={invalid}
                     placeholder={watermark}
