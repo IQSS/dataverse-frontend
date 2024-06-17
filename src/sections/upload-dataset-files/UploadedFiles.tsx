@@ -7,6 +7,7 @@ import { useState } from 'react'
 interface DatasetFilesProps {
   fileUploadState: FileUploadState[]
   cancelTitle: string
+  saveDisabled: boolean
   deleteFile: (file: FileUploadState) => void
   cleanup: () => void
   addFiles: (fileUploadState: FileUploadState[]) => void
@@ -15,6 +16,7 @@ interface DatasetFilesProps {
 export function UploadedFiles({
   fileUploadState,
   cancelTitle,
+  saveDisabled,
   deleteFile,
   cleanup,
   addFiles
@@ -31,10 +33,7 @@ export function UploadedFiles({
     <div hidden={fileUploadState.length === 0}>
       <Card>
         <Card.Header>
-          <Button
-            withSpacing
-            onClick={save}
-            disabled={fileUploadState.some((x) => !(x.failed || x.done || x.removed))}>
+          <Button withSpacing onClick={save} disabled={saveDisabled}>
             Save
           </Button>
           <Button withSpacing variant="secondary" onClick={cleanup} disabled={saving}>

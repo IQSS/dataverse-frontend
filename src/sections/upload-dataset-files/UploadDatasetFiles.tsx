@@ -140,6 +140,9 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     cleanAllState()
   }
 
+  const saveDisabled = () =>
+    Array.from(fileUploaderState.state.values()).some((x) => !(x.failed || x.done || x.removed))
+
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])
@@ -172,6 +175,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
             <UploadedFiles
               fileUploadState={fileUploaderState.uploaded}
               cancelTitle={t('cancel')}
+              saveDisabled={saveDisabled()}
               deleteFile={deleteFile}
               cleanup={cleanAllState}
               addFiles={addFiles}
