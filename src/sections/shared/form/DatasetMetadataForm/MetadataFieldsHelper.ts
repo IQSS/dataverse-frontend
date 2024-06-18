@@ -105,7 +105,10 @@ export class MetadataFieldsHelper {
         }, {} as DatasetMetadataSubField)
 
         datasetMetadataFieldsNormalized[newKey] = nestedKeysMapped
-      } else if (Array.isArray(value) && value.every((v) => typeof v === 'object')) {
+      } else if (
+        Array.isArray(value) &&
+        (value as readonly (string | DatasetMetadataSubField)[]).every((v) => typeof v === 'object')
+      ) {
         // Case of DatasetMetadataSubField[]
         const nestedKeysMapped = value.map((subFields) => {
           return Object.entries(subFields).reduce((acc, [nestedKey, nestedValue]) => {
