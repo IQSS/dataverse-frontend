@@ -262,7 +262,7 @@ export class FileJSDataverseRepository implements FileRepository {
         file: {
           lastModified: file.fileLastModified,
           name: file.fileName,
-          webkitRelativePath: file.fileDir,
+          webkitRelativePath: file.fileDir ? (file.fileDir + '/' + file.fileName) : file.fileName,
           size: file.fileSize,
           type: file.fileType,
           arrayBuffer: function (): Promise<ArrayBuffer> {

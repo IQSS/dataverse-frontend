@@ -38,9 +38,9 @@ export class FileUploadTools {
         done: false,
         removed: false,
         fileName: file.name,
-        fileDir: file.webkitRelativePath,
+        fileDir: this.toDir(file.webkitRelativePath),
         fileType: file.type,
-        key: this.key(file)
+        key: key
       }
       newState.set(key, newValue)
     })
@@ -48,7 +48,7 @@ export class FileUploadTools {
   }
 
   static key(file: File): string {
-    return file.webkitRelativePath + file.name
+    return file.webkitRelativePath ? file.webkitRelativePath : file.name
   }
 
   static get(file: File, state: FileUploaderState): FileUploadState {
@@ -66,7 +66,7 @@ export class FileUploadTools {
       done: false,
       removed: false,
       fileName: file.name,
-      fileDir: file.webkitRelativePath,
+      fileDir: this.toDir(file.webkitRelativePath),
       fileType: file.type,
       key: this.key(file)
     }
@@ -116,24 +116,6 @@ export class FileUploadTools {
     return newState
   }
 
-  static fileName(file: File, name: string, oldState: FileUploaderState): FileUploaderState {
-    const [newState, newValue] = this.toNewState(file, oldState)
-    newValue.fileName = name
-    return newState
-  }
-
-  static fileDir(file: File, dir: string, oldState: FileUploaderState): FileUploaderState {
-    const [newState, newValue] = this.toNewState(file, oldState)
-    newValue.fileDir = dir
-    return newState
-  }
-
-  static fileDescription(file: File, txt: string, oldState: FileUploaderState): FileUploaderState {
-    const [newState, newValue] = this.toNewState(file, oldState)
-    newValue.description = txt
-    return newState
-  }
-
   static delete(file: File, oldState: FileUploaderState): FileUploaderState {
     oldState.state.delete(this.key(file))
     return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
@@ -152,5 +134,13 @@ export class FileUploadTools {
     return Array.from(state.values())
       .filter((x) => !x.removed && x.done)
       .sort((a, b) => (a.fileDir + a.fileName).localeCompare(b.fileDir + b.fileName))
+  }
+
+  private static toDir(relativePath: string): string {
+    const parts = relativePath.split('/')
+    if (parts.length > 0) {
+      return parts.slice(0, parts.length - 1).join('/')
+    }
+    return relativePath
   }
 }

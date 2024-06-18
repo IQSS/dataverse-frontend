@@ -1,8 +1,8 @@
-import { Button, Card } from '@iqss/dataverse-design-system'
+import { Button, Card, Col, Form } from '@iqss/dataverse-design-system'
 import { X } from 'react-bootstrap-icons'
 import { FileUploadState } from '../../files/domain/models/FileUploadState'
 import styles from './FileUploader.module.scss'
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 
 interface DatasetFilesProps {
   fileUploadState: FileUploadState[]
@@ -11,6 +11,7 @@ interface DatasetFilesProps {
   deleteFile: (file: FileUploadState) => void
   cleanup: () => void
   addFiles: (fileUploadState: FileUploadState[]) => void
+  updateFile: (file: FileUploadState) => void
 }
 
 export function UploadedFiles({
@@ -19,7 +20,8 @@ export function UploadedFiles({
   saveDisabled,
   deleteFile,
   cleanup,
-  addFiles
+  addFiles,
+  updateFile
 }: DatasetFilesProps) {
   const [saving, setSaving] = useState(false)
   const save = () => {
@@ -27,6 +29,18 @@ export function UploadedFiles({
     addFiles(fileUploadState)
     cleanup()
     setSaving(false)
+  }
+  const updateFileName = (file: FileUploadState, updated: string) => {
+    file.fileName = updated
+    updateFile(file)
+  }
+  const updateFileDir = (file: FileUploadState, updated: string) => {
+    file.fileDir = updated
+    updateFile(file)
+  }
+  const updateFileDescription = (file: FileUploadState, updated: string) => {
+    file.description = updated
+    updateFile(file)
   }
 
   return (
@@ -53,11 +67,54 @@ export function UploadedFiles({
                 {fileUploadState.map((file) => (
                   <div className={styles.file} key={file.key}>
                     <div className={styles.file_name}>
-                      {file.fileDir}
-                      {file.fileName}
+                      <Form>
+                        <Form.Group>
+                          <Form.Group.Label column sm={3}>
+                            File name
+                          </Form.Group.Label>
+                          <Col sm={9}>
+                            <Form.Group.Input
+                              type="text"
+                              placeholder="File name"
+                              defaultValue={file.fileName}
+                              onChange={(event: FormEvent<HTMLInputElement>) =>
+                                updateFileName(file, event.currentTarget.value)
+                              }
+                            />
+                          </Col>
+                        </Form.Group>
+                        <Form.Group>
+                          <Form.Group.Label column sm={3}>
+                            File path
+                          </Form.Group.Label>
+                          <Col sm={9}>
+                            <Form.Group.Input
+                              type="text"
+                              placeholder="File path"
+                              defaultValue={file.fileDir}
+                              onChange={(event: FormEvent<HTMLInputElement>) =>
+                                updateFileDir(file, event.currentTarget.value)
+                              }
+                            />
+                          </Col>
+                        </Form.Group>
+                        <Form.Group>
+                          <Form.Group.Label column sm={3}>
+                            Description
+                          </Form.Group.Label>
+                          <Col sm={9}>
+                            <Form.Group.TextArea
+                              defaultValue={file.description}
+                              onChange={(event: FormEvent<HTMLInputElement>) =>
+                                updateFileDescription(file, event.currentTarget.value)
+                              }
+                            />
+                          </Col>
+                        </Form.Group>
+                      </Form>
                     </div>
                     <div className={styles.file_size}>{file.fileSizeString}</div>
-                    <div className={styles.upload_progress}>{null}</div>
+                    <div>{null}</div>
                     <div className={styles.cancel_upload}>
                       <Button
                         variant="secondary"

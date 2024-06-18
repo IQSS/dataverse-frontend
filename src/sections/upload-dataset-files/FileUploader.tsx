@@ -160,8 +160,7 @@ export function FileUploader({
                       className={cn(styles.file_name, {
                         [styles.failed]: FileUploadTools.get(file, fileUploaderState).failed
                       })}>
-                      {file.webkitRelativePath}
-                      {file.name}
+                      {file.webkitRelativePath ? file.webkitRelativePath : file.name}
                     </div>
                     <div className={styles.file_size}>
                       {FileUploadTools.get(file, fileUploaderState).fileSizeString}

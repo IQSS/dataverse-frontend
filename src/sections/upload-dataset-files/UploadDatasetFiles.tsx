@@ -114,6 +114,13 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     })
   }
 
+  const updateFile = (fileUploadState: FileUploadState) => {
+    setState((x) => {
+      x.state.set(fileUploadState.key, fileUploadState)
+      return { state: x.state, uploaded: x.uploaded }
+    })
+  }
+
   const cleanFileState = (file: File) => {
     cleanup(file)
     setState(FileUploadTools.delete(file, fileUploaderState))
@@ -174,6 +181,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
               deleteFile={deleteFile}
               cleanup={cleanAllState}
               addFiles={addFiles}
+              updateFile={updateFile}
             />
           </article>
         </>
