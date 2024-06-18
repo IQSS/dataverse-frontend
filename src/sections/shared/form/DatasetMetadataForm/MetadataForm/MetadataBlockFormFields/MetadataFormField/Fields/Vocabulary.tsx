@@ -7,6 +7,7 @@ import { type CommonFieldProps } from '..'
 interface VocabularyProps extends CommonFieldProps {
   metadataBlockName: string
   options: string[]
+  withinMultipleFieldsGroup: boolean
   compoundParentName?: string
   fieldsArrayIndex?: number
 }
@@ -18,7 +19,6 @@ export const Vocabulary = ({
   description,
   title,
   options,
-  isRequired,
   withinMultipleFieldsGroup,
   fieldsArrayIndex
 }: VocabularyProps) => {
@@ -44,7 +44,7 @@ export const Vocabulary = ({
         <Form.Group controlId={builtFieldName} as={withinMultipleFieldsGroup ? Col : Row}>
           <Form.Group.Label
             message={description}
-            required={isRequired}
+            required={Boolean(rulesToApply?.required)}
             column={!withinMultipleFieldsGroup}
             sm={3}>
             {title}

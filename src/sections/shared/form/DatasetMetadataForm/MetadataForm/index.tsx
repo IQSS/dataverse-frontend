@@ -122,10 +122,6 @@ export const MetadataForm = ({
           {errorLoadingMetadataBlocksInfo}
         </Alert>
       )}
-      {submissionStatus === SubmissionStatus.IsSubmitting && <p>{t('status.submitting')}</p>}
-
-      {submissionStatus === SubmissionStatus.SubmitComplete && <p>{t('status.success')}</p>}
-
       {submissionStatus === SubmissionStatus.Errored && (
         <Alert variant={'danger'} customHeading={t('validationAlert.title')} dismissible={false}>
           {submitError}

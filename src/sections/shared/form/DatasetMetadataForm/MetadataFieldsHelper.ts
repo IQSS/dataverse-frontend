@@ -154,7 +154,6 @@ export class MetadataFieldsHelper {
           }
 
           if (fieldValue) {
-            // At this point we now that the field.value is a DatasetMetadataSubField[]
             const castedFieldValue = fieldValue as
               | DatasetMetadataSubField
               | DatasetMetadataSubField[]

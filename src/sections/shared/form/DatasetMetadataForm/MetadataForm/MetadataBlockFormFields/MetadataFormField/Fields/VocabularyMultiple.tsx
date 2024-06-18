@@ -18,7 +18,6 @@ export const VocabularyMultiple = ({
   description,
   title,
   options,
-  isRequired,
   fieldsArrayIndex
 }: VocabularyProps) => {
   const { control } = useFormContext()
@@ -44,7 +43,7 @@ export const VocabularyMultiple = ({
           <Form.Group.Label
             message={description}
             htmlFor={builtFieldName}
-            required={isRequired}
+            required={Boolean(rulesToApply?.required)}
             column
             sm={3}>
             {title}

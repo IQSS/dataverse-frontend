@@ -22,7 +22,6 @@ export const PrimitiveMultiple = ({
   title,
   watermark,
   type,
-  isRequired,
   rulesToApply
 }: PrimitiveMultipleProps) => {
   const { control } = useFormContext()
@@ -70,7 +69,7 @@ export const PrimitiveMultiple = ({
     <Form.Group as={Row}>
       <Form.Group.Label
         message={description}
-        required={isRequired}
+        required={Boolean(rulesToApply?.required)}
         htmlFor={controlID}
         column
         sm={3}>
@@ -104,7 +103,6 @@ export const PrimitiveMultiple = ({
                         isInvalid={invalid}
                         placeholder={watermark}
                         data-fieldtype={type}
-                        required={isRequired}
                         ref={ref}
                         id={builtFieldNameWithIndex(index)}
                       />

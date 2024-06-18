@@ -15,16 +15,24 @@ import {
 
 interface Props {
   metadataFieldInfo: MetadataField
+  isParentFieldRequired?: boolean
 }
 
 export type DefinedRules = UseControllerProps['rules']
 
-export const useDefineRules = ({ metadataFieldInfo }: Props): DefinedRules => {
+export const useDefineRules = ({
+  metadataFieldInfo,
+  isParentFieldRequired
+}: Props): DefinedRules => {
   const { t } = useTranslation('datasetMetadataForm')
   const { type, displayName, isRequired, watermark } = metadataFieldInfo
 
+  // A sub field is required if the parent field is required and the sub field is required
+  const isFieldRequired =
+    isParentFieldRequired !== undefined ? isParentFieldRequired && isRequired : isRequired
+
   const rulesToApply: DefinedRules = {
-    required: isRequired ? t('field.required', { displayName }) : false,
+    required: isFieldRequired ? t('field.required', { displayName }) : false,
     validate: (value: string) => {
       if (!value) {
         return true

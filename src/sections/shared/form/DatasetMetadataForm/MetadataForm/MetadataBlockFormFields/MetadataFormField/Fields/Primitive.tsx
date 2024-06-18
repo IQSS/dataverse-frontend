@@ -7,6 +7,7 @@ import { type CommonFieldProps } from '..'
 
 interface PrimitiveProps extends CommonFieldProps {
   metadataBlockName: string
+  withinMultipleFieldsGroup: boolean
   compoundParentName?: string
   fieldsArrayIndex?: number
 }
@@ -19,7 +20,6 @@ export const Primitive = ({
   title,
   watermark,
   type,
-  isRequired,
   withinMultipleFieldsGroup,
   fieldsArrayIndex
 }: PrimitiveProps) => {
@@ -42,7 +42,7 @@ export const Primitive = ({
     <Form.Group controlId={builtFieldName} as={withinMultipleFieldsGroup ? Col : undefined}>
       <Form.Group.Label
         message={description}
-        required={isRequired}
+        required={Boolean(rulesToApply?.required)}
         column={!withinMultipleFieldsGroup}
         sm={3}>
         {title}

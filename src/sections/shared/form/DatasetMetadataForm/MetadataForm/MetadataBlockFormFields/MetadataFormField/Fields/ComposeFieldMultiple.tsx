@@ -18,8 +18,8 @@ export const ComposedFieldMultiple = ({
   title,
   name,
   description,
-  isRequired,
-  childMetadataFields
+  childMetadataFields,
+  rulesToApply
 }: ComposedFieldMultipleProps) => {
   const { control } = useFormContext()
 
@@ -49,7 +49,10 @@ export const ComposedFieldMultiple = ({
   const handleOnRemoveField = (index: number) => remove(index)
 
   return (
-    <Form.GroupWithMultipleFields title={title} message={description} required={isRequired}>
+    <Form.GroupWithMultipleFields
+      title={title}
+      message={description}
+      required={Boolean(rulesToApply?.required)}>
       {fieldsArray.map((field, index) => {
         return (
           <Row key={field.id} className={styles['composed-fields-multiple-row']}>
@@ -61,9 +64,10 @@ export const ComposedFieldMultiple = ({
                       key={childMetadataFieldKey}
                       metadataFieldInfo={childMetadataFieldInfo}
                       metadataBlockName={metadataBlockName}
-                      compoundParentName={name}
-                      withinMultipleFieldsGroup
                       fieldsArrayIndex={index}
+                      withinMultipleFieldsGroup={true}
+                      compoundParentName={name}
+                      compoundParentIsRequired={Boolean(rulesToApply?.required)}
                     />
                   )
                 }

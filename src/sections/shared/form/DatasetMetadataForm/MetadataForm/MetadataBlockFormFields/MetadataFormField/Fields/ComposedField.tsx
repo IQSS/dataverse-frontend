@@ -15,11 +15,14 @@ export const ComposedField = ({
   title,
   name,
   description,
-  isRequired,
-  childMetadataFields
+  childMetadataFields,
+  rulesToApply
 }: ComposedFieldProps) => {
   return (
-    <Form.GroupWithMultipleFields title={title} message={description} required={isRequired}>
+    <Form.GroupWithMultipleFields
+      title={title}
+      message={description}
+      required={Boolean(rulesToApply?.required)}>
       <Row>
         <Col sm={9} className={styles['composed-fields-grid']}>
           {Object.entries(childMetadataFields).map(
@@ -29,8 +32,9 @@ export const ComposedField = ({
                   key={childMetadataFieldKey}
                   metadataFieldInfo={childMetadataFieldInfo}
                   metadataBlockName={metadataBlockName}
+                  withinMultipleFieldsGroup={true}
                   compoundParentName={name}
-                  withinMultipleFieldsGroup
+                  compoundParentIsRequired={Boolean(rulesToApply?.required)}
                 />
               )
             }

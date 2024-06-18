@@ -15,44 +15,55 @@ import {
 
 export interface CommonFieldProps {
   name: string
-  rulesToApply: DefinedRules
-  description: string
   title: string
   watermark: string
+  description: string
   type: TypeMetadataField
-  isRequired: boolean
-  withinMultipleFieldsGroup?: boolean
+  rulesToApply: DefinedRules
 }
 
-interface Props {
-  metadataFieldInfo: MetadataField
-  metadataBlockName: string
-  withinMultipleFieldsGroup?: boolean
-  compoundParentName?: string
-  fieldsArrayIndex?: number
-}
+type DynamicMetadataFormFieldProps =
+  | {
+      metadataFieldInfo: MetadataField
+      metadataBlockName: string
+      fieldsArrayIndex?: number
+      withinMultipleFieldsGroup?: false
+      compoundParentName?: never
+      compoundParentIsRequired?: never
+    }
+  | {
+      metadataFieldInfo: MetadataField
+      metadataBlockName: string
+      fieldsArrayIndex?: number
+      withinMultipleFieldsGroup: true
+      compoundParentName: string
+      compoundParentIsRequired: boolean
+    }
 
 export const MetadataFormField = ({
   metadataFieldInfo,
   metadataBlockName,
+  fieldsArrayIndex,
   withinMultipleFieldsGroup = false,
   compoundParentName,
-  fieldsArrayIndex
-}: Props) => {
+  compoundParentIsRequired
+}: DynamicMetadataFormFieldProps) => {
   const {
     name,
     type,
     title,
     multiple,
     typeClass,
-    isRequired,
     description,
     watermark,
     childMetadataFields,
     controlledVocabularyValues
   } = metadataFieldInfo
 
-  const rulesToApply = useDefineRules({ metadataFieldInfo })
+  const rulesToApply = useDefineRules({
+    metadataFieldInfo,
+    isParentFieldRequired: compoundParentIsRequired
+  })
 
   const isSafeCompound =
     typeClass === TypeClassMetadataFieldOptions.Compound &&
@@ -77,7 +88,6 @@ export const MetadataFormField = ({
           title={title}
           watermark={watermark}
           type={type}
-          isRequired={isRequired}
         />
       )
     }
@@ -91,7 +101,6 @@ export const MetadataFormField = ({
         title={title}
         watermark={watermark}
         type={type}
-        isRequired={isRequired}
         withinMultipleFieldsGroup={withinMultipleFieldsGroup}
         fieldsArrayIndex={fieldsArrayIndex}
       />
@@ -111,7 +120,6 @@ export const MetadataFormField = ({
           title={title}
           watermark={watermark}
           type={type}
-          isRequired={isRequired}
         />
       )
     }
@@ -126,7 +134,6 @@ export const MetadataFormField = ({
         title={title}
         watermark={watermark}
         type={type}
-        isRequired={isRequired}
         withinMultipleFieldsGroup={withinMultipleFieldsGroup}
         fieldsArrayIndex={fieldsArrayIndex}
       />
@@ -146,8 +153,6 @@ export const MetadataFormField = ({
           title={title}
           watermark={watermark}
           type={type}
-          isRequired={isRequired}
-          withinMultipleFieldsGroup={withinMultipleFieldsGroup}
         />
       )
     }
@@ -163,8 +168,6 @@ export const MetadataFormField = ({
         title={title}
         watermark={watermark}
         type={type}
-        isRequired={isRequired}
-        withinMultipleFieldsGroup={withinMultipleFieldsGroup}
       />
     )
   }
