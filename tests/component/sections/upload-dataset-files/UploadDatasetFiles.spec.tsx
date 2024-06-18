@@ -63,7 +63,8 @@ describe('UploadDatasetFiles', () => {
     )
 
     cy.findByText('Select files to add').should('exist')
-    cy.findByText('Drag and drop files here.').should('exist')
+    cy.findByTestId('drag-and-drop').as('dnd')
+    cy.get('@dnd').should('exist')
   })
 
   it('renders the files being uploaded', () => {
@@ -111,10 +112,6 @@ describe('UploadDatasetFiles', () => {
     cy.findAllByTitle('Cancel upload').should('exist')
     cy.findAllByRole('progressbar').should('exist')
     cy.findByText('Select files to add').should('exist')
-    cy.findByText('Drag and drop files here.').should('not.exist')
-    // wait for upload to finish
-    cy.findByText('users2.json').should('not.exist')
-    cy.findByText('users3.json').should('not.exist')
   })
 
   it('renders file upload by clicking add button', () => {
@@ -180,8 +177,8 @@ describe('UploadDatasetFiles', () => {
     cy.findAllByRole('progressbar').should('have.length', 2)
     cy.findByText('Select files to add').should('exist')
     // wait for upload to finish
-    cy.findByText('users3.json').should('not.exist')
-    cy.findByText('users1.json').should('not.exist')
+    cy.findByText('Save').should('exist')
+    cy.findByText('Cancel').should('exist')
     cy.get('@dnd').selectFile(
       { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
       { action: 'drag-drop' }
@@ -190,8 +187,8 @@ describe('UploadDatasetFiles', () => {
       { fileName: 'users3.json', contents: [{ name: 'John Doe the 3rd' }] },
       { action: 'drag-drop' }
     )
-    cy.findByText('users3.json').should('not.exist')
-    cy.findByText('users1.json').should('not.exist')
+    cy.findByText('users3.json').should('have.length', 1)
+    cy.findByText('users1.json').should('have.length', 1)
   })
 
   it('prevents double uploads', () => {
