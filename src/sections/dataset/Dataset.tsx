@@ -20,6 +20,7 @@ import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useAlertContext } from '../alerts/AlertContext'
 import { AlertMessageKey } from '../../alert/domain/models/Alert'
+import { useAddDatasetJsonLd } from './useAddDatasetJsonLd'
 
 interface DatasetProps {
   fileRepository: FileRepository
@@ -32,6 +33,7 @@ export function Dataset({ fileRepository, created }: DatasetProps) {
   const { t } = useTranslation('dataset')
   const { hideModal, isModalOpen } = useNotImplementedModal()
   const { addDatasetAlert } = useAlertContext()
+  useAddDatasetJsonLd({ persistentId: dataset?.persistentId })
 
   if (created) {
     addDatasetAlert({ messageKey: AlertMessageKey.DATASET_CREATED, variant: 'success' })
