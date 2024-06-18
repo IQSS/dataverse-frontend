@@ -1,5 +1,5 @@
 import { Button, Card, Col, Form } from '@iqss/dataverse-design-system'
-import { X } from 'react-bootstrap-icons'
+import { Plus, X } from 'react-bootstrap-icons'
 import { FileUploadState } from '../../files/domain/models/FileUploadState'
 import styles from './FileUploader.module.scss'
 import { FormEvent, useState } from 'react'
@@ -41,6 +41,15 @@ export function UploadedFiles({
   const updateFileDescription = (file: FileUploadState, updated: string) => {
     file.description = updated
     updateFile(file)
+  }
+  const updateFileRestricted = (file: FileUploadState, updated: boolean) => {
+    file.restricted = updated
+    updateFile(file)
+    // TODO: show dialog for restriction
+  }
+
+  const addTag = (file: FileUploadState) => {
+    // TODO: show dialog for tag
   }
 
   return (
@@ -111,6 +120,29 @@ export function UploadedFiles({
                             />
                           </Col>
                         </Form.Group>
+                        <Form.Group>
+                          <Form.Group.Label column sm={3}>
+                            Restricted
+                          </Form.Group.Label>
+                          <Col sm={9}>
+                            <Form.Group.Checkbox
+                              label=""
+                              id={'restricted-' + file.key}
+                              defaultChecked={file.restricted}
+                              onChange={(event: FormEvent<HTMLInputElement>) =>
+                                updateFileRestricted(file, event.currentTarget.checked)
+                              }
+                            />
+                          </Col>
+                        </Form.Group>
+                        <Button
+                          variant="secondary"
+                          {...{ size: 'sm' }}
+                          withSpacing
+                          onClick={() => addTag(file)}>
+                          <Plus className={styles.icon} title="Add tag" />
+                          Tag
+                        </Button>
                       </Form>
                     </div>
                     <div className={styles.file_size}>{file.fileSizeString}</div>

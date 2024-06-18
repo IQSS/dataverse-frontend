@@ -15,6 +15,8 @@ export interface FileUploadState {
   fileType: string
   key: string
   description?: string
+  tags: string[]
+  restricted: boolean
 }
 
 export interface FileUploaderState {
@@ -40,7 +42,9 @@ export class FileUploadTools {
         fileName: file.name,
         fileDir: this.toDir(file.webkitRelativePath),
         fileType: file.type,
-        key: key
+        key: key,
+        tags: [],
+        restricted: false
       }
       newState.set(key, newValue)
     })
@@ -68,7 +72,9 @@ export class FileUploadTools {
       fileName: file.name,
       fileDir: this.toDir(file.webkitRelativePath),
       fileType: file.type,
-      key: this.key(file)
+      key: this.key(file),
+      tags: [],
+      restricted: false
     }
   }
 
