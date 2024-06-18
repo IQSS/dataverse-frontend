@@ -6,7 +6,6 @@ import { TypeMetadataFieldOptions } from '../../../../src/metadata-block-info/do
 import { NotImplementedModalProvider } from '../../../../src/sections/not-implemented/NotImplementedModalProvider'
 import { UserMother } from '../../users/domain/models/UserMother'
 import { UserRepository } from '../../../../src/users/domain/repositories/UserRepository'
-import { SessionProvider } from '../../../../src/sections/session/SessionProvider'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -94,33 +93,35 @@ describe('Create Dataset', () => {
       })
   })
   it('pre-fills the form with user data', () => {
-    cy.customMount(
-      <SessionProvider repository={userRepository}>
-        <NotImplementedModalProvider>
-          <CreateDataset
-            repository={datasetRepository}
-            collectionId={'test-collectionId'}
-            metadataBlockInfoRepository={metadataBlockInfoRepository}
-          />
-        </NotImplementedModalProvider>
-      </SessionProvider>
+    cy.mountAuthenticated(
+      <NotImplementedModalProvider>
+        <CreateDataset
+          repository={datasetRepository}
+          collectionId={'test-collectionId'}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </NotImplementedModalProvider>
     )
-    cy.findAllByLabelText(/^Name/i).each(($el) => {
-      if (
-        $el.attr('name') === 'citation.author.0.authorName' ||
-        $el.attr('name') === 'citation.datasetContact.0.datasetContactName'
-      ) {
-        cy.wrap($el).should('have.value', testUser.displayName)
-      }
-    })
-    cy.findAllByLabelText(/^Affiliation/i).each(($el) => {
-      if (
-        $el.attr('name') === 'citation.author.0.affiliation' ||
-        $el.attr('name') === 'citation.datasetContact.0.affiliation'
-      ) {
-        cy.wrap($el).should('have.value', testUser.affiliation)
-      }
-    })
+    cy.findByText('Author')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^Name/i).should('have.value', testUser.displayName)
+      })
+    cy.findByText('Author')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^Affiliation/i).should('have.value', testUser.affiliation)
+      })
+    cy.findByText('Point of Contact')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^Name/i).should('have.value', testUser.displayName)
+      })
+    cy.findByText('Point of Contact')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^Affiliation/i).should('have.value', testUser.affiliation)
+      })
     cy.findByLabelText(/^E-mail/i).should('have.value', testUser.email)
   })
   it('renders the Create Dataset page and its metadata blocks sections', () => {

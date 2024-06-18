@@ -34,7 +34,6 @@ describe('Create Dataset', () => {
 
         cy.findByLabelText('Agricultural Sciences').click()
       })
-    cy.pause()
     cy.findByText(/Save Dataset/i).click()
 
     cy.findByRole('heading', { name: 'Test Dataset Title' }).should('exist')

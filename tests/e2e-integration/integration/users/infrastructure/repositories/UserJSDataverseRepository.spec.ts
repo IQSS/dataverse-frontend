@@ -10,14 +10,6 @@ const userRepository = new UserJSDataverseRepository()
 describe('User JSDataverse Repository', () => {
   before(() => TestsUtils.setup())
   beforeEach(() => TestsUtils.login())
-  /*
- -{ displayName: 'Dataverse Admin',
-      -  persistentId: 'dataverseAdmin',
-      -  firstName: 'Dataverse',
-      -  lastName: 'Admin',
-      -  email: 'dataverse@mailinator.com',
-      -  affiliation: 'Dataverse.org' }
- */
   it('gets the authenticated user', async () => {
     const expectedUser = {
       displayName: 'Dataverse Admin',

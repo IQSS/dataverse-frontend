@@ -11,6 +11,7 @@ import { FileMother } from '../../../tests/component/files/domain/models/FileMot
 import { File } from '../../files/domain/models/File'
 import { FilePreview } from '../../files/domain/models/FilePreview'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
+import { FileHolder } from '../../files/domain/repositories/File'
 
 export class FileMockRepository implements FileRepository {
   constructor(public readonly fileMock?: File) {}
@@ -64,5 +65,26 @@ export class FileMockRepository implements FileRepository {
 
   getFileDownloadUrl(_id: number, _downloadMode: FileDownloadMode): string {
     return FileMetadataMother.createDownloadUrl()
+  }
+
+  uploadFile(
+    _datasetId: number | string,
+    _file: FileHolder,
+    progress: (now: number) => void,
+    abortController: AbortController
+  ): Promise<void> {
+    let t: NodeJS.Timeout
+    const sleep = (delay: number) => new Promise((res) => (t = setTimeout(res, delay)))
+    abortController.signal.addEventListener('abort', () => clearTimeout(t))
+    const res = async () => {
+      let now = 0
+      while (now < 100) {
+        await sleep(500)
+        now += 20
+        progress(now)
+        //console.log(FileUploadTools.key(_file.file) + ': ' + String(now))
+      }
+    }
+    return res()
   }
 }

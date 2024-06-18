@@ -1,0 +1,49 @@
+@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
+
+.file_uploader {
+    min-height: 5em;
+}
+
+.files {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+}
+
+.file {
+    display: contents;
+}
+
+.file_name {
+    padding: 0.25em;
+}
+
+.failed {
+    padding: 0.25em;
+    color: $dv-danger-color;
+    text-decoration: line-through;
+}
+
+.file_size {
+    padding: 0.25em;
+}
+
+.cancel_upload {
+    padding: 0.25em;
+}
+
+.upload_progress {
+    width: 10em;
+    margin-top: 0.25em;
+    padding: 0.25em;
+}
+
+.icon {
+    display: inline-block;
+}
+
+.info {
+    padding: 0.5em;
+    color: $dv-subtext-color;
+    font-size: 1.3em;
+    text-align: center;
+}
