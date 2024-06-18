@@ -131,14 +131,15 @@ export function FileUploader({
           <Plus></Plus> {selectText}
         </Button>
       </Card.Header>
-      <Card.Body style={{ backgroundColor: bgColor }}>
+      <Card.Body>
         <div
           className={styles.file_uploader}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragEnter={handleDragEnter}
           onDragLeave={handleDragLeave}
-          data-testid="drag-and-drop">
+          data-testid="drag-and-drop"
+          style={{ backgroundColor: bgColor }}>
           <div>
             <input
               ref={inputRef}
