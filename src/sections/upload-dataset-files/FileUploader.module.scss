@@ -9,6 +9,16 @@
     grid-template-columns: repeat(4, auto);
 }
 
+.file:nth-of-type(even)>div{
+    padding: 0.5rem;
+    background-color: #F0F0F0;
+}
+
+.file:nth-of-type(odd)>div{
+    padding: 0.5rem;
+    background-color: white;
+}
+
 .file {
     display: contents;
 }
@@ -28,13 +38,12 @@
 }
 
 .cancel_upload {
-    padding: 0.25em;
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
 }
 
 .upload_progress {
-    width: 10em;
-    margin-top: 0.25em;
-    padding: 0.25em;
+    min-width: 10em;
 }
 
 .icon {
