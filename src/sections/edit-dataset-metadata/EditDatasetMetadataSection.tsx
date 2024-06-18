@@ -67,6 +67,7 @@ export const EditDatasetMetadataSection = ({
                   mode="edit"
                   collectionId={datasetParentCollection?.id}
                   datasetRepository={datasetRepository}
+                  datasetPersistentID={dataset.persistentId}
                   metadataBlockInfoRepository={metadataBlockInfoRepository}
                   datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
                 />

@@ -49,8 +49,9 @@ function DatasetWithSearchParams() {
   const searchParamVersion = searchParams.get('version') ?? undefined
   const version = searchParamVersionToDomainVersion(searchParamVersion)
   const location = useLocation()
-  const state = location.state as { created: boolean } | undefined
+  const state = location.state as { created: boolean; metadataUpdated: boolean } | undefined
   const created = state?.created ?? false
+  const metadataUpdated = state?.metadataUpdated ?? false
 
   useEffect(() => {
     if (privateUrlToken) setAnonymizedView(true)
@@ -70,7 +71,11 @@ function DatasetWithSearchParams() {
     <DatasetProvider
       repository={datasetRepository}
       searchParams={{ persistentId: persistentId, version: version }}>
-      <Dataset fileRepository={fileRepository} created={created} />
+      <Dataset
+        fileRepository={fileRepository}
+        created={created}
+        metadataUpdated={metadataUpdated}
+      />
     </DatasetProvider>
   )
 }

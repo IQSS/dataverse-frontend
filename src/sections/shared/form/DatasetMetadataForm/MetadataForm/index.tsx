@@ -22,6 +22,7 @@ interface FormProps {
   metadataBlocksInfo: MetadataBlockInfo[]
   errorLoadingMetadataBlocksInfo: string | null
   datasetRepository: DatasetRepository
+  datasetPersistentID?: string
 }
 
 export const MetadataForm = ({
@@ -30,7 +31,8 @@ export const MetadataForm = ({
   formDefaultValues,
   metadataBlocksInfo,
   errorLoadingMetadataBlocksInfo,
-  datasetRepository
+  datasetRepository,
+  datasetPersistentID
 }: FormProps) => {
   const { user } = useSession()
   const navigate = useNavigate()
@@ -43,13 +45,14 @@ export const MetadataForm = ({
   const isErrorLoadingMetadataBlocks = Boolean(errorLoadingMetadataBlocksInfo)
 
   const form = useForm({ mode: 'onChange', defaultValues: formDefaultValues })
-  const { setValue } = form
+  const { setValue, formState } = form
 
   const { submissionStatus, submitError, submitForm } = useSubmitDataset(
     mode,
     collectionId,
     datasetRepository,
-    onSubmitDatasetError
+    onSubmitDatasetError,
+    datasetPersistentID
   )
 
   useEffect(() => {
@@ -110,8 +113,12 @@ export const MetadataForm = ({
   }
 
   const disableSubmitButton = useMemo(() => {
-    return isErrorLoadingMetadataBlocks || submissionStatus === SubmissionStatus.IsSubmitting
-  }, [isErrorLoadingMetadataBlocks, submissionStatus])
+    return (
+      isErrorLoadingMetadataBlocks ||
+      submissionStatus === SubmissionStatus.IsSubmitting ||
+      !formState.isDirty
+    )
+  }, [isErrorLoadingMetadataBlocks, submissionStatus, formState.isDirty])
 
   return (
     <div className={styles['form-container']} ref={formContainerRef}>

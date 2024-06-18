@@ -13,6 +13,7 @@ type DatasetMetadataFormProps =
       mode: 'create'
       collectionId: string
       datasetRepository: DatasetRepository
+      datasetPersistentID?: never
       metadataBlockInfoRepository: MetadataBlockInfoRepository
       datasetMetadaBlocksCurrentValues?: never
     }
@@ -20,12 +21,14 @@ type DatasetMetadataFormProps =
       mode: 'edit'
       collectionId: string
       datasetRepository: DatasetRepository
+      datasetPersistentID: string
       metadataBlockInfoRepository: MetadataBlockInfoRepository
       datasetMetadaBlocksCurrentValues: DatasetMetadataBlocks
     }
 
 export type DatasetMetadataFormMode = 'create' | 'edit'
 
+// TODO:ME Label with height of fit content?
 // TODO:ME Keep both accordions open as in JSF version ?
 // TODO:ME Add Save and cancel button on top also but where ? and only on edit mode ?
 // TODO:ME After removing form from create-dataset also remove unused translations
@@ -33,6 +36,7 @@ export const DatasetMetadataForm = ({
   mode,
   collectionId,
   datasetRepository,
+  datasetPersistentID,
   metadataBlockInfoRepository,
   datasetMetadaBlocksCurrentValues
 }: DatasetMetadataFormProps) => {
@@ -102,6 +106,7 @@ export const DatasetMetadataForm = ({
       metadataBlocksInfo={normalizedMetadataBlocksInfo}
       errorLoadingMetadataBlocksInfo={errorLoadingMetadataBlocksInfo}
       datasetRepository={datasetRepository}
+      datasetPersistentID={datasetPersistentID}
     />
   )
 }

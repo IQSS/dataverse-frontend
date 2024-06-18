@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import styles from './Dataset.module.scss'
 import { DatasetLabels } from './dataset-labels/DatasetLabels'
@@ -12,7 +13,6 @@ import { DatasetFiles } from './dataset-files/DatasetFiles'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { DatasetActionButtons } from './dataset-action-buttons/DatasetActionButtons'
 import { useDataset } from './DatasetContext'
-import { useEffect } from 'react'
 import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
 import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
@@ -24,18 +24,25 @@ import { AlertMessageKey } from '../../alert/domain/models/Alert'
 interface DatasetProps {
   fileRepository: FileRepository
   created?: boolean
+  metadataUpdated?: boolean
 }
 
-export function Dataset({ fileRepository, created }: DatasetProps) {
+export function Dataset({ fileRepository, created, metadataUpdated }: DatasetProps) {
   const { setIsLoading } = useLoading()
   const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('dataset')
   const { hideModal, isModalOpen } = useNotImplementedModal()
   const { addDatasetAlert } = useAlertContext()
 
-  if (created) {
-    addDatasetAlert({ messageKey: AlertMessageKey.DATASET_CREATED, variant: 'success' })
-  }
+  useEffect(() => {
+    if (metadataUpdated) {
+      addDatasetAlert({ messageKey: AlertMessageKey.METADATA_UPDATED, variant: 'success' })
+    }
+    if (created) {
+      addDatasetAlert({ messageKey: AlertMessageKey.DATASET_CREATED, variant: 'success' })
+    }
+  }, [metadataUpdated, created])
+
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])

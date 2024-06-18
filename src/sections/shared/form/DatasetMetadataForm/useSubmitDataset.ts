@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { DatasetRepository } from '../../../../dataset/domain/repositories/DatasetRepository'
 import { createDataset } from '../../../../dataset/domain/useCases/createDataset'
+import { updateDatasetMetadata } from '../../../../dataset/domain/useCases/updateDatasetMetadata'
 import { MetadataFieldsHelper, type DatasetMetadataFormValues } from './MetadataFieldsHelper'
 import { getValidationFailedFieldError } from '../../../../metadata-block-info/domain/models/fieldValidations'
 import { type DatasetMetadataFormMode } from '.'
@@ -34,7 +35,8 @@ export function useSubmitDataset(
   mode: DatasetMetadataFormMode,
   collectionId: string,
   datasetRepository: DatasetRepository,
-  onSubmitErrorCallback: () => void
+  onSubmitErrorCallback: () => void,
+  datasetPersistentID?: string
 ): UseSubmitDatasetReturnType {
   const navigate = useNavigate()
   const { t } = useTranslation('datasetMetadataForm')
@@ -75,7 +77,33 @@ export function useSubmitDataset(
           onSubmitErrorCallback()
         })
     } else {
-      // TODO:ME Update dataset metadata use case here
+      const currentEditedDatasetPersistentID = datasetPersistentID as string
+
+      updateDatasetMetadata(
+        datasetRepository,
+        currentEditedDatasetPersistentID,
+        formattedFormValues
+      )
+        .then(() => {
+          setSubmitError(null)
+          setSubmissionStatus(SubmissionStatus.SubmitComplete)
+          navigate(`${Route.DATASETS}?persistentId=${currentEditedDatasetPersistentID}`, {
+            state: { metadataUpdated: true }
+          })
+
+          return
+        })
+        .catch((err) => {
+          const errorMessage =
+            err instanceof Error && err.message
+              ? getValidationFailedFieldError(err.message) ?? err.message
+              : t('validationAlert.content')
+
+          setSubmitError(errorMessage)
+          setSubmissionStatus(SubmissionStatus.Errored)
+
+          onSubmitErrorCallback()
+        })
     }
   }
 
