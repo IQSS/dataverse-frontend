@@ -1,4 +1,4 @@
-import { MouseEvent, useMemo, useRef } from 'react'
+import { MouseEvent, useEffect, useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FieldErrors, FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -12,6 +12,7 @@ import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { MetadataBlockFormFields } from './MetadataBlockFormFields'
 import { Route } from '../Route.enum'
 import styles from './DatasetForm.module.scss'
+import { useSession } from '../session/SessionContext'
 
 interface DatasetFormProps {
   repository: DatasetRepository
@@ -39,6 +40,7 @@ export const DatasetForm = ({
     collectionId,
     onCreateDatasetError
   )
+  const { user } = useSession()
 
   const isErrorLoadingMetadataBlocks = Boolean(errorLoadingMetadataBlocks)
 
@@ -46,7 +48,20 @@ export const DatasetForm = ({
     mode: 'onChange',
     defaultValues: formDefaultValues
   })
-
+  const { setValue } = form
+  useEffect(() => {
+    if (user) {
+      setValue('citation.author.0.authorName', user.displayName)
+      setValue('citation.datasetContact.0.datasetContactName', user.displayName)
+      setValue('citation.datasetContact.0.datasetContactEmail', user.email, {
+        shouldValidate: true
+      })
+      if (user.affiliation) {
+        setValue('citation.datasetContact.0.datasetContactAffiliation', user.affiliation)
+        setValue('citation.author.0.authorAffiliation', user.affiliation)
+      }
+    }
+  }, [setValue, user])
   const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     navigate(Route.HOME)
