@@ -25,6 +25,7 @@ export const MetadataBlockInfoCitationExample = {
     keywordValue: { displayFormat: '#VALUE' },
     keywordVocabulary: { displayFormat: '(#VALUE)' },
     keywordVocabularyURI: { displayFormat: '[#VALUE](#VALUE)' },
+    keywordTermURI: { displayFormat: '[#VALUE](#VALUE)' },
     topicClassification: { displayFormat: '' },
     topicClassValue: { displayFormat: '#VALUE' },
     topicClassVocab: { displayFormat: '(#VALUE)' },
