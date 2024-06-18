@@ -44,12 +44,13 @@ export function UploadedFiles({
   }
   const updateFileRestricted = (file: FileUploadState, updated: boolean) => {
     file.restricted = updated
-    updateFile(file)
     // TODO: show dialog for restriction
+    updateFile(file)
   }
 
   const addTag = (file: FileUploadState) => {
     // TODO: show dialog for tag
+    updateFile(file)
   }
 
   return (
@@ -135,15 +136,15 @@ export function UploadedFiles({
                             />
                           </Col>
                         </Form.Group>
-                        <Button
-                          variant="secondary"
-                          {...{ size: 'sm' }}
-                          withSpacing
-                          onClick={() => addTag(file)}>
-                          <Plus className={styles.icon} title="Add tag" />
-                          Tag
-                        </Button>
                       </Form>
+                      <Button
+                        variant="secondary"
+                        {...{ size: 'sm' }}
+                        withSpacing
+                        onClick={() => addTag(file)}>
+                        <Plus className={styles.icon} title="Add tag" />
+                        Tag
+                      </Button>
                     </div>
                     <div className={styles.file_size}>{file.fileSizeString}</div>
                     <div>{null}</div>
