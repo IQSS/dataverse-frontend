@@ -10,9 +10,6 @@ import { UploadDatasetFilesFactory } from './sections/upload-dataset-files/Uploa
 import { EditDatasetMetadataFactory } from './sections/edit-dataset-metadata/EditDatasetMetadataFactory'
 import { DatasetNonNumericVersion } from './dataset/domain/models/Dataset'
 
-// TODO: Implement scroll restoration on navigation
-// TODO: JSF shows a select similar to Select Multiple but with the option of selecting only one item, I think for when options are more than certain number
-
 const router = createBrowserRouter(
   [
     {

@@ -71,6 +71,7 @@ export const PrimitiveMultiple = ({
         message={description}
         required={Boolean(rulesToApply?.required)}
         htmlFor={controlID}
+        className={styles['field-label']}
         column
         sm={3}>
         {title}

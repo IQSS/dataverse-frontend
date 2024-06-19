@@ -28,10 +28,12 @@ type DatasetMetadataFormProps =
 
 export type DatasetMetadataFormMode = 'create' | 'edit'
 
-// TODO:ME Label with height of fit content?
-// TODO:ME Keep both accordions open as in JSF version ?
+// TODO:ME Use this component in create-dataset
+// TODO:ME Add component unit testing for both modes
 // TODO:ME Add Save and cancel button on top also but where ? and only on edit mode ?
 // TODO:ME After removing form from create-dataset also remove unused translations
+// TODO:ME JSF shows a select similar to Select Multiple but with the option of selecting only one item, I think for when options are more than certain number
+
 export const DatasetMetadataForm = ({
   mode,
   collectionId,

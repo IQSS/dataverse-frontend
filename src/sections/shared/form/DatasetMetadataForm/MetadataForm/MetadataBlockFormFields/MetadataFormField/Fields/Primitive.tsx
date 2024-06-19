@@ -4,6 +4,7 @@ import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { MetadataFieldsHelper } from '../../../../MetadataFieldsHelper'
 import { TypeMetadataFieldOptions } from '../../../../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { type CommonFieldProps } from '..'
+import styles from '../index.module.scss'
 
 interface PrimitiveProps extends CommonFieldProps {
   metadataBlockName: string
@@ -43,6 +44,7 @@ export const Primitive = ({
       <Form.Group.Label
         message={description}
         required={Boolean(rulesToApply?.required)}
+        className={styles['field-label']}
         column={!withinMultipleFieldsGroup}
         sm={3}>
         {title}

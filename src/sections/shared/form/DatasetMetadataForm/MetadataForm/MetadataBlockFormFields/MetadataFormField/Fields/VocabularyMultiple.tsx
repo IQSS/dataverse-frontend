@@ -3,6 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { Form, Row, Col } from '@iqss/dataverse-design-system'
 import { MetadataFieldsHelper } from '../../../../MetadataFieldsHelper'
 import { type CommonFieldProps } from '..'
+import styles from '../index.module.scss'
 
 interface VocabularyProps extends CommonFieldProps {
   metadataBlockName: string
@@ -44,6 +45,7 @@ export const VocabularyMultiple = ({
             message={description}
             htmlFor={builtFieldName}
             required={Boolean(rulesToApply?.required)}
+            className={styles['field-label']}
             column
             sm={3}>
             {title}
