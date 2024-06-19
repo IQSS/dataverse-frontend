@@ -67,12 +67,16 @@ export function UploadedFiles({
     updateFiles([file])
   }
   const clicked = (event: MouseEvent<HTMLDivElement, unknown>, file: FileUploadState) => {
-    const classList = (event.target as HTMLDivElement).classList
-    if (
-      !classList.contains('form-control') &&
-      !classList.contains('btn') &&
-      !classList.contains('form-check-input')
-    ) {
+    const classList = Array.from((event.target as HTMLDivElement).classList)
+    const parent = (event.target as HTMLDivElement).parentElement
+    if (parent) {
+      classList.push(...Array.from(parent.classList))
+      if (parent.parentElement) {
+        classList.push(...Array.from(parent.parentElement.classList))
+      }
+    }
+    console.log(classList)
+    if (!classList.some((x) => x === 'form-control' || x === 'btn' || x === 'form-check-input')) {
       setSelected((current) => {
         if (current.has(file)) {
           current.delete(file)
