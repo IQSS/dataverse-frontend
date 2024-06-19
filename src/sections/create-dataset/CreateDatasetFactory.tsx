@@ -5,7 +5,7 @@ import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repos
 import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
 import { NotImplementedModalProvider } from '../not-implemented/NotImplementedModalProvider'
 
-const repository = new DatasetJSDataverseRepository()
+const datasetRepository = new DatasetJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
 
 export class CreateDatasetFactory {
@@ -24,7 +24,7 @@ function CreateDatasetWithSearchParams() {
 
   return (
     <CreateDataset
-      repository={repository}
+      datasetRepository={datasetRepository}
       metadataBlockInfoRepository={metadataBlockInfoRepository}
       collectionId={collectionId}
     />
