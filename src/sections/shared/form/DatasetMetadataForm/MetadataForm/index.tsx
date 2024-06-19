@@ -8,7 +8,6 @@ import { type DatasetRepository } from '../../../../../dataset/domain/repositori
 import { type MetadataBlockInfo } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { type DatasetMetadataFormValues } from '../MetadataFieldsHelper'
 import { type DatasetMetadataFormMode } from '..'
-import { Route } from '../../../../Route.enum'
 import { SubmissionStatus, useSubmitDataset } from '../useSubmitDataset'
 import { MetadataBlockFormFields } from './MetadataBlockFormFields'
 import { RequiredFieldText } from '../../RequiredFieldText/RequiredFieldText'
@@ -42,6 +41,7 @@ export const MetadataForm = ({
   const formContainerRef = useRef<HTMLDivElement>(null)
 
   const onCreateMode = mode === 'create'
+  const onEditMode = mode === 'edit'
   const isErrorLoadingMetadataBlocks = Boolean(errorLoadingMetadataBlocksInfo)
 
   const form = useForm({ mode: 'onChange', defaultValues: formDefaultValues })
@@ -72,7 +72,7 @@ export const MetadataForm = ({
 
   const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
-    navigate(Route.HOME)
+    navigate(-1)
   }
 
   const onInvalidSubmit = (errors: FieldErrors<DatasetMetadataFormValues>) => {
@@ -121,8 +121,25 @@ export const MetadataForm = ({
   }, [isErrorLoadingMetadataBlocks, submissionStatus, formState.isDirty])
 
   return (
-    <div className={styles['form-container']} ref={formContainerRef}>
-      <RequiredFieldText />
+    <section className={styles['form-container']} ref={formContainerRef}>
+      <div className={styles['top-buttons-container']}>
+        <RequiredFieldText />
+        {onEditMode && (
+          <div>
+            <Button type="submit" disabled={disableSubmitButton}>
+              {t('saveButton.editMode')}
+            </Button>
+            <Button
+              withSpacing
+              variant="secondary"
+              type="button"
+              onClick={handleCancel}
+              disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
+              {t('cancelButton')}
+            </Button>
+          </div>
+        )}
+      </div>
 
       {isErrorLoadingMetadataBlocks && (
         <Alert variant="danger" dismissible={false}>
@@ -160,20 +177,21 @@ export const MetadataForm = ({
               {t('metadataTip.content')}
             </Alert>
           )}
-
-          <Button type="submit" disabled={disableSubmitButton}>
-            {onCreateMode ? t('saveButton.createMode') : t('saveButton.editMode')}
-          </Button>
-          <Button
-            withSpacing
-            variant="secondary"
-            type="button"
-            onClick={handleCancel}
-            disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
-            {t('cancelButton')}
-          </Button>
+          <div className={styles['bottom-buttons-container']}>
+            <Button type="submit" disabled={disableSubmitButton}>
+              {onCreateMode ? t('saveButton.createMode') : t('saveButton.editMode')}
+            </Button>
+            <Button
+              withSpacing
+              variant="secondary"
+              type="button"
+              onClick={handleCancel}
+              disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
+              {t('cancelButton')}
+            </Button>
+          </div>
         </Form>
       </FormProvider>
-    </div>
+    </section>
   )
 }
