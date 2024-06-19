@@ -137,7 +137,7 @@ export function UploadedFiles({
             {fileUploadState.length}
             {fileUploadState.length === 1 ? ' file uploaded' : ' files uploaded'}
           </Button>
-          <span className={styles.selected} hidden={selected.size === 0}>
+          <span className={styles.selected_files_info} hidden={selected.size === 0}>
             <span>
               {selected.size}
               {selected.size === 1 ? ' file selected' : ' files selected'}
