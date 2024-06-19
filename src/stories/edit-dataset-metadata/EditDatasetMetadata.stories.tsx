@@ -1,5 +1,4 @@
 import type { StoryObj, Meta } from '@storybook/react'
-import { CreateDataset } from '../../sections/create-dataset/CreateDataset'
 import { WithLayout } from '../WithLayout'
 import { WithI18next } from '../WithI18next'
 import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
@@ -8,23 +7,25 @@ import { MetadataBlockInfoMockLoadingRepository } from '../shared-mock-repositor
 import { MetadataBlockInfoMockErrorRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockErrorRepository'
 import { NotImplementedModalProvider } from '../../sections/not-implemented/NotImplementedModalProvider'
 import { WithLoggedInUser } from '../WithLoggedInUser'
+import { EditDatasetMetadata } from '../../sections/edit-dataset-metadata/EditDatasetMetadata'
+import { WithDataset } from '../dataset/WithDataset'
 
-const meta: Meta<typeof CreateDataset> = {
-  title: 'Pages/Create Dataset',
-  component: CreateDataset,
-  decorators: [WithI18next, WithLayout, WithLoggedInUser],
+const meta: Meta<typeof EditDatasetMetadata> = {
+  title: 'Pages/Edit Dataset Metadata',
+  component: EditDatasetMetadata,
+  decorators: [WithI18next, WithLayout, WithDataset, WithLoggedInUser],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
   }
 }
 export default meta
-type Story = StoryObj<typeof CreateDataset>
+type Story = StoryObj<typeof EditDatasetMetadata>
 
 export const Default: Story = {
   render: () => (
     <NotImplementedModalProvider>
-      <CreateDataset
+      <EditDatasetMetadata
         datasetRepository={new DatasetMockRepository()}
         metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       />
@@ -34,7 +35,7 @@ export const Default: Story = {
 
 export const Loading: Story = {
   render: () => (
-    <CreateDataset
+    <EditDatasetMetadata
       datasetRepository={new DatasetMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockLoadingRepository()}
     />
@@ -43,7 +44,7 @@ export const Loading: Story = {
 
 export const ErrorLoadingMetadataBlocksConfiguration: Story = {
   render: () => (
-    <CreateDataset
+    <EditDatasetMetadata
       datasetRepository={new DatasetMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockErrorRepository()}
     />

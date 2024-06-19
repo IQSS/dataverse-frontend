@@ -1,7 +1,7 @@
 import {
   MetadataBlockInfoDisplayFormat,
   MetadataBlockInfo
-} from '../../metadata-block-info/domain/models/MetadataBlockInfo'
+} from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataBlockInfoMockRepository } from './MetadataBlockInfoMockRepository'
 
 export class MetadataBlockInfoMockLoadingRepository implements MetadataBlockInfoMockRepository {

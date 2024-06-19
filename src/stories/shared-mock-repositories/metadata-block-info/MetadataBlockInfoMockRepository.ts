@@ -1,9 +1,9 @@
-import { MetadataBlockInfoMother } from '../../../tests/component/metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { MetadataBlockInfoMother } from '../../../../tests/component/metadata-block-info/domain/models/MetadataBlockInfoMother'
 import {
   MetadataBlockInfoDisplayFormat,
   MetadataBlockInfo
-} from '../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+} from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { MetadataBlockInfoRepository } from '../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 
 export class MetadataBlockInfoMockRepository implements MetadataBlockInfoRepository {
   getByName(_name: string): Promise<MetadataBlockInfoDisplayFormat | undefined> {

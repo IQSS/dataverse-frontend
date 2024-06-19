@@ -19,7 +19,7 @@ interface EditDatasetMetadataProps {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
 
-export const EditDatasetMetadataSection = ({
+export const EditDatasetMetadata = ({
   datasetRepository,
   metadataBlockInfoRepository
 }: EditDatasetMetadataProps) => {
