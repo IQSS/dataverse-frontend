@@ -212,7 +212,7 @@ export function UploadedFiles({
                             <Form.Group.Checkbox
                               label=""
                               id={'restricted-' + file.key}
-                              defaultChecked={file.restricted}
+                              checked={file.restricted}
                               onChange={(event: FormEvent<HTMLInputElement>) =>
                                 updateFileRestricted(file, event.currentTarget.checked)
                               }
