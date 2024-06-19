@@ -1,8 +1,9 @@
 import { Button, Card, Col, Form } from '@iqss/dataverse-design-system'
+import cn from 'classnames'
 import { Plus, X } from 'react-bootstrap-icons'
 import { FileUploadState } from '../../files/domain/models/FileUploadState'
 import styles from './FileUploader.module.scss'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useState, MouseEvent } from 'react'
 
 interface DatasetFilesProps {
   fileUploadState: FileUploadState[]
@@ -23,6 +24,7 @@ export function UploadedFiles({
   addFiles,
   updateFile
 }: DatasetFilesProps) {
+  const [selected, setSelected] = useState(new Set<FileUploadState>())
   const [saving, setSaving] = useState(false)
   const save = () => {
     setSaving(true)
@@ -47,10 +49,26 @@ export function UploadedFiles({
     // TODO: show dialog for restriction
     updateFile(file)
   }
-
   const addTag = (file: FileUploadState) => {
     // TODO: show dialog for tag
     updateFile(file)
+  }
+  const clicked = (event: MouseEvent<HTMLDivElement, unknown>, file: FileUploadState) => {
+    const classList = (event.target as HTMLDivElement).classList
+    if (
+      !classList.contains('form-control') &&
+      !classList.contains('btn') &&
+      !classList.contains('form-check-input')
+    ) {
+      setSelected((current) => {
+        if (current.has(file)) {
+          current.delete(file)
+        } else {
+          current.add(file)
+        }
+        return new Set<FileUploadState>(current)
+      })
+    }
   }
 
   return (
@@ -75,7 +93,12 @@ export function UploadedFiles({
             {fileUploadState.length > 0 ? (
               <div className={styles.files}>
                 {fileUploadState.map((file) => (
-                  <div className={styles.file} key={file.key}>
+                  <div
+                    className={cn(styles.file, {
+                      [styles.selected_file]: selected.has(file)
+                    })}
+                    key={file.key}
+                    onClick={(event) => clicked(event, file)}>
                     <div className={styles.file_name}>
                       <Form>
                         <Form.Group>

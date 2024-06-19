@@ -11,7 +11,7 @@
 
 .file:nth-of-type(even)>div{
     padding: 0.5rem;
-    background-color: #F0F0F0;
+    background-color: #f8f9fc;
 }
 
 .file:nth-of-type(odd)>div{
@@ -21,6 +21,14 @@
 
 .file {
     display: contents;
+}
+
+.selected_file {
+    display: contents;
+}
+
+.selected_file>div {
+    background-color: #ffc!important;
 }
 
 .file_name {
