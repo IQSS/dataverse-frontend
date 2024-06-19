@@ -4,10 +4,26 @@ import { SeparationLine } from '../../../layout/SeparationLine/SeparationLine'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 //TODO:ME Check if we can add skeleton css once in the app and if tests still pass
-export const MetadataFormSkeleton = () => (
+export const MetadataFormSkeleton = ({ onEditMode }: { onEditMode: boolean }) => (
   <SkeletonTheme>
     <div>
-      <Skeleton height={16} width={240} style={{ marginBottom: 16 }} />
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: '1rem',
+          marginBottom: '1rem'
+        }}>
+        <Skeleton height={16} width={240} />
+        {onEditMode && (
+          <div style={{ display: 'flex', gap: 16 }}>
+            <Skeleton height={38} width={120} />
+            <Skeleton height={38} width={70} />
+          </div>
+        )}
+      </div>
+
       <Accordion defaultActiveKey="0" data-testid="dataset-form-skeleton">
         <Accordion.Item eventKey="0">
           <Accordion.Header>

@@ -7,6 +7,7 @@ import { MetadataFieldsHelper } from './MetadataFieldsHelper'
 import { MetadataFormSkeleton } from './MetadataForm/MetadataFormSkeleton'
 import { MetadataForm } from './MetadataForm'
 import { DatasetMetadataBlocks } from '../../../../dataset/domain/models/Dataset'
+import { Alert } from '@iqss/dataverse-design-system'
 
 type DatasetMetadataFormProps =
   | {
@@ -97,7 +98,15 @@ export const DatasetMetadataForm = ({
   }, [isLoadingMetadataBlocksInfo, setIsLoading])
 
   if (isLoadingMetadataBlocksInfo || !formDefaultValues) {
-    return <MetadataFormSkeleton />
+    return <MetadataFormSkeleton onEditMode={mode === 'edit'} />
+  }
+
+  if (Boolean(errorLoadingMetadataBlocksInfo)) {
+    return (
+      <Alert variant="danger" dismissible={false}>
+        {errorLoadingMetadataBlocksInfo}
+      </Alert>
+    )
   }
 
   return (
