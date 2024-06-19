@@ -32,7 +32,9 @@ export const useDefineRules = ({
     isParentFieldRequired !== undefined ? isParentFieldRequired && isRequired : isRequired
 
   const rulesToApply: DefinedRules = {
-    required: isFieldRequired ? t('field.required', { displayName }) : false,
+    required: isFieldRequired
+      ? t('field.required', { displayName, interpolation: { escapeValue: false } })
+      : false,
     validate: (value: string) => {
       if (!value) {
         return true
@@ -40,7 +42,7 @@ export const useDefineRules = ({
 
       if (type === TypeMetadataFieldOptions.URL) {
         if (!isValidURL(value)) {
-          return t('field.invalid.url', { displayName })
+          return t('field.invalid.url', { displayName, interpolation: { escapeValue: false } })
         }
         return true
       }
@@ -49,25 +51,29 @@ export const useDefineRules = ({
           watermark === 'YYYY-MM-DD' ? DateFormatsOptions.YYYYMMDD : undefined
 
         if (!isValidDateFormat(value, acceptedDateFormat)) {
-          return t('field.invalid.date', { displayName, dateFormat: watermark })
+          return t('field.invalid.date', {
+            displayName,
+            dateFormat: watermark,
+            interpolation: { escapeValue: false }
+          })
         }
         return true
       }
       if (type === TypeMetadataFieldOptions.Email) {
         if (!isValidEmail(value)) {
-          return t('field.invalid.email', { displayName })
+          return t('field.invalid.email', { displayName, interpolation: { escapeValue: false } })
         }
         return true
       }
       if (type === TypeMetadataFieldOptions.Int) {
         if (!isValidInteger(value)) {
-          return t('field.invalid.int', { displayName })
+          return t('field.invalid.int', { displayName, interpolation: { escapeValue: false } })
         }
         return true
       }
       if (type === TypeMetadataFieldOptions.Float) {
         if (!isValidFloat(value)) {
-          return t('field.invalid.float', { displayName })
+          return t('field.invalid.float', { displayName, interpolation: { escapeValue: false } })
         }
         return true
       }
