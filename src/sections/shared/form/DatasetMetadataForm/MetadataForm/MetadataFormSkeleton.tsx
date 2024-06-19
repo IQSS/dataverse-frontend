@@ -65,7 +65,7 @@ export const MetadataFormSkeleton = () => (
 
       <SeparationLine />
 
-      <div style={{ display: 'flex', gap: 16 }}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 16 }}>
         <Skeleton height={38} width={120} />
 
         <Skeleton height={38} width={70} />
