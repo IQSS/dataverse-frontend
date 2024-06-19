@@ -9,6 +9,10 @@
     grid-template-columns: repeat(4, auto);
 }
 
+.selected_file>div {
+    background-color: #ffc!important;
+}
+
 .file:nth-of-type(even)>div{
     padding: 0.5rem;
     background-color: #f8f9fc;
@@ -25,10 +29,6 @@
 
 .selected_file {
     display: contents;
-}
-
-.selected_file>div {
-    background-color: #ffc!important;
 }
 
 .file_name {
