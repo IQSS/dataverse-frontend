@@ -1,45 +1,12 @@
 import type { StoryObj, Meta } from '@storybook/react'
-import { faker } from '@faker-js/faker'
 import { DatasetMetadataForm } from '../../../sections/shared/form/DatasetMetadataForm'
 import { WithI18next } from '../../WithI18next'
 import { WithLoggedInUser } from '../../WithLoggedInUser'
 import { DatasetMockRepository } from '../../dataset/DatasetMockRepository'
 import { MetadataBlockInfoMockRepository } from '../../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
-import { MetadataBlockName } from '../../../dataset/domain/models/Dataset'
 
-const datasetToEditMock = DatasetMother.create({
-  metadataBlocks: [
-    {
-      name: MetadataBlockName.CITATION,
-      fields: {
-        title: faker.lorem.words(2),
-        subtitle: faker.lorem.sentence(),
-        author: [
-          {
-            authorName: faker.name.fullName(),
-            authorAffiliation: faker.lorem.word(8)
-          }
-        ],
-        datasetContact: [
-          {
-            datasetContactName: faker.name.fullName(),
-            datasetContactAffiliation: faker.lorem.word(),
-            datasetContactEmail: faker.internet.email()
-          }
-        ],
-        dsDescription: [
-          {
-            dsDescriptionValue: faker.lorem.paragraphs(4)
-          }
-        ],
-        subject: ['Agricultural Sciences']
-      }
-    }
-  ]
-})
-
-console.log(datasetToEditMock.metadataBlocks)
+const datasetToEditMock = DatasetMother.createDatasetForEditMetadata()
 
 const meta: Meta<typeof DatasetMetadataForm> = {
   title: 'Sections/Shared/Dataset Metadata Form',

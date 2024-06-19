@@ -122,33 +122,36 @@ export const MetadataForm = ({
 
   return (
     <section className={styles['form-container']} ref={formContainerRef}>
-      <div className={styles['top-buttons-container']}>
-        <RequiredFieldText />
-        {onEditMode && (
-          <div>
-            <Button type="submit" disabled={disableSubmitButton}>
-              {t('saveButton.editMode')}
-            </Button>
-            <Button
-              withSpacing
-              variant="secondary"
-              type="button"
-              onClick={handleCancel}
-              disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
-              {t('cancelButton')}
-            </Button>
-          </div>
-        )}
-      </div>
-
-      {submissionStatus === SubmissionStatus.Errored && (
-        <Alert variant={'danger'} customHeading={t('validationAlert.title')} dismissible={false}>
-          {submitError}
-        </Alert>
-      )}
-
       <FormProvider {...form}>
         <Form onSubmit={form.handleSubmit(submitForm, onInvalidSubmit)}>
+          <div className={styles['top-buttons-container']}>
+            <RequiredFieldText />
+            {onEditMode && (
+              <div>
+                <Button type="submit" disabled={disableSubmitButton}>
+                  {t('saveButton.editMode')}
+                </Button>
+                <Button
+                  withSpacing
+                  variant="secondary"
+                  type="button"
+                  onClick={handleCancel}
+                  disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
+                  {t('cancelButton')}
+                </Button>
+              </div>
+            )}
+          </div>
+
+          {submissionStatus === SubmissionStatus.Errored && (
+            <Alert
+              variant={'danger'}
+              customHeading={t('validationAlert.title')}
+              dismissible={false}>
+              {submitError}
+            </Alert>
+          )}
+
           {metadataBlocksInfo.length > 0 && (
             <Accordion defaultActiveKey="0" ref={accordionRef}>
               {metadataBlocksInfo.map((metadataBlock, index) => (
