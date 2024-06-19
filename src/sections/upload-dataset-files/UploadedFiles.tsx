@@ -4,7 +4,8 @@ import {
   Col,
   DropdownButton,
   DropdownButtonItem,
-  Form
+  Form,
+  SelectMultiple
 } from '@iqss/dataverse-design-system'
 import cn from 'classnames'
 import { PencilFill, Plus, X } from 'react-bootstrap-icons'
@@ -31,6 +32,7 @@ export function UploadedFiles({
 }: DatasetFilesProps) {
   const [selected, setSelected] = useState(new Set<FileUploadState>())
   const [saving, setSaving] = useState(false)
+  const [tags, setTagOptions] = useState(['Documentation', 'Data', 'Code'])
   const save = () => {
     setSaving(true)
     addFiles(fileUploadState)
@@ -54,8 +56,8 @@ export function UploadedFiles({
     // TODO: show dialog for restriction
     updateFiles([file])
   }
-  const addTag = (file: FileUploadState) => {
-    // TODO: show dialog for tag
+  const setTags = (file: FileUploadState, tags: string[]) => {
+    file.tags = tags
     updateFiles([file])
   }
   const deleteFile = (file: FileUploadState) => {
@@ -75,8 +77,8 @@ export function UploadedFiles({
         classList.push(...Array.from(parent.parentElement.classList))
       }
     }
-    console.log(classList)
-    if (!classList.some((x) => x === 'form-control' || x === 'btn' || x === 'form-check-input')) {
+    const ignoreClasses = new Set<string>(['form-control', 'btn', 'form-check-input', 'form-check-label', 'dropdown-item', 'dropdown'])
+    if (!classList.some((x) => ignoreClasses.has(x))) {
       setSelected((current) => {
         if (current.has(file)) {
           current.delete(file)
@@ -210,31 +212,27 @@ export function UploadedFiles({
                         </Form.Group>
                         <Form.Group>
                           <Form.Group.Label column sm={3}>
-                            Restricted
+                            Tags
                           </Form.Group.Label>
                           <Col sm={9}>
-                            <Form.Group.Checkbox
-                              label=""
-                              id={'restricted-' + file.key}
-                              checked={file.restricted}
-                              onChange={(event: FormEvent<HTMLInputElement>) =>
-                                updateFileRestricted(file, event.currentTarget.checked)
-                              }
-                            />
+                            <SelectMultiple
+                              options={tags}
+                              onChange={(newTags) => setTags(file, newTags)}></SelectMultiple>
                           </Col>
                         </Form.Group>
                       </Form>
-                      <Button
-                        variant="secondary"
-                        {...{ size: 'sm' }}
-                        withSpacing
-                        onClick={() => addTag(file)}>
-                        <Plus className={styles.icon} title="Add tag" />
-                        Tag
-                      </Button>
                     </div>
                     <div className={styles.file_size}>{file.fileSizeString}</div>
-                    <div>{null}</div>
+                    <div>
+                      <Form.Group.Checkbox
+                        label="Restricted"
+                        id={'restricted-' + file.key}
+                        checked={file.restricted}
+                        onChange={(event: FormEvent<HTMLInputElement>) =>
+                          updateFileRestricted(file, event.currentTarget.checked)
+                        }
+                      />
+                    </div>
                     <div className={styles.cancel_upload}>
                       <Button
                         variant="secondary"
