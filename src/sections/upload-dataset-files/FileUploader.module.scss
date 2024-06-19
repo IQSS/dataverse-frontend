@@ -58,6 +58,11 @@
     display: inline-block;
 }
 
+.icon_pencil {
+    margin-right: 0.3rem;
+  margin-bottom: 0.2rem;
+}
+
 .info {
     padding: 0.5em;
     color: $dv-subtext-color;
@@ -65,6 +70,8 @@
     text-align: center;
 }
 
-.uploaded {
+.selected {
+    display: inline-flex;
+    align-items: center;
     padding-left: 1em;
 }

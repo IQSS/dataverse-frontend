@@ -107,16 +107,11 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     setState(FileUploadTools.removed(file, fileUploaderState))
   }
 
-  const deleteFile = (fileUploadState: FileUploadState) => {
+  const updateFiles = (fileUploadState: FileUploadState[]) => {
     setState((x) => {
-      fileUploadState.removed = true
-      return { state: x.state, uploaded: x.uploaded }
-    })
-  }
-
-  const updateFile = (fileUploadState: FileUploadState) => {
-    setState((x) => {
-      x.state.set(fileUploadState.key, fileUploadState)
+      fileUploadState.forEach((file) => {
+        x.state.set(file.key, file)
+      })
       return { state: x.state, uploaded: x.uploaded }
     })
   }
@@ -178,10 +173,9 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
               fileUploadState={fileUploaderState.uploaded}
               cancelTitle={'Delete'}
               saveDisabled={saveDisabled()}
-              deleteFile={deleteFile}
+              updateFiles={updateFiles}
               cleanup={cleanAllState}
               addFiles={addFiles}
-              updateFile={updateFile}
             />
           </article>
         </>

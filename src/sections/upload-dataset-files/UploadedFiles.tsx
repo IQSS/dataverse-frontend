@@ -1,6 +1,13 @@
-import { Button, Card, Col, Form } from '@iqss/dataverse-design-system'
+import {
+  Button,
+  Card,
+  Col,
+  DropdownButton,
+  DropdownButtonItem,
+  Form
+} from '@iqss/dataverse-design-system'
 import cn from 'classnames'
-import { Plus, X } from 'react-bootstrap-icons'
+import { PencilFill, Plus, X } from 'react-bootstrap-icons'
 import { FileUploadState } from '../../files/domain/models/FileUploadState'
 import styles from './FileUploader.module.scss'
 import { FormEvent, useState, MouseEvent } from 'react'
@@ -9,20 +16,18 @@ interface DatasetFilesProps {
   fileUploadState: FileUploadState[]
   cancelTitle: string
   saveDisabled: boolean
-  deleteFile: (file: FileUploadState) => void
+  updateFiles: (file: FileUploadState[]) => void
   cleanup: () => void
   addFiles: (fileUploadState: FileUploadState[]) => void
-  updateFile: (file: FileUploadState) => void
 }
 
 export function UploadedFiles({
   fileUploadState,
   cancelTitle,
   saveDisabled,
-  deleteFile,
+  updateFiles,
   cleanup,
-  addFiles,
-  updateFile
+  addFiles
 }: DatasetFilesProps) {
   const [selected, setSelected] = useState(new Set<FileUploadState>())
   const [saving, setSaving] = useState(false)
@@ -34,24 +39,32 @@ export function UploadedFiles({
   }
   const updateFileName = (file: FileUploadState, updated: string) => {
     file.fileName = updated
-    updateFile(file)
+    updateFiles([file])
   }
   const updateFileDir = (file: FileUploadState, updated: string) => {
     file.fileDir = updated
-    updateFile(file)
+    updateFiles([file])
   }
   const updateFileDescription = (file: FileUploadState, updated: string) => {
     file.description = updated
-    updateFile(file)
+    updateFiles([file])
   }
   const updateFileRestricted = (file: FileUploadState, updated: boolean) => {
     file.restricted = updated
     // TODO: show dialog for restriction
-    updateFile(file)
+    updateFiles([file])
   }
   const addTag = (file: FileUploadState) => {
     // TODO: show dialog for tag
-    updateFile(file)
+    updateFiles([file])
+  }
+  const deleteFile = (file: FileUploadState) => {
+    file.removed = true
+    setSelected((x) => {
+      x.delete(file)
+      return x
+    })
+    updateFiles([file])
   }
   const clicked = (event: MouseEvent<HTMLDivElement, unknown>, file: FileUploadState) => {
     const classList = (event.target as HTMLDivElement).classList
@@ -70,6 +83,38 @@ export function UploadedFiles({
       })
     }
   }
+  const all = () => {
+    setSelected((current) => {
+      if (current.size === fileUploadState.length) {
+        return new Set<FileUploadState>()
+      } else {
+        return new Set<FileUploadState>(fileUploadState)
+      }
+    })
+  }
+  const restrictSelected = () => {
+    // TODO: show dialog for restriction
+    const res = Array.from(selected).map((x) => {
+      x.restricted = true
+      return x
+    })
+    updateFiles(res)
+  }
+  const unrestrictSelected = () => {
+    const res = Array.from(selected).map((x) => {
+      x.restricted = false
+      return x
+    })
+    updateFiles(res)
+  }
+  const deleteSelected = () => {
+    const res = Array.from(selected).map((x) => {
+      x.removed = true
+      return x
+    })
+    setSelected(new Set<FileUploadState>())
+    updateFiles(res)
+  }
 
   return (
     <div hidden={fileUploadState.length === 0}>
@@ -81,11 +126,26 @@ export function UploadedFiles({
           <Button withSpacing variant="secondary" onClick={cleanup} disabled={saving}>
             Cancel
           </Button>
-          <span className={styles.uploaded}>
+          <Button withSpacing variant="link" onClick={all} disabled={saving}>
+            {' '}
+            {fileUploadState.length}
+            {fileUploadState.length === 1 ? ' file uploaded' : ' files uploaded'}
+          </Button>
+          <span className={styles.selected} hidden={selected.size === 0}>
             <span>
-              {fileUploadState.length}
-              {fileUploadState.length === 1 ? ' file uploaded' : ' files uploaded'}
+              {selected.size}
+              {selected.size === 1 ? ' file selected' : ' files selected'}
             </span>
+            <DropdownButton
+              variant="secondary"
+              withSpacing
+              icon={<PencilFill className={styles.icon_pencil} />}
+              id={'edit-files'}
+              title={'Edit files'}>
+              <DropdownButtonItem onClick={restrictSelected}>{'Restrict'}</DropdownButtonItem>
+              <DropdownButtonItem onClick={unrestrictSelected}>{'Unrestrict'}</DropdownButtonItem>
+              <DropdownButtonItem onClick={deleteSelected}>{'Delete'}</DropdownButtonItem>
+            </DropdownButton>
           </span>
         </Card.Header>
         <Card.Body>
