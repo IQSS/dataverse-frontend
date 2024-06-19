@@ -1,4 +1,4 @@
-import { Outlet, ScrollRestoration } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { Container } from '@iqss/dataverse-design-system'
 import styles from './Layout.module.scss'
 import { FooterFactory } from './footer/FooterFactory'
@@ -17,8 +17,6 @@ export function Layout() {
       </main>
 
       {FooterFactory.create()}
-
-      <ScrollRestoration />
     </>
   )
 }
