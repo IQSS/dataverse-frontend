@@ -8,7 +8,7 @@ import {
   SelectMultiple
 } from '@iqss/dataverse-design-system'
 import cn from 'classnames'
-import { PencilFill, Plus, X } from 'react-bootstrap-icons'
+import { PencilFill, X } from 'react-bootstrap-icons'
 import { FileUploadState } from '../../files/domain/models/FileUploadState'
 import styles from './FileUploader.module.scss'
 import { FormEvent, useState, MouseEvent } from 'react'
@@ -33,6 +33,14 @@ export function UploadedFiles({
   const [selected, setSelected] = useState(new Set<FileUploadState>())
   const [saving, setSaving] = useState(false)
   const [tags, setTagOptions] = useState(['Documentation', 'Data', 'Code'])
+  const ignoreClasses = new Set<string>([
+    'form-control',
+    'btn',
+    'form-check-input',
+    'form-check-label',
+    'dropdown-item',
+    'dropdown'
+  ])
   const save = () => {
     setSaving(true)
     addFiles(fileUploadState)
@@ -77,7 +85,6 @@ export function UploadedFiles({
         classList.push(...Array.from(parent.parentElement.classList))
       }
     }
-    const ignoreClasses = new Set<string>(['form-control', 'btn', 'form-check-input', 'form-check-label', 'dropdown-item', 'dropdown'])
     if (!classList.some((x) => ignoreClasses.has(x))) {
       setSelected((current) => {
         if (current.has(file)) {
