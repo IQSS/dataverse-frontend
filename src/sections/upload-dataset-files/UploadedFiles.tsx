@@ -1,17 +1,16 @@
 import {
   Button,
   Card,
-  Col,
-  DropdownButton,
-  DropdownButtonItem,
-  Form,
-  SelectMultiple
+  Form
 } from '@iqss/dataverse-design-system'
 import cn from 'classnames'
-import { PencilFill, X } from 'react-bootstrap-icons'
+import { X } from 'react-bootstrap-icons'
 import { FileUploadState } from '../../files/domain/models/FileUploadState'
 import styles from './FileUploader.module.scss'
 import { FormEvent, useState, MouseEvent } from 'react'
+import { FileForm } from './uploaded-files-list/file-form/FileForm'
+import { TagOptions } from './uploaded-files-list/tag-options/TagOptions'
+import { FilesHeader } from './uploaded-files-list/files-header/FilesHeader'
 
 interface DatasetFilesProps {
   fileUploadState: FileUploadState[]
@@ -31,7 +30,6 @@ export function UploadedFiles({
   addFiles
 }: DatasetFilesProps) {
   const [selected, setSelected] = useState(new Set<FileUploadState>())
-  const [saving, setSaving] = useState(false)
   const [tags, setTagOptions] = useState(['Documentation', 'Data', 'Code'])
   const ignoreClasses = new Set<string>([
     'form-control',
@@ -41,31 +39,9 @@ export function UploadedFiles({
     'dropdown-item',
     'dropdown'
   ])
-  const save = () => {
-    setSaving(true)
-    addFiles(fileUploadState)
-    cleanup()
-    setSaving(false)
-  }
-  const updateFileName = (file: FileUploadState, updated: string) => {
-    file.fileName = updated
-    updateFiles([file])
-  }
-  const updateFileDir = (file: FileUploadState, updated: string) => {
-    file.fileDir = updated
-    updateFiles([file])
-  }
-  const updateFileDescription = (file: FileUploadState, updated: string) => {
-    file.description = updated
-    updateFiles([file])
-  }
   const updateFileRestricted = (file: FileUploadState, updated: boolean) => {
     file.restricted = updated
     // TODO: show dialog for restriction
-    updateFiles([file])
-  }
-  const setTags = (file: FileUploadState, tags: string[]) => {
-    file.tags = tags
     updateFiles([file])
   }
   const deleteFile = (file: FileUploadState) => {
@@ -96,166 +72,53 @@ export function UploadedFiles({
       })
     }
   }
-  const all = () => {
-    setSelected((current) => {
-      if (current.size === fileUploadState.length) {
-        return new Set<FileUploadState>()
-      } else {
-        return new Set<FileUploadState>(fileUploadState)
-      }
-    })
-  }
-  const restrictSelected = () => {
-    // TODO: show dialog for restriction
-    const res = Array.from(selected).map((x) => {
-      x.restricted = true
-      return x
-    })
-    updateFiles(res)
-  }
-  const unrestrictSelected = () => {
-    const res = Array.from(selected).map((x) => {
-      x.restricted = false
-      return x
-    })
-    updateFiles(res)
-  }
-  const deleteSelected = () => {
-    const res = Array.from(selected).map((x) => {
-      x.removed = true
-      return x
-    })
-    setSelected(new Set<FileUploadState>())
-    updateFiles(res)
-  }
 
   return (
-    <div hidden={fileUploadState.length === 0}>
-      <Card>
-        <Card.Header>
-          <Button withSpacing onClick={save} disabled={saveDisabled}>
-            Save
-          </Button>
-          <Button withSpacing variant="secondary" onClick={cleanup} disabled={saving}>
-            Cancel
-          </Button>
-          <Button withSpacing variant="link" onClick={all} disabled={saving}>
-            {' '}
-            {fileUploadState.length}
-            {fileUploadState.length === 1 ? ' file uploaded' : ' files uploaded'}
-          </Button>
-          <span className={styles.selected_files_info} hidden={selected.size === 0}>
-            <span>
-              {selected.size}
-              {selected.size === 1 ? ' file selected' : ' files selected'}
-            </span>
-            <DropdownButton
-              variant="secondary"
-              withSpacing
-              icon={<PencilFill className={styles.icon_pencil} />}
-              id={'edit-files'}
-              title={'Edit files'}>
-              <DropdownButtonItem onClick={restrictSelected}>{'Restrict'}</DropdownButtonItem>
-              <DropdownButtonItem onClick={unrestrictSelected}>{'Unrestrict'}</DropdownButtonItem>
-              <DropdownButtonItem onClick={deleteSelected}>{'Delete'}</DropdownButtonItem>
-            </DropdownButton>
-          </span>
-        </Card.Header>
-        <Card.Body>
-          <div>
-            {fileUploadState.length > 0 ? (
-              <div className={styles.files}>
-                {fileUploadState.map((file) => (
-                  <div
-                    className={cn(styles.file, {
-                      [styles.selected_file]: selected.has(file)
-                    })}
-                    key={file.key}
-                    onClick={(event) => clicked(event, file)}>
-                    <div className={styles.file_name}>
-                      <Form>
-                        <Form.Group>
-                          <Form.Group.Label column sm={3}>
-                            File name
-                          </Form.Group.Label>
-                          <Col sm={9}>
-                            <Form.Group.Input
-                              type="text"
-                              placeholder="File name"
-                              defaultValue={file.fileName}
-                              onChange={(event: FormEvent<HTMLInputElement>) =>
-                                updateFileName(file, event.currentTarget.value)
-                              }
-                            />
-                          </Col>
-                        </Form.Group>
-                        <Form.Group>
-                          <Form.Group.Label column sm={3}>
-                            File path
-                          </Form.Group.Label>
-                          <Col sm={9}>
-                            <Form.Group.Input
-                              type="text"
-                              placeholder="File path"
-                              defaultValue={file.fileDir}
-                              onChange={(event: FormEvent<HTMLInputElement>) =>
-                                updateFileDir(file, event.currentTarget.value)
-                              }
-                            />
-                          </Col>
-                        </Form.Group>
-                        <Form.Group>
-                          <Form.Group.Label column sm={3}>
-                            Description
-                          </Form.Group.Label>
-                          <Col sm={9}>
-                            <Form.Group.TextArea
-                              defaultValue={file.description}
-                              onChange={(event: FormEvent<HTMLInputElement>) =>
-                                updateFileDescription(file, event.currentTarget.value)
-                              }
-                            />
-                          </Col>
-                        </Form.Group>
-                        <Form.Group>
-                          <Form.Group.Label column sm={3}>
-                            Tags
-                          </Form.Group.Label>
-                          <Col sm={9}>
-                            <SelectMultiple
-                              options={tags}
-                              onChange={(newTags) => setTags(file, newTags)}></SelectMultiple>
-                          </Col>
-                        </Form.Group>
-                      </Form>
+    <>
+      <TagOptions tags={tags} setTagOptions={setTagOptions} />
+      <div hidden={fileUploadState.length === 0}>
+        <Card>
+          <FilesHeader fileUploadState={fileUploadState} saveDisabled={saveDisabled} updateFiles={updateFiles} cleanup={cleanup} addFiles={addFiles} selected={selected} setSelected={setSelected}/>
+          <Card.Body>
+            <div>
+              {fileUploadState.length > 0 ? (
+                <div className={styles.files}>
+                  {fileUploadState.map((file) => (
+                    <div
+                      className={cn(styles.file, {
+                        [styles.selected_file]: selected.has(file)
+                      })}
+                      key={file.key}
+                      onClick={(event) => clicked(event, file)}>
+                      <FileForm file={file} updateFiles={updateFiles} tags={tags} />
+                      <div className={styles.file_size}>{file.fileSizeString}</div>
+                      <div>
+                        <Form.Group.Checkbox
+                          label="Restricted"
+                          id={'restricted-' + file.key}
+                          checked={file.restricted}
+                          onChange={(event: FormEvent<HTMLInputElement>) =>
+                            updateFileRestricted(file, event.currentTarget.checked)
+                          }
+                        />
+                      </div>
+                      <div className={styles.cancel_upload}>
+                        <Button
+                          variant="secondary"
+                          {...{ size: 'sm' }}
+                          withSpacing
+                          onClick={() => deleteFile(file)}>
+                          <X className={styles.icon} title={cancelTitle} />
+                        </Button>
+                      </div>
                     </div>
-                    <div className={styles.file_size}>{file.fileSizeString}</div>
-                    <div>
-                      <Form.Group.Checkbox
-                        label="Restricted"
-                        id={'restricted-' + file.key}
-                        checked={file.restricted}
-                        onChange={(event: FormEvent<HTMLInputElement>) =>
-                          updateFileRestricted(file, event.currentTarget.checked)
-                        }
-                      />
-                    </div>
-                    <div className={styles.cancel_upload}>
-                      <Button
-                        variant="secondary"
-                        {...{ size: 'sm' }}
-                        withSpacing
-                        onClick={() => deleteFile(file)}>
-                        <X className={styles.icon} title={cancelTitle} />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : null}
-          </div>
-        </Card.Body>
-      </Card>
-    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          </Card.Body>
+        </Card>
+      </div>
+    </>
   )
 }
