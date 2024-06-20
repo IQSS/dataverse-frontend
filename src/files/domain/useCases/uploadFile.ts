@@ -14,5 +14,5 @@ export function uploadFile(
     .uploadFile(datasetId, { file: file }, progress, controller, storageIdSetter)
     .then(done)
     .catch(failed)
-  return controller.abort
+  return () => controller.abort()
 }
