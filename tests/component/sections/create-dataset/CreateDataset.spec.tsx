@@ -4,12 +4,19 @@ import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { TypeMetadataFieldOptions } from '../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
 import { NotImplementedModalProvider } from '../../../../src/sections/not-implemented/NotImplementedModalProvider'
+import { UserMother } from '../../users/domain/models/UserMother'
+import { UserRepository } from '../../../../src/users/domain/repositories/UserRepository'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
+const userRepository: UserRepository = {} as UserRepository
 
 const collectionMetadataBlocksInfo =
   MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue()
+
+const wrongCollectionMetadataBlocksInfo =
+  MetadataBlockInfoMother.wrongCollectionMetadataBlocksInfo()
+const testUser = UserMother.create()
 
 const fillRequiredFields = () => {
   cy.findByLabelText(/^Title/i).type('Test Dataset Title')
@@ -63,7 +70,9 @@ describe('Create Dataset', () => {
     metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
       .stub()
       .resolves(collectionMetadataBlocksInfo)
+    userRepository.getAuthenticated = cy.stub().resolves(testUser)
   })
+
   it('renders the Host Collection Form', () => {
     cy.customMount(
       <NotImplementedModalProvider>
@@ -82,6 +91,38 @@ describe('Create Dataset', () => {
       .then(() => {
         cy.findByText('Not Implemented').should('exist')
       })
+  })
+  it('pre-fills the form with user data', () => {
+    cy.mountAuthenticated(
+      <NotImplementedModalProvider>
+        <CreateDataset
+          repository={datasetRepository}
+          collectionId={'test-collectionId'}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      </NotImplementedModalProvider>
+    )
+    cy.findByText('Author')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^Name/i).should('have.value', testUser.displayName)
+      })
+    cy.findByText('Author')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^Affiliation/i).should('have.value', testUser.affiliation)
+      })
+    cy.findByText('Point of Contact')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^Name/i).should('have.value', testUser.displayName)
+      })
+    cy.findByText('Point of Contact')
+      .closest('.row')
+      .within(() => {
+        cy.findByLabelText(/^Affiliation/i).should('have.value', testUser.affiliation)
+      })
+    cy.findByLabelText(/^E-mail/i).should('have.value', testUser.email)
   })
   it('renders the Create Dataset page and its metadata blocks sections', () => {
     cy.customMount(
@@ -208,7 +249,7 @@ describe('Create Dataset', () => {
     })
   })
 
-  it('should display required errors and error alert when submitting the form with required fields empty', () => {
+  it('should display required errors when submitting the form with required fields empty', () => {
     cy.customMount(
       <CreateDataset
         repository={datasetRepository}
@@ -226,8 +267,6 @@ describe('Create Dataset', () => {
     cy.findByText('Description Text is required').should('exist')
     cy.findByText('Subject is required').should('exist')
     cy.findByText('Producer Name is required').should('exist')
-
-    cy.findByText('Validation Error').should('exist')
   })
 
   it('should not display required errors when submitting the form with required fields filled', () => {
@@ -247,8 +286,6 @@ describe('Create Dataset', () => {
     cy.findByText('Description Text is required').should('not.exist')
     cy.findByText('Subject is required').should('not.exist')
     cy.findByText('Producer Name is required').should('not.exist')
-
-    cy.findByText('Validation Error').should('not.exist')
   })
 
   it('should show correct errors when filling inputs with invalid formats', () => {
@@ -285,8 +322,6 @@ describe('Create Dataset', () => {
     // Object Count
     cy.findByLabelText(/Object Count/).type('30.5')
     cy.findByText('Object Count is not a valid integer').should('exist')
-
-    cy.findByText('Validation Error').should('exist')
   })
 
   it('should not show errors when filling inputs with valid formats', () => {
@@ -323,8 +358,6 @@ describe('Create Dataset', () => {
     // Object Count
     cy.findByLabelText(/Object Count/).type('30')
     cy.findByText('Object Count is not a valid integer').should('not.exist')
-
-    cy.findByText('Validation Error').should('not.exist')
   })
 
   it('renders skeleton while loading', () => {
@@ -367,6 +400,75 @@ describe('Create Dataset', () => {
       )
 
       cy.findByText(/Save Dataset/i).should('be.disabled')
+    })
+  })
+
+  describe('When dataset creation fails', () => {
+    it('should show create error message from the client-javascript client when the dataset creation fails', () => {
+      datasetRepository.create = cy
+        .stub()
+        .rejects(new Error('Error from the api javascript client'))
+      metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
+        .stub()
+        .resolves(wrongCollectionMetadataBlocksInfo)
+
+      cy.customMount(
+        <CreateDataset
+          repository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+
+      cy.findByText(/Save Dataset/i).click()
+
+      cy.findByText('Validation Error').should('exist')
+      cy.findByText(/Error from the api javascript client/).should('exist')
+    })
+
+    it('should only show field error part of the error message from the api when the dataset creation fails', () => {
+      datasetRepository.create = cy
+        .stub()
+        .rejects(
+          new Error(
+            'Validation Failed: Point of Contact E-mail test@test.c is not a valid email address. (Invalid value:edu.harvard.iq.dataverse.DatasetFieldValueValue[ id=null ]).java.util.stream.ReferencePipeline$3@561b5200'
+          )
+        )
+
+      cy.customMount(
+        <CreateDataset
+          repository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+
+      fillRequiredFields()
+
+      cy.findByText(/Save Dataset/i).click()
+
+      cy.findByText('Validation Error').should('exist')
+      cy.findByText(/Point of Contact E-mail test@test.c is not a valid email address./).should(
+        'exist'
+      )
+    })
+
+    it('should show locale error message when the dataset creation fails with an unknown error message', () => {
+      datasetRepository.create = cy.stub().rejects('Some not expected error')
+
+      cy.customMount(
+        <CreateDataset
+          repository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+
+      fillRequiredFields()
+
+      cy.findByText(/Save Dataset/i).click()
+
+      cy.findByText('Validation Error').should('exist')
+      cy.findByText(
+        /Required fields were missed or there was a validation error. Please scroll down to see details./
+      ).should('exist')
     })
   })
 

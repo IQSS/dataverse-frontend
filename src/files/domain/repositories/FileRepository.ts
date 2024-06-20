@@ -6,6 +6,7 @@ import { DatasetVersion, DatasetVersionNumber } from '../../../dataset/domain/mo
 import { FilePaginationInfo } from '../models/FilePaginationInfo'
 import { FilePreview } from '../models/FilePreview'
 import { FilesWithCount } from '../models/FilesWithCount'
+import { FileHolder } from './File'
 
 export interface FileRepository {
   getAllByDatasetPersistentId: (
@@ -33,4 +34,10 @@ export interface FileRepository {
     paginationInfo?: FilePaginationInfo,
     criteria?: FileCriteria
   ) => Promise<FilesWithCount>
+  uploadFile: (
+    datasetId: number | string,
+    file: FileHolder,
+    progress: (now: number) => void,
+    abortController: AbortController
+  ) => Promise<void>
 }

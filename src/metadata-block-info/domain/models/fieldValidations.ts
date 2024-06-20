@@ -2,7 +2,7 @@ import { DateFormats } from './MetadataBlockInfo'
 
 export function isValidEmail(email: string): boolean {
   const EMAIL_REGEX =
-    /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+    /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])/
   return EMAIL_REGEX.test(email)
 }
 
@@ -75,4 +75,31 @@ export function isValidDateFormat(dateString: string, acceptedFormat?: DateForma
       yearFormatRegex.test(dateString)
     )
   }
+}
+
+/**
+ * Extracts the invalid value from the error message, removing 'Validation Failed:' and everything after '(Invalid value:'
+ * @param errorMessage
+ * @returns the invalid value or null if it can't be extracted
+ * @example
+ * getValidationFailedFieldError("Validation Failed: Point of Contact E-mail test@test.c  is not a valid email address. (Invalid value:edu.harvard.iq.dataverse.DatasetFieldValueValue[ id=null ]).java.util.stream.ReferencePipeline$3@561b5200")
+ * // returns "Point of Contact E-mail test@test.c  is not a valid email address."
+ */
+
+export function getValidationFailedFieldError(errorMessage: string): string | null {
+  const validationFailedKeyword = 'Validation Failed:'
+  const invalidValueKeyword = '(Invalid value:'
+
+  const validationFailedKeywordIndex = errorMessage.indexOf(validationFailedKeyword)
+  const invalidValueKeywordIndex = errorMessage.indexOf(invalidValueKeyword)
+
+  if (validationFailedKeywordIndex !== -1 && invalidValueKeywordIndex !== -1) {
+    const start = validationFailedKeywordIndex + validationFailedKeyword.length
+    const end = invalidValueKeywordIndex
+    const extractedValue = errorMessage.slice(start, end).trim()
+
+    return extractedValue
+  }
+
+  return null
 }

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { TypeMetadataFieldOptions } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
@@ -36,20 +36,20 @@ export const PrimitiveMultiple = ({
     control: control
   })
 
-  const builtFieldNameWithIndex = (fieldIndex: number) => {
-    return MetadataFieldsHelper.defineFieldName(
-      name,
-      metadataBlockName,
-      compoundParentName,
-      fieldIndex
-    )
-  }
-
-  // We give the label the same ID as the first field, so that clicking on the label focuses the first field
-  const controlID = useMemo(
-    () => builtFieldNameWithIndex(0),
+  const builtFieldNameWithIndex = useCallback(
+    (fieldIndex: number) => {
+      return MetadataFieldsHelper.defineFieldName(
+        name,
+        metadataBlockName,
+        compoundParentName,
+        fieldIndex
+      )
+    },
     [name, metadataBlockName, compoundParentName]
   )
+
+  // We give the label the same ID as the first field, so that clicking on the label focuses the first field
+  const controlID = useMemo(() => builtFieldNameWithIndex(0), [builtFieldNameWithIndex])
 
   const handleOnAddField = (index: number) => {
     insert(

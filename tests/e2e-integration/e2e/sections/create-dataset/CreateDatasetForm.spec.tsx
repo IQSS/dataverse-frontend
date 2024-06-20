@@ -20,17 +20,6 @@ describe('Create Dataset', () => {
     cy.visit('/spa/datasets/create')
 
     cy.findByLabelText(/^Title/i).type('Test Dataset Title', { force: true })
-    cy.findByText('Author')
-      .closest('.row')
-      .within(() => {
-        cy.findByLabelText(/^Name/i).type('Test author name', { force: true })
-      })
-
-    cy.findByText('Point of Contact')
-      .closest('.row')
-      .within(() => {
-        cy.findByLabelText(/^E-mail/i).type('test@test.com', { force: true })
-      })
 
     cy.findByText('Description')
       .closest('.row')
@@ -45,7 +34,6 @@ describe('Create Dataset', () => {
 
         cy.findByLabelText('Agricultural Sciences').click()
       })
-
     cy.findByText(/Save Dataset/i).click()
 
     cy.findByRole('heading', { name: 'Test Dataset Title' }).should('exist')

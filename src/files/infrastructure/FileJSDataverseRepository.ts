@@ -29,6 +29,7 @@ import { JSFileMetadataMapper } from './mappers/JSFileMetadataMapper'
 import { FilePermissions } from '../domain/models/FilePermissions'
 import { JSFilePermissionsMapper } from './mappers/JSFilePermissionsMapper'
 import { FilesWithCount } from '../domain/models/FilesWithCount'
+import { FileHolder } from '../domain/repositories/File'
 
 const includeDeaccessioned = true
 
@@ -280,5 +281,15 @@ export class FileJSDataverseRepository implements FileRepository {
       return `/api/access/datafile/${id}?format=${downloadMode}`
     }
     return `/api/access/datafile/${id}`
+  }
+
+  uploadFile(
+    _datasetId: number | string,
+    _file: FileHolder,
+    _progress: (now: number) => void,
+    _abortController: AbortController
+  ): Promise<void> {
+    // TODO:
+    return new Promise(() => {})
   }
 }

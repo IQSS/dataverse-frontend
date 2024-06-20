@@ -7,11 +7,16 @@ import { MetadataBlockInfoMockRepository } from './MetadataBlockInfoMockReposito
 import { MetadataBlockInfoMockLoadingRepository } from './MetadataBlockInfoMockLoadingRepository'
 import { MetadataBlockInfoMockErrorRepository } from './MetadataBlockInfoMockErrorRepository'
 import { NotImplementedModalProvider } from '../../sections/not-implemented/NotImplementedModalProvider'
+import { WithLoggedInUser } from '../WithLoggedInUser'
 
 const meta: Meta<typeof CreateDataset> = {
   title: 'Pages/Create Dataset',
   component: CreateDataset,
-  decorators: [WithI18next, WithLayout]
+  decorators: [WithI18next, WithLayout, WithLoggedInUser],
+  parameters: {
+    // Sets the delay for all stories.
+    chromatic: { delay: 15000, pauseAnimationAtEnd: true }
+  }
 }
 export default meta
 type Story = StoryObj<typeof CreateDataset>

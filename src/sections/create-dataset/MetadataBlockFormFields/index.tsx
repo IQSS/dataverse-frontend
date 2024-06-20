@@ -1,4 +1,4 @@
-import { MetadataBlockInfo } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { type MetadataBlockInfo } from /* istanbul ignore next */ '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataFormField } from './MetadataFormField'
 
 interface Props {
