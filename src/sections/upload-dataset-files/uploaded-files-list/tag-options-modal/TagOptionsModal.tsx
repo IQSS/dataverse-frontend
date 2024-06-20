@@ -1,5 +1,5 @@
 import { Button, Col, Form } from '@iqss/dataverse-design-system'
-import styles from './TagOptions.module.scss'
+import styles from './TagOptionsModal.module.scss'
 import { FormEvent, useState } from 'react'
 
 interface TagOptionsProps {

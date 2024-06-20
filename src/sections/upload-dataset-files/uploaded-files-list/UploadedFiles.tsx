@@ -5,7 +5,7 @@ import { FileUploadState } from '../../../files/domain/models/FileUploadState'
 import styles from '../FileUploader.module.scss'
 import { FormEvent, useState, MouseEvent } from 'react'
 import { FileForm } from './file-form/FileForm'
-import { TagOptions } from './tag-options/TagOptions'
+import { TagOptions } from './tag-options-modal/TagOptionsModal'
 import { FilesHeader } from './files-header/FilesHeader'
 import { RestrictionForm } from './restriction-modal/RestrictionModal'
 
