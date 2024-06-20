@@ -46,7 +46,7 @@ export function UploadedFiles({
       setFilesToRestrict(files)
       setShowRestrictionModal(true)
     } else {
-      files.forEach((file) => file.restricted = false)
+      files.forEach((file) => (file.restricted = false))
       updateFiles(files)
     }
   }
@@ -54,7 +54,7 @@ export function UploadedFiles({
     if (res.saved) {
       setTerms(res.terms)
       setRequestAccess(res.requestAccess)
-      filesToRestrict.forEach((file) => file.restricted = true)
+      filesToRestrict.forEach((file) => (file.restricted = true))
       updateFiles(filesToRestrict)
     }
     setShowRestrictionModal(false)
@@ -91,8 +91,12 @@ export function UploadedFiles({
   return (
     <>
       <div className={styles.forms}>
-        <TagOptionsModal tags={tags} setTagOptions={setTagOptions}
-          show={showTagOptionsModal} hide={() => setShowTagOptionsModal(false)}/>
+        <TagOptionsModal
+          tags={tags}
+          setTagOptions={setTagOptions}
+          show={showTagOptionsModal}
+          hide={() => setShowTagOptionsModal(false)}
+        />
         <RestrictionModal
           defaultRequestAccess={requestAccess}
           defaultTerms={terms}
@@ -123,7 +127,12 @@ export function UploadedFiles({
                       })}
                       key={file.key}
                       onClick={(event) => clicked(event, file)}>
-                      <FileForm file={file} updateFiles={updateFiles} tags={tags} editTagOptions={() => setShowTagOptionsModal(true)}/>
+                      <FileForm
+                        file={file}
+                        updateFiles={updateFiles}
+                        tags={tags}
+                        editTagOptions={() => setShowTagOptionsModal(true)}
+                      />
                       <div className={styles.file_size}>{file.fileSizeString}</div>
                       <div>
                         <Form.Group.Checkbox

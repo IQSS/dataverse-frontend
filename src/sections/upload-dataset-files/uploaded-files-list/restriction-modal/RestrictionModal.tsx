@@ -23,7 +23,8 @@ export function RestrictionModal({
 }: RestrictionModalProps) {
   const [terms, setTerms] = useState('')
   const [requestAccess, setRequestAccess] = useState(true)
-  const handleClose = (saved: boolean) => update({saved: saved, terms: terms, requestAccess: requestAccess})
+  const handleClose = (saved: boolean) =>
+    update({ saved: saved, terms: terms, requestAccess: requestAccess })
 
   return (
     <Modal show={show} onHide={() => handleClose(false)} size="lg">

@@ -77,8 +77,12 @@ export function FilesHeader({
           icon={<PencilFill className={styles.icon_pencil} />}
           id={'edit-files'}
           title={'Edit files'}>
-          <DropdownButtonItem onClick={() => updateRestriction(true)}>{'Restrict'}</DropdownButtonItem>
-          <DropdownButtonItem onClick={() => updateRestriction(false)}>{'Unrestrict'}</DropdownButtonItem>
+          <DropdownButtonItem onClick={() => updateRestriction(true)}>
+            {'Restrict'}
+          </DropdownButtonItem>
+          <DropdownButtonItem onClick={() => updateRestriction(false)}>
+            {'Unrestrict'}
+          </DropdownButtonItem>
           <DropdownButtonItem onClick={deleteSelected}>{'Delete'}</DropdownButtonItem>
         </DropdownButton>
       </span>

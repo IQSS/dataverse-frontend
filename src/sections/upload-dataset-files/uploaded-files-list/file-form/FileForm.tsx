@@ -92,7 +92,7 @@ export function FileForm({ file, updateFiles, tags, editTagOptions }: FileFormPr
               {...{ size: 'sm' }}
               withSpacing
               onClick={editTagOptions}>
-              <Plus className={styles.icon} title={"Add tag options"} />
+              <Plus className={styles.icon} title={'Add tag options'} />
             </Button>
           </Col>
         </Form.Group>

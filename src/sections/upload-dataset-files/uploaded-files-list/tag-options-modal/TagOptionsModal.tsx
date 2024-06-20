@@ -1,6 +1,6 @@
 import { Button, Col, Form, Modal } from '@iqss/dataverse-design-system'
 import styles from './TagOptionsModal.module.scss'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useState, KeyboardEvent } from 'react'
 
 interface TagOptionsModalProps {
   tags: string[]
@@ -12,12 +12,16 @@ interface TagOptionsModalProps {
 export function TagOptionsModal({ tags, setTagOptions, show, hide }: TagOptionsModalProps) {
   const [tag, setTag] = useState('')
   const addTagOption = () => {
-    console.log(tag)
     if (tag && !tags.includes(tag)) {
       setTagOptions([...tags, tag])
       setTag('')
     }
-    console.log(tags)
+  }
+  const handleEnter = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      addTagOption()
+      event.preventDefault()
+    }
   }
 
   return (
@@ -26,8 +30,8 @@ export function TagOptionsModal({ tags, setTagOptions, show, hide }: TagOptionsM
         <Modal.Title>Edit tag options</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <div className={styles.tag_options}>
-          <Form>
+        <div className={styles.tag_options} onKeyDown={handleEnter}>
+          <Form onSubmit={addTagOption}>
             <Form.Group>
               <Form.Group.Label column sm={3}>
                 Custom file tag
@@ -41,7 +45,9 @@ export function TagOptionsModal({ tags, setTagOptions, show, hide }: TagOptionsM
                     type="text"
                     placeholder="Add new file tag..."
                     value={tag}
-                    onChange={(event: FormEvent<HTMLInputElement>) => setTag(event.currentTarget.value)}
+                    onChange={(event: FormEvent<HTMLInputElement>) =>
+                      setTag(event.currentTarget.value)
+                    }
                   />
                   <Button
                     className={styles.apply_button}
