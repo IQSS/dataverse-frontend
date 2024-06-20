@@ -6,7 +6,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 // TODO:ME Check if we can add skeleton css once in the app and if tests still pass
 export const MetadataFormSkeleton = ({ onEditMode }: { onEditMode: boolean }) => (
   <SkeletonTheme>
-    <div>
+    <div data-testid="metadata-form-loading-skeleton">
       <div
         style={{
           display: 'flex',

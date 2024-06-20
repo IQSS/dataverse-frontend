@@ -121,7 +121,10 @@ export const MetadataForm = ({
   }, [isErrorLoadingMetadataBlocks, submissionStatus, formState.isDirty])
 
   return (
-    <section className={styles['form-container']} ref={formContainerRef}>
+    <section
+      className={styles['form-container']}
+      ref={formContainerRef}
+      data-testid="metadata-form">
       <FormProvider {...form}>
         <Form onSubmit={form.handleSubmit(submitForm, onInvalidSubmit)}>
           <div className={styles['top-buttons-container']}>
