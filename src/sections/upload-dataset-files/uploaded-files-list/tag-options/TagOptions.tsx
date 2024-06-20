@@ -27,7 +27,6 @@ export function TagOptions({
 
   return (
     <div className={styles.tag_options}>
-      <div>
         <Form>
           <Form.Group>
             <Form.Group.Label column sm={3}>
@@ -59,7 +58,6 @@ export function TagOptions({
             </Col>
           </Form.Group>
         </Form>
-      </div>
     </div>
   )
 }

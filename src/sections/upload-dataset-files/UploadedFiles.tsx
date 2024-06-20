@@ -11,6 +11,7 @@ import { FormEvent, useState, MouseEvent } from 'react'
 import { FileForm } from './uploaded-files-list/file-form/FileForm'
 import { TagOptions } from './uploaded-files-list/tag-options/TagOptions'
 import { FilesHeader } from './uploaded-files-list/files-header/FilesHeader'
+import { RestrictionForm } from './uploaded-files-list/restriction-form/RestrictionForm'
 
 interface DatasetFilesProps {
   fileUploadState: FileUploadState[]
@@ -31,6 +32,8 @@ export function UploadedFiles({
 }: DatasetFilesProps) {
   const [selected, setSelected] = useState(new Set<FileUploadState>())
   const [tags, setTagOptions] = useState(['Documentation', 'Data', 'Code'])
+  const [terms, setTerms] = useState('')
+  const [requestAccess, setRequestAccess] = useState(true)
   const ignoreClasses = new Set<string>([
     'form-control',
     'btn',
@@ -75,10 +78,13 @@ export function UploadedFiles({
 
   return (
     <>
-      <TagOptions tags={tags} setTagOptions={setTagOptions} />
+      <div className={styles.forms}>
+        <TagOptions tags={tags} setTagOptions={setTagOptions} />
+        <RestrictionForm terms={terms} updateTerms={setTerms} requestAccess={requestAccess} updateRequestAccess={setRequestAccess}/>
+      </div>
       <div hidden={fileUploadState.length === 0}>
         <Card>
-          <FilesHeader fileUploadState={fileUploadState} saveDisabled={saveDisabled} updateFiles={updateFiles} cleanup={cleanup} addFiles={addFiles} selected={selected} setSelected={setSelected}/>
+          <FilesHeader fileUploadState={fileUploadState} saveDisabled={saveDisabled} updateFiles={updateFiles} cleanup={cleanup} addFiles={addFiles} selected={selected} setSelected={setSelected} />
           <Card.Body>
             <div>
               {fileUploadState.length > 0 ? (
