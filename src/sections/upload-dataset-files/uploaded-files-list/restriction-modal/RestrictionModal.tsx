@@ -21,8 +21,8 @@ export function RestrictionModal({
   show,
   update
 }: RestrictionModalProps) {
-  const [terms, setTerms] = useState('')
-  const [requestAccess, setRequestAccess] = useState(true)
+  const [terms, setTerms] = useState(defaultTerms)
+  const [requestAccess, setRequestAccess] = useState(defaultRequestAccess)
   const handleClose = (saved: boolean) =>
     update({ saved: saved, terms: terms, requestAccess: requestAccess })
 
@@ -50,7 +50,7 @@ export function RestrictionModal({
                 <Form.Group.Checkbox
                   label="Enable access request"
                   id={'requestAccessCB'}
-                  checked={defaultRequestAccess}
+                  checked={requestAccess}
                   onChange={(event: FormEvent<HTMLInputElement>) =>
                     setRequestAccess(event.currentTarget.checked)
                   }
@@ -74,7 +74,10 @@ export function RestrictionModal({
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="primary" onClick={() => handleClose(true)}>
+        <Button
+          variant="primary"
+          onClick={() => handleClose(true)}
+          disabled={!requestAccess && !terms}>
           Save Changes
         </Button>
         <Button variant="secondary" onClick={() => handleClose(false)}>
