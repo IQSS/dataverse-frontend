@@ -12,6 +12,7 @@ interface FilesHeaderProps {
   updateFiles: (file: FileUploadState[]) => void
   cleanup: () => void
   addFiles: (fileUploadState: FileUploadState[]) => void
+  updateFilesRestricted: (fileUploadState: FileUploadState[], restricted: boolean) => void
 }
 
 export function FilesHeader({
@@ -21,7 +22,8 @@ export function FilesHeader({
   saveDisabled,
   updateFiles,
   cleanup,
-  addFiles
+  addFiles,
+  updateFilesRestricted
 }: FilesHeaderProps) {
   const [saving, setSaving] = useState(false)
   const save = () => {
@@ -39,20 +41,8 @@ export function FilesHeader({
       }
     })
   }
-  const restrictSelected = () => {
-    // TODO: show dialog for restriction
-    const res = Array.from(selected).map((x) => {
-      x.restricted = true
-      return x
-    })
-    updateFiles(res)
-  }
-  const unrestrictSelected = () => {
-    const res = Array.from(selected).map((x) => {
-      x.restricted = false
-      return x
-    })
-    updateFiles(res)
+  const updateRestriction = (restrict: boolean) => {
+    updateFilesRestricted(Array.from(selected), restrict)
   }
   const deleteSelected = () => {
     const res = Array.from(selected).map((x) => {
@@ -87,8 +77,8 @@ export function FilesHeader({
           icon={<PencilFill className={styles.icon_pencil} />}
           id={'edit-files'}
           title={'Edit files'}>
-          <DropdownButtonItem onClick={restrictSelected}>{'Restrict'}</DropdownButtonItem>
-          <DropdownButtonItem onClick={unrestrictSelected}>{'Unrestrict'}</DropdownButtonItem>
+          <DropdownButtonItem onClick={() => updateRestriction(true)}>{'Restrict'}</DropdownButtonItem>
+          <DropdownButtonItem onClick={() => updateRestriction(false)}>{'Unrestrict'}</DropdownButtonItem>
           <DropdownButtonItem onClick={deleteSelected}>{'Delete'}</DropdownButtonItem>
         </DropdownButton>
       </span>

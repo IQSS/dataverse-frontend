@@ -7,7 +7,7 @@ import { FormEvent, useState, MouseEvent } from 'react'
 import { FileForm } from './file-form/FileForm'
 import { TagOptions } from './tag-options-modal/TagOptionsModal'
 import { FilesHeader } from './files-header/FilesHeader'
-import { RestrictionForm } from './restriction-modal/RestrictionModal'
+import { RestrictionModal, RestrictionModalResult } from './restriction-modal/RestrictionModal'
 
 interface DatasetFilesProps {
   fileUploadState: FileUploadState[]
@@ -27,10 +27,11 @@ export function UploadedFiles({
   addFiles
 }: DatasetFilesProps) {
   const [selected, setSelected] = useState(new Set<FileUploadState>())
+  const [filesToRestrict, setFilesToRestrict] = useState<FileUploadState[]>([])
   const [tags, setTagOptions] = useState(['Documentation', 'Data', 'Code'])
   const [terms, setTerms] = useState('')
   const [requestAccess, setRequestAccess] = useState(true)
-  const [showRestrictionForm, setShowRestrictionForm] = useState(false)
+  const [showRestrictionModal, setShowRestrictionModal] = useState(false)
   const ignoreClasses = new Set<string>([
     'form-control',
     'btn',
@@ -39,10 +40,23 @@ export function UploadedFiles({
     'dropdown-item',
     'dropdown'
   ])
-  const updateFileRestricted = (file: FileUploadState, updated: boolean) => {
-    file.restricted = updated
-    setShowRestrictionForm(true)
-    updateFiles([file])
+  const updateFilesRestricted = (files: FileUploadState[], restricted: boolean) => {
+    if (restricted) {
+      setFilesToRestrict(files)
+      setShowRestrictionModal(true)
+    } else {
+      files.forEach((file) => file.restricted = false)
+      updateFiles(files)
+    }
+  }
+  const restrict = (res: RestrictionModalResult) => {
+    if (res.saved) {
+      setTerms(res.terms)
+      setRequestAccess(res.requestAccess)
+      filesToRestrict.forEach((file) => file.restricted = true)
+      updateFiles(filesToRestrict)
+    }
+    setShowRestrictionModal(false)
   }
   const deleteFile = (file: FileUploadState) => {
     file.removed = true
@@ -77,13 +91,11 @@ export function UploadedFiles({
     <>
       <div className={styles.forms}>
         <TagOptions tags={tags} setTagOptions={setTagOptions} />
-        <RestrictionForm
-          terms={terms}
-          updateTerms={setTerms}
-          requestAccess={requestAccess}
-          updateRequestAccess={setRequestAccess}
-          show={showRestrictionForm}
-          setShow={setShowRestrictionForm}
+        <RestrictionModal
+          defaultRequestAccess={requestAccess}
+          defaultTerms={terms}
+          show={showRestrictionModal}
+          update={restrict}
         />
       </div>
       <div hidden={fileUploadState.length === 0}>
@@ -96,6 +108,7 @@ export function UploadedFiles({
             addFiles={addFiles}
             selected={selected}
             setSelected={setSelected}
+            updateFilesRestricted={updateFilesRestricted}
           />
           <Card.Body>
             <div>
@@ -116,7 +129,7 @@ export function UploadedFiles({
                           id={'restricted-' + file.key}
                           checked={file.restricted}
                           onChange={(event: FormEvent<HTMLInputElement>) =>
-                            updateFileRestricted(file, event.currentTarget.checked)
+                            updateFilesRestricted([file], event.currentTarget.checked)
                           }
                         />
                       </div>

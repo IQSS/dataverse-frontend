@@ -1,28 +1,32 @@
 import { Button, Col, Form, Modal } from '@iqss/dataverse-design-system'
 import styles from './RestrictionModal.module.scss'
-import { FormEvent } from 'react'
+import { FormEvent, useState } from 'react'
 
-interface RestrictionFormProps {
-  requestAccess: boolean
-  updateRequestAccess: (checked: boolean) => void
-  terms: string
-  updateTerms: (newTerms: string) => void
+interface RestrictionModalProps {
+  defaultRequestAccess: boolean
+  defaultTerms: string
   show: boolean
-  setShow: (doShow: boolean) => void
+  update: (res: RestrictionModalResult) => void
 }
 
-export function RestrictionForm({
-  requestAccess,
-  updateRequestAccess,
-  terms,
-  updateTerms,
+export interface RestrictionModalResult {
+  saved: boolean
+  terms: string
+  requestAccess: boolean
+}
+
+export function RestrictionModal({
+  defaultRequestAccess,
+  defaultTerms,
   show,
-  setShow
-}: RestrictionFormProps) {
-  const handleClose = () => setShow(false)
+  update
+}: RestrictionModalProps) {
+  const [terms, setTerms] = useState('')
+  const [requestAccess, setRequestAccess] = useState(true)
+  const handleClose = (saved: boolean) => update({saved: saved, terms: terms, requestAccess: requestAccess})
 
   return (
-    <Modal show={show} onHide={handleClose} size="lg">
+    <Modal show={show} onHide={() => handleClose(false)} size="lg">
       <Modal.Header>
         <Modal.Title>Restrict Access</Modal.Title>
       </Modal.Header>
@@ -45,9 +49,9 @@ export function RestrictionForm({
                 <Form.Group.Checkbox
                   label="Enable access request"
                   id={'requestAccessCB'}
-                  checked={requestAccess}
+                  checked={defaultRequestAccess}
                   onChange={(event: FormEvent<HTMLInputElement>) =>
-                    updateRequestAccess(event.currentTarget.checked)
+                    setRequestAccess(event.currentTarget.checked)
                   }
                 />
               </Col>
@@ -58,9 +62,9 @@ export function RestrictionForm({
               </Form.Group.Label>
               <Col sm={9}>
                 <Form.Group.TextArea
-                  defaultValue={terms}
+                  defaultValue={defaultTerms}
                   onChange={(event: FormEvent<HTMLInputElement>) =>
-                    updateTerms(event.currentTarget.value)
+                    setTerms(event.currentTarget.value)
                   }
                 />
               </Col>
@@ -69,10 +73,10 @@ export function RestrictionForm({
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="primary" onClick={handleClose}>
+        <Button variant="primary" onClick={() => handleClose(true)}>
           Save Changes
         </Button>
-        <Button variant="secondary" onClick={handleClose}>
+        <Button variant="secondary" onClick={() => handleClose(false)}>
           Cancel
         </Button>
       </Modal.Footer>
