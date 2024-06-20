@@ -100,7 +100,7 @@ describe('DatasetFilesScrollable', () => {
       />
     )
 
-    cy.findByText('10 of 200 Files seen').should('exist')
+    cy.findByText('10 of 200 Files displayed').should('exist')
     first10Files.forEach((file) => {
       cy.findByText(file.name).should('exist').should('have.attr', 'href', `/files?id=${file.id}`)
     })
@@ -150,16 +150,16 @@ describe('DatasetFilesScrollable', () => {
         />
       )
 
-      cy.findByText('10 of 200 Files seen').should('exist')
+      cy.findByText('10 of 200 Files displayed').should('exist')
 
       cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
       cy.get('@scrollableFilesContainer').scrollTo('bottom')
 
-      cy.findByText('20 of 200 Files seen').should('exist')
+      cy.findByText('20 of 200 Files displayed').should('exist')
 
       cy.get('@scrollableFilesContainer').scrollTo('bottom')
 
-      cy.findByText('30 of 200 Files seen').should('exist')
+      cy.findByText('30 of 200 Files displayed').should('exist')
     })
 
     it('scrolls to the top when criteria changes', () => {
@@ -171,11 +171,11 @@ describe('DatasetFilesScrollable', () => {
         />
       )
 
-      cy.findByText('10 of 200 Files seen').should('exist')
+      cy.findByText('10 of 200 Files displayed').should('exist')
       cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
       cy.get('@scrollableFilesContainer').scrollTo('bottom')
 
-      cy.findByText('20 of 200 Files seen').should('exist')
+      cy.findByText('20 of 200 Files displayed').should('exist')
 
       cy.findByRole('button', { name: /Sort/ }).click()
       cy.findByText('Name (Z-A)').should('exist').click()
@@ -195,16 +195,16 @@ describe('DatasetFilesScrollable', () => {
           />
         )
 
-        cy.findByText('10 of 200 Files seen').should('exist')
+        cy.findByText('10 of 200 Files displayed').should('exist')
 
         cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
         cy.get('@scrollableFilesContainer').scrollTo('bottom')
 
-        cy.findByText('20 of 200 Files seen').should('exist')
+        cy.findByText('20 of 200 Files displayed').should('exist')
 
         cy.get('@scrollableFilesContainer').scrollTo('bottom')
 
-        cy.findByText('30 of 200 Files seen').should('exist')
+        cy.findByText('30 of 200 Files displayed').should('exist')
 
         cy.get('@scrollableFilesContainer').scrollTo('top')
 
@@ -222,7 +222,7 @@ describe('DatasetFilesScrollable', () => {
           </SettingsProvider>
         )
 
-        cy.findByText('10 of 200 Files seen').should('exist')
+        cy.findByText('10 of 200 Files displayed').should('exist')
 
         cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
         cy.findByText('1 file is currently selected.').should('exist')
@@ -230,11 +230,11 @@ describe('DatasetFilesScrollable', () => {
         cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
         cy.get('@scrollableFilesContainer').scrollTo('bottom')
 
-        cy.findByText('20 of 200 Files seen').should('exist')
+        cy.findByText('20 of 200 Files displayed').should('exist')
 
         cy.get('@scrollableFilesContainer').scrollTo('bottom')
 
-        cy.findByText('30 of 200 Files seen').should('exist')
+        cy.findByText('30 of 200 Files displayed').should('exist')
 
         cy.get('@scrollableFilesContainer').scrollTo('top')
 
@@ -255,16 +255,16 @@ describe('DatasetFilesScrollable', () => {
           </SettingsProvider>
         )
 
-        cy.findByText('10 of 200 Files seen').should('exist')
+        cy.findByText('10 of 200 Files displayed').should('exist')
 
         cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
         cy.get('@scrollableFilesContainer').scrollTo('bottom')
 
-        cy.findByText('20 of 200 Files seen').should('exist')
+        cy.findByText('20 of 200 Files displayed').should('exist')
 
         cy.get('@scrollableFilesContainer').scrollTo('bottom')
 
-        cy.findByText('30 of 200 Files seen').should('exist')
+        cy.findByText('30 of 200 Files displayed').should('exist')
 
         cy.get('@scrollableFilesContainer').scrollTo('top')
 
@@ -291,18 +291,18 @@ describe('DatasetFilesScrollable', () => {
           </SettingsProvider>
         )
 
-        cy.findByRole('columnheader', { name: '10 of 200 Files seen' }).should('exist')
+        cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
         cy.get('table > thead > tr > th > input[type=checkbox]').click()
         cy.findByText('10 files are currently selected.').should('exist')
 
         cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
         cy.get('@scrollableFilesContainer').scrollTo('bottom')
 
-        cy.findByText('20 of 200 Files seen').should('exist')
+        cy.findByText('20 of 200 Files displayed').should('exist')
 
         cy.get('@scrollableFilesContainer').scrollTo('bottom')
 
-        cy.findByText('30 of 200 Files seen').should('exist')
+        cy.findByText('30 of 200 Files displayed').should('exist')
 
         cy.get('@scrollableFilesContainer').scrollTo('top')
 
@@ -349,7 +349,7 @@ describe('DatasetFilesScrollable', () => {
           datasetVersion={datasetVersion}
         />
       )
-      cy.findByRole('columnheader', { name: '10 of 200 Files seen' }).should('exist')
+      cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.get('table > thead > tr > th > input[type=checkbox]').click()
       cy.findByText('10 files are currently selected.').should('exist')
     })
@@ -362,7 +362,7 @@ describe('DatasetFilesScrollable', () => {
           datasetVersion={datasetVersion}
         />
       )
-      cy.findByRole('columnheader', { name: '10 of 200 Files seen' }).should('exist')
+      cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.get('table > thead > tr > th > input[type=checkbox]').click()
       cy.findByText('10 files are currently selected.').should('exist')
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
@@ -377,7 +377,7 @@ describe('DatasetFilesScrollable', () => {
           datasetVersion={datasetVersion}
         />
       )
-      cy.findByRole('columnheader', { name: '10 of 200 Files seen' }).should('exist')
+      cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
       cy.get('table > tbody > tr:nth-child(2)').should('have.class', styles['selected-row'])
       cy.findByText('1 file is currently selected.').should('exist')
@@ -385,7 +385,7 @@ describe('DatasetFilesScrollable', () => {
       cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
       cy.get('@scrollableFilesContainer').scrollTo('bottom')
 
-      cy.findByRole('columnheader', { name: '20 of 200 Files seen' }).should('exist')
+      cy.findByRole('columnheader', { name: '20 of 200 Files displayed' }).should('exist')
 
       cy.get('table > tbody > tr:nth-child(2)').should('have.class', styles['selected-row'])
       cy.findByText('1 file is currently selected.').should('exist')
@@ -402,7 +402,7 @@ describe('DatasetFilesScrollable', () => {
           datasetVersion={datasetVersion}
         />
       )
-      cy.findByRole('columnheader', { name: '10 of 200 Files seen' }).should('exist')
+      cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.get('table > thead > tr > th > input[type=checkbox]').click()
       cy.findByText('10 files are currently selected.').should('exist')
       cy.get('table > thead > tr > th > input[type=checkbox]').click()
@@ -418,19 +418,19 @@ describe('DatasetFilesScrollable', () => {
         />
       )
 
-      cy.findByText('10 of 200 Files seen').should('exist')
+      cy.findByText('10 of 200 Files displayed').should('exist')
 
       cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
       cy.get('@scrollableFilesContainer').scrollTo('bottom')
 
-      cy.findByText('20 of 200 Files seen').should('exist')
+      cy.findByText('20 of 200 Files displayed').should('exist')
 
       cy.get('table > thead > tr > th > input[type=checkbox]').click()
 
       cy.findByText('20 files are currently selected.').should('exist')
     })
 
-    it('all new loaded files should be checked if selecting all files when only seen 10 and then scrolling to bottom to load 10 more files', () => {
+    it('all new loaded files should be checked if selecting all files when only displayed 10 and then scrolling to bottom to load 10 more files', () => {
       cy.customMount(
         <DatasetFilesScrollable
           filesRepository={fileRepository}
@@ -438,7 +438,7 @@ describe('DatasetFilesScrollable', () => {
           datasetVersion={datasetVersion}
         />
       )
-      cy.findByRole('columnheader', { name: '10 of 200 Files seen' }).should('exist')
+      cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.get('table > thead > tr > th > input[type=checkbox]').click()
       cy.findByText('10 files are currently selected.').should('exist')
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
@@ -447,7 +447,7 @@ describe('DatasetFilesScrollable', () => {
       cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
       cy.get('@scrollableFilesContainer').scrollTo('bottom')
 
-      cy.findByRole('columnheader', { name: '20 of 200 Files seen' }).should('exist')
+      cy.findByRole('columnheader', { name: '20 of 200 Files displayed' }).should('exist')
 
       cy.get('table > tbody > tr').each(() => {
         cy.get('table > tbody > tr > td:nth-child(1) > input[type=checkbox]').should('be.checked')
@@ -462,7 +462,7 @@ describe('DatasetFilesScrollable', () => {
           datasetVersion={datasetVersion}
         />
       )
-      cy.findByRole('columnheader', { name: '10 of 200 Files seen' }).should('exist')
+      cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
       cy.findByText('1 file is currently selected.').should('exist')
       cy.findByRole('button', { name: 'File Type: All' }).click()
@@ -478,7 +478,7 @@ describe('DatasetFilesScrollable', () => {
           datasetVersion={datasetVersion}
         />
       )
-      cy.findByRole('columnheader', { name: '10 of 200 Files seen' }).should('exist')
+      cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
       cy.findByText('1 file is currently selected.').should('exist')
       cy.findByRole('button', { name: /Sort/ }).click()
@@ -494,7 +494,7 @@ describe('DatasetFilesScrollable', () => {
           datasetVersion={datasetVersion}
         />
       )
-      cy.findByRole('columnheader', { name: '10 of 200 Files seen' }).should('exist')
+      cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
       cy.findByText('1 file is currently selected.').should('exist')
       cy.findByLabelText('Search').type('test{enter}')
@@ -509,7 +509,7 @@ describe('DatasetFilesScrollable', () => {
           datasetVersion={datasetVersion}
         />
       )
-      cy.findByRole('columnheader', { name: '10 of 200 Files seen' }).should('exist')
+      cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.get('table > tbody > tr:nth-child(2) > td:nth-child(1) > input[type=checkbox]').click()
       cy.findByText('1 file is currently selected.').should('exist')
       cy.findByRole('button', { name: 'Clear selection.' }).click()

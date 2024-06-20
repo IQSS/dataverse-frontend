@@ -235,14 +235,14 @@ describe('Dataset', () => {
             cy.findByRole('button', { name: /Sort/ }).click({ force: true })
             cy.findByText('Name (A-Z)').should('exist').click({ force: true })
 
-            cy.findByText('10 of 30 Files seen').should('exist')
+            cy.findByText('10 of 30 Files displayed').should('exist')
             cy.findByText('blob').should('exist')
             cy.findByText('blob-17').should('exist')
 
             cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
             cy.get('@scrollableFilesContainer').scrollTo('bottom')
 
-            cy.findByText('20 of 30 Files seen').should('exist')
+            cy.findByText('20 of 30 Files displayed').should('exist')
             cy.findByText('blob-18').should('exist')
             cy.findByText('blob-26').should('exist')
           })

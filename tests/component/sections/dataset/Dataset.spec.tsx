@@ -157,6 +157,6 @@ describe('Dataset', () => {
 
     cy.findByRole('table').should('exist')
     cy.findByRole('columnheader', { name: /Files/ }).should('exist')
-    cy.findByText('10 of 200 Files seen').should('exist')
+    cy.findByText('10 of 200 Files displayed').should('exist')
   })
 })
