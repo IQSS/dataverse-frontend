@@ -1,8 +1,4 @@
-import {
-  Col,
-  Form,
-  SelectMultiple
-} from '@iqss/dataverse-design-system'
+import { Col, Form, SelectMultiple } from '@iqss/dataverse-design-system'
 import { FileUploadState } from '../../../../files/domain/models/FileUploadState'
 import styles from './FileForm.module.scss'
 import { FormEvent } from 'react'
@@ -13,11 +9,7 @@ interface FileFormProps {
   tags: string[]
 }
 
-export function FileForm({
-  file,
-  updateFiles,
-  tags
-}: FileFormProps) {
+export function FileForm({ file, updateFiles, tags }: FileFormProps) {
   const updateFileName = (file: FileUploadState, updated: string) => {
     file.fileName = updated
     updateFiles([file])
@@ -34,7 +26,6 @@ export function FileForm({
     file.tags = tags
     updateFiles([file])
   }
-
 
   return (
     <div className={styles.file_form}>

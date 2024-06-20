@@ -1,9 +1,4 @@
-import {
-  Button,
-  Card,
-  DropdownButton,
-  DropdownButtonItem
-} from '@iqss/dataverse-design-system'
+import { Button, Card, DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { PencilFill } from 'react-bootstrap-icons'
 import { FileUploadState } from '../../../../files/domain/models/FileUploadState'
 import styles from './FilesHeader.module.scss'
@@ -36,7 +31,7 @@ export function FilesHeader({
     setSaving(false)
   }
   const all = () => {
-    setSelected(current => {
+    setSelected((current) => {
       if (current.size === fileUploadState.length) {
         return new Set<FileUploadState>()
       } else {

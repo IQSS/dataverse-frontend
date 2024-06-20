@@ -1,8 +1,4 @@
-import {
-  Button,
-  Card,
-  Form
-} from '@iqss/dataverse-design-system'
+import { Button, Card, Form } from '@iqss/dataverse-design-system'
 import cn from 'classnames'
 import { X } from 'react-bootstrap-icons'
 import { FileUploadState } from '../../files/domain/models/FileUploadState'
@@ -34,6 +30,7 @@ export function UploadedFiles({
   const [tags, setTagOptions] = useState(['Documentation', 'Data', 'Code'])
   const [terms, setTerms] = useState('')
   const [requestAccess, setRequestAccess] = useState(true)
+  const [showRestrictionForm, setShowRestrictionForm] = useState(false)
   const ignoreClasses = new Set<string>([
     'form-control',
     'btn',
@@ -44,7 +41,7 @@ export function UploadedFiles({
   ])
   const updateFileRestricted = (file: FileUploadState, updated: boolean) => {
     file.restricted = updated
-    // TODO: show dialog for restriction
+    setShowRestrictionForm(true)
     updateFiles([file])
   }
   const deleteFile = (file: FileUploadState) => {
@@ -80,11 +77,26 @@ export function UploadedFiles({
     <>
       <div className={styles.forms}>
         <TagOptions tags={tags} setTagOptions={setTagOptions} />
-        <RestrictionForm terms={terms} updateTerms={setTerms} requestAccess={requestAccess} updateRequestAccess={setRequestAccess}/>
+        <RestrictionForm
+          terms={terms}
+          updateTerms={setTerms}
+          requestAccess={requestAccess}
+          updateRequestAccess={setRequestAccess}
+          show={showRestrictionForm}
+          setShow={setShowRestrictionForm}
+        />
       </div>
       <div hidden={fileUploadState.length === 0}>
         <Card>
-          <FilesHeader fileUploadState={fileUploadState} saveDisabled={saveDisabled} updateFiles={updateFiles} cleanup={cleanup} addFiles={addFiles} selected={selected} setSelected={setSelected} />
+          <FilesHeader
+            fileUploadState={fileUploadState}
+            saveDisabled={saveDisabled}
+            updateFiles={updateFiles}
+            cleanup={cleanup}
+            addFiles={addFiles}
+            selected={selected}
+            setSelected={setSelected}
+          />
           <Card.Body>
             <div>
               {fileUploadState.length > 0 ? (
