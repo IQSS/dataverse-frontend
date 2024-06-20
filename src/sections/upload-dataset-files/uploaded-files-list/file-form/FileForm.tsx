@@ -1,15 +1,17 @@
-import { Col, Form, SelectMultiple } from '@iqss/dataverse-design-system'
+import { Button, Col, Form, SelectMultiple } from '@iqss/dataverse-design-system'
 import { FileUploadState } from '../../../../files/domain/models/FileUploadState'
 import styles from './FileForm.module.scss'
 import { FormEvent } from 'react'
+import { Plus } from 'react-bootstrap-icons'
 
 interface FileFormProps {
   file: FileUploadState
   updateFiles: (file: FileUploadState[]) => void
   tags: string[]
+  editTagOptions: () => void
 }
 
-export function FileForm({ file, updateFiles, tags }: FileFormProps) {
+export function FileForm({ file, updateFiles, tags, editTagOptions }: FileFormProps) {
   const updateFileName = (file: FileUploadState, updated: string) => {
     file.fileName = updated
     updateFiles([file])
@@ -77,10 +79,21 @@ export function FileForm({ file, updateFiles, tags }: FileFormProps) {
           <Form.Group.Label column sm={3}>
             Tags
           </Form.Group.Label>
-          <Col sm={9}>
-            <SelectMultiple
-              options={tags}
-              onChange={(newTags) => setTags(file, newTags)}></SelectMultiple>
+          <Col sm={9} className={styles.tags}>
+            <div className={styles.tags_select}>
+              <SelectMultiple
+                options={tags}
+                onChange={(newTags) => setTags(file, newTags)}></SelectMultiple>
+            </div>
+            <Button
+              className={styles.edit_tags_btn}
+              variant="secondary"
+              type="button"
+              {...{ size: 'sm' }}
+              withSpacing
+              onClick={editTagOptions}>
+              <Plus className={styles.icon} title={"Add tag options"} />
+            </Button>
           </Col>
         </Form.Group>
       </Form>

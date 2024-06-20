@@ -5,7 +5,7 @@ import { FileUploadState } from '../../../files/domain/models/FileUploadState'
 import styles from '../FileUploader.module.scss'
 import { FormEvent, useState, MouseEvent } from 'react'
 import { FileForm } from './file-form/FileForm'
-import { TagOptions } from './tag-options-modal/TagOptionsModal'
+import { TagOptionsModal } from './tag-options-modal/TagOptionsModal'
 import { FilesHeader } from './files-header/FilesHeader'
 import { RestrictionModal, RestrictionModalResult } from './restriction-modal/RestrictionModal'
 
@@ -32,6 +32,7 @@ export function UploadedFiles({
   const [terms, setTerms] = useState('')
   const [requestAccess, setRequestAccess] = useState(true)
   const [showRestrictionModal, setShowRestrictionModal] = useState(false)
+  const [showTagOptionsModal, setShowTagOptionsModal] = useState(false)
   const ignoreClasses = new Set<string>([
     'form-control',
     'btn',
@@ -90,7 +91,8 @@ export function UploadedFiles({
   return (
     <>
       <div className={styles.forms}>
-        <TagOptions tags={tags} setTagOptions={setTagOptions} />
+        <TagOptionsModal tags={tags} setTagOptions={setTagOptions}
+          show={showTagOptionsModal} hide={() => setShowTagOptionsModal(false)}/>
         <RestrictionModal
           defaultRequestAccess={requestAccess}
           defaultTerms={terms}
@@ -121,7 +123,7 @@ export function UploadedFiles({
                       })}
                       key={file.key}
                       onClick={(event) => clicked(event, file)}>
-                      <FileForm file={file} updateFiles={updateFiles} tags={tags} />
+                      <FileForm file={file} updateFiles={updateFiles} tags={tags} editTagOptions={() => setShowTagOptionsModal(true)}/>
                       <div className={styles.file_size}>{file.fileSizeString}</div>
                       <div>
                         <Form.Group.Checkbox
