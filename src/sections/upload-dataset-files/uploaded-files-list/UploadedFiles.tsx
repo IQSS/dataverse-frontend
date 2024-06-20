@@ -7,7 +7,7 @@ import { FormEvent, useState, MouseEvent } from 'react'
 import { FileForm } from './file-form/FileForm'
 import { TagOptions } from './tag-options/TagOptions'
 import { FilesHeader } from './files-header/FilesHeader'
-import { RestrictionForm } from './restriction-form/RestrictionForm'
+import { RestrictionForm } from './restriction-modal/RestrictionModal'
 
 interface DatasetFilesProps {
   fileUploadState: FileUploadState[]

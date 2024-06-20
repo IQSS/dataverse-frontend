@@ -1,5 +1,5 @@
 import { Button, Col, Form, Modal } from '@iqss/dataverse-design-system'
-import styles from './RestrictionForm.module.scss'
+import styles from './RestrictionModal.module.scss'
 import { FormEvent } from 'react'
 
 interface RestrictionFormProps {
