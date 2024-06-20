@@ -8,7 +8,7 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { FileUploader } from './FileUploader'
 import { FileUploadState, FileUploadTools } from '../../files/domain/models/FileUploadState'
 import { uploadFile } from '../../files/domain/useCases/uploadFile'
-import { UploadedFiles } from './UploadedFiles'
+import { UploadedFiles } from './uploaded-files-list/UploadedFiles'
 import { addUploadedFile } from '../../files/domain/useCases/addUploadedFile'
 
 interface UploadDatasetFilesProps {

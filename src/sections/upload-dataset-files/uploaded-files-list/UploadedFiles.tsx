@@ -1,13 +1,13 @@
 import { Button, Card, Form } from '@iqss/dataverse-design-system'
 import cn from 'classnames'
 import { X } from 'react-bootstrap-icons'
-import { FileUploadState } from '../../files/domain/models/FileUploadState'
-import styles from './FileUploader.module.scss'
+import { FileUploadState } from '../../../files/domain/models/FileUploadState'
+import styles from '../FileUploader.module.scss'
 import { FormEvent, useState, MouseEvent } from 'react'
-import { FileForm } from './uploaded-files-list/file-form/FileForm'
-import { TagOptions } from './uploaded-files-list/tag-options/TagOptions'
-import { FilesHeader } from './uploaded-files-list/files-header/FilesHeader'
-import { RestrictionForm } from './uploaded-files-list/restriction-form/RestrictionForm'
+import { FileForm } from './file-form/FileForm'
+import { TagOptions } from './tag-options/TagOptions'
+import { FilesHeader } from './files-header/FilesHeader'
+import { RestrictionForm } from './restriction-form/RestrictionForm'
 
 interface DatasetFilesProps {
   fileUploadState: FileUploadState[]
