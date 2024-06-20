@@ -20,6 +20,7 @@ export function TagOptions({
     console.log(tag)
     if (tag && !tags.includes(tag)) {
       setTagOptions([...tags, tag])
+      setTag('')
     }
     console.log(tags)
   }
@@ -38,6 +39,7 @@ export function TagOptions({
                 <Form.Group.Input
                   type="text"
                   placeholder="Add new file tag..."
+                  value={tag}
                   onChange={(event: FormEvent<HTMLInputElement>) =>
                     setTag(event.currentTarget.value)
                   }
