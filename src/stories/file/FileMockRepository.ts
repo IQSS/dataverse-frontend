@@ -92,6 +92,10 @@ export class FileMockRepository implements FileRepository {
   }
 
   addUploadedFile(_datasetId: number | string, _files: FileUploadState[]): Promise<void[]> {
-    return new Promise(() => {})
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([])
+      }, FakerHelper.loadingTimout())
+    })
   }
 }

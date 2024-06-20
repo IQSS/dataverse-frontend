@@ -9,7 +9,7 @@ import { FileUploader } from './FileUploader'
 import { FileUploadState, FileUploadTools } from '../../files/domain/models/FileUploadState'
 import { uploadFile } from '../../files/domain/useCases/uploadFile'
 import { UploadedFiles } from './uploaded-files-list/UploadedFiles'
-import { addUploadedFile } from '../../files/domain/useCases/addUploadedFile'
+import { addUploadedFiles } from '../../files/domain/useCases/addUploadedFiles'
 
 interface UploadDatasetFilesProps {
   fileRepository: FileRepository
@@ -133,7 +133,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
   const addFiles = (state: FileUploadState[]) => {
     setIsLoading(true)
     const done = () => setIsLoading(false)
-    addUploadedFile(fileRepository, dataset?.persistentId as string, state, done)
+    addUploadedFiles(fileRepository, dataset?.persistentId as string, state, done)
     cleanAllState()
   }
 

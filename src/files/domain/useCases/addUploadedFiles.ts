@@ -1,7 +1,7 @@
 import { FileUploadState } from '../models/FileUploadState'
 import { FileRepository } from '../repositories/FileRepository'
 
-export function addUploadedFile(
+export function addUploadedFiles(
   fileRepository: FileRepository,
   datasetId: number | string,
   files: FileUploadState[],
@@ -9,11 +9,8 @@ export function addUploadedFile(
 ): void {
   fileRepository
     .addUploadedFile(datasetId, files)
-    .then(() => {
-      done()
-    })
     .catch((error: Error) => {
-      done()
       throw new Error(error.message)
     })
+    .finally(done)
 }
