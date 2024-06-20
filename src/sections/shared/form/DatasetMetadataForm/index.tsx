@@ -29,12 +29,10 @@ type DatasetMetadataFormProps =
 
 export type DatasetMetadataFormMode = 'create' | 'edit'
 
-// TODO:ME Use this component in create-dataset
+// TODO:ME How to know when to show the textarea field to accept html tags? we could create a markdown plus preview field like github comments
 // TODO:ME Add component unit testing for both modes
-// TODO:ME Add Save and cancel button on top also but where ? and only on edit mode ?
 // TODO:ME After removing form from create-dataset also remove unused translations
 // TODO:ME JSF shows a select similar to Select Multiple but with the option of selecting only one item, I think for when options are more than certain number
-// TODO:ME Implement Scroll Restoration but how to use it with stories that uses memory router and scroll restoration needs data router, check if env is cypress or tests and do not use it?
 export const DatasetMetadataForm = ({
   mode,
   collectionId,

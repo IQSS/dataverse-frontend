@@ -21,7 +21,10 @@ import {
   FileSizeUnit
 } from '../../../../../src/files/domain/models/FileMetadata'
 import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
-import { SUBJECT_FIELD_VOCAB_VALUES } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
+import {
+  COUNTRY_FIELD_VOCAB_VALUES,
+  SUBJECT_FIELD_VOCAB_VALUES
+} from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 
 export class DatasetVersionMother {
   static create(props?: Partial<DatasetVersion>): DatasetVersion {
@@ -499,7 +502,7 @@ export class DatasetMother {
             publicationDate: '2021-01-01',
             citationDate: '2023-01-01',
             title: 'Dataset Title',
-            subject: ['Subject1', 'Subject2'],
+            subject: [SUBJECT_FIELD_VOCAB_VALUES[0], SUBJECT_FIELD_VOCAB_VALUES[1]],
             author: [
               {
                 authorName: 'Admin, Dataverse',
@@ -533,8 +536,8 @@ export class DatasetMother {
           fields: {
             geographicUnit: 'km',
             geographicCoverage: {
-              geographicCoverageCountry: 'United States',
-              geographicCoverageCity: 'Cambridge'
+              country: COUNTRY_FIELD_VOCAB_VALUES[234],
+              city: 'Cambridge'
             }
           }
         }
@@ -571,7 +574,7 @@ export class DatasetMother {
             publicationDate: ANONYMIZED_FIELD_VALUE,
             citationDate: '2023-01-01',
             title: 'Dataset Title',
-            subject: ['Subject1', 'Subject2'],
+            subject: [SUBJECT_FIELD_VOCAB_VALUES[0], SUBJECT_FIELD_VOCAB_VALUES[1]],
             author: ANONYMIZED_FIELD_VALUE,
             datasetContact: ANONYMIZED_FIELD_VALUE,
             dsDescription: [
@@ -591,89 +594,5 @@ export class DatasetMother {
         }
       ] as DatasetMetadataBlocks
     })
-  }
-
-  static createDatasetForEditMetadata(props?: Partial<Dataset>): Dataset {
-    const dataset = {
-      persistentId: faker.datatype.uuid(),
-      version: DatasetVersionMother.create(),
-      license: {
-        name: 'CC0 1.0',
-        uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
-        iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
-      },
-      labels: DatasetLabelsMother.create(),
-      summaryFields: [
-        {
-          name: MetadataBlockName.CITATION,
-          fields: {
-            dsDescription: faker.lorem.sentence(),
-            keyword: faker.lorem.sentence(),
-            subject: faker.lorem.sentence(),
-            publication: faker.lorem.sentence(),
-            notesText: faker.lorem.sentence()
-          }
-        }
-      ],
-      metadataBlocks: [
-        {
-          name: MetadataBlockName.CITATION,
-          fields: {
-            title: faker.lorem.words(2),
-            subtitle: faker.lorem.sentence(),
-            author: [
-              {
-                authorName: faker.name.fullName(),
-                authorAffiliation: faker.lorem.word(8)
-              }
-            ],
-            datasetContact: [
-              {
-                datasetContactName: faker.name.fullName(),
-                datasetContactAffiliation: faker.lorem.word(),
-                datasetContactEmail: faker.internet.email()
-              }
-            ],
-            dsDescription: [
-              {
-                dsDescriptionValue: faker.lorem.paragraphs(4)
-              }
-            ],
-            subject: [SUBJECT_FIELD_VOCAB_VALUES[0]]
-          }
-        }
-      ] as DatasetMetadataBlocks,
-      permissions: DatasetPermissionsMother.create(),
-      locks: [],
-      hasValidTermsOfAccess: faker.datatype.boolean(),
-      hasOneTabularFileAtLeast: faker.datatype.boolean(),
-      isValid: faker.datatype.boolean(),
-      downloadUrls: DatasetDownloadUrlsMother.create(),
-      thumbnail: undefined,
-      privateUrl: undefined,
-      fileDownloadSizes: [],
-      requestedVersion: undefined,
-      hierarchy: UpwardHierarchyNodeMother.createDataset(),
-      ...props
-    }
-
-    return new Dataset.Builder(
-      dataset.persistentId,
-      dataset.version,
-      dataset.summaryFields,
-      dataset.license,
-      dataset.metadataBlocks,
-      dataset.permissions,
-      dataset.locks,
-      dataset.hasValidTermsOfAccess,
-      dataset.hasOneTabularFileAtLeast,
-      dataset.isValid,
-      dataset.downloadUrls,
-      dataset.fileDownloadSizes,
-      dataset.hierarchy,
-      dataset.thumbnail,
-      dataset.privateUrl,
-      dataset.requestedVersion
-    ).build()
   }
 }

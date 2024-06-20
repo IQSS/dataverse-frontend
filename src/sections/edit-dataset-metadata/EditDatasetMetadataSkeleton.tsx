@@ -13,12 +13,12 @@ export function EditDatasetMetadataSkeleton() {
       <section data-testid="edit-dataset-metadata-skeleton">
         <BreadcrumbsSkeleton />
         <Skeleton height="58px" style={{ marginBottom: 16 }} />
-        <Row>
+        <Row style={{ marginBottom: 20 }}>
           <Col sm={3}>
-            <Skeleton height="30px" />
+            <Skeleton height="30px" width="150px" />
           </Col>
           <Col sm={9}>
-            <Skeleton height="30px" />
+            <Skeleton height="30px" width="150px" />
           </Col>
         </Row>
         <SeparationLine />

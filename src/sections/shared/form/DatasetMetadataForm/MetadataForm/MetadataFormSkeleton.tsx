@@ -3,7 +3,7 @@ import { Accordion, Col, Row } from '@iqss/dataverse-design-system'
 import { SeparationLine } from '../../../layout/SeparationLine/SeparationLine'
 import 'react-loading-skeleton/dist/skeleton.css'
 
-//TODO:ME Check if we can add skeleton css once in the app and if tests still pass
+// TODO:ME Check if we can add skeleton css once in the app and if tests still pass
 export const MetadataFormSkeleton = ({ onEditMode }: { onEditMode: boolean }) => (
   <SkeletonTheme>
     <div>

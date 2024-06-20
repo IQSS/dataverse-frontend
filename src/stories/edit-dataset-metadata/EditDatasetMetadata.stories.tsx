@@ -4,7 +4,6 @@ import { WithI18next } from '../WithI18next'
 import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
 import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 import { MetadataBlockInfoMockLoadingRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockLoadingRepository'
-import { MetadataBlockInfoMockErrorRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockErrorRepository'
 import { NotImplementedModalProvider } from '../../sections/not-implemented/NotImplementedModalProvider'
 import { WithLoggedInUser } from '../WithLoggedInUser'
 import { EditDatasetMetadata } from '../../sections/edit-dataset-metadata/EditDatasetMetadata'
@@ -38,15 +37,6 @@ export const Loading: Story = {
     <EditDatasetMetadata
       datasetRepository={new DatasetMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockLoadingRepository()}
-    />
-  )
-}
-
-export const ErrorLoadingMetadataBlocksConfiguration: Story = {
-  render: () => (
-    <EditDatasetMetadata
-      datasetRepository={new DatasetMockRepository()}
-      metadataBlockInfoRepository={new MetadataBlockInfoMockErrorRepository()}
     />
   )
 }

@@ -6,8 +6,6 @@ import { DatasetMockRepository } from '../../dataset/DatasetMockRepository'
 import { MetadataBlockInfoMockRepository } from '../../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 
-const datasetToEditMock = DatasetMother.createDatasetForEditMetadata()
-
 const meta: Meta<typeof DatasetMetadataForm> = {
   title: 'Sections/Shared/Dataset Metadata Form',
   component: DatasetMetadataForm,
@@ -30,6 +28,8 @@ export const CreateMode: Story = {
     />
   )
 }
+
+const datasetToEditMock = DatasetMother.createRealistic()
 
 export const EditMode: Story = {
   render: () => (
