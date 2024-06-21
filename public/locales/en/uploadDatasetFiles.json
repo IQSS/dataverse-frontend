@@ -2,5 +2,13 @@
   "breadcrumbActionItem": "Upload files",
   "cancel": "Cancel upload",
   "info": "Drag and drop files and/or directories here.",
-  "select": "Select files to add"
+  "select": "Select files to add",
+  "delete": "Delete",
+  "tags": {
+    "documentation": "Documentation",
+    "data": "Data",
+    "code": "Code"
+  },
+  "restricted": "Restricted",
+  "uploadedFileSize": "Uploaded file size"
 }

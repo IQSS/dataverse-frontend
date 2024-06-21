@@ -8,6 +8,7 @@ import { FileForm } from './file-form/FileForm'
 import { TagOptionsModal } from './tag-options-modal/TagOptionsModal'
 import { FilesHeader } from './files-header/FilesHeader'
 import { RestrictionModal, RestrictionModalResult } from './restriction-modal/RestrictionModal'
+import { useTranslation } from 'react-i18next'
 
 interface DatasetFilesProps {
   fileUploadState: FileUploadState[]
@@ -26,9 +27,10 @@ export function UploadedFiles({
   cleanup,
   addFiles
 }: DatasetFilesProps) {
+  const { t } = useTranslation('uploadDatasetFiles')
   const [selected, setSelected] = useState(new Set<FileUploadState>())
   const [filesToRestrict, setFilesToRestrict] = useState<FileUploadState[]>([])
-  const [tags, setTagOptions] = useState(['Documentation', 'Data', 'Code'])
+  const [tags, setTagOptions] = useState([t('tags.documentation'), t('tags.data'), t('tags.code')])
   const [terms, setTerms] = useState('')
   const [requestAccess, setRequestAccess] = useState(true)
   const [showRestrictionModal, setShowRestrictionModal] = useState(false)
@@ -133,10 +135,12 @@ export function UploadedFiles({
                         tags={tags}
                         editTagOptions={() => setShowTagOptionsModal(true)}
                       />
-                      <div className={styles.file_size}>{file.fileSizeString}</div>
+                      <div className={styles.file_size} title={t('uploadedFileSize')}>
+                        {file.fileSizeString}
+                      </div>
                       <div>
                         <Form.Group.Checkbox
-                          label="Restricted"
+                          label={t('restricted')}
                           id={'restricted-' + file.key}
                           checked={file.restricted}
                           onChange={(event: FormEvent<HTMLInputElement>) =>

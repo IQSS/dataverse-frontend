@@ -1,6 +1,7 @@
 import { Button, Col, Form, Modal } from '@iqss/dataverse-design-system'
 import styles from './TagOptionsModal.module.scss'
 import { FormEvent, useState, KeyboardEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface TagOptionsModalProps {
   tags: string[]
@@ -10,6 +11,7 @@ interface TagOptionsModalProps {
 }
 
 export function TagOptionsModal({ tags, setTagOptions, show, hide }: TagOptionsModalProps) {
+  const { t } = useTranslation('uploadDatasetFiles')
   const [tag, setTag] = useState('')
   const addTagOption = () => {
     if (tag && !tags.includes(tag)) {
