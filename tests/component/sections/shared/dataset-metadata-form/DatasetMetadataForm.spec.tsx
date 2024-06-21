@@ -68,7 +68,7 @@ describe('DatasetMetadataForm', () => {
     cy.findByText(/Journal Metadata/i).should('not.exist')
   })
 
-  it.only('renders the Citation Metadata Form Fields correctly on create mode', () => {
+  it('renders the Citation and Geospatial Metadata Form Fields correctly on create mode', () => {
     cy.customMount(
       <DatasetMetadataForm
         mode="create"
@@ -77,15 +77,19 @@ describe('DatasetMetadataForm', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     )
-    // Check the first accordion item content
-    cy.get('.accordion > :nth-child(1)').within((_$accordionItem) => {
+    // 1st Accordion with Citation Metadata
+    cy.get('.accordion > :nth-child(1)').within(() => {
       cy.findByText(/Citation Metadata/i).should('exist')
 
       // Title field - required
       cy.findByText('Title').should('exist')
+      // .within(() => {
+      //   cy.get('[aria-label="Required input symbol"]').should('exist')
+      // })
 
       cy.findByLabelText(/^Title/i)
         .should('exist')
+        .should('have.attr', 'aria-required', 'true')
         .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
       //   cy.findByText('Title').children('div').trigger('mouseover')
       //   cy.document().its('body').findByText('The main title of the Dataset').should('exist')
@@ -98,7 +102,6 @@ describe('DatasetMetadataForm', () => {
       //     )
       //     .should('exist')
 
-      // TODO:ME Assert that as it is a multiple field, it should have a button to add more fields visible
       // Composed field
       cy.findByText('Author')
         .should('exist')
@@ -106,6 +109,7 @@ describe('DatasetMetadataForm', () => {
         .within(() => {
           cy.findByLabelText(/Name/)
             .should('exist')
+            .should('have.attr', 'aria-required', 'true')
             .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
 
           cy.findByLabelText(/Affiliation/)
@@ -133,14 +137,17 @@ describe('DatasetMetadataForm', () => {
         .within(() => {
           cy.findByLabelText(/Name/)
             .should('exist')
+            .should('have.attr', 'aria-required', 'false')
             .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
 
           cy.findByLabelText(/Affiliation/)
             .should('exist')
+            .should('have.attr', 'aria-required', 'false')
             .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
 
           cy.findByLabelText(/E-mail/)
             .should('exist')
+            .should('have.attr', 'aria-required', 'true')
             .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Email)
 
           cy.findByLabelText(`Add Point of Contact`).should('exist')
@@ -154,19 +161,30 @@ describe('DatasetMetadataForm', () => {
         .within(() => {
           cy.findByLabelText(/Text/)
             .should('exist')
+            .should('have.attr', 'aria-required', 'true')
             .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Textbox)
 
           cy.findByLabelText(/Date/)
             .should('exist')
+            .should('have.attr', 'aria-required', 'false')
             .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Date)
 
           cy.findByLabelText(`Add Description`).should('exist')
           cy.findByLabelText(`Delete Description`).should('not.exist')
         })
 
-      // TODO:ME Would be nice to assert that the select multiple is rendered correctly
-      cy.findByText('Subject').should('exist')
+      cy.findByText('Subject')
+        .should('exist')
+        .within(() => {
+          cy.get('[aria-label="Required input symbol"]').should('exist')
+        })
+
       cy.findByLabelText(/Subject/).should('exist')
+      cy.findByLabelText(/Subject/).click()
+      cy.findByText('Subject1').should('exist')
+      cy.findByText('Subject2').should('exist')
+      cy.findByText('Subject3').should('exist')
+      cy.findByText('Subject4').should('exist')
 
       // Composed field
       cy.findByText('Keyword')
@@ -175,18 +193,22 @@ describe('DatasetMetadataForm', () => {
         .within(() => {
           cy.findByLabelText('Term', { exact: true })
             .should('exist')
+            .should('have.attr', 'aria-required', 'false')
             .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
 
           cy.findByLabelText('Term URI', { exact: true })
             .should('exist')
+            .should('have.attr', 'aria-required', 'false')
             .should('have.data', 'fieldtype', TypeMetadataFieldOptions.URL)
 
           cy.findByLabelText('Controlled Vocabulary Name', { exact: true })
             .should('exist')
+            .should('have.attr', 'aria-required', 'false')
             .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
 
           cy.findByLabelText('Controlled Vocabulary URL', { exact: true })
             .should('exist')
+            .should('have.attr', 'aria-required', 'false')
             .should('have.data', 'fieldtype', TypeMetadataFieldOptions.URL)
 
           cy.findByLabelText(`Add Keyword`).should('exist')
@@ -200,20 +222,24 @@ describe('DatasetMetadataForm', () => {
         .within(() => {
           cy.findByLabelText('Citation', { exact: true })
             .should('exist')
+            .should('have.attr', 'aria-required', 'false')
             .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Textbox)
 
           cy.findByLabelText('Identifier Type', { exact: true })
             .should('exist')
+            .should('have.attr', 'aria-required', 'false')
             .should('have.prop', 'tagName', 'SELECT')
             .children('option')
             .should('have.length', 20)
 
           cy.findByLabelText('Identifier', { exact: true })
             .should('exist')
+            .should('have.attr', 'aria-required', 'false')
             .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
 
           cy.findByLabelText('URL', { exact: true })
             .should('exist')
+            .should('have.attr', 'aria-required', 'false')
             .should('have.data', 'fieldtype', TypeMetadataFieldOptions.URL)
 
           cy.findByLabelText(`Add Related Publication`).should('exist')
@@ -223,16 +249,79 @@ describe('DatasetMetadataForm', () => {
       cy.findByText('Notes').should('exist')
       cy.findByLabelText(/Notes/)
         .should('exist')
+        .should('have.attr', 'aria-required', 'false')
         .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Textbox)
       cy.findByLabelText(/Notes/).should('have.prop', 'tagName', 'TEXTAREA')
     })
 
-    cy.findByText(/Save Dataset/i).should('exist')
+    // 2nd Accordion with Geospatial Metadata
+    cy.get('.accordion > :nth-child(2)').within(() => {
+      // Open accordion and wait for it to open
+      cy.get('.accordion-button').click()
+      cy.wait(300)
 
-    cy.findByText(/Cancel/i).should('exist')
+      cy.findByText(/Geospatial Metadata/i).should('exist')
+
+      cy.findByLabelText('Geographic Unit')
+        .should('exist')
+        .should('have.attr', 'aria-required', 'false')
+        .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
+
+      // Composed field
+      cy.findByText('Geographic Coverage')
+        .should('exist')
+        .closest('.row')
+        .within(() => {
+          cy.findByLabelText(/Country \/ Nation/)
+            .should('exist')
+            .should('have.attr', 'aria-required', 'true')
+            .should('have.prop', 'tagName', 'SELECT')
+            .children('option')
+            .should('have.length', 250)
+
+          cy.findByLabelText(/State \/ Province/)
+            .should('exist')
+            .should('have.attr', 'aria-required', 'false')
+            .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
+
+          cy.findByLabelText('City')
+            .should('exist')
+            .should('have.attr', 'aria-required', 'false')
+            .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
+
+          cy.findByLabelText('Other')
+            .should('exist')
+            .should('have.attr', 'aria-required', 'false')
+            .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
+
+          cy.findByLabelText(`Add Geographic Coverage`).should('not.exist')
+        })
+    })
+
+    cy.findByRole('button', { name: 'Save Dataset' }).should('exist')
+
+    cy.findByRole('button', { name: 'Cancel' }).should('exist')
   })
 
-  // TODO:ME Here assert all fields correctly for edit mode
+  it.only('renders the Citation and Geospatial Metadata Form Fields correctly on edit mode', () => {
+    cy.customMount(
+      <DatasetMetadataForm
+        mode="edit"
+        collectionId="root"
+        datasetRepository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        datasetPersistentID={dataset.persistentId}
+        datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+      />
+    )
+
+    // 1st Accordion with Citation Metadata
+    cy.get('.accordion > :nth-child(1)').within(() => {})
+
+    cy.findAllByRole('button', { name: 'Save Changes' }).should('exist').should('have.length', 2)
+
+    cy.findAllByRole('button', { name: 'Cancel' }).should('exist').should('have.length', 2)
+  })
 
   it('shows the skeleton while loading', () => {
     cy.customMount(

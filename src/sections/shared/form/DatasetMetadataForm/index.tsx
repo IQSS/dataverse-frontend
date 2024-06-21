@@ -99,7 +99,7 @@ export const DatasetMetadataForm = ({
     return <MetadataFormSkeleton onEditMode={mode === 'edit'} />
   }
 
-  if (Boolean(errorLoadingMetadataBlocksInfo)) {
+  if (errorLoadingMetadataBlocksInfo) {
     return (
       <Alert variant="danger" dismissible={false}>
         {errorLoadingMetadataBlocksInfo}

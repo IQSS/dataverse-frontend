@@ -58,6 +58,7 @@ export const Vocabulary = ({
                   onChange={onChange}
                   value={value as string}
                   isInvalid={invalid}
+                  aria-required={Boolean(rulesToApply?.required)}
                   ref={ref}>
                   <option value="">Select</option>
                   {options.map((option) => (

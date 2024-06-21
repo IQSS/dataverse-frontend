@@ -93,6 +93,7 @@ export const PrimitiveMultiple = ({
                         isInvalid={invalid}
                         placeholder={watermark}
                         data-fieldtype={type}
+                        aria-required={Boolean(rulesToApply?.required)}
                         ref={ref}
                         id={builtFieldNameWithIndex(index)}
                       />
@@ -104,6 +105,7 @@ export const PrimitiveMultiple = ({
                         isInvalid={invalid}
                         placeholder={watermark}
                         data-fieldtype={type}
+                        aria-required={Boolean(rulesToApply?.required)}
                         ref={ref}
                         id={builtFieldNameWithIndex(index)}
                       />

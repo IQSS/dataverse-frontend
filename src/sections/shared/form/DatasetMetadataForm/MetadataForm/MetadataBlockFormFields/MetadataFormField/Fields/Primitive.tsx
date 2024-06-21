@@ -65,6 +65,7 @@ export const Primitive = ({
                     isInvalid={invalid}
                     placeholder={watermark}
                     data-fieldtype={type}
+                    aria-required={Boolean(rulesToApply?.required)}
                     ref={ref}
                   />
                 ) : (
@@ -75,6 +76,7 @@ export const Primitive = ({
                     isInvalid={invalid}
                     placeholder={watermark}
                     data-fieldtype={type}
+                    aria-required={Boolean(rulesToApply?.required)}
                     ref={ref}
                   />
                 )}
