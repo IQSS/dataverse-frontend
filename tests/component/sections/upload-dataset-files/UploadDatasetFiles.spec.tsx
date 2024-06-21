@@ -451,4 +451,26 @@ describe('UploadDatasetFiles', () => {
     cy.get('input[placeholder="File path"]').first().type('Hello, World!')
     cy.get('textarea').first().type('Hello, World!')
   })
+
+  it('click test', () => {
+    const testDataset = DatasetMother.create()
+
+    mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
+
+    cy.findByTestId('drag-and-drop').as('dnd')
+    cy.get('@dnd').should('exist')
+
+    cy.get('@dnd').selectFile(
+      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+      { action: 'drag-drop' }
+    )
+    cy.get('@dnd').selectFile(
+      { fileName: 'users2.json', contents: [{ name: 'John Doe the 2nd' }] },
+      { action: 'drag-drop' }
+    )
+    // wait for upload to finish
+    cy.findByText('2 files uploaded').should('exist')
+    cy.get('label:contains("Tags")').first().click()
+    cy.get('label:contains("Tags")').first().click()
+  })
 })
