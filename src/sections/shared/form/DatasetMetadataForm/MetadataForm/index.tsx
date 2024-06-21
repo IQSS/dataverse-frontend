@@ -155,6 +155,12 @@ export const MetadataForm = ({
             </Alert>
           )}
 
+          {submissionStatus === SubmissionStatus.SubmitComplete && (
+            <Alert variant="success" dismissible={false}>
+              {t('status.success')}
+            </Alert>
+          )}
+
           {metadataBlocksInfo.length > 0 && (
             <Accordion defaultActiveKey="0" ref={accordionRef}>
               {metadataBlocksInfo.map((metadataBlock, index) => (
