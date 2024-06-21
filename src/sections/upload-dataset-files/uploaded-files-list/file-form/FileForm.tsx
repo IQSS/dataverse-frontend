@@ -80,7 +80,7 @@ export function FileForm({ file, updateFiles, tags, editTagOptions }: FileFormPr
             Tags
           </Form.Group.Label>
           <Col sm={9} className={styles.tags}>
-            <div className={styles.tags_select} title='Select tags'>
+            <div className={styles.tags_select} title="Select tags">
               <SelectMultiple
                 options={tags}
                 onChange={(newTags) => setTags(file, newTags)}></SelectMultiple>
@@ -91,7 +91,7 @@ export function FileForm({ file, updateFiles, tags, editTagOptions }: FileFormPr
               type="button"
               {...{ size: 'sm' }}
               withSpacing
-              title='Edit tag options'
+              title="Edit tag options"
               onClick={editTagOptions}>
               <Plus className={styles.icon} title={'Plus'} />
             </Button>
