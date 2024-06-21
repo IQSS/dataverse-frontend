@@ -299,8 +299,8 @@ describe('UploadDatasetFiles', () => {
     cy.findByText('Save').click()
     cy.findByText('users1.json').should('not.exist')
     cy.findByText('users2.json').should('not.exist')
-    // wait for reload
-    cy.findByText('Temporary Loading until having shape of skeleton').should('not.exist')
+    cy.get('input[value="users1.json"]').should('not.exist')
+    cy.get('input[value="users2.json"]').should('not.exist')
   })
 
   it('cancels saving uploaded files', () => {
@@ -330,6 +330,8 @@ describe('UploadDatasetFiles', () => {
     cy.findByText('Cancel').click()
     cy.findByText('users1.json').should('not.exist')
     cy.findByText('users2.json').should('not.exist')
+    cy.get('input[value="users1.json"]').should('not.exist')
+    cy.get('input[value="users2.json"]').should('not.exist')
   })
 
   it('deletes uploaded files', () => {
@@ -358,6 +360,7 @@ describe('UploadDatasetFiles', () => {
     cy.findByText('Cancel').should('exist')
     cy.findAllByTitle('Delete').first().parent().click()
     cy.findByText('users1.json').should('not.exist')
-    cy.findByText('users2.json').should('exist')
+    cy.get('input[value="users1.json"]').should('not.exist')
+    cy.get('input[value="users2.json"]').should('exist')
   })
 })
