@@ -363,4 +363,98 @@ describe('UploadDatasetFiles', () => {
     cy.get('input[value="users1.json"]').should('not.exist')
     cy.get('input[value="users2.json"]').should('exist')
   })
+
+  it('restrict uploaded file', () => {
+    const testDataset = DatasetMother.create()
+
+    mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
+
+    cy.findByTestId('drag-and-drop').as('dnd')
+    cy.get('@dnd').should('exist')
+
+    cy.get('@dnd').selectFile(
+      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+      { action: 'drag-drop' }
+    )
+    cy.get('@dnd').selectFile(
+      { fileName: 'users2.json', contents: [{ name: 'John Doe the 2nd' }] },
+      { action: 'drag-drop' }
+    )
+    // wait for upload to finish
+    cy.findByText('2 files uploaded').should('exist')
+    cy.get('[type="checkbox"]').first().click()
+    cy.findByText('Save Changes').first().click()
+    cy.get('[type="checkbox"]').first().should('be.checked')
+    cy.get('[type="checkbox"]').first().click()
+    cy.get('[type="checkbox"]').first().should('not.be.checked')
+    cy.findByText('2 files uploaded').first().click()
+    cy.findByText('Edit files').first().click()
+    cy.findByText('Restrict').first().click()
+    cy.findByText('Save Changes').first().click()
+    cy.get('[type="checkbox"]').first().should('be.checked')
+    cy.get('input[value="users1.json"]').first().parent().click()
+    cy.findByText('Edit files').first().click()
+    cy.findByText('Unrestrict').first().click()
+    cy.get('[type="checkbox"]').first().should('not.be.checked')
+    cy.findByText('Edit files').first().click()
+    cy.findByText('Restrict').first().click()
+    cy.findByLabelText('Close').click()
+    cy.get('[type="checkbox"]').first().should('not.be.checked')
+    cy.findByText('Edit files').first().click()
+    cy.findByText('Restrict').first().click()
+    cy.get('[type="checkbox"]').last().click()
+    cy.get('textarea').last().type("Hello, World!")
+    cy.findByText('Save Changes').first().click()
+    cy.get('[type="checkbox"]').first().should('be.checked')
+    cy.findByText('Edit files').first().click()
+    cy.findByText('Restrict').first().click()
+    cy.findByTitle('Cancel changes').click()
+    cy.get('[type="checkbox"]').first().should('be.checked')
+    cy.get('input[value="users1.json"]').first().parent().click()
+    cy.findByText('2 files uploaded').first().click()
+    cy.get('input[value="users1.json"]').first().parent().click()
+    cy.get('input[value="users1.json"]').first().parent().click()
+    cy.findByText('2 files uploaded').first().click()
+    cy.findByText('2 files uploaded').first().click()
+    cy.findByText('2 files uploaded').first().click()
+    cy.findByText('Edit files').first().click()
+    cy.findByTitle('Delete selected').click()
+    cy.get('input[value="users1.json"]').should('not.exist')
+    cy.get('input[value="users2.json"]').should('not.exist')
+  })
+  
+  it('edit tags', () => {
+    const testDataset = DatasetMother.create()
+
+    mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
+
+    cy.findByTestId('drag-and-drop').as('dnd')
+    cy.get('@dnd').should('exist')
+
+    cy.get('@dnd').selectFile(
+      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+      { action: 'drag-drop' }
+    )
+    // wait for upload to finish
+    cy.findByText('1 file uploaded').should('exist')
+    cy.findByTitle('Edit tag options').first().click()
+    cy.get('input').last().type("Hello, World!")
+    cy.findByText('Apply').click()
+    cy.findByText('Close').click()
+    cy.findByTitle('Edit tag options').first().click()
+    cy.get('input').last().type("Hello, World, again!")
+    cy.findByText('Apply').click()
+    cy.findByLabelText('Close').click()
+    cy.findByTitle('Edit tag options').first().click()
+    cy.get('input').last().type("Hello, World, yet again!{enter}")
+    cy.findByLabelText('Close').click()
+    cy.findByTitle('Select tags').first().click()
+    cy.findByText('Hello, World!').should('exist')
+    cy.findByText('Hello, World, again!').should('exist')
+    cy.findByText('Hello, World, yet again!').should('exist')
+    cy.findByText('Hello, World!').click()
+    cy.get('input[type=text]').first().type("Hello, World!")
+    cy.get('input[placeholder="File path"]').first().type("Hello, World!")
+    cy.get('textarea').first().type("Hello, World!")
+  })
 })

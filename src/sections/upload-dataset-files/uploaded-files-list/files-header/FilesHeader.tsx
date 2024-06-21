@@ -83,7 +83,7 @@ export function FilesHeader({
           <DropdownButtonItem onClick={() => updateRestriction(false)}>
             {'Unrestrict'}
           </DropdownButtonItem>
-          <DropdownButtonItem onClick={deleteSelected}>{'Delete'}</DropdownButtonItem>
+          <DropdownButtonItem onClick={deleteSelected} title='Delete selected'>{'Delete'}</DropdownButtonItem>
         </DropdownButton>
       </span>
     </Card.Header>

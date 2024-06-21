@@ -80,7 +80,7 @@ export function RestrictionModal({
           disabled={!requestAccess && !terms}>
           Save Changes
         </Button>
-        <Button variant="secondary" onClick={() => handleClose(false)}>
+        <Button variant="secondary" onClick={() => handleClose(false)} title='Cancel changes'>
           Cancel
         </Button>
       </Modal.Footer>
