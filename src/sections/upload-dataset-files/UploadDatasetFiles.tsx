@@ -172,7 +172,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
             />
             <UploadedFiles
               fileUploadState={fileUploaderState.uploaded}
-              cancelTitle={'Delete'}
+              cancelTitle={t('delete')}
               saveDisabled={saveDisabled()}
               updateFiles={updateFiles}
               cleanup={cleanAllState}
