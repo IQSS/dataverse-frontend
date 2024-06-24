@@ -29,23 +29,21 @@ export function TagOptionsModal({ tags, setTagOptions, show, hide }: TagOptionsM
   return (
     <Modal show={show} onHide={hide} size="lg">
       <Modal.Header>
-        <Modal.Title>Edit tag options</Modal.Title>
+        <Modal.Title>{t('tags.editTagOptions')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className={styles.tag_options} onKeyDown={handleEnter}>
           <Form onSubmit={addTagOption}>
             <Form.Group>
               <Form.Group.Label column sm={3}>
-                Custom file tag
+                {t('tags.customFileTag')}
               </Form.Group.Label>
               <Col sm={9}>
-                <div className={styles.tag_info}>
-                  Creating a new tag will add it as a tag option for all files in this dataset.
-                </div>
+                <div className={styles.tag_info}>{t('tags.creatingNewTag')}</div>
                 <div className="input-group mb-3">
                   <Form.Group.Input
                     type="text"
-                    placeholder="Add new file tag..."
+                    placeholder={t('tags.addNewTag')}
                     value={tag}
                     onChange={(event: FormEvent<HTMLInputElement>) =>
                       setTag(event.currentTarget.value)
@@ -58,10 +56,13 @@ export function TagOptionsModal({ tags, setTagOptions, show, hide }: TagOptionsM
                     {...{ size: 'sm' }}
                     withSpacing
                     onClick={addTagOption}>
-                    Apply
+                    {t('tags.apply')}
                   </Button>
                 </div>
-                <div className={styles.tag_info}>Available tag options: {tags.join(', ')}</div>
+                <div className={styles.tag_info}>
+                  {t('tags.availableTagOptions')}
+                  {tags.join(', ')}
+                </div>
               </Col>
             </Form.Group>
           </Form>
@@ -69,7 +70,7 @@ export function TagOptionsModal({ tags, setTagOptions, show, hide }: TagOptionsM
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={hide}>
-          Close
+          {t('tags.close')}
         </Button>
       </Modal.Footer>
     </Modal>

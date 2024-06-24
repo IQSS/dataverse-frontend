@@ -3,6 +3,7 @@ import { PencilFill } from 'react-bootstrap-icons'
 import { FileUploadState } from '../../../../files/domain/models/FileUploadState'
 import styles from './FilesHeader.module.scss'
 import { Dispatch, SetStateAction, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface FilesHeaderProps {
   fileUploadState: FileUploadState[]
@@ -25,6 +26,7 @@ export function FilesHeader({
   addFiles,
   updateFilesRestricted
 }: FilesHeaderProps) {
+  const { t } = useTranslation('uploadDatasetFiles')
   const [saving, setSaving] = useState(false)
   const save = () => {
     setSaving(true)
@@ -62,29 +64,24 @@ export function FilesHeader({
         Cancel
       </Button>
       <Button withSpacing variant="link" onClick={all} disabled={saving}>
-        {' '}
-        {fileUploadState.length}
-        {fileUploadState.length === 1 ? ' file uploaded' : ' files uploaded'}
+        {t('filesHeader.filesUploaded', { count: fileUploadState.length })}
       </Button>
       <span className={styles.selected_files_info} hidden={selected.size === 0}>
-        <span>
-          {selected.size}
-          {selected.size === 1 ? ' file selected' : ' files selected'}
-        </span>
+        <span>{t('filesHeader.filesSelected', { count: selected.size })}</span>
         <DropdownButton
           variant="secondary"
           withSpacing
           icon={<PencilFill className={styles.icon_pencil} />}
           id={'edit-files'}
-          title={'Edit files'}>
+          title={t('filesHeader.editFiles')}>
           <DropdownButtonItem onClick={() => updateRestriction(true)}>
-            {'Restrict'}
+            {t('filesHeader.restrict')}
           </DropdownButtonItem>
           <DropdownButtonItem onClick={() => updateRestriction(false)}>
-            {'Unrestrict'}
+            {t('filesHeader.unrestrict')}
           </DropdownButtonItem>
           <DropdownButtonItem onClick={deleteSelected} title="Delete selected">
-            {'Delete'}
+            {t('delete')}
           </DropdownButtonItem>
         </DropdownButton>
       </span>

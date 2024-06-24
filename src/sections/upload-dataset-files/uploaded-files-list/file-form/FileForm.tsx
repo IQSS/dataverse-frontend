@@ -3,6 +3,7 @@ import { FileUploadState } from '../../../../files/domain/models/FileUploadState
 import styles from './FileForm.module.scss'
 import { FormEvent } from 'react'
 import { Plus } from 'react-bootstrap-icons'
+import { useTranslation } from 'react-i18next'
 
 interface FileFormProps {
   file: FileUploadState
@@ -12,6 +13,7 @@ interface FileFormProps {
 }
 
 export function FileForm({ file, updateFiles, tags, editTagOptions }: FileFormProps) {
+  const { t } = useTranslation('uploadDatasetFiles')
   const updateFileName = (file: FileUploadState, updated: string) => {
     file.fileName = updated
     updateFiles([file])
@@ -34,12 +36,12 @@ export function FileForm({ file, updateFiles, tags, editTagOptions }: FileFormPr
       <Form>
         <Form.Group>
           <Form.Group.Label column sm={3}>
-            File name
+            {t('fileForm.fileName')}
           </Form.Group.Label>
           <Col sm={9}>
             <Form.Group.Input
               type="text"
-              placeholder="File name"
+              placeholder={t('fileForm.fileName')}
               defaultValue={file.fileName}
               onChange={(event: FormEvent<HTMLInputElement>) =>
                 updateFileName(file, event.currentTarget.value)
@@ -49,12 +51,12 @@ export function FileForm({ file, updateFiles, tags, editTagOptions }: FileFormPr
         </Form.Group>
         <Form.Group>
           <Form.Group.Label column sm={3}>
-            File path
+            {t('fileForm.filePath')}
           </Form.Group.Label>
           <Col sm={9}>
             <Form.Group.Input
               type="text"
-              placeholder="File path"
+              placeholder={t('fileForm.filePath')}
               defaultValue={file.fileDir}
               onChange={(event: FormEvent<HTMLInputElement>) =>
                 updateFileDir(file, event.currentTarget.value)
@@ -64,7 +66,7 @@ export function FileForm({ file, updateFiles, tags, editTagOptions }: FileFormPr
         </Form.Group>
         <Form.Group>
           <Form.Group.Label column sm={3}>
-            Description
+            {t('fileForm.description')}
           </Form.Group.Label>
           <Col sm={9}>
             <Form.Group.TextArea
@@ -77,10 +79,10 @@ export function FileForm({ file, updateFiles, tags, editTagOptions }: FileFormPr
         </Form.Group>
         <Form.Group>
           <Form.Group.Label column sm={3}>
-            Tags
+            {t('fileForm.tags')}
           </Form.Group.Label>
           <Col sm={9} className={styles.tags}>
-            <div className={styles.tags_select} title="Select tags">
+            <div className={styles.tags_select} title={t('fileForm.selectTags')}>
               <SelectMultiple
                 options={tags}
                 onChange={(newTags) => setTags(file, newTags)}></SelectMultiple>
@@ -91,9 +93,9 @@ export function FileForm({ file, updateFiles, tags, editTagOptions }: FileFormPr
               type="button"
               {...{ size: 'sm' }}
               withSpacing
-              title="Edit tag options"
+              title={t('fileForm.editTagOptions')}
               onClick={editTagOptions}>
-              <Plus className={styles.icon} title={'Plus'} />
+              <Plus className={styles.icon} title={t('fileForm.plus')} />
             </Button>
           </Col>
         </Form.Group>

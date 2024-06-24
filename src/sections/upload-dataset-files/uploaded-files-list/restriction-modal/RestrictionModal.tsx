@@ -1,6 +1,7 @@
 import { Button, Col, Form, Modal } from '@iqss/dataverse-design-system'
 import styles from './RestrictionModal.module.scss'
 import { FormEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface RestrictionModalProps {
   defaultRequestAccess: boolean
@@ -21,6 +22,7 @@ export function RestrictionModal({
   show,
   update
 }: RestrictionModalProps) {
+  const { t } = useTranslation('uploadDatasetFiles')
   const [terms, setTerms] = useState(defaultTerms)
   const [requestAccess, setRequestAccess] = useState(defaultRequestAccess)
   const handleClose = (saved: boolean) =>
@@ -29,26 +31,22 @@ export function RestrictionModal({
   return (
     <Modal show={show} onHide={() => handleClose(false)} size="lg">
       <Modal.Header>
-        <Modal.Title>Restrict Access</Modal.Title>
+        <Modal.Title>{t('restriction.restrictAccess')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className={styles.restriction_form}>
           <div className={styles.restriction_info}>
-            <p>
-              Restricting limits access to published files. People who want to use the restricted
-              files can request access by default. If you disable request access, you must add
-              information about access to the Terms of Access field.
-            </p>
-            <p>Learn about restricting files and dataset access in the User Guide.</p>
+            <p>{t('restriction.restrictionInfoP1')}</p>
+            <p>{t('restriction.restrictionInfoP2')}</p>
           </div>
           <Form>
             <Form.Group>
               <Form.Group.Label column sm={3}>
-                Request Access
+                {t('restriction.restrictAccess')}
               </Form.Group.Label>
               <Col sm={9}>
                 <Form.Group.Checkbox
-                  label="Enable access request"
+                  label={t('restriction.enableAccessRequest')}
                   id={'requestAccessCB'}
                   checked={requestAccess}
                   onChange={(event: FormEvent<HTMLInputElement>) =>
@@ -59,7 +57,7 @@ export function RestrictionModal({
             </Form.Group>
             <Form.Group>
               <Form.Group.Label column sm={3}>
-                Terms of Access for Restricted Files
+                {t('restriction.termsOfAccess')}
               </Form.Group.Label>
               <Col sm={9}>
                 <Form.Group.TextArea
@@ -78,10 +76,13 @@ export function RestrictionModal({
           variant="primary"
           onClick={() => handleClose(true)}
           disabled={!requestAccess && !terms}>
-          Save Changes
+          {t('restriction.saveChanges')}
         </Button>
-        <Button variant="secondary" onClick={() => handleClose(false)} title="Cancel changes">
-          Cancel
+        <Button
+          variant="secondary"
+          onClick={() => handleClose(false)}
+          title={t('restriction.cancelChanges')}>
+          {t('cancel')}
         </Button>
       </Modal.Footer>
     </Modal>
