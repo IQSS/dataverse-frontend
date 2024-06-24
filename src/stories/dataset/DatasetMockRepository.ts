@@ -1,4 +1,4 @@
-import { Dataset } from '../../dataset/domain/models/Dataset'
+import { Dataset, DatasetLock } from '../../dataset/domain/models/Dataset'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { DatasetMother } from '../../../tests/component/dataset/domain/models/DatasetMother'
 import { DatasetPaginationInfo } from '../../dataset/domain/models/DatasetPaginationInfo'
@@ -54,6 +54,13 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+  getLocks(persistentId: string): Promise<DatasetLock[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([])
       }, FakerHelper.loadingTimout())
     })
   }

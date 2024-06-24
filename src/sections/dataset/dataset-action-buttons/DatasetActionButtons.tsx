@@ -16,7 +16,6 @@ interface DatasetActionButtonsProps {
 
 export function DatasetActionButtons({ dataset, datasetRepository }: DatasetActionButtonsProps) {
   const { t } = useTranslation('dataset')
-  console.log('datasetRepository' + datasetRepository)
   return (
     <ButtonGroup aria-label={t('datasetActionButtons.title')} vertical className={styles.group}>
       <AccessDatasetMenu
