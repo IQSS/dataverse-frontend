@@ -24,7 +24,7 @@ describe('FileActionsHeader', () => {
       </DatasetProvider>
     )
 
-    cy.findByRole('button', { name: 'Edit Files' }).should('exist')
-    cy.findByRole('button', { name: 'Download' }).should('exist')
+    cy.get('#edit-files-menu').should('exist')
+    cy.get('#download-files').should('exist')
   })
 })

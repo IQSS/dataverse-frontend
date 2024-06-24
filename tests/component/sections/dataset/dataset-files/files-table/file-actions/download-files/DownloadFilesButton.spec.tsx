@@ -46,7 +46,7 @@ describe('DownloadFilesButton', () => {
       )
     )
 
-    cy.findByRole('button', { name: 'Download' }).should('exist')
+    cy.get('#download-files').should('exist')
   })
 
   it('does not render the Download Files button if there is only 1 file in the dataset', () => {
@@ -61,7 +61,7 @@ describe('DownloadFilesButton', () => {
       )
     )
 
-    cy.findByRole('button', { name: 'Download' }).should('not.exist')
+    cy.get('#download-files').should('not.exist')
   })
 
   it('does not render the Download Files button if the user does not have download files permission', () => {
@@ -76,7 +76,7 @@ describe('DownloadFilesButton', () => {
       )
     )
 
-    cy.findByRole('button', { name: 'Download' }).should('not.exist')
+    cy.get('#download-files').should('not.exist')
   })
 
   it('renders the Download Files button as a dropdown if there are tabular files in the dataset', () => {
@@ -94,7 +94,7 @@ describe('DownloadFilesButton', () => {
       )
     )
 
-    cy.findByRole('button', { name: 'Download' }).click()
+    cy.get('#download-files').click()
     cy.findByRole('button', { name: 'Original Format' }).should('exist')
     cy.findByRole('button', { name: 'Archival Format (.tab)' }).should('exist')
   })
@@ -114,7 +114,7 @@ describe('DownloadFilesButton', () => {
       )
     )
 
-    cy.findByRole('button', { name: 'Download' }).click()
+    cy.get('#download-files').click()
     cy.findByRole('button', { name: 'Original Format' }).should('not.exist')
     cy.findByRole('button', { name: 'Archival Format (.tab)' }).should('not.exist')
   })
@@ -134,7 +134,7 @@ describe('DownloadFilesButton', () => {
       )
     )
 
-    cy.findByRole('button', { name: 'Download' }).click()
+    cy.get('#download-files').click()
     cy.findByText('Select File(s)').should('exist')
   })
 
@@ -159,7 +159,7 @@ describe('DownloadFilesButton', () => {
       </MultipleFileDownloadProvider>
     )
 
-    cy.findByRole('button', { name: 'Download' })
+    cy.get('#download-files')
       .parent('a')
       .should('have.attr', 'href', 'https://multiple-file-download-url')
   })
@@ -185,7 +185,7 @@ describe('DownloadFilesButton', () => {
       </MultipleFileDownloadProvider>
     )
 
-    cy.findByRole('button', { name: 'Download' }).click()
+    cy.get('#download-files').click()
     cy.findByRole('link', { name: 'Original Format' }).should(
       'have.attr',
       'href',
@@ -221,7 +221,7 @@ describe('DownloadFilesButton', () => {
       )
     )
 
-    cy.findByRole('button', { name: 'Download' }).click()
+    cy.get('#download-files').click()
     cy.findByRole('link', { name: 'Original Format' }).should(
       'have.attr',
       'href',
@@ -255,7 +255,7 @@ describe('DownloadFilesButton', () => {
       </MultipleFileDownloadProvider>
     )
 
-    cy.findByRole('button', { name: 'Download' }).click()
+    cy.get('#download-files').click()
     cy.findByRole('link', { name: 'Original Format' }).should(
       'have.attr',
       'href',

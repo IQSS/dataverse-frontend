@@ -42,6 +42,7 @@
     "react-topbar-progress-indicator": "4.1.1",
     "sass": "1.58.1",
     "typescript": "4.9.5",
+    "use-deep-compare": "1.2.1",
     "vite-plugin-istanbul": "4.0.1",
     "web-vitals": "2.1.4"
   },

@@ -6,6 +6,7 @@ import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/model
 import { FileCriteria } from '../../files/domain/models/FileCriteria'
 import { FileMockRepository } from './FileMockRepository'
 import { File } from '../../files/domain/models/File'
+import { FilesWithCount } from '../../files/domain/models/FilesWithCount'
 
 export class FileMockNoDataRepository extends FileMockRepository implements FileRepository {
   getAllByDatasetPersistentId(
@@ -15,6 +16,20 @@ export class FileMockNoDataRepository extends FileMockRepository implements File
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve([])
+      }, 1000)
+    })
+  }
+
+  getAllByDatasetPersistentIdWithCount(
+    _datasetPersistentId: string,
+    _datasetVersion: DatasetVersion
+  ): Promise<FilesWithCount> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          files: [],
+          totalFilesCount: 0
+        })
       }, 1000)
     })
   }

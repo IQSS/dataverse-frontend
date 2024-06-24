@@ -1,0 +1,17 @@
+.files-scrollable-container {
+  min-height: 400px;
+  max-height: 650px;
+  overflow-y: auto;
+
+  &--empty {
+    min-height: auto;
+  }
+
+  .criteria-form-container {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 0.25rem 0.25rem 1rem;
+    background: var(--bs-white);
+  }
+}

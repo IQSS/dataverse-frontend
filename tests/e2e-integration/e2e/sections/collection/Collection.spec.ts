@@ -140,13 +140,13 @@ describe('Collection Page', () => {
         cy.findAllByText(/Scientific Research/i).should('exist')
         cy.findByText(/Dataverse Admin/i).should('exist')
 
-        cy.findByText('10 of 12 Datasets seen').should('exist')
+        cy.findByText('10 of 12 Datasets displayed').should('exist')
 
         cy.get('[data-testid="scrollable-container"]').scrollTo('bottom', {
           ensureScrollable: false
         })
         cy.wait(1_500)
-        cy.findByText('12 of 12 Datasets seen').should('exist')
+        cy.findByText('12 of 12 Datasets displayed').should('exist')
       })
     })
   })

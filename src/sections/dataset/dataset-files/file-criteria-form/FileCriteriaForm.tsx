@@ -1,52 +1,55 @@
 import { FileCriteria } from '../../../../files/domain/models/FileCriteria'
-import { Col, Form, Row } from '@iqss/dataverse-design-system'
+import { Form } from '@iqss/dataverse-design-system'
 import styles from './FileCriteriaForm.module.scss'
 import { FileCriteriaSortBy } from './FileCriteriaSortBy'
 import { FileCriteriaFilters } from './FileCriteriaFilters'
 import { FilesCountInfo } from '../../../../files/domain/models/FilesCountInfo'
 import { FileCriteriaSearchText } from './FileCriteriaSearchText'
 import { DatasetUploadFilesButton } from '../dataset-upload-files-button/DatasetUploadFilesButton'
+import cn from 'classnames'
 
 interface FileCriteriaInputsProps {
   criteria: FileCriteria
   onCriteriaChange: (criteria: FileCriteria) => void
   filesCountInfo: FilesCountInfo | undefined
+  onInfiniteScrollMode?: boolean
 }
 const MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS = 2
 export function FileCriteriaForm({
   criteria,
   onCriteriaChange,
-  filesCountInfo
+  filesCountInfo,
+  onInfiniteScrollMode
 }: FileCriteriaInputsProps) {
   const showFileCriteriaInputs =
     filesCountInfo &&
     (filesCountInfo.total >= MINIMUM_FILES_TO_SHOW_CRITERIA_INPUTS || criteria.someFilterApplied)
   return (
-    <div className={styles['criteria-section']}>
+    <div
+      className={cn({
+        [styles['criteria-section']]: !onInfiniteScrollMode
+      })}>
       <Form>
-        <Row>
+        <div className={styles['row-top']}>
           {showFileCriteriaInputs && (
-            <Col md={5}>
+            <div className={styles['search-container']}>
               <FileCriteriaSearchText criteria={criteria} onCriteriaChange={onCriteriaChange} />
-            </Col>
+            </div>
           )}
-          <Col className={styles['upload-files-container']}>
+          <div className={styles['upload-files-container']}>
             <DatasetUploadFilesButton />
-          </Col>
-        </Row>
+          </div>
+        </div>
         {showFileCriteriaInputs && (
-          <Row>
-            <Col>
-              <FileCriteriaFilters
-                criteria={criteria}
-                onCriteriaChange={onCriteriaChange}
-                filesCountInfo={filesCountInfo}
-              />
-            </Col>
-            <Col className={styles['sort-container']}>
-              <FileCriteriaSortBy criteria={criteria} onCriteriaChange={onCriteriaChange} />
-            </Col>
-          </Row>
+          <div className={styles['row-bottom']}>
+            <FileCriteriaFilters
+              criteria={criteria}
+              onCriteriaChange={onCriteriaChange}
+              filesCountInfo={filesCountInfo}
+            />
+
+            <FileCriteriaSortBy criteria={criteria} onCriteriaChange={onCriteriaChange} />
+          </div>
         )}
       </Form>
     </div>
