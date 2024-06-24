@@ -33,7 +33,7 @@ export class MetadataBlockInfoMother {
     }
   }
 
-  static getByCollectionIdDisplayedOnCreateTrue(): MetadataBlockInfo[] {
+  static getByCollectionIdDisplayedOnCreateTrue(block?: MetadataBlockInfo): MetadataBlockInfo[] {
     return [
       {
         id: 1,
@@ -577,7 +577,8 @@ export class MetadataBlockInfoMother {
             }
           }
         }
-      }
+      },
+      ...(block ? [block] : [])
     ]
   }
 

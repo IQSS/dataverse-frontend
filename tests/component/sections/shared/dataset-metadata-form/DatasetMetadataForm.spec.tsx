@@ -1,3 +1,4 @@
+import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Dataset'
 import { DatasetRepository } from '../../../../../src/dataset/domain/repositories/DatasetRepository'
 import { TypeMetadataFieldOptions } from '../../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
@@ -12,8 +13,78 @@ const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataB
 const userRepository: UserRepository = {} as UserRepository
 
 const dataset = DatasetMother.createRealistic()
+const datasetWithAstroBlock = DatasetMother.createRealistic({
+  metadataBlocks: [
+    ...dataset.metadataBlocks,
+    {
+      name: MetadataBlockName.ASTROPHYSICS,
+      fields: {
+        'coverage.ObjectDensity': '23.35',
+        'coverage.ObjectCount': '50'
+      }
+    }
+  ]
+})
+
 const metadataBlocksInfoOnCreateMode =
   MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue()
+
+const metadataBlocksInfoOnCreateModeWithAstroBlock =
+  MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue({
+    id: 4,
+    name: 'astrophysics',
+    displayName: 'Astronomy and Astrophysics Metadata',
+    displayOnCreate: false,
+    metadataFields: {
+      'coverage.ObjectDensity': {
+        name: 'coverage.ObjectDensity',
+        displayName: 'Object Density',
+        title: 'Object Density',
+        type: 'FLOAT',
+        watermark: 'Enter a floating-point number.',
+        description:
+          'The (typical) density of objects, catalog entries, telescope pointings, etc., on the sky, in number per square degree.',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: true,
+        displayOrder: 17,
+        typeClass: 'primitive',
+        displayOnCreate: false
+      },
+      'coverage.ObjectCount': {
+        name: 'coverage.ObjectCount',
+        displayName: 'Object Count',
+        title: 'Object Count',
+        type: 'INT',
+        watermark: 'Enter an integer.',
+        description: 'The total number of objects, catalog entries, etc., in the data object.',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: true,
+        displayOrder: 18,
+        typeClass: 'primitive',
+        displayOnCreate: false
+      },
+      someDate: {
+        name: 'someDate',
+        displayName: 'Some Date in either of the formats',
+        title: 'Some Date',
+        type: 'DATE',
+        typeClass: 'primitive',
+        watermark: 'YYYY or YYYY-MM or YYYY-MM-DD',
+        description: 'Some description',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: false,
+        displayOnCreate: true,
+        displayOrder: 3
+      }
+    }
+  })
+
 const metadataBlocksInfoOnEditMode =
   MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateFalse()
 const wrongCollectionMetadataBlocksInfo =
@@ -1199,6 +1270,11 @@ describe('DatasetMetadataForm', () => {
   })
 
   it('should show correct errors when filling inputs with invalid formats', () => {
+    datasetRepository.getByPersistentId = cy.stub().resolves(datasetWithAstroBlock)
+    metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
+      .stub()
+      .resolves(metadataBlocksInfoOnCreateModeWithAstroBlock)
+
     cy.customMount(
       <DatasetMetadataForm
         mode="create"
@@ -1232,81 +1308,94 @@ describe('DatasetMetadataForm', () => {
           cy.findByLabelText(/^E-mail/i).type('test')
           cy.findByText('Point of Contact E-mail is not a valid email').should('exist')
         })
+    })
 
-      // TODO:Me Valid float and valid int
-      //   // We need to open the Astronomy and Astrophysics Metadata accordion to fill the fields first, in this metadatablock we have ints and floats fields
-      //   cy.get(':nth-child(2) > .accordion-header > .accordion-button').click()
+    // 3rd should be the Astronomy and Astrophysics Metadata block
+    cy.get('.accordion > :nth-child(3)').within(() => {
+      // Open accordion and wait for it to open
+      cy.get('.accordion-button').click()
+      cy.wait(300)
 
-      //   cy.findByLabelText(/Depth Coverage/).type('30L')
-      //   cy.findByText('Depth Coverage is not a valid float').should('exist')
+      cy.findByText('Object Density').should('exist')
+      cy.findByLabelText(/Object Density/)
+        .should('exist')
+        .type('30L')
+      cy.findByText('Object Density is not a valid float').should('exist')
 
-      //   // Object Count
-      //   cy.findByLabelText(/Object Count/).type('30.5')
-      //   cy.findByText('Object Count is not a valid integer').should('exist')
+      cy.findByText('Object Count').should('exist')
+      cy.findByLabelText(/Object Count/)
+        .should('exist')
+        .type('30.5')
+      cy.findByText('Object Count is not a valid integer').should('exist')
     })
   })
 
-  // it('should not show errors when filling inputs with valid formats', () => {
-  //   cy.customMount(
-  //     <CreateDataset
-  //       repository={datasetRepository}
-  //       metadataBlockInfoRepository={metadataBlockInfoRepository}
-  //     />
-  //   )
+  it('should not show errors when filling inputs with valid formats', () => {
+    datasetRepository.getByPersistentId = cy.stub().resolves(datasetWithAstroBlock)
+    metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
+      .stub()
+      .resolves(metadataBlocksInfoOnCreateModeWithAstroBlock)
 
-  //   cy.findByLabelText(/Alternative URL/).type('https://test.com')
-  //   cy.findByText('Alternative URL is not a valid URL').should('not.exist')
+    cy.customMount(
+      <DatasetMetadataForm
+        mode="create"
+        collectionId="root"
+        datasetRepository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+    cy.get('.accordion > :nth-child(1)').within(() => {
+      cy.findByText('Keyword')
+        .should('exist')
+        .closest('.row')
+        .within(() => {
+          cy.findByLabelText('Term URI', { exact: true }).type('http://test.com')
 
-  //   cy.findByText('Description')
-  //     .closest('.row')
-  //     .within(() => {
-  //       cy.findByLabelText(/Date/).type('1990-01-23')
-  //       cy.findByText(/^Description Date is not a valid date./).should('not.exist')
-  //     })
+          cy.findByText('Keyword Term URI is not a valid URL').should('not.exist')
+        })
 
-  //   cy.findByText('Point of Contact')
-  //     .closest('.row')
-  //     .within(() => {
-  //       cy.findByLabelText(/^E-mail/i).type('test@test.com')
-  //       cy.findByText('Point of Contact E-mail is not a valid email').should('not.exist')
-  //     })
+      cy.findByText('Description')
+        .should('exist')
+        .closest('.row')
+        .within(() => {
+          cy.findByLabelText(/Date/).type('1990-01-23')
+          cy.findByText(/^Description Date is not a valid date./).should('not.exist')
+        })
 
-  //   // We need to open the Astronomy and Astrophysics Metadata accordion to fill the fields first, in this metadatablock we have ints and floats fields
-  //   cy.get(':nth-child(2) > .accordion-header > .accordion-button').click()
+      cy.findByText('Point of Contact')
+        .should('exist')
+        .closest('.row')
+        .within(() => {
+          cy.findByLabelText(/^E-mail/i).type('email@valid.com')
+          cy.findByText('Point of Contact E-mail is not a valid email').should('not.exist')
+        })
+    })
 
-  //   cy.findByLabelText(/Depth Coverage/).type('3.14159265')
-  //   cy.findByText('Depth Coverage is not a valid float').should('not.exist')
+    // 3rd should be the Astronomy and Astrophysics Metadata block
+    cy.get('.accordion > :nth-child(3)').within(() => {
+      // Open accordion and wait for it to open
+      cy.get('.accordion-button').click()
+      cy.wait(300)
 
-  //   // Object Count
-  //   cy.findByLabelText(/Object Count/).type('30')
-  //   cy.findByText('Object Count is not a valid integer').should('not.exist')
-  // })
+      cy.findByText('Object Density').should('exist')
+      cy.findByLabelText(/Object Density/)
+        .should('exist')
+        .type('30.5')
+      cy.findByText('Object Density is not a valid float').should('not.exist')
 
-  // TODO:ME Float and int
-  // it('renders the Astronomy and Astrophysics Metadata Form Fields correctly', () => {
-  //   cy.customMount(
-  //     <CreateDataset
-  //       repository={datasetRepository}
-  //       metadataBlockInfoRepository={metadataBlockInfoRepository}
-  //     />
-  //   )
+      cy.findByText('Object Count').should('exist')
+      cy.findByLabelText(/Object Count/)
+        .should('exist')
+        .type('30')
+      cy.findByText('Object Count is not a valid integer').should('not.exist')
 
-  //   cy.get('.accordion > :nth-child(2)').within((_$accordionItem) => {
-  //     cy.findByText(/Astronomy and Astrophysics Metadata/i).should('exist')
-
-  //     // Depth Coverage field - FLOAT
-  //     cy.findByText('Depth Coverage').should('exist')
-  //     cy.findByLabelText(/Depth Coverage/)
-  //       .should('exist')
-  //       .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Float)
-
-  //     // Integer Something field - INT
-  //     cy.findByText('Object Count').should('exist')
-  //     cy.findByLabelText(/Object Count/)
-  //       .should('exist')
-  //       .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Int)
-  //   })
-  // })
+      cy.findByText('Some Date').should('exist')
+      cy.findByLabelText(/Some Date/)
+        .should('exist')
+        .type('1990-01-23')
+      cy.findByText('Some Date is not a valid date').should('not.exist')
+    })
+  })
 
   it('pre-fills the form with user data', () => {
     cy.mountAuthenticated(
