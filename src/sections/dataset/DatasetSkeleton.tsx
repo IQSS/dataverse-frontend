@@ -1,7 +1,6 @@
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import styles from './Dataset.module.scss'
 import { Row, Col, Tabs } from '@iqss/dataverse-design-system'
-import 'react-loading-skeleton/dist/skeleton.css'
 import { BreadcrumbsSkeleton } from '../shared/hierarchy/BreadcrumbsSkeleton'
 
 export function DatasetSkeleton() {

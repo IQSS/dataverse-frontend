@@ -1,9 +1,7 @@
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { Accordion, Col, Row } from '@iqss/dataverse-design-system'
 import { SeparationLine } from '../../../layout/SeparationLine/SeparationLine'
-import 'react-loading-skeleton/dist/skeleton.css'
 
-// TODO:ME Check if we can add skeleton css once in the app and if tests still pass
 export const MetadataFormSkeleton = ({ onEditMode }: { onEditMode: boolean }) => (
   <SkeletonTheme>
     <div data-testid="metadata-form-loading-skeleton">

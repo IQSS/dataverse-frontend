@@ -3,7 +3,6 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { Row, Col, Tabs } from '@iqss/dataverse-design-system'
 import { BreadcrumbsSkeleton } from '../shared/hierarchy/BreadcrumbsSkeleton'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
-import 'react-loading-skeleton/dist/skeleton.css'
 
 export function EditDatasetMetadataSkeleton() {
   const { t } = useTranslation('editDatasetMetadata')

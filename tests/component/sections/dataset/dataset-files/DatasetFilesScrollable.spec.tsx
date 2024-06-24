@@ -65,8 +65,6 @@ const testFilesCountInfo = FilesCountInfoMother.create({
 })
 const settingsRepository = {} as SettingRepository
 
-// TODO:ME Test everything here, to difficult to test passing ref of sentry
-
 describe('DatasetFilesScrollable', () => {
   beforeEach(() => {
     fileRepository.getAllByDatasetPersistentIdWithCount = cy.stub().resolves(testFiles)
