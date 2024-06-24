@@ -21,6 +21,7 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useAlertContext } from '../alerts/AlertContext'
 import { AlertMessageKey } from '../../alert/domain/models/Alert'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
+import { useLocation } from 'react-router-dom'
 
 interface DatasetProps {
   fileRepository: FileRepository
@@ -33,7 +34,9 @@ export function Dataset({ fileRepository, datasetRepository, created }: DatasetP
   const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('dataset')
   const { hideModal, isModalOpen } = useNotImplementedModal()
-  const { addDatasetAlert } = useAlertContext()
+  const { addDatasetAlert, removeDatasetAlert } = useAlertContext()
+  const location = useLocation()
+  const state = location.state as { publishInProgress: boolean }
 
   if (created) {
     addDatasetAlert({ messageKey: AlertMessageKey.DATASET_CREATED, variant: 'success' })
@@ -41,6 +44,13 @@ export function Dataset({ fileRepository, datasetRepository, created }: DatasetP
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])
+
+  useEffect(() => {
+    if (state && state.publishInProgress) {
+      removeDatasetAlert(AlertMessageKey.UNPUBLISHED_DATASET)
+      addDatasetAlert({ messageKey: AlertMessageKey.PUBLISH_IN_PROGRESS, variant: 'info' })
+    }
+  }, [state])
 
   if (isLoading) {
     return <DatasetSkeleton />
