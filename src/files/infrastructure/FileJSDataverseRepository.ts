@@ -14,6 +14,8 @@ import {
   getFileDataTables,
   getFileDownloadCount,
   getFileUserPermissions,
+  //uploadFile as jsUploadFile,
+  //addUploadedFileToDataset,
   ReadError
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
@@ -285,11 +287,11 @@ export class FileJSDataverseRepository implements FileRepository {
   }
 
   uploadFile(
-    _datasetId: number | string,
-    _file: FileHolder,
-    _progress: (now: number) => void,
-    _abortController: AbortController,
-    _storageIdSetter: (storageId: string) => void
+    datasetId: number | string,
+    file: FileHolder,
+    progress: (now: number) => void,
+    abortController: AbortController,
+    storageIdSetter: (storageId: string) => void
   ): Promise<void> {
     /*return jsUploadFile
       .execute(datasetId, file.file, progress, abortController)
@@ -300,7 +302,7 @@ export class FileJSDataverseRepository implements FileRepository {
     return new Promise(() => {})
   }
 
-  addUploadedFile(_datasetId: number | string, files: FileUploadState[]): Promise<void[]> {
+  addUploadedFile(datasetId: number | string, files: FileUploadState[]): Promise<void[]> {
     const all: Promise<void>[] = []
     files.forEach((file) => {
       const f: FileHolder = {
@@ -330,7 +332,7 @@ export class FileJSDataverseRepository implements FileRepository {
       }
       console.log(f.file.name)
       all.push(new Promise(() => {}))
-      //all.push(addUploadedFileToDataset.execute(datasetId, f.file, file.storageId as string, file.description))
+      //all.push(addUploadedFileToDataset.execute(datasetId, f.file, file.storageId as string))
     })
     return Promise.all(all)
   }
