@@ -18,6 +18,17 @@ describe('Create Dataset', () => {
       .resolves(collectionMetadataBlocksInfo)
   })
 
+  it('renders the Host Collection Form for root collection', () => {
+    cy.customMount(
+      <CreateDataset
+        datasetRepository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+    cy.findByText(/^Host Collection/i).should('exist')
+    cy.findByDisplayValue('root').should('exist')
+  })
+
   it('renders the Host Collection Form', () => {
     cy.customMount(
       <NotImplementedModalProvider>
