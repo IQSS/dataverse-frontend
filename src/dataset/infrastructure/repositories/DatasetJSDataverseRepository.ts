@@ -1,5 +1,5 @@
 import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
-import { Dataset } from '../../domain/models/Dataset'
+import { Dataset, DatasetLock } from '../../domain/models/Dataset'
 import {
   getDataset,
   getAllDatasetPreviews,
@@ -113,6 +113,11 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         includeDeaccessioned
       )
     ])
+  }
+  getLocks(persistentId: string): Promise<DatasetLock[]> {
+    return getDatasetLocks.execute(persistentId).then((jsDatasetLocks) => {
+      return JSDatasetMapper.toLocks(jsDatasetLocks)
+    })
   }
 
   getByPersistentId(
