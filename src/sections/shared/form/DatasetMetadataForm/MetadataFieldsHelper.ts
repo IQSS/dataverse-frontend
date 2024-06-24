@@ -45,11 +45,7 @@ export class MetadataFieldsHelper {
     return metadataBlocksCopy
   }
 
-  private static metadataBlocksInfoDotReplacer(
-    metadataFields: Record<string, MetadataField> | undefined
-  ) {
-    if (!metadataFields) return
-
+  private static metadataBlocksInfoDotReplacer(metadataFields: Record<string, MetadataField>) {
     for (const key in metadataFields) {
       const field = metadataFields[key]
       if (field.name.includes('.')) {
@@ -420,7 +416,7 @@ export class MetadataFieldsHelper {
    * To define the field name that will be used to register the field in the form
    * Most basic could be: metadataBlockName.name eg: citation.title
    * If the field is part of a compound field, the name will be: metadataBlockName.compoundParentName.name eg: citation.author.authorName
-   * If the field is part of an array of fields, the name will be: metadataBlockName.fieldsArrayIndex.name eg: citation.alternativeTitle.0.value
+   * If the field is part of an array of fields, the name will be: metadataBlockName.fieldsArrayIndex.name.value eg: citation.alternativeTitle.0.value
    * If the field is part of a compound field that is part of an array of fields, the name will be: metadataBlockName.compoundParentName.fieldsArrayIndex.name eg: citation.author.0.authorName
    */
   public static defineFieldName(
