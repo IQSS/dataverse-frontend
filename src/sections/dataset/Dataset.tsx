@@ -20,14 +20,21 @@ import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useAlertContext } from '../alerts/AlertContext'
 import { AlertMessageKey } from '../../alert/domain/models/Alert'
+import { DatasetFilesScrollable } from './dataset-files/DatasetFilesScrollable'
 
 interface DatasetProps {
   fileRepository: FileRepository
   created?: boolean
   metadataUpdated?: boolean
+  filesTabInfiniteScrollEnabled?: boolean
 }
 
-export function Dataset({ fileRepository, created, metadataUpdated }: DatasetProps) {
+export function Dataset({
+  fileRepository,
+  created,
+  metadataUpdated,
+  filesTabInfiniteScrollEnabled
+}: DatasetProps) {
   const { setIsLoading } = useLoading()
   const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('dataset')
@@ -89,11 +96,19 @@ export function Dataset({ fileRepository, created, metadataUpdated }: DatasetPro
               <Tabs defaultActiveKey="files">
                 <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
                   <div className={styles['tab-container']}>
-                    <DatasetFiles
-                      filesRepository={fileRepository}
-                      datasetPersistentId={dataset.persistentId}
-                      datasetVersion={dataset.version}
-                    />
+                    {filesTabInfiniteScrollEnabled ? (
+                      <DatasetFilesScrollable
+                        filesRepository={fileRepository}
+                        datasetPersistentId={dataset.persistentId}
+                        datasetVersion={dataset.version}
+                      />
+                    ) : (
+                      <DatasetFiles
+                        filesRepository={fileRepository}
+                        datasetPersistentId={dataset.persistentId}
+                        datasetVersion={dataset.version}
+                      />
+                    )}
                   </div>
                 </Tabs.Tab>
                 <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>

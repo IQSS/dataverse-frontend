@@ -1,15 +1,23 @@
 import { flexRender, HeaderGroup } from '@tanstack/react-table'
 import { FilePreview } from '../../../../files/domain/models/FilePreview'
-import styles from './FilesTable.module.scss'
 import { getCellStyle } from './FilesTable'
+import cn from 'classnames'
+import styles from './FilesTable.module.scss'
 
 interface FilesTableHeaderProps {
   headers: HeaderGroup<FilePreview>[]
+  topStickyValue?: number
 }
 
-export function FilesTableHeader({ headers }: FilesTableHeaderProps) {
+export const FilesTableHeader = ({ headers, topStickyValue }: FilesTableHeaderProps) => {
+  const isStickyHeader = topStickyValue !== undefined
+
   return (
-    <thead>
+    <thead
+      className={cn({
+        [styles['table-sticky-header']]: isStickyHeader
+      })}
+      style={{ top: isStickyHeader ? topStickyValue : 'unset' }}>
       {headers.map((headerGroup) => (
         <tr key={headerGroup.id}>
           {headerGroup.headers.map((header) => {

@@ -35,7 +35,7 @@ describe('EditFilesMenu', () => {
       withDataset(<EditFilesMenu files={files} fileSelection={{}} />, datasetWithUpdatePermissions)
     )
 
-    cy.findByRole('button', { name: 'Edit Files' }).should('exist')
+    cy.get('#edit-files-menu').should('exist')
   })
 
   it('does not render the Edit Files menu when the user is not authenticated', () => {
@@ -43,7 +43,7 @@ describe('EditFilesMenu', () => {
       withDataset(<EditFilesMenu files={files} fileSelection={{}} />, datasetWithUpdatePermissions)
     )
 
-    cy.findByRole('button', { name: 'Edit Files' }).should('not.exist')
+    cy.get('#edit-files-menu').should('not.exist')
   })
 
   it('does not render the Edit Files menu when there are no files in the dataset', () => {
@@ -51,7 +51,7 @@ describe('EditFilesMenu', () => {
       withDataset(<EditFilesMenu files={[]} fileSelection={{}} />, datasetWithUpdatePermissions)
     )
 
-    cy.findByRole('button', { name: 'Edit Files' }).should('not.exist')
+    cy.get('#edit-files-menu').should('not.exist')
   })
 
   it('renders the Edit Files options', () => {
@@ -59,7 +59,7 @@ describe('EditFilesMenu', () => {
       withDataset(<EditFilesMenu files={files} fileSelection={{}} />, datasetWithUpdatePermissions)
     )
 
-    cy.findByRole('button', { name: 'Edit Files' }).click()
+    cy.get('#edit-files-menu').click()
     cy.findByRole('button', { name: 'Metadata' }).should('exist')
   })
 
@@ -75,7 +75,7 @@ describe('EditFilesMenu', () => {
       )
     )
 
-    cy.findByRole('button', { name: 'Edit Files' }).should('not.exist')
+    cy.get('#edit-files-menu').should('not.exist')
   })
 
   it('renders the disabled Edit Files menu when the dataset is locked from edits', () => {
@@ -88,7 +88,7 @@ describe('EditFilesMenu', () => {
       withDataset(<EditFilesMenu files={files} fileSelection={{}} />, datasetWithUpdatePermissions)
     )
 
-    cy.findByRole('button', { name: 'Edit Files' }).should('be.disabled')
+    cy.get('#edit-files-menu').should('be.disabled')
   })
 
   it('renders the disabled Edit Files menu when the dataset does not have valid terms of access', () => {
@@ -101,6 +101,6 @@ describe('EditFilesMenu', () => {
       withDataset(<EditFilesMenu files={files} fileSelection={{}} />, datasetWithUpdatePermissions)
     )
 
-    cy.findByRole('button', { name: 'Edit Files' }).should('be.disabled')
+    cy.get('#edit-files-menu').should('be.disabled')
   })
 })

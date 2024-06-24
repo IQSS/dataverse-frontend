@@ -27,7 +27,7 @@ export function FileCriteriaFilters({
   }
 
   return (
-    <>
+    <div>
       <span className={styles['text-filter-by']}>{t('criteria.filters.title')}</span>
       <div className={styles['filters-container']}>
         <FileCriteriaFilterByType
@@ -46,6 +46,6 @@ export function FileCriteriaFilters({
           filesCountInfo={filesCountInfo}
         />
       </div>
-    </>
+    </div>
   )
 }

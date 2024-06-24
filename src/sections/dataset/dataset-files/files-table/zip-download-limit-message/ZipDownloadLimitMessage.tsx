@@ -9,7 +9,7 @@ import { FileSelection } from '../row-selection/useFileSelection'
 
 interface ZipDownloadLimitMessageProps {
   fileSelection: FileSelection
-  visitedFiles: FileSelection
+  visitedFiles?: FileSelection
   filesTotalDownloadSize: number
 }
 
@@ -36,9 +36,9 @@ export function ZipDownloadLimitMessage({
   const [fileSelectionTotalSizeInInBytes, setFileSelectionTotalSizeInInBytes] = useState<number>(0)
   useEffect(() => {
     const totalSize = computeFileSelectionTotalSizeInBytes(
-      visitedFiles,
       fileSelection,
-      filesTotalDownloadSize
+      filesTotalDownloadSize,
+      visitedFiles
     )
     setFileSelectionTotalSizeInInBytes(totalSize)
   }, [fileSelection, visitedFiles, filesTotalDownloadSize])
@@ -64,14 +64,14 @@ export function ZipDownloadLimitMessage({
 }
 
 function computeFileSelectionTotalSizeInBytes(
-  visitedFiles: FileSelection,
   fileSelection: FileSelection,
-  filesTotalDownloadSize: number
+  filesTotalDownloadSize: number,
+  visitedFiles?: FileSelection
 ) {
   const selectAllHasBeenClicked = Object.values(fileSelection).some((file) => file == undefined)
   if (selectAllHasBeenClicked) {
     const differenceBetweenPreviousAndCurrentSelection =
-      getFilesTotalSize(visitedFiles) - getFilesTotalSize(fileSelection)
+      getFilesTotalSize(visitedFiles ?? {}) - getFilesTotalSize(fileSelection)
 
     if (differenceBetweenPreviousAndCurrentSelection < 0) {
       return filesTotalDownloadSize

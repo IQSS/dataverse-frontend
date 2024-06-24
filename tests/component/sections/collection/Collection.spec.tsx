@@ -139,7 +139,7 @@ describe('Collection page', () => {
       />
     )
 
-    cy.findByText('10 of 200 Datasets seen').should('exist')
+    cy.findByText('10 of 200 Datasets displayed').should('exist')
 
     first10Elements.forEach((dataset) => {
       cy.findByText(dataset.version.title).should('exist')

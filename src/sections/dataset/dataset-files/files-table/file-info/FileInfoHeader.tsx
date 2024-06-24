@@ -4,17 +4,22 @@ import { FilePaginationInfo } from '../../../../../files/domain/models/FilePagin
 
 interface FileInfoHeaderProps {
   paginationInfo: FilePaginationInfo
+  accumulatedFilesCount?: number
 }
 
-export function FileInfoHeader({ paginationInfo }: FileInfoHeaderProps) {
+export function FileInfoHeader({ paginationInfo, accumulatedFilesCount }: FileInfoHeaderProps) {
   const fileCount = paginationInfo.totalItems
 
   if (fileCount === 0) {
-    return <></>
+    return (
+      <span className={styles['file-info-header--sr-only']}>
+        {`${fileCount} ${paginationInfo.itemName}`}
+      </span>
+    )
   }
   return (
     <span className={styles['file-info-header']}>
-      <PaginationResultsInfo paginationInfo={paginationInfo} />
+      <PaginationResultsInfo paginationInfo={paginationInfo} accumulated={accumulatedFilesCount} />
     </span>
   )
 }
