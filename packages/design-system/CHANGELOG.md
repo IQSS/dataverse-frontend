@@ -21,6 +21,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **FormLabel:** extend Props Interface to accept `htmlFor` prop.
 - **SelectMultiple:** NEW multiple selector for occasions when you can choose more than one option.
 - **FormSelectMultiple:** The new multiple selector is added to the "FormGroup" components.
+- **DropdownButton:** extend Props Interface to accept `ariaLabel` prop.
 - **DropdownButtonItem:** extend Props Interface to accept `as` prop.
 - **Accordion:** ability to forward react ref.
 - **DynamicFieldsButtons:** Removed from design system.

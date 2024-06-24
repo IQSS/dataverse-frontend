@@ -30,6 +30,7 @@ export function FilesTable({
     files,
     paginationInfo
   )
+
   const [visitedPagination, setVisitedPagination] = useState<FilePaginationInfo>(paginationInfo)
   const [visitedFiles, setVisitedFiles] = useState<FileSelection>({})
   const [previousCriteria, setPreviousCriteria] = useState<FileCriteria>(criteria)
