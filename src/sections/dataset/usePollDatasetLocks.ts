@@ -43,7 +43,7 @@ const usePollDatasetLocks = (
         }
       }
     }
-  }, [dataset, datasetRepository, navigate])
+  }, [publishInPogress, dataset, datasetRepository, navigate])
 }
 
 export default usePollDatasetLocks

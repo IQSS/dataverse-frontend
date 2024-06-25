@@ -13,6 +13,7 @@ export const AlertContext = createContext<DatasetAlertContextProps>({
   datasetAlerts: [],
   addDatasetAlert: /* istanbul ignore next */ () => {},
   removeDatasetAlert: /* istanbul ignore next */ () => {},
+  // eslint-disable-next-line unused-imports/no-unused-vars
   setDatasetAlerts: (alerts: Alert[]) => {}
 })
 export const useAlertContext = () => useContext(AlertContext)

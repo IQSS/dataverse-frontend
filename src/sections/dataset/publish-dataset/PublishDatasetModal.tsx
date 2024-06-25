@@ -1,5 +1,5 @@
 import { Button, Modal } from '@iqss/dataverse-design-system'
-import { SubmissionStatus, useCreateDatasetForm } from '../../create-dataset/useCreateDatasetForm'
+import { SubmissionStatus } from '../../create-dataset/useCreateDatasetForm'
 import { useTranslation } from 'react-i18next'
 import type { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
 import { usePublishDataset } from './usePublishDataset'
@@ -24,7 +24,7 @@ export function PublishDatasetModal({
   const onPublishErrorCallback = () => {
     //TODO: Implement
   }
-  const { submissionStatus, publishError, submitPublish } = usePublishDataset(
+  const { submissionStatus, submitPublish } = usePublishDataset(
     repository,
     persistentId,
     onPublishErrorCallback

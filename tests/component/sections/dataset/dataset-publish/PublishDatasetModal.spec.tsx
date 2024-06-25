@@ -1,7 +1,5 @@
 import { DatasetRepository } from '../../../../../src/dataset/domain/repositories/DatasetRepository'
-
 import { PublishDatasetModal } from '../../../../../src/sections/dataset/publish-dataset/PublishDatasetModal'
-import { Simulate } from 'react-dom/test-utils'
 
 describe('PublishDatasetModal', () => {
   it('renders the PublishDatasetModal and triggers submitPublish on button click', () => {

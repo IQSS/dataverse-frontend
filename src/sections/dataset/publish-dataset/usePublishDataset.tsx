@@ -34,8 +34,6 @@ export function usePublishDataset(
 
   const navigate = useNavigate()
 
-  const { t } = useTranslation('publishDataset')
-
   const submitPublish = (versionUpdateType: VersionUpdateType): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
 

@@ -12,7 +12,7 @@ import { DatasetFiles } from './dataset-files/DatasetFiles'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { DatasetActionButtons } from './dataset-action-buttons/DatasetActionButtons'
 import { useDataset } from './DatasetContext'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
 import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
@@ -20,7 +20,6 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useAlertContext } from '../alerts/AlertContext'
 import { AlertMessageKey } from '../../alert/domain/models/Alert'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { useLocation } from 'react-router-dom'
 import { Alerts } from '../alerts/Alerts'
 import usePollDatasetLocks from './usePollDatasetLocks'
 
@@ -41,7 +40,7 @@ export function Dataset({
   const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('dataset')
   const { hideModal, isModalOpen } = useNotImplementedModal()
-  const { addDatasetAlert, removeDatasetAlert, setDatasetAlerts, datasetAlerts } = useAlertContext()
+  const { addDatasetAlert, setDatasetAlerts } = useAlertContext()
 
   if (created) {
     addDatasetAlert({ messageKey: AlertMessageKey.DATASET_CREATED, variant: 'success' })
@@ -63,7 +62,7 @@ export function Dataset({
         }
       }
     }
-  }, [dataset, setDatasetAlerts])
+  }, [publishInProgress, dataset, setDatasetAlerts])
 
   usePollDatasetLocks(publishInProgress, dataset, datasetRepository)
 

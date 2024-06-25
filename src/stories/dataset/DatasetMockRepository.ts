@@ -50,14 +50,14 @@ export class DatasetMockRepository implements DatasetRepository {
       }, FakerHelper.loadingTimout())
     })
   }
-  publish(persistentId: string, versionUpdateType: VersionUpdateType): Promise<void> {
+  publish(_persistentId: string, _versionUpdateType: VersionUpdateType): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()
       }, FakerHelper.loadingTimout())
     })
   }
-  getLocks(persistentId: string): Promise<DatasetLock[]> {
+  getLocks(_persistentId: string): Promise<DatasetLock[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve([])
