@@ -12,8 +12,7 @@ import { DatasetFiles } from './dataset-files/DatasetFiles'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { DatasetActionButtons } from './dataset-action-buttons/DatasetActionButtons'
 import { useDataset } from './DatasetContext'
-import { useEffect } from 'react'
-import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
+import { useEffect, useRef } from 'react'
 import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
 import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
@@ -24,7 +23,7 @@ import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepo
 import { useLocation, useNavigate } from 'react-router-dom'
 import { getDatasetLocks } from '../../dataset/domain/useCases/getDatasetLocks'
 import { Route } from '../Route.enum'
-import { DatasetPublishingStatus } from '../../dataset/domain/models/Dataset'
+import { Alerts } from '../alerts/Alerts'
 
 interface DatasetProps {
   fileRepository: FileRepository
@@ -49,36 +48,45 @@ export function Dataset({ fileRepository, datasetRepository, created }: DatasetP
   }, [isLoading, setIsLoading])
 
   useEffect(() => {
-    if (
-      state &&
-      state.publishInProgress &&
-      setDatasetAlerts &&
-      dataset &&
-      dataset.version.latestVersionPublishingStatus === DatasetPublishingStatus.DRAFT
-    ) {
-      setDatasetAlerts([{ messageKey: AlertMessageKey.PUBLISH_IN_PROGRESS, variant: 'info' }])
+    if (setDatasetAlerts) {
+      if (state && state.publishInProgress) {
+        console.log('state.publishInProgress', state.publishInProgress)
+        setDatasetAlerts([{ messageKey: AlertMessageKey.PUBLISH_IN_PROGRESS, variant: 'info' }])
+      } else {
+        console.log('else condition  setting alerts')
+        if (dataset && setDatasetAlerts) {
+          setDatasetAlerts(dataset.alerts)
+        }
+      }
+    }
+  }, [state, dataset, setDatasetAlerts])
+
+  useEffect(() => {
+    if (state?.publishInProgress && dataset) {
+      console.log('SETTING INTERVAL')
 
       const intervalId = setInterval(() => {
+        console.log('intervalId', intervalId)
         void getDatasetLocks(datasetRepository, dataset.persistentId).then((locks) => {
           console.log('polling, locks', locks)
           if (locks.length === 0) {
             console.log('navigating to released version')
-            navigate(`${Route.DATASETS}?persistentId=${dataset.persistentId}`, {})
-            state.publishInProgress = false
             clearInterval(intervalId)
+            navigate(`${Route.DATASETS}?persistentId=${dataset.persistentId}`, {
+              state: { publishInProgress: false }
+            })
           }
         })
-      }, 1000) // Poll every 1 seconds
+      }, 1000) // Poll every 1 second
 
       // Clear interval on component unmount
-      return () => clearInterval(intervalId)
-    } else {
-      console.log('else condition  setting alerts')
-      if (dataset && setDatasetAlerts) {
-        setDatasetAlerts(dataset.alerts)
+      return () => {
+        if (intervalId) {
+          clearInterval(intervalId)
+        }
       }
     }
-  }, [state, dataset, setDatasetAlerts])
+  }, [state?.publishInProgress, dataset, datasetRepository, navigate])
   if (isLoading) {
     return <DatasetSkeleton />
   }
@@ -95,7 +103,7 @@ export function Dataset({ fileRepository, datasetRepository, created }: DatasetP
             <div className={styles.container}>
               <Row>
                 <Col>
-                  <DatasetAlerts alerts={datasetAlerts} />
+                  <Alerts></Alerts>
                 </Col>
               </Row>
             </div>
