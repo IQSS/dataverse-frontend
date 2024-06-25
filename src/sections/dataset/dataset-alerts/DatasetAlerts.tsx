@@ -7,7 +7,7 @@ interface DatasetAlertsProps {
 }
 
 export function DatasetAlerts({ alerts }: DatasetAlertsProps) {
-  const { addDatasetAlert } = useAlertContext()
-  alerts.forEach((alert) => addDatasetAlert(alert))
+  console.log('DatasetAlerts', alerts)
+
   return <Alerts></Alerts>
 }

@@ -23,7 +23,8 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
       value={{
         datasetAlerts,
         addDatasetAlert,
-        removeDatasetAlert
+        removeDatasetAlert,
+        setDatasetAlerts
       }}>
       {children}
     </AlertContext.Provider>
