@@ -20,37 +20,41 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useAlertContext } from '../alerts/AlertContext'
 import { AlertMessageKey } from '../../alert/domain/models/Alert'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { getDatasetLocks } from '../../dataset/domain/useCases/getDatasetLocks'
-import { Route } from '../Route.enum'
+import { useLocation } from 'react-router-dom'
 import { Alerts } from '../alerts/Alerts'
+import usePollDatasetLocks from './usePollDatasetLocks'
 
 interface DatasetProps {
   fileRepository: FileRepository
   datasetRepository: DatasetRepository
   created?: boolean
+  publishInProgress?: boolean
 }
 
-export function Dataset({ fileRepository, datasetRepository, created }: DatasetProps) {
+export function Dataset({
+  fileRepository,
+  datasetRepository,
+  created,
+  publishInProgress
+}: DatasetProps) {
   const { setIsLoading } = useLoading()
   const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('dataset')
   const { hideModal, isModalOpen } = useNotImplementedModal()
   const { addDatasetAlert, removeDatasetAlert, setDatasetAlerts, datasetAlerts } = useAlertContext()
-  const location = useLocation()
-  const state = location.state as { publishInProgress: boolean }
-  const navigate = useNavigate()
+
   if (created) {
     addDatasetAlert({ messageKey: AlertMessageKey.DATASET_CREATED, variant: 'success' })
   }
+
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])
 
   useEffect(() => {
     if (setDatasetAlerts) {
-      if (state && state.publishInProgress) {
-        console.log('state.publishInProgress', state.publishInProgress)
+      if (publishInProgress) {
+        console.log('state.publishInProgress', publishInProgress)
         setDatasetAlerts([{ messageKey: AlertMessageKey.PUBLISH_IN_PROGRESS, variant: 'info' }])
       } else {
         console.log('else condition  setting alerts')
@@ -59,39 +63,9 @@ export function Dataset({ fileRepository, datasetRepository, created }: DatasetP
         }
       }
     }
-  }, [state, dataset, setDatasetAlerts])
-  const intervalIdRef = useRef<NodeJS.Timeout | null>(null)
-  useEffect(() => {
-    if (state?.publishInProgress && dataset) {
-      console.log('SETTING INTERVAL')
-      const intervalId = setInterval(() => {
-        const pollLocks = async () => {
-          try {
-            const locks = await getDatasetLocks(datasetRepository, dataset.persistentId)
-            if (locks.length === 0) {
-              console.log('navigating to released version')
-              clearInterval(intervalId)
-              navigate(`${Route.DATASETS}?persistentId=${dataset.persistentId}`, {
-                state: { publishInProgress: false }
-              })
-            }
-          } catch (error) {
-            console.error('Error getting dataset locks:', error)
-            clearInterval(intervalId)
-          }
-        }
-        void pollLocks()
-      }, 1000)
-      intervalIdRef.current = intervalId
+  }, [dataset, setDatasetAlerts])
 
-      return () => {
-        if (intervalIdRef.current) {
-          clearInterval(intervalIdRef.current)
-          intervalIdRef.current = null
-        }
-      }
-    }
-  }, [state?.publishInProgress, dataset, datasetRepository, navigate])
+  usePollDatasetLocks(publishInProgress, dataset, datasetRepository)
 
   if (isLoading) {
     return <DatasetSkeleton />

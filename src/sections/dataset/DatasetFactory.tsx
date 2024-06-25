@@ -49,8 +49,9 @@ function DatasetWithSearchParams() {
   const searchParamVersion = searchParams.get('version') ?? undefined
   const version = searchParamVersionToDomainVersion(searchParamVersion)
   const location = useLocation()
-  const state = location.state as { created: boolean } | undefined
+  const state = location.state as { created: boolean; publishInProgress: boolean } | undefined
   const created = state?.created ?? false
+  const publishInProgress = state?.publishInProgress ?? false
 
   useEffect(() => {
     if (privateUrlToken) setAnonymizedView(true)
@@ -74,6 +75,7 @@ function DatasetWithSearchParams() {
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         created={created}
+        publishInProgress={publishInProgress}
       />
     </DatasetProvider>
   )
