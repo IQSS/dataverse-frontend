@@ -60,33 +60,39 @@ export function Dataset({ fileRepository, datasetRepository, created }: DatasetP
       }
     }
   }, [state, dataset, setDatasetAlerts])
-
+  const intervalIdRef = useRef<NodeJS.Timeout | null>(null)
   useEffect(() => {
     if (state?.publishInProgress && dataset) {
       console.log('SETTING INTERVAL')
-
       const intervalId = setInterval(() => {
-        console.log('intervalId', intervalId)
-        void getDatasetLocks(datasetRepository, dataset.persistentId).then((locks) => {
-          console.log('polling, locks', locks)
-          if (locks.length === 0) {
-            console.log('navigating to released version')
+        const pollLocks = async () => {
+          try {
+            const locks = await getDatasetLocks(datasetRepository, dataset.persistentId)
+            if (locks.length === 0) {
+              console.log('navigating to released version')
+              clearInterval(intervalId)
+              navigate(`${Route.DATASETS}?persistentId=${dataset.persistentId}`, {
+                state: { publishInProgress: false }
+              })
+            }
+          } catch (error) {
+            console.error('Error getting dataset locks:', error)
             clearInterval(intervalId)
-            navigate(`${Route.DATASETS}?persistentId=${dataset.persistentId}`, {
-              state: { publishInProgress: false }
-            })
           }
-        })
-      }, 1000) // Poll every 1 second
+        }
+        void pollLocks()
+      }, 1000)
+      intervalIdRef.current = intervalId
 
-      // Clear interval on component unmount
       return () => {
-        if (intervalId) {
-          clearInterval(intervalId)
+        if (intervalIdRef.current) {
+          clearInterval(intervalIdRef.current)
+          intervalIdRef.current = null
         }
       }
     }
   }, [state?.publishInProgress, dataset, datasetRepository, navigate])
+
   if (isLoading) {
     return <DatasetSkeleton />
   }
