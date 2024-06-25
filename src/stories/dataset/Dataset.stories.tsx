@@ -16,6 +16,7 @@ import { WithLoggedInUser } from '../WithLoggedInUser'
 import { WithAlerts } from '../WithAlerts'
 import { WithDeaccessionedDataset } from './WithDeaccessionedDataset'
 import { WithNotImplementedModal } from '../WithNotImplementedModal'
+import { DatasetMockRepository } from './DatasetMockRepository'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -32,42 +33,87 @@ type Story = StoryObj<typeof Dataset>
 
 export const Default: Story = {
   decorators: [WithLayout, WithDataset, WithNotImplementedModal],
-  render: () => <Dataset fileRepository={new FileMockRepository()} />
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+    />
+  )
 }
 
 export const Created: Story = {
   decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithNotImplementedModal],
-  render: () => <Dataset fileRepository={new FileMockRepository()} created={true} />
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+    />
+  )
 }
 export const DraftWithAllDatasetPermissions: Story = {
   decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithNotImplementedModal],
-  render: () => <Dataset fileRepository={new FileMockRepository()} />
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+    />
+  )
 }
 export const Deaccessioned: Story = {
   decorators: [WithLayout, WithDeaccessionedDataset, WithLoggedInUser],
-  render: () => <Dataset fileRepository={new FileMockRepository()} />
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+    />
+  )
 }
 export const LoggedInAsOwner: Story = {
   decorators: [WithDataset, WithLayout, WithLoggedInUser, WithNotImplementedModal],
-  render: () => <Dataset fileRepository={new FileMockRepository()} />
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+    />
+  )
 }
 
 export const Loading: Story = {
   decorators: [WithLayout, WithDatasetLoading],
-  render: () => <Dataset fileRepository={new FileMockRepository()} />
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+    />
+  )
 }
 
 export const DatasetNotFound: Story = {
   decorators: [WithLayout, WithDatasetNotFound],
-  render: () => <Dataset fileRepository={new FileMockRepository()} />
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+    />
+  )
 }
 
 export const DatasetAnonymizedView: Story = {
   decorators: [WithLayout, WithAnonymizedView, WithDatasetPrivateUrl],
-  render: () => <Dataset fileRepository={new FileMockRepository()} />
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+    />
+  )
 }
 
 export const DatasetWithNoFiles: Story = {
   decorators: [WithLayout, WithAnonymizedView, WithDataset],
-  render: () => <Dataset fileRepository={new FileMockNoDataRepository()} />
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+    />
+  )
 }
