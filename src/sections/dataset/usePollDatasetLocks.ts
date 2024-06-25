@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getDatasetLocks } from '../../dataset/domain/useCases/getDatasetLocks' // Adjust the import path as necessary
 import { Route } from '../Route.enum'
@@ -11,37 +11,40 @@ const usePollDatasetLocks = (
   datasetRepository: DatasetRepository
 ) => {
   const navigate = useNavigate()
-  const intervalIdRef = useRef<NodeJS.Timeout | null>(null)
+  const navigateToDataset = (persistentId: string) => {
+    navigate(`${Route.DATASETS}?persistentId=${persistentId}`, {
+      state: { publishInProgress: false }
+    })
+  }
 
   useEffect(() => {
     if (publishInPogress && dataset) {
-      console.log('SETTING INTERVAL')
-      const intervalId = setInterval(() => {
-        const pollLocks = async () => {
-          try {
-            const locks = await getDatasetLocks(datasetRepository, dataset.persistentId)
-            if (locks.length === 0) {
-              console.log('navigating to released version')
-              clearInterval(intervalId)
-              navigate(`${Route.DATASETS}?persistentId=${dataset.persistentId}`, {
-                state: { publishInProgress: false }
-              })
+      const gotoReleasedPageAfterPublish = async () => {
+        const initialLocks = await getDatasetLocks(datasetRepository, dataset.persistentId)
+        console.log('initial locks:', JSON.stringify(initialLocks))
+        if (initialLocks.length === 0) {
+          navigateToDataset(dataset.persistentId)
+        } else {
+          const intervalId = setInterval(() => {
+            console.log('polling locks')
+            const pollLocks = async () => {
+              try {
+                const locks = await getDatasetLocks(datasetRepository, dataset.persistentId)
+                if (locks.length === 0) {
+                  console.log('navigating to released version')
+                  clearInterval(intervalId)
+                  navigateToDataset(dataset.persistentId)
+                }
+              } catch (error) {
+                console.error('Error getting dataset locks:', error)
+                clearInterval(intervalId)
+              }
             }
-          } catch (error) {
-            console.error('Error getting dataset locks:', error)
-            clearInterval(intervalId)
-          }
-        }
-        void pollLocks()
-      }, 1000)
-      intervalIdRef.current = intervalId
-
-      return () => {
-        if (intervalIdRef.current) {
-          clearInterval(intervalIdRef.current)
-          intervalIdRef.current = null
+            void pollLocks()
+          }, 2000)
         }
       }
+      void gotoReleasedPageAfterPublish()
     }
   }, [publishInPogress, dataset, datasetRepository, navigate])
 }
