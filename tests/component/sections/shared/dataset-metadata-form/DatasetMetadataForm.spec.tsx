@@ -1,3 +1,4 @@
+import { fireEvent } from '@testing-library/react'
 import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Dataset'
 import { DatasetRepository } from '../../../../../src/dataset/domain/repositories/DatasetRepository'
 import { TypeMetadataFieldOptions } from '../../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
@@ -85,13 +86,73 @@ const metadataBlocksInfoOnCreateModeWithAstroBlock =
     }
   })
 
+const metadataBlocksInfoOnCreateModeWithComposedNotMultipleField =
+  MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue({
+    id: 4,
+    name: 'astrophysics',
+    displayName: 'Astronomy and Astrophysics Metadata',
+    displayOnCreate: false,
+    metadataFields: {
+      producer: {
+        name: 'producer',
+        displayName: 'Producer',
+        title: 'Producer',
+        type: 'NONE',
+        watermark: '',
+        description:
+          'The entity, such a person or organization, managing the finances or other administrative processes involved in the creation of the Dataset',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: false,
+        displayOrder: 36,
+        typeClass: 'compound',
+        displayOnCreate: false,
+        childMetadataFields: {
+          producerName: {
+            name: 'producerName',
+            displayName: 'Producer Name',
+            title: 'Name',
+            type: 'TEXT',
+            watermark: '1) FamilyName, GivenName or 2) Organization',
+            description:
+              "The name of the entity, e.g. the person's name or the name of an organization",
+            multiple: false,
+            isControlledVocabulary: false,
+            displayFormat: '#VALUE',
+            isRequired: true,
+            displayOrder: 37,
+            typeClass: 'primitive',
+            displayOnCreate: false
+          },
+          producerAffiliation: {
+            name: 'producerAffiliation',
+            displayName: 'Producer Affiliation',
+            title: 'Affiliation',
+            type: 'TEXT',
+            watermark: 'Organization XYZ',
+            description:
+              "The name of the entity affiliated with the producer, e.g. an organization's name",
+            multiple: false,
+            isControlledVocabulary: false,
+            displayFormat: '(#VALUE)',
+            isRequired: false,
+            displayOrder: 38,
+            typeClass: 'primitive',
+            displayOnCreate: false
+          }
+        }
+      }
+    }
+  })
+
 const metadataBlocksInfoOnEditMode =
   MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateFalse()
 const wrongCollectionMetadataBlocksInfo =
   MetadataBlockInfoMother.wrongCollectionMetadataBlocksInfo()
 const testUser = UserMother.create()
 
-const fillRequiredFields = () => {
+const fillRequiredFieldsOnCreate = () => {
   cy.findByLabelText(/^Title/i).type('Test Dataset Title')
 
   cy.findByText('Author')
@@ -210,16 +271,6 @@ describe('DatasetMetadataForm', () => {
           .should('exist')
           .should('have.attr', 'aria-required', 'true')
           .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
-        //   cy.findByText('Title').children('div').trigger('mouseover')
-        //   cy.document().its('body').findByText('The main title of the Dataset').should('exist')
-
-        //   cy.findByText('Subtitle').children('div').trigger('mouseover')
-        //   cy.document()
-        //     .its('body')
-        //     .findByText(
-        //       'A secondary title that amplifies or states certain limitations on the main title'
-        //     )
-        //     .should('exist')
 
         // Composed field
         cy.findByText('Author')
@@ -1226,7 +1277,7 @@ describe('DatasetMetadataForm', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
         />
       )
-      fillRequiredFields()
+      fillRequiredFieldsOnCreate()
       cy.findByText(/Save Dataset/i).click()
       cy.findByText('Title is required').should('not.exist')
       cy.findByText('Author Name is required').should('not.exist')
@@ -1458,6 +1509,7 @@ describe('DatasetMetadataForm', () => {
 
     cy.findByText('Error').should('exist')
   })
+
   it('cancel button is clickable', () => {
     cy.customMount(
       <DatasetMetadataForm
@@ -1542,7 +1594,7 @@ describe('DatasetMetadataForm', () => {
         />
       )
       // Fields are being send correctly, we are just forcing a create error to check if the error message is being displayed correctly
-      fillRequiredFields()
+      fillRequiredFieldsOnCreate()
 
       cy.findByText(/Save Dataset/i).click()
 
@@ -1564,9 +1616,103 @@ describe('DatasetMetadataForm', () => {
         />
       )
 
-      fillRequiredFields()
+      fillRequiredFieldsOnCreate()
 
       cy.findByText(/Save Dataset/i).click()
+
+      cy.findByText('Validation Error').should('exist')
+      cy.findByText(
+        /Required fields were missed or there was a validation error. Please scroll down to see details./
+      ).should('exist')
+    })
+  })
+
+  describe('When dataset metadata update fails', () => {
+    it('should show edit error message from the client-javascript client when the dataset edition fails', () => {
+      datasetRepository.updateMetadata = cy
+        .stub()
+        .rejects(new Error('Error from the api javascript client'))
+      metadataBlockInfoRepository.getByColecctionId = cy
+        .stub()
+        .resolves(wrongCollectionMetadataBlocksInfo)
+
+      cy.customMount(
+        <DatasetMetadataForm
+          mode="edit"
+          collectionId="root"
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          datasetPersistentID={dataset.persistentId}
+          datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+        />
+      )
+
+      // Fill one non required field to undisable the Save button, is disabled if fields are not dirty
+      cy.findByLabelText('Title').type('Some note')
+
+      cy.findAllByText(/Save Changes/i)
+        .first()
+        .click()
+
+      cy.findByText('Validation Error').should('exist')
+      cy.findByText(/Error from the api javascript client/).should('exist')
+    })
+
+    it('should only show field error part of the error message from the api when the dataset edition fails', () => {
+      datasetRepository.updateMetadata = cy
+        .stub()
+        .rejects(
+          new Error(
+            'Validation Failed: Point of Contact E-mail test@test.c is not a valid email address. (Invalid value:edu.harvard.iq.dataverse.DatasetFieldValueValue[ id=null ]).java.util.stream.ReferencePipeline$3@561b5200'
+          )
+        )
+
+      cy.customMount(
+        <DatasetMetadataForm
+          mode="edit"
+          collectionId="root"
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          datasetPersistentID={dataset.persistentId}
+          datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+        />
+      )
+
+      cy.findByLabelText(/^Title/i)
+        .clear()
+        .type('New Title')
+
+      cy.findAllByText(/Save Changes/i)
+        .first()
+        .click()
+
+      cy.findByText('Validation Error').should('exist')
+      cy.findByText(/Point of Contact E-mail test@test.c is not a valid email address./).should(
+        'exist'
+      )
+    })
+
+    it('should show locale error message when the dataset edition fails with an unknown error message', () => {
+      datasetRepository.updateMetadata = cy.stub().rejects('Some not expected error')
+
+      cy.customMount(
+        <DatasetMetadataForm
+          mode="edit"
+          collectionId="root"
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          datasetPersistentID={dataset.persistentId}
+          datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+        />
+      )
+
+      cy.findByLabelText(/^Title/i)
+        .clear()
+        .type('New Title')
+
+      cy.findAllByText(/Save Changes/i)
+        .first()
+        .click()
 
       cy.findByText('Validation Error').should('exist')
       cy.findByText(
@@ -1625,5 +1771,128 @@ describe('DatasetMetadataForm', () => {
     cy.findByLabelText(`Delete Alternative Title`).click()
 
     cy.findByLabelText(`Delete Alternative Title`).should('not.exist')
+  })
+
+  it('should not submit the form when pressing enter key if submit button is not focused', () => {
+    cy.customMount(
+      <DatasetMetadataForm
+        mode="create"
+        collectionId="root"
+        datasetRepository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+
+    // We simulate using focusing on an input and pressing enter key
+    cy.findByLabelText(/^Title/i)
+      .focus()
+      .type('{enter}')
+
+    // Validation error shouldn't be shown as form wasn't submitted
+    cy.findByText('Title is required').should('not.exist')
+  })
+  it('should submit the form when pressing enter key if submit button is indeed focused', () => {
+    cy.customMount(
+      <DatasetMetadataForm
+        mode="create"
+        collectionId="root"
+        datasetRepository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+
+    // Type something so submit button is not disabled
+    cy.findByLabelText(/^Title/i).type('Some title')
+
+    cy.findByText(/Save Dataset/i)
+      .focus()
+      .type('{enter}')
+
+    // Validation error shouldn be shown as form was submitted
+    cy.findByText('Author Name is required').should('exist')
+  })
+
+  describe('should make field required if some of the siblings are filled and viceversa and show helper message', () => {
+    it('for a composed field multiple', () => {
+      cy.customMount(
+        <DatasetMetadataForm
+          mode="edit"
+          collectionId="root"
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          datasetPersistentID={dataset.persistentId}
+          datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+        />
+      )
+
+      cy.findByText('Producer')
+        .should('exist')
+        .closest('.row')
+        .within(() => {
+          cy.findByText(
+            'One or more of these fields may become required if you add to one or more of these optional fields.'
+          ).should('exist')
+
+          cy.findByLabelText('Name', { exact: true })
+            .should('exist')
+            .should('have.attr', 'aria-required', 'false')
+
+          cy.findByLabelText('Affiliation', { exact: true })
+            .should('exist')
+            .type('something to trigger sibling Name field to become required')
+
+          cy.findByLabelText(/^Name/).should('exist').should('have.attr', 'aria-required', 'true')
+
+          cy.findByLabelText('Affiliation', { exact: true }).clear()
+
+          cy.findByLabelText(/^Name/).should('exist').should('have.attr', 'aria-required', 'false')
+        })
+    })
+    it('for a composed field NOT multiple', () => {
+      metadataBlockInfoRepository.getByColecctionId = cy
+        .stub()
+        .resolves(metadataBlocksInfoOnCreateModeWithComposedNotMultipleField)
+
+      cy.customMount(
+        <DatasetMetadataForm
+          mode="edit"
+          collectionId="root"
+          datasetRepository={datasetRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          datasetPersistentID={dataset.persistentId}
+          datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+        />
+      )
+
+      cy.get('.accordion > :nth-child(3)').within(() => {
+        // Open accordion and wait for it to open
+        cy.get('.accordion-button').click()
+        cy.wait(300)
+        cy.findByText('Producer')
+          .should('exist')
+          .closest('.row')
+          .within(() => {
+            cy.findByText(
+              'One or more of these fields may become required if you add to one or more of these optional fields.'
+            ).should('exist')
+
+            cy.findByLabelText('Name', { exact: true })
+              .should('exist')
+              .should('have.attr', 'aria-required', 'false')
+
+            cy.findByLabelText('Affiliation', { exact: true })
+              .should('exist')
+              .type('something to trigger sibling Name field to become required')
+
+            cy.findByLabelText(/^Name/).should('exist').should('have.attr', 'aria-required', 'true')
+
+            cy.findByLabelText('Affiliation', { exact: true }).clear()
+
+            cy.findByLabelText(/^Name/)
+              .should('exist')
+              .should('have.attr', 'aria-required', 'false')
+          })
+      })
+    })
   })
 })
