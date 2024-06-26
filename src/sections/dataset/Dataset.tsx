@@ -48,7 +48,7 @@ export function Dataset({
     if (created) {
       addDatasetAlert({ messageKey: AlertMessageKey.DATASET_CREATED, variant: 'success' })
     }
-  }, [metadataUpdated, created])
+  }, [metadataUpdated, created, addDatasetAlert])
 
   useEffect(() => {
     setIsLoading(isLoading)
