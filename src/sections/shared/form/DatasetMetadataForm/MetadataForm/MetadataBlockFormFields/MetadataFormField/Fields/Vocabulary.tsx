@@ -67,7 +67,7 @@ export const Vocabulary = ({
       }
     }
     return rulesToApply
-  }, [rulesToApply, fieldShouldBecomeRequired])
+  }, [rulesToApply, fieldShouldBecomeRequired, displayName, isFieldThatMayBecomeRequired, t])
 
   return (
     <Controller

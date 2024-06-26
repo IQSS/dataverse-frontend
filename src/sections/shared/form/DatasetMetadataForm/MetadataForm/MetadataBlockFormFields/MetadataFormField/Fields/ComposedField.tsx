@@ -31,7 +31,7 @@ export const ComposedField = ({
             .filter(([_, metadataField]) => metadataField.isRequired)
             .map(([key, _]) => key)
         : [],
-    []
+    [childMetadataFields, notRequiredWithChildFieldsRequired]
   )
 
   const childFieldNamesThatTriggerRequired = useMemo(
@@ -41,7 +41,7 @@ export const ComposedField = ({
             .filter(([_, metadataField]) => !metadataField.isRequired)
             .map(([key, _]) => key)
         : [],
-    []
+    [childMetadataFields, notRequiredWithChildFieldsRequired]
   )
 
   return (

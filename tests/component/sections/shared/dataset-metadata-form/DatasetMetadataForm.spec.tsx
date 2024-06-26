@@ -1,4 +1,3 @@
-import { fireEvent } from '@testing-library/react'
 import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Dataset'
 import { DatasetRepository } from '../../../../../src/dataset/domain/repositories/DatasetRepository'
 import { TypeMetadataFieldOptions } from '../../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'

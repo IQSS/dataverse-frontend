@@ -67,7 +67,7 @@ export const Primitive = ({
       }
     }
     return rulesToApply
-  }, [rulesToApply, fieldShouldBecomeRequired])
+  }, [rulesToApply, fieldShouldBecomeRequired, displayName, isFieldThatMayBecomeRequired, t])
 
   const isTextArea = type === TypeMetadataFieldOptions.Textbox
 

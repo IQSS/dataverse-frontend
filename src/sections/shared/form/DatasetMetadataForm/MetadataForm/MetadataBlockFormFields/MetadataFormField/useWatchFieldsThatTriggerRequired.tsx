@@ -21,7 +21,7 @@ const useWatchFieldsThatTriggerRequired = ({ fieldsToWatch, builtFieldName }: Pr
     if (!fieldShouldBecomeRequired) {
       clearErrors(builtFieldName)
     }
-  }, [fieldShouldBecomeRequired])
+  }, [fieldShouldBecomeRequired, builtFieldName, clearErrors])
 
   return fieldShouldBecomeRequired
 }
