@@ -16,6 +16,7 @@ import {
 export interface CommonFieldProps {
   name: string
   title: string
+  displayName: string
   watermark: string
   description: string
   type: TypeMetadataField
@@ -30,6 +31,8 @@ type DynamicMetadataFormFieldProps =
       withinMultipleFieldsGroup?: false
       compoundParentName?: never
       compoundParentIsRequired?: never
+      isFieldThatMayBecomeRequired?: never
+      childFieldNamesThatTriggerRequired?: never
     }
   | {
       metadataFieldInfo: MetadataField
@@ -38,6 +41,8 @@ type DynamicMetadataFormFieldProps =
       withinMultipleFieldsGroup: true
       compoundParentName: string
       compoundParentIsRequired: boolean
+      isFieldThatMayBecomeRequired: boolean
+      childFieldNamesThatTriggerRequired: string[]
     }
 
 export const MetadataFormField = ({
@@ -46,10 +51,13 @@ export const MetadataFormField = ({
   fieldsArrayIndex,
   withinMultipleFieldsGroup = false,
   compoundParentName,
-  compoundParentIsRequired
+  compoundParentIsRequired,
+  isFieldThatMayBecomeRequired,
+  childFieldNamesThatTriggerRequired
 }: DynamicMetadataFormFieldProps) => {
   const {
     name,
+    displayName,
     type,
     title,
     multiple,
@@ -57,13 +65,9 @@ export const MetadataFormField = ({
     description,
     watermark,
     childMetadataFields,
-    controlledVocabularyValues
+    controlledVocabularyValues,
+    isRequired
   } = metadataFieldInfo
-
-  const rulesToApply = useDefineRules({
-    metadataFieldInfo,
-    isParentFieldRequired: compoundParentIsRequired
-  })
 
   const isSafeCompound =
     typeClass === TypeClassMetadataFieldOptions.Compound &&
@@ -77,32 +81,46 @@ export const MetadataFormField = ({
 
   const isSafePrimitive = typeClass === TypeClassMetadataFieldOptions.Primitive
 
+  const notRequiredWithChildFieldsRequired =
+    isSafeCompound &&
+    !isRequired &&
+    Object.keys(childMetadataFields).some((key) => childMetadataFields[key].isRequired)
+
+  const rulesToApply = useDefineRules({
+    metadataFieldInfo,
+    isParentFieldRequired: compoundParentIsRequired
+  })
+
   if (isSafePrimitive) {
     if (multiple) {
       return (
         <PrimitiveMultiple
-          rulesToApply={rulesToApply}
-          metadataBlockName={metadataBlockName}
           name={name}
-          description={description}
+          type={type}
           title={title}
           watermark={watermark}
-          type={type}
+          displayName={displayName}
+          description={description}
+          rulesToApply={rulesToApply}
+          metadataBlockName={metadataBlockName}
         />
       )
     }
     return (
       <Primitive
         name={name}
-        compoundParentName={compoundParentName}
-        metadataBlockName={metadataBlockName}
-        rulesToApply={rulesToApply}
-        description={description}
+        type={type}
         title={title}
         watermark={watermark}
-        type={type}
-        withinMultipleFieldsGroup={withinMultipleFieldsGroup}
+        displayName={displayName}
+        description={description}
+        rulesToApply={rulesToApply}
         fieldsArrayIndex={fieldsArrayIndex}
+        metadataBlockName={metadataBlockName}
+        compoundParentName={compoundParentName}
+        withinMultipleFieldsGroup={withinMultipleFieldsGroup}
+        isFieldThatMayBecomeRequired={isFieldThatMayBecomeRequired}
+        childFieldNamesThatTriggerRequired={childFieldNamesThatTriggerRequired}
       />
     )
   }
@@ -112,30 +130,32 @@ export const MetadataFormField = ({
       return (
         <VocabularyMultiple
           name={name}
-          compoundParentName={compoundParentName}
-          metadataBlockName={metadataBlockName}
-          options={controlledVocabularyValues}
-          rulesToApply={rulesToApply}
-          description={description}
+          type={type}
           title={title}
           watermark={watermark}
-          type={type}
+          displayName={displayName}
+          description={description}
+          rulesToApply={rulesToApply}
+          options={controlledVocabularyValues}
+          compoundParentName={compoundParentName}
+          metadataBlockName={metadataBlockName}
         />
       )
     }
     return (
       <Vocabulary
         name={name}
-        compoundParentName={compoundParentName}
-        metadataBlockName={metadataBlockName}
-        options={controlledVocabularyValues}
-        rulesToApply={rulesToApply}
-        description={description}
+        type={type}
         title={title}
         watermark={watermark}
-        type={type}
-        withinMultipleFieldsGroup={withinMultipleFieldsGroup}
+        description={description}
+        displayName={displayName}
+        rulesToApply={rulesToApply}
+        options={controlledVocabularyValues}
         fieldsArrayIndex={fieldsArrayIndex}
+        metadataBlockName={metadataBlockName}
+        compoundParentName={compoundParentName}
+        withinMultipleFieldsGroup={withinMultipleFieldsGroup}
       />
     )
   }
@@ -145,14 +165,16 @@ export const MetadataFormField = ({
       return (
         <ComposedFieldMultiple
           name={name}
-          compoundParentName={compoundParentName}
-          metadataBlockName={metadataBlockName}
-          childMetadataFields={childMetadataFields}
-          rulesToApply={rulesToApply}
-          description={description}
+          type={type}
           title={title}
           watermark={watermark}
-          type={type}
+          description={description}
+          displayName={displayName}
+          rulesToApply={rulesToApply}
+          metadataBlockName={metadataBlockName}
+          compoundParentName={compoundParentName}
+          childMetadataFields={childMetadataFields}
+          notRequiredWithChildFieldsRequired={notRequiredWithChildFieldsRequired}
         />
       )
     }
@@ -160,14 +182,16 @@ export const MetadataFormField = ({
     return (
       <ComposedField
         name={name}
-        compoundParentName={compoundParentName}
-        metadataBlockName={metadataBlockName}
-        childMetadataFields={childMetadataFields}
-        rulesToApply={rulesToApply}
-        description={description}
+        type={type}
         title={title}
         watermark={watermark}
-        type={type}
+        description={description}
+        displayName={displayName}
+        rulesToApply={rulesToApply}
+        metadataBlockName={metadataBlockName}
+        compoundParentName={compoundParentName}
+        childMetadataFields={childMetadataFields}
+        notRequiredWithChildFieldsRequired={notRequiredWithChildFieldsRequired}
       />
     )
   }

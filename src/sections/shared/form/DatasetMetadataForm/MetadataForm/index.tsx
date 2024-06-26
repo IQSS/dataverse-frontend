@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FieldErrors, FormProvider, useForm } from 'react-hook-form'
 import { useSession } from '../../../../session/SessionContext'
-import { Form, Accordion, Alert, Button } from '@iqss/dataverse-design-system'
+import { Accordion, Alert, Button } from '@iqss/dataverse-design-system'
 import { type DatasetRepository } from '../../../../../dataset/domain/repositories/DatasetRepository'
 import { type MetadataBlockInfo } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { type DatasetMetadataFormValues } from '../MetadataFieldsHelper'
@@ -120,13 +120,26 @@ export const MetadataForm = ({
     )
   }, [isErrorLoadingMetadataBlocks, submissionStatus, formState.isDirty])
 
+  const preventEnterSubmit = (e: React.KeyboardEvent<HTMLFormElement | HTMLButtonElement>) => {
+    // When pressing Enter, only submit the form  if the user is focused on the submit button itself
+    if (e.key !== 'Enter') return
+
+    const isButton = e.target instanceof HTMLButtonElement
+    const isButtonTypeSubmit = isButton ? (e.target as HTMLButtonElement).type === 'submit' : false
+
+    if (!isButton && !isButtonTypeSubmit) e.preventDefault()
+  }
+
   return (
     <section
       className={styles['form-container']}
       ref={formContainerRef}
       data-testid="metadata-form">
       <FormProvider {...form}>
-        <Form onSubmit={form.handleSubmit(submitForm, onInvalidSubmit)}>
+        <form
+          onSubmit={form.handleSubmit(submitForm, onInvalidSubmit)}
+          onKeyDown={preventEnterSubmit}
+          noValidate={true}>
           <div className={styles['top-buttons-container']}>
             <RequiredFieldText />
             {onEditMode && (
@@ -197,7 +210,7 @@ export const MetadataForm = ({
               {t('cancelButton')}
             </Button>
           </div>
-        </Form>
+        </form>
       </FormProvider>
     </section>
   )

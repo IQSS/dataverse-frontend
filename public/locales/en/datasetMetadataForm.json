@@ -8,6 +8,7 @@
     "content": "Required fields were missed or there was a validation error. Please scroll down to see details."
   },
   "requiredFields": "Asterisks indicate required fields",
+  "mayBecomeRequired": "One or more of these fields may become required if you add to one or more of these optional fields.",
   "field": {
     "required": "{{displayName}} is required",
     "invalid": {

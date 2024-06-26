@@ -11,18 +11,17 @@ import styles from '../index.module.scss'
 interface PrimitiveMultipleProps extends CommonFieldProps {
   metadataBlockName: string
   compoundParentName?: string
-  fieldsArrayIndex?: number
 }
 
 export const PrimitiveMultiple = ({
   name,
-  compoundParentName,
-  metadataBlockName,
-  description,
-  title,
-  watermark,
   type,
-  rulesToApply
+  title,
+  description,
+  watermark,
+  rulesToApply,
+  metadataBlockName,
+  compoundParentName
 }: PrimitiveMultipleProps) => {
   const { control } = useFormContext()
 

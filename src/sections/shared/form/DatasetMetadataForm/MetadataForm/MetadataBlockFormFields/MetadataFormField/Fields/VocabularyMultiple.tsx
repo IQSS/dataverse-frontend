@@ -6,19 +6,19 @@ import { type CommonFieldProps } from '..'
 import styles from '../index.module.scss'
 
 interface VocabularyProps extends CommonFieldProps {
-  metadataBlockName: string
   options: string[]
+  metadataBlockName: string
   compoundParentName?: string
   fieldsArrayIndex?: number
 }
 export const VocabularyMultiple = ({
   name,
-  compoundParentName,
-  metadataBlockName,
-  rulesToApply,
-  description,
   title,
+  description,
+  rulesToApply,
   options,
+  metadataBlockName,
+  compoundParentName,
   fieldsArrayIndex
 }: VocabularyProps) => {
   const { control } = useFormContext()

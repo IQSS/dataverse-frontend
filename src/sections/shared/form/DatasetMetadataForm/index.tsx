@@ -29,8 +29,6 @@ type DatasetMetadataFormProps =
 
 export type DatasetMetadataFormMode = 'create' | 'edit'
 
-// TODO:ME How to know when to show the textarea field to accept html tags? we could create a markdown plus preview field like github comments
-// TODO:ME JSF shows a select similar to Select Multiple but with the option of selecting only one item, I think for when options are more than certain number
 export const DatasetMetadataForm = ({
   mode,
   collectionId,

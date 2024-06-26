@@ -1,28 +1,37 @@
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Controller, useFormContext } from 'react-hook-form'
-import { Form, Row, Col } from '@iqss/dataverse-design-system'
+import useWatchFieldsThatTriggerRequired from '../useWatchFieldsThatTriggerRequired'
+import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { MetadataFieldsHelper } from '../../../../MetadataFieldsHelper'
 import { type CommonFieldProps } from '..'
 import styles from '../index.module.scss'
 
 interface VocabularyProps extends CommonFieldProps {
-  metadataBlockName: string
   options: string[]
-  withinMultipleFieldsGroup: boolean
+  metadataBlockName: string
   compoundParentName?: string
+  withinMultipleFieldsGroup: boolean
   fieldsArrayIndex?: number
+  isFieldThatMayBecomeRequired?: boolean
+  childFieldNamesThatTriggerRequired?: string[]
 }
 export const Vocabulary = ({
   name,
-  compoundParentName,
-  metadataBlockName,
-  rulesToApply,
-  description,
   title,
+  displayName,
+  description,
+  rulesToApply,
   options,
+  metadataBlockName,
+  compoundParentName,
   withinMultipleFieldsGroup,
-  fieldsArrayIndex
+  fieldsArrayIndex,
+  isFieldThatMayBecomeRequired,
+  childFieldNamesThatTriggerRequired
 }: VocabularyProps) => {
+  const { t } = useTranslation('datasetMetadataForm')
+
   const { control } = useFormContext()
 
   const builtFieldName = useMemo(
@@ -36,16 +45,40 @@ export const Vocabulary = ({
     [name, metadataBlockName, compoundParentName, fieldsArrayIndex]
   )
 
+  const builtFieldNamesThatTriggerRequired = childFieldNamesThatTriggerRequired?.map((value) =>
+    MetadataFieldsHelper.defineFieldName(
+      value,
+      metadataBlockName,
+      compoundParentName,
+      fieldsArrayIndex
+    )
+  )
+
+  const fieldShouldBecomeRequired = useWatchFieldsThatTriggerRequired({
+    fieldsToWatch: builtFieldNamesThatTriggerRequired,
+    builtFieldName
+  })
+
+  const updatedRulesToApply = useMemo(() => {
+    if (isFieldThatMayBecomeRequired && fieldShouldBecomeRequired) {
+      return {
+        ...rulesToApply,
+        required: t('field.required', { displayName, interpolation: { escapeValue: false } })
+      }
+    }
+    return rulesToApply
+  }, [rulesToApply, fieldShouldBecomeRequired])
+
   return (
     <Controller
       name={builtFieldName}
       control={control}
-      rules={rulesToApply}
+      rules={updatedRulesToApply}
       render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
         <Form.Group controlId={builtFieldName} as={withinMultipleFieldsGroup ? Col : Row}>
           <Form.Group.Label
             message={description}
-            required={Boolean(rulesToApply?.required)}
+            required={Boolean(updatedRulesToApply?.required)}
             column={!withinMultipleFieldsGroup}
             className={styles['field-label']}
             sm={3}>
@@ -58,7 +91,7 @@ export const Vocabulary = ({
                   onChange={onChange}
                   value={value as string}
                   isInvalid={invalid}
-                  aria-required={Boolean(rulesToApply?.required)}
+                  aria-required={Boolean(updatedRulesToApply?.required)}
                   ref={ref}>
                   <option value="">Select</option>
                   {options.map((option) => (
