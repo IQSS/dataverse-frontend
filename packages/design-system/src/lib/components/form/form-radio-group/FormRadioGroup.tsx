@@ -1,6 +1,6 @@
 import { Row } from '../../grid/Row'
 import { Col } from '../../grid/Col'
-import { PropsWithChildren } from 'react'
+import React, { PropsWithChildren, ReactElement } from 'react'
 import styles from './FormRadioGroup.module.scss'
 import { RequiredInputSymbol } from '../required-input-symbol/RequiredInputSymbol'
 import { QuestionMarkTooltip } from '../../tooltip/question-mark-tooltip/QuestionMarkTooltip'
@@ -11,6 +11,7 @@ interface FormRadioGroupProps {
   message?: string
   isValid?: boolean
   isInvalid?: boolean
+  onChange?: (event: React.MouseEvent<HTMLInputElement>) => void
 }
 
 export function FormRadioGroup({
@@ -19,8 +20,15 @@ export function FormRadioGroup({
   message,
   isValid,
   isInvalid,
-  children
+  children,
+  onChange
 }: PropsWithChildren<FormRadioGroupProps>) {
+  const childrenWithProps = React.Children.map(children, (child) => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child as ReactElement, { onClick: onChange })
+    }
+    return child
+  })
   const validationClass = isInvalid ? 'is-invalid' : isValid ? 'is-valid' : ''
   return (
     <Row className="mb-3">
@@ -34,7 +42,7 @@ export function FormRadioGroup({
       </Col>
       <Col sm={9}>
         {<div className={validationClass}></div>}
-        {children}
+        {childrenWithProps}
       </Col>
     </Row>
   )
