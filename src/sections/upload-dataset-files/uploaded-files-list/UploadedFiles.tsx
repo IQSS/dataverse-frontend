@@ -141,7 +141,7 @@ export function UploadedFiles({
                           label={''}
                           id={'select-all'}
                           checked={selected.has(file)}
-                          onChange={(event) => updateSelected(file)}
+                          onChange={() => updateSelected(file)}
                         />
                       </div>
                       <FileForm

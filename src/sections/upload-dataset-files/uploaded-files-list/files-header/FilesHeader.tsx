@@ -76,11 +76,11 @@ export function FilesHeader({
           onChange={all}
         />
       </span>
-      <Button withSpacing onClick={save} disabled={saveDisabled}>
-        Save
+      <Button withSpacing onClick={save} disabled={saveDisabled} title={t('filesHeader.save')}>
+        {t('filesHeader.save')}
       </Button>
       <Button withSpacing variant="secondary" onClick={cleanup} disabled={saving}>
-        Cancel
+        {t('filesHeader.cancel')}
       </Button>
       <span className={styles.uploaded_files_info}>
         {t('filesHeader.filesUploaded', { count: fileUploadState.length })}

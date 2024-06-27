@@ -37,6 +37,8 @@
     "plus": "Add new tag option"
   },
   "filesHeader": {
+    "save": "Save",
+    "cancel": "Cancel",
     "editFiles": "Edit files",
     "restrict": "Restrict",
     "unrestrict": "Unrestrict",
