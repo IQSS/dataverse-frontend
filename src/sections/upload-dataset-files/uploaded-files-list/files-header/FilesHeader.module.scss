@@ -5,7 +5,20 @@
   margin-bottom: 0.2rem;
 }
 
+.selected_files_cb {
+  display: inline-flex;
+  align-items: center;
+  padding-right: 2rem;
+  padding-left: 0.5rem;
+}
+
 .selected_files_info {
+  display: inline-flex;
+  align-items: center;
+  float: right;
+}
+
+.uploaded_files_info {
   display: inline-flex;
   align-items: center;
   padding-left: 1em;

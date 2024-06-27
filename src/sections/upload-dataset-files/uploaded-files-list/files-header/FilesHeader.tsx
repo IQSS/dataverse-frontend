@@ -1,8 +1,14 @@
-import { Button, Card, DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
+import {
+  Button,
+  Card,
+  DropdownButton,
+  DropdownButtonItem,
+  Form
+} from '@iqss/dataverse-design-system'
 import { PencilFill } from 'react-bootstrap-icons'
 import { FileUploadState } from '../../../../files/domain/models/FileUploadState'
 import styles from './FilesHeader.module.scss'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface FilesHeaderProps {
@@ -28,6 +34,7 @@ export function FilesHeader({
 }: FilesHeaderProps) {
   const { t } = useTranslation('uploadDatasetFiles')
   const [saving, setSaving] = useState(false)
+  const [selectAllChecked, setSelectAllChecked] = useState(false)
   const save = () => {
     setSaving(true)
     addFiles(fileUploadState)
@@ -55,17 +62,29 @@ export function FilesHeader({
     updateFiles(res)
   }
 
+  useEffect(() => {
+    setSelectAllChecked(selected.size === fileUploadState.length)
+  }, [selected, fileUploadState])
+
   return (
     <Card.Header>
+      <span className={styles.selected_files_cb}>
+        <Form.Group.Checkbox
+          label={''}
+          id={'select-all'}
+          checked={selectAllChecked}
+          onChange={all}
+        />
+      </span>
       <Button withSpacing onClick={save} disabled={saveDisabled}>
         Save
       </Button>
       <Button withSpacing variant="secondary" onClick={cleanup} disabled={saving}>
         Cancel
       </Button>
-      <Button withSpacing variant="link" onClick={all} disabled={saving}>
+      <span className={styles.uploaded_files_info}>
         {t('filesHeader.filesUploaded', { count: fileUploadState.length })}
-      </Button>
+      </span>
       <span className={styles.selected_files_info} hidden={selected.size === 0}>
         <span>{t('filesHeader.filesSelected', { count: selected.size })}</span>
         <DropdownButton

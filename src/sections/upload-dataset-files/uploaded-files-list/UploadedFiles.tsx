@@ -79,15 +79,18 @@ export function UploadedFiles({
       }
     }
     if (!classList.some((x) => ignoreClasses.has(x))) {
-      setSelected((current) => {
-        if (current.has(file)) {
-          current.delete(file)
-        } else {
-          current.add(file)
-        }
-        return new Set<FileUploadState>(current)
-      })
+      updateSelected(file)
     }
+  }
+  const updateSelected = (file: FileUploadState) => {
+    setSelected((current) => {
+      if (current.has(file)) {
+        current.delete(file)
+      } else {
+        current.add(file)
+      }
+      return new Set<FileUploadState>(current)
+    })
   }
 
   return (
@@ -129,6 +132,14 @@ export function UploadedFiles({
                       })}
                       key={file.key}
                       onClick={(event) => clicked(event, file)}>
+                      <div className={styles.selected_files_cb}>
+                        <Form.Group.Checkbox
+                          label={''}
+                          id={'select-all'}
+                          checked={selected.has(file)}
+                          onChange={(event) => updateSelected(file)}
+                        />
+                      </div>
                       <FileForm
                         file={file}
                         updateFiles={updateFiles}
