@@ -153,10 +153,20 @@
     }
 
     &__checkbox-input {
-      padding-block: 0.25rem;
+      display: flex;
+      align-items: center;
+      padding-left: 0;
+
+      input[type='checkbox'] {
+        float: unset;
+        margin-top: 0;
+        margin-left: 0;
+      }
 
       label {
         width: 100%;
+        padding-left: 0.5rem;
+        padding-block: 0.25rem;
       }
     }
   }

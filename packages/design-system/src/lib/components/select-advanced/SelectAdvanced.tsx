@@ -69,7 +69,12 @@ export const SelectAdvanced = forwardRef(
 
     const [{ selected, filteredOptions, searchValue, options }, dispatch] = useReducer(
       selectAdvancedReducer,
-      getSelectAdvancedInitialState(Boolean(isMultiple), dynamicInitialOptions, defaultValue)
+      getSelectAdvancedInitialState(
+        Boolean(isMultiple),
+        dynamicInitialOptions,
+        locales?.select ?? DEFAULT_LOCALES.select,
+        defaultValue
+      )
     )
 
     const isFirstRender = useIsFirstRender()
