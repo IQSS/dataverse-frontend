@@ -45,6 +45,14 @@
     "filesUploaded_one": "{{count}} file uploaded",
     "filesUploaded_other": "{{count}} files uploaded",
     "filesSelected_one": "{{count}} file selected",
-    "filesSelected_other": "{{count}} files selected"
+    "filesSelected_other": "{{count}} files selected",
+    "deleteSelected": "Delete selected",
+    "addTagsToSelected": "Add tags to selected",
+    "addTags": "Add tags"
+  },
+  "addTags": {
+    "title": "Add tags to selected files",
+    "saveChanges": "Save Changes",
+    "cancelChanges": "Cancel changes"
   }
 }

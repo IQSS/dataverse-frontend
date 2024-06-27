@@ -20,6 +20,7 @@ interface FilesHeaderProps {
   cleanup: () => void
   addFiles: (fileUploadState: FileUploadState[]) => void
   updateFilesRestricted: (fileUploadState: FileUploadState[], restricted: boolean) => void
+  showAddTagsModal: () => void
 }
 
 export function FilesHeader({
@@ -30,7 +31,8 @@ export function FilesHeader({
   updateFiles,
   cleanup,
   addFiles,
-  updateFilesRestricted
+  updateFilesRestricted,
+  showAddTagsModal
 }: FilesHeaderProps) {
   const { t } = useTranslation('uploadDatasetFiles')
   const [saving, setSaving] = useState(false)
@@ -93,13 +95,16 @@ export function FilesHeader({
           icon={<PencilFill className={styles.icon_pencil} />}
           id={'edit-files'}
           title={t('filesHeader.editFiles')}>
+          <DropdownButtonItem onClick={showAddTagsModal} title={t('filesHeader.addTagsToSelected')}>
+            {t('filesHeader.addTags')}
+          </DropdownButtonItem>
           <DropdownButtonItem onClick={() => updateRestriction(true)}>
             {t('filesHeader.restrict')}
           </DropdownButtonItem>
           <DropdownButtonItem onClick={() => updateRestriction(false)}>
             {t('filesHeader.unrestrict')}
           </DropdownButtonItem>
-          <DropdownButtonItem onClick={deleteSelected} title="Delete selected">
+          <DropdownButtonItem onClick={deleteSelected} title={t('filesHeader.deleteSelected')}>
             {t('delete')}
           </DropdownButtonItem>
         </DropdownButton>

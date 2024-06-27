@@ -9,6 +9,7 @@ import { TagOptionsModal } from './tag-options-modal/TagOptionsModal'
 import { FilesHeader } from './files-header/FilesHeader'
 import { RestrictionModal, RestrictionModalResult } from './restriction-modal/RestrictionModal'
 import { useTranslation } from 'react-i18next'
+import { AddTagsModal, AddTagsModalResult } from './add-tags-modal/AddTagsModal'
 
 interface DatasetFilesProps {
   fileUploadState: FileUploadState[]
@@ -30,11 +31,12 @@ export function UploadedFiles({
   const { t } = useTranslation('uploadDatasetFiles')
   const [selected, setSelected] = useState(new Set<FileUploadState>())
   const [filesToRestrict, setFilesToRestrict] = useState<FileUploadState[]>([])
-  const [tags, setTagOptions] = useState([t('tags.documentation'), t('tags.data'), t('tags.code')])
+  const [tagOptions, setTagOptions] = useState([t('tags.documentation'), t('tags.data'), t('tags.code')])
   const [terms, setTerms] = useState('')
   const [requestAccess, setRequestAccess] = useState(true)
   const [showRestrictionModal, setShowRestrictionModal] = useState(false)
   const [showTagOptionsModal, setShowTagOptionsModal] = useState(false)
+  const [showAddTagsModal, setShowAddTagsModal] = useState(false)
   const ignoreClasses = new Set<string>([
     'form-control',
     'btn',
@@ -60,6 +62,19 @@ export function UploadedFiles({
       updateFiles(filesToRestrict)
     }
     setShowRestrictionModal(false)
+  }
+  const addTags = (res: AddTagsModalResult) => {
+    if (res.saved) {
+      const filesToAddTagsTo = Array.from(selected).map((file) => {
+        const newTags = [...file.tags]
+        res.tags.forEach((t) => { if (!file.tags.some((x) => x === t)) newTags.push(t) })
+        file.tags = newTags
+        return file
+      })
+      console.log(filesToAddTagsTo)
+      updateFiles(filesToAddTagsTo)
+    }
+    setShowAddTagsModal(false)
   }
   const deleteFile = (file: FileUploadState) => {
     file.removed = true
@@ -101,7 +116,7 @@ export function UploadedFiles({
     <>
       <div className={styles.forms}>
         <TagOptionsModal
-          tags={tags}
+          availableTags={[...tagOptions]}
           setTagOptions={setTagOptions}
           show={showTagOptionsModal}
           hide={() => setShowTagOptionsModal(false)}
@@ -111,6 +126,12 @@ export function UploadedFiles({
           defaultTerms={terms}
           show={showRestrictionModal}
           update={restrict}
+        />
+        <AddTagsModal
+          show={showAddTagsModal}
+          availableTags={[...tagOptions]}
+          setTagOptions={setTagOptions}
+          update={addTags}
         />
       </div>
       <div hidden={fileUploadState.length === 0}>
@@ -124,6 +145,7 @@ export function UploadedFiles({
             selected={selected}
             setSelected={setSelected}
             updateFilesRestricted={updateFilesRestricted}
+            showAddTagsModal={() => setShowAddTagsModal(true)}
           />
           <Card.Body>
             <div>
@@ -147,7 +169,7 @@ export function UploadedFiles({
                       <FileForm
                         file={file}
                         updateFiles={updateFiles}
-                        tags={tags}
+                        availableTags={[...tagOptions]}
                         editTagOptions={() => setShowTagOptionsModal(true)}
                       />
                       <div className={styles.file_size} title={t('uploadedFileSize')}>

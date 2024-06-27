@@ -8,11 +8,11 @@ import { useTranslation } from 'react-i18next'
 interface FileFormProps {
   file: FileUploadState
   updateFiles: (file: FileUploadState[]) => void
-  tags: string[]
+  availableTags: string[]
   editTagOptions: () => void
 }
 
-export function FileForm({ file, updateFiles, tags, editTagOptions }: FileFormProps) {
+export function FileForm({ file, updateFiles, availableTags, editTagOptions }: FileFormProps) {
   const { t } = useTranslation('uploadDatasetFiles')
   const updateFileName = (file: FileUploadState, updated: string) => {
     file.fileName = updated
@@ -26,8 +26,8 @@ export function FileForm({ file, updateFiles, tags, editTagOptions }: FileFormPr
     file.description = updated
     updateFiles([file])
   }
-  const setTags = (file: FileUploadState, tags: string[]) => {
-    file.tags = tags
+  const setTags = (file: FileUploadState, newTags: string[]) => {
+    file.tags = [...newTags]
     updateFiles([file])
   }
 
@@ -84,7 +84,8 @@ export function FileForm({ file, updateFiles, tags, editTagOptions }: FileFormPr
           <Col sm={9} className={styles.tags}>
             <div className={styles.tags_select} title={t('fileForm.selectTags')}>
               <SelectMultiple
-                options={tags}
+                options={availableTags}
+                defaultValue={file.tags}
                 onChange={(newTags) => setTags(file, newTags)}></SelectMultiple>
             </div>
             <Button
