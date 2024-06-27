@@ -1,18 +1,18 @@
-export const selectMultipleInitialState: SelectMultipleState = {
+export const selectAdvancedInitialState: SelectAdvancedState = {
   options: [],
   selectedOptions: [],
   filteredOptions: [],
   searchValue: ''
 }
 
-interface SelectMultipleState {
+interface SelectAdvancedState {
   options: string[]
   selectedOptions: string[]
   filteredOptions: string[]
   searchValue: string
 }
 
-type SelectMultipleActions =
+type SelectAdvancedActions =
   | {
       type: 'SELECT_OPTION'
       payload: string
@@ -32,9 +32,9 @@ type SelectMultipleActions =
       payload: string
     }
 
-export const selectMultipleReducer = (
-  state: SelectMultipleState,
-  action: SelectMultipleActions
+export const selectAdvancedReducer = (
+  state: SelectAdvancedState,
+  action: SelectAdvancedActions
 ) => {
   switch (action.type) {
     case 'SELECT_OPTION':
@@ -80,25 +80,25 @@ export const selectMultipleReducer = (
   }
 }
 
-export const selectOption = /* istanbul ignore next */ (option: string): SelectMultipleActions => ({
+export const selectOption = /* istanbul ignore next */ (option: string): SelectAdvancedActions => ({
   type: 'SELECT_OPTION',
   payload: option
 })
 
-export const removeOption = /* istanbul ignore next */ (option: string): SelectMultipleActions => ({
+export const removeOption = /* istanbul ignore next */ (option: string): SelectAdvancedActions => ({
   type: 'REMOVE_OPTION',
   payload: option
 })
 
-export const selectAllOptions = /* istanbul ignore next */ (): SelectMultipleActions => ({
+export const selectAllOptions = /* istanbul ignore next */ (): SelectAdvancedActions => ({
   type: 'SELECT_ALL_OPTIONS'
 })
 
-export const deselectAllOptions = /* istanbul ignore next */ (): SelectMultipleActions => ({
+export const deselectAllOptions = /* istanbul ignore next */ (): SelectAdvancedActions => ({
   type: 'DESELECT_ALL_OPTIONS'
 })
 
-export const searchOptions = /* istanbul ignore next */ (value: string): SelectMultipleActions => ({
+export const searchOptions = /* istanbul ignore next */ (value: string): SelectAdvancedActions => ({
   type: 'SEARCH',
   payload: value
 })

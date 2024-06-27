@@ -3,11 +3,11 @@
 @import 'src/lib/assets/styles/design-tokens/typography.module';
 
 :root {
-  --select-multiple-menu-max-height: 300px;
+  --select-advanced-menu-max-height: 300px;
   --toggle-padding: 6px 36px 6px 12px;
 }
 
-.select-multiple-toggle {
+.select-advanced-toggle {
   position: relative;
   display: grid;
   background-color: #fff;
@@ -108,10 +108,10 @@
   }
 }
 
-.select-multiple-menu {
+.select-advanced-menu {
   width: 100%;
   max-width: 100%;
-  max-height: var(--select-multiple-menu-max-height);
+  max-height: var(--select-advanced-menu-max-height);
   padding-top: 0;
   overflow-x: hidden;
   overflow-y: auto;

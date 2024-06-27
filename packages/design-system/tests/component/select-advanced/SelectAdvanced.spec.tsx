@@ -1,12 +1,12 @@
 import {
-  SELECT_MENU_SEARCH_DEBOUNCE_TIME,
-  SelectMultiple
-} from '../../../src/lib/components/select-multiple/SelectMultiple'
+  SelectAdvanced,
+  SELECT_MENU_SEARCH_DEBOUNCE_TIME
+} from '../../../src/lib/components/select-advanced/SelectAdvanced'
 
-describe('SelectMultiple', () => {
+describe('SelectAdvanced', () => {
   it('should render correctly', () => {
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
       />
     )
@@ -16,7 +16,7 @@ describe('SelectMultiple', () => {
 
   it('should render correct options', () => {
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
       />
     )
@@ -33,7 +33,7 @@ describe('SelectMultiple', () => {
 
   it('should render with default values', () => {
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
         defaultValue={['Reading', 'Running']}
       />
@@ -47,7 +47,7 @@ describe('SelectMultiple', () => {
     const onChange = cy.stub().as('onChange')
 
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
         onChange={onChange}
       />
@@ -63,7 +63,7 @@ describe('SelectMultiple', () => {
     const onChange = cy.stub().as('onChange')
 
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
         defaultValue={['Reading', 'Running']}
         onChange={onChange}
@@ -80,7 +80,7 @@ describe('SelectMultiple', () => {
     const onChange = cy.stub().as('onChange')
 
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
         defaultValue={['Reading', 'Running']}
         onChange={onChange}
@@ -92,7 +92,7 @@ describe('SelectMultiple', () => {
 
   it('should select an option and be shown as selected both in the menu as well as in the selected options', () => {
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
       />
     )
@@ -110,7 +110,7 @@ describe('SelectMultiple', () => {
 
   it('should remove a selected option by clicking on an item in the selected options', () => {
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
       />
     )
@@ -126,7 +126,7 @@ describe('SelectMultiple', () => {
 
   it('selects all options', () => {
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
       />
     )
@@ -156,7 +156,7 @@ describe('SelectMultiple', () => {
 
   it('deselects all options', () => {
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
       />
     )
@@ -178,7 +178,7 @@ describe('SelectMultiple', () => {
 
   it('should select all filtered options', () => {
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
       />
     )
@@ -213,7 +213,7 @@ describe('SelectMultiple', () => {
 
   it('should unselect only filtered options', () => {
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
       />
     )
@@ -256,7 +256,7 @@ describe('SelectMultiple', () => {
 
   it('should show correct filtered options when searching for a value', () => {
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
       />
     )
@@ -274,7 +274,7 @@ describe('SelectMultiple', () => {
 
   it('should debounce the search input correctly', () => {
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
       />
     )
@@ -306,7 +306,7 @@ describe('SelectMultiple', () => {
 
   it('should show count of selected options when isSearchable is false', () => {
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
         isSearchable={false}
       />
@@ -321,7 +321,7 @@ describe('SelectMultiple', () => {
 
   it('should show No Options Found and toggle all chebox be disabled when search does not match any option', () => {
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
       />
     )
@@ -335,7 +335,7 @@ describe('SelectMultiple', () => {
 
   it('should be disabled when isDisabled is true', () => {
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
         isDisabled
       />
@@ -346,7 +346,7 @@ describe('SelectMultiple', () => {
 
   it('should be invalid when isInvalid is true', () => {
     cy.mount(
-      <SelectMultiple
+      <SelectAdvanced
         options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
         isInvalid
       />

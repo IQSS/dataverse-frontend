@@ -1,11 +1,11 @@
 import { FormGroup } from '../../../../src/lib/components/form/form-group/FormGroup'
 
-describe('FormSelectMultiple', () => {
+describe('FormSelectAdvanced', () => {
   it('renders without error', () => {
     cy.mount(
       <FormGroup controlId="some-id">
         <FormGroup.Label>Hobbies</FormGroup.Label>
-        <FormGroup.SelectMultiple
+        <FormGroup.SelectAdvanced
           options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
           inputButtonId="some-id"
         />
@@ -19,7 +19,7 @@ describe('FormSelectMultiple', () => {
     cy.mount(
       <FormGroup controlId="some-id">
         <FormGroup.Label>Hobbies</FormGroup.Label>
-        <FormGroup.SelectMultiple
+        <FormGroup.SelectAdvanced
           options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
           inputButtonId="some-id"
         />

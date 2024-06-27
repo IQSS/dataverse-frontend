@@ -1,22 +1,22 @@
 import { ForwardedRef, forwardRef, useEffect, useId, useReducer } from 'react'
 import { Dropdown as DropdownBS } from 'react-bootstrap'
 import {
-  selectMultipleInitialState,
-  selectMultipleReducer,
+  selectAdvancedInitialState,
+  selectAdvancedReducer,
   selectOption,
   removeOption,
   selectAllOptions,
   deselectAllOptions,
   searchOptions
-} from './selectMultipleReducer'
-import { SelectMultipleToggle } from './SelectMultipleToggle'
-import { SelectMultipleMenu } from './SelectMultipleMenu'
+} from './selectAdvancedReducer'
+import { SelectAdvancedToggle } from './SelectAdvancedToggle'
+import { SelectAdvancedMenu } from './SelectAdvancedMenu'
 import { debounce } from './utils'
 import { useIsFirstRender } from './useIsFirstRender'
 
 export const SELECT_MENU_SEARCH_DEBOUNCE_TIME = 400
 
-export interface SelectMultipleProps {
+export interface SelectAdvancedProps {
   options: string[]
   onChange?: (selectedOptions: string[]) => void
   defaultValue?: string[]
@@ -26,7 +26,7 @@ export interface SelectMultipleProps {
   inputButtonId?: string
 }
 
-export const SelectMultiple = forwardRef(
+export const SelectAdvanced = forwardRef(
   (
     {
       options,
@@ -36,13 +36,13 @@ export const SelectMultiple = forwardRef(
       isDisabled = false,
       isInvalid = false,
       inputButtonId
-    }: SelectMultipleProps,
+    }: SelectAdvancedProps,
     ref: ForwardedRef<HTMLInputElement | null>
   ) => {
     const [{ selectedOptions, filteredOptions, searchValue }, dispatch] = useReducer(
-      selectMultipleReducer,
+      selectAdvancedReducer,
       {
-        ...selectMultipleInitialState,
+        ...selectAdvancedInitialState,
         options: options,
         selectedOptions: defaultValue || []
       }
@@ -54,7 +54,7 @@ export const SelectMultiple = forwardRef(
       if (!isFirstRender && onChange) {
         onChange(selectedOptions)
       }
-    }, [selectedOptions])
+    }, [selectedOptions, isFirstRender, onChange])
 
     const handleSearch = debounce((e: React.ChangeEvent<HTMLInputElement>): void => {
       const { value } = e.target
@@ -83,7 +83,7 @@ export const SelectMultiple = forwardRef(
 
     return (
       <DropdownBS autoClose="outside" className={isInvalid ? 'is-invalid' : ''}>
-        <SelectMultipleToggle
+        <SelectAdvancedToggle
           selectedOptions={selectedOptions}
           handleRemoveSelectedOption={handleRemoveSelectedOption}
           isInvalid={isInvalid}
@@ -92,7 +92,7 @@ export const SelectMultiple = forwardRef(
           menuId={menuId}
           ref={ref}
         />
-        <SelectMultipleMenu
+        <SelectAdvancedMenu
           options={options}
           selectedOptions={selectedOptions}
           filteredOptions={filteredOptions}
@@ -108,4 +108,4 @@ export const SelectMultiple = forwardRef(
   }
 )
 
-SelectMultiple.displayName = 'SelectMultiple'
+SelectAdvanced.displayName = 'SelectAdvanced'

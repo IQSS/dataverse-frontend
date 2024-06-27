@@ -1,19 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { SelectMultiple } from '../../components/select-multiple/SelectMultiple'
+import { SelectAdvanced } from '../../components/select-advanced/SelectAdvanced'
 
 /**
  * ## Description
- * The select multiple component is a user interface element that allows users to select multiple options from a list of items.
+ * The select advanced component is a user interface element that allows users to select one or multiple options from a list of items.
  * They can also search for items in the list, select all items, and clear the selection.
  */
-const meta: Meta<typeof SelectMultiple> = {
-  title: 'Select Multiple',
-  component: SelectMultiple,
+const meta: Meta<typeof SelectAdvanced> = {
+  title: 'Select Advanced',
+  component: SelectAdvanced,
   tags: ['autodocs']
 }
 
 export default meta
-type Story = StoryObj<typeof SelectMultiple>
+type Story = StoryObj<typeof SelectAdvanced>
 
 const exampleOptions = [
   'Agricultural Sciences',
@@ -33,11 +33,11 @@ const exampleOptions = [
 ]
 
 export const Default: Story = {
-  render: () => <SelectMultiple options={exampleOptions} />
+  render: () => <SelectAdvanced options={exampleOptions} onChange={(a) => console.log(a)} />
 }
 export const WithDefaultValues: Story = {
   render: () => (
-    <SelectMultiple
+    <SelectAdvanced
       options={exampleOptions}
       defaultValue={[exampleOptions[3], exampleOptions[6]]}
     />
@@ -45,13 +45,13 @@ export const WithDefaultValues: Story = {
 }
 
 export const NotSearchable: Story = {
-  render: () => <SelectMultiple options={exampleOptions} isSearchable={false} />
+  render: () => <SelectAdvanced options={exampleOptions} isSearchable={false} />
 }
 
 export const Invalid: Story = {
-  render: () => <SelectMultiple options={exampleOptions} isInvalid />
+  render: () => <SelectAdvanced options={exampleOptions} isInvalid />
 }
 
 export const Disabled: Story = {
-  render: () => <SelectMultiple options={exampleOptions} isDisabled />
+  render: () => <SelectAdvanced options={exampleOptions} isDisabled />
 }

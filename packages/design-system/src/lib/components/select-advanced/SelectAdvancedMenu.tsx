@@ -1,8 +1,8 @@
 import { useId } from 'react'
 import { Dropdown as DropdownBS, Form as FormBS } from 'react-bootstrap'
-import styles from './SelectMultiple.module.scss'
+import styles from './SelectAdvanced.module.scss'
 
-interface SelectMultipleMenuProps {
+interface SelectAdvancedMenuProps {
   options: string[]
   selectedOptions: string[]
   filteredOptions: string[]
@@ -14,7 +14,7 @@ interface SelectMultipleMenuProps {
   menuId: string
 }
 
-export const SelectMultipleMenu = ({
+export const SelectAdvancedMenu = ({
   options,
   selectedOptions,
   filteredOptions,
@@ -24,7 +24,7 @@ export const SelectMultipleMenu = ({
   handleCheck,
   isSearchable,
   menuId
-}: SelectMultipleMenuProps) => {
+}: SelectAdvancedMenuProps) => {
   const searchInputControlID = useId()
   const toggleAllControlID = useId()
 
@@ -42,7 +42,7 @@ export const SelectMultipleMenu = ({
     <DropdownBS.Menu
       as="menu"
       id={menuId}
-      className={styles['select-multiple-menu']}
+      className={styles['select-advanced-menu']}
       popperConfig={{
         modifiers: [
           {

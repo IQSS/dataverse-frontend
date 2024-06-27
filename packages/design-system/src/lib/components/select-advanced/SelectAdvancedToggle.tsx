@@ -1,9 +1,9 @@
 import { ForwardedRef, forwardRef } from 'react'
 import { Dropdown as DropdownBS, Button as ButtonBS } from 'react-bootstrap'
 import { X as CloseIcon } from 'react-bootstrap-icons'
-import styles from './SelectMultiple.module.scss'
+import styles from './SelectAdvanced.module.scss'
 
-interface SelectMultipleToggleProps {
+interface SelectAdvancedToggleProps {
   selectedOptions: string[]
   handleRemoveSelectedOption: (option: string) => void
   isInvalid?: boolean
@@ -12,7 +12,7 @@ interface SelectMultipleToggleProps {
   menuId: string
 }
 
-export const SelectMultipleToggle = forwardRef(
+export const SelectAdvancedToggle = forwardRef(
   (
     {
       selectedOptions,
@@ -21,12 +21,12 @@ export const SelectMultipleToggle = forwardRef(
       isDisabled,
       inputButtonId,
       menuId
-    }: SelectMultipleToggleProps,
+    }: SelectAdvancedToggleProps,
     ref: ForwardedRef<HTMLInputElement | null>
   ) => {
     return (
       <div
-        className={`${styles['select-multiple-toggle']} ${isDisabled ? styles['disabled'] : ''}`}>
+        className={`${styles['select-advanced-toggle']} ${isDisabled ? styles['disabled'] : ''}`}>
         <DropdownBS.Toggle
           ref={ref}
           as="input"
@@ -37,11 +37,11 @@ export const SelectMultipleToggle = forwardRef(
           aria-invalid={isInvalid}
           aria-label="Toggle options menu"
           aria-controls={menuId}
-          className={`${styles['select-multiple-toggle__input-button']} ${
+          className={`${styles['select-advanced-toggle__input-button']} ${
             isInvalid ? styles['invalid'] : ''
           }`}
         />
-        <div className={styles['select-multiple-toggle__inner-content']}>
+        <div className={styles['select-advanced-toggle__inner-content']}>
           {selectedOptions.length > 0 ? (
             <div
               className={styles['selected-options-container']}
@@ -70,4 +70,4 @@ export const SelectMultipleToggle = forwardRef(
   }
 )
 
-SelectMultipleToggle.displayName = 'SelectMultipleToggle'
+SelectAdvancedToggle.displayName = 'SelectAdvancedToggle'

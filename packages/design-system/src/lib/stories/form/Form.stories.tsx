@@ -212,17 +212,17 @@ export const Select: Story = {
   )
 }
 
-export const SelectMultiple: Story = {
+export const SelectAdvanced: Story = {
   render: () => (
     <Form>
       <Form.Group>
-        <Form.Group.Label htmlFor="basic-form-select-multiple" column sm={3}>
+        <Form.Group.Label htmlFor="basic-form-select-advanced" column sm={3}>
           Hobbies
         </Form.Group.Label>
         <Col sm={9}>
-          <Form.Group.SelectMultiple
+          <Form.Group.SelectAdvanced
             options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
-            inputButtonId="basic-form-select-multiple"
+            inputButtonId="basic-form-select-advanced"
           />
         </Col>
       </Form.Group>
