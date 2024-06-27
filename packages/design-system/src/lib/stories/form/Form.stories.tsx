@@ -221,7 +221,26 @@ export const SelectAdvanced: Story = {
         </Form.Group.Label>
         <Col sm={9}>
           <Form.Group.SelectAdvanced
-            options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
+            initialOptions={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
+            inputButtonId="basic-form-select-advanced"
+          />
+        </Col>
+      </Form.Group>
+    </Form>
+  )
+}
+
+export const SelectAdvancedMultiple: Story = {
+  render: () => (
+    <Form>
+      <Form.Group>
+        <Form.Group.Label htmlFor="basic-form-select-advanced" column sm={3}>
+          Hobbies
+        </Form.Group.Label>
+        <Col sm={9}>
+          <Form.Group.SelectAdvanced
+            isMultiple
+            initialOptions={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
             inputButtonId="basic-form-select-advanced"
           />
         </Col>

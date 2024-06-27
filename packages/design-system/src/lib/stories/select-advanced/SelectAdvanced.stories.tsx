@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { SelectAdvanced } from '../../components/select-advanced/SelectAdvanced'
+import { CanvasFixedHeight } from '../CanvasFixedHeight'
 
 /**
  * ## Description
  * The select advanced component is a user interface element that allows users to select one or multiple options from a list of items.
- * They can also search for items in the list, select all items, and clear the selection.
+ * They can also search for items in the list, select all items and clear the selection (last two on multiple selection mode).
  */
 const meta: Meta<typeof SelectAdvanced> = {
   title: 'Select Advanced',
@@ -15,61 +16,78 @@ const meta: Meta<typeof SelectAdvanced> = {
 export default meta
 type Story = StoryObj<typeof SelectAdvanced>
 
-const exampleOptions = [
-  'Agricultural Sciences',
-  'Arts and Humanities',
-  'Astronomy and Astrophysics',
-  'Business and Management',
-  'Chemistry',
-  'Computer and Information Science',
-  'Earth and Environmental Sciences',
-  'Engineering',
-  'Law',
-  'Mathematical Sciences',
-  'Medicine, Health and Life Sciences',
-  'Physics',
-  'Social Sciences',
-  'Other'
-]
+const exampleOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4']
 
 export const Single: Story = {
-  render: () => <SelectAdvanced initialOptions={exampleOptions} />
+  render: () => (
+    <CanvasFixedHeight height={250}>
+      <SelectAdvanced initialOptions={exampleOptions} />
+    </CanvasFixedHeight>
+  )
 }
 export const Multiple: Story = {
-  render: () => <SelectAdvanced isMultiple initialOptions={exampleOptions} />
+  render: () => (
+    <CanvasFixedHeight height={250}>
+      <SelectAdvanced isMultiple initialOptions={exampleOptions} />
+    </CanvasFixedHeight>
+  )
 }
 
-export const SingleWithDefaultValues: Story = {
-  render: () => <SelectAdvanced initialOptions={exampleOptions} defaultValue={exampleOptions[3]} />
+export const SingleWithDefaultValue: Story = {
+  render: () => (
+    <CanvasFixedHeight height={250}>
+      <SelectAdvanced initialOptions={exampleOptions} defaultValue={exampleOptions[2]} />
+    </CanvasFixedHeight>
+  )
 }
 export const MultipleWithDefaultValues: Story = {
   render: () => (
-    <SelectAdvanced
-      isMultiple
-      initialOptions={exampleOptions}
-      defaultValue={[exampleOptions[3], exampleOptions[6]]}
-    />
+    <CanvasFixedHeight height={250}>
+      <SelectAdvanced
+        isMultiple
+        initialOptions={exampleOptions}
+        defaultValue={[exampleOptions[0], exampleOptions[2]]}
+      />
+    </CanvasFixedHeight>
   )
 }
 
 export const SingleNotSearchable: Story = {
-  render: () => <SelectAdvanced initialOptions={exampleOptions} isSearchable={false} />
+  render: () => (
+    <CanvasFixedHeight height={250}>
+      <SelectAdvanced initialOptions={exampleOptions} isSearchable={false} />
+    </CanvasFixedHeight>
+  )
 }
 
 export const MultipleNotSearchable: Story = {
-  render: () => <SelectAdvanced isMultiple initialOptions={exampleOptions} isSearchable={false} />
+  render: () => (
+    <CanvasFixedHeight height={250}>
+      <SelectAdvanced isMultiple initialOptions={exampleOptions} isSearchable={false} />
+    </CanvasFixedHeight>
+  )
 }
 
 export const Invalid: Story = {
-  render: () => <SelectAdvanced initialOptions={exampleOptions} isInvalid />
+  render: () => (
+    <CanvasFixedHeight height={250}>
+      <SelectAdvanced initialOptions={exampleOptions} isInvalid />
+    </CanvasFixedHeight>
+  )
 }
 
 export const Disabled: Story = {
-  render: () => <SelectAdvanced initialOptions={exampleOptions} isDisabled />
+  render: () => (
+    <CanvasFixedHeight height={250}>
+      <SelectAdvanced initialOptions={exampleOptions} isDisabled />
+    </CanvasFixedHeight>
+  )
 }
 
 export const WithDifferentSelectWord: Story = {
   render: () => (
-    <SelectAdvanced initialOptions={exampleOptions} locales={{ select: 'Selezionare...' }} />
+    <CanvasFixedHeight height={250}>
+      <SelectAdvanced initialOptions={exampleOptions} locales={{ select: 'Selezionare...' }} />
+    </CanvasFixedHeight>
   )
 }

@@ -83,7 +83,6 @@ export const SelectAdvanced = forwardRef(
 
     const handleSearch = debounce((e: React.ChangeEvent<HTMLInputElement>): void => {
       const { value } = e.target
-      console.log({ value })
       dispatch(searchOptions(value))
     }, SELECT_MENU_SEARCH_DEBOUNCE_TIME)
 
