@@ -130,4 +130,22 @@ describe('FormRadio', () => {
     cy.findByText('Invalid radio').should('not.be.visible')
     cy.findByText('Valid radio').should('be.visible')
   })
+  describe('FormRadioGroup', () => {
+    it('calls the onChange prop when a radio button is clicked', () => {
+      const handleChange = cy.stub()
+      const option1Label = 'Test Label 1'
+      const radioName = 'radio-name'
+
+      cy.mount(
+        <FormRadioGroup title="Radio" onChange={handleChange}>
+          <FormGroup.Radio id="radio-1" label={option1Label} name={radioName} />
+        </FormRadioGroup>
+      )
+
+      const radio1 = cy.findByLabelText(option1Label)
+      radio1.click()
+
+      cy.wrap(handleChange).should('have.been.calledOnce')
+    })
+  })
 })

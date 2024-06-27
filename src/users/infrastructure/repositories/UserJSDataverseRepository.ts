@@ -13,7 +13,8 @@ export class UserJSDataverseRepository implements UserRepository {
       .then((authenticatedUser: AuthenticatedUser) => {
         return {
           name: authenticatedUser.displayName,
-          persistentId: authenticatedUser.persistentUserId
+          persistentId: authenticatedUser.persistentUserId,
+          superuser: authenticatedUser.superuser
         }
       })
       .catch((error: ReadError) => {

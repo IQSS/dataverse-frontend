@@ -68,6 +68,15 @@ Cypress.Commands.add('mountAuthenticated', (component: ReactNode) => {
   return cy.customMount(<SessionProvider repository={userRepository}>{component}</SessionProvider>)
 })
 
+Cypress.Commands.add('mountSuperuser', (component: ReactNode) => {
+  const user = UserMother.createSuperUser()
+  const userRepository = {} as UserRepository
+  userRepository.getAuthenticated = cy.stub().resolves(user)
+  userRepository.removeAuthenticated = cy.stub().resolves()
+
+  return cy.customMount(<SessionProvider repository={userRepository}>{component}</SessionProvider>)
+})
+
 Cypress.Commands.add('loginAsAdmin', (go?: string) => {
   cy.visit('/')
   cy.get('#topNavBar').then((navbar) => {

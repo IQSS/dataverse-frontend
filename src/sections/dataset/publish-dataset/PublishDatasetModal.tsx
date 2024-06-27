@@ -6,6 +6,8 @@ import { usePublishDataset } from './usePublishDataset'
 import { VersionUpdateType } from '../../../dataset/domain/models/VersionUpdateType'
 import { Form } from '@iqss/dataverse-design-system'
 import { useState } from 'react'
+import { useSession } from '../../session/SessionContext'
+
 interface PublishDatasetModalProps {
   show: boolean
   repository: DatasetRepository
@@ -22,6 +24,7 @@ export function PublishDatasetModal({
   handleClose
 }: PublishDatasetModalProps) {
   const { t } = useTranslation('publishDataset')
+  const { user } = useSession()
   const onPublishErrorCallback = () => {
     //TODO: Implement
   }
@@ -46,7 +49,7 @@ export function PublishDatasetModal({
       <Modal.Body>
         <p>Click to Publish the Dataset</p>
         {releasedVersionExists && (
-          <Form.RadioGroup title={'Update Version'}>
+          <Form.RadioGroup onChange={handleVersionUpdateTypeChange} title={'Update Version'}>
             <Form.Group.Radio
               defaultChecked
               onClick={handleVersionUpdateTypeChange}
@@ -62,13 +65,15 @@ export function PublishDatasetModal({
               id="update-type-major"
               value={VersionUpdateType.MAJOR}
             />
-            <Form.Group.Radio
-              onClick={handleVersionUpdateTypeChange}
-              name="update-type"
-              label="Update Current Version"
-              id="update-type-current"
-              value="version-update-current"
-            />
+            {user?.superuser && (
+              <Form.Group.Radio
+                onClick={handleVersionUpdateTypeChange}
+                name="update-type"
+                label="Update Current Version"
+                id="update-type-current"
+                value={VersionUpdateType.UPDATE_CURRENT}
+              />
+            )}
           </Form.RadioGroup>
         )}
       </Modal.Body>

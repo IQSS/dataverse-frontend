@@ -29,4 +29,46 @@ describe('PublishDatasetModal', () => {
       VersionUpdateType.MAJOR
     )
   })
+  describe('PublishDatasetModal', () => {
+    it('renders the third radio button when user.superuser is true', () => {
+      // Mock the useSession hook
+
+      const handleClose = cy.stub()
+      const repository = {} as DatasetRepository // Mock the repository as needed
+      repository.publish = cy.stub().as('repositoryPublish').resolves()
+      cy.mountSuperuser(
+        <PublishDatasetModal
+          show={true}
+          repository={repository}
+          persistentId="testPersistentId"
+          releasedVersionExists={true}
+          handleClose={handleClose}
+        />
+      )
+
+      // Check if the third radio button is rendered
+      cy.findByText('Update Current Version').should('exist')
+    })
+  })
+  describe('PublishDatasetModal', () => {
+    it('does not the third radio button when user.superuser is false', () => {
+      // Mock the useSession hook
+
+      const handleClose = cy.stub()
+      const repository = {} as DatasetRepository // Mock the repository as needed
+      repository.publish = cy.stub().as('repositoryPublish').resolves()
+      cy.mountAuthenticated(
+        <PublishDatasetModal
+          show={true}
+          repository={repository}
+          persistentId="testPersistentId"
+          releasedVersionExists={true}
+          handleClose={handleClose}
+        />
+      )
+
+      // Check if the third radio button is rendered
+      cy.findByText('Update Current Version').should('not.exist')
+    })
+  })
 })

@@ -1,4 +1,5 @@
 export enum VersionUpdateType {
   MAJOR = 'major',
-  MINOR = 'minor'
+  MINOR = 'minor',
+  UPDATE_CURRENT = 'updateCurrent'
 }
