@@ -32,26 +32,44 @@ const exampleOptions = [
   'Other'
 ]
 
-export const Default: Story = {
-  render: () => <SelectAdvanced options={exampleOptions} onChange={(a) => console.log(a)} />
+export const Single: Story = {
+  render: () => <SelectAdvanced initialOptions={exampleOptions} />
 }
-export const WithDefaultValues: Story = {
+export const Multiple: Story = {
+  render: () => <SelectAdvanced isMultiple initialOptions={exampleOptions} />
+}
+
+export const SingleWithDefaultValues: Story = {
+  render: () => <SelectAdvanced initialOptions={exampleOptions} defaultValue={exampleOptions[3]} />
+}
+export const MultipleWithDefaultValues: Story = {
   render: () => (
     <SelectAdvanced
-      options={exampleOptions}
+      isMultiple
+      initialOptions={exampleOptions}
       defaultValue={[exampleOptions[3], exampleOptions[6]]}
     />
   )
 }
 
-export const NotSearchable: Story = {
-  render: () => <SelectAdvanced options={exampleOptions} isSearchable={false} />
+export const SingleNotSearchable: Story = {
+  render: () => <SelectAdvanced initialOptions={exampleOptions} isSearchable={false} />
+}
+
+export const MultipleNotSearchable: Story = {
+  render: () => <SelectAdvanced isMultiple initialOptions={exampleOptions} isSearchable={false} />
 }
 
 export const Invalid: Story = {
-  render: () => <SelectAdvanced options={exampleOptions} isInvalid />
+  render: () => <SelectAdvanced initialOptions={exampleOptions} isInvalid />
 }
 
 export const Disabled: Story = {
-  render: () => <SelectAdvanced options={exampleOptions} isDisabled />
+  render: () => <SelectAdvanced initialOptions={exampleOptions} isDisabled />
+}
+
+export const WithDifferentSelectWord: Story = {
+  render: () => (
+    <SelectAdvanced initialOptions={exampleOptions} locales={{ select: 'Selezionare...' }} />
+  )
 }

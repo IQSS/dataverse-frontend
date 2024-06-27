@@ -3,24 +3,28 @@ import { Dropdown as DropdownBS, Button as ButtonBS } from 'react-bootstrap'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import styles from './SelectAdvanced.module.scss'
 
-interface SelectAdvancedToggleProps {
-  selectedOptions: string[]
+type SelectAdvancedToggleProps = {
+  isMultiple: boolean
+  selected: string | string[]
   handleRemoveSelectedOption: (option: string) => void
   isInvalid?: boolean
   isDisabled?: boolean
   inputButtonId?: string
   menuId: string
+  selectWord: string
 }
 
 export const SelectAdvancedToggle = forwardRef(
   (
     {
-      selectedOptions,
+      isMultiple,
+      selected,
       handleRemoveSelectedOption,
       isInvalid,
       isDisabled,
       inputButtonId,
-      menuId
+      menuId,
+      selectWord
     }: SelectAdvancedToggleProps,
     ref: ForwardedRef<HTMLInputElement | null>
   ) => {
@@ -42,27 +46,36 @@ export const SelectAdvancedToggle = forwardRef(
           }`}
         />
         <div className={styles['select-advanced-toggle__inner-content']}>
-          {selectedOptions.length > 0 ? (
+          {selected.length > 0 ? (
             <div
-              className={styles['selected-options-container']}
+              className={styles['multiple-selected-options-container']}
               aria-label="List of selected options">
-              {selectedOptions.map((selectedOption) => (
-                <div
-                  className={styles['selected-options-container__item']}
+              {isMultiple ? (
+                (selected as string[]).map((selectedValue) => (
+                  <div
+                    className={styles['multiple-selected-options-container__item']}
+                    onClick={(e) => e.stopPropagation()}
+                    key={`selected-option-${selectedValue}`}>
+                    <span className="me-2">{selectedValue}</span>
+                    <ButtonBS
+                      variant="primary"
+                      aria-label={`Remove ${selectedValue} option`}
+                      onClick={() => handleRemoveSelectedOption(selectedValue)}>
+                      <CloseIcon size={14} />
+                    </ButtonBS>
+                  </div>
+                ))
+              ) : (
+                <p
+                  className={styles['single-selected-option']}
                   onClick={(e) => e.stopPropagation()}
-                  key={`selected-option-${selectedOption}`}>
-                  <span className="me-2">{selectedOption}</span>
-                  <ButtonBS
-                    variant="primary"
-                    aria-label={`Remove ${selectedOption} option`}
-                    onClick={() => handleRemoveSelectedOption(selectedOption)}>
-                    <CloseIcon size={14} />
-                  </ButtonBS>
-                </div>
-              ))}
+                  key={`selected-option-${selected as string}`}>
+                  {selected}
+                </p>
+              )}
             </div>
           ) : (
-            'Select...'
+            selectWord
           )}
         </div>
       </div>

@@ -1,13 +1,21 @@
-export const selectAdvancedInitialState: SelectAdvancedState = {
-  options: [],
-  selectedOptions: [],
+export const getSelectAdvancedInitialState = (
+  isMultiple: boolean,
+  initialOptions: string[],
+  defaultValue?: string | string[]
+): SelectAdvancedState => ({
+  options: initialOptions,
+  selected: isMultiple
+    ? (defaultValue as string[] | undefined) ?? []
+    : (defaultValue as string | undefined) ?? '',
   filteredOptions: [],
-  searchValue: ''
-}
+  searchValue: '',
+  isMultiple
+})
 
 interface SelectAdvancedState {
+  isMultiple: boolean
+  selected: string | string[]
   options: string[]
-  selectedOptions: string[]
   filteredOptions: string[]
   searchValue: string
 }
@@ -38,32 +46,48 @@ export const selectAdvancedReducer = (
 ) => {
   switch (action.type) {
     case 'SELECT_OPTION':
-      return {
-        ...state,
-        selectedOptions: [...state.selectedOptions, action.payload]
+      if (state.isMultiple) {
+        return {
+          ...state,
+          selected: Array.isArray(state.selected)
+            ? [...state.selected, action.payload]
+            : [action.payload]
+        }
+      } else {
+        return {
+          ...state,
+          selected: action.payload
+        }
       }
     case 'REMOVE_OPTION':
-      return {
-        ...state,
-        selectedOptions: state.selectedOptions.filter((option) => option !== action.payload)
+      if (state.isMultiple && Array.isArray(state.selected)) {
+        return {
+          ...state,
+          selected: state.selected.filter((option) => option !== action.payload)
+        }
+      } else {
+        return {
+          ...state,
+          selected: ''
+        }
       }
     case 'SELECT_ALL_OPTIONS':
-      return {
-        ...state,
-        selectedOptions:
-          state.filteredOptions.length > 0
-            ? Array.from(new Set([...state.selectedOptions, ...state.filteredOptions]))
-            : state.options
+      if (state.isMultiple) {
+        return {
+          ...state,
+          selected:
+            state.filteredOptions.length > 0
+              ? Array.from(new Set([...state.selected, ...state.filteredOptions]))
+              : state.options
+        }
+      } else {
+        return state
       }
     case 'DESELECT_ALL_OPTIONS':
       return {
         ...state,
-        selectedOptions:
-          state.filteredOptions.length > 0
-            ? state.selectedOptions.filter((option) => !state.filteredOptions.includes(option))
-            : []
+        selected: state.isMultiple ? [] : ''
       }
-
     case 'SEARCH':
       return {
         ...state,
@@ -75,10 +99,64 @@ export const selectAdvancedReducer = (
             : [],
         searchValue: action.payload
       }
+    // case 'TOGGLE_SELECTION_MODE':
+    //   return {
+    //     ...state,
+    //     isMultiple: action.payload,
+    //     selected: action.payload ? [] : ''
+    //   }
     default:
       return state
   }
 }
+
+// export const selectAdvancedReducer = (
+//   state: SelectAdvancedState,
+//   action: SelectAdvancedActions
+// ) => {
+//   switch (action.type) {
+//     case 'SELECT_OPTION':
+//       return {
+//         ...state,
+//         selected: [...state.selected, action.payload]
+//       }
+//     case 'REMOVE_OPTION':
+//       return {
+//         ...state,
+//         selected: state.selected.filter((option) => option !== action.payload)
+//       }
+//     case 'SELECT_ALL_OPTIONS':
+//       return {
+//         ...state,
+//         selected:
+//           state.filteredOptions.length > 0
+//             ? Array.from(new Set([...state.selected, ...state.filteredOptions]))
+//             : state.options
+//       }
+//     case 'DESELECT_ALL_OPTIONS':
+//       return {
+//         ...state,
+//         selected:
+//           state.filteredOptions.length > 0
+//             ? state.selected.filter((option) => !state.filteredOptions.includes(option))
+//             : []
+//       }
+
+//     case 'SEARCH':
+//       return {
+//         ...state,
+//         filteredOptions:
+//           action.payload !== ''
+//             ? state.options.filter((option) =>
+//                 option.toLowerCase().includes(action.payload.toLowerCase())
+//               )
+//             : [],
+//         searchValue: action.payload
+//       }
+//     default:
+//       return state
+//   }
+// }
 
 export const selectOption = /* istanbul ignore next */ (option: string): SelectAdvancedActions => ({
   type: 'SELECT_OPTION',

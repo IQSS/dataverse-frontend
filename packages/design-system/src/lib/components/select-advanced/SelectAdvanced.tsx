@@ -1,63 +1,89 @@
 import { ForwardedRef, forwardRef, useEffect, useId, useReducer } from 'react'
 import { Dropdown as DropdownBS } from 'react-bootstrap'
 import {
-  selectAdvancedInitialState,
   selectAdvancedReducer,
   selectOption,
   removeOption,
   selectAllOptions,
   deselectAllOptions,
-  searchOptions
+  searchOptions,
+  getSelectAdvancedInitialState
 } from './selectAdvancedReducer'
 import { SelectAdvancedToggle } from './SelectAdvancedToggle'
 import { SelectAdvancedMenu } from './SelectAdvancedMenu'
 import { debounce } from './utils'
 import { useIsFirstRender } from './useIsFirstRender'
 
+export const DEFAULT_LOCALES = {
+  select: 'Select...'
+}
+
 export const SELECT_MENU_SEARCH_DEBOUNCE_TIME = 400
 
-export interface SelectAdvancedProps {
-  options: string[]
-  onChange?: (selectedOptions: string[]) => void
-  defaultValue?: string[]
-  isSearchable?: boolean
-  isDisabled?: boolean
-  isInvalid?: boolean
-  inputButtonId?: string
-}
+export type SelectAdvancedProps =
+  | {
+      isMultiple?: false
+      initialOptions: string[]
+      onChange?: (selected: string) => void
+      defaultValue?: string
+      isSearchable?: boolean
+      isDisabled?: boolean
+      isInvalid?: boolean
+      inputButtonId?: string
+      locales?: {
+        select?: string
+      }
+    }
+  | {
+      isMultiple: true
+      initialOptions: string[]
+      onChange?: (selected: string[]) => void
+      defaultValue?: string[]
+      isSearchable?: boolean
+      isDisabled?: boolean
+      isInvalid?: boolean
+      inputButtonId?: string
+      locales?: {
+        select?: string
+      }
+    }
 
 export const SelectAdvanced = forwardRef(
   (
     {
-      options,
+      initialOptions,
       onChange,
       defaultValue,
+      isMultiple,
       isSearchable = true,
       isDisabled = false,
       isInvalid = false,
-      inputButtonId
+      inputButtonId,
+      locales
     }: SelectAdvancedProps,
     ref: ForwardedRef<HTMLInputElement | null>
   ) => {
-    const [{ selectedOptions, filteredOptions, searchValue }, dispatch] = useReducer(
+    const dynamicInitialOptions = isMultiple
+      ? initialOptions
+      : [locales?.select ?? DEFAULT_LOCALES.select, ...initialOptions]
+
+    const [{ selected, filteredOptions, searchValue, options }, dispatch] = useReducer(
       selectAdvancedReducer,
-      {
-        ...selectAdvancedInitialState,
-        options: options,
-        selectedOptions: defaultValue || []
-      }
+      getSelectAdvancedInitialState(Boolean(isMultiple), dynamicInitialOptions, defaultValue)
     )
+
     const isFirstRender = useIsFirstRender()
     const menuId = useId()
 
     useEffect(() => {
       if (!isFirstRender && onChange) {
-        onChange(selectedOptions)
+        isMultiple ? onChange(selected as string[]) : onChange(selected as string)
       }
-    }, [selectedOptions, isFirstRender, onChange])
+    }, [isMultiple, selected, isFirstRender, onChange])
 
     const handleSearch = debounce((e: React.ChangeEvent<HTMLInputElement>): void => {
       const { value } = e.target
+      console.log({ value })
       dispatch(searchOptions(value))
     }, SELECT_MENU_SEARCH_DEBOUNCE_TIME)
 
@@ -69,6 +95,13 @@ export const SelectAdvanced = forwardRef(
       } else {
         dispatch(removeOption(value))
       }
+    }
+
+    const handleClickOption = (option: string): void => {
+      if ((selected as string) === option) {
+        return
+      }
+      dispatch(selectOption(option))
     }
 
     const handleRemoveSelectedOption = (option: string): void => dispatch(removeOption(option))
@@ -84,24 +117,29 @@ export const SelectAdvanced = forwardRef(
     return (
       <DropdownBS autoClose="outside" className={isInvalid ? 'is-invalid' : ''}>
         <SelectAdvancedToggle
-          selectedOptions={selectedOptions}
+          isMultiple={Boolean(isMultiple)}
+          selected={selected}
           handleRemoveSelectedOption={handleRemoveSelectedOption}
           isInvalid={isInvalid}
           isDisabled={isDisabled}
           inputButtonId={inputButtonId}
           menuId={menuId}
+          selectWord={locales?.select ?? DEFAULT_LOCALES.select}
           ref={ref}
         />
         <SelectAdvancedMenu
+          isMultiple={Boolean(isMultiple)}
           options={options}
-          selectedOptions={selectedOptions}
+          selected={selected}
           filteredOptions={filteredOptions}
           searchValue={searchValue}
           handleToggleAllOptions={handleToggleAllOptions}
           handleSearch={handleSearch}
           handleCheck={handleCheck}
+          handleClickOption={handleClickOption}
           isSearchable={isSearchable}
           menuId={menuId}
+          selectWord={locales?.select ?? DEFAULT_LOCALES.select}
         />
       </DropdownBS>
     )

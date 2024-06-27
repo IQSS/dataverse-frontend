@@ -77,7 +77,7 @@
     padding: var(--toggle-padding);
     pointer-events: none;
 
-    .selected-options-container {
+    .multiple-selected-options-container {
       display: inline-flex;
       flex: 1;
       flex-wrap: wrap;
@@ -104,6 +104,10 @@
           border-radius: 50%;
         }
       }
+    }
+
+    .single-selected-option {
+      margin: 0;
     }
   }
 }
@@ -155,5 +159,11 @@
         width: 100%;
       }
     }
+  }
+
+  .option-item-not-multiple {
+    margin-bottom: 0.125rem;
+    cursor: pointer;
+    transition: background-color 0.1s ease-in-out;
   }
 }
