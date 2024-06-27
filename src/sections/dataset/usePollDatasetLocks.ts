@@ -18,6 +18,8 @@ const usePollDatasetLocks = (
   }
 
   useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null
+
     if (publishInPogress && dataset) {
       const gotoReleasedPageAfterPublish = async () => {
         const initialLocks = await getDatasetLocks(datasetRepository, dataset.persistentId)
@@ -25,19 +27,19 @@ const usePollDatasetLocks = (
         if (initialLocks.length === 0) {
           navigateToDataset(dataset.persistentId)
         } else {
-          const intervalId = setInterval(() => {
+          intervalId = setInterval(() => {
             console.log('polling locks')
             const pollLocks = async () => {
               try {
                 const locks = await getDatasetLocks(datasetRepository, dataset.persistentId)
                 if (locks.length === 0) {
                   console.log('navigating to released version')
-                  clearInterval(intervalId)
+                  if (intervalId) clearInterval(intervalId)
                   navigateToDataset(dataset.persistentId)
                 }
               } catch (error) {
                 console.error('Error getting dataset locks:', error)
-                clearInterval(intervalId)
+                if (intervalId) clearInterval(intervalId)
               }
             }
             void pollLocks()
@@ -46,7 +48,12 @@ const usePollDatasetLocks = (
       }
       void gotoReleasedPageAfterPublish()
     }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId)
+      }
+    }
   }, [publishInPogress, dataset, datasetRepository, navigate])
 }
-
 export default usePollDatasetLocks
