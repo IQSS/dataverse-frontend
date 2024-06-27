@@ -431,7 +431,7 @@ describe('UploadDatasetFiles', () => {
     cy.get('[type="checkbox"]').last().should('be.checked')
     cy.findByText('Edit files').first().click()
     cy.findByText('Restrict').first().click()
-    cy.findByTitle('Cancel changes').click()
+    cy.findByTitle('Cancel Changes').click()
     cy.get('[type="checkbox"]').last().should('be.checked')
     cy.get('[type="checkbox"]').first().click()
     cy.get('[type="checkbox"]').first().click()
@@ -496,5 +496,36 @@ describe('UploadDatasetFiles', () => {
     cy.findByText('2 files uploaded').should('exist')
     cy.get('label:contains("Tags")').first().click()
     cy.get('label:contains("Tags")').first().click()
+  })
+
+  it('add tags', () => {
+    const testDataset = DatasetMother.create()
+
+    mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
+
+    cy.findByTestId('drag-and-drop').as('dnd')
+    cy.get('@dnd').should('exist')
+
+    cy.get('@dnd').selectFile(
+      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+      { action: 'drag-drop' }
+    )
+    // wait for upload to finish
+    cy.findByText('1 file uploaded').should('exist')
+    cy.get('[type="checkbox"]').first().click()
+    cy.findByText('Edit files').first().click()
+    cy.findByText('Add tags').first().click()
+    cy.findByTitle('Custom tag').type('Hello, World!')
+    cy.findByText('Apply').click()
+    cy.findByTitle('Cancel Changes').click()
+    cy.findByText('Edit files').first().click()
+    cy.findByText('Add tags').first().click()
+    cy.findByTitle('Custom tag').type('Hello, World!{enter}')
+    cy.findByLabelText('Close').click()
+    cy.findByText('Edit files').first().click()
+    cy.findByText('Add tags').first().click()
+    cy.findByTitle('Select tags to add').first().click()
+    cy.findByText('Hello, World!').click()
+    cy.findByTitle('Save Changes').click()
   })
 })

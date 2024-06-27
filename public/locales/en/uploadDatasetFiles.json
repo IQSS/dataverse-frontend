@@ -27,7 +27,7 @@
     "termsOfAccess": "Terms of Access for Restricted Files",
     "enableAccessRequest": "Enable access request",
     "saveChanges": "Save Changes",
-    "cancelChanges": "Cancel changes"
+    "cancelChanges": "Cancel Changes"
   },
   "fileForm": {
     "fileName": "File name",
@@ -54,7 +54,9 @@
   },
   "addTags": {
     "title": "Add tags to selected files",
+    "customTag": "Custom tag",
+    "selectTags": "Select tags to add",
     "saveChanges": "Save Changes",
-    "cancelChanges": "Cancel changes"
+    "cancelChanges": "Cancel Changes"
   }
 }

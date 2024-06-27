@@ -46,7 +46,7 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
                 {t('fileForm.tags')}
               </Form.Group.Label>
               <Col sm={9} className={styles.tags}>
-                <div className={styles.tags_select} title={t('fileForm.selectTags')}>
+                <div className={styles.tags_select} title={t('addTags.selectTags')}>
                   <SelectMultiple
                     options={availableTags}
                     onChange={(newTags) => setTagsToAdd(newTags)}></SelectMultiple>
@@ -64,6 +64,7 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
                     type="text"
                     placeholder={t('tags.addNewTag')}
                     value={tag}
+                    title={t('addTags.customTag')}
                     onChange={(event: FormEvent<HTMLInputElement>) =>
                       setTag(event.currentTarget.value)
                     }
@@ -91,14 +92,15 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
         <Button
           variant="primary"
           onClick={() => handleClose(true)}
-          disabled={tagsToAdd.length === 0}>
+          disabled={tagsToAdd.length === 0}
+          title={t('addTags.saveChanges')}>
           {t('addTags.saveChanges')}
         </Button>
         <Button
           variant="secondary"
           onClick={() => handleClose(false)}
           title={t('addTags.cancelChanges')}>
-          {t('cancel')}
+          {t('addTags.cancelChanges')}
         </Button>
       </Modal.Footer>
     </Modal>
