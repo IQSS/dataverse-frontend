@@ -6,6 +6,11 @@
 
 .files {
     display: grid;
+    grid-template-columns: repeat(4, auto);
+}
+
+.uploaded_files {
+    display: grid;
     grid-template-columns: 4rem auto auto auto 3.5rem;
 }
 
@@ -72,4 +77,9 @@
 .selected_files_cb {
     display: inline-flex;
     align-items: center;
+}
+
+.save_btn {
+    padding-top: 1rem;
+    float: right;
 }

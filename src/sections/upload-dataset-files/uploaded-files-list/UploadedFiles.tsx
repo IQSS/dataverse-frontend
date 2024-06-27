@@ -92,6 +92,10 @@ export function UploadedFiles({
       return new Set<FileUploadState>(current)
     })
   }
+  const save = () => {
+    addFiles(fileUploadState)
+    cleanup()
+  }
 
   return (
     <>
@@ -124,7 +128,7 @@ export function UploadedFiles({
           <Card.Body>
             <div>
               {fileUploadState.length > 0 ? (
-                <div className={styles.files}>
+                <div className={styles.uploaded_files}>
                   {fileUploadState.map((file) => (
                     <div
                       className={cn(styles.file, {
@@ -172,6 +176,11 @@ export function UploadedFiles({
                   ))}
                 </div>
               ) : null}
+            </div>
+            <div className={styles.save_btn}>
+              <Button withSpacing onClick={save} disabled={saveDisabled}>
+                Save
+              </Button>
             </div>
           </Card.Body>
         </Card>
