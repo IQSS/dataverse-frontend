@@ -299,6 +299,36 @@ describe('UploadDatasetFiles', () => {
     cy.get('input[value="users2.json"]').should('not.exist')
   })
 
+  it('saves uploaded files 2', () => {
+    const testDataset = DatasetMother.create()
+
+    mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
+
+    cy.findByTestId('drag-and-drop').as('dnd')
+    cy.get('@dnd').should('exist')
+
+    cy.get('@dnd').selectFile(
+      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+      { action: 'drag-drop' }
+    )
+    cy.get('@dnd').selectFile(
+      { fileName: 'users2.json', contents: [{ name: 'John Doe the 2nd' }] },
+      { action: 'drag-drop' }
+    )
+    cy.findByText('users1.json').should('exist')
+    cy.findByText('users2.json').should('exist')
+    cy.findAllByTitle('Cancel upload').should('have.length', 2)
+    cy.findAllByRole('progressbar').should('have.length', 2)
+    cy.findByText('Select files to add').should('exist')
+    // wait for upload to finish
+    cy.findByText('Cancel').should('exist')
+    cy.findAllByTitle('Save uploaded files').click()
+    cy.findByText('users1.json').should('not.exist')
+    cy.findByText('users2.json').should('not.exist')
+    cy.get('input[value="users1.json"]').should('not.exist')
+    cy.get('input[value="users2.json"]').should('not.exist')
+  })
+
   it('cancels saving uploaded files', () => {
     const testDataset = DatasetMother.create()
 

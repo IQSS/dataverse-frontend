@@ -206,8 +206,8 @@ export function UploadedFiles({
               ) : null}
             </div>
             <div className={styles.save_btn}>
-              <Button withSpacing onClick={save} disabled={saveDisabled}>
-                Save
+              <Button withSpacing onClick={save} disabled={saveDisabled} title={t('saveUploaded')}>
+                {t('save')}
               </Button>
             </div>
           </Card.Body>

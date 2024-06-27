@@ -4,6 +4,8 @@
   "info": "Drag and drop files and/or directories here.",
   "select": "Select files to add",
   "delete": "Delete",
+  "save": "Save",
+  "saveUploaded": "Save uploaded files",
   "uploadedFileSize": "Uploaded file size",
   "restricted": "Restricted",
   "tags": {
