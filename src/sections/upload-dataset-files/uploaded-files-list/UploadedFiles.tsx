@@ -31,7 +31,11 @@ export function UploadedFiles({
   const { t } = useTranslation('uploadDatasetFiles')
   const [selected, setSelected] = useState(new Set<FileUploadState>())
   const [filesToRestrict, setFilesToRestrict] = useState<FileUploadState[]>([])
-  const [tagOptions, setTagOptions] = useState([t('tags.documentation'), t('tags.data'), t('tags.code')])
+  const [tagOptions, setTagOptions] = useState([
+    t('tags.documentation'),
+    t('tags.data'),
+    t('tags.code')
+  ])
   const [terms, setTerms] = useState('')
   const [requestAccess, setRequestAccess] = useState(true)
   const [showRestrictionModal, setShowRestrictionModal] = useState(false)
@@ -67,7 +71,9 @@ export function UploadedFiles({
     if (res.saved) {
       const filesToAddTagsTo = Array.from(selected).map((file) => {
         const newTags = [...file.tags]
-        res.tags.forEach((t) => { if (!file.tags.some((x) => x === t)) newTags.push(t) })
+        res.tags.forEach((t) => {
+          if (!file.tags.some((x) => x === t)) newTags.push(t)
+        })
         file.tags = newTags
         return file
       })

@@ -10,7 +10,12 @@ interface TagOptionsModalProps {
   hide: () => void
 }
 
-export function TagOptionsModal({ availableTags, setTagOptions, show, hide }: TagOptionsModalProps) {
+export function TagOptionsModal({
+  availableTags,
+  setTagOptions,
+  show,
+  hide
+}: TagOptionsModalProps) {
   const { t } = useTranslation('uploadDatasetFiles')
   const [tag, setTag] = useState('')
   const addTagOption = () => {

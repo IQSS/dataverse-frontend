@@ -15,17 +15,11 @@ export interface AddTagsModalResult {
   tags: string[]
 }
 
-export function AddTagsModal({
-  show,
-  availableTags,
-  setTagOptions,
-  update
-}: AddTagsModalProps) {
+export function AddTagsModal({ show, availableTags, setTagOptions, update }: AddTagsModalProps) {
   const { t } = useTranslation('uploadDatasetFiles')
   const [tagsToAdd, setTagsToAdd] = useState<string[]>([])
   const [tag, setTag] = useState('')
-  const handleClose = (saved: boolean) =>
-    update({ saved: saved, tags: tagsToAdd })
+  const handleClose = (saved: boolean) => update({ saved: saved, tags: tagsToAdd })
   const addTagOption = () => {
     if (tag && !availableTags.includes(tag)) {
       setTagOptions([...availableTags, tag])
@@ -38,7 +32,6 @@ export function AddTagsModal({
       event.preventDefault()
     }
   }
-
 
   return (
     <Modal show={show} onHide={() => handleClose(false)} size="lg">
@@ -66,7 +59,7 @@ export function AddTagsModal({
               </Form.Group.Label>
               <Col sm={9}>
                 <div className={styles.tag_info}>{t('tags.creatingNewTag')}</div>
-                <div className="input-group mb-3" onKeyDown={handleEnter} >
+                <div className="input-group mb-3" onKeyDown={handleEnter}>
                   <Form.Group.Input
                     type="text"
                     placeholder={t('tags.addNewTag')}

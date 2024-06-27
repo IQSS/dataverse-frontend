@@ -15,20 +15,20 @@
 }
 
 .selected_file>div {
-    background-color: #ffc !important;
     margin-bottom: 0.5rem;
+    background-color: #ffc !important;
 }
 
 .file:nth-of-type(even)>div {
+    margin-bottom: 0.5rem;
     padding: 0.5rem;
     background-color: #f8f9fc;
-    margin-bottom: 0.5rem;
 }
 
 .file:nth-of-type(odd)>div {
+    margin-bottom: 0.5rem;
     padding: 0.5rem;
     background-color: white;
-    margin-bottom: 0.5rem;
 }
 
 .file {
