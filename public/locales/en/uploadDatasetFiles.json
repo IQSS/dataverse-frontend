@@ -43,6 +43,6 @@
     "filesUploaded_one": "{{count}} file uploaded",
     "filesUploaded_other": "{{count}} files uploaded",
     "filesSelected_one": "{{count}} file selected",
-    "filesSelected_other": "{{count}} files selected."
+    "filesSelected_other": "{{count}} files selected"
   }
 }
