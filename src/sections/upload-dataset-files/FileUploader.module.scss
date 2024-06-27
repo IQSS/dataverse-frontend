@@ -16,16 +16,19 @@
 
 .selected_file>div {
     background-color: #ffc !important;
+    margin-bottom: 0.5rem;
 }
 
 .file:nth-of-type(even)>div {
     padding: 0.5rem;
     background-color: #f8f9fc;
+    margin-bottom: 0.5rem;
 }
 
 .file:nth-of-type(odd)>div {
     padding: 0.5rem;
     background-color: white;
+    margin-bottom: 0.5rem;
 }
 
 .file {
