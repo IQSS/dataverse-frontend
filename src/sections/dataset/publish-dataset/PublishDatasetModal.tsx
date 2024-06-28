@@ -49,36 +49,38 @@ export function PublishDatasetModal({
       </Modal.Header>
       <Modal.Body>
         <PublishDatasetHelpText releasedVersionExists={releasedVersionExists} />
-        <p>Click to Publish the Dataset</p>
         {releasedVersionExists && (
-          <Form.RadioGroup onChange={handleVersionUpdateTypeChange} title={'Update Version'}>
-            <Form.Group.Radio
-              defaultChecked
-              onClick={handleVersionUpdateTypeChange}
-              name="update-type"
-              label="Minor Version"
-              id="update-type-minor"
-              value={VersionUpdateType.MINOR}
-            />
-            <Form.Group.Radio
-              onClick={handleVersionUpdateTypeChange}
-              name="update-type"
-              label="Major Version"
-              id="update-type-major"
-              value={VersionUpdateType.MAJOR}
-            />
-            {user?.superuser && (
+          <>
+            <p>{t('selectVersion')}</p>
+            <Form.RadioGroup onChange={handleVersionUpdateTypeChange} title={'Update Version'}>
+              <Form.Group.Radio
+                defaultChecked
+                onClick={handleVersionUpdateTypeChange}
+                name="update-type"
+                label="Minor Version"
+                id="update-type-minor"
+                value={VersionUpdateType.MINOR}
+              />
               <Form.Group.Radio
                 onClick={handleVersionUpdateTypeChange}
                 name="update-type"
-                label="Update Current Version"
-                id="update-type-current"
-                // TODO: Remove disabled when JSVersionUpdateType.UPDATE_CURRENT is available in js-dataverse
-                disabled={true}
-                value={VersionUpdateType.UPDATE_CURRENT}
+                label="Major Version"
+                id="update-type-major"
+                value={VersionUpdateType.MAJOR}
               />
-            )}
-          </Form.RadioGroup>
+              {user?.superuser && (
+                <Form.Group.Radio
+                  onClick={handleVersionUpdateTypeChange}
+                  name="update-type"
+                  label="Update Current Version"
+                  id="update-type-current"
+                  // TODO: Remove disabled when JSVersionUpdateType.UPDATE_CURRENT is available in js-dataverse
+                  disabled={true}
+                  value={VersionUpdateType.UPDATE_CURRENT}
+                />
+              )}
+            </Form.RadioGroup>
+          </>
         )}
       </Modal.Body>
       <Modal.Footer>

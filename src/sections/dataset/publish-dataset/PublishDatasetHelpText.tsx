@@ -1,3 +1,4 @@
+import styles from './PublishDatasetHelpText.module.scss'
 import { useTranslation } from 'react-i18next'
 import { Trans } from 'react-i18next'
 
@@ -10,15 +11,11 @@ export function PublishDatasetHelpText({ releasedVersionExists }: PublishDataset
   const cc0Link = 'https://creativecommons.org/publicdomain/zero/1.0/'
   return (
     <>
-      {!releasedVersionExists && <p>{t('draftQuestion')}</p>}
-      {releasedVersionExists && <p>{t('previouslyReleasedQuestion')}</p>}
-      <div
-        style={{
-          border: '1px solid black',
-          padding: '10px',
-          margin: '10px',
-          backgroundColor: 'rgb(220, 220, 220)'
-        }}>
+      {!releasedVersionExists && <p className={styles.warningText}>{t('draftQuestion')}</p>}
+      {releasedVersionExists && (
+        <p className={styles.warningText}>{t('previouslyReleasedQuestion')}</p>
+      )}
+      <div className={styles.container}>
         <Trans
           t={t}
           i18nKey="termsText1"

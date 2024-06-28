@@ -1,0 +1,12 @@
+@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
+
+.container {
+  border: 1px solid black;
+  padding: 10px;
+  margin: 10px;
+  background-color: rgb(220, 220, 220);
+}
+
+.warningText {
+  color: $dv-warning-color;
+}
