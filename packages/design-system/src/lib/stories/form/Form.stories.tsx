@@ -221,7 +221,7 @@ export const SelectAdvanced: Story = {
         </Form.Group.Label>
         <Col sm={9}>
           <Form.Group.SelectAdvanced
-            initialOptions={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
+            options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
             inputButtonId="basic-form-select-advanced"
           />
         </Col>
@@ -240,7 +240,7 @@ export const SelectAdvancedMultiple: Story = {
         <Col sm={9}>
           <Form.Group.SelectAdvanced
             isMultiple
-            initialOptions={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
+            options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
             inputButtonId="basic-form-select-advanced"
           />
         </Col>

@@ -42,6 +42,10 @@ type SelectAdvancedActions =
       type: 'SEARCH'
       payload: string
     }
+  | {
+      type: 'UPDATE_OPTIONS'
+      payload: string[]
+    }
 
 export const selectAdvancedReducer = (
   state: SelectAdvancedState,
@@ -97,6 +101,11 @@ export const selectAdvancedReducer = (
         filteredOptions: filterOptions(state, action),
         searchValue: action.payload
       }
+    case 'UPDATE_OPTIONS':
+      return {
+        ...state,
+        options: action.payload
+      }
     default:
       return state
   }
@@ -139,4 +148,11 @@ export const deselectAllOptions = /* istanbul ignore next */ (): SelectAdvancedA
 export const searchOptions = /* istanbul ignore next */ (value: string): SelectAdvancedActions => ({
   type: 'SEARCH',
   payload: value
+})
+
+export const updateOptions = /* istanbul ignore next */ (
+  options: string[]
+): SelectAdvancedActions => ({
+  type: 'UPDATE_OPTIONS',
+  payload: options
 })
