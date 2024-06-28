@@ -33,6 +33,7 @@ export const SelectAdvancedMenu = ({
 }: SelectAdvancedMenuProps) => {
   const searchInputControlID = useId()
   const toggleAllControlID = useId()
+  const optionLabelId = useId()
 
   const menuOptions = filteredOptions.length > 0 ? filteredOptions : options
 
@@ -98,7 +99,7 @@ export const SelectAdvancedMenu = ({
                 key={option}
                 onClick={() => handleClickOption(option === selectWord ? '' : option)}
                 active={option !== selectWord ? selected === option : selected === ''}
-                id={`check-item-${option}`}>
+                id={`${optionLabelId}-${option}`}>
                 {option}
               </DropdownBS.Item>
             )
@@ -111,7 +112,7 @@ export const SelectAdvancedMenu = ({
                 value={option}
                 label={option}
                 onChange={handleCheck}
-                id={`check-item-${option}`}
+                id={`${optionLabelId}-${option}`}
                 checked={selected.includes(option)}
                 className={styles['option-item__checkbox-input']}
               />
