@@ -107,19 +107,65 @@ export const SelectAdvanced = forwardRef(
 
           if (selectedOptionRemainTheSame) return
         }
-
+        // console.log('%cOn Change', 'background: green; color: white; padding: 4px;')
         isMultiple ? onChange(selected as string[]) : onChange(selected as string)
         setLastOnChangeValue(selected)
       }
     }, [isMultiple, selected, isFirstRender, onChange, lastOnChangeValue, defaultValue])
 
     useEffect(() => {
+      console.log('%cselected: ', 'background: green; color: white; padding: 4px;')
+      console.log({ selected })
+    }, [selected])
+
+    useEffect(() => {
       const optionsRemainTheSame = propsOption.every((option) => options.includes(option))
 
+      // If the options remain the same, do nothing
       if (optionsRemainTheSame) return
 
+      const selectedOptionsThatAreNotInNewOptions = isMultiple
+        ? (selected as string[]).filter((option) => !propsOption.includes(option))
+        : []
+
+      // If there are selected options that are not in the new options, remove them
+      if (isMultiple && selectedOptionsThatAreNotInNewOptions.length > 0) {
+        selectedOptionsThatAreNotInNewOptions.forEach((option) => dispatch(removeOption(option)))
+        const newSelected = (selected as string[]).filter((option) => propsOption.includes(option))
+
+        if (onChange) {
+          onChange(newSelected)
+          // console.log('%cOn Change new selected', 'background: green; color: white; padding: 4px;')
+          setLastOnChangeValue(newSelected)
+        }
+      }
+      // If the selected option is not in the new options replace it with the default empty value
+
+      if (
+        !isMultiple &&
+        selected !== '' &&
+        !propsOption.some((option) => option === (selected as string))
+      ) {
+        dispatch(selectOption(''))
+
+        if (onChange) {
+          onChange('')
+          // console.log('%cOn Change to " " ', 'background: green; color: white; padding: 4px;')
+          setLastOnChangeValue('')
+        }
+      }
+      // Update the options
       dispatch(updateOptions(dynamicInitialOptions))
-    }, [dynamicInitialOptions, propsOption, options, isFirstRender, dispatch])
+    }, [
+      dynamicInitialOptions,
+      propsOption,
+      options,
+      isFirstRender,
+      dispatch,
+      selected,
+      isMultiple,
+      onChange
+    ])
 
     const handleSearch = debounce((e: React.ChangeEvent<HTMLInputElement>): void => {
       const { value } = e.target

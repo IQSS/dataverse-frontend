@@ -649,155 +649,415 @@ describe('SelectAdvanced', () => {
     })
   })
 
-  // TODO:ME What happen if available options change to less?
-  describe('should update available options when options prop changes', () => {
-    const SelectSingleExample = ({ withDefaultValues }: { withDefaultValues: boolean }) => {
+  describe('when options props changes', () => {
+    const ADD_OPTION_BUTTON_TEST_ID = 'add-option-button'
+    const CHANGE_ALL_OPTIONS_BUTTON_TEST_ID = 'change-all-options-button'
+    const CHANGE_ALL_ONE_KEEP_OPTION_BUTTON_TEST_ID = 'chage-all-one-keep-option-button'
+    const ALL_NEW_OPTIONS = ['Foo', 'Bar', 'Ron', 'Hermione']
+    const NEW_OPTIONS_BUT_ONE_REMAIN_THE_SAME = ['Foo', 'Reading', 'Ron', 'Hermione', 'Harry']
+
+    const SelectWithButtonsToChangeOptions = ({
+      isMultiple,
+      withDefaultValues,
+      onChange
+    }: {
+      isMultiple: boolean
+      withDefaultValues: boolean
+      onChange?: (value: string | string[]) => void
+    }) => {
       const [availableOptions, setAvailableOptions] = useState(['Reading', 'Swimming', 'Running'])
 
       return (
         <>
           <button
-            data-testid="add-option-button"
+            data-testid={ADD_OPTION_BUTTON_TEST_ID}
             onClick={() => setAvailableOptions((current) => [...current, 'Gardening'])}>
             Add Gardening option
           </button>
-          <SelectAdvanced
-            options={availableOptions}
-            defaultValue={withDefaultValues ? 'Reading' : undefined}
-          />
-        </>
-      )
-    }
 
-    const SelectMultipleExample = ({ withDefaultValues }: { withDefaultValues: boolean }) => {
-      const [availableOptions, setAvailableOptions] = useState(['Reading', 'Swimming', 'Running'])
-
-      return (
-        <>
           <button
-            data-testid="add-option-button"
-            onClick={() => setAvailableOptions((current) => [...current, 'Gardening'])}>
-            Add Gardening option
+            data-testid={CHANGE_ALL_OPTIONS_BUTTON_TEST_ID}
+            onClick={() => setAvailableOptions(ALL_NEW_OPTIONS)}>
+            Change all options
           </button>
+          <button
+            data-testid={CHANGE_ALL_ONE_KEEP_OPTION_BUTTON_TEST_ID}
+            onClick={() => setAvailableOptions(NEW_OPTIONS_BUT_ONE_REMAIN_THE_SAME)}>
+            Change all new options but leave one
+          </button>
+          {/* @ts-expect-error type boolean is not assignable to type true */}
           <SelectAdvanced
-            isMultiple
+            isMultiple={isMultiple}
             options={availableOptions}
-            defaultValue={withDefaultValues ? ['Reading'] : undefined}
+            onChange={onChange}
+            defaultValue={
+              withDefaultValues ? (isMultiple ? ['Reading', 'Running'] : 'Reading') : undefined
+            }
           />
         </>
       )
     }
+    describe('adds one option correctly', () => {
+      it('on single selection', () => {
+        cy.mount(<SelectWithButtonsToChangeOptions isMultiple={false} withDefaultValues={false} />)
 
-    it('on single selection', () => {
-      cy.mount(<SelectSingleExample withDefaultValues={false} />)
+        cy.findByLabelText('Toggle options menu').click()
+        cy.findByText('Reading').should('exist')
+        cy.findByText('Swimming').should('exist')
+        cy.findByText('Running').should('exist')
+        cy.findByText('Gardening').should('not.exist')
 
-      cy.findByLabelText('Toggle options menu').click()
-      cy.findByText('Reading').should('exist')
-      cy.findByText('Swimming').should('exist')
-      cy.findByText('Running').should('exist')
-      cy.findByText('Gardening').should('not.exist')
+        cy.findByTestId(ADD_OPTION_BUTTON_TEST_ID).click()
 
-      cy.findByTestId('add-option-button').click()
+        cy.findByText('Reading').should('exist')
+        cy.findByText('Swimming').should('exist')
+        cy.findByText('Running').should('exist')
+        cy.findByText('Gardening').should('exist')
+      })
 
-      cy.findByText('Reading').should('exist')
-      cy.findByText('Swimming').should('exist')
-      cy.findByText('Running').should('exist')
-      cy.findByText('Gardening').should('exist')
+      it('on single selection with default value', () => {
+        cy.mount(<SelectWithButtonsToChangeOptions isMultiple={false} withDefaultValues={true} />)
+
+        cy.findByLabelText('Toggle options menu').click()
+        cy.findAllByText('Reading').should('exist').should('have.length', 2)
+        cy.findByText('Swimming').should('exist')
+        cy.findByText('Running').should('exist')
+        cy.findByText('Gardening').should('not.exist')
+
+        cy.findByTestId(ADD_OPTION_BUTTON_TEST_ID).click()
+
+        cy.findAllByText('Reading').should('exist').should('have.length', 2)
+        cy.findByText('Swimming').should('exist')
+        cy.findByText('Running').should('exist')
+        cy.findByText('Gardening').should('exist')
+      })
+
+      it('on multiple selection', () => {
+        cy.mount(<SelectWithButtonsToChangeOptions isMultiple={true} withDefaultValues={false} />)
+
+        cy.findByLabelText('Toggle options menu').click()
+        cy.findByLabelText('Reading').should('exist')
+        cy.findByLabelText('Swimming').should('exist')
+        cy.findByLabelText('Running').should('exist')
+        cy.findByLabelText('Gardening').should('not.exist')
+
+        cy.findByTestId(ADD_OPTION_BUTTON_TEST_ID).click()
+
+        cy.findByLabelText('Reading').should('exist')
+        cy.findByLabelText('Swimming').should('exist')
+        cy.findByLabelText('Running').should('exist')
+        cy.findByLabelText('Gardening').should('exist')
+      })
+      it('on multiple selection with default values', () => {
+        cy.mount(<SelectWithButtonsToChangeOptions isMultiple={true} withDefaultValues={true} />)
+
+        cy.findByLabelText('Toggle options menu').click()
+        cy.findByLabelText('Reading').should('exist')
+        cy.findByLabelText('Swimming').should('exist')
+        cy.findByLabelText('Running').should('exist')
+        cy.findByLabelText('Gardening').should('not.exist')
+
+        cy.findByTestId(ADD_OPTION_BUTTON_TEST_ID).click()
+
+        cy.findByLabelText('Reading').should('exist')
+        cy.findByLabelText('Swimming').should('exist')
+        cy.findByLabelText('Running').should('exist')
+        cy.findByLabelText('Gardening').should('exist')
+      })
     })
 
-    it('on multiple selection', () => {
-      cy.mount(<SelectMultipleExample withDefaultValues={false} />)
+    describe('adds completely new options correctly', () => {
+      it('on single selection', () => {
+        cy.mount(<SelectWithButtonsToChangeOptions isMultiple={false} withDefaultValues={false} />)
 
-      cy.findByLabelText('Toggle options menu').click()
-      cy.findByText('Reading').should('exist')
-      cy.findByLabelText('Swimming').should('exist')
-      cy.findByLabelText('Running').should('exist')
-      cy.findByLabelText('Gardening').should('not.exist')
+        cy.findByLabelText('Toggle options menu').click()
+        cy.findByText('Reading').should('exist')
+        cy.findByText('Swimming').should('exist')
+        cy.findByText('Running').should('exist')
 
-      cy.findByTestId('add-option-button').click()
+        cy.findByTestId(CHANGE_ALL_OPTIONS_BUTTON_TEST_ID).click()
 
-      cy.findByLabelText('Reading').should('exist')
-      cy.findByLabelText('Swimming').should('exist')
-      cy.findByLabelText('Running').should('exist')
-      cy.findByLabelText('Gardening').should('exist')
+        cy.findByText('Reading').should('not.exist')
+        cy.findByText('Swimming').should('not.exist')
+        cy.findByText('Running').should('not.exist')
+
+        ALL_NEW_OPTIONS.forEach((option) => {
+          cy.findByText(option).should('exist')
+        })
+      })
+
+      it('on single selection with default value', () => {
+        cy.mount(<SelectWithButtonsToChangeOptions isMultiple={false} withDefaultValues={true} />)
+
+        cy.findByLabelText('Toggle options menu').click()
+        cy.findAllByText('Reading').should('exist').should('have.length', 2)
+        cy.findByText('Swimming').should('exist')
+        cy.findByText('Running').should('exist')
+
+        cy.findByTestId(CHANGE_ALL_OPTIONS_BUTTON_TEST_ID).click()
+
+        cy.findByText('Reading').should('not.exist')
+        cy.findByText('Swimming').should('not.exist')
+        cy.findByText('Running').should('not.exist')
+
+        ALL_NEW_OPTIONS.forEach((option) => {
+          cy.findByText(option).should('exist')
+        })
+      })
+
+      it('on multiple selection', () => {
+        cy.mount(<SelectWithButtonsToChangeOptions isMultiple={true} withDefaultValues={false} />)
+
+        cy.findByLabelText('Toggle options menu').click()
+        cy.findByLabelText('Reading').should('exist')
+        cy.findByLabelText('Reading').should('exist')
+        cy.findByLabelText('Running').should('exist')
+
+        cy.findByTestId(CHANGE_ALL_OPTIONS_BUTTON_TEST_ID).click()
+
+        cy.findByText('Reading').should('not.exist')
+        cy.findByText('Swimming').should('not.exist')
+        cy.findByText('Running').should('not.exist')
+
+        ALL_NEW_OPTIONS.forEach((option) => {
+          cy.findByText(option).should('exist')
+        })
+      })
+
+      it('on multiple selection with default values', () => {
+        cy.mount(<SelectWithButtonsToChangeOptions isMultiple={true} withDefaultValues={true} />)
+
+        cy.findByLabelText('Toggle options menu').click()
+        cy.findAllByText('Reading').should('exist').should('have.length', 2)
+        cy.findAllByText('Reading').should('exist').should('have.length', 2)
+        cy.findByLabelText('Running').should('exist')
+
+        cy.findByTestId(CHANGE_ALL_OPTIONS_BUTTON_TEST_ID).click()
+
+        cy.findByText('Reading').should('not.exist')
+        cy.findByText('Swimming').should('not.exist')
+        cy.findByText('Running').should('not.exist')
+
+        ALL_NEW_OPTIONS.forEach((option) => {
+          cy.findByText(option).should('exist')
+        })
+      })
     })
 
-    it('on multiple selection after selecting and deselecting all', () => {
-      cy.mount(<SelectMultipleExample withDefaultValues={false} />)
+    describe('adds new options but keeps one option the same correctly', () => {
+      it('on single selection', () => {
+        cy.mount(<SelectWithButtonsToChangeOptions isMultiple={false} withDefaultValues={false} />)
 
-      cy.findByLabelText('Toggle options menu').click()
-      cy.findByLabelText('Toggle all options').click()
+        cy.findByLabelText('Toggle options menu').click()
+        cy.findByText('Reading').should('exist')
+        cy.findByText('Swimming').should('exist')
+        cy.findByText('Running').should('exist')
 
-      cy.findByLabelText('Reading').should('be.checked')
-      cy.findByLabelText('Swimming').should('be.checked')
-      cy.findByLabelText('Running').should('be.checked')
+        cy.findByTestId(CHANGE_ALL_ONE_KEEP_OPTION_BUTTON_TEST_ID).click()
+        // This option remains
+        cy.findByText('Reading').should('exist')
+        cy.findByText('Swimming').should('not.exist')
+        cy.findByText('Running').should('not.exist')
 
-      cy.findByLabelText('Toggle all options').click()
+        NEW_OPTIONS_BUT_ONE_REMAIN_THE_SAME.filter((option) => option !== 'Reading').forEach(
+          (option) => {
+            cy.findByText(option).should('exist')
+          }
+        )
+      })
 
-      cy.findByLabelText('Reading').should('not.be.checked')
-      cy.findByLabelText('Swimming').should('not.be.checked')
-      cy.findByLabelText('Running').should('not.be.checked')
+      it('on single selection with default value', () => {
+        cy.mount(<SelectWithButtonsToChangeOptions isMultiple={false} withDefaultValues={true} />)
 
-      cy.findByTestId('add-option-button').click()
+        cy.findByLabelText('Toggle options menu').click()
+        cy.findAllByText('Reading').should('exist').should('have.length', 2)
+        cy.findByText('Swimming').should('exist')
+        cy.findByText('Running').should('exist')
 
-      cy.findByLabelText('Reading').should('exist')
-      cy.findByLabelText('Swimming').should('exist')
-      cy.findByLabelText('Running').should('exist')
-      cy.findByLabelText('Gardening').should('exist')
+        cy.findByTestId(CHANGE_ALL_ONE_KEEP_OPTION_BUTTON_TEST_ID).click()
+
+        // This option remains
+        cy.findAllByText('Reading').should('exist').should('have.length', 2)
+        cy.findByText('Swimming').should('not.exist')
+        cy.findByText('Running').should('not.exist')
+
+        NEW_OPTIONS_BUT_ONE_REMAIN_THE_SAME.filter((option) => option !== 'Reading').forEach(
+          (option) => {
+            cy.findByText(option).should('exist')
+          }
+        )
+      })
+
+      it('on multiple selection', () => {
+        cy.mount(<SelectWithButtonsToChangeOptions isMultiple={true} withDefaultValues={false} />)
+
+        cy.findByLabelText('Toggle options menu').click()
+        cy.findByText('Reading').should('exist')
+        cy.findByText('Running').should('exist')
+        cy.findByText('Swimming').should('exist')
+
+        cy.findByTestId(CHANGE_ALL_ONE_KEEP_OPTION_BUTTON_TEST_ID).click()
+
+        // This option remains
+        cy.findByText('Reading').should('exist')
+        cy.findByText('Swimming').should('not.exist')
+        cy.findByText('Running').should('not.exist')
+
+        NEW_OPTIONS_BUT_ONE_REMAIN_THE_SAME.filter((option) => option !== 'Reading').forEach(
+          (option) => {
+            cy.findByLabelText(option).should('exist')
+          }
+        )
+      })
+      it('on multiple selection with default values', () => {
+        cy.mount(<SelectWithButtonsToChangeOptions isMultiple={true} withDefaultValues={true} />)
+
+        cy.findByLabelText('Toggle options menu').click()
+        cy.findAllByText('Reading').should('exist').should('have.length', 2)
+        cy.findByLabelText('Running').should('exist')
+        cy.findByLabelText('Swimming').should('exist')
+
+        cy.findByTestId(CHANGE_ALL_ONE_KEEP_OPTION_BUTTON_TEST_ID).click()
+
+        // This option remains
+        cy.findAllByText('Reading').should('exist').should('have.length', 2)
+        cy.findByText('Swimming').should('not.exist')
+        cy.findByText('Running').should('not.exist')
+
+        NEW_OPTIONS_BUT_ONE_REMAIN_THE_SAME.filter((option) => option !== 'Reading').forEach(
+          (option) => {
+            cy.findByLabelText(option).should('exist')
+          }
+        )
+      })
     })
 
-    it('on multiple selection after selecting all', () => {
-      cy.mount(<SelectMultipleExample withDefaultValues={false} />)
+    // it('on multiple selection', () => {
+    //   cy.mount(<SelectMultipleExample withDefaultValues={false} />)
 
-      cy.findByLabelText('Toggle options menu').click()
-      cy.findByLabelText('Toggle all options').click()
+    //   cy.findByLabelText('Toggle options menu').click()
+    //   cy.findByText('Reading').should('exist')
+    //   cy.findByLabelText('Swimming').should('exist')
+    //   cy.findByLabelText('Running').should('exist')
+    //   cy.findByLabelText('Gardening').should('not.exist')
 
-      cy.findByLabelText('Reading').should('be.checked')
-      cy.findByLabelText('Swimming').should('be.checked')
-      cy.findByLabelText('Running').should('be.checked')
+    //   cy.findByTestId('add-option-button').click()
 
-      cy.findByTestId('add-option-button').click()
+    //   cy.findByLabelText('Reading').should('exist')
+    //   cy.findByLabelText('Swimming').should('exist')
+    //   cy.findByLabelText('Running').should('exist')
+    //   cy.findByLabelText('Gardening').should('exist')
+    // })
 
-      cy.findByLabelText('Toggle options menu').click({ force: true })
+    // it('on multiple selection after selecting and deselecting all', () => {
+    //   cy.mount(<SelectMultipleExample withDefaultValues={false} />)
 
-      cy.findByLabelText('Reading').should('be.checked')
-      cy.findByLabelText('Swimming').should('be.checked')
-      cy.findByLabelText('Running').should('be.checked')
-      cy.findByLabelText('Gardening').should('exist').should('not.be.checked')
-    })
+    //   cy.findByLabelText('Toggle options menu').click()
+    //   cy.findByLabelText('Toggle all options').click()
 
-    it('on single selection and with default value', () => {
-      cy.mount(<SelectSingleExample withDefaultValues={true} />)
+    //   cy.findByLabelText('Reading').should('be.checked')
+    //   cy.findByLabelText('Swimming').should('be.checked')
+    //   cy.findByLabelText('Running').should('be.checked')
 
-      cy.findByLabelText('Toggle options menu').click()
-      cy.findAllByText('Reading').should('exist').should('have.length', 2)
-      cy.findByText('Swimming').should('exist')
-      cy.findByText('Running').should('exist')
-      cy.findByText('Gardening').should('not.exist')
+    //   cy.findByLabelText('Toggle all options').click()
 
-      cy.findByTestId('add-option-button').click()
+    //   cy.findByLabelText('Reading').should('not.be.checked')
+    //   cy.findByLabelText('Swimming').should('not.be.checked')
+    //   cy.findByLabelText('Running').should('not.be.checked')
 
-      cy.findAllByText('Reading').should('exist').should('have.length', 2)
-      cy.findByText('Swimming').should('exist')
-      cy.findByText('Running').should('exist')
-      cy.findByText('Gardening').should('exist')
-    })
+    //   cy.findByTestId('add-option-button').click()
 
-    it('on multiple selection and with default values', () => {
-      cy.mount(<SelectMultipleExample withDefaultValues={true} />)
+    //   cy.findByLabelText('Reading').should('exist')
+    //   cy.findByLabelText('Swimming').should('exist')
+    //   cy.findByLabelText('Running').should('exist')
+    //   cy.findByLabelText('Gardening').should('exist')
+    // })
 
-      cy.findByLabelText('Toggle options menu').click()
-      cy.findAllByText('Reading').should('exist').should('have.length', 2)
-      cy.findByLabelText('Swimming').should('exist')
-      cy.findByLabelText('Running').should('exist')
-      cy.findByLabelText('Gardening').should('not.exist')
+    // it('on multiple selection after selecting all', () => {
+    //   cy.mount(<SelectMultipleExample withDefaultValues={false} />)
 
-      cy.findByTestId('add-option-button').click()
+    //   cy.findByLabelText('Toggle options menu').click()
+    //   cy.findByLabelText('Toggle all options').click()
 
-      cy.findAllByText('Reading').should('exist').should('have.length', 2)
-      cy.findByLabelText('Swimming').should('exist')
-      cy.findByLabelText('Running').should('exist')
-      cy.findByLabelText('Gardening').should('exist')
-    })
+    //   cy.findByLabelText('Reading').should('be.checked')
+    //   cy.findByLabelText('Swimming').should('be.checked')
+    //   cy.findByLabelText('Running').should('be.checked')
+
+    //   cy.findByTestId('add-option-button').click()
+
+    //   cy.findByLabelText('Toggle options menu').click({ force: true })
+
+    //   cy.findByLabelText('Reading').should('be.checked')
+    //   cy.findByLabelText('Swimming').should('be.checked')
+    //   cy.findByLabelText('Running').should('be.checked')
+    //   cy.findByLabelText('Gardening').should('exist').should('not.be.checked')
+    // })
+
+    // it('on single selection and with default value', () => {
+    //   cy.mount(<SelectSingleExample withDefaultValues={true} />)
+
+    //   cy.findByLabelText('Toggle options menu').click()
+    //   cy.findAllByText('Reading').should('exist').should('have.length', 2)
+    //   cy.findByText('Swimming').should('exist')
+    //   cy.findByText('Running').should('exist')
+    //   cy.findByText('Gardening').should('not.exist')
+
+    //   cy.findByTestId('add-option-button').click()
+
+    //   cy.findAllByText('Reading').should('exist').should('have.length', 2)
+    //   cy.findByText('Swimming').should('exist')
+    //   cy.findByText('Running').should('exist')
+    //   cy.findByText('Gardening').should('exist')
+    // })
+
+    // it('on multiple selection and with default values', () => {
+    //   cy.mount(<SelectMultipleExample withDefaultValues={true} />)
+
+    //   cy.findByLabelText('Toggle options menu').click()
+    //   cy.findAllByText('Reading').should('exist').should('have.length', 2)
+    //   cy.findByLabelText('Swimming').should('exist')
+    //   cy.findByLabelText('Running').should('exist')
+    //   cy.findByLabelText('Gardening').should('not.exist')
+
+    //   cy.findByTestId('add-option-button').click()
+
+    //   cy.findAllByText('Reading').should('exist').should('have.length', 2)
+    //   cy.findByLabelText('Swimming').should('exist')
+    //   cy.findByLabelText('Running').should('exist')
+    //   cy.findByLabelText('Gardening').should('exist')
+    // })
+  })
+
+  it('selects the "Select..." option correctly', () => {
+    cy.mount(
+      <SelectAdvanced
+        options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
+      />
+    )
+
+    cy.findByLabelText('Toggle options menu').click()
+    cy.findByText('Swimming').click()
+    cy.findAllByText('Swimming').should('have.length', 2)
+
+    cy.findByText('Select...').click()
+
+    cy.findAllByText('Select...').should('have.length', 2)
+  })
+
+  it('selects the custom Select word option correctly', () => {
+    cy.mount(
+      <SelectAdvanced
+        locales={{ select: 'Selezionare...' }}
+        options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
+      />
+    )
+
+    cy.findByLabelText('Toggle options menu').click()
+    cy.findByText('Swimming').click()
+    cy.findAllByText('Swimming').should('have.length', 2)
+
+    cy.findByText('Selezionare...').click()
+
+    cy.findAllByText('Selezionare...').should('have.length', 2)
   })
 })

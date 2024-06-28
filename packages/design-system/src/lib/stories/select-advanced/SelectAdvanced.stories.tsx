@@ -97,6 +97,9 @@ export const WithDifferentSelectWord: Story = {
 const SimulateChangeOfAvailableOptions = () => {
   const [availableOptions, setAvailableOptions] = useState(['Tag 1', 'Tag 2', 'Tag 3'])
 
+  const newOptions = ['Foo', 'Bar', 'Ron', 'Hermione']
+  const newOptions2 = ['Foo', 'Tag 2', 'Ron', 'Hermione', 'Harry']
+
   return (
     <>
       <Button
@@ -105,18 +108,25 @@ const SimulateChangeOfAvailableOptions = () => {
         }>
         Add one more option
       </Button>
+      <Button onClick={() => setAvailableOptions(newOptions)}>Change options</Button>
+      <Button onClick={() => setAvailableOptions(newOptions2)}>Change options 2</Button>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
         <SelectAdvanced
           isMultiple
           options={availableOptions}
           defaultValue={[availableOptions[0], availableOptions[2]]}
-          onChange={(selected) => console.log(selected)}
+          onChange={(selectedFromIsMultiple1) => console.log({ selectedFromIsMultiple1 })}
         />
         <SelectAdvanced
           isMultiple
           options={availableOptions}
           defaultValue={[availableOptions[1]]}
-          onChange={(selected) => console.log(selected)}
+          onChange={(selectedFromIsMultiple2) => console.log({ selectedFromIsMultiple2 })}
+        />
+        <SelectAdvanced
+          options={availableOptions}
+          defaultValue={availableOptions[1]}
+          onChange={(selected1) => console.log({ selected1 })}
         />
       </div>
     </>
