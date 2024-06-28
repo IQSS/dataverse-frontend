@@ -3,7 +3,7 @@ import cn from 'classnames'
 import { X } from 'react-bootstrap-icons'
 import { FileUploadState } from '../../../files/domain/models/FileUploadState'
 import styles from '../FileUploader.module.scss'
-import { FormEvent, useState, MouseEvent } from 'react'
+import { FormEvent, useState } from 'react'
 import { FileForm } from './file-form/FileForm'
 import { TagOptionsModal } from './tag-options-modal/TagOptionsModal'
 import { FilesHeader } from './files-header/FilesHeader'
@@ -41,14 +41,6 @@ export function UploadedFiles({
   const [showRestrictionModal, setShowRestrictionModal] = useState(false)
   const [showTagOptionsModal, setShowTagOptionsModal] = useState(false)
   const [showAddTagsModal, setShowAddTagsModal] = useState(false)
-  const ignoreClasses = new Set<string>([
-    'form-control',
-    'btn',
-    'form-check-input',
-    'form-check-label',
-    'dropdown-item',
-    'dropdown'
-  ])
   const updateFilesRestricted = (files: FileUploadState[], restricted: boolean) => {
     if (restricted) {
       setFilesToRestrict(files)
@@ -89,19 +81,6 @@ export function UploadedFiles({
       return x
     })
     updateFiles([file])
-  }
-  const clicked = (event: MouseEvent<HTMLDivElement, unknown>, file: FileUploadState) => {
-    const classList = Array.from((event.target as HTMLDivElement).classList)
-    const parent = (event.target as HTMLDivElement).parentElement
-    if (parent) {
-      classList.push(...Array.from(parent.classList))
-      if (parent.parentElement) {
-        classList.push(...Array.from(parent.parentElement.classList))
-      }
-    }
-    if (!classList.some((x) => ignoreClasses.has(x))) {
-      updateSelected(file)
-    }
   }
   const updateSelected = (file: FileUploadState) => {
     setSelected((current) => {
@@ -162,8 +141,7 @@ export function UploadedFiles({
                       className={cn(styles.file, {
                         [styles.selected_file]: selected.has(file)
                       })}
-                      key={file.key}
-                      onClick={(event) => clicked(event, file)}>
+                      key={file.key}>
                       <div className={styles.selected_files_cb}>
                         <Form.Group.Checkbox
                           label={''}
