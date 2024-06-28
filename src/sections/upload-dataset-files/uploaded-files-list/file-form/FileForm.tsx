@@ -1,7 +1,7 @@
 import { Button, Col, Form, SelectMultiple } from '@iqss/dataverse-design-system'
 import { FileUploadState } from '../../../../files/domain/models/FileUploadState'
 import styles from './FileForm.module.scss'
-import { FormEvent } from 'react'
+import { FormEvent, useId } from 'react'
 import { Plus } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
 
@@ -14,6 +14,7 @@ interface FileFormProps {
 
 export function FileForm({ file, updateFiles, availableTags, editTagOptions }: FileFormProps) {
   const { t } = useTranslation('uploadDatasetFiles')
+  const tagsSelectId = useId()
   const updateFileName = (file: FileUploadState, updated: string) => {
     file.fileName = updated
     updateFiles([file])
@@ -78,7 +79,7 @@ export function FileForm({ file, updateFiles, availableTags, editTagOptions }: F
           </Col>
         </Form.Group>
         <Form.Group>
-          <Form.Group.Label column sm={3}>
+          <Form.Group.Label column sm={3} htmlFor={tagsSelectId}>
             {t('fileForm.tags')}
           </Form.Group.Label>
           <Col sm={9} className={styles.tags}>
@@ -86,17 +87,16 @@ export function FileForm({ file, updateFiles, availableTags, editTagOptions }: F
               <SelectMultiple
                 options={availableTags}
                 defaultValue={file.tags}
-                onChange={(newTags) => setTags(file, newTags)}></SelectMultiple>
+                onChange={(newTags) => setTags(file, newTags)}
+                inputButtonId={tagsSelectId}></SelectMultiple>
             </div>
             <Button
               className={styles.edit_tags_btn}
               variant="secondary"
               type="button"
-              {...{ size: 'sm' }}
-              withSpacing
               title={t('fileForm.editTagOptions')}
               onClick={editTagOptions}>
-              <Plus className={styles.icon} title={t('fileForm.plus')} />
+              <Plus title={t('fileForm.plus')} size={20} />
             </Button>
           </Col>
         </Form.Group>

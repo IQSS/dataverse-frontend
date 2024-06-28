@@ -1,6 +1,6 @@
 import { Button, Col, Form, Modal, SelectMultiple } from '@iqss/dataverse-design-system'
 import styles from './AddTagsModal.module.scss'
-import { FormEvent, useState, KeyboardEvent } from 'react'
+import { FormEvent, useState, KeyboardEvent, useId } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface AddTagsModalProps {
@@ -20,6 +20,7 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
   const [tagsToAdd, setTagsToAdd] = useState<string[]>([])
   const [tag, setTag] = useState('')
   const handleClose = (saved: boolean) => update({ saved: saved, tags: tagsToAdd })
+  const tagsSelectId = useId()
   const addTagOption = () => {
     if (tag && !availableTags.includes(tag)) {
       setTagOptions([...availableTags, tag])
@@ -42,14 +43,15 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
         <div className={styles.add_tags_form}>
           <Form>
             <Form.Group>
-              <Form.Group.Label column sm={3}>
+              <Form.Group.Label column sm={3} htmlFor={tagsSelectId}>
                 {t('fileForm.tags')}
               </Form.Group.Label>
               <Col sm={9} className={styles.tags}>
                 <div className={styles.tags_select} title={t('addTags.selectTags')}>
                   <SelectMultiple
                     options={availableTags}
-                    onChange={(newTags) => setTagsToAdd(newTags)}></SelectMultiple>
+                    onChange={(newTags) => setTagsToAdd(newTags)}
+                    inputButtonId={tagsSelectId}></SelectMultiple>
                 </div>
               </Col>
             </Form.Group>
