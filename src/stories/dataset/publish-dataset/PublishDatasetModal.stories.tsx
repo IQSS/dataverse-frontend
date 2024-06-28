@@ -2,6 +2,8 @@ import { Meta, StoryObj } from '@storybook/react'
 import { PublishDatasetModal } from '../../../sections/dataset/publish-dataset/PublishDatasetModal'
 import { DatasetMockRepository } from '../DatasetMockRepository'
 import { WithI18next } from '../../WithI18next'
+import { WithLoggedInSuperUser } from '../../WithLoggedInSuperUser'
+import { WithLoggedInUser } from '../../WithLoggedInUser'
 
 const meta: Meta<typeof PublishDatasetModal> = {
   title: 'Sections/Dataset Page/PublishDatasetModal',
@@ -13,8 +15,9 @@ export default meta
 
 type Story = StoryObj<typeof PublishDatasetModal>
 
-function DefaultExample() {
-  return (
+export const Default: Story = {
+  decorators: [WithLoggedInUser],
+  render: () => (
     <PublishDatasetModal
       show={true}
       repository={new DatasetMockRepository()}
@@ -24,6 +27,25 @@ function DefaultExample() {
   )
 }
 
-export const Default: Story = {
-  render: () => DefaultExample()
+export const ReleasedVersionExists: Story = {
+  decorators: [WithLoggedInUser],
+  render: () => (
+    <PublishDatasetModal
+      show={true}
+      repository={new DatasetMockRepository()}
+      persistentId={'test'}
+      releasedVersionExists={true}
+      handleClose={() => {}}></PublishDatasetModal>
+  )
+}
+export const Superuser: Story = {
+  decorators: [WithLoggedInSuperUser],
+  render: () => (
+    <PublishDatasetModal
+      show={true}
+      repository={new DatasetMockRepository()}
+      persistentId={'test'}
+      releasedVersionExists={true}
+      handleClose={() => {}}></PublishDatasetModal>
+  )
 }

@@ -12,7 +12,8 @@ export class JSDatasetVersionMapper {
     jDatasetVersionId: number,
     jsDatasetVersionInfo: JSDatasetVersionInfo,
     jsDatasetTitle: string,
-    jsDatasetCitation: string
+    jsDatasetCitation: string,
+    jsDatasetPublicationDate?: string
   ): DatasetVersion {
     return new DatasetVersion.Builder(
       jDatasetVersionId,
@@ -23,7 +24,7 @@ export class JSDatasetVersionMapper {
       true, // TODO Connect with dataset version isLatest
       false, // TODO Connect with dataset version isInReview
       this.toStatus(jsDatasetVersionInfo.state),
-      this.toSomeDatasetVersionHasBeenReleased(jsDatasetVersionInfo)
+      jsDatasetPublicationDate !== undefined
     )
   }
 
@@ -48,6 +49,7 @@ export class JSDatasetVersionMapper {
   }
 
   static toSomeDatasetVersionHasBeenReleased(jsDatasetVersionInfo: JSDatasetVersionInfo): boolean {
+    console.log('RELEASE TIME', JSON.stringify(jsDatasetVersionInfo))
     return (
       jsDatasetVersionInfo.releaseTime !== undefined &&
       !isNaN(jsDatasetVersionInfo.releaseTime.getTime())

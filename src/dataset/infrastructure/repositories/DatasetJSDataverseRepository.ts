@@ -8,6 +8,7 @@ import {
   Dataset as JSDataset,
   DatasetPreview as JSDatasetPreview,
   DatasetUserPermissions as JSDatasetPermissions,
+  VersionUpdateType as JSVersionUpdateType,
   getPrivateUrlDataset,
   getPrivateUrlDatasetCitation,
   getDatasetUserPermissions,
@@ -204,7 +205,16 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     persistentId: string,
     versionUpdateType: VersionUpdateType = VersionUpdateType.MAJOR
   ): Promise<void> {
-    return publishDataset.execute(persistentId, versionUpdateType).catch((error: WriteError) => {
+    let jsVersionUpdateType: JSVersionUpdateType
+    // TODO: remove this logic when VersionUpdateType.UPDATE_CURRENT is available in js-dataverse
+    if (versionUpdateType === VersionUpdateType.UPDATE_CURRENT) {
+      throw new Error('update current version type not supported yet')
+    } else if (versionUpdateType === VersionUpdateType.MINOR) {
+      jsVersionUpdateType = JSVersionUpdateType.MINOR
+    } else {
+      jsVersionUpdateType = JSVersionUpdateType.MAJOR
+    }
+    return publishDataset.execute(persistentId, jsVersionUpdateType).catch((error: WriteError) => {
       throw new Error(error.message)
     })
   }

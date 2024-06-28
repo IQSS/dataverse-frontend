@@ -376,7 +376,8 @@ export class Dataset {
     public readonly hierarchy: UpwardHierarchyNode,
     public readonly thumbnail?: string,
     public readonly privateUrl?: PrivateUrl, // will be set if the user requested a version that did not exist
-    public readonly requestedVersion?: string
+    public readonly requestedVersion?: string,
+    public readonly publicationDate?: string
   ) {}
 
   public checkIsLockedFromPublishing(userPersistentId: string): boolean {
@@ -457,7 +458,8 @@ export class Dataset {
       public readonly hierarchy: UpwardHierarchyNode,
       public readonly thumbnail?: string,
       public readonly privateUrl?: PrivateUrl, // will be set if the user requested a version that did not exist
-      public readonly requestedVersion?: string
+      public readonly requestedVersion?: string,
+      public readonly publicationDate?: string
     ) {
       this.withAlerts()
     }
@@ -521,7 +523,8 @@ export class Dataset {
         this.hierarchy,
         this.thumbnail,
         this.privateUrl,
-        this.requestedVersion
+        this.requestedVersion,
+        this.publicationDate
       )
     }
   }

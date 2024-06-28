@@ -71,6 +71,8 @@ export function PublishDatasetModal({
                 name="update-type"
                 label="Update Current Version"
                 id="update-type-current"
+                // TODO: Remove disabled when JSVersionUpdateType.UPDATE_CURRENT is available in js-dataverse
+                disabled={true}
                 value={VersionUpdateType.UPDATE_CURRENT}
               />
             )}

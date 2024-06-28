@@ -37,7 +37,7 @@ export function PublishDatasetMenu({ dataset, datasetRepository }: PublishDatase
         show={showModal}
         repository={datasetRepository}
         persistentId={dataset.persistentId}
-        releasedVersionExists={false}
+        releasedVersionExists={dataset.version.someDatasetVersionHasBeenReleased}
         handleClose={() => setShowModal(false)}></PublishDatasetModal>
 
       <DropdownButton

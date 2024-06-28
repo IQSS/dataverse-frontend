@@ -3,6 +3,24 @@ import { DatasetRepository } from '../../../../../src/dataset/domain/repositorie
 import { PublishDatasetModal } from '../../../../../src/sections/dataset/publish-dataset/PublishDatasetModal'
 
 describe('PublishDatasetModal', () => {
+  it('does not render the radio buttons when releasedVersionExists is false', () => {
+    const handleClose = cy.stub()
+    const repository = {} as DatasetRepository // Mock the repository as needed
+    repository.publish = cy.stub().as('repositoryPublish').resolves()
+    cy.mountAuthenticated(
+      <PublishDatasetModal
+        show={true}
+        repository={repository}
+        persistentId="testPersistentId"
+        releasedVersionExists={false}
+        handleClose={handleClose}
+      />
+    )
+    cy.findByText('Publish Dataset').should('exist')
+    cy.findByText('Major Version').should('not.exist')
+    cy.findByText('Minor Version').should('not.exist')
+    cy.findByText('Update Current Version').should('not.exist')
+  })
   it('renders the PublishDatasetModal and triggers submitPublish on button click', () => {
     const handleClose = cy.stub()
     const repository = {} as DatasetRepository // Mock the repository as needed
@@ -20,8 +38,6 @@ describe('PublishDatasetModal', () => {
     // Check if the modal is rendered
     cy.findByText('Publish Dataset').should('exist')
     cy.findByText('Major Version').click()
-    // Check if the "Publish Dataset" button is rendered and triggers submitPublish when clicked
-    // Check if the "Publish Dataset" button is rendered and triggers submitPublish when clicked
     cy.findByText('Continue').click()
     cy.get('@repositoryPublish').should(
       'have.been.calledWith',
@@ -31,8 +47,6 @@ describe('PublishDatasetModal', () => {
   })
   describe('PublishDatasetModal', () => {
     it('renders the third radio button when user.superuser is true', () => {
-      // Mock the useSession hook
-
       const handleClose = cy.stub()
       const repository = {} as DatasetRepository // Mock the repository as needed
       repository.publish = cy.stub().as('repositoryPublish').resolves()
@@ -45,15 +59,11 @@ describe('PublishDatasetModal', () => {
           handleClose={handleClose}
         />
       )
-
-      // Check if the third radio button is rendered
       cy.findByText('Update Current Version').should('exist')
     })
   })
   describe('PublishDatasetModal', () => {
-    it('does not the third radio button when user.superuser is false', () => {
-      // Mock the useSession hook
-
+    it('does not display the third radio button when user.superuser is false', () => {
       const handleClose = cy.stub()
       const repository = {} as DatasetRepository // Mock the repository as needed
       repository.publish = cy.stub().as('repositoryPublish').resolves()
@@ -66,8 +76,6 @@ describe('PublishDatasetModal', () => {
           handleClose={handleClose}
         />
       )
-
-      // Check if the third radio button is rendered
       cy.findByText('Update Current Version').should('not.exist')
     })
   })
