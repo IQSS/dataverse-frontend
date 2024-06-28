@@ -14,7 +14,7 @@ export const getSelectAdvancedInitialState = (
   selectWord
 })
 
-interface SelectAdvancedState {
+export interface SelectAdvancedState {
   isMultiple: boolean
   selected: string | string[]
   options: string[]
@@ -56,9 +56,7 @@ export const selectAdvancedReducer = (
       if (state.isMultiple) {
         return {
           ...state,
-          selected: Array.isArray(state.selected)
-            ? [...state.selected, action.payload]
-            : [action.payload]
+          selected: [...state.selected, action.payload]
         }
       } else {
         return {
@@ -66,34 +64,32 @@ export const selectAdvancedReducer = (
           selected: action.payload
         }
       }
+    // ONLY FOR MULTIPLE SELECT 👇
     case 'REMOVE_OPTION':
-      if (state.isMultiple && Array.isArray(state.selected)) {
-        return {
-          ...state,
-          selected: state.selected.filter((option) => option !== action.payload)
-        }
-      } else {
-        return {
-          ...state,
-          selected: ''
-        }
+      return {
+        ...state,
+        selected: (state.selected as string[]).filter((option) => option !== action.payload)
       }
+
+    // ONLY FOR MULTIPLE SELECT 👇
     case 'SELECT_ALL_OPTIONS':
-      if (state.isMultiple) {
-        return {
-          ...state,
-          selected:
-            state.filteredOptions.length > 0
-              ? Array.from(new Set([...state.selected, ...state.filteredOptions]))
-              : state.options
-        }
-      } else {
-        return state
+      return {
+        ...state,
+        selected:
+          state.filteredOptions.length > 0
+            ? Array.from(new Set([...(state.selected as string[]), ...state.filteredOptions]))
+            : state.options
       }
+    // ONLY FOR MULTIPLE SELECT 👇
     case 'DESELECT_ALL_OPTIONS':
       return {
         ...state,
-        selected: state.isMultiple ? [] : ''
+        selected:
+          state.filteredOptions.length > 0
+            ? (state.selected as string[]).filter(
+                (option) => !state.filteredOptions.includes(option)
+              )
+            : []
       }
     case 'SEARCH':
       return {

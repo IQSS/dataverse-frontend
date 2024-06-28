@@ -45,7 +45,9 @@ export const SelectAdvancedToggle = forwardRef(
             isInvalid ? styles['invalid'] : ''
           }`}
         />
-        <div className={styles['select-advanced-toggle__inner-content']}>
+        <div
+          className={styles['select-advanced-toggle__inner-content']}
+          data-testid="toggle-inner-content">
           {selected.length > 0 ? (
             <div
               className={styles['multiple-selected-options-container']}
@@ -68,7 +70,6 @@ export const SelectAdvancedToggle = forwardRef(
               ) : (
                 <p
                   className={styles['single-selected-option']}
-                  onClick={(e) => e.stopPropagation()}
                   key={`selected-option-${selected as string}`}>
                   {selected}
                 </p>

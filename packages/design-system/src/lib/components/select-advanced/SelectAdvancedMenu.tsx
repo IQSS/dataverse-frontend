@@ -81,10 +81,13 @@ export const SelectAdvancedMenu = ({
               aria-label="Search for an option"
               size="sm"
               onChange={handleSearch}
+              data-testid="select-advanced-searchable-input"
             />
           )}
           {isMultiple && !isSearchable && (
-            <p className={styles['selected-count']}>{selected.length} selected</p>
+            <p className={styles['selected-count']} data-testid="select-advanced-selected-count">
+              {selected.length} selected
+            </p>
           )}
         </DropdownBS.Header>
       )}
