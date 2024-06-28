@@ -7,6 +7,7 @@ import { VersionUpdateType } from '../../../dataset/domain/models/VersionUpdateT
 import { Form } from '@iqss/dataverse-design-system'
 import { useState } from 'react'
 import { useSession } from '../../session/SessionContext'
+import { PublishDatasetHelpText } from './PublishDatasetHelpText'
 
 interface PublishDatasetModalProps {
   show: boolean
@@ -47,6 +48,7 @@ export function PublishDatasetModal({
         <Modal.Title>Publish Dataset</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        <PublishDatasetHelpText releasedVersionExists={releasedVersionExists} />
         <p>Click to Publish the Dataset</p>
         {releasedVersionExists && (
           <Form.RadioGroup onChange={handleVersionUpdateTypeChange} title={'Update Version'}>
