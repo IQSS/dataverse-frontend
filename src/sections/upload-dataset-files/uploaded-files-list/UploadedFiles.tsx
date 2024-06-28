@@ -144,6 +144,7 @@ export function UploadedFiles({
                       key={file.key}>
                       <div className={styles.selected_files_cb}>
                         <Form.Group.Checkbox
+                          data-testid="select_file_cb"
                           label={''}
                           id={'select-all'}
                           checked={selected.has(file)}

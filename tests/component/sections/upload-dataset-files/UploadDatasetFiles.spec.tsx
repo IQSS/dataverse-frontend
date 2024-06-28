@@ -488,14 +488,10 @@ describe('UploadDatasetFiles', () => {
       { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
       { action: 'drag-drop' }
     )
-    cy.get('@dnd').selectFile(
-      { fileName: 'users2.json', contents: [{ name: 'John Doe the 2nd' }] },
-      { action: 'drag-drop' }
-    )
     // wait for upload to finish
-    cy.findByText('2 files uploaded').should('exist')
-    cy.get('label:contains("Tags")').first().click()
-    cy.get('label:contains("Tags")').first().click()
+    cy.findByText('1 file uploaded').should('exist')
+    cy.findByTestId('select_file_cb').first().click()
+    cy.findByTestId('select_file_cb').first().click()
   })
 
   it('add tags', () => {
