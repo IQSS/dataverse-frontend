@@ -38,7 +38,10 @@ describe('Dataset', () => {
   it('renders skeleton while loading', () => {
     const testDataset = DatasetMother.create()
 
-    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
+    mountWithDataset(
+      <Dataset datasetRepository={datasetRepository} fileRepository={fileRepository} />,
+      testDataset
+    )
 
     cy.findByTestId('dataset-skeleton').should('exist')
     cy.findByText(testDataset.version.title).should('not.exist')
@@ -47,7 +50,10 @@ describe('Dataset', () => {
   it('renders page not found when dataset is null', () => {
     const emptyDataset = DatasetMother.createEmpty()
 
-    mountWithDataset(<Dataset fileRepository={fileRepository} />, emptyDataset)
+    mountWithDataset(
+      <Dataset datasetRepository={datasetRepository} fileRepository={fileRepository} />,
+      emptyDataset
+    )
 
     cy.findByText('Page Not Found').should('exist')
   })
@@ -55,7 +61,10 @@ describe('Dataset', () => {
   it('renders the breadcrumbs', () => {
     const testDataset = DatasetMother.create()
 
-    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
+    mountWithDataset(
+      <Dataset datasetRepository={datasetRepository} fileRepository={fileRepository} />,
+      testDataset
+    )
 
     cy.findByText('Dataset Title').should('exist').should('have.class', 'active')
     cy.findByRole('link', { name: 'Root' }).should('exist')
@@ -64,7 +73,10 @@ describe('Dataset', () => {
   it('renders the Dataset page title and labels', () => {
     const testDataset = DatasetMother.create()
 
-    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
+    mountWithDataset(
+      <Dataset datasetRepository={datasetRepository} fileRepository={fileRepository} />,
+      testDataset
+    )
 
     cy.findAllByText(testDataset.version.title).should('exist')
 
@@ -76,7 +88,10 @@ describe('Dataset', () => {
   it('renders the Dataset Metadata tab', () => {
     const testDataset = DatasetMother.create()
 
-    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
+    mountWithDataset(
+      <Dataset datasetRepository={datasetRepository} fileRepository={fileRepository} />,
+      testDataset
+    )
 
     cy.findAllByText(testDataset.version.title).should('exist')
 
@@ -91,7 +106,10 @@ describe('Dataset', () => {
   it('renders the Dataset in anonymized view', () => {
     const testDatasetAnonymized = DatasetMother.createAnonymized()
 
-    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDatasetAnonymized)
+    mountWithDataset(
+      <Dataset datasetRepository={datasetRepository} fileRepository={fileRepository} />,
+      testDatasetAnonymized
+    )
 
     cy.findByRole('tab', { name: 'Metadata' }).click()
 
@@ -101,7 +119,10 @@ describe('Dataset', () => {
   it('renders the Dataset Action Buttons', () => {
     const testDataset = DatasetMother.create()
 
-    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
+    mountWithDataset(
+      <Dataset datasetRepository={datasetRepository} fileRepository={fileRepository} />,
+      testDataset
+    )
 
     cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
   })
