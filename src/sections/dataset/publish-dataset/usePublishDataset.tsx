@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
 import { publishDataset } from '../../../dataset/domain/useCases/publishDataset'
 import { Route } from '../../Route.enum'
