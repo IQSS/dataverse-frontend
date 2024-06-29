@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useId, useReducer, forwardRef, ForwardedRef } from 'react'
+import { useEffect, useMemo, useId, useReducer, forwardRef, ForwardedRef, useCallback } from 'react'
 import { Dropdown as DropdownBS } from 'react-bootstrap'
 import {
   selectAdvancedReducer,
@@ -80,121 +80,108 @@ export const SelectAdvanced = forwardRef(
 
     const isFirstRender = useIsFirstRender()
     const menuId = useId()
-    const [lastOnChangeValue, setLastOnChangeValue] = useState<string | string[]>(
-      isMultiple ? [] : ''
+
+    const callOnChage = useCallback(
+      (newSelected: string | string[]): void => {
+        if (!onChange) return
+        //@ts-expect-error - types differs
+        onChange(newSelected)
+      },
+      [onChange]
     )
 
     useEffect(() => {
-      if (!isFirstRender && onChange) {
-        // Dont call onChange if the selected options (string[]) remain the same
-        if (isMultiple) {
-          const selectedOptionsRemainTheSame = areArraysEqual(
-            selected as string[],
-            defaultValue && (lastOnChangeValue as string[])?.length === 0
-              ? defaultValue
-              : (lastOnChangeValue as string[])
-          )
-
-          if (selectedOptionsRemainTheSame) return
-        }
-        // Dont call onChange if the selected option (string) remain the same
-        if (!isMultiple) {
-          const compareAgainst =
-            defaultValue && (lastOnChangeValue as string) === ''
-              ? defaultValue
-              : (lastOnChangeValue as string)
-          const selectedOptionRemainTheSame = selected === compareAgainst
-
-          if (selectedOptionRemainTheSame) return
-        }
-        // console.log('%cOn Change', 'background: green; color: white; padding: 4px;')
-        isMultiple ? onChange(selected as string[]) : onChange(selected as string)
-        setLastOnChangeValue(selected)
-      }
-    }, [isMultiple, selected, isFirstRender, onChange, lastOnChangeValue, defaultValue])
-
-    useEffect(() => {
-      console.log('%cselected: ', 'background: green; color: white; padding: 4px;')
-      console.log({ selected })
-    }, [selected])
-
-    useEffect(() => {
-      const optionsRemainTheSame = propsOption.every((option) => options.includes(option))
+      const optionsRemainTheSame = areArraysEqual(dynamicInitialOptions, options)
 
       // If the options remain the same, do nothing
       if (optionsRemainTheSame) return
 
       const selectedOptionsThatAreNotInNewOptions = isMultiple
-        ? (selected as string[]).filter((option) => !propsOption.includes(option))
+        ? (selected as string[]).filter((option) => !dynamicInitialOptions.includes(option))
         : []
 
       // If there are selected options that are not in the new options, remove them
       if (isMultiple && selectedOptionsThatAreNotInNewOptions.length > 0) {
         selectedOptionsThatAreNotInNewOptions.forEach((option) => dispatch(removeOption(option)))
-        const newSelected = (selected as string[]).filter((option) => propsOption.includes(option))
 
-        if (onChange) {
-          onChange(newSelected)
-          // console.log('%cOn Change new selected', 'background: green; color: white; padding: 4px;')
-          setLastOnChangeValue(newSelected)
-        }
+        const newSelected = (selected as string[]).filter((option) =>
+          dynamicInitialOptions.includes(option)
+        )
+
+        callOnChage(newSelected)
       }
-      // If the selected option is not in the new options replace it with the default empty value
 
+      // If the selected option is not in the new options replace it with the default empty value
       if (
         !isMultiple &&
         selected !== '' &&
-        !propsOption.some((option) => option === (selected as string))
+        !dynamicInitialOptions.some((option) => option === (selected as string))
       ) {
         dispatch(selectOption(''))
-
-        if (onChange) {
-          onChange('')
-          // console.log('%cOn Change to " " ', 'background: green; color: white; padding: 4px;')
-          setLastOnChangeValue('')
-        }
+        callOnChage('')
       }
-      // Update the options
       dispatch(updateOptions(dynamicInitialOptions))
-    }, [
-      dynamicInitialOptions,
-      propsOption,
-      options,
-      isFirstRender,
-      dispatch,
-      selected,
-      isMultiple,
-      onChange
-    ])
+    }, [dynamicInitialOptions, options, selected, isFirstRender, dispatch, callOnChage, isMultiple])
 
     const handleSearch = debounce((e: React.ChangeEvent<HTMLInputElement>): void => {
       const { value } = e.target
       dispatch(searchOptions(value))
     }, SELECT_MENU_SEARCH_DEBOUNCE_TIME)
 
+    // ONLY FOR MULTIPLE SELECT 👇
     const handleCheck = (e: React.ChangeEvent<HTMLInputElement>): void => {
       const { value, checked } = e.target
 
       if (checked) {
+        const newSelected = [...(selected as string[]), value]
+        callOnChage(newSelected)
+
         dispatch(selectOption(value))
       } else {
+        const newSelected = (selected as string[]).filter((option) => option !== value)
+        callOnChage(newSelected)
+
         dispatch(removeOption(value))
       }
     }
 
+    // ONLY FOR SINGLE SELECT 👇
     const handleClickOption = (option: string): void => {
       if ((selected as string) === option) {
         return
       }
+      callOnChage(option)
+
       dispatch(selectOption(option))
     }
 
-    const handleRemoveSelectedOption = (option: string): void => dispatch(removeOption(option))
+    // ONLY FOR MULTIPLE SELECT 👇
+    const handleRemoveSelectedOption = (option: string): void => {
+      const newSelected = (selected as string[]).filter((selected) => selected !== option)
+      callOnChage(newSelected)
 
+      dispatch(removeOption(option))
+    }
+
+    // ONLY FOR MULTIPLE SELECT 👇
     const handleToggleAllOptions = (e: React.ChangeEvent<HTMLInputElement>): void => {
       if (e.target.checked) {
+        const newSelected =
+          filteredOptions.length > 0
+            ? Array.from(new Set([...(selected as string[]), ...filteredOptions]))
+            : options
+
+        callOnChage(newSelected)
+
         dispatch(selectAllOptions())
       } else {
+        const newSelected =
+          filteredOptions.length > 0
+            ? (selected as string[]).filter((option) => !filteredOptions.includes(option))
+            : []
+
+        callOnChage(newSelected)
+
         dispatch(deselectAllOptions())
       }
     }
