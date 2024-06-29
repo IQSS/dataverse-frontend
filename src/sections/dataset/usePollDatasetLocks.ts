@@ -4,6 +4,8 @@ import { getDatasetLocks } from '../../dataset/domain/useCases/getDatasetLocks' 
 import { Route } from '../Route.enum'
 import { Dataset } from '../../dataset/domain/models/Dataset'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
+import { useAlertContext } from '../alerts/AlertContext'
+import { AlertMessageKey } from '../../alert/domain/models/Alert'
 
 const usePollDatasetLocks = (
   publishInPogress: boolean | undefined,
@@ -11,7 +13,9 @@ const usePollDatasetLocks = (
   datasetRepository: DatasetRepository
 ) => {
   const navigate = useNavigate()
-  const navigateToDataset = (persistentId: string) => {
+  const { removeDatasetAlert, addDatasetAlert } = useAlertContext()
+  const navigateToPublishedDataset = (persistentId: string) => {
+    removeDatasetAlert(AlertMessageKey.PUBLISH_IN_PROGRESS)
     navigate(`${Route.DATASETS}?persistentId=${persistentId}`, {
       state: { publishInProgress: false }
     })
@@ -25,7 +29,7 @@ const usePollDatasetLocks = (
         const initialLocks = await getDatasetLocks(datasetRepository, dataset.persistentId)
         console.log('initial locks:', JSON.stringify(initialLocks))
         if (initialLocks.length === 0) {
-          navigateToDataset(dataset.persistentId)
+          navigateToPublishedDataset(dataset.persistentId)
         } else {
           intervalId = setInterval(() => {
             console.log('polling locks')
@@ -35,7 +39,8 @@ const usePollDatasetLocks = (
                 if (locks.length === 0) {
                   console.log('navigating to released version')
                   if (intervalId) clearInterval(intervalId)
-                  navigateToDataset(dataset.persistentId)
+
+                  navigateToPublishedDataset(dataset.persistentId)
                 }
               } catch (error) {
                 console.error('Error getting dataset locks:', error)
