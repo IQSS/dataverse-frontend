@@ -1,9 +1,9 @@
-import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
-import styles from './FileCitation.module.scss'
+import { Col, Row } from '@iqss/dataverse-design-system'
 import { CitationDescription } from '../../shared/citation/CitationDescription'
+import { DatasetPublishingStatus, DatasetVersion } from '../../../dataset/domain/models/Dataset'
 import { DatasetCitationTooltip } from '../../dataset/dataset-citation/DatasetCitationTooltip'
 import { CitationLearnAbout } from '../../shared/citation/CitationLearnAbout'
-import { Col, Row } from '@iqss/dataverse-design-system'
+import styles from './FileCitation.module.scss'
 
 interface FileCitationProps {
   citation: string

@@ -46,7 +46,7 @@ export function Collection({
             <CollectionInfo collection={collection} />
             {user && (
               <div className={styles.container}>
-                <AddDataActionsButton />
+                <AddDataActionsButton collectionId={id} />
               </div>
             )}
           </>

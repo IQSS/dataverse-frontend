@@ -21,6 +21,10 @@ import {
   FileSizeUnit
 } from '../../../../../src/files/domain/models/FileMetadata'
 import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
+import {
+  COUNTRY_FIELD_VOCAB_VALUES,
+  SUBJECT_FIELD_VOCAB_VALUES
+} from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 
 export class DatasetVersionMother {
   static create(props?: Partial<DatasetVersion>): DatasetVersion {
@@ -498,7 +502,7 @@ export class DatasetMother {
             publicationDate: '2021-01-01',
             citationDate: '2023-01-01',
             title: 'Dataset Title',
-            subject: ['Subject1', 'Subject2'],
+            subject: [SUBJECT_FIELD_VOCAB_VALUES[0], SUBJECT_FIELD_VOCAB_VALUES[1]],
             author: [
               {
                 authorName: 'Admin, Dataverse',
@@ -532,8 +536,8 @@ export class DatasetMother {
           fields: {
             geographicUnit: 'km',
             geographicCoverage: {
-              geographicCoverageCountry: 'United States',
-              geographicCoverageCity: 'Cambridge'
+              country: COUNTRY_FIELD_VOCAB_VALUES[234],
+              city: 'Cambridge'
             }
           }
         }
@@ -570,7 +574,7 @@ export class DatasetMother {
             publicationDate: ANONYMIZED_FIELD_VALUE,
             citationDate: '2023-01-01',
             title: 'Dataset Title',
-            subject: ['Subject1', 'Subject2'],
+            subject: [SUBJECT_FIELD_VOCAB_VALUES[0], SUBJECT_FIELD_VOCAB_VALUES[1]],
             author: ANONYMIZED_FIELD_VALUE,
             datasetContact: ANONYMIZED_FIELD_VALUE,
             dsDescription: [

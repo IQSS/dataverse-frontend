@@ -49,13 +49,17 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
     return <></>
   }
 
+  const dropdownButtonTitle = isBelow768px
+    ? ''
+    : /* istanbul ignore next */ t('actions.downloadFiles.title')
+
   if (dataset.hasOneTabularFileAtLeast) {
     return (
       <>
         <DropdownButton
           id="download-files"
           icon={<Download className={styles.icon} />}
-          title={isBelow768px ? '' : t('actions.downloadFiles.title')}
+          title={dropdownButtonTitle}
           ariaLabel={t('actions.downloadFiles.title')}
           variant="secondary"
           withSpacing>
@@ -84,7 +88,7 @@ export function DownloadFilesButton({ files, fileSelection }: DownloadFilesButto
           aria-label={t('actions.downloadFiles.title')}
           withSpacing
           onClick={onClick}>
-          {isBelow768px ? '' : t('actions.downloadFiles.title')}
+          {dropdownButtonTitle}
         </Button>
       </a>
       <NoSelectedFilesModal

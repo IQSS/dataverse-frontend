@@ -25,9 +25,12 @@ const expect = chai.expect
 
 function getCurrentDateInYYYYMMDDFormat() {
   const date = new Date()
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
-    date.getDate()
-  ).padStart(2, '0')}`
+  const [year, month, day] = [
+    date.getUTCFullYear(),
+    String(date.getUTCMonth() + 1).padStart(2, '0'),
+    String(date.getUTCDate()).padStart(2, '0')
+  ]
+  return `${year}-${month}-${day}`
 }
 
 function getPersistentIdUrl(persistentId: string) {
