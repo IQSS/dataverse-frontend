@@ -87,19 +87,31 @@ export const Vocabulary = ({
           <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
             <Row>
               <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
-                <Form.Group.Select
-                  onChange={onChange}
-                  value={value as string}
-                  isInvalid={invalid}
-                  aria-required={Boolean(updatedRulesToApply?.required)}
-                  ref={ref}>
-                  <option value="">Select</option>
-                  {options.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </Form.Group.Select>
+                {options.length > 10 ? (
+                  <Form.Group.SelectAdvanced
+                    defaultValue={value as string}
+                    options={options}
+                    onChange={onChange}
+                    isInvalid={invalid}
+                    ref={ref}
+                    inputButtonId={builtFieldName}
+                  />
+                ) : (
+                  <Form.Group.Select
+                    onChange={onChange}
+                    value={value as string}
+                    isInvalid={invalid}
+                    aria-required={Boolean(updatedRulesToApply?.required)}
+                    ref={ref}>
+                    <option value="">Select</option>
+                    {options.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </Form.Group.Select>
+                )}
+
                 <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
               </Col>
             </Row>

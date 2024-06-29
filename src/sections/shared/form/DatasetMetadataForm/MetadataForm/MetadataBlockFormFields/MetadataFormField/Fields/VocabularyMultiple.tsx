@@ -53,7 +53,8 @@ export const VocabularyMultiple = ({
           <Col sm={9}>
             <Row>
               <Col sm={9}>
-                <Form.Group.SelectMultiple
+                <Form.Group.SelectAdvanced
+                  isMultiple
                   defaultValue={value as string[]}
                   options={options}
                   onChange={onChange}
