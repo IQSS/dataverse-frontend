@@ -27,7 +27,8 @@ export function PublishDatasetModal({
   const { t } = useTranslation('publishDataset')
   const { user } = useSession()
   const onPublishErrorCallback = () => {
-    //TODO: Implement
+    // TODO: Navigate to error page
+    console.log('Error publishing dataset')
   }
   const { submissionStatus, submitPublish } = usePublishDataset(
     repository,
@@ -35,7 +36,7 @@ export function PublishDatasetModal({
     onPublishErrorCallback
   )
   const [selectedVersionUpdateType, setSelectedVersionUpdateType] = useState(
-    VersionUpdateType.MINOR
+    VersionUpdateType.MAJOR
   )
   const handleVersionUpdateTypeChange = (event: React.MouseEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement
