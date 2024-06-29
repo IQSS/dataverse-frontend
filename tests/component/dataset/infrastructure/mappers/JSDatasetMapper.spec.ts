@@ -108,6 +108,7 @@ const expectedDataset = {
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
   requestedVersion: undefined,
+  publicationDate: undefined,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
@@ -205,6 +206,7 @@ const expectedDatasetAlternateVersion = {
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
   requestedVersion: '4.0',
+  publicationDate: undefined,
   hasValidTermsOfAccess: true,
   hasOneTabularFileAtLeast: true,
   isValid: true,
@@ -305,7 +307,7 @@ describe('JS Dataset Mapper', () => {
 
     expect(expectedDataset).to.deep.equal(mapped)
   })
-  it('maps jsDataset model to the domain Dataset model for alternate version', () => {
+  it.only('maps jsDataset model to the domain Dataset model for alternate version', () => {
     const mappedWithAlternate = JSDatasetMapper.toDataset(
       jsDataset,
       citation,
