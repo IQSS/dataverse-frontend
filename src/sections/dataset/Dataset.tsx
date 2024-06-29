@@ -20,7 +20,7 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useAlertContext } from '../alerts/AlertContext'
 import { AlertMessageKey } from '../../alert/domain/models/Alert'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { Alerts } from '../alerts/Alerts'
+import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 import usePollDatasetLocks from './usePollDatasetLocks'
 
 interface DatasetProps {
@@ -40,9 +40,10 @@ export function Dataset({
   const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('dataset')
   const { hideModal, isModalOpen } = useNotImplementedModal()
-  const { addDatasetAlert, setDatasetAlerts } = useAlertContext()
+  const { datasetAlerts, addDatasetAlert, removeDatasetAlert, setDatasetAlerts } = useAlertContext()
 
   if (created) {
+    console.log('created')
     addDatasetAlert({ messageKey: AlertMessageKey.DATASET_CREATED, variant: 'success' })
   }
 
@@ -54,15 +55,10 @@ export function Dataset({
     if (setDatasetAlerts) {
       if (publishInProgress) {
         console.log('state.publishInProgress', publishInProgress)
-        setDatasetAlerts([{ messageKey: AlertMessageKey.PUBLISH_IN_PROGRESS, variant: 'info' }])
-      } else {
-        console.log('else condition  setting alerts')
-        if (dataset && setDatasetAlerts) {
-          setDatasetAlerts(dataset.alerts)
-        }
+        addDatasetAlert({ messageKey: AlertMessageKey.PUBLISH_IN_PROGRESS, variant: 'info' })
       }
     }
-  }, [publishInProgress, dataset, setDatasetAlerts])
+  }, [publishInProgress, dataset, removeDatasetAlert, addDatasetAlert])
 
   usePollDatasetLocks(publishInProgress, dataset, datasetRepository)
 
@@ -82,7 +78,7 @@ export function Dataset({
             <div className={styles.container}>
               <Row>
                 <Col>
-                  <Alerts></Alerts>
+                  <DatasetAlerts alerts={datasetAlerts}></DatasetAlerts>
                 </Col>
               </Row>
             </div>

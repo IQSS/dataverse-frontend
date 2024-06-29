@@ -1,3 +1,4 @@
+import { useAlertContext } from '../../alerts/AlertContext'
 import { Alerts } from '../../alerts/Alerts'
 import { Alert } from '../../../alert/domain/models/Alert'
 
@@ -6,7 +7,7 @@ interface DatasetAlertsProps {
 }
 
 export function DatasetAlerts({ alerts }: DatasetAlertsProps) {
-  console.log('DatasetAlerts', alerts)
-
+  const { addDatasetAlert } = useAlertContext()
+  alerts.forEach((alert) => addDatasetAlert(alert))
   return <Alerts></Alerts>
 }
