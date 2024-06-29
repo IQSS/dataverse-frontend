@@ -44,6 +44,7 @@ export const Created: Story = {
   decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithNotImplementedModal],
   render: () => (
     <Dataset
+      created={true}
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
     />
