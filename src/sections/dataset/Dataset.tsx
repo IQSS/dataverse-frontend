@@ -22,7 +22,7 @@ import { AlertMessageKey } from '../../alert/domain/models/Alert'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 import { DatasetFilesScrollable } from './dataset-files/DatasetFilesScrollable'
-import { usePollDatasetLocks } from './usePollDatasetLocks'
+import usePollDatasetLocks from './usePollDatasetLocks'
 
 interface DatasetProps {
   fileRepository: FileRepository
