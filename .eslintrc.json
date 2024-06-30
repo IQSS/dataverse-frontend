@@ -75,6 +75,12 @@
           "attributes": false
         }
       }
+    ],
+    "react-hooks/exhaustive-deps": [
+      "warn",
+      {
+        "additionalHooks": "(useDeepCompareEffect|useDeepCompareCallback|useDeepCompareMemo)"
+      }
     ]
   },
   "overrides": [

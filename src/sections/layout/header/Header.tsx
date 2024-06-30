@@ -35,7 +35,7 @@ export function Header() {
               {t('navigation.newDataset')}
             </Navbar.Dropdown.Item>
           </Navbar.Dropdown>
-          <Navbar.Dropdown title={user.name} id="dropdown-user">
+          <Navbar.Dropdown title={user.displayName} id="dropdown-user">
             <Navbar.Dropdown.Item href="#" onClick={onLogoutClick}>
               {t('logOut')}
             </Navbar.Dropdown.Item>

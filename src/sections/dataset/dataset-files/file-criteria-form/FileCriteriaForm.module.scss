@@ -1,18 +1,50 @@
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module";
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
 
 .criteria-section {
-    margin-bottom: 1em;
+  margin-bottom: 1em;
 }
 
-.sort-container {
+.row-top {
   display: flex;
-  align-items: end;
-  justify-content: end;
+  flex-direction: column;
+  justify-content: space-between;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .search-container {
+    width: 100%;
+
+    @media (min-width: 768px) {
+      flex-shrink: 0;
+      width: 42%;
+    }
+  }
+
+  .upload-files-container {
+    flex-shrink: 0;
+    align-self: flex-end;
+
+    @media (min-width: 768px) {
+      align-self: start;
+      margin-left: auto;
+    }
+  }
+}
+
+.row-bottom {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  justify-content: space-between;
 }
 
 .icon {
-  margin-right:  0.3em;
+  margin-right: 0.3em;
   margin-bottom: 0.2em;
 }
 
@@ -23,16 +55,10 @@
 }
 
 .selected-option {
-    font-weight: $dv-font-weight-bold;
+  font-weight: $dv-font-weight-bold;
 }
 
 .filters-container {
   display: flex;
   align-items: center;
-}
-
-.upload-files-container {
-  display: flex;
-  align-items: start;
-  justify-content: end;
 }

@@ -1,0 +1,1 @@
+export const FILES_TAB_INFINITE_SCROLL_ENABLED = true

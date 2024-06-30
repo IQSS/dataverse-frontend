@@ -51,7 +51,7 @@ describe('PaginationResultsInfo', () => {
         accumulated={10}
       />
     )
-    cy.findByText('10 of 15 Items seen').should('exist')
+    cy.findByText('10 of 15 Items displayed').should('exist')
   })
 
   it('shows the correct formatted results when accumulated prop passed and results are more than page size', () => {
@@ -64,6 +64,6 @@ describe('PaginationResultsInfo', () => {
         accumulated={500}
       />
     )
-    cy.findByText(`500 of ${expectedFormattedTotalCount} Items seen`).should('exist')
+    cy.findByText(`500 of ${expectedFormattedTotalCount} Items displayed`).should('exist')
   })
 })

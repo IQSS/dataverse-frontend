@@ -11,6 +11,7 @@ import { FileMother } from '../../../tests/component/files/domain/models/FileMot
 import { File } from '../../files/domain/models/File'
 import { FilePreview } from '../../files/domain/models/FilePreview'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
+import { FilesWithCount } from '../../files/domain/models/FilesWithCount'
 import { FileHolder } from '../../files/domain/repositories/File'
 
 export class FileMockRepository implements FileRepository {
@@ -24,6 +25,21 @@ export class FileMockRepository implements FileRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(FilesMockData(paginationInfo))
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getAllByDatasetPersistentIdWithCount(
+    _datasetPersistentId: string,
+    _datasetVersion: DatasetVersion,
+    paginationInfo?: FilePaginationInfo
+  ): Promise<FilesWithCount> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          files: FilesMockData(paginationInfo),
+          totalFilesCount: 50
+        })
       }, FakerHelper.loadingTimout())
     })
   }

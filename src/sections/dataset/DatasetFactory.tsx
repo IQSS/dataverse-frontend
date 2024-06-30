@@ -15,6 +15,7 @@ import { MultipleFileDownloadProvider } from '../file/multiple-file-download/Mul
 import { NotImplementedModalProvider } from '../not-implemented/NotImplementedModalProvider'
 import { AlertProvider } from '../alerts/AlertProvider'
 import { searchParamVersionToDomainVersion } from '../../Router'
+import { FILES_TAB_INFINITE_SCROLL_ENABLED } from './config'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
@@ -62,7 +63,11 @@ function DatasetWithSearchParams() {
       <DatasetProvider
         repository={datasetRepository}
         searchParams={{ privateUrlToken: privateUrlToken }}>
-        <Dataset datasetRepository={datasetRepository} fileRepository={fileRepository} />
+        <Dataset
+          datasetRepository={datasetRepository}
+          fileRepository={fileRepository}
+          filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
+        />
       </DatasetProvider>
     )
   }
@@ -76,6 +81,7 @@ function DatasetWithSearchParams() {
         fileRepository={fileRepository}
         created={created}
         publishInProgress={publishInProgress}
+        filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
       />
     </DatasetProvider>
   )

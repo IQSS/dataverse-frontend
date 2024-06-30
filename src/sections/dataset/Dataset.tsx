@@ -21,12 +21,14 @@ import { useAlertContext } from '../alerts/AlertContext'
 import { AlertMessageKey } from '../../alert/domain/models/Alert'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
-import usePollDatasetLocks from './usePollDatasetLocks'
+import { DatasetFilesScrollable } from './dataset-files/DatasetFilesScrollable'
+import { usePollDatasetLocks } from './usePollDatasetLocks'
 
 interface DatasetProps {
   fileRepository: FileRepository
   datasetRepository: DatasetRepository
   created?: boolean
+  filesTabInfiniteScrollEnabled?: boolean
   publishInProgress?: boolean
 }
 
@@ -34,19 +36,18 @@ export function Dataset({
   fileRepository,
   datasetRepository,
   created,
+  filesTabInfiniteScrollEnabled,
   publishInProgress
 }: DatasetProps) {
   const { setIsLoading } = useLoading()
   const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('dataset')
   const { hideModal, isModalOpen } = useNotImplementedModal()
-  const { addDatasetAlert, removeDatasetAlert, setDatasetAlerts } = useAlertContext()
+  const { setDatasetAlerts, removeDatasetAlert, addDatasetAlert } = useAlertContext()
 
   if (created) {
-    console.log('created')
     addDatasetAlert({ messageKey: AlertMessageKey.DATASET_CREATED, variant: 'success' })
   }
-
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])
@@ -104,11 +105,19 @@ export function Dataset({
               <Tabs defaultActiveKey="files">
                 <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
                   <div className={styles['tab-container']}>
-                    <DatasetFiles
-                      filesRepository={fileRepository}
-                      datasetPersistentId={dataset.persistentId}
-                      datasetVersion={dataset.version}
-                    />
+                    {filesTabInfiniteScrollEnabled ? (
+                      <DatasetFilesScrollable
+                        filesRepository={fileRepository}
+                        datasetPersistentId={dataset.persistentId}
+                        datasetVersion={dataset.version}
+                      />
+                    ) : (
+                      <DatasetFiles
+                        filesRepository={fileRepository}
+                        datasetPersistentId={dataset.persistentId}
+                        datasetVersion={dataset.version}
+                      />
+                    )}
                   </div>
                 </Tabs.Tab>
                 <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>

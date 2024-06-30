@@ -6,6 +6,7 @@ import { FileCriteria } from '../../files/domain/models/FileCriteria'
 import { FileMockRepository } from './FileMockRepository'
 import { File } from '../../files/domain/models/File'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
+import { FilesWithCount } from '../../files/domain/models/FilesWithCount'
 
 export class FileMockLoadingRepository extends FileMockRepository implements FileRepository {
   getAllByDatasetPersistentId(
@@ -16,6 +17,15 @@ export class FileMockLoadingRepository extends FileMockRepository implements Fil
       setTimeout(() => {
         // Do nothing
       }, 0)
+    })
+  }
+
+  getAllByDatasetPersistentIdWithCount(
+    _datasetPersistentId: string,
+    _datasetVersion: DatasetVersion
+  ): Promise<FilesWithCount> {
+    return new Promise(() => {
+      setTimeout(() => {}, 0)
     })
   }
 

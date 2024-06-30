@@ -7,6 +7,7 @@ import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
 import { useDataset } from '../../../../DatasetContext'
 import { FileSelection } from '../../row-selection/useFileSelection'
+import { useMediaQuery } from '../../../../../../shared/hooks/useMediaQuery'
 
 interface EditFilesMenuProps {
   files: FilePreview[]
@@ -17,6 +18,7 @@ export function EditFilesMenu({ files, fileSelection }: EditFilesMenuProps) {
   const { t } = useTranslation('files')
   const { user } = useSession()
   const { dataset } = useDataset()
+  const isBelow768px = useMediaQuery('(max-width: 768px)')
 
   if (
     files.length < MINIMUM_FILES_COUNT_TO_SHOW_EDIT_FILES_BUTTON ||
@@ -27,11 +29,14 @@ export function EditFilesMenu({ files, fileSelection }: EditFilesMenuProps) {
   }
   return (
     <DropdownButton
-      variant="secondary"
       id="edit-files-menu"
-      title={t('actions.editFilesMenu.title')}
-      disabled={dataset.checkIsLockedFromEdits(user.persistentId) || !dataset.hasValidTermsOfAccess}
-      icon={<PencilFill className={styles.icon} />}>
+      icon={<PencilFill className={styles.icon} />}
+      title={isBelow768px ? '' : t('actions.editFilesMenu.title')}
+      ariaLabel={t('actions.editFilesMenu.title')}
+      variant="secondary"
+      disabled={
+        dataset.checkIsLockedFromEdits(user.persistentId) || !dataset.hasValidTermsOfAccess
+      }>
       <EditFilesOptions files={files} fileSelection={fileSelection} />
     </DropdownButton>
   )
