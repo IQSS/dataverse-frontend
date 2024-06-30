@@ -16,6 +16,7 @@ const usePollDatasetLocks = (
   const { removeDatasetAlert, addDatasetAlert } = useAlertContext()
   const navigateToPublishedDataset = (persistentId: string) => {
     removeDatasetAlert(AlertMessageKey.PUBLISH_IN_PROGRESS)
+    removeDatasetAlert(AlertMessageKey.DRAFT_VERSION)
     navigate(`${Route.DATASETS}?persistentId=${persistentId}`, {
       state: { publishInProgress: false }
     })
