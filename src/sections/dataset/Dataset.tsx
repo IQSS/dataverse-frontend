@@ -40,7 +40,7 @@ export function Dataset({
   const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('dataset')
   const { hideModal, isModalOpen } = useNotImplementedModal()
-  const { datasetAlerts, addDatasetAlert, removeDatasetAlert, setDatasetAlerts } = useAlertContext()
+  const { addDatasetAlert, removeDatasetAlert, setDatasetAlerts } = useAlertContext()
 
   if (created) {
     console.log('created')
@@ -78,7 +78,7 @@ export function Dataset({
             <div className={styles.container}>
               <Row>
                 <Col>
-                  <DatasetAlerts alerts={datasetAlerts}></DatasetAlerts>
+                  <DatasetAlerts alerts={dataset.alerts} />
                 </Col>
               </Row>
             </div>
