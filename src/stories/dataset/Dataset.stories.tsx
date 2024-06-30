@@ -43,7 +43,12 @@ export const Default: Story = {
 }
 export const WithNormalPagination: Story = {
   decorators: [WithLayout, WithDataset, WithNotImplementedModal],
-  render: () => <Dataset fileRepository={new FileMockRepository()} />
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+    />
+  )
 }
 
 export const Created: Story = {
@@ -59,35 +64,75 @@ export const Created: Story = {
 }
 export const DraftWithAllDatasetPermissions: Story = {
   decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithNotImplementedModal],
-  render: () => <Dataset datasetRepository={new DatasetMockRepository()} fileRepository={new FileMockRepository()} filesTabInfiniteScrollEnabled />
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+      filesTabInfiniteScrollEnabled
+    />
+  )
 }
 export const Deaccessioned: Story = {
   decorators: [WithLayout, WithDeaccessionedDataset, WithLoggedInUser],
-  render: () => <Dataset datasetRepository={new DatasetMockRepository()} fileRepository={new FileMockRepository()} filesTabInfiniteScrollEnabled />
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+      filesTabInfiniteScrollEnabled
+    />
+  )
 }
 export const LoggedInAsOwner: Story = {
   decorators: [WithDataset, WithLayout, WithLoggedInUser, WithNotImplementedModal],
-  render: () => <Dataset datasetRepository={new DatasetMockRepository()} fileRepository={new FileMockRepository()} filesTabInfiniteScrollEnabled />
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+      filesTabInfiniteScrollEnabled
+    />
+  )
 }
 
 export const Loading: Story = {
   decorators: [WithLayout, WithDatasetLoading],
-  render: () => <Dataset fileRepository={new FileMockRepository()} datasetRepository={new DatasetMockRepository()} filesTabInfiniteScrollEnabled />
+  render: () => (
+    <Dataset
+      fileRepository={new FileMockRepository()}
+      datasetRepository={new DatasetMockRepository()}
+      filesTabInfiniteScrollEnabled
+    />
+  )
 }
 
 export const DatasetNotFound: Story = {
   decorators: [WithLayout, WithDatasetNotFound],
-  render: () => <Dataset datasetRepository={new DatasetMockRepository()} fileRepository={new FileMockRepository()} filesTabInfiniteScrollEnabled />
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+      filesTabInfiniteScrollEnabled
+    />
+  )
 }
 
 export const DatasetAnonymizedView: Story = {
   decorators: [WithLayout, WithAnonymizedView, WithDatasetPrivateUrl],
-  render: () => <Dataset datasetRepository={new DatasetMockRepository()} fileRepository={new FileMockRepository()} filesTabInfiniteScrollEnabled />
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+      filesTabInfiniteScrollEnabled
+    />
+  )
 }
 
 export const DatasetWithNoFiles: Story = {
   decorators: [WithLayout, WithAnonymizedView, WithDataset],
   render: () => (
-    <Dataset fileRepository={new FileMockNoDataRepository()} datasetRepository={new DatasetMockRepository()} filesTabInfiniteScrollEnabled />
+    <Dataset
+      fileRepository={new FileMockNoDataRepository()}
+      datasetRepository={new DatasetMockRepository()}
+      filesTabInfiniteScrollEnabled
+    />
   )
 }
