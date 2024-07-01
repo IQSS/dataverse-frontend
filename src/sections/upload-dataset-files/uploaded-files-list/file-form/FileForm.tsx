@@ -1,15 +1,17 @@
-import { Badge, Col, Form } from '@iqss/dataverse-design-system'
+import { Badge, Button, Col, Form } from '@iqss/dataverse-design-system'
 import { FileUploadState } from '../../../../files/domain/models/FileUploadState'
 import styles from './FileForm.module.scss'
 import { FormEvent, useId } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Plus } from 'react-bootstrap-icons'
 
 interface FileFormProps {
   file: FileUploadState
   updateFiles: (file: FileUploadState[]) => void
+  addTagTo: (file: FileUploadState) => void
 }
 
-export function FileForm({ file, updateFiles }: FileFormProps) {
+export function FileForm({ file, updateFiles, addTagTo }: FileFormProps) {
   const { t } = useTranslation('uploadDatasetFiles')
   const tagsSelectId = useId()
   const updateFileName = (file: FileUploadState, updated: string) => {
@@ -83,6 +85,14 @@ export function FileForm({ file, updateFiles }: FileFormProps) {
                 ))}
               </div>
             </div>
+            <Button
+              className={styles.edit_tags_btn}
+              variant="secondary"
+              type="button"
+              title={t('fileForm.editTagOptions')}
+              onClick={() => addTagTo(file)}>
+              <Plus title={t('fileForm.plus')} size={20} />
+            </Button>
           </Col>
         </Form.Group>
       </Form>

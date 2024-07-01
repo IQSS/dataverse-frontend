@@ -30,6 +30,7 @@ export function UploadedFiles({
   const { t } = useTranslation('uploadDatasetFiles')
   const [selected, setSelected] = useState(new Set<FileUploadState>())
   const [filesToRestrict, setFilesToRestrict] = useState<FileUploadState[]>([])
+  const [filesToAddTagsTo, setFilesToAddTagsTo] = useState<FileUploadState[]>([])
   const [tagOptions, setTagOptions] = useState([
     t('tags.documentation'),
     t('tags.data'),
@@ -59,16 +60,13 @@ export function UploadedFiles({
   }
   const addTags = (res: AddTagsModalResult) => {
     if (res.saved) {
-      setTagOptions([...tagOptions]) // trigger multiselect on change to set file.tags to selectedOptions
-      const filesToAddTagsTo = Array.from(selected).map((file) => {
+      const files = filesToAddTagsTo.map((file) => {
         res.tags.forEach((t) => {
           if (!file.tags.some((x) => x === t)) file.tags.push(t)
         })
         return file
       })
-      console.log(filesToAddTagsTo)
-      updateFiles(filesToAddTagsTo)
-      setTagOptions([...tagOptions]) // trigger multiselect to redraw
+      updateFiles(files)
     }
     setShowAddTagsModal(false)
   }
@@ -122,7 +120,10 @@ export function UploadedFiles({
             selected={selected}
             setSelected={setSelected}
             updateFilesRestricted={updateFilesRestricted}
-            showAddTagsModal={() => setShowAddTagsModal(true)}
+            showAddTagsModal={() => {
+              setFilesToAddTagsTo(Array.from(selected))
+              setShowAddTagsModal(true)
+            }}
           />
           <Card.Body>
             <div>
@@ -143,7 +144,14 @@ export function UploadedFiles({
                           onChange={() => updateSelected(file)}
                         />
                       </div>
-                      <FileForm file={file} updateFiles={updateFiles} />
+                      <FileForm
+                        file={file}
+                        updateFiles={updateFiles}
+                        addTagTo={(file) => {
+                          setFilesToAddTagsTo([file])
+                          setShowAddTagsModal(true)
+                        }}
+                      />
                       <div className={styles.file_size} title={t('uploadedFileSize')}>
                         {file.fileSizeString}
                       </div>

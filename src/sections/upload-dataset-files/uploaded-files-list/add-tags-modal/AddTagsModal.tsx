@@ -1,8 +1,7 @@
-import { Button, Col, Form, Modal, MultiSelectClassic } from '@iqss/dataverse-design-system'
+import { Button, Col, Form, Modal, MultiSelectClassic, Badge } from '@iqss/dataverse-design-system'
 import styles from './AddTagsModal.module.scss'
 import { FormEvent, useState, KeyboardEvent, useId } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Badge } from '@iqss/dataverse-design-system'
 
 interface AddTagsModalProps {
   show: boolean
@@ -20,7 +19,10 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
   const { t } = useTranslation('uploadDatasetFiles')
   const [tagsToAdd, setTagsToAdd] = useState<string[]>([])
   const [tag, setTag] = useState('')
-  const handleClose = (saved: boolean) => update({ saved: saved, tags: tagsToAdd })
+  const handleClose = (saved: boolean) => {
+    update({ saved: saved, tags: tagsToAdd })
+    setTagsToAdd([])
+  }
   const tagsSelectId = useId()
   const addTagOption = () => {
     if (tag && !availableTags.includes(tag)) {
