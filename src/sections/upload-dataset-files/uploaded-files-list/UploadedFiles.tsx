@@ -61,16 +61,16 @@ export function UploadedFiles({
   }
   const addTags = (res: AddTagsModalResult) => {
     if (res.saved) {
+      setTagOptions([...tagOptions]) // trigger multiselect on change to set file.tags to selectedOptions
       const filesToAddTagsTo = Array.from(selected).map((file) => {
-        const newTags = [...file.tags]
         res.tags.forEach((t) => {
-          if (!file.tags.some((x) => x === t)) newTags.push(t)
+          if (!file.tags.some((x) => x === t)) file.tags.push(t)
         })
-        file.tags = newTags
         return file
       })
       console.log(filesToAddTagsTo)
       updateFiles(filesToAddTagsTo)
+      setTagOptions([...tagOptions]) // trigger multiselect to redraw
     }
     setShowAddTagsModal(false)
   }

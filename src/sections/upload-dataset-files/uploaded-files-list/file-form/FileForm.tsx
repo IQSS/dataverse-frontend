@@ -28,7 +28,7 @@ export function FileForm({ file, updateFiles, availableTags, editTagOptions }: F
     updateFiles([file])
   }
   const setTags = (file: FileUploadState, newTags: string[]) => {
-    file.tags = [...newTags]
+    file.tags = newTags
     updateFiles([file])
   }
 
