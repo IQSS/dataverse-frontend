@@ -17,7 +17,8 @@ describe('User JSDataverse Repository', () => {
       firstName: 'Dataverse',
       lastName: 'Admin',
       email: 'dataverse@mailinator.com',
-      affiliation: 'Dataverse.org'
+      affiliation: 'Dataverse.org',
+      superuser: true
     }
     const user = await userRepository.getAuthenticated()
 
