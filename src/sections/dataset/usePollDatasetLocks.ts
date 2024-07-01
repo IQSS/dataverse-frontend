@@ -17,6 +17,7 @@ const usePollDatasetLocks = (
 
   const navigateToPublishedDataset = (persistentId: string) => {
     removeDatasetAlert(AlertMessageKey.PUBLISH_IN_PROGRESS)
+    removeDatasetAlert(AlertMessageKey.DRAFT_VERSION)
     navigate(`${Route.DATASETS}?persistentId=${persistentId}`, {
       state: { publishInProgress: false }
     })
@@ -26,7 +27,6 @@ const usePollDatasetLocks = (
 
     if (publishInProgress && dataset) {
       addDatasetAlert({ messageKey: AlertMessageKey.PUBLISH_IN_PROGRESS, variant: 'info' })
-      removeDatasetAlert(AlertMessageKey.DRAFT_VERSION)
       const gotoReleasedPageAfterPublish = async () => {
         const initialLocks = await getDatasetLocks(datasetRepository, dataset.persistentId)
         console.log('initial locks:', JSON.stringify(initialLocks))
