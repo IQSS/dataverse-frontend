@@ -146,6 +146,7 @@ export function UploadedFiles({
                       </div>
                       <FileForm
                         file={file}
+                        availableTags={[...tagOptions]}
                         updateFiles={updateFiles}
                         addTagTo={(file) => {
                           setFilesToAddTagsTo([file])

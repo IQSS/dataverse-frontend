@@ -3,15 +3,16 @@ import { FileUploadState } from '../../../../files/domain/models/FileUploadState
 import styles from './FileForm.module.scss'
 import { FormEvent, useId } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus } from 'react-bootstrap-icons'
+import { Plus, X } from 'react-bootstrap-icons'
 
 interface FileFormProps {
   file: FileUploadState
+  availableTags: string[]
   updateFiles: (file: FileUploadState[]) => void
   addTagTo: (file: FileUploadState) => void
 }
 
-export function FileForm({ file, updateFiles, addTagTo }: FileFormProps) {
+export function FileForm({ file, availableTags, updateFiles, addTagTo }: FileFormProps) {
   const { t } = useTranslation('uploadDatasetFiles')
   const tagsSelectId = useId()
   const updateFileName = (file: FileUploadState, updated: string) => {
@@ -24,6 +25,14 @@ export function FileForm({ file, updateFiles, addTagTo }: FileFormProps) {
   }
   const updateFileDescription = (file: FileUploadState, updated: string) => {
     file.description = updated
+    updateFiles([file])
+  }
+  const toggleTag = (file: FileUploadState, tag: string) => {
+    if (file.tags.includes(tag)) {
+      delete file.tags[file.tags.indexOf(tag)]
+    } else {
+      file.tags.push(tag)
+    }
     updateFiles([file])
   }
 
@@ -80,8 +89,13 @@ export function FileForm({ file, updateFiles, addTagTo }: FileFormProps) {
           <Col sm={9} className={styles.tags}>
             <div className={styles.tags_select} title={t('fileForm.selectTags')}>
               <div>
-                {file.tags.map((o) => (
-                  <Badge key={o}>{o}</Badge>
+                {availableTags.map((o) => (
+                  <span key={o} onClick={() => toggleTag(file, o)}>
+                    <Badge variant={file.tags.includes(o) ? 'primary' : 'secondary'}>
+                      {o}
+                      {file.tags.includes(o) ? <X /> : <Plus />}
+                    </Badge>
+                  </span>
                 ))}
               </div>
             </div>

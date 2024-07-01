@@ -1,7 +1,8 @@
-import { Button, Col, Form, Modal, MultiSelectClassic, Badge } from '@iqss/dataverse-design-system'
+import { Button, Col, Form, Modal, Badge } from '@iqss/dataverse-design-system'
 import styles from './AddTagsModal.module.scss'
 import { FormEvent, useState, KeyboardEvent, useId } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Plus, X } from 'react-bootstrap-icons'
 
 interface AddTagsModalProps {
   show: boolean
@@ -37,7 +38,6 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
       event.preventDefault()
     }
   }
-
   return (
     <Modal show={show} onHide={() => handleClose(false)} size="lg">
       <Modal.Header>
@@ -49,19 +49,17 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
             <Form.Group>
               <Form.Group.Label column sm={3} htmlFor={tagsSelectId}>
                 {t('fileForm.tags')}
-                <div>
-                  {tagsToAdd.map((o) => (
-                    <Badge key={o}>{o}</Badge>
-                  ))}
-                </div>
               </Form.Group.Label>
               <Col sm={9} className={styles.tags}>
                 <div className={styles.tags_select} title={t('addTags.selectTags')}>
-                  <MultiSelectClassic
-                    value={tagsToAdd}
-                    options={availableTags}
-                    setSelected={(newTags) => setTagsToAdd(newTags)}
-                  />
+                  {tagsToAdd.map((o) => (
+                    <span key={o} onClick={() => setTagsToAdd(tagsToAdd.filter((x) => x !== o))}>
+                      <Badge variant="primary">
+                        {o}
+                        <X />
+                      </Badge>
+                    </span>
+                  ))}
                 </div>
               </Col>
             </Form.Group>
@@ -95,7 +93,16 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
                   {t('tags.availableTagOptions')}
                   <div>
                     {availableTags.map((o) => (
-                      <Badge key={o}>{o}</Badge>
+                      <span
+                        key={o}
+                        onClick={() => {
+                          if (!tagsToAdd.includes(o)) setTagsToAdd([...tagsToAdd, o])
+                        }}>
+                        <Badge variant="secondary">
+                          {o}
+                          <Plus />
+                        </Badge>
+                      </span>
                     ))}
                   </div>
                 </div>
