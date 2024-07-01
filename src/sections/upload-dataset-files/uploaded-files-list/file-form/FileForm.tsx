@@ -1,19 +1,15 @@
-import { Button, Col, Form, MultiSelectClassic } from '@iqss/dataverse-design-system'
+import { Badge, Col, Form } from '@iqss/dataverse-design-system'
 import { FileUploadState } from '../../../../files/domain/models/FileUploadState'
 import styles from './FileForm.module.scss'
 import { FormEvent, useId } from 'react'
-import { Plus } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
-import { Badge } from '@iqss/dataverse-design-system'
 
 interface FileFormProps {
   file: FileUploadState
   updateFiles: (file: FileUploadState[]) => void
-  availableTags: string[]
-  editTagOptions: () => void
 }
 
-export function FileForm({ file, updateFiles, availableTags, editTagOptions }: FileFormProps) {
+export function FileForm({ file, updateFiles }: FileFormProps) {
   const { t } = useTranslation('uploadDatasetFiles')
   const tagsSelectId = useId()
   const updateFileName = (file: FileUploadState, updated: string) => {
@@ -26,10 +22,6 @@ export function FileForm({ file, updateFiles, availableTags, editTagOptions }: F
   }
   const updateFileDescription = (file: FileUploadState, updated: string) => {
     file.description = updated
-    updateFiles([file])
-  }
-  const setTags = (file: FileUploadState, newTags: string[]) => {
-    file.tags = newTags
     updateFiles([file])
   }
 
@@ -82,28 +74,15 @@ export function FileForm({ file, updateFiles, availableTags, editTagOptions }: F
         <Form.Group>
           <Form.Group.Label column sm={3} htmlFor={tagsSelectId}>
             {t('fileForm.tags')}
-            <div>
-              {file.tags.map((o) => (
-                <Badge key={o}>{o}</Badge>
-              ))}
-            </div>
           </Form.Group.Label>
           <Col sm={9} className={styles.tags}>
             <div className={styles.tags_select} title={t('fileForm.selectTags')}>
-              <MultiSelectClassic
-                options={availableTags}
-                value={file.tags}
-                setSelected={(newTags) => setTags(file, newTags)}
-              />
+              <div>
+                {file.tags.map((o) => (
+                  <Badge key={o}>{o}</Badge>
+                ))}
+              </div>
             </div>
-            <Button
-              className={styles.edit_tags_btn}
-              variant="secondary"
-              type="button"
-              title={t('fileForm.editTagOptions')}
-              onClick={editTagOptions}>
-              <Plus title={t('fileForm.plus')} size={20} />
-            </Button>
           </Col>
         </Form.Group>
       </Form>

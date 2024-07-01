@@ -5,7 +5,6 @@ import { FileUploadState } from '../../../files/domain/models/FileUploadState'
 import styles from '../FileUploader.module.scss'
 import { FormEvent, useState } from 'react'
 import { FileForm } from './file-form/FileForm'
-import { TagOptionsModal } from './tag-options-modal/TagOptionsModal'
 import { FilesHeader } from './files-header/FilesHeader'
 import { RestrictionModal, RestrictionModalResult } from './restriction-modal/RestrictionModal'
 import { useTranslation } from 'react-i18next'
@@ -39,7 +38,6 @@ export function UploadedFiles({
   const [terms, setTerms] = useState('')
   const [requestAccess, setRequestAccess] = useState(true)
   const [showRestrictionModal, setShowRestrictionModal] = useState(false)
-  const [showTagOptionsModal, setShowTagOptionsModal] = useState(false)
   const [showAddTagsModal, setShowAddTagsModal] = useState(false)
   const updateFilesRestricted = (files: FileUploadState[], restricted: boolean) => {
     if (restricted) {
@@ -100,12 +98,6 @@ export function UploadedFiles({
   return (
     <>
       <div className={styles.forms}>
-        <TagOptionsModal
-          availableTags={[...tagOptions]}
-          setTagOptions={setTagOptions}
-          show={showTagOptionsModal}
-          hide={() => setShowTagOptionsModal(false)}
-        />
         <RestrictionModal
           defaultRequestAccess={requestAccess}
           defaultTerms={terms}
@@ -151,12 +143,7 @@ export function UploadedFiles({
                           onChange={() => updateSelected(file)}
                         />
                       </div>
-                      <FileForm
-                        file={file}
-                        updateFiles={updateFiles}
-                        availableTags={[...tagOptions]}
-                        editTagOptions={() => setShowTagOptionsModal(true)}
-                      />
+                      <FileForm file={file} updateFiles={updateFiles} />
                       <div className={styles.file_size} title={t('uploadedFileSize')}>
                         {file.fileSizeString}
                       </div>

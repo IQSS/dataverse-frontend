@@ -47,6 +47,11 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
             <Form.Group>
               <Form.Group.Label column sm={3} htmlFor={tagsSelectId}>
                 {t('fileForm.tags')}
+                <div>
+                  {tagsToAdd.map((o) => (
+                    <Badge key={o}>{o}</Badge>
+                  ))}
+                </div>
               </Form.Group.Label>
               <Col sm={9} className={styles.tags}>
                 <div className={styles.tags_select} title={t('addTags.selectTags')}>
@@ -87,7 +92,7 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
                 <div className={styles.tag_info}>
                   {t('tags.availableTagOptions')}
                   <div>
-                    {tagsToAdd.map((o) => (
+                    {availableTags.map((o) => (
                       <Badge key={o}>{o}</Badge>
                     ))}
                   </div>
