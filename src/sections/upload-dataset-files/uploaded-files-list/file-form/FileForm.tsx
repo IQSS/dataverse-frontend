@@ -1,9 +1,10 @@
-import { Button, Col, Form, SelectMultiple } from '@iqss/dataverse-design-system'
+import { Button, Col, Form, MultiSelectClassic } from '@iqss/dataverse-design-system'
 import { FileUploadState } from '../../../../files/domain/models/FileUploadState'
 import styles from './FileForm.module.scss'
 import { FormEvent, useId } from 'react'
 import { Plus } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
+import { Badge } from '@iqss/dataverse-design-system'
 
 interface FileFormProps {
   file: FileUploadState
@@ -81,14 +82,19 @@ export function FileForm({ file, updateFiles, availableTags, editTagOptions }: F
         <Form.Group>
           <Form.Group.Label column sm={3} htmlFor={tagsSelectId}>
             {t('fileForm.tags')}
+            <div>
+              {file.tags.map((o) => (
+                <Badge key={o}>{o}</Badge>
+              ))}
+            </div>
           </Form.Group.Label>
           <Col sm={9} className={styles.tags}>
             <div className={styles.tags_select} title={t('fileForm.selectTags')}>
-              <SelectMultiple
+              <MultiSelectClassic
                 options={availableTags}
-                defaultValue={file.tags}
-                onChange={(newTags) => setTags(file, newTags)}
-                inputButtonId={tagsSelectId}></SelectMultiple>
+                value={file.tags}
+                setSelected={(newTags) => setTags(file, newTags)}
+              />
             </div>
             <Button
               className={styles.edit_tags_btn}

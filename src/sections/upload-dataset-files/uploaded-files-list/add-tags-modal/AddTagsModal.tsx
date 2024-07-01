@@ -1,7 +1,8 @@
-import { Button, Col, Form, Modal, SelectMultiple } from '@iqss/dataverse-design-system'
+import { Button, Col, Form, Modal, MultiSelectClassic } from '@iqss/dataverse-design-system'
 import styles from './AddTagsModal.module.scss'
 import { FormEvent, useState, KeyboardEvent, useId } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Badge } from '@iqss/dataverse-design-system'
 
 interface AddTagsModalProps {
   show: boolean
@@ -24,6 +25,7 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
   const addTagOption = () => {
     if (tag && !availableTags.includes(tag)) {
       setTagOptions([...availableTags, tag])
+      setTagsToAdd((current) => [...current, tag])
       setTag('')
     }
   }
@@ -48,10 +50,11 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
               </Form.Group.Label>
               <Col sm={9} className={styles.tags}>
                 <div className={styles.tags_select} title={t('addTags.selectTags')}>
-                  <SelectMultiple
+                  <MultiSelectClassic
+                    value={tagsToAdd}
                     options={availableTags}
-                    onChange={(newTags) => setTagsToAdd(newTags)}
-                    inputButtonId={tagsSelectId}></SelectMultiple>
+                    setSelected={(newTags) => setTagsToAdd(newTags)}
+                  />
                 </div>
               </Col>
             </Form.Group>
@@ -83,7 +86,11 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
                 </div>
                 <div className={styles.tag_info}>
                   {t('tags.availableTagOptions')}
-                  {availableTags.join(', ')}
+                  <div>
+                    {tagsToAdd.map((o) => (
+                      <Badge key={o}>{o}</Badge>
+                    ))}
+                  </div>
                 </div>
               </Col>
             </Form.Group>
