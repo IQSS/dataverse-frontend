@@ -24,7 +24,7 @@ export class JSDatasetVersionMapper {
       true, // TODO Connect with dataset version isLatest
       false, // TODO Connect with dataset version isInReview
       this.toStatus(jsDatasetVersionInfo.state),
-      jsDatasetPublicationDate !== undefined
+      this.toSomeDatasetVersionHasBeenReleased(jsDatasetVersionInfo)
     )
   }
 
