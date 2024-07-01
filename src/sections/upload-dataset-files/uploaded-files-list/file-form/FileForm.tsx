@@ -1,7 +1,7 @@
 import { Badge, Button, Col, Form } from '@iqss/dataverse-design-system'
 import { FileUploadState } from '../../../../files/domain/models/FileUploadState'
 import styles from './FileForm.module.scss'
-import { FormEvent, useId } from 'react'
+import { FormEvent, useState, KeyboardEvent, useId } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Plus, X } from 'react-bootstrap-icons'
 
@@ -9,11 +9,12 @@ interface FileFormProps {
   file: FileUploadState
   availableTags: string[]
   updateFiles: (file: FileUploadState[]) => void
-  addTagTo: (file: FileUploadState) => void
+  setTagOptions: (tags: string[]) => void
 }
 
-export function FileForm({ file, availableTags, updateFiles, addTagTo }: FileFormProps) {
+export function FileForm({ file, availableTags, updateFiles, setTagOptions }: FileFormProps) {
   const { t } = useTranslation('uploadDatasetFiles')
+  const [tag, setTag] = useState('')
   const tagsSelectId = useId()
   const updateFileName = (file: FileUploadState, updated: string) => {
     file.fileName = updated
@@ -34,6 +35,20 @@ export function FileForm({ file, availableTags, updateFiles, addTagTo }: FileFor
       file.tags.push(tag)
     }
     updateFiles([file])
+  }
+  const handleEnter = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      addTagOption()
+      event.preventDefault()
+    }
+  }
+  const addTagOption = () => {
+    if (tag && !availableTags.includes(tag)) {
+      setTagOptions([...availableTags, tag])
+      file.tags.push(tag)
+      setTag('')
+      updateFiles([file])
+    }
   }
 
   return (
@@ -98,15 +113,26 @@ export function FileForm({ file, availableTags, updateFiles, addTagTo }: FileFor
                   </span>
                 ))}
               </div>
+              <div className={styles.tags} onKeyDown={handleEnter}>
+                <Form.Group.Input
+                  type="text"
+                  placeholder={t('tags.addCustomTag')}
+                  title={t('tags.creatingNewTag')}
+                  value={tag}
+                  onChange={(event: FormEvent<HTMLInputElement>) =>
+                    setTag(event.currentTarget.value)
+                  }
+                />
+                <Button
+                  className={styles.edit_tags_btn}
+                  variant="secondary"
+                  type="button"
+                  title={t('tags.creatingNewTag')}
+                  onClick={addTagOption}>
+                  <Plus size={20} />
+                </Button>
+              </div>
             </div>
-            <Button
-              className={styles.edit_tags_btn}
-              variant="secondary"
-              type="button"
-              title={t('fileForm.editTagOptions')}
-              onClick={() => addTagTo(file)}>
-              <Plus title={t('fileForm.plus')} size={20} />
-            </Button>
           </Col>
         </Form.Group>
       </Form>

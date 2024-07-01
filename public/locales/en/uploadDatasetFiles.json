@@ -18,7 +18,8 @@
     "addNewTag": "Add new file tag...",
     "availableTagOptions": "Available tag options: ",
     "apply": "Apply",
-    "close": "Close"
+    "close": "Close",
+    "addCustomTag": "Add new custom file tag..."
   },
   "restriction": {
     "restrictAccess": "Restrict Access",

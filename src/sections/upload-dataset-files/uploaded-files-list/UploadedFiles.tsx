@@ -148,10 +148,7 @@ export function UploadedFiles({
                         file={file}
                         availableTags={[...tagOptions]}
                         updateFiles={updateFiles}
-                        addTagTo={(file) => {
-                          setFilesToAddTagsTo([file])
-                          setShowAddTagsModal(true)
-                        }}
+                        setTagOptions={setTagOptions}
                       />
                       <div className={styles.file_size} title={t('uploadedFileSize')}>
                         {file.fileSizeString}
