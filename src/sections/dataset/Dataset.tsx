@@ -43,7 +43,7 @@ export function Dataset({
   const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('dataset')
   const { hideModal, isModalOpen } = useNotImplementedModal()
-  const { setDatasetAlerts, removeDatasetAlert, addDatasetAlert } = useAlertContext()
+  const { setDatasetAlerts, addDatasetAlert } = useAlertContext()
 
   if (created) {
     addDatasetAlert({ messageKey: AlertMessageKey.DATASET_CREATED, variant: 'success' })
@@ -51,15 +51,6 @@ export function Dataset({
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])
-
-  useEffect(() => {
-    if (setDatasetAlerts) {
-      if (publishInProgress) {
-        console.log('state.publishInProgress', publishInProgress)
-        addDatasetAlert({ messageKey: AlertMessageKey.PUBLISH_IN_PROGRESS, variant: 'info' })
-      }
-    }
-  }, [publishInProgress, dataset, removeDatasetAlert, addDatasetAlert])
 
   usePollDatasetLocks(publishInProgress, dataset, datasetRepository)
 

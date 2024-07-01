@@ -8,24 +8,25 @@ import { useAlertContext } from '../alerts/AlertContext'
 import { AlertMessageKey } from '../../alert/domain/models/Alert'
 
 const usePollDatasetLocks = (
-  publishInPogress: boolean | undefined,
+  publishInProgress: boolean | undefined,
   dataset: Dataset | undefined,
   datasetRepository: DatasetRepository
 ) => {
   const navigate = useNavigate()
   const { removeDatasetAlert, addDatasetAlert } = useAlertContext()
+
   const navigateToPublishedDataset = (persistentId: string) => {
     removeDatasetAlert(AlertMessageKey.PUBLISH_IN_PROGRESS)
-    removeDatasetAlert(AlertMessageKey.DRAFT_VERSION)
     navigate(`${Route.DATASETS}?persistentId=${persistentId}`, {
       state: { publishInProgress: false }
     })
   }
-
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null
 
-    if (publishInPogress && dataset) {
+    if (publishInProgress && dataset) {
+      addDatasetAlert({ messageKey: AlertMessageKey.PUBLISH_IN_PROGRESS, variant: 'info' })
+      removeDatasetAlert(AlertMessageKey.DRAFT_VERSION)
       const gotoReleasedPageAfterPublish = async () => {
         const initialLocks = await getDatasetLocks(datasetRepository, dataset.persistentId)
         console.log('initial locks:', JSON.stringify(initialLocks))
@@ -38,13 +39,10 @@ const usePollDatasetLocks = (
               try {
                 const locks = await getDatasetLocks(datasetRepository, dataset.persistentId)
                 if (locks.length === 0) {
-                  console.log('navigating to released version')
                   if (intervalId) clearInterval(intervalId)
-
                   navigateToPublishedDataset(dataset.persistentId)
                 }
               } catch (error) {
-                console.error('Error getting dataset locks:', error)
                 if (intervalId) clearInterval(intervalId)
               }
             }
@@ -60,6 +58,6 @@ const usePollDatasetLocks = (
         clearInterval(intervalId)
       }
     }
-  }, [publishInPogress, dataset, datasetRepository, navigate])
+  }, [publishInProgress, dataset, datasetRepository, navigate])
 }
 export default usePollDatasetLocks
