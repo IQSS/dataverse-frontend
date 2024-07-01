@@ -447,7 +447,13 @@ describe('DatasetMetadataForm', () => {
           .should('exist')
           .closest('.row')
           .within(() => {
-            cy.findByLabelText(/Country \/ Nation/).should('exist')
+            cy.findByLabelText(/Country \/ Nation/)
+              .should('exist')
+              .closest('.dropdown')
+              .within(() => {
+                cy.findByLabelText('Toggle options menu').click()
+                cy.findAllByRole('option').should('have.length', 250)
+              })
 
             cy.findByLabelText(/State \/ Province/)
               .should('exist')

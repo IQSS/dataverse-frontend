@@ -51,7 +51,8 @@ export const SelectAdvancedToggle = forwardRef(
           {selected.length > 0 ? (
             <div
               className={styles['multiple-selected-options-container']}
-              aria-label="List of selected options">
+              aria-label="List of selected options"
+              role="region">
               {isMultiple ? (
                 (selected as string[]).map((selectedValue) => (
                   <div

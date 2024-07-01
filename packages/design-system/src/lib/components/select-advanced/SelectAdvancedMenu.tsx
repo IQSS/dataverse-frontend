@@ -98,18 +98,25 @@ export const SelectAdvancedMenu = ({
             return (
               <DropdownBS.Item
                 as="li"
+                role="option"
+                data-value={option === selectWord ? '' : option}
+                id={`${optionLabelId}-${option}`}
                 className={styles['option-item-not-multiple']}
-                key={option}
                 onClick={() => handleClickOption(option === selectWord ? '' : option)}
                 active={option !== selectWord ? selected === option : selected === ''}
-                id={`${optionLabelId}-${option}`}>
+                key={option}>
                 {option}
               </DropdownBS.Item>
             )
           }
 
           return (
-            <DropdownBS.Item as="li" className={styles['option-item']} key={option}>
+            <DropdownBS.Item
+              as="li"
+              className={styles['option-item']}
+              role="option"
+              data-value={option}
+              key={option}>
               <FormBS.Check
                 type="checkbox"
                 value={option}

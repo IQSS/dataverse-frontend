@@ -37,11 +37,15 @@ describe('SelectAdvanced', () => {
       cy.findByLabelText('Toggle options menu').click()
 
       cy.findByText('Reading').should('exist')
+      cy.findByText('Reading').should('exist')
       cy.findByText('Swimming').should('exist')
       cy.findByText('Running').should('exist')
       cy.findByText('Cycling').should('exist')
       cy.findByText('Cooking').should('exist')
       cy.findByText('Gardening').should('exist')
+
+      // 6 Options + 1 Select... option
+      cy.findAllByRole('option').should('have.length', 7)
     })
     it('on multiple selection', () => {
       cy.mount(
@@ -58,6 +62,8 @@ describe('SelectAdvanced', () => {
       cy.findByText('Cycling').should('exist')
       cy.findByText('Cooking').should('exist')
       cy.findByText('Gardening').should('exist')
+
+      cy.findAllByRole('option').should('have.length', 6)
     })
   })
 
@@ -327,6 +333,7 @@ describe('SelectAdvanced', () => {
       .spread((_selectedItem, selectedListOption) => {
         const element = cy.get(selectedListOption)
         element.should('have.class', 'active')
+        element.should('have.attr', 'aria-selected', 'true')
       })
 
     cy.findByText('Swimming').click()
@@ -336,8 +343,11 @@ describe('SelectAdvanced', () => {
       .spread((_selectedItem, selectedListOption) => {
         const element = cy.get(selectedListOption)
         element.should('have.class', 'active')
+        element.should('have.attr', 'aria-selected', 'true')
       })
-    cy.findByText('Reading').should('not.have.class', 'active')
+    cy.findByText('Reading')
+      .should('not.have.class', 'active')
+      .should('have.attr', 'aria-selected', 'false')
   })
 
   it('should not change the selected option when clicking on the selected option in single selection mode', () => {

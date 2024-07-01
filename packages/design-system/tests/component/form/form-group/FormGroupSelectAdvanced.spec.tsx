@@ -3,8 +3,8 @@ import { FormGroup } from '../../../../src/lib/components/form/form-group/FormGr
 describe('FormSelectAdvanced', () => {
   it('renders without error', () => {
     cy.mount(
-      <FormGroup controlId="some-id">
-        <FormGroup.Label>Hobbies</FormGroup.Label>
+      <FormGroup>
+        <FormGroup.Label htmlFor="some-id">Hobbies</FormGroup.Label>
         <FormGroup.SelectAdvanced
           options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
           inputButtonId="some-id"
@@ -17,8 +17,8 @@ describe('FormSelectAdvanced', () => {
 
   it('should focus on the input button when the label is clicked', () => {
     cy.mount(
-      <FormGroup controlId="some-id">
-        <FormGroup.Label>Hobbies</FormGroup.Label>
+      <FormGroup>
+        <FormGroup.Label htmlFor="some-id">Hobbies</FormGroup.Label>
         <FormGroup.SelectAdvanced
           options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
           inputButtonId="some-id"
