@@ -196,7 +196,7 @@ export interface DatasetLicense {
   iconUri?: string
 }
 
-const defaultLicense: DatasetLicense = {
+export const defaultLicense: DatasetLicense = {
   name: 'CC0 1.0',
   uri: 'https://creativecommons.org/publicdomain/zero/1.0',
   iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
