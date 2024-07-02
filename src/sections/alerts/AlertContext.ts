@@ -6,7 +6,7 @@ interface DatasetAlertContextProps {
   datasetAlerts: Alert[]
   addDatasetAlert: (newAlert: Alert) => void
   removeDatasetAlert: (alertId: AlertMessageKey) => void
-  setDatasetAlerts?: (alerts: Alert[]) => void
+  setDatasetAlerts: (alerts: Alert[]) => void
 }
 
 export const AlertContext = createContext<DatasetAlertContextProps>({

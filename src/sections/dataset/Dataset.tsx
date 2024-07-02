@@ -22,7 +22,9 @@ import { AlertMessageKey } from '../../alert/domain/models/Alert'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 import { DatasetFilesScrollable } from './dataset-files/DatasetFilesScrollable'
-import usePollDatasetLocks from './usePollDatasetLocks'
+import useCheckPublishCompleted from './useCheckPublishCompleted'
+import { useNavigate } from 'react-router-dom'
+import { Route } from '../Route.enum'
 
 interface DatasetProps {
   fileRepository: FileRepository
@@ -43,16 +45,36 @@ export function Dataset({
   const { dataset, isLoading } = useDataset()
   const { t } = useTranslation('dataset')
   const { hideModal, isModalOpen } = useNotImplementedModal()
-  const { setDatasetAlerts, addDatasetAlert } = useAlertContext()
+  const { setDatasetAlerts, datasetAlerts, addDatasetAlert, removeDatasetAlert } = useAlertContext()
+  const publishCompleted = useCheckPublishCompleted(publishInProgress, dataset, datasetRepository)
+  const navigate = useNavigate()
 
-  if (created) {
-    addDatasetAlert({ messageKey: AlertMessageKey.DATASET_CREATED, variant: 'success' })
-  }
+  useEffect(() => {
+    if (created) {
+      addDatasetAlert({ messageKey: AlertMessageKey.DATASET_CREATED, variant: 'success' })
+    }
+    if (dataset) {
+      if (publishInProgress) {
+        addDatasetAlert({ messageKey: AlertMessageKey.PUBLISH_IN_PROGRESS, variant: 'info' })
+        if (publishCompleted) {
+          const newAlerts = datasetAlerts.filter(
+            (alert) =>
+              alert.messageKey !== AlertMessageKey.PUBLISH_IN_PROGRESS &&
+              alert.messageKey !== AlertMessageKey.DRAFT_VERSION
+          )
+          setDatasetAlerts(newAlerts)
+          navigate(`${Route.DATASETS}?persistentId=${dataset.persistentId}`, {
+            state: { publishInProgress: false },
+            replace: true
+          })
+        }
+      }
+    }
+  }, [publishCompleted])
+
   useEffect(() => {
     setIsLoading(isLoading)
   }, [isLoading, setIsLoading])
-
-  usePollDatasetLocks(publishInProgress, dataset, datasetRepository)
 
   if (isLoading) {
     return <DatasetSkeleton />

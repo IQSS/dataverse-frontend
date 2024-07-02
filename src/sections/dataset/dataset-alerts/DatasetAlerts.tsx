@@ -1,6 +1,7 @@
 import { useAlertContext } from '../../alerts/AlertContext'
 import { Alerts } from '../../alerts/Alerts'
 import { Alert } from '../../../alert/domain/models/Alert'
+import { useEffect } from 'react'
 
 interface DatasetAlertsProps {
   alerts: Alert[]
@@ -8,6 +9,9 @@ interface DatasetAlertsProps {
 
 export function DatasetAlerts({ alerts }: DatasetAlertsProps) {
   const { addDatasetAlert } = useAlertContext()
-  alerts.forEach((alert) => addDatasetAlert(alert))
+  useEffect(() => {
+    alerts.forEach((alert) => addDatasetAlert(alert))
+  }, [alerts])
+
   return <Alerts></Alerts>
 }
