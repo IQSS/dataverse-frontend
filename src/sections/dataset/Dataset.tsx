@@ -55,14 +55,15 @@ export function Dataset({
     }
     if (dataset) {
       if (publishInProgress) {
-        addDatasetAlert({ messageKey: AlertMessageKey.PUBLISH_IN_PROGRESS, variant: 'info' })
+        const newAlerts = datasetAlerts.filter(
+          (alert) =>
+            alert.messageKey !== AlertMessageKey.DRAFT_VERSION &&
+            alert.messageKey !== AlertMessageKey.DATASET_CREATED
+        )
+        newAlerts.push({ messageKey: AlertMessageKey.PUBLISH_IN_PROGRESS, variant: 'info' })
+        setDatasetAlerts(newAlerts)
         if (publishCompleted) {
-          const newAlerts = datasetAlerts.filter(
-            (alert) =>
-              alert.messageKey !== AlertMessageKey.PUBLISH_IN_PROGRESS &&
-              alert.messageKey !== AlertMessageKey.DRAFT_VERSION
-          )
-          setDatasetAlerts(newAlerts)
+          removeDatasetAlert(AlertMessageKey.PUBLISH_IN_PROGRESS)
           navigate(`${Route.DATASETS}?persistentId=${dataset.persistentId}`, {
             state: { publishInProgress: false },
             replace: true
@@ -70,7 +71,7 @@ export function Dataset({
         }
       }
     }
-  }, [publishCompleted])
+  }, [publishCompleted, dataset])
 
   useEffect(() => {
     setIsLoading(isLoading)
