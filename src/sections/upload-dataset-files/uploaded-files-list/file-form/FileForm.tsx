@@ -124,6 +124,7 @@ export function FileForm({ file, availableTags, updateFiles, setTagOptions }: Fi
                   }
                 />
                 <Button
+                  data-testid="add-custom-tag"
                   className={styles.edit_tags_btn}
                   variant="secondary"
                   type="button"
