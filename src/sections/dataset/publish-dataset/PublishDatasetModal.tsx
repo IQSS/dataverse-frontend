@@ -8,6 +8,8 @@ import { Form } from '@iqss/dataverse-design-system'
 import { useState } from 'react'
 import { useSession } from '../../session/SessionContext'
 import { PublishDatasetHelpText } from './PublishDatasetHelpText'
+import { License } from '../dataset-summary/License'
+import { defaultLicense } from '../../../dataset/domain/models/Dataset'
 
 interface PublishDatasetModalProps {
   show: boolean
@@ -28,7 +30,7 @@ export function PublishDatasetModal({
   const { user } = useSession()
   const onPublishErrorCallback = () => {
     // TODO: Navigate to error page
-    console.log('Error publishing dataset')
+    throw new Error('Error publishing dataset')
   }
   const { submissionStatus, submitPublish } = usePublishDataset(
     repository,
@@ -50,6 +52,13 @@ export function PublishDatasetModal({
       </Modal.Header>
       <Modal.Body>
         <PublishDatasetHelpText releasedVersionExists={releasedVersionExists} />
+        <License
+          license={{
+            name: defaultLicense.name,
+            uri: defaultLicense.uri,
+            iconUri: defaultLicense.iconUri
+          }}
+        />
         {releasedVersionExists && (
           <>
             <p>{t('selectVersion')}</p>
