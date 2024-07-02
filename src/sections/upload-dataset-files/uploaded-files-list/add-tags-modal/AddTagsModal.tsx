@@ -53,7 +53,10 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
               <Col sm={9} className={styles.tags}>
                 <div className={styles.tags_select} title={t('addTags.selectTags')}>
                   {tagsToAdd.map((o) => (
-                    <span key={o} onClick={() => setTagsToAdd(tagsToAdd.filter((x) => x !== o))}>
+                    <span
+                      key={o}
+                      onClick={() => setTagsToAdd(tagsToAdd.filter((x) => x !== o))}
+                      data-testid="tag-to-add">
                       <Badge variant="primary">
                         {o}
                         <X />
@@ -97,7 +100,8 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
                         key={o}
                         onClick={() => {
                           if (!tagsToAdd.includes(o)) setTagsToAdd([...tagsToAdd, o])
-                        }}>
+                        }}
+                        data-testid={o}>
                         <Badge variant="secondary">
                           {o}
                           <Plus />

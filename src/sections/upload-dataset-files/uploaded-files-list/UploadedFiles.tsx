@@ -62,7 +62,7 @@ export function UploadedFiles({
     if (res.saved) {
       const files = filesToAddTagsTo.map((file) => {
         res.tags.forEach((t) => {
-          if (!file.tags.some((x) => x === t)) file.tags.push(t)
+          if (!file.tags.includes(t)) file.tags.push(t)
         })
         return file
       })
