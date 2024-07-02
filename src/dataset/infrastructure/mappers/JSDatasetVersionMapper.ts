@@ -49,7 +49,6 @@ export class JSDatasetVersionMapper {
   }
 
   static toSomeDatasetVersionHasBeenReleased(jsDatasetVersionInfo: JSDatasetVersionInfo): boolean {
-    console.log('RELEASE TIME', JSON.stringify(jsDatasetVersionInfo))
     return (
       jsDatasetVersionInfo.releaseTime !== undefined &&
       !isNaN(jsDatasetVersionInfo.releaseTime.getTime())
