@@ -7,7 +7,7 @@
   <display-name>spa-servlet</display-name>
 
   <error-page>
-    <error-code>200</error-code>
+    <error-code>404</error-code>
     <location>/index.html</location>
   </error-page>
 
