@@ -5,7 +5,6 @@ interface DatasetJsonLdProps {
 
 export const useAddDatasetJsonLd = ({ persistentId }: DatasetJsonLdProps) => {
   const scriptRef = useRef<HTMLScriptElement | null>(null)
-  // const persistentIdRef = useRef('')
 
   const addJsonLdScript = (persistentId: string) => {
     const jsonLdData = {
@@ -32,16 +31,16 @@ export const useAddDatasetJsonLd = ({ persistentId }: DatasetJsonLdProps) => {
     document.head.append(script)
   }
   useEffect(() => {
-    if (persistentId && scriptRef.current !== null) {
+    if (persistentId && scriptRef.current === null) {
+      console.log('%c Adding script', 'color: white; background: green; padding: 4px;')
       addJsonLdScript(persistentId)
     }
 
     return () => {
       if (scriptRef.current !== null) {
+        console.log('%c Removing script', 'color: white; background: orange; padding: 4px;')
         scriptRef.current.remove()
       }
-
-      console.log('Component unmounted')
     }
   }, [persistentId])
 }
