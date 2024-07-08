@@ -522,8 +522,7 @@ export class Dataset {
         this.hierarchy,
         this.thumbnail,
         this.privateUrl,
-        this.requestedVersion,
-        this.publicationDate
+        this.requestedVersion
       )
     }
   }
