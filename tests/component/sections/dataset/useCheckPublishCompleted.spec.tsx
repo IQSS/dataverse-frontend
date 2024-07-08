@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
-import { renderHook, waitFor } from '@testing-library/react'
+import { renderHook } from '@testing-library/react'
 import useCheckPublishCompleted from '../../../../src/sections/dataset/useCheckPublishCompleted'
 import { DatasetMother } from '../../dataset/domain/models/DatasetMother'
 import { DatasetMockRepository } from '../../../../src/stories/dataset/DatasetMockRepository'
