@@ -20,7 +20,7 @@ function CreateCollectionWithParams() {
   return (
     <CreateCollection
       ownerCollectionId={ownerCollectionId}
-      //   collectionRepository={collectionRepository}
+      collectionRepository={collectionRepository}
     />
   )
 }

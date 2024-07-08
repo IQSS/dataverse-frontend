@@ -1,0 +1,42 @@
+{
+  "pageTitle": "Create Collection",
+  "fields": {
+    "hostCollection": {
+      "label": "Host Collection",
+      "description": "The collection which contains this data.",
+      "required": "Host Collection is required"
+    },
+    "name": {
+      "label": "Dataverse Name",
+      "description": "The project, department, university, professor, or journal this collection will contain data for.",
+      "required": "Dataverse Name is required"
+    },
+    "affiliation": {
+      "label": "Affiliation",
+      "description": "The organization with which this collection is affiliated."
+    },
+    "alias": {
+      "label": "Identifier",
+      "description": "Short name used for the URL of this collection.",
+      "required": "Identifier is required"
+    },
+    "storage": {
+      "label": "Storage",
+      "description": "A storage service to be used for datasets in this collection."
+    },
+    "type": {
+      "label": "Category",
+      "description": "The type that most closely reflects this collection.",
+      "required": "Category is required"
+    },
+    "description": {
+      "label": "Description",
+      "description": "A summary describing the purpose, nature or scope of this collection."
+    },
+    "contacts": {
+      "label": "Email",
+      "description": "The email address(es) of the contact(s) for the collection.",
+      "required": "Email is required"
+    }
+  }
+}

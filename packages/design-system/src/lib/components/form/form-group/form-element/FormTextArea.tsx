@@ -7,10 +7,11 @@ export interface FormTextAreaProps extends Omit<React.HTMLAttributes<FormInputEl
   disabled?: boolean
   isValid?: boolean
   isInvalid?: boolean
+  value?: string
 }
 
 export const FormTextArea = React.forwardRef(function FormTextArea(
-  { name, disabled, isValid, isInvalid, ...props }: FormTextAreaProps,
+  { name, disabled, isValid, isInvalid, value, ...props }: FormTextAreaProps,
   ref
 ) {
   return (
@@ -21,6 +22,7 @@ export const FormTextArea = React.forwardRef(function FormTextArea(
       name={name}
       isValid={isValid}
       isInvalid={isInvalid}
+      value={value}
       ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
       {...props}
     />
