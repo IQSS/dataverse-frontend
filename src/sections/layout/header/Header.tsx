@@ -1,7 +1,7 @@
 import dataverse_logo from '../../../assets/dataverse_brand_icon.svg'
 import { useTranslation } from 'react-i18next'
 import { Navbar } from '@iqss/dataverse-design-system'
-import { Route } from '../../Route.enum'
+import { Route, RouteWithParams } from '../../Route.enum'
 import { useSession } from '../../session/SessionContext'
 import { useNavigate } from 'react-router-dom'
 import { BASE_URL } from '../../../config'
@@ -18,6 +18,8 @@ export function Header() {
     })
   }
 
+  const createCollectionRoute = RouteWithParams.CREATE_COLLECTION()
+
   return (
     <Navbar
       brand={{
@@ -28,7 +30,7 @@ export function Header() {
       {user ? (
         <>
           <Navbar.Dropdown title={t('navigation.addData')} id="dropdown-addData">
-            <Navbar.Dropdown.Item href={`/spa${Route.DATASETS}`} disabled={true}>
+            <Navbar.Dropdown.Item href={`/spa${createCollectionRoute}`} disabled={false}>
               {t('navigation.newCollection')}
             </Navbar.Dropdown.Item>
             <Navbar.Dropdown.Item href={`/spa${Route.CREATE_DATASET}`} disabled={false}>
