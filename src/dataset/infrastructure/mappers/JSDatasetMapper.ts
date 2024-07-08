@@ -80,8 +80,7 @@ export class JSDatasetMapper {
       ),
       undefined, // TODO: get dataset thumbnail from js-dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl,
-      requestedVersion,
-      jsDataset.publicationDate
+      requestedVersion
     ).build()
   }
 

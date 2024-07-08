@@ -458,8 +458,7 @@ export class Dataset {
       public readonly hierarchy: UpwardHierarchyNode,
       public readonly thumbnail?: string,
       public readonly privateUrl?: PrivateUrl, // will be set if the user requested a version that did not exist
-      public readonly requestedVersion?: string,
-      public readonly publicationDate?: string
+      public readonly requestedVersion?: string
     ) {
       this.withAlerts()
     }
