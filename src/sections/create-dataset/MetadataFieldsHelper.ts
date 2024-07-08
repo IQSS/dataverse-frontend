@@ -7,6 +7,7 @@ import {
   DatasetMetadataBlockValuesDTO,
   DatasetMetadataChildFieldValueDTO
 } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
+import { defaultLicense } from '../../dataset/domain/models/Dataset'
 
 export type CreateDatasetFormValues = Record<string, MetadataBlockFormValues>
 
@@ -224,7 +225,7 @@ export class MetadataFieldsHelper {
 
       metadataBlocks.push(formattedMetadataBlock)
     }
-    return { metadataBlocks }
+    return { licence: defaultLicense, metadataBlocks }
   }
 
   /*

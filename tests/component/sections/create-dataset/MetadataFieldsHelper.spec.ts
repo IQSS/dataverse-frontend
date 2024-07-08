@@ -4,6 +4,7 @@ import {
   CreateDatasetFormValues,
   MetadataFieldsHelper
 } from '../../../../src/sections/create-dataset/MetadataFieldsHelper'
+import { defaultLicense } from '../../../../src/dataset/domain/models/Dataset'
 
 const sampleObjectWithSlashKeys: CreateDatasetFormValues = {
   blockOne: {
@@ -278,6 +279,7 @@ const formValues: CreateDatasetFormValues = {
 }
 
 const expectedDatasetDTO: DatasetDTO = {
+  licence: defaultLicense,
   metadataBlocks: [
     {
       name: 'citation',
