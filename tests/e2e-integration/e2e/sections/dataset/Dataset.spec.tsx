@@ -44,6 +44,36 @@ describe('Dataset', () => {
           })
         })
     })
+    it('successfully publishes a draft dataset', () => {
+      cy.wrap(DatasetHelper.create())
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.findByText('Draft').should('exist')
+          cy.findByRole('button', { name: 'Publish Dataset' }).should('exist').click()
+          cy.findByRole('button', { name: 'Publish' }).should('exist')
+          cy.findByRole('button', { name: 'Publish' }).click()
+
+          cy.findByRole('button', { name: 'Continue' }).should('exist').click()
+          cy.findByText('Version 1.0').should('exist')
+          cy.findByText('Draft').should('not.exist')
+        })
+    })
+    // TODO: update this usecase to use the edit dataset form when it is ready
+    it.skip('successfully publishes a previously released dataset', () => {
+      cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.findByText('Published').should('exist')
+          // TODO: edit the dataset
+          cy.findByRole('button', { name: 'Publish Dataset' }).should('exist').click()
+          cy.findByRole('button', { name: 'Publish' }).should('exist').click()
+          cy.findByRole('button', { name: 'Major' }).should('exist').click()
+          cy.findByText('Version 2.0').should('exist')
+          cy.findByText('Published').should('exist')
+        })
+    })
 
     it('successfully loads a published dataset when the user is not authenticated', () => {
       cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
