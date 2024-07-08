@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Navbar } from '@iqss/dataverse-design-system'
 import { Route, RouteWithParams } from '../../Route.enum'
 import { useSession } from '../../session/SessionContext'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { BASE_URL } from '../../../config'
 
 const currentPage = 0
@@ -30,10 +30,10 @@ export function Header() {
       {user ? (
         <>
           <Navbar.Dropdown title={t('navigation.addData')} id="dropdown-addData">
-            <Navbar.Dropdown.Item href={`/spa${createCollectionRoute}`} disabled={false}>
+            <Navbar.Dropdown.Item as={Link} to={createCollectionRoute}>
               {t('navigation.newCollection')}
             </Navbar.Dropdown.Item>
-            <Navbar.Dropdown.Item href={`/spa${Route.CREATE_DATASET}`} disabled={false}>
+            <Navbar.Dropdown.Item as={Link} to={Route.CREATE_DATASET}>
               {t('navigation.newDataset')}
             </Navbar.Dropdown.Item>
           </Navbar.Dropdown>
