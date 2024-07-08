@@ -307,7 +307,7 @@ describe('JS Dataset Mapper', () => {
 
     expect(expectedDataset).to.deep.equal(mapped)
   })
-  it.only('maps jsDataset model to the domain Dataset model for alternate version', () => {
+  it('maps jsDataset model to the domain Dataset model for alternate version', () => {
     const mappedWithAlternate = JSDatasetMapper.toDataset(
       jsDataset,
       citation,

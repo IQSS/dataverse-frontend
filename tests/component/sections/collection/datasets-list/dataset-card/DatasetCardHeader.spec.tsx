@@ -4,7 +4,6 @@ import { DatasetPreviewMother } from '../../../../dataset/domain/models/DatasetP
 describe('DatasetCardHeader', () => {
   it('should render the header', () => {
     const dataset = DatasetPreviewMother.create()
-    console.log(dataset)
     cy.customMount(
       <DatasetCardHeader persistentId={dataset.persistentId} version={dataset.version} />
     )
