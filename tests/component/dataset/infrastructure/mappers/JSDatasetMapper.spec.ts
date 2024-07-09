@@ -518,18 +518,7 @@ describe('JS Dataset Mapper', () => {
       jsDatasetFilesTotalOriginalDownloadSize,
       jsDatasetFilesTotalArchivalDownloadSize
     )
-    const replacer = function (key, value) {
-      if (value === undefined) {
-        return null
-      }
-      return value
-    }
 
-    console.log('actual', JSON.stringify(actual, replacer))
-    console.log(
-      'expectedDatasetWithPublicationDate',
-      JSON.stringify(expectedDatasetWithPublicationDate, replacer)
-    )
     expect(expectedDatasetWithPublicationDate).to.deep.equal(actual)
   })
 })
