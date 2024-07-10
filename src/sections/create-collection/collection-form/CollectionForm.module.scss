@@ -3,3 +3,21 @@
     font-size: 14px;
   }
 }
+
+.dynamic-fields-button-container {
+  margin-top: calc(24px + 8px); // 24px text label height & 8px its margin bottom
+
+  &.on-composed-multiple {
+    @media screen and (max-width: 575px) {
+      margin-top: 0;
+    }
+  }
+
+  &.on-primitive-multiple {
+    margin-top: 0;
+
+    @media screen and (max-width: 575px) {
+      margin-top: 1rem;
+    }
+  }
+}

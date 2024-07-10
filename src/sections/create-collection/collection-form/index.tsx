@@ -1,10 +1,11 @@
 import { useRef } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import CoreFieldsSection from './CoreFieldsSection'
+import { TopFieldsSection } from './top-fields-section'
 import {
   CollectionType,
   CollectionStorage
 } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
+import { SeparationLine } from '../../shared/layout/SeparationLine/SeparationLine'
 
 export interface CollectionFormProps {
   defaultValues: {
@@ -57,7 +58,9 @@ export const CollectionForm = ({ defaultValues }: CollectionFormProps) => {
           onSubmit={form.handleSubmit(submitForm)}
           onKeyDown={preventEnterSubmit}
           noValidate={true}>
-          <CoreFieldsSection />
+          <TopFieldsSection />
+
+          <SeparationLine />
 
           {/* Metadata Fields Section here 👇 */}
 

@@ -1,29 +1,64 @@
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, UseControllerProps, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import {
   collectionTypeOptions,
   collectionStorageOptions
-} from '../../../collection/domain/useCases/DTOs/CollectionDTO'
+} from '../../../../collection/domain/useCases/DTOs/CollectionDTO'
 import { ContactsField } from './ContactsField'
-import styles from './CollectionForm.module.scss'
+import styles from '../CollectionForm.module.scss'
+import { Validator } from '../../../../shared/helpers/Validator'
 
-const CoreFieldsSection = () => {
+export const TopFieldsSection = () => {
   const { t } = useTranslation('createCollection')
   const { control } = useFormContext()
+
+  const hostCollectionRules: UseControllerProps['rules'] = {
+    required: t('fields.hostCollection.required')
+  }
+
+  const nameRules: UseControllerProps['rules'] = {
+    required: t('fields.name.required')
+  }
+
+  const aliasRules: UseControllerProps['rules'] = {
+    required: t('fields.alias.required'),
+    maxLength: {
+      value: 60,
+      message: t('fields.alias.invalid.maxLength', { maxLength: 60 })
+    },
+    validate: (value: string) => {
+      if (!Validator.isValidIdentifier(value)) {
+        return t('fields.alias.invalid.format')
+      }
+      return true
+    }
+  }
+
+  const typeRules: UseControllerProps['rules'] = { required: t('fields.type.required') }
+
+  const contactsRules: UseControllerProps['rules'] = {
+    required: t('fields.contacts.required'),
+    validate: (value: string) => {
+      if (!Validator.isValidEmail(value)) {
+        return t('fields.contacts.invalid')
+      }
+      return true
+    }
+  }
 
   return (
     <section data-testid="core-fields-section">
       {/* Host Collection */}
       <Row>
-        <Form.Group controlId="collection-host" as={Col} md={6}>
+        <Form.Group controlId="host-collection" as={Col} md={6}>
           <Form.Group.Label message={t('fields.hostCollection.description')} required={true}>
             {t('fields.hostCollection.label')}
           </Form.Group.Label>
           <Controller
-            name="parentCollectionName"
+            name="hostCollection"
             control={control}
-            rules={{ required: t('fields.hostCollection.required') }}
+            rules={hostCollectionRules}
             render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
               <Col>
                 <Form.Group.Input
@@ -34,6 +69,9 @@ const CoreFieldsSection = () => {
                   aria-required={true}
                   ref={ref}
                   disabled
+                  // readOnly
+                  // plaintext
+                  // TODO:ME Check this, modify ds component?
                 />
                 <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
               </Col>
@@ -51,7 +89,7 @@ const CoreFieldsSection = () => {
           <Controller
             name="name"
             control={control}
-            rules={{ required: t('fields.name.required') }}
+            rules={nameRules}
             render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
               <Col>
                 <Form.Group.Input
@@ -74,6 +112,7 @@ const CoreFieldsSection = () => {
           <Controller
             name="affiliation"
             control={control}
+            rules={affiliationRules}
             render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
               <Col>
                 <Form.Group.Input
@@ -103,7 +142,7 @@ const CoreFieldsSection = () => {
           <Controller
             name="alias"
             control={control}
-            rules={{ required: t('fields.alias.required') }}
+            rules={aliasRules}
             render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
               <Col>
                 <Form.InputGroup hasValidation>
@@ -133,6 +172,7 @@ const CoreFieldsSection = () => {
           <Controller
             name="storage"
             control={control}
+            rules={storageRules}
             render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
               <Col>
                 <Form.Group.Select
@@ -164,7 +204,7 @@ const CoreFieldsSection = () => {
           <Controller
             name="type"
             control={control}
-            rules={{ required: t('fields.type.required') }}
+            rules={typeRules}
             render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
               <Col>
                 <Form.Group.Select
@@ -192,6 +232,7 @@ const CoreFieldsSection = () => {
           <Controller
             name="description"
             control={control}
+            rules={descriptionRules}
             render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
               <Col>
                 <Form.Group.TextArea
@@ -210,10 +251,8 @@ const CoreFieldsSection = () => {
 
       {/* Email (contacts) */}
       <Row>
-        <ContactsField />
+        <ContactsField rules={contactsRules} />
       </Row>
     </section>
   )
 }
-
-export default CoreFieldsSection

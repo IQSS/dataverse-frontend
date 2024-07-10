@@ -18,7 +18,11 @@
     "alias": {
       "label": "Identifier",
       "description": "Short name used for the URL of this collection.",
-      "required": "Identifier is required"
+      "required": "Identifier is required",
+      "invalid": {
+        "format": "Identifier is not a valid identifier. Valid characters are a-Z, 0-9, '_', and '-'.",
+        "maxLength": "Identifier must be at most {{maxLength}} characters."
+      }
     },
     "storage": {
       "label": "Storage",
@@ -36,7 +40,8 @@
     "contacts": {
       "label": "Email",
       "description": "The email address(es) of the contact(s) for the collection.",
-      "required": "Email is required"
+      "required": "Email is required",
+      "invalid": "Email is not a valid email"
     }
   }
 }
