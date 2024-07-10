@@ -13,6 +13,7 @@ import { FilesWithCount } from '../../../../src/files/domain/models/FilesWithCou
 import { FilesCountInfoMother } from '../../files/domain/models/FilesCountInfoMother'
 import { FileType } from '../../../../src/files/domain/models/FileMetadata'
 import { FileAccessOption, FileTag } from '../../../../src/files/domain/models/FileCriteria'
+import { AlertProvider } from '../../../../src/sections/alerts/AlertProvider'
 
 const setAnonymizedView = () => {}
 const fileRepository: FileRepository = {} as FileRepository
@@ -67,11 +68,13 @@ describe('Dataset', () => {
 
     cy.customMount(
       <LoadingProvider>
-        <AnonymizedContext.Provider value={{ anonymizedView: anonymizedView, setAnonymizedView }}>
-          <DatasetProvider repository={datasetRepository} searchParams={searchParams}>
-            {component}
-          </DatasetProvider>
-        </AnonymizedContext.Provider>
+        <AlertProvider>
+          <AnonymizedContext.Provider value={{ anonymizedView: anonymizedView, setAnonymizedView }}>
+            <DatasetProvider repository={datasetRepository} searchParams={searchParams}>
+              {component}
+            </DatasetProvider>
+          </AnonymizedContext.Provider>
+        </AlertProvider>
       </LoadingProvider>
     )
   }
@@ -97,6 +100,35 @@ describe('Dataset', () => {
     )
 
     cy.findByText('Page Not Found').should('exist')
+  })
+  it('renders Success alert when dataset is created', () => {
+    const dataset = DatasetMother.create()
+
+    mountWithDataset(
+      <Dataset
+        created={true}
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+      />,
+      dataset
+    )
+
+    cy.findByText('Success!').should('exist')
+  })
+  it('renders In Progress alert when dataset publish is inProgress', () => {
+    const dataset = DatasetMother.create()
+
+    mountWithDataset(
+      <Dataset
+        created={false}
+        publishInProgress={true}
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+      />,
+      dataset
+    )
+
+    cy.findByText('Publish in Progress').should('exist')
   })
 
   it('renders the breadcrumbs', () => {
