@@ -94,6 +94,20 @@ export const AllVariantsAtAGlance: Story = {
   )
 }
 
+export const AllSizesAtAGlance: Story = {
+  render: () => (
+    <>
+      <Button withSpacing size="sm">
+        Small
+      </Button>
+      <Button withSpacing>Default size</Button>
+      <Button withSpacing size="lg">
+        Large size
+      </Button>
+    </>
+  )
+}
+
 export const Disabled: Story = {
   render: () => (
     <>
