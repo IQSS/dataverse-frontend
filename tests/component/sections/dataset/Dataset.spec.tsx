@@ -14,7 +14,6 @@ import { FilesCountInfoMother } from '../../files/domain/models/FilesCountInfoMo
 import { FileType } from '../../../../src/files/domain/models/FileMetadata'
 import { FileAccessOption, FileTag } from '../../../../src/files/domain/models/FileCriteria'
 import { AlertProvider } from '../../../../src/sections/alerts/AlertProvider'
-import { DatasetMockRepository } from '../../../../src/stories/dataset/DatasetMockRepository'
 
 const setAnonymizedView = () => {}
 const fileRepository: FileRepository = {} as FileRepository
