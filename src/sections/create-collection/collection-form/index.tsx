@@ -1,29 +1,31 @@
 import { useRef } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { TopFieldsSection } from './top-fields-section'
 import {
   CollectionType,
   CollectionStorage
 } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
 import { SeparationLine } from '../../shared/layout/SeparationLine/SeparationLine'
+import { TopFieldsSection } from './top-fields-section'
 
 export interface CollectionFormProps {
-  defaultValues: {
-    parentCollectionName: string
-    name: string
-    affiliation?: string
-    alias: string
-    storage?: CollectionStorage
-    type: CollectionType
-    description?: string
-    contacts: { value: string }[]
-  }
+  defaultValues: Partial<CollectionFormData>
+}
+
+export type CollectionFormData = {
+  hostCollection: string
+  name: string
+  affiliation?: string
+  alias: string
+  storage?: CollectionStorage
+  type: CollectionType
+  description?: string
+  contacts: { value: string }[]
 }
 
 export const CollectionForm = ({ defaultValues }: CollectionFormProps) => {
   const formContainerRef = useRef<HTMLDivElement>(null)
 
-  const form = useForm({
+  const form = useForm<CollectionFormData>({
     mode: 'onChange',
     defaultValues
   })
@@ -38,8 +40,8 @@ export const CollectionForm = ({ defaultValues }: CollectionFormProps) => {
     if (!isButton && !isButtonTypeSubmit) e.preventDefault()
   }
 
-  const submitForm = (formValues: any) => {
-    // console.log({ formValues })
+  const submitForm = (formValues: CollectionFormData) => {
+    console.log({ formValues })
   }
 
   function onSubmittedCollectionError() {

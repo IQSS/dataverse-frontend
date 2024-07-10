@@ -7,9 +7,9 @@
       "required": "Host Collection is required"
     },
     "name": {
-      "label": "Dataverse Name",
+      "label": "Collection Name",
       "description": "The project, department, university, professor, or journal this collection will contain data for.",
-      "required": "Dataverse Name is required"
+      "required": "Collection Name is required"
     },
     "affiliation": {
       "label": "Affiliation",
@@ -22,7 +22,8 @@
       "invalid": {
         "format": "Identifier is not a valid identifier. Valid characters are a-Z, 0-9, '_', and '-'.",
         "maxLength": "Identifier must be at most {{maxLength}} characters."
-      }
+      },
+      "suggestion": "Psst... try this"
     },
     "storage": {
       "label": "Storage",

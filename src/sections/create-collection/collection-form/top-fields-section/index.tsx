@@ -5,9 +5,9 @@ import {
   collectionTypeOptions,
   collectionStorageOptions
 } from '../../../../collection/domain/useCases/DTOs/CollectionDTO'
-import { ContactsField } from './ContactsField'
-import styles from '../CollectionForm.module.scss'
 import { Validator } from '../../../../shared/helpers/Validator'
+import { ContactsField } from './ContactsField'
+import { IdentifierField } from './IdentifierField'
 
 export const TopFieldsSection = () => {
   const { t } = useTranslation('createCollection')
@@ -69,9 +69,6 @@ export const TopFieldsSection = () => {
                   aria-required={true}
                   ref={ref}
                   disabled
-                  // readOnly
-                  // plaintext
-                  // TODO:ME Check this, modify ds component?
                 />
                 <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
               </Col>
@@ -112,7 +109,6 @@ export const TopFieldsSection = () => {
           <Controller
             name="affiliation"
             control={control}
-            rules={affiliationRules}
             render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
               <Col>
                 <Form.Group.Input
@@ -131,40 +127,7 @@ export const TopFieldsSection = () => {
 
       {/* Identifier(alias) & Storage */}
       <Row>
-        <Form.Group
-          controlId="identifier"
-          as={Col}
-          md={6}
-          className={styles['identifier-field-group']}>
-          <Form.Group.Label message={t('fields.alias.description')} required={true}>
-            {t('fields.alias.label')}
-          </Form.Group.Label>
-          <Controller
-            name="alias"
-            control={control}
-            rules={aliasRules}
-            render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
-              <Col>
-                <Form.InputGroup hasValidation>
-                  <Form.InputGroup.Text>
-                    {window.location.origin}/spa/collections/
-                  </Form.InputGroup.Text>
-                  <Form.Group.Input
-                    type="text"
-                    placeholder={t('fields.alias.label')}
-                    aria-label="identifier"
-                    value={value as string}
-                    onChange={onChange}
-                    isInvalid={invalid}
-                    aria-required={true}
-                    ref={ref}
-                  />
-                  <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
-                </Form.InputGroup>
-              </Col>
-            )}
-          />
-        </Form.Group>
+        <IdentifierField rules={aliasRules} />
         <Form.Group controlId="storage" as={Col} md={6}>
           <Form.Group.Label message={t('fields.storage.description')}>
             {t('fields.storage.label')}
@@ -172,7 +135,6 @@ export const TopFieldsSection = () => {
           <Controller
             name="storage"
             control={control}
-            rules={storageRules}
             render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
               <Col>
                 <Form.Group.Select
@@ -198,7 +160,7 @@ export const TopFieldsSection = () => {
       {/* Category (type) & Description */}
       <Row>
         <Form.Group controlId="type" as={Col} md={6}>
-          <Form.Group.Label message={t('fields.type.description')}>
+          <Form.Group.Label message={t('fields.type.description')} required>
             {t('fields.type.label')}
           </Form.Group.Label>
           <Controller
@@ -210,6 +172,7 @@ export const TopFieldsSection = () => {
                 <Form.Group.Select
                   onChange={onChange}
                   value={value as string}
+                  aria-required={true}
                   isInvalid={invalid}
                   ref={ref}>
                   <option value="">Select...</option>
@@ -226,20 +189,18 @@ export const TopFieldsSection = () => {
         </Form.Group>
 
         <Form.Group controlId="description" as={Col} md={6}>
-          <Form.Group.Label message={t('fields.description.description')} required={true}>
+          <Form.Group.Label message={t('fields.description.description')}>
             {t('fields.description.label')}
           </Form.Group.Label>
           <Controller
             name="description"
             control={control}
-            rules={descriptionRules}
             render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
               <Col>
                 <Form.Group.TextArea
                   value={value as string}
                   onChange={onChange}
                   isInvalid={invalid}
-                  aria-required={true}
                   ref={ref}
                 />
                 <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>

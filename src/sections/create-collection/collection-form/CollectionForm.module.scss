@@ -2,6 +2,35 @@
   :global .input-group-text {
     font-size: 14px;
   }
+
+  .suggestion-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    width: 100%;
+    margin-top: -0.75rem;
+    margin-bottom: 1rem;
+    padding-top: 0.25rem;
+
+    :global .form-text {
+      margin-top: 0;
+    }
+
+    .apply-suggestion-btn {
+      display: grid;
+      place-items: center;
+      padding: 3px;
+      border-radius: 50%;
+    }
+  }
+}
+
+.contact-row {
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .dynamic-fields-button-container {

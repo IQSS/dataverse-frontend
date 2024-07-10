@@ -56,7 +56,7 @@ export const ContactsField = ({ rules }: ContactsFieldProps) => {
       </Form.Group.Label>
 
       {(fieldsArray as { id: string; value: string }[]).map((field, index) => (
-        <Row className="mb-3" key={field.id}>
+        <Row className={styles['contact-row']} key={field.id}>
           <Controller
             name={builtFieldNameWithIndex(index)}
             control={control}
