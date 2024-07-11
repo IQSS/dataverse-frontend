@@ -178,9 +178,9 @@ export const TopFieldsSection = () => {
                     isInvalid={invalid}
                     ref={ref}>
                     <option value="">Select...</option>
-                    {Object.values(collectionTypeOptions).map((type) => (
-                      <option value={type} key={type}>
-                        {type}
+                    {Object.values(collectionTypeOptions).map(({ label, value }) => (
+                      <option value={value} key={value}>
+                        {label}
                       </option>
                     ))}
                   </Form.Group.Select>

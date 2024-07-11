@@ -5,19 +5,56 @@ export interface CollectionDTO {
   type: CollectionType
 }
 
-export const collectionTypeOptions = {
-  RESEARCHERS: 'Researchers',
-  RESEARCH_PROJECTS: 'Research Projects',
-  JOURNALS: 'Journals',
-  ORGANIZATIONS_INSTITUTIONS: 'Organizations/Institutions',
-  TEACHING_COURSES: 'Teaching Courses',
-  UNCATEGORIZED: 'Uncategorized',
-  LABORATORY: 'Laboratory',
-  RESEARCH_GROUP: 'Research Group',
-  DEPARTMENT: 'Department'
-} as const
+export enum CollectionType {
+  RESEARCHERS = 'RESEARCHERS',
+  RESEARCH_PROJECTS = 'RESEARCH_PROJECTS',
+  JOURNALS = 'JOURNALS',
+  ORGANIZATIONS_INSTITUTIONS = 'ORGANIZATIONS_INSTITUTIONS',
+  TEACHING_COURSES = 'TEACHING_COURSES',
+  UNCATEGORIZED = 'UNCATEGORIZED',
+  LABORATORY = 'LABORATORY',
+  RESEARCH_GROUP = 'RESEARCH_GROUP',
+  DEPARTMENT = 'DEPARTMENT'
+}
 
-export type CollectionType = (typeof collectionTypeOptions)[keyof typeof collectionTypeOptions]
+export const collectionTypeOptions = {
+  RESEARCHERS: {
+    label: 'Researchers',
+    value: CollectionType.RESEARCHERS
+  },
+  RESEARCH_PROJECTS: {
+    label: 'Research Projects',
+    value: CollectionType.RESEARCH_PROJECTS
+  },
+  JOURNALS: {
+    label: 'Journals',
+    value: CollectionType.JOURNALS
+  },
+  ORGANIZATIONS_INSTITUTIONS: {
+    label: 'Organizations/Institutions',
+    value: CollectionType.ORGANIZATIONS_INSTITUTIONS
+  },
+  TEACHING_COURSES: {
+    label: 'Teaching Courses',
+    value: CollectionType.TEACHING_COURSES
+  },
+  UNCATEGORIZED: {
+    label: 'Uncategorized',
+    value: CollectionType.UNCATEGORIZED
+  },
+  LABORATORY: {
+    label: 'Laboratory',
+    value: CollectionType.LABORATORY
+  },
+  RESEARCH_GROUP: {
+    label: 'Research Group',
+    value: CollectionType.RESEARCH_GROUP
+  },
+  DEPARTMENT: {
+    label: 'Department',
+    value: CollectionType.DEPARTMENT
+  }
+} as const
 
 export const collectionStorageOptions = {
   LOCAL_DEFAULT: 'Local (Default)',
