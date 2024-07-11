@@ -65,9 +65,12 @@ export function NewCollection({ ownerCollectionId, collectionRepository }: NewCo
       </header>
 
       <SeparationLine />
-
       <RequiredFieldText />
-      <CollectionForm defaultValues={formDefaultValues} />
+
+      <CollectionForm
+        collectionRepository={collectionRepository}
+        defaultValues={formDefaultValues}
+      />
     </section>
   )
 }

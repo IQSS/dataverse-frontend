@@ -57,7 +57,7 @@ export const IdentifierField = ({ rules }: IdentifierFieldProps) => {
               <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
             </Form.InputGroup>
 
-            {aliasSuggestion !== '' && value !== aliasSuggestion && !invalid && (
+            {aliasSuggestion !== '' && value !== aliasSuggestion && (
               <div className={styles['suggestion-container']}>
                 <Form.Group.Text>
                   {t('fields.alias.suggestion')} 👉 <strong>{aliasSuggestion}</strong>

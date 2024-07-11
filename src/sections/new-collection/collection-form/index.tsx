@@ -1,8 +1,9 @@
-import { MouseEvent, useRef } from 'react'
+import { MouseEvent, useMemo, useRef } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Button, Card, Stack } from '@iqss/dataverse-design-system'
+import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import {
   CollectionType,
   CollectionStorage
@@ -11,8 +12,10 @@ import { SeparationLine } from '../../shared/layout/SeparationLine/SeparationLin
 import { TopFieldsSection } from './top-fields-section'
 import { MetadataFieldsSection } from './metadata-fields-section'
 import { BrowseSearchFacetsSection } from './browse-search-facets-section'
+import { SubmissionStatus, useSubmitCollection } from './useSubmitCollection'
 
 export interface CollectionFormProps {
+  collectionRepository: CollectionRepository
   defaultValues: Partial<CollectionFormData>
 }
 
@@ -27,10 +30,15 @@ export type CollectionFormData = {
   contacts: { value: string }[]
 }
 
-export const CollectionForm = ({ defaultValues }: CollectionFormProps) => {
+export const CollectionForm = ({ collectionRepository, defaultValues }: CollectionFormProps) => {
   const formContainerRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation('newCollection')
   const navigate = useNavigate()
+
+  const { submitForm, submitError, submissionStatus } = useSubmitCollection(
+    collectionRepository,
+    onSubmittedCollectionError
+  )
 
   const form = useForm<CollectionFormData>({
     mode: 'onChange',
@@ -49,10 +57,6 @@ export const CollectionForm = ({ defaultValues }: CollectionFormProps) => {
     if (!isButton && !isButtonTypeSubmit) e.preventDefault()
   }
 
-  const submitForm = (formValues: CollectionFormData) => {
-    console.log({ formValues })
-  }
-
   function onSubmittedCollectionError() {
     if (formContainerRef.current) {
       formContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -64,19 +68,13 @@ export const CollectionForm = ({ defaultValues }: CollectionFormProps) => {
     navigate(-1)
   }
 
-  // const disableSubmitButton = useMemo(() => {
-  //   return (
-  //     // submissionStatus === SubmissionStatus.IsSubmitting ||
-  //     !formState.isDirty
-  //   )
-  // }, [submissionStatus, formState.isDirty])
+  const disableSubmitButton = useMemo(() => {
+    return submissionStatus === SubmissionStatus.IsSubmitting || !formState.isDirty
+  }, [submissionStatus, formState.isDirty])
 
   // TODO:ME Apply max width to container
   return (
-    <div
-      // className={styles['form-container']}
-      ref={formContainerRef}
-      data-testid="collection-form">
+    <div ref={formContainerRef} data-testid="collection-form">
       <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(submitForm)}
@@ -111,8 +109,7 @@ export const CollectionForm = ({ defaultValues }: CollectionFormProps) => {
               variant="secondary"
               type="button"
               onClick={handleCancel}
-              // disabled={submissionStatus === SubmissionStatus.IsSubmitting}
-            >
+              disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
               {t('formButtons.cancel')}
             </Button>
           </Stack>
