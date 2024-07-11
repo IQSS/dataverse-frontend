@@ -12,6 +12,7 @@ export interface FormInputProps extends React.HTMLAttributes<FormInputElement> {
   disabled?: boolean
   value?: string | number
   required?: boolean
+  autoFocus?: boolean
 }
 
 export const FormInput = React.forwardRef(function FormInput(
@@ -24,6 +25,7 @@ export const FormInput = React.forwardRef(function FormInput(
     disabled,
     value,
     required,
+    autoFocus,
     ...props
   }: FormInputProps,
   ref
@@ -39,6 +41,7 @@ export const FormInput = React.forwardRef(function FormInput(
       disabled={disabled}
       value={value}
       required={required}
+      autoFocus={autoFocus}
       ref={ref as React.ForwardedRef<HTMLInputElement>}
       {...props}
     />
