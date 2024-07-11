@@ -103,6 +103,7 @@ export const TopFieldsSection = () => {
             )}
           />
         </Form.Group>
+
         <Form.Group controlId="affiliation" as={Col} md={6}>
           <Form.Group.Label message={t('fields.affiliation.description')}>
             {t('fields.affiliation.label')}
@@ -118,6 +119,7 @@ export const TopFieldsSection = () => {
                   onChange={onChange}
                   isInvalid={invalid}
                   ref={ref}
+                  disabled
                 />
                 <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
               </Col>
@@ -129,6 +131,7 @@ export const TopFieldsSection = () => {
       {/* Identifier(alias) & Storage */}
       <Row>
         <IdentifierField rules={aliasRules} />
+
         <Form.Group controlId="storage" as={Col} md={6}>
           <Form.Group.Label message={t('fields.storage.description')}>
             {t('fields.storage.label')}
@@ -142,7 +145,8 @@ export const TopFieldsSection = () => {
                   onChange={onChange}
                   value={value as string}
                   isInvalid={invalid}
-                  ref={ref}>
+                  ref={ref}
+                  disabled>
                   {/* TODO:ME What are this options? do they come from a configuration? */}
                   <option value="">Select...</option>
                   {Object.values(collectionStorageOptions).map((type) => (
@@ -192,6 +196,7 @@ export const TopFieldsSection = () => {
 
           <ContactsField rules={contactsRules} />
         </Col>
+
         <Form.Group controlId="description" as={Col} md={6}>
           <Form.Group.Label message={t('fields.description.description')}>
             {t('fields.description.label')}
@@ -206,6 +211,7 @@ export const TopFieldsSection = () => {
                   onChange={onChange}
                   isInvalid={invalid}
                   ref={ref}
+                  disabled
                 />
                 <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
               </Col>

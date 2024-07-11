@@ -1,3 +1,9 @@
+@import 'src/assets/variables';
+
+.form-container {
+  scroll-margin-top: calc(#{$header-aproximate-height} + 1rem);
+}
+
 .identifier-field-group {
   :global .input-group-text {
     font-size: 14px;

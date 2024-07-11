@@ -53,6 +53,9 @@
       "helperText": "Choose the metadata fields to use as facets for browsing datasets and dataverses in this dataverse."
     }
   },
+  "submitStatus": {
+    "success": "Collection created successfully."
+  },
   "formButtons": {
     "save": "Create Collection",
     "cancel": "Cancel"

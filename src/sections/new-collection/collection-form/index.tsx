@@ -2,17 +2,18 @@ import { MouseEvent, useMemo, useRef } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { Button, Card, Stack } from '@iqss/dataverse-design-system'
+import { Alert, Button, Card, Stack } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import {
   CollectionType,
   CollectionStorage
 } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
 import { SeparationLine } from '../../shared/layout/SeparationLine/SeparationLine'
+import { SubmissionStatus, useSubmitCollection } from './useSubmitCollection'
 import { TopFieldsSection } from './top-fields-section'
 import { MetadataFieldsSection } from './metadata-fields-section'
 import { BrowseSearchFacetsSection } from './browse-search-facets-section'
-import { SubmissionStatus, useSubmitCollection } from './useSubmitCollection'
+import styles from './CollectionForm.module.scss'
 
 export interface CollectionFormProps {
   collectionRepository: CollectionRepository
@@ -74,7 +75,17 @@ export const CollectionForm = ({ collectionRepository, defaultValues }: Collecti
 
   // TODO:ME Apply max width to container
   return (
-    <div ref={formContainerRef} data-testid="collection-form">
+    <div className={styles['form-container']} ref={formContainerRef} data-testid="collection-form">
+      {submissionStatus === SubmissionStatus.Errored && (
+        <Alert variant={'danger'} dismissible={false}>
+          {submitError}
+        </Alert>
+      )}
+      {submissionStatus === SubmissionStatus.SubmitComplete && (
+        <Alert variant="success" dismissible={false}>
+          {t('submitStatus.success')}
+        </Alert>
+      )}
       <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(submitForm)}

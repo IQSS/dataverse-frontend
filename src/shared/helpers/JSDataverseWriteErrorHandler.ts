@@ -14,7 +14,6 @@ export class JSDataverseWriteErrorHandler {
   public getReason(): string | null {
     // Reason comes after "Reason was: "
     const reasonMatch = this.error.message.match(/Reason was: (.*)/)
-    console.log({ reasonMatch })
     return reasonMatch ? reasonMatch[1] : null
   }
 
