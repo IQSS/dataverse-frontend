@@ -7,6 +7,7 @@ import { useSession } from '../session/SessionContext'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { CollectionForm, CollectionFormData } from './collection-form'
+import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 
 interface NewCollectionProps {
   ownerCollectionId: string
@@ -59,6 +60,12 @@ export function NewCollection({ ownerCollectionId, collectionRepository }: NewCo
         withActionItem
         actionItemText={t('pageTitle')}
       />
+      <header>
+        <h1>New Collection</h1>
+      </header>
+
+      <SeparationLine />
+
       <RequiredFieldText />
       <CollectionForm defaultValues={formDefaultValues} />
     </section>

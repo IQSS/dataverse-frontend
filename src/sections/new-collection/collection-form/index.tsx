@@ -1,11 +1,16 @@
-import { useRef } from 'react'
+import { MouseEvent, useRef } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import { Button, Card, Stack } from '@iqss/dataverse-design-system'
 import {
   CollectionType,
   CollectionStorage
 } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
 import { SeparationLine } from '../../shared/layout/SeparationLine/SeparationLine'
 import { TopFieldsSection } from './top-fields-section'
+import { MetadataFieldsSection } from './metadata-fields-section'
+import { BrowseSearchFacetsSection } from './browse-search-facets-section'
 
 export interface CollectionFormProps {
   defaultValues: Partial<CollectionFormData>
@@ -24,11 +29,15 @@ export type CollectionFormData = {
 
 export const CollectionForm = ({ defaultValues }: CollectionFormProps) => {
   const formContainerRef = useRef<HTMLDivElement>(null)
+  const { t } = useTranslation('newCollection')
+  const navigate = useNavigate()
 
   const form = useForm<CollectionFormData>({
     mode: 'onChange',
     defaultValues
   })
+
+  const { formState } = form
 
   const preventEnterSubmit = (e: React.KeyboardEvent<HTMLFormElement | HTMLButtonElement>) => {
     // When pressing Enter, only submit the form  if the user is focused on the submit button itself
@@ -49,6 +58,19 @@ export const CollectionForm = ({ defaultValues }: CollectionFormProps) => {
       formContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
+
+  const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    navigate(-1)
+  }
+
+  // const disableSubmitButton = useMemo(() => {
+  //   return (
+  //     // submissionStatus === SubmissionStatus.IsSubmitting ||
+  //     !formState.isDirty
+  //   )
+  // }, [submissionStatus, formState.isDirty])
+
   // TODO:ME Apply max width to container
   return (
     <div
@@ -64,9 +86,36 @@ export const CollectionForm = ({ defaultValues }: CollectionFormProps) => {
 
           <SeparationLine />
 
-          {/* Metadata Fields Section here 👇 */}
+          <Stack>
+            <Card>
+              <Card.Body>
+                <MetadataFieldsSection />
+              </Card.Body>
+            </Card>
 
-          {/* Browse/Search Facets Section here 👇 */}
+            <Card>
+              <Card.Body>
+                <BrowseSearchFacetsSection />
+              </Card.Body>
+            </Card>
+          </Stack>
+
+          <Stack direction="horizontal" className="pt-3">
+            <Button
+              type="submit"
+              // disabled={disableSubmitButton}
+            >
+              {t('formButtons.save')}
+            </Button>
+            <Button
+              variant="secondary"
+              type="button"
+              onClick={handleCancel}
+              // disabled={submissionStatus === SubmissionStatus.IsSubmitting}
+            >
+              {t('formButtons.cancel')}
+            </Button>
+          </Stack>
         </form>
       </FormProvider>
     </div>

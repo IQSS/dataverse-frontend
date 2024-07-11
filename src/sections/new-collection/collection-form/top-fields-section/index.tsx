@@ -95,6 +95,7 @@ export const TopFieldsSection = () => {
                   onChange={onChange}
                   isInvalid={invalid}
                   aria-required={true}
+                  autoFocus
                   ref={ref}
                 />
                 <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
@@ -157,37 +158,40 @@ export const TopFieldsSection = () => {
         </Form.Group>
       </Row>
 
-      {/* Category (type) & Description */}
+      {/* Category (type) & Email (contacts) & Description */}
       <Row>
-        <Form.Group controlId="type" as={Col} md={6}>
-          <Form.Group.Label message={t('fields.type.description')} required>
-            {t('fields.type.label')}
-          </Form.Group.Label>
-          <Controller
-            name="type"
-            control={control}
-            rules={typeRules}
-            render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
-              <Col>
-                <Form.Group.Select
-                  onChange={onChange}
-                  value={value as string}
-                  aria-required={true}
-                  isInvalid={invalid}
-                  ref={ref}>
-                  <option value="">Select...</option>
-                  {Object.values(collectionTypeOptions).map((type) => (
-                    <option value={type} key={type}>
-                      {type}
-                    </option>
-                  ))}
-                </Form.Group.Select>
-                <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
-              </Col>
-            )}
-          />
-        </Form.Group>
+        <Col>
+          <Form.Group controlId="type" as={Col}>
+            <Form.Group.Label message={t('fields.type.description')} required>
+              {t('fields.type.label')}
+            </Form.Group.Label>
+            <Controller
+              name="type"
+              control={control}
+              rules={typeRules}
+              render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
+                <Col>
+                  <Form.Group.Select
+                    onChange={onChange}
+                    value={value as string}
+                    aria-required={true}
+                    isInvalid={invalid}
+                    ref={ref}>
+                    <option value="">Select...</option>
+                    {Object.values(collectionTypeOptions).map((type) => (
+                      <option value={type} key={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </Form.Group.Select>
+                  <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+                </Col>
+              )}
+            />
+          </Form.Group>
 
+          <ContactsField rules={contactsRules} />
+        </Col>
         <Form.Group controlId="description" as={Col} md={6}>
           <Form.Group.Label message={t('fields.description.description')}>
             {t('fields.description.label')}
@@ -208,11 +212,6 @@ export const TopFieldsSection = () => {
             )}
           />
         </Form.Group>
-      </Row>
-
-      {/* Email (contacts) */}
-      <Row>
-        <ContactsField rules={contactsRules} />
       </Row>
     </section>
   )

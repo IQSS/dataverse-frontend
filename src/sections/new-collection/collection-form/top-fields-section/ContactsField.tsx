@@ -47,7 +47,7 @@ export const ContactsField = ({ rules }: ContactsFieldProps) => {
   const handleOnRemoveField = (index: number) => remove(index)
 
   return (
-    <Form.Group as={Col} md={6}>
+    <Form.Group as={Col}>
       <Form.Group.Label
         message={t('fields.contacts.description')}
         htmlFor={controlID}

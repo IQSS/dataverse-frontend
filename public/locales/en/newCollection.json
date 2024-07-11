@@ -43,6 +43,18 @@
       "description": "The email address(es) of the contact(s) for the collection.",
       "required": "Email is required",
       "invalid": "Email is not a valid email"
+    },
+    "metadataFields": {
+      "label": "Metadata Fields",
+      "helperText": "Choose the metadata fields to use in dataset templates and when adding a dataset to this dataverse."
+    },
+    "browseSearchFacets": {
+      "label": "Browse/Search Facets",
+      "helperText": "Choose the metadata fields to use as facets for browsing datasets and dataverses in this dataverse."
     }
+  },
+  "formButtons": {
+    "save": "Create Collection",
+    "cancel": "Cancel"
   }
 }

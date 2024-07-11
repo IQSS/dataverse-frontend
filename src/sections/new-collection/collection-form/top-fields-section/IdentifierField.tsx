@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import { Button, Col, Form } from '@iqss/dataverse-design-system'
-import { CheckLg } from 'react-bootstrap-icons'
+import { CheckCircle } from 'react-bootstrap-icons'
 import styles from '../CollectionForm.module.scss'
 
 interface IdentifierFieldProps {
@@ -65,9 +65,9 @@ export const IdentifierField = ({ rules }: IdentifierFieldProps) => {
 
                 <Button
                   type="button"
-                  size="sm"
-                  icon={<CheckLg />}
                   variant="secondary"
+                  size="sm"
+                  icon={<CheckCircle size={16} color="green" />}
                   onClick={applyAliasSuggestion}
                   className={styles['apply-suggestion-btn']}
                   aria-label="Apply suggestion"
