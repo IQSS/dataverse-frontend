@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { createCollection } from '../../../collection/domain/useCases/createCollection'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
@@ -36,7 +35,6 @@ export function useSubmitCollection(
   onSubmitErrorCallback: () => void
 ): UseSubmitCollectionReturnType {
   const navigate = useNavigate()
-  const { t } = useTranslation('newCollection')
 
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
