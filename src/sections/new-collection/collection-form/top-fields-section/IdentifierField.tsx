@@ -10,7 +10,7 @@ interface IdentifierFieldProps {
 }
 
 export const IdentifierField = ({ rules }: IdentifierFieldProps) => {
-  const { t } = useTranslation('createCollection')
+  const { t } = useTranslation('newCollection')
   const { control, setValue } = useFormContext()
   const nameFieldValue = useWatch({ name: 'name' }) as string
 
@@ -23,6 +23,7 @@ export const IdentifierField = ({ rules }: IdentifierFieldProps) => {
       .replace(/[^\w\s-]/g, '') // Remove non-alphanumeric characters except for spaces and hyphens
       .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
       .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
+      .slice(0, 60) // Limit to 60 characters
   }
 
   const aliasSuggestion = useMemo(() => collectionNameToAlias(nameFieldValue), [nameFieldValue])

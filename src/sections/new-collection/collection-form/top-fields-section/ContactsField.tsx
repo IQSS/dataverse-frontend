@@ -14,7 +14,7 @@ interface ContactsFieldProps {
 }
 
 export const ContactsField = ({ rules }: ContactsFieldProps) => {
-  const { t } = useTranslation('createCollection')
+  const { t } = useTranslation('newCollection')
   const { control } = useFormContext()
 
   const {

@@ -1,24 +1,24 @@
 import { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
 import { CollectionJSDataverseRepository } from '../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
-import CreateCollection from './CreateCollection'
+import { NewCollection } from './NewCollection'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 
-export class CreateCollectionFactory {
+export class NewCollectionFactory {
   static create(): ReactElement {
-    return <CreateCollectionWithParams />
+    return <NewCollectionWithParams />
   }
 }
 
-function CreateCollectionWithParams() {
+function NewCollectionWithParams() {
   const { ownerCollectionId = 'root' } = useParams<{ ownerCollectionId: string }>()
 
   // TODO:ME Maybe assert that collection with ownerCollectionId exists first, could be root or a specific collection
   // TODO:ME What roles can create a collection, what checks to do?
 
   return (
-    <CreateCollection
+    <NewCollection
       ownerCollectionId={ownerCollectionId}
       collectionRepository={collectionRepository}
     />

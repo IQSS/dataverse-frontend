@@ -18,7 +18,7 @@ export function Header() {
     })
   }
 
-  const createCollectionRoute = RouteWithParams.CREATE_COLLECTION()
+  const createCollectionRoute = RouteWithParams.NEW_COLLECTION()
 
   return (
     <Navbar

@@ -8,7 +8,7 @@ import { FileFactory } from './sections/file/FileFactory'
 import { CollectionFactory } from './sections/collection/CollectionFactory'
 import { UploadDatasetFilesFactory } from './sections/upload-dataset-files/UploadDatasetFilesFactory'
 import { DatasetNonNumericVersion } from './dataset/domain/models/Dataset'
-import { CreateCollectionFactory } from './sections/create-collection/CreateCollectionFactory'
+import { NewCollectionFactory } from './sections/new-collection/NewCollectionFactory'
 
 const router = createBrowserRouter(
   [
@@ -26,8 +26,8 @@ const router = createBrowserRouter(
           element: CollectionFactory.create()
         },
         {
-          path: Route.CREATE_COLLECTION,
-          element: CreateCollectionFactory.create()
+          path: Route.NEW_COLLECTION,
+          element: NewCollectionFactory.create()
         },
         {
           path: Route.DATASETS,

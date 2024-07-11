@@ -10,7 +10,7 @@ import { ContactsField } from './ContactsField'
 import { IdentifierField } from './IdentifierField'
 
 export const TopFieldsSection = () => {
-  const { t } = useTranslation('createCollection')
+  const { t } = useTranslation('newCollection')
   const { control } = useFormContext()
 
   const hostCollectionRules: UseControllerProps['rules'] = {

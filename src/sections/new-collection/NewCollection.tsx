@@ -8,16 +8,13 @@ import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFiel
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { CollectionForm, CollectionFormData } from './collection-form'
 
-interface CreateCollectionProps {
+interface NewCollectionProps {
   ownerCollectionId: string
   collectionRepository: CollectionRepository
 }
 
-export function CreateCollection({
-  ownerCollectionId,
-  collectionRepository
-}: CreateCollectionProps) {
-  const { t } = useTranslation('createCollection')
+export function NewCollection({ ownerCollectionId, collectionRepository }: NewCollectionProps) {
+  const { t } = useTranslation('newCollection')
   const { isLoading, setIsLoading } = useLoading()
   const { user } = useSession()
 
@@ -67,5 +64,3 @@ export function CreateCollection({
     </section>
   )
 }
-
-export default CreateCollection

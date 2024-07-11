@@ -15,7 +15,7 @@ export default function AddDataActionsButton() {
     ? `${Route.CREATE_DATASET}?collectionId=${collectionId}`
     : Route.CREATE_DATASET
 
-  const createCollectionRoute = RouteWithParams.CREATE_COLLECTION(collectionId)
+  const createCollectionRoute = RouteWithParams.NEW_COLLECTION(collectionId)
 
   return (
     <DropdownButton
