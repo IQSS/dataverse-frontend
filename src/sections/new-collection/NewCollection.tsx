@@ -9,6 +9,7 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { CollectionForm, CollectionFormData } from './collection-form'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { PageNotFound } from '../page-not-found/PageNotFound'
+import { NewCollectionSkeleton } from './NewCollectionSkeleton'
 
 interface NewCollectionProps {
   ownerCollectionId: string
@@ -31,13 +32,12 @@ export function NewCollection({ ownerCollectionId, collectionRepository }: NewCo
     }
   }, [isLoading, isLoadingCollection, setIsLoading])
 
-  if (!isLoading && !collection) {
+  if (!isLoadingCollection && !collection) {
     return <PageNotFound />
   }
 
-  // TODO:ME Create Skeleton
-  if (isLoading || !collection) {
-    return <p>Loading...</p>
+  if (isLoadingCollection || !collection) {
+    return <NewCollectionSkeleton />
   }
 
   const formDefaultValues: CollectionFormData = {
