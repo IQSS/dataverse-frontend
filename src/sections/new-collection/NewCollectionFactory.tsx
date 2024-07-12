@@ -20,6 +20,7 @@ function NewCollectionWithParams() {
     <NewCollection
       ownerCollectionId={ownerCollectionId}
       collectionRepository={collectionRepository}
+      key={ownerCollectionId}
     />
   )
 }
