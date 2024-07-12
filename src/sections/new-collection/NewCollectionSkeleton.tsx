@@ -1,5 +1,5 @@
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
-import { Col, Row } from '@iqss/dataverse-design-system'
+import { Col, Row, Stack } from '@iqss/dataverse-design-system'
 import { BreadcrumbsSkeleton } from '../shared/hierarchy/BreadcrumbsSkeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
@@ -71,6 +71,11 @@ export const NewCollectionSkeleton = () => (
 
       <Skeleton height={145} width="100%" style={{ marginBottom: 16 }} />
       <Skeleton height={145} width="100%" style={{ marginBottom: 16 }} />
+
+      <Stack direction="horizontal" className="pt-3">
+        <Skeleton width={120} height={38} />
+        <Skeleton width={120} height={38} />
+      </Stack>
     </section>
   </SkeletonTheme>
 )
