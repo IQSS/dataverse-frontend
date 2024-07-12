@@ -6,6 +6,7 @@ import { useSession } from '../../session/SessionContext'
 import { Link, useNavigate } from 'react-router-dom'
 import { BASE_URL } from '../../../config'
 
+const currentPage = 0
 export function Header() {
   const { t } = useTranslation('header')
   const { user, logout } = useSession()
@@ -13,8 +14,7 @@ export function Header() {
 
   const onLogoutClick = () => {
     void logout().then(() => {
-      navigate(Route.HOME)
-      window.location.reload()
+      navigate(currentPage)
     })
   }
 
@@ -38,7 +38,7 @@ export function Header() {
             </Navbar.Dropdown.Item>
           </Navbar.Dropdown>
           <Navbar.Dropdown title={user.displayName} id="dropdown-user">
-            <Navbar.Dropdown.Item as="button" onClick={onLogoutClick}>
+            <Navbar.Dropdown.Item href="#" onClick={onLogoutClick}>
               {t('logOut')}
             </Navbar.Dropdown.Item>
           </Navbar.Dropdown>

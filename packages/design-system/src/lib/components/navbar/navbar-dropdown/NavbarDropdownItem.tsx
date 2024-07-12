@@ -17,7 +17,7 @@ export function NavbarDropdownItem<T extends ElementType = 'a'>({
   ...props
 }: PropsWithChildren<NavbarDropdownItemProps<T>>) {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
-  const Component: ElementType<any> = as || 'a'
+  const Component: ElementType<any> | undefined = as
 
   return (
     <NavDropdown.Item href={href} onClick={onClick} disabled={disabled} as={Component} {...props}>
