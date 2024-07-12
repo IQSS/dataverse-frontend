@@ -5,6 +5,18 @@ import { Button, Col, Form } from '@iqss/dataverse-design-system'
 import { CheckCircle } from 'react-bootstrap-icons'
 import styles from '../CollectionForm.module.scss'
 
+export const collectionNameToAlias = (name: string) => {
+  if (!name) return ''
+
+  return name
+    .toLowerCase() // Convert to lowercase
+    .trim() // Remove leading/trailing whitespace
+    .replace(/[^\w\s-]/g, '') // Remove non-alphanumeric characters except for spaces and hyphens
+    .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
+    .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
+    .slice(0, 60) // Limit to 60 characters
+}
+
 interface IdentifierFieldProps {
   rules: UseControllerProps['rules']
 }
@@ -13,18 +25,6 @@ export const IdentifierField = ({ rules }: IdentifierFieldProps) => {
   const { t } = useTranslation('newCollection')
   const { control, setValue } = useFormContext()
   const nameFieldValue = useWatch({ name: 'name' }) as string
-
-  const collectionNameToAlias = (name: string) => {
-    if (!name) return ''
-
-    return name
-      .toLowerCase() // Convert to lowercase
-      .trim() // Remove leading/trailing whitespace
-      .replace(/[^\w\s-]/g, '') // Remove non-alphanumeric characters except for spaces and hyphens
-      .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
-      .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
-      .slice(0, 60) // Limit to 60 characters
-  }
 
   const aliasSuggestion = useMemo(() => collectionNameToAlias(nameFieldValue), [nameFieldValue])
 

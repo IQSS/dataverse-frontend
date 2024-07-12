@@ -79,7 +79,10 @@ export const CollectionForm = ({ collectionRepository, defaultValues }: Collecti
 
   // TODO:ME Apply max width to container
   return (
-    <div className={styles['form-container']} ref={formContainerRef} data-testid="collection-form">
+    <div
+      className={styles['form-container']}
+      ref={formContainerRef}
+      data-testid="collection-form-container">
       {submissionStatus === SubmissionStatus.Errored && (
         <Alert variant={'danger'} dismissible={false}>
           {submitError}
@@ -94,7 +97,8 @@ export const CollectionForm = ({ collectionRepository, defaultValues }: Collecti
         <form
           onSubmit={form.handleSubmit(submitForm)}
           onKeyDown={preventEnterSubmit}
-          noValidate={true}>
+          noValidate={true}
+          data-testid="collection-form">
           <TopFieldsSection />
 
           <SeparationLine />

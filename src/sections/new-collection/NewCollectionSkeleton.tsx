@@ -6,7 +6,7 @@ import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 
 export const NewCollectionSkeleton = () => (
   <SkeletonTheme>
-    <section data-testid="edit-dataset-metadata-skeleton">
+    <section data-testid="new-collection-skeleton">
       <BreadcrumbsSkeleton />
       <Skeleton height="40px" width="350px" style={{ marginBottom: 16 }} />
 
