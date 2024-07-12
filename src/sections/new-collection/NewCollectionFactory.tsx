@@ -14,7 +14,6 @@ export class NewCollectionFactory {
 function NewCollectionWithParams() {
   const { ownerCollectionId = 'root' } = useParams<{ ownerCollectionId: string }>()
 
-  // TODO:ME Maybe assert that collection with ownerCollectionId exists first, could be root or a specific collection
   // TODO:ME What roles can create a collection, what checks to do?
 
   return (

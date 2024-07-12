@@ -17,18 +17,22 @@ import styles from './CollectionForm.module.scss'
 
 export interface CollectionFormProps {
   collectionRepository: CollectionRepository
-  defaultValues: Partial<CollectionFormData>
+  defaultValues: CollectionFormData
 }
 
 export type CollectionFormData = {
   hostCollection: string
   name: string
-  affiliation?: string
+  affiliation: string
   alias: string
-  storage?: CollectionStorage
-  type: CollectionType
-  description?: string
+  storage: CollectionStorage
+  type: CollectionType | ''
+  description: string
   contacts: { value: string }[]
+}
+// On the submit function callback, type is CollectionType as type field is required and wont never be ""
+export type CollectionFormValuesOnSubmit = Omit<CollectionFormData, 'type'> & {
+  type: CollectionType
 }
 
 export const CollectionForm = ({ collectionRepository, defaultValues }: CollectionFormProps) => {
@@ -110,10 +114,7 @@ export const CollectionForm = ({ collectionRepository, defaultValues }: Collecti
           </Stack>
 
           <Stack direction="horizontal" className="pt-3">
-            <Button
-              type="submit"
-              // disabled={disableSubmitButton}
-            >
+            <Button type="submit" disabled={disableSubmitButton}>
               {t('formButtons.save')}
             </Button>
             <Button

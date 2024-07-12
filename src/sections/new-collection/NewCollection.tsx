@@ -8,6 +8,7 @@ import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFiel
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { CollectionForm, CollectionFormData } from './collection-form'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
+import { PageNotFound } from '../page-not-found/PageNotFound'
 
 interface NewCollectionProps {
   ownerCollectionId: string
@@ -24,9 +25,6 @@ export function NewCollection({ ownerCollectionId, collectionRepository }: NewCo
     ownerCollectionId
   )
 
-  // TODO:ME If is not loading and collection is not found, show a message and navigate to the root collection
-  // One good thing would be add toastify to show messages on top of the page for this kind of things
-
   useEffect(() => {
     if (!isLoadingCollection) {
       setIsLoading(false)
@@ -34,19 +32,19 @@ export function NewCollection({ ownerCollectionId, collectionRepository }: NewCo
   }, [isLoading, isLoadingCollection, setIsLoading])
 
   if (!isLoading && !collection) {
-    return <p>Owner Collection not found</p>
+    return <PageNotFound />
   }
 
   // TODO:ME Create Skeleton
   if (isLoading || !collection) {
     return <p>Loading...</p>
   }
-  // TODO:ME name = user name, affiliation = user affiliation, first email = user email
-  const formDefaultValues: Partial<CollectionFormData> = {
+
+  const formDefaultValues: CollectionFormData = {
     hostCollection: collection.name,
     name: user?.displayName ? `${user?.displayName} Collection` : '',
     alias: '',
-    type: undefined,
+    type: '',
     contacts: [{ value: user?.email ?? '' }],
     affiliation: user?.affiliation ?? '',
     storage: 'Local (Default)',
