@@ -178,10 +178,64 @@ describe('CollectionForm', () => {
     // Select a Category option so submit button is not disabled
     cy.findByLabelText(/^Category/i).select(1)
 
-    cy.findByRole('button', { name: 'Create Collection' }).click()
+    // To wait until button becomes enabled
+    cy.wait(100)
+
+    cy.findByRole('button', { name: 'Create Collection' }).focus().type('{enter}')
 
     // Validation error should be shown as form was submitted by pressing enter key on Identifier field
     cy.findByText('Identifier is required').should('exist')
+  })
+
+  it('submits a valid form and succeed', () => {
+    cy.customMount(
+      <CollectionForm
+        collectionRepository={collectionRepository}
+        defaultValues={formDefaultValues}
+      />
+    )
+    // Accept suggestion
+    cy.findByRole('button', { name: 'Apply suggestion' }).click()
+    // Select a Category option
+    cy.findByLabelText(/^Category/i).select(1)
+
+    cy.findByRole('button', { name: 'Create Collection' }).click()
+
+    cy.findByText('Error').should('not.exist')
+    cy.findByText('Success!').should('exist')
+  })
+
+  it('submits a valid form and fails', () => {
+    collectionRepository.create = cy.stub().rejects(new Error('Error creating collection'))
+
+    cy.customMount(
+      <CollectionForm
+        collectionRepository={collectionRepository}
+        defaultValues={formDefaultValues}
+      />
+    )
+
+    // Accept suggestion
+    cy.findByRole('button', { name: 'Apply suggestion' }).click()
+    // Select a Category option
+    cy.findByLabelText(/^Category/i).select(1)
+
+    cy.findByRole('button', { name: 'Create Collection' }).click()
+
+    cy.findByText('Error').should('exist')
+    cy.findByText(/Error creating collection/).should('exist')
+    cy.findByText('Success!').should('not.exist')
+  })
+
+  it('cancel button is clickable', () => {
+    cy.customMount(
+      <CollectionForm
+        collectionRepository={collectionRepository}
+        defaultValues={formDefaultValues}
+      />
+    )
+
+    cy.findByText(/Cancel/i).click()
   })
 
   describe('IdentifierField suggestion functionality', () => {
