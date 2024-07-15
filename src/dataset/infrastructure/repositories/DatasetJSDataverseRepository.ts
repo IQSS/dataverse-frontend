@@ -19,7 +19,8 @@ import {
   DatasetPreviewSubset,
   createDataset,
   CreatedDatasetIdentifiers as JSDatasetIdentifiers,
-  WriteError
+  WriteError,
+  updateDataset
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -189,6 +190,14 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .then((jsDatasetIdentifiers: JSDatasetIdentifiers) => ({
         persistentId: jsDatasetIdentifiers.persistentId
       }))
+      .catch((error: WriteError) => {
+        throw new Error(error.message)
+      })
+  }
+
+  updateMetadata(datasetId: string | number, updatedDataset: DatasetDTO): Promise<void> {
+    return updateDataset
+      .execute(datasetId, DatasetDTOMapper.toJSDatasetDTO(updatedDataset))
       .catch((error: WriteError) => {
         throw new Error(error.message)
       })
