@@ -10,7 +10,6 @@
     "helpText": "Changing the host collection will clear any fields you may have entered data into.",
     "buttonLabel": "Edit Host Collection"
   },
-  "requiredFields": "Asterisks indicate required fields",
   "validationAlert": {
     "title": "Validation Error",
     "content": "Required fields were missed or there was a validation error. Please scroll down to see details."

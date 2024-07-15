@@ -59,7 +59,7 @@ export function NewCollection({ ownerCollectionId, collectionRepository }: NewCo
         actionItemText={t('pageTitle')}
       />
       <header>
-        <h1>New Collection</h1>
+        <h1>{t('pageTitle')}</h1>
       </header>
 
       <SeparationLine />
