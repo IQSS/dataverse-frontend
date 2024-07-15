@@ -137,8 +137,13 @@ describe('FormRadio', () => {
       const radioName = 'radio-name'
 
       cy.mount(
-        <FormRadioGroup title="Radio" onChange={handleChange}>
-          <FormGroup.Radio id="radio-1" label={option1Label} name={radioName} />
+        <FormRadioGroup title="Radio">
+          <FormGroup.Radio
+            id="radio-1"
+            onChange={handleChange}
+            label={option1Label}
+            name={radioName}
+          />
         </FormRadioGroup>
       )
 
