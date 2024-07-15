@@ -61,7 +61,7 @@ describe('Dataset', () => {
       : { persistentId: 'some-persistent-id', version: 'some-version' }
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
-
+    datasetRepository.getLocks = cy.stub().resolves([])
     fileRepository.getAllByDatasetPersistentIdWithCount = cy.stub().resolves(testFiles)
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
     fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(19900)
@@ -221,7 +221,11 @@ describe('Dataset', () => {
     const testDataset = DatasetMother.create()
     mountWithDataset(
       <AlertProvider>
-        <Dataset fileRepository={fileRepository} created={true} />
+        <Dataset
+          datasetRepository={datasetRepository}
+          fileRepository={fileRepository}
+          created={true}
+        />
       </AlertProvider>,
       testDataset
     )
@@ -235,7 +239,11 @@ describe('Dataset', () => {
     const testDataset = DatasetMother.create()
     mountWithDataset(
       <AlertProvider>
-        <Dataset fileRepository={fileRepository} metadataUpdated={true} />
+        <Dataset
+          datasetRepository={datasetRepository}
+          fileRepository={fileRepository}
+          metadataUpdated={true}
+        />
       </AlertProvider>,
       testDataset
     )
