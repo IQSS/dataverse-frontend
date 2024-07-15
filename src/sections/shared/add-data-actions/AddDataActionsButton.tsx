@@ -1,15 +1,17 @@
 import { useTranslation } from 'react-i18next'
 import { Dropdown } from 'react-bootstrap'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { DropdownButton } from '@iqss/dataverse-design-system'
 import { PlusLg } from 'react-bootstrap-icons'
 import { Route, RouteWithParams } from '../../Route.enum'
 import styles from './AddDataActionsButton.module.scss'
 
-export default function AddDataActionsButton() {
+interface AddDataActionsButtonProps {
+  collectionId?: string
+}
+
+export default function AddDataActionsButton({ collectionId }: AddDataActionsButtonProps) {
   const { t } = useTranslation('header')
-  const [searchParams] = useSearchParams()
-  const collectionId = searchParams.get('id') ?? undefined
 
   const createDatasetRoute = collectionId
     ? `${Route.CREATE_DATASET}?collectionId=${collectionId}`

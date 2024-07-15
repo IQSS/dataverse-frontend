@@ -5,6 +5,7 @@ import * as React from 'react'
 
 export interface FormSelectProps
   extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
+  value?: string
   isInvalid?: boolean
   isValid?: boolean
   disabled?: boolean
@@ -13,6 +14,7 @@ export interface FormSelectProps
 
 export const FormSelect = React.forwardRef(function FormSelect(
   {
+    value,
     isInvalid,
     isValid,
     disabled,
@@ -24,6 +26,7 @@ export const FormSelect = React.forwardRef(function FormSelect(
 ) {
   return (
     <FormBS.Select
+      value={value}
       isInvalid={isInvalid}
       isValid={isValid}
       disabled={disabled}

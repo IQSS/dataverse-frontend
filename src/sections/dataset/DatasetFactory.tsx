@@ -50,8 +50,9 @@ function DatasetWithSearchParams() {
   const searchParamVersion = searchParams.get('version') ?? undefined
   const version = searchParamVersionToDomainVersion(searchParamVersion)
   const location = useLocation()
-  const state = location.state as { created: boolean } | undefined
+  const state = location.state as { created: boolean; metadataUpdated: boolean } | undefined
   const created = state?.created ?? false
+  const metadataUpdated = state?.metadataUpdated ?? false
 
   useEffect(() => {
     if (privateUrlToken) setAnonymizedView(true)
@@ -77,6 +78,7 @@ function DatasetWithSearchParams() {
       <Dataset
         fileRepository={fileRepository}
         created={created}
+        metadataUpdated={metadataUpdated}
         filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
       />
     </DatasetProvider>

@@ -12,7 +12,6 @@ import { InitialLoadingSkeleton, LoadingSkeleton } from './DatasetsListWithInfin
 import { ErrorDatasetsMessage } from './ErrorDatasetsMessage'
 import { NO_DATASETS, useLoadDatasets } from './useLoadDatasets'
 import styles from './DatasetsList.module.scss'
-import 'react-loading-skeleton/dist/skeleton.css'
 
 interface DatasetsListWithInfiniteScrollProps {
   datasetRepository: DatasetRepository

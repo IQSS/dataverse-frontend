@@ -1,5 +1,5 @@
-import { FileLabel, FileLabelType } from '../../../files/domain/models/FileMetadata'
 import { Badge } from '@iqss/dataverse-design-system'
+import { FileLabel, FileLabelType } from '../../../files/domain/models/FileMetadata'
 import styles from './FileLabels.module.scss'
 
 const VARIANT_BY_LABEL_TYPE: Record<FileLabelType, 'secondary' | 'info'> = {

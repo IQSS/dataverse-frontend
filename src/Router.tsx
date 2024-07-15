@@ -7,6 +7,7 @@ import { CreateDatasetFactory } from './sections/create-dataset/CreateDatasetFac
 import { FileFactory } from './sections/file/FileFactory'
 import { CollectionFactory } from './sections/collection/CollectionFactory'
 import { UploadDatasetFilesFactory } from './sections/upload-dataset-files/UploadDatasetFilesFactory'
+import { EditDatasetMetadataFactory } from './sections/edit-dataset-metadata/EditDatasetMetadataFactory'
 import { DatasetNonNumericVersion } from './dataset/domain/models/Dataset'
 import { NewCollectionFactory } from './sections/new-collection/NewCollectionFactory'
 
@@ -40,6 +41,10 @@ const router = createBrowserRouter(
         {
           path: Route.UPLOAD_DATASET_FILES,
           element: UploadDatasetFilesFactory.create()
+        },
+        {
+          path: Route.EDIT_DATASET_METADATA,
+          element: EditDatasetMetadataFactory.create()
         },
         {
           path: Route.FILES,

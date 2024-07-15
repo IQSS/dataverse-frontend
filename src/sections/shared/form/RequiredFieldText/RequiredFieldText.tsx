@@ -5,7 +5,7 @@ export function RequiredFieldText() {
   const { t } = useTranslation('shared')
 
   return (
-    <p>
+    <p className="m-0">
       <RequiredInputSymbol />
       {t('asterisksIndicateRequiredFields')}
     </p>

@@ -67,7 +67,7 @@ export function Collection({
             )}
             {user && (
               <div className={styles.container}>
-                <AddDataActionsButton />
+                <AddDataActionsButton collectionId={id} />
               </div>
             )}
           </>
