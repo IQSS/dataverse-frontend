@@ -1,8 +1,8 @@
 import { Button, Modal } from '@iqss/dataverse-design-system'
-import { SubmissionStatus } from '../../create-dataset/useCreateDatasetForm'
 import { useTranslation } from 'react-i18next'
 import type { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
 import { usePublishDataset } from './usePublishDataset'
+
 import { VersionUpdateType } from '../../../dataset/domain/models/VersionUpdateType'
 import { Form } from '@iqss/dataverse-design-system'
 import { useState } from 'react'
@@ -10,6 +10,7 @@ import { useSession } from '../../session/SessionContext'
 import { PublishDatasetHelpText } from './PublishDatasetHelpText'
 import { License } from '../dataset-summary/License'
 import { defaultLicense } from '../../../dataset/domain/models/Dataset'
+import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
 
 interface PublishDatasetModalProps {
   show: boolean

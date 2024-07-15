@@ -21,7 +21,8 @@ import {
   createDataset,
   CreatedDatasetIdentifiers as JSDatasetIdentifiers,
   WriteError,
-  publishDataset
+  publishDataset,
+  updateDataset
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -217,5 +218,13 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     return publishDataset.execute(persistentId, jsVersionUpdateType).catch((error: WriteError) => {
       throw new Error(error.message)
     })
+  }
+
+  updateMetadata(datasetId: string | number, updatedDataset: DatasetDTO): Promise<void> {
+    return updateDataset
+      .execute(datasetId, DatasetDTOMapper.toJSDatasetDTO(updatedDataset))
+      .catch((error: WriteError) => {
+        throw new Error(error.message)
+      })
   }
 }

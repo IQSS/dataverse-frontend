@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import styles from './Dataset.module.scss'
 import { DatasetLabels } from './dataset-labels/DatasetLabels'
@@ -12,7 +13,6 @@ import { DatasetFiles } from './dataset-files/DatasetFiles'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { DatasetActionButtons } from './dataset-action-buttons/DatasetActionButtons'
 import { useDataset } from './DatasetContext'
-import { useEffect } from 'react'
 import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
 import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
@@ -30,6 +30,7 @@ interface DatasetProps {
   fileRepository: FileRepository
   datasetRepository: DatasetRepository
   created?: boolean
+  metadataUpdated?: boolean
   filesTabInfiniteScrollEnabled?: boolean
   publishInProgress?: boolean
 }
@@ -38,6 +39,7 @@ export function Dataset({
   fileRepository,
   datasetRepository,
   created,
+  metadataUpdated,
   filesTabInfiniteScrollEnabled,
   publishInProgress
 }: DatasetProps) {
@@ -52,6 +54,9 @@ export function Dataset({
   useEffect(() => {
     if (created) {
       addDatasetAlert({ messageKey: AlertMessageKey.DATASET_CREATED, variant: 'success' })
+    }
+    if (metadataUpdated) {
+      addDatasetAlert({ messageKey: AlertMessageKey.METADATA_UPDATED, variant: 'success' })
     }
     if (dataset) {
       if (publishInProgress) {

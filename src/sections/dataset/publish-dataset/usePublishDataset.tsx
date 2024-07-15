@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
 import { publishDataset } from '../../../dataset/domain/useCases/publishDataset'
 import { Route } from '../../Route.enum'
-import { SubmissionStatus } from '../../create-dataset/useCreateDatasetForm'
+
 import { VersionUpdateType } from '../../../dataset/domain/models/VersionUpdateType'
+import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
 
 type UsePublishDatasetReturnType =
   | {

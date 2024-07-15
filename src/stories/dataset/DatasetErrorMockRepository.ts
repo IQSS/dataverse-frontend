@@ -60,4 +60,12 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+
+  updateMetadata(_datasetId: string | number, _updatedDataset: DatasetDTO): Promise<void> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
 }

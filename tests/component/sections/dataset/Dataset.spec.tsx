@@ -216,4 +216,32 @@ describe('Dataset', () => {
     cy.findByRole('columnheader', { name: /Files/ }).should('exist')
     cy.findByText('10 of 200 Files displayed').should('exist')
   })
+
+  it('renders the dataset created alert correctly', () => {
+    const testDataset = DatasetMother.create()
+    mountWithDataset(
+      <AlertProvider>
+        <Dataset fileRepository={fileRepository} created={true} />
+      </AlertProvider>,
+      testDataset
+    )
+
+    cy.findAllByText(testDataset.version.title).should('exist')
+
+    cy.findByText(/This dataset has been created./).should('exist')
+  })
+
+  it('renders the dataset updated metadata alert correctly', () => {
+    const testDataset = DatasetMother.create()
+    mountWithDataset(
+      <AlertProvider>
+        <Dataset fileRepository={fileRepository} metadataUpdated={true} />
+      </AlertProvider>,
+      testDataset
+    )
+
+    cy.findAllByText(testDataset.version.title).should('exist')
+
+    cy.findByText(/The metadata for this dataset has been updated./).should('exist')
+  })
 })

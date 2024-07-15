@@ -1,7 +1,7 @@
 import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
 import {
-  NewDataset as JSDatasetDTO,
-  NewDatasetMetadataBlockValues as JSMetadataBlocksDTO
+  DatasetDTO as JSDatasetDTO,
+  DatasetMetadataBlockValuesDTO as JSMetadataBlocksDTO
 } from '@iqss/dataverse-client-javascript'
 import { defaultLicense } from '../../domain/models/Dataset'
 

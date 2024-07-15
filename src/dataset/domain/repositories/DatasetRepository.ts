@@ -9,6 +9,7 @@ export interface DatasetRepository {
   getLocks(persistentId: string): Promise<DatasetLock[]>
   getByPrivateUrlToken: (privateUrlToken: string) => Promise<Dataset | undefined>
   create: (dataset: DatasetDTO, collectionId?: string) => Promise<{ persistentId: string }>
+  updateMetadata: (datasetId: string | number, datasetDTO: DatasetDTO) => Promise<void>
   getAllWithCount: (
     collectionId: string,
     paginationInfo: DatasetPaginationInfo
