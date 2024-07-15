@@ -65,7 +65,13 @@ export const Created: Story = {
 
 export const MetadataUpdated: Story = {
   decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithNotImplementedModal],
-  render: () => <Dataset fileRepository={new FileMockRepository()} metadataUpdated={true} />
+  render: () => (
+    <Dataset
+      datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+      metadataUpdated={true}
+    />
+  )
 }
 export const DraftWithAllDatasetPermissions: Story = {
   decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithNotImplementedModal],
