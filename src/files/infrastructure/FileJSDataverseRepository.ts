@@ -329,7 +329,6 @@ export class FileJSDataverseRepository implements FileRepository {
           }
         }
       }
-      console.log(f.file.name)
       all.push(addUploadedFileToDataset.execute(datasetId, f.file, file.storageId as string))
     })
     return Promise.all(all)
