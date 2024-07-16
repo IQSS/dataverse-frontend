@@ -19,17 +19,17 @@ export interface AddTagsModalResult {
 export function AddTagsModal({ show, availableTags, setTagOptions, update }: AddTagsModalProps) {
   const { t } = useTranslation('uploadDatasetFiles')
   const [tagsToAdd, setTagsToAdd] = useState<string[]>([])
-  const [tag, setTag] = useState('')
+  const [newCustomTag, setNewCustomTag] = useState('')
   const handleClose = (saved: boolean) => {
     update({ saved: saved, tags: tagsToAdd })
     setTagsToAdd([])
   }
   const tagsSelectId = useId()
   const addTagOption = () => {
-    if (tag && !availableTags.includes(tag)) {
-      setTagOptions([...availableTags, tag])
-      setTagsToAdd((current) => [...current, tag])
-      setTag('')
+    if (newCustomTag && !availableTags.includes(newCustomTag)) {
+      setTagOptions([...availableTags, newCustomTag])
+      setTagsToAdd((current) => [...current, newCustomTag])
+      setNewCustomTag('')
     }
   }
   const handleEnter = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -76,10 +76,10 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
                   <Form.Group.Input
                     type="text"
                     placeholder={t('tags.addNewTag')}
-                    value={tag}
+                    value={newCustomTag}
                     title={t('addTags.customTag')}
                     onChange={(event: FormEvent<HTMLInputElement>) =>
-                      setTag(event.currentTarget.value)
+                      setNewCustomTag(event.currentTarget.value)
                     }
                   />
                   <Button
