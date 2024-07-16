@@ -1,11 +1,11 @@
-import { Dataset, DatasetPublishingStatus } from '../../../../dataset/domain/models/Dataset'
-import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
-import { ChangeCurationStatusMenu } from './ChangeCurationStatusMenu'
-import { useTranslation } from 'react-i18next'
-import { useSession } from '../../../session/SessionContext'
 import { useState } from 'react'
-import { PublishDatasetModal } from '../../publish-dataset/PublishDatasetModal'
+import { useTranslation } from 'react-i18next'
+import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
+import { useSession } from '../../../session/SessionContext'
 import { DatasetRepository } from '../../../../dataset/domain/repositories/DatasetRepository'
+import { Dataset, DatasetPublishingStatus } from '../../../../dataset/domain/models/Dataset'
+import { ChangeCurationStatusMenu } from './ChangeCurationStatusMenu'
+import { PublishDatasetModal } from '../../publish-dataset/PublishDatasetModal'
 
 interface PublishDatasetMenuProps {
   dataset: Dataset
@@ -38,7 +38,8 @@ export function PublishDatasetMenu({ dataset, datasetRepository }: PublishDatase
         repository={datasetRepository}
         persistentId={dataset.persistentId}
         releasedVersionExists={dataset.version.someDatasetVersionHasBeenReleased}
-        handleClose={() => setShowModal(false)}></PublishDatasetModal>
+        handleClose={() => setShowModal(false)}
+      />
 
       <DropdownButton
         id={`publish-dataset-menu`}
