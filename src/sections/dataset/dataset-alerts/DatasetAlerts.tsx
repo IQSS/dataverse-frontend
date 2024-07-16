@@ -11,7 +11,7 @@ export function DatasetAlerts({ alerts }: DatasetAlertsProps) {
   const { addDatasetAlert } = useAlertContext()
   useEffect(() => {
     alerts.forEach((alert) => addDatasetAlert(alert))
-  }, [alerts])
+  }, [addDatasetAlert, alerts])
 
   return <Alerts></Alerts>
 }
