@@ -52,13 +52,13 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
               </Form.Group.Label>
               <Col sm={9} className={styles.tags}>
                 <div className={styles.tags_select} title={t('addTags.selectTags')}>
-                  {tagsToAdd.map((o) => (
+                  {tagsToAdd.map((tagName) => (
                     <span
-                      key={o}
-                      onClick={() => setTagsToAdd(tagsToAdd.filter((x) => x !== o))}
+                      key={tagName}
+                      onClick={() => setTagsToAdd(tagsToAdd.filter((x) => x !== tagName))}
                       data-testid="tag-to-add">
                       <Badge variant="primary">
-                        {o}
+                        {tagName}
                         <X />
                       </Badge>
                     </span>
