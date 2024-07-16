@@ -1,25 +1,25 @@
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
-
 .icon_pencil {
-  margin-right: 0.3rem;
-  margin-bottom: 0.2rem;
+    margin-right: 0.3rem;
+    margin-bottom: 0.2rem;
 }
 
 .selected_files_checkbox {
-  display: inline-flex;
-  align-items: center;
-  padding-right: 2rem;
-  padding-left: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    padding-right: 2rem;
+    padding-left: 0.5rem;
 }
 
 .selected_files_info {
-  display: inline-flex;
-  align-items: center;
-  float: right;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: absolute;
+    right: 0;
 }
 
 .uploaded_files_info {
-  display: inline-flex;
-  align-items: center;
-  padding-left: 1em;
+    display: inline-flex;
+    align-items: center;
+    padding-left: 1em;
 }
