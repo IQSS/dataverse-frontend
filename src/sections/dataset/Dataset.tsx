@@ -59,21 +59,22 @@ export function Dataset({
       addDatasetAlert({ messageKey: AlertMessageKey.METADATA_UPDATED, variant: 'success' })
     }
     if (dataset) {
-      if (publishInProgress) {
+      if (publishInProgress && !publishCompleted) {
         const newAlerts = datasetAlerts.filter(
           (alert) =>
             alert.messageKey !== AlertMessageKey.DRAFT_VERSION &&
-            alert.messageKey !== AlertMessageKey.DATASET_CREATED
+            alert.messageKey !== AlertMessageKey.DATASET_CREATED &&
+            alert.messageKey !== AlertMessageKey.METADATA_UPDATED
         )
         newAlerts.push({ messageKey: AlertMessageKey.PUBLISH_IN_PROGRESS, variant: 'info' })
         setDatasetAlerts(newAlerts)
-        if (publishCompleted) {
-          removeDatasetAlert(AlertMessageKey.PUBLISH_IN_PROGRESS)
-          navigate(`${Route.DATASETS}?persistentId=${dataset.persistentId}`, {
-            state: { publishInProgress: false },
-            replace: true
-          })
-        }
+      }
+      if (publishInProgress && publishCompleted) {
+        removeDatasetAlert(AlertMessageKey.PUBLISH_IN_PROGRESS)
+        navigate(`${Route.DATASETS}?persistentId=${dataset.persistentId}`, {
+          state: { publishInProgress: false },
+          replace: true
+        })
       }
     }
   }, [publishCompleted, dataset])
