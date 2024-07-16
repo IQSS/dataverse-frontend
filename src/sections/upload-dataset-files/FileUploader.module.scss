@@ -16,7 +16,8 @@
 
 .selected_file>div {
     margin-bottom: 0.5rem;
-    background-color: #ffc;
+    padding: 0.5rem;
+    background-color: #ffc !important;
 }
 
 .file:nth-of-type(even)>div {
