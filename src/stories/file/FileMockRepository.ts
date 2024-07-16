@@ -12,7 +12,7 @@ import { File } from '../../files/domain/models/File'
 import { FilePreview } from '../../files/domain/models/FilePreview'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { FilesWithCount } from '../../files/domain/models/FilesWithCount'
-import { FileHolder } from '../../files/domain/repositories/File'
+import { FileHolder } from '../../files/domain/models/FileHolder'
 import { FileUploadState } from '../../files/domain/models/FileUploadState'
 
 export class FileMockRepository implements FileRepository {

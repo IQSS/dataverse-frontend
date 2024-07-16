@@ -31,7 +31,7 @@ import { JSFileMetadataMapper } from './mappers/JSFileMetadataMapper'
 import { FilePermissions } from '../domain/models/FilePermissions'
 import { JSFilePermissionsMapper } from './mappers/JSFilePermissionsMapper'
 import { FilesWithCount } from '../domain/models/FilesWithCount'
-import { FileHolder } from '../domain/repositories/File'
+import { FileHolder } from '../domain/models/FileHolder'
 import { FileUploadState } from '../domain/models/FileUploadState'
 
 const includeDeaccessioned = true

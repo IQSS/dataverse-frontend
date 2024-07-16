@@ -6,7 +6,7 @@ import { DatasetVersion, DatasetVersionNumber } from '../../../dataset/domain/mo
 import { FilePaginationInfo } from '../models/FilePaginationInfo'
 import { FilePreview } from '../models/FilePreview'
 import { FilesWithCount } from '../models/FilesWithCount'
-import { FileHolder } from './File'
+import { FileHolder } from '../models/FileHolder'
 import { FileUploadState } from '../models/FileUploadState'
 
 export interface FileRepository {

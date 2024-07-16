@@ -1,6 +1,6 @@
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { FileMockRepository } from './FileMockRepository'
-import { FileHolder } from '../../files/domain/repositories/File'
+import { FileHolder } from '../../files/domain/models/FileHolder'
 
 export class FileMocFailedRepository extends FileMockRepository implements FileRepository {
   uploadFile(
