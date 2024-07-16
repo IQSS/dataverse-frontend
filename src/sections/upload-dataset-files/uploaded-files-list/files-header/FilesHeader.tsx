@@ -70,7 +70,7 @@ export function FilesHeader({
 
   return (
     <Card.Header>
-      <span className={styles.selected_files_cb}>
+      <span className={styles.selected_files_checkbox}>
         <Form.Group.Checkbox
           label={''}
           id={'select-all'}

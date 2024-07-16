@@ -480,8 +480,8 @@ describe('UploadDatasetFiles', () => {
     )
     // wait for upload to finish
     cy.findByText('1 file uploaded').should('exist')
-    cy.findByTestId('select_file_cb').first().click()
-    cy.findByTestId('select_file_cb').first().click()
+    cy.findByTestId('select_file_checkbox').first().click()
+    cy.findByTestId('select_file_checkbox').first().click()
   })
 
   it('add tags', () => {

@@ -16,7 +16,7 @@
 
 .selected_file>div {
     margin-bottom: 0.5rem;
-    background-color: #ffc !important;
+    background-color: #ffc;
 }
 
 .file:nth-of-type(even)>div {
@@ -77,7 +77,7 @@
     padding: 0.5em;
 }
 
-.selected_files_cb {
+.selected_files_checkbox {
     display: inline-flex;
     align-items: center;
 }
