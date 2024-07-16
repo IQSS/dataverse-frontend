@@ -73,6 +73,7 @@ export function FilesHeader({
       <span className={styles.selected_files_checkbox}>
         <Form.Group.Checkbox
           label={''}
+          aria-label={t('filesHeader.selectAll')}
           id={'select-all'}
           checked={selectAllChecked}
           onChange={all}

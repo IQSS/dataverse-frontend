@@ -51,7 +51,8 @@
     "filesSelected_other": "{{count}} files selected",
     "deleteSelected": "Delete selected",
     "addTagsToSelected": "Add tags to selected",
-    "addTags": "Add tags"
+    "addTags": "Add tags",
+    "selectAll": "Select all"
   },
   "addTags": {
     "title": "Add tags to selected files",
