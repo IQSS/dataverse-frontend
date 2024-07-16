@@ -1,8 +1,7 @@
 @import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
 
 .add_tags_form {
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+    padding-block: 0.5em;
 }
 
 .tags {
@@ -14,13 +13,11 @@
 }
 
 .tag_options {
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+    padding-block: 0.5em;
 }
 
 .tag_info {
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+    padding-block: 0.5em;
     color: $dv-subtext-color;
 }
 
