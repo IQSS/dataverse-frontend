@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { getDatasetLocks } from '../../dataset/domain/useCases/getDatasetLocks' // Adjust the import path as necessary
 import { Dataset } from '../../dataset/domain/models/Dataset'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
+import { PUBLISH_DATASET_POLL_INTERVAL } from './config'
 
 const useCheckPublishCompleted = (
   publishInProgress: boolean | undefined,
@@ -14,7 +15,7 @@ const useCheckPublishCompleted = (
     let intervalId: NodeJS.Timeout | null = null
 
     if (publishInProgress && dataset) {
-      const gotoReleasedPageAfterPublish = async () => {
+      const waitForDatasetLocksReleased = async () => {
         const initialLocks = await getDatasetLocks(datasetRepository, dataset.persistentId)
         if (initialLocks.length === 0) {
           setPublishCompleted(true)
@@ -32,10 +33,10 @@ const useCheckPublishCompleted = (
               }
             }
             void pollLocks()
-          }, 2000)
+          }, PUBLISH_DATASET_POLL_INTERVAL)
         }
       }
-      void gotoReleasedPageAfterPublish()
+      void waitForDatasetLocksReleased()
     }
 
     return () => {
@@ -44,6 +45,7 @@ const useCheckPublishCompleted = (
       }
     }
   }, [publishInProgress, dataset, datasetRepository])
+
   return publishCompleted
 }
 export default useCheckPublishCompleted
