@@ -11,11 +11,11 @@
 }
 
 .selected_files_info {
+    position: absolute;
+    right: 0;
     display: inline-flex;
     align-items: center;
     justify-content: flex-end;
-    position: absolute;
-    right: 0;
 }
 
 .uploaded_files_info {

@@ -95,20 +95,18 @@ export function UploadedFiles({
 
   return (
     <>
-      <div className={styles.forms}>
-        <RestrictionModal
-          defaultRequestAccess={requestAccess}
-          defaultTerms={terms}
-          show={showRestrictionModal}
-          update={restrict}
-        />
-        <AddTagsModal
-          show={showAddTagsModal}
-          availableTags={[...tagOptions]}
-          setTagOptions={setTagOptions}
-          update={addTags}
-        />
-      </div>
+      <RestrictionModal
+        defaultRequestAccess={requestAccess}
+        defaultTerms={terms}
+        show={showRestrictionModal}
+        update={restrict}
+      />
+      <AddTagsModal
+        show={showAddTagsModal}
+        availableTags={[...tagOptions]}
+        setTagOptions={setTagOptions}
+        update={addTags}
+      />
       <div hidden={fileUploadState.length === 0}>
         <Card>
           <FilesHeader
