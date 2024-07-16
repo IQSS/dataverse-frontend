@@ -11,7 +11,7 @@
 
 .uploaded_files {
     display: grid;
-    grid-template-columns: 4rem auto auto auto 3.5rem;
+    grid-template-columns: 4rem repeat(3, auto) 3.5rem;
 }
 
 .selected_file>div {
