@@ -1,9 +1,9 @@
+import { PropsWithChildren } from 'react'
 import { Row } from '../../grid/Row'
 import { Col } from '../../grid/Col'
-import React, { PropsWithChildren } from 'react'
-import styles from './FormRadioGroup.module.scss'
 import { RequiredInputSymbol } from '../required-input-symbol/RequiredInputSymbol'
 import { QuestionMarkTooltip } from '../../tooltip/question-mark-tooltip/QuestionMarkTooltip'
+import styles from './FormRadioGroup.module.scss'
 
 interface FormRadioGroupProps {
   title: string
