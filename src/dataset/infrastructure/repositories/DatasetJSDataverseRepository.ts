@@ -207,14 +207,24 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     versionUpdateType: VersionUpdateType = VersionUpdateType.MAJOR
   ): Promise<void> {
     let jsVersionUpdateType: JSVersionUpdateType
-    // TODO: remove this logic when VersionUpdateType.UPDATE_CURRENT is available in js-dataverse
-    if (versionUpdateType === VersionUpdateType.UPDATE_CURRENT) {
-      throw new Error('update current version type not supported yet')
-    } else if (versionUpdateType === VersionUpdateType.MINOR) {
-      jsVersionUpdateType = JSVersionUpdateType.MINOR
-    } else {
-      jsVersionUpdateType = JSVersionUpdateType.MAJOR
+
+    switch (versionUpdateType) {
+      case VersionUpdateType.MINOR:
+        jsVersionUpdateType = JSVersionUpdateType.MINOR
+        break
+      case VersionUpdateType.MAJOR:
+        jsVersionUpdateType = JSVersionUpdateType.MAJOR
+        break
+      case VersionUpdateType.UPDATE_CURRENT:
+        // TODO: remove this logic when VersionUpdateType.UPDATE_CURRENT is available in js-dataverse
+        throw new Error('update current version type not supported yet')
+      default:
+        throw new Error('Invalid version update type')
     }
+
+    return publishDataset.execute(persistentId, jsVersionUpdateType).catch((error: WriteError) => {
+      throw new Error(error.message)
+    })
     return publishDataset.execute(persistentId, jsVersionUpdateType).catch((error: WriteError) => {
       throw new Error(error.message)
     })
