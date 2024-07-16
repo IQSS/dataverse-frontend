@@ -24,8 +24,7 @@ type UsePublishDatasetReturnType =
 
 export function usePublishDataset(
   repository: DatasetRepository,
-  persistentId: string,
-  onPublishErrorCallback: () => void
+  persistentId: string
 ): UsePublishDatasetReturnType {
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
@@ -47,13 +46,10 @@ export function usePublishDataset(
         return
       })
       .catch((err) => {
-        console.log('caught error')
         const errorMessage = err instanceof Error && err.message ? err.message : 'Unknown Error' // TODO: i18n
 
         setPublishError(errorMessage)
         setSubmissionStatus(SubmissionStatus.Errored)
-
-        onPublishErrorCallback()
       })
   }
 

@@ -1,16 +1,16 @@
-import { Button, Modal } from '@iqss/dataverse-design-system'
-import { useTranslation } from 'react-i18next'
-import type { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
-import { usePublishDataset } from './usePublishDataset'
-
-import { VersionUpdateType } from '../../../dataset/domain/models/VersionUpdateType'
-import { Form } from '@iqss/dataverse-design-system'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Button, Modal } from '@iqss/dataverse-design-system'
+import { Form } from '@iqss/dataverse-design-system'
+import type { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
+import { VersionUpdateType } from '../../../dataset/domain/models/VersionUpdateType'
 import { useSession } from '../../session/SessionContext'
-import { PublishDatasetHelpText } from './PublishDatasetHelpText'
 import { License } from '../dataset-summary/License'
 import { defaultLicense } from '../../../dataset/domain/models/Dataset'
 import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
+import { usePublishDataset } from './usePublishDataset'
+import { PublishDatasetHelpText } from './PublishDatasetHelpText'
+import styles from './PublishDatasetModal.module.scss'
 
 interface PublishDatasetModalProps {
   show: boolean
@@ -29,14 +29,10 @@ export function PublishDatasetModal({
 }: PublishDatasetModalProps) {
   const { t } = useTranslation('dataset')
   const { user } = useSession()
-  const onPublishErrorCallback = () => {
-    // TODO: Navigate to error page
-    throw new Error('Error publishing dataset')
-  }
-  const { submissionStatus, submitPublish } = usePublishDataset(
+
+  const { submissionStatus, submitPublish, publishError } = usePublishDataset(
     repository,
-    persistentId,
-    onPublishErrorCallback
+    persistentId
   )
   const [selectedVersionUpdateType, setSelectedVersionUpdateType] = useState(
     VersionUpdateType.MAJOR
@@ -62,7 +58,7 @@ export function PublishDatasetModal({
         {releasedVersionExists && (
           <>
             <p>{t('publish.selectVersion')}</p>
-            <Form.RadioGroup onChange={handleVersionUpdateTypeChange} title={'Update Version'}>
+            <Form.RadioGroup title={'Update Version'}>
               <Form.Group.Radio
                 defaultChecked
                 onClick={handleVersionUpdateTypeChange}
@@ -92,6 +88,10 @@ export function PublishDatasetModal({
             </Form.RadioGroup>
           </>
         )}
+        <span className={styles.errorText}>
+          {submissionStatus === SubmissionStatus.Errored &&
+            `${t('publish.error')} ${publishError ? publishError : ''}`}
+        </span>
       </Modal.Body>
       <Modal.Footer>
         <Button

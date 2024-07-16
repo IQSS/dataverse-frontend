@@ -121,6 +121,7 @@
     "cancelButton": "Cancel",
     "minorVersion": "Minor Version",
     "majorVersion": "Major Version",
-    "updateCurrentVersion": "Update Current Version"
+    "updateCurrentVersion": "Update Current Version",
+    "error": "An error occurred while publishing the dataset."
+    }
   }
-}

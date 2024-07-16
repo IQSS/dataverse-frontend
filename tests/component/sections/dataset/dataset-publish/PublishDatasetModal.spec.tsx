@@ -21,6 +21,29 @@ describe('PublishDatasetModal', () => {
     cy.findByText('Minor Version').should('not.exist')
     cy.findByText('Update Current Version').should('not.exist')
   })
+
+  it('displays an error message when publishDataset fails', () => {
+    const handleClose = cy.stub()
+    const repository = {} as DatasetRepository // Mock the repository as needed
+    const errorMessage = 'Publishing failed'
+    repository.publish = cy.stub().as('repositoryPublish').rejects(new Error(errorMessage))
+
+    cy.mountAuthenticated(
+      <PublishDatasetModal
+        show={true}
+        repository={repository}
+        persistentId="testPersistentId"
+        releasedVersionExists={false}
+        handleClose={handleClose}
+      />
+    )
+
+    // Trigger the Publish action
+    cy.findByText('Continue').click()
+
+    // Check if the error message is displayed
+    cy.contains(errorMessage).should('exist')
+  })
   it('renders the PublishDatasetModal and triggers submitPublish on button click', () => {
     const handleClose = cy.stub()
     const repository = {} as DatasetRepository // Mock the repository as needed
