@@ -1,6 +1,5 @@
+import { useTranslation, Trans } from 'react-i18next'
 import styles from './PublishDatasetHelpText.module.scss'
-import { useTranslation } from 'react-i18next'
-import { Trans } from 'react-i18next'
 
 interface PublishDatasetHelpTextProps {
   releasedVersionExists: boolean
