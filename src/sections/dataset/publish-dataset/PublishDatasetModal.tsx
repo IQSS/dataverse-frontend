@@ -27,7 +27,7 @@ export function PublishDatasetModal({
   releasedVersionExists,
   handleClose
 }: PublishDatasetModalProps) {
-  const { t } = useTranslation('publishDataset')
+  const { t } = useTranslation('dataset')
   const { user } = useSession()
   const onPublishErrorCallback = () => {
     // TODO: Navigate to error page
@@ -61,20 +61,20 @@ export function PublishDatasetModal({
         />
         {releasedVersionExists && (
           <>
-            <p>{t('selectVersion')}</p>
+            <p>{t('publish.selectVersion')}</p>
             <Form.RadioGroup onChange={handleVersionUpdateTypeChange} title={'Update Version'}>
               <Form.Group.Radio
                 defaultChecked
                 onClick={handleVersionUpdateTypeChange}
                 name="update-type"
-                label="Minor Version"
+                label={t('publish.minorVersion')}
                 id="update-type-minor"
                 value={VersionUpdateType.MINOR}
               />
               <Form.Group.Radio
                 onClick={handleVersionUpdateTypeChange}
                 name="update-type"
-                label="Major Version"
+                label={t('publish.majorVersion')}
                 id="update-type-major"
                 value={VersionUpdateType.MAJOR}
               />
@@ -82,7 +82,7 @@ export function PublishDatasetModal({
                 <Form.Group.Radio
                   onClick={handleVersionUpdateTypeChange}
                   name="update-type"
-                  label="Update Current Version"
+                  label={t('publish.updateCurrentVersion')}
                   id="update-type-current"
                   // TODO: Remove disabled when JSVersionUpdateType.UPDATE_CURRENT is available in js-dataverse
                   disabled={true}
@@ -98,7 +98,7 @@ export function PublishDatasetModal({
           variant="primary"
           onClick={() => submitPublish(selectedVersionUpdateType)}
           type="submit">
-          {t('continueButton')}
+          {t('publish.continueButton')}
         </Button>
         <Button
           withSpacing
@@ -106,7 +106,7 @@ export function PublishDatasetModal({
           type="button"
           onClick={handleClose}
           disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
-          {t('cancelButton')}
+          {t('publish.cancelButton')}
         </Button>
       </Modal.Footer>
     </Modal>

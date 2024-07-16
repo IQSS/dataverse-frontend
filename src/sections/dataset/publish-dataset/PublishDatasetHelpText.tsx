@@ -6,22 +6,22 @@ interface PublishDatasetHelpTextProps {
 }
 
 export function PublishDatasetHelpText({ releasedVersionExists }: PublishDatasetHelpTextProps) {
-  const { t } = useTranslation('publishDataset')
+  const { t } = useTranslation('dataset')
   const cc0Link = 'https://creativecommons.org/publicdomain/zero/1.0/'
   return (
     <>
-      {!releasedVersionExists && <p className={styles.warningText}>{t('draftQuestion')}</p>}
+      {!releasedVersionExists && <p className={styles.warningText}>{t('publish.draftQuestion')}</p>}
       {releasedVersionExists && (
-        <p className={styles.warningText}>{t('previouslyReleasedQuestion')}</p>
+        <p className={styles.warningText}>{t('publish.previouslyReleasedQuestion')}</p>
       )}
       <div className={styles.container}>
         <Trans
           t={t}
-          i18nKey="termsText1"
+          i18nKey="publish.termsText1"
           values={{ cc0Link }}
           components={{ a: <a href={cc0Link} /> }}
         />
-        <p>{t('termsText2')}</p>
+        <p>{t('publish.termsText2')}</p>
       </div>
     </>
   )
