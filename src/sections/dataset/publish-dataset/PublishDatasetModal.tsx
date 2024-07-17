@@ -97,8 +97,10 @@ export function PublishDatasetModal({
         <Button
           variant="primary"
           onClick={() => {
-            handleClose()
             submitPublish(selectedVersionUpdateType)
+            if (submissionStatus === SubmissionStatus.SubmitComplete) {
+              handleClose()
+            }
           }}
           type="submit">
           {t('publish.continueButton')}
