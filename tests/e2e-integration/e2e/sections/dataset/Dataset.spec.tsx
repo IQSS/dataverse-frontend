@@ -57,6 +57,7 @@ describe('Dataset', () => {
           cy.findByRole('button', { name: 'Continue' }).should('exist').click()
           cy.findByText('Version 1.0').should('exist')
           cy.findByText('Draft').should('not.exist')
+          cy.contains('This draft version needs to be published').should('not.exist')
         })
     })
     // TODO: update this usecase to use the edit dataset form when it is ready
