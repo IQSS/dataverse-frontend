@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import styles from './Dataset.module.scss'
 import { DatasetLabels } from './dataset-labels/DatasetLabels'
@@ -17,14 +17,11 @@ import { useNotImplementedModal } from '../not-implemented/NotImplementedModalCo
 import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
-import { Alert, AlertMessageKey } from '../../alert/domain/models/Alert'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 import { DatasetFilesScrollable } from './dataset-files/DatasetFilesScrollable'
 import useCheckPublishCompleted from './useCheckPublishCompleted'
-import { useNavigate } from 'react-router-dom'
-import { Route } from '../Route.enum'
-import { useDeepCompareEffect } from 'use-deep-compare'
+import useDatasetAlerts from './useDatasetAlerts'
 
 interface DatasetProps {
   fileRepository: FileRepository
@@ -44,84 +41,24 @@ export function Dataset({
   publishInProgress
 }: DatasetProps) {
   const { setIsLoading } = useLoading()
-  const { dataset, isLoading } = useDataset()
+  const { dataset, isLoading: isDatasetLoading } = useDataset()
   const { t } = useTranslation('dataset')
   const { hideModal, isModalOpen } = useNotImplementedModal()
   const publishCompleted = useCheckPublishCompleted(publishInProgress, dataset, datasetRepository)
-  const navigate = useNavigate()
-  // TODO: Move this to custom hook useDatasetAlerts
-  const [datasetAlerts, setDatasetAlerts] = useState<Alert[]>([])
 
-  useDeepCompareEffect(() => {
-    if (dataset?.alerts) {
-      console.log(
-        '%cSetting initial dataset alerts',
-        'background: red; color: white; padding: 2px;'
-      )
-      setDatasetAlerts(dataset.alerts)
-    }
-  }, [dataset?.alerts])
+  const datasetAlerts = useDatasetAlerts(
+    created,
+    metadataUpdated,
+    dataset,
+    publishInProgress,
+    publishCompleted
+  )
 
   useEffect(() => {
-    if (created && dataset) {
-      setDatasetAlerts((prevAlerts) => {
-        const datasetCreatedAdded = prevAlerts.some(
-          (alert) => alert.messageKey === AlertMessageKey.DATASET_CREATED
-        )
-        if (datasetCreatedAdded) return prevAlerts
+    setIsLoading(isDatasetLoading)
+  }, [isDatasetLoading, setIsLoading])
 
-        return [...prevAlerts, { messageKey: AlertMessageKey.DATASET_CREATED, variant: 'success' }]
-      })
-    }
-    if (metadataUpdated && dataset) {
-      setDatasetAlerts((prevAlerts) => {
-        const metadataUpdatedAdded = prevAlerts.some(
-          (alert) => alert.messageKey === AlertMessageKey.METADATA_UPDATED
-        )
-        if (metadataUpdatedAdded) return prevAlerts
-
-        return [...prevAlerts, { messageKey: AlertMessageKey.METADATA_UPDATED, variant: 'success' }]
-      })
-    }
-  }, [created, metadataUpdated, dataset])
-
-  useEffect(() => {
-    if (dataset) {
-      console.log('%cRunning effect', 'background: blue; color: white; padding: 2px;')
-
-      if (publishInProgress && !publishCompleted) {
-        console.log(
-          '%cPublish in progress but not completed',
-          'background: orange; color: white; padding: 2px;'
-        )
-
-        setDatasetAlerts((prevAlerts) => {
-          const publishInProgressAdded = prevAlerts.some(
-            (alert) => alert.messageKey === AlertMessageKey.PUBLISH_IN_PROGRESS
-          )
-          if (publishInProgressAdded) return prevAlerts
-
-          return [{ messageKey: AlertMessageKey.PUBLISH_IN_PROGRESS, variant: 'info' }]
-        })
-      }
-      if (publishInProgress && publishCompleted) {
-        console.log(
-          '%cPublish in progress and completed',
-          'background: green; color: white; padding: 2px;'
-        )
-        navigate(`${Route.DATASETS}?persistentId=${dataset.persistentId}`, {
-          state: { publishInProgress: false },
-          replace: true
-        })
-      }
-    }
-  }, [dataset, publishInProgress, publishCompleted, navigate])
-
-  useEffect(() => {
-    setIsLoading(isLoading)
-  }, [isLoading, setIsLoading])
-
-  if (isLoading) {
+  if (isDatasetLoading && !dataset) {
     return <DatasetSkeleton />
   }
 
