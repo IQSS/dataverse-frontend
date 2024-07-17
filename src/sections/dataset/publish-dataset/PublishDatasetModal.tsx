@@ -96,7 +96,10 @@ export function PublishDatasetModal({
       <Modal.Footer>
         <Button
           variant="primary"
-          onClick={() => submitPublish(selectedVersionUpdateType)}
+          onClick={() => {
+            handleClose()
+            submitPublish(selectedVersionUpdateType)
+          }}
           type="submit">
           {t('publish.continueButton')}
         </Button>
