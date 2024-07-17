@@ -57,6 +57,11 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     !FileUploadTools.get(file, fileUploaderState).done
 
   const uploadOneFile = (file: File) => {
+    // sanity check: should not happen
+    /* istanbul ignore next */
+    if (!canUpload(file)) {
+      return
+    }
     const key = FileUploadTools.key(file)
     setState(FileUploadTools.showProgressBar(file, fileUploaderState))
     const cancel = uploadFile(
