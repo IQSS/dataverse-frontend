@@ -6,6 +6,7 @@ export enum Route {
   DATASETS = '/datasets',
   CREATE_DATASET = '/datasets/create',
   UPLOAD_DATASET_FILES = '/datasets/upload-files',
+  EDIT_DATASET_METADATA = '/datasets/edit-metadata',
   FILES = '/files',
   COLLECTIONS = '/collections'
 }

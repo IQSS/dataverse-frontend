@@ -2,6 +2,7 @@ import type { Preview } from '@storybook/react'
 import { ThemeProvider } from '@iqss/dataverse-design-system'
 import { MemoryRouter } from 'react-router-dom'
 import { FakerHelper } from '../tests/component/shared/FakerHelper'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const preview: Preview = {
   parameters: {

@@ -3,9 +3,8 @@ import { CreateDataset } from '../../sections/create-dataset/CreateDataset'
 import { WithLayout } from '../WithLayout'
 import { WithI18next } from '../WithI18next'
 import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
-import { MetadataBlockInfoMockRepository } from './MetadataBlockInfoMockRepository'
-import { MetadataBlockInfoMockLoadingRepository } from './MetadataBlockInfoMockLoadingRepository'
-import { MetadataBlockInfoMockErrorRepository } from './MetadataBlockInfoMockErrorRepository'
+import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
+import { MetadataBlockInfoMockLoadingRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockLoadingRepository'
 import { NotImplementedModalProvider } from '../../sections/not-implemented/NotImplementedModalProvider'
 import { WithLoggedInUser } from '../WithLoggedInUser'
 
@@ -25,27 +24,18 @@ export const Default: Story = {
   render: () => (
     <NotImplementedModalProvider>
       <CreateDataset
-        repository={new DatasetMockRepository()}
+        datasetRepository={new DatasetMockRepository()}
         metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       />
     </NotImplementedModalProvider>
   )
 }
 
-export const LoadingMetadataBlocksConfiguration: Story = {
+export const Loading: Story = {
   render: () => (
     <CreateDataset
-      repository={new DatasetMockRepository()}
+      datasetRepository={new DatasetMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockLoadingRepository()}
-    />
-  )
-}
-
-export const ErrorLoadingMetadataBlocksConfiguration: Story = {
-  render: () => (
-    <CreateDataset
-      repository={new DatasetMockRepository()}
-      metadataBlockInfoRepository={new MetadataBlockInfoMockErrorRepository()}
     />
   )
 }

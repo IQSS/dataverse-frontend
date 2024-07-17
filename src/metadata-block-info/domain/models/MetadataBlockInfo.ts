@@ -1,9 +1,15 @@
+import { DatasetMetadataFieldValue } from '../../../dataset/domain/models/Dataset'
+
 export interface MetadataBlockInfo {
   id: number
   name: string
   displayName: string
   metadataFields: Record<string, MetadataField>
   displayOnCreate: boolean
+}
+
+export interface MetadataBlockInfoWithMaybeValues extends MetadataBlockInfo {
+  metadataFields: Record<string, MetadataFieldWithMaybeValue>
 }
 
 export interface MetadataField {
@@ -22,6 +28,10 @@ export interface MetadataField {
   controlledVocabularyValues?: string[]
   childMetadataFields?: Record<string, MetadataField>
   displayOnCreate: boolean
+}
+
+export interface MetadataFieldWithMaybeValue extends MetadataField {
+  value?: DatasetMetadataFieldValue
 }
 
 export const TypeMetadataFieldOptions = {
