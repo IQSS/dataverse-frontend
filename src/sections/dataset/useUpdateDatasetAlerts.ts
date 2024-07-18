@@ -49,7 +49,6 @@ function useUpdateDatasetAlerts({
   }, [metadataUpdated, alertsInitialized.current])
 
   useDeepCompareEffect(() => {
-    console.log('alerts initialized: ', alertsInitialized.current)
     if (publishInProgress && alertsInitialized.current) {
       // If publishing, just show the publish in progress alert
       setAlerts([{ messageKey: AlertMessageKey.PUBLISH_IN_PROGRESS, variant: 'info' }])
