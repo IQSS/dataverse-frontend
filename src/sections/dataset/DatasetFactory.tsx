@@ -13,6 +13,7 @@ import { SettingsProvider } from '../settings/SettingsProvider'
 import { DatasetProvider } from './DatasetProvider'
 import { MultipleFileDownloadProvider } from '../file/multiple-file-download/MultipleFileDownloadProvider'
 import { NotImplementedModalProvider } from '../not-implemented/NotImplementedModalProvider'
+import { AlertProvider } from '../alerts/AlertProvider'
 import { searchParamVersionToDomainVersion } from '../../Router'
 import { FILES_TAB_INFINITE_SCROLL_ENABLED } from './config'
 
@@ -29,7 +30,9 @@ export class DatasetFactory {
           <NotImplementedModalProvider>
             <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
               <AnonymizedProvider>
-                <DatasetWithSearchParams />
+                <AlertProvider>
+                  <DatasetWithSearchParams />
+                </AlertProvider>
               </AnonymizedProvider>
             </MetadataBlockInfoProvider>
           </NotImplementedModalProvider>

@@ -1,8 +1,6 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
 import { publishDataset } from '../../../dataset/domain/useCases/publishDataset'
-import { Route } from '../../Route.enum'
 
 import { VersionUpdateType } from '../../../dataset/domain/models/VersionUpdateType'
 import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
@@ -24,14 +22,13 @@ type UsePublishDatasetReturnType =
 
 export function usePublishDataset(
   repository: DatasetRepository,
-  persistentId: string
+  persistentId: string,
+  onPublishSucceed: () => void
 ): UsePublishDatasetReturnType {
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
   )
   const [publishError, setPublishError] = useState<string | null>(null)
-
-  const navigate = useNavigate()
 
   const submitPublish = (versionUpdateType: VersionUpdateType): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
@@ -40,9 +37,7 @@ export function usePublishDataset(
       .then(() => {
         setPublishError(null)
         setSubmissionStatus(SubmissionStatus.SubmitComplete)
-        navigate(`${Route.DATASETS}?persistentId=${persistentId}&Version=DRAFT`, {
-          state: { publishInProgress: true }
-        })
+        onPublishSucceed()
         return
       })
       .catch((err) => {

@@ -1,19 +1,19 @@
-import { createContext, useContext } from 'react'
+import { createContext, SetStateAction, useContext } from 'react'
 
 import { Alert, AlertMessageKey } from '../../alert/domain/models/Alert'
 
-interface DatasetAlertContextProps {
-  datasetAlerts: Alert[]
-  addDatasetAlert: (newAlert: Alert) => void
-  removeDatasetAlert: (alertId: AlertMessageKey) => void
-  setDatasetAlerts: (alerts: Alert[]) => void
+interface AlertContextProps {
+  alerts: Alert[]
+  addAlert: (newAlert: Alert) => void
+  removeAlert: (alertId: AlertMessageKey) => void
+  setAlerts: (value: SetStateAction<Alert[]>) => void
 }
 
-export const AlertContext = createContext<DatasetAlertContextProps>({
-  datasetAlerts: [],
-  addDatasetAlert: /* istanbul ignore next */ () => {},
-  removeDatasetAlert: /* istanbul ignore next */ () => {},
+export const AlertContext = createContext<AlertContextProps>({
+  alerts: [],
+  addAlert: /* istanbul ignore next */ () => {},
+  removeAlert: /* istanbul ignore next */ () => {},
   // eslint-disable-next-line unused-imports/no-unused-vars
-  setDatasetAlerts: (alerts: Alert[]) => {}
+  setAlerts: () => {}
 })
 export const useAlertContext = () => useContext(AlertContext)

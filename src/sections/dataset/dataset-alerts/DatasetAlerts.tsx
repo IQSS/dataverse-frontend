@@ -1,19 +1,20 @@
 import { useTranslation } from 'react-i18next'
 import parse from 'html-react-parser'
-import { Alert as AlertComponent } from '@iqss/dataverse-design-system'
-import { Alert } from '../../../alert/domain/models/Alert'
+import { Alert } from '@iqss/dataverse-design-system'
+import { useAlertContext } from '../../alerts/AlertContext'
 import styles from './DatasetAlerts.module.scss'
 
-interface DatasetAlertsProps {
-  alerts: Alert[]
-}
-
-export function DatasetAlerts({ alerts }: DatasetAlertsProps) {
+export function DatasetAlerts() {
   const { t } = useTranslation('dataset')
+  const { alerts } = useAlertContext()
+
+  if (!alerts.length) {
+    return null
+  }
 
   return (
     <div className={styles.container}>
-      {alerts.map((alert: Alert, index) => {
+      {alerts.map((alert, index) => {
         const translatedMsg = alert.dynamicFields
           ? t(`alerts.${alert.messageKey}.alertText`, alert.dynamicFields)
           : t(`alerts.${alert.messageKey}.alertText`)
@@ -21,13 +22,13 @@ export function DatasetAlerts({ alerts }: DatasetAlertsProps) {
         const alertKey = `alert-${index}`
 
         return (
-          <AlertComponent
+          <Alert
             key={alertKey}
             variant={alert.variant}
             customHeading={translatedHeading}
             dismissible={false}>
             {parse(translatedMsg)}
-          </AlertComponent>
+          </Alert>
         )
       })}
     </div>

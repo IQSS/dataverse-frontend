@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
-import styles from './Dataset.module.scss'
+import { useNavigate } from 'react-router-dom'
 import { DatasetLabels } from './dataset-labels/DatasetLabels'
 import { useLoading } from '../loading/LoadingContext'
 import { DatasetSkeleton, TabsSkeleton } from './DatasetSkeleton'
@@ -21,7 +21,9 @@ import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepo
 import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 import { DatasetFilesScrollable } from './dataset-files/DatasetFilesScrollable'
 import useCheckPublishCompleted from './useCheckPublishCompleted'
-import useDatasetAlerts from './useDatasetAlerts'
+import useUpdateDatasetAlerts from './useUpdateDatasetAlerts'
+import styles from './Dataset.module.scss'
+import { Route } from '../Route.enum'
 
 interface DatasetProps {
   fileRepository: FileRepository
@@ -43,16 +45,24 @@ export function Dataset({
   const { setIsLoading } = useLoading()
   const { dataset, isLoading: isDatasetLoading } = useDataset()
   const { t } = useTranslation('dataset')
+  const navigate = useNavigate()
   const { hideModal, isModalOpen } = useNotImplementedModal()
   const publishCompleted = useCheckPublishCompleted(publishInProgress, dataset, datasetRepository)
-
-  const datasetAlerts = useDatasetAlerts(
+  useUpdateDatasetAlerts({
+    dataset,
     created,
     metadataUpdated,
-    dataset,
-    publishInProgress,
-    publishCompleted
-  )
+    publishInProgress
+  })
+
+  useEffect(() => {
+    if (publishInProgress && publishCompleted && dataset) {
+      navigate(`${Route.DATASETS}?persistentId=${dataset.persistentId}`, {
+        state: {},
+        replace: true
+      })
+    }
+  }, [publishInProgress, publishCompleted, dataset, navigate])
 
   useEffect(() => {
     setIsLoading(isDatasetLoading)
@@ -74,7 +84,7 @@ export function Dataset({
             <div className={styles.container}>
               <Row>
                 <Col>
-                  <DatasetAlerts alerts={datasetAlerts} />
+                  <DatasetAlerts />
                 </Col>
               </Row>
             </div>

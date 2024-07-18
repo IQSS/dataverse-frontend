@@ -11,6 +11,8 @@ import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmi
 import { usePublishDataset } from './usePublishDataset'
 import { PublishDatasetHelpText } from './PublishDatasetHelpText'
 import styles from './PublishDatasetModal.module.scss'
+import { useNavigate } from 'react-router-dom'
+import { Route } from '../../Route.enum'
 
 interface PublishDatasetModalProps {
   show: boolean
@@ -29,10 +31,12 @@ export function PublishDatasetModal({
 }: PublishDatasetModalProps) {
   const { t } = useTranslation('dataset')
   const { user } = useSession()
+  const navigate = useNavigate()
 
   const { submissionStatus, submitPublish, publishError } = usePublishDataset(
     repository,
-    persistentId
+    persistentId,
+    onPublishSucceed
   )
   const [selectedVersionUpdateType, setSelectedVersionUpdateType] = useState(
     VersionUpdateType.MAJOR
@@ -41,6 +45,15 @@ export function PublishDatasetModal({
     const target = event.target as HTMLInputElement
     setSelectedVersionUpdateType(target.value as VersionUpdateType)
   }
+
+  function onPublishSucceed() {
+    navigate(`${Route.DATASETS}?persistentId=${persistentId}&Version=DRAFT`, {
+      state: { publishInProgress: true },
+      replace: true
+    })
+    handleClose()
+  }
+
   return (
     <Modal show={show} onHide={handleClose} size="lg">
       <Modal.Header>
@@ -98,9 +111,6 @@ export function PublishDatasetModal({
           variant="primary"
           onClick={() => {
             submitPublish(selectedVersionUpdateType)
-            if (submissionStatus === SubmissionStatus.SubmitComplete) {
-              handleClose()
-            }
           }}
           type="submit">
           {t('publish.continueButton')}
