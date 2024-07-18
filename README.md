@@ -178,6 +178,8 @@ The environment is accessible through the following URLs:
 > did not reflect the user's current location within the site, our new SPA design now includes this feature in the breadcrumbs.
 > Additionally, we have aligned with best practices by positioning all breadcrumbs at the top, before anything else in the UI.
 >
+> We have also introduced action items as the last item of the breadcrumb, eg: Collection > Dataset Name > Edit Dataset Metadata
+>
 > This update gives users a clear indication of their current position within the application's hierarchy.
 >
 > ### Changes in Functionality &amp; Behavior
@@ -200,11 +202,17 @@ The environment is accessible through the following URLs:
 > search, whose search facets are reduced compared to other in-application searches. Therefore, if we find evidence that
 > the assumption is incorrect, we will work on extending the search capabilities to support Solr.
 >
+> We have also introduced infinite scroll pagination here.
+>
 > #### Dataverses/Datasets list
 >
 > The original JSF Dataverses/Datasets list on the home page uses normal paging buttons at the bottom of the list.
 > We have implemented infinite scrolling in this list, replacing the normal paging buttons, but the goal would be to be
 > able to toggle between normal paging and infinite scrolling via a toggle setting or button.
+>
+> #### Create/Edit Collection Page Identifier Field
+>
+> A feature has been added to suggest an identifier to the user based on the collection name entered.
 
 </details>
 
