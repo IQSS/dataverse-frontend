@@ -4,6 +4,10 @@ import {
   SELECT_MENU_SEARCH_DEBOUNCE_TIME
 } from '../../../src/lib/components/select-advanced/SelectAdvanced'
 
+function toggleOptionsMenu() {
+  cy.findByLabelText('Toggle options menu').click()
+}
+
 describe('SelectAdvanced', () => {
   describe('should render correctly', () => {
     it('on single selection', () => {
@@ -34,7 +38,7 @@ describe('SelectAdvanced', () => {
         />
       )
 
-      cy.findByLabelText('Toggle options menu').click()
+      toggleOptionsMenu()
 
       cy.findByText('Reading').should('exist')
       cy.findByText('Reading').should('exist')
@@ -54,7 +58,7 @@ describe('SelectAdvanced', () => {
           options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
         />
       )
-      cy.findByLabelText('Toggle options menu').click()
+      toggleOptionsMenu()
 
       cy.findByText('Reading').should('exist')
       cy.findByText('Swimming').should('exist')
@@ -102,7 +106,7 @@ describe('SelectAdvanced', () => {
         />
       )
 
-      cy.findByLabelText('Toggle options menu').click()
+      toggleOptionsMenu()
       cy.findByText('Reading').click()
 
       cy.get('@onChange').should('have.been.calledOnce')
@@ -119,7 +123,7 @@ describe('SelectAdvanced', () => {
           onChange={onChange}
         />
       )
-      cy.findByLabelText('Toggle options menu').click()
+      toggleOptionsMenu()
       cy.findByLabelText('Reading').click()
 
       cy.get('@onChange').should('have.been.calledOnce')
@@ -139,7 +143,7 @@ describe('SelectAdvanced', () => {
           onChange={onChange}
         />
       )
-      cy.findByLabelText('Toggle options menu').click()
+      toggleOptionsMenu()
       cy.findByLabelText('Reading').click()
       cy.get('@onChange').should('have.been.calledWith', ['Reading'])
 
@@ -159,7 +163,7 @@ describe('SelectAdvanced', () => {
           onChange={onChange}
         />
       )
-      cy.findByLabelText('Toggle options menu').click()
+      toggleOptionsMenu()
       cy.findByLabelText('Reading').click()
 
       cy.get('@onChange').should('have.been.calledOnce')
@@ -207,14 +211,24 @@ describe('SelectAdvanced', () => {
         />
       )
 
-      cy.findByLabelText('Toggle options menu').click()
+      toggleOptionsMenu()
 
       // 6 different individual selections
       cy.findByText('Reading').click()
+
+      toggleOptionsMenu()
       cy.findByText('Swimming').click()
+
+      toggleOptionsMenu()
       cy.findByText('Running').click()
+
+      toggleOptionsMenu()
       cy.findByText('Cycling').click()
+
+      toggleOptionsMenu()
       cy.findByText('Reading').click()
+
+      toggleOptionsMenu()
       cy.findByText('Swimming').click()
 
       cy.get('@onChange').should('have.callCount', 6)
@@ -235,7 +249,7 @@ describe('SelectAdvanced', () => {
         />
       )
 
-      cy.findByLabelText('Toggle options menu').click()
+      toggleOptionsMenu()
 
       // 4 individual selections
       cy.findByLabelText('Reading').click()
@@ -286,7 +300,7 @@ describe('SelectAdvanced', () => {
           options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
         />
       )
-      cy.findByLabelText('Toggle options menu').click()
+      toggleOptionsMenu()
       cy.findByText('Reading').click()
       cy.findAllByText('Reading').spread((_selectedItem, selectedListOption) => {
         const element = cy.get(selectedListOption)
@@ -307,7 +321,7 @@ describe('SelectAdvanced', () => {
         />
       )
 
-      cy.findByLabelText('Toggle options menu').click()
+      toggleOptionsMenu()
       cy.findByLabelText('Reading').click()
       cy.findByLabelText('Reading').should('be.checked')
 
@@ -326,7 +340,7 @@ describe('SelectAdvanced', () => {
       />
     )
 
-    cy.findByLabelText('Toggle options menu').click()
+    toggleOptionsMenu()
     cy.findByText('Reading').click()
     cy.findAllByText('Reading')
       .should('have.length', 2)
@@ -335,6 +349,8 @@ describe('SelectAdvanced', () => {
         element.should('have.class', 'active')
         element.should('have.attr', 'aria-selected', 'true')
       })
+
+    toggleOptionsMenu()
 
     cy.findByText('Swimming').click()
 
@@ -357,8 +373,11 @@ describe('SelectAdvanced', () => {
       />
     )
 
-    cy.findByLabelText('Toggle options menu').click()
+    toggleOptionsMenu()
     cy.findByText('Reading').click()
+
+    toggleOptionsMenu()
+
     cy.findAllByText('Reading')
       .should('have.length', 2)
       .spread((_selectedItem, selectedListOption) => {
@@ -370,6 +389,8 @@ describe('SelectAdvanced', () => {
       const element = cy.get(selectedListOption)
       element.click()
     })
+
+    toggleOptionsMenu()
 
     cy.findAllByText('Reading')
       .should('have.length', 2)
@@ -387,7 +408,7 @@ describe('SelectAdvanced', () => {
       />
     )
 
-    cy.findByLabelText('Toggle options menu').click()
+    toggleOptionsMenu()
     cy.findByLabelText('Reading').click()
 
     cy.findByTestId('toggle-inner-content').within(() => {
@@ -404,7 +425,7 @@ describe('SelectAdvanced', () => {
       />
     )
 
-    cy.findByLabelText('Toggle options menu').click()
+    toggleOptionsMenu()
     cy.findByLabelText('Toggle all options').click()
 
     cy.findByLabelText('Reading').should('be.checked')
@@ -435,7 +456,7 @@ describe('SelectAdvanced', () => {
       />
     )
 
-    cy.findByLabelText('Toggle options menu').click()
+    toggleOptionsMenu()
     cy.findByLabelText('Toggle all options').click()
     cy.findByLabelText('Toggle all options').click()
 
@@ -468,7 +489,7 @@ describe('SelectAdvanced', () => {
     )
     cy.clock()
 
-    cy.findByLabelText('Toggle options menu').click()
+    toggleOptionsMenu()
     cy.findByPlaceholderText('Search...').type('Read')
 
     cy.tick(SELECT_MENU_SEARCH_DEBOUNCE_TIME)
@@ -504,7 +525,7 @@ describe('SelectAdvanced', () => {
     )
     cy.clock()
 
-    cy.findByLabelText('Toggle options menu').click()
+    toggleOptionsMenu()
     cy.findByLabelText('Toggle all options').click()
 
     cy.findByLabelText('Reading').should('be.checked')
@@ -547,7 +568,7 @@ describe('SelectAdvanced', () => {
         />
       )
 
-      cy.findByLabelText('Toggle options menu').click()
+      toggleOptionsMenu()
       cy.findByPlaceholderText('Search...').type('Read')
 
       cy.findByText('Reading').should('exist')
@@ -565,7 +586,7 @@ describe('SelectAdvanced', () => {
         />
       )
 
-      cy.findByLabelText('Toggle options menu').click()
+      toggleOptionsMenu()
       cy.findByPlaceholderText('Search...').type('Read')
 
       cy.findByLabelText('Reading').should('exist')
@@ -587,7 +608,7 @@ describe('SelectAdvanced', () => {
 
     cy.clock()
 
-    cy.findByLabelText('Toggle options menu').click()
+    toggleOptionsMenu()
     cy.findByPlaceholderText('Search...').type('Read')
     cy.findByLabelText('Swimming').should('exist')
 
@@ -619,7 +640,7 @@ describe('SelectAdvanced', () => {
       />
     )
 
-    cy.findByLabelText('Toggle options menu').click()
+    toggleOptionsMenu()
     cy.findByLabelText('Reading').click()
     cy.findByLabelText('Swimming').click()
 
@@ -635,7 +656,7 @@ describe('SelectAdvanced', () => {
         />
       )
 
-      cy.findByLabelText('Toggle options menu').click()
+      toggleOptionsMenu()
 
       cy.findByTestId('select-advanced-searchable-input').should('not.exist')
     })
@@ -649,7 +670,7 @@ describe('SelectAdvanced', () => {
         />
       )
 
-      cy.findByLabelText('Toggle options menu').click()
+      toggleOptionsMenu()
 
       cy.findByTestId('select-advanced-searchable-input').should('not.exist')
     })
@@ -663,7 +684,7 @@ describe('SelectAdvanced', () => {
       />
     )
 
-    cy.findByLabelText('Toggle options menu').click()
+    toggleOptionsMenu()
     cy.findByText('Reading').click()
 
     cy.findByTestId('select-advanced-searchable-input').should('not.exist')
@@ -679,7 +700,7 @@ describe('SelectAdvanced', () => {
       />
     )
 
-    cy.findByLabelText('Toggle options menu').click()
+    toggleOptionsMenu()
     cy.findByLabelText('Reading').click()
     cy.findByLabelText('Swimming').click()
 
@@ -697,7 +718,7 @@ describe('SelectAdvanced', () => {
         />
       )
 
-      cy.findByLabelText('Toggle options menu').click()
+      toggleOptionsMenu()
       cy.findByPlaceholderText('Search...').type('Yoga')
 
       cy.findByText('No options found').should('exist')
@@ -709,7 +730,7 @@ describe('SelectAdvanced', () => {
           options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
         />
       )
-      cy.findByLabelText('Toggle options menu').click()
+      toggleOptionsMenu()
       cy.findByPlaceholderText('Search...').type('Yoga')
 
       cy.findByText('No options found').should('exist')
@@ -817,7 +838,7 @@ describe('SelectAdvanced', () => {
       it('on single selection', () => {
         cy.mount(<SelectWithButtonsToChangeOptions isMultiple={false} withDefaultValues={false} />)
 
-        cy.findByLabelText('Toggle options menu').click()
+        toggleOptionsMenu()
         cy.findByText('Reading').should('exist')
         cy.findByText('Swimming').should('exist')
         cy.findByText('Running').should('exist')
@@ -834,7 +855,7 @@ describe('SelectAdvanced', () => {
       it('on single selection with default value', () => {
         cy.mount(<SelectWithButtonsToChangeOptions isMultiple={false} withDefaultValues={true} />)
 
-        cy.findByLabelText('Toggle options menu').click()
+        toggleOptionsMenu()
         cy.findAllByText('Reading').should('exist').should('have.length', 2)
         cy.findByText('Swimming').should('exist')
         cy.findByText('Running').should('exist')
@@ -851,7 +872,7 @@ describe('SelectAdvanced', () => {
       it('on multiple selection', () => {
         cy.mount(<SelectWithButtonsToChangeOptions isMultiple={true} withDefaultValues={false} />)
 
-        cy.findByLabelText('Toggle options menu').click()
+        toggleOptionsMenu()
         cy.findByLabelText('Reading').should('exist')
         cy.findByLabelText('Swimming').should('exist')
         cy.findByLabelText('Running').should('exist')
@@ -867,7 +888,7 @@ describe('SelectAdvanced', () => {
       it('on multiple selection with default values', () => {
         cy.mount(<SelectWithButtonsToChangeOptions isMultiple={true} withDefaultValues={true} />)
 
-        cy.findByLabelText('Toggle options menu').click()
+        toggleOptionsMenu()
         cy.findByLabelText('Reading').should('exist')
         cy.findByLabelText('Swimming').should('exist')
         cy.findByLabelText('Running').should('exist')
@@ -886,7 +907,7 @@ describe('SelectAdvanced', () => {
       it('on single selection', () => {
         cy.mount(<SelectWithButtonsToChangeOptions isMultiple={false} withDefaultValues={false} />)
 
-        cy.findByLabelText('Toggle options menu').click()
+        toggleOptionsMenu()
         cy.findByText('Reading').should('exist')
         cy.findByText('Swimming').should('exist')
         cy.findByText('Running').should('exist')
@@ -913,7 +934,7 @@ describe('SelectAdvanced', () => {
           />
         )
 
-        cy.findByLabelText('Toggle options menu').click()
+        toggleOptionsMenu()
         cy.findAllByText('Reading').should('exist').should('have.length', 2)
         cy.findByText('Swimming').should('exist')
         cy.findByText('Running').should('exist')
@@ -942,7 +963,7 @@ describe('SelectAdvanced', () => {
           />
         )
 
-        cy.findByLabelText('Toggle options menu').click()
+        toggleOptionsMenu()
         cy.findByLabelText('Reading').should('exist')
         cy.findByLabelText('Reading').should('exist')
         cy.findByLabelText('Running').should('exist')
@@ -970,7 +991,7 @@ describe('SelectAdvanced', () => {
           />
         )
 
-        cy.findByLabelText('Toggle options menu').click()
+        toggleOptionsMenu()
         cy.findAllByText('Reading').should('exist').should('have.length', 2)
         cy.findAllByText('Reading').should('exist').should('have.length', 2)
         cy.findByLabelText('Running').should('exist')
@@ -1001,7 +1022,7 @@ describe('SelectAdvanced', () => {
           />
         )
 
-        cy.findByLabelText('Toggle options menu').click()
+        toggleOptionsMenu()
         cy.findByText('Reading').should('exist')
         cy.findByText('Swimming').should('exist')
         cy.findByText('Running').should('exist')
@@ -1032,7 +1053,7 @@ describe('SelectAdvanced', () => {
           />
         )
 
-        cy.findByLabelText('Toggle options menu').click()
+        toggleOptionsMenu()
         cy.findAllByText('Reading').should('exist').should('have.length', 2)
         cy.findByText('Swimming').should('exist')
         cy.findByText('Running').should('exist')
@@ -1064,7 +1085,7 @@ describe('SelectAdvanced', () => {
           />
         )
 
-        cy.findByLabelText('Toggle options menu').click()
+        toggleOptionsMenu()
         cy.findByText('Reading').should('exist')
         cy.findByText('Running').should('exist')
         cy.findByText('Swimming').should('exist')
@@ -1095,7 +1116,7 @@ describe('SelectAdvanced', () => {
           />
         )
 
-        cy.findByLabelText('Toggle options menu').click()
+        toggleOptionsMenu()
         cy.findAllByText('Reading').should('exist').should('have.length', 2)
         cy.findAllByText('Running').should('exist').should('have.length', 2)
         cy.findByLabelText('Swimming').should('exist')
@@ -1124,12 +1145,15 @@ describe('SelectAdvanced', () => {
       />
     )
 
-    cy.findByLabelText('Toggle options menu').click()
+    toggleOptionsMenu()
     cy.findByText('Swimming').click()
+
+    toggleOptionsMenu()
     cy.findAllByText('Swimming').should('have.length', 2)
 
     cy.findByText('Select...').click()
 
+    toggleOptionsMenu()
     cy.findAllByText('Select...').should('have.length', 2)
   })
 
@@ -1141,12 +1165,15 @@ describe('SelectAdvanced', () => {
       />
     )
 
-    cy.findByLabelText('Toggle options menu').click()
+    toggleOptionsMenu()
     cy.findByText('Swimming').click()
+
+    toggleOptionsMenu()
     cy.findAllByText('Swimming').should('have.length', 2)
 
     cy.findByText('Selezionare...').click()
 
+    toggleOptionsMenu()
     cy.findAllByText('Selezionare...').should('have.length', 2)
   })
 })

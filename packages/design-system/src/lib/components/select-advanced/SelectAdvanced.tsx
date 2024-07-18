@@ -187,7 +187,9 @@ export const SelectAdvanced = forwardRef(
     }
 
     return (
-      <DropdownBS autoClose="outside" className={isInvalid ? 'is-invalid' : ''}>
+      <DropdownBS
+        autoClose={isMultiple ? 'outside' : true}
+        className={isInvalid ? 'is-invalid' : ''}>
         <SelectAdvancedToggle
           isMultiple={Boolean(isMultiple)}
           selected={selected}
