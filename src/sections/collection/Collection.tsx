@@ -13,6 +13,7 @@ import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CollectionSkeleton } from './CollectionSkeleton'
 import { CollectionInfo } from './CollectionInfo'
 import { Trans, useTranslation } from 'react-i18next'
+import { useScrollTop } from '../../shared/hooks/useScrollTop'
 
 interface CollectionProps {
   repository: CollectionRepository
@@ -31,6 +32,7 @@ export function Collection({
   page,
   infiniteScrollEnabled = false
 }: CollectionProps) {
+  useScrollTop()
   const { user } = useSession()
   const { collection, isLoading } = useCollection(repository, id)
   const { t } = useTranslation('collection')
