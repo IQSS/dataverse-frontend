@@ -1,7 +1,7 @@
 import {
   CollectionForm,
   CollectionFormData
-} from '../../../../src/sections/create-collection/collection-form'
+} from '../../../../src/sections/create-collection/collection-form/CollectionForm'
 import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
 import { UserRepository } from '../../../../src/users/domain/repositories/UserRepository'
 import { CollectionMother } from '../../collection/domain/models/CollectionMother'
@@ -9,6 +9,8 @@ import { UserMother } from '../../users/domain/models/UserMother'
 import { collectionNameToAlias } from '../../../../src/sections/create-collection/collection-form/top-fields-section/IdentifierField'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
+
+const OWNER_COLLECTION_ID = 'root'
 
 const COLLECTION_NAME = 'Collection Name'
 const collection = CollectionMother.create({ name: COLLECTION_NAME })
@@ -40,6 +42,7 @@ describe('CollectionForm', () => {
     cy.mountAuthenticated(
       <CollectionForm
         collectionRepository={collectionRepository}
+        ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
       />
     )
@@ -50,6 +53,7 @@ describe('CollectionForm', () => {
     cy.mountAuthenticated(
       <CollectionForm
         collectionRepository={collectionRepository}
+        ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
       />
     )
@@ -61,6 +65,7 @@ describe('CollectionForm', () => {
     cy.mountAuthenticated(
       <CollectionForm
         collectionRepository={collectionRepository}
+        ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
       />
     )
@@ -76,6 +81,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
+        ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
       />
     )
@@ -87,6 +93,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
+        ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
       />
     )
@@ -102,6 +109,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
+        ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
       />
     )
@@ -121,6 +129,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
+        ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
       />
     )
@@ -137,6 +146,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
+        ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
       />
     )
@@ -152,6 +162,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
+        ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
       />
     )
@@ -171,6 +182,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
+        ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
       />
     )
@@ -191,6 +203,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
+        ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
       />
     )
@@ -211,6 +224,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
+        ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
       />
     )
@@ -231,6 +245,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
+        ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
       />
     )
@@ -243,6 +258,7 @@ describe('CollectionForm', () => {
       cy.customMount(
         <CollectionForm
           collectionRepository={collectionRepository}
+          ownerCollectionId={OWNER_COLLECTION_ID}
           defaultValues={formDefaultValues}
         />
       )
@@ -259,6 +275,7 @@ describe('CollectionForm', () => {
       cy.customMount(
         <CollectionForm
           collectionRepository={collectionRepository}
+          ownerCollectionId={OWNER_COLLECTION_ID}
           defaultValues={formDefaultValues}
         />
       )
@@ -276,6 +293,7 @@ describe('CollectionForm', () => {
       cy.customMount(
         <CollectionForm
           collectionRepository={collectionRepository}
+          ownerCollectionId={OWNER_COLLECTION_ID}
           defaultValues={{
             ...formDefaultValues,
             alias: collectionNameToAlias(defaultCollectionName)
@@ -290,6 +308,7 @@ describe('CollectionForm', () => {
       cy.customMount(
         <CollectionForm
           collectionRepository={collectionRepository}
+          ownerCollectionId={OWNER_COLLECTION_ID}
           defaultValues={{ ...formDefaultValues, name: '' }}
         />
       )
@@ -303,6 +322,7 @@ describe('CollectionForm', () => {
       cy.customMount(
         <CollectionForm
           collectionRepository={collectionRepository}
+          ownerCollectionId={OWNER_COLLECTION_ID}
           defaultValues={formDefaultValues}
         />
       )
@@ -317,6 +337,7 @@ describe('CollectionForm', () => {
       cy.customMount(
         <CollectionForm
           collectionRepository={collectionRepository}
+          ownerCollectionId={OWNER_COLLECTION_ID}
           defaultValues={{
             ...formDefaultValues,
             contacts: [{ value: testUser.email }, { value: 'fake@fake.com' }]
