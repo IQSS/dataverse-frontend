@@ -4,9 +4,9 @@ import { BreadcrumbsSkeleton } from '../shared/hierarchy/BreadcrumbsSkeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 
-export const NewCollectionSkeleton = () => (
+export const CreateCollectionSkeleton = () => (
   <SkeletonTheme>
-    <section data-testid="new-collection-skeleton">
+    <section data-testid="create-collection-skeleton">
       <BreadcrumbsSkeleton />
       <Skeleton height="40px" width="350px" style={{ marginBottom: 16 }} />
 

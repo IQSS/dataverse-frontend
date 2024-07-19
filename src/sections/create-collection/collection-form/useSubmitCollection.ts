@@ -32,6 +32,7 @@ type UseSubmitCollectionReturnType =
 
 export function useSubmitCollection(
   collectionRepository: CollectionRepository,
+  ownerCollectionId: string,
   onSubmitErrorCallback: () => void
 ): UseSubmitCollectionReturnType {
   const navigate = useNavigate()
@@ -51,9 +52,10 @@ export function useSubmitCollection(
       contacts: formData.contacts.map((contact) => contact.value)
     }
 
-    const hostCollection = formData.hostCollection
+    // TODO: We can't send the hostCollection name, but we should send the hostCollection alias
+    // So in a next iteration we should get the hostCollection alias from the hostCollection name selected
 
-    createCollection(collectionRepository, newCollection, hostCollection)
+    createCollection(collectionRepository, newCollection, ownerCollectionId)
       .then(() => {
         setSubmitError(null)
         setSubmissionStatus(SubmissionStatus.SubmitComplete)

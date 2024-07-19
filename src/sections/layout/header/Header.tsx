@@ -18,7 +18,7 @@ export function Header() {
     })
   }
 
-  const createCollectionRoute = RouteWithParams.NEW_COLLECTION()
+  const createCollectionRoute = RouteWithParams.CREATE_COLLECTION()
 
   return (
     <Navbar
@@ -54,4 +54,3 @@ export function Header() {
 }
 
 // TODO: AddData Dropdown item needs proper permissions checking, see Spike #318
-// TODO: Add page for "New Collection", see Issue #319

@@ -1,23 +1,23 @@
 import { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
 import { CollectionJSDataverseRepository } from '../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
-import { NewCollection } from './NewCollection'
+import { CreateCollection } from './CreateCollection'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 
-export class NewCollectionFactory {
+export class CreateCollectionFactory {
   static create(): ReactElement {
-    return <NewCollectionWithParams />
+    return <CreateCollectionWithParams />
   }
 }
 
-function NewCollectionWithParams() {
+function CreateCollectionWithParams() {
   const { ownerCollectionId = 'root' } = useParams<{ ownerCollectionId: string }>()
 
   // TODO:ME What roles can create a collection, what checks to do?
 
   return (
-    <NewCollection
+    <CreateCollection
       ownerCollectionId={ownerCollectionId}
       collectionRepository={collectionRepository}
       key={ownerCollectionId}

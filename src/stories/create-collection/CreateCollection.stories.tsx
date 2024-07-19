@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { NewCollection } from '../../sections/new-collection/NewCollection'
+import { CreateCollection } from '../../sections/create-collection/CreateCollection'
 import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { WithLoggedInUser } from '../WithLoggedInUser'
@@ -7,9 +7,9 @@ import { CollectionMockRepository } from '../collection/CollectionMockRepository
 import { CollectionLoadingMockRepository } from '../collection/CollectionLoadingMockRepository'
 import { NoCollectionMockRepository } from '../collection/NoCollectionMockRepository'
 
-const meta: Meta<typeof NewCollection> = {
-  title: 'Pages/New Collection',
-  component: NewCollection,
+const meta: Meta<typeof CreateCollection> = {
+  title: 'Pages/Create Collection',
+  component: CreateCollection,
   decorators: [WithI18next, WithLayout, WithLoggedInUser],
   parameters: {
     // Sets the delay for all stories.
@@ -17,16 +17,19 @@ const meta: Meta<typeof NewCollection> = {
   }
 }
 export default meta
-type Story = StoryObj<typeof NewCollection>
+type Story = StoryObj<typeof CreateCollection>
 
 export const Default: Story = {
   render: () => (
-    <NewCollection collectionRepository={new CollectionMockRepository()} ownerCollectionId="root" />
+    <CreateCollection
+      collectionRepository={new CollectionMockRepository()}
+      ownerCollectionId="root"
+    />
   )
 }
 export const Loading: Story = {
   render: () => (
-    <NewCollection
+    <CreateCollection
       collectionRepository={new CollectionLoadingMockRepository()}
       ownerCollectionId="root"
     />
@@ -35,7 +38,7 @@ export const Loading: Story = {
 
 export const OwnerCollectionNotFound: Story = {
   render: () => (
-    <NewCollection
+    <CreateCollection
       collectionRepository={new NoCollectionMockRepository()}
       ownerCollectionId="root"
     />

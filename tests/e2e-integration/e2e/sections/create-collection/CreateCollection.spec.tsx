@@ -1,6 +1,6 @@
 import { TestsUtils } from '../../../shared/TestsUtils'
 
-describe('New Collection', () => {
+describe('Create Collection', () => {
   before(() => {
     TestsUtils.setup()
   })
@@ -9,8 +9,8 @@ describe('New Collection', () => {
     TestsUtils.login()
   })
 
-  it('navigates to the new collection page after submitting a valid form', () => {
-    cy.visit('/spa/collections/new/root')
+  it('navigates to the collection page after submitting a valid form', () => {
+    cy.visit('/spa/collections/root/create')
 
     cy.findByLabelText(/^Identifier/i).type('some-alias')
 

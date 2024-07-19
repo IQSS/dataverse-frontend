@@ -22,7 +22,7 @@ interface IdentifierFieldProps {
 }
 
 export const IdentifierField = ({ rules }: IdentifierFieldProps) => {
-  const { t } = useTranslation('newCollection')
+  const { t } = useTranslation('createCollection')
   const { control, setValue } = useFormContext()
   const nameFieldValue = useWatch({ name: 'name' }) as string
 

@@ -9,9 +9,10 @@ export enum Route {
   EDIT_DATASET_METADATA = '/datasets/edit-metadata',
   FILES = '/files',
   COLLECTIONS = '/collections',
-  NEW_COLLECTION = '/collections/new/:ownerCollectionId'
+  CREATE_COLLECTION = '/collections/:ownerCollectionId/create'
 }
 
 export const RouteWithParams = {
-  NEW_COLLECTION: (ownerCollectionId?: string) => `/collections/new/${ownerCollectionId ?? 'root'}`
+  CREATE_COLLECTION: (ownerCollectionId?: string) =>
+    `/collections/${ownerCollectionId ?? 'root'}/create`
 }

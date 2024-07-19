@@ -17,6 +17,7 @@ import styles from './CollectionForm.module.scss'
 
 export interface CollectionFormProps {
   collectionRepository: CollectionRepository
+  ownerCollectionId: string
   defaultValues: CollectionFormData
 }
 
@@ -35,13 +36,18 @@ export type CollectionFormValuesOnSubmit = Omit<CollectionFormData, 'type'> & {
   type: CollectionType
 }
 
-export const CollectionForm = ({ collectionRepository, defaultValues }: CollectionFormProps) => {
+export const CollectionForm = ({
+  collectionRepository,
+  ownerCollectionId,
+  defaultValues
+}: CollectionFormProps) => {
   const formContainerRef = useRef<HTMLDivElement>(null)
-  const { t } = useTranslation('newCollection')
+  const { t } = useTranslation('createCollection')
   const navigate = useNavigate()
 
   const { submitForm, submitError, submissionStatus } = useSubmitCollection(
     collectionRepository,
+    ownerCollectionId,
     onSubmittedCollectionError
   )
 

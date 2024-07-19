@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Alert, Col, Form, Row } from '@iqss/dataverse-design-system'
 
 export const BrowseSearchFacetsSection = () => {
-  const { t } = useTranslation('newCollection')
+  const { t } = useTranslation('createCollection')
 
   return (
     <Row>

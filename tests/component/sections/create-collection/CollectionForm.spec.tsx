@@ -1,12 +1,12 @@
 import {
   CollectionForm,
   CollectionFormData
-} from '../../../../src/sections/new-collection/collection-form'
+} from '../../../../src/sections/create-collection/collection-form'
 import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
 import { UserRepository } from '../../../../src/users/domain/repositories/UserRepository'
 import { CollectionMother } from '../../collection/domain/models/CollectionMother'
 import { UserMother } from '../../users/domain/models/UserMother'
-import { collectionNameToAlias } from '../../../../src/sections/new-collection/collection-form/top-fields-section/IdentifierField'
+import { collectionNameToAlias } from '../../../../src/sections/create-collection/collection-form/top-fields-section/IdentifierField'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 

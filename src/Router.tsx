@@ -9,7 +9,7 @@ import { CollectionFactory } from './sections/collection/CollectionFactory'
 import { UploadDatasetFilesFactory } from './sections/upload-dataset-files/UploadDatasetFilesFactory'
 import { EditDatasetMetadataFactory } from './sections/edit-dataset-metadata/EditDatasetMetadataFactory'
 import { DatasetNonNumericVersion } from './dataset/domain/models/Dataset'
-import { NewCollectionFactory } from './sections/new-collection/NewCollectionFactory'
+import { CreateCollectionFactory } from './sections/create-collection/CreateCollectionFactory'
 
 const router = createBrowserRouter(
   [
@@ -27,8 +27,8 @@ const router = createBrowserRouter(
           element: CollectionFactory.create()
         },
         {
-          path: Route.NEW_COLLECTION,
-          element: NewCollectionFactory.create()
+          path: Route.CREATE_COLLECTION,
+          element: CreateCollectionFactory.create()
         },
         {
           path: Route.DATASETS,

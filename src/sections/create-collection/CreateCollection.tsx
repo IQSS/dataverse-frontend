@@ -9,15 +9,18 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { CollectionForm, CollectionFormData } from './collection-form'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { PageNotFound } from '../page-not-found/PageNotFound'
-import { NewCollectionSkeleton } from './NewCollectionSkeleton'
+import { CreateCollectionSkeleton } from './CreateCollectionSkeleton'
 
-interface NewCollectionProps {
+interface CreateCollectionProps {
   ownerCollectionId: string
   collectionRepository: CollectionRepository
 }
 
-export function NewCollection({ ownerCollectionId, collectionRepository }: NewCollectionProps) {
-  const { t } = useTranslation('newCollection')
+export function CreateCollection({
+  ownerCollectionId,
+  collectionRepository
+}: CreateCollectionProps) {
+  const { t } = useTranslation('createCollection')
   const { isLoading, setIsLoading } = useLoading()
   const { user } = useSession()
 
@@ -37,7 +40,7 @@ export function NewCollection({ ownerCollectionId, collectionRepository }: NewCo
   }
 
   if (isLoadingCollection || !collection) {
-    return <NewCollectionSkeleton />
+    return <CreateCollectionSkeleton />
   }
 
   const formDefaultValues: CollectionFormData = {
@@ -67,6 +70,7 @@ export function NewCollection({ ownerCollectionId, collectionRepository }: NewCo
 
       <CollectionForm
         collectionRepository={collectionRepository}
+        ownerCollectionId={ownerCollectionId}
         defaultValues={formDefaultValues}
       />
     </section>
