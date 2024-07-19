@@ -10,9 +10,9 @@ import {
 } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
 import { SeparationLine } from '../../shared/layout/SeparationLine/SeparationLine'
 import { SubmissionStatus, useSubmitCollection } from './useSubmitCollection'
-import { TopFieldsSection } from './top-fields-section'
-import { MetadataFieldsSection } from './metadata-fields-section'
-import { BrowseSearchFacetsSection } from './browse-search-facets-section'
+import { TopFieldsSection } from './top-fields-section/TopFieldsSection'
+import { MetadataFieldsSection } from './metadata-fields-section/MetadataFieldsSection'
+import { BrowseSearchFacetsSection } from './browse-search-facets-section/BrowseSearchFacetsSection'
 import styles from './CollectionForm.module.scss'
 
 export interface CollectionFormProps {

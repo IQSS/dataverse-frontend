@@ -4,7 +4,7 @@ import { WriteError } from '@iqss/dataverse-client-javascript'
 import { createCollection } from '../../../collection/domain/useCases/createCollection'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import { CollectionDTO } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
-import { CollectionFormData, CollectionFormValuesOnSubmit } from '.'
+import { CollectionFormData, CollectionFormValuesOnSubmit } from './CollectionForm'
 import { Route } from '../../Route.enum'
 import { JSDataverseWriteErrorHandler } from '../../../shared/helpers/JSDataverseWriteErrorHandler'
 
