@@ -301,36 +301,12 @@ export class FileJSDataverseRepository implements FileRepository {
       })
   }
 
-  addUploadedFile(datasetId: number | string, files: FileUploadState[]): Promise<void[]> {
-    const all: Promise<void>[] = []
-    files.forEach((file) => {
-      const f: FileHolder = {
-        file: {
-          lastModified: file.fileLastModified,
-          name: file.fileName,
-          webkitRelativePath: file.fileDir ? file.fileDir + '/' + file.fileName : file.fileName,
-          size: file.fileSize,
-          type: file.fileType,
-          arrayBuffer: function (): Promise<ArrayBuffer> {
-            throw new Error('Function not implemented.')
-          },
-          slice: function (
-            _start?: number | undefined,
-            _end?: number | undefined,
-            _contentType?: string | undefined
-          ): Blob {
-            throw new Error('Function not implemented.')
-          },
-          stream: function (): ReadableStream<Uint8Array> {
-            throw new Error('Function not implemented.')
-          },
-          text: function (): Promise<string> {
-            throw new Error('Function not implemented.')
-          }
-        }
-      }
-      all.push(addUploadedFileToDataset.execute(datasetId, f.file, file.storageId as string))
-    })
-    return Promise.all(all)
+  addUploadedFiles(_datasetId: number | string, _files: FileUploadState[]): Promise<void> {
+    // TODO: not yet implemented
+    return new Promise<void>(() => {})
+  }
+
+  addUploadedFile(datasetId: number | string, file: FileHolder, storageId: string): Promise<void> {
+    return addUploadedFileToDataset.execute(datasetId, file.file, storageId)
   }
 }

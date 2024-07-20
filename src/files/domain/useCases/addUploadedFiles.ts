@@ -8,7 +8,22 @@ export function addUploadedFiles(
   done: () => void
 ): void {
   fileRepository
-    .addUploadedFile(datasetId, files)
+    .addUploadedFiles(datasetId, files)
+    .catch((error: Error) => {
+      throw new Error(error.message)
+    })
+    .finally(done)
+}
+
+export function addUploadedFile(
+  fileRepository: FileRepository,
+  datasetId: number | string,
+  file: File,
+  storageId: string,
+  done: () => void
+): void {
+  fileRepository
+    .addUploadedFile(datasetId, { file: file }, storageId)
     .catch((error: Error) => {
       throw new Error(error.message)
     })
