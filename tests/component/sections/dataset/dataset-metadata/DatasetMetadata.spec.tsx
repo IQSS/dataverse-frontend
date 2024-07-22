@@ -9,7 +9,6 @@ import {
   isArrayOfObjects,
   metadataFieldValueToDisplayFormat
 } from '../../../../../src/sections/dataset/dataset-metadata/dataset-metadata-fields/DatasetMetadataFieldValueFormatted'
-import { MetadataBlockInfoProvider } from '../../../../../src/sections/dataset/metadata-block-info/MetadataBlockProvider'
 import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER } from '../../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
@@ -75,6 +74,11 @@ describe('DatasetMetadata', () => {
     const mockDataset = DatasetMother.create()
     const mockMetadataBlocks = mockDataset.metadataBlocks
 
+    const metadataBlockInfoMock = MetadataBlockInfoMother.create()
+    const metadataBlockInfoRepository: MetadataBlockInfoRepository =
+      {} as MetadataBlockInfoRepository
+    metadataBlockInfoRepository.getByName = cy.stub().resolves(metadataBlockInfoMock)
+
     cy.viewport(1280, 720)
 
     cy.fixture('metadataTranslations').then((t) => {
@@ -82,6 +86,7 @@ describe('DatasetMetadata', () => {
         <DatasetMetadata
           persistentId={mockDataset.persistentId}
           metadataBlocks={mockMetadataBlocks}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
         />
       )
 
@@ -97,6 +102,11 @@ describe('DatasetMetadata', () => {
     const mockDataset = DatasetMother.create()
     const mockMetadataBlocks = mockDataset.metadataBlocks
 
+    const metadataBlockInfoMock = MetadataBlockInfoMother.create()
+    const metadataBlockInfoRepository: MetadataBlockInfoRepository =
+      {} as MetadataBlockInfoRepository
+    metadataBlockInfoRepository.getByName = cy.stub().resolves(metadataBlockInfoMock)
+
     cy.viewport(1280, 720)
 
     cy.fixture('metadataTranslations').then((t) => {
@@ -104,6 +114,7 @@ describe('DatasetMetadata', () => {
         <DatasetMetadata
           persistentId={mockDataset.persistentId}
           metadataBlocks={mockMetadataBlocks}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
         />
       )
 
@@ -128,6 +139,11 @@ describe('DatasetMetadata', () => {
     const mockDataset = DatasetMother.create()
     const mockMetadataBlocks = mockDataset.metadataBlocks
 
+    const metadataBlockInfoMock = MetadataBlockInfoMother.create()
+    const metadataBlockInfoRepository: MetadataBlockInfoRepository =
+      {} as MetadataBlockInfoRepository
+    metadataBlockInfoRepository.getByName = cy.stub().resolves(metadataBlockInfoMock)
+
     cy.viewport(1280, 720)
 
     cy.fixture('metadataTranslations').then((t) => {
@@ -135,6 +151,7 @@ describe('DatasetMetadata', () => {
         <DatasetMetadata
           persistentId={mockDataset.persistentId}
           metadataBlocks={mockMetadataBlocks}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
         />
       )
 
@@ -172,12 +189,11 @@ describe('DatasetMetadata', () => {
 
     cy.fixture('metadataTranslations').then((t) => {
       cy.customMount(
-        <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
-          <DatasetMetadata
-            persistentId={mockDataset.persistentId}
-            metadataBlocks={mockMetadataBlocks}
-          />
-        </MetadataBlockInfoProvider>
+        <DatasetMetadata
+          persistentId={mockDataset.persistentId}
+          metadataBlocks={mockMetadataBlocks}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
       )
 
       mockMetadataBlocks.forEach((metadataBlock, index) => {
@@ -213,11 +229,17 @@ describe('DatasetMetadata', () => {
     const mockDataset = DatasetMother.createAnonymized()
     const mockAnonymizedMetadataBlocks = mockDataset.metadataBlocks
 
+    const metadataBlockInfoMock = MetadataBlockInfoMother.create()
+    const metadataBlockInfoRepository: MetadataBlockInfoRepository =
+      {} as MetadataBlockInfoRepository
+    metadataBlockInfoRepository.getByName = cy.stub().resolves(metadataBlockInfoMock)
+
     cy.customMount(
       <AnonymizedContext.Provider value={{ anonymizedView: true, setAnonymizedView }}>
         <DatasetMetadata
           persistentId={mockDataset.persistentId}
           metadataBlocks={mockAnonymizedMetadataBlocks}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
         />
       </AnonymizedContext.Provider>
     )
@@ -229,6 +251,11 @@ describe('DatasetMetadata', () => {
     const mockDataset = DatasetMother.create()
     const mockMetadataBlocks = mockDataset.metadataBlocks
 
+    const metadataBlockInfoMock = MetadataBlockInfoMother.create()
+    const metadataBlockInfoRepository: MetadataBlockInfoRepository =
+      {} as MetadataBlockInfoRepository
+    metadataBlockInfoRepository.getByName = cy.stub().resolves(metadataBlockInfoMock)
+
     cy.viewport(1280, 720)
 
     cy.fixture('metadataTranslations').then((t) => {
@@ -236,6 +263,7 @@ describe('DatasetMetadata', () => {
         <DatasetMetadata
           persistentId={mockDataset.persistentId}
           metadataBlocks={mockMetadataBlocks}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
         />
       )
 
@@ -251,6 +279,11 @@ describe('DatasetMetadata', () => {
     const mockDataset = DatasetMother.create()
     const mockMetadataBlocks = mockDataset.metadataBlocks
 
+    const metadataBlockInfoMock = MetadataBlockInfoMother.create()
+    const metadataBlockInfoRepository: MetadataBlockInfoRepository =
+      {} as MetadataBlockInfoRepository
+    metadataBlockInfoRepository.getByName = cy.stub().resolves(metadataBlockInfoMock)
+
     cy.viewport(1280, 720)
 
     cy.fixture('metadataTranslations').then((t) => {
@@ -258,6 +291,7 @@ describe('DatasetMetadata', () => {
         <DatasetMetadata
           persistentId={mockDataset.persistentId}
           metadataBlocks={mockMetadataBlocks}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
         />
       )
 

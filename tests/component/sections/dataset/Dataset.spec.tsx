@@ -14,10 +14,13 @@ import { FilesCountInfoMother } from '../../files/domain/models/FilesCountInfoMo
 import { FileType } from '../../../../src/files/domain/models/FileMetadata'
 import { FileAccessOption, FileTag } from '../../../../src/files/domain/models/FileCriteria'
 import { AlertProvider } from '../../../../src/sections/alerts/AlertProvider'
+import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 
 const setAnonymizedView = () => {}
 const fileRepository: FileRepository = {} as FileRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
+const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
 
 const TOTAL_FILES_COUNT = 200
 const allFiles = FilePreviewMother.createMany(TOTAL_FILES_COUNT)
@@ -66,6 +69,9 @@ describe('Dataset', () => {
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
     fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(19900)
 
+    const metadataBlockInfoMock = MetadataBlockInfoMother.create()
+    metadataBlockInfoRepository.getByName = cy.stub().resolves(metadataBlockInfoMock)
+
     cy.customMount(
       <LoadingProvider>
         <AnonymizedContext.Provider value={{ anonymizedView: anonymizedView, setAnonymizedView }}>
@@ -80,7 +86,13 @@ describe('Dataset', () => {
   it('renders skeleton while loading', () => {
     const testDataset = DatasetMother.create()
 
-    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
+    mountWithDataset(
+      <Dataset
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />,
+      testDataset
+    )
 
     cy.findByTestId('dataset-skeleton').should('exist')
     cy.findByText(testDataset.version.title).should('not.exist')
@@ -89,7 +101,13 @@ describe('Dataset', () => {
   it('renders page not found when dataset is null', () => {
     const emptyDataset = DatasetMother.createEmpty()
 
-    mountWithDataset(<Dataset fileRepository={fileRepository} />, emptyDataset)
+    mountWithDataset(
+      <Dataset
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />,
+      emptyDataset
+    )
 
     cy.findByText('Page Not Found').should('exist')
   })
@@ -97,7 +115,13 @@ describe('Dataset', () => {
   it('renders the breadcrumbs', () => {
     const testDataset = DatasetMother.create()
 
-    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
+    mountWithDataset(
+      <Dataset
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />,
+      testDataset
+    )
 
     cy.findByText('Dataset Title').should('exist').should('have.class', 'active')
     cy.findByRole('link', { name: 'Root' }).should('exist')
@@ -106,7 +130,13 @@ describe('Dataset', () => {
   it('renders the Dataset page title and labels', () => {
     const testDataset = DatasetMother.create()
 
-    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
+    mountWithDataset(
+      <Dataset
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />,
+      testDataset
+    )
 
     cy.findAllByText(testDataset.version.title).should('exist')
 
@@ -118,7 +148,13 @@ describe('Dataset', () => {
   it('renders the Dataset Metadata tab', () => {
     const testDataset = DatasetMother.create()
 
-    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
+    mountWithDataset(
+      <Dataset
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />,
+      testDataset
+    )
 
     cy.findAllByText(testDataset.version.title).should('exist')
 
@@ -133,7 +169,13 @@ describe('Dataset', () => {
   it('renders the Dataset in anonymized view', () => {
     const testDatasetAnonymized = DatasetMother.createAnonymized()
 
-    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDatasetAnonymized)
+    mountWithDataset(
+      <Dataset
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />,
+      testDatasetAnonymized
+    )
 
     cy.findByRole('tab', { name: 'Metadata' }).click()
 
@@ -143,7 +185,13 @@ describe('Dataset', () => {
   it('renders the Dataset Action Buttons', () => {
     const testDataset = DatasetMother.create()
 
-    mountWithDataset(<Dataset fileRepository={fileRepository} />, testDataset)
+    mountWithDataset(
+      <Dataset
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />,
+      testDataset
+    )
 
     cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
   })
@@ -152,7 +200,11 @@ describe('Dataset', () => {
     const testDataset = DatasetMother.create()
 
     mountWithDataset(
-      <Dataset fileRepository={fileRepository} filesTabInfiniteScrollEnabled={true} />,
+      <Dataset
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        filesTabInfiniteScrollEnabled={true}
+      />,
       testDataset
     )
 
@@ -165,7 +217,11 @@ describe('Dataset', () => {
     const testDataset = DatasetMother.create()
     mountWithDataset(
       <AlertProvider>
-        <Dataset fileRepository={fileRepository} created={true} />
+        <Dataset
+          fileRepository={fileRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          created={true}
+        />
       </AlertProvider>,
       testDataset
     )
@@ -179,7 +235,11 @@ describe('Dataset', () => {
     const testDataset = DatasetMother.create()
     mountWithDataset(
       <AlertProvider>
-        <Dataset fileRepository={fileRepository} metadataUpdated={true} />
+        <Dataset
+          fileRepository={fileRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+          metadataUpdated={true}
+        />
       </AlertProvider>,
       testDataset
     )

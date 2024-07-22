@@ -7,7 +7,6 @@ import {
 } from '../../../../../src/sections/dataset/dataset-metadata/dataset-metadata-fields/DatasetMetadataFieldValueFormatted'
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { MetadataBlockInfoProvider } from '../../../../../src/sections/dataset/metadata-block-info/MetadataBlockProvider'
 
 describe('DatasetSummary', () => {
   it('renders the DatasetSummary fields', () => {
@@ -18,9 +17,10 @@ describe('DatasetSummary', () => {
     metadataBlockInfoRepository.getByName = cy.stub().resolves(metadataBlockInfoMock)
 
     cy.customMount(
-      <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
-        <SummaryFields summaryFields={summaryFieldsMock} />
-      </MetadataBlockInfoProvider>
+      <SummaryFields
+        summaryFields={summaryFieldsMock}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
     )
 
     cy.fixture('metadataTranslations').then((t) => {
