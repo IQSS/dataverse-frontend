@@ -26,7 +26,7 @@ export function DatasetMetadataBlock({
   })
 
   if (errorLoadingMetadataBlockDisplayFormatInfo) {
-    return null
+    return <span data-testid="ds-metadata-block-display-format-error"></span>
   }
 
   if (isLoadingMetadataBlockDisplayFormatInfo || !metadataBlockDisplayFormatInfo) {

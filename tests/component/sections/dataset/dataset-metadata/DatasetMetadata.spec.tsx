@@ -303,4 +303,25 @@ describe('DatasetMetadata', () => {
       )
     })
   })
+
+  it('renders an empty span if there is an error getting the metadata block display info', () => {
+    const mockDataset = DatasetMother.create()
+    const mockMetadataBlocks = mockDataset.metadataBlocks
+
+    const metadataBlockInfoRepository: MetadataBlockInfoRepository =
+      {} as MetadataBlockInfoRepository
+    metadataBlockInfoRepository.getByName = cy
+      .stub()
+      .rejects(new Error('Error getting metadata block display info'))
+
+    cy.customMount(
+      <DatasetMetadata
+        persistentId={mockDataset.persistentId}
+        metadataBlocks={mockMetadataBlocks}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+
+    cy.findAllByTestId('ds-metadata-block-display-format-error').should('exist')
+  })
 })

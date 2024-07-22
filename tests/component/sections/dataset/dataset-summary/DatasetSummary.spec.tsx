@@ -37,4 +37,20 @@ describe('DatasetSummary', () => {
     cy.get('img').should('exist')
     cy.findByText(licenseMock.name).should('exist')
   })
+
+  it('renders an empty span if there is an error getting the metadata block display info', () => {
+    metadataBlockInfoRepository.getByName = cy
+      .stub()
+      .rejects(new Error('Error getting metadata block display info'))
+
+    cy.customMount(
+      <DatasetSummary
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        summaryFields={summaryFieldsMock}
+        license={licenseMock}
+      />
+    )
+
+    cy.findAllByTestId('summary-block-display-format-error').should('exist')
+  })
 })
