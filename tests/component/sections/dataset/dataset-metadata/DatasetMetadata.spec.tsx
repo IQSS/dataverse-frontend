@@ -165,7 +165,7 @@ describe('DatasetMetadata', () => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           cy.findAllByText(t[metadataBlock.name].datasetField[metadataFieldName].name as string)
             .siblings('div')
-            .trigger('mouseover')
+            .trigger('mouseover', { force: true })
 
           const fieldDescription = cy.findAllByText(
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
