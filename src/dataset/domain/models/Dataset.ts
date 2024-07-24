@@ -214,7 +214,7 @@ export enum DatasetNonNumericVersion {
   DRAFT = ':draft',
   LATEST_PUBLISHED = ':latest-published'
 }
-export enum DatasetVersionNonNumericSearchParam {
+export enum DatasetNonNumericVersionSearchParam {
   DRAFT = 'DRAFT'
 }
 

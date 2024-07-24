@@ -119,7 +119,6 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     version: string = DatasetNonNumericVersion.LATEST_PUBLISHED,
     requestedVersion?: string
   ): Promise<Dataset | undefined> {
-    console.log('getByPersistentId', persistentId, version, requestedVersion)
     return getDataset
       .execute(persistentId, version, includeDeaccessioned)
       .then((jsDataset) => this.fetchDatasetDetails(jsDataset, version))
