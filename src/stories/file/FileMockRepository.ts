@@ -12,7 +12,8 @@ import { File } from '../../files/domain/models/File'
 import { FilePreview } from '../../files/domain/models/FilePreview'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { FilesWithCount } from '../../files/domain/models/FilesWithCount'
-import { FileHolder } from '../../files/domain/repositories/File'
+import { FileHolder } from '../../files/domain/models/FileHolder'
+import { FileUploadState } from '../../files/domain/models/FileUploadState'
 
 export class FileMockRepository implements FileRepository {
   constructor(public readonly fileMock?: File) {}
@@ -87,7 +88,8 @@ export class FileMockRepository implements FileRepository {
     _datasetId: number | string,
     _file: FileHolder,
     progress: (now: number) => void,
-    abortController: AbortController
+    abortController: AbortController,
+    storageIdSetter: (storageId: string) => void
   ): Promise<void> {
     let t: NodeJS.Timeout
     const sleep = (delay: number) => new Promise((res) => (t = setTimeout(res, delay)))
@@ -100,7 +102,28 @@ export class FileMockRepository implements FileRepository {
         progress(now)
         //console.log(FileUploadTools.key(_file.file) + ': ' + String(now))
       }
+      storageIdSetter('some-storage-identifier')
     }
     return res()
+  }
+
+  addUploadedFiles(_datasetId: number | string, _files: FileUploadState[]): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  addUploadedFile(
+    _datasetId: number | string,
+    _file: FileHolder,
+    _storageId: string
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
   }
 }
