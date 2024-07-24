@@ -1,6 +1,6 @@
 import {
   DatasetLabelValue,
-  DatasetVersionNonNumericSearchParam
+  DatasetNonNumericVersionSearchParam
 } from '../../../../../src/dataset/domain/models/Dataset'
 import { TestsUtils } from '../../../shared/TestsUtils'
 import { DatasetHelper, DatasetResponse } from '../../../shared/datasets/DatasetHelper'
@@ -12,7 +12,7 @@ import { FILES_TAB_INFINITE_SCROLL_ENABLED } from '../../../../../src/sections/d
 type Dataset = {
   datasetVersion: { metadataBlocks: { citation: { fields: { value: string }[] } } }
 }
-const DRAFT_PARAM = DatasetVersionNonNumericSearchParam.DRAFT
+const DRAFT_PARAM = DatasetNonNumericVersionSearchParam.DRAFT
 
 describe('Dataset', () => {
   before(() => {
