@@ -6,7 +6,7 @@ import { DatasetIcon } from '../../../dataset/dataset-icon/DatasetIcon'
 import {
   DatasetPublishingStatus,
   DatasetVersion,
-  DatasetVersionNonNumericSearchParam
+  DatasetNonNumericVersionSearchParam
 } from '../../../../dataset/domain/models/Dataset'
 
 interface DatasetCardHeaderProps {
@@ -19,7 +19,7 @@ function getSearchParams(
 ): Record<string, string> {
   const params: Record<string, string> = { persistentId: persistentId }
   if (publishingStatus === DatasetPublishingStatus.DRAFT) {
-    params.version = DatasetVersionNonNumericSearchParam.DRAFT
+    params.version = DatasetNonNumericVersionSearchParam.DRAFT
   }
   return params
 }
