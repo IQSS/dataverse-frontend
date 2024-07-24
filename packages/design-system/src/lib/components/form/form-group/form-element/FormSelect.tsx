@@ -9,10 +9,19 @@ export interface FormSelectProps
   isInvalid?: boolean
   isValid?: boolean
   disabled?: boolean
+  autoFocus?: boolean
 }
 
 export const FormSelect = React.forwardRef(function FormSelect(
-  { value, isInvalid, isValid, disabled, children, ...props }: PropsWithChildren<FormSelectProps>,
+  {
+    value,
+    isInvalid,
+    isValid,
+    disabled,
+    autoFocus,
+    children,
+    ...props
+  }: PropsWithChildren<FormSelectProps>,
   ref
 ) {
   return (
@@ -21,6 +30,7 @@ export const FormSelect = React.forwardRef(function FormSelect(
       isInvalid={isInvalid}
       isValid={isValid}
       disabled={disabled}
+      autoFocus={autoFocus}
       ref={ref as React.ForwardedRef<HTMLSelectElement>}
       {...props}>
       {children}

@@ -23,6 +23,7 @@ describe('Collection page', () => {
         repository={collectionRepository}
         id="collection"
         datasetRepository={datasetRepository}
+        created={false}
       />
     )
 
@@ -37,6 +38,7 @@ describe('Collection page', () => {
         repository={collectionRepository}
         id="collection"
         datasetRepository={datasetRepository}
+        created={false}
       />
     )
 
@@ -49,6 +51,7 @@ describe('Collection page', () => {
         repository={collectionRepository}
         id="collection"
         datasetRepository={datasetRepository}
+        created={false}
       />
     )
 
@@ -61,6 +64,7 @@ describe('Collection page', () => {
         repository={collectionRepository}
         id="collection"
         datasetRepository={datasetRepository}
+        created={false}
       />
     )
     cy.findByRole('heading', { name: 'Collection Name' }).should('exist')
@@ -72,6 +76,7 @@ describe('Collection page', () => {
         repository={collectionRepository}
         datasetRepository={datasetRepository}
         id="collection"
+        created={false}
       />
     )
     cy.findByRole('button', { name: /Add Data/i }).should('not.exist')
@@ -83,6 +88,7 @@ describe('Collection page', () => {
         repository={collectionRepository}
         datasetRepository={datasetRepository}
         id="collection"
+        created={false}
       />
     )
 
@@ -99,6 +105,7 @@ describe('Collection page', () => {
         repository={collectionRepository}
         datasetRepository={datasetRepository}
         id="collection"
+        created={false}
       />
     )
 
@@ -116,6 +123,7 @@ describe('Collection page', () => {
         datasetRepository={datasetRepository}
         page={5}
         id="collection"
+        created={false}
       />
     )
 
@@ -136,6 +144,7 @@ describe('Collection page', () => {
         datasetRepository={datasetRepository}
         id="collection"
         infiniteScrollEnabled
+        created={false}
       />
     )
 
@@ -144,5 +153,18 @@ describe('Collection page', () => {
     first10Elements.forEach((dataset) => {
       cy.findByText(dataset.version.title).should('exist')
     })
+  })
+
+  it('shows the created alert when the collection was just created', () => {
+    cy.customMount(
+      <Collection
+        repository={collectionRepository}
+        datasetRepository={datasetRepository}
+        id="collection"
+        created
+      />
+    )
+
+    cy.findByRole('alert').should('exist').should('include.text', 'Success!')
   })
 })

@@ -14,7 +14,7 @@ export function NoDatasetsMessage() {
       ) : (
         <Trans i18nKey="noDatasetsMessage.anonymous">
           <p>
-            This dataverse currently has no datasets. Please <a href={Route.LOG_IN}>log in</a> to
+            This collection currently has no datasets. Please <a href={Route.LOG_IN}>log in</a> to
             see if you are able to add to it.
           </p>
         </Trans>

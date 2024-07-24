@@ -39,6 +39,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **Select Multiple:** add is-invalid classname if isInvalid prop is true.
 - **Card:** NEW card element to show header and body.
 - **ProgressBar:** NEW progress bar element to show progress.
+- **NavbarDropdownItem:** Now accepts `as` prop and takes `as` Element props.
+- **FormInputGroup:** extend Props Interface to accept `hasValidation` prop to properly show rounded corners in an <InputGroup> with validation
+- **Button:** extend Props Interface to accept `size` prop.
+- **FormInput:** extend Props Interface to accept `autoFocus` prop.
+- **FormTextArea:** extend Props Interface to accept `autoFocus` prop.
+- **FormSelect:** extend Props Interface to accept `autoFocus` prop.
+- **Stack:** NEW Stack element to manage layouts.
 
 # [1.1.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@1.0.1...@iqss/dataverse-design-system@1.1.0) (2024-03-12)
 
