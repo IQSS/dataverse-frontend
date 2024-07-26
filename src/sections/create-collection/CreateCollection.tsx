@@ -10,6 +10,7 @@ import { CollectionForm, CollectionFormData } from './collection-form/Collection
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreateCollectionSkeleton } from './CreateCollectionSkeleton'
+import { USE_FIELDS_FROM_ROOT_NAME } from './collection-form/metadata-fields-section/MetadataFieldsFromRootCheckbox'
 
 interface CreateCollectionProps {
   ownerCollectionId: string
@@ -51,7 +52,8 @@ export function CreateCollection({
     contacts: [{ value: user?.email ?? '' }],
     affiliation: user?.affiliation ?? '',
     storage: 'Local (Default)',
-    description: ''
+    description: '',
+    [USE_FIELDS_FROM_ROOT_NAME]: true
   }
 
   return (

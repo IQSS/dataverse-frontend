@@ -14,6 +14,7 @@ import { TopFieldsSection } from './top-fields-section/TopFieldsSection'
 import { MetadataFieldsSection } from './metadata-fields-section/MetadataFieldsSection'
 import { BrowseSearchFacetsSection } from './browse-search-facets-section/BrowseSearchFacetsSection'
 import styles from './CollectionForm.module.scss'
+import { USE_FIELDS_FROM_ROOT_NAME } from './metadata-fields-section/MetadataFieldsFromRootCheckbox'
 
 export interface CollectionFormProps {
   collectionRepository: CollectionRepository
@@ -30,6 +31,7 @@ export type CollectionFormData = {
   type: CollectionType | ''
   description: string
   contacts: { value: string }[]
+  [USE_FIELDS_FROM_ROOT_NAME]: boolean
 }
 // On the submit function callback, type is CollectionType as type field is required and wont never be ""
 export type CollectionFormValuesOnSubmit = Omit<CollectionFormData, 'type'> & {
@@ -124,9 +126,10 @@ export const CollectionForm = ({
           </Stack>
 
           <Stack direction="horizontal" className="pt-3">
-            <Button type="submit" disabled={disableSubmitButton}>
+            <Button type="submit">{t('formButtons.save')}</Button>
+            {/* <Button type="submit" disabled={disableSubmitButton}>
               {t('formButtons.save')}
-            </Button>
+            </Button> */}
             <Button
               variant="secondary"
               type="button"
