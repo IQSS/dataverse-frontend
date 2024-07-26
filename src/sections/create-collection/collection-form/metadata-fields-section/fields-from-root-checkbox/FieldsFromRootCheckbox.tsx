@@ -1,5 +1,5 @@
 import { ChangeEvent, useId, useState } from 'react'
-import { Controller, UseControllerProps, useFormContext } from 'react-hook-form'
+import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import { Form } from '@iqss/dataverse-design-system'
 import { MetadataBlockName } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { ConfirmResetModificationsModal } from './ConfirmResetModificationsModal'
@@ -17,6 +17,7 @@ export const FieldsFromRootCheckbox = () => {
   const checkboxID = useId()
   const { control, setValue } = useFormContext()
   const [showResetConfirmationModal, setShowResetConfirmationModal] = useState(false)
+  const hostCollectionFieldValue = useWatch({ name: 'hostCollection' }) as string
 
   const handleContinueWithReset = () => {
     setValue(USE_FIELDS_FROM_ROOT_NAME, true)
@@ -53,7 +54,7 @@ export const FieldsFromRootCheckbox = () => {
               id={checkboxID}
               onChange={handleChange}
               name={USE_FIELDS_FROM_ROOT_NAME}
-              label="Use metadata fields from Root"
+              label={`Use metadata fields from ${hostCollectionFieldValue}`}
               checked={value as boolean}
               isInvalid={invalid}
               invalidFeedback={error?.message}
