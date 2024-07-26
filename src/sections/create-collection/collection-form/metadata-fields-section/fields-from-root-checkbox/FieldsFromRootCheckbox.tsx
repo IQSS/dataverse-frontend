@@ -2,10 +2,9 @@ import { ChangeEvent, useId, useState } from 'react'
 import { Controller, UseControllerProps, useFormContext } from 'react-hook-form'
 import { Form } from '@iqss/dataverse-design-system'
 import { MetadataBlockName } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { METADATA_BLOCKS_NAMES_GROUPER } from '../metadata-input-level-fields-block/MetadataInputLevelFieldsBlock'
 import { ConfirmResetModificationsModal } from './ConfirmResetModificationsModal'
+import { METADATA_BLOCKS_NAMES_GROUPER, USE_FIELDS_FROM_ROOT_NAME } from '../../CollectionForm'
 
-export const USE_FIELDS_FROM_ROOT_NAME = 'useFieldsFromRoot'
 const ALL_INPUT_LEVEL_FIELDS_EXCEPT_CITATION = [
   MetadataBlockName.GEOSPATIAL,
   MetadataBlockName.SOCIAL_SCIENCE,

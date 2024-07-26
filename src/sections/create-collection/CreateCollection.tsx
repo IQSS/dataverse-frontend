@@ -6,12 +6,15 @@ import { useLoading } from '../loading/LoadingContext'
 import { useSession } from '../session/SessionContext'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
-import { CollectionForm, CollectionFormData } from './collection-form/CollectionForm'
+import {
+  CollectionForm,
+  CollectionFormData,
+  METADATA_BLOCKS_NAMES_GROUPER,
+  USE_FIELDS_FROM_ROOT_NAME
+} from './collection-form/CollectionForm'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreateCollectionSkeleton } from './CreateCollectionSkeleton'
-import { USE_FIELDS_FROM_ROOT_NAME } from './collection-form/metadata-fields-section/fields-from-root-checkbox/FieldsFromRootCheckbox'
-import { METADATA_BLOCKS_NAMES_GROUPER } from './collection-form/metadata-fields-section/metadata-input-level-fields-block/MetadataInputLevelFieldsBlock'
 
 interface CreateCollectionProps {
   ownerCollectionId: string

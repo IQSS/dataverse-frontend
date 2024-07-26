@@ -3,9 +3,7 @@ import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-
 import { Form } from '@iqss/dataverse-design-system'
 import { CollectionInputLevel } from '../../../../../collection/domain/models/Collection'
 import { MetadataBlockName } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { USE_FIELDS_FROM_ROOT_NAME } from '../fields-from-root-checkbox/FieldsFromRootCheckbox'
-
-export const METADATA_BLOCKS_NAMES_GROUPER = 'metadataBlockNames'
+import { METADATA_BLOCKS_NAMES_GROUPER, USE_FIELDS_FROM_ROOT_NAME } from '../../CollectionForm'
 
 interface MetadataInputLevelFieldsBlockProps {
   name: MetadataBlockName

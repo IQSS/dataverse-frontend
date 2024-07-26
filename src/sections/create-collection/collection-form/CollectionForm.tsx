@@ -13,10 +13,11 @@ import { SubmissionStatus, useSubmitCollection } from './useSubmitCollection'
 import { TopFieldsSection } from './top-fields-section/TopFieldsSection'
 import { MetadataFieldsSection } from './metadata-fields-section/MetadataFieldsSection'
 import { BrowseSearchFacetsSection } from './browse-search-facets-section/BrowseSearchFacetsSection'
-import { USE_FIELDS_FROM_ROOT_NAME } from './metadata-fields-section/fields-from-root-checkbox/FieldsFromRootCheckbox'
-import { METADATA_BLOCKS_NAMES_GROUPER } from './metadata-fields-section/metadata-input-level-fields-block/MetadataInputLevelFieldsBlock'
 import { MetadataBlockName } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import styles from './CollectionForm.module.scss'
+
+export const METADATA_BLOCKS_NAMES_GROUPER = 'metadataBlockNames'
+export const USE_FIELDS_FROM_ROOT_NAME = 'useFieldsFromRoot'
 
 export interface CollectionFormProps {
   collectionRepository: CollectionRepository
