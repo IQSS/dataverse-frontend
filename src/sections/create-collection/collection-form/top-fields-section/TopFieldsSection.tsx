@@ -147,7 +147,6 @@ export const TopFieldsSection = () => {
                   isInvalid={invalid}
                   ref={ref}
                   disabled>
-                  {/* TODO:ME What are this options? do they come from a configuration? */}
                   <option value="">Select...</option>
                   {Object.values(collectionStorageOptions).map((type) => (
                     <option value={type} key={type}>
