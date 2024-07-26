@@ -1,16 +1,31 @@
 import { ChangeEvent, useId, useState } from 'react'
 import { Controller, UseControllerProps, useFormContext } from 'react-hook-form'
-import { Alert, Button, Form, Modal } from '@iqss/dataverse-design-system'
+import { Form } from '@iqss/dataverse-design-system'
+import { MetadataBlockName } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { METADATA_BLOCKS_NAMES_GROUPER } from '../metadata-input-level-fields-block/MetadataInputLevelFieldsBlock'
+import { ConfirmResetModificationsModal } from './ConfirmResetModificationsModal'
 
 export const USE_FIELDS_FROM_ROOT_NAME = 'useFieldsFromRoot'
+const ALL_INPUT_LEVEL_FIELDS_EXCEPT_CITATION = [
+  MetadataBlockName.GEOSPATIAL,
+  MetadataBlockName.SOCIAL_SCIENCE,
+  MetadataBlockName.ASTROPHYSICS,
+  MetadataBlockName.BIOMEDICAL,
+  MetadataBlockName.JOURNAL
+]
 
-export const MetadataFieldsFromRootCheckbox = () => {
+export const FieldsFromRootCheckbox = () => {
   const checkboxID = useId()
   const { control, setValue } = useFormContext()
   const [showResetConfirmationModal, setShowResetConfirmationModal] = useState(false)
 
   const handleContinueWithReset = () => {
     setValue(USE_FIELDS_FROM_ROOT_NAME, true)
+
+    ALL_INPUT_LEVEL_FIELDS_EXCEPT_CITATION.forEach((blockName) => {
+      setValue(`${METADATA_BLOCKS_NAMES_GROUPER}.${blockName}`, false)
+    })
+
     closeModal()
   }
 
@@ -57,34 +72,3 @@ export const MetadataFieldsFromRootCheckbox = () => {
     </>
   )
 }
-
-interface ConfirmResetModificationsModalProps {
-  showModal: boolean
-  onContinue: () => void
-  onCancel: () => void
-}
-
-const ConfirmResetModificationsModal = ({
-  showModal,
-  onContinue,
-  onCancel
-}: ConfirmResetModificationsModalProps) => (
-  <Modal show={showModal} onHide={onCancel} size="xl">
-    <Modal.Header>
-      <Modal.Title>Reset Modifications</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-      {/* <AlertIcon */}
-      <Alert variant="warning" dismissible={false}>
-        Are you sure you want to reset the selected metadata fields? If you do this, any
-        customizations (hidden, required, optional) you have done will no longer appear.
-      </Alert>
-    </Modal.Body>
-    <Modal.Footer>
-      <Button onClick={onContinue}>Continue</Button>
-      <Button variant="secondary" onClick={onCancel}>
-        Cancel
-      </Button>
-    </Modal.Footer>
-  </Modal>
-)

@@ -3,7 +3,9 @@ import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-
 import { Form } from '@iqss/dataverse-design-system'
 import { CollectionInputLevel } from '../../../../../collection/domain/models/Collection'
 import { MetadataBlockName } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { USE_FIELDS_FROM_ROOT_NAME } from '../MetadataFieldsFromRootCheckbox'
+import { USE_FIELDS_FROM_ROOT_NAME } from '../fields-from-root-checkbox/FieldsFromRootCheckbox'
+
+export const METADATA_BLOCKS_NAMES_GROUPER = 'metadataBlockNames'
 
 interface MetadataInputLevelFieldsBlockProps {
   name: MetadataBlockName
@@ -20,26 +22,28 @@ export const MetadataInputLevelFieldsBlock = ({
   const { control } = useFormContext()
   const useFieldsFromRootFieldValue = useWatch({ name: USE_FIELDS_FROM_ROOT_NAME }) as boolean
 
+  const isCitation = name === MetadataBlockName.CITATION
+
   const rules: UseControllerProps['rules'] = {}
-  //   metadataBlockNames
+  const withGroupName = `${METADATA_BLOCKS_NAMES_GROUPER}.${name}`
+
   return (
     <>
       <Controller
-        name={name}
+        name={withGroupName}
         control={control}
         rules={rules}
         render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
           <Form.Group.Checkbox
-            // required
             id={checkboxID}
             onChange={onChange}
-            name={name}
+            name={withGroupName}
             label={blockDisplayName}
             checked={value as boolean}
             isInvalid={invalid}
-            ref={ref}
             invalidFeedback={error?.message}
-            disabled={useFieldsFromRootFieldValue}
+            disabled={isCitation ? true : useFieldsFromRootFieldValue}
+            ref={ref}
           />
         )}
       />

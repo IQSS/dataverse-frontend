@@ -10,7 +10,8 @@ import { CollectionForm, CollectionFormData } from './collection-form/Collection
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreateCollectionSkeleton } from './CreateCollectionSkeleton'
-import { USE_FIELDS_FROM_ROOT_NAME } from './collection-form/metadata-fields-section/MetadataFieldsFromRootCheckbox'
+import { USE_FIELDS_FROM_ROOT_NAME } from './collection-form/metadata-fields-section/fields-from-root-checkbox/FieldsFromRootCheckbox'
+import { METADATA_BLOCKS_NAMES_GROUPER } from './collection-form/metadata-fields-section/metadata-input-level-fields-block/MetadataInputLevelFieldsBlock'
 
 interface CreateCollectionProps {
   ownerCollectionId: string
@@ -53,7 +54,15 @@ export function CreateCollection({
     affiliation: user?.affiliation ?? '',
     storage: 'Local (Default)',
     description: '',
-    [USE_FIELDS_FROM_ROOT_NAME]: true
+    [USE_FIELDS_FROM_ROOT_NAME]: true,
+    [METADATA_BLOCKS_NAMES_GROUPER]: {
+      citation: true,
+      geospatial: false,
+      socialscience: false,
+      astrophysics: false,
+      biomedical: false,
+      journal: false
+    }
   }
 
   return (

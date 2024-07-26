@@ -13,8 +13,10 @@ import { SubmissionStatus, useSubmitCollection } from './useSubmitCollection'
 import { TopFieldsSection } from './top-fields-section/TopFieldsSection'
 import { MetadataFieldsSection } from './metadata-fields-section/MetadataFieldsSection'
 import { BrowseSearchFacetsSection } from './browse-search-facets-section/BrowseSearchFacetsSection'
+import { USE_FIELDS_FROM_ROOT_NAME } from './metadata-fields-section/fields-from-root-checkbox/FieldsFromRootCheckbox'
+import { METADATA_BLOCKS_NAMES_GROUPER } from './metadata-fields-section/metadata-input-level-fields-block/MetadataInputLevelFieldsBlock'
+import { MetadataBlockName } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import styles from './CollectionForm.module.scss'
-import { USE_FIELDS_FROM_ROOT_NAME } from './metadata-fields-section/MetadataFieldsFromRootCheckbox'
 
 export interface CollectionFormProps {
   collectionRepository: CollectionRepository
@@ -32,6 +34,10 @@ export type CollectionFormData = {
   description: string
   contacts: { value: string }[]
   [USE_FIELDS_FROM_ROOT_NAME]: boolean
+  [METADATA_BLOCKS_NAMES_GROUPER]: Omit<
+    Record<MetadataBlockName, boolean>,
+    'codeMeta20' | 'computationalworkflow'
+  >
 }
 // On the submit function callback, type is CollectionType as type field is required and wont never be ""
 export type CollectionFormValuesOnSubmit = Omit<CollectionFormData, 'type'> & {
@@ -85,7 +91,6 @@ export const CollectionForm = ({
     return submissionStatus === SubmissionStatus.IsSubmitting || !formState.isDirty
   }, [submissionStatus, formState.isDirty])
 
-  // TODO:ME Apply max width to container
   return (
     <div
       className={styles['form-container']}
