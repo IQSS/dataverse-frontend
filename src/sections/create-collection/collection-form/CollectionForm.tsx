@@ -35,11 +35,14 @@ export type CollectionFormData = {
   description: string
   contacts: { value: string }[]
   [USE_FIELDS_FROM_ROOT_NAME]: boolean
-  [METADATA_BLOCKS_NAMES_GROUPER]: Omit<
-    Record<MetadataBlockName, boolean>,
-    'codeMeta20' | 'computationalworkflow'
-  >
+  [METADATA_BLOCKS_NAMES_GROUPER]: CollectionFormMetadataBlocks
 }
+
+export type CollectionFormMetadataBlocks = Omit<
+  Record<MetadataBlockName, boolean>,
+  'codeMeta20' | 'computationalworkflow'
+>
+
 // On the submit function callback, type is CollectionType as type field is required and wont never be ""
 export type CollectionFormValuesOnSubmit = Omit<CollectionFormData, 'type'> & {
   type: CollectionType
