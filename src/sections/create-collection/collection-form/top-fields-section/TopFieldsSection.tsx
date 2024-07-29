@@ -119,7 +119,6 @@ export const TopFieldsSection = () => {
                   onChange={onChange}
                   isInvalid={invalid}
                   ref={ref}
-                  disabled
                 />
                 <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
               </Col>
@@ -210,7 +209,6 @@ export const TopFieldsSection = () => {
                   onChange={onChange}
                   isInvalid={invalid}
                   ref={ref}
-                  disabled
                 />
                 <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
               </Col>
