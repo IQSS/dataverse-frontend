@@ -62,13 +62,6 @@ export const CollectionFormInputLevelOptions = {
 export type CollectionFormInputLevelValue =
   (typeof CollectionFormInputLevelOptions)[keyof typeof CollectionFormInputLevelOptions]
 
-// export type FormattedCollectionInputLevels = {
-//   [key: string]: {
-//     include: boolean
-//     required: boolean
-//   }
-// }
-
 // On the submit function callback, type is CollectionType as type field is required and wont never be ""
 export type CollectionFormValuesOnSubmit = Omit<CollectionFormData, 'type'> & {
   type: CollectionType
@@ -95,9 +88,10 @@ export const CollectionForm = ({
     defaultValues
   })
 
-  const { formState, watch } = form
+  const { formState } = form
 
-  console.log(watch('inputLevels'))
+  console.log({ defaultValues })
+  // console.log(watch('inputLevels'))
 
   const preventEnterSubmit = (e: React.KeyboardEvent<HTMLFormElement | HTMLButtonElement>) => {
     // When pressing Enter, only submit the form  if the user is focused on the submit button itself

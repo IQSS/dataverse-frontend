@@ -20,7 +20,6 @@ import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreateCollectionSkeleton } from './CreateCollectionSkeleton'
-import { CollectionInputLevel } from '../../collection/domain/models/Collection'
 import { useGetAllMetadataBlocksInfoByName } from './useGetAllMetadataBlocksInfoByName'
 import { CollectionFormHelper } from './collection-form/CollectionFormHelper'
 
@@ -44,8 +43,8 @@ export function CreateCollection({
     ownerCollectionId
   )
 
-  // TODO:ME Quizas en modo edicion collection id no deberia ser sobre el owner sino sobre la collection en si, pero esta quizas se puede diferenciar por pagina.
-  // Es decir, en esta pagina create, esta bien obtener sobre el padre, en la pagina edit sobre el mismo collection.
+  // TODO:ME Maybe in edit mode collection id should not be on the owner but on the collection itself, but this can perhaps be differentiated by page.
+  // That is to say, in this create page, it is good to get on the parent, in the edit page on the same collection.
   const { metadataBlocksNamesInfo, isLoading: isLoadingMetadataBlocksNamesInfo } =
     useGetCollectionMetadataBlocksNamesInfo({
       collectionId: ownerCollectionId,
@@ -55,9 +54,13 @@ export function CreateCollection({
   const { allMetadataBlocksInfo, isLoading: isLoadingAllMetadataBlocksInfo } =
     useGetAllMetadataBlocksInfoByName({ metadataBlockInfoRepository })
 
-  const baseInputLevels = useDeepCompareMemo(() => {
-    return CollectionFormHelper.getFormBaseInputLevels(allMetadataBlocksInfo)
+  const formBaseInputLevels: FormattedCollectionInputLevels = useDeepCompareMemo(() => {
+    return CollectionFormHelper.defineBaseInputLevels(allMetadataBlocksInfo)
   }, [allMetadataBlocksInfo])
+
+  const formDefaultInputLevels: FormattedCollectionInputLevels = useDeepCompareMemo(() => {
+    return CollectionFormHelper.formatCollectiontInputLevels(collection?.inputLevels)
+  }, [collection?.inputLevels])
 
   const defaultBlocksNames = useDeepCompareMemo(
     () =>
@@ -94,6 +97,7 @@ export function CreateCollection({
     setIsLoading
   ])
 
+  // TODO:ME Instead show error of parent collection not found.
   if (!isLoadingCollection && !collection) {
     return <PageNotFound />
   }
@@ -107,28 +111,6 @@ export function CreateCollection({
     return <CreateCollectionSkeleton />
   }
 
-  console.log({ baseInputLevels })
-
-  // TODO:ME Move to another place?
-  const transformInputLevels = (levels: CollectionInputLevel[]): FormattedCollectionInputLevels => {
-    const result: FormattedCollectionInputLevels = {}
-    levels.forEach((level) => {
-      const { datasetFieldName, include, required } = level
-      const replaceDotWithSlash = (str: string) => str.replace(/\./g, '/')
-      const normalizedFieldName = replaceDotWithSlash(datasetFieldName)
-
-      result[normalizedFieldName] = {
-        include,
-        optionalOrRequired: required ? 'required' : 'optional'
-      }
-    })
-    return result
-  }
-
-  const defaultInputLevels: FormattedCollectionInputLevels | undefined = collection.inputLevels
-    ? transformInputLevels(collection.inputLevels)
-    : undefined
-
   const formDefaultValues: CollectionFormData = {
     hostCollection: collection.name,
     name: user?.displayName ? `${user?.displayName} Collection` : '',
@@ -141,8 +123,8 @@ export function CreateCollection({
     [USE_FIELDS_FROM_PARENT]: true,
     [METADATA_BLOCKS_NAMES_GROUPER]: defaultBlocksNames,
     inputLevels: {
-      ...baseInputLevels,
-      ...defaultInputLevels
+      ...formBaseInputLevels,
+      ...formDefaultInputLevels
     }
   }
 

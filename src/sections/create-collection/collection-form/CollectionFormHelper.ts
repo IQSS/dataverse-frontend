@@ -1,3 +1,4 @@
+import { CollectionInputLevel } from '../../../collection/domain/models/Collection'
 import { ReducedMetadataBlockInfo } from '../useGetAllMetadataBlocksInfoByName'
 import { FormattedCollectionInputLevels } from './CollectionForm'
 
@@ -6,7 +7,7 @@ export class CollectionFormHelper {
 
   public static replaceSlashWithDot = (str: string) => str.replace(/\//g, '.')
 
-  public static getFormBaseInputLevels(
+  public static defineBaseInputLevels(
     allMetadataBlocksInfoReduced: ReducedMetadataBlockInfo[]
   ): FormattedCollectionInputLevels {
     const fields: FormattedCollectionInputLevels = {}
@@ -37,5 +38,27 @@ export class CollectionFormHelper {
       ...fields,
       ...childFields
     }
+  }
+
+  public static formatCollectiontInputLevels(
+    collectionInputLevels: CollectionInputLevel[] | undefined
+  ): FormattedCollectionInputLevels {
+    const result: FormattedCollectionInputLevels = {}
+
+    if (!collectionInputLevels) {
+      return result
+    }
+
+    collectionInputLevels.forEach((level) => {
+      const { datasetFieldName, include, required } = level
+      const replaceDotWithSlash = (str: string) => str.replace(/\./g, '/')
+      const normalizedFieldName = replaceDotWithSlash(datasetFieldName)
+
+      result[normalizedFieldName] = {
+        include,
+        optionalOrRequired: required ? 'required' : 'optional'
+      }
+    })
+    return result
   }
 }
