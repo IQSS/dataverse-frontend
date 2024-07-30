@@ -2,11 +2,13 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDeepCompareMemo } from 'use-deep-compare'
 import { useCollection } from '../collection/useCollection'
+import { useGetCollectionMetadataBlocksNamesInfo } from './useGetCollectionMetadataBlocksNamesInfo'
+import { useGetAllMetadataBlocksInfoByName } from './useGetAllMetadataBlocksInfoByName'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
+import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useLoading } from '../loading/LoadingContext'
 import { useSession } from '../session/SessionContext'
-import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { useGetCollectionMetadataBlocksNamesInfo } from './useGetCollectionMetadataBlocksNamesInfo'
+import { CollectionFormHelper } from './collection-form/CollectionFormHelper'
 import {
   CollectionForm,
   CollectionFormData,
@@ -20,8 +22,6 @@ import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreateCollectionSkeleton } from './CreateCollectionSkeleton'
-import { useGetAllMetadataBlocksInfoByName } from './useGetAllMetadataBlocksInfoByName'
-import { CollectionFormHelper } from './collection-form/CollectionFormHelper'
 
 interface CreateCollectionProps {
   ownerCollectionId: string
@@ -144,9 +144,9 @@ export function CreateCollection({
 
       <CollectionForm
         collectionRepository={collectionRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
         ownerCollectionId={ownerCollectionId}
         defaultValues={formDefaultValues}
+        allMetadataBlocksInfo={allMetadataBlocksInfo}
       />
     </section>
   )

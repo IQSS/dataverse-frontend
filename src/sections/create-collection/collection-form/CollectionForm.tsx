@@ -8,13 +8,13 @@ import {
   CollectionType,
   CollectionStorage
 } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
-import { SeparationLine } from '../../shared/layout/SeparationLine/SeparationLine'
 import { SubmissionStatus, useSubmitCollection } from './useSubmitCollection'
+import { ReducedMetadataBlockInfo } from '../useGetAllMetadataBlocksInfoByName'
+import { MetadataBlockName } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { SeparationLine } from '../../shared/layout/SeparationLine/SeparationLine'
 import { TopFieldsSection } from './top-fields-section/TopFieldsSection'
 import { MetadataFieldsSection } from './metadata-fields-section/MetadataFieldsSection'
 import { BrowseSearchFacetsSection } from './browse-search-facets-section/BrowseSearchFacetsSection'
-import { MetadataBlockName } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { MetadataBlockInfoRepository } from '../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import styles from './CollectionForm.module.scss'
 
 export const METADATA_BLOCKS_NAMES_GROUPER = 'metadataBlockNames'
@@ -23,9 +23,9 @@ export const INPUT_LEVELS_GROUPER = 'inputLevels'
 
 export interface CollectionFormProps {
   collectionRepository: CollectionRepository
-  metadataBlockInfoRepository: MetadataBlockInfoRepository
   ownerCollectionId: string
   defaultValues: CollectionFormData
+  allMetadataBlocksInfo: ReducedMetadataBlockInfo[]
 }
 
 export type CollectionFormData = {
@@ -69,9 +69,9 @@ export type CollectionFormValuesOnSubmit = Omit<CollectionFormData, 'type'> & {
 
 export const CollectionForm = ({
   collectionRepository,
-  metadataBlockInfoRepository,
   ownerCollectionId,
-  defaultValues
+  defaultValues,
+  allMetadataBlocksInfo
 }: CollectionFormProps) => {
   const formContainerRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation('createCollection')
@@ -146,7 +146,7 @@ export const CollectionForm = ({
           <Stack>
             <Card>
               <Card.Body>
-                <MetadataFieldsSection metadataBlockInfoRepository={metadataBlockInfoRepository} />
+                <MetadataFieldsSection allMetadataBlocksInfo={allMetadataBlocksInfo} />
               </Card.Body>
             </Card>
 

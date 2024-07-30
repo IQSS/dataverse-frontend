@@ -1,18 +1,26 @@
 import { useTranslation } from 'react-i18next'
 import { Col, Form, Row, Stack } from '@iqss/dataverse-design-system'
+import { ReducedMetadataBlockInfo } from '../../useGetAllMetadataBlocksInfoByName'
 import { MetadataInputLevelFieldsBlock } from './metadata-input-level-fields-block/MetadataInputLevelFieldsBlock'
 import { FieldsFromRootCheckbox } from './fields-from-root-checkbox/FieldsFromRootCheckbox'
 import { MetadataBlockName } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { MetadataBlockInfoRepository } from '../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { CollectionFormHelper } from '../CollectionFormHelper'
 
 interface MetadataFieldsSectionProps {
-  metadataBlockInfoRepository: MetadataBlockInfoRepository
+  allMetadataBlocksInfo: ReducedMetadataBlockInfo[]
 }
 
-export const MetadataFieldsSection = ({
-  metadataBlockInfoRepository
-}: MetadataFieldsSectionProps) => {
+export const MetadataFieldsSection = ({ allMetadataBlocksInfo }: MetadataFieldsSectionProps) => {
   const { t } = useTranslation('createCollection')
+
+  const {
+    citationBlock,
+    geospatialBlock,
+    socialScienceBlock,
+    astrophysicsBlock,
+    biomedicalBlock,
+    journalBlock
+  } = CollectionFormHelper.separateMetadataBlocksInfoByNames(allMetadataBlocksInfo)
 
   return (
     <Row>
@@ -28,32 +36,32 @@ export const MetadataFieldsSection = ({
             <MetadataInputLevelFieldsBlock
               blockName={MetadataBlockName.CITATION}
               blockDisplayName="Citation Metadata (Required)"
-              metadataBlockInfoRepository={metadataBlockInfoRepository}
+              reducedMetadataBlockInfo={citationBlock}
             />
             <MetadataInputLevelFieldsBlock
               blockName={MetadataBlockName.GEOSPATIAL}
               blockDisplayName="Geospatial Metadata"
-              metadataBlockInfoRepository={metadataBlockInfoRepository}
+              reducedMetadataBlockInfo={geospatialBlock}
             />
             <MetadataInputLevelFieldsBlock
               blockName={MetadataBlockName.SOCIAL_SCIENCE}
               blockDisplayName="Social Science and Humanities Metadata"
-              metadataBlockInfoRepository={metadataBlockInfoRepository}
+              reducedMetadataBlockInfo={socialScienceBlock}
             />
             <MetadataInputLevelFieldsBlock
               blockName={MetadataBlockName.ASTROPHYSICS}
               blockDisplayName="Astronomy and Astrophysics Metadata"
-              metadataBlockInfoRepository={metadataBlockInfoRepository}
+              reducedMetadataBlockInfo={astrophysicsBlock}
             />
             <MetadataInputLevelFieldsBlock
               blockName={MetadataBlockName.BIOMEDICAL}
               blockDisplayName="Life Sciences Metadata"
-              metadataBlockInfoRepository={metadataBlockInfoRepository}
+              reducedMetadataBlockInfo={biomedicalBlock}
             />
             <MetadataInputLevelFieldsBlock
               blockName={MetadataBlockName.JOURNAL}
               blockDisplayName="Journal Metadata"
-              metadataBlockInfoRepository={metadataBlockInfoRepository}
+              reducedMetadataBlockInfo={journalBlock}
             />
           </Stack>
         </Col>

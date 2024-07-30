@@ -6,13 +6,6 @@ import {
   MetadataField
 } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { getMetadataBlockInfoByNameTemporal } from '../../metadata-block-info/domain/useCases/getMetadataBlockInfoByNameTemporal'
-// import { MetadataBlockInfoRepository } from '../../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-// import {
-//   MetadataBlockInfo,
-//   MetadataBlockName,
-//   MetadataField
-// } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-// import { getMetadataBlockInfoByNameTemporal } from '../../../../../metadata-block-info/domain/useCases/getMetadataBlockInfoByNameTemporal'
 
 interface Props {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
@@ -99,27 +92,6 @@ export const useGetAllMetadataBlocksInfoByName = ({
             return reducedMetadataBlockInfo
           }
         )
-
-        // #region Temporal
-        // const citationBlock: MetadataBlockInfo = reducedMetadataBlocksInfo.find(
-        //   (block) => block.name === MetadataBlockName.CITATION
-        // )
-        // const geospatialBlock: MetadataBlockInfo = reducedMetadataBlocksInfo.find(
-        //   (block) => block.name === MetadataBlockName.GEOSPATIAL
-        // )
-        // const socialScienceBlock: MetadataBlockInfo = reducedMetadataBlocksInfo.find(
-        //   (block) => block.name === MetadataBlockName.SOCIAL_SCIENCE
-        // )
-        // const astrophysicsBlock: MetadataBlockInfo = reducedMetadataBlocksInfo.find(
-        //   (block) => block.name === MetadataBlockName.ASTROPHYSICS
-        // )
-        // const biomedicalBlock: MetadataBlockInfo = reducedMetadataBlocksInfo.find(
-        //   (block) => block.name === MetadataBlockName.BIOMEDICAL
-        // )
-        // const journalBlock: MetadataBlockInfo = reducedMetadataBlocksInfo.find(
-        //   (block) => block.name === MetadataBlockName.JOURNAL
-        // )
-        // #endregion
 
         setAllMetadataBlocksInfo(reducedMetadataBlocksInfo)
       } catch (err) {

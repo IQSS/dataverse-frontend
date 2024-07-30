@@ -2,8 +2,8 @@ import { ChangeEvent, useId } from 'react'
 import { Controller, UseControllerProps, useFormContext } from 'react-hook-form'
 import { Form, Stack } from '@iqss/dataverse-design-system'
 import { ReducedMetadataFieldInfo } from '../useGetBlockMetadataInputLevelFields'
-import styles from './InputLevelsTable.module.scss'
 import { CollectionFormInputLevelValue, INPUT_LEVELS_GROUPER } from '../../../CollectionForm'
+import styles from './InputLevelsTable.module.scss'
 
 interface InputLevelFieldRowProps {
   metadataField: ReducedMetadataFieldInfo

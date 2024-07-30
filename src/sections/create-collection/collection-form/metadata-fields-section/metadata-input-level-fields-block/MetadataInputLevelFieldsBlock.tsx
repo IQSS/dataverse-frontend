@@ -2,23 +2,21 @@ import { useId, useState } from 'react'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import { Button, Form, Stack } from '@iqss/dataverse-design-system'
 import { CloseButton } from 'react-bootstrap'
-// import { CollectionInputLevel } from '../../../../../collection/domain/models/Collection'
 import { MetadataBlockName } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { ReducedMetadataBlockInfo } from '../../../useGetAllMetadataBlocksInfoByName'
 import { METADATA_BLOCKS_NAMES_GROUPER, USE_FIELDS_FROM_PARENT } from '../../CollectionForm'
-import { MetadataBlockInfoRepository } from '../../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { useGetBlockMetadataInputLevelFields } from './useGetBlockMetadataInputLevelFields'
 import { InputLevelsTable } from './input-levels-table/InputLevelsTable'
 
 interface MetadataInputLevelFieldsBlockProps {
   blockName: MetadataBlockName
   blockDisplayName: string
-  metadataBlockInfoRepository: MetadataBlockInfoRepository
+  reducedMetadataBlockInfo: ReducedMetadataBlockInfo
 }
 
 export const MetadataInputLevelFieldsBlock = ({
   blockName,
   blockDisplayName,
-  metadataBlockInfoRepository
+  reducedMetadataBlockInfo
 }: MetadataInputLevelFieldsBlockProps) => {
   const checkboxID = useId()
   const { control } = useFormContext()
@@ -35,12 +33,6 @@ export const MetadataInputLevelFieldsBlock = ({
   const metadataBlockCheckedValue = useWatch({
     name: metadataBlockFieldName
   }) as boolean
-
-  const {
-    blockMetadataInputLevelFields,
-    error: errorBlockMetadataFields,
-    isLoading: isLoadingBlockMetadataFields
-  } = useGetBlockMetadataInputLevelFields({ blockName, metadataBlockInfoRepository })
 
   const isCitation = blockName === MetadataBlockName.CITATION
 
@@ -65,11 +57,6 @@ export const MetadataInputLevelFieldsBlock = ({
       show: false,
       asDisabled: false
     })
-  }
-
-  // TODO: Temporary, this will change with get all metadata blocks info use case
-  if (isLoadingBlockMetadataFields || errorBlockMetadataFields || !blockMetadataInputLevelFields) {
-    return null
   }
 
   return (
@@ -122,12 +109,12 @@ export const MetadataInputLevelFieldsBlock = ({
       <InputLevelsTable
         show={inputLevelsTableStatus.show}
         disabled={inputLevelsTableStatus.asDisabled}
-        blockMetadataInputLevelFields={blockMetadataInputLevelFields}
+        blockMetadataInputLevelFields={reducedMetadataBlockInfo}
         closeButton={
           <CloseButton
             onClick={handleHideInputLevelsTable}
             aria-label="Hide input levels table"
-            tabIndex={inputLevelsTableStatus.show ? 1 : -1}
+            tabIndex={inputLevelsTableStatus.show ? 0 : -1}
           />
         }
       />

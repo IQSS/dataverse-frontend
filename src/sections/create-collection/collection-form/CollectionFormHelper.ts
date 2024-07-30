@@ -1,4 +1,5 @@
 import { CollectionInputLevel } from '../../../collection/domain/models/Collection'
+import { MetadataBlockName } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { ReducedMetadataBlockInfo } from '../useGetAllMetadataBlocksInfoByName'
 import { FormattedCollectionInputLevels } from './CollectionForm'
 
@@ -60,5 +61,49 @@ export class CollectionFormHelper {
       }
     })
     return result
+  }
+
+  public static separateMetadataBlocksInfoByNames(
+    allMetadataBlocksInfo: ReducedMetadataBlockInfo[]
+  ): {
+    citationBlock: ReducedMetadataBlockInfo
+    geospatialBlock: ReducedMetadataBlockInfo
+    socialScienceBlock: ReducedMetadataBlockInfo
+    astrophysicsBlock: ReducedMetadataBlockInfo
+    biomedicalBlock: ReducedMetadataBlockInfo
+    journalBlock: ReducedMetadataBlockInfo
+  } {
+    const citationBlock: ReducedMetadataBlockInfo = allMetadataBlocksInfo.find(
+      (block) => block.name === MetadataBlockName.CITATION
+    ) as ReducedMetadataBlockInfo
+
+    const geospatialBlock: ReducedMetadataBlockInfo = allMetadataBlocksInfo.find(
+      (block) => block.name === MetadataBlockName.GEOSPATIAL
+    ) as ReducedMetadataBlockInfo
+
+    const socialScienceBlock: ReducedMetadataBlockInfo = allMetadataBlocksInfo.find(
+      (block) => block.name === MetadataBlockName.SOCIAL_SCIENCE
+    ) as ReducedMetadataBlockInfo
+
+    const astrophysicsBlock: ReducedMetadataBlockInfo = allMetadataBlocksInfo.find(
+      (block) => block.name === MetadataBlockName.ASTROPHYSICS
+    ) as ReducedMetadataBlockInfo
+
+    const biomedicalBlock: ReducedMetadataBlockInfo = allMetadataBlocksInfo.find(
+      (block) => block.name === MetadataBlockName.BIOMEDICAL
+    ) as ReducedMetadataBlockInfo
+
+    const journalBlock: ReducedMetadataBlockInfo = allMetadataBlocksInfo.find(
+      (block) => block.name === MetadataBlockName.JOURNAL
+    ) as ReducedMetadataBlockInfo
+
+    return {
+      citationBlock,
+      geospatialBlock,
+      socialScienceBlock,
+      astrophysicsBlock,
+      biomedicalBlock,
+      journalBlock
+    }
   }
 }

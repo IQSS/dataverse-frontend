@@ -1,15 +1,15 @@
-import { BlockMetadataInputLevelFields } from '../useGetBlockMetadataInputLevelFields'
+import { ReactNode } from 'react'
 import cn from 'classnames'
-import styles from './InputLevelsTable.module.scss'
-import React from 'react'
 import { Table } from '@iqss/dataverse-design-system'
+import { BlockMetadataInputLevelFields } from '../useGetBlockMetadataInputLevelFields'
 import { InputLevelFieldRow } from './InputLevelFieldRow'
+import styles from './InputLevelsTable.module.scss'
 
 interface InputLevelsTableProps {
   show: boolean
   disabled: boolean
   blockMetadataInputLevelFields: BlockMetadataInputLevelFields
-  closeButton: React.ReactNode
+  closeButton: ReactNode
 }
 
 export const InputLevelsTable = ({
