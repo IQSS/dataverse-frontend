@@ -15,12 +15,16 @@ type Story = StoryObj<typeof FileCard>
 export const Default: Story = {
   render: () => <FileCard persistentId={'testid'} filePreview={FilePreviewMother.createDefault()} />
 }
-
 export const TabDelimited: Story = {
   render: () => <FileCard persistentId={'testid'} filePreview={FilePreviewMother.createTabular()} />
 }
-export const Deaccessioned: Story = {
+export const WithDescription: Story = {
   render: () => (
-    <FileCard persistentId={'testid'} filePreview={FilePreviewMother.createDeaccessioned()} />
+    <FileCard persistentId={'testid'} filePreview={FilePreviewMother.createWithDescription()} />
+  )
+}
+export const WithChecksum: Story = {
+  render: () => (
+    <FileCard persistentId={'testid'} filePreview={FilePreviewMother.createWithChecksum()} />
   )
 }

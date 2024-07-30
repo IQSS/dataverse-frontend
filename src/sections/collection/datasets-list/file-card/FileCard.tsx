@@ -15,7 +15,7 @@ export function FileCard({ filePreview, persistentId }: FileCardProps) {
       <FileCardHeader persistentId={persistentId} filePreview={filePreview} />
       <div className={styles.info}>
         <FileCardThumbnail filePreview={filePreview} persistentId={persistentId} />
-        <FileCardInfo filePreview={filePreview} />
+        <FileCardInfo filePreview={filePreview} persistentId={persistentId} />
       </div>
     </article>
   )

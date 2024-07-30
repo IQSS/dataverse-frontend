@@ -1,8 +1,6 @@
 import styles from './FileCard.module.scss'
 import { LinkToPage } from '../../../shared/link-to-page/LinkToPage'
 import { Route } from '../../../Route.enum'
-import { DatasetLabels } from '../../../dataset/dataset-labels/DatasetLabels'
-import { DatasetIcon } from '../../../dataset/dataset-icon/DatasetIcon'
 import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { DatasetPublishingStatus } from '../../../../dataset/domain/models/Dataset'
 import { FileIcon } from '../../../file/file-preview/FileIcon'
