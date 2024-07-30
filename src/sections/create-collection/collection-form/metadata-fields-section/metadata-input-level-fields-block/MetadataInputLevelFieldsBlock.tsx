@@ -1,50 +1,136 @@
-import { useId } from 'react'
+import { useId, useState } from 'react'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
-import { Form } from '@iqss/dataverse-design-system'
-import { CollectionInputLevel } from '../../../../../collection/domain/models/Collection'
+import { Button, Form, Stack } from '@iqss/dataverse-design-system'
+import { CloseButton } from 'react-bootstrap'
+// import { CollectionInputLevel } from '../../../../../collection/domain/models/Collection'
 import { MetadataBlockName } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { METADATA_BLOCKS_NAMES_GROUPER, USE_FIELDS_FROM_ROOT_NAME } from '../../CollectionForm'
+import { METADATA_BLOCKS_NAMES_GROUPER, USE_FIELDS_FROM_PARENT } from '../../CollectionForm'
+import { MetadataBlockInfoRepository } from '../../../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { useGetBlockMetadataInputLevelFields } from './useGetBlockMetadataInputLevelFields'
+import { InputLevelsTable } from './input-levels-table/InputLevelsTable'
 
 interface MetadataInputLevelFieldsBlockProps {
-  name: MetadataBlockName
+  blockName: MetadataBlockName
   blockDisplayName: string
-  inputLevels?: CollectionInputLevel[]
+  metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
 
 export const MetadataInputLevelFieldsBlock = ({
-  name,
+  blockName,
   blockDisplayName,
-  inputLevels
+  metadataBlockInfoRepository
 }: MetadataInputLevelFieldsBlockProps) => {
   const checkboxID = useId()
   const { control } = useFormContext()
-  const useFieldsFromRootFieldValue = useWatch({ name: USE_FIELDS_FROM_ROOT_NAME }) as boolean
+  const [inputLevelsTableStatus, setInputLevelsTableStatus] = useState({
+    show: false,
+    asDisabled: false
+  })
 
-  const isCitation = name === MetadataBlockName.CITATION
+  const metadataBlockFieldName = `${METADATA_BLOCKS_NAMES_GROUPER}.${blockName}`
+
+  const useFieldsFromParentCheckedValue = useWatch({
+    name: USE_FIELDS_FROM_PARENT
+  }) as boolean
+  const metadataBlockCheckedValue = useWatch({
+    name: metadataBlockFieldName
+  }) as boolean
+
+  const {
+    blockMetadataInputLevelFields,
+    error: errorBlockMetadataFields,
+    isLoading: isLoadingBlockMetadataFields
+  } = useGetBlockMetadataInputLevelFields({ blockName, metadataBlockInfoRepository })
+
+  const isCitation = blockName === MetadataBlockName.CITATION
 
   const rules: UseControllerProps['rules'] = {}
-  const withGroupName = `${METADATA_BLOCKS_NAMES_GROUPER}.${name}`
+
+  const handleEditInputLevels = () => {
+    setInputLevelsTableStatus({
+      show: true,
+      asDisabled: false
+    })
+  }
+
+  const handleShowInputLevels = () => {
+    setInputLevelsTableStatus({
+      show: true,
+      asDisabled: true
+    })
+  }
+
+  const handleHideInputLevelsTable = () => {
+    setInputLevelsTableStatus({
+      show: false,
+      asDisabled: false
+    })
+  }
+
+  // TODO: Temporary, this will change with get all metadata blocks info use case
+  if (isLoadingBlockMetadataFields || errorBlockMetadataFields || !blockMetadataInputLevelFields) {
+    return null
+  }
 
   return (
-    <>
-      <Controller
-        name={withGroupName}
-        control={control}
-        rules={rules}
-        render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
-          <Form.Group.Checkbox
-            id={checkboxID}
-            onChange={onChange}
-            name={withGroupName}
-            label={blockDisplayName}
-            checked={value as boolean}
-            isInvalid={invalid}
-            invalidFeedback={error?.message}
-            disabled={isCitation ? true : useFieldsFromRootFieldValue}
-            ref={ref}
-          />
+    <Stack direction="vertical" gap={2}>
+      <Stack direction="horizontal" gap={0}>
+        <Controller
+          name={metadataBlockFieldName}
+          control={control}
+          rules={rules}
+          render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
+            <Form.Group.Checkbox
+              id={checkboxID}
+              onChange={onChange}
+              name={metadataBlockFieldName}
+              label={blockDisplayName}
+              checked={value as boolean}
+              isInvalid={invalid}
+              invalidFeedback={error?.message}
+              disabled={isCitation ? true : useFieldsFromParentCheckedValue}
+              ref={ref}
+            />
+          )}
+        />
+
+        {/* If checked and use fields from parent not checked */}
+        {!inputLevelsTableStatus.show &&
+          metadataBlockCheckedValue &&
+          !useFieldsFromParentCheckedValue && (
+            <Button variant="link" size="sm" type="button" onClick={handleEditInputLevels}>
+              [+] View fields + set as hidden, required, or optional
+            </Button>
+          )}
+
+        {/* If checked and use fields from parent checked */}
+        {!inputLevelsTableStatus.show &&
+          metadataBlockCheckedValue &&
+          useFieldsFromParentCheckedValue && (
+            <Button variant="link" size="sm" type="button" onClick={handleShowInputLevels}>
+              [+] View Fields
+            </Button>
+          )}
+        {/* If just not checked */}
+        {!inputLevelsTableStatus.show && !metadataBlockCheckedValue && (
+          <Button variant="link" size="sm" type="button" onClick={handleShowInputLevels}>
+            [+] View Fields
+          </Button>
         )}
+      </Stack>
+
+      <InputLevelsTable
+        show={inputLevelsTableStatus.show}
+        disabled={inputLevelsTableStatus.asDisabled}
+        blockMetadataInputLevelFields={blockMetadataInputLevelFields}
+        closeButton={
+          <CloseButton
+            onClick={handleHideInputLevelsTable}
+            aria-label="Hide input levels table"
+            tabIndex={inputLevelsTableStatus.show ? 1 : -1}
+          />
+        }
       />
-    </>
+    </Stack>
   )
 }

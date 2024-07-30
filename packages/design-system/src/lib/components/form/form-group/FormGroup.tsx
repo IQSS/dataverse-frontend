@@ -10,6 +10,7 @@ import { Row } from '../../grid/Row'
 import { FormCheckbox } from './form-element/FormCheckbox'
 import { FormFeedback } from './form-element/FormFeedback'
 import { FormSelectMultiple } from './form-element/FormSelectMultiple'
+import { FormRadio } from './form-element/FormRadio'
 
 interface FormGroupProps extends ColProps {
   as?: typeof Col | typeof Row
@@ -31,6 +32,7 @@ FormGroup.SelectMultiple = FormSelectMultiple
 FormGroup.TextArea = FormTextArea
 FormGroup.Text = FormText
 FormGroup.Checkbox = FormCheckbox
+FormGroup.Radio = FormRadio
 FormGroup.Feedback = FormFeedback
 
 export { FormGroup }

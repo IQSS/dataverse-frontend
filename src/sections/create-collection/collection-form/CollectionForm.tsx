@@ -14,13 +14,16 @@ import { TopFieldsSection } from './top-fields-section/TopFieldsSection'
 import { MetadataFieldsSection } from './metadata-fields-section/MetadataFieldsSection'
 import { BrowseSearchFacetsSection } from './browse-search-facets-section/BrowseSearchFacetsSection'
 import { MetadataBlockName } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { Collection } from '../../../collection/domain/models/Collection'
 import styles from './CollectionForm.module.scss'
+import { MetadataBlockInfoRepository } from '../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 
 export const METADATA_BLOCKS_NAMES_GROUPER = 'metadataBlockNames'
-export const USE_FIELDS_FROM_ROOT_NAME = 'useFieldsFromRoot'
+export const USE_FIELDS_FROM_PARENT = 'useFieldsFromParent'
 
 export interface CollectionFormProps {
   collectionRepository: CollectionRepository
+  metadataBlockInfoRepository: MetadataBlockInfoRepository
   ownerCollectionId: string
   defaultValues: CollectionFormData
 }
@@ -34,8 +37,9 @@ export type CollectionFormData = {
   type: CollectionType | ''
   description: string
   contacts: { value: string }[]
-  [USE_FIELDS_FROM_ROOT_NAME]: boolean
+  [USE_FIELDS_FROM_PARENT]: boolean
   [METADATA_BLOCKS_NAMES_GROUPER]: CollectionFormMetadataBlocks
+  inputLevels: Collection['inputLevels']
 }
 
 export type CollectionFormMetadataBlocks = Omit<
@@ -50,6 +54,7 @@ export type CollectionFormValuesOnSubmit = Omit<CollectionFormData, 'type'> & {
 
 export const CollectionForm = ({
   collectionRepository,
+  metadataBlockInfoRepository,
   ownerCollectionId,
   defaultValues
 }: CollectionFormProps) => {
@@ -123,7 +128,7 @@ export const CollectionForm = ({
           <Stack>
             <Card>
               <Card.Body>
-                <MetadataFieldsSection />
+                <MetadataFieldsSection metadataBlockInfoRepository={metadataBlockInfoRepository} />
               </Card.Body>
             </Card>
 

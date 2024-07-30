@@ -45,35 +45,39 @@ export function useSubmitCollection(
   const submitForm = (formData: CollectionFormValuesOnSubmit): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
+    // TODO:ME js-dataverse cannot read properties of undefined (reading 'map')
+
     const newCollection: CollectionDTO = {
       name: formData.name,
       alias: formData.alias,
       type: formData.type,
-      contacts: formData.contacts.map((contact) => contact.value)
+      affiliation: formData.affiliation,
+      description: formData.description,
+      contacts: formData.contacts.map((contact) => contact.value),
+      inputLevels: []
     }
+
+    console.log({ newCollection })
 
     // TODO: We can't send the hostCollection name, but we should send the hostCollection alias
     // So in a next iteration we should get the hostCollection alias from the hostCollection name selected
 
-    createCollection(collectionRepository, newCollection, ownerCollectionId)
-      .then(() => {
-        setSubmitError(null)
-        setSubmissionStatus(SubmissionStatus.SubmitComplete)
-
-        navigate(`${Route.COLLECTIONS}?id=${newCollection.alias}`, {
-          state: { created: true }
-        })
-        return
-      })
-      .catch((err: WriteError) => {
-        const error = new JSDataverseWriteErrorHandler(err)
-        const formattedError = error.getReasonWithoutStatusCode() ?? error.getErrorMessage()
-
-        setSubmitError(formattedError)
-        setSubmissionStatus(SubmissionStatus.Errored)
-
-        onSubmitErrorCallback()
-      })
+    // createCollection(collectionRepository, newCollection, ownerCollectionId)
+    //   .then(() => {
+    //     setSubmitError(null)
+    //     setSubmissionStatus(SubmissionStatus.SubmitComplete)
+    //     navigate(`${Route.COLLECTIONS}?id=${newCollection.alias}`, {
+    //       state: { created: true }
+    //     })
+    //     return
+    //   })
+    //   .catch((err: WriteError) => {
+    //     const error = new JSDataverseWriteErrorHandler(err)
+    //     const formattedError = error.getReasonWithoutStatusCode() ?? error.getErrorMessage()
+    //     setSubmitError(formattedError)
+    //     setSubmissionStatus(SubmissionStatus.Errored)
+    //     onSubmitErrorCallback()
+    //   })
   }
 
   return {

@@ -1,0 +1,45 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.input-levels-table-container {
+  position: relative;
+  display: grid;
+  grid-template-rows: 0fr;
+  width: 70%;
+  max-height: 400px;
+  margin-bottom: 1rem;
+  margin-left: 3rem;
+  overflow-y: auto;
+  border: solid 1px $dv-secondary-color;
+  border-radius: 4px;
+  transition: grid-template-rows 350ms;
+
+  .inner {
+    overflow: hidden;
+  }
+
+  &--show {
+    grid-template-rows: 1fr;
+
+    .inner {
+      overflow: auto;
+    }
+  }
+}
+
+.close-button-container {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.35rem 0.5rem;
+  background-color: #fff;
+  border-bottom: solid 1px $dv-secondary-color;
+}
+
+.input-level-row {
+  &--child-field {
+    td {
+      padding-left: 1.5rem;
+    }
+  }
+}

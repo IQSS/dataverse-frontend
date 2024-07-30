@@ -12,7 +12,7 @@ import {
   CollectionFormData,
   CollectionFormMetadataBlocks,
   METADATA_BLOCKS_NAMES_GROUPER,
-  USE_FIELDS_FROM_ROOT_NAME
+  USE_FIELDS_FROM_PARENT
 } from './collection-form/CollectionForm'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
@@ -40,6 +40,8 @@ export function CreateCollection({
     ownerCollectionId
   )
 
+  // TODO:ME Quizas en modo edicion collection id no deberia ser sobre el owner sino sobre la collection en si, pero esta quizas se puede diferenciar por pagina.
+  // Es decir, en esta pagina create, esta bien obtener sobre el padre, en la pagina edit sobre el mismo collection.
   const { metadataBlocksNamesInfo, isLoading: isLoadingMetadataBlocksNamesInfo } =
     useGetMetadataBlocksNamesInfo({
       collectionId: ownerCollectionId,
@@ -78,8 +80,7 @@ export function CreateCollection({
   if (isLoadingCollection || isLoadingMetadataBlocksNamesInfo || !collection) {
     return <CreateCollectionSkeleton />
   }
-  console.log({ collection, metadataBlocksNamesInfo })
-  console.log({ defaultBlocksNames })
+  console.log({ collection })
 
   const formDefaultValues: CollectionFormData = {
     hostCollection: collection.name,
@@ -90,8 +91,9 @@ export function CreateCollection({
     affiliation: user?.affiliation ?? '',
     storage: 'Local (Default)',
     description: '',
-    [USE_FIELDS_FROM_ROOT_NAME]: true,
-    [METADATA_BLOCKS_NAMES_GROUPER]: defaultBlocksNames
+    [USE_FIELDS_FROM_PARENT]: true,
+    [METADATA_BLOCKS_NAMES_GROUPER]: defaultBlocksNames,
+    inputLevels: collection.inputLevels
   }
 
   return (
@@ -110,6 +112,7 @@ export function CreateCollection({
 
       <CollectionForm
         collectionRepository={collectionRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
         ownerCollectionId={ownerCollectionId}
         defaultValues={formDefaultValues}
       />
