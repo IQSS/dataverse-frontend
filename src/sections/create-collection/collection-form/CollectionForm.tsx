@@ -14,12 +14,12 @@ import { TopFieldsSection } from './top-fields-section/TopFieldsSection'
 import { MetadataFieldsSection } from './metadata-fields-section/MetadataFieldsSection'
 import { BrowseSearchFacetsSection } from './browse-search-facets-section/BrowseSearchFacetsSection'
 import { MetadataBlockName } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { Collection } from '../../../collection/domain/models/Collection'
-import styles from './CollectionForm.module.scss'
 import { MetadataBlockInfoRepository } from '../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import styles from './CollectionForm.module.scss'
 
 export const METADATA_BLOCKS_NAMES_GROUPER = 'metadataBlockNames'
 export const USE_FIELDS_FROM_PARENT = 'useFieldsFromParent'
+export const INPUT_LEVELS_GROUPER = 'inputLevels'
 
 export interface CollectionFormProps {
   collectionRepository: CollectionRepository
@@ -39,13 +39,35 @@ export type CollectionFormData = {
   contacts: { value: string }[]
   [USE_FIELDS_FROM_PARENT]: boolean
   [METADATA_BLOCKS_NAMES_GROUPER]: CollectionFormMetadataBlocks
-  inputLevels: Collection['inputLevels']
+  [INPUT_LEVELS_GROUPER]?: FormattedCollectionInputLevels
 }
 
 export type CollectionFormMetadataBlocks = Omit<
   Record<MetadataBlockName, boolean>,
   'codeMeta20' | 'computationalworkflow'
 >
+
+export type FormattedCollectionInputLevels = {
+  [key: string]: {
+    include: boolean
+    optionalOrRequired: CollectionFormInputLevelValue
+  }
+}
+
+export const CollectionFormInputLevelOptions = {
+  OPTIONAL: 'optional',
+  REQUIRED: 'required'
+} as const
+
+export type CollectionFormInputLevelValue =
+  (typeof CollectionFormInputLevelOptions)[keyof typeof CollectionFormInputLevelOptions]
+
+// export type FormattedCollectionInputLevels = {
+//   [key: string]: {
+//     include: boolean
+//     required: boolean
+//   }
+// }
 
 // On the submit function callback, type is CollectionType as type field is required and wont never be ""
 export type CollectionFormValuesOnSubmit = Omit<CollectionFormData, 'type'> & {
@@ -73,7 +95,9 @@ export const CollectionForm = ({
     defaultValues
   })
 
-  const { formState } = form
+  const { formState, watch } = form
+
+  console.log(watch('inputLevels'))
 
   const preventEnterSubmit = (e: React.KeyboardEvent<HTMLFormElement | HTMLButtonElement>) => {
     // When pressing Enter, only submit the form  if the user is focused on the submit button itself

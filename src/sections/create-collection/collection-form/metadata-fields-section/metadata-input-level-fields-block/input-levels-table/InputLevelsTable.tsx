@@ -18,7 +18,7 @@ export const InputLevelsTable = ({
   blockMetadataInputLevelFields,
   closeButton
 }: InputLevelsTableProps) => {
-  console.log(blockMetadataInputLevelFields)
+  // console.log(blockMetadataInputLevelFields)
 
   // TODO:ME Disable everything if disabled
   return (
@@ -26,19 +26,15 @@ export const InputLevelsTable = ({
       className={cn(styles['input-levels-table-container'], {
         [styles['input-levels-table-container--show']]: show
       })}>
-      <div className={styles.inner}>
-        <div className={styles['close-button-container']}>{closeButton}</div>
+      <div className={styles['close-button-container']}>{closeButton}</div>
 
-        <Table>
-          <tbody>
-            {Object.entries(blockMetadataInputLevelFields.metadataFields).map(
-              ([fieldName, field]) => (
-                <InputLevelFieldRow metadataField={field} key={fieldName} />
-              )
-            )}
-          </tbody>
-        </Table>
-      </div>
+      <Table bordered={false}>
+        <tbody>
+          {Object.entries(blockMetadataInputLevelFields.metadataFields).map(([key, field]) => (
+            <InputLevelFieldRow metadataField={field} key={key} />
+          ))}
+        </tbody>
+      </Table>
     </div>
   )
 }

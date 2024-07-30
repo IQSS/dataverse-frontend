@@ -17,7 +17,7 @@ interface UseGetMetadataBlocksNamesInfoReturn {
   isLoading: boolean
 }
 
-export const useGetMetadataBlocksNamesInfo = ({
+export const useGetCollectionMetadataBlocksNamesInfo = ({
   collectionId,
   metadataBlockInfoRepository
 }: Props): UseGetMetadataBlocksNamesInfoReturn => {

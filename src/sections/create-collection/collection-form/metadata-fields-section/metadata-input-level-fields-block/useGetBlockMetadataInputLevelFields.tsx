@@ -51,14 +51,20 @@ export const useGetBlockMetadataInputLevelFields = ({
         const formattedMetadataFields: BlockMetadataInputLevelFields['metadataFields'] =
           Object.entries(blockInfo.metadataFields).reduce((acc, [key, value]) => {
             const { name, displayName, childMetadataFields } = value
+            const replaceDotWithSlash = (str: string) => str.replace(/\./g, '/')
+            const normalizedName = replaceDotWithSlash(name)
+
             acc[key] = {
-              name,
+              name: normalizedName,
               displayName,
               childMetadataFields: childMetadataFields
                 ? Object.entries(childMetadataFields).reduce((acc, [key, value]) => {
                     const { name, displayName } = value
+
+                    const normalizedChildfieldName = replaceDotWithSlash(name)
+
                     acc[key] = {
-                      name,
+                      name: normalizedChildfieldName,
                       displayName
                     }
                     return acc

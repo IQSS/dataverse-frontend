@@ -6,11 +6,12 @@ import { CollectionRepository } from '../../collection/domain/repositories/Colle
 import { useLoading } from '../loading/LoadingContext'
 import { useSession } from '../session/SessionContext'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { useGetMetadataBlocksNamesInfo } from './useGetMetadataBlocksNamesInfo'
+import { useGetCollectionMetadataBlocksNamesInfo } from './useGetCollectionMetadataBlocksNamesInfo'
 import {
   CollectionForm,
   CollectionFormData,
   CollectionFormMetadataBlocks,
+  FormattedCollectionInputLevels,
   METADATA_BLOCKS_NAMES_GROUPER,
   USE_FIELDS_FROM_PARENT
 } from './collection-form/CollectionForm'
@@ -19,6 +20,9 @@ import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreateCollectionSkeleton } from './CreateCollectionSkeleton'
+import { CollectionInputLevel } from '../../collection/domain/models/Collection'
+import { useGetAllMetadataBlocksInfoByName } from './useGetAllMetadataBlocksInfoByName'
+import { CollectionFormHelper } from './collection-form/CollectionFormHelper'
 
 interface CreateCollectionProps {
   ownerCollectionId: string
@@ -43,10 +47,17 @@ export function CreateCollection({
   // TODO:ME Quizas en modo edicion collection id no deberia ser sobre el owner sino sobre la collection en si, pero esta quizas se puede diferenciar por pagina.
   // Es decir, en esta pagina create, esta bien obtener sobre el padre, en la pagina edit sobre el mismo collection.
   const { metadataBlocksNamesInfo, isLoading: isLoadingMetadataBlocksNamesInfo } =
-    useGetMetadataBlocksNamesInfo({
+    useGetCollectionMetadataBlocksNamesInfo({
       collectionId: ownerCollectionId,
       metadataBlockInfoRepository
     })
+
+  const { allMetadataBlocksInfo, isLoading: isLoadingAllMetadataBlocksInfo } =
+    useGetAllMetadataBlocksInfoByName({ metadataBlockInfoRepository })
+
+  const baseInputLevels = useDeepCompareMemo(() => {
+    return CollectionFormHelper.getFormBaseInputLevels(allMetadataBlocksInfo)
+  }, [allMetadataBlocksInfo])
 
   const defaultBlocksNames = useDeepCompareMemo(
     () =>
@@ -68,19 +79,55 @@ export function CreateCollection({
   )
 
   useEffect(() => {
-    if (!isLoadingCollection && !isLoadingMetadataBlocksNamesInfo) {
+    if (
+      !isLoadingCollection &&
+      !isLoadingMetadataBlocksNamesInfo &&
+      !isLoadingAllMetadataBlocksInfo
+    ) {
       setIsLoading(false)
     }
-  }, [isLoading, isLoadingCollection, isLoadingMetadataBlocksNamesInfo, setIsLoading])
+  }, [
+    isLoading,
+    isLoadingCollection,
+    isLoadingMetadataBlocksNamesInfo,
+    isLoadingAllMetadataBlocksInfo,
+    setIsLoading
+  ])
 
   if (!isLoadingCollection && !collection) {
     return <PageNotFound />
   }
 
-  if (isLoadingCollection || isLoadingMetadataBlocksNamesInfo || !collection) {
+  if (
+    isLoadingCollection ||
+    isLoadingMetadataBlocksNamesInfo ||
+    isLoadingAllMetadataBlocksInfo ||
+    !collection
+  ) {
     return <CreateCollectionSkeleton />
   }
-  console.log({ collection })
+
+  console.log({ baseInputLevels })
+
+  // TODO:ME Move to another place?
+  const transformInputLevels = (levels: CollectionInputLevel[]): FormattedCollectionInputLevels => {
+    const result: FormattedCollectionInputLevels = {}
+    levels.forEach((level) => {
+      const { datasetFieldName, include, required } = level
+      const replaceDotWithSlash = (str: string) => str.replace(/\./g, '/')
+      const normalizedFieldName = replaceDotWithSlash(datasetFieldName)
+
+      result[normalizedFieldName] = {
+        include,
+        optionalOrRequired: required ? 'required' : 'optional'
+      }
+    })
+    return result
+  }
+
+  const defaultInputLevels: FormattedCollectionInputLevels | undefined = collection.inputLevels
+    ? transformInputLevels(collection.inputLevels)
+    : undefined
 
   const formDefaultValues: CollectionFormData = {
     hostCollection: collection.name,
@@ -93,7 +140,10 @@ export function CreateCollection({
     description: '',
     [USE_FIELDS_FROM_PARENT]: true,
     [METADATA_BLOCKS_NAMES_GROUPER]: defaultBlocksNames,
-    inputLevels: collection.inputLevels
+    inputLevels: {
+      ...baseInputLevels,
+      ...defaultInputLevels
+    }
   }
 
   return (
