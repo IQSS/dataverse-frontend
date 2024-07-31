@@ -61,7 +61,7 @@ export const MetadataInputLevelFieldsBlock = ({
 
   return (
     <Stack direction="vertical" gap={2}>
-      <Stack direction="horizontal" gap={0}>
+      <Stack direction="horizontal" gap={1}>
         <Controller
           name={metadataBlockFieldName}
           control={control}

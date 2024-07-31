@@ -1,5 +1,5 @@
 import { ChangeEvent, useId } from 'react'
-import { Controller, UseControllerProps, useFormContext } from 'react-hook-form'
+import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import { Form, Stack } from '@iqss/dataverse-design-system'
 import { ReducedMetadataFieldInfo } from '../useGetBlockMetadataInputLevelFields'
 import { CollectionFormInputLevelValue, INPUT_LEVELS_GROUPER } from '../../../CollectionForm'
@@ -12,9 +12,16 @@ interface InputLevelFieldRowProps {
 export const InputLevelFieldRow = ({ metadataField }: InputLevelFieldRowProps) => {
   const uniqueInputLevelRowID = useId()
   const { control } = useFormContext()
+
+  const includeCheckboxValue = useWatch({
+    name: `${INPUT_LEVELS_GROUPER}.${metadataField.name}.include`
+  }) as boolean
+
   const { name, displayName, childMetadataFields } = metadataField
 
   const rules: UseControllerProps['rules'] = {}
+
+  // TODO:ME Add label "Required by Dataverse" on specific Citation fields
 
   return (
     <>
@@ -32,7 +39,7 @@ export const InputLevelFieldRow = ({ metadataField }: InputLevelFieldRowProps) =
                 checked={Boolean(value as boolean)}
                 isInvalid={invalid}
                 invalidFeedback={error?.message}
-                // disabled={isCitation ? true : useFieldsFromParentCheckedValue}
+                // disabled={ }
                 ref={ref}
                 data-name={`${name}`}
               />
@@ -42,8 +49,9 @@ export const InputLevelFieldRow = ({ metadataField }: InputLevelFieldRowProps) =
         <td>
           {!childMetadataFields && (
             <RequiredAndOptionalRadios
-              fieldName={`${INPUT_LEVELS_GROUPER}.${name}.optionalOrRequired`}
+              parentFieldChecked={includeCheckboxValue}
               uniqueInputLevelRowID={uniqueInputLevelRowID}
+              fieldName={`${INPUT_LEVELS_GROUPER}.${name}.optionalOrRequired`}
             />
           )}
         </td>
@@ -54,8 +62,9 @@ export const InputLevelFieldRow = ({ metadataField }: InputLevelFieldRowProps) =
             <td>{field.displayName}</td>
             <td>
               <RequiredAndOptionalRadios
-                fieldName={`${INPUT_LEVELS_GROUPER}.${field.name}.optionalOrRequired`}
+                parentFieldChecked={includeCheckboxValue}
                 uniqueInputLevelRowID={`${uniqueInputLevelRowID}-${field.name}`}
+                fieldName={`${INPUT_LEVELS_GROUPER}.${field.name}.optionalOrRequired`}
               />
             </td>
           </tr>
@@ -66,11 +75,13 @@ export const InputLevelFieldRow = ({ metadataField }: InputLevelFieldRowProps) =
 
 interface RequiredAndOptionalRadiosProps {
   fieldName: string
+  parentFieldChecked: boolean
   uniqueInputLevelRowID: string
 }
 
 const RequiredAndOptionalRadios = ({
   fieldName,
+  parentFieldChecked,
   uniqueInputLevelRowID
 }: RequiredAndOptionalRadiosProps) => {
   const { control } = useFormContext()
@@ -85,6 +96,21 @@ const RequiredAndOptionalRadios = ({
         const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
           console.log(e)
           onChange(e.target.value)
+        }
+
+        if (!parentFieldChecked) {
+          return (
+            <Form.Group.Radio
+              label="Hidden"
+              checked={true}
+              value="required"
+              name={`${uniqueInputLevelRowID}-${fieldName}-hidden-radio`}
+              id={`${uniqueInputLevelRowID}-${fieldName}-hidden-radio`}
+              readOnly
+              disabled
+              ref={ref}
+            />
+          )
         }
 
         return (
