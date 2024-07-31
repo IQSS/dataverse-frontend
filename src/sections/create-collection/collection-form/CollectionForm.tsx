@@ -20,6 +20,18 @@ import styles from './CollectionForm.module.scss'
 export const METADATA_BLOCKS_NAMES_GROUPER = 'metadataBlockNames'
 export const USE_FIELDS_FROM_PARENT = 'useFieldsFromParent'
 export const INPUT_LEVELS_GROUPER = 'inputLevels'
+export const REQUIRED_BY_DATAVERSE_FIELDS = [
+  'title',
+  'author',
+  'authorName',
+  'datasetContact',
+  'datasetContactEmail',
+  'dsDescription',
+  'dsDescriptionValue',
+  'subject'
+] as const
+
+// TODO:ME Conditionally required Producer -> Producer Name
 
 export interface CollectionFormProps {
   collectionRepository: CollectionRepository

@@ -3,10 +3,8 @@
 .input-levels-table-container {
   position: relative;
   display: none;
-  width: 70%;
   max-height: 400px;
   margin-bottom: 1rem;
-  margin-left: 3rem;
   overflow-y: auto;
   border-radius: 6px;
   box-shadow: 4px 4px 16px 0 rgb(0 0 0 / 10%);
@@ -14,6 +12,11 @@
   &--show {
     display: block;
     border: solid 1px $dv-secondary-color;
+  }
+
+  @media (min-width: 768px) {
+    width: 70%;
+    margin-left: 3rem;
   }
 }
 
@@ -33,8 +36,18 @@
     width: 50%;
   }
 
+  .required-by-dataverse-label {
+    font-style: italic;
+    opacity: 0.5;
+  }
+
   &--child-field {
     .displayName-disabled {
+      opacity: 0.5;
+    }
+
+    .required-by-dataverse-label {
+      font-style: italic;
       opacity: 0.5;
     }
 
