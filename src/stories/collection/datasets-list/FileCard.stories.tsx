@@ -28,3 +28,14 @@ export const WithChecksum: Story = {
     <FileCard persistentId={'testid'} filePreview={FilePreviewMother.createWithChecksum()} />
   )
 }
+export const WithDraft: Story = {
+  render: () => (
+    <FileCard persistentId={'testid'} filePreview={FilePreviewMother.createWithDraft()} />
+  )
+}
+
+export const ReleasedWithDraft: Story = {
+  render: () => (
+    <FileCard persistentId={'testid'} filePreview={FilePreviewMother.createReleasedWithDraft()} />
+  )
+}

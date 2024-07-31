@@ -2,8 +2,14 @@ import styles from './FileCard.module.scss'
 import { LinkToPage } from '../../../shared/link-to-page/LinkToPage'
 import { Route } from '../../../Route.enum'
 import { FilePreview } from '../../../../files/domain/models/FilePreview'
-import { DatasetPublishingStatus } from '../../../../dataset/domain/models/Dataset'
+import {
+  DatasetLabel,
+  DatasetLabelSemanticMeaning,
+  DatasetLabelValue,
+  DatasetPublishingStatus
+} from '../../../../dataset/domain/models/Dataset'
 import { FileIcon } from '../../../file/file-preview/FileIcon'
+import { DatasetLabels } from '../../../dataset/dataset-labels/DatasetLabels'
 
 interface FileCardHeaderProps {
   persistentId: string
@@ -20,7 +26,24 @@ function getSearchParams(
   }
   return params
 }
-
+function getDatasetLabels(
+  datasetPublishingStatus: DatasetPublishingStatus,
+  someDatasetVersionHasBeenReleased: boolean | undefined
+) {
+  const labels: DatasetLabel[] = []
+  if (datasetPublishingStatus === DatasetPublishingStatus.DRAFT) {
+    labels.push(new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.DRAFT))
+  }
+  if (
+    someDatasetVersionHasBeenReleased == undefined ||
+    someDatasetVersionHasBeenReleased == false
+  ) {
+    labels.push(
+      new DatasetLabel(DatasetLabelSemanticMeaning.WARNING, DatasetLabelValue.UNPUBLISHED)
+    )
+  }
+  return labels
+}
 export function FileCardHeader({ persistentId, filePreview }: FileCardHeaderProps) {
   return (
     <div className={styles.header}>
@@ -30,6 +53,12 @@ export function FileCardHeader({ persistentId, filePreview }: FileCardHeaderProp
           searchParams={getSearchParams(persistentId, filePreview.datasetPublishingStatus)}>
           {filePreview.name}
         </LinkToPage>
+        <DatasetLabels
+          labels={getDatasetLabels(
+            filePreview.datasetPublishingStatus,
+            filePreview.someDatasetVersionHasBeenReleased
+          )}
+        />
       </div>
       <div className={styles.icon}>
         <FileIcon type={filePreview.metadata.type} />

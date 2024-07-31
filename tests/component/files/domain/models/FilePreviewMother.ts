@@ -36,6 +36,18 @@ export class FilePreviewMother {
       ...props
     })
   }
+  static createWithDraft(): FilePreview {
+    return this.createDefault({
+      datasetPublishingStatus: DatasetPublishingStatus.DRAFT
+    })
+  }
+
+  static createReleasedWithDraft(): FilePreview {
+    return this.createDefault({
+      datasetPublishingStatus: DatasetPublishingStatus.DRAFT,
+      someDatasetVersionHasBeenReleased: true
+    })
+  }
 
   static createWithEmbargo(): FilePreview {
     return this.createDefault({
