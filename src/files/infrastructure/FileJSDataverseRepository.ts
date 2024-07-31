@@ -14,6 +14,8 @@ import {
   getFileDataTables,
   getFileDownloadCount,
   getFileUserPermissions,
+  uploadFile as jsUploadFile,
+  addUploadedFileToDataset,
   ReadError
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
@@ -29,7 +31,8 @@ import { JSFileMetadataMapper } from './mappers/JSFileMetadataMapper'
 import { FilePermissions } from '../domain/models/FilePermissions'
 import { JSFilePermissionsMapper } from './mappers/JSFilePermissionsMapper'
 import { FilesWithCount } from '../domain/models/FilesWithCount'
-import { FileHolder } from '../domain/repositories/File'
+import { FileHolder } from '../domain/models/FileHolder'
+import { FileUploadState } from '../domain/models/FileUploadState'
 
 const includeDeaccessioned = true
 
@@ -284,12 +287,26 @@ export class FileJSDataverseRepository implements FileRepository {
   }
 
   uploadFile(
-    _datasetId: number | string,
-    _file: FileHolder,
-    _progress: (now: number) => void,
-    _abortController: AbortController
+    datasetId: number | string,
+    file: FileHolder,
+    progress: (now: number) => void,
+    abortController: AbortController,
+    storageIdSetter: (storageId: string) => void
   ): Promise<void> {
-    // TODO:
-    return new Promise(() => {})
+    return jsUploadFile
+      .execute(datasetId, file.file, progress, abortController)
+      .then(storageIdSetter)
+      .catch((error: ReadError) => {
+        throw new Error(error.message)
+      })
+  }
+
+  addUploadedFiles(_datasetId: number | string, _files: FileUploadState[]): Promise<void> {
+    // TODO: not yet implemented
+    return new Promise<void>(() => {})
+  }
+
+  addUploadedFile(datasetId: number | string, file: FileHolder, storageId: string): Promise<void> {
+    return addUploadedFileToDataset.execute(datasetId, file.file, storageId)
   }
 }

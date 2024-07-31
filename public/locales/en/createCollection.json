@@ -1,0 +1,63 @@
+{
+  "pageTitle": "Create Collection",
+  "fields": {
+    "hostCollection": {
+      "label": "Host Collection",
+      "description": "The collection which contains this data.",
+      "required": "Host Collection is required"
+    },
+    "name": {
+      "label": "Collection Name",
+      "description": "The project, department, university, professor, or journal this collection will contain data for.",
+      "required": "Collection Name is required"
+    },
+    "affiliation": {
+      "label": "Affiliation",
+      "description": "The organization with which this collection is affiliated."
+    },
+    "alias": {
+      "label": "Identifier",
+      "description": "Short name used for the URL of this collection.",
+      "required": "Identifier is required",
+      "invalid": {
+        "format": "Identifier is not valid. Valid characters are a-Z, 0-9, '_', and '-'.",
+        "maxLength": "Identifier must be at most {{maxLength}} characters."
+      },
+      "suggestion": "Psst... try this"
+    },
+    "storage": {
+      "label": "Storage",
+      "description": "A storage service to be used for datasets in this collection."
+    },
+    "type": {
+      "label": "Category",
+      "description": "The type that most closely reflects this collection.",
+      "required": "Category is required"
+    },
+    "description": {
+      "label": "Description",
+      "description": "A summary describing the purpose, nature or scope of this collection."
+    },
+    "contacts": {
+      "label": "Email",
+      "description": "The email address(es) of the contact(s) for the collection.",
+      "required": "Email is required",
+      "invalid": "Email is not a valid email"
+    },
+    "metadataFields": {
+      "label": "Metadata Fields",
+      "helperText": "Choose the metadata fields to use in dataset templates and when adding a dataset to this dataverse."
+    },
+    "browseSearchFacets": {
+      "label": "Browse/Search Facets",
+      "helperText": "Choose the metadata fields to use as facets for browsing datasets and dataverses in this dataverse."
+    }
+  },
+  "submitStatus": {
+    "success": "Collection created successfully."
+  },
+  "formButtons": {
+    "save": "Create Collection",
+    "cancel": "Cancel"
+  }
+}

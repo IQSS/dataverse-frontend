@@ -8,5 +8,11 @@ export enum Route {
   UPLOAD_DATASET_FILES = '/datasets/upload-files',
   EDIT_DATASET_METADATA = '/datasets/edit-metadata',
   FILES = '/files',
-  COLLECTIONS = '/collections'
+  COLLECTIONS = '/collections',
+  CREATE_COLLECTION = '/collections/:ownerCollectionId/create'
+}
+
+export const RouteWithParams = {
+  CREATE_COLLECTION: (ownerCollectionId?: string) =>
+    `/collections/${ownerCollectionId ?? 'root'}/create`
 }

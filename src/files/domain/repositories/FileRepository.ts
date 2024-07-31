@@ -6,7 +6,8 @@ import { DatasetVersion, DatasetVersionNumber } from '../../../dataset/domain/mo
 import { FilePaginationInfo } from '../models/FilePaginationInfo'
 import { FilePreview } from '../models/FilePreview'
 import { FilesWithCount } from '../models/FilesWithCount'
-import { FileHolder } from './File'
+import { FileHolder } from '../models/FileHolder'
+import { FileUploadState } from '../models/FileUploadState'
 
 export interface FileRepository {
   getAllByDatasetPersistentId: (
@@ -38,6 +39,13 @@ export interface FileRepository {
     datasetId: number | string,
     file: FileHolder,
     progress: (now: number) => void,
-    abortController: AbortController
+    abortController: AbortController,
+    storageIdSetter: (storageId: string) => void
+  ) => Promise<void>
+  addUploadedFiles: (datasetId: number | string, files: FileUploadState[]) => Promise<void>
+  addUploadedFile: (
+    datasetId: number | string,
+    file: FileHolder,
+    storageId: string
   ) => Promise<void>
 }
