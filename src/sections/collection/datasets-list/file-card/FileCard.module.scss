@@ -42,12 +42,14 @@
 
 .info {
   display: flex;
+  color: $dv-subtext-color;
 }
 
 .description {
   display: flex;
   flex-direction: column;
   width: 100%;
+  color: black;
   font-size: $dv-font-size-sm;
 }
 

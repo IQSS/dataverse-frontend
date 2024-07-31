@@ -33,12 +33,15 @@ export class FilePreviewMother {
       ingest: FileIngestMother.createIngestNone(),
       metadata: FileMetadataMother.createDefault(),
       permissions: FilePermissionsMother.createWithGrantedPermissions(),
+      datasetName: 'Dataset Name',
+      someDatasetVersionHasBeenReleased: true,
       ...props
     })
   }
   static createWithDraft(): FilePreview {
     return this.createDefault({
-      datasetPublishingStatus: DatasetPublishingStatus.DRAFT
+      datasetPublishingStatus: DatasetPublishingStatus.DRAFT,
+      someDatasetVersionHasBeenReleased: false
     })
   }
 

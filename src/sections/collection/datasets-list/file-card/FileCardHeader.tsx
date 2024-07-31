@@ -12,17 +12,16 @@ import { FileIcon } from '../../../file/file-preview/FileIcon'
 import { DatasetLabels } from '../../../dataset/dataset-labels/DatasetLabels'
 
 interface FileCardHeaderProps {
-  persistentId: string
   filePreview: FilePreview
 }
 function getSearchParams(
-  persistentId: string,
+  id: number,
   publishingStatus: DatasetPublishingStatus
 ): Record<string, string> {
-  const params: Record<string, string> = { persistentId: persistentId }
+  const params: Record<string, string> = { id: id.toString() }
   if (publishingStatus === DatasetPublishingStatus.DRAFT) {
     // TODO: Replace with const after merge of #442
-    params.version = 'DRAFT'
+    params.datasetVersion = 'DRAFT'
   }
   return params
 }
@@ -44,13 +43,13 @@ function getDatasetLabels(
   }
   return labels
 }
-export function FileCardHeader({ persistentId, filePreview }: FileCardHeaderProps) {
+export function FileCardHeader({ filePreview }: FileCardHeaderProps) {
   return (
     <div className={styles.header}>
       <div className={styles.title}>
         <LinkToPage
           page={Route.FILES}
-          searchParams={getSearchParams(persistentId, filePreview.datasetPublishingStatus)}>
+          searchParams={getSearchParams(filePreview.id, filePreview.datasetPublishingStatus)}>
           {filePreview.name}
         </LinkToPage>
         <DatasetLabels
