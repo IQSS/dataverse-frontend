@@ -6,6 +6,7 @@ import { useGetCollectionMetadataBlocksNamesInfo } from './useGetCollectionMetad
 import { useGetAllMetadataBlocksInfoByName } from './useGetAllMetadataBlocksInfoByName'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { MetadataBlockName } from '../../dataset/domain/models/Dataset'
 import { useLoading } from '../loading/LoadingContext'
 import { useSession } from '../session/SessionContext'
 import { CollectionFormHelper } from './collection-form/CollectionFormHelper'
@@ -70,12 +71,12 @@ export function CreateCollection({
           return acc
         },
         {
-          citation: false,
-          geospatial: false,
-          socialscience: false,
-          astrophysics: false,
-          biomedical: false,
-          journal: false
+          [MetadataBlockName.CITATION]: false,
+          [MetadataBlockName.GEOSPATIAL]: false,
+          [MetadataBlockName.SOCIAL_SCIENCE]: false,
+          [MetadataBlockName.ASTROPHYSICS]: false,
+          [MetadataBlockName.BIOMEDICAL]: false,
+          [MetadataBlockName.JOURNAL]: false
         } as CollectionFormMetadataBlocks
       ),
     [metadataBlocksNamesInfo]

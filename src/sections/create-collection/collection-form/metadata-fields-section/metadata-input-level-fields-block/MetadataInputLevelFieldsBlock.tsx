@@ -1,4 +1,4 @@
-import { useId, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import { Button, Form, Stack } from '@iqss/dataverse-design-system'
 import { CloseButton } from 'react-bootstrap'
@@ -58,6 +58,16 @@ export const MetadataInputLevelFieldsBlock = ({
       asDisabled: false
     })
   }
+
+  // In order to close the table when use fields from parent change from unchecked to checked
+  useEffect(() => {
+    if (useFieldsFromParentCheckedValue) {
+      setInputLevelsTableStatus({
+        show: false,
+        asDisabled: false
+      })
+    }
+  }, [useFieldsFromParentCheckedValue])
 
   return (
     <Stack direction="vertical" gap={2}>

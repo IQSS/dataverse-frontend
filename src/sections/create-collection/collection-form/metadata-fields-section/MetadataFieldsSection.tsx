@@ -5,12 +5,17 @@ import { MetadataInputLevelFieldsBlock } from './metadata-input-level-fields-blo
 import { FieldsFromRootCheckbox } from './fields-from-root-checkbox/FieldsFromRootCheckbox'
 import { MetadataBlockName } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { CollectionFormHelper } from '../CollectionFormHelper'
+import { CollectionFormData } from '../CollectionForm'
 
 interface MetadataFieldsSectionProps {
   allMetadataBlocksInfo: ReducedMetadataBlockInfo[]
+  defaultValues: CollectionFormData
 }
 
-export const MetadataFieldsSection = ({ allMetadataBlocksInfo }: MetadataFieldsSectionProps) => {
+export const MetadataFieldsSection = ({
+  allMetadataBlocksInfo,
+  defaultValues
+}: MetadataFieldsSectionProps) => {
   const { t } = useTranslation('createCollection')
 
   const {
@@ -31,7 +36,7 @@ export const MetadataFieldsSection = ({ allMetadataBlocksInfo }: MetadataFieldsS
         <Form.Group.Text>{t('fields.metadataFields.helperText')}</Form.Group.Text>
         <Col className="mt-3">
           <Stack gap={2}>
-            <FieldsFromRootCheckbox />
+            <FieldsFromRootCheckbox defaultValues={defaultValues} />
 
             <MetadataInputLevelFieldsBlock
               blockName={MetadataBlockName.CITATION}

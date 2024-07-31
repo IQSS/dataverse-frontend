@@ -1,4 +1,4 @@
-import { ChangeEvent, useId } from 'react'
+import { useId } from 'react'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import cn from 'classnames'
 import { Form, Stack } from '@iqss/dataverse-design-system'
@@ -43,14 +43,12 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
             name={`${INPUT_LEVELS_GROUPER}.${name}.include`}
             control={control}
             rules={rules}
-            render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
+            render={({ field: { onChange, ref, value } }) => (
               <Form.Group.Checkbox
                 id={`${uniqueInputLevelRowID}-checkbox`}
                 onChange={onChange}
                 label={displayName}
                 checked={Boolean(value as boolean)}
-                isInvalid={invalid}
-                invalidFeedback={error?.message}
                 disabled={disabled || isRequiredByDataverse}
                 ref={ref}
               />
@@ -120,13 +118,8 @@ const RequiredAndOptionalRadios = ({
     <Controller
       name={fieldName}
       control={control}
-      render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => {
+      render={({ field: { onChange, ref, value } }) => {
         const castedValue = value as CollectionFormInputLevelValue
-
-        const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-          console.log(e)
-          onChange(e.target.value)
-        }
 
         if (!parentFieldChecked) {
           return (
@@ -147,7 +140,7 @@ const RequiredAndOptionalRadios = ({
           <Stack direction="horizontal">
             <Form.Group.Radio
               label="Required"
-              onChange={handleChange}
+              onChange={onChange}
               checked={castedValue === 'required'}
               value="required"
               name={`${uniqueInputLevelRowID}-radio-group`}
@@ -157,7 +150,7 @@ const RequiredAndOptionalRadios = ({
             />
             <Form.Group.Radio
               label="Optional"
-              onChange={handleChange}
+              onChange={onChange}
               checked={castedValue === 'optional'}
               value="optional"
               name={`${uniqueInputLevelRowID}-radio-group`}

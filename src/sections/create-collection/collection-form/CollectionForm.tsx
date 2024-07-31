@@ -31,7 +31,7 @@ export const REQUIRED_BY_DATAVERSE_FIELDS = [
   'subject'
 ] as const
 
-// TODO:ME Conditionally required Producer -> Producer Name
+// TODO:ME Ask in channel how to handle this case with the js-dataverse use case. Conditionally required Producer -> Producer Name
 
 export interface CollectionFormProps {
   collectionRepository: CollectionRepository
@@ -102,9 +102,6 @@ export const CollectionForm = ({
 
   const { formState } = form
 
-  console.log({ defaultValues })
-  // console.log(watch('inputLevels'))
-
   const preventEnterSubmit = (e: React.KeyboardEvent<HTMLFormElement | HTMLButtonElement>) => {
     // When pressing Enter, only submit the form  if the user is focused on the submit button itself
     if (e.key !== 'Enter') return
@@ -158,7 +155,10 @@ export const CollectionForm = ({
           <Stack>
             <Card>
               <Card.Body>
-                <MetadataFieldsSection allMetadataBlocksInfo={allMetadataBlocksInfo} />
+                <MetadataFieldsSection
+                  defaultValues={defaultValues}
+                  allMetadataBlocksInfo={allMetadataBlocksInfo}
+                />
               </Card.Body>
             </Card>
 

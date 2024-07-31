@@ -3,9 +3,16 @@ import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-
 import { Form } from '@iqss/dataverse-design-system'
 import { MetadataBlockName } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { ConfirmResetModificationsModal } from './ConfirmResetModificationsModal'
-import { METADATA_BLOCKS_NAMES_GROUPER, USE_FIELDS_FROM_PARENT } from '../../CollectionForm'
+import {
+  CollectionFormData,
+  CollectionFormMetadataBlocks,
+  INPUT_LEVELS_GROUPER,
+  METADATA_BLOCKS_NAMES_GROUPER,
+  USE_FIELDS_FROM_PARENT
+} from '../../CollectionForm'
 
-const ALL_INPUT_LEVEL_FIELDS_EXCEPT_CITATION = [
+const ALL_INPUT_LEVEL_FIELDS = [
+  MetadataBlockName.CITATION,
   MetadataBlockName.GEOSPATIAL,
   MetadataBlockName.SOCIAL_SCIENCE,
   MetadataBlockName.ASTROPHYSICS,
@@ -13,7 +20,11 @@ const ALL_INPUT_LEVEL_FIELDS_EXCEPT_CITATION = [
   MetadataBlockName.JOURNAL
 ]
 
-export const FieldsFromRootCheckbox = () => {
+interface FieldsFromRootCheckboxProps {
+  defaultValues: CollectionFormData
+}
+
+export const FieldsFromRootCheckbox = ({ defaultValues }: FieldsFromRootCheckboxProps) => {
   const checkboxID = useId()
   const { control, setValue } = useFormContext()
   const [showResetConfirmationModal, setShowResetConfirmationModal] = useState(false)
@@ -22,9 +33,18 @@ export const FieldsFromRootCheckbox = () => {
   const handleContinueWithReset = () => {
     setValue(USE_FIELDS_FROM_PARENT, true)
 
-    ALL_INPUT_LEVEL_FIELDS_EXCEPT_CITATION.forEach((blockName) => {
-      setValue(`${METADATA_BLOCKS_NAMES_GROUPER}.${blockName}`, false)
+    // Reset metadata block names checboxes to the inital value
+    ALL_INPUT_LEVEL_FIELDS.forEach((blockName) => {
+      const castedBlockName = blockName as keyof CollectionFormMetadataBlocks
+
+      setValue(
+        `${METADATA_BLOCKS_NAMES_GROUPER}.${blockName}`,
+        defaultValues[METADATA_BLOCKS_NAMES_GROUPER][castedBlockName]
+      )
     })
+
+    // Reset input levels to the initial value
+    setValue(INPUT_LEVELS_GROUPER, defaultValues[INPUT_LEVELS_GROUPER])
 
     closeModal()
   }
