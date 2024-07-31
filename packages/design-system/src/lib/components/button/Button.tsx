@@ -4,10 +4,12 @@ import { Button as ButtonBS } from 'react-bootstrap'
 import { IconName } from '../icon/IconName'
 import { Icon } from '../icon/Icon'
 
+type ButtonSize = 'sm' | 'lg'
 type ButtonVariant = 'primary' | 'secondary' | 'link'
 type ButtonType = 'button' | 'reset' | 'submit'
 
 interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
+  size?: ButtonSize
   variant?: ButtonVariant
   disabled?: boolean
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void
@@ -18,6 +20,7 @@ interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
 }
 
 export function Button({
+  size,
   variant = 'primary',
   disabled = false,
   onClick,
@@ -29,6 +32,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <ButtonBS
+      size={size}
       className={withSpacing ? styles.spacing : ''}
       variant={variant}
       onClick={disabled ? undefined : onClick}

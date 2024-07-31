@@ -27,3 +27,4 @@ export { RequiredInputSymbol } from './components/form/required-input-symbol/Req
 export { SelectAdvanced } from './components/select-advanced/SelectAdvanced'
 export { Card } from './components/card/Card'
 export { ProgressBar } from './components/progress-bar/ProgressBar'
+export { Stack } from './components/stack/Stack'

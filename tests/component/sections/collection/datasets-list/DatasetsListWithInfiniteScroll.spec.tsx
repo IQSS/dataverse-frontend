@@ -36,7 +36,7 @@ describe('Datasets List with Infinite Scroll', () => {
       <DatasetsListWithInfiniteScroll datasetRepository={datasetRepository} collectionId="root" />
     )
 
-    cy.findByText(/This dataverse currently has no datasets./).should('exist')
+    cy.findByText(/This collection currently has no datasets./).should('exist')
   })
 
   it('renders the first 10 datasets', () => {

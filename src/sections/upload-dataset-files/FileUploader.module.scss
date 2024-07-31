@@ -9,7 +9,34 @@
     grid-template-columns: repeat(4, auto);
 }
 
+.uploaded_files {
+    display: grid;
+    grid-template-columns: 4rem repeat(3, auto) 3.5rem;
+}
+
+.selected_file>div {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background-color: #ffc !important;
+}
+
+.file:nth-of-type(even)>div {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background-color: #f8f9fc;
+}
+
+.file:nth-of-type(odd)>div {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background-color: white;
+}
+
 .file {
+    display: contents;
+}
+
+.selected_file {
     display: contents;
 }
 
@@ -28,13 +55,11 @@
 }
 
 .cancel_upload {
-    padding: 0.25em;
+    padding-block: 0.1rem;
 }
 
 .upload_progress {
-    width: 10em;
-    margin-top: 0.25em;
-    padding: 0.25em;
+    min-width: 10em;
 }
 
 .icon {
@@ -46,4 +71,15 @@
     color: $dv-subtext-color;
     font-size: 1.3em;
     text-align: center;
+}
+
+.selected_files_checkbox {
+    display: inline-flex;
+    align-items: center;
+}
+
+.save_btn {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 1rem;
 }

@@ -2,15 +2,26 @@ import { FileSize, FileSizeUnit } from './FileMetadata'
 
 export interface FileUploadState {
   progress: number
+  storageId?: string
   progressHidden: boolean
   fileSizeString: string
+  fileSize: number
+  fileLastModified: number
   failed: boolean
   done: boolean
   removed: boolean
+  fileName: string
+  fileDir: string
+  fileType: string
+  key: string
+  description?: string
+  tags: string[]
+  restricted: boolean
 }
 
 export interface FileUploaderState {
   state: Map<string, FileUploadState>
+  uploaded: FileUploadState[]
 }
 
 export class FileUploadTools {
@@ -20,19 +31,28 @@ export class FileUploadTools {
       const key = this.key(file)
       const newValue: FileUploadState = {
         progress: 0,
+        storageId: undefined,
         progressHidden: true,
         fileSizeString: new FileSize(file.size, FileSizeUnit.BYTES).toString(),
+        fileSize: file.size,
+        fileLastModified: file.lastModified,
         failed: false,
         done: false,
-        removed: false
+        removed: false,
+        fileName: file.name,
+        fileDir: this.toDir(file.webkitRelativePath),
+        fileType: file.type,
+        key: key,
+        tags: [],
+        restricted: false
       }
       newState.set(key, newValue)
     })
-    return { state: newState }
+    return { state: newState, uploaded: this.toUploaded(newState) }
   }
 
   static key(file: File): string {
-    return file.webkitRelativePath + file.name
+    return file.webkitRelativePath ? file.webkitRelativePath : file.name
   }
 
   static get(file: File, state: FileUploaderState): FileUploadState {
@@ -44,28 +64,50 @@ export class FileUploadTools {
       progress: 0,
       progressHidden: true,
       fileSizeString: new FileSize(file.size, FileSizeUnit.BYTES).toString(),
+      fileSize: file.size,
+      fileLastModified: file.lastModified,
       failed: false,
       done: false,
-      removed: false
+      removed: false,
+      fileName: file.name,
+      fileDir: this.toDir(file.webkitRelativePath),
+      fileType: file.type,
+      key: this.key(file),
+      tags: [],
+      restricted: false
     }
   }
 
   static progress(file: File, now: number, oldState: FileUploaderState): FileUploaderState {
-    const [newState, newValue] = this.toNewState(file, oldState)
-    newValue.progress = now
-    return newState
+    const fileUploadState = oldState.state.get(this.key(file))
+    if (fileUploadState) {
+      fileUploadState.progress = now
+    }
+    return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
+  }
+
+  static storageId(file: File, id: string, oldState: FileUploaderState): FileUploaderState {
+    const fileUploadState = oldState.state.get(this.key(file))
+    if (fileUploadState) {
+      fileUploadState.storageId = id
+    }
+    return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
   }
 
   static failed(file: File, oldState: FileUploaderState): FileUploaderState {
-    const [newState, newValue] = this.toNewState(file, oldState)
-    newValue.failed = true
-    return newState
+    const fileUploadState = oldState.state.get(this.key(file))
+    if (fileUploadState) {
+      fileUploadState.failed = true
+    }
+    return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
   }
 
   static done(file: File, oldState: FileUploaderState): FileUploaderState {
-    const [newState, newValue] = this.toNewState(file, oldState)
-    newValue.done = true
-    return newState
+    const fileUploadState = oldState.state.get(this.key(file))
+    if (fileUploadState) {
+      fileUploadState.done = true
+    }
+    return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
   }
 
   static removed(file: File, oldState: FileUploaderState): FileUploaderState {
@@ -80,12 +122,31 @@ export class FileUploadTools {
     return newState
   }
 
+  static delete(file: File, oldState: FileUploaderState): FileUploaderState {
+    oldState.state.delete(this.key(file))
+    return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
+  }
+
   private static toNewState(
     file: File,
     oldState: FileUploaderState
   ): [FileUploaderState, FileUploadState] {
     const newValue = this.get(file, oldState)
     oldState.state.set(this.key(file), newValue)
-    return [{ state: oldState.state }, newValue]
+    return [{ state: oldState.state, uploaded: this.toUploaded(oldState.state) }, newValue]
+  }
+
+  private static toUploaded(state: Map<string, FileUploadState>): FileUploadState[] {
+    return Array.from(state.values())
+      .filter((x) => !x.removed && x.done)
+      .sort((a, b) => (a.fileDir + a.fileName).localeCompare(b.fileDir + b.fileName))
+  }
+
+  private static toDir(relativePath: string): string {
+    const parts = relativePath.split('/')
+    if (parts.length > 0) {
+      return parts.slice(0, parts.length - 1).join('/')
+    }
+    return relativePath
   }
 }

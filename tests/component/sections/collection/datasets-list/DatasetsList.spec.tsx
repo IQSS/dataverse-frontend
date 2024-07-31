@@ -28,7 +28,7 @@ describe('Datasets List', () => {
     datasetRepository.getAllWithCount = cy.stub().resolves(emptyDatasetsWithCount)
     cy.customMount(<DatasetsList datasetRepository={datasetRepository} collectionId="root" />)
 
-    cy.findByText(/This dataverse currently has no datasets./).should('exist')
+    cy.findByText(/This collection currently has no datasets./).should('exist')
   })
 
   it('renders the datasets list', () => {

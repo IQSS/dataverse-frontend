@@ -19,7 +19,7 @@ export const createColumnsDefinition = (
       <RowSelectionCheckbox
         {...{
           checked: table.getIsAllRowsSelected(),
-          indeterminate: table.getIsSomeRowsSelected(),
+          indeterminate: table.getIsSomePageRowsSelected(),
           onChange: table.getToggleAllRowsSelectedHandler(),
           disabled: table.getPageCount() === 0
         }}

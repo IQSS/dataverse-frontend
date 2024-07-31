@@ -1,0 +1,12 @@
+@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
+
+.restriction_form {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+.restriction_info {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    color: $dv-subtext-color;
+}

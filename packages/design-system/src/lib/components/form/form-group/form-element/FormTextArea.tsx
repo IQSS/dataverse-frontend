@@ -8,10 +8,11 @@ export interface FormTextAreaProps extends Omit<React.HTMLAttributes<FormInputEl
   isValid?: boolean
   isInvalid?: boolean
   value?: string
+  autoFocus?: boolean
 }
 
 export const FormTextArea = React.forwardRef(function FormTextArea(
-  { name, disabled, isValid, isInvalid, value, ...props }: FormTextAreaProps,
+  { name, disabled, isValid, isInvalid, value, autoFocus, ...props }: FormTextAreaProps,
   ref
 ) {
   return (
@@ -23,6 +24,7 @@ export const FormTextArea = React.forwardRef(function FormTextArea(
       isValid={isValid}
       isInvalid={isInvalid}
       value={value}
+      autoFocus={autoFocus}
       ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
       {...props}
     />
