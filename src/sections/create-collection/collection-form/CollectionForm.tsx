@@ -49,19 +49,28 @@ export type CollectionFormData = {
   contacts: { value: string }[]
   [USE_FIELDS_FROM_PARENT]: boolean
   [METADATA_BLOCKS_NAMES_GROUPER]: CollectionFormMetadataBlocks
-  [INPUT_LEVELS_GROUPER]?: FormattedCollectionInputLevels
+  [INPUT_LEVELS_GROUPER]: FormattedCollectionInputLevels
 }
-
-export type CollectionFormMetadataBlocks = Omit<
-  Record<MetadataBlockName, boolean>,
-  'codeMeta20' | 'computationalworkflow'
+export type CollectionFormMetadataBlock = Exclude<
+  MetadataBlockName,
+  MetadataBlockName.CODE_META | MetadataBlockName.COMPUTATIONAL_WORKFLOW
 >
+
+export type CollectionFormMetadataBlocks = Record<CollectionFormMetadataBlock, boolean>
 
 export type FormattedCollectionInputLevels = {
   [key: string]: {
     include: boolean
     optionalOrRequired: CollectionFormInputLevelValue
+    parentBlockName: CollectionFormMetadataBlock
   }
+}
+
+export type FormattedCollectionInputLevelsWithoutParentBlockName = {
+  [K in keyof FormattedCollectionInputLevels]: Omit<
+    FormattedCollectionInputLevels[K],
+    'parentBlockName'
+  >
 }
 
 export const CollectionFormInputLevelOptions = {

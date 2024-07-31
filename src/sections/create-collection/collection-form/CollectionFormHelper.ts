@@ -1,7 +1,16 @@
 import { CollectionInputLevel } from '../../../collection/domain/models/Collection'
+import {
+  CollectionDTO,
+  CollectionInputLevelDTO
+} from '../../../collection/domain/useCases/DTOs/CollectionDTO'
 import { MetadataBlockName } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { ReducedMetadataBlockInfo } from '../useGetAllMetadataBlocksInfoByName'
-import { FormattedCollectionInputLevels } from './CollectionForm'
+import {
+  CollectionFormMetadataBlock,
+  CollectionFormMetadataBlocks,
+  FormattedCollectionInputLevels,
+  FormattedCollectionInputLevelsWithoutParentBlockName
+} from './CollectionForm'
 
 export class CollectionFormHelper {
   public static replaceDotWithSlash = (str: string) => str.replace(/\./g, '/')
@@ -20,7 +29,8 @@ export class CollectionFormHelper {
 
         fields[normalizedFieldName] = {
           include: true,
-          optionalOrRequired: 'optional'
+          optionalOrRequired: 'optional',
+          parentBlockName: block.name as CollectionFormMetadataBlock
         }
 
         if (field.childMetadataFields) {
@@ -28,7 +38,8 @@ export class CollectionFormHelper {
             const normalizedFieldName = this.replaceDotWithSlash(childField.name)
             childFields[normalizedFieldName] = {
               include: true,
-              optionalOrRequired: 'optional'
+              optionalOrRequired: 'optional',
+              parentBlockName: block.name as CollectionFormMetadataBlock
             }
           })
         }
@@ -43,8 +54,8 @@ export class CollectionFormHelper {
 
   public static formatCollectiontInputLevels(
     collectionInputLevels: CollectionInputLevel[] | undefined
-  ): FormattedCollectionInputLevels {
-    const result: FormattedCollectionInputLevels = {}
+  ): FormattedCollectionInputLevelsWithoutParentBlockName {
+    const result: FormattedCollectionInputLevelsWithoutParentBlockName = {}
 
     if (!collectionInputLevels) {
       return result
@@ -60,6 +71,28 @@ export class CollectionFormHelper {
         optionalOrRequired: required ? 'required' : 'optional'
       }
     })
+    return result
+  }
+
+  public static mergeBaseAndDefaultInputLevels(
+    baseInputLevels: FormattedCollectionInputLevels,
+    defaultInputLevels: FormattedCollectionInputLevelsWithoutParentBlockName
+  ): FormattedCollectionInputLevels {
+    const result: FormattedCollectionInputLevels = { ...baseInputLevels }
+
+    for (const key in defaultInputLevels) {
+      if (baseInputLevels[key]) {
+        result[key] = {
+          ...baseInputLevels[key],
+          ...defaultInputLevels[key],
+          parentBlockName: baseInputLevels[key].parentBlockName
+        }
+      } else {
+        // TODO:ME Fix this ts error
+        result[key] = { ...defaultInputLevels[key] }
+      }
+    }
+
     return result
   }
 
@@ -105,5 +138,56 @@ export class CollectionFormHelper {
       biomedicalBlock,
       journalBlock
     }
+  }
+
+  public static formatFormMetadataBlockNamesToMetadataBlockNamesDTO(
+    formMetadataBlockNames: CollectionFormMetadataBlocks
+  ): string[] {
+    const result: CollectionDTO['metadataBlockNames'] = []
+
+    Object.entries(formMetadataBlockNames).forEach(([key, value]) => {
+      if (value) {
+        result.push(key)
+      }
+    })
+
+    return result
+  }
+
+  public static formatFormInputLevelsToInputLevelsDTO(
+    metadataBlockNamesSelected: string[],
+    formCollectionInputLevels: FormattedCollectionInputLevels
+  ): CollectionInputLevelDTO[] {
+    const normalizedInputLevels =
+      this.replaceSlashBackToDotsFromInputLevels(formCollectionInputLevels)
+
+    const result: CollectionInputLevelDTO[] = []
+
+    Object.entries(normalizedInputLevels).forEach(([key, value]) => {
+      if (metadataBlockNamesSelected.includes(value.parentBlockName)) {
+        result.push({
+          datasetFieldName: key,
+          include: value.include,
+          required: value.optionalOrRequired === 'required'
+        })
+      }
+    })
+
+    return result
+  }
+
+  private static replaceSlashBackToDotsFromInputLevels(
+    inputLevels: FormattedCollectionInputLevels
+  ): FormattedCollectionInputLevels {
+    const result: FormattedCollectionInputLevels = {}
+
+    Object.entries(inputLevels).forEach(([key, value]) => {
+      const replaceSlashWithDot = (str: string) => str.replace(/\//g, '.')
+      const normalizedFieldName = replaceSlashWithDot(key)
+
+      result[normalizedFieldName] = value
+    })
+
+    return result
   }
 }

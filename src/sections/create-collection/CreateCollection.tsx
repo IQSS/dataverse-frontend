@@ -15,6 +15,7 @@ import {
   CollectionFormData,
   CollectionFormMetadataBlocks,
   FormattedCollectionInputLevels,
+  FormattedCollectionInputLevelsWithoutParentBlockName,
   METADATA_BLOCKS_NAMES_GROUPER,
   USE_FIELDS_FROM_PARENT
 } from './collection-form/CollectionForm'
@@ -59,9 +60,10 @@ export function CreateCollection({
     return CollectionFormHelper.defineBaseInputLevels(allMetadataBlocksInfo)
   }, [allMetadataBlocksInfo])
 
-  const formDefaultInputLevels: FormattedCollectionInputLevels = useDeepCompareMemo(() => {
-    return CollectionFormHelper.formatCollectiontInputLevels(collection?.inputLevels)
-  }, [collection?.inputLevels])
+  const formDefaultInputLevels: FormattedCollectionInputLevelsWithoutParentBlockName =
+    useDeepCompareMemo(() => {
+      return CollectionFormHelper.formatCollectiontInputLevels(collection?.inputLevels)
+    }, [collection?.inputLevels])
 
   const defaultBlocksNames = useDeepCompareMemo(
     () =>
@@ -112,6 +114,12 @@ export function CreateCollection({
     return <CreateCollectionSkeleton />
   }
 
+  // TODO:ME use memo for this also?¿
+  const mergedInputLevels = CollectionFormHelper.mergeBaseAndDefaultInputLevels(
+    formBaseInputLevels,
+    formDefaultInputLevels
+  )
+
   const formDefaultValues: CollectionFormData = {
     hostCollection: collection.name,
     name: user?.displayName ? `${user?.displayName} Collection` : '',
@@ -123,10 +131,7 @@ export function CreateCollection({
     description: '',
     [USE_FIELDS_FROM_PARENT]: true,
     [METADATA_BLOCKS_NAMES_GROUPER]: defaultBlocksNames,
-    inputLevels: {
-      ...formBaseInputLevels,
-      ...formDefaultInputLevels
-    }
+    inputLevels: mergedInputLevels
   }
 
   return (
