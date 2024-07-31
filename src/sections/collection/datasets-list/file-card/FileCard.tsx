@@ -12,7 +12,7 @@ interface FileCardProps {
 export function FileCard({ filePreview, persistentId }: FileCardProps) {
   return (
     <article className={styles.container}>
-      <FileCardHeader persistentId={persistentId} filePreview={filePreview} />
+      <FileCardHeader filePreview={filePreview} />
       <div className={styles.info}>
         <FileCardThumbnail filePreview={filePreview} persistentId={persistentId} />
         <FileCardInfo filePreview={filePreview} persistentId={persistentId} />
