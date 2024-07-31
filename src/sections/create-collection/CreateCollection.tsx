@@ -98,7 +98,7 @@ export function CreateCollection({
     setIsLoading
   ])
 
-  // TODO:ME Instead show error of parent collection not found.
+  // TODO:ME Instead show error of "Parent collection not found" maybe?
   if (!isLoadingCollection && !collection) {
     return <PageNotFound />
   }

@@ -33,8 +33,6 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
 
   const rules: UseControllerProps['rules'] = {}
 
-  // TODO:ME Add label "Required by Dataverse" on specific Citation fields
-
   return (
     <>
       <tr className={styles['input-level-row']}>

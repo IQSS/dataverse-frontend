@@ -31,8 +31,6 @@ export const REQUIRED_BY_DATAVERSE_FIELDS = [
   'subject'
 ] as const
 
-// TODO:ME Ask in channel how to handle this case with the js-dataverse use case. Conditionally required Producer -> Producer Name
-
 export interface CollectionFormProps {
   collectionRepository: CollectionRepository
   ownerCollectionId: string

@@ -16,8 +16,6 @@ export class CreateCollectionFactory {
 function CreateCollectionWithParams() {
   const { ownerCollectionId = 'root' } = useParams<{ ownerCollectionId: string }>()
 
-  // TODO:ME What roles can create a collection, what checks to do?
-
   return (
     <CreateCollection
       ownerCollectionId={ownerCollectionId}

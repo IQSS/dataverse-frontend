@@ -45,8 +45,6 @@ export function useSubmitCollection(
   const submitForm = (formData: CollectionFormValuesOnSubmit): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
-    // TODO:ME js-dataverse cannot read properties of undefined (reading 'map')
-
     const newCollection: CollectionDTO = {
       name: formData.name,
       alias: formData.alias,
