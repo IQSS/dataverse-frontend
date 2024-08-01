@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react'
+import { ChangeEvent, useEffect, useId, useState } from 'react'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import { Button, Form, Stack } from '@iqss/dataverse-design-system'
 import { CloseButton } from 'react-bootstrap'
@@ -20,6 +20,7 @@ export const MetadataInputLevelFieldsBlock = ({
 }: MetadataInputLevelFieldsBlockProps) => {
   const checkboxID = useId()
   const { control } = useFormContext()
+
   const [inputLevelsTableStatus, setInputLevelsTableStatus] = useState({
     show: false,
     asDisabled: false
@@ -59,6 +60,21 @@ export const MetadataInputLevelFieldsBlock = ({
     })
   }
 
+  const handleIncludeBlockChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    formOnChange: (...event: unknown[]) => void
+  ) => {
+    // If input levels table is open, change the disabled status according to the block checked status
+    if (inputLevelsTableStatus.show) {
+      setInputLevelsTableStatus((currentStatus) => ({
+        ...currentStatus,
+        asDisabled: !e.target.checked
+      }))
+    }
+
+    formOnChange(e)
+  }
+
   // In order to close the table when use fields from parent change from unchecked to checked
   useEffect(() => {
     if (useFieldsFromParentCheckedValue) {
@@ -79,7 +95,7 @@ export const MetadataInputLevelFieldsBlock = ({
           render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
             <Form.Group.Checkbox
               id={checkboxID}
-              onChange={onChange}
+              onChange={(e) => handleIncludeBlockChange(e, onChange)}
               name={metadataBlockFieldName}
               label={blockDisplayName}
               checked={value as boolean}
