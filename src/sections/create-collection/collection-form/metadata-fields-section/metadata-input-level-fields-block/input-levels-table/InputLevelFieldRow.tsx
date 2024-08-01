@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { ChangeEvent, useId } from 'react'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import cn from 'classnames'
 import { Form, Stack } from '@iqss/dataverse-design-system'
@@ -17,7 +17,7 @@ interface InputLevelFieldRowProps {
 
 export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldRowProps) => {
   const uniqueInputLevelRowID = useId()
-  const { control } = useFormContext()
+  const { control, setValue } = useFormContext()
 
   const includeCheckboxValue = useWatch({
     name: `${INPUT_LEVELS_GROUPER}.${metadataField.name}.include`
@@ -33,6 +33,25 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
 
   const rules: UseControllerProps['rules'] = {}
 
+  const handleIncludeChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    formOnChange: (...event: unknown[]) => void
+  ) => {
+    if (e.target.checked === false) {
+      // If include is set to false, then optionalOrRequired should back to 'optional'
+      if (!childMetadataFields) {
+        setValue(`${INPUT_LEVELS_GROUPER}.${name}.optionalOrRequired`, 'optional')
+      } else {
+        Object.values(childMetadataFields).forEach(({ name }) => {
+          setValue(`${INPUT_LEVELS_GROUPER}.${name}.optionalOrRequired`, 'optional')
+        })
+      }
+      formOnChange(e)
+    } else {
+      formOnChange(e)
+    }
+  }
+
   return (
     <>
       <tr className={styles['input-level-row']}>
@@ -44,7 +63,7 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
             render={({ field: { onChange, ref, value } }) => (
               <Form.Group.Checkbox
                 id={`${uniqueInputLevelRowID}-checkbox`}
-                onChange={onChange}
+                onChange={(e) => handleIncludeChange(e, onChange)}
                 label={displayName}
                 checked={Boolean(value as boolean)}
                 disabled={disabled || isRequiredByDataverse}
