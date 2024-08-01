@@ -56,14 +56,21 @@ export function CreateCollection({
   const { allMetadataBlocksInfo, isLoading: isLoadingAllMetadataBlocksInfo } =
     useGetAllMetadataBlocksInfoByName({ metadataBlockInfoRepository })
 
-  const formBaseInputLevels: FormattedCollectionInputLevels = useDeepCompareMemo(() => {
+  const baseInputLevels: FormattedCollectionInputLevels = useDeepCompareMemo(() => {
     return CollectionFormHelper.defineBaseInputLevels(allMetadataBlocksInfo)
   }, [allMetadataBlocksInfo])
 
-  const formDefaultInputLevels: FormattedCollectionInputLevelsWithoutParentBlockName =
+  const formattedCollectionInputLevels: FormattedCollectionInputLevelsWithoutParentBlockName =
     useDeepCompareMemo(() => {
       return CollectionFormHelper.formatCollectiontInputLevels(collection?.inputLevels)
     }, [collection?.inputLevels])
+
+  const mergedInputLevels = useDeepCompareMemo(() => {
+    return CollectionFormHelper.mergeBaseAndDefaultInputLevels(
+      baseInputLevels,
+      formattedCollectionInputLevels
+    )
+  }, [baseInputLevels, formattedCollectionInputLevels])
 
   const defaultBlocksNames = useDeepCompareMemo(
     () =>
@@ -79,7 +86,7 @@ export function CreateCollection({
           [MetadataBlockName.ASTROPHYSICS]: false,
           [MetadataBlockName.BIOMEDICAL]: false,
           [MetadataBlockName.JOURNAL]: false
-        } as CollectionFormMetadataBlocks
+        }
       ),
     [metadataBlocksNamesInfo]
   )
@@ -113,12 +120,6 @@ export function CreateCollection({
   ) {
     return <CreateCollectionSkeleton />
   }
-
-  // TODO:ME use memo for this also?¿
-  const mergedInputLevels = CollectionFormHelper.mergeBaseAndDefaultInputLevels(
-    formBaseInputLevels,
-    formDefaultInputLevels
-  )
 
   const formDefaultValues: CollectionFormData = {
     hostCollection: collection.name,

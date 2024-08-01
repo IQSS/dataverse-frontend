@@ -76,20 +76,17 @@ export class CollectionFormHelper {
 
   public static mergeBaseAndDefaultInputLevels(
     baseInputLevels: FormattedCollectionInputLevels,
-    defaultInputLevels: FormattedCollectionInputLevelsWithoutParentBlockName
+    formattedCollectionInputLevels: FormattedCollectionInputLevelsWithoutParentBlockName
   ): FormattedCollectionInputLevels {
     const result: FormattedCollectionInputLevels = { ...baseInputLevels }
 
-    for (const key in defaultInputLevels) {
+    for (const key in formattedCollectionInputLevels) {
       if (baseInputLevels[key]) {
         result[key] = {
           ...baseInputLevels[key],
-          ...defaultInputLevels[key],
+          ...formattedCollectionInputLevels[key],
           parentBlockName: baseInputLevels[key].parentBlockName
         }
-      } else {
-        // TODO:ME Fix this ts error
-        result[key] = { ...defaultInputLevels[key] }
       }
     }
 
