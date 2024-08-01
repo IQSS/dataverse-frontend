@@ -1,6 +1,9 @@
 name: accessibility
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+    types: [opened, reopened]
 
 jobs:
   interaction-and-accessibility:

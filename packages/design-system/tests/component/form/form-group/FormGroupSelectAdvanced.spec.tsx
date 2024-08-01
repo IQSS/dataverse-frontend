@@ -1,11 +1,11 @@
 import { FormGroup } from '../../../../src/lib/components/form/form-group/FormGroup'
 
-describe('FormSelectMultiple', () => {
+describe('FormSelectAdvanced', () => {
   it('renders without error', () => {
     cy.mount(
-      <FormGroup controlId="some-id">
-        <FormGroup.Label>Hobbies</FormGroup.Label>
-        <FormGroup.SelectMultiple
+      <FormGroup>
+        <FormGroup.Label htmlFor="some-id">Hobbies</FormGroup.Label>
+        <FormGroup.SelectAdvanced
           options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
           inputButtonId="some-id"
         />
@@ -17,9 +17,9 @@ describe('FormSelectMultiple', () => {
 
   it('should focus on the input button when the label is clicked', () => {
     cy.mount(
-      <FormGroup controlId="some-id">
-        <FormGroup.Label>Hobbies</FormGroup.Label>
-        <FormGroup.SelectMultiple
+      <FormGroup>
+        <FormGroup.Label htmlFor="some-id">Hobbies</FormGroup.Label>
+        <FormGroup.SelectAdvanced
           options={['Reading', 'Swimming', 'Running', 'Cycling', 'Cooking', 'Gardening']}
           inputButtonId="some-id"
         />

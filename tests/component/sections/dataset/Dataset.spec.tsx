@@ -14,10 +14,13 @@ import { FilesCountInfoMother } from '../../files/domain/models/FilesCountInfoMo
 import { FileType } from '../../../../src/files/domain/models/FileMetadata'
 import { FileAccessOption, FileTag } from '../../../../src/files/domain/models/FileCriteria'
 import { AlertProvider } from '../../../../src/sections/alerts/AlertProvider'
+import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 
 const setAnonymizedView = () => {}
 const fileRepository: FileRepository = {} as FileRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
+const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
 
 const TOTAL_FILES_COUNT = 200
 const allFiles = FilePreviewMother.createMany(TOTAL_FILES_COUNT)
@@ -66,6 +69,9 @@ describe('Dataset', () => {
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
     fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(19900)
 
+    const metadataBlockInfoMock = MetadataBlockInfoMother.create()
+    metadataBlockInfoRepository.getByName = cy.stub().resolves(metadataBlockInfoMock)
+
     cy.customMount(
       <LoadingProvider>
         <AlertProvider>
@@ -83,7 +89,11 @@ describe('Dataset', () => {
     const testDataset = DatasetMother.create()
 
     mountWithDataset(
-      <Dataset datasetRepository={datasetRepository} fileRepository={fileRepository} />,
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />,
       testDataset
     )
 
@@ -95,7 +105,11 @@ describe('Dataset', () => {
     const emptyDataset = DatasetMother.createEmpty()
 
     mountWithDataset(
-      <Dataset datasetRepository={datasetRepository} fileRepository={fileRepository} />,
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />,
       emptyDataset
     )
 
@@ -109,6 +123,7 @@ describe('Dataset', () => {
         created={true}
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
       />,
       dataset
     )
@@ -124,6 +139,7 @@ describe('Dataset', () => {
         publishInProgress={true}
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
       />,
       dataset
     )
@@ -135,7 +151,11 @@ describe('Dataset', () => {
     const testDataset = DatasetMother.create()
 
     mountWithDataset(
-      <Dataset datasetRepository={datasetRepository} fileRepository={fileRepository} />,
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />,
       testDataset
     )
 
@@ -147,7 +167,11 @@ describe('Dataset', () => {
     const testDataset = DatasetMother.create()
 
     mountWithDataset(
-      <Dataset datasetRepository={datasetRepository} fileRepository={fileRepository} />,
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />,
       testDataset
     )
 
@@ -162,7 +186,11 @@ describe('Dataset', () => {
     const testDataset = DatasetMother.create()
 
     mountWithDataset(
-      <Dataset datasetRepository={datasetRepository} fileRepository={fileRepository} />,
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />,
       testDataset
     )
 
@@ -180,7 +208,11 @@ describe('Dataset', () => {
     const testDatasetAnonymized = DatasetMother.createAnonymized()
 
     mountWithDataset(
-      <Dataset datasetRepository={datasetRepository} fileRepository={fileRepository} />,
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />,
       testDatasetAnonymized
     )
 
@@ -193,7 +225,11 @@ describe('Dataset', () => {
     const testDataset = DatasetMother.create()
 
     mountWithDataset(
-      <Dataset datasetRepository={datasetRepository} fileRepository={fileRepository} />,
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />,
       testDataset
     )
 
@@ -207,6 +243,7 @@ describe('Dataset', () => {
       <Dataset
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
         filesTabInfiniteScrollEnabled={true}
       />,
       testDataset
@@ -224,6 +261,7 @@ describe('Dataset', () => {
         <Dataset
           datasetRepository={datasetRepository}
           fileRepository={fileRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
           created={true}
         />
       </AlertProvider>,
@@ -242,6 +280,7 @@ describe('Dataset', () => {
         <Dataset
           datasetRepository={datasetRepository}
           fileRepository={fileRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
           metadataUpdated={true}
         />
       </AlertProvider>,

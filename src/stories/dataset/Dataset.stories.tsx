@@ -5,7 +5,6 @@ import { Dataset } from '../../sections/dataset/Dataset'
 import { WithAnonymizedView } from './WithAnonymizedView'
 import { WithDatasetPrivateUrl } from './WithDatasetPrivateUrl'
 import { FileMockRepository } from '../file/FileMockRepository'
-import { WithCitationMetadataBlockInfo } from './WithCitationMetadataBlockInfo'
 import { FileMockNoDataRepository } from '../file/FileMockNoDataRepository'
 import { WithSettings } from '../WithSettings'
 import { WithDataset } from './WithDataset'
@@ -16,12 +15,13 @@ import { WithLoggedInUser } from '../WithLoggedInUser'
 import { WithAlerts } from '../WithAlerts'
 import { WithDeaccessionedDataset } from './WithDeaccessionedDataset'
 import { WithNotImplementedModal } from '../WithNotImplementedModal'
+import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 import { DatasetMockRepository } from './DatasetMockRepository'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
   component: Dataset,
-  decorators: [WithI18next, WithCitationMetadataBlockInfo, WithSettings, WithAlerts],
+  decorators: [WithI18next, WithSettings, WithAlerts],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
@@ -37,6 +37,7 @@ export const Default: Story = {
     <Dataset
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       filesTabInfiniteScrollEnabled
     />
   )
@@ -47,6 +48,7 @@ export const WithNormalPagination: Story = {
     <Dataset
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
     />
   )
 }
@@ -57,6 +59,7 @@ export const Created: Story = {
     <Dataset
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       created={true}
       filesTabInfiniteScrollEnabled
     />
@@ -69,6 +72,7 @@ export const MetadataUpdated: Story = {
     <Dataset
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       metadataUpdated={true}
     />
   )
@@ -79,6 +83,7 @@ export const DraftWithAllDatasetPermissions: Story = {
     <Dataset
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       filesTabInfiniteScrollEnabled
     />
   )
@@ -89,6 +94,7 @@ export const Deaccessioned: Story = {
     <Dataset
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       filesTabInfiniteScrollEnabled
     />
   )
@@ -99,6 +105,7 @@ export const LoggedInAsOwner: Story = {
     <Dataset
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       filesTabInfiniteScrollEnabled
     />
   )
@@ -108,8 +115,9 @@ export const Loading: Story = {
   decorators: [WithLayout, WithDatasetLoading],
   render: () => (
     <Dataset
-      fileRepository={new FileMockRepository()}
       datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       filesTabInfiniteScrollEnabled
     />
   )
@@ -121,6 +129,7 @@ export const DatasetNotFound: Story = {
     <Dataset
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       filesTabInfiniteScrollEnabled
     />
   )
@@ -132,6 +141,7 @@ export const DatasetAnonymizedView: Story = {
     <Dataset
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       filesTabInfiniteScrollEnabled
     />
   )
@@ -141,8 +151,9 @@ export const DatasetWithNoFiles: Story = {
   decorators: [WithLayout, WithAnonymizedView, WithDataset],
   render: () => (
     <Dataset
-      fileRepository={new FileMockNoDataRepository()}
       datasetRepository={new DatasetMockRepository()}
+      fileRepository={new FileMockNoDataRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       filesTabInfiniteScrollEnabled
     />
   )

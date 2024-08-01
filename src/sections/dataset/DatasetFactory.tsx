@@ -6,7 +6,6 @@ import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repos
 import { useAnonymized } from './anonymized/AnonymizedContext'
 import { AnonymizedProvider } from './anonymized/AnonymizedProvider'
 import { FileJSDataverseRepository } from '../../files/infrastructure/FileJSDataverseRepository'
-import { MetadataBlockInfoProvider } from './metadata-block-info/MetadataBlockProvider'
 import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
 import { SettingJSDataverseRepository } from '../../settings/infrastructure/SettingJSDataverseRepository'
 import { SettingsProvider } from '../settings/SettingsProvider'
@@ -20,6 +19,7 @@ import { FILES_TAB_INFINITE_SCROLL_ENABLED } from './config'
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
+
 const settingRepository = new SettingJSDataverseRepository()
 
 export class DatasetFactory {
@@ -28,13 +28,11 @@ export class DatasetFactory {
       <MultipleFileDownloadProvider repository={fileRepository}>
         <SettingsProvider repository={settingRepository}>
           <NotImplementedModalProvider>
-            <MetadataBlockInfoProvider repository={metadataBlockInfoRepository}>
-              <AnonymizedProvider>
-                <AlertProvider>
-                  <DatasetWithSearchParams />
-                </AlertProvider>
-              </AnonymizedProvider>
-            </MetadataBlockInfoProvider>
+            <AnonymizedProvider>
+              <AlertProvider>
+                <DatasetWithSearchParams />
+              </AlertProvider>
+            </AnonymizedProvider>
           </NotImplementedModalProvider>
         </SettingsProvider>
       </MultipleFileDownloadProvider>
@@ -69,6 +67,7 @@ function DatasetWithSearchParams() {
         <Dataset
           datasetRepository={datasetRepository}
           fileRepository={fileRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
           filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
         />
       </DatasetProvider>
@@ -82,6 +81,7 @@ function DatasetWithSearchParams() {
       <Dataset
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
         created={created}
         publishInProgress={publishInProgress}
         metadataUpdated={metadataUpdated}

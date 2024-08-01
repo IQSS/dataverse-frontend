@@ -1,4 +1,3 @@
-import { useMetadataBlockInfo } from '../../metadata-block-info/MetadataBlockInfoContext'
 import {
   METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
   METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER,
@@ -16,19 +15,22 @@ interface DatasetMetadataFieldValueFormattedProps {
   metadataBlockName: MetadataBlockName
   metadataFieldName: string
   metadataFieldValue: DatasetMetadataFieldValueModel
+  metadataBlockDisplayFormatInfo: MetadataBlockInfoDisplayFormat
 }
 export function DatasetMetadataFieldValueFormatted({
   metadataBlockName,
   metadataFieldName,
-  metadataFieldValue
+  metadataFieldValue,
+  metadataBlockDisplayFormatInfo
 }: DatasetMetadataFieldValueFormattedProps) {
   const { t } = useTranslation(metadataBlockName)
-  const { metadataBlockInfo } = useMetadataBlockInfo()
+
   const valueFormatted = metadataFieldValueToDisplayFormat(
     metadataFieldName,
     metadataFieldValue,
-    metadataBlockInfo
+    metadataBlockDisplayFormatInfo
   )
+
   const valueFormattedWithNamesTranslated = valueFormatted.replaceAll(
     METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
     t(`${metadataBlockName}.datasetField.${metadataFieldName}.name`)
@@ -92,7 +94,7 @@ function formatSubFieldValue(
     return ''
   }
 
-  if (displayFormat === undefined) {
+  if (!displayFormat) {
     return subFieldValue
   }
 

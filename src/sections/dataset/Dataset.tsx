@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
+import styles from './Dataset.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { DatasetLabels } from './dataset-labels/DatasetLabels'
 import { useLoading } from '../loading/LoadingContext'
@@ -22,12 +23,13 @@ import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 import { DatasetFilesScrollable } from './dataset-files/DatasetFilesScrollable'
 import useCheckPublishCompleted from './useCheckPublishCompleted'
 import useUpdateDatasetAlerts from './useUpdateDatasetAlerts'
-import styles from './Dataset.module.scss'
 import { Route } from '../Route.enum'
+import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 
 interface DatasetProps {
-  fileRepository: FileRepository
   datasetRepository: DatasetRepository
+  fileRepository: FileRepository
+  metadataBlockInfoRepository: MetadataBlockInfoRepository
   created?: boolean
   metadataUpdated?: boolean
   filesTabInfiniteScrollEnabled?: boolean
@@ -35,8 +37,9 @@ interface DatasetProps {
 }
 
 export function Dataset({
-  fileRepository,
   datasetRepository,
+  fileRepository,
+  metadataBlockInfoRepository,
   created,
   metadataUpdated,
   filesTabInfiniteScrollEnabled,
@@ -104,7 +107,11 @@ export function Dataset({
               </Row>
               <Row>
                 <Col sm={9} className={styles['summary-container']}>
-                  <DatasetSummary summaryFields={dataset.summaryFields} license={dataset.license} />
+                  <DatasetSummary
+                    summaryFields={dataset.summaryFields}
+                    license={dataset.license}
+                    metadataBlockInfoRepository={metadataBlockInfoRepository}
+                  />
                 </Col>
               </Row>
               {publishInProgress && <TabsSkeleton />}
@@ -133,12 +140,12 @@ export function Dataset({
                       <DatasetMetadata
                         persistentId={dataset.persistentId}
                         metadataBlocks={dataset.metadataBlocks}
+                        metadataBlockInfoRepository={metadataBlockInfoRepository}
                       />
                     </div>
                   </Tabs.Tab>
                 </Tabs>
               )}
-
               <SeparationLine />
             </div>
           </article>
