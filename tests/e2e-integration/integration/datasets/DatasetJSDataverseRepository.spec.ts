@@ -6,6 +6,7 @@ import {
   DatasetLabel,
   DatasetLabelSemanticMeaning,
   DatasetLockReason,
+  DatasetNonNumericVersion,
   DatasetPublishingStatus,
   DatasetVersion,
   MetadataBlockName
@@ -19,6 +20,7 @@ import {
 import { DatasetPaginationInfo } from '../../../../src/dataset/domain/models/DatasetPaginationInfo'
 import { DatasetDTO } from '../../../../src/dataset/domain/useCases/DTOs/DatasetDTO'
 import { CollectionHelper } from '../../shared/collection/CollectionHelper'
+const DRAFT_PARAM = DatasetNonNumericVersion.DRAFT
 import { VersionUpdateType } from '../../../../src/dataset/domain/models/VersionUpdateType'
 
 chai.use(chaiAsPromised)
@@ -143,23 +145,25 @@ describe('Dataset JSDataverse Repository', () => {
   it('gets the dataset by persistentId', async () => {
     const datasetResponse = await DatasetHelper.create(collectionId)
 
-    await datasetRepository.getByPersistentId(datasetResponse.persistentId).then((dataset) => {
-      if (!dataset) {
-        throw new Error('Dataset not found')
-      }
-      const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
+    await datasetRepository
+      .getByPersistentId(datasetResponse.persistentId, DRAFT_PARAM)
+      .then((dataset) => {
+        if (!dataset) {
+          throw new Error('Dataset not found')
+        }
+        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
-      expect(dataset.license).to.deep.equal(datasetExpected.license)
-      expect(dataset.metadataBlocks).to.deep.equal(datasetExpected.metadataBlocks)
-      expect(dataset.summaryFields).to.deep.equal(datasetExpected.summaryFields)
-      expect(dataset.version).to.deep.equal(datasetExpected.version)
-      expect(dataset.metadataBlocks[0].fields.publicationDate).not.to.exist
-      expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
-      expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
-      expect(dataset.locks).to.deep.equal(datasetExpected.locks)
-      expect(dataset.downloadUrls).to.deep.equal(datasetExpected.downloadUrls)
-      expect(dataset.fileDownloadSizes).to.deep.equal(datasetExpected.fileDownloadSizes)
-    })
+        expect(dataset.license).to.deep.equal(datasetExpected.license)
+        expect(dataset.metadataBlocks).to.deep.equal(datasetExpected.metadataBlocks)
+        expect(dataset.summaryFields).to.deep.equal(datasetExpected.summaryFields)
+        expect(dataset.version).to.deep.equal(datasetExpected.version)
+        expect(dataset.metadataBlocks[0].fields.publicationDate).not.to.exist
+        expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
+        expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
+        expect(dataset.locks).to.deep.equal(datasetExpected.locks)
+        expect(dataset.downloadUrls).to.deep.equal(datasetExpected.downloadUrls)
+        expect(dataset.fileDownloadSizes).to.deep.equal(datasetExpected.fileDownloadSizes)
+      })
   })
 
   it('gets a published dataset by persistentId without user authentication', async () => {
@@ -248,7 +252,7 @@ describe('Dataset JSDataverse Repository', () => {
     const datasetResponse = await DatasetHelper.create(collectionId)
 
     await datasetRepository
-      .getByPersistentId(datasetResponse.persistentId, 'DRAFT')
+      .getByPersistentId(datasetResponse.persistentId, DRAFT_PARAM)
       .then((dataset) => {
         if (!dataset) {
           throw new Error('Dataset not found')
@@ -339,20 +343,22 @@ describe('Dataset JSDataverse Repository', () => {
     const datasetResponse = await DatasetHelper.create(collectionId)
     await DatasetHelper.lock(datasetResponse.id, DatasetLockReason.FINALIZE_PUBLICATION)
 
-    await datasetRepository.getByPersistentId(datasetResponse.persistentId).then((dataset) => {
-      if (!dataset) {
-        throw new Error('Dataset not found')
-      }
-      const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
-
-      expect(dataset.version.title).to.deep.equal(datasetExpected.title)
-      expect(dataset.locks).to.deep.equal([
-        {
-          userPersistentId: 'dataverseAdmin',
-          reason: DatasetLockReason.FINALIZE_PUBLICATION
+    await datasetRepository
+      .getByPersistentId(datasetResponse.persistentId, DRAFT_PARAM)
+      .then((dataset) => {
+        if (!dataset) {
+          throw new Error('Dataset not found')
         }
-      ])
-    })
+        const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
+
+        expect(dataset.version.title).to.deep.equal(datasetExpected.title)
+        expect(dataset.locks).to.deep.equal([
+          {
+            userPersistentId: 'dataverseAdmin',
+            reason: DatasetLockReason.FINALIZE_PUBLICATION
+          }
+        ])
+      })
   })
 
   it('creates a new dataset from DatasetDTO', async () => {

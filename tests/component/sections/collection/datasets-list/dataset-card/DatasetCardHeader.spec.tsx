@@ -1,5 +1,6 @@
 import { DatasetCardHeader } from '../../../../../../src/sections/collection/datasets-list/dataset-card/DatasetCardHeader'
 import { DatasetPreviewMother } from '../../../../dataset/domain/models/DatasetPreviewMother'
+import { DatasetNonNumericVersionSearchParam } from '../../../../../../src/dataset/domain/models/Dataset'
 
 describe('DatasetCardHeader', () => {
   it('should render the header', () => {
@@ -24,6 +25,6 @@ describe('DatasetCardHeader', () => {
 
     cy.findByText(dataset.version.title)
       .should('exist')
-      .should('have.attr', 'href', `/datasets?persistentId=${dataset.persistentId}`)
+      .should('have.attr', 'href', `/datasets?persistentId=${dataset.persistentId}&version=DRAFT`)
   })
 })

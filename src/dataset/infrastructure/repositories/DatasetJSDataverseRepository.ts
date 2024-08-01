@@ -1,5 +1,5 @@
 import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
-import { Dataset, DatasetLock } from '../../domain/models/Dataset'
+import { Dataset, DatasetLock, DatasetNonNumericVersion } from '../../domain/models/Dataset'
 import {
   getDataset,
   getAllDatasetPreviews,
@@ -124,7 +124,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
 
   getByPersistentId(
     persistentId: string,
-    version?: string,
+    version: string = DatasetNonNumericVersion.LATEST_PUBLISHED,
     requestedVersion?: string
   ): Promise<Dataset | undefined> {
     return getDataset
@@ -155,10 +155,14 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
       .catch((error: ReadError) => {
         console.error(error)
-        if (!version) {
+        if (version === DatasetNonNumericVersion.LATEST_PUBLISHED) {
           throw new Error(`Failed to get dataset by persistent ID: ${error.message}`)
         }
-        return this.getByPersistentId(persistentId, undefined, (requestedVersion = version))
+        return this.getByPersistentId(
+          persistentId,
+          DatasetNonNumericVersion.LATEST_PUBLISHED,
+          (requestedVersion = version)
+        )
       })
   }
   getByPrivateUrlToken(privateUrlToken: string): Promise<Dataset | undefined> {
