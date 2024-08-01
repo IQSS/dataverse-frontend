@@ -4,7 +4,10 @@ import {
   CollectionInputLevelDTO
 } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
 import { MetadataBlockName } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { ReducedMetadataBlockInfo } from '../useGetAllMetadataBlocksInfoByName'
+import {
+  ReducedMetadataBlockInfo,
+  ReducedMetadataFieldInfo
+} from '../useGetAllMetadataBlocksInfoByName'
 import {
   CollectionFormMetadataBlock,
   CollectionFormMetadataBlocks,
@@ -186,5 +189,17 @@ export class CollectionFormHelper {
     })
 
     return result
+  }
+
+  public static getChildFieldSiblings = (
+    childMetadataFields: Record<string, ReducedMetadataFieldInfo>,
+    targetChildFieldName: string
+  ): Record<string, ReducedMetadataFieldInfo> => {
+    return Object.entries(childMetadataFields)
+      .filter(([_key, { name }]) => name !== targetChildFieldName)
+      .reduce((acc, [key, field]) => {
+        acc[key] = field
+        return acc
+      }, {} as Record<string, ReducedMetadataFieldInfo>)
   }
 }

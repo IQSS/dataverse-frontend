@@ -24,8 +24,10 @@ export interface ReducedMetadataBlockInfo {
   metadataFields: Record<string, ReducedMetadataFieldInfo>
 }
 
-export type ReducedMetadataFieldInfo = Pick<MetadataField, 'name' | 'displayName'> & {
-  childMetadataFields?: Record<string, Pick<MetadataField, 'name' | 'displayName'>>
+export type ReducedMetadataFieldsAndChildsInfo = Pick<MetadataField, 'name' | 'displayName'>
+
+export type ReducedMetadataFieldInfo = ReducedMetadataFieldsAndChildsInfo & {
+  childMetadataFields?: Record<string, ReducedMetadataFieldsAndChildsInfo>
 }
 
 const blocksNames: MetadataBlockName[] = [

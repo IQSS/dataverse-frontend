@@ -45,8 +45,7 @@ export function CreateCollection({
     ownerCollectionId
   )
 
-  // TODO:ME Maybe in edit mode collection id should not be on the owner but on the collection itself, but this can perhaps be differentiated by page.
-  // That is to say, in this create page, it is good to get on the parent, in the edit page on the same collection.
+  // TODO:ME In edit mode, collection id should not be from the collection owner but from the collection being edited, but this can perhaps be differentiated by page.
   const { metadataBlocksNamesInfo, isLoading: isLoadingMetadataBlocksNamesInfo } =
     useGetCollectionMetadataBlocksNamesInfo({
       collectionId: ownerCollectionId,
@@ -107,7 +106,6 @@ export function CreateCollection({
     setIsLoading
   ])
 
-  // TODO:ME Instead show error of "Parent collection not found" maybe?
   if (!isLoadingCollection && !collection) {
     return <PageNotFound />
   }

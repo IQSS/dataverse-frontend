@@ -1,14 +1,12 @@
 import { ChangeEvent, useId } from 'react'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import cn from 'classnames'
-import { Form, Stack } from '@iqss/dataverse-design-system'
-import { ReducedMetadataFieldInfo } from '../useGetBlockMetadataInputLevelFields'
-import {
-  CollectionFormInputLevelValue,
-  INPUT_LEVELS_GROUPER,
-  REQUIRED_BY_DATAVERSE_FIELDS
-} from '../../../CollectionForm'
+import { Form } from '@iqss/dataverse-design-system'
+import { ReducedMetadataFieldInfo } from '../../../../useGetAllMetadataBlocksInfoByName'
+import { INPUT_LEVELS_GROUPER, REQUIRED_BY_DATAVERSE_FIELDS } from '../../../CollectionForm'
 import styles from './InputLevelsTable.module.scss'
+import { CollectionFormHelper } from '../../../CollectionFormHelper'
+import { RequiredOptionalRadios } from './RequiredOptionalRadios'
 
 interface InputLevelFieldRowProps {
   metadataField: ReducedMetadataFieldInfo
@@ -38,11 +36,14 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
     formOnChange: (...event: unknown[]) => void
   ) => {
     if (e.target.checked === false) {
-      // If include is set to false, then optionalOrRequired should back to 'optional'
+      // If include is set to false, then field and child fields should be set to optional and include false
       if (!childMetadataFields) {
         setValue(`${INPUT_LEVELS_GROUPER}.${name}.optionalOrRequired`, 'optional')
       } else {
+        setValue(`${INPUT_LEVELS_GROUPER}.${name}.optionalOrRequired`, 'optional')
+
         Object.values(childMetadataFields).forEach(({ name }) => {
+          setValue(`${INPUT_LEVELS_GROUPER}.${name}.include`, false)
           setValue(`${INPUT_LEVELS_GROUPER}.${name}.optionalOrRequired`, 'optional')
         })
       }
@@ -77,8 +78,9 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
             <span className={styles['required-by-dataverse-label']}>Required by Dataverse</span>
           )}
           {!childMetadataFields && !isRequiredByDataverse && (
-            <RequiredAndOptionalRadios
+            <RequiredOptionalRadios
               disabled={disabled}
+              isForChildField={false}
               parentFieldChecked={includeCheckboxValue}
               uniqueInputLevelRowID={uniqueInputLevelRowID}
               fieldName={`${INPUT_LEVELS_GROUPER}.${name}.optionalOrRequired`}
@@ -102,8 +104,14 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
               {isChildFieldRequiredByDataverse(childField.name) ? (
                 <span className={styles['required-by-dataverse-label']}>Required by Dataverse</span>
               ) : (
-                <RequiredAndOptionalRadios
+                <RequiredOptionalRadios
                   disabled={disabled}
+                  isForChildField={true}
+                  siblingChildFields={CollectionFormHelper.getChildFieldSiblings(
+                    childMetadataFields,
+                    childField.name
+                  )}
+                  parentIncludeName={name}
                   parentFieldChecked={includeCheckboxValue}
                   uniqueInputLevelRowID={`${uniqueInputLevelRowID}-${childField.name}`}
                   fieldName={`${INPUT_LEVELS_GROUPER}.${childField.name}.optionalOrRequired`}
@@ -113,71 +121,5 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
           </tr>
         ))}
     </>
-  )
-}
-
-interface RequiredAndOptionalRadiosProps {
-  disabled: boolean
-  fieldName: string
-  parentFieldChecked: boolean
-  uniqueInputLevelRowID: string
-}
-
-const RequiredAndOptionalRadios = ({
-  disabled,
-  fieldName,
-  parentFieldChecked,
-  uniqueInputLevelRowID
-}: RequiredAndOptionalRadiosProps) => {
-  const { control } = useFormContext()
-
-  return (
-    <Controller
-      name={fieldName}
-      control={control}
-      render={({ field: { onChange, ref, value } }) => {
-        const castedValue = value as CollectionFormInputLevelValue
-
-        if (!parentFieldChecked) {
-          return (
-            <Form.Group.Radio
-              label="Hidden"
-              checked={true}
-              value="required"
-              name={`${uniqueInputLevelRowID}-${fieldName}-hidden-radio`}
-              id={`${uniqueInputLevelRowID}-${fieldName}-hidden-radio`}
-              readOnly
-              disabled
-              ref={ref}
-            />
-          )
-        }
-
-        return (
-          <Stack direction="horizontal">
-            <Form.Group.Radio
-              label="Required"
-              onChange={onChange}
-              checked={castedValue === 'required'}
-              value="required"
-              name={`${uniqueInputLevelRowID}-radio-group`}
-              id={`${uniqueInputLevelRowID}-required-radio`}
-              disabled={disabled}
-              ref={ref}
-            />
-            <Form.Group.Radio
-              label="Optional"
-              onChange={onChange}
-              checked={castedValue === 'optional'}
-              value="optional"
-              name={`${uniqueInputLevelRowID}-radio-group`}
-              id={`${uniqueInputLevelRowID}-optional-radio`}
-              disabled={disabled}
-              ref={ref}
-            />
-          </Stack>
-        )
-      }}
-    />
   )
 }
