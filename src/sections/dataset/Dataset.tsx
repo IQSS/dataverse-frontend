@@ -21,9 +21,11 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useAlertContext } from '../alerts/AlertContext'
 import { AlertMessageKey } from '../../alert/domain/models/Alert'
 import { DatasetFilesScrollable } from './dataset-files/DatasetFilesScrollable'
+import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 
 interface DatasetProps {
   fileRepository: FileRepository
+  metadataBlockInfoRepository: MetadataBlockInfoRepository
   created?: boolean
   metadataUpdated?: boolean
   filesTabInfiniteScrollEnabled?: boolean
@@ -31,6 +33,7 @@ interface DatasetProps {
 
 export function Dataset({
   fileRepository,
+  metadataBlockInfoRepository,
   created,
   metadataUpdated,
   filesTabInfiniteScrollEnabled
@@ -90,7 +93,11 @@ export function Dataset({
               </Row>
               <Row>
                 <Col sm={9} className={styles['summary-container']}>
-                  <DatasetSummary summaryFields={dataset.summaryFields} license={dataset.license} />
+                  <DatasetSummary
+                    summaryFields={dataset.summaryFields}
+                    license={dataset.license}
+                    metadataBlockInfoRepository={metadataBlockInfoRepository}
+                  />
                 </Col>
               </Row>
               <Tabs defaultActiveKey="files">
@@ -116,6 +123,7 @@ export function Dataset({
                     <DatasetMetadata
                       persistentId={dataset.persistentId}
                       metadataBlocks={dataset.metadataBlocks}
+                      metadataBlockInfoRepository={metadataBlockInfoRepository}
                     />
                   </div>
                 </Tabs.Tab>
