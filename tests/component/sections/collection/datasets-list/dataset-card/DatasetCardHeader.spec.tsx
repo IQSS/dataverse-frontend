@@ -1,6 +1,5 @@
 import { DatasetCardHeader } from '../../../../../../src/sections/collection/datasets-list/dataset-card/DatasetCardHeader'
 import { DatasetPreviewMother } from '../../../../dataset/domain/models/DatasetPreviewMother'
-import { DatasetNonNumericVersionSearchParam } from '../../../../../../src/dataset/domain/models/Dataset'
 
 describe('DatasetCardHeader', () => {
   it('should render the header', () => {
