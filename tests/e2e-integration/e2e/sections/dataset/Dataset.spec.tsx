@@ -52,7 +52,7 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.visit(`/spa/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
           cy.findByText('Draft').should('exist')
           cy.findByRole('button', { name: 'Publish Dataset' }).should('exist').click()
           cy.findByRole('button', { name: 'Publish' }).should('exist')
@@ -69,7 +69,7 @@ describe('Dataset', () => {
       cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.visit(`/spa/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
           cy.findByText('Published').should('exist')
           // TODO: edit the dataset
           cy.findByRole('button', { name: 'Publish Dataset' }).should('exist').click()
