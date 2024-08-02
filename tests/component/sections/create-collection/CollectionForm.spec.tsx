@@ -1,12 +1,20 @@
 import {
   CollectionForm,
-  CollectionFormData
+  CollectionFormData,
+  FormattedCollectionInputLevels,
+  FormattedCollectionInputLevelsWithoutParentBlockName,
+  INPUT_LEVELS_GROUPER,
+  METADATA_BLOCKS_NAMES_GROUPER,
+  USE_FIELDS_FROM_PARENT
 } from '../../../../src/sections/create-collection/collection-form/CollectionForm'
 import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
 import { UserRepository } from '../../../../src/users/domain/repositories/UserRepository'
 import { CollectionMother } from '../../collection/domain/models/CollectionMother'
 import { UserMother } from '../../users/domain/models/UserMother'
 import { collectionNameToAlias } from '../../../../src/sections/create-collection/collection-form/top-fields-section/IdentifierField'
+import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { CollectionFormHelper } from '../../../../src/sections/create-collection/collection-form/CollectionFormHelper'
+import { MetadataBlockName } from '../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 
@@ -15,11 +23,41 @@ const OWNER_COLLECTION_ID = 'root'
 const COLLECTION_NAME = 'Collection Name'
 const collection = CollectionMother.create({ name: COLLECTION_NAME })
 
+const allMetadataBlocksMock = [
+  MetadataBlockInfoMother.getCitationBlock(),
+  MetadataBlockInfoMother.getGeospatialBlock(),
+  MetadataBlockInfoMother.getAstrophysicsBlock(),
+  MetadataBlockInfoMother.getBiomedicalBlock(),
+  MetadataBlockInfoMother.getJournalBlock(),
+  MetadataBlockInfoMother.getSocialScienceBlock()
+]
+
 const testUser = UserMother.create()
 const userRepository: UserRepository = {} as UserRepository
 
 const defaultCollectionName = `${testUser.displayName} Collection`
 
+const baseInputLevels: FormattedCollectionInputLevels =
+  CollectionFormHelper.defineBaseInputLevels(allMetadataBlocksMock)
+
+const formattedCollectionInputLevels: FormattedCollectionInputLevelsWithoutParentBlockName =
+  CollectionFormHelper.formatCollectiontInputLevels(collection?.inputLevels)
+
+const mergedInputLevels = CollectionFormHelper.mergeBaseAndDefaultInputLevels(
+  baseInputLevels,
+  formattedCollectionInputLevels
+)
+
+const defaultBlocksNames = {
+  [MetadataBlockName.CITATION]: true,
+  [MetadataBlockName.GEOSPATIAL]: false,
+  [MetadataBlockName.SOCIAL_SCIENCE]: false,
+  [MetadataBlockName.ASTROPHYSICS]: false,
+  [MetadataBlockName.BIOMEDICAL]: false,
+  [MetadataBlockName.JOURNAL]: false
+}
+
+// TODO:ME Add missing default values
 const formDefaultValues: CollectionFormData = {
   hostCollection: collection.name,
   name: defaultCollectionName,
@@ -28,7 +66,10 @@ const formDefaultValues: CollectionFormData = {
   contacts: [{ value: testUser.email }],
   affiliation: testUser.affiliation ?? '',
   storage: 'Local (Default)',
-  description: ''
+  description: '',
+  [USE_FIELDS_FROM_PARENT]: true,
+  [METADATA_BLOCKS_NAMES_GROUPER]: defaultBlocksNames,
+  [INPUT_LEVELS_GROUPER]: mergedInputLevels
 }
 
 describe('CollectionForm', () => {
@@ -44,6 +85,7 @@ describe('CollectionForm', () => {
         collectionRepository={collectionRepository}
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
+        allMetadataBlocksInfo={allMetadataBlocksMock}
       />
     )
 
@@ -55,6 +97,7 @@ describe('CollectionForm', () => {
         collectionRepository={collectionRepository}
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
+        allMetadataBlocksInfo={allMetadataBlocksMock}
       />
     )
 
@@ -67,6 +110,7 @@ describe('CollectionForm', () => {
         collectionRepository={collectionRepository}
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
+        allMetadataBlocksInfo={allMetadataBlocksMock}
       />
     )
 
@@ -83,6 +127,7 @@ describe('CollectionForm', () => {
         collectionRepository={collectionRepository}
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
+        allMetadataBlocksInfo={allMetadataBlocksMock}
       />
     )
 
@@ -95,6 +140,7 @@ describe('CollectionForm', () => {
         collectionRepository={collectionRepository}
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
+        allMetadataBlocksInfo={allMetadataBlocksMock}
       />
     )
 
@@ -111,6 +157,7 @@ describe('CollectionForm', () => {
         collectionRepository={collectionRepository}
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
+        allMetadataBlocksInfo={allMetadataBlocksMock}
       />
     )
 
@@ -131,6 +178,7 @@ describe('CollectionForm', () => {
         collectionRepository={collectionRepository}
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
+        allMetadataBlocksInfo={allMetadataBlocksMock}
       />
     )
 
@@ -148,6 +196,7 @@ describe('CollectionForm', () => {
         collectionRepository={collectionRepository}
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
+        allMetadataBlocksInfo={allMetadataBlocksMock}
       />
     )
 
@@ -164,6 +213,7 @@ describe('CollectionForm', () => {
         collectionRepository={collectionRepository}
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
+        allMetadataBlocksInfo={allMetadataBlocksMock}
       />
     )
 
@@ -184,6 +234,7 @@ describe('CollectionForm', () => {
         collectionRepository={collectionRepository}
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
+        allMetadataBlocksInfo={allMetadataBlocksMock}
       />
     )
 
@@ -205,6 +256,7 @@ describe('CollectionForm', () => {
         collectionRepository={collectionRepository}
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
+        allMetadataBlocksInfo={allMetadataBlocksMock}
       />
     )
     // Accept suggestion
@@ -226,6 +278,7 @@ describe('CollectionForm', () => {
         collectionRepository={collectionRepository}
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
+        allMetadataBlocksInfo={allMetadataBlocksMock}
       />
     )
 
@@ -247,6 +300,7 @@ describe('CollectionForm', () => {
         collectionRepository={collectionRepository}
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
+        allMetadataBlocksInfo={allMetadataBlocksMock}
       />
     )
 
@@ -260,6 +314,7 @@ describe('CollectionForm', () => {
           collectionRepository={collectionRepository}
           ownerCollectionId={OWNER_COLLECTION_ID}
           defaultValues={formDefaultValues}
+          allMetadataBlocksInfo={allMetadataBlocksMock}
         />
       )
 
@@ -277,6 +332,7 @@ describe('CollectionForm', () => {
           collectionRepository={collectionRepository}
           ownerCollectionId={OWNER_COLLECTION_ID}
           defaultValues={formDefaultValues}
+          allMetadataBlocksInfo={allMetadataBlocksMock}
         />
       )
 
@@ -298,6 +354,7 @@ describe('CollectionForm', () => {
             ...formDefaultValues,
             alias: collectionNameToAlias(defaultCollectionName)
           }}
+          allMetadataBlocksInfo={allMetadataBlocksMock}
         />
       )
 
@@ -310,6 +367,7 @@ describe('CollectionForm', () => {
           collectionRepository={collectionRepository}
           ownerCollectionId={OWNER_COLLECTION_ID}
           defaultValues={{ ...formDefaultValues, name: '' }}
+          allMetadataBlocksInfo={allMetadataBlocksMock}
         />
       )
 
@@ -324,6 +382,7 @@ describe('CollectionForm', () => {
           collectionRepository={collectionRepository}
           ownerCollectionId={OWNER_COLLECTION_ID}
           defaultValues={formDefaultValues}
+          allMetadataBlocksInfo={allMetadataBlocksMock}
         />
       )
 
@@ -342,6 +401,7 @@ describe('CollectionForm', () => {
             ...formDefaultValues,
             contacts: [{ value: testUser.email }, { value: 'fake@fake.com' }]
           }}
+          allMetadataBlocksInfo={allMetadataBlocksMock}
         />
       )
       cy.findAllByLabelText('Add Email').should('exist').should('have.length', 2)
