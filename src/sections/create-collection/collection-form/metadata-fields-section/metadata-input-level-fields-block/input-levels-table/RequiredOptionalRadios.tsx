@@ -2,7 +2,11 @@ import { ChangeEvent } from 'react'
 import { Form, Stack } from '@iqss/dataverse-design-system'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { ReducedMetadataFieldInfo } from '../../../../useGetAllMetadataBlocksInfo'
-import { CollectionFormInputLevelValue, INPUT_LEVELS_GROUPER } from '../../../CollectionForm'
+import {
+  CollectionFormInputLevelValue,
+  INPUT_LEVELS_GROUPER,
+  REQUIRED_BY_DATAVERSE_FIELDS
+} from '../../../CollectionForm'
 
 type RequiredOptionalRadiosProps =
   | {
@@ -47,9 +51,13 @@ export const RequiredOptionalRadios = ({
     e: ChangeEvent<HTMLInputElement>,
     formOnChange: (...event: unknown[]) => void
   ) => {
-    // Check if all siblingChildFields are required then set parent to required also
+    // Check if all siblingChildFields are required then set parent to required also unless parent is required by dataverse
     if (isForChildField) {
-      if (e.target.value === 'required') {
+      const isParentFieldRequiredByDataverseField = REQUIRED_BY_DATAVERSE_FIELDS.includes(
+        parentIncludeName as (typeof REQUIRED_BY_DATAVERSE_FIELDS)[number]
+      )
+      // If parent is required by dataverse, then is already required
+      if (e.target.value === 'required' && !isParentFieldRequiredByDataverseField) {
         const allSiblingsRequired = (
           siblingChildFieldsValues as CollectionFormInputLevelValue[]
         ).every((value) => value === 'required')
@@ -59,7 +67,8 @@ export const RequiredOptionalRadios = ({
         }
       }
 
-      if (e.target.value === 'optional') {
+      // If parent is required by dataverse, then is already required and should not be set to optional
+      if (e.target.value === 'optional' && !isParentFieldRequiredByDataverseField) {
         setValue(`${INPUT_LEVELS_GROUPER}.${parentIncludeName}.optionalOrRequired`, 'optional')
       }
     }

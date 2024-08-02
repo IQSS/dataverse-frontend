@@ -55,8 +55,6 @@ export const useGetAllMetadataBlocksInfo = ({
           blocksNames
         )
 
-        console.log(blocksInfo)
-
         const reducedMetadataBlocksInfo: ReducedMetadataBlockInfo[] = blocksInfo.map(
           (blockInfo) => {
             const formattedMetadataFields: Record<string, ReducedMetadataFieldInfo> =

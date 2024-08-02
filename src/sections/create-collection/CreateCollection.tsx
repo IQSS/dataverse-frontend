@@ -16,6 +16,7 @@ import {
   CollectionFormMetadataBlocks,
   FormattedCollectionInputLevels,
   FormattedCollectionInputLevelsWithoutParentBlockName,
+  INPUT_LEVELS_GROUPER,
   METADATA_BLOCKS_NAMES_GROUPER,
   USE_FIELDS_FROM_PARENT
 } from './collection-form/CollectionForm'
@@ -130,7 +131,7 @@ export function CreateCollection({
     description: '',
     [USE_FIELDS_FROM_PARENT]: true,
     [METADATA_BLOCKS_NAMES_GROUPER]: defaultBlocksNames,
-    inputLevels: mergedInputLevels
+    [INPUT_LEVELS_GROUPER]: mergedInputLevels
   }
 
   return (
