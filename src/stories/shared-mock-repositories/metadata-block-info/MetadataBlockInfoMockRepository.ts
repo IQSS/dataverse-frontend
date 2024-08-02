@@ -29,4 +29,19 @@ export class MetadataBlockInfoMockRepository implements MetadataBlockInfoReposit
       }, 1_000)
     })
   }
+
+  getAllTemporal(_names: string[]): Promise<MetadataBlockInfo[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([
+          MetadataBlockInfoMother.getCitationBlock(),
+          MetadataBlockInfoMother.getGeospatialBlock(),
+          MetadataBlockInfoMother.getAstrophysicsBlock(),
+          MetadataBlockInfoMother.getBiomedicalBlock(),
+          MetadataBlockInfoMother.getJournalBlock(),
+          MetadataBlockInfoMother.getSocialScienceBlock()
+        ])
+      }, 1_000)
+    })
+  }
 }
