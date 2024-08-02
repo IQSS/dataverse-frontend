@@ -28,6 +28,14 @@ type RequiredOptionalRadiosProps =
       uniqueInputLevelRowID: string
     }
 
+/**
+ * Component that renders a pair of radio buttons for selecting if a field is required or optional
+ *
+ * Is used from a normal field or a child field
+ *
+ * If used from a child field, checks if at any moment all siblingChildFields are required then set parent to required also unless parent is required by dataverse
+ */
+
 export const RequiredOptionalRadios = ({
   disabled,
   fieldName,

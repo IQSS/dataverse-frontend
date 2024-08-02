@@ -177,10 +177,9 @@ export const CollectionForm = ({
           </Stack>
 
           <Stack direction="horizontal" className="pt-3">
-            <Button type="submit">{t('formButtons.save')}</Button>
-            {/* <Button type="submit" disabled={disableSubmitButton}>
+            <Button type="submit" disabled={disableSubmitButton}>
               {t('formButtons.save')}
-            </Button> */}
+            </Button>
             <Button
               variant="secondary"
               type="button"
