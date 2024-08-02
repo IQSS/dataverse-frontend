@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Col, Form, Row, Stack } from '@iqss/dataverse-design-system'
-import { ReducedMetadataBlockInfo } from '../../useGetAllMetadataBlocksInfoByName'
+import { ReducedMetadataBlockInfo } from '../../useGetAllMetadataBlocksInfo'
 import { MetadataInputLevelFieldsBlock } from './metadata-input-level-fields-block/MetadataInputLevelFieldsBlock'
 import { FieldsFromRootCheckbox } from './fields-from-root-checkbox/FieldsFromRootCheckbox'
 import { MetadataBlockName } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'

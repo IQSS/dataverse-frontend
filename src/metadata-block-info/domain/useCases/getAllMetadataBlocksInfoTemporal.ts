@@ -1,11 +1,11 @@
 import { MetadataBlockInfoRepository } from '../repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfo } from '../models/MetadataBlockInfo'
 
-export async function getMetadataBlockInfoByNameTemporal(
+export async function getAllMetadataBlocksInfoTemporal(
   metadataBlockInfoRepository: MetadataBlockInfoRepository,
-  name: string
-): Promise<MetadataBlockInfo> {
-  return metadataBlockInfoRepository.getByNameTemporal(name).catch((error: Error) => {
+  names: string[]
+): Promise<MetadataBlockInfo[]> {
+  return metadataBlockInfoRepository.getAllTemporal(names).catch((error: Error) => {
     throw new Error(error.message)
   })
 }

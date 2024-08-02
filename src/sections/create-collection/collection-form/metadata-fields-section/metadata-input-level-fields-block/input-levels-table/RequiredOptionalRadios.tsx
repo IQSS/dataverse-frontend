@@ -1,7 +1,7 @@
 import { ChangeEvent } from 'react'
 import { Form, Stack } from '@iqss/dataverse-design-system'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
-import { ReducedMetadataFieldInfo } from '../../../../useGetAllMetadataBlocksInfoByName'
+import { ReducedMetadataFieldInfo } from '../../../../useGetAllMetadataBlocksInfo'
 import { CollectionFormInputLevelValue, INPUT_LEVELS_GROUPER } from '../../../CollectionForm'
 
 type RequiredOptionalRadiosProps =

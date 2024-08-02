@@ -4,10 +4,7 @@ import {
   CollectionInputLevelDTO
 } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
 import { MetadataBlockName } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import {
-  ReducedMetadataBlockInfo,
-  ReducedMetadataFieldInfo
-} from '../useGetAllMetadataBlocksInfoByName'
+import { ReducedMetadataBlockInfo, ReducedMetadataFieldInfo } from '../useGetAllMetadataBlocksInfo'
 import {
   CollectionFormMetadataBlock,
   CollectionFormMetadataBlocks,

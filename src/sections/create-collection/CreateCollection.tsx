@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useDeepCompareMemo } from 'use-deep-compare'
 import { useCollection } from '../collection/useCollection'
 import { useGetCollectionMetadataBlocksNamesInfo } from './useGetCollectionMetadataBlocksNamesInfo'
-import { useGetAllMetadataBlocksInfoByName } from './useGetAllMetadataBlocksInfoByName'
+import { useGetAllMetadataBlocksInfo } from './useGetAllMetadataBlocksInfo'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockName } from '../../dataset/domain/models/Dataset'
@@ -53,7 +53,7 @@ export function CreateCollection({
     })
 
   const { allMetadataBlocksInfo, isLoading: isLoadingAllMetadataBlocksInfo } =
-    useGetAllMetadataBlocksInfoByName({ metadataBlockInfoRepository })
+    useGetAllMetadataBlocksInfo({ metadataBlockInfoRepository })
 
   const baseInputLevels: FormattedCollectionInputLevels = useDeepCompareMemo(() => {
     return CollectionFormHelper.defineBaseInputLevels(allMetadataBlocksInfo)

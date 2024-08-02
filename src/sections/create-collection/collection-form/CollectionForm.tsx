@@ -9,7 +9,7 @@ import {
   CollectionStorage
 } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
 import { SubmissionStatus, useSubmitCollection } from './useSubmitCollection'
-import { ReducedMetadataBlockInfo } from '../useGetAllMetadataBlocksInfoByName'
+import { ReducedMetadataBlockInfo } from '../useGetAllMetadataBlocksInfo'
 import { MetadataBlockName } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { SeparationLine } from '../../shared/layout/SeparationLine/SeparationLine'
 import { TopFieldsSection } from './top-fields-section/TopFieldsSection'

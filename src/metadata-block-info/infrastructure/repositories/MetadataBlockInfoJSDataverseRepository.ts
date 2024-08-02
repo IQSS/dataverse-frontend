@@ -24,10 +24,11 @@ export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfo
   }
 
   // TODO: This will be replaced to a new use case that will return all metadata blocks info
-  getByNameTemporal(name: string): Promise<MetadataBlockInfo> {
-    return getMetadataBlockByName
-      .execute(name)
-      .then((jsMetadataBlockInfo: JSMetadataBlockInfo) => {
+  getAllTemporal(names: string[]): Promise<MetadataBlockInfo[]> {
+    const blockPromises = names.map((name) => getMetadataBlockByName.execute(name))
+
+    return Promise.all(blockPromises)
+      .then((jsMetadataBlockInfo: JSMetadataBlockInfo[]) => {
         return jsMetadataBlockInfo
       })
       .catch((error: ReadError) => {

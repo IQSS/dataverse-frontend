@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import cn from 'classnames'
 import { Table } from '@iqss/dataverse-design-system'
-import { ReducedMetadataBlockInfo } from '../../../../useGetAllMetadataBlocksInfoByName'
+import { ReducedMetadataBlockInfo } from '../../../../useGetAllMetadataBlocksInfo'
 import { InputLevelFieldRow } from './InputLevelFieldRow'
 import styles from './InputLevelsTable.module.scss'
 

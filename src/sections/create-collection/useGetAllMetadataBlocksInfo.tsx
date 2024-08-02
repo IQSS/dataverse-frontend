@@ -5,13 +5,13 @@ import {
   MetadataBlockName,
   MetadataField
 } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { getMetadataBlockInfoByNameTemporal } from '../../metadata-block-info/domain/useCases/getMetadataBlockInfoByNameTemporal'
+import { getAllMetadataBlocksInfoTemporal } from '../../metadata-block-info/domain/useCases/getAllMetadataBlocksInfoTemporal'
 
 interface Props {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
 
-interface UseGetAllMetadataBlocksInfoByName {
+interface UseGetAllMetadataBlocksInfo {
   allMetadataBlocksInfo: ReducedMetadataBlockInfo[]
   error: string | null
   isLoading: boolean
@@ -39,9 +39,9 @@ const blocksNames: MetadataBlockName[] = [
   MetadataBlockName.JOURNAL
 ]
 
-export const useGetAllMetadataBlocksInfoByName = ({
+export const useGetAllMetadataBlocksInfo = ({
   metadataBlockInfoRepository
-}: Props): UseGetAllMetadataBlocksInfoByName => {
+}: Props): UseGetAllMetadataBlocksInfo => {
   const [allMetadataBlocksInfo, setAllMetadataBlocksInfo] = useState<ReducedMetadataBlockInfo[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
@@ -50,11 +50,12 @@ export const useGetAllMetadataBlocksInfoByName = ({
     const handleGetInfo = async () => {
       setIsLoading(true)
       try {
-        const promises = blocksNames.map((blockName) =>
-          getMetadataBlockInfoByNameTemporal(metadataBlockInfoRepository, blockName)
+        const blocksInfo = await getAllMetadataBlocksInfoTemporal(
+          metadataBlockInfoRepository,
+          blocksNames
         )
 
-        const blocksInfo = await Promise.all(promises)
+        console.log(blocksInfo)
 
         const reducedMetadataBlocksInfo: ReducedMetadataBlockInfo[] = blocksInfo.map(
           (blockInfo) => {

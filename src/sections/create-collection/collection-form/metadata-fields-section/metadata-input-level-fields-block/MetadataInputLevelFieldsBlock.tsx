@@ -3,7 +3,7 @@ import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-
 import { Button, Form, Stack } from '@iqss/dataverse-design-system'
 import { CloseButton } from 'react-bootstrap'
 import { MetadataBlockName } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { ReducedMetadataBlockInfo } from '../../../useGetAllMetadataBlocksInfoByName'
+import { ReducedMetadataBlockInfo } from '../../../useGetAllMetadataBlocksInfo'
 import { METADATA_BLOCKS_NAMES_GROUPER, USE_FIELDS_FROM_PARENT } from '../../CollectionForm'
 import { InputLevelsTable } from './input-levels-table/InputLevelsTable'
 
