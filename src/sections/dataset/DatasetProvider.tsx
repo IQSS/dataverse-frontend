@@ -12,7 +12,7 @@ interface DatasetProviderProps {
     privateUrlToken?: string
     version?: string
   }
-  isPublishing: boolean
+  isPublishing?: boolean
 }
 export function DatasetProvider({
   repository,
