@@ -35,11 +35,8 @@ export const FilesTableScrollable = ({
   isEmptyFiles,
   accumulatedCount
 }: FilesTableScrollableProps) => {
-  const { table, fileSelection, selectAllFiles, clearFileSelection } = useFilesTableScrollable(
-    files,
-    paginationInfo,
-    accumulatedCount
-  )
+  const { table, fileSelection, selectAllPossibleRows, clearRowsSelection } =
+    useFilesTableScrollable(files, paginationInfo, accumulatedCount)
 
   const [previousCriteria, setPreviousCriteria] = useState<FileCriteria>(criteria)
 
@@ -50,10 +47,10 @@ export const FilesTableScrollable = ({
 
   useEffect(() => {
     if (previousCriteria != criteria) {
-      clearFileSelection(false)
+      clearRowsSelection()
     }
     setPreviousCriteria(criteria)
-  }, [criteria, previousCriteria, clearFileSelection])
+  }, [criteria, previousCriteria, clearRowsSelection])
 
   return (
     <>
@@ -64,9 +61,9 @@ export const FilesTableScrollable = ({
         data-testid="table-top-messages">
         <RowSelectionMessage
           fileSelection={fileSelection}
-          selectAllRows={selectAllFiles}
+          selectAllRows={selectAllPossibleRows}
           totalFilesCount={paginationInfo.totalItems}
-          clearRowSelection={clearFileSelection}
+          clearRowSelection={clearRowsSelection}
         />
         <ZipDownloadLimitMessage
           fileSelection={fileSelection}

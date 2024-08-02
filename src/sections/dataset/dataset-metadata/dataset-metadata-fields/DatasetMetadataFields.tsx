@@ -1,24 +1,19 @@
 import { DatasetMetadataField } from './DatasetMetadataField'
 import { DatasetMetadataFields as DatasetMetadataFieldsModel } from '../../../../dataset/domain/models/Dataset'
 import { MetadataBlockName } from '../../../../dataset/domain/models/Dataset'
-import { useMetadataBlockInfo } from '../../metadata-block-info/MetadataBlockInfoContext'
-import { useEffect } from 'react'
+import { MetadataBlockInfoDisplayFormat } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 
 interface DatasetMetadataFieldsProps {
   metadataBlockName: MetadataBlockName
   metadataFields: DatasetMetadataFieldsModel
+  metadataBlockDisplayFormatInfo: MetadataBlockInfoDisplayFormat
 }
 
 export function DatasetMetadataFields({
   metadataBlockName,
-  metadataFields
+  metadataFields,
+  metadataBlockDisplayFormatInfo
 }: DatasetMetadataFieldsProps) {
-  const { setMetadataBlockName } = useMetadataBlockInfo()
-
-  useEffect(() => {
-    setMetadataBlockName(metadataBlockName)
-  }, [metadataBlockName, setMetadataBlockName])
-
   return (
     <>
       {Object.entries(metadataFields).map(([metadataFieldName, metadataFieldValue], index) => (
@@ -27,6 +22,7 @@ export function DatasetMetadataFields({
           metadataBlockName={metadataBlockName}
           metadataFieldName={metadataFieldName}
           metadataFieldValue={metadataFieldValue}
+          metadataBlockDisplayFormatInfo={metadataBlockDisplayFormatInfo}
         />
       ))}
     </>

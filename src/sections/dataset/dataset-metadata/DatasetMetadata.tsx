@@ -4,13 +4,19 @@ import {
   MetadataBlockName
 } from '../../../dataset/domain/models/Dataset'
 import { DatasetMetadataBlock } from './dataset-metadata-block/DatasetMetadataBlock'
+import { MetadataBlockInfoRepository } from '../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 
 interface DatasetMetadataProps {
   persistentId: string
   metadataBlocks: DatasetMetadataBlockModel[]
+  metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
 
-export function DatasetMetadata({ persistentId, metadataBlocks }: DatasetMetadataProps) {
+export function DatasetMetadata({
+  persistentId,
+  metadataBlocks,
+  metadataBlockInfoRepository
+}: DatasetMetadataProps) {
   return (
     <Accordion defaultActiveKey={['0']} alwaysOpen>
       {metadataBlocks.map((metadataBlock, index) => {
@@ -21,7 +27,10 @@ export function DatasetMetadata({ persistentId, metadataBlocks }: DatasetMetadat
 
         return (
           <Accordion.Item key={`${metadataBlock.name}-${index}`} eventKey={index.toString()}>
-            <DatasetMetadataBlock metadataBlock={metadataBlock} />
+            <DatasetMetadataBlock
+              metadataBlock={metadataBlock}
+              metadataBlockInfoRepository={metadataBlockInfoRepository}
+            />
           </Accordion.Item>
         )
       })}
