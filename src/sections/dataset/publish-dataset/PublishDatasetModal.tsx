@@ -6,7 +6,11 @@ import type { DatasetRepository } from '../../../dataset/domain/repositories/Dat
 import { VersionUpdateType } from '../../../dataset/domain/models/VersionUpdateType'
 import { useSession } from '../../session/SessionContext'
 import { License } from '../dataset-summary/License'
-import { defaultLicense } from '../../../dataset/domain/models/Dataset'
+import {
+  DatasetNonNumericVersionSearchParam,
+  defaultLicense,
+  QueryParamsKeys
+} from '../../../dataset/domain/models/Dataset'
 import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
 import { usePublishDataset } from './usePublishDataset'
 import { PublishDatasetHelpText } from './PublishDatasetHelpText'
@@ -47,10 +51,13 @@ export function PublishDatasetModal({
   }
 
   function onPublishSucceed() {
-    navigate(`${Route.DATASETS}?persistentId=${persistentId}&Version=DRAFT`, {
-      state: { publishInProgress: true },
-      replace: true
-    })
+    navigate(
+      `${Route.DATASETS}?persistentId=${persistentId}&${QueryParamsKeys.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
+      {
+        state: { publishInProgress: true },
+        replace: true
+      }
+    )
     handleClose()
   }
 

@@ -116,7 +116,7 @@ export function Dataset({
               </Row>
               {publishInProgress && <TabsSkeleton />}
 
-              {!publishInProgress && (
+              {(!publishInProgress || !isDatasetLoading) && (
                 <Tabs defaultActiveKey="files">
                   <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
                     <div className={styles['tab-container']}>

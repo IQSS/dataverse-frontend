@@ -12,10 +12,12 @@ interface DatasetProviderProps {
     privateUrlToken?: string
     version?: string
   }
+  isPublishing: boolean
 }
 export function DatasetProvider({
   repository,
   searchParams,
+  isPublishing,
   children
 }: PropsWithChildren<DatasetProviderProps>) {
   const [dataset, setDataset] = useState<Dataset>()
@@ -32,6 +34,7 @@ export function DatasetProvider({
   }, [repository, searchParams])
 
   useEffect(() => {
+    if (isPublishing) return
     setIsLoading(true)
 
     getDataset()
@@ -43,7 +46,7 @@ export function DatasetProvider({
         console.error('There was an error getting the dataset', error)
         setIsLoading(false)
       })
-  }, [repository, searchParams, getDataset])
+  }, [repository, searchParams, getDataset, isPublishing])
 
   return (
     <DatasetContext.Provider value={{ dataset, isLoading }}>{children}</DatasetContext.Provider>
