@@ -20,11 +20,11 @@ const ALL_INPUT_LEVEL_FIELDS = [
   MetadataBlockName.JOURNAL
 ]
 
-interface FieldsFromRootCheckboxProps {
+interface FieldsFromParentCheckboxProps {
   defaultValues: CollectionFormData
 }
 
-export const FieldsFromRootCheckbox = ({ defaultValues }: FieldsFromRootCheckboxProps) => {
+export const FieldsFromParentCheckbox = ({ defaultValues }: FieldsFromParentCheckboxProps) => {
   const checkboxID = useId()
   const { control, setValue } = useFormContext()
   const [showResetConfirmationModal, setShowResetConfirmationModal] = useState(false)

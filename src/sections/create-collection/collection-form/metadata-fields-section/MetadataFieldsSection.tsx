@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Col, Form, Row, Stack } from '@iqss/dataverse-design-system'
 import { ReducedMetadataBlockInfo } from '../../useGetAllMetadataBlocksInfo'
 import { MetadataInputLevelFieldsBlock } from './metadata-input-level-fields-block/MetadataInputLevelFieldsBlock'
-import { FieldsFromRootCheckbox } from './fields-from-root-checkbox/FieldsFromRootCheckbox'
+import { FieldsFromParentCheckbox } from './fields-from-parent-checkbox/FieldsFromParentCheckbox'
 import { MetadataBlockName } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { CollectionFormHelper } from '../CollectionFormHelper'
 import { CollectionFormData } from '../CollectionForm'
@@ -36,7 +36,7 @@ export const MetadataFieldsSection = ({
         <Form.Group.Text>{t('fields.metadataFields.helperText')}</Form.Group.Text>
         <Col className="mt-3">
           <Stack gap={2}>
-            <FieldsFromRootCheckbox defaultValues={defaultValues} />
+            <FieldsFromParentCheckbox defaultValues={defaultValues} />
 
             <MetadataInputLevelFieldsBlock
               blockName={MetadataBlockName.CITATION}
