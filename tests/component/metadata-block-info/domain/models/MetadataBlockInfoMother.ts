@@ -39,7 +39,6 @@ export class MetadataBlockInfoMother {
     }
   }
 
-  // TODO:ME Check response of getByNameTemporal hook and update this method
   static getCitationBlock(): MetadataBlockInfo {
     return CitationMetadataBlockInfoMother.get()
   }

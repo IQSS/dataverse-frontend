@@ -121,13 +121,13 @@ export const MetadataInputLevelFieldsBlock = ({
           metadataBlockCheckedValue &&
           useFieldsFromParentCheckedValue && (
             <Button variant="link" size="sm" type="button" onClick={handleShowInputLevels}>
-              [+] View Fields
+              [+] View fields
             </Button>
           )}
         {/* If just not checked */}
         {!inputLevelsTableStatus.show && !metadataBlockCheckedValue && (
           <Button variant="link" size="sm" type="button" onClick={handleShowInputLevels}>
-            [+] View Fields
+            [+] View fields
           </Button>
         )}
       </Stack>

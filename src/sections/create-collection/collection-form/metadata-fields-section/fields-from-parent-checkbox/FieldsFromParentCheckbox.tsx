@@ -82,6 +82,7 @@ export const FieldsFromParentCheckbox = ({ defaultValues }: FieldsFromParentChec
               checked={value as boolean}
               isInvalid={invalid}
               invalidFeedback={error?.message}
+              data-testid="use-fields-from-parent-checkbox"
               ref={ref}
             />
           )

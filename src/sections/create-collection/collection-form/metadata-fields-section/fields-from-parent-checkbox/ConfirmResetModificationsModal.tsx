@@ -22,8 +22,10 @@ export const ConfirmResetModificationsModal = ({
       </Alert>
     </Modal.Body>
     <Modal.Footer>
-      <Button onClick={onContinue}>Continue</Button>
-      <Button variant="secondary" onClick={onCancel}>
+      <Button onClick={onContinue} data-testid="confirm-reset-modal-continue">
+        Continue
+      </Button>
+      <Button variant="secondary" onClick={onCancel} data-testid="confirm-reset-modal-cancel">
         Cancel
       </Button>
     </Modal.Footer>

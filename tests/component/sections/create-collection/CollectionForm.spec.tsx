@@ -23,6 +23,9 @@ const OWNER_COLLECTION_ID = 'root'
 const COLLECTION_NAME = 'Collection Name'
 const collection = CollectionMother.create({ name: COLLECTION_NAME })
 
+const VIEW_AND_EDIT_FIELDS_LABEL = '[+] View fields + set as hidden, required, or optional'
+const VIEW_FIELDS_LABEL = '[+] View fields'
+
 const allMetadataBlocksMock = [
   MetadataBlockInfoMother.getCitationBlock(),
   MetadataBlockInfoMother.getGeospatialBlock(),
@@ -57,7 +60,6 @@ const defaultBlocksNames = {
   [MetadataBlockName.JOURNAL]: false
 }
 
-// TODO:ME Add missing default values
 const formDefaultValues: CollectionFormData = {
   hostCollection: collection.name,
   name: defaultCollectionName,
@@ -411,6 +413,349 @@ describe('CollectionForm', () => {
 
       cy.findByLabelText('Add Email').should('exist')
       cy.findByLabelText('Remove Email').should('not.exist')
+    })
+  })
+
+  describe('MetadataFieldsSection functionality', () => {
+    beforeEach(() => {
+      cy.mountAuthenticated(
+        <CollectionForm
+          collectionRepository={collectionRepository}
+          ownerCollectionId={OWNER_COLLECTION_ID}
+          defaultValues={formDefaultValues}
+          allMetadataBlocksInfo={allMetadataBlocksMock}
+        />
+      )
+
+      cy.get('[data-testid="use-fields-from-parent-checkbox"]').as('useFieldsFromParentCheckbox')
+    })
+
+    describe('Use fields from parent checkbox', () => {
+      it('should be checked by default', () => {
+        cy.get('@useFieldsFromParentCheckbox').should('be.checked')
+      })
+
+      it('should open the reset confirmation modal when unchecking and then checking the checkbox again', () => {
+        cy.get('@useFieldsFromParentCheckbox').uncheck({ force: true })
+
+        cy.get('@useFieldsFromParentCheckbox').check({ force: true })
+
+        cy.findByText(/Reset Modifications/).should('exist')
+      })
+
+      it('should close the reset confirmation modal if cancelling without finally checking the checkbox', () => {
+        cy.get('@useFieldsFromParentCheckbox').uncheck({ force: true })
+
+        cy.get('@useFieldsFromParentCheckbox').check({ force: true })
+
+        cy.findByText(/Reset Modifications/).should('exist')
+
+        cy.findByTestId('confirm-reset-modal-cancel').click()
+
+        cy.findByText(/Reset Modifications/).should('not.exist')
+
+        cy.get('@useFieldsFromParentCheckbox').should('not.be.checked')
+      })
+
+      it('should reset the metadata fields when confirming the reset', () => {
+        cy.get('@useFieldsFromParentCheckbox').uncheck()
+
+        // Modify a field in citation block
+        cy.findByRole('button', {
+          name: VIEW_AND_EDIT_FIELDS_LABEL
+        })
+          .should('exist')
+          .click()
+
+        cy.findByLabelText('Subtitle').uncheck({ force: true })
+
+        cy.findByLabelText('Subtitle').should('not.be.checked')
+
+        cy.get('@useFieldsFromParentCheckbox').check({ force: true })
+
+        cy.findByText(/Reset Modifications/).should('exist')
+
+        cy.findByTestId('confirm-reset-modal-continue').click()
+
+        cy.findByText(/Reset Modifications/).should('not.exist')
+
+        cy.get('@useFieldsFromParentCheckbox').should('be.checked')
+
+        // Check if field is back to its original state
+        cy.findAllByRole('button', {
+          name: VIEW_FIELDS_LABEL
+        })
+          .first()
+          .click()
+
+        cy.findByLabelText('Subtitle').should('be.checked')
+      })
+    })
+
+    describe('InputLevelFieldRow', () => {
+      it('On not composed fields - should unclude and include the field when checking the checkbox', () => {
+        cy.get('@useFieldsFromParentCheckbox').uncheck({ force: true })
+
+        // Open citation input levels
+        cy.findByRole('button', {
+          name: VIEW_AND_EDIT_FIELDS_LABEL
+        })
+          .should('exist')
+          .click({ force: true })
+
+        // First unclude the subtitle field
+        cy.findByLabelText('Subtitle').uncheck({ force: true })
+
+        cy.findByLabelText('Subtitle').should('not.be.checked')
+
+        // Go to parent td of Subtitle field and find sibling td to check if Hidden checkbox is there
+        cy.findByLabelText('Subtitle')
+          .closest('td')
+          .next()
+          .within(() => {
+            cy.findByLabelText('Hidden').should('exist').should('be.checked')
+          })
+
+        // Second include the subtitle field
+        cy.findByLabelText('Subtitle').check({ force: true })
+        cy.findByLabelText('Subtitle').should('be.checked')
+
+        // Go to parent td of Subtitle field and find sibling td to check if Hidden checkbox is not there anymore
+        cy.findByLabelText('Subtitle')
+          .closest('td')
+          .next()
+          .within(() => {
+            cy.findByLabelText('Hidden').should('not.exist')
+          })
+      })
+
+      it('On composed fields - should unclude and include the child field when checking the checkbox', () => {
+        cy.get('@useFieldsFromParentCheckbox').uncheck({ force: true })
+
+        // Open citation input levels
+        cy.findByRole('button', {
+          name: VIEW_AND_EDIT_FIELDS_LABEL
+        })
+          .should('exist')
+          .click()
+
+        // First unclude the other identifier composed field
+        cy.findByLabelText('Other Identifier').uncheck({ force: true })
+
+        cy.findByLabelText('Other Identifier').should('not.be.checked')
+
+        // Go to child fields rows and check if Hidden checkbox is there
+        cy.findByText('Other Identifier Agency', { exact: true })
+          .closest('td')
+          .next()
+          .within(() => {
+            cy.findByLabelText('Hidden').should('exist').should('be.checked')
+          })
+
+        cy.findByText('Other Identifier Identifier', { exact: true })
+          .closest('td')
+          .next()
+          .within(() => {
+            cy.findByLabelText('Hidden').should('exist').should('be.checked')
+          })
+
+        // Second include the other identifier composed fields
+        cy.findByLabelText('Other Identifier').check({ force: true })
+        cy.findByLabelText('Other Identifier').should('be.checked')
+
+        // Go to child fields rows and check if Hidden checkbox is not there anymore and they optional checkbox is checked
+        cy.findByText('Other Identifier Agency', { exact: true })
+          .closest('td')
+          .next()
+          .within(() => {
+            cy.findByLabelText('Hidden').should('not.exist')
+            cy.findByLabelText('Optional').should('be.checked')
+          })
+
+        cy.findByText('Other Identifier Identifier', { exact: true })
+          .closest('td')
+          .next()
+          .within(() => {
+            cy.findByLabelText('Hidden').should('not.exist')
+            cy.findByLabelText('Optional').should('be.checked')
+          })
+      })
+
+      it('On not composed fields - should select correctly the Required or Optional radios', () => {
+        cy.get('@useFieldsFromParentCheckbox').uncheck({ force: true })
+
+        // Open citation input levels
+        cy.findByRole('button', {
+          name: VIEW_AND_EDIT_FIELDS_LABEL
+        })
+          .should('exist')
+          .click()
+
+        // Go to parent td of Subtitle field and find sibling td to select the Required radio
+        cy.findByLabelText('Subtitle')
+          .closest('td')
+          .next()
+          .within(() => {
+            cy.findByLabelText('Required').should('exist').should('not.be.checked')
+            cy.findByLabelText('Optional').should('exist').should('be.checked')
+
+            cy.findByLabelText('Required').check({ force: true })
+            cy.findByLabelText('Required').should('be.checked')
+            cy.findByLabelText('Optional').should('not.be.checked')
+
+            cy.findByLabelText('Optional').check({ force: true })
+            cy.findByLabelText('Optional').should('be.checked')
+            cy.findByLabelText('Required').should('not.be.checked')
+          })
+
+        // Second set the subtitle field as optional
+        // cy.findByLabelText('Subtitle').uncheck({ force: true })
+
+        // // Go to parent td of Subtitle field and find sibling td to check if Optional radio is there
+        // cy.findByLabelText('Subtitle')
+        //   .closest('td')
+        //   .next()
+        //   .next()
+        //   .within(() => {
+        //     cy.findByLabelText('Optional').should('exist').should('be.checked')
+        //   })
+      })
+
+      it('On composed fields - should select correctly the Required or Optional radios of child fields', () => {
+        cy.get('@useFieldsFromParentCheckbox').uncheck({ force: true })
+
+        // Open citation input levels
+        cy.findByRole('button', {
+          name: VIEW_AND_EDIT_FIELDS_LABEL
+        })
+          .should('exist')
+          .click()
+
+        // Go to child fields row and check if Required radio is there and perform the check/uncheck
+        cy.findByText('Other Identifier Identifier', { exact: true })
+          .closest('td')
+          .next()
+          .within(() => {
+            cy.findByLabelText('Required').should('exist').should('not.be.checked')
+            cy.findByLabelText('Optional').should('exist').should('be.checked')
+
+            cy.findByLabelText('Required').check({ force: true })
+            cy.findByLabelText('Required').should('be.checked')
+            cy.findByLabelText('Optional').should('not.be.checked')
+          })
+
+        cy.findByText('Other Identifier Agency', { exact: true })
+          .closest('td')
+          .next()
+          .within(() => {
+            cy.findByLabelText('Required').should('exist').should('not.be.checked')
+            cy.findByLabelText('Optional').should('exist').should('be.checked')
+
+            cy.findByLabelText('Required').check({ force: true })
+            cy.findByLabelText('Required').should('be.checked')
+            cy.findByLabelText('Optional').should('not.be.checked')
+
+            cy.findByLabelText('Optional').check({ force: true })
+            cy.findByLabelText('Optional').should('be.checked')
+            cy.findByLabelText('Required').should('not.be.checked')
+          })
+
+        cy.findByText('Other Identifier Identifier', { exact: true })
+          .closest('td')
+          .next()
+          .within(() => {
+            cy.findByLabelText('Optional').check({ force: true })
+          })
+
+        cy.findByText('Other Identifier Agency', { exact: true })
+          .closest('td')
+          .next()
+          .within(() => {
+            cy.findByLabelText('Required').should('exist').should('not.be.checked')
+            cy.findByLabelText('Optional').should('exist').should('be.checked')
+
+            cy.findByLabelText('Required').check({ force: true })
+            cy.findByLabelText('Required').should('be.checked')
+            cy.findByLabelText('Optional').should('not.be.checked')
+
+            cy.findByLabelText('Optional').check({ force: true })
+            cy.findByLabelText('Optional').should('be.checked')
+            cy.findByLabelText('Required').should('not.be.checked')
+          })
+      })
+    })
+
+    describe('Opens input levels table correctly on different states', () => {
+      it('should open the Citation input levels on view mode', () => {
+        // cy.get('@useFieldsFromParentCheckbox').uncheck({ force: true })
+
+        cy.findAllByRole('button', {
+          name: VIEW_FIELDS_LABEL
+        })
+          .first()
+          .should('exist')
+          .click()
+
+        cy.findByRole('table').should('exist').should('be.visible')
+
+        cy.findByRole('table').within(() => {
+          cy.findByText('Title').should('be.visible')
+          cy.findByLabelText('Subtitle').should('be.visible').should('be.disabled')
+        })
+
+        // Close the table
+        cy.findAllByLabelText('Hide input levels table').first().click()
+
+        cy.findByRole('table').should('not.exist')
+      })
+
+      it('should open the Citation input levels on edit mode', () => {
+        cy.get('@useFieldsFromParentCheckbox').uncheck({ force: true })
+
+        cy.findByRole('button', {
+          name: VIEW_AND_EDIT_FIELDS_LABEL
+        })
+          .should('exist')
+          .click()
+
+        cy.findByRole('table').should('exist').should('be.visible')
+
+        cy.findByRole('table').within(() => {
+          cy.findByText('Title').should('be.visible')
+          cy.findByLabelText('Subtitle').should('be.visible').should('not.be.disabled')
+        })
+
+        // Close the table
+        cy.findAllByLabelText('Hide input levels table').first().click()
+
+        cy.findByRole('table').should('not.exist')
+      })
+
+      it('should enable fields when opening an input levels table on view mode and checking the block name checkbox', () => {
+        cy.get('@useFieldsFromParentCheckbox').uncheck({ force: true })
+
+        cy.findAllByRole('button', {
+          name: VIEW_FIELDS_LABEL
+        })
+          .first()
+          .should('exist')
+          .click()
+
+        cy.findByRole('table').should('exist').should('be.visible')
+
+        cy.findByRole('table').within(() => {
+          cy.findByLabelText('Geographic Unit').should('exist').should('be.disabled')
+        })
+
+        // Now check the Geospatial block name checkbox
+        cy.findByLabelText('Geospatial Metadata').check({ force: true })
+
+        cy.findByRole('table').should('exist').should('be.visible')
+
+        cy.findByRole('table').within(() => {
+          cy.findByLabelText('Geographic Unit').should('exist').should('not.be.disabled')
+        })
+      })
     })
   })
 })
