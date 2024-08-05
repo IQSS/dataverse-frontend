@@ -1,4 +1,5 @@
 import { ChangeEvent, useId, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import { Form } from '@iqss/dataverse-design-system'
 import { MetadataBlockName } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
@@ -25,6 +26,7 @@ interface FieldsFromParentCheckboxProps {
 }
 
 export const FieldsFromParentCheckbox = ({ defaultValues }: FieldsFromParentCheckboxProps) => {
+  const { t } = useTranslation('createCollection')
   const checkboxID = useId()
   const { control, setValue } = useFormContext()
   const [showResetConfirmationModal, setShowResetConfirmationModal] = useState(false)
@@ -74,7 +76,9 @@ export const FieldsFromParentCheckbox = ({ defaultValues }: FieldsFromParentChec
               id={checkboxID}
               onChange={handleChange}
               name={USE_FIELDS_FROM_PARENT}
-              label={`Use metadata fields from ${hostCollectionFieldValue}`}
+              label={`${t(
+                'fields.metadataFields.useMetadataFieldsFrom'
+              )} ${hostCollectionFieldValue}`}
               checked={value as boolean}
               isInvalid={invalid}
               invalidFeedback={error?.message}

@@ -46,7 +46,8 @@
     },
     "metadataFields": {
       "label": "Metadata Fields",
-      "helperText": "Choose the metadata fields to use in dataset templates and when adding a dataset to this dataverse."
+      "helperText": "Choose the metadata fields to use in dataset templates and when adding a dataset to this dataverse.",
+      "useMetadataFieldsFrom": "Use metadata fields from"
     },
     "browseSearchFacets": {
       "label": "Browse/Search Facets",
