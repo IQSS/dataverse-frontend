@@ -64,19 +64,47 @@ describe('Dataset', () => {
           cy.contains('This draft version needs to be published').should('not.exist')
         })
     })
-    // TODO: update this usecase to use the edit dataset form when it is ready
-    it.skip('successfully publishes a previously released dataset', () => {
+    it('successfully publishes a Major Version update', () => {
       cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
         .its('persistentId')
         .then((persistentId: string) => {
-          cy.visit(`/spa/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
-          cy.findByText('Published').should('exist')
-          // TODO: edit the dataset
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.findByText('Version 1.0').should('exist')
+          cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').click()
+          cy.findByRole('button', { name: 'Metadata' }).should('exist').click()
+          cy.findByLabelText(/^Title/i).type('New Title', { force: true })
+          cy.findAllByText(/Save Changes/i)
+            .should('exist')
+            .first()
+            .click({
+              force: true
+            })
           cy.findByRole('button', { name: 'Publish Dataset' }).should('exist').click()
           cy.findByRole('button', { name: 'Publish' }).should('exist').click()
-          cy.findByRole('button', { name: 'Major' }).should('exist').click()
+          cy.findByText('Major Version').should('exist').click()
+          cy.findByRole('button', { name: 'Continue' }).should('exist').click()
           cy.findByText('Version 2.0').should('exist')
-          cy.findByText('Published').should('exist')
+        })
+    })
+    it('successfully publishes a Minor Version update', () => {
+      cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.findByText('Version 1.0').should('exist')
+          cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').click()
+          cy.findByRole('button', { name: 'Metadata' }).should('exist').click()
+          cy.findByLabelText(/^Title/i).type('New Title', { force: true })
+          cy.findAllByText(/Save Changes/i)
+            .should('exist')
+            .first()
+            .click({
+              force: true
+            })
+          cy.findByRole('button', { name: 'Publish Dataset' }).should('exist').click()
+          cy.findByRole('button', { name: 'Publish' }).should('exist').click()
+          cy.findByRole('button', { name: 'Continue' }).should('exist').click()
+          cy.findByText('Version 1.1').should('exist')
         })
     })
 

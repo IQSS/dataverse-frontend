@@ -43,7 +43,7 @@ export function PublishDatasetModal({
     onPublishSucceed
   )
   const [selectedVersionUpdateType, setSelectedVersionUpdateType] = useState(
-    VersionUpdateType.MAJOR
+    VersionUpdateType.MINOR
   )
   const handleVersionUpdateTypeChange = (event: React.MouseEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement
