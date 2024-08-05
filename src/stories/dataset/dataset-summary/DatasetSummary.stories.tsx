@@ -3,6 +3,7 @@ import { WithI18next } from '../../WithI18next'
 import { DatasetSummary } from '../../../sections/dataset/dataset-summary/DatasetSummary'
 import { DatasetMetadataBlock, DatasetLicense } from '../../../dataset/domain/models/Dataset'
 import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
+import { MetadataBlockInfoMockRepository } from '../../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 
 const meta: Meta<typeof DatasetSummary> = {
   title: 'Sections/Dataset Page/DatasetSummary',
@@ -16,5 +17,11 @@ export default meta
 type Story = StoryObj<typeof DatasetSummary>
 
 export const Default: Story = {
-  render: () => <DatasetSummary summaryFields={summaryFieldsMock} license={licenseMock} />
+  render: () => (
+    <DatasetSummary
+      summaryFields={summaryFieldsMock}
+      license={licenseMock}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+    />
+  )
 }

@@ -8,6 +8,7 @@ import { MetadataFieldsHelper, type DatasetMetadataFormValues } from './Metadata
 import { getValidationFailedFieldError } from '../../../../metadata-block-info/domain/models/fieldValidations'
 import { type DatasetMetadataFormMode } from '.'
 import { Route } from '../../../Route.enum'
+import { DatasetNonNumericVersionSearchParam } from '../../../../dataset/domain/models/Dataset'
 
 export enum SubmissionStatus {
   NotSubmitted = 'NotSubmitted',
@@ -60,9 +61,12 @@ export function useSubmitDataset(
         .then(({ persistentId }) => {
           setSubmitError(null)
           setSubmissionStatus(SubmissionStatus.SubmitComplete)
-          navigate(`${Route.DATASETS}?persistentId=${persistentId}`, {
-            state: { created: true }
-          })
+          navigate(
+            `${Route.DATASETS}?persistentId=${persistentId}&version=${DatasetNonNumericVersionSearchParam.DRAFT}`,
+            {
+              state: { created: true }
+            }
+          )
           return
         })
         .catch((err) => {

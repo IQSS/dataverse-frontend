@@ -19,7 +19,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **FormFeedback:** remove `span: 9` from styles.
 - **FormGroup:** controlId is now optional.
 - **FormLabel:** extend Props Interface to accept `htmlFor` prop.
-- **SelectMultiple:** NEW multiple selector for occasions when you can choose more than one option.
 - **FormSelectMultiple:** The new multiple selector is added to the "FormGroup" components.
 - **DropdownButton:** extend Props Interface to accept `ariaLabel` prop.
 - **DropdownButtonItem:** extend Props Interface to accept `as` prop.
@@ -31,14 +30,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **FormInput:** remove withinMultipleFieldsGroup prop.
 - **FormLabel:** remove withinMultipleFieldsGroup prop extend interface to accept ColProps.
 - **FormSelect:** remove withinMultipleFieldsGroup prop.
-- **FormSelectMultiple:** remove withinMultipleFieldsGroup prop.
 - **FormText:** remove withinMultipleFieldsGroup prop.
 - **FormTextArea:** remove withinMultipleFieldsGroup prop.
 - **FormInputGroup:** remove hasVisibleLabel prop.
 - **FormInputGroupText:** refactor type.
-- **Select Multiple:** add is-invalid classname if isInvalid prop is true.
 - **Card:** NEW card element to show header and body.
 - **ProgressBar:** NEW progress bar element to show progress.
+- **SelectAdvanced:** NEW ehanced select to search across options, and perform both single and multiple selections.
 - **NavbarDropdownItem:** Now accepts `as` prop and takes `as` Element props.
 - **FormInputGroup:** extend Props Interface to accept `hasValidation` prop to properly show rounded corners in an <InputGroup> with validation
 - **Button:** extend Props Interface to accept `size` prop.

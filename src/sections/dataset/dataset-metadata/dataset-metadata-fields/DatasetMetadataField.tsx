@@ -4,17 +4,20 @@ import { MetadataBlockName } from '../../../../dataset/domain/models/Dataset'
 import { DatasetMetadataFieldValue } from './DatasetMetadataFieldValue'
 import { DatasetMetadataFieldTitle } from './DatasetMetadataFieldTitle'
 import { DatasetMetadataFieldTip } from './DatasetMetadataFieldTip'
+import { MetadataBlockInfoDisplayFormat } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 
 interface DatasetMetadataFieldProps {
   metadataBlockName: MetadataBlockName
   metadataFieldName: string
   metadataFieldValue: DatasetMetadataFieldValueModel
+  metadataBlockDisplayFormatInfo: MetadataBlockInfoDisplayFormat
 }
 
 export function DatasetMetadataField({
   metadataBlockName,
   metadataFieldName,
-  metadataFieldValue
+  metadataFieldValue,
+  metadataBlockDisplayFormatInfo
 }: DatasetMetadataFieldProps) {
   return (
     <Row>
@@ -33,6 +36,7 @@ export function DatasetMetadataField({
           metadataBlockName={metadataBlockName}
           metadataFieldName={metadataFieldName}
           metadataFieldValue={metadataFieldValue}
+          metadataBlockDisplayFormatInfo={metadataBlockDisplayFormatInfo}
         />
       </Col>
     </Row>

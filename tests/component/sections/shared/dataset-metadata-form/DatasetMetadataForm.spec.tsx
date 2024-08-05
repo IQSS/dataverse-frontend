@@ -185,9 +185,15 @@ const fillRequiredFieldsOnCreate = () => {
     .should('exist')
     .closest('.row')
     .within(() => {
+      // This is a Select Advanced single, it is shown as a Select with more than 10 options
       cy.findByLabelText(/Country \/ Nation/)
         .should('exist')
-        .select('Argentina', { force: true })
+        .click({ force: true })
+      cy.findByLabelText(/Country \/ Nation/)
+        .closest('.dropdown')
+        .within(() => {
+          cy.findByText('Argentina').click({ force: true })
+        })
     })
 }
 
@@ -394,12 +400,10 @@ describe('DatasetMetadataForm', () => {
               .should('have.attr', 'aria-required', 'false')
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Textbox)
 
-            cy.findByLabelText('Identifier Type', { exact: true })
-              .should('exist')
-              .should('have.attr', 'aria-required', 'false')
-              .should('have.prop', 'tagName', 'SELECT')
-              .children('option')
-              .should('have.length', 20)
+            cy.get('[id="citation.publication.0.publicationIDType"]').as(
+              'identifierTypeInputButton'
+            )
+            cy.get('@identifierTypeInputButton').should('exist')
 
             cy.findByLabelText('Identifier', { exact: true })
               .should('exist')
@@ -445,10 +449,11 @@ describe('DatasetMetadataForm', () => {
           .within(() => {
             cy.findByLabelText(/Country \/ Nation/)
               .should('exist')
-              .should('have.attr', 'aria-required', 'true')
-              .should('have.prop', 'tagName', 'SELECT')
-              .children('option')
-              .should('have.length', 250)
+              .closest('.dropdown')
+              .within(() => {
+                cy.findByLabelText('Toggle options menu').click()
+                cy.findAllByRole('option').should('have.length', 250)
+              })
 
             cy.findByLabelText(/State \/ Province/)
               .should('exist')
@@ -750,12 +755,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.attr', 'aria-required', 'false')
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Textbox)
 
-            cy.findByLabelText('Identifier Type', { exact: true })
-              .should('exist')
-              .should('have.attr', 'aria-required', 'false')
-              .should('have.prop', 'tagName', 'SELECT')
-              .children('option')
-              .should('have.length', 20)
+            cy.findByLabelText('Identifier Type', { exact: true }).should('exist')
 
             cy.findByLabelText('Identifier', { exact: true })
               .should('exist')
@@ -857,13 +857,7 @@ describe('DatasetMetadataForm', () => {
           .should('exist')
           .closest('.row')
           .within(() => {
-            cy.findByLabelText('Type', { exact: true })
-              .should('exist')
-              .should('have.attr', 'aria-required', 'false')
-              .should('have.value', '')
-              .should('have.prop', 'tagName', 'SELECT')
-              .children('option')
-              .should('have.length', 18)
+            cy.findByLabelText('Type', { exact: true }).should('exist')
 
             cy.findByLabelText('Name', { exact: true })
               .should('exist')
@@ -1143,13 +1137,16 @@ describe('DatasetMetadataForm', () => {
           .should('exist')
           .closest('.row')
           .within(() => {
+            // This is a Select Advanced single, it is shown as a Select with more than 10 options
             cy.findByLabelText(/Country \/ Nation/)
               .should('exist')
-              .should('have.attr', 'aria-required', 'true')
-              .should('have.value', 'United States')
-              .should('have.prop', 'tagName', 'SELECT')
-              .children('option')
-              .should('have.length', 250)
+              .click({ force: true })
+
+            cy.findByLabelText(/Country \/ Nation/)
+              .closest('.dropdown')
+              .within(() => {
+                cy.findAllByText('United States').should('exist').should('have.length', 2)
+              })
 
             cy.findByLabelText(/State \/ Province/)
               .should('exist')

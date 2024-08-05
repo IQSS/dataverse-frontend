@@ -369,6 +369,40 @@ describe('DatasetFilesScrollable', () => {
       cy.findByText('200 files are currently selected.').should('exist')
     })
 
+    it('selects all files when clicking the select all button and mantains selection when loading more on scroll to bottom', () => {
+      cy.customMount(
+        <DatasetFilesScrollable
+          filesRepository={fileRepository}
+          datasetPersistentId={datasetPersistentId}
+          datasetVersion={datasetVersion}
+        />
+      )
+      cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
+      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.findByText('10 files are currently selected.').should('exist')
+      cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
+      cy.findByText('200 files are currently selected.').should('exist')
+
+      // Scroll to bottom to load more files
+      cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
+      cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+      cy.findByText('200 files are currently selected.').should('exist')
+      cy.findByRole('columnheader', { name: '20 of 200 Files displayed' }).should('exist')
+
+      // Scroll to bottom to load more files
+      cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+      cy.findByText('200 files are currently selected.').should('exist')
+      cy.findByRole('columnheader', { name: '30 of 200 Files displayed' }).should('exist')
+
+      // Scroll to bottom to load more files
+      cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+      cy.findByText('200 files are currently selected.').should('exist')
+      cy.findByRole('columnheader', { name: '40 of 200 Files displayed' }).should('exist')
+    })
+
     it('maintains the selection when scrolling to bottom and loading more files', () => {
       cy.customMount(
         <DatasetFilesScrollable
@@ -382,6 +416,7 @@ describe('DatasetFilesScrollable', () => {
       cy.get('table > tbody > tr:nth-child(2)').should('have.class', styles['selected-row'])
       cy.findByText('1 file is currently selected.').should('exist')
 
+      // Scroll to bottom to load more files
       cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
       cy.get('@scrollableFilesContainer').scrollTo('bottom')
 
@@ -389,9 +424,27 @@ describe('DatasetFilesScrollable', () => {
 
       cy.get('table > tbody > tr:nth-child(2)').should('have.class', styles['selected-row'])
       cy.findByText('1 file is currently selected.').should('exist')
-      //   cy.get('table > tbody > tr:nth-child(3) > td:nth-child(1) > input[type=checkbox]').click()
-      //   cy.get('table > tbody > tr:nth-child(3)').should('have.class', styles['selected-row'])
-      //   cy.findByText('2 files are currently selected.').should('exist')
+
+      // Scroll to bottom to load more files
+      cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+      cy.findByRole('columnheader', { name: '30 of 200 Files displayed' }).should('exist')
+      cy.get('table > tbody > tr:nth-child(2)').should('have.class', styles['selected-row'])
+      cy.findByText('1 file is currently selected.').should('exist')
+
+      // Scroll to bottom to load more files
+      cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+      cy.findByRole('columnheader', { name: '40 of 200 Files displayed' }).should('exist')
+      cy.get('table > tbody > tr:nth-child(2)').should('have.class', styles['selected-row'])
+      cy.findByText('1 file is currently selected.').should('exist')
+
+      // Scroll to bottom to load more files
+      cy.get('@scrollableFilesContainer').scrollTo('bottom')
+
+      cy.findByRole('columnheader', { name: '50 of 200 Files displayed' }).should('exist')
+      cy.get('table > tbody > tr:nth-child(2)').should('have.class', styles['selected-row'])
+      cy.findByText('1 file is currently selected.').should('exist')
     })
 
     it('removes the selection when the header checkbox is clicked again', () => {

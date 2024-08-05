@@ -211,7 +211,11 @@ export enum DatasetPublishingStatus {
 
 export enum DatasetNonNumericVersion {
   LATEST = ':latest',
-  DRAFT = ':draft'
+  DRAFT = ':draft',
+  LATEST_PUBLISHED = ':latest-published'
+}
+export enum DatasetNonNumericVersionSearchParam {
+  DRAFT = 'DRAFT'
 }
 
 export class DatasetVersionNumber {

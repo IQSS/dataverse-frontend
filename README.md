@@ -68,7 +68,7 @@ To stay up-to-date with all the latest changes, join the [Google Group][dv_commu
         <li><a href="#what-is-dataverse">What is Dataverse?</a></li>
         <li><a href="#what-is-dataverse-frontend">What Is Dataverse Frontend &amp; How Do They Differ?</a></li>
         <li><a href="#demo-videos">Demo Videos</a></li>
-        <li><a href="#beta-testing-environemtn">Beta Testing Environment</a></li>
+        <li><a href="#beta-testing-environment">Beta Testing Environment</a></li>
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
