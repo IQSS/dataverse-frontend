@@ -29,12 +29,8 @@ type RequiredOptionalRadiosProps =
 /**
  * Component that renders a pair of radio buttons for selecting if a field is required or optional
  *
- * Is used from a normal field or a child field
- *
- * If used from a child field, checks if at any moment all siblingChildFields are required then set parent to required also unless parent is required by dataverse
+ * If used from a child field, makes parent field required if one of the child fields is required
  */
-
-// TODO:ME Make parent field required if one of the child fields is required
 
 export const RequiredOptionalRadios = ({
   disabled,
@@ -60,22 +56,24 @@ export const RequiredOptionalRadios = ({
     e: ChangeEvent<HTMLInputElement>,
     formOnChange: (...event: unknown[]) => void
   ) => {
-    // Check if all siblingChildFields are required then set parent to required also unless parent is required by dataverse
+    // Check if any siblingChildFields is required then set parent to required also unless parent is required by dataverse
     if (isForChildField) {
       // If parent is required by dataverse, then is already required
       if (e.target.value === 'required' && !parentIsRequiredByDataverse) {
-        const allSiblingsRequired = (
-          siblingChildFieldsValues as CollectionFormInputLevelValue[]
-        ).every((value) => value === 'required')
-
-        if (allSiblingsRequired) {
-          setValue(`${INPUT_LEVELS_GROUPER}.${parentIncludeName}.optionalOrRequired`, 'required')
-        }
+        setValue(`${INPUT_LEVELS_GROUPER}.${parentIncludeName}.optionalOrRequired`, 'required')
       }
 
       // If parent is required by dataverse, then is already required and should not be set to optional
       if (e.target.value === 'optional' && !parentIsRequiredByDataverse) {
-        setValue(`${INPUT_LEVELS_GROUPER}.${parentIncludeName}.optionalOrRequired`, 'optional')
+        const isSomeSiblingRequired = (
+          siblingChildFieldsValues as CollectionFormInputLevelValue[]
+        ).some((value) => value === 'required')
+
+        if (!isSomeSiblingRequired) {
+          setValue(`${INPUT_LEVELS_GROUPER}.${parentIncludeName}.optionalOrRequired`, 'optional')
+        } else {
+          setValue(`${INPUT_LEVELS_GROUPER}.${parentIncludeName}.optionalOrRequired`, 'required')
+        }
       }
     }
     formOnChange(e)
