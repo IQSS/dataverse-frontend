@@ -85,6 +85,7 @@ export const Vocabulary = ({
             required={Boolean(updatedRulesToApply?.required)}
             column={!withinMultipleFieldsGroup}
             className={styles['field-label']}
+            htmlFor={builtFieldName}
             sm={3}>
             {title}
           </Form.Group.Label>
