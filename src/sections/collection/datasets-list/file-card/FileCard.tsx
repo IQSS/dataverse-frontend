@@ -3,6 +3,7 @@ import { FileCardHeader } from './FileCardHeader'
 import { FileCardThumbnail } from './FileCardThumbnail'
 import { FileCardInfo } from './FileCardInfo'
 import { FilePreview } from '../../../../files/domain/models/FilePreview'
+import { Stack } from '@iqss/dataverse-design-system'
 
 interface FileCardProps {
   filePreview: FilePreview
@@ -14,8 +15,10 @@ export function FileCard({ filePreview, persistentId }: FileCardProps) {
     <article className={styles.container}>
       <FileCardHeader filePreview={filePreview} />
       <div className={styles.info}>
-        <FileCardThumbnail filePreview={filePreview} persistentId={persistentId} />
-        <FileCardInfo filePreview={filePreview} persistentId={persistentId} />
+        <Stack direction={'horizontal'} gap={1}>
+          <FileCardThumbnail filePreview={filePreview} persistentId={persistentId} />
+          <FileCardInfo filePreview={filePreview} persistentId={persistentId} />
+        </Stack>
       </div>
     </article>
   )

@@ -8,8 +8,9 @@ import {
   DatasetLabelValue,
   DatasetPublishingStatus
 } from '../../../../dataset/domain/models/Dataset'
-import { FileIcon } from '../../../file/file-preview/FileIcon'
 import { DatasetLabels } from '../../../dataset/dataset-labels/DatasetLabels'
+import { FileCardIcon } from './FileCardIcon'
+import { FileType } from '../../../../files/domain/models/FileMetadata'
 
 interface FileCardHeaderProps {
   filePreview: FilePreview
@@ -44,6 +45,7 @@ function getDatasetLabels(
   return labels
 }
 export function FileCardHeader({ filePreview }: FileCardHeaderProps) {
+  const iconFileType = new FileType('text/tab-separated-values', 'Comma Separated Values')
   return (
     <div className={styles.header}>
       <div className={styles.title}>
@@ -60,7 +62,7 @@ export function FileCardHeader({ filePreview }: FileCardHeaderProps) {
         />
       </div>
       <div className={styles.icon}>
-        <FileIcon type={filePreview.metadata.type} />
+        <FileCardIcon type={iconFileType} />
       </div>
     </div>
   )

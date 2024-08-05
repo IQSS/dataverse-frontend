@@ -27,7 +27,7 @@ function getSearchParams(
 export function FileCardInfo({ filePreview, persistentId }: FileCardInfoProps) {
   return (
     <div className={styles.description}>
-      <Stack>
+      <Stack gap={1}>
         <span className={styles.date}>
           {DateHelper.toDisplayFormat(filePreview.metadata.depositDate)} -{' '}
           <LinkToPage
