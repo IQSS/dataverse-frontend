@@ -24,7 +24,10 @@ export interface ReducedMetadataBlockInfo {
   metadataFields: Record<string, ReducedMetadataFieldInfo>
 }
 
-export type ReducedMetadataFieldsAndChildsInfo = Pick<MetadataField, 'name' | 'displayName'>
+export type ReducedMetadataFieldsAndChildsInfo = Pick<
+  MetadataField,
+  'name' | 'displayName' | 'isRequired'
+>
 
 export type ReducedMetadataFieldInfo = ReducedMetadataFieldsAndChildsInfo & {
   childMetadataFields?: Record<string, ReducedMetadataFieldsAndChildsInfo>
@@ -59,25 +62,27 @@ export const useGetAllMetadataBlocksInfo = ({
           (blockInfo) => {
             const formattedMetadataFields: Record<string, ReducedMetadataFieldInfo> =
               Object.entries(blockInfo.metadataFields).reduce((acc, [key, value]) => {
-                const { name, displayName, childMetadataFields } = value
+                const { name, displayName, isRequired, childMetadataFields } = value
                 const replaceDotWithSlash = (str: string) => str.replace(/\./g, '/')
                 const normalizedName = replaceDotWithSlash(name)
 
                 acc[key] = {
                   name: normalizedName,
                   displayName,
+                  isRequired,
                   childMetadataFields: childMetadataFields
                     ? Object.entries(childMetadataFields).reduce((acc, [key, value]) => {
-                        const { name, displayName } = value
+                        const { name, displayName, isRequired } = value
 
                         const normalizedChildfieldName = replaceDotWithSlash(name)
 
                         acc[key] = {
                           name: normalizedChildfieldName,
-                          displayName
+                          displayName,
+                          isRequired
                         }
                         return acc
-                      }, {} as Record<string, Pick<MetadataField, 'name' | 'displayName'>>)
+                      }, {} as Record<string, ReducedMetadataFieldInfo>)
                     : undefined
                 }
                 return acc

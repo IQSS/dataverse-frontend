@@ -3,7 +3,7 @@ import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-
 import cn from 'classnames'
 import { Form } from '@iqss/dataverse-design-system'
 import { ReducedMetadataFieldInfo } from '../../../../useGetAllMetadataBlocksInfo'
-import { INPUT_LEVELS_GROUPER, REQUIRED_BY_DATAVERSE_FIELDS } from '../../../CollectionForm'
+import { INPUT_LEVELS_GROUPER } from '../../../CollectionForm'
 import styles from './InputLevelsTable.module.scss'
 import { CollectionFormHelper } from '../../../CollectionFormHelper'
 import { RequiredOptionalRadios } from './RequiredOptionalRadios'
@@ -21,13 +21,7 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
     name: `${INPUT_LEVELS_GROUPER}.${metadataField.name}.include`
   }) as boolean
 
-  const { name, displayName, childMetadataFields } = metadataField
-
-  const isRequiredByDataverse = REQUIRED_BY_DATAVERSE_FIELDS.some((field) => field === name)
-
-  const isChildFieldRequiredByDataverse = (fieldName: string) => {
-    return REQUIRED_BY_DATAVERSE_FIELDS.some((field) => field === fieldName)
-  }
+  const { name, displayName, isRequired, childMetadataFields } = metadataField
 
   const rules: UseControllerProps['rules'] = {}
 
@@ -67,17 +61,17 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
                 onChange={(e) => handleIncludeChange(e, onChange)}
                 label={displayName}
                 checked={Boolean(value as boolean)}
-                disabled={disabled || isRequiredByDataverse}
+                disabled={disabled || isRequired}
                 ref={ref}
               />
             )}
           />
         </td>
         <td>
-          {isRequiredByDataverse && (
+          {isRequired && (
             <span className={styles['required-by-dataverse-label']}>Required by Dataverse</span>
           )}
-          {!childMetadataFields && !isRequiredByDataverse && (
+          {!childMetadataFields && !isRequired && (
             <RequiredOptionalRadios
               disabled={disabled}
               isForChildField={false}
@@ -94,14 +88,13 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
             <td>
               <label
                 className={cn({
-                  [styles['displayName-disabled']]:
-                    disabled || isChildFieldRequiredByDataverse(childField.name)
+                  [styles['displayName-disabled']]: disabled || childField.isRequired
                 })}>
                 {childField.displayName}
               </label>
             </td>
             <td>
-              {isChildFieldRequiredByDataverse(childField.name) ? (
+              {childField.isRequired ? (
                 <span className={styles['required-by-dataverse-label']}>Required by Dataverse</span>
               ) : (
                 <RequiredOptionalRadios
@@ -112,6 +105,7 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
                     childField.name
                   )}
                   parentIncludeName={name}
+                  parentIsRequiredByDataverse={isRequired}
                   parentFieldChecked={includeCheckboxValue}
                   uniqueInputLevelRowID={`${uniqueInputLevelRowID}-${childField.name}`}
                   fieldName={`${INPUT_LEVELS_GROUPER}.${childField.name}.optionalOrRequired`}

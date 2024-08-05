@@ -9,8 +9,7 @@ import {
   CollectionFormMetadataBlock,
   CollectionFormMetadataBlocks,
   FormattedCollectionInputLevels,
-  FormattedCollectionInputLevelsWithoutParentBlockName,
-  REQUIRED_BY_DATAVERSE_FIELDS
+  FormattedCollectionInputLevelsWithoutParentBlockName
 } from './CollectionForm'
 
 export class CollectionFormHelper {
@@ -27,26 +26,22 @@ export class CollectionFormHelper {
     allMetadataBlocksInfoReduced.forEach((block) => {
       Object.entries(block.metadataFields).forEach(([_key, field]) => {
         const normalizedFieldName = this.replaceDotWithSlash(field.name)
-        const isRequiredByDataverseField = REQUIRED_BY_DATAVERSE_FIELDS.includes(
-          field.name as (typeof REQUIRED_BY_DATAVERSE_FIELDS)[number]
-        )
+        const isFieldRequiredByDataverse = field.isRequired
 
         fields[normalizedFieldName] = {
           include: true,
-          optionalOrRequired: isRequiredByDataverseField ? 'required' : 'optional',
+          optionalOrRequired: isFieldRequiredByDataverse ? 'required' : 'optional',
           parentBlockName: block.name as CollectionFormMetadataBlock
         }
 
         if (field.childMetadataFields) {
           Object.entries(field.childMetadataFields).forEach(([_key, childField]) => {
             const normalizedFieldName = this.replaceDotWithSlash(childField.name)
-            const isRequiredByDataverseField = REQUIRED_BY_DATAVERSE_FIELDS.includes(
-              childField.name as (typeof REQUIRED_BY_DATAVERSE_FIELDS)[number]
-            )
+            const isChildFieldRequiredByDataverse = childField.isRequired
 
             childFields[normalizedFieldName] = {
               include: true,
-              optionalOrRequired: isRequiredByDataverseField ? 'required' : 'optional',
+              optionalOrRequired: isChildFieldRequiredByDataverse ? 'required' : 'optional',
               parentBlockName: block.name as CollectionFormMetadataBlock
             }
           })

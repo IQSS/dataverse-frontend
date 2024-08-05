@@ -2,11 +2,7 @@ import { ChangeEvent } from 'react'
 import { Form, Stack } from '@iqss/dataverse-design-system'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { ReducedMetadataFieldInfo } from '../../../../useGetAllMetadataBlocksInfo'
-import {
-  CollectionFormInputLevelValue,
-  INPUT_LEVELS_GROUPER,
-  REQUIRED_BY_DATAVERSE_FIELDS
-} from '../../../CollectionForm'
+import { CollectionFormInputLevelValue, INPUT_LEVELS_GROUPER } from '../../../CollectionForm'
 
 type RequiredOptionalRadiosProps =
   | {
@@ -15,6 +11,7 @@ type RequiredOptionalRadiosProps =
       isForChildField: true
       siblingChildFields: Record<string, ReducedMetadataFieldInfo>
       parentIncludeName: string
+      parentIsRequiredByDataverse: boolean
       parentFieldChecked: boolean
       uniqueInputLevelRowID: string
     }
@@ -24,6 +21,7 @@ type RequiredOptionalRadiosProps =
       isForChildField?: false
       siblingChildFields?: never
       parentIncludeName?: never
+      parentIsRequiredByDataverse?: never
       parentFieldChecked: boolean
       uniqueInputLevelRowID: string
     }
@@ -36,12 +34,15 @@ type RequiredOptionalRadiosProps =
  * If used from a child field, checks if at any moment all siblingChildFields are required then set parent to required also unless parent is required by dataverse
  */
 
+// TODO:ME Make parent field required if one of the child fields is required
+
 export const RequiredOptionalRadios = ({
   disabled,
   fieldName,
   isForChildField,
   siblingChildFields,
   parentIncludeName,
+  parentIsRequiredByDataverse,
   parentFieldChecked,
   uniqueInputLevelRowID
 }: RequiredOptionalRadiosProps) => {
@@ -61,11 +62,8 @@ export const RequiredOptionalRadios = ({
   ) => {
     // Check if all siblingChildFields are required then set parent to required also unless parent is required by dataverse
     if (isForChildField) {
-      const isParentFieldRequiredByDataverseField = REQUIRED_BY_DATAVERSE_FIELDS.includes(
-        parentIncludeName as (typeof REQUIRED_BY_DATAVERSE_FIELDS)[number]
-      )
       // If parent is required by dataverse, then is already required
-      if (e.target.value === 'required' && !isParentFieldRequiredByDataverseField) {
+      if (e.target.value === 'required' && !parentIsRequiredByDataverse) {
         const allSiblingsRequired = (
           siblingChildFieldsValues as CollectionFormInputLevelValue[]
         ).every((value) => value === 'required')
@@ -76,7 +74,7 @@ export const RequiredOptionalRadios = ({
       }
 
       // If parent is required by dataverse, then is already required and should not be set to optional
-      if (e.target.value === 'optional' && !isParentFieldRequiredByDataverseField) {
+      if (e.target.value === 'optional' && !parentIsRequiredByDataverse) {
         setValue(`${INPUT_LEVELS_GROUPER}.${parentIncludeName}.optionalOrRequired`, 'optional')
       }
     }
