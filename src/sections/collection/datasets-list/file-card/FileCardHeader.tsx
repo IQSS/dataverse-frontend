@@ -6,6 +6,7 @@ import {
   DatasetLabel,
   DatasetLabelSemanticMeaning,
   DatasetLabelValue,
+  DatasetNonNumericVersionSearchParam,
   DatasetPublishingStatus
 } from '../../../../dataset/domain/models/Dataset'
 import { DatasetLabels } from '../../../dataset/dataset-labels/DatasetLabels'
@@ -21,8 +22,7 @@ function getSearchParams(
 ): Record<string, string> {
   const params: Record<string, string> = { id: id.toString() }
   if (publishingStatus === DatasetPublishingStatus.DRAFT) {
-    // TODO: Replace with const after merge of #442
-    params.datasetVersion = 'DRAFT'
+    params.datasetVersion = DatasetNonNumericVersionSearchParam.DRAFT
   }
   return params
 }
