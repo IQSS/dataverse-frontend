@@ -48,8 +48,11 @@ function DatasetWithSearchParams() {
   const searchParamVersion = searchParams.get('version') ?? undefined
   const version = searchParamVersionToDomainVersion(searchParamVersion)
   const location = useLocation()
-  const state = location.state as { created: boolean; metadataUpdated: boolean } | undefined
+  const state = location.state as
+    | { created: boolean; metadataUpdated: boolean; publishInProgress: boolean }
+    | undefined
   const created = state?.created ?? false
+  const publishInProgress = state?.publishInProgress ?? false
   const metadataUpdated = state?.metadataUpdated ?? false
 
   useEffect(() => {
@@ -60,8 +63,10 @@ function DatasetWithSearchParams() {
     return (
       <DatasetProvider
         repository={datasetRepository}
-        searchParams={{ privateUrlToken: privateUrlToken }}>
+        searchParams={{ privateUrlToken: privateUrlToken }}
+        isPublishing={publishInProgress}>
         <Dataset
+          datasetRepository={datasetRepository}
           fileRepository={fileRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
@@ -73,11 +78,14 @@ function DatasetWithSearchParams() {
   return (
     <DatasetProvider
       repository={datasetRepository}
-      searchParams={{ persistentId: persistentId, version: version }}>
+      searchParams={{ persistentId: persistentId, version: version }}
+      isPublishing={publishInProgress}>
       <Dataset
+        datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         created={created}
+        publishInProgress={publishInProgress}
         metadataUpdated={metadataUpdated}
         filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
       />

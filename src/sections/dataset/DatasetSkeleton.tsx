@@ -25,16 +25,20 @@ export function DatasetSkeleton() {
               <Skeleton height="300px" style={{ marginBottom: 10 }} />
             </Col>
           </Row>
-          <Tabs defaultActiveKey="files">
-            <Tabs.Tab eventKey="files" title="Files">
-              <Skeleton height="1000px" style={{ marginTop: 20 }} />
-            </Tabs.Tab>
-            <Tabs.Tab eventKey="metadata" title="Metadata">
-              <Skeleton height="1000px" style={{ marginTop: 20 }} />
-            </Tabs.Tab>
-          </Tabs>
+          <TabsSkeleton />
         </div>
       </article>
     </SkeletonTheme>
   )
 }
+
+export const TabsSkeleton = () => (
+  <Tabs defaultActiveKey="files">
+    <Tabs.Tab eventKey="files" title="Files">
+      <Skeleton height="1000px" style={{ marginTop: 20 }} />
+    </Tabs.Tab>
+    <Tabs.Tab eventKey="metadata" title="Metadata">
+      <Skeleton height="1000px" style={{ marginTop: 20 }} />
+    </Tabs.Tab>
+  </Tabs>
+)

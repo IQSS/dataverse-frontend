@@ -1,5 +1,5 @@
 import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
-import { Dataset, DatasetNonNumericVersion } from '../../domain/models/Dataset'
+import { Dataset, DatasetLock, DatasetNonNumericVersion } from '../../domain/models/Dataset'
 import {
   getDataset,
   getAllDatasetPreviews,
@@ -8,6 +8,7 @@ import {
   Dataset as JSDataset,
   DatasetPreview as JSDatasetPreview,
   DatasetUserPermissions as JSDatasetPermissions,
+  VersionUpdateType as JSVersionUpdateType,
   getPrivateUrlDataset,
   getPrivateUrlDatasetCitation,
   getDatasetUserPermissions,
@@ -20,6 +21,7 @@ import {
   createDataset,
   CreatedDatasetIdentifiers as JSDatasetIdentifiers,
   WriteError,
+  publishDataset,
   updateDataset
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
@@ -28,6 +30,7 @@ import { JSDatasetPreviewMapper } from '../mappers/JSDatasetPreviewMapper'
 import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
 import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
 import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
+import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
 const defaultCollectionId = 'root'
 const includeDeaccessioned = true
 type DatasetDetails = [JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[]]
@@ -113,6 +116,11 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       )
     ])
   }
+  getLocks(persistentId: string): Promise<DatasetLock[]> {
+    return getDatasetLocks.execute(persistentId).then((jsDatasetLocks) => {
+      return JSDatasetMapper.toLocks(jsDatasetLocks)
+    })
+  }
 
   getByPersistentId(
     persistentId: string,
@@ -197,6 +205,33 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .catch((error: WriteError) => {
         throw new Error(error.message)
       })
+  }
+  publish(
+    persistentId: string,
+    versionUpdateType: VersionUpdateType = VersionUpdateType.MAJOR
+  ): Promise<void> {
+    let jsVersionUpdateType: JSVersionUpdateType
+
+    switch (versionUpdateType) {
+      case VersionUpdateType.MINOR:
+        jsVersionUpdateType = JSVersionUpdateType.MINOR
+        break
+      case VersionUpdateType.MAJOR:
+        jsVersionUpdateType = JSVersionUpdateType.MAJOR
+        break
+      case VersionUpdateType.UPDATE_CURRENT:
+        // TODO: remove this logic when VersionUpdateType.UPDATE_CURRENT is available in js-dataverse
+        throw new Error('update current version type not supported yet')
+      default:
+        throw new Error('Invalid version update type')
+    }
+
+    return publishDataset.execute(persistentId, jsVersionUpdateType).catch((error: WriteError) => {
+      throw new Error(error.message)
+    })
+    return publishDataset.execute(persistentId, jsVersionUpdateType).catch((error: WriteError) => {
+      throw new Error(error.message)
+    })
   }
 
   updateMetadata(datasetId: string | number, updatedDataset: DatasetDTO): Promise<void> {

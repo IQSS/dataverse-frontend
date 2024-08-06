@@ -35,6 +35,7 @@ declare global {
       mount: typeof mount
       customMount: typeof mount
       mountAuthenticated: typeof mount
+      mountSuperuser: typeof mount
       loginAsAdmin(go?: string): Chainable<JQuery<HTMLElement>>
       getApiToken(): Chainable<string>
       compareDate(date: Date, expectedDate: Date): Chainable

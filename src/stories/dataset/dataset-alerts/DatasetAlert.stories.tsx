@@ -1,8 +1,7 @@
+import { useEffect } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
-
 import { DatasetAlerts } from '../../../sections/dataset/dataset-alerts/DatasetAlerts'
 import { WithI18next } from '../../WithI18next'
-
 import {
   DatasetMother,
   DatasetPermissionsMother,
@@ -11,12 +10,34 @@ import {
 import { useAlertContext } from '../../../sections/alerts/AlertContext'
 import { WithAlerts } from '../../WithAlerts'
 import { Alert, AlertMessageKey } from '../../../alert/domain/models/Alert'
+import useUpdateDatasetAlerts from '../../../sections/dataset/useUpdateDatasetAlerts'
+import { Dataset } from '../../../dataset/domain/models/Dataset'
 
 const meta: Meta<typeof DatasetAlerts> = {
   title: 'Sections/Dataset Page/DatasetAlerts',
   component: DatasetAlerts,
   decorators: [WithI18next, WithAlerts]
 }
+export default meta
+
+type Story = StoryObj<typeof DatasetAlerts>
+
+const DatasetAlertsWrapper = ({ alerts }: { alerts: Alert[] }) => {
+  const { setAlerts } = useAlertContext()
+
+  useEffect(() => {
+    setAlerts(alerts)
+  }, [alerts, setAlerts])
+
+  return <DatasetAlerts />
+}
+
+const DatasetAlertsWithDatasetInfoWrapper = ({ dataset }: { dataset: Dataset }) => {
+  useUpdateDatasetAlerts({ dataset })
+
+  return <DatasetAlerts />
+}
+
 const allUpdateAlerts: Alert[] = [
   new Alert('success', AlertMessageKey.METADATA_UPDATED),
   new Alert('success', AlertMessageKey.THUMBNAIL_UPDATED),
@@ -25,34 +46,16 @@ const allUpdateAlerts: Alert[] = [
   new Alert('success', AlertMessageKey.DATASET_DELETED)
 ]
 
-export default meta
-type Story = StoryObj<typeof DatasetAlerts>
 export const UpdateAlerts: Story = {
   render: () => {
-    const dataset = DatasetMother.createRealistic()
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { addDatasetAlert } = useAlertContext()
-    allUpdateAlerts.forEach((alert) => addDatasetAlert(alert))
-    return (
-      <div>
-        <DatasetAlerts alerts={dataset.alerts} />
-      </div>
-    )
+    return <DatasetAlertsWrapper alerts={allUpdateAlerts} />
   }
 }
 
 const publishAlert = new Alert('warning', AlertMessageKey.PUBLISH_IN_PROGRESS)
 export const PublishInProgress: Story = {
   render: () => {
-    const dataset = DatasetMother.createRealistic()
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { addDatasetAlert } = useAlertContext()
-    addDatasetAlert(publishAlert)
-    return (
-      <div>
-        <DatasetAlerts alerts={dataset.alerts} />
-      </div>
-    )
+    return <DatasetAlertsWrapper alerts={[publishAlert]} />
   }
 }
 
@@ -62,11 +65,8 @@ export const DraftVersion: Story = {
       version: DatasetVersionMother.createDraft(),
       permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed()
     })
-    return (
-      <div>
-        <DatasetAlerts alerts={dataset.alerts} />
-      </div>
-    )
+
+    return <DatasetAlertsWithDatasetInfoWrapper dataset={dataset} />
   }
 }
 
@@ -77,11 +77,7 @@ export const VersionNotFound: Story = {
       requestedVersion: '3.0'
     })
 
-    return (
-      <div>
-        <DatasetAlerts alerts={dataset.alerts} />
-      </div>
-    )
+    return <DatasetAlertsWithDatasetInfoWrapper dataset={dataset} />
   }
 }
 export const VersionNotFoundShowDraft: Story = {
@@ -91,11 +87,7 @@ export const VersionNotFoundShowDraft: Story = {
       requestedVersion: '3.0'
     })
 
-    return (
-      <div>
-        <DatasetAlerts alerts={dataset.alerts} />
-      </div>
-    )
+    return <DatasetAlertsWithDatasetInfoWrapper dataset={dataset} />
   }
 }
 export const SharePrivateUrl: Story = {
@@ -109,11 +101,7 @@ export const SharePrivateUrl: Story = {
       }
     })
 
-    return (
-      <div>
-        <DatasetAlerts alerts={dataset.alerts} />
-      </div>
-    )
+    return <DatasetAlertsWithDatasetInfoWrapper dataset={dataset} />
   }
 }
 export const UsePrivateUrl: Story = {
@@ -127,10 +115,6 @@ export const UsePrivateUrl: Story = {
       }
     })
 
-    return (
-      <div>
-        <DatasetAlerts alerts={dataset.alerts} />
-      </div>
-    )
+    return <DatasetAlertsWithDatasetInfoWrapper dataset={dataset} />
   }
 }

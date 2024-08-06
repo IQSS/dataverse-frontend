@@ -1,4 +1,7 @@
+import { DatasetLicense } from '../../models/Dataset'
+
 export interface DatasetDTO {
+  licence: DatasetLicense
   metadataBlocks: DatasetMetadataBlockValuesDTO[]
 }
 

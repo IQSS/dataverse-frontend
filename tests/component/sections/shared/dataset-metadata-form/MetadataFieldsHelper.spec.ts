@@ -8,6 +8,7 @@ import {
   DatasetMetadataFormValues,
   MetadataFieldsHelper
 } from '../../../../../src/sections/shared/form/DatasetMetadataForm/MetadataFieldsHelper'
+import { defaultLicense } from '../../../../../src/dataset/domain/models/Dataset'
 
 const metadataBlocksInfo: MetadataBlockInfo[] = [
   {
@@ -1247,6 +1248,7 @@ const formValuesWithValuesBackToDotKeys: DatasetMetadataFormValues = {
 }
 
 const expectedDatasetDTO: DatasetDTO = {
+  licence: defaultLicense,
   metadataBlocks: [
     {
       name: 'foo',

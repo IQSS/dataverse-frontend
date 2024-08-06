@@ -196,7 +196,7 @@ export interface DatasetLicense {
   iconUri?: string
 }
 
-const defaultLicense: DatasetLicense = {
+export const defaultLicense: DatasetLicense = {
   name: 'CC0 1.0',
   uri: 'https://creativecommons.org/publicdomain/zero/1.0',
   iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
@@ -216,6 +216,10 @@ export enum DatasetNonNumericVersion {
 }
 export enum DatasetNonNumericVersionSearchParam {
   DRAFT = 'DRAFT'
+}
+// TODO: Maybe add this to some routing related folder or file
+export enum QueryParamsKeys {
+  VERSION = 'version'
 }
 
 export class DatasetVersionNumber {
@@ -380,7 +384,8 @@ export class Dataset {
     public readonly hierarchy: UpwardHierarchyNode,
     public readonly thumbnail?: string,
     public readonly privateUrl?: PrivateUrl, // will be set if the user requested a version that did not exist
-    public readonly requestedVersion?: string
+    public readonly requestedVersion?: string,
+    public readonly publicationDate?: string
   ) {}
 
   public checkIsLockedFromPublishing(userPersistentId: string): boolean {

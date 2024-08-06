@@ -37,6 +37,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **Card:** NEW card element to show header and body.
 - **ProgressBar:** NEW progress bar element to show progress.
 - **SelectAdvanced:** NEW ehanced select to search across options, and perform both single and multiple selections.
+- **FormRadioGroup:** NEW radio group element to show radio buttons.
+- **FormRadio:** NEW radio element to show radio button.
 - **NavbarDropdownItem:** Now accepts `as` prop and takes `as` Element props.
 - **FormInputGroup:** extend Props Interface to accept `hasValidation` prop to properly show rounded corners in an <InputGroup> with validation
 - **Button:** extend Props Interface to accept `size` prop.
