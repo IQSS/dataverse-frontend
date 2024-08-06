@@ -9,7 +9,6 @@ import { Col, ColProps } from '../../grid/Col'
 import { Row } from '../../grid/Row'
 import { FormCheckbox } from './form-element/FormCheckbox'
 import { FormFeedback } from './form-element/FormFeedback'
-import { FormRadio } from './form-element/FormRadio'
 import { FormSelectAdvanced } from './form-element/FormSelectAdvanced'
 import { FormRadio } from './form-element/FormRadio'
 

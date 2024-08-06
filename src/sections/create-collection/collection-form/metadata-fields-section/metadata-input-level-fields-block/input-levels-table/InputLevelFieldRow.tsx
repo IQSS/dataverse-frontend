@@ -7,6 +7,7 @@ import { INPUT_LEVELS_GROUPER } from '../../../CollectionForm'
 import styles from './InputLevelsTable.module.scss'
 import { CollectionFormHelper } from '../../../CollectionFormHelper'
 import { RequiredOptionalRadios } from './RequiredOptionalRadios'
+import { useTranslation } from 'react-i18next'
 
 interface InputLevelFieldRowProps {
   metadataField: ReducedMetadataFieldInfo
@@ -14,6 +15,9 @@ interface InputLevelFieldRowProps {
 }
 
 export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldRowProps) => {
+  const { t } = useTranslation('createCollection', {
+    keyPrefix: 'fields.metadataFields.inputLevelsTable'
+  })
   const uniqueInputLevelRowID = useId()
   const { control, setValue } = useFormContext()
 
@@ -69,7 +73,9 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
         </td>
         <td>
           {isRequired && (
-            <span className={styles['required-by-dataverse-label']}>Required by Dataverse</span>
+            <span className={styles['required-by-dataverse-label']}>
+              {t('requiredByDataverse')}
+            </span>
           )}
           {!childMetadataFields && !isRequired && (
             <RequiredOptionalRadios
@@ -95,7 +101,9 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
             </td>
             <td>
               {childField.isRequired ? (
-                <span className={styles['required-by-dataverse-label']}>Required by Dataverse</span>
+                <span className={styles['required-by-dataverse-label']}>
+                  {t('requiredByDataverse')}
+                </span>
               ) : (
                 <RequiredOptionalRadios
                   disabled={disabled}

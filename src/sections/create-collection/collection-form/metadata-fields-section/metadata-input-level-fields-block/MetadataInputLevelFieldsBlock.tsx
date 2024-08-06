@@ -6,6 +6,7 @@ import { MetadataBlockName } from '../../../../../metadata-block-info/domain/mod
 import { ReducedMetadataBlockInfo } from '../../../useGetAllMetadataBlocksInfo'
 import { METADATA_BLOCKS_NAMES_GROUPER, USE_FIELDS_FROM_PARENT } from '../../CollectionForm'
 import { InputLevelsTable } from './input-levels-table/InputLevelsTable'
+import { useTranslation } from 'react-i18next'
 
 interface MetadataInputLevelFieldsBlockProps {
   blockName: MetadataBlockName
@@ -20,6 +21,9 @@ export const MetadataInputLevelFieldsBlock = ({
 }: MetadataInputLevelFieldsBlockProps) => {
   const checkboxID = useId()
   const { control } = useFormContext()
+  const { t } = useTranslation('createCollection', {
+    keyPrefix: 'fields.metadataFields.inputLevelsTable'
+  })
 
   const [inputLevelsTableStatus, setInputLevelsTableStatus] = useState({
     show: false,
@@ -139,7 +143,7 @@ export const MetadataInputLevelFieldsBlock = ({
         closeButton={
           <CloseButton
             onClick={handleHideInputLevelsTable}
-            aria-label="Hide input levels table"
+            aria-label={t('hideTableAriaLabel')}
             tabIndex={inputLevelsTableStatus.show ? 0 : -1}
           />
         }

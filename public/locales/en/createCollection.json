@@ -45,14 +45,30 @@
       "invalid": "Email is not a valid email"
     },
     "metadataFields": {
-      "label": "Metadata Fields",
+      "sectionLabel": "Metadata Fields",
       "helperText": "Choose the metadata fields to use in dataset templates and when adding a dataset to this dataverse.",
-      "useMetadataFieldsFrom": "Use metadata fields from"
+      "useMetadataFieldsFrom": "Use metadata fields from",
+      "citationMetadata": "Citation Metadata (Required)",
+      "geospatialMetadata": "Geospatial Metadata",
+      "socialScienceMetadata": "Social Science and Humanities Metadata",
+      "astrophysicsMetadata": "Astronomy and Astrophysics Metadata",
+      "biomedicalMetadata": "Life Sciences Metadata",
+      "journalMetadata": "Journal Metadata",
+      "inputLevelsTable": {
+        "hideTableAriaLabel": "Hide input levels table",
+        "requiredByDataverse": "Required by Dataverse"
+      }
     },
     "browseSearchFacets": {
       "label": "Browse/Search Facets",
       "helperText": "Choose the metadata fields to use as facets for browsing datasets and dataverses in this dataverse."
     }
+  },
+  "confirmResetModal": {
+    "title": "Reset Modifications",
+    "warning": "Are you sure you want to reset the selected metadata fields? If you do this, any customizations (hidden, required, optional) you have done will no longer appear.",
+    "continue": "Continue",
+    "cancel": "Cancel"
   },
   "submitStatus": {
     "success": "Collection created successfully."
