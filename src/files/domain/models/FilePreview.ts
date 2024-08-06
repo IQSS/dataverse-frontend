@@ -1,7 +1,10 @@
 import { FileMetadata } from './FileMetadata'
 import { FileIngest } from './FileIngest'
 import { FileAccess } from './FileAccess'
-import { DatasetPublishingStatus } from '../../../dataset/domain/models/Dataset'
+import {
+  DatasetPublishingStatus,
+  DatasetVersionNumber
+} from '../../../dataset/domain/models/Dataset'
 import { FilePermissions } from './FilePermissions'
 
 export interface FilePreview {
@@ -12,4 +15,5 @@ export interface FilePreview {
   ingest: FileIngest
   metadata: FileMetadata
   permissions: FilePermissions
+  datasetVersionNumber?: DatasetVersionNumber
 }

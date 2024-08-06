@@ -17,6 +17,7 @@ export class FilePreviewMother {
       ingest: FileIngestMother.create(),
       metadata: FileMetadataMother.create(),
       permissions: FilePermissionsMother.create(),
+      datasetVersionNumber: DatasetVersionMother.create().number,
       ...props
     }
   }
@@ -33,6 +34,7 @@ export class FilePreviewMother {
       ingest: FileIngestMother.createIngestNone(),
       metadata: FileMetadataMother.createDefault(),
       permissions: FilePermissionsMother.createWithGrantedPermissions(),
+      datasetVersionNumber: DatasetVersionMother.create().number,
       ...props
     })
   }
