@@ -21,6 +21,7 @@ import { DatasetPaginationInfo } from '../../../../src/dataset/domain/models/Dat
 import { DatasetDTO } from '../../../../src/dataset/domain/useCases/DTOs/DatasetDTO'
 import { CollectionHelper } from '../../shared/collection/CollectionHelper'
 const DRAFT_PARAM = DatasetNonNumericVersion.DRAFT
+import { VersionUpdateType } from '../../../../src/dataset/domain/models/VersionUpdateType'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -392,5 +393,36 @@ describe('Dataset JSDataverse Repository', () => {
     await datasetRepository.create(datasetDTO).then((response) => {
       expect(response.persistentId).to.exist
     })
+  })
+  it('publishes a draft dataset', async () => {
+    const datasetResponse = await DatasetHelper.create(collectionId)
+    await datasetRepository.publish(datasetResponse.persistentId).then((response) => {
+      expect(response).to.not.exist
+    })
+    await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
+    await datasetRepository
+      .getByPersistentId(datasetResponse.persistentId)
+      .then((datasetResponse) => {
+        expect(datasetResponse?.version.number.majorNumber).to.equal(1)
+        expect(datasetResponse?.version.number.minorNumber).to.equal(0)
+        expect(datasetResponse?.version.publishingStatus).to.equal(DatasetPublishingStatus.RELEASED)
+      })
+  })
+  it.skip('publishes a new version of a previously released dataset', async () => {
+    const datasetResponse = await DatasetHelper.createAndPublish(collectionId)
+    // TODO: update dataset
+    await datasetRepository
+      .publish(datasetResponse.persistentId, VersionUpdateType.MINOR)
+      .then((response) => {
+        expect(response).to.not.exist
+      })
+    await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
+    await datasetRepository
+      .getByPersistentId(datasetResponse.persistentId)
+      .then((datasetResponse) => {
+        expect(datasetResponse?.version.number.majorNumber).to.equal(1)
+        expect(datasetResponse?.version.number.minorNumber).to.equal(1)
+        expect(datasetResponse?.version.publishingStatus).to.equal(DatasetPublishingStatus.RELEASED)
+      })
   })
 })

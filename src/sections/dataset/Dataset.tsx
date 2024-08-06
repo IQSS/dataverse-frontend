@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
 import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import styles from './Dataset.module.scss'
+import { useNavigate } from 'react-router-dom'
 import { DatasetLabels } from './dataset-labels/DatasetLabels'
 import { useLoading } from '../loading/LoadingContext'
-import { DatasetSkeleton } from './DatasetSkeleton'
+import { DatasetSkeleton, TabsSkeleton } from './DatasetSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { useTranslation } from 'react-i18next'
 import { DatasetMetadata } from './dataset-metadata/DatasetMetadata'
@@ -13,51 +14,64 @@ import { DatasetFiles } from './dataset-files/DatasetFiles'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { DatasetActionButtons } from './dataset-action-buttons/DatasetActionButtons'
 import { useDataset } from './DatasetContext'
-import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 import { useNotImplementedModal } from '../not-implemented/NotImplementedModalContext'
 import { NotImplementedModal } from '../not-implemented/NotImplementedModal'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
-import { useAlertContext } from '../alerts/AlertContext'
-import { AlertMessageKey } from '../../alert/domain/models/Alert'
+import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
+import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 import { DatasetFilesScrollable } from './dataset-files/DatasetFilesScrollable'
+import useCheckPublishCompleted from './useCheckPublishCompleted'
+import useUpdateDatasetAlerts from './useUpdateDatasetAlerts'
+import { Route } from '../Route.enum'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 
 interface DatasetProps {
+  datasetRepository: DatasetRepository
   fileRepository: FileRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
   created?: boolean
   metadataUpdated?: boolean
   filesTabInfiniteScrollEnabled?: boolean
+  publishInProgress?: boolean
 }
 
 export function Dataset({
+  datasetRepository,
   fileRepository,
   metadataBlockInfoRepository,
   created,
   metadataUpdated,
-  filesTabInfiniteScrollEnabled
+  filesTabInfiniteScrollEnabled,
+  publishInProgress
 }: DatasetProps) {
   const { setIsLoading } = useLoading()
-  const { dataset, isLoading } = useDataset()
+  const { dataset, isLoading: isDatasetLoading } = useDataset()
   const { t } = useTranslation('dataset')
+  const navigate = useNavigate()
   const { hideModal, isModalOpen } = useNotImplementedModal()
-  const { addDatasetAlert } = useAlertContext()
+  const publishCompleted = useCheckPublishCompleted(publishInProgress, dataset, datasetRepository)
+  useUpdateDatasetAlerts({
+    dataset,
+    created,
+    metadataUpdated,
+    publishInProgress
+  })
 
   useEffect(() => {
-    if (metadataUpdated) {
-      addDatasetAlert({ messageKey: AlertMessageKey.METADATA_UPDATED, variant: 'success' })
+    if (publishInProgress && publishCompleted && dataset) {
+      navigate(`${Route.DATASETS}?persistentId=${dataset.persistentId}`, {
+        state: {},
+        replace: true
+      })
     }
-    if (created) {
-      addDatasetAlert({ messageKey: AlertMessageKey.DATASET_CREATED, variant: 'success' })
-    }
-  }, [metadataUpdated, created, addDatasetAlert])
+  }, [publishInProgress, publishCompleted, dataset, navigate])
 
   useEffect(() => {
-    setIsLoading(isLoading)
-  }, [isLoading, setIsLoading])
+    setIsLoading(isDatasetLoading)
+  }, [isDatasetLoading, setIsLoading])
 
-  if (isLoading) {
+  if (isDatasetLoading && !dataset) {
     return <DatasetSkeleton />
   }
 
@@ -73,7 +87,7 @@ export function Dataset({
             <div className={styles.container}>
               <Row>
                 <Col>
-                  <DatasetAlerts alerts={dataset.alerts} />
+                  <DatasetAlerts />
                 </Col>
               </Row>
             </div>
@@ -88,7 +102,7 @@ export function Dataset({
                   <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
                 </Col>
                 <Col sm={3}>
-                  <DatasetActionButtons dataset={dataset} />
+                  <DatasetActionButtons datasetRepository={datasetRepository} dataset={dataset} />
                 </Col>
               </Row>
               <Row>
@@ -100,34 +114,38 @@ export function Dataset({
                   />
                 </Col>
               </Row>
-              <Tabs defaultActiveKey="files">
-                <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
-                  <div className={styles['tab-container']}>
-                    {filesTabInfiniteScrollEnabled ? (
-                      <DatasetFilesScrollable
-                        filesRepository={fileRepository}
-                        datasetPersistentId={dataset.persistentId}
-                        datasetVersion={dataset.version}
+              {publishInProgress && <TabsSkeleton />}
+
+              {(!publishInProgress || !isDatasetLoading) && (
+                <Tabs defaultActiveKey="files">
+                  <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
+                    <div className={styles['tab-container']}>
+                      {filesTabInfiniteScrollEnabled ? (
+                        <DatasetFilesScrollable
+                          filesRepository={fileRepository}
+                          datasetPersistentId={dataset.persistentId}
+                          datasetVersion={dataset.version}
+                        />
+                      ) : (
+                        <DatasetFiles
+                          filesRepository={fileRepository}
+                          datasetPersistentId={dataset.persistentId}
+                          datasetVersion={dataset.version}
+                        />
+                      )}
+                    </div>
+                  </Tabs.Tab>
+                  <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
+                    <div className={styles['tab-container']}>
+                      <DatasetMetadata
+                        persistentId={dataset.persistentId}
+                        metadataBlocks={dataset.metadataBlocks}
+                        metadataBlockInfoRepository={metadataBlockInfoRepository}
                       />
-                    ) : (
-                      <DatasetFiles
-                        filesRepository={fileRepository}
-                        datasetPersistentId={dataset.persistentId}
-                        datasetVersion={dataset.version}
-                      />
-                    )}
-                  </div>
-                </Tabs.Tab>
-                <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
-                  <div className={styles['tab-container']}>
-                    <DatasetMetadata
-                      persistentId={dataset.persistentId}
-                      metadataBlocks={dataset.metadataBlocks}
-                      metadataBlockInfoRepository={metadataBlockInfoRepository}
-                    />
-                  </div>
-                </Tabs.Tab>
-              </Tabs>
+                    </div>
+                  </Tabs.Tab>
+                </Tabs>
+              )}
               <SeparationLine />
             </div>
           </article>

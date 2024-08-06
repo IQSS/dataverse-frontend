@@ -1,18 +1,21 @@
-import { Dataset, DatasetPublishingStatus } from '../../../../dataset/domain/models/Dataset'
-import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
-import { ChangeCurationStatusMenu } from './ChangeCurationStatusMenu'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNotImplementedModal } from '../../../not-implemented/NotImplementedModalContext'
+import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useSession } from '../../../session/SessionContext'
+import { DatasetRepository } from '../../../../dataset/domain/repositories/DatasetRepository'
+import { Dataset, DatasetPublishingStatus } from '../../../../dataset/domain/models/Dataset'
+import { ChangeCurationStatusMenu } from './ChangeCurationStatusMenu'
+import { PublishDatasetModal } from '../../publish-dataset/PublishDatasetModal'
 
 interface PublishDatasetMenuProps {
   dataset: Dataset
+  datasetRepository: DatasetRepository
 }
 
-export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
+export function PublishDatasetMenu({ dataset, datasetRepository }: PublishDatasetMenuProps) {
   const { user } = useSession()
   const { t } = useTranslation('dataset')
-  const { showModal } = useNotImplementedModal()
+  const [showModal, setShowModal] = useState(false)
 
   if (
     !dataset.version.isLatest ||
@@ -25,26 +28,38 @@ export function PublishDatasetMenu({ dataset }: PublishDatasetMenuProps) {
 
   const handleSelect = () => {
     // TODO - Implement upload files
-    showModal()
+    setShowModal(true)
   }
 
   return (
-    <DropdownButton
-      id={`publish-dataset-menu`}
-      title={t('datasetActionButtons.publish.title')}
-      onSelect={handleSelect}
-      asButtonGroup
-      variant="secondary"
-      disabled={
-        dataset.checkIsLockedFromPublishing(user.persistentId) ||
-        !dataset.hasValidTermsOfAccess ||
-        !dataset.isValid
-      }>
-      <DropdownButtonItem>{t('datasetActionButtons.publish.publish')}</DropdownButtonItem>
-      {dataset.version.isInReview && (
-        <DropdownButtonItem>{t('datasetActionButtons.publish.returnToAuthor')}</DropdownButtonItem>
-      )}
-      <ChangeCurationStatusMenu />
-    </DropdownButton>
+    <>
+      <PublishDatasetModal
+        show={showModal}
+        repository={datasetRepository}
+        persistentId={dataset.persistentId}
+        releasedVersionExists={dataset.version.someDatasetVersionHasBeenReleased}
+        handleClose={() => setShowModal(false)}
+      />
+
+      <DropdownButton
+        id={`publish-dataset-menu`}
+        title={t('datasetActionButtons.publish.title')}
+        onSelect={handleSelect}
+        asButtonGroup
+        variant="secondary"
+        disabled={
+          dataset.checkIsLockedFromPublishing(user.persistentId) ||
+          !dataset.hasValidTermsOfAccess ||
+          !dataset.isValid
+        }>
+        <DropdownButtonItem>{t('datasetActionButtons.publish.publish')}</DropdownButtonItem>
+        {dataset.version.isInReview && (
+          <DropdownButtonItem>
+            {t('datasetActionButtons.publish.returnToAuthor')}
+          </DropdownButtonItem>
+        )}
+        <ChangeCurationStatusMenu />
+      </DropdownButton>
+    </>
   )
 }

@@ -3,9 +3,11 @@ import { DatasetRepository } from '../../../../src/dataset/domain/repositories/D
 import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { NotImplementedModalProvider } from '../../../../src/sections/not-implemented/NotImplementedModalProvider'
+import { FileRepository } from '../../../../src/files/domain/repositories/FileRepository'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
+const fileRepository: FileRepository = {} as FileRepository
 
 const collectionMetadataBlocksInfo =
   MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue()

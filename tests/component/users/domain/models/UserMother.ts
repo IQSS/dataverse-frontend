@@ -8,6 +8,18 @@ export class UserMother {
       firstName: 'James',
       lastName: 'Potts',
       email: 'jamesPotts@g.harvard.edu',
+      affiliation: 'Harvard University',
+      superuser: false
+    }
+  }
+  static createSuperUser(): User {
+    return {
+      persistentId: 'admin',
+      superuser: true,
+      displayName: 'James D. Potts',
+      firstName: 'James',
+      lastName: 'Potts',
+      email: 'jamesPotts@g.harvard.edu',
       affiliation: 'Harvard University'
     }
   }

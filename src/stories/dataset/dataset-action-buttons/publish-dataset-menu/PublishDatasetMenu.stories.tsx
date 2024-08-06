@@ -8,6 +8,7 @@ import {
 } from '../../../../../tests/component/dataset/domain/models/DatasetMother'
 import { PublishDatasetMenu } from '../../../../sections/dataset/dataset-action-buttons/publish-dataset-menu/PublishDatasetMenu'
 import { WithLoggedInUser } from '../../../WithLoggedInUser'
+import { DatasetMockRepository } from '../../DatasetMockRepository'
 
 const meta: Meta<typeof PublishDatasetMenu> = {
   title: 'Sections/Dataset Page/DatasetActionButtons/PublishDatasetMenu',
@@ -32,6 +33,7 @@ export const PublishingAllowed: Story = {
         hasValidTermsOfAccess: true,
         isValid: true
       })}
+      datasetRepository={new DatasetMockRepository()}
     />
   )
 }
@@ -46,6 +48,7 @@ export const NoValidTermsOfAccess: Story = {
         hasValidTermsOfAccess: false,
         isValid: true
       })}
+      datasetRepository={new DatasetMockRepository()}
     />
   )
 }
@@ -60,6 +63,7 @@ export const DatasetInReview: Story = {
         hasValidTermsOfAccess: true,
         isValid: true
       })}
+      datasetRepository={new DatasetMockRepository()}
     />
   )
 }

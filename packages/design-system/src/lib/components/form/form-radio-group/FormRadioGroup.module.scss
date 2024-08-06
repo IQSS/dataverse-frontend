@@ -1,0 +1,7 @@
+@import 'src/lib/assets/styles/design-tokens/typography.module';
+
+.title {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  font-weight: $dv-font-weight-bold;
+}

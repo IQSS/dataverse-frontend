@@ -108,6 +108,7 @@ const expectedDataset = {
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
   requestedVersion: undefined,
+  publicationDate: undefined,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
   summaryFields: [
     {
@@ -183,6 +184,103 @@ const expectedDataset = {
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
   )
 }
+const expectedDatasetWithPublicationDate = {
+  persistentId: 'doi:10.5072/FK2/B4B2MJ',
+  version: {
+    id: 101,
+    title: "Darwin's Finches",
+    labels: [{ semanticMeaning: 'dataset', value: 'Draft' }],
+    publishingStatus: 'draft',
+    isLatest: true,
+    isInReview: false,
+    latestVersionPublishingStatus: 'draft',
+    number: {
+      minorNumber: 0,
+      majorNumber: 0
+    },
+    someDatasetVersionHasBeenReleased: true,
+    citation:
+      'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
+  },
+  requestedVersion: undefined,
+  publicationDate: undefined,
+  alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
+  summaryFields: [
+    {
+      name: 'citation',
+      fields: {
+        dsDescription: [
+          {
+            dsDescriptionValue:
+              "Darwin's finches (also known as the Galápagos finches) are a group of about fifteen species of passerine birds."
+          }
+        ],
+        subject: ['Medicine, Health and Life Sciences']
+      }
+    }
+  ],
+  license: {
+    name: 'CC0 1.0',
+    uri: 'http://creativecommons.org/publicdomain/zero/1.0',
+    iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+  },
+  metadataBlocks: [
+    {
+      name: 'citation',
+      fields: {
+        title: "Darwin's Finches",
+        author: [{ authorName: 'Finch, Fiona', authorAffiliation: 'Birds Inc.' }],
+        datasetContact: [
+          { datasetContactName: 'Finch, Fiona', datasetContactEmail: 'finch@mailinator.com' }
+        ],
+        dsDescription: [
+          {
+            dsDescriptionValue:
+              "Darwin's finches (also known as the Galápagos finches) are a group of about fifteen species of passerine birds."
+          }
+        ],
+        subject: ['Medicine, Health and Life Sciences'],
+        publicationDate: '2023-02-12'
+      }
+    }
+  ],
+  permissions: {
+    canDownloadFiles: true,
+    canUpdateDataset: true,
+    canPublishDataset: true,
+    canManageDatasetPermissions: true,
+    canManageFilesPermissions: true,
+    canDeleteDataset: true
+  },
+  locks: [
+    {
+      userPersistentId: 'dataverseAdmin',
+      reason: DatasetLockReason.IN_REVIEW
+    }
+  ],
+  hasValidTermsOfAccess: true,
+  hasOneTabularFileAtLeast: true,
+  isValid: true,
+  thumbnail: undefined,
+  privateUrl: undefined,
+  fileDownloadSizes: [
+    new FileDownloadSize(5, FileSizeUnit.BYTES, FileDownloadMode.ORIGINAL),
+    new FileDownloadSize(7, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
+  ],
+  downloadUrls: {
+    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
+    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+  },
+  hierarchy: new UpwardHierarchyNode(
+    "Darwin's Finches",
+    DvObjectType.DATASET,
+    '505',
+    'doi:10.5072/FK2/B4B2MJ',
+    '0.0',
+    new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
+  )
+}
+
 const expectedDatasetAlternateVersion = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
@@ -205,6 +303,7 @@ const expectedDatasetAlternateVersion = {
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
   requestedVersion: '4.0',
+  publicationDate: undefined,
   hasValidTermsOfAccess: true,
   hasOneTabularFileAtLeast: true,
   isValid: true,
@@ -409,39 +508,17 @@ describe('JS Dataset Mapper', () => {
       ...jsDataset,
       publicationDate: '2023-02-12'
     }
-    const expectedDatasetWithPublicationDate = {
-      ...expectedDataset,
-      metadataBlocks: [
-        {
-          name: 'citation',
-          fields: {
-            title: "Darwin's Finches",
-            author: [{ authorName: 'Finch, Fiona', authorAffiliation: 'Birds Inc.' }],
-            datasetContact: [
-              { datasetContactName: 'Finch, Fiona', datasetContactEmail: 'finch@mailinator.com' }
-            ],
-            dsDescription: [
-              {
-                dsDescriptionValue:
-                  "Darwin's finches (also known as the Galápagos finches) are a group of about fifteen species of passerine birds."
-              }
-            ],
-            subject: ['Medicine, Health and Life Sciences'],
-            publicationDate: '2023-02-12'
-          }
-        }
-      ]
-    }
-    expect(expectedDatasetWithPublicationDate).to.deep.equal(
-      JSDatasetMapper.toDataset(
-        jsDatasetWithPublicationDate,
-        citation,
-        datasetSummaryFields,
-        jsDatasetPermissions,
-        jsDatasetLocks,
-        jsDatasetFilesTotalOriginalDownloadSize,
-        jsDatasetFilesTotalArchivalDownloadSize
-      )
+
+    const actual = JSDatasetMapper.toDataset(
+      jsDatasetWithPublicationDate,
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions,
+      jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize
     )
+
+    expect(expectedDatasetWithPublicationDate).to.deep.equal(actual)
   })
 })

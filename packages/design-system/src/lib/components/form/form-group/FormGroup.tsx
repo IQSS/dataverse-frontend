@@ -11,6 +11,7 @@ import { FormCheckbox } from './form-element/FormCheckbox'
 import { FormFeedback } from './form-element/FormFeedback'
 import { FormRadio } from './form-element/FormRadio'
 import { FormSelectAdvanced } from './form-element/FormSelectAdvanced'
+import { FormRadio } from './form-element/FormRadio'
 
 interface FormGroupProps extends ColProps {
   as?: typeof Col | typeof Row
