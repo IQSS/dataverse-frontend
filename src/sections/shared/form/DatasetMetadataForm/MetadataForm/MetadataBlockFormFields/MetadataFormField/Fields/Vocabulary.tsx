@@ -78,14 +78,14 @@ export const Vocabulary = ({
       rules={updatedRulesToApply}
       render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
         <Form.Group
-          controlId={!showSelectWithSearch ? builtFieldName : undefined}
+          controlId={showSelectWithSearch ? undefined : builtFieldName}
           as={withinMultipleFieldsGroup ? Col : Row}>
           <Form.Group.Label
             message={description}
             required={Boolean(updatedRulesToApply?.required)}
             column={!withinMultipleFieldsGroup}
             className={styles['field-label']}
-            htmlFor={builtFieldName}
+            htmlFor={showSelectWithSearch ? builtFieldName : undefined}
             sm={3}>
             {title}
           </Form.Group.Label>
