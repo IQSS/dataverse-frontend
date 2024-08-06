@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDeepCompareMemo } from 'use-deep-compare'
 import { useCollection } from '../collection/useCollection'
-import { useGetCollectionMetadataBlocksNamesInfo } from './useGetCollectionMetadataBlocksNamesInfo'
+import { useGetCollectionMetadataBlocksInfo } from './useGetCollectionMetadataBlocksInfo'
 import { useGetAllMetadataBlocksInfo } from './useGetAllMetadataBlocksInfo'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
@@ -47,8 +47,8 @@ export function CreateCollection({
   )
 
   // TODO:ME In edit mode, collection id should not be from the collection owner but from the collection being edited, but this can perhaps be differentiated by page.
-  const { metadataBlocksNamesInfo, isLoading: isLoadingMetadataBlocksNamesInfo } =
-    useGetCollectionMetadataBlocksNamesInfo({
+  const { metadataBlocksInfo, isLoading: isLoadingMetadataBlocksNamesInfo } =
+    useGetCollectionMetadataBlocksInfo({
       collectionId: ownerCollectionId,
       metadataBlockInfoRepository
     })
@@ -74,21 +74,23 @@ export function CreateCollection({
 
   const defaultBlocksNames = useDeepCompareMemo(
     () =>
-      metadataBlocksNamesInfo.reduce(
-        (acc, blockName) => {
-          acc[blockName as keyof CollectionFormMetadataBlocks] = true
-          return acc
-        },
-        {
-          [MetadataBlockName.CITATION]: false,
-          [MetadataBlockName.GEOSPATIAL]: false,
-          [MetadataBlockName.SOCIAL_SCIENCE]: false,
-          [MetadataBlockName.ASTROPHYSICS]: false,
-          [MetadataBlockName.BIOMEDICAL]: false,
-          [MetadataBlockName.JOURNAL]: false
-        }
-      ),
-    [metadataBlocksNamesInfo]
+      metadataBlocksInfo
+        .map((block) => block.name)
+        .reduce(
+          (acc, blockName) => {
+            acc[blockName as keyof CollectionFormMetadataBlocks] = true
+            return acc
+          },
+          {
+            [MetadataBlockName.CITATION]: false,
+            [MetadataBlockName.GEOSPATIAL]: false,
+            [MetadataBlockName.SOCIAL_SCIENCE]: false,
+            [MetadataBlockName.ASTROPHYSICS]: false,
+            [MetadataBlockName.BIOMEDICAL]: false,
+            [MetadataBlockName.JOURNAL]: false
+          }
+        ),
+    [metadataBlocksInfo]
   )
 
   useEffect(() => {

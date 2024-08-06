@@ -1,32 +1,29 @@
 import { useEffect, useState } from 'react'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { getMetadataBlockInfoByCollectionId } from '../../metadata-block-info/domain/useCases/getMetadataBlockInfoByCollectionId'
-import {
-  MetadataBlockInfo,
-  MetadataBlockName
-} from '../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { MetadataBlockInfo } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
 
 interface Props {
   collectionId: string
   metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
 
-interface UseGetMetadataBlocksNamesInfoReturn {
-  metadataBlocksNamesInfo: MetadataBlockName[]
+interface UseGetMetadataBlocksInfoReturn {
+  metadataBlocksInfo: MetadataBlockInfo[]
   error: string | null
   isLoading: boolean
 }
 
-export const useGetCollectionMetadataBlocksNamesInfo = ({
+export const useGetCollectionMetadataBlocksInfo = ({
   collectionId,
   metadataBlockInfoRepository
-}: Props): UseGetMetadataBlocksNamesInfoReturn => {
-  const [metadataBlocksNamesInfo, setMetadataBlocksNamesInfo] = useState<MetadataBlockName[]>([])
+}: Props): UseGetMetadataBlocksInfoReturn => {
+  const [metadataBlocksInfo, setMetadataBlocksInfo] = useState<MetadataBlockInfo[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const handleGetCollectionMetadataBlockNames = async () => {
+    const handleGetCollectionMetadataBlocks = async () => {
       setIsLoading(true)
       try {
         const metadataBlocks: MetadataBlockInfo[] = await getMetadataBlockInfoByCollectionId(
@@ -34,9 +31,7 @@ export const useGetCollectionMetadataBlocksNamesInfo = ({
           collectionId
         )
 
-        const blocksNames = metadataBlocks.map((block) => block.name) as MetadataBlockName[]
-
-        setMetadataBlocksNamesInfo(blocksNames)
+        setMetadataBlocksInfo(metadataBlocks)
       } catch (err) {
         const errorMessage =
           err instanceof Error && err.message
@@ -48,11 +43,11 @@ export const useGetCollectionMetadataBlocksNamesInfo = ({
       }
     }
 
-    void handleGetCollectionMetadataBlockNames()
+    void handleGetCollectionMetadataBlocks()
   }, [collectionId, metadataBlockInfoRepository])
 
   return {
-    metadataBlocksNamesInfo,
+    metadataBlocksInfo,
     error,
     isLoading
   }

@@ -39,6 +39,17 @@ export class MetadataBlockInfoMother {
     }
   }
 
+  static getAllBlocks(): MetadataBlockInfo[] {
+    return [
+      this.getCitationBlock(),
+      this.getAstrophysicsBlock(),
+      this.getBiomedicalBlock(),
+      this.getGeospatialBlock(),
+      this.getSocialScienceBlock(),
+      this.getJournalBlock()
+    ]
+  }
+
   static getCitationBlock(): MetadataBlockInfo {
     return CitationMetadataBlockInfoMother.get()
   }

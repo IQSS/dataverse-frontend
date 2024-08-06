@@ -58,46 +58,8 @@ export const useGetAllMetadataBlocksInfo = ({
           blocksNames
         )
 
-        const reducedMetadataBlocksInfo: ReducedMetadataBlockInfo[] = blocksInfo.map(
-          (blockInfo) => {
-            const formattedMetadataFields: Record<string, ReducedMetadataFieldInfo> =
-              Object.entries(blockInfo.metadataFields).reduce((acc, [key, value]) => {
-                const { name, displayName, isRequired, childMetadataFields } = value
-                const replaceDotWithSlash = (str: string) => str.replace(/\./g, '/')
-                const normalizedName = replaceDotWithSlash(name)
-
-                acc[key] = {
-                  name: normalizedName,
-                  displayName,
-                  isRequired,
-                  childMetadataFields: childMetadataFields
-                    ? Object.entries(childMetadataFields).reduce((acc, [key, value]) => {
-                        const { name, displayName, isRequired } = value
-
-                        const normalizedChildfieldName = replaceDotWithSlash(name)
-
-                        acc[key] = {
-                          name: normalizedChildfieldName,
-                          displayName,
-                          isRequired
-                        }
-                        return acc
-                      }, {} as Record<string, ReducedMetadataFieldInfo>)
-                    : undefined
-                }
-                return acc
-              }, {} as Record<string, ReducedMetadataFieldInfo>)
-
-            const reducedMetadataBlockInfo: ReducedMetadataBlockInfo = {
-              id: blockInfo.id,
-              name: blockInfo.name,
-              displayName: blockInfo.displayName,
-              metadataFields: formattedMetadataFields
-            }
-
-            return reducedMetadataBlockInfo
-          }
-        )
+        const reducedMetadataBlocksInfo: ReducedMetadataBlockInfo[] =
+          reduceMetadataBlocksInfo(blocksInfo)
 
         setAllMetadataBlocksInfo(reducedMetadataBlocksInfo)
       } catch (err) {
@@ -119,4 +81,48 @@ export const useGetAllMetadataBlocksInfo = ({
     error,
     isLoading
   }
+}
+
+export function reduceMetadataBlocksInfo(
+  allMetadataBlocksInfo: MetadataBlockInfo[]
+): ReducedMetadataBlockInfo[] {
+  return allMetadataBlocksInfo.map((blockInfo) => {
+    const formattedMetadataFields: Record<string, ReducedMetadataFieldInfo> = Object.entries(
+      blockInfo.metadataFields
+    ).reduce((acc, [key, value]) => {
+      const { name, displayName, isRequired, childMetadataFields } = value
+      const replaceDotWithSlash = (str: string) => str.replace(/\./g, '/')
+      const normalizedName = replaceDotWithSlash(name)
+
+      acc[key] = {
+        name: normalizedName,
+        displayName,
+        isRequired,
+        childMetadataFields: childMetadataFields
+          ? Object.entries(childMetadataFields).reduce((acc, [key, value]) => {
+              const { name, displayName, isRequired } = value
+
+              const normalizedChildfieldName = replaceDotWithSlash(name)
+
+              acc[key] = {
+                name: normalizedChildfieldName,
+                displayName,
+                isRequired
+              }
+              return acc
+            }, {} as Record<string, ReducedMetadataFieldInfo>)
+          : undefined
+      }
+      return acc
+    }, {} as Record<string, ReducedMetadataFieldInfo>)
+
+    const reducedMetadataBlockInfo: ReducedMetadataBlockInfo = {
+      id: blockInfo.id,
+      name: blockInfo.name,
+      displayName: blockInfo.displayName,
+      metadataFields: formattedMetadataFields
+    }
+
+    return reducedMetadataBlockInfo
+  })
 }
