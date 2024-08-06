@@ -6,7 +6,7 @@ on:
     types: [opened, reopened]
 
 env:
-  E2E_DATAVERSE_IMAGE_TAG: unstable
+  E2E_DATAVERSE_IMAGE_TAG: 10726-facets-api-extension
 
 jobs:
   e2e:
