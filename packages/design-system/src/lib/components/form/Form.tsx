@@ -4,6 +4,7 @@ import { Form as FormBS } from 'react-bootstrap'
 import { FormGroupWithMultipleFields } from './form-group-multiple-fields/FormGroupWithMultipleFields'
 import { FormInputGroup } from './form-group/form-input-group/FormInputGroup'
 import { FormCheckboxGroup } from './form-checkbox-group/FormCheckboxGroup'
+import { FormRadioGroup } from './form-radio-group/FormRadioGroup'
 
 interface FormProps {
   className?: string
@@ -23,5 +24,5 @@ Form.InputGroup = FormInputGroup
 Form.Group = FormGroup
 Form.GroupWithMultipleFields = FormGroupWithMultipleFields
 Form.CheckboxGroup = FormCheckboxGroup
-
+Form.RadioGroup = FormRadioGroup
 export { Form }

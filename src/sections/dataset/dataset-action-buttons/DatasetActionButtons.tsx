@@ -7,12 +7,14 @@ import { SubmitForReviewButton } from './submit-for-review-button/SubmitForRevie
 import { EditDatasetMenu } from './edit-dataset-menu/EditDatasetMenu'
 import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
 import { useTranslation } from 'react-i18next'
+import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset
+  datasetRepository: DatasetRepository
 }
 
-export function DatasetActionButtons({ dataset }: DatasetActionButtonsProps) {
+export function DatasetActionButtons({ dataset, datasetRepository }: DatasetActionButtonsProps) {
   const { t } = useTranslation('dataset')
   return (
     <ButtonGroup aria-label={t('datasetActionButtons.title')} vertical className={styles.group}>
@@ -23,7 +25,7 @@ export function DatasetActionButtons({ dataset }: DatasetActionButtonsProps) {
         fileDownloadSizes={dataset.fileDownloadSizes}
         downloadUrls={dataset.downloadUrls}
       />
-      <PublishDatasetMenu dataset={dataset} />
+      <PublishDatasetMenu dataset={dataset} datasetRepository={datasetRepository} />
       <SubmitForReviewButton dataset={dataset} />
       <EditDatasetMenu dataset={dataset} />
       <LinkDatasetButton dataset={dataset} />

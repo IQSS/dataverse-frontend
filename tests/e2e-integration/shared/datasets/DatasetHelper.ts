@@ -92,6 +92,7 @@ export class DatasetHelper extends DataverseApiHelper {
     const response = await this.request<{
       status: string
     }>(`/datasets/:persistentId/actions/:publish?persistentId=${persistentId}&type=major`, 'POST')
+    await TestsUtils.waitForNoLocks(persistentId)
 
     return { ...response, persistentId }
   }

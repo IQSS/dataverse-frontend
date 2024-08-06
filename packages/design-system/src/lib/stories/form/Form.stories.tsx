@@ -288,7 +288,31 @@ export const Checkbox: Story = {
     </Form>
   )
 }
-
+export const Radio: Story = {
+  render: () => (
+    <Form>
+      <Form.RadioGroup title="Version Update Types">
+        <Form.Group.Radio
+          defaultChecked
+          name="update-type"
+          label="Minor Version"
+          id="version-update-minor"
+        />
+        <Form.Group.Radio
+          required
+          name="update-type"
+          label="Major Version"
+          id="version-update-majoy"
+        />
+        <Form.Group.Radio
+          name="update-type"
+          label="Update Current Version"
+          id="version-type-update-current"
+        />
+      </Form.RadioGroup>
+    </Form>
+  )
+}
 export const GroupWithMultipleFields: Story = {
   render: () => (
     <Form>

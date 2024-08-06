@@ -12,7 +12,8 @@ import {
 import {
   DatasetMetadataBlocks,
   DatasetMetadataFields,
-  DatasetMetadataSubField
+  DatasetMetadataSubField,
+  defaultLicense
 } from '../../../../dataset/domain/models/Dataset'
 
 export type DatasetMetadataFormValues = Record<string, MetadataBlockFormValues>
@@ -374,7 +375,7 @@ export class MetadataFieldsHelper {
 
       metadataBlocks.push(formattedMetadataBlock)
     }
-    return { metadataBlocks }
+    return { licence: defaultLicense, metadataBlocks }
   }
 
   public static addFieldValuesToMetadataBlocksInfo(

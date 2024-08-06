@@ -8,10 +8,12 @@ import { useEffect, useState } from 'react'
 import { SettingName } from '../../../../settings/domain/models/Setting'
 import { AllowedExternalStatuses } from '../../../../settings/domain/models/AllowedExternalStatuses'
 import { useTranslation } from 'react-i18next'
+import { useNotImplementedModal } from '../../../not-implemented/NotImplementedModalContext'
 
 export function ChangeCurationStatusMenu() {
   const { t } = useTranslation('dataset')
   const { getSettingByName } = useSettings()
+  const { showModal } = useNotImplementedModal()
   const [allowedExternalStatuses, setAllowedExternalStatuses] = useState<string[]>([])
   useEffect(() => {
     getSettingByName<AllowedExternalStatuses>(SettingName.ALLOWED_EXTERNAL_STATUSES)
@@ -23,6 +25,11 @@ export function ChangeCurationStatusMenu() {
       })
   }, [getSettingByName])
 
+  const handleItemClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation()
+    showModal()
+  }
+
   if (allowedExternalStatuses.length === 0) {
     return <></>
   }
@@ -33,10 +40,12 @@ export function ChangeCurationStatusMenu() {
       title={t('datasetActionButtons.publish.changeCurationStatus')}
       variant="secondary">
       {allowedExternalStatuses.map((status) => (
-        <DropdownButtonItem key={status}>{status}</DropdownButtonItem>
+        <DropdownButtonItem onClick={(event) => handleItemClick(event)} key={status}>
+          {status}
+        </DropdownButtonItem>
       ))}
       <DropdownSeparator />
-      <DropdownButtonItem>
+      <DropdownButtonItem onClick={(event) => handleItemClick(event)}>
         {t('datasetActionButtons.publish.removeCurrentStatus')}
       </DropdownButtonItem>
     </DropdownButton>

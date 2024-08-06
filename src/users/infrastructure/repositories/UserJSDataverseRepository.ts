@@ -17,7 +17,8 @@ export class UserJSDataverseRepository implements UserRepository {
           firstName: authenticatedUser.firstName,
           lastName: authenticatedUser.lastName,
           email: authenticatedUser.email,
-          affiliation: authenticatedUser.affiliation
+          affiliation: authenticatedUser.affiliation,
+          superuser: authenticatedUser.superuser
         }
       })
       .catch((error: ReadError) => {
