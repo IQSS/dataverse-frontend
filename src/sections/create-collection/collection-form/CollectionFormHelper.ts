@@ -8,6 +8,7 @@ import { ReducedMetadataBlockInfo, ReducedMetadataFieldInfo } from '../useGetAll
 import {
   CollectionFormMetadataBlock,
   CollectionFormMetadataBlocks,
+  CONDITIONALLY_REQUIRED_FIELDS,
   FormattedCollectionInputLevels,
   FormattedCollectionInputLevelsWithoutParentBlockName
 } from './CollectionForm'
@@ -27,10 +28,12 @@ export class CollectionFormHelper {
       Object.entries(block.metadataFields).forEach(([_key, field]) => {
         const normalizedFieldName = this.replaceDotWithSlash(field.name)
         const isFieldRequiredByDataverse = field.isRequired
+        const isAConditionallyRequiredField = CONDITIONALLY_REQUIRED_FIELDS.includes(field.name)
 
         fields[normalizedFieldName] = {
           include: true,
-          optionalOrRequired: isFieldRequiredByDataverse ? 'required' : 'optional',
+          optionalOrRequired:
+            isFieldRequiredByDataverse && !isAConditionallyRequiredField ? 'required' : 'optional',
           parentBlockName: block.name as CollectionFormMetadataBlock
         }
 
@@ -38,10 +41,16 @@ export class CollectionFormHelper {
           Object.entries(field.childMetadataFields).forEach(([_key, childField]) => {
             const normalizedFieldName = this.replaceDotWithSlash(childField.name)
             const isChildFieldRequiredByDataverse = childField.isRequired
+            const isAConditionallyRequiredChildField = CONDITIONALLY_REQUIRED_FIELDS.includes(
+              childField.name
+            )
 
             childFields[normalizedFieldName] = {
               include: true,
-              optionalOrRequired: isChildFieldRequiredByDataverse ? 'required' : 'optional',
+              optionalOrRequired:
+                isChildFieldRequiredByDataverse && !isAConditionallyRequiredChildField
+                  ? 'required'
+                  : 'optional',
               parentBlockName: block.name as CollectionFormMetadataBlock
             }
           })

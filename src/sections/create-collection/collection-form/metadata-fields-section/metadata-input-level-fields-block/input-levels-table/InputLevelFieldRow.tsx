@@ -3,7 +3,7 @@ import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-
 import cn from 'classnames'
 import { Form } from '@iqss/dataverse-design-system'
 import { ReducedMetadataFieldInfo } from '../../../../useGetAllMetadataBlocksInfo'
-import { INPUT_LEVELS_GROUPER } from '../../../CollectionForm'
+import { CONDITIONALLY_REQUIRED_FIELDS, INPUT_LEVELS_GROUPER } from '../../../CollectionForm'
 import styles from './InputLevelsTable.module.scss'
 import { CollectionFormHelper } from '../../../CollectionFormHelper'
 import { RequiredOptionalRadios } from './RequiredOptionalRadios'
@@ -26,6 +26,8 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
   }) as boolean
 
   const { name, displayName, isRequired, childMetadataFields } = metadataField
+
+  const isAConditionallyRequiredField = CONDITIONALLY_REQUIRED_FIELDS.includes(name)
 
   const rules: UseControllerProps['rules'] = {}
 
@@ -72,56 +74,63 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
           />
         </td>
         <td>
-          {isRequired && (
+          {isRequired && !isAConditionallyRequiredField && (
             <span className={styles['required-by-dataverse-label']}>
               {t('requiredByDataverse')}
             </span>
           )}
-          {!childMetadataFields && !isRequired && (
+          {!childMetadataFields && (!isRequired || isAConditionallyRequiredField) && (
             <RequiredOptionalRadios
               disabled={disabled}
               isForChildField={false}
               parentFieldChecked={includeCheckboxValue}
               uniqueInputLevelRowID={uniqueInputLevelRowID}
-              fieldName={`${INPUT_LEVELS_GROUPER}.${name}.optionalOrRequired`}
+              formBuiltedFieldName={`${INPUT_LEVELS_GROUPER}.${name}.optionalOrRequired`}
             />
           )}
         </td>
       </tr>
       {childMetadataFields &&
-        Object.entries(childMetadataFields).map(([key, childField]) => (
-          <tr className={styles['input-level-row--child-field']} key={key}>
-            <td>
-              <label
-                className={cn({
-                  [styles['displayName-disabled']]: disabled || childField.isRequired
-                })}>
-                {childField.displayName}
-              </label>
-            </td>
-            <td>
-              {childField.isRequired ? (
-                <span className={styles['required-by-dataverse-label']}>
-                  {t('requiredByDataverse')}
-                </span>
-              ) : (
-                <RequiredOptionalRadios
-                  disabled={disabled}
-                  isForChildField={true}
-                  siblingChildFields={CollectionFormHelper.getChildFieldSiblings(
-                    childMetadataFields,
-                    childField.name
-                  )}
-                  parentIncludeName={name}
-                  parentIsRequiredByDataverse={isRequired}
-                  parentFieldChecked={includeCheckboxValue}
-                  uniqueInputLevelRowID={`${uniqueInputLevelRowID}-${childField.name}`}
-                  fieldName={`${INPUT_LEVELS_GROUPER}.${childField.name}.optionalOrRequired`}
-                />
-              )}
-            </td>
-          </tr>
-        ))}
+        Object.entries(childMetadataFields).map(([key, childField]) => {
+          const isAConditionallyRequiredChildField = CONDITIONALLY_REQUIRED_FIELDS.includes(
+            childField.name
+          )
+
+          return (
+            <tr className={styles['input-level-row--child-field']} key={key}>
+              <td>
+                <label
+                  className={cn({
+                    [styles['displayName-disabled']]:
+                      disabled || (childField.isRequired && !isAConditionallyRequiredChildField)
+                  })}>
+                  {childField.displayName}
+                </label>
+              </td>
+              <td>
+                {childField.isRequired && !isAConditionallyRequiredChildField ? (
+                  <span className={styles['required-by-dataverse-label']}>
+                    {t('requiredByDataverse')}
+                  </span>
+                ) : (
+                  <RequiredOptionalRadios
+                    disabled={disabled}
+                    isForChildField={true}
+                    siblingChildFields={CollectionFormHelper.getChildFieldSiblings(
+                      childMetadataFields,
+                      childField.name
+                    )}
+                    parentIncludeName={name}
+                    parentIsRequiredByDataverse={isRequired}
+                    parentFieldChecked={includeCheckboxValue}
+                    uniqueInputLevelRowID={`${uniqueInputLevelRowID}-${childField.name}`}
+                    formBuiltedFieldName={`${INPUT_LEVELS_GROUPER}.${childField.name}.optionalOrRequired`}
+                  />
+                )}
+              </td>
+            </tr>
+          )
+        })}
     </>
   )
 }

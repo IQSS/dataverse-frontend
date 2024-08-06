@@ -1,13 +1,18 @@
 import { ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Form, Stack } from '@iqss/dataverse-design-system'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { ReducedMetadataFieldInfo } from '../../../../useGetAllMetadataBlocksInfo'
-import { CollectionFormInputLevelValue, INPUT_LEVELS_GROUPER } from '../../../CollectionForm'
+import {
+  CollectionFormInputLevelValue,
+  CONDITIONALLY_REQUIRED_FIELDS,
+  INPUT_LEVELS_GROUPER
+} from '../../../CollectionForm'
 
 type RequiredOptionalRadiosProps =
   | {
       disabled: boolean
-      fieldName: string
+      formBuiltedFieldName: string
       isForChildField: true
       siblingChildFields: Record<string, ReducedMetadataFieldInfo>
       parentIncludeName: string
@@ -17,7 +22,7 @@ type RequiredOptionalRadiosProps =
     }
   | {
       disabled: boolean
-      fieldName: string
+      formBuiltedFieldName: string
       isForChildField?: false
       siblingChildFields?: never
       parentIncludeName?: never
@@ -34,7 +39,7 @@ type RequiredOptionalRadiosProps =
 
 export const RequiredOptionalRadios = ({
   disabled,
-  fieldName,
+  formBuiltedFieldName,
   isForChildField,
   siblingChildFields,
   parentIncludeName,
@@ -42,6 +47,9 @@ export const RequiredOptionalRadios = ({
   parentFieldChecked,
   uniqueInputLevelRowID
 }: RequiredOptionalRadiosProps) => {
+  const { t } = useTranslation('createCollection', {
+    keyPrefix: 'fields.metadataFields.inputLevelsTable'
+  })
   const { control, setValue } = useFormContext()
 
   const siblingChildFieldsNames = Object.values(siblingChildFields || {})
@@ -79,9 +87,13 @@ export const RequiredOptionalRadios = ({
     formOnChange(e)
   }
 
+  const isAConditionallyRequiredField = CONDITIONALLY_REQUIRED_FIELDS.some((field) =>
+    formBuiltedFieldName.includes(field)
+  )
+
   return (
     <Controller
-      name={fieldName}
+      name={formBuiltedFieldName}
       control={control}
       render={({ field: { onChange, ref, value } }) => {
         const castedValue = value as CollectionFormInputLevelValue
@@ -89,38 +101,41 @@ export const RequiredOptionalRadios = ({
         if (!parentFieldChecked) {
           return (
             <Form.Group.Radio
-              label="Hidden"
+              label={t('hidden')}
               checked={true}
-              value="required"
-              name={`${uniqueInputLevelRowID}-${fieldName}-hidden-radio`}
-              id={`${uniqueInputLevelRowID}-${fieldName}-hidden-radio`}
+              value="hidden"
+              name={`${uniqueInputLevelRowID}-${formBuiltedFieldName}-hidden-radio`}
+              id={`${uniqueInputLevelRowID}-${formBuiltedFieldName}-hidden-radio`}
               readOnly
               disabled
               ref={ref}
             />
           )
         }
-
+        {
+          /* For now we are just disabling the radios if this is a conditionally required field */
+        }
         return (
           <Stack direction="horizontal">
             <Form.Group.Radio
-              label="Required"
+              label={t('required')}
               onChange={(e) => handleOptionalOrRequiredChange(e, onChange)}
               checked={castedValue === 'required'}
               value="required"
               name={`${uniqueInputLevelRowID}-radio-group`}
               id={`${uniqueInputLevelRowID}-required-radio`}
-              disabled={disabled}
+              disabled={disabled || isAConditionallyRequiredField}
               ref={ref}
             />
+
             <Form.Group.Radio
-              label="Optional"
+              label={!isAConditionallyRequiredField ? t('optional') : t('conditionallyRequired')}
               onChange={(e) => handleOptionalOrRequiredChange(e, onChange)}
               checked={castedValue === 'optional'}
               value="optional"
               name={`${uniqueInputLevelRowID}-radio-group`}
               id={`${uniqueInputLevelRowID}-optional-radio`}
-              disabled={disabled}
+              disabled={disabled || isAConditionallyRequiredField}
               ref={ref}
             />
           </Stack>

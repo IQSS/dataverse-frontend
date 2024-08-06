@@ -56,7 +56,11 @@
       "journalMetadata": "Journal Metadata",
       "inputLevelsTable": {
         "hideTableAriaLabel": "Hide input levels table",
-        "requiredByDataverse": "Required by Dataverse"
+        "requiredByDataverse": "Required by Dataverse",
+        "hidden": "Hidden",
+        "optional": "Optional",
+        "required": "Required",
+        "conditionallyRequired": "Conditionally Required"
       }
     },
     "browseSearchFacets": {

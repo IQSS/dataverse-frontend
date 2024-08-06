@@ -71,6 +71,8 @@ export const CollectionFormInputLevelOptions = {
 export type CollectionFormInputLevelValue =
   (typeof CollectionFormInputLevelOptions)[keyof typeof CollectionFormInputLevelOptions]
 
+export const CONDITIONALLY_REQUIRED_FIELDS = ['producerName']
+
 // On the submit function callback, type is CollectionType as type field is required and wont never be ""
 export type CollectionFormValuesOnSubmit = Omit<CollectionFormData, 'type'> & {
   type: CollectionType
