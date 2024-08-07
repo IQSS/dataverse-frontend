@@ -47,7 +47,7 @@ export function CreateCollection({
   )
 
   // TODO:ME In edit mode, collection id should not be from the collection owner but from the collection being edited, but this can perhaps be differentiated by page.
-  const { metadataBlocksInfo, isLoading: isLoadingMetadataBlocksNamesInfo } =
+  const { metadataBlocksInfo, isLoading: isLoadingMetadataBlocksInfo } =
     useGetCollectionMetadataBlocksInfo({
       collectionId: ownerCollectionId,
       metadataBlockInfoRepository
@@ -94,17 +94,13 @@ export function CreateCollection({
   )
 
   useEffect(() => {
-    if (
-      !isLoadingCollection &&
-      !isLoadingMetadataBlocksNamesInfo &&
-      !isLoadingAllMetadataBlocksInfo
-    ) {
+    if (!isLoadingCollection && !isLoadingMetadataBlocksInfo && !isLoadingAllMetadataBlocksInfo) {
       setIsLoading(false)
     }
   }, [
     isLoading,
     isLoadingCollection,
-    isLoadingMetadataBlocksNamesInfo,
+    isLoadingMetadataBlocksInfo,
     isLoadingAllMetadataBlocksInfo,
     setIsLoading
   ])
@@ -115,7 +111,7 @@ export function CreateCollection({
 
   if (
     isLoadingCollection ||
-    isLoadingMetadataBlocksNamesInfo ||
+    isLoadingMetadataBlocksInfo ||
     isLoadingAllMetadataBlocksInfo ||
     !collection
   ) {
