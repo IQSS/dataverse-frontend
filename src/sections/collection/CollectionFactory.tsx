@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 import { Collection } from './Collection'
 import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repositories/DatasetJSDataverseRepository'
-import { useLocation, useSearchParams } from 'react-router-dom'
+import { useLocation, useParams, useSearchParams } from 'react-router-dom'
 import { CollectionJSDataverseRepository } from '../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
 import { INFINITE_SCROLL_ENABLED } from './config'
 
@@ -15,9 +15,9 @@ export class CollectionFactory {
 
 function CollectionWithSearchParams() {
   const [searchParams] = useSearchParams()
+  const { collectionId = 'root' } = useParams<{ collectionId: string }>()
   const location = useLocation()
   const page = searchParams.get('page') ? parseInt(searchParams.get('page') as string) : undefined
-  const id = searchParams.get('id') ? (searchParams.get('id') as string) : 'root'
   const state = location.state as { created: boolean } | undefined
   const created = state?.created ?? false
 
@@ -26,7 +26,7 @@ function CollectionWithSearchParams() {
       repository={repository}
       datasetRepository={datasetRepository}
       page={page}
-      id={id}
+      id={collectionId}
       created={created}
       infiniteScrollEnabled={INFINITE_SCROLL_ENABLED}
     />

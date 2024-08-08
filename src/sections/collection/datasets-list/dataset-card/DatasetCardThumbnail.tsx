@@ -3,6 +3,7 @@ import { LinkToPage } from '../../../shared/link-to-page/LinkToPage'
 import { Route } from '../../../Route.enum'
 import { DatasetThumbnail } from '../../../dataset/dataset-thumbnail/DatasetThumbnail'
 import { DatasetPublishingStatus, DatasetVersion } from '../../../../dataset/domain/models/Dataset'
+import { DvObjectType } from '../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 interface DatasetCardThumbnailProps {
   persistentId: string
@@ -17,7 +18,10 @@ export function DatasetCardThumbnail({
 }: DatasetCardThumbnailProps) {
   return (
     <div className={styles.thumbnail}>
-      <LinkToPage page={Route.DATASETS} searchParams={{ persistentId: persistentId }}>
+      <LinkToPage
+        page={Route.DATASETS}
+        type={DvObjectType.DATASET}
+        searchParams={{ persistentId: persistentId }}>
         <DatasetThumbnail
           title={version.title}
           thumbnail={thumbnail}

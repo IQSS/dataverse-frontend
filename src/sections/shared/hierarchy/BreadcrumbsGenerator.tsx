@@ -1,5 +1,8 @@
 import { Breadcrumb } from '@iqss/dataverse-design-system'
-import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import {
+  DvObjectType,
+  UpwardHierarchyNode
+} from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { LinkToPage } from '../link-to-page/LinkToPage'
 import { Route } from '../../Route.enum'
 
@@ -81,7 +84,7 @@ const LinkToDvObject = ({
   version
 }: {
   name: string
-  type: string
+  type: DvObjectType
   id: string
   persistentId?: string
   version?: string
@@ -89,6 +92,7 @@ const LinkToDvObject = ({
   return (
     <LinkToPage
       page={dvObjectTypeToRoute[type]}
+      type={type}
       searchParams={{
         ...(persistentId ? { persistentId } : { id }),
         ...(version ? { version } : {})
