@@ -5,7 +5,7 @@ import { createCollection } from '../../../collection/domain/useCases/createColl
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import { CollectionDTO } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
 import { CollectionFormData, CollectionFormValuesOnSubmit } from './CollectionForm'
-import { Route } from '../../Route.enum'
+import { RouteWithParams } from '../../Route.enum'
 import { JSDataverseWriteErrorHandler } from '../../../shared/helpers/JSDataverseWriteErrorHandler'
 
 export enum SubmissionStatus {
@@ -60,7 +60,7 @@ export function useSubmitCollection(
         setSubmitError(null)
         setSubmissionStatus(SubmissionStatus.SubmitComplete)
 
-        navigate(`${Route.COLLECTIONS}/${newCollection.alias}`, {
+        navigate(RouteWithParams.COLLECTIONS(newCollection.alias), {
           state: { created: true }
         })
         return
