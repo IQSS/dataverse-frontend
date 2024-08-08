@@ -15,7 +15,7 @@ interface FileCardInfoProps {
 
 export function FileCardInfo({ filePreview, persistentId }: FileCardInfoProps) {
   return (
-    <div className={styles.description}>
+    <div className={styles['card-info-container']}>
       <Stack gap={1}>
         <span className={styles.date}>
           {DateHelper.toDisplayFormat(filePreview.metadata.depositDate)} -{' '}
@@ -35,7 +35,7 @@ export function FileCardInfo({ filePreview, persistentId }: FileCardInfoProps) {
             <FileChecksum checksum={filePreview.metadata.checksum} />
           </Stack>
         </span>
-        <p className={styles.descriptionText}>{filePreview.metadata.description}</p>
+        <p className={styles.description}>{filePreview.metadata.description}</p>
       </Stack>
     </div>
   )

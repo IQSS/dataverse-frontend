@@ -42,12 +42,12 @@
   color: $dv-subtext-color;
 }
 
-.description {
+.card-info-container {
   display: flex;
   font-size: $dv-font-size-sm;
 }
 
-.descriptionText {
+.description {
   display: -webkit-box; -webkit-line-clamp: 3;  line-clamp: 3; -webkit-box-orient: vertical;
   flex-direction: column;
   width: 100%;

@@ -6,12 +6,11 @@ import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { FileCardHelper } from './FileCardHelper'
 
 interface FileCardThumbnailProps {
-  persistentId: string
   filePreview: FilePreview
   thumbnail?: string
 }
 
-export function FileCardThumbnail({ persistentId, filePreview }: FileCardThumbnailProps) {
+export function FileCardThumbnail({ filePreview }: FileCardThumbnailProps) {
   return (
     <div className={styles.thumbnail}>
       <LinkToPage
