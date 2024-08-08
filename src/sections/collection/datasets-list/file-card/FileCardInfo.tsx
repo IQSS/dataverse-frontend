@@ -35,7 +35,7 @@ export function FileCardInfo({ filePreview, persistentId }: FileCardInfoProps) {
             <FileChecksum checksum={filePreview.metadata.checksum} />
           </Stack>
         </span>
-        <span className={styles.descriptionText}>{filePreview.metadata.description}</span>
+        <p className={styles.descriptionText}>{filePreview.metadata.description}</p>
       </Stack>
     </div>
   )
