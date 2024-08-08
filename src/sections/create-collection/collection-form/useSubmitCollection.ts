@@ -60,7 +60,7 @@ export function useSubmitCollection(
         setSubmitError(null)
         setSubmissionStatus(SubmissionStatus.SubmitComplete)
 
-        navigate(`${Route.COLLECTIONS}?id=${newCollection.alias}`, {
+        navigate(`${Route.COLLECTIONS}/${newCollection.alias}`, {
           state: { created: true }
         })
         return
