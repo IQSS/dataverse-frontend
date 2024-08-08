@@ -44,12 +44,15 @@
 
 .description {
   display: flex;
-  display: -webkit-box; -webkit-line-clamp: 3; /* number of lines to show, apply what you think looks better */ line-clamp: 3; -webkit-box-orient: vertical;
+  font-size: $dv-font-size-sm;
+}
+
+.descriptionText {
+  display: -webkit-box; -webkit-line-clamp: 3;  line-clamp: 3; -webkit-box-orient: vertical;
   flex-direction: column;
   width: 100%;
   overflow: hidden;
   color: black;
-  font-size: $dv-font-size-sm;
 }
 
 .date {
