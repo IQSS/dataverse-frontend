@@ -16,7 +16,7 @@ export function FileCard({ filePreview, persistentId }: FileCardProps) {
       <FileCardHeader filePreview={filePreview} />
       <div className={styles.info}>
         <Stack direction={'horizontal'} gap={3}>
-          <FileCardThumbnail filePreview={filePreview} persistentId={persistentId} />
+          <FileCardThumbnail filePreview={filePreview} />
           <FileCardInfo filePreview={filePreview} persistentId={persistentId} />
         </Stack>
       </div>
