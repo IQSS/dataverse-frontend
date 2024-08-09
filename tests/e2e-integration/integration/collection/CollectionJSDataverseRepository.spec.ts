@@ -6,9 +6,10 @@ import {
   DvObjectType,
   UpwardHierarchyNode
 } from '../../../../src/shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { Collection } from '../../../../src/collection/domain/models/Collection'
 
 const collectionRepository = new CollectionJSDataverseRepository()
-const collectionExpected = {
+const collectionExpected: Collection = {
   id: 'new-collection',
   name: 'Scientific Research',
   description: 'We do all the science.',
@@ -28,7 +29,8 @@ const collectionExpected = {
       undefined,
       undefined
     )
-  )
+  ),
+  inputLevels: undefined
 }
 describe('Collection JSDataverse Repository', () => {
   before(() => TestsUtils.setup())
