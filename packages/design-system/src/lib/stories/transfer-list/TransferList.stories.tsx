@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { TransferList, TransferListItem } from '../../components/transfer-list/TransferList'
 import { useState } from 'react'
-import { Button } from '../../components/button/Button'
+import { SelectAdvanced } from '../../components/select-advanced/SelectAdvanced'
 
 /**
  * ## Description
@@ -16,87 +16,149 @@ const meta: Meta<typeof TransferList> = {
   tags: ['autodocs']
 }
 
-const availableItems: TransferListItem[] = [
+const aToEitems: TransferListItem[] = [
   {
-    label: 'Item 1',
-    value: 1
+    label: 'Item A',
+    value: 'A'
   },
   {
-    label: 'Item 2',
-    value: 2
+    label: 'Item B',
+    value: 'B'
   },
   {
-    label: 'Item 3',
-    value: 3
+    label: 'Item C',
+    value: 'C'
   },
   {
-    label: 'Item 4',
-    value: 4
+    label: 'Item D',
+    value: 'D'
   },
   {
-    label: 'Item 5',
-    value: 5
-  },
-  {
-    label: 'Item 6',
-    value: 6
-  },
-  {
-    label: 'Item 7',
-    value: 7
-  },
-  {
-    label: 'Item 8',
-    value: 8
-  },
-  {
-    label: 'Item 9',
-    value: 9
-  },
-  {
-    label: 'Item 10',
-    value: 10
+    label: 'Item E',
+    value: 'E'
   }
 ]
 
-const availableItemsTypeHobbies: TransferListItem[] = [
+const fToJitems: TransferListItem[] = [
   {
-    label: 'Soccer',
-    value: 20
+    label: 'Item F',
+    value: 'F'
   },
   {
-    label: 'Basketball',
-    value: 30
+    label: 'Item G',
+    value: 'G'
   },
   {
-    label: 'Tennis',
-    value: 40
+    label: 'Item H',
+    value: 'H'
+  },
+  {
+    label: 'Item I',
+    value: 'I'
+  },
+  {
+    label: 'Item J',
+    value: 'J'
   }
 ]
 
-const availableItemsTypeCookies: TransferListItem[] = [
+const kToÑitems: TransferListItem[] = [
   {
-    label: 'Chocolate Chip',
-    value: 100
+    label: 'Item K',
+    value: 'K'
   },
   {
-    label: 'Oatmeal Raisin',
-    value: 200
+    label: 'Item L',
+    value: 'L'
   },
   {
-    label: 'Peanut Butter',
-    value: 300
+    label: 'Item M',
+    value: 'M'
+  },
+  {
+    label: 'Item N',
+    value: 'N'
+  },
+  {
+    label: 'Item Ñ',
+    value: 'Ñ'
   }
+]
+
+const oToUitems: TransferListItem[] = [
+  {
+    label: 'Item O',
+    value: 'O'
+  },
+  {
+    label: 'Item P',
+    value: 'P'
+  },
+  {
+    label: 'Item Q',
+    value: 'Q'
+  },
+  {
+    label: 'Item R',
+    value: 'R'
+  },
+  {
+    label: 'Item S',
+    value: 'S'
+  },
+  {
+    label: 'Item T',
+    value: 'T'
+  },
+  {
+    label: 'Item U',
+    value: 'U'
+  }
+]
+
+const vToZitems: TransferListItem[] = [
+  {
+    label: 'Item V',
+    value: 'V'
+  },
+  {
+    label: 'Item W',
+    value: 'W'
+  },
+  {
+    label: 'Item X',
+    value: 'X'
+  },
+  {
+    label: 'Item Y',
+    value: 'Y'
+  },
+  {
+    label: 'Item Z',
+    value: 'Z'
+  }
+]
+
+const allItems: TransferListItem[] = [
+  ...aToEitems,
+  ...fToJitems,
+  ...kToÑitems,
+  ...oToUitems,
+  ...vToZitems
 ]
 
 const defaultSelected: TransferListItem[] = [
   {
-    label: 'Item 4',
-    value: 4
+    label: 'Item B',
+    value: 'B'
   },
   {
-    label: 'Item 5',
-    value: 5
+    label: 'Item C',
+    value: 'C'
+  },
+  {
+    label: 'Item D',
+    value: 'D'
   }
 ]
 
@@ -108,13 +170,13 @@ const onChangeFn = (items: TransferListItem[]) => {
 }
 
 export const Default: Story = {
-  render: () => <TransferList availableItems={availableItems} onChange={onChangeFn} />
+  render: () => <TransferList availableItems={aToEitems} onChange={onChangeFn} />
 }
 
 export const WithDefaultSelected: Story = {
   render: () => (
     <TransferList
-      availableItems={availableItems}
+      availableItems={aToEitems}
       defaultSelected={defaultSelected}
       onChange={onChangeFn}
     />
@@ -124,27 +186,58 @@ export const WithDefaultSelected: Story = {
 export const WithLabels: Story = {
   render: () => (
     <TransferList
-      availableItems={availableItems}
+      availableItems={aToEitems}
       leftLabel="Available Items"
       rightLabel="Selected Items"
       onChange={onChangeFn}
     />
   )
 }
-
+type SelectOption = 'All' | 'A to E' | 'F to J' | 'K to Ñ' | 'O to U' | 'V to Z'
 const WithChangingAvailableItemsComponent = () => {
-  const [items, setItems] = useState(availableItems)
+  const [items, setItems] = useState(allItems)
+  const options: SelectOption[] = ['All', 'A to E', 'F to J', 'K to Ñ', 'O to U', 'V to Z']
+
+  const handleChangeSelect = (selected: string) => {
+    const castedSelected = selected as SelectOption
+    switch (castedSelected) {
+      case 'All':
+        setItems(allItems)
+        break
+      case 'A to E':
+        setItems(aToEitems)
+        break
+      case 'F to J':
+        setItems(fToJitems)
+        break
+      case 'K to Ñ':
+        setItems(kToÑitems)
+        break
+      case 'O to U':
+        setItems(oToUitems)
+        break
+      case 'V to Z':
+        setItems(vToZitems)
+        break
+    }
+  }
 
   return (
-    <>
-      <TransferList availableItems={items} />
-      <Button onClick={() => setItems(availableItemsTypeHobbies)}>
-        Change available items type hobbies
-      </Button>
-      <Button onClick={() => setItems(availableItemsTypeCookies)}>
-        Change available items type cookies
-      </Button>
-    </>
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div
+        style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', width: 'fit-content' }}>
+        <div style={{ width: 262 }}>
+          <SelectAdvanced
+            options={options}
+            onChange={handleChangeSelect}
+            isSearchable={false}
+            defaultValue="All"
+          />
+        </div>
+
+        <TransferList availableItems={items} defaultSelected={defaultSelected} />
+      </div>
+    </div>
   )
 }
 
