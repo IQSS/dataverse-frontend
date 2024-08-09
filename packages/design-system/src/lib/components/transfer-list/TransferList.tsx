@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { ListGroup } from 'react-bootstrap'
 import { Button } from '../button/Button'
 import { Row } from '../grid/Row'
@@ -22,13 +22,18 @@ export interface TransferListProps {
   availableItems: TransferListItem[]
   defaultSelected?: TransferListItem[]
   onChange?: (selected: TransferListItem[]) => void
+  leftLabel?: string
+  rightLabel?: string
 }
 
 export const TransferList = ({
   availableItems,
   defaultSelected = [],
-  onChange
+  onChange,
+  leftLabel,
+  rightLabel
 }: TransferListProps) => {
+  const uniqueID = useId()
   const [checked, setChecked] = useState<readonly TransferListItem[]>([])
   const [left, setLeft] = useState<readonly TransferListItem[]>(
     not(availableItems, defaultSelected)
@@ -79,11 +84,17 @@ export const TransferList = ({
     onChange && onChange([])
   }
 
+  useEffect(() => {
+    // Update the left items when the available items change
+    setLeft(not(availableItems, right))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [availableItems])
+
   const customList = (items: readonly TransferListItem[]) => (
     <div style={{ width: 200, height: 230, overflow: 'auto' }}>
       <ListGroup as="ul">
         {items.map((item: TransferListItem) => {
-          const labelId = `transfer-list-item-${item.value}-label`
+          const labelId = `transfer-list-item-${item.value}-label-${uniqueID}`
 
           return (
             <ListGroup.Item as="li" key={item.value}>
@@ -103,7 +114,10 @@ export const TransferList = ({
 
   return (
     <Row>
-      <Col>{customList(left)}</Col>
+      <Col>
+        {leftLabel && <p>{leftLabel}</p>}
+        {customList(left)}
+      </Col>
       <Col>
         <Col>
           <Button onClick={handleAllRight} disabled={left.length === 0} aria-label="move all right">
@@ -126,7 +140,10 @@ export const TransferList = ({
           </Button>
         </Col>
       </Col>
-      <Col>{customList(right)}</Col>
+      <Col>
+        {rightLabel && <p>{rightLabel}</p>}
+        {customList(right)}
+      </Col>
     </Row>
   )
 }

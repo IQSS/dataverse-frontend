@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { TransferList, TransferListItem } from '../../components/transfer-list/TransferList'
+import { useState } from 'react'
+import { Button } from '../../components/button/Button'
 
 /**
  * ## Description
@@ -41,6 +43,36 @@ const availableItems: TransferListItem[] = [
   }
 ]
 
+const availableItemsTypeHobbies: TransferListItem[] = [
+  {
+    label: 'Soccer',
+    value: 10
+  },
+  {
+    label: 'Basketball',
+    value: 20
+  },
+  {
+    label: 'Tennis',
+    value: 30
+  }
+]
+
+const availableItemsTypeCookies: TransferListItem[] = [
+  {
+    label: 'Chocolate Chip',
+    value: 100
+  },
+  {
+    label: 'Oatmeal Raisin',
+    value: 200
+  },
+  {
+    label: 'Peanut Butter',
+    value: 300
+  }
+]
+
 const defaultSelected: TransferListItem[] = [
   {
     label: 'Item 4',
@@ -59,7 +91,11 @@ const onChangeFn = (items: TransferListItem[]) => {
   console.log(items)
 }
 
-export const Single: Story = {
+export const Default: Story = {
+  render: () => <TransferList availableItems={availableItems} onChange={onChangeFn} />
+}
+
+export const WithDefaultSelected: Story = {
   render: () => (
     <TransferList
       availableItems={availableItems}
@@ -67,4 +103,35 @@ export const Single: Story = {
       onChange={onChangeFn}
     />
   )
+}
+
+export const WithLabels: Story = {
+  render: () => (
+    <TransferList
+      availableItems={availableItems}
+      leftLabel="Available Items"
+      rightLabel="Selected Items"
+      onChange={onChangeFn}
+    />
+  )
+}
+
+const WithChangingAvailableItemsComponent = () => {
+  const [items, setItems] = useState(availableItems)
+
+  return (
+    <>
+      <TransferList availableItems={items} />
+      <Button onClick={() => setItems(availableItemsTypeHobbies)}>
+        Change available items type hobbies
+      </Button>
+      <Button onClick={() => setItems(availableItemsTypeCookies)}>
+        Change available items type cookies
+      </Button>
+    </>
+  )
+}
+
+export const WithChangingAvailableItems: Story = {
+  render: () => <WithChangingAvailableItemsComponent />
 }
