@@ -31,7 +31,7 @@ describe('CreateCollection', () => {
   beforeEach(() => {
     collectionRepository.create = cy.stub().resolves(1)
     collectionRepository.getById = cy.stub().resolves(collection)
-    metadataBlockInfoRepository.getByColecctionId = cy.stub().resolves(collectionMetadataBlocksInfo)
+    metadataBlockInfoRepository.getByCollectionId = cy.stub().resolves(collectionMetadataBlocksInfo)
     metadataBlockInfoRepository.getAllTemporal = cy.stub().resolves(allMetadataBlocksMock)
     userRepository.getAuthenticated = cy.stub().resolves(testUser)
   })

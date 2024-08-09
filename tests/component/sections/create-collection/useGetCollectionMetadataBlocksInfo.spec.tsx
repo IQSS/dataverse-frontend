@@ -8,7 +8,7 @@ const metadataBlocksInfoMock = MetadataBlockInfoMother.getAllBlocks()
 
 describe('useGetCollectionMetadataBlocksInfo', () => {
   it('should return metadataBlockDisplayFormatInfo correctly', async () => {
-    metadataBlockInfoRepository.getByColecctionId = cy.stub().resolves(metadataBlocksInfoMock)
+    metadataBlockInfoRepository.getByCollectionId = cy.stub().resolves(metadataBlocksInfoMock)
 
     const { result } = renderHook(() =>
       useGetCollectionMetadataBlocksInfo({
@@ -30,7 +30,7 @@ describe('useGetCollectionMetadataBlocksInfo', () => {
 
   describe('Error handling', () => {
     it('should return correct error message when there is an error type catched', async () => {
-      metadataBlockInfoRepository.getByColecctionId = cy.stub().rejects(new Error('Error message'))
+      metadataBlockInfoRepository.getByCollectionId = cy.stub().rejects(new Error('Error message'))
 
       const { result } = renderHook(() =>
         useGetCollectionMetadataBlocksInfo({
@@ -51,7 +51,7 @@ describe('useGetCollectionMetadataBlocksInfo', () => {
     })
 
     it('should return correct error message when there is not an error type catched', async () => {
-      metadataBlockInfoRepository.getByColecctionId = cy.stub().rejects('Error message')
+      metadataBlockInfoRepository.getByCollectionId = cy.stub().rejects('Error message')
 
       const { result } = renderHook(() =>
         useGetCollectionMetadataBlocksInfo({

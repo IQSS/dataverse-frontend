@@ -36,7 +36,7 @@ export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfo
       })
   }
 
-  getByColecctionId(collectionIdOrAlias: number | string): Promise<MetadataBlockInfo[]> {
+  getByCollectionId(collectionIdOrAlias: number | string): Promise<MetadataBlockInfo[]> {
     return getCollectionMetadataBlocks
       .execute(collectionIdOrAlias)
       .then((metadataBlocks: MetadataBlockInfo[]) => {

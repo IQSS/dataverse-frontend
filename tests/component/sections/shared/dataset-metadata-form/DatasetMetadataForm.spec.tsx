@@ -202,7 +202,7 @@ describe('DatasetMetadataForm', () => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.create = cy.stub().resolves({ persistentId: 'persistentId' })
     datasetRepository.updateMetadata = cy.stub().resolves(undefined)
-    metadataBlockInfoRepository.getByColecctionId = cy.stub().resolves(metadataBlocksInfoOnEditMode)
+    metadataBlockInfoRepository.getByCollectionId = cy.stub().resolves(metadataBlocksInfoOnEditMode)
     metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
       .stub()
       .resolves(metadataBlocksInfoOnCreateMode)
@@ -1628,7 +1628,7 @@ describe('DatasetMetadataForm', () => {
       datasetRepository.updateMetadata = cy
         .stub()
         .rejects(new Error('Error from the api javascript client'))
-      metadataBlockInfoRepository.getByColecctionId = cy
+      metadataBlockInfoRepository.getByCollectionId = cy
         .stub()
         .resolves(wrongCollectionMetadataBlocksInfo)
 
@@ -1845,7 +1845,7 @@ describe('DatasetMetadataForm', () => {
         })
     })
     it('for a composed field NOT multiple', () => {
-      metadataBlockInfoRepository.getByColecctionId = cy
+      metadataBlockInfoRepository.getByCollectionId = cy
         .stub()
         .resolves(metadataBlocksInfoOnCreateModeWithComposedNotMultipleField)
 

@@ -6,5 +6,5 @@ export interface MetadataBlockInfoRepository {
   getDisplayedOnCreateByCollectionId: (
     collectionId: number | string
   ) => Promise<MetadataBlockInfo[]>
-  getByColecctionId: (collectionId: number | string) => Promise<MetadataBlockInfo[]>
+  getByCollectionId: (collectionId: number | string) => Promise<MetadataBlockInfo[]>
 }
