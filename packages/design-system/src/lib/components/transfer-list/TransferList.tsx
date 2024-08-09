@@ -32,7 +32,6 @@ export interface TransferListProps {
 }
 
 // TODO:ME Check scrollbar styles for chrome and safari
-// TODO:ME Check navigation with keyboard
 
 export const TransferList = ({
   availableItems,
@@ -110,7 +109,6 @@ export const TransferList = ({
               onChange={handleToggle(item)}
               id={labelId}
               checked={checked.indexOf(item) !== -1}
-              tabIndex={-1}
             />
           </ListGroup.Item>
         )
