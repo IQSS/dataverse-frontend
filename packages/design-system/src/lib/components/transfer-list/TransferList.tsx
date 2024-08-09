@@ -1,9 +1,14 @@
 import { useEffect, useId, useState } from 'react'
 import { ListGroup } from 'react-bootstrap'
 import { Button } from '../button/Button'
-import { Row } from '../grid/Row'
-import { Col } from '../grid/Col'
 import { Form } from '../form/Form'
+import {
+  ChevronDoubleLeft,
+  ChevronDoubleRight,
+  ChevronLeft,
+  ChevronRight
+} from 'react-bootstrap-icons'
+import styles from './TransferList.module.scss'
 
 function not(a: readonly TransferListItem[], b: readonly TransferListItem[]) {
   return a.filter((item) => !b.some((bItem) => bItem.value === item.value))
@@ -25,6 +30,8 @@ export interface TransferListProps {
   leftLabel?: string
   rightLabel?: string
 }
+
+// TODO:ME Check scrollbar styles for chrome and safari
 
 export const TransferList = ({
   availableItems,
@@ -91,59 +98,71 @@ export const TransferList = ({
   }, [availableItems])
 
   const customList = (items: readonly TransferListItem[]) => (
-    <div style={{ width: 200, height: 230, overflow: 'auto' }}>
-      <ListGroup as="ul">
-        {items.map((item: TransferListItem) => {
-          const labelId = `transfer-list-item-${item.value}-label-${uniqueID}`
+    <ListGroup as="ul" className={styles['items-list']}>
+      {items.map((item: TransferListItem) => {
+        const labelId = `transfer-list-item-${item.value}-label-${uniqueID}`
 
-          return (
-            <ListGroup.Item as="li" key={item.value}>
-              <Form.Group.Checkbox
-                label={item.label}
-                onChange={handleToggle(item)}
-                id={labelId}
-                checked={checked.indexOf(item) !== -1}
-                tabIndex={-1}
-              />
-            </ListGroup.Item>
-          )
-        })}
-      </ListGroup>
-    </div>
+        return (
+          <ListGroup.Item as="li" key={item.value} className={styles['list-item']}>
+            <Form.Group.Checkbox
+              label={item.label}
+              onChange={handleToggle(item)}
+              id={labelId}
+              checked={checked.indexOf(item) !== -1}
+              tabIndex={-1}
+            />
+          </ListGroup.Item>
+        )
+      })}
+    </ListGroup>
   )
 
   return (
-    <Row>
-      <Col>
+    <div className={styles['transfer-list']}>
+      <div className={styles['items-column']}>
         {leftLabel && <p>{leftLabel}</p>}
         {customList(left)}
-      </Col>
-      <Col>
-        <Col>
-          <Button onClick={handleAllRight} disabled={left.length === 0} aria-label="move all right">
-            ≫
-          </Button>
-          <Button
-            onClick={handleCheckedRight}
-            disabled={leftChecked.length === 0}
-            aria-label="move selected right">
-            &gt;
-          </Button>
-          <Button
-            onClick={handleCheckedLeft}
-            disabled={rightChecked.length === 0}
-            aria-label="move selected left">
-            &lt;
-          </Button>
-          <Button onClick={handleAllLeft} disabled={right.length === 0} aria-label="move all left">
-            ≪
-          </Button>
-        </Col>
-      </Col>
-      <Col>
+      </div>
+      <div className={styles['middle-column']}>
+        <Button
+          size="sm"
+          onClick={handleAllRight}
+          disabled={left.length === 0}
+          icon={<ChevronDoubleRight />}
+          aria-label="move all right"
+          className={styles['transfer-button']}
+        />
+
+        <Button
+          size="sm"
+          onClick={handleCheckedRight}
+          disabled={leftChecked.length === 0}
+          icon={<ChevronRight />}
+          aria-label="move selected right"
+          className={styles['transfer-button']}
+        />
+
+        <Button
+          size="sm"
+          onClick={handleCheckedLeft}
+          disabled={rightChecked.length === 0}
+          icon={<ChevronLeft />}
+          aria-label="move selected left"
+          className={styles['transfer-button']}
+        />
+        <Button
+          size="sm"
+          onClick={handleAllLeft}
+          disabled={right.length === 0}
+          icon={<ChevronDoubleLeft />}
+          aria-label="move all left"
+          className={styles['transfer-button']}
+        />
+      </div>
+      <div className={styles['items-column']}>
         {rightLabel && <p>{rightLabel}</p>}
         {customList(right)}
-      </Col>
-    </Row>
+      </div>
+    </div>
   )
 }
