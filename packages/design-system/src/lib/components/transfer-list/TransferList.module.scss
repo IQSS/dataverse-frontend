@@ -16,8 +16,7 @@
   position: relative;
   z-index: 1;
   width: 230px;
-  height: 230px;
-  padding-block: 0.75rem;
+  height: 240px;
   overflow-y: auto;
   border: solid 2px $dv-border-color;
   border-radius: 6px;
@@ -57,10 +56,21 @@
       label {
         width: 100%;
         padding-left: 0.5rem;
-        padding-block: 0.25rem;
+        padding-block: 0.5rem;
         cursor: pointer;
       }
     }
+  }
+
+  .column-label {
+    position: sticky;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0.35rem 0.5rem;
+    font-weight: bold;
+    text-align: center;
+    background-color: #f5f5f5;
   }
 }
 

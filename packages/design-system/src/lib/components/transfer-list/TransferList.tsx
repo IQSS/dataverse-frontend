@@ -32,6 +32,7 @@ export interface TransferListProps {
 }
 
 // TODO:ME Check scrollbar styles for chrome and safari
+// TODO:ME Check navigation with keyboard
 
 export const TransferList = ({
   availableItems,
@@ -103,7 +104,7 @@ export const TransferList = ({
         const labelId = `transfer-list-item-${item.value}-label-${uniqueID}`
 
         return (
-          <ListGroup.Item as="li" key={item.value} className={styles['list-item']}>
+          <ListGroup.Item as="li" className={styles['list-item']} key={item.value}>
             <Form.Group.Checkbox
               label={item.label}
               onChange={handleToggle(item)}
@@ -119,8 +120,8 @@ export const TransferList = ({
 
   return (
     <div className={styles['transfer-list']}>
-      <div className={styles['items-column']}>
-        {leftLabel && <p>{leftLabel}</p>}
+      <div className={styles['items-column']} tabIndex={0}>
+        {leftLabel && <p className={styles['column-label']}>{leftLabel}</p>}
         {customList(left)}
       </div>
       <div className={styles['middle-column']}>
@@ -159,8 +160,8 @@ export const TransferList = ({
           className={styles['transfer-button']}
         />
       </div>
-      <div className={styles['items-column']}>
-        {rightLabel && <p>{rightLabel}</p>}
+      <div className={styles['items-column']} tabIndex={0}>
+        {rightLabel && <p className={styles['column-label']}>{rightLabel}</p>}
         {customList(right)}
       </div>
     </div>

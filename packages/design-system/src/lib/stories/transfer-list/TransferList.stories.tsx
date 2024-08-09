@@ -40,21 +40,37 @@ const availableItems: TransferListItem[] = [
   {
     label: 'Item 6',
     value: 6
+  },
+  {
+    label: 'Item 7',
+    value: 7
+  },
+  {
+    label: 'Item 8',
+    value: 8
+  },
+  {
+    label: 'Item 9',
+    value: 9
+  },
+  {
+    label: 'Item 10',
+    value: 10
   }
 ]
 
 const availableItemsTypeHobbies: TransferListItem[] = [
   {
     label: 'Soccer',
-    value: 10
-  },
-  {
-    label: 'Basketball',
     value: 20
   },
   {
-    label: 'Tennis',
+    label: 'Basketball',
     value: 30
+  },
+  {
+    label: 'Tennis',
+    value: 40
   }
 ]
 
