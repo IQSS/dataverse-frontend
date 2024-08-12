@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '../button/Button'
 import {
   ChevronDoubleLeft,
@@ -37,7 +37,6 @@ export const TransferList = ({
   leftLabel,
   rightLabel
 }: TransferListProps) => {
-  const uniqueID = useId()
   const [checked, setChecked] = useState<readonly TransferListItem[]>([])
   const [left, setLeft] = useState<readonly TransferListItem[]>(
     not(availableItems, defaultSelected)

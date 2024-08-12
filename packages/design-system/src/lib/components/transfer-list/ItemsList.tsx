@@ -20,7 +20,7 @@ export const ItemsList = ({ items, side, checked, onToggle }: ListProps) => {
         const labelId = `transfer-list-item-${item.value}-label-${uniqueID}`
 
         return (
-          <ListGroup.Item as="li" className={styles['list-item']} key={item.value} draggable>
+          <ListGroup.Item as="li" className={styles['list-item']} key={item.value}>
             <Form.Group.Checkbox
               label={item.label}
               onChange={onToggle(item)}
