@@ -1,35 +1,88 @@
-import { useId } from 'react'
 import { ListGroup } from 'react-bootstrap'
-import { Form } from '../form/Form'
-import { TransferListItem } from './TransferList'
+import { DndContext, DragEndEvent } from '@dnd-kit/core'
+import { arrayMove, SortableContext } from '@dnd-kit/sortable'
+import { type TransferListItem } from './TransferList'
+import { ListItem } from './ListItem'
 import styles from './TransferList.module.scss'
 
-interface ListProps {
-  items: readonly TransferListItem[]
-  side: 'left' | 'right'
-  checked: readonly TransferListItem[]
-  onToggle: (item: TransferListItem) => () => void
-}
+type ListProps =
+  | {
+      items: TransferListItem[]
+      side: 'left'
+      checked: TransferListItem[]
+      onToggle: (item: TransferListItem) => () => void
+      rightItems?: never
+      setRight?: never
+      onChange?: never
+    }
+  | {
+      items: TransferListItem[]
+      side: 'right'
+      checked: TransferListItem[]
+      onToggle: (item: TransferListItem) => () => void
+      rightItems: TransferListItem[]
+      setRight: React.Dispatch<React.SetStateAction<TransferListItem[]>>
+      onChange?: (selected: TransferListItem[]) => void
+    }
 
-export const ItemsList = ({ items, side, checked, onToggle }: ListProps) => {
-  const uniqueID = useId()
+export const ItemsList = ({
+  items,
+  side,
+  checked,
+  onToggle,
+  rightItems,
+  setRight,
+  onChange
+}: ListProps) => {
+  const handleDragEnd = (event: DragEndEvent) => {
+    // Prevent sorting on the left side which is not sortable but also asserts that setRight is defined
+    if (side === 'left') return
+
+    const { active, over } = event
+
+    if (over && active.id !== over.id) {
+      const oldIndex = rightItems.findIndex((item) => item.id === active.id)
+      const newIndex = rightItems.findIndex((item) => item.id === over.id)
+
+      const newItems = arrayMove(rightItems, oldIndex, newIndex)
+
+      setRight(newItems)
+
+      onChange && onChange(newItems)
+    }
+  }
+
+  if (side === 'left') {
+    return (
+      <ListGroup as="ul" className={styles['items-list']} data-testid={`${side}-list-group`}>
+        {items.map((item: TransferListItem) => (
+          <ListItem
+            item={item}
+            side={side}
+            checked={checked}
+            onToggle={onToggle}
+            key={item.value}
+          />
+        ))}
+      </ListGroup>
+    )
+  }
 
   return (
-    <ListGroup as="ul" className={styles['items-list']} data-testid={`${side}-list-group`}>
-      {items.map((item: TransferListItem) => {
-        const labelId = `transfer-list-item-${item.value}-label-${uniqueID}`
-
-        return (
-          <ListGroup.Item as="li" className={styles['list-item']} key={item.value}>
-            <Form.Group.Checkbox
-              label={item.label}
-              onChange={onToggle(item)}
-              id={labelId}
-              checked={checked.indexOf(item) !== -1}
+    <DndContext onDragEnd={handleDragEnd}>
+      <SortableContext items={items}>
+        <ListGroup as="ul" className={styles['items-list']} data-testid={`${side}-list-group`}>
+          {items.map((item: TransferListItem) => (
+            <ListItem
+              item={item}
+              side={side}
+              checked={checked}
+              onToggle={onToggle}
+              key={item.value}
             />
-          </ListGroup.Item>
-        )
-      })}
-    </ListGroup>
+          ))}
+        </ListGroup>
+      </SortableContext>
+    </DndContext>
   )
 }

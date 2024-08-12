@@ -9,17 +9,18 @@ import {
 import { ItemsList } from './ItemsList'
 import styles from './TransferList.module.scss'
 
-function not(a: readonly TransferListItem[], b: readonly TransferListItem[]) {
+function not(a: TransferListItem[], b: TransferListItem[]) {
   return a.filter((item) => !b.some((bItem) => bItem.value === item.value))
 }
 
-function intersection(a: readonly TransferListItem[], b: readonly TransferListItem[]) {
+function intersection(a: TransferListItem[], b: TransferListItem[]) {
   return a.filter((item) => b.some((bItem) => bItem.value === item.value))
 }
 
 export interface TransferListItem {
   value: string | number
   label: string
+  id: string | number
 }
 
 export interface TransferListProps {
@@ -37,11 +38,9 @@ export const TransferList = ({
   leftLabel,
   rightLabel
 }: TransferListProps) => {
-  const [checked, setChecked] = useState<readonly TransferListItem[]>([])
-  const [left, setLeft] = useState<readonly TransferListItem[]>(
-    not(availableItems, defaultSelected)
-  )
-  const [right, setRight] = useState<readonly TransferListItem[]>(
+  const [checked, setChecked] = useState<TransferListItem[]>([])
+  const [left, setLeft] = useState<TransferListItem[]>(not(availableItems, defaultSelected))
+  const [right, setRight] = useState<TransferListItem[]>(
     intersection(availableItems, defaultSelected)
   )
 
@@ -137,7 +136,15 @@ export const TransferList = ({
       </div>
       <div className={styles['items-column']} tabIndex={0}>
         {rightLabel && <p className={styles['column-label']}>{rightLabel}</p>}
-        <ItemsList items={right} side="right" checked={checked} onToggle={handleToggle} />
+        <ItemsList
+          items={right}
+          side="right"
+          checked={checked}
+          onToggle={handleToggle}
+          rightItems={right}
+          setRight={setRight}
+          onChange={onChange}
+        />
       </div>
     </div>
   )

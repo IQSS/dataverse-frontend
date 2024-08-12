@@ -17,6 +17,7 @@
   z-index: 1;
   width: 230px;
   height: 240px;
+  overflow-x: hidden;
   overflow-y: auto;
   border: solid 1px $dv-border-color;
   border-radius: 6px;
@@ -46,15 +47,6 @@
     .list-item {
       padding-inline: 1rem;
 
-      &:hover {
-        color: $dv-text-color;
-        background-color: color.adjust($dv-secondary-color, $alpha: -0.7);
-      }
-
-      &:has(input[type='checkbox']:checked) {
-        background-color: color.adjust($dv-secondary-color, $alpha: -0.4);
-      }
-
       :global .form-check {
         display: flex;
         align-items: center;
@@ -75,6 +67,29 @@
         padding-left: 0.5rem;
         padding-block: 0.5rem;
         cursor: pointer;
+      }
+
+      .drag-grip {
+        border-radius: 4px;
+        cursor: grab;
+        opacity: 0;
+
+        &:hover {
+          background-color: $dv-secondary-color;
+        }
+      }
+
+      &:hover {
+        color: $dv-text-color;
+        background-color: color.adjust($dv-secondary-color, $alpha: -0.7);
+
+        .drag-grip {
+          opacity: 1;
+        }
+      }
+
+      &:has(input[type='checkbox']:checked) {
+        background-color: color.adjust($dv-secondary-color, $alpha: -0.4);
       }
     }
   }
