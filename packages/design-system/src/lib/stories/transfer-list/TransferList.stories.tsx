@@ -19,123 +19,150 @@ const meta: Meta<typeof TransferList> = {
 const aToEitems: TransferListItem[] = [
   {
     label: 'Item A',
-    value: 'A'
+    value: 'A',
+    id: 'A'
   },
   {
     label: 'Item B',
-    value: 'B'
+    value: 'B',
+    id: 'B'
   },
   {
     label: 'Item C',
-    value: 'C'
+    value: 'C',
+    id: 'C'
   },
   {
     label: 'Item D',
-    value: 'D'
+    value: 'D',
+    id: 'D'
   },
   {
     label: 'Item E',
-    value: 'E'
+    value: 'E',
+    id: 'E'
   }
 ]
 
 const fToJitems: TransferListItem[] = [
   {
     label: 'Item F',
-    value: 'F'
+    value: 'F',
+    id: 'F'
   },
   {
     label: 'Item G',
-    value: 'G'
+    value: 'G',
+    id: 'G'
   },
   {
     label: 'Item H',
-    value: 'H'
+    value: 'H',
+    id: 'H'
   },
   {
     label: 'Item I',
-    value: 'I'
+    value: 'I',
+    id: 'I'
   },
   {
     label: 'Item J',
-    value: 'J'
+    value: 'J',
+    id: 'J'
   }
 ]
 
 const kToÑitems: TransferListItem[] = [
   {
     label: 'Item K',
-    value: 'K'
+    value: 'K',
+    id: 'K'
   },
   {
     label: 'Item L',
-    value: 'L'
+    value: 'L',
+    id: 'L'
   },
   {
     label: 'Item M',
-    value: 'M'
+    value: 'M',
+    id: 'M'
   },
   {
     label: 'Item N',
-    value: 'N'
+    value: 'N',
+    id: 'N'
   },
   {
     label: 'Item Ñ',
-    value: 'Ñ'
+    value: 'Ñ',
+    id: 'Ñ'
   }
 ]
 
 const oToUitems: TransferListItem[] = [
   {
     label: 'Item O',
-    value: 'O'
+    value: 'O',
+    id: 'O'
   },
   {
     label: 'Item P',
-    value: 'P'
+    value: 'P',
+    id: 'P'
   },
   {
     label: 'Item Q',
-    value: 'Q'
+    value: 'Q',
+    id: 'Q'
   },
   {
     label: 'Item R',
-    value: 'R'
+    value: 'R',
+    id: 'R'
   },
   {
     label: 'Item S',
-    value: 'S'
+    value: 'S',
+    id: 'S'
   },
   {
     label: 'Item T',
-    value: 'T'
+    value: 'T',
+    id: 'T'
   },
   {
     label: 'Item U',
-    value: 'U'
+    value: 'U',
+    id: 'U'
   }
 ]
 
 const vToZitems: TransferListItem[] = [
   {
     label: 'Item V',
-    value: 'V'
+    value: 'V',
+    id: 'V'
   },
   {
     label: 'Item W',
-    value: 'W'
+    value: 'W',
+    id: 'W'
   },
   {
     label: 'Item X',
-    value: 'X'
+    value: 'X',
+    id: 'X'
   },
   {
     label: 'Item Y',
-    value: 'Y'
+    value: 'Y',
+    id: 'Y'
   },
   {
     label: 'Item Z',
-    value: 'Z'
+    value: 'Z',
+    id: 'Z'
   }
 ]
 
@@ -150,15 +177,18 @@ const allItems: TransferListItem[] = [
 const defaultSelected: TransferListItem[] = [
   {
     label: 'Item B',
-    value: 'B'
+    value: 'B',
+    id: 'B'
   },
   {
     label: 'Item C',
-    value: 'C'
+    value: 'C',
+    id: 'C'
   },
   {
     label: 'Item D',
-    value: 'D'
+    value: 'D',
+    id: 'D'
   }
 ]
 

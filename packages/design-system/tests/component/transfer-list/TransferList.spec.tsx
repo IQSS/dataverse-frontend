@@ -6,23 +6,28 @@ import {
 const availableItems: TransferListItem[] = [
   {
     label: 'Item A',
-    value: 'A'
+    value: 'A',
+    id: 'A'
   },
   {
     label: 'Item B',
-    value: 'B'
+    value: 'B',
+    id: 'B'
   },
   {
     label: 'Item C',
-    value: 'C'
+    value: 'C',
+    id: 'C'
   },
   {
     label: 'Item D',
-    value: 'D'
+    value: 'D',
+    id: 'D'
   },
   {
     label: 'Item E',
-    value: 'E'
+    value: 'E',
+    id: 'E'
   }
 ]
 
@@ -58,11 +63,13 @@ describe('TransferList', () => {
         defaultSelected={[
           {
             label: 'Item A',
-            value: 'A'
+            value: 'A',
+            id: 'A'
           },
           {
             label: 'Item C',
-            value: 'C'
+            value: 'C',
+            id: 'C'
           }
         ]}
       />
@@ -117,11 +124,13 @@ describe('TransferList', () => {
         defaultSelected={[
           {
             label: 'Item A',
-            value: 'A'
+            value: 'A',
+            id: 'A'
           },
           {
             label: 'Item C',
-            value: 'C'
+            value: 'C',
+            id: 'C'
           }
         ]}
       />
@@ -197,11 +206,13 @@ describe('TransferList', () => {
         defaultSelected={[
           {
             label: 'Item A',
-            value: 'A'
+            value: 'A',
+            id: 'A'
           },
           {
             label: 'Item C',
-            value: 'C'
+            value: 'C',
+            id: 'C'
           }
         ]}
       />
@@ -356,11 +367,13 @@ describe('TransferList', () => {
           defaultSelected={[
             {
               label: 'Item A',
-              value: 'A'
+              value: 'A',
+              id: 'A'
             },
             {
               label: 'Item C',
-              value: 'C'
+              value: 'C',
+              id: 'C'
             }
           ]}
           onChange={onChange}
@@ -441,11 +454,13 @@ describe('TransferList', () => {
           defaultSelected={[
             {
               label: 'Item A',
-              value: 'A'
+              value: 'A',
+              id: 'A'
             },
             {
               label: 'Item C',
-              value: 'C'
+              value: 'C',
+              id: 'C'
             }
           ]}
           onChange={onChange}
