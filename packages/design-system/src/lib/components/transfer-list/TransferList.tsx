@@ -31,8 +31,6 @@ export interface TransferListProps {
   rightLabel?: string
 }
 
-// TODO:ME Check scrollbar styles for chrome and safari
-
 export const TransferList = ({
   availableItems,
   defaultSelected = [],
