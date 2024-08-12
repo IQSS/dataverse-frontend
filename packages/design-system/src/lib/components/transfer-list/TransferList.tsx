@@ -1,13 +1,12 @@
 import { useEffect, useId, useState } from 'react'
-import { ListGroup } from 'react-bootstrap'
 import { Button } from '../button/Button'
-import { Form } from '../form/Form'
 import {
   ChevronDoubleLeft,
   ChevronDoubleRight,
   ChevronLeft,
   ChevronRight
 } from 'react-bootstrap-icons'
+import { ItemsList } from './ItemsList'
 import styles from './TransferList.module.scss'
 
 function not(a: readonly TransferListItem[], b: readonly TransferListItem[]) {
@@ -95,30 +94,11 @@ export const TransferList = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [availableItems])
 
-  const customList = (items: readonly TransferListItem[], side: 'left' | 'right') => (
-    <ListGroup as="ul" className={styles['items-list']} data-testid={`${side}-list-group`}>
-      {items.map((item: TransferListItem) => {
-        const labelId = `transfer-list-item-${item.value}-label-${uniqueID}`
-
-        return (
-          <ListGroup.Item as="li" className={styles['list-item']} key={item.value}>
-            <Form.Group.Checkbox
-              label={item.label}
-              onChange={handleToggle(item)}
-              id={labelId}
-              checked={checked.indexOf(item) !== -1}
-            />
-          </ListGroup.Item>
-        )
-      })}
-    </ListGroup>
-  )
-
   return (
     <div className={styles['transfer-list']}>
       <div className={styles['items-column']} tabIndex={0}>
         {leftLabel && <p className={styles['column-label']}>{leftLabel}</p>}
-        {customList(left, 'left')}
+        <ItemsList items={left} side="left" checked={checked} onToggle={handleToggle} />
       </div>
       <div className={styles['middle-column']} data-testid="actions-column">
         <Button
@@ -158,7 +138,7 @@ export const TransferList = ({
       </div>
       <div className={styles['items-column']} tabIndex={0}>
         {rightLabel && <p className={styles['column-label']}>{rightLabel}</p>}
-        {customList(right, 'right')}
+        <ItemsList items={right} side="right" checked={checked} onToggle={handleToggle} />
       </div>
     </div>
   )
