@@ -95,8 +95,8 @@ export const TransferList = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [availableItems])
 
-  const customList = (items: readonly TransferListItem[]) => (
-    <ListGroup as="ul" className={styles['items-list']}>
+  const customList = (items: readonly TransferListItem[], side: 'left' | 'right') => (
+    <ListGroup as="ul" className={styles['items-list']} data-testid={`${side}-list-group`}>
       {items.map((item: TransferListItem) => {
         const labelId = `transfer-list-item-${item.value}-label-${uniqueID}`
 
@@ -118,9 +118,9 @@ export const TransferList = ({
     <div className={styles['transfer-list']}>
       <div className={styles['items-column']} tabIndex={0}>
         {leftLabel && <p className={styles['column-label']}>{leftLabel}</p>}
-        {customList(left)}
+        {customList(left, 'left')}
       </div>
-      <div className={styles['middle-column']}>
+      <div className={styles['middle-column']} data-testid="actions-column">
         <Button
           size="sm"
           onClick={handleAllRight}
@@ -158,7 +158,7 @@ export const TransferList = ({
       </div>
       <div className={styles['items-column']} tabIndex={0}>
         {rightLabel && <p className={styles['column-label']}>{rightLabel}</p>}
-        {customList(right)}
+        {customList(right, 'right')}
       </div>
     </div>
   )
