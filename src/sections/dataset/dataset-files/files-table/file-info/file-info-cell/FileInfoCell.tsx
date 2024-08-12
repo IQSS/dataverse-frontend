@@ -14,9 +14,9 @@ import { FileLabels } from '../../../../../file/file-labels/FileLabels'
 
 export function FileInfoCell({ file }: { file: FilePreview }) {
   if (!file.datasetVersionNumber) {
-    throw new Error('FilePreview object must contain datasetVersionNumber')
+    console.log('FileInfoCell error: FilePreview object must contain datasetVersionNumber')
+    return null
   }
-
   return (
     <div className={styles.container}>
       <div className={styles['thumbnail-container']}>
