@@ -173,6 +173,11 @@ export const Default: Story = {
   render: () => <TransferList availableItems={aToEitems} onChange={onChangeFn} />
 }
 
+/**
+ * Use the `defaultSelected` prop to set the items that are selected by default.
+ * The component will render with the selected items on the right list and remove them from the left list of available items.
+ */
+
 export const WithDefaultSelected: Story = {
   render: () => (
     <TransferList
@@ -182,6 +187,11 @@ export const WithDefaultSelected: Story = {
     />
   )
 }
+
+/**
+ * Use the `leftLabel` and `rightLabel` props to set the labels of the lists.
+ * Both left and right labels are optional.
+ */
 
 export const WithLabels: Story = {
   render: () => (
@@ -193,6 +203,19 @@ export const WithLabels: Story = {
     />
   )
 }
+
+/**
+ * You can change the items of the left list dynamically by changing the `availableItems` prop. This is just an example using the SelectAdvanced component.
+ * - In this example, the `availableItems` prop changes when the user selects an option from the select and make the items of the left list change.
+ * - The right list will keep the selected items even if they are not available in the left list.
+ * - If there is an item in the right list that belongs to new available items, it will remain on the right list and will be filtered out from the new available items for the left list.
+ * - If you move an item from the right list to the left list but this item does not exist anymore in the current available items, it wont appear on the left list.
+ */
+
+export const WithChangingAvailableItems: Story = {
+  render: () => <WithChangingAvailableItemsComponent />
+}
+
 type SelectOption = 'All' | 'A to E' | 'F to J' | 'K to Ñ' | 'O to U' | 'V to Z'
 const WithChangingAvailableItemsComponent = () => {
   const [items, setItems] = useState(allItems)
@@ -239,8 +262,4 @@ const WithChangingAvailableItemsComponent = () => {
       </div>
     </div>
   )
-}
-
-export const WithChangingAvailableItems: Story = {
-  render: () => <WithChangingAvailableItemsComponent />
 }
