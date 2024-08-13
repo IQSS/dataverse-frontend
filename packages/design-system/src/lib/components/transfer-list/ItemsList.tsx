@@ -54,7 +54,7 @@ export const ItemsList = ({
 
   if (side === 'left') {
     return (
-      <ListGroup as="ul" className={styles['items-list']} data-testid={`${side}-list-group`}>
+      <ListGroup className={styles['items-list']} data-testid={`${side}-list-group`}>
         {items.map((item: TransferListItem) => (
           <ListItem
             item={item}
@@ -71,7 +71,7 @@ export const ItemsList = ({
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <SortableContext items={items}>
-        <ListGroup as="ul" className={styles['items-list']} data-testid={`${side}-list-group`}>
+        <ListGroup className={styles['items-list']} data-testid={`${side}-list-group`}>
           {items.map((item: TransferListItem) => (
             <ListItem
               item={item}

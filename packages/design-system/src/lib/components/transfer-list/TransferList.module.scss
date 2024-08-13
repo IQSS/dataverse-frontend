@@ -45,6 +45,7 @@
     list-style-type: none;
 
     .list-item {
+      position: relative;
       padding-inline: 1rem;
 
       :global .form-check {
@@ -69,7 +70,10 @@
         cursor: pointer;
       }
 
-      .drag-grip {
+      .drag-handle {
+        padding: 0;
+        background-color: transparent;
+        border: 0;
         border-radius: 4px;
         cursor: grab;
         opacity: 0;
@@ -77,19 +81,30 @@
         &:hover {
           background-color: $dv-secondary-color;
         }
+
+        &:active {
+          cursor: grabbing;
+        }
       }
 
-      &:hover {
+      &:hover,
+      &:focus-visible,
+      &:focus-within {
         color: $dv-text-color;
         background-color: color.adjust($dv-secondary-color, $alpha: -0.7);
 
-        .drag-grip {
+        .drag-handle {
           opacity: 1;
         }
       }
 
       &:has(input[type='checkbox']:checked) {
         background-color: color.adjust($dv-secondary-color, $alpha: -0.4);
+      }
+
+      &[aria-pressed='true'] {
+        z-index: 999;
+        background-color: color.adjust($dv-secondary-color, $alpha: -0.3);
       }
     }
   }

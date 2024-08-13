@@ -23,7 +23,7 @@ export const ListItem = ({ item, side, checked, onToggle }: ListItemProps) => {
 
   if (side === 'left') {
     return (
-      <ListGroup.Item as="li" className={styles['list-item']}>
+      <ListGroup.Item className={styles['list-item']}>
         <Form.Group.Checkbox
           label={item.label}
           onChange={onToggle(item)}
@@ -43,13 +43,17 @@ export const ListItem = ({ item, side, checked, onToggle }: ListItemProps) => {
 
   return (
     <ListGroup.Item
-      as="li"
       ref={setNodeRef}
       {...attributes}
+      role=""
       style={style}
       className={styles['list-item']}>
       <Stack direction="horizontal" gap={1}>
-        <div className={styles['drag-grip']} ref={setActivatorNodeRef} {...listeners}>
+        <button
+          ref={setActivatorNodeRef}
+          {...listeners}
+          className={styles['drag-handle']}
+          aria-label="hold click to drag">
           <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
             <circle cx="9" cy="6" r="1.5" fill="#333" />
             <circle cx="15" cy="6" r="1.5" fill="#333" />
@@ -58,7 +62,7 @@ export const ListItem = ({ item, side, checked, onToggle }: ListItemProps) => {
             <circle cx="9" cy="18" r="1.5" fill="#333" />
             <circle cx="15" cy="18" r="1.5" fill="#333" />
           </svg>
-        </div>
+        </button>
         <Form.Group.Checkbox
           label={item.label}
           onChange={onToggle(item)}
