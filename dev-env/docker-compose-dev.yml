@@ -54,6 +54,17 @@ services:
         -Ddataverse.pid.fake.label=FakeDOIProvider
         -Ddataverse.pid.fake.authority=10.5072
         -Ddataverse.pid.fake.shoulder=FK2/
+        -Ddataverse.files.storage-driver-id=localstack1
+        -Ddataverse.files.localstack1.type=s3
+        -Ddataverse.files.localstack1.label=LocalStack
+        -Ddataverse.files.localstack1.custom-endpoint-url=http://localstack:4566
+        -Ddataverse.files.localstack1.custom-endpoint-region=us-east-2
+        -Ddataverse.files.localstack1.bucket-name=mybucket
+        -Ddataverse.files.localstack1.path-style-access=true
+        -Ddataverse.files.localstack1.upload-redirect=true
+        -Ddataverse.files.localstack1.download-redirect=true
+        -Ddataverse.files.localstack1.access-key=default
+        -Ddataverse.files.localstack1.secret-key=default
     expose:
       - '8080'
     networks:
@@ -61,6 +72,7 @@ services:
     depends_on:
       - dev_postgres
       - dev_solr
+      - dev_localstack
     volumes:
       - ./docker-dev-volumes/app/data:/dv
       - ./docker-dev-volumes/app/secrets:/secrets
@@ -81,6 +93,23 @@ services:
       - 'fix-fs-perms.sh dv'
     volumes:
       - ./docker-dev-volumes/app/data:/dv
+
+  dev_localstack:
+    container_name: 'dev_localstack'
+    hostname: 'localstack'
+    image: localstack/localstack:2.3.2
+    restart: on-failure
+    ports:
+      - '4566:4566'
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - HOSTNAME_EXTERNAL=localstack
+    networks:
+      - dataverse
+    volumes:
+      - ./conf/localstack:/etc/localstack/init/ready.d
+    tmpfs:
+      - /localstack:mode=770,size=128M,uid=1000,gid=1000
 
   dev_dataverse_bootstrap:
     container_name: 'dev_dataverse_bootstrap'
