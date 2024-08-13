@@ -70,7 +70,7 @@ export function BreadcrumbsGenerator({
   )
 }
 
-const dvObjectTypeToRoute: Record<string, Route> = {
+const dvObjectTypeToRoute: Record<DvObjectType, Route> = {
   dataset: Route.DATASETS,
   collection: Route.COLLECTIONS,
   file: Route.FILES
