@@ -48,6 +48,7 @@ export const ListItem = ({ item, side, checked, onToggle }: ListItemProps) => {
       className={styles['list-item']}>
       <Stack direction="horizontal" gap={1}>
         <button
+          type="button"
           ref={setActivatorNodeRef}
           {...listeners}
           className={styles['drag-handle']}

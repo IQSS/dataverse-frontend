@@ -317,6 +317,140 @@ describe('TransferList', () => {
     })
   })
 
+  describe('drag and drop', () => {
+    it('should sort item A for Item B', () => {
+      cy.mount(
+        <TransferList
+          availableItems={availableItems}
+          defaultSelected={[
+            {
+              label: 'Item A',
+              value: 'A',
+              id: 'A'
+            },
+            {
+              label: 'Item B',
+              value: 'B',
+              id: 'B'
+            },
+            {
+              label: 'Item C',
+              value: 'C',
+              id: 'C'
+            }
+          ]}
+        />
+      )
+
+      cy.findByTestId('right-list-group').as('rightList')
+
+      // Check initial order of items
+      cy.get('@rightList').within(() => {
+        cy.get('[aria-roledescription="sortable"]').as('sortableItems')
+        cy.get('@sortableItems').should('have.length', 3)
+
+        cy.get('@sortableItems').spread((firstItem, secondItem, thirdItem) => {
+          cy.wrap(firstItem).should('contain.text', 'Item A')
+          cy.wrap(secondItem).should('contain.text', 'Item B')
+          cy.wrap(thirdItem).should('contain.text', 'Item C')
+        })
+      })
+
+      cy.wait(1000)
+
+      cy.findAllByLabelText('press space to select and keys to drag').as('dragHandles')
+
+      cy.get('@dragHandles').should('have.length', 3)
+
+      cy.get('@dragHandles')
+        .first()
+        .focus()
+        .type('{enter}')
+        .type('{downArrow}')
+        .type('{downArrow}') // with two presses of down arrow, item A should be moved to the Item B position
+        .type('{enter}')
+
+      // Check the new order of items
+      cy.get('@rightList').within(() => {
+        cy.get('[aria-roledescription="sortable"]').as('sortableItems')
+        cy.get('@sortableItems').should('have.length', 3)
+
+        cy.get('@sortableItems').spread((firstItem, secondItem, thirdItem) => {
+          cy.wrap(firstItem).should('contain.text', 'Item B')
+          cy.wrap(secondItem).should('contain.text', 'Item A')
+          cy.wrap(thirdItem).should('contain.text', 'Item C')
+        })
+      })
+    })
+
+    it('should sort item C to the top of the list', () => {
+      cy.mount(
+        <TransferList
+          availableItems={availableItems}
+          defaultSelected={[
+            {
+              label: 'Item A',
+              value: 'A',
+              id: 'A'
+            },
+            {
+              label: 'Item B',
+              value: 'B',
+              id: 'B'
+            },
+            {
+              label: 'Item C',
+              value: 'C',
+              id: 'C'
+            }
+          ]}
+        />
+      )
+
+      cy.findByTestId('right-list-group').as('rightList')
+
+      // Check initial order of items
+      cy.get('@rightList').within(() => {
+        cy.get('[aria-roledescription="sortable"]').as('sortableItems')
+        cy.get('@sortableItems').should('have.length', 3)
+
+        cy.get('@sortableItems').spread((firstItem, secondItem, thirdItem) => {
+          cy.wrap(firstItem).should('contain.text', 'Item A')
+          cy.wrap(secondItem).should('contain.text', 'Item B')
+          cy.wrap(thirdItem).should('contain.text', 'Item C')
+        })
+      })
+
+      cy.wait(1000)
+
+      cy.findAllByLabelText('press space to select and keys to drag').as('dragHandles')
+
+      cy.get('@dragHandles').should('have.length', 3)
+
+      cy.get('@dragHandles')
+        .last()
+        .focus()
+        .type('{enter}')
+        .type('{upArrow}')
+        .type('{upArrow}')
+        .type('{upArrow}')
+        .type('{upArrow}') // with 4 press of up arrow, item C should be moved to the top of the list
+        .type('{enter}')
+
+      // Check the new order of items
+      cy.get('@rightList').within(() => {
+        cy.get('[aria-roledescription="sortable"]').as('sortableItems')
+        cy.get('@sortableItems').should('have.length', 3)
+
+        cy.get('@sortableItems').spread((firstItem, secondItem, thirdItem) => {
+          cy.wrap(firstItem).should('contain.text', 'Item C')
+          cy.wrap(secondItem).should('contain.text', 'Item A')
+          cy.wrap(thirdItem).should('contain.text', 'Item B')
+        })
+      })
+    })
+  })
+
   describe('onChange calls', () => {
     it('should call onChange correctly when moving checked items to right', () => {
       const onChange = cy.stub().as('onChange')
@@ -345,15 +479,18 @@ describe('TransferList', () => {
       cy.get('@onChange').should('have.been.calledWith', [
         {
           label: 'Item A',
-          value: 'A'
+          value: 'A',
+          id: 'A'
         },
         {
           label: 'Item C',
-          value: 'C'
+          value: 'C',
+          id: 'C'
         },
         {
           label: 'Item E',
-          value: 'E'
+          value: 'E',
+          id: 'E'
         }
       ])
     })
@@ -424,23 +561,28 @@ describe('TransferList', () => {
       cy.get('@onChange').should('have.been.calledWith', [
         {
           label: 'Item A',
-          value: 'A'
+          value: 'A',
+          id: 'A'
         },
         {
           label: 'Item B',
-          value: 'B'
+          value: 'B',
+          id: 'B'
         },
         {
           label: 'Item C',
-          value: 'C'
+          value: 'C',
+          id: 'C'
         },
         {
           label: 'Item D',
-          value: 'D'
+          value: 'D',
+          id: 'D'
         },
         {
           label: 'Item E',
-          value: 'E'
+          value: 'E',
+          id: 'E'
         }
       ])
     })
@@ -482,6 +624,66 @@ describe('TransferList', () => {
 
       cy.get('@onChange').should('have.been.calledOnce')
       cy.get('@onChange').should('have.been.calledWith', [])
+    })
+
+    it('should call onChange correctly when sorting items', () => {
+      const onChange = cy.stub().as('onChange')
+
+      cy.mount(
+        <TransferList
+          onChange={onChange}
+          availableItems={availableItems}
+          defaultSelected={[
+            {
+              label: 'Item A',
+              value: 'A',
+              id: 'A'
+            },
+            {
+              label: 'Item B',
+              value: 'B',
+              id: 'B'
+            },
+            {
+              label: 'Item C',
+              value: 'C',
+              id: 'C'
+            }
+          ]}
+        />
+      )
+
+      cy.wait(1000)
+
+      cy.findAllByLabelText('press space to select and keys to drag').as('dragHandles')
+
+      cy.get('@dragHandles').should('have.length', 3)
+
+      cy.get('@dragHandles')
+        .first()
+        .focus()
+        .type('{enter}')
+        .type('{downArrow}')
+        .type('{downArrow}') // with two presses of down arrow, item A should be moved to the Item B position
+        .type('{enter}')
+
+      cy.get('@onChange').should('have.been.calledWith', [
+        {
+          label: 'Item B',
+          value: 'B',
+          id: 'B'
+        },
+        {
+          label: 'Item A',
+          value: 'A',
+          id: 'A'
+        },
+        {
+          label: 'Item C',
+          value: 'C',
+          id: 'C'
+        }
+      ])
     })
   })
 })

@@ -6,8 +6,16 @@ import { SelectAdvanced } from '../../components/select-advanced/SelectAdvanced'
 /**
  * ## Description
  * The transfer list component is an element that allows users to transfer on or more items between two lists.
+ *
  * The list on the left is the source list and the list on the right is the target list.
- * The right list can be empty or have some items already.
+ *
+ * The right list can be empty or have some items initially.
+ *
+ * You can also sort the items on the right list by dragging them.
+ *
+ * You can pass an onChange function to know when the selected items change.
+ *
+ * *Note: You can open the developer console to see the selected items when they change.*
  */
 
 const meta: Meta<typeof TransferList> = {
@@ -196,7 +204,7 @@ export default meta
 type Story = StoryObj<typeof TransferList>
 
 const onChangeFn = (items: TransferListItem[]) => {
-  console.log(items)
+  console.log('%cSelected items:', 'color: #00d400; font-weight: bold;', items)
 }
 
 export const Default: Story = {
@@ -288,7 +296,11 @@ const WithChangingAvailableItemsComponent = () => {
           />
         </div>
 
-        <TransferList availableItems={items} defaultSelected={defaultSelected} />
+        <TransferList
+          availableItems={items}
+          defaultSelected={defaultSelected}
+          onChange={onChangeFn}
+        />
       </div>
     </div>
   )

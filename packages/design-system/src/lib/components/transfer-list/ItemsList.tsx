@@ -35,24 +35,6 @@ export const ItemsList = ({
   setRight,
   onChange
 }: ListProps) => {
-  const handleDragEnd = (event: DragEndEvent) => {
-    // Prevent sorting on the left side which is not sortable but also asserts that setRight is defined
-    if (side === 'left') return
-
-    const { active, over } = event
-
-    if (over && active.id !== over.id) {
-      const oldIndex = rightItems.findIndex((item) => item.id === active.id)
-      const newIndex = rightItems.findIndex((item) => item.id === over.id)
-
-      const newItems = arrayMove(rightItems, oldIndex, newIndex)
-
-      setRight(newItems)
-
-      onChange && onChange(newItems)
-    }
-  }
-
   if (side === 'left') {
     return (
       <ListGroup className={styles['items-list']} data-testid={`${side}-list-group`}>
@@ -67,6 +49,21 @@ export const ItemsList = ({
         ))}
       </ListGroup>
     )
+  }
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+
+    if (over && active.id !== over.id) {
+      const oldIndex = rightItems.findIndex((item) => item.id === active.id)
+      const newIndex = rightItems.findIndex((item) => item.id === over.id)
+
+      const newItems = arrayMove(rightItems, oldIndex, newIndex)
+
+      setRight(newItems)
+
+      onChange && onChange(newItems)
+    }
   }
 
   return (
