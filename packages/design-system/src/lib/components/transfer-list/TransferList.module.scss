@@ -47,6 +47,7 @@
     .list-item {
       position: relative;
       padding-inline: 1rem;
+      touch-action: none;
 
       :global .form-check {
         display: flex;
@@ -76,7 +77,6 @@
         border: 0;
         border-radius: 4px;
         cursor: grab;
-        opacity: 0;
 
         &:hover {
           background-color: $dv-secondary-color;
@@ -88,14 +88,9 @@
       }
 
       &:hover,
-      &:focus-visible,
-      &:focus-within {
+      &:focus-visible {
         color: $dv-text-color;
         background-color: color.adjust($dv-secondary-color, $alpha: -0.7);
-
-        .drag-handle {
-          opacity: 1;
-        }
       }
 
       &:has(input[type='checkbox']:checked) {

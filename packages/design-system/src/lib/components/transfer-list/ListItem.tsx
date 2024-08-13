@@ -39,8 +39,6 @@ export const ListItem = ({ item, side, checked, onToggle }: ListItemProps) => {
     transition
   }
 
-  // TODO:ME Limit the drag movement to the y-axis
-
   return (
     <ListGroup.Item
       ref={setNodeRef}
@@ -53,14 +51,14 @@ export const ListItem = ({ item, side, checked, onToggle }: ListItemProps) => {
           ref={setActivatorNodeRef}
           {...listeners}
           className={styles['drag-handle']}
-          aria-label="hold click to drag">
+          aria-label="press space to select and keys to drag">
           <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="9" cy="6" r="1.5" fill="#333" />
-            <circle cx="15" cy="6" r="1.5" fill="#333" />
-            <circle cx="9" cy="12" r="1.5" fill="#333" />
-            <circle cx="15" cy="12" r="1.5" fill="#333" />
-            <circle cx="9" cy="18" r="1.5" fill="#333" />
-            <circle cx="15" cy="18" r="1.5" fill="#333" />
+            <circle cx="9" cy="6" r="1.5" fill="#777" />
+            <circle cx="15" cy="6" r="1.5" fill="#777" />
+            <circle cx="9" cy="12" r="1.5" fill="#777" />
+            <circle cx="15" cy="12" r="1.5" fill="#777" />
+            <circle cx="9" cy="18" r="1.5" fill="#777" />
+            <circle cx="15" cy="18" r="1.5" fill="#777" />
           </svg>
         </button>
         <Form.Group.Checkbox

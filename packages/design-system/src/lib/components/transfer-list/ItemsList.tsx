@@ -1,6 +1,7 @@
 import { ListGroup } from 'react-bootstrap'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { arrayMove, SortableContext } from '@dnd-kit/sortable'
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { type TransferListItem } from './TransferList'
 import { ListItem } from './ListItem'
 import styles from './TransferList.module.scss'
@@ -69,7 +70,7 @@ export const ItemsList = ({
   }
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
       <SortableContext items={items}>
         <ListGroup className={styles['items-list']} data-testid={`${side}-list-group`}>
           {items.map((item: TransferListItem) => (
