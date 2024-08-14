@@ -32,25 +32,20 @@ export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
   const { t } = useTranslation('dataset')
   const navigate = useNavigate()
 
-  console.log(dataset.version)
-
   const handleOnSelect = (eventKey: EditDatasetMenuItems | string | null) => {
+    const searchParams = new URLSearchParams()
+    searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
+
+    if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
+      searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
+    }
+
     if (eventKey === EditDatasetMenuItems.FILES_UPLOAD) {
-      navigate(
-        `${Route.UPLOAD_DATASET_FILES}?${QueryParamKey.PERSISTENT_ID}=${dataset.persistentId}`
-      )
+      navigate(`${Route.UPLOAD_DATASET_FILES}?${searchParams.toString()}`)
       return
     }
     if (eventKey === EditDatasetMenuItems.METADATA) {
-      const searchParams = new URLSearchParams()
-      searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
-
-      if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
-        searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
-      }
-
       navigate(`${Route.EDIT_DATASET_METADATA}?${searchParams.toString()}`)
-
       return
     }
     showModal()
