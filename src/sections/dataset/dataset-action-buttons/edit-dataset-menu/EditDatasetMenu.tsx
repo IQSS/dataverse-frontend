@@ -1,13 +1,17 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { Dataset } from '../../../../dataset/domain/models/Dataset'
+import {
+  Dataset,
+  DatasetNonNumericVersionSearchParam,
+  DatasetPublishingStatus
+} from '../../../../dataset/domain/models/Dataset'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { EditDatasetPermissionsMenu } from './EditDatasetPermissionsMenu'
 import { DeleteDatasetButton } from './DeleteDatasetButton'
 import { DeaccessionDatasetButton } from './DeaccessionDatasetButton'
 import { useNotImplementedModal } from '../../../not-implemented/NotImplementedModalContext'
 import { useSession } from '../../../session/SessionContext'
-import { Route } from '../../../Route.enum'
+import { QueryParamKey, Route } from '../../../Route.enum'
 
 interface EditDatasetMenuProps {
   dataset: Dataset
@@ -28,13 +32,25 @@ export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
   const { t } = useTranslation('dataset')
   const navigate = useNavigate()
 
+  console.log(dataset.version)
+
   const handleOnSelect = (eventKey: EditDatasetMenuItems | string | null) => {
     if (eventKey === EditDatasetMenuItems.FILES_UPLOAD) {
-      navigate(`${Route.UPLOAD_DATASET_FILES}?persistentId=${dataset.persistentId}`)
+      navigate(
+        `${Route.UPLOAD_DATASET_FILES}?${QueryParamKey.PERSISTENT_ID}=${dataset.persistentId}`
+      )
       return
     }
     if (eventKey === EditDatasetMenuItems.METADATA) {
-      navigate(`${Route.EDIT_DATASET_METADATA}?persistentId=${dataset.persistentId}`)
+      const searchParams = new URLSearchParams()
+      searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
+
+      if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
+        searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
+      }
+
+      navigate(`${Route.EDIT_DATASET_METADATA}?${searchParams.toString()}`)
+
       return
     }
     showModal()
