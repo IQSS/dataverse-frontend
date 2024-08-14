@@ -1,6 +1,5 @@
 import { LinkToPage } from '../../../shared/link-to-page/LinkToPage'
 import { Route } from '../../../Route.enum'
-import { FileType } from '../../../../files/domain/models/FileMetadata'
 import { CollectionPreview } from '../../../../collection/domain/models/CollectionPreview'
 import styles from './CollectionCard.module.scss'
 import { Icon, IconName } from '@iqss/dataverse-design-system'
@@ -12,7 +11,6 @@ interface CollectionCardHeaderProps {
 }
 
 export function CollectionCardHeader({ collectionPreview }: CollectionCardHeaderProps) {
-  const iconFileType = new FileType('text/tab-separated-values', 'Comma Separated Values')
   return (
     <>
       <div className={styles.header}>
