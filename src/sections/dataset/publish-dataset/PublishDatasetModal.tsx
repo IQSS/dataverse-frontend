@@ -8,15 +8,14 @@ import { useSession } from '../../session/SessionContext'
 import { License } from '../dataset-summary/License'
 import {
   DatasetNonNumericVersionSearchParam,
-  defaultLicense,
-  QueryParamsKeys
+  defaultLicense
 } from '../../../dataset/domain/models/Dataset'
 import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
 import { usePublishDataset } from './usePublishDataset'
 import { PublishDatasetHelpText } from './PublishDatasetHelpText'
 import styles from './PublishDatasetModal.module.scss'
 import { useNavigate } from 'react-router-dom'
-import { Route } from '../../Route.enum'
+import { QueryParamKey, Route } from '../../Route.enum'
 
 interface PublishDatasetModalProps {
   show: boolean
@@ -52,7 +51,7 @@ export function PublishDatasetModal({
 
   function onPublishSucceed() {
     navigate(
-      `${Route.DATASETS}?persistentId=${persistentId}&${QueryParamsKeys.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
+      `${Route.DATASETS}?persistentId=${persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
       {
         state: { publishInProgress: true },
         replace: true
