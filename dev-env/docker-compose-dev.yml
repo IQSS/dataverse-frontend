@@ -57,7 +57,7 @@ services:
         -Ddataverse.files.storage-driver-id=localstack1
         -Ddataverse.files.localstack1.type=s3
         -Ddataverse.files.localstack1.label=LocalStack
-        -Ddataverse.files.localstack1.custom-endpoint-url=http://localstack:4566
+        -Ddataverse.files.localstack1.custom-endpoint-url=http://localhost:4566
         -Ddataverse.files.localstack1.custom-endpoint-region=us-east-2
         -Ddataverse.files.localstack1.bucket-name=mybucket
         -Ddataverse.files.localstack1.path-style-access=true
