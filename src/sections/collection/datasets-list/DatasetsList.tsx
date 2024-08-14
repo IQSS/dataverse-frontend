@@ -56,7 +56,7 @@ export function DatasetsList({ datasetRepository, page, collectionId }: Datasets
             <PaginationResultsInfo paginationInfo={paginationInfo} />
           </div>
           {datasets.map((dataset) => (
-            <DatasetCard dataset={dataset} key={dataset.persistentId} />
+            <DatasetCard dataset={dataset} key={`${dataset.persistentId}-${dataset.version.id}`} />
           ))}
           <PaginationControls
             onPaginationInfoChange={setPaginationInfo}
