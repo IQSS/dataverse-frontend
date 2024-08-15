@@ -139,4 +139,26 @@ describe('AccessDatasetMenu', () => {
       .should('exist')
       .should('have.attr', 'href', downloadUrls.archival)
   })
+
+  it('does not render the AccessDatasetMenu if the file download sizes are zero', () => {
+    const version = DatasetVersionMother.createReleased()
+    const permissions = DatasetPermissionsMother.createWithFilesDownloadAllowed()
+    const fileDownloadSizes = [
+      DatasetFileDownloadSizeMother.createOriginal({ value: 0, unit: FileSizeUnit.BYTES }),
+      DatasetFileDownloadSizeMother.createArchival({
+        value: 0,
+        unit: FileSizeUnit.BYTES
+      })
+    ]
+    cy.customMount(
+      <AccessDatasetMenu
+        fileDownloadSizes={fileDownloadSizes}
+        hasOneTabularFileAtLeast={true}
+        version={version}
+        permissions={permissions}
+        downloadUrls={downloadUrls}
+      />
+    )
+    cy.findByRole('button', { name: 'Access Dataset' }).should('not.exist')
+  })
 })
