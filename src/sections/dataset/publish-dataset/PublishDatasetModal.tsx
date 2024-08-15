@@ -51,7 +51,7 @@ export function PublishDatasetModal({
 
   function onPublishSucceed() {
     navigate(
-      `${Route.DATASETS}?persistentId=${persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
+      `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
       {
         state: { publishInProgress: true },
         replace: true

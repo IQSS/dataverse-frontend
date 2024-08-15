@@ -4,7 +4,7 @@ import { PlusLg } from 'react-bootstrap-icons'
 import { Button } from '@iqss/dataverse-design-system'
 import { useSession } from '../../../session/SessionContext'
 import { useDataset } from '../../DatasetContext'
-import { Route } from '../../../Route.enum'
+import { QueryParamKey, Route } from '../../../Route.enum'
 import styles from './DatasetUploadFilesButton.module.scss'
 
 export function DatasetUploadFilesButton() {
@@ -18,7 +18,7 @@ export function DatasetUploadFilesButton() {
   }
 
   const handleClick = () => {
-    navigate(`${Route.UPLOAD_DATASET_FILES}?persistentId=${dataset.persistentId}`)
+    navigate(`${Route.UPLOAD_DATASET_FILES}?${QueryParamKey.PERSISTENT_ID}=${dataset.persistentId}`)
   }
 
   return (

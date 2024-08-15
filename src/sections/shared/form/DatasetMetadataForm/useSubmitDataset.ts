@@ -62,7 +62,7 @@ export function useSubmitDataset(
           setSubmitError(null)
           setSubmissionStatus(SubmissionStatus.SubmitComplete)
           navigate(
-            `${Route.DATASETS}?persistentId=${persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
+            `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
             {
               state: { created: true }
             }
@@ -92,7 +92,7 @@ export function useSubmitDataset(
           setSubmitError(null)
           setSubmissionStatus(SubmissionStatus.SubmitComplete)
           navigate(
-            `${Route.DATASETS}?persistentId=${currentEditedDatasetPersistentID}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
+            `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${currentEditedDatasetPersistentID}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
             {
               state: { metadataUpdated: true }
             }
