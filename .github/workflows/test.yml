@@ -48,6 +48,7 @@ jobs:
         shell: bash
 
       - name: Create .npmrc
+        working-directory: dev-env
         run: |
           cp .env.example .env
           sed -i -e 's/<S3_ACCESS_KEY>/${{ secrets.S3_ACCESS_KEY }}/g' .env
