@@ -8,6 +8,7 @@ const collectionRepository: CollectionRepository = {} as CollectionRepository
 
 const COLLECTION_NAME = 'Collection Name'
 const collection = CollectionMother.create({ name: COLLECTION_NAME })
+const userPermissionsMock = CollectionMother.createUserPermissions()
 
 const testUser = UserMother.create()
 const userRepository: UserRepository = {} as UserRepository
@@ -16,6 +17,7 @@ describe('CreateCollection', () => {
   beforeEach(() => {
     collectionRepository.create = cy.stub().resolves(1)
     collectionRepository.getById = cy.stub().resolves(collection)
+    collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
     userRepository.getAuthenticated = cy.stub().resolves(testUser)
   })
 
@@ -63,5 +65,25 @@ describe('CreateCollection', () => {
     cy.findByLabelText(/^Affiliation/i).should('have.value', testUser.affiliation)
 
     cy.findByLabelText(/^Email/i).should('have.value', testUser.email)
+  })
+
+  it('should show alert error message when user is not allowed to create collection', () => {
+    collectionRepository.getUserPermissions = cy.stub().resolves(
+      CollectionMother.createUserPermissions({
+        canAddCollection: false
+      })
+    )
+
+    cy.mountAuthenticated(
+      <CreateCollection collectionRepository={collectionRepository} ownerCollectionId="root" />
+    )
+    cy.findAllByTestId('not-allowed-to-create-collection-alert').should('exist')
+  })
+
+  it('should not show alert error message when user is allowed to create collection', () => {
+    cy.mountAuthenticated(
+      <CreateCollection collectionRepository={collectionRepository} ownerCollectionId="root" />
+    )
+    cy.findAllByTestId('not-allowed-to-create-collection-alert').should('not.exist')
   })
 })
