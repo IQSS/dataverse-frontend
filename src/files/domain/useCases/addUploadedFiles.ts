@@ -14,18 +14,3 @@ export function addUploadedFiles(
     })
     .finally(done)
 }
-
-export function addUploadedFile(
-  fileRepository: FileRepository,
-  datasetId: number | string,
-  file: File,
-  storageId: string,
-  done: () => void
-): void {
-  fileRepository
-    .addUploadedFile(datasetId, { file: file }, storageId)
-    .catch((error: Error) => {
-      throw new Error(error.message)
-    })
-    .finally(done)
-}

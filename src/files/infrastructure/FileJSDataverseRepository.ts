@@ -15,7 +15,8 @@ import {
   getFileDownloadCount,
   getFileUserPermissions,
   uploadFile as jsUploadFile,
-  addUploadedFileToDataset,
+  addUploadedFilesToDataset,
+  UploadedFileDTO,
   ReadError
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
@@ -301,12 +302,18 @@ export class FileJSDataverseRepository implements FileRepository {
       })
   }
 
-  addUploadedFiles(_datasetId: number | string, _files: FileUploadState[]): Promise<void> {
-    // TODO: not yet implemented
-    return new Promise<void>(() => {})
-  }
-
-  addUploadedFile(datasetId: number | string, file: FileHolder, storageId: string): Promise<void> {
-    return addUploadedFileToDataset.execute(datasetId, file.file, storageId)
+  addUploadedFiles(datasetId: number | string, files: FileUploadState[]): Promise<void> {
+    const uploadedFiles: UploadedFileDTO[] = files.map((x) => ({
+      fileName: x.fileName,
+      description: x.description,
+      directoryLabel: x.fileDir,
+      categories: x.tags,
+      restrict: x.restricted,
+      storageId: x.storageId as string,
+      checksumValue: x.checksumValue as string,
+      checksumType: 'md5',
+      mimeType: x.fileType
+    }))
+    return addUploadedFilesToDataset.execute(datasetId, uploadedFiles)
   }
 }

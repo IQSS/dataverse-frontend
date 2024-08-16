@@ -9,7 +9,7 @@ import { FileUploader } from './FileUploader'
 import { FileUploadState, FileUploadTools } from '../../files/domain/models/FileUploadState'
 import { uploadFile } from '../../files/domain/useCases/uploadFile'
 import { UploadedFiles } from './uploaded-files-list/UploadedFiles'
-import { addUploadedFile, addUploadedFiles } from '../../files/domain/useCases/addUploadedFiles'
+import { addUploadedFiles } from '../../files/domain/useCases/addUploadedFiles'
 
 interface UploadDatasetFilesProps {
   fileRepository: FileRepository
@@ -44,11 +44,18 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
 
   const fileUploadFinished = (file: File) => {
     const key = FileUploadTools.key(file)
-    setUploadingToCancelMap((x) => {
-      x.delete(key)
-      return x
-    })
-    releaseSemaphore(file)
+    const reader = new FileReader()
+    reader.onload = () => {
+      // const buffer = reader.result as ArrayBuffer
+      const checksumValue = '???'
+      FileUploadTools.checksum(file, checksumValue, fileUploaderState)
+      setUploadingToCancelMap((x) => {
+        x.delete(key)
+        return x
+      })
+      releaseSemaphore(file)
+    }
+    reader.readAsArrayBuffer(file)
   }
 
   const canUpload = (file: File) =>
@@ -71,13 +78,6 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
       () => {
         setState(FileUploadTools.done(file, fileUploaderState))
         fileUploadFinished(file)
-        addUploadedFile(
-          fileRepository,
-          dataset?.persistentId as string,
-          file,
-          FileUploadTools.get(file, fileUploaderState).storageId as string,
-          () => {}
-        )
       },
       () => {
         setState(FileUploadTools.failed(file, fileUploaderState))

@@ -17,6 +17,7 @@ export interface FileUploadState {
   description?: string
   tags: string[]
   restricted: boolean
+  checksumValue?: string
 }
 
 export interface FileUploaderState {
@@ -90,6 +91,18 @@ export class FileUploadTools {
     const fileUploadState = oldState.state.get(this.key(file))
     if (fileUploadState) {
       fileUploadState.storageId = id
+    }
+    return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
+  }
+
+  static checksum(
+    file: File,
+    checksumValue: string,
+    oldState: FileUploaderState
+  ): FileUploaderState {
+    const fileUploadState = oldState.state.get(this.key(file))
+    if (fileUploadState) {
+      fileUploadState.checksumValue = checksumValue
     }
     return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
   }
