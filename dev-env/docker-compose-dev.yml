@@ -44,6 +44,7 @@ services:
     restart: on-failure
     user: payara
     environment:
+      dataverse_files_storage__driver__id: s3
       DATAVERSE_DB_HOST: postgres
       DATAVERSE_DB_PASSWORD: secret
       DATAVERSE_DB_USER: ${DATAVERSE_DB_USER}
