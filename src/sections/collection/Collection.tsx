@@ -14,6 +14,7 @@ import { CollectionSkeleton } from './CollectionSkeleton'
 import { CollectionInfo } from './CollectionInfo'
 import { Trans, useTranslation } from 'react-i18next'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
+import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
 
 interface CollectionProps {
   repository: CollectionRepository
@@ -35,6 +36,16 @@ export function Collection({
   useScrollTop()
   const { user } = useSession()
   const { collection, isLoading } = useCollection(repository, id)
+  const { collectionUserPermissions } = useGetCollectionUserPermissions({
+    collectionIdOrAlias: id,
+    collectionRepository: repository
+  })
+
+  const canUserAddCollection = Boolean(collectionUserPermissions?.canAddCollection)
+  const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
+
+  const showAddDataActions = user && (canUserAddCollection || canUserAddDataset)
+
   const { t } = useTranslation('collection')
 
   if (!isLoading && !collection) {
@@ -67,9 +78,13 @@ export function Collection({
                 />
               </Alert>
             )}
-            {user && (
+            {showAddDataActions && (
               <div className={styles.container}>
-                <AddDataActionsButton collectionId={id} />
+                <AddDataActionsButton
+                  collectionId={id}
+                  canAddCollection={canUserAddCollection}
+                  canAddDataset={canUserAddDataset}
+                />
               </div>
             )}
           </>
