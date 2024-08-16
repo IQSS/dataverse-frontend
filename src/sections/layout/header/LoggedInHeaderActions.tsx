@@ -2,24 +2,27 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { Navbar } from '@iqss/dataverse-design-system'
 import { useGetCollectionUserPermissions } from '../../../shared/hooks/useGetCollectionUserPermissions'
-import { CollectionJSDataverseRepository } from '../../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
 import { useSession } from '../../session/SessionContext'
 import { Route, RouteWithParams } from '../../Route.enum'
 import { User } from '../../../users/domain/models/User'
+import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 
-const collectionRepository = new CollectionJSDataverseRepository()
 const currentPage = 0
 
 interface LoggedInHeaderActionsProps {
   user: User
+  collectionRepository: CollectionRepository
 }
 
-export const LoggedInHeaderActions = ({ user }: LoggedInHeaderActionsProps) => {
+export const LoggedInHeaderActions = ({
+  user,
+  collectionRepository
+}: LoggedInHeaderActionsProps) => {
   const { t } = useTranslation('header')
   const { logout } = useSession()
   const navigate = useNavigate()
 
-  const { collectionUserPermissions, error, isLoading } = useGetCollectionUserPermissions({
+  const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: 'root',
     collectionRepository: collectionRepository
   })
@@ -32,18 +35,22 @@ export const LoggedInHeaderActions = ({ user }: LoggedInHeaderActionsProps) => {
 
   const createCollectionRoute = RouteWithParams.CREATE_COLLECTION()
 
-  // TODO:ME Check if user can create collection on root
-  // TODO:ME Check if user can create dataset on root
-
-  // TODO:Me disable buttons if can not
+  const canUserAddCollectionToRoot = Boolean(collectionUserPermissions?.canAddCollection)
+  const canUserAddDatasetToRoot = Boolean(collectionUserPermissions?.canAddDataset)
 
   return (
     <>
       <Navbar.Dropdown title={t('navigation.addData')} id="dropdown-addData">
-        <Navbar.Dropdown.Item as={Link} to={createCollectionRoute}>
+        <Navbar.Dropdown.Item
+          as={Link}
+          to={createCollectionRoute}
+          disabled={!canUserAddCollectionToRoot}>
           {t('navigation.newCollection')}
         </Navbar.Dropdown.Item>
-        <Navbar.Dropdown.Item as={Link} to={Route.CREATE_DATASET}>
+        <Navbar.Dropdown.Item
+          as={Link}
+          to={Route.CREATE_DATASET}
+          disabled={!canUserAddDatasetToRoot}>
           {t('navigation.newDataset')}
         </Navbar.Dropdown.Item>
       </Navbar.Dropdown>

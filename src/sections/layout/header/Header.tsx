@@ -5,6 +5,9 @@ import { Route } from '../../Route.enum'
 import { useSession } from '../../session/SessionContext'
 import { BASE_URL } from '../../../config'
 import { LoggedInHeaderActions } from './LoggedInHeaderActions'
+import { CollectionJSDataverseRepository } from '../../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
+
+const collectionRepository = new CollectionJSDataverseRepository()
 
 export function Header() {
   const { t } = useTranslation('header')
@@ -18,7 +21,7 @@ export function Header() {
         logoImgSrc: dataverse_logo
       }}>
       {user ? (
-        <LoggedInHeaderActions user={user} />
+        <LoggedInHeaderActions user={user} collectionRepository={collectionRepository} />
       ) : (
         <>
           <Navbar.Link href={`${BASE_URL}${Route.LOG_IN}`}>{t('logIn')}</Navbar.Link>
