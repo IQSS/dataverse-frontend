@@ -4,6 +4,7 @@ import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repos
 import { useLocation, useSearchParams } from 'react-router-dom'
 import { CollectionJSDataverseRepository } from '../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
 import { INFINITE_SCROLL_ENABLED } from './config'
+import { ROOT_COLLECTION_ALIAS } from '../../collection/domain/models/Collection'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const repository = new CollectionJSDataverseRepository()
@@ -17,7 +18,7 @@ function CollectionWithSearchParams() {
   const [searchParams] = useSearchParams()
   const location = useLocation()
   const page = searchParams.get('page') ? parseInt(searchParams.get('page') as string) : undefined
-  const id = searchParams.get('id') ? (searchParams.get('id') as string) : 'root'
+  const id = searchParams.get('id') ? (searchParams.get('id') as string) : ROOT_COLLECTION_ALIAS
   const state = location.state as { created: boolean } | undefined
   const created = state?.created ?? false
 

@@ -6,6 +6,7 @@ import { useSession } from '../../session/SessionContext'
 import { Route, RouteWithParams } from '../../Route.enum'
 import { User } from '../../../users/domain/models/User'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
+import { ROOT_COLLECTION_ALIAS } from '../../../collection/domain/models/Collection'
 
 const currentPage = 0
 
@@ -23,7 +24,7 @@ export const LoggedInHeaderActions = ({
   const navigate = useNavigate()
 
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
-    collectionIdOrAlias: 'root',
+    collectionIdOrAlias: ROOT_COLLECTION_ALIAS,
     collectionRepository: collectionRepository
   })
 
