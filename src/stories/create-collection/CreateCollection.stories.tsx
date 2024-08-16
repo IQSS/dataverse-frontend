@@ -6,6 +6,9 @@ import { WithLoggedInUser } from '../WithLoggedInUser'
 import { CollectionMockRepository } from '../collection/CollectionMockRepository'
 import { CollectionLoadingMockRepository } from '../collection/CollectionLoadingMockRepository'
 import { NoCollectionMockRepository } from '../collection/NoCollectionMockRepository'
+import { CollectionMother } from '../../../tests/component/collection/domain/models/CollectionMother'
+import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
+import { ROOT_COLLECTION_ALIAS } from '../../collection/domain/models/Collection'
 
 const meta: Meta<typeof CreateCollection> = {
   title: 'Pages/Create Collection',
@@ -23,7 +26,7 @@ export const Default: Story = {
   render: () => (
     <CreateCollection
       collectionRepository={new CollectionMockRepository()}
-      ownerCollectionId="root"
+      ownerCollectionId={ROOT_COLLECTION_ALIAS}
     />
   )
 }
@@ -31,7 +34,7 @@ export const Loading: Story = {
   render: () => (
     <CreateCollection
       collectionRepository={new CollectionLoadingMockRepository()}
-      ownerCollectionId="root"
+      ownerCollectionId={ROOT_COLLECTION_ALIAS}
     />
   )
 }
@@ -40,7 +43,29 @@ export const OwnerCollectionNotFound: Story = {
   render: () => (
     <CreateCollection
       collectionRepository={new NoCollectionMockRepository()}
-      ownerCollectionId="root"
+      ownerCollectionId={ROOT_COLLECTION_ALIAS}
+    />
+  )
+}
+
+const collectionRepositoryWithoutPermissionsToCreateCollection = new CollectionMockRepository()
+collectionRepositoryWithoutPermissionsToCreateCollection.getUserPermissions = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(
+        CollectionMother.createUserPermissions({
+          canAddCollection: false
+        })
+      )
+    }, FakerHelper.loadingTimout())
+  })
+}
+
+export const NotAllowedToAddCollection: Story = {
+  render: () => (
+    <CreateCollection
+      collectionRepository={collectionRepositoryWithoutPermissionsToCreateCollection}
+      ownerCollectionId={ROOT_COLLECTION_ALIAS}
     />
   )
 }

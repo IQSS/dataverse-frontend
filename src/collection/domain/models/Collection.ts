@@ -8,3 +8,5 @@ export interface Collection {
   description?: string
   affiliation?: string
 }
+
+export const ROOT_COLLECTION_ALIAS = 'root'
