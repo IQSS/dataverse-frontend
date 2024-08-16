@@ -10,6 +10,7 @@ import { FileUploadState, FileUploadTools } from '../../files/domain/models/File
 import { uploadFile } from '../../files/domain/useCases/uploadFile'
 import { UploadedFiles } from './uploaded-files-list/UploadedFiles'
 import { addUploadedFiles } from '../../files/domain/useCases/addUploadedFiles'
+import { createHash } from 'crypto'
 
 interface UploadDatasetFilesProps {
   fileRepository: FileRepository
@@ -46,9 +47,11 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     const key = FileUploadTools.key(file)
     const reader = new FileReader()
     reader.onload = () => {
-      // const buffer = reader.result as ArrayBuffer
-      const checksumValue = '???'
-      FileUploadTools.checksum(file, checksumValue, fileUploaderState)
+      const buffer = new Uint8Array(reader.result as ArrayBuffer)
+      const hash = createHash('md5')
+      hash.update(buffer)
+      const checksum = hash.digest('hex')
+      FileUploadTools.checksum(file, checksum, fileUploaderState)
       setUploadingToCancelMap((x) => {
         x.delete(key)
         return x
