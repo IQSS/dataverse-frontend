@@ -6,6 +6,9 @@ import { WithLoggedInUser } from '../WithLoggedInUser'
 import { CollectionMockRepository } from '../collection/CollectionMockRepository'
 import { CollectionLoadingMockRepository } from '../collection/CollectionLoadingMockRepository'
 import { NoCollectionMockRepository } from '../collection/NoCollectionMockRepository'
+import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
+import { MetadataBlockInfoMockLoadingRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockLoadingRepository'
+import { MetadataBlockInfoMockErrorRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockErrorRepository'
 
 const meta: Meta<typeof CreateCollection> = {
   title: 'Pages/Create Collection',
@@ -23,6 +26,7 @@ export const Default: Story = {
   render: () => (
     <CreateCollection
       collectionRepository={new CollectionMockRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       ownerCollectionId="root"
     />
   )
@@ -31,6 +35,7 @@ export const Loading: Story = {
   render: () => (
     <CreateCollection
       collectionRepository={new CollectionLoadingMockRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockLoadingRepository()}
       ownerCollectionId="root"
     />
   )
@@ -40,6 +45,7 @@ export const OwnerCollectionNotFound: Story = {
   render: () => (
     <CreateCollection
       collectionRepository={new NoCollectionMockRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockErrorRepository()}
       ownerCollectionId="root"
     />
   )

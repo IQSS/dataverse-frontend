@@ -21,7 +21,8 @@ export class JSCollectionMapper {
         jsCollection.name,
         jsCollection.alias,
         jsCollection.isPartOf
-      )
+      ),
+      inputLevels: jsCollection.inputLevels
     }
   }
 

@@ -4,9 +4,15 @@ import { WriteError } from '@iqss/dataverse-client-javascript'
 import { createCollection } from '../../../collection/domain/useCases/createCollection'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import { CollectionDTO } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
-import { CollectionFormData, CollectionFormValuesOnSubmit } from './CollectionForm'
+import {
+  CollectionFormData,
+  CollectionFormValuesOnSubmit,
+  INPUT_LEVELS_GROUPER,
+  METADATA_BLOCKS_NAMES_GROUPER
+} from './CollectionForm'
 import { Route } from '../../Route.enum'
 import { JSDataverseWriteErrorHandler } from '../../../shared/helpers/JSDataverseWriteErrorHandler'
+import { CollectionFormHelper } from './CollectionFormHelper'
 
 export enum SubmissionStatus {
   NotSubmitted = 'NotSubmitted',
@@ -45,11 +51,27 @@ export function useSubmitCollection(
   const submitForm = (formData: CollectionFormValuesOnSubmit): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
+    const contactsDTO = formData.contacts.map((contact) => contact.value)
+
+    const metadataBlockNamesDTO =
+      CollectionFormHelper.formatFormMetadataBlockNamesToMetadataBlockNamesDTO(
+        formData[METADATA_BLOCKS_NAMES_GROUPER]
+      )
+
+    const inputLevelsDTO = CollectionFormHelper.formatFormInputLevelsToInputLevelsDTO(
+      metadataBlockNamesDTO,
+      formData[INPUT_LEVELS_GROUPER]
+    )
+
     const newCollection: CollectionDTO = {
       name: formData.name,
       alias: formData.alias,
       type: formData.type,
-      contacts: formData.contacts.map((contact) => contact.value)
+      affiliation: formData.affiliation,
+      description: formData.description,
+      contacts: contactsDTO,
+      metadataBlockNames: metadataBlockNamesDTO,
+      inputLevels: inputLevelsDTO
     }
 
     // TODO: We can't send the hostCollection name, but we should send the hostCollection alias
@@ -59,7 +81,6 @@ export function useSubmitCollection(
       .then(() => {
         setSubmitError(null)
         setSubmissionStatus(SubmissionStatus.SubmitComplete)
-
         navigate(`${Route.COLLECTIONS}?id=${newCollection.alias}`, {
           state: { created: true }
         })
@@ -68,10 +89,8 @@ export function useSubmitCollection(
       .catch((err: WriteError) => {
         const error = new JSDataverseWriteErrorHandler(err)
         const formattedError = error.getReasonWithoutStatusCode() ?? error.getErrorMessage()
-
         setSubmitError(formattedError)
         setSubmissionStatus(SubmissionStatus.Errored)
-
         onSubmitErrorCallback()
       })
   }
