@@ -1,7 +1,14 @@
 import { useTranslation } from 'react-i18next'
 import { Alert, Col, Form, Row } from '@iqss/dataverse-design-system'
+import { MetadataField } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 
-export const BrowseSearchFacetsSection = () => {
+interface BrowseSearchFacetsSectionProps {
+  allFacetableMetadataFields: MetadataField[]
+}
+
+export const BrowseSearchFacetsSection = ({
+  allFacetableMetadataFields
+}: BrowseSearchFacetsSectionProps) => {
   const { t } = useTranslation('createCollection')
 
   return (

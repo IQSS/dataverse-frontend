@@ -24,6 +24,8 @@ import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreateCollectionSkeleton } from './CreateCollectionSkeleton'
+import { useGetCollectionFacets } from './useGetCollectionFacets'
+import { useGetAllFacetableMetadataFields } from './useGetAllFacetableMetadataFields'
 
 interface CreateCollectionProps {
   ownerCollectionId: string
@@ -54,6 +56,16 @@ export function CreateCollection({
 
   const { allMetadataBlocksInfo, isLoading: isLoadingAllMetadataBlocksInfo } =
     useGetAllMetadataBlocksInfo({ metadataBlockInfoRepository })
+
+  const { collectionFacets, isLoading: isLoadingCollectionFacets } = useGetCollectionFacets({
+    collectionId: ownerCollectionId,
+    collectionRepository
+  })
+
+  const { facetableMetadataFields, isLoading: isLoadingFacetableMetadataFields } =
+    useGetAllFacetableMetadataFields({
+      metadataBlockInfoRepository
+    })
 
   const baseInputLevels: FormattedCollectionInputLevels = useDeepCompareMemo(() => {
     return CollectionFormHelper.defineBaseInputLevels(allMetadataBlocksInfo)
@@ -89,28 +101,24 @@ export function CreateCollection({
     [metadataBlocksInfo, baseBlockNames]
   )
 
+  const isLoadingData =
+    isLoadingCollection ||
+    isLoadingMetadataBlocksInfo ||
+    isLoadingAllMetadataBlocksInfo ||
+    isLoadingCollectionFacets ||
+    isLoadingFacetableMetadataFields
+
   useEffect(() => {
-    if (!isLoadingCollection && !isLoadingMetadataBlocksInfo && !isLoadingAllMetadataBlocksInfo) {
+    if (!isLoadingData) {
       setIsLoading(false)
     }
-  }, [
-    isLoading,
-    isLoadingCollection,
-    isLoadingMetadataBlocksInfo,
-    isLoadingAllMetadataBlocksInfo,
-    setIsLoading
-  ])
+  }, [isLoading, isLoadingData, setIsLoading])
 
   if (!isLoadingCollection && !collection) {
     return <PageNotFound />
   }
 
-  if (
-    isLoadingCollection ||
-    isLoadingMetadataBlocksInfo ||
-    isLoadingAllMetadataBlocksInfo ||
-    !collection
-  ) {
+  if (isLoadingData || !collection) {
     return <CreateCollectionSkeleton />
   }
 
@@ -125,7 +133,8 @@ export function CreateCollection({
     description: '',
     [USE_FIELDS_FROM_PARENT]: true,
     [METADATA_BLOCKS_NAMES_GROUPER]: defaultBlocksNames,
-    [INPUT_LEVELS_GROUPER]: mergedInputLevels
+    [INPUT_LEVELS_GROUPER]: mergedInputLevels,
+    facetIds: collectionFacets.map((facet) => facet.name)
   }
 
   return (
@@ -147,6 +156,7 @@ export function CreateCollection({
         ownerCollectionId={ownerCollectionId}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksInfo}
+        allFacetableMetadataFields={facetableMetadataFields}
       />
     </section>
   )

@@ -1,4 +1,8 @@
-import { MetadataBlockInfoDisplayFormat, MetadataBlockInfo } from '../models/MetadataBlockInfo'
+import {
+  MetadataBlockInfoDisplayFormat,
+  MetadataBlockInfo,
+  MetadataField
+} from '../models/MetadataBlockInfo'
 
 export interface MetadataBlockInfoRepository {
   getByName: (name: string) => Promise<MetadataBlockInfoDisplayFormat | undefined>
@@ -7,4 +11,5 @@ export interface MetadataBlockInfoRepository {
     collectionId: number | string
   ) => Promise<MetadataBlockInfo[]>
   getByCollectionId: (collectionId: number | string) => Promise<MetadataBlockInfo[]>
+  getAllFacetableMetadataFields: () => Promise<MetadataField[]>
 }

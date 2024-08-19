@@ -1,12 +1,14 @@
 import { MetadataBlockInfoRepository } from '../../domain/repositories/MetadataBlockInfoRepository'
 import {
   MetadataBlockInfoDisplayFormat,
-  MetadataBlockInfo
+  MetadataBlockInfo,
+  MetadataField
 } from '../../domain/models/MetadataBlockInfo'
 import {
   getMetadataBlockByName,
   getCollectionMetadataBlocks,
   getAllMetadataBlocks,
+  getAllFacetableMetadataFields as jsGetAllFacetableMetadataFields,
   MetadataBlock as JSMetadataBlockInfo,
   ReadError
 } from '@iqss/dataverse-client-javascript'
@@ -54,6 +56,15 @@ export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfo
       .then((metadataBlocks: MetadataBlockInfo[]) => {
         return metadataBlocks
       })
+      .catch((error: ReadError) => {
+        throw new Error(error.message)
+      })
+  }
+
+  getAllFacetableMetadataFields(): Promise<MetadataField[]> {
+    return jsGetAllFacetableMetadataFields
+      .execute()
+      .then((metadataFields: MetadataField[]) => metadataFields)
       .catch((error: ReadError) => {
         throw new Error(error.message)
       })

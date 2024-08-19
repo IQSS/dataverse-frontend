@@ -10,7 +10,10 @@ import {
 } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
 import { SubmissionStatus, useSubmitCollection } from './useSubmitCollection'
 import { ReducedMetadataBlockInfo } from '../useGetAllMetadataBlocksInfo'
-import { MetadataBlockName } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import {
+  MetadataBlockName,
+  MetadataField
+} from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { SeparationLine } from '../../shared/layout/SeparationLine/SeparationLine'
 import { TopFieldsSection } from './top-fields-section/TopFieldsSection'
 import { MetadataFieldsSection } from './metadata-fields-section/MetadataFieldsSection'
@@ -26,6 +29,7 @@ export interface CollectionFormProps {
   ownerCollectionId: string
   defaultValues: CollectionFormData
   allMetadataBlocksInfo: ReducedMetadataBlockInfo[]
+  allFacetableMetadataFields: MetadataField[]
 }
 
 export type CollectionFormData = {
@@ -40,6 +44,7 @@ export type CollectionFormData = {
   [USE_FIELDS_FROM_PARENT]: boolean
   [METADATA_BLOCKS_NAMES_GROUPER]: CollectionFormMetadataBlocks
   [INPUT_LEVELS_GROUPER]: FormattedCollectionInputLevels
+  facetIds: string[]
 }
 
 export type CollectionFormMetadataBlocks = Record<MetadataBlockName, boolean>
@@ -78,7 +83,8 @@ export const CollectionForm = ({
   collectionRepository,
   ownerCollectionId,
   defaultValues,
-  allMetadataBlocksInfo
+  allMetadataBlocksInfo,
+  allFacetableMetadataFields
 }: CollectionFormProps) => {
   const formContainerRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation('createCollection')
@@ -159,7 +165,9 @@ export const CollectionForm = ({
 
             <Card>
               <Card.Body>
-                <BrowseSearchFacetsSection />
+                <BrowseSearchFacetsSection
+                  allFacetableMetadataFields={allFacetableMetadataFields}
+                />
               </Card.Body>
             </Card>
           </Stack>

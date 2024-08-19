@@ -1,6 +1,7 @@
 import {
   MetadataBlockInfoDisplayFormat,
-  MetadataBlockInfo
+  MetadataBlockInfo,
+  MetadataField
 } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataBlockInfoMockRepository } from './MetadataBlockInfoMockRepository'
 
@@ -30,6 +31,14 @@ export class MetadataBlockInfoMockErrorRepository implements MetadataBlockInfoMo
   }
 
   getAll(): Promise<MetadataBlockInfo[]> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, 1000)
+    })
+  }
+
+  getAllFacetableMetadataFields(): Promise<MetadataField[]> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')
