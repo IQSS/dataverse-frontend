@@ -10,7 +10,7 @@ import { FileUploadState, FileUploadTools } from '../../files/domain/models/File
 import { uploadFile } from '../../files/domain/useCases/uploadFile'
 import { UploadedFiles } from './uploaded-files-list/UploadedFiles'
 import { addUploadedFiles } from '../../files/domain/useCases/addUploadedFiles'
-import { createHash } from 'crypto'
+import { md5 } from 'js-md5'
 
 interface UploadDatasetFilesProps {
   fileRepository: FileRepository
@@ -44,21 +44,25 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
   }
 
   const fileUploadFinished = (file: File) => {
-    const key = FileUploadTools.key(file)
-    const reader = new FileReader()
-    reader.onload = () => {
-      const buffer = new Uint8Array(reader.result as ArrayBuffer)
-      const hash = createHash('md5')
-      hash.update(buffer)
-      const checksum = hash.digest('hex')
-      FileUploadTools.checksum(file, checksum, fileUploaderState)
-      setUploadingToCancelMap((x) => {
-        x.delete(key)
-        return x
+    const hash = md5.create()
+    file
+      .stream()
+      .getReader()
+      .read()
+      .then((stream) => {
+        for (const chunk in stream) {
+          hash.update(chunk)
+        }
       })
-      releaseSemaphore(file)
-    }
-    reader.readAsArrayBuffer(file)
+      .finally(() => {
+        const checksum = hash.hex()
+        FileUploadTools.checksum(file, checksum, fileUploaderState)
+        setUploadingToCancelMap((x) => {
+          x.delete(FileUploadTools.key(file))
+          return x
+        })
+        releaseSemaphore(file)
+      })
   }
 
   const canUpload = (file: File) =>
