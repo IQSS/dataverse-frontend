@@ -20,7 +20,7 @@ describe('EditDatasetMetadata', () => {
     const searchParams = { persistentId: 'some-persistent-id' }
 
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
-    metadataBlockInfoRepository.getByColecctionId = cy.stub().resolves(metadataBlocksInfoOnEditMode)
+    metadataBlockInfoRepository.getByCollectionId = cy.stub().resolves(metadataBlocksInfoOnEditMode)
     datasetRepository.updateMetadata = cy.stub().resolves(undefined)
 
     cy.customMount(

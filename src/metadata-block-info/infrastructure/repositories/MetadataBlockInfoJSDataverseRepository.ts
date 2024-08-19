@@ -23,7 +23,20 @@ export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfo
       })
   }
 
-  getByColecctionId(collectionIdOrAlias: number | string): Promise<MetadataBlockInfo[]> {
+  // TODO: This will be replaced to a new use case that will return all metadata blocks info
+  getAllTemporal(names: string[]): Promise<MetadataBlockInfo[]> {
+    const blockPromises = names.map((name) => getMetadataBlockByName.execute(name))
+
+    return Promise.all(blockPromises)
+      .then((jsMetadataBlockInfo: JSMetadataBlockInfo[]) => {
+        return jsMetadataBlockInfo
+      })
+      .catch((error: ReadError) => {
+        throw new Error(error.message)
+      })
+  }
+
+  getByCollectionId(collectionIdOrAlias: number | string): Promise<MetadataBlockInfo[]> {
     return getCollectionMetadataBlocks
       .execute(collectionIdOrAlias)
       .then((metadataBlocks: MetadataBlockInfo[]) => {

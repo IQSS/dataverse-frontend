@@ -14,7 +14,7 @@ export class MetadataBlockInfoMockRepository implements MetadataBlockInfoReposit
     })
   }
 
-  getByColecctionId(_collectionId: number | string): Promise<MetadataBlockInfo[]> {
+  getByCollectionId(_collectionId: number | string): Promise<MetadataBlockInfo[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateFalse())
@@ -26,6 +26,21 @@ export class MetadataBlockInfoMockRepository implements MetadataBlockInfoReposit
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue())
+      }, 1_000)
+    })
+  }
+
+  getAllTemporal(_names: string[]): Promise<MetadataBlockInfo[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([
+          MetadataBlockInfoMother.getCitationBlock(),
+          MetadataBlockInfoMother.getGeospatialBlock(),
+          MetadataBlockInfoMother.getAstrophysicsBlock(),
+          MetadataBlockInfoMother.getBiomedicalBlock(),
+          MetadataBlockInfoMother.getJournalBlock(),
+          MetadataBlockInfoMother.getSocialScienceBlock()
+        ])
       }, 1_000)
     })
   }

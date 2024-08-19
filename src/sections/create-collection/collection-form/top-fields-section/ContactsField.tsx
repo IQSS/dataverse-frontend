@@ -3,11 +3,9 @@ import { useCallback, useMemo } from 'react'
 import { Controller, UseControllerProps, useFieldArray, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import cn from 'classnames'
+
 import styles from '../CollectionForm.module.scss'
-// TODO:ME This imports are only used in the DynamicFieldsButtons component (temporal)
-import { MouseEvent } from 'react'
-import { Button, Tooltip } from '@iqss/dataverse-design-system'
-import { Dash, Plus } from 'react-bootstrap-icons'
+import { DynamicFieldsButtons } from '../../../shared/form/DynamicFieldsButtons/DynamicFieldsButtons'
 
 interface ContactsFieldProps {
   rules: UseControllerProps['rules']
@@ -95,48 +93,5 @@ export const ContactsField = ({ rules }: ContactsFieldProps) => {
         </Row>
       ))}
     </Form.Group>
-  )
-}
-
-// TODO:ME Create reusable DynamicFieldsButtons component inside shared Form when merged with issue 422
-// TODO:ME This component here is temporal, it will be moved to the shared form folder
-interface DynamicFieldsButtonsProps {
-  fieldName: string
-  originalField?: boolean
-  onAddButtonClick: (event: MouseEvent<HTMLButtonElement>) => void
-  onRemoveButtonClick: (event: MouseEvent<HTMLButtonElement>) => void
-}
-
-const DynamicFieldsButtons = ({
-  fieldName,
-  originalField,
-  onAddButtonClick,
-  onRemoveButtonClick
-}: DynamicFieldsButtonsProps) => {
-  return (
-    <div style={{ display: 'flex', gap: '1rem' }}>
-      <Tooltip placement="top" overlay="Add">
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={onAddButtonClick}
-          className="px-2"
-          aria-label={`Add ${fieldName}`}>
-          <Plus title="Add" size={24} />
-        </Button>
-      </Tooltip>
-      {!originalField && (
-        <Tooltip placement="top" overlay="Remove">
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={onRemoveButtonClick}
-            className="px-2"
-            aria-label={`Remove ${fieldName}`}>
-            <Dash title="Delete" size={24} />
-          </Button>
-        </Tooltip>
-      )}
-    </div>
   )
 }
