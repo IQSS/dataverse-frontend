@@ -17,7 +17,7 @@ export class MetadataBlockInfoMockLoadingRepository implements MetadataBlockInfo
     return new Promise(() => {})
   }
 
-  getAllTemporal(_names: string[]): Promise<MetadataBlockInfo[]> {
+  getAll(): Promise<MetadataBlockInfo[]> {
     return new Promise(() => {})
   }
 }

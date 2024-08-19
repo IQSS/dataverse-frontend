@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import {
   MetadataBlockInfo,
-  MetadataBlockName,
   MetadataField
 } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { getAllMetadataBlocksInfoTemporal } from '../../metadata-block-info/domain/useCases/getAllMetadataBlocksInfoTemporal'
+import { getAllMetadataBlocksInfo } from '../../metadata-block-info/domain/useCases/getAllMetadataBlocksInfo'
 
 interface Props {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
@@ -33,15 +32,6 @@ export type ReducedMetadataFieldInfo = ReducedMetadataFieldsAndChildsInfo & {
   childMetadataFields?: Record<string, ReducedMetadataFieldsAndChildsInfo>
 }
 
-const blocksNames: MetadataBlockName[] = [
-  MetadataBlockName.CITATION,
-  MetadataBlockName.GEOSPATIAL,
-  MetadataBlockName.SOCIAL_SCIENCE,
-  MetadataBlockName.ASTROPHYSICS,
-  MetadataBlockName.BIOMEDICAL,
-  MetadataBlockName.JOURNAL
-]
-
 export const useGetAllMetadataBlocksInfo = ({
   metadataBlockInfoRepository
 }: Props): UseGetAllMetadataBlocksInfo => {
@@ -53,10 +43,7 @@ export const useGetAllMetadataBlocksInfo = ({
     const handleGetInfo = async () => {
       setIsLoading(true)
       try {
-        const blocksInfo = await getAllMetadataBlocksInfoTemporal(
-          metadataBlockInfoRepository,
-          blocksNames
-        )
+        const blocksInfo = await getAllMetadataBlocksInfo(metadataBlockInfoRepository)
 
         const reducedMetadataBlocksInfo: ReducedMetadataBlockInfo[] =
           reduceMetadataBlocksInfo(blocksInfo)

@@ -1,7 +1,7 @@
 import { CollectionInputLevel } from '../../../../src/collection/domain/models/Collection'
 import { CollectionInputLevelDTO } from '../../../../src/collection/domain/useCases/DTOs/CollectionDTO'
+import { MetadataBlockName } from '../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
 import {
-  CollectionFormMetadataBlock,
   FormattedCollectionInputLevels,
   FormattedCollectionInputLevelsWithoutParentBlockName
 } from '../../../../src/sections/create-collection/collection-form/CollectionForm'
@@ -47,22 +47,22 @@ const expectedBaseInputLevels: FormattedCollectionInputLevels = {
   bar: {
     include: true,
     optionalOrRequired: 'required',
-    parentBlockName: 'astrophysics' as CollectionFormMetadataBlock
+    parentBlockName: 'astrophysics' as MetadataBlockName
   },
   'coverage/Spectral/MinimumWavelength': {
     include: true,
     optionalOrRequired: 'optional',
-    parentBlockName: 'astrophysics' as CollectionFormMetadataBlock
+    parentBlockName: 'astrophysics' as MetadataBlockName
   },
   'coverage/Spectral/Wavelength': {
     include: true,
     optionalOrRequired: 'optional',
-    parentBlockName: 'astrophysics' as CollectionFormMetadataBlock
+    parentBlockName: 'astrophysics' as MetadataBlockName
   },
   requiredField: {
     include: true,
     optionalOrRequired: 'required',
-    parentBlockName: 'astrophysics' as CollectionFormMetadataBlock
+    parentBlockName: 'astrophysics' as MetadataBlockName
   }
 }
 
@@ -109,12 +109,12 @@ describe('CollectionFormHelper', () => {
       'coverage/Spectral/Wavelength': {
         include: true,
         optionalOrRequired: 'optional',
-        parentBlockName: 'astrophysics' as CollectionFormMetadataBlock
+        parentBlockName: 'astrophysics' as MetadataBlockName
       },
       foo: {
         include: true,
         optionalOrRequired: 'optional',
-        parentBlockName: 'astrophysics' as CollectionFormMetadataBlock
+        parentBlockName: 'astrophysics' as MetadataBlockName
       }
     }
 
@@ -137,12 +137,12 @@ describe('CollectionFormHelper', () => {
       'coverage/Spectral/Wavelength': {
         include: true,
         optionalOrRequired: 'optional',
-        parentBlockName: 'astrophysics' as CollectionFormMetadataBlock
+        parentBlockName: 'astrophysics' as MetadataBlockName
       },
       foo: {
         include: true,
         optionalOrRequired: 'required',
-        parentBlockName: 'astrophysics' as CollectionFormMetadataBlock
+        parentBlockName: 'astrophysics' as MetadataBlockName
       }
     })
   })
@@ -154,7 +154,9 @@ describe('CollectionFormHelper', () => {
       socialscience: true,
       astrophysics: false,
       biomedical: true,
-      journal: false
+      journal: false,
+      codeMeta20: false,
+      computationalworkflow: false
     }
 
     const result =
@@ -171,22 +173,22 @@ describe('CollectionFormHelper', () => {
       title: {
         include: true,
         optionalOrRequired: 'required',
-        parentBlockName: 'citation' as CollectionFormMetadataBlock
+        parentBlockName: 'citation' as MetadataBlockName
       },
       subtitle: {
         include: true,
         optionalOrRequired: 'optional',
-        parentBlockName: 'citation' as CollectionFormMetadataBlock
+        parentBlockName: 'citation' as MetadataBlockName
       },
       foo: {
         include: true,
         optionalOrRequired: 'required',
-        parentBlockName: 'socialscience' as CollectionFormMetadataBlock
+        parentBlockName: 'socialscience' as MetadataBlockName
       },
       bar: {
         include: true,
         optionalOrRequired: 'optional',
-        parentBlockName: 'socialscience' as CollectionFormMetadataBlock
+        parentBlockName: 'socialscience' as MetadataBlockName
       }
     }
 

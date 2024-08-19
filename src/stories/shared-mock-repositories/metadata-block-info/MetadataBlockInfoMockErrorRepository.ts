@@ -29,7 +29,7 @@ export class MetadataBlockInfoMockErrorRepository implements MetadataBlockInfoMo
     })
   }
 
-  getAllTemporal(_names: string[]): Promise<MetadataBlockInfo[]> {
+  getAll(): Promise<MetadataBlockInfo[]> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')

@@ -48,12 +48,6 @@
       "sectionLabel": "Metadata Fields",
       "helperText": "Choose the metadata fields to use in dataset templates and when adding a dataset to this dataverse.",
       "useMetadataFieldsFrom": "Use metadata fields from",
-      "citationMetadata": "Citation Metadata (Required)",
-      "geospatialMetadata": "Geospatial Metadata",
-      "socialScienceMetadata": "Social Science and Humanities Metadata",
-      "astrophysicsMetadata": "Astronomy and Astrophysics Metadata",
-      "biomedicalMetadata": "Life Sciences Metadata",
-      "journalMetadata": "Journal Metadata",
       "inputLevelsTable": {
         "hideTableAriaLabel": "Hide input levels table",
         "requiredByDataverse": "Required by Dataverse",

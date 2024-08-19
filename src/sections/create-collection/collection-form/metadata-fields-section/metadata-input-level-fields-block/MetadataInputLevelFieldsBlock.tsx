@@ -101,7 +101,7 @@ export const MetadataInputLevelFieldsBlock = ({
               id={checkboxID}
               onChange={(e) => handleIncludeBlockChange(e, onChange)}
               name={metadataBlockFieldName}
-              label={blockDisplayName}
+              label={isCitation ? `${blockDisplayName} (Required)` : blockDisplayName}
               checked={value as boolean}
               isInvalid={invalid}
               invalidFeedback={error?.message}

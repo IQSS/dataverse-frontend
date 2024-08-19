@@ -41,18 +41,14 @@ export type CollectionFormData = {
   [METADATA_BLOCKS_NAMES_GROUPER]: CollectionFormMetadataBlocks
   [INPUT_LEVELS_GROUPER]: FormattedCollectionInputLevels
 }
-export type CollectionFormMetadataBlock = Exclude<
-  MetadataBlockName,
-  MetadataBlockName.CODE_META | MetadataBlockName.COMPUTATIONAL_WORKFLOW
->
 
-export type CollectionFormMetadataBlocks = Record<CollectionFormMetadataBlock, boolean>
+export type CollectionFormMetadataBlocks = Record<MetadataBlockName, boolean>
 
 export type FormattedCollectionInputLevels = {
   [key: string]: {
     include: boolean
     optionalOrRequired: CollectionFormInputLevelValue
-    parentBlockName: CollectionFormMetadataBlock
+    parentBlockName: MetadataBlockName
   }
 }
 

@@ -11,7 +11,7 @@ const allMetadataBlocksInfoMock = MetadataBlockInfoMother.getAllBlocks()
 
 describe('useGetAllMetadataBlocksInfo', () => {
   it('should return metadataBlockDisplayFormatInfo correctly', async () => {
-    metadataBlockInfoRepository.getAllTemporal = cy.stub().resolves(allMetadataBlocksInfoMock)
+    metadataBlockInfoRepository.getAll = cy.stub().resolves(allMetadataBlocksInfoMock)
 
     const { result } = renderHook(() =>
       useGetAllMetadataBlocksInfo({
@@ -35,7 +35,7 @@ describe('useGetAllMetadataBlocksInfo', () => {
 
   describe('Error handling', () => {
     it('should return correct error message when there is an error type catched', async () => {
-      metadataBlockInfoRepository.getAllTemporal = cy.stub().rejects(new Error('Error message'))
+      metadataBlockInfoRepository.getAll = cy.stub().rejects(new Error('Error message'))
 
       const { result } = renderHook(() =>
         useGetAllMetadataBlocksInfo({
@@ -55,7 +55,7 @@ describe('useGetAllMetadataBlocksInfo', () => {
     })
 
     it('should return correct error message when there is not an error type catched', async () => {
-      metadataBlockInfoRepository.getAllTemporal = cy.stub().rejects('Error message')
+      metadataBlockInfoRepository.getAll = cy.stub().rejects('Error message')
 
       const { result } = renderHook(() =>
         useGetAllMetadataBlocksInfo({

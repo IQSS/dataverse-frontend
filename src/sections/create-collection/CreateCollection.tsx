@@ -6,7 +6,6 @@ import { useGetCollectionMetadataBlocksInfo } from './useGetCollectionMetadataBl
 import { useGetAllMetadataBlocksInfo } from './useGetAllMetadataBlocksInfo'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { MetadataBlockName } from '../../dataset/domain/models/Dataset'
 import { useLoading } from '../loading/LoadingContext'
 import { useSession } from '../session/SessionContext'
 import { CollectionFormHelper } from './collection-form/CollectionFormHelper'
@@ -72,25 +71,22 @@ export function CreateCollection({
     )
   }, [baseInputLevels, formattedCollectionInputLevels])
 
+  const baseBlockNames = useDeepCompareMemo(() => {
+    return allMetadataBlocksInfo.reduce((acc, block) => {
+      acc[block.name as keyof CollectionFormMetadataBlocks] = false
+      return acc
+    }, {} as CollectionFormMetadataBlocks)
+  }, [allMetadataBlocksInfo])
+
   const defaultBlocksNames = useDeepCompareMemo(
     () =>
       metadataBlocksInfo
         .map((block) => block.name)
-        .reduce(
-          (acc, blockName) => {
-            acc[blockName as keyof CollectionFormMetadataBlocks] = true
-            return acc
-          },
-          {
-            [MetadataBlockName.CITATION]: false,
-            [MetadataBlockName.GEOSPATIAL]: false,
-            [MetadataBlockName.SOCIAL_SCIENCE]: false,
-            [MetadataBlockName.ASTROPHYSICS]: false,
-            [MetadataBlockName.BIOMEDICAL]: false,
-            [MetadataBlockName.JOURNAL]: false
-          }
-        ),
-    [metadataBlocksInfo]
+        .reduce((acc, blockName) => {
+          acc[blockName as keyof CollectionFormMetadataBlocks] = true
+          return acc
+        }, baseBlockNames),
+    [metadataBlocksInfo, baseBlockNames]
   )
 
   useEffect(() => {

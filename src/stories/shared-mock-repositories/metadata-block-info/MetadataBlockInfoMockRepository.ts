@@ -30,7 +30,7 @@ export class MetadataBlockInfoMockRepository implements MetadataBlockInfoReposit
     })
   }
 
-  getAllTemporal(_names: string[]): Promise<MetadataBlockInfo[]> {
+  getAll(): Promise<MetadataBlockInfo[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve([
