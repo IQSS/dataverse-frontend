@@ -43,20 +43,28 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     })
   }
 
+  const fileUploadFailed = (file: File) => {
+    setUploadingToCancelMap((x) => {
+      x.delete(FileUploadTools.key(file))
+      return x
+    })
+    releaseSemaphore(file)
+  }
+
   const fileUploadFinished = (file: File) => {
     const hash = md5.create()
-    file
-      .stream()
-      .getReader()
+    const reader = file.stream().getReader()
+    reader
       .read()
-      .then((stream) => {
-        for (const chunk in stream) {
-          hash.update(chunk)
+      .then(async function updateHash({ done, value }) {
+        if (done) {
+          FileUploadTools.checksum(file, hash.hex(), fileUploaderState)
+        } else {
+          hash.update(value)
+          await updateHash(await reader.read())
         }
       })
       .finally(() => {
-        const checksum = hash.hex()
-        FileUploadTools.checksum(file, checksum, fileUploaderState)
         setUploadingToCancelMap((x) => {
           x.delete(FileUploadTools.key(file))
           return x
@@ -88,7 +96,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
       },
       () => {
         setState(FileUploadTools.failed(file, fileUploaderState))
-        fileUploadFinished(file)
+        fileUploadFailed(file)
       },
       (now) => setState(FileUploadTools.progress(file, now, fileUploaderState)),
       (storageId) => setState(FileUploadTools.storageId(file, storageId, fileUploaderState))
