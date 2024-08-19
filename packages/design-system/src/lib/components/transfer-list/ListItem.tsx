@@ -35,7 +35,7 @@ export const ListItem = ({ item, side, checked, onToggle }: ListItemProps) => {
   }
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition
   }
 
