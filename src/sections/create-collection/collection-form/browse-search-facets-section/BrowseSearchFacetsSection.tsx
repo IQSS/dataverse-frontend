@@ -34,7 +34,7 @@ export const BrowseSearchFacetsSection = ({
   const transferListKey = String(useBrowseSearchFacetsFromParentCheckedValue)
 
   // TODO:ME When we have info about parent block name of each facetable field, we should use it to group the facets in a Select.
-  const [availableItems, setAvailableItems] = useState<TransferListItem[]>(
+  const [availableItems, _setAvailableItems] = useState<TransferListItem[]>(
     allFacetableMetadataFields.map((field) => ({
       id: field.name,
       value: field.name,
@@ -83,7 +83,7 @@ export const BrowseSearchFacetsSection = ({
                   onChange={(selectedItems) => handleOnChangeSelectedItems(selectedItems, onChange)}
                   availableItems={availableItems}
                   defaultSelected={defaultCollectionFacets}
-                  rightLabel="Selected"
+                  rightLabel={t('fields.browseSearchFacets.selectedFacets')}
                   key={transferListKey}
                 />
               )}
