@@ -261,4 +261,16 @@ describe('CollectionFormHelper', () => {
       }
     })
   })
+
+  it('replaces string with dots with slashes', () => {
+    const result = CollectionFormHelper.replaceDotWithSlash('coverage.Spectral.MinimumWavelength')
+
+    expect(result).to.equal('coverage/Spectral/MinimumWavelength')
+  })
+
+  it('replaces string with slashes with dots', () => {
+    const result = CollectionFormHelper.replaceSlashWithDot('coverage/Spectral/MinimumWavelength')
+
+    expect(result).to.equal('coverage.Spectral.MinimumWavelength')
+  })
 })

@@ -1,10 +1,12 @@
 import {
   CollectionForm,
   CollectionFormData,
+  CollectionFormFacet,
   FormattedCollectionInputLevels,
   FormattedCollectionInputLevelsWithoutParentBlockName,
   INPUT_LEVELS_GROUPER,
   METADATA_BLOCKS_NAMES_GROUPER,
+  USE_FACETS_FROM_PARENT,
   USE_FIELDS_FROM_PARENT
 } from '../../../../src/sections/create-collection/collection-form/CollectionForm'
 import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
@@ -15,6 +17,7 @@ import { collectionNameToAlias } from '../../../../src/sections/create-collectio
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { CollectionFormHelper } from '../../../../src/sections/create-collection/collection-form/CollectionFormHelper'
 import { MetadataBlockName } from '../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
+import { CollectionFacetMother } from '../../collection/domain/models/CollectionFacetMother'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 
@@ -57,8 +60,20 @@ const defaultBlocksNames = {
   [MetadataBlockName.SOCIAL_SCIENCE]: false,
   [MetadataBlockName.ASTROPHYSICS]: false,
   [MetadataBlockName.BIOMEDICAL]: false,
-  [MetadataBlockName.JOURNAL]: false
+  [MetadataBlockName.JOURNAL]: false,
+  [MetadataBlockName.COMPUTATIONAL_WORKFLOW]: false,
+  [MetadataBlockName.CODE_META]: false
 }
+
+const defaultCollectionFacetsMock: CollectionFormFacet[] = CollectionFacetMother.createFacets().map(
+  (facet) => ({
+    id: facet.name,
+    value: facet.name,
+    label: facet.displayName
+  })
+)
+
+const allFacetableMetadataFields = MetadataBlockInfoMother.getAllFacetableMetadataFields()
 
 const formDefaultValues: CollectionFormData = {
   hostCollection: collection.name,
@@ -71,7 +86,9 @@ const formDefaultValues: CollectionFormData = {
   description: '',
   [USE_FIELDS_FROM_PARENT]: true,
   [METADATA_BLOCKS_NAMES_GROUPER]: defaultBlocksNames,
-  [INPUT_LEVELS_GROUPER]: mergedInputLevels
+  [INPUT_LEVELS_GROUPER]: mergedInputLevels,
+  [USE_FACETS_FROM_PARENT]: true,
+  facetIds: defaultCollectionFacetsMock
 }
 
 describe('CollectionForm', () => {
@@ -88,6 +105,8 @@ describe('CollectionForm', () => {
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
+        defaultCollectionFacets={defaultCollectionFacetsMock}
+        allFacetableMetadataFields={allFacetableMetadataFields}
       />
     )
 
@@ -100,6 +119,8 @@ describe('CollectionForm', () => {
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
+        defaultCollectionFacets={defaultCollectionFacetsMock}
+        allFacetableMetadataFields={allFacetableMetadataFields}
       />
     )
 
@@ -113,6 +134,8 @@ describe('CollectionForm', () => {
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
+        defaultCollectionFacets={defaultCollectionFacetsMock}
+        allFacetableMetadataFields={allFacetableMetadataFields}
       />
     )
 
@@ -130,6 +153,8 @@ describe('CollectionForm', () => {
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
+        defaultCollectionFacets={defaultCollectionFacetsMock}
+        allFacetableMetadataFields={allFacetableMetadataFields}
       />
     )
 
@@ -143,6 +168,8 @@ describe('CollectionForm', () => {
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
+        defaultCollectionFacets={defaultCollectionFacetsMock}
+        allFacetableMetadataFields={allFacetableMetadataFields}
       />
     )
 
@@ -160,6 +187,8 @@ describe('CollectionForm', () => {
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
+        defaultCollectionFacets={defaultCollectionFacetsMock}
+        allFacetableMetadataFields={allFacetableMetadataFields}
       />
     )
 
@@ -181,6 +210,8 @@ describe('CollectionForm', () => {
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
+        defaultCollectionFacets={defaultCollectionFacetsMock}
+        allFacetableMetadataFields={allFacetableMetadataFields}
       />
     )
 
@@ -199,6 +230,8 @@ describe('CollectionForm', () => {
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
+        defaultCollectionFacets={defaultCollectionFacetsMock}
+        allFacetableMetadataFields={allFacetableMetadataFields}
       />
     )
 
@@ -216,6 +249,8 @@ describe('CollectionForm', () => {
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
+        defaultCollectionFacets={defaultCollectionFacetsMock}
+        allFacetableMetadataFields={allFacetableMetadataFields}
       />
     )
 
@@ -237,6 +272,8 @@ describe('CollectionForm', () => {
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
+        defaultCollectionFacets={defaultCollectionFacetsMock}
+        allFacetableMetadataFields={allFacetableMetadataFields}
       />
     )
 
@@ -259,6 +296,8 @@ describe('CollectionForm', () => {
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
+        defaultCollectionFacets={defaultCollectionFacetsMock}
+        allFacetableMetadataFields={allFacetableMetadataFields}
       />
     )
     // Accept suggestion
@@ -281,6 +320,8 @@ describe('CollectionForm', () => {
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
+        defaultCollectionFacets={defaultCollectionFacetsMock}
+        allFacetableMetadataFields={allFacetableMetadataFields}
       />
     )
 
@@ -303,10 +344,12 @@ describe('CollectionForm', () => {
         ownerCollectionId={OWNER_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
+        defaultCollectionFacets={defaultCollectionFacetsMock}
+        allFacetableMetadataFields={allFacetableMetadataFields}
       />
     )
 
-    cy.findByText(/Cancel/i).click()
+    cy.findByText('Cancel').click()
   })
 
   describe('IdentifierField suggestion functionality', () => {
@@ -317,6 +360,8 @@ describe('CollectionForm', () => {
           ownerCollectionId={OWNER_COLLECTION_ID}
           defaultValues={formDefaultValues}
           allMetadataBlocksInfo={allMetadataBlocksMock}
+          defaultCollectionFacets={defaultCollectionFacetsMock}
+          allFacetableMetadataFields={allFacetableMetadataFields}
         />
       )
 
@@ -335,6 +380,8 @@ describe('CollectionForm', () => {
           ownerCollectionId={OWNER_COLLECTION_ID}
           defaultValues={formDefaultValues}
           allMetadataBlocksInfo={allMetadataBlocksMock}
+          defaultCollectionFacets={defaultCollectionFacetsMock}
+          allFacetableMetadataFields={allFacetableMetadataFields}
         />
       )
 
@@ -357,6 +404,8 @@ describe('CollectionForm', () => {
             alias: collectionNameToAlias(defaultCollectionName)
           }}
           allMetadataBlocksInfo={allMetadataBlocksMock}
+          defaultCollectionFacets={defaultCollectionFacetsMock}
+          allFacetableMetadataFields={allFacetableMetadataFields}
         />
       )
 
@@ -370,6 +419,8 @@ describe('CollectionForm', () => {
           ownerCollectionId={OWNER_COLLECTION_ID}
           defaultValues={{ ...formDefaultValues, name: '' }}
           allMetadataBlocksInfo={allMetadataBlocksMock}
+          defaultCollectionFacets={defaultCollectionFacetsMock}
+          allFacetableMetadataFields={allFacetableMetadataFields}
         />
       )
 
@@ -385,6 +436,8 @@ describe('CollectionForm', () => {
           ownerCollectionId={OWNER_COLLECTION_ID}
           defaultValues={formDefaultValues}
           allMetadataBlocksInfo={allMetadataBlocksMock}
+          defaultCollectionFacets={defaultCollectionFacetsMock}
+          allFacetableMetadataFields={allFacetableMetadataFields}
         />
       )
 
@@ -404,6 +457,8 @@ describe('CollectionForm', () => {
             contacts: [{ value: testUser.email }, { value: 'fake@fake.com' }]
           }}
           allMetadataBlocksInfo={allMetadataBlocksMock}
+          defaultCollectionFacets={defaultCollectionFacetsMock}
+          allFacetableMetadataFields={allFacetableMetadataFields}
         />
       )
       cy.findAllByLabelText('Add Email').should('exist').should('have.length', 2)
@@ -424,6 +479,8 @@ describe('CollectionForm', () => {
           ownerCollectionId={OWNER_COLLECTION_ID}
           defaultValues={formDefaultValues}
           allMetadataBlocksInfo={allMetadataBlocksMock}
+          defaultCollectionFacets={defaultCollectionFacetsMock}
+          allFacetableMetadataFields={allFacetableMetadataFields}
         />
       )
 
@@ -755,6 +812,93 @@ describe('CollectionForm', () => {
         cy.findByRole('table').within(() => {
           cy.findByLabelText('Geographic Unit').should('exist').should('not.be.disabled')
         })
+      })
+    })
+  })
+
+  describe('BrowseSearchFacetsSection functionality', () => {
+    beforeEach(() => {
+      cy.mountAuthenticated(
+        <CollectionForm
+          collectionRepository={collectionRepository}
+          ownerCollectionId={OWNER_COLLECTION_ID}
+          defaultValues={formDefaultValues}
+          allMetadataBlocksInfo={allMetadataBlocksMock}
+          defaultCollectionFacets={defaultCollectionFacetsMock}
+          allFacetableMetadataFields={allFacetableMetadataFields}
+        />
+      )
+
+      cy.get('[data-testid="use-facets-from-parent-checkbox"]').as('useFacetsFromParentCheckbox')
+      cy.get('[data-testid="transfer-list-container"]').as('transferListContainer')
+      cy.findByTestId('left-list-group').as('leftList')
+      cy.findByTestId('actions-column').as('actionsColumn')
+      cy.findByTestId('right-list-group').as('rightList')
+    })
+
+    it('should populate the right list with the default facets', () => {
+      cy.get('@rightList').children().should('have.length', 4)
+
+      cy.get('@rightList').within(() => {
+        cy.findByLabelText('Author Name').should('exist')
+        cy.findByLabelText('Subject').should('exist')
+        cy.findByLabelText('Keyword Term').should('exist')
+        cy.findByLabelText('Deposit Date').should('exist')
+      })
+    })
+
+    it('should reset the newly selected facets when checking the checkbox', () => {
+      cy.get('@useFacetsFromParentCheckbox').should('be.checked')
+      cy.get('@useFacetsFromParentCheckbox').uncheck({ force: true })
+      cy.get('@useFacetsFromParentCheckbox').should('not.be.checked')
+
+      cy.get('@rightList').should('exist')
+      cy.get('@rightList').children().should('have.length', 4)
+      cy.get('@rightList').within(() => {
+        cy.findByLabelText('Author Name').should('exist')
+        cy.findByLabelText('Subject').should('exist')
+        cy.findByLabelText('Keyword Term').should('exist')
+        cy.findByLabelText('Deposit Date').should('exist')
+      })
+
+      cy.get('@transferListContainer').within(() => {
+        cy.findByLabelText('Topic Classification Term').check({ force: true })
+
+        cy.findByLabelText('Topic Classification Term').should('be.checked')
+      })
+
+      cy.get('@actionsColumn').within(() => {
+        cy.findByLabelText('move selected to right').click()
+      })
+
+      cy.get('@leftList').within(() => {
+        cy.findByLabelText('Topic Classification Term').should('not.exist')
+      })
+
+      cy.get('@rightList').children().should('have.length', 5)
+
+      cy.get('@rightList').within(() => {
+        cy.findByLabelText('Author Name').should('exist')
+        cy.findByLabelText('Subject').should('exist')
+        cy.findByLabelText('Keyword Term').should('exist')
+        cy.findByLabelText('Deposit Date').should('exist')
+        cy.findByLabelText('Topic Classification Term').should('exist')
+      })
+
+      cy.get('@useFacetsFromParentCheckbox').check({ force: true })
+
+      cy.get('@rightList').children().should('have.length', 4)
+
+      cy.get('@rightList').within(() => {
+        cy.findByLabelText('Author Name').should('exist')
+        cy.findByLabelText('Subject').should('exist')
+        cy.findByLabelText('Keyword Term').should('exist')
+        cy.findByLabelText('Deposit Date').should('exist')
+        cy.findByLabelText('Topic Classification Term').should('not.exist')
+      })
+
+      cy.get('@leftList').within(() => {
+        cy.findByLabelText('Topic Classification Term').should('exist')
       })
     })
   })

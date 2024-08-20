@@ -101,6 +101,7 @@ export const TransferList = ({
       <div className={styles['middle-column']} data-testid="actions-column">
         <Button
           size="sm"
+          type="button"
           onClick={handleAllRight}
           disabled={left.length === 0}
           icon={<ChevronDoubleRight />}
@@ -110,6 +111,7 @@ export const TransferList = ({
 
         <Button
           size="sm"
+          type="button"
           onClick={handleCheckedRight}
           disabled={leftChecked.length === 0}
           icon={<ChevronRight />}
@@ -119,6 +121,7 @@ export const TransferList = ({
 
         <Button
           size="sm"
+          type="button"
           onClick={handleCheckedLeft}
           disabled={rightChecked.length === 0}
           icon={<ChevronLeft />}
@@ -127,6 +130,7 @@ export const TransferList = ({
         />
         <Button
           size="sm"
+          type="button"
           onClick={handleAllLeft}
           disabled={right.length === 0}
           icon={<ChevronDoubleLeft />}

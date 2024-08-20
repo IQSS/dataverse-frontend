@@ -41,7 +41,7 @@ export const FacetsFromParentCheckbox = ({
             checked={value as boolean}
             isInvalid={invalid}
             invalidFeedback={error?.message}
-            data-testid="use-browse-search-facets-from-parent-checkbox"
+            data-testid="use-facets-from-parent-checkbox"
             ref={ref}
           />
         )

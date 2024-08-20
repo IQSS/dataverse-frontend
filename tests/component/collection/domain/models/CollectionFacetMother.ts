@@ -1,18 +1,27 @@
 import { CollectionFacet } from '../../../../../src/collection/domain/models/CollectionFacet'
-import { faker } from '@faker-js/faker'
 
 export class CollectionFacetMother {
   static createFacets(): CollectionFacet[] {
     return [
       {
-        id: faker.datatype.number(),
-        name: faker.lorem.word(),
-        displayName: faker.lorem.words()
+        id: 3,
+        name: 'authorName',
+        displayName: 'Author Name'
       },
       {
-        id: faker.datatype.number(),
-        name: faker.lorem.word(),
-        displayName: faker.lorem.words()
+        id: 1,
+        name: 'subject',
+        displayName: 'Subject'
+      },
+      {
+        id: 2,
+        name: 'keywordValue',
+        displayName: 'Keyword Term'
+      },
+      {
+        id: 4,
+        name: 'dateOfDeposit',
+        displayName: 'Deposit Date'
       }
     ]
   }

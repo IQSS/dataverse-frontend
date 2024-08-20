@@ -73,7 +73,8 @@ export const BrowseSearchFacetsSection = ({
             className={cn(style['transfer-list-container'], {
               [style['transfer-list-container--disabled']]:
                 useBrowseSearchFacetsFromParentCheckedValue
-            })}>
+            })}
+            data-testid="transfer-list-container">
             <Controller
               name={FACET_IDS_FIELD}
               control={control}

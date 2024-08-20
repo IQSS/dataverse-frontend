@@ -10,6 +10,7 @@ import { BiomedicalMetadataBlockInfoMother } from './BiomedicalMetadataBlockInfo
 import { GeospatialMetadataBlockInfoMother } from './GeospatialMetadataBlockInfoMother'
 import { SocialScienceMetadataBlockInfoMother } from './SocialScienceMetadataBlockInfoMother'
 import { JournalMetadataBlockInfoMother } from './JournalMetadataBlockInfoMother'
+import { FacetableMetadataFieldMother } from './FacetableMetadataFieldsMother'
 
 export class MetadataBlockInfoMother {
   static create(props?: Partial<MetadataBlockInfoDisplayFormat>): MetadataBlockInfoDisplayFormat {
@@ -2431,6 +2432,10 @@ export class MetadataBlockInfoMother {
         displayOnCreate: false
       }
     ]
+  }
+
+  static getAllFacetableMetadataFields(): MetadataField[] {
+    return FacetableMetadataFieldMother.getAll()
   }
 }
 
