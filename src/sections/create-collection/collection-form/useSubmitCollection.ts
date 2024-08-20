@@ -63,6 +63,8 @@ export function useSubmitCollection(
       formData[INPUT_LEVELS_GROUPER]
     )
 
+    const facetIdsDTO = formData.facetIds.map((facet) => facet.value)
+
     const newCollection: CollectionDTO = {
       name: formData.name,
       alias: formData.alias,
@@ -71,7 +73,8 @@ export function useSubmitCollection(
       description: formData.description,
       contacts: contactsDTO,
       metadataBlockNames: metadataBlockNamesDTO,
-      inputLevels: inputLevelsDTO
+      inputLevels: inputLevelsDTO,
+      facetIds: facetIdsDTO
     }
 
     // TODO: We can't send the hostCollection name, but we should send the hostCollection alias

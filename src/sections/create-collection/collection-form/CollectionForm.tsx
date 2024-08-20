@@ -23,6 +23,7 @@ import styles from './CollectionForm.module.scss'
 export const METADATA_BLOCKS_NAMES_GROUPER = 'metadataBlockNames'
 export const USE_FIELDS_FROM_PARENT = 'useFieldsFromParent'
 export const INPUT_LEVELS_GROUPER = 'inputLevels'
+export const FACET_IDS_FIELD = 'facetIds'
 
 export interface CollectionFormProps {
   collectionRepository: CollectionRepository
@@ -30,6 +31,7 @@ export interface CollectionFormProps {
   defaultValues: CollectionFormData
   allMetadataBlocksInfo: ReducedMetadataBlockInfo[]
   allFacetableMetadataFields: MetadataField[]
+  defaultCollectionFacets: CollectionFormFacet[]
 }
 
 export type CollectionFormData = {
@@ -44,7 +46,7 @@ export type CollectionFormData = {
   [USE_FIELDS_FROM_PARENT]: boolean
   [METADATA_BLOCKS_NAMES_GROUPER]: CollectionFormMetadataBlocks
   [INPUT_LEVELS_GROUPER]: FormattedCollectionInputLevels
-  facetIds: string[]
+  facetIds: CollectionFormFacet[]
 }
 
 export type CollectionFormMetadataBlocks = Record<MetadataBlockName, boolean>
@@ -74,6 +76,12 @@ export type CollectionFormInputLevelValue =
 
 export const CONDITIONALLY_REQUIRED_FIELDS = ['producerName']
 
+export type CollectionFormFacet = {
+  value: string
+  label: string
+  id: string
+}
+
 // On the submit function callback, type is CollectionType as type field is required and wont never be ""
 export type CollectionFormValuesOnSubmit = Omit<CollectionFormData, 'type'> & {
   type: CollectionType
@@ -84,7 +92,8 @@ export const CollectionForm = ({
   ownerCollectionId,
   defaultValues,
   allMetadataBlocksInfo,
-  allFacetableMetadataFields
+  allFacetableMetadataFields,
+  defaultCollectionFacets
 }: CollectionFormProps) => {
   const formContainerRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation('createCollection')
@@ -166,6 +175,7 @@ export const CollectionForm = ({
             <Card>
               <Card.Body>
                 <BrowseSearchFacetsSection
+                  defaultCollectionFacets={defaultCollectionFacets}
                   allFacetableMetadataFields={allFacetableMetadataFields}
                 />
               </Card.Body>

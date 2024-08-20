@@ -12,7 +12,9 @@ import { CollectionFormHelper } from './collection-form/CollectionFormHelper'
 import {
   CollectionForm,
   CollectionFormData,
+  CollectionFormFacet,
   CollectionFormMetadataBlocks,
+  FACET_IDS_FIELD,
   FormattedCollectionInputLevels,
   FormattedCollectionInputLevelsWithoutParentBlockName,
   INPUT_LEVELS_GROUPER,
@@ -101,6 +103,12 @@ export function CreateCollection({
     [metadataBlocksInfo, baseBlockNames]
   )
 
+  const defaultCollectionFacets: CollectionFormFacet[] = collectionFacets.map((facet) => ({
+    id: facet.name,
+    value: facet.name,
+    label: facet.displayName
+  }))
+
   const isLoadingData =
     isLoadingCollection ||
     isLoadingMetadataBlocksInfo ||
@@ -134,7 +142,7 @@ export function CreateCollection({
     [USE_FIELDS_FROM_PARENT]: true,
     [METADATA_BLOCKS_NAMES_GROUPER]: defaultBlocksNames,
     [INPUT_LEVELS_GROUPER]: mergedInputLevels,
-    facetIds: collectionFacets.map((facet) => facet.name)
+    [FACET_IDS_FIELD]: defaultCollectionFacets
   }
 
   return (
@@ -157,6 +165,7 @@ export function CreateCollection({
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksInfo}
         allFacetableMetadataFields={facetableMetadataFields}
+        defaultCollectionFacets={defaultCollectionFacets}
       />
     </section>
   )
