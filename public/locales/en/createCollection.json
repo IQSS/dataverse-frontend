@@ -59,7 +59,8 @@
     },
     "browseSearchFacets": {
       "label": "Browse/Search Facets",
-      "helperText": "Choose the metadata fields to use as facets for browsing datasets and dataverses in this dataverse."
+      "helperText": "Choose the metadata fields to use as facets for browsing datasets and dataverses in this dataverse.",
+      "useBrowseSearchFacetsFrom": "Use browse/search facets from"
     }
   },
   "confirmResetModal": {

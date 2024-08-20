@@ -19,6 +19,7 @@ import {
   FormattedCollectionInputLevelsWithoutParentBlockName,
   INPUT_LEVELS_GROUPER,
   METADATA_BLOCKS_NAMES_GROUPER,
+  USE_FACETS_FROM_PARENT,
   USE_FIELDS_FROM_PARENT
 } from './collection-form/CollectionForm'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
@@ -142,6 +143,7 @@ export function CreateCollection({
     [USE_FIELDS_FROM_PARENT]: true,
     [METADATA_BLOCKS_NAMES_GROUPER]: defaultBlocksNames,
     [INPUT_LEVELS_GROUPER]: mergedInputLevels,
+    [USE_FACETS_FROM_PARENT]: true,
     [FACET_IDS_FIELD]: defaultCollectionFacets
   }
 

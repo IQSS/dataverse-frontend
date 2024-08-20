@@ -24,6 +24,7 @@ export const METADATA_BLOCKS_NAMES_GROUPER = 'metadataBlockNames'
 export const USE_FIELDS_FROM_PARENT = 'useFieldsFromParent'
 export const INPUT_LEVELS_GROUPER = 'inputLevels'
 export const FACET_IDS_FIELD = 'facetIds'
+export const USE_FACETS_FROM_PARENT = 'useFacetsFromParent'
 
 export interface CollectionFormProps {
   collectionRepository: CollectionRepository
@@ -46,6 +47,7 @@ export type CollectionFormData = {
   [USE_FIELDS_FROM_PARENT]: boolean
   [METADATA_BLOCKS_NAMES_GROUPER]: CollectionFormMetadataBlocks
   [INPUT_LEVELS_GROUPER]: FormattedCollectionInputLevels
+  [USE_FACETS_FROM_PARENT]: boolean
   facetIds: CollectionFormFacet[]
 }
 
