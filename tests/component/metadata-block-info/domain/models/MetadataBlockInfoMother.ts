@@ -3,6 +3,12 @@ import {
   MetadataBlockInfo
 } from '../../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Dataset'
+import { CitationMetadataBlockInfoMother } from './CitationMetadataBlockInfoMother'
+import { AstrophysicsMetadataBlockInfoMother } from './AstrophysicsMetadataBlockInfoMother'
+import { BiomedicalMetadataBlockInfoMother } from './BiomedicalMetadataBlockInfoMother'
+import { GeospatialMetadataBlockInfoMother } from './GeospatialMetadataBlockInfoMother'
+import { SocialScienceMetadataBlockInfoMother } from './SocialScienceMetadataBlockInfoMother'
+import { JournalMetadataBlockInfoMother } from './JournalMetadataBlockInfoMother'
 
 export class MetadataBlockInfoMother {
   static create(props?: Partial<MetadataBlockInfoDisplayFormat>): MetadataBlockInfoDisplayFormat {
@@ -31,6 +37,41 @@ export class MetadataBlockInfoMother {
       },
       ...props
     }
+  }
+
+  static getAllBlocks(): MetadataBlockInfo[] {
+    return [
+      this.getCitationBlock(),
+      this.getAstrophysicsBlock(),
+      this.getBiomedicalBlock(),
+      this.getGeospatialBlock(),
+      this.getSocialScienceBlock(),
+      this.getJournalBlock()
+    ]
+  }
+
+  static getCitationBlock(): MetadataBlockInfo {
+    return CitationMetadataBlockInfoMother.get()
+  }
+
+  static getAstrophysicsBlock(): MetadataBlockInfo {
+    return AstrophysicsMetadataBlockInfoMother.get()
+  }
+
+  static getBiomedicalBlock(): MetadataBlockInfo {
+    return BiomedicalMetadataBlockInfoMother.get()
+  }
+
+  static getGeospatialBlock(): MetadataBlockInfo {
+    return GeospatialMetadataBlockInfoMother.get()
+  }
+
+  static getSocialScienceBlock(): MetadataBlockInfo {
+    return SocialScienceMetadataBlockInfoMother.get()
+  }
+
+  static getJournalBlock(): MetadataBlockInfo {
+    return JournalMetadataBlockInfoMother.get()
   }
 
   static getByCollectionIdDisplayedOnCreateTrue(block?: MetadataBlockInfo): MetadataBlockInfo[] {
