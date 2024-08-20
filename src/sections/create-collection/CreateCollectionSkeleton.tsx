@@ -69,8 +69,8 @@ export const CreateCollectionSkeleton = () => (
 
       <SeparationLine />
 
-      <Skeleton height={145} width="100%" style={{ marginBottom: 16 }} />
-      <Skeleton height={145} width="100%" style={{ marginBottom: 16 }} />
+      <Skeleton height={325} width="100%" style={{ marginBottom: 16 }} />
+      <Skeleton height={325} width="100%" style={{ marginBottom: 16 }} />
 
       <Stack direction="horizontal" className="pt-3">
         <Skeleton width={120} height={38} />

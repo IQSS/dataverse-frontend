@@ -1,0 +1,63 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.input-levels-table-container {
+  position: relative;
+  display: none;
+  max-height: 400px;
+  margin-bottom: 1rem;
+  overflow-y: auto;
+  border-radius: 6px;
+  box-shadow: 4px 4px 16px 0 rgb(0 0 0 / 10%);
+
+  &--show {
+    display: block;
+    border: solid 1px $dv-secondary-color;
+  }
+
+  @media (min-width: 768px) {
+    width: 70%;
+    margin-left: 3rem;
+  }
+}
+
+.close-button-container {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.35rem 0.5rem;
+  background-color: #fff;
+  border-bottom: solid 2px $dv-secondary-color;
+}
+
+.input-level-row {
+  td {
+    width: 50%;
+  }
+
+  .required-by-dataverse-label {
+    font-style: italic;
+    opacity: 0.5;
+  }
+
+  &--child-field {
+    .displayName-disabled {
+      opacity: 0.5;
+    }
+
+    .required-by-dataverse-label {
+      font-style: italic;
+      opacity: 0.5;
+    }
+
+    td {
+      padding-block: 1rem;
+
+      &:first-child {
+        padding-left: 3rem;
+        text-wrap: balance;
+      }
+    }
+  }
+}
