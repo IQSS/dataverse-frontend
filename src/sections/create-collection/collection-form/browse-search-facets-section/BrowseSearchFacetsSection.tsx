@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Col, Form, Row, TransferList, TransferListItem } from '@iqss/dataverse-design-system'
 import { MetadataField } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { CollectionFormFacet, FACET_IDS_FIELD } from '../CollectionForm'
+import style from './BrowseSearchFacetsSection.module.scss'
 
 interface BrowseSearchFacetsSectionProps {
   defaultCollectionFacets: CollectionFormFacet[]
@@ -55,7 +56,7 @@ export const BrowseSearchFacetsSection = ({
       </Col>
       <Col lg={9}>
         <Form.Group.Text>{t('fields.browseSearchFacets.helperText')}</Form.Group.Text>
-        <Col className="mt-3">
+        <div className={style['transfer-list-container']}>
           <Controller
             name={FACET_IDS_FIELD}
             control={control}
@@ -68,7 +69,7 @@ export const BrowseSearchFacetsSection = ({
               />
             )}
           />
-        </Col>
+        </div>
       </Col>
     </Row>
   )

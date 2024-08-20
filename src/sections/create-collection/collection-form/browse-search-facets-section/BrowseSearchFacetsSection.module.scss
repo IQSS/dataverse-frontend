@@ -1,0 +1,9 @@
+.transfer-list-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+
+  @media (min-width: 768px) {
+    justify-content: flex-start;
+  }
+}
