@@ -10,7 +10,7 @@ import {
   INPUT_LEVELS_GROUPER,
   METADATA_BLOCKS_NAMES_GROUPER
 } from './CollectionForm'
-import { Route } from '../../Route.enum'
+import { RouteWithParams } from '../../Route.enum'
 import { JSDataverseWriteErrorHandler } from '../../../shared/helpers/JSDataverseWriteErrorHandler'
 import { CollectionFormHelper } from './CollectionFormHelper'
 
@@ -84,7 +84,8 @@ export function useSubmitCollection(
       .then(() => {
         setSubmitError(null)
         setSubmissionStatus(SubmissionStatus.SubmitComplete)
-        navigate(`${Route.COLLECTIONS}?id=${newCollection.alias}`, {
+
+        navigate(RouteWithParams.COLLECTIONS(newCollection.alias), {
           state: { created: true }
         })
         return

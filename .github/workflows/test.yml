@@ -41,6 +41,18 @@ jobs:
           echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
         shell: bash
 
+      - name: Create containerized development environment .env file
+        working-directory: dev-env
+        run: cp .env.example .env
+        shell: bash
+
+      - name: Set S3 secrets for the containerized development environment
+        working-directory: dev-env
+        run: |
+          sed -i -e 's/<S3_ACCESS_KEY>/${{ secrets.S3_ACCESS_KEY }}/g' .env
+          sed -i -e 's/<S3_SECRET_KEY>/${{ secrets.S3_SECRET_KEY }}/g' .env
+        shell: bash
+
       - name: Update registry for the containerized development environment
         working-directory: dev-env
         run: |
