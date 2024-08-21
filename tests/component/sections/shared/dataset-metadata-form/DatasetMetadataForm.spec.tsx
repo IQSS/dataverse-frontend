@@ -202,7 +202,7 @@ describe('DatasetMetadataForm', () => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.create = cy.stub().resolves({ persistentId: 'persistentId' })
     datasetRepository.updateMetadata = cy.stub().resolves(undefined)
-    metadataBlockInfoRepository.getByColecctionId = cy.stub().resolves(metadataBlocksInfoOnEditMode)
+    metadataBlockInfoRepository.getByCollectionId = cy.stub().resolves(metadataBlocksInfoOnEditMode)
     metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
       .stub()
       .resolves(metadataBlocksInfoOnCreateMode)
@@ -302,7 +302,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
 
             cy.findByLabelText(`Add Author`).should('exist')
-            cy.findByLabelText(`Delete Author`).should('not.exist')
+            cy.findByLabelText(`Remove Author`).should('not.exist')
           })
 
         // Composed field
@@ -326,7 +326,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Email)
 
             cy.findByLabelText(`Add Point of Contact`).should('exist')
-            cy.findByLabelText(`Delete Point of Contact`).should('not.exist')
+            cy.findByLabelText(`Remove Point of Contact`).should('not.exist')
           })
 
         // Composed field
@@ -345,7 +345,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Date)
 
             cy.findByLabelText(`Add Description`).should('exist')
-            cy.findByLabelText(`Delete Description`).should('not.exist')
+            cy.findByLabelText(`Remove Description`).should('not.exist')
           })
 
         cy.findByText('Subject')
@@ -387,7 +387,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.URL)
 
             cy.findByLabelText(`Add Keyword`).should('exist')
-            cy.findByLabelText(`Delete Keyword`).should('not.exist')
+            cy.findByLabelText(`Remove Keyword`).should('not.exist')
           })
 
         // Composed field
@@ -416,7 +416,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.URL)
 
             cy.findByLabelText(`Add Related Publication`).should('exist')
-            cy.findByLabelText(`Delete Related Publication`).should('not.exist')
+            cy.findByLabelText(`Remove Related Publication`).should('not.exist')
           })
 
         cy.findByText('Notes').should('exist')
@@ -547,7 +547,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
 
             cy.findByLabelText(`Add Other Identifier`).should('exist')
-            cy.findByLabelText(`Delete Other Identifier`).should('not.exist')
+            cy.findByLabelText(`Remove Other Identifier`).should('not.exist')
           })
 
         // Composed field
@@ -613,9 +613,9 @@ describe('DatasetMetadataForm', () => {
               }
             )
 
-            // As we have to groups of Author fields, we should have 2 Add Author buttons and 1 Delete Author button
+            // As we have to groups of Author fields, we should have 2 Add Author buttons and 1 Remove Author button
             cy.findAllByLabelText(`Add Author`).should('have.length', 2)
-            cy.findByLabelText(`Delete Author`).should('exist')
+            cy.findByLabelText(`Remove Author`).should('exist')
           })
 
         // Composed field
@@ -641,7 +641,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Email)
 
             cy.findByLabelText(`Add Point of Contact`).should('exist')
-            cy.findByLabelText(`Delete Point of Contact`).should('not.exist')
+            cy.findByLabelText(`Remove Point of Contact`).should('not.exist')
           })
 
         // Composed field
@@ -664,7 +664,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Date)
 
             cy.findByLabelText(`Add Description`).should('exist')
-            cy.findByLabelText(`Delete Description`).should('not.exist')
+            cy.findByLabelText(`Remove Description`).should('not.exist')
           })
 
         // Subject - Select multiple field
@@ -718,7 +718,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.URL)
 
             cy.findByLabelText(`Add Keyword`).should('exist')
-            cy.findByLabelText(`Delete Keyword`).should('not.exist')
+            cy.findByLabelText(`Remove Keyword`).should('not.exist')
           })
 
         // Composed field
@@ -742,7 +742,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.URL)
 
             cy.findByLabelText(`Add Topic Classification`).should('exist')
-            cy.findByLabelText(`Delete Topic Classification`).should('not.exist')
+            cy.findByLabelText(`Remove Topic Classification`).should('not.exist')
           })
 
         // Composed field
@@ -768,7 +768,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.URL)
 
             cy.findByLabelText(`Add Related Publication`).should('exist')
-            cy.findByLabelText(`Delete Related Publication`).should('not.exist')
+            cy.findByLabelText(`Remove Related Publication`).should('not.exist')
           })
 
         cy.findByText('Notes').should('exist')
@@ -829,7 +829,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.URL)
 
             cy.findAllByLabelText(`Add Producer`).should('exist')
-            cy.findByLabelText(`Delete Producer`).should('not.exist')
+            cy.findByLabelText(`Remove Producer`).should('not.exist')
           })
 
         cy.findByText('Production Date').should('exist')
@@ -866,7 +866,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
 
             cy.findAllByLabelText(`Add Contributor`).should('exist')
-            cy.findByLabelText(`Delete Contributor`).should('not.exist')
+            cy.findByLabelText(`Remove Contributor`).should('not.exist')
           })
 
         // Composed field
@@ -887,7 +887,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
 
             cy.findAllByLabelText(`Add Funding Information`).should('exist')
-            cy.findByLabelText(`Delete Funding Information`).should('not.exist')
+            cy.findByLabelText(`Remove Funding Information`).should('not.exist')
           })
 
         // Composed field
@@ -926,7 +926,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.URL)
 
             cy.findAllByLabelText(`Add Distributor`).should('exist')
-            cy.findByLabelText(`Delete Distributor`).should('not.exist')
+            cy.findByLabelText(`Remove Distributor`).should('not.exist')
           })
 
         cy.findByText('Distribution Date').should('exist')
@@ -968,7 +968,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Date)
 
             cy.findAllByLabelText(`Add Time Period`).should('exist')
-            cy.findByLabelText(`Delete Time Period`).should('not.exist')
+            cy.findByLabelText(`Remove Time Period`).should('not.exist')
           })
 
         // Composed field
@@ -989,7 +989,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Date)
 
             cy.findAllByLabelText(`Add Date of Collection`).should('exist')
-            cy.findByLabelText(`Delete Date of Collection`).should('not.exist')
+            cy.findByLabelText(`Remove Date of Collection`).should('not.exist')
           })
 
         // Primitive multiple
@@ -1023,7 +1023,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Textbox)
 
             cy.findAllByLabelText(`Add Series`).should('exist')
-            cy.findByLabelText(`Delete Series`).should('not.exist')
+            cy.findByLabelText(`Remove Series`).should('not.exist')
           })
 
         // Composed field
@@ -1044,7 +1044,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
 
             cy.findAllByLabelText(`Add Software`).should('exist')
-            cy.findByLabelText(`Delete Software`).should('not.exist')
+            cy.findByLabelText(`Remove Software`).should('not.exist')
           })
 
         // Primitive multiple
@@ -1198,7 +1198,7 @@ describe('DatasetMetadataForm', () => {
               .should('have.data', 'fieldtype', TypeMetadataFieldOptions.Text)
 
             cy.findByLabelText(`Add Geographic Bounding Box`).should('exist')
-            cy.findByLabelText(`Delete Geographic Bounding Box`).should('not.exist')
+            cy.findByLabelText(`Remove Geographic Bounding Box`).should('not.exist')
           })
       })
     })
@@ -1628,7 +1628,7 @@ describe('DatasetMetadataForm', () => {
       datasetRepository.updateMetadata = cy
         .stub()
         .rejects(new Error('Error from the api javascript client'))
-      metadataBlockInfoRepository.getByColecctionId = cy
+      metadataBlockInfoRepository.getByCollectionId = cy
         .stub()
         .resolves(wrongCollectionMetadataBlocksInfo)
 
@@ -1736,11 +1736,11 @@ describe('DatasetMetadataForm', () => {
 
         cy.findAllByLabelText(/^Name/i).should('have.length', 2)
 
-        cy.findByLabelText(`Delete Author`).should('exist')
+        cy.findByLabelText(`Remove Author`).should('exist')
 
-        cy.findByLabelText(`Delete Author`).click()
+        cy.findByLabelText(`Remove Author`).click()
 
-        cy.findByLabelText(`Delete Author`).should('not.exist')
+        cy.findByLabelText(`Remove Author`).should('not.exist')
 
         cy.findAllByLabelText(/^Name/i).should('have.length', 1)
       })
@@ -1762,11 +1762,11 @@ describe('DatasetMetadataForm', () => {
 
     cy.findByLabelText(`Add Alternative Title`).click()
 
-    cy.findByLabelText(`Delete Alternative Title`).should('exist')
+    cy.findByLabelText(`Remove Alternative Title`).should('exist')
 
-    cy.findByLabelText(`Delete Alternative Title`).click()
+    cy.findByLabelText(`Remove Alternative Title`).click()
 
-    cy.findByLabelText(`Delete Alternative Title`).should('not.exist')
+    cy.findByLabelText(`Remove Alternative Title`).should('not.exist')
   })
 
   it('should not submit the form when pressing enter key if submit button is not focused', () => {
@@ -1845,7 +1845,7 @@ describe('DatasetMetadataForm', () => {
         })
     })
     it('for a composed field NOT multiple', () => {
-      metadataBlockInfoRepository.getByColecctionId = cy
+      metadataBlockInfoRepository.getByCollectionId = cy
         .stub()
         .resolves(metadataBlocksInfoOnCreateModeWithComposedNotMultipleField)
 

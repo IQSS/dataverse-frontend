@@ -12,4 +12,8 @@ export interface FilePreview {
   ingest: FileIngest
   metadata: FileMetadata
   permissions: FilePermissions
+  releaseOrCreateDate?: Date
+  someDatasetVersionHasBeenReleased?: boolean
+  datasetPersistentId?: string
+  datasetName?: string
 }

@@ -8,6 +8,7 @@ import {
   DatasetVersion,
   DatasetNonNumericVersionSearchParam
 } from '../../../../dataset/domain/models/Dataset'
+import { DvObjectType } from '../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 interface DatasetCardHeaderProps {
   persistentId: string
@@ -29,6 +30,7 @@ export function DatasetCardHeader({ persistentId, version }: DatasetCardHeaderPr
       <div className={styles.title}>
         <LinkToPage
           page={Route.DATASETS}
+          type={DvObjectType.DATASET}
           searchParams={getSearchParams(persistentId, version.publishingStatus)}>
           {version.title}
         </LinkToPage>

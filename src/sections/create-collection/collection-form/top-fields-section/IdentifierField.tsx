@@ -44,9 +44,7 @@ export const IdentifierField = ({ rules }: IdentifierFieldProps) => {
         render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
           <Col>
             <Form.InputGroup hasValidation>
-              <Form.InputGroup.Text>
-                {window.location.origin}/spa/collections/?id=
-              </Form.InputGroup.Text>
+              <Form.InputGroup.Text>{window.location.origin}/spa/collections/</Form.InputGroup.Text>
               <Form.Group.Input
                 type="text"
                 aria-label="identifier"
