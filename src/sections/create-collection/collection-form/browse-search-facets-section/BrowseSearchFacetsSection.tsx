@@ -12,7 +12,6 @@ import {
 import { MetadataField } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { CollectionFormFacet, FACET_IDS_FIELD, USE_FACETS_FROM_PARENT } from '../CollectionForm'
 import { FacetsFromParentCheckbox } from './FacetsFromParentCheckbox'
-import cn from 'classnames'
 import style from './BrowseSearchFacetsSection.module.scss'
 
 interface BrowseSearchFacetsSectionProps {
@@ -69,12 +68,7 @@ export const BrowseSearchFacetsSection = ({
 
           <FacetsFromParentCheckbox defaultCollectionFacets={defaultCollectionFacets} />
 
-          <div
-            className={cn(style['transfer-list-container'], {
-              [style['transfer-list-container--disabled']]:
-                useBrowseSearchFacetsFromParentCheckedValue
-            })}
-            data-testid="transfer-list-container">
+          <div className={style['transfer-list-container']} data-testid="transfer-list-container">
             <Controller
               name={FACET_IDS_FIELD}
               control={control}
@@ -84,6 +78,7 @@ export const BrowseSearchFacetsSection = ({
                   availableItems={availableItems}
                   defaultSelected={defaultCollectionFacets}
                   rightLabel={t('fields.browseSearchFacets.selectedFacets')}
+                  disabled={useBrowseSearchFacetsFromParentCheckedValue}
                   key={transferListKey}
                 />
               )}

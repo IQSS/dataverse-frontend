@@ -86,17 +86,21 @@
         border-radius: 4px;
         cursor: grab;
 
-        &:hover {
+        &:hover:not(.disabled) {
           background-color: $dv-secondary-color;
         }
 
-        &:active {
+        &:active:not(.disabled) {
           cursor: grabbing;
+        }
+
+        &.disabled {
+          pointer-events: none;
         }
       }
 
-      &:hover,
-      &:focus-visible {
+      &:hover:not(.disabled),
+      &:focus-visible:not(.disabled) {
         color: $dv-text-color;
         background-color: color.adjust($dv-secondary-color, $alpha: -0.7);
       }

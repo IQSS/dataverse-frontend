@@ -25,18 +25,20 @@ export const MetadataFieldsSection = ({
       <Col lg={9}>
         <Form.Group.Text>{t('helperText')}</Form.Group.Text>
         <Col className="mt-3">
-          <Stack gap={2}>
+          <Stack gap={3}>
             <FieldsFromParentCheckbox defaultValues={defaultValues} />
-            {allMetadataBlocksInfo.map((block) => {
-              return (
-                <MetadataInputLevelFieldsBlock
-                  key={block.name}
-                  blockName={block.name as MetadataBlockName}
-                  blockDisplayName={block.displayName}
-                  reducedMetadataBlockInfo={block}
-                />
-              )
-            })}
+            <Stack gap={1}>
+              {allMetadataBlocksInfo.map((block) => {
+                return (
+                  <MetadataInputLevelFieldsBlock
+                    key={block.name}
+                    blockName={block.name as MetadataBlockName}
+                    blockDisplayName={block.displayName}
+                    reducedMetadataBlockInfo={block}
+                  />
+                )
+              })}
+            </Stack>
           </Stack>
         </Col>
       </Col>

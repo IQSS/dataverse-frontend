@@ -2,11 +2,6 @@
   display: flex;
   justify-content: center;
 
-  &--disabled {
-    opacity: 0.5;
-    pointer-events: none;
-  }
-
   @media (min-width: 768px) {
     justify-content: flex-start;
   }
