@@ -44,6 +44,7 @@ services:
     restart: on-failure
     user: payara
     environment:
+      dataverse_files_storage__driver__id: s3
       DATAVERSE_DB_HOST: postgres
       DATAVERSE_DB_PASSWORD: secret
       DATAVERSE_DB_USER: ${DATAVERSE_DB_USER}
@@ -54,6 +55,19 @@ services:
         -Ddataverse.pid.fake.label=FakeDOIProvider
         -Ddataverse.pid.fake.authority=10.5072
         -Ddataverse.pid.fake.shoulder=FK2/
+        -Ddataverse.files.s3.access-key=${S3_ACCESS_KEY}
+        -Ddataverse.files.s3.label=s3
+        -Ddataverse.files.s3.secret-key=${S3_SECRET_KEY}
+        -Ddataverse.files.storage-driver-id=s3
+        -Ddataverse.files.s3.type=s3
+        -Ddataverse.files.s3.bucket-name=beta-dataverse-direct
+        -Ddataverse.files.s3.upload-redirect=true
+        -Ddataverse.files.s3.download-redirect=true
+        -Ddataverse.files.s3.ingestsizelimit=50000000
+        -Ddataverse.files.s3.url-expiration-minutes=60
+        -Ddataverse.files.s3.connection-pool-size=2048
+        -Ddataverse.files.s3.custom-endpoint-region=us-east-1
+        -Ddataverse.files.s3.custom-endpoint-url=https://s3.us-east-1.amazonaws.com
     expose:
       - '8080'
     networks:
