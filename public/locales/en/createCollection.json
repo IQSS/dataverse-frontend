@@ -36,7 +36,9 @@
     },
     "description": {
       "label": "Description",
-      "description": "A summary describing the purpose, nature or scope of this collection."
+      "description": "A summary describing the purpose, nature or scope of this collection.",
+      "subLabel": "This field supports only certain <htmlTooltip>HTML tags</htmlTooltip>.",
+      "htmlAllowedTags": "<a>, <b>, <blockquote>, <br>, <code>, <del>, <dd>, <dl>, <dt>, <em>, <hr>, <h1>-<h3>, <i>, <img>, <kbd>, <li>, <ol>, <p>, <pre>, <s>, <sup>, <sub>, <strong>, <strike>, <u>, <ul>"
     },
     "contacts": {
       "label": "Email",
