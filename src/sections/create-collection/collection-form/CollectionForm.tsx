@@ -76,8 +76,6 @@ export const CollectionFormInputLevelOptions = {
 export type CollectionFormInputLevelValue =
   (typeof CollectionFormInputLevelOptions)[keyof typeof CollectionFormInputLevelOptions]
 
-export const CONDITIONALLY_REQUIRED_FIELDS = ['producerName']
-
 export type CollectionFormFacet = {
   value: string
   label: string
@@ -111,6 +109,8 @@ export const CollectionForm = ({
     mode: 'onChange',
     defaultValues
   })
+
+  console.log({ defaultValues })
 
   const { formState } = form
 

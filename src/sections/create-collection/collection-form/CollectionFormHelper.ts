@@ -6,11 +6,11 @@ import {
 import {
   MetadataBlockInfo,
   MetadataBlockName,
-  MetadataField
+  MetadataField,
+  TypeClassMetadataFieldOptions
 } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import {
   CollectionFormMetadataBlocks,
-  CONDITIONALLY_REQUIRED_FIELDS,
   FormattedCollectionInputLevels,
   FormattedCollectionInputLevelsWithoutParentBlockName
 } from './CollectionForm'
@@ -28,14 +28,26 @@ export class CollectionFormHelper {
 
     allMetadataBlocksInfo.forEach((block) => {
       Object.entries(block.metadataFields).forEach(([_key, field]) => {
-        const normalizedFieldName = this.replaceDotWithSlash(field.name)
-        const isFieldRequiredByDataverse = field.isRequired
-        const isAConditionallyRequiredField = CONDITIONALLY_REQUIRED_FIELDS.includes(field.name)
+        const { name, isRequired, childMetadataFields, typeClass } = field
+        const normalizedFieldName = this.replaceDotWithSlash(name)
+        const isFieldRequiredByDataverse = isRequired
+
+        const isSafeCompound =
+          typeClass === TypeClassMetadataFieldOptions.Compound &&
+          childMetadataFields !== undefined &&
+          Object.keys(childMetadataFields).length > 0
+
+        const composedFieldNotRequiredWithChildFieldsRequired =
+          isSafeCompound &&
+          !isRequired &&
+          Object.keys(childMetadataFields).some((key) => childMetadataFields[key].isRequired)
 
         fields[normalizedFieldName] = {
           include: true,
           optionalOrRequired:
-            isFieldRequiredByDataverse && !isAConditionallyRequiredField ? 'required' : 'optional',
+            isFieldRequiredByDataverse && !composedFieldNotRequiredWithChildFieldsRequired
+              ? 'required'
+              : 'optional',
           parentBlockName: block.name as MetadataBlockName
         }
 
@@ -43,9 +55,9 @@ export class CollectionFormHelper {
           Object.entries(field.childMetadataFields).forEach(([_key, childField]) => {
             const normalizedFieldName = this.replaceDotWithSlash(childField.name)
             const isChildFieldRequiredByDataverse = childField.isRequired
-            const isAConditionallyRequiredChildField = CONDITIONALLY_REQUIRED_FIELDS.includes(
-              childField.name
-            )
+
+            const isAConditionallyRequiredChildField =
+              composedFieldNotRequiredWithChildFieldsRequired && childField.isRequired
 
             childFields[normalizedFieldName] = {
               include: true,
