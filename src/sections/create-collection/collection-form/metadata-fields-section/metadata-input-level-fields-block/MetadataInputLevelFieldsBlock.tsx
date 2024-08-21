@@ -2,8 +2,10 @@ import { ChangeEvent, useEffect, useId, useState } from 'react'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import { Button, Form, Stack } from '@iqss/dataverse-design-system'
 import { CloseButton } from 'react-bootstrap'
-import { MetadataBlockName } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { ReducedMetadataBlockInfo } from '../../../useGetAllMetadataBlocksInfo'
+import {
+  MetadataBlockInfo,
+  MetadataBlockName
+} from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { METADATA_BLOCKS_NAMES_GROUPER, USE_FIELDS_FROM_PARENT } from '../../CollectionForm'
 import { InputLevelsTable } from './input-levels-table/InputLevelsTable'
 import { useTranslation } from 'react-i18next'
@@ -11,13 +13,13 @@ import { useTranslation } from 'react-i18next'
 interface MetadataInputLevelFieldsBlockProps {
   blockName: MetadataBlockName
   blockDisplayName: string
-  reducedMetadataBlockInfo: ReducedMetadataBlockInfo
+  metadataBlockInfo: MetadataBlockInfo
 }
 
 export const MetadataInputLevelFieldsBlock = ({
   blockName,
   blockDisplayName,
-  reducedMetadataBlockInfo
+  metadataBlockInfo
 }: MetadataInputLevelFieldsBlockProps) => {
   const checkboxID = useId()
   const { control } = useFormContext()
@@ -139,7 +141,7 @@ export const MetadataInputLevelFieldsBlock = ({
       <InputLevelsTable
         show={inputLevelsTableStatus.show}
         disabled={inputLevelsTableStatus.asDisabled}
-        blockMetadataInputLevelFields={reducedMetadataBlockInfo}
+        blockMetadataInputLevelFields={metadataBlockInfo}
         closeButton={
           <CloseButton
             onClick={handleHideInputLevelsTable}

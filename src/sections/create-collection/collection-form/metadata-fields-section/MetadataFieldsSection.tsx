@@ -1,13 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import { Col, Form, Row, Stack } from '@iqss/dataverse-design-system'
-import { ReducedMetadataBlockInfo } from '../../useGetAllMetadataBlocksInfo'
+
 import { MetadataInputLevelFieldsBlock } from './metadata-input-level-fields-block/MetadataInputLevelFieldsBlock'
 import { FieldsFromParentCheckbox } from './fields-from-parent-checkbox/FieldsFromParentCheckbox'
-import { MetadataBlockName } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import {
+  MetadataBlockInfo,
+  MetadataBlockName
+} from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { CollectionFormData } from '../CollectionForm'
 
 interface MetadataFieldsSectionProps {
-  allMetadataBlocksInfo: ReducedMetadataBlockInfo[]
+  allMetadataBlocksInfo: MetadataBlockInfo[]
   defaultValues: CollectionFormData
 }
 
@@ -34,7 +37,7 @@ export const MetadataFieldsSection = ({
                     key={block.name}
                     blockName={block.name as MetadataBlockName}
                     blockDisplayName={block.displayName}
-                    reducedMetadataBlockInfo={block}
+                    metadataBlockInfo={block}
                   />
                 )
               })}

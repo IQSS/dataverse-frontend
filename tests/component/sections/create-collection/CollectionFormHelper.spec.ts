@@ -1,41 +1,82 @@
 import { CollectionInputLevel } from '../../../../src/collection/domain/models/Collection'
 import { CollectionInputLevelDTO } from '../../../../src/collection/domain/useCases/DTOs/CollectionDTO'
-import { MetadataBlockName } from '../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
+import {
+  MetadataBlockInfo,
+  MetadataBlockName,
+  MetadataField
+} from '../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
 import {
   FormattedCollectionInputLevels,
   FormattedCollectionInputLevelsWithoutParentBlockName
 } from '../../../../src/sections/create-collection/collection-form/CollectionForm'
 import { CollectionFormHelper } from '../../../../src/sections/create-collection/collection-form/CollectionFormHelper'
-import {
-  ReducedMetadataBlockInfo,
-  ReducedMetadataFieldInfo
-} from '../../../../src/sections/create-collection/useGetAllMetadataBlocksInfo'
 
-const allMetadataBlocksInfoReducedMock: ReducedMetadataBlockInfo[] = [
+const allMetadataBlocksInfoMock: MetadataBlockInfo[] = [
   {
     id: 4,
     name: 'astrophysics',
     displayName: 'Astronomy and Astrophysics Metadata',
+    displayOnCreate: true,
     metadataFields: {
       requiredField: {
         name: 'requiredField',
         displayName: 'Spatial Resolution',
-        isRequired: true
+        isRequired: true,
+        title: '',
+        type: 'TEXT',
+        typeClass: 'primitive',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        displayOnCreate: true,
+        displayOrder: 0
       },
       'coverage.Spectral.Wavelength': {
         name: 'coverage.Spectral.Wavelength',
         displayName: 'Wavelength Range',
         isRequired: false,
+        displayOnCreate: true,
+        title: '',
+        type: 'TEXT',
+        typeClass: 'primitive',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        displayOrder: 0,
         childMetadataFields: {
           'coverage.Spectral.MinimumWavelength': {
             name: 'coverage.Spectral.MinimumWavelength',
             displayName: 'Wavelength Range Minimum (m)',
-            isRequired: false
+            isRequired: false,
+            title: '',
+            type: 'TEXT',
+            typeClass: 'primitive',
+            watermark: '',
+            description: '',
+            multiple: false,
+            isControlledVocabulary: false,
+            displayFormat: '',
+            displayOrder: 0,
+            displayOnCreate: true
           },
           bar: {
             name: 'bar',
             displayName: 'Bar',
-            isRequired: true
+            isRequired: true,
+            title: '',
+            type: 'TEXT',
+            typeClass: 'primitive',
+            watermark: '',
+            description: '',
+            multiple: false,
+            isControlledVocabulary: false,
+            displayFormat: '',
+            displayOnCreate: true,
+            displayOrder: 0
           }
         }
       }
@@ -68,7 +109,7 @@ const expectedBaseInputLevels: FormattedCollectionInputLevels = {
 
 describe('CollectionFormHelper', () => {
   it('defineBaseInputLevels helper', () => {
-    const result = CollectionFormHelper.defineBaseInputLevels(allMetadataBlocksInfoReducedMock)
+    const result = CollectionFormHelper.defineBaseInputLevels(allMetadataBlocksInfoMock)
 
     expect(result).to.deep.equal(expectedBaseInputLevels)
   })
@@ -224,21 +265,51 @@ describe('CollectionFormHelper', () => {
   })
 
   it('getChildFieldSiblings', () => {
-    const childMetadataFields: Record<string, ReducedMetadataFieldInfo> = {
+    const childMetadataFields: Record<string, MetadataField> = {
       'coverage.Spectral.MinimumWavelength': {
         name: 'coverage.Spectral.MinimumWavelength',
         displayName: 'Wavelength Range Minimum (m)',
-        isRequired: false
+        isRequired: false,
+        title: '',
+        type: 'TEXT',
+        typeClass: 'primitive',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        displayOnCreate: true,
+        displayOrder: 0
       },
       bar: {
         name: 'bar',
         displayName: 'Bar',
-        isRequired: true
+        isRequired: true,
+        title: '',
+        type: 'TEXT',
+        typeClass: 'primitive',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        displayOnCreate: true,
+        displayOrder: 0
       },
       foo: {
         name: 'foo',
         displayName: 'Foo',
-        isRequired: false
+        isRequired: false,
+        title: '',
+        type: 'TEXT',
+        typeClass: 'primitive',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        displayOnCreate: true,
+        displayOrder: 0
       }
     }
     const targetChildFieldName = 'bar'
@@ -252,12 +323,32 @@ describe('CollectionFormHelper', () => {
       'coverage.Spectral.MinimumWavelength': {
         name: 'coverage.Spectral.MinimumWavelength',
         displayName: 'Wavelength Range Minimum (m)',
-        isRequired: false
+        isRequired: false,
+        title: '',
+        type: 'TEXT',
+        typeClass: 'primitive',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        displayOnCreate: true,
+        displayOrder: 0
       },
       foo: {
         name: 'foo',
         displayName: 'Foo',
-        isRequired: false
+        isRequired: false,
+        title: '',
+        type: 'TEXT',
+        typeClass: 'primitive',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        displayOnCreate: true,
+        displayOrder: 0
       }
     })
   })

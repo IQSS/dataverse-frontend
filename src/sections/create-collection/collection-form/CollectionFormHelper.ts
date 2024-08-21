@@ -3,8 +3,11 @@ import {
   CollectionDTO,
   CollectionInputLevelDTO
 } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
-import { MetadataBlockName } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { ReducedMetadataBlockInfo, ReducedMetadataFieldInfo } from '../useGetAllMetadataBlocksInfo'
+import {
+  MetadataBlockInfo,
+  MetadataBlockName,
+  MetadataField
+} from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import {
   CollectionFormMetadataBlocks,
   CONDITIONALLY_REQUIRED_FIELDS,
@@ -18,12 +21,12 @@ export class CollectionFormHelper {
   public static replaceSlashWithDot = (str: string) => str.replace(/\//g, '.')
 
   public static defineBaseInputLevels(
-    allMetadataBlocksInfoReduced: ReducedMetadataBlockInfo[]
+    allMetadataBlocksInfo: MetadataBlockInfo[]
   ): FormattedCollectionInputLevels {
     const fields: FormattedCollectionInputLevels = {}
     const childFields: FormattedCollectionInputLevels = {}
 
-    allMetadataBlocksInfoReduced.forEach((block) => {
+    allMetadataBlocksInfo.forEach((block) => {
       Object.entries(block.metadataFields).forEach(([_key, field]) => {
         const normalizedFieldName = this.replaceDotWithSlash(field.name)
         const isFieldRequiredByDataverse = field.isRequired
@@ -156,14 +159,14 @@ export class CollectionFormHelper {
   }
 
   public static getChildFieldSiblings = (
-    childMetadataFields: Record<string, ReducedMetadataFieldInfo>,
+    childMetadataFields: Record<string, MetadataField>,
     targetChildFieldName: string
-  ): Record<string, ReducedMetadataFieldInfo> => {
+  ): Record<string, MetadataField> => {
     return Object.entries(childMetadataFields)
       .filter(([_key, { name }]) => name !== targetChildFieldName)
       .reduce((acc, [key, field]) => {
         acc[key] = field
         return acc
-      }, {} as Record<string, ReducedMetadataFieldInfo>)
+      }, {} as Record<string, MetadataField>)
   }
 }

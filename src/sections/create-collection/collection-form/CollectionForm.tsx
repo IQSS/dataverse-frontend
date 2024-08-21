@@ -9,8 +9,8 @@ import {
   CollectionStorage
 } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
 import { SubmissionStatus, useSubmitCollection } from './useSubmitCollection'
-import { ReducedMetadataBlockInfo } from '../useGetAllMetadataBlocksInfo'
 import {
+  MetadataBlockInfo,
   MetadataBlockName,
   MetadataField
 } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
@@ -30,7 +30,7 @@ export interface CollectionFormProps {
   collectionRepository: CollectionRepository
   ownerCollectionId: string
   defaultValues: CollectionFormData
-  allMetadataBlocksInfo: ReducedMetadataBlockInfo[]
+  allMetadataBlocksInfo: MetadataBlockInfo[]
   allFacetableMetadataFields: MetadataField[]
   defaultCollectionFacets: CollectionFormFacet[]
 }
