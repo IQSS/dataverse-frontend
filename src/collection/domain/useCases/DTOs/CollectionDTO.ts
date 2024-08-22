@@ -3,6 +3,11 @@ export interface CollectionDTO {
   name: string
   contacts: string[]
   type: CollectionType
+  affiliation?: string
+  description?: string
+  metadataBlockNames?: string[]
+  facetIds?: string[]
+  inputLevels?: CollectionInputLevelDTO[]
 }
 
 export enum CollectionType {
@@ -15,6 +20,12 @@ export enum CollectionType {
   LABORATORY = 'LABORATORY',
   RESEARCH_GROUP = 'RESEARCH_GROUP',
   DEPARTMENT = 'DEPARTMENT'
+}
+
+export interface CollectionInputLevelDTO {
+  datasetFieldName: string
+  include: boolean
+  required: boolean
 }
 
 export const collectionTypeOptions = {

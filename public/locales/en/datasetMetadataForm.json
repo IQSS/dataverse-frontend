@@ -28,8 +28,6 @@
     "submitting": "Form Submitting",
     "submissionSuccess": "Form submission successful"
   },
-  "addRowButton": "Add",
-  "deleteRowButton": "Delete",
   "saveButton": {
     "createMode": "Save Dataset",
     "editMode": "Save Changes"

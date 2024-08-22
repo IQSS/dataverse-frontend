@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { type MetadataField } from '../../../../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataFormField, type CommonFieldProps } from '..'
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
-import { DynamicFieldsButtons } from '../../dynamic-fields-buttons/DynamicFieldsButtons'
+import { DynamicFieldsButtons } from '../../../../../DynamicFieldsButtons/DynamicFieldsButtons'
 import cn from 'classnames'
 import styles from '../index.module.scss'
 

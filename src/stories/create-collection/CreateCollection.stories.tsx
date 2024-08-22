@@ -9,6 +9,9 @@ import { NoCollectionMockRepository } from '../collection/NoCollectionMockReposi
 import { CollectionMother } from '../../../tests/component/collection/domain/models/CollectionMother'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { ROOT_COLLECTION_ALIAS } from '../../collection/domain/models/Collection'
+import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
+import { MetadataBlockInfoMockLoadingRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockLoadingRepository'
+import { MetadataBlockInfoMockErrorRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockErrorRepository'
 
 const meta: Meta<typeof CreateCollection> = {
   title: 'Pages/Create Collection',
@@ -27,6 +30,7 @@ export const Default: Story = {
     <CreateCollection
       collectionRepository={new CollectionMockRepository()}
       ownerCollectionId={ROOT_COLLECTION_ALIAS}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
     />
   )
 }
@@ -35,6 +39,7 @@ export const Loading: Story = {
     <CreateCollection
       collectionRepository={new CollectionLoadingMockRepository()}
       ownerCollectionId={ROOT_COLLECTION_ALIAS}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockLoadingRepository()}
     />
   )
 }
@@ -43,6 +48,7 @@ export const OwnerCollectionNotFound: Story = {
   render: () => (
     <CreateCollection
       collectionRepository={new NoCollectionMockRepository()}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockErrorRepository()}
       ownerCollectionId={ROOT_COLLECTION_ALIAS}
     />
   )
@@ -65,6 +71,7 @@ export const NotAllowedToAddCollection: Story = {
   render: () => (
     <CreateCollection
       collectionRepository={collectionRepositoryWithoutPermissionsToCreateCollection}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockErrorRepository()}
       ownerCollectionId={ROOT_COLLECTION_ALIAS}
     />
   )
