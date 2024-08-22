@@ -16,8 +16,7 @@ export default defineConfig({
     setupNodeEvents(on) {
       on('file:preprocessor', vitePreprocessor(path.resolve(__dirname, './vite.config.ts')))
     },
-    defaultCommandTimeout: 10_000, // https://docs.cypress.io/guides/references/configuration#Timeouts
-    pageLoadTimeout: 10_000
+    defaultCommandTimeout: 10_000 // https://docs.cypress.io/guides/references/configuration#Timeouts
   },
   component: {
     indexHtmlFile: 'tests/support/component-index.html',
