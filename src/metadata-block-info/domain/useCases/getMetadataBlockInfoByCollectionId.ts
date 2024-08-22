@@ -5,7 +5,7 @@ export async function getMetadataBlockInfoByCollectionId(
   metadataBlockInfoRepository: MetadataBlockInfoRepository,
   collectionId: number | string
 ): Promise<MetadataBlockInfo[]> {
-  return metadataBlockInfoRepository.getByColecctionId(collectionId).catch((error: Error) => {
+  return metadataBlockInfoRepository.getByCollectionId(collectionId).catch((error: Error) => {
     throw new Error(error.message)
   })
 }

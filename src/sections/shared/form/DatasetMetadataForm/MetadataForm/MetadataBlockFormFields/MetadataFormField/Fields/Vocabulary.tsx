@@ -69,25 +69,30 @@ export const Vocabulary = ({
     return rulesToApply
   }, [rulesToApply, fieldShouldBecomeRequired, displayName, isFieldThatMayBecomeRequired, t])
 
+  const showSelectWithSearch = options.length > 10
+
   return (
     <Controller
       name={builtFieldName}
       control={control}
       rules={updatedRulesToApply}
       render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
-        <Form.Group controlId={builtFieldName} as={withinMultipleFieldsGroup ? Col : Row}>
+        <Form.Group
+          controlId={showSelectWithSearch ? undefined : builtFieldName}
+          as={withinMultipleFieldsGroup ? Col : Row}>
           <Form.Group.Label
             message={description}
             required={Boolean(updatedRulesToApply?.required)}
             column={!withinMultipleFieldsGroup}
             className={styles['field-label']}
+            htmlFor={showSelectWithSearch ? builtFieldName : undefined}
             sm={3}>
             {title}
           </Form.Group.Label>
           <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
             <Row>
               <Col sm={withinMultipleFieldsGroup ? 12 : 9}>
-                {options.length > 10 ? (
+                {showSelectWithSearch ? (
                   <Form.Group.SelectAdvanced
                     defaultValue={value as string}
                     options={options}

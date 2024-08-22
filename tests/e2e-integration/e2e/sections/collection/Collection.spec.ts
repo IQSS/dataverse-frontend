@@ -123,7 +123,7 @@ describe('Collection Page', () => {
 
   it('displays a collection different from the root when accessing a subcollection', () => {
     cy.wrap(CollectionHelper.create('collection-1')).then(() => {
-      cy.visit('/spa/collections?id=collection-1')
+      cy.visit('/spa/collections/collection-1')
 
       cy.findAllByText(/Scientific Research/i).should('exist')
       cy.findByText(/Dataverse Admin/i).should('exist')
@@ -135,7 +135,7 @@ describe('Collection Page', () => {
     cy.wrap(CollectionHelper.create(collectionId)).then(() => {
       cy.wrap(DatasetHelper.createMany(12, collectionId), { timeout: 10_000 }).then(() => {
         cy.wait(2_000) // Wait for the datasets to be created
-        cy.visit(`/spa/collections?id=${collectionId}`)
+        cy.visit(`/spa/collections/${collectionId}`)
 
         cy.findAllByText(/Scientific Research/i).should('exist')
         cy.findByText(/Dataverse Admin/i).should('exist')

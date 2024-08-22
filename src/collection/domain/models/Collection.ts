@@ -7,4 +7,11 @@ export interface Collection {
   isReleased: boolean
   description?: string
   affiliation?: string
+  inputLevels?: CollectionInputLevel[]
+}
+
+export interface CollectionInputLevel {
+  datasetFieldName: string
+  include: boolean
+  required: boolean
 }

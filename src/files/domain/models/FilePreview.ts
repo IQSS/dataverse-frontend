@@ -16,4 +16,8 @@ export interface FilePreview {
   metadata: FileMetadata
   permissions: FilePermissions
   datasetVersionNumber?: DatasetVersionNumber
+  releaseOrCreateDate?: Date
+  someDatasetVersionHasBeenReleased?: boolean
+  datasetPersistentId?: string
+  datasetName?: string
 }

@@ -35,7 +35,22 @@ export class FilePreviewMother {
       metadata: FileMetadataMother.createDefault(),
       permissions: FilePermissionsMother.createWithGrantedPermissions(),
       datasetVersionNumber: DatasetVersionMother.create().number,
+      datasetName: 'Dataset Name',
+      someDatasetVersionHasBeenReleased: true,
       ...props
+    })
+  }
+  static createWithDraft(): FilePreview {
+    return this.createDefault({
+      datasetPublishingStatus: DatasetPublishingStatus.DRAFT,
+      someDatasetVersionHasBeenReleased: false
+    })
+  }
+
+  static createReleasedWithDraft(): FilePreview {
+    return this.createDefault({
+      datasetPublishingStatus: DatasetPublishingStatus.DRAFT,
+      someDatasetVersionHasBeenReleased: true
     })
   }
 

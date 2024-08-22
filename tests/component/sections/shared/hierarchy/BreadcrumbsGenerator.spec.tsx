@@ -27,7 +27,7 @@ describe('BreadcrumbsGenerator', () => {
       .should('have.attr', 'href', '/datasets?persistentId=doi:10.5072/FK2/ABC123&version=1.0')
     cy.findByRole('link', { name: 'Collection' })
       .should('exist')
-      .should('have.attr', 'href', '/collections?id=collection1')
+      .should('have.attr', 'href', '/collections/collection1')
     cy.findByRole('link', { name: 'Root' }).should('have.attr', 'href', '/')
   })
 

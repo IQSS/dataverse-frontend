@@ -67,6 +67,7 @@ const settingsRepository = {} as SettingRepository
 
 describe('DatasetFilesScrollable', () => {
   beforeEach(() => {
+    cy.viewport(1280, 720)
     fileRepository.getAllByDatasetPersistentIdWithCount = cy.stub().resolves(testFiles)
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
     fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(19900)
@@ -498,7 +499,9 @@ describe('DatasetFilesScrollable', () => {
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
       cy.get('table > thead > tr > th > input[type=checkbox]').click()
       cy.findByText('10 files are currently selected.').should('exist')
-      cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click()
+      cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click({
+        force: true
+      })
       cy.findByText('200 files are currently selected.').should('exist')
 
       cy.findByTestId('scrollable-files-container').as('scrollableFilesContainer')
