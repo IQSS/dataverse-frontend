@@ -156,4 +156,30 @@ export class FileHelper extends DataverseApiHelper {
   static async delete(id: number) {
     return this.request<FileResponse>(`/files/${id}`, 'DELETE')
   }
+
+  static createSinglePartFileBlob(): File {
+    try {
+      return FileHelper.createFileBlobWithSize(1000, 'singlepart-file')
+    } catch (error) {
+      throw new Error(`Error while creating test singlepart file`)
+    }
+  }
+
+  static createMultipartFileBlob(): File {
+    try {
+      return FileHelper.createFileBlobWithSize(1273741824, 'multipart-file')
+    } catch (error) {
+      throw new Error(`Error while creating test multipart file`)
+    }
+  }
+
+  private static createFileBlobWithSize(fileSizeInBytes: number, fileName: string): File {
+    const blob = FileHelper.createBlobWithSize(fileSizeInBytes)
+    return new File([blob], fileName, { type: 'text/plain' })
+  }
+
+  private static createBlobWithSize(size: number): Blob {
+    const arrayBuffer = new ArrayBuffer(size)
+    return new Blob([arrayBuffer])
+  }
 }
