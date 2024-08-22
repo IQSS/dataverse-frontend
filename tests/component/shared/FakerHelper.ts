@@ -83,11 +83,11 @@ export class FakerHelper {
       return faker.system.directoryPath()
     }
   }
-  static paragraph() {
+  static paragraph(sentenceCount?: number) {
     if (this.chromaticBuild()) {
       return 'Voluptas amet consectetur dolore doloribus. Cumque et quo eum voluptatem eum dolores dignissimos. Vel inventore quaerat officiis. Nobis debitis quidem hic laudantium blanditiis. Error excepturi dicta aliquam enim ducimus.'
     } else {
-      return faker.lorem.paragraph()
+      return faker.lorem.paragraph(sentenceCount)
     }
   }
   static pastDate() {

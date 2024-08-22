@@ -238,6 +238,7 @@ export class FileMetadataMother {
 
   static createTabular(props?: Partial<FileMetadata>): FileMetadata {
     return this.createDefault({
+      description: FakerHelper.paragraph(),
       type: FileTypeMother.createTabular(),
       tabularData: FileTabularDataMother.create(),
       ...props
@@ -246,6 +247,7 @@ export class FileMetadataMother {
 
   static createNonTabular(props?: Partial<FileMetadata>): FileMetadata {
     return this.createDefault({
+      description: FakerHelper.paragraph(),
       type: FileTypeMother.createText(),
       tabularData: undefined,
       ...props
@@ -273,13 +275,15 @@ export class FileMetadataMother {
 
   static createWithChecksum(): FileMetadata {
     return this.createDefault({
-      checksum: FileChecksumMother.create()
+      checksum: FileChecksumMother.create(),
+      description: FakerHelper.paragraph()
     })
   }
 
   static createWithNoChecksum(): FileMetadata {
     return this.createDefault({
-      checksum: undefined
+      checksum: undefined,
+      description: FakerHelper.paragraph()
     })
   }
 
