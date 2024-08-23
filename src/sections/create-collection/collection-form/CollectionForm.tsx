@@ -82,6 +82,10 @@ export type CollectionFormFacet = {
   id: string
 }
 
+export type MetadataFieldWithParentBlockInfo = MetadataField & {
+  parentBlockInfo: Pick<MetadataBlockInfo, 'id' | 'name' | 'displayName'>
+}
+
 // On the submit function callback, type is CollectionType as type field is required and wont never be ""
 export type CollectionFormValuesOnSubmit = Omit<CollectionFormData, 'type'> & {
   type: CollectionType
@@ -109,8 +113,6 @@ export const CollectionForm = ({
     mode: 'onChange',
     defaultValues
   })
-
-  console.log({ defaultValues })
 
   const { formState } = form
 
@@ -179,6 +181,7 @@ export const CollectionForm = ({
                 <BrowseSearchFacetsSection
                   defaultCollectionFacets={defaultCollectionFacets}
                   allFacetableMetadataFields={allFacetableMetadataFields}
+                  allMetadataBlocksInfo={allMetadataBlocksInfo}
                 />
               </Card.Body>
             </Card>

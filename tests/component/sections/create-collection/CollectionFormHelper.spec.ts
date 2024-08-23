@@ -7,7 +7,8 @@ import {
 } from '../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
 import {
   FormattedCollectionInputLevels,
-  FormattedCollectionInputLevelsWithoutParentBlockName
+  FormattedCollectionInputLevelsWithoutParentBlockName,
+  MetadataFieldWithParentBlockInfo
 } from '../../../../src/sections/create-collection/collection-form/CollectionForm'
 import { CollectionFormHelper } from '../../../../src/sections/create-collection/collection-form/CollectionFormHelper'
 
@@ -351,6 +352,192 @@ describe('CollectionFormHelper', () => {
         displayOrder: 0
       }
     })
+  })
+
+  it('assignBlockInfoToFacetableMetadataFields', () => {
+    const facetableMetadataFields: MetadataField[] = [
+      {
+        name: 'foo',
+        displayName: 'Foo',
+        title: 'Foo',
+        type: 'TEXT',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: false,
+        displayOrder: 1,
+        typeClass: 'primitive',
+        displayOnCreate: false
+      },
+      {
+        name: 'bar',
+        displayName: 'Bar',
+        title: 'Bar',
+        type: 'TEXT',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: false,
+        displayOrder: 2,
+        typeClass: 'primitive',
+        displayOnCreate: false
+      },
+      {
+        name: 'doe',
+        displayName: 'Doe',
+        title: 'Doe',
+        type: 'TEXT',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: false,
+        displayOrder: 3,
+        typeClass: 'primitive',
+        displayOnCreate: false
+      }
+    ]
+
+    const allMetadataBlocksInfo: MetadataBlockInfo[] = [
+      {
+        id: 1,
+        name: 'citation',
+        displayName: 'Citation Metadata',
+        displayOnCreate: true,
+        metadataFields: {
+          foo: {
+            name: 'foo',
+            displayName: 'Foo',
+            title: 'Foo',
+            type: 'TEXT',
+            watermark: '',
+            description: '',
+            multiple: false,
+            isControlledVocabulary: false,
+            displayFormat: '',
+            isRequired: false,
+            displayOrder: 1,
+            typeClass: 'primitive',
+            displayOnCreate: false,
+            childMetadataFields: {
+              bar: {
+                name: 'bar',
+                displayName: 'Bar',
+                title: 'Bar',
+                type: 'TEXT',
+                watermark: '',
+                description: '',
+                multiple: false,
+                isControlledVocabulary: false,
+                displayFormat: '',
+                isRequired: false,
+                displayOrder: 2,
+                typeClass: 'primitive',
+                displayOnCreate: false
+              }
+            }
+          }
+        }
+      },
+      {
+        id: 4,
+        name: 'astrophysics',
+        displayName: 'Astronomy and Astrophysics Metadata',
+        displayOnCreate: false,
+        metadataFields: {
+          doe: {
+            name: 'doe',
+            displayName: 'Doe',
+            title: 'Doe',
+            type: 'TEXT',
+            watermark: '',
+            description: '',
+            multiple: false,
+            isControlledVocabulary: false,
+            displayFormat: '',
+            isRequired: false,
+            displayOrder: 3,
+            typeClass: 'primitive',
+            displayOnCreate: false
+          }
+        }
+      }
+    ]
+
+    const result = CollectionFormHelper.assignBlockInfoToFacetableMetadataFields(
+      facetableMetadataFields,
+      allMetadataBlocksInfo
+    )
+
+    const expectedResult: MetadataFieldWithParentBlockInfo[] = [
+      {
+        name: 'foo',
+        displayName: 'Foo',
+        title: 'Foo',
+        type: 'TEXT',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: false,
+        displayOrder: 1,
+        typeClass: 'primitive',
+        displayOnCreate: false,
+        parentBlockInfo: {
+          id: 1,
+          name: 'citation',
+          displayName: 'Citation Metadata'
+        }
+      },
+      {
+        name: 'bar',
+        displayName: 'Bar',
+        title: 'Bar',
+        type: 'TEXT',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: false,
+        displayOrder: 2,
+        typeClass: 'primitive',
+        displayOnCreate: false,
+        parentBlockInfo: {
+          id: 1,
+          name: 'citation',
+          displayName: 'Citation Metadata'
+        }
+      },
+      {
+        name: 'doe',
+        displayName: 'Doe',
+        title: 'Doe',
+        type: 'TEXT',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: false,
+        displayOrder: 3,
+        typeClass: 'primitive',
+        displayOnCreate: false,
+        parentBlockInfo: {
+          id: 4,
+          name: 'astrophysics',
+          displayName: 'Astronomy and Astrophysics Metadata'
+        }
+      }
+    ]
+
+    expect(result).to.deep.equal(expectedResult)
   })
 
   it('replaces string with dots with slashes', () => {

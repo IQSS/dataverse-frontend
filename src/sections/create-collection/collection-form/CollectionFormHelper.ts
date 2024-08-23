@@ -12,7 +12,8 @@ import {
 import {
   CollectionFormMetadataBlocks,
   FormattedCollectionInputLevels,
-  FormattedCollectionInputLevelsWithoutParentBlockName
+  FormattedCollectionInputLevelsWithoutParentBlockName,
+  MetadataFieldWithParentBlockInfo
 } from './CollectionForm'
 
 export class CollectionFormHelper {
@@ -180,5 +181,39 @@ export class CollectionFormHelper {
         acc[key] = field
         return acc
       }, {} as Record<string, MetadataField>)
+  }
+
+  public static assignBlockInfoToFacetableMetadataFields(
+    facetableMetadataFields: MetadataField[],
+    allMetadataBlocksInfo: MetadataBlockInfo[]
+  ): MetadataFieldWithParentBlockInfo[] {
+    const blockInfoMap = allMetadataBlocksInfo.reduce((acc, block) => {
+      Object.keys(block.metadataFields).forEach((fieldName) => {
+        acc[fieldName] = block
+      })
+
+      Object.values(block.metadataFields).forEach((metadataField) => {
+        if (metadataField.childMetadataFields) {
+          Object.keys(metadataField.childMetadataFields).forEach((childFieldName) => {
+            acc[childFieldName] = block
+          })
+        }
+      })
+
+      return acc
+    }, {} as Record<string, MetadataBlockInfo>)
+
+    return facetableMetadataFields.map((field) => {
+      const parentBlockInfo = blockInfoMap[field.name]
+
+      return {
+        ...field,
+        parentBlockInfo: {
+          id: parentBlockInfo.id,
+          name: parentBlockInfo.name,
+          displayName: parentBlockInfo.displayName
+        }
+      }
+    })
   }
 }
