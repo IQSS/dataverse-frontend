@@ -7,9 +7,14 @@ import {
   Row,
   Stack,
   TransferList,
-  TransferListItem
+  TransferListItem,
+  SelectAdvanced
 } from '@iqss/dataverse-design-system'
-import { MetadataField } from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import {
+  MetadataBlockInfo,
+  MetadataField
+} from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { CollectionFormHelper } from '../CollectionFormHelper'
 import { CollectionFormFacet, FACET_IDS_FIELD, USE_FACETS_FROM_PARENT } from '../CollectionForm'
 import { FacetsFromParentCheckbox } from './FacetsFromParentCheckbox'
 import style from './BrowseSearchFacetsSection.module.scss'
@@ -17,11 +22,13 @@ import style from './BrowseSearchFacetsSection.module.scss'
 interface BrowseSearchFacetsSectionProps {
   defaultCollectionFacets: CollectionFormFacet[]
   allFacetableMetadataFields: MetadataField[]
+  allMetadataBlocksInfo: MetadataBlockInfo[]
 }
 
 export const BrowseSearchFacetsSection = ({
   defaultCollectionFacets,
-  allFacetableMetadataFields
+  allFacetableMetadataFields,
+  allMetadataBlocksInfo
 }: BrowseSearchFacetsSectionProps) => {
   const { t } = useTranslation('createCollection')
   const { control } = useFormContext()
@@ -30,16 +37,17 @@ export const BrowseSearchFacetsSection = ({
   }) as boolean
 
   // To reset the transfer list when the use browse search facets from parent checkbox changes
-  const transferListKey = String(useBrowseSearchFacetsFromParentCheckedValue)
+  const resetKey = String(useBrowseSearchFacetsFromParentCheckedValue)
 
-  // TODO:ME When we have info about parent block name of each facetable field, we should use it to group the facets in a Select.
-  const [availableItems, _setAvailableItems] = useState<TransferListItem[]>(
-    allFacetableMetadataFields.map((field) => ({
-      id: field.name,
-      value: field.name,
-      label: field.displayName
-    }))
-  )
+  const selectOptions = allMetadataBlocksInfo.map((block) => block.displayName)
+
+  const initialAvailableItems = allFacetableMetadataFields.map((field) => ({
+    id: field.name,
+    value: field.name,
+    label: field.displayName
+  }))
+
+  const [availableItems, setAvailableItems] = useState<TransferListItem[]>(initialAvailableItems)
 
   const handleOnChangeSelectedItems = (
     selectedItems: TransferListItem[],
@@ -57,6 +65,33 @@ export const BrowseSearchFacetsSection = ({
     formOnChange(formattedSelectedItems)
   }
 
+  const handleChangeSelectedBlock = (selected: string) => {
+    if (selected === '') {
+      setAvailableItems(initialAvailableItems)
+      return
+    }
+
+    const facetableMetadataFieldsWithParentBlockName =
+      CollectionFormHelper.assignBlockInfoToFacetableMetadataFields(
+        allFacetableMetadataFields,
+        allMetadataBlocksInfo
+      )
+
+    const filteredByBlockAvailableItems = facetableMetadataFieldsWithParentBlockName
+      .filter((field) => field.parentBlockInfo.displayName === selected)
+      .map((field) => ({
+        id: field.name,
+        value: field.name,
+        label: field.displayName
+      }))
+
+    setAvailableItems(filteredByBlockAvailableItems)
+  }
+
+  const resetAvailableItems = () => {
+    setAvailableItems(initialAvailableItems)
+  }
+
   return (
     <Row>
       <Col lg={3}>
@@ -66,7 +101,21 @@ export const BrowseSearchFacetsSection = ({
         <Stack>
           <Form.Group.Text>{t('fields.browseSearchFacets.helperText')}</Form.Group.Text>
 
-          <FacetsFromParentCheckbox defaultCollectionFacets={defaultCollectionFacets} />
+          <FacetsFromParentCheckbox
+            defaultCollectionFacets={defaultCollectionFacets}
+            resetAvailableItems={resetAvailableItems}
+          />
+
+          <div style={{ width: 350 }}>
+            <SelectAdvanced
+              options={selectOptions}
+              onChange={handleChangeSelectedBlock}
+              isSearchable={false}
+              isDisabled={useBrowseSearchFacetsFromParentCheckedValue}
+              locales={{ select: 'All Metadata Fields' }}
+              key={resetKey}
+            />
+          </div>
 
           <div className={style['transfer-list-container']} data-testid="transfer-list-container">
             <Controller
@@ -79,7 +128,7 @@ export const BrowseSearchFacetsSection = ({
                   defaultSelected={defaultCollectionFacets}
                   rightLabel={t('fields.browseSearchFacets.selectedFacets')}
                   disabled={useBrowseSearchFacetsFromParentCheckedValue}
-                  key={transferListKey}
+                  key={resetKey}
                 />
               )}
             />

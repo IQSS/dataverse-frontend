@@ -6,10 +6,12 @@ import { CollectionFormFacet, FACET_IDS_FIELD, USE_FACETS_FROM_PARENT } from '..
 
 interface FacetsFromParentCheckboxProps {
   defaultCollectionFacets: CollectionFormFacet[]
+  resetAvailableItems: () => void
 }
 
 export const FacetsFromParentCheckbox = ({
-  defaultCollectionFacets
+  defaultCollectionFacets,
+  resetAvailableItems
 }: FacetsFromParentCheckboxProps) => {
   const { t } = useTranslation('createCollection')
   const { control, setValue } = useFormContext()
@@ -21,6 +23,7 @@ export const FacetsFromParentCheckbox = ({
   ) => {
     if (e.target.checked) {
       setValue(FACET_IDS_FIELD, defaultCollectionFacets)
+      resetAvailableItems()
     }
     formOnChange(e)
   }
