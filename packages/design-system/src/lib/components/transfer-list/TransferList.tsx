@@ -85,7 +85,7 @@ export const TransferList = ({
   }
 
   const handleAllLeft = () => {
-    setLeft(left.concat(right.filter((item) => availableItems.includes(item))))
+    setLeft(left.concat(right.filter((item) => availableItems.find((a) => a.value === item.value))))
     setRight([])
     onChange && onChange([])
   }
