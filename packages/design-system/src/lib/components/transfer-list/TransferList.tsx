@@ -68,15 +68,17 @@ export const TransferList = ({
     setLeft([])
   }
 
-  const handleCheckedRight = () => {
+  const handleCheckedToRight = () => {
     setRight(right.concat(leftChecked))
     onChange && onChange(right.concat(leftChecked))
     setLeft(not(left, leftChecked))
     setChecked(not(checked, leftChecked))
   }
 
-  const handleCheckedLeft = () => {
-    setLeft(left.concat(rightChecked.filter((item) => availableItems.includes(item))))
+  const handleCheckedToLeft = () => {
+    setLeft(
+      left.concat(rightChecked.filter((item) => availableItems.find((a) => a.value === item.value)))
+    )
     setRight(not(right, rightChecked))
     onChange && onChange(not(right, rightChecked))
     setChecked(not(checked, rightChecked))
@@ -120,7 +122,7 @@ export const TransferList = ({
         <Button
           size="sm"
           type="button"
-          onClick={handleCheckedRight}
+          onClick={handleCheckedToRight}
           disabled={leftChecked.length === 0 || disabled}
           icon={<ChevronRight />}
           aria-label="move selected to right"
@@ -130,7 +132,7 @@ export const TransferList = ({
         <Button
           size="sm"
           type="button"
-          onClick={handleCheckedLeft}
+          onClick={handleCheckedToLeft}
           disabled={rightChecked.length === 0 || disabled}
           icon={<ChevronLeft />}
           aria-label="move selected to left"
