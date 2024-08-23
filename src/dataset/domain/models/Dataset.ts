@@ -231,6 +231,12 @@ export class DatasetVersionNumber {
     }
     return `${this.majorNumber}.${this.minorNumber}`
   }
+  toSearchParam(): string {
+    if (this.majorNumber === undefined || this.minorNumber === undefined) {
+      return DatasetNonNumericVersionSearchParam.DRAFT
+    }
+    return this.toString()
+  }
 }
 
 export class DatasetVersion {
