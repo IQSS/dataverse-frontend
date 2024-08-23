@@ -901,5 +901,102 @@ describe('CollectionForm', () => {
         cy.findByLabelText('Topic Classification Term').should('exist')
       })
     })
+
+    it('should populate the select to filter facets by blocks correctly', () => {
+      cy.get('@useFacetsFromParentCheckbox').uncheck({ force: true })
+
+      cy.findByTestId('select-facets-by-block').within(() => {
+        cy.findByLabelText('Toggle options menu').click()
+
+        cy.findAllByText('All Metadata Fields').should('have.length', 2)
+
+        cy.findByText('Citation Metadata').should('have.length', 1)
+        cy.findByText('Geospatial Metadata').should('have.length', 1)
+        cy.findByText('Astronomy and Astrophysics Metadata').should('have.length', 1)
+        cy.findByText('Life Sciences Metadata').should('have.length', 1)
+        cy.findByText('Journal Metadata').should('have.length', 1)
+        cy.findByText('Social Science and Humanities Metadata').should('have.length', 1)
+      })
+    })
+
+    it('should filter the facets by blocks correctly', () => {
+      cy.get('@useFacetsFromParentCheckbox').uncheck({ force: true })
+
+      cy.findByTestId('select-facets-by-block').within(() => {
+        cy.findByLabelText('Toggle options menu').click()
+
+        cy.findByText('Journal Metadata').click()
+      })
+
+      cy.get('@leftList').children().should('have.length', 4)
+
+      cy.get('@leftList').within(() => {
+        cy.findByLabelText('Journal Volume').should('exist')
+        cy.findByLabelText('Journal Issue').should('exist')
+        cy.findByLabelText('Journal Publication Date').should('exist')
+        cy.findByLabelText('Type of Article').should('exist')
+      })
+
+      cy.findByTestId('select-facets-by-block').within(() => {
+        cy.findByLabelText('Toggle options menu').click()
+
+        cy.findByText('Social Science and Humanities Metadata').click()
+      })
+
+      cy.get('@leftList').children().should('have.length', 5)
+
+      cy.get('@leftList').within(() => {
+        cy.findByLabelText('Unit of Analysis').should('exist')
+        cy.findByLabelText('Universe').should('exist')
+        cy.findByLabelText('Time Method').should('exist')
+        cy.findByLabelText('Frequency').should('exist')
+        cy.findByLabelText('Response Rate').should('exist')
+      })
+
+      cy.findByTestId('select-facets-by-block').within(() => {
+        cy.findByLabelText('Toggle options menu').click()
+
+        cy.findByText('All Metadata Fields').click()
+      })
+
+      cy.get('@leftList')
+        .children()
+        .should(
+          'have.length',
+          allFacetableMetadataFields.length - defaultCollectionFacetsMock.length
+        )
+    })
+
+    it('should reset the select to filter by facets when checking the checkbox', () => {
+      cy.get('@useFacetsFromParentCheckbox').uncheck({ force: true })
+
+      cy.findByTestId('select-facets-by-block').within(() => {
+        cy.findByLabelText('Toggle options menu').click()
+
+        cy.findByText('Journal Metadata').click()
+      })
+
+      cy.get('@leftList').children().should('have.length', 4)
+
+      cy.get('@leftList').within(() => {
+        cy.findByLabelText('Journal Volume').should('exist')
+        cy.findByLabelText('Journal Issue').should('exist')
+        cy.findByLabelText('Journal Publication Date').should('exist')
+        cy.findByLabelText('Type of Article').should('exist')
+      })
+
+      cy.get('@useFacetsFromParentCheckbox').check({ force: true })
+
+      cy.get('@leftList')
+        .children()
+        .should(
+          'have.length',
+          allFacetableMetadataFields.length - defaultCollectionFacetsMock.length
+        )
+
+      cy.findByTestId('select-facets-by-block').within(() => {
+        cy.findByText('All Metadata Fields').should('exist')
+      })
+    })
   })
 })

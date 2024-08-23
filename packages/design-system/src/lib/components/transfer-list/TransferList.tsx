@@ -42,9 +42,7 @@ export const TransferList = ({
 }: TransferListProps) => {
   const [checked, setChecked] = useState<TransferListItem[]>([])
   const [left, setLeft] = useState<TransferListItem[]>(not(availableItems, defaultSelected))
-  const [right, setRight] = useState<TransferListItem[]>(
-    intersection(availableItems, defaultSelected)
-  )
+  const [right, setRight] = useState<TransferListItem[]>(defaultSelected)
 
   const leftChecked = intersection(checked, left)
   const rightChecked = intersection(checked, right)

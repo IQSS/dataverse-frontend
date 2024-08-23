@@ -106,7 +106,9 @@ export const BrowseSearchFacetsSection = ({
             resetAvailableItems={resetAvailableItems}
           />
 
-          <div className={styles['select-facets-by-block-container']}>
+          <div
+            className={styles['select-facets-by-block-container']}
+            data-testid="select-facets-by-block">
             <SelectAdvanced
               options={selectOptions}
               onChange={handleChangeSelectedBlock}
