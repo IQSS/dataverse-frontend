@@ -17,7 +17,7 @@ import {
 import { CollectionFormHelper } from '../CollectionFormHelper'
 import { CollectionFormFacet, FACET_IDS_FIELD, USE_FACETS_FROM_PARENT } from '../CollectionForm'
 import { FacetsFromParentCheckbox } from './FacetsFromParentCheckbox'
-import style from './BrowseSearchFacetsSection.module.scss'
+import styles from './BrowseSearchFacetsSection.module.scss'
 
 interface BrowseSearchFacetsSectionProps {
   defaultCollectionFacets: CollectionFormFacet[]
@@ -106,7 +106,7 @@ export const BrowseSearchFacetsSection = ({
             resetAvailableItems={resetAvailableItems}
           />
 
-          <div style={{ width: 350 }}>
+          <div className={styles['select-facets-by-block-container']}>
             <SelectAdvanced
               options={selectOptions}
               onChange={handleChangeSelectedBlock}
@@ -117,7 +117,7 @@ export const BrowseSearchFacetsSection = ({
             />
           </div>
 
-          <div className={style['transfer-list-container']} data-testid="transfer-list-container">
+          <div className={styles['transfer-list-container']} data-testid="transfer-list-container">
             <Controller
               name={FACET_IDS_FIELD}
               control={control}
