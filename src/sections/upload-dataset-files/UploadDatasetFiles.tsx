@@ -11,6 +11,8 @@ import { uploadFile } from '../../files/domain/useCases/uploadFile'
 import { UploadedFiles } from './uploaded-files-list/UploadedFiles'
 import { addUploadedFiles } from '../../files/domain/useCases/addUploadedFiles'
 import { md5 } from 'js-md5'
+import { useNavigate } from 'react-router-dom'
+import { Route } from '../Route.enum'
 
 interface UploadDatasetFilesProps {
   fileRepository: FileRepository
@@ -23,6 +25,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
   const [fileUploaderState, setState] = useState(FileUploadTools.createNewState([]))
   const [uploadingToCancelMap, setUploadingToCancelMap] = useState(new Map<string, () => void>())
   const [semaphore, setSemaphore] = useState(new Set<string>())
+  const navigate = useNavigate()
 
   const sleep = (delay: number) => new Promise((res) => setTimeout(res, delay))
   const limit = 6
@@ -156,7 +159,10 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
 
   const addFiles = (state: FileUploadState[]) => {
     setIsLoading(true)
-    const done = () => setIsLoading(false)
+    const done = () => {
+      setIsLoading(false)
+      navigate(`${Route.UPLOAD_DATASET_FILES}?persistentId=${dataset?.persistentId as string}`)
+    }
     addUploadedFiles(fileRepository, dataset?.persistentId as string, state, done)
     cleanAllState()
   }
