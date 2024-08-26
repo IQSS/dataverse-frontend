@@ -4,6 +4,7 @@ import { Stack } from '@iqss/dataverse-design-system'
 import { LinkToPage } from '../../../shared/link-to-page/LinkToPage'
 import { Route } from '../../../Route.enum'
 import { CollectionPreview } from '../../../../collection/domain/models/CollectionPreview'
+import { DvObjectType } from '../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 interface CollectionCardInfoProps {
   collectionPreview: CollectionPreview
@@ -19,6 +20,7 @@ export function CollectionCardInfo({ collectionPreview }: CollectionCardInfoProp
           </span>
           {collectionPreview.parentCollectionName && collectionPreview.parentCollectionId && (
             <LinkToPage
+              type={DvObjectType.COLLECTION}
               page={Route.COLLECTIONS}
               searchParams={{ id: collectionPreview.parentCollectionId.toString() }}>
               {collectionPreview.parentCollectionName}

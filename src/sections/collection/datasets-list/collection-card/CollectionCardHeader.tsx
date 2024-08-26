@@ -2,9 +2,10 @@ import { LinkToPage } from '../../../shared/link-to-page/LinkToPage'
 import { Route } from '../../../Route.enum'
 import { CollectionPreview } from '../../../../collection/domain/models/CollectionPreview'
 import styles from './CollectionCard.module.scss'
-import { Icon, IconName } from '@iqss/dataverse-design-system'
+import { Badge, Icon, IconName } from '@iqss/dataverse-design-system'
 import { DatasetLabels } from '../../../dataset/dataset-labels/DatasetLabels'
 import { CollectionCardHelper } from './CollectionCardHelper'
+import { DvObjectType } from '../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 interface CollectionCardHeaderProps {
   collectionPreview: CollectionPreview
@@ -16,6 +17,7 @@ export function CollectionCardHeader({ collectionPreview }: CollectionCardHeader
       <div className={styles.header}>
         <div className={styles.title}>
           <LinkToPage
+            type={DvObjectType.COLLECTION}
             page={Route.COLLECTIONS}
             searchParams={{ id: collectionPreview.id.toString() }}>
             {collectionPreview.name}
@@ -23,8 +25,13 @@ export function CollectionCardHeader({ collectionPreview }: CollectionCardHeader
           {collectionPreview.affiliation && (
             <span className={styles.affiliation}> ({collectionPreview.affiliation})</span>
           )}
-          <DatasetLabels labels={CollectionCardHelper.getLabel(collectionPreview.isReleased)} />
+          {!collectionPreview.isReleased && (
+            <div className={styles.badge}>
+              <Badge variant="warning">Unpublished</Badge>
+            </div>
+          )}
         </div>
+
         <div className={styles.icon}>
           <Icon name={IconName.COLLECTION} />
         </div>
