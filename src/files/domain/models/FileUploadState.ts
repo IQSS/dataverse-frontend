@@ -1,4 +1,6 @@
+import { UploadedFileDTO } from '@iqss/dataverse-client-javascript'
 import { FileSize, FileSizeUnit } from './FileMetadata'
+import { UploadedFileDTOMapper } from '../../infrastructure/mappers/UploadedFileDTOMapper'
 
 export interface FileUploadState {
   progress: number
@@ -138,6 +140,21 @@ export class FileUploadTools {
   static delete(file: File, oldState: FileUploaderState): FileUploaderState {
     oldState.state.delete(this.key(file))
     return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
+  }
+
+  static mapToUploadedFilesDTOs(state: FileUploadState[]): UploadedFileDTO[] {
+    return state.map((uploadedFile) =>
+      UploadedFileDTOMapper.toUploadedFileDTO(
+        uploadedFile.fileName,
+        uploadedFile.description,
+        uploadedFile.fileDir,
+        uploadedFile.tags,
+        uploadedFile.restricted,
+        uploadedFile.storageId as string,
+        uploadedFile.checksumValue as string,
+        uploadedFile.fileType
+      )
+    )
   }
 
   private static toNewState(

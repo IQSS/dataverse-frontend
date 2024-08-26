@@ -33,7 +33,6 @@ import { FilePermissions } from '../domain/models/FilePermissions'
 import { JSFilePermissionsMapper } from './mappers/JSFilePermissionsMapper'
 import { FilesWithCount } from '../domain/models/FilesWithCount'
 import { FileHolder } from '../domain/models/FileHolder'
-import { FileUploadState } from '../domain/models/FileUploadState'
 
 const includeDeaccessioned = true
 
@@ -302,18 +301,7 @@ export class FileJSDataverseRepository implements FileRepository {
       })
   }
 
-  addUploadedFiles(datasetId: number | string, files: FileUploadState[]): Promise<void> {
-    const uploadedFiles: UploadedFileDTO[] = files.map((x) => ({
-      fileName: x.fileName,
-      description: x.description,
-      directoryLabel: x.fileDir,
-      categories: x.tags,
-      restrict: x.restricted,
-      storageId: x.storageId as string,
-      checksumValue: x.checksumValue as string,
-      checksumType: 'md5',
-      mimeType: x.fileType
-    }))
+  addUploadedFiles(datasetId: number | string, uploadedFiles: UploadedFileDTO[]): Promise<void> {
     return addUploadedFilesToDataset.execute(datasetId, uploadedFiles)
   }
 }

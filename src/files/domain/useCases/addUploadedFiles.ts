@@ -1,10 +1,10 @@
-import { FileUploadState } from '../models/FileUploadState'
+import { UploadedFileDTO } from '@iqss/dataverse-client-javascript'
 import { FileRepository } from '../repositories/FileRepository'
 
 export function addUploadedFiles(
   fileRepository: FileRepository,
   datasetId: number | string,
-  files: FileUploadState[],
+  files: UploadedFileDTO[],
   done: () => void
 ): void {
   fileRepository

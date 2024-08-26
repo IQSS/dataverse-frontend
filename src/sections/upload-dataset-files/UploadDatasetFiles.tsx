@@ -163,7 +163,8 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
       setIsLoading(false)
       navigate(`${Route.DATASETS}?persistentId=${dataset?.persistentId as string}&version=:draft`)
     }
-    addUploadedFiles(fileRepository, dataset?.persistentId as string, state, done)
+    const uploadedFiles = FileUploadTools.mapToUploadedFilesDTOs(state)
+    addUploadedFiles(fileRepository, dataset?.persistentId as string, uploadedFiles, done)
     cleanAllState()
   }
 

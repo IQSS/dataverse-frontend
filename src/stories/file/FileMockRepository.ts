@@ -13,7 +13,7 @@ import { FilePreview } from '../../files/domain/models/FilePreview'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { FilesWithCount } from '../../files/domain/models/FilesWithCount'
 import { FileHolder } from '../../files/domain/models/FileHolder'
-import { FileUploadState } from '../../files/domain/models/FileUploadState'
+import { UploadedFileDTO } from '@iqss/dataverse-client-javascript'
 
 export class FileMockRepository implements FileRepository {
   constructor(public readonly fileMock?: File) {}
@@ -107,7 +107,7 @@ export class FileMockRepository implements FileRepository {
     return res()
   }
 
-  addUploadedFiles(_datasetId: number | string, _files: FileUploadState[]): Promise<void> {
+  addUploadedFiles(_datasetId: number | string, _files: UploadedFileDTO[]): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()
