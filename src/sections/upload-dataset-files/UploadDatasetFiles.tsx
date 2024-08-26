@@ -10,9 +10,17 @@ import { FileUploadState, FileUploadTools } from '../../files/domain/models/File
 import { uploadFile } from '../../files/domain/useCases/uploadFile'
 import { UploadedFiles } from './uploaded-files-list/UploadedFiles'
 import { addUploadedFile, addUploadedFiles } from '../../files/domain/useCases/addUploadedFiles'
+import { Alert } from '@iqss/dataverse-design-system'
+import { AlertVariant } from '@iqss/dataverse-design-system/src/lib/components/alert/AlertVariant'
 
 interface UploadDatasetFilesProps {
   fileRepository: FileRepository
+}
+
+interface FileUploadAlert {
+  key: string
+  variant: AlertVariant
+  message: string
 }
 
 export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDatasetFilesProps) => {
@@ -22,6 +30,13 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
   const [fileUploaderState, setState] = useState(FileUploadTools.createNewState([]))
   const [uploadingToCancelMap, setUploadingToCancelMap] = useState(new Map<string, () => void>())
   const [semaphore, setSemaphore] = useState(new Set<string>())
+  const [alerts, setAlerts] = useState<FileUploadAlert[]>([])
+  let i = 0
+  const addAlert = (variant: AlertVariant, message: string) =>
+    setAlerts((current) => [
+      ...current,
+      { key: (i++).toString(), variant: variant, message: message }
+    ])
 
   const sleep = (delay: number) => new Promise((res) => setTimeout(res, delay))
   const limit = 6
@@ -169,6 +184,11 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
             actionItemText={t('breadcrumbActionItem')}
           />
           <article>
+            {alerts.map((alert) => (
+              <Alert variant={alert.variant} key={alert.key}>
+                {alert.message}
+              </Alert>
+            ))}
             <FileUploader
               upload={upload}
               cancelTitle={t('cancel')}
@@ -177,6 +197,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
               fileUploaderState={fileUploaderState}
               cancelUpload={cancelUpload}
               cleanFileState={cleanFileState}
+              addAlert={addAlert}
             />
             <UploadedFiles
               fileUploadState={fileUploaderState.uploaded}

@@ -4,6 +4,8 @@ import { ChangeEventHandler, DragEventHandler, useEffect, useRef, useState } fro
 import { Plus, X } from 'react-bootstrap-icons'
 import { FileUploadTools, FileUploaderState } from '../../files/domain/models/FileUploadState'
 import styles from './FileUploader.module.scss'
+import { AlertVariant } from '@iqss/dataverse-design-system/src/lib/components/alert/AlertVariant'
+import { useTranslation } from 'react-i18next'
 
 export interface FileUploaderProps {
   upload: (files: File[]) => void
@@ -13,6 +15,7 @@ export interface FileUploaderProps {
   fileUploaderState: FileUploaderState
   cancelUpload: (file: File) => void
   cleanFileState: (file: File) => void
+  addAlert: (variant: AlertVariant, message: string) => void
 }
 
 export function FileUploader({
@@ -22,11 +25,13 @@ export function FileUploader({
   selectText,
   fileUploaderState,
   cancelUpload,
-  cleanFileState
+  cleanFileState,
+  addAlert
 }: FileUploaderProps) {
   const theme = useTheme()
   const [files, setFiles] = useState<File[]>([])
   const [bgColor, setBackgroundColor] = useState(theme.color.primaryTextColor)
+  const { t } = useTranslation('uploadDatasetFiles')
 
   const addFiles = (selectedFiles: FileList | null) => {
     if (selectedFiles && selectedFiles.length > 0) {
@@ -45,6 +50,8 @@ export function FileUploader({
   const addFile = (file: File) => {
     if (!files.some((x) => FileUploadTools.key(x) === FileUploadTools.key(file))) {
       setFiles((oldFiles) => [...oldFiles, file])
+    } else {
+      addAlert('danger', t('alerts.fileNameNotUnique', { name: FileUploadTools.key(file) }))
     }
   }
 
