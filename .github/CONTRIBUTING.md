@@ -3,7 +3,7 @@
 > All contributions to this project will be released under the Apache License, Version 2.0.
 > By submitting a pull request or filing a bug, issue, or
 > feature request, you are agreeing to comply with this waiver of copyright interest.
-> Details can be found in our [LICENSE](LICENSE).
+> Details can be found in our [LICENSE](/LICENSE).
 
 Thank you for your interest in contributing to Dataverse Frontend! We are open to contributions from everyone. You don't
 need permission to participate. Just jump in. If you have questions, please reach out using one or more of the channels
@@ -81,7 +81,7 @@ guidelines to help:
 ### How to start
 
 After you’ve forked the Dataverse Frontend repository, you should follow the Getting Started instructions in the
-[Developer Guide](DEVELOPER_GUIDE.md) to get your local environment up and running.
+[Developer Guide](/DEVELOPER_GUIDE.md) to get your local environment up and running.
 
 ### GitHub reviews & assignments
 

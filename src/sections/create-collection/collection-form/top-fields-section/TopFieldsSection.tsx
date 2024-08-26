@@ -119,7 +119,6 @@ export const TopFieldsSection = () => {
                   onChange={onChange}
                   isInvalid={invalid}
                   ref={ref}
-                  disabled
                 />
                 <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
               </Col>
@@ -147,7 +146,6 @@ export const TopFieldsSection = () => {
                   isInvalid={invalid}
                   ref={ref}
                   disabled>
-                  {/* TODO:ME What are this options? do they come from a configuration? */}
                   <option value="">Select...</option>
                   {Object.values(collectionStorageOptions).map((type) => (
                     <option value={type} key={type}>
@@ -211,7 +209,6 @@ export const TopFieldsSection = () => {
                   onChange={onChange}
                   isInvalid={invalid}
                   ref={ref}
-                  disabled
                 />
                 <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
               </Col>

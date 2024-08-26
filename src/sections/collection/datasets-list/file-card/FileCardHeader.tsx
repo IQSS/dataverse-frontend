@@ -6,6 +6,7 @@ import { DatasetLabels } from '../../../dataset/dataset-labels/DatasetLabels'
 import { FileCardIcon } from './FileCardIcon'
 import { FileType } from '../../../../files/domain/models/FileMetadata'
 import { FileCardHelper } from './FileCardHelper'
+import { DvObjectType } from '../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 interface FileCardHeaderProps {
   filePreview: FilePreview
@@ -18,6 +19,7 @@ export function FileCardHeader({ filePreview }: FileCardHeaderProps) {
       <div className={styles.title}>
         <LinkToPage
           page={Route.FILES}
+          type={DvObjectType.FILE}
           searchParams={FileCardHelper.getFileSearchParams(
             filePreview.id,
             filePreview.datasetPublishingStatus

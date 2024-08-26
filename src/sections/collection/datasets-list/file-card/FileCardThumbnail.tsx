@@ -4,6 +4,7 @@ import { Route } from '../../../Route.enum'
 import { FileThumbnail } from '../../../dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/file-thumbnail/FileThumbnail'
 import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { FileCardHelper } from './FileCardHelper'
+import { DvObjectType } from '../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 interface FileCardThumbnailProps {
   filePreview: FilePreview
@@ -15,6 +16,7 @@ export function FileCardThumbnail({ filePreview }: FileCardThumbnailProps) {
     <div className={styles.thumbnail}>
       <LinkToPage
         page={Route.FILES}
+        type={DvObjectType.FILE}
         searchParams={FileCardHelper.getFileSearchParams(
           filePreview.id,
           filePreview.datasetPublishingStatus

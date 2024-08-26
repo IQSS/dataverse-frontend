@@ -1,6 +1,6 @@
 // Base colors
-$dv-brand-color: #C55B28;
-$dv-primary-color: #337AB7;
+$dv-brand-color: #c55b28;
+$dv-primary-color: #337ab7;
 $dv-secondary-color: #e0e0e0;
 $dv-success-color: #3c763d;
 $dv-danger-color: #a94442;
@@ -10,7 +10,7 @@ $dv-success-box-color: #e0e0e0;
 $dv-danger-box-color: #f2dede;
 $dv-warning-box-color: #fcf8e3;
 $dv-info-box-color: #d9edf7;
-$dv-info-border-color: #428BCA;
+$dv-info-border-color: #428bca;
 
 $dv-collection-border-color: #c55b28;
 $dv-dataset-border-color: #428BCA;
@@ -26,13 +26,16 @@ $dv-secondary-text-color: $dv-text-color;
 $dv-headings-color: #333;
 
 // Link colors
-$dv-link-color: #3174AF;
+$dv-link-color: #3174af;
 $dv-link-hover-color: #23527c;
 $dv-tooltip-color: #99bcdb;
 $dv-tooltip-hover-color: #337ab7;
 
 // Button colors
-$dv-button-border-color: #CCC;
+$dv-button-border-color: #ccc;
+
+// Border colors
+$dv-border-color: #dee2e6;
 
 :export {
   brand: $dv-brand-color;
@@ -56,4 +59,5 @@ $dv-button-border-color: #CCC;
   buttonBorderColor: $dv-button-border-color;
   tooltipFillColor: $dv-tooltip-color;
   tooltipBorderColor: $dv-tooltip-hover-color;
+  borderColor: $dv-border-color;
 }

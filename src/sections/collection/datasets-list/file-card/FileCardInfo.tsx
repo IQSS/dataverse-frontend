@@ -7,6 +7,7 @@ import { Route } from '../../../Route.enum'
 import { FileChecksum } from '../../../dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileChecksum'
 import { FileTabularData } from '../../../dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileTabularData'
 import { FileCardHelper } from './FileCardHelper'
+import { DvObjectType } from '../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 interface FileCardInfoProps {
   filePreview: FilePreview
@@ -21,6 +22,7 @@ export function FileCardInfo({ filePreview, persistentId }: FileCardInfoProps) {
           {DateHelper.toDisplayFormat(filePreview.metadata.depositDate)} -{' '}
           <LinkToPage
             page={Route.DATASETS}
+            type={DvObjectType.DATASET}
             searchParams={FileCardHelper.getDatasetSearchParams(
               persistentId,
               filePreview.datasetPublishingStatus

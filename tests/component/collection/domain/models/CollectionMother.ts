@@ -14,6 +14,7 @@ export class CollectionMother {
         : undefined,
       affiliation: faker.datatype.boolean() ? faker.lorem.words(3) : undefined,
       hierarchy: UpwardHierarchyNodeMother.createCollection(),
+      inputLevels: [],
       ...props
     }
   }
