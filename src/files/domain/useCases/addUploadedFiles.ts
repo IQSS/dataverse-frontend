@@ -9,8 +9,8 @@ export function addUploadedFiles(
 ): void {
   fileRepository
     .addUploadedFiles(datasetId, files)
+    .then(done)
     .catch((error: Error) => {
       throw new Error(error.message)
     })
-    .finally(done)
 }
