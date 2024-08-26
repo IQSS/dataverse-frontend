@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { md5 } from 'js-md5'
+import { useNavigate } from 'react-router-dom'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { useLoading } from '../loading/LoadingContext'
 import { useDataset } from '../dataset/DatasetContext'
@@ -10,8 +12,6 @@ import { FileUploadState, FileUploadTools } from '../../files/domain/models/File
 import { uploadFile } from '../../files/domain/useCases/uploadFile'
 import { UploadedFiles } from './uploaded-files-list/UploadedFiles'
 import { addUploadedFiles } from '../../files/domain/useCases/addUploadedFiles'
-import { md5 } from 'js-md5'
-import { useNavigate } from 'react-router-dom'
 import { Route } from '../Route.enum'
 
 interface UploadDatasetFilesProps {
