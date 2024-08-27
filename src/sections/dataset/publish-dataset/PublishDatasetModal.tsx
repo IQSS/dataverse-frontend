@@ -17,34 +17,36 @@ import { PublishDatasetHelpText } from './PublishDatasetHelpText'
 import styles from './PublishDatasetModal.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { Route } from '../../Route.enum'
-import { UseGetVersionLabels } from './useGetVersionLabels'
 
-interface PublishDatasetModalProps {
+interface ReleaseDatasetModalProps {
   show: boolean
   repository: DatasetRepository
   persistentId: string
-  releasedVersionExists: boolean
+  releasedVersionExists: true
+  nextMajorVersion: string
+  nextMinorVersion: string
+  handleClose: () => void
+}
+interface BaseDatasetModalProps {
+  show: boolean
+  repository: DatasetRepository
+  persistentId: string
+  releasedVersionExists: false
   handleClose: () => void
 }
 
-export function PublishDatasetModal({
-  show,
-  repository,
-  persistentId,
-  releasedVersionExists,
-  handleClose
-}: PublishDatasetModalProps) {
+type PublishDatasetModalProps = BaseDatasetModalProps | ReleaseDatasetModalProps
+export function PublishDatasetModal(props: PublishDatasetModalProps) {
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const navigate = useNavigate()
-  const { minorVersion, majorVersion } = UseGetVersionLabels(repository, persistentId)
   const { submissionStatus, submitPublish, publishError } = usePublishDataset(
-    repository,
-    persistentId,
+    props.repository,
+    props.persistentId,
     onPublishSucceed
   )
   const [selectedVersionUpdateType, setSelectedVersionUpdateType] = useState(
-    releasedVersionExists ? VersionUpdateType.MINOR : VersionUpdateType.MAJOR
+    props.releasedVersionExists ? VersionUpdateType.MINOR : VersionUpdateType.MAJOR
   )
   const handleVersionUpdateTypeChange = (event: React.MouseEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement
@@ -53,22 +55,22 @@ export function PublishDatasetModal({
 
   function onPublishSucceed() {
     navigate(
-      `${Route.DATASETS}?persistentId=${persistentId}&${QueryParamsKeys.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
+      `${Route.DATASETS}?persistentId=${props.persistentId}&${QueryParamsKeys.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
       {
         state: { publishInProgress: true },
         replace: true
       }
     )
-    handleClose()
+    props.handleClose()
   }
 
   return (
-    <Modal show={show} onHide={handleClose} size="lg">
+    <Modal show={props.show} onHide={props.handleClose} size="lg">
       <Modal.Header>
         <Modal.Title>Publish Dataset</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <PublishDatasetHelpText releasedVersionExists={releasedVersionExists} />
+        <PublishDatasetHelpText releasedVersionExists={props.releasedVersionExists} />
         <License
           license={{
             name: defaultLicense.name,
@@ -76,7 +78,7 @@ export function PublishDatasetModal({
             iconUri: defaultLicense.iconUri
           }}
         />
-        {releasedVersionExists && (
+        {props.releasedVersionExists && (
           <>
             <p>{t('publish.selectVersion')}</p>
             <Form.RadioGroup title={'Update Version'}>
@@ -84,14 +86,14 @@ export function PublishDatasetModal({
                 defaultChecked
                 onClick={handleVersionUpdateTypeChange}
                 name="update-type"
-                label={t('publish.minorVersion') + ` (${minorVersion})`}
+                label={t('publish.minorVersion') + ` (${props.nextMinorVersion})`}
                 id="update-type-minor"
                 value={VersionUpdateType.MINOR}
               />
               <Form.Group.Radio
                 onClick={handleVersionUpdateTypeChange}
                 name="update-type"
-                label={t('publish.majorVersion') + ` (${majorVersion})`}
+                label={t('publish.majorVersion') + ` (${props.nextMajorVersion})`}
                 id="update-type-major"
                 value={VersionUpdateType.MAJOR}
               />
@@ -127,7 +129,7 @@ export function PublishDatasetModal({
           withSpacing
           variant="secondary"
           type="button"
-          onClick={handleClose}
+          onClick={props.handleClose}
           disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
           {t('publish.cancelButton')}
         </Button>

@@ -35,9 +35,12 @@ export const ReleasedVersionExists: Story = {
       repository={new DatasetMockRepository()}
       persistentId={'test'}
       releasedVersionExists={true}
+      nextMinorVersion={'1.1'}
+      nextMajorVersion={'2.0'}
       handleClose={() => {}}></PublishDatasetModal>
   )
 }
+
 export const Superuser: Story = {
   decorators: [WithLoggedInSuperUser],
   render: () => (
@@ -46,6 +49,8 @@ export const Superuser: Story = {
       repository={new DatasetMockRepository()}
       persistentId={'test'}
       releasedVersionExists={true}
+      nextMinorVersion={'1.1'}
+      nextMajorVersion={'2.0'}
       handleClose={() => {}}></PublishDatasetModal>
   )
 }
