@@ -15,9 +15,9 @@ export function UseGetVersionLabels(
   const [majorVersion, setMajorVersion] = useState<string>('')
 
   useEffect(() => {
-    const fetchVersions = () => {
+    const fetchVersions = async () => {
       try {
-        repository.getByPersistentId(persistentId).then((dataset) => {
+        await repository.getByPersistentId(persistentId).then((dataset) => {
           const majorVersionNumber = dataset?.version.number.majorNumber ?? 0
           const minorVersionNumber = dataset?.version.number.minorNumber ?? 0
 
@@ -29,7 +29,7 @@ export function UseGetVersionLabels(
       }
     }
 
-    fetchVersions()
+    void fetchVersions()
   }, [repository, persistentId])
 
   return {
