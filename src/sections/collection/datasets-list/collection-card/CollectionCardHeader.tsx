@@ -3,8 +3,6 @@ import { Route } from '../../../Route.enum'
 import { CollectionPreview } from '../../../../collection/domain/models/CollectionPreview'
 import styles from './CollectionCard.module.scss'
 import { Badge, Icon, IconName } from '@iqss/dataverse-design-system'
-import { DatasetLabels } from '../../../dataset/dataset-labels/DatasetLabels'
-import { CollectionCardHelper } from './CollectionCardHelper'
 import { DvObjectType } from '../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 interface CollectionCardHeaderProps {
