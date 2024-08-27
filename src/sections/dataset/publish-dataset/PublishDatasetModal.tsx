@@ -18,59 +18,63 @@ import styles from './PublishDatasetModal.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { Route } from '../../Route.enum'
 
-interface ReleaseDatasetModalProps {
+interface PublishDatasetModalProps {
   show: boolean
   repository: DatasetRepository
   persistentId: string
-  releasedVersionExists: true
-  nextMajorVersion: string
-  nextMinorVersion: string
-  handleClose: () => void
-}
-interface BaseDatasetModalProps {
-  show: boolean
-  repository: DatasetRepository
-  persistentId: string
-  releasedVersionExists: false
+  releasedVersionExists: boolean
+  nextMajorVersion: string | undefined
+  nextMinorVersion: string | undefined
   handleClose: () => void
 }
 
-type PublishDatasetModalProps = BaseDatasetModalProps | ReleaseDatasetModalProps
-export function PublishDatasetModal(props: PublishDatasetModalProps) {
+export function PublishDatasetModal({
+  show,
+  repository,
+  persistentId,
+  releasedVersionExists,
+  nextMajorVersion,
+  nextMinorVersion,
+  handleClose
+}: PublishDatasetModalProps) {
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const navigate = useNavigate()
   const { submissionStatus, submitPublish, publishError } = usePublishDataset(
-    props.repository,
-    props.persistentId,
+    repository,
+    persistentId,
     onPublishSucceed
   )
   const [selectedVersionUpdateType, setSelectedVersionUpdateType] = useState(
-    props.releasedVersionExists ? VersionUpdateType.MINOR : VersionUpdateType.MAJOR
+    releasedVersionExists ? VersionUpdateType.MINOR : VersionUpdateType.MAJOR
   )
   const handleVersionUpdateTypeChange = (event: React.MouseEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement
     setSelectedVersionUpdateType(target.value as VersionUpdateType)
   }
-
+  const nextMajorVersionString = nextMajorVersion ? nextMajorVersion : ''
+  const nextMinorVersionString = nextMinorVersion ? nextMinorVersion : ''
   function onPublishSucceed() {
     navigate(
-      `${Route.DATASETS}?persistentId=${props.persistentId}&${QueryParamsKeys.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
+      `${Route.DATASETS}?persistentId=${persistentId}&${QueryParamsKeys.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
       {
         state: { publishInProgress: true },
         replace: true
       }
     )
-    props.handleClose()
+    handleClose()
   }
-
+  if (releasedVersionExists && (!nextMajorVersion || !nextMinorVersion)) {
+    console.log('Error: nextMajorVersion or nextMinorVersion is missing')
+    return null
+  }
   return (
-    <Modal show={props.show} onHide={props.handleClose} size="lg">
+    <Modal show={show} onHide={handleClose} size="lg">
       <Modal.Header>
         <Modal.Title>Publish Dataset</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <PublishDatasetHelpText releasedVersionExists={props.releasedVersionExists} />
+        <PublishDatasetHelpText releasedVersionExists={releasedVersionExists} />
         <License
           license={{
             name: defaultLicense.name,
@@ -78,7 +82,7 @@ export function PublishDatasetModal(props: PublishDatasetModalProps) {
             iconUri: defaultLicense.iconUri
           }}
         />
-        {props.releasedVersionExists && (
+        {releasedVersionExists && (
           <>
             <p>{t('publish.selectVersion')}</p>
             <Form.RadioGroup title={'Update Version'}>
@@ -86,14 +90,14 @@ export function PublishDatasetModal(props: PublishDatasetModalProps) {
                 defaultChecked
                 onClick={handleVersionUpdateTypeChange}
                 name="update-type"
-                label={t('publish.minorVersion') + ` (${props.nextMinorVersion})`}
+                label={t('publish.minorVersion') + ` (${nextMinorVersionString})`}
                 id="update-type-minor"
                 value={VersionUpdateType.MINOR}
               />
               <Form.Group.Radio
                 onClick={handleVersionUpdateTypeChange}
                 name="update-type"
-                label={t('publish.majorVersion') + ` (${props.nextMajorVersion})`}
+                label={t('publish.majorVersion') + ` (${nextMajorVersionString})`}
                 id="update-type-major"
                 value={VersionUpdateType.MAJOR}
               />
@@ -129,7 +133,7 @@ export function PublishDatasetModal(props: PublishDatasetModalProps) {
           withSpacing
           variant="secondary"
           type="button"
-          onClick={props.handleClose}
+          onClick={handleClose}
           disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
           {t('publish.cancelButton')}
         </Button>
