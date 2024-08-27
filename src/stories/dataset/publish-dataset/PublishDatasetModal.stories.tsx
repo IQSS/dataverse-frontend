@@ -23,6 +23,8 @@ export const Default: Story = {
       repository={new DatasetMockRepository()}
       persistentId={'test'}
       releasedVersionExists={false}
+      nextMinorVersion={undefined}
+      nextMajorVersion={undefined}
       handleClose={() => {}}></PublishDatasetModal>
   )
 }
