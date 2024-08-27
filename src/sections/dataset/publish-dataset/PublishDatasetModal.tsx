@@ -17,6 +17,7 @@ import { PublishDatasetHelpText } from './PublishDatasetHelpText'
 import styles from './PublishDatasetModal.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { Route } from '../../Route.enum'
+import { UseGetVersionLabels } from './useGetVersionLabels'
 
 interface PublishDatasetModalProps {
   show: boolean
@@ -36,7 +37,7 @@ export function PublishDatasetModal({
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const navigate = useNavigate()
-
+  const { minorVersion, majorVersion } = UseGetVersionLabels(repository, persistentId)
   const { submissionStatus, submitPublish, publishError } = usePublishDataset(
     repository,
     persistentId,
@@ -83,14 +84,14 @@ export function PublishDatasetModal({
                 defaultChecked
                 onClick={handleVersionUpdateTypeChange}
                 name="update-type"
-                label={t('publish.minorVersion')}
+                label={t('publish.minorVersion') + ` (${minorVersion})`}
                 id="update-type-minor"
                 value={VersionUpdateType.MINOR}
               />
               <Form.Group.Radio
                 onClick={handleVersionUpdateTypeChange}
                 name="update-type"
-                label={t('publish.majorVersion')}
+                label={t('publish.majorVersion') + ` (${majorVersion})`}
                 id="update-type-major"
                 value={VersionUpdateType.MAJOR}
               />
