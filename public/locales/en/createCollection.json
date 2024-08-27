@@ -48,7 +48,7 @@
     },
     "metadataFields": {
       "sectionLabel": "Metadata Fields",
-      "helperText": "Choose the metadata fields to use in dataset templates and when adding a dataset to this dataverse.",
+      "helperText": "Choose the metadata fields to use in dataset templates and when adding a dataset to this collection.",
       "useMetadataFieldsFrom": "Use metadata fields from",
       "inputLevelsTable": {
         "hideTableAriaLabel": "Hide input levels table",
@@ -61,7 +61,7 @@
     },
     "browseSearchFacets": {
       "label": "Browse/Search Facets",
-      "helperText": "Choose and order the metadata fields to use as facets for browsing datasets and dataverses in this dataverse.",
+      "helperText": "Choose and order the metadata fields to use as facets when browsing this collection.",
       "useBrowseSearchFacetsFrom": "Use browse/search facets from",
       "selectedFacets": "Selected"
     }
