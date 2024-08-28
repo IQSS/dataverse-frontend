@@ -45,25 +45,21 @@ describe('DirectUpload', () => {
     )
 
     expect(storageId).to.be.not.undefined
+    if (storageId == undefined) {
+      throw new Error('storageId is undefined')
+    }
 
     await fileRepository.addUploadedFiles(dataset.persistentId, [
       {
-        progress: 100,
-        progressHidden: false,
-        fileSizeString: '1000 B',
-        fileSize: 1000,
-        fileLastModified: 0,
-        failed: false,
-        done: true,
-        removed: false,
         fileName: 'test.json',
-        fileDir: '',
-        fileType: 'application/json',
-        key: 'test.json',
-        tags: ['tag'],
-        restricted: false,
+        description: 'description text',
+        directoryLabel: '',
+        categories: ['tag'],
+        restrict: false,
         storageId: storageId,
-        checksumValue: 'abc123'
+        checksumValue: 'abc123',
+        checksumType: 'md5',
+        mimeType: 'application/json'
       }
     ])
 
@@ -116,43 +112,35 @@ describe('DirectUpload', () => {
 
     expect(storageId1).to.be.not.undefined
     expect(storageId2).to.be.not.undefined
+    if (storageId1 == undefined) {
+      throw new Error('storageId1 is undefined')
+    }
+    if (storageId2 == undefined) {
+      throw new Error('storageId2 is undefined')
+    }
 
     await fileRepository.addUploadedFiles(dataset.persistentId, [
       {
-        progress: 100,
-        progressHidden: false,
-        fileSizeString: '1000 B',
-        fileSize: 1000,
-        fileLastModified: 0,
-        failed: false,
-        done: true,
-        removed: false,
         fileName: 'test1.json',
-        fileDir: '',
-        fileType: 'application/json',
-        key: 'test1.json',
-        tags: ['tag'],
-        restricted: false,
+        description: 'description text',
+        directoryLabel: '',
+        categories: ['tag'],
+        restrict: false,
         storageId: storageId1,
-        checksumValue: 'abc123'
+        checksumValue: 'abc123',
+        checksumType: 'md5',
+        mimeType: 'application/json'
       },
       {
-        progress: 100,
-        progressHidden: false,
-        fileSizeString: '1000 B',
-        fileSize: 1000,
-        fileLastModified: 0,
-        failed: false,
-        done: true,
-        removed: false,
         fileName: 'test2.json',
-        fileDir: '',
-        fileType: 'application/json',
-        key: 'test2.json',
-        tags: ['tag'],
-        restricted: false,
+        description: 'description text',
+        directoryLabel: '',
+        categories: ['tag'],
+        restrict: false,
         storageId: storageId2,
-        checksumValue: 'def456'
+        checksumValue: 'def456',
+        checksumType: 'md5',
+        mimeType: 'application/json'
       }
     ])
 
