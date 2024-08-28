@@ -5,6 +5,7 @@ import {
 } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { LinkToPage } from '../link-to-page/LinkToPage'
 import { Route } from '../../Route.enum'
+import styles from './BreadcrumbsGenerator.module.scss'
 
 type BreadcrumbGeneratorProps =
   | {
@@ -26,7 +27,7 @@ export function BreadcrumbsGenerator({
   const hierarchyArray = hierarchy.toArray()
 
   return (
-    <Breadcrumb>
+    <Breadcrumb className={styles['breadcrumb-generator']}>
       {hierarchyArray.map((item, index) => {
         const isLast = withActionItem ? false : index === hierarchyArray.length - 1
         const isFirst = index === 0
@@ -38,7 +39,7 @@ export function BreadcrumbsGenerator({
             </Breadcrumb.Item>
           )
         }
-
+        // TODO:ME - Route.HOME should be changed to RouteWithParams.COLLECTIONS() so it goes to root collection
         if (isFirst) {
           return (
             <Breadcrumb.Item
