@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { md5 } from 'js-md5'
+import { useNavigate } from 'react-router-dom'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { useLoading } from '../loading/LoadingContext'
 import { useDataset } from '../dataset/DatasetContext'
@@ -9,7 +11,8 @@ import { FileUploader } from './FileUploader'
 import { FileUploadState, FileUploadTools } from '../../files/domain/models/FileUploadState'
 import { uploadFile } from '../../files/domain/useCases/uploadFile'
 import { UploadedFiles } from './uploaded-files-list/UploadedFiles'
-import { addUploadedFile, addUploadedFiles } from '../../files/domain/useCases/addUploadedFiles'
+import { addUploadedFiles } from '../../files/domain/useCases/addUploadedFiles'
+import { Route } from '../Route.enum'
 import { Alert } from '@iqss/dataverse-design-system'
 import { AlertVariant } from '@iqss/dataverse-design-system/src/lib/components/alert/AlertVariant'
 
@@ -30,6 +33,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
   const [fileUploaderState, setState] = useState(FileUploadTools.createNewState([]))
   const [uploadingToCancelMap, setUploadingToCancelMap] = useState(new Map<string, () => void>())
   const [semaphore, setSemaphore] = useState(new Set<string>())
+  const navigate = useNavigate()
   const [alerts, setAlerts] = useState<FileUploadAlert[]>([])
   let i = 0
   const addAlert = (variant: AlertVariant, message: string) =>
@@ -57,13 +61,34 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     })
   }
 
-  const fileUploadFinished = (file: File) => {
-    const key = FileUploadTools.key(file)
+  const fileUploadFailed = (file: File) => {
     setUploadingToCancelMap((x) => {
-      x.delete(key)
+      x.delete(FileUploadTools.key(file))
       return x
     })
     releaseSemaphore(file)
+  }
+
+  const fileUploadFinished = (file: File) => {
+    const hash = md5.create()
+    const reader = file.stream().getReader()
+    reader
+      .read()
+      .then(async function updateHash({ done, value }) {
+        if (done) {
+          FileUploadTools.checksum(file, hash.hex(), fileUploaderState)
+        } else {
+          hash.update(value)
+          await updateHash(await reader.read())
+        }
+      })
+      .finally(() => {
+        setUploadingToCancelMap((x) => {
+          x.delete(FileUploadTools.key(file))
+          return x
+        })
+        releaseSemaphore(file)
+      })
   }
 
   const canUpload = (file: File) =>
@@ -86,17 +111,10 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
       () => {
         setState(FileUploadTools.done(file, fileUploaderState))
         fileUploadFinished(file)
-        addUploadedFile(
-          fileRepository,
-          dataset?.persistentId as string,
-          file,
-          FileUploadTools.get(file, fileUploaderState).storageId as string,
-          () => {}
-        )
       },
       () => {
         setState(FileUploadTools.failed(file, fileUploaderState))
-        fileUploadFinished(file)
+        fileUploadFailed(file)
       },
       (now) => setState(FileUploadTools.progress(file, now, fileUploaderState)),
       (storageId) => setState(FileUploadTools.storageId(file, storageId, fileUploaderState))
@@ -156,8 +174,12 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
 
   const addFiles = (state: FileUploadState[]) => {
     setIsLoading(true)
-    const done = () => setIsLoading(false)
-    addUploadedFiles(fileRepository, dataset?.persistentId as string, state, done)
+    const done = () => {
+      setIsLoading(false)
+      navigate(`${Route.DATASETS}?persistentId=${dataset?.persistentId as string}&version=:draft`)
+    }
+    const uploadedFiles = FileUploadTools.mapToUploadedFilesDTOs(state)
+    addUploadedFiles(fileRepository, dataset?.persistentId as string, uploadedFiles, done)
     cleanAllState()
   }
 
