@@ -132,6 +132,7 @@ export const TopFieldsSection = () => {
       <Row>
         <IdentifierField rules={aliasRules} />
 
+        {/* 👇 To be defined, at the moment the SPA only supports file uploading through direct upload (S3), so we are disabling the storage selector */}
         <Form.Group controlId="storage" as={Col} md={6}>
           <Form.Group.Label message={t('fields.storage.description')}>
             {t('fields.storage.label')}

@@ -138,7 +138,7 @@ export function CreateCollection({
     type: '',
     contacts: [{ value: user?.email ?? '' }],
     affiliation: user?.affiliation ?? '',
-    storage: 'Local (Default)',
+    storage: 'S3',
     description: '',
     [USE_FIELDS_FROM_PARENT]: true,
     [METADATA_BLOCKS_NAMES_GROUPER]: defaultBlocksNames,
