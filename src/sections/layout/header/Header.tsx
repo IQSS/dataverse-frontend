@@ -5,6 +5,7 @@ import { Route, RouteWithParams } from '../../Route.enum'
 import { useSession } from '../../session/SessionContext'
 import { Link, useNavigate } from 'react-router-dom'
 import { BASE_URL } from '../../../config'
+import styles from './Header.module.scss'
 
 const currentPage = 0
 export function Header() {
@@ -26,7 +27,8 @@ export function Header() {
         title: t('brandTitle'),
         href: `/spa${Route.HOME}`,
         logoImgSrc: dataverse_logo
-      }}>
+      }}
+      className={styles.navbar}>
       {user ? (
         <>
           <Navbar.Dropdown title={t('navigation.addData')} id="dropdown-addData">
