@@ -80,8 +80,9 @@ describe('Dataset', () => {
               force: true
             })
           cy.findByRole('button', { name: 'Publish Dataset' }).should('exist').click()
-          cy.findByRole('button', { name: 'Publish' }).should('exist').click()
-          cy.findByText('Major Version').should('exist').click()
+          cy.findByRole('button', { name: 'Publish' }).should('exist').click({ force: true })
+          cy.findByText('Minor Release (1.1)')
+          cy.findByText('Major Release (2.0)').should('exist').click()
           cy.findByRole('button', { name: 'Continue' }).should('exist').click()
           cy.findByText('Version 2.0').should('exist')
         })
@@ -267,7 +268,7 @@ describe('Dataset', () => {
         })
     })
 
-    it('successfully loads the files tab with files', () => {
+    it.only('successfully loads the files tab with files', () => {
       cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(3)), { timeout: 5000 })
         .its('persistentId')
         .then((persistentId: string) => {

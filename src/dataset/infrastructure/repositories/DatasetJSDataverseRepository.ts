@@ -161,7 +161,10 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         }
       })
       .then((datasetDetails) => {
-        if (datasetDetails.jsDataset.versionInfo.state === DatasetVersionState.DRAFT) {
+        if (
+          datasetDetails.jsDataset.versionInfo.state === DatasetVersionState.DRAFT &&
+          datasetDetails.jsDataset.publicationDate !== undefined
+        ) {
           return this.getLatestPublishedVersionNumbers(datasetDetails)
         } else {
           return datasetDetails

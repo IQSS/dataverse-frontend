@@ -17,8 +17,8 @@ describe('PublishDatasetModal', () => {
       />
     )
     cy.findByText('Publish Dataset').should('exist')
-    cy.findByText('Major Version').should('not.exist')
-    cy.findByText('Minor Version').should('not.exist')
+    cy.findByText('Major Release (2.0)').should('not.exist')
+    cy.findByText('Minor Release (1.1)').should('not.exist')
     cy.findByText('Update Current Version').should('not.exist')
   })
 
@@ -54,13 +54,15 @@ describe('PublishDatasetModal', () => {
         repository={repository}
         persistentId="testPersistentId"
         releasedVersionExists={true}
+        nextMajorVersion={'2.0'}
+        nextMinorVersion={'1.1'}
         handleClose={handleClose}
       />
     )
 
     // Check if the modal is rendered
     cy.findByText('Publish Dataset').should('exist')
-    cy.findByText('Major Version').click()
+    cy.findByText('Major Release (2.0)').click()
     cy.findByText('Continue').click()
     cy.get('@repositoryPublish').should(
       'have.been.calledWith',
@@ -79,10 +81,12 @@ describe('PublishDatasetModal', () => {
           repository={repository}
           persistentId="testPersistentId"
           releasedVersionExists={true}
+          nextMajorVersion={'2.0'}
+          nextMinorVersion={'1.1'}
           handleClose={handleClose}
         />
       )
-      cy.findByText('Update Current Version').should('exist')
+      cy.contains('Update Current Version').should('exist')
     })
   })
   describe('PublishDatasetModal', () => {
@@ -96,10 +100,12 @@ describe('PublishDatasetModal', () => {
           repository={repository}
           persistentId="testPersistentId"
           releasedVersionExists={true}
+          nextMajorVersion={'2.0'}
+          nextMinorVersion={'1.1'}
           handleClose={handleClose}
         />
       )
-      cy.findByText('Update Current Version').should('not.exist')
+      cy.contains('Update Current Version').should('not.exist')
     })
   })
 })

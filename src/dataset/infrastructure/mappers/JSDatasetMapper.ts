@@ -97,7 +97,8 @@ export class JSDatasetMapper {
     if (latestPublishedVersionMajorNumber === undefined) {
       return undefined
     }
-    return (latestPublishedVersionMajorNumber + 1).toString() + '.0'
+    const nextMajorVersion = (latestPublishedVersionMajorNumber + 1).toString() + '.0'
+    return nextMajorVersion
   }
   static toNextMinorVersion(
     latestPublishedVersionMajorNumber: number | undefined,
@@ -109,7 +110,10 @@ export class JSDatasetMapper {
     ) {
       return undefined
     }
-    return (latestPublishedVersionMajorNumber + latestPublishedVersionMinorNumber + 0.1).toString()
+    const nextMinorVersion = `${latestPublishedVersionMajorNumber}.${
+      latestPublishedVersionMinorNumber + 1
+    }`
+    return nextMinorVersion
   }
 
   static toDatasetTitle(jsDatasetMetadataBlocks: JSDatasetMetadataBlocks): string {
