@@ -1,0 +1,39 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  width: min(100%, 600px);
+  background-color: $dv-brand-color;
+  border: solid 4px $dv-brand-color;
+  border-radius: 999px;
+  transition: box-shadow 0.15s ease-in-out;
+
+  &:focus-within,
+  &:hover {
+    box-shadow: 0 0 0 0.15rem color.adjust($dv-brand-color, $alpha: -0.7);
+  }
+}
+
+.search-icon-wrapper {
+  display: grid;
+  align-self: stretch;
+  place-items: center;
+  padding-inline: 0.75rem;
+
+  svg {
+    color: $dv-primary-text-color;
+  }
+}
+
+.text-input {
+  height: 42px;
+  border: 0;
+  border-radius: 999px;
+  caret-color: $dv-brand-color;
+
+  &:focus {
+    box-shadow: none;
+  }
+}
