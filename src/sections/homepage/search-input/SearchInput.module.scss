@@ -3,20 +3,19 @@
 
 :root {
   --search-input-height: 50px;
-  --search-input-max-width: 550px;
-  --search-input-right-padding: 8px;
+  --search-input-max-width: 580px;
+  --search-input-gap: 4px;
   --search-input-transition: 0.15s ease-in-out;
-  --search-icon-btn-size: 42px;
-  --search-icon-left-margin: 4px;
+  --search-icon-btn-width: 60px;
 }
 
 .search-input-wrapper {
   position: relative;
   display: flex;
+  gap: var(--search-input-gap);
   align-items: center;
   width: min(100%, var(--search-input-max-width));
   height: var(--search-input-height);
-  padding-right: var(--search-input-right-padding);
   background-color: $dv-brand-color;
   border: solid 4px $dv-brand-color;
   border-radius: 999px;
@@ -34,6 +33,7 @@
   border: 0;
   border-radius: 999px;
   caret-color: $dv-brand-color;
+  padding-inline: 1.25rem;
 
   &:focus {
     box-shadow: none;
@@ -43,21 +43,18 @@
 .search-btn {
   display: grid;
   place-items: center;
-  min-width: var(--search-icon-btn-size);
-  min-height: var(--search-icon-btn-size);
+  min-width: var(--search-icon-btn-width);
+  height: 100%;
   margin: 0;
-  margin-left: var(--search-icon-left-margin);
   padding: 0;
-  padding-inline: 0;
-  aspect-ratio: 1;
   background-color: transparent;
   border: 0;
-  border-radius: 50%;
+  border-radius: 999px;
   transition: var(--search-input-transition);
   transition-property: background-color;
 
   &:hover {
-    background-color: color.adjust($dv-brand-color, $lightness: -5%);
+    background-color: color.adjust($dv-brand-color, $lightness: -10%);
   }
 
   &:focus-visible {
@@ -66,7 +63,7 @@
   }
 
   &:active {
-    background-color: color.adjust($dv-brand-color, $lightness: -10%);
+    background-color: color.adjust($dv-brand-color, $lightness: -15%);
   }
 
   svg {
@@ -76,8 +73,6 @@
 
 .clear-btn {
   position: absolute;
-  right: calc(
-    var(--search-icon-btn-size) + var(--search-icon-left-margin) + var(--search-input-right-padding)
-  );
+  right: calc(var(--search-icon-btn-width) + var(--search-input-gap));
   margin-right: 1rem;
 }
