@@ -1,14 +1,27 @@
 @use 'sass:color';
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
+:root {
+  --search-input-height: 50px;
+  --search-input-max-width: 550px;
+  --search-input-right-padding: 8px;
+  --search-input-transition: 0.15s ease-in-out;
+  --search-icon-btn-size: 42px;
+  --search-icon-left-margin: 4px;
+}
+
 .search-input-wrapper {
+  position: relative;
   display: flex;
   align-items: center;
-  width: min(100%, 600px);
+  width: min(100%, var(--search-input-max-width));
+  height: var(--search-input-height);
+  padding-right: var(--search-input-right-padding);
   background-color: $dv-brand-color;
   border: solid 4px $dv-brand-color;
   border-radius: 999px;
-  transition: box-shadow 0.15s ease-in-out;
+  transition: var(--search-input-transition);
+  transition-property: box-shadow;
 
   &:focus-within,
   &:hover {
@@ -16,19 +29,8 @@
   }
 }
 
-.search-icon-wrapper {
-  display: grid;
-  align-self: stretch;
-  place-items: center;
-  padding-inline: 0.75rem;
-
-  svg {
-    color: $dv-primary-text-color;
-  }
-}
-
 .text-input {
-  height: 42px;
+  height: 100%;
   border: 0;
   border-radius: 999px;
   caret-color: $dv-brand-color;
@@ -36,4 +38,46 @@
   &:focus {
     box-shadow: none;
   }
+}
+
+.search-btn {
+  display: grid;
+  place-items: center;
+  min-width: var(--search-icon-btn-size);
+  min-height: var(--search-icon-btn-size);
+  margin: 0;
+  margin-left: var(--search-icon-left-margin);
+  padding: 0;
+  padding-inline: 0;
+  aspect-ratio: 1;
+  background-color: transparent;
+  border: 0;
+  border-radius: 50%;
+  transition: var(--search-input-transition);
+  transition-property: background-color;
+
+  &:hover {
+    background-color: color.adjust($dv-brand-color, $lightness: -5%);
+  }
+
+  &:focus-visible {
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem color.adjust($dv-brand-color, $lightness: -5%);
+  }
+
+  &:active {
+    background-color: color.adjust($dv-brand-color, $lightness: -10%);
+  }
+
+  svg {
+    color: $dv-primary-text-color;
+  }
+}
+
+.clear-btn {
+  position: absolute;
+  right: calc(
+    var(--search-icon-btn-size) + var(--search-icon-left-margin) + var(--search-input-right-padding)
+  );
+  margin-right: 1rem;
 }
