@@ -39,13 +39,13 @@ export function BreadcrumbsGenerator({
             </Breadcrumb.Item>
           )
         }
-        // TODO:ME - Route.HOME should be changed to RouteWithParams.COLLECTIONS() so it goes to root collection
+
         if (isFirst) {
           return (
             <Breadcrumb.Item
               key={index}
               linkAs={LinkToPage}
-              linkProps={{ page: Route.HOME, children: <>{item.name}</> }}>
+              linkProps={{ page: Route.COLLECTIONS_BASE, children: <>{item.name}</> }}>
               {item.name}
             </Breadcrumb.Item>
           )
