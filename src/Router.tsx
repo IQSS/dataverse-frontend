@@ -24,6 +24,10 @@ const router = createBrowserRouter(
           element: HomepageFactory.create()
         },
         {
+          path: Route.COLLECTIONS_BASE,
+          element: CollectionFactory.create()
+        },
+        {
           path: Route.COLLECTIONS,
           element: CollectionFactory.create()
         },
