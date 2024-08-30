@@ -152,7 +152,7 @@ export class FileUploadTools {
         uploadedFile.restricted,
         uploadedFile.storageId as string,
         uploadedFile.checksumValue as string,
-        uploadedFile.fileType === '' ? 'application/octet-stream' : uploadedFile.fileType
+        uploadedFile.fileType === '' ? 'application/octet-stream' : uploadedFile.fileType // some browsers (e.g., chromium for .java files) fail to detect the mime type for some files and leave the fileType as an empty string, we use the default value 'application/octet-stream' in that case
       )
     )
   }
