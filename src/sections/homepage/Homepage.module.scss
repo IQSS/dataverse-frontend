@@ -1,3 +1,5 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 @import 'src/assets/variables';
 
 .section-wrapper {
@@ -7,3 +9,37 @@
   justify-content: center;
   min-height: $main-container-available-height;
 }
+
+.middle-search-cta-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+// .btn-group {
+//   display: flex;
+//   gap: 1rem;
+//   button {
+//     // border-radius: 999px;
+//     // border: solid 2px color.adjust($dv-brand-color, $alpha: -0.4);
+
+//     // &:first-child {
+//     //   border-right-width: 1px;
+//     // }
+
+//     // &:last-child {
+//     //   border-left-width: 1px;
+//     // }
+
+//     // &:first-child,
+//     // &:last-child {
+//     //   &:hover,
+//     //   &:active {
+//     //     border: solid 2px color.adjust($dv-brand-color, $alpha: -0.7);
+//     //   }
+//     // }
+//   }
+// }
