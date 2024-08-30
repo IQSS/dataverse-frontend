@@ -1,8 +1,7 @@
 import { Button, Card, ProgressBar, useTheme } from '@iqss/dataverse-design-system'
 import cn from 'classnames'
-import { ChangeEventHandler, DragEventHandler, useRef, useState } from 'react'
+import { ChangeEventHandler, DragEventHandler, useEffect, useRef, useState } from 'react'
 import { Plus, X } from 'react-bootstrap-icons'
-import { useDeepCompareEffect } from 'use-deep-compare'
 import { FileUploadTools, FileUploaderState } from '../../files/domain/models/FileUploadState'
 import styles from './FileUploader.module.scss'
 
@@ -99,7 +98,7 @@ export function FileUploader({
     }
   }
 
-  useDeepCompareEffect(() => {
+  useEffect(() => {
     setFiles((newFiles) =>
       newFiles.filter((x) => {
         const res = !FileUploadTools.get(x, fileUploaderState).removed
