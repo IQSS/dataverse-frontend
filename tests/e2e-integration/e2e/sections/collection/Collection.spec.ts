@@ -15,13 +15,13 @@ describe('Collection Page', () => {
   })
 
   it('successfully loads root collection when accessing the home', () => {
-    cy.visit('/spa')
+    cy.visit('/spa/collections/root')
     cy.findAllByText(/Root/i).should('exist')
   })
 
   it('navigates to a dataset from the list when clicking the title', () => {
     cy.wrap(DatasetHelper.createWithTitle(title), { timeout: 10000 }).then(() => {
-      cy.visit('/spa')
+      cy.visit('/spa/collections/root')
 
       cy.findByText(/Dataverse Admin/i).should('exist')
 
@@ -33,7 +33,7 @@ describe('Collection Page', () => {
   })
 
   it('Navigates to Create Dataset page when New Dataset link clicked', () => {
-    cy.visit('/spa')
+    cy.visit('/spa/collections/root')
 
     cy.get('nav.navbar').within(() => {
       const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
@@ -44,7 +44,7 @@ describe('Collection Page', () => {
     cy.wait(1000)
     cy.findByText(/Create Dataset/i).should('exist')
 
-    cy.visit('/spa')
+    cy.visit('/spa/collections/root')
     cy.wait(1000)
     cy.get('main').within(() => {
       const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
@@ -57,7 +57,7 @@ describe('Collection Page', () => {
   })
 
   it('log out Dataverse Admin user', () => {
-    cy.visit('/spa')
+    cy.visit('/spa/collections/root')
     cy.findAllByText(/Root/i).should('exist')
 
     cy.findByText(/Dataverse Admin/i).click()
@@ -70,7 +70,7 @@ describe('Collection Page', () => {
       cy.wrap(DatasetHelper.createMany(12), { timeout: 10000 }).then(() => {
         cy.wait(1500) // Wait for the datasets to be created
 
-        cy.visit('/spa?page=2')
+        cy.visit('/spa/collections/root?page=2')
         cy.findAllByText(/Root/i).should('exist')
         cy.findByText(/Dataverse Admin/i).should('exist')
 
@@ -82,7 +82,7 @@ describe('Collection Page', () => {
       cy.wrap(DatasetHelper.createMany(12), { timeout: 10000 }).then(() => {
         cy.wait(2000) // Wait for the datasets to be created
 
-        cy.visit('/spa')
+        cy.visit('/spa/collections/root')
 
         cy.findAllByText(/Root/i).should('exist')
         cy.findByText(/Dataverse Admin/i).should('exist')
@@ -97,7 +97,7 @@ describe('Collection Page', () => {
       cy.wrap(DatasetHelper.createMany(12), { timeout: 10000 }).then(() => {
         cy.wait(1500) // Wait for the datasets to be created
 
-        cy.visit('/spa?page=2')
+        cy.visit('/spa/collections/root?page=2')
 
         cy.findAllByText(/Root/i).should('exist')
         cy.findByText(/Dataverse Admin/i).should('exist')
