@@ -1,10 +1,13 @@
 import { useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Form } from '@iqss/dataverse-design-system'
 import { CloseButton } from 'react-bootstrap'
 import { Search as SearchIcon } from 'react-bootstrap-icons'
+import { QueryParamKey, Route } from '../../Route.enum'
 import styles from './SearchInput.module.scss'
 
 export const SearchInput = () => {
+  const navigate = useNavigate()
   const inputSearchRef = useRef<HTMLInputElement>(null)
   const [searchValue, setSearchValue] = useState('')
 
@@ -14,7 +17,17 @@ export const SearchInput = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    console.log('Search:', searchValue)
+
+    const trimmedSearchValue = searchValue.trim()
+
+    if (!trimmedSearchValue) return
+
+    const searchParams = new URLSearchParams()
+    searchParams.set(QueryParamKey.QUERY, trimmedSearchValue)
+
+    const collectionUrlWithQuery = `${Route.COLLECTIONS_BASE}?${searchParams.toString()}`
+
+    navigate(collectionUrlWithQuery)
   }
 
   const handleClearSearch = () => {
