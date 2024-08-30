@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { md5 } from 'js-md5'
+import { Semaphore } from 'async-mutex'
 import { useNavigate } from 'react-router-dom'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { useLoading } from '../loading/LoadingContext'
@@ -24,34 +25,17 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
   const { t } = useTranslation('uploadDatasetFiles')
   const [fileUploaderState, setState] = useState(FileUploadTools.createNewState([]))
   const [uploadingToCancelMap, setUploadingToCancelMap] = useState(new Map<string, () => void>())
-  const [semaphore, setSemaphore] = useState(new Set<string>())
   const navigate = useNavigate()
 
-  const sleep = (delay: number) => new Promise((res) => setTimeout(res, delay))
   const limit = 6
-
-  const acquireSemaphore = async (file: File) => {
-    const key = FileUploadTools.key(file)
-    setSemaphore((x) => (x.size >= limit ? x : x.add(key)))
-    while (!semaphore.has(key)) {
-      await sleep(500)
-      setSemaphore((x) => (x.size >= limit ? x : x.add(key)))
-    }
-  }
-
-  const releaseSemaphore = (file: File) => {
-    setSemaphore((x) => {
-      x.delete(FileUploadTools.key(file))
-      return x
-    })
-  }
+  const semaphore = new Semaphore(limit)
 
   const fileUploadFailed = (file: File) => {
     setUploadingToCancelMap((x) => {
       x.delete(FileUploadTools.key(file))
       return x
     })
-    releaseSemaphore(file)
+    semaphore.release(1)
   }
 
   const fileUploadFinished = (file: File) => {
@@ -72,7 +56,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
           x.delete(FileUploadTools.key(file))
           return x
         })
-        releaseSemaphore(file)
+        semaphore.release(1)
       })
   }
 
@@ -107,13 +91,9 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
     setUploadingToCancelMap((x) => x.set(key, cancel))
   }
 
-  const upload = async (files: File[]) => {
-    for (const file of files) {
-      if (canUpload(file)) {
-        await acquireSemaphore(file)
-        uploadOneFile(file)
-      }
-    }
+  const upload = async (file: File) => {
+    await semaphore.acquire(1)
+    uploadOneFile(file)
   }
 
   const cleanup = (file: File) => {
@@ -126,7 +106,6 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
       x.delete(key)
       return x
     })
-    releaseSemaphore(file)
   }
 
   const cancelUpload = (file: File) => {

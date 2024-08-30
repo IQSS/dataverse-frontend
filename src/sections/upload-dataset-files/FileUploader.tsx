@@ -1,12 +1,13 @@
 import { Button, Card, ProgressBar, useTheme } from '@iqss/dataverse-design-system'
 import cn from 'classnames'
-import { ChangeEventHandler, DragEventHandler, useEffect, useRef, useState } from 'react'
+import { ChangeEventHandler, DragEventHandler, useRef, useState } from 'react'
 import { Plus, X } from 'react-bootstrap-icons'
+import { useDeepCompareEffect } from 'use-deep-compare'
 import { FileUploadTools, FileUploaderState } from '../../files/domain/models/FileUploadState'
 import styles from './FileUploader.module.scss'
 
 export interface FileUploaderProps {
-  upload: (files: File[]) => void
+  upload: (file: File) => void
   cancelTitle: string
   info: string
   selectText: string
@@ -30,21 +31,14 @@ export function FileUploader({
 
   const addFiles = (selectedFiles: FileList | null) => {
     if (selectedFiles && selectedFiles.length > 0) {
-      setFiles((alreadyAdded) => {
-        const selectedFilesArray = Array.from(selectedFiles)
-        const selectedFilesSet = new Set(selectedFilesArray.map((x) => FileUploadTools.key(x)))
-        const alreadyAddedFiltered = alreadyAdded.filter(
-          /* istanbul ignore next */
-          (x) => !selectedFilesSet.has(FileUploadTools.key(x))
-        )
-        return [...alreadyAddedFiltered, ...selectedFilesArray]
-      })
+      Array.from(selectedFiles).forEach((file) => addFile(file))
     }
   }
 
   const addFile = (file: File) => {
     if (!files.some((x) => FileUploadTools.key(x) === FileUploadTools.key(file))) {
       setFiles((oldFiles) => [...oldFiles, file])
+      upload(file)
     }
   }
 
@@ -105,11 +99,7 @@ export function FileUploader({
     }
   }
 
-  useEffect(() => {
-    upload(files)
-  }, [files, upload])
-
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     setFiles((newFiles) =>
       newFiles.filter((x) => {
         const res = !FileUploadTools.get(x, fileUploaderState).removed
