@@ -22,8 +22,10 @@ export const SearchInput = () => {
 
     if (!trimmedSearchValue) return
 
+    const encodedSearchValue = encodeURIComponent(trimmedSearchValue)
+
     const searchParams = new URLSearchParams()
-    searchParams.set(QueryParamKey.QUERY, trimmedSearchValue)
+    searchParams.set(QueryParamKey.QUERY, encodedSearchValue)
 
     const collectionUrlWithQuery = `${Route.COLLECTIONS_BASE}?${searchParams.toString()}`
 
