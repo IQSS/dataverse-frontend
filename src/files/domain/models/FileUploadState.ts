@@ -152,7 +152,7 @@ export class FileUploadTools {
         uploadedFile.restricted,
         uploadedFile.storageId as string,
         uploadedFile.checksumValue as string,
-        'application/octet-stream'
+        uploadedFile.fileType === '' ? 'application/octet-stream' : uploadedFile.fileType
       )
     )
   }
