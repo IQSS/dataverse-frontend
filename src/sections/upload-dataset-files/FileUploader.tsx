@@ -99,11 +99,11 @@ export function FileUploader({
   }
 
   useEffect(() => {
-    setFiles((newFiles) =>
-      newFiles.filter((x) => {
-        const res = !FileUploadTools.get(x, fileUploaderState).removed
+    setFiles((currentFiles) =>
+      currentFiles.filter((file) => {
+        const res = !FileUploadTools.get(file, fileUploaderState).removed
         if (!res) {
-          cleanFileState(x)
+          cleanFileState(file)
         }
         return res
       })
