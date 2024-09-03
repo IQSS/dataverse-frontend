@@ -2,8 +2,12 @@ import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { FileCard } from '../../../sections/collection/datasets-list/file-card/FileCard'
 import { FilePreviewMother } from '../../../../tests/component/files/domain/models/FilePreviewMother'
-import { FileMetadataMother } from '../../../../tests/component/files/domain/models/FileMetadataMother'
+import {
+  FileLabelMother,
+  FileMetadataMother
+} from '../../../../tests/component/files/domain/models/FileMetadataMother'
 import { FakerHelper } from '../../../../tests/component/shared/FakerHelper'
+import { DatasetPublishingStatus } from '../../../dataset/domain/models/Dataset'
 
 const meta: Meta<typeof FileCard> = {
   title: 'Sections/Collection Page/FileCard',
@@ -45,4 +49,17 @@ export const ReleasedWithDraft: Story = {
   render: () => (
     <FileCard persistentId={'testid'} filePreview={FilePreviewMother.createReleasedWithDraft()} />
   )
+}
+export const WithAllLabels: Story = {
+  render: () => {
+    const filePreview = FilePreviewMother.createDefault({
+      datasetPublishingStatus: DatasetPublishingStatus.DRAFT,
+      someDatasetVersionHasBeenReleased: false,
+      metadata: FileMetadataMother.createDefault({
+        description: FakerHelper.paragraph(5),
+        labels: FileLabelMother.createMany(4)
+      })
+    })
+    return <FileCard persistentId={'testid'} filePreview={filePreview} />
+  }
 }

@@ -4,7 +4,7 @@ import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repos
 import { FileJSDataverseRepository } from '../../files/infrastructure/FileJSDataverseRepository'
 import { DatasetProvider } from '../dataset/DatasetProvider'
 import { UploadDatasetFiles } from './UploadDatasetFiles'
-import { DatasetNonNumericVersion } from '../../dataset/domain/models/Dataset'
+import { searchParamVersionToDomainVersion } from '../../Router'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
@@ -18,7 +18,8 @@ export class UploadDatasetFilesFactory {
 function UploadDatasetFilesWithSearchParams() {
   const [searchParams] = useSearchParams()
   const persistentId = searchParams.get('persistentId') ?? undefined
-  const version = searchParams.get('version') ?? DatasetNonNumericVersion.DRAFT
+  const searchParamVersion = searchParams.get('version') ?? undefined
+  const version = searchParamVersionToDomainVersion(searchParamVersion)
 
   return (
     <DatasetProvider
