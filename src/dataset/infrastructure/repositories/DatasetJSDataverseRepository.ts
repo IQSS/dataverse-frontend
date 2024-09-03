@@ -131,15 +131,11 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .execute(persistentId, version, includeDeaccessioned)
       .then((jsDataset) => this.fetchDatasetDetails(jsDataset, version))
       .then((datasetDetails) => {
-        if (datasetDetails.jsDatasetPermissions.canEditDataset) {
-          return this.fetchDownloadSizes(persistentId, version).then((downloadSizes) => {
-            datasetDetails.jsDatasetFilesTotalOriginalDownloadSize = downloadSizes[0]
-            datasetDetails.jsDatasetFilesTotalArchivalDownloadSize = downloadSizes[1]
-            return datasetDetails
-          })
-        } else {
+        return this.fetchDownloadSizes(persistentId, version).then((downloadSizes) => {
+          datasetDetails.jsDatasetFilesTotalOriginalDownloadSize = downloadSizes[0]
+          datasetDetails.jsDatasetFilesTotalArchivalDownloadSize = downloadSizes[1]
           return datasetDetails
-        }
+        })
       })
       .then((datasetDetails) => {
         return JSDatasetMapper.toDataset(
