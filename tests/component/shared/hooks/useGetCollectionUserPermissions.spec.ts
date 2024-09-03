@@ -6,7 +6,7 @@ import { useGetCollectionUserPermissions } from '../../../../src/shared/hooks/us
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const userPermissionsMock = CollectionMother.createUserPermissions()
 
-describe('useGetAllMetadataBlocksInfo', () => {
+describe('useGetCollectionUserPermissions', () => {
   it('should return userCollectionPermissions correctly', async () => {
     collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
 
