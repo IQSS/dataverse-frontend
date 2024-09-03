@@ -39,24 +39,26 @@ export const SearchInput = () => {
 
   return (
     <Form onSubmit={handleSubmit} className={styles['search-input-wrapper']}>
-      <Form.Group.Input
-        type="text"
-        role="search"
-        aria-label="Search"
-        autoFocus
-        autoComplete="off"
-        className={styles['text-input']}
-        value={searchValue}
-        onChange={handleSearchChange}
-        ref={inputSearchRef}
-      />
-      {searchValue && (
-        <CloseButton
-          aria-label="Clear search"
-          className={styles['clear-btn']}
-          onClick={handleClearSearch}
+      <div className={styles['input-and-clear-wrapper']}>
+        <Form.Group.Input
+          type="text"
+          role="search"
+          aria-label="Search"
+          autoFocus
+          autoComplete="off"
+          className={styles['text-input']}
+          value={searchValue}
+          onChange={handleSearchChange}
+          ref={inputSearchRef}
         />
-      )}
+        {searchValue && (
+          <CloseButton
+            aria-label="Clear search"
+            className={styles['clear-btn']}
+            onClick={handleClearSearch}
+          />
+        )}
+      </div>
 
       <button type="submit" aria-label="Submit Search" className={styles['search-btn']}>
         <SearchIcon size={22} />

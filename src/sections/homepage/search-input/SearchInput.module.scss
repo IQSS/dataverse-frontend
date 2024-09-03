@@ -10,7 +10,6 @@
 }
 
 .search-input-wrapper {
-  position: relative;
   display: flex;
   gap: var(--search-input-gap);
   align-items: center;
@@ -28,6 +27,14 @@
   }
 }
 
+.input-and-clear-wrapper {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  align-self: stretch;
+}
+
 .text-input {
   height: 100%;
   border: 0;
@@ -38,6 +45,12 @@
   &:focus {
     box-shadow: none;
   }
+}
+
+.clear-btn {
+  position: absolute;
+  right: 0;
+  margin-right: 1rem;
 }
 
 .search-btn {
@@ -69,10 +82,4 @@
   svg {
     color: $dv-primary-text-color;
   }
-}
-
-.clear-btn {
-  position: absolute;
-  right: calc(var(--search-icon-btn-width) + var(--search-input-gap));
-  margin-right: 1rem;
 }
