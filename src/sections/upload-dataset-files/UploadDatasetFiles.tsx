@@ -14,6 +14,7 @@ import { uploadFile } from '../../files/domain/useCases/uploadFile'
 import { UploadedFiles } from './uploaded-files-list/UploadedFiles'
 import { addUploadedFiles } from '../../files/domain/useCases/addUploadedFiles'
 import { Route } from '../Route.enum'
+import { Stack } from '@iqss/dataverse-design-system'
 
 interface UploadDatasetFilesProps {
   fileRepository: FileRepository
@@ -170,23 +171,25 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
             actionItemText={t('breadcrumbActionItem')}
           />
           <article>
-            <FileUploader
-              upload={upload}
-              cancelTitle={t('cancel')}
-              info={t('info')}
-              selectText={t('select')}
-              fileUploaderState={fileUploaderState}
-              cancelUpload={cancelUpload}
-              cleanFileState={cleanFileState}
-            />
-            <UploadedFiles
-              fileUploadState={fileUploaderState.uploaded}
-              cancelTitle={t('delete')}
-              saveDisabled={saveDisabled()}
-              updateFiles={updateFiles}
-              cleanup={cleanAllState}
-              addFiles={addFiles}
-            />
+            <Stack direction="vertical" gap={3}>
+              <FileUploader
+                upload={upload}
+                cancelTitle={t('cancel')}
+                info={t('info')}
+                selectText={t('select')}
+                fileUploaderState={fileUploaderState}
+                cancelUpload={cancelUpload}
+                cleanFileState={cleanFileState}
+              />
+              <UploadedFiles
+                fileUploadState={fileUploaderState.uploaded}
+                cancelTitle={t('delete')}
+                saveDisabled={saveDisabled()}
+                updateFiles={updateFiles}
+                cleanup={cleanAllState}
+                addFiles={addFiles}
+              />
+            </Stack>
           </article>
         </>
       )}
