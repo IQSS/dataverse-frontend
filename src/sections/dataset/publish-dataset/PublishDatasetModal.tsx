@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Modal } from '@iqss/dataverse-design-system'
+import { Button, Modal, Stack } from '@iqss/dataverse-design-system'
 import { Form } from '@iqss/dataverse-design-system'
 import type { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
 import { VersionUpdateType } from '../../../dataset/domain/models/VersionUpdateType'
@@ -23,9 +23,9 @@ interface PublishDatasetModalProps {
   repository: DatasetRepository
   persistentId: string
   releasedVersionExists: boolean
-  nextMajorVersion: string | undefined
-  nextMinorVersion: string | undefined
   handleClose: () => void
+  nextMajorVersion?: string
+  nextMinorVersion?: string
 }
 
 export function PublishDatasetModal({
@@ -33,9 +33,9 @@ export function PublishDatasetModal({
   repository,
   persistentId,
   releasedVersionExists,
+  handleClose,
   nextMajorVersion,
-  nextMinorVersion,
-  handleClose
+  nextMinorVersion
 }: PublishDatasetModalProps) {
   const { t } = useTranslation('dataset')
   const { user } = useSession()
@@ -64,57 +64,56 @@ export function PublishDatasetModal({
     )
     handleClose()
   }
-  if (releasedVersionExists && (!nextMajorVersion || !nextMinorVersion)) {
-    console.log('Error: nextMajorVersion or nextMinorVersion is missing')
-    return null
-  }
+
   return (
-    <Modal show={show} onHide={handleClose} size="lg">
+    <Modal show={show} onHide={handleClose} size="xl">
       <Modal.Header>
         <Modal.Title>Publish Dataset</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <PublishDatasetHelpText releasedVersionExists={releasedVersionExists} />
-        <License
-          license={{
-            name: defaultLicense.name,
-            uri: defaultLicense.uri,
-            iconUri: defaultLicense.iconUri
-          }}
-        />
-        {releasedVersionExists && (
-          <>
-            <p>{t('publish.selectVersion')}</p>
-            <Form.RadioGroup title={'Update Version'}>
-              <Form.Group.Radio
-                defaultChecked
-                onClick={handleVersionUpdateTypeChange}
-                name="update-type"
-                label={t('publish.minorVersion') + ` (${nextMinorVersionString})`}
-                id="update-type-minor"
-                value={VersionUpdateType.MINOR}
-              />
-              <Form.Group.Radio
-                onClick={handleVersionUpdateTypeChange}
-                name="update-type"
-                label={t('publish.majorVersion') + ` (${nextMajorVersionString})`}
-                id="update-type-major"
-                value={VersionUpdateType.MAJOR}
-              />
-              {user?.superuser && (
+        <Stack direction="vertical">
+          <PublishDatasetHelpText releasedVersionExists={releasedVersionExists} />
+          <License
+            license={{
+              name: defaultLicense.name,
+              uri: defaultLicense.uri,
+              iconUri: defaultLicense.iconUri
+            }}
+          />
+          {releasedVersionExists && (
+            <>
+              <Form.Group.Text>{t('publish.selectVersion')}</Form.Group.Text>
+              <Form.RadioGroup title={'Update Version'}>
+                <Form.Group.Radio
+                  defaultChecked
+                  onClick={handleVersionUpdateTypeChange}
+                  name="update-type"
+                  label={t('publish.minorVersion') + ` (${nextMinorVersionString})`}
+                  id="update-type-minor"
+                  value={VersionUpdateType.MINOR}
+                />
                 <Form.Group.Radio
                   onClick={handleVersionUpdateTypeChange}
                   name="update-type"
-                  label={t('publish.updateCurrentVersion')}
-                  id="update-type-current"
-                  // TODO: Remove disabled when JSVersionUpdateType.UPDATE_CURRENT is available in js-dataverse
-                  disabled={true}
-                  value={VersionUpdateType.UPDATE_CURRENT}
+                  label={`${t('publish.majorVersion')} (${nextMajorVersionString})`}
+                  id="update-type-major"
+                  value={VersionUpdateType.MAJOR}
                 />
-              )}
-            </Form.RadioGroup>
-          </>
-        )}
+                {user?.superuser && (
+                  <Form.Group.Radio
+                    onClick={handleVersionUpdateTypeChange}
+                    name="update-type"
+                    label={t('publish.updateCurrentVersion')}
+                    id="update-type-current"
+                    // TODO: Remove disabled when JSVersionUpdateType.UPDATE_CURRENT is available in js-dataverse
+                    disabled={true}
+                    value={VersionUpdateType.UPDATE_CURRENT}
+                  />
+                )}
+              </Form.RadioGroup>
+            </>
+          )}
+        </Stack>
         <span className={styles.errorText}>
           {submissionStatus === SubmissionStatus.Errored &&
             `${t('publish.error')} ${publishError ? publishError : ''}`}

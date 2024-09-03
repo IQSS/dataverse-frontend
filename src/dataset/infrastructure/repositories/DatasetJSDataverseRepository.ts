@@ -165,6 +165,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           datasetDetails.jsDataset.versionInfo.state === DatasetVersionState.DRAFT &&
           datasetDetails.jsDataset.publicationDate !== undefined
         ) {
+          // If the dataset is a draft, but has a publication date, then we need the version
+          // numbers of the latest published version to show in the "Publish" button
           return this.getLatestPublishedVersionNumbers(datasetDetails)
         } else {
           return datasetDetails
@@ -214,10 +216,10 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
             canManageDatasetPermissions: true,
             canDeleteDatasetDraft: true,
             canViewUnpublishedDataset: true
-          },
-          [],
-          0,
-          0
+          }, // TODO Connect with JS dataset permissions for privateUrl when it is available in js-dataverse
+          [], // TODO Connect with JS dataset locks for privateUrl when it is available in js-dataverse
+          0, // TODO Connect with JS dataset filesTotalDownloadSize for privateUrl when it is available in js-dataverse
+          0 // TODO Connect with JS dataset filesTotalDownloadSize for privateUrl when it is available in js-dataverse
         )
       )
       .catch((error: ReadError) => {

@@ -26,7 +26,7 @@ export const InputLevelsTable = ({
       })}>
       <div className={styles['close-button-container']}>{closeButton}</div>
 
-      <Table>
+      <Table bordered={false}>
         <tbody>
           {Object.entries(blockMetadataInputLevelFields.metadataFields).map(([key, field]) => (
             <InputLevelFieldRow metadataField={field} disabled={disabled} key={key} />

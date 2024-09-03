@@ -268,7 +268,7 @@ describe('Dataset', () => {
         })
     })
 
-    it.only('successfully loads the files tab with files', () => {
+    it('successfully loads the files tab with files', () => {
       cy.wrap(DatasetHelper.createWithFiles(FileHelper.createMany(3)), { timeout: 5000 })
         .its('persistentId')
         .then((persistentId: string) => {
