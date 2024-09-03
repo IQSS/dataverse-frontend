@@ -7,7 +7,7 @@ const collectionRepository: CollectionRepository = {} as CollectionRepository
 const userPermissionsMock = CollectionMother.createUserPermissions()
 
 describe('useGetAllMetadataBlocksInfo', () => {
-  it('should return metadataBlockDisplayFormatInfo correctly', async () => {
+  it('should return userCollectionPermissions correctly', async () => {
     collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
 
     const { result } = renderHook(() =>
