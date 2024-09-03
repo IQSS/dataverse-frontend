@@ -19,7 +19,7 @@ describe('AddDataActionsButton', () => {
       .should('have.attr', 'href', '/datasets/create')
   })
 
-  it('renders the new dataset button with the correct generated link', () => {
+  it('renders the new dataset button with the correct generated link for specified collectionId', () => {
     const collectionId = 'some-collection-id'
     cy.customMount(
       <AddDataActionsButton
