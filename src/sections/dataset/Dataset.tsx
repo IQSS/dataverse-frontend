@@ -23,7 +23,7 @@ import { DatasetAlerts } from './dataset-alerts/DatasetAlerts'
 import { DatasetFilesScrollable } from './dataset-files/DatasetFilesScrollable'
 import useCheckPublishCompleted from './useCheckPublishCompleted'
 import useUpdateDatasetAlerts from './useUpdateDatasetAlerts'
-import { Route } from '../Route.enum'
+import { QueryParamKey, Route } from '../Route.enum'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 
 interface DatasetProps {
@@ -60,7 +60,7 @@ export function Dataset({
 
   useEffect(() => {
     if (publishInProgress && publishCompleted && dataset) {
-      navigate(`${Route.DATASETS}?persistentId=${dataset.persistentId}`, {
+      navigate(`${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${dataset.persistentId}`, {
         state: {},
         replace: true
       })
