@@ -43,7 +43,7 @@ describe('AddDataActionsButton', () => {
     cy.get('@addDataBtn').click()
     cy.findByRole('link', { name: 'New Collection' })
       .should('be.visible')
-      .should('not.have.attr', 'aria-disabled', 'false')
+      .should('not.have.attr', 'aria-disabled')
   })
 
   it('shows New Dataset button enabled if user has permissions to create dataset', () => {
@@ -54,7 +54,7 @@ describe('AddDataActionsButton', () => {
     cy.get('@addDataBtn').click()
     cy.findByRole('link', { name: 'New Dataset' })
       .should('be.visible')
-      .should('not.have.attr', 'aria-disabled', 'true')
+      .should('not.have.attr', 'aria-disabled')
   })
 
   it('shows New Collection button disabled if user does not have permissions to create collection', () => {
