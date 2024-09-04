@@ -108,6 +108,30 @@ describe('Dataset', () => {
           cy.findByText('Version 1.1').should('exist')
         })
     })
+    it('successfully publishes a Current Version update', () => {
+      cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.findByText('Version 1.0').should('exist')
+          cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').click()
+          cy.findByRole('button', { name: 'Metadata' }).should('exist').click()
+          cy.findByLabelText(/^Title/i).type('New Title', { force: true })
+          cy.findAllByText(/Save Changes/i)
+            .should('exist')
+            .first()
+            .click({
+              force: true
+            })
+          cy.findByRole('button', { name: 'Publish Dataset' }).should('exist').click()
+          cy.findByRole('button', { name: 'Publish' }).should('exist').click({ force: true })
+          cy.findByText(/Update Current Version/)
+            .should('exist')
+            .click()
+          cy.findByRole('button', { name: 'Continue' }).should('exist').click()
+          cy.findByText('Version 1.0').should('exist')
+        })
+    })
 
     it('successfully loads a published dataset when the user is not authenticated', () => {
       cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))

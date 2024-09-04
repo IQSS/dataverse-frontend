@@ -254,8 +254,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         jsVersionUpdateType = JSVersionUpdateType.MAJOR
         break
       case VersionUpdateType.UPDATE_CURRENT:
-        // TODO: remove this logic when VersionUpdateType.UPDATE_CURRENT is available in js-dataverse
-        throw new Error('update current version type not supported yet')
+        jsVersionUpdateType = JSVersionUpdateType.UPDATE_CURRENT
+        break
       default:
         throw new Error('Invalid version update type')
     }
