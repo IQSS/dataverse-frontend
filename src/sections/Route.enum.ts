@@ -1,3 +1,5 @@
+import { ROOT_COLLECTION_ALIAS } from '../collection/domain/models/Collection'
+
 export enum Route {
   HOME = '/',
   SIGN_UP = '/dataverseuser.xhtml?editMode=CREATE&redirectPage=%2Fdataverse.xhtml',
@@ -16,5 +18,5 @@ export enum Route {
 export const RouteWithParams = {
   COLLECTIONS: (collectionId?: string) => `/collections/${collectionId ?? 'root'}`,
   CREATE_COLLECTION: (ownerCollectionId?: string) =>
-    `/collections/${ownerCollectionId ?? 'root'}/create`
+    `/collections/${ownerCollectionId ?? ROOT_COLLECTION_ALIAS}/create`
 }
