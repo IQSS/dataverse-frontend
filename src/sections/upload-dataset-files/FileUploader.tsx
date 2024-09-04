@@ -6,7 +6,7 @@ import { FileUploadTools, FileUploaderState } from '../../files/domain/models/Fi
 import styles from './FileUploader.module.scss'
 
 export interface FileUploaderProps {
-  upload: (files: File[]) => void
+  upload: (file: File) => void
   cancelTitle: string
   info: string
   selectText: string
@@ -30,21 +30,14 @@ export function FileUploader({
 
   const addFiles = (selectedFiles: FileList | null) => {
     if (selectedFiles && selectedFiles.length > 0) {
-      setFiles((alreadyAdded) => {
-        const selectedFilesArray = Array.from(selectedFiles)
-        const selectedFilesSet = new Set(selectedFilesArray.map((x) => FileUploadTools.key(x)))
-        const alreadyAddedFiltered = alreadyAdded.filter(
-          /* istanbul ignore next */
-          (x) => !selectedFilesSet.has(FileUploadTools.key(x))
-        )
-        return [...alreadyAddedFiltered, ...selectedFilesArray]
-      })
+      Array.from(selectedFiles).forEach((file) => addFile(file))
     }
   }
 
   const addFile = (file: File) => {
     if (!files.some((x) => FileUploadTools.key(x) === FileUploadTools.key(file))) {
       setFiles((oldFiles) => [...oldFiles, file])
+      upload(file)
     }
   }
 
@@ -106,15 +99,11 @@ export function FileUploader({
   }
 
   useEffect(() => {
-    upload(files)
-  }, [files, upload])
-
-  useEffect(() => {
-    setFiles((newFiles) =>
-      newFiles.filter((x) => {
-        const res = !FileUploadTools.get(x, fileUploaderState).removed
+    setFiles((currentFiles) =>
+      currentFiles.filter((file) => {
+        const res = !FileUploadTools.get(file, fileUploaderState).removed
         if (!res) {
-          cleanFileState(x)
+          cleanFileState(file)
         }
         return res
       })
