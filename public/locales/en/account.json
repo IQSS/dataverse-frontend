@@ -7,6 +7,10 @@
     "apiToken": "API token"
   },
   "apiToken": {
-    "helperText": "Your API Token is valid for a year. Check out our <anchor>API Guide</anchor> for more information on using your API Token with the Dataverse APIs."
+    "helperText": "Your API Token is valid for a year. Check out our <anchor>API Guide</anchor> for more information on using your API Token with the Dataverse APIs.",
+    "expirationDate": "Expiration date",
+    "copyToClipboard": "Copy to Clipboard",
+    "recreateToken": "Recreate Token",
+    "revokeToken": "Revoke Token"
   }
 }

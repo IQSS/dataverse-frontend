@@ -1,0 +1,31 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.exp-date {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  padding-left: 0.5rem;
+  font-weight: bold;
+
+  time {
+    font-weight: normal;
+  }
+
+  @media (min-width: 768px) {
+    gap: 3rem;
+  }
+}
+
+.api-token {
+  padding: 0.5rem 1rem;
+  background-color: #f7f7f9;
+  border: solid 1px $dv-border-color;
+  border-radius: 4px;
+}
+
+.btns-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding-top: 1rem;
+}
