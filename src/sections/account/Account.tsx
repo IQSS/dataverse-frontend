@@ -1,19 +1,28 @@
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { Tabs } from '@iqss/dataverse-design-system'
-import { UserPanelHelper } from './UserPanelHelper'
-import { ApiTokenSection } from './ApiTokenSection'
-import styles from './UserPanel.module.scss'
+import { AccountHelper } from './AccountHelper'
+import { ApiTokenSection } from './ApiTokenSection/ApiTokenSection'
+import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
+import { UpwardHierarchyNodeMother } from '../../../tests/component/shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
+import styles from './Account.module.scss'
 
-const tabsKeys = UserPanelHelper.USER_PANEL_TABS_KEYS
+const tabsKeys = AccountHelper.ACCOUNT_PANEL_TABS_KEYS
 
-export const UserPanel = () => {
-  const { t } = useTranslation('userPanel')
+export const Account = () => {
+  const { t } = useTranslation('account')
   const [searchParams] = useSearchParams()
-  const defaultActiveTabKey = UserPanelHelper.defineSelectedTabKey(searchParams)
+  const defaultActiveTabKey = AccountHelper.defineSelectedTabKey(searchParams)
+
+  const rootHierarchy = UpwardHierarchyNodeMother.createCollection({
+    name: 'Root',
+    id: 'root'
+  })
 
   return (
     <section>
+      <BreadcrumbsGenerator hierarchy={rootHierarchy} withActionItem actionItemText="Account" />
+
       <header>
         <h1>{t('pageTitle')}</h1>
       </header>

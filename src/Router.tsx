@@ -10,7 +10,7 @@ import { UploadDatasetFilesFactory } from './sections/upload-dataset-files/Uploa
 import { EditDatasetMetadataFactory } from './sections/edit-dataset-metadata/EditDatasetMetadataFactory'
 import { DatasetNonNumericVersion } from './dataset/domain/models/Dataset'
 import { CreateCollectionFactory } from './sections/create-collection/CreateCollectionFactory'
-import { UserPanelFactory } from './sections/user-panel/UserPanelFactory'
+import { AccountFactory } from './sections/account/AccountFactory'
 
 const router = createBrowserRouter(
   [
@@ -52,8 +52,8 @@ const router = createBrowserRouter(
           element: FileFactory.create()
         },
         {
-          path: Route.USER_PANEL,
-          element: UserPanelFactory.create()
+          path: Route.ACCOUNT,
+          element: AccountFactory.create()
         }
       ]
     }

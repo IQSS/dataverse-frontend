@@ -10,7 +10,7 @@ export enum Route {
   FILES = '/files',
   COLLECTIONS = '/collections/:collectionId',
   CREATE_COLLECTION = '/collections/:ownerCollectionId/create',
-  USER_PANEL = '/user-panel'
+  ACCOUNT = '/account'
 }
 
 export const RouteWithParams = {
