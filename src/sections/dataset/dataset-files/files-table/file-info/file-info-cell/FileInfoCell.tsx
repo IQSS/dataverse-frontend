@@ -13,13 +13,17 @@ import { FileDescription } from './file-info-data/FileDescription'
 import { FileLabels } from '../../../../../file/file-labels/FileLabels'
 
 export function FileInfoCell({ file }: { file: FilePreview }) {
+  if (!file.datasetVersionNumber) {
+    console.log('FileInfoCell error: FilePreview object must contain datasetVersionNumber')
+    return null
+  }
   return (
     <div className={styles.container}>
       <div className={styles['thumbnail-container']}>
         <FileThumbnail file={file} />
       </div>
       <div className={styles['body-container']}>
-        <FileTitle id={file.id} name={file.name} />
+        <FileTitle id={file.id} datasetVersionNumber={file.datasetVersionNumber} name={file.name} />
         <div className={styles['body-container__subtext']}>
           <FileDirectory directory={file.metadata.directory} />
           <FileType type={file.metadata.type} size={file.metadata.size} />

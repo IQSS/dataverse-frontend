@@ -79,14 +79,13 @@ export function UploadedFiles({
     updateFiles([file])
   }
   const updateSelected = (file: FileUploadState) => {
-    setSelected((current) => {
-      if (current.has(file)) {
-        current.delete(file)
-      } else {
-        current.add(file)
-      }
-      return new Set<FileUploadState>(current)
-    })
+    const newSelected = new Set<FileUploadState>(selected)
+    if (newSelected.has(file)) {
+      newSelected.delete(file)
+    } else {
+      newSelected.add(file)
+    }
+    setSelected(newSelected)
   }
   const save = () => {
     addFiles(fileUploadState)

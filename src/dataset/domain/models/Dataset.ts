@@ -217,10 +217,6 @@ export enum DatasetNonNumericVersion {
 export enum DatasetNonNumericVersionSearchParam {
   DRAFT = 'DRAFT'
 }
-// TODO: Maybe add this to some routing related folder or file
-export enum QueryParamsKeys {
-  VERSION = 'version'
-}
 
 export class DatasetVersionNumber {
   constructor(public readonly majorNumber?: number, public readonly minorNumber?: number) {}
@@ -230,6 +226,12 @@ export class DatasetVersionNumber {
       return DatasetNonNumericVersion.DRAFT
     }
     return `${this.majorNumber}.${this.minorNumber}`
+  }
+  toSearchParam(): string {
+    if (this.majorNumber === undefined || this.minorNumber === undefined) {
+      return DatasetNonNumericVersionSearchParam.DRAFT
+    }
+    return this.toString()
   }
 }
 

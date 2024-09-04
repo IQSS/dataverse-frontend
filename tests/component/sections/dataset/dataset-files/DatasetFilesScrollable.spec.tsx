@@ -101,7 +101,9 @@ describe('DatasetFilesScrollable', () => {
 
     cy.findByText('10 of 200 Files displayed').should('exist')
     first10Files.forEach((file) => {
-      cy.findByText(file.name).should('exist').should('have.attr', 'href', `/files?id=${file.id}`)
+      cy.findByText(file.name)
+        .should('exist')
+        .should('have.attr', 'href', `/files?id=${file.id}&datasetVersion=1.0`)
     })
   })
 
@@ -135,7 +137,9 @@ describe('DatasetFilesScrollable', () => {
 
       cy.findByText(`${ONLY_4_FILES_COUNT} Files`).should('exist')
       only4Files.files.forEach((file) => {
-        cy.findByText(file.name).should('exist').should('have.attr', 'href', `/files?id=${file.id}`)
+        cy.findByText(file.name)
+          .should('exist')
+          .should('have.attr', 'href', `/files?id=${file.id}&datasetVersion=1.0`)
       })
       cy.findByTestId('table-row-loading-skeleton').should('not.exist')
     })

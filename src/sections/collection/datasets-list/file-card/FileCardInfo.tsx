@@ -8,6 +8,7 @@ import { FileChecksum } from '../../../dataset/dataset-files/files-table/file-in
 import { FileTabularData } from '../../../dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileTabularData'
 import { FileCardHelper } from './FileCardHelper'
 import { DvObjectType } from '../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { FileLabels } from '../../../file/file-labels/FileLabels'
 
 interface FileCardInfoProps {
   filePreview: FilePreview
@@ -37,6 +38,7 @@ export function FileCardInfo({ filePreview, persistentId }: FileCardInfoProps) {
             <FileChecksum checksum={filePreview.metadata.checksum} />
           </Stack>
         </span>
+        <FileLabels labels={filePreview.metadata.labels}></FileLabels>
         <p className={styles.description}>{filePreview.metadata.description}</p>
       </Stack>
     </div>

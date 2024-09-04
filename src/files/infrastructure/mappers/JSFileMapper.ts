@@ -32,6 +32,7 @@ export class JSFileMapper {
       id: this.toFileId(jsFile.id),
       name: this.toFileName(jsFile.name),
       datasetPublishingStatus: datasetVersion.publishingStatus,
+      datasetVersionNumber: datasetVersion.number,
       access: JSFileAccessMapper.toFileAccess(jsFile.restricted),
       ingest: JSFileIngestMapper.toFileIngest(),
       metadata: JSFileMetadataMapper.toFileMetadata(jsFile, downloadsCount, thumbnail, tabularData),
