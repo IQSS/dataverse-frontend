@@ -20,3 +20,8 @@ export const RouteWithParams = {
   CREATE_COLLECTION: (ownerCollectionId?: string) =>
     `/collections/${ownerCollectionId ?? ROOT_COLLECTION_ALIAS}/create`
 }
+
+export enum QueryParamKey {
+  VERSION = 'version',
+  PERSISTENT_ID = 'persistentId'
+}
