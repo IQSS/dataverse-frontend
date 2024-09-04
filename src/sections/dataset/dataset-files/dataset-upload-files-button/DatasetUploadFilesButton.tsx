@@ -4,7 +4,11 @@ import { PlusLg } from 'react-bootstrap-icons'
 import { Button } from '@iqss/dataverse-design-system'
 import { useSession } from '../../../session/SessionContext'
 import { useDataset } from '../../DatasetContext'
-import { Route } from '../../../Route.enum'
+import { QueryParamKey, Route } from '../../../Route.enum'
+import {
+  DatasetNonNumericVersionSearchParam,
+  DatasetPublishingStatus
+} from '../../../../dataset/domain/models/Dataset'
 import styles from './DatasetUploadFilesButton.module.scss'
 
 export function DatasetUploadFilesButton() {
@@ -18,7 +22,14 @@ export function DatasetUploadFilesButton() {
   }
 
   const handleClick = () => {
-    navigate(`${Route.UPLOAD_DATASET_FILES}?persistentId=${dataset.persistentId}`)
+    const searchParams = new URLSearchParams()
+    searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
+
+    if (dataset.version.publishingStatus === DatasetPublishingStatus.DRAFT) {
+      searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
+    }
+
+    navigate(`${Route.UPLOAD_DATASET_FILES}?${searchParams.toString()}`)
   }
 
   return (

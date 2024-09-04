@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "7.6.0",
-    "@iqss/dataverse-client-javascript": "2.0.0-pr169.aa49f06",
+    "@iqss/dataverse-client-javascript": "2.0.0-pr187.f29c0e6",
     "@iqss/dataverse-design-system": "*",
     "@istanbuljs/nyc-config-typescript": "1.0.2",
     "@tanstack/react-table": "8.9.2",
@@ -45,7 +45,8 @@
     "use-deep-compare": "1.2.1",
     "vite-plugin-istanbul": "4.0.1",
     "web-vitals": "2.1.4",
-    "js-md5": "0.8.3"
+    "js-md5": "0.8.3",
+    "async-mutex": "0.5.0"
   },
   "scripts": {
     "start": "vite --base=/spa",
