@@ -4,7 +4,7 @@ import { EditDatasetMetadata } from './EditDatasetMetadata'
 import { DatasetProvider } from '../dataset/DatasetProvider'
 import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
-import { searchParamVersionToDomainVersion } from '../../Router'
+import { searchParamVersionToDomainVersion } from '../../router'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()

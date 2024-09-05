@@ -4,7 +4,7 @@ import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repos
 import { FileJSDataverseRepository } from '../../files/infrastructure/FileJSDataverseRepository'
 import { DatasetProvider } from '../dataset/DatasetProvider'
 import { UploadDatasetFiles } from './UploadDatasetFiles'
-import { searchParamVersionToDomainVersion } from '../../Router'
+import { searchParamVersionToDomainVersion } from '../../router'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
