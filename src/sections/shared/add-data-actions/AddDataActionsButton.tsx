@@ -8,9 +8,15 @@ import styles from './AddDataActionsButton.module.scss'
 
 interface AddDataActionsButtonProps {
   collectionId?: string
+  canAddCollection: boolean
+  canAddDataset: boolean
 }
 
-export default function AddDataActionsButton({ collectionId }: AddDataActionsButtonProps) {
+export default function AddDataActionsButton({
+  collectionId,
+  canAddCollection,
+  canAddDataset
+}: AddDataActionsButtonProps) {
   const { t } = useTranslation('header')
 
   const createDatasetRoute = collectionId
@@ -25,10 +31,10 @@ export default function AddDataActionsButton({ collectionId }: AddDataActionsBut
       title={t('navigation.addData')}
       variant="secondary"
       icon={<PlusLg className={styles.icon} />}>
-      <Dropdown.Item to={createCollectionRoute} as={Link}>
+      <Dropdown.Item to={createCollectionRoute} as={Link} disabled={!canAddCollection}>
         {t('navigation.newCollection')}
       </Dropdown.Item>
-      <Dropdown.Item to={createDatasetRoute} as={Link}>
+      <Dropdown.Item to={createDatasetRoute} as={Link} disabled={!canAddDataset}>
         {t('navigation.newDataset')}
       </Dropdown.Item>
     </DropdownButton>

@@ -3,9 +3,14 @@ import { DatasetRepository } from '../../../../src/dataset/domain/repositories/D
 import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { NotImplementedModalProvider } from '../../../../src/sections/not-implemented/NotImplementedModalProvider'
+import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
+import { CollectionMother } from '../../collection/domain/models/CollectionMother'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
+
+const collectionRepository: CollectionRepository = {} as CollectionRepository
+const userPermissionsMock = CollectionMother.createUserPermissions()
 
 const collectionMetadataBlocksInfo =
   MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue()
@@ -16,6 +21,8 @@ describe('Create Dataset', () => {
     metadataBlockInfoRepository.getDisplayedOnCreateByCollectionId = cy
       .stub()
       .resolves(collectionMetadataBlocksInfo)
+
+    collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
   })
 
   it('renders the Host Collection Form for root collection', () => {
@@ -23,6 +30,7 @@ describe('Create Dataset', () => {
       <CreateDataset
         datasetRepository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
       />
     )
     cy.findByText(/^Host Collection/i).should('exist')
@@ -36,6 +44,7 @@ describe('Create Dataset', () => {
           datasetRepository={datasetRepository}
           collectionId={'test-collectionId'}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
         />
       </NotImplementedModalProvider>
     )
@@ -47,5 +56,33 @@ describe('Create Dataset', () => {
       .then(() => {
         cy.findByText('Not Implemented').should('exist')
       })
+  })
+
+  it('should show alert error message when user is not allowed to create a dataset within the collection', () => {
+    collectionRepository.getUserPermissions = cy.stub().resolves(
+      CollectionMother.createUserPermissions({
+        canAddDataset: false
+      })
+    )
+
+    cy.customMount(
+      <CreateDataset
+        datasetRepository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
+    cy.findAllByTestId('not-allowed-to-create-dataset-alert').should('exist')
+  })
+
+  it('should not show alert error message when user is allowed to create a dataset within the collection', () => {
+    cy.customMount(
+      <CreateDataset
+        datasetRepository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
+    cy.findAllByTestId('not-allowed-to-create-dataset-alert').should('not.exist')
   })
 })
