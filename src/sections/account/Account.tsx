@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
-import { Tabs } from '@iqss/dataverse-design-system'
+import { Alert, Tabs } from '@iqss/dataverse-design-system'
 import { AccountHelper } from './AccountHelper'
 import { ApiTokenSection } from './api-token-section/ApiTokenSection'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
@@ -29,13 +29,25 @@ export const Account = () => {
 
       <Tabs defaultActiveKey={defaultActiveTabKey}>
         <Tabs.Tab eventKey={tabsKeys.myData} title={t('tabs.myData')}>
-          <div className={styles['tab-container']}>My Data here.</div>
+          <div className={styles['tab-container']}>
+            <Alert variant="info" dismissible={false} customHeading="Coming soon">
+              Work in progress
+            </Alert>
+          </div>
         </Tabs.Tab>
         <Tabs.Tab eventKey={tabsKeys.notifications} title={t('tabs.notifications')}>
-          <div className={styles['tab-container']}>Notifications here.</div>
+          <div className={styles['tab-container']}>
+            <Alert variant="info" dismissible={false} customHeading="Coming soon">
+              Work in progress
+            </Alert>
+          </div>
         </Tabs.Tab>
         <Tabs.Tab eventKey={tabsKeys.accountInformation} title={t('tabs.accountInformation')}>
-          <div className={styles['tab-container']}>Account Information.</div>
+          <div className={styles['tab-container']}>
+            <Alert variant="info" dismissible={false} customHeading="Coming soon">
+              Work in progress
+            </Alert>
+          </div>
         </Tabs.Tab>
         <Tabs.Tab eventKey={tabsKeys.apiToken} title={t('tabs.apiToken')}>
           <div className={styles['tab-container']}>

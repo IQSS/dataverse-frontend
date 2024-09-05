@@ -1,7 +1,7 @@
 import { Trans, useTranslation } from 'react-i18next'
+import { Button } from '@iqss/dataverse-design-system'
 import accountStyles from '../Account.module.scss'
 import styles from './ApiTokenSection.module.scss'
-import { Button } from '@iqss/dataverse-design-system'
 
 export const ApiTokenSection = () => {
   const { t } = useTranslation('account', { keyPrefix: 'apiToken' })
@@ -42,8 +42,12 @@ export const ApiTokenSection = () => {
         <Button variant="secondary" onClick={copyToClipboard}>
           {t('copyToClipboard')}
         </Button>
-        <Button variant="secondary">{t('recreateToken')}</Button>
-        <Button variant="secondary">{t('revokeToken')}</Button>
+        <Button variant="secondary" disabled>
+          {t('recreateToken')}
+        </Button>
+        <Button variant="secondary" disabled>
+          {t('revokeToken')}
+        </Button>
       </div>
     </>
   )
