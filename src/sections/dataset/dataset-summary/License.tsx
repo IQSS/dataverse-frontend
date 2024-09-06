@@ -23,7 +23,9 @@ export function License({ license }: LicenseProps) {
             style={{ marginRight: '0.5rem' }}
           />
         )}
-        <a href={license.uri}>{license.name}</a>
+        <a target="_blank" rel="noreferrer" href={license.uri}>
+          {license.name}
+        </a>
       </Col>
     </Row>
   )

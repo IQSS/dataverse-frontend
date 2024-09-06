@@ -182,7 +182,9 @@ const expectedDataset = {
     'doi:10.5072/FK2/B4B2MJ',
     '0.0',
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
-  )
+  ),
+  nextMajorVersion: undefined,
+  nextMinorVersion: undefined
 }
 const expectedDatasetWithPublicationDate = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -278,7 +280,107 @@ const expectedDatasetWithPublicationDate = {
     'doi:10.5072/FK2/B4B2MJ',
     '0.0',
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
-  )
+  ),
+  nextMajorVersion: undefined,
+  nextMinorVersion: undefined
+}
+const expectedDatasetWithNextVersionNumbers = {
+  persistentId: 'doi:10.5072/FK2/B4B2MJ',
+  version: {
+    id: 101,
+    title: "Darwin's Finches",
+    labels: [{ semanticMeaning: 'dataset', value: 'Draft' }],
+    publishingStatus: 'draft',
+    isLatest: true,
+    isInReview: false,
+    latestVersionPublishingStatus: 'draft',
+    number: {
+      minorNumber: 0,
+      majorNumber: 0
+    },
+    someDatasetVersionHasBeenReleased: true,
+    citation:
+      'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
+  },
+  requestedVersion: undefined,
+  publicationDate: undefined,
+  alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
+  summaryFields: [
+    {
+      name: 'citation',
+      fields: {
+        dsDescription: [
+          {
+            dsDescriptionValue:
+              "Darwin's finches (also known as the Galápagos finches) are a group of about fifteen species of passerine birds."
+          }
+        ],
+        subject: ['Medicine, Health and Life Sciences']
+      }
+    }
+  ],
+  license: {
+    name: 'CC0 1.0',
+    uri: 'http://creativecommons.org/publicdomain/zero/1.0',
+    iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+  },
+  metadataBlocks: [
+    {
+      name: 'citation',
+      fields: {
+        title: "Darwin's Finches",
+        author: [{ authorName: 'Finch, Fiona', authorAffiliation: 'Birds Inc.' }],
+        datasetContact: [
+          { datasetContactName: 'Finch, Fiona', datasetContactEmail: 'finch@mailinator.com' }
+        ],
+        dsDescription: [
+          {
+            dsDescriptionValue:
+              "Darwin's finches (also known as the Galápagos finches) are a group of about fifteen species of passerine birds."
+          }
+        ],
+        subject: ['Medicine, Health and Life Sciences'],
+        publicationDate: '2023-02-12'
+      }
+    }
+  ],
+  permissions: {
+    canDownloadFiles: true,
+    canUpdateDataset: true,
+    canPublishDataset: true,
+    canManageDatasetPermissions: true,
+    canManageFilesPermissions: true,
+    canDeleteDataset: true
+  },
+  locks: [
+    {
+      userPersistentId: 'dataverseAdmin',
+      reason: DatasetLockReason.IN_REVIEW
+    }
+  ],
+  hasValidTermsOfAccess: true,
+  hasOneTabularFileAtLeast: true,
+  isValid: true,
+  thumbnail: undefined,
+  privateUrl: undefined,
+  fileDownloadSizes: [
+    new FileDownloadSize(5, FileSizeUnit.BYTES, FileDownloadMode.ORIGINAL),
+    new FileDownloadSize(7, FileSizeUnit.BYTES, FileDownloadMode.ARCHIVAL)
+  ],
+  downloadUrls: {
+    original: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ&format=original`,
+    archival: `/api/access/dataset/:persistentId/versions/0.0?persistentId=doi:10.5072/FK2/B4B2MJ`
+  },
+  hierarchy: new UpwardHierarchyNode(
+    "Darwin's Finches",
+    DvObjectType.DATASET,
+    '505',
+    'doi:10.5072/FK2/B4B2MJ',
+    '0.0',
+    new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
+  ),
+  nextMajorVersion: '2.0',
+  nextMinorVersion: '1.3'
 }
 
 const expectedDatasetAlternateVersion = {
@@ -388,7 +490,9 @@ const expectedDatasetAlternateVersion = {
     'doi:10.5072/FK2/B4B2MJ',
     '0.0',
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
-  )
+  ),
+  nextMajorVersion: undefined,
+  nextMinorVersion: undefined
 }
 describe('JS Dataset Mapper', () => {
   it('maps jsDataset model to the domain Dataset model', () => {
@@ -520,5 +624,28 @@ describe('JS Dataset Mapper', () => {
     )
 
     expect(expectedDatasetWithPublicationDate).to.deep.equal(actual)
+  })
+  it('maps jsDataset model to the domain Dataset model when latest published version numbers are provided', () => {
+    const jsDatasetWithPublicationDate = {
+      ...jsDataset,
+      publicationDate: '2023-02-12'
+    }
+
+    const latestPublishedVersionMajorNumber = 1
+    const latestPublishedVersionMinorNumber = 2
+    const actual = JSDatasetMapper.toDataset(
+      jsDatasetWithPublicationDate,
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions,
+      jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize,
+      undefined,
+      undefined,
+      latestPublishedVersionMajorNumber,
+      latestPublishedVersionMinorNumber
+    )
+    expect(expectedDatasetWithNextVersionNumbers).to.deep.equal(actual)
   })
 })
