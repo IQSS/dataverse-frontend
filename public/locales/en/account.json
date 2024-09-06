@@ -1,10 +1,10 @@
 {
   "pageTitle": "Account",
   "tabs": {
-    "myData": "My data",
+    "myData": "My Data",
     "notifications": "Notifications",
-    "accountInformation": "Account information",
-    "apiToken": "API token"
+    "accountInformation": "Account Information",
+    "apiToken": "API Token"
   },
   "apiToken": {
     "helperText": "Your API Token is valid for a year. Check out our <anchor>API Guide</anchor> for more information on using your API Token with the Dataverse APIs.",
