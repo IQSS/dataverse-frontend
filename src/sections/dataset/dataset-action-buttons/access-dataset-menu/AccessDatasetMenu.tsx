@@ -26,7 +26,11 @@ export function AccessDatasetMenu({
 }: AccessDatasetMenuProps) {
   const { t } = useTranslation('dataset')
 
+  const flesToDownloadSizeIsZero =
+    fileDownloadSizes.map(({ value }) => value).reduce((acc, curr) => acc + curr, 0) === 0
+
   if (
+    flesToDownloadSizeIsZero ||
     !permissions.canDownloadFiles ||
     (version.publishingStatus === DatasetPublishingStatus.DEACCESSIONED &&
       !permissions.canUpdateDataset)

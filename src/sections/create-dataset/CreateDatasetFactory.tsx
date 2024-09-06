@@ -4,9 +4,11 @@ import { CreateDataset } from './CreateDataset'
 import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
 import { NotImplementedModalProvider } from '../not-implemented/NotImplementedModalProvider'
+import { CollectionJSDataverseRepository } from '../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
 
 const datasetRepository = new DatasetJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
+const collectionRepository = new CollectionJSDataverseRepository()
 
 export class CreateDatasetFactory {
   static create(): ReactElement {
@@ -26,6 +28,7 @@ function CreateDatasetWithSearchParams() {
     <CreateDataset
       datasetRepository={datasetRepository}
       metadataBlockInfoRepository={metadataBlockInfoRepository}
+      collectionRepository={collectionRepository}
       collectionId={collectionId}
     />
   )

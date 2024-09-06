@@ -91,7 +91,7 @@ export function DatasetsListWithInfiniteScroll({
             <PaginationResultsInfo paginationInfo={paginationInfo} accumulated={accumulatedCount} />
           </div>
           {accumulatedDatasets.map((dataset) => (
-            <DatasetCard dataset={dataset} key={dataset.persistentId} />
+            <DatasetCard dataset={dataset} key={`${dataset.persistentId}-${dataset.version.id}`} />
           ))}
         </>
       )}

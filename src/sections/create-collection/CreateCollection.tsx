@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Alert } from '@iqss/dataverse-design-system'
 import { useDeepCompareMemo } from 'use-deep-compare'
 import { useCollection } from '../collection/useCollection'
 import { useGetCollectionMetadataBlocksInfo } from './useGetCollectionMetadataBlocksInfo'
@@ -29,6 +30,7 @@ import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreateCollectionSkeleton } from './CreateCollectionSkeleton'
 import { useGetCollectionFacets } from './useGetCollectionFacets'
 import { useGetAllFacetableMetadataFields } from './useGetAllFacetableMetadataFields'
+import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
 
 interface CreateCollectionProps {
   ownerCollectionId: string
@@ -49,6 +51,14 @@ export function CreateCollection({
     collectionRepository,
     ownerCollectionId
   )
+
+  const { collectionUserPermissions, isLoading: isLoadingCollectionUserPermissions } =
+    useGetCollectionUserPermissions({
+      collectionIdOrAlias: ownerCollectionId,
+      collectionRepository: collectionRepository
+    })
+
+  const canUserAddCollection = Boolean(collectionUserPermissions?.canAddCollection)
 
   // TODO:ME In edit mode, collection id should not be from the collection owner but from the collection being edited, but this can perhaps be differentiated by page.
   const { metadataBlocksInfo, isLoading: isLoadingMetadataBlocksInfo } =
@@ -115,7 +125,8 @@ export function CreateCollection({
     isLoadingMetadataBlocksInfo ||
     isLoadingAllMetadataBlocksInfo ||
     isLoadingCollectionFacets ||
-    isLoadingFacetableMetadataFields
+    isLoadingFacetableMetadataFields ||
+    isLoadingCollectionUserPermissions
 
   useEffect(() => {
     if (!isLoadingData) {
@@ -129,6 +140,16 @@ export function CreateCollection({
 
   if (isLoadingData || !collection) {
     return <CreateCollectionSkeleton />
+  }
+
+  if (collectionUserPermissions && !canUserAddCollection) {
+    return (
+      <div className="pt-4" data-testid="not-allowed-to-create-collection-alert">
+        <Alert variant="danger" dismissible={false}>
+          {t('notAllowedToCreateCollection')}
+        </Alert>
+      </div>
+    )
   }
 
   const formDefaultValues: CollectionFormData = {

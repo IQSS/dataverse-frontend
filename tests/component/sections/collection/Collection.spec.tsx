@@ -9,12 +9,15 @@ const totalDatasetsCount = 200
 const datasets = DatasetPreviewMother.createMany(totalDatasetsCount)
 const collectionRepository = {} as CollectionRepository
 const collection = CollectionMother.create({ name: 'Collection Name' })
+const userPermissionsMock = CollectionMother.createUserPermissions()
+
 const datasetsWithCount = { datasetPreviews: datasets, totalCount: totalDatasetsCount }
 
 describe('Collection page', () => {
   beforeEach(() => {
     datasetRepository.getAllWithCount = cy.stub().resolves(datasetsWithCount)
     collectionRepository.getById = cy.stub().resolves(collection)
+    collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
   })
 
   it('renders skeleton while loading', () => {
@@ -166,5 +169,25 @@ describe('Collection page', () => {
     )
 
     cy.findByRole('alert').should('exist').should('include.text', 'Success!')
+  })
+
+  it('hides the Add data dropdown button when user does not have permissions to create both a collection and a dataset', () => {
+    collectionRepository.getUserPermissions = cy.stub().resolves(
+      CollectionMother.createUserPermissions({
+        canAddCollection: false,
+        canAddDataset: false
+      })
+    )
+
+    cy.mountAuthenticated(
+      <Collection
+        repository={collectionRepository}
+        datasetRepository={datasetRepository}
+        id="collection"
+        created={false}
+      />
+    )
+
+    cy.findByRole('button', { name: /Add Data/i }).should('not.exist')
   })
 })
