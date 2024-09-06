@@ -2,13 +2,13 @@ import { BASE_URL } from '../config'
 import { Route } from '../sections/Route.enum'
 import { useSession } from '../sections/session/SessionContext'
 import { Outlet } from 'react-router-dom'
+import { AppLoader } from '../sections/shared/layout/app-loader/AppLoader'
 
 export const ProtectedRoute = () => {
   const { user, isLoadingUser } = useSession()
 
   if (isLoadingUser) {
-    //TODO:ME Show app loader here
-    return null
+    return <AppLoader />
   }
 
   if (!user) {
@@ -16,7 +16,7 @@ export const ProtectedRoute = () => {
     return null
   }
 
-  // TODO: When we have the login page within the SPA, we can use the following code:
+  // When we have the login page inside the SPA, we can use the following code:
   // return !user ? <Navigate to="/login" replace /> : <Outlet />
 
   return <Outlet />
