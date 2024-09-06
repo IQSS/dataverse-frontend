@@ -7,7 +7,7 @@ import { FilePaginationInfo } from '../models/FilePaginationInfo'
 import { FilePreview } from '../models/FilePreview'
 import { FilesWithCount } from '../models/FilesWithCount'
 import { FileHolder } from '../models/FileHolder'
-import { FileUploadState } from '../models/FileUploadState'
+import { UploadedFileDTO } from '@iqss/dataverse-client-javascript'
 
 export interface FileRepository {
   getAllByDatasetPersistentId: (
@@ -42,10 +42,5 @@ export interface FileRepository {
     abortController: AbortController,
     storageIdSetter: (storageId: string) => void
   ) => Promise<void>
-  addUploadedFiles: (datasetId: number | string, files: FileUploadState[]) => Promise<void>
-  addUploadedFile: (
-    datasetId: number | string,
-    file: FileHolder,
-    storageId: string
-  ) => Promise<void>
+  addUploadedFiles: (datasetId: number | string, files: UploadedFileDTO[]) => Promise<void>
 }

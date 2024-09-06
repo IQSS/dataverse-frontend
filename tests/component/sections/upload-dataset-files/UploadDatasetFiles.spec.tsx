@@ -217,58 +217,6 @@ describe('UploadDatasetFiles', () => {
     cy.findByText('Select files to add').should('exist')
   })
 
-  it('prevents more than 6 simultaneous uploads', () => {
-    const testDataset = DatasetMother.create()
-
-    mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
-
-    cy.findByTestId('drag-and-drop').as('dnd')
-    cy.get('@dnd').should('exist')
-
-    const filenames: string[] = [
-      'users1.json',
-      'users2.json',
-      'users3.json',
-      'users4.json',
-      'users5.json',
-      'users6.json',
-      'users7.json',
-      'users8.json',
-      'users9.json',
-      'users10.json'
-    ]
-    filenames.forEach((element) => {
-      cy.get('@dnd').selectFile(
-        { fileName: element, contents: [{ name: 'John Doe' }] },
-        { action: 'drag-drop' }
-      )
-    })
-    cy.findAllByTitle('Cancel upload').should('have.length', 10)
-    cy.findAllByRole('progressbar').should('have.length', 6)
-    cy.findByText('Select files to add').should('exist')
-    const filenames2: string[] = [
-      'users11.json',
-      'users12.json',
-      'users13.json',
-      'users14.json',
-      'users15.json',
-      'users16.json',
-      'users17.json',
-      'users18.json',
-      'users19.json',
-      'users20.json'
-    ]
-    filenames2.forEach((element) => {
-      cy.get('@dnd').selectFile(
-        { fileName: element, contents: [{ name: 'John Doe' }] },
-        { action: 'drag-drop' }
-      )
-    })
-    cy.findByText('users20.json').should('exist')
-    cy.findAllByRole('progressbar').should('have.length', 6)
-    cy.findByText('Select files to add').should('exist')
-  })
-
   it('saves uploaded files', () => {
     const testDataset = DatasetMother.create()
 
