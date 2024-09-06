@@ -9,6 +9,7 @@ import { CollectionFactory } from '../sections/collection/CollectionFactory'
 import { UploadDatasetFilesFactory } from '../sections/upload-dataset-files/UploadDatasetFilesFactory'
 import { EditDatasetMetadataFactory } from '../sections/edit-dataset-metadata/EditDatasetMetadataFactory'
 import { CreateCollectionFactory } from '../sections/create-collection/CreateCollectionFactory'
+import { ProtectedRoute } from './ProtectedRoute'
 
 export const routes: RouteObject[] = [
   {
@@ -25,28 +26,34 @@ export const routes: RouteObject[] = [
         element: CollectionFactory.create()
       },
       {
-        path: Route.CREATE_COLLECTION,
-        element: CreateCollectionFactory.create()
-      },
-      {
         path: Route.DATASETS,
         element: DatasetFactory.create()
       },
       {
-        path: Route.CREATE_DATASET,
-        element: CreateDatasetFactory.create()
-      },
-      {
-        path: Route.UPLOAD_DATASET_FILES,
-        element: UploadDatasetFilesFactory.create()
-      },
-      {
-        path: Route.EDIT_DATASET_METADATA,
-        element: EditDatasetMetadataFactory.create()
-      },
-      {
         path: Route.FILES,
         element: FileFactory.create()
+      },
+      // 🔐 Protected routes are only accessible to authenticated users
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: Route.CREATE_COLLECTION,
+            element: CreateCollectionFactory.create()
+          },
+          {
+            path: Route.CREATE_DATASET,
+            element: CreateDatasetFactory.create()
+          },
+          {
+            path: Route.UPLOAD_DATASET_FILES,
+            element: UploadDatasetFilesFactory.create()
+          },
+          {
+            path: Route.EDIT_DATASET_METADATA,
+            element: EditDatasetMetadataFactory.create()
+          }
+        ]
       }
     ]
   }
