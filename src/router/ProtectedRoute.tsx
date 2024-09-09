@@ -1,8 +1,8 @@
-import { BASE_URL } from '../config'
+import { Outlet } from 'react-router-dom'
 import { Route } from '../sections/Route.enum'
 import { useSession } from '../sections/session/SessionContext'
-import { Outlet } from 'react-router-dom'
 import { AppLoader } from '../sections/shared/layout/app-loader/AppLoader'
+import { BASE_URL } from '../config'
 
 export const ProtectedRoute = () => {
   const { user, isLoadingUser } = useSession()
