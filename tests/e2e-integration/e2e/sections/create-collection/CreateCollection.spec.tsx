@@ -27,4 +27,12 @@ describe('Create Collection', () => {
     cy.findByRole('heading', { name: collectionName }).should('exist')
     cy.findByText('Success!').should('exist')
   })
+
+  it('redirects to the Log i¡In page when the user is not authenticated', () => {
+    cy.wrap(TestsUtils.logout())
+
+    cy.visit('/spa/collections/root/create')
+    cy.get('#login-container').should('exist')
+    cy.url().should('include', '/loginpage.xhtml')
+  })
 })
