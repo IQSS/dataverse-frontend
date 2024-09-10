@@ -42,7 +42,9 @@ describe('Collection Page', () => {
       cy.findByText('New Dataset').should('be.visible').click({ force: true })
     })
     cy.wait(1000)
-    cy.findByText(/Create Dataset/i).should('exist')
+    cy.get(`.breadcrumb`)
+      .findByText(/Create Dataset/i)
+      .should('exist')
 
     cy.visit('/spa')
     cy.wait(1000)
@@ -53,7 +55,9 @@ describe('Collection Page', () => {
       cy.findByText('New Dataset').should('be.visible').click({ force: true })
     })
     cy.wait(1000)
-    cy.findByText(/Create Dataset/i).should('exist')
+    cy.get(`h1`)
+      .findByText(/Create Dataset/i)
+      .should('exist')
   })
 
   it('log out Dataverse Admin user', () => {
