@@ -52,33 +52,49 @@ export function CreateCollection({
     ownerCollectionId
   )
 
-  const { collectionUserPermissions, isLoading: isLoadingCollectionUserPermissions } =
-    useGetCollectionUserPermissions({
-      collectionIdOrAlias: ownerCollectionId,
-      collectionRepository: collectionRepository
-    })
+  const {
+    collectionUserPermissions,
+    isLoading: isLoadingCollectionUserPermissions,
+    error: collectionPermissionsError
+  } = useGetCollectionUserPermissions({
+    collectionIdOrAlias: ownerCollectionId,
+    collectionRepository: collectionRepository
+  })
 
   const canUserAddCollection = Boolean(collectionUserPermissions?.canAddCollection)
 
   // TODO:ME In edit mode, collection id should not be from the collection owner but from the collection being edited, but this can perhaps be differentiated by page.
-  const { metadataBlocksInfo, isLoading: isLoadingMetadataBlocksInfo } =
-    useGetCollectionMetadataBlocksInfo({
-      collectionId: ownerCollectionId,
-      metadataBlockInfoRepository
-    })
+  const {
+    metadataBlocksInfo,
+    isLoading: isLoadingMetadataBlocksInfo,
+    error: metadataBlockInfoError
+  } = useGetCollectionMetadataBlocksInfo({
+    collectionId: ownerCollectionId,
+    metadataBlockInfoRepository
+  })
 
-  const { allMetadataBlocksInfo, isLoading: isLoadingAllMetadataBlocksInfo } =
-    useGetAllMetadataBlocksInfo({ metadataBlockInfoRepository })
+  const {
+    allMetadataBlocksInfo,
+    isLoading: isLoadingAllMetadataBlocksInfo,
+    error: allMetadataBlocksInfoError
+  } = useGetAllMetadataBlocksInfo({ metadataBlockInfoRepository })
 
-  const { collectionFacets, isLoading: isLoadingCollectionFacets } = useGetCollectionFacets({
+  const {
+    collectionFacets,
+    isLoading: isLoadingCollectionFacets,
+    error: collectionFacetsError
+  } = useGetCollectionFacets({
     collectionId: ownerCollectionId,
     collectionRepository
   })
 
-  const { facetableMetadataFields, isLoading: isLoadingFacetableMetadataFields } =
-    useGetAllFacetableMetadataFields({
-      metadataBlockInfoRepository
-    })
+  const {
+    facetableMetadataFields,
+    isLoading: isLoadingFacetableMetadataFields,
+    error: facetableMetadataFieldsError
+  } = useGetAllFacetableMetadataFields({
+    metadataBlockInfoRepository
+  })
 
   const baseInputLevels: FormattedCollectionInputLevels = useDeepCompareMemo(() => {
     return CollectionFormHelper.defineBaseInputLevels(allMetadataBlocksInfo)
@@ -128,6 +144,14 @@ export function CreateCollection({
     isLoadingFacetableMetadataFields ||
     isLoadingCollectionUserPermissions
 
+  const dataLoadingErrors = [
+    collectionPermissionsError,
+    metadataBlockInfoError,
+    allMetadataBlocksInfoError,
+    collectionFacetsError,
+    facetableMetadataFieldsError
+  ]
+
   useEffect(() => {
     if (!isLoadingData) {
       setIsLoading(false)
@@ -149,6 +173,20 @@ export function CreateCollection({
           {t('notAllowedToCreateCollection')}
         </Alert>
       </div>
+    )
+  }
+
+  if (dataLoadingErrors.some((error) => error !== null)) {
+    return (
+      <>
+        {dataLoadingErrors
+          .filter((err) => err !== null)
+          .map((error, index) => (
+            <Alert key={index} variant="danger" dismissible={false}>
+              {error}
+            </Alert>
+          ))}
+      </>
     )
   }
 
