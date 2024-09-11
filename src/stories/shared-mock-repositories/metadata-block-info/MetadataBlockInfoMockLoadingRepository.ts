@@ -1,6 +1,7 @@
 import {
   MetadataBlockInfoDisplayFormat,
-  MetadataBlockInfo
+  MetadataBlockInfo,
+  MetadataField
 } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataBlockInfoMockRepository } from './MetadataBlockInfoMockRepository'
 
@@ -17,7 +18,11 @@ export class MetadataBlockInfoMockLoadingRepository implements MetadataBlockInfo
     return new Promise(() => {})
   }
 
-  getAllTemporal(_names: string[]): Promise<MetadataBlockInfo[]> {
+  getAll(): Promise<MetadataBlockInfo[]> {
+    return new Promise(() => {})
+  }
+
+  getAllFacetableMetadataFields(): Promise<MetadataField[]> {
     return new Promise(() => {})
   }
 }

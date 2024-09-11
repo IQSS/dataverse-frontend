@@ -9,8 +9,11 @@ import {
   CollectionStorage
 } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
 import { SubmissionStatus, useSubmitCollection } from './useSubmitCollection'
-import { ReducedMetadataBlockInfo } from '../useGetAllMetadataBlocksInfo'
-import { MetadataBlockName } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import {
+  MetadataBlockInfo,
+  MetadataBlockName,
+  MetadataField
+} from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { SeparationLine } from '../../shared/layout/SeparationLine/SeparationLine'
 import { TopFieldsSection } from './top-fields-section/TopFieldsSection'
 import { MetadataFieldsSection } from './metadata-fields-section/MetadataFieldsSection'
@@ -20,12 +23,16 @@ import styles from './CollectionForm.module.scss'
 export const METADATA_BLOCKS_NAMES_GROUPER = 'metadataBlockNames'
 export const USE_FIELDS_FROM_PARENT = 'useFieldsFromParent'
 export const INPUT_LEVELS_GROUPER = 'inputLevels'
+export const FACET_IDS_FIELD = 'facetIds'
+export const USE_FACETS_FROM_PARENT = 'useFacetsFromParent'
 
 export interface CollectionFormProps {
   collectionRepository: CollectionRepository
   ownerCollectionId: string
   defaultValues: CollectionFormData
-  allMetadataBlocksInfo: ReducedMetadataBlockInfo[]
+  allMetadataBlocksInfo: MetadataBlockInfo[]
+  allFacetableMetadataFields: MetadataField[]
+  defaultCollectionFacets: CollectionFormFacet[]
 }
 
 export type CollectionFormData = {
@@ -40,19 +47,17 @@ export type CollectionFormData = {
   [USE_FIELDS_FROM_PARENT]: boolean
   [METADATA_BLOCKS_NAMES_GROUPER]: CollectionFormMetadataBlocks
   [INPUT_LEVELS_GROUPER]: FormattedCollectionInputLevels
+  [USE_FACETS_FROM_PARENT]: boolean
+  facetIds: CollectionFormFacet[]
 }
-export type CollectionFormMetadataBlock = Exclude<
-  MetadataBlockName,
-  MetadataBlockName.CODE_META | MetadataBlockName.COMPUTATIONAL_WORKFLOW
->
 
-export type CollectionFormMetadataBlocks = Record<CollectionFormMetadataBlock, boolean>
+export type CollectionFormMetadataBlocks = Record<MetadataBlockName, boolean>
 
 export type FormattedCollectionInputLevels = {
   [key: string]: {
     include: boolean
     optionalOrRequired: CollectionFormInputLevelValue
-    parentBlockName: CollectionFormMetadataBlock
+    parentBlockName: MetadataBlockName
   }
 }
 
@@ -71,7 +76,15 @@ export const CollectionFormInputLevelOptions = {
 export type CollectionFormInputLevelValue =
   (typeof CollectionFormInputLevelOptions)[keyof typeof CollectionFormInputLevelOptions]
 
-export const CONDITIONALLY_REQUIRED_FIELDS = ['producerName']
+export type CollectionFormFacet = {
+  value: string
+  label: string
+  id: string
+}
+
+export type MetadataFieldWithParentBlockInfo = MetadataField & {
+  parentBlockInfo: Pick<MetadataBlockInfo, 'id' | 'name' | 'displayName'>
+}
 
 // On the submit function callback, type is CollectionType as type field is required and wont never be ""
 export type CollectionFormValuesOnSubmit = Omit<CollectionFormData, 'type'> & {
@@ -82,7 +95,9 @@ export const CollectionForm = ({
   collectionRepository,
   ownerCollectionId,
   defaultValues,
-  allMetadataBlocksInfo
+  allMetadataBlocksInfo,
+  allFacetableMetadataFields,
+  defaultCollectionFacets
 }: CollectionFormProps) => {
   const formContainerRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation('createCollection')
@@ -163,7 +178,11 @@ export const CollectionForm = ({
 
             <Card>
               <Card.Body>
-                <BrowseSearchFacetsSection />
+                <BrowseSearchFacetsSection
+                  defaultCollectionFacets={defaultCollectionFacets}
+                  allFacetableMetadataFields={allFacetableMetadataFields}
+                  allMetadataBlocksInfo={allMetadataBlocksInfo}
+                />
               </Card.Body>
             </Card>
           </Stack>

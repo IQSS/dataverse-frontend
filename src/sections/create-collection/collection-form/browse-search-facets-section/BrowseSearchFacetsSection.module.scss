@@ -1,0 +1,16 @@
+.transfer-list-container {
+  display: flex;
+  justify-content: center;
+
+  @media (min-width: 768px) {
+    justify-content: flex-start;
+  }
+}
+
+.select-facets-by-block-container {
+  width: 100%;
+
+  @media (min-width: 768px) {
+    width: 370px;
+  }
+}

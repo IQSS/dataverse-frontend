@@ -1,7 +1,8 @@
 import { MetadataBlockInfoMother } from '../../../../tests/component/metadata-block-info/domain/models/MetadataBlockInfoMother'
 import {
   MetadataBlockInfoDisplayFormat,
-  MetadataBlockInfo
+  MetadataBlockInfo,
+  MetadataField
 } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataBlockInfoRepository } from '../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 
@@ -30,7 +31,7 @@ export class MetadataBlockInfoMockRepository implements MetadataBlockInfoReposit
     })
   }
 
-  getAllTemporal(_names: string[]): Promise<MetadataBlockInfo[]> {
+  getAll(): Promise<MetadataBlockInfo[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve([
@@ -41,6 +42,14 @@ export class MetadataBlockInfoMockRepository implements MetadataBlockInfoReposit
           MetadataBlockInfoMother.getJournalBlock(),
           MetadataBlockInfoMother.getSocialScienceBlock()
         ])
+      }, 1_000)
+    })
+  }
+
+  getAllFacetableMetadataFields(): Promise<MetadataField[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(MetadataBlockInfoMother.createFacetableMetadataFields())
       }, 1_000)
     })
   }
