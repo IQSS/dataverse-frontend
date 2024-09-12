@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Form } from '@iqss/dataverse-design-system'
-import { CloseButton } from 'react-bootstrap'
+import { Form, CloseButton } from '@iqss/dataverse-design-system'
 import { Search as SearchIcon } from 'react-bootstrap-icons'
 import { QueryParamKey, Route } from '../../Route.enum'
 import styles from './SearchInput.module.scss'

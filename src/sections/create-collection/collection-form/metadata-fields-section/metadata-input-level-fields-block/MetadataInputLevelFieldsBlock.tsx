@@ -1,7 +1,6 @@
 import { ChangeEvent, useEffect, useId, useState } from 'react'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
-import { Button, Form, Stack } from '@iqss/dataverse-design-system'
-import { CloseButton } from 'react-bootstrap'
+import { Button, Form, Stack, CloseButton } from '@iqss/dataverse-design-system'
 import { MetadataBlockName } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { ReducedMetadataBlockInfo } from '../../../useGetAllMetadataBlocksInfo'
 import { METADATA_BLOCKS_NAMES_GROUPER, USE_FIELDS_FROM_PARENT } from '../../CollectionForm'
