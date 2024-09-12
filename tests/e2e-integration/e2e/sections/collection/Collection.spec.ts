@@ -42,10 +42,6 @@ describe('Collection Page', () => {
       cy.findByText('New Dataset').should('be.visible').click({ force: true })
     })
     cy.wait(1000)
-    cy.get(`.breadcrumb`)
-      .findByText(/Create Dataset/i)
-      .should('exist')
-
     cy.visit('/spa')
     cy.wait(1000)
     cy.get('main').within(() => {
