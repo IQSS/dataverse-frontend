@@ -8,6 +8,7 @@ import {
 import { Validator } from '../../../../shared/helpers/Validator'
 import { ContactsField } from './ContactsField'
 import { IdentifierField } from './IdentifierField'
+import { DescriptionField } from './DescriptionField'
 
 export const TopFieldsSection = () => {
   const { t } = useTranslation('createCollection')
@@ -48,7 +49,7 @@ export const TopFieldsSection = () => {
   }
 
   return (
-    <section data-testid="core-fields-section">
+    <section>
       {/* Host Collection */}
       <Row>
         <Form.Group controlId="host-collection" as={Col} md={6}>
@@ -131,6 +132,7 @@ export const TopFieldsSection = () => {
       <Row>
         <IdentifierField rules={aliasRules} />
 
+        {/* 👇 To be defined, at the moment the SPA only supports file uploading through direct upload (S3), so we are disabling the storage selector */}
         <Form.Group controlId="storage" as={Col} md={6}>
           <Form.Group.Label message={t('fields.storage.description')}>
             {t('fields.storage.label')}
@@ -195,26 +197,7 @@ export const TopFieldsSection = () => {
           <ContactsField rules={contactsRules} />
         </Col>
 
-        <Form.Group controlId="description" as={Col} md={6}>
-          <Form.Group.Label message={t('fields.description.description')}>
-            {t('fields.description.label')}
-          </Form.Group.Label>
-          <Controller
-            name="description"
-            control={control}
-            render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
-              <Col>
-                <Form.Group.TextArea
-                  value={value as string}
-                  onChange={onChange}
-                  isInvalid={invalid}
-                  ref={ref}
-                />
-                <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
-              </Col>
-            )}
-          />
-        </Form.Group>
+        <DescriptionField />
       </Row>
     </section>
   )

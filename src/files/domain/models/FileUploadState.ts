@@ -1,4 +1,6 @@
+import { UploadedFileDTO } from '@iqss/dataverse-client-javascript'
 import { FileSize, FileSizeUnit } from './FileMetadata'
+import { UploadedFileDTOMapper } from '../../infrastructure/mappers/UploadedFileDTOMapper'
 
 export interface FileUploadState {
   progress: number
@@ -17,6 +19,7 @@ export interface FileUploadState {
   description?: string
   tags: string[]
   restricted: boolean
+  checksumValue?: string
 }
 
 export interface FileUploaderState {
@@ -94,6 +97,18 @@ export class FileUploadTools {
     return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
   }
 
+  static checksum(
+    file: File,
+    checksumValue: string,
+    oldState: FileUploaderState
+  ): FileUploaderState {
+    const fileUploadState = oldState.state.get(this.key(file))
+    if (fileUploadState) {
+      fileUploadState.checksumValue = checksumValue
+    }
+    return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
+  }
+
   static failed(file: File, oldState: FileUploaderState): FileUploaderState {
     const fileUploadState = oldState.state.get(this.key(file))
     if (fileUploadState) {
@@ -125,6 +140,21 @@ export class FileUploadTools {
   static delete(file: File, oldState: FileUploaderState): FileUploaderState {
     oldState.state.delete(this.key(file))
     return { state: oldState.state, uploaded: this.toUploaded(oldState.state) }
+  }
+
+  static mapToUploadedFilesDTOs(state: FileUploadState[]): UploadedFileDTO[] {
+    return state.map((uploadedFile) =>
+      UploadedFileDTOMapper.toUploadedFileDTO(
+        uploadedFile.fileName,
+        uploadedFile.description,
+        uploadedFile.fileDir,
+        uploadedFile.tags,
+        uploadedFile.restricted,
+        uploadedFile.storageId as string,
+        uploadedFile.checksumValue as string,
+        uploadedFile.fileType === '' ? 'application/octet-stream' : uploadedFile.fileType // some browsers (e.g., chromium for .java files) fail to detect the mime type for some files and leave the fileType as an empty string, we use the default value 'application/octet-stream' in that case
+      )
+    )
   }
 
   private static toNewState(

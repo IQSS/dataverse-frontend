@@ -2,6 +2,7 @@ import { Collection } from '../../../../../src/collection/domain/models/Collecti
 import { faker } from '@faker-js/faker'
 import { FakerHelper } from '../../../shared/FakerHelper'
 import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
+import { CollectionUserPermissions } from '../../../../../src/collection/domain/models/CollectionUserPermissions'
 
 export class CollectionMother {
   static create(props?: Partial<Collection>): Collection {
@@ -65,5 +66,20 @@ export class CollectionMother {
     return CollectionMother.createWithOnlyRequiredFields({
       affiliation: FakerHelper.affiliation()
     })
+  }
+
+  static createUserPermissions(
+    props?: Partial<CollectionUserPermissions>
+  ): CollectionUserPermissions {
+    return {
+      canAddCollection: true,
+      canAddDataset: true,
+      canViewUnpublishedCollection: true,
+      canEditCollection: true,
+      canManageCollectionPermissions: true,
+      canPublishCollection: true,
+      canDeleteCollection: true,
+      ...props
+    }
   }
 }

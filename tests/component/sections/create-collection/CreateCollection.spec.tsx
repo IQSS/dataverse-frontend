@@ -2,6 +2,7 @@ import { CollectionRepository } from '../../../../src/collection/domain/reposito
 import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { CreateCollection } from '../../../../src/sections/create-collection/CreateCollection'
 import { UserRepository } from '../../../../src/users/domain/repositories/UserRepository'
+import { CollectionFacetMother } from '../../collection/domain/models/CollectionFacetMother'
 import { CollectionMother } from '../../collection/domain/models/CollectionMother'
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { UserMother } from '../../users/domain/models/UserMother'
@@ -11,9 +12,14 @@ const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataB
 
 const COLLECTION_NAME = 'Collection Name'
 const collection = CollectionMother.create({ name: COLLECTION_NAME })
+const userPermissionsMock = CollectionMother.createUserPermissions()
 
 const collectionMetadataBlocksInfo =
   MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateFalse()
+
+const collectionFacetsMock = CollectionFacetMother.createFacets()
+
+const allFacetableMetadataFieldsMock = MetadataBlockInfoMother.createFacetableMetadataFields()
 
 const allMetadataBlocksMock = [
   MetadataBlockInfoMother.getCitationBlock(),
@@ -31,8 +37,13 @@ describe('CreateCollection', () => {
   beforeEach(() => {
     collectionRepository.create = cy.stub().resolves(1)
     collectionRepository.getById = cy.stub().resolves(collection)
+    collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
+    collectionRepository.getFacets = cy.stub().resolves(collectionFacetsMock)
     metadataBlockInfoRepository.getByCollectionId = cy.stub().resolves(collectionMetadataBlocksInfo)
-    metadataBlockInfoRepository.getAllTemporal = cy.stub().resolves(allMetadataBlocksMock)
+    metadataBlockInfoRepository.getAll = cy.stub().resolves(allMetadataBlocksMock)
+    metadataBlockInfoRepository.getAllFacetableMetadataFields = cy
+      .stub()
+      .resolves(allFacetableMetadataFieldsMock)
     userRepository.getAuthenticated = cy.stub().resolves(testUser)
   })
 
@@ -96,5 +107,63 @@ describe('CreateCollection', () => {
     cy.findByLabelText(/^Affiliation/i).should('have.value', testUser.affiliation)
 
     cy.findByLabelText(/^Email/i).should('have.value', testUser.email)
+  })
+
+  it('should show alert error message when user is not allowed to create collection', () => {
+    collectionRepository.getUserPermissions = cy.stub().resolves(
+      CollectionMother.createUserPermissions({
+        canAddCollection: false
+      })
+    )
+
+    cy.mountAuthenticated(
+      <CreateCollection
+        collectionRepository={collectionRepository}
+        ownerCollectionId="root"
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+    cy.findAllByTestId('not-allowed-to-create-collection-alert').should('exist')
+  })
+
+  it('should not show alert error message when user is allowed to create collection', () => {
+    cy.mountAuthenticated(
+      <CreateCollection
+        collectionRepository={collectionRepository}
+        ownerCollectionId="root"
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+    cy.findAllByTestId('not-allowed-to-create-collection-alert').should('not.exist')
+  })
+
+  it('should display an alert error message for each error in loading the required data', () => {
+    collectionRepository.getUserPermissions = cy
+      .stub()
+      .rejects(new Error('Error getting user permissions'))
+    collectionRepository.getFacets = cy.stub().rejects(new Error('Error getting collection facets'))
+    metadataBlockInfoRepository.getByCollectionId = cy
+      .stub()
+      .rejects(new Error('Error getting metadata blocks info'))
+    metadataBlockInfoRepository.getAll = cy
+      .stub()
+      .rejects(new Error('Error getting all metadata blocks info'))
+    metadataBlockInfoRepository.getAllFacetableMetadataFields = cy
+      .stub()
+      .rejects(new Error('Error getting all facetable metadata fields'))
+
+    cy.mountAuthenticated(
+      <CreateCollection
+        collectionRepository={collectionRepository}
+        ownerCollectionId="root"
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+
+    cy.findByText(/Error getting user permissions/).should('exist')
+    cy.findByText(/Error getting collection facets/).should('exist')
+    cy.findByText(/Error getting metadata blocks info/).should('exist')
+    cy.findByText(/Error getting all metadata blocks info/).should('exist')
+    cy.findByText(/Error getting all facetable metadata fields/).should('exist')
   })
 })

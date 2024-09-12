@@ -1,11 +1,10 @@
-import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { useCallback, useMemo } from 'react'
+import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { Controller, UseControllerProps, useFieldArray, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import cn from 'classnames'
-
-import styles from '../CollectionForm.module.scss'
 import { DynamicFieldsButtons } from '../../../shared/form/DynamicFieldsButtons/DynamicFieldsButtons'
+import cn from 'classnames'
+import styles from './TopFieldsSection.module.scss'
 
 interface ContactsFieldProps {
   rules: UseControllerProps['rules']

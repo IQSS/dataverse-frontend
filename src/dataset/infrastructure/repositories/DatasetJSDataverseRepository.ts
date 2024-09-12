@@ -1,28 +1,29 @@
 import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
 import { Dataset, DatasetLock, DatasetNonNumericVersion } from '../../domain/models/Dataset'
 import {
-  getDataset,
-  getAllDatasetPreviews,
-  getDatasetCitation,
-  getDatasetSummaryFieldNames,
-  Dataset as JSDataset,
-  DatasetPreview as JSDatasetPreview,
-  DatasetUserPermissions as JSDatasetPermissions,
-  VersionUpdateType as JSVersionUpdateType,
-  getPrivateUrlDataset,
-  getPrivateUrlDatasetCitation,
-  getDatasetUserPermissions,
-  ReadError,
-  getDatasetLocks,
-  DatasetLock as JSDatasetLock,
-  getDatasetFilesTotalDownloadSize,
-  FileDownloadSizeMode,
-  DatasetPreviewSubset,
   createDataset,
   CreatedDatasetIdentifiers as JSDatasetIdentifiers,
-  WriteError,
+  Dataset as JSDataset,
+  DatasetLock as JSDatasetLock,
+  DatasetPreview as JSDatasetPreview,
+  DatasetPreviewSubset,
+  DatasetUserPermissions as JSDatasetPermissions,
+  DatasetVersionState,
+  FileDownloadSizeMode,
+  getAllDatasetPreviews,
+  getDataset,
+  getDatasetCitation,
+  getDatasetFilesTotalDownloadSize,
+  getDatasetLocks,
+  getDatasetSummaryFieldNames,
+  getDatasetUserPermissions,
+  getPrivateUrlDataset,
+  getPrivateUrlDatasetCitation,
   publishDataset,
-  updateDataset
+  ReadError,
+  updateDataset,
+  VersionUpdateType as JSVersionUpdateType,
+  WriteError
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -31,7 +32,8 @@ import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
 import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
 import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
-const defaultCollectionId = 'root'
+import { ROOT_COLLECTION_ALIAS } from '../../../collection/domain/models/Collection'
+
 const includeDeaccessioned = true
 type DatasetDetails = [JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[]]
 
@@ -43,6 +45,8 @@ interface IDatasetDetails {
   jsDatasetLocks: JSDatasetLock[]
   jsDatasetFilesTotalOriginalDownloadSize: number
   jsDatasetFilesTotalArchivalDownloadSize: number
+  latestPublishedVersionMajorNumber?: number
+  latestPublishedVersionMinorNumber?: number
 }
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
@@ -62,6 +66,21 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           totalCount: subset.totalDatasetCount
         }
       })
+  }
+  private async getLatestPublishedVersionNumbers(
+    datasetDetails: IDatasetDetails
+  ): Promise<IDatasetDetails> {
+    await getDataset
+      .execute(datasetDetails.jsDataset.persistentId, DatasetNonNumericVersion.LATEST_PUBLISHED)
+      .then((latestPublishedDataset) => {
+        datasetDetails.latestPublishedVersionMajorNumber =
+          latestPublishedDataset.versionInfo.majorNumber
+        datasetDetails.latestPublishedVersionMinorNumber =
+          latestPublishedDataset.versionInfo.minorNumber
+        return datasetDetails
+      })
+
+    return datasetDetails
   }
 
   private async fetchDatasetDetails(
@@ -138,6 +157,18 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         })
       })
       .then((datasetDetails) => {
+        if (
+          datasetDetails.jsDataset.versionInfo.state === DatasetVersionState.DRAFT &&
+          datasetDetails.jsDataset.publicationDate !== undefined
+        ) {
+          // If the dataset is a draft, but has a publication date, then we need the version
+          // numbers of the latest published version to show in the "Publish" button
+          return this.getLatestPublishedVersionNumbers(datasetDetails)
+        } else {
+          return datasetDetails
+        }
+      })
+      .then((datasetDetails) => {
         return JSDatasetMapper.toDataset(
           datasetDetails.jsDataset,
           datasetDetails.citation,
@@ -146,7 +177,10 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           datasetDetails.jsDatasetLocks,
           datasetDetails.jsDatasetFilesTotalOriginalDownloadSize,
           datasetDetails.jsDatasetFilesTotalArchivalDownloadSize,
-          requestedVersion
+          requestedVersion,
+          undefined,
+          datasetDetails.latestPublishedVersionMajorNumber,
+          datasetDetails.latestPublishedVersionMinorNumber
         )
       })
       .catch((error: ReadError) => {
@@ -191,7 +225,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
 
   create(
     dataset: DatasetDTO,
-    collectionId = defaultCollectionId
+    collectionId = ROOT_COLLECTION_ALIAS
   ): Promise<{ persistentId: string }> {
     return createDataset
       .execute(DatasetDTOMapper.toJSDatasetDTO(dataset), collectionId)
@@ -216,8 +250,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         jsVersionUpdateType = JSVersionUpdateType.MAJOR
         break
       case VersionUpdateType.UPDATE_CURRENT:
-        // TODO: remove this logic when VersionUpdateType.UPDATE_CURRENT is available in js-dataverse
-        throw new Error('update current version type not supported yet')
+        jsVersionUpdateType = JSVersionUpdateType.UPDATE_CURRENT
+        break
       default:
         throw new Error('Invalid version update type')
     }

@@ -6,6 +6,9 @@ import { WithLoggedInUser } from '../WithLoggedInUser'
 import { CollectionMockRepository } from '../collection/CollectionMockRepository'
 import { CollectionLoadingMockRepository } from '../collection/CollectionLoadingMockRepository'
 import { NoCollectionMockRepository } from '../collection/NoCollectionMockRepository'
+import { CollectionMother } from '../../../tests/component/collection/domain/models/CollectionMother'
+import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
+import { ROOT_COLLECTION_ALIAS } from '../../collection/domain/models/Collection'
 import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 import { MetadataBlockInfoMockLoadingRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockLoadingRepository'
 import { MetadataBlockInfoMockErrorRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockErrorRepository'
@@ -26,8 +29,8 @@ export const Default: Story = {
   render: () => (
     <CreateCollection
       collectionRepository={new CollectionMockRepository()}
+      ownerCollectionId={ROOT_COLLECTION_ALIAS}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
-      ownerCollectionId="root"
     />
   )
 }
@@ -35,8 +38,8 @@ export const Loading: Story = {
   render: () => (
     <CreateCollection
       collectionRepository={new CollectionLoadingMockRepository()}
+      ownerCollectionId={ROOT_COLLECTION_ALIAS}
       metadataBlockInfoRepository={new MetadataBlockInfoMockLoadingRepository()}
-      ownerCollectionId="root"
     />
   )
 }
@@ -46,7 +49,30 @@ export const OwnerCollectionNotFound: Story = {
     <CreateCollection
       collectionRepository={new NoCollectionMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockErrorRepository()}
-      ownerCollectionId="root"
+      ownerCollectionId={ROOT_COLLECTION_ALIAS}
+    />
+  )
+}
+
+const collectionRepositoryWithoutPermissionsToCreateCollection = new CollectionMockRepository()
+collectionRepositoryWithoutPermissionsToCreateCollection.getUserPermissions = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(
+        CollectionMother.createUserPermissions({
+          canAddCollection: false
+        })
+      )
+    }, FakerHelper.loadingTimout())
+  })
+}
+
+export const NotAllowedToAddCollection: Story = {
+  render: () => (
+    <CreateCollection
+      collectionRepository={collectionRepositoryWithoutPermissionsToCreateCollection}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockErrorRepository()}
+      ownerCollectionId={ROOT_COLLECTION_ALIAS}
     />
   )
 }

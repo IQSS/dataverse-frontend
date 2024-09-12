@@ -3,14 +3,17 @@ import {
   CollectionDTO,
   CollectionInputLevelDTO
 } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
-import { MetadataBlockName } from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { ReducedMetadataBlockInfo, ReducedMetadataFieldInfo } from '../useGetAllMetadataBlocksInfo'
 import {
-  CollectionFormMetadataBlock,
+  MetadataBlockInfo,
+  MetadataBlockName,
+  MetadataField,
+  TypeClassMetadataFieldOptions
+} from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import {
   CollectionFormMetadataBlocks,
-  CONDITIONALLY_REQUIRED_FIELDS,
   FormattedCollectionInputLevels,
-  FormattedCollectionInputLevelsWithoutParentBlockName
+  FormattedCollectionInputLevelsWithoutParentBlockName,
+  MetadataFieldWithParentBlockInfo
 } from './CollectionForm'
 
 export class CollectionFormHelper {
@@ -19,31 +22,43 @@ export class CollectionFormHelper {
   public static replaceSlashWithDot = (str: string) => str.replace(/\//g, '.')
 
   public static defineBaseInputLevels(
-    allMetadataBlocksInfoReduced: ReducedMetadataBlockInfo[]
+    allMetadataBlocksInfo: MetadataBlockInfo[]
   ): FormattedCollectionInputLevels {
     const fields: FormattedCollectionInputLevels = {}
     const childFields: FormattedCollectionInputLevels = {}
 
-    allMetadataBlocksInfoReduced.forEach((block) => {
+    allMetadataBlocksInfo.forEach((block) => {
       Object.entries(block.metadataFields).forEach(([_key, field]) => {
-        const normalizedFieldName = this.replaceDotWithSlash(field.name)
-        const isFieldRequiredByDataverse = field.isRequired
-        const isAConditionallyRequiredField = CONDITIONALLY_REQUIRED_FIELDS.includes(field.name)
+        const { name, isRequired, childMetadataFields, typeClass } = field
+        const normalizedFieldName = this.replaceDotWithSlash(name)
+        const isFieldRequiredByDataverse = isRequired
+
+        const isSafeCompound =
+          typeClass === TypeClassMetadataFieldOptions.Compound &&
+          childMetadataFields !== undefined &&
+          Object.keys(childMetadataFields).length > 0
+
+        const composedFieldNotRequiredWithChildFieldsRequired =
+          isSafeCompound &&
+          !isRequired &&
+          Object.keys(childMetadataFields).some((key) => childMetadataFields[key].isRequired)
 
         fields[normalizedFieldName] = {
           include: true,
           optionalOrRequired:
-            isFieldRequiredByDataverse && !isAConditionallyRequiredField ? 'required' : 'optional',
-          parentBlockName: block.name as CollectionFormMetadataBlock
+            isFieldRequiredByDataverse && !composedFieldNotRequiredWithChildFieldsRequired
+              ? 'required'
+              : 'optional',
+          parentBlockName: block.name as MetadataBlockName
         }
 
         if (field.childMetadataFields) {
           Object.entries(field.childMetadataFields).forEach(([_key, childField]) => {
             const normalizedFieldName = this.replaceDotWithSlash(childField.name)
             const isChildFieldRequiredByDataverse = childField.isRequired
-            const isAConditionallyRequiredChildField = CONDITIONALLY_REQUIRED_FIELDS.includes(
-              childField.name
-            )
+
+            const isAConditionallyRequiredChildField =
+              composedFieldNotRequiredWithChildFieldsRequired && childField.isRequired
 
             childFields[normalizedFieldName] = {
               include: true,
@@ -51,7 +66,7 @@ export class CollectionFormHelper {
                 isChildFieldRequiredByDataverse && !isAConditionallyRequiredChildField
                   ? 'required'
                   : 'optional',
-              parentBlockName: block.name as CollectionFormMetadataBlock
+              parentBlockName: block.name as MetadataBlockName
             }
           })
         }
@@ -103,50 +118,6 @@ export class CollectionFormHelper {
     }
 
     return result
-  }
-
-  public static separateMetadataBlocksInfoByNames(
-    allMetadataBlocksInfo: ReducedMetadataBlockInfo[]
-  ): {
-    citationBlock: ReducedMetadataBlockInfo
-    geospatialBlock: ReducedMetadataBlockInfo
-    socialScienceBlock: ReducedMetadataBlockInfo
-    astrophysicsBlock: ReducedMetadataBlockInfo
-    biomedicalBlock: ReducedMetadataBlockInfo
-    journalBlock: ReducedMetadataBlockInfo
-  } {
-    const citationBlock: ReducedMetadataBlockInfo = allMetadataBlocksInfo.find(
-      (block) => block.name === MetadataBlockName.CITATION
-    ) as ReducedMetadataBlockInfo
-
-    const geospatialBlock: ReducedMetadataBlockInfo = allMetadataBlocksInfo.find(
-      (block) => block.name === MetadataBlockName.GEOSPATIAL
-    ) as ReducedMetadataBlockInfo
-
-    const socialScienceBlock: ReducedMetadataBlockInfo = allMetadataBlocksInfo.find(
-      (block) => block.name === MetadataBlockName.SOCIAL_SCIENCE
-    ) as ReducedMetadataBlockInfo
-
-    const astrophysicsBlock: ReducedMetadataBlockInfo = allMetadataBlocksInfo.find(
-      (block) => block.name === MetadataBlockName.ASTROPHYSICS
-    ) as ReducedMetadataBlockInfo
-
-    const biomedicalBlock: ReducedMetadataBlockInfo = allMetadataBlocksInfo.find(
-      (block) => block.name === MetadataBlockName.BIOMEDICAL
-    ) as ReducedMetadataBlockInfo
-
-    const journalBlock: ReducedMetadataBlockInfo = allMetadataBlocksInfo.find(
-      (block) => block.name === MetadataBlockName.JOURNAL
-    ) as ReducedMetadataBlockInfo
-
-    return {
-      citationBlock,
-      geospatialBlock,
-      socialScienceBlock,
-      astrophysicsBlock,
-      biomedicalBlock,
-      journalBlock
-    }
   }
 
   public static formatFormMetadataBlockNamesToMetadataBlockNamesDTO(
@@ -201,14 +172,48 @@ export class CollectionFormHelper {
   }
 
   public static getChildFieldSiblings = (
-    childMetadataFields: Record<string, ReducedMetadataFieldInfo>,
+    childMetadataFields: Record<string, MetadataField>,
     targetChildFieldName: string
-  ): Record<string, ReducedMetadataFieldInfo> => {
+  ): Record<string, MetadataField> => {
     return Object.entries(childMetadataFields)
       .filter(([_key, { name }]) => name !== targetChildFieldName)
       .reduce((acc, [key, field]) => {
         acc[key] = field
         return acc
-      }, {} as Record<string, ReducedMetadataFieldInfo>)
+      }, {} as Record<string, MetadataField>)
+  }
+
+  public static assignBlockInfoToFacetableMetadataFields(
+    facetableMetadataFields: MetadataField[],
+    allMetadataBlocksInfo: MetadataBlockInfo[]
+  ): MetadataFieldWithParentBlockInfo[] {
+    const blockInfoMap = allMetadataBlocksInfo.reduce((acc, block) => {
+      Object.keys(block.metadataFields).forEach((fieldName) => {
+        acc[fieldName] = block
+      })
+
+      Object.values(block.metadataFields).forEach((metadataField) => {
+        if (metadataField.childMetadataFields) {
+          Object.keys(metadataField.childMetadataFields).forEach((childFieldName) => {
+            acc[childFieldName] = block
+          })
+        }
+      })
+
+      return acc
+    }, {} as Record<string, MetadataBlockInfo>)
+
+    return facetableMetadataFields.map((field) => {
+      const parentBlockInfo = blockInfoMap[field.name]
+
+      return {
+        ...field,
+        parentBlockInfo: {
+          id: parentBlockInfo.id,
+          name: parentBlockInfo.name,
+          displayName: parentBlockInfo.displayName
+        }
+      }
+    })
   }
 }

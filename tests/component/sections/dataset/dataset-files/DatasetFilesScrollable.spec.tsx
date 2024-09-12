@@ -483,7 +483,7 @@ describe('DatasetFilesScrollable', () => {
 
       cy.findByText('20 of 200 Files displayed').should('exist')
 
-      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.get('table > thead > tr > th > input[type=checkbox]').click({ force: true })
 
       cy.findByText('20 files are currently selected.').should('exist')
     })
@@ -497,7 +497,7 @@ describe('DatasetFilesScrollable', () => {
         />
       )
       cy.findByRole('columnheader', { name: '10 of 200 Files displayed' }).should('exist')
-      cy.get('table > thead > tr > th > input[type=checkbox]').click()
+      cy.get('table > thead > tr > th > input[type=checkbox]').click({ force: true })
       cy.findByText('10 files are currently selected.').should('exist')
       cy.findByRole('button', { name: 'Select all 200 files in this dataset.' }).click({
         force: true

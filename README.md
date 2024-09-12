@@ -213,6 +213,11 @@ The environment is accessible through the following URLs:
 > #### Create/Edit Collection Page Identifier Field
 >
 > A feature has been added to suggest an identifier to the user based on the collection name entered.
+>
+> #### Create/Edit Collection Page Storage Field
+>
+> Given that at the moment the SPA only supports file uploading through direct upload (S3), the storage selector on the create collection
+> page is disabled. The collection is always created using the default storage, which must be S3
 
 </details>
 

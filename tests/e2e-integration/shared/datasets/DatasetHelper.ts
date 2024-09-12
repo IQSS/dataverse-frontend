@@ -3,6 +3,7 @@ import { DataverseApiHelper } from '../DataverseApiHelper'
 import { FileData } from '../files/FileHelper'
 import { DatasetLockReason } from '../../../../src/dataset/domain/models/Dataset'
 import { TestsUtils } from '../TestsUtils'
+import { ROOT_COLLECTION_ALIAS } from '../../../../src/collection/domain/models/Collection'
 
 export interface DatasetResponse {
   persistentId: string
@@ -16,7 +17,7 @@ export interface DatasetFileResponse {
 }
 
 export class DatasetHelper extends DataverseApiHelper {
-  static async create(collectionId = 'root'): Promise<DatasetResponse> {
+  static async create(collectionId = ROOT_COLLECTION_ALIAS): Promise<DatasetResponse> {
     return this.request<DatasetResponse>(
       `/dataverses/${collectionId}/datasets`,
       'POST',
@@ -43,14 +44,17 @@ export class DatasetHelper extends DataverseApiHelper {
       throw error
     }
   }
-  static async createAndPublish(collectionId = 'root'): Promise<DatasetResponse> {
+  static async createAndPublish(collectionId = ROOT_COLLECTION_ALIAS): Promise<DatasetResponse> {
     const datasetResponse = await DatasetHelper.create(collectionId)
     await DatasetHelper.publish(datasetResponse.persistentId)
     await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
     return datasetResponse
   }
 
-  static async createMany(amount: number, collectionId = 'root'): Promise<DatasetResponse[]> {
+  static async createMany(
+    amount: number,
+    collectionId = ROOT_COLLECTION_ALIAS
+  ): Promise<DatasetResponse[]> {
     const datasets = []
     for (let i = 0; i < amount; i++) {
       const datasetResponse = await this.create(collectionId)
@@ -136,14 +140,17 @@ export class DatasetHelper extends DataverseApiHelper {
 
   static async createWithFiles(
     filesData: FileData[],
-    collectionId = 'root'
+    collectionId = ROOT_COLLECTION_ALIAS
   ): Promise<DatasetResponse> {
     const datasetResponse = await this.create(collectionId)
     const files = await this.uploadFiles(datasetResponse.persistentId, filesData)
     return { ...datasetResponse, files: files }
   }
 
-  static async createWithFile(fileData: FileData, collectionId = 'root'): Promise<DatasetResponse> {
+  static async createWithFile(
+    fileData: FileData,
+    collectionId = ROOT_COLLECTION_ALIAS
+  ): Promise<DatasetResponse> {
     const datasetResponse = await this.create(collectionId)
     const file = await this.uploadFile(datasetResponse.persistentId, fileData)
     return { ...datasetResponse, file: file }
@@ -151,7 +158,7 @@ export class DatasetHelper extends DataverseApiHelper {
 
   static async createWithFileAndPublish(
     fileData: FileData,
-    collectionId = 'root'
+    collectionId = ROOT_COLLECTION_ALIAS
   ): Promise<DatasetResponse> {
     const datasetResponse = await DatasetHelper.createWithFile(fileData, collectionId)
     await DatasetHelper.publish(datasetResponse.persistentId)

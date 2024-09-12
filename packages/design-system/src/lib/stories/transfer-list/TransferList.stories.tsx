@@ -305,3 +305,7 @@ const WithChangingAvailableItemsComponent = () => {
     </div>
   )
 }
+
+export const Disabled: Story = {
+  render: () => <TransferList availableItems={aToEitems} disabled />
+}

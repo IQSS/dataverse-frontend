@@ -15,6 +15,8 @@ import {
   getFileDownloadCount,
   getFileUserPermissions,
   uploadFile as jsUploadFile,
+  addUploadedFilesToDataset,
+  UploadedFileDTO,
   ReadError
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
@@ -31,7 +33,6 @@ import { FilePermissions } from '../domain/models/FilePermissions'
 import { JSFilePermissionsMapper } from './mappers/JSFilePermissionsMapper'
 import { FilesWithCount } from '../domain/models/FilesWithCount'
 import { FileHolder } from '../domain/models/FileHolder'
-import { FileUploadState } from '../domain/models/FileUploadState'
 
 const includeDeaccessioned = true
 
@@ -300,13 +301,7 @@ export class FileJSDataverseRepository implements FileRepository {
       })
   }
 
-  addUploadedFiles(_datasetId: number | string, _files: FileUploadState[]): Promise<void> {
-    // TODO: not yet implemented
-    return new Promise<void>(() => {})
-  }
-
-  addUploadedFile(datasetId: number | string, file: FileHolder, storageId: string): Promise<void> {
-    return new Promise<void>(() => {})
-    // return addUploadedFilesToDataset.execute(datasetId, file.file)
+  addUploadedFiles(datasetId: number | string, uploadedFiles: UploadedFileDTO[]): Promise<void> {
+    return addUploadedFilesToDataset.execute(datasetId, uploadedFiles)
   }
 }

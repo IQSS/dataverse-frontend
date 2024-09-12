@@ -1,11 +1,14 @@
 import { MetadataBlockInfoRepository } from '../../domain/repositories/MetadataBlockInfoRepository'
 import {
   MetadataBlockInfoDisplayFormat,
-  MetadataBlockInfo
+  MetadataBlockInfo,
+  MetadataField
 } from '../../domain/models/MetadataBlockInfo'
 import {
   getMetadataBlockByName,
   getCollectionMetadataBlocks,
+  getAllMetadataBlocks,
+  getAllFacetableMetadataFields as jsGetAllFacetableMetadataFields,
   MetadataBlock as JSMetadataBlockInfo,
   ReadError
 } from '@iqss/dataverse-client-javascript'
@@ -23,11 +26,9 @@ export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfo
       })
   }
 
-  // TODO: This will be replaced to a new use case that will return all metadata blocks info
-  getAllTemporal(names: string[]): Promise<MetadataBlockInfo[]> {
-    const blockPromises = names.map((name) => getMetadataBlockByName.execute(name))
-
-    return Promise.all(blockPromises)
+  getAll(): Promise<MetadataBlockInfo[]> {
+    return getAllMetadataBlocks
+      .execute()
       .then((jsMetadataBlockInfo: JSMetadataBlockInfo[]) => {
         return jsMetadataBlockInfo
       })
@@ -55,6 +56,15 @@ export class MetadataBlockInfoJSDataverseRepository implements MetadataBlockInfo
       .then((metadataBlocks: MetadataBlockInfo[]) => {
         return metadataBlocks
       })
+      .catch((error: ReadError) => {
+        throw new Error(error.message)
+      })
+  }
+
+  getAllFacetableMetadataFields(): Promise<MetadataField[]> {
+    return jsGetAllFacetableMetadataFields
+      .execute()
+      .then((metadataFields: MetadataField[]) => metadataFields)
       .catch((error: ReadError) => {
         throw new Error(error.message)
       })

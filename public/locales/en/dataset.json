@@ -119,9 +119,9 @@
     "selectVersion": "Select if this is a minor or major version update.",
     "continueButton": "Continue",
     "cancelButton": "Cancel",
-    "minorVersion": "Minor Version",
-    "majorVersion": "Major Version",
-    "updateCurrentVersion": "Update Current Version",
+    "minorVersion": "Minor Release",
+    "majorVersion": "Major Release",
+    "updateCurrentVersion": "Update Current Version (will permanently overwrite the latest published version)",
     "error": "An error occurred while publishing the dataset."
   }
 }
