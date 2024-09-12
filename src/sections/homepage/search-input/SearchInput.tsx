@@ -37,11 +37,10 @@ export const SearchInput = () => {
   }
 
   return (
-    <Form onSubmit={handleSubmit} className={styles['search-input-wrapper']}>
+    <form onSubmit={handleSubmit} className={styles['search-input-wrapper']} role="search">
       <div className={styles['input-and-clear-wrapper']}>
         <Form.Group.Input
           type="text"
-          role="search"
           aria-label="Search"
           autoFocus
           autoComplete="off"
@@ -62,6 +61,6 @@ export const SearchInput = () => {
       <button type="submit" aria-label="Submit Search" className={styles['search-btn']}>
         <SearchIcon size={22} />
       </button>
-    </Form>
+    </form>
   )
 }

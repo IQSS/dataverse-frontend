@@ -4,7 +4,7 @@ import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 
 const meta: Meta<typeof Homepage> = {
-  title: 'Pages/Home',
+  title: 'Pages/Homepage',
   component: Homepage,
   decorators: [WithI18next, WithLayout],
   parameters: {
