@@ -15,6 +15,7 @@ import { CollectionInfo } from './CollectionInfo'
 import { Trans, useTranslation } from 'react-i18next'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
+import { ItemsPanel } from './items-panel/ItemsPanel'
 
 interface CollectionProps {
   repository: CollectionRepository
@@ -44,7 +45,7 @@ export function Collection({
   const canUserAddCollection = Boolean(collectionUserPermissions?.canAddCollection)
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
 
-  const showAddDataActions = user && (canUserAddCollection || canUserAddDataset)
+  const showAddDataActions = Boolean(user && (canUserAddCollection || canUserAddDataset))
 
   const { t } = useTranslation('collection')
 
@@ -78,18 +79,20 @@ export function Collection({
                 />
               </Alert>
             )}
-            {showAddDataActions && (
-              <div className={styles.container}>
-                <AddDataActionsButton
-                  collectionId={id}
-                  canAddCollection={canUserAddCollection}
-                  canAddDataset={canUserAddDataset}
-                />
-              </div>
-            )}
           </>
         )}
-        {infiniteScrollEnabled ? (
+        <ItemsPanel
+          addDataSlot={
+            showAddDataActions ? (
+              <AddDataActionsButton
+                collectionId={id}
+                canAddCollection={canUserAddCollection}
+                canAddDataset={canUserAddDataset}
+              />
+            ) : null
+          }
+        />
+        {/* {infiniteScrollEnabled ? (
           <DatasetsListWithInfiniteScroll
             datasetRepository={datasetRepository}
             collectionId={id}
@@ -102,7 +105,7 @@ export function Collection({
             collectionId={id}
             key={id}
           />
-        )}
+        )} */}
       </Col>
     </Row>
   )

@@ -1,0 +1,9 @@
+.filter-panel {
+  .toggle-canvas-btn {
+    display: block;
+
+    @media (min-width: 992px) {
+      display: none;
+    }
+  }
+}

@@ -32,7 +32,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **FormSelect:** remove withinMultipleFieldsGroup prop.
 - **FormText:** remove withinMultipleFieldsGroup prop.
 - **FormTextArea:** remove withinMultipleFieldsGroup prop.
-- **FormInputGroup:** remove hasVisibleLabel prop.
+- **FormInputGroup:** remove hasVisibleLabel prop and accepts className prop.
 - **FormInputGroupText:** refactor type.
 - **Card:** NEW card element to show header and body.
 - **ProgressBar:** NEW progress bar element to show progress.
