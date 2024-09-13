@@ -1,0 +1,16 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.type-filters {
+  input[type='checkbox'] {
+    cursor: pointer;
+  }
+
+  .label-content-wrapper {
+    color: $dv-primary-color;
+    cursor: pointer;
+
+    &.selected {
+      font-weight: bold;
+    }
+  }
+}
