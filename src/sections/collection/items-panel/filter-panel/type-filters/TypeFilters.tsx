@@ -1,5 +1,4 @@
 import { ChangeEvent } from 'react'
-import cn from 'classnames'
 import { Form, Icon, IconName, Stack } from '@iqss/dataverse-design-system'
 import styles from './TypeFilters.module.scss'
 
@@ -10,10 +9,7 @@ export const TypeFilters = () => {
         id="collections-type-check"
         onChange={(e: ChangeEvent<HTMLInputElement>) => console.log(e.target.checked)}
         label={
-          <span
-            className={cn(styles['label-content-wrapper'], {
-              [styles['selected']]: true
-            })}>
+          <span className={styles['label-content-wrapper']}>
             <Icon name={IconName.COLLECTION} />
             <span>Collections (19)</span>
           </span>
@@ -24,10 +20,7 @@ export const TypeFilters = () => {
         id="datasets-type-check"
         onChange={(e: ChangeEvent<HTMLInputElement>) => console.log(e.target.checked)}
         label={
-          <span
-            className={cn(styles['label-content-wrapper'], {
-              [styles['selected']]: false
-            })}>
+          <span className={styles['label-content-wrapper']}>
             <Icon name={IconName.DATASET} />
             <span>Datasets (32)</span>
           </span>
@@ -38,10 +31,7 @@ export const TypeFilters = () => {
         id="files-type-check"
         onChange={(e: ChangeEvent<HTMLInputElement>) => console.log(e.target.checked)}
         label={
-          <span
-            className={cn(styles['label-content-wrapper'], {
-              [styles['selected']]: true
-            })}>
+          <span className={styles['label-content-wrapper']}>
             <Icon name={IconName.FILE} />
             <span>Files (10,081)</span>
           </span>

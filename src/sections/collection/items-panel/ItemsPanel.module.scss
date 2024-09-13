@@ -26,9 +26,6 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding-block: 1rem;
-  border: 1px solid $dv-border-color;
-  border-radius: 4px;
 
   // TODO:ME Add media queries in variables
   @media (min-width: 992px) {

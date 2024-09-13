@@ -3,14 +3,14 @@
 .type-filters {
   input[type='checkbox'] {
     cursor: pointer;
+
+    &:checked + label {
+      font-weight: 500;
+    }
   }
 
   .label-content-wrapper {
     color: $dv-primary-color;
     cursor: pointer;
-
-    &.selected {
-      font-weight: bold;
-    }
   }
 }

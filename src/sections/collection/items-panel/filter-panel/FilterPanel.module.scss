@@ -1,5 +1,11 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
 .filter-panel {
-  // border: solid 1px red;
+  @media (min-width: 992px) {
+    padding: 1rem;
+    border: 1px solid $dv-border-color;
+    border-radius: 4px;
+  }
 
   .toggle-canvas-btn {
     display: block;
@@ -11,6 +17,5 @@
 
   .filters-wrapper {
     width: 100%;
-    padding-inline: 1rem;
   }
 }

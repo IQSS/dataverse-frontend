@@ -1,10 +1,6 @@
 import { Alert, Col, Row } from '@iqss/dataverse-design-system'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
-import { DatasetsList } from './datasets-list/DatasetsList'
-import { DatasetsListWithInfiniteScroll } from './datasets-list/DatasetsListWithInfiniteScroll'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
-
-import styles from './Collection.module.scss'
 import AddDataActionsButton from '../shared/add-data-actions/AddDataActionsButton'
 import { useSession } from '../session/SessionContext'
 import { useCollection } from './useCollection'
@@ -82,6 +78,8 @@ export function Collection({
           </>
         )}
         <ItemsPanel
+          collectionId={id}
+          datasetRepository={datasetRepository}
           addDataSlot={
             showAddDataActions ? (
               <AddDataActionsButton
@@ -92,20 +90,6 @@ export function Collection({
             ) : null
           }
         />
-        {/* {infiniteScrollEnabled ? (
-          <DatasetsListWithInfiniteScroll
-            datasetRepository={datasetRepository}
-            collectionId={id}
-            key={id}
-          />
-        ) : (
-          <DatasetsList
-            datasetRepository={datasetRepository}
-            page={page}
-            collectionId={id}
-            key={id}
-          />
-        )} */}
       </Col>
     </Row>
   )

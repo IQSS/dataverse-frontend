@@ -1,3 +1,11 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
 .items-list {
-  border: solid 1px orange;
+  padding: 0.5rem;
+  border: 1px solid $dv-border-color;
+  border-radius: 4px;
+
+  @media (min-width: 768px) {
+    padding: 1rem;
+  }
 }
