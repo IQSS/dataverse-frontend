@@ -10,6 +10,8 @@ import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'
 import { CollectionFacet } from '../../domain/models/CollectionFacet'
 import { CollectionUserPermissions } from '../../domain/models/CollectionUserPermissions'
+import { CollectionItemsPaginationInfo } from '../../domain/models/CollectionItemsPaginationInfo'
+import { CollectionItemSubset } from '../../domain/models/CollectionItemSubset'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id: string): Promise<Collection> {
@@ -32,5 +34,15 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     return getCollectionUserPermissions
       .execute(collectionIdOrAlias)
       .then((jsCollectionUserPermissions) => jsCollectionUserPermissions)
+  }
+
+  getItems(
+    _collectionIdOrAlias: number | string,
+    _paginationInfo: CollectionItemsPaginationInfo
+  ): Promise<CollectionItemSubset> {
+    return Promise.resolve({
+      items: [],
+      totalItemCount: 0
+    })
   }
 }

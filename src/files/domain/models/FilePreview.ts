@@ -7,6 +7,8 @@ import {
 } from '../../../dataset/domain/models/Dataset'
 import { FilePermissions } from './FilePermissions'
 
+// TODO:ME Once 181 is merged, update interface
+
 export interface FilePreview {
   id: number
   name: string

@@ -1,5 +1,8 @@
 import { DatasetVersion } from './Dataset'
 
+// TODO:ME Once 181 is merged, update interface
+// TODO:ME A class is not needed, we can change to an interface, we can ellipse the text with CSS as done in CollectionCard and FileCard
+
 export class DatasetPreview {
   constructor(
     public persistentId: string,
