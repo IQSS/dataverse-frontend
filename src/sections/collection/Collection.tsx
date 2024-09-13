@@ -11,7 +11,7 @@ import { CollectionInfo } from './CollectionInfo'
 import { Trans, useTranslation } from 'react-i18next'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
-import { ItemsPanel } from './items-panel/ItemsPanel'
+import { CollectionItemsPanel } from './collection-items-panel/CollectionItemsPanel'
 
 interface CollectionProps {
   repository: CollectionRepository
@@ -77,7 +77,7 @@ export function Collection({
             )}
           </>
         )}
-        <ItemsPanel
+        <CollectionItemsPanel
           collectionId={id}
           datasetRepository={datasetRepository}
           addDataSlot={

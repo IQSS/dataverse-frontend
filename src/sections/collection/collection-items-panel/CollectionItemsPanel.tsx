@@ -2,7 +2,7 @@ import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetR
 import { FilterPanel } from './filter-panel/FilterPanel'
 import { ItemsList } from './items-list/ItemsList'
 import { SearchPanel } from './search-panel/SearchPanel'
-import styles from './ItemsPanel.module.scss'
+import styles from './CollectionItemsPanel.module.scss'
 
 interface ItemsPanelProps {
   collectionId: string
@@ -10,7 +10,11 @@ interface ItemsPanelProps {
   addDataSlot: JSX.Element | null
 }
 
-export const ItemsPanel = ({ collectionId, datasetRepository, addDataSlot }: ItemsPanelProps) => {
+export const CollectionItemsPanel = ({
+  collectionId,
+  datasetRepository,
+  addDataSlot
+}: ItemsPanelProps) => {
   return (
     <section className={styles['items-panel']}>
       <header className={styles['top-wrapper']}>
