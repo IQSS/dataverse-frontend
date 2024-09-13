@@ -1,21 +1,22 @@
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
 import { Tabs } from '@iqss/dataverse-design-system'
 import { useLoading } from '../loading/LoadingContext'
-import { AccountHelper } from './AccountHelper'
+import { AccountHelper, AccountPanelTabKey } from './AccountHelper'
 import { ApiTokenSection } from './api-token-section/ApiTokenSection'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { UpwardHierarchyNodeMother } from '../../../tests/component/shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 import styles from './Account.module.scss'
-import { useEffect } from 'react'
 
 const tabsKeys = AccountHelper.ACCOUNT_PANEL_TABS_KEYS
 
-export const Account = () => {
+interface AccountProps {
+  defaultActiveTabKey: AccountPanelTabKey
+}
+
+export const Account = ({ defaultActiveTabKey }: AccountProps) => {
   const { t } = useTranslation('account')
   const { setIsLoading } = useLoading()
-  const [searchParams] = useSearchParams()
-  const defaultActiveTabKey = AccountHelper.defineSelectedTabKey(searchParams)
 
   const rootHierarchy = UpwardHierarchyNodeMother.createCollection({
     name: 'Root',
