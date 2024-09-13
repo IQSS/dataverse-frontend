@@ -58,8 +58,9 @@ export const MetadataForm = ({
   useEffect(() => {
     // Only on create mode, lets prefill specific fields with user data
     if (mode === 'create' && user) {
-      setValue('citation.author.0.authorName', user.displayName)
-      setValue('citation.datasetContact.0.datasetContactName', user.displayName)
+      const displayName = `${user.lastName}, ${user.firstName}`
+      setValue('citation.author.0.authorName', displayName)
+      setValue('citation.datasetContact.0.datasetContactName', displayName)
       setValue('citation.datasetContact.0.datasetContactEmail', user.email, {
         shouldValidate: true
       })
