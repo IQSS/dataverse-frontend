@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Navbar } from '@iqss/dataverse-design-system'
 import { useGetCollectionUserPermissions } from '../../../shared/hooks/useGetCollectionUserPermissions'
 import { useSession } from '../../session/SessionContext'
-import { Route, RouteWithParams } from '../../Route.enum'
+import { RouteWithParams } from '../../Route.enum'
 import { User } from '../../../users/domain/models/User'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import { ROOT_COLLECTION_ALIAS } from '../../../collection/domain/models/Collection'
@@ -35,6 +35,7 @@ export const LoggedInHeaderActions = ({
   }
 
   const createCollectionRoute = RouteWithParams.CREATE_COLLECTION()
+  const createDatasetRoute = RouteWithParams.CREATE_DATASET()
 
   const canUserAddCollectionToRoot = Boolean(collectionUserPermissions?.canAddCollection)
   const canUserAddDatasetToRoot = Boolean(collectionUserPermissions?.canAddDataset)
@@ -48,10 +49,7 @@ export const LoggedInHeaderActions = ({
           disabled={!canUserAddCollectionToRoot}>
           {t('navigation.newCollection')}
         </Navbar.Dropdown.Item>
-        <Navbar.Dropdown.Item
-          as={Link}
-          to={Route.CREATE_DATASET}
-          disabled={!canUserAddDatasetToRoot}>
+        <Navbar.Dropdown.Item as={Link} to={createDatasetRoute} disabled={!canUserAddDatasetToRoot}>
           {t('navigation.newDataset')}
         </Navbar.Dropdown.Item>
       </Navbar.Dropdown>

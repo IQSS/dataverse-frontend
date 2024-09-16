@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { CreateDataset } from './CreateDataset'
 import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { MetadataBlockInfoJSDataverseRepository } from '../../metadata-block-info/infrastructure/repositories/MetadataBlockInfoJSDataverseRepository'
@@ -21,8 +21,7 @@ export class CreateDatasetFactory {
 }
 
 function CreateDatasetWithSearchParams() {
-  const [searchParams] = useSearchParams()
-  const collectionId = searchParams.get('collectionId') ?? undefined
+  const { collectionId } = useParams<{ collectionId: string }>()
 
   return (
     <CreateDataset
