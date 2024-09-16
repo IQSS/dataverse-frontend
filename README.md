@@ -125,6 +125,7 @@ and utilize the JavaScript framework of their choice.
 
 - 2023-08-01: [View mode of the dataset page](https://groups.google.com/g/dataverse-community/c/cxZ3Bal_-uo/m/h3kh3iVNCwAJ)
 - 2023-12-13: [Files table on the dataset page](https://groups.google.com/g/dataverse-community/c/w_rEMddESYc/m/6F7QC1p-AgAJ)
+- 2024-09-13: [Collection page, collection and dataset creation and file uploading](https://groups.google.com/g/dataverse-community/c/heSnBRhhriM/m/bFgLDvvZAQAJ)
 
 ### Beta Testing Environment
 
@@ -441,6 +442,9 @@ Distributed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for mo
 <!-- December, 2023 -->
 
 [_video_demo_filetable_url]: https://groups.google.com/g/dataverse-community/c/w_rEMddESYc/m/6F7QC1p-AgAJ
+
+<!-- September, 2024 -->
+[_video_demo_collectionpage_creationpages_fileuploading_url]: https://groups.google.com/g/dataverse-community/c/heSnBRhhriM/m/bFgLDvvZAQAJ
 
 <!--  -->
 <!--  -->
