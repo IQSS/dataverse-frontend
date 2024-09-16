@@ -2,23 +2,20 @@ import { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Form, Stack } from '@iqss/dataverse-design-system'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
-import { ReducedMetadataFieldInfo } from '../../../../useGetAllMetadataBlocksInfo'
-import {
-  CollectionFormInputLevelValue,
-  CONDITIONALLY_REQUIRED_FIELDS,
-  INPUT_LEVELS_GROUPER
-} from '../../../CollectionForm'
+import { MetadataField } from '../../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { CollectionFormInputLevelValue, INPUT_LEVELS_GROUPER } from '../../../CollectionForm'
 
 type RequiredOptionalRadiosProps =
   | {
       disabled: boolean
       formBuiltedFieldName: string
       isForChildField: true
-      siblingChildFields: Record<string, ReducedMetadataFieldInfo>
+      siblingChildFields: Record<string, MetadataField>
       parentIncludeName: string
       parentIsRequiredByDataverse: boolean
       parentFieldChecked: boolean
       uniqueInputLevelRowID: string
+      isConditionallyRequired: boolean
     }
   | {
       disabled: boolean
@@ -29,6 +26,7 @@ type RequiredOptionalRadiosProps =
       parentIsRequiredByDataverse?: never
       parentFieldChecked: boolean
       uniqueInputLevelRowID: string
+      isConditionallyRequired?: never
     }
 
 /**
@@ -45,7 +43,8 @@ export const RequiredOptionalRadios = ({
   parentIncludeName,
   parentIsRequiredByDataverse,
   parentFieldChecked,
-  uniqueInputLevelRowID
+  uniqueInputLevelRowID,
+  isConditionallyRequired
 }: RequiredOptionalRadiosProps) => {
   const { t } = useTranslation('createCollection', {
     keyPrefix: 'fields.metadataFields.inputLevelsTable'
@@ -87,10 +86,6 @@ export const RequiredOptionalRadios = ({
     formOnChange(e)
   }
 
-  const isAConditionallyRequiredField = CONDITIONALLY_REQUIRED_FIELDS.some((field) =>
-    formBuiltedFieldName.includes(field)
-  )
-
   return (
     <Controller
       name={formBuiltedFieldName}
@@ -112,9 +107,7 @@ export const RequiredOptionalRadios = ({
             />
           )
         }
-        {
-          /* For now we are just disabling the radios if this is a conditionally required field */
-        }
+
         return (
           <Stack direction="horizontal">
             <Form.Group.Radio
@@ -124,18 +117,18 @@ export const RequiredOptionalRadios = ({
               value="required"
               name={`${uniqueInputLevelRowID}-radio-group`}
               id={`${uniqueInputLevelRowID}-required-radio`}
-              disabled={disabled || isAConditionallyRequiredField}
+              disabled={disabled}
               ref={ref}
             />
 
             <Form.Group.Radio
-              label={!isAConditionallyRequiredField ? t('optional') : t('conditionallyRequired')}
+              label={!isConditionallyRequired ? t('optional') : t('conditionallyRequired')}
               onChange={(e) => handleOptionalOrRequiredChange(e, onChange)}
               checked={castedValue === 'optional'}
               value="optional"
               name={`${uniqueInputLevelRowID}-radio-group`}
               id={`${uniqueInputLevelRowID}-optional-radio`}
-              disabled={disabled || isAConditionallyRequiredField}
+              disabled={disabled}
               ref={ref}
             />
           </Stack>

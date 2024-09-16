@@ -29,6 +29,7 @@ export interface TransferListProps {
   onChange?: (selected: TransferListItem[]) => void
   leftLabel?: string
   rightLabel?: string
+  disabled?: boolean
 }
 
 export const TransferList = ({
@@ -36,13 +37,12 @@ export const TransferList = ({
   defaultSelected = [],
   onChange,
   leftLabel,
-  rightLabel
+  rightLabel,
+  disabled = false
 }: TransferListProps) => {
   const [checked, setChecked] = useState<TransferListItem[]>([])
   const [left, setLeft] = useState<TransferListItem[]>(not(availableItems, defaultSelected))
-  const [right, setRight] = useState<TransferListItem[]>(
-    intersection(availableItems, defaultSelected)
-  )
+  const [right, setRight] = useState<TransferListItem[]>(defaultSelected)
 
   const leftChecked = intersection(checked, left)
   const rightChecked = intersection(checked, right)
@@ -66,22 +66,24 @@ export const TransferList = ({
     setLeft([])
   }
 
-  const handleCheckedRight = () => {
+  const handleCheckedToRight = () => {
     setRight(right.concat(leftChecked))
     onChange && onChange(right.concat(leftChecked))
     setLeft(not(left, leftChecked))
     setChecked(not(checked, leftChecked))
   }
 
-  const handleCheckedLeft = () => {
-    setLeft(left.concat(rightChecked.filter((item) => availableItems.includes(item))))
+  const handleCheckedToLeft = () => {
+    setLeft(
+      left.concat(rightChecked.filter((item) => availableItems.find((a) => a.value === item.value)))
+    )
     setRight(not(right, rightChecked))
     onChange && onChange(not(right, rightChecked))
     setChecked(not(checked, rightChecked))
   }
 
   const handleAllLeft = () => {
-    setLeft(left.concat(right.filter((item) => availableItems.includes(item))))
+    setLeft(left.concat(right.filter((item) => availableItems.find((a) => a.value === item.value))))
     setRight([])
     onChange && onChange([])
   }
@@ -94,15 +96,22 @@ export const TransferList = ({
 
   return (
     <div className={styles['transfer-list']}>
-      <div className={styles['items-column']} tabIndex={0}>
+      <div className={styles['items-column']} tabIndex={disabled ? -1 : 0}>
         {leftLabel && <p className={styles['column-label']}>{leftLabel}</p>}
-        <ItemsList items={left} side="left" checked={checked} onToggle={handleToggle} />
+        <ItemsList
+          items={left}
+          side="left"
+          checked={checked}
+          onToggle={handleToggle}
+          disabled={disabled}
+        />
       </div>
       <div className={styles['middle-column']} data-testid="actions-column">
         <Button
           size="sm"
+          type="button"
           onClick={handleAllRight}
-          disabled={left.length === 0}
+          disabled={left.length === 0 || disabled}
           icon={<ChevronDoubleRight />}
           aria-label="move all right"
           className={styles['transfer-button']}
@@ -110,8 +119,9 @@ export const TransferList = ({
 
         <Button
           size="sm"
-          onClick={handleCheckedRight}
-          disabled={leftChecked.length === 0}
+          type="button"
+          onClick={handleCheckedToRight}
+          disabled={leftChecked.length === 0 || disabled}
           icon={<ChevronRight />}
           aria-label="move selected to right"
           className={styles['transfer-button']}
@@ -119,22 +129,24 @@ export const TransferList = ({
 
         <Button
           size="sm"
-          onClick={handleCheckedLeft}
-          disabled={rightChecked.length === 0}
+          type="button"
+          onClick={handleCheckedToLeft}
+          disabled={rightChecked.length === 0 || disabled}
           icon={<ChevronLeft />}
           aria-label="move selected to left"
           className={styles['transfer-button']}
         />
         <Button
           size="sm"
+          type="button"
           onClick={handleAllLeft}
-          disabled={right.length === 0}
+          disabled={right.length === 0 || disabled}
           icon={<ChevronDoubleLeft />}
           aria-label="move all left"
           className={styles['transfer-button']}
         />
       </div>
-      <div className={styles['items-column']} tabIndex={0}>
+      <div className={styles['items-column']} tabIndex={disabled ? -1 : 0}>
         {rightLabel && <p className={styles['column-label']}>{rightLabel}</p>}
         <ItemsList
           items={right}
@@ -144,6 +156,7 @@ export const TransferList = ({
           rightItems={right}
           setRight={setRight}
           onChange={onChange}
+          disabled={disabled}
         />
       </div>
     </div>

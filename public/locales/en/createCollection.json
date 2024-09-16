@@ -36,7 +36,9 @@
     },
     "description": {
       "label": "Description",
-      "description": "A summary describing the purpose, nature or scope of this collection."
+      "description": "A summary describing the purpose, nature or scope of this collection.",
+      "subLabel": "This field supports only certain <htmlTooltip>HTML tags</htmlTooltip>.",
+      "htmlAllowedTags": "<a>, <b>, <blockquote>, <br>, <code>, <del>, <dd>, <dl>, <dt>, <em>, <hr>, <h1>-<h3>, <i>, <img>, <kbd>, <li>, <ol>, <p>, <pre>, <s>, <sup>, <sub>, <strong>, <strike>, <u>, <ul>"
     },
     "contacts": {
       "label": "Email",
@@ -46,14 +48,8 @@
     },
     "metadataFields": {
       "sectionLabel": "Metadata Fields",
-      "helperText": "Choose the metadata fields to use in dataset templates and when adding a dataset to this dataverse.",
+      "helperText": "Choose the metadata fields to use in dataset templates and when adding a dataset to this collection.",
       "useMetadataFieldsFrom": "Use metadata fields from",
-      "citationMetadata": "Citation Metadata (Required)",
-      "geospatialMetadata": "Geospatial Metadata",
-      "socialScienceMetadata": "Social Science and Humanities Metadata",
-      "astrophysicsMetadata": "Astronomy and Astrophysics Metadata",
-      "biomedicalMetadata": "Life Sciences Metadata",
-      "journalMetadata": "Journal Metadata",
       "inputLevelsTable": {
         "hideTableAriaLabel": "Hide input levels table",
         "requiredByDataverse": "Required by Dataverse",
@@ -65,7 +61,9 @@
     },
     "browseSearchFacets": {
       "label": "Browse/Search Facets",
-      "helperText": "Choose the metadata fields to use as facets for browsing datasets and dataverses in this dataverse."
+      "helperText": "Choose and order the metadata fields to use as facets when browsing this collection.",
+      "useBrowseSearchFacetsFrom": "Use browse/search facets from",
+      "selectedFacets": "Selected"
     }
   },
   "confirmResetModal": {

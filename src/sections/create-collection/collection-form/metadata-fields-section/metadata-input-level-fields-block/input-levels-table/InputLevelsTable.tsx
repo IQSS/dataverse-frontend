@@ -1,14 +1,14 @@
 import { ReactNode } from 'react'
 import cn from 'classnames'
 import { Table } from '@iqss/dataverse-design-system'
-import { ReducedMetadataBlockInfo } from '../../../../useGetAllMetadataBlocksInfo'
+import { MetadataBlockInfo } from '../../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { InputLevelFieldRow } from './InputLevelFieldRow'
 import styles from './InputLevelsTable.module.scss'
 
 interface InputLevelsTableProps {
   show: boolean
   disabled: boolean
-  blockMetadataInputLevelFields: ReducedMetadataBlockInfo
+  blockMetadataInputLevelFields: MetadataBlockInfo
   closeButton: ReactNode
 }
 

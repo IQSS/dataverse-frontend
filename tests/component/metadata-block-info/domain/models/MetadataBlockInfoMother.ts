@@ -1,6 +1,7 @@
 import {
   MetadataBlockInfoDisplayFormat,
-  MetadataBlockInfo
+  MetadataBlockInfo,
+  MetadataField
 } from '../../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
 import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Dataset'
 import { CitationMetadataBlockInfoMother } from './CitationMetadataBlockInfoMother'
@@ -9,6 +10,7 @@ import { BiomedicalMetadataBlockInfoMother } from './BiomedicalMetadataBlockInfo
 import { GeospatialMetadataBlockInfoMother } from './GeospatialMetadataBlockInfoMother'
 import { SocialScienceMetadataBlockInfoMother } from './SocialScienceMetadataBlockInfoMother'
 import { JournalMetadataBlockInfoMother } from './JournalMetadataBlockInfoMother'
+import { FacetableMetadataFieldMother } from './FacetableMetadataFieldsMother'
 
 export class MetadataBlockInfoMother {
   static create(props?: Partial<MetadataBlockInfoDisplayFormat>): MetadataBlockInfoDisplayFormat {
@@ -2346,6 +2348,94 @@ export class MetadataBlockInfoMother {
         }
       }
     ]
+  }
+
+  static createFacetableMetadataFields(): MetadataField[] {
+    return [
+      {
+        name: 'authorName',
+        displayName: 'Author Name',
+        title: 'Name',
+        type: 'TEXT',
+        watermark: '1) Family Name, Given Name or 2) Organization XYZ',
+        description:
+          "The name of the author, such as the person's name or the name of an organization",
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '#VALUE',
+        isRequired: true,
+        displayOrder: 8,
+        typeClass: 'primitive',
+        displayOnCreate: true
+      },
+      {
+        name: 'subject',
+        displayName: 'Subject',
+        title: 'Subject',
+        type: 'TEXT',
+        watermark: '',
+        description: 'The area of study relevant to the Dataset',
+        multiple: true,
+        isControlledVocabulary: true,
+        controlledVocabularyValues: [
+          'Agricultural Sciences',
+          'Arts and Humanities',
+          'Astronomy and Astrophysics',
+          'Business and Management',
+          'Chemistry',
+          'Computer and Information Science',
+          'Earth and Environmental Sciences',
+          'Engineering',
+          'Law',
+          'Mathematical Sciences',
+          'Medicine, Health and Life Sciences',
+          'Physics',
+          'Social Sciences',
+          'Other'
+        ],
+        displayFormat: '',
+        isRequired: true,
+        displayOrder: 19,
+        typeClass: 'controlledVocabulary',
+        displayOnCreate: true
+      },
+      {
+        name: 'geographicUnit',
+        displayName: 'Geographic Unit',
+        title: 'Geographic Unit',
+        type: 'TEXT',
+        watermark: '',
+        description:
+          'Lowest level of geographic aggregation covered by the Dataset, e.g., village, county, region.',
+        multiple: true,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: false,
+        displayOrder: 5,
+        typeClass: 'primitive',
+        displayOnCreate: false
+      },
+      {
+        name: 'journalIssue',
+        displayName: 'Journal Issue',
+        title: 'Issue',
+        type: 'TEXT',
+        watermark: '',
+        description:
+          'The journal issue number which this Dataset is associated with (e.g., Number 2, Autumn).',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: false,
+        displayOrder: 2,
+        typeClass: 'primitive',
+        displayOnCreate: false
+      }
+    ]
+  }
+
+  static getAllFacetableMetadataFields(): MetadataField[] {
+    return FacetableMetadataFieldMother.getAll()
   }
 }
 

@@ -1,41 +1,83 @@
 import { CollectionInputLevel } from '../../../../src/collection/domain/models/Collection'
 import { CollectionInputLevelDTO } from '../../../../src/collection/domain/useCases/DTOs/CollectionDTO'
 import {
-  CollectionFormMetadataBlock,
+  MetadataBlockInfo,
+  MetadataBlockName,
+  MetadataField
+} from '../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
+import {
   FormattedCollectionInputLevels,
-  FormattedCollectionInputLevelsWithoutParentBlockName
+  FormattedCollectionInputLevelsWithoutParentBlockName,
+  MetadataFieldWithParentBlockInfo
 } from '../../../../src/sections/create-collection/collection-form/CollectionForm'
 import { CollectionFormHelper } from '../../../../src/sections/create-collection/collection-form/CollectionFormHelper'
-import {
-  ReducedMetadataBlockInfo,
-  ReducedMetadataFieldInfo
-} from '../../../../src/sections/create-collection/useGetAllMetadataBlocksInfo'
 
-const allMetadataBlocksInfoReducedMock: ReducedMetadataBlockInfo[] = [
+const allMetadataBlocksInfoMock: MetadataBlockInfo[] = [
   {
     id: 4,
     name: 'astrophysics',
     displayName: 'Astronomy and Astrophysics Metadata',
+    displayOnCreate: true,
     metadataFields: {
       requiredField: {
         name: 'requiredField',
         displayName: 'Spatial Resolution',
-        isRequired: true
+        isRequired: true,
+        title: '',
+        type: 'TEXT',
+        typeClass: 'primitive',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        displayOnCreate: true,
+        displayOrder: 0
       },
       'coverage.Spectral.Wavelength': {
         name: 'coverage.Spectral.Wavelength',
         displayName: 'Wavelength Range',
         isRequired: false,
+        displayOnCreate: true,
+        title: '',
+        type: 'TEXT',
+        typeClass: 'primitive',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        displayOrder: 0,
         childMetadataFields: {
           'coverage.Spectral.MinimumWavelength': {
             name: 'coverage.Spectral.MinimumWavelength',
             displayName: 'Wavelength Range Minimum (m)',
-            isRequired: false
+            isRequired: false,
+            title: '',
+            type: 'TEXT',
+            typeClass: 'primitive',
+            watermark: '',
+            description: '',
+            multiple: false,
+            isControlledVocabulary: false,
+            displayFormat: '',
+            displayOrder: 0,
+            displayOnCreate: true
           },
           bar: {
             name: 'bar',
             displayName: 'Bar',
-            isRequired: true
+            isRequired: true,
+            title: '',
+            type: 'TEXT',
+            typeClass: 'primitive',
+            watermark: '',
+            description: '',
+            multiple: false,
+            isControlledVocabulary: false,
+            displayFormat: '',
+            displayOnCreate: true,
+            displayOrder: 0
           }
         }
       }
@@ -47,28 +89,28 @@ const expectedBaseInputLevels: FormattedCollectionInputLevels = {
   bar: {
     include: true,
     optionalOrRequired: 'required',
-    parentBlockName: 'astrophysics' as CollectionFormMetadataBlock
+    parentBlockName: 'astrophysics' as MetadataBlockName
   },
   'coverage/Spectral/MinimumWavelength': {
     include: true,
     optionalOrRequired: 'optional',
-    parentBlockName: 'astrophysics' as CollectionFormMetadataBlock
+    parentBlockName: 'astrophysics' as MetadataBlockName
   },
   'coverage/Spectral/Wavelength': {
     include: true,
     optionalOrRequired: 'optional',
-    parentBlockName: 'astrophysics' as CollectionFormMetadataBlock
+    parentBlockName: 'astrophysics' as MetadataBlockName
   },
   requiredField: {
     include: true,
     optionalOrRequired: 'required',
-    parentBlockName: 'astrophysics' as CollectionFormMetadataBlock
+    parentBlockName: 'astrophysics' as MetadataBlockName
   }
 }
 
 describe('CollectionFormHelper', () => {
   it('defineBaseInputLevels helper', () => {
-    const result = CollectionFormHelper.defineBaseInputLevels(allMetadataBlocksInfoReducedMock)
+    const result = CollectionFormHelper.defineBaseInputLevels(allMetadataBlocksInfoMock)
 
     expect(result).to.deep.equal(expectedBaseInputLevels)
   })
@@ -109,12 +151,12 @@ describe('CollectionFormHelper', () => {
       'coverage/Spectral/Wavelength': {
         include: true,
         optionalOrRequired: 'optional',
-        parentBlockName: 'astrophysics' as CollectionFormMetadataBlock
+        parentBlockName: 'astrophysics' as MetadataBlockName
       },
       foo: {
         include: true,
         optionalOrRequired: 'optional',
-        parentBlockName: 'astrophysics' as CollectionFormMetadataBlock
+        parentBlockName: 'astrophysics' as MetadataBlockName
       }
     }
 
@@ -137,12 +179,12 @@ describe('CollectionFormHelper', () => {
       'coverage/Spectral/Wavelength': {
         include: true,
         optionalOrRequired: 'optional',
-        parentBlockName: 'astrophysics' as CollectionFormMetadataBlock
+        parentBlockName: 'astrophysics' as MetadataBlockName
       },
       foo: {
         include: true,
         optionalOrRequired: 'required',
-        parentBlockName: 'astrophysics' as CollectionFormMetadataBlock
+        parentBlockName: 'astrophysics' as MetadataBlockName
       }
     })
   })
@@ -154,7 +196,9 @@ describe('CollectionFormHelper', () => {
       socialscience: true,
       astrophysics: false,
       biomedical: true,
-      journal: false
+      journal: false,
+      codeMeta20: false,
+      computationalworkflow: false
     }
 
     const result =
@@ -171,22 +215,22 @@ describe('CollectionFormHelper', () => {
       title: {
         include: true,
         optionalOrRequired: 'required',
-        parentBlockName: 'citation' as CollectionFormMetadataBlock
+        parentBlockName: 'citation' as MetadataBlockName
       },
       subtitle: {
         include: true,
         optionalOrRequired: 'optional',
-        parentBlockName: 'citation' as CollectionFormMetadataBlock
+        parentBlockName: 'citation' as MetadataBlockName
       },
       foo: {
         include: true,
         optionalOrRequired: 'required',
-        parentBlockName: 'socialscience' as CollectionFormMetadataBlock
+        parentBlockName: 'socialscience' as MetadataBlockName
       },
       bar: {
         include: true,
         optionalOrRequired: 'optional',
-        parentBlockName: 'socialscience' as CollectionFormMetadataBlock
+        parentBlockName: 'socialscience' as MetadataBlockName
       }
     }
 
@@ -222,21 +266,51 @@ describe('CollectionFormHelper', () => {
   })
 
   it('getChildFieldSiblings', () => {
-    const childMetadataFields: Record<string, ReducedMetadataFieldInfo> = {
+    const childMetadataFields: Record<string, MetadataField> = {
       'coverage.Spectral.MinimumWavelength': {
         name: 'coverage.Spectral.MinimumWavelength',
         displayName: 'Wavelength Range Minimum (m)',
-        isRequired: false
+        isRequired: false,
+        title: '',
+        type: 'TEXT',
+        typeClass: 'primitive',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        displayOnCreate: true,
+        displayOrder: 0
       },
       bar: {
         name: 'bar',
         displayName: 'Bar',
-        isRequired: true
+        isRequired: true,
+        title: '',
+        type: 'TEXT',
+        typeClass: 'primitive',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        displayOnCreate: true,
+        displayOrder: 0
       },
       foo: {
         name: 'foo',
         displayName: 'Foo',
-        isRequired: false
+        isRequired: false,
+        title: '',
+        type: 'TEXT',
+        typeClass: 'primitive',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        displayOnCreate: true,
+        displayOrder: 0
       }
     }
     const targetChildFieldName = 'bar'
@@ -250,13 +324,231 @@ describe('CollectionFormHelper', () => {
       'coverage.Spectral.MinimumWavelength': {
         name: 'coverage.Spectral.MinimumWavelength',
         displayName: 'Wavelength Range Minimum (m)',
-        isRequired: false
+        isRequired: false,
+        title: '',
+        type: 'TEXT',
+        typeClass: 'primitive',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        displayOnCreate: true,
+        displayOrder: 0
       },
       foo: {
         name: 'foo',
         displayName: 'Foo',
-        isRequired: false
+        isRequired: false,
+        title: '',
+        type: 'TEXT',
+        typeClass: 'primitive',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        displayOnCreate: true,
+        displayOrder: 0
       }
     })
+  })
+
+  it('assignBlockInfoToFacetableMetadataFields', () => {
+    const facetableMetadataFields: MetadataField[] = [
+      {
+        name: 'foo',
+        displayName: 'Foo',
+        title: 'Foo',
+        type: 'TEXT',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: false,
+        displayOrder: 1,
+        typeClass: 'primitive',
+        displayOnCreate: false
+      },
+      {
+        name: 'bar',
+        displayName: 'Bar',
+        title: 'Bar',
+        type: 'TEXT',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: false,
+        displayOrder: 2,
+        typeClass: 'primitive',
+        displayOnCreate: false
+      },
+      {
+        name: 'doe',
+        displayName: 'Doe',
+        title: 'Doe',
+        type: 'TEXT',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: false,
+        displayOrder: 3,
+        typeClass: 'primitive',
+        displayOnCreate: false
+      }
+    ]
+
+    const allMetadataBlocksInfo: MetadataBlockInfo[] = [
+      {
+        id: 1,
+        name: 'citation',
+        displayName: 'Citation Metadata',
+        displayOnCreate: true,
+        metadataFields: {
+          foo: {
+            name: 'foo',
+            displayName: 'Foo',
+            title: 'Foo',
+            type: 'TEXT',
+            watermark: '',
+            description: '',
+            multiple: false,
+            isControlledVocabulary: false,
+            displayFormat: '',
+            isRequired: false,
+            displayOrder: 1,
+            typeClass: 'primitive',
+            displayOnCreate: false,
+            childMetadataFields: {
+              bar: {
+                name: 'bar',
+                displayName: 'Bar',
+                title: 'Bar',
+                type: 'TEXT',
+                watermark: '',
+                description: '',
+                multiple: false,
+                isControlledVocabulary: false,
+                displayFormat: '',
+                isRequired: false,
+                displayOrder: 2,
+                typeClass: 'primitive',
+                displayOnCreate: false
+              }
+            }
+          }
+        }
+      },
+      {
+        id: 4,
+        name: 'astrophysics',
+        displayName: 'Astronomy and Astrophysics Metadata',
+        displayOnCreate: false,
+        metadataFields: {
+          doe: {
+            name: 'doe',
+            displayName: 'Doe',
+            title: 'Doe',
+            type: 'TEXT',
+            watermark: '',
+            description: '',
+            multiple: false,
+            isControlledVocabulary: false,
+            displayFormat: '',
+            isRequired: false,
+            displayOrder: 3,
+            typeClass: 'primitive',
+            displayOnCreate: false
+          }
+        }
+      }
+    ]
+
+    const result = CollectionFormHelper.assignBlockInfoToFacetableMetadataFields(
+      facetableMetadataFields,
+      allMetadataBlocksInfo
+    )
+
+    const expectedResult: MetadataFieldWithParentBlockInfo[] = [
+      {
+        name: 'foo',
+        displayName: 'Foo',
+        title: 'Foo',
+        type: 'TEXT',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: false,
+        displayOrder: 1,
+        typeClass: 'primitive',
+        displayOnCreate: false,
+        parentBlockInfo: {
+          id: 1,
+          name: 'citation',
+          displayName: 'Citation Metadata'
+        }
+      },
+      {
+        name: 'bar',
+        displayName: 'Bar',
+        title: 'Bar',
+        type: 'TEXT',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: false,
+        displayOrder: 2,
+        typeClass: 'primitive',
+        displayOnCreate: false,
+        parentBlockInfo: {
+          id: 1,
+          name: 'citation',
+          displayName: 'Citation Metadata'
+        }
+      },
+      {
+        name: 'doe',
+        displayName: 'Doe',
+        title: 'Doe',
+        type: 'TEXT',
+        watermark: '',
+        description: '',
+        multiple: false,
+        isControlledVocabulary: false,
+        displayFormat: '',
+        isRequired: false,
+        displayOrder: 3,
+        typeClass: 'primitive',
+        displayOnCreate: false,
+        parentBlockInfo: {
+          id: 4,
+          name: 'astrophysics',
+          displayName: 'Astronomy and Astrophysics Metadata'
+        }
+      }
+    ]
+
+    expect(result).to.deep.equal(expectedResult)
+  })
+
+  it('replaces string with dots with slashes', () => {
+    const result = CollectionFormHelper.replaceDotWithSlash('coverage.Spectral.MinimumWavelength')
+
+    expect(result).to.equal('coverage/Spectral/MinimumWavelength')
+  })
+
+  it('replaces string with slashes with dots', () => {
+    const result = CollectionFormHelper.replaceSlashWithDot('coverage/Spectral/MinimumWavelength')
+
+    expect(result).to.equal('coverage.Spectral.MinimumWavelength')
   })
 })

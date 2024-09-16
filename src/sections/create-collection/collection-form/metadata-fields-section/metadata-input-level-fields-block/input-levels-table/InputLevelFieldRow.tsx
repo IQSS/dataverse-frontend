@@ -2,15 +2,18 @@ import { ChangeEvent, useId } from 'react'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import cn from 'classnames'
 import { Form } from '@iqss/dataverse-design-system'
-import { ReducedMetadataFieldInfo } from '../../../../useGetAllMetadataBlocksInfo'
-import { CONDITIONALLY_REQUIRED_FIELDS, INPUT_LEVELS_GROUPER } from '../../../CollectionForm'
+import {
+  MetadataField,
+  TypeClassMetadataFieldOptions
+} from '../../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { INPUT_LEVELS_GROUPER } from '../../../CollectionForm'
 import styles from './InputLevelsTable.module.scss'
 import { CollectionFormHelper } from '../../../CollectionFormHelper'
 import { RequiredOptionalRadios } from './RequiredOptionalRadios'
 import { useTranslation } from 'react-i18next'
 
 interface InputLevelFieldRowProps {
-  metadataField: ReducedMetadataFieldInfo
+  metadataField: MetadataField
   disabled: boolean
 }
 
@@ -25,9 +28,17 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
     name: `${INPUT_LEVELS_GROUPER}.${metadataField.name}.include`
   }) as boolean
 
-  const { name, displayName, isRequired, childMetadataFields } = metadataField
+  const { name, displayName, isRequired, childMetadataFields, typeClass } = metadataField
 
-  const isAConditionallyRequiredField = CONDITIONALLY_REQUIRED_FIELDS.includes(name)
+  const isSafeCompound =
+    typeClass === TypeClassMetadataFieldOptions.Compound &&
+    childMetadataFields !== undefined &&
+    Object.keys(childMetadataFields).length > 0
+
+  const composedFieldNotRequiredWithChildFieldsRequired =
+    isSafeCompound &&
+    !isRequired &&
+    Object.keys(childMetadataFields).some((key) => childMetadataFields[key].isRequired)
 
   const rules: UseControllerProps['rules'] = {}
 
@@ -67,19 +78,19 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
                 onChange={(e) => handleIncludeChange(e, onChange)}
                 label={displayName}
                 checked={Boolean(value as boolean)}
-                disabled={disabled || isRequired}
+                disabled={disabled || isRequired || composedFieldNotRequiredWithChildFieldsRequired}
                 ref={ref}
               />
             )}
           />
         </td>
         <td>
-          {isRequired && !isAConditionallyRequiredField && (
+          {isRequired && (
             <span className={styles['required-by-dataverse-label']}>
               {t('requiredByDataverse')}
             </span>
           )}
-          {!childMetadataFields && (!isRequired || isAConditionallyRequiredField) && (
+          {!childMetadataFields && !isRequired && (
             <RequiredOptionalRadios
               disabled={disabled}
               isForChildField={false}
@@ -92,9 +103,8 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
       </tr>
       {childMetadataFields &&
         Object.entries(childMetadataFields).map(([key, childField]) => {
-          const isAConditionallyRequiredChildField = CONDITIONALLY_REQUIRED_FIELDS.includes(
-            childField.name
-          )
+          const isAConditionallyRequiredChildField =
+            composedFieldNotRequiredWithChildFieldsRequired && childField.isRequired
 
           return (
             <tr className={styles['input-level-row--child-field']} key={key}>
@@ -125,6 +135,7 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
                     parentFieldChecked={includeCheckboxValue}
                     uniqueInputLevelRowID={`${uniqueInputLevelRowID}-${childField.name}`}
                     formBuiltedFieldName={`${INPUT_LEVELS_GROUPER}.${childField.name}.optionalOrRequired`}
+                    isConditionallyRequired={isAConditionallyRequiredChildField}
                   />
                 )}
               </td>

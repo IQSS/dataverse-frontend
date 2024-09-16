@@ -66,10 +66,9 @@ export const collectionTypeOptions = {
     value: CollectionType.DEPARTMENT
   }
 } as const
-
+// 👇 To be defined, at the moment the SPA only supports file uploading through direct upload (S3), so we are disabling the storage selector
 export const collectionStorageOptions = {
-  LOCAL_DEFAULT: 'Local (Default)',
-  LOCAL: 'Local'
+  S3: 'S3'
 } as const
 
 export type CollectionStorage =

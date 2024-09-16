@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import { Button, Col, Form } from '@iqss/dataverse-design-system'
 import { CheckCircle } from 'react-bootstrap-icons'
-import styles from '../CollectionForm.module.scss'
+import styles from './TopFieldsSection.module.scss'
 
 export const collectionNameToAlias = (name: string) => {
   if (!name) return ''

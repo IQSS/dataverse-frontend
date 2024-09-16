@@ -6,7 +6,6 @@ import { MetadataBlockName } from '../../../../../metadata-block-info/domain/mod
 import { ConfirmResetModificationsModal } from './ConfirmResetModificationsModal'
 import {
   CollectionFormData,
-  CollectionFormMetadataBlocks,
   INPUT_LEVELS_GROUPER,
   METADATA_BLOCKS_NAMES_GROUPER,
   USE_FIELDS_FROM_PARENT
@@ -37,11 +36,9 @@ export const FieldsFromParentCheckbox = ({ defaultValues }: FieldsFromParentChec
 
     // Reset metadata block names checboxes to the inital value
     ALL_INPUT_LEVEL_FIELDS.forEach((blockName) => {
-      const castedBlockName = blockName as keyof CollectionFormMetadataBlocks
-
       setValue(
         `${METADATA_BLOCKS_NAMES_GROUPER}.${blockName}`,
-        defaultValues[METADATA_BLOCKS_NAMES_GROUPER][castedBlockName]
+        defaultValues[METADATA_BLOCKS_NAMES_GROUPER][blockName]
       )
     })
 

@@ -4,10 +4,13 @@ import {
   createCollection,
   getCollection,
   getCollectionUserPermissions,
-  publishCollection
+  publishCollection,
+  getCollectionFacets,
+  getCollectionUserPermissions
 } from '@iqss/dataverse-client-javascript'
 import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'
+import { CollectionFacet } from '../../domain/models/CollectionFacet'
 import { CollectionUserPermissions } from '../../domain/models/CollectionUserPermissions'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
@@ -21,6 +24,10 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     return createCollection
       .execute(collection, hostCollection)
       .then((newCollectionIdentifier) => newCollectionIdentifier)
+  }
+
+  getFacets(collectionIdOrAlias: number | string): Promise<CollectionFacet[]> {
+    return getCollectionFacets.execute(collectionIdOrAlias).then((facets) => facets)
   }
 
   getUserPermissions(collectionIdOrAlias: number | string): Promise<CollectionUserPermissions> {
