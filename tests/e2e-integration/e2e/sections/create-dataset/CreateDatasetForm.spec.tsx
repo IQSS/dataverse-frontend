@@ -11,13 +11,13 @@ describe('Create Dataset', () => {
   })
 
   it('visits the Create Dataset Page as a logged in user', () => {
-    cy.visit('/spa/datasets/create')
+    cy.visit('/spa/datasets/root/create')
 
     cy.findByRole('heading', { name: 'Create Dataset' }).should('exist')
   })
 
   it('navigates to the new dataset after submitting a valid form', () => {
-    cy.visit('/spa/datasets/create')
+    cy.visit('/spa/datasets/root/create')
 
     cy.findByLabelText(/^Title/i).type('Test Dataset Title', { force: true })
 
@@ -44,7 +44,7 @@ describe('Create Dataset', () => {
   })
 
   it('navigates to the home if the user cancels the form', () => {
-    cy.visit('/spa/datasets/create')
+    cy.visit('/spa/datasets/root/create')
 
     cy.findByText(/Cancel/i).click()
 
