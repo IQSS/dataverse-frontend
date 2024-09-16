@@ -3,6 +3,8 @@ import { FilePreview } from '../../../files/domain/models/FilePreview'
 import { CollectionPreview } from './CollectionPreview'
 
 export interface CollectionItemSubset {
-  items: (CollectionPreview | DatasetPreview | FilePreview)[]
+  items: CollectionItem[]
   totalItemCount: number
 }
+
+export type CollectionItem = CollectionPreview | DatasetPreview | FilePreview

@@ -4,7 +4,8 @@ import {
   createCollection,
   getCollection,
   getCollectionFacets,
-  getCollectionUserPermissions
+  getCollectionUserPermissions,
+  getCollectionItems
 } from '@iqss/dataverse-client-javascript'
 import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'
@@ -36,13 +37,13 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
       .then((jsCollectionUserPermissions) => jsCollectionUserPermissions)
   }
 
+  // TODO:ME After updating previews object to match the response models we should not see ts error anymore under the return keyword
   getItems(
-    _collectionIdOrAlias: number | string,
+    collectionId: string,
     _paginationInfo: CollectionItemsPaginationInfo
   ): Promise<CollectionItemSubset> {
-    return Promise.resolve({
-      items: [],
-      totalItemCount: 0
-    })
+    return getCollectionItems
+      .execute(collectionId)
+      .then((jsCollectionItemSubset) => jsCollectionItemSubset)
   }
 }

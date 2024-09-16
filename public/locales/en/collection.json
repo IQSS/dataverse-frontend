@@ -3,5 +3,9 @@
     "authenticated": "This collection currently has no datasets. You can add to it by using the Add Data button on this page.",
     "anonymous": "This collection currently has no datasets. Please <1>log in</1> to see if you are able to add to it."
   },
+  "noItemsMessage": {
+    "authenticated": "This collection currently has no collections, datasets or files. You can add to it by using the Add Data button on this page.",
+    "anonymous": "This collection currently has no collections, datasets or files. Please <1>log in</1> to see if you are able to add to it."
+  },
   "createdAlert": "You have successfully created your collection! To learn more about what you can do with your collection, check out the <anchor>User Guide</anchor>."
 }

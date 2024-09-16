@@ -11,7 +11,7 @@ export interface CollectionRepository {
   getFacets(collectionIdOrAlias: number | string): Promise<CollectionFacet[]>
   getUserPermissions(collectionIdOrAlias: number | string): Promise<CollectionUserPermissions>
   getItems(
-    collectionIdOrAlias: number | string,
+    collectionId: string,
     paginationInfo: CollectionItemsPaginationInfo
   ): Promise<CollectionItemSubset>
 }

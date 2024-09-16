@@ -1,12 +1,10 @@
 import { ReactElement } from 'react'
-import { Collection } from './Collection'
-import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { useLocation, useParams, useSearchParams } from 'react-router-dom'
 import { CollectionJSDataverseRepository } from '../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
+import { Collection } from './Collection'
 import { INFINITE_SCROLL_ENABLED } from './config'
 
-const datasetRepository = new DatasetJSDataverseRepository()
-const repository = new CollectionJSDataverseRepository()
+const collectionRepository = new CollectionJSDataverseRepository()
 export class CollectionFactory {
   static create(): ReactElement {
     return <CollectionWithSearchParams />
@@ -23,10 +21,9 @@ function CollectionWithSearchParams() {
 
   return (
     <Collection
-      repository={repository}
-      datasetRepository={datasetRepository}
+      collectionRepository={collectionRepository}
       page={page}
-      id={collectionId}
+      collectionId={collectionId}
       created={created}
       infiniteScrollEnabled={INFINITE_SCROLL_ENABLED}
     />
