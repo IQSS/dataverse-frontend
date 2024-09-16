@@ -6,4 +6,5 @@ export interface CollectionRepository {
   getById: (id: string) => Promise<Collection>
   create(collection: CollectionDTO, hostCollection?: string): Promise<number>
   getUserPermissions(collectionIdOrAlias: number | string): Promise<CollectionUserPermissions>
+  publish(collectionIdOrAlias: number | string): Promise<void>
 }

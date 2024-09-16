@@ -16,10 +16,12 @@ import { PublishDatasetHelpText } from './PublishDatasetHelpText'
 import styles from './PublishDatasetModal.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { QueryParamKey, Route } from '../../Route.enum'
+import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 
 interface PublishDatasetModalProps {
   show: boolean
   repository: DatasetRepository
+  collectionRepository: CollectionRepository
   persistentId: string
   releasedVersionExists: boolean
   handleClose: () => void
@@ -30,6 +32,7 @@ interface PublishDatasetModalProps {
 export function PublishDatasetModal({
   show,
   repository,
+  collectionRepository,
   persistentId,
   releasedVersionExists,
   handleClose,
@@ -41,6 +44,7 @@ export function PublishDatasetModal({
   const navigate = useNavigate()
   const { submissionStatus, submitPublish, publishError } = usePublishDataset(
     repository,
+    collectionRepository,
     persistentId,
     onPublishSucceed
   )

@@ -6,13 +6,21 @@ import { DatasetRepository } from '../../../../dataset/domain/repositories/Datas
 import { Dataset, DatasetPublishingStatus } from '../../../../dataset/domain/models/Dataset'
 import { ChangeCurationStatusMenu } from './ChangeCurationStatusMenu'
 import { PublishDatasetModal } from '../../publish-dataset/PublishDatasetModal'
+import { Collection } from '../../../../collection/domain/models/Collection'
+import { CollectionRepository } from '../../../../collection/domain/repositories/CollectionRepository'
 
 interface PublishDatasetMenuProps {
   dataset: Dataset
+  parentCollection: Collection
   datasetRepository: DatasetRepository
+  collectionRepository: CollectionRepository
 }
 
-export function PublishDatasetMenu({ dataset, datasetRepository }: PublishDatasetMenuProps) {
+export function PublishDatasetMenu({
+  dataset,
+  datasetRepository,
+  collectionRepository
+}: PublishDatasetMenuProps) {
   const { user } = useSession()
   const { t } = useTranslation('dataset')
   const [showModal, setShowModal] = useState(false)
@@ -36,6 +44,7 @@ export function PublishDatasetMenu({ dataset, datasetRepository }: PublishDatase
       <PublishDatasetModal
         show={showModal}
         repository={datasetRepository}
+        collectionRepository={collectionRepository}
         persistentId={dataset.persistentId}
         releasedVersionExists={dataset.version.someDatasetVersionHasBeenReleased}
         nextMajorVersion={dataset.nextMajorVersion}

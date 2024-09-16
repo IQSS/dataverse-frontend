@@ -22,6 +22,7 @@ type UsePublishDatasetReturnType =
 
 export function usePublishDataset(
   repository: DatasetRepository,
+  collectionRepository: DatasetRepository,
   persistentId: string,
   onPublishSucceed: () => void
 ): UsePublishDatasetReturnType {

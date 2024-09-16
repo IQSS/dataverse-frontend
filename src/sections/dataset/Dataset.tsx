@@ -25,11 +25,14 @@ import useCheckPublishCompleted from './useCheckPublishCompleted'
 import useUpdateDatasetAlerts from './useUpdateDatasetAlerts'
 import { QueryParamKey, Route } from '../Route.enum'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { useGetParentCollection } from './useGetParentCollection'
+import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
   fileRepository: FileRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
+  collectionRepository: CollectionRepository
   created?: boolean
   metadataUpdated?: boolean
   filesTabInfiniteScrollEnabled?: boolean
@@ -40,6 +43,7 @@ export function Dataset({
   datasetRepository,
   fileRepository,
   metadataBlockInfoRepository,
+  collectionRepository,
   created,
   metadataUpdated,
   filesTabInfiniteScrollEnabled,
@@ -51,6 +55,10 @@ export function Dataset({
   const navigate = useNavigate()
   const { hideModal, isModalOpen } = useNotImplementedModal()
   const publishCompleted = useCheckPublishCompleted(publishInProgress, dataset, datasetRepository)
+  const { collection, isLoading: isLoadingParentCollection } = useGetParentCollection(
+    collectionRepository,
+    dataset
+  )
   useUpdateDatasetAlerts({
     dataset,
     created,
