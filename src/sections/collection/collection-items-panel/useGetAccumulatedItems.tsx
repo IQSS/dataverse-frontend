@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react'
-
 import { getCollectionItems } from '../../../collection/domain/useCases/getCollectionItems'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import {
@@ -31,13 +30,11 @@ type UseGetAccumulatedItemsReturnType = {
 type UseGetAccumulatedItemsParams = {
   collectionRepository: CollectionRepository
   collectionId: string
-  paginationInfo: CollectionItemsPaginationInfo
 }
 
 export const useGetAccumulatedItems = ({
   collectionRepository,
-  collectionId,
-  paginationInfo
+  collectionId
 }: UseGetAccumulatedItemsParams): UseGetAccumulatedItemsReturnType => {
   const [isLoadingItems, setIsLoadingItems] = useState(false)
   const [accumulatedItems, setAccumulatedItems] = useState<CollectionItem[]>([])
@@ -111,11 +108,14 @@ async function loadNextItems(
   collectionRepository: CollectionRepository,
   collectionId: string,
   paginationInfo: CollectionItemsPaginationInfo,
-  _criteria: TemporarySearchCriteria
+  searchCriteria: TemporarySearchCriteria
 ): Promise<CollectionItemSubset> {
-  return getCollectionItems(collectionRepository, collectionId, paginationInfo).catch(
-    (err: Error) => {
-      throw new Error(err.message)
-    }
-  )
+  return getCollectionItems(
+    collectionRepository,
+    collectionId,
+    paginationInfo,
+    searchCriteria
+  ).catch((err: Error) => {
+    throw new Error(err.message)
+  })
 }

@@ -1,7 +1,8 @@
+import { ForwardedRef, forwardRef } from 'react'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
-import { UseInfiniteScrollHookRefCallback } from 'react-infinite-scroll-hook'
+import useInfiniteScroll from 'react-infinite-scroll-hook'
 import cn from 'classnames'
-import { CollectionItem } from '../../../../collection/domain/models/CollectionItemSubset'
+import { type CollectionItem } from '../../../../collection/domain/models/CollectionItemSubset'
 import { CollectionItemsPaginationInfo } from '../../../../collection/domain/models/CollectionItemsPaginationInfo'
 import { PaginationResultsInfo } from '../../../shared/pagination/PaginationResultsInfo'
 import { ErrorItemsMessage } from './ErrorItemsMessage'
@@ -13,66 +14,91 @@ interface ItemsListProps {
   items: CollectionItem[]
   error: string | null
   accumulatedCount: number
+  isLoadingItems: boolean
   areItemsAvailable: boolean
   hasNextPage: boolean
   isEmptyItems: boolean
   paginationInfo: CollectionItemsPaginationInfo
-  rootRef: any
-  sentryRef: UseInfiniteScrollHookRefCallback
+  onLoadMore: (paginationInfo: CollectionItemsPaginationInfo) => void
 }
 
-export const ItemsList = ({
-  items,
-  error,
-  accumulatedCount,
-  areItemsAvailable,
-  hasNextPage,
-  isEmptyItems,
-  paginationInfo,
-  rootRef,
-  sentryRef
-}: ItemsListProps) => {
-  return (
-    <div
-      className={cn(styles['items-list'], {
-        [styles['empty-or-error']]: isEmptyItems || error
-      })}
-      ref={rootRef}>
-      {isEmptyItems && <NoItemsMessage />}
+export const ItemsList = forwardRef(
+  (
+    {
+      items,
+      error,
+      accumulatedCount,
+      isLoadingItems,
+      areItemsAvailable,
+      hasNextPage,
+      isEmptyItems,
+      paginationInfo,
+      onLoadMore
+    }: ItemsListProps,
+    ref
+  ) => {
+    const [sentryRef, { rootRef }] = useInfiniteScroll({
+      loading: isLoadingItems,
+      hasNextPage: hasNextPage,
+      onLoadMore: () => void onLoadMore(paginationInfo),
+      disabled: !!error,
+      rootMargin: '0px 0px 250px 0px'
+    })
 
-      {error && <ErrorItemsMessage errorMessage={error} />}
+    return (
+      <section ref={rootRef}>
+        <div
+          className={cn(styles['items-list'], {
+            [styles['empty-or-error']]: isEmptyItems || error
+          })}
+          ref={ref as ForwardedRef<HTMLDivElement>}>
+          {isEmptyItems && <NoItemsMessage />}
 
-      {areItemsAvailable && (
-        <>
-          <header>
-            <PaginationResultsInfo paginationInfo={paginationInfo} accumulated={accumulatedCount} />
-          </header>
-          <ul>
-            {items.map((collectionItem, index) => {
-              return (
-                <li
-                  key={index}
-                  // key={`${dataset.persistentId}-${dataset.version.id}`}
-                >
-                  <p>A collection item</p>
-                </li>
-              )
-            })}
-          </ul>
-        </>
-      )}
+          {error && <ErrorItemsMessage errorMessage={error} />}
 
-      {hasNextPage && !error && !isEmptyItems && (
-        <div ref={sentryRef} data-testid="collection-items-list-infinite-scroll-skeleton">
-          <SkeletonTheme>
-            {accumulatedCount === NO_COLLECTION_ITEMS && <InitialLoadingSkeleton />}
-            <LoadingSkeleton />
-          </SkeletonTheme>
+          {areItemsAvailable && (
+            <>
+              <header>
+                <PaginationResultsInfo
+                  paginationInfo={paginationInfo}
+                  accumulated={accumulatedCount}
+                />
+              </header>
+
+              {/* TODO:ME After updating js-dataverse use case, assert by the type wich card to render */}
+              <ul>
+                {items.map((collectionItem, index) => {
+                  console.log(collectionItem)
+
+                  return (
+                    <li
+                      style={{ height: 100, border: 'solid 2px black' }}
+                      key={index}
+                      // key={`${dataset.persistentId}-${dataset.version.id}`}
+                    >
+                      <p>Assert type collection, dataset or file here</p>
+                    </li>
+                  )
+                })}
+              </ul>
+            </>
+          )}
+
+          {hasNextPage && !error && !isEmptyItems && (
+            <div ref={sentryRef} data-testid="collection-items-list-infinite-scroll-skeleton">
+              <SkeletonTheme>
+                {accumulatedCount === NO_COLLECTION_ITEMS && <InitialLoadingSkeleton />}
+                <LoadingSkeleton />
+              </SkeletonTheme>
+            </div>
+          )}
         </div>
-      )}
-    </div>
-  )
-}
+      </section>
+    )
+  }
+)
+
+ItemsList.displayName = 'ItemsList'
 
 export const InitialLoadingSkeleton = () => (
   <>

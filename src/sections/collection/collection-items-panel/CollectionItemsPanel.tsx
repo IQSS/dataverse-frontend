@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react'
-import useInfiniteScroll from 'react-infinite-scroll-hook'
+import { useEffect, useRef, useState } from 'react'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '../../../collection/domain/models/CollectionItemsPaginationInfo'
 import { TemporarySearchCriteria, useGetAccumulatedItems } from './useGetAccumulatedItems'
+import { useLoading } from '../../loading/LoadingContext'
 import { FilterPanel } from './filter-panel/FilterPanel'
 import { ItemsList } from './items-list/ItemsList'
 import { SearchPanel } from './search-panel/SearchPanel'
 import styles from './CollectionItemsPanel.module.scss'
-import { useLoading } from '../../loading/LoadingContext'
 
 const PAGE_SIZE = 10
 const INITIAL_PAGE = 1
@@ -26,8 +25,10 @@ export const CollectionItemsPanel = ({
   const { setIsLoading } = useLoading()
   const [searchCriteria, setSearchCriteria] = useState<TemporarySearchCriteria>({})
   const [paginationInfo, setPaginationInfo] = useState<CollectionItemsPaginationInfo>(
-    new CollectionItemsPaginationInfo(INITIAL_PAGE)
+    new CollectionItemsPaginationInfo()
   )
+  const itemsListContainerRef = useRef<HTMLDivElement | null>(null)
+
   const {
     isLoadingItems,
     accumulatedItems,
@@ -40,27 +41,7 @@ export const CollectionItemsPanel = ({
     accumulatedCount
   } = useGetAccumulatedItems({
     collectionRepository,
-    collectionId,
-    paginationInfo
-  })
-
-  const [sentryRef, { rootRef }] = useInfiniteScroll({
-    loading: isLoadingItems,
-    hasNextPage: hasNextPage,
-    onLoadMore: () => void handleOnLoadMore(paginationInfo),
-    disabled: !!error,
-    rootMargin: '0px 0px 250px 0px'
-  })
-
-  console.log({
-    accumulatedItems,
-    accumulatedCount,
-    areItemsAvailable,
-    error,
-    hasNextPage,
-    isLoadingItems,
-    isEmptyItems,
-    totalAvailable
+    collectionId
   })
 
   async function handleOnLoadMore(currentPagination: CollectionItemsPaginationInfo) {
@@ -68,24 +49,29 @@ export const CollectionItemsPanel = ({
     if (totalAvailable !== undefined) {
       paginationInfoToSend = currentPagination.goToNextPage()
     }
-    const totalFilesCount = await loadMore(paginationInfoToSend, searchCriteria)
+    console.log('paginationInfoToSend', paginationInfoToSend)
+    const totalItemsCount = await loadMore(paginationInfoToSend, searchCriteria)
 
-    if (totalFilesCount !== undefined) {
-      const paginationInfoUpdated = paginationInfoToSend.withTotal(totalFilesCount)
+    if (totalItemsCount !== undefined) {
+      const paginationInfoUpdated = paginationInfoToSend.withTotal(totalItemsCount)
       setPaginationInfo(paginationInfoUpdated)
     }
   }
 
-  const handleCriteriaChange = async (newCriteria: any) => {
-    // scrollableContainerRef.current?.scrollTo({ top: 0 })
-    // setCriteria(newCriteria)
-    // const resetedPaginationInfo = new FilePaginationInfo()
-    // setPaginationInfo(resetedPaginationInfo)
-    // const totalFilesCount = await loadMore(resetedPaginationInfo, newCriteria, true)
-    // if (totalFilesCount !== undefined) {
-    //   const paginationInfoUpdated = resetedPaginationInfo.withTotal(totalFilesCount)
-    //   setPaginationInfo(paginationInfoUpdated)
-    // }
+  // This function is called when the user changes the search criteria (search input, filters, etc.)
+  const handleCriteriaChange = async (newCriteria: TemporarySearchCriteria) => {
+    itemsListContainerRef.current?.scrollTo({ top: 0 })
+
+    setSearchCriteria(newCriteria)
+
+    const resetedPaginationInfo = new CollectionItemsPaginationInfo()
+    setPaginationInfo(resetedPaginationInfo)
+
+    const totalItemsCount = await loadMore(resetedPaginationInfo, newCriteria, true)
+    if (totalItemsCount !== undefined) {
+      const paginationInfoUpdated = resetedPaginationInfo.withTotal(totalItemsCount)
+      setPaginationInfo(paginationInfoUpdated)
+    }
   }
 
   useEffect(() => {
@@ -106,12 +92,13 @@ export const CollectionItemsPanel = ({
           items={accumulatedItems}
           error={error}
           accumulatedCount={accumulatedCount}
+          isLoadingItems={isLoadingItems}
           areItemsAvailable={areItemsAvailable}
           hasNextPage={hasNextPage}
           isEmptyItems={isEmptyItems}
           paginationInfo={paginationInfo}
-          rootRef={rootRef}
-          sentryRef={sentryRef}
+          onLoadMore={handleOnLoadMore}
+          ref={itemsListContainerRef}
         />
       </div>
     </section>

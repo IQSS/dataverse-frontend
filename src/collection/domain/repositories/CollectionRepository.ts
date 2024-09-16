@@ -1,3 +1,4 @@
+import { TemporarySearchCriteria } from '../../../sections/collection/collection-items-panel/useGetAccumulatedItems'
 import { Collection } from '../models/Collection'
 import { CollectionFacet } from '../models/CollectionFacet'
 import { CollectionItemsPaginationInfo } from '../models/CollectionItemsPaginationInfo'
@@ -12,6 +13,7 @@ export interface CollectionRepository {
   getUserPermissions(collectionIdOrAlias: number | string): Promise<CollectionUserPermissions>
   getItems(
     collectionId: string,
-    paginationInfo: CollectionItemsPaginationInfo
+    paginationInfo: CollectionItemsPaginationInfo,
+    searchCriteria?: TemporarySearchCriteria
   ): Promise<CollectionItemSubset>
 }
