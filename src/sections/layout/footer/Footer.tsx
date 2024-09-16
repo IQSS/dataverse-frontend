@@ -12,6 +12,7 @@ interface FooterProps {
 export function Footer({ dataverseInfoRepository }: FooterProps) {
   const { t } = useTranslation('footer')
   const { dataverseVersion } = useDataverseVersion(dataverseInfoRepository)
+  const currentYear = new Date().getFullYear().toString()
 
   return (
     <footer className={styles.container}>
@@ -19,7 +20,7 @@ export function Footer({ dataverseInfoRepository }: FooterProps) {
         <Row>
           <Col sm={8}>
             <p className={styles.copyright}>
-              {t('copyright')}
+              {t('copyright', { year: currentYear })}
               <a
                 href="https://dataverse.org/best-practices/harvard-dataverse-privacy-policy"
                 rel="noreferrer"
