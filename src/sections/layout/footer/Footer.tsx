@@ -13,6 +13,7 @@ export function Footer({ dataverseInfoRepository }: FooterProps) {
   const { t } = useTranslation('footer')
   const { dataverseVersion } = useDataverseVersion(dataverseInfoRepository)
   const currentYear = new Date().getFullYear().toString()
+
   return (
     <footer className={styles.container}>
       <Container>
