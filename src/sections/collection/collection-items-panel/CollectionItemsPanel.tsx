@@ -107,6 +107,7 @@ export const CollectionItemsPanel = ({
           areItemsAvailable={areItemsAvailable}
           hasNextPage={hasNextPage}
           isEmptyItems={isEmptyItems}
+          hasSearchValue={searchCriteria.hasSearchText()}
           paginationInfo={paginationInfo}
           onLoadMore={handleOnLoadMore}
           ref={itemsListContainerRef}

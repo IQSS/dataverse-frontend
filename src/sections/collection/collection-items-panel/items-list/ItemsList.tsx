@@ -7,6 +7,7 @@ import { CollectionItemsPaginationInfo } from '../../../../collection/domain/mod
 import { PaginationResultsInfo } from '../../../shared/pagination/PaginationResultsInfo'
 import { ErrorItemsMessage } from './ErrorItemsMessage'
 import { NoItemsMessage } from './NoItemsMessage'
+import { NoSearchMatchesMessage } from './NoSearchMatchesMessage'
 import { NO_COLLECTION_ITEMS } from '../useGetAccumulatedItems'
 import styles from './ItemsList.module.scss'
 
@@ -18,6 +19,7 @@ interface ItemsListProps {
   areItemsAvailable: boolean
   hasNextPage: boolean
   isEmptyItems: boolean
+  hasSearchValue: boolean
   paginationInfo: CollectionItemsPaginationInfo
   onLoadMore: (paginationInfo: CollectionItemsPaginationInfo) => void
 }
@@ -32,6 +34,7 @@ export const ItemsList = forwardRef(
       areItemsAvailable,
       hasNextPage,
       isEmptyItems,
+      hasSearchValue,
       paginationInfo,
       onLoadMore
     }: ItemsListProps,
@@ -52,11 +55,8 @@ export const ItemsList = forwardRef(
             [styles['empty-or-error']]: isEmptyItems || error
           })}
           ref={ref as ForwardedRef<HTMLDivElement>}>
-          {isEmptyItems && <NoItemsMessage />}
-
-          {/* TODO:ME If there is a type or search applied, then message should not be no items message */}
-          {/* There are no dataverses, datasets, or files that match your search. Please try a new search by using other or broader terms. You can also check out the [search guide] for tips. */}
-          {/* https://guides.dataverse.org/en/latest/user/find-use-data.html */}
+          {isEmptyItems && !hasSearchValue && <NoItemsMessage />}
+          {isEmptyItems && hasSearchValue && <NoSearchMatchesMessage />}
 
           {error && <ErrorItemsMessage errorMessage={error} />}
 

@@ -8,7 +8,7 @@ export function NoItemsMessage() {
   const { user } = useSession()
 
   return (
-    <div className={styles['empty-message-container']}>
+    <div className={styles['custom-message-container']}>
       {user ? (
         <p>{t('noItemsMessage.authenticated')}</p>
       ) : (

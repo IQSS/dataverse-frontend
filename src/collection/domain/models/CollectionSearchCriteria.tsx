@@ -13,4 +13,8 @@ export class CollectionSearchCriteria {
   withItemTypes(itemTypes: CollectionItemType[] | undefined): CollectionSearchCriteria {
     return new CollectionSearchCriteria(this.searchText, itemTypes)
   }
+
+  hasSearchText(): boolean {
+    return !!this.searchText
+  }
 }
