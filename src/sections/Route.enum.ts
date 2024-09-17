@@ -12,7 +12,8 @@ export enum Route {
   FILES = '/files',
   COLLECTIONS_BASE = '/collections',
   COLLECTIONS = '/collections/:collectionId',
-  CREATE_COLLECTION = '/collections/:ownerCollectionId/create'
+  CREATE_COLLECTION = '/collections/:ownerCollectionId/create',
+  ACCOUNT = '/account'
 }
 
 export const RouteWithParams = {

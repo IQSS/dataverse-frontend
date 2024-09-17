@@ -11,6 +11,7 @@ import { EditDatasetMetadataFactory } from './sections/edit-dataset-metadata/Edi
 import { DatasetNonNumericVersion } from './dataset/domain/models/Dataset'
 import { CreateCollectionFactory } from './sections/create-collection/CreateCollectionFactory'
 import { HomepageFactory } from './sections/homepage/HomepageFactory'
+import { AccountFactory } from './sections/account/AccountFactory'
 
 const router = createBrowserRouter(
   [
@@ -54,6 +55,10 @@ const router = createBrowserRouter(
         {
           path: Route.FILES,
           element: FileFactory.create()
+        },
+        {
+          path: Route.ACCOUNT,
+          element: AccountFactory.create()
         }
       ]
     }

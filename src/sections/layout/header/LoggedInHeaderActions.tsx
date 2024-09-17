@@ -7,6 +7,7 @@ import { Route, RouteWithParams } from '../../Route.enum'
 import { User } from '../../../users/domain/models/User'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import { ROOT_COLLECTION_ALIAS } from '../../../collection/domain/models/Collection'
+import { AccountHelper } from '../../account/AccountHelper'
 
 const currentPage = 0
 
@@ -56,6 +57,11 @@ export const LoggedInHeaderActions = ({
         </Navbar.Dropdown.Item>
       </Navbar.Dropdown>
       <Navbar.Dropdown title={user.displayName} id="dropdown-user">
+        <Navbar.Dropdown.Item
+          as={Link}
+          to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}`}>
+          {t('navigation.apiToken')}
+        </Navbar.Dropdown.Item>
         <Navbar.Dropdown.Item href="#" onClick={onLogoutClick}>
           {t('logOut')}
         </Navbar.Dropdown.Item>
