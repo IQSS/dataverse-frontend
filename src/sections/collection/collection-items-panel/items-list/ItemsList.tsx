@@ -54,6 +54,10 @@ export const ItemsList = forwardRef(
           ref={ref as ForwardedRef<HTMLDivElement>}>
           {isEmptyItems && <NoItemsMessage />}
 
+          {/* TODO:ME If there is a type or search applied, then message should not be no items message */}
+          {/* There are no dataverses, datasets, or files that match your search. Please try a new search by using other or broader terms. You can also check out the [search guide] for tips. */}
+          {/* https://guides.dataverse.org/en/latest/user/find-use-data.html */}
+
           {error && <ErrorItemsMessage errorMessage={error} />}
 
           {areItemsAvailable && (
@@ -68,7 +72,7 @@ export const ItemsList = forwardRef(
               {/* TODO:ME After updating js-dataverse use case, assert by the type wich card to render */}
               <ul>
                 {items.map((collectionItem, index) => {
-                  console.log(collectionItem)
+                  // console.log(collectionItem)
 
                   return (
                     <li

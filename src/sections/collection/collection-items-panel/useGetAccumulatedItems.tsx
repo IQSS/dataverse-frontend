@@ -6,8 +6,7 @@ import {
   CollectionItemSubset
 } from '../../../collection/domain/models/CollectionItemSubset'
 import { CollectionItemsPaginationInfo } from '../../../collection/domain/models/CollectionItemsPaginationInfo'
-
-export type TemporarySearchCriteria = {}
+import { CollectionSearchCriteria } from '../../../collection/domain/models/CollectionSearchCriteria'
 
 export const NO_COLLECTION_ITEMS = 0
 
@@ -19,7 +18,7 @@ type UseGetAccumulatedItemsReturnType = {
   error: string | null
   loadMore: (
     paginationInfo: CollectionItemsPaginationInfo,
-    criteria: TemporarySearchCriteria,
+    criteria: CollectionSearchCriteria,
     resetAccumulated?: boolean
   ) => Promise<number | undefined>
   isEmptyItems: boolean
@@ -50,7 +49,7 @@ export const useGetAccumulatedItems = ({
 
   const loadMore = async (
     pagination: CollectionItemsPaginationInfo,
-    criteria: TemporarySearchCriteria,
+    criteria: CollectionSearchCriteria,
     resetAccumulated = false
   ): Promise<number | undefined> => {
     setIsLoadingItems(true)
@@ -108,7 +107,7 @@ async function loadNextItems(
   collectionRepository: CollectionRepository,
   collectionId: string,
   paginationInfo: CollectionItemsPaginationInfo,
-  searchCriteria: TemporarySearchCriteria
+  searchCriteria: CollectionSearchCriteria
 ): Promise<CollectionItemSubset> {
   return getCollectionItems(
     collectionRepository,

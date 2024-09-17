@@ -5,6 +5,7 @@ import { useCollection } from './useCollection'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
 import { useSession } from '../session/SessionContext'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
+import { type UseCollectionQueryParamsReturnType } from './useCollectionQueryParams'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import AddDataActionsButton from '../shared/add-data-actions/AddDataActionsButton'
 import { CollectionItemsPanel } from './collection-items-panel/CollectionItemsPanel'
@@ -16,7 +17,7 @@ interface CollectionProps {
   collectionRepository: CollectionRepository
   collectionId: string
   created: boolean
-  page?: number
+  collectionQueryParams: UseCollectionQueryParamsReturnType
   infiniteScrollEnabled?: boolean
 }
 
@@ -24,7 +25,7 @@ export function Collection({
   collectionId,
   collectionRepository,
   created,
-  page,
+  collectionQueryParams,
   infiniteScrollEnabled = false
 }: CollectionProps) {
   useScrollTop()
@@ -78,6 +79,7 @@ export function Collection({
           key={collectionId}
           collectionId={collectionId}
           collectionRepository={collectionRepository}
+          collectionQueryParams={collectionQueryParams}
           addDataSlot={
             showAddDataActions ? (
               <AddDataActionsButton

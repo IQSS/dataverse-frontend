@@ -1,29 +1,40 @@
 import { useEffect, useRef, useState } from 'react'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '../../../collection/domain/models/CollectionItemsPaginationInfo'
-import { TemporarySearchCriteria, useGetAccumulatedItems } from './useGetAccumulatedItems'
+import { CollectionSearchCriteria } from '../../../collection/domain/models/CollectionSearchCriteria'
+import { useGetAccumulatedItems } from './useGetAccumulatedItems'
+import { UseCollectionQueryParamsReturnType } from '../useCollectionQueryParams'
 import { useLoading } from '../../loading/LoadingContext'
 import { FilterPanel } from './filter-panel/FilterPanel'
 import { ItemsList } from './items-list/ItemsList'
 import { SearchPanel } from './search-panel/SearchPanel'
 import styles from './CollectionItemsPanel.module.scss'
 
-const PAGE_SIZE = 10
-const INITIAL_PAGE = 1
-
 interface ItemsPanelProps {
   collectionId: string
   collectionRepository: CollectionRepository
+  collectionQueryParams: UseCollectionQueryParamsReturnType
   addDataSlot: JSX.Element | null
 }
 
 export const CollectionItemsPanel = ({
   collectionId,
   collectionRepository,
+  collectionQueryParams,
   addDataSlot
 }: ItemsPanelProps) => {
   const { setIsLoading } = useLoading()
-  const [searchCriteria, setSearchCriteria] = useState<TemporarySearchCriteria>({})
+
+  const initialSearchCriteria = new CollectionSearchCriteria(
+    collectionQueryParams.searchQuery,
+    collectionQueryParams.typesQuery
+  )
+
+  console.log({ initialSearchCriteria })
+
+  const [searchCriteria, setSearchCriteria] =
+    useState<CollectionSearchCriteria>(initialSearchCriteria)
+
   const [paginationInfo, setPaginationInfo] = useState<CollectionItemsPaginationInfo>(
     new CollectionItemsPaginationInfo()
   )
@@ -59,7 +70,7 @@ export const CollectionItemsPanel = ({
   }
 
   // This function is called when the user changes the search criteria (search input, filters, etc.)
-  const handleCriteriaChange = async (newCriteria: TemporarySearchCriteria) => {
+  const handleCriteriaChange = async (newCriteria: CollectionSearchCriteria) => {
     itemsListContainerRef.current?.scrollTo({ top: 0 })
 
     setSearchCriteria(newCriteria)

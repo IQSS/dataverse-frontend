@@ -13,7 +13,7 @@ import { CollectionFacet } from '../../domain/models/CollectionFacet'
 import { CollectionUserPermissions } from '../../domain/models/CollectionUserPermissions'
 import { CollectionItemsPaginationInfo } from '../../domain/models/CollectionItemsPaginationInfo'
 import { CollectionItemSubset } from '../../domain/models/CollectionItemSubset'
-import { TemporarySearchCriteria } from '../../../sections/collection/collection-items-panel/useGetAccumulatedItems'
+import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCriteria'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id: string): Promise<Collection> {
@@ -41,13 +41,11 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
   // TODO:ME After updating previews object to match the response models we should not see ts error anymore under the return keyword
   getItems(
     collectionId: string,
-    paginationInfo?: CollectionItemsPaginationInfo,
-    _searchCriteria?: TemporarySearchCriteria
+    paginationInfo: CollectionItemsPaginationInfo,
+    searchCriteria: CollectionSearchCriteria
   ): Promise<CollectionItemSubset> {
-    console.log({ _searchCriteria })
-
     return getCollectionItems
-      .execute(collectionId, paginationInfo?.pageSize, paginationInfo?.offset)
+      .execute(collectionId, paginationInfo?.pageSize, paginationInfo?.offset, searchCriteria)
       .then((jsCollectionItemSubset) => jsCollectionItemSubset)
   }
 }

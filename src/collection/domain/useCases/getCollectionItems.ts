@@ -1,13 +1,13 @@
 import { CollectionRepository } from '../repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '../models/CollectionItemsPaginationInfo'
 import { CollectionItemSubset } from '../models/CollectionItemSubset'
-import { TemporarySearchCriteria } from '../../../sections/collection/collection-items-panel/useGetAccumulatedItems'
+import { CollectionSearchCriteria } from '../models/CollectionSearchCriteria'
 
 export async function getCollectionItems(
   collectionRepository: CollectionRepository,
   collectionId: string,
   paginationInfo: CollectionItemsPaginationInfo,
-  searchCriteria: TemporarySearchCriteria
+  searchCriteria: CollectionSearchCriteria
 ): Promise<CollectionItemSubset> {
   return collectionRepository
     .getItems(collectionId, paginationInfo, searchCriteria)

@@ -1,8 +1,8 @@
-import { TemporarySearchCriteria } from '../../../sections/collection/collection-items-panel/useGetAccumulatedItems'
 import { Collection } from '../models/Collection'
 import { CollectionFacet } from '../models/CollectionFacet'
 import { CollectionItemsPaginationInfo } from '../models/CollectionItemsPaginationInfo'
 import { CollectionItemSubset } from '../models/CollectionItemSubset'
+import { CollectionSearchCriteria } from '../models/CollectionSearchCriteria'
 import { CollectionUserPermissions } from '../models/CollectionUserPermissions'
 import { CollectionDTO } from '../useCases/DTOs/CollectionDTO'
 
@@ -14,6 +14,6 @@ export interface CollectionRepository {
   getItems(
     collectionId: string,
     paginationInfo: CollectionItemsPaginationInfo,
-    searchCriteria?: TemporarySearchCriteria
+    searchCriteria?: CollectionSearchCriteria
   ): Promise<CollectionItemSubset>
 }
