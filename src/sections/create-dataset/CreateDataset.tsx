@@ -13,6 +13,11 @@ import { CollectionRepository } from '../../collection/domain/repositories/Colle
 import { useLoading } from '../loading/LoadingContext'
 import { ROOT_COLLECTION_ALIAS } from '../../collection/domain/models/Collection'
 
+import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
+import { useCollection } from '../collection/useCollection'
+import { PageNotFound } from '../page-not-found/PageNotFound'
+import { CreateDatasetSkeleton } from './CreateDatasetSkeleton'
+
 interface CreateDatasetProps {
   datasetRepository: DatasetRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
@@ -30,6 +35,11 @@ export function CreateDataset({
   const { isModalOpen, hideModal } = useNotImplementedModal()
   const { setIsLoading } = useLoading()
 
+  const { collection, isLoading: isLoadingCollection } = useCollection(
+    collectionRepository,
+    collectionId
+  )
+
   const { collectionUserPermissions, isLoading: isLoadingCollectionUserPermissions } =
     useGetCollectionUserPermissions({
       collectionIdOrAlias: collectionId,
@@ -37,10 +47,19 @@ export function CreateDataset({
     })
 
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
+  const isLoadingData = isLoadingCollectionUserPermissions || isLoadingCollection
 
   useEffect(() => {
-    setIsLoading(isLoadingCollectionUserPermissions)
-  }, [isLoadingCollectionUserPermissions, setIsLoading])
+    setIsLoading(isLoadingData)
+  }, [isLoadingData, setIsLoading])
+
+  if (!isLoadingCollection && !collection) {
+    return <PageNotFound />
+  }
+
+  if (isLoadingCollection || !collection) {
+    return <CreateDatasetSkeleton />
+  }
 
   if (collectionUserPermissions && !canUserAddDataset) {
     return (
@@ -56,6 +75,11 @@ export function CreateDataset({
     <>
       <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
       <article>
+        <BreadcrumbsGenerator
+          hierarchy={collection?.hierarchy}
+          withActionItem
+          actionItemText={t('pageTitle')}
+        />
         <header>
           <h1>{t('pageTitle')}</h1>
         </header>

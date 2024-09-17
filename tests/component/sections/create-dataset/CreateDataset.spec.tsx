@@ -15,6 +15,9 @@ const userPermissionsMock = CollectionMother.createUserPermissions()
 const collectionMetadataBlocksInfo =
   MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue()
 
+const COLLECTION_NAME = 'Collection Name'
+const collection = CollectionMother.create({ name: COLLECTION_NAME })
+
 describe('Create Dataset', () => {
   beforeEach(() => {
     datasetRepository.create = cy.stub().resolves({ persistentId: 'persistentId' })
@@ -23,6 +26,47 @@ describe('Create Dataset', () => {
       .resolves(collectionMetadataBlocksInfo)
 
     collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
+    collectionRepository.getById = cy.stub().resolves(collection)
+  })
+
+  it('should show page not found when owner collection does not exist', () => {
+    collectionRepository.getById = cy.stub().resolves(null)
+    cy.customMount(
+      <CreateDataset
+        datasetRepository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
+    cy.findByText('Page Not Found').should('exist')
+  })
+
+  it('should show loading skeleton while loading the collection', () => {
+    cy.customMount(
+      <CreateDataset
+        datasetRepository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
+    cy.findByTestId('create-dataset-skeleton').should('exist')
+  })
+
+  it('should render the correct breadcrumbs', () => {
+    cy.customMount(
+      <CreateDataset
+        datasetRepository={datasetRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+      />
+    )
+
+    cy.findByRole('link', { name: 'Root' }).should('exist')
+
+    cy.get('li[aria-current="page"]')
+      .should('exist')
+      .should('have.text', 'Create Dataset')
+      .should('have.class', 'active')
   })
 
   it('renders the Host Collection Form for root collection', () => {
