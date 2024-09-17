@@ -1,0 +1,10 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.tab-container {
+  padding: 1rem;
+}
+
+.helper-text {
+  color: $dv-subtext-color;
+  font-size: 14px;
+}

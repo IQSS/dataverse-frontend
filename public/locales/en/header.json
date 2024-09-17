@@ -7,6 +7,7 @@
   "navigation": {
     "addData": "Add Data",
     "newCollection": "New Collection",
-    "newDataset": "New Dataset"
+    "newDataset": "New Dataset",
+    "apiToken": "API Token"
   }
 }

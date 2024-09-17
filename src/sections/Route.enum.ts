@@ -11,7 +11,8 @@ export enum Route {
   EDIT_DATASET_METADATA = '/datasets/edit-metadata',
   FILES = '/files',
   COLLECTIONS = '/collections/:collectionId',
-  CREATE_COLLECTION = '/collections/:ownerCollectionId/create'
+  CREATE_COLLECTION = '/collections/:ownerCollectionId/create',
+  ACCOUNT = '/account'
 }
 
 export const RouteWithParams = {

@@ -10,6 +10,7 @@ import { UploadDatasetFilesFactory } from './sections/upload-dataset-files/Uploa
 import { EditDatasetMetadataFactory } from './sections/edit-dataset-metadata/EditDatasetMetadataFactory'
 import { DatasetNonNumericVersion } from './dataset/domain/models/Dataset'
 import { CreateCollectionFactory } from './sections/create-collection/CreateCollectionFactory'
+import { AccountFactory } from './sections/account/AccountFactory'
 
 const router = createBrowserRouter(
   [
@@ -49,6 +50,10 @@ const router = createBrowserRouter(
         {
           path: Route.FILES,
           element: FileFactory.create()
+        },
+        {
+          path: Route.ACCOUNT,
+          element: AccountFactory.create()
         }
       ]
     }
