@@ -1,25 +1,29 @@
 import { useState } from 'react'
 import { Button, Form } from '@iqss/dataverse-design-system'
 import { Search } from 'react-bootstrap-icons'
-import { QueryParamKey, Route } from '../../../Route.enum'
 import styles from './SearchPanel.module.scss'
 
-export const SearchPanel = () => {
-  const [searchValue, setSearchValue] = useState('')
+interface SearchPanelProps {
+  initialSearchValue?: string
+  isLoadingCollectionItems: boolean
+  onSubmitSearch: (searchValue: string) => void
+}
+
+export const SearchPanel = ({
+  initialSearchValue = '',
+  isLoadingCollectionItems,
+  onSubmitSearch
+}: SearchPanelProps) => {
+  const [searchValue, setSearchValue] = useState(initialSearchValue)
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     const trimmedSearchValue = searchValue.trim()
 
-    if (!trimmedSearchValue) return
+    const encodedSearchValue = encodeURIComponent(trimmedSearchValue)
 
-    console.log({ trimmedSearchValue })
-
-    // const encodedSearchValue = encodeURIComponent(trimmedSearchValue)
-
-    // const searchParams = new URLSearchParams()
-    // searchParams.set(QueryParamKey.QUERY, encodedSearchValue)
+    onSubmitSearch(encodedSearchValue)
   }
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +41,12 @@ export const SearchPanel = () => {
             value={searchValue}
             onChange={handleSearchChange}
           />
-          <Button variant="secondary" icon={<Search />} aria-label="Search submit" />
+          <Button
+            variant="secondary"
+            icon={<Search />}
+            aria-label="Search submit"
+            disabled={isLoadingCollectionItems}
+          />
         </Form.InputGroup>
       </form>
       <Button variant="link" className={styles['advanced-search-btn']} disabled>

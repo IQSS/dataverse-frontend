@@ -49,7 +49,7 @@ export const useGetAccumulatedItems = ({
 
   const loadMore = async (
     pagination: CollectionItemsPaginationInfo,
-    criteria: CollectionSearchCriteria,
+    searchCriteria: CollectionSearchCriteria,
     resetAccumulated = false
   ): Promise<number | undefined> => {
     setIsLoadingItems(true)
@@ -59,7 +59,7 @@ export const useGetAccumulatedItems = ({
         collectionRepository,
         collectionId,
         pagination,
-        criteria
+        searchCriteria
       )
 
       const newAccumulatedItems = !resetAccumulated ? [...accumulatedItems, ...items] : items

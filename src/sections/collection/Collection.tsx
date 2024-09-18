@@ -1,17 +1,17 @@
-import { Trans, useTranslation } from 'react-i18next'
-import { Alert, Col, Row } from '@iqss/dataverse-design-system'
+import { Col, Row } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { useCollection } from './useCollection'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
 import { useSession } from '../session/SessionContext'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
-import { type UseCollectionQueryParamsReturnType } from './useCollectionQueryParams'
+import { type UseCollectionQueryParamsReturnType } from './useGetCollectionQueryParams'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import AddDataActionsButton from '../shared/add-data-actions/AddDataActionsButton'
 import { CollectionItemsPanel } from './collection-items-panel/CollectionItemsPanel'
 import { CollectionInfo } from './CollectionInfo'
 import { CollectionSkeleton } from './CollectionSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
+import { CreatedAlert } from './CreatedAlert'
 
 interface CollectionProps {
   collectionRepository: CollectionRepository
@@ -41,8 +41,6 @@ export function Collection({
 
   const showAddDataActions = Boolean(user && (canUserAddCollection || canUserAddDataset))
 
-  const { t } = useTranslation('collection')
-
   if (!isLoading && !collection) {
     return <PageNotFound />
   }
@@ -56,23 +54,7 @@ export function Collection({
           <>
             <BreadcrumbsGenerator hierarchy={collection.hierarchy} />
             <CollectionInfo collection={collection} />
-            {created && (
-              <Alert variant="success" dismissible={false}>
-                <Trans
-                  t={t}
-                  i18nKey="createdAlert"
-                  components={{
-                    anchor: (
-                      <a
-                        href="https://guides.dataverse.org/en/latest/user/dataverse-management.html"
-                        target="_blank"
-                        rel="noreferrer"
-                      />
-                    )
-                  }}
-                />
-              </Alert>
-            )}
+            {created && <CreatedAlert />}
           </>
         )}
         <CollectionItemsPanel

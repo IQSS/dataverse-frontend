@@ -1,10 +1,21 @@
 import { useState } from 'react'
 import { Button, Offcanvas } from '@iqss/dataverse-design-system'
 import { FunnelFill } from 'react-bootstrap-icons'
-import { TypeFilters } from './type-filters/TypeFilters'
+import { ItemTypeChange, TypeFilters } from './type-filters/TypeFilters'
+import { CollectionItemType } from '../../../../collection/domain/models/CollectionItemType'
 import styles from './FilterPanel.module.scss'
 
-export const FilterPanel = () => {
+interface FilterPanelProps {
+  currentItemTypes?: CollectionItemType[]
+  onItemTypesChange: (itemTypeChange: ItemTypeChange) => void
+  isLoadingCollectionItems: boolean
+}
+
+export const FilterPanel = ({
+  currentItemTypes,
+  onItemTypesChange,
+  isLoadingCollectionItems
+}: FilterPanelProps) => {
   const [showOffcanvas, setShowOffcanvas] = useState(false)
 
   const handleCloseOffcanvas = () => setShowOffcanvas(false)
@@ -26,7 +37,11 @@ export const FilterPanel = () => {
         </Offcanvas.Header>
         <Offcanvas.Body>
           <div className={styles['filters-wrapper']}>
-            <TypeFilters />
+            <TypeFilters
+              onItemTypesChange={onItemTypesChange}
+              currentItemTypes={currentItemTypes}
+              isLoadingCollectionItems={isLoadingCollectionItems}
+            />
           </div>
         </Offcanvas.Body>
       </Offcanvas>

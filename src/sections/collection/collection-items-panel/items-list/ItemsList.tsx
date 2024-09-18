@@ -63,6 +63,7 @@ export const ItemsList = forwardRef(
           {areItemsAvailable && (
             <>
               <header>
+                {/* TODO:ME Maybe show skeleton while loading or prevent 0 in total results somehow */}
                 <PaginationResultsInfo
                   paginationInfo={paginationInfo}
                   accumulated={accumulatedCount}
@@ -80,7 +81,11 @@ export const ItemsList = forwardRef(
                       key={index}
                       // key={`${dataset.persistentId}-${dataset.version.id}`}
                     >
-                      <p>Assert type collection, dataset or file here</p>
+                      <p>
+                        This is a : {collectionItem?.type === 'file' && 'File'}
+                        {collectionItem?.type === 'dataset' && 'Dataset'}
+                        {collectionItem?.type === 'collection' && 'Collection'}
+                      </p>
                     </li>
                   )
                 })}

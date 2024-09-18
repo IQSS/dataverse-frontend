@@ -8,12 +8,14 @@ export interface UseCollectionQueryParamsReturnType {
   typesQuery?: CollectionItemType[]
 }
 
-export const useCollectionQueryParams = (): UseCollectionQueryParamsReturnType => {
+export const useGetCollectionQueryParams = (): UseCollectionQueryParamsReturnType => {
   const [searchParams] = useSearchParams()
 
   const pageQuery = searchParams.get('page') ? parseInt(searchParams.get('page') as string, 10) : 1
 
-  const searchQuery = searchParams.get(QueryParamKey.QUERY) ?? undefined
+  const searchQuery = searchParams.get(QueryParamKey.QUERY)
+    ? decodeURIComponent(searchParams.get(QueryParamKey.QUERY) as string)
+    : undefined
 
   const typesParam = searchParams.get(QueryParamKey.COLLECTION_ITEM_TYPES) ?? undefined
 
