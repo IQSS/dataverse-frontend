@@ -39,7 +39,7 @@ describe('Tabs', () => {
     cy.findByText('Content 2').should('have.class', 'show').and('have.class', 'active')
   })
 
-  it('renders with disabled tab', () => {
+  it('renders with a disabled tab', () => {
     cy.mount(
       <Tabs defaultActiveKey="key-1">
         <Tabs.Tab eventKey="key-1" title="Tab 1">
