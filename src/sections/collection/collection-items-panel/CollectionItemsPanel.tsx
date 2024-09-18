@@ -60,7 +60,7 @@ export const CollectionItemsPanel = ({
     collectionId
   })
 
-  async function handleOnLoadMore(currentPagination: CollectionItemsPaginationInfo) {
+  async function handleLoadMoreOnBottomReach(currentPagination: CollectionItemsPaginationInfo) {
     let paginationInfoToSend = currentPagination
     if (totalAvailable !== undefined) {
       paginationInfoToSend = currentPagination.goToNextPage()
@@ -115,14 +115,12 @@ export const CollectionItemsPanel = ({
 
   // WHEN APPLYING FILTERS, WE RESET THE PAGINATION INFO AND IF SEARCH VALUE EXISTS, WE KEEP IT!!
   const handleItemsTypeChange = async (itemTypeChange: ItemTypeChange) => {
-    console.log({ itemTypeChange })
     const { type, checked } = itemTypeChange
 
     const newItemsTypes = checked
       ? [...new Set([...(currentSearchCriteria?.itemTypes ?? []), type])]
       : (currentSearchCriteria.itemTypes ?? []).filter((itemType) => itemType !== type)
 
-    console.log({ newItemsTypes })
     // KEEP SEARCH VALUE IF EXISTS
     itemsListContainerRef.current?.scrollTo({ top: 0 })
 
@@ -185,7 +183,7 @@ export const CollectionItemsPanel = ({
             collectionQueryParams.searchQuery
           ).hasSearchText()}
           paginationInfo={paginationInfo}
-          onLoadMore={handleOnLoadMore}
+          onBottomReach={handleLoadMoreOnBottomReach}
           ref={itemsListContainerRef}
         />
       </div>

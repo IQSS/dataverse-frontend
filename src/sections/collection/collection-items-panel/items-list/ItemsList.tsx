@@ -21,7 +21,7 @@ interface ItemsListProps {
   isEmptyItems: boolean
   hasSearchValue: boolean
   paginationInfo: CollectionItemsPaginationInfo
-  onLoadMore: (paginationInfo: CollectionItemsPaginationInfo) => void
+  onBottomReach: (paginationInfo: CollectionItemsPaginationInfo) => void
 }
 
 export const ItemsList = forwardRef(
@@ -36,17 +36,23 @@ export const ItemsList = forwardRef(
       isEmptyItems,
       hasSearchValue,
       paginationInfo,
-      onLoadMore
+      onBottomReach
     }: ItemsListProps,
     ref
   ) => {
     const [sentryRef, { rootRef }] = useInfiniteScroll({
       loading: isLoadingItems,
       hasNextPage: hasNextPage,
-      onLoadMore: () => void onLoadMore(paginationInfo),
+      onLoadMore: () => void onBottomReach(paginationInfo),
       disabled: !!error,
       rootMargin: '0px 0px 250px 0px'
     })
+
+    const showNoItemsMessage = !isLoadingItems && isEmptyItems && !hasSearchValue
+    const showNoSearchMatchesMessage = !isLoadingItems && isEmptyItems && hasSearchValue
+
+    const showSentrySkeleton = hasNextPage && !error && !isEmptyItems
+    const showNotSentrySkeleton = isLoadingItems && isEmptyItems
 
     return (
       <section ref={rootRef}>
@@ -55,19 +61,24 @@ export const ItemsList = forwardRef(
             [styles['empty-or-error']]: isEmptyItems || error
           })}
           ref={ref as ForwardedRef<HTMLDivElement>}>
-          {isEmptyItems && !hasSearchValue && <NoItemsMessage />}
-          {isEmptyItems && hasSearchValue && <NoSearchMatchesMessage />}
+          {showNoItemsMessage && <NoItemsMessage />}
+          {showNoSearchMatchesMessage && <NoSearchMatchesMessage />}
 
           {error && <ErrorItemsMessage errorMessage={error} />}
 
           {areItemsAvailable && (
             <>
               <header>
-                {/* TODO:ME Maybe show skeleton while loading or prevent 0 in total results somehow */}
-                <PaginationResultsInfo
-                  paginationInfo={paginationInfo}
-                  accumulated={accumulatedCount}
-                />
+                {isLoadingItems ? (
+                  <SkeletonTheme>
+                    <Skeleton height={19} width={190} />
+                  </SkeletonTheme>
+                ) : (
+                  <PaginationResultsInfo
+                    paginationInfo={paginationInfo}
+                    accumulated={accumulatedCount}
+                  />
+                )}
               </header>
 
               {/* TODO:ME After updating js-dataverse use case, assert by the type wich card to render */}
@@ -93,13 +104,18 @@ export const ItemsList = forwardRef(
             </>
           )}
 
-          {hasNextPage && !error && !isEmptyItems && (
+          {showSentrySkeleton && (
             <div ref={sentryRef} data-testid="collection-items-list-infinite-scroll-skeleton">
               <SkeletonTheme>
                 {accumulatedCount === NO_COLLECTION_ITEMS && <InitialLoadingSkeleton />}
-                <LoadingSkeleton />
+                <LoadingSkeleton numOfSkeletons={3} />
               </SkeletonTheme>
             </div>
+          )}
+          {showNotSentrySkeleton && (
+            <SkeletonTheme>
+              <LoadingSkeleton numOfSkeletons={10} />
+            </SkeletonTheme>
           )}
         </div>
       </section>
@@ -126,10 +142,10 @@ export const InitialLoadingSkeleton = () => (
   </>
 )
 
-export const LoadingSkeleton = () => (
+export const LoadingSkeleton = ({ numOfSkeletons }: { numOfSkeletons: number }) => (
   <>
-    <Skeleton height="109px" style={{ marginBottom: 6 }} />
-    <Skeleton height="109px" style={{ marginBottom: 6 }} />
-    <Skeleton height="109px" style={{ marginBottom: 6 }} />
+    {Array.from({ length: numOfSkeletons }).map((_, index) => (
+      <Skeleton key={index} height="109px" style={{ marginBottom: 6 }} />
+    ))}
   </>
 )

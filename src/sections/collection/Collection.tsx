@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Col, Row } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { useCollection } from './useCollection'
@@ -28,6 +29,7 @@ export function Collection({
   collectionQueryParams,
   infiniteScrollEnabled = false
 }: CollectionProps) {
+  useTranslation('collection')
   useScrollTop()
   const { user } = useSession()
   const { collection, isLoading } = useCollection(collectionRepository, collectionId)
