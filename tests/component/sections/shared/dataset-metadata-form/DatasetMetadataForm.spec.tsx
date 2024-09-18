@@ -1445,6 +1445,7 @@ describe('DatasetMetadataForm', () => {
   })
 
   it('pre-fills the form with user data', () => {
+    const displayName = `${testUser.lastName}, ${testUser.firstName}`
     cy.mountAuthenticated(
       <DatasetMetadataForm
         mode="create"
@@ -1456,7 +1457,7 @@ describe('DatasetMetadataForm', () => {
     cy.findByText('Author')
       .closest('.row')
       .within(() => {
-        cy.findByLabelText(/^Name/i).should('have.value', testUser.displayName)
+        cy.findByLabelText(/^Name/i).should('have.value', displayName)
       })
     cy.findByText('Author')
       .closest('.row')
@@ -1466,7 +1467,7 @@ describe('DatasetMetadataForm', () => {
     cy.findByText('Point of Contact')
       .closest('.row')
       .within(() => {
-        cy.findByLabelText(/^Name/i).should('have.value', testUser.displayName)
+        cy.findByLabelText(/^Name/i).should('have.value', displayName)
       })
     cy.findByText('Point of Contact')
       .closest('.row')
