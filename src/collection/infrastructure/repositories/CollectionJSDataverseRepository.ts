@@ -5,8 +5,7 @@ import {
   getCollection,
   getCollectionUserPermissions,
   publishCollection,
-  getCollectionFacets,
-  getCollectionUserPermissions
+  getCollectionFacets
 } from '@iqss/dataverse-client-javascript'
 import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'

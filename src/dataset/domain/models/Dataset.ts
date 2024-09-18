@@ -404,7 +404,7 @@ export class Dataset {
     return this.locks.some((lock) => lock.reason === DatasetLockReason.WORKFLOW)
   }
 
-  public get parentCollection(): UpwardHierarchyNode {
+  public get parentCollectionNode(): UpwardHierarchyNode {
     return this.hierarchy
       .toArray()
       .filter((item) => item.type === 'collection')

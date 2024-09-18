@@ -16,6 +16,7 @@ import {
   DatasetMetadataBlocks,
   DatasetMetadataFields,
   DatasetPermissions,
+  DatasetPublishingStatus,
   DatasetVersion,
   MetadataBlockName,
   PrivateUrl
@@ -281,6 +282,7 @@ export class JSDatasetMapper {
       id.toString(),
       persistentId,
       version.number.toString(),
+      version.latestVersionPublishingStatus === DatasetPublishingStatus.RELEASED,
       JSUpwardHierarchyNodeMapper.toUpwardHierarchyNode(jsUpwardHierarchyNode)
     )
   }

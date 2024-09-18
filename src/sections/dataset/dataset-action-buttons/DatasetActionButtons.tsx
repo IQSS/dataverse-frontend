@@ -9,18 +9,15 @@ import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
 import { useTranslation } from 'react-i18next'
 import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
-import { Collection } from '../../../collection/domain/models/Collection'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset
-  parentCollection: Collection
   datasetRepository: DatasetRepository
   collectionRepository: CollectionRepository
 }
 
 export function DatasetActionButtons({
   dataset,
-  parentCollection,
   datasetRepository,
   collectionRepository
 }: DatasetActionButtonsProps) {
@@ -36,7 +33,6 @@ export function DatasetActionButtons({
       />
       <PublishDatasetMenu
         dataset={dataset}
-        parentCollection={parentCollection}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
       />

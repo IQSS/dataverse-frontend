@@ -25,7 +25,6 @@ import useCheckPublishCompleted from './useCheckPublishCompleted'
 import useUpdateDatasetAlerts from './useUpdateDatasetAlerts'
 import { QueryParamKey, Route } from '../Route.enum'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { useGetParentCollection } from './useGetParentCollection'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 
 interface DatasetProps {
@@ -55,10 +54,7 @@ export function Dataset({
   const navigate = useNavigate()
   const { hideModal, isModalOpen } = useNotImplementedModal()
   const publishCompleted = useCheckPublishCompleted(publishInProgress, dataset, datasetRepository)
-  const { collection, isLoading: isLoadingParentCollection } = useGetParentCollection(
-    collectionRepository,
-    dataset
-  )
+
   useUpdateDatasetAlerts({
     dataset,
     created,
@@ -110,7 +106,11 @@ export function Dataset({
                   <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
                 </Col>
                 <Col sm={3}>
-                  <DatasetActionButtons datasetRepository={datasetRepository} dataset={dataset} />
+                  <DatasetActionButtons
+                    datasetRepository={datasetRepository}
+                    collectionRepository={collectionRepository}
+                    dataset={dataset}
+                  />
                 </Col>
               </Row>
               <Row>

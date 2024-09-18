@@ -1,16 +1,23 @@
 import { VersionUpdateType } from '../../../../../src/dataset/domain/models/VersionUpdateType'
 import { DatasetRepository } from '../../../../../src/dataset/domain/repositories/DatasetRepository'
 import { PublishDatasetModal } from '../../../../../src/sections/dataset/publish-dataset/PublishDatasetModal'
+import { CollectionRepository } from '../../../../../src/collection/domain/repositories/CollectionRepository'
+import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 
 describe('PublishDatasetModal', () => {
   it('does not render the radio buttons when releasedVersionExists is false', () => {
     const handleClose = cy.stub()
     const repository = {} as DatasetRepository // Mock the repository as needed
     repository.publish = cy.stub().as('repositoryPublish').resolves()
+    const collectionRepository = {} as CollectionRepository
+    collectionRepository.publish = cy.stub().as('collectionRepositoryPublish').resolves()
+    const parentCollection = UpwardHierarchyNodeMother.createCollection()
     cy.mountAuthenticated(
       <PublishDatasetModal
         show={true}
         repository={repository}
+        collectionRepository={collectionRepository}
+        parentCollection={parentCollection}
         persistentId="testPersistentId"
         releasedVersionExists={false}
         handleClose={handleClose}
@@ -27,11 +34,15 @@ describe('PublishDatasetModal', () => {
     const repository = {} as DatasetRepository // Mock the repository as needed
     const errorMessage = 'Publishing failed'
     repository.publish = cy.stub().as('repositoryPublish').rejects(new Error(errorMessage))
-
+    const collectionRepository = {} as CollectionRepository
+    collectionRepository.publish = cy.stub().as('collectionRepositoryPublish').resolves()
+    const parentCollection = UpwardHierarchyNodeMother.createCollection()
     cy.mountAuthenticated(
       <PublishDatasetModal
         show={true}
         repository={repository}
+        collectionRepository={collectionRepository}
+        parentCollection={parentCollection}
         persistentId="testPersistentId"
         releasedVersionExists={false}
         handleClose={handleClose}
@@ -48,10 +59,15 @@ describe('PublishDatasetModal', () => {
     const handleClose = cy.stub()
     const repository = {} as DatasetRepository // Mock the repository as needed
     repository.publish = cy.stub().as('repositoryPublish').resolves()
-    cy.customMount(
+    const collectionRepository = {} as CollectionRepository
+    collectionRepository.publish = cy.stub().as('collectionRepositoryPublish').resolves()
+    const parentCollection = UpwardHierarchyNodeMother.createCollection()
+    cy.mountAuthenticated(
       <PublishDatasetModal
         show={true}
         repository={repository}
+        collectionRepository={collectionRepository}
+        parentCollection={parentCollection}
         persistentId="testPersistentId"
         releasedVersionExists={true}
         nextMajorVersion={'2.0'}
@@ -75,10 +91,15 @@ describe('PublishDatasetModal', () => {
     const handleClose = cy.stub()
     const repository = {} as DatasetRepository // Mock the repository as needed
     repository.publish = cy.stub().as('repositoryPublish').resolves()
+    const collectionRepository = {} as CollectionRepository
+    collectionRepository.publish = cy.stub().as('collectionRepositoryPublish').resolves()
+    const parentCollection = UpwardHierarchyNodeMother.createCollection()
     cy.mountSuperuser(
       <PublishDatasetModal
         show={true}
         repository={repository}
+        collectionRepository={collectionRepository}
+        parentCollection={parentCollection}
         persistentId="testPersistentId"
         releasedVersionExists={true}
         nextMajorVersion={'2.0'}
@@ -93,10 +114,15 @@ describe('PublishDatasetModal', () => {
     const handleClose = cy.stub()
     const repository = {} as DatasetRepository // Mock the repository as needed
     repository.publish = cy.stub().as('repositoryPublish').resolves()
+    const collectionRepository = {} as CollectionRepository
+    collectionRepository.publish = cy.stub().as('collectionRepositoryPublish').resolves()
+    const parentCollection = UpwardHierarchyNodeMother.createCollection()
     cy.mountAuthenticated(
       <PublishDatasetModal
         show={true}
         repository={repository}
+        collectionRepository={collectionRepository}
+        parentCollection={parentCollection}
         persistentId="testPersistentId"
         releasedVersionExists={true}
         nextMajorVersion={'2.0'}
@@ -105,5 +131,25 @@ describe('PublishDatasetModal', () => {
       />
     )
     cy.findByText(/Update Current Version/).should('not.exist')
+  })
+  it('Displays warning text for unreleased Collection', () => {
+    const handleClose = cy.stub()
+    const repository = {} as DatasetRepository // Mock the repository as needed
+    repository.publish = cy.stub().as('repositoryPublish').resolves()
+    const collectionRepository = {} as CollectionRepository
+    collectionRepository.publish = cy.stub().as('collectionRepositoryPublish').resolves()
+    const parentCollection = UpwardHierarchyNodeMother.createCollection({ isReleased: false })
+    cy.mountAuthenticated(
+      <PublishDatasetModal
+        show={true}
+        repository={repository}
+        collectionRepository={collectionRepository}
+        parentCollection={parentCollection}
+        persistentId="testPersistentId"
+        releasedVersionExists={false}
+        handleClose={handleClose}
+      />
+    )
+    cy.findByText(/collection/).should('exist')
   })
 })

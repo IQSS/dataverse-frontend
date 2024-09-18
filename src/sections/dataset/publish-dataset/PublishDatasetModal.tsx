@@ -17,11 +17,13 @@ import styles from './PublishDatasetModal.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { QueryParamKey, Route } from '../../Route.enum'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
+import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 interface PublishDatasetModalProps {
   show: boolean
   repository: DatasetRepository
   collectionRepository: CollectionRepository
+  parentCollection: UpwardHierarchyNode
   persistentId: string
   releasedVersionExists: boolean
   handleClose: () => void
@@ -33,6 +35,7 @@ export function PublishDatasetModal({
   show,
   repository,
   collectionRepository,
+  parentCollection,
   persistentId,
   releasedVersionExists,
   handleClose,
@@ -45,6 +48,7 @@ export function PublishDatasetModal({
   const { submissionStatus, submitPublish, publishError } = usePublishDataset(
     repository,
     collectionRepository,
+    parentCollection,
     persistentId,
     onPublishSucceed
   )
@@ -75,7 +79,10 @@ export function PublishDatasetModal({
       </Modal.Header>
       <Modal.Body>
         <Stack direction="vertical">
-          <PublishDatasetHelpText releasedVersionExists={releasedVersionExists} />
+          <PublishDatasetHelpText
+            releasedVersionExists={releasedVersionExists}
+            parentCollectionIsReleased={parentCollection.isReleased}
+          />
           <License
             license={{
               name: defaultLicense.name,
