@@ -37,28 +37,32 @@ export function usePublishDataset(
 
   const submitPublish = (versionUpdateType: VersionUpdateType): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
-    publishCollection(collectionRepository, parentCollection.id)
-      .then(() => {
-        publishDataset(repository, persistentId, versionUpdateType)
-          .then(() => {
-            setPublishError(null)
-            setSubmissionStatus(SubmissionStatus.SubmitComplete)
-            onPublishSucceed()
-            return
-          })
-          .catch((err) => {
-            const errorMessage = err instanceof Error && err.message ? err.message : 'Unknown Error' // TODO: i18n
 
-            setPublishError(errorMessage)
-            setSubmissionStatus(SubmissionStatus.Errored)
-          })
-      })
-      .catch((err) => {
-        const errorMessage = err instanceof Error && err.message ? err.message : 'Unknown Error' // TODO: i18n
+    const publishDatasetAndHandleError = () => {
+      publishDataset(repository, persistentId, versionUpdateType)
+        .then(() => {
+          setPublishError(null)
+          setSubmissionStatus(SubmissionStatus.SubmitComplete)
+          onPublishSucceed()
+        })
+        .catch((err) => {
+          const errorMessage = err instanceof Error && err.message ? err.message : 'Unknown Error' // TODO: i18n
+          setPublishError(errorMessage)
+          setSubmissionStatus(SubmissionStatus.Errored)
+        })
+    }
 
-        setPublishError(errorMessage)
-        setSubmissionStatus(SubmissionStatus.Errored)
-      })
+    if (!parentCollection.isReleased) {
+      publishCollection(collectionRepository, parentCollection.id)
+        .then(publishDatasetAndHandleError)
+        .catch((err) => {
+          const errorMessage = err instanceof Error && err.message ? err.message : 'Unknown Error' // TODO: i18n
+          setPublishError(errorMessage)
+          setSubmissionStatus(SubmissionStatus.Errored)
+        })
+    } else {
+      publishDatasetAndHandleError()
+    }
   }
 
   return {
