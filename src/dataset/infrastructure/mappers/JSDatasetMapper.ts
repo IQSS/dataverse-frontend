@@ -42,7 +42,9 @@ export class JSDatasetMapper {
     jsDatasetFilesTotalOriginalDownloadSize: number,
     jsDatasetFilesTotalArchivalDownloadSize: number,
     requestedVersion?: string,
-    privateUrl?: PrivateUrl
+    privateUrl?: PrivateUrl,
+    latestPublishedVersionMajorNumber?: number,
+    latestPublishedVersionMinorNumber?: number
   ): Dataset {
     const version = JSDatasetVersionMapper.toVersion(
       jsDataset.versionId,
@@ -80,8 +82,38 @@ export class JSDatasetMapper {
       ),
       undefined, // TODO: get dataset thumbnail from js-dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl,
-      requestedVersion
+      requestedVersion,
+      JSDatasetMapper.toNextMajorVersion(latestPublishedVersionMajorNumber),
+      JSDatasetMapper.toNextMinorVersion(
+        latestPublishedVersionMajorNumber,
+        latestPublishedVersionMinorNumber
+      )
     ).build()
+  }
+
+  static toNextMajorVersion(
+    latestPublishedVersionMajorNumber: number | undefined
+  ): string | undefined {
+    if (latestPublishedVersionMajorNumber === undefined) {
+      return undefined
+    }
+    const nextMajorVersion = (latestPublishedVersionMajorNumber + 1).toString() + '.0'
+    return nextMajorVersion
+  }
+  static toNextMinorVersion(
+    latestPublishedVersionMajorNumber: number | undefined,
+    latestPublishedVersionMinorNumber: number | undefined
+  ): string | undefined {
+    if (
+      latestPublishedVersionMajorNumber === undefined ||
+      latestPublishedVersionMinorNumber === undefined
+    ) {
+      return undefined
+    }
+    const nextMinorVersion = `${latestPublishedVersionMajorNumber}.${
+      latestPublishedVersionMinorNumber + 1
+    }`
+    return nextMinorVersion
   }
 
   static toDatasetTitle(jsDatasetMetadataBlocks: JSDatasetMetadataBlocks): string {

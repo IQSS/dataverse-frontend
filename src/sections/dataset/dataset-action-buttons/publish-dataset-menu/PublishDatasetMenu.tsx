@@ -38,6 +38,8 @@ export function PublishDatasetMenu({ dataset, datasetRepository }: PublishDatase
         repository={datasetRepository}
         persistentId={dataset.persistentId}
         releasedVersionExists={dataset.version.someDatasetVersionHasBeenReleased}
+        nextMajorVersion={dataset.nextMajorVersion}
+        nextMinorVersion={dataset.nextMinorVersion}
         handleClose={() => setShowModal(false)}
       />
 

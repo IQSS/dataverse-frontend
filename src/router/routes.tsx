@@ -9,6 +9,7 @@ import { CollectionFactory } from '../sections/collection/CollectionFactory'
 import { UploadDatasetFilesFactory } from '../sections/upload-dataset-files/UploadDatasetFilesFactory'
 import { EditDatasetMetadataFactory } from '../sections/edit-dataset-metadata/EditDatasetMetadataFactory'
 import { CreateCollectionFactory } from '../sections/create-collection/CreateCollectionFactory'
+import { AccountFactory } from '../sections/account/AccountFactory'
 import { ProtectedRoute } from './ProtectedRoute'
 
 export const routes: RouteObject[] = [
@@ -52,6 +53,10 @@ export const routes: RouteObject[] = [
           {
             path: Route.EDIT_DATASET_METADATA,
             element: EditDatasetMetadataFactory.create()
+          },
+          {
+            path: Route.ACCOUNT,
+            element: AccountFactory.create()
           }
         ]
       }

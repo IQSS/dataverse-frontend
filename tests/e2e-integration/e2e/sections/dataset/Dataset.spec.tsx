@@ -80,8 +80,9 @@ describe('Dataset', () => {
               force: true
             })
           cy.findByRole('button', { name: 'Publish Dataset' }).should('exist').click()
-          cy.findByRole('button', { name: 'Publish' }).should('exist').click()
-          cy.findByText('Major Version').should('exist').click()
+          cy.findByRole('button', { name: 'Publish' }).should('exist').click({ force: true })
+          cy.findByText('Minor Release (1.1)')
+          cy.findByText('Major Release (2.0)').should('exist').click()
           cy.findByRole('button', { name: 'Continue' }).should('exist').click()
           cy.findByText('Version 2.0').should('exist')
         })
@@ -105,6 +106,30 @@ describe('Dataset', () => {
           cy.findByRole('button', { name: 'Publish' }).should('exist').click()
           cy.findByRole('button', { name: 'Continue' }).should('exist').click()
           cy.findByText('Version 1.1').should('exist')
+        })
+    })
+    it('successfully publishes a Current Version update', () => {
+      cy.wrap(DatasetHelper.create().then((dataset) => DatasetHelper.publish(dataset.persistentId)))
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.visit(`/spa/datasets?persistentId=${persistentId}`)
+          cy.findByText('Version 1.0').should('exist')
+          cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').click()
+          cy.findByRole('button', { name: 'Metadata' }).should('exist').click()
+          cy.findByLabelText(/^Title/i).type('New Title', { force: true })
+          cy.findAllByText(/Save Changes/i)
+            .should('exist')
+            .first()
+            .click({
+              force: true
+            })
+          cy.findByRole('button', { name: 'Publish Dataset' }).should('exist').click()
+          cy.findByRole('button', { name: 'Publish' }).should('exist').click({ force: true })
+          cy.findByText(/Update Current Version/)
+            .should('exist')
+            .click()
+          cy.findByRole('button', { name: 'Continue' }).should('exist').click()
+          cy.findByText('Version 1.0').should('exist')
         })
     })
 

@@ -1,0 +1,72 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.identifier-field-group {
+  :global .input-group-text {
+    font-size: 14px;
+  }
+
+  .suggestion-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    width: 100%;
+    margin-top: -0.75rem;
+    margin-bottom: 1rem;
+    padding-top: 0.25rem;
+
+    :global .form-text {
+      margin-top: 0;
+    }
+
+    .apply-suggestion-btn {
+      display: grid;
+      place-items: center;
+      padding: 3px;
+      border-radius: 50%;
+    }
+  }
+}
+
+.contact-row {
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.dynamic-fields-button-container {
+  margin-top: calc(24px + 8px); // 24px text label height & 8px its margin bottom
+
+  &.on-composed-multiple {
+    @media screen and (max-width: 575px) {
+      margin-top: 0;
+    }
+  }
+
+  &.on-primitive-multiple {
+    margin-top: 0;
+
+    @media screen and (max-width: 575px) {
+      margin-top: 1rem;
+    }
+  }
+}
+
+.description-field-html-allowed-tag {
+  color: $dv-link-color;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.description-field-tooltip-content {
+  padding: 0.1rem 0.3rem 0.2rem;
+  color: $dv-primary-text-color;
+  word-wrap: break-word;
+  background: color.adjust($dv-primary-color, $alpha: -0.4);
+  border-radius: 0.2rem;
+}

@@ -1,17 +1,15 @@
 import { act, renderHook } from '@testing-library/react'
 import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
-import {
-  reduceMetadataBlocksInfo,
-  useGetAllMetadataBlocksInfo
-} from '../../../../src/sections/create-collection/useGetAllMetadataBlocksInfo'
+import { useGetAllMetadataBlocksInfo } from '../../../../src/sections/create-collection/useGetAllMetadataBlocksInfo'
+import { MetadataFieldsHelper } from '../../../../src/sections/shared/form/DatasetMetadataForm/MetadataFieldsHelper'
 
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
 const allMetadataBlocksInfoMock = MetadataBlockInfoMother.getAllBlocks()
 
 describe('useGetAllMetadataBlocksInfo', () => {
   it('should return metadataBlockDisplayFormatInfo correctly', async () => {
-    metadataBlockInfoRepository.getAllTemporal = cy.stub().resolves(allMetadataBlocksInfoMock)
+    metadataBlockInfoRepository.getAll = cy.stub().resolves(allMetadataBlocksInfoMock)
 
     const { result } = renderHook(() =>
       useGetAllMetadataBlocksInfo({
@@ -25,17 +23,22 @@ describe('useGetAllMetadataBlocksInfo', () => {
     })
 
     await act(() => {
-      const reducedMetadataBlocksInfo = reduceMetadataBlocksInfo(allMetadataBlocksInfoMock)
-
       expect(result.current.isLoading).to.deep.equal(false)
 
-      return expect(result.current.allMetadataBlocksInfo).to.deep.equal(reducedMetadataBlocksInfo)
+      const allMetadataBlocksInfoNormalized =
+        MetadataFieldsHelper.replaceMetadataBlocksInfoDotNamesKeysWithSlash(
+          allMetadataBlocksInfoMock
+        )
+
+      return expect(result.current.allMetadataBlocksInfo).to.deep.equal(
+        allMetadataBlocksInfoNormalized
+      )
     })
   })
 
   describe('Error handling', () => {
     it('should return correct error message when there is an error type catched', async () => {
-      metadataBlockInfoRepository.getAllTemporal = cy.stub().rejects(new Error('Error message'))
+      metadataBlockInfoRepository.getAll = cy.stub().rejects(new Error('Error message'))
 
       const { result } = renderHook(() =>
         useGetAllMetadataBlocksInfo({
@@ -55,7 +58,7 @@ describe('useGetAllMetadataBlocksInfo', () => {
     })
 
     it('should return correct error message when there is not an error type catched', async () => {
-      metadataBlockInfoRepository.getAllTemporal = cy.stub().rejects('Error message')
+      metadataBlockInfoRepository.getAll = cy.stub().rejects('Error message')
 
       const { result } = renderHook(() =>
         useGetAllMetadataBlocksInfo({

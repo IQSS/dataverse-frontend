@@ -26,7 +26,8 @@ import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePagi
 import { FilePreview } from '../../../../src/files/domain/models/FilePreview'
 import {
   DatasetNonNumericVersion,
-  DatasetPublishingStatus
+  DatasetPublishingStatus,
+  DatasetVersionNumber
 } from '../../../../src/dataset/domain/models/Dataset'
 import { File } from '../../../../src/files/domain/models/File'
 import { FileIngest, FileIngestStatus } from '../../../../src/files/domain/models/FileIngest'
@@ -99,10 +100,7 @@ const fileExpectedData = (id: number): File => {
       ],
       id: 74,
       title: "Darwin's Finches",
-      number: {
-        majorNumber: undefined,
-        minorNumber: undefined
-      },
+      number: new DatasetVersionNumber(undefined, undefined),
       publishingStatus: DatasetPublishingStatus.DRAFT,
       citation:
         'Finch, Fiona, 2024, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/M6AWUM" target="_blank">https://doi.org/10.5072/FK2/M6AWUM</a>, Root, DRAFT VERSION',

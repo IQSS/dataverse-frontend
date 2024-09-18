@@ -12,6 +12,7 @@ type ListProps =
       side: 'left'
       checked: TransferListItem[]
       onToggle: (item: TransferListItem) => () => void
+      disabled: boolean
       rightItems?: never
       setRight?: never
       onChange?: never
@@ -21,6 +22,7 @@ type ListProps =
       side: 'right'
       checked: TransferListItem[]
       onToggle: (item: TransferListItem) => () => void
+      disabled: boolean
       rightItems: TransferListItem[]
       setRight: React.Dispatch<React.SetStateAction<TransferListItem[]>>
       onChange?: (selected: TransferListItem[]) => void
@@ -31,6 +33,7 @@ export const ItemsList = ({
   side,
   checked,
   onToggle,
+  disabled,
   rightItems,
   setRight,
   onChange
@@ -44,6 +47,7 @@ export const ItemsList = ({
             side={side}
             checked={checked}
             onToggle={onToggle}
+            disabled={disabled}
             key={item.value}
           />
         ))}
@@ -76,6 +80,7 @@ export const ItemsList = ({
               side={side}
               checked={checked}
               onToggle={onToggle}
+              disabled={disabled}
               key={item.value}
             />
           ))}

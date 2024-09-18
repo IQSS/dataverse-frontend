@@ -12,47 +12,57 @@ interface ListItemProps {
   side: 'left' | 'right'
   checked: readonly TransferListItem[]
   onToggle: (item: TransferListItem) => () => void
+  disabled: boolean
 }
 
-export const ListItem = ({ item, side, checked, onToggle }: ListItemProps) => {
+export const ListItem = ({ item, side, checked, onToggle, disabled }: ListItemProps) => {
   const { attributes, listeners, transform, transition, setNodeRef, setActivatorNodeRef } =
     useSortable({ id: item.id })
+
+  const attributesCheckingDisabled = disabled
+    ? { ...attributes, ['aria-disabled']: true, tabIndex: -1 }
+    : attributes
 
   const uniqueID = useId()
   const labelId = `transfer-list-item-${item.value}-label-${uniqueID}`
 
   if (side === 'left') {
     return (
-      <ListGroup.Item className={styles['list-item']}>
+      <ListGroup.Item
+        className={`${styles['list-item']} ${disabled ? styles['disabled'] : ''}`}
+        disabled={disabled}>
         <Form.Group.Checkbox
           label={item.label}
           onChange={onToggle(item)}
           id={labelId}
           checked={checked.indexOf(item) !== -1}
+          disabled={disabled}
         />
       </ListGroup.Item>
     )
   }
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition
   }
 
   return (
     <ListGroup.Item
       ref={setNodeRef}
-      {...attributes}
+      {...attributesCheckingDisabled}
       role=""
       style={style}
-      className={styles['list-item']}>
+      className={`${styles['list-item']} ${disabled ? styles['disabled'] : ''}`}
+      disabled={disabled}>
       <Stack direction="horizontal" gap={1}>
         <button
           type="button"
           ref={setActivatorNodeRef}
           {...listeners}
-          className={styles['drag-handle']}
-          aria-label="press space to select and keys to drag">
+          className={`${styles['drag-handle']} ${disabled ? styles['disabled'] : ''}`}
+          aria-label="press space to select and keys to drag"
+          disabled={disabled}>
           <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
             <circle cx="9" cy="6" r="1.5" fill="#777" />
             <circle cx="15" cy="6" r="1.5" fill="#777" />
@@ -67,6 +77,7 @@ export const ListItem = ({ item, side, checked, onToggle }: ListItemProps) => {
           onChange={onToggle(item)}
           id={labelId}
           checked={checked.indexOf(item) !== -1}
+          disabled={disabled}
         />
       </Stack>
     </ListGroup.Item>
