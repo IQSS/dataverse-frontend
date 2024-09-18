@@ -15,13 +15,13 @@ describe('Collection Page', () => {
   })
 
   it('successfully loads root collection when accessing the home', () => {
-    cy.visit('/spa')
+    cy.visit('/spa/collections')
     cy.findAllByText(/Root/i).should('exist')
   })
 
   it('navigates to a dataset from the list when clicking the title', () => {
     cy.wrap(DatasetHelper.createWithTitle(title), { timeout: 10000 }).then(() => {
-      cy.visit('/spa')
+      cy.visit('/spa/collections')
 
       cy.findByText(/Dataverse Admin/i).should('exist')
 
@@ -33,7 +33,7 @@ describe('Collection Page', () => {
   })
 
   it('Navigates to Create Dataset page when New Dataset link clicked', () => {
-    cy.visit('/spa')
+    cy.visit('/spa/collections')
 
     cy.get('nav.navbar').within(() => {
       const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
@@ -41,7 +41,9 @@ describe('Collection Page', () => {
       addDataBtn.click({ force: true })
       cy.findByText('New Dataset').should('be.visible').click({ force: true })
     })
-    cy.visit('/spa')
+
+    cy.visit('/spa/collections')
+
     cy.get('main').within(() => {
       const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
       addDataBtn.should('exist')
@@ -54,7 +56,7 @@ describe('Collection Page', () => {
   })
 
   it('log out Dataverse Admin user', () => {
-    cy.visit('/spa')
+    cy.visit('/spa/collections')
     cy.findAllByText(/Root/i).should('exist')
 
     cy.findByText(/Dataverse Admin/i).click()
@@ -65,7 +67,7 @@ describe('Collection Page', () => {
   describe.skip('Currently skipping all tests as we are only rendering an infinite scrollable container. Please refactor these tests if a toggle button is added to switch between pagination and infinite scroll.', () => {
     it('navigates to the correct page of the datasets list when passing the page query param', () => {
       cy.wrap(DatasetHelper.createMany(12), { timeout: 10000 }).then(() => {
-        cy.visit('/spa?page=2')
+        cy.visit('/spa/collections?page=2')
         cy.findAllByText(/Root/i).should('exist')
         cy.findByText(/Dataverse Admin/i).should('exist')
 
@@ -75,7 +77,7 @@ describe('Collection Page', () => {
 
     it('updates the page query param when navigating to another page', () => {
       cy.wrap(DatasetHelper.createMany(12), { timeout: 10000 }).then(() => {
-        cy.visit('/spa')
+        cy.visit('/spa/collections')
 
         cy.findAllByText(/Root/i).should('exist')
         cy.findByText(/Dataverse Admin/i).should('exist')
@@ -88,7 +90,7 @@ describe('Collection Page', () => {
 
     it('correctly changes the pages when using the back and forward buttons from the browser after using some page number button', () => {
       cy.wrap(DatasetHelper.createMany(12), { timeout: 10000 }).then(() => {
-        cy.visit('/spa?page=2')
+        cy.visit('/spa/collections?page=2')
 
         cy.findAllByText(/Root/i).should('exist')
         cy.findByText(/Dataverse Admin/i).should('exist')

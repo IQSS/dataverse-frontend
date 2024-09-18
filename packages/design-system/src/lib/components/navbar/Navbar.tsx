@@ -13,11 +13,12 @@ interface Brand {
 
 export interface NavbarProps {
   brand: Brand
+  className?: string
 }
 
-function Navbar({ brand, children }: PropsWithChildren<NavbarProps>) {
+function Navbar({ brand, className, children }: PropsWithChildren<NavbarProps>) {
   return (
-    <NavbarBS collapseOnSelect bg="light" expand="lg" fixed="top">
+    <NavbarBS collapseOnSelect bg="light" expand="lg" sticky="top" className={className}>
       <Container>
         <NavbarBS.Brand href={brand.href}>
           <img width="28" height="28" src={brand.logoImgSrc} alt="Brand Logo Image" />

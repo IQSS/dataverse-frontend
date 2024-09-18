@@ -10,6 +10,7 @@ export enum Route {
   UPLOAD_DATASET_FILES = '/datasets/upload-files',
   EDIT_DATASET_METADATA = '/datasets/edit-metadata',
   FILES = '/files',
+  COLLECTIONS_BASE = '/collections',
   COLLECTIONS = '/collections/:collectionId',
   CREATE_COLLECTION = '/collections/:ownerCollectionId/create',
   ACCOUNT = '/account'
@@ -23,5 +24,6 @@ export const RouteWithParams = {
 
 export enum QueryParamKey {
   VERSION = 'version',
-  PERSISTENT_ID = 'persistentId'
+  PERSISTENT_ID = 'persistentId',
+  QUERY = 'q'
 }

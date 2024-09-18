@@ -1,5 +1,3 @@
-version: '2.4'
-
 services:
   dev_nginx:
     container_name: 'dev_nginx_proxy'

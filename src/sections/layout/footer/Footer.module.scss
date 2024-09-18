@@ -1,28 +1,33 @@
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module";
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
+@import 'src/assets/variables';
 
 .container {
-    padding: 60px 0;
-    color: $dv-subtext-color;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: $footer-height;
+  min-height: $footer-height;
+  color: $dv-subtext-color;
 }
 
 .copyright {
-    margin: 0 0 10px;
-    font-size: $dv-font-size-sm;
+  margin: 0 0 10px;
+  font-size: $dv-font-size-sm;
 }
 
 .powered-by-container {
-    font-size: $dv-font-size-sm;
-    text-align: right;
+  font-size: $dv-font-size-sm;
+  text-align: right;
 }
 
 .powered-by-text {
-    margin-right: 0.6em;
+  margin-right: 0.6em;
 }
 
 .version {
-    margin-right: 0.3em;
-    white-space: nowrap;
-    text-align: right;
-    vertical-align: bottom;
+  margin-right: 0.3em;
+  white-space: nowrap;
+  text-align: right;
+  vertical-align: bottom;
 }
