@@ -35,7 +35,7 @@ export const SearchPanel = ({
       <form onSubmit={handleSubmit} className={styles['search-form']} role="search">
         <Form.InputGroup className={styles['search-input-group']}>
           <Form.Group.Input
-            type="text"
+            type="search"
             placeholder="Search this collection..."
             aria-label="Search"
             value={searchValue}

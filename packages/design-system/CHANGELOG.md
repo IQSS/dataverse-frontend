@@ -42,7 +42,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **NavbarDropdownItem:** Now accepts `as` prop and takes `as` Element props.
 - **FormInputGroup:** extend Props Interface to accept `hasValidation` prop to properly show rounded corners in an <InputGroup> with validation
 - **Button:** extend Props Interface to accept `size` prop.
-- **FormInput:** extend Props Interface to accept `autoFocus` prop.
+- **FormInput:** extend Props Interface to accept `autoFocus` and `type: 'search'` prop.
 - **FormTextArea:** extend Props Interface to accept `autoFocus` prop.
 - **FormSelect:** extend Props Interface to accept `autoFocus` prop.
 - **Stack:** NEW Stack element to manage layouts.
