@@ -3,7 +3,7 @@ import { Dropdown } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { DropdownButton } from '@iqss/dataverse-design-system'
 import { PlusLg } from 'react-bootstrap-icons'
-import { Route, RouteWithParams } from '../../Route.enum'
+import { RouteWithParams } from '../../Route.enum'
 import styles from './AddDataActionsButton.module.scss'
 
 interface AddDataActionsButtonProps {
@@ -19,11 +19,8 @@ export default function AddDataActionsButton({
 }: AddDataActionsButtonProps) {
   const { t } = useTranslation('header')
 
-  const createDatasetRoute = collectionId
-    ? `${Route.CREATE_DATASET}?collectionId=${collectionId}`
-    : Route.CREATE_DATASET
-
   const createCollectionRoute = RouteWithParams.CREATE_COLLECTION(collectionId)
+  const createDatasetRoute = RouteWithParams.CREATE_DATASET(collectionId)
 
   return (
     <DropdownButton
