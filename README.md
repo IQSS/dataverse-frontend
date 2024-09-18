@@ -434,17 +434,4 @@ Distributed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for mo
 [_img_dv_logo_nobackground]: https://github.com/IQSS/dataverse-frontend/assets/7512607/6c4d79e4-7be5-4102-88bd-dfa167dc79d3
 [_img_screenshot]: images/screenshot.png
 
-<!-- Video Links -->
-<!-- August, 2023 -->
-
-[_video_demo_datasetpage_url]: https://groups.google.com/g/dataverse-community/c/cxZ3Bal_-uo/m/h3kh3iVNCwAJ
-
-<!-- December, 2023 -->
-
-[_video_demo_filetable_url]: https://groups.google.com/g/dataverse-community/c/w_rEMddESYc/m/6F7QC1p-AgAJ
-
-<!-- September, 2024 -->
-[_video_demo_collectionpage_creationpages_fileuploading_url]: https://groups.google.com/g/dataverse-community/c/heSnBRhhriM/m/bFgLDvvZAQAJ
-
-<!--  -->
 <!--  -->
