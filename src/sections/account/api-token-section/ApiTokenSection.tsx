@@ -6,6 +6,7 @@ import styles from './ApiTokenSection.module.scss'
 export const ApiTokenSection = () => {
   const { t } = useTranslation('account', { keyPrefix: 'apiToken' })
 
+  // TODO: When we have the use cases we need to mock stub to unit test this with or without token
   const apiToken = '999fff-666rrr-this-is-not-a-real-token-123456'
   const expirationDate = '2025-09-04'
 
