@@ -51,7 +51,7 @@ describe('Create Dataset', () => {
     cy.findByRole('heading', { name: 'Root' }).should('exist')
   })
 
-  it.only('redirects to the Log In page when the user is not authenticated', () => {
+  it('redirects to the Log In page when the user is not authenticated', () => {
     cy.wrap(TestsUtils.logout())
 
     cy.visit('/spa/datasets/root/create')
