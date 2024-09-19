@@ -11,6 +11,7 @@ import { EditDatasetMetadataFactory } from '../sections/edit-dataset-metadata/Ed
 import { CreateCollectionFactory } from '../sections/create-collection/CreateCollectionFactory'
 import { AccountFactory } from '../sections/account/AccountFactory'
 import { ProtectedRoute } from './ProtectedRoute'
+import { HomepageFactory } from '../sections/homepage/HomepageFactory'
 
 export const routes: RouteObject[] = [
   {
@@ -20,7 +21,7 @@ export const routes: RouteObject[] = [
     children: [
       {
         path: Route.HOME,
-        element: CollectionFactory.create()
+        element: HomepageFactory.create()
       },
       {
         path: Route.COLLECTIONS_BASE,
