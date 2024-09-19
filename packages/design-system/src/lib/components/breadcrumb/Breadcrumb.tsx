@@ -1,9 +1,13 @@
 import { Breadcrumb as BreadcrumbBS } from 'react-bootstrap'
-import { PropsWithChildren } from 'react'
+import { ReactNode } from 'react'
 import { BreadcrumbItem } from './BreadcrumbItem'
 
-function Breadcrumb({ children }: PropsWithChildren) {
-  return <BreadcrumbBS>{children}</BreadcrumbBS>
+interface BreadcrumbProps {
+  children: ReactNode
+  className?: string
+}
+function Breadcrumb({ children, className }: BreadcrumbProps) {
+  return <BreadcrumbBS className={className}>{children}</BreadcrumbBS>
 }
 
 Breadcrumb.Item = BreadcrumbItem

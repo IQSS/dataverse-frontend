@@ -6,6 +6,7 @@ import { useSession } from '../../session/SessionContext'
 import { BASE_URL } from '../../../config'
 import { LoggedInHeaderActions } from './LoggedInHeaderActions'
 import { CollectionJSDataverseRepository } from '../../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
+import styles from './Header.module.scss'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 
@@ -19,7 +20,8 @@ export function Header() {
         title: t('brandTitle'),
         href: `/spa${Route.HOME}`,
         logoImgSrc: dataverse_logo
-      }}>
+      }}
+      className={styles.navbar}>
       {user ? (
         <LoggedInHeaderActions user={user} collectionRepository={collectionRepository} />
       ) : (

@@ -1,6 +1,5 @@
-@import "src/assets/variables";
+@import 'src/assets/variables';
 
 .body-container {
-    min-height: $body-available-height;
-    margin-top: 64px;
+  min-height: $main-container-available-height;
 }

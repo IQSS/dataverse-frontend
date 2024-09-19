@@ -49,6 +49,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **TransferList:** NEW TransferList component to transfer items between two list, also sortable.
 - **Table:** extend Props Interface to accept `bordered` prop to add or remove borders on all sides of the table and cells. Defaults to true.
 - **Spinner:** New Spinner component.
+- **CloseButton:** NEW close button component.
 - **Tab:** extend Props Interface to accept `disabled` prop to disable the tab.
 
 # [1.1.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@1.0.1...@iqss/dataverse-design-system@1.1.0) (2024-03-12)

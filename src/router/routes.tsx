@@ -23,6 +23,10 @@ export const routes: RouteObject[] = [
         element: CollectionFactory.create()
       },
       {
+        path: Route.COLLECTIONS_BASE,
+        element: CollectionFactory.create()
+      },
+      {
         path: Route.COLLECTIONS,
         element: CollectionFactory.create()
       },
