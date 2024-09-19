@@ -1,70 +1,90 @@
-@use 'sass:color';
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module";
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
 
-.container {
-  margin: 6px 0;
-  padding: 4px 10px;
-  border: 1px solid $dv-collection-border-color;
-}
-
-.header {
+.card-main-container {
   display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid $dv-collection-border-color;
+  border-radius: 4px;
+}
+
+.thumbnail-and-info-wrapper {
+  display: flex;
+  gap: 1rem;
+}
+
+.card-header-container {
+  display: flex;
+  gap: 1rem;
   justify-content: space-between;
-}
 
-.title {
-  display: flex;gap: 8px;
-}
+  .title {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 8px;
 
-.icon {
-  margin-top: 2px;
-  color: $dv-collection-border-color;
-  font-size: 1.3em;
-  line-height: 1.1;
+    .affiliation {
+      margin: 0;
+      color: $dv-subtext-color;
+    }
+  }
 
-  > div >span {
-    margin-right: 0;
+  .top-right-icon {
+    height: fit-content;
+    color: $dv-collection-border-color;
+    font-size: 1.3em;
+    line-height: 1.1;
+
+    > span {
+      margin-right: 0;
+    }
   }
 }
 
-.thumbnail {
-  width: 48px;
-  margin: 8px 12px 6px 0;
-  font-size: 2.8em;
+.card-thumbnail-container {
+  padding-block: 0.25rem;
 
   img {
-      vertical-align: top;
+    max-width: 40px;
+    max-height: 48px;
+    vertical-align: top;
   }
-}
 
-.info {
-  display: flex;
-  color: $dv-subtext-color;
+  .icon {
+    height: fit-content;
+    color: $dv-collection-border-color;
+
+    > span {
+      margin-right: 0;
+      font-size: 40px;
+      line-height: 1;
+    }
+  }
 }
 
 .card-info-container {
-  display: flex;
+  align-self: flex-start;
   font-size: $dv-font-size-sm;
-}
 
-.description {
-  display: -webkit-box; -webkit-line-clamp: 3;  line-clamp: 3; -webkit-box-orient: vertical;
-  flex-direction: column;
-  width: 100%;
-  overflow: hidden;
-  color: black;
-}
+  .date-link-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.5rem;
+  }
 
-.date {
-  color: $dv-subtext-color;
+  .date {
+    color: $dv-subtext-color;
+  }
 
-}
-
-.affiliation {
-  color: $dv-subtext-color;
-}
-
-.badge {
-  margin-right: 0.5em;
+  .description {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    width: 100%;
+    overflow: hidden;
+    color: black;
+  }
 }

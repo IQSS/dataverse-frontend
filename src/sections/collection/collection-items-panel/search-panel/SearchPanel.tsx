@@ -49,9 +49,9 @@ export const SearchPanel = ({
           />
         </Form.InputGroup>
       </form>
-      <Button variant="link" className={styles['advanced-search-btn']} disabled>
+      {/* <Button variant="link" className={styles['advanced-search-btn']} disabled>
         Advanced Search
-      </Button>
+      </Button> */}
     </div>
   )
 }

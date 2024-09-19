@@ -1,13 +1,14 @@
-// TODO:ME Once 181 is merged, update interface
+import { CollectionItemType } from './CollectionItemType'
 
 export interface CollectionPreview {
-  id: string
-  name: string
+  type: CollectionItemType.COLLECTION
   isReleased: boolean
+  name: string
+  alias: string
+  description?: string // it could be undefined before ?
+  affiliation?: string // it could be undefined before ?
   releaseOrCreateDate: Date
-  parentCollectionId?: string
-  parentCollectionName?: string
-  description?: string
-  affiliation?: string
   thumbnail?: string
+  parentCollectionName: string
+  parentCollectionAlias: string
 }

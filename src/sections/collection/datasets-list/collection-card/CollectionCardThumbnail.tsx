@@ -11,17 +11,13 @@ interface CollectionCardCardThumbnailProps {
 
 export function CollectionCardThumbnail({ collectionPreview }: CollectionCardCardThumbnailProps) {
   return (
-    <div className={styles.thumbnail}>
+    <div className={styles['card-thumbnail-container']}>
       <LinkToPage
         type={DvObjectType.COLLECTION}
         page={Route.COLLECTIONS}
-        searchParams={{ id: collectionPreview.id.toString() }}>
+        searchParams={{ id: collectionPreview.alias.toString() }}>
         {collectionPreview.thumbnail ? (
-          <img
-            className={styles['preview-image']}
-            src={collectionPreview.thumbnail}
-            alt={collectionPreview.name}
-          />
+          <img src={collectionPreview.thumbnail} alt={collectionPreview.name} />
         ) : (
           <div className={styles.icon}>
             <Icon name={IconName.COLLECTION} />

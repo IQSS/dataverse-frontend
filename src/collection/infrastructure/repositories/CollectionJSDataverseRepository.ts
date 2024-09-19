@@ -8,12 +8,14 @@ import {
   getCollectionItems
 } from '@iqss/dataverse-client-javascript'
 import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
+import { JSCollectionPreviewMapper } from '../mappers/JSCollectionPreviewMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'
 import { CollectionFacet } from '../../domain/models/CollectionFacet'
 import { CollectionUserPermissions } from '../../domain/models/CollectionUserPermissions'
 import { CollectionItemsPaginationInfo } from '../../domain/models/CollectionItemsPaginationInfo'
 import { CollectionItemSubset } from '../../domain/models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCriteria'
+import { CollectionItemType } from '../../domain/models/CollectionItemType'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id: string): Promise<Collection> {
@@ -46,6 +48,20 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
   ): Promise<CollectionItemSubset> {
     return getCollectionItems
       .execute(collectionId, paginationInfo?.pageSize, paginationInfo?.offset, searchCriteria)
-      .then((jsCollectionItemSubset) => jsCollectionItemSubset)
+      .then((jsCollectionItemSubset) => {
+        const collectionPreviewsMapped = jsCollectionItemSubset.items
+          .filter((item) => item.type === CollectionItemType.COLLECTION)
+          .map((item) => JSCollectionPreviewMapper.toCollectionPreview(item))
+
+        // TODO:ME This will change, I need a mapper for all types
+        const jsCollectionItemsWithoutCollections = jsCollectionItemSubset.items.filter(
+          (item) => item.type !== CollectionItemType.COLLECTION
+        )
+
+        return {
+          items: [...jsCollectionItemsWithoutCollections, ...collectionPreviewsMapped],
+          totalItemCount: jsCollectionItemSubset.totalItemCount
+        }
+      })
   }
 }

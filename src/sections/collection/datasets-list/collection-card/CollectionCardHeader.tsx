@@ -11,29 +11,27 @@ interface CollectionCardHeaderProps {
 
 export function CollectionCardHeader({ collectionPreview }: CollectionCardHeaderProps) {
   return (
-    <>
-      <div className={styles.header}>
-        <div className={styles.title}>
-          <LinkToPage
-            type={DvObjectType.COLLECTION}
-            page={Route.COLLECTIONS}
-            searchParams={{ id: collectionPreview.id.toString() }}>
-            {collectionPreview.name}
-          </LinkToPage>
-          {collectionPreview.affiliation && (
-            <span className={styles.affiliation}> ({collectionPreview.affiliation})</span>
-          )}
-          {!collectionPreview.isReleased && (
-            <div className={styles.badge}>
-              <Badge variant="warning">Unpublished</Badge>
-            </div>
-          )}
-        </div>
-
-        <div className={styles.icon}>
-          <Icon name={IconName.COLLECTION} />
-        </div>
+    <div className={styles['card-header-container']}>
+      <div className={styles.title}>
+        <LinkToPage
+          type={DvObjectType.COLLECTION}
+          page={Route.COLLECTIONS}
+          searchParams={{ id: collectionPreview.alias.toString() }}>
+          {collectionPreview.name}
+        </LinkToPage>
+        {collectionPreview.affiliation && (
+          <p className={styles.affiliation}>({collectionPreview.affiliation})</p>
+        )}
+        {!collectionPreview.isReleased && (
+          <div>
+            <Badge variant="warning">Unpublished</Badge>
+          </div>
+        )}
       </div>
-    </>
+
+      <div className={styles['top-right-icon']}>
+        <Icon name={IconName.COLLECTION} />
+      </div>
+    </div>
   )
 }

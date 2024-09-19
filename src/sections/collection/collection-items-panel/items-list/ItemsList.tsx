@@ -10,6 +10,8 @@ import { NoItemsMessage } from './NoItemsMessage'
 import { NoSearchMatchesMessage } from './NoSearchMatchesMessage'
 import { NO_COLLECTION_ITEMS } from '../useGetAccumulatedItems'
 import styles from './ItemsList.module.scss'
+import { CollectionItemType } from '../../../../collection/domain/models/CollectionItemType'
+import { CollectionCard } from '../../datasets-list/collection-card/CollectionCard'
 
 interface ItemsListProps {
   items: CollectionItem[]
@@ -85,18 +87,36 @@ export const ItemsList = forwardRef(
               <ul>
                 {items.map((collectionItem, index) => {
                   // console.log(collectionItem)
+                  // if (collectionItem?.type === CollectionItemType.COLLECTION) {
+                  //   return (
+                  //     <li
+                  //       style={{ height: 100, border: 'solid 2px black' }}
+                  //       key={index}
+                  //       // key={`${dataset.persistentId}-${dataset.version.id}`}
+                  //     >
+                  //       <p>This is a Collection</p>
+                  //     </li>
+                  //   )
+                  // }
+                  // TODO:ME make unique keys specially for datasets and files also maybe?
 
                   return (
                     <li
-                      style={{ height: 100, border: 'solid 2px black' }}
                       key={index}
                       // key={`${dataset.persistentId}-${dataset.version.id}`}
                     >
-                      <p>
+                      {collectionItem?.type === CollectionItemType.COLLECTION && (
+                        <CollectionCard collectionPreview={collectionItem} />
+                      )}
+                      {collectionItem?.type === CollectionItemType.DATASET && (
+                        <p>This is a Dataset</p>
+                      )}
+                      {collectionItem?.type === CollectionItemType.FILE && <p>This is a File</p>}
+                      {/* <p>
                         This is a : {collectionItem?.type === 'file' && 'File'}
                         {collectionItem?.type === 'dataset' && 'Dataset'}
                         {collectionItem?.type === 'collection' && 'Collection'}
-                      </p>
+                      </p> */}
                     </li>
                   )
                 })}
