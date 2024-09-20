@@ -37,5 +37,3 @@ export default function AddDataActionsButton({
     </DropdownButton>
   )
 }
-
-// TODO: AddData Dropdown item needs proper permissions checking, see Spike #318

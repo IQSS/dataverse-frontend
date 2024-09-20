@@ -8,7 +8,8 @@ export const WithLoggedInSuperUser = (Story: StoryFn) => {
       value={{
         user: UserMother.createSuperUser(),
         logout: () => Promise.resolve(),
-        setUser: () => {}
+        setUser: () => {},
+        isLoadingUser: false
       }}>
       <Story />
     </SessionContext.Provider>

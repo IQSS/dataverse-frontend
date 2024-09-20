@@ -1,5 +1,5 @@
 import { ApiConfig } from '@iqss/dataverse-client-javascript/dist/core'
-import { Router } from './Router'
+import { Router } from './router'
 import { SessionProvider } from './sections/session/SessionProvider'
 import { UserJSDataverseRepository } from './users/infrastructure/repositories/UserJSDataverseRepository'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'

@@ -10,13 +10,23 @@ interface SessionProviderProps {
 }
 export function SessionProvider({ repository, children }: PropsWithChildren<SessionProviderProps>) {
   const [user, setUser] = useState<User | null>(null)
+  const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true)
 
   useEffect(() => {
-    getUser(repository)
-      .then((user: User | void) => {
+    const handleGetUser = async () => {
+      setIsLoadingUser(true)
+      try {
+        const user: User | void = await getUser(repository)
+
         user && setUser(user)
-      })
-      .catch((error) => console.error('There was an error getting the authenticated user', error))
+      } catch (error) {
+        console.error('There was an error getting the authenticated user', error)
+      } finally {
+        setIsLoadingUser(false)
+      }
+    }
+
+    void handleGetUser()
   }, [repository])
 
   const submitLogOut = () => {
@@ -28,7 +38,7 @@ export function SessionProvider({ repository, children }: PropsWithChildren<Sess
   }
 
   return (
-    <SessionContext.Provider value={{ user, setUser, logout: submitLogOut }}>
+    <SessionContext.Provider value={{ user, isLoadingUser, setUser, logout: submitLogOut }}>
       {children}
     </SessionContext.Provider>
   )
