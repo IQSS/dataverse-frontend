@@ -49,4 +49,17 @@ describe('Collection JSDataverse Repository', () => {
       expect(collection).to.deep.equal(collectionExpected)
     })
   })
+  it('publishes the collection', async () => {
+    const timestamp = new Date().valueOf()
+    const uniqueCollectionId = `test-publish-collection-${timestamp}`
+    const collectionResponse = await CollectionHelper.create(uniqueCollectionId)
+    await collectionRepository.publish(collectionResponse.id)
+    await collectionRepository.getById(collectionResponse.id).then((collection) => {
+      if (!collection) {
+        throw new Error('Collection not found')
+      }
+
+      expect(collection.isReleased).to.deep.equal(true)
+    })
+  })
 })
