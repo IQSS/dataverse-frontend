@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
-import { DatasetCard } from '../../../sections/collection/datasets-list/dataset-card/DatasetCard'
+import { DatasetCard } from '../../../sections/collection/collection-items-panel/items-list/dataset-card/DatasetCard'
 import { DatasetPreviewMother } from '../../../../tests/component/dataset/domain/models/DatasetPreviewMother'
 
 const meta: Meta<typeof DatasetCard> = {
@@ -13,9 +13,9 @@ export default meta
 type Story = StoryObj<typeof DatasetCard>
 
 export const Default: Story = {
-  render: () => <DatasetCard dataset={DatasetPreviewMother.createDraft()} />
+  render: () => <DatasetCard datasetPreview={DatasetPreviewMother.createDraft()} />
 }
 
 export const Deaccessioned: Story = {
-  render: () => <DatasetCard dataset={DatasetPreviewMother.createDeaccessioned()} />
+  render: () => <DatasetCard datasetPreview={DatasetPreviewMother.createDeaccessioned()} />
 }

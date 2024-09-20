@@ -1,10 +1,10 @@
+import { CollectionItemTypePreview } from './CollectionItemTypePreview'
 import { DatasetPreview } from '../../../dataset/domain/models/DatasetPreview'
-import { FilePreview } from '../../../files/domain/models/FilePreview'
-import { CollectionPreview } from './CollectionPreview'
+import { FileItemTypePreview } from './FileItemTypePreview'
 
 export interface CollectionItemSubset {
   items: CollectionItem[]
   totalItemCount: number
 }
 
-export type CollectionItem = CollectionPreview | DatasetPreview | FilePreview
+export type CollectionItem = CollectionItemTypePreview | DatasetPreview | FileItemTypePreview

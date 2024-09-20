@@ -1,9 +1,12 @@
+import { Route } from '../../../../Route.enum'
+import {
+  DatasetPublishingStatus,
+  DatasetVersion
+} from '../../../../../dataset/domain/models/Dataset'
+import { DvObjectType } from '../../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { DatasetThumbnail } from '../../../../dataset/dataset-thumbnail/DatasetThumbnail'
+import { LinkToPage } from '../../../../shared/link-to-page/LinkToPage'
 import styles from './DatasetCard.module.scss'
-import { LinkToPage } from '../../../shared/link-to-page/LinkToPage'
-import { Route } from '../../../Route.enum'
-import { DatasetThumbnail } from '../../../dataset/dataset-thumbnail/DatasetThumbnail'
-import { DatasetPublishingStatus, DatasetVersion } from '../../../../dataset/domain/models/Dataset'
-import { DvObjectType } from '../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 interface DatasetCardThumbnailProps {
   persistentId: string
@@ -17,7 +20,7 @@ export function DatasetCardThumbnail({
   thumbnail
 }: DatasetCardThumbnailProps) {
   return (
-    <div className={styles.thumbnail}>
+    <div className={styles['card-thumbnail-container']}>
       <LinkToPage
         page={Route.DATASETS}
         type={DvObjectType.DATASET}

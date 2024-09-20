@@ -1,14 +1,14 @@
-import styles from './DatasetCard.module.scss'
-import { LinkToPage } from '../../../shared/link-to-page/LinkToPage'
-import { Route } from '../../../Route.enum'
-import { DatasetLabels } from '../../../dataset/dataset-labels/DatasetLabels'
-import { DatasetIcon } from '../../../dataset/dataset-icon/DatasetIcon'
+import { Route } from '../../../../Route.enum'
 import {
+  DatasetNonNumericVersionSearchParam,
   DatasetPublishingStatus,
-  DatasetVersion,
-  DatasetNonNumericVersionSearchParam
-} from '../../../../dataset/domain/models/Dataset'
-import { DvObjectType } from '../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+  DatasetVersion
+} from '../../../../../dataset/domain/models/Dataset'
+import { DvObjectType } from '../../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { DatasetIcon } from '../../../../dataset/dataset-icon/DatasetIcon'
+import { DatasetLabels } from '../../../../dataset/dataset-labels/DatasetLabels'
+import { LinkToPage } from '../../../../shared/link-to-page/LinkToPage'
+import styles from './DatasetCard.module.scss'
 
 interface DatasetCardHeaderProps {
   persistentId: string
@@ -19,6 +19,7 @@ function getSearchParams(
   publishingStatus: DatasetPublishingStatus
 ): Record<string, string> {
   const params: Record<string, string> = { persistentId: persistentId }
+
   if (publishingStatus === DatasetPublishingStatus.DRAFT) {
     params.version = DatasetNonNumericVersionSearchParam.DRAFT
   }
@@ -26,7 +27,7 @@ function getSearchParams(
 }
 export function DatasetCardHeader({ persistentId, version }: DatasetCardHeaderProps) {
   return (
-    <div className={styles.header}>
+    <div className={styles['card-header-container']}>
       <div className={styles.title}>
         <LinkToPage
           page={Route.DATASETS}
@@ -36,7 +37,7 @@ export function DatasetCardHeader({ persistentId, version }: DatasetCardHeaderPr
         </LinkToPage>
         <DatasetLabels labels={version.labels} />
       </div>
-      <div className={styles.icon}>
+      <div className={styles['top-right-icon']}>
         <DatasetIcon />
       </div>
     </div>

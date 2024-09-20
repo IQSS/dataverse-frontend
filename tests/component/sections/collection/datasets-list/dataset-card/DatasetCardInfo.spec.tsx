@@ -1,7 +1,7 @@
 import { DatasetPreviewMother } from '../../../../dataset/domain/models/DatasetPreviewMother'
 import { DateHelper } from '../../../../../../src/shared/helpers/DateHelper'
+import { DatasetCardInfo } from '../../../../../../src/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCardInfo'
 import styles from '../../../../../../src/sections/collection/datasets-list/dataset-card/DatasetCard.module.scss'
-import { DatasetCardInfo } from '../../../../../../src/sections/collection/datasets-list/dataset-card/DatasetCardInfo'
 
 describe('DatasetCardInfo', () => {
   it('should render the dataset info', () => {
@@ -10,7 +10,7 @@ describe('DatasetCardInfo', () => {
       <DatasetCardInfo
         version={dataset.version}
         releaseOrCreateDate={dataset.releaseOrCreateDate}
-        abbreviatedDescription={dataset.abbreviatedDescription}
+        description={dataset.description}
       />
     )
 
@@ -20,7 +20,7 @@ describe('DatasetCardInfo', () => {
       .parent()
       .parent()
       .should('have.class', styles['citation-box'])
-    cy.findByText(dataset.abbreviatedDescription).should('exist')
+    cy.findByText(dataset.description).should('exist')
   })
 
   it('should render the citation with the deaccessioned background if the dataset is deaccessioned', () => {
@@ -29,7 +29,7 @@ describe('DatasetCardInfo', () => {
       <DatasetCardInfo
         version={dataset.version}
         releaseOrCreateDate={dataset.releaseOrCreateDate}
-        abbreviatedDescription={dataset.abbreviatedDescription}
+        description={dataset.description}
       />
     )
 

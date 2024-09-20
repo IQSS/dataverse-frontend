@@ -1,6 +1,6 @@
 import { CollectionItemType } from './CollectionItemType'
 
-export interface CollectionPreview {
+export interface CollectionItemTypePreview {
   type: CollectionItemType.COLLECTION
   isReleased: boolean
   name: string

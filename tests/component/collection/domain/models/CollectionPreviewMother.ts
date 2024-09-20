@@ -1,16 +1,18 @@
 import { faker } from '@faker-js/faker'
 import { FakerHelper } from '../../../shared/FakerHelper'
-import { CollectionPreview } from '../../../../../src/collection/domain/models/CollectionPreview'
+import { CollectionItemTypePreview } from '../../../../../src/collection/domain/models/CollectionItemTypePreview'
+import { CollectionItemType } from '../../../../../src/collection/domain/models/CollectionItemType'
 
 export class CollectionPreviewMother {
-  static create(props?: Partial<CollectionPreview>): CollectionPreview {
+  static create(props?: Partial<CollectionItemTypePreview>): CollectionItemTypePreview {
     return {
-      id: faker.datatype.uuid(),
+      type: CollectionItemType.COLLECTION,
+      alias: faker.datatype.string(10),
       name: faker.lorem.words(3),
       isReleased: faker.datatype.boolean(),
       releaseOrCreateDate: faker.date.recent(),
-      parentCollectionId: faker.datatype.boolean() ? faker.datatype.uuid() : undefined,
-      parentCollectionName: faker.datatype.boolean() ? faker.lorem.words(3) : undefined,
+      parentCollectionAlias: faker.datatype.string(10),
+      parentCollectionName: faker.lorem.words(3),
       description: faker.datatype.boolean()
         ? `${faker.lorem.paragraph()} **${faker.lorem.sentence()}** ${faker.lorem.paragraph()}`
         : undefined,
@@ -19,22 +21,23 @@ export class CollectionPreviewMother {
     }
   }
 
-  static createRealistic(): CollectionPreview {
+  static createRealistic(): CollectionItemTypePreview {
     return CollectionPreviewMother.create({
-      id: 'science',
       isReleased: true,
       name: 'Scientific Research Collection',
+      alias: 'scientific-research-collection',
       releaseOrCreateDate: new Date('2021-01-01'),
-      parentCollectionId: 'parentId',
+      parentCollectionAlias: 'parent-alias',
       parentCollectionName: 'University Parent Collection',
       description: 'We do all the science.',
       affiliation: 'Scientific Research University'
     })
   }
 
-  static createWithOnlyRequiredFields(props?: Partial<CollectionPreview>): CollectionPreview {
+  static createWithOnlyRequiredFields(
+    props?: Partial<CollectionItemTypePreview>
+  ): CollectionItemTypePreview {
     return CollectionPreviewMother.create({
-      id: faker.datatype.uuid(),
       name: FakerHelper.collectionName(),
       isReleased: faker.datatype.boolean(),
       affiliation: undefined,
@@ -43,31 +46,30 @@ export class CollectionPreviewMother {
     })
   }
 
-  static createComplete(): CollectionPreview {
+  static createComplete(): CollectionItemTypePreview {
     return CollectionPreviewMother.create({
-      id: faker.datatype.uuid(),
       isReleased: faker.datatype.boolean(),
       name: FakerHelper.collectionName(),
-      parentCollectionId: faker.datatype.uuid(),
+      parentCollectionAlias: faker.datatype.string(10),
       parentCollectionName: faker.lorem.words(3),
       releaseOrCreateDate: FakerHelper.pastDate(),
       description: FakerHelper.paragraph(),
       affiliation: FakerHelper.affiliation()
     })
   }
-  static createUnpublished(): CollectionPreview {
+  static createUnpublished(): CollectionItemTypePreview {
     return CollectionPreviewMother.createWithOnlyRequiredFields({
       isReleased: false,
       affiliation: FakerHelper.affiliation()
     })
   }
-  static createWithDescription(): CollectionPreview {
+  static createWithDescription(): CollectionItemTypePreview {
     return CollectionPreviewMother.createWithOnlyRequiredFields({
       description: FakerHelper.paragraph()
     })
   }
 
-  static createWithAffiliation(): CollectionPreview {
+  static createWithAffiliation(): CollectionItemTypePreview {
     return CollectionPreviewMother.createWithOnlyRequiredFields({
       affiliation: FakerHelper.affiliation()
     })

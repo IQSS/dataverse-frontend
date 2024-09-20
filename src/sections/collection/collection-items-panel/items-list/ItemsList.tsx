@@ -9,9 +9,11 @@ import { ErrorItemsMessage } from './ErrorItemsMessage'
 import { NoItemsMessage } from './NoItemsMessage'
 import { NoSearchMatchesMessage } from './NoSearchMatchesMessage'
 import { NO_COLLECTION_ITEMS } from '../useGetAccumulatedItems'
-import styles from './ItemsList.module.scss'
 import { CollectionItemType } from '../../../../collection/domain/models/CollectionItemType'
-import { CollectionCard } from '../../datasets-list/collection-card/CollectionCard'
+import { CollectionCard } from './collection-card/CollectionCard'
+import { DatasetCard } from './dataset-card/DatasetCard'
+// import { FileCard } from './file-card/FileCard'
+import styles from './ItemsList.module.scss'
 
 interface ItemsListProps {
   items: CollectionItem[]
@@ -56,6 +58,8 @@ export const ItemsList = forwardRef(
     const showSentrySkeleton = hasNextPage && !error && !isEmptyItems
     const showNotSentrySkeleton = isLoadingItems && isEmptyItems
 
+    // TODO:ME When search is too fast, switching from no results to loading skeleton to results gives a flicker effect
+
     return (
       <section ref={rootRef}>
         <div
@@ -83,40 +87,23 @@ export const ItemsList = forwardRef(
                 )}
               </header>
 
-              {/* TODO:ME After updating js-dataverse use case, assert by the type wich card to render */}
               <ul>
                 {items.map((collectionItem, index) => {
-                  // console.log(collectionItem)
-                  // if (collectionItem?.type === CollectionItemType.COLLECTION) {
-                  //   return (
-                  //     <li
-                  //       style={{ height: 100, border: 'solid 2px black' }}
-                  //       key={index}
-                  //       // key={`${dataset.persistentId}-${dataset.version.id}`}
-                  //     >
-                  //       <p>This is a Collection</p>
-                  //     </li>
-                  //   )
-                  // }
                   // TODO:ME make unique keys specially for datasets and files also maybe?
 
                   return (
-                    <li
-                      key={index}
-                      // key={`${dataset.persistentId}-${dataset.version.id}`}
-                    >
+                    <li key={`${collectionItem.type}-${index}`}>
                       {collectionItem?.type === CollectionItemType.COLLECTION && (
                         <CollectionCard collectionPreview={collectionItem} />
                       )}
                       {collectionItem?.type === CollectionItemType.DATASET && (
-                        <p>This is a Dataset</p>
+                        <DatasetCard datasetPreview={collectionItem} />
                       )}
-                      {collectionItem?.type === CollectionItemType.FILE && <p>This is a File</p>}
-                      {/* <p>
-                        This is a : {collectionItem?.type === 'file' && 'File'}
-                        {collectionItem?.type === 'dataset' && 'Dataset'}
-                        {collectionItem?.type === 'collection' && 'Collection'}
-                      </p> */}
+
+                      {collectionItem?.type === CollectionItemType.FILE && (
+                        <p style={{ border: 'solid 1px red', margin: 0 }}>Here goes a File Card</p>
+                        // <FileCard filePreview={collectionItem as FileItemTypePreview} />
+                      )}
                     </li>
                   )
                 })}

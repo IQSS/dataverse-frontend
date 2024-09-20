@@ -1,12 +1,12 @@
-import styles from './CollectionCard.module.scss'
-import { LinkToPage } from '../../../shared/link-to-page/LinkToPage'
-import { Route } from '../../../Route.enum'
 import { Icon, IconName } from '@iqss/dataverse-design-system'
-import { CollectionPreview } from '../../../../collection/domain/models/CollectionPreview'
-import { DvObjectType } from '../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { Route } from '../../../../Route.enum'
+import { CollectionItemTypePreview } from '../../../../../collection/domain/models/CollectionItemTypePreview'
+import { DvObjectType } from '../../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { LinkToPage } from '../../../../shared/link-to-page/LinkToPage'
+import styles from './CollectionCard.module.scss'
 
 interface CollectionCardCardThumbnailProps {
-  collectionPreview: CollectionPreview
+  collectionPreview: CollectionItemTypePreview
 }
 
 export function CollectionCardThumbnail({ collectionPreview }: CollectionCardCardThumbnailProps) {

@@ -2,6 +2,8 @@ import { faker } from '@faker-js/faker'
 import { DatasetPreview } from '../../../../../src/dataset/domain/models/DatasetPreview'
 import { DatasetVersionMother } from './DatasetMother'
 import { FakerHelper } from '../../../shared/FakerHelper'
+import { CollectionItemType } from '../../../../../src/collection/domain/models/CollectionItemType'
+import { PublicationStatus } from '../../../../../src/shared/core/domain/models/PublicationStatus'
 
 export class DatasetPreviewMother {
   static createMany(count: number): DatasetPreview[] {
@@ -23,10 +25,14 @@ export class DatasetPreviewMother {
     }
 
     return new DatasetPreview(
+      CollectionItemType.DATASET,
       datasetPreview.persistentId,
       datasetPreview.version,
       datasetPreview.releaseOrCreateDate,
       datasetPreview.description,
+      [PublicationStatus.Published],
+      faker.lorem.word(),
+      faker.lorem.word(),
       datasetPreview.thumbnail
     )
   }

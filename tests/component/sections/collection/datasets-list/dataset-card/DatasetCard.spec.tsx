@@ -1,12 +1,12 @@
 import { DatasetPreviewMother } from '../../../../dataset/domain/models/DatasetPreviewMother'
-import { DatasetCard } from '../../../../../../src/sections/collection/datasets-list/dataset-card/DatasetCard'
+import { DatasetCard } from '../../../../../../src/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCard'
 import { DateHelper } from '../../../../../../src/shared/helpers/DateHelper'
 import styles from '../../../../../../src/sections/collection/datasets-list/dataset-card/DatasetCard.module.scss'
 
 describe('DatasetCard', () => {
   it('should render the card', () => {
     const dataset = DatasetPreviewMother.createWithThumbnail()
-    cy.customMount(<DatasetCard dataset={dataset} />)
+    cy.customMount(<DatasetCard datasetPreview={dataset} />)
 
     cy.findByText(dataset.version.title).should('exist')
 
@@ -17,6 +17,6 @@ describe('DatasetCard', () => {
       .parent()
       .parent()
       .should('have.class', styles['citation-box'])
-    cy.findByText(dataset.abbreviatedDescription).should('exist')
+    cy.findByText(dataset.description).should('exist')
   })
 })

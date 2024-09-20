@@ -5,7 +5,7 @@
 .container {
   margin: 6px 0;
   padding: 4px 10px;
-  border: 1px solid $dv-info-border-color;
+  border: 1px solid $dv-file-border-color;
 }
 
 .header {
@@ -14,16 +14,13 @@
 }
 
 .title {
-  display: flex;
-
-  > * {
-    margin-right: .5em;
-  }
+  display: flex;gap: 8px;
 }
 
 .icon {
   margin-top: 2px;
   font-size: 1.3em;
+  line-height: 1.1;
 
   > div >span {
     margin-right: 0;
@@ -42,13 +39,20 @@
 
 .info {
   display: flex;
+  color: $dv-subtext-color;
+}
+
+.card-info-container {
+  display: flex;
+  font-size: $dv-font-size-sm;
 }
 
 .description {
-  display: flex;
+  display: -webkit-box; -webkit-line-clamp: 3;  line-clamp: 3; -webkit-box-orient: vertical;
   flex-direction: column;
   width: 100%;
-  font-size: $dv-font-size-sm;
+  overflow: hidden;
+  color: black;
 }
 
 .date {

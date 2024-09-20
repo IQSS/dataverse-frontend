@@ -8,14 +8,13 @@ import {
   getCollectionItems
 } from '@iqss/dataverse-client-javascript'
 import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
-import { JSCollectionPreviewMapper } from '../mappers/JSCollectionPreviewMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'
 import { CollectionFacet } from '../../domain/models/CollectionFacet'
 import { CollectionUserPermissions } from '../../domain/models/CollectionUserPermissions'
 import { CollectionItemsPaginationInfo } from '../../domain/models/CollectionItemsPaginationInfo'
 import { CollectionItemSubset } from '../../domain/models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCriteria'
-import { CollectionItemType } from '../../domain/models/CollectionItemType'
+import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id: string): Promise<Collection> {
@@ -40,7 +39,6 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
       .then((jsCollectionUserPermissions) => jsCollectionUserPermissions)
   }
 
-  // TODO:ME After updating previews object to match the response models we should not see ts error anymore under the return keyword
   getItems(
     collectionId: string,
     paginationInfo: CollectionItemsPaginationInfo,
@@ -49,17 +47,12 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     return getCollectionItems
       .execute(collectionId, paginationInfo?.pageSize, paginationInfo?.offset, searchCriteria)
       .then((jsCollectionItemSubset) => {
-        const collectionPreviewsMapped = jsCollectionItemSubset.items
-          .filter((item) => item.type === CollectionItemType.COLLECTION)
-          .map((item) => JSCollectionPreviewMapper.toCollectionPreview(item))
-
-        // TODO:ME This will change, I need a mapper for all types
-        const jsCollectionItemsWithoutCollections = jsCollectionItemSubset.items.filter(
-          (item) => item.type !== CollectionItemType.COLLECTION
+        const collectionItemsPreviewsMapped = JSCollectionItemsMapper.toCollectionItemsPreviews(
+          jsCollectionItemSubset.items
         )
 
         return {
-          items: [...jsCollectionItemsWithoutCollections, ...collectionPreviewsMapped],
+          items: collectionItemsPreviewsMapped,
           totalItemCount: jsCollectionItemSubset.totalItemCount
         }
       })
