@@ -1,5 +1,7 @@
 {
   "asterisksIndicateRequiredFields": "Asterisks indicate required fields",
   "remove": "Remove",
-  "add": "Add"
+  "add": "Add",
+  "cancel": "Cancel",
+  "continue": "Continue"
 }

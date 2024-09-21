@@ -27,5 +27,6 @@ export const RouteWithParams = {
 export enum QueryParamKey {
   VERSION = 'version',
   PERSISTENT_ID = 'persistentId',
+  COLLECTION_ID = 'collectionId',
   QUERY = 'q'
 }

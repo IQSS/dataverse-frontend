@@ -38,4 +38,11 @@ export class CollectionMockRepository implements CollectionRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+  publish(_persistentId: string): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
 }
