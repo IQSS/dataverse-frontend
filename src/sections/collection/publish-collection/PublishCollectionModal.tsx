@@ -21,8 +21,8 @@ export function PublishCollectionModal({
   collectionId,
   handleClose
 }: PublishCollectionModalProps) {
-  const { t: tCollection } = useTranslation('collection')
   const { t: tShared } = useTranslation('shared')
+  const { t: tCollection } = useTranslation('collection')
 
   const navigate = useNavigate()
   const { submissionStatus, submitPublish, publishError } = usePublishCollection(
@@ -39,7 +39,7 @@ export function PublishCollectionModal({
   return (
     <Modal show={show} onHide={handleClose} size="xl">
       <Modal.Header>
-        <Modal.Title>Publish Dataset</Modal.Title>
+        <Modal.Title>Publish Collection</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Stack direction="vertical">
