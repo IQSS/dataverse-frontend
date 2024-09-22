@@ -95,10 +95,9 @@ services:
     hostname: dvproxy
     build:
       context: ./dvproxy
-      dockerfile: ./dvproxy/Dockerfile
+      dockerfile: ./Dockerfile
       network: host
     restart: on-failure
-    user: app
     environment:
       DATAVERSE_SERVER: ${DATAVERSE_SERVER}
       API_KEY: ${API_KEY}
