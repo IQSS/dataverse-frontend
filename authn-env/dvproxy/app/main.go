@@ -36,7 +36,6 @@ func main() {
 
 func handle(w http.ResponseWriter, r *http.Request) {
 	client := api.NewClient(dataverseServer)
-	fmt.Println(r.Header)
 	client.User = r.Header.Get(userHeader)
 	client.AdminApiKey = apiKey
 	client.UnblockKey = unblockKey
