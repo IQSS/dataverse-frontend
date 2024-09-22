@@ -9,7 +9,7 @@
 # Or:
 #    make keycloak-<command> (eg. make keycloak-up, make keycloak-down)
 #
-# Access http://oauth2-proxy.localtest.me:4180 to initiate a login cycle using user=admin@example.com, password=password
+# Access http://oauth2-proxy.localtest.me:4180/spa to initiate a login cycle using user=admin@example.com, password=password
 # Access http://keycloak.localtest.me:9080 with the same credentials to check out the settings
 services:
   oauth2-proxy:
