@@ -15,6 +15,7 @@ import { CollectionInfo } from './CollectionInfo'
 import { Trans, useTranslation } from 'react-i18next'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
+import { PublishCollectionButton } from './PublishCollectionButton'
 
 interface CollectionProps {
   repository: CollectionRepository
@@ -43,7 +44,7 @@ export function Collection({
 
   const canUserAddCollection = Boolean(collectionUserPermissions?.canAddCollection)
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
-
+  const canUserPublishCollection = user && Boolean(collectionUserPermissions?.canPublishCollection)
   const showAddDataActions = user && (canUserAddCollection || canUserAddDataset)
 
   const { t } = useTranslation('collection')
@@ -77,6 +78,11 @@ export function Collection({
                   }}
                 />
               </Alert>
+            )}
+            {canUserPublishCollection && (
+              <div className={styles.container}>
+                <PublishCollectionButton repository={repository} collectionId={collection.id} />
+              </div>
             )}
             {showAddDataActions && (
               <div className={styles.container}>

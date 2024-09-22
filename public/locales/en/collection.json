@@ -4,6 +4,7 @@
     "anonymous": "This collection currently has no datasets. Please <1>log in</1> to see if you are able to add to it."
   },
   "publish": {
+    "button": "Publish",
     "question": "Are you sure you want to publish your collection? Once you do so it must remain published.",
     "error": "There was an error publishing your collection."
   },
