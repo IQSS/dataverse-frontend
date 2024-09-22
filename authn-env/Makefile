@@ -5,8 +5,8 @@ SHELL = /bin/bash
 
 .PHONY: keycloak-up
 keycloak-up:
-	docker compose -f docker-compose-keycloak.yaml up -d --build
+	docker compose -f docker-compose-keycloak.yml up -d --build
 
 .PHONY: keycloak-%
 keycloak-%:
-	docker compose -f docker-compose-keycloak.yaml $*
+	docker compose -f docker-compose-keycloak.yml $*
