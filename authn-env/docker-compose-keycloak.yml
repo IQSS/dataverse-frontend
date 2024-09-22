@@ -1,0 +1,117 @@
+# see: https://github.com/oauth2-proxy/oauth2-proxy/blob/master/contrib/local-environment/docker-compose-keycloak.yaml
+# This docker-compose file can be used to bring up an example instance of oauth2-proxy
+# for manual testing and exploration of features.
+# Alongside OAuth2-Proxy, this file also starts Keycloak to act as the identity provider,
+# dvproxy as an example upstream.
+#
+# This can either be created using docker-compose
+#    docker-compose -f docker-compose-keycloak.yaml <command>
+# Or:
+#    make keycloak-<command> (eg. make keycloak-up, make keycloak-down)
+#
+# Access http://oauth2-proxy.localtest.me:4180 to initiate a login cycle using user=admin@example.com, password=password
+# Access http://keycloak.localtest.me:9080 with the same credentials to check out the settings
+services:
+  oauth2-proxy:
+    container_name: oauth2-proxy
+    image: bitnami/oauth2-proxy:latest
+    command: --config /oauth2-proxy.cfg
+    hostname: oauth2-proxy
+    volumes:
+      - "./oauth2-proxy-keycloak.cfg:/oauth2-proxy.cfg"
+    restart: unless-stopped
+    ports:
+      - 4180:4180/tcp
+    networks:
+      keycloak: {}
+      dataverse: {}
+      oauth2-proxy: {}
+    depends_on:
+      - dev_nginx
+      - keycloak
+
+  keycloak:
+    container_name: keycloak
+    image: bitnami/keycloak:latest
+    hostname: keycloak
+    command:
+      - 'start-dev'
+      - '--http-port=9080'
+      - '--import-realm'
+    volumes:
+      - ./keycloak:/opt/keycloak/data/import
+    environment:
+      KC_HTTP_PORT: 9080
+      KEYCLOAK_ADMIN: admin@example.com
+      KEYCLOAK_ADMIN_PASSWORD: password
+    ports:
+      - 9080:9080/tcp
+    networks:
+      keycloak:
+        aliases:
+          - keycloak.localtest.me
+
+  dev_nginx:
+    container_name: 'dev_nginx_proxy'
+    hostname: dataverse
+    image: nginx:stable
+    ports:
+      - '8000:80'
+    networks:
+      dataverse:
+        aliases:
+          - dataverse.localtest.me
+    depends_on:
+      - dvproxy
+      - dev_frontend
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./docker-dev-volumes/nginx/logs:/var/log/nginx/
+
+  dev_frontend:
+    container_name: 'authn_frontend'
+    hostname: frontend
+    build:
+      context: ../
+      dockerfile: ./dev.Dockerfile
+      network: host
+    expose:
+      - '5173'
+    stdin_open: true
+    networks:
+      - dataverse
+    depends_on:
+      - dvproxy
+    environment:
+      - VITE_DATAVERSE_BACKEND_URL=http://localhost:8000
+    volumes:
+      - ../:/usr/src/app
+      - ../dev-env/vite.config.ts:/usr/src/app/vite.config.ts
+      - /usr/src/app/dev-env
+      - /usr/src/app/node_modules
+
+  dvproxy:
+    container_name: 'dvproxy'
+    hostname: dvproxy
+    build:
+      context: ./dvproxy
+      dockerfile: ./dvproxy/Dockerfile
+      network: host
+    restart: on-failure
+    user: app
+    environment:
+      DATAVERSE_SERVER: ${DATAVERSE_SERVER}
+      API_KEY: ${API_KEY}
+      UNBLOCK_KEY: ${UNBLOCK_KEY}
+      USER_HEADER: ${USER_HEADER}
+    expose:
+      - '8080'
+    networks:
+      - dataverse
+    privileged: false
+
+networks:
+  dataverse:
+    driver: bridge
+  keycloak: {}
+  oauth2-proxy: {}
