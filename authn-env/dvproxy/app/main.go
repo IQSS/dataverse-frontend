@@ -42,8 +42,6 @@ func handle(w http.ResponseWriter, r *http.Request) {
 	req := client.NewRequest(r.URL.Path, r.Method, r.Body, r.Header)
 	res, err := api.DoStream(r.Context(), req)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
 		return
 	}
 	defer res.Close()
