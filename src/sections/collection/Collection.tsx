@@ -79,7 +79,8 @@ export function Collection({
                 />
               </Alert>
             )}
-            {canUserPublishCollection && (
+
+            {!collection.isReleased && canUserPublishCollection && (
               <div className={styles.container}>
                 <PublishCollectionButton repository={repository} collectionId={collection.id} />
               </div>
