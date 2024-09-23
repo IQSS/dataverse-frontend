@@ -39,7 +39,7 @@ describe('PublishCollectionModal', () => {
     // Check if the modal is rendered
     cy.findByText('Publish Collection').should('exist')
     cy.contains('Are you sure you want to publish your collection?').should('exist')
-    cy.findByText('Continue').click()
+    cy.findByRole('button', { name: 'Continue' }).click()
     cy.get('@repositoryPublish').should('have.been.calledWith', 'testCollectionId')
   })
 })
