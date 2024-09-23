@@ -6,7 +6,7 @@ import { getCollectionById } from '../../collection/domain/useCases/getCollectio
 export function useCollection(
   collectionRepository: CollectionRepository,
   collectionId: string,
-  published: boolean
+  published?: boolean
 ) {
   const [isLoading, setIsLoading] = useState(true)
   const [collection, setCollection] = useState<Collection>()

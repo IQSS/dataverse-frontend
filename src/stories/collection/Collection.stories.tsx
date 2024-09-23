@@ -30,6 +30,7 @@ export const Default: Story = {
       datasetRepository={new DatasetMockRepository()}
       id="collection"
       created={false}
+      published={false}
     />
   )
 }
@@ -42,6 +43,7 @@ export const InfiniteScrollingEnabled: Story = {
       id="collection"
       infiniteScrollEnabled={true}
       created={false}
+      published={false}
     />
   )
 }
@@ -53,6 +55,7 @@ export const Loading: Story = {
       datasetRepository={new DatasetLoadingMockRepository()}
       id="collection"
       created={false}
+      published={false}
     />
   )
 }
@@ -64,6 +67,7 @@ export const NoResults: Story = {
       datasetRepository={new NoDatasetsMockRepository()}
       id="collection"
       created={false}
+      published={false}
     />
   )
 }
@@ -76,6 +80,7 @@ export const LoggedIn: Story = {
       datasetRepository={new DatasetMockRepository()}
       id="collection"
       created={false}
+      published={false}
     />
   )
 }
@@ -88,6 +93,19 @@ export const Created: Story = {
       datasetRepository={new NoDatasetsMockRepository()}
       id="collection"
       created={true}
+      published={false}
+    />
+  )
+}
+export const Published: Story = {
+  decorators: [WithLoggedInUser],
+  render: () => (
+    <Collection
+      repository={new CollectionMockRepository()}
+      datasetRepository={new NoDatasetsMockRepository()}
+      id="collection"
+      created={false}
+      published={true}
     />
   )
 }
