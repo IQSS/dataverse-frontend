@@ -86,4 +86,12 @@ describe('Create Collection', () => {
       cy.findByLabelText('Topic Classification Term').should('exist')
     })
   })
+
+  it('redirects to the Log in page when the user is not authenticated', () => {
+    cy.wrap(TestsUtils.logout())
+
+    cy.visit('/spa/collections/root/create')
+    cy.get('#login-container').should('exist')
+    cy.url().should('include', '/loginpage.xhtml')
+  })
 })
