@@ -9,10 +9,11 @@
 # Or:
 #    make keycloak-<command> (eg. make keycloak-up, make keycloak-down)
 #
-# Access SPA http://oauth2-proxy.localtest.me:4180/spa/ to initiate a login cycle using user=admin@example.com, password=password
-# Access API http://oauth2-proxy.localtest.me:4180/api/v1/users/:me
-# Access public SPA http://dataverse-public.localtest.me:9000/spa/ to initiate a login cycle using user=admin@example.com, password=password
+# Access public SPA http://dataverse-public.localtest.me:9000/
 # Access public API http://dataverse-public.localtest.me:9000/api/v1/users/:me
+# click on "Log In" and login with user=admin@example.com, password=password, or use:
+# Access authenticated SPA http://oauth2-proxy.localtest.me:4180/ to initiate a login cycle using user=admin@example.com, password=password
+# Access authenticated API http://oauth2-proxy.localtest.me:4180/api/v1/users/:me to initiate a login cycle using user=admin@example.com, password=password
 # Access http://keycloak.localtest.me:9080 with the same credentials to check out the settings
 services:
 
