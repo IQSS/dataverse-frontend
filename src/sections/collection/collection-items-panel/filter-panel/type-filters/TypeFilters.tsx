@@ -45,7 +45,7 @@ export const TypeFilters = ({
         label={
           <>
             <Icon name={IconName.COLLECTION} />
-            <span>Collections (19)</span>
+            <span>Collections</span>
           </>
         }
         checked={Boolean(currentItemTypes?.includes(CollectionItemType.COLLECTION))}
@@ -59,7 +59,7 @@ export const TypeFilters = ({
         label={
           <>
             <Icon name={IconName.DATASET} />
-            <span>Datasets (32)</span>
+            <span>Datasets</span>
           </>
         }
         checked={Boolean(currentItemTypes?.includes(CollectionItemType.DATASET))}
@@ -73,7 +73,7 @@ export const TypeFilters = ({
         label={
           <>
             <Icon name={IconName.FILE} />
-            <span>Files (10,081)</span>
+            <span>Files</span>
           </>
         }
         checked={Boolean(currentItemTypes?.includes(CollectionItemType.FILE))}

@@ -88,25 +88,23 @@ export const ItemsList = forwardRef(
               </header>
 
               <ul>
-                {items.map((collectionItem, index) => {
-                  // TODO:ME make unique keys specially for datasets and files also maybe?
+                {items.map((collectionItem, index) => (
+                  <li key={`${collectionItem.type}-${index}`}>
+                    {collectionItem?.type === CollectionItemType.COLLECTION && (
+                      <CollectionCard collectionPreview={collectionItem} />
+                    )}
+                    {collectionItem?.type === CollectionItemType.DATASET && (
+                      <DatasetCard datasetPreview={collectionItem} />
+                    )}
 
-                  return (
-                    <li key={`${collectionItem.type}-${index}`}>
-                      {collectionItem?.type === CollectionItemType.COLLECTION && (
-                        <CollectionCard collectionPreview={collectionItem} />
-                      )}
-                      {collectionItem?.type === CollectionItemType.DATASET && (
-                        <DatasetCard datasetPreview={collectionItem} />
-                      )}
-
-                      {collectionItem?.type === CollectionItemType.FILE && (
-                        <p style={{ border: 'solid 1px red', margin: 0 }}>Here goes a File Card</p>
-                        // <FileCard filePreview={collectionItem as FileItemTypePreview} />
-                      )}
-                    </li>
-                  )
-                })}
+                    {collectionItem?.type === CollectionItemType.FILE && (
+                      <p style={{ border: 'solid 1px red', margin: 0, minHeight: 130 }}>
+                        Here goes a File Card
+                      </p>
+                      // <FileCard filePreview={collectionItem as FileItemTypePreview} />
+                    )}
+                  </li>
+                ))}
               </ul>
             </>
           )}

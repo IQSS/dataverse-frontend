@@ -60,6 +60,27 @@ export const CollectionItemsPanel = ({
     collectionId
   })
 
+  // TODO:ME Detect with popstate event when the user goes back or forward in the browser history to perform the search again.
+  /*
+    Could be good to move it to a custom hook that receives the currentSearchCriteria and the loadMore function
+    CurrentSearchCriteria will be outdated, due to change only when is set by setSearchParams
+    Could be good to instead of calling load more, call the setSearchParams with the new search params but reading them with URLSearchParams
+    And also create a reausable function that accepts searchParams from both useSearchParams and URLSearchParams
+  */
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      console.log(currentSearchCriteria)
+      console.log('Navegación hacia atrás o adelante detectada', event)
+    }
+
+    window.addEventListener('popstate', handlePopState)
+
+    return () => {
+      console.log('Removing popstate event listener')
+      window.removeEventListener('popstate', handlePopState)
+    }
+  }, [])
+
   async function handleLoadMoreOnBottomReach(currentPagination: CollectionItemsPaginationInfo) {
     let paginationInfoToSend = currentPagination
     if (totalAvailable !== undefined) {

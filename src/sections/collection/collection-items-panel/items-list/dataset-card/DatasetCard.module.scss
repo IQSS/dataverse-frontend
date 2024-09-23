@@ -70,6 +70,8 @@
     background-color: color.adjust($dv-primary-color, $lightness: 48%);
     border-radius: 4px;
 
+    // TODO:ME Could be good to apply line-clamp here also to avoid long citations, we will need to create a selector to match
+
     &.deaccesioned {
       background-color: color.adjust($dv-danger-box-color, $lightness: 6%);
     }

@@ -3,6 +3,7 @@ import {
   DatasetPublishingStatus,
   DatasetVersion
 } from '../../../../../dataset/domain/models/Dataset'
+import { DatasetCardHelper } from './DatasetCardHelper'
 import { DvObjectType } from '../../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { DatasetThumbnail } from '../../../../dataset/dataset-thumbnail/DatasetThumbnail'
 import { LinkToPage } from '../../../../shared/link-to-page/LinkToPage'
@@ -24,7 +25,10 @@ export function DatasetCardThumbnail({
       <LinkToPage
         page={Route.DATASETS}
         type={DvObjectType.DATASET}
-        searchParams={{ persistentId: persistentId }}>
+        searchParams={DatasetCardHelper.getDatasetSearchParams(
+          persistentId,
+          version.publishingStatus
+        )}>
         <DatasetThumbnail
           title={version.title}
           thumbnail={thumbnail}
