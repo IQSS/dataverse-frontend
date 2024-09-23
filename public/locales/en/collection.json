@@ -8,6 +8,6 @@
     "question": "Are you sure you want to publish your collection? Once you do so it must remain published.",
     "error": "There was an error publishing your collection."
   },
-  "publishedAlert" : "Your collection is now public.",
+  "publishedAlert": "Your collection is now public.",
   "createdAlert": "You have successfully created your collection! To learn more about what you can do with your collection, check out the <anchor>User Guide</anchor>."
 }
