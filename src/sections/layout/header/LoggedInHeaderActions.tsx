@@ -8,6 +8,7 @@ import { User } from '../../../users/domain/models/User'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import { ROOT_COLLECTION_ALIAS } from '../../../collection/domain/models/Collection'
 import { AccountHelper } from '../../account/AccountHelper'
+import { AUTHN_URL } from '../../../config'
 
 interface LoggedInHeaderActionsProps {
   user: User
@@ -29,7 +30,7 @@ export const LoggedInHeaderActions = ({
 
   const onLogoutClick = () => {
     void logout().then(() => {
-      navigate(`${Route.LOG_OUT}`)
+      window.location.href = `${AUTHN_URL}${Route.LOG_OUT}`
     })
   }
 
