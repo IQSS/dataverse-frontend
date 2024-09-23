@@ -11,8 +11,13 @@
 #
 # Access SPA http://oauth2-proxy.localtest.me:4180/spa/ to initiate a login cycle using user=admin@example.com, password=password
 # Access API http://oauth2-proxy.localtest.me:4180/api/v1/users/:me
+# Access public SPA http://dataverse-public.localtest.me:9000/spa/ to initiate a login cycle using user=admin@example.com, password=password
+# Access public API http://dataverse-public.localtest.me:9000/api/v1/users/:me
 # Access http://keycloak.localtest.me:9080 with the same credentials to check out the settings
 services:
+
+# secured access
+
   oauth2-proxy:
     container_name: oauth2-proxy
     image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
@@ -56,8 +61,6 @@ services:
     container_name: 'dev_nginx_proxy'
     hostname: dataverse
     image: nginx:stable
-    ports:
-      - '8000:80'
     networks:
       dataverse:
         aliases:
@@ -76,8 +79,6 @@ services:
       context: ../
       dockerfile: ./dev.Dockerfile
       network: host
-    expose:
-      - '5173'
     stdin_open: true
     networks:
       - dataverse
@@ -104,11 +105,42 @@ services:
       API_KEY: ${API_KEY}
       UNBLOCK_KEY: ${UNBLOCK_KEY}
       USER_HEADER: ${USER_HEADER}
-    expose:
-      - '8080'
     networks:
       - dataverse
     privileged: false
+
+# public access
+
+  dvproxy-public:
+    container_name: 'dvproxy-public'
+    hostname: dvproxy-public
+    build:
+      context: ./dvproxy
+      dockerfile: ./Dockerfile
+      network: host
+    restart: on-failure
+    environment:
+      DATAVERSE_SERVER: ${DATAVERSE_SERVER}
+    networks:
+      - dataverse
+    privileged: false
+
+  dev_nginx-public:
+    container_name: 'dev_nginx_proxy-public'
+    hostname: dataverse-pulic
+    image: nginx:stable
+    ports:
+      - '9000:80'
+    networks:
+      dataverse:
+        aliases:
+          - dataverse-public.localtest.me
+    depends_on:
+      - dvproxy-public
+      - dev_frontend
+    volumes:
+      - ./nginx-public.conf:/etc/nginx/nginx.conf
+      - ./docker-dev-volumes/nginx/logs:/var/log/nginx/
 
 networks:
   dataverse:
