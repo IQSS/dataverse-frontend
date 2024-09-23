@@ -4,7 +4,7 @@ export enum Route {
   HOME = '/',
   SIGN_UP = '/dataverseuser.xhtml?editMode=CREATE&redirectPage=%2Fdataverse.xhtml',
   LOG_IN = '/',
-  LOG_OUT = '/',
+  LOG_OUT = '/oauth2/sign_out',
   DATASETS = '/datasets',
   CREATE_DATASET = '/datasets/:collectionId/create',
   UPLOAD_DATASET_FILES = '/datasets/upload-files',
