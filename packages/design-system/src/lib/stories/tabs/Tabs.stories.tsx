@@ -43,3 +43,19 @@ export const Default: Story = {
     </Tabs>
   )
 }
+
+export const SomeTabDisabled: Story = {
+  render: () => (
+    <Tabs defaultActiveKey="key-1">
+      <Tabs.Tab eventKey="key-1" title="Tab 1">
+        <ExampleContent title="Content 1" />
+      </Tabs.Tab>
+      <Tabs.Tab eventKey="key-2" title="Tab 2" disabled>
+        <ExampleContent title="Content 2" />
+      </Tabs.Tab>
+      <Tabs.Tab eventKey="key-3" title="Tab 3">
+        <ExampleContent title="Content 3" />
+      </Tabs.Tab>
+    </Tabs>
+  )
+}

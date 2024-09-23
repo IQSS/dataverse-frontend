@@ -28,7 +28,7 @@ describe('BreadcrumbsGenerator', () => {
     cy.findByRole('link', { name: 'Collection' })
       .should('exist')
       .should('have.attr', 'href', '/collections/collection1')
-    cy.findByRole('link', { name: 'Root' }).should('have.attr', 'href', '/')
+    cy.findByRole('link', { name: 'Root' }).should('have.attr', 'href', '/collections')
   })
 
   it('shows the breadcrumb active when the hierarchy has only one item', () => {

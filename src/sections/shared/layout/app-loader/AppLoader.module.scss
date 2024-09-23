@@ -1,0 +1,7 @@
+@import 'src/assets/variables';
+
+.app-loader {
+  display: grid;
+  place-content: center;
+  min-height: $main-container-available-height;
+}
