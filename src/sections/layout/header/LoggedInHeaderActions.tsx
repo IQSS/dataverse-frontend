@@ -9,8 +9,6 @@ import { CollectionRepository } from '../../../collection/domain/repositories/Co
 import { ROOT_COLLECTION_ALIAS } from '../../../collection/domain/models/Collection'
 import { AccountHelper } from '../../account/AccountHelper'
 
-const currentPage = 0
-
 interface LoggedInHeaderActionsProps {
   user: User
   collectionRepository: CollectionRepository
@@ -31,7 +29,7 @@ export const LoggedInHeaderActions = ({
 
   const onLogoutClick = () => {
     void logout().then(() => {
-      navigate(currentPage)
+      navigate(`${Route.LOG_OUT}`)
     })
   }
 
