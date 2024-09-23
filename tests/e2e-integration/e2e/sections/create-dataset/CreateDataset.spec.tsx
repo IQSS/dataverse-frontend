@@ -50,4 +50,12 @@ describe('Create Dataset', () => {
 
     cy.findByRole('heading', { name: 'Root' }).should('exist')
   })
+
+  it('redirects to the Log In page when the user is not authenticated', () => {
+    cy.wrap(TestsUtils.logout())
+
+    cy.visit('/spa/datasets/root/create')
+    cy.get('#login-container').should('exist')
+    cy.url().should('include', '/loginpage.xhtml')
+  })
 })

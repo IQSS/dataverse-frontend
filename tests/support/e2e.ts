@@ -21,6 +21,20 @@ import { BASE_URL } from '../../src/config'
 
 ApiConfig.init(`${BASE_URL}/api/v1`, DataverseApiAuthMechanism.SESSION_COOKIE)
 
+//https://github.com/cypress-io/cypress/issues/18182
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace Cypress {
+    interface Chainable {
+      wrap<E extends Node = HTMLElement>(
+        element: E | JQuery<E>,
+        options?: Partial<Loggable & Timeoutable>
+      ): Chainable<JQuery<E>>
+      wrap<S>(object: S | Promise<S>, options?: Partial<Loggable & Timeoutable>): Chainable<S>
+    }
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import registerCypressGrep from '@cypress/grep'
