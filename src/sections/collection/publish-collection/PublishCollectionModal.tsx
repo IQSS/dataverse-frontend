@@ -4,9 +4,9 @@ import { usePublishCollection } from './usePublishCollection'
 
 import styles from './PublishCollectionModal.module.scss'
 import { useNavigate } from 'react-router-dom'
-import { QueryParamKey, Route } from '../../Route.enum'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
+import { RouteWithParams } from '../../Route.enum'
 
 interface PublishCollectionModalProps {
   show: boolean
@@ -32,7 +32,9 @@ export function PublishCollectionModal({
   )
 
   function onPublishSucceed() {
-    navigate(`${Route.COLLECTIONS}?${QueryParamKey.COLLECTION_ID}=${collectionId}`)
+    navigate(RouteWithParams.COLLECTIONS(collectionId), {
+      state: { published: true }
+    })
     handleClose()
   }
 
