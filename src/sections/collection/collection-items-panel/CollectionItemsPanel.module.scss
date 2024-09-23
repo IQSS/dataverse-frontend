@@ -27,7 +27,6 @@
   flex-direction: column;
   gap: 0.5rem;
 
-  // TODO:ME Add media queries in variables
   @media (min-width: 992px) {
     display: grid;
     grid-template-columns: 1fr 3fr;

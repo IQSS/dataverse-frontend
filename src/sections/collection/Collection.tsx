@@ -26,8 +26,7 @@ export function Collection({
   collectionId,
   collectionRepository,
   created,
-  collectionQueryParams,
-  infiniteScrollEnabled = false
+  collectionQueryParams
 }: CollectionProps) {
   useTranslation('collection')
   useScrollTop()

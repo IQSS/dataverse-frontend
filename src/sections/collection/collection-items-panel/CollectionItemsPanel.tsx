@@ -13,6 +13,8 @@ import { QueryParamKey } from '../../Route.enum'
 import { CollectionItemType } from '../../../collection/domain/models/CollectionItemType'
 import { ItemTypeChange } from './filter-panel/type-filters/TypeFilters'
 import styles from './CollectionItemsPanel.module.scss'
+import { useLoadMoreOnPopStateEvent } from '../useLoadMoreOnPopStateEvent'
+import { CollectionHelper } from '../CollectionHelper'
 
 interface CollectionItemsPanelProps {
   collectionId: string
@@ -30,16 +32,14 @@ export const CollectionItemsPanel = ({
   const { setIsLoading } = useLoading()
   const [_, setSearchParams] = useSearchParams()
 
+  useLoadMoreOnPopStateEvent(loadItemsOnBackAndForwardNavigation)
+
   // This object will update every time we update a query param in the URL with the setSearchParams setter
   const currentSearchCriteria = new CollectionSearchCriteria(
     collectionQueryParams.searchQuery,
     collectionQueryParams.typesQuery || [CollectionItemType.COLLECTION, CollectionItemType.DATASET]
   )
 
-  /*
-    TODO:ME For now I think we really shouldnt care about setting an inital page based on the page query param
-    Items in specific page of a list could change while browsing at different times so is not so useful for url sharing.
-  */
   const [paginationInfo, setPaginationInfo] = useState<CollectionItemsPaginationInfo>(
     new CollectionItemsPaginationInfo()
   )
@@ -59,27 +59,6 @@ export const CollectionItemsPanel = ({
     collectionRepository,
     collectionId
   })
-
-  // TODO:ME Detect with popstate event when the user goes back or forward in the browser history to perform the search again.
-  /*
-    Could be good to move it to a custom hook that receives the currentSearchCriteria and the loadMore function
-    CurrentSearchCriteria will be outdated, due to change only when is set by setSearchParams
-    Could be good to instead of calling load more, call the setSearchParams with the new search params but reading them with URLSearchParams
-    And also create a reausable function that accepts searchParams from both useSearchParams and URLSearchParams
-  */
-  useEffect(() => {
-    const handlePopState = (event: PopStateEvent) => {
-      console.log(currentSearchCriteria)
-      console.log('Navegación hacia atrás o adelante detectada', event)
-    }
-
-    window.addEventListener('popstate', handlePopState)
-
-    return () => {
-      console.log('Removing popstate event listener')
-      window.removeEventListener('popstate', handlePopState)
-    }
-  }, [])
 
   async function handleLoadMoreOnBottomReach(currentPagination: CollectionItemsPaginationInfo) {
     let paginationInfoToSend = currentPagination
@@ -170,6 +149,24 @@ export const CollectionItemsPanel = ({
     }
   }
 
+  async function loadItemsOnBackAndForwardNavigation() {
+    const searchParams = new URLSearchParams(window.location.search)
+    const collectionQueryParams = CollectionHelper.defineCollectionQueryParams(searchParams)
+
+    const newCollectionSearchCriteria = new CollectionSearchCriteria(
+      collectionQueryParams.searchQuery,
+      collectionQueryParams.typesQuery
+    )
+
+    const newPaginationInfo = new CollectionItemsPaginationInfo()
+    const totalItemsCount = await loadMore(newPaginationInfo, newCollectionSearchCriteria, true)
+
+    if (totalItemsCount !== undefined) {
+      const paginationInfoUpdated = newPaginationInfo.withTotal(totalItemsCount)
+      setPaginationInfo(paginationInfoUpdated)
+    }
+  }
+
   useEffect(() => {
     setIsLoading(isLoadingItems)
   }, [isLoadingItems, setIsLoading])
@@ -179,7 +176,7 @@ export const CollectionItemsPanel = ({
       <header className={styles['top-wrapper']}>
         <SearchPanel
           onSubmitSearch={handleSearchSubmit}
-          initialSearchValue={currentSearchCriteria.searchText}
+          currentSearchValue={currentSearchCriteria.searchText}
           isLoadingCollectionItems={isLoadingItems}
         />
         <div className={styles['add-data-slot']}>{addDataSlot}</div>
@@ -200,9 +197,7 @@ export const CollectionItemsPanel = ({
           areItemsAvailable={areItemsAvailable}
           hasNextPage={hasNextPage}
           isEmptyItems={isEmptyItems}
-          hasSearchValue={new CollectionSearchCriteria(
-            collectionQueryParams.searchQuery
-          ).hasSearchText()}
+          hasSearchValue={currentSearchCriteria.hasSearchText()}
           paginationInfo={paginationInfo}
           onBottomReach={handleLoadMoreOnBottomReach}
           ref={itemsListContainerRef}

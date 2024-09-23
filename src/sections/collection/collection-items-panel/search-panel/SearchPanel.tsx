@@ -1,20 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Form } from '@iqss/dataverse-design-system'
 import { Search } from 'react-bootstrap-icons'
 import styles from './SearchPanel.module.scss'
 
 interface SearchPanelProps {
-  initialSearchValue?: string
+  currentSearchValue?: string
   isLoadingCollectionItems: boolean
   onSubmitSearch: (searchValue: string) => void
 }
 
 export const SearchPanel = ({
-  initialSearchValue = '',
+  currentSearchValue = '',
   isLoadingCollectionItems,
   onSubmitSearch
 }: SearchPanelProps) => {
-  const [searchValue, setSearchValue] = useState(initialSearchValue)
+  const [searchValue, setSearchValue] = useState(currentSearchValue)
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -29,6 +29,10 @@ export const SearchPanel = ({
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value)
   }
+
+  useEffect(() => {
+    setSearchValue(currentSearchValue)
+  }, [currentSearchValue])
 
   return (
     <div className={styles['search-panel']}>
