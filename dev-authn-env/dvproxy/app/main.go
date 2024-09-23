@@ -37,7 +37,11 @@ func main() {
 func handle(w http.ResponseWriter, r *http.Request) {
 	user := r.Header.Get(userHeader)
 	client := api.NewUrlSigningClient(dataverseServer, user, apiKey, unblockKey)
-	req := client.NewRequest(r.URL.Path, r.Method, r.Body, r.Header)
+	url := r.URL.Path
+	if r.URL.RawQuery != "" {
+		url = fmt.Sprintf("%s?%s", url, r.URL.RawQuery)
+	}
+	req := client.NewRequest(url, r.Method, r.Body, r.Header)
 	res, err := api.DoStream(r.Context(), req)
 	if err != nil {
 		return
