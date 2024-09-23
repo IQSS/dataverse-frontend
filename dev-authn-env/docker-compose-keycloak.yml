@@ -60,38 +60,18 @@ services:
   dev_nginx:
     container_name: 'dev_nginx_proxy'
     hostname: dataverse
-    image: nginx:stable
+    build:
+      context: ../
+      dockerfile: ./dev-authn-env/frontend/Dockerfile
+      network: host
+      args:
+        CONFIG: authn
     networks:
       dataverse:
         aliases:
           - dataverse.localtest.me
     depends_on:
       - dvproxy
-      - dev_frontend
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./docker-dev-volumes/nginx/logs:/var/log/nginx/
-
-  dev_frontend:
-    container_name: 'authn_frontend'
-    hostname: frontend
-    build:
-      context: ../
-      dockerfile: ./dev.Dockerfile
-      network: host
-    stdin_open: true
-    networks:
-      - dataverse
-    depends_on:
-      - dvproxy
-    environment:
-      - VITE_DATAVERSE_BACKEND_URL=http://oauth2-proxy.localtest.me:4180
-      - VITE_DATAVERSE_AUTHN_URL=http://oauth2-proxy.localtest.me:4180
-    volumes:
-      - ../:/usr/src/app
-      - ./vite.config.ts:/usr/src/app/vite.config.ts
-      - /usr/src/app/dev-env
-      - /usr/src/app/node_modules
 
   dvproxy:
     container_name: 'dvproxy'
@@ -128,8 +108,13 @@ services:
 
   dev_nginx-public:
     container_name: 'dev_nginx_proxy-public'
-    hostname: dataverse-pulic
-    image: nginx:stable
+    hostname: dataverse-public
+    build:
+      context: ../
+      dockerfile: ./dev-authn-env/frontend/Dockerfile
+      network: host
+      args:
+        CONFIG: public
     ports:
       - '9000:80'
     networks:
@@ -138,10 +123,6 @@ services:
           - dataverse-public.localtest.me
     depends_on:
       - dvproxy-public
-      - dev_frontend
-    volumes:
-      - ./nginx-public.conf:/etc/nginx/nginx.conf
-      - ./docker-dev-volumes/nginx/logs:/var/log/nginx/
 
 networks:
   dataverse:
