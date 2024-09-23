@@ -3,7 +3,7 @@ import { ROOT_COLLECTION_ALIAS } from '../collection/domain/models/Collection'
 export enum Route {
   HOME = '/',
   SIGN_UP = '/dataverseuser.xhtml?editMode=CREATE&redirectPage=%2Fdataverse.xhtml',
-  LOG_IN = '/spa/',
+  LOG_IN = '/',
   LOG_OUT = '/',
   DATASETS = '/datasets',
   CREATE_DATASET = '/datasets/:collectionId/create',

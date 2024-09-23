@@ -1,14 +1,18 @@
-FROM node:18-alpine AS builder
+FROM node:22-alpine AS builder
 
-WORKDIR /app
-ADD . /app/
+ADD ./dev-authn-env/frontend/git /app/
 ARG CONFIG=public
 COPY ./dev-authn-env/frontend/${CONFIG}/vite.config.ts /app/vite.config.ts
+COPY ./dev-authn-env/frontend/${CONFIG}/.env /app/.env
+COPY ./.npmrc /app/.npmrc
+
+WORKDIR /app/packages/design-system
+RUN npm install && npm run build
 
 WORKDIR /app
-RUN npm run build --configuration=production
+RUN npm install && npm run build
 
-FROM nginx:1.26.0-alpine
+FROM nginx:1.27.1-alpine
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 ARG CONFIG=public
