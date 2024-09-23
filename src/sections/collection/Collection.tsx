@@ -22,6 +22,7 @@ interface CollectionProps {
   datasetRepository: DatasetRepository
   id: string
   created: boolean
+  published: boolean
   page?: number
   infiniteScrollEnabled?: boolean
 }
@@ -31,12 +32,13 @@ export function Collection({
   id,
   datasetRepository,
   created,
+  published,
   page,
   infiniteScrollEnabled = false
 }: CollectionProps) {
   useScrollTop()
   const { user } = useSession()
-  const { collection, isLoading } = useCollection(repository, id)
+  const { collection, isLoading } = useCollection(repository, id, published)
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: id,
     collectionRepository: repository
@@ -79,7 +81,11 @@ export function Collection({
                 />
               </Alert>
             )}
-
+            {published && (
+              <Alert variant="success" dismissible={false}>
+                {t('publishedAlert')}
+              </Alert>
+            )}
             {!collection.isReleased && canUserPublishCollection && (
               <div className={styles.container}>
                 <PublishCollectionButton repository={repository} collectionId={collection.id} />
