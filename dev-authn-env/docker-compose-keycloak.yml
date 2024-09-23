@@ -33,7 +33,7 @@ services:
       dataverse: {}
       oauth2-proxy: {}
     depends_on:
-      - dev_nginx
+      - dataverse
       - keycloak
 
   keycloak:
@@ -57,8 +57,8 @@ services:
         aliases:
           - keycloak.localtest.me
 
-  dev_nginx:
-    container_name: 'dev_nginx_proxy'
+  dataverse:
+    container_name: 'dataverse'
     hostname: dataverse
     build:
       context: ../
@@ -106,8 +106,8 @@ services:
       - dataverse
     privileged: false
 
-  dev_nginx-public:
-    container_name: 'dev_nginx_proxy-public'
+  dataverse-public:
+    container_name: 'dataverse-public'
     hostname: dataverse-public
     build:
       context: ../
