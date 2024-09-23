@@ -1,6 +1,6 @@
 import { CollectionItemTypePreview } from './CollectionItemTypePreview'
 import { DatasetPreview } from '../../../dataset/domain/models/DatasetPreview'
-import { FileItemTypePreview } from './FileItemTypePreview'
+import { FileItemTypePreview } from '../../../files/domain/models/FileItemTypePreview'
 
 export interface CollectionItemSubset {
   items: CollectionItem[]

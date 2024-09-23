@@ -1,21 +1,24 @@
-import { FileItemTypePreview } from '../../../../../collection/domain/models/FileItemTypePreview'
+import { Icon, IconName, Tooltip } from '@iqss/dataverse-design-system'
+import { FileItemTypePreview } from '../../../../../files/domain/models/FileItemTypePreview'
 import { PublicationStatus } from '../../../../../shared/core/domain/models/PublicationStatus'
 import { DvObjectType } from '../../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { FileType } from '../../../../../files/domain/models/FileMetadata'
+import { FileTypeToFileIconMap } from '../../../../file/file-preview/FileTypeToFileIconMap'
+import { FileCardHelper } from './FileCardHelper'
 import { Route } from '../../../../Route.enum'
 import { LinkToPage } from '../../../../shared/link-to-page/LinkToPage'
-import { FileCardHelper } from './FileCardHelper'
 import styles from './FileCard.module.scss'
 
 interface FileCardThumbnailProps {
   filePreview: FileItemTypePreview
-  thumbnail?: string
 }
 
 export function FileCardThumbnail({ filePreview }: FileCardThumbnailProps) {
-  console.log({ filePreview })
+  const iconFileType = new FileType(filePreview.fileContentType)
+  const iconName = FileTypeToFileIconMap[iconFileType.value] || IconName.OTHER
 
   return (
-    <div className={styles.thumbnail}>
+    <div className={styles['card-thumbnail-container']}>
       <LinkToPage
         page={Route.FILES}
         type={DvObjectType.FILE}
@@ -23,8 +26,22 @@ export function FileCardThumbnail({ filePreview }: FileCardThumbnailProps) {
           filePreview.id,
           filePreview.publicationStatuses.includes(PublicationStatus.Draft)
         )}>
-        asd
-        {/* <FileThumbnail file={filePreview} /> */}
+        {filePreview.thumbnail ? (
+          <Tooltip
+            overlay={
+              <div className={styles.tooltip}>
+                <img src={filePreview.thumbnail} alt={filePreview.name} />
+              </div>
+            }
+            placement="top"
+            maxWidth={430}>
+            <img src={filePreview.thumbnail} alt={filePreview.name} />
+          </Tooltip>
+        ) : (
+          <div className={styles.icon}>
+            <Icon name={iconName} />
+          </div>
+        )}
       </LinkToPage>
     </div>
   )

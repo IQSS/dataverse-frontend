@@ -1,45 +1,52 @@
-import styles from './FileCard.module.scss'
-import { DateHelper } from '../../../../shared/helpers/DateHelper'
-import { FileItemTypePreview } from '../../../../collection/domain/models/FileItemTypePreview'
 import { Stack } from '@iqss/dataverse-design-system'
-import { LinkToPage } from '../../../shared/link-to-page/LinkToPage'
-import { Route } from '../../../Route.enum'
-import { FileChecksum } from '../../../dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileChecksum'
-import { FileTabularData } from '../../../dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileTabularData'
+import { PublicationStatus } from '../../../../../shared/core/domain/models/PublicationStatus'
+import { FileItemTypePreview } from '../../../../../files/domain/models/FileItemTypePreview'
+import { DateHelper } from '../../../../../shared/helpers/DateHelper'
 import { FileCardHelper } from './FileCardHelper'
-import { DvObjectType } from '../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
-import { FileLabels } from '../../../file/file-labels/FileLabels'
+import { Route } from '../../../../Route.enum'
+import { DvObjectType } from '../../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { LinkToPage } from '../../../../shared/link-to-page/LinkToPage'
+import { CopyToClipboardButton } from '../../../../dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/copy-to-clipboard-button/CopyToClipboardButton'
+import styles from './FileCard.module.scss'
 
 interface FileCardInfoProps {
   filePreview: FileItemTypePreview
-  persistentId: string
 }
 
-export function FileCardInfo({ filePreview, persistentId }: FileCardInfoProps) {
+export function FileCardInfo({ filePreview }: FileCardInfoProps) {
+  const bytesFormatted = FileCardHelper.formatBytesToCompactNumber(filePreview.sizeInBytes)
+
   return (
     <div className={styles['card-info-container']}>
       <Stack gap={1}>
-        <span className={styles.date}>
-          {DateHelper.toDisplayFormat(filePreview.metadata.depositDate)} -{' '}
+        <div className={styles['date-link-wrapper']}>
+          <time
+            dateTime={filePreview.releaseOrCreateDate.toLocaleDateString()}
+            className={styles.date}>
+            {DateHelper.toDisplayFormat(filePreview.releaseOrCreateDate)}
+          </time>
           <LinkToPage
             page={Route.DATASETS}
             type={DvObjectType.DATASET}
             searchParams={FileCardHelper.getDatasetSearchParams(
-              persistentId,
-              filePreview.datasetPublishingStatus
+              filePreview.datasetPersistentId,
+              filePreview.publicationStatuses.includes(PublicationStatus.Draft)
             )}>
             {filePreview.datasetName}
           </LinkToPage>
-        </span>
-        <span className={styles.info}>
-          <Stack gap={1} direction="horizontal">
-            {filePreview.metadata.type.toDisplayFormat()} - {filePreview.metadata.size.toString()}
-            <FileTabularData tabularData={filePreview.metadata.tabularData} />
-            <FileChecksum checksum={filePreview.metadata.checksum} />
-          </Stack>
-        </span>
-        <FileLabels labels={filePreview.metadata.labels}></FileLabels>
-        <p className={styles.description}>{filePreview.metadata.description}</p>
+        </div>
+
+        <div className={styles.info}>
+          <span>{filePreview.fileType}</span>
+          <span>{`- ${bytesFormatted}`}</span>
+          {filePreview.checksum && (
+            <Stack direction="horizontal" gap={0}>
+              <span>{`- ${filePreview.checksum.type}:`}</span>
+              <CopyToClipboardButton text={filePreview.checksum.value} />
+            </Stack>
+          )}
+        </div>
+        <p className={styles.description}>{filePreview.description}</p>
       </Stack>
     </div>
   )

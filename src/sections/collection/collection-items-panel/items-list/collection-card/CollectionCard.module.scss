@@ -10,17 +10,12 @@
   border-radius: 4px;
 }
 
-.thumbnail-and-info-wrapper {
-  display: flex;
-  gap: 1rem;
-}
-
 .card-header-container {
   display: flex;
   gap: 1rem;
   justify-content: space-between;
 
-  .title {
+  .left-side-content {
     display: flex;
     flex-wrap: wrap;
     column-gap: 8px;
@@ -41,6 +36,11 @@
       margin-right: 0;
     }
   }
+}
+
+.thumbnail-and-info-wrapper {
+  display: flex;
+  gap: 1rem;
 }
 
 .card-thumbnail-container {
@@ -72,10 +72,10 @@
     display: flex;
     flex-wrap: wrap;
     column-gap: 0.5rem;
-  }
 
-  .date {
-    color: $dv-subtext-color;
+    .date {
+      color: $dv-subtext-color;
+    }
   }
 
   .description {

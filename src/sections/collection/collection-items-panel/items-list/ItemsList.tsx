@@ -12,7 +12,7 @@ import { NO_COLLECTION_ITEMS } from '../useGetAccumulatedItems'
 import { CollectionItemType } from '../../../../collection/domain/models/CollectionItemType'
 import { CollectionCard } from './collection-card/CollectionCard'
 import { DatasetCard } from './dataset-card/DatasetCard'
-// import { FileCard } from './file-card/FileCard'
+import { FileCard } from './file-card/FileCard'
 import styles from './ItemsList.module.scss'
 
 interface ItemsListProps {
@@ -96,12 +96,8 @@ export const ItemsList = forwardRef(
                     {collectionItem?.type === CollectionItemType.DATASET && (
                       <DatasetCard datasetPreview={collectionItem} />
                     )}
-
                     {collectionItem?.type === CollectionItemType.FILE && (
-                      <p style={{ border: 'solid 1px red', margin: 0, minHeight: 130 }}>
-                        Here goes a File Card
-                      </p>
-                      // <FileCard filePreview={collectionItem as FileItemTypePreview} />
+                      <FileCard filePreview={collectionItem} />
                     )}
                   </li>
                 ))}

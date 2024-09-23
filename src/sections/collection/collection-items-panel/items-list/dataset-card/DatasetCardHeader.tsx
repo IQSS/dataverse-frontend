@@ -14,8 +14,8 @@ interface DatasetCardHeaderProps {
 
 export function DatasetCardHeader({ persistentId, version }: DatasetCardHeaderProps) {
   return (
-    <div className={styles['card-header-container']}>
-      <div className={styles.title}>
+    <header className={styles['card-header-container']}>
+      <div className={styles['left-side-content']}>
         <LinkToPage
           page={Route.DATASETS}
           type={DvObjectType.DATASET}
@@ -30,6 +30,6 @@ export function DatasetCardHeader({ persistentId, version }: DatasetCardHeaderPr
       <div className={styles['top-right-icon']}>
         <DatasetIcon />
       </div>
-    </div>
+    </header>
   )
 }

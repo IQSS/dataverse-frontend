@@ -1,12 +1,13 @@
-import { FileItemTypePreview } from '../../../../../collection/domain/models/FileItemTypePreview'
-import { FileType } from '../../../../../files/domain/models/FileMetadata'
+import { Icon, IconName } from '@iqss/dataverse-design-system'
 import { PublicationStatus } from '../../../../../shared/core/domain/models/PublicationStatus'
 import { DvObjectType } from '../../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { FileItemTypePreview } from '../../../../../files/domain/models/FileItemTypePreview'
+import { FileType } from '../../../../../files/domain/models/FileMetadata'
+import { FileTypeToFileIconMap } from '../../../../file/file-preview/FileTypeToFileIconMap'
+import { FileCardHelper } from './FileCardHelper'
 import { Route } from '../../../../Route.enum'
 import { LinkToPage } from '../../../../shared/link-to-page/LinkToPage'
 import { DatasetLabels } from '../../../../dataset/dataset-labels/DatasetLabels'
-import { FileCardHelper } from './FileCardHelper'
-import { FileCardIcon } from './FileCardIcon'
 import styles from './FileCard.module.scss'
 
 interface FileCardHeaderProps {
@@ -14,11 +15,12 @@ interface FileCardHeaderProps {
 }
 
 export function FileCardHeader({ filePreview }: FileCardHeaderProps) {
-  const iconFileType = new FileType('text/tab-separated-values', 'Comma Separated Values')
+  const iconFileType = new FileType(filePreview.fileContentType)
+  const iconName = FileTypeToFileIconMap[iconFileType.value] || IconName.OTHER
 
   return (
-    <div className={styles.header}>
-      <div className={styles.title}>
+    <header className={styles['card-header-container']}>
+      <div className={styles['left-side-content']}>
         <LinkToPage
           page={Route.FILES}
           type={DvObjectType.FILE}
@@ -35,9 +37,9 @@ export function FileCardHeader({ filePreview }: FileCardHeaderProps) {
           )}
         />
       </div>
-      <div className={styles.icon}>
-        <FileCardIcon type={iconFileType} />
+      <div className={styles['top-right-icon']}>
+        <Icon name={iconName} />
       </div>
-    </div>
+    </header>
   )
 }

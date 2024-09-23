@@ -2,18 +2,14 @@ import {
   DatasetLabel,
   DatasetLabelSemanticMeaning,
   DatasetLabelValue,
-  DatasetNonNumericVersionSearchParam,
-  DatasetPublishingStatus
+  DatasetNonNumericVersionSearchParam
 } from '../../../../../dataset/domain/models/Dataset'
 import { PublicationStatus } from '../../../../../shared/core/domain/models/PublicationStatus'
 
 export class FileCardHelper {
-  static getDatasetSearchParams(
-    persistentId: string,
-    publishingStatus: DatasetPublishingStatus
-  ): Record<string, string> {
+  static getDatasetSearchParams(persistentId: string, isDraft: boolean): Record<string, string> {
     const params: Record<string, string> = { persistentId: persistentId }
-    if (publishingStatus === DatasetPublishingStatus.DRAFT) {
+    if (isDraft) {
       params.version = DatasetNonNumericVersionSearchParam.DRAFT
     }
     return params
@@ -43,5 +39,16 @@ export class FileCardHelper {
       )
     }
     return labels
+  }
+
+  static formatBytesToCompactNumber(bytes: number): string {
+    const byteValueNumberFormatter = Intl.NumberFormat(undefined, {
+      notation: 'compact',
+      style: 'unit',
+      unit: 'byte',
+      unitDisplay: 'narrow'
+    })
+
+    return byteValueNumberFormatter.format(bytes)
   }
 }

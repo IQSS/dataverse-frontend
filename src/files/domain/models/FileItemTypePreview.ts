@@ -1,5 +1,5 @@
+import { CollectionItemType } from '../../../collection/domain/models/CollectionItemType'
 import { PublicationStatus } from '../../../shared/core/domain/models/PublicationStatus'
-import { CollectionItemType } from './CollectionItemType'
 
 export interface FileItemTypePreview {
   type: CollectionItemType.FILE
@@ -7,7 +7,7 @@ export interface FileItemTypePreview {
   name: string
   persistentId?: string
   url: string
-  imageUrl?: string
+  thumbnail?: string
   description: string
   fileType: string
   fileContentType: string

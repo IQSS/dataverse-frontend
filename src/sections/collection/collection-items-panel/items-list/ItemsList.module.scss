@@ -29,7 +29,7 @@
     background: $dv-warning-box-color;
   }
 
-  header {
+  > header {
     position: sticky;
     top: 0;
     z-index: 10;
@@ -40,7 +40,7 @@
     transform: translateX(calc(var(--inline-padding) * -1));
   }
 
-  ul {
+  > ul {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;

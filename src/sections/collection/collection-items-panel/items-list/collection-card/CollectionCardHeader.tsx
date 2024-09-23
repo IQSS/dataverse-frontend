@@ -11,8 +11,8 @@ interface CollectionCardHeaderProps {
 
 export function CollectionCardHeader({ collectionPreview }: CollectionCardHeaderProps) {
   return (
-    <div className={styles['card-header-container']}>
-      <div className={styles.title}>
+    <header className={styles['card-header-container']}>
+      <div className={styles['left-side-content']}>
         <LinkToPage
           type={DvObjectType.COLLECTION}
           page={Route.COLLECTIONS}
@@ -32,6 +32,6 @@ export function CollectionCardHeader({ collectionPreview }: CollectionCardHeader
       <div className={styles['top-right-icon']}>
         <Icon name={IconName.COLLECTION} />
       </div>
-    </div>
+    </header>
   )
 }

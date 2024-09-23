@@ -9,7 +9,7 @@ export class JSFileItemTypePreviewMapper {
       name: jsFilePreview.name,
       persistentId: jsFilePreview.filePersistentId,
       url: jsFilePreview.url,
-      imageUrl: jsFilePreview.imageUrl,
+      thumbnail: jsFilePreview.imageUrl,
       description: jsFilePreview.description,
       fileType: jsFilePreview.fileType,
       fileContentType: jsFilePreview.fileContentType,
