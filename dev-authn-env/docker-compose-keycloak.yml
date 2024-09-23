@@ -85,10 +85,11 @@ services:
     depends_on:
       - dvproxy
     environment:
-      - VITE_DATAVERSE_BACKEND_URL=http://localhost:8000
+      - VITE_DATAVERSE_BACKEND_URL=http://oauth2-proxy.localtest.me:4180
+      - VITE_DATAVERSE_AUTHN_URL=http://oauth2-proxy.localtest.me:4180
     volumes:
       - ../:/usr/src/app
-      - ../dev-env/vite.config.ts:/usr/src/app/vite.config.ts
+      - ./vite.config.ts:/usr/src/app/vite.config.ts
       - /usr/src/app/dev-env
       - /usr/src/app/node_modules
 
