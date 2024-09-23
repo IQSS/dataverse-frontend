@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Navbar } from '@iqss/dataverse-design-system'
 import { useGetCollectionUserPermissions } from '../../../shared/hooks/useGetCollectionUserPermissions'
 import { useSession } from '../../session/SessionContext'
@@ -21,7 +21,6 @@ export const LoggedInHeaderActions = ({
 }: LoggedInHeaderActionsProps) => {
   const { t } = useTranslation('header')
   const { logout } = useSession()
-  const navigate = useNavigate()
 
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: ROOT_COLLECTION_ALIAS,
