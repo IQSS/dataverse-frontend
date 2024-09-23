@@ -21,4 +21,17 @@ describe('Metadata Block Info JSDataverse Repository', () => {
       expect(metadataBlockInfo).to.deep.equal(metadataBlockInfoExpected)
     })
   })
+  it('returns JSON in the  correct format', async () => {
+    await metadataBlockInfoRepository.getByName('citation').then((metadataBlockInfo) => {
+      if (!metadataBlockInfo) {
+        throw new Error('Metadata Block Info not found')
+      }
+      expect(metadataBlockInfo['name']).to.equal('citation')
+      expect(metadataBlockInfo['fields']).to.be.an('object')
+      Object.keys(metadataBlockInfo['fields']).forEach((field) => {
+        expect(metadataBlockInfo['fields'][field]).to.be.an('object')
+        expect(metadataBlockInfo['fields'][field]['displayFormat']).to.be.a('string')
+      })
+    })
+  })
 })
