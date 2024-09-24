@@ -1,10 +1,10 @@
-import { Route } from '../../../../Route.enum'
+import { Route } from '@/sections/Route.enum'
 import { DatasetCardHelper } from './DatasetCardHelper'
-import { DatasetVersion } from '../../../../../dataset/domain/models/Dataset'
-import { DvObjectType } from '../../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
-import { DatasetIcon } from '../../../../dataset/dataset-icon/DatasetIcon'
-import { DatasetLabels } from '../../../../dataset/dataset-labels/DatasetLabels'
-import { LinkToPage } from '../../../../shared/link-to-page/LinkToPage'
+import { DatasetVersion } from '@/dataset/domain/models/Dataset'
+import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { DatasetIcon } from '@/sections/dataset/dataset-icon/DatasetIcon'
+import { DatasetLabels } from '@/sections/dataset/dataset-labels/DatasetLabels'
+import { LinkToPage } from '@/sections/shared/link-to-page/LinkToPage'
 import styles from './DatasetCard.module.scss'
 
 interface DatasetCardHeaderProps {

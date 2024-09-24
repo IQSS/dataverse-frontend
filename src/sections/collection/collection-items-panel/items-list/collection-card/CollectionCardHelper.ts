@@ -2,7 +2,7 @@ import {
   DatasetLabel,
   DatasetLabelSemanticMeaning,
   DatasetLabelValue
-} from '../../../../../dataset/domain/models/Dataset'
+} from '@/dataset/domain/models/Dataset'
 
 export class CollectionCardHelper {
   static getLabel(isReleased: boolean) {

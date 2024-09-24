@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Button, Offcanvas } from '@iqss/dataverse-design-system'
 import { FunnelFill } from 'react-bootstrap-icons'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { ItemTypeChange, TypeFilters } from './type-filters/TypeFilters'
-import { CollectionItemType } from '../../../../collection/domain/models/CollectionItemType'
 import styles from './FilterPanel.module.scss'
 
 interface FilterPanelProps {

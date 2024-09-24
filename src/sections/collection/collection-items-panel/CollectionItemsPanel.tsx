@@ -1,20 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
-import { CollectionItemsPaginationInfo } from '../../../collection/domain/models/CollectionItemsPaginationInfo'
-import { CollectionSearchCriteria } from '../../../collection/domain/models/CollectionSearchCriteria'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
+import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { useGetAccumulatedItems } from './useGetAccumulatedItems'
 import { UseCollectionQueryParamsReturnType } from '../useGetCollectionQueryParams'
-import { useLoading } from '../../loading/LoadingContext'
+import { useLoadMoreOnPopStateEvent } from '../useLoadMoreOnPopStateEvent'
+import { useLoading } from '@/sections/loading/LoadingContext'
+import { QueryParamKey } from '../../Route.enum'
+import { CollectionHelper } from '../CollectionHelper'
 import { FilterPanel } from './filter-panel/FilterPanel'
 import { ItemsList } from './items-list/ItemsList'
 import { SearchPanel } from './search-panel/SearchPanel'
-import { QueryParamKey } from '../../Route.enum'
-import { CollectionItemType } from '../../../collection/domain/models/CollectionItemType'
 import { ItemTypeChange } from './filter-panel/type-filters/TypeFilters'
 import styles from './CollectionItemsPanel.module.scss'
-import { useLoadMoreOnPopStateEvent } from '../useLoadMoreOnPopStateEvent'
-import { CollectionHelper } from '../CollectionHelper'
 
 interface CollectionItemsPanelProps {
   collectionId: string
@@ -22,6 +22,9 @@ interface CollectionItemsPanelProps {
   collectionQueryParams: UseCollectionQueryParamsReturnType
   addDataSlot: JSX.Element | null
 }
+
+// TODO:ME Fix Stories and Mother Mocks objects
+// TODO:ME New Tests
 
 export const CollectionItemsPanel = ({
   collectionId,

@@ -1,10 +1,7 @@
 import cn from 'classnames'
-import {
-  DatasetPublishingStatus,
-  DatasetVersion
-} from '../../../../../dataset/domain/models/Dataset'
-import { DateHelper } from '../../../../../shared/helpers/DateHelper'
-import { CitationDescription } from '../../../../shared/citation/CitationDescription'
+import { DatasetPublishingStatus, DatasetVersion } from '@/dataset/domain/models/Dataset'
+import { DateHelper } from '@/shared/helpers/DateHelper'
+import { CitationDescription } from '@/sections/shared/citation/CitationDescription'
 import styles from './DatasetCard.module.scss'
 
 interface DatasetCardInfoProps {

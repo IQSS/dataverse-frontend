@@ -3,8 +3,8 @@ import {
   DatasetLabelSemanticMeaning,
   DatasetLabelValue,
   DatasetNonNumericVersionSearchParam
-} from '../../../../../dataset/domain/models/Dataset'
-import { PublicationStatus } from '../../../../../shared/core/domain/models/PublicationStatus'
+} from '@/dataset/domain/models/Dataset'
+import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 
 export class FileCardHelper {
   static getDatasetSearchParams(persistentId: string, isDraft: boolean): Record<string, string> {

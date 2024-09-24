@@ -1,7 +1,7 @@
 import { CollectionCardHeader } from './CollectionCardHeader'
 import { CollectionCardThumbnail } from './CollectionCardThumbnail'
 import { CollectionCardInfo } from './CollectionCardInfo'
-import { CollectionItemTypePreview } from '../../../../../collection/domain/models/CollectionItemTypePreview'
+import { CollectionItemTypePreview } from '@/collection/domain/models/CollectionItemTypePreview'
 import styles from './CollectionCard.module.scss'
 
 interface CollectionCardProps {

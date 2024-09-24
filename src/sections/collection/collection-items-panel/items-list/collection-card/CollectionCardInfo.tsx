@@ -1,11 +1,11 @@
 import { useParams } from 'react-router-dom'
 import { Stack } from '@iqss/dataverse-design-system'
-import { Route } from '../../../../Route.enum'
-import { ROOT_COLLECTION_ALIAS } from '../../../../../collection/domain/models/Collection'
-import { CollectionItemTypePreview } from '../../../../../collection/domain/models/CollectionItemTypePreview'
-import { DateHelper } from '../../../../../shared/helpers/DateHelper'
-import { DvObjectType } from '../../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
-import { LinkToPage } from '../../../../shared/link-to-page/LinkToPage'
+import { ROOT_COLLECTION_ALIAS } from '@/collection/domain/models/Collection'
+import { CollectionItemTypePreview } from '@/collection/domain/models/CollectionItemTypePreview'
+import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { DateHelper } from '@/shared/helpers/DateHelper'
+import { Route } from '@/sections/Route.enum'
+import { LinkToPage } from '@/sections/shared/link-to-page/LinkToPage'
 import styles from './CollectionCard.module.scss'
 
 interface CollectionCardInfoProps {

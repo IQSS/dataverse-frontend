@@ -1,4 +1,4 @@
-import { FileItemTypePreview } from '../../../../../files/domain/models/FileItemTypePreview'
+import { FileItemTypePreview } from '@/files/domain/models/FileItemTypePreview'
 import { FileCardHeader } from './FileCardHeader'
 import { FileCardThumbnail } from './FileCardThumbnail'
 import { FileCardInfo } from './FileCardInfo'

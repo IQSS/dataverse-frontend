@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react'
-import { getCollectionItems } from '../../../collection/domain/useCases/getCollectionItems'
-import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
+import { getCollectionItems } from '@/collection/domain/useCases/getCollectionItems'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import {
   CollectionItem,
   CollectionItemSubset
-} from '../../../collection/domain/models/CollectionItemSubset'
-import { CollectionItemsPaginationInfo } from '../../../collection/domain/models/CollectionItemsPaginationInfo'
-import { CollectionSearchCriteria } from '../../../collection/domain/models/CollectionSearchCriteria'
+} from '@/collection/domain/models/CollectionItemSubset'
+import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
+import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
 
 export const NO_COLLECTION_ITEMS = 0
 

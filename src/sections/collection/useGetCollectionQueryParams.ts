@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom'
-import { CollectionItemType } from '../../collection/domain/models/CollectionItemType'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { CollectionHelper } from './CollectionHelper'
 
 export interface UseCollectionQueryParamsReturnType {

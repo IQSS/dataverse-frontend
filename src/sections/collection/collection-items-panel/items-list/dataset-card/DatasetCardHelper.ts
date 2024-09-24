@@ -1,7 +1,7 @@
 import {
   DatasetNonNumericVersionSearchParam,
   DatasetPublishingStatus
-} from '../../../../../dataset/domain/models/Dataset'
+} from '@/dataset/domain/models/Dataset'
 
 export class DatasetCardHelper {
   static getDatasetSearchParams(

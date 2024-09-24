@@ -1,6 +1,6 @@
 import { Trans, useTranslation } from 'react-i18next'
-import { useSession } from '../../../session/SessionContext'
-import { Route } from '../../../Route.enum'
+import { useSession } from '@/sections/session/SessionContext'
+import { Route } from '@/sections/Route.enum'
 import styles from './ItemsList.module.scss'
 
 export function NoItemsMessage() {

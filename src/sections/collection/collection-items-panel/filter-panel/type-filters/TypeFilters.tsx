@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react'
 import { Form, Icon, IconName, Stack } from '@iqss/dataverse-design-system'
-import { CollectionItemType } from '../../../../../collection/domain/models/CollectionItemType'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import styles from './TypeFilters.module.scss'
 
 interface TypeFiltersProps {

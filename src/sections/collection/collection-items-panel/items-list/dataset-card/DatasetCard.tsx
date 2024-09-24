@@ -1,4 +1,4 @@
-import { DatasetPreview } from '../../../../../dataset/domain/models/DatasetPreview'
+import { DatasetPreview } from '@/dataset/domain/models/DatasetPreview'
 import { DatasetCardHeader } from './DatasetCardHeader'
 import { DatasetCardThumbnail } from './DatasetCardThumbnail'
 import { DatasetCardInfo } from './DatasetCardInfo'

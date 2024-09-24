@@ -1,8 +1,8 @@
 import { Badge, Icon, IconName } from '@iqss/dataverse-design-system'
-import { Route } from '../../../../Route.enum'
-import { CollectionItemTypePreview } from '../../../../../collection/domain/models/CollectionItemTypePreview'
-import { DvObjectType } from '../../../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
-import { LinkToPage } from '../../../../shared/link-to-page/LinkToPage'
+import { Route } from '@/sections/Route.enum'
+import { CollectionItemTypePreview } from '@/collection/domain/models/CollectionItemTypePreview'
+import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { LinkToPage } from '@/sections/shared/link-to-page/LinkToPage'
 import styles from './CollectionCard.module.scss'
 
 interface CollectionCardHeaderProps {
