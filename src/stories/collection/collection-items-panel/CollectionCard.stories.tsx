@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
-import { CollectionCard } from '../../../sections/collection/datasets-list/collection-card/CollectionCard'
-import { CollectionPreviewMother } from '../../../../tests/component/collection/domain/models/CollectionPreviewMother'
+import { CollectionCard } from '@/sections/collection/collection-items-panel/items-list/collection-card/CollectionCard'
+import { CollectionItemTypePreviewMother } from '../../../../tests/component/collection/domain/models/CollectionItemTypePreviewMother'
 import { FakerHelper } from '../../../../tests/component/shared/FakerHelper'
 
 const meta: Meta<typeof CollectionCard> = {
@@ -14,17 +14,14 @@ export default meta
 type Story = StoryObj<typeof CollectionCard>
 
 export const Default: Story = {
-  render: () => <CollectionCard collectionPreview={CollectionPreviewMother.createRealistic()} />
-}
-
-export const RequiredOnly: Story = {
   render: () => (
-    <CollectionCard collectionPreview={CollectionPreviewMother.createWithOnlyRequiredFields()} />
+    <CollectionCard collectionPreview={CollectionItemTypePreviewMother.createRealistic()} />
   )
 }
+
 export const WithLongDescription: Story = {
   render: () => {
-    const collectionPreview = CollectionPreviewMother.create({
+    const collectionPreview = CollectionItemTypePreviewMother.create({
       description: FakerHelper.paragraph(20)
     })
 
@@ -33,5 +30,7 @@ export const WithLongDescription: Story = {
 }
 
 export const Unpublished: Story = {
-  render: () => <CollectionCard collectionPreview={CollectionPreviewMother.createUnpublished()} />
+  render: () => (
+    <CollectionCard collectionPreview={CollectionItemTypePreviewMother.createUnpublished()} />
+  )
 }

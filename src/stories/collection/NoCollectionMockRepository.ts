@@ -1,3 +1,6 @@
+import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
+import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
+import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { Collection } from '../../collection/domain/models/Collection'
 import { CollectionFacet } from '../../collection/domain/models/CollectionFacet'
@@ -16,6 +19,21 @@ export class NoCollectionMockRepository extends CollectionMockRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve([])
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getItems(
+    _collectionId: string,
+    _paginationInfo: CollectionItemsPaginationInfo,
+    _searchCriteria?: CollectionSearchCriteria
+  ): Promise<CollectionItemSubset> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          items: [],
+          totalItemCount: 0
+        })
       }, FakerHelper.loadingTimout())
     })
   }

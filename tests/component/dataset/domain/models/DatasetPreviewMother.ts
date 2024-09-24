@@ -21,20 +21,22 @@ export class DatasetPreviewMother {
       releaseOrCreateDate: FakerHelper.pastDate(),
       description: faker.lorem.paragraph(),
       thumbnail: faker.datatype.boolean() ? FakerHelper.getImageUrl() : undefined,
+      publicationStatuses: [PublicationStatus.Published],
+      parentCollectionName: faker.lorem.word(),
+      parentCollectionAlias: faker.lorem.slug(),
       ...props
     }
-
-    return new DatasetPreview(
-      CollectionItemType.DATASET,
-      datasetPreview.persistentId,
-      datasetPreview.version,
-      datasetPreview.releaseOrCreateDate,
-      datasetPreview.description,
-      [PublicationStatus.Published],
-      faker.lorem.word(),
-      faker.lorem.word(),
-      datasetPreview.thumbnail
-    )
+    return {
+      type: CollectionItemType.DATASET,
+      persistentId: datasetPreview.persistentId,
+      version: datasetPreview.version,
+      releaseOrCreateDate: datasetPreview.releaseOrCreateDate,
+      description: datasetPreview.description,
+      publicationStatuses: datasetPreview.publicationStatuses,
+      parentCollectionName: datasetPreview.parentCollectionName,
+      parentCollectionAlias: datasetPreview.parentCollectionAlias,
+      thumbnail: datasetPreview.thumbnail
+    }
   }
 
   static createRealistic(): DatasetPreview {
@@ -43,7 +45,8 @@ export class DatasetPreviewMother {
 
   static createDraft(): DatasetPreview {
     return this.create({
-      version: DatasetVersionMother.createDraft()
+      version: DatasetVersionMother.createDraft(),
+      publicationStatuses: [PublicationStatus.Draft]
     })
   }
 

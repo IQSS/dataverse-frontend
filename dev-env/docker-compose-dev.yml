@@ -66,8 +66,8 @@ services:
         -Ddataverse.files.s3.connection-pool-size=2048
         -Ddataverse.files.s3.custom-endpoint-region=us-east-1
         -Ddataverse.files.s3.custom-endpoint-url=https://s3.us-east-1.amazonaws.com
-    expose:
-      - '8080'
+    ports:
+      - '8080:8080'
     networks:
       - dataverse
     depends_on:

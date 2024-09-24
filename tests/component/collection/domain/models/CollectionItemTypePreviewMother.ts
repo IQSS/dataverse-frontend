@@ -3,7 +3,7 @@ import { FakerHelper } from '../../../shared/FakerHelper'
 import { CollectionItemTypePreview } from '../../../../../src/collection/domain/models/CollectionItemTypePreview'
 import { CollectionItemType } from '../../../../../src/collection/domain/models/CollectionItemType'
 
-export class CollectionPreviewMother {
+export class CollectionItemTypePreviewMother {
   static create(props?: Partial<CollectionItemTypePreview>): CollectionItemTypePreview {
     return {
       type: CollectionItemType.COLLECTION,
@@ -21,8 +21,15 @@ export class CollectionPreviewMother {
     }
   }
 
+  static createMany(
+    amount: number,
+    props?: Partial<CollectionItemTypePreview>
+  ): CollectionItemTypePreview[] {
+    return Array.from({ length: amount }).map(() => this.create(props))
+  }
+
   static createRealistic(): CollectionItemTypePreview {
-    return CollectionPreviewMother.create({
+    return CollectionItemTypePreviewMother.create({
       isReleased: true,
       name: 'Scientific Research Collection',
       alias: 'scientific-research-collection',
@@ -37,7 +44,7 @@ export class CollectionPreviewMother {
   static createWithOnlyRequiredFields(
     props?: Partial<CollectionItemTypePreview>
   ): CollectionItemTypePreview {
-    return CollectionPreviewMother.create({
+    return CollectionItemTypePreviewMother.create({
       name: FakerHelper.collectionName(),
       isReleased: faker.datatype.boolean(),
       affiliation: undefined,
@@ -47,7 +54,7 @@ export class CollectionPreviewMother {
   }
 
   static createComplete(): CollectionItemTypePreview {
-    return CollectionPreviewMother.create({
+    return CollectionItemTypePreviewMother.create({
       isReleased: faker.datatype.boolean(),
       name: FakerHelper.collectionName(),
       parentCollectionAlias: faker.datatype.string(10),
@@ -58,19 +65,19 @@ export class CollectionPreviewMother {
     })
   }
   static createUnpublished(): CollectionItemTypePreview {
-    return CollectionPreviewMother.createWithOnlyRequiredFields({
+    return CollectionItemTypePreviewMother.createWithOnlyRequiredFields({
       isReleased: false,
       affiliation: FakerHelper.affiliation()
     })
   }
   static createWithDescription(): CollectionItemTypePreview {
-    return CollectionPreviewMother.createWithOnlyRequiredFields({
+    return CollectionItemTypePreviewMother.createWithOnlyRequiredFields({
       description: FakerHelper.paragraph()
     })
   }
 
   static createWithAffiliation(): CollectionItemTypePreview {
-    return CollectionPreviewMother.createWithOnlyRequiredFields({
+    return CollectionItemTypePreviewMother.createWithOnlyRequiredFields({
       affiliation: FakerHelper.affiliation()
     })
   }

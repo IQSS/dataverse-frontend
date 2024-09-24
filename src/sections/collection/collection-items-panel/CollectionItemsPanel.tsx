@@ -6,7 +6,7 @@ import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionS
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { useGetAccumulatedItems } from './useGetAccumulatedItems'
 import { UseCollectionQueryParamsReturnType } from '../useGetCollectionQueryParams'
-import { useLoadMoreOnPopStateEvent } from '../useLoadMoreOnPopStateEvent'
+import { useLoadMoreOnPopStateEvent } from './useLoadMoreOnPopStateEvent'
 import { useLoading } from '@/sections/loading/LoadingContext'
 import { QueryParamKey } from '../../Route.enum'
 import { CollectionHelper } from '../CollectionHelper'

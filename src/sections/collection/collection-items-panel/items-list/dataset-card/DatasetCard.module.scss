@@ -24,7 +24,7 @@
   .left-side-content {
     display: flex;
     flex-wrap: wrap;
-    column-gap: 8px;
+    gap: 8px;
   }
 
   .top-right-icon {
@@ -41,7 +41,9 @@
   padding-block: 0.25rem;
 
   img {
-    max-width: 40px;
+    width: 64px;
+    max-width: 64px;
+    height: 48px;
     max-height: 48px;
     vertical-align: top;
   }
@@ -66,11 +68,18 @@
   }
 
   .citation-box {
+    display: -webkit-box;
     padding: 4px;
+    overflow: hidden;
     background-color: color.adjust($dv-primary-color, $lightness: 48%);
     border-radius: 4px;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    -webkit-box-orient: vertical;
 
-    // TODO:ME Could be good to apply line-clamp here also to avoid long citations, we will need to create a selector to match
+    a {
+      word-break: break-all;
+    }
 
     &.deaccesioned {
       background-color: color.adjust($dv-danger-box-color, $lightness: 6%);
@@ -88,6 +97,6 @@
     -webkit-box-orient: vertical;
     width: 100%;
     overflow: hidden;
-    color: black;
+    color: #000;
   }
 }
