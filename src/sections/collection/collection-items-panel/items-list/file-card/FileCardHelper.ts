@@ -24,16 +24,13 @@ export class FileCardHelper {
 
   static getDatasetLabels(
     publicationStatuses: PublicationStatus[],
-    someDatasetVersionHasBeenReleased: boolean | undefined
+    someDatasetVersionHasBeenReleased: boolean
   ) {
     const labels: DatasetLabel[] = []
     if (publicationStatuses.includes(PublicationStatus.Draft)) {
       labels.push(new DatasetLabel(DatasetLabelSemanticMeaning.DATASET, DatasetLabelValue.DRAFT))
     }
-    if (
-      someDatasetVersionHasBeenReleased == undefined ||
-      someDatasetVersionHasBeenReleased == false
-    ) {
+    if (!someDatasetVersionHasBeenReleased) {
       labels.push(
         new DatasetLabel(DatasetLabelSemanticMeaning.WARNING, DatasetLabelValue.UNPUBLISHED)
       )

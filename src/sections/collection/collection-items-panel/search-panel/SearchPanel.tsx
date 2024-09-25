@@ -47,6 +47,7 @@ export const SearchPanel = ({
           />
           <Button
             variant="secondary"
+            type="submit"
             icon={<Search />}
             aria-label="Search submit"
             disabled={isLoadingCollectionItems}

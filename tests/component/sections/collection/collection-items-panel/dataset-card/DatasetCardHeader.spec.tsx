@@ -1,5 +1,5 @@
-import { DatasetCardHeader } from '../../../../../../src/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCardHeader'
-import { DatasetPreviewMother } from '../../../../dataset/domain/models/DatasetPreviewMother'
+import { DatasetCardHeader } from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCardHeader'
+import { DatasetPreviewMother } from '@tests/component/dataset/domain/models/DatasetPreviewMother'
 
 describe('DatasetCardHeader', () => {
   it('should render the header', () => {

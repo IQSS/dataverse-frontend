@@ -37,7 +37,7 @@ export class FileItemTypePreviewMother {
     return Array.from({ length: amount }).map(() => this.create(props))
   }
 
-  static createRealistic(): FileItemTypePreview {
+  static createRealistic(props?: Partial<FileItemTypePreview>): FileItemTypePreview {
     return this.create({
       id: 2,
       name: 'test file',
@@ -59,7 +59,8 @@ export class FileItemTypePreviewMother {
       datasetPersistentId: 'test pid1',
       datasetCitation: 'test citation',
       publicationStatuses: [PublicationStatus.Published],
-      releaseOrCreateDate: new Date('2023-05-15T08:21:01Z')
+      releaseOrCreateDate: new Date('2023-05-15T08:21:01Z'),
+      ...props
     })
   }
 

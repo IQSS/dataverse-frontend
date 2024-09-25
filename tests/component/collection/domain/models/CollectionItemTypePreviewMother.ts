@@ -81,4 +81,10 @@ export class CollectionItemTypePreviewMother {
       affiliation: FakerHelper.affiliation()
     })
   }
+
+  static createWithThumbnail(): CollectionItemTypePreview {
+    return CollectionItemTypePreviewMother.create({
+      thumbnail: FakerHelper.getImageUrl()
+    })
+  }
 }

@@ -1,7 +1,7 @@
+import { DatasetCardInfo } from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCardInfo'
 import { DatasetPreviewMother } from '../../../../dataset/domain/models/DatasetPreviewMother'
-import { DateHelper } from '../../../../../../src/shared/helpers/DateHelper'
-import { DatasetCardInfo } from '../../../../../../src/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCardInfo'
-import styles from '../../../../../../src/sections/collection/datasets-list/dataset-card/DatasetCard.module.scss'
+import { DateHelper } from '@/shared/helpers/DateHelper'
+import styles from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCard.module.scss'
 
 describe('DatasetCardInfo', () => {
   it('should render the dataset info', () => {
@@ -37,6 +37,6 @@ describe('DatasetCardInfo', () => {
       .should('exist')
       .parent()
       .parent()
-      .should('have.class', styles['citation-box-deaccessioned'])
+      .should('have.class', styles['deaccesioned'])
   })
 })

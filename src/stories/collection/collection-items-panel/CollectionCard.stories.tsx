@@ -34,3 +34,9 @@ export const Unpublished: Story = {
     <CollectionCard collectionPreview={CollectionItemTypePreviewMother.createUnpublished()} />
   )
 }
+
+export const WithThumbnail: Story = {
+  render: () => (
+    <CollectionCard collectionPreview={CollectionItemTypePreviewMother.createWithThumbnail()} />
+  )
+}

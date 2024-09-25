@@ -87,7 +87,7 @@ export const ItemsList = forwardRef(
                 )}
               </header>
 
-              <ul>
+              <ul data-testid="items-list">
                 {items.map((collectionItem, index) => (
                   <li key={`${collectionItem.type}-${index}`}>
                     {collectionItem?.type === CollectionItemType.COLLECTION && (

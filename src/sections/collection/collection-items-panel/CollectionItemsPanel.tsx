@@ -24,6 +24,8 @@ interface CollectionItemsPanelProps {
 }
 
 // TODO:ME New Tests
+// TODO:ME Add all locales in translation files
+// TODO:ME Add documentation about how it works and link to some react router dom docs
 
 export const CollectionItemsPanel = ({
   collectionId,
@@ -76,6 +78,7 @@ export const CollectionItemsPanel = ({
     }
   }
 
+  // TODO:ME This code will be test with an e2e test because it updates the URL
   const handleSearchSubmit = async (searchValue: string) => {
     itemsListContainerRef.current?.scrollTo({ top: 0 })
 
@@ -115,7 +118,7 @@ export const CollectionItemsPanel = ({
     }
   }
 
-  // WHEN APPLYING FILTERS, WE RESET THE PAGINATION INFO AND IF SEARCH VALUE EXISTS, WE KEEP IT!!
+  // TODO:ME This code will be test with an e2e test because it updates the URL
   const handleItemsTypeChange = async (itemTypeChange: ItemTypeChange) => {
     const { type, checked } = itemTypeChange
 
@@ -151,6 +154,7 @@ export const CollectionItemsPanel = ({
     }
   }
 
+  // TODO:ME This code will MAYBE? be test with an e2e test because it updates the URL
   async function loadItemsOnBackAndForwardNavigation() {
     const searchParams = new URLSearchParams(window.location.search)
     const collectionQueryParams = CollectionHelper.defineCollectionQueryParams(searchParams)
