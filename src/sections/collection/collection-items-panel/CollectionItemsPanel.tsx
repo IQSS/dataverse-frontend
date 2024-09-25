@@ -23,7 +23,6 @@ interface CollectionItemsPanelProps {
   addDataSlot: JSX.Element | null
 }
 
-// TODO:ME Fix Stories and Mother Mocks objects
 // TODO:ME New Tests
 
 export const CollectionItemsPanel = ({
