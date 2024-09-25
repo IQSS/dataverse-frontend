@@ -44,6 +44,7 @@ func handle(w http.ResponseWriter, r *http.Request) {
 	req := client.NewRequest(url, r.Method, r.Body, r.Header)
 	res, err := api.DoStream(r.Context(), req)
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	defer res.Close()
