@@ -93,20 +93,6 @@ services:
 
 # public access
 
-  dvproxy-public:
-    container_name: 'dvproxy-public'
-    hostname: dvproxy-public
-    build:
-      context: ./dvproxy
-      dockerfile: ./Dockerfile
-      network: host
-    restart: on-failure
-    environment:
-      DATAVERSE_SERVER: ${DATAVERSE_SERVER}
-    networks:
-      - dataverse
-    privileged: false
-
   dataverse-public:
     container_name: 'dataverse-public'
     hostname: dataverse-public
@@ -116,14 +102,13 @@ services:
       network: host
       args:
         CONFIG: public
+        DATAVERSE_SERVER: ${DATAVERSE_SERVER}
     ports:
       - '9000:80'
     networks:
       dataverse:
         aliases:
           - dataverse-public.localtest.me
-    depends_on:
-      - dvproxy-public
 
 networks:
   dataverse:

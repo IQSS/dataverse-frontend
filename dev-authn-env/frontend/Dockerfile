@@ -17,3 +17,5 @@ FROM nginx:1.27.1-alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
 ARG CONFIG=public
 COPY ./dev-authn-env/frontend/${CONFIG}/nginx.conf /etc/nginx/conf.d/default.conf
+ARG DATAVERSE_SERVER=http://dvproxy:8080/api
+RUN sed -i -e 's@DATAVERSE_SERVER@'"$DATAVERSE_SERVER"'@' /etc/nginx/conf.d/default.conf
