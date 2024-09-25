@@ -1,4 +1,4 @@
-![Untitled Diagram drawio](https://github.com/user-attachments/assets/c4acd0a3-11c1-4f19-adf4-45f887ae91fd)
+![authentication drawio](https://github.com/user-attachments/assets/830d1f31-67d0-47f6-950a-ce3b8d79e8d9)
 
 Steps needed to get it running:
 - make sure you have a `.npmrc` file in your project (see also documentation and the [example](/.npmrc.example))
