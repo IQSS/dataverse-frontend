@@ -10,6 +10,7 @@ import { CollectionItemsPaginationInfo } from '@/collection/domain/models/Collec
 import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionItemsMother } from '../../../tests/component/collection/domain/models/CollectionItemsMother'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 
 export class CollectionMockRepository implements CollectionRepository {
   getById(_id: string): Promise<Collection> {
@@ -48,8 +49,6 @@ export class CollectionMockRepository implements CollectionRepository {
     paginationInfo: CollectionItemsPaginationInfo,
     searchCriteria?: CollectionSearchCriteria
   ): Promise<CollectionItemSubset> {
-    // TODO:ME Filter based on search criteria now
-
     const numberOfCollections = Math.floor(paginationInfo.pageSize / 3)
     const numberOfDatasets = Math.floor(paginationInfo.pageSize / 3)
     const numberOfFiles = paginationInfo.pageSize - numberOfCollections - numberOfDatasets
@@ -60,6 +59,11 @@ export class CollectionMockRepository implements CollectionRepository {
       numberOfFiles
     })
 
+    const isDefaultSelected =
+      searchCriteria?.itemTypes?.length === 2 &&
+      searchCriteria?.itemTypes?.includes(CollectionItemType.COLLECTION) &&
+      searchCriteria?.itemTypes?.includes(CollectionItemType.DATASET)
+
     const filteredByTypeItems = items.filter((item) =>
       searchCriteria?.itemTypes?.includes(item.type)
     )
@@ -68,7 +72,7 @@ export class CollectionMockRepository implements CollectionRepository {
       setTimeout(() => {
         resolve({
           items: filteredByTypeItems,
-          totalItemCount: 200 // This is a fake number, its big so we can always scroll to load more items for the story
+          totalItemCount: isDefaultSelected ? 6 : 200 // This is a fake number, its big so we can always scroll to load more items for the story
         })
       }, FakerHelper.loadingTimout())
     })

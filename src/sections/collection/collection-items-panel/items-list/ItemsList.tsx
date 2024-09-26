@@ -58,14 +58,13 @@ export const ItemsList = forwardRef(
     const showSentrySkeleton = hasNextPage && !error && !isEmptyItems
     const showNotSentrySkeleton = isLoadingItems && isEmptyItems
 
-    // TODO:ME When search is too fast, switching from no results to loading skeleton to results gives a flicker effect
-
     return (
       <section ref={rootRef}>
         <div
           className={cn(styles['items-list'], {
             [styles['empty-or-error']]: isEmptyItems || error
           })}
+          tabIndex={0}
           ref={ref as ForwardedRef<HTMLDivElement>}>
           {showNoItemsMessage && <NoItemsMessage />}
           {showNoSearchMatchesMessage && <NoSearchMatchesMessage />}

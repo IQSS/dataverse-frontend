@@ -25,7 +25,11 @@ export const Default: Story = {
       collectionRepository={new CollectionMockRepository()}
       collectionId="collection"
       created={false}
-      collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
+      collectionQueryParams={{
+        pageQuery: 1,
+        searchQuery: undefined,
+        typesQuery: undefined
+      }}
     />
   )
 }
