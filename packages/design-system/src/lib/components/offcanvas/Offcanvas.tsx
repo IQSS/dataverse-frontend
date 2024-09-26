@@ -15,7 +15,7 @@ interface OffcanvasProps {
 }
 
 const Offcanvas = ({
-  show = false,
+  show,
   placement = 'start',
   responsive,
   onHide,
