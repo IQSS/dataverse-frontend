@@ -91,16 +91,15 @@ describe('Collection Items Panel', () => {
     cy.findByRole('checkbox', { name: /Collections/ }).click()
     cy.findByRole('checkbox', { name: /Datasets/ }).click()
 
-    cy.findByText('8 results').should('exist')
-
     const fourthExpectedURL = new URLSearchParams({
       [QueryParamKey.COLLECTION_ITEM_TYPES]: [CollectionItemType.FILE].join(',')
     }).toString()
 
     cy.url().should('include', `/collections?${fourthExpectedURL}`)
+    cy.findByText('8 results').should('exist')
     cy.findByTestId('items-list').should('exist').children().should('have.length', 8)
 
-    // 5 - Now check all to get 16 total items, scroll to the bottom and assert that 16 of 16 results displayed
+    // 5 - Now check all to get 16 total items by scroll to the bottom and assert that 16 of 16 results displayed
     cy.findByRole('checkbox', { name: /Collections/ }).click()
     cy.findByRole('checkbox', { name: /Datasets/ }).click()
 
@@ -122,5 +121,12 @@ describe('Collection Items Panel', () => {
     cy.findByText('16 of 16 results displayed').should('exist')
 
     cy.findByTestId('items-list').should('exist').children().should('have.length', 16)
+
+    // 6 - Navigate baack with the browser and assert that the url is updated correctly and the items are displayed correctly as in step 4
+    cy.go('back')
+
+    cy.url().should('include', `/collections?${fourthExpectedURL}`)
+    cy.findByText('8 results').should('exist')
+    cy.findByTestId('items-list').should('exist').children().should('have.length', 8)
   })
 })

@@ -23,7 +23,7 @@ interface CollectionItemsPanelProps {
   addDataSlot: JSX.Element | null
 }
 
-// TODO:ME Add all locales in translation files
+// TODO:ME Add tests for off canvas component
 
 /**
  * HOW IT WORKS:
