@@ -23,7 +23,7 @@ func main() {
 	srvMux.Handle("/", http.HandlerFunc(handle))
 	tlsConfig := &tls.Config{InsecureSkipVerify: true}
 	srv := &http.Server{
-		Addr:              ":8080",
+		Addr:              ":5050",
 		ReadTimeout:       timeout,
 		WriteTimeout:      timeout,
 		IdleTimeout:       timeout,
