@@ -10,7 +10,7 @@ interface DatasetCardProps {
 
 export function DatasetCard({ datasetPreview }: DatasetCardProps) {
   return (
-    <article className={styles['card-main-container']}>
+    <article className={styles['card-main-container']} data-testid="dataset-card">
       <DatasetCardHeader
         persistentId={datasetPreview.persistentId}
         version={datasetPreview.version}

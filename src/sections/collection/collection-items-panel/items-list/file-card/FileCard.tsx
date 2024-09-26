@@ -10,7 +10,7 @@ interface FileCardProps {
 
 export function FileCard({ filePreview }: FileCardProps) {
   return (
-    <article className={styles['card-main-container']}>
+    <article className={styles['card-main-container']} data-testid="file-card">
       <FileCardHeader filePreview={filePreview} />
       <div className={styles['thumbnail-and-info-wrapper']}>
         <FileCardThumbnail filePreview={filePreview} />
