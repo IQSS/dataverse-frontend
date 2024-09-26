@@ -26,6 +26,7 @@ interface ItemsListProps {
   hasSearchValue: boolean
   paginationInfo: CollectionItemsPaginationInfo
   onBottomReach: (paginationInfo: CollectionItemsPaginationInfo) => void
+  itemsTypesSelected: CollectionItemType[]
 }
 
 export const ItemsList = forwardRef(
@@ -40,7 +41,8 @@ export const ItemsList = forwardRef(
       isEmptyItems,
       hasSearchValue,
       paginationInfo,
-      onBottomReach
+      onBottomReach,
+      itemsTypesSelected
     }: ItemsListProps,
     ref
   ) => {
@@ -67,7 +69,8 @@ export const ItemsList = forwardRef(
           tabIndex={0}
           ref={ref as ForwardedRef<HTMLDivElement>}
           data-testid="items-list-scrollable-container">
-          {showNoItemsMessage && <NoItemsMessage />}
+          {showNoItemsMessage && <NoItemsMessage itemsTypesSelected={itemsTypesSelected} />}
+
           {showNoSearchMatchesMessage && <NoSearchMatchesMessage />}
 
           {error && <ErrorItemsMessage errorMessage={error} />}

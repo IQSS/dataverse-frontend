@@ -6,6 +6,7 @@ import {
 } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 
@@ -42,27 +43,159 @@ describe('CollectionItemsPanel', () => {
     cy.findByTestId('collection-items-list-infinite-scroll-skeleton').should('exist')
   })
 
-  it('renders no items message when there are no collection, dataset or files', () => {
-    const emptyItems: CollectionItem[] = []
-    const emptyItemsWithCount: CollectionItemSubset = { items: emptyItems, totalItemCount: 0 }
-    collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
+  describe('NoItemsMessage', () => {
+    it('renders correct no items message when there are no collection, dataset or files', () => {
+      const emptyItems: CollectionItem[] = []
+      const emptyItemsWithCount: CollectionItemSubset = { items: emptyItems, totalItemCount: 0 }
+      collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
-    cy.customMount(
-      <CollectionItemsPanel
-        collectionId={ROOT_COLLECTION_ALIAS}
-        collectionRepository={collectionRepository}
-        collectionQueryParams={{
-          pageQuery: 1,
-          searchQuery: undefined,
-          typesQuery: undefined
-        }}
-        addDataSlot={null}
-      />
-    )
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: [
+              CollectionItemType.COLLECTION,
+              CollectionItemType.DATASET,
+              CollectionItemType.FILE
+            ]
+          }}
+          addDataSlot={null}
+        />
+      )
 
-    cy.findByText(/This collection currently has no collections, datasets or files./).should(
-      'exist'
-    )
+      cy.findByText(/This collection currently has no collections, datasets or files./).should(
+        'exist'
+      )
+    })
+
+    it('renders correct no items message when there are no collections', () => {
+      const emptyItems: CollectionItem[] = []
+      const emptyItemsWithCount: CollectionItemSubset = { items: emptyItems, totalItemCount: 0 }
+      collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
+
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: [CollectionItemType.COLLECTION]
+          }}
+          addDataSlot={null}
+        />
+      )
+
+      cy.findByText(/This collection currently has no collections./).should('exist')
+    })
+
+    it('renders correct no items message when there are no datasets', () => {
+      const emptyItems: CollectionItem[] = []
+      const emptyItemsWithCount: CollectionItemSubset = { items: emptyItems, totalItemCount: 0 }
+      collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
+
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: [CollectionItemType.DATASET]
+          }}
+          addDataSlot={null}
+        />
+      )
+
+      cy.findByText(/This collection currently has no datasets./).should('exist')
+    })
+
+    it('renders correct no items message when there are no files', () => {
+      const emptyItems: CollectionItem[] = []
+      const emptyItemsWithCount: CollectionItemSubset = { items: emptyItems, totalItemCount: 0 }
+      collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
+
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: [CollectionItemType.FILE]
+          }}
+          addDataSlot={null}
+        />
+      )
+
+      cy.findByText(/This collection currently has no files./).should('exist')
+    })
+
+    it('renders correct no items message when there are no collections and datasets', () => {
+      const emptyItems: CollectionItem[] = []
+      const emptyItemsWithCount: CollectionItemSubset = { items: emptyItems, totalItemCount: 0 }
+      collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
+
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: [CollectionItemType.COLLECTION, CollectionItemType.DATASET]
+          }}
+          addDataSlot={null}
+        />
+      )
+
+      cy.findByText(/This collection currently has no collections or datasets./).should('exist')
+    })
+
+    it('renders correct no items message when there are no collections and files', () => {
+      const emptyItems: CollectionItem[] = []
+      const emptyItemsWithCount: CollectionItemSubset = { items: emptyItems, totalItemCount: 0 }
+      collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
+
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: [CollectionItemType.COLLECTION, CollectionItemType.FILE]
+          }}
+          addDataSlot={null}
+        />
+      )
+
+      cy.findByText(/This collection currently has no collections or files./).should('exist')
+    })
+
+    it('renders correct no items message when there are no datasets and files', () => {
+      const emptyItems: CollectionItem[] = []
+      const emptyItemsWithCount: CollectionItemSubset = { items: emptyItems, totalItemCount: 0 }
+      collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
+
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: [CollectionItemType.DATASET, CollectionItemType.FILE]
+          }}
+          addDataSlot={null}
+        />
+      )
+
+      cy.findByText(/This collection currently has no datasets or files./).should('exist')
+    })
   })
 
   it('renders the no search results message when there are no items matching the search query', () => {

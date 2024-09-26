@@ -216,6 +216,7 @@ export const CollectionItemsPanel = ({
           hasNextPage={hasNextPage}
           isEmptyItems={isEmptyItems}
           hasSearchValue={currentSearchCriteria.hasSearchText()}
+          itemsTypesSelected={currentSearchCriteria.itemTypes as CollectionItemType[]}
           paginationInfo={paginationInfo}
           onBottomReach={handleLoadMoreOnBottomReach}
           ref={itemsListContainerRef}

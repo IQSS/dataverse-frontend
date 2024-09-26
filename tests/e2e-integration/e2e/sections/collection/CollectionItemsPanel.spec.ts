@@ -53,11 +53,10 @@ describe('Collection Items Panel', () => {
     })
   })
 
-  it.only('performs different search, filtering and respond to back and forward navigation', () => {
+  it('performs different search, filtering and respond to back and forward navigation', () => {
     cy.visit(`/spa/collections`)
 
     cy.wait('@getCollectionItems').then((interception) => {
-      console.log('interception', interception)
       const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
         extractInfoFromInterceptedResponse(interception)
 
@@ -80,7 +79,6 @@ describe('Collection Items Panel', () => {
     cy.findByRole('checkbox', { name: /Files/ }).click()
 
     cy.wait('@getCollectionItems').then((interception) => {
-      console.log('interception', interception)
       const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
         extractInfoFromInterceptedResponse(interception)
 
@@ -113,7 +111,6 @@ describe('Collection Items Panel', () => {
     cy.findByPlaceholderText('Search this collection...').type('Darwin{enter}')
 
     cy.wait('@getCollectionItems').then((interception) => {
-      console.log('interception', interception)
       const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
         extractInfoFromInterceptedResponse(interception)
 
@@ -148,7 +145,6 @@ describe('Collection Items Panel', () => {
     cy.findByRole('button', { name: /Search submit/ }).click()
 
     cy.wait('@getCollectionItems').then((interception) => {
-      console.log('interception', interception)
       const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
         extractInfoFromInterceptedResponse(interception)
 
@@ -182,7 +178,6 @@ describe('Collection Items Panel', () => {
     cy.findByRole('checkbox', { name: /Collections/ }).click()
 
     cy.wait('@getCollectionItems').then((interception) => {
-      console.log('interception', interception)
       const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
         extractInfoFromInterceptedResponse(interception)
 
@@ -214,7 +209,6 @@ describe('Collection Items Panel', () => {
     cy.findByRole('checkbox', { name: /Datasets/ }).click()
 
     cy.wait('@getCollectionItems').then((interception) => {
-      console.log('interception', interception)
       const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
         extractInfoFromInterceptedResponse(interception)
 
