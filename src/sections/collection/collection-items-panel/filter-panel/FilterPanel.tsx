@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button, Offcanvas } from '@iqss/dataverse-design-system'
 import { FunnelFill } from 'react-bootstrap-icons'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
@@ -16,6 +17,8 @@ export const FilterPanel = ({
   onItemTypesChange,
   isLoadingCollectionItems
 }: FilterPanelProps) => {
+  const { t } = useTranslation('collection')
+
   const [showOffcanvas, setShowOffcanvas] = useState(false)
 
   const handleCloseOffcanvas = () => setShowOffcanvas(false)
@@ -28,12 +31,12 @@ export const FilterPanel = ({
         className={styles['toggle-canvas-btn']}
         onClick={handleShowOffcanvas}
         size="sm">
-        <FunnelFill /> Filter Results
+        <FunnelFill /> {t('filterResults')}
       </Button>
 
       <Offcanvas show={showOffcanvas} onHide={handleCloseOffcanvas} responsive="lg">
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Filter Results</Offcanvas.Title>
+          <Offcanvas.Title>{t('filterResults')}</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body dataTestId="filter-panel-off-canvas-body">
           <div className={styles['filters-wrapper']}>

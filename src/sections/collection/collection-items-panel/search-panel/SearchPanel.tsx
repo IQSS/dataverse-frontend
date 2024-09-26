@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button, Form } from '@iqss/dataverse-design-system'
 import { Search } from 'react-bootstrap-icons'
 import styles from './SearchPanel.module.scss'
@@ -14,6 +15,8 @@ export const SearchPanel = ({
   isLoadingCollectionItems,
   onSubmitSearch
 }: SearchPanelProps) => {
+  const { t } = useTranslation('collection')
+
   const [searchValue, setSearchValue] = useState(currentSearchValue)
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -40,7 +43,7 @@ export const SearchPanel = ({
         <Form.InputGroup className={styles['search-input-group']}>
           <Form.Group.Input
             type="search"
-            placeholder="Search this collection..."
+            placeholder={t('searchThisCollectionPlaceholder')}
             aria-label="Search"
             value={searchValue}
             onChange={handleSearchChange}
@@ -49,7 +52,7 @@ export const SearchPanel = ({
             variant="secondary"
             type="submit"
             icon={<Search />}
-            aria-label="Search submit"
+            aria-label={t('searchSubmitButtonLabel')}
             disabled={isLoadingCollectionItems}
           />
         </Form.InputGroup>

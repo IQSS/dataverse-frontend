@@ -1,4 +1,5 @@
 import { ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Form, Icon, IconName, Stack } from '@iqss/dataverse-design-system'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import styles from './TypeFilters.module.scss'
@@ -19,6 +20,8 @@ export const TypeFilters = ({
   onItemTypesChange,
   isLoadingCollectionItems
 }: TypeFiltersProps) => {
+  const { t } = useTranslation('collection')
+
   const handleItemTypeChange = (type: CollectionItemType, checked: boolean) => {
     onItemTypesChange({ type, checked })
   }
@@ -45,7 +48,7 @@ export const TypeFilters = ({
         label={
           <>
             <Icon name={IconName.COLLECTION} />
-            <span>Collections</span>
+            <span>{t('collectionFilterTypeLabel')}</span>
           </>
         }
         checked={Boolean(currentItemTypes?.includes(CollectionItemType.COLLECTION))}
@@ -59,7 +62,7 @@ export const TypeFilters = ({
         label={
           <>
             <Icon name={IconName.DATASET} />
-            <span>Datasets</span>
+            <span>{t('datasetFilterTypeLabel')}</span>
           </>
         }
         checked={Boolean(currentItemTypes?.includes(CollectionItemType.DATASET))}
@@ -73,7 +76,7 @@ export const TypeFilters = ({
         label={
           <>
             <Icon name={IconName.FILE} />
-            <span>Files</span>
+            <span>{t('fileFilterTypeLabel')}</span>
           </>
         }
         checked={Boolean(currentItemTypes?.includes(CollectionItemType.FILE))}
