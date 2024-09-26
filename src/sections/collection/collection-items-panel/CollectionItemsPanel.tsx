@@ -23,9 +23,21 @@ interface CollectionItemsPanelProps {
   addDataSlot: JSX.Element | null
 }
 
-// TODO:ME New Tests
 // TODO:ME Add all locales in translation files
-// TODO:ME Add documentation about how it works and link to some react router dom docs
+
+/**
+ * HOW IT WORKS:
+ * This component loads items on 5 different scenarios:
+ * 1. When the component mounts
+ * 2. When the user scrolls to the bottom of the list and there are more items to load
+ * 3. When the user submits a search query in the search panel
+ * 4. When the user changes the item types in the filter panel
+ * 5. When the user navigates back and forward in the browser
+ *
+ * It initializes the search criteria with the query params in the URL.
+ * By default if no query params are present in the URL, the search query is empty and the item types are COLLECTION and DATASET.
+ * Every time a load of items is triggered, the pagination info is updated and the URL is updated with the new query params so it can be shared and the user can navigate back and forward in the browser.
+ */
 
 export const CollectionItemsPanel = ({
   collectionId,
@@ -78,7 +90,6 @@ export const CollectionItemsPanel = ({
     }
   }
 
-  // TODO:ME This code will be test with an e2e test because it updates the URL
   const handleSearchSubmit = async (searchValue: string) => {
     itemsListContainerRef.current?.scrollTo({ top: 0 })
 
@@ -118,13 +129,15 @@ export const CollectionItemsPanel = ({
     }
   }
 
-  // TODO:ME This code will be test with an e2e test because it updates the URL
   const handleItemsTypeChange = async (itemTypeChange: ItemTypeChange) => {
     const { type, checked } = itemTypeChange
 
+    // These istanbul comments are only because checking if itemTypes is undefined is not possible is just a good defensive code to have
     const newItemsTypes = checked
-      ? [...new Set([...(currentSearchCriteria?.itemTypes ?? []), type])]
-      : (currentSearchCriteria.itemTypes ?? []).filter((itemType) => itemType !== type)
+      ? [...new Set([...(currentSearchCriteria?.itemTypes ?? /* istanbul ignore next */ []), type])]
+      : (currentSearchCriteria.itemTypes ?? /* istanbul ignore next */ []).filter(
+          (itemType) => itemType !== type
+        )
 
     // KEEP SEARCH VALUE IF EXISTS
     itemsListContainerRef.current?.scrollTo({ top: 0 })
@@ -154,7 +167,6 @@ export const CollectionItemsPanel = ({
     }
   }
 
-  // TODO:ME This code will MAYBE? be test with an e2e test because it updates the URL
   async function loadItemsOnBackAndForwardNavigation() {
     const searchParams = new URLSearchParams(window.location.search)
     const collectionQueryParams = CollectionHelper.defineCollectionQueryParams(searchParams)

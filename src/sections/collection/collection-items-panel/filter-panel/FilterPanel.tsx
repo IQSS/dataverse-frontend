@@ -35,7 +35,7 @@ export const FilterPanel = ({
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Filter Results</Offcanvas.Title>
         </Offcanvas.Header>
-        <Offcanvas.Body>
+        <Offcanvas.Body dataTestId="filter-panel-off-canvas-body">
           <div className={styles['filters-wrapper']}>
             <TypeFilters
               onItemTypesChange={onItemTypesChange}

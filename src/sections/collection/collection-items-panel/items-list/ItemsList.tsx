@@ -65,7 +65,8 @@ export const ItemsList = forwardRef(
             [styles['empty-or-error']]: isEmptyItems || error
           })}
           tabIndex={0}
-          ref={ref as ForwardedRef<HTMLDivElement>}>
+          ref={ref as ForwardedRef<HTMLDivElement>}
+          data-testid="items-list-scrollable-container">
           {showNoItemsMessage && <NoItemsMessage />}
           {showNoSearchMatchesMessage && <NoSearchMatchesMessage />}
 
