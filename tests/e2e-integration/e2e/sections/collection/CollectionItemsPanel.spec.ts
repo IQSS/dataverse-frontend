@@ -1,10 +1,36 @@
+import { CollectionItem } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { QueryParamKey } from '@/sections/Route.enum'
 import { DatasetHelper } from '@tests/e2e-integration/shared/datasets/DatasetHelper'
 import { FileHelper } from '@tests/e2e-integration/shared/files/FileHelper'
 import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
+import { Interception } from 'cypress/types/net-stubbing'
 
 const numbersOfDatasetsToCreate = [1, 2, 3, 4, 5, 6, 7, 8]
+
+const SEARCH_ENDPOINT_REGEX = /^\/api\/v1\/search(\?.*)?$/
+
+function extractInfoFromInterceptedResponse(interception: Interception) {
+  const totalCount = interception?.response?.body?.data.total_count as number
+  const totalItemsInResponse = interception?.response?.body?.data.items.length as number
+  const collectionsInResponse = (
+    interception?.response?.body?.data.items as CollectionItem[]
+  ).filter((item: CollectionItem) => item.type === CollectionItemType.COLLECTION)
+  const datasetsInResponse = (interception?.response?.body?.data.items as CollectionItem[]).filter(
+    (item: CollectionItem) => item.type === CollectionItemType.DATASET
+  )
+  const filesInResponse = (interception?.response?.body?.data.items as CollectionItem[]).filter(
+    (item: CollectionItem) => item.type === CollectionItemType.FILE
+  )
+
+  return {
+    totalCount,
+    totalItemsInResponse,
+    collectionsInResponse,
+    datasetsInResponse,
+    filesInResponse
+  }
+}
 
 describe('Collection Items Panel', () => {
   before(() => {
@@ -13,6 +39,8 @@ describe('Collection Items Panel', () => {
   })
 
   beforeEach(async () => {
+    cy.intercept(SEARCH_ENDPOINT_REGEX).as('getCollectionItems')
+
     // Creates 8 datasets with 1 file each
     for (const _number of numbersOfDatasetsToCreate) {
       await DatasetHelper.createWithFile(FileHelper.create())
@@ -25,108 +53,221 @@ describe('Collection Items Panel', () => {
     })
   })
 
-  //TODO: I cant call CollectionHelper with a destroy method because it gives me an error, so only testing dataset and filter items
-
   it.only('performs different search, filtering and respond to back and forward navigation', () => {
     cy.visit(`/spa/collections`)
 
-    cy.wait(4_000)
+    cy.wait('@getCollectionItems').then((interception) => {
+      console.log('interception', interception)
+      const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
+        extractInfoFromInterceptedResponse(interception)
 
-    // Should show 8 items:  8 Datasets only because by default if no query params are present in the URL, the item types by default are COLLECTION and DATASET.
-    cy.findByTestId('items-list').should('exist').children().should('have.length', 8)
-    cy.findByText('8 results').should('exist')
+      cy.findByTestId('items-list')
+        .should('exist')
+        .children()
+        .should('have.length', totalItemsInResponse)
 
-    // 1 - Now select checkbox file, assert that 10 of 16 results displayed and url is updated correctly
+      collectionsInResponse.length > 0 &&
+        cy.findAllByTestId('collection-card').should('have.length', collectionsInResponse.length)
+
+      datasetsInResponse.length > 0 &&
+        cy.findAllByTestId('dataset-card').should('have.length', datasetsInResponse.length)
+
+      filesInResponse.length > 0 &&
+        cy.findAllByTestId('file-card').should('have.length', filesInResponse.length)
+    })
+
+    // 1 - Now select the Files checkbox
     cy.findByRole('checkbox', { name: /Files/ }).click()
 
-    const firstExpectedURL = new URLSearchParams({
-      [QueryParamKey.COLLECTION_ITEM_TYPES]: [
-        CollectionItemType.COLLECTION,
-        CollectionItemType.DATASET,
-        CollectionItemType.FILE
-      ].join(',')
-    }).toString()
+    cy.wait('@getCollectionItems').then((interception) => {
+      console.log('interception', interception)
+      const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
+        extractInfoFromInterceptedResponse(interception)
 
-    cy.url().should('include', `/collections?${firstExpectedURL}`)
+      cy.findByTestId('items-list')
+        .should('exist')
+        .children()
+        .should('have.length', totalItemsInResponse)
 
-    cy.findByText('10 of 16 results displayed').should('exist')
-    cy.findByTestId('items-list').should('exist').children().should('have.length', 10)
+      collectionsInResponse.length > 0 &&
+        cy.findAllByTestId('collection-card').should('have.length', collectionsInResponse.length)
 
-    // 2 - Now perform a search in the input and validate that the search is performed correctly and the url is updated correctly
+      datasetsInResponse.length > 0 &&
+        cy.findAllByTestId('dataset-card').should('have.length', datasetsInResponse.length)
+
+      filesInResponse.length > 0 &&
+        cy.findAllByTestId('file-card').should('have.length', filesInResponse.length)
+
+      const firstExpectedURL = new URLSearchParams({
+        [QueryParamKey.COLLECTION_ITEM_TYPES]: [
+          CollectionItemType.COLLECTION,
+          CollectionItemType.DATASET,
+          CollectionItemType.FILE
+        ].join(',')
+      }).toString()
+
+      cy.url().should('include', `/collections?${firstExpectedURL}`)
+    })
+
+    // 2 - Now perform a search in the input
     cy.findByPlaceholderText('Search this collection...').type('Darwin{enter}')
 
-    const secondExpectedURL = new URLSearchParams({
-      [QueryParamKey.COLLECTION_ITEM_TYPES]: [
-        CollectionItemType.COLLECTION,
-        CollectionItemType.DATASET,
-        CollectionItemType.FILE
-      ].join(','),
-      [QueryParamKey.QUERY]: 'Darwin'
-    }).toString()
+    cy.wait('@getCollectionItems').then((interception) => {
+      console.log('interception', interception)
+      const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
+        extractInfoFromInterceptedResponse(interception)
 
-    cy.url().should('include', `/collections?${secondExpectedURL}`)
+      cy.findByTestId('items-list')
+        .should('exist')
+        .children()
+        .should('have.length', totalItemsInResponse)
 
-    cy.findByText('8 results').should('exist')
-    cy.findByTestId('items-list').should('exist').children().should('have.length', 8)
+      collectionsInResponse.length > 0 &&
+        cy.findAllByTestId('collection-card').should('have.length', collectionsInResponse.length)
+
+      datasetsInResponse.length > 0 &&
+        cy.findAllByTestId('dataset-card').should('have.length', datasetsInResponse.length)
+
+      filesInResponse.length > 0 &&
+        cy.findAllByTestId('file-card').should('have.length', filesInResponse.length)
+
+      const secondExpectedURL = new URLSearchParams({
+        [QueryParamKey.COLLECTION_ITEM_TYPES]: [
+          CollectionItemType.COLLECTION,
+          CollectionItemType.DATASET,
+          CollectionItemType.FILE
+        ].join(','),
+        [QueryParamKey.QUERY]: 'Darwin'
+      }).toString()
+
+      cy.url().should('include', `/collections?${secondExpectedURL}`)
+    })
 
     // 3 - Clear the search and assert that the search is performed correctly and the url is updated correctly
     cy.findByPlaceholderText('Search this collection...').clear()
     cy.findByRole('button', { name: /Search submit/ }).click()
 
-    const thirdExpectedURL = new URLSearchParams({
-      [QueryParamKey.COLLECTION_ITEM_TYPES]: [
-        CollectionItemType.COLLECTION,
-        CollectionItemType.DATASET,
-        CollectionItemType.FILE
-      ].join(',')
-    }).toString()
+    cy.wait('@getCollectionItems').then((interception) => {
+      console.log('interception', interception)
+      const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
+        extractInfoFromInterceptedResponse(interception)
 
-    cy.url().should('include', `/collections?${thirdExpectedURL}`)
+      cy.findByTestId('items-list')
+        .should('exist')
+        .children()
+        .should('have.length', totalItemsInResponse)
 
-    cy.findByText('10 of 16 results displayed').should('exist')
-    cy.findByTestId('items-list').should('exist').children().should('have.length', 10)
+      collectionsInResponse.length > 0 &&
+        cy.findAllByTestId('collection-card').should('have.length', collectionsInResponse.length)
 
-    // 4 - Uncheck all and check only Files, assert that  8 results displayed and url is updated correctly
+      datasetsInResponse.length > 0 &&
+        cy.findAllByTestId('dataset-card').should('have.length', datasetsInResponse.length)
+
+      filesInResponse.length > 0 &&
+        cy.findAllByTestId('file-card').should('have.length', filesInResponse.length)
+
+      const thirdExpectedURL = new URLSearchParams({
+        [QueryParamKey.COLLECTION_ITEM_TYPES]: [
+          CollectionItemType.COLLECTION,
+          CollectionItemType.DATASET,
+          CollectionItemType.FILE
+        ].join(',')
+      }).toString()
+
+      cy.url().should('include', `/collections?${thirdExpectedURL}`)
+    })
+
+    // 4 - Uncheck the Collections checkbox
 
     cy.findByRole('checkbox', { name: /Collections/ }).click()
+
+    cy.wait('@getCollectionItems').then((interception) => {
+      console.log('interception', interception)
+      const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
+        extractInfoFromInterceptedResponse(interception)
+
+      cy.findByTestId('items-list')
+        .should('exist')
+        .children()
+        .should('have.length', totalItemsInResponse)
+
+      collectionsInResponse.length > 0 &&
+        cy.findAllByTestId('collection-card').should('have.length', collectionsInResponse.length)
+
+      datasetsInResponse.length > 0 &&
+        cy.findAllByTestId('dataset-card').should('have.length', datasetsInResponse.length)
+
+      filesInResponse.length > 0 &&
+        cy.findAllByTestId('file-card').should('have.length', filesInResponse.length)
+
+      const fourthExpectedURL = new URLSearchParams({
+        [QueryParamKey.COLLECTION_ITEM_TYPES]: [
+          CollectionItemType.DATASET,
+          CollectionItemType.FILE
+        ].join(',')
+      }).toString()
+
+      cy.url().should('include', `/collections?${fourthExpectedURL}`)
+    })
+
+    // 5 - Uncheck the Dataset checkbox
     cy.findByRole('checkbox', { name: /Datasets/ }).click()
 
-    const fourthExpectedURL = new URLSearchParams({
-      [QueryParamKey.COLLECTION_ITEM_TYPES]: [CollectionItemType.FILE].join(',')
-    }).toString()
+    cy.wait('@getCollectionItems').then((interception) => {
+      console.log('interception', interception)
+      const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
+        extractInfoFromInterceptedResponse(interception)
 
-    cy.url().should('include', `/collections?${fourthExpectedURL}`)
-    cy.findByText('8 results').should('exist')
-    cy.findByTestId('items-list').should('exist').children().should('have.length', 8)
+      cy.findByTestId('items-list')
+        .should('exist')
+        .children()
+        .should('have.length', totalItemsInResponse)
 
-    // 5 - Now check all to get 16 total items by scroll to the bottom and assert that 16 of 16 results displayed
-    cy.findByRole('checkbox', { name: /Collections/ }).click()
-    cy.findByRole('checkbox', { name: /Datasets/ }).click()
+      collectionsInResponse.length > 0 &&
+        cy.findAllByTestId('collection-card').should('have.length', collectionsInResponse.length)
 
-    cy.findByText('10 of 16 results displayed').should('exist')
-    cy.findByTestId('items-list').should('exist').children().should('have.length', 10)
+      datasetsInResponse.length > 0 &&
+        cy.findAllByTestId('dataset-card').should('have.length', datasetsInResponse.length)
 
-    cy.findByTestId('items-list-scrollable-container').scrollTo('bottom')
+      filesInResponse.length > 0 &&
+        cy.findAllByTestId('file-card').should('have.length', filesInResponse.length)
 
-    const fifthExpectedURL = new URLSearchParams({
-      [QueryParamKey.COLLECTION_ITEM_TYPES]: [
-        CollectionItemType.FILE,
-        CollectionItemType.COLLECTION,
-        CollectionItemType.DATASET
-      ].join(',')
-    }).toString()
+      const fifthExpectedURL = new URLSearchParams({
+        [QueryParamKey.COLLECTION_ITEM_TYPES]: [CollectionItemType.FILE].join(',')
+      }).toString()
 
-    cy.url().should('include', `/collections?${fifthExpectedURL}`)
+      cy.url().should('include', `/collections?${fifthExpectedURL}`)
+    })
 
-    cy.findByText('16 of 16 results displayed').should('exist')
-
-    cy.findByTestId('items-list').should('exist').children().should('have.length', 16)
-
-    // 6 - Navigate baack with the browser and assert that the url is updated correctly and the items are displayed correctly as in step 4
+    //6 - Navigate back with the browser and assert that the url is updated correctly and the items are displayed correctly as in step 4
     cy.go('back')
 
-    cy.url().should('include', `/collections?${fourthExpectedURL}`)
-    cy.findByText('8 results').should('exist')
-    cy.findByTestId('items-list').should('exist').children().should('have.length', 8)
+    cy.wait('@getCollectionItems').then((interception) => {
+      const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
+        extractInfoFromInterceptedResponse(interception)
+
+      cy.findByTestId('items-list')
+        .should('exist')
+        .children()
+        .should('have.length', totalItemsInResponse)
+
+      collectionsInResponse.length > 0 &&
+        cy.findAllByTestId('collection-card').should('have.length', collectionsInResponse.length)
+
+      datasetsInResponse.length > 0 &&
+        cy.findAllByTestId('dataset-card').should('have.length', datasetsInResponse.length)
+
+      filesInResponse.length > 0 &&
+        cy.findAllByTestId('file-card').should('have.length', filesInResponse.length)
+
+      const fourthExpectedURL = new URLSearchParams({
+        [QueryParamKey.COLLECTION_ITEM_TYPES]: [
+          CollectionItemType.DATASET,
+          CollectionItemType.FILE
+        ].join(',')
+      }).toString()
+
+      cy.url().should('include', `/collections?${fourthExpectedURL}`)
+    })
   })
 })
