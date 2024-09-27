@@ -21,6 +21,11 @@ describe('Collection page', () => {
   })
 
   it('renders skeleton while loading', () => {
+    const DELAYED_TIME = 200
+    collectionRepository.getById = cy.stub().callsFake(() => {
+      return Cypress.Promise.delay(DELAYED_TIME).then(() => collection)
+    })
+
     cy.customMount(
       <Collection
         repository={collectionRepository}
@@ -30,8 +35,17 @@ describe('Collection page', () => {
       />
     )
 
+    cy.clock()
+
     cy.findByTestId('collection-skeleton').should('exist')
     cy.findByRole('heading', { name: 'Collection Name' }).should('not.exist')
+
+    cy.tick(DELAYED_TIME)
+
+    cy.findByTestId('collection-skeleton').should('not.exist')
+    cy.findByRole('heading', { name: 'Collection Name' }).should('exist')
+
+    cy.clock().then((clock) => clock.restore())
   })
 
   it('renders page not found when collection is undefined', () => {
