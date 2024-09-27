@@ -30,7 +30,7 @@ export const Vocabulary = ({
   isFieldThatMayBecomeRequired,
   childFieldNamesThatTriggerRequired
 }: VocabularyProps) => {
-  const { t } = useTranslation('datasetMetadataForm')
+  const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
 
   const { control } = useFormContext()
 

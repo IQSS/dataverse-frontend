@@ -31,7 +31,7 @@ export const Primitive = ({
   isFieldThatMayBecomeRequired,
   childFieldNamesThatTriggerRequired
 }: PrimitiveProps) => {
-  const { t } = useTranslation('datasetMetadataForm')
+  const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
   const { control } = useFormContext()
 
   const builtFieldName = useMemo(
