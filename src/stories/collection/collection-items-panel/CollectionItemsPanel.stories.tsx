@@ -87,27 +87,87 @@ export const NoSearchMatches: Story = {
   )
 }
 
-export const NoCollectionDatasetsOrFilesAnonymousUser: Story = {
+export const NoCollectionDatasetsOrFiles: Story = {
   render: () => (
     <CollectionItemsPanel
       collectionId="collectionId"
-      collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
+      collectionQueryParams={{
+        pageQuery: 1,
+        searchQuery: undefined,
+        typesQuery: [
+          CollectionItemType.COLLECTION,
+          CollectionItemType.DATASET,
+          CollectionItemType.FILE
+        ]
+      }}
+      collectionRepository={new NoCollectionMockRepository()}
+      addDataSlot={null}
+    />
+  )
+}
+export const NoCollectionDatasetsOrFilesAuthenticatedUser: Story = {
+  decorators: [WithLoggedInUser],
+  render: () => (
+    <CollectionItemsPanel
+      collectionId="collectionId"
+      collectionQueryParams={{
+        pageQuery: 1,
+        searchQuery: undefined,
+        typesQuery: [
+          CollectionItemType.COLLECTION,
+          CollectionItemType.DATASET,
+          CollectionItemType.FILE
+        ]
+      }}
+      collectionRepository={new NoCollectionMockRepository()}
+      addDataSlot={
+        <AddDataActionsButton collectionId={'collectionId'} canAddCollection canAddDataset />
+      }
+    />
+  )
+}
+
+export const NoCollections: Story = {
+  render: () => (
+    <CollectionItemsPanel
+      collectionId="collectionId"
+      collectionQueryParams={{
+        pageQuery: 1,
+        searchQuery: undefined,
+        typesQuery: [CollectionItemType.COLLECTION]
+      }}
       collectionRepository={new NoCollectionMockRepository()}
       addDataSlot={null}
     />
   )
 }
 
-export const NoCollectionDatasetsOrFilesAuthenticatedUser: Story = {
-  decorators: [WithLoggedInUser],
+export const NoDatasets: Story = {
   render: () => (
     <CollectionItemsPanel
       collectionId="collectionId"
-      collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
+      collectionQueryParams={{
+        pageQuery: 1,
+        searchQuery: undefined,
+        typesQuery: [CollectionItemType.DATASET]
+      }}
       collectionRepository={new NoCollectionMockRepository()}
-      addDataSlot={
-        <AddDataActionsButton collectionId={'collectionId'} canAddCollection canAddDataset />
-      }
+      addDataSlot={null}
+    />
+  )
+}
+
+export const NoFiles: Story = {
+  render: () => (
+    <CollectionItemsPanel
+      collectionId="collectionId"
+      collectionQueryParams={{
+        pageQuery: 1,
+        searchQuery: undefined,
+        typesQuery: [CollectionItemType.FILE]
+      }}
+      collectionRepository={new NoCollectionMockRepository()}
+      addDataSlot={null}
     />
   )
 }

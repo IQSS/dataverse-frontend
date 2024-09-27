@@ -23,8 +23,6 @@ interface CollectionItemsPanelProps {
   addDataSlot: JSX.Element | null
 }
 
-// TODO:ME Add tests for off canvas component
-
 /**
  * HOW IT WORKS:
  * This component loads items on 5 different scenarios:
