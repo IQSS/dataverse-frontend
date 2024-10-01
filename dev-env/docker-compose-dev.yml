@@ -46,7 +46,10 @@ services:
       DATAVERSE_DB_HOST: postgres
       DATAVERSE_DB_PASSWORD: secret
       DATAVERSE_DB_USER: ${DATAVERSE_DB_USER}
-      DATAVERSE_FEATURE_API_SESSION_AUTH: 1
+      DATAVERSE_AUTH_OIDC_ENABLED: "1"
+      DATAVERSE_AUTH_OIDC_CLIENT_ID: oauth2-proxy
+      DATAVERSE_AUTH_OIDC_CLIENT_SECRET: 72341b6d-7065-4518-a0e4-50ee15025608
+      DATAVERSE_AUTH_OIDC_AUTH_SERVER_URL: http://keycloak.localhost:9080/realms/oauth2-proxy
       JVM_ARGS: -Ddataverse.pid.providers=fake
         -Ddataverse.pid.default-provider=fake
         -Ddataverse.pid.fake.type=FAKE
@@ -66,8 +69,8 @@ services:
         -Ddataverse.files.s3.connection-pool-size=2048
         -Ddataverse.files.s3.custom-endpoint-region=us-east-1
         -Ddataverse.files.s3.custom-endpoint-url=https://s3.us-east-1.amazonaws.com
-    expose:
-      - '8080'
+    ports:
+      - '8080:8080'
     networks:
       - dataverse
     depends_on:

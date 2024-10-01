@@ -1,20 +1,19 @@
 # see: https://github.com/oauth2-proxy/oauth2-proxy/blob/master/contrib/local-environment/docker-compose-keycloak.yaml
 # This docker-compose file can be used to bring up an example instance of oauth2-proxy
 # for manual testing and exploration of features.
-# Alongside OAuth2-Proxy, this file also starts Keycloak to act as the identity provider,
-# dvproxy as an example upstream.
+# Alongside OAuth2-Proxy, this file also starts Keycloak to act as the identity provider
 #
 # This can either be created using docker-compose
 #    docker-compose -f docker-compose-keycloak.yaml <command>
 # Or:
 #    make keycloak-<command> (eg. make keycloak-up, make keycloak-down)
 #
-# Access public SPA http://dataverse-public.localtest.me:9000/
-# Access public API http://dataverse-public.localtest.me:9000/api/v1/users/:me
+# Access public SPA http://dataverse-public.localhost:9000/
+# Access public API http://dataverse-public.localhost:9000/api/v1/users/:me
 # click on "Log In" and login with user=admin@example.com, password=password, or use:
-# Access authenticated SPA http://oauth2-proxy.localtest.me:4180/ to initiate a login cycle using user=admin@example.com, password=password
-# Access authenticated API http://oauth2-proxy.localtest.me:4180/api/v1/users/:me to initiate a login cycle using user=admin@example.com, password=password
-# Access http://keycloak.localtest.me:9080 with the same credentials to check out the settings
+# Access authenticated SPA http://oauth2-proxy.localhost:4180/ to initiate a login cycle using user=admin@example.com, password=password
+# Access authenticated API http://oauth2-proxy.localhost:4180/api/v1/users/:me to initiate a login cycle using user=admin@example.com, password=password
+# Access http://keycloak.localhost:9080 with the same credentials to check out the settings
 services:
 
 # secured access
@@ -56,7 +55,7 @@ services:
     networks:
       keycloak:
         aliases:
-          - keycloak.localtest.me
+          - keycloak.localhost
 
   dataverse:
     container_name: 'dataverse'
@@ -67,29 +66,11 @@ services:
       network: host
       args:
         CONFIG: authn
+        DATAVERSE_SERVER: ${DATAVERSE_SERVER}
     networks:
       dataverse:
         aliases:
-          - dataverse.localtest.me
-    depends_on:
-      - dvproxy
-
-  dvproxy:
-    container_name: 'dvproxy'
-    hostname: dvproxy
-    build:
-      context: ./dvproxy
-      dockerfile: ./Dockerfile
-      network: host
-    restart: on-failure
-    environment:
-      DATAVERSE_SERVER: ${DATAVERSE_SERVER}
-      API_KEY: ${API_KEY}
-      UNBLOCK_KEY: ${UNBLOCK_KEY}
-      USER_HEADER: ${USER_HEADER}
-    networks:
-      - dataverse
-    privileged: false
+          - dataverse.localhost
 
 # public access
 
@@ -108,7 +89,7 @@ services:
     networks:
       dataverse:
         aliases:
-          - dataverse-public.localtest.me
+          - dataverse-public.localhost
 
 networks:
   dataverse:
