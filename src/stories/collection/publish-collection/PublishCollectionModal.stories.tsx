@@ -21,6 +21,7 @@ export const Default: Story = {
       show={true}
       repository={new CollectionMockRepository()}
       collectionId={'testAlias'}
-      handleClose={() => {}}></PublishCollectionModal>
+      handleClose={() => {}}
+    />
   )
 }
