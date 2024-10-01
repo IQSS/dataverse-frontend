@@ -91,8 +91,8 @@ export const CollectionItemsPanel = ({
   const handleSearchSubmit = async (searchValue: string) => {
     itemsListContainerRef.current?.scrollTo({ top: 0 })
 
-    const resetedPaginationInfo = new CollectionItemsPaginationInfo()
-    setPaginationInfo(resetedPaginationInfo)
+    const resetPaginationInfo = new CollectionItemsPaginationInfo()
+    setPaginationInfo(resetPaginationInfo)
 
     if (searchValue === '') {
       // Update the URL without the search value, keep other querys
@@ -119,10 +119,10 @@ export const CollectionItemsPanel = ({
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE]
     )
 
-    const totalItemsCount = await loadMore(resetedPaginationInfo, newCollectionSearchCriteria, true)
+    const totalItemsCount = await loadMore(resetPaginationInfo, newCollectionSearchCriteria, true)
 
     if (totalItemsCount !== undefined) {
-      const paginationInfoUpdated = resetedPaginationInfo.withTotal(totalItemsCount)
+      const paginationInfoUpdated = resetPaginationInfo.withTotal(totalItemsCount)
       setPaginationInfo(paginationInfoUpdated)
     }
   }
@@ -140,8 +140,8 @@ export const CollectionItemsPanel = ({
     // KEEP SEARCH VALUE IF EXISTS
     itemsListContainerRef.current?.scrollTo({ top: 0 })
 
-    const resetedPaginationInfo = new CollectionItemsPaginationInfo()
-    setPaginationInfo(resetedPaginationInfo)
+    const resetPaginationInfo = new CollectionItemsPaginationInfo()
+    setPaginationInfo(resetPaginationInfo)
 
     // Update the URL with the new item types, keep other querys and include the search value if exists
     setSearchParams((currentSearchParams) => ({
@@ -157,10 +157,10 @@ export const CollectionItemsPanel = ({
       newItemsTypes
     )
 
-    const totalItemsCount = await loadMore(resetedPaginationInfo, newCollectionSearchCriteria, true)
+    const totalItemsCount = await loadMore(resetPaginationInfo, newCollectionSearchCriteria, true)
 
     if (totalItemsCount !== undefined) {
-      const paginationInfoUpdated = resetedPaginationInfo.withTotal(totalItemsCount)
+      const paginationInfoUpdated = resetPaginationInfo.withTotal(totalItemsCount)
       setPaginationInfo(paginationInfoUpdated)
     }
   }
