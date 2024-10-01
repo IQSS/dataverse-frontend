@@ -46,6 +46,7 @@ describe('Collection Page', () => {
         cy.findByRole('button', { name: 'Continue' }).click()
         cy.contains('Your collection is now public.').should('exist')
         cy.findByText('Unpublished').should('not.exist')
+        cy.findByRole('button', { name: 'Publish' }).should('not.exist')
       })
   })
   it('Navigates to Create Dataset page when New Dataset link clicked', () => {
