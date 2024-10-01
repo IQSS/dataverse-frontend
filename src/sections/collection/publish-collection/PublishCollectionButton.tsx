@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
-import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
-import { PublishCollectionModal } from './publish-collection/PublishCollectionModal'
+import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
+import { PublishCollectionModal } from './PublishCollectionModal'
 import { Button } from '@iqss/dataverse-design-system'
 import { GlobeAmericas } from 'react-bootstrap-icons'
-import styles from '../shared/add-data-actions/AddDataActionsButton.module.scss'
+import styles from '../../shared/add-data-actions/AddDataActionsButton.module.scss'
 
 interface PublishCollectionButtonProps {
   repository: CollectionRepository
@@ -17,10 +17,6 @@ export function PublishCollectionButton({
   const { t } = useTranslation('collection')
   const [showModal, setShowModal] = useState(false)
 
-  const handleSelect = () => {
-    setShowModal(true)
-  }
-
   return (
     <>
       <PublishCollectionModal
@@ -32,8 +28,8 @@ export function PublishCollectionButton({
       <Button
         icon={<GlobeAmericas className={styles.icon} />}
         variant="secondary"
-        onClick={handleSelect}
-        type="submit">
+        onClick={() => setShowModal(true)}
+        type="button">
         {t('publish.button')}
       </Button>
     </>
