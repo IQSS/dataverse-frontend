@@ -1,10 +1,10 @@
 import { DatasetPreview as JSDatasetPreview } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/DatasetPreview'
-import { DatasetPreview } from '../../domain/models/DatasetPreview'
+import { DatasetItemTypePreview } from '../../domain/models/DatasetItemTypePreview'
 import { DatasetVersionInfo as JSDatasetVersionInfo } from '@iqss/dataverse-client-javascript/dist/datasets/domain/models/Dataset'
 import { JSDatasetVersionMapper } from './JSDatasetVersionMapper'
 
 export class JSDatasetPreviewMapper {
-  static toDatasetPreview(jsDatasetPreview: JSDatasetPreview): DatasetPreview {
+  static toDatasetItemTypePreview(jsDatasetPreview: JSDatasetPreview): DatasetItemTypePreview {
     return {
       type: jsDatasetPreview.type,
       persistentId: jsDatasetPreview.persistentId,

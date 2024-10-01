@@ -1,10 +1,10 @@
 import { DatasetCard } from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCard'
-import { DatasetPreviewMother } from '@tests/component/dataset/domain/models/DatasetPreviewMother'
+import { DatasetItemTypePreviewMother } from '@tests/component/dataset/domain/models/DatasetItemTypePreviewMother'
 import { DateHelper } from '@/shared/helpers/DateHelper'
 
 describe('DatasetCard', () => {
   it('should render the card', () => {
-    const dataset = DatasetPreviewMother.createWithThumbnail()
+    const dataset = DatasetItemTypePreviewMother.createWithThumbnail()
 
     cy.customMount(<DatasetCard datasetPreview={dataset} />)
 

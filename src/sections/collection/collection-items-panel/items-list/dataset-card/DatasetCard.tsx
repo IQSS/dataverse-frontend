@@ -1,11 +1,11 @@
-import { DatasetPreview } from '@/dataset/domain/models/DatasetPreview'
+import { DatasetItemTypePreview } from '@/dataset/domain/models/DatasetItemTypePreview'
 import { DatasetCardHeader } from './DatasetCardHeader'
 import { DatasetCardThumbnail } from './DatasetCardThumbnail'
 import { DatasetCardInfo } from './DatasetCardInfo'
 import styles from './DatasetCard.module.scss'
 
 interface DatasetCardProps {
-  datasetPreview: DatasetPreview
+  datasetPreview: DatasetItemTypePreview
 }
 
 export function DatasetCard({ datasetPreview }: DatasetCardProps) {

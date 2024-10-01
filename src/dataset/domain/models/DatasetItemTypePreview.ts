@@ -2,7 +2,7 @@ import { CollectionItemType } from '../../../collection/domain/models/Collection
 import { PublicationStatus } from '../../../shared/core/domain/models/PublicationStatus'
 import { DatasetVersion } from './Dataset'
 
-export interface DatasetPreview {
+export interface DatasetItemTypePreview {
   type: CollectionItemType.DATASET
   persistentId: string
   version: DatasetVersion

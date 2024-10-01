@@ -1,9 +1,9 @@
 import { DatasetCardThumbnail } from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCardThumbnail'
-import { DatasetPreviewMother } from '@tests/component/dataset/domain/models/DatasetPreviewMother'
+import { DatasetItemTypePreviewMother } from '@tests/component/dataset/domain/models/DatasetItemTypePreviewMother'
 
 describe('DatasetCardThumbnail', () => {
   it('should render the thumbnail', () => {
-    const dataset = DatasetPreviewMother.createWithThumbnail()
+    const dataset = DatasetItemTypePreviewMother.createWithThumbnail()
     cy.customMount(
       <DatasetCardThumbnail
         persistentId={dataset.persistentId}
@@ -19,7 +19,7 @@ describe('DatasetCardThumbnail', () => {
   })
 
   it('should render the placeholder if the dataset has no thumbnail', () => {
-    const dataset = DatasetPreviewMother.createWithNoThumbnail()
+    const dataset = DatasetItemTypePreviewMother.createWithNoThumbnail()
     cy.customMount(
       <DatasetCardThumbnail
         persistentId={dataset.persistentId}

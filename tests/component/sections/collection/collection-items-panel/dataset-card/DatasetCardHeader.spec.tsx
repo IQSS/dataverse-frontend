@@ -1,9 +1,9 @@
 import { DatasetCardHeader } from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCardHeader'
-import { DatasetPreviewMother } from '@tests/component/dataset/domain/models/DatasetPreviewMother'
+import { DatasetItemTypePreviewMother } from '@tests/component/dataset/domain/models/DatasetItemTypePreviewMother'
 
 describe('DatasetCardHeader', () => {
   it('should render the header', () => {
-    const dataset = DatasetPreviewMother.create()
+    const dataset = DatasetItemTypePreviewMother.create()
     cy.customMount(
       <DatasetCardHeader persistentId={dataset.persistentId} version={dataset.version} />
     )
@@ -17,7 +17,7 @@ describe('DatasetCardHeader', () => {
     cy.findByLabelText('icon-dataset').should('exist')
   })
   it('should render the correct search param for draft version', () => {
-    const dataset = DatasetPreviewMother.createDraft()
+    const dataset = DatasetItemTypePreviewMother.createDraft()
     cy.customMount(
       <DatasetCardHeader persistentId={dataset.persistentId} version={dataset.version} />
     )

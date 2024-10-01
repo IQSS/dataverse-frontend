@@ -22,7 +22,7 @@ export class JSCollectionItemsMapper {
       }
 
       if (item.type === JSCollectionItemType.DATASET) {
-        items.push(JSDatasetPreviewMapper.toDatasetPreview(item))
+        items.push(JSDatasetPreviewMapper.toDatasetItemTypePreview(item))
       }
 
       if (item.type === JSCollectionItemType.FILE) {
@@ -34,21 +34,21 @@ export class JSCollectionItemsMapper {
   }
 
   static toCollectionItemTypePreview(
-    jsDatasetPreview: JSCollectionPreview
+    jsCollectionPreview: JSCollectionPreview
   ): CollectionItemTypePreview {
     return {
-      type: jsDatasetPreview.type,
+      type: jsCollectionPreview.type,
       isReleased: JSCollectionItemsMapper.toIsRelasedCollection(
-        jsDatasetPreview.publicationStatuses
+        jsCollectionPreview.publicationStatuses
       ),
-      name: jsDatasetPreview.name,
-      alias: jsDatasetPreview.alias,
-      description: jsDatasetPreview.description,
-      affiliation: jsDatasetPreview.affiliation,
-      releaseOrCreateDate: jsDatasetPreview.releaseOrCreateDate,
-      thumbnail: jsDatasetPreview.imageUrl,
-      parentCollectionName: jsDatasetPreview.parentName,
-      parentCollectionAlias: jsDatasetPreview.parentAlias
+      name: jsCollectionPreview.name,
+      alias: jsCollectionPreview.alias,
+      description: jsCollectionPreview.description,
+      affiliation: jsCollectionPreview.affiliation,
+      releaseOrCreateDate: jsCollectionPreview.releaseOrCreateDate,
+      thumbnail: jsCollectionPreview.imageUrl,
+      parentCollectionName: jsCollectionPreview.parentName,
+      parentCollectionAlias: jsCollectionPreview.parentAlias
     }
   }
 

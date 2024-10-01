@@ -1,11 +1,11 @@
 import { DatasetCardInfo } from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCardInfo'
-import { DatasetPreviewMother } from '../../../../dataset/domain/models/DatasetPreviewMother'
+import { DatasetItemTypePreviewMother } from '../../../../dataset/domain/models/DatasetItemTypePreviewMother'
 import { DateHelper } from '@/shared/helpers/DateHelper'
 import styles from '@/sections/collection/collection-items-panel/items-list/dataset-card/DatasetCard.module.scss'
 
 describe('DatasetCardInfo', () => {
   it('should render the dataset info', () => {
-    const dataset = DatasetPreviewMother.createDraft()
+    const dataset = DatasetItemTypePreviewMother.createDraft()
     cy.customMount(
       <DatasetCardInfo
         version={dataset.version}
@@ -24,7 +24,7 @@ describe('DatasetCardInfo', () => {
   })
 
   it('should render the citation with the deaccessioned background if the dataset is deaccessioned', () => {
-    const dataset = DatasetPreviewMother.createDeaccessioned()
+    const dataset = DatasetItemTypePreviewMother.createDeaccessioned()
     cy.customMount(
       <DatasetCardInfo
         version={dataset.version}

@@ -1,20 +1,20 @@
 import { faker } from '@faker-js/faker'
-import { DatasetPreview } from '../../../../../src/dataset/domain/models/DatasetPreview'
+import { DatasetItemTypePreview } from '../../../../../src/dataset/domain/models/DatasetItemTypePreview'
 import { DatasetVersionMother } from './DatasetMother'
 import { FakerHelper } from '../../../shared/FakerHelper'
 import { CollectionItemType } from '../../../../../src/collection/domain/models/CollectionItemType'
 import { PublicationStatus } from '../../../../../src/shared/core/domain/models/PublicationStatus'
 
-export class DatasetPreviewMother {
-  static createMany(count: number): DatasetPreview[] {
+export class DatasetItemTypePreviewMother {
+  static createMany(count: number): DatasetItemTypePreview[] {
     return Array.from({ length: count }, () => this.create())
   }
 
-  static createManyRealistic(count: number): DatasetPreview[] {
+  static createManyRealistic(count: number): DatasetItemTypePreview[] {
     return Array.from({ length: count }, () => this.createRealistic())
   }
 
-  static create(props?: Partial<DatasetPreview>): DatasetPreview {
+  static create(props?: Partial<DatasetItemTypePreview>): DatasetItemTypePreview {
     const datasetPreview = {
       persistentId: faker.datatype.uuid(),
       version: DatasetVersionMother.create(),
@@ -39,26 +39,26 @@ export class DatasetPreviewMother {
     }
   }
 
-  static createRealistic(): DatasetPreview {
+  static createRealistic(): DatasetItemTypePreview {
     return faker.datatype.boolean() ? this.createDraft() : this.createDeaccessioned()
   }
 
-  static createDraft(): DatasetPreview {
+  static createDraft(): DatasetItemTypePreview {
     return this.create({
       version: DatasetVersionMother.createDraft(),
       publicationStatuses: [PublicationStatus.Draft]
     })
   }
 
-  static createWithThumbnail(): DatasetPreview {
+  static createWithThumbnail(): DatasetItemTypePreview {
     return this.create({ thumbnail: FakerHelper.getImageUrl() })
   }
 
-  static createWithNoThumbnail(): DatasetPreview {
+  static createWithNoThumbnail(): DatasetItemTypePreview {
     return this.create({ thumbnail: undefined })
   }
 
-  static createDeaccessioned(): DatasetPreview {
+  static createDeaccessioned(): DatasetItemTypePreview {
     return this.create({
       version: DatasetVersionMother.createDeaccessioned()
     })
