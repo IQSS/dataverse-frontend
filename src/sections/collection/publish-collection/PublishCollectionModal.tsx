@@ -39,25 +39,25 @@ export function PublishCollectionModal({
   }
 
   return (
-    <Modal show={show} onHide={handleClose} size="xl">
+    <Modal show={show} onHide={handleClose} size="lg">
       <Modal.Header>
-        <Modal.Title>Publish Collection</Modal.Title>
+        <Modal.Title>{tCollection('title')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Stack direction="vertical">
           <p className={styles.warningText}>{tCollection('publish.question')}</p>
-          <span className={styles.errorText}>
-            {submissionStatus === SubmissionStatus.Errored &&
-              `${tCollection('publish.error')} ${publishError ? publishError : ''}`}
-          </span>
+          {submissionStatus === SubmissionStatus.Errored && (
+            <p className={styles.errorText}>
+              `${tCollection('publish.error')} ${publishError ? publishError : ''}`
+            </p>
+          )}
         </Stack>
       </Modal.Body>
       <Modal.Footer>
         <Button
           variant="primary"
-          onClick={() => {
-            submitPublish()
-          }}
+          disabled={submissionStatus === SubmissionStatus.IsSubmitting}
+          onClick={submitPublish}
           type="submit">
           {tShared('continue')}
         </Button>
