@@ -50,7 +50,7 @@ services:
       DATAVERSE_AUTH_OIDC_ENABLED: "1"
       DATAVERSE_AUTH_OIDC_CLIENT_ID: oauth2-proxy
       DATAVERSE_AUTH_OIDC_CLIENT_SECRET: 72341b6d-7065-4518-a0e4-50ee15025608
-      DATAVERSE_AUTH_OIDC_AUTH_SERVER_URL: http://keycloak.localhost:9080/realms/oauth2-proxy
+      DATAVERSE_AUTH_OIDC_AUTH_SERVER_URL: http://172.17.0.1:9080/realms/oauth2-proxy
       JVM_ARGS: -Ddataverse.pid.providers=fake
         -Ddataverse.pid.default-provider=fake
         -Ddataverse.pid.fake.type=FAKE
