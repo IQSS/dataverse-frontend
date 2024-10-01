@@ -41,7 +41,7 @@ export function PublishCollectionModal({
   return (
     <Modal show={show} onHide={handleClose} size="lg">
       <Modal.Header>
-        <Modal.Title>{tCollection('title')}</Modal.Title>
+        <Modal.Title>{tCollection('publish.title')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Stack direction="vertical">
