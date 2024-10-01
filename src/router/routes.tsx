@@ -1,7 +1,6 @@
 import { RouteObject } from 'react-router-dom'
 import { Route } from '../sections/Route.enum'
 import { Layout } from '../sections/layout/Layout'
-import { PageNotFound } from '../sections/page-not-found/PageNotFound'
 import { DatasetFactory } from '../sections/dataset/DatasetFactory'
 import { CreateDatasetFactory } from '../sections/create-dataset/CreateDatasetFactory'
 import { FileFactory } from '../sections/file/FileFactory'
@@ -12,12 +11,13 @@ import { CreateCollectionFactory } from '../sections/create-collection/CreateCol
 import { AccountFactory } from '../sections/account/AccountFactory'
 import { ProtectedRoute } from './ProtectedRoute'
 import { HomepageFactory } from '../sections/homepage/HomepageFactory'
+import { ErrorPage } from '../sections/error-page/ErrorPage'
 
 export const routes: RouteObject[] = [
   {
     path: '/',
     element: <Layout />,
-    errorElement: <PageNotFound />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: Route.HOME,
