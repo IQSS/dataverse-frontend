@@ -5,8 +5,8 @@ export interface CollectionItemTypePreview {
   isReleased: boolean
   name: string
   alias: string
-  description?: string // it could be undefined before ?
-  affiliation?: string // it could be undefined before ?
+  description?: string
+  affiliation?: string
   releaseOrCreateDate: Date
   thumbnail?: string
   parentCollectionName: string

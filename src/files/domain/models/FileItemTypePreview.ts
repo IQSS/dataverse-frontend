@@ -14,7 +14,7 @@ export interface FileItemTypePreview {
   sizeInBytes: number
   md5?: string
   checksum?: FilePreviewChecksum
-  unf: string
+  unf?: string
   datasetName: string
   datasetId: number
   datasetPersistentId: string
