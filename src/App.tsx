@@ -7,7 +7,7 @@ import { BASE_URL } from './config'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 if (BASE_URL === '') {
-  throw Error('VITE_DATAVERSE_BACKEND_URL environment variable should be specified.')
+  throw Error('BASE_URL variable failed to initialize.')
 } else {
   ApiConfig.init(`${BASE_URL}/api/v1`, DataverseApiAuthMechanism.SESSION_COOKIE)
 }

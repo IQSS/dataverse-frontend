@@ -35,7 +35,6 @@ jobs:
           DATAVERSE_BACKEND_URL: ${{ secrets.BETA_DATAVERSE_BACKEND_URL }}
         run: |
           touch .env
-          echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
         shell: bash
 
       - name: Build with base path

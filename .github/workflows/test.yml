@@ -38,7 +38,6 @@ jobs:
           DATAVERSE_BACKEND_URL: 'http://localhost:8000'
         run: |
           touch .env
-          echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
         shell: bash
 
       - name: Create containerized development environment .env file
@@ -108,7 +107,6 @@ jobs:
           DATAVERSE_BACKEND_URL: 'http://localhost:8000'
         run: |
           touch .env
-          echo VITE_DATAVERSE_BACKEND_URL="$DATAVERSE_BACKEND_URL" >> .env
         shell: bash
 
       - name: Install Dependencies
