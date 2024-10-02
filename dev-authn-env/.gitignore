@@ -1,4 +1,0 @@
-.env
-frontend/git
-!frontend/authn/.env
-!frontend/public/.env

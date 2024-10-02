@@ -1,7 +1,43 @@
 services:
+  oauth2-proxy:
+    container_name: oauth2-proxy
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+    command: --config /oauth2-proxy.cfg
+    hostname: oauth2-proxy
+    volumes:
+      - "./oauth2-proxy-keycloak.cfg:/oauth2-proxy.cfg"
+    restart: unless-stopped
+    ports:
+      - 4180:4180
+    networks:
+      - dataverse
+    depends_on:
+      - dev_nginx
+      - keycloak
+
+  keycloak:
+    container_name: keycloak
+    image: keycloak/keycloak:25.0
+    hostname: keycloak
+    command:
+      - 'start-dev'
+      - '--http-port=8000'
+      - '--import-realm'
+    volumes:
+      - ./keycloak:/opt/keycloak/data/import
+    environment:
+      KC_HTTP_PORT: 8000
+      KEYCLOAK_ADMIN: admin@mailinator.com
+      KEYCLOAK_ADMIN_PASSWORD: password
+    ports:
+      - 9080:8000
+    networks:
+      - dataverse
+
   dev_nginx:
     container_name: 'dev_nginx_proxy'
     image: nginx:stable
+    hostname: dev_nginx
     ports:
       - '8000:80'
     networks:
