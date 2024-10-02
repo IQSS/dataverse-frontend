@@ -17,7 +17,6 @@ describe('useErrorLogger', () => {
         { initialProps: { error } }
       )
       cy.get('@consoleError').should('have.been.calledOnceWith', 'Error:', 'Test error')
-
       cy.then(() => {
         rerender({ error })
       })
@@ -38,7 +37,6 @@ describe('useErrorLogger', () => {
         ({ error }: { error: Error | null }) => useErrorLogger(error),
         { initialProps: { error: null } }
       )
-
       cy.get('@consoleError').should('not.have.been.called')
       cy.then(() => {
         rerender({ error: null })
@@ -50,23 +48,17 @@ describe('useErrorLogger', () => {
   it('should be used to log errors manually only once for the same error, and log different errors seperately', () => {
     cy.window().then(() => {
       const { result } = renderHook(() => useErrorLogger(null))
-
       cy.then(() => {
         result.current(new Error('Manually logged error'))
       })
-
       cy.get('@consoleError').should('have.been.calledOnceWith', 'Error:', 'Manually logged error')
-
       cy.then(() => {
         result.current(new Error('Manually logged error'))
       })
-
       cy.get('@consoleError').should('have.been.calledOnce')
-
       cy.then(() => {
         result.current(new Error('Another manually logged error'))
       })
-
       cy.get('@consoleError').should(
         'have.been.calledWith',
         'Error:',
