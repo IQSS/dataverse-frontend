@@ -32,7 +32,9 @@ services:
     ports:
       - 9080:8000
     networks:
-      - dataverse
+      dataverse:
+        aliases:
+          - keycloak2.mydomain.com #create a DNS alias within the network (add the same alias to your /etc/hosts to get a working OIDC flow)
 
   dev_nginx:
     container_name: 'dev_nginx_proxy'
@@ -84,7 +86,7 @@ services:
       DATAVERSE_AUTH_OIDC_ENABLED: "1"
       DATAVERSE_AUTH_OIDC_CLIENT_ID: oauth2-proxy
       DATAVERSE_AUTH_OIDC_CLIENT_SECRET: 72341b6d-7065-4518-a0e4-50ee15025608
-      DATAVERSE_AUTH_OIDC_AUTH_SERVER_URL: http://172.17.0.1:9080/realms/oauth2-proxy
+      DATAVERSE_AUTH_OIDC_AUTH_SERVER_URL: http://keycloak2.mydomain.com:9080/realms/oauth2-proxy
       JVM_ARGS: -Ddataverse.pid.providers=fake
         -Ddataverse.pid.default-provider=fake
         -Ddataverse.pid.fake.type=FAKE

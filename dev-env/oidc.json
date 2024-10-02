@@ -3,6 +3,6 @@
     "factoryAlias": "oidc",
     "title": "OIDC-Keycloak",
     "subtitle": "OIDC-Keycloak",
-    "factoryData": "type: oidc | issuer: http://172.17.0.1:9080/realms/oauth2-proxy | clientId: oauth2-proxy | clientSecret: 72341b6d-7065-4518-a0e4-50ee15025608",
+    "factoryData": "type: oidc | issuer: http://keycloak2.mydomain.com:9080/realms/oauth2-proxy | clientId: oauth2-proxy | clientSecret: 72341b6d-7065-4518-a0e4-50ee15025608",
     "enabled": true
   }
