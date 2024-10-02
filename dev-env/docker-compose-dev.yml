@@ -21,16 +21,16 @@ services:
     hostname: keycloak
     command:
       - 'start-dev'
-      - '--http-port=8000'
+      - '--http-port=9080'
       - '--import-realm'
     volumes:
       - ./keycloak:/opt/keycloak/data/import
     environment:
-      KC_HTTP_PORT: 8000
+      KC_HTTP_PORT: 9080
       KEYCLOAK_ADMIN: admin@mailinator.com
       KEYCLOAK_ADMIN_PASSWORD: password
     ports:
-      - 9080:8000
+      - 9080:9080
     networks:
       dataverse:
         aliases:
