@@ -33,7 +33,7 @@ services:
       dataverse: {}
       oauth2-proxy: {}
     depends_on:
-      - dataverse
+      - dataverse-public
       - keycloak
 
   keycloak:
@@ -56,23 +56,6 @@ services:
       keycloak:
         aliases:
           - keycloak.localhost
-
-  dataverse:
-    container_name: 'dataverse'
-    hostname: dataverse
-    build:
-      context: ../
-      dockerfile: ./dev-authn-env/frontend/Dockerfile
-      network: host
-      args:
-        CONFIG: authn
-        DATAVERSE_SERVER: ${DATAVERSE_SERVER}
-    networks:
-      dataverse:
-        aliases:
-          - dataverse.localhost
-
-# public access
 
   dataverse-public:
     container_name: 'dataverse-public'

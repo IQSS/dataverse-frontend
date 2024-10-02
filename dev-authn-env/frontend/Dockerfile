@@ -2,7 +2,6 @@ FROM node:22-alpine AS builder
 
 ADD ./dev-authn-env/frontend/git /app/
 ARG CONFIG=public
-COPY ./dev-authn-env/frontend/${CONFIG}/vite.config.ts /app/vite.config.ts
 COPY ./dev-authn-env/frontend/${CONFIG}/.env /app/.env
 COPY ./.npmrc /app/.npmrc
 
@@ -17,5 +16,5 @@ FROM nginx:1.27.1-alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
 ARG CONFIG=public
 COPY ./dev-authn-env/frontend/${CONFIG}/nginx.conf /etc/nginx/conf.d/default.conf
-ARG DATAVERSE_SERVER=http://172.17.0.1:8080
+ARG DATAVERSE_SERVER=http://172.17.0.1:8080/api
 RUN sed -i -e 's@DATAVERSE_SERVER@'"$DATAVERSE_SERVER"'@' /etc/nginx/conf.d/default.conf
