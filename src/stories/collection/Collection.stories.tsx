@@ -5,6 +5,7 @@ import { WithLayout } from '../WithLayout'
 import { WithLoggedInUser } from '../WithLoggedInUser'
 import { CollectionMockRepository } from './CollectionMockRepository'
 import { CollectionLoadingMockRepository } from './CollectionLoadingMockRepository'
+import { UnpublishedCollectionMockRepository } from '@/stories/collection/UnpublishedCollectionMockRepository'
 
 const meta: Meta<typeof Collection> = {
   title: 'Pages/Collection',
@@ -52,6 +53,18 @@ export const LoggedIn: Story = {
   render: () => (
     <Collection
       collectionRepository={new CollectionMockRepository()}
+      collectionId="collection"
+      created={false}
+      published={false}
+      collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
+    />
+  )
+}
+export const Unpublished: Story = {
+  decorators: [WithLoggedInUser],
+  render: () => (
+    <Collection
+      collectionRepository={new UnpublishedCollectionMockRepository()}
       collectionId="collection"
       created={false}
       published={false}
