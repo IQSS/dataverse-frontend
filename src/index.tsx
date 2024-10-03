@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App'
 import './i18n'
 import { LoadingProvider } from './sections/loading/LoadingProvider'
 import { ThemeProvider } from '@iqss/dataverse-design-system'
+import SecuredApp from './SecuredApp'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
@@ -11,7 +11,7 @@ root.render(
     <React.Suspense>
       <LoadingProvider>
         <ThemeProvider>
-          <App />
+          <SecuredApp />
         </ThemeProvider>
       </LoadingProvider>
     </React.Suspense>

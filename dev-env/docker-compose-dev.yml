@@ -9,6 +9,7 @@ services:
     depends_on:
       - dev_dataverse
       - dev_frontend
+      - dev_keycloak
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./docker-dev-volumes/nginx/logs:/var/log/nginx/
@@ -171,6 +172,28 @@ services:
     #  - ./docker-dev-volumes/smtp/data:/mail
     tmpfs:
       - /mail:mode=770,size=128M,uid=1000,gid=1000
+
+  dev_keycloak:
+    container_name: 'dev_keycloak'
+    image: 'quay.io/keycloak/keycloak:21.0'
+    hostname: keycloak
+    command:
+      - 'start-dev'
+      - '--import-realm'
+    environment:
+      - KC_HTTP_PORT=9080
+      - KC_HOSTNAME=localhost
+      - KC_HOSTNAME_PORT=8000
+      - KC_HOSTNAME_ADMIN_URL=http://localhost:8000
+      - KEYCLOAK_ADMIN=kcadmin
+      - KEYCLOAK_ADMIN_PASSWORD=kcpassword
+      - KEYCLOAK_LOGLEVEL=DEBUG
+    networks:
+      - dataverse
+    expose:
+      - 9080
+    volumes:
+      - './keycloak/test-realm.json:/opt/keycloak/data/import/test-realm.json'
 
 networks:
   dataverse:
