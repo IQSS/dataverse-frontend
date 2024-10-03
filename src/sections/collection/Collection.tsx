@@ -68,7 +68,7 @@ export function Collection({
               </Alert>
             )}
             {!collection.isReleased && canUserPublishCollection && (
-              <div className={styles.container}>
+              <div className={styles['action-buttons']}>
                 <PublishCollectionButton
                   repository={collectionRepository}
                   collectionId={collection.id}

@@ -11,6 +11,12 @@
   gap: 10px;
 }
 
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
 .subtext {
   color: $dv-subtext-color;
 }
