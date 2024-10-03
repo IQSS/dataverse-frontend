@@ -1,0 +1,112 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
+
+.card-main-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid $dv-file-border-color;
+  border-radius: 4px;
+}
+
+.card-header-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+
+  .left-side-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .top-right-icon {
+    height: fit-content;
+    color: $dv-file-border-color;
+    font-size: 1.3em;
+    line-height: 1.1;
+
+    > span {
+      margin-right: 0;
+    }
+  }
+}
+
+.thumbnail-and-info-wrapper {
+  display: flex;
+  gap: 1rem;
+}
+
+.card-thumbnail-container {
+  padding-block: 0.25rem;
+
+  img {
+    width: 64px;
+    max-width: 64px;
+    height: 48px;
+    max-height: 48px;
+    vertical-align: top;
+  }
+
+  .icon {
+    height: fit-content;
+    color: $dv-file-border-color;
+
+    > span {
+      margin-right: 0;
+      font-size: 40px;
+      line-height: 1;
+    }
+  }
+}
+
+.tooltip {
+  display: table-cell;
+  width: 430px;
+  height: 430px;
+  vertical-align: middle;
+
+  img {
+    width: 100%;
+    max-width: 390px;
+  }
+}
+
+.card-info-container {
+  align-self: flex-start;
+  font-size: $dv-font-size-sm;
+
+  .date-link-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.5rem;
+
+    .date {
+      color: $dv-subtext-color;
+    }
+  }
+
+  .info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+    color: $dv-subtext-color;
+
+    > p {
+      margin: 0;
+    }
+  }
+
+  .description {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    width: 100%;
+    overflow: hidden;
+    color: black;
+  }
+}

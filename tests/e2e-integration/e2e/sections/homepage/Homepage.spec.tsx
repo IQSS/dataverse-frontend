@@ -1,3 +1,4 @@
+import { CollectionItemType } from '../../../../../src/collection/domain/models/CollectionItemType'
 import { QueryParamKey } from '../../../../../src/sections/Route.enum'
 
 describe('Homepage', () => {
@@ -11,6 +12,10 @@ describe('Homepage', () => {
 
     const searchParams = new URLSearchParams()
     searchParams.set(QueryParamKey.QUERY, encodedSearchValue)
+    searchParams.set(
+      QueryParamKey.COLLECTION_ITEM_TYPES,
+      [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(',')
+    )
 
     cy.url().should('include', `/collections?${searchParams.toString()}`)
   })

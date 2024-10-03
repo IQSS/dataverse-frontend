@@ -116,23 +116,4 @@ describe('Collection Page', () => {
       cy.findByText(/Dataverse Admin/i).should('exist')
     })
   })
-
-  it('12 Datasets - displays first 10 datasets, scroll to the bottom and displays the remaining 2 datasets', () => {
-    const collectionId = 'collection-1' + Date.now().toString()
-    cy.wrap(CollectionHelper.create(collectionId)).then(() => {
-      cy.wrap(DatasetHelper.createMany(12, collectionId), { timeout: 10_000 }).then(() => {
-        cy.visit(`/spa/collections/${collectionId}`)
-
-        cy.findAllByText(/Scientific Research/i).should('exist')
-        cy.findByText(/Dataverse Admin/i).should('exist')
-
-        cy.findByText('10 of 12 Datasets displayed').should('exist')
-
-        cy.get('[data-testid="scrollable-container"]').scrollTo('bottom', {
-          ensureScrollable: false
-        })
-        cy.findByText('12 of 12 Datasets displayed').should('exist')
-      })
-    })
-  })
 })

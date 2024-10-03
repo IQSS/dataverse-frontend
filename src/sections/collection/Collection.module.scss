@@ -1,12 +1,6 @@
 @import 'node_modules/bootstrap/scss/functions';
 @import 'node_modules/bootstrap/scss/variables';
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
-
-.container {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: $spacer;
-}
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
 .header {
   margin-bottom: $spacer;
