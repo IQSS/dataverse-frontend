@@ -1,5 +1,5 @@
-@import "design-tokens/typography.module";
-@import "design-tokens/colors.module";
+@import 'design-tokens/typography.module';
+@import 'design-tokens/colors.module';
 
 // Theme
 
@@ -10,9 +10,9 @@ $info: $dv-info-color;
 $warning: $dv-warning-color;
 $danger: $dv-danger-color;
 
-@import "bootstrap/scss/functions";
-@import "bootstrap/scss/variables";
-@import "bootstrap/scss/mixins";
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
 
 // Body
 $body-color: $dv-text-color;
@@ -36,73 +36,77 @@ $link-color: $dv-link-color;
 $link-hover-color: $dv-link-hover-color;
 
 // Base
-@import "bootstrap/scss/maps";
-@import "bootstrap/scss/root";
-@import "bootstrap/scss/reboot";
-@import "bootstrap/scss/type";
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/root';
+@import 'bootstrap/scss/reboot';
+@import 'bootstrap/scss/type';
 
 // Buttons and Dropdowns
-@import "bootstrap/scss/buttons";
+@import 'bootstrap/scss/buttons';
 @import 'bootstrap/scss/button-group';
-@import "bootstrap/scss/dropdown";
+@import 'bootstrap/scss/dropdown';
 
 // Grid
-@import "bootstrap/scss/utilities";
-@import "bootstrap/scss/utilities/api";
-@import "bootstrap/scss/containers";
-@import "bootstrap/scss/grid";
+@import 'bootstrap/scss/utilities';
+@import 'bootstrap/scss/utilities/api';
+@import 'bootstrap/scss/containers';
+@import 'bootstrap/scss/grid';
 
 // Badge
-@import "bootstrap/scss/badge";
+@import 'bootstrap/scss/badge';
 
 // Forms
 $form-label-font-weight: $dv-font-weight-bold;
 
-@import "bootstrap/scss/forms";
-
+@import 'bootstrap/scss/forms';
 
 // Table
-@import "bootstrap/scss/tables";
-
+@import 'bootstrap/scss/tables';
 
 // Accordion
-@import "bootstrap/scss/accordion";
+@import 'bootstrap/scss/accordion';
 
 // Modal
-@import "bootstrap/scss/modal";
-@import "bootstrap/scss/close";
+@import 'bootstrap/scss/modal';
+@import 'bootstrap/scss/close';
 
 // Breadcrumb
-$breadcrumb-divider: ">";
+$breadcrumb-divider: '>';
 
-@import "bootstrap/scss/breadcrumb";
+@import 'bootstrap/scss/breadcrumb';
 
 // QuestionMarkTooltip
 $tooltip-max-width: 500px;
 
-@import "bootstrap/scss/tooltip";
+@import 'bootstrap/scss/tooltip';
 
 // Alert
-@import "bootstrap/scss/alert";
+@import 'bootstrap/scss/alert';
 
 // Pagination
-@import "bootstrap/scss/pagination";
+@import 'bootstrap/scss/pagination';
 
 // Card
-@import "bootstrap/scss/card";
+@import 'bootstrap/scss/card';
 
 // Progress
-@import "bootstrap/scss/progress";
+@import 'bootstrap/scss/progress';
+
+// Spinner
+@import 'bootstrap/scss/spinners';
+
+// OffCanvas
+@import 'bootstrap/scss/offcanvas';
 
 // Navbar
 
 $navbar-light-brand-color: $dv-brand-color;
 $navbar-brand-font-size: $dv-brand-font-size;
 
-@import "bootstrap/scss/nav";
-@import "bootstrap/scss/navbar";
-@import "bootstrap/scss/transitions";
-@import "bootstrap/scss/helpers";
+@import 'bootstrap/scss/nav';
+@import 'bootstrap/scss/navbar';
+@import 'bootstrap/scss/transitions';
+@import 'bootstrap/scss/helpers';
 
 .navbar-collapse {
   justify-content: end;
@@ -124,12 +128,14 @@ th {
   vertical-align: middle;
 }
 
-.btn-group > div:not(:last-child) > .btn-group > .btn, .btn-group-vertical >div:not(:last-child) > .btn-group > .btn {
+.btn-group > div:not(:last-child) > .btn-group > .btn,
+.btn-group-vertical > div:not(:last-child) > .btn-group > .btn {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-.btn-group > div:not(:first-child) > .btn-group > .btn, .btn-group-vertical > div:not(:first-child) > .btn-group > .btn {
+.btn-group > div:not(:first-child) > .btn-group > .btn,
+.btn-group-vertical > div:not(:first-child) > .btn-group > .btn {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }

@@ -1,3 +1,6 @@
-.container > * {
-  margin-right: 0.5em;
+.dataset-labels-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
 }

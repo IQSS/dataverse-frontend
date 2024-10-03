@@ -6,21 +6,28 @@ export enum Route {
   LOG_IN = '/loginpage.xhtml?redirectPage=%2Fdataverse.xhtml',
   LOG_OUT = '/',
   DATASETS = '/datasets',
-  CREATE_DATASET = '/datasets/create',
+  CREATE_DATASET = '/datasets/:collectionId/create',
   UPLOAD_DATASET_FILES = '/datasets/upload-files',
   EDIT_DATASET_METADATA = '/datasets/edit-metadata',
   FILES = '/files',
+  COLLECTIONS_BASE = '/collections',
   COLLECTIONS = '/collections/:collectionId',
-  CREATE_COLLECTION = '/collections/:ownerCollectionId/create'
+  CREATE_COLLECTION = '/collections/:ownerCollectionId/create',
+  ACCOUNT = '/account'
 }
 
 export const RouteWithParams = {
   COLLECTIONS: (collectionId?: string) => `/collections/${collectionId ?? 'root'}`,
   CREATE_COLLECTION: (ownerCollectionId?: string) =>
-    `/collections/${ownerCollectionId ?? ROOT_COLLECTION_ALIAS}/create`
+    `/collections/${ownerCollectionId ?? ROOT_COLLECTION_ALIAS}/create`,
+  CREATE_DATASET: (collectionId?: string) =>
+    `/datasets/${collectionId ?? ROOT_COLLECTION_ALIAS}/create`
 }
 
 export enum QueryParamKey {
   VERSION = 'version',
-  PERSISTENT_ID = 'persistentId'
+  PERSISTENT_ID = 'persistentId',
+  QUERY = 'q',
+  COLLECTION_ITEM_TYPES = 'types',
+  PAGE = 'page'
 }

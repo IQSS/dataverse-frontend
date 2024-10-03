@@ -4,7 +4,7 @@ import * as React from 'react'
 export type FormInputElement = HTMLInputElement | HTMLTextAreaElement
 
 export interface FormInputProps extends React.HTMLAttributes<FormInputElement> {
-  type?: 'text' | 'email' | 'password'
+  type?: 'text' | 'email' | 'password' | 'search'
   readOnly?: boolean
   name?: string
   isValid?: boolean
@@ -13,6 +13,7 @@ export interface FormInputProps extends React.HTMLAttributes<FormInputElement> {
   value?: string | number
   required?: boolean
   autoFocus?: boolean
+  autoComplete?: string
 }
 
 export const FormInput = React.forwardRef(function FormInput(
@@ -26,6 +27,7 @@ export const FormInput = React.forwardRef(function FormInput(
     value,
     required,
     autoFocus,
+    autoComplete,
     ...props
   }: FormInputProps,
   ref
@@ -42,6 +44,7 @@ export const FormInput = React.forwardRef(function FormInput(
       value={value}
       required={required}
       autoFocus={autoFocus}
+      autoComplete={autoComplete}
       ref={ref as React.ForwardedRef<HTMLInputElement>}
       {...props}
     />

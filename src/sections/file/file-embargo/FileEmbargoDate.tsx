@@ -20,6 +20,8 @@ export function FileEmbargoDate({
     return <></>
   }
 
+  // TODO: use time tag with dateTime attr https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time
+
   return (
     <div>
       <span>

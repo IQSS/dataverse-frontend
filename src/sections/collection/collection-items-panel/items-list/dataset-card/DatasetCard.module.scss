@@ -1,0 +1,102 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
+
+.card-main-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid $dv-dataset-border-color;
+  border-radius: 4px;
+}
+
+.thumbnail-and-info-wrapper {
+  display: flex;
+  gap: 1rem;
+}
+
+.card-header-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+
+  .left-side-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .top-right-icon {
+    height: fit-content;
+    font-size: 1.3em;
+
+    & span {
+      margin-right: 0;
+    }
+  }
+}
+
+.card-thumbnail-container {
+  padding-block: 0.25rem;
+
+  img {
+    width: 64px;
+    max-width: 64px;
+    height: 48px;
+    max-height: 48px;
+    vertical-align: top;
+  }
+
+  :global .icon-dataset {
+    margin-right: 0;
+    font-size: 40px;
+    line-height: 1;
+  }
+}
+
+.card-info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-self: flex-start;
+  width: 100%;
+  font-size: $dv-font-size-sm;
+
+  .date {
+    color: $dv-subtext-color;
+  }
+
+  .citation-box {
+    display: -webkit-box;
+    padding: 4px;
+    overflow: hidden;
+    background-color: color.adjust($dv-primary-color, $lightness: 51%);
+    border-radius: 4px;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    -webkit-box-orient: vertical;
+
+    a {
+      word-break: break-all;
+    }
+
+    &.deaccesioned {
+      background-color: color.adjust($dv-danger-box-color, $lightness: 6%);
+    }
+
+    & > div {
+      margin-bottom: 0;
+    }
+  }
+
+  .description {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    width: 100%;
+    overflow: hidden;
+    color: #000;
+  }
+}

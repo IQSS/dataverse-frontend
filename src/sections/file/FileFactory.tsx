@@ -3,7 +3,7 @@ import { FileJSDataverseRepository } from '../../files/infrastructure/FileJSData
 import { File } from './File'
 import { useSearchParams } from 'react-router-dom'
 import { PageNotFound } from '../page-not-found/PageNotFound'
-import { searchParamVersionToDomainVersion } from '../../Router'
+import { searchParamVersionToDomainVersion } from '../../router'
 
 const repository = new FileJSDataverseRepository()
 export class FileFactory {

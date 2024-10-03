@@ -16,7 +16,7 @@ describe('AddDataActionsButton', () => {
     cy.findByRole('button', { name: /Add Data/i }).click()
     cy.findByText('New Dataset')
       .should('be.visible')
-      .should('have.attr', 'href', '/datasets/create')
+      .should('have.attr', 'href', '/datasets/root/create')
   })
 
   it('renders the new dataset button with the correct generated link for specified collectionId', () => {
@@ -32,7 +32,7 @@ describe('AddDataActionsButton', () => {
     cy.findByRole('button', { name: /Add Data/i }).click()
     cy.findByText('New Dataset')
       .should('be.visible')
-      .should('have.attr', 'href', `/datasets/create?collectionId=${collectionId}`)
+      .should('have.attr', 'href', `/datasets/${collectionId}/create`)
   })
 
   it('shows New Collection button enabled if user has permissions to create collection', () => {

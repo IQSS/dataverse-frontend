@@ -7,10 +7,12 @@ import { Footer } from '../../../../../src/sections/layout/footer/Footer'
 describe('Footer component', () => {
   const sandbox: SinonSandbox = createSandbox()
   const testVersion = DataverseVersionMother.create()
+  const currentYear = new Date().getFullYear().toString()
 
   it('should render footer content', () => {
     cy.customMount(FooterMother.withDataverseVersion(sandbox, testVersion))
 
+    cy.contains(`Copyright © ${currentYear}`).should('exist')
     cy.findByText('Privacy Policy').should('exist')
     cy.findByAltText('The Dataverse Project logo').should('exist')
     cy.findByText(testVersion).should('exist')
