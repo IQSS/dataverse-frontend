@@ -5,11 +5,12 @@ import { FormInputGroupText } from './FormInputGroupText'
 interface FormInputGroupProps {
   children: ReactNode
   hasValidation?: boolean
+  className?: string
 }
 
-function FormInputGroup({ children, hasValidation }: FormInputGroupProps) {
+function FormInputGroup({ children, hasValidation, className = '' }: FormInputGroupProps) {
   return (
-    <InputGroup className="mb-3" hasValidation={hasValidation}>
+    <InputGroup className={`mb-3 ${className}`} hasValidation={hasValidation}>
       {children}
     </InputGroup>
   )

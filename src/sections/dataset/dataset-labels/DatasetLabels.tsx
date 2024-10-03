@@ -21,7 +21,7 @@ interface DatasetLabelsProps {
 
 export function DatasetLabels({ labels }: DatasetLabelsProps) {
   return (
-    <div className={styles.container}>
+    <div className={styles['dataset-labels-container']}>
       {labels.map((label: DatasetLabel, index) => {
         return (
           <Badge

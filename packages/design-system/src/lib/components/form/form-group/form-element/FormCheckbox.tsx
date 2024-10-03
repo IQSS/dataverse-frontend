@@ -4,7 +4,7 @@ import * as React from 'react'
 export interface FormCheckboxProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   id: string
-  label: string
+  label: React.ReactNode
   isValid?: boolean
   isInvalid?: boolean
   invalidFeedback?: string

@@ -32,7 +32,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **FormSelect:** remove withinMultipleFieldsGroup prop.
 - **FormText:** remove withinMultipleFieldsGroup prop.
 - **FormTextArea:** remove withinMultipleFieldsGroup prop.
-- **FormInputGroup:** remove hasVisibleLabel prop.
+- **FormInputGroup:** remove hasVisibleLabel prop and accepts className prop.
 - **FormInputGroupText:** refactor type.
 - **Card:** NEW card element to show header and body.
 - **ProgressBar:** NEW progress bar element to show progress.
@@ -42,7 +42,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **NavbarDropdownItem:** Now accepts `as` prop and takes `as` Element props.
 - **FormInputGroup:** extend Props Interface to accept `hasValidation` prop to properly show rounded corners in an <InputGroup> with validation
 - **Button:** extend Props Interface to accept `size` prop.
-- **FormInput:** extend Props Interface to accept `autoFocus` prop.
+- **FormInput:** extend Props Interface to accept `autoFocus` and `type: 'search'` prop.
 - **FormTextArea:** extend Props Interface to accept `autoFocus` prop.
 - **FormSelect:** extend Props Interface to accept `autoFocus` prop.
 - **Stack:** NEW Stack element to manage layouts.
@@ -51,6 +51,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **Spinner:** New Spinner component.
 - **CloseButton:** NEW close button component.
 - **Tab:** extend Props Interface to accept `disabled` prop to disable the tab.
+- **Offcanvas:** NEW Offcanvas component.
+- **FormCheckbox:** modify Props Interface to allow any react node as `label` prop.
 
 # [1.1.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@1.0.1...@iqss/dataverse-design-system@1.1.0) (2024-03-12)
 

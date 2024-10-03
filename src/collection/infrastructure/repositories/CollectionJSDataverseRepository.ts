@@ -5,12 +5,17 @@ import {
   getCollection,
   getCollectionFacets,
   getCollectionUserPermissions,
+  getCollectionItems,
   publishCollection
 } from '@iqss/dataverse-client-javascript'
 import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'
 import { CollectionFacet } from '../../domain/models/CollectionFacet'
 import { CollectionUserPermissions } from '../../domain/models/CollectionUserPermissions'
+import { CollectionItemsPaginationInfo } from '../../domain/models/CollectionItemsPaginationInfo'
+import { CollectionItemSubset } from '../../domain/models/CollectionItemSubset'
+import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCriteria'
+import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id: string): Promise<Collection> {
@@ -33,6 +38,25 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     return getCollectionUserPermissions
       .execute(collectionIdOrAlias)
       .then((jsCollectionUserPermissions) => jsCollectionUserPermissions)
+  }
+
+  getItems(
+    collectionId: string,
+    paginationInfo: CollectionItemsPaginationInfo,
+    searchCriteria: CollectionSearchCriteria
+  ): Promise<CollectionItemSubset> {
+    return getCollectionItems
+      .execute(collectionId, paginationInfo?.pageSize, paginationInfo?.offset, searchCriteria)
+      .then((jsCollectionItemSubset) => {
+        const collectionItemsPreviewsMapped = JSCollectionItemsMapper.toCollectionItemsPreviews(
+          jsCollectionItemSubset.items
+        )
+
+        return {
+          items: collectionItemsPreviewsMapped,
+          totalItemCount: jsCollectionItemSubset.totalItemCount
+        }
+      })
   }
   publish(collectionIdOrAlias: number | string): Promise<void> {
     return publishCollection.execute(collectionIdOrAlias)
