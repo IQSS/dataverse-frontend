@@ -5,6 +5,7 @@ import { UserJSDataverseRepository } from './users/infrastructure/repositories/U
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 import { BASE_URL } from './config'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { AuthProvider, TAuthConfig } from 'react-oauth2-code-pkce'
 
 if (BASE_URL === '') {
   throw Error('VITE_DATAVERSE_BACKEND_URL environment variable should be specified.')
@@ -12,12 +13,23 @@ if (BASE_URL === '') {
   ApiConfig.init(`${BASE_URL}/api/v1`, DataverseApiAuthMechanism.SESSION_COOKIE)
 }
 
+const authConfig: TAuthConfig = {
+  clientId: 'test',
+  authorizationEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/auth',
+  tokenEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/token',
+  logoutEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/logout',
+  redirectUri: 'http://localhost:8000/spa',
+  scope: 'openid'
+}
+
 const userRepository = new UserJSDataverseRepository()
 function App() {
   return (
-    <SessionProvider repository={userRepository}>
-      <Router />
-    </SessionProvider>
+    <AuthProvider authConfig={authConfig}>
+      <SessionProvider repository={userRepository}>
+        <Router />
+      </SessionProvider>
+    </AuthProvider>
   )
 }
 
