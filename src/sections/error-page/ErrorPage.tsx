@@ -6,7 +6,7 @@ import { ExclamationCircle } from 'react-bootstrap-icons'
 import { useTheme } from '@iqss/dataverse-design-system'
 
 export function ErrorPage() {
-  const { t } = useTranslation('ErrorPage')
+  const { t } = useTranslation('errorPage')
   const error = useRouteError()
   useErrorLogger(error)
   const theme = useTheme()
@@ -17,13 +17,13 @@ export function ErrorPage() {
         <div className={styles['icon-layout']}>
           <ExclamationCircle color={theme.color.dangerColor} size={62} />
           <div aria-label="error-page">
-            <h1>Oops,</h1>
-            <h4>something went wrong...</h4>
+            <h1>{t('message.heading')}</h1>
+            <h4>{t('message.errorText')}</h4>
           </div>
         </div>
 
         <Link to="/" className="btn btn-secondary">
-          {t('Back to Dataverse Homepage')}
+          {t('backToHomepage', { brandName: t('brandName') })}
         </Link>
       </div>
     </section>
