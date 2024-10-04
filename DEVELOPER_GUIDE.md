@@ -328,7 +328,7 @@ dataset/
     │   ├── Dataset.ts
     │   ├── DatasetFormFields.ts
     │   ├── DatasetPaginationInfo.ts
-    │   ├── DatasetPreview.ts
+    │   ├── DatasetItemTypePreview.ts
     │   ├── DatasetValidationResponse.ts
     │   └── TotalDatasetsCount.ts
     └── repositories/
@@ -655,11 +655,11 @@ This means:
 
 import { Home } from '../../../../src/sections/home/Home'
 import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
-import { DatasetPreviewMother } from '../../dataset/domain/models/DatasetPreviewMother'
+import { DatasetItemTypePreviewMother } from '../../dataset/domain/models/DatasetItemTypePreviewMother'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const totalDatasetsCount = 10
-const datasets = DatasetPreviewMother.createMany(totalDatasetsCount)
+const datasets = DatasetItemTypePreviewMother.createMany(totalDatasetsCount)
 describe('Home page', () => {
   beforeEach(() => {
     datasetRepository.getAll = cy.stub().resolves(datasets)

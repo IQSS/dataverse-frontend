@@ -18,7 +18,9 @@ export function CollectionInfo({ collection }: CollectionInfoProps) {
             <span className={styles.subtext}>({collection.affiliation})</span>
           )}
           {!collection.isReleased && (
-            <Badge variant={DatasetLabelSemanticMeaning.WARNING}>Unpublished</Badge>
+            <div>
+              <Badge variant={DatasetLabelSemanticMeaning.WARNING}>Unpublished</Badge>
+            </div>
           )}
         </div>
       </header>
