@@ -59,7 +59,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .then((subset: DatasetPreviewSubset) => {
         const datasetPreviewsMapped = subset.datasetPreviews.map(
           (datasetPreview: JSDatasetPreview) =>
-            JSDatasetPreviewMapper.toDatasetPreview(datasetPreview)
+            JSDatasetPreviewMapper.toDatasetItemTypePreview(datasetPreview)
         )
         return {
           datasetPreviews: datasetPreviewsMapped,

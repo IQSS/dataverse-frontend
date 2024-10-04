@@ -1,21 +1,13 @@
 import { Collection } from '../../../../src/sections/collection/Collection'
-import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
-import { DatasetPreviewMother } from '../../dataset/domain/models/DatasetPreviewMother'
 import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
 import { CollectionMother } from '../../collection/domain/models/CollectionMother'
 
-const datasetRepository: DatasetRepository = {} as DatasetRepository
-const totalDatasetsCount = 200
-const datasets = DatasetPreviewMother.createMany(totalDatasetsCount)
 const collectionRepository = {} as CollectionRepository
 const collection = CollectionMother.create({ name: 'Collection Name' })
 const userPermissionsMock = CollectionMother.createUserPermissions()
 
-const datasetsWithCount = { datasetPreviews: datasets, totalCount: totalDatasetsCount }
-
 describe('Collection page', () => {
   beforeEach(() => {
-    datasetRepository.getAllWithCount = cy.stub().resolves(datasetsWithCount)
     collectionRepository.getById = cy.stub().resolves(collection)
     collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
   })
@@ -28,10 +20,10 @@ describe('Collection page', () => {
 
     cy.customMount(
       <Collection
-        repository={collectionRepository}
-        id="collection"
-        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+        collectionId="collection"
         created={false}
+        collectionQueryParams={{ pageQuery: 1 }}
       />
     )
 
@@ -52,10 +44,10 @@ describe('Collection page', () => {
     collectionRepository.getById = cy.stub().resolves(undefined)
     cy.customMount(
       <Collection
-        repository={collectionRepository}
-        id="collection"
-        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+        collectionId="collection"
         created={false}
+        collectionQueryParams={{ pageQuery: 1 }}
       />
     )
 
@@ -65,10 +57,10 @@ describe('Collection page', () => {
   it('renders the breadcrumbs', () => {
     cy.customMount(
       <Collection
-        repository={collectionRepository}
-        id="collection"
-        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+        collectionId="collection"
         created={false}
+        collectionQueryParams={{ pageQuery: 1 }}
       />
     )
 
@@ -78,10 +70,10 @@ describe('Collection page', () => {
   it('renders collection title', () => {
     cy.customMount(
       <Collection
-        repository={collectionRepository}
-        id="collection"
-        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+        collectionId="collection"
         created={false}
+        collectionQueryParams={{ pageQuery: 1 }}
       />
     )
     cy.findByRole('heading', { name: 'Collection Name' }).should('exist')
@@ -90,10 +82,10 @@ describe('Collection page', () => {
   it('does not render the Add Data dropdown button', () => {
     cy.customMount(
       <Collection
-        repository={collectionRepository}
-        datasetRepository={datasetRepository}
-        id="collection"
+        collectionRepository={collectionRepository}
+        collectionId="collection"
         created={false}
+        collectionQueryParams={{ pageQuery: 1 }}
       />
     )
     cy.findByRole('button', { name: /Add Data/i }).should('not.exist')
@@ -102,10 +94,10 @@ describe('Collection page', () => {
   it('does render the Add Data dropdown button when user logged in', () => {
     cy.mountAuthenticated(
       <Collection
-        repository={collectionRepository}
-        datasetRepository={datasetRepository}
-        id="collection"
+        collectionRepository={collectionRepository}
+        collectionId="collection"
         created={false}
+        collectionQueryParams={{ pageQuery: 1 }}
       />
     )
 
@@ -116,69 +108,13 @@ describe('Collection page', () => {
     cy.findByText('New Dataset').should('be.visible')
   })
 
-  it('renders the datasets list', () => {
-    cy.customMount(
-      <Collection
-        repository={collectionRepository}
-        datasetRepository={datasetRepository}
-        id="collection"
-        created={false}
-      />
-    )
-
-    cy.findByText('1 to 10 of 200 Datasets').should('exist')
-
-    datasets.forEach((dataset) => {
-      cy.findByText(dataset.version.title).should('exist')
-    })
-  })
-
-  it('renders the correct page when passing the page number as a query param', () => {
-    cy.customMount(
-      <Collection
-        repository={collectionRepository}
-        datasetRepository={datasetRepository}
-        page={5}
-        id="collection"
-        created={false}
-      />
-    )
-
-    cy.findByText('41 to 50 of 200 Datasets').should('exist')
-  })
-
-  it('renders the datasets list with infinite scrolling enabled', () => {
-    const first10Elements = datasets.slice(0, 10)
-
-    datasetRepository.getAllWithCount = cy.stub().resolves({
-      datasetPreviews: first10Elements,
-      totalCount: totalDatasetsCount
-    })
-
-    cy.customMount(
-      <Collection
-        repository={collectionRepository}
-        datasetRepository={datasetRepository}
-        id="collection"
-        infiniteScrollEnabled
-        created={false}
-      />
-    )
-
-    cy.findByText('10 of 200 Datasets displayed').should('exist')
-
-    first10Elements.forEach((dataset) => {
-      cy.findByText(dataset.version.title).should('exist')
-    })
-  })
-
   it('shows the created alert when the collection was just created', () => {
     cy.customMount(
       <Collection
-        repository={collectionRepository}
-        datasetRepository={datasetRepository}
-        id="collection"
+        collectionRepository={collectionRepository}
+        collectionId="collection"
         created
+        collectionQueryParams={{ pageQuery: 1 }}
       />
     )
 
@@ -195,10 +131,10 @@ describe('Collection page', () => {
 
     cy.mountAuthenticated(
       <Collection
-        repository={collectionRepository}
-        datasetRepository={datasetRepository}
-        id="collection"
+        collectionRepository={collectionRepository}
+        collectionId="collection"
         created={false}
+        collectionQueryParams={{ pageQuery: 1 }}
       />
     )
 

@@ -1,7 +1,7 @@
-import { DatasetPreview } from '../../domain/models/DatasetPreview'
+import { DatasetItemTypePreview } from './DatasetItemTypePreview'
 import { TotalDatasetsCount } from './TotalDatasetsCount'
 
 export interface DatasetsWithCount {
-  datasetPreviews: DatasetPreview[]
+  datasetPreviews: DatasetItemTypePreview[]
   totalCount: TotalDatasetsCount
 }
