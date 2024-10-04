@@ -21,47 +21,58 @@ export const routes: RouteObject[] = [
     children: [
       {
         path: Route.HOME,
-        element: HomepageFactory.create()
+        element: HomepageFactory.create(),
+        errorElement: <ErrorPage />
       },
       {
         path: Route.COLLECTIONS_BASE,
-        element: CollectionFactory.create()
+        element: CollectionFactory.create(),
+        errorElement: <ErrorPage />
       },
       {
         path: Route.COLLECTIONS,
-        element: CollectionFactory.create()
+        element: CollectionFactory.create(),
+        errorElement: <ErrorPage />
       },
       {
         path: Route.DATASETS,
-        element: DatasetFactory.create()
+        element: DatasetFactory.create(),
+        errorElement: <ErrorPage />
       },
       {
         path: Route.FILES,
-        element: FileFactory.create()
+        element: FileFactory.create(),
+        errorElement: <ErrorPage />
       },
       // 🔐 Protected routes are only accessible to authenticated users
       {
         element: <ProtectedRoute />,
+        errorElement: <ErrorPage />,
         children: [
           {
             path: Route.CREATE_COLLECTION,
-            element: CreateCollectionFactory.create()
+            element: CreateCollectionFactory.create(),
+            errorElement: <ErrorPage />
           },
           {
             path: Route.CREATE_DATASET,
-            element: CreateDatasetFactory.create()
+            element: CreateDatasetFactory.create(),
+            errorElement: <ErrorPage />
           },
           {
             path: Route.UPLOAD_DATASET_FILES,
-            element: UploadDatasetFilesFactory.create()
+            element: UploadDatasetFilesFactory.create(),
+            errorElement: <ErrorPage />
           },
           {
             path: Route.EDIT_DATASET_METADATA,
-            element: EditDatasetMetadataFactory.create()
+            element: EditDatasetMetadataFactory.create(),
+            errorElement: <ErrorPage />
           },
           {
             path: Route.ACCOUNT,
-            element: AccountFactory.create()
+            element: AccountFactory.create(),
+            errorElement: <ErrorPage />
           }
         ]
       }

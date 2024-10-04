@@ -23,7 +23,7 @@ export function ErrorPage() {
         </div>
 
         <Link to="/" className="btn btn-secondary">
-          {t('Back to root collection')}
+          {t('Back to Dataverse Homepage')}
         </Link>
       </div>
     </section>
