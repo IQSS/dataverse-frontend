@@ -2,22 +2,22 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Modal, Stack } from '@iqss/dataverse-design-system'
 import { Form } from '@iqss/dataverse-design-system'
-import type { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
-import { VersionUpdateType } from '../../../dataset/domain/models/VersionUpdateType'
+import type { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { VersionUpdateType } from '@/dataset/domain/models/VersionUpdateType'
 import { useSession } from '../../session/SessionContext'
 import { License } from '../dataset-summary/License'
 import {
   DatasetNonNumericVersionSearchParam,
   defaultLicense
-} from '../../../dataset/domain/models/Dataset'
+} from '@/dataset/domain/models/Dataset'
 import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
 import { usePublishDataset } from './usePublishDataset'
 import { PublishDatasetHelpText } from './PublishDatasetHelpText'
 import styles from './PublishDatasetModal.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { QueryParamKey, Route } from '../../Route.enum'
-import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
-import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { UpwardHierarchyNode } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 interface PublishDatasetModalProps {
   show: boolean
@@ -45,6 +45,7 @@ export function PublishDatasetModal({
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const navigate = useNavigate()
+  console.log('PublishDatasetModal collectionRepository', collectionRepository)
   const { submissionStatus, submitPublish, publishError } = usePublishDataset(
     repository,
     collectionRepository,
@@ -71,7 +72,7 @@ export function PublishDatasetModal({
     )
     handleClose()
   }
-
+  console.log(parentCollection)
   return (
     <Modal show={show} onHide={handleClose} size="xl">
       <Modal.Header>
@@ -82,6 +83,7 @@ export function PublishDatasetModal({
           <PublishDatasetHelpText
             releasedVersionExists={releasedVersionExists}
             parentCollectionIsReleased={parentCollection.isReleased}
+            parentCollectionName={parentCollection.name}
           />
           <License
             license={{

@@ -4,30 +4,41 @@ import styles from './PublishDatasetHelpText.module.scss'
 interface PublishDatasetHelpTextProps {
   releasedVersionExists: boolean
   parentCollectionIsReleased: boolean | undefined
+  parentCollectionName: string
 }
 function getWarningText(
   releasedVersionExists: boolean,
   parentCollectionIsReleased: boolean | undefined,
-  t: (key: string) => string
-): string {
+  parentCollectionName: string
+): { key: string; parentCollectionName?: string } {
   if (!releasedVersionExists) {
     if (!parentCollectionIsReleased) {
-      return t('publish.releaseCollectionQuestion')
+      return {
+        key: 'publish.releaseCollectionQuestion',
+        parentCollectionName: parentCollectionName
+      }
     } else {
-      return t('publish.draftQuestion')
+      return { key: 'publish.draftQuestion' }
     }
   }
-  return t('publish.previouslyReleasedQuestion')
+  return { key: 'publish.previouslyReleasedQuestion' }
 }
 export function PublishDatasetHelpText({
   releasedVersionExists,
-  parentCollectionIsReleased
+  parentCollectionIsReleased,
+  parentCollectionName
 }: PublishDatasetHelpTextProps) {
   const { t } = useTranslation('dataset')
   const cc0Link = 'https://creativecommons.org/publicdomain/zero/1.0/'
+  const warningText = getWarningText(
+    releasedVersionExists,
+    parentCollectionIsReleased,
+    parentCollectionName
+  )
+
   return (
     <>
-      {getWarningText(releasedVersionExists, parentCollectionIsReleased, t)}
+      {t(warningText.key, { parentCollectionName: warningText.parentCollectionName })}
       <div className={styles.container}>
         <Trans
           t={t}
