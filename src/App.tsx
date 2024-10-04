@@ -19,7 +19,8 @@ const authConfig: TAuthConfig = {
   tokenEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/token',
   logoutEndpoint: 'http://localhost:8000/realms/test/protocol/openid-connect/logout',
   redirectUri: 'http://localhost:8000/spa',
-  scope: 'openid'
+  scope: 'openid',
+  autoLogin: false
 }
 
 const userRepository = new UserJSDataverseRepository()
