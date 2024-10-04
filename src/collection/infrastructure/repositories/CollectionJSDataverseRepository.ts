@@ -3,10 +3,10 @@ import { Collection } from '../../domain/models/Collection'
 import {
   createCollection,
   getCollection,
-  getCollectionUserPermissions,
-  publishCollection,
   getCollectionFacets,
-  getCollectionItems
+  getCollectionUserPermissions,
+  getCollectionItems,
+  publishCollection
 } from '@iqss/dataverse-client-javascript'
 import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'

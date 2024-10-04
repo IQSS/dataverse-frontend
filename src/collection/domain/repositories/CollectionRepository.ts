@@ -17,4 +17,5 @@ export interface CollectionRepository {
     paginationInfo: CollectionItemsPaginationInfo,
     searchCriteria?: CollectionSearchCriteria
   ): Promise<CollectionItemSubset>
+  publish(collectionIdOrAlias: number | string): Promise<void>
 }

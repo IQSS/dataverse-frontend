@@ -33,7 +33,6 @@ export function PublishDatasetMenu({
   }
 
   const handleSelect = () => {
-    // TODO - Implement upload files
     setShowModal(true)
   }
 
