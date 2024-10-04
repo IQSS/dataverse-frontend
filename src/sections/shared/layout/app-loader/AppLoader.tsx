@@ -11,7 +11,8 @@ export const AppLoader = ({ fullViewport = false }: AppLoaderProps) => {
     <section
       className={cn(styles['app-loader'], {
         [styles['full-viewport']]: fullViewport
-      })}>
+      })}
+      data-testid="app-loader">
       <Spinner />
     </section>
   )
