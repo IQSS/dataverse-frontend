@@ -2,6 +2,11 @@
 @import 'node_modules/bootstrap/scss/variables';
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
+.show-me-data-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
 .header {
   margin-bottom: $spacer;
 }

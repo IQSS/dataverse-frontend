@@ -7,6 +7,8 @@ import { BASE_URL } from '../config'
 export const ProtectedRoute = () => {
   const { user, isLoadingUser } = useSession()
 
+  console.log({ user })
+
   if (isLoadingUser) {
     return <AppLoader />
   }
