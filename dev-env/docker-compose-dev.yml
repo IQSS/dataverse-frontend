@@ -48,6 +48,10 @@ services:
       DATAVERSE_DB_PASSWORD: secret
       DATAVERSE_DB_USER: ${DATAVERSE_DB_USER}
       DATAVERSE_FEATURE_API_SESSION_AUTH: 1
+      DATAVERSE_AUTH_OIDC_ENABLED: "1"
+      DATAVERSE_AUTH_OIDC_CLIENT_ID: test
+      DATAVERSE_AUTH_OIDC_CLIENT_SECRET: 94XHrfNRwXsjqTqApRrwWmhDLDHpIYV8
+      DATAVERSE_AUTH_OIDC_AUTH_SERVER_URL: http://localhost:8000/realms/test
       JVM_ARGS: -Ddataverse.pid.providers=fake
         -Ddataverse.pid.default-provider=fake
         -Ddataverse.pid.fake.type=FAKE
