@@ -19,7 +19,7 @@ describe('Collection Page', () => {
     cy.findAllByText(/Root/i).should('exist')
   })
 
-  it.only('navigates to a dataset from the list when clicking the title', () => {
+  it('navigates to a dataset from the list when clicking the title', () => {
     cy.wrap(DatasetHelper.createWithTitle(title), { timeout: 10000 }).then(() => {
       cy.wait(1_000)
       cy.visit('/spa/collections')
