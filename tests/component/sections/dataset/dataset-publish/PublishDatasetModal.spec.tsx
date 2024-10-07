@@ -150,6 +150,6 @@ describe('PublishDatasetModal', () => {
         handleClose={handleClose}
       />
     )
-    cy.findByText(/collection/).should('exist')
+    cy.findByText(/This dataset cannot be published until Root is published./).should('exist')
   })
 })
