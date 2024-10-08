@@ -51,7 +51,7 @@ services:
       DATAVERSE_AUTH_OIDC_ENABLED: 1
       DATAVERSE_AUTH_OIDC_CLIENT_ID: test
       DATAVERSE_AUTH_OIDC_CLIENT_SECRET: 94XHrfNRwXsjqTqApRrwWmhDLDHpIYV8
-      DATAVERSE_AUTH_OIDC_AUTH_SERVER_URL: http://localhost:8000/realms/test
+      DATAVERSE_AUTH_OIDC_AUTH_SERVER_URL: http://keycloak.mydomain.com:9080/realms/test
       JVM_ARGS: -Ddataverse.pid.providers=fake
         -Ddataverse.pid.default-provider=fake
         -Ddataverse.pid.fake.type=FAKE
@@ -193,7 +193,9 @@ services:
       - KEYCLOAK_ADMIN_PASSWORD=kcpassword
       - KEYCLOAK_LOGLEVEL=DEBUG
     networks:
-      - dataverse
+      dataverse:
+        aliases:
+          - keycloak.mydomain.com
     expose:
       - 9080
     volumes:
