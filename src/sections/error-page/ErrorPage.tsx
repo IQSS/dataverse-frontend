@@ -11,6 +11,11 @@ export function ErrorPage() {
   useErrorLogger(error)
   const theme = useTheme()
 
+  const header = document.querySelector('nav')
+  const footer = document.querySelector('footer')
+  const newMinHeight = header && footer ? '$main-container-available-height' : '100vh'
+  document.documentElement.style.setProperty('--error-min-height', newMinHeight)
+
   return (
     <section className={styles['section-wrapper']}>
       <div className={styles['middle-search-cta-wrapper']}>

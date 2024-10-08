@@ -7,7 +7,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: $main-container-available-height;
+  min-height: var(--error-min-height);
 }
 
 .middle-search-cta-wrapper {
