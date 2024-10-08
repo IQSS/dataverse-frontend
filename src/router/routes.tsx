@@ -12,6 +12,10 @@ import { CreateCollectionFactory } from '../sections/create-collection/CreateCol
 import { AccountFactory } from '../sections/account/AccountFactory'
 import { ProtectedRoute } from './ProtectedRoute'
 import { HomepageFactory } from '../sections/homepage/HomepageFactory'
+import { CollectionFeaturedItemsFactory } from '@/sections/collection-featured-items/CollectionFeaturedItemsFactory'
+
+// TODO:ME We are going to need nested layouts routes to achieve the desired layout structure of a collection page with the edition pages
+// TODO:ME Or maybe reuse the collection header as a component easier perhaps
 
 export const routes: RouteObject[] = [
   {
@@ -62,6 +66,10 @@ export const routes: RouteObject[] = [
           {
             path: Route.ACCOUNT,
             element: AccountFactory.create()
+          },
+          {
+            path: Route.COLLECTION_FEATURED_ITEMS,
+            element: CollectionFeaturedItemsFactory.create()
           }
         ]
       }

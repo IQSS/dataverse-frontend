@@ -19,22 +19,26 @@
     .cover-image {
       display: block;
       width: 100%;
-      height: 30vh;
+      height: 35vh;
       min-height: 200px;
-      max-height: 280px;
+      max-height: 320px;
       object-fit: cover;
 
       // object-position: center 70%;
     }
 
     .content {
-      padding: 0.5rem 1rem;
+      padding: 1rem;
+      background-image: linear-gradient(140deg, rgba(0 0 0 / 30%), transparent);
+
+      // example to show linear-gradient
+      // background-image: linear-gradient(140deg, rgba(255, 0, 0, 0.9) 40%, transparent 20%);
 
       .breadcrumbs-wrapper {
         width: fit-content;
-        padding-bottom: 0.5rem;
         padding-inline: 0.5rem;
-        background-color: rgba(255 255 255 / 80%);
+        margin-bottom: 1rem;
+        background-color: white;
         border-radius: 4px;
 
         :global .breadcrumb {
@@ -47,7 +51,18 @@
 
         h1 {
           color: white;
-          text-shadow: 2px 2px 5px rgba(0 0 0 / 80%); /* Dark shadow to create contrast */
+
+          // 👇 Another soultion.
+          // text-shadow: 2px 2px 5px rgba(0 0 0 / 80%);
+
+          // 👇 Another solution, not really sure about paint-order cross browser support.
+          -webkit-text-stroke: 4px black;
+          paint-order: stroke fill;
+          letter-spacing: 1px;
+
+          // 👇 Another solution
+          // filter: drop-shadow(-1px 0 0 #000) drop-shadow(1px 0 0 #000) drop-shadow(0 -1px 0 #000)
+          //   drop-shadow(0 1px 0 #000);
         }
 
         // h1 {
@@ -66,73 +81,17 @@
       .subtext {
         margin-bottom: 0;
         color: white;
-        text-shadow: 2px 2px 5px rgba(0 0 0 / 70%); /* Dark shadow to create contrast */
+
+        // 👇 Another solution, not really sure about paint-order cross browser support.
+        -webkit-text-stroke: 3px black;
+        paint-order: stroke fill;
+        letter-spacing: 1px;
+
+        // 👇 Another soultion.
+        // text-shadow: 2px 2px 5px rgba(0 0 0 / 80%);
+
         // color: $dv-subtext-color;
       }
     }
   }
-
-  .bottom-section {
-    padding: 2rem 0 2.5rem;
-    background-color: $dv-secondary-color;
-    border-bottom-right-radius: 6px;
-    border-bottom-left-radius: 6px;
-
-    // border: solid 2px black;
-
-    // Carousel
-
-    :global .carousel-indicators {
-      top: 100%;
-    }
-
-    :global .carousel-indicators button {
-      width: 14px;
-      height: 14px;
-      background-color: #000;
-      border-radius: 50%;
-    }
-
-    .featured-item {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      width: 70%;
-      min-height: 300px;
-      max-height: 300px;
-      padding: 1rem 1.5rem;
-      overflow-y: auto;
-      margin-inline: auto;
-      margin-block: 1rem;
-      background-color: #fff;
-      border: solid 2px #000;
-      border-radius: 8px;
-      box-shadow: 2px 2px 16px rgba(0 0 0 / 30%);
-
-      &::-webkit-scrollbar {
-        width: 8px;
-      }
-
-      &::-webkit-scrollbar-track {
-        background-color: transparent;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background-color: $dv-secondary-color;
-        border-radius: 6px;
-
-        &:hover {
-          background-color: color.adjust($dv-secondary-color, $blackness: 40%);
-        }
-      }
-    }
-  }
-
-  // .description {
-  //   p {
-  //     margin-bottom: 0;
-  //     // color: white;
-  //     // text-shadow: 2px 2px 5px rgba(0 0 0 / 70%); /* Dark shadow to create contrast */
-  //   }
-  // }
 }

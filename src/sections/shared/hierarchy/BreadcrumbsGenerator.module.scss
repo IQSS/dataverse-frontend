@@ -1,3 +1,7 @@
 .breadcrumb-generator {
-  padding-top: 0.5rem;
+  padding-block: 0.5rem;
+
+  .breadcrumb {
+    margin-bottom: 0;
+  }
 }
