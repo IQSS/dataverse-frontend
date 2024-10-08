@@ -1,6 +1,6 @@
 import { FileMetadata } from '../../../../../src/sections/file/file-metadata/FileMetadata'
 import { FileMother } from '../../../files/domain/models/FileMother'
-import { BASE_URL } from '../../../../../src/config'
+import { DATAVERSE_BACKEND_URL } from '../../../../../src/config'
 import { FileSizeUnit } from '../../../../../src/files/domain/models/FileMetadata'
 import {
   FileEmbargoMother,
@@ -118,7 +118,7 @@ describe('FileMetadata', () => {
     )
 
     cy.findByText('Download URL').should('exist')
-    cy.findByText(`${BASE_URL}/api/datafile/3`).should('exist')
+    cy.findByText(`${DATAVERSE_BACKEND_URL}/api/datafile/3`).should('exist')
     cy.findByText(
       'Use the Download URL in a Wget command or a download manager to avoid interrupted downloads, time outs or other failures.'
     ).should('exist')
