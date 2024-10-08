@@ -1,17 +1,28 @@
-import { useContext } from 'react'
-import { Outlet } from 'react-router-dom'
+import { useContext, useEffect } from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
 import { AuthContext } from 'react-oauth2-code-pkce'
 import { AppLoader } from '../sections/shared/layout/app-loader/AppLoader'
 
+/**
+ * This component is responsible for protecting routes that require authentication.
+ * If we dont have a token, we redirect the user to the OIDC login page with the current pathname as a state parameter.
+ * This state parameter is used to redirect the user back to their former intended pathname after the OIDC login is complete.
+ */
+
 export const ProtectedRoute = () => {
-  const { token, loginInProgress, logIn } = useContext(AuthContext)
+  const { pathname } = useLocation()
+  const { token, loginInProgress, logIn: oidcLogin } = useContext(AuthContext)
+
+  useEffect(() => {
+    if (loginInProgress) return
+
+    if (!token) {
+      oidcLogin(encodeURIComponent(pathname))
+    }
+  }, [token, oidcLogin, pathname, loginInProgress])
 
   if (loginInProgress) {
     return <AppLoader />
-  }
-
-  if (!token) {
-    logIn()
   }
 
   return <Outlet />

@@ -12,6 +12,7 @@ import { CreateCollectionFactory } from '../sections/create-collection/CreateCol
 import { AccountFactory } from '../sections/account/AccountFactory'
 import { ProtectedRoute } from './ProtectedRoute'
 import { HomepageFactory } from '../sections/homepage/HomepageFactory'
+import { AuthCallback } from '../sections/auth-callback/AuthCallback'
 
 export const routes: RouteObject[] = [
   {
@@ -38,6 +39,10 @@ export const routes: RouteObject[] = [
       {
         path: Route.FILES,
         element: FileFactory.create()
+      },
+      {
+        path: Route.AUTH_CALLBACK,
+        element: <AuthCallback />
       },
       // 🔐 Protected routes are only accessible to authenticated users
       {
