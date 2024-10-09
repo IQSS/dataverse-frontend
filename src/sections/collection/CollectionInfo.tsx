@@ -6,9 +6,10 @@ import { DatasetLabelSemanticMeaning } from '../../dataset/domain/models/Dataset
 
 interface CollectionInfoProps {
   collection: Collection
+  showDescription: boolean
 }
 
-export function CollectionInfo({ collection }: CollectionInfoProps) {
+export function CollectionInfo({ collection, showDescription = true }: CollectionInfoProps) {
   return (
     <>
       <header className={styles.header}>
@@ -24,7 +25,7 @@ export function CollectionInfo({ collection }: CollectionInfoProps) {
           )}
         </div>
       </header>
-      {collection.description && (
+      {collection.description && showDescription && (
         <div>
           <MarkdownComponent markdown={collection.description} />
         </div>

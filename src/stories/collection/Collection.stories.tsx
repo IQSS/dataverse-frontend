@@ -20,6 +20,31 @@ export default meta
 type Story = StoryObj<typeof Collection>
 
 export const Default: Story = {
+  render: () => {
+    const collectionRepositoryWithoutFeaturedItems = new CollectionMockRepository()
+    collectionRepositoryWithoutFeaturedItems.getFeaturedItems = () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve([])
+        }, 1_000)
+      })
+    }
+    return (
+      <Collection
+        collectionRepository={collectionRepositoryWithoutFeaturedItems}
+        collectionId="collection"
+        created={false}
+        collectionQueryParams={{
+          pageQuery: 1,
+          searchQuery: undefined,
+          typesQuery: undefined
+        }}
+      />
+    )
+  }
+}
+
+export const WithFeaturedItems: Story = {
   render: () => (
     <Collection
       collectionRepository={new CollectionMockRepository()}
