@@ -1,53 +1,52 @@
 import { useTranslation, Trans } from 'react-i18next'
+import { RouteWithParams } from '@/sections/Route.enum'
+import { Link } from 'react-router-dom'
+import { Stack } from '@iqss/dataverse-design-system'
 import styles from './PublishDatasetHelpText.module.scss'
 
 interface PublishDatasetHelpTextProps {
   releasedVersionExists: boolean
   parentCollectionIsReleased: boolean | undefined
   parentCollectionName: string
+  parentCollectionId: string
 }
-function getWarningText(
+
+function getWarningTextKey(
   releasedVersionExists: boolean,
-  parentCollectionIsReleased: boolean | undefined,
-  parentCollectionName: string
-): { key: string; parentCollectionName?: string } {
+  parentCollectionIsReleased: boolean | undefined
+): string {
   if (!releasedVersionExists) {
     if (!parentCollectionIsReleased) {
-      return {
-        key: 'publish.releaseCollectionQuestion',
-        parentCollectionName: parentCollectionName
-      }
-    } else {
-      return { key: 'publish.draftQuestion' }
-    }
+      return 'publish.releaseCollectionQuestion'
+    } else return 'publish.draftQuestion'
   }
-  return { key: 'publish.previouslyReleasedQuestion' }
+  return 'publish.previouslyReleasedQuestion'
 }
+
 export function PublishDatasetHelpText({
   releasedVersionExists,
   parentCollectionIsReleased,
-  parentCollectionName
+  parentCollectionName,
+  parentCollectionId
 }: PublishDatasetHelpTextProps) {
   const { t } = useTranslation('dataset')
-  const cc0Link = 'https://creativecommons.org/publicdomain/zero/1.0/'
-  const warningText = getWarningText(
-    releasedVersionExists,
-    parentCollectionIsReleased,
-    parentCollectionName
-  )
+  const warningText = getWarningTextKey(releasedVersionExists, parentCollectionIsReleased)
 
   return (
-    <>
-      {t(warningText.key, { parentCollectionName: warningText.parentCollectionName })}
-      <div className={styles.container}>
-        <Trans
-          t={t}
-          i18nKey="publish.termsText1"
-          values={{ cc0Link }}
-          components={{ a: <a href={cc0Link} /> }}
-        />
-        <p>{t('publish.termsText2')}</p>
+    <Stack direction="vertical">
+      <div className={styles.warningText}>
+        {!parentCollectionIsReleased ? (
+          <Trans
+            t={t}
+            i18nKey={warningText}
+            values={{ parentCollectionName }}
+            components={{ a: <Link to={RouteWithParams.COLLECTIONS(parentCollectionId)} /> }}
+          />
+        ) : (
+          <p>{t(warningText)}</p>
+        )}
       </div>
-    </>
+      <p>{t('publish.termsText')}</p>
+    </Stack>
   )
 }

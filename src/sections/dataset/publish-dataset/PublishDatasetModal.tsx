@@ -45,7 +45,7 @@ export function PublishDatasetModal({
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const navigate = useNavigate()
-  console.log('PublishDatasetModal collectionRepository', collectionRepository)
+
   const { submissionStatus, submitPublish, publishError } = usePublishDataset(
     repository,
     collectionRepository,
@@ -72,7 +72,7 @@ export function PublishDatasetModal({
     )
     handleClose()
   }
-  console.log(parentCollection)
+
   return (
     <Modal show={show} onHide={handleClose} size="xl">
       <Modal.Header>
@@ -84,6 +84,7 @@ export function PublishDatasetModal({
             releasedVersionExists={releasedVersionExists}
             parentCollectionIsReleased={parentCollection.isReleased}
             parentCollectionName={parentCollection.name}
+            parentCollectionId={parentCollection.id}
           />
           <License
             license={{
