@@ -1,7 +1,11 @@
-import { Controller, FormProvider, useFieldArray, useForm } from 'react-hook-form'
-import { Button, Col, Row } from '@iqss/dataverse-design-system'
-import { DynamicFieldsButtons } from '@/sections/shared/form/DynamicFieldsButtons/DynamicFieldsButtons'
-import { FeaturedItemFields } from './FeaturedItemFields/FeaturedItemFields'
+import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
+import { DndContext, DragEndEvent } from '@dnd-kit/core'
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
+import { Button } from '@iqss/dataverse-design-system'
+import { FeaturedItem } from './FeaturedItem/FeaturedItem'
+import { SortableContext } from '@dnd-kit/sortable'
+import styles from './FeaturedItemsForm.module.scss'
+import { PreviewCarousel } from './PreviewCarousel/PreviewCarousel'
 
 export type FeaturedItemsFormData = {
   featuredItems: FeaturedItemField[]
@@ -56,14 +60,17 @@ export const FeaturedItemsForm = () => {
 
   const handleOnRemoveField = (index: number) => remove(index)
 
-  const preventEnterSubmit = (e: React.KeyboardEvent<HTMLFormElement | HTMLButtonElement>) => {
-    // When pressing Enter, only submit the form  if the user is focused on the submit button itself
-    if (e.key !== 'Enter') return
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
 
-    const isButton = e.target instanceof HTMLButtonElement
-    const isButtonTypeSubmit = isButton ? (e.target as HTMLButtonElement).type === 'submit' : false
+    if (over && active.id !== over?.id) {
+      const activeIndex = (active.data.current?.sortable as { index: number })?.index
+      const overIndex = (over.data.current?.sortable as { index: number })?.index
 
-    if (!isButton && !isButtonTypeSubmit) e.preventDefault()
+      if (activeIndex !== undefined && overIndex !== undefined) {
+        move(activeIndex, overIndex)
+      }
+    }
   }
 
   const submitForm = (data: FeaturedItemsFormData) => {
@@ -72,36 +79,29 @@ export const FeaturedItemsForm = () => {
 
   return (
     <FormProvider {...form}>
+      <PreviewCarousel />
       <form
         onSubmit={form.handleSubmit(submitForm)}
-        onKeyDown={preventEnterSubmit}
         noValidate={true}
+        className={styles.form}
         data-testid="collection-form">
-        {(fieldsArray as FeaturedItemFieldWithId[]).map((field, index) => (
-          <Row key={field.id}>
-            {/* <Controller
-              name={`featuredItems.${index}`}
-              control={form.control}
-              render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
-                <> */}
-            <Col sm={9}>
-              <FeaturedItemFields itemIndex={index} />
-            </Col>
-            <Col sm={3} style={{ marginTop: 32 }}>
-              <DynamicFieldsButtons
-                fieldName="Featured Item"
-                onAddButtonClick={() => handleOnAddField(index)}
-                onRemoveButtonClick={() => handleOnRemoveField(index)}
-                originalField={index === 0}
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button disabled={!form.formState.isDirty}>Save Featured Items</Button>
+        </div>
+        <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
+          <SortableContext items={fieldsArray}>
+            {(fieldsArray as FeaturedItemFieldWithId[]).map((field, index) => (
+              <FeaturedItem
+                key={field.id}
+                itemId={field.id}
+                itemIndex={index}
+                disableDragWhenOnlyOneItem={fieldsArray.length === 1}
+                onAddField={handleOnAddField}
+                onRemoveField={handleOnRemoveField}
               />
-            </Col>
-            {/* </>
-              )}
-            /> */}
-          </Row>
-        ))}
-
-        <Button>Save Featured Items</Button>
+            ))}
+          </SortableContext>
+        </DndContext>
       </form>
     </FormProvider>
   )

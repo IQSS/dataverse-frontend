@@ -5,7 +5,7 @@ import { MarkdownComponent } from '@/sections/dataset/markdown/MarkdownComponent
 import styles from './FeaturedItems.module.scss'
 
 interface FeaturedItemsProps {
-  collection: Collection
+  collection?: Collection
 }
 
 const FeaturedItems = ({ collection }: FeaturedItemsProps) => {
@@ -21,7 +21,7 @@ const FeaturedItems = ({ collection }: FeaturedItemsProps) => {
       nextIcon={<ChevronRight color="black" size={40} />}>
       {/* First item should be the description */}
       {/* Description can't be inside the cover, this one has a limited height */}
-      {collection.description && (
+      {collection?.description && (
         <Carousel.Item>
           <Card className={styles['featured-item-card']}>
             <Card.Body>
