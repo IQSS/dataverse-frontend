@@ -5,7 +5,7 @@ import { CollectionRepository } from '../../../../../src/collection/domain/repos
 import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 
 describe('PublishDatasetModal', () => {
-  it('does not render the radio buttons when releasedVersionExists is false', () => {
+  it('display modal for never released dataset', () => {
     const handleClose = cy.stub()
     const repository = {} as DatasetRepository // Mock the repository as needed
     repository.publish = cy.stub().as('repositoryPublish').resolves()
@@ -24,6 +24,9 @@ describe('PublishDatasetModal', () => {
       />
     )
     cy.findByText('Publish Dataset').should('exist')
+    cy.findByText(
+      'Are you sure you want to publish this dataset? Once you do so, it must remain public.'
+    ).should('exist')
     cy.findByText('Major Release (2.0)').should('not.exist')
     cy.findByText('Minor Release (1.1)').should('not.exist')
     cy.findByText('Update Current Version').should('not.exist')
@@ -55,7 +58,7 @@ describe('PublishDatasetModal', () => {
     // Check if the error message is displayed
     cy.contains(errorMessage).should('exist')
   })
-  it('renders the PublishDatasetModal and triggers submitPublish on button click', () => {
+  it('renders the PublishDatasetModal for previously released dataset and triggers submitPublish on button click', () => {
     const handleClose = cy.stub()
     const repository = {} as DatasetRepository // Mock the repository as needed
     repository.publish = cy.stub().as('repositoryPublish').resolves()
@@ -78,6 +81,7 @@ describe('PublishDatasetModal', () => {
 
     // Check if the modal is rendered
     cy.findByText('Publish Dataset').should('exist')
+    cy.findByText('Are you sure you want to republish this dataset?').should('exist')
     cy.findByText('Major Release (2.0)').click()
     cy.findByText('Continue').click()
     cy.get('@repositoryPublish').should(
@@ -150,6 +154,10 @@ describe('PublishDatasetModal', () => {
         handleClose={handleClose}
       />
     )
-    cy.findByText(/This dataset cannot be published until Root is published./).should('exist')
+    cy.findByText(/This dataset cannot be published until/).should('exist')
+    cy.findByRole('link', { name: parentCollection.name }).should('exist')
+    cy.findByRole('link', { name: parentCollection.name })
+      .should('have.attr', 'href')
+      .and('include', `/collections/${parentCollection.id}`)
   })
 })
