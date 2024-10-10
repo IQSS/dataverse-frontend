@@ -17,7 +17,7 @@ export class JSUpwardHierarchyNodeMapper {
       jsUpwardHierarchyNode.identifier,
       jsUpwardHierarchyNode.persistentIdentifier,
       jsUpwardHierarchyNode.version,
-      jsUpwardHierarchyNode.isReleased as boolean, // TODO: replace with jsUpwardHierarchyNode.isReleased when it is available
+      jsUpwardHierarchyNode.isReleased as boolean,
       JSUpwardHierarchyNodeMapper.toUpwardHierarchyNode(jsUpwardHierarchyNode.isPartOf)
     )
   }

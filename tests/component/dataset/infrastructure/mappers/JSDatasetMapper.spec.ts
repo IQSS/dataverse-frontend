@@ -4,7 +4,8 @@ import { JSDatasetMapper } from '../../../../../src/dataset/infrastructure/mappe
 import {
   DatasetLockType,
   DatasetVersionState,
-  DatasetLock as JSDatasetLock
+  DatasetLock as JSDatasetLock,
+  DvObjectType as JSDvObjectType
 } from '@iqss/dataverse-client-javascript'
 import {
   CitationMetadataBlock,
@@ -62,10 +63,10 @@ const jsDataset = {
   },
   thumbnail: undefined,
   isPartOf: {
-    type: 'DATAVERSE',
+    type: JSDvObjectType.DATAVERSE,
     identifier: 'root',
     displayName: 'Root',
-    isRelased: true
+    isReleased: true
   }
 }
 const citation =
@@ -182,8 +183,8 @@ const expectedDataset = {
     '505',
     'doi:10.5072/FK2/B4B2MJ',
     '0.0',
-    true,
-    new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
+    undefined,
+    new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root', undefined, undefined, true)
   ),
   nextMajorVersion: undefined,
   nextMinorVersion: undefined
@@ -281,8 +282,8 @@ const expectedDatasetWithPublicationDate = {
     '505',
     'doi:10.5072/FK2/B4B2MJ',
     '0.0',
-    true,
-    new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
+    undefined,
+    new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root', undefined, undefined, true)
   ),
   nextMajorVersion: undefined,
   nextMinorVersion: undefined
@@ -380,8 +381,8 @@ const expectedDatasetWithNextVersionNumbers = {
     '505',
     'doi:10.5072/FK2/B4B2MJ',
     '0.0',
-    true,
-    new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
+    undefined,
+    new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root', undefined, undefined, true)
   ),
   nextMajorVersion: '2.0',
   nextMinorVersion: '1.3'
@@ -493,14 +494,14 @@ const expectedDatasetAlternateVersion = {
     '505',
     'doi:10.5072/FK2/B4B2MJ',
     '0.0',
-    true,
-    new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
+    undefined,
+    new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root', undefined, undefined, true)
   ),
   nextMajorVersion: undefined,
   nextMinorVersion: undefined
 }
 describe('JS Dataset Mapper', () => {
-  it.only('maps jsDataset model to the domain Dataset model', () => {
+  it('maps jsDataset model to the domain Dataset model', () => {
     const mapped = JSDatasetMapper.toDataset(
       jsDataset,
       citation,
@@ -510,24 +511,9 @@ describe('JS Dataset Mapper', () => {
       jsDatasetFilesTotalOriginalDownloadSize,
       jsDatasetFilesTotalArchivalDownloadSize
     )
-    const expectedWithNull = JSON.stringify(expectedDataset, (key, value) => {
-      if (value === undefined) {
-        return null
-      }
-      return value
-    })
-
-    const mappedWithNull = JSON.stringify(mapped, (key, value) => {
-      if (value === undefined) {
-        return null
-      }
-      return value
-    })
-
-    console.log(expectedWithNull)
-    console.log('MAPPED')
-    console.log(mappedWithNull)
-    expect(expectedWithNull).to.deep.equal(mappedWithNull)
+    console.log('expectedDataset', expectedDataset)
+    console.log('mapped', mapped)
+    expect(expectedDataset).to.deep.equal(mapped)
   })
   it('maps jsDataset model to the domain Dataset model for alternate version', () => {
     const mappedWithAlternate = JSDatasetMapper.toDataset(
