@@ -20,13 +20,14 @@ export class CollectionMother {
     }
   }
 
-  static createRealistic(): Collection {
+  static createRealistic(props?: Partial<Collection>): Collection {
     return CollectionMother.create({
       id: 'science',
       isReleased: true,
       name: 'Collection Name',
       description: 'We do all the science.',
-      affiliation: 'Scientific Research University'
+      affiliation: 'Scientific Research University',
+      ...props
     })
   }
 

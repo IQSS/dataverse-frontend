@@ -13,20 +13,26 @@ export default meta
 type Story = StoryObj<typeof CollectionInfo>
 
 export const Default: Story = {
-  render: () => <CollectionInfo collection={CollectionMother.createWithOnlyRequiredFields()} />
+  render: () => (
+    <CollectionInfo collection={CollectionMother.createWithOnlyRequiredFields()} showDescription />
+  )
 }
 
 export const Complete: Story = {
-  render: () => <CollectionInfo collection={CollectionMother.createComplete()} />
+  render: () => <CollectionInfo collection={CollectionMother.createComplete()} showDescription />
 }
 
 export const WithAffiliation: Story = {
-  render: () => <CollectionInfo collection={CollectionMother.createWithAffiliation()} />
+  render: () => (
+    <CollectionInfo collection={CollectionMother.createWithAffiliation()} showDescription />
+  )
 }
 
 export const Unpublished: Story = {
-  render: () => <CollectionInfo collection={CollectionMother.createUnpublished()} />
+  render: () => <CollectionInfo collection={CollectionMother.createUnpublished()} showDescription />
 }
 export const WithDescription: Story = {
-  render: () => <CollectionInfo collection={CollectionMother.createWithDescription()} />
+  render: () => (
+    <CollectionInfo collection={CollectionMother.createWithDescription()} showDescription />
+  )
 }

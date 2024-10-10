@@ -11,6 +11,7 @@ import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemS
 import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionItemsMother } from '../../../tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
+import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 
 export class CollectionMockRepository implements CollectionRepository {
   getById(_id: string): Promise<Collection> {
@@ -75,6 +76,14 @@ export class CollectionMockRepository implements CollectionRepository {
           totalItemCount: isDefaultSelected ? 6 : 200 // This is a fake number, its big so we can always scroll to load more items for the story
         })
       }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getFeaturedItems(_collectionIdOrAlias: number | string): Promise<CollectionFeaturedItem[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([])
+      }, 1_000)
     })
   }
 }
