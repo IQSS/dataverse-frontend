@@ -1,13 +1,12 @@
 import { Card, Carousel } from 'react-bootstrap'
 import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons'
-import { Collection } from '@/collection/domain/models/Collection'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { MarkdownComponent } from '@/sections/dataset/markdown/MarkdownComponent'
 import styles from './FeaturedItems.module.scss'
 
 interface FeaturedItemsProps {
   featuredItems: CollectionFeaturedItem[]
-  collectionDescription: Collection['description']
+  collectionDescription?: string
 }
 
 const FeaturedItems = ({ featuredItems, collectionDescription }: FeaturedItemsProps) => {
@@ -50,7 +49,7 @@ const FeaturedItems = ({ featuredItems, collectionDescription }: FeaturedItemsPr
                     style={{ maxWidth: '50%', maxHeight: 250 }}
                   />
                 )}
-                <p style={{ flex: 1 }}>{featuredItem.description}</p>
+                <p style={{ flex: 1 }}>{featuredItem.content}</p>
               </div>
             </Card.Body>
           </Card>

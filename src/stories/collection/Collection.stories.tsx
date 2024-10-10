@@ -5,6 +5,9 @@ import { WithLayout } from '../WithLayout'
 import { WithLoggedInUser } from '../WithLoggedInUser'
 import { CollectionMockRepository } from './CollectionMockRepository'
 import { CollectionLoadingMockRepository } from './CollectionLoadingMockRepository'
+import { CollectionFeaturedItemsMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemsMother'
+import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
+import { faker } from '@faker-js/faker'
 
 const meta: Meta<typeof Collection> = {
   title: 'Pages/Collection',
@@ -20,31 +23,6 @@ export default meta
 type Story = StoryObj<typeof Collection>
 
 export const Default: Story = {
-  render: () => {
-    const collectionRepositoryWithoutFeaturedItems = new CollectionMockRepository()
-    collectionRepositoryWithoutFeaturedItems.getFeaturedItems = () => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve([])
-        }, 1_000)
-      })
-    }
-    return (
-      <Collection
-        collectionRepository={collectionRepositoryWithoutFeaturedItems}
-        collectionId="collection"
-        created={false}
-        collectionQueryParams={{
-          pageQuery: 1,
-          searchQuery: undefined,
-          typesQuery: undefined
-        }}
-      />
-    )
-  }
-}
-
-export const WithFeaturedItems: Story = {
   render: () => (
     <Collection
       collectionRepository={new CollectionMockRepository()}
@@ -92,4 +70,50 @@ export const Created: Story = {
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
+}
+
+export const WithFeaturedItems: Story = {
+  render: () => {
+    const collectionRepositoryWitFeaturedItems = new CollectionMockRepository()
+
+    collectionRepositoryWitFeaturedItems.getById = () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(
+            CollectionMother.createRealistic({
+              description:
+                'This is the description of the collection. When the user configures any featured item for the collection and the collection already has a description, it will be displayed here in the featured item entitled About.'
+            })
+          )
+        }, 1_000)
+      })
+    }
+
+    collectionRepositoryWitFeaturedItems.getFeaturedItems = () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve([
+            CollectionFeaturedItemsMother.createWithImage(undefined, 'city'),
+            CollectionFeaturedItemsMother.create(),
+            CollectionFeaturedItemsMother.createWithImage(undefined, 'dog'),
+            CollectionFeaturedItemsMother.create({
+              content: faker.lorem.paragraphs(100)
+            })
+          ])
+        }, 1_000)
+      })
+    }
+    return (
+      <Collection
+        collectionRepository={collectionRepositoryWitFeaturedItems}
+        collectionId="collection"
+        created={false}
+        collectionQueryParams={{
+          pageQuery: 1,
+          searchQuery: undefined,
+          typesQuery: undefined
+        }}
+      />
+    )
+  }
 }

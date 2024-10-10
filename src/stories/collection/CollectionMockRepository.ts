@@ -12,7 +12,6 @@ import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionS
 import { CollectionItemsMother } from '../../../tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
-import { CollectionFeaturedItemsMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemsMother'
 
 export class CollectionMockRepository implements CollectionRepository {
   getById(_id: string): Promise<Collection> {
@@ -81,16 +80,9 @@ export class CollectionMockRepository implements CollectionRepository {
   }
 
   getFeaturedItems(_collectionIdOrAlias: number | string): Promise<CollectionFeaturedItem[]> {
-    const featuredItems = [
-      CollectionFeaturedItemsMother.create({ title: 'About' }),
-      CollectionFeaturedItemsMother.createWithImage(),
-      CollectionFeaturedItemsMother.createWithImage(),
-      CollectionFeaturedItemsMother.create()
-    ]
-
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(featuredItems)
+        resolve([])
       }, 1_000)
     })
   }

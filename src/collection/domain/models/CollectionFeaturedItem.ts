@@ -1,6 +1,6 @@
 export interface CollectionFeaturedItem {
   title: string
-  description: string
+  content: string
   image?: {
     url: string
     altText: string

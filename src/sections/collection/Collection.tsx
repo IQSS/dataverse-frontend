@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -48,6 +48,7 @@ export function Collection({
   useScrollTop()
   const { user } = useSession()
   const [dataShown, setDataShown] = useState(false)
+  const divRef = useRef<HTMLDivElement | null>(null)
 
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
@@ -65,8 +66,6 @@ export function Collection({
     })
 
   const hasFeaturedItems = collectionFeaturedItems.length > 0
-
-  console.log({ collectionFeaturedItems, isLoadingCollectionFeaturedItems, hasFeaturedItems })
 
   const canUserAddCollection = Boolean(collectionUserPermissions?.canAddCollection)
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
@@ -106,7 +105,15 @@ export function Collection({
             {/* TODO:ME When showing the data we could focus the scroll to the collection items panel */}
             {hasFeaturedItems && !dataShown && (
               <div className={styles['show-me-data-wrapper']}>
-                <Button onClick={() => setDataShown(true)}>Show me the data</Button>
+                <Button
+                  onClick={() => {
+                    setDataShown(true)
+                    setTimeout(() => {
+                      divRef.current?.scrollIntoView({ behavior: 'smooth' })
+                    }, 100)
+                  }}>
+                  Show me the data
+                </Button>
               </div>
             )}
 
@@ -139,21 +146,23 @@ export function Collection({
                     </DropdownButton>
                   </ButtonGroup>
                 </div>
-                <CollectionItemsPanel
-                  key={collectionId}
-                  collectionId={collectionId}
-                  collectionRepository={collectionRepository}
-                  collectionQueryParams={collectionQueryParams}
-                  addDataSlot={
-                    showAddDataActions ? (
-                      <AddDataActionsButton
-                        collectionId={collectionId}
-                        canAddCollection={canUserAddCollection}
-                        canAddDataset={canUserAddDataset}
-                      />
-                    ) : null
-                  }
-                />
+                <div className={styles['coll-items-wrapper']} ref={divRef}>
+                  <CollectionItemsPanel
+                    key={collectionId}
+                    collectionId={collectionId}
+                    collectionRepository={collectionRepository}
+                    collectionQueryParams={collectionQueryParams}
+                    addDataSlot={
+                      showAddDataActions ? (
+                        <AddDataActionsButton
+                          collectionId={collectionId}
+                          canAddCollection={canUserAddCollection}
+                          canAddDataset={canUserAddDataset}
+                        />
+                      ) : null
+                    }
+                  />
+                </div>
               </>
             )}
           </>

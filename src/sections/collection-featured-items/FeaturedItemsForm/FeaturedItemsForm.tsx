@@ -6,6 +6,7 @@ import { FeaturedItem } from './FeaturedItem/FeaturedItem'
 import { SortableContext } from '@dnd-kit/sortable'
 import styles from './FeaturedItemsForm.module.scss'
 import { PreviewCarousel } from './PreviewCarousel/PreviewCarousel'
+import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 
 export type FeaturedItemsFormData = {
   featuredItems: FeaturedItemField[]
@@ -14,7 +15,10 @@ export type FeaturedItemsFormData = {
 type FeaturedItemField = {
   title: string
   content: string
-  image?: File
+  image?: {
+    file: File
+    altText: string
+  }
 }
 
 type FeaturedItemFieldWithId = FeaturedItemField & {
@@ -77,17 +81,33 @@ export const FeaturedItemsForm = () => {
     console.log(data)
   }
 
+  const formFieldsToFeaturedItems: CollectionFeaturedItem[] = form
+    .watch('featuredItems')
+    .map((field) => {
+      const { title, content, image } = field
+
+      if (image?.file) {
+        const url = URL.createObjectURL(image.file)
+        return { title, content, image: { url, altText: image.altText } }
+      }
+
+      return { title, content }
+    })
+
   return (
     <FormProvider {...form}>
-      <PreviewCarousel />
+      <PreviewCarousel currentFormFeaturedItems={formFieldsToFeaturedItems} />
       <form
         onSubmit={form.handleSubmit(submitForm)}
         noValidate={true}
         className={styles.form}
         data-testid="collection-form">
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button disabled={!form.formState.isDirty}>Save Featured Items</Button>
-        </div>
+        {fieldsArray.length > 3 && (
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button disabled={!form.formState.isDirty}>Save Featured Items</Button>
+          </div>
+        )}
+
         <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
           <SortableContext items={fieldsArray}>
             {(fieldsArray as FeaturedItemFieldWithId[]).map((field, index) => (
@@ -102,6 +122,9 @@ export const FeaturedItemsForm = () => {
             ))}
           </SortableContext>
         </DndContext>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button disabled={!form.formState.isDirty}>Save Featured Items</Button>
+        </div>
       </form>
     </FormProvider>
   )

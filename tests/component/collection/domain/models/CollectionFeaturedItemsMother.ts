@@ -4,21 +4,26 @@ import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFea
 export class CollectionFeaturedItemsMother {
   static create(props?: Partial<CollectionFeaturedItem>): CollectionFeaturedItem {
     return {
-      title: faker.lorem.word(),
-      description: faker.lorem.paragraph(),
+      title: this.capitalizeWord(faker.lorem.words(2)),
+      content: faker.lorem.paragraph(),
       ...props
     }
   }
 
-  static createWithImage(props?: Partial<CollectionFeaturedItem['image']>): CollectionFeaturedItem {
+  static createWithImage(
+    props?: Partial<CollectionFeaturedItem['image']>,
+    imageCategory?: string
+  ): CollectionFeaturedItem {
     return CollectionFeaturedItemsMother.create({
       image: {
-        url: faker.image.imageUrl(),
+        url: faker.image.imageUrl(undefined, undefined, imageCategory),
         altText: faker.lorem.words(2),
         ...props
       }
     })
   }
 
-  // TODO:ME Create realistic for demo?
+  private static capitalizeWord(word: string): string {
+    return word.charAt(0).toUpperCase() + word.slice(1)
+  }
 }

@@ -52,7 +52,7 @@ export const FeaturedItem = ({
         [styles['active']]: active?.id === itemId
       })}>
       <Row>
-        <Col sm={1}>
+        <Col md={1}>
           <button
             type="button"
             ref={setActivatorNodeRef}
@@ -72,7 +72,7 @@ export const FeaturedItem = ({
             </svg>
           </button>
         </Col>
-        <Col sm={8}>
+        <Col md={8} lg={9}>
           <Row>
             <Form.Group controlId={`featuredItems.${itemIndex}.title`} as={Col} md={6}>
               <Form.Group.Label
@@ -146,7 +146,7 @@ export const FeaturedItem = ({
             </Form.Group>
           </Row>
         </Col>
-        <Col sm={3} style={{ marginTop: '2rem' }}>
+        <Col md={3} lg={2} style={{ marginTop: '2rem' }}>
           <DynamicFieldsButtons
             fieldName="Featured Item"
             onAddButtonClick={() => onAddField(itemIndex)}

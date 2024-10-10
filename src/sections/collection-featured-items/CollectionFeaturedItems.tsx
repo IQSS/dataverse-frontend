@@ -36,7 +36,7 @@ export const CollectionFeaturedItems = ({
               actionItemText="Featured Items"
             />
 
-            <CollectionInfo collection={collection} />
+            <CollectionInfo collection={collection} showDescription={false} />
 
             <SeparationLine />
             <Alert variant="info" customHeading="What is this about?" dismissible={false}>

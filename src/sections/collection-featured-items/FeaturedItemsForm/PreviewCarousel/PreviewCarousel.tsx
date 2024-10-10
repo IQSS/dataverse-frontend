@@ -1,13 +1,19 @@
-import FeaturedItems from '@/sections/collection/featured-items/FeaturedItems'
 import { Accordion } from '@iqss/dataverse-design-system'
+import FeaturedItems from '@/sections/collection/featured-items/FeaturedItems'
+import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 
-export const PreviewCarousel = () => {
+interface PreviewCarouselProps {
+  currentFormFeaturedItems: CollectionFeaturedItem[]
+}
+
+export const PreviewCarousel = ({ currentFormFeaturedItems }: PreviewCarouselProps) => {
+  console.log({ currentFormFeaturedItems })
   return (
     <Accordion>
       <Accordion.Item eventKey="0">
         <Accordion.Header>Preview Featured Items Carousel</Accordion.Header>
         <Accordion.Body>
-          <FeaturedItems />
+          <FeaturedItems featuredItems={currentFormFeaturedItems} />
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>
