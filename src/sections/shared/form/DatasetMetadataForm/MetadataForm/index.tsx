@@ -35,7 +35,7 @@ export const MetadataForm = ({
 }: FormProps) => {
   const { user } = useSession()
   const navigate = useNavigate()
-  const { t } = useTranslation('datasetMetadataForm')
+  const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
 
   const accordionRef = useRef<HTMLDivElement>(null)
   const formContainerRef = useRef<HTMLDivElement>(null)

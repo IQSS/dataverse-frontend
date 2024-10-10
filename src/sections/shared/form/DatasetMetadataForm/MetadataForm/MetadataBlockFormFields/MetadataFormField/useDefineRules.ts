@@ -24,7 +24,7 @@ export const useDefineRules = ({
   metadataFieldInfo,
   isParentFieldRequired
 }: Props): DefinedRules => {
-  const { t } = useTranslation('datasetMetadataForm')
+  const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
   const { type, displayName, isRequired, watermark } = metadataFieldInfo
 
   // A sub field is required if the parent field is required and the sub field is required

@@ -1,5 +1,63 @@
 {
   "asterisksIndicateRequiredFields": "Asterisks indicate required fields",
   "remove": "Remove",
-  "add": "Add"
+  "add": "Add",
+  "pageNumberNotFound": {
+    "heading": "Page Number Not Found",
+    "message": "The page number you requested does not exist. Please try a different page number."
+  },
+  "pageNotFound": {
+    "heading": "Page Not Found",
+    "message": "The page you are looking for was not found."
+  },
+  "pagination": {
+    "results_one": "1 {{item}}",
+    "results_other": "{{start}} to {{end}} of {{formattedCount}} {{item}}s",
+    "accumulated": {
+      "one": "{{formattedCount}} {{item}}",
+      "lessThanPageSize": "{{formattedCount}} {{item}}s",
+      "moreThanPageSize": "{{accumulated}} of {{formattedCount}} {{item}}s displayed"
+    },
+    "pageSize": "{{item}}s per page"
+  },
+  "citationBlock": {
+    "learnAbout": "Learn About",
+    "standards": "Data Citation Standards"
+  },
+  "datasetMetadataForm": {
+    "metadataTip": {
+      "title": "Metadata Tip",
+      "content": "After adding the dataset, click the Edit Dataset button to add more metadata."
+    },
+    "validationAlert": {
+      "title": "Validation Error",
+      "content": "Required fields were missed or there was a validation error. Please scroll down to see details."
+    },
+    "requiredFields": "Asterisks indicate required fields",
+    "mayBecomeRequired": "One or more of these fields may become required if you add to one or more of these optional fields.",
+    "field": {
+      "required": "{{displayName}} is required",
+      "invalid": {
+        "url": "{{displayName}} is not a valid URL",
+        "email": "{{displayName}} is not a valid email",
+        "int": "{{displayName}} is not a valid integer",
+        "float": "{{displayName}} is not a valid float",
+        "date": "{{displayName}} is not a valid date. Please use the format {{dateFormat}}"
+      }
+    },
+    "status": {
+      "submitting": "Submitting...",
+      "success": "Form submitted successfully!",
+      "failed": "Error: Submission failed."
+    },
+    "states": {
+      "submitting": "Form Submitting",
+      "submissionSuccess": "Form submission successful"
+    },
+    "saveButton": {
+      "createMode": "Save Dataset",
+      "editMode": "Save Changes"
+    },
+    "cancelButton": "Cancel"
+  }
 }
