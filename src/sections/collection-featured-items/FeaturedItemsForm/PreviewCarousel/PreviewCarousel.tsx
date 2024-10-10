@@ -11,7 +11,7 @@ export const PreviewCarousel = ({ currentFormFeaturedItems }: PreviewCarouselPro
   return (
     <Accordion>
       <Accordion.Item eventKey="0">
-        <Accordion.Header>Preview Featured Items Carousel</Accordion.Header>
+        <Accordion.Header>Preview of the carousel of featured items</Accordion.Header>
         <Accordion.Body>
           <FeaturedItems featuredItems={currentFormFeaturedItems} />
         </Accordion.Body>
