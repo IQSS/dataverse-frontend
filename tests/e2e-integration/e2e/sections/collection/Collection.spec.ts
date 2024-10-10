@@ -32,7 +32,24 @@ describe('Collection Page', () => {
       cy.findAllByText(title).should('be.visible')
     })
   })
+  it('Successfully publishes a collection', () => {
+    const timestamp = new Date().valueOf()
+    const uniqueCollectionId = `test-publish-collection-${timestamp}`
+    cy.wrap(CollectionHelper.create(uniqueCollectionId))
+      .its('id')
+      .then((collectionId: string) => {
+        console.log('collectionId', collectionId)
+        cy.visit(`/spa/collections/${collectionId}`)
+        cy.findByText('Unpublished').should('exist')
+        cy.findByRole('button', { name: 'Publish' }).click()
 
+        cy.findByText(/Publish Collection/i).should('exist')
+        cy.findByRole('button', { name: 'Continue' }).click()
+        cy.contains('Your collection is now public.').should('exist')
+        cy.findByText('Unpublished').should('not.exist')
+        cy.findByRole('button', { name: 'Publish' }).should('not.exist')
+      })
+  })
   it('Navigates to Create Dataset page when New Dataset link clicked', () => {
     cy.visit('/spa/collections')
 

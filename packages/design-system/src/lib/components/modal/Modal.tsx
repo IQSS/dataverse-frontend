@@ -8,12 +8,13 @@ import { ModalFooter } from './ModalFooter'
 interface ModalProps {
   show: boolean
   onHide: () => void
+  centered?: boolean
   size?: 'sm' | 'lg' | 'xl'
 }
 
-function Modal({ show, onHide, size, children }: PropsWithChildren<ModalProps>) {
+function Modal({ show, onHide, centered, size, children }: PropsWithChildren<ModalProps>) {
   return (
-    <BSModal show={show} onHide={onHide} size={size}>
+    <BSModal centered={centered} show={show} onHide={onHide} size={size}>
       {children}
     </BSModal>
   )

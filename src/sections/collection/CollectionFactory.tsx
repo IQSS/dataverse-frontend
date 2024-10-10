@@ -16,8 +16,9 @@ function CollectionWithSearchParams() {
   const collectionQueryParams = useGetCollectionQueryParams()
   const { collectionId = 'root' } = useParams<{ collectionId: string }>()
   const location = useLocation()
-  const state = location.state as { created: boolean } | undefined
+  const state = location.state as { published: boolean; created: boolean } | undefined
   const created = state?.created ?? false
+  const published = state?.published ?? false
 
   return (
     <Collection
@@ -25,6 +26,7 @@ function CollectionWithSearchParams() {
       collectionId={collectionId}
       created={created}
       collectionQueryParams={collectionQueryParams}
+      published={published}
       infiniteScrollEnabled={INFINITE_SCROLL_ENABLED}
     />
   )

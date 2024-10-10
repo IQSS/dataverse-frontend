@@ -23,5 +23,12 @@
   "datasetFilterTypeLabel": "Datasets",
   "fileFilterTypeLabel": "Files",
   "searchThisCollectionPlaceholder": "Search this collection...",
-  "searchSubmitButtonLabel": "Search submit"
+  "searchSubmitButtonLabel": "Search submit",
+  "publish": {
+    "title": "Publish Collection",
+    "button": "Publish",
+    "question": "Are you sure you want to publish your collection? Once you do so it must remain published.",
+    "error": "There was an error publishing your collection."
+  },
+  "publishedAlert": "Your collection is now public."
 }

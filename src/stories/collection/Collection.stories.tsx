@@ -5,6 +5,7 @@ import { WithLayout } from '../WithLayout'
 import { WithLoggedInUser } from '../WithLoggedInUser'
 import { CollectionMockRepository } from './CollectionMockRepository'
 import { CollectionLoadingMockRepository } from './CollectionLoadingMockRepository'
+import { UnpublishedCollectionMockRepository } from '@/stories/collection/UnpublishedCollectionMockRepository'
 
 const meta: Meta<typeof Collection> = {
   title: 'Pages/Collection',
@@ -25,6 +26,7 @@ export const Default: Story = {
       collectionRepository={new CollectionMockRepository()}
       collectionId="collection"
       created={false}
+      published={false}
       collectionQueryParams={{
         pageQuery: 1,
         searchQuery: undefined,
@@ -40,6 +42,7 @@ export const Loading: Story = {
       collectionRepository={new CollectionLoadingMockRepository()}
       collectionId="collection"
       created={false}
+      published={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
@@ -52,6 +55,19 @@ export const LoggedIn: Story = {
       collectionRepository={new CollectionMockRepository()}
       collectionId="collection"
       created={false}
+      published={false}
+      collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
+    />
+  )
+}
+export const Unpublished: Story = {
+  decorators: [WithLoggedInUser],
+  render: () => (
+    <Collection
+      collectionRepository={new UnpublishedCollectionMockRepository()}
+      collectionId="collection"
+      created={false}
+      published={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
@@ -64,6 +80,19 @@ export const Created: Story = {
       collectionRepository={new CollectionMockRepository()}
       collectionId="collection"
       created={true}
+      published={false}
+      collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
+    />
+  )
+}
+export const Published: Story = {
+  decorators: [WithLoggedInUser],
+  render: () => (
+    <Collection
+      collectionRepository={new CollectionMockRepository()}
+      collectionId="collection"
+      created={false}
+      published={true}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
