@@ -4,21 +4,24 @@ import styles from './ErrorPage.module.scss'
 import { useErrorLogger } from './useErrorLogger'
 import { ExclamationCircle } from 'react-bootstrap-icons'
 import { useTheme } from '@iqss/dataverse-design-system'
+import cn from 'classnames'
 
-export function ErrorPage() {
+interface AppLoaderProps {
+  fullViewport?: boolean
+}
+
+export function ErrorPage({ fullViewport = false }: AppLoaderProps) {
   const { t } = useTranslation('errorPage')
   const error = useRouteError()
   useErrorLogger(error)
   const theme = useTheme()
 
-  const header = document.querySelector('nav')
-  const footer = document.querySelector('footer')
-  const newMinHeight = header && footer ? '$main-container-available-height' : '100vh'
-  document.documentElement.style.setProperty('--error-min-height', newMinHeight)
-
   return (
-    <section className={styles['section-wrapper']}>
-      <div className={styles['middle-search-cta-wrapper']}>
+    <section
+      className={cn(styles['section-wrapper'], {
+        [styles['full-viewport']]: fullViewport
+      })}>
+      <div className={styles['middle-errorMessage-wrapper']}>
         <div className={styles['icon-layout']}>
           <ExclamationCircle color={theme.color.dangerColor} size={62} />
           <div aria-label="error-page">
