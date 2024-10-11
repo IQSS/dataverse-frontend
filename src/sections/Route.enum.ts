@@ -13,7 +13,8 @@ export enum Route {
   COLLECTIONS_BASE = '/collections',
   COLLECTIONS = '/collections/:collectionId',
   CREATE_COLLECTION = '/collections/:ownerCollectionId/create',
-  ACCOUNT = '/account'
+  ACCOUNT = '/account',
+  AUTH_CALLBACK = '/auth-callback'
 }
 
 export const RouteWithParams = {
@@ -27,5 +28,6 @@ export const RouteWithParams = {
 export enum QueryParamKey {
   VERSION = 'version',
   PERSISTENT_ID = 'persistentId',
-  QUERY = 'q'
+  QUERY = 'q',
+  AUTH_STATE = 'state'
 }

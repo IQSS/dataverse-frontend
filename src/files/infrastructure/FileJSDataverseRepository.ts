@@ -25,7 +25,7 @@ import { JSFileMapper } from './mappers/JSFileMapper'
 import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/models/Dataset'
 import { File } from '../domain/models/File'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
-import { BASE_URL } from '../../config'
+import { DATAVERSE_BACKEND_URL } from '../../config'
 import { FilePreview } from '../domain/models/FilePreview'
 import { JSFilesCountInfoMapper } from './mappers/JSFilesCountInfoMapper'
 import { JSFileMetadataMapper } from './mappers/JSFileMetadataMapper'
@@ -37,7 +37,7 @@ import { FileHolder } from '../domain/models/FileHolder'
 const includeDeaccessioned = true
 
 export class FileJSDataverseRepository implements FileRepository {
-  static readonly DATAVERSE_BACKEND_URL = BASE_URL
+  static readonly DATAVERSE_BACKEND_URL = DATAVERSE_BACKEND_URL
 
   getAllByDatasetPersistentId(
     datasetPersistentId: string,
