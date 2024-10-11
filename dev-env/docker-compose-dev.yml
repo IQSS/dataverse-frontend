@@ -73,6 +73,9 @@ services:
         -Ddataverse.files.s3.custom-endpoint-url=https://s3.us-east-1.amazonaws.com
     expose:
       - '8080'
+    # TODO: The port has been opened for the redirection to /oauth2/callback.xhtml after a JSF OIDC login. We may prefer to change this to use the proxy.
+    ports:
+      - '8080:8080'
     networks:
       - dataverse
     depends_on:

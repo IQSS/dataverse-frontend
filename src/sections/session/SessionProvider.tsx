@@ -39,7 +39,6 @@ export function SessionProvider({ repository, children }: PropsWithChildren<Sess
         method: 'GET',
         credentials: 'omit', // to avoid sending the cookie
         headers: {
-          // 👇 This throws Error 400: User with token null not found.
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
           // 👇 And this throws BAD API key because its a token not an api key of course

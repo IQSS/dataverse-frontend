@@ -10,7 +10,7 @@ import { AuthProvider, TAuthConfig } from 'react-oauth2-code-pkce'
 if (BASE_URL === '') {
   throw Error('VITE_DATAVERSE_BACKEND_URL environment variable should be specified.')
 } else {
-  ApiConfig.init(`${BASE_URL}/api/v1`, DataverseApiAuthMechanism.SESSION_COOKIE)
+  ApiConfig.init(`${BASE_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
 }
 
 const authConfig: TAuthConfig = {
