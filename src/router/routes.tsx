@@ -120,7 +120,6 @@ export const routes: RouteObject[] = [
       // 🔐 Protected routes are only accessible to authenticated users
       {
         element: <ProtectedRoute />,
-        errorElement: <ErrorPage />,
         children: [
           {
             path: Route.CREATE_COLLECTION,
