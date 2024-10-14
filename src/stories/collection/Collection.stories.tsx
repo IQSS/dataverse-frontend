@@ -2,13 +2,10 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { Collection } from '../../sections/collection/Collection'
 import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
-import { DatasetMockRepository } from '../dataset/DatasetMockRepository'
-import { DatasetLoadingMockRepository } from '../dataset/DatasetLoadingMockRepository'
-import { NoDatasetsMockRepository } from '../dataset/NoDatasetsMockRepository'
 import { WithLoggedInUser } from '../WithLoggedInUser'
 import { CollectionMockRepository } from './CollectionMockRepository'
 import { CollectionLoadingMockRepository } from './CollectionLoadingMockRepository'
-import { NoCollectionMockRepository } from './NoCollectionMockRepository'
+import { UnpublishedCollectionMockRepository } from '@/stories/collection/UnpublishedCollectionMockRepository'
 
 const meta: Meta<typeof Collection> = {
   title: 'Pages/Collection',
@@ -26,22 +23,15 @@ type Story = StoryObj<typeof Collection>
 export const Default: Story = {
   render: () => (
     <Collection
-      repository={new CollectionMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
-      id="collection"
+      collectionRepository={new CollectionMockRepository()}
+      collectionId="collection"
       created={false}
-    />
-  )
-}
-
-export const InfiniteScrollingEnabled: Story = {
-  render: () => (
-    <Collection
-      repository={new CollectionMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
-      id="collection"
-      infiniteScrollEnabled={true}
-      created={false}
+      published={false}
+      collectionQueryParams={{
+        pageQuery: 1,
+        searchQuery: undefined,
+        typesQuery: undefined
+      }}
     />
   )
 }
@@ -49,21 +39,11 @@ export const InfiniteScrollingEnabled: Story = {
 export const Loading: Story = {
   render: () => (
     <Collection
-      repository={new CollectionLoadingMockRepository()}
-      datasetRepository={new DatasetLoadingMockRepository()}
-      id="collection"
+      collectionRepository={new CollectionLoadingMockRepository()}
+      collectionId="collection"
       created={false}
-    />
-  )
-}
-
-export const NoResults: Story = {
-  render: () => (
-    <Collection
-      repository={new NoCollectionMockRepository()}
-      datasetRepository={new NoDatasetsMockRepository()}
-      id="collection"
-      created={false}
+      published={false}
+      collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
 }
@@ -72,10 +52,23 @@ export const LoggedIn: Story = {
   decorators: [WithLoggedInUser],
   render: () => (
     <Collection
-      repository={new CollectionMockRepository()}
-      datasetRepository={new DatasetMockRepository()}
-      id="collection"
+      collectionRepository={new CollectionMockRepository()}
+      collectionId="collection"
       created={false}
+      published={false}
+      collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
+    />
+  )
+}
+export const Unpublished: Story = {
+  decorators: [WithLoggedInUser],
+  render: () => (
+    <Collection
+      collectionRepository={new UnpublishedCollectionMockRepository()}
+      collectionId="collection"
+      created={false}
+      published={false}
+      collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
 }
@@ -84,10 +77,23 @@ export const Created: Story = {
   decorators: [WithLoggedInUser],
   render: () => (
     <Collection
-      repository={new CollectionMockRepository()}
-      datasetRepository={new NoDatasetsMockRepository()}
-      id="collection"
+      collectionRepository={new CollectionMockRepository()}
+      collectionId="collection"
       created={true}
+      published={false}
+      collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
+    />
+  )
+}
+export const Published: Story = {
+  decorators: [WithLoggedInUser],
+  render: () => (
+    <Collection
+      collectionRepository={new CollectionMockRepository()}
+      collectionId="collection"
+      created={false}
+      published={true}
+      collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
 }

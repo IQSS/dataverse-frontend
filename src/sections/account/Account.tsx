@@ -5,8 +5,12 @@ import { useLoading } from '../loading/LoadingContext'
 import { AccountHelper, AccountPanelTabKey } from './AccountHelper'
 import { ApiTokenSection } from './api-token-section/ApiTokenSection'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
-import { UpwardHierarchyNodeMother } from '../../../tests/component/shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 import styles from './Account.module.scss'
+import {
+  DvObjectType,
+  UpwardHierarchyNode
+} from '../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { ROOT_COLLECTION_ALIAS } from '../../collection/domain/models/Collection'
 
 const tabsKeys = AccountHelper.ACCOUNT_PANEL_TABS_KEYS
 
@@ -18,10 +22,11 @@ export const Account = ({ defaultActiveTabKey }: AccountProps) => {
   const { t } = useTranslation('account')
   const { setIsLoading } = useLoading()
 
-  const rootHierarchy = UpwardHierarchyNodeMother.createCollection({
-    name: 'Root',
-    id: 'root'
-  })
+  const rootHierarchy = new UpwardHierarchyNode(
+    'Root',
+    DvObjectType.COLLECTION,
+    ROOT_COLLECTION_ALIAS
+  )
 
   useEffect(() => {
     setIsLoading(false)

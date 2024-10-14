@@ -26,7 +26,7 @@ export const ComposedFieldMultiple = ({
   notRequiredWithChildFieldsRequired
 }: ComposedFieldMultipleProps) => {
   const { control } = useFormContext()
-  const { t } = useTranslation('datasetMetadataForm')
+  const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
 
   const {
     fields: fieldsArray,

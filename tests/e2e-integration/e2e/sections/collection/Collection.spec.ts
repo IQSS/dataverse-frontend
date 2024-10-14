@@ -21,6 +21,7 @@ describe('Collection Page', () => {
 
   it('navigates to a dataset from the list when clicking the title', () => {
     cy.wrap(DatasetHelper.createWithTitle(title), { timeout: 10000 }).then(() => {
+      cy.wait(1_000)
       cy.visit('/spa/collections')
 
       cy.findByText(/Dataverse Admin/i).should('exist')
@@ -31,7 +32,24 @@ describe('Collection Page', () => {
       cy.findAllByText(title).should('be.visible')
     })
   })
+  it('Successfully publishes a collection', () => {
+    const timestamp = new Date().valueOf()
+    const uniqueCollectionId = `test-publish-collection-${timestamp}`
+    cy.wrap(CollectionHelper.create(uniqueCollectionId))
+      .its('id')
+      .then((collectionId: string) => {
+        console.log('collectionId', collectionId)
+        cy.visit(`/spa/collections/${collectionId}`)
+        cy.findByText('Unpublished').should('exist')
+        cy.findByRole('button', { name: 'Publish' }).click()
 
+        cy.findByText(/Publish Collection/i).should('exist')
+        cy.findByRole('button', { name: 'Continue' }).click()
+        cy.contains('Your collection is now public.').should('exist')
+        cy.findByText('Unpublished').should('not.exist')
+        cy.findByRole('button', { name: 'Publish' }).should('not.exist')
+      })
+  })
   it('Navigates to Create Dataset page when New Dataset link clicked', () => {
     cy.visit('/spa/collections')
 
@@ -114,25 +132,6 @@ describe('Collection Page', () => {
 
       cy.findAllByText(/Scientific Research/i).should('exist')
       cy.findByText(/Dataverse Admin/i).should('exist')
-    })
-  })
-
-  it('12 Datasets - displays first 10 datasets, scroll to the bottom and displays the remaining 2 datasets', () => {
-    const collectionId = 'collection-1' + Date.now().toString()
-    cy.wrap(CollectionHelper.create(collectionId)).then(() => {
-      cy.wrap(DatasetHelper.createMany(12, collectionId), { timeout: 10_000 }).then(() => {
-        cy.visit(`/spa/collections/${collectionId}`)
-
-        cy.findAllByText(/Scientific Research/i).should('exist')
-        cy.findByText(/Dataverse Admin/i).should('exist')
-
-        cy.findByText('10 of 12 Datasets displayed').should('exist')
-
-        cy.get('[data-testid="scrollable-container"]').scrollTo('bottom', {
-          ensureScrollable: false
-        })
-        cy.findByText('12 of 12 Datasets displayed').should('exist')
-      })
     })
   })
 })

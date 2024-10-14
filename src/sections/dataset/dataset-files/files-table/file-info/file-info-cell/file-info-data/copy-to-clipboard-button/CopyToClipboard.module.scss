@@ -1,8 +1,10 @@
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
 .container {
+  display: inline-flex;
+  align-items: center;
   margin: 0 3px;
-  cursor: pointer
+  cursor: pointer;
 }
 
 %icon {

@@ -78,6 +78,15 @@ export const AllInputTypes: Story = {
           <Form.Group.Input type="password" placeholder="Password" />
         </Col>
       </Form.Group>
+
+      <Form.Group controlId="basic-form-search">
+        <Form.Group.Label column sm={3}>
+          Search something
+        </Form.Group.Label>
+        <Col sm={9}>
+          <Form.Group.Input type="search" placeholder="Search..." />
+        </Col>
+      </Form.Group>
     </Form>
   )
 }

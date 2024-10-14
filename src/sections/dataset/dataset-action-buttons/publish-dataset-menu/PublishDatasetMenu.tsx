@@ -27,7 +27,6 @@ export function PublishDatasetMenu({ dataset, datasetRepository }: PublishDatase
   }
 
   const handleSelect = () => {
-    // TODO - Implement upload files
     setShowModal(true)
   }
 

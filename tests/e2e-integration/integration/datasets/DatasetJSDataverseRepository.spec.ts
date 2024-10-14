@@ -302,7 +302,7 @@ describe('Dataset JSDataverse Repository', () => {
       })
   })
 
-  it('gets the DatasetPreview', () => {
+  it('gets the DatasetItemTypePreview', () => {
     const previewCollectionId = 'DatasetJSDataverseRepositoryPreview' + Date.now().toString()
 
     cy.wrap(CollectionHelper.createAndPublish(previewCollectionId)).then(() => {
