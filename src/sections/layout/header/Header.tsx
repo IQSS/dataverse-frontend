@@ -35,7 +35,7 @@ export function Header() {
         <LoggedInHeaderActions user={user} collectionRepository={collectionRepository} />
       ) : (
         <Button onClick={handleOidcLogIn} variant="link" className={styles['login-btn']}>
-          OIDC {t('logIn')}
+          {t('logIn')}
         </Button>
       )}
     </Navbar>

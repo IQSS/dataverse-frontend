@@ -58,7 +58,7 @@ export const LoggedInHeaderActions = ({
           {t('navigation.apiToken')}
         </Navbar.Dropdown.Item>
         <Navbar.Dropdown.Item href="#" onClick={handleOidcLogout}>
-          OIDC {t('logOut')}
+          {t('logOut')}
         </Navbar.Dropdown.Item>
       </Navbar.Dropdown>
     </>
