@@ -1,29 +1,25 @@
 import { useContext } from 'react'
 import { AuthContext } from 'react-oauth2-code-pkce'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Navbar } from '@iqss/dataverse-design-system'
-import { useGetCollectionUserPermissions } from '../../../shared/hooks/useGetCollectionUserPermissions'
-import { useSession } from '../../session/SessionContext'
-import { RouteWithParams, Route } from '../../Route.enum'
-import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
-import { ROOT_COLLECTION_ALIAS } from '../../../collection/domain/models/Collection'
-import { AccountHelper } from '../../account/AccountHelper'
-
-const currentPage = 0
+import { User } from '@/users/domain/models/User'
+import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollectionUserPermissions'
+import { RouteWithParams, Route } from '@/sections//Route.enum'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { ROOT_COLLECTION_ALIAS } from '@/collection/domain/models/Collection'
+import { AccountHelper } from '@/sections/account/AccountHelper'
 
 interface LoggedInHeaderActionsProps {
-  userName: string
+  user: User
   collectionRepository: CollectionRepository
 }
 
 export const LoggedInHeaderActions = ({
-  userName,
+  user,
   collectionRepository
 }: LoggedInHeaderActionsProps) => {
   const { t } = useTranslation('header')
-  const { logout } = useSession()
-  const navigate = useNavigate()
 
   const { logOut: oidcLogout } = useContext(AuthContext)
 
@@ -32,15 +28,8 @@ export const LoggedInHeaderActions = ({
     collectionRepository: collectionRepository
   })
 
-  // Just keeping logOut in a handler function because we might want to add more logic here (e.g: logOut can receive up to 3 parameters)
   const handleOidcLogout = () => {
     oidcLogout()
-  }
-
-  const _handleSessionLogout = () => {
-    void logout().then(() => {
-      navigate(currentPage)
-    })
   }
 
   const createCollectionRoute = RouteWithParams.CREATE_COLLECTION()
@@ -62,7 +51,7 @@ export const LoggedInHeaderActions = ({
           {t('navigation.newDataset')}
         </Navbar.Dropdown.Item>
       </Navbar.Dropdown>
-      <Navbar.Dropdown title={userName} id="dropdown-user">
+      <Navbar.Dropdown title={user.displayName} id="dropdown-user">
         <Navbar.Dropdown.Item
           as={Link}
           to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}`}>
@@ -71,9 +60,6 @@ export const LoggedInHeaderActions = ({
         <Navbar.Dropdown.Item href="#" onClick={handleOidcLogout}>
           OIDC {t('logOut')}
         </Navbar.Dropdown.Item>
-        {/* <Navbar.Dropdown.Item href="#" onClick={handleSessionLogout}>
-          {t('logOut')}
-        </Navbar.Dropdown.Item> */}
       </Navbar.Dropdown>
     </>
   )

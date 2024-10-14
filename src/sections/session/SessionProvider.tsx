@@ -6,65 +6,13 @@ import { getUser } from '../../users/domain/useCases/getUser'
 import { UserRepository } from '../../users/domain/repositories/UserRepository'
 import { logOut } from '../../users/domain/useCases/logOut'
 
-const BACKEND_URL = import.meta.env.VITE_DATAVERSE_BACKEND_URL as string
-
 interface SessionProviderProps {
   repository: UserRepository
 }
 export function SessionProvider({ repository, children }: PropsWithChildren<SessionProviderProps>) {
-  const { token, tokenData } = useContext(AuthContext)
+  const { token, loginInProgress } = useContext(AuthContext)
   const [user, setUser] = useState<User | null>(null)
   const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true)
-
-  useEffect(() => {
-    // Just to log some data from the AuthContext
-    console.log(
-      '%cToken from AuthContext: ',
-      'background: green; color: white; padding: 2px; border-radius: 2px;',
-      {
-        token
-      }
-    )
-
-    console.log(
-      '%cTokenData from AuthContext: ',
-      'background: green; color: white; padding: 2px; border-radius: 2px;',
-      tokenData
-    )
-  }, [token, tokenData])
-
-  useEffect(() => {
-    if (token) {
-      fetch(`${BACKEND_URL}/api/v1/users/:me`, {
-        method: 'GET',
-        credentials: 'omit', // to avoid sending the cookie
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-          // 👇 And this throws BAD API key because its a token not an api key of course
-          //   'X-Dataverse-key': token
-        }
-      })
-        .then((response) => {
-          if (!response.ok) {
-            return response.json().then((errData: Error) => {
-              throw new Error(`Error ${response.status}: ${errData.message || response.statusText}`)
-            })
-          }
-          return response.json()
-        })
-        .then((data) => {
-          console.log('User data:', data)
-        })
-        .catch((error) => {
-          console.error(
-            '%cError getting user data with users/:me endpoint',
-            'background: #eb5656; color: white; padding: 2px',
-            error
-          )
-        })
-    }
-  }, [token])
 
   useEffect(() => {
     const handleGetUser = async () => {
@@ -80,8 +28,10 @@ export function SessionProvider({ repository, children }: PropsWithChildren<Sess
       }
     }
 
-    void handleGetUser()
-  }, [repository])
+    if (token && !loginInProgress) {
+      void handleGetUser()
+    }
+  }, [repository, token, loginInProgress])
 
   const submitLogOut = () => {
     return logOut(repository)

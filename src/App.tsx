@@ -32,8 +32,8 @@ const authConfig: TAuthConfig = {
 }
 
 const userRepository = new UserJSDataverseRepository()
+
 function App() {
-  console.log({ authConfig })
   return (
     <AuthProvider authConfig={authConfig}>
       <SessionProvider repository={userRepository}>
