@@ -34,7 +34,7 @@ export function PublishDatasetHelpText({
 
   return (
     <Stack direction="vertical">
-      <div className={styles.warningText}>
+      <p className={styles.warningText}>
         {!parentCollectionIsReleased ? (
           <Trans
             t={t}
@@ -43,9 +43,9 @@ export function PublishDatasetHelpText({
             components={{ a: <Link to={RouteWithParams.COLLECTIONS(parentCollectionId)} /> }}
           />
         ) : (
-          <p>{t(warningText)}</p>
+          <>{t(warningText)}</>
         )}
-      </div>
+      </p>
       <p>{t('publish.termsText')}</p>
     </Stack>
   )
