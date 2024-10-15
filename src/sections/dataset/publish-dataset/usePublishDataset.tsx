@@ -46,7 +46,10 @@ export function usePublishDataset(
           onPublishSucceed()
         })
         .catch((err) => {
-          const errorMessage = err instanceof Error && err.message ? err.message : 'Unknown Error' // TODO: i18n
+          const errorMessage =
+            err instanceof Error && err.message
+              ? err.message
+              : 'Something went wrong while trying to publish your dataset'
           setPublishError(errorMessage)
           setSubmissionStatus(SubmissionStatus.Errored)
         })
@@ -56,7 +59,10 @@ export function usePublishDataset(
       publishCollection(collectionRepository, parentCollection.id)
         .then(publishDatasetAndHandleError)
         .catch((err) => {
-          const errorMessage = err instanceof Error && err.message ? err.message : 'Unknown Error' // TODO: i18n
+          const errorMessage =
+            err instanceof Error && err.message
+              ? err.message
+              : 'Something went wrong while trying to publish your dataset'
           setPublishError(errorMessage)
           setSubmissionStatus(SubmissionStatus.Errored)
         })
