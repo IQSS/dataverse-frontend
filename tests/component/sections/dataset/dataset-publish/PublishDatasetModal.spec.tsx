@@ -30,6 +30,13 @@ describe('PublishDatasetModal', () => {
     cy.findByText('Major Release (2.0)').should('not.exist')
     cy.findByText('Minor Release (1.1)').should('not.exist')
     cy.findByText('Update Current Version').should('not.exist')
+    // Trigger the Publish action
+    cy.findByText('Continue').click()
+    cy.get('@repositoryPublish').should(
+      'have.been.calledWith',
+      'testPersistentId',
+      VersionUpdateType.MAJOR
+    )
   })
 
   it('displays an error message when publishDataset fails', () => {
