@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react'
 import { RouteObject } from 'react-router-dom'
 import { Route } from '../sections/Route.enum'
 import { Layout } from '../sections/layout/Layout'
-import { PageNotFound } from '../sections/page-not-found/PageNotFound'
+import { ErrorPage } from '../sections/error-page/ErrorPage'
 import { ProtectedRoute } from './ProtectedRoute'
 import { AppLoader } from '../sections/shared/layout/app-loader/AppLoader'
 
@@ -70,7 +70,7 @@ export const routes: RouteObject[] = [
   {
     path: '/',
     element: <Layout />,
-    errorElement: <PageNotFound />,
+    errorElement: <ErrorPage fullViewport />,
     children: [
       {
         path: Route.HOME,
@@ -78,7 +78,8 @@ export const routes: RouteObject[] = [
           <Suspense fallback={<AppLoader />}>
             <Homepage />
           </Suspense>
-        )
+        ),
+        errorElement: <ErrorPage />
       },
       {
         path: Route.COLLECTIONS_BASE,
@@ -86,7 +87,8 @@ export const routes: RouteObject[] = [
           <Suspense fallback={<AppLoader />}>
             <CollectionPage />
           </Suspense>
-        )
+        ),
+        errorElement: <ErrorPage />
       },
       {
         path: Route.COLLECTIONS,
@@ -94,7 +96,8 @@ export const routes: RouteObject[] = [
           <Suspense fallback={<AppLoader />}>
             <CollectionPage />
           </Suspense>
-        )
+        ),
+        errorElement: <ErrorPage />
       },
       {
         path: Route.DATASETS,
@@ -102,7 +105,8 @@ export const routes: RouteObject[] = [
           <Suspense fallback={<AppLoader />}>
             <DatasetPage />
           </Suspense>
-        )
+        ),
+        errorElement: <ErrorPage />
       },
       {
         path: Route.FILES,
@@ -110,7 +114,8 @@ export const routes: RouteObject[] = [
           <Suspense fallback={<AppLoader />}>
             <FilePage />
           </Suspense>
-        )
+        ),
+        errorElement: <ErrorPage />
       },
       // 🔐 Protected routes are only accessible to authenticated users
       {
@@ -122,7 +127,8 @@ export const routes: RouteObject[] = [
               <Suspense fallback={<AppLoader />}>
                 <CreateCollectionPage />
               </Suspense>
-            )
+            ),
+            errorElement: <ErrorPage />
           },
           {
             path: Route.CREATE_DATASET,
@@ -130,7 +136,8 @@ export const routes: RouteObject[] = [
               <Suspense fallback={<AppLoader />}>
                 <CreateDatasetPage />
               </Suspense>
-            )
+            ),
+            errorElement: <ErrorPage />
           },
           {
             path: Route.UPLOAD_DATASET_FILES,
@@ -138,7 +145,8 @@ export const routes: RouteObject[] = [
               <Suspense fallback={<AppLoader />}>
                 <UploadDatasetFilesPage />
               </Suspense>
-            )
+            ),
+            errorElement: <ErrorPage />
           },
           {
             path: Route.EDIT_DATASET_METADATA,
@@ -146,7 +154,8 @@ export const routes: RouteObject[] = [
               <Suspense fallback={<AppLoader />}>
                 <EditDatasetMetadataPage />
               </Suspense>
-            )
+            ),
+            errorElement: <ErrorPage />
           },
           {
             path: Route.ACCOUNT,
@@ -154,7 +163,8 @@ export const routes: RouteObject[] = [
               <Suspense fallback={<AppLoader />}>
                 <AccountPage />
               </Suspense>
-            )
+            ),
+            errorElement: <ErrorPage />
           }
         ]
       }

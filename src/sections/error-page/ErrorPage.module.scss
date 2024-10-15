@@ -1,0 +1,34 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import 'src/assets/variables';
+
+.section-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: $main-container-available-height;
+
+  &.full-viewport {
+    min-height: 100vh;
+  }
+}
+
+.middle-errorMessage-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding-block: 2rem;
+}
+
+.icon-layout {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding-block: 2rem;
+}
