@@ -8,6 +8,7 @@ import { Route } from '@/sections/Route.enum'
 import { useSession } from '@/sections/session/SessionContext'
 import { LoggedInHeaderActions } from './LoggedInHeaderActions'
 import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
+import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
 import styles from './Header.module.scss'
 
 const collectionRepository = new CollectionJSDataverseRepository()
@@ -15,12 +16,14 @@ const collectionRepository = new CollectionJSDataverseRepository()
 export function Header() {
   const { t } = useTranslation('header')
   const { user } = useSession()
-  const { pathname } = useLocation()
+  const { pathname, search } = useLocation()
 
   const { logIn: oidcLogin } = useContext(AuthContext)
 
   const handleOidcLogIn = () => {
-    oidcLogin(encodeURIComponent(pathname))
+    const state = encodeReturnToPathInStateQueryParam(`${pathname}${search}`)
+
+    oidcLogin(state)
   }
 
   return (
