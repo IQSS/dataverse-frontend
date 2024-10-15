@@ -1,4 +1,5 @@
-import { PropsWithChildren, useEffect, useState } from 'react'
+import { PropsWithChildren, useContext, useEffect, useState } from 'react'
+import { AuthContext } from 'react-oauth2-code-pkce'
 import { User } from '../../users/domain/models/User'
 import { SessionContext } from './SessionContext'
 import { getUser } from '../../users/domain/useCases/getUser'
@@ -9,6 +10,7 @@ interface SessionProviderProps {
   repository: UserRepository
 }
 export function SessionProvider({ repository, children }: PropsWithChildren<SessionProviderProps>) {
+  const { token, loginInProgress } = useContext(AuthContext)
   const [user, setUser] = useState<User | null>(null)
   const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true)
 
@@ -26,8 +28,10 @@ export function SessionProvider({ repository, children }: PropsWithChildren<Sess
       }
     }
 
-    void handleGetUser()
-  }, [repository])
+    if (token && !loginInProgress) {
+      void handleGetUser()
+    }
+  }, [repository, token, loginInProgress])
 
   const submitLogOut = () => {
     return logOut(repository)

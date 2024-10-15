@@ -1,15 +1,14 @@
+import { useContext } from 'react'
+import { AuthContext } from 'react-oauth2-code-pkce'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Navbar } from '@iqss/dataverse-design-system'
-import { useGetCollectionUserPermissions } from '../../../shared/hooks/useGetCollectionUserPermissions'
-import { useSession } from '../../session/SessionContext'
-import { RouteWithParams, Route } from '../../Route.enum'
-import { User } from '../../../users/domain/models/User'
-import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
-import { ROOT_COLLECTION_ALIAS } from '../../../collection/domain/models/Collection'
-import { AccountHelper } from '../../account/AccountHelper'
-
-const currentPage = 0
+import { User } from '@/users/domain/models/User'
+import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollectionUserPermissions'
+import { RouteWithParams, Route } from '@/sections//Route.enum'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { ROOT_COLLECTION_ALIAS } from '@/collection/domain/models/Collection'
+import { AccountHelper } from '@/sections/account/AccountHelper'
 
 interface LoggedInHeaderActionsProps {
   user: User
@@ -21,18 +20,16 @@ export const LoggedInHeaderActions = ({
   collectionRepository
 }: LoggedInHeaderActionsProps) => {
   const { t } = useTranslation('header')
-  const { logout } = useSession()
-  const navigate = useNavigate()
+
+  const { logOut: oidcLogout } = useContext(AuthContext)
 
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: ROOT_COLLECTION_ALIAS,
     collectionRepository: collectionRepository
   })
 
-  const onLogoutClick = () => {
-    void logout().then(() => {
-      navigate(currentPage)
-    })
+  const handleOidcLogout = () => {
+    oidcLogout()
   }
 
   const createCollectionRoute = RouteWithParams.CREATE_COLLECTION()
@@ -60,7 +57,7 @@ export const LoggedInHeaderActions = ({
           to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}`}>
           {t('navigation.apiToken')}
         </Navbar.Dropdown.Item>
-        <Navbar.Dropdown.Item href="#" onClick={onLogoutClick}>
+        <Navbar.Dropdown.Item href="#" onClick={handleOidcLogout}>
           {t('logOut')}
         </Navbar.Dropdown.Item>
       </Navbar.Dropdown>

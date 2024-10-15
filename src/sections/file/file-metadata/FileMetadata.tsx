@@ -4,7 +4,7 @@ import { FileLabels } from '../file-labels/FileLabels'
 import styles from './FileMetadata.module.scss'
 import { DateHelper } from '../../../shared/helpers/DateHelper'
 import { FileEmbargoDate } from '../file-embargo/FileEmbargoDate'
-import { BASE_URL } from '../../../config'
+import { DATAVERSE_BACKEND_URL } from '../../../config'
 import { Trans, useTranslation } from 'react-i18next'
 import { FileMetadata as FileMetadataModel } from '../../../files/domain/models/FileMetadata'
 import { FilePermissions } from '../../../files/domain/models/FilePermissions'
@@ -71,7 +71,7 @@ export function FileMetadata({
                   </p>
                 </Trans>
                 <code className={styles.code}>
-                  {BASE_URL}
+                  {DATAVERSE_BACKEND_URL}
                   {removeQueryParams(metadata.downloadUrls.original)}
                 </code>
               </Col>

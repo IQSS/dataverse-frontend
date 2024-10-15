@@ -3,10 +3,10 @@ import { DataverseApiHelper } from './DataverseApiHelper'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 import { UserJSDataverseRepository } from '../../../src/users/infrastructure/repositories/UserJSDataverseRepository'
 import { DatasetHelper } from './datasets/DatasetHelper'
-import { BASE_URL } from '../../../src/config'
+import { DATAVERSE_BACKEND_URL } from '../../../src/config'
 
 export class TestsUtils {
-  static readonly DATAVERSE_BACKEND_URL = BASE_URL
+  static readonly DATAVERSE_BACKEND_URL = DATAVERSE_BACKEND_URL
 
   static setup() {
     ApiConfig.init(`${this.DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.SESSION_COOKIE)

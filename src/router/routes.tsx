@@ -4,6 +4,7 @@ import { Route } from '../sections/Route.enum'
 import { Layout } from '../sections/layout/Layout'
 import { ErrorPage } from '../sections/error-page/ErrorPage'
 import { ProtectedRoute } from './ProtectedRoute'
+import { AuthCallback } from '../sections/auth-callback/AuthCallback'
 import { AppLoader } from '../sections/shared/layout/app-loader/AppLoader'
 
 const Homepage = lazy(() =>
@@ -116,6 +117,10 @@ export const routes: RouteObject[] = [
           </Suspense>
         ),
         errorElement: <ErrorPage />
+      },
+      {
+        path: Route.AUTH_CALLBACK,
+        element: <AuthCallback />
       },
       // 🔐 Protected routes are only accessible to authenticated users
       {
