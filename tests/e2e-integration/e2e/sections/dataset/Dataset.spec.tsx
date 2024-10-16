@@ -48,6 +48,28 @@ describe('Dataset', () => {
           })
         })
     })
+    it('successfully publishes a draft dataset and the parent collection', () => {
+      const timestamp = new Date().valueOf()
+      const uniqueCollectionId = `test-publish-collection-${timestamp}`
+      cy.wrap(CollectionHelper.create(uniqueCollectionId))
+        .its('id')
+        .then((collectionId: string) => {
+          cy.wrap(DatasetHelper.create(collectionId))
+            .its('persistentId')
+            .then((persistentId: string) => {
+              cy.visit(`/spa/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+              cy.findByText('Draft').should('exist')
+              cy.findByRole('button', { name: 'Publish Dataset' }).should('exist').click()
+              cy.findByRole('button', { name: 'Publish' }).should('exist')
+              cy.findByRole('button', { name: 'Publish' }).click()
+
+              cy.findByRole('button', { name: 'Continue' }).should('exist').click()
+              cy.findByText('Version 1.0').should('exist')
+              cy.findByText('Draft').should('not.exist')
+              cy.contains('This draft version needs to be published').should('not.exist')
+            })
+        })
+    })
     it('successfully publishes a draft dataset', () => {
       cy.wrap(DatasetHelper.create())
         .its('persistentId')
