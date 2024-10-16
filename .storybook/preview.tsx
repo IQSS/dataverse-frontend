@@ -1,3 +1,4 @@
+import React from 'react'
 import type { Preview } from '@storybook/react'
 import { ThemeProvider } from '@iqss/dataverse-design-system'
 import { createBrowserRouter, RouteObject, RouterProvider } from 'react-router-dom'
