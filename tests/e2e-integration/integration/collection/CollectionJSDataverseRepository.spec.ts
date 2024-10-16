@@ -21,8 +21,14 @@ const collectionExpected: Collection = {
     'new-collection',
     undefined,
     undefined,
-    undefined,
-    new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root', undefined, undefined, true)
+    new UpwardHierarchyNode(
+      'Root',
+      DvObjectType.COLLECTION,
+      'root',
+      undefined,
+      undefined,
+      undefined
+    )
   ),
   inputLevels: undefined
 }

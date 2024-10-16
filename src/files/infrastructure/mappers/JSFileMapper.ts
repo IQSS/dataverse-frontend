@@ -88,7 +88,6 @@ export class JSFileMapper {
       id.toString(),
       undefined,
       undefined,
-      undefined,
       JSUpwardHierarchyNodeMapper.toUpwardHierarchyNode(jsUpwardHierarchyNode)
     )
   }

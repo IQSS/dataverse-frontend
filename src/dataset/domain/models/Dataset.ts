@@ -404,13 +404,6 @@ export class Dataset {
     return this.locks.some((lock) => lock.reason === DatasetLockReason.WORKFLOW)
   }
 
-  public get parentCollectionNode(): UpwardHierarchyNode {
-    return this.hierarchy
-      .toArray()
-      .filter((item) => item.type === 'collection')
-      .at(-1) as UpwardHierarchyNode
-  }
-
   public checkIsLockedFromEdits(userPersistentId: string): boolean {
     const lockedReasonIsInReview = this.locks.some(
       (lock) => lock.reason === DatasetLockReason.IN_REVIEW

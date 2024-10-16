@@ -4,9 +4,6 @@ import { publishDataset } from '../../../dataset/domain/useCases/publishDataset'
 
 import { VersionUpdateType } from '../../../dataset/domain/models/VersionUpdateType'
 import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
-import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
-import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
-import { publishCollection } from '../../../collection/domain/useCases/publishCollection'
 
 type UsePublishDatasetReturnType =
   | {
@@ -25,8 +22,6 @@ type UsePublishDatasetReturnType =
 
 export function usePublishDataset(
   repository: DatasetRepository,
-  collectionRepository: CollectionRepository,
-  parentCollection: UpwardHierarchyNode,
   persistentId: string,
   onPublishSucceed: () => void
 ): UsePublishDatasetReturnType {
@@ -38,37 +33,19 @@ export function usePublishDataset(
   const submitPublish = (versionUpdateType: VersionUpdateType): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
-    const publishDatasetAndHandleError = () => {
-      publishDataset(repository, persistentId, versionUpdateType)
-        .then(() => {
-          setPublishError(null)
-          setSubmissionStatus(SubmissionStatus.SubmitComplete)
-          onPublishSucceed()
-        })
-        .catch((err) => {
-          const errorMessage =
-            err instanceof Error && err.message
-              ? err.message
-              : 'Something went wrong while trying to publish your dataset'
-          setPublishError(errorMessage)
-          setSubmissionStatus(SubmissionStatus.Errored)
-        })
-    }
+    publishDataset(repository, persistentId, versionUpdateType)
+      .then(() => {
+        setPublishError(null)
+        setSubmissionStatus(SubmissionStatus.SubmitComplete)
+        onPublishSucceed()
+        return
+      })
+      .catch((err) => {
+        const errorMessage = err instanceof Error && err.message ? err.message : 'Unknown Error' // TODO: i18n
 
-    if (!parentCollection.isReleased) {
-      publishCollection(collectionRepository, parentCollection.id)
-        .then(publishDatasetAndHandleError)
-        .catch((err) => {
-          const errorMessage =
-            err instanceof Error && err.message
-              ? err.message
-              : 'Something went wrong while trying to publish your dataset'
-          setPublishError(errorMessage)
-          setSubmissionStatus(SubmissionStatus.Errored)
-        })
-    } else {
-      publishDatasetAndHandleError()
-    }
+        setPublishError(errorMessage)
+        setSubmissionStatus(SubmissionStatus.Errored)
+      })
   }
 
   return {

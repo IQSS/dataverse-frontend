@@ -25,13 +25,11 @@ import useCheckPublishCompleted from './useCheckPublishCompleted'
 import useUpdateDatasetAlerts from './useUpdateDatasetAlerts'
 import { QueryParamKey, Route } from '../Route.enum'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
   fileRepository: FileRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
-  collectionRepository: CollectionRepository
   created?: boolean
   metadataUpdated?: boolean
   filesTabInfiniteScrollEnabled?: boolean
@@ -42,7 +40,6 @@ export function Dataset({
   datasetRepository,
   fileRepository,
   metadataBlockInfoRepository,
-  collectionRepository,
   created,
   metadataUpdated,
   filesTabInfiniteScrollEnabled,
@@ -54,7 +51,6 @@ export function Dataset({
   const navigate = useNavigate()
   const { hideModal, isModalOpen } = useNotImplementedModal()
   const publishCompleted = useCheckPublishCompleted(publishInProgress, dataset, datasetRepository)
-
   useUpdateDatasetAlerts({
     dataset,
     created,
@@ -106,11 +102,7 @@ export function Dataset({
                   <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
                 </Col>
                 <Col sm={3}>
-                  <DatasetActionButtons
-                    datasetRepository={datasetRepository}
-                    collectionRepository={collectionRepository}
-                    dataset={dataset}
-                  />
+                  <DatasetActionButtons datasetRepository={datasetRepository} dataset={dataset} />
                 </Col>
               </Row>
               <Row>
