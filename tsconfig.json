@@ -28,7 +28,8 @@
     "cypress.config.ts",
     "vite.config.ts",
     "packages/design-system/src/",
-    "public"
+    "public",
+    ".storybook/*.tsx"
   ],
   "exclude": ["tests/**/**.spec.ts", "tests/**/**.spec.tsx"]
 }
