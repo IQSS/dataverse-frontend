@@ -14,10 +14,6 @@ deployment
 dist
 /packages/design-system/dist
 
-# Ignore css or scss files
-*.css
-*.scss
-
 # Ignore mdx files due to different conflicts between prettier and mdx files
 *.mdx
 
