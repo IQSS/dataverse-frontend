@@ -1,4 +1,5 @@
 import { ApiTokenSection } from '../../../../src/sections/account/api-token-section/ApiTokenSection'
+import { ApiTokenInfoJSDataverseRepository } from '../../../../src/api-token-info/infrastructure/ApiTokenInfoJSDataverseRepository'
 
 describe('ApiTokenSection', () => {
   beforeEach(() => {
@@ -21,4 +22,31 @@ describe('ApiTokenSection', () => {
   })
 
   // TODO: When we get the api token from the use case, we could mock the response and test more things.
+  describe('when fetching the current API token', () => {
+    it('should fetch and display the current API token', () => {
+      const mockApiToken = 'mocked-api-token'
+      const mockExpirationDate = '2024-12-31'
+
+      //TODO: we need change the fake call to the real one once we have the api working
+      cy.stub(ApiTokenInfoJSDataverseRepository.prototype, 'getCurrentApiToken').callsFake(() =>
+        Promise.resolve({
+          apiToken: mockApiToken,
+          expirationDate: mockExpirationDate
+        })
+      )
+      cy.mountAuthenticated(<ApiTokenSection />)
+
+      cy.get('[data-testid="api-token"]').should('contain.text', mockApiToken)
+      cy.get('[data-testid="expiration-date"]').should('contain.text', mockExpirationDate)
+    })
+    it('should display skeleton when the API token is fetching', () => {
+      it('should display skeleton when the API token is fetching', () => {
+        cy.stub(ApiTokenInfoJSDataverseRepository.prototype, 'getCurrentApiToken').callsFake(
+          () => new Promise(() => {})
+        )
+
+        cy.get('[data-testid="loadingSkeleton"]').should('exist')
+      })
+    })
+  })
 })
