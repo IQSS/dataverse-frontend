@@ -17,6 +17,7 @@ import { WithDeaccessionedDataset } from './WithDeaccessionedDataset'
 import { WithNotImplementedModal } from '../WithNotImplementedModal'
 import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 import { DatasetMockRepository } from './DatasetMockRepository'
+import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
 
 const meta: Meta<typeof Dataset> = {
   title: 'Pages/Dataset',
@@ -35,6 +36,7 @@ export const Default: Story = {
   decorators: [WithLayout, WithDataset, WithNotImplementedModal],
   render: () => (
     <Dataset
+      collectionRepository={new CollectionMockRepository()}
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
@@ -46,6 +48,7 @@ export const WithNormalPagination: Story = {
   decorators: [WithLayout, WithDataset, WithNotImplementedModal],
   render: () => (
     <Dataset
+      collectionRepository={new CollectionMockRepository()}
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
@@ -57,6 +60,7 @@ export const Created: Story = {
   decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithNotImplementedModal],
   render: () => (
     <Dataset
+      collectionRepository={new CollectionMockRepository()}
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
@@ -70,6 +74,7 @@ export const MetadataUpdated: Story = {
   decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithNotImplementedModal],
   render: () => (
     <Dataset
+      collectionRepository={new CollectionMockRepository()}
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
@@ -81,6 +86,7 @@ export const DraftWithAllDatasetPermissions: Story = {
   decorators: [WithLayout, WithDatasetDraftAsOwner, WithLoggedInUser, WithNotImplementedModal],
   render: () => (
     <Dataset
+      collectionRepository={new CollectionMockRepository()}
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
@@ -92,6 +98,7 @@ export const Deaccessioned: Story = {
   decorators: [WithLayout, WithDeaccessionedDataset, WithLoggedInUser],
   render: () => (
     <Dataset
+      collectionRepository={new CollectionMockRepository()}
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
@@ -103,6 +110,7 @@ export const LoggedInAsOwner: Story = {
   decorators: [WithDataset, WithLayout, WithLoggedInUser, WithNotImplementedModal],
   render: () => (
     <Dataset
+      collectionRepository={new CollectionMockRepository()}
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
@@ -115,6 +123,7 @@ export const Loading: Story = {
   decorators: [WithLayout, WithDatasetLoading],
   render: () => (
     <Dataset
+      collectionRepository={new CollectionMockRepository()}
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
@@ -127,6 +136,7 @@ export const DatasetNotFound: Story = {
   decorators: [WithLayout, WithDatasetNotFound],
   render: () => (
     <Dataset
+      collectionRepository={new CollectionMockRepository()}
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
@@ -139,6 +149,7 @@ export const DatasetAnonymizedView: Story = {
   decorators: [WithLayout, WithAnonymizedView, WithDatasetPrivateUrl],
   render: () => (
     <Dataset
+      collectionRepository={new CollectionMockRepository()}
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
@@ -151,6 +162,7 @@ export const DatasetWithNoFiles: Story = {
   decorators: [WithLayout, WithAnonymizedView, WithDataset],
   render: () => (
     <Dataset
+      collectionRepository={new CollectionMockRepository()}
       datasetRepository={new DatasetMockRepository()}
       fileRepository={new FileMockNoDataRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}

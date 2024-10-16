@@ -23,6 +23,7 @@ describe('Collection page', () => {
         collectionRepository={collectionRepository}
         collectionId="collection"
         created={false}
+        published={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -47,6 +48,7 @@ describe('Collection page', () => {
         collectionRepository={collectionRepository}
         collectionId="collection"
         created={false}
+        published={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -60,6 +62,7 @@ describe('Collection page', () => {
         collectionRepository={collectionRepository}
         collectionId="collection"
         created={false}
+        published={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -73,6 +76,7 @@ describe('Collection page', () => {
         collectionRepository={collectionRepository}
         collectionId="collection"
         created={false}
+        published={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -85,6 +89,7 @@ describe('Collection page', () => {
         collectionRepository={collectionRepository}
         collectionId="collection"
         created={false}
+        published={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -97,6 +102,7 @@ describe('Collection page', () => {
         collectionRepository={collectionRepository}
         collectionId="collection"
         created={false}
+        published={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
@@ -114,11 +120,25 @@ describe('Collection page', () => {
         collectionRepository={collectionRepository}
         collectionId="collection"
         created
+        published={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
 
     cy.findByRole('alert').should('exist').should('include.text', 'Success!')
+  })
+  it('shows the published alert when the collection was just published', () => {
+    cy.customMount(
+      <Collection
+        collectionRepository={collectionRepository}
+        collectionId="collection"
+        created={false}
+        published={true}
+        collectionQueryParams={{ pageQuery: 1 }}
+      />
+    )
+
+    cy.findByRole('alert').should('exist').should('include.text', 'Your collection is now public')
   })
 
   it('hides the Add data dropdown button when user does not have permissions to create both a collection and a dataset', () => {
@@ -134,6 +154,7 @@ describe('Collection page', () => {
         collectionRepository={collectionRepository}
         collectionId="collection"
         created={false}
+        published={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )

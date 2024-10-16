@@ -281,6 +281,7 @@ export class JSDatasetMapper {
       id.toString(),
       persistentId,
       version.number.toString(),
+      undefined,
       JSUpwardHierarchyNodeMapper.toUpwardHierarchyNode(jsUpwardHierarchyNode)
     )
   }

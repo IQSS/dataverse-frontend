@@ -8,13 +8,19 @@ import { EditDatasetMenu } from './edit-dataset-menu/EditDatasetMenu'
 import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
 import { useTranslation } from 'react-i18next'
 import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
+import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset
   datasetRepository: DatasetRepository
+  collectionRepository: CollectionRepository
 }
 
-export function DatasetActionButtons({ dataset, datasetRepository }: DatasetActionButtonsProps) {
+export function DatasetActionButtons({
+  dataset,
+  datasetRepository,
+  collectionRepository
+}: DatasetActionButtonsProps) {
   const { t } = useTranslation('dataset')
   return (
     <ButtonGroup aria-label={t('datasetActionButtons.title')} vertical className={styles.group}>
@@ -25,7 +31,11 @@ export function DatasetActionButtons({ dataset, datasetRepository }: DatasetActi
         fileDownloadSizes={dataset.fileDownloadSizes}
         downloadUrls={dataset.downloadUrls}
       />
-      <PublishDatasetMenu dataset={dataset} datasetRepository={datasetRepository} />
+      <PublishDatasetMenu
+        dataset={dataset}
+        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+      />
       <SubmitForReviewButton dataset={dataset} />
       <EditDatasetMenu dataset={dataset} />
       <LinkDatasetButton dataset={dataset} />

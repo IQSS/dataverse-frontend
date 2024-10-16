@@ -9,6 +9,7 @@ import {
 import { PublishDatasetMenu } from '../../../../sections/dataset/dataset-action-buttons/publish-dataset-menu/PublishDatasetMenu'
 import { WithLoggedInUser } from '../../../WithLoggedInUser'
 import { DatasetMockRepository } from '../../DatasetMockRepository'
+import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
 
 const meta: Meta<typeof PublishDatasetMenu> = {
   title: 'Sections/Dataset Page/DatasetActionButtons/PublishDatasetMenu',
@@ -34,6 +35,7 @@ export const PublishingAllowed: Story = {
         isValid: true
       })}
       datasetRepository={new DatasetMockRepository()}
+      collectionRepository={new CollectionMockRepository()}
     />
   )
 }
@@ -49,6 +51,7 @@ export const NoValidTermsOfAccess: Story = {
         isValid: true
       })}
       datasetRepository={new DatasetMockRepository()}
+      collectionRepository={new CollectionMockRepository()}
     />
   )
 }
@@ -64,6 +67,7 @@ export const DatasetInReview: Story = {
         isValid: true
       })}
       datasetRepository={new DatasetMockRepository()}
+      collectionRepository={new CollectionMockRepository()}
     />
   )
 }
