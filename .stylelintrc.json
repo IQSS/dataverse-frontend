@@ -22,6 +22,14 @@
       {
         "ignoreSelectors": [":export"]
       }
+    ],
+    "at-rule-empty-line-before": [
+      "always",
+      {
+        "ignore": ["after-comment", "first-nested", "inside-block", "blockless-after-same-name-blockless"],
+        "severity": "warning",
+        "except": ["blockless-after-blockless"]
+      }
     ]
   }
 }
