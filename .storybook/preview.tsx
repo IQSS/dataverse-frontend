@@ -1,6 +1,7 @@
+import React from 'react'
 import type { Preview } from '@storybook/react'
 import { ThemeProvider } from '@iqss/dataverse-design-system'
-import { MemoryRouter } from 'react-router-dom'
+import { createBrowserRouter, RouteObject, RouterProvider } from 'react-router-dom'
 import { FakerHelper } from '../tests/component/shared/FakerHelper'
 import 'react-loading-skeleton/dist/skeleton.css'
 
@@ -17,11 +18,18 @@ const preview: Preview = {
   decorators: [
     (Story) => {
       FakerHelper.setFakerSeed()
+
+      const routes: RouteObject[] = [
+        {
+          element: <Story />,
+          path: '/*'
+        }
+      ]
+      const browserRouter = createBrowserRouter(routes)
+
       return (
         <ThemeProvider>
-          <MemoryRouter>
-            <Story />
-          </MemoryRouter>
+          <RouterProvider router={browserRouter} />
         </ThemeProvider>
       )
     }
