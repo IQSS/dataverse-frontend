@@ -1,7 +1,7 @@
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
+import { Controller, FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
-import { Button } from '@iqss/dataverse-design-system'
+import { Button, Form, QuestionMarkTooltip } from '@iqss/dataverse-design-system'
 import { FeaturedItem } from './FeaturedItem/FeaturedItem'
 import { SortableContext } from '@dnd-kit/sortable'
 import styles from './FeaturedItemsForm.module.scss'
@@ -10,6 +10,7 @@ import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFea
 
 export type FeaturedItemsFormData = {
   featuredItems: FeaturedItemField[]
+  withShowDataButton: boolean
 }
 
 type FeaturedItemField = {
@@ -33,7 +34,8 @@ export const FeaturedItemsForm = () => {
         content: '',
         image: undefined
       }
-    ]
+    ],
+    withShowDataButton: true
   }
 
   const form = useForm<FeaturedItemsFormData>({
@@ -107,6 +109,26 @@ export const FeaturedItemsForm = () => {
             <Button disabled={!form.formState.isDirty}>Save Featured Items</Button>
           </div>
         )}
+
+        <Controller
+          name="withShowDataButton"
+          control={form.control}
+          render={({ field: { onChange, ref, value } }) => (
+            <div className={styles['show-data-checkbox-wrapper']}>
+              <Form.Group.Checkbox
+                id="withShowDataButton"
+                onChange={onChange}
+                label="Show data by default"
+                checked={value}
+                ref={ref}
+              />
+              <QuestionMarkTooltip
+                placement="right"
+                message="If this option is unchecked, the collections, datasets, and files list will not appear by default. To display them, the user will need to click a button located below the carousel."
+              />
+            </div>
+          )}
+        />
 
         <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
           <SortableContext items={fieldsArray}>
