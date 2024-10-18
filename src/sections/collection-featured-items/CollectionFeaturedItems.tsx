@@ -5,8 +5,8 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { CollectionInfo } from '../collection/CollectionInfo'
 import { CollectionSkeleton } from '../collection/CollectionSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
-import { FeaturedItemsForm } from './FeaturedItemsForm/FeaturedItemsForm'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
+import { FeaturedItemsForm } from './FeaturedItemsForm/FeaturedItemsForm'
 
 interface CollectionFeaturedItemsProps {
   collectionRepository: CollectionRepository
