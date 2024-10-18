@@ -1,85 +1,85 @@
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
 .file_uploader {
-    min-height: 5em;
+  min-height: 5em;
 }
 
 .files {
-    display: grid;
-    grid-template-columns: repeat(4, auto);
+  display: grid;
+  grid-template-columns: repeat(4, auto);
 }
 
 .uploaded_files {
-    display: grid;
-    grid-template-columns: 4rem repeat(3, auto) 3.5rem;
+  display: grid;
+  grid-template-columns: 4rem repeat(3, auto) 3.5rem;
 }
 
-.selected_file>div {
-    margin-bottom: 0.5rem;
-    padding: 0.5rem;
-    background-color: #ffc !important;
+.selected_file > div {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background-color: #ffc !important;
 }
 
-.file:nth-of-type(even)>div {
-    margin-bottom: 0.5rem;
-    padding: 0.5rem;
-    background-color: #f8f9fc;
+.file:nth-of-type(even) > div {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background-color: #f8f9fc;
 }
 
-.file:nth-of-type(odd)>div {
-    margin-bottom: 0.5rem;
-    padding: 0.5rem;
-    background-color: white;
+.file:nth-of-type(odd) > div {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background-color: white;
 }
 
 .file {
-    display: contents;
+  display: contents;
 }
 
 .selected_file {
-    display: contents;
+  display: contents;
 }
 
 .file_name {
-    padding: 0.25em;
+  padding: 0.25em;
 }
 
 .failed {
-    padding: 0.25em;
-    color: $dv-danger-color;
-    text-decoration: line-through;
+  padding: 0.25em;
+  color: $dv-danger-color;
+  text-decoration: line-through;
 }
 
 .file_size {
-    padding: 0.25em;
+  padding: 0.25em;
 }
 
 .cancel_upload {
-    padding-block: 0.1rem;
+  padding-block: 0.1rem;
 }
 
 .upload_progress {
-    min-width: 10em;
+  min-width: 10em;
 }
 
 .icon {
-    display: inline-block;
+  display: inline-block;
 }
 
 .info {
-    padding: 0.5em;
-    color: $dv-subtext-color;
-    font-size: 1.3em;
-    text-align: center;
+  padding: 0.5em;
+  color: $dv-subtext-color;
+  font-size: 1.3em;
+  text-align: center;
 }
 
 .selected_files_checkbox {
-    display: inline-flex;
-    align-items: center;
+  display: inline-flex;
+  align-items: center;
 }
 
 .save_btn {
-    display: flex;
-    justify-content: flex-end;
-    padding-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
 }

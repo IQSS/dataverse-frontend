@@ -6,20 +6,22 @@
   font-weight: normal;
   font-family: fontcustom;
   font-style: normal;
-  src: url("fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.woff2") format("woff2"),
-       url("fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.woff") format("woff"),
-       url("fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.ttf") format("truetype"),
-       url("fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.svg#fontcustom") format("svg");
+  src: url('fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.woff2') format('woff2'),
+    url('fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.woff') format('woff'),
+    url('fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.ttf') format('truetype'),
+    url('fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.svg#fontcustom') format('svg');
 }
 
 @media screen and (min-resolution) {
   @font-face {
     font-family: fontcustom;
-    src: url("fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.svg#fontcustom") format("svg");
+    src: url('fontcustom/fontcustom_8c9f858763dbca8e064e7fd59d1aa2b7.svg#fontcustom') format('svg');
   }
 }
 
-[data-icon]::before { content: attr(data-icon); }
+[data-icon]::before {
+  content: attr(data-icon);
+}
 
 [data-icon]::before,
 .icon-astro::before,
@@ -50,18 +52,62 @@
   -webkit-font-smoothing: antialiased;
 }
 
-.icon-astro::before { content: "\f100"; }
-.icon-audio::before { content: "\f101"; }
-.icon-code::before { content: "\f102"; }
-.icon-collection::before { content: "\f103"; }
-.icon-dataset::before { content: "\f104"; }
-.icon-document::before { content: "\f105"; }
-.icon-file::before { content: "\f106"; }
-.icon-geodata::before { content: "\f107"; }
-.icon-image::before { content: "\f108"; }
-.icon-network::before { content: "\f109"; }
-.icon-other::before { content: "\f10a"; }
-.icon-package::before { content: "\f10b"; }
-.icon-tabular::before { content: "\f10c"; }
-.icon-unlock::before { content: "\f10d"; }
-.icon-video::before { content: "\f10e"; }
+.icon-astro::before {
+  content: '\f100';
+}
+
+.icon-audio::before {
+  content: '\f101';
+}
+
+.icon-code::before {
+  content: '\f102';
+}
+
+.icon-collection::before {
+  content: '\f103';
+}
+
+.icon-dataset::before {
+  content: '\f104';
+}
+
+.icon-document::before {
+  content: '\f105';
+}
+
+.icon-file::before {
+  content: '\f106';
+}
+
+.icon-geodata::before {
+  content: '\f107';
+}
+
+.icon-image::before {
+  content: '\f108';
+}
+
+.icon-network::before {
+  content: '\f109';
+}
+
+.icon-other::before {
+  content: '\f10a';
+}
+
+.icon-package::before {
+  content: '\f10b';
+}
+
+.icon-tabular::before {
+  content: '\f10c';
+}
+
+.icon-unlock::before {
+  content: '\f10d';
+}
+
+.icon-video::before {
+  content: '\f10e';
+}
