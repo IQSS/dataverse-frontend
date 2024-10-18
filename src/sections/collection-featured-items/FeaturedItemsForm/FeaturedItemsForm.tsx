@@ -4,9 +4,9 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { Button, Form, QuestionMarkTooltip } from '@iqss/dataverse-design-system'
 import { FeaturedItem } from './FeaturedItem/FeaturedItem'
 import { SortableContext } from '@dnd-kit/sortable'
-import styles from './FeaturedItemsForm.module.scss'
 import { PreviewCarousel } from './PreviewCarousel/PreviewCarousel'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import styles from './FeaturedItemsForm.module.scss'
 
 export type FeaturedItemsFormData = {
   featuredItems: FeaturedItemField[]
