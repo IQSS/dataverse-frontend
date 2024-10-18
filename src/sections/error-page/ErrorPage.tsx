@@ -24,10 +24,10 @@ export function ErrorPage({ fullViewport = false }: AppLoaderProps) {
       <div className={styles['middle-errorMessage-wrapper']}>
         <div className={styles['icon-layout']}>
           <ExclamationCircle color={theme.color.dangerColor} size={62} />
-          <div aria-label="error-page">
-            <h1>{t('message.heading')}</h1>
-            <h4>{t('message.errorText')}</h4>
-          </div>
+          <h1>
+            {t('message.heading')}
+            <span>{t('message.errorText')}</span>
+          </h1>
         </div>
 
         <Link to="/" className="btn btn-secondary">
