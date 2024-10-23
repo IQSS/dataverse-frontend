@@ -513,6 +513,37 @@ export class MetadataBlockInfoMother {
             displayOrder: 34,
             typeClass: 'primitive',
             displayOnCreate: true
+          },
+          depositor: {
+            name: 'depositor',
+            displayName: 'Depositor',
+            displayOnCreate: true,
+            title: 'Depositor',
+            type: 'TEXT',
+            typeClass: 'primitive',
+            watermark: '1) FamilyName, GivenName or 2) Organization',
+            description:
+              'The entity, such as a person or organization, that deposited the Dataset in the repository',
+            multiple: false,
+            isControlledVocabulary: false,
+            displayFormat: '',
+            displayOrder: 58,
+            isRequired: false
+          },
+          dateOfDeposit: {
+            name: 'dateOfDeposit',
+            displayName: 'Deposit Date',
+            displayOnCreate: true,
+            title: 'Deposit Date',
+            type: 'DATE',
+            typeClass: 'primitive',
+            watermark: 'YYYY-MM-DD',
+            description: 'The date when the Dataset was deposited into the repository',
+            multiple: false,
+            isControlledVocabulary: false,
+            displayFormat: '',
+            displayOrder: 59,
+            isRequired: false
           }
         }
       },

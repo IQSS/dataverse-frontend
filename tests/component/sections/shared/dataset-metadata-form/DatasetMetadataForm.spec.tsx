@@ -1,9 +1,10 @@
-import { MetadataBlockName } from '../../../../../src/dataset/domain/models/Dataset'
-import { DatasetRepository } from '../../../../../src/dataset/domain/repositories/DatasetRepository'
-import { TypeMetadataFieldOptions } from '../../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
-import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { DatasetMetadataForm } from '../../../../../src/sections/shared/form/DatasetMetadataForm'
-import { UserRepository } from '../../../../../src/users/domain/repositories/UserRepository'
+import { DateHelper } from '@/shared/helpers/DateHelper'
+import { MetadataBlockName } from '@/dataset/domain/models/Dataset'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { TypeMetadataFieldOptions } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { DatasetMetadataForm } from '@/sections/shared/form/DatasetMetadataForm'
+import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { UserMother } from '../../../users/domain/models/UserMother'
@@ -1446,6 +1447,8 @@ describe('DatasetMetadataForm', () => {
 
   it('pre-fills the form with user data', () => {
     const displayName = `${testUser.lastName}, ${testUser.firstName}`
+    const expectedDepositDate = DateHelper.toISO8601Format(new Date())
+
     cy.mountAuthenticated(
       <DatasetMetadataForm
         mode="create"
@@ -1475,6 +1478,8 @@ describe('DatasetMetadataForm', () => {
         cy.findByLabelText(/^Affiliation/i).should('have.value', testUser.affiliation)
       })
     cy.findByLabelText(/^E-mail/i).should('have.value', testUser.email)
+    cy.findByLabelText(/^Depositor/i).should('have.value', displayName)
+    cy.findByLabelText(/^Deposit Date/i).should('have.value', expectedDepositDate)
   })
 
   it('shows the skeleton while loading', () => {

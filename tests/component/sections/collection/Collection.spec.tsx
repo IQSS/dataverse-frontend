@@ -1,15 +1,26 @@
-import { Collection } from '../../../../src/sections/collection/Collection'
-import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
-import { CollectionMother } from '../../collection/domain/models/CollectionMother'
+import { Collection } from '@/sections/collection/Collection'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
+import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
+import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
 
 const collectionRepository = {} as CollectionRepository
 const collection = CollectionMother.create({ name: 'Collection Name' })
 const userPermissionsMock = CollectionMother.createUserPermissions()
 
+const items = CollectionItemsMother.createItems({
+  numberOfCollections: 4,
+  numberOfDatasets: 3,
+  numberOfFiles: 3
+})
+
+const itemsWithCount: CollectionItemSubset = { items, totalItemCount: 200 }
+
 describe('Collection page', () => {
   beforeEach(() => {
     collectionRepository.getById = cy.stub().resolves(collection)
     collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
+    collectionRepository.getItems = cy.stub().resolves(itemsWithCount)
   })
 
   it('renders skeleton while loading', () => {
@@ -160,5 +171,29 @@ describe('Collection page', () => {
     )
 
     cy.findByRole('button', { name: /Add Data/i }).should('not.exist')
+  })
+
+  it('opens and close the publish collection modal', () => {
+    cy.viewport(1200, 800)
+    const collection = CollectionMother.createUnpublished()
+
+    collectionRepository.getById = cy.stub().resolves(collection)
+
+    cy.mountAuthenticated(
+      <Collection
+        collectionRepository={collectionRepository}
+        collectionId="collection"
+        created={false}
+        published={false}
+        collectionQueryParams={{ pageQuery: 1 }}
+      />
+    )
+    cy.findByRole('button', { name: /Publish/i }).should('exist')
+
+    cy.findByRole('button', { name: /Publish/i }).click()
+    cy.findByText('Publish Collection').should('exist')
+
+    cy.findByRole('button', { name: /Cancel/i }).click()
+    cy.findByText('Publish Collection').should('not.exist')
   })
 })
