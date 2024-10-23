@@ -3,6 +3,8 @@ import { Editor } from '@tiptap/react'
 import { ButtonGroup } from '../button-group/ButtonGroup'
 import { Button } from '../button/Button'
 import {
+  ArrowLeft,
+  ArrowRight,
   BlockquoteRight,
   Code,
   CodeSquare,
@@ -95,6 +97,9 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
   const handleToggleOrderedList = () => editor.chain().focus().toggleOrderedList().run()
   const isActiveOrderedList = !disabled && editor.isActive(EDITOR_FORMATS.orderedList)
 
+  const handleUndo = () => editor.chain().focus().undo().run()
+  const handleRedo = () => editor.chain().focus().redo().run()
+
   return (
     <>
       <div className={styles['editor-actions-wrapper']}>
@@ -106,6 +111,7 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
             aria-pressed={isActiveH1}
             aria-label="Heading 1"
             disabled={disabled}
+            title="Heading 1"
             variant="secondary"
             size="sm"
             icon={<TypeH1 size={18} />}
@@ -116,6 +122,7 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
             aria-pressed={isActiveH2}
             aria-label="Heading 2"
             disabled={disabled}
+            title="Heading 2"
             variant="secondary"
             size="sm"
             icon={<TypeH2 size={18} />}
@@ -126,6 +133,7 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
             aria-pressed={isActiveH3}
             aria-label="Heading 3"
             disabled={disabled}
+            title="Heading 3"
             variant="secondary"
             size="sm"
             icon={<TypeH3 size={18} />}
@@ -140,6 +148,7 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
             aria-pressed={isActiveBold}
             aria-label="Bold"
             disabled={disabled}
+            title="Bold"
             variant="secondary"
             size="sm"
             icon={<TypeBold size={18} />}
@@ -152,6 +161,7 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
             aria-pressed={isActiveItalic}
             aria-label="Italic"
             disabled={disabled}
+            title="Italic"
             variant="secondary"
             size="sm"
             icon={<TypeItalic size={18} />}
@@ -165,6 +175,7 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
             aria-pressed={isActiveUnderline}
             aria-label="Underline"
             disabled={disabled}
+            title="Underline"
             variant="secondary"
             size="sm"
             icon={<TypeUnderline size={18} />}
@@ -175,8 +186,9 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
               isActiveStrike ? styles.selected : ''
             }`}
             aria-pressed={isActiveStrike}
-            aria-label="Underline"
+            aria-label="Strikethrough"
             disabled={disabled}
+            title="Strikethrough"
             variant="secondary"
             size="sm"
             icon={<TypeStrikethrough size={18} />}
@@ -193,6 +205,7 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
             aria-pressed={isActiveBulletList}
             aria-label="Unordered list"
             disabled={disabled}
+            title="Unordered list"
             variant="secondary"
             size="sm"
             icon={<ListUl size={18} />}
@@ -205,6 +218,7 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
             aria-pressed={isActiveOrderedList}
             aria-label="Ordered list"
             disabled={disabled}
+            title="Ordered list"
             variant="secondary"
             size="sm"
             icon={<ListOl size={18} />}
@@ -214,11 +228,22 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
         {/* Extras */}
         <ButtonGroup>
           <Button
+            onClick={handleOpenLinkDialog}
+            className={`${styles['editor-actions-button']}`}
+            aria-label="Add link"
+            disabled={disabled}
+            title="Add link"
+            variant="secondary"
+            size="sm"
+            icon={<Link size={18} />}
+          />
+          <Button
             onClick={handleToggleCode}
             className={`${styles['editor-actions-button']} ${isActiveCode ? styles.selected : ''}`}
             aria-pressed={isActiveCode}
             aria-label="Code"
             disabled={disabled}
+            title="Code"
             variant="secondary"
             size="sm"
             icon={<Code size={18} />}
@@ -231,18 +256,10 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
             aria-pressed={isActiveCodeBlock}
             aria-label="Code block"
             disabled={disabled}
+            title="Code block"
             variant="secondary"
             size="sm"
             icon={<CodeSquare size={18} />}
-          />
-          <Button
-            onClick={handleOpenLinkDialog}
-            className={`${styles['editor-actions-button']}`}
-            aria-label="Open modal to add link"
-            disabled={disabled}
-            variant="secondary"
-            size="sm"
-            icon={<Link size={18} />}
           />
           <Button
             onClick={handleToggleBlockquote}
@@ -251,10 +268,35 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
             }`}
             aria-pressed={isActiveBlockquote}
             aria-label="Blockquote"
+            title="Blockquote"
             disabled={disabled}
             variant="secondary"
             size="sm"
             icon={<BlockquoteRight size={18} />}
+          />
+        </ButtonGroup>
+
+        {/* Undo - Redo */}
+        <ButtonGroup>
+          <Button
+            onClick={handleUndo}
+            className={`${styles['editor-actions-button']}`}
+            aria-label="Undo"
+            disabled={disabled || !editor.can().undo()}
+            title="Undo"
+            variant="secondary"
+            size="sm"
+            icon={<ArrowLeft size={18} />}
+          />
+          <Button
+            onClick={handleRedo}
+            className={`${styles['editor-actions-button']}`}
+            aria-label="Redo"
+            disabled={disabled || !editor.can().redo()}
+            title="Redo"
+            variant="secondary"
+            size="sm"
+            icon={<ArrowRight size={18} />}
           />
         </ButtonGroup>
       </div>
@@ -262,11 +304,11 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
       {/* Dialog for pasting a url to the link */}
       <Modal show={linkDialogOpen} onHide={handleCloseLinkDialog} size="lg">
         <Modal.Header>
-          <Modal.Title>Add Link</Modal.Title>
+          <Modal.Title>Add link</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group controlId="link-url" as={Col}>
-            <Form.Group.Label column>URL</Form.Group.Label>
+            <Form.Group.Label column>Link</Form.Group.Label>
             <Col>
               <Form.Group.Input type="text" ref={linkTextfieldRef} />
             </Col>

@@ -7,13 +7,13 @@
   gap: 0.5rem;
   align-items: center;
   padding-inline: 0.5rem;
-}
 
-.editor-actions-button {
-  display: grid;
-  place-items: center;
+  .editor-actions-button {
+    display: grid;
+    place-items: center;
 
-  &.selected {
-    background-color: color.adjust($dv-secondary-color, $blackness: 30%);
+    &.selected {
+      background-color: color.adjust($dv-secondary-color, $blackness: 30%);
+    }
   }
 }
