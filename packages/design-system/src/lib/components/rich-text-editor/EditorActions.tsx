@@ -5,6 +5,7 @@ import { Button } from '../button/Button'
 import {
   BlockquoteRight,
   Code,
+  CodeSquare,
   Link,
   ListOl,
   ListUl,
@@ -16,10 +17,10 @@ import {
   TypeStrikethrough,
   TypeUnderline
 } from 'react-bootstrap-icons'
-import styles from './EditorActions.module.scss'
 import { Modal } from '../modal/Modal'
 import { Form } from '../form/Form'
 import { Col } from '../grid/Col'
+import styles from './EditorActions.module.scss'
 
 const EDITOR_FORMATS = {
   heading: 'heading',
@@ -28,6 +29,7 @@ const EDITOR_FORMATS = {
   underline: 'underline',
   strike: 'strike',
   code: 'code',
+  codeBlock: 'codeBlock',
   link: 'link',
   blockquote: 'blockquote',
   bulletList: 'bulletList',
@@ -80,6 +82,9 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
 
   const handleToggleCode = () => editor.chain().focus().toggleCode().run()
   const isActiveCode = !disabled && editor.isActive(EDITOR_FORMATS.code)
+
+  const handleToogleCodeBlock = () => editor.chain().focus().toggleCodeBlock().run()
+  const isActiveCodeBlock = !disabled && editor.isActive(EDITOR_FORMATS.codeBlock)
 
   const handleToggleBlockquote = () => editor.chain().focus().toggleBlockquote().run()
   const isActiveBlockquote = !disabled && editor.isActive(EDITOR_FORMATS.blockquote)
@@ -219,6 +224,18 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
             icon={<Code size={18} />}
           />
           <Button
+            onClick={handleToogleCodeBlock}
+            className={`${styles['editor-actions-button']} ${
+              isActiveCodeBlock ? styles.selected : ''
+            }`}
+            aria-pressed={isActiveCodeBlock}
+            aria-label="Code block"
+            disabled={disabled}
+            variant="secondary"
+            size="sm"
+            icon={<CodeSquare size={18} />}
+          />
+          <Button
             onClick={handleOpenLinkDialog}
             className={`${styles['editor-actions-button']}`}
             aria-label="Open modal to add link"
@@ -241,6 +258,8 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
           />
         </ButtonGroup>
       </div>
+
+      {/* Dialog for pasting a url to the link */}
       <Modal show={linkDialogOpen} onHide={handleCloseLinkDialog} size="lg">
         <Modal.Header>
           <Modal.Title>Add Link</Modal.Title>

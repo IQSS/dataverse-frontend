@@ -3,6 +3,7 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
+import CodeBlock from '@tiptap/extension-code-block'
 import { EditorActions } from './EditorActions'
 import './RichTextEditor.scss'
 
@@ -26,7 +27,8 @@ export const RichTextEditor = ({ initialValue, onChange, disabled }: RichTextFie
         openOnClick: false,
         autolink: true,
         linkOnPaste: true
-      })
+      }),
+      CodeBlock
     ],
     content: initialValue,
     editorProps: {

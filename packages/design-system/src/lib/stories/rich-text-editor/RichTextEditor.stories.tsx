@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { RichTextEditor } from '../../components/rich-text-editor/RichTextEditor'
 
 const meta: Meta<typeof RichTextEditor> = {
-  title: 'RichTextEditor',
+  title: 'Rich Text Editor',
   component: RichTextEditor
 }
 
