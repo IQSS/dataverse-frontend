@@ -214,9 +214,12 @@ As the script argument, add the name of the Dataverse image tag you want to depl
 # To test file upload, update the .env file with S3 credentials
 $ cp .env.example .env
 
-# Installs and runs project off latest tagged container image
-# To install the latest image from the develop branch, use the 'unstable' tag
-$ ./run-env.sh <DATAVERSE_IMAGE_TAG>
+# Install and run project off latest tagged container image from the develop branch
+$ ./run-env.sh unstable
+
+# Alternatively, you can specify a PR tag from https://github.com/orgs/gdcc/packages/container/package/dataverse
+# To run this, you need to also change the REGISTRY variable in the .env file to point to the GitHub Container Registry (REGISTRY=ghcr.io)
+$ ./run-env.sh  <DATAVERSE_IMAGE_TAG>
 
 # Removes the project and its dependencies
 $ ./rm-env.sh
