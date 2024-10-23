@@ -210,7 +210,12 @@ As the script argument, add the name of the Dataverse image tag you want to depl
 ```bash
 # /dev-env/ directory
 
+# copy the .env.example file to .env
+# To test file upload, update the .env file with S3 credentials
+$ cp .env.example .env
+
 # Installs and runs project off latest tagged container image
+# To install the latest image from the develop branch, use the 'unstable' tag
 $ ./run-env.sh <DATAVERSE_IMAGE_TAG>
 
 # Removes the project and its dependencies
