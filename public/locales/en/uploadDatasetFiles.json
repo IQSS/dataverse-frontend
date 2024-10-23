@@ -60,5 +60,8 @@
     "selectTags": "Select tags to add",
     "saveChanges": "Save Changes",
     "cancelChanges": "Cancel Changes"
+  },
+  "alerts": {
+    "fileNameNotUnique": "File {{name}} was already added and is ignored"
   }
 }

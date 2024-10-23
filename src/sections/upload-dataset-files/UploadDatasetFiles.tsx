@@ -15,9 +15,17 @@ import { UploadedFiles } from './uploaded-files-list/UploadedFiles'
 import { addUploadedFiles } from '../../files/domain/useCases/addUploadedFiles'
 import { Route } from '../Route.enum'
 import { Stack } from '@iqss/dataverse-design-system'
+import { Alert } from '@iqss/dataverse-design-system'
+import { AlertVariant } from '@iqss/dataverse-design-system/src/lib/components/alert/AlertVariant'
 
 interface UploadDatasetFilesProps {
   fileRepository: FileRepository
+}
+
+interface FileUploadAlert {
+  key: string
+  variant: AlertVariant
+  message: string
 }
 
 export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDatasetFilesProps) => {
@@ -27,6 +35,13 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
   const [fileUploaderState, setState] = useState(FileUploadTools.createNewState([]))
   const [uploadingToCancelMap, setUploadingToCancelMap] = useState(new Map<string, () => void>())
   const navigate = useNavigate()
+  const [alerts, setAlerts] = useState<FileUploadAlert[]>([])
+  let i = 0
+  const addAlert = (variant: AlertVariant, message: string) =>
+    setAlerts((current) => [
+      ...current,
+      { key: (i++).toString(), variant: variant, message: message }
+    ])
 
   const limit = 6
   const semaphore = new Semaphore(limit)
@@ -171,6 +186,11 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
             actionItemText={t('breadcrumbActionItem')}
           />
           <article>
+            {alerts.map((alert) => (
+              <Alert variant={alert.variant} key={alert.key}>
+                {alert.message}
+              </Alert>
+            ))}
             <Stack direction="vertical" gap={3}>
               <FileUploader
                 upload={upload}
@@ -180,6 +200,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
                 fileUploaderState={fileUploaderState}
                 cancelUpload={cancelUpload}
                 cleanFileState={cleanFileState}
+                addAlert={addAlert}
               />
               <UploadedFiles
                 fileUploadState={fileUploaderState.uploaded}
