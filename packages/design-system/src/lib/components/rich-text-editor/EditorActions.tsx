@@ -40,7 +40,7 @@ const EDITOR_FORMATS = {
 } as const
 
 interface EditorActionsProps {
-  editor: Editor
+  editor: Editor | null
   disabled?: boolean
   locales?: RichTextEditorLocales
 }
@@ -56,51 +56,51 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
     const url = linkTextfieldRef.current?.value
 
     if (url) {
-      editor.chain().focus().extendMarkRange(EDITOR_FORMATS.link).setLink({ href: url }).run()
+      editor?.chain().focus().extendMarkRange(EDITOR_FORMATS.link).setLink({ href: url }).run()
     } else {
-      editor.chain().focus().extendMarkRange(EDITOR_FORMATS.link).unsetLink().run()
+      editor?.chain().focus().extendMarkRange(EDITOR_FORMATS.link).unsetLink().run()
     }
     setLinkDialogOpen(false)
   }
 
-  const handleToggleH1 = () => editor.chain().focus().toggleHeading({ level: 1 }).run()
-  const isActiveH1 = !disabled && editor.isActive(EDITOR_FORMATS.heading, { level: 1 })
+  const handleToggleH1 = () => editor?.chain().focus().toggleHeading({ level: 1 }).run()
+  const isActiveH1 = !disabled && editor?.isActive(EDITOR_FORMATS.heading, { level: 1 })
 
-  const handleToggleH2 = () => editor.chain().focus().toggleHeading({ level: 2 }).run()
-  const isActiveH2 = !disabled && editor.isActive(EDITOR_FORMATS.heading, { level: 2 })
+  const handleToggleH2 = () => editor?.chain().focus().toggleHeading({ level: 2 }).run()
+  const isActiveH2 = !disabled && editor?.isActive(EDITOR_FORMATS.heading, { level: 2 })
 
-  const handleToggleH3 = () => editor.chain().focus().toggleHeading({ level: 3 }).run()
-  const isActiveH3 = !disabled && editor.isActive(EDITOR_FORMATS.heading, { level: 3 })
+  const handleToggleH3 = () => editor?.chain().focus().toggleHeading({ level: 3 }).run()
+  const isActiveH3 = !disabled && editor?.isActive(EDITOR_FORMATS.heading, { level: 3 })
 
-  const handleToggleBold = () => editor.chain().focus().toggleBold().run()
-  const isActiveBold = !disabled && editor.isActive(EDITOR_FORMATS.bold)
+  const handleToggleBold = () => editor?.chain().focus().toggleBold().run()
+  const isActiveBold = !disabled && editor?.isActive(EDITOR_FORMATS.bold)
 
-  const handleToggleItalic = () => editor.chain().focus().toggleItalic().run()
-  const isActiveItalic = !disabled && editor.isActive(EDITOR_FORMATS.italic)
+  const handleToggleItalic = () => editor?.chain().focus().toggleItalic().run()
+  const isActiveItalic = !disabled && editor?.isActive(EDITOR_FORMATS.italic)
 
-  const handleToggleUnderline = () => editor.chain().focus().toggleUnderline().run()
-  const isActiveUnderline = !disabled && editor.isActive(EDITOR_FORMATS.underline)
+  const handleToggleUnderline = () => editor?.chain().focus().toggleUnderline().run()
+  const isActiveUnderline = !disabled && editor?.isActive(EDITOR_FORMATS.underline)
 
-  const handleToggleStrike = () => editor.chain().focus().toggleStrike().run()
-  const isActiveStrike = !disabled && editor.isActive(EDITOR_FORMATS.strike)
+  const handleToggleStrike = () => editor?.chain().focus().toggleStrike().run()
+  const isActiveStrike = !disabled && editor?.isActive(EDITOR_FORMATS.strike)
 
-  const handleToggleCode = () => editor.chain().focus().toggleCode().run()
-  const isActiveCode = !disabled && editor.isActive(EDITOR_FORMATS.code)
+  const handleToggleCode = () => editor?.chain().focus().toggleCode().run()
+  const isActiveCode = !disabled && editor?.isActive(EDITOR_FORMATS.code)
 
-  const handleToogleCodeBlock = () => editor.chain().focus().toggleCodeBlock().run()
-  const isActiveCodeBlock = !disabled && editor.isActive(EDITOR_FORMATS.codeBlock)
+  const handleToogleCodeBlock = () => editor?.chain().focus().toggleCodeBlock().run()
+  const isActiveCodeBlock = !disabled && editor?.isActive(EDITOR_FORMATS.codeBlock)
 
-  const handleToggleBlockquote = () => editor.chain().focus().toggleBlockquote().run()
-  const isActiveBlockquote = !disabled && editor.isActive(EDITOR_FORMATS.blockquote)
+  const handleToggleBlockquote = () => editor?.chain().focus().toggleBlockquote().run()
+  const isActiveBlockquote = !disabled && editor?.isActive(EDITOR_FORMATS.blockquote)
 
-  const handleToggleBulletList = () => editor.chain().focus().toggleBulletList().run()
-  const isActiveBulletList = !disabled && editor.isActive(EDITOR_FORMATS.bulletList)
+  const handleToggleBulletList = () => editor?.chain().focus().toggleBulletList().run()
+  const isActiveBulletList = !disabled && editor?.isActive(EDITOR_FORMATS.bulletList)
 
-  const handleToggleOrderedList = () => editor.chain().focus().toggleOrderedList().run()
-  const isActiveOrderedList = !disabled && editor.isActive(EDITOR_FORMATS.orderedList)
+  const handleToggleOrderedList = () => editor?.chain().focus().toggleOrderedList().run()
+  const isActiveOrderedList = !disabled && editor?.isActive(EDITOR_FORMATS.orderedList)
 
-  const handleUndo = () => editor.chain().focus().undo().run()
-  const handleRedo = () => editor.chain().focus().redo().run()
+  const handleUndo = () => editor?.chain().focus().undo().run()
+  const handleRedo = () => editor?.chain().focus().redo().run()
 
   return (
     <>
@@ -284,7 +284,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             onClick={handleUndo}
             className={`${styles['editor-actions-button']}`}
             aria-label="Undo"
-            disabled={disabled || !editor.can().undo()}
+            disabled={disabled || !editor?.can().undo()}
             title="Undo"
             variant="secondary"
             size="sm"
@@ -294,7 +294,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             onClick={handleRedo}
             className={`${styles['editor-actions-button']}`}
             aria-label="Redo"
-            disabled={disabled || !editor.can().redo()}
+            disabled={disabled || !editor?.can().redo()}
             title="Redo"
             variant="secondary"
             size="sm"

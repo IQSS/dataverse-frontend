@@ -35,6 +35,14 @@
       box-shadow: 0 0 0 0.25rem rgba(51 122 183 / 25%);
     }
 
+    p.is-editor-empty:first-child::before {
+      float: left;
+      height: 0;
+      color: #adb5bd;
+      content: attr(data-placeholder);
+      pointer-events: none;
+    }
+
     // Styles for the editor html content
 
     blockquote {

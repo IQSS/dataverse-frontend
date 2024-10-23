@@ -1,9 +1,28 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { RichTextEditor } from '../../components/rich-text-editor/RichTextEditor'
 
+/**
+ * ## Description
+ * The rich text editor component is a user interface element that allows users to input and format text content using
+ * a variety of tools and options.
+
+ * ## Usage guidelines
+  * The rich text editor component should be used when there is a need to allow users to input and format text content in
+  * a more flexible and customizable way.
+  *
+  * You can keep track of the content changes by using the `onChange` prop. It will return the HTML content of the editor.
+  *
+  * You can also set an initial value using the `initialValue` prop.
+  *
+  * You can disable the editor by using the `disabled` prop.
+  *
+  * You can customize the locales of the editor by using the `locales` prop.
+ */
+
 const meta: Meta<typeof RichTextEditor> = {
   title: 'Rich Text Editor',
-  component: RichTextEditor
+  component: RichTextEditor,
+  tags: ['autodocs']
 }
 
 export default meta

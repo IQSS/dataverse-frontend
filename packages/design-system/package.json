@@ -42,6 +42,7 @@
     "@tiptap/extension-link": "2.9.0",
     "@tiptap/extension-list-item": "2.9.0",
     "@tiptap/extension-ordered-list": "2.9.0",
+    "@tiptap/extension-placeholder": "2.9.0",
     "@tiptap/extension-underline": "2.9.0",
     "@tiptap/pm": "2.9.0",
     "@tiptap/react": "2.9.0",

@@ -1,4 +1,5 @@
 export interface RichTextEditorLocales {
+  placeholder?: string
   linkDialog?: {
     title?: string
     label?: string
@@ -8,6 +9,7 @@ export interface RichTextEditorLocales {
 }
 
 export const richTextEditorDefaultLocales: RichTextEditorLocales = {
+  placeholder: 'Write something …',
   linkDialog: {
     title: 'Add link',
     label: 'Link',

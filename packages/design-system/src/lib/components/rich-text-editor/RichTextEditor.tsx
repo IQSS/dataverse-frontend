@@ -4,23 +4,26 @@ import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
 import CodeBlock from '@tiptap/extension-code-block'
+import Placeholder from '@tiptap/extension-placeholder'
 import { EditorActions } from './EditorActions'
-import { RichTextEditorLocales } from './defaultLocales'
+import { richTextEditorDefaultLocales, RichTextEditorLocales } from './defaultLocales'
 import './RichTextEditor.scss'
 
 export interface RichTextEditorProps {
   initialValue?: string | undefined
-  onChange: (value: string) => void
+  onChange?: (value: string) => void
   error?: string
   disabled?: boolean
   locales?: RichTextEditorLocales
+  editorContentId?: string
 }
 
 export const RichTextEditor = ({
   initialValue,
   onChange,
   disabled,
-  locales
+  locales,
+  editorContentId
 }: RichTextEditorProps) => {
   const editor = useEditor({
     extensions: [
@@ -35,22 +38,24 @@ export const RichTextEditor = ({
         autolink: true,
         linkOnPaste: true
       }),
-      CodeBlock
+      CodeBlock,
+      Placeholder.configure({
+        placeholder: locales?.placeholder ?? richTextEditorDefaultLocales.placeholder
+      })
     ],
     content: initialValue,
     editorProps: {
       attributes: {
+        id: editorContentId || 'rich-text-editor-content',
         class: 'rich-text-editor-content'
       }
     },
-    onUpdate: ({ editor }) => onChange(editor.getHTML())
+    onUpdate: ({ editor }) => onChange && onChange(editor.getHTML())
   })
 
   useEffect(() => {
     if (editor) editor.setEditable(disabled ? false : true, false)
   }, [disabled, editor])
-
-  if (!editor) return null
 
   return (
     <div className="rich-text-editor-wrapper">
