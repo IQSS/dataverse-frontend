@@ -5,16 +5,23 @@ import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
 import CodeBlock from '@tiptap/extension-code-block'
 import { EditorActions } from './EditorActions'
+import { RichTextEditorLocales } from './defaultLocales'
 import './RichTextEditor.scss'
 
-export interface RichTextFieldProps {
+export interface RichTextEditorProps {
   initialValue?: string | undefined
   onChange: (value: string) => void
   error?: string
   disabled?: boolean
+  locales?: RichTextEditorLocales
 }
 
-export const RichTextEditor = ({ initialValue, onChange, disabled }: RichTextFieldProps) => {
+export const RichTextEditor = ({
+  initialValue,
+  onChange,
+  disabled,
+  locales
+}: RichTextEditorProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -47,7 +54,7 @@ export const RichTextEditor = ({ initialValue, onChange, disabled }: RichTextFie
 
   return (
     <div className="rich-text-editor-wrapper">
-      <EditorActions editor={editor} disabled={disabled} />
+      <EditorActions editor={editor} disabled={disabled} locales={locales} />
       <div className="editor-content-wrapper">
         <EditorContent editor={editor} />
       </div>

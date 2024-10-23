@@ -26,6 +26,21 @@ export const WithInitialValue: Story = {
   )
 }
 
+export const WithNotDefaultLocales: Story = {
+  render: () => (
+    <RichTextEditor
+      onChange={handleChange}
+      locales={{
+        linkDialog: {
+          title: 'Inserte un enlace',
+          ok: 'Aceptar',
+          cancel: 'Cancelar'
+        }
+      }}
+    />
+  )
+}
+
 export const Disabled: Story = {
   render: () => <RichTextEditor onChange={handleChange} disabled />
 }

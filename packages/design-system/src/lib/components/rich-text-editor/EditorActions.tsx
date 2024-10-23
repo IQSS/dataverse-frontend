@@ -22,6 +22,7 @@ import {
 import { Modal } from '../modal/Modal'
 import { Form } from '../form/Form'
 import { Col } from '../grid/Col'
+import { richTextEditorDefaultLocales, RichTextEditorLocales } from './defaultLocales'
 import styles from './EditorActions.module.scss'
 
 const EDITOR_FORMATS = {
@@ -41,9 +42,10 @@ const EDITOR_FORMATS = {
 interface EditorActionsProps {
   editor: Editor
   disabled?: boolean
+  locales?: RichTextEditorLocales
 }
 
-export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
+export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps) => {
   const [linkDialogOpen, setLinkDialogOpen] = useState(false)
   const linkTextfieldRef = useRef<HTMLInputElement>(null)
 
@@ -304,11 +306,15 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
       {/* Dialog for pasting a url to the link */}
       <Modal show={linkDialogOpen} onHide={handleCloseLinkDialog} size="lg">
         <Modal.Header>
-          <Modal.Title>Add link</Modal.Title>
+          <Modal.Title>
+            {locales?.linkDialog?.title ?? richTextEditorDefaultLocales.linkDialog?.title}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group controlId="link-url" as={Col}>
-            <Form.Group.Label column>Link</Form.Group.Label>
+            <Form.Group.Label column>
+              {locales?.linkDialog?.label ?? richTextEditorDefaultLocales.linkDialog?.label}
+            </Form.Group.Label>
             <Col>
               <Form.Group.Input type="text" ref={linkTextfieldRef} />
             </Col>
@@ -316,10 +322,10 @@ export const EditorActions = ({ editor, disabled }: EditorActionsProps) => {
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={handleOKLinkDialog} variant="primary">
-            OK
+            {locales?.linkDialog?.ok ?? richTextEditorDefaultLocales.linkDialog?.ok}
           </Button>
           <Button onClick={handleCloseLinkDialog} variant="secondary">
-            Cancel
+            {locales?.linkDialog?.cancel ?? richTextEditorDefaultLocales.linkDialog?.cancel}
           </Button>
         </Modal.Footer>
       </Modal>
