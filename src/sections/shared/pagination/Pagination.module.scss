@@ -1,4 +1,4 @@
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module";
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
 
 .row {
   justify-content: center;
@@ -6,11 +6,11 @@
 
 .container {
   display: flex;
-    align-items: center;
+  align-items: center;
 }
 
 .size-selector-container {
-  display:flex;
+  display: flex;
   margin-bottom: 14px;
   margin-left: 28px;
 

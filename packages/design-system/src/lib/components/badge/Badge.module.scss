@@ -3,25 +3,25 @@
 @import 'src/lib/assets/styles/design-tokens/colors.module';
 
 .primary:not(#\#) {
-    color: color-contrast($dv-primary-color);
+  color: color-contrast($dv-primary-color);
 }
 
 .secondary:not(#\#) {
-    color: color-contrast($dv-secondary-color);
+  color: color-contrast($dv-secondary-color);
 }
 
 .info:not(#\#) {
-    color: color-contrast($dv-info-color);
+  color: color-contrast($dv-info-color);
 }
 
 .success:not(#\#) {
-    color: color-contrast($dv-success-color);
+  color: color-contrast($dv-success-color);
 }
 
 .warning:not(#\#) {
-    color: color-contrast($dv-warning-color);
+  color: color-contrast($dv-warning-color);
 }
 
 .danger:not(#\#) {
-    color: color-contrast($dv-danger-color);
+  color: color-contrast($dv-danger-color);
 }
