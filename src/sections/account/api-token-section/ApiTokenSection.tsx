@@ -2,65 +2,68 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Button } from '@iqss/dataverse-design-system'
 import accountStyles from '../Account.module.scss'
 import styles from './ApiTokenSection.module.scss'
-import { useEffect, useMemo, useState } from 'react'
-import { TokenInfo } from '@/api-token-info/domain/models/TokenInfo'
-import { readCurrentApiToken } from '@/api-token-info/domain/useCases/readCurrentApiToken'
-import { ApiTokenInfoJSDataverseRepository } from '@/api-token-info/infrastructure/ApiTokenInfoJSDataverseRepository'
+import { useEffect, useState } from 'react'
+import { TokenInfo } from '@/users/domain/models/TokenInfo'
+import { recreateApiToken } from '@/users/domain/useCases/recreateApiToken'
+import { revokeApiToken } from '@/users/domain/useCases/revokeApiToken'
+import { ApiTokenInfoRepository } from '@/users/domain/repositories/ApiTokenInfoRepository'
 import ApiTokenSectionSkeleton from './ApiTokenSectionSkeleton'
-export const ApiTokenSection = () => {
-  const { t } = useTranslation('account', { keyPrefix: 'apiToken' })
+import { useGetApiToken } from './useGetCurrentApiToken'
+import { useLoading } from '../../loading/LoadingContext'
 
-  // TODO: When we have the use cases we need to mock stub to unit test this with or without token
-  const [apiToken, setApiToken] = useState<TokenInfo['apiToken']>('')
-  const [expirationDate, setExpirationDate] = useState<TokenInfo['expirationDate']>('')
-  const [loading, setLoading] = useState(true)
-  const repository = useMemo(() => new ApiTokenInfoJSDataverseRepository(), [])
+interface ApiTokenSectionProps {
+  repository: ApiTokenInfoRepository
+}
+
+export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
+  const { t } = useTranslation('account', { keyPrefix: 'apiToken' })
+  const { isLoading, setIsLoading } = useLoading()
+  const [isRevoke, setIsRevoke] = useState<boolean>(false)
+  const { error, apiTokenInfo, isLoading: isLoadingData } = useGetApiToken(repository)
+  const [currentApiTokenInfo, setCurrentApiTokenInfo] = useState<TokenInfo>(apiTokenInfo)
 
   useEffect(() => {
-    setLoading(true)
-    readCurrentApiToken(repository)
+    setCurrentApiTokenInfo(apiTokenInfo)
+  }, [apiTokenInfo])
+
+  const handleCreateToken = () => {
+    setIsLoading(true)
+    recreateApiToken(repository)
       .then((tokenInfo) => {
-        if (tokenInfo) {
-          setApiToken(tokenInfo.apiToken)
-          setExpirationDate(tokenInfo.expirationDate)
-        }
+        setCurrentApiTokenInfo(tokenInfo)
       })
       .catch((error) => {
-        console.error('There was an error fetching current Api token:', error)
+        console.error('There was an error fetching recreated Api token:', error)
       })
       .finally(() => {
-        setLoading(false)
+        setIsLoading(false)
+        setIsRevoke(false)
       })
-  }, [repository])
+  }
+
+  const handleRevokeToken = () => {
+    revokeApiToken(repository)
+      .then()
+      .catch((error) => {
+        console.error('There was an error revoking Api token:', error)
+      })
+      .finally(() => {
+        setCurrentApiTokenInfo({ apiToken: '', expirationDate: '' })
+        setIsRevoke(true)
+        setIsRevoke(true)
+      })
+  }
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(apiToken).catch(
+    navigator.clipboard.writeText(apiTokenInfo.apiToken).catch(
       /* istanbul ignore next */ (error) => {
         console.error('Failed to copy text:', error)
       }
     )
   }
-  if (loading) {
-    return (
-      <>
-        <p className={accountStyles['helper-text']}>
-          <Trans
-            t={t}
-            i18nKey="helperText"
-            components={{
-              anchor: (
-                <a
-                  href="http://guides.dataverse.org/en/latest/api"
-                  target="_blank"
-                  rel="noreferrer"
-                />
-              )
-            }}
-          />
-        </p>
-        <ApiTokenSectionSkeleton data-testid="loadingSkeleton" />
-      </>
-    )
+
+  if (isLoadingData) {
+    return <ApiTokenSectionSkeleton data-testid="loadingSkeleton" />
   }
 
   return (
@@ -80,25 +83,25 @@ export const ApiTokenSection = () => {
           }}
         />
       </p>
-      {apiToken ? (
+      {!isRevoke && currentApiTokenInfo.apiToken ? (
         <>
           <p className={styles['exp-date']}>
             {t('expirationDate')}{' '}
-            <time data-testid="expiration-date" dateTime={expirationDate}>
-              {expirationDate}
+            <time data-testid="expiration-date" dateTime={currentApiTokenInfo.expirationDate}>
+              {currentApiTokenInfo.expirationDate}
             </time>
           </p>
           <div className={styles['api-token']}>
-            <code data-testid="api-token">{apiToken}</code>
+            <code data-testid="api-token">{currentApiTokenInfo.apiToken}</code>
           </div>
           <div className={styles['btns-wrapper']} role="group">
             <Button variant="secondary" onClick={copyToClipboard}>
               {t('copyToClipboard')}
             </Button>
-            <Button variant="secondary" disabled>
+            <Button variant="secondary" onClick={handleCreateToken}>
               {t('recreateToken')}
             </Button>
-            <Button variant="secondary" disabled>
+            <Button variant="secondary" onClick={handleRevokeToken}>
               {t('revokeToken')}
             </Button>
           </div>
@@ -108,8 +111,8 @@ export const ApiTokenSection = () => {
           <div className={styles['api-token']}>
             <code data-testid="api-token">{t('notCreatedApiToken')}</code>
           </div>
-          <div className={styles['btns-wrapper']} role="group">
-            <Button variant="secondary" disabled>
+          <div className={styles['btns-wrapper']} data-testid="noApiToken" role="group">
+            <Button data-testid="createApi" variant="secondary" onClick={handleCreateToken}>
               {t('createToken')}
             </Button>
           </div>

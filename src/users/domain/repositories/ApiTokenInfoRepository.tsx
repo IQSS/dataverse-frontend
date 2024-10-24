@@ -1,4 +1,4 @@
-import { TokenInfo } from '../models/TokenInfo'
+import { TokenInfo } from '../.././domain/models/TokenInfo'
 
 export interface ApiTokenInfoRepository {
   getCurrentApiToken(): Promise<TokenInfo>
