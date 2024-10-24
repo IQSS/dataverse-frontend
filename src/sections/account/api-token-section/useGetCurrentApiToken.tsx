@@ -36,7 +36,7 @@ export const useGetApiToken = (repository: ApiTokenInfoRepository): UseGetApiTok
   }, [repository])
 
   useEffect(() => {
-    fetchTokenInfo()
+    void fetchTokenInfo()
   }, [fetchTokenInfo])
 
   return { error, apiTokenInfo, isLoading }

@@ -3,42 +3,41 @@ import { Button } from '@iqss/dataverse-design-system'
 import accountStyles from '../Account.module.scss'
 import styles from './ApiTokenSection.module.scss'
 import { useEffect, useState } from 'react'
+import { Alert } from '@iqss/dataverse-design-system'
 import { TokenInfo } from '@/users/domain/models/TokenInfo'
-import { recreateApiToken } from '@/users/domain/useCases/recreateApiToken'
 import { revokeApiToken } from '@/users/domain/useCases/revokeApiToken'
 import { ApiTokenInfoRepository } from '@/users/domain/repositories/ApiTokenInfoRepository'
 import ApiTokenSectionSkeleton from './ApiTokenSectionSkeleton'
 import { useGetApiToken } from './useGetCurrentApiToken'
-import { useLoading } from '../../loading/LoadingContext'
-
+import { useRecreateApiToken } from './useRecreateApiToken'
 interface ApiTokenSectionProps {
   repository: ApiTokenInfoRepository
 }
 
 export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
   const { t } = useTranslation('account', { keyPrefix: 'apiToken' })
-  const { isLoading, setIsLoading } = useLoading()
-  const [isRevoke, setIsRevoke] = useState<boolean>(false)
+  const [currentApiTokenInfo, setCurrentApiTokenInfo] = useState<TokenInfo>()
   const { error, apiTokenInfo, isLoading: isLoadingData } = useGetApiToken(repository)
-  const [currentApiTokenInfo, setCurrentApiTokenInfo] = useState<TokenInfo>(apiTokenInfo)
 
   useEffect(() => {
     setCurrentApiTokenInfo(apiTokenInfo)
   }, [apiTokenInfo])
 
+  const {
+    initiateRecreateToken,
+    isRecreating,
+    error: recreatingError,
+    tokenInfo
+  } = useRecreateApiToken(repository)
+
+  useEffect(() => {
+    if (tokenInfo) {
+      setCurrentApiTokenInfo(tokenInfo)
+    }
+  }, [tokenInfo])
+
   const handleCreateToken = () => {
-    setIsLoading(true)
-    recreateApiToken(repository)
-      .then((tokenInfo) => {
-        setCurrentApiTokenInfo(tokenInfo)
-      })
-      .catch((error) => {
-        console.error('There was an error fetching recreated Api token:', error)
-      })
-      .finally(() => {
-        setIsLoading(false)
-        setIsRevoke(false)
-      })
+    initiateRecreateToken()
   }
 
   const handleRevokeToken = () => {
@@ -49,8 +48,6 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
       })
       .finally(() => {
         setCurrentApiTokenInfo({ apiToken: '', expirationDate: '' })
-        setIsRevoke(true)
-        setIsRevoke(true)
       })
   }
 
@@ -62,8 +59,16 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
     )
   }
 
-  if (isLoadingData) {
+  if (isLoadingData || isRecreating) {
     return <ApiTokenSectionSkeleton data-testid="loadingSkeleton" />
+  }
+
+  if (error || recreatingError) {
+    return (
+      <Alert variant="danger" dismissible={false}>
+        {error}
+      </Alert>
+    )
   }
 
   return (
@@ -83,7 +88,7 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
           }}
         />
       </p>
-      {!isRevoke && currentApiTokenInfo.apiToken ? (
+      {currentApiTokenInfo?.apiToken ? (
         <>
           <p className={styles['exp-date']}>
             {t('expirationDate')}{' '}
@@ -121,3 +126,18 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
     </>
   )
 }
+
+// const handleCreateToken = () => {
+//   setIsLoading(true)
+//   recreateApiToken(repository)
+//     .then((tokenInfo) => {
+//       setCurrentApiTokenInfo(tokenInfo)
+//     })
+//     .catch((error) => {
+//       console.error('There was an error fetching recreated Api token:', error)
+//     })
+//     .finally(() => {
+//       setIsLoading(false)
+//       setIsRevoke(false)
+//     })
+// }
