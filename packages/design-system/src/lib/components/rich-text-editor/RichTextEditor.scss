@@ -13,12 +13,6 @@
   flex: 1;
   flex-direction: column;
 
-  & > div {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-  }
-
   .rich-text-editor-content {
     flex: 1;
     min-height: 200px;
@@ -28,6 +22,11 @@
     overflow-y: auto;
     border: solid 1px $dv-border-color;
     border-radius: 4px;
+    resize: vertical;
+
+    &[style*='height'] {
+      max-height: unset;
+    }
 
     &.ProseMirror-focused {
       border-color: #99bddb;
