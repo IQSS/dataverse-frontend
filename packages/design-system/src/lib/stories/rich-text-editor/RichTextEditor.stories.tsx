@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { RichTextEditor } from '../../components/rich-text-editor/RichTextEditor'
+import { Form } from '../../components/form/Form'
+import { Col } from '../../components/grid/Col'
 
 /**
  * ## Description
@@ -62,4 +64,15 @@ export const WithNotDefaultLocales: Story = {
 
 export const Disabled: Story = {
   render: () => <RichTextEditor onChange={handleChange} disabled />
+}
+
+export const WithLabel: Story = {
+  render: () => (
+    <Form.Group as={Col}>
+      <Form.Group.Label id="label-id">Dataset Description</Form.Group.Label>
+      <Col>
+        <RichTextEditor editorContentAriaLabelledBy="label-id" onChange={handleChange} />
+      </Col>
+    </Form.Group>
+  )
 }

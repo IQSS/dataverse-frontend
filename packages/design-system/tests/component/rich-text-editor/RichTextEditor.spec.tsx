@@ -8,13 +8,26 @@ describe('RichTextEditor', () => {
   it('should render the component', () => {
     cy.mount(<RichTextEditor />)
 
-    cy.get('#rich-text-editor-content').should('exist')
+    cy.findByTestId('rich-text-editor-wrapper').should('exist').should('be.visible')
   })
 
-  it('should render the component with different id in the editor content', () => {
+  it('should render the component with an id in the editor content', () => {
     cy.mount(<RichTextEditor editorContentId={editorContentId} />)
 
     cy.get(`#${editorContentId}`).should('exist')
+  })
+
+  it('should render the component with an aria-labelledby attribute in the editor content', () => {
+    const ariaLabelledBy = 'test-aria-labelledby'
+
+    cy.mount(
+      <RichTextEditor
+        editorContentAriaLabelledBy={ariaLabelledBy}
+        editorContentId={editorContentId}
+      />
+    )
+
+    cy.get(`#${editorContentId}`).should('have.attr', 'aria-labelledby', ariaLabelledBy)
   })
 
   it('should render the component with initial value', () => {

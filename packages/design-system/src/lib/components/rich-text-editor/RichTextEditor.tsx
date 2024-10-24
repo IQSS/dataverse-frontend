@@ -16,6 +16,7 @@ export interface RichTextEditorProps {
   disabled?: boolean
   locales?: RichTextEditorLocales
   editorContentId?: string
+  editorContentAriaLabelledBy?: string
 }
 
 export const RichTextEditor = ({
@@ -23,7 +24,8 @@ export const RichTextEditor = ({
   onChange,
   disabled,
   locales,
-  editorContentId
+  editorContentId,
+  editorContentAriaLabelledBy
 }: RichTextEditorProps) => {
   const editor = useEditor({
     extensions: [
@@ -46,8 +48,9 @@ export const RichTextEditor = ({
     content: initialValue,
     editorProps: {
       attributes: {
-        id: editorContentId || 'rich-text-editor-content',
-        class: 'rich-text-editor-content'
+        class: 'rich-text-editor-content',
+        ...(editorContentId && { id: editorContentId }),
+        ...(editorContentAriaLabelledBy && { 'aria-labelledby': editorContentAriaLabelledBy })
       }
     },
     onUpdate: ({ editor }) => onChange && onChange(editor.getHTML())
@@ -58,7 +61,7 @@ export const RichTextEditor = ({
   }, [disabled, editor])
 
   return (
-    <div className="rich-text-editor-wrapper">
+    <div className="rich-text-editor-wrapper" data-testid="rich-text-editor-wrapper">
       <EditorActions editor={editor} disabled={disabled} locales={locales} />
       <div className="editor-content-wrapper">
         <EditorContent editor={editor} />
