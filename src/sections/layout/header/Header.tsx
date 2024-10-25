@@ -5,12 +5,13 @@ import { Route } from '../../Route.enum'
 import { useSession } from '../../session/SessionContext'
 import { BASE_URL } from '../../../config'
 import { LoggedInHeaderActions } from './LoggedInHeaderActions'
-import { CollectionJSDataverseRepository } from '../../../collection/infrastructure/repositories/CollectionJSDataverseRepository'
 import styles from './Header.module.scss'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 
-const collectionRepository = new CollectionJSDataverseRepository()
-
-export function Header() {
+interface HeaderProps {
+  collectionRepository: CollectionRepository
+}
+export function Header({ collectionRepository }: HeaderProps) {
   const { t } = useTranslation('header')
   const { user } = useSession()
 

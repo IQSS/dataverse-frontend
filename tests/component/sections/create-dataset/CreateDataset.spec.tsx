@@ -16,7 +16,7 @@ const collectionMetadataBlocksInfo =
   MetadataBlockInfoMother.getByCollectionIdDisplayedOnCreateTrue()
 
 const COLLECTION_NAME = 'Collection Name'
-const collection = CollectionMother.create({ name: COLLECTION_NAME })
+const collection = CollectionMother.create({ name: COLLECTION_NAME, id: 'test-alias' })
 
 describe('Create Dataset', () => {
   beforeEach(() => {
@@ -36,6 +36,7 @@ describe('Create Dataset', () => {
         datasetRepository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        collectionId={'non-existing-collection'}
       />
     )
     cy.findByText('Page Not Found').should('exist')
@@ -52,6 +53,7 @@ describe('Create Dataset', () => {
         datasetRepository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        collectionId={'test-collectionId'}
       />
     )
     cy.clock()
@@ -67,6 +69,7 @@ describe('Create Dataset', () => {
         datasetRepository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        collectionId={'test-collectionId'}
       />
     )
 
@@ -76,18 +79,6 @@ describe('Create Dataset', () => {
       .should('exist')
       .should('have.text', 'Create Dataset')
       .should('have.class', 'active')
-  })
-
-  it('renders the Host Collection Form for root collection', () => {
-    cy.customMount(
-      <CreateDataset
-        datasetRepository={datasetRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        collectionRepository={collectionRepository}
-      />
-    )
-    cy.findByText(/^Host Collection/i).should('exist')
-    cy.findByDisplayValue('root').should('exist')
   })
 
   it('renders the Host Collection Form', () => {
@@ -102,7 +93,7 @@ describe('Create Dataset', () => {
       </NotImplementedModalProvider>
     )
     cy.findByText(/^Host Collection/i).should('exist')
-    cy.findByDisplayValue('test-collectionId').should('exist')
+    cy.findByDisplayValue('test-alias').should('exist')
     cy.findByText(/^Edit Host Collection/i)
       .should('exist')
       .click()
@@ -123,6 +114,7 @@ describe('Create Dataset', () => {
         datasetRepository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        collectionId={'test-collectionId'}
       />
     )
     cy.findAllByTestId('not-allowed-to-create-dataset-alert').should('exist')
@@ -134,6 +126,7 @@ describe('Create Dataset', () => {
         datasetRepository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        collectionId={'test-collectionId'}
       />
     )
     cy.findAllByTestId('not-allowed-to-create-dataset-alert').should('not.exist')

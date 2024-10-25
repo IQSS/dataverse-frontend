@@ -75,23 +75,24 @@ export function Collection({
                 />
               </div>
             )}
+
+            <CollectionItemsPanel
+              key={collectionId}
+              collectionId={collectionId}
+              collectionRepository={collectionRepository}
+              collectionQueryParams={collectionQueryParams}
+              addDataSlot={
+                showAddDataActions ? (
+                  <AddDataActionsButton
+                    collectionId={collection.id}
+                    canAddCollection={canUserAddCollection}
+                    canAddDataset={canUserAddDataset}
+                  />
+                ) : null
+              }
+            />
           </>
         )}
-        <CollectionItemsPanel
-          key={collectionId}
-          collectionId={collectionId}
-          collectionRepository={collectionRepository}
-          collectionQueryParams={collectionQueryParams}
-          addDataSlot={
-            showAddDataActions ? (
-              <AddDataActionsButton
-                collectionId={collectionId}
-                canAddCollection={canUserAddCollection}
-                canAddDataset={canUserAddDataset}
-              />
-            ) : null
-          }
-        />
       </Col>
     </Row>
   )

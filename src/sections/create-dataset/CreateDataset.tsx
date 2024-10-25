@@ -22,14 +22,14 @@ interface CreateDatasetProps {
   datasetRepository: DatasetRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
   collectionRepository: CollectionRepository
-  collectionId?: string
+  collectionId: string
 }
 
 export function CreateDataset({
   datasetRepository,
   metadataBlockInfoRepository,
   collectionRepository,
-  collectionId = ROOT_COLLECTION_ALIAS
+  collectionId
 }: CreateDatasetProps) {
   const { t } = useTranslation('createDataset')
   const { isModalOpen, hideModal } = useNotImplementedModal()
@@ -84,7 +84,7 @@ export function CreateDataset({
           <h1>{t('pageTitle')}</h1>
         </header>
         <SeparationLine />
-        <HostCollectionForm collectionId={collectionId} />
+        <HostCollectionForm collectionId={collection.id} />
 
         <DatasetMetadataForm
           mode="create"

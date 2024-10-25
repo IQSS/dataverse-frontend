@@ -4,6 +4,7 @@ import { CollectionJSDataverseRepository } from '../../collection/infrastructure
 import { Collection } from './Collection'
 import { INFINITE_SCROLL_ENABLED } from './config'
 import { useGetCollectionQueryParams } from './useGetCollectionQueryParams'
+import { ROOT_COLLECTION_ALIAS } from '@/collection/domain/models/Collection'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 export class CollectionFactory {
@@ -14,7 +15,7 @@ export class CollectionFactory {
 
 function CollectionWithSearchParams() {
   const collectionQueryParams = useGetCollectionQueryParams()
-  const { collectionId = 'root' } = useParams<{ collectionId: string }>()
+  const { collectionId = ROOT_COLLECTION_ALIAS } = useParams<{ collectionId: string }>()
   const location = useLocation()
   const state = location.state as { published: boolean; created: boolean } | undefined
   const created = state?.created ?? false

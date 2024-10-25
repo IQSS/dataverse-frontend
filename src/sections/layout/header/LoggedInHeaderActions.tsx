@@ -8,6 +8,8 @@ import { User } from '../../../users/domain/models/User'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import { ROOT_COLLECTION_ALIAS } from '../../../collection/domain/models/Collection'
 import { AccountHelper } from '../../account/AccountHelper'
+import { useCollection } from '@/sections/collection/useCollection'
+import Skeleton from 'react-loading-skeleton'
 
 const currentPage = 0
 
@@ -23,6 +25,7 @@ export const LoggedInHeaderActions = ({
   const { t } = useTranslation('header')
   const { logout } = useSession()
   const navigate = useNavigate()
+  const { collection, isLoading } = useCollection(collectionRepository, ROOT_COLLECTION_ALIAS)
 
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: ROOT_COLLECTION_ALIAS,
@@ -34,9 +37,16 @@ export const LoggedInHeaderActions = ({
       navigate(currentPage)
     })
   }
+  if (isLoading) {
+    return <Skeleton />
+  }
 
-  const createCollectionRoute = RouteWithParams.CREATE_COLLECTION()
-  const createDatasetRoute = RouteWithParams.CREATE_DATASET()
+  if (!collection) {
+    return null
+  }
+
+  const createCollectionRoute = RouteWithParams.CREATE_COLLECTION(collection.id)
+  const createDatasetRoute = RouteWithParams.CREATE_DATASET(collection.id)
 
   const canUserAddCollectionToRoot = Boolean(collectionUserPermissions?.canAddCollection)
   const canUserAddDatasetToRoot = Boolean(collectionUserPermissions?.canAddDataset)

@@ -2,19 +2,24 @@ import { UserMother } from '../../../users/domain/models/UserMother'
 import { UserRepository } from '../../../../../src/users/domain/repositories/UserRepository'
 import { Header } from '../../../../../src/sections/layout/header/Header'
 import { SessionProvider } from '../../../../../src/sections/session/SessionProvider'
+import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 
 const testUser = UserMother.create()
+const rootCollection = CollectionMother.create({ id: 'root' })
 const userRepository: UserRepository = {} as UserRepository
+const collectionRepository: CollectionRepository = {} as CollectionRepository
 describe('Header component', () => {
   beforeEach(() => {
     userRepository.getAuthenticated = cy.stub().resolves(testUser)
     userRepository.removeAuthenticated = cy.stub().resolves()
+    collectionRepository.getById = cy.stub().resolves(rootCollection)
   })
 
   it('displays the brand', () => {
     cy.customMount(
       <SessionProvider repository={userRepository}>
-        <Header />
+        <Header collectionRepository={collectionRepository} />
       </SessionProvider>
     )
 
@@ -25,7 +30,7 @@ describe('Header component', () => {
   it('displays the user name when the user is logged in', () => {
     cy.customMount(
       <SessionProvider repository={userRepository}>
-        <Header />
+        <Header collectionRepository={collectionRepository} />
       </SessionProvider>
     )
 
@@ -40,7 +45,7 @@ describe('Header component', () => {
   it('displays the Add Data Button when the user is logged in', () => {
     cy.customMount(
       <SessionProvider repository={userRepository}>
-        <Header />
+        <Header collectionRepository={collectionRepository} />
       </SessionProvider>
     )
 
@@ -59,7 +64,7 @@ describe('Header component', () => {
 
     cy.customMount(
       <SessionProvider repository={userRepository}>
-        <Header />
+        <Header collectionRepository={collectionRepository} />
       </SessionProvider>
     )
 
@@ -76,7 +81,7 @@ describe('Header component', () => {
 
     cy.customMount(
       <SessionProvider repository={userRepository}>
-        <Header />
+        <Header collectionRepository={collectionRepository} />
       </SessionProvider>
     )
 
@@ -89,7 +94,7 @@ describe('Header component', () => {
   it('log outs the user after clicking Log Out', () => {
     cy.customMount(
       <SessionProvider repository={userRepository}>
-        <Header />
+        <Header collectionRepository={collectionRepository} />
       </SessionProvider>
     )
 
