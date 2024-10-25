@@ -11,7 +11,6 @@ import { DatasetMetadataForm } from '../shared/form/DatasetMetadataForm'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { useLoading } from '../loading/LoadingContext'
-import { ROOT_COLLECTION_ALIAS } from '../../collection/domain/models/Collection'
 
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useCollection } from '../collection/useCollection'
