@@ -27,6 +27,12 @@ describe('useGetApiToken', () => {
         expirationDate: ''
       })
     })
+
+    await act(() => {
+      expect(result.current.isLoading).to.equal(false)
+      expect(result.current.error).to.equal(null)
+      return expect(result.current.apiTokenInfo).to.deep.equal(mockTokenInfo)
+    })
   })
 
   describe('Error Handling', () => {
@@ -44,7 +50,8 @@ describe('useGetApiToken', () => {
         return expect(result.current.error).to.equal('API Error')
       })
     })
-    it('should handle error correctly when there is no error is thrown', async () => {
+
+    it('should return correct error message when there is not an error type catched', async () => {
       apiTokenInfoRepository.getCurrentApiToken = cy.stub().rejects('Error message')
 
       const { result } = renderHook(() => useGetApiToken(apiTokenInfoRepository))

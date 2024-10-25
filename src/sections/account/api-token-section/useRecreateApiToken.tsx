@@ -21,6 +21,7 @@ export const useRecreateApiToken = (
   const initiateRecreateToken = () => {
     setShouldRecreate(true)
   }
+
   useEffect(() => {
     const recreateToken = async () => {
       setIsRecreating(true)

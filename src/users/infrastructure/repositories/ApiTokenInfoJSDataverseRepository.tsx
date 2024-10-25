@@ -1,5 +1,6 @@
 import { TokenInfo } from '../../domain/models/TokenInfo'
 import { ApiTokenInfoRepository } from '../../domain/repositories/ApiTokenInfoRepository'
+import { DateHelper } from '@/shared/helpers/DateHelper'
 import {
   getCurrentApiToken,
   recreateCurrentApiToken,
@@ -16,7 +17,7 @@ export class ApiTokenInfoJSDataverseRepository implements ApiTokenInfoRepository
     return getCurrentApiToken.execute().then((apiTokenInfo: ApiTokenInfoPayload) => {
       return {
         apiToken: apiTokenInfo.apiToken,
-        expirationDate: apiTokenInfo.expirationDate.toISOString().substring(0, 10)
+        expirationDate: DateHelper.toISO8601Format(apiTokenInfo.expirationDate)
       }
     })
   }
@@ -25,7 +26,7 @@ export class ApiTokenInfoJSDataverseRepository implements ApiTokenInfoRepository
     return recreateCurrentApiToken.execute().then((apiTokenInfo: ApiTokenInfoPayload) => {
       return {
         apiToken: apiTokenInfo.apiToken,
-        expirationDate: apiTokenInfo.expirationDate.toISOString().substring(0, 10)
+        expirationDate: DateHelper.toISO8601Format(apiTokenInfo.expirationDate)
       }
     })
   }

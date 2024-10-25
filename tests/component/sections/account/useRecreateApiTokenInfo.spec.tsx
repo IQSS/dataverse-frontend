@@ -7,7 +7,7 @@ describe('useRecreateApiToken', () => {
   let apiTokenInfoRepository: ApiTokenInfoRepository
 
   const mockTokenInfo: TokenInfo = {
-    apiToken: 'mocked-api-token',
+    apiToken: 'new-mocked-api-token',
     expirationDate: '2024-12-31'
   }
 
@@ -19,43 +19,77 @@ describe('useRecreateApiToken', () => {
     apiTokenInfoRepository.recreateApiToken = cy.stub().resolves(mockTokenInfo)
 
     const { result } = renderHook(() => useRecreateApiToken(apiTokenInfoRepository))
+
+    expect(result.current.isRecreating).to.equal(false)
+    expect(result.current.error).to.equal(null)
+    expect(result.current.tokenInfo).to.deep.equal(null)
+
+    act(() => {
+      result.current.initiateRecreateToken()
+    })
+
     await act(() => {
       expect(result.current.isRecreating).to.equal(true)
       expect(result.current.error).to.equal(null)
-      return expect(result.current.tokenInfo).to.deep.equal({
-        apiToken: '',
-        expirationDate: ''
-      })
+      return expect(result.current.tokenInfo).to.equal(null)
+    })
+
+    await act(() => {
+      expect(result.current.isRecreating).to.equal(false)
+      expect(result.current.error).to.equal(null)
+      return expect(result.current.tokenInfo).to.deep.equal(mockTokenInfo)
     })
   })
 
   describe('Error Handling', () => {
     it('should handle error correctly when an error is thrown', async () => {
-      apiTokenInfoRepository.getCurrentApiToken = cy.stub().rejects(new Error('API Error'))
+      const errorMessage = 'Failed to recreate API token.'
+      apiTokenInfoRepository.recreateApiToken = cy.stub().rejects(new Error(errorMessage))
 
       const { result } = renderHook(() => useRecreateApiToken(apiTokenInfoRepository))
 
+      expect(result.current.isRecreating).to.equal(false)
+      expect(result.current.error).to.equal(null)
+      expect(result.current.tokenInfo).to.equal(null)
+
+      act(() => {
+        result.current.initiateRecreateToken()
+      })
+
       await act(() => {
-        expect(result.current.isRecreating).to.deep.equal(true)
+        expect(result.current.isRecreating).to.equal(true)
         return expect(result.current.error).to.equal(null)
       })
+
       await act(() => {
-        expect(result.current.tokenInfo).to.deep.equal(false)
-        return expect(result.current.error).to.equal('API Error')
+        expect(result.current.isRecreating).to.equal(false)
+        expect(result.current.error).to.equal('Failed to recreate API token.')
+        return expect(result.current.tokenInfo).to.equal(null)
       })
     })
-    it('should handle error correctly when there is no error is thrown', async () => {
-      apiTokenInfoRepository.getCurrentApiToken = cy.stub().rejects('Error message')
+
+    it('should return correct error message when there is not an error type catched', async () => {
+      apiTokenInfoRepository.recreateApiToken = cy.stub().rejects('Unexpected error message')
 
       const { result } = renderHook(() => useRecreateApiToken(apiTokenInfoRepository))
 
+      expect(result.current.isRecreating).to.equal(false)
+      expect(result.current.error).to.equal(null)
+      expect(result.current.tokenInfo).to.equal(null)
+
+      act(() => {
+        result.current.initiateRecreateToken()
+      })
+
       await act(() => {
-        expect(result.current.isRecreating).to.deep.equal(true)
+        expect(result.current.isRecreating).to.equal(true)
         return expect(result.current.error).to.equal(null)
       })
+
       await act(() => {
-        expect(result.current.isRecreating).to.deep.equal(false)
-        return expect(result.current.error).to.deep.equal('Failed to fetch API token.')
+        expect(result.current.isRecreating).to.equal(false)
+        expect(result.current.error).to.equal('Failed to recreate API token.')
+        return expect(result.current.tokenInfo).to.equal(null)
       })
     })
   })
