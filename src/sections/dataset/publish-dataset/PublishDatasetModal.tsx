@@ -2,24 +2,28 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Modal, Stack } from '@iqss/dataverse-design-system'
 import { Form } from '@iqss/dataverse-design-system'
-import type { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
-import { VersionUpdateType } from '../../../dataset/domain/models/VersionUpdateType'
+import type { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { VersionUpdateType } from '@/dataset/domain/models/VersionUpdateType'
 import { useSession } from '../../session/SessionContext'
 import { License } from '../dataset-summary/License'
 import {
   DatasetNonNumericVersionSearchParam,
   defaultLicense
-} from '../../../dataset/domain/models/Dataset'
+} from '@/dataset/domain/models/Dataset'
 import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
 import { usePublishDataset } from './usePublishDataset'
 import { PublishDatasetHelpText } from './PublishDatasetHelpText'
 import styles from './PublishDatasetModal.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { QueryParamKey, Route } from '../../Route.enum'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { UpwardHierarchyNode } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 interface PublishDatasetModalProps {
   show: boolean
   repository: DatasetRepository
+  collectionRepository: CollectionRepository
+  parentCollection: UpwardHierarchyNode
   persistentId: string
   releasedVersionExists: boolean
   handleClose: () => void
@@ -30,6 +34,8 @@ interface PublishDatasetModalProps {
 export function PublishDatasetModal({
   show,
   repository,
+  collectionRepository,
+  parentCollection,
   persistentId,
   releasedVersionExists,
   handleClose,
@@ -39,8 +45,11 @@ export function PublishDatasetModal({
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const navigate = useNavigate()
+
   const { submissionStatus, submitPublish, publishError } = usePublishDataset(
     repository,
+    collectionRepository,
+    parentCollection,
     persistentId,
     onPublishSucceed
   )
@@ -71,7 +80,12 @@ export function PublishDatasetModal({
       </Modal.Header>
       <Modal.Body>
         <Stack direction="vertical">
-          <PublishDatasetHelpText releasedVersionExists={releasedVersionExists} />
+          <PublishDatasetHelpText
+            releasedVersionExists={releasedVersionExists}
+            parentCollectionIsReleased={parentCollection.isReleased}
+            parentCollectionName={parentCollection.name}
+            parentCollectionId={parentCollection.id}
+          />
           <License
             license={{
               name: defaultLicense.name,
