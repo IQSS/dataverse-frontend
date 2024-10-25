@@ -22,7 +22,9 @@ export class CreateDatasetFactory {
 
 function CreateDatasetWithSearchParams() {
   const { collectionId } = useParams<{ collectionId: string }>()
-
+  if (!collectionId) {
+    throw new Error('collectionId is required')
+  }
   return (
     <CreateDataset
       datasetRepository={datasetRepository}
