@@ -22,7 +22,7 @@ describe('useRecreateApiToken', () => {
 
     expect(result.current.isRecreating).to.equal(false)
     expect(result.current.error).to.equal(null)
-    expect(result.current.tokenInfo).to.deep.equal(null)
+    expect(result.current.apiTokenInfo).to.deep.equal(null)
 
     act(() => {
       result.current.initiateRecreateToken()
@@ -31,13 +31,13 @@ describe('useRecreateApiToken', () => {
     await act(() => {
       expect(result.current.isRecreating).to.equal(true)
       expect(result.current.error).to.equal(null)
-      return expect(result.current.tokenInfo).to.equal(null)
+      return expect(result.current.apiTokenInfo).to.equal(null)
     })
 
     await act(() => {
       expect(result.current.isRecreating).to.equal(false)
       expect(result.current.error).to.equal(null)
-      return expect(result.current.tokenInfo).to.deep.equal(mockTokenInfo)
+      return expect(result.current.apiTokenInfo).to.deep.equal(mockTokenInfo)
     })
   })
 
@@ -50,7 +50,7 @@ describe('useRecreateApiToken', () => {
 
       expect(result.current.isRecreating).to.equal(false)
       expect(result.current.error).to.equal(null)
-      expect(result.current.tokenInfo).to.equal(null)
+      expect(result.current.apiTokenInfo).to.equal(null)
 
       act(() => {
         result.current.initiateRecreateToken()
@@ -64,7 +64,7 @@ describe('useRecreateApiToken', () => {
       await act(() => {
         expect(result.current.isRecreating).to.equal(false)
         expect(result.current.error).to.equal('Failed to recreate API token.')
-        return expect(result.current.tokenInfo).to.equal(null)
+        return expect(result.current.apiTokenInfo).to.equal(null)
       })
     })
 
@@ -75,7 +75,7 @@ describe('useRecreateApiToken', () => {
 
       expect(result.current.isRecreating).to.equal(false)
       expect(result.current.error).to.equal(null)
-      expect(result.current.tokenInfo).to.equal(null)
+      expect(result.current.apiTokenInfo).to.equal(null)
 
       act(() => {
         result.current.initiateRecreateToken()
@@ -89,7 +89,7 @@ describe('useRecreateApiToken', () => {
       await act(() => {
         expect(result.current.isRecreating).to.equal(false)
         expect(result.current.error).to.equal('Failed to recreate API token.')
-        return expect(result.current.tokenInfo).to.equal(null)
+        return expect(result.current.apiTokenInfo).to.equal(null)
       })
     })
   })
