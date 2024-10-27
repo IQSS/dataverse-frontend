@@ -1,6 +1,10 @@
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
-.icon {
-  color: $dv-info-border-color;
-  line-height: 1.1;
+.errorText {
+  color: $dv-danger-color;
+}
+
+.warningText {
+  margin-bottom: 0;
+  color: $dv-warning-color;
 }

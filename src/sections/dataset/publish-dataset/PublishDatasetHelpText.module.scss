@@ -1,10 +1,4 @@
-@import "node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module";
-
-.container {
-  padding: 10px;
-  background-color: $dv-info-box-color;
-  border: 1px solid black;
-}
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
 .warningText {
   margin-bottom: 0;
