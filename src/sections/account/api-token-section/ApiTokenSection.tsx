@@ -33,7 +33,7 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
     initiateRecreateToken,
     isRecreating,
     error: recreatingError,
-    tokenInfo: updatedTokenInfo
+    apiTokenInfo: updatedTokenInfo
   } = useRecreateApiToken(repository)
 
   useEffect(() => {

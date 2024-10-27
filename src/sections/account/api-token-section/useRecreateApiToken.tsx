@@ -7,7 +7,7 @@ interface UseRecreateApiTokenResult {
   initiateRecreateToken: () => void
   isRecreating: boolean
   error: string | null
-  tokenInfo: TokenInfo | null
+  apiTokenInfo: TokenInfo | null
 }
 
 export const useRecreateApiToken = (
@@ -15,7 +15,7 @@ export const useRecreateApiToken = (
 ): UseRecreateApiTokenResult => {
   const [isRecreating, setIsRecreating] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
-  const [tokenInfo, setTokenInfo] = useState<TokenInfo | null>(null)
+  const [apiTokenInfo, setApiTokenInfo] = useState<TokenInfo | null>(null)
   const [shouldRecreate, setShouldRecreate] = useState<boolean>(false)
 
   const initiateRecreateToken = () => {
@@ -29,7 +29,7 @@ export const useRecreateApiToken = (
 
       try {
         const newTokenInfo = await recreateApiToken(repository)
-        setTokenInfo(newTokenInfo)
+        setApiTokenInfo(newTokenInfo)
       } catch (err) {
         console.error('Error recreating token:', err)
         setError('Failed to recreate API token.')
@@ -43,5 +43,5 @@ export const useRecreateApiToken = (
     }
   }, [shouldRecreate, repository])
 
-  return { initiateRecreateToken, isRecreating, error, tokenInfo }
+  return { initiateRecreateToken, isRecreating, error, apiTokenInfo }
 }
