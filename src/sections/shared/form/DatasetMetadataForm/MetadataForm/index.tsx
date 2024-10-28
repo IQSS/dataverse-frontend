@@ -2,16 +2,17 @@ import { MouseEvent, useEffect, useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FieldErrors, FormProvider, useForm } from 'react-hook-form'
-import { useSession } from '../../../../session/SessionContext'
+import { useSession } from '@/sections/session/SessionContext'
 import { Accordion, Alert, Button } from '@iqss/dataverse-design-system'
-import { type DatasetRepository } from '../../../../../dataset/domain/repositories/DatasetRepository'
-import { type MetadataBlockInfo } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
+import { type DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { type MetadataBlockInfo } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { type DatasetMetadataFormValues } from '../MetadataFieldsHelper'
 import { type DatasetMetadataFormMode } from '..'
 import { SubmissionStatus, useSubmitDataset } from '../useSubmitDataset'
 import { MetadataBlockFormFields } from './MetadataBlockFormFields'
 import { RequiredFieldText } from '../../RequiredFieldText/RequiredFieldText'
-import { SeparationLine } from '../../../layout/SeparationLine/SeparationLine'
+import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
+import { DateHelper } from '@/shared/helpers/DateHelper'
 import styles from './index.module.scss'
 
 interface FormProps {
@@ -64,6 +65,9 @@ export const MetadataForm = ({
       setValue('citation.datasetContact.0.datasetContactEmail', user.email, {
         shouldValidate: true
       })
+      setValue('citation.depositor', displayName)
+      setValue('citation.dateOfDeposit', DateHelper.toISO8601Format(new Date()))
+
       if (user.affiliation) {
         setValue('citation.datasetContact.0.datasetContactAffiliation', user.affiliation)
         setValue('citation.author.0.authorAffiliation', user.affiliation)
