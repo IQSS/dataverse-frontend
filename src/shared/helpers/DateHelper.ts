@@ -20,4 +20,7 @@ export class DateHelper {
       day: '2-digit'
     })
   }
+  static toISO8601Format(date: Date): string {
+    return date.toISOString().split('T')[0]
+  }
 }

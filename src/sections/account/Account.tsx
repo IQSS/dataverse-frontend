@@ -6,11 +6,7 @@ import { AccountHelper, AccountPanelTabKey } from './AccountHelper'
 import { ApiTokenSection } from './api-token-section/ApiTokenSection'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import styles from './Account.module.scss'
-import {
-  DvObjectType,
-  UpwardHierarchyNode
-} from '../../shared/hierarchy/domain/models/UpwardHierarchyNode'
-import { ROOT_COLLECTION_ALIAS } from '../../collection/domain/models/Collection'
+import { ApiTokenInfoJSDataverseRepository } from '@/users/infrastructure/repositories/ApiTokenInfoJSDataverseRepository'
 
 const tabsKeys = AccountHelper.ACCOUNT_PANEL_TABS_KEYS
 
@@ -21,6 +17,7 @@ interface AccountProps {
 export const Account = ({ defaultActiveTabKey }: AccountProps) => {
   const { t } = useTranslation('account')
   const { setIsLoading } = useLoading()
+  const repository = new ApiTokenInfoJSDataverseRepository()
 
   const rootHierarchy = new UpwardHierarchyNode(
     'Root',
@@ -55,7 +52,7 @@ export const Account = ({ defaultActiveTabKey }: AccountProps) => {
         </Tabs.Tab>
         <Tabs.Tab eventKey={tabsKeys.apiToken} title={t('tabs.apiToken')}>
           <div className={styles['tab-container']}>
-            <ApiTokenSection />
+            <ApiTokenSection repository={repository} />
           </div>
         </Tabs.Tab>
       </Tabs>
