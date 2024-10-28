@@ -6,6 +6,11 @@ import { AccountHelper, AccountPanelTabKey } from './AccountHelper'
 import { ApiTokenSection } from './api-token-section/ApiTokenSection'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import styles from './Account.module.scss'
+import {
+  DvObjectType,
+  UpwardHierarchyNode
+} from '../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { ROOT_COLLECTION_ALIAS } from '../../collection/domain/models/Collection'
 import { ApiTokenInfoJSDataverseRepository } from '@/users/infrastructure/repositories/ApiTokenInfoJSDataverseRepository'
 
 const tabsKeys = AccountHelper.ACCOUNT_PANEL_TABS_KEYS
