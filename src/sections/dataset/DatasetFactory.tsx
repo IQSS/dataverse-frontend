@@ -15,9 +15,7 @@ import { NotImplementedModalProvider } from '../not-implemented/NotImplementedMo
 import { AlertProvider } from '../alerts/AlertProvider'
 import { searchParamVersionToDomainVersion } from '../../router'
 import { FILES_TAB_INFINITE_SCROLL_ENABLED } from './config'
-import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
 
-const collectionRepository = new CollectionJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
@@ -68,7 +66,6 @@ function DatasetWithSearchParams() {
         searchParams={{ privateUrlToken: privateUrlToken }}
         isPublishing={publishInProgress}>
         <Dataset
-          collectionRepository={collectionRepository}
           datasetRepository={datasetRepository}
           fileRepository={fileRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
@@ -84,7 +81,6 @@ function DatasetWithSearchParams() {
       searchParams={{ persistentId: persistentId, version: version }}
       isPublishing={publishInProgress}>
       <Dataset
-        collectionRepository={collectionRepository}
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}

@@ -1,18 +1,9 @@
-import cn from 'classnames'
 import { Spinner } from '@iqss/dataverse-design-system'
 import styles from './AppLoader.module.scss'
 
-interface AppLoaderProps {
-  fullViewport?: boolean
-}
-
-export const AppLoader = ({ fullViewport = false }: AppLoaderProps) => {
+export const AppLoader = () => {
   return (
-    <section
-      className={cn(styles['app-loader'], {
-        [styles['full-viewport']]: fullViewport
-      })}
-      data-testid="app-loader">
+    <section className={styles['app-loader']}>
       <Spinner />
     </section>
   )

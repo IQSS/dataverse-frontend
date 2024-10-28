@@ -37,7 +37,6 @@ export class JSCollectionMapper {
       id,
       undefined,
       undefined,
-      undefined,
       JSUpwardHierarchyNodeMapper.toUpwardHierarchyNode(jsUpwardHierarchyNode)
     )
   }

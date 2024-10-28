@@ -22,7 +22,7 @@ export const ComposedField = ({
   rulesToApply,
   notRequiredWithChildFieldsRequired
 }: ComposedFieldProps) => {
-  const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
+  const { t } = useTranslation('datasetMetadataForm')
 
   const childFieldNamesThatMayBecomeRequired: string[] = useMemo(
     () =>

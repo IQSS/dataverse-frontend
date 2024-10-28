@@ -3,17 +3,13 @@ import { Collection } from '../../collection/domain/models/Collection'
 import { useEffect, useState } from 'react'
 import { getCollectionById } from '../../collection/domain/useCases/getCollectionById'
 
-export function useCollection(
-  collectionRepository: CollectionRepository,
-  collectionId: string,
-  published?: boolean
-) {
+export function useCollection(collectionRepository: CollectionRepository, collectionId: string) {
   const [isLoading, setIsLoading] = useState(true)
   const [collection, setCollection] = useState<Collection>()
 
   useEffect(() => {
     setIsLoading(true)
-    setCollection(undefined)
+
     getCollectionById(collectionRepository, collectionId)
       .then((collection: Collection | undefined) => {
         setCollection(collection)
@@ -24,7 +20,7 @@ export function useCollection(
       .finally(() => {
         setIsLoading(false)
       })
-  }, [collectionRepository, collectionId, published])
+  }, [collectionRepository, collectionId])
 
   return { collection, isLoading }
 }

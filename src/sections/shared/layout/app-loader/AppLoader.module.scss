@@ -4,11 +4,4 @@
   display: grid;
   place-content: center;
   min-height: $main-container-available-height;
-
-  &.full-viewport {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    min-height: unset;
-  }
 }

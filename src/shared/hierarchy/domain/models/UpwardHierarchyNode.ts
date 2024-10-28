@@ -11,7 +11,6 @@ export class UpwardHierarchyNode {
     public readonly id: string,
     public readonly persistentId?: string,
     public readonly version?: string,
-    public readonly isReleased?: boolean,
     public readonly parent?: UpwardHierarchyNode
   ) {}
 

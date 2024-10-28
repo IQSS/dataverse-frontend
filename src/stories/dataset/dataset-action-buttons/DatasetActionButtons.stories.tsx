@@ -10,7 +10,6 @@ import {
 } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 import { WithLoggedInUser } from '../../WithLoggedInUser'
 import { DatasetMockRepository } from '../DatasetMockRepository'
-import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
 
 const meta: Meta<typeof DatasetActionButtons> = {
   title: 'Sections/Dataset Page/DatasetActionButtons',
@@ -40,7 +39,6 @@ export const WithPublishPermissions: Story = {
         isValid: true
       })}
       datasetRepository={new DatasetMockRepository()}
-      collectionRepository={new CollectionMockRepository()}
     />
   )
 }
@@ -59,7 +57,6 @@ export const WithNoDatasetPermissions: Story = {
         isValid: true
       })}
       datasetRepository={new DatasetMockRepository()}
-      collectionRepository={new CollectionMockRepository()}
     />
   )
 }
@@ -82,7 +79,6 @@ export const WithUpdateAndNoPublishDatasetPermissions: Story = {
         isValid: true
       })}
       datasetRepository={new DatasetMockRepository()}
-      collectionRepository={new CollectionMockRepository()}
     />
   )
 }

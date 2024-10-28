@@ -12,7 +12,6 @@ export class UpwardHierarchyNodeMother {
       props?.id ?? faker.datatype.uuid(),
       props?.persistentId ?? undefined,
       props?.version ?? undefined,
-      props?.isReleased ?? undefined,
       props?.parent ?? undefined
     )
   }
@@ -39,8 +38,7 @@ export class UpwardHierarchyNodeMother {
       ...props,
       type: DvObjectType.COLLECTION,
       name: props?.name ?? 'Root',
-      id: props?.id ?? 'root',
-      isReleased: props?.isReleased ?? true
+      id: props?.id ?? 'root'
     })
   }
 }

@@ -40,7 +40,7 @@ export function useSubmitDataset(
   datasetPersistentID?: string
 ): UseSubmitDatasetReturnType {
   const navigate = useNavigate()
-  const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
+  const { t } = useTranslation('datasetMetadataForm')
 
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted

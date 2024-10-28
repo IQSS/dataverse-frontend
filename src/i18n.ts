@@ -16,20 +16,7 @@ void i18next
   .init({
     fallbackLng: 'en',
     supportedLngs: ['en'],
-    ns: [
-      'shared',
-      'header',
-      'footer',
-      'file',
-      'astrophysics',
-      'biomedical',
-      'citation',
-      'codeMeta20',
-      'computationalworkflow',
-      'geospatial',
-      'journal',
-      'socialscience'
-    ],
+    ns: [],
     returnNull: false,
     backend: {
       loadPath:

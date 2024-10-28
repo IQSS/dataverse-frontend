@@ -42,11 +42,6 @@ describe('Create Dataset', () => {
   })
 
   it('should show loading skeleton while loading the collection', () => {
-    const DELAYED_TIME = 200
-    collectionRepository.getById = cy.stub().callsFake(() => {
-      return Cypress.Promise.delay(DELAYED_TIME).then(() => collection)
-    })
-
     cy.customMount(
       <CreateDataset
         datasetRepository={datasetRepository}
@@ -54,11 +49,7 @@ describe('Create Dataset', () => {
         collectionRepository={collectionRepository}
       />
     )
-    cy.clock()
     cy.findByTestId('create-dataset-skeleton').should('exist')
-
-    cy.tick(DELAYED_TIME)
-    cy.findByTestId('create-dataset-skeleton').should('not.exist')
   })
 
   it('should render the correct breadcrumbs', () => {

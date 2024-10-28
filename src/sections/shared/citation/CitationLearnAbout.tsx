@@ -2,8 +2,7 @@ import { useTranslation } from 'react-i18next'
 import styles from './Citation.module.scss'
 
 export function CitationLearnAbout() {
-  const { t } = useTranslation('shared', { keyPrefix: 'citationBlock' })
-
+  const { t } = useTranslation('citationBlock')
   return (
     <div>
       <span className={styles.text}>{t('learnAbout')}</span>{' '}

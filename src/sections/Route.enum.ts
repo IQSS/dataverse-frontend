@@ -29,6 +29,5 @@ export enum QueryParamKey {
   PERSISTENT_ID = 'persistentId',
   QUERY = 'q',
   COLLECTION_ITEM_TYPES = 'types',
-  PAGE = 'page',
-  COLLECTION_ID = 'collectionId'
+  PAGE = 'page'
 }

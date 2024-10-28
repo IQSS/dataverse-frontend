@@ -5,6 +5,7 @@ import { useLoading } from '../loading/LoadingContext'
 import { AccountHelper, AccountPanelTabKey } from './AccountHelper'
 import { ApiTokenSection } from './api-token-section/ApiTokenSection'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
+import { UpwardHierarchyNodeMother } from '../../../tests/component/shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 import styles from './Account.module.scss'
 import { ApiTokenInfoJSDataverseRepository } from '@/users/infrastructure/repositories/ApiTokenInfoJSDataverseRepository'
 
@@ -19,11 +20,10 @@ export const Account = ({ defaultActiveTabKey }: AccountProps) => {
   const { setIsLoading } = useLoading()
   const repository = new ApiTokenInfoJSDataverseRepository()
 
-  const rootHierarchy = new UpwardHierarchyNode(
-    'Root',
-    DvObjectType.COLLECTION,
-    ROOT_COLLECTION_ALIAS
-  )
+  const rootHierarchy = UpwardHierarchyNodeMother.createCollection({
+    name: 'Root',
+    id: 'root'
+  })
 
   useEffect(() => {
     setIsLoading(false)

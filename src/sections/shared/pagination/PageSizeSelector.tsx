@@ -10,7 +10,7 @@ export function PageSizeSelector({
   pageSize: number
   setPageSize: (pageSize: number) => void
 }) {
-  const { t } = useTranslation('shared', { keyPrefix: 'pagination' })
+  const { t } = useTranslation('pagination')
   const availableSizes = [10, 25, 50]
 
   return (

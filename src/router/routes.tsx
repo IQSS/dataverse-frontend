@@ -1,121 +1,43 @@
-import { lazy, Suspense } from 'react'
 import { RouteObject } from 'react-router-dom'
 import { Route } from '../sections/Route.enum'
 import { Layout } from '../sections/layout/Layout'
-import { ErrorPage } from '../sections/error-page/ErrorPage'
+import { PageNotFound } from '../sections/page-not-found/PageNotFound'
+import { DatasetFactory } from '../sections/dataset/DatasetFactory'
+import { CreateDatasetFactory } from '../sections/create-dataset/CreateDatasetFactory'
+import { FileFactory } from '../sections/file/FileFactory'
+import { CollectionFactory } from '../sections/collection/CollectionFactory'
+import { UploadDatasetFilesFactory } from '../sections/upload-dataset-files/UploadDatasetFilesFactory'
+import { EditDatasetMetadataFactory } from '../sections/edit-dataset-metadata/EditDatasetMetadataFactory'
+import { CreateCollectionFactory } from '../sections/create-collection/CreateCollectionFactory'
+import { AccountFactory } from '../sections/account/AccountFactory'
 import { ProtectedRoute } from './ProtectedRoute'
-import { AppLoader } from '../sections/shared/layout/app-loader/AppLoader'
-
-const Homepage = lazy(() =>
-  import('../sections/homepage/HomepageFactory').then(({ HomepageFactory }) => ({
-    default: () => HomepageFactory.create()
-  }))
-)
-
-const CollectionPage = lazy(() =>
-  import('../sections/collection/CollectionFactory').then(({ CollectionFactory }) => ({
-    default: () => CollectionFactory.create()
-  }))
-)
-
-const DatasetPage = lazy(() =>
-  import('../sections/dataset/DatasetFactory').then(({ DatasetFactory }) => ({
-    default: () => DatasetFactory.create()
-  }))
-)
-
-const FilePage = lazy(() =>
-  import('../sections/file/FileFactory').then(({ FileFactory }) => ({
-    default: () => FileFactory.create()
-  }))
-)
-
-const CreateCollectionPage = lazy(() =>
-  import('../sections/create-collection/CreateCollectionFactory').then(
-    ({ CreateCollectionFactory }) => ({
-      default: () => CreateCollectionFactory.create()
-    })
-  )
-)
-
-const CreateDatasetPage = lazy(() =>
-  import('../sections/create-dataset/CreateDatasetFactory').then(({ CreateDatasetFactory }) => ({
-    default: () => CreateDatasetFactory.create()
-  }))
-)
-
-const UploadDatasetFilesPage = lazy(() =>
-  import('../sections/upload-dataset-files/UploadDatasetFilesFactory').then(
-    ({ UploadDatasetFilesFactory }) => ({
-      default: () => UploadDatasetFilesFactory.create()
-    })
-  )
-)
-
-const EditDatasetMetadataPage = lazy(() =>
-  import('../sections/edit-dataset-metadata/EditDatasetMetadataFactory').then(
-    ({ EditDatasetMetadataFactory }) => ({
-      default: () => EditDatasetMetadataFactory.create()
-    })
-  )
-)
-
-const AccountPage = lazy(() =>
-  import('../sections/account/AccountFactory').then(({ AccountFactory }) => ({
-    default: () => AccountFactory.create()
-  }))
-)
+import { HomepageFactory } from '../sections/homepage/HomepageFactory'
 
 export const routes: RouteObject[] = [
   {
     path: '/',
     element: <Layout />,
-    errorElement: <ErrorPage fullViewport />,
+    errorElement: <PageNotFound />,
     children: [
       {
         path: Route.HOME,
-        element: (
-          <Suspense fallback={<AppLoader />}>
-            <Homepage />
-          </Suspense>
-        ),
-        errorElement: <ErrorPage />
+        element: HomepageFactory.create()
       },
       {
         path: Route.COLLECTIONS_BASE,
-        element: (
-          <Suspense fallback={<AppLoader />}>
-            <CollectionPage />
-          </Suspense>
-        ),
-        errorElement: <ErrorPage />
+        element: CollectionFactory.create()
       },
       {
         path: Route.COLLECTIONS,
-        element: (
-          <Suspense fallback={<AppLoader />}>
-            <CollectionPage />
-          </Suspense>
-        ),
-        errorElement: <ErrorPage />
+        element: CollectionFactory.create()
       },
       {
         path: Route.DATASETS,
-        element: (
-          <Suspense fallback={<AppLoader />}>
-            <DatasetPage />
-          </Suspense>
-        ),
-        errorElement: <ErrorPage />
+        element: DatasetFactory.create()
       },
       {
         path: Route.FILES,
-        element: (
-          <Suspense fallback={<AppLoader />}>
-            <FilePage />
-          </Suspense>
-        ),
-        errorElement: <ErrorPage />
+        element: FileFactory.create()
       },
       // 🔐 Protected routes are only accessible to authenticated users
       {
@@ -123,48 +45,23 @@ export const routes: RouteObject[] = [
         children: [
           {
             path: Route.CREATE_COLLECTION,
-            element: (
-              <Suspense fallback={<AppLoader />}>
-                <CreateCollectionPage />
-              </Suspense>
-            ),
-            errorElement: <ErrorPage />
+            element: CreateCollectionFactory.create()
           },
           {
             path: Route.CREATE_DATASET,
-            element: (
-              <Suspense fallback={<AppLoader />}>
-                <CreateDatasetPage />
-              </Suspense>
-            ),
-            errorElement: <ErrorPage />
+            element: CreateDatasetFactory.create()
           },
           {
             path: Route.UPLOAD_DATASET_FILES,
-            element: (
-              <Suspense fallback={<AppLoader />}>
-                <UploadDatasetFilesPage />
-              </Suspense>
-            ),
-            errorElement: <ErrorPage />
+            element: UploadDatasetFilesFactory.create()
           },
           {
             path: Route.EDIT_DATASET_METADATA,
-            element: (
-              <Suspense fallback={<AppLoader />}>
-                <EditDatasetMetadataPage />
-              </Suspense>
-            ),
-            errorElement: <ErrorPage />
+            element: EditDatasetMetadataFactory.create()
           },
           {
             path: Route.ACCOUNT,
-            element: (
-              <Suspense fallback={<AppLoader />}>
-                <AccountPage />
-              </Suspense>
-            ),
-            errorElement: <ErrorPage />
+            element: AccountFactory.create()
           }
         ]
       }

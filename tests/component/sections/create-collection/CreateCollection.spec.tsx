@@ -48,11 +48,6 @@ describe('CreateCollection', () => {
   })
 
   it('should show loading skeleton while loading the owner collection', () => {
-    const DELAYED_TIME = 200
-    collectionRepository.getById = cy.stub().callsFake(() => {
-      return Cypress.Promise.delay(DELAYED_TIME).then(() => collection)
-    })
-
     cy.customMount(
       <CreateCollection
         collectionRepository={collectionRepository}
@@ -60,15 +55,8 @@ describe('CreateCollection', () => {
         ownerCollectionId="root"
       />
     )
-    cy.clock()
 
     cy.findByTestId('create-collection-skeleton').should('exist')
-
-    cy.tick(DELAYED_TIME)
-
-    cy.findByTestId('create-collection-skeleton').should('not.exist')
-
-    cy.clock().then((clock) => clock.restore())
   })
 
   it('should render the correct breadcrumbs', () => {
