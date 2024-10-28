@@ -69,10 +69,9 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
   }
 
   if (getError || recreatingError || revokingError) {
-    console.error('Error getting the API token:', error, recreatingError, revokingError)
     return (
       <Alert variant="danger" dismissible={false}>
-        {recreatingError}
+        {getError || recreatingError || revokingError}
       </Alert>
     )
   }
