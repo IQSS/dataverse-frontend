@@ -11,6 +11,9 @@ const apiTokenInfoRepository = new ApiTokenInfoJSDataverseRepository()
 describe('API Token Info JSDataverse Repository', () => {
   before(() => TestsUtils.setup())
   beforeEach(() => TestsUtils.login())
+  it('revoke the API token', async () => {
+    await expect(apiTokenInfoRepository.deleteApiToken()).to.be.fulfilled
+  })
 
   it('create or recreate the API token and return the new token info', async () => {
     const recreatedTokenInfo = await apiTokenInfoRepository.recreateApiToken()
@@ -21,16 +24,12 @@ describe('API Token Info JSDataverse Repository', () => {
     expect(recreatedTokenInfo).to.have.property('expirationDate').that.is.a('string')
   })
 
-  it('fetche the current API token', async () => {
+  it('fetch the current API token', async () => {
     const tokenInfo = await apiTokenInfoRepository.getCurrentApiToken()
     if (!tokenInfo) {
       throw new Error('API Token not found')
     }
     expect(tokenInfo).to.have.property('apiToken').that.is.a('string')
     expect(tokenInfo).to.have.property('expirationDate').that.is.a('string')
-  })
-
-  it('revoke the API token', async () => {
-    await expect(apiTokenInfoRepository.deleteApiToken()).to.be.fulfilled
   })
 })
