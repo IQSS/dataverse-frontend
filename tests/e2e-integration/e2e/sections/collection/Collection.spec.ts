@@ -5,13 +5,9 @@ import { CollectionHelper } from '../../../shared/collection/CollectionHelper'
 
 describe('Collection Page', () => {
   const title = faker.lorem.sentence()
-  before(() => {
-    TestsUtils.setup()
-    TestsUtils.login()
-  })
-
   beforeEach(() => {
     TestsUtils.login()
+    TestsUtils.setup()
   })
 
   it('successfully loads root collection when accessing the home', () => {
@@ -71,15 +67,6 @@ describe('Collection Page', () => {
     cy.get(`h1`)
       .findByText(/Create Dataset/i)
       .should('exist')
-  })
-
-  it('log out Dataverse Admin user', () => {
-    cy.visit('/spa/collections')
-    cy.findAllByText(/Root/i).should('exist')
-
-    cy.findByText(/Dataverse Admin/i).click()
-    cy.findByRole('button', { name: /Log Out/i }).click()
-    cy.findByText(/Dataverse Admin/i).should('not.exist')
   })
 
   describe.skip('Currently skipping all tests as we are only rendering an infinite scrollable container. Please refactor these tests if a toggle button is added to switch between pagination and infinite scroll.', () => {

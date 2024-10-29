@@ -7,16 +7,17 @@ export class DataverseApiHelper {
 
   static setup() {
     this.API_URL = `${TestsUtils.DATAVERSE_BACKEND_URL}/api`
-    // TODO - Replace with an ajax call to the API
-    cy.getApiToken().then((token) => {
-      this.API_TOKEN = token
-    })
-    void this.request('/admin/settings/:MaxEmbargoDurationInMonths', 'PUT', -1)
-    void this.request(
-      '/admin/settings/:AnonymizedFieldTypeNames',
-      'PUT',
-      'author, datasetContact, contributor, depositor, grantNumber, publication'
-    )
+    const token = this.getLocalStorageItem<string>('ROCP_token')
+
+    if (token) {
+      console.log('Setting embargo and anonymized field types')
+      void this.request('/admin/settings/:MaxEmbargoDurationInMonths', 'PUT', -1)
+      void this.request(
+        '/admin/settings/:AnonymizedFieldTypeNames',
+        'PUT',
+        'author, datasetContact, contributor, depositor, grantNumber, publication'
+      )
+    }
   }
 
   static async request<T>(
@@ -27,16 +28,29 @@ export class DataverseApiHelper {
     contentType = 'application/json'
   ): Promise<T> {
     const isFormData = contentType === 'multipart/form-data'
+
     const config: AxiosRequestConfig = {
       url: `${this.API_URL}${url}`,
       method: method,
       headers: {
-        'X-Dataverse-key': this.API_TOKEN,
         'Content-Type': contentType
       },
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      data: isFormData ? this.createFormData(data) : data
+      data: isFormData ? this.createFormData(data) : data,
+      withCredentials: false
     }
+
+    // Intercept the request to add the token
+    axios.interceptors.request.use((config) => {
+      const token = this.getLocalStorageItem<string>('ROCP_token')
+
+      console.log('%cRequest with Token:', 'background: green; color: white;', token)
+
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
+      return config
+    })
 
     const response: { data: { data: T } } = await axios(config)
     return response.data.data
@@ -62,5 +76,15 @@ export class DataverseApiHelper {
     }
 
     return formData
+  }
+
+  static getLocalStorageItem<T>(key: string): T | null {
+    try {
+      const item = localStorage.getItem(key)
+      return item ? (JSON.parse(item) as T) : null
+    } catch (error) {
+      console.error(`Error parsing localStorage key "${key}":`, error)
+      return null
+    }
   }
 }

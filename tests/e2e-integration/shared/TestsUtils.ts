@@ -1,7 +1,6 @@
 import { ApiConfig } from '@iqss/dataverse-client-javascript/dist/core'
 import { DataverseApiHelper } from './DataverseApiHelper'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
-import { UserJSDataverseRepository } from '../../../src/users/infrastructure/repositories/UserJSDataverseRepository'
 import { DatasetHelper } from './datasets/DatasetHelper'
 import { DATAVERSE_BACKEND_URL } from '../../../src/config'
 
@@ -9,12 +8,18 @@ export class TestsUtils {
   static readonly DATAVERSE_BACKEND_URL = DATAVERSE_BACKEND_URL
 
   static setup() {
-    ApiConfig.init(`${this.DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.SESSION_COOKIE)
+    ApiConfig.init(`${this.DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
     DataverseApiHelper.setup()
   }
 
   static login() {
-    return cy.loginAsAdmin() // TODO - Replace with an ajax call to the API
+    return cy.loginAsAdmin()
+  }
+
+  static enterCredentialsInKeycloak() {
+    cy.get('#username').type('dataverse-admin@mailinator.com')
+    cy.get('#password').type('admin')
+    cy.get('#kc-login').click()
   }
 
   static wait(ms: number): Promise<void> {
@@ -24,7 +29,7 @@ export class TestsUtils {
   }
 
   static logout() {
-    return new UserJSDataverseRepository().removeAuthenticated()
+    return cy.logout()
   }
 
   static async waitForNoLocks(persistentId: string, maxRetries = 20, delay = 1000): Promise<void> {

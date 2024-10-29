@@ -46,6 +46,7 @@ import i18next from '../../src/i18n'
 import { UserRepository } from '../../src/users/domain/repositories/UserRepository'
 import { SessionProvider } from '../../src/sections/session/SessionProvider'
 import { MemoryRouter } from 'react-router-dom'
+import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
 
 // Define your custom mount function
 
@@ -77,25 +78,19 @@ Cypress.Commands.add('mountSuperuser', (component: ReactNode) => {
   return cy.customMount(<SessionProvider repository={userRepository}>{component}</SessionProvider>)
 })
 
-Cypress.Commands.add('loginAsAdmin', (go?: string) => {
-  cy.visit('/')
-  cy.get('#topNavBar').then((navbar) => {
-    if (navbar.find('ul > li:nth-child(6) > a').text().includes('Log In')) {
-      cy.findAllByRole('link', { name: /Log In/i })
-        .first()
-        .click()
-      cy.findByLabelText('Username/Email').type('dataverseAdmin')
-      cy.findByLabelText('Password').type('admin1')
-      cy.findByRole('button', { name: /Log In/i }).click()
-      cy.findAllByText(/Dataverse Admin/i).should('exist')
-      if (go) cy.visit(go)
-    }
-  })
+Cypress.Commands.add('loginAsAdmin', () => {
+  cy.visit('/spa/')
+  cy.findByTestId('oidc-login').click()
+
+  TestsUtils.enterCredentialsInKeycloak()
+
+  cy.url().should('eq', `${Cypress.config().baseUrl as string}/spa`)
 })
 
-Cypress.Commands.add('getApiToken', () => {
-  cy.loginAsAdmin('/dataverseuser.xhtml?selectTab=dataRelatedToMe')
-  return cy.findByRole('link', { name: 'API Token' }).click().get('#apiToken code').invoke('text')
+Cypress.Commands.add('logout', () => {
+  cy.visit('/spa/')
+  cy.get('#dropdown-user').click()
+  cy.findByTestId('oidc-logout').click()
 })
 
 Cypress.Commands.add('compareDate', (date, expectedDate) => {
