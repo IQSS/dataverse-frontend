@@ -50,3 +50,5 @@ export class CollectionHelper extends DataverseApiHelper {
     return collectionResponse
   }
 }
+
+export const ROOT_COLLECTION_ALIAS = 'root'

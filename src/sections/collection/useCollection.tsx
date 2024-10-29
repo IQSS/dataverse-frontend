@@ -5,7 +5,7 @@ import { getCollectionById } from '../../collection/domain/useCases/getCollectio
 
 export function useCollection(
   collectionRepository: CollectionRepository,
-  collectionId: string,
+  collectionId?: string | undefined,
   published?: boolean
 ) {
   const [isLoading, setIsLoading] = useState(true)
@@ -15,7 +15,8 @@ export function useCollection(
     setIsLoading(true)
     setCollection(undefined)
     getCollectionById(collectionRepository, collectionId)
-      .then((collection: Collection | undefined) => {
+      .then((collection: Collection) => {
+        console.log('useCollection: returning collection', collection)
         setCollection(collection)
       })
       .catch((error) => {

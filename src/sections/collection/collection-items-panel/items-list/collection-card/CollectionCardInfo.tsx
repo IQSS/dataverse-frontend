@@ -1,6 +1,4 @@
-import { useParams } from 'react-router-dom'
 import { Stack } from '@iqss/dataverse-design-system'
-import { ROOT_COLLECTION_ALIAS } from '@/collection/domain/models/Collection'
 import { CollectionItemTypePreview } from '@/collection/domain/models/CollectionItemTypePreview'
 import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { DateHelper } from '@/shared/helpers/DateHelper'
@@ -10,11 +8,15 @@ import styles from './CollectionCard.module.scss'
 
 interface CollectionCardInfoProps {
   collectionPreview: CollectionItemTypePreview
+  parentCollectionAlias: string
 }
 
-export function CollectionCardInfo({ collectionPreview }: CollectionCardInfoProps) {
-  const { collectionId = ROOT_COLLECTION_ALIAS } = useParams<{ collectionId: string }>()
-  const isStandingOnParentCollectionPage = collectionPreview.parentCollectionAlias === collectionId
+export function CollectionCardInfo({
+  collectionPreview,
+  parentCollectionAlias
+}: CollectionCardInfoProps) {
+  const isStandingOnParentCollectionPage =
+    collectionPreview.parentCollectionAlias === parentCollectionAlias
 
   return (
     <div className={styles['card-info-container']}>

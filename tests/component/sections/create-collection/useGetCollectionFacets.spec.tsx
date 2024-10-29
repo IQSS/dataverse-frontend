@@ -2,7 +2,8 @@ import { act, renderHook } from '@testing-library/react'
 import { useGetCollectionFacets } from '../../../../src/sections/create-collection/useGetCollectionFacets'
 import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
 import { CollectionFacetMother } from '../../collection/domain/models/CollectionFacetMother'
-import { ROOT_COLLECTION_ALIAS } from '../../../../src/collection/domain/models/Collection'
+
+import { ROOT_COLLECTION_ALIAS } from '@tests/e2e-integration/shared/collection/CollectionHelper'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const collectionFacetsMock = CollectionFacetMother.createFacets()

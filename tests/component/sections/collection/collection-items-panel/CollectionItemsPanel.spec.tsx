@@ -1,5 +1,4 @@
 import { CollectionItemsPanel } from '@/sections/collection/collection-items-panel/CollectionItemsPanel'
-import { ROOT_COLLECTION_ALIAS } from '@/collection/domain/models/Collection'
 import {
   CollectionItem,
   CollectionItemSubset
@@ -7,6 +6,8 @@ import {
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
+
+import { ROOT_COLLECTION_ALIAS } from '@tests/e2e-integration/shared/collection/CollectionHelper'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 

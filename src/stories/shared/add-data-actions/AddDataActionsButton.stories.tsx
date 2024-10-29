@@ -1,7 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import AddDataActionsButton from '../../../sections/shared/add-data-actions/AddDataActionsButton'
-import { ROOT_COLLECTION_ALIAS } from '../../../collection/domain/models/Collection'
+
+import { ROOT_COLLECTION_ALIAS } from '@tests/e2e-integration/shared/collection/CollectionHelper'
 
 const meta: Meta<typeof AddDataActionsButton> = {
   title: 'Sections/Shared/AddDataActions/AddDataActionsButton',

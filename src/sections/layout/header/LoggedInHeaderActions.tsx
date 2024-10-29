@@ -6,7 +6,6 @@ import { useSession } from '../../session/SessionContext'
 import { RouteWithParams, Route } from '../../Route.enum'
 import { User } from '../../../users/domain/models/User'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
-import { ROOT_COLLECTION_ALIAS } from '../../../collection/domain/models/Collection'
 import { AccountHelper } from '../../account/AccountHelper'
 import { useCollection } from '@/sections/collection/useCollection'
 import Skeleton from 'react-loading-skeleton'
@@ -25,10 +24,10 @@ export const LoggedInHeaderActions = ({
   const { t } = useTranslation('header')
   const { logout } = useSession()
   const navigate = useNavigate()
-  const { collection, isLoading } = useCollection(collectionRepository, ROOT_COLLECTION_ALIAS)
+  const { collection, isLoading } = useCollection(collectionRepository)
 
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
-    collectionIdOrAlias: ROOT_COLLECTION_ALIAS,
+    collectionIdOrAlias: undefined,
     collectionRepository: collectionRepository
   })
 

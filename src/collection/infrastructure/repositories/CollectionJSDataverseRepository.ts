@@ -18,7 +18,8 @@ import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCr
 import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
-  getById(id: string): Promise<Collection> {
+  getById(id?: string): Promise<Collection> {
+    console.log('calling getCollection.execute with id:', id)
     return getCollection
       .execute(id)
       .then((jsCollection) => JSCollectionMapper.toCollection(jsCollection))
@@ -30,11 +31,11 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
       .then((newCollectionIdentifier) => newCollectionIdentifier)
   }
 
-  getFacets(collectionIdOrAlias: number | string): Promise<CollectionFacet[]> {
+  getFacets(collectionIdOrAlias?: number | string): Promise<CollectionFacet[]> {
     return getCollectionFacets.execute(collectionIdOrAlias).then((facets) => facets)
   }
 
-  getUserPermissions(collectionIdOrAlias: number | string): Promise<CollectionUserPermissions> {
+  getUserPermissions(collectionIdOrAlias?: number | string): Promise<CollectionUserPermissions> {
     return getCollectionUserPermissions
       .execute(collectionIdOrAlias)
       .then((jsCollectionUserPermissions) => jsCollectionUserPermissions)
