@@ -3,8 +3,6 @@ import { useGetCollectionFacets } from '../../../../src/sections/create-collecti
 import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
 import { CollectionFacetMother } from '../../collection/domain/models/CollectionFacetMother'
 
-import { ROOT_COLLECTION_ALIAS } from '@tests/e2e-integration/shared/collection/CollectionHelper'
-
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const collectionFacetsMock = CollectionFacetMother.createFacets()
 
@@ -15,7 +13,7 @@ describe('useGetCollectionFacets', () => {
     const { result } = renderHook(() =>
       useGetCollectionFacets({
         collectionRepository,
-        collectionId: ROOT_COLLECTION_ALIAS
+        collectionId: 'collectionId'
       })
     )
 
@@ -38,7 +36,7 @@ describe('useGetCollectionFacets', () => {
       const { result } = renderHook(() =>
         useGetCollectionFacets({
           collectionRepository,
-          collectionId: ROOT_COLLECTION_ALIAS
+          collectionId: 'collectionId'
         })
       )
 
@@ -59,7 +57,7 @@ describe('useGetCollectionFacets', () => {
       const { result } = renderHook(() =>
         useGetCollectionFacets({
           collectionRepository,
-          collectionId: ROOT_COLLECTION_ALIAS
+          collectionId: 'collectionId'
         })
       )
 
