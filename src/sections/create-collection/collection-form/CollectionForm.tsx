@@ -1,4 +1,4 @@
-import { MouseEvent, useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -18,6 +18,7 @@ import { SeparationLine } from '../../shared/layout/SeparationLine/SeparationLin
 import { TopFieldsSection } from './top-fields-section/TopFieldsSection'
 import { MetadataFieldsSection } from './metadata-fields-section/MetadataFieldsSection'
 import { BrowseSearchFacetsSection } from './browse-search-facets-section/BrowseSearchFacetsSection'
+import { RouteWithParams } from '@/sections/Route.enum'
 import styles from './CollectionForm.module.scss'
 
 export const METADATA_BLOCKS_NAMES_GROUPER = 'metadataBlockNames'
@@ -132,9 +133,8 @@ export const CollectionForm = ({
     }
   }
 
-  const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-    navigate(-1)
+  const handleCancel = () => {
+    navigate(RouteWithParams.COLLECTIONS(ownerCollectionId))
   }
 
   const disableSubmitButton = useMemo(() => {
