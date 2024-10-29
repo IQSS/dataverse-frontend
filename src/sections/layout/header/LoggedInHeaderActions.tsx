@@ -57,7 +57,7 @@ export const LoggedInHeaderActions = ({
           to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}`}>
           {t('navigation.apiToken')}
         </Navbar.Dropdown.Item>
-        <Navbar.Dropdown.Item href="#" onClick={handleOidcLogout}>
+        <Navbar.Dropdown.Item href="#" onClick={handleOidcLogout} data-testid="oidc-logout">
           {t('logOut')}
         </Navbar.Dropdown.Item>
       </Navbar.Dropdown>

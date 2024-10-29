@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { AuthContext } from 'react-oauth2-code-pkce'
 import { AppLoader } from '../sections/shared/layout/app-loader/AppLoader'
 import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
+import { useSession } from '@/sections/session/SessionContext'
 
 /**
  * This component is responsible for protecting routes that require authentication.
@@ -12,19 +13,22 @@ import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/Au
 
 export const ProtectedRoute = () => {
   const { pathname, search } = useLocation()
-  const { token, loginInProgress, logIn: oidcLogin } = useContext(AuthContext)
+  const { token, loginInProgress: oidcLoginInProgress, logIn: oidcLogin } = useContext(AuthContext)
+  const { user, isLoadingUser } = useSession()
+
+  const isSafeToRenderProtectedRoute = !oidcLoginInProgress && !isLoadingUser && token && user
 
   useEffect(() => {
-    if (loginInProgress) return
+    if (oidcLoginInProgress || isLoadingUser) return
 
     if (!token) {
       const state = encodeReturnToPathInStateQueryParam(`${pathname}${search}`)
 
       oidcLogin(state)
     }
-  }, [token, oidcLogin, pathname, loginInProgress, search])
+  }, [token, oidcLogin, oidcLoginInProgress, isLoadingUser, pathname, search])
 
-  if (loginInProgress) {
+  if (!isSafeToRenderProtectedRoute) {
     return <AppLoader />
   }
 

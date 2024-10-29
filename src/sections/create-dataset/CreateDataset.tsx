@@ -74,7 +74,7 @@ export function CreateDataset({
   return (
     <>
       <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
-      <article>
+      <section>
         <BreadcrumbsGenerator
           hierarchy={collection?.hierarchy}
           withActionItem
@@ -92,7 +92,7 @@ export function CreateDataset({
           datasetRepository={datasetRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
         />
-      </article>
+      </section>
     </>
   )
 }

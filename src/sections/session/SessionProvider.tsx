@@ -12,13 +12,13 @@ interface SessionProviderProps {
 export function SessionProvider({ repository, children }: PropsWithChildren<SessionProviderProps>) {
   const { token, loginInProgress } = useContext(AuthContext)
   const [user, setUser] = useState<User | null>(null)
-  const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true)
+  const [isLoadingUser, setIsLoadingUser] = useState<boolean>(false)
 
   useEffect(() => {
     const handleGetUser = async () => {
       setIsLoadingUser(true)
       try {
-        const user: User | void = await getUser(repository)
+        const user: User = await getUser(repository)
 
         user && setUser(user)
       } catch (error) {

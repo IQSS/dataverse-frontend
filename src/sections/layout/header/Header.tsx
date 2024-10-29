@@ -37,7 +37,11 @@ export function Header() {
       {user ? (
         <LoggedInHeaderActions user={user} collectionRepository={collectionRepository} />
       ) : (
-        <Button onClick={handleOidcLogIn} variant="link" className={styles['login-btn']}>
+        <Button
+          onClick={handleOidcLogIn}
+          variant="link"
+          className={styles['login-btn']}
+          data-testid="oidc-login">
           {t('logIn')}
         </Button>
       )}
