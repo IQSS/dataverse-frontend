@@ -4,6 +4,7 @@ import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { WithLoggedInUser } from '../WithLoggedInUser'
 import { AccountHelper } from '../../sections/account/AccountHelper'
+import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
 
 const meta: Meta<typeof Account> = {
   title: 'Pages/Account',
@@ -18,5 +19,10 @@ export default meta
 type Story = StoryObj<typeof Account>
 
 export const APITokenTab: Story = {
-  render: () => <Account defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken} />
+  render: () => (
+    <Account
+      collectionRepository={new CollectionMockRepository()}
+      defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
+    />
+  )
 }

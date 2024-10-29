@@ -7,7 +7,7 @@ import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemS
 import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
 
 export class CollectionLoadingMockRepository extends CollectionMockRepository {
-  getById(_id: string): Promise<Collection> {
+  getById(_id?: string): Promise<Collection> {
     return new Promise(() => {})
   }
   create(_collection: CollectionDTO, _hostCollection?: string): Promise<number> {
