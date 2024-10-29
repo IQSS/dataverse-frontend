@@ -1,4 +1,4 @@
-import { AuthProvider, TAuthConfig, TRefreshTokenExpiredEvent } from 'react-oauth2-code-pkce'
+import { AuthProvider, TAuthConfig } from 'react-oauth2-code-pkce'
 import { ApiConfig } from '@iqss/dataverse-client-javascript/dist/core'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 import { Router } from './router'
@@ -25,8 +25,6 @@ const authConfig: TAuthConfig = {
   logoutRedirect: `${origin}${BASENAME_URL}`,
   redirectUri: `${origin}${BASENAME_URL}${Route.AUTH_CALLBACK}`,
   scope: 'openid',
-  onRefreshTokenExpire: (event: TRefreshTokenExpiredEvent) =>
-    event.logIn(undefined, undefined, 'popup'),
   autoLogin: false,
   clearURL: false
 }
