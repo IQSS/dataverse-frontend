@@ -21,7 +21,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
-        collectionId="collection"
+        collectionIdFromParams="collection"
         created={false}
         published={false}
         collectionQueryParams={{ pageQuery: 1 }}
@@ -46,7 +46,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
-        collectionId="collection"
+        collectionIdFromParams="collection"
         created={false}
         published={false}
         collectionQueryParams={{ pageQuery: 1 }}
@@ -60,7 +60,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
-        collectionId="collection"
+        collectionIdFromParams="collection"
         created={false}
         published={false}
         collectionQueryParams={{ pageQuery: 1 }}
@@ -74,7 +74,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
-        collectionId="collection"
+        collectionIdFromParams="collection"
         created={false}
         published={false}
         collectionQueryParams={{ pageQuery: 1 }}
@@ -87,7 +87,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
-        collectionId="collection"
+        collectionIdFromParams="collection"
         created={false}
         published={false}
         collectionQueryParams={{ pageQuery: 1 }}
@@ -100,7 +100,7 @@ describe('Collection page', () => {
     cy.mountAuthenticated(
       <Collection
         collectionRepository={collectionRepository}
-        collectionId="collection"
+        collectionIdFromParams="collection"
         created={false}
         published={false}
         collectionQueryParams={{ pageQuery: 1 }}
@@ -118,7 +118,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
-        collectionId="collection"
+        collectionIdFromParams="collection"
         created
         published={false}
         collectionQueryParams={{ pageQuery: 1 }}
@@ -131,7 +131,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
-        collectionId="collection"
+        collectionIdFromParams="collection"
         created={false}
         published={true}
         collectionQueryParams={{ pageQuery: 1 }}
@@ -152,7 +152,7 @@ describe('Collection page', () => {
     cy.mountAuthenticated(
       <Collection
         collectionRepository={collectionRepository}
-        collectionId="collection"
+        collectionIdFromParams="collection"
         created={false}
         published={false}
         collectionQueryParams={{ pageQuery: 1 }}
