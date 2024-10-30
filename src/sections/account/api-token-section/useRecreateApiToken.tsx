@@ -38,6 +38,7 @@ export const useRecreateApiToken = (
         setShouldRecreate(false)
       }
     }
+
     if (shouldRecreate) {
       void recreateToken()
     }

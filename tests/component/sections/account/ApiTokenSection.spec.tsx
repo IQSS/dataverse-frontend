@@ -18,20 +18,20 @@ describe('ApiTokenSection', () => {
       recreateApiToken: cy.stub().resolves(mockApiTokenInfo),
       deleteApiToken: cy.stub().resolves()
     }
+
     cy.mountAuthenticated(<ApiTokenSection repository={apiTokenRepository} />)
   })
 
   it('should show the loading skeleton while fetching the token', () => {
-    // Simulate a delayed API response
     apiTokenRepository.getCurrentApiToken = cy.stub().callsFake(() => {
       return Cypress.Promise.delay(500).then(() => mockApiTokenInfo)
     })
 
     cy.mount(<ApiTokenSection repository={apiTokenRepository} />)
-    cy.get('[data-testid="loadingSkeleton"]').should('exist') // Verify loading skeleton exists
+    cy.get('[data-testid="loadingSkeleton"]').should('exist')
 
-    cy.wait(500) // Wait for the delay to finish
-    cy.get('[data-testid="loadingSkeleton"]').should('not.exist') // Verify skeleton is gone
+    cy.wait(500)
+    cy.get('[data-testid="loadingSkeleton"]').should('not.exist')
   })
 
   it('should copy the api token to the clipboard', () => {

@@ -39,5 +39,5 @@ export const useGetApiToken = (repository: ApiTokenInfoRepository): UseGetApiTok
     void fetchTokenInfo()
   }, [fetchTokenInfo])
 
-  return { error, apiTokenInfo, isLoading }
+  return { isLoading, error, apiTokenInfo }
 }
