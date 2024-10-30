@@ -7,8 +7,7 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 
-import { ROOT_COLLECTION_ALIAS } from '@tests/e2e-integration/shared/collection/CollectionHelper'
-
+const ROOT_COLLECTION_ALIAS = 'root'
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 
 const totalItemCount = 200

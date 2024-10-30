@@ -4,7 +4,7 @@ import { FileData } from '../files/FileHelper'
 import { DatasetLockReason } from '../../../../src/dataset/domain/models/Dataset'
 import { TestsUtils } from '../TestsUtils'
 
-import { ROOT_COLLECTION_ALIAS } from '@tests/e2e-integration/shared/collection/CollectionHelper'
+import { ROOT_COLLECTION_ALIAS } from '@tests/e2e-integration/shared/collection/ROOT_COLLECTION_ALIAS'
 
 export interface DatasetResponse {
   persistentId: string
