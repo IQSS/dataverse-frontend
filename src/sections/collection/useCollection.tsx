@@ -16,7 +16,6 @@ export function useCollection(
     setCollection(undefined)
     getCollectionById(collectionRepository, collectionId)
       .then((collection: Collection) => {
-        console.log('useCollection: returning collection', collection)
         setCollection(collection)
       })
       .catch((error) => {

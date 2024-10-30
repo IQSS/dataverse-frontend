@@ -43,7 +43,6 @@ export class CollectionHelper extends DataverseApiHelper {
   }
   static async createAndPublish(id = 'subcollection'): Promise<CollectionResponse> {
     const collectionResponse = await CollectionHelper.create(id)
-    console.log(collectionResponse)
     if (!collectionResponse.isReleased) {
       await CollectionHelper.publish(collectionResponse.id)
     }

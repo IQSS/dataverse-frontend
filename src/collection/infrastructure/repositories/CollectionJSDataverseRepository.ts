@@ -19,7 +19,6 @@ import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id?: string): Promise<Collection> {
-    console.log('calling getCollection.execute with id:', id)
     return getCollection
       .execute(id)
       .then((jsCollection) => JSCollectionMapper.toCollection(jsCollection))
