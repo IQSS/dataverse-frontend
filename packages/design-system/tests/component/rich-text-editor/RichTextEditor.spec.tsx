@@ -66,6 +66,7 @@ describe('RichTextEditor', () => {
 
       cy.findByLabelText('Heading 1').should('have.attr', 'aria-pressed', 'true')
     })
+
     it('should apply the heading 2', () => {
       cy.mount(<RichTextEditor editorContentId={editorContentId} />)
 
@@ -77,6 +78,7 @@ describe('RichTextEditor', () => {
 
       cy.findByLabelText('Heading 2').should('have.attr', 'aria-pressed', 'true')
     })
+
     it('should apply the heading 3', () => {
       cy.mount(<RichTextEditor editorContentId={editorContentId} />)
 
