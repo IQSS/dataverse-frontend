@@ -219,7 +219,11 @@ The environment is accessible through the following URLs:
 >
 > Given that at the moment the SPA only supports file uploading through direct upload (S3), the storage selector on the create collection
 > page is disabled. The collection is always created using the default storage, which must be S3
-
+>
+> #### Account Page BreadCrumbs
+>
+> The Account Page has been updated to remove breadcrumbs, as the page is not part of the main navigation.
+>
 </details>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

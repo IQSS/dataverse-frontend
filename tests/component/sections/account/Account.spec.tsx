@@ -1,27 +1,16 @@
 import { Account } from '../../../../src/sections/account/Account'
 import { AccountHelper } from '../../../../src/sections/account/AccountHelper'
-import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
-const collectionRepository = {} as CollectionRepository
-const collection = CollectionMother.create({ name: 'Root' })
 
 describe('Account', () => {
-  beforeEach(() => {
-    collectionRepository.getById = cy.stub().resolves(collection)
-  })
-  it('should render the correct breadcrumbs', () => {
+  it('should render the component', () => {
     cy.mountAuthenticated(
-      <Account
-        collectionRepository={collectionRepository}
-        defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
-      />
+      <Account defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken} />
     )
 
-    cy.findByRole('link', { name: 'Root' }).should('exist')
-
-    cy.get('li[aria-current="page"]')
-      .should('exist')
-      .should('have.text', 'Account')
-      .should('have.class', 'active')
+    cy.get('h1').should('contain.text', 'Account')
+    cy.findByRole('tab', { name: 'My Data' }).should('exist').and('be.disabled')
+    cy.findByRole('tab', { name: 'Account Information' }).should('exist').and('be.disabled')
+    cy.findByRole('tab', { name: 'Notifications' }).should('exist').and('be.disabled')
+    cy.findByRole('tab', { name: 'API Token' }).should('be.enabled')
   })
 })
