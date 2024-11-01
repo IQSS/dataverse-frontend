@@ -8,7 +8,7 @@ import { User } from '../../../users/domain/models/User'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import { AccountHelper } from '../../account/AccountHelper'
 import { useCollection } from '@/sections/collection/useCollection'
-import Skeleton from 'react-loading-skeleton'
+import { PageNotFound } from '@/sections/page-not-found/PageNotFound'
 
 const currentPage = 0
 
@@ -36,11 +36,12 @@ export const LoggedInHeaderActions = ({
       navigate(currentPage)
     })
   }
-  if (isLoading) {
-    return <Skeleton />
+
+  if (!isLoading && !collection) {
+    return <PageNotFound />
   }
 
-  if (!collection) {
+  if (isLoading || !collection) {
     return null
   }
 
