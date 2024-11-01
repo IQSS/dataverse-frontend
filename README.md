@@ -223,7 +223,7 @@ The environment is accessible through the following URLs:
 > #### Account Page BreadCrumbs
 >
 > The Account Page has been updated to remove breadcrumbs, as the page is not part of the main navigation.
->
+
 </details>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
