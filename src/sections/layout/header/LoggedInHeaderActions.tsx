@@ -8,7 +8,6 @@ import { User } from '../../../users/domain/models/User'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
 import { AccountHelper } from '../../account/AccountHelper'
 import { useCollection } from '@/sections/collection/useCollection'
-import { PageNotFound } from '@/sections/page-not-found/PageNotFound'
 
 const currentPage = 0
 
@@ -24,7 +23,7 @@ export const LoggedInHeaderActions = ({
   const { t } = useTranslation('header')
   const { logout } = useSession()
   const navigate = useNavigate()
-  const { collection, isLoading } = useCollection(collectionRepository)
+  const { collection } = useCollection(collectionRepository)
 
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
     collectionIdOrAlias: undefined,
@@ -37,11 +36,7 @@ export const LoggedInHeaderActions = ({
     })
   }
 
-  if (!isLoading && !collection) {
-    return <PageNotFound />
-  }
-
-  if (isLoading || !collection) {
+  if (!collection) {
     return null
   }
 
