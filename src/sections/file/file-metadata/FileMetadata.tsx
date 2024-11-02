@@ -97,16 +97,18 @@ export function FileMetadata({
             <Col sm={3}>
               <strong>{t('metadata.fields.depositDate')}</strong>
             </Col>
-            {/* TODO: use time tag with dateTime attr https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time */}
-            <Col>{DateHelper.toDisplayFormatYYYYMMDD(metadata.depositDate)}</Col>
+            <Col>
+              <time>{DateHelper.toISO8601Format(metadata.depositDate)}</time>
+            </Col>
           </Row>
           {metadata.publicationDate && (
             <Row className={styles.row}>
               <Col sm={3}>
                 <strong>{t('metadata.fields.metadataReleaseDate')}</strong>
               </Col>
-              {/* TODO: use time tag with dateTime attr https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time */}
-              <Col>{DateHelper.toDisplayFormatYYYYMMDD(metadata.publicationDate)}</Col>
+              <Col>
+                <time>{DateHelper.toISO8601Format(metadata.publicationDate)}</time>
+              </Col>
             </Row>
           )}
           {(metadata.publicationDate || metadata.embargo) && (
@@ -114,7 +116,6 @@ export function FileMetadata({
               <Col sm={3}>
                 <strong>{t('metadata.fields.publicationDate')}</strong>
               </Col>
-              {/* TODO: use time tag with dateTime attr https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time */}
               <Col>
                 {metadata.embargo ? (
                   <FileEmbargoDate
@@ -123,7 +124,7 @@ export function FileMetadata({
                     format="YYYY-MM-DD"
                   />
                 ) : (
-                  DateHelper.toDisplayFormatYYYYMMDD(metadata.publicationDate)
+                  <time>{DateHelper.toISO8601Format(metadata.depositDate)}</time>
                 )}
               </Col>
             </Row>

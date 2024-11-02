@@ -26,9 +26,11 @@ export function FileEmbargoDate({
     <div>
       <span>
         {t(embargoTypeOfDate(embargo.isActive, datasetPublishingStatus))}{' '}
-        {format === 'YYYY-MM-DD'
-          ? DateHelper.toDisplayFormatYYYYMMDD(embargo.dateAvailable)
-          : DateHelper.toDisplayFormat(embargo.dateAvailable)}
+        <time>
+          {format === 'YYYY-MM-DD'
+            ? DateHelper.toISO8601Format(embargo.dateAvailable)
+            : DateHelper.toDisplayFormat(embargo.dateAvailable)}
+        </time>
       </span>
     </div>
   )
