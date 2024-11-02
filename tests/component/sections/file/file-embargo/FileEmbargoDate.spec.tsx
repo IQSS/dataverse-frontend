@@ -8,14 +8,7 @@ describe('FileEmbargoDate', () => {
     const embargo = FileEmbargoMother.create({ dateAvailable: embargoDate })
     const status = DatasetPublishingStatus.RELEASED
     cy.customMount(<FileEmbargoDate embargo={embargo} datasetPublishingStatus={status} />)
-    const dateString = embargoDate.toLocaleDateString(
-      Intl.DateTimeFormat().resolvedOptions().locale,
-      {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      }
-    )
+    const dateString = embargoDate.toISOString().split('T')[0]
     cy.findByText(`Embargoed until`).should('exist')
     cy.get('time').should('have.text', dateString)
   })
@@ -26,14 +19,8 @@ describe('FileEmbargoDate', () => {
     const status = DatasetPublishingStatus.RELEASED
 
     cy.customMount(<FileEmbargoDate embargo={embargo} datasetPublishingStatus={status} />)
-    const dateString = embargoDate.toLocaleDateString(
-      Intl.DateTimeFormat().resolvedOptions().locale,
-      {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      }
-    )
+    const dateString = embargoDate.toISOString().split('T')[0]
+
     cy.findByText(`Was embargoed until`).should('exist')
     cy.get('time').should('have.text', dateString)
   })
@@ -44,14 +31,8 @@ describe('FileEmbargoDate', () => {
     const status = DatasetPublishingStatus.DRAFT
 
     cy.customMount(<FileEmbargoDate embargo={embargo} datasetPublishingStatus={status} />)
-    const dateString = embargoDate.toLocaleDateString(
-      Intl.DateTimeFormat().resolvedOptions().locale,
-      {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      }
-    )
+    const dateString = embargoDate.toISOString().split('T')[0]
+
     cy.findByText(`Draft: will be embargoed until`).should('exist')
     cy.get('time').should('have.text', dateString)
   })
