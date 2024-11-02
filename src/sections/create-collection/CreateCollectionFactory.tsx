@@ -14,9 +14,8 @@ export class CreateCollectionFactory {
 }
 
 function CreateCollectionWithParams() {
-  const { ownerCollectionId } = useParams<{ ownerCollectionId: string }>()
-  if (!ownerCollectionId) {
-    throw new Error('ownerCollectionId is required')
+  const { ownerCollectionId } = useParams<{ ownerCollectionId: string }>() as {
+    ownerCollectionId: string
   }
   return (
     <CreateCollection
