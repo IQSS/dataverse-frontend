@@ -16,7 +16,8 @@ describe('FileEmbargoDate', () => {
         day: 'numeric'
       }
     )
-    cy.findByText(`Embargoed until ` + dateString).should('exist')
+    cy.findByText(`Embargoed until`).should('exist')
+    cy.get('time').should('have.text', dateString)
   })
 
   it('renders the until embargo date when embargo is not active and the file is not released', () => {
@@ -33,7 +34,8 @@ describe('FileEmbargoDate', () => {
         day: 'numeric'
       }
     )
-    cy.findByText(`Was embargoed until ` + dateString).should('exist')
+    cy.findByText(`Was embargoed until`).should('exist')
+    cy.get('time').should('have.text', dateString)
   })
 
   it('renders the draft until embargo date when embargo is active and the file is not released', () => {
@@ -50,7 +52,8 @@ describe('FileEmbargoDate', () => {
         day: 'numeric'
       }
     )
-    cy.findByText(`Draft: will be embargoed until ` + dateString).should('exist')
+    cy.findByText(`Draft: will be embargoed until`).should('exist')
+    cy.get('time').should('have.text', dateString)
   })
 
   it('renders an empty fragment when embargo is undefined', () => {
@@ -58,7 +61,6 @@ describe('FileEmbargoDate', () => {
     const status = DatasetPublishingStatus.RELEASED
 
     cy.customMount(<FileEmbargoDate embargo={embargo} datasetPublishingStatus={status} />)
-
     cy.findByText(/Draft: will be embargoed until/).should('not.exist')
     cy.findByText(/Embargoed until/).should('not.exist')
     cy.findByText(/Was embargoed until/).should('not.exist')
@@ -68,17 +70,12 @@ describe('FileEmbargoDate', () => {
     const embargoDate = new Date('2123-09-18')
     const embargo = FileEmbargoMother.create({ dateAvailable: embargoDate })
     const status = DatasetPublishingStatus.RELEASED
+
     cy.customMount(
       <FileEmbargoDate embargo={embargo} datasetPublishingStatus={status} format="YYYY-MM-DD" />
     )
-    const dateString = embargoDate.toLocaleDateString(
-      Intl.DateTimeFormat().resolvedOptions().locale,
-      {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-      }
-    )
-    cy.findByText(`Embargoed until ` + dateString).should('exist')
+    const dateString = embargoDate.toISOString().split('T')[0]
+    cy.findByText(`Embargoed until`).should('exist')
+    cy.get('time').should('have.text', dateString)
   })
 })

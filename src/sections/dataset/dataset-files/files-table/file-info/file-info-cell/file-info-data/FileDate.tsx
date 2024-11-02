@@ -7,10 +7,7 @@ export function FileDate({ date }: { date: FileDateModel }) {
   return (
     <div>
       <span>
-        <time>
-          {t(`table.date.${date.type}`)}
-          {DateHelper.toDisplayFormat(date.date)}
-        </time>
+        {t(`table.date.${date.type}`)} <time>{DateHelper.toDisplayFormat(date.date)}</time>
       </span>
     </div>
   )

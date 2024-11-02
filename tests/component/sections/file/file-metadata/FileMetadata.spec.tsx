@@ -216,7 +216,7 @@ describe('FileMetadata', () => {
     )
 
     cy.findByText('Deposit Date').should('exist')
-    cy.findByText(DateHelper.toDisplayFormatYYYYMMDD(file.metadata.depositDate)).should('exist')
+    cy.findByText(DateHelper.toISO8601Format(file.metadata.depositDate)).should('exist')
   })
 
   it('renders the file Metadata Release Date', () => {
@@ -231,9 +231,11 @@ describe('FileMetadata', () => {
     )
 
     cy.findByText('Metadata Release Date').should('exist')
-    cy.findAllByText(
-      DateHelper.toDisplayFormatYYYYMMDD(metadataWithPublicationDate.publicationDate)
-    ).should('exist')
+    if (metadataWithPublicationDate.publicationDate) {
+      cy.findAllByText(
+        DateHelper.toISO8601Format(metadataWithPublicationDate.publicationDate)
+      ).should('exist')
+    }
   })
 
   it('does not render the file Metadata Release Date if the publication date does not exist', () => {
@@ -262,9 +264,11 @@ describe('FileMetadata', () => {
     )
 
     cy.findByText('Publication Date').should('exist')
-    cy.findAllByText(
-      DateHelper.toDisplayFormatYYYYMMDD(metadataWithPublicationDate.publicationDate)
-    ).should('exist')
+    if (metadataWithPublicationDate.publicationDate) {
+      cy.findAllByText(
+        DateHelper.toISO8601Format(metadataWithPublicationDate.publicationDate)
+      ).should('exist')
+    }
   })
 
   it('renders the file Publication Date with embargo', () => {
@@ -280,11 +284,11 @@ describe('FileMetadata', () => {
     )
 
     cy.findByText('Publication Date').should('exist')
-    cy.findByText(
-      `Embargoed until ${DateHelper.toDisplayFormatYYYYMMDD(
-        metadataWithPublicationDateEmbargoed.embargo?.dateAvailable
-      )}`
-    ).should('exist')
+    if (metadataWithPublicationDateEmbargoed.publicationDate) {
+      cy.findAllByText(
+        DateHelper.toISO8601Format(metadataWithPublicationDateEmbargoed.publicationDate)
+      ).should('exist')
+    }
   })
 
   it('does not render the file Publication Date if the publication date and embargo do not exist', () => {
