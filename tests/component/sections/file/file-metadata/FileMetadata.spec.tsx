@@ -214,9 +214,8 @@ describe('FileMetadata', () => {
         datasetPublishingStatus={file.datasetVersion.publishingStatus}
       />
     )
-
     cy.findByText('Deposit Date').should('exist')
-    cy.findByText(DateHelper.toISO8601Format(file.metadata.depositDate)).should('exist')
+    cy.get('time').contains(DateHelper.toISO8601Format(file.metadata.depositDate)).should('exist')
   })
 
   it('renders the file Metadata Release Date', () => {
