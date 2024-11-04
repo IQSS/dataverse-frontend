@@ -33,18 +33,26 @@ function extractInfoFromInterceptedResponse(interception: Interception) {
 }
 
 describe('Collection Items Panel', () => {
-  before(() => {
-    TestsUtils.setup()
-    TestsUtils.login()
-  })
+  // before(() => {
+  //   TestsUtils.setup()
+  //   TestsUtils.login()
+  // })
 
-  beforeEach(async () => {
-    cy.intercept(SEARCH_ENDPOINT_REGEX).as('getCollectionItems')
+  beforeEach(() => {
+    TestsUtils.login().then((token) => {
+      if (!token) {
+        throw new Error('Token not found after Keycloak login')
+      }
 
-    // Creates 8 datasets with 1 file each
-    for (const _number of numbersOfDatasetsToCreate) {
-      await DatasetHelper.createWithFile(FileHelper.create())
-    }
+      cy.wrap(TestsUtils.setup(token)).then(async () => {
+        cy.intercept(SEARCH_ENDPOINT_REGEX).as('getCollectionItems')
+
+        // Creates 8 datasets with 1 file each
+        for (const _number of numbersOfDatasetsToCreate) {
+          await DatasetHelper.createWithFile(FileHelper.create())
+        }
+      })
+    })
   })
 
   afterEach(() => {

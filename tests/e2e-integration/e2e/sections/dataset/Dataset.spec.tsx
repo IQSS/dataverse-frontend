@@ -14,13 +14,17 @@ type Dataset = {
 }
 const DRAFT_PARAM = DatasetNonNumericVersionSearchParam.DRAFT
 
-describe('Dataset', () => {
-  before(() => {
-    TestsUtils.setup()
-  })
+// TODO:ME - User not admin cant publish dataset, maybe superuser lookup and give permission to test user?
 
+describe('Dataset', () => {
   beforeEach(() => {
-    TestsUtils.login()
+    TestsUtils.login().then((token) => {
+      if (!token) {
+        throw new Error('Token not found after Keycloak login')
+      }
+
+      cy.wrap(TestsUtils.setup(token))
+    })
   })
 
   describe('Visit the Dataset Page as a logged in user', () => {

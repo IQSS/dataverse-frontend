@@ -5,8 +5,13 @@ const CREATE_COLLECTION_PAGE_URL = '/spa/collections/root/create'
 
 describe('Create Collection', () => {
   beforeEach(() => {
-    TestsUtils.login()
-    TestsUtils.setup()
+    TestsUtils.login().then((token) => {
+      if (!token) {
+        throw new Error('Token not found after Keycloak login')
+      }
+
+      cy.wrap(TestsUtils.setup(token))
+    })
   })
 
   it('visits the Create Collection Page as a logged in user', () => {

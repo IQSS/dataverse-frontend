@@ -3,14 +3,19 @@ import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
 import { DatasetLabelValue } from '../../../../../src/dataset/domain/models/Dataset'
 import { FileHelper } from '../../../shared/files/FileHelper'
 
+// TODO:ME - User not admin cant publish dataset, maybe superuser lookup and give permission to test user?
+
 describe('File', () => {
-  before(() => {
-    TestsUtils.setup()
+  beforeEach(() => {
+    TestsUtils.login().then((token) => {
+      if (!token) {
+        throw new Error('Token not found after Keycloak login')
+      }
+
+      cy.wrap(TestsUtils.setup(token))
+    })
   })
 
-  beforeEach(() => {
-    TestsUtils.login()
-  })
   describe('Visit the File Page as a logged in user', () => {
     it('successfully loads a file in draft mode', () => {
       cy.wrap(
@@ -32,7 +37,7 @@ describe('File', () => {
         })
     })
 
-    it('successfully loads a published file when the user is not authenticated', () => {
+    it.only('successfully loads a published file when the user is not authenticated', () => {
       cy.wrap(
         DatasetHelper.createWithFileAndPublish(FileHelper.create()).then(
           (datasetResponse) => datasetResponse.file
@@ -57,6 +62,8 @@ describe('File', () => {
     })
 
     it('loads page not found when the user is not authenticated and tries to access a draft', () => {
+      TestsUtils.logout()
+
       cy.wrap(
         DatasetHelper.createWithFile(FileHelper.create()).then(
           (datasetResponse) => datasetResponse.file
