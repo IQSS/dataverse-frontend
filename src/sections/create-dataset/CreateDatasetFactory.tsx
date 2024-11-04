@@ -21,10 +21,8 @@ export class CreateDatasetFactory {
 }
 
 function CreateDatasetWithSearchParams() {
-  const { collectionId } = useParams<{ collectionId: string }>()
-  if (!collectionId) {
-    throw new Error('collectionId is required')
-  }
+  const { collectionId } = useParams<{ collectionId: string }>() as { collectionId: string }
+
   return (
     <CreateDataset
       datasetRepository={datasetRepository}
