@@ -124,7 +124,9 @@ export function FileMetadata({
                     format="YYYY-MM-DD"
                   />
                 ) : (
-                  <time>{DateHelper.toISO8601Format(metadata.depositDate)}</time>
+                  metadata.publicationDate && (
+                    <time>DateHelper.toISO8601Format(metadata.publicationDate)</time>
+                  )
                 )}
               </Col>
             </Row>
