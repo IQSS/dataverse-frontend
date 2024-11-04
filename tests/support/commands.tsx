@@ -78,13 +78,19 @@ Cypress.Commands.add('mountSuperuser', (component: ReactNode) => {
   return cy.customMount(<SessionProvider repository={userRepository}>{component}</SessionProvider>)
 })
 
-Cypress.Commands.add('loginAsAdmin', () => {
+Cypress.Commands.add('login', () => {
   cy.visit('/spa/')
   cy.findByTestId('oidc-login').click()
 
   TestsUtils.enterCredentialsInKeycloak()
 
-  cy.url().should('eq', `${Cypress.config().baseUrl as string}/spa`)
+  cy.url()
+    .should('eq', `${Cypress.config().baseUrl as string}/spa`)
+    .then(() => {
+      const token = TestsUtils.getLocalStorageItem<string>('ROCP_token')
+
+      return cy.wrap(token)
+    })
 })
 
 Cypress.Commands.add('logout', () => {

@@ -7,29 +7,23 @@ import { DATAVERSE_BACKEND_URL } from '../../../src/config'
 export class TestsUtils {
   static readonly DATAVERSE_BACKEND_URL = DATAVERSE_BACKEND_URL
 
-  static setup() {
-    ApiConfig.init(`${this.DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
-    DataverseApiHelper.setup()
+  static async setup(bearerToken: string) {
+    ApiConfig.init(`${this.DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.API_KEY)
+    await DataverseApiHelper.setup(bearerToken)
   }
 
   static login() {
-    return cy.loginAsAdmin()
+    return cy.login()
   }
 
-  static enterCredentialsInKeycloak() {
-    cy.get('#username').type('dataverse-admin@mailinator.com')
-    cy.get('#password').type('admin')
-    cy.get('#kc-login').click()
+  static logout() {
+    return cy.logout()
   }
 
   static wait(ms: number): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(resolve, ms)
     })
-  }
-
-  static logout() {
-    return cy.logout()
   }
 
   static async waitForNoLocks(persistentId: string, maxRetries = 20, delay = 1000): Promise<void> {
@@ -59,5 +53,21 @@ export class TestsUtils {
 
     console.log('Max retries reached.')
     throw new Error('Max retries reached.')
+  }
+
+  static enterCredentialsInKeycloak() {
+    cy.get('#username').type('dataverse-admin@mailinator.com')
+    cy.get('#password').type('admin')
+    cy.get('#kc-login').click()
+  }
+
+  static getLocalStorageItem<T>(key: string): T | null {
+    try {
+      const item = localStorage.getItem(key)
+      return item ? (JSON.parse(item) as T) : null
+    } catch (error) {
+      console.error(`Error parsing localStorage key "${key}":`, error)
+      return null
+    }
   }
 }
