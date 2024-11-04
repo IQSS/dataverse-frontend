@@ -4,7 +4,7 @@ import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
 
 export class UnpublishedCollectionMockRepository extends CollectionMockRepository {
-  getById(_id: string): Promise<Collection> {
+  getById(_id?: string): Promise<Collection> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(CollectionMother.createUnpublished())

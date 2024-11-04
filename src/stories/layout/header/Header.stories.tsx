@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { Header } from '../../../sections/layout/header/Header'
 import { WithLoggedInUser } from '../../WithLoggedInUser'
+import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
 
 const meta: Meta<typeof Header> = {
   title: 'Layout/Header',
@@ -14,13 +15,13 @@ type Story = StoryObj<typeof Header>
 
 export const LoggedOut: Story = {
   render: () => {
-    return <Header />
+    return <Header collectionRepository={new CollectionMockRepository()} />
   }
 }
 
 export const LoggedIn: Story = {
   decorators: [WithLoggedInUser],
   render: () => {
-    return <Header />
+    return <Header collectionRepository={new CollectionMockRepository()} />
   }
 }

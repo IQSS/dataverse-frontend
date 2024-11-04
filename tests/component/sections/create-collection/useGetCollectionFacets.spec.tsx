@@ -2,7 +2,6 @@ import { act, renderHook } from '@testing-library/react'
 import { useGetCollectionFacets } from '../../../../src/sections/create-collection/useGetCollectionFacets'
 import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
 import { CollectionFacetMother } from '../../collection/domain/models/CollectionFacetMother'
-import { ROOT_COLLECTION_ALIAS } from '../../../../src/collection/domain/models/Collection'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const collectionFacetsMock = CollectionFacetMother.createFacets()
@@ -14,7 +13,7 @@ describe('useGetCollectionFacets', () => {
     const { result } = renderHook(() =>
       useGetCollectionFacets({
         collectionRepository,
-        collectionId: ROOT_COLLECTION_ALIAS
+        collectionId: 'collectionId'
       })
     )
 
@@ -37,7 +36,7 @@ describe('useGetCollectionFacets', () => {
       const { result } = renderHook(() =>
         useGetCollectionFacets({
           collectionRepository,
-          collectionId: ROOT_COLLECTION_ALIAS
+          collectionId: 'collectionId'
         })
       )
 
@@ -58,7 +57,7 @@ describe('useGetCollectionFacets', () => {
       const { result } = renderHook(() =>
         useGetCollectionFacets({
           collectionRepository,
-          collectionId: ROOT_COLLECTION_ALIAS
+          collectionId: 'collectionId'
         })
       )
 

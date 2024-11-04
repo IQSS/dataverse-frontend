@@ -30,6 +30,7 @@ export const Default: Story = {
         datasetRepository={new DatasetMockRepository()}
         metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
         collectionRepository={new CollectionMockRepository()}
+        collectionId={'collectionId'}
       />
     </NotImplementedModalProvider>
   )
@@ -41,6 +42,7 @@ export const Loading: Story = {
       datasetRepository={new DatasetMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockLoadingRepository()}
       collectionRepository={new CollectionMockRepository()}
+      collectionId={'collectionId'}
     />
   )
 }
@@ -64,6 +66,7 @@ export const NotAllowedToAddDataset: Story = {
       datasetRepository={new DatasetMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
       collectionRepository={collectionRepositoryWithoutPermissionsToCreateDataset}
+      collectionId={'collectionId'}
     />
   )
 }

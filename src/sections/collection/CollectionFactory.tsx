@@ -14,7 +14,7 @@ export class CollectionFactory {
 
 function CollectionWithSearchParams() {
   const collectionQueryParams = useGetCollectionQueryParams()
-  const { collectionId = 'root' } = useParams<{ collectionId: string }>()
+  const { collectionId } = useParams<{ collectionId: string }>()
   const location = useLocation()
   const state = location.state as { published: boolean; created: boolean } | undefined
   const created = state?.created ?? false
@@ -23,7 +23,7 @@ function CollectionWithSearchParams() {
   return (
     <Collection
       collectionRepository={collectionRepository}
-      collectionId={collectionId}
+      collectionIdFromParams={collectionId}
       created={created}
       collectionQueryParams={collectionQueryParams}
       published={published}

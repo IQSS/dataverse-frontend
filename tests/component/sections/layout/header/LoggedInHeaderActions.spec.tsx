@@ -14,7 +14,7 @@ describe('LoggedInHeaderActions', () => {
         canAddCollection: false
       })
     )
-
+    collectionRepository.getById = cy.stub().resolves(CollectionMother.create())
     cy.customMount(
       <LoggedInHeaderActions user={testUser} collectionRepository={collectionRepository} />
     )

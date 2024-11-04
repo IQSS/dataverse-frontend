@@ -24,7 +24,7 @@ export const Default: Story = {
   render: () => (
     <Collection
       collectionRepository={new CollectionMockRepository()}
-      collectionId="collection"
+      collectionIdFromParams="collection"
       created={false}
       published={false}
       collectionQueryParams={{
@@ -39,8 +39,8 @@ export const Default: Story = {
 export const Loading: Story = {
   render: () => (
     <Collection
+      collectionIdFromParams="collection"
       collectionRepository={new CollectionLoadingMockRepository()}
-      collectionId="collection"
       created={false}
       published={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
@@ -52,8 +52,8 @@ export const LoggedIn: Story = {
   decorators: [WithLoggedInUser],
   render: () => (
     <Collection
+      collectionIdFromParams="collection"
       collectionRepository={new CollectionMockRepository()}
-      collectionId="collection"
       created={false}
       published={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
@@ -64,8 +64,8 @@ export const Unpublished: Story = {
   decorators: [WithLoggedInUser],
   render: () => (
     <Collection
+      collectionIdFromParams="collection"
       collectionRepository={new UnpublishedCollectionMockRepository()}
-      collectionId="collection"
       created={false}
       published={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
@@ -78,7 +78,7 @@ export const Created: Story = {
   render: () => (
     <Collection
       collectionRepository={new CollectionMockRepository()}
-      collectionId="collection"
+      collectionIdFromParams="collection"
       created={true}
       published={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
@@ -90,7 +90,7 @@ export const Published: Story = {
   render: () => (
     <Collection
       collectionRepository={new CollectionMockRepository()}
-      collectionId="collection"
+      collectionIdFromParams="collection"
       created={false}
       published={true}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}

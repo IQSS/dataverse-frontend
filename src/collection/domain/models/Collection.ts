@@ -15,5 +15,3 @@ export interface CollectionInputLevel {
   include: boolean
   required: boolean
 }
-
-export const ROOT_COLLECTION_ALIAS = 'root'

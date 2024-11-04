@@ -6,15 +6,19 @@ import styles from './CollectionCard.module.scss'
 
 interface CollectionCardProps {
   collectionPreview: CollectionItemTypePreview
+  parentCollectionAlias: string
 }
 
-export function CollectionCard({ collectionPreview }: CollectionCardProps) {
+export function CollectionCard({ collectionPreview, parentCollectionAlias }: CollectionCardProps) {
   return (
     <article className={styles['card-main-container']} data-testid="collection-card">
       <CollectionCardHeader collectionPreview={collectionPreview} />
       <div className={styles['thumbnail-and-info-wrapper']}>
         <CollectionCardThumbnail collectionPreview={collectionPreview} />
-        <CollectionCardInfo collectionPreview={collectionPreview} />
+        <CollectionCardInfo
+          parentCollectionAlias={parentCollectionAlias}
+          collectionPreview={collectionPreview}
+        />
       </div>
     </article>
   )

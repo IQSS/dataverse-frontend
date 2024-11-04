@@ -7,7 +7,7 @@ import { RouteWithParams } from '../../Route.enum'
 import styles from './AddDataActionsButton.module.scss'
 
 interface AddDataActionsButtonProps {
-  collectionId?: string
+  collectionId: string
   canAddCollection: boolean
   canAddDataset: boolean
 }
