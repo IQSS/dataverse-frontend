@@ -206,6 +206,7 @@ export const CollectionItemsPanel = ({
         />
 
         <ItemsList
+          parentCollectionAlias={collectionId}
           items={accumulatedItems}
           error={error}
           accumulatedCount={accumulatedCount}

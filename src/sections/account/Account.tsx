@@ -1,16 +1,8 @@
-import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Tabs } from '@iqss/dataverse-design-system'
-import { useLoading } from '../loading/LoadingContext'
 import { AccountHelper, AccountPanelTabKey } from './AccountHelper'
 import { ApiTokenSection } from './api-token-section/ApiTokenSection'
-import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import styles from './Account.module.scss'
-import {
-  DvObjectType,
-  UpwardHierarchyNode
-} from '../../shared/hierarchy/domain/models/UpwardHierarchyNode'
-import { ROOT_COLLECTION_ALIAS } from '../../collection/domain/models/Collection'
 import { ApiTokenInfoJSDataverseRepository } from '@/users/infrastructure/repositories/ApiTokenInfoJSDataverseRepository'
 
 const tabsKeys = AccountHelper.ACCOUNT_PANEL_TABS_KEYS
@@ -21,24 +13,11 @@ interface AccountProps {
 
 export const Account = ({ defaultActiveTabKey }: AccountProps) => {
   const { t } = useTranslation('account')
-  const { setIsLoading } = useLoading()
   const repository = new ApiTokenInfoJSDataverseRepository()
-
-  const rootHierarchy = new UpwardHierarchyNode(
-    'Root',
-    DvObjectType.COLLECTION,
-    ROOT_COLLECTION_ALIAS
-  )
-
-  useEffect(() => {
-    setIsLoading(false)
-  }, [setIsLoading])
 
   return (
     <section>
-      <BreadcrumbsGenerator hierarchy={rootHierarchy} withActionItem actionItemText="Account" />
-
-      <header>
+      <header className={styles['header']}>
         <h1>{t('pageTitle')}</h1>
       </header>
 

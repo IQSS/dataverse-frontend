@@ -8,10 +8,11 @@ import { CollectionLoadingMockRepository } from '../collection/CollectionLoading
 import { NoCollectionMockRepository } from '../collection/NoCollectionMockRepository'
 import { CollectionMother } from '../../../tests/component/collection/domain/models/CollectionMother'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
-import { ROOT_COLLECTION_ALIAS } from '../../collection/domain/models/Collection'
 import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 import { MetadataBlockInfoMockLoadingRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockLoadingRepository'
 import { MetadataBlockInfoMockErrorRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockErrorRepository'
+
+import { ROOT_COLLECTION_ALIAS } from '@tests/e2e-integration/shared/collection/ROOT_COLLECTION_ALIAS'
 
 const meta: Meta<typeof CreateCollection> = {
   title: 'Pages/Create Collection',
