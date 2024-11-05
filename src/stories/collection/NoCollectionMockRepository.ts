@@ -7,7 +7,7 @@ import { CollectionFacet } from '../../collection/domain/models/CollectionFacet'
 import { CollectionMockRepository } from './CollectionMockRepository'
 
 export class NoCollectionMockRepository extends CollectionMockRepository {
-  getById(_id: string): Promise<Collection> {
+  getById(_id?: string): Promise<Collection> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Collection not found')

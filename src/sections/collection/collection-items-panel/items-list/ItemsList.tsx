@@ -16,6 +16,7 @@ import { FileCard } from './file-card/FileCard'
 import styles from './ItemsList.module.scss'
 
 interface ItemsListProps {
+  parentCollectionAlias: string
   items: CollectionItem[]
   error: string | null
   accumulatedCount: number
@@ -32,6 +33,7 @@ interface ItemsListProps {
 export const ItemsList = forwardRef(
   (
     {
+      parentCollectionAlias,
       items,
       error,
       accumulatedCount,
@@ -94,7 +96,10 @@ export const ItemsList = forwardRef(
                 {items.map((collectionItem, index) => (
                   <li key={`${collectionItem.type}-${index}`}>
                     {collectionItem?.type === CollectionItemType.COLLECTION && (
-                      <CollectionCard collectionPreview={collectionItem} />
+                      <CollectionCard
+                        parentCollectionAlias={parentCollectionAlias}
+                        collectionPreview={collectionItem}
+                      />
                     )}
                     {collectionItem?.type === CollectionItemType.DATASET && (
                       <DatasetCard datasetPreview={collectionItem} />

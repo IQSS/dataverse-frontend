@@ -4,7 +4,7 @@ import { CollectionUserPermissions } from '@iqss/dataverse-client-javascript'
 import { getCollectionUserPermissions } from '../../collection/domain/useCases/getCollectionUserPermissions'
 
 interface Props {
-  collectionIdOrAlias: string | number
+  collectionIdOrAlias: string | number | undefined
   collectionRepository: CollectionRepository
 }
 

@@ -32,7 +32,6 @@ import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
 import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
 import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
-import { ROOT_COLLECTION_ALIAS } from '../../../collection/domain/models/Collection'
 
 const includeDeaccessioned = true
 type DatasetDetails = [JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[]]
@@ -223,10 +222,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       })
   }
 
-  create(
-    dataset: DatasetDTO,
-    collectionId = ROOT_COLLECTION_ALIAS
-  ): Promise<{ persistentId: string }> {
+  create(dataset: DatasetDTO, collectionId: string): Promise<{ persistentId: string }> {
     return createDataset
       .execute(DatasetDTOMapper.toJSDatasetDTO(dataset), collectionId)
       .then((jsDatasetIdentifiers: JSDatasetIdentifiers) => ({

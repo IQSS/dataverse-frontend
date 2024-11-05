@@ -15,7 +15,10 @@ type Story = StoryObj<typeof CollectionCard>
 
 export const Default: Story = {
   render: () => (
-    <CollectionCard collectionPreview={CollectionItemTypePreviewMother.createRealistic()} />
+    <CollectionCard
+      parentCollectionAlias="parentAlias"
+      collectionPreview={CollectionItemTypePreviewMother.createRealistic()}
+    />
   )
 }
 
@@ -24,19 +27,26 @@ export const WithLongDescription: Story = {
     const collectionPreview = CollectionItemTypePreviewMother.create({
       description: FakerHelper.paragraph(20)
     })
-
-    return <CollectionCard collectionPreview={collectionPreview} />
+    return (
+      <CollectionCard parentCollectionAlias="parentAlias" collectionPreview={collectionPreview} />
+    )
   }
 }
 
 export const Unpublished: Story = {
   render: () => (
-    <CollectionCard collectionPreview={CollectionItemTypePreviewMother.createUnpublished()} />
+    <CollectionCard
+      parentCollectionAlias="parentAlias"
+      collectionPreview={CollectionItemTypePreviewMother.createUnpublished()}
+    />
   )
 }
 
 export const WithThumbnail: Story = {
   render: () => (
-    <CollectionCard collectionPreview={CollectionItemTypePreviewMother.createWithThumbnail()} />
+    <CollectionCard
+      parentCollectionAlias="parentAlias"
+      collectionPreview={CollectionItemTypePreviewMother.createWithThumbnail()}
+    />
   )
 }
