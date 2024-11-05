@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { TestsUtils } from './TestsUtils'
 
 export class DataverseApiHelper {
@@ -14,7 +14,9 @@ export class DataverseApiHelper {
     this.API_URL = `${TestsUtils.DATAVERSE_BACKEND_URL}/api/v1`
 
     try {
-      const createdApiToken = await this.createAndGetApiKeyWithBearerToken(bearerToken)
+      await this.setLoggedInUserAsSuperUser()
+
+      const createdApiToken = await this.createAndGetApiTokenWithBearerToken(bearerToken)
 
       this.API_TOKEN = createdApiToken
 
@@ -94,7 +96,7 @@ export class DataverseApiHelper {
     return formData
   }
 
-  static async createAndGetApiKeyWithBearerToken(bearerToken: string): Promise<string> {
+  static async createAndGetApiTokenWithBearerToken(bearerToken: string): Promise<string> {
     console.log(
       '%cCreating test API key...',
       'background: blue; color: white; padding: 2px; border-radius: 4px;'
@@ -116,5 +118,31 @@ export class DataverseApiHelper {
     const apiKey = messageParts[5]
 
     return apiKey
+  }
+
+  static async setLoggedInUserAsSuperUser(): Promise<void> {
+    const API_ALLOW_TOKEN_LOOKUP_ENDPOINT = '/admin/settings/:AllowApiTokenLookupViaApi'
+    const API_KEY_USER_ENDPOINT = '/builtin-users/dataverseAdmin/api-token'
+    const API_KEY_USER_PASSWORD = 'admin1'
+
+    // Get API key from superuser dataverseAdmin
+    await axios.put(`${this.API_URL}${API_ALLOW_TOKEN_LOOKUP_ENDPOINT}`, 'true')
+
+    // Get API key from superuser dataverseAdmin
+    const {
+      data: {
+        data: { message: superuserApiToken }
+      }
+    }: AxiosResponse<{ data: { message: string } }> = await axios.get(
+      `${this.API_URL}${API_KEY_USER_ENDPOINT}?password=${API_KEY_USER_PASSWORD}`
+    )
+
+    // Set superuser status for the user authenticated via OIDC
+    await axios.put(`${this.API_URL}/admin/superuser/admin`, 'true', {
+      headers: {
+        'X-Dataverse-key': superuserApiToken,
+        'Content-Type': 'application/json'
+      }
+    })
   }
 }
