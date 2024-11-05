@@ -1,7 +1,11 @@
+import { useContext } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { AuthContext } from 'react-oauth2-code-pkce'
+import { useLocation } from 'react-router-dom'
 import { useSession } from '@/sections/session/SessionContext'
-import { Route } from '@/sections/Route.enum'
+import { Button } from '@iqss/dataverse-design-system'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
+import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
 import styles from './ItemsList.module.scss'
 
 interface NoItemsMessageProps {
@@ -11,6 +15,8 @@ interface NoItemsMessageProps {
 export function NoItemsMessage({ itemsTypesSelected }: NoItemsMessageProps) {
   const { t } = useTranslation('collection')
   const { user } = useSession()
+  const { logIn: oidcLogin } = useContext(AuthContext)
+  const { pathname, search } = useLocation()
 
   const itemTypeMessages = {
     all: t('noItemsMessage.itemTypeMessage.all'),
@@ -65,7 +71,16 @@ export function NoItemsMessage({ itemsTypesSelected }: NoItemsMessageProps) {
           i18nKey="noItemsMessage.anonymous"
           values={{ typeOfEmptyItems: messageKey }}
           components={{
-            1: <a href={Route.LOG_IN}>log in</a>
+            1: (
+              <Button
+                variant="link"
+                onClick={() =>
+                  oidcLogin(encodeReturnToPathInStateQueryParam(`${pathname}${search}`))
+                }
+                className="p-0 align-baseline">
+                log in
+              </Button>
+            )
           }}
         />
       )}
