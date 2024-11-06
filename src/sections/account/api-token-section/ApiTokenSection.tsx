@@ -20,12 +20,7 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
   const { t } = useTranslation('account', { keyPrefix: 'apiToken' })
   const [currentApiTokenInfo, setCurrentApiTokenInfo] = useState<TokenInfo>()
 
-  const { error, apiTokenInfo, isLoading } = useGetApiToken(repository)
-
-  const getError =
-    error !== 'There was an error when reading the resource. Reason was: [404] Token not found.'
-      ? error
-      : null
+  const { error: getError, apiTokenInfo, isLoading } = useGetApiToken(repository)
 
   useEffect(() => {
     setCurrentApiTokenInfo(apiTokenInfo)

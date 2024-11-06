@@ -31,7 +31,12 @@ export const useGetApiToken = (repository: UserRepository): UseGetApiTokenResult
         err instanceof Error && err.message
           ? err.message
           : 'Something went wrong getting the current api token. Try again later.'
-      setError(errorMessage)
+      setError(
+        errorMessage ===
+          'There was an error when reading the resource. Reason was: [404] Token not found.'
+          ? null
+          : errorMessage
+      )
     } finally {
       setIsLoading(false)
     }
@@ -40,6 +45,5 @@ export const useGetApiToken = (repository: UserRepository): UseGetApiTokenResult
   useEffect(() => {
     void fetchTokenInfo()
   }, [fetchTokenInfo])
-
   return { isLoading, error, apiTokenInfo }
 }
