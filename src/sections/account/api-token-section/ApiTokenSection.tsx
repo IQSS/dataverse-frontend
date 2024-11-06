@@ -1,17 +1,19 @@
 import { Trans, useTranslation } from 'react-i18next'
-import { Button } from '@iqss/dataverse-design-system'
-import accountStyles from '../Account.module.scss'
-import styles from './ApiTokenSection.module.scss'
 import { useEffect, useState } from 'react'
-import { Alert } from '@iqss/dataverse-design-system'
-import { TokenInfo } from '@/users/domain/models/TokenInfo'
-import { ApiTokenInfoRepository } from '@/users/domain/repositories/ApiTokenInfoRepository'
-import ApiTokenSectionSkeleton from './ApiTokenSectionSkeleton'
 import { useGetApiToken } from './useGetCurrentApiToken'
 import { useRecreateApiToken } from './useRecreateApiToken'
 import { useRevokeApiToken } from './useRevokeApiToken'
+import { ApiTokenSectionSkeleton } from './ApiTokenSectionSkeleton'
+import { TokenInfo } from '@/users/domain/models/TokenInfo'
+import { DateHelper } from '@/shared/helpers/DateHelper'
+import { UserRepository } from '@/users/domain/repositories/UserRepository'
+import { Button } from '@iqss/dataverse-design-system'
+import { Alert } from '@iqss/dataverse-design-system'
+import accountStyles from '../Account.module.scss'
+import styles from './ApiTokenSection.module.scss'
+
 interface ApiTokenSectionProps {
-  repository: ApiTokenInfoRepository
+  repository: UserRepository
 }
 
 export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
@@ -30,7 +32,7 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
   }, [apiTokenInfo])
 
   const {
-    initiateRecreateToken,
+    recreateToken,
     isRecreating,
     error: recreatingError,
     apiTokenInfo: updatedTokenInfo
@@ -43,7 +45,7 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
   }, [updatedTokenInfo])
 
   const handleCreateToken = () => {
-    initiateRecreateToken()
+    void recreateToken()
   }
 
   const { revokeToken, isRevoking, error: revokingError } = useRevokeApiToken(repository)
@@ -52,7 +54,7 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
     await revokeToken()
     setCurrentApiTokenInfo({
       apiToken: '',
-      expirationDate: ''
+      expirationDate: new Date(0)
     })
   }
 
@@ -97,8 +99,10 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
         <>
           <p className={styles['exp-date']}>
             {t('expirationDate')}{' '}
-            <time data-testid="expiration-date" dateTime={currentApiTokenInfo.expirationDate}>
-              {currentApiTokenInfo.expirationDate}
+            <time
+              data-testid="expiration-date"
+              dateTime={DateHelper.toISO8601Format(currentApiTokenInfo.expirationDate)}>
+              {DateHelper.toISO8601Format(currentApiTokenInfo.expirationDate)}
             </time>
           </p>
           <div className={styles['api-token']}>

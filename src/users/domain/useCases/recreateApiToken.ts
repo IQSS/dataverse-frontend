@@ -1,6 +1,6 @@
 import { TokenInfo } from '../models/TokenInfo'
-import { ApiTokenInfoRepository } from '../repositories/ApiTokenInfoRepository'
+import { UserRepository } from '../repositories/UserRepository'
 
-export function recreateApiToken(apiTokenRepository: ApiTokenInfoRepository): Promise<TokenInfo> {
-  return apiTokenRepository.recreateApiToken()
+export function recreateApiToken(userRepository: UserRepository): Promise<TokenInfo> {
+  return userRepository.recreateApiToken()
 }

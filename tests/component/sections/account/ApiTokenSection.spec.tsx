@@ -1,22 +1,26 @@
 import { ApiTokenSection } from '../../../../src/sections/account/api-token-section/ApiTokenSection'
-import { ApiTokenInfoRepository } from '@/users/domain/repositories/ApiTokenInfoRepository'
+import { DateHelper } from '@/shared/helpers/DateHelper'
+import { UserRepository } from '@/users/domain/repositories/UserRepository'
+
 describe('ApiTokenSection', () => {
   const mockApiTokenInfo = {
     apiToken: 'mocked-api',
-    expirationDate: '2024-12-31'
+    expirationDate: new Date('2024-12-31')
   }
   const newMockApiTokenInfo = {
     apiToken: 'new-mocked-api',
-    expirationDate: '2025-12-31'
+    expirationDate: new Date('2025-12-31')
   }
 
-  let apiTokenRepository: ApiTokenInfoRepository
+  let apiTokenRepository: UserRepository
 
   beforeEach(() => {
     apiTokenRepository = {
       getCurrentApiToken: cy.stub().resolves(mockApiTokenInfo),
       recreateApiToken: cy.stub().resolves(mockApiTokenInfo),
-      deleteApiToken: cy.stub().resolves()
+      deleteApiToken: cy.stub().resolves(),
+      getAuthenticated: cy.stub().resolves(),
+      removeAuthenticated: cy.stub().resolves()
     }
 
     cy.mountAuthenticated(<ApiTokenSection repository={apiTokenRepository} />)
@@ -53,7 +57,7 @@ describe('ApiTokenSection', () => {
     cy.get('[data-testid="api-token"]').should('contain.text', mockApiTokenInfo.apiToken)
     cy.get('[data-testid="expiration-date"]').should(
       'contain.text',
-      mockApiTokenInfo.expirationDate
+      DateHelper.toISO8601Format(mockApiTokenInfo.expirationDate)
     )
   })
 
@@ -63,7 +67,7 @@ describe('ApiTokenSection', () => {
     cy.get('[data-testid="api-token"]').should('contain.text', newMockApiTokenInfo.apiToken)
     cy.get('[data-testid="expiration-date"]').should(
       'contain.text',
-      newMockApiTokenInfo.expirationDate
+      DateHelper.toISO8601Format(newMockApiTokenInfo.expirationDate)
     )
   })
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { TokenInfo } from '@/users/domain/models/TokenInfo'
-import { ApiTokenInfoRepository } from '@/users/domain/repositories/ApiTokenInfoRepository'
+import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { getCurrentApiToken } from '@/users/domain/useCases/getCurrentApiToken'
 
 interface UseGetApiTokenResult {
@@ -9,10 +9,10 @@ interface UseGetApiTokenResult {
   error: string | null
 }
 
-export const useGetApiToken = (repository: ApiTokenInfoRepository): UseGetApiTokenResult => {
+export const useGetApiToken = (repository: UserRepository): UseGetApiTokenResult => {
   const [apiTokenInfo, setApiTokenInfo] = useState<TokenInfo>({
     apiToken: '',
-    expirationDate: ''
+    expirationDate: new Date(0)
   })
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
@@ -27,8 +27,10 @@ export const useGetApiToken = (repository: ApiTokenInfoRepository): UseGetApiTok
       })
       setError(null)
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch API token.'
-      console.error(errorMessage)
+      const errorMessage =
+        err instanceof Error && err.message
+          ? err.message
+          : 'Something went wrong getting the current api token. Try again later.'
       setError(errorMessage)
     } finally {
       setIsLoading(false)

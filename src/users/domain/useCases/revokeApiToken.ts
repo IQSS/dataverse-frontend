@@ -1,5 +1,5 @@
-import { ApiTokenInfoRepository } from '../repositories/ApiTokenInfoRepository'
+import { UserRepository } from '../repositories/UserRepository'
 
-export function revokeApiToken(apiTokenRepository: ApiTokenInfoRepository): Promise<void> {
-  return apiTokenRepository.deleteApiToken()
+export function revokeApiToken(userRepository: UserRepository): Promise<void> {
+  return userRepository.deleteApiToken()
 }

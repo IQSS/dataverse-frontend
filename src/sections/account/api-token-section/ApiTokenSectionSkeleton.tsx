@@ -1,11 +1,10 @@
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
 import { Trans, useTranslation } from 'react-i18next'
-import accountStyles from '../Account.module.scss'
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { Button } from '@iqss/dataverse-design-system'
+import accountStyles from '../Account.module.scss'
 import styles from './ApiTokenSection.module.scss'
 
-const ApiTokenSectionSkeleton = () => {
+export const ApiTokenSectionSkeleton = () => {
   const { t } = useTranslation('account', { keyPrefix: 'apiToken' })
 
   return (
@@ -48,4 +47,3 @@ const ApiTokenSectionSkeleton = () => {
     </>
   )
 }
-export default ApiTokenSectionSkeleton

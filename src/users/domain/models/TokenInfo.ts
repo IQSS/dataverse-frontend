@@ -1,4 +1,4 @@
 export interface TokenInfo {
   apiToken: string
-  expirationDate: string
+  expirationDate: Date
 }

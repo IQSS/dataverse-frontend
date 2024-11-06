@@ -1,6 +1,6 @@
 import { TokenInfo } from '../models/TokenInfo'
-import { ApiTokenInfoRepository } from '../repositories/ApiTokenInfoRepository'
+import { UserRepository } from '../repositories/UserRepository'
 
-export function getCurrentApiToken(apiTokenRepository: ApiTokenInfoRepository): Promise<TokenInfo> {
-  return apiTokenRepository.getCurrentApiToken()
+export function getCurrentApiToken(userRepository: UserRepository): Promise<TokenInfo> {
+  return userRepository.getCurrentApiToken()
 }

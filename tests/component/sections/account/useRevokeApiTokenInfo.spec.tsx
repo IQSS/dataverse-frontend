@@ -1,18 +1,18 @@
 import { act, renderHook } from '@testing-library/react'
-import { ApiTokenInfoRepository } from '@/users/domain/repositories/ApiTokenInfoRepository'
+import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { useRevokeApiToken } from '@/sections/account/api-token-section/useRevokeApiToken'
 
 describe('useRevokeApiToken', () => {
-  let apiTokenInfoRepository: ApiTokenInfoRepository
+  let UserRepository: UserRepository
 
   beforeEach(() => {
-    apiTokenInfoRepository = {} as ApiTokenInfoRepository
+    UserRepository = {} as UserRepository
   })
 
   it('should revoke the API token successfully', async () => {
-    apiTokenInfoRepository.deleteApiToken = cy.stub().resolves()
+    UserRepository.deleteApiToken = cy.stub().resolves()
 
-    const { result } = renderHook(() => useRevokeApiToken(apiTokenInfoRepository))
+    const { result } = renderHook(() => useRevokeApiToken(UserRepository))
 
     expect(result.current.isRevoking).to.equal(false)
     expect(result.current.error).to.equal(null)
@@ -28,29 +28,31 @@ describe('useRevokeApiToken', () => {
   describe('Error Handling', () => {
     it('should handle error correctly when an error is thrown', async () => {
       const errorMessage = 'API token revocation failed.'
-      apiTokenInfoRepository.deleteApiToken = cy.stub().rejects(new Error(errorMessage))
+      UserRepository.deleteApiToken = cy.stub().rejects(new Error(errorMessage))
 
-      const { result } = renderHook(() => useRevokeApiToken(apiTokenInfoRepository))
+      const { result } = renderHook(() => useRevokeApiToken(UserRepository))
 
       await act(async () => {
         await result.current.revokeToken()
       })
 
       expect(result.current.isRevoking).to.equal(false)
-      expect(result.current.error).to.equal('Failed to revoke API token.')
+      expect(result.current.error).to.equal(errorMessage)
     })
 
     it('should handle non-error rejection gracefully', async () => {
-      apiTokenInfoRepository.deleteApiToken = cy.stub().rejects('Unexpected error')
+      UserRepository.deleteApiToken = cy.stub().rejects('Unexpected error')
 
-      const { result } = renderHook(() => useRevokeApiToken(apiTokenInfoRepository))
+      const { result } = renderHook(() => useRevokeApiToken(UserRepository))
 
       await act(async () => {
         await result.current.revokeToken()
       })
 
       expect(result.current.isRevoking).to.equal(false)
-      expect(result.current.error).to.equal('Failed to revoke API token.')
+      expect(result.current.error).to.equal(
+        'Something went wrong revoking the api token. Try again later.'
+      )
     })
   })
 })

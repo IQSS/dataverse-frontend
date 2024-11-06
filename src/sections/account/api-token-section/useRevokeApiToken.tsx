@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { revokeApiToken } from '@/users/domain/useCases/revokeApiToken'
-import { ApiTokenInfoRepository } from '@/users/domain/repositories/ApiTokenInfoRepository'
+import { UserRepository } from '@/users/domain/repositories/UserRepository'
 
 interface UseRevokeApiTokenResult {
   revokeToken: () => Promise<void>
@@ -8,23 +8,25 @@ interface UseRevokeApiTokenResult {
   error: string | null
 }
 
-export const useRevokeApiToken = (repository: ApiTokenInfoRepository): UseRevokeApiTokenResult => {
+export const useRevokeApiToken = (repository: UserRepository): UseRevokeApiTokenResult => {
   const [isRevoking, setIsRevoking] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
-  const revokeToken = useCallback(async () => {
+  const revokeToken = async () => {
     setIsRevoking(true)
     setError(null)
-
     try {
       await revokeApiToken(repository)
     } catch (err) {
-      console.error('There was an error revoking Api token:', err)
-      setError('Failed to revoke API token.')
+      const errorMessage =
+        err instanceof Error && err.message
+          ? err.message
+          : 'Something went wrong revoking the api token. Try again later.'
+      setError(errorMessage)
     } finally {
       setIsRevoking(false)
     }
-  }, [repository])
+  }
 
   return { revokeToken, isRevoking, error }
 }
