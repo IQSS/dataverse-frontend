@@ -17,4 +17,5 @@ export interface CollectionRepository {
     paginationInfo: CollectionItemsPaginationInfo,
     searchCriteria?: CollectionSearchCriteria
   ): Promise<CollectionItemSubset>
+  editGeneralInfo(collectionIdOrAlias: string, updatedCollection: CollectionDTO): Promise<void>
 }

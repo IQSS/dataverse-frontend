@@ -84,4 +84,12 @@ export class CollectionMockRepository implements CollectionRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+
+  editGeneralInfo(_collectionIdOrAlias: string, _updatedCollection: CollectionDTO): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
 }

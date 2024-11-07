@@ -6,7 +6,8 @@ import {
   getCollectionFacets,
   getCollectionUserPermissions,
   getCollectionItems,
-  publishCollection
+  publishCollection,
+  updateCollection
 } from '@iqss/dataverse-client-javascript'
 import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'
@@ -60,5 +61,9 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
   }
   publish(collectionIdOrAlias: number | string): Promise<void> {
     return publishCollection.execute(collectionIdOrAlias)
+  }
+
+  editGeneralInfo(collectionIdOrAlias: string, updatedCollection: CollectionDTO): Promise<void> {
+    return updateCollection.execute(collectionIdOrAlias, updatedCollection)
   }
 }
