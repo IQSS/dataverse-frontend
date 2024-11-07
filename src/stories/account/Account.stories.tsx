@@ -47,3 +47,26 @@ export const APITokenTabError: Story = {
     />
   )
 }
+
+export const APITokenTabNoToken: Story = {
+  render: () => {
+    const noTokenRepository = new AccountPageMockUserRepository()
+    noTokenRepository.getCurrentApiToken = () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            apiToken: '',
+            expirationDate: new Date()
+          })
+        }, 1_000)
+      })
+    }
+
+    return (
+      <Account
+        defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
+        userRepository={noTokenRepository}
+      />
+    )
+  }
+}

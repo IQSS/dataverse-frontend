@@ -1,10 +1,14 @@
 import { Account } from '../../../../src/sections/account/Account'
 import { AccountHelper } from '../../../../src/sections/account/AccountHelper'
+import { UserJSDataverseRepository } from '../../../../src/users/infrastructure/repositories/UserJSDataverseRepository'
 
 describe('Account', () => {
   it('should render the component', () => {
     cy.mountAuthenticated(
-      <Account defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken} />
+      <Account
+        defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
+        userRepository={new UserJSDataverseRepository()}
+      />
     )
 
     cy.get('h1').should('contain.text', 'Account')
