@@ -54,7 +54,7 @@ export const ApiTokenSection = ({ repository }: ApiTokenSectionProps) => {
   }
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(apiTokenInfo.apiToken).catch(
+    navigator.clipboard.writeText(currentApiTokenInfo?.apiToken ?? '').catch(
       /* istanbul ignore next */ (error) => {
         console.error('Failed to copy text:', error)
       }
