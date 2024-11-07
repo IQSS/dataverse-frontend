@@ -33,11 +33,6 @@ function extractInfoFromInterceptedResponse(interception: Interception) {
 }
 
 describe('Collection Items Panel', () => {
-  // before(() => {
-  //   TestsUtils.setup()
-  //   TestsUtils.login()
-  // })
-
   beforeEach(() => {
     TestsUtils.login().then((token) => {
       if (!token) {

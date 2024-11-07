@@ -3,8 +3,6 @@ import { DatasetHelper } from '../../../shared/datasets/DatasetHelper'
 import { DatasetLabelValue } from '../../../../../src/dataset/domain/models/Dataset'
 import { FileHelper } from '../../../shared/files/FileHelper'
 
-// TODO:ME - User not admin cant publish dataset, maybe superuser lookup and give permission to test user?
-
 describe('File', () => {
   beforeEach(() => {
     TestsUtils.login().then((token) => {
@@ -37,7 +35,7 @@ describe('File', () => {
         })
     })
 
-    it.only('successfully loads a published file when the user is not authenticated', () => {
+    it('successfully loads a published file when the user is not authenticated', () => {
       cy.wrap(
         DatasetHelper.createWithFileAndPublish(FileHelper.create()).then(
           (datasetResponse) => datasetResponse.file
@@ -46,7 +44,7 @@ describe('File', () => {
       )
         .its('id')
         .then((id: string) => {
-          cy.wrap(TestsUtils.logout())
+          TestsUtils.logout()
           cy.visit(`/spa/files?id=${id}`)
 
           cy.findByRole('heading', { name: 'blob' }).should('exist')
@@ -62,8 +60,6 @@ describe('File', () => {
     })
 
     it('loads page not found when the user is not authenticated and tries to access a draft', () => {
-      TestsUtils.logout()
-
       cy.wrap(
         DatasetHelper.createWithFile(FileHelper.create()).then(
           (datasetResponse) => datasetResponse.file
@@ -71,7 +67,7 @@ describe('File', () => {
       )
         .its('id')
         .then((id: string) => {
-          cy.wrap(TestsUtils.logout())
+          TestsUtils.logout()
           cy.visit(`/spa/files?id=${id}`)
 
           cy.findByText('Page Not Found').should('exist')

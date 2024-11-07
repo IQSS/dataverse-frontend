@@ -15,8 +15,6 @@ type Dataset = {
 }
 const DRAFT_PARAM = DatasetNonNumericVersionSearchParam.DRAFT
 
-// TODO:ME - User not admin cant publish dataset, maybe superuser lookup and give permission to test user?
-
 describe('Dataset', () => {
   beforeEach(() => {
     TestsUtils.login().then((token) => {
@@ -680,8 +678,7 @@ describe('Dataset', () => {
         })
     })
 
-    // TODO:ME - http://localhost:8000/api/access/datafile/229?imageThumb=400 returns 403 Forbidden
-    it.skip('shows the thumbnail for a file', () => {
+    it('shows the thumbnail for a file', () => {
       cy.wrap(FileHelper.createImage().then((file) => DatasetHelper.createWithFiles([file])))
         .its('persistentId')
         .then((persistentId: string) => {

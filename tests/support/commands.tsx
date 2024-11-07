@@ -47,6 +47,7 @@ import { UserRepository } from '../../src/users/domain/repositories/UserReposito
 import { SessionProvider } from '../../src/sections/session/SessionProvider'
 import { MemoryRouter } from 'react-router-dom'
 import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
+import { Utils } from '@/shared/helpers/Utils'
 
 // Define your custom mount function
 
@@ -87,7 +88,7 @@ Cypress.Commands.add('login', () => {
   cy.url()
     .should('eq', `${Cypress.config().baseUrl as string}/spa`)
     .then(() => {
-      const token = TestsUtils.getLocalStorageItem<string>('ROCP_token')
+      const token = Utils.getLocalStorageItem<string>('ROCP_token')
 
       return cy.wrap(token)
     })

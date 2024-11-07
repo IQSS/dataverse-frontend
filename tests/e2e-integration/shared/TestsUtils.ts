@@ -6,6 +6,9 @@ import { DATAVERSE_BACKEND_URL } from '../../../src/config'
 
 export class TestsUtils {
   static readonly DATAVERSE_BACKEND_URL = DATAVERSE_BACKEND_URL
+  static readonly USER_EMAIL = 'dataverse-user@mailinator.com'
+  static readonly USER_PASSWORD = 'user'
+  static readonly USER_USERNAME = 'user'
 
   static async setup(bearerToken: string) {
     ApiConfig.init(`${this.DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.API_KEY)
@@ -56,18 +59,8 @@ export class TestsUtils {
   }
 
   static enterCredentialsInKeycloak() {
-    cy.get('#username').type('dataverse-admin@mailinator.com')
-    cy.get('#password').type('admin')
+    cy.get('#username').type(this.USER_EMAIL)
+    cy.get('#password').type(this.USER_PASSWORD)
     cy.get('#kc-login').click()
-  }
-
-  static getLocalStorageItem<T>(key: string): T | null {
-    try {
-      const item = localStorage.getItem(key)
-      return item ? (JSON.parse(item) as T) : null
-    } catch (error) {
-      console.error(`Error parsing localStorage key "${key}":`, error)
-      return null
-    }
   }
 }

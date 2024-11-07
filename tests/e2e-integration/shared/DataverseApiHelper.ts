@@ -53,7 +53,8 @@ export class DataverseApiHelper {
   ): Promise<T> {
     console.log(
       '%cMaking request...',
-      'background: violet; color: white; padding: 2px; border-radius: 4px;'
+      'background: violet; color: white; padding: 2px; border-radius: 4px;',
+      url
     )
 
     const isFormData = contentType === 'multipart/form-data'
@@ -138,7 +139,7 @@ export class DataverseApiHelper {
     )
 
     // Set superuser status for the user authenticated via OIDC
-    await axios.put(`${this.API_URL}/admin/superuser/admin`, 'true', {
+    await axios.put(`${this.API_URL}/admin/superuser/${TestsUtils.USER_USERNAME}`, 'true', {
       headers: {
         'X-Dataverse-key': superuserApiToken,
         'Content-Type': 'application/json'
