@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios'
+import { axiosInstance } from '@/axiosInstance'
 import { FileRepository } from '../domain/repositories/FileRepository'
 import { FileDownloadMode, FileTabularData } from '../domain/models/FileMetadata'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
@@ -172,15 +174,16 @@ export class FileJSDataverseRepository implements FileRepository {
   }
 
   private static getThumbnailById(id: number): Promise<string | undefined> {
-    return fetch(`${this.DATAVERSE_BACKEND_URL}/api/access/datafile/${id}?imageThumb=400`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        return response.blob()
+    return axiosInstance
+      .get(`${this.DATAVERSE_BACKEND_URL}/api/access/datafile/${id}?imageThumb=400`, {
+        responseType: 'blob'
       })
-      .then((blob) => {
-        return URL.createObjectURL(blob)
+      .then((res: AxiosResponse<Blob>) => {
+        const blob = res.data
+
+        const objectURL = URL.createObjectURL(blob)
+
+        return objectURL
       })
       .catch(() => {
         return undefined
