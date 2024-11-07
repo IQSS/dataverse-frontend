@@ -336,6 +336,7 @@ describe('Dataset JSDataverse Repository', () => {
       const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
       expect(dataset.version.title).to.deep.equal(datasetExpected.title)
+      expect(dataset.version.publishingStatus).to.equal(DatasetPublishingStatus.DEACCESSIONED)
     })
   })
 
