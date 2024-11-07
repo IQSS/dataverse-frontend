@@ -7,6 +7,11 @@ import {
   UpwardHierarchyNode
 } from '../../../../src/shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { Collection } from '../../../../src/collection/domain/models/Collection'
+import { DATAVERSE_BACKEND_URL } from '@/config'
+import {
+  ApiConfig,
+  DataverseApiAuthMechanism
+} from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 const collectionExpected: Collection = {
@@ -27,14 +32,24 @@ const collectionExpected: Collection = {
   inputLevels: undefined
 }
 describe('Collection JSDataverse Repository', () => {
-  before(() => TestsUtils.setup())
   beforeEach(() => {
-    TestsUtils.login()
+    TestsUtils.login().then((token) => {
+      if (!token) {
+        throw new Error('Token not found after Keycloak login')
+      }
+
+      cy.wrap(TestsUtils.setup(token))
+    })
   })
 
   it('gets the collection by id', async () => {
     const collectionResponse = await CollectionHelper.create('new-collection')
-    console.log('collectionResponse', collectionResponse.id)
+
+    // Change the api config to use bearer token
+    cy.wrap(
+      ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
+    )
+
     await collectionRepository.getById(collectionResponse.id).then((collection) => {
       if (!collection) {
         throw new Error('Collection not found')
@@ -47,6 +62,12 @@ describe('Collection JSDataverse Repository', () => {
     const timestamp = new Date().valueOf()
     const uniqueCollectionId = `test-publish-collection-${timestamp}`
     const collectionResponse = await CollectionHelper.create(uniqueCollectionId)
+
+    // Change the api config to use bearer token
+    cy.wrap(
+      ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
+    )
+
     await collectionRepository.publish(collectionResponse.id)
     await collectionRepository.getById(collectionResponse.id).then((collection) => {
       if (!collection) {
