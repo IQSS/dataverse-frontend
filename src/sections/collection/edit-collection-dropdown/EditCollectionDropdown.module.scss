@@ -1,0 +1,42 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.dropdown-icon {
+  margin-right: 0.3rem;
+  margin-bottom: 0.2rem;
+}
+
+.dropdown-header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: unset;
+
+  .collection-alias,
+  .collection-name {
+    margin: 0;
+  }
+
+  .collection-name {
+    font-weight: 600;
+
+    span {
+      color: $dv-subtext-color;
+      font-weight: 400;
+    }
+  }
+
+  .collection-alias {
+    color: $dv-subtext-color;
+  }
+
+  .collection-icon {
+    height: fit-content;
+    color: $dv-collection-border-color;
+
+    > span {
+      margin-right: 0;
+      font-size: 40px;
+      line-height: 1;
+    }
+  }
+}

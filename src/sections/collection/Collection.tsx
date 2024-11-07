@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { Alert, Col, Row } from '@iqss/dataverse-design-system'
+import { Alert, ButtonGroup, Col, Row } from '@iqss/dataverse-design-system'
+
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { useCollection } from './useCollection'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
@@ -14,6 +15,7 @@ import { CollectionSkeleton } from './CollectionSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
+import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectionDropdown'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {
@@ -33,6 +35,7 @@ export function Collection({
   collectionQueryParams
 }: CollectionProps) {
   useTranslation('collection')
+  const { t } = useTranslation('collection')
   useScrollTop()
   const { user } = useSession()
   const { collection, isLoading } = useCollection(
@@ -46,11 +49,13 @@ export function Collection({
   })
 
   const canUserAddCollection = Boolean(collectionUserPermissions?.canAddCollection)
+  const canUserEditCollection = Boolean(collectionUserPermissions?.canEditCollection)
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
-  const canUserPublishCollection = user && Boolean(collectionUserPermissions?.canPublishCollection)
+  const canUserPublishCollection = Boolean(collectionUserPermissions?.canPublishCollection)
 
   const showAddDataActions = Boolean(user && (canUserAddCollection || canUserAddDataset))
-  const { t } = useTranslation('collection')
+  const showPublishButton = user && !collection?.isReleased && canUserPublishCollection
+  const showEditButton = user && canUserEditCollection
 
   if (!isLoading && !collection) {
     return <PageNotFound />
@@ -71,12 +76,17 @@ export function Collection({
                 {t('publishedAlert')}
               </Alert>
             )}
-            {!collection.isReleased && canUserPublishCollection && (
+            {(showPublishButton || showEditButton) && (
               <div className={styles['action-buttons']}>
-                <PublishCollectionButton
-                  repository={collectionRepository}
-                  collectionId={collection.id}
-                />
+                <ButtonGroup>
+                  {showPublishButton && (
+                    <PublishCollectionButton
+                      repository={collectionRepository}
+                      collectionId={collection.id}
+                    />
+                  )}
+                  {showEditButton && <EditCollectionDropdown collection={collection} />}
+                </ButtonGroup>
               </div>
             )}
 
