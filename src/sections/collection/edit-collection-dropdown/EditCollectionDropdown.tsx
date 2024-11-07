@@ -10,6 +10,7 @@ import {
 } from '@iqss/dataverse-design-system'
 import { PencilFill } from 'react-bootstrap-icons'
 import { Collection } from '@/collection/domain/models/Collection'
+import { RouteWithParams } from '@/sections/Route.enum'
 import styles from './EditCollectionDropdown.module.scss'
 
 interface EditCollectionDropdownProps {
@@ -21,7 +22,7 @@ export const EditCollectionDropdown = ({ collection }: EditCollectionDropdownPro
   const navigate = useNavigate()
 
   const onClickEditGeneralInformation = () => {
-    navigate('edit-general-information')
+    navigate(RouteWithParams.EDIT_COLLECTION_GENERAL_INFO(collection.id))
   }
 
   console.log(collection)
