@@ -8,7 +8,8 @@ import {
   CollectionFormData,
   CollectionFormValuesOnSubmit,
   INPUT_LEVELS_GROUPER,
-  METADATA_BLOCKS_NAMES_GROUPER
+  METADATA_BLOCKS_NAMES_GROUPER,
+  USE_FIELDS_FROM_PARENT
 } from './CollectionForm'
 import { RouteWithParams } from '../../Route.enum'
 import { JSDataverseWriteErrorHandler } from '../../../shared/helpers/JSDataverseWriteErrorHandler'
@@ -65,6 +66,8 @@ export function useSubmitCollection(
 
     const facetIdsDTO = formData.facetIds.map((facet) => facet.value)
 
+    const useFieldsFromParentChecked = formData[USE_FIELDS_FROM_PARENT]
+
     const newCollection: CollectionDTO = {
       name: formData.name,
       alias: formData.alias,
@@ -72,8 +75,8 @@ export function useSubmitCollection(
       affiliation: formData.affiliation,
       description: formData.description,
       contacts: contactsDTO,
-      metadataBlockNames: metadataBlockNamesDTO,
-      inputLevels: inputLevelsDTO,
+      metadataBlockNames: useFieldsFromParentChecked ? undefined : metadataBlockNamesDTO,
+      inputLevels: useFieldsFromParentChecked ? undefined : inputLevelsDTO,
       facetIds: facetIdsDTO
     }
 

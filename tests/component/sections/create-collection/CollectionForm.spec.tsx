@@ -18,6 +18,7 @@ import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models
 import { CollectionFormHelper } from '../../../../src/sections/create-collection/collection-form/CollectionFormHelper'
 import { MetadataBlockName } from '../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
 import { CollectionFacetMother } from '../../collection/domain/models/CollectionFacetMother'
+import { CollectionDTO } from '@/collection/domain/useCases/DTOs/CollectionDTO'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 
@@ -546,6 +547,75 @@ describe('CollectionForm', () => {
           .click()
 
         cy.findByLabelText('Subtitle').should('be.checked')
+      })
+
+      it('should send metadataBlockNames and inputLevels as undefined if use fields from parent is checked', () => {
+        const collectionRepository = {} as CollectionRepository
+        collectionRepository.create = cy.stub().as('createCollection').resolves()
+
+        cy.customMount(
+          <CollectionForm
+            collectionRepository={collectionRepository}
+            ownerCollectionId={OWNER_COLLECTION_ID}
+            defaultValues={formDefaultValues}
+            allMetadataBlocksInfo={allMetadataBlocksMock}
+            defaultCollectionFacets={defaultCollectionFacetsMock}
+            allFacetableMetadataFields={allFacetableMetadataFields}
+          />
+        )
+        // Accept suggestion
+        cy.findByRole('button', { name: 'Apply suggestion' }).click()
+        // Select a Category option
+        cy.findByLabelText(/^Category/i).select(1)
+
+        cy.findByRole('button', { name: 'Create Collection' }).click()
+
+        cy.get('@createCollection').should((spy) => {
+          const createCollectionSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+          const collectionDTO = createCollectionSpy.getCall(0).args[0] as CollectionDTO
+
+          const inputLevels = collectionDTO.inputLevels
+          const metadataBlockNames = collectionDTO.metadataBlockNames
+
+          expect(inputLevels).to.be.undefined
+          expect(metadataBlockNames).to.be.undefined
+        })
+      })
+
+      it('should not send metadataBlockNames and inputLevels as undefined if use fields from parent is unchecked', () => {
+        const collectionRepository = {} as CollectionRepository
+        collectionRepository.create = cy.stub().as('createCollection').resolves()
+
+        cy.customMount(
+          <CollectionForm
+            collectionRepository={collectionRepository}
+            ownerCollectionId={OWNER_COLLECTION_ID}
+            defaultValues={formDefaultValues}
+            allMetadataBlocksInfo={allMetadataBlocksMock}
+            defaultCollectionFacets={defaultCollectionFacetsMock}
+            allFacetableMetadataFields={allFacetableMetadataFields}
+          />
+        )
+
+        cy.get('@useFieldsFromParentCheckbox').uncheck({ force: true })
+
+        // Accept suggestion
+        cy.findByRole('button', { name: 'Apply suggestion' }).click()
+        // Select a Category option
+        cy.findByLabelText(/^Category/i).select(1)
+
+        cy.findByRole('button', { name: 'Create Collection' }).click()
+
+        cy.get('@createCollection').should((spy) => {
+          const createCollectionSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+          const collectionDTO = createCollectionSpy.getCall(0).args[0] as CollectionDTO
+
+          const inputLevels = collectionDTO.inputLevels
+          const metadataBlockNames = collectionDTO.metadataBlockNames
+
+          expect(inputLevels).to.not.be.undefined
+          expect(metadataBlockNames).to.not.be.undefined
+        })
       })
     })
 
