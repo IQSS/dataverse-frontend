@@ -322,8 +322,7 @@ describe('Dataset JSDataverse Repository', () => {
     })
   })
 
-  it.skip('gets the dataset by persistentId when the dataset is deaccessioned', async () => {
-    // TODO - Implement once the getDatasetCitation includes deaccessioned datasets
+  it('gets the dataset by persistentId when the dataset is deaccessioned', async () => {
     const datasetResponse = await DatasetHelper.create(collectionId)
 
     await DatasetHelper.publish(datasetResponse.persistentId)
@@ -337,8 +336,10 @@ describe('Dataset JSDataverse Repository', () => {
       const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
       expect(dataset.version.title).to.deep.equal(datasetExpected.title)
+      expect(dataset.version.publishingStatus).to.equal(DatasetPublishingStatus.DEACCESSIONED)
     })
   })
+
   it('gets the dataset by persistentId when is locked', async () => {
     const datasetResponse = await DatasetHelper.create(collectionId)
     await DatasetHelper.lock(datasetResponse.id, DatasetLockReason.FINALIZE_PUBLICATION)
