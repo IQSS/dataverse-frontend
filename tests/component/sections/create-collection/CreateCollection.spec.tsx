@@ -57,7 +57,7 @@ describe('CreateCollection', () => {
       <CreateCollection
         collectionRepository={collectionRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
-        ownerCollectionId="root"
+        parentCollectionId="root"
       />
     )
     cy.clock()
@@ -76,7 +76,7 @@ describe('CreateCollection', () => {
       <CreateCollection
         collectionRepository={collectionRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
-        ownerCollectionId="root"
+        parentCollectionId="root"
       />
     )
 
@@ -95,7 +95,7 @@ describe('CreateCollection', () => {
       <CreateCollection
         collectionRepository={collectionRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
-        ownerCollectionId="root"
+        parentCollectionId="root"
       />
     )
 
@@ -107,7 +107,7 @@ describe('CreateCollection', () => {
       <CreateCollection
         collectionRepository={collectionRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
-        ownerCollectionId="root"
+        parentCollectionId="root"
       />
     )
 
@@ -131,7 +131,7 @@ describe('CreateCollection', () => {
     cy.mountAuthenticated(
       <CreateCollection
         collectionRepository={collectionRepository}
-        ownerCollectionId="root"
+        parentCollectionId="root"
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     )
@@ -142,7 +142,7 @@ describe('CreateCollection', () => {
     cy.mountAuthenticated(
       <CreateCollection
         collectionRepository={collectionRepository}
-        ownerCollectionId="root"
+        parentCollectionId="root"
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     )
@@ -167,7 +167,7 @@ describe('CreateCollection', () => {
     cy.mountAuthenticated(
       <CreateCollection
         collectionRepository={collectionRepository}
-        ownerCollectionId="root"
+        parentCollectionId="root"
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     )

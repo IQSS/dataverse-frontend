@@ -7,6 +7,13 @@ import { useLoading } from '../loading/LoadingContext'
 import { useSession } from '../session/SessionContext'
 import { useCollection } from '../collection/useCollection'
 import { PageNotFound } from '../page-not-found/PageNotFound'
+import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
+import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
+import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
+import { EditCreateCollectionForm } from '../shared/form/EditCreateCollectionForm/EditCreateCollectionForm'
+import { User } from '@/users/domain/models/User'
+import { useEffect } from 'react'
+import { EditCollectionSkeleton } from './EditCollectionSkeleton'
 
 interface EditCollectionGeneralInfoProps {
   collectionId: string
@@ -16,6 +23,7 @@ interface EditCollectionGeneralInfoProps {
 
 // TODO:ME - Move collection form to a shared component and make everything work again after, tests stories etc.
 // TODO:ME - Integrated shared form here.
+// TODO:ME Change name to EditCollection and use cases also
 
 export const EditCollectionGeneralInfo = ({
   collectionId,
@@ -23,7 +31,7 @@ export const EditCollectionGeneralInfo = ({
   metadataBlockInfoRepository
 }: EditCollectionGeneralInfoProps) => {
   const { t } = useTranslation('editCollectionGeneralInfo')
-  const { isLoading, setIsLoading } = useLoading()
+  const { setIsLoading } = useLoading()
   const { user } = useSession()
 
   const { collection, isLoading: isLoadingCollection } = useCollection(
@@ -41,8 +49,20 @@ export const EditCollectionGeneralInfo = ({
   })
   const canUserEditCollection = Boolean(collectionUserPermissions?.canEditCollection)
 
+  const isLoadingData = isLoadingCollection || isLoadingCollectionUserPermissions
+
+  useEffect(() => {
+    if (!isLoadingData) {
+      setIsLoading(false)
+    }
+  }, [setIsLoading, isLoadingData])
+
   if (!isLoadingCollection && !collection) {
     return <PageNotFound />
+  }
+
+  if (isLoadingData || !collection) {
+    return <EditCollectionSkeleton />
   }
 
   if (collectionUserPermissions && !canUserEditCollection) {
@@ -55,9 +75,35 @@ export const EditCollectionGeneralInfo = ({
     )
   }
 
+  if (collectionPermissionsError) {
+    return (
+      <Alert variant="danger" dismissible={false}>
+        {collectionPermissionsError}
+      </Alert>
+    )
+  }
+
   return (
-    <div>
-      <p>Edit collection general info</p>
-    </div>
+    <section>
+      <BreadcrumbsGenerator
+        hierarchy={collection?.hierarchy}
+        withActionItem
+        actionItemText={t('pageTitle')}
+      />
+      <header>
+        <h1>{t('pageTitle')}</h1>
+      </header>
+
+      <SeparationLine />
+      <RequiredFieldText />
+
+      <EditCreateCollectionForm
+        mode="edit"
+        user={user as User}
+        collection={collection}
+        collectionRepository={collectionRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    </section>
   )
 }

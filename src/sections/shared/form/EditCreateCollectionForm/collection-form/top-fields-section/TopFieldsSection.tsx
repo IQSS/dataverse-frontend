@@ -1,11 +1,11 @@
 import { Controller, UseControllerProps, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
+import { Validator } from '@/shared/helpers/Validator'
 import {
-  collectionTypeOptions,
-  collectionStorageOptions
-} from '../../../../collection/domain/useCases/DTOs/CollectionDTO'
-import { Validator } from '../../../../shared/helpers/Validator'
+  collectionStorageOptions,
+  collectionTypeOptions
+} from '@/collection/domain/useCases/DTOs/CollectionDTO'
 import { ContactsField } from './ContactsField'
 import { IdentifierField } from './IdentifierField'
 import { DescriptionField } from './DescriptionField'

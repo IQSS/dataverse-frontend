@@ -3,97 +3,34 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Alert, Button, Card, Stack } from '@iqss/dataverse-design-system'
-import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
-import {
-  CollectionType,
-  CollectionStorage
-} from '../../../collection/domain/useCases/DTOs/CollectionDTO'
-import { SubmissionStatus, useSubmitCollection } from './useSubmitCollection'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { CollectionFormData, CollectionFormFacet } from '../types'
 import {
   MetadataBlockInfo,
-  MetadataBlockName,
   MetadataField
-} from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { SeparationLine } from '../../shared/layout/SeparationLine/SeparationLine'
+} from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { SubmissionStatus, useSubmitCollection } from './useSubmitCollection'
+import styles from './CollectionForm.module.scss'
 import { TopFieldsSection } from './top-fields-section/TopFieldsSection'
+import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
 import { MetadataFieldsSection } from './metadata-fields-section/MetadataFieldsSection'
 import { BrowseSearchFacetsSection } from './browse-search-facets-section/BrowseSearchFacetsSection'
-import styles from './CollectionForm.module.scss'
-
-export const METADATA_BLOCKS_NAMES_GROUPER = 'metadataBlockNames'
-export const USE_FIELDS_FROM_PARENT = 'useFieldsFromParent'
-export const INPUT_LEVELS_GROUPER = 'inputLevels'
-export const FACET_IDS_FIELD = 'facetIds'
-export const USE_FACETS_FROM_PARENT = 'useFacetsFromParent'
+import { EditCreateCollectionFormMode } from '../EditCreateCollectionForm'
 
 export interface CollectionFormProps {
+  mode: EditCreateCollectionFormMode
   collectionRepository: CollectionRepository
-  ownerCollectionId: string
+  collectionIdOrParentCollectionId: string
   defaultValues: CollectionFormData
   allMetadataBlocksInfo: MetadataBlockInfo[]
   allFacetableMetadataFields: MetadataField[]
   defaultCollectionFacets: CollectionFormFacet[]
 }
 
-export type CollectionFormData = {
-  hostCollection: string
-  name: string
-  affiliation: string
-  alias: string
-  storage: CollectionStorage
-  type: CollectionType | ''
-  description: string
-  contacts: { value: string }[]
-  [USE_FIELDS_FROM_PARENT]: boolean
-  [METADATA_BLOCKS_NAMES_GROUPER]: CollectionFormMetadataBlocks
-  [INPUT_LEVELS_GROUPER]: FormattedCollectionInputLevels
-  [USE_FACETS_FROM_PARENT]: boolean
-  facetIds: CollectionFormFacet[]
-}
-
-export type CollectionFormMetadataBlocks = Record<MetadataBlockName, boolean>
-
-export type FormattedCollectionInputLevels = {
-  [key: string]: {
-    include: boolean
-    optionalOrRequired: CollectionFormInputLevelValue
-    parentBlockName: MetadataBlockName
-  }
-}
-
-export type FormattedCollectionInputLevelsWithoutParentBlockName = {
-  [K in keyof FormattedCollectionInputLevels]: Omit<
-    FormattedCollectionInputLevels[K],
-    'parentBlockName'
-  >
-}
-
-export const CollectionFormInputLevelOptions = {
-  OPTIONAL: 'optional',
-  REQUIRED: 'required'
-} as const
-
-export type CollectionFormInputLevelValue =
-  (typeof CollectionFormInputLevelOptions)[keyof typeof CollectionFormInputLevelOptions]
-
-export type CollectionFormFacet = {
-  value: string
-  label: string
-  id: string
-}
-
-export type MetadataFieldWithParentBlockInfo = MetadataField & {
-  parentBlockInfo: Pick<MetadataBlockInfo, 'id' | 'name' | 'displayName'>
-}
-
-// On the submit function callback, type is CollectionType as type field is required and wont never be ""
-export type CollectionFormValuesOnSubmit = Omit<CollectionFormData, 'type'> & {
-  type: CollectionType
-}
-
 export const CollectionForm = ({
+  mode,
   collectionRepository,
-  ownerCollectionId,
+  collectionIdOrParentCollectionId,
   defaultValues,
   allMetadataBlocksInfo,
   allFacetableMetadataFields,
@@ -104,8 +41,9 @@ export const CollectionForm = ({
   const navigate = useNavigate()
 
   const { submitForm, submitError, submissionStatus } = useSubmitCollection(
+    mode,
+    collectionIdOrParentCollectionId,
     collectionRepository,
-    ownerCollectionId,
     onSubmittedCollectionError
   )
 

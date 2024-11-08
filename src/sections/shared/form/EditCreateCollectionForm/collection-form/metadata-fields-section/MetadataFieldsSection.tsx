@@ -6,8 +6,8 @@ import { FieldsFromParentCheckbox } from './fields-from-parent-checkbox/FieldsFr
 import {
   MetadataBlockInfo,
   MetadataBlockName
-} from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { CollectionFormData } from '../CollectionForm'
+} from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { CollectionFormData } from '../../types'
 
 interface MetadataFieldsSectionProps {
   allMetadataBlocksInfo: MetadataBlockInfo[]

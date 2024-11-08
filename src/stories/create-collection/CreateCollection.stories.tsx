@@ -30,7 +30,7 @@ export const Default: Story = {
   render: () => (
     <CreateCollection
       collectionRepository={new CollectionMockRepository()}
-      ownerCollectionId={ROOT_COLLECTION_ALIAS}
+      parentCollectionId={ROOT_COLLECTION_ALIAS}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
     />
   )
@@ -39,7 +39,7 @@ export const Loading: Story = {
   render: () => (
     <CreateCollection
       collectionRepository={new CollectionLoadingMockRepository()}
-      ownerCollectionId={ROOT_COLLECTION_ALIAS}
+      parentCollectionId={ROOT_COLLECTION_ALIAS}
       metadataBlockInfoRepository={new MetadataBlockInfoMockLoadingRepository()}
     />
   )
@@ -50,7 +50,7 @@ export const OwnerCollectionNotFound: Story = {
     <CreateCollection
       collectionRepository={new NoCollectionMockRepository()}
       metadataBlockInfoRepository={new MetadataBlockInfoMockErrorRepository()}
-      ownerCollectionId={ROOT_COLLECTION_ALIAS}
+      parentCollectionId={ROOT_COLLECTION_ALIAS}
     />
   )
 }
@@ -73,7 +73,7 @@ export const NotAllowedToAddCollection: Story = {
     <CreateCollection
       collectionRepository={collectionRepositoryWithoutPermissionsToCreateCollection}
       metadataBlockInfoRepository={new MetadataBlockInfoMockErrorRepository()}
-      ownerCollectionId={ROOT_COLLECTION_ALIAS}
+      parentCollectionId={ROOT_COLLECTION_ALIAS}
     />
   )
 }

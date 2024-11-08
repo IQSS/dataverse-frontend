@@ -2,23 +2,13 @@ import { ChangeEvent, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import { Form } from '@iqss/dataverse-design-system'
-import { MetadataBlockName } from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
 import { ConfirmResetModificationsModal } from './ConfirmResetModificationsModal'
+import { CollectionFormData } from '../../../types'
 import {
-  CollectionFormData,
   INPUT_LEVELS_GROUPER,
   METADATA_BLOCKS_NAMES_GROUPER,
   USE_FIELDS_FROM_PARENT
-} from '../../CollectionForm'
-
-const ALL_INPUT_LEVEL_FIELDS = [
-  MetadataBlockName.CITATION,
-  MetadataBlockName.GEOSPATIAL,
-  MetadataBlockName.SOCIAL_SCIENCE,
-  MetadataBlockName.ASTROPHYSICS,
-  MetadataBlockName.BIOMEDICAL,
-  MetadataBlockName.JOURNAL
-]
+} from '../../../EditCreateCollectionForm'
 
 interface FieldsFromParentCheckboxProps {
   defaultValues: CollectionFormData
@@ -34,12 +24,11 @@ export const FieldsFromParentCheckbox = ({ defaultValues }: FieldsFromParentChec
   const handleContinueWithReset = () => {
     setValue(USE_FIELDS_FROM_PARENT, true)
 
+    const metadataBlockDefaultValues = Object.entries(defaultValues[METADATA_BLOCKS_NAMES_GROUPER])
+
     // Reset metadata block names checboxes to the inital value
-    ALL_INPUT_LEVEL_FIELDS.forEach((blockName) => {
-      setValue(
-        `${METADATA_BLOCKS_NAMES_GROUPER}.${blockName}`,
-        defaultValues[METADATA_BLOCKS_NAMES_GROUPER][blockName]
-      )
+    metadataBlockDefaultValues.forEach(([blockName, blockInitialValue]) => {
+      setValue(`${METADATA_BLOCKS_NAMES_GROUPER}.${blockName}`, blockInitialValue)
     })
 
     // Reset input levels to the initial value

@@ -1,5 +1,5 @@
-import { Alert, Button, Modal } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
+import { Alert, Button, Modal } from '@iqss/dataverse-design-system'
 
 interface ConfirmResetModificationsModalProps {
   showModal: boolean

@@ -1,27 +1,40 @@
-import {
-  CollectionForm,
-  CollectionFormData,
-  CollectionFormFacet,
-  FormattedCollectionInputLevels,
-  FormattedCollectionInputLevelsWithoutParentBlockName,
-  INPUT_LEVELS_GROUPER,
-  METADATA_BLOCKS_NAMES_GROUPER,
-  USE_FACETS_FROM_PARENT,
-  USE_FIELDS_FROM_PARENT
-} from '../../../../src/sections/create-collection/collection-form/CollectionForm'
+// import {
+//   CollectionForm,
+//   CollectionFormData,
+//   CollectionFormFacet,
+//   FormattedCollectionInputLevels,
+//   FormattedCollectionInputLevelsWithoutParentBlockName,
+//   INPUT_LEVELS_GROUPER,
+//   METADATA_BLOCKS_NAMES_GROUPER,
+//   USE_FACETS_FROM_PARENT,
+//   USE_FIELDS_FROM_PARENT
+// } from '../../../../src/sections/create-collection/collection-form/CollectionForm'
 import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
 import { UserRepository } from '../../../../src/users/domain/repositories/UserRepository'
 import { CollectionMother } from '../../collection/domain/models/CollectionMother'
 import { UserMother } from '../../users/domain/models/UserMother'
-import { collectionNameToAlias } from '../../../../src/sections/create-collection/collection-form/top-fields-section/IdentifierField'
+// import { collectionNameToAlias } from '../../../../src/sections/create-collection/collection-form/top-fields-section/IdentifierField'
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
-import { CollectionFormHelper } from '../../../../src/sections/create-collection/collection-form/CollectionFormHelper'
+// import { CollectionFormHelper } from '../../../../src/sections/create-collection/collection-form/CollectionFormHelper'
 import { MetadataBlockName } from '../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
 import { CollectionFacetMother } from '../../collection/domain/models/CollectionFacetMother'
+import { CollectionFormHelper } from '@/sections/shared/form/EditCreateCollectionForm/CollectionFormHelper'
+import {
+  CollectionFormData,
+  CollectionFormFacet,
+  FormattedCollectionInputLevels,
+  FormattedCollectionInputLevelsWithoutParentBlockName
+} from '@/sections/shared/form/EditCreateCollectionForm/types'
+import {
+  INPUT_LEVELS_GROUPER,
+  METADATA_BLOCKS_NAMES_GROUPER,
+  USE_FACETS_FROM_PARENT,
+  USE_FIELDS_FROM_PARENT
+} from '@/sections/shared/form/EditCreateCollectionForm/EditCreateCollectionForm'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 
-const OWNER_COLLECTION_ID = 'root'
+const PARENT_COLLECTION_ID = 'root'
 
 const COLLECTION_NAME = 'Collection Name'
 const collection = CollectionMother.create({ name: COLLECTION_NAME })
@@ -91,6 +104,8 @@ const formDefaultValues: CollectionFormData = {
   facetIds: defaultCollectionFacetsMock
 }
 
+// TODO:ME Test the EditCreateCollectionForm instead
+
 describe('CollectionForm', () => {
   beforeEach(() => {
     collectionRepository.create = cy.stub().resolves(1)
@@ -102,7 +117,7 @@ describe('CollectionForm', () => {
     cy.mountAuthenticated(
       <CollectionForm
         collectionRepository={collectionRepository}
-        ownerCollectionId={OWNER_COLLECTION_ID}
+        parentCollectionId={PARENT_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
         defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -116,7 +131,7 @@ describe('CollectionForm', () => {
     cy.mountAuthenticated(
       <CollectionForm
         collectionRepository={collectionRepository}
-        ownerCollectionId={OWNER_COLLECTION_ID}
+        parentCollectionId={PARENT_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
         defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -131,7 +146,7 @@ describe('CollectionForm', () => {
     cy.mountAuthenticated(
       <CollectionForm
         collectionRepository={collectionRepository}
-        ownerCollectionId={OWNER_COLLECTION_ID}
+        parentCollectionId={PARENT_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
         defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -150,7 +165,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
-        ownerCollectionId={OWNER_COLLECTION_ID}
+        parentCollectionId={PARENT_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
         defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -165,7 +180,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
-        ownerCollectionId={OWNER_COLLECTION_ID}
+        parentCollectionId={PARENT_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
         defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -184,7 +199,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
-        ownerCollectionId={OWNER_COLLECTION_ID}
+        parentCollectionId={PARENT_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
         defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -207,7 +222,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
-        ownerCollectionId={OWNER_COLLECTION_ID}
+        parentCollectionId={PARENT_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
         defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -227,7 +242,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
-        ownerCollectionId={OWNER_COLLECTION_ID}
+        parentCollectionId={PARENT_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
         defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -246,7 +261,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
-        ownerCollectionId={OWNER_COLLECTION_ID}
+        parentCollectionId={PARENT_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
         defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -269,7 +284,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
-        ownerCollectionId={OWNER_COLLECTION_ID}
+        parentCollectionId={PARENT_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
         defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -293,7 +308,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
-        ownerCollectionId={OWNER_COLLECTION_ID}
+        parentCollectionId={PARENT_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
         defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -317,7 +332,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
-        ownerCollectionId={OWNER_COLLECTION_ID}
+        parentCollectionId={PARENT_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
         defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -341,7 +356,7 @@ describe('CollectionForm', () => {
     cy.customMount(
       <CollectionForm
         collectionRepository={collectionRepository}
-        ownerCollectionId={OWNER_COLLECTION_ID}
+        parentCollectionId={PARENT_COLLECTION_ID}
         defaultValues={formDefaultValues}
         allMetadataBlocksInfo={allMetadataBlocksMock}
         defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -357,7 +372,7 @@ describe('CollectionForm', () => {
       cy.customMount(
         <CollectionForm
           collectionRepository={collectionRepository}
-          ownerCollectionId={OWNER_COLLECTION_ID}
+          parentCollectionId={PARENT_COLLECTION_ID}
           defaultValues={formDefaultValues}
           allMetadataBlocksInfo={allMetadataBlocksMock}
           defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -377,7 +392,7 @@ describe('CollectionForm', () => {
       cy.customMount(
         <CollectionForm
           collectionRepository={collectionRepository}
-          ownerCollectionId={OWNER_COLLECTION_ID}
+          parentCollectionId={PARENT_COLLECTION_ID}
           defaultValues={formDefaultValues}
           allMetadataBlocksInfo={allMetadataBlocksMock}
           defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -398,7 +413,7 @@ describe('CollectionForm', () => {
       cy.customMount(
         <CollectionForm
           collectionRepository={collectionRepository}
-          ownerCollectionId={OWNER_COLLECTION_ID}
+          parentCollectionId={PARENT_COLLECTION_ID}
           defaultValues={{
             ...formDefaultValues,
             alias: collectionNameToAlias(defaultCollectionName)
@@ -416,7 +431,7 @@ describe('CollectionForm', () => {
       cy.customMount(
         <CollectionForm
           collectionRepository={collectionRepository}
-          ownerCollectionId={OWNER_COLLECTION_ID}
+          parentCollectionId={PARENT_COLLECTION_ID}
           defaultValues={{ ...formDefaultValues, name: '' }}
           allMetadataBlocksInfo={allMetadataBlocksMock}
           defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -433,7 +448,7 @@ describe('CollectionForm', () => {
       cy.customMount(
         <CollectionForm
           collectionRepository={collectionRepository}
-          ownerCollectionId={OWNER_COLLECTION_ID}
+          parentCollectionId={PARENT_COLLECTION_ID}
           defaultValues={formDefaultValues}
           allMetadataBlocksInfo={allMetadataBlocksMock}
           defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -451,7 +466,7 @@ describe('CollectionForm', () => {
       cy.customMount(
         <CollectionForm
           collectionRepository={collectionRepository}
-          ownerCollectionId={OWNER_COLLECTION_ID}
+          parentCollectionId={PARENT_COLLECTION_ID}
           defaultValues={{
             ...formDefaultValues,
             contacts: [{ value: testUser.email }, { value: 'fake@fake.com' }]
@@ -476,7 +491,7 @@ describe('CollectionForm', () => {
       cy.mountAuthenticated(
         <CollectionForm
           collectionRepository={collectionRepository}
-          ownerCollectionId={OWNER_COLLECTION_ID}
+          parentCollectionId={PARENT_COLLECTION_ID}
           defaultValues={formDefaultValues}
           allMetadataBlocksInfo={allMetadataBlocksMock}
           defaultCollectionFacets={defaultCollectionFacetsMock}
@@ -821,7 +836,7 @@ describe('CollectionForm', () => {
       cy.mountAuthenticated(
         <CollectionForm
           collectionRepository={collectionRepository}
-          ownerCollectionId={OWNER_COLLECTION_ID}
+          parentCollectionId={PARENT_COLLECTION_ID}
           defaultValues={formDefaultValues}
           allMetadataBlocksInfo={allMetadataBlocksMock}
           defaultCollectionFacets={defaultCollectionFacetsMock}

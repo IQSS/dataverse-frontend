@@ -1,13 +1,16 @@
 import { ChangeEvent, useEffect, useId, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import { Button, Form, Stack, CloseButton } from '@iqss/dataverse-design-system'
 import {
   MetadataBlockInfo,
   MetadataBlockName
-} from '../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { METADATA_BLOCKS_NAMES_GROUPER, USE_FIELDS_FROM_PARENT } from '../../CollectionForm'
+} from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import {
+  METADATA_BLOCKS_NAMES_GROUPER,
+  USE_FIELDS_FROM_PARENT
+} from '../../../EditCreateCollectionForm'
 import { InputLevelsTable } from './input-levels-table/InputLevelsTable'
-import { useTranslation } from 'react-i18next'
 
 interface MetadataInputLevelFieldsBlockProps {
   blockName: MetadataBlockName

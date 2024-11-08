@@ -2,8 +2,9 @@ import { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Form, Stack } from '@iqss/dataverse-design-system'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
-import { MetadataField } from '../../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { CollectionFormInputLevelValue, INPUT_LEVELS_GROUPER } from '../../../CollectionForm'
+import { MetadataField } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { INPUT_LEVELS_GROUPER } from '../../../../EditCreateCollectionForm'
+import { CollectionFormInputLevelValue } from '../../../../types'
 
 type RequiredOptionalRadiosProps =
   | {

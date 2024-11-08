@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { CollectionFacet } from '../../collection/domain/models/CollectionFacet'
-import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
-import { getCollectionFacets } from '../../collection/domain/useCases/getCollectionFacets'
+import { CollectionFacet } from '@/collection/domain/models/CollectionFacet'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { getCollectionFacets } from '@/collection/domain/useCases/getCollectionFacets'
 
 interface Props {
   collectionId: string

@@ -1,20 +1,20 @@
-import { CollectionInputLevel } from '../../../collection/domain/models/Collection'
-import {
-  CollectionDTO,
-  CollectionInputLevelDTO
-} from '../../../collection/domain/useCases/DTOs/CollectionDTO'
 import {
   MetadataBlockInfo,
   MetadataBlockName,
   MetadataField,
   TypeClassMetadataFieldOptions
-} from '../../../metadata-block-info/domain/models/MetadataBlockInfo'
+} from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { CollectionInputLevel } from '@/collection/domain/models/Collection'
+import {
+  CollectionDTO,
+  CollectionInputLevelDTO
+} from '@/collection/domain/useCases/DTOs/CollectionDTO'
 import {
   CollectionFormMetadataBlocks,
   FormattedCollectionInputLevels,
   FormattedCollectionInputLevelsWithoutParentBlockName,
   MetadataFieldWithParentBlockInfo
-} from './CollectionForm'
+} from './types'
 
 export class CollectionFormHelper {
   public static replaceDotWithSlash = (str: string) => str.replace(/\./g, '/')

@@ -2,7 +2,8 @@ import { ChangeEvent } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Form } from '@iqss/dataverse-design-system'
-import { CollectionFormFacet, FACET_IDS_FIELD, USE_FACETS_FROM_PARENT } from '../CollectionForm'
+import { CollectionFormFacet } from '../../types'
+import { FACET_IDS_FIELD, USE_FACETS_FROM_PARENT } from '../../EditCreateCollectionForm'
 
 interface FacetsFromParentCheckboxProps {
   defaultCollectionFacets: CollectionFormFacet[]

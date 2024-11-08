@@ -1,16 +1,16 @@
 import { ChangeEvent, useId } from 'react'
 import { Controller, UseControllerProps, useFormContext, useWatch } from 'react-hook-form'
 import cn from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { Form } from '@iqss/dataverse-design-system'
+import { RequiredOptionalRadios } from './RequiredOptionalRadios'
 import {
   MetadataField,
   TypeClassMetadataFieldOptions
-} from '../../../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { INPUT_LEVELS_GROUPER } from '../../../CollectionForm'
+} from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { INPUT_LEVELS_GROUPER } from '../../../../EditCreateCollectionForm'
+import { CollectionFormHelper } from '../../../../CollectionFormHelper'
 import styles from './InputLevelsTable.module.scss'
-import { CollectionFormHelper } from '../../../CollectionFormHelper'
-import { RequiredOptionalRadios } from './RequiredOptionalRadios'
-import { useTranslation } from 'react-i18next'
 
 interface InputLevelFieldRowProps {
   metadataField: MetadataField

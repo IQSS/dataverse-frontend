@@ -3,9 +3,9 @@ import { BreadcrumbsSkeleton } from '@/sections/shared/hierarchy/BreadcrumbsSkel
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
 import { EditCreateCollectionFormSkeleton } from '@/sections/shared/form/EditCreateCollectionForm/EditCreateCollectionFormSkeleton'
 
-export const CreateCollectionSkeleton = () => (
+export const EditCollectionSkeleton = () => (
   <SkeletonTheme>
-    <section data-testid="create-collection-skeleton">
+    <section data-testid="edit-collection-skeleton">
       <BreadcrumbsSkeleton />
       <Skeleton height="40px" width="350px" style={{ marginBottom: 16 }} />
 

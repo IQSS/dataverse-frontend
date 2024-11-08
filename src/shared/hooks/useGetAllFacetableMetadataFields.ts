@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { MetadataField } from '../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { getAllFacetableMetadataFields } from '../../metadata-block-info/domain/useCases/getAllFacetableMetadataFields'
+import { MetadataField } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { getAllFacetableMetadataFields } from '@/metadata-block-info/domain/useCases/getAllFacetableMetadataFields'
 
 interface Props {
   metadataBlockInfoRepository: MetadataBlockInfoRepository

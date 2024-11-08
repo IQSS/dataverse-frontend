@@ -1,18 +1,24 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { WriteError } from '@iqss/dataverse-client-javascript'
-import { createCollection } from '../../../collection/domain/useCases/createCollection'
-import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
-import { CollectionDTO } from '../../../collection/domain/useCases/DTOs/CollectionDTO'
 import {
   CollectionFormData,
+  CollectionFormMetadataBlocks,
   CollectionFormValuesOnSubmit,
+  FormattedCollectionInputLevels
+} from '../types'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import {
+  EditCreateCollectionFormMode,
   INPUT_LEVELS_GROUPER,
-  METADATA_BLOCKS_NAMES_GROUPER
-} from './CollectionForm'
-import { RouteWithParams } from '../../Route.enum'
-import { JSDataverseWriteErrorHandler } from '../../../shared/helpers/JSDataverseWriteErrorHandler'
-import { CollectionFormHelper } from './CollectionFormHelper'
+  METADATA_BLOCKS_NAMES_GROUPER,
+  USE_FIELDS_FROM_PARENT
+} from '../EditCreateCollectionForm'
+import { CollectionDTO } from '@/collection/domain/useCases/DTOs/CollectionDTO'
+import { createCollection } from '@/collection/domain/useCases/createCollection'
+import { RouteWithParams } from '@/sections/Route.enum'
+import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
+import { CollectionFormHelper } from '../CollectionFormHelper'
 
 export enum SubmissionStatus {
   NotSubmitted = 'NotSubmitted',
@@ -37,8 +43,9 @@ type UseSubmitCollectionReturnType =
     }
 
 export function useSubmitCollection(
+  mode: EditCreateCollectionFormMode,
+  collectionIdOrParentCollectionId: string,
   collectionRepository: CollectionRepository,
-  ownerCollectionId: string,
   onSubmitErrorCallback: () => void
 ): UseSubmitCollectionReturnType {
   const navigate = useNavigate()
@@ -55,15 +62,17 @@ export function useSubmitCollection(
 
     const metadataBlockNamesDTO =
       CollectionFormHelper.formatFormMetadataBlockNamesToMetadataBlockNamesDTO(
-        formData[METADATA_BLOCKS_NAMES_GROUPER]
+        formData[METADATA_BLOCKS_NAMES_GROUPER] as CollectionFormMetadataBlocks
       )
 
     const inputLevelsDTO = CollectionFormHelper.formatFormInputLevelsToInputLevelsDTO(
       metadataBlockNamesDTO,
-      formData[INPUT_LEVELS_GROUPER]
+      formData[INPUT_LEVELS_GROUPER] as FormattedCollectionInputLevels
     )
 
     const facetIdsDTO = formData.facetIds.map((facet) => facet.value)
+
+    const useFieldsFromParentChecked = formData[USE_FIELDS_FROM_PARENT] as boolean
 
     const newCollection: CollectionDTO = {
       name: formData.name,
@@ -72,15 +81,12 @@ export function useSubmitCollection(
       affiliation: formData.affiliation,
       description: formData.description,
       contacts: contactsDTO,
-      metadataBlockNames: metadataBlockNamesDTO,
-      inputLevels: inputLevelsDTO,
+      metadataBlockNames: useFieldsFromParentChecked ? undefined : metadataBlockNamesDTO,
+      inputLevels: useFieldsFromParentChecked ? undefined : inputLevelsDTO,
       facetIds: facetIdsDTO
     }
 
-    // TODO: We can't send the hostCollection name, but we should send the hostCollection alias
-    // So in a next iteration we should get the hostCollection alias from the hostCollection name selected
-
-    createCollection(collectionRepository, newCollection, ownerCollectionId)
+    createCollection(collectionRepository, newCollection, collectionIdOrParentCollectionId)
       .then(() => {
         setSubmitError(null)
         setSubmissionStatus(SubmissionStatus.SubmitComplete)

@@ -10,12 +10,13 @@ import {
   TransferListItem,
   SelectAdvanced
 } from '@iqss/dataverse-design-system'
+import { CollectionFormFacet } from '../../types'
 import {
   MetadataBlockInfo,
   MetadataField
-} from '../../../../metadata-block-info/domain/models/MetadataBlockInfo'
-import { CollectionFormHelper } from '../CollectionFormHelper'
-import { CollectionFormFacet, FACET_IDS_FIELD, USE_FACETS_FROM_PARENT } from '../CollectionForm'
+} from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { FACET_IDS_FIELD, USE_FACETS_FROM_PARENT } from '../../EditCreateCollectionForm'
+import { CollectionFormHelper } from '../../CollectionFormHelper'
 import { FacetsFromParentCheckbox } from './FacetsFromParentCheckbox'
 import styles from './BrowseSearchFacetsSection.module.scss'
 
