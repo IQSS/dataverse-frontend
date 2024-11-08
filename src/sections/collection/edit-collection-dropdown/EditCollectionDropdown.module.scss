@@ -9,11 +9,19 @@
   display: flex;
   gap: 12px;
   align-items: center;
+  min-width: 250px;
   color: unset;
+  white-space: wrap;
+
+  @media screen and (min-width: 768px) {
+    min-width: 350px;
+    white-space: nowrap;
+  }
 
   .collection-alias,
   .collection-name {
     margin: 0;
+    font-size: 14px;
   }
 
   .collection-name {

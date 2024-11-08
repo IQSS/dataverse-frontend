@@ -25,8 +25,6 @@ export const EditCollectionDropdown = ({ collection }: EditCollectionDropdownPro
     navigate(RouteWithParams.EDIT_COLLECTION_GENERAL_INFO(collection.id))
   }
 
-  console.log(collection)
-
   return (
     <DropdownButton
       id="edit-collection-dropdown"
