@@ -479,8 +479,8 @@ describe('Dataset', () => {
     })
 
     it('loads the embargoed files', () => {
-      const utcDate = moment.utc().startOf('day').add(100, 'years').toDate()
-      const expectedDate = DateHelper.toDisplayFormat(utcDate)
+      const utcDate = moment.utc().startOf('day').add(100, 'years')
+      const expectedDate = utcDate.toISOString().split('T')[0]
 
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(1)).then((dataset) =>
