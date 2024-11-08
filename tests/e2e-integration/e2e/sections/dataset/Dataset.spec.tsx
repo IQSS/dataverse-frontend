@@ -8,7 +8,6 @@ import { FileHelper } from '../../../shared/files/FileHelper'
 import moment from 'moment-timezone'
 import { CollectionHelper } from '../../../shared/collection/CollectionHelper'
 import { FILES_TAB_INFINITE_SCROLL_ENABLED } from '../../../../../src/sections/dataset/config'
-import { DateHelper } from '../../../../../src/shared/helpers/DateHelper'
 
 type Dataset = {
   datasetVersion: { metadataBlocks: { citation: { fields: { value: string }[] } } }
