@@ -1,14 +1,14 @@
+import { Trans, useTranslation } from 'react-i18next'
 import { Accordion, Col, Row } from '@iqss/dataverse-design-system'
 import { FilePreview } from '../file-preview/FilePreview'
 import { FileLabels } from '../file-labels/FileLabels'
-import styles from './FileMetadata.module.scss'
 import { DateHelper } from '../../../shared/helpers/DateHelper'
 import { FileEmbargoDate } from '../file-embargo/FileEmbargoDate'
 import { BASE_URL } from '../../../config'
-import { Trans, useTranslation } from 'react-i18next'
 import { FileMetadata as FileMetadataModel } from '../../../files/domain/models/FileMetadata'
 import { FilePermissions } from '../../../files/domain/models/FilePermissions'
 import { DatasetPublishingStatus } from '../../../dataset/domain/models/Dataset'
+import styles from './FileMetadata.module.scss'
 
 interface FileMetadataProps {
   name: string
@@ -24,6 +24,7 @@ export function FileMetadata({
   datasetPublishingStatus
 }: FileMetadataProps) {
   const { t } = useTranslation('file')
+
   return (
     <Accordion defaultActiveKey="0">
       <Accordion.Item eventKey="0">
@@ -98,7 +99,9 @@ export function FileMetadata({
               <strong>{t('metadata.fields.depositDate')}</strong>
             </Col>
             <Col>
-              <time>{DateHelper.toISO8601Format(metadata.depositDate)}</time>
+              <time dateTime={DateHelper.toISO8601Format(metadata.depositDate)}>
+                {DateHelper.toISO8601Format(metadata.depositDate)}
+              </time>
             </Col>
           </Row>
           {metadata.publicationDate && (
@@ -107,7 +110,9 @@ export function FileMetadata({
                 <strong>{t('metadata.fields.metadataReleaseDate')}</strong>
               </Col>
               <Col>
-                <time>{DateHelper.toISO8601Format(metadata.publicationDate)}</time>
+                <time dateTime={DateHelper.toISO8601Format(metadata.publicationDate)}>
+                  {DateHelper.toISO8601Format(metadata.publicationDate)}
+                </time>
               </Col>
             </Row>
           )}
@@ -124,10 +129,11 @@ export function FileMetadata({
                     format="YYYY-MM-DD"
                   />
                 ) : (
-                  <time>
-                    {metadata.publicationDate &&
-                      DateHelper.toISO8601Format(metadata.publicationDate)}
-                  </time>
+                  metadata.publicationDate && (
+                    <time dateTime={DateHelper.toISO8601Format(metadata.publicationDate)}>
+                      {DateHelper.toISO8601Format(metadata.publicationDate)}
+                    </time>
+                  )
                 )}
               </Col>
             </Row>

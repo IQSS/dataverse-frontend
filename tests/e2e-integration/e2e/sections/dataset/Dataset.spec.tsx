@@ -8,6 +8,7 @@ import { FileHelper } from '../../../shared/files/FileHelper'
 import moment from 'moment-timezone'
 import { CollectionHelper } from '../../../shared/collection/CollectionHelper'
 import { FILES_TAB_INFINITE_SCROLL_ENABLED } from '../../../../../src/sections/dataset/config'
+import { DateHelper } from '../../../../../src/shared/helpers/DateHelper'
 
 type Dataset = {
   datasetVersion: { metadataBlocks: { citation: { fields: { value: string }[] } } }
@@ -478,8 +479,8 @@ describe('Dataset', () => {
     })
 
     it('loads the embargoed files', () => {
-      const utcDate = moment.utc().startOf('day').add(100, 'years')
-      const expectedDate = utcDate.toISOString().split('T')[0]
+      const utcDate = moment.utc().startOf('day').add(100, 'years').toDate()
+      const expectedDate = DateHelper.toDisplayFormat(utcDate)
 
       cy.wrap(
         DatasetHelper.createWithFiles(FileHelper.createMany(1)).then((dataset) =>
