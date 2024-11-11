@@ -28,7 +28,7 @@ export class CollectionLoadingMockRepository extends CollectionMockRepository {
     return new Promise(() => {})
   }
 
-  editGeneralInfo(_collectionIdOrAlias: string, _updatedCollection: CollectionDTO): Promise<void> {
+  edit(_collectionIdOrAlias: string, _updatedCollection: CollectionDTO): Promise<void> {
     return new Promise(() => {})
   }
 }

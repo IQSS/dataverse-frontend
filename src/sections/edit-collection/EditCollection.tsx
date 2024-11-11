@@ -15,7 +15,7 @@ import { User } from '@/users/domain/models/User'
 import { useEffect } from 'react'
 import { EditCollectionSkeleton } from './EditCollectionSkeleton'
 
-interface EditCollectionGeneralInfoProps {
+interface EditCollectionProps {
   collectionId: string
   collectionRepository: CollectionRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
@@ -23,14 +23,13 @@ interface EditCollectionGeneralInfoProps {
 
 // TODO:ME - Move collection form to a shared component and make everything work again after, tests stories etc.
 // TODO:ME - Integrated shared form here.
-// TODO:ME Change name to EditCollection and use cases also
 
-export const EditCollectionGeneralInfo = ({
+export const EditCollection = ({
   collectionId,
   collectionRepository,
   metadataBlockInfoRepository
-}: EditCollectionGeneralInfoProps) => {
-  const { t } = useTranslation('editCollectionGeneralInfo')
+}: EditCollectionProps) => {
+  const { t } = useTranslation('editCollection')
   const { setIsLoading } = useLoading()
   const { user } = useSession()
 

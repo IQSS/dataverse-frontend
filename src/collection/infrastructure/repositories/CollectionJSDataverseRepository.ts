@@ -63,7 +63,7 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     return publishCollection.execute(collectionIdOrAlias)
   }
 
-  editGeneralInfo(collectionIdOrAlias: string, updatedCollection: CollectionDTO): Promise<void> {
+  edit(collectionIdOrAlias: string, updatedCollection: CollectionDTO): Promise<void> {
     return updateCollection.execute(collectionIdOrAlias, updatedCollection)
   }
 }

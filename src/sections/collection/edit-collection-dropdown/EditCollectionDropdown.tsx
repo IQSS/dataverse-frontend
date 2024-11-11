@@ -22,7 +22,7 @@ export const EditCollectionDropdown = ({ collection }: EditCollectionDropdownPro
   const navigate = useNavigate()
 
   const onClickEditGeneralInformation = () => {
-    navigate(RouteWithParams.EDIT_COLLECTION_GENERAL_INFO(collection.id))
+    navigate(RouteWithParams.EDIT_COLLECTION(collection.id))
   }
 
   return (
