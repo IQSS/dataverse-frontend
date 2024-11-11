@@ -138,9 +138,10 @@
     "submitStatus": {
       "success": "Collection created successfully."
     },
-    "formButtons": {
-      "save": "Create Collection",
-      "cancel": "Cancel"
-    }
+    "saveButton": {
+      "createMode": "Create Collection",
+      "editMode": "Save Changes"
+    },
+    "cancelButton": "Cancel"
   }
 }

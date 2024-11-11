@@ -11,6 +11,7 @@ import {
 } from '../EditCreateCollectionForm'
 import { CollectionDTO } from '@/collection/domain/useCases/DTOs/CollectionDTO'
 import { createCollection } from '@/collection/domain/useCases/createCollection'
+import { editCollection } from '@/collection/domain/useCases/editCollection'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { CollectionFormHelper } from '../CollectionFormHelper'
@@ -69,7 +70,7 @@ export function useSubmitCollection(
 
     const useFieldsFromParentChecked = formData[USE_FIELDS_FROM_PARENT]
 
-    const newCollection: CollectionDTO = {
+    const newOrUpdatedCollection: CollectionDTO = {
       name: formData.name,
       alias: formData.alias,
       type: formData.type,
@@ -81,23 +82,47 @@ export function useSubmitCollection(
       facetIds: facetIdsDTO
     }
 
-    createCollection(collectionRepository, newCollection, collectionIdOrParentCollectionId)
-      .then(() => {
-        setSubmitError(null)
-        setSubmissionStatus(SubmissionStatus.SubmitComplete)
+    if (mode === 'create') {
+      createCollection(
+        collectionRepository,
+        newOrUpdatedCollection,
+        collectionIdOrParentCollectionId
+      )
+        .then(() => {
+          setSubmitError(null)
+          setSubmissionStatus(SubmissionStatus.SubmitComplete)
 
-        navigate(RouteWithParams.COLLECTIONS(newCollection.alias), {
-          state: { created: true }
+          navigate(RouteWithParams.COLLECTIONS(newOrUpdatedCollection.alias), {
+            state: { created: true }
+          })
+          return
         })
-        return
-      })
-      .catch((err: WriteError) => {
-        const error = new JSDataverseWriteErrorHandler(err)
-        const formattedError = error.getReasonWithoutStatusCode() ?? error.getErrorMessage()
-        setSubmitError(formattedError)
-        setSubmissionStatus(SubmissionStatus.Errored)
-        onSubmitErrorCallback()
-      })
+        .catch((err: WriteError) => {
+          const error = new JSDataverseWriteErrorHandler(err)
+          const formattedError = error.getReasonWithoutStatusCode() ?? error.getErrorMessage()
+          setSubmitError(formattedError)
+          setSubmissionStatus(SubmissionStatus.Errored)
+          onSubmitErrorCallback()
+        })
+    } else {
+      editCollection(collectionRepository, newOrUpdatedCollection, collectionIdOrParentCollectionId)
+        .then(() => {
+          setSubmitError(null)
+          setSubmissionStatus(SubmissionStatus.SubmitComplete)
+
+          navigate(RouteWithParams.COLLECTIONS(newOrUpdatedCollection.alias), {
+            state: { edited: true }
+          })
+          return
+        })
+        .catch((err: WriteError) => {
+          const error = new JSDataverseWriteErrorHandler(err)
+          const formattedError = error.getReasonWithoutStatusCode() ?? error.getErrorMessage()
+          setSubmitError(formattedError)
+          setSubmissionStatus(SubmissionStatus.Errored)
+          onSubmitErrorCallback()
+        })
+    }
   }
 
   return {

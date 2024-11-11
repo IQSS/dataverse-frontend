@@ -4,8 +4,8 @@ import { CollectionDTO } from './DTOs/CollectionDTO'
 
 export async function editCollection(
   collectionRepository: CollectionRepository,
-  collectionId: string,
-  updatedCollection: CollectionDTO
+  updatedCollection: CollectionDTO,
+  collectionId: string
 ): Promise<void> {
   return collectionRepository.edit(collectionId, updatedCollection).catch((error: WriteError) => {
     throw error

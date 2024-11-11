@@ -94,6 +94,11 @@ export const EditCollection = ({
       </header>
 
       <SeparationLine />
+
+      <Alert variant="info" customHeading={t('infoAlert.heading')}>
+        {t('infoAlert.text')}
+      </Alert>
+
       <RequiredFieldText />
 
       <EditCreateCollectionForm
