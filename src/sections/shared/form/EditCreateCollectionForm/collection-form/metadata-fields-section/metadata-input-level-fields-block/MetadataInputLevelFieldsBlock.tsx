@@ -25,8 +25,8 @@ export const MetadataInputLevelFieldsBlock = ({
 }: MetadataInputLevelFieldsBlockProps) => {
   const checkboxID = useId()
   const { control } = useFormContext()
-  const { t } = useTranslation('createCollection', {
-    keyPrefix: 'fields.metadataFields.inputLevelsTable'
+  const { t } = useTranslation('shared', {
+    keyPrefix: 'collectionForm.fields.metadataFields.inputLevelsTable'
   })
 
   const [inputLevelsTableStatus, setInputLevelsTableStatus] = useState({

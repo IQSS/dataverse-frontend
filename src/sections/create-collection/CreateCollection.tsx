@@ -15,8 +15,6 @@ import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollection
 import { User } from '@/users/domain/models/User'
 import { EditCreateCollectionForm } from '../shared/form/EditCreateCollectionForm/EditCreateCollectionForm'
 
-// TODO:ME Change ownerCollectionId to parentCollectionId
-
 interface CreateCollectionProps {
   parentCollectionId: string
   collectionRepository: CollectionRepository

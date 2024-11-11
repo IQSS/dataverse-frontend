@@ -12,7 +12,7 @@ export const ConfirmResetModificationsModal = ({
   onContinue,
   onCancel
 }: ConfirmResetModificationsModalProps) => {
-  const { t } = useTranslation('createCollection', { keyPrefix: 'confirmResetModal' })
+  const { t } = useTranslation('shared', { keyPrefix: 'collectionForm.confirmResetModal' })
 
   return (
     <Modal show={showModal} onHide={onCancel} size="xl">

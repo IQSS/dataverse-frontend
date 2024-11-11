@@ -47,8 +47,8 @@ export const RequiredOptionalRadios = ({
   uniqueInputLevelRowID,
   isConditionallyRequired
 }: RequiredOptionalRadiosProps) => {
-  const { t } = useTranslation('createCollection', {
-    keyPrefix: 'fields.metadataFields.inputLevelsTable'
+  const { t } = useTranslation('shared', {
+    keyPrefix: 'collectionForm.fields.metadataFields.inputLevelsTable'
   })
   const { control, setValue } = useFormContext()
 

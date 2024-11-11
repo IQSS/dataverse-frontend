@@ -18,8 +18,8 @@ interface InputLevelFieldRowProps {
 }
 
 export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldRowProps) => {
-  const { t } = useTranslation('createCollection', {
-    keyPrefix: 'fields.metadataFields.inputLevelsTable'
+  const { t } = useTranslation('shared', {
+    keyPrefix: 'collectionForm.fields.metadataFields.inputLevelsTable'
   })
   const uniqueInputLevelRowID = useId()
   const { control, setValue } = useFormContext()

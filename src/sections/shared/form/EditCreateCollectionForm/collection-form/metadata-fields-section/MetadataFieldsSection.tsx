@@ -18,7 +18,7 @@ export const MetadataFieldsSection = ({
   allMetadataBlocksInfo,
   defaultValues
 }: MetadataFieldsSectionProps) => {
-  const { t } = useTranslation('createCollection', { keyPrefix: 'fields.metadataFields' })
+  const { t } = useTranslation('shared', { keyPrefix: 'collectionForm.fields.metadataFields' })
 
   return (
     <Row>
