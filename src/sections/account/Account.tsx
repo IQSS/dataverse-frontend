@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Tabs } from '@iqss/dataverse-design-system'
 import { AccountHelper, AccountPanelTabKey } from './AccountHelper'
+import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/UserJSDataverseRepository'
 import { ApiTokenSection } from './api-token-section/ApiTokenSection'
 import styles from './Account.module.scss'
 
@@ -8,9 +9,10 @@ const tabsKeys = AccountHelper.ACCOUNT_PANEL_TABS_KEYS
 
 interface AccountProps {
   defaultActiveTabKey: AccountPanelTabKey
+  userRepository: UserJSDataverseRepository
 }
 
-export const Account = ({ defaultActiveTabKey }: AccountProps) => {
+export const Account = ({ defaultActiveTabKey, userRepository }: AccountProps) => {
   const { t } = useTranslation('account')
 
   return (
@@ -34,7 +36,7 @@ export const Account = ({ defaultActiveTabKey }: AccountProps) => {
         </Tabs.Tab>
         <Tabs.Tab eventKey={tabsKeys.apiToken} title={t('tabs.apiToken')}>
           <div className={styles['tab-container']}>
-            <ApiTokenSection />
+            <ApiTokenSection repository={userRepository} />
           </div>
         </Tabs.Tab>
       </Tabs>

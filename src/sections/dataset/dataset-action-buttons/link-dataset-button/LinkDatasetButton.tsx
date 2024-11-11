@@ -12,7 +12,6 @@ export function LinkDatasetButton({ dataset }: LinkDatasetButtonProps) {
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const handleClick = () => {
-    // TODO - Implement upload files
     showModal()
   }
   const { showModal } = useNotImplementedModal()

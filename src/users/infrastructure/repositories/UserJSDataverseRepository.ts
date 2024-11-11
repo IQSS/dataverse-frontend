@@ -1,10 +1,19 @@
 import { User } from '../../domain/models/User'
+import { TokenInfo } from '../../domain/models/TokenInfo'
+import { UserRepository } from '../../domain/repositories/UserRepository'
 import {
   AuthenticatedUser,
-  getCurrentAuthenticatedUser
+  getCurrentAuthenticatedUser,
+  getCurrentApiToken,
+  recreateCurrentApiToken,
+  deleteCurrentApiToken
 } from '@iqss/dataverse-client-javascript/dist/users'
 import { logout, ReadError, WriteError } from '@iqss/dataverse-client-javascript'
-import { UserRepository } from '../../domain/repositories/UserRepository'
+
+interface ApiTokenInfoPayload {
+  apiToken: string
+  expirationDate: Date
+}
 
 export class UserJSDataverseRepository implements UserRepository {
   getAuthenticated(): Promise<User> {
@@ -30,5 +39,27 @@ export class UserJSDataverseRepository implements UserRepository {
     return logout.execute().catch((error: WriteError) => {
       throw new Error(error.message)
     })
+  }
+
+  getCurrentApiToken(): Promise<TokenInfo> {
+    return getCurrentApiToken.execute().then((apiTokenInfo: ApiTokenInfoPayload) => {
+      return {
+        apiToken: apiTokenInfo.apiToken,
+        expirationDate: apiTokenInfo.expirationDate
+      }
+    })
+  }
+
+  recreateApiToken(): Promise<TokenInfo> {
+    return recreateCurrentApiToken.execute().then((apiTokenInfo: ApiTokenInfoPayload) => {
+      return {
+        apiToken: apiTokenInfo.apiToken,
+        expirationDate: apiTokenInfo.expirationDate
+      }
+    })
+  }
+
+  deleteApiToken(): Promise<void> {
+    return deleteCurrentApiToken.execute()
   }
 }
