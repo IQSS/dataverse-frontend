@@ -14,7 +14,7 @@ export const FacetsFromParentCheckbox = ({
   defaultCollectionFacets,
   resetAvailableItems
 }: FacetsFromParentCheckboxProps) => {
-  const { t } = useTranslation('createCollection')
+  const { t } = useTranslation('shared', { keyPrefix: 'collectionForm' })
   const { control, setValue } = useFormContext()
   const hostCollectionFieldValue = useWatch({ name: 'hostCollection' }) as string
 

@@ -31,7 +31,7 @@ export const BrowseSearchFacetsSection = ({
   allFacetableMetadataFields,
   allMetadataBlocksInfo
 }: BrowseSearchFacetsSectionProps) => {
-  const { t } = useTranslation('createCollection')
+  const { t } = useTranslation('shared', { keyPrefix: 'collectionForm' })
   const { control } = useFormContext()
   const useBrowseSearchFacetsFromParentCheckedValue = useWatch({
     name: USE_FACETS_FROM_PARENT

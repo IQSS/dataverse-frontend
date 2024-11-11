@@ -15,7 +15,7 @@ interface FieldsFromParentCheckboxProps {
 }
 
 export const FieldsFromParentCheckbox = ({ defaultValues }: FieldsFromParentCheckboxProps) => {
-  const { t } = useTranslation('createCollection')
+  const { t } = useTranslation('shared', { keyPrefix: 'collectionForm' })
   const checkboxID = useId()
   const { control, setValue } = useFormContext()
   const [showResetConfirmationModal, setShowResetConfirmationModal] = useState(false)

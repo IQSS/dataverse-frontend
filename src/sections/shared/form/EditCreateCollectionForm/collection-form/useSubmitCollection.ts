@@ -1,12 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { WriteError } from '@iqss/dataverse-client-javascript'
-import {
-  CollectionFormData,
-  CollectionFormMetadataBlocks,
-  CollectionFormValuesOnSubmit,
-  FormattedCollectionInputLevels
-} from '../types'
+import { CollectionFormData, CollectionFormValuesOnSubmit } from '../types'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import {
   EditCreateCollectionFormMode,
@@ -62,17 +57,17 @@ export function useSubmitCollection(
 
     const metadataBlockNamesDTO =
       CollectionFormHelper.formatFormMetadataBlockNamesToMetadataBlockNamesDTO(
-        formData[METADATA_BLOCKS_NAMES_GROUPER] as CollectionFormMetadataBlocks
+        formData[METADATA_BLOCKS_NAMES_GROUPER]
       )
 
     const inputLevelsDTO = CollectionFormHelper.formatFormInputLevelsToInputLevelsDTO(
       metadataBlockNamesDTO,
-      formData[INPUT_LEVELS_GROUPER] as FormattedCollectionInputLevels
+      formData[INPUT_LEVELS_GROUPER]
     )
 
     const facetIdsDTO = formData.facetIds.map((facet) => facet.value)
 
-    const useFieldsFromParentChecked = formData[USE_FIELDS_FROM_PARENT] as boolean
+    const useFieldsFromParentChecked = formData[USE_FIELDS_FROM_PARENT]
 
     const newCollection: CollectionDTO = {
       name: formData.name,

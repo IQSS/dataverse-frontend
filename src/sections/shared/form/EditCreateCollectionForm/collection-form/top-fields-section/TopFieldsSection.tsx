@@ -11,7 +11,7 @@ import { IdentifierField } from './IdentifierField'
 import { DescriptionField } from './DescriptionField'
 
 export const TopFieldsSection = () => {
-  const { t } = useTranslation('createCollection')
+  const { t } = useTranslation('shared', { keyPrefix: 'collectionForm' })
   const { control } = useFormContext()
 
   const hostCollectionRules: UseControllerProps['rules'] = {

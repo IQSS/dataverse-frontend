@@ -37,7 +37,7 @@ export const CollectionForm = ({
   defaultCollectionFacets
 }: CollectionFormProps) => {
   const formContainerRef = useRef<HTMLDivElement>(null)
-  const { t } = useTranslation('createCollection')
+  const { t } = useTranslation('shared', { keyPrefix: 'collectionForm' })
   const navigate = useNavigate()
 
   const { submitForm, submitError, submissionStatus } = useSubmitCollection(

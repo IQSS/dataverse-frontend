@@ -5,7 +5,7 @@ import { Col, Form, Stack, Tooltip } from '@iqss/dataverse-design-system'
 import styles from './TopFieldsSection.module.scss'
 
 export const DescriptionField = () => {
-  const { t } = useTranslation('createCollection')
+  const { t } = useTranslation('shared', { keyPrefix: 'collectionForm' })
   const { control } = useFormContext()
 
   const HtmlWordTooltip = ({ children }: { children: ReactNode }) => (
