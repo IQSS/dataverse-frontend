@@ -9,7 +9,9 @@ import {
   CollectionDTO,
   CollectionInputLevelDTO
 } from '@/collection/domain/useCases/DTOs/CollectionDTO'
+import { CollectionContact } from '@/collection/domain/models/CollectionContact'
 import {
+  CollectionFormContactValue,
   CollectionFormMetadataBlocks,
   FormattedCollectionInputLevels,
   FormattedCollectionInputLevelsWithoutParentBlockName,
@@ -215,5 +217,13 @@ export class CollectionFormHelper {
         }
       }
     })
+  }
+
+  public static formatCollectionContactsToFormContacts(
+    collectionContacts: CollectionContact[]
+  ): CollectionFormContactValue[] {
+    return collectionContacts.map((contact) => ({
+      value: contact.email
+    }))
   }
 }

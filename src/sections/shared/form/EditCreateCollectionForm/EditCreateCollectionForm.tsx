@@ -168,19 +168,29 @@ export const EditCreateCollectionForm = ({
     )
   }
 
+  const defaultCollectionName = onEditMode
+    ? collection.name
+    : user?.displayName
+    ? `${user?.displayName} Collection`
+    : ''
+
+  const defaultContacts = onEditMode
+    ? CollectionFormHelper.formatCollectionContactsToFormContacts(collection.contacts)
+    : [{ value: user?.email ?? '' }]
+
   const formDefaultValues: CollectionFormData = {
     hostCollection: collection.name,
-    name: user?.displayName ? `${user?.displayName} Collection` : '',
-    alias: '',
-    type: '',
-    contacts: [{ value: user?.email ?? '' }],
-    affiliation: user?.affiliation ?? '',
+    name: defaultCollectionName,
+    alias: onEditMode ? collection.id : '',
+    type: onEditMode ? collection.type : '',
+    contacts: defaultContacts,
+    affiliation: onEditMode ? collection.affiliation ?? '' : user?.affiliation ?? '',
     storage: 'S3',
-    description: '',
-    [USE_FIELDS_FROM_PARENT]: true,
+    description: onEditMode ? collection.description ?? '' : '',
+    [USE_FIELDS_FROM_PARENT]: onEditMode ? collection.usesMetadataFieldsFromParent : true,
     [METADATA_BLOCKS_NAMES_GROUPER]: defaultBlocksNames,
     [INPUT_LEVELS_GROUPER]: mergedInputLevels,
-    [USE_FACETS_FROM_PARENT]: true,
+    [USE_FACETS_FROM_PARENT]: onEditMode ? collection.usesBrowseSearchFacetsFromParent : true,
     [FACET_IDS_FIELD]: defaultCollectionFacets
   }
 

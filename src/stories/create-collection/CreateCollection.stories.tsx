@@ -45,7 +45,7 @@ export const Loading: Story = {
   )
 }
 
-export const OwnerCollectionNotFound: Story = {
+export const ParentCollectionNotFound: Story = {
   render: () => (
     <CreateCollection
       collectionRepository={new NoCollectionMockRepository()}

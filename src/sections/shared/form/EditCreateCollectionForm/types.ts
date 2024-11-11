@@ -1,4 +1,4 @@
-import { CollectionStorage, CollectionType } from '@/collection/domain/useCases/DTOs/CollectionDTO'
+import { CollectionStorage } from '@/collection/domain/useCases/DTOs/CollectionDTO'
 import {
   MetadataBlockInfo,
   MetadataBlockName,
@@ -10,6 +10,7 @@ import {
   USE_FACETS_FROM_PARENT,
   USE_FIELDS_FROM_PARENT
 } from './EditCreateCollectionForm'
+import { CollectionType } from '@/collection/domain/models/CollectionType'
 
 export type CollectionFormData = {
   hostCollection: string
@@ -65,4 +66,8 @@ export type MetadataFieldWithParentBlockInfo = MetadataField & {
 // On the submit function callback, type is CollectionType as type field is required and wont never be ""
 export type CollectionFormValuesOnSubmit = Omit<CollectionFormData, 'type'> & {
   type: CollectionType
+}
+
+export interface CollectionFormContactValue {
+  value: string
 }
