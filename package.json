@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "7.6.0",
-    "@iqss/dataverse-client-javascript": "2.0.0-alpha.5",
+    "@iqss/dataverse-client-javascript": "2.0.0-pr215.654db9d",
     "@iqss/dataverse-design-system": "*",
     "@istanbuljs/nyc-config-typescript": "1.0.2",
     "@tanstack/react-table": "8.9.2",
