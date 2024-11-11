@@ -1,16 +1,18 @@
-import { CollectionInputLevel } from '../../../../src/collection/domain/models/Collection'
-import { CollectionInputLevelDTO } from '../../../../src/collection/domain/useCases/DTOs/CollectionDTO'
+import { CollectionInputLevel } from '@/collection/domain/models/Collection'
+import { CollectionContact } from '@/collection/domain/models/CollectionContact'
+import { CollectionInputLevelDTO } from '@/collection/domain/useCases/DTOs/CollectionDTO'
 import {
   MetadataBlockInfo,
   MetadataBlockName,
   MetadataField
-} from '../../../../src/metadata-block-info/domain/models/MetadataBlockInfo'
+} from '@/metadata-block-info/domain/models/MetadataBlockInfo'
+import { CollectionFormHelper } from '@/sections/shared/form/EditCreateCollectionForm/CollectionFormHelper'
 import {
+  CollectionFormContactValue,
   FormattedCollectionInputLevels,
   FormattedCollectionInputLevelsWithoutParentBlockName,
   MetadataFieldWithParentBlockInfo
-} from '../../../../src/sections/create-collection/collection-form/CollectionForm'
-import { CollectionFormHelper } from '../../../../src/sections/create-collection/collection-form/CollectionFormHelper'
+} from '@/sections/shared/form/EditCreateCollectionForm/types'
 
 const allMetadataBlocksInfoMock: MetadataBlockInfo[] = [
   {
@@ -550,5 +552,30 @@ describe('CollectionFormHelper', () => {
     const result = CollectionFormHelper.replaceSlashWithDot('coverage/Spectral/MinimumWavelength')
 
     expect(result).to.equal('coverage.Spectral.MinimumWavelength')
+  })
+
+  it('formats collection contacts to form contacts values', () => {
+    const collectionContacts: CollectionContact[] = [
+      {
+        email: 'test1@mail.com',
+        displayOrder: 0
+      },
+      {
+        email: 'test2@mail.com',
+        displayOrder: 1
+      }
+    ]
+    const expected: CollectionFormContactValue[] = [
+      {
+        value: 'test1@mail.com'
+      },
+      {
+        value: 'test2@mail.com'
+      }
+    ]
+
+    const result = CollectionFormHelper.formatCollectionContactsToFormContacts(collectionContacts)
+
+    expect(result).to.deep.equal(expected)
   })
 })

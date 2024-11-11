@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react'
-import { useGetCollectionFacets } from '../../../../src/sections/create-collection/useGetCollectionFacets'
-import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
-import { CollectionFacetMother } from '../../collection/domain/models/CollectionFacetMother'
+import { CollectionFacetMother } from '@tests/component/collection/domain/models/CollectionFacetMother'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { useGetCollectionFacets } from '@/shared/hooks/useGetCollectionFacets'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const collectionFacetsMock = CollectionFacetMother.createFacets()

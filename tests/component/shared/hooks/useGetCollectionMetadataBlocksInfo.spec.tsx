@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react'
-import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
-import { useGetCollectionMetadataBlocksInfo } from '../../../../src/sections/create-collection/useGetCollectionMetadataBlocksInfo'
+import { MetadataBlockInfoMother } from '@tests/component/metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { useGetCollectionMetadataBlocksInfo } from '@/shared/hooks/useGetCollectionMetadataBlocksInfo'
 
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
 const metadataBlocksInfoMock = MetadataBlockInfoMother.getAllBlocks()

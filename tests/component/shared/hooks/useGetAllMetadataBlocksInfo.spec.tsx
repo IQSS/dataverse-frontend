@@ -1,45 +1,47 @@
 import { act, renderHook } from '@testing-library/react'
-import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
-import { useGetAllFacetableMetadataFields } from '../../../../src/sections/create-collection/useGetAllFacetableMetadataFields'
+import { MetadataBlockInfoMother } from '@tests/component/metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { MetadataFieldsHelper } from '@/sections/shared/form/DatasetMetadataForm/MetadataFieldsHelper'
+import { useGetAllMetadataBlocksInfo } from '@/shared/hooks/useGetAllMetadataBlocksInfo'
 
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
-const allFacetableMetadataFieldsMock = MetadataBlockInfoMother.createFacetableMetadataFields()
+const allMetadataBlocksInfoMock = MetadataBlockInfoMother.getAllBlocks()
 
-describe('useGetAllFacetableMetadataFields', () => {
-  it('should return all facetable metadata fields correctly', async () => {
-    metadataBlockInfoRepository.getAllFacetableMetadataFields = cy
-      .stub()
-      .resolves(allFacetableMetadataFieldsMock)
+describe('useGetAllMetadataBlocksInfo', () => {
+  it('should return metadataBlockDisplayFormatInfo correctly', async () => {
+    metadataBlockInfoRepository.getAll = cy.stub().resolves(allMetadataBlocksInfoMock)
 
     const { result } = renderHook(() =>
-      useGetAllFacetableMetadataFields({
+      useGetAllMetadataBlocksInfo({
         metadataBlockInfoRepository
       })
     )
 
     await act(() => {
       expect(result.current.isLoading).to.deep.equal(true)
-      return expect(result.current.facetableMetadataFields).to.deep.equal([])
+      return expect(result.current.allMetadataBlocksInfo).to.deep.equal([])
     })
 
     await act(() => {
       expect(result.current.isLoading).to.deep.equal(false)
 
-      return expect(result.current.facetableMetadataFields).to.deep.equal(
-        allFacetableMetadataFieldsMock
+      const allMetadataBlocksInfoNormalized =
+        MetadataFieldsHelper.replaceMetadataBlocksInfoDotNamesKeysWithSlash(
+          allMetadataBlocksInfoMock
+        )
+
+      return expect(result.current.allMetadataBlocksInfo).to.deep.equal(
+        allMetadataBlocksInfoNormalized
       )
     })
   })
 
   describe('Error handling', () => {
     it('should return correct error message when there is an error type catched', async () => {
-      metadataBlockInfoRepository.getAllFacetableMetadataFields = cy
-        .stub()
-        .rejects(new Error('Error message'))
+      metadataBlockInfoRepository.getAll = cy.stub().rejects(new Error('Error message'))
 
       const { result } = renderHook(() =>
-        useGetAllFacetableMetadataFields({
+        useGetAllMetadataBlocksInfo({
           metadataBlockInfoRepository
         })
       )
@@ -56,10 +58,10 @@ describe('useGetAllFacetableMetadataFields', () => {
     })
 
     it('should return correct error message when there is not an error type catched', async () => {
-      metadataBlockInfoRepository.getAllFacetableMetadataFields = cy.stub().rejects('Error message')
+      metadataBlockInfoRepository.getAll = cy.stub().rejects('Error message')
 
       const { result } = renderHook(() =>
-        useGetAllFacetableMetadataFields({
+        useGetAllMetadataBlocksInfo({
           metadataBlockInfoRepository
         })
       )
@@ -72,7 +74,7 @@ describe('useGetAllFacetableMetadataFields', () => {
       await act(() => {
         expect(result.current.isLoading).to.deep.equal(false)
         return expect(result.current.error).to.deep.equal(
-          'Something went wrong getting all the facetable metadata fields. Try again later.'
+          'Something went wrong getting the information from the metadata blocks. Try again later.'
         )
       })
     })
