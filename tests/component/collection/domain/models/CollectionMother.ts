@@ -19,8 +19,8 @@ export class CollectionMother {
       inputLevels: [],
       contacts: [],
       type: CollectionType.UNCATEGORIZED,
-      usesMetadataFieldsFromParent: true,
-      usesBrowseSearchFacetsFromParent: true,
+      isMetadataBlockRoot: true,
+      isFacetRoot: true,
       ...props
     }
   }

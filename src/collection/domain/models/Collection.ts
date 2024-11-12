@@ -12,8 +12,8 @@ export interface Collection {
   inputLevels?: CollectionInputLevel[]
   type: CollectionType
   contacts: CollectionContact[]
-  usesMetadataFieldsFromParent: boolean
-  usesBrowseSearchFacetsFromParent: boolean
+  isMetadataBlockRoot: boolean
+  isFacetRoot: boolean
 }
 
 export interface CollectionInputLevel {

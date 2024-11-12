@@ -187,10 +187,10 @@ export const EditCreateCollectionForm = ({
     affiliation: onEditMode ? collection.affiliation ?? '' : user?.affiliation ?? '',
     storage: 'S3',
     description: onEditMode ? collection.description ?? '' : '',
-    [USE_FIELDS_FROM_PARENT]: onEditMode ? collection.usesMetadataFieldsFromParent : true,
+    [USE_FIELDS_FROM_PARENT]: onEditMode ? collection.isMetadataBlockRoot : true,
     [METADATA_BLOCKS_NAMES_GROUPER]: defaultBlocksNames,
     [INPUT_LEVELS_GROUPER]: mergedInputLevels,
-    [USE_FACETS_FROM_PARENT]: onEditMode ? collection.usesBrowseSearchFacetsFromParent : true,
+    [USE_FACETS_FROM_PARENT]: onEditMode ? collection.isFacetRoot : true,
     [FACET_IDS_FIELD]: defaultCollectionFacets
   }
 

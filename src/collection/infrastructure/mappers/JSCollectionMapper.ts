@@ -25,8 +25,8 @@ export class JSCollectionMapper {
       inputLevels: jsCollection.inputLevels,
       type: jsCollection.type,
       contacts: jsCollection.contacts ?? [],
-      usesBrowseSearchFacetsFromParent: jsCollection.usesBrowseSearchFacetsFromParent,
-      usesMetadataFieldsFromParent: jsCollection.usesMetadataFieldsFromParent
+      isMetadataBlockRoot: jsCollection.isMetadataBlockRoot,
+      isFacetRoot: jsCollection.isFacetRoot
     }
   }
 
