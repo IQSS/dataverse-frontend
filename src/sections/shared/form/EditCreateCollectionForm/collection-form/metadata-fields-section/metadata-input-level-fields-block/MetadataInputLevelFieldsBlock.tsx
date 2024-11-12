@@ -7,24 +7,30 @@ import {
   MetadataBlockName
 } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import {
+  INPUT_LEVELS_GROUPER,
   METADATA_BLOCKS_NAMES_GROUPER,
   USE_FIELDS_FROM_PARENT
 } from '../../../EditCreateCollectionForm'
 import { InputLevelsTable } from './input-levels-table/InputLevelsTable'
+import { CollectionFormData } from '../../../types'
 
 interface MetadataInputLevelFieldsBlockProps {
   blockName: MetadataBlockName
   blockDisplayName: string
   metadataBlockInfo: MetadataBlockInfo
+  isEditingRootCollection: boolean
+  defaultValues: CollectionFormData
 }
 
 export const MetadataInputLevelFieldsBlock = ({
   blockName,
   blockDisplayName,
-  metadataBlockInfo
+  metadataBlockInfo,
+  isEditingRootCollection,
+  defaultValues
 }: MetadataInputLevelFieldsBlockProps) => {
   const checkboxID = useId()
-  const { control } = useFormContext()
+  const { control, setValue } = useFormContext()
   const { t } = useTranslation('shared', {
     keyPrefix: 'collectionForm.fields.metadataFields.inputLevelsTable'
   })
@@ -44,6 +50,12 @@ export const MetadataInputLevelFieldsBlock = ({
   }) as boolean
 
   const isCitation = blockName === MetadataBlockName.CITATION
+
+  const disabledBlockCheckbox = isCitation
+    ? true
+    : isEditingRootCollection
+    ? false
+    : useFieldsFromParentCheckedValue
 
   const rules: UseControllerProps['rules'] = {}
 
@@ -81,6 +93,19 @@ export const MetadataInputLevelFieldsBlock = ({
     }
 
     formOnChange(e)
+
+    // Apart from changing the checked status of the blockname, if the block is unchecked, make the input levels of that block back to the initial default value
+    if (!e.target.checked) {
+      const blockInputLevelsToSetBackToDefault = Object.entries(
+        defaultValues[INPUT_LEVELS_GROUPER]
+      ).filter(([_key, value]) => value.parentBlockName === blockName)
+
+      blockInputLevelsToSetBackToDefault.forEach(([key, _value]) => {
+        setValue(`${INPUT_LEVELS_GROUPER}.${key}`, defaultValues[INPUT_LEVELS_GROUPER][key], {
+          shouldDirty: true
+        })
+      })
+    }
   }
 
   // In order to close the table when use fields from parent change from unchecked to checked
@@ -109,7 +134,7 @@ export const MetadataInputLevelFieldsBlock = ({
               checked={value as boolean}
               isInvalid={invalid}
               invalidFeedback={error?.message}
-              disabled={isCitation ? true : useFieldsFromParentCheckedValue}
+              disabled={disabledBlockCheckbox}
               ref={ref}
             />
           )}

@@ -26,9 +26,8 @@ export interface CollectionFormProps {
   allMetadataBlocksInfo: MetadataBlockInfo[]
   allFacetableMetadataFields: MetadataField[]
   defaultCollectionFacets: CollectionFormFacet[]
+  isEditingRootCollection: boolean
 }
-
-// TODO:ME Add Edited alert on just navigated collection
 
 export const CollectionForm = ({
   mode,
@@ -37,19 +36,13 @@ export const CollectionForm = ({
   defaultValues,
   allMetadataBlocksInfo,
   allFacetableMetadataFields,
-  defaultCollectionFacets
+  defaultCollectionFacets,
+  isEditingRootCollection
 }: CollectionFormProps) => {
   const formContainerRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation('shared', { keyPrefix: 'collectionForm' })
   const navigate = useNavigate()
   const onCreateMode = mode === 'create'
-
-  const { submitForm, submitError, submissionStatus } = useSubmitCollection(
-    mode,
-    collectionIdOrParentCollectionId,
-    collectionRepository,
-    onSubmittedCollectionError
-  )
 
   const form = useForm<CollectionFormData>({
     mode: 'onChange',
@@ -57,6 +50,17 @@ export const CollectionForm = ({
   })
 
   const { formState } = form
+
+  console.log(formState.dirtyFields)
+
+  const { submitForm, submitError, submissionStatus } = useSubmitCollection(
+    mode,
+    collectionIdOrParentCollectionId,
+    collectionRepository,
+    isEditingRootCollection,
+    formState.dirtyFields,
+    onSubmittedCollectionError
+  )
 
   function onSubmittedCollectionError() {
     if (formContainerRef.current) {
@@ -67,6 +71,7 @@ export const CollectionForm = ({
   const handleCancel = () => {
     navigate(RouteWithParams.COLLECTIONS(collectionIdOrParentCollectionId))
   }
+
   const disableSubmitButton = useMemo(() => {
     return submissionStatus === SubmissionStatus.IsSubmitting || !formState.isDirty
   }, [submissionStatus, formState.isDirty])
@@ -101,6 +106,7 @@ export const CollectionForm = ({
                 <MetadataFieldsSection
                   defaultValues={defaultValues}
                   allMetadataBlocksInfo={allMetadataBlocksInfo}
+                  isEditingRootCollection={isEditingRootCollection}
                 />
               </Card.Body>
             </Card>
@@ -111,6 +117,7 @@ export const CollectionForm = ({
                   defaultCollectionFacets={defaultCollectionFacets}
                   allFacetableMetadataFields={allFacetableMetadataFields}
                   allMetadataBlocksInfo={allMetadataBlocksInfo}
+                  isEditingRootCollection={isEditingRootCollection}
                 />
               </Card.Body>
             </Card>

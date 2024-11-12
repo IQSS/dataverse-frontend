@@ -24,12 +24,14 @@ interface BrowseSearchFacetsSectionProps {
   defaultCollectionFacets: CollectionFormFacet[]
   allFacetableMetadataFields: MetadataField[]
   allMetadataBlocksInfo: MetadataBlockInfo[]
+  isEditingRootCollection: boolean
 }
 
 export const BrowseSearchFacetsSection = ({
   defaultCollectionFacets,
   allFacetableMetadataFields,
-  allMetadataBlocksInfo
+  allMetadataBlocksInfo,
+  isEditingRootCollection
 }: BrowseSearchFacetsSectionProps) => {
   const { t } = useTranslation('shared', { keyPrefix: 'collectionForm' })
   const { control } = useFormContext()
@@ -102,10 +104,12 @@ export const BrowseSearchFacetsSection = ({
         <Stack>
           <Form.Group.Text>{t('fields.browseSearchFacets.helperText')}</Form.Group.Text>
 
-          <FacetsFromParentCheckbox
-            defaultCollectionFacets={defaultCollectionFacets}
-            resetAvailableItems={resetAvailableItems}
-          />
+          {!isEditingRootCollection && (
+            <FacetsFromParentCheckbox
+              defaultCollectionFacets={defaultCollectionFacets}
+              resetAvailableItems={resetAvailableItems}
+            />
+          )}
 
           <div
             className={styles['select-facets-by-block-container']}

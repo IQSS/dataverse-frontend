@@ -20,6 +20,7 @@ import { Alert } from '@iqss/dataverse-design-system'
 import { User } from '@/users/domain/models/User'
 import { CollectionForm } from './collection-form/CollectionForm'
 import { EditCreateCollectionFormSkeleton } from './EditCreateCollectionFormSkeleton'
+import { CollectionHelper } from '@/sections/collection/CollectionHelper'
 
 export const METADATA_BLOCKS_NAMES_GROUPER = 'metadataBlockNames'
 export const USE_FIELDS_FROM_PARENT = 'useFieldsFromParent'
@@ -58,6 +59,8 @@ export const EditCreateCollectionForm = ({
   const { setIsLoading } = useLoading()
 
   const onEditMode = mode === 'edit'
+  const isEditingRootCollection =
+    onEditMode && CollectionHelper.isRootCollection(collection.hierarchy)
 
   const {
     metadataBlocksInfo,
@@ -178,6 +181,18 @@ export const EditCreateCollectionForm = ({
     ? CollectionFormHelper.formatCollectionContactsToFormContacts(collection.contacts)
     : [{ value: user?.email ?? '' }]
 
+  const useFieldsFromParentDefault = CollectionFormHelper.defineShouldCheckUseFromParent(
+    onEditMode,
+    isEditingRootCollection,
+    collection.isMetadataBlockRoot
+  )
+
+  const useFacetsFromParentDefault = CollectionFormHelper.defineShouldCheckUseFromParent(
+    onEditMode,
+    isEditingRootCollection,
+    collection.isFacetRoot
+  )
+
   const formDefaultValues: CollectionFormData = {
     hostCollection: collection.name,
     name: defaultCollectionName,
@@ -187,10 +202,10 @@ export const EditCreateCollectionForm = ({
     affiliation: onEditMode ? collection.affiliation ?? '' : user?.affiliation ?? '',
     storage: 'S3',
     description: onEditMode ? collection.description ?? '' : '',
-    [USE_FIELDS_FROM_PARENT]: onEditMode ? collection.isMetadataBlockRoot : true,
+    [USE_FIELDS_FROM_PARENT]: useFieldsFromParentDefault,
     [METADATA_BLOCKS_NAMES_GROUPER]: defaultBlocksNames,
     [INPUT_LEVELS_GROUPER]: mergedInputLevels,
-    [USE_FACETS_FROM_PARENT]: onEditMode ? collection.isFacetRoot : true,
+    [USE_FACETS_FROM_PARENT]: useFacetsFromParentDefault,
     [FACET_IDS_FIELD]: defaultCollectionFacets
   }
 
@@ -203,6 +218,7 @@ export const EditCreateCollectionForm = ({
       allMetadataBlocksInfo={allMetadataBlocksInfo}
       allFacetableMetadataFields={facetableMetadataFields}
       defaultCollectionFacets={defaultCollectionFacets}
+      isEditingRootCollection={isEditingRootCollection}
     />
   )
 }

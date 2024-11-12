@@ -12,11 +12,13 @@ import { CollectionFormData } from '../../types'
 interface MetadataFieldsSectionProps {
   allMetadataBlocksInfo: MetadataBlockInfo[]
   defaultValues: CollectionFormData
+  isEditingRootCollection: boolean
 }
 
 export const MetadataFieldsSection = ({
   allMetadataBlocksInfo,
-  defaultValues
+  defaultValues,
+  isEditingRootCollection
 }: MetadataFieldsSectionProps) => {
   const { t } = useTranslation('shared', { keyPrefix: 'collectionForm.fields.metadataFields' })
 
@@ -29,7 +31,8 @@ export const MetadataFieldsSection = ({
         <Form.Group.Text>{t('helperText')}</Form.Group.Text>
         <Col className="mt-3">
           <Stack gap={3}>
-            <FieldsFromParentCheckbox defaultValues={defaultValues} />
+            {!isEditingRootCollection && <FieldsFromParentCheckbox defaultValues={defaultValues} />}
+
             <Stack gap={1}>
               {allMetadataBlocksInfo.map((block) => {
                 return (
@@ -38,6 +41,8 @@ export const MetadataFieldsSection = ({
                     blockName={block.name as MetadataBlockName}
                     blockDisplayName={block.displayName}
                     metadataBlockInfo={block}
+                    isEditingRootCollection={isEditingRootCollection}
+                    defaultValues={defaultValues}
                   />
                 )
               })}
