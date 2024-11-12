@@ -226,4 +226,20 @@ export class CollectionFormHelper {
       value: contact.email
     }))
   }
+
+  public static defineShouldCheckUseFromParent(
+    onEditMode: boolean,
+    isEditingRootCollection: boolean,
+    isMetadataBlockOrFacetRoot: boolean
+  ): boolean {
+    if (onEditMode) {
+      if (isEditingRootCollection) {
+        return false
+      } else {
+        return isMetadataBlockOrFacetRoot
+      }
+    } else {
+      return true
+    }
+  }
 }

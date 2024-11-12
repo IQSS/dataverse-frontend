@@ -578,4 +578,30 @@ describe('CollectionFormHelper', () => {
 
     expect(result).to.deep.equal(expected)
   })
+
+  describe('defineShouldCheckUseFromParent', () => {
+    it('returns false if is on edit mode and is editing the root collection', () => {
+      const result = CollectionFormHelper.defineShouldCheckUseFromParent(true, true, true)
+
+      expect(result).to.equal(false)
+    })
+
+    it('returns true if is on edit mode and is not editing the root collection and isMetadataBlockOrFacetRoot is true', () => {
+      const result = CollectionFormHelper.defineShouldCheckUseFromParent(true, false, true)
+
+      expect(result).to.equal(true)
+    })
+
+    it('returns false if is on edit mode and is not editing the root collection and isMetadataBlockOrFacetRoot is false', () => {
+      const result = CollectionFormHelper.defineShouldCheckUseFromParent(true, false, false)
+
+      expect(result).to.equal(false)
+    })
+
+    it('should return true if is not on edit mode', () => {
+      const result = CollectionFormHelper.defineShouldCheckUseFromParent(false, false, true)
+
+      expect(result).to.equal(true)
+    })
+  })
 })
