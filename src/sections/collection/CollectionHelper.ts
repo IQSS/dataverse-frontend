@@ -1,4 +1,5 @@
-import { CollectionItemType } from '../../collection/domain/models/CollectionItemType'
+import { Collection } from '@/collection/domain/models/Collection'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { QueryParamKey } from '../Route.enum'
 
 export class CollectionHelper {
@@ -21,5 +22,9 @@ export class CollectionHelper {
       ) as CollectionItemType[]
 
     return { pageQuery, searchQuery, typesQuery }
+  }
+
+  static isRootCollection(collectionHierarchy: Collection['hierarchy']) {
+    return !collectionHierarchy.parent
   }
 }
