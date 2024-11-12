@@ -21,9 +21,6 @@ interface EditCollectionProps {
   metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
 
-// TODO:ME - Move collection form to a shared component and make everything work again after, tests stories etc.
-// TODO:ME - Integrated shared form here.
-
 export const EditCollection = ({
   collectionId,
   collectionRepository,

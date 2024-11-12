@@ -23,6 +23,7 @@ interface CollectionProps {
   collectionIdFromParams: string | undefined
   created: boolean
   published: boolean
+  edited?: boolean
   collectionQueryParams: UseCollectionQueryParamsReturnType
   infiniteScrollEnabled?: boolean
 }
@@ -32,6 +33,7 @@ export function Collection({
   collectionRepository,
   created,
   published,
+  edited,
   collectionQueryParams
 }: CollectionProps) {
   useTranslation('collection')
@@ -71,6 +73,11 @@ export function Collection({
             <BreadcrumbsGenerator hierarchy={collection.hierarchy} />
             <CollectionInfo collection={collection} />
             {created && <CreatedAlert />}
+            {edited && (
+              <Alert variant="success" dismissible={false}>
+                {t('editedAlert')}
+              </Alert>
+            )}
             {published && (
               <Alert variant="success" dismissible={false}>
                 {t('publishedAlert')}
