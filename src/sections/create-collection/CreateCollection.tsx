@@ -97,8 +97,7 @@ export function CreateCollection({
       <EditCreateCollectionForm
         mode="create"
         user={user as User}
-        collection={collection}
-        parentCollection={{ id: collection.id, name: collection.name }}
+        parentCollection={collection}
         collectionRepository={collectionRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />

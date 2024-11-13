@@ -19,16 +19,37 @@ import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { CollectionFacetMother } from '@tests/component/collection/domain/models/CollectionFacetMother'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { MetadataBlockInfoMother } from '@tests/component/metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { UpwardHierarchyNodeMother } from '@tests/component/shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 import { UserMother } from '@tests/component/users/domain/models/UserMother'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
-
 const metadataBlockInfoRepository = {} as MetadataBlockInfoRepository
+const userRepository: UserRepository = {} as UserRepository
+
+const testUser = UserMother.create()
 
 const PARENT_COLLECTION_ID = 'root'
+const PARENT_COLLECTION_NAME = 'Root'
 
-const COLLECTION_NAME = 'Collection Name'
-const collection = CollectionMother.create({ name: COLLECTION_NAME })
+const COLLECTION_BEING_EDITED_ID = 'collection-being-edited-id'
+const COLLECTION_BEING_EDITED_NAME = 'Collection In Edition'
+
+const defaultCollectionNameInCreateMode = `${testUser.displayName} Collection`
+
+const collectionBeingEdited = CollectionMother.create({
+  id: COLLECTION_BEING_EDITED_ID,
+  name: COLLECTION_BEING_EDITED_NAME,
+  hierarchy: UpwardHierarchyNodeMother.createCollection({
+    id: COLLECTION_BEING_EDITED_ID,
+    name: COLLECTION_BEING_EDITED_NAME,
+    parent: UpwardHierarchyNodeMother.createCollection({
+      id: PARENT_COLLECTION_ID,
+      name: PARENT_COLLECTION_NAME
+    })
+  }),
+  isFacetRoot: false,
+  isMetadataBlockRoot: false
+})
 
 const VIEW_AND_EDIT_FIELDS_LABEL = '[+] View fields + set as hidden, required, or optional'
 const VIEW_FIELDS_LABEL = '[+] View fields'
@@ -44,10 +65,7 @@ const allMetadataBlocksMock = [
   MetadataBlockInfoMother.getSocialScienceBlock()
 ]
 
-const testUser = UserMother.create()
-const userRepository: UserRepository = {} as UserRepository
 
-const defaultCollectionName = `${testUser.displayName} Collection`
 
 // const baseInputLevels: FormattedCollectionInputLevels =
 //   CollectionFormHelper.defineBaseInputLevels(allMetadataBlocksMock)
@@ -100,10 +118,8 @@ const allFacetableMetadataFields = MetadataBlockInfoMother.getAllFacetableMetada
 describe('EditCreateCollectionForm', () => {
   beforeEach(() => {
     collectionRepository.create = cy.stub().resolves(1)
-    collectionRepository.getById = cy.stub().resolves(collection)
     collectionRepository.getFacets = cy.stub().resolves(CollectionFacetMother.createFacets())
     userRepository.getAuthenticated = cy.stub().resolves(testUser)
-
     metadataBlockInfoRepository.getByCollectionId = cy.stub().resolves(colllectionMetadataBlocks)
     metadataBlockInfoRepository.getAll = cy.stub().resolves(allMetadataBlocksMock)
     metadataBlockInfoRepository.getAllFacetableMetadataFields = cy
@@ -111,249 +127,225 @@ describe('EditCreateCollectionForm', () => {
       .resolves(allFacetableMetadataFields)
   })
 
-  /* 
-    <EditCreateCollectionForm
-        mode="create"
-        user={user as User}
-        collection={collection}
-        parentCollectionId={parentCollectionId}
-        collectionRepository={collectionRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-    />
-
-
-    <EditCreateCollectionForm
-        mode="edit"
-        user={user as User}
-        collection={collection}
-        collectionRepository={collectionRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-    />
-*/
-
-  describe('should render the form', () => {
-    it('on create mode', () => {
+  describe('on create mode', () => {
+    it('should render the form', () => {
       cy.mountAuthenticated(
         <EditCreateCollectionForm
           mode="create"
           user={testUser}
-          collection={collection}
-          parentCollectionId={PARENT_COLLECTION_ID}
+          parentCollection={{ id: PARENT_COLLECTION_ID, name: PARENT_COLLECTION_NAME }}
+          collectionRepository={collectionRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+      cy.findByTestId('collection-form').should('exist')
+    })
+
+    it('prefills the Host Collection field with the parent collection name', () => {
+      cy.mountAuthenticated(
+        <EditCreateCollectionForm
+          mode="create"
+          user={testUser}
+          parentCollection={{ id: PARENT_COLLECTION_ID, name: PARENT_COLLECTION_NAME }}
           collectionRepository={collectionRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
         />
       )
 
-      cy.findByTestId('collection-form').should('exist')
+      cy.findByLabelText(/^Host Collection/i).should('have.value', PARENT_COLLECTION_NAME)
     })
 
-    it('on edit mode', () => {
+    it('pre-fills specific form fields with user data', () => {
+      cy.mountAuthenticated(
+        <EditCreateCollectionForm
+          mode="create"
+          user={testUser}
+          parentCollection={{ id: PARENT_COLLECTION_ID, name: PARENT_COLLECTION_NAME }}
+          collectionRepository={collectionRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+
+      cy.findByLabelText(/^Collection Name/i).should(
+        'have.value',
+        defaultCollectionNameInCreateMode
+      )
+
+      cy.findByLabelText(/^Affiliation/i).should('have.value', testUser.affiliation)
+
+      cy.findByLabelText(/^Email/i).should('have.value', testUser.email)
+    })
+
+    it('submit button should be disabled when form has not been touched', () => {
+      cy.customMount(
+        <EditCreateCollectionForm
+          mode="create"
+          user={testUser}
+          parentCollection={{ id: PARENT_COLLECTION_ID, name: PARENT_COLLECTION_NAME }}
+          collectionRepository={collectionRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+
+      cy.findByRole('button', { name: 'Create Collection' }).should('be.disabled')
+    })
+
+    it('submit button should not be disabled when form has been touched', () => {
+      cy.customMount(
+        <EditCreateCollectionForm
+          mode="create"
+          user={testUser}
+          parentCollection={{ id: PARENT_COLLECTION_ID, name: PARENT_COLLECTION_NAME }}
+          collectionRepository={collectionRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+
+      cy.findByLabelText(/^Collection Name/i)
+        .clear()
+        .type('New Collection Name')
+
+      cy.findByRole('button', { name: 'Create Collection' }).should('not.be.disabled')
+    })
+
+    it('shows error message when form is submitted with empty required fields', () => {
+      cy.customMount(
+        <EditCreateCollectionForm
+          mode="create"
+          user={testUser}
+          parentCollection={{ id: PARENT_COLLECTION_ID, name: PARENT_COLLECTION_NAME }}
+          collectionRepository={collectionRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+
+      // Change collection name so submit button is no longer disabled
+      cy.findByLabelText(/^Collection Name/i)
+        .clear()
+        .type('New Collection Name')
+
+      cy.findByRole('button', { name: 'Create Collection' }).click()
+
+      cy.findByText('Category is required').should('exist')
+      cy.findByText('Identifier is required').should('exist')
+    })
+
+    it('shows error message when form is submitted with invalid email', () => {
+      cy.customMount(
+        <EditCreateCollectionForm
+          mode="create"
+          user={testUser}
+          parentCollection={{ id: PARENT_COLLECTION_ID, name: PARENT_COLLECTION_NAME }}
+          collectionRepository={collectionRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+
+      cy.findByLabelText(/^Email/i)
+        .clear()
+        .type('invalid-email')
+
+      cy.findByRole('button', { name: 'Create Collection' }).click()
+
+      cy.findByText('Email is not a valid email').should('exist')
+    })
+
+    it('shows error message when form is submitted with invalid identifier', () => {
+      cy.customMount(
+        <EditCreateCollectionForm
+          mode="create"
+          user={testUser}
+          parentCollection={{ id: PARENT_COLLECTION_ID, name: PARENT_COLLECTION_NAME }}
+          collectionRepository={collectionRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+
+      cy.findByLabelText(/^Identifier/i).type('invalid identifier')
+
+      cy.findByRole('button', { name: 'Create Collection' }).click()
+
+      cy.findByText(/Identifier is not valid./).should('exist')
+    })
+
+    it('submits a valid form and succeed', () => {
+      cy.customMount(
+        <EditCreateCollectionForm
+          mode="create"
+          user={testUser}
+          parentCollection={{ id: PARENT_COLLECTION_ID, name: PARENT_COLLECTION_NAME }}
+          collectionRepository={collectionRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+      // Accept suggestion
+      cy.findByRole('button', { name: 'Apply suggestion' }).click()
+      // Select a Category option
+      cy.findByLabelText(/^Category/i).select(1)
+
+      cy.findByRole('button', { name: 'Create Collection' }).click()
+
+      cy.findByText('Error').should('not.exist')
+      cy.findByText('Success!').should('exist')
+    })
+
+    it('submits a valid form and fails', () => {
+      collectionRepository.create = cy.stub().rejects(new Error('Error creating collection'))
+
+      cy.customMount(
+        <EditCreateCollectionForm
+          mode="create"
+          user={testUser}
+          parentCollection={{ id: PARENT_COLLECTION_ID, name: PARENT_COLLECTION_NAME }}
+          collectionRepository={collectionRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+
+      // Accept suggestion
+      cy.findByRole('button', { name: 'Apply suggestion' }).click()
+      // Select a Category option
+      cy.findByLabelText(/^Category/i).select(1)
+
+      cy.findByRole('button', { name: 'Create Collection' }).click()
+
+      cy.findByText('Error').should('exist')
+      cy.findByText(/Error creating collection/).should('exist')
+      cy.findByText('Success!').should('not.exist')
+    })
+
+    it('cancel button is clickable', () => {
+      cy.customMount(
+        <EditCreateCollectionForm
+          mode="create"
+          user={testUser}
+          parentCollection={{ id: PARENT_COLLECTION_ID, name: PARENT_COLLECTION_NAME }}
+          collectionRepository={collectionRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+
+      cy.findByText('Cancel').click()
+    })
+  })
+
+  describe('on edit mode', () => {
+    it('should render the form', () => {
       cy.mountAuthenticated(
         <EditCreateCollectionForm
           mode="edit"
           user={testUser}
-          collection={collection}
+          collection={collectionBeingEdited}
+          parentCollection={{ id: PARENT_COLLECTION_ID, name: PARENT_COLLECTION_NAME }}
           collectionRepository={collectionRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
         />
       )
-
       cy.findByTestId('collection-form').should('exist')
     })
+
+    // TODO:ME - Case for not showing host collection field when editing the root collection
   })
-
-  //   it('prefills the Host Collection field with current owner collection', () => {
-  //     cy.mountAuthenticated(
-  //       <CollectionForm
-  //         collectionRepository={collectionRepository}
-  //         parentCollectionId={PARENT_COLLECTION_ID}
-  //         defaultValues={formDefaultValues}
-  //         allMetadataBlocksInfo={allMetadataBlocksMock}
-  //         defaultCollectionFacets={defaultCollectionFacetsMock}
-  //         allFacetableMetadataFields={allFacetableMetadataFields}
-  //       />
-  //     )
-
-  //     cy.findByLabelText(/^Host Collection/i).should('have.value', COLLECTION_NAME)
-  //   })
-
-  //   it('pre-fills specific form fields with user data', () => {
-  //     cy.mountAuthenticated(
-  //       <CollectionForm
-  //         collectionRepository={collectionRepository}
-  //         parentCollectionId={PARENT_COLLECTION_ID}
-  //         defaultValues={formDefaultValues}
-  //         allMetadataBlocksInfo={allMetadataBlocksMock}
-  //         defaultCollectionFacets={defaultCollectionFacetsMock}
-  //         allFacetableMetadataFields={allFacetableMetadataFields}
-  //       />
-  //     )
-
-  //     cy.findByLabelText(/^Collection Name/i).should('have.value', defaultCollectionName)
-
-  //     cy.findByLabelText(/^Affiliation/i).should('have.value', testUser.affiliation)
-
-  //     cy.findByLabelText(/^Email/i).should('have.value', testUser.email)
-  //   })
-
-  //   it('submit button should be disabled when form has not been touched', () => {
-  //     cy.customMount(
-  //       <CollectionForm
-  //         collectionRepository={collectionRepository}
-  //         parentCollectionId={PARENT_COLLECTION_ID}
-  //         defaultValues={formDefaultValues}
-  //         allMetadataBlocksInfo={allMetadataBlocksMock}
-  //         defaultCollectionFacets={defaultCollectionFacetsMock}
-  //         allFacetableMetadataFields={allFacetableMetadataFields}
-  //       />
-  //     )
-
-  //     cy.findByRole('button', { name: 'Create Collection' }).should('be.disabled')
-  //   })
-
-  //   it('submit button should not be disabled when form has been touched', () => {
-  //     cy.customMount(
-  //       <CollectionForm
-  //         collectionRepository={collectionRepository}
-  //         parentCollectionId={PARENT_COLLECTION_ID}
-  //         defaultValues={formDefaultValues}
-  //         allMetadataBlocksInfo={allMetadataBlocksMock}
-  //         defaultCollectionFacets={defaultCollectionFacetsMock}
-  //         allFacetableMetadataFields={allFacetableMetadataFields}
-  //       />
-  //     )
-
-  //     cy.findByLabelText(/^Collection Name/i)
-  //       .clear()
-  //       .type('New Collection Name')
-
-  //     cy.findByRole('button', { name: 'Create Collection' }).should('not.be.disabled')
-  //   })
-
-  //   it('shows error message when form is submitted with empty required fields', () => {
-  //     cy.customMount(
-  //       <CollectionForm
-  //         collectionRepository={collectionRepository}
-  //         parentCollectionId={PARENT_COLLECTION_ID}
-  //         defaultValues={formDefaultValues}
-  //         allMetadataBlocksInfo={allMetadataBlocksMock}
-  //         defaultCollectionFacets={defaultCollectionFacetsMock}
-  //         allFacetableMetadataFields={allFacetableMetadataFields}
-  //       />
-  //     )
-
-  //     // Change collection name so submit button is no longer disabled
-  //     cy.findByLabelText(/^Collection Name/i)
-  //       .clear()
-  //       .type('New Collection Name')
-
-  //     cy.findByRole('button', { name: 'Create Collection' }).click()
-
-  //     cy.findByText('Category is required').should('exist')
-  //     cy.findByText('Identifier is required').should('exist')
-  //   })
-
-  //   it('shows error message when form is submitted with invalid email', () => {
-  //     cy.customMount(
-  //       <CollectionForm
-  //         collectionRepository={collectionRepository}
-  //         parentCollectionId={PARENT_COLLECTION_ID}
-  //         defaultValues={formDefaultValues}
-  //         allMetadataBlocksInfo={allMetadataBlocksMock}
-  //         defaultCollectionFacets={defaultCollectionFacetsMock}
-  //         allFacetableMetadataFields={allFacetableMetadataFields}
-  //       />
-  //     )
-
-  //     cy.findByLabelText(/^Email/i)
-  //       .clear()
-  //       .type('invalid-email')
-
-  //     cy.findByRole('button', { name: 'Create Collection' }).click()
-
-  //     cy.findByText('Email is not a valid email').should('exist')
-  //   })
-  //   it('shows error message when form is submitted with invalid identifier', () => {
-  //     cy.customMount(
-  //       <CollectionForm
-  //         collectionRepository={collectionRepository}
-  //         parentCollectionId={PARENT_COLLECTION_ID}
-  //         defaultValues={formDefaultValues}
-  //         allMetadataBlocksInfo={allMetadataBlocksMock}
-  //         defaultCollectionFacets={defaultCollectionFacetsMock}
-  //         allFacetableMetadataFields={allFacetableMetadataFields}
-  //       />
-  //     )
-
-  //     cy.findByLabelText(/^Identifier/i).type('invalid identifier')
-
-  //     cy.findByRole('button', { name: 'Create Collection' }).click()
-
-  //     cy.findByText(/Identifier is not valid./).should('exist')
-  //   })
-
-  //   it('submits a valid form and succeed', () => {
-  //     cy.customMount(
-  //       <CollectionForm
-  //         collectionRepository={collectionRepository}
-  //         parentCollectionId={PARENT_COLLECTION_ID}
-  //         defaultValues={formDefaultValues}
-  //         allMetadataBlocksInfo={allMetadataBlocksMock}
-  //         defaultCollectionFacets={defaultCollectionFacetsMock}
-  //         allFacetableMetadataFields={allFacetableMetadataFields}
-  //       />
-  //     )
-  //     // Accept suggestion
-  //     cy.findByRole('button', { name: 'Apply suggestion' }).click()
-  //     // Select a Category option
-  //     cy.findByLabelText(/^Category/i).select(1)
-
-  //     cy.findByRole('button', { name: 'Create Collection' }).click()
-
-  //     cy.findByText('Error').should('not.exist')
-  //     cy.findByText('Success!').should('exist')
-  //   })
-
-  //   it('submits a valid form and fails', () => {
-  //     collectionRepository.create = cy.stub().rejects(new Error('Error creating collection'))
-
-  //     cy.customMount(
-  //       <CollectionForm
-  //         collectionRepository={collectionRepository}
-  //         parentCollectionId={PARENT_COLLECTION_ID}
-  //         defaultValues={formDefaultValues}
-  //         allMetadataBlocksInfo={allMetadataBlocksMock}
-  //         defaultCollectionFacets={defaultCollectionFacetsMock}
-  //         allFacetableMetadataFields={allFacetableMetadataFields}
-  //       />
-  //     )
-
-  //     // Accept suggestion
-  //     cy.findByRole('button', { name: 'Apply suggestion' }).click()
-  //     // Select a Category option
-  //     cy.findByLabelText(/^Category/i).select(1)
-
-  //     cy.findByRole('button', { name: 'Create Collection' }).click()
-
-  //     cy.findByText('Error').should('exist')
-  //     cy.findByText(/Error creating collection/).should('exist')
-  //     cy.findByText('Success!').should('not.exist')
-  //   })
-
-  //   it('cancel button is clickable', () => {
-  //     cy.customMount(
-  //       <CollectionForm
-  //         collectionRepository={collectionRepository}
-  //         parentCollectionId={PARENT_COLLECTION_ID}
-  //         defaultValues={formDefaultValues}
-  //         allMetadataBlocksInfo={allMetadataBlocksMock}
-  //         defaultCollectionFacets={defaultCollectionFacetsMock}
-  //         allFacetableMetadataFields={allFacetableMetadataFields}
-  //       />
-  //     )
-
-  //     cy.findByText('Cancel').click()
-  //   })
 
   //   describe('IdentifierField suggestion functionality', () => {
   //     it('should show to apply an identifier suggestion', () => {
@@ -1071,4 +1063,37 @@ describe('EditCreateCollectionForm', () => {
   //       })
   //     })
   //   })
+
+  // TODO:ME Move this to EditCreateCollectionForm.spec.tsx
+  // it('should display an alert error message for each error in loading the required data', () => {
+  //   collectionRepository.getUserPermissions = cy
+  //     .stub()
+  //     .rejects(new Error('Error getting user permissions'))
+  //   collectionRepository.getFacets = cy.stub().rejects(new Error('Error getting collection facets'))
+  //   metadataBlockInfoRepository.getByCollectionId = cy
+  //     .stub()
+  //     .rejects(new Error('Error getting metadata blocks info'))
+  //   metadataBlockInfoRepository.getAll = cy
+  //     .stub()
+  //     .rejects(new Error('Error getting all metadata blocks info'))
+  //   metadataBlockInfoRepository.getAllFacetableMetadataFields = cy
+  //     .stub()
+  //     .rejects(new Error('Error getting all facetable metadata fields'))
+
+  //   cy.mountAuthenticated(
+  //     <CreateCollection
+  //       collectionRepository={collectionRepository}
+  //       parentCollectionId="root"
+  //       metadataBlockInfoRepository={metadataBlockInfoRepository}
+  //     />
+  //   )
+
+  //   cy.findByText(/Error getting user permissions/).should('exist')
+  //   cy.findByText(/Error getting collection facets/).should('exist')
+  //   cy.findByText(/Error getting metadata blocks info/).should('exist')
+  //   cy.findByText(/Error getting all metadata blocks info/).should('exist')
+  //   cy.findByText(/Error getting all facetable metadata fields/).should('exist')
+  // })
 })
+
+

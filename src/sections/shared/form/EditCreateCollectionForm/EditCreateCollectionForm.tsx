@@ -32,8 +32,8 @@ type EditCreateCollectionFormProps =
   | {
       mode: 'create'
       user: User
-      collection: Collection
-      parentCollection: ParentCollectionData
+      collection?: never
+      parentCollection: Collection
       collectionRepository: CollectionRepository
       metadataBlockInfoRepository: MetadataBlockInfoRepository
     }
@@ -41,14 +41,14 @@ type EditCreateCollectionFormProps =
       mode: 'edit'
       user: User
       collection: Collection
-      parentCollection?: ParentCollectionData
+      parentCollection?: ParentCollectionDataInEdition
       collectionRepository: CollectionRepository
       metadataBlockInfoRepository: MetadataBlockInfoRepository
     }
 
 export type EditCreateCollectionFormMode = 'create' | 'edit'
 
-interface ParentCollectionData {
+interface ParentCollectionDataInEdition {
   id: string
   name: string
 }
@@ -103,10 +103,13 @@ export const EditCreateCollectionForm = ({
     return CollectionFormHelper.defineBaseInputLevels(allMetadataBlocksInfo)
   }, [allMetadataBlocksInfo])
 
+  const collectionInputLevelsToFormat =
+    mode === 'edit' ? collection?.inputLevels : parentCollection?.inputLevels
+
   const formattedCollectionInputLevels: FormattedCollectionInputLevelsWithoutParentBlockName =
     useDeepCompareMemo(() => {
-      return CollectionFormHelper.formatCollectiontInputLevels(collection?.inputLevels)
-    }, [collection?.inputLevels])
+      return CollectionFormHelper.formatCollectiontInputLevels(collectionInputLevelsToFormat)
+    }, [collectionInputLevelsToFormat])
 
   const mergedInputLevels = useDeepCompareMemo(() => {
     return CollectionFormHelper.mergeBaseAndDefaultInputLevels(
@@ -189,19 +192,19 @@ export const EditCreateCollectionForm = ({
   const useFieldsFromParentDefault = CollectionFormHelper.defineShouldCheckUseFromParent(
     onEditMode,
     isEditingRootCollection,
-    collection.isMetadataBlockRoot
+    mode === 'edit' ? collection.isMetadataBlockRoot : undefined
   )
 
   const useFacetsFromParentDefault = CollectionFormHelper.defineShouldCheckUseFromParent(
     onEditMode,
     isEditingRootCollection,
-    collection.isFacetRoot
+    mode === 'edit' ? collection.isMetadataBlockRoot : undefined
   )
 
   const formDefaultValues: CollectionFormData = {
     hostCollection: isEditingRootCollection
       ? null
-      : (parentCollection as ParentCollectionData).name,
+      : (parentCollection as ParentCollectionDataInEdition).name,
     name: defaultCollectionName,
     alias: onEditMode ? collection.id : '',
     type: onEditMode ? collection.type : '',

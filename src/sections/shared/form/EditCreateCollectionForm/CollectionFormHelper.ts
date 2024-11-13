@@ -230,7 +230,7 @@ export class CollectionFormHelper {
   public static defineShouldCheckUseFromParent(
     onEditMode: boolean,
     isEditingRootCollection: boolean,
-    isMetadataBlockOrFacetRoot: boolean
+    isMetadataBlockOrFacetRoot?: boolean
   ): boolean {
     if (onEditMode) {
       if (isEditingRootCollection) {

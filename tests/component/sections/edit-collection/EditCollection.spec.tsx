@@ -1,6 +1,6 @@
+import { EditCollection } from '@/sections/edit-collection/EditCollection'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { CreateCollection } from '@/sections/create-collection/CreateCollection'
 import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { CollectionFacetMother } from '@tests/component/collection/domain/models/CollectionFacetMother'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
@@ -54,29 +54,29 @@ describe('CreateCollection', () => {
     })
 
     cy.customMount(
-      <CreateCollection
+      <EditCollection
+        collectionId="root"
         collectionRepository={collectionRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
-        parentCollectionId="root"
       />
     )
     cy.clock()
 
-    cy.findByTestId('create-collection-skeleton').should('exist')
+    cy.findByTestId('edit-collection-skeleton').should('exist')
 
     cy.tick(DELAYED_TIME)
 
-    cy.findByTestId('create-collection-skeleton').should('not.exist')
+    cy.findByTestId('edit-collection-skeleton').should('not.exist')
 
     cy.clock().then((clock) => clock.restore())
   })
 
   it('should render the correct breadcrumbs', () => {
     cy.customMount(
-      <CreateCollection
+      <EditCollection
+        collectionId="root"
         collectionRepository={collectionRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
-        parentCollectionId="root"
       />
     )
 
@@ -84,49 +84,49 @@ describe('CreateCollection', () => {
 
     cy.get('li[aria-current="page"]')
       .should('exist')
-      .should('have.text', 'Create Collection')
+      .should('have.text', 'Edit Collection')
       .should('have.class', 'active')
   })
 
-  it('should show page not found when owner collection does not exist', () => {
+  it('should show page not found when collection does not exist', () => {
     collectionRepository.getById = cy.stub().resolves(null)
 
     cy.customMount(
-      <CreateCollection
+      <EditCollection
+        collectionId="root"
         collectionRepository={collectionRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
-        parentCollectionId="root"
       />
     )
 
     cy.findByText('Page Not Found').should('exist')
   })
 
-  it('should show alert error message when user is not allowed to create collection', () => {
+  it('should show alert error message when user is not allowed to edit the collection', () => {
     collectionRepository.getUserPermissions = cy.stub().resolves(
       CollectionMother.createUserPermissions({
-        canAddCollection: false
+        canEditCollection: false
       })
     )
 
     cy.mountAuthenticated(
-      <CreateCollection
+      <EditCollection
+        collectionId="root"
         collectionRepository={collectionRepository}
-        parentCollectionId="root"
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     )
-    cy.findAllByTestId('not-allowed-to-create-collection-alert').should('exist')
+    cy.findAllByTestId('not-allowed-to-edit-collection-alert').should('exist')
   })
 
-  it('should not show alert error message when user is allowed to create collection', () => {
+  it('should not show alert error message when user is allowed to edit the collection', () => {
     cy.mountAuthenticated(
-      <CreateCollection
+      <EditCollection
+        collectionId="root"
         collectionRepository={collectionRepository}
-        parentCollectionId="root"
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     )
-    cy.findAllByTestId('not-allowed-to-create-collection-alert').should('not.exist')
+    cy.findAllByTestId('not-allowed-to-edit-collection-alert').should('not.exist')
   })
 })
