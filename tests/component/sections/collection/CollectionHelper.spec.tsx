@@ -90,4 +90,35 @@ describe('CollectionHelper', () => {
       expect(CollectionHelper.isRootCollection(collectionHierarchy)).to.be.false
     })
   })
+
+  describe('getParentCollection', () => {
+    it('returns parent collection when collection has parent', () => {
+      const parentCollection: UpwardHierarchyNode = new UpwardHierarchyNode(
+        'Root',
+        DvObjectType.COLLECTION,
+        'root'
+      )
+      const collectionHierarchy: UpwardHierarchyNode = new UpwardHierarchyNode(
+        'Subcollection',
+        DvObjectType.COLLECTION,
+        'subcollection',
+        undefined,
+        undefined,
+        undefined,
+        parentCollection
+      )
+      expect(CollectionHelper.getParentCollection(collectionHierarchy)).to.deep.equal(
+        parentCollection
+      )
+    })
+
+    it('returns undefined when collection does not have parent', () => {
+      const collectionHierarchy: UpwardHierarchyNode = new UpwardHierarchyNode(
+        'Root',
+        DvObjectType.COLLECTION,
+        'root'
+      )
+      expect(CollectionHelper.getParentCollection(collectionHierarchy)).to.be.undefined
+    })
+  })
 })
