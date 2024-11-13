@@ -85,13 +85,33 @@ export function useSubmitCollection(
 
     const hasFacetIdsChangedFromDefaultValue = formDirtyFields[FACET_IDS_FIELD] !== undefined
 
+    const shouldSendMetadataBlockNamesAndInputLevels =
+      CollectionFormHelper.defineShouldSendMetadataBlockNamesAndInputLevels(
+        useFieldsFromParentChecked,
+        isEditingRootCollection,
+        hasMetadataBlockNamesChangedFromDefaultValue,
+        hasInputLevelsChangedFromDefaultValue,
+        mode
+      )
+
+    const shouldSendFacetIds = CollectionFormHelper.defineShouldSendFacetIds(
+      useFacetsFromParentChecked,
+      isEditingRootCollection,
+      hasFacetIdsChangedFromDefaultValue,
+      mode
+    )
+
     console.log({
+      useFacetsFromParentChecked,
+      useFieldsFromParentChecked,
+      isEditingRootCollection,
       hasMetadataBlockNamesChangedFromDefaultValue,
       hasInputLevelsChangedFromDefaultValue,
-      hasFacetIdsChangedFromDefaultValue
+      shouldSendMetadataBlockNamesAndInputLevels,
+      shouldSendFacetIds
     })
 
-    // Luego al enviar los datos, si nada cambio en los metada fields o facets, enviar undefined en vez de los datos
+    // TODO:ME Check what happens if sending facetsId as empty array
 
     const newOrUpdatedCollection: CollectionDTO = {
       name: formData.name,
@@ -100,12 +120,14 @@ export function useSubmitCollection(
       affiliation: formData.affiliation,
       description: formData.description,
       contacts: contactsDTO,
-      metadataBlockNames: useFieldsFromParentChecked ? undefined : metadataBlockNamesDTO,
-      inputLevels: useFieldsFromParentChecked ? undefined : inputLevelsDTO,
-      facetIds: useFacetsFromParentChecked ? undefined : facetIdsDTO
+      metadataBlockNames: shouldSendMetadataBlockNamesAndInputLevels
+        ? metadataBlockNamesDTO
+        : undefined,
+      inputLevels: shouldSendMetadataBlockNamesAndInputLevels ? inputLevelsDTO : undefined,
+      facetIds: shouldSendFacetIds ? facetIdsDTO : undefined
     }
 
-    return
+    console.log(newOrUpdatedCollection)
 
     if (mode === 'create') {
       createCollection(
