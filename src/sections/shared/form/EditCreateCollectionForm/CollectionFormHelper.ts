@@ -236,9 +236,42 @@ export class CollectionFormHelper {
       if (isEditingRootCollection) {
         return false
       } else {
-        return isMetadataBlockOrFacetRoot
+        return !isMetadataBlockOrFacetRoot
       }
     } else {
+      return true
+    }
+  }
+
+  public static defineShouldSendMetadataBlockNamesAndInputLevels(
+    useFieldsFromParentChecked: boolean,
+    isEditingRootCollection: boolean,
+    blockNamesHaveChanged: boolean,
+    inputLevelsHaveChanged: boolean
+  ): boolean {
+    if (isEditingRootCollection) {
+      if (blockNamesHaveChanged || inputLevelsHaveChanged) return true
+
+      return false
+    } else {
+      if (useFieldsFromParentChecked) return false
+
+      return true
+    }
+  }
+
+  public static defineShouldSendFacetIds(
+    useFacetsFromParentChecked: boolean,
+    isEditingRootCollection: boolean,
+    facetIdsHaveChanged: boolean
+  ): boolean {
+    if (isEditingRootCollection) {
+      if (facetIdsHaveChanged) return true
+
+      return false
+    } else {
+      if (useFacetsFromParentChecked) return false
+
       return true
     }
   }

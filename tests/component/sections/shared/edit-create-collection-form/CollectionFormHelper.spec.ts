@@ -586,20 +586,119 @@ describe('CollectionFormHelper', () => {
       expect(result).to.equal(false)
     })
 
-    it('returns true if is on edit mode and is not editing the root collection and isMetadataBlockOrFacetRoot is true', () => {
+    it('returns false if is on edit mode and is not editing the root collection and isMetadataBlockOrFacetRoot is true', () => {
       const result = CollectionFormHelper.defineShouldCheckUseFromParent(true, false, true)
-
-      expect(result).to.equal(true)
-    })
-
-    it('returns false if is on edit mode and is not editing the root collection and isMetadataBlockOrFacetRoot is false', () => {
-      const result = CollectionFormHelper.defineShouldCheckUseFromParent(true, false, false)
 
       expect(result).to.equal(false)
     })
 
+    it('returns true if is on edit mode and is not editing the root collection and isMetadataBlockOrFacetRoot is false', () => {
+      const result = CollectionFormHelper.defineShouldCheckUseFromParent(true, false, false)
+
+      expect(result).to.equal(true)
+    })
+
     it('should return true if is not on edit mode', () => {
       const result = CollectionFormHelper.defineShouldCheckUseFromParent(false, false, true)
+
+      expect(result).to.equal(true)
+    })
+  })
+
+  describe('defineShouldSendMetadataBlockNamesAndInputLevels', () => {
+    it('returns true if is editing root collection and blockNamesHaveChanged is true', () => {
+      const result = CollectionFormHelper.defineShouldSendMetadataBlockNamesAndInputLevels(
+        false,
+        true,
+        true,
+        false
+      )
+
+      expect(result).to.equal(true)
+    })
+
+    it('returns true if is editing root collection and inputLevelsHaveChanged is true', () => {
+      const result = CollectionFormHelper.defineShouldSendMetadataBlockNamesAndInputLevels(
+        false,
+        true,
+        false,
+        true
+      )
+
+      expect(result).to.equal(true)
+    })
+
+    it('returns false if is editing root collection and blockNamesHaveChanged and inputLevelsHaveChanged are false', () => {
+      const result = CollectionFormHelper.defineShouldSendMetadataBlockNamesAndInputLevels(
+        false,
+        true,
+        false,
+        false
+      )
+
+      expect(result).to.equal(false)
+    })
+
+    it('returns false if is not editing root collection and useFieldsFromParentChecked is true', () => {
+      const result = CollectionFormHelper.defineShouldSendMetadataBlockNamesAndInputLevels(
+        true,
+        false,
+        true,
+        true
+      )
+
+      expect(result).to.equal(false)
+    })
+
+    it('returns true if is not editing root collection and useFieldsFromParentChecked is false', () => {
+      const result = CollectionFormHelper.defineShouldSendMetadataBlockNamesAndInputLevels(
+        false,
+        false,
+        true,
+        true
+      )
+
+      expect(result).to.equal(true)
+    })
+  })
+
+  // public static defineShouldSendFacetIds(
+  //   useFacetsFromParentChecked: boolean,
+  //   isEditingRootCollection: boolean,
+  //   facetIdsHaveChanged: boolean
+  // ): boolean {
+  //   if (isEditingRootCollection) {
+  //     if (facetIdsHaveChanged) return true
+
+  //     return false
+  //   } else {
+  //     if (useFacetsFromParentChecked) return false
+
+  //     return true
+  //   }
+  // }
+
+  describe('defineShouldSendFacetIds', () => {
+    it('returns true if is editing root collection and facetIdsHaveChanged is true', () => {
+      const result = CollectionFormHelper.defineShouldSendFacetIds(true, true, true)
+
+      expect(result).to.equal(true)
+    })
+
+    it('returns false if is editing root collection and facetIdsHaveChanged is false', () => {
+      const result = CollectionFormHelper.defineShouldSendFacetIds(true, true, false)
+
+      expect(result).to.equal(false)
+    })
+
+    it('returns false if is not editing root collection and useFacetsFromParentChecked is true', () => {
+      const result = CollectionFormHelper.defineShouldSendFacetIds(true, false, true)
+
+      expect(result).to.equal(false)
+    })
+
+    it('returns true if is not editing root collection and useFacetsFromParentChecked is false', () => {
+      const result = CollectionFormHelper.defineShouldSendFacetIds(false, false, true)
 
       expect(result).to.equal(true)
     })
