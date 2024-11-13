@@ -128,15 +128,28 @@ export const BrowseSearchFacetsSection = ({
             <Controller
               name={FACET_IDS_FIELD}
               control={control}
-              render={({ field: { onChange } }) => (
-                <TransferList
-                  onChange={(selectedItems) => handleOnChangeSelectedItems(selectedItems, onChange)}
-                  availableItems={availableItems}
-                  defaultSelected={defaultCollectionFacets}
-                  rightLabel={t('fields.browseSearchFacets.selectedFacets')}
-                  disabled={useBrowseSearchFacetsFromParentCheckedValue}
-                  key={resetKey}
-                />
+              rules={{
+                validate: (facetsSelected: CollectionFormFacet[]) => {
+                  if (facetsSelected.length === 0) {
+                    return t('fields.browseSearchFacets.invalid.minLength')
+                  }
+                  return true
+                }
+              }}
+              render={({ field: { onChange }, fieldState: { invalid, error } }) => (
+                <div>
+                  <TransferList
+                    onChange={(selectedItems) =>
+                      handleOnChangeSelectedItems(selectedItems, onChange)
+                    }
+                    availableItems={availableItems}
+                    defaultSelected={defaultCollectionFacets}
+                    rightLabel={t('fields.browseSearchFacets.selectedFacets')}
+                    disabled={useBrowseSearchFacetsFromParentCheckedValue}
+                    key={resetKey}
+                  />
+                  {invalid && <div className={styles['error-msg']}>{error?.message}</div>}
+                </div>
               )}
             />
           </div>

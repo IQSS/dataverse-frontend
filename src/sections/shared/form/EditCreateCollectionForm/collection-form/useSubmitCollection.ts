@@ -111,8 +111,6 @@ export function useSubmitCollection(
       shouldSendFacetIds
     })
 
-    // TODO:ME Check what happens if sending facetsId as empty array
-
     const newOrUpdatedCollection: CollectionDTO = {
       name: formData.name,
       alias: formData.alias,
