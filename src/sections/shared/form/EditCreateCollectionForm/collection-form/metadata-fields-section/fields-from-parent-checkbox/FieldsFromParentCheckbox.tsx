@@ -22,17 +22,19 @@ export const FieldsFromParentCheckbox = ({ defaultValues }: FieldsFromParentChec
   const hostCollectionFieldValue = useWatch({ name: 'hostCollection' }) as string
 
   const handleContinueWithReset = () => {
-    setValue(USE_FIELDS_FROM_PARENT, true)
+    setValue(USE_FIELDS_FROM_PARENT, true, { shouldDirty: true })
 
     const metadataBlockDefaultValues = Object.entries(defaultValues[METADATA_BLOCKS_NAMES_GROUPER])
 
     // Reset metadata block names checboxes to the inital value
     metadataBlockDefaultValues.forEach(([blockName, blockInitialValue]) => {
-      setValue(`${METADATA_BLOCKS_NAMES_GROUPER}.${blockName}`, blockInitialValue)
+      setValue(`${METADATA_BLOCKS_NAMES_GROUPER}.${blockName}`, blockInitialValue, {
+        shouldDirty: true
+      })
     })
 
     // Reset input levels to the initial value
-    setValue(INPUT_LEVELS_GROUPER, defaultValues[INPUT_LEVELS_GROUPER])
+    setValue(INPUT_LEVELS_GROUPER, defaultValues[INPUT_LEVELS_GROUPER], { shouldDirty: true })
 
     closeModal()
   }

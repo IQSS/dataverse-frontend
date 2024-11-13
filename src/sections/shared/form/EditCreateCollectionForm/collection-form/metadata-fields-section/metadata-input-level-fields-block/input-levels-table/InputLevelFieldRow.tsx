@@ -49,13 +49,19 @@ export const InputLevelFieldRow = ({ metadataField, disabled }: InputLevelFieldR
     if (e.target.checked === false) {
       // If include is set to false, then field and child fields should be set to optional and include false
       if (!childMetadataFields) {
-        setValue(`${INPUT_LEVELS_GROUPER}.${name}.optionalOrRequired`, 'optional')
+        setValue(`${INPUT_LEVELS_GROUPER}.${name}.optionalOrRequired`, 'optional', {
+          shouldDirty: true
+        })
       } else {
-        setValue(`${INPUT_LEVELS_GROUPER}.${name}.optionalOrRequired`, 'optional')
+        setValue(`${INPUT_LEVELS_GROUPER}.${name}.optionalOrRequired`, 'optional', {
+          shouldDirty: true
+        })
 
         Object.values(childMetadataFields).forEach(({ name }) => {
           setValue(`${INPUT_LEVELS_GROUPER}.${name}.include`, false)
-          setValue(`${INPUT_LEVELS_GROUPER}.${name}.optionalOrRequired`, 'optional')
+          setValue(`${INPUT_LEVELS_GROUPER}.${name}.optionalOrRequired`, 'optional', {
+            shouldDirty: true
+          })
         })
       }
       formOnChange(e)

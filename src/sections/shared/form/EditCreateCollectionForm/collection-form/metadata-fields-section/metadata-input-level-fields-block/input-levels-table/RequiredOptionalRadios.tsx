@@ -68,7 +68,9 @@ export const RequiredOptionalRadios = ({
     if (isForChildField) {
       // If parent is required by dataverse, then is already required
       if (e.target.value === 'required' && !parentIsRequiredByDataverse) {
-        setValue(`${INPUT_LEVELS_GROUPER}.${parentIncludeName}.optionalOrRequired`, 'required')
+        setValue(`${INPUT_LEVELS_GROUPER}.${parentIncludeName}.optionalOrRequired`, 'required', {
+          shouldDirty: true
+        })
       }
 
       // If parent is required by dataverse, then is already required and should not be set to optional
@@ -78,9 +80,13 @@ export const RequiredOptionalRadios = ({
         ).some((value) => value === 'required')
 
         if (!isSomeSiblingRequired) {
-          setValue(`${INPUT_LEVELS_GROUPER}.${parentIncludeName}.optionalOrRequired`, 'optional')
+          setValue(`${INPUT_LEVELS_GROUPER}.${parentIncludeName}.optionalOrRequired`, 'optional', {
+            shouldDirty: true
+          })
         } else {
-          setValue(`${INPUT_LEVELS_GROUPER}.${parentIncludeName}.optionalOrRequired`, 'required')
+          setValue(`${INPUT_LEVELS_GROUPER}.${parentIncludeName}.optionalOrRequired`, 'required', {
+            shouldDirty: true
+          })
         }
       }
     }

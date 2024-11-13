@@ -23,7 +23,7 @@ export const FacetsFromParentCheckbox = ({
     formOnChange: (...event: unknown[]) => void
   ) => {
     if (e.target.checked) {
-      setValue(FACET_IDS_FIELD, defaultCollectionFacets)
+      setValue(FACET_IDS_FIELD, defaultCollectionFacets, { shouldDirty: true })
       resetAvailableItems()
     }
     formOnChange(e)
