@@ -247,15 +247,24 @@ export class CollectionFormHelper {
     useFieldsFromParentChecked: boolean,
     isEditingRootCollection: boolean,
     blockNamesHaveChanged: boolean,
-    inputLevelsHaveChanged: boolean
+    inputLevelsHaveChanged: boolean,
+    mode: 'edit' | 'create'
   ): boolean {
-    if (isEditingRootCollection) {
-      if (blockNamesHaveChanged || inputLevelsHaveChanged) return true
+    if (mode === 'edit') {
+      if (isEditingRootCollection) {
+        if (blockNamesHaveChanged || inputLevelsHaveChanged) return true
 
-      return false
+        return false
+      } else {
+        if (useFieldsFromParentChecked) return false
+
+        // If useFieldsFromParentChecked is not checked we should send the default metadata block names and input levels, the only way for the user to edit them is to uncheck the useFromParent first
+        return true
+      }
     } else {
       if (useFieldsFromParentChecked) return false
 
+      // If useFieldsFromParentChecked is not checked we should send the default metadata block names and input levels, the only way for the user to edit them is to uncheck the useFromParent first
       return true
     }
   }
@@ -263,15 +272,23 @@ export class CollectionFormHelper {
   public static defineShouldSendFacetIds(
     useFacetsFromParentChecked: boolean,
     isEditingRootCollection: boolean,
-    facetIdsHaveChanged: boolean
+    facetIdsHaveChanged: boolean,
+    mode: 'edit' | 'create'
   ): boolean {
-    if (isEditingRootCollection) {
-      if (facetIdsHaveChanged) return true
+    if (mode === 'edit') {
+      if (isEditingRootCollection) {
+        if (facetIdsHaveChanged) return true
+        return false
+      } else {
+        if (useFacetsFromParentChecked) return false
 
-      return false
+        // If useFacetsFromParentChecked is not checked we should send the default facetIds, changed or not
+        return true
+      }
     } else {
       if (useFacetsFromParentChecked) return false
 
+      // If useFacetsFromParentChecked is not checked we should send the default facetIds, changed or not
       return true
     }
   }

@@ -606,99 +606,124 @@ describe('CollectionFormHelper', () => {
   })
 
   describe('defineShouldSendMetadataBlockNamesAndInputLevels', () => {
-    it('returns true if is editing root collection and blockNamesHaveChanged is true', () => {
+    it('for edit mode - returns true if is editing root collection and blockNamesHaveChanged is true', () => {
       const result = CollectionFormHelper.defineShouldSendMetadataBlockNamesAndInputLevels(
         false,
         true,
         true,
-        false
+        false,
+        'edit'
       )
 
       expect(result).to.equal(true)
     })
 
-    it('returns true if is editing root collection and inputLevelsHaveChanged is true', () => {
+    it('for edit mode - returns true if is editing root collection and inputLevelsHaveChanged is true', () => {
       const result = CollectionFormHelper.defineShouldSendMetadataBlockNamesAndInputLevels(
         false,
         true,
         false,
-        true
+        true,
+        'edit'
       )
 
       expect(result).to.equal(true)
     })
 
-    it('returns false if is editing root collection and blockNamesHaveChanged and inputLevelsHaveChanged are false', () => {
+    it('for edit mode - returns false if is editing root collection and blockNamesHaveChanged and inputLevelsHaveChanged are false', () => {
       const result = CollectionFormHelper.defineShouldSendMetadataBlockNamesAndInputLevels(
         false,
         true,
         false,
-        false
+        false,
+        'edit'
       )
 
       expect(result).to.equal(false)
     })
 
-    it('returns false if is not editing root collection and useFieldsFromParentChecked is true', () => {
+    it('for edit mode - returns false if is not editing root collection and useFieldsFromParentChecked is true', () => {
       const result = CollectionFormHelper.defineShouldSendMetadataBlockNamesAndInputLevels(
         true,
         false,
         true,
-        true
+        true,
+        'edit'
       )
 
       expect(result).to.equal(false)
     })
 
-    it('returns true if is not editing root collection and useFieldsFromParentChecked is false', () => {
+    it('for edit mode - returns true if is not editing root collection and useFieldsFromParentChecked is false', () => {
       const result = CollectionFormHelper.defineShouldSendMetadataBlockNamesAndInputLevels(
         false,
         false,
         true,
-        true
+        true,
+        'edit'
+      )
+
+      expect(result).to.equal(true)
+    })
+
+    it('for create mode - returns false if useFieldsFromParentChecked is true', () => {
+      const result = CollectionFormHelper.defineShouldSendMetadataBlockNamesAndInputLevels(
+        true,
+        false,
+        true,
+        true,
+        'create'
+      )
+
+      expect(result).to.equal(false)
+    })
+
+    it('for create mode - returns true if useFieldsFromParentChecked is false', () => {
+      const result = CollectionFormHelper.defineShouldSendMetadataBlockNamesAndInputLevels(
+        false,
+        false,
+        true,
+        true,
+        'create'
       )
 
       expect(result).to.equal(true)
     })
   })
 
-  // public static defineShouldSendFacetIds(
-  //   useFacetsFromParentChecked: boolean,
-  //   isEditingRootCollection: boolean,
-  //   facetIdsHaveChanged: boolean
-  // ): boolean {
-  //   if (isEditingRootCollection) {
-  //     if (facetIdsHaveChanged) return true
-
-  //     return false
-  //   } else {
-  //     if (useFacetsFromParentChecked) return false
-
-  //     return true
-  //   }
-  // }
-
   describe('defineShouldSendFacetIds', () => {
-    it('returns true if is editing root collection and facetIdsHaveChanged is true', () => {
-      const result = CollectionFormHelper.defineShouldSendFacetIds(true, true, true)
+    it('for edit mode - returns true if is editing root collection and facetIdsHaveChanged is true', () => {
+      const result = CollectionFormHelper.defineShouldSendFacetIds(false, true, true, 'edit')
 
       expect(result).to.equal(true)
     })
 
-    it('returns false if is editing root collection and facetIdsHaveChanged is false', () => {
-      const result = CollectionFormHelper.defineShouldSendFacetIds(true, true, false)
+    it('for edit mode - returns false if is editing root collection and facetIdsHaveChanged is false', () => {
+      const result = CollectionFormHelper.defineShouldSendFacetIds(false, true, false, 'edit')
 
       expect(result).to.equal(false)
     })
 
-    it('returns false if is not editing root collection and useFacetsFromParentChecked is true', () => {
-      const result = CollectionFormHelper.defineShouldSendFacetIds(true, false, true)
+    it('for edit mode - returns false if is not editing root collection and useFacetsFromParentChecked is true', () => {
+      const result = CollectionFormHelper.defineShouldSendFacetIds(true, false, true, 'edit')
 
       expect(result).to.equal(false)
     })
 
-    it('returns true if is not editing root collection and useFacetsFromParentChecked is false', () => {
-      const result = CollectionFormHelper.defineShouldSendFacetIds(false, false, true)
+    it('for edit mode - returns true if is not editing root collection and useFacetsFromParentChecked is false', () => {
+      const result = CollectionFormHelper.defineShouldSendFacetIds(false, false, true, 'edit')
+
+      expect(result).to.equal(true)
+    })
+
+    it('for create mode - returns false if useFacetsFromParentChecked is true', () => {
+      const result = CollectionFormHelper.defineShouldSendFacetIds(true, false, true, 'create')
+
+      expect(result).to.equal(false)
+    })
+
+    it('for create mode - returns true if useFacetsFromParentChecked is false', () => {
+      const result = CollectionFormHelper.defineShouldSendFacetIds(false, false, true, 'create')
 
       expect(result).to.equal(true)
     })
