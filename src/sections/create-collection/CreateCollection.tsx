@@ -6,13 +6,13 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useLoading } from '../loading/LoadingContext'
 import { useSession } from '../session/SessionContext'
+import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollectionUserPermissions'
+import { User } from '@/users/domain/models/User'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreateCollectionSkeleton } from './CreateCollectionSkeleton'
-import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollectionUserPermissions'
-import { User } from '@/users/domain/models/User'
 import { EditCreateCollectionForm } from '../shared/form/EditCreateCollectionForm/EditCreateCollectionForm'
 
 interface CreateCollectionProps {
@@ -98,7 +98,7 @@ export function CreateCollection({
         mode="create"
         user={user as User}
         collection={collection}
-        parentCollectionId={parentCollectionId}
+        parentCollection={{ id: collection.id, name: collection.name }}
         collectionRepository={collectionRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />

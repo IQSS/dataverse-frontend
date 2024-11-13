@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
@@ -6,13 +7,13 @@ import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollection
 import { useLoading } from '../loading/LoadingContext'
 import { useSession } from '../session/SessionContext'
 import { useCollection } from '../collection/useCollection'
+import { User } from '@/users/domain/models/User'
+import { CollectionHelper } from '../collection/CollectionHelper'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
 import { EditCreateCollectionForm } from '../shared/form/EditCreateCollectionForm/EditCreateCollectionForm'
-import { User } from '@/users/domain/models/User'
-import { useEffect } from 'react'
 import { EditCollectionSkeleton } from './EditCollectionSkeleton'
 
 interface EditCollectionProps {
@@ -79,6 +80,8 @@ export const EditCollection = ({
     )
   }
 
+  const parentCollection = CollectionHelper.getParentCollection(collection.hierarchy)
+
   return (
     <section>
       <BreadcrumbsGenerator
@@ -102,6 +105,14 @@ export const EditCollection = ({
         mode="edit"
         user={user as User}
         collection={collection}
+        parentCollection={
+          parentCollection
+            ? {
+                id: parentCollection.id,
+                name: parentCollection.name
+              }
+            : undefined
+        }
         collectionRepository={collectionRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />

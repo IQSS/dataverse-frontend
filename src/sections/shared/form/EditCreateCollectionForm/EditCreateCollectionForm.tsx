@@ -33,7 +33,7 @@ type EditCreateCollectionFormProps =
       mode: 'create'
       user: User
       collection: Collection
-      parentCollectionId: string
+      parentCollection: ParentCollectionData
       collectionRepository: CollectionRepository
       metadataBlockInfoRepository: MetadataBlockInfoRepository
     }
@@ -41,18 +41,23 @@ type EditCreateCollectionFormProps =
       mode: 'edit'
       user: User
       collection: Collection
-      parentCollectionId?: never
+      parentCollection?: ParentCollectionData
       collectionRepository: CollectionRepository
       metadataBlockInfoRepository: MetadataBlockInfoRepository
     }
 
 export type EditCreateCollectionFormMode = 'create' | 'edit'
 
+interface ParentCollectionData {
+  id: string
+  name: string
+}
+
 export const EditCreateCollectionForm = ({
   mode,
   user,
   collection,
-  parentCollectionId,
+  parentCollection,
   collectionRepository,
   metadataBlockInfoRepository
 }: EditCreateCollectionFormProps) => {
@@ -67,7 +72,7 @@ export const EditCreateCollectionForm = ({
     isLoading: isLoadingMetadataBlocksInfo,
     error: metadataBlockInfoError
   } = useGetCollectionMetadataBlocksInfo({
-    collectionId: onEditMode ? collection.id : parentCollectionId,
+    collectionId: onEditMode ? collection.id : parentCollection.id,
     metadataBlockInfoRepository
   })
 
@@ -82,7 +87,7 @@ export const EditCreateCollectionForm = ({
     isLoading: isLoadingCollectionFacets,
     error: collectionFacetsError
   } = useGetCollectionFacets({
-    collectionId: onEditMode ? collection.id : parentCollectionId,
+    collectionId: onEditMode ? collection.id : parentCollection.id,
     collectionRepository
   })
 
@@ -194,7 +199,9 @@ export const EditCreateCollectionForm = ({
   )
 
   const formDefaultValues: CollectionFormData = {
-    hostCollection: collection.name,
+    hostCollection: isEditingRootCollection
+      ? null
+      : (parentCollection as ParentCollectionData).name,
     name: defaultCollectionName,
     alias: onEditMode ? collection.id : '',
     type: onEditMode ? collection.type : '',
@@ -213,7 +220,7 @@ export const EditCreateCollectionForm = ({
     <CollectionForm
       mode={mode}
       collectionRepository={collectionRepository}
-      collectionIdOrParentCollectionId={mode === 'create' ? parentCollectionId : collection.id}
+      collectionIdOrParentCollectionId={mode === 'create' ? parentCollection.id : collection.id}
       defaultValues={formDefaultValues}
       allMetadataBlocksInfo={allMetadataBlocksInfo}
       allFacetableMetadataFields={facetableMetadataFields}

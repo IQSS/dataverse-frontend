@@ -13,7 +13,7 @@ import {
 import { CollectionType } from '@/collection/domain/models/CollectionType'
 
 export type CollectionFormData = {
-  hostCollection: string
+  hostCollection: string | null
   name: string
   affiliation: string
   alias: string

@@ -51,8 +51,6 @@ export const CollectionForm = ({
 
   const { formState } = form
 
-  console.log(formState.dirtyFields)
-
   const { submitForm, submitError, submissionStatus } = useSubmitCollection(
     mode,
     collectionIdOrParentCollectionId,
@@ -96,7 +94,7 @@ export const CollectionForm = ({
           onSubmit={form.handleSubmit(submitForm)}
           noValidate={true}
           data-testid="collection-form">
-          <TopFieldsSection />
+          <TopFieldsSection isEditingRootCollection={isEditingRootCollection} />
 
           <SeparationLine />
 

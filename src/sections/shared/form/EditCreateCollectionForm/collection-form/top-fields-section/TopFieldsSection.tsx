@@ -10,7 +10,11 @@ import { ContactsField } from './ContactsField'
 import { IdentifierField } from './IdentifierField'
 import { DescriptionField } from './DescriptionField'
 
-export const TopFieldsSection = () => {
+interface TopFieldsSectionProps {
+  isEditingRootCollection: boolean
+}
+
+export const TopFieldsSection = ({ isEditingRootCollection }: TopFieldsSectionProps) => {
   const { t } = useTranslation('shared', { keyPrefix: 'collectionForm' })
   const { control } = useFormContext()
 
@@ -50,33 +54,36 @@ export const TopFieldsSection = () => {
 
   return (
     <section>
-      {/* Host Collection */}
-      <Row>
-        <Form.Group controlId="host-collection" as={Col} md={6}>
-          <Form.Group.Label message={t('fields.hostCollection.description')} required={true}>
-            {t('fields.hostCollection.label')}
-          </Form.Group.Label>
-          <Controller
-            name="hostCollection"
-            control={control}
-            rules={hostCollectionRules}
-            render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
-              <Col>
-                <Form.Group.Input
-                  type="text"
-                  value={value as string}
-                  onChange={onChange}
-                  isInvalid={invalid}
-                  aria-required={true}
-                  ref={ref}
-                  disabled
-                />
-                <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
-              </Col>
-            )}
-          />
-        </Form.Group>
-      </Row>
+      {/* Host Collection - Not shown if editing root collection */}
+
+      {!isEditingRootCollection && (
+        <Row>
+          <Form.Group controlId="host-collection" as={Col} md={6}>
+            <Form.Group.Label message={t('fields.hostCollection.description')} required={true}>
+              {t('fields.hostCollection.label')}
+            </Form.Group.Label>
+            <Controller
+              name="hostCollection"
+              control={control}
+              rules={hostCollectionRules}
+              render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
+                <Col>
+                  <Form.Group.Input
+                    type="text"
+                    value={value as string}
+                    onChange={onChange}
+                    isInvalid={invalid}
+                    aria-required={true}
+                    ref={ref}
+                    disabled
+                  />
+                  <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+                </Col>
+              )}
+            />
+          </Form.Group>
+        </Row>
+      )}
 
       {/* Name & Affiliation */}
       <Row>
