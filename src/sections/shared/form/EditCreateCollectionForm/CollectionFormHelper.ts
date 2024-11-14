@@ -222,6 +222,10 @@ export class CollectionFormHelper {
   public static formatCollectionContactsToFormContacts(
     collectionContacts: CollectionContact[]
   ): CollectionFormContactValue[] {
+    if (collectionContacts.length === 0) {
+      return [{ value: '' }]
+    }
+
     return collectionContacts.map((contact) => ({
       value: contact.email
     }))

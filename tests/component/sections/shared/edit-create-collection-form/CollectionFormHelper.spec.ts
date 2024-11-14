@@ -579,6 +579,14 @@ describe('CollectionFormHelper', () => {
     expect(result).to.deep.equal(expected)
   })
 
+  it('formats empty collection contacts to empty form contacts values ', () => {
+    const collectionContacts: CollectionContact[] = []
+
+    const result = CollectionFormHelper.formatCollectionContactsToFormContacts(collectionContacts)
+
+    expect(result).to.deep.equal([{ value: '' }])
+  })
+
   describe('defineShouldCheckUseFromParent', () => {
     it('returns false if is on edit mode and is editing the root collection', () => {
       const result = CollectionFormHelper.defineShouldCheckUseFromParent(true, true, true)

@@ -32,7 +32,7 @@ type EditCreateCollectionFormProps =
   | {
       mode: 'create'
       user: User
-      collection?: never
+      collection?: never // In create mode, collection is undefined, we only have parentCollection
       parentCollection: Collection
       collectionRepository: CollectionRepository
       metadataBlockInfoRepository: MetadataBlockInfoRepository
@@ -41,7 +41,7 @@ type EditCreateCollectionFormProps =
       mode: 'edit'
       user: User
       collection: Collection
-      parentCollection?: ParentCollectionDataInEdition
+      parentCollection?: ParentCollectionDataInEdition // In edit mode, parentCollection could be undefined in case of root collection
       collectionRepository: CollectionRepository
       metadataBlockInfoRepository: MetadataBlockInfoRepository
     }
@@ -104,7 +104,7 @@ export const EditCreateCollectionForm = ({
   }, [allMetadataBlocksInfo])
 
   const collectionInputLevelsToFormat =
-    mode === 'edit' ? collection?.inputLevels : parentCollection?.inputLevels
+    mode === 'edit' ? collection.inputLevels : parentCollection.inputLevels
 
   const formattedCollectionInputLevels: FormattedCollectionInputLevelsWithoutParentBlockName =
     useDeepCompareMemo(() => {
