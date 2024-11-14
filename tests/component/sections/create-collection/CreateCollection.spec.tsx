@@ -129,4 +129,18 @@ describe('CreateCollection', () => {
     )
     cy.findAllByTestId('not-allowed-to-create-collection-alert').should('not.exist')
   })
+
+  it('should show alert error message when getting the user permissions fails', () => {
+    collectionRepository.getUserPermissions = cy.stub().rejects('Error')
+
+    cy.mountAuthenticated(
+      <CreateCollection
+        collectionRepository={collectionRepository}
+        parentCollectionId="root"
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+      />
+    )
+
+    cy.findByText('Error').should('exist')
+  })
 })
