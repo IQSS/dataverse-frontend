@@ -78,11 +78,7 @@ const collectionFacets = CollectionFacetMother.createFacets()
 
 const allFacetableMetadataFields = MetadataBlockInfoMother.getAllFacetableMetadataFields()
 
-// TODO:ME - Test: EditCollection.spec - test the permissions error
-// TODO:ME - Test: CreateCollection.spec - test the permissions error
-// TODO:ME - Test: EditCollectionDropdown.spec - test the onClickEdit and the rendering or not the affiliation next to name
-// TODO:ME - Test: check the error message when not selecting any facet
-// TODO:ME - Test unchecking block name checkbox and checking it again setting input levels related to default
+// TODO:ME - e2e gets the collection by id deeply equal failinng
 
 describe('EditCreateCollectionForm', () => {
   beforeEach(() => {
@@ -825,6 +821,31 @@ describe('EditCreateCollectionForm', () => {
           })
         })
       })
+
+      it('when unchecking a block name checkbox, should reset the input levels as they were by default', () => {
+        cy.get('@useFieldsFromParentCheckbox').uncheck({ force: true })
+
+        // Check geospatial block name checkbox
+        cy.findByLabelText('Geospatial Metadata').check({ force: true })
+
+        // Open geospatial input levels
+        cy.findAllByRole('button', {
+          name: VIEW_AND_EDIT_FIELDS_LABEL
+        })
+          .last()
+          .should('exist')
+          .click()
+
+        // Set coverage city as required
+        cy.findByLabelText('Geographic Coverage').uncheck({ force: true })
+
+        cy.findByLabelText('Geographic Coverage').should('not.be.checked')
+
+        // Uncheck geospatial block name checkbox
+        cy.findByLabelText('Geospatial Metadata').uncheck({ force: true })
+
+        cy.findByLabelText('Geographic Coverage').should('be.checked')
+      })
     })
 
     describe('BrowseSearchFacetsSection functionality', () => {
@@ -1001,6 +1022,27 @@ describe('EditCreateCollectionForm', () => {
         cy.findByTestId('select-facets-by-block').within(() => {
           cy.findByText('All Metadata Fields').should('exist')
         })
+      })
+
+      it('should show error message when there is no selected facet in the right list', () => {
+        cy.get('@useFacetsFromParentCheckbox').uncheck({ force: true })
+        // Move all facets to the left list
+        cy.get('@actionsColumn').within(() => {
+          cy.findByLabelText('move all left').click()
+        })
+
+        cy.findByText('At least one facet must be selected.').should('exist')
+
+        // Now move one facet to the right list and the error message should disappear
+        cy.get('@leftList').within(() => {
+          cy.findByLabelText('Journal Volume').click()
+        })
+
+        cy.get('@actionsColumn').within(() => {
+          cy.findByLabelText('move selected to right').click()
+        })
+
+        cy.findByText('At least one facet must be selected.').should('not.exist')
       })
     })
   })
