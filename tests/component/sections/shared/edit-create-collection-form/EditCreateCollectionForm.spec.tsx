@@ -83,6 +83,7 @@ const allFacetableMetadataFields = MetadataBlockInfoMother.getAllFacetableMetada
 describe('EditCreateCollectionForm', () => {
   beforeEach(() => {
     collectionRepository.create = cy.stub().resolves(1)
+    collectionRepository.edit = cy.stub().resolves({})
     collectionRepository.getFacets = cy.stub().resolves(collectionFacets)
     userRepository.getAuthenticated = cy.stub().resolves(testUser)
     metadataBlockInfoRepository.getByCollectionId = cy.stub().resolves(colllectionMetadataBlocks)
@@ -1060,6 +1061,54 @@ describe('EditCreateCollectionForm', () => {
         />
       )
       cy.findByTestId('collection-form').should('exist')
+    })
+
+    it('submits a valid form and succeed', () => {
+      cy.customMount(
+        <EditCreateCollectionForm
+          mode="edit"
+          user={testUser}
+          collection={collectionBeingEdited}
+          parentCollection={{ id: PARENT_COLLECTION_ID, name: PARENT_COLLECTION_NAME }}
+          collectionRepository={collectionRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+      // Change affiliation in order to be able to save
+      cy.findByLabelText(/^Affiliation/i)
+        .clear()
+        .type('New Affiliation')
+
+      cy.findByRole('button', { name: 'Save Changes' }).click()
+
+      cy.findByText('Error').should('not.exist')
+      cy.findByText('Success!').should('exist')
+    })
+
+    it('submits a valid form and fails', () => {
+      collectionRepository.edit = cy.stub().rejects(new Error('Error editing collection'))
+
+      cy.customMount(
+        <EditCreateCollectionForm
+          mode="edit"
+          user={testUser}
+          collection={collectionBeingEdited}
+          parentCollection={{ id: PARENT_COLLECTION_ID, name: PARENT_COLLECTION_NAME }}
+          collectionRepository={collectionRepository}
+          metadataBlockInfoRepository={metadataBlockInfoRepository}
+        />
+      )
+
+      // Change affiliation in order to be able to save
+      cy.findByLabelText(/^Affiliation/i)
+        .clear()
+        .type('New Affiliation')
+
+      cy.findByRole('button', { name: 'Save Changes' }).click()
+
+      cy.findByText('Error').should('exist')
+      cy.findByText(/Error editing collection/).should('exist')
+      cy.findByText('Success!').should('not.exist')
     })
 
     it('should not show the Host Collection field when editing the root collection', () => {

@@ -139,7 +139,8 @@
       "cancel": "Cancel"
     },
     "submitStatus": {
-      "success": "Collection created successfully."
+      "createSuccess": "Collection created successfully.",
+      "editSuccess": "Collection updated successfully."
     },
     "saveButton": {
       "createMode": "Create Collection",

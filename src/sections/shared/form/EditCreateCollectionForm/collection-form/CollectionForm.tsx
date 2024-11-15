@@ -86,7 +86,7 @@ export const CollectionForm = ({
       )}
       {submissionStatus === SubmissionStatus.SubmitComplete && (
         <Alert variant="success" dismissible={false}>
-          {t('submitStatus.success')}
+          {onCreateMode ? t('submitStatus.createSuccess') : t('submitStatus.editSuccess')}
         </Alert>
       )}
       <FormProvider {...form}>
