@@ -14,6 +14,7 @@ if (BASE_URL === '') {
 
 const userRepository = new UserJSDataverseRepository()
 function App() {
+  console.log('Hi there')
   return (
     <SessionProvider repository={userRepository}>
       <Router />
