@@ -42,6 +42,8 @@ export function PaginationControls({
 
   useEffect(() => {
     onPaginationInfoChange(paginationInfo)
+    // TODO: Not a priority as not used for inifinite scroll is used but the eslint disable should be removed and the dependency should be added
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginationInfo.pageSize])
 
   useEffect(() => {
@@ -52,10 +54,14 @@ export function PaginationControls({
         setSearchParams(searchParams)
       }
     }
+    // TODO: Not a priority as not used for inifinite scroll is used but the eslint disable should be removed and the dependency should be added
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginationInfo.page])
 
   useEffect(() => {
     setPaginationInfo(paginationInfo.withTotal(initialPaginationInfo.totalItems))
+    // TODO: Not a priority as not used for inifinite scroll is used but the eslint disable should be removed and the dependency should be added
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialPaginationInfo.totalItems])
 
   useEffect(() => {
@@ -67,6 +73,8 @@ export function PaginationControls({
         goToPage(page)
       }
     }
+    // TODO: Not a priority as not used for inifinite scroll is used but the eslint disable should be removed and the dependency should be added
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
 
   if (paginationInfo.totalPages < MINIMUM_NUMBER_OF_PAGES_TO_DISPLAY_PAGINATION) {
