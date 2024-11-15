@@ -61,10 +61,11 @@ jobs:
         if: ${{ github.event.inputs.infra_type == 'Payara' && github.event.inputs.basepath != '' }}
         run: npm run build -- --base=/${{ github.event.inputs.basepath }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: built-site
           path: ./dist
+          include-hidden-files: true
 
   deploy-to-s3:
     needs: build
@@ -84,7 +85,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install awscli
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: built-site
           path: ./dist
@@ -111,7 +112,7 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: built-site
           path: ./dist
