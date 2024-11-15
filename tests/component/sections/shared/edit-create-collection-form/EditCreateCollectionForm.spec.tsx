@@ -78,8 +78,6 @@ const collectionFacets = CollectionFacetMother.createFacets()
 
 const allFacetableMetadataFields = MetadataBlockInfoMother.getAllFacetableMetadataFields()
 
-// TODO:ME - e2e gets the collection by id deeply equal failinng
-
 describe('EditCreateCollectionForm', () => {
   beforeEach(() => {
     collectionRepository.create = cy.stub().resolves(1)
@@ -547,8 +545,6 @@ describe('EditCreateCollectionForm', () => {
           cy.get('@createCollection').should((spy) => {
             const createCollectionSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
             const collectionDTO = createCollectionSpy.getCall(0).args[0] as CollectionDTO
-
-            console.log({ collectionDTO })
 
             const inputLevels = collectionDTO.inputLevels
             const metadataBlockNames = collectionDTO.metadataBlockNames

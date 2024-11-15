@@ -101,16 +101,6 @@ export function useSubmitCollection(
       mode
     )
 
-    console.log({
-      useFacetsFromParentChecked,
-      useFieldsFromParentChecked,
-      isEditingRootCollection,
-      hasMetadataBlockNamesChangedFromDefaultValue,
-      hasInputLevelsChangedFromDefaultValue,
-      shouldSendMetadataBlockNamesAndInputLevels,
-      shouldSendFacetIds
-    })
-
     const newOrUpdatedCollection: CollectionDTO = {
       name: formData.name,
       alias: formData.alias,
@@ -124,8 +114,6 @@ export function useSubmitCollection(
       inputLevels: shouldSendMetadataBlockNamesAndInputLevels ? inputLevelsDTO : undefined,
       facetIds: shouldSendFacetIds ? facetIdsDTO : undefined
     }
-
-    console.log(newOrUpdatedCollection)
 
     if (mode === 'create') {
       createCollection(
