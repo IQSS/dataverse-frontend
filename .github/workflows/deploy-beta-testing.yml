@@ -3,7 +3,7 @@ name: 'Deploy to Beta Testing'
 on:
   push:
     branches:
-      - 537-upgrade-to-v4-download-upload-artifacts
+      - develop
 
 jobs:
   build:
