@@ -29,6 +29,7 @@ interface PublishDatasetModalProps {
   handleClose: () => void
   nextMajorVersion?: string
   nextMinorVersion?: string
+  requiresMajorVersionUpdate?: boolean
 }
 
 export function PublishDatasetModal({
@@ -40,7 +41,8 @@ export function PublishDatasetModal({
   releasedVersionExists,
   handleClose,
   nextMajorVersion,
-  nextMinorVersion
+  nextMinorVersion,
+  requiresMajorVersionUpdate
 }: PublishDatasetModalProps) {
   const { t } = useTranslation('dataset')
   const { user } = useSession()
@@ -82,9 +84,11 @@ export function PublishDatasetModal({
         <Stack direction="vertical">
           <PublishDatasetHelpText
             releasedVersionExists={releasedVersionExists}
+            nextMajorVersion={nextMajorVersionString}
             parentCollectionIsReleased={parentCollection.isReleased}
             parentCollectionName={parentCollection.name}
             parentCollectionId={parentCollection.id}
+            requiresMajorVersionUpdate={requiresMajorVersionUpdate}
           />
           <License
             license={{
@@ -93,7 +97,7 @@ export function PublishDatasetModal({
               iconUri: defaultLicense.iconUri
             }}
           />
-          {releasedVersionExists && (
+          {releasedVersionExists && !requiresMajorVersionUpdate && (
             <>
               <Form.Group.Text>{t('publish.selectVersion')}</Form.Group.Text>
               <Form.RadioGroup title={'Update Version'}>

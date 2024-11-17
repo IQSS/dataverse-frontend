@@ -6,9 +6,11 @@ import styles from './PublishDatasetHelpText.module.scss'
 
 interface PublishDatasetHelpTextProps {
   releasedVersionExists: boolean
+  nextMajorVersion: string
   parentCollectionIsReleased: boolean | undefined
   parentCollectionName: string
   parentCollectionId: string
+  requiresMajorVersionUpdate?: boolean
 }
 
 function getWarningTextKey(
@@ -25,9 +27,11 @@ function getWarningTextKey(
 
 export function PublishDatasetHelpText({
   releasedVersionExists,
+  nextMajorVersion,
   parentCollectionIsReleased,
   parentCollectionName,
-  parentCollectionId
+  parentCollectionId,
+  requiresMajorVersionUpdate
 }: PublishDatasetHelpTextProps) {
   const { t } = useTranslation('dataset')
   const warningText = getWarningTextKey(releasedVersionExists, parentCollectionIsReleased)
