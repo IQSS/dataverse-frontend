@@ -86,6 +86,101 @@ const jsDatasetLocks: JSDatasetLock[] = [
     datasetPersistentId: 'doi:10.5072/FK2/B4B2MJ'
   }
 ]
+const jsDatasetVersionDiff = {
+  oldVersion: {
+    versionNumber: '1.0',
+    lastUpdatedDate: '2023-05-15T08:21:03Z'
+  },
+  newVersion: {
+    versionNumber: '2.0',
+    lastUpdatedDate: '2023-06-15T08:21:03Z'
+  },
+  metadataChanges: [
+    {
+      blockName: 'citation',
+      changed: [
+        {
+          fieldName: 'title',
+          oldValue: 'Old Title',
+          newValue: 'New Title'
+        }
+      ]
+    }
+  ],
+  filesAdded: [
+    {
+      fileName: 'file2.txt',
+      MD5: 'd41d8cd98f00b204e9800998ecf8427e',
+      type: 'text/plain',
+      fileId: 2,
+      filePath: '/path/to/file2.txt',
+      description: 'New file',
+      isRestricted: false,
+      tags: ['tag2'],
+      categories: ['category2']
+    }
+  ],
+  filesRemoved: [
+    {
+      fileName: 'file1.txt',
+      MD5: 'd41d8cd98f00b204e9800998ecf8427e',
+      type: 'text/plain',
+      fileId: 1,
+      filePath: '/path/to/file1.txt',
+      description: 'Test file',
+      isRestricted: false,
+      tags: ['tag1'],
+      categories: ['category1']
+    }
+  ],
+  fileChanges: [
+    {
+      fileName: 'file1.txt',
+      md5: 'd41d8cd98f00b204e9800998ecf8427e',
+      fileId: 1,
+      changed: [
+        {
+          fieldName: 'description',
+          oldValue: 'Old description',
+          newValue: 'New description'
+        }
+      ]
+    }
+  ],
+  filesReplaced: [
+    {
+      oldFile: {
+        fileName: 'file1.txt',
+        MD5: 'd41d8cd98f00b204e9800998ecf8427e',
+        type: 'text/plain',
+        fileId: 1,
+        filePath: '/path/to/file1.txt',
+        description: 'Test file',
+        isRestricted: false,
+        tags: ['tag1'],
+        categories: ['category1']
+      },
+      newFile: {
+        fileName: 'file2.txt',
+        MD5: 'd41d8cd98f00b204e9800998ecf8427e',
+        type: 'text/plain',
+        fileId: 2,
+        filePath: '/path/to/file2.txt',
+        description: 'New file',
+        isRestricted: false,
+        tags: ['tag2'],
+        categories: ['category2']
+      }
+    }
+  ],
+  termsOfAccess: [
+    {
+      fieldName: 'termsOfAccess',
+      oldValue: 'Old terms',
+      newValue: 'New terms'
+    }
+  ]
+}
 const jsDatasetFilesTotalOriginalDownloadSize = 5
 const jsDatasetFilesTotalArchivalDownloadSize = 7
 const expectedDataset = {
@@ -187,7 +282,8 @@ const expectedDataset = {
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root', undefined, undefined, true)
   ),
   nextMajorVersion: undefined,
-  nextMinorVersion: undefined
+  nextMinorVersion: undefined,
+  requiresMajorVersionUpdate: false
 }
 const expectedDatasetWithPublicationDate = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -286,7 +382,8 @@ const expectedDatasetWithPublicationDate = {
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root', undefined, undefined, true)
   ),
   nextMajorVersion: undefined,
-  nextMinorVersion: undefined
+  nextMinorVersion: undefined,
+  requiresMajorVersionUpdate: false
 }
 const expectedDatasetWithNextVersionNumbers = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -385,7 +482,8 @@ const expectedDatasetWithNextVersionNumbers = {
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root', undefined, undefined, true)
   ),
   nextMajorVersion: '2.0',
-  nextMinorVersion: '1.3'
+  nextMinorVersion: '1.3',
+  requiresMajorVersionUpdate: false
 }
 
 const expectedDatasetAlternateVersion = {
@@ -498,7 +596,8 @@ const expectedDatasetAlternateVersion = {
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root', undefined, undefined, true)
   ),
   nextMajorVersion: undefined,
-  nextMinorVersion: undefined
+  nextMinorVersion: undefined,
+  requiresMajorVersionUpdate: false
 }
 describe('JS Dataset Mapper', () => {
   it('maps jsDataset model to the domain Dataset model', () => {
@@ -651,6 +750,40 @@ describe('JS Dataset Mapper', () => {
       latestPublishedVersionMajorNumber,
       latestPublishedVersionMinorNumber
     )
+    console.log('actual', actual)
+    console.log('expectedDataset', expectedDatasetWithNextVersionNumbers)
     expect(expectedDatasetWithNextVersionNumbers).to.deep.equal(actual)
+  })
+  it.only('maps jsDataset model to the domain Dataset model when datasetVersionDiff is provided', () => {
+    const latestPublishedVersionMajorNumber = 1
+    const latestPublishedVersionMinorNumber = 2
+    const jsDatasetWithPublicationDate = {
+      ...jsDataset,
+      publicationDate: '2023-02-12'
+    }
+    const actual = JSDatasetMapper.toDataset(
+      jsDatasetWithPublicationDate,
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions,
+      jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize,
+      undefined,
+      undefined,
+      latestPublishedVersionMajorNumber,
+      latestPublishedVersionMinorNumber,
+      jsDatasetVersionDiff
+    )
+    console.log('actual', actual)
+    const expectedDatasetWithRequiredVersionUpdate = {
+      ...expectedDatasetWithNextVersionNumbers,
+      requiresMajorVersionUpdate: true
+    }
+    console.log(
+      'expectedDatasetWithRequiredVersionUpdate',
+      expectedDatasetWithRequiredVersionUpdate
+    )
+    expect(expectedDatasetWithRequiredVersionUpdate).to.deep.equal(actual)
   })
 })
