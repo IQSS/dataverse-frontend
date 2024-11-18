@@ -12,7 +12,7 @@ interface FileEmbargoDateProps {
 export function FileEmbargoDate({
   embargo,
   datasetPublishingStatus,
-  format = 'short'
+  format = 'YYYY-MM-DD'
 }: FileEmbargoDateProps) {
   const { t } = useTranslation('files')
 
@@ -20,15 +20,17 @@ export function FileEmbargoDate({
     return <></>
   }
 
-  // TODO: use time tag with dateTime attr https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time
-
   return (
     <div>
       <span>
         {t(embargoTypeOfDate(embargo.isActive, datasetPublishingStatus))}{' '}
-        {format === 'YYYY-MM-DD'
-          ? DateHelper.toDisplayFormatYYYYMMDD(embargo.dateAvailable)
-          : DateHelper.toDisplayFormat(embargo.dateAvailable)}
+        <time
+          dateTime={DateHelper.toISO8601Format(embargo.dateAvailable)}
+          data-testid="embargo-date">
+          {format === 'YYYY-MM-DD'
+            ? DateHelper.toISO8601Format(embargo.dateAvailable)
+            : DateHelper.toDisplayFormat(embargo.dateAvailable)}
+        </time>
       </span>
     </div>
   )

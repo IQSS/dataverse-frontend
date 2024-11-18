@@ -8,6 +8,7 @@ describe('FileDate', () => {
     const date = { type: FileDateType.PUBLISHED, date: fileDate }
     cy.customMount(<FileDate date={date} />)
     const dateString = DateHelper.toDisplayFormat(fileDate)
-    cy.findByText(`Published ` + dateString).should('exist')
+    cy.findByText(`Published`).should('exist')
+    cy.get('time').should('have.text', dateString)
   })
 })
