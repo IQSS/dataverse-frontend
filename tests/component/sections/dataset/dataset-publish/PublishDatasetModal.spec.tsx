@@ -25,7 +25,7 @@ describe('PublishDatasetModal', () => {
     )
     cy.findByText('Publish Dataset').should('exist')
     cy.findByText(
-      'Are you sure you want to publish this dataset? Once you do so, it must remain public.'
+      'Are you sure you want to publish this dataset? Once you do so, it must remain published.'
     ).should('exist')
     cy.findByText('Major Release (2.0)').should('not.exist')
     cy.findByText('Minor Release (1.1)').should('not.exist')
