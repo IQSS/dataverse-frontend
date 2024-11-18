@@ -13,18 +13,6 @@ interface PublishDatasetHelpTextProps {
   requiresMajorVersionUpdate?: boolean
 }
 
-function getWarningTextKey(
-  releasedVersionExists: boolean,
-  parentCollectionIsReleased: boolean | undefined
-): string {
-  if (!releasedVersionExists) {
-    if (!parentCollectionIsReleased) {
-      return 'publish.releaseCollectionQuestion'
-    } else return 'publish.draftQuestion'
-  }
-  return 'publish.previouslyReleasedQuestion'
-}
-
 export function PublishDatasetHelpText({
   releasedVersionExists,
   nextMajorVersion,
@@ -34,20 +22,24 @@ export function PublishDatasetHelpText({
   requiresMajorVersionUpdate
 }: PublishDatasetHelpTextProps) {
   const { t } = useTranslation('dataset')
-  const warningText = getWarningTextKey(releasedVersionExists, parentCollectionIsReleased)
 
   return (
     <Stack direction="vertical">
       <p className={styles.warningText}>
-        {!parentCollectionIsReleased ? (
+        {!releasedVersionExists && parentCollectionIsReleased && <>{t('publish.draftQuestion')}</>}
+        {!releasedVersionExists && !parentCollectionIsReleased && (
           <Trans
             t={t}
-            i18nKey={warningText}
+            i18nKey={'publish.releaseCollectionQuestion'}
             values={{ parentCollectionName }}
             components={{ a: <Link to={RouteWithParams.COLLECTIONS(parentCollectionId)} /> }}
           />
-        ) : (
-          <>{t(warningText)}</>
+        )}
+        {releasedVersionExists && !requiresMajorVersionUpdate && (
+          <>{t('publish.previouslyReleasedQuestion')}</>
+        )}
+        {releasedVersionExists && requiresMajorVersionUpdate && (
+          <Trans t={t} i18nKey={'publish.requiresMajorRelease'} values={{ nextMajorVersion }} />
         )}
       </p>
       <p>{t('publish.termsText')}</p>
