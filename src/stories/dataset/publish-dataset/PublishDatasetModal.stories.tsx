@@ -74,3 +74,19 @@ export const Superuser: Story = {
       handleClose={() => {}}></PublishDatasetModal>
   )
 }
+export const RequiresMajorVersionUpdate: Story = {
+  decorators: [WithLoggedInUser],
+  render: () => (
+    <PublishDatasetModal
+      show={true}
+      repository={new DatasetMockRepository()}
+      collectionRepository={new CollectionMockRepository()}
+      parentCollection={UpwardHierarchyNodeMother.createCollection()}
+      persistentId={'test'}
+      releasedVersionExists={true}
+      nextMinorVersion={'1.1'}
+      nextMajorVersion={'2.0'}
+      requiresMajorVersionUpdate={true}
+      handleClose={() => {}}></PublishDatasetModal>
+  )
+}

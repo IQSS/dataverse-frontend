@@ -35,11 +35,11 @@ export function PublishDatasetHelpText({
             components={{ a: <Link to={RouteWithParams.COLLECTIONS(parentCollectionId)} /> }}
           />
         )}
-        {releasedVersionExists && !requiresMajorVersionUpdate && (
-          <>{t('publish.previouslyReleasedQuestion')}</>
-        )}
+        {releasedVersionExists && <>{t('publish.previouslyReleasedQuestion')}</>}
+      </p>
+      <p>
         {releasedVersionExists && requiresMajorVersionUpdate && (
-          <Trans t={t} i18nKey={'publish.requiresMajorRelease'} values={{ nextMajorVersion }} />
+          <>{t('publish.requiresMajorRelease', { versionNumber: nextMajorVersion })}</>
         )}
       </p>
       <p>{t('publish.termsText')}</p>
