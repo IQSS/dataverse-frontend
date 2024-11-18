@@ -112,10 +112,13 @@
     }
   },
   "publish": {
-    "draftQuestion": "Are you sure you want to publish this dataset? Once you do so, it must remain public.",
+    "draftQuestion": "Are you sure you want to publish this dataset? Once you do so, it must remain published.",
+    "draftSubtext": "This version of the dataset will be published with the following terms:",
     "previouslyReleasedQuestion": "Are you sure you want to republish this dataset?",
-    "releaseCollectionQuestion": "This dataset cannot be published until <a>{{parentCollectionName}}</a> is published. Would you like to publish both right now?  Once you do so, it must remain public.",
-    "requiresMajorRelease": "Due to the nature of the changes to the current draft this will be a major release ({{versionNumber}})",
+    "previouslyReleasedSubtext": "Select if this is a minor or major version update.",
+    "releaseCollectionQuestion": "This dataset cannot be published until <a>{{parentCollectionName}}</a> is published. Would you like to publish both right now?  ",
+    "releaseCollectionSubtext": "Once you publish this dataset it must remain published.",
+    "requiresMajorReleaseSubtext": "Due to the nature of the changes to the current draft this will be a major release ({{versionNumber}})",
     "termsText": "To change the terms for this version, click the Cancel button and go to the Terms tab for this dataset.",
     "selectVersion": "Select if this is a minor or major version update.",
     "continueButton": "Continue",

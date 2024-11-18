@@ -47,7 +47,7 @@ export function PublishDatasetModal({
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const navigate = useNavigate()
-
+  console.log('requiresMajorVersionUpdate', requiresMajorVersionUpdate)
   const { submissionStatus, submitPublish, publishError } = usePublishDataset(
     repository,
     collectionRepository,
@@ -85,21 +85,14 @@ export function PublishDatasetModal({
           <PublishDatasetHelpText
             releasedVersionExists={releasedVersionExists}
             nextMajorVersion={nextMajorVersionString}
-            parentCollectionIsReleased={parentCollection.isReleased}
+            parentCollectionIsReleased={parentCollection.isReleased ?? true}
             parentCollectionName={parentCollection.name}
             parentCollectionId={parentCollection.id}
-            requiresMajorVersionUpdate={requiresMajorVersionUpdate}
+            requiresMajorVersionUpdate={requiresMajorVersionUpdate ?? false}
           />
-          <License
-            license={{
-              name: defaultLicense.name,
-              uri: defaultLicense.uri,
-              iconUri: defaultLicense.iconUri
-            }}
-          />
+
           {releasedVersionExists && !requiresMajorVersionUpdate && (
             <>
-              <Form.Group.Text>{t('publish.selectVersion')}</Form.Group.Text>
               <Form.RadioGroup title={'Update Version'}>
                 <Form.Group.Radio
                   defaultChecked
@@ -128,6 +121,14 @@ export function PublishDatasetModal({
               </Form.RadioGroup>
             </>
           )}
+          <License
+            license={{
+              name: defaultLicense.name,
+              uri: defaultLicense.uri,
+              iconUri: defaultLicense.iconUri
+            }}
+          />
+          <p className={styles.secondaryText}>{t('publish.termsText')}</p>
         </Stack>
         <span className={styles.errorText}>
           {submissionStatus === SubmissionStatus.Errored &&
