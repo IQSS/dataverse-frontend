@@ -549,7 +549,8 @@ export class Dataset {
         this.requestedVersion,
         undefined,
         this.nextMajorVersionNumber,
-        this.nextMinorVersionNumber
+        this.nextMinorVersionNumber,
+        this.requiresMajorVersionUpdate
       )
     }
   }
