@@ -198,7 +198,7 @@ export const EditCreateCollectionForm = ({
   const useFacetsFromParentDefault = CollectionFormHelper.defineShouldCheckUseFromParent(
     onEditMode,
     isEditingRootCollection,
-    mode === 'edit' ? collection.isMetadataBlockRoot : undefined
+    mode === 'edit' ? collection.isFacetRoot : undefined
   )
 
   const formDefaultValues: CollectionFormData = {
