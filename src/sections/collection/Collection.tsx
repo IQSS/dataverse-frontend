@@ -14,6 +14,7 @@ import { CollectionSkeleton } from './CollectionSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
+import { ShareButton } from './share-button/ShareButton'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {
@@ -47,9 +48,11 @@ export function Collection({
 
   const canUserAddCollection = Boolean(collectionUserPermissions?.canAddCollection)
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
-  const canUserPublishCollection = user && Boolean(collectionUserPermissions?.canPublishCollection)
+  const canUserPublishCollection = Boolean(collectionUserPermissions?.canPublishCollection)
 
   const showAddDataActions = Boolean(user && (canUserAddCollection || canUserAddDataset))
+  const showPublishButton = user && !collection?.isReleased && canUserPublishCollection
+
   const { t } = useTranslation('collection')
 
   if (!isLoading && !collection) {
@@ -71,14 +74,25 @@ export function Collection({
                 {t('publishedAlert')}
               </Alert>
             )}
-            {!collection.isReleased && canUserPublishCollection && (
-              <div className={styles['action-buttons']}>
-                <PublishCollectionButton
-                  repository={collectionRepository}
-                  collectionId={collection.id}
-                />
+
+            <div className={styles['metrics-actions-container']}>
+              <div className={styles.metrics}>Metrics</div>
+              <div className={styles['right-content']}>
+                <div className={styles['contact-share-btns']}>
+                  {/* 👇 Here should go Contact button also */}
+                  {/* <ContactButton /> */}
+
+                  <ShareButton />
+                </div>
+
+                {showPublishButton && (
+                  <PublishCollectionButton
+                    repository={collectionRepository}
+                    collectionId={collection.id}
+                  />
+                )}
               </div>
-            )}
+            </div>
 
             <CollectionItemsPanel
               key={collection.id}
