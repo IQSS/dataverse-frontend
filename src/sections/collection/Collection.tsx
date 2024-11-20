@@ -14,7 +14,7 @@ import { CollectionSkeleton } from './CollectionSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
-import { ShareButton } from './share-button/ShareButton'
+import { ShareCollectionButton } from './share-collection/ShareCollectionButton'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {
@@ -82,7 +82,7 @@ export function Collection({
                   {/* 👇 Here should go Contact button also */}
                   {/* <ContactButton /> */}
 
-                  <ShareButton />
+                  <ShareCollectionButton />
                 </div>
 
                 {showPublishButton && (
