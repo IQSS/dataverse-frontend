@@ -18,6 +18,7 @@ export const ShareDatasetButton = () => {
       </Button>
 
       <SocialShareModal
+        shareUrl={window.location.href}
         show={showShareModal}
         handleClose={closeShareModal}
         title={t('datasetActionButtons.share.shareDataset')}

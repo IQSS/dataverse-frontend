@@ -3,30 +3,34 @@ import { Button, Modal, Stack } from '@iqss/dataverse-design-system'
 import { Facebook, Linkedin, TwitterX } from 'react-bootstrap-icons'
 import styles from './SocialShareModal.module.scss'
 
-// TODO:ME - Add storybook
 // TODO:ME - Add component test to check url is correct
+
+export const LINKEDIN_SHARE_URL = 'https://www.linkedin.com/shareArticle?url='
+export const X_SHARE_URL = 'https://x.com/intent/post?url='
+export const FACEBOOK_SHARE_URL = 'https://www.facebook.com/sharer/sharer.php?u='
 
 interface SocialShareModalProps {
   show: boolean
   title: string
   helpText: string
+  shareUrl: string
   handleClose: () => void
 }
 
-export const SocialShareModal = ({ show, title, helpText, handleClose }: SocialShareModalProps) => {
+export const SocialShareModal = ({
+  show,
+  title,
+  helpText,
+  shareUrl,
+  handleClose
+}: SocialShareModalProps) => {
   const { t } = useTranslation('shared')
 
-  const currentUrl = window.location.href
+  const shareOnLinkedInURL = `${LINKEDIN_SHARE_URL}${encodeURIComponent(shareUrl)}`
 
-  const shareOnLinkedInURL = `https://www.linkedin.com/shareArticle?url=${encodeURIComponent(
-    currentUrl
-  )}`
+  const shareOnXURL = `${X_SHARE_URL}${encodeURIComponent(shareUrl)}`
 
-  const shareOnXURL = `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}`
-
-  const shareOnFacebookURL = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-    currentUrl
-  )}`
+  const shareOnFacebookURL = `${FACEBOOK_SHARE_URL}${encodeURIComponent(shareUrl)}`
 
   return (
     <Modal show={show} onHide={handleClose} centered>

@@ -76,7 +76,7 @@ export function Collection({
             )}
 
             <div className={styles['metrics-actions-container']}>
-              <div className={styles.metrics}>Metrics</div>
+              <div className={styles.metrics}></div>
               <div className={styles['right-content']}>
                 <div className={styles['contact-share-btns']}>
                   {/* 👇 Here should go Contact button also */}

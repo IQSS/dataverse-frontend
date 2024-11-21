@@ -25,6 +25,7 @@ export const ShareCollectionButton = () => {
       </Tooltip>
 
       <SocialShareModal
+        shareUrl={window.location.href}
         show={showShareModal}
         handleClose={closeShareModal}
         title={t('share.shareCollection')}
