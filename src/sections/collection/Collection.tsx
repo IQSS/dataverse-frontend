@@ -14,7 +14,7 @@ import { CollectionSkeleton } from './CollectionSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
-import { ShareCollectionButton } from './share-collection/ShareCollectionButton'
+import { ShareCollectionButton } from './share-collection-button/ShareCollectionButton'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {

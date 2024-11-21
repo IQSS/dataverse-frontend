@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { Button, Tooltip } from '@iqss/dataverse-design-system'
 import { ShareFill } from 'react-bootstrap-icons'
-import { ShareCollectionModal } from './ShareCollectionModal'
-import styles from './ShareCollection.module.scss'
+import { SocialShareModal } from '@/sections/shared/social-share-modal/SocialShareModal'
 
 export const ShareCollectionButton = () => {
   const [showShareModal, setShowShareModal] = useState(false)
@@ -16,13 +15,17 @@ export const ShareCollectionButton = () => {
         <Button
           variant="link"
           onClick={openShareModal}
-          className={styles['share-btn']}
-          icon={<ShareFill className={styles['share-icon']} />}>
+          icon={<ShareFill style={{ marginRight: '0.3rem', marginBottom: '0.2rem' }} />}>
           Share
         </Button>
       </Tooltip>
 
-      <ShareCollectionModal show={showShareModal} handleClose={closeShareModal} />
+      <SocialShareModal
+        show={showShareModal}
+        handleClose={closeShareModal}
+        title="Share Collection"
+        helpText="Share this collection on your favorite social media networks."
+      />
     </>
   )
 }

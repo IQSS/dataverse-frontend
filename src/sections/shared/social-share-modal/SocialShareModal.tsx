@@ -1,16 +1,18 @@
 import { Button, Modal, Stack } from '@iqss/dataverse-design-system'
 import { Facebook, Linkedin, TwitterX } from 'react-bootstrap-icons'
-import styles from './ShareCollection.module.scss'
-
-interface ShareCollectionModalProps {
-  show: boolean
-  handleClose: () => void
-}
+import styles from './SocialShareModal.module.scss'
 
 // TODO:ME - Add storybook
 // TODO:ME - Add component test to check url is correct
 
-export const ShareCollectionModal = ({ show, handleClose }: ShareCollectionModalProps) => {
+interface SocialShareModalProps {
+  show: boolean
+  title: string
+  helpText: string
+  handleClose: () => void
+}
+
+export const SocialShareModal = ({ show, title, helpText, handleClose }: SocialShareModalProps) => {
   const currentUrl = window.location.href
 
   const shareOnLinkedInURL = `https://www.linkedin.com/shareArticle?url=${encodeURIComponent(
@@ -26,12 +28,10 @@ export const ShareCollectionModal = ({ show, handleClose }: ShareCollectionModal
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header>
-        <Modal.Title>Share Collection</Modal.Title>
+        <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p className={styles['help-block']}>
-          Share this collection on your favorite social media networks.
-        </p>
+        <p className={styles['help-block']}>{helpText}</p>
 
         <Stack direction="horizontal">
           <a
@@ -39,7 +39,7 @@ export const ShareCollectionModal = ({ show, handleClose }: ShareCollectionModal
             target="_blank"
             rel="noreferrer"
             title="LinkedIn"
-            aria-label="LinkedIn"
+            aria-label="Share on LinkedIn"
             className={`${styles['social-btn']} ${styles.linkedin}`}>
             <Linkedin size={18} />
           </a>
@@ -49,7 +49,7 @@ export const ShareCollectionModal = ({ show, handleClose }: ShareCollectionModal
             target="_blank"
             rel="noreferrer"
             title="X, formerly Twitter"
-            aria-label="X, formerly Twitter"
+            aria-label="Share on X, formerly Twitter"
             className={`${styles['social-btn']} ${styles.x}`}>
             <TwitterX size={18} />
           </a>
@@ -58,7 +58,7 @@ export const ShareCollectionModal = ({ show, handleClose }: ShareCollectionModal
             target="_blank"
             rel="noreferrer"
             title="Facebook"
-            aria-label="Facebook"
+            aria-label="Share on Facebook"
             className={`${styles['social-btn']} ${styles.fb}`}>
             <Facebook size={18} />
           </a>
