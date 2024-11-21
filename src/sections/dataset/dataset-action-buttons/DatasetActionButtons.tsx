@@ -23,6 +23,7 @@ export function DatasetActionButtons({
   collectionRepository
 }: DatasetActionButtonsProps) {
   const { t } = useTranslation('dataset')
+
   return (
     <ButtonGroup aria-label={t('datasetActionButtons.title')} vertical className={styles.group}>
       <AccessDatasetMenu
@@ -42,7 +43,7 @@ export function DatasetActionButtons({
       <LinkDatasetButton dataset={dataset} />
       <ButtonGroup className={styles['contact-owner-and-share-group']}>
         <Button disabled variant="secondary" size="sm">
-          Contact Owner
+          {t('datasetActionButtons.contactOwner')}
         </Button>
         <ShareDatasetButton />
       </ButtonGroup>

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Button, Modal, Stack } from '@iqss/dataverse-design-system'
 import { Facebook, Linkedin, TwitterX } from 'react-bootstrap-icons'
 import styles from './SocialShareModal.module.scss'
@@ -13,6 +14,8 @@ interface SocialShareModalProps {
 }
 
 export const SocialShareModal = ({ show, title, helpText, handleClose }: SocialShareModalProps) => {
+  const { t } = useTranslation('shared')
+
   const currentUrl = window.location.href
 
   const shareOnLinkedInURL = `https://www.linkedin.com/shareArticle?url=${encodeURIComponent(
@@ -66,7 +69,7 @@ export const SocialShareModal = ({ show, title, helpText, handleClose }: SocialS
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose} type="submit">
-          Close
+          {t('close')}
         </Button>
       </Modal.Footer>
     </Modal>
