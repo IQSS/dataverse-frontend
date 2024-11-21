@@ -3,8 +3,6 @@ import { Button, Modal, Stack } from '@iqss/dataverse-design-system'
 import { Facebook, Linkedin, TwitterX } from 'react-bootstrap-icons'
 import styles from './SocialShareModal.module.scss'
 
-// TODO:ME - Add component test to check url is correct
-
 export const LINKEDIN_SHARE_URL = 'https://www.linkedin.com/shareArticle?url='
 export const X_SHARE_URL = 'https://x.com/intent/post?url='
 export const FACEBOOK_SHARE_URL = 'https://www.facebook.com/sharer/sharer.php?u='

@@ -1,3 +1,4 @@
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { DatasetRepository } from '../../../../../src/dataset/domain/repositories/DatasetRepository'
 import { FileSizeUnit } from '../../../../../src/files/domain/models/FileMetadata'
 import { DatasetActionButtons } from '../../../../../src/sections/dataset/dataset-action-buttons/DatasetActionButtons'
@@ -10,6 +11,8 @@ import {
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 
+const collectionRepository = {} as CollectionRepository
+
 describe('DatasetActionButtons', () => {
   it('renders the DatasetActionButtons with the Publish button', () => {
     const dataset = DatasetMother.create({
@@ -21,7 +24,11 @@ describe('DatasetActionButtons', () => {
     })
 
     cy.mountAuthenticated(
-      <DatasetActionButtons dataset={dataset} datasetRepository={datasetRepository} />
+      <DatasetActionButtons
+        dataset={dataset}
+        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+      />
     )
 
     cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
@@ -45,7 +52,11 @@ describe('DatasetActionButtons', () => {
     })
 
     cy.mountAuthenticated(
-      <DatasetActionButtons dataset={dataset} datasetRepository={datasetRepository} />
+      <DatasetActionButtons
+        dataset={dataset}
+        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+      />
     )
 
     cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
