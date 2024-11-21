@@ -1,5 +1,5 @@
 import { Dataset } from '../../../dataset/domain/models/Dataset'
-import { ButtonGroup } from '@iqss/dataverse-design-system'
+import { Button, ButtonGroup } from '@iqss/dataverse-design-system'
 import { AccessDatasetMenu } from './access-dataset-menu/AccessDatasetMenu'
 import { PublishDatasetMenu } from './publish-dataset-menu/PublishDatasetMenu'
 import styles from './DatasetActionButtons.module.scss'
@@ -9,6 +9,7 @@ import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
 import { useTranslation } from 'react-i18next'
 import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
 import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
+import { ShareDatasetButton } from './share-dataset-button/ShareDatasetButton'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset
@@ -39,6 +40,12 @@ export function DatasetActionButtons({
       <SubmitForReviewButton dataset={dataset} />
       <EditDatasetMenu dataset={dataset} />
       <LinkDatasetButton dataset={dataset} />
+      <ButtonGroup className={styles['contact-owner-and-share-group']}>
+        <Button disabled variant="secondary" size="sm">
+          Contact Owner
+        </Button>
+        <ShareDatasetButton />
+      </ButtonGroup>
     </ButtonGroup>
   )
 }
