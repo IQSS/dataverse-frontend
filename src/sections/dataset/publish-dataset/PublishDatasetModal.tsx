@@ -85,7 +85,7 @@ export function PublishDatasetModal({
           <PublishDatasetHelpText
             releasedVersionExists={releasedVersionExists}
             nextMajorVersion={nextMajorVersionString}
-            parentCollectionIsReleased={parentCollection.isReleased ?? true}
+            parentCollectionIsReleased={parentCollection.isReleased ?? false}
             parentCollectionName={parentCollection.name}
             parentCollectionId={parentCollection.id}
             requiresMajorVersionUpdate={requiresMajorVersionUpdate ?? false}
