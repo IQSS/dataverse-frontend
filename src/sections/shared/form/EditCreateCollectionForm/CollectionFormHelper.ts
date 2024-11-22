@@ -4,7 +4,7 @@ import {
   MetadataField,
   TypeClassMetadataFieldOptions
 } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
-import { CollectionInputLevel } from '@/collection/domain/models/Collection'
+import { CollectionInputLevel } from '@/collection/domain/models/CollectionInputLevel'
 import {
   CollectionDTO,
   CollectionInputLevelDTO

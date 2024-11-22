@@ -1,4 +1,4 @@
-import { CollectionInputLevel } from '@/collection/domain/models/Collection'
+import { CollectionInputLevel } from '@/collection/domain/models/CollectionInputLevel'
 import { CollectionContact } from '@/collection/domain/models/CollectionContact'
 import { CollectionInputLevelDTO } from '@/collection/domain/useCases/DTOs/CollectionDTO'
 import {
