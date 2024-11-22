@@ -750,11 +750,9 @@ describe('JS Dataset Mapper', () => {
       latestPublishedVersionMajorNumber,
       latestPublishedVersionMinorNumber
     )
-    console.log('actual', actual)
-    console.log('expectedDataset', expectedDatasetWithNextVersionNumbers)
     expect(expectedDatasetWithNextVersionNumbers).to.deep.equal(actual)
   })
-  it.only('maps jsDataset model to the domain Dataset model when datasetVersionDiff is provided', () => {
+  it('maps jsDataset model to the domain Dataset model when datasetVersionDiff is provided', () => {
     const latestPublishedVersionMajorNumber = 1
     const latestPublishedVersionMinorNumber = 2
     const jsDatasetWithPublicationDate = {
@@ -775,15 +773,63 @@ describe('JS Dataset Mapper', () => {
       latestPublishedVersionMinorNumber,
       jsDatasetVersionDiff
     )
-    console.log('actual', actual)
     const expectedDatasetWithRequiredVersionUpdate = {
       ...expectedDatasetWithNextVersionNumbers,
       requiresMajorVersionUpdate: true
     }
-    console.log(
-      'expectedDatasetWithRequiredVersionUpdate',
-      expectedDatasetWithRequiredVersionUpdate
-    )
     expect(expectedDatasetWithRequiredVersionUpdate).to.deep.equal(actual)
+  })
+  it('maps jsDatasetVersionDiff model to the domain DatasetVersionDiff model', () => {
+    const expectedDatasetVersionDiff = {
+      oldVersion: {
+        versionNumber: '1.0',
+        lastUpdatedDate: '2023-05-15T08:21:03Z'
+      },
+      newVersion: {
+        versionNumber: '2.0',
+        lastUpdatedDate: '2023-06-15T08:21:03Z'
+      },
+      metadataChanges: [
+        {
+          blockName: 'citation',
+          changed: [
+            {
+              fieldName: 'title',
+              oldValue: 'Old Title',
+              newValue: 'New Title'
+            }
+          ]
+        }
+      ],
+      filesAdded: [
+        {
+          fileName: 'file2.txt',
+          MD5: 'd41d8cd98f00b204e9800998ecf8427e',
+          type: 'text/plain',
+          fileId: 2,
+          filePath: '/path/to/file2.txt',
+          description: 'New file',
+          isRestricted: false,
+          tags: ['tag2'],
+          categories: ['category2']
+        }
+      ],
+      filesRemoved: [
+        {
+          fileName: 'file1.txt',
+          MD5: 'd41d8cd98f00b204e9800998ecf8427e',
+          type: 'text/plain',
+          fileId: 1,
+          filePath: '/path/to/file1.txt',
+          description: 'Test file',
+          isRestricted: false,
+          tags: ['tag1'],
+          categories: ['category1']
+        }
+      ]
+    }
+
+    const actual = JSDatasetMapper.toDatasetVersionDiff(jsDatasetVersionDiff)
+    expect(expectedDatasetVersionDiff).to.deep.equal(actual)
   })
 })

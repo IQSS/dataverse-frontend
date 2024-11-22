@@ -1,5 +1,6 @@
 import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
 import { Dataset, DatasetLock, DatasetNonNumericVersion } from '../../domain/models/Dataset'
+import { DatasetVersionDiff } from '../../domain/models/DatasetVersionDiff'
 import {
   createDataset,
   CreatedDatasetIdentifiers as JSDatasetIdentifiers,
@@ -69,6 +70,18 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         }
       })
   }
+  getVersionDiff(
+    persistentId: string,
+    oldVersion: string,
+    newVersion: string
+  ): Promise<DatasetVersionDiff> {
+    return getDatasetVersionDiff
+      .execute(persistentId, oldVersion, newVersion)
+      .then((jsDatasetVersionDiff) => {
+        return JSDatasetMapper.toDatasetVersionDiff(jsDatasetVersionDiff)
+      })
+  }
+
   private async getLatestPublishedVersionNumbers(
     datasetDetails: IDatasetDetails
   ): Promise<IDatasetDetails> {
@@ -86,16 +99,14 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   }
 
   private async getVersionDiffDetails(datasetDetails: IDatasetDetails): Promise<IDatasetDetails> {
-    await getDatasetVersionDiff
-      .execute(
-        datasetDetails.jsDataset.persistentId,
-        DatasetNonNumericVersion.LATEST_PUBLISHED,
-        DatasetNonNumericVersion.DRAFT
-      )
-      .then((datasetVersionDiff) => {
-        datasetDetails.datasetVersionDiff = datasetVersionDiff
-        return datasetDetails
-      })
+    await this.getVersionDiff(
+      datasetDetails.jsDataset.persistentId,
+      DatasetNonNumericVersion.LATEST_PUBLISHED,
+      DatasetNonNumericVersion.DRAFT
+    ).then((datasetVersionDiff) => {
+      datasetDetails.datasetVersionDiff = datasetVersionDiff
+      return datasetDetails
+    })
 
     return datasetDetails
   }
