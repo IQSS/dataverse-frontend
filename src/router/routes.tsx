@@ -142,7 +142,8 @@ export const routes: RouteObject[] = [
               <Suspense fallback={<AppLoader />}>
                 <EditCollectionPage />
               </Suspense>
-            )
+            ),
+            errorElement: <ErrorPage />
           },
           {
             path: Route.CREATE_DATASET,
