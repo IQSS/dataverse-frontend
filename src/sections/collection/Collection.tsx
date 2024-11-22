@@ -4,7 +4,6 @@ import { Alert, ButtonGroup, Col, Row } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { useCollection } from './useCollection'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
-import { useSession } from '../session/SessionContext'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
 import { type UseCollectionQueryParamsReturnType } from './useGetCollectionQueryParams'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
@@ -39,7 +38,6 @@ export function Collection({
   useTranslation('collection')
   const { t } = useTranslation('collection')
   useScrollTop()
-  const { user } = useSession()
   const { collection, isLoading } = useCollection(
     collectionRepository,
     collectionIdFromParams,
@@ -55,9 +53,9 @@ export function Collection({
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
   const canUserPublishCollection = Boolean(collectionUserPermissions?.canPublishCollection)
 
-  const showAddDataActions = Boolean(user && (canUserAddCollection || canUserAddDataset))
-  const showPublishButton = user && !collection?.isReleased && canUserPublishCollection
-  const showEditButton = user && canUserEditCollection
+  const showAddDataActions = canUserAddCollection || canUserAddDataset
+  const showPublishButton = collection?.isReleased && canUserPublishCollection
+  const showEditButton = canUserEditCollection
 
   if (!isLoading && !collection) {
     return <PageNotFound />
