@@ -826,9 +826,55 @@ describe('JS Dataset Mapper', () => {
           tags: ['tag1'],
           categories: ['category1']
         }
+      ],
+      fileChanges: [
+        {
+          fileName: 'file1.txt',
+          md5: 'd41d8cd98f00b204e9800998ecf8427e',
+          fileId: 1,
+          changed: [
+            {
+              fieldName: 'description',
+              oldValue: 'Old description',
+              newValue: 'New description'
+            }
+          ]
+        }
+      ],
+      filesReplaced: [
+        {
+          oldFile: {
+            fileName: 'file1.txt',
+            MD5: 'd41d8cd98f00b204e9800998ecf8427e',
+            type: 'text/plain',
+            fileId: 1,
+            filePath: '/path/to/file1.txt',
+            description: 'Test file',
+            isRestricted: false,
+            tags: ['tag1'],
+            categories: ['category1']
+          },
+          newFile: {
+            fileName: 'file2.txt',
+            MD5: 'd41d8cd98f00b204e9800998ecf8427e',
+            type: 'text/plain',
+            fileId: 2,
+            filePath: '/path/to/file2.txt',
+            description: 'New file',
+            isRestricted: false,
+            tags: ['tag2'],
+            categories: ['category2']
+          }
+        }
+      ],
+      termsOfAccess: [
+        {
+          fieldName: 'termsOfAccess',
+          oldValue: 'Old terms',
+          newValue: 'New terms'
+        }
       ]
     }
-
     const actual = JSDatasetMapper.toDatasetVersionDiff(jsDatasetVersionDiff)
     expect(expectedDatasetVersionDiff).to.deep.equal(actual)
   })
