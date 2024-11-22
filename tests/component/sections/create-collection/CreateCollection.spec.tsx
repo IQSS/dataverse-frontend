@@ -103,11 +103,14 @@ describe('CreateCollection', () => {
   })
 
   it('should show alert error message when user is not allowed to create collection', () => {
-    collectionRepository.getUserPermissions = cy.stub().resolves(
-      CollectionMother.createUserPermissions({
-        canAddCollection: false
-      })
-    )
+    const DELAYED_TIME = 200
+    collectionRepository.getUserPermissions = cy.stub().callsFake(() => {
+      return Cypress.Promise.delay(DELAYED_TIME).then(() =>
+        CollectionMother.createUserPermissions({
+          canAddCollection: false
+        })
+      )
+    })
 
     cy.mountAuthenticated(
       <CreateCollection
@@ -116,10 +119,20 @@ describe('CreateCollection', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     )
-    cy.findAllByTestId('not-allowed-to-create-collection-alert').should('exist')
+
+    cy.wait(DELAYED_TIME * 2)
+
+    cy.findByText(
+      /You do not have permissions to create a collection within this collection./
+    ).should('exist')
   })
 
   it('should not show alert error message when user is allowed to create collection', () => {
+    const DELAYED_TIME = 200
+    collectionRepository.getUserPermissions = cy.stub().callsFake(() => {
+      return Cypress.Promise.delay(DELAYED_TIME).then(() => userPermissionsMock)
+    })
+
     cy.mountAuthenticated(
       <CreateCollection
         collectionRepository={collectionRepository}
@@ -127,7 +140,12 @@ describe('CreateCollection', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     )
-    cy.findAllByTestId('not-allowed-to-create-collection-alert').should('not.exist')
+
+    cy.wait(DELAYED_TIME * 2)
+
+    cy.findByText(
+      /You do not have permissions to create a collection within this collection./
+    ).should('not.exist')
   })
 
   it('should show alert error message when getting the user permissions fails', () => {

@@ -64,7 +64,7 @@ export const EditCollection = ({
 
   if (collectionUserPermissions && !canUserEditCollection) {
     return (
-      <div className="pt-4" data-testid="not-allowed-to-edit-collection-alert">
+      <div className="pt-4">
         <Alert variant="danger" dismissible={false}>
           {t('notAllowedToEditCollection')}
         </Alert>

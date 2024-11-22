@@ -64,7 +64,7 @@ export function CreateCollection({
 
   if (collectionUserPermissions && !canUserAddCollection) {
     return (
-      <div className="pt-4" data-testid="not-allowed-to-create-collection-alert">
+      <div className="pt-4">
         <Alert variant="danger" dismissible={false}>
           {t('notAllowedToCreateCollection')}
         </Alert>

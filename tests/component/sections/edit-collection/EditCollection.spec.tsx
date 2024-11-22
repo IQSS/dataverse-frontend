@@ -33,7 +33,7 @@ const allMetadataBlocksMock = [
 const testUser = UserMother.create()
 const userRepository: UserRepository = {} as UserRepository
 
-describe('CreateCollection', () => {
+describe('EditCollection', () => {
   beforeEach(() => {
     collectionRepository.create = cy.stub().resolves(1)
     collectionRepository.getById = cy.stub().resolves(collection)
@@ -103,11 +103,14 @@ describe('CreateCollection', () => {
   })
 
   it('should show alert error message when user is not allowed to edit the collection', () => {
-    collectionRepository.getUserPermissions = cy.stub().resolves(
-      CollectionMother.createUserPermissions({
-        canEditCollection: false
-      })
-    )
+    const DELAYED_TIME = 200
+    collectionRepository.getUserPermissions = cy.stub().callsFake(() => {
+      return Cypress.Promise.delay(DELAYED_TIME).then(() =>
+        CollectionMother.createUserPermissions({
+          canEditCollection: false
+        })
+      )
+    })
 
     cy.mountAuthenticated(
       <EditCollection
@@ -116,10 +119,20 @@ describe('CreateCollection', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     )
-    cy.findAllByTestId('not-allowed-to-edit-collection-alert').should('exist')
+
+    cy.wait(DELAYED_TIME * 2)
+
+    cy.findByText(/You do not have permissions to edit this collection./, { timeout: 0 }).should(
+      'exist'
+    )
   })
 
   it('should not show alert error message when user is allowed to edit the collection', () => {
+    const DELAYED_TIME = 200
+    collectionRepository.getUserPermissions = cy.stub().callsFake(() => {
+      return Cypress.Promise.delay(DELAYED_TIME).then(() => userPermissionsMock)
+    })
+
     cy.mountAuthenticated(
       <EditCollection
         collectionId="root"
@@ -127,7 +140,12 @@ describe('CreateCollection', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     )
-    cy.findAllByTestId('not-allowed-to-edit-collection-alert').should('not.exist')
+
+    cy.wait(DELAYED_TIME * 2)
+
+    cy.findByText(/You do not have permissions to edit this collection./, { timeout: 0 }).should(
+      'not.exist'
+    )
   })
 
   it('should show alert error message when getting the user permissions fails', () => {
