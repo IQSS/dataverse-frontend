@@ -1,4 +1,5 @@
 import { ReadError } from '@iqss/dataverse-client-javascript'
+import { BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE } from '@/sections/session/SessionProvider'
 
 export class JSDataverseReadErrorHandler {
   private error: ReadError
@@ -32,5 +33,22 @@ export class JSDataverseReadErrorHandler {
 
     // Remove status code from reason
     return reason.replace(`[${statusCode}]`, '').trim()
+  }
+
+  public static isBearerTokenValidatedButNoLinkedUserAccountError(err: unknown): boolean {
+    if (err instanceof ReadError) {
+      const errorHandler = new JSDataverseReadErrorHandler(err)
+
+      const formattedError: string =
+        errorHandler.getReasonWithoutStatusCode() ?? errorHandler.getErrorMessage()
+
+      const statusCode: number | null = errorHandler.getStatusCode()
+
+      if (statusCode === 403 && formattedError === BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE) {
+        return true // Return true if the specific error is detected
+      }
+    }
+
+    return false // Return false if no match
   }
 }

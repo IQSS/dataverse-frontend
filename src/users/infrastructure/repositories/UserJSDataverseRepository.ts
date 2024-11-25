@@ -22,7 +22,7 @@ export class UserJSDataverseRepository implements UserRepository {
         }
       })
       .catch((error: ReadError) => {
-        throw new Error(error.message)
+        throw error
       })
   }
 

@@ -5,6 +5,10 @@ import { SessionContext } from './SessionContext'
 import { getUser } from '../../users/domain/useCases/getUser'
 import { UserRepository } from '../../users/domain/repositories/UserRepository'
 import { logOut } from '../../users/domain/useCases/logOut'
+import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
+
+export const BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE =
+  'Bearer token is validated, but there is no linked user account.'
 
 interface SessionProviderProps {
   repository: UserRepository
@@ -21,8 +25,14 @@ export function SessionProvider({ repository, children }: PropsWithChildren<Sess
         const user: User = await getUser(repository)
 
         user && setUser(user)
-      } catch (error) {
-        console.error('There was an error getting the authenticated user', error)
+      } catch (err: unknown) {
+        if (JSDataverseReadErrorHandler.isBearerTokenValidatedButNoLinkedUserAccountError(err)) {
+          alert('Redirect the user to the registration page to fully create the user account.')
+          console.log(
+            'Redirect the user to the registration page to fully create the user account.'
+          )
+        }
+        // TODO:ME - Handle another type of error
       } finally {
         setIsLoadingUser(false)
       }
