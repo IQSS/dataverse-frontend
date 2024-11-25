@@ -54,7 +54,7 @@ export function Collection({
   const canUserPublishCollection = Boolean(collectionUserPermissions?.canPublishCollection)
 
   const showAddDataActions = canUserAddCollection || canUserAddDataset
-  const showPublishButton = collection?.isReleased && canUserPublishCollection
+  const showPublishButton = !collection?.isReleased && canUserPublishCollection
   const showEditButton = canUserEditCollection
 
   if (!isLoading && !collection) {
