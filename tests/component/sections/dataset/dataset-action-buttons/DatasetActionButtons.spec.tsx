@@ -11,7 +11,7 @@ import {
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 
-const collectionRepository = {} as CollectionRepository
+const collectionRepository: CollectionRepository = {} as CollectionRepository
 
 describe('DatasetActionButtons', () => {
   it('renders the DatasetActionButtons with the Publish button', () => {
