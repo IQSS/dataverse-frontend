@@ -16,11 +16,13 @@ import { FileAccessOption, FileTag } from '../../../../src/files/domain/models/F
 import { AlertProvider } from '../../../../src/sections/alerts/AlertProvider'
 import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 
 const setAnonymizedView = () => {}
 const fileRepository: FileRepository = {} as FileRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
+const collectionRepository: CollectionRepository = {} as CollectionRepository
 
 const TOTAL_FILES_COUNT = 200
 const allFiles = FilePreviewMother.createMany(TOTAL_FILES_COUNT)
@@ -93,6 +95,7 @@ describe('Dataset', () => {
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
       />,
       testDataset
     )
@@ -109,6 +112,7 @@ describe('Dataset', () => {
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
       />,
       emptyDataset
     )
@@ -124,6 +128,7 @@ describe('Dataset', () => {
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
       />,
       dataset
     )
@@ -140,6 +145,7 @@ describe('Dataset', () => {
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
       />,
       dataset
     )
@@ -155,6 +161,7 @@ describe('Dataset', () => {
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
       />,
       testDataset
     )
@@ -171,6 +178,7 @@ describe('Dataset', () => {
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
       />,
       testDataset
     )
@@ -190,6 +198,7 @@ describe('Dataset', () => {
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
       />,
       testDataset
     )
@@ -212,6 +221,7 @@ describe('Dataset', () => {
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
       />,
       testDatasetAnonymized
     )
@@ -229,6 +239,7 @@ describe('Dataset', () => {
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
       />,
       testDataset
     )
@@ -245,6 +256,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         filesTabInfiniteScrollEnabled={true}
+        collectionRepository={collectionRepository}
       />,
       testDataset
     )
@@ -262,6 +274,7 @@ describe('Dataset', () => {
           datasetRepository={datasetRepository}
           fileRepository={fileRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
           created={true}
         />
       </AlertProvider>,
@@ -281,6 +294,7 @@ describe('Dataset', () => {
           datasetRepository={datasetRepository}
           fileRepository={fileRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
+          collectionRepository={collectionRepository}
           metadataUpdated={true}
         />
       </AlertProvider>,
