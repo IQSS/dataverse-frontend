@@ -6,13 +6,13 @@ import { WithLoggedInUser } from '../WithLoggedInUser'
 import { CollectionMockRepository } from '../collection/CollectionMockRepository'
 import { CollectionLoadingMockRepository } from '../collection/CollectionLoadingMockRepository'
 import { NoCollectionMockRepository } from '../collection/NoCollectionMockRepository'
-import { CollectionMother } from '../../../tests/component/collection/domain/models/CollectionMother'
-import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
+import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
+import { FakerHelper } from '@tests/component/shared/FakerHelper'
+import { ROOT_COLLECTION_ALIAS } from '@tests/e2e-integration/shared/collection/ROOT_COLLECTION_ALIAS'
+import { UpwardHierarchyNodeMother } from '@tests/component/shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 import { MetadataBlockInfoMockRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
 import { MetadataBlockInfoMockLoadingRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockLoadingRepository'
 import { MetadataBlockInfoMockErrorRepository } from '../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockErrorRepository'
-
-import { ROOT_COLLECTION_ALIAS } from '@tests/e2e-integration/shared/collection/ROOT_COLLECTION_ALIAS'
 
 const meta: Meta<typeof EditCollection> = {
   title: 'Pages/Edit Collection',
@@ -27,6 +27,43 @@ export default meta
 type Story = StoryObj<typeof EditCollection>
 
 export const Default: Story = {
+  render: () => {
+    const collectionRepo = new CollectionMockRepository()
+    collectionRepo.getById = () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(
+            CollectionMother.create({
+              id: 'science',
+              isReleased: true,
+              name: 'Collection Name',
+              description: 'We do all the science.',
+              affiliation: 'Scientific Research University',
+              hierarchy: UpwardHierarchyNodeMother.createCollection({
+                id: 'science',
+                name: 'Collection Name',
+                parent: UpwardHierarchyNodeMother.createCollection({
+                  id: ROOT_COLLECTION_ALIAS,
+                  name: 'Root'
+                })
+              })
+            })
+          )
+        }, FakerHelper.loadingTimout())
+      })
+    }
+
+    return (
+      <EditCollection
+        collectionId="science"
+        collectionRepository={collectionRepo}
+        metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+      />
+    )
+  }
+}
+
+export const EditingRoot: Story = {
   render: () => (
     <EditCollection
       collectionId={ROOT_COLLECTION_ALIAS}
@@ -35,6 +72,7 @@ export const Default: Story = {
     />
   )
 }
+
 export const Loading: Story = {
   render: () => (
     <EditCollection
