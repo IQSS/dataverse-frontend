@@ -48,6 +48,7 @@ import { SessionProvider } from '../../src/sections/session/SessionProvider'
 import { MemoryRouter } from 'react-router-dom'
 import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
 import { Utils } from '@/shared/helpers/Utils'
+import { OIDC_AUTH_CONFIG } from '@/config'
 
 // Define your custom mount function
 
@@ -88,7 +89,9 @@ Cypress.Commands.add('login', () => {
   cy.url()
     .should('eq', `${Cypress.config().baseUrl as string}/spa`)
     .then(() => {
-      const token = Utils.getLocalStorageItem<string>('ROCP_token')
+      const token = Utils.getLocalStorageItem<string>(
+        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}_token`
+      )
 
       return cy.wrap(token)
     })

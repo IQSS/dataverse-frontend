@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { DATAVERSE_BACKEND_URL } from './config'
+import { OIDC_AUTH_CONFIG, DATAVERSE_BACKEND_URL } from './config'
 import { Utils } from './shared/helpers/Utils'
 
 /**
@@ -12,7 +12,9 @@ const axiosInstance = axios.create({
 })
 
 axiosInstance.interceptors.request.use((config) => {
-  const token = Utils.getLocalStorageItem<string>('ROCP_token')
+  const token = Utils.getLocalStorageItem<string>(
+    `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}_token`
+  )
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`

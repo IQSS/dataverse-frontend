@@ -7,7 +7,7 @@ import {
   UpwardHierarchyNode
 } from '../../../../src/shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { Collection } from '../../../../src/collection/domain/models/Collection'
-import { DATAVERSE_BACKEND_URL } from '@/config'
+import { DATAVERSE_BACKEND_URL, OIDC_AUTH_CONFIG } from '@/config'
 import {
   ApiConfig,
   DataverseApiAuthMechanism
@@ -47,7 +47,12 @@ describe('Collection JSDataverse Repository', () => {
 
     // Change the api config to use bearer token
     cy.wrap(
-      ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
+      ApiConfig.init(
+        `${DATAVERSE_BACKEND_URL}/api/v1`,
+        DataverseApiAuthMechanism.BEARER_TOKEN,
+        undefined,
+        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+      )
     )
 
     await collectionRepository.getById(collectionResponse.id).then((collection) => {
@@ -65,7 +70,12 @@ describe('Collection JSDataverse Repository', () => {
 
     // Change the api config to use bearer token
     cy.wrap(
-      ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
+      ApiConfig.init(
+        `${DATAVERSE_BACKEND_URL}/api/v1`,
+        DataverseApiAuthMechanism.BEARER_TOKEN,
+        undefined,
+        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+      )
     )
 
     await collectionRepository.publish(collectionResponse.id)

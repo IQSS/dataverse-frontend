@@ -5,13 +5,18 @@ import { Router } from './router'
 import { SessionProvider } from './sections/session/SessionProvider'
 import { UserJSDataverseRepository } from './users/infrastructure/repositories/UserJSDataverseRepository'
 import { Route } from './sections/Route.enum'
-import { DATAVERSE_BACKEND_URL } from './config'
+import { OIDC_AUTH_CONFIG, DATAVERSE_BACKEND_URL } from './config'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 if (DATAVERSE_BACKEND_URL === '') {
   throw Error('VITE_DATAVERSE_BACKEND_URL environment variable should be specified.')
 } else {
-  ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
+  ApiConfig.init(
+    `${DATAVERSE_BACKEND_URL}/api/v1`,
+    DataverseApiAuthMechanism.BEARER_TOKEN,
+    undefined,
+    `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+  )
 }
 
 const origin = window.location.origin
@@ -26,7 +31,8 @@ const authConfig: TAuthConfig = {
   redirectUri: `${origin}${BASENAME_URL}${Route.AUTH_CALLBACK}`,
   scope: 'openid',
   autoLogin: false,
-  clearURL: false
+  clearURL: false,
+  storageKeyPrefix: OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX
 }
 
 const userRepository = new UserJSDataverseRepository()

@@ -23,7 +23,7 @@ import { CollectionHelper } from '../../shared/collection/CollectionHelper'
 const DRAFT_PARAM = DatasetNonNumericVersion.DRAFT
 import { VersionUpdateType } from '../../../../src/dataset/domain/models/VersionUpdateType'
 import { ApiConfig } from '@iqss/dataverse-client-javascript'
-import { DATAVERSE_BACKEND_URL } from '@/config'
+import { DATAVERSE_BACKEND_URL, OIDC_AUTH_CONFIG } from '@/config'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 
 chai.use(chaiAsPromised)
@@ -163,7 +163,12 @@ describe('Dataset JSDataverse Repository', () => {
 
     // Change the api config to use bearer token
     cy.wrap(
-      ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
+      ApiConfig.init(
+        `${DATAVERSE_BACKEND_URL}/api/v1`,
+        DataverseApiAuthMechanism.BEARER_TOKEN,
+        undefined,
+        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+      )
     )
 
     await datasetRepository
@@ -197,7 +202,12 @@ describe('Dataset JSDataverse Repository', () => {
 
     // Change the api config to use bearer token
     cy.wrap(
-      ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
+      ApiConfig.init(
+        `${DATAVERSE_BACKEND_URL}/api/v1`,
+        DataverseApiAuthMechanism.BEARER_TOKEN,
+        undefined,
+        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+      )
     )
 
     await datasetRepository
@@ -248,7 +258,12 @@ describe('Dataset JSDataverse Repository', () => {
 
     // Change the api config to use bearer token
     cy.wrap(
-      ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
+      ApiConfig.init(
+        `${DATAVERSE_BACKEND_URL}/api/v1`,
+        DataverseApiAuthMechanism.BEARER_TOKEN,
+        undefined,
+        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+      )
     )
 
     await datasetRepository
@@ -288,7 +303,12 @@ describe('Dataset JSDataverse Repository', () => {
 
     // Change the api config to use bearer token
     cy.wrap(
-      ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
+      ApiConfig.init(
+        `${DATAVERSE_BACKEND_URL}/api/v1`,
+        DataverseApiAuthMechanism.BEARER_TOKEN,
+        undefined,
+        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+      )
     )
 
     await datasetRepository
@@ -310,7 +330,12 @@ describe('Dataset JSDataverse Repository', () => {
 
     // Change the api config to use bearer token
     cy.wrap(
-      ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
+      ApiConfig.init(
+        `${DATAVERSE_BACKEND_URL}/api/v1`,
+        DataverseApiAuthMechanism.BEARER_TOKEN,
+        undefined,
+        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+      )
     )
 
     await datasetRepository.getByPrivateUrlToken(privateUrlResponse.token).then((dataset) => {
@@ -335,7 +360,12 @@ describe('Dataset JSDataverse Repository', () => {
 
     // Change the api config to use bearer token
     cy.wrap(
-      ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
+      ApiConfig.init(
+        `${DATAVERSE_BACKEND_URL}/api/v1`,
+        DataverseApiAuthMechanism.BEARER_TOKEN,
+        undefined,
+        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+      )
     )
 
     await datasetRepository
@@ -361,7 +391,12 @@ describe('Dataset JSDataverse Repository', () => {
 
         // Change the api config to use bearer token
         cy.wrap(
-          ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
+          ApiConfig.init(
+            `${DATAVERSE_BACKEND_URL}/api/v1`,
+            DataverseApiAuthMechanism.BEARER_TOKEN,
+            undefined,
+            `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+          )
         )
 
         return datasetRepository
@@ -388,7 +423,12 @@ describe('Dataset JSDataverse Repository', () => {
 
     // Change the api config to use bearer token
     cy.wrap(
-      ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
+      ApiConfig.init(
+        `${DATAVERSE_BACKEND_URL}/api/v1`,
+        DataverseApiAuthMechanism.BEARER_TOKEN,
+        undefined,
+        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+      )
     )
 
     await datasetRepository.getByPersistentId(datasetResponse.persistentId).then((dataset) => {
@@ -406,7 +446,12 @@ describe('Dataset JSDataverse Repository', () => {
 
     // Change the api config to use bearer token
     cy.wrap(
-      ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
+      ApiConfig.init(
+        `${DATAVERSE_BACKEND_URL}/api/v1`,
+        DataverseApiAuthMechanism.BEARER_TOKEN,
+        undefined,
+        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+      )
     )
 
     await datasetRepository
@@ -430,7 +475,12 @@ describe('Dataset JSDataverse Repository', () => {
   it('creates a new dataset from DatasetDTO', async () => {
     // Change the api config to use bearer token
     cy.wrap(
-      ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
+      ApiConfig.init(
+        `${DATAVERSE_BACKEND_URL}/api/v1`,
+        DataverseApiAuthMechanism.BEARER_TOKEN,
+        undefined,
+        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+      )
     )
 
     const datasetDTO: DatasetDTO = {
@@ -470,7 +520,12 @@ describe('Dataset JSDataverse Repository', () => {
 
     // Change the api config to use bearer token
     cy.wrap(
-      ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.BEARER_TOKEN)
+      ApiConfig.init(
+        `${DATAVERSE_BACKEND_URL}/api/v1`,
+        DataverseApiAuthMechanism.BEARER_TOKEN,
+        undefined,
+        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+      )
     )
 
     await datasetRepository.publish(datasetResponse.persistentId).then((response) => {
