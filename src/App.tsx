@@ -2,8 +2,6 @@ import { AuthProvider, TAuthConfig } from 'react-oauth2-code-pkce'
 import { ApiConfig } from '@iqss/dataverse-client-javascript/dist/core'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 import { Router } from './router'
-import { SessionProvider } from './sections/session/SessionProvider'
-import { UserJSDataverseRepository } from './users/infrastructure/repositories/UserJSDataverseRepository'
 import { Route } from './sections/Route.enum'
 import { OIDC_AUTH_CONFIG, DATAVERSE_BACKEND_URL } from './config'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -35,14 +33,10 @@ const authConfig: TAuthConfig = {
   storageKeyPrefix: OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX
 }
 
-const userRepository = new UserJSDataverseRepository()
-
 function App() {
   return (
     <AuthProvider authConfig={authConfig}>
-      <SessionProvider repository={userRepository}>
-        <Router />
-      </SessionProvider>
+      <Router />
     </AuthProvider>
   )
 }

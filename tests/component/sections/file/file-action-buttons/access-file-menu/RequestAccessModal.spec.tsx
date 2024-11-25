@@ -24,10 +24,10 @@ describe('RequestAccessModal', () => {
 
     cy.findByRole('link', { name: 'Log In' })
       .should('exist')
-      .should('have.attr', 'href', Route.LOG_IN)
+      .should('have.attr', 'href', Route.LOG_IN_JSF)
     cy.findByRole('link', { name: 'Sign Up' })
       .should('exist')
-      .should('have.attr', 'href', Route.SIGN_UP)
+      .should('have.attr', 'href', Route.SIGN_UP_JSF)
 
     cy.findByText('Close').click()
     cy.findByRole('dialog').should('not.exist')

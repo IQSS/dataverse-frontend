@@ -89,7 +89,7 @@ const RequestAccessLoginMessage = ({ handleClose }: { handleClose: () => void })
     <>
       <Modal.Body>
         <p className={styles['request-access-login-message']}>
-          <ExclamationTriangle /> You need to <a href={Route.SIGN_UP}>Sign Up</a> or{' '}
+          <ExclamationTriangle /> You need to <a href={Route.SIGN_UP_JSF}>Sign Up</a> or{' '}
           <Button
             variant="link"
             onClick={() => oidcLogin(encodeReturnToPathInStateQueryParam(`${pathname}${search}`))}

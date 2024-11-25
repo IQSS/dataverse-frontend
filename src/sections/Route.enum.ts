@@ -2,8 +2,8 @@ import { ROOT_COLLECTION_ALIAS } from '../collection/domain/models/Collection'
 
 export enum Route {
   HOME = '/',
-  SIGN_UP = '/dataverseuser.xhtml?editMode=CREATE&redirectPage=%2Fdataverse.xhtml',
-  LOG_IN = '/loginpage.xhtml?redirectPage=%2Fdataverse.xhtml',
+  SIGN_UP_JSF = '/dataverseuser.xhtml?editMode=CREATE&redirectPage=%2Fdataverse.xhtml',
+  LOG_IN_JSF = '/loginpage.xhtml?redirectPage=%2Fdataverse.xhtml',
   LOG_OUT = '/',
   DATASETS = '/datasets',
   CREATE_DATASET = '/datasets/:collectionId/create',
@@ -14,7 +14,8 @@ export enum Route {
   COLLECTIONS = '/collections/:collectionId',
   CREATE_COLLECTION = '/collections/:ownerCollectionId/create',
   ACCOUNT = '/account',
-  AUTH_CALLBACK = '/auth-callback'
+  AUTH_CALLBACK = '/auth-callback',
+  SIGN_UP = '/sign-up'
 }
 
 export const RouteWithParams = {
