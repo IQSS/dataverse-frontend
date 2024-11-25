@@ -48,7 +48,6 @@ export const SocialShareModal = ({
             className={`${styles['social-btn']} ${styles.linkedin}`}>
             <Linkedin size={18} />
           </a>
-
           <a
             href={shareOnXURL}
             target="_blank"
