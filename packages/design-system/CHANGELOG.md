@@ -54,6 +54,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **Offcanvas:** NEW Offcanvas component.
 - **FormCheckbox:** modify Props Interface to allow any react node as `label` prop.
 - **RichTextEditor:** NEW Rich Text Editor component.
+- **FormTextArea:** modify Props Interface to allow `rows` prop.
 
 # [1.1.0](https://github.com/IQSS/dataverse-frontend/compare/@iqss/dataverse-design-system@1.0.1...@iqss/dataverse-design-system@1.1.0) (2024-03-12)
 
