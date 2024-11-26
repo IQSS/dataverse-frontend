@@ -33,5 +33,6 @@ export enum QueryParamKey {
   COLLECTION_ITEM_TYPES = 'types',
   PAGE = 'page',
   COLLECTION_ID = 'collectionId',
-  AUTH_STATE = 'state'
+  AUTH_STATE = 'state',
+  VALID_TOKEN_BUT_NOT_LINKED_ACCOUNT = 'validTokenButNotLinkedAccount'
 }

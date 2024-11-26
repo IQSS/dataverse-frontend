@@ -13,7 +13,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use((config) => {
   const token = Utils.getLocalStorageItem<string>(
-    `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}_token`
+    `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
   )
 
   if (token) {

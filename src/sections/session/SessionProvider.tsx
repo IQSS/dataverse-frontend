@@ -7,7 +7,7 @@ import { getUser } from '../../users/domain/useCases/getUser'
 import { UserRepository } from '../../users/domain/repositories/UserRepository'
 import { logOut } from '../../users/domain/useCases/logOut'
 import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErrorHandler'
-import { Route } from '../Route.enum'
+import { QueryParamKey, Route } from '../Route.enum'
 
 export const BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE =
   'Bearer token is validated, but there is no linked user account.'
@@ -31,7 +31,7 @@ export function SessionProvider({ repository }: SessionProviderProps) {
       } catch (err: unknown) {
         if (JSDataverseReadErrorHandler.isBearerTokenValidatedButNoLinkedUserAccountError(err)) {
           const searchParams = new URLSearchParams()
-          searchParams.set('validTokenButNotLinkedAccount', 'true')
+          searchParams.set(QueryParamKey.VALID_TOKEN_BUT_NOT_LINKED_ACCOUNT, 'true')
 
           navigate(`${Route.SIGN_UP}?${searchParams.toString()}`)
         }
