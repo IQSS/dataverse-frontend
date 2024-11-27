@@ -43,12 +43,11 @@ import { ThemeProvider } from '@iqss/dataverse-design-system'
 import { ReactNode } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import i18next from '../../src/i18n'
-import { UserRepository } from '../../src/users/domain/repositories/UserRepository'
 import { MemoryRouter } from 'react-router-dom'
 import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
 import { Utils } from '@/shared/helpers/Utils'
 import { OIDC_AUTH_CONFIG } from '@/config'
-import { SessionProvider } from '@/sections/session/SessionProvider'
+import { SessionContext } from '@/sections/session/SessionContext'
 
 // Define your custom mount function
 
@@ -63,24 +62,34 @@ Cypress.Commands.add('customMount', (component: ReactNode) => {
 })
 
 Cypress.Commands.add('mountAuthenticated', (component: ReactNode) => {
-  const user = UserMother.create()
-  const userRepository = {} as UserRepository
-  userRepository.getAuthenticated = cy.stub().resolves(user)
-  userRepository.removeAuthenticated = cy.stub().resolves()
-
   return cy.customMount(
-    <SessionProvider repository={userRepository} forComponentTesting testComponent={component} />
+    <SessionContext.Provider
+      value={{
+        user: UserMother.create(),
+        logout: () => Promise.resolve(),
+        setUser: () => {},
+        isLoadingUser: false,
+        sessionError: null,
+        refetchUserSession: () => Promise.resolve()
+      }}>
+      {component}
+    </SessionContext.Provider>
   )
 })
 
 Cypress.Commands.add('mountSuperuser', (component: ReactNode) => {
-  const user = UserMother.createSuperUser()
-  const userRepository = {} as UserRepository
-  userRepository.getAuthenticated = cy.stub().resolves(user)
-  userRepository.removeAuthenticated = cy.stub().resolves()
-
   return cy.customMount(
-    <SessionProvider repository={userRepository} forComponentTesting testComponent={component} />
+    <SessionContext.Provider
+      value={{
+        user: UserMother.createSuperUser(),
+        logout: () => Promise.resolve(),
+        setUser: () => {},
+        isLoadingUser: false,
+        sessionError: null,
+        refetchUserSession: () => Promise.resolve()
+      }}>
+      {component}
+    </SessionContext.Provider>
   )
 })
 

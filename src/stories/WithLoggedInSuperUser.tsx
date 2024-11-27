@@ -9,7 +9,9 @@ export const WithLoggedInSuperUser = (Story: StoryFn) => {
         user: UserMother.createSuperUser(),
         logout: () => Promise.resolve(),
         setUser: () => {},
-        isLoadingUser: false
+        isLoadingUser: false,
+        sessionError: null,
+        refetchUserSession: () => Promise.resolve()
       }}>
       <Story />
     </SessionContext.Provider>
