@@ -94,7 +94,7 @@ const RequestAccessLoginMessage = ({ handleClose }: { handleClose: () => void })
             variant="link"
             onClick={() => oidcLogin(encodeReturnToPathInStateQueryParam(`${pathname}${search}`))}
             className="p-0 align-baseline">
-            log in
+            Log In
           </Button>{' '}
           to request access.
         </p>
