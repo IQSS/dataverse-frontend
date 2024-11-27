@@ -44,11 +44,11 @@ import { ReactNode } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import i18next from '../../src/i18n'
 import { UserRepository } from '../../src/users/domain/repositories/UserRepository'
-import { SessionProvider } from '../../src/sections/session/SessionProvider'
 import { MemoryRouter } from 'react-router-dom'
 import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
 import { Utils } from '@/shared/helpers/Utils'
 import { OIDC_AUTH_CONFIG } from '@/config'
+import { SessionProvider } from '@/sections/session/SessionProvider'
 
 // Define your custom mount function
 
@@ -68,7 +68,9 @@ Cypress.Commands.add('mountAuthenticated', (component: ReactNode) => {
   userRepository.getAuthenticated = cy.stub().resolves(user)
   userRepository.removeAuthenticated = cy.stub().resolves()
 
-  return cy.customMount(<SessionProvider repository={userRepository}>{component}</SessionProvider>)
+  return cy.customMount(
+    <SessionProvider repository={userRepository} forComponentTesting testComponent={component} />
+  )
 })
 
 Cypress.Commands.add('mountSuperuser', (component: ReactNode) => {
@@ -77,7 +79,9 @@ Cypress.Commands.add('mountSuperuser', (component: ReactNode) => {
   userRepository.getAuthenticated = cy.stub().resolves(user)
   userRepository.removeAuthenticated = cy.stub().resolves()
 
-  return cy.customMount(<SessionProvider repository={userRepository}>{component}</SessionProvider>)
+  return cy.customMount(
+    <SessionProvider repository={userRepository} forComponentTesting testComponent={component} />
+  )
 })
 
 Cypress.Commands.add('login', () => {

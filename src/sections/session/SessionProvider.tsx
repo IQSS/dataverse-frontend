@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from 'react-router-dom'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { ReactNode, useCallback, useContext, useEffect, useState } from 'react'
 import { AuthContext } from 'react-oauth2-code-pkce'
 import { User } from '../../users/domain/models/User'
 import { SessionContext, SessionError } from './SessionContext'
@@ -13,11 +13,23 @@ import { ReadError } from '@iqss/dataverse-client-javascript'
 export const BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE =
   'Bearer token is validated, but there is no linked user account.'
 
-interface SessionProviderProps {
-  repository: UserRepository
-}
+type SessionProviderProps =
+  | {
+      repository: UserRepository
+      forComponentTesting?: false
+      testComponent?: never
+    }
+  | {
+      repository: UserRepository
+      forComponentTesting: true
+      testComponent: ReactNode
+    }
 
-export function SessionProvider({ repository }: SessionProviderProps) {
+export function SessionProvider({
+  repository,
+  forComponentTesting,
+  testComponent
+}: SessionProviderProps) {
   const navigate = useNavigate()
   const { token, loginInProgress } = useContext(AuthContext)
   const [user, setUser] = useState<User | null>(null)
@@ -90,7 +102,14 @@ export function SessionProvider({ repository }: SessionProviderProps) {
     if (token && !loginInProgress) {
       void fetchUser()
     }
-  }, [repository, token, loginInProgress, navigate, fetchUser])
+  }, [token, loginInProgress, fetchUser])
+
+  // This is only for component testing purposes
+  useEffect(() => {
+    if (forComponentTesting) {
+      void fetchUser()
+    }
+  }, [fetchUser, forComponentTesting])
 
   return (
     <SessionContext.Provider
@@ -102,7 +121,7 @@ export function SessionProvider({ repository }: SessionProviderProps) {
         logout: submitLogOut,
         refetchUserSession
       }}>
-      <Outlet />
+      {!forComponentTesting ? <Outlet /> : testComponent}
     </SessionContext.Provider>
   )
 }
