@@ -56,22 +56,18 @@ export class ValidTokenNotLinkedAccountFormHelper {
     // If properties are in the tokenData then dont send them at all
 
     if (OIDC_STANDARD_CLAIMS.PREFERRED_USERNAME in tokenData === false) {
-      console.log('preferred_username not in tokenData')
       registrationDTO.username = formData.username
     }
 
     if (OIDC_STANDARD_CLAIMS.GIVEN_NAME in tokenData === false) {
-      console.log('given_name not in tokenData')
       registrationDTO.firstName = formData.firstName
     }
 
     if (OIDC_STANDARD_CLAIMS.FAMILY_NAME in tokenData === false) {
-      console.log('family_name not in tokenData')
       registrationDTO.lastName = formData.lastName
     }
 
     if (OIDC_STANDARD_CLAIMS.EMAIL in tokenData === false) {
-      console.log('email not in tokenData')
       registrationDTO.emailAddress = formData.emailAddress
     }
 

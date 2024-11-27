@@ -5,8 +5,9 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { TTokenData } from 'react-oauth2-code-pkce/dist/types'
 import { Button, Col, Form, Stack } from '@iqss/dataverse-design-system'
+import { useSession } from '@/sections/session/SessionContext'
 import { Validator } from '@/shared/helpers/Validator'
-import { ValidTokenNotLinkedAccountFormData } from './types'
+import { type ValidTokenNotLinkedAccountFormData } from './types'
 import { ValidTokenNotLinkedAccountFormHelper } from './ValidTokenNotLinkedAccountFormHelper'
 import styles from './FormFields.module.scss'
 
@@ -15,12 +16,30 @@ interface FormFieldsProps {
   tokenData: TTokenData | undefined
 }
 
+// TODO:ME - Maybe we should redirect to a welcome page after success? ask if there is one, maybe not the case for this scenario
+// TODO:ME - We will need an api call to get the terms of use of the installation
+// TODO:ME - Show the registration write error message to the user after encapsulating this call in js-dataverse
+
+/*
+  This is the expected response from the server after succesfull registration, will help for js-dataverse-client-javascript
+  const resp = {
+    data: {
+      status: 'OK',
+      data: {
+        message: 'User registered.'
+      }
+    },
+    status: 200,
+    statusText: 'OK'
+  }
+*/
+
 export const FormFields = ({ formDefaultValues, tokenData }: FormFieldsProps) => {
   const navigate = useNavigate()
+  const { refetchUserSession } = useSession()
   const { t } = useTranslation('signUp')
   const { t: tShared } = useTranslation('shared')
 
-  // TODO:ME - We will need an api call to get the terms of use of the installation
   const hasTermsOfUse = false
 
   const isUsernameRequired = formDefaultValues.username === ''
@@ -41,14 +60,12 @@ export const FormFields = ({ formDefaultValues, tokenData }: FormFieldsProps) =>
       tokenData
     )
 
-    console.log({ registrationDTO })
-    // curl -H "Authorization: Bearer $TOKEN" -X POST http://localhost:8080/api/users/register --data '{"termsAccepted":true}'
     axiosInstance
       .post('/api/users/register', registrationDTO)
-      .then((response) => {
-        console.log({ response })
+      .then(async () => {
+        await refetchUserSession()
 
-        // TODO:ME - Enforce the SessionProvider to make a new call to get the user now and navigate to the root collection
+        navigate('/')
       })
       .catch((error: AxiosError) => {
         console.error({ error })

@@ -35,20 +35,15 @@ export class JSDataverseReadErrorHandler {
     return reason.replace(`[${statusCode}]`, '').trim()
   }
 
-  public static isBearerTokenValidatedButNoLinkedUserAccountError(err: unknown): boolean {
-    if (err instanceof ReadError) {
-      const errorHandler = new JSDataverseReadErrorHandler(err)
+  public isBearerTokenValidatedButNoLinkedUserAccountError(): boolean {
+    const formattedError: string = this.getReasonWithoutStatusCode() ?? this.getErrorMessage()
 
-      const formattedError: string =
-        errorHandler.getReasonWithoutStatusCode() ?? errorHandler.getErrorMessage()
+    const statusCode: number | null = this.getStatusCode()
 
-      const statusCode: number | null = errorHandler.getStatusCode()
-
-      if (statusCode === 403 && formattedError === BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE) {
-        return true // Return true if the specific error is detected
-      }
+    if (statusCode === 403 && formattedError === BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE) {
+      return true
     }
 
-    return false // Return false if no match
+    return false
   }
 }

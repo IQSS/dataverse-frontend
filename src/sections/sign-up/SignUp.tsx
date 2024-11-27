@@ -1,13 +1,12 @@
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Tabs } from '@iqss/dataverse-design-system'
-import styles from './SignUp.module.scss'
-import { useEffect } from 'react'
 import { useLoading } from '../loading/LoadingContext'
 import { ValidTokenNotLinkedAccountForm } from './valid-token-not-linked-account-form/ValidTokenNotLinkedAccountForm'
+import styles from './SignUp.module.scss'
 
-// const collectionRepository = new CollectionJSDataverseRepository()
-// TODO:ME- All use cases will return same error message so this is blocking us for making requests to other public use cases like get root collection
-// const { collection } = useCollection(collectionRepository, ':root')
+// TODO:ME - All use cases will return same error message so this is blocking us for making requests to other public use cases like get root collection, should work removing access token from localstorage but we need it for future call
+// TODO:ME - How to handle 401 Unauthorized {"status":"ERROR","message":"Unauthorized bearer token."} globally, maybe redirect to oidc login page?
 
 interface SignUpProps {
   hasValidTokenButNotLinkedAccount: boolean
