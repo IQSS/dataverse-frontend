@@ -45,5 +45,5 @@ export const ValidTokenNotLinkedAccountForm = () => {
     termsAccepted: false
   }
 
-  return <FormFields formDefaultValues={formDefaultValues} tokenData={tokenData} />
+  return <FormFields formDefaultValues={formDefaultValues} />
 }

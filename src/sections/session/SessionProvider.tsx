@@ -24,7 +24,6 @@ export function SessionProvider({ repository }: SessionProviderProps) {
   const [isLoadingUser, setIsLoadingUser] = useState(false)
   const [sessionError, setSessionError] = useState<SessionError | null>(null)
 
-  // TODO:ME - Ask how to handle when user doesn't want to sign up, save in memory to avoid redirecting it again. Next time ask with an alert?
   const handleFetchError = useCallback(
     (err: unknown) => {
       if (err instanceof ReadError) {
@@ -107,62 +106,3 @@ export function SessionProvider({ repository }: SessionProviderProps) {
     </SessionContext.Provider>
   )
 }
-
-// export function SessionProvider({ repository }: SessionProviderProps) {
-//   const { token, loginInProgress } = useContext(AuthContext)
-//   const [user, setUser] = useState<User | null>(null)
-//   const [isLoadingUser, setIsLoadingUser] = useState<boolean>(false)
-//   const navigate = useNavigate()
-
-//   useEffect(() => {
-//     const handleGetUser = async () => {
-//       setIsLoadingUser(true)
-//       try {
-//         const user: User = await getUser(repository)
-
-//         user && setUser(user)
-//       } catch (err: unknown) {
-//         if (JSDataverseReadErrorHandler.isBearerTokenValidatedButNoLinkedUserAccountError(err)) {
-//           const searchParams = new URLSearchParams()
-//           searchParams.set(QueryParamKey.VALID_TOKEN_BUT_NOT_LINKED_ACCOUNT, 'true')
-
-//           navigate(`${Route.SIGN_UP}?${searchParams.toString()}`)
-//         }
-//         // TODO:ME - Handle another type of error
-//         // TODO:ME - Ask how to handle when user doesn't want to sign up, save in memory to avoid redirecting it again. Next time ask with an alert?
-//       } finally {
-//         setIsLoadingUser(false)
-//       }
-//     }
-
-//     if (token && !loginInProgress) {
-//       void handleGetUser()
-//     }
-//   }, [repository, token, loginInProgress, navigate])
-
-//   const refetchUser = () => {
-//     setIsLoadingUser(true)
-
-//     getUser(repository)
-//       .then((user) => {
-//         setUser(user)
-//       })
-//       .catch((error) => console.error('There was an error fetching the user', error))
-//       .finally(() => setIsLoadingUser(false))
-//   }
-
-//   const submitLogOut = () => {
-//     return logOut(repository)
-//       .then(() => {
-//         setUser(null)
-//       })
-//       .catch((error) => console.error('There was an error logging out the user', error))
-//   }
-
-//   return (
-//     <SessionContext.Provider
-//       value={{ user, isLoadingUser, setUser, logout: submitLogOut, refetchUser }}>
-//       <Outlet />
-//     </SessionContext.Provider>
-//   )
-// }

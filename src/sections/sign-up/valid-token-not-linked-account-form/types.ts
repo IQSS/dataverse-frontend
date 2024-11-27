@@ -8,7 +8,8 @@ export interface ValidTokenNotLinkedAccountFormData {
   termsAccepted: boolean
 }
 
-// This enum is based only on some of the standard claims according to the official openId documentation https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
+// This enum is based only on some of the standard claims according to the official openId documentation
+// https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
 
 export enum OIDC_STANDARD_CLAIMS {
   GIVEN_NAME = 'given_name',

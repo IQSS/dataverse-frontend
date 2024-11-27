@@ -32,7 +32,6 @@ export class ValidTokenNotLinkedAccountFormHelper {
   }
 
   public static defineRegistrationDTOProperties(
-    defaultValues: ValidTokenNotLinkedAccountFormData,
     formData: ValidTokenNotLinkedAccountFormData,
     tokenData?: TTokenData
   ) {

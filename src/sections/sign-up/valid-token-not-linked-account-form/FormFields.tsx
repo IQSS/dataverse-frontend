@@ -1,9 +1,10 @@
-import { AxiosError } from 'axios'
-import { axiosInstance } from '@/axiosInstance'
+import { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { AuthContext } from 'react-oauth2-code-pkce'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
-import { TTokenData } from 'react-oauth2-code-pkce/dist/types'
+import { AxiosError } from 'axios'
+import { axiosInstance } from '@/axiosInstance'
 import { Button, Col, Form, Stack } from '@iqss/dataverse-design-system'
 import { useSession } from '@/sections/session/SessionContext'
 import { Validator } from '@/shared/helpers/Validator'
@@ -13,12 +14,12 @@ import styles from './FormFields.module.scss'
 
 interface FormFieldsProps {
   formDefaultValues: ValidTokenNotLinkedAccountFormData
-  tokenData: TTokenData | undefined
 }
 
 // TODO:ME - Maybe we should redirect to a welcome page after success? ask if there is one, maybe not the case for this scenario
 // TODO:ME - We will need an api call to get the terms of use of the installation
 // TODO:ME - Show the registration write error message to the user after encapsulating this call in js-dataverse
+// TODO:ME - Ask about logout when clicking the Cancel button because of the BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE error
 
 /*
   This is the expected response from the server after succesfull registration, will help for js-dataverse-client-javascript
@@ -34,9 +35,10 @@ interface FormFieldsProps {
   }
 */
 
-export const FormFields = ({ formDefaultValues, tokenData }: FormFieldsProps) => {
+export const FormFields = ({ formDefaultValues }: FormFieldsProps) => {
   const navigate = useNavigate()
   const { refetchUserSession } = useSession()
+  const { tokenData, logOut: oidcLogout } = useContext(AuthContext)
   const { t } = useTranslation('signUp')
   const { t: tShared } = useTranslation('shared')
 
@@ -55,7 +57,6 @@ export const FormFields = ({ formDefaultValues, tokenData }: FormFieldsProps) =>
   const submitForm = (formData: ValidTokenNotLinkedAccountFormData) => {
     // We wont send properties that are already present in the tokenData, those are the disabled/readonly fields
     const registrationDTO = ValidTokenNotLinkedAccountFormHelper.defineRegistrationDTOProperties(
-      formDefaultValues,
       formData,
       tokenData
     )
@@ -71,6 +72,10 @@ export const FormFields = ({ formDefaultValues, tokenData }: FormFieldsProps) =>
         console.error({ error })
       })
   }
+
+  // If the user cancels the registration, we should logout the user and redirect to the home page.
+  // This is to avoid sending the valid bearer token and receiving the same BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE error
+  const handleCancel = () => oidcLogout()
 
   const userNameRules = {
     required: isUsernameRequired ? t('fields.username.required') : false,
@@ -314,7 +319,7 @@ export const FormFields = ({ formDefaultValues, tokenData }: FormFieldsProps) =>
               {t('submit')}
             </Button>
 
-            <Button onClick={() => navigate('/')} type="button" variant="secondary">
+            <Button onClick={handleCancel} type="button" variant="secondary">
               {tShared('cancel')}
             </Button>
           </Stack>
