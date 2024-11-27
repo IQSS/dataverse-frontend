@@ -46,7 +46,7 @@
       "primaryLabel": "General Terms of Use",
       "label": "I have read and accept the Dataverse General Terms of Use as outlined above.",
       "description": "The terms and conditions for using the application and services.",
-      "required": "You must agree to the terms of use.",
+      "required": "Please check the box to indicate your acceptance of the General Terms of Use.",
       "noTerms": "There are no Terms of Use for this Dataverse installation."
     }
   },

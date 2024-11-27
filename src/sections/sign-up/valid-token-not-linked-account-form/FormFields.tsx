@@ -10,6 +10,8 @@ import { useSession } from '@/sections/session/SessionContext'
 import { Validator } from '@/shared/helpers/Validator'
 import { type ValidTokenNotLinkedAccountFormData } from './types'
 import { ValidTokenNotLinkedAccountFormHelper } from './ValidTokenNotLinkedAccountFormHelper'
+import { useGetTermsOfUse } from '@/shared/hooks/useGetTermsOfUse'
+import { AppLoader } from '@/sections/shared/layout/app-loader/AppLoader'
 import styles from './FormFields.module.scss'
 
 interface FormFieldsProps {
@@ -17,9 +19,12 @@ interface FormFieldsProps {
 }
 
 // TODO:ME - Maybe we should redirect to a welcome page after success? ask if there is one, maybe not the case for this scenario
-// TODO:ME - We will need an api call to get the terms of use of the installation
-// TODO:ME - Show the registration write error message to the user after encapsulating this call in js-dataverse
+// TODO:ME - Ask about the format of the terms of use, html string? just text string? what is shown in the box if there is just a url string ?
 // TODO:ME - Ask about logout when clicking the Cancel button because of the BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE error
+
+// TODO:ME - JS-DATAVERSE use case for registration
+// TODO:ME - Show the registration write error message to the user after encapsulating this call in js-dataverse
+// TODO:ME - JS-DATAVERSE use case for getting the terms of use? how to avoid sending token in this case?
 
 /*
   This is the expected response from the server after succesfull registration, will help for js-dataverse-client-javascript
@@ -42,7 +47,7 @@ export const FormFields = ({ formDefaultValues }: FormFieldsProps) => {
   const { t } = useTranslation('signUp')
   const { t: tShared } = useTranslation('shared')
 
-  const hasTermsOfUse = false
+  const { termsOfUse, isLoading: isLoadingTermsOfUse } = useGetTermsOfUse()
 
   const isUsernameRequired = formDefaultValues.username === ''
   const isEmailRequired = formDefaultValues.emailAddress === ''
@@ -115,6 +120,10 @@ export const FormFields = ({ formDefaultValues }: FormFieldsProps) => {
   }
 
   const hasAcceptedTheTermsOfUse = form.watch('termsAccepted')
+
+  if (isLoadingTermsOfUse) {
+    return <AppLoader />
+  }
 
   return (
     <div>
@@ -293,9 +302,9 @@ export const FormFields = ({ formDefaultValues }: FormFieldsProps) => {
                 <Col md={6}>
                   <Stack direction="vertical" gap={3}>
                     <Form.Group.TextArea
-                      rows={hasTermsOfUse ? 3 : 1}
+                      value={termsOfUse ? termsOfUse : t('fields.termsAccepted.noTerms')}
+                      rows={2}
                       disabled
-                      value={t('fields.termsAccepted.noTerms')}
                     />
 
                     <Form.Group.Checkbox
