@@ -16,4 +16,8 @@
   max-width: 100ch;
   margin-bottom: 1rem;
   white-space: pre-wrap;
+
+  svg {
+    translate: 0 -15%;
+  }
 }

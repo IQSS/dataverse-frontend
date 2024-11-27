@@ -1,14 +1,14 @@
-import { axiosInstance } from '@/axiosInstance'
 import { AxiosError } from 'axios'
+import { axiosInstance } from '@/axiosInstance'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { Button, Col, Form, Stack } from '@iqss/dataverse-design-system'
-import { TTokenData } from 'react-oauth2-code-pkce/dist/types'
-import { ValidTokenNotLinkedAccountFormData } from './types'
-import styles from './FormFields.module.scss'
 import { useNavigate } from 'react-router-dom'
+import { TTokenData } from 'react-oauth2-code-pkce/dist/types'
+import { Button, Col, Form, Stack } from '@iqss/dataverse-design-system'
 import { Validator } from '@/shared/helpers/Validator'
+import { ValidTokenNotLinkedAccountFormData } from './types'
 import { ValidTokenNotLinkedAccountFormHelper } from './ValidTokenNotLinkedAccountFormHelper'
+import styles from './FormFields.module.scss'
 
 interface FormFieldsProps {
   formDefaultValues: ValidTokenNotLinkedAccountFormData
@@ -96,9 +96,11 @@ export const FormFields = ({ formDefaultValues, tokenData }: FormFieldsProps) =>
 
   return (
     <div>
-      <div className={styles['about-prefilled-fields-wrapper']}>
-        <Form.Group.Text>{t('aboutPrefilledFields')}</Form.Group.Text>
-      </div>
+      {/* <div className={styles['about-prefilled-fields-wrapper']}>
+        <Form.Group.Text>
+          <InfoCircleFill /> {t('aboutPrefilledFields')}
+        </Form.Group.Text>
+      </div> */}
 
       <FormProvider {...form}>
         <form

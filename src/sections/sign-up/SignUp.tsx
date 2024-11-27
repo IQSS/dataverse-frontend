@@ -6,8 +6,8 @@ import { useLoading } from '../loading/LoadingContext'
 import { ValidTokenNotLinkedAccountForm } from './valid-token-not-linked-account-form/ValidTokenNotLinkedAccountForm'
 
 // const collectionRepository = new CollectionJSDataverseRepository()
-//   // TODO:ME- All use cases will return same error message so we can use  anyone?
-//   const { collection } = useCollection(collectionRepository, ':root')
+// TODO:ME- All use cases will return same error message so this is blocking us for making requests to other public use cases like get root collection
+// const { collection } = useCollection(collectionRepository, ':root')
 
 interface SignUpProps {
   hasValidTokenButNotLinkedAccount: boolean
@@ -28,11 +28,16 @@ export const SignUp = ({ hasValidTokenButNotLinkedAccount }: SignUpProps) => {
           </Alert>
         )}
         {hasValidTokenButNotLinkedAccount && (
-          <Alert variant="info" customHeading={t('hasValidTokenButNotLinkedAccount.heading')}>
-            <span className={styles['not-linked-account-text']}>
-              {t('hasValidTokenButNotLinkedAccount.alertText')}
-            </span>
-          </Alert>
+          <>
+            <Alert variant="info" customHeading={t('hasValidTokenButNotLinkedAccount.heading')}>
+              <span className={styles['not-linked-account-text']}>
+                {t('hasValidTokenButNotLinkedAccount.alertText')}
+              </span>
+            </Alert>
+            <Alert variant="info">
+              <span className={styles['not-linked-account-text']}>{t('aboutPrefilledFields')}</span>
+            </Alert>
+          </>
         )}
       </div>
       <header className={styles.header}>
