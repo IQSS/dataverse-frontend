@@ -1,14 +1,14 @@
+import { Trans, useTranslation } from 'react-i18next'
 import { Accordion, Col, Row } from '@iqss/dataverse-design-system'
 import { FilePreview } from '../file-preview/FilePreview'
 import { FileLabels } from '../file-labels/FileLabels'
-import styles from './FileMetadata.module.scss'
 import { DateHelper } from '../../../shared/helpers/DateHelper'
 import { FileEmbargoDate } from '../file-embargo/FileEmbargoDate'
 import { DATAVERSE_BACKEND_URL } from '../../../config'
-import { Trans, useTranslation } from 'react-i18next'
 import { FileMetadata as FileMetadataModel } from '../../../files/domain/models/FileMetadata'
 import { FilePermissions } from '../../../files/domain/models/FilePermissions'
 import { DatasetPublishingStatus } from '../../../dataset/domain/models/Dataset'
+import styles from './FileMetadata.module.scss'
 
 interface FileMetadataProps {
   name: string
@@ -24,6 +24,7 @@ export function FileMetadata({
   datasetPublishingStatus
 }: FileMetadataProps) {
   const { t } = useTranslation('file')
+
   return (
     <Accordion defaultActiveKey="0">
       <Accordion.Item eventKey="0">
@@ -97,16 +98,22 @@ export function FileMetadata({
             <Col sm={3}>
               <strong>{t('metadata.fields.depositDate')}</strong>
             </Col>
-            {/* TODO: use time tag with dateTime attr https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time */}
-            <Col>{DateHelper.toDisplayFormatYYYYMMDD(metadata.depositDate)}</Col>
+            <Col>
+              <time dateTime={DateHelper.toISO8601Format(metadata.depositDate)}>
+                {DateHelper.toISO8601Format(metadata.depositDate)}
+              </time>
+            </Col>
           </Row>
           {metadata.publicationDate && (
             <Row className={styles.row}>
               <Col sm={3}>
                 <strong>{t('metadata.fields.metadataReleaseDate')}</strong>
               </Col>
-              {/* TODO: use time tag with dateTime attr https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time */}
-              <Col>{DateHelper.toDisplayFormatYYYYMMDD(metadata.publicationDate)}</Col>
+              <Col>
+                <time dateTime={DateHelper.toISO8601Format(metadata.publicationDate)}>
+                  {DateHelper.toISO8601Format(metadata.publicationDate)}
+                </time>
+              </Col>
             </Row>
           )}
           {(metadata.publicationDate || metadata.embargo) && (
@@ -114,7 +121,6 @@ export function FileMetadata({
               <Col sm={3}>
                 <strong>{t('metadata.fields.publicationDate')}</strong>
               </Col>
-              {/* TODO: use time tag with dateTime attr https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time */}
               <Col>
                 {metadata.embargo ? (
                   <FileEmbargoDate
@@ -123,7 +129,11 @@ export function FileMetadata({
                     format="YYYY-MM-DD"
                   />
                 ) : (
-                  DateHelper.toDisplayFormatYYYYMMDD(metadata.publicationDate)
+                  metadata.publicationDate && (
+                    <time dateTime={DateHelper.toISO8601Format(metadata.publicationDate)}>
+                      {DateHelper.toISO8601Format(metadata.publicationDate)}
+                    </time>
+                  )
                 )}
               </Col>
             </Row>

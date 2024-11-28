@@ -13,7 +13,7 @@ import { CollectionItemsMother } from '../../../tests/component/collection/domai
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 
 export class CollectionMockRepository implements CollectionRepository {
-  getById(_id: string): Promise<Collection> {
+  getById(_id?: string): Promise<Collection> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(CollectionMother.createRealistic())

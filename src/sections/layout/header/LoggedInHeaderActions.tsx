@@ -7,8 +7,8 @@ import { User } from '@/users/domain/models/User'
 import { useGetCollectionUserPermissions } from '@/shared/hooks/useGetCollectionUserPermissions'
 import { RouteWithParams, Route } from '@/sections//Route.enum'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import { ROOT_COLLECTION_ALIAS } from '@/collection/domain/models/Collection'
 import { AccountHelper } from '@/sections/account/AccountHelper'
+import { useCollection } from '@/sections/collection/useCollection'
 
 interface LoggedInHeaderActionsProps {
   user: User
@@ -20,11 +20,12 @@ export const LoggedInHeaderActions = ({
   collectionRepository
 }: LoggedInHeaderActionsProps) => {
   const { t } = useTranslation('header')
-
   const { logOut: oidcLogout } = useContext(AuthContext)
 
+  const { collection } = useCollection(collectionRepository)
+
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
-    collectionIdOrAlias: ROOT_COLLECTION_ALIAS,
+    collectionIdOrAlias: undefined,
     collectionRepository: collectionRepository
   })
 
@@ -32,8 +33,12 @@ export const LoggedInHeaderActions = ({
     oidcLogout()
   }
 
-  const createCollectionRoute = RouteWithParams.CREATE_COLLECTION()
-  const createDatasetRoute = RouteWithParams.CREATE_DATASET()
+  if (!collection) {
+    return null
+  }
+
+  const createCollectionRoute = RouteWithParams.CREATE_COLLECTION(collection.id)
+  const createDatasetRoute = RouteWithParams.CREATE_DATASET(collection.id)
 
   const canUserAddCollectionToRoot = Boolean(collectionUserPermissions?.canAddCollection)
   const canUserAddDatasetToRoot = Boolean(collectionUserPermissions?.canAddDataset)

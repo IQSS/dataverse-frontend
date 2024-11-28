@@ -479,48 +479,39 @@ describe('Dataset', () => {
     })
 
     it('loads the embargoed files', () => {
-      cy.window().then(() => {
-        // Create a moment object in UTC and set the time to 12 AM (midnight)
-        const utcDate = moment.utc().startOf('day')
+      const utcDate = moment.utc().startOf('day').add(100, 'years')
+      const expectedDate = utcDate.toISOString().split('T')[0]
 
-        // Add 100 years to the UTC date
-        utcDate.add(100, 'years')
-        const dateString = utcDate.format('YYYY-MM-DD')
-
-        const expectedDate = DateHelper.toDisplayFormat(utcDate.toDate())
-
-        cy.wrap(
-          DatasetHelper.createWithFiles(FileHelper.createMany(1)).then((dataset) =>
-            DatasetHelper.embargoFiles(
-              dataset.persistentId,
-              [dataset.files ? dataset.files[0].id : 0],
-              dateString
-            )
+      cy.wrap(
+        DatasetHelper.createWithFiles(FileHelper.createMany(1)).then((dataset) =>
+          DatasetHelper.embargoFiles(
+            dataset.persistentId,
+            [dataset.files ? dataset.files[0].id : 0],
+            expectedDate
           )
         )
-          .its('persistentId')
-          .then((persistentId: string) => {
-            cy.wait(1500) // Wait for the files to be embargoed
+      )
+        .its('persistentId')
+        .then((persistentId: string) => {
+          cy.wait(1500) // Wait for the files to be embargoed
 
-            cy.visit(`/spa/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
+          cy.visit(`/spa/datasets?persistentId=${persistentId}&version=${DRAFT_PARAM}`)
 
-            cy.wait(1500) // Wait for the files to be loaded
+          cy.wait(1500) // Wait for the files to be loaded
 
-            cy.findByText('Files').should('exist')
+          cy.findByText('Files').should('exist')
 
-            cy.findByText(/Deposited/).should('exist')
-            cy.findByText(`Draft: will be embargoed until ${expectedDate}`).should('exist')
+          cy.findByText(/Deposited/).should('exist')
+          cy.findByText(`Draft: will be embargoed until`).should('exist')
+          cy.findByTestId('embargo-date').should('have.text', expectedDate)
 
-            // Draft: will be embargoed until Nov 4, 2124
+          cy.get('#edit-files-menu').should('exist')
 
-            cy.get('#edit-files-menu').should('exist')
-
-            cy.findByRole('button', { name: 'Access File' }).as('accessButton')
-            cy.get('@accessButton').should('exist')
-            cy.get('@accessButton').click()
-            cy.findByText('Embargoed').should('exist')
-          })
-      })
+          cy.findByRole('button', { name: 'Access File' }).as('accessButton')
+          cy.get('@accessButton').should('exist')
+          cy.get('@accessButton').click()
+          cy.findByText('Embargoed').should('exist')
+        })
     })
 
     it('applies filters to the Files Table in the correct order', () => {

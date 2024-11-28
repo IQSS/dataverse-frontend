@@ -41,10 +41,11 @@ jobs:
       - name: Build with base path
         run: npm run build -- --base=/spa
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: built-site
           path: ./dist
+          include-hidden-files: true
 
   deploy-to-payara:
     needs: build
@@ -58,7 +59,7 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: built-site
           path: ./dist

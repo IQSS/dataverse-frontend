@@ -32,7 +32,6 @@ import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
 import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
 import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
-import { ROOT_COLLECTION_ALIAS } from '../../../collection/domain/models/Collection'
 
 const includeDeaccessioned = true
 type DatasetDetails = [JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[]]
@@ -201,32 +200,42 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       getDatasetSummaryFieldNames.execute(),
       getPrivateUrlDatasetCitation.execute(privateUrlToken)
     ])
-      .then(([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) =>
-        JSDatasetMapper.toDataset(
+      .then(async ([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) => {
+        const [permissions, locks, originalSize, archivalSize] = await Promise.all([
+          getDatasetUserPermissions.execute(jsDataset.id),
+          getDatasetLocks.execute(jsDataset.id),
+          getDatasetFilesTotalDownloadSize.execute(
+            jsDataset.id,
+            DatasetNonNumericVersion.DRAFT,
+            FileDownloadSizeMode.ORIGINAL,
+            undefined,
+            includeDeaccessioned
+          ),
+          getDatasetFilesTotalDownloadSize.execute(
+            jsDataset.id,
+            DatasetNonNumericVersion.DRAFT,
+            FileDownloadSizeMode.ARCHIVAL,
+            undefined,
+            includeDeaccessioned
+          )
+        ])
+
+        return JSDatasetMapper.toDataset(
           jsDataset,
           citation,
           summaryFieldsNames,
-          {
-            canEditDataset: true,
-            canPublishDataset: true,
-            canManageDatasetPermissions: true,
-            canDeleteDatasetDraft: true,
-            canViewUnpublishedDataset: true
-          }, // TODO Connect with JS dataset permissions for privateUrl when it is available in js-dataverse
-          [], // TODO Connect with JS dataset locks for privateUrl when it is available in js-dataverse
-          0, // TODO Connect with JS dataset filesTotalDownloadSize for privateUrl when it is available in js-dataverse
-          0 // TODO Connect with JS dataset filesTotalDownloadSize for privateUrl when it is available in js-dataverse
+          permissions,
+          locks,
+          originalSize,
+          archivalSize
         )
-      )
+      })
       .catch((error: ReadError) => {
         throw new Error(error.message)
       })
   }
 
-  create(
-    dataset: DatasetDTO,
-    collectionId = ROOT_COLLECTION_ALIAS
-  ): Promise<{ persistentId: string }> {
+  create(dataset: DatasetDTO, collectionId: string): Promise<{ persistentId: string }> {
     return createDataset
       .execute(DatasetDTOMapper.toJSDatasetDTO(dataset), collectionId)
       .then((jsDatasetIdentifiers: JSDatasetIdentifiers) => ({

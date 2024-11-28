@@ -41,7 +41,6 @@ describe('Collection Page', () => {
     cy.wrap(CollectionHelper.create(uniqueCollectionId))
       .its('id')
       .then((collectionId: string) => {
-        console.log('collectionId', collectionId)
         cy.visit(`/spa/collections/${collectionId}`)
         cy.findByText('Unpublished').should('exist')
         cy.findByRole('button', { name: 'Publish' }).click()

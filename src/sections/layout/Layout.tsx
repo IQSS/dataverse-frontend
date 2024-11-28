@@ -3,13 +3,13 @@ import { Container } from '@iqss/dataverse-design-system'
 import styles from './Layout.module.scss'
 import { FooterFactory } from './footer/FooterFactory'
 import TopBarProgressIndicator from './topbar-progress-indicator/TopbarProgressIndicator'
-import { Header } from './header/Header'
+import { HeaderFactory } from './header/HeaderFactory'
 
 export function Layout() {
   return (
     <>
       <TopBarProgressIndicator />
-      <Header />
+      {HeaderFactory.create()}
       <main>
         <Container className={styles['body-container']}>
           <Outlet />

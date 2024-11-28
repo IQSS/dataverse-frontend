@@ -18,7 +18,7 @@ import styles from './Collection.module.scss'
 
 interface CollectionProps {
   collectionRepository: CollectionRepository
-  collectionId: string
+  collectionIdFromParams: string | undefined
   created: boolean
   published: boolean
   collectionQueryParams: UseCollectionQueryParamsReturnType
@@ -26,7 +26,7 @@ interface CollectionProps {
 }
 
 export function Collection({
-  collectionId,
+  collectionIdFromParams,
   collectionRepository,
   created,
   published,
@@ -35,9 +35,13 @@ export function Collection({
   useTranslation('collection')
   useScrollTop()
   const { user } = useSession()
-  const { collection, isLoading } = useCollection(collectionRepository, collectionId, published)
+  const { collection, isLoading } = useCollection(
+    collectionRepository,
+    collectionIdFromParams,
+    published
+  )
   const { collectionUserPermissions } = useGetCollectionUserPermissions({
-    collectionIdOrAlias: collectionId,
+    collectionIdOrAlias: collectionIdFromParams,
     collectionRepository
   })
 
@@ -75,23 +79,24 @@ export function Collection({
                 />
               </div>
             )}
+
+            <CollectionItemsPanel
+              key={collection.id}
+              collectionId={collection.id}
+              collectionRepository={collectionRepository}
+              collectionQueryParams={collectionQueryParams}
+              addDataSlot={
+                showAddDataActions ? (
+                  <AddDataActionsButton
+                    collectionId={collection.id}
+                    canAddCollection={canUserAddCollection}
+                    canAddDataset={canUserAddDataset}
+                  />
+                ) : null
+              }
+            />
           </>
         )}
-        <CollectionItemsPanel
-          key={collectionId}
-          collectionId={collectionId}
-          collectionRepository={collectionRepository}
-          collectionQueryParams={collectionQueryParams}
-          addDataSlot={
-            showAddDataActions ? (
-              <AddDataActionsButton
-                collectionId={collectionId}
-                canAddCollection={canUserAddCollection}
-                canAddDataset={canUserAddDataset}
-              />
-            ) : null
-          }
-        />
       </Col>
     </Row>
   )

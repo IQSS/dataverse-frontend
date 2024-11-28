@@ -7,13 +7,14 @@ import dataverse_logo from '@/assets/dataverse_brand_icon.svg'
 import { Route } from '@/sections/Route.enum'
 import { useSession } from '@/sections/session/SessionContext'
 import { LoggedInHeaderActions } from './LoggedInHeaderActions'
-import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { encodeReturnToPathInStateQueryParam } from '@/sections/auth-callback/AuthCallback'
 import styles from './Header.module.scss'
 
-const collectionRepository = new CollectionJSDataverseRepository()
-
-export function Header() {
+interface HeaderProps {
+  collectionRepository: CollectionRepository
+}
+export function Header({ collectionRepository }: HeaderProps) {
   const { t } = useTranslation('header')
   const { user } = useSession()
   const { pathname, search } = useLocation()

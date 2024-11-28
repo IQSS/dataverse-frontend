@@ -11,7 +11,6 @@ import { DatasetMetadataForm } from '../shared/form/DatasetMetadataForm'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { useLoading } from '../loading/LoadingContext'
-import { ROOT_COLLECTION_ALIAS } from '../../collection/domain/models/Collection'
 
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useCollection } from '../collection/useCollection'
@@ -22,14 +21,14 @@ interface CreateDatasetProps {
   datasetRepository: DatasetRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
   collectionRepository: CollectionRepository
-  collectionId?: string
+  collectionId: string
 }
 
 export function CreateDataset({
   datasetRepository,
   metadataBlockInfoRepository,
   collectionRepository,
-  collectionId = ROOT_COLLECTION_ALIAS
+  collectionId
 }: CreateDatasetProps) {
   const { t } = useTranslation('createDataset')
   const { isModalOpen, hideModal } = useNotImplementedModal()
@@ -84,7 +83,7 @@ export function CreateDataset({
           <h1>{t('pageTitle')}</h1>
         </header>
         <SeparationLine />
-        <HostCollectionForm collectionId={collectionId} />
+        <HostCollectionForm collectionId={collection.id} />
 
         <DatasetMetadataForm
           mode="create"

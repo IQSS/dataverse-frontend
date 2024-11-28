@@ -1,5 +1,4 @@
 import { CollectionItemsPanel } from '@/sections/collection/collection-items-panel/CollectionItemsPanel'
-import { ROOT_COLLECTION_ALIAS } from '@/collection/domain/models/Collection'
 import {
   CollectionItem,
   CollectionItemSubset
@@ -8,6 +7,7 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 
+const ROOT_COLLECTION_ALIAS = 'root'
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 
 const totalItemCount = 200
