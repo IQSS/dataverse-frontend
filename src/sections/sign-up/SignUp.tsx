@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Tabs } from '@iqss/dataverse-design-system'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { useLoading } from '../loading/LoadingContext'
 import { ValidTokenNotLinkedAccountForm } from './valid-token-not-linked-account-form/ValidTokenNotLinkedAccountForm'
 import styles from './SignUp.module.scss'
@@ -9,10 +10,14 @@ import styles from './SignUp.module.scss'
 // TODO:ME - How to handle 401 Unauthorized {"status":"ERROR","message":"Unauthorized bearer token."} globally, maybe redirect to oidc login page?
 
 interface SignUpProps {
+  dataverseInfoRepository: DataverseInfoRepository
   hasValidTokenButNotLinkedAccount: boolean
 }
 
-export const SignUp = ({ hasValidTokenButNotLinkedAccount }: SignUpProps) => {
+export const SignUp = ({
+  dataverseInfoRepository,
+  hasValidTokenButNotLinkedAccount
+}: SignUpProps) => {
   const { t } = useTranslation('signUp')
   const { setIsLoading } = useLoading()
 
@@ -46,7 +51,9 @@ export const SignUp = ({ hasValidTokenButNotLinkedAccount }: SignUpProps) => {
       <Tabs defaultActiveKey="accountInfo">
         <Tabs.Tab eventKey="accountInfo" title={t('accountInfo')}>
           <div className={styles['tab-container']}>
-            <ValidTokenNotLinkedAccountForm />
+            {hasValidTokenButNotLinkedAccount && (
+              <ValidTokenNotLinkedAccountForm dataverseInfoRepository={dataverseInfoRepository} />
+            )}
           </div>
         </Tabs.Tab>
       </Tabs>

@@ -1,6 +1,8 @@
 import { getDataverseVersion, ReadError } from '@iqss/dataverse-client-javascript'
-import { DataverseInfoRepository } from '../../domain/repositories/DataverseInfoRepository'
-import { DataverseVersion } from '../../domain/models/DataverseVersion'
+import { axiosInstance } from '@/axiosInstance'
+import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { DataverseVersion } from '@/info/domain/models/DataverseVersion'
+import { TermsOfUse } from '@/info/domain/models/TermsOfUse'
 
 interface JSDataverseDataverseVersion {
   number: string
@@ -25,5 +27,14 @@ export class DataverseInfoJSDataverseRepository implements DataverseInfoReposito
       .catch((error: ReadError) => {
         throw new Error(error.message)
       })
+  }
+
+  async getTermsOfUse() {
+    //TODO - implement using js-dataverse
+    const response = await axiosInstance.get<{ data: { message: TermsOfUse } }>(
+      '/api/v1/info/apiTermsOfUse',
+      { excludeToken: true }
+    )
+    return response.data.data.message
   }
 }

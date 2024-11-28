@@ -10,13 +10,8 @@ import { useSession } from '@/sections/session/SessionContext'
 import { Validator } from '@/shared/helpers/Validator'
 import { type ValidTokenNotLinkedAccountFormData } from './types'
 import { ValidTokenNotLinkedAccountFormHelper } from './ValidTokenNotLinkedAccountFormHelper'
-import { useGetTermsOfUse } from '@/shared/hooks/useGetTermsOfUse'
-import { AppLoader } from '@/sections/shared/layout/app-loader/AppLoader'
+import { TermsOfUse } from '@/info/domain/models/TermsOfUse'
 import styles from './FormFields.module.scss'
-
-interface FormFieldsProps {
-  formDefaultValues: ValidTokenNotLinkedAccountFormData
-}
 
 // TODO:ME - Maybe we should redirect to a welcome page after success? ask if there is one, maybe not the case for this scenario
 // TODO:ME - Ask about the format of the terms of use, html string? just text string? what is shown in the box if there is just a url string ?
@@ -40,14 +35,17 @@ interface FormFieldsProps {
   }
 */
 
-export const FormFields = ({ formDefaultValues }: FormFieldsProps) => {
+interface FormFieldsProps {
+  formDefaultValues: ValidTokenNotLinkedAccountFormData
+  termsOfUse: TermsOfUse
+}
+
+export const FormFields = ({ formDefaultValues, termsOfUse }: FormFieldsProps) => {
   const navigate = useNavigate()
   const { refetchUserSession } = useSession()
   const { tokenData, logOut: oidcLogout } = useContext(AuthContext)
   const { t } = useTranslation('signUp')
   const { t: tShared } = useTranslation('shared')
-
-  const { termsOfUse, isLoading: isLoadingTermsOfUse } = useGetTermsOfUse()
 
   const isUsernameRequired = formDefaultValues.username === ''
   const isEmailRequired = formDefaultValues.emailAddress === ''
@@ -120,10 +118,6 @@ export const FormFields = ({ formDefaultValues }: FormFieldsProps) => {
   }
 
   const hasAcceptedTheTermsOfUse = form.watch('termsAccepted')
-
-  if (isLoadingTermsOfUse) {
-    return <AppLoader />
-  }
 
   return (
     <div>

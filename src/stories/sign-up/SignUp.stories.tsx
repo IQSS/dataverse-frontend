@@ -3,7 +3,7 @@ import { WithLayout } from '../WithLayout'
 import { WithI18next } from '../WithI18next'
 import { SignUp } from '@/sections/sign-up/SignUp'
 import { DataverseInfoMockRepository } from '../shared-mock-repositories/info/DataverseInfoMockRepository'
-import { DataverseInfoMockLoadingRepository } from '../shared-mock-repositories/info/DataverseInfoMocLoadingkRepository'
+import { DataverseInfoMockLoadingRepository } from '../shared-mock-repositories/info/DataverseInfoMockLoadingkRepository'
 import { WithOIDCAuthContext } from '../WithOIDCAuthContext'
 
 // TODO:ME - After implementing register use case in js-dataverse, we should mock the register function here also.
