@@ -59,6 +59,11 @@ export const LoggedInHeaderActions = ({
       <Navbar.Dropdown title={user.displayName} id="dropdown-user">
         <Navbar.Dropdown.Item
           as={Link}
+          to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}`}>
+          {t('navigation.accountInfo')}
+        </Navbar.Dropdown.Item>
+        <Navbar.Dropdown.Item
+          as={Link}
           to={`${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}`}>
           {t('navigation.apiToken')}
         </Navbar.Dropdown.Item>

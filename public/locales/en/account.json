@@ -14,5 +14,11 @@
     "recreateToken": "Recreate Token",
     "revokeToken": "Revoke Token",
     "createToken": "Create Token"
+  },
+  "info": {
+    "username": "Username",
+    "givenName": "Given Name",
+    "familyName": "Family Name",
+    "email": "Email"
   }
 }
