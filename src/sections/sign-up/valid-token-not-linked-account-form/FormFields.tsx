@@ -16,7 +16,6 @@ import styles from './FormFields.module.scss'
 // TODO:ME - Maybe we should redirect to a welcome page after success? ask if there is one, maybe not the case for this scenario
 // TODO:ME - Ask about the format of the terms of use, html string? just text string? what is shown in the box if there is just a url string ?
 // TODO:ME - Ask about logout when clicking the Cancel button because of the BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE error
-
 // TODO:ME - JS-DATAVERSE use case for registration
 // TODO:ME - Show the registration write error message to the user after encapsulating this call in js-dataverse
 // TODO:ME - JS-DATAVERSE use case for getting the terms of use? how to avoid sending token in this case?
@@ -153,6 +152,7 @@ export const FormFields = ({ formDefaultValues, termsOfUse }: FormFieldsProps) =
                         isInvalid={invalid}
                         ref={ref}
                         disabled={!isUsernameRequired}
+                        aria-required={isUsernameRequired}
                       />
                       <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
                     </div>
@@ -180,6 +180,7 @@ export const FormFields = ({ formDefaultValues, termsOfUse }: FormFieldsProps) =
                     isInvalid={invalid}
                     ref={ref}
                     disabled={!isFirstNameRequired}
+                    aria-required={isFirstNameRequired}
                   />
                   <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
                 </Col>
@@ -205,6 +206,7 @@ export const FormFields = ({ formDefaultValues, termsOfUse }: FormFieldsProps) =
                     isInvalid={invalid}
                     ref={ref}
                     disabled={!isLastNameRequired}
+                    aria-required={isLastNameRequired}
                   />
                   <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
                 </Col>
@@ -230,6 +232,7 @@ export const FormFields = ({ formDefaultValues, termsOfUse }: FormFieldsProps) =
                     isInvalid={invalid}
                     ref={ref}
                     disabled={!isEmailRequired}
+                    aria-required={isEmailRequired}
                   />
                   <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
                 </Col>
