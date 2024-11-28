@@ -1,8 +1,8 @@
-import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/UserJSDataverseRepository'
+import { UserMockRepository } from './UserMockRepository'
 import { TokenInfo } from '@/users/domain/models/TokenInfo'
 import { User } from '@/users/domain/models/User'
 
-export class AccountPageMockLoadingUserRepository extends UserJSDataverseRepository {
+export class UserMockLoadingRepository extends UserMockRepository {
   getAuthenticated(): Promise<User> {
     return new Promise(() => {})
   }

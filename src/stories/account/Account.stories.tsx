@@ -4,9 +4,7 @@ import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { WithLoggedInUser } from '../WithLoggedInUser'
 import { AccountHelper } from '../../sections/account/AccountHelper'
-import { AccountPageMockUserRepository } from './AccountPageMockUserRepository'
-import { AccountPageMockLoadingUserRepository } from './AccountPageMockLoadingUserRepository'
-import { AccountPageMockErrorUserRepository } from './AccountPageMockErrorUserRepository'
+import { UserMockRepository } from './UserMockRepository'
 
 const meta: Meta<typeof Account> = {
   title: 'Pages/Account',
@@ -21,52 +19,20 @@ const meta: Meta<typeof Account> = {
 export default meta
 type Story = StoryObj<typeof Account>
 
-export const APITokenTabDefault: Story = {
+export const AccountInformation: Story = {
   render: () => (
     <Account
-      defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
-      userRepository={new AccountPageMockUserRepository()}
+      defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}
+      userRepository={new UserMockRepository()}
     />
   )
 }
 
-export const APITokenTabLoading: Story = {
+export const ApiTokenTab: Story = {
   render: () => (
     <Account
       defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
-      userRepository={new AccountPageMockLoadingUserRepository()}
+      userRepository={new UserMockRepository()}
     />
   )
-}
-
-export const APITokenTabError: Story = {
-  render: () => (
-    <Account
-      defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
-      userRepository={new AccountPageMockErrorUserRepository()}
-    />
-  )
-}
-
-export const APITokenTabNoToken: Story = {
-  render: () => {
-    const noTokenRepository = new AccountPageMockUserRepository()
-    noTokenRepository.getCurrentApiToken = () => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({
-            apiToken: '',
-            expirationDate: new Date()
-          })
-        }, 1_000)
-      })
-    }
-
-    return (
-      <Account
-        defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
-        userRepository={noTokenRepository}
-      />
-    )
-  }
 }
