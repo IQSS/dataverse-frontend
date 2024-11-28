@@ -9,7 +9,8 @@ export class UserMother {
       lastName: 'Potts',
       email: 'jamesPotts@g.harvard.edu',
       affiliation: 'Harvard University',
-      superuser: false
+      superuser: false,
+      identifier: 'jamespotts'
     }
   }
   static createSuperUser(): User {
@@ -20,7 +21,8 @@ export class UserMother {
       firstName: 'James',
       lastName: 'Potts',
       email: 'jamesPotts@g.harvard.edu',
-      affiliation: 'Harvard University'
+      affiliation: 'Harvard University',
+      identifier: 'jamespotts'
     }
   }
 }

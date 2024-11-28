@@ -9,6 +9,7 @@ import {
   deleteCurrentApiToken
 } from '@iqss/dataverse-client-javascript/dist/users'
 import { logout, ReadError, WriteError } from '@iqss/dataverse-client-javascript'
+import { JSUserMapper } from '../mappers/JSUserMapper'
 
 interface ApiTokenInfoPayload {
   apiToken: string
@@ -20,15 +21,7 @@ export class UserJSDataverseRepository implements UserRepository {
     return getCurrentAuthenticatedUser
       .execute()
       .then((authenticatedUser: AuthenticatedUser) => {
-        return {
-          displayName: authenticatedUser.displayName,
-          persistentId: authenticatedUser.persistentUserId,
-          firstName: authenticatedUser.firstName,
-          lastName: authenticatedUser.lastName,
-          email: authenticatedUser.email,
-          affiliation: authenticatedUser.affiliation,
-          superuser: authenticatedUser.superuser
-        }
+        return JSUserMapper.toUser(authenticatedUser)
       })
       .catch((error: ReadError) => {
         throw error
