@@ -50,5 +50,8 @@
       "noTerms": "There are no Terms of Use for this Dataverse installation."
     }
   },
-  "submit": "Create Account"
+  "submit": "Create Account",
+  "status": {
+    "success": "User account created successfully."
+  }
 }

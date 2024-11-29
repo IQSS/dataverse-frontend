@@ -1,31 +1,27 @@
-import { useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useContext, useRef } from 'react'
 import { AuthContext } from 'react-oauth2-code-pkce'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { AxiosError } from 'axios'
-import { axiosInstance } from '@/axiosInstance'
-import { Button, Col, Form, Stack } from '@iqss/dataverse-design-system'
-import { useSession } from '@/sections/session/SessionContext'
+import { Alert, Button, Col, Form, Stack } from '@iqss/dataverse-design-system'
+import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { Validator } from '@/shared/helpers/Validator'
 import { type ValidTokenNotLinkedAccountFormData } from './types'
-import { ValidTokenNotLinkedAccountFormHelper } from './ValidTokenNotLinkedAccountFormHelper'
 import { TermsOfUse } from '@/info/domain/models/TermsOfUse'
-import { Route } from '@/sections/Route.enum'
-import { AccountHelper } from '@/sections/account/AccountHelper'
+import { SubmissionStatus, useSubmitUser } from './useSubmitUser'
 import styles from './FormFields.module.scss'
 
 interface FormFieldsProps {
+  userRepository: UserRepository
   formDefaultValues: ValidTokenNotLinkedAccountFormData
   termsOfUse: TermsOfUse
 }
 
-export const FormFields = ({ formDefaultValues, termsOfUse }: FormFieldsProps) => {
-  const navigate = useNavigate()
-  const { refetchUserSession } = useSession()
+export const FormFields = ({ userRepository, formDefaultValues, termsOfUse }: FormFieldsProps) => {
   const { tokenData, logOut: oidcLogout } = useContext(AuthContext)
   const { t } = useTranslation('signUp')
   const { t: tShared } = useTranslation('shared')
+
+  const formContainerRef = useRef<HTMLDivElement>(null)
 
   const isUsernameRequired = formDefaultValues.username === ''
   const isEmailRequired = formDefaultValues.emailAddress === ''
@@ -37,33 +33,21 @@ export const FormFields = ({ formDefaultValues, termsOfUse }: FormFieldsProps) =
     defaultValues: formDefaultValues
   })
 
-  const submitForm = (formData: ValidTokenNotLinkedAccountFormData) => {
-    // We wont send properties that are already present in the tokenData, those are the disabled/readonly fields
-    const registrationDTO = ValidTokenNotLinkedAccountFormHelper.defineRegistrationDTOProperties(
-      formData,
-      tokenData
-    )
-
-    axiosInstance
-      .post('/api/users/register', registrationDTO)
-      .then(async () => {
-        await refetchUserSession()
-
-        // Navigate to Account - Account Information tab after successful registration
-        navigate(
-          `${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}`
-        )
-      })
-      .catch(
-        /* istanbul ignore next */ (error: AxiosError) => {
-          console.error({ error })
-        }
-      )
-  }
+  const { submissionStatus, submitError, submitForm } = useSubmitUser(
+    userRepository,
+    onSubmitUserError,
+    tokenData
+  )
 
   // If the user cancels the registration, we should logout the user and redirect to the home page.
   // This is to avoid sending the valid bearer token and receiving the same BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE error
   const handleCancel = () => oidcLogout()
+
+  function onSubmitUserError() {
+    if (formContainerRef.current) {
+      formContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
 
   const userNameRules = {
     required: isUsernameRequired ? t('fields.username.required') : false,
@@ -105,12 +89,24 @@ export const FormFields = ({ formDefaultValues, termsOfUse }: FormFieldsProps) =
   const hasAcceptedTheTermsOfUse = form.watch('termsAccepted')
 
   return (
-    <div>
+    <div className={styles['form-container']} ref={formContainerRef}>
       {/* <div className={styles['about-prefilled-fields-wrapper']}>
         <Form.Group.Text>
           <InfoCircleFill /> {t('aboutPrefilledFields')}
         </Form.Group.Text>
       </div> */}
+
+      {submissionStatus === SubmissionStatus.Errored && (
+        <Alert variant={'danger'} dismissible={false}>
+          {submitError}
+        </Alert>
+      )}
+
+      {submissionStatus === SubmissionStatus.SubmitComplete && (
+        <Alert variant="success" dismissible={false}>
+          {t('status.success')}
+        </Alert>
+      )}
 
       <FormProvider {...form}>
         <form

@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { AuthContext } from 'react-oauth2-code-pkce'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { useGetTermsOfUse } from '@/shared/hooks/useGetTermsOfUse'
 import { OIDC_STANDARD_CLAIMS, type ValidTokenNotLinkedAccountFormData } from './types'
 import { ValidTokenNotLinkedAccountFormHelper } from './ValidTokenNotLinkedAccountFormHelper'
@@ -9,9 +10,11 @@ import { FormFieldsSkeleton } from './FormFieldsSkeleton'
 
 interface ValidTokenNotLinkedAccountFormProps {
   dataverseInfoRepository: DataverseInfoRepository
+  userRepository: UserRepository
 }
 
 export const ValidTokenNotLinkedAccountForm = ({
+  userRepository,
   dataverseInfoRepository
 }: ValidTokenNotLinkedAccountFormProps) => {
   const { tokenData } = useContext(AuthContext)
@@ -59,5 +62,11 @@ export const ValidTokenNotLinkedAccountForm = ({
     return <FormFieldsSkeleton />
   }
 
-  return <FormFields formDefaultValues={formDefaultValues} termsOfUse={termsOfUse} />
+  return (
+    <FormFields
+      userRepository={userRepository}
+      formDefaultValues={formDefaultValues}
+      termsOfUse={termsOfUse}
+    />
+  )
 }
