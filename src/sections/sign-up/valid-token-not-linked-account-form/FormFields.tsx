@@ -15,27 +15,6 @@ import { Route } from '@/sections/Route.enum'
 import { AccountHelper } from '@/sections/account/AccountHelper'
 import styles from './FormFields.module.scss'
 
-// TODO:ME - Maybe we should redirect to a welcome page after success? ask if there is one, maybe not the case for this scenario
-// TODO:ME - Ask about the format of the terms of use, html string? just text string? what is shown in the box if there is just a url string ?
-// TODO:ME - Ask about logout when clicking the Cancel button because of the BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE error
-// TODO:ME - JS-DATAVERSE use case for registration
-// TODO:ME - Show the registration write error message to the user after encapsulating this call in js-dataverse
-// TODO:ME - JS-DATAVERSE use case for getting the terms of use? how to avoid sending token in this case?
-
-/*
-  This is the expected response from the server after succesfull registration, will help for js-dataverse-client-javascript
-  const resp = {
-    data: {
-      status: 'OK',
-      data: {
-        message: 'User registered.'
-      }
-    },
-    status: 200,
-    statusText: 'OK'
-  }
-*/
-
 interface FormFieldsProps {
   formDefaultValues: ValidTokenNotLinkedAccountFormData
   termsOfUse: TermsOfUse
@@ -75,9 +54,11 @@ export const FormFields = ({ formDefaultValues, termsOfUse }: FormFieldsProps) =
           `${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}`
         )
       })
-      .catch((error: AxiosError) => {
-        console.error({ error })
-      })
+      .catch(
+        /* istanbul ignore next */ (error: AxiosError) => {
+          console.error({ error })
+        }
+      )
   }
 
   // If the user cancels the registration, we should logout the user and redirect to the home page.
