@@ -13,12 +13,14 @@ const fileRepository = new FileJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
 
 describe('DirectUpload', () => {
-  before(() => {
-    TestsUtils.setup()
-  })
-
   beforeEach(() => {
-    TestsUtils.login()
+    TestsUtils.login().then((token) => {
+      if (!token) {
+        throw new Error('Token not found after Keycloak login')
+      }
+
+      cy.wrap(TestsUtils.setup(token))
+    })
   })
 
   it('should upload file and add it to the dataset', async () => {

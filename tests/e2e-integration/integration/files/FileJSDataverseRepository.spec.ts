@@ -152,11 +152,14 @@ const fileExpectedData = (id: number): File => {
 }
 
 describe('File JSDataverse Repository', () => {
-  before(() => {
-    TestsUtils.setup()
-  })
   beforeEach(() => {
-    TestsUtils.login()
+    TestsUtils.login().then((token) => {
+      if (!token) {
+        throw new Error('Token not found after Keycloak login')
+      }
+
+      cy.wrap(TestsUtils.setup(token))
+    })
   })
 
   const compareMetadata = (fileMetadata: FileMetadata, expectedFileMetadata: FileMetadata) => {
