@@ -21,7 +21,9 @@ import 'react-loading-skeleton/dist/skeleton.css'
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
-import { mount } from 'cypress/react18'
+import { mount, MountReturn } from 'cypress/react18'
+import { RouterInitialEntry } from './commands'
+import { ReactNode } from 'react'
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
@@ -33,9 +35,19 @@ declare global {
   namespace Cypress {
     interface Chainable {
       mount: typeof mount
-      customMount: typeof mount
-      mountAuthenticated: typeof mount
-      mountSuperuser: typeof mount
+      // customMount: typeof mount
+      customMount: (
+        component: ReactNode,
+        initialEntries?: RouterInitialEntry[]
+      ) => Cypress.Chainable<MountReturn>
+      mountAuthenticated: (
+        component: ReactNode,
+        initialEntries?: RouterInitialEntry[]
+      ) => Cypress.Chainable<MountReturn>
+      mountSuperuser: (
+        component: ReactNode,
+        initialEntries?: RouterInitialEntry[]
+      ) => Cypress.Chainable<MountReturn>
       login(): Chainable<string | null>
       logout(): Chainable<JQuery<HTMLElement>>
       compareDate(date: Date, expectedDate: Date): Chainable

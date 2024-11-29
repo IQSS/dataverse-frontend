@@ -43,7 +43,7 @@ import { ThemeProvider } from '@iqss/dataverse-design-system'
 import { ReactNode } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import i18next from '../../src/i18n'
-import { MemoryRouter } from 'react-router-dom'
+import { Location, MemoryRouter } from 'react-router-dom'
 import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
 import { Utils } from '@/shared/helpers/Utils'
 import { OIDC_AUTH_CONFIG } from '@/config'
@@ -51,47 +51,60 @@ import { SessionContext } from '@/sections/session/SessionContext'
 
 // Define your custom mount function
 
-Cypress.Commands.add('customMount', (component: ReactNode) => {
-  return cy.mount(
-    <MemoryRouter>
-      <ThemeProvider>
-        <I18nextProvider i18n={i18next}>{component}</I18nextProvider>
-      </ThemeProvider>
-    </MemoryRouter>
-  )
-})
+export type RouterInitialEntry = string | Partial<Location>
 
-Cypress.Commands.add('mountAuthenticated', (component: ReactNode) => {
-  return cy.customMount(
-    <SessionContext.Provider
-      value={{
-        user: UserMother.create(),
-        logout: () => Promise.resolve(),
-        setUser: () => {},
-        isLoadingUser: false,
-        sessionError: null,
-        refetchUserSession: () => Promise.resolve()
-      }}>
-      {component}
-    </SessionContext.Provider>
-  )
-})
+Cypress.Commands.add(
+  'customMount',
+  (component: ReactNode, initialEntries?: RouterInitialEntry[]) => {
+    return cy.mount(
+      <MemoryRouter initialEntries={initialEntries}>
+        <ThemeProvider>
+          <I18nextProvider i18n={i18next}>{component}</I18nextProvider>
+        </ThemeProvider>
+      </MemoryRouter>
+    )
+  }
+)
 
-Cypress.Commands.add('mountSuperuser', (component: ReactNode) => {
-  return cy.customMount(
-    <SessionContext.Provider
-      value={{
-        user: UserMother.createSuperUser(),
-        logout: () => Promise.resolve(),
-        setUser: () => {},
-        isLoadingUser: false,
-        sessionError: null,
-        refetchUserSession: () => Promise.resolve()
-      }}>
-      {component}
-    </SessionContext.Provider>
-  )
-})
+Cypress.Commands.add(
+  'mountAuthenticated',
+  (component: ReactNode, initialEntries?: RouterInitialEntry[]) => {
+    return cy.customMount(
+      <SessionContext.Provider
+        value={{
+          user: UserMother.create(),
+          logout: () => Promise.resolve(),
+          setUser: () => {},
+          isLoadingUser: false,
+          sessionError: null,
+          refetchUserSession: () => Promise.resolve()
+        }}>
+        {component}
+      </SessionContext.Provider>,
+      initialEntries
+    )
+  }
+)
+
+Cypress.Commands.add(
+  'mountSuperuser',
+  (component: ReactNode, initialEntries?: RouterInitialEntry[]) => {
+    return cy.customMount(
+      <SessionContext.Provider
+        value={{
+          user: UserMother.createSuperUser(),
+          logout: () => Promise.resolve(),
+          setUser: () => {},
+          isLoadingUser: false,
+          sessionError: null,
+          refetchUserSession: () => Promise.resolve()
+        }}>
+        {component}
+      </SessionContext.Provider>,
+      initialEntries
+    )
+  }
+)
 
 Cypress.Commands.add('login', () => {
   cy.visit('/spa/')

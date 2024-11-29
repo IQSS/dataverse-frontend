@@ -43,13 +43,18 @@ export const encodeReturnToPathInStateQueryParam = (returnToPath: string): strin
 
 export const decodeReturnToPathFromStateQueryParam = (stateQueryParam: string): string => {
   const decodedStateQueryParam = decodeURIComponent(stateQueryParam)
-  const parsedStateQueryParam = JSON.parse(decodedStateQueryParam) as unknown
 
-  if (isReturnToObject(parsedStateQueryParam)) {
-    return parsedStateQueryParam.returnTo
+  try {
+    const parsedStateQueryParam = JSON.parse(decodedStateQueryParam) as unknown
+
+    if (isReturnToObject(parsedStateQueryParam)) {
+      return parsedStateQueryParam.returnTo
+    }
+
+    return '/'
+  } catch (_error) {
+    return '/'
   }
-
-  return '/'
 }
 
 function isReturnToObject(obj: unknown): obj is AuthStateQueryParamValue {
