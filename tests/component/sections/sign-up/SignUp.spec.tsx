@@ -1,9 +1,11 @@
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { SignUp } from '@/sections/sign-up/SignUp'
+import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { AuthContextMother } from '@tests/component/auth/AuthContextMother'
 import { AuthContext } from 'react-oauth2-code-pkce'
 
 const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
+const userRepository: UserRepository = {} as UserRepository
 
 describe('SignUp', () => {
   beforeEach(() => {
@@ -25,6 +27,7 @@ describe('SignUp', () => {
           login: () => {} // 👈 deprecated
         }}>
         <SignUp
+          userRepository={userRepository}
           dataverseInfoRepository={dataverseInfoRepository}
           hasValidTokenButNotLinkedAccount={true}
         />
@@ -54,6 +57,7 @@ describe('SignUp', () => {
           login: () => {} // 👈 deprecated
         }}>
         <SignUp
+          userRepository={userRepository}
           dataverseInfoRepository={dataverseInfoRepository}
           hasValidTokenButNotLinkedAccount={false}
         />

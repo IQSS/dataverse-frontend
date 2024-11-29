@@ -1,10 +1,12 @@
-// import { axiosInstance } from '@/axiosInstance'
+import { AuthContext } from 'react-oauth2-code-pkce'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
+import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { ValidTokenNotLinkedAccountForm } from '@/sections/sign-up/valid-token-not-linked-account-form/ValidTokenNotLinkedAccountForm'
 import { AuthContextMother } from '@tests/component/auth/AuthContextMother'
-import { AuthContext } from 'react-oauth2-code-pkce'
+import { UserDTO } from '@/users/domain/useCases/DTOs/UserDTO'
 
 const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
+const userRepository: UserRepository = {} as UserRepository
 
 const termsOfUseMock = 'Terms of use'
 const mockUserName = 'mockUserName'
@@ -12,23 +14,10 @@ const mockFirstName = 'mockFirstName'
 const mockLastName = 'mockLastName'
 const mockEmail = 'mockEmail@email.com'
 
-const successfullStaticResponse = {
-  data: {
-    status: 'OK',
-    data: {
-      message: 'User registered.'
-    }
-  },
-  status: 200,
-  statusText: 'OK'
-}
-
 describe('ValidTokenNotLinkedAccountForm', () => {
   beforeEach(() => {
     dataverseInfoRepository.getTermsOfUse = cy.stub().resolves(termsOfUseMock)
-
-    // Intercept axios register call to avoid real API call
-    cy.intercept('POST', '/api/users/register', successfullStaticResponse).as('registerUserCall')
+    userRepository.register = cy.stub().as('registerUser').resolves()
   })
 
   describe('form fields correct values', () => {
@@ -51,7 +40,10 @@ describe('ValidTokenNotLinkedAccountForm', () => {
             error: null,
             login: () => {} // 👈 deprecated
           }}>
-          <ValidTokenNotLinkedAccountForm dataverseInfoRepository={dataverseInfoRepository} />
+          <ValidTokenNotLinkedAccountForm
+            userRepository={userRepository}
+            dataverseInfoRepository={dataverseInfoRepository}
+          />
         </AuthContext.Provider>
       )
 
@@ -76,7 +68,10 @@ describe('ValidTokenNotLinkedAccountForm', () => {
             error: null,
             login: () => {} // 👈 deprecated
           }}>
-          <ValidTokenNotLinkedAccountForm dataverseInfoRepository={dataverseInfoRepository} />
+          <ValidTokenNotLinkedAccountForm
+            userRepository={userRepository}
+            dataverseInfoRepository={dataverseInfoRepository}
+          />
         </AuthContext.Provider>
       )
 
@@ -113,7 +108,10 @@ describe('ValidTokenNotLinkedAccountForm', () => {
             error: null,
             login: () => {} // 👈 deprecated
           }}>
-          <ValidTokenNotLinkedAccountForm dataverseInfoRepository={dataverseInfoRepository} />
+          <ValidTokenNotLinkedAccountForm
+            userRepository={userRepository}
+            dataverseInfoRepository={dataverseInfoRepository}
+          />
         </AuthContext.Provider>
       )
 
@@ -123,10 +121,11 @@ describe('ValidTokenNotLinkedAccountForm', () => {
 
       cy.findByRole('button', { name: 'Create Account' }).click()
 
-      cy.wait('@registerUserCall').then((interception) => {
-        const requestBody = interception.request.body as Record<string, string>
+      cy.get('@registerUser').should((spy) => {
+        const registerUserSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+        const userDTO = registerUserSpy.getCall(0).args[0] as UserDTO
 
-        expect(requestBody).to.deep.equal({
+        expect(userDTO).to.deep.equal({
           termsAccepted: true
         })
       })
@@ -146,7 +145,10 @@ describe('ValidTokenNotLinkedAccountForm', () => {
             error: null,
             login: () => {} // 👈 deprecated
           }}>
-          <ValidTokenNotLinkedAccountForm dataverseInfoRepository={dataverseInfoRepository} />
+          <ValidTokenNotLinkedAccountForm
+            userRepository={userRepository}
+            dataverseInfoRepository={dataverseInfoRepository}
+          />
         </AuthContext.Provider>
       )
 
@@ -198,10 +200,11 @@ describe('ValidTokenNotLinkedAccountForm', () => {
 
       cy.findByRole('button', { name: 'Create Account' }).click()
 
-      cy.wait('@registerUserCall').then((interception) => {
-        const requestBody = interception.request.body as Record<string, string>
+      cy.get('@registerUser').should((spy) => {
+        const registerUserSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+        const userDTO = registerUserSpy.getCall(0).args[0] as UserDTO
 
-        expect(requestBody).to.deep.equal({
+        expect(userDTO).to.deep.equal({
           termsAccepted: true,
           username: newMockUserName,
           emailAddress: newMockEmail,
@@ -228,7 +231,10 @@ describe('ValidTokenNotLinkedAccountForm', () => {
           error: null,
           login: () => {} // 👈 deprecated
         }}>
-        <ValidTokenNotLinkedAccountForm dataverseInfoRepository={dataverseInfoRepository} />
+        <ValidTokenNotLinkedAccountForm
+          userRepository={userRepository}
+          dataverseInfoRepository={dataverseInfoRepository}
+        />
       </AuthContext.Provider>
     )
 
@@ -251,7 +257,10 @@ describe('ValidTokenNotLinkedAccountForm', () => {
           error: null,
           login: () => {} // 👈 deprecated
         }}>
-        <ValidTokenNotLinkedAccountForm dataverseInfoRepository={dataverseInfoRepository} />
+        <ValidTokenNotLinkedAccountForm
+          userRepository={userRepository}
+          dataverseInfoRepository={dataverseInfoRepository}
+        />
       </AuthContext.Provider>
     )
 
