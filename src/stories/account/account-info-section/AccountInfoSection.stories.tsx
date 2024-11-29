@@ -4,7 +4,7 @@ import { WithI18next } from '@/stories/WithI18next'
 import { WithLayout } from '@/stories/WithLayout'
 import { WithLoggedInUser } from '@/stories/WithLoggedInUser'
 import { AccountHelper } from '@/sections/account/AccountHelper'
-import { UserMockRepository } from '../UserMockRepository'
+import { UserMockRepository } from '../../shared-mock-repositories/user/UserMockRepository'
 
 const meta: Meta<typeof Account> = {
   title: 'Sections/Account Page/AccountInfoSection',

@@ -4,7 +4,7 @@ import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { WithLoggedInUser } from '../WithLoggedInUser'
 import { AccountHelper } from '../../sections/account/AccountHelper'
-import { UserMockRepository } from './UserMockRepository'
+import { UserMockRepository } from '../shared-mock-repositories/user/UserMockRepository'
 
 const meta: Meta<typeof Account> = {
   title: 'Pages/Account',

@@ -4,9 +4,9 @@ import { WithI18next } from '@/stories/WithI18next'
 import { WithLayout } from '@/stories/WithLayout'
 import { WithLoggedInUser } from '@/stories/WithLoggedInUser'
 import { AccountHelper } from '@/sections/account/AccountHelper'
-import { UserMockRepository } from '../UserMockRepository'
-import { UserMockLoadingRepository } from '../UserMockLoadingRepository'
-import { UserMockErrorRepository } from '../UserMockErrorRepository'
+import { UserMockRepository } from '../../shared-mock-repositories/user/UserMockRepository'
+import { UserMockLoadingRepository } from '../../shared-mock-repositories/user/UserMockLoadingRepository'
+import { UserMockErrorRepository } from '../../shared-mock-repositories/user/UserMockErrorRepository'
 
 const meta: Meta<typeof Account> = {
   title: 'Sections/Account Page/ApiTokenSection',

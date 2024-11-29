@@ -22,4 +22,8 @@ export class UserMockLoadingRepository extends UserMockRepository {
   deleteApiToken(): Promise<void> {
     return new Promise(() => {})
   }
+
+  register(): Promise<void> {
+    return new Promise(() => {})
+  }
 }

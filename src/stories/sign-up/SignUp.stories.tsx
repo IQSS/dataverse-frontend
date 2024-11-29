@@ -5,8 +5,7 @@ import { SignUp } from '@/sections/sign-up/SignUp'
 import { DataverseInfoMockRepository } from '../shared-mock-repositories/info/DataverseInfoMockRepository'
 import { DataverseInfoMockLoadingRepository } from '../shared-mock-repositories/info/DataverseInfoMockLoadingkRepository'
 import { WithOIDCAuthContext } from '../WithOIDCAuthContext'
-
-// TODO:ME - After implementing register use case in js-dataverse, we should mock the register function here also.
+import { UserMockRepository } from '../shared-mock-repositories/user/UserMockRepository'
 
 const meta: Meta<typeof SignUp> = {
   title: 'Pages/Sign Up',
@@ -23,6 +22,7 @@ type Story = StoryObj<typeof SignUp>
 export const ValidTokenWithNotLinkedAccount: Story = {
   render: () => (
     <SignUp
+      userRepository={new UserMockRepository()}
       dataverseInfoRepository={new DataverseInfoMockRepository()}
       hasValidTokenButNotLinkedAccount
     />
@@ -32,6 +32,7 @@ export const ValidTokenWithNotLinkedAccount: Story = {
 export const Loading: Story = {
   render: () => (
     <SignUp
+      userRepository={new UserMockRepository()}
       dataverseInfoRepository={new DataverseInfoMockLoadingRepository()}
       hasValidTokenButNotLinkedAccount
     />

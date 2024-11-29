@@ -43,4 +43,12 @@ export class UserMockErrorRepository extends UserMockRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+
+  register(): Promise<void> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Something went wrong registering the user. Try again later.')
+      }, FakerHelper.loadingTimout())
+    })
+  }
 }

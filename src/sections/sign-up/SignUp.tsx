@@ -8,26 +8,10 @@ import { ValidTokenNotLinkedAccountForm } from './valid-token-not-linked-account
 import styles from './SignUp.module.scss'
 
 // TODO:ME - All use cases will return same error message so this is blocking us for making requests to other public use cases like get root collection, should work removing access token from localstorage but we need it for future call
-// TODO:ME - How to handle 401 Unauthorized {"status":"ERROR","message":"Unauthorized bearer token."} globally, maybe redirect to oidc login page?
 // TODO:ME - Maybe we should redirect to a welcome page after success? ask if there is one, maybe not the case for this scenario
 // TODO:ME - Ask about the format of the terms of use, html string? just text string? what is shown in the box if there is just a url string ?
 // TODO:ME - Ask about logout when clicking the Cancel button because of the BEARER_TOKEN_IS_VALID_BUT_NOT_LINKED_MESSAGE error
-// TODO:ME - JS-DATAVERSE use case for registration
 // TODO:ME - JS-DATAVERSE use case for getting the terms of use? how to avoid sending token in this case?
-
-/*
-  This is the expected response from the server after succesfull registration, will help for js-dataverse-client-javascript
-  const resp = {
-    data: {
-      status: 'OK',
-      data: {
-        message: 'User registered.'
-      }
-    },
-    status: 200,
-    statusText: 'OK'
-  }
-*/
 
 interface SignUpProps {
   userRepository: UserRepository
