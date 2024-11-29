@@ -29,6 +29,18 @@ export const AccountInfoSection = () => {
           <th scope="row">{t('email')}</th>
           <td>{user?.email}</td>
         </tr>
+        {user?.affiliation && (
+          <tr>
+            <th scope="row">{t('affiliation')}</th>
+            <td>{user?.affiliation}</td>
+          </tr>
+        )}
+        {user?.position && (
+          <tr>
+            <th scope="row">{t('position')}</th>
+            <td>{user?.position}</td>
+          </tr>
+        )}
       </tbody>
     </Table>
   )

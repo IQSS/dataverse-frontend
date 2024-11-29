@@ -19,6 +19,8 @@
     "username": "Username",
     "givenName": "Given Name",
     "familyName": "Family Name",
-    "email": "Email"
+    "email": "Email",
+    "affiliation": "Affiliation",
+    "position": "Position"
   }
 }

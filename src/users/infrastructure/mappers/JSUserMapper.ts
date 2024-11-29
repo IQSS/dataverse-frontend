@@ -9,6 +9,7 @@ export class JSUserMapper {
       firstName: authenticatedUser.firstName,
       lastName: authenticatedUser.lastName,
       email: authenticatedUser.email,
+      position: authenticatedUser.position,
       affiliation: authenticatedUser.affiliation,
       superuser: authenticatedUser.superuser,
       identifier: this.removeAtSymbol(authenticatedUser.identifier)

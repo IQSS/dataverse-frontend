@@ -7,4 +7,5 @@ export interface User {
   email: string
   identifier: string
   affiliation?: string
+  position?: string
 }
