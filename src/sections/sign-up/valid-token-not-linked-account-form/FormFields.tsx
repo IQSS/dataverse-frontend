@@ -88,6 +88,9 @@ export const FormFields = ({ userRepository, formDefaultValues, termsOfUse }: Fo
 
   const hasAcceptedTheTermsOfUse = form.watch('termsAccepted')
 
+  const disableSubmitButton =
+    !hasAcceptedTheTermsOfUse || submissionStatus === SubmissionStatus.IsSubmitting
+
   return (
     <div className={styles['form-container']} ref={formContainerRef}>
       {/* <div className={styles['about-prefilled-fields-wrapper']}>
@@ -303,7 +306,7 @@ export const FormFields = ({ userRepository, formDefaultValues, termsOfUse }: Fo
           </Form.Group>
 
           <Stack direction="horizontal" gap={3}>
-            <Button type="submit" disabled={!hasAcceptedTheTermsOfUse}>
+            <Button type="submit" disabled={disableSubmitButton}>
               {t('submit')}
             </Button>
 

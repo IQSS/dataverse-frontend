@@ -1,47 +1,54 @@
-import { Table } from '@iqss/dataverse-design-system'
+import { Alert, Table } from '@iqss/dataverse-design-system'
 import { useSession } from '@/sections/session/SessionContext'
 import { useTranslation } from 'react-i18next'
 
 // TODO - Add verified email icon
 // TODO - Edit account information
 // TODO - Change password
+interface AccountInfoSectionProps {
+  accountCreated: boolean
+}
 
-export const AccountInfoSection = () => {
+export const AccountInfoSection = ({ accountCreated }: AccountInfoSectionProps) => {
   const { t } = useTranslation('account', { keyPrefix: 'info' })
   const { user } = useSession()
 
   return (
-    <Table striped={false} bordered={false} borderless>
-      <tbody>
-        <tr>
-          <th scope="row">{t('username')}</th>
-          <td>{user?.identifier}</td>
-        </tr>
-        <tr>
-          <th scope="row">{t('givenName')}</th>
-          <td>{user?.firstName}</td>
-        </tr>
-        <tr>
-          <th scope="row">{t('familyName')}</th>
-          <td>{user?.lastName}</td>
-        </tr>
-        <tr>
-          <th scope="row">{t('email')}</th>
-          <td>{user?.email}</td>
-        </tr>
-        {user?.affiliation && (
+    <>
+      {accountCreated && <Alert variant="success">{t('accountJustCreated')}</Alert>}
+
+      <Table striped={false} bordered={false} borderless>
+        <tbody>
           <tr>
-            <th scope="row">{t('affiliation')}</th>
-            <td>{user?.affiliation}</td>
+            <th scope="row">{t('username')}</th>
+            <td>{user?.identifier}</td>
           </tr>
-        )}
-        {user?.position && (
           <tr>
-            <th scope="row">{t('position')}</th>
-            <td>{user?.position}</td>
+            <th scope="row">{t('givenName')}</th>
+            <td>{user?.firstName}</td>
           </tr>
-        )}
-      </tbody>
-    </Table>
+          <tr>
+            <th scope="row">{t('familyName')}</th>
+            <td>{user?.lastName}</td>
+          </tr>
+          <tr>
+            <th scope="row">{t('email')}</th>
+            <td>{user?.email}</td>
+          </tr>
+          {user?.affiliation && (
+            <tr>
+              <th scope="row">{t('affiliation')}</th>
+              <td>{user?.affiliation}</td>
+            </tr>
+          )}
+          {user?.position && (
+            <tr>
+              <th scope="row">{t('position')}</th>
+              <td>{user?.position}</td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
+    </>
   )
 }

@@ -21,6 +21,7 @@
     "familyName": "Family Name",
     "email": "Email",
     "affiliation": "Affiliation",
-    "position": "Position"
+    "position": "Position",
+    "accountJustCreated": "Your account has been successfully created! Welcome to Dataverse!"
   }
 }

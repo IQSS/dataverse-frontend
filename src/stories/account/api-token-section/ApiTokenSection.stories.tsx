@@ -26,6 +26,7 @@ export const Default: Story = {
     <Account
       defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
       userRepository={new UserMockRepository()}
+      accountCreated={false}
     />
   )
 }
@@ -35,6 +36,7 @@ export const Loading: Story = {
     <Account
       defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
       userRepository={new UserMockLoadingRepository()}
+      accountCreated={false}
     />
   )
 }
@@ -44,6 +46,7 @@ export const Error: Story = {
     <Account
       defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
       userRepository={new UserMockErrorRepository()}
+      accountCreated={false}
     />
   )
 }
@@ -66,6 +69,7 @@ export const NoToken: Story = {
       <Account
         defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
         userRepository={noTokenRepository}
+        accountCreated={false}
       />
     )
   }

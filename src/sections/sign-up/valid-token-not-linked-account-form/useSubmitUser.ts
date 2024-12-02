@@ -67,7 +67,11 @@ export const useSubmitUser = (
 
         // Navigate to Account - Account Information tab after successful registration
         navigate(
-          `${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}`
+          `${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}`,
+          {
+            state: { accountCreated: true },
+            replace: true
+          }
         )
       })
       .catch((err: WriteError) => {

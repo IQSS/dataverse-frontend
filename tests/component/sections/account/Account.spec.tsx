@@ -8,6 +8,7 @@ describe('Account', () => {
       <Account
         defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
         userRepository={new UserJSDataverseRepository()}
+        accountCreated={false}
       />
     )
 
