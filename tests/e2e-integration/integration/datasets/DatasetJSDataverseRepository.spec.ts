@@ -140,21 +140,15 @@ const datasetData = (persistentId: string, versionId: number) => {
 const collectionId = 'DatasetJSDataverseRepository'
 const datasetRepository = new DatasetJSDataverseRepository()
 describe('Dataset JSDataverse Repository', () => {
-  // before(() => {
-  //   TestsUtils.setup()
-  //   TestsUtils.login().then(() => CollectionHelper.createAndPublish(collectionId))
-  // })
-  // beforeEach(() => {
-  //   TestsUtils.login()
-  // })
-
   beforeEach(() => {
     TestsUtils.login().then((token) => {
       if (!token) {
         throw new Error('Token not found after Keycloak login')
       }
 
-      cy.wrap(TestsUtils.setup(token)).then(() => CollectionHelper.createAndPublish(collectionId))
+      cy.wrap(TestsUtils.setup(token)).then(
+        async () => await CollectionHelper.createAndPublish(collectionId)
+      )
     })
   })
 
@@ -162,13 +156,12 @@ describe('Dataset JSDataverse Repository', () => {
     const datasetResponse = await DatasetHelper.create(collectionId)
 
     // Change the api config to use bearer token
-    cy.wrap(
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
+
+    ApiConfig.init(
+      `${DATAVERSE_BACKEND_URL}/api/v1`,
+      DataverseApiAuthMechanism.BEARER_TOKEN,
+      undefined,
+      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
     )
 
     await datasetRepository
@@ -192,28 +185,29 @@ describe('Dataset JSDataverse Repository', () => {
       })
   })
 
-  it.only('gets a published dataset by persistentId without user authentication', async () => {
+  it('gets a published dataset by persistentId without user authentication', async () => {
+    console.log('RUNNING TEST')
     const datasetResponse = await DatasetHelper.create(collectionId)
     await DatasetHelper.publish(datasetResponse.persistentId)
 
     await TestsUtils.wait(1500)
 
-    TestsUtils.logout()
+    // This is to simulate the user being logged out
+    cy.clearAllLocalStorage()
+    cy.clearAllCookies()
 
     // Change the api config to use bearer token
-    cy.wrap(
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
+    ApiConfig.init(
+      `${DATAVERSE_BACKEND_URL}/api/v1`,
+      DataverseApiAuthMechanism.BEARER_TOKEN,
+      undefined,
+      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
     )
 
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, '1.0')
       .then((dataset) => {
-        console.log(dataset)
+        console.log({ dataset })
         if (!dataset) {
           throw new Error('Dataset not found')
         }
@@ -239,7 +233,6 @@ describe('Dataset JSDataverse Repository', () => {
         )
         expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
 
-        console.log(dataset.permissions)
         expect(dataset.permissions).to.deep.equal({
           canDownloadFiles: true,
           canUpdateDataset: false,
@@ -257,13 +250,12 @@ describe('Dataset JSDataverse Repository', () => {
     await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
 
     // Change the api config to use bearer token
-    cy.wrap(
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
+
+    ApiConfig.init(
+      `${DATAVERSE_BACKEND_URL}/api/v1`,
+      DataverseApiAuthMechanism.BEARER_TOKEN,
+      undefined,
+      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
     )
 
     await datasetRepository
@@ -294,6 +286,11 @@ describe('Dataset JSDataverse Repository', () => {
           expectedPublicationDate
         )
         expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
+
+        console.log({
+          datasetPermissions: dataset.permissions,
+          expected: datasetExpected.permissions
+        })
         expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
       })
   })
@@ -302,13 +299,12 @@ describe('Dataset JSDataverse Repository', () => {
     const datasetResponse = await DatasetHelper.create(collectionId)
 
     // Change the api config to use bearer token
-    cy.wrap(
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
+
+    ApiConfig.init(
+      `${DATAVERSE_BACKEND_URL}/api/v1`,
+      DataverseApiAuthMechanism.BEARER_TOKEN,
+      undefined,
+      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
     )
 
     await datasetRepository
@@ -329,13 +325,12 @@ describe('Dataset JSDataverse Repository', () => {
     const privateUrlResponse = await DatasetHelper.createPrivateUrl(datasetResponse.id)
 
     // Change the api config to use bearer token
-    cy.wrap(
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
+
+    ApiConfig.init(
+      `${DATAVERSE_BACKEND_URL}/api/v1`,
+      DataverseApiAuthMechanism.BEARER_TOKEN,
+      undefined,
+      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
     )
 
     await datasetRepository.getByPrivateUrlToken(privateUrlResponse.token).then((dataset) => {
@@ -359,13 +354,11 @@ describe('Dataset JSDataverse Repository', () => {
     await DatasetHelper.setCitationDateFieldType(datasetResponse.persistentId, 'dateOfDeposit')
 
     // Change the api config to use bearer token
-    cy.wrap(
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
+    ApiConfig.init(
+      `${DATAVERSE_BACKEND_URL}/api/v1`,
+      DataverseApiAuthMechanism.BEARER_TOKEN,
+      undefined,
+      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
     )
 
     await datasetRepository
@@ -390,13 +383,12 @@ describe('Dataset JSDataverse Repository', () => {
         const paginationInfo = new DatasetPaginationInfo(1, 20)
 
         // Change the api config to use bearer token
-        cy.wrap(
-          ApiConfig.init(
-            `${DATAVERSE_BACKEND_URL}/api/v1`,
-            DataverseApiAuthMechanism.BEARER_TOKEN,
-            undefined,
-            `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-          )
+
+        ApiConfig.init(
+          `${DATAVERSE_BACKEND_URL}/api/v1`,
+          DataverseApiAuthMechanism.BEARER_TOKEN,
+          undefined,
+          `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
         )
 
         return datasetRepository
@@ -421,13 +413,12 @@ describe('Dataset JSDataverse Repository', () => {
     await DatasetHelper.deaccession(datasetResponse.id)
 
     // Change the api config to use bearer token
-    cy.wrap(
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
+
+    ApiConfig.init(
+      `${DATAVERSE_BACKEND_URL}/api/v1`,
+      DataverseApiAuthMechanism.BEARER_TOKEN,
+      undefined,
+      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
     )
 
     await datasetRepository.getByPersistentId(datasetResponse.persistentId).then((dataset) => {
@@ -446,13 +437,12 @@ describe('Dataset JSDataverse Repository', () => {
     await DatasetHelper.lock(datasetResponse.id, DatasetLockReason.FINALIZE_PUBLICATION)
 
     // Change the api config to use bearer token
-    cy.wrap(
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
+
+    ApiConfig.init(
+      `${DATAVERSE_BACKEND_URL}/api/v1`,
+      DataverseApiAuthMechanism.BEARER_TOKEN,
+      undefined,
+      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
     )
 
     await datasetRepository
@@ -464,9 +454,10 @@ describe('Dataset JSDataverse Repository', () => {
         const datasetExpected = datasetData(dataset.persistentId, dataset.version.id)
 
         expect(dataset.version.title).to.deep.equal(datasetExpected.title)
+
         expect(dataset.locks).to.deep.equal([
           {
-            userPersistentId: 'dataverseAdmin',
+            userPersistentId: TestsUtils.USER_USERNAME,
             reason: DatasetLockReason.FINALIZE_PUBLICATION
           }
         ])
@@ -475,13 +466,12 @@ describe('Dataset JSDataverse Repository', () => {
 
   it('creates a new dataset from DatasetDTO', async () => {
     // Change the api config to use bearer token
-    cy.wrap(
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
+
+    ApiConfig.init(
+      `${DATAVERSE_BACKEND_URL}/api/v1`,
+      DataverseApiAuthMechanism.BEARER_TOKEN,
+      undefined,
+      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
     )
 
     const datasetDTO: DatasetDTO = {
@@ -516,17 +506,17 @@ describe('Dataset JSDataverse Repository', () => {
       expect(response.persistentId).to.exist
     })
   })
+
   it('publishes a draft dataset', async () => {
     const datasetResponse = await DatasetHelper.create(collectionId)
 
     // Change the api config to use bearer token
-    cy.wrap(
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
+
+    ApiConfig.init(
+      `${DATAVERSE_BACKEND_URL}/api/v1`,
+      DataverseApiAuthMechanism.BEARER_TOKEN,
+      undefined,
+      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
     )
 
     await datasetRepository.publish(datasetResponse.persistentId).then((response) => {
@@ -541,6 +531,7 @@ describe('Dataset JSDataverse Repository', () => {
         expect(datasetResponse?.version.publishingStatus).to.equal(DatasetPublishingStatus.RELEASED)
       })
   })
+
   it.skip('publishes a new version of a previously released dataset', async () => {
     const datasetResponse = await DatasetHelper.createAndPublish(collectionId)
     // TODO: update dataset

@@ -30,7 +30,7 @@ export const SignUp = ({
   useEffect(() => setIsLoading(false), [setIsLoading])
 
   return (
-    <section>
+    <section data-testid="sign-up-page">
       <div className={styles['alert-container']}>
         {!hasValidTokenButNotLinkedAccount && (
           <Alert variant="info" customHeading={t('createAccount.heading')}>

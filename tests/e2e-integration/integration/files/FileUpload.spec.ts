@@ -5,6 +5,9 @@ import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
 import { FileHelper } from '../../shared/files/FileHelper'
 import { DatasetNonNumericVersion } from '../../../../src/dataset/domain/models/Dataset'
 import chaiAsPromised from 'chai-as-promised'
+import { ApiConfig } from '@iqss/dataverse-client-javascript'
+import { DATAVERSE_BACKEND_URL, OIDC_AUTH_CONFIG } from '@/config'
+import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -24,12 +27,21 @@ describe('DirectUpload', () => {
   })
 
   it('should upload file and add it to the dataset', async () => {
-    const dataset = await DatasetHelper.create().then((datasetResponse) =>
-      datasetRepository.getByPersistentId(
-        datasetResponse.persistentId,
-        DatasetNonNumericVersion.DRAFT
-      )
+    const datasetResponse = await DatasetHelper.create()
+
+    // Change the api config to use bearer token
+    ApiConfig.init(
+      `${DATAVERSE_BACKEND_URL}/api/v1`,
+      DataverseApiAuthMechanism.BEARER_TOKEN,
+      undefined,
+      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
     )
+
+    const dataset = await datasetRepository.getByPersistentId(
+      datasetResponse.persistentId,
+      DatasetNonNumericVersion.DRAFT
+    )
+
     if (!dataset) throw new Error('Dataset not found')
 
     const singlePartFile = FileHelper.createSinglePartFileBlob()
@@ -76,18 +88,27 @@ describe('DirectUpload', () => {
   })
 
   it('should upload 2 files and add it to the dataset', async () => {
-    const dataset = await DatasetHelper.create().then((datasetResponse) =>
-      datasetRepository.getByPersistentId(
-        datasetResponse.persistentId,
-        DatasetNonNumericVersion.DRAFT
-      )
-    )
-    if (!dataset) throw new Error('Dataset not found')
+    const datasetResponse = await DatasetHelper.create()
 
     const singlePartFile1 = FileHelper.createSinglePartFileBlob()
     const singlePartFile2 = FileHelper.createSinglePartFileBlob()
     let storageId1: string | undefined = undefined
     let storageId2: string | undefined = undefined
+
+    // Change the api config to use bearer token
+    ApiConfig.init(
+      `${DATAVERSE_BACKEND_URL}/api/v1`,
+      DataverseApiAuthMechanism.BEARER_TOKEN,
+      undefined,
+      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+    )
+
+    const dataset = await datasetRepository.getByPersistentId(
+      datasetResponse.persistentId,
+      DatasetNonNumericVersion.DRAFT
+    )
+
+    if (!dataset) throw new Error('Dataset not found')
 
     const upload1 = fileRepository.uploadFile(
       dataset.persistentId,
@@ -158,16 +179,25 @@ describe('DirectUpload', () => {
   })
 
   it('should not finish uploading file to destinations when user cancels immediately', async () => {
-    const dataset = await DatasetHelper.create().then((datasetResponse) =>
-      datasetRepository.getByPersistentId(
-        datasetResponse.persistentId,
-        DatasetNonNumericVersion.DRAFT
-      )
-    )
-    if (!dataset) throw new Error('Dataset not found')
+    const datasetResponse = await DatasetHelper.create()
 
     const multipartFile = FileHelper.createMultipartFileBlob()
     const controller = new AbortController()
+
+    // Change the api config to use bearer token
+    ApiConfig.init(
+      `${DATAVERSE_BACKEND_URL}/api/v1`,
+      DataverseApiAuthMechanism.BEARER_TOKEN,
+      undefined,
+      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+    )
+
+    const dataset = await datasetRepository.getByPersistentId(
+      datasetResponse.persistentId,
+      DatasetNonNumericVersion.DRAFT
+    )
+
+    if (!dataset) throw new Error('Dataset not found')
 
     const upload = fileRepository.uploadFile(
       dataset.persistentId,

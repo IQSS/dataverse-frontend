@@ -108,19 +108,43 @@ Cypress.Commands.add(
 
 Cypress.Commands.add('login', () => {
   cy.visit('/spa/')
+  cy.wait(1_000)
   cy.findByTestId('oidc-login').click()
 
   TestsUtils.enterCredentialsInKeycloak()
 
-  cy.url()
-    .should('eq', `${Cypress.config().baseUrl as string}/spa`)
-    .then(() => {
-      const token = Utils.getLocalStorageItem<string>(
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}_token`
-      )
+  cy.wait(1_500)
 
-      return cy.wrap(token)
-    })
+  // This function will check if the sign-up page is visible (valid token not linked account) and finish the sign-up process and return the token
+  // Else, it will check if the home page is visible and return the token
+
+  ifElseVisible(
+    () => cy.get('[data-testid="sign-up-page"]', { timeout: 10_000 }),
+    () => {
+      TestsUtils.finishSignUp()
+
+      cy.url()
+        .should('eq', `${Cypress.config().baseUrl as string}/spa/account?tab=accountInformation`)
+        .then(() => {
+          const token = Utils.getLocalStorageItem<string>(
+            `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+          )
+
+          return cy.wrap(token)
+        })
+    },
+    () => {
+      cy.url()
+        .should('eq', `${Cypress.config().baseUrl as string}/spa`)
+        .then(() => {
+          const token = Utils.getLocalStorageItem<string>(
+            `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+          )
+
+          return cy.wrap(token)
+        })
+    }
+  )
 })
 
 Cypress.Commands.add('logout', () => {
@@ -134,3 +158,54 @@ Cypress.Commands.add('compareDate', (date, expectedDate) => {
   expect(date.getUTCMonth()).to.deep.equal(expectedDate.getUTCMonth())
   expect(date.getUTCFullYear()).to.deep.equal(expectedDate.getUTCFullYear())
 })
+
+// Define the type for the conditional functions
+type ConditionCallback = ($el: JQuery<HTMLElement>) => boolean
+type CypressCommandFn = (cyChainable: () => Cypress.Chainable<any>) => void
+
+export function ifElseVisible(
+  cyChainable: () => Cypress.Chainable<JQuery<HTMLElement>>,
+  ifFn: CypressCommandFn,
+  elseFn: CypressCommandFn
+) {
+  return ifElse(
+    cyChainable,
+    (el) => Cypress.dom.isElement(el) && Cypress.dom.isVisible(el),
+    ifFn,
+    elseFn
+  )
+}
+
+export function ifElse(
+  cyChainable: () => Cypress.Chainable<JQuery<HTMLElement>>,
+  conditionCallback: ConditionCallback,
+  ifFn: CypressCommandFn,
+  elseFn: CypressCommandFn
+) {
+  cyChainable()
+    .should((_) => {})
+    .then(($el) => {
+      const result = conditionCallback($el)
+
+      Cypress.log({
+        name: 'ifElse',
+        message: `conditionCallback returned ${String(result)}, calling ${
+          String(result) === 'true' ? 'ifFn' : 'elseFn'
+        }`,
+        type: 'parent',
+        consoleProps: () => {
+          return {
+            conditionCallback
+          }
+        }
+      })
+      if (result) {
+        ifFn(cyChainable)
+      } else {
+        if (elseFn) {
+          elseFn(cyChainable)
+        }
+      }
+    })
+  return cyChainable
+}

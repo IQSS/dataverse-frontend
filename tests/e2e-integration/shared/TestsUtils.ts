@@ -63,4 +63,10 @@ export class TestsUtils {
     cy.get('#password').type(this.USER_PASSWORD)
     cy.get('#kc-login').click()
   }
+
+  static finishSignUp() {
+    cy.get('#termsAccepted').check({ force: true })
+
+    cy.findByRole('button', { name: 'Create Account' }).click()
+  }
 }
