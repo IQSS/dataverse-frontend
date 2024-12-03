@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 
 interface UseGetTermsOfUseReturnType {
-  termsOfUse: string | null
+  termsOfUse: string
   error: string | null
   isLoading: boolean
 }
@@ -10,7 +10,7 @@ interface UseGetTermsOfUseReturnType {
 export const useGetApiTermsOfUse = (
   dataverseInfoRepository: DataverseInfoRepository
 ): UseGetTermsOfUseReturnType => {
-  const [termsOfUse, setTermsOfUse] = useState<string | null>(null)
+  const [termsOfUse, setTermsOfUse] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
