@@ -186,7 +186,6 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('gets a published dataset by persistentId without user authentication', async () => {
-    console.log('RUNNING TEST')
     const datasetResponse = await DatasetHelper.create(collectionId)
     await DatasetHelper.publish(datasetResponse.persistentId)
 
@@ -207,7 +206,6 @@ describe('Dataset JSDataverse Repository', () => {
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, '1.0')
       .then((dataset) => {
-        console.log({ dataset })
         if (!dataset) {
           throw new Error('Dataset not found')
         }
@@ -287,10 +285,6 @@ describe('Dataset JSDataverse Repository', () => {
         )
         expect(dataset.metadataBlocks[0].fields.citationDate).not.to.exist
 
-        console.log({
-          datasetPermissions: dataset.permissions,
-          expected: datasetExpected.permissions
-        })
         expect(dataset.permissions).to.deep.equal(datasetExpected.permissions)
       })
   })

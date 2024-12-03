@@ -37,11 +37,7 @@ describe('useGetApiToken', () => {
         ...result.current.apiTokenInfo,
         expirationDate: DateHelper.toISO8601Format(result.current.apiTokenInfo.expirationDate)
       }
-      console.log(
-        'test',
-        DateHelper.toISO8601Format(result.current.apiTokenInfo.expirationDate),
-        DateHelper.toISO8601Format(mockTokenInfo.expirationDate)
-      )
+
       return expect(apiTokenInfo).to.deep.equal({
         apiToken: mockTokenInfo.apiToken,
         expirationDate: DateHelper.toISO8601Format(mockTokenInfo.expirationDate)

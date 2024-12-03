@@ -26,21 +26,16 @@ export class DataverseApiHelper {
         'PUT',
         'author, datasetContact, contributor, depositor, grantNumber, publication'
       )
+      console.log(
+        '%cDataverse API setup complete',
+        'background: green; color: white; padding: 2px; border-radius: 4px;'
+      )
     } catch (error) {
       console.log(
         '%cError setting up Dataverse API',
         'background: red; color: white; padding: 2px; border-radius: 4px;'
       )
       console.log(error)
-    } finally {
-      console.log(
-        '%cDataverse API setup complete',
-        'background: green; color: white; padding: 2px; border-radius: 4px;'
-      )
-      console.group('Dataverse API setup results')
-      console.log('API URL:', this.API_URL)
-      console.log('API Token:', this.API_TOKEN)
-      console.groupEnd()
     }
   }
 
@@ -51,12 +46,6 @@ export class DataverseApiHelper {
     data?: any,
     contentType = 'application/json'
   ): Promise<T> {
-    console.log(
-      '%cMaking request...',
-      'background: violet; color: white; padding: 2px; border-radius: 4px;',
-      url
-    )
-
     const isFormData = contentType === 'multipart/form-data'
 
     const config: AxiosRequestConfig = {
@@ -98,11 +87,6 @@ export class DataverseApiHelper {
   }
 
   static async createAndGetApiTokenWithBearerToken(bearerToken: string): Promise<string> {
-    console.log(
-      '%cCreating test API key...',
-      'background: blue; color: white; padding: 2px; border-radius: 4px;'
-    )
-
     const { data }: { data: { data: { message: string } } } = await axios.post(
       `${this.API_URL}/users/token/recreate`,
       {},
