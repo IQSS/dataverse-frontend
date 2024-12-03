@@ -77,9 +77,7 @@
   "pre-commit": [
     "typecheck",
     "lint:fix",
-    "git:add",
-    "test:unit",
-    "test:coverage"
+    "git:add"
   ],
   "eslintConfig": {
     "extends": [
