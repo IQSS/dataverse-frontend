@@ -135,8 +135,6 @@ const datasetData = (persistentId: string, versionId: number) => {
   }
 }
 
-// TODO:ME Some tests are failing because dataset permissions is not matching
-
 const collectionId = 'DatasetJSDataverseRepository'
 const datasetRepository = new DatasetJSDataverseRepository()
 describe('Dataset JSDataverse Repository', () => {

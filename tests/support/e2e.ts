@@ -15,12 +15,6 @@
 
 // Import commands.js using ES2015 syntax:
 import '../../tests/support/commands'
-// import { ApiConfig } from '@iqss/dataverse-client-javascript/dist/core'
-// import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
-// import { DATAVERSE_BACKEND_URL } from '../../src/config'
-
-// TODO:ME Why do we need api config in here?
-// ApiConfig.init(`${DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.SESSION_COOKIE)
 
 // This global declaration is to get automatic typescript inferring for wrap https://github.com/cypress-io/cypress/issues/18182
 declare global {
