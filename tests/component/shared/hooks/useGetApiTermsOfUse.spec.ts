@@ -14,7 +14,7 @@ describe('useGetApiTermsOfUse', () => {
 
     await act(() => {
       expect(result.current.isLoading).to.deep.equal(true)
-      return expect(result.current.termsOfUse).to.deep.equal(null)
+      return expect(result.current.termsOfUse).to.deep.equal('')
     })
 
     await act(() => {
