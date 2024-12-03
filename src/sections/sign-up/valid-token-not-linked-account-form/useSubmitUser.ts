@@ -6,7 +6,6 @@ import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { UserDTO } from '@/users/domain/useCases/DTOs/UserDTO'
 import { registerUser } from '@/users/domain/useCases/registerUser'
 import { useSession } from '@/sections/session/SessionContext'
-import { AccountHelper } from '@/sections/account/AccountHelper'
 import { Route } from '@/sections/Route.enum'
 import { ValidTokenNotLinkedAccountFormHelper } from './ValidTokenNotLinkedAccountFormHelper'
 import { ValidTokenNotLinkedAccountFormData } from './types'
@@ -65,14 +64,10 @@ export const useSubmitUser = (
 
         await refetchUserSession()
 
-        // Navigate to Account - Account Information tab after successful registration
-        navigate(
-          `${Route.ACCOUNT}?${AccountHelper.ACCOUNT_PANEL_TAB_QUERY_KEY}=${AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}`,
-          {
-            state: { accountCreated: true },
-            replace: true
-          }
-        )
+        navigate(Route.COLLECTIONS_BASE, {
+          state: { accountCreated: true },
+          replace: true
+        })
       })
       .catch((err: WriteError) => {
         const error = new JSDataverseWriteErrorHandler(err)

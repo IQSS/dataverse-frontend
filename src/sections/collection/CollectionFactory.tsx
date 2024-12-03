@@ -16,9 +16,16 @@ function CollectionWithSearchParams() {
   const collectionQueryParams = useGetCollectionQueryParams()
   const { collectionId } = useParams<{ collectionId: string }>()
   const location = useLocation()
-  const state = location.state as { published: boolean; created: boolean } | undefined
+  const state = location.state as
+    | {
+        published?: boolean
+        created?: boolean
+        accountCreated?: boolean
+      }
+    | undefined
   const created = state?.created ?? false
   const published = state?.published ?? false
+  const accountCreated = state?.accountCreated ?? false
 
   return (
     <Collection
@@ -27,6 +34,7 @@ function CollectionWithSearchParams() {
       created={created}
       collectionQueryParams={collectionQueryParams}
       published={published}
+      accountCreated={accountCreated}
       infiniteScrollEnabled={INFINITE_SCROLL_ENABLED}
     />
   )

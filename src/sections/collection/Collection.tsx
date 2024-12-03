@@ -22,6 +22,7 @@ interface CollectionProps {
   created: boolean
   published: boolean
   collectionQueryParams: UseCollectionQueryParamsReturnType
+  accountCreated: boolean
   infiniteScrollEnabled?: boolean
 }
 
@@ -30,6 +31,7 @@ export function Collection({
   collectionRepository,
   created,
   published,
+  accountCreated,
   collectionQueryParams
 }: CollectionProps) {
   useTranslation('collection')
@@ -65,12 +67,15 @@ export function Collection({
           <>
             <BreadcrumbsGenerator hierarchy={collection.hierarchy} />
             <CollectionInfo collection={collection} />
+
             {created && <CreatedAlert />}
             {published && (
               <Alert variant="success" dismissible={false}>
                 {t('publishedAlert')}
               </Alert>
             )}
+            {accountCreated && <Alert variant="success">{t('accountJustCreated')}</Alert>}
+
             {!collection.isReleased && canUserPublishCollection && (
               <div className={styles['action-buttons']}>
                 <PublishCollectionButton

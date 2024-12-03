@@ -24,7 +24,6 @@ export const AccountInformation: Story = {
     <Account
       defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}
       userRepository={new UserMockRepository()}
-      accountCreated={false}
     />
   )
 }
@@ -34,7 +33,6 @@ export const ApiTokenTab: Story = {
     <Account
       defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.apiToken}
       userRepository={new UserMockRepository()}
-      accountCreated={false}
     />
   )
 }

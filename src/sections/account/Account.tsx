@@ -11,10 +11,9 @@ const tabsKeys = AccountHelper.ACCOUNT_PANEL_TABS_KEYS
 interface AccountProps {
   defaultActiveTabKey: AccountPanelTabKey
   userRepository: UserJSDataverseRepository
-  accountCreated: boolean
 }
 
-export const Account = ({ defaultActiveTabKey, userRepository, accountCreated }: AccountProps) => {
+export const Account = ({ defaultActiveTabKey, userRepository }: AccountProps) => {
   const { t } = useTranslation('account')
 
   return (
@@ -32,7 +31,7 @@ export const Account = ({ defaultActiveTabKey, userRepository, accountCreated }:
         </Tabs.Tab>
         <Tabs.Tab eventKey={tabsKeys.accountInformation} title={t('tabs.accountInformation')}>
           <div className={styles['tab-container']}>
-            <AccountInfoSection accountCreated={accountCreated} />
+            <AccountInfoSection />
           </div>
         </Tabs.Tab>
         <Tabs.Tab eventKey={tabsKeys.apiToken} title={t('tabs.apiToken')}>

@@ -24,17 +24,6 @@ export const Default: Story = {
     <Account
       defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}
       userRepository={new UserMockRepository()}
-      accountCreated={false}
-    />
-  )
-}
-
-export const AccountJustCreated: Story = {
-  render: () => (
-    <Account
-      defaultActiveTabKey={AccountHelper.ACCOUNT_PANEL_TABS_KEYS.accountInformation}
-      userRepository={new UserMockRepository()}
-      accountCreated={true}
     />
   )
 }

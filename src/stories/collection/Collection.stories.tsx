@@ -27,6 +27,7 @@ export const Default: Story = {
       collectionIdFromParams="collection"
       created={false}
       published={false}
+      accountCreated={false}
       collectionQueryParams={{
         pageQuery: 1,
         searchQuery: undefined,
@@ -43,6 +44,7 @@ export const Loading: Story = {
       collectionRepository={new CollectionLoadingMockRepository()}
       created={false}
       published={false}
+      accountCreated={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
@@ -56,6 +58,7 @@ export const LoggedIn: Story = {
       collectionRepository={new CollectionMockRepository()}
       created={false}
       published={false}
+      accountCreated={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
@@ -68,6 +71,7 @@ export const Unpublished: Story = {
       collectionRepository={new UnpublishedCollectionMockRepository()}
       created={false}
       published={false}
+      accountCreated={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
@@ -81,6 +85,7 @@ export const Created: Story = {
       collectionIdFromParams="collection"
       created={true}
       published={false}
+      accountCreated={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
@@ -93,6 +98,21 @@ export const Published: Story = {
       collectionIdFromParams="collection"
       created={false}
       published={true}
+      accountCreated={false}
+      collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
+    />
+  )
+}
+
+export const AccountCreated: Story = {
+  decorators: [WithLoggedInUser],
+  render: () => (
+    <Collection
+      collectionRepository={new CollectionMockRepository()}
+      collectionIdFromParams="collection"
+      created={false}
+      published={false}
+      accountCreated={true}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )

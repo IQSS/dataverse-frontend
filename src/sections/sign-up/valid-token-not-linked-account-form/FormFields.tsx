@@ -93,12 +93,6 @@ export const FormFields = ({ userRepository, formDefaultValues, termsOfUse }: Fo
 
   return (
     <div className={styles['form-container']} ref={formContainerRef}>
-      {/* <div className={styles['about-prefilled-fields-wrapper']}>
-        <Form.Group.Text>
-          <InfoCircleFill /> {t('aboutPrefilledFields')}
-        </Form.Group.Text>
-      </div> */}
-
       {submissionStatus === SubmissionStatus.Errored && (
         <Alert variant={'danger'} dismissible={false}>
           {submitError}

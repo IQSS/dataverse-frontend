@@ -5,7 +5,7 @@ const testUser = UserMother.create()
 
 describe('AccountInfoSection', () => {
   it('should display the user information', () => {
-    cy.mountAuthenticated(<AccountInfoSection accountCreated={false} />)
+    cy.mountAuthenticated(<AccountInfoSection />)
 
     cy.findAllByRole('row').spread((usernameRow, givenNameRow, familyNameRow, emailRow) => {
       cy.wrap(usernameRow).within(() => {
@@ -28,13 +28,5 @@ describe('AccountInfoSection', () => {
         cy.findByText(testUser.email).should('exist')
       })
     })
-  })
-
-  it('should display the account created alert', () => {
-    cy.mountAuthenticated(<AccountInfoSection accountCreated={true} />)
-
-    cy.findByText(/Your account has been successfully created! Welcome to Dataverse!/).should(
-      'exist'
-    )
   })
 })
