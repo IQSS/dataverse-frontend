@@ -7,7 +7,7 @@ export class DataverseInfoMockLoadingRepository implements DataverseInfoMockRepo
     return new Promise(() => {})
   }
 
-  getTermsOfUse(): Promise<TermsOfUse> {
+  getApiTermsOfUse(): Promise<TermsOfUse> {
     return new Promise(() => {})
   }
 }

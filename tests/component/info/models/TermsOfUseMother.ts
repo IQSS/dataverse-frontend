@@ -1,10 +1,8 @@
-import { faker } from '@faker-js/faker'
-import isChromatic from 'chromatic/isChromatic'
 import { TermsOfUse } from '@/info/domain/models/TermsOfUse'
 
 export class TermsOfUseMother {
   static create(): TermsOfUse {
-    return isChromatic() ? 'https://some-terms-of-use-url.com' : faker.lorem.paragraphs(8)
+    return '<h3>Terms of Use SPA dev</h3><p>Please see our full <a href="https://beta.dataverse.org/spa/">terms of use</a></p><p onclick="alert(\'this alert is to text sanitization\')">Thanks for reading!</p>'
   }
 
   static createEmpty(): TermsOfUse {

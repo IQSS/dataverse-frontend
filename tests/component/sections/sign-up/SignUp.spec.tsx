@@ -9,7 +9,7 @@ const userRepository: UserRepository = {} as UserRepository
 
 describe('SignUp', () => {
   beforeEach(() => {
-    dataverseInfoRepository.getTermsOfUse = cy.stub().resolves('Terms of use')
+    dataverseInfoRepository.getApiTermsOfUse = cy.stub().resolves('Terms of use')
   })
 
   it('renders the valid token not linked account form and correct alerts when hasValidTokenButNotLinkedAccount prop is true', () => {

@@ -3,6 +3,7 @@ import { axiosInstance } from '@/axiosInstance'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { DataverseVersion } from '@/info/domain/models/DataverseVersion'
 import { TermsOfUse } from '@/info/domain/models/TermsOfUse'
+import { JSTermsOfUseMapper } from '../mappers/JSTermsOfUseMapper'
 
 interface JSDataverseDataverseVersion {
   number: string
@@ -29,12 +30,12 @@ export class DataverseInfoJSDataverseRepository implements DataverseInfoReposito
       })
   }
 
-  async getTermsOfUse() {
+  async getApiTermsOfUse() {
     //TODO - implement using js-dataverse
     const response = await axiosInstance.get<{ data: { message: TermsOfUse } }>(
       '/api/v1/info/apiTermsOfUse',
       { excludeToken: true }
     )
-    return response.data.data.message
+    return JSTermsOfUseMapper.toSanitizedTermsOfUse(response.data.data.message)
   }
 }

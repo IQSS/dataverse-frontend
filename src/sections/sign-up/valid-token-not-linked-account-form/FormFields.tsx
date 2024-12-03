@@ -271,10 +271,11 @@ export const FormFields = ({ userRepository, formDefaultValues, termsOfUse }: Fo
               render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
                 <Col md={6}>
                   <Stack direction="vertical" gap={3}>
-                    <Form.Group.TextArea
-                      value={termsOfUse ? termsOfUse : t('fields.termsAccepted.noTerms')}
-                      rows={2}
-                      disabled
+                    <div
+                      className={styles['terms-of-use-wrapper']}
+                      dangerouslySetInnerHTML={{
+                        __html: termsOfUse ? termsOfUse : t('fields.termsAccepted.noTerms')
+                      }}
                     />
 
                     <Form.Group.Checkbox

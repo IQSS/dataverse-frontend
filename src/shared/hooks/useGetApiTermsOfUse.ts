@@ -7,7 +7,7 @@ interface UseGetTermsOfUseReturnType {
   isLoading: boolean
 }
 
-export const useGetTermsOfUse = (
+export const useGetApiTermsOfUse = (
   dataverseInfoRepository: DataverseInfoRepository
 ): UseGetTermsOfUseReturnType => {
   const [termsOfUse, setTermsOfUse] = useState<string | null>(null)
@@ -18,7 +18,7 @@ export const useGetTermsOfUse = (
     const handleGetUseOfTerms = async () => {
       setIsLoading(true)
       try {
-        const termsOfUse = await dataverseInfoRepository.getTermsOfUse()
+        const termsOfUse = await dataverseInfoRepository.getApiTermsOfUse()
 
         setTermsOfUse(termsOfUse)
       } catch (err) {

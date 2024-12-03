@@ -1,10 +1,10 @@
 import { type TermsOfUse } from '../../../info/domain/models/TermsOfUse'
 import { DataverseInfoRepository } from '../repositories/DataverseInfoRepository'
 
-export function getTermsOfUse(
+export function getApiTermsOfUse(
   dataverseInfoRepository: DataverseInfoRepository
 ): Promise<TermsOfUse> {
-  return dataverseInfoRepository.getTermsOfUse().catch((error) => {
+  return dataverseInfoRepository.getApiTermsOfUse().catch((error) => {
     throw error
   })
 }

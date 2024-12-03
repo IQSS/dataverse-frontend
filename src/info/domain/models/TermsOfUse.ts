@@ -1,1 +1,1 @@
-export type TermsOfUse = string | null
+export type TermsOfUse = string

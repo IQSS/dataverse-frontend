@@ -13,7 +13,7 @@ export class DataverseInfoMockRepository implements DataverseInfoRepository {
     })
   }
 
-  getTermsOfUse(): Promise<TermsOfUse> {
+  getApiTermsOfUse(): Promise<TermsOfUse> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(TermsOfUseMother.create())

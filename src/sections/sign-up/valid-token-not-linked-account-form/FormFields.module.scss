@@ -1,3 +1,5 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
 .form-container {
   scroll-margin-top: 62px;
 }
@@ -14,4 +16,13 @@
   label[for='termsAccepted'] {
     text-align: left;
   }
+}
+
+.terms-of-use-wrapper {
+  max-height: 200px;
+  padding: 12px;
+  overflow-y: auto;
+  background-color: #f5f5f5;
+  border: solid 1px $dv-border-color;
+  border-radius: 6px;
 }

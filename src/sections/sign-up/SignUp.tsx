@@ -8,7 +8,6 @@ import { ValidTokenNotLinkedAccountForm } from './valid-token-not-linked-account
 import styles from './SignUp.module.scss'
 
 // TODO:ME - All use cases will return same error message so this is blocking us for making requests to other public use cases like get root collection, should work removing access token from localstorage but we need it for future call
-// TODO:ME - Ask about the format of the terms of use, html string? just text string? what is shown in the box if there is just a url string ?
 
 interface SignUpProps {
   userRepository: UserRepository
