@@ -99,12 +99,6 @@ export const FormFields = ({ userRepository, formDefaultValues, termsOfUse }: Fo
         </Alert>
       )}
 
-      {submissionStatus === SubmissionStatus.SubmitComplete && (
-        <Alert variant="success" dismissible={false}>
-          {t('status.success')}
-        </Alert>
-      )}
-
       <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(submitForm)}

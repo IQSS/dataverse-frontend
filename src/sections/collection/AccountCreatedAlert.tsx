@@ -17,7 +17,13 @@ export const AccountCreatedAlert = () => {
 
   return (
     <>
-      <Confetti width={width} height={height} numberOfPieces={1000} recycle={false} />
+      <Confetti
+        width={width}
+        height={height}
+        numberOfPieces={1000}
+        recycle={false}
+        style={{ zIndex: 9999 }}
+      />
       <Alert variant="success">{t('accountJustCreated')}</Alert>
     </>
   )
