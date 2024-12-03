@@ -14,6 +14,7 @@ import { CollectionSkeleton } from './CollectionSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
+import { AccountCreatedAlert } from './AccountCreatedAlert'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {
@@ -74,7 +75,7 @@ export function Collection({
                 {t('publishedAlert')}
               </Alert>
             )}
-            {accountCreated && <Alert variant="success">{t('accountJustCreated')}</Alert>}
+            {accountCreated && <AccountCreatedAlert />}
 
             {!collection.isReleased && canUserPublishCollection && (
               <div className={styles['action-buttons']}>

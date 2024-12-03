@@ -10,6 +10,7 @@ import { Route } from '@/sections/Route.enum'
 import { ValidTokenNotLinkedAccountFormHelper } from './ValidTokenNotLinkedAccountFormHelper'
 import { ValidTokenNotLinkedAccountFormData } from './types'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
+import { ACCOUNT_CREATED_SESSION_STORAGE_KEY } from '@/sections/collection/AccountCreatedAlert'
 
 export enum SubmissionStatus {
   NotSubmitted = 'NotSubmitted',
@@ -64,8 +65,9 @@ export const useSubmitUser = (
 
         await refetchUserSession()
 
+        sessionStorage.setItem(ACCOUNT_CREATED_SESSION_STORAGE_KEY, 'true')
+
         navigate(Route.COLLECTIONS_BASE, {
-          state: { accountCreated: true },
           replace: true
         })
       })

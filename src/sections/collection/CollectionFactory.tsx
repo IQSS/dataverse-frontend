@@ -4,6 +4,7 @@ import { CollectionJSDataverseRepository } from '../../collection/infrastructure
 import { Collection } from './Collection'
 import { INFINITE_SCROLL_ENABLED } from './config'
 import { useGetCollectionQueryParams } from './useGetCollectionQueryParams'
+import { ACCOUNT_CREATED_SESSION_STORAGE_KEY } from './AccountCreatedAlert'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 export class CollectionFactory {
@@ -25,7 +26,8 @@ function CollectionWithSearchParams() {
     | undefined
   const created = state?.created ?? false
   const published = state?.published ?? false
-  const accountCreated = state?.accountCreated ?? false
+  const accountCreated =
+    Boolean(sessionStorage.getItem(ACCOUNT_CREATED_SESSION_STORAGE_KEY)) ?? false
 
   return (
     <Collection
