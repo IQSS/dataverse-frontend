@@ -124,7 +124,7 @@ Cypress.Commands.add('login', () => {
       TestsUtils.finishSignUp()
 
       cy.url()
-        .should('eq', `${Cypress.config().baseUrl as string}/spa/account?tab=accountInformation`)
+        .should('eq', `${Cypress.config().baseUrl as string}/spa/collections`)
         .then(() => {
           const token = Utils.getLocalStorageItem<string>(
             `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
