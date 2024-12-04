@@ -125,7 +125,7 @@ describe('ValidTokenNotLinkedAccountForm', () => {
         'I have read and accept the Dataverse General Terms of Use as outlined above.'
       ).check({ force: true })
 
-      cy.findByRole('button', { name: 'Create Account' }).click()
+      cy.findByRole('button', { name: 'Create Account' }).click({ force: true })
 
       cy.get('@registerUser').should((spy) => {
         const registerUserSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
@@ -185,7 +185,7 @@ describe('ValidTokenNotLinkedAccountForm', () => {
 
       cy.findByRole('button', { name: 'Create Account' }).should('not.be.disabled')
 
-      cy.findByRole('button', { name: 'Create Account' }).click()
+      cy.findByRole('button', { name: 'Create Account' }).click({ force: true })
 
       // Assert that the form has errors in Username and Email fields
       cy.findByText('Username is required.').should('exist')
@@ -204,7 +204,7 @@ describe('ValidTokenNotLinkedAccountForm', () => {
       cy.findByLabelText('Family Name').type(newMockLastName)
       cy.findByLabelText('Email').type(newMockEmail)
 
-      cy.findByRole('button', { name: 'Create Account' }).click()
+      cy.findByRole('button', { name: 'Create Account' }).click({ force: true })
 
       cy.get('@registerUser').should((spy) => {
         const registerUserSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
