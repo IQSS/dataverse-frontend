@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Tabs } from '@iqss/dataverse-design-system'
-import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { useLoading } from '../loading/LoadingContext'
 import { ValidTokenNotLinkedAccountForm } from './valid-token-not-linked-account-form/ValidTokenNotLinkedAccountForm'
@@ -11,15 +10,10 @@ import styles from './SignUp.module.scss'
 
 interface SignUpProps {
   userRepository: UserRepository
-  dataverseInfoRepository: DataverseInfoRepository
   hasValidTokenButNotLinkedAccount: boolean
 }
 
-export const SignUp = ({
-  userRepository,
-  dataverseInfoRepository,
-  hasValidTokenButNotLinkedAccount
-}: SignUpProps) => {
+export const SignUp = ({ userRepository, hasValidTokenButNotLinkedAccount }: SignUpProps) => {
   const { t } = useTranslation('signUp')
   const { setIsLoading } = useLoading()
 
@@ -62,10 +56,7 @@ export const SignUp = ({
         <Tabs.Tab eventKey="accountInfo" title={t('accountInfo')}>
           <div className={styles['tab-container']}>
             {hasValidTokenButNotLinkedAccount && (
-              <ValidTokenNotLinkedAccountForm
-                userRepository={userRepository}
-                dataverseInfoRepository={dataverseInfoRepository}
-              />
+              <ValidTokenNotLinkedAccountForm userRepository={userRepository} />
             )}
           </div>
         </Tabs.Tab>
