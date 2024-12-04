@@ -24,6 +24,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { mount, MountReturn } from 'cypress/react18'
 import { RouterInitialEntry } from './commands'
 import { ReactNode } from 'react'
+import { User } from '@/users/domain/models/User'
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
@@ -42,7 +43,8 @@ declare global {
       ) => Cypress.Chainable<MountReturn>
       mountAuthenticated: (
         component: ReactNode,
-        initialEntries?: RouterInitialEntry[]
+        initialEntries?: RouterInitialEntry[],
+        userOverrides?: Partial<User>
       ) => Cypress.Chainable<MountReturn>
       mountSuperuser: (
         component: ReactNode,

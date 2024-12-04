@@ -48,6 +48,7 @@ import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
 import { Utils } from '@/shared/helpers/Utils'
 import { OIDC_AUTH_CONFIG } from '@/config'
 import { SessionContext } from '@/sections/session/SessionContext'
+import { User } from '@/users/domain/models/User'
 
 // Define your custom mount function
 
@@ -68,11 +69,11 @@ Cypress.Commands.add(
 
 Cypress.Commands.add(
   'mountAuthenticated',
-  (component: ReactNode, initialEntries?: RouterInitialEntry[]) => {
+  (component: ReactNode, initialEntries?: RouterInitialEntry[], userOverrides?: Partial<User>) => {
     return cy.customMount(
       <SessionContext.Provider
         value={{
-          user: UserMother.create(),
+          user: UserMother.create(userOverrides),
           logout: () => Promise.resolve(),
           setUser: () => {},
           isLoadingUser: false,

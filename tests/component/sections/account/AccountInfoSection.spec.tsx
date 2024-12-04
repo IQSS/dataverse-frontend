@@ -29,4 +29,25 @@ describe('AccountInfoSection', () => {
       })
     })
   })
+
+  it('should display the user affiliation and position if present', () => {
+    cy.mountAuthenticated(<AccountInfoSection />, undefined, {
+      affiliation: 'Harvard University',
+      position: 'Researcher'
+    })
+
+    cy.findAllByRole('row').spread(
+      (_usernameRow, _givenNameRow, _familyNameRow, _emailRow, affiliationRow, positionRow) => {
+        cy.wrap(affiliationRow).within(() => {
+          cy.findByText('Affiliation').should('exist')
+          cy.findByText('Harvard University').should('exist')
+        })
+
+        cy.wrap(positionRow).within(() => {
+          cy.findByText('Position').should('exist')
+          cy.findByText('Researcher').should('exist')
+        })
+      }
+    )
+  })
 })
