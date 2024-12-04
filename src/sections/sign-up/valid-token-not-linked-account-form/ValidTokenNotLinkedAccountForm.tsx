@@ -2,11 +2,11 @@ import { useContext } from 'react'
 import { AuthContext } from 'react-oauth2-code-pkce'
 import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { UserRepository } from '@/users/domain/repositories/UserRepository'
-import { useGetApiTermsOfUse } from '@/shared/hooks/useGetApiTermsOfUse'
+// import { useGetApiTermsOfUse } from '@/shared/hooks/useGetApiTermsOfUse'
 import { OIDC_STANDARD_CLAIMS, type ValidTokenNotLinkedAccountFormData } from './types'
 import { ValidTokenNotLinkedAccountFormHelper } from './ValidTokenNotLinkedAccountFormHelper'
 import { FormFields } from './FormFields'
-import { FormFieldsSkeleton } from './FormFieldsSkeleton'
+// import { FormFieldsSkeleton } from './FormFieldsSkeleton'
 
 interface ValidTokenNotLinkedAccountFormProps {
   dataverseInfoRepository: DataverseInfoRepository
@@ -18,8 +18,10 @@ export const ValidTokenNotLinkedAccountForm = ({
   dataverseInfoRepository
 }: ValidTokenNotLinkedAccountFormProps) => {
   const { tokenData } = useContext(AuthContext)
-  const { termsOfUse, isLoading: isLoadingTermsOfUse } =
-    useGetApiTermsOfUse(dataverseInfoRepository)
+
+  // TODO - Change for application terms of use when available in API 👇
+  // const { termsOfUse, isLoading: isLoadingTermsOfUse } =
+  //   useGetApiTermsOfUse(dataverseInfoRepository)
 
   const defaultUserName =
     ValidTokenNotLinkedAccountFormHelper.getTokenDataValue<string>(
@@ -59,15 +61,15 @@ export const ValidTokenNotLinkedAccountForm = ({
     termsAccepted: false
   }
 
-  if (isLoadingTermsOfUse) {
-    return <FormFieldsSkeleton />
-  }
+  // if (isLoadingTermsOfUse) {
+  //   return <FormFieldsSkeleton />
+  // }
 
   return (
     <FormFields
       userRepository={userRepository}
       formDefaultValues={formDefaultValues}
-      termsOfUse={termsOfUse}
+      termsOfUse=""
     />
   )
 }

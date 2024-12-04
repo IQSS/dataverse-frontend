@@ -4,14 +4,15 @@ import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { ValidTokenNotLinkedAccountForm } from '@/sections/sign-up/valid-token-not-linked-account-form/ValidTokenNotLinkedAccountForm'
 import { AuthContextMother } from '@tests/component/auth/AuthContextMother'
 import { UserDTO } from '@/users/domain/useCases/DTOs/UserDTO'
-import { TermsOfUseMother } from '@tests/component/info/models/TermsOfUseMother'
-import { JSTermsOfUseMapper } from '@/info/infrastructure/mappers/JSTermsOfUseMapper'
+// import { TermsOfUseMother } from '@tests/component/info/models/TermsOfUseMother'
+// import { JSTermsOfUseMapper } from '@/info/infrastructure/mappers/JSTermsOfUseMapper'
 
 const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
 const userRepository: UserRepository = {} as UserRepository
 
-const termsOfUseMock = TermsOfUseMother.create()
-const sanitizedTermsOfUseMock = JSTermsOfUseMapper.toSanitizedTermsOfUse(termsOfUseMock)
+// TODO - Uncomment when application terms of use are available in API
+// const termsOfUseMock = TermsOfUseMother.create()
+// const sanitizedTermsOfUseMock = JSTermsOfUseMapper.toSanitizedTermsOfUse(termsOfUseMock)
 
 const mockUserName = 'mockUserName'
 const mockFirstName = 'mockFirstName'
@@ -20,7 +21,8 @@ const mockEmail = 'mockEmail@email.com'
 
 describe('ValidTokenNotLinkedAccountForm', () => {
   beforeEach(() => {
-    dataverseInfoRepository.getApiTermsOfUse = cy.stub().resolves(sanitizedTermsOfUseMock)
+    // dataverseInfoRepository.getApiTermsOfUse = cy.stub().resolves(sanitizedTermsOfUseMock)
+    dataverseInfoRepository.getApiTermsOfUse = cy.stub().resolves('')
     userRepository.register = cy.stub().as('registerUser').resolves()
   })
 
@@ -55,7 +57,7 @@ describe('ValidTokenNotLinkedAccountForm', () => {
       cy.findByLabelText('Given Name').should('have.value', mockFirstName)
       cy.findByLabelText('Family Name').should('have.value', mockLastName)
       cy.findByLabelText('Email').should('have.value', mockEmail)
-      cy.findByText('Terms of Use SPA dev').should('exist')
+      // cy.findByText('Terms of Use SPA dev').should('exist')
     })
 
     it('renders the form fields with the correct default values when tokenData does not have preferred username, given name, family name and email', () => {
@@ -83,7 +85,7 @@ describe('ValidTokenNotLinkedAccountForm', () => {
       cy.findByLabelText('Given Name').should('have.value', '')
       cy.findByLabelText('Family Name').should('have.value', '')
       cy.findByLabelText('Email').should('have.value', '')
-      cy.findByText('Terms of Use SPA dev').should('exist')
+      // cy.findByText('Terms of Use SPA dev').should('exist')
     })
   })
 
