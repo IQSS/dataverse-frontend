@@ -113,10 +113,7 @@ describe('ValidTokenNotLinkedAccountForm', () => {
           <ValidTokenNotLinkedAccountForm userRepository={userRepository} />
         </AuthContext.Provider>
       )
-
-      cy.findByLabelText(
-        'I have read and accept the Dataverse General Terms of Use as outlined above.'
-      ).check({ force: true })
+      cy.findByTestId('termsAcceptedCheckbox').check({ force: true })
 
       cy.findByRole('button', { name: 'Create Account' }).click()
 
@@ -156,22 +153,16 @@ describe('ValidTokenNotLinkedAccountForm', () => {
       // Assert that submit button is disabled if terms are not accepted
       cy.findByRole('button', { name: 'Create Account' }).should('be.disabled')
 
-      cy.findByLabelText(
-        'I have read and accept the Dataverse General Terms of Use as outlined above.'
-      ).check({ force: true })
+      cy.findByTestId('termsAcceptedCheckbox').check({ force: true })
 
       // Uncheck and then check again to test validation error from terms not accepted
-      cy.findByLabelText(
-        'I have read and accept the Dataverse General Terms of Use as outlined above.'
-      ).uncheck({ force: true })
+      cy.findByTestId('termsAcceptedCheckbox').uncheck({ force: true })
 
       cy.findByText(
         'Please check the box to indicate your acceptance of the General Terms of Use.'
       ).should('exist')
 
-      cy.findByLabelText(
-        'I have read and accept the Dataverse General Terms of Use as outlined above.'
-      ).check({ force: true })
+      cy.findByTestId('termsAcceptedCheckbox').check({ force: true })
 
       cy.findByRole('button', { name: 'Create Account' }).should('not.be.disabled')
 

@@ -280,6 +280,7 @@ export const FormFields = ({ userRepository, formDefaultValues, termsOfUse }: Fo
 
                     <Form.Group.Checkbox
                       id="termsAccepted"
+                      data-testid="termsAcceptedCheckbox"
                       onChange={onChange}
                       name="termsAccepted"
                       label={t('fields.termsAccepted.label')}
