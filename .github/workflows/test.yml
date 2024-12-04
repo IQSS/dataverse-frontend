@@ -122,6 +122,10 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           component: true
+          record: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cypress run Design System
         uses: cypress-io/github-action@v5

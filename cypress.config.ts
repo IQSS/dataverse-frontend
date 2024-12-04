@@ -3,6 +3,7 @@ import vitePreprocessor from 'cypress-vite'
 import path from 'path'
 
 export default defineConfig({
+  projectId: '6sn9cr',
   video: false,
   e2e: {
     baseUrl: 'http://localhost:8000',
