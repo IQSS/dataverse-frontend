@@ -19,8 +19,10 @@ const mockFirstName = 'mockFirstName'
 const mockLastName = 'mockLastName'
 const mockEmail = 'mockEmail@email.com'
 
-describe.only('ValidTokenNotLinkedAccountForm', () => {
+describe('ValidTokenNotLinkedAccountForm', () => {
   beforeEach(() => {
+    cy.viewport(1280, 720)
+
     // dataverseInfoRepository.getApiTermsOfUse = cy.stub().resolves(sanitizedTermsOfUseMock)
     dataverseInfoRepository.getApiTermsOfUse = cy.stub().resolves('')
     userRepository.register = cy.stub().as('registerUser').resolves()
@@ -46,10 +48,7 @@ describe.only('ValidTokenNotLinkedAccountForm', () => {
             error: null,
             login: () => {} // 👈 deprecated
           }}>
-          <ValidTokenNotLinkedAccountForm
-            userRepository={userRepository}
-            dataverseInfoRepository={dataverseInfoRepository}
-          />
+          <ValidTokenNotLinkedAccountForm userRepository={userRepository} />
         </AuthContext.Provider>
       )
 
@@ -74,10 +73,7 @@ describe.only('ValidTokenNotLinkedAccountForm', () => {
             error: null,
             login: () => {} // 👈 deprecated
           }}>
-          <ValidTokenNotLinkedAccountForm
-            userRepository={userRepository}
-            dataverseInfoRepository={dataverseInfoRepository}
-          />
+          <ValidTokenNotLinkedAccountForm userRepository={userRepository} />
         </AuthContext.Provider>
       )
 
@@ -114,10 +110,7 @@ describe.only('ValidTokenNotLinkedAccountForm', () => {
             error: null,
             login: () => {} // 👈 deprecated
           }}>
-          <ValidTokenNotLinkedAccountForm
-            userRepository={userRepository}
-            dataverseInfoRepository={dataverseInfoRepository}
-          />
+          <ValidTokenNotLinkedAccountForm userRepository={userRepository} />
         </AuthContext.Provider>
       )
 
@@ -151,10 +144,7 @@ describe.only('ValidTokenNotLinkedAccountForm', () => {
             error: null,
             login: () => {} // 👈 deprecated
           }}>
-          <ValidTokenNotLinkedAccountForm
-            userRepository={userRepository}
-            dataverseInfoRepository={dataverseInfoRepository}
-          />
+          <ValidTokenNotLinkedAccountForm userRepository={userRepository} />
         </AuthContext.Provider>
       )
 
@@ -237,10 +227,7 @@ describe.only('ValidTokenNotLinkedAccountForm', () => {
           error: null,
           login: () => {} // 👈 deprecated
         }}>
-        <ValidTokenNotLinkedAccountForm
-          userRepository={userRepository}
-          dataverseInfoRepository={dataverseInfoRepository}
-        />
+        <ValidTokenNotLinkedAccountForm userRepository={userRepository} />
       </AuthContext.Provider>
     )
 
@@ -263,10 +250,7 @@ describe.only('ValidTokenNotLinkedAccountForm', () => {
           error: null,
           login: () => {} // 👈 deprecated
         }}>
-        <ValidTokenNotLinkedAccountForm
-          userRepository={userRepository}
-          dataverseInfoRepository={dataverseInfoRepository}
-        />
+        <ValidTokenNotLinkedAccountForm userRepository={userRepository} />
       </AuthContext.Provider>
     )
 
