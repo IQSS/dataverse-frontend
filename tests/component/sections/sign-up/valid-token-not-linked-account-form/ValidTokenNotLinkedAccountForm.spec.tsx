@@ -19,7 +19,7 @@ const mockFirstName = 'mockFirstName'
 const mockLastName = 'mockLastName'
 const mockEmail = 'mockEmail@email.com'
 
-describe('ValidTokenNotLinkedAccountForm', () => {
+describe.only('ValidTokenNotLinkedAccountForm', () => {
   beforeEach(() => {
     // dataverseInfoRepository.getApiTermsOfUse = cy.stub().resolves(sanitizedTermsOfUseMock)
     dataverseInfoRepository.getApiTermsOfUse = cy.stub().resolves('')
@@ -125,9 +125,7 @@ describe('ValidTokenNotLinkedAccountForm', () => {
         'I have read and accept the Dataverse General Terms of Use as outlined above.'
       ).check({ force: true })
 
-      cy.wait(500)
-
-      cy.findByRole('button', { name: 'Create Account' }).click({ force: true })
+      cy.findByRole('button', { name: 'Create Account' }).click()
 
       cy.get('@registerUser').should((spy) => {
         const registerUserSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
@@ -185,11 +183,9 @@ describe('ValidTokenNotLinkedAccountForm', () => {
         'I have read and accept the Dataverse General Terms of Use as outlined above.'
       ).check({ force: true })
 
-      cy.wait(500)
-
       cy.findByRole('button', { name: 'Create Account' }).should('not.be.disabled')
 
-      cy.findByRole('button', { name: 'Create Account' }).click({ force: true })
+      cy.findByRole('button', { name: 'Create Account' }).click()
 
       // Assert that the form has errors in Username and Email fields
       cy.findByText('Username is required.').should('exist')
@@ -208,11 +204,7 @@ describe('ValidTokenNotLinkedAccountForm', () => {
       cy.findByLabelText('Family Name').type(newMockLastName)
       cy.findByLabelText('Email').type(newMockEmail)
 
-      cy.wait(500)
-
-      cy.findByRole('button', { name: 'Create Account' }).should('not.be.disabled')
-
-      cy.findByRole('button', { name: 'Create Account' }).click({ force: true })
+      cy.findByRole('button', { name: 'Create Account' }).click()
 
       cy.get('@registerUser').should((spy) => {
         const registerUserSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
