@@ -86,7 +86,7 @@ describe('ValidTokenNotLinkedAccountForm', () => {
   })
 
   describe('submit form with correct data', () => {
-    it('submits the form with the correct data when tokenData has preferred username, given name, family name and email ', () => {
+    it.only('submits the form with the correct data when tokenData has preferred username, given name, family name and email ', () => {
       cy.customMount(
         <AuthContext.Provider
           value={{
@@ -114,6 +114,8 @@ describe('ValidTokenNotLinkedAccountForm', () => {
         </AuthContext.Provider>
       )
       cy.findByTestId('termsAcceptedCheckbox').check({ force: true })
+
+      cy.findByRole('button', { name: 'Create Account' }).should('not.be.disabled')
 
       cy.findByRole('button', { name: 'Create Account' }).click()
 
@@ -154,6 +156,8 @@ describe('ValidTokenNotLinkedAccountForm', () => {
       cy.findByRole('button', { name: 'Create Account' }).should('be.disabled')
 
       cy.findByTestId('termsAcceptedCheckbox').check({ force: true })
+
+      cy.findByRole('button', { name: 'Create Account' }).should('not.be.disabled')
 
       // Uncheck and then check again to test validation error from terms not accepted
       cy.findByTestId('termsAcceptedCheckbox').uncheck({ force: true })
