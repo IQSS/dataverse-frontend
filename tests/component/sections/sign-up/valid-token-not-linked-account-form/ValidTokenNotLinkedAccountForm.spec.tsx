@@ -86,7 +86,7 @@ describe('ValidTokenNotLinkedAccountForm', () => {
   })
 
   describe('submit form with correct data', () => {
-    it.only('submits the form with the correct data when tokenData has preferred username, given name, family name and email ', () => {
+    it('submits the form with the correct data when tokenData has preferred username, given name, family name and email ', () => {
       cy.customMount(
         <AuthContext.Provider
           value={{
@@ -114,6 +114,8 @@ describe('ValidTokenNotLinkedAccountForm', () => {
         </AuthContext.Provider>
       )
       cy.findByTestId('termsAcceptedCheckbox').check({ force: true })
+
+      cy.findByTestId('termsAcceptedCheckbox').should('be.checked')
 
       cy.findByRole('button', { name: 'Create Account' }).should('not.be.disabled')
 
@@ -157,16 +159,22 @@ describe('ValidTokenNotLinkedAccountForm', () => {
 
       cy.findByTestId('termsAcceptedCheckbox').check({ force: true })
 
+      cy.findByTestId('termsAcceptedCheckbox').should('be.checked')
+
       cy.findByRole('button', { name: 'Create Account' }).should('not.be.disabled')
 
       // Uncheck and then check again to test validation error from terms not accepted
       cy.findByTestId('termsAcceptedCheckbox').uncheck({ force: true })
+
+      cy.findByTestId('termsAcceptedCheckbox').should('not.be.checked')
 
       cy.findByText(
         'Please check the box to indicate your acceptance of the General Terms of Use.'
       ).should('exist')
 
       cy.findByTestId('termsAcceptedCheckbox').check({ force: true })
+
+      cy.findByTestId('termsAcceptedCheckbox').should('be.checked')
 
       cy.findByRole('button', { name: 'Create Account' }).should('not.be.disabled')
 
