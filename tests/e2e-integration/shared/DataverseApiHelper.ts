@@ -110,7 +110,7 @@ export class DataverseApiHelper {
     const API_KEY_USER_ENDPOINT = '/builtin-users/dataverseAdmin/api-token'
     const API_KEY_USER_PASSWORD = 'admin1'
 
-    // Get API key from superuser dataverseAdmin
+    // Allow token lookup via API
     await axios.put(`${this.API_URL}${API_ALLOW_TOKEN_LOOKUP_ENDPOINT}`, 'true')
 
     // Get API key from superuser dataverseAdmin

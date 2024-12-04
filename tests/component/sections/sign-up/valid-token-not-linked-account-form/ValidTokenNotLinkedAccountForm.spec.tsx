@@ -125,6 +125,8 @@ describe('ValidTokenNotLinkedAccountForm', () => {
         'I have read and accept the Dataverse General Terms of Use as outlined above.'
       ).check({ force: true })
 
+      cy.wait(500)
+
       cy.findByRole('button', { name: 'Create Account' }).click({ force: true })
 
       cy.get('@registerUser').should((spy) => {
@@ -183,6 +185,8 @@ describe('ValidTokenNotLinkedAccountForm', () => {
         'I have read and accept the Dataverse General Terms of Use as outlined above.'
       ).check({ force: true })
 
+      cy.wait(500)
+
       cy.findByRole('button', { name: 'Create Account' }).should('not.be.disabled')
 
       cy.findByRole('button', { name: 'Create Account' }).click({ force: true })
@@ -203,6 +207,10 @@ describe('ValidTokenNotLinkedAccountForm', () => {
       cy.findByLabelText('Given Name').type(newMockFirstName)
       cy.findByLabelText('Family Name').type(newMockLastName)
       cy.findByLabelText('Email').type(newMockEmail)
+
+      cy.wait(500)
+
+      cy.findByRole('button', { name: 'Create Account' }).should('not.be.disabled')
 
       cy.findByRole('button', { name: 'Create Account' }).click({ force: true })
 
