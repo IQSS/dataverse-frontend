@@ -115,6 +115,8 @@ describe('ValidTokenNotLinkedAccountForm', () => {
         </AuthContext.Provider>
       )
 
+      cy.wait(300)
+
       cy.findByTestId('termsAcceptedCheckbox').check({ force: true })
 
       cy.wait(300)
@@ -158,6 +160,8 @@ describe('ValidTokenNotLinkedAccountForm', () => {
 
       // Assert that submit button is disabled if terms are not accepted
       cy.findByRole('button', { name: 'Create Account' }).should('be.disabled')
+
+      cy.wait(300)
 
       cy.findByTestId('termsAcceptedCheckbox').check({ force: true })
 
