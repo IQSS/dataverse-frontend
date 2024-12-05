@@ -1,13 +1,13 @@
 import { AuthContext } from 'react-oauth2-code-pkce'
-import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 import { UserRepository } from '@/users/domain/repositories/UserRepository'
 import { ValidTokenNotLinkedAccountForm } from '@/sections/sign-up/valid-token-not-linked-account-form/ValidTokenNotLinkedAccountForm'
 import { AuthContextMother } from '@tests/component/auth/AuthContextMother'
 import { UserDTO } from '@/users/domain/useCases/DTOs/UserDTO'
+// import { DataverseInfoRepository } from '@/info/domain/repositories/DataverseInfoRepository'
 // import { TermsOfUseMother } from '@tests/component/info/models/TermsOfUseMother'
 // import { JSTermsOfUseMapper } from '@/info/infrastructure/mappers/JSTermsOfUseMapper'
 
-const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
+// const dataverseInfoRepository: DataverseInfoRepository = {} as DataverseInfoRepository
 const userRepository: UserRepository = {} as UserRepository
 
 // TODO - Uncomment when application terms of use are available in API
@@ -24,7 +24,7 @@ describe('ValidTokenNotLinkedAccountForm', () => {
     cy.viewport(1280, 720)
 
     // dataverseInfoRepository.getApiTermsOfUse = cy.stub().resolves(sanitizedTermsOfUseMock)
-    dataverseInfoRepository.getApiTermsOfUse = cy.stub().resolves('')
+    // dataverseInfoRepository.getApiTermsOfUse = cy.stub().resolves('')
     userRepository.register = cy.stub().as('registerUser').resolves()
   })
 
@@ -114,7 +114,10 @@ describe('ValidTokenNotLinkedAccountForm', () => {
           <ValidTokenNotLinkedAccountForm userRepository={userRepository} />
         </AuthContext.Provider>
       )
+
       cy.findByTestId('termsAcceptedCheckbox').check({ force: true })
+
+      cy.wait(300)
 
       cy.findByRole('button', { name: 'Create Account' }).should('not.be.disabled')
 
@@ -158,16 +161,22 @@ describe('ValidTokenNotLinkedAccountForm', () => {
 
       cy.findByTestId('termsAcceptedCheckbox').check({ force: true })
 
+      cy.wait(300)
+
       cy.findByRole('button', { name: 'Create Account' }).should('not.be.disabled')
 
       // Uncheck and then check again to test validation error from terms not accepted
       cy.findByTestId('termsAcceptedCheckbox').uncheck({ force: true })
+
+      cy.wait(300)
 
       cy.findByText(
         'Please check the box to indicate your acceptance of the General Terms of Use.'
       ).should('exist')
 
       cy.findByTestId('termsAcceptedCheckbox').check({ force: true })
+
+      cy.wait(300)
 
       cy.findByRole('button', { name: 'Create Account' }).should('not.be.disabled')
 
@@ -205,29 +214,6 @@ describe('ValidTokenNotLinkedAccountForm', () => {
         })
       })
     })
-  })
-
-  it('shows no terms message when there are no terms of use', () => {
-    dataverseInfoRepository.getApiTermsOfUse = cy.stub().resolves(null)
-
-    cy.customMount(
-      <AuthContext.Provider
-        value={{
-          token: AuthContextMother.createToken(),
-          idToken: AuthContextMother.createToken(),
-          logIn: () => {},
-          logOut: () => {},
-          loginInProgress: false,
-          tokenData: AuthContextMother.createTokenData(),
-          idTokenData: AuthContextMother.createTokenData(),
-          error: null,
-          login: () => {} // 👈 deprecated
-        }}>
-        <ValidTokenNotLinkedAccountForm userRepository={userRepository} />
-      </AuthContext.Provider>
-    )
-
-    cy.findByText('There are no Terms of Use for this Dataverse installation.').should('exist')
   })
 
   it('logOut function is called when clicking the Cancel button', () => {
