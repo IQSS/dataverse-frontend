@@ -85,7 +85,6 @@ describe('ValidTokenNotLinkedAccountForm', () => {
     })
   })
 
-  // TODO:ME - Remove setting up record of component test and remove secret from github
   describe('submit form with correct data', () => {
     it('submits the form with the correct data when tokenData has preferred username, given name, family name and email ', () => {
       cy.customMount(

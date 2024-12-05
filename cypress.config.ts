@@ -3,7 +3,6 @@ import vitePreprocessor from 'cypress-vite'
 import path from 'path'
 
 export default defineConfig({
-  projectId: '6sn9cr',
   video: false,
   e2e: {
     baseUrl: 'http://localhost:8000',
@@ -21,7 +20,7 @@ export default defineConfig({
   },
   component: {
     indexHtmlFile: 'tests/support/component-index.html',
-    specPattern: ['tests/component/**/ValidTokenNotLinkedAccountForm.spec.{js,jsx,ts,tsx}'],
+    specPattern: ['tests/component/**/*.spec.{js,jsx,ts,tsx}'],
     supportFile: 'tests/support/component.ts',
     fixturesFolder: 'tests/component/fixtures',
     devServer: {
