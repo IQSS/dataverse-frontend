@@ -59,7 +59,6 @@ export class JSFileMetadataMapper {
     jsFilePublicationDate?: string,
     jsFileEmbargo?: JSFileEmbargo
   ): FileDate {
-    console.log('jsFileCreationDate', jsFileCreationDate)
     if (jsFilePublicationDate) {
       if (jsFileEmbargo) {
         return {

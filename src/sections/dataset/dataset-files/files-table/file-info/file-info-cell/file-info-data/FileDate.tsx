@@ -10,7 +10,7 @@ export function FileDate({ date }: { date: FileDateModel }) {
       <span>
         {t(`table.date.${date.type}`)}{' '}
         <time dateTime={DateHelper.toISO8601Format(date.date)}>
-          {DateHelper.toDisplayFormat(date.date)}
+          {DateHelper.toDisplayFileFormat(date.date)}
         </time>
       </span>
     </div>
