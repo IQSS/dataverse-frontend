@@ -2,9 +2,6 @@ import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { UserJSDataverseRepository } from '../../../../../../src/users/infrastructure/repositories/UserJSDataverseRepository'
 import { TestsUtils } from '../../../../shared/TestsUtils'
-import { ApiConfig } from '@iqss/dataverse-client-javascript'
-import { DATAVERSE_BACKEND_URL, OIDC_AUTH_CONFIG } from '@/config'
-import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 import { User } from '@/users/domain/models/User'
 
 chai.use(chaiAsPromised)
@@ -23,14 +20,6 @@ describe('User JSDataverse Repository', () => {
   })
 
   it('gets the authenticated user', async () => {
-    // Change the api config to use bearer token
-    ApiConfig.init(
-      `${DATAVERSE_BACKEND_URL}/api/v1`,
-      DataverseApiAuthMechanism.BEARER_TOKEN,
-      undefined,
-      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-    )
-
     const expectedUser: Omit<User, 'persistentId'> = {
       displayName: 'Dataverse User',
       firstName: 'Dataverse',

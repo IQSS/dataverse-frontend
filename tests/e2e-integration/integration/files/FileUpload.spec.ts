@@ -5,9 +5,6 @@ import { DatasetHelper } from '../../shared/datasets/DatasetHelper'
 import { FileHelper } from '../../shared/files/FileHelper'
 import { DatasetNonNumericVersion } from '../../../../src/dataset/domain/models/Dataset'
 import chaiAsPromised from 'chai-as-promised'
-import { ApiConfig } from '@iqss/dataverse-client-javascript'
-import { DATAVERSE_BACKEND_URL, OIDC_AUTH_CONFIG } from '@/config'
-import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -28,14 +25,6 @@ describe('DirectUpload', () => {
 
   it('should upload file and add it to the dataset', async () => {
     const datasetResponse = await DatasetHelper.create()
-
-    // Change the api config to use bearer token
-    ApiConfig.init(
-      `${DATAVERSE_BACKEND_URL}/api/v1`,
-      DataverseApiAuthMechanism.BEARER_TOKEN,
-      undefined,
-      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-    )
 
     const dataset = await datasetRepository.getByPersistentId(
       datasetResponse.persistentId,
@@ -94,14 +83,6 @@ describe('DirectUpload', () => {
     const singlePartFile2 = FileHelper.createSinglePartFileBlob()
     let storageId1: string | undefined = undefined
     let storageId2: string | undefined = undefined
-
-    // Change the api config to use bearer token
-    ApiConfig.init(
-      `${DATAVERSE_BACKEND_URL}/api/v1`,
-      DataverseApiAuthMechanism.BEARER_TOKEN,
-      undefined,
-      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-    )
 
     const dataset = await datasetRepository.getByPersistentId(
       datasetResponse.persistentId,
@@ -183,14 +164,6 @@ describe('DirectUpload', () => {
 
     const multipartFile = FileHelper.createMultipartFileBlob()
     const controller = new AbortController()
-
-    // Change the api config to use bearer token
-    ApiConfig.init(
-      `${DATAVERSE_BACKEND_URL}/api/v1`,
-      DataverseApiAuthMechanism.BEARER_TOKEN,
-      undefined,
-      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-    )
 
     const dataset = await datasetRepository.getByPersistentId(
       datasetResponse.persistentId,

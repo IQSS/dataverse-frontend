@@ -31,9 +31,7 @@ import {
 } from '../../../../src/dataset/domain/models/Dataset'
 import { File } from '../../../../src/files/domain/models/File'
 import { FileIngest, FileIngestStatus } from '../../../../src/files/domain/models/FileIngest'
-import { ApiConfig } from '@iqss/dataverse-client-javascript'
-import { DATAVERSE_BACKEND_URL, OIDC_AUTH_CONFIG } from '@/config'
-import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
+
 const DRAFT_PARAM = DatasetNonNumericVersion.DRAFT
 
 chai.use(chaiAsPromised)
@@ -184,14 +182,6 @@ describe('File JSDataverse Repository', () => {
     it('gets all the files by dataset persistentId with the basic information', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(3))
 
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
-
       const dataset = await datasetRepository.getByPersistentId(
         datasetResponse.persistentId,
         DatasetNonNumericVersion.DRAFT
@@ -223,28 +213,12 @@ describe('File JSDataverse Repository', () => {
       }
       const datasetResponse = await DatasetHelper.createWithFiles([fileData])
 
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
-
       const dataset = await datasetRepository.getByPersistentId(
         datasetResponse.persistentId,
         DatasetNonNumericVersion.DRAFT
       )
 
       if (!dataset) throw new Error('Dataset not found')
-
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
 
       await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
@@ -256,14 +230,6 @@ describe('File JSDataverse Repository', () => {
     it('gets all the files by dataset persistentId after dataset publication', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(3))
 
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
-
       const dataset = await datasetRepository.getByPersistentId(
         datasetResponse.persistentId,
         DatasetNonNumericVersion.DRAFT
@@ -273,14 +239,6 @@ describe('File JSDataverse Repository', () => {
 
       await DatasetHelper.publish(dataset.persistentId)
       await TestsUtils.waitForNoLocks(dataset.persistentId) // Wait for the dataset to be published
-
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
 
       await fileRepository
         .getAllByDatasetPersistentId(
@@ -312,14 +270,6 @@ describe('File JSDataverse Repository', () => {
 
       await DatasetHelper.deaccession(datasetResponse.id)
 
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
-
       const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
       if (!dataset) throw new Error('Dataset not found')
 
@@ -350,14 +300,6 @@ describe('File JSDataverse Repository', () => {
       await FileHelper.download(datasetResponse.files[0].id)
       await TestsUtils.wait(3000) // Wait for the file to be downloaded
 
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
-
       const dataset = await datasetRepository.getByPersistentId(datasetResponse.persistentId)
       if (!dataset) throw new Error('Dataset not found')
 
@@ -378,14 +320,6 @@ describe('File JSDataverse Repository', () => {
         { type: FileLabelType.CATEGORY, value: 'category_2' }
       ]
       await FileHelper.addLabel(datasetResponse.files[0].id, expectedLabels)
-
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
 
       const dataset = await datasetRepository.getByPersistentId(
         datasetResponse.persistentId,
@@ -408,14 +342,6 @@ describe('File JSDataverse Repository', () => {
       const expectedLabels = [{ type: FileLabelType.TAG, value: 'Survey' }]
       await FileHelper.addLabel(datasetResponse.files[0].id, expectedLabels)
 
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
-
       const dataset = await datasetRepository.getByPersistentId(
         datasetResponse.persistentId,
         DatasetNonNumericVersion.DRAFT
@@ -434,14 +360,6 @@ describe('File JSDataverse Repository', () => {
         DatasetHelper.createWithFiles([file])
       )
       if (!datasetResponse.files) throw new Error('Files not found')
-
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
 
       const dataset = await datasetRepository.getByPersistentId(
         datasetResponse.persistentId,
@@ -468,14 +386,6 @@ describe('File JSDataverse Repository', () => {
       )
       await TestsUtils.waitForNoLocks(datasetResponse.persistentId) // Wait for the files to be embargoed
 
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
-
       const dataset = await datasetRepository.getByPersistentId(
         datasetResponse.persistentId,
         DRAFT_PARAM
@@ -494,14 +404,6 @@ describe('File JSDataverse Repository', () => {
     it.skip('gets all the files by dataset persistentId when files are tabular data', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(1, 'csv'))
       if (!datasetResponse.files) throw new Error('Files not found')
-
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
 
       const dataset = await datasetRepository.getByPersistentId(
         datasetResponse.persistentId,
@@ -531,14 +433,6 @@ describe('File JSDataverse Repository', () => {
     it('gets the files pagination selection when passing pagination', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(3))
 
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
-
       const dataset = await datasetRepository.getByPersistentId(
         datasetResponse.persistentId,
         DRAFT_PARAM
@@ -562,14 +456,6 @@ describe('File JSDataverse Repository', () => {
 
     it('gets all the files by dataset persistentId when passing sortBy criteria', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(3))
-
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
 
       const dataset = await datasetRepository.getByPersistentId(
         datasetResponse.persistentId,
@@ -601,14 +487,6 @@ describe('File JSDataverse Repository', () => {
         FileHelper.create('csv')
       ])
 
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
-
       const dataset = await datasetRepository.getByPersistentId(
         datasetResponse.persistentId,
         DRAFT_PARAM
@@ -633,14 +511,6 @@ describe('File JSDataverse Repository', () => {
       if (!datasetResponse.files) throw new Error('Files not found')
 
       await FileHelper.restrict(datasetResponse.files[0].id)
-
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
 
       const dataset = await datasetRepository.getByPersistentId(
         datasetResponse.persistentId,
@@ -667,14 +537,6 @@ describe('File JSDataverse Repository', () => {
       const category = { type: FileLabelType.CATEGORY, value: 'category' }
       await FileHelper.addLabel(datasetResponse.files[0].id, [category])
 
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
-
       const dataset = await datasetRepository.getByPersistentId(
         datasetResponse.persistentId,
         DRAFT_PARAM
@@ -695,14 +557,6 @@ describe('File JSDataverse Repository', () => {
 
     it('gets all the files by dataset persistentId when passing searchText criteria', async () => {
       const datasetResponse = await DatasetHelper.createWithFiles(FileHelper.createMany(3))
-
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
 
       const dataset = await datasetRepository.getByPersistentId(
         datasetResponse.persistentId,
@@ -736,14 +590,6 @@ describe('File JSDataverse Repository', () => {
 
       if (!datasetResponse.files) throw new Error('Files not found')
       datasetResponse.files.map((file) => FileHelper.delete(file.id))
-
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
 
       await fileRepository
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
@@ -797,14 +643,6 @@ describe('File JSDataverse Repository', () => {
     })
 
     it('gets FilesCountInfo by dataset persistentId', async () => {
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
-
       const dataset = await datasetRepository.getByPersistentId(datasetPersistentId, DRAFT_PARAM)
       if (!dataset) throw new Error('Dataset not found')
 
@@ -882,14 +720,6 @@ describe('File JSDataverse Repository', () => {
     })
 
     it('gets FilesCountInfo by dataset persistentId when passing filterByType criteria', async () => {
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
-
       const dataset = await datasetRepository.getByPersistentId(datasetPersistentId, DRAFT_PARAM)
       if (!dataset) throw new Error('Dataset not found')
 
@@ -983,14 +813,6 @@ describe('File JSDataverse Repository', () => {
       ]
       const datasetResponse = await DatasetHelper.createWithFiles(files)
 
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
-
       const dataset = await datasetRepository.getByPersistentId(
         datasetResponse.persistentId,
         DRAFT_PARAM
@@ -1036,14 +858,6 @@ describe('File JSDataverse Repository', () => {
       ]
       const datasetResponse = await DatasetHelper.createWithFiles(files)
 
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
-
       const dataset = await datasetRepository.getByPersistentId(
         datasetResponse.persistentId,
         DRAFT_PARAM
@@ -1082,14 +896,6 @@ describe('File JSDataverse Repository', () => {
       if (!datasetResponse.file) throw new Error('File not found')
 
       const expectedFile = fileExpectedData(datasetResponse.file.id)
-
-      // Change the api config to use bearer token
-      ApiConfig.init(
-        `${DATAVERSE_BACKEND_URL}/api/v1`,
-        DataverseApiAuthMechanism.BEARER_TOKEN,
-        undefined,
-        `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-      )
 
       await fileRepository.getById(datasetResponse.file.id).then((file) => {
         expect(file.name).to.deep.equal(expectedFile.name)

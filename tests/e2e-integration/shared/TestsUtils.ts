@@ -2,7 +2,7 @@ import { ApiConfig } from '@iqss/dataverse-client-javascript/dist/core'
 import { DataverseApiHelper } from './DataverseApiHelper'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 import { DatasetHelper } from './datasets/DatasetHelper'
-import { DATAVERSE_BACKEND_URL } from '../../../src/config'
+import { DATAVERSE_BACKEND_URL, OIDC_AUTH_CONFIG } from '../../../src/config'
 
 export class TestsUtils {
   static readonly DATAVERSE_BACKEND_URL = DATAVERSE_BACKEND_URL
@@ -11,7 +11,13 @@ export class TestsUtils {
   static readonly USER_USERNAME = 'user'
 
   static async setup(bearerToken: string) {
-    ApiConfig.init(`${this.DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.API_KEY)
+    ApiConfig.init(
+      `${this.DATAVERSE_BACKEND_URL}/api/v1`,
+      DataverseApiAuthMechanism.BEARER_TOKEN,
+      undefined,
+      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+    )
+
     await DataverseApiHelper.setup(bearerToken)
   }
 

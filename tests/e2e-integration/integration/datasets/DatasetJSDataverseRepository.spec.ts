@@ -22,9 +22,6 @@ import { DatasetDTO } from '../../../../src/dataset/domain/useCases/DTOs/Dataset
 import { CollectionHelper } from '../../shared/collection/CollectionHelper'
 const DRAFT_PARAM = DatasetNonNumericVersion.DRAFT
 import { VersionUpdateType } from '../../../../src/dataset/domain/models/VersionUpdateType'
-import { ApiConfig } from '@iqss/dataverse-client-javascript'
-import { DATAVERSE_BACKEND_URL, OIDC_AUTH_CONFIG } from '@/config'
-import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -153,15 +150,6 @@ describe('Dataset JSDataverse Repository', () => {
   it('gets the dataset by persistentId', async () => {
     const datasetResponse = await DatasetHelper.create(collectionId)
 
-    // Change the api config to use bearer token
-
-    ApiConfig.init(
-      `${DATAVERSE_BACKEND_URL}/api/v1`,
-      DataverseApiAuthMechanism.BEARER_TOKEN,
-      undefined,
-      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-    )
-
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, DRAFT_PARAM)
       .then((dataset) => {
@@ -192,14 +180,6 @@ describe('Dataset JSDataverse Repository', () => {
     // This is to simulate the user being logged out
     cy.clearAllLocalStorage()
     cy.clearAllCookies()
-
-    // Change the api config to use bearer token
-    ApiConfig.init(
-      `${DATAVERSE_BACKEND_URL}/api/v1`,
-      DataverseApiAuthMechanism.BEARER_TOKEN,
-      undefined,
-      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-    )
 
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, '1.0')
@@ -245,15 +225,6 @@ describe('Dataset JSDataverse Repository', () => {
     await DatasetHelper.publish(datasetResponse.persistentId)
     await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
 
-    // Change the api config to use bearer token
-
-    ApiConfig.init(
-      `${DATAVERSE_BACKEND_URL}/api/v1`,
-      DataverseApiAuthMechanism.BEARER_TOKEN,
-      undefined,
-      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-    )
-
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, '1.0')
       .then((dataset) => {
@@ -290,15 +261,6 @@ describe('Dataset JSDataverse Repository', () => {
   it('gets the dataset by persistentId and version DRAFT keyword', async () => {
     const datasetResponse = await DatasetHelper.create(collectionId)
 
-    // Change the api config to use bearer token
-
-    ApiConfig.init(
-      `${DATAVERSE_BACKEND_URL}/api/v1`,
-      DataverseApiAuthMechanism.BEARER_TOKEN,
-      undefined,
-      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-    )
-
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, DRAFT_PARAM)
       .then((dataset) => {
@@ -315,15 +277,6 @@ describe('Dataset JSDataverse Repository', () => {
   it('gets the dataset by privateUrlToken', async () => {
     const datasetResponse = await DatasetHelper.create(collectionId)
     const privateUrlResponse = await DatasetHelper.createPrivateUrl(datasetResponse.id)
-
-    // Change the api config to use bearer token
-
-    ApiConfig.init(
-      `${DATAVERSE_BACKEND_URL}/api/v1`,
-      DataverseApiAuthMechanism.BEARER_TOKEN,
-      undefined,
-      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-    )
 
     await datasetRepository.getByPrivateUrlToken(privateUrlResponse.token).then((dataset) => {
       if (!dataset) {
@@ -344,14 +297,6 @@ describe('Dataset JSDataverse Repository', () => {
     await TestsUtils.waitForNoLocks(datasetResponse.persistentId)
 
     await DatasetHelper.setCitationDateFieldType(datasetResponse.persistentId, 'dateOfDeposit')
-
-    // Change the api config to use bearer token
-    ApiConfig.init(
-      `${DATAVERSE_BACKEND_URL}/api/v1`,
-      DataverseApiAuthMechanism.BEARER_TOKEN,
-      undefined,
-      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-    )
 
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, '1.0')
@@ -374,14 +319,12 @@ describe('Dataset JSDataverse Repository', () => {
       return DatasetHelper.createAndPublish(previewCollectionId).then((datasetResponse) => {
         const paginationInfo = new DatasetPaginationInfo(1, 20)
 
-        // Change the api config to use bearer token
-
-        ApiConfig.init(
-          `${DATAVERSE_BACKEND_URL}/api/v1`,
-          DataverseApiAuthMechanism.BEARER_TOKEN,
-          undefined,
-          `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-        )
+        // ApiConfig.init(
+        //   `${DATAVERSE_BACKEND_URL}/api/v1`,
+        //   DataverseApiAuthMechanism.BEARER_TOKEN,
+        //   undefined,
+        //   `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+        // )
 
         return datasetRepository
           .getAllWithCount(previewCollectionId, paginationInfo)
@@ -404,15 +347,6 @@ describe('Dataset JSDataverse Repository', () => {
 
     await DatasetHelper.deaccession(datasetResponse.id)
 
-    // Change the api config to use bearer token
-
-    ApiConfig.init(
-      `${DATAVERSE_BACKEND_URL}/api/v1`,
-      DataverseApiAuthMechanism.BEARER_TOKEN,
-      undefined,
-      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-    )
-
     await datasetRepository.getByPersistentId(datasetResponse.persistentId).then((dataset) => {
       if (!dataset) {
         throw new Error('Dataset not found')
@@ -427,15 +361,6 @@ describe('Dataset JSDataverse Repository', () => {
   it('gets the dataset by persistentId when is locked', async () => {
     const datasetResponse = await DatasetHelper.create(collectionId)
     await DatasetHelper.lock(datasetResponse.id, DatasetLockReason.FINALIZE_PUBLICATION)
-
-    // Change the api config to use bearer token
-
-    ApiConfig.init(
-      `${DATAVERSE_BACKEND_URL}/api/v1`,
-      DataverseApiAuthMechanism.BEARER_TOKEN,
-      undefined,
-      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-    )
 
     await datasetRepository
       .getByPersistentId(datasetResponse.persistentId, DRAFT_PARAM)
@@ -457,15 +382,6 @@ describe('Dataset JSDataverse Repository', () => {
   })
 
   it('creates a new dataset from DatasetDTO', async () => {
-    // Change the api config to use bearer token
-
-    ApiConfig.init(
-      `${DATAVERSE_BACKEND_URL}/api/v1`,
-      DataverseApiAuthMechanism.BEARER_TOKEN,
-      undefined,
-      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-    )
-
     const datasetDTO: DatasetDTO = {
       metadataBlocks: [
         {
@@ -501,15 +417,6 @@ describe('Dataset JSDataverse Repository', () => {
 
   it('publishes a draft dataset', async () => {
     const datasetResponse = await DatasetHelper.create(collectionId)
-
-    // Change the api config to use bearer token
-
-    ApiConfig.init(
-      `${DATAVERSE_BACKEND_URL}/api/v1`,
-      DataverseApiAuthMechanism.BEARER_TOKEN,
-      undefined,
-      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-    )
 
     await datasetRepository.publish(datasetResponse.persistentId).then((response) => {
       expect(response).to.not.exist
