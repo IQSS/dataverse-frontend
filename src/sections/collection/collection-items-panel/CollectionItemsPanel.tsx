@@ -14,6 +14,7 @@ import { FilterPanel } from './filter-panel/FilterPanel'
 import { ItemsList } from './items-list/ItemsList'
 import { SearchPanel } from './search-panel/SearchPanel'
 import { ItemTypeChange } from './filter-panel/type-filters/TypeFilters'
+import { GetCollectionItemsQueryParams } from '@/collection/domain/models/GetCollectionItemsQueryParams'
 import styles from './CollectionItemsPanel.module.scss'
 
 interface CollectionItemsPanelProps {
@@ -104,7 +105,7 @@ export const CollectionItemsPanel = ({
       // Update the URL with the search value ,keep other querys and include all item types always
       setSearchParams((currentSearchParams) => ({
         ...currentSearchParams,
-        [QueryParamKey.COLLECTION_ITEM_TYPES]: [
+        [GetCollectionItemsQueryParams.TYPES]: [
           CollectionItemType.COLLECTION,
           CollectionItemType.DATASET,
           CollectionItemType.FILE
@@ -146,7 +147,7 @@ export const CollectionItemsPanel = ({
     // Update the URL with the new item types, keep other querys and include the search value if exists
     setSearchParams((currentSearchParams) => ({
       ...currentSearchParams,
-      [QueryParamKey.COLLECTION_ITEM_TYPES]: newItemsTypes.join(','),
+      [GetCollectionItemsQueryParams.TYPES]: newItemsTypes.join(','),
       ...(currentSearchCriteria.searchText && {
         [QueryParamKey.QUERY]: currentSearchCriteria.searchText
       })

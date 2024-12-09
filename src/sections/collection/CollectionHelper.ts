@@ -1,3 +1,4 @@
+import { GetCollectionItemsQueryParams } from '@/collection/domain/models/GetCollectionItemsQueryParams'
 import { CollectionItemType } from '../../collection/domain/models/CollectionItemType'
 import { QueryParamKey } from '../Route.enum'
 
@@ -11,7 +12,7 @@ export class CollectionHelper {
       ? decodeURIComponent(searchParams.get(QueryParamKey.QUERY) as string)
       : undefined
 
-    const typesParam = searchParams.get(QueryParamKey.COLLECTION_ITEM_TYPES) ?? undefined
+    const typesParam = searchParams.get(GetCollectionItemsQueryParams.TYPES) ?? undefined
 
     const typesQuery = typesParam
       ?.split(',')

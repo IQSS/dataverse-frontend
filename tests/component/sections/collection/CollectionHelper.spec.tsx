@@ -1,3 +1,4 @@
+import { GetCollectionItemsQueryParams } from '@/collection/domain/models/GetCollectionItemsQueryParams'
 import { CollectionHelper } from '@/sections/collection/CollectionHelper'
 import { QueryParamKey } from '@/sections/Route.enum'
 import { CollectionItemType } from '@iqss/dataverse-client-javascript'
@@ -12,7 +13,7 @@ describe('CollectionHelper', () => {
 
     searchParams.set(QueryParamKey.QUERY, QUERY_VALUE)
     searchParams.set(
-      QueryParamKey.COLLECTION_ITEM_TYPES,
+      GetCollectionItemsQueryParams.TYPES,
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET].join(',')
     )
     searchParams.set(QueryParamKey.PAGE, PAGE_NUMBER.toString())
@@ -41,7 +42,7 @@ describe('CollectionHelper', () => {
     const searchParams = new URLSearchParams({})
 
     searchParams.set(
-      QueryParamKey.COLLECTION_ITEM_TYPES,
+      GetCollectionItemsQueryParams.TYPES,
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET].join(',')
     )
     const collectionQueryParams = CollectionHelper.defineCollectionQueryParams(searchParams)

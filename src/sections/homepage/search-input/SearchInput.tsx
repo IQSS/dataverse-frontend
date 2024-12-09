@@ -4,6 +4,7 @@ import { Form, CloseButton } from '@iqss/dataverse-design-system'
 import { Search as SearchIcon } from 'react-bootstrap-icons'
 import { QueryParamKey, Route } from '../../Route.enum'
 import { CollectionItemType } from '../../../collection/domain/models/CollectionItemType'
+import { GetCollectionItemsQueryParams } from '@/collection/domain/models/GetCollectionItemsQueryParams'
 import styles from './SearchInput.module.scss'
 
 export const SearchInput = () => {
@@ -27,7 +28,7 @@ export const SearchInput = () => {
     const searchParams = new URLSearchParams()
     searchParams.set(QueryParamKey.QUERY, encodedSearchValue)
     searchParams.set(
-      QueryParamKey.COLLECTION_ITEM_TYPES,
+      GetCollectionItemsQueryParams.TYPES,
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(',')
     )
 
