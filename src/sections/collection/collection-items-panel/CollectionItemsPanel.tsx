@@ -19,6 +19,7 @@ import { ItemsList } from './items-list/ItemsList'
 import { SearchPanel } from './search-panel/SearchPanel'
 import { ItemTypeChange } from './filter-panel/type-filters/TypeFilters'
 import { RemoveAddFacetFilter } from './filter-panel/facets-filters/FacetFilter'
+import { SelectedFacets } from './selected-facets/SelectedFacets'
 import styles from './CollectionItemsPanel.module.scss'
 
 interface CollectionItemsPanelProps {
@@ -61,8 +62,6 @@ export const CollectionItemsPanel = ({
     undefined,
     collectionQueryParams.filtersQuery
   )
-
-  console.log({ currentSearchCriteria })
 
   const [paginationInfo, setPaginationInfo] = useState<CollectionItemsPaginationInfo>(
     new CollectionItemsPaginationInfo()
@@ -243,6 +242,9 @@ export const CollectionItemsPanel = ({
     }
   }
 
+  const showSelectedFacets =
+    currentSearchCriteria.filterQueries && currentSearchCriteria.filterQueries.length > 0
+
   useEffect(() => {
     setIsLoading(isLoadingItems)
   }, [isLoadingItems, setIsLoading])
@@ -268,21 +270,32 @@ export const CollectionItemsPanel = ({
           isLoadingCollectionItems={isLoadingItems}
         />
 
-        <ItemsList
-          parentCollectionAlias={collectionId}
-          items={accumulatedItems}
-          error={error}
-          accumulatedCount={accumulatedCount}
-          isLoadingItems={isLoadingItems}
-          areItemsAvailable={areItemsAvailable}
-          hasNextPage={hasNextPage}
-          isEmptyItems={isEmptyItems}
-          hasSearchValue={currentSearchCriteria.hasSearchText()}
-          itemsTypesSelected={currentSearchCriteria.itemTypes as CollectionItemType[]}
-          paginationInfo={paginationInfo}
-          onBottomReach={handleLoadMoreOnBottomReach}
-          ref={itemsListContainerRef}
-        />
+        <div>
+          {showSelectedFacets && facets.length > 0 && (
+            <SelectedFacets
+              onRemoveFacet={(filterQuery: FilterQuery) =>
+                handleFacetChange(filterQuery, RemoveAddFacetFilter.REMOVE)
+              }
+              selectedFilterQueries={currentSearchCriteria.filterQueries}
+            />
+          )}
+
+          <ItemsList
+            parentCollectionAlias={collectionId}
+            items={accumulatedItems}
+            error={error}
+            accumulatedCount={accumulatedCount}
+            isLoadingItems={isLoadingItems}
+            areItemsAvailable={areItemsAvailable}
+            hasNextPage={hasNextPage}
+            isEmptyItems={isEmptyItems}
+            hasSearchValue={currentSearchCriteria.hasSearchText()}
+            itemsTypesSelected={currentSearchCriteria.itemTypes as CollectionItemType[]}
+            paginationInfo={paginationInfo}
+            onBottomReach={handleLoadMoreOnBottomReach}
+            ref={itemsListContainerRef}
+          />
+        </div>
       </div>
     </section>
   )

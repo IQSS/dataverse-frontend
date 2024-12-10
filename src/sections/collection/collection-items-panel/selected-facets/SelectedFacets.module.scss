@@ -1,0 +1,33 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.selected-facets-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  .selected-facet-btn {
+    display: flex;
+    align-items: center;
+    padding-right: 2px;
+    padding-block: 2px;
+    color: $dv-primary-color;
+    font-weight: 600;
+    font-size: 80%;
+    line-height: 1;
+    background-color: color.adjust($dv-primary-color, $lightness: 50%);
+
+    &:hover {
+      background-color: color.adjust($dv-primary-color, $lightness: 40%);
+    }
+
+    &:active {
+      color: $dv-primary-color;
+    }
+
+    svg {
+      min-width: fit-content;
+    }
+  }
+}
