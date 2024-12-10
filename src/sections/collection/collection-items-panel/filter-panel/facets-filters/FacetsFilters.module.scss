@@ -1,0 +1,22 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+// TODO:ME Improve styles
+
+.facets-list,
+.labels-list {
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style-type: none;
+}
+
+.facets-list {
+  > li {
+    border-bottom: solid 1px $dv-border-color;
+  }
+}
+
+.labels-list {
+  .label-btn {
+    padding: 0;
+  }
+}
