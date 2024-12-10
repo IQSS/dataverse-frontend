@@ -8,12 +8,14 @@ interface FacetsFiltersProps {
   facets: CollectionItemsFacet[]
   currentFilterQueries?: FilterQuery[]
   onFacetChange: (filterQuery: FilterQuery, removeOrAdd: RemoveAddFacetFilter) => void
+  isLoadingCollectionItems: boolean
 }
 
 export const FacetsFilters = ({
   facets,
   currentFilterQueries,
-  onFacetChange
+  onFacetChange,
+  isLoadingCollectionItems
 }: FacetsFiltersProps) => {
   return (
     <Stack gap={2} as="ul" className={styles['facets-list']}>
@@ -28,6 +30,7 @@ export const FacetsFilters = ({
             key={facet.name}
             facetSelectedLabels={facetSelectedLabels}
             onFacetChange={onFacetChange}
+            isLoadingCollectionItems={isLoadingCollectionItems}
           />
         )
       })}

@@ -60,6 +60,7 @@ export const FilterPanel = ({
               facets={facets}
               currentFilterQueries={currentFilterQueries}
               onFacetChange={onFacetChange}
+              isLoadingCollectionItems={isLoadingCollectionItems}
             />
           </div>
         </Offcanvas.Body>

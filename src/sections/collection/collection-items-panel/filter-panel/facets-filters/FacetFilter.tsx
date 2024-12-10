@@ -16,12 +16,14 @@ interface FacetFilterGroupProps {
   facet: CollectionItemsFacet
   facetSelectedLabels?: string[]
   onFacetChange: (filterQuery: FilterQuery, removeOrAdd: RemoveAddFacetFilter) => void
+  isLoadingCollectionItems: boolean
 }
 
 export const FacetFilterGroup = ({
   facet,
   facetSelectedLabels,
-  onFacetChange
+  onFacetChange,
+  isLoadingCollectionItems
 }: FacetFilterGroupProps) => {
   const [visibleCount, setVisibleCount] = useState(FACETS_PER_VIEW)
 
@@ -63,6 +65,7 @@ export const FacetFilterGroup = ({
                 aria-label={
                   isFacetLabelSelected ? `Remove ${label.name} filter` : `Add ${label.name} filter`
                 }
+                disabled={isLoadingCollectionItems}
                 variant="link"
                 size="sm">
                 <span>{`${label.name} (${label.count})`}</span>
@@ -77,14 +80,22 @@ export const FacetFilterGroup = ({
         <Row>
           <Col>
             {showLessButton && (
-              <Button variant="link" size="sm" onClick={handleShowLess}>
+              <Button
+                variant="link"
+                size="sm"
+                onClick={handleShowLess}
+                disabled={isLoadingCollectionItems}>
                 Less...
               </Button>
             )}
           </Col>
           <Col className={styles['show-more']}>
             {showMoreButton && (
-              <Button variant="link" size="sm" onClick={handleShowMore}>
+              <Button
+                variant="link"
+                size="sm"
+                onClick={handleShowMore}
+                disabled={isLoadingCollectionItems}>
                 More...
               </Button>
             )}

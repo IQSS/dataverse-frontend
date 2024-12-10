@@ -284,6 +284,7 @@ export const CollectionItemsPanel = ({
                 handleFacetChange(filterQuery, RemoveAddFacetFilter.REMOVE)
               }
               selectedFilterQueries={currentSearchCriteria.filterQueries}
+              isLoadingCollectionItems={isLoadingItems}
             />
           )}
 
