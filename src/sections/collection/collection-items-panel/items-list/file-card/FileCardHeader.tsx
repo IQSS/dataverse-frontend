@@ -8,6 +8,7 @@ import { Route } from '@/sections/Route.enum'
 import { LinkToPage } from '@/sections/shared/link-to-page/LinkToPage'
 import { DatasetLabels } from '@/sections/dataset/dataset-labels/DatasetLabels'
 import { FileCardHelper } from './FileCardHelper'
+import { FileAccessRestrictedIcon } from '../../../../file/file-access/FileAccessRestrictedIcon'
 import styles from './FileCard.module.scss'
 
 interface FileCardHeaderProps {
@@ -21,6 +22,10 @@ export function FileCardHeader({ filePreview }: FileCardHeaderProps) {
   return (
     <header className={styles['card-header-container']}>
       <div className={styles['left-side-content']}>
+        <div className={styles['restricted-icon']}>
+          {/* TODO: change the properties to dynamic ones for the icon */}
+          <FileAccessRestrictedIcon restricted={true} canDownloadFile={false} />
+        </div>
         <LinkToPage
           page={Route.FILES}
           type={DvObjectType.FILE}
