@@ -3,7 +3,7 @@ export enum GetCollectionItemsQueryParams {
   ORDER = 'order',
   START = 'start',
   TYPES = 'types',
-  FILTER_QUERIES = 'fq'
+  FILTER_QUERIES = 'fqs'
 }
 
 export enum SortType {
