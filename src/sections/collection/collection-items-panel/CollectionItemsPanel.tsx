@@ -188,7 +188,6 @@ export const CollectionItemsPanel = ({
             (fQuery) => fQuery !== filterQuery
           )
 
-    // KEEP SEARCH VALUE IF EXISTS
     itemsListContainerRef.current?.scrollTo({ top: 0 })
 
     const resetPaginationInfo = new CollectionItemsPaginationInfo()

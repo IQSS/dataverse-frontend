@@ -15,7 +15,6 @@
     color: $dv-primary-color;
     font-weight: 600;
     font-size: 80%;
-    line-height: 1;
     background-color: color.adjust($dv-primary-color, $lightness: 50%);
 
     &:hover {

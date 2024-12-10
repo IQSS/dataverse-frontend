@@ -10,13 +10,43 @@
 }
 
 .facets-list {
-  > li {
-    border-bottom: solid 1px $dv-border-color;
-  }
-}
+  padding-block: 1rem;
 
-.labels-list {
-  .label-btn {
-    padding: 0;
+  .facet-filter-group {
+    padding-bottom: 0.5rem;
+    border-bottom: solid 1px $dv-border-color;
+
+    .facet-name {
+      font-weight: 600;
+    }
+
+    .labels-list {
+      li {
+        display: flex;
+      }
+
+      button {
+        padding: 0;
+        text-decoration: none;
+        text-wrap: nowrap;
+
+        &[aria-selected='true'] {
+          font-weight: 600;
+        }
+
+        span {
+          text-wrap: wrap;
+        }
+
+        svg {
+          min-width: fit-content;
+        }
+      }
+    }
+
+    .show-more {
+      display: flex;
+      justify-content: flex-end;
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button, Col, Row } from '@iqss/dataverse-design-system'
-import { XLg } from 'react-bootstrap-icons'
+import { X as CloseIcon } from 'react-bootstrap-icons'
 import { CollectionItemsFacet } from '@/collection/domain/models/CollectionItemSubset'
 import { FilterQuery } from '@/collection/domain/models/GetCollectionItemsQueryParams'
 import styles from './FacetsFilters.module.scss'
@@ -12,13 +12,17 @@ export enum RemoveAddFacetFilter {
   ADD = 'add'
 }
 
-interface FacetFilterProps {
+interface FacetFilterGroupProps {
   facet: CollectionItemsFacet
   facetSelectedLabels?: string[]
   onFacetChange: (filterQuery: FilterQuery, removeOrAdd: RemoveAddFacetFilter) => void
 }
 
-export const FacetFilter = ({ facet, facetSelectedLabels, onFacetChange }: FacetFilterProps) => {
+export const FacetFilterGroup = ({
+  facet,
+  facetSelectedLabels,
+  onFacetChange
+}: FacetFilterGroupProps) => {
   const [visibleCount, setVisibleCount] = useState(FACETS_PER_VIEW)
 
   const handleShowMore = () => {
@@ -43,11 +47,9 @@ export const FacetFilter = ({ facet, facetSelectedLabels, onFacetChange }: Facet
   const showMoreLessButtons =
     (showMoreButton || showLessButton) && facet.labels.length > FACETS_PER_VIEW
 
-  // TODO:ME - Increase width of X icon
-
   return (
-    <li key={facet.name}>
-      <span>{facet.friendlyName}</span>
+    <li key={facet.name} className={styles['facet-filter-group']}>
+      <span className={styles['facet-name']}>{facet.friendlyName}</span>
       <ul className={styles['labels-list']}>
         {facet.labels.slice(0, visibleCount).map((label) => {
           const isFacetLabelSelected = Boolean(facetSelectedLabels?.includes(label.name))
@@ -56,10 +58,15 @@ export const FacetFilter = ({ facet, facetSelectedLabels, onFacetChange }: Facet
             <li key={label.name}>
               <Button
                 onClick={() => handleClickFacetLabel(facet.name, label.name)}
+                role="option"
+                aria-selected={isFacetLabelSelected}
+                aria-label={
+                  isFacetLabelSelected ? `Remove ${label.name} filter` : `Add ${label.name} filter`
+                }
                 variant="link"
-                size="sm"
-                className={styles['label-btn']}>
-                {`${label.name} (${label.count})`} {isFacetLabelSelected && <XLg size={16} />}
+                size="sm">
+                <span>{`${label.name} (${label.count})`}</span>
+                {isFacetLabelSelected && <CloseIcon size={22} />}
               </Button>
             </li>
           )
@@ -75,7 +82,7 @@ export const FacetFilter = ({ facet, facetSelectedLabels, onFacetChange }: Facet
               </Button>
             )}
           </Col>
-          <Col>
+          <Col className={styles['show-more']}>
             {showMoreButton && (
               <Button variant="link" size="sm" onClick={handleShowMore}>
                 More...

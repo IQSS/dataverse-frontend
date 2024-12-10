@@ -1,7 +1,7 @@
 import { Stack } from '@iqss/dataverse-design-system'
 import { CollectionItemsFacet } from '@/collection/domain/models/CollectionItemSubset'
 import { FilterQuery } from '@/collection/domain/models/GetCollectionItemsQueryParams'
-import { FacetFilter, RemoveAddFacetFilter } from './FacetFilter'
+import { FacetFilterGroup, RemoveAddFacetFilter } from './FacetFilter'
 import styles from './FacetsFilters.module.scss'
 
 interface FacetsFiltersProps {
@@ -16,14 +16,14 @@ export const FacetsFilters = ({
   onFacetChange
 }: FacetsFiltersProps) => {
   return (
-    <Stack gap={1} as="ul" className={styles['facets-list']}>
+    <Stack gap={2} as="ul" className={styles['facets-list']}>
       {facets.map((facet) => {
         const facetSelectedLabels = currentFilterQueries
           ?.filter((query) => query.split(':')[0] === facet.name)
           .map((query) => query.split(':')[1])
 
         return (
-          <FacetFilter
+          <FacetFilterGroup
             facet={facet}
             key={facet.name}
             facetSelectedLabels={facetSelectedLabels}
