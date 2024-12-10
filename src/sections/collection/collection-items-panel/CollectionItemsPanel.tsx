@@ -193,16 +193,24 @@ export const CollectionItemsPanel = ({
     const resetPaginationInfo = new CollectionItemsPaginationInfo()
     setPaginationInfo(resetPaginationInfo)
 
-    // Update the URL with the new item types, keep other querys and include the search value if exists
-    setSearchParams((currentSearchParams) => ({
-      ...currentSearchParams,
-      ...(newFilterQueries.length > 0 && {
-        [GetCollectionItemsQueryParams.FILTER_QUERIES]: newFilterQueries.join(',')
-      }),
-      ...(currentSearchCriteria.searchText && {
-        [QueryParamKey.QUERY]: currentSearchCriteria.searchText
-      })
-    }))
+    const newFilterQueriesWithFacetValueEncoded = newFilterQueries.map((fq) => {
+      const [facetName, facetValue] = fq.split(':')
+      return `${facetName}:${encodeURIComponent(facetValue)}`
+    })
+
+    // Update the URL with the new facets, keep other querys and include the search value if exists
+    setSearchParams((currentSearchParams) => {
+      return {
+        ...currentSearchParams,
+        ...(newFilterQueries.length > 0 && {
+          [GetCollectionItemsQueryParams.FILTER_QUERIES]:
+            newFilterQueriesWithFacetValueEncoded.join(',')
+        }),
+        ...(currentSearchCriteria.searchText && {
+          [QueryParamKey.QUERY]: currentSearchCriteria.searchText
+        })
+      }
+    })
 
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
       currentSearchCriteria.searchText,
