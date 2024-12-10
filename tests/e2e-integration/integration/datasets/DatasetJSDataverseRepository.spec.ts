@@ -319,13 +319,6 @@ describe('Dataset JSDataverse Repository', () => {
       return DatasetHelper.createAndPublish(previewCollectionId).then((datasetResponse) => {
         const paginationInfo = new DatasetPaginationInfo(1, 20)
 
-        // ApiConfig.init(
-        //   `${DATAVERSE_BACKEND_URL}/api/v1`,
-        //   DataverseApiAuthMechanism.BEARER_TOKEN,
-        //   undefined,
-        //   `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
-        // )
-
         return datasetRepository
           .getAllWithCount(previewCollectionId, paginationInfo)
           .then((datasetsWithCount) => {
