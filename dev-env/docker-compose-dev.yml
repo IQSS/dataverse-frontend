@@ -49,10 +49,6 @@ services:
       DATAVERSE_DB_USER: ${DATAVERSE_DB_USER}
       DATAVERSE_FEATURE_API_BEARER_AUTH: 1
       DATAVERSE_FEATURE_API_BEARER_AUTH_PROVIDE_MISSING_CLAIMS: 1
-      DATAVERSE_AUTH_OIDC_ENABLED: 1
-      DATAVERSE_AUTH_OIDC_CLIENT_ID: test
-      DATAVERSE_AUTH_OIDC_CLIENT_SECRET: 94XHrfNRwXsjqTqApRrwWmhDLDHpIYV8
-      DATAVERSE_AUTH_OIDC_AUTH_SERVER_URL: http://keycloak.mydomain.com:9080/realms/test
       JVM_ARGS: -Ddataverse.pid.providers=fake
         -Ddataverse.pid.default-provider=fake
         -Ddataverse.pid.fake.type=FAKE
@@ -72,6 +68,11 @@ services:
         -Ddataverse.files.s3.connection-pool-size=2048
         -Ddataverse.files.s3.custom-endpoint-region=us-east-1
         -Ddataverse.files.s3.custom-endpoint-url=https://s3.us-east-1.amazonaws.com
+        -Ddataverse.auth.oidc.enabled=true
+        -Ddataverse.auth.oidc.client-id=test
+        -Ddataverse.auth.oidc.client-secret=94XHrfNRwXsjqTqApRrwWmhDLDHpIYV8
+        -Ddataverse.auth.oidc.auth-server-url=http://keycloak.mydomain.com:9080/realms/test
+        -Ddataverse.auth.oidc.pkce.enabled=true
     expose:
       - '8080'
     # TODO: The port has been opened for the redirection to /oauth2/callback.xhtml after a JSF OIDC login. We may prefer to change this to use the proxy.
@@ -125,6 +126,8 @@ services:
       - POSTGRES_PASSWORD=secret
     expose:
       - '5432'
+    ports:
+      - '5432:5432'
     networks:
       - dataverse
     volumes:
