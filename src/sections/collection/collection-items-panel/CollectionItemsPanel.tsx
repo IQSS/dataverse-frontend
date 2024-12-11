@@ -44,7 +44,6 @@ interface CollectionItemsPanelProps {
  * Every time a load of items is triggered, the pagination info is updated and the URL is updated with the new query params so it can be shared and the user can navigate back and forward in the browser.
  */
 
-// TODO:ME - Nothing found message when no items are found
 // TODO:ME - Add a remove all filters button
 // TODO:ME - Maybe different button to show more facets
 // TODO:ME - margin top scroll
@@ -305,6 +304,7 @@ export const CollectionItemsPanel = ({
             isEmptyItems={isEmptyItems}
             hasSearchValue={currentSearchCriteria.hasSearchText()}
             itemsTypesSelected={currentSearchCriteria.itemTypes as CollectionItemType[]}
+            filterQueriesSelected={currentSearchCriteria.filterQueries ?? []}
             paginationInfo={paginationInfo}
             onBottomReach={handleLoadMoreOnBottomReach}
             ref={itemsListContainerRef}

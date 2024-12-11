@@ -14,7 +14,8 @@
       "collectionAndDataset": "collections or datasets",
       "collectionAndFile": "collections or files",
       "datasetAndFile": "datasets or files"
-    }
+    },
+    "noItemsBasedOnFilterQueries": "There are no search results based on how you have narrowed your search. You can check out the <1>search guide</1> for tips."
   },
   "noSearchMatches": "There are no collections, datasets, or files that match your search. Please try a new search by using other or broader terms. You can also check out the <anchor>search guide</anchor> for tips.",
   "createdAlert": "You have successfully created your collection! To learn more about what you can do with your collection, check out the <anchor>User Guide</anchor>.",

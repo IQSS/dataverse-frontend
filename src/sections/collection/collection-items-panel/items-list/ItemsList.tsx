@@ -5,6 +5,7 @@ import cn from 'classnames'
 import { type CollectionItem } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
+import { FilterQuery } from '@/collection/domain/models/GetCollectionItemsQueryParams'
 import { PaginationResultsInfo } from '@/sections/shared/pagination/PaginationResultsInfo'
 import { NO_COLLECTION_ITEMS } from '../useGetAccumulatedItems'
 import { ErrorItemsMessage } from './ErrorItemsMessage'
@@ -28,6 +29,7 @@ interface ItemsListProps {
   paginationInfo: CollectionItemsPaginationInfo
   onBottomReach: (paginationInfo: CollectionItemsPaginationInfo) => void
   itemsTypesSelected: CollectionItemType[]
+  filterQueriesSelected: FilterQuery[]
 }
 
 export const ItemsList = forwardRef(
@@ -44,7 +46,8 @@ export const ItemsList = forwardRef(
       hasSearchValue,
       paginationInfo,
       onBottomReach,
-      itemsTypesSelected
+      itemsTypesSelected,
+      filterQueriesSelected
     }: ItemsListProps,
     ref
   ) => {
@@ -72,7 +75,12 @@ export const ItemsList = forwardRef(
           tabIndex={0}
           ref={ref as ForwardedRef<HTMLDivElement>}
           data-testid="items-list-scrollable-container">
-          {showNoItemsMessage && <NoItemsMessage itemsTypesSelected={itemsTypesSelected} />}
+          {showNoItemsMessage && (
+            <NoItemsMessage
+              itemsTypesSelected={itemsTypesSelected}
+              filterQueriesSelected={filterQueriesSelected}
+            />
+          )}
 
           {showNoSearchMatchesMessage && <NoSearchMatchesMessage />}
 
