@@ -3,6 +3,7 @@ import { CollectionItemsFacet } from '@/collection/domain/models/CollectionItemS
 import { FilterQuery } from '@/collection/domain/models/GetCollectionItemsQueryParams'
 import { FacetFilterGroup, RemoveAddFacetFilter } from './FacetFilterGroup'
 import styles from './FacetsFilters.module.scss'
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 
 interface FacetsFiltersProps {
   facets: CollectionItemsFacet[]
@@ -17,6 +18,10 @@ export const FacetsFilters = ({
   onFacetChange,
   isLoadingCollectionItems
 }: FacetsFiltersProps) => {
+  if (isLoadingCollectionItems && facets.length === 0) {
+    return <FacetsFiltersSkeleton />
+  }
+
   return (
     <Stack gap={2} as="ul" className={styles['facets-list']}>
       {facets.map((facet) => {
@@ -37,3 +42,17 @@ export const FacetsFilters = ({
     </Stack>
   )
 }
+
+const FacetsFiltersSkeleton = () => (
+  <SkeletonTheme>
+    {Array.from({ length: 3 }).map((_, index) => (
+      <div style={{ padding: '16px 0 8px 0' }} key={index}>
+        <Skeleton height={18} width={160} style={{ marginBottom: 8 }} />
+
+        {Array.from({ length: 4 }).map((_, index) => (
+          <Skeleton key={index} height={14} width={120} />
+        ))}
+      </div>
+    ))}
+  </SkeletonTheme>
+)

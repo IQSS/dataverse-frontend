@@ -45,7 +45,6 @@ interface CollectionItemsPanelProps {
  */
 
 // TODO:ME - margin top scroll
-// TODO:ME - Facet filters skeleton?
 // TODO:ME - Add locales
 
 export const CollectionItemsPanel = ({
