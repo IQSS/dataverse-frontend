@@ -31,5 +31,7 @@
     "question": "Are you sure you want to publish your collection? Once you do so it must remain published.",
     "error": "There was an error publishing your collection."
   },
-  "publishedAlert": "Your collection is now public."
+  "publishedAlert": "Your collection is now public.",
+  "addFacetFilter": "Add {{labelName}} facet filter",
+  "removeSelectedFacet": "Remove {{labelName}} facet filter"
 }

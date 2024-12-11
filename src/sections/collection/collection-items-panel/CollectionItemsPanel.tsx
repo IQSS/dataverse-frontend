@@ -44,9 +44,6 @@ interface CollectionItemsPanelProps {
  * Every time a load of items is triggered, the pagination info is updated and the URL is updated with the new query params so it can be shared and the user can navigate back and forward in the browser.
  */
 
-// TODO:ME - margin top scroll
-// TODO:ME - Add locales
-
 export const CollectionItemsPanel = ({
   collectionId,
   collectionRepository,

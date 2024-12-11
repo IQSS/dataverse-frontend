@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Button } from '@iqss/dataverse-design-system'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import { FilterQuery } from '@/collection/domain/models/GetCollectionItemsQueryParams'
@@ -14,6 +15,8 @@ export const SelectedFacets = ({
   onRemoveFacet,
   isLoadingCollectionItems
 }: SelectedFacetsProps) => {
+  const { t } = useTranslation('collection')
+
   return (
     <div className={styles['selected-facets-container']}>
       {selectedFilterQueries.map((filterQuery) => {
@@ -25,7 +28,7 @@ export const SelectedFacets = ({
             className={styles['selected-facet-btn']}
             onClick={() => onRemoveFacet(filterQuery)}
             disabled={isLoadingCollectionItems}
-            aria-label={`Remove ${labelName} query filter`}
+            aria-label={t('removeSelectedFacet', { labelName })}
             key={filterQuery}>
             {labelName} <CloseIcon size={22} />
           </Button>

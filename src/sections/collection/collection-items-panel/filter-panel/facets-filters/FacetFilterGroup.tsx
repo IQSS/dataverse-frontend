@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button, Col, Row } from '@iqss/dataverse-design-system'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import { CollectionItemsFacet } from '@/collection/domain/models/CollectionItemSubset'
@@ -25,6 +26,9 @@ export const FacetFilterGroup = ({
   onFacetChange,
   isLoadingCollectionItems
 }: FacetFilterGroupProps) => {
+  const { t } = useTranslation('collection')
+  const { t: tShared } = useTranslation('shared')
+
   const [visibleCount, setVisibleCount] = useState(FACETS_PER_VIEW)
 
   const handleShowMore = () => {
@@ -63,7 +67,9 @@ export const FacetFilterGroup = ({
                 role="option"
                 aria-selected={isFacetLabelSelected}
                 aria-label={
-                  isFacetLabelSelected ? `Remove ${label.name} filter` : `Add ${label.name} filter`
+                  isFacetLabelSelected
+                    ? t('removeSelectedFacet', { labelName: label.name })
+                    : t('addFacetFilter', { labelName: label.name })
                 }
                 disabled={isLoadingCollectionItems}
                 variant="link"
@@ -85,7 +91,7 @@ export const FacetFilterGroup = ({
                 size="sm"
                 onClick={handleShowLess}
                 disabled={isLoadingCollectionItems}>
-                Less...
+                {tShared('less')}
               </Button>
             )}
           </Col>
@@ -96,7 +102,7 @@ export const FacetFilterGroup = ({
                 size="sm"
                 onClick={handleShowMore}
                 disabled={isLoadingCollectionItems}>
-                More...
+                {tShared('more')}
               </Button>
             )}
           </Col>
