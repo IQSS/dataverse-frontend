@@ -7,7 +7,7 @@ import { ItemTypeChange, TypeFilters } from './type-filters/TypeFilters'
 import { CollectionItemsFacet } from '@/collection/domain/models/CollectionItemSubset'
 import { FilterQuery } from '@/collection/domain/models/GetCollectionItemsQueryParams'
 import { FacetsFilters } from './facets-filters/FacetsFilters'
-import { RemoveAddFacetFilter } from './facets-filters/FacetFilter'
+import { RemoveAddFacetFilter } from './facets-filters/FacetFilterGroup'
 import styles from './FilterPanel.module.scss'
 
 interface FilterPanelProps {

@@ -1,7 +1,7 @@
 import { Stack } from '@iqss/dataverse-design-system'
 import { CollectionItemsFacet } from '@/collection/domain/models/CollectionItemSubset'
 import { FilterQuery } from '@/collection/domain/models/GetCollectionItemsQueryParams'
-import { FacetFilterGroup, RemoveAddFacetFilter } from './FacetFilter'
+import { FacetFilterGroup, RemoveAddFacetFilter } from './FacetFilterGroup'
 import styles from './FacetsFilters.module.scss'
 
 interface FacetsFiltersProps {

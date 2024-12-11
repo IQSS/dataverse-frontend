@@ -25,6 +25,17 @@
       font-weight: 600;
     }
 
+    .show-less-more {
+      button {
+        text-decoration: none;
+      }
+
+      :last-child {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+
     .labels-list {
       li {
         display: flex;
@@ -52,11 +63,6 @@
           min-width: fit-content;
         }
       }
-    }
-
-    .show-more {
-      display: flex;
-      justify-content: flex-end;
     }
   }
 }

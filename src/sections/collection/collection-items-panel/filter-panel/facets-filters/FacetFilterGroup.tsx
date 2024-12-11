@@ -77,7 +77,7 @@ export const FacetFilterGroup = ({
       </ul>
 
       {showMoreLessButtons && (
-        <Row>
+        <Row className={styles['show-less-more']}>
           <Col>
             {showLessButton && (
               <Button
@@ -89,7 +89,7 @@ export const FacetFilterGroup = ({
               </Button>
             )}
           </Col>
-          <Col className={styles['show-more']}>
+          <Col>
             {showMoreButton && (
               <Button
                 variant="link"
