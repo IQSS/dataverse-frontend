@@ -63,10 +63,11 @@ export const ItemsList = forwardRef(
     const showNotSentrySkeleton = isLoadingItems && isEmptyItems
 
     return (
-      <section ref={rootRef}>
+      <section ref={rootRef} className={styles['items-list-root-ref']}>
         <div
           className={cn(styles['items-list'], {
-            [styles['empty-or-error']]: isEmptyItems || error
+            [styles['empty-or-error']]: isEmptyItems || error,
+            [styles['only-one-or-two-items']]: items.length === 1 || items.length === 2
           })}
           tabIndex={0}
           ref={ref as ForwardedRef<HTMLDivElement>}
@@ -141,7 +142,7 @@ export const InitialLoadingSkeleton = () => (
       data-testid="collection-items-list-infinite-scroll-skeleton-header">
       <Skeleton width="17%" />
     </div>
-    <Skeleton height="109px" style={{ marginBottom: 6 }} />
+    <Skeleton height="109px" style={{ marginBottom: 6, marginTop: 16 }} />
     <Skeleton height="109px" style={{ marginBottom: 6 }} />
     <Skeleton height="109px" style={{ marginBottom: 6 }} />
     <Skeleton height="109px" style={{ marginBottom: 6 }} />

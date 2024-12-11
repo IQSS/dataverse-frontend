@@ -1,7 +1,5 @@
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
-// TODO:ME Improve styles
-
 .facets-list,
 .labels-list {
   margin-bottom: 0;
@@ -10,11 +8,18 @@
 }
 
 .facets-list {
-  padding-block: 1rem;
+  padding-top: 1rem;
+
+  &:empty {
+    padding-top: 0;
+  }
 
   .facet-filter-group {
     padding-bottom: 0.5rem;
-    border-bottom: solid 1px $dv-border-color;
+
+    &:not(:last-child) {
+      border-bottom: solid 1px $dv-border-color;
+    }
 
     .facet-name {
       font-weight: 600;

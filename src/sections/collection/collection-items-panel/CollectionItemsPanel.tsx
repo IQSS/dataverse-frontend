@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { Stack } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
@@ -42,6 +43,12 @@ interface CollectionItemsPanelProps {
  * By default if no query params are present in the URL, the search query is empty and the item types are COLLECTION and DATASET.
  * Every time a load of items is triggered, the pagination info is updated and the URL is updated with the new query params so it can be shared and the user can navigate back and forward in the browser.
  */
+
+// TODO:ME - Nothing found message when no items are found
+// TODO:ME - Add a remove all filters button
+// TODO:ME - Maybe different button to show more facets
+// TODO:ME - margin top scroll
+// TODO:ME - Facet filters skeleton?
 
 export const CollectionItemsPanel = ({
   collectionId,
@@ -147,7 +154,6 @@ export const CollectionItemsPanel = ({
           (itemType) => itemType !== type
         )
 
-    // KEEP SEARCH VALUE IF EXISTS
     itemsListContainerRef.current?.scrollTo({ top: 0 })
 
     const resetPaginationInfo = new CollectionItemsPaginationInfo()
@@ -277,7 +283,7 @@ export const CollectionItemsPanel = ({
           isLoadingCollectionItems={isLoadingItems}
         />
 
-        <div>
+        <Stack direction="vertical" gap={2}>
           {showSelectedFacets && facets.length > 0 && (
             <SelectedFacets
               onRemoveFacet={(filterQuery: FilterQuery) =>
@@ -303,7 +309,7 @@ export const CollectionItemsPanel = ({
             onBottomReach={handleLoadMoreOnBottomReach}
             ref={itemsListContainerRef}
           />
-        </div>
+        </Stack>
       </div>
     </section>
   )
