@@ -1,5 +1,6 @@
 import { FilePreview as JSFilePreview } from '@iqss/dataverse-client-javascript'
 import { FileItemTypePreview } from '../../domain/models/FileItemTypePreview'
+import { FileLabelType } from '@/files/domain/models/FileMetadata'
 
 export class JSFileItemTypePreviewMapper {
   static toFileItemTypePreview(jsFilePreview: JSFilePreview): FileItemTypePreview {
@@ -22,7 +23,13 @@ export class JSFileItemTypePreviewMapper {
       datasetPersistentId: jsFilePreview.datasetPersistentId,
       datasetCitation: jsFilePreview.datasetCitation,
       publicationStatuses: jsFilePreview.publicationStatuses,
-      releaseOrCreateDate: jsFilePreview.releaseOrCreateDate
+      releaseOrCreateDate: jsFilePreview.releaseOrCreateDate,
+      tags: [
+        { type: FileLabelType.CATEGORY, value: 'mock-CATEGORY' },
+        { type: FileLabelType.TAG, value: 'mock-TAG' }
+      ],
+      variablesCount: 12,
+      observationsCount: 6
     }
   }
 }

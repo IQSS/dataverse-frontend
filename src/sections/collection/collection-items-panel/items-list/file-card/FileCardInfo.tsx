@@ -6,6 +6,7 @@ import { FileCardHelper } from './FileCardHelper'
 import { Route } from '@/sections/Route.enum'
 import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { LinkToPage } from '@/sections/shared/link-to-page/LinkToPage'
+import { FileLabels } from '@/sections/file/file-labels/FileLabels'
 import { CopyToClipboardButton } from '@/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/copy-to-clipboard-button/CopyToClipboardButton'
 import styles from './FileCard.module.scss'
 
@@ -15,6 +16,8 @@ interface FileCardInfoProps {
 
 export function FileCardInfo({ filePreview }: FileCardInfoProps) {
   const bytesFormatted = FileCardHelper.formatBytesToCompactNumber(filePreview.sizeInBytes)
+  const variablesCount = filePreview.variablesCount || 0
+  const observationsCount = filePreview.observationsCount || 0
 
   return (
     <div className={styles['card-info-container']}>
@@ -38,15 +41,23 @@ export function FileCardInfo({ filePreview }: FileCardInfoProps) {
 
         <div className={styles.info}>
           <span>{filePreview.fileType}</span>
-          <span>{`- ${bytesFormatted}`}</span>
+          <span>{`- ${bytesFormatted}`}</span>{' '}
+          {/*TODO: filePreview.fileType is tabular file, then show variables and observations */}
+          {filePreview.fileType === 'Tab-Delimited' && (
+            <span>{`- ${variablesCount} variables, ${observationsCount} observations`}</span>
+          )}
           {filePreview.checksum && (
             <Stack direction="horizontal" gap={0}>
               <span>{`- ${filePreview.checksum.type}:`}</span>
+
               <CopyToClipboardButton text={filePreview.checksum.value} />
             </Stack>
           )}
         </div>
-        <p className={styles.description}>{filePreview.description}</p>
+        <div>
+          <FileLabels labels={filePreview.tags || []} />
+        </div>
+        {filePreview.description && <p className={styles.description}>{filePreview.description}</p>}
       </Stack>
     </div>
   )

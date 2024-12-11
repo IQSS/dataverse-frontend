@@ -2,7 +2,9 @@ import { faker } from '@faker-js/faker'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { FileItemTypePreview } from '@/files/domain/models/FileItemTypePreview'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
+import { FileLabelType } from '@/files/domain/models/FileMetadata'
 import { FakerHelper } from '../../../shared/FakerHelper'
+import { FileLabelMother } from './FileMetadataMother'
 
 export class FileItemTypePreviewMother {
   static create(props?: Partial<FileItemTypePreview>): FileItemTypePreview {
@@ -29,6 +31,13 @@ export class FileItemTypePreviewMother {
       datasetCitation: faker.lorem.paragraph(),
       publicationStatuses: [PublicationStatus.Published],
       releaseOrCreateDate: faker.date.past(),
+      // TODO: Add more properties as needed
+      tags: [
+        FileLabelMother.create({ type: FileLabelType.TAG }),
+        FileLabelMother.create({ type: FileLabelType.CATEGORY })
+      ],
+      variablesCount: faker.datatype.number(),
+      observationsCount: faker.datatype.number(),
       ...props
     }
   }

@@ -1,5 +1,6 @@
 import { CollectionItemType } from '../../../collection/domain/models/CollectionItemType'
 import { PublicationStatus } from '../../../shared/core/domain/models/PublicationStatus'
+import { FileLabel } from './FileMetadata'
 
 export interface FileItemTypePreview {
   type: CollectionItemType.FILE
@@ -21,6 +22,10 @@ export interface FileItemTypePreview {
   datasetCitation: string
   publicationStatuses: PublicationStatus[]
   releaseOrCreateDate: Date
+  // TODO: Add more properties as needed
+  tags?: FileLabel[]
+  variablesCount?: number
+  observationsCount?: number
 }
 
 export interface FilePreviewChecksum {
