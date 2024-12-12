@@ -146,9 +146,12 @@ export class FileJSDataverseRepository implements FileRepository {
 
   private static getAllDownloadCount(jsFiles: JSFile[]): Promise<number[]> {
     return Promise.all(
-      jsFiles.map((jsFile) =>
-        FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate)
-      )
+      jsFiles.map((jsFile) => {
+        return FileJSDataverseRepository.getDownloadCountById(
+          jsFile.id,
+          jsFile.publicationDate ? new Date(jsFile.publicationDate) : new Date()
+        )
+      })
     )
   }
   private static getAllWithPermissions(files: JSFile[]): Promise<FilePermissions[]> {
@@ -234,7 +237,10 @@ export class FileJSDataverseRepository implements FileRepository {
           jsDataset,
           getDatasetCitation.execute(jsDataset.id, datasetVersionNumber, includeDeaccessioned),
           FileJSDataverseRepository.getCitationById(jsFile.id),
-          FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate),
+          FileJSDataverseRepository.getDownloadCountById(
+            jsFile.id,
+            jsFile.publicationDate ? new Date(jsFile.publicationDate) : new Date()
+          ),
           FileJSDataverseRepository.getPermissionsById(jsFile.id),
           FileJSDataverseRepository.getThumbnailById(jsFile.id),
           FileJSDataverseRepository.getTabularDataById(jsFile.id, jsFile.tabularData)
