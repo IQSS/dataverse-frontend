@@ -2,15 +2,13 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useSession } from '@/sections/session/SessionContext'
 import { Route } from '@/sections/Route.enum'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import { FilterQuery } from '@/collection/domain/models/GetCollectionItemsQueryParams'
 import styles from './ItemsList.module.scss'
 
 interface NoItemsMessageProps {
   itemsTypesSelected: CollectionItemType[]
-  filterQueriesSelected: FilterQuery[]
 }
 
-export function NoItemsMessage({ itemsTypesSelected, filterQueriesSelected }: NoItemsMessageProps) {
+export function NoItemsMessage({ itemsTypesSelected }: NoItemsMessageProps) {
   const { t } = useTranslation('collection')
   const { user } = useSession()
 
@@ -60,23 +58,7 @@ export function NoItemsMessage({ itemsTypesSelected, filterQueriesSelected }: No
   return (
     <div className={styles['custom-message-container']}>
       {user ? (
-        filterQueriesSelected.length > 0 ? (
-          <Trans
-            t={t}
-            i18nKey="noItemsMessage.noItemsBasedOnFilterQueries"
-            components={{
-              1: (
-                <a
-                  href="https://guides.dataverse.org/en/latest/user/find-use-data.html"
-                  target="_blank"
-                  rel="noreferrer"
-                />
-              )
-            }}
-          />
-        ) : (
-          <p>{t('noItemsMessage.authenticated', { typeOfEmptyItems: messageKey })}</p>
-        )
+        <p>{t('noItemsMessage.authenticated', { typeOfEmptyItems: messageKey })}</p>
       ) : (
         <Trans
           t={t}

@@ -59,8 +59,10 @@ export const ItemsList = forwardRef(
       rootMargin: '0px 0px 250px 0px'
     })
 
-    const showNoItemsMessage = !isLoadingItems && isEmptyItems && !hasSearchValue
-    const showNoSearchMatchesMessage = !isLoadingItems && isEmptyItems && hasSearchValue
+    const showNoItemsMessage =
+      !isLoadingItems && isEmptyItems && !hasSearchValue && filterQueriesSelected.length === 0
+    const showNoSearchMatchesMessage =
+      !isLoadingItems && isEmptyItems && (hasSearchValue || filterQueriesSelected.length > 0)
 
     const showSentrySkeleton = hasNextPage && !error && !isEmptyItems
     const showNotSentrySkeleton = isLoadingItems && isEmptyItems
@@ -75,12 +77,7 @@ export const ItemsList = forwardRef(
           tabIndex={0}
           ref={ref as ForwardedRef<HTMLDivElement>}
           data-testid="items-list-scrollable-container">
-          {showNoItemsMessage && (
-            <NoItemsMessage
-              itemsTypesSelected={itemsTypesSelected}
-              filterQueriesSelected={filterQueriesSelected}
-            />
-          )}
+          {showNoItemsMessage && <NoItemsMessage itemsTypesSelected={itemsTypesSelected} />}
 
           {showNoSearchMatchesMessage && <NoSearchMatchesMessage />}
 
