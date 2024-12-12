@@ -116,15 +116,18 @@ export const CollectionItemsPanel = ({
       })
     } else {
       // Update the URL with the search value ,keep other querys and include all item types always
-      setSearchParams((currentSearchParams) => ({
-        ...currentSearchParams,
-        [GetCollectionItemsQueryParams.TYPES]: [
-          CollectionItemType.COLLECTION,
-          CollectionItemType.DATASET,
-          CollectionItemType.FILE
-        ].join(','),
-        [QueryParamKey.QUERY]: searchValue
-      }))
+      setSearchParams((currentSearchParams) => {
+        currentSearchParams.set(
+          GetCollectionItemsQueryParams.TYPES,
+          [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(
+            ','
+          )
+        )
+
+        currentSearchParams.set(QueryParamKey.QUERY, searchValue)
+
+        return currentSearchParams
+      })
     }
 
     // WHEN SEARCHING, WE RESET THE PAGINATION INFO AND KEEP ALL ITEM TYPES!!
@@ -157,13 +160,11 @@ export const CollectionItemsPanel = ({
     setPaginationInfo(resetPaginationInfo)
 
     // Update the URL with the new item types, keep other querys and include the search value if exists
-    setSearchParams((currentSearchParams) => ({
-      ...currentSearchParams,
-      [GetCollectionItemsQueryParams.TYPES]: newItemsTypes.join(','),
-      ...(currentSearchCriteria.searchText && {
-        [QueryParamKey.QUERY]: currentSearchCriteria.searchText
-      })
-    }))
+    setSearchParams((currentSearchParams) => {
+      currentSearchParams.set(GetCollectionItemsQueryParams.TYPES, newItemsTypes.join(','))
+
+      return currentSearchParams
+    })
 
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
       currentSearchCriteria.searchText,
@@ -203,16 +204,12 @@ export const CollectionItemsPanel = ({
 
     // Update the URL with the new facets, keep other querys and include the search value if exists
     setSearchParams((currentSearchParams) => {
-      return {
-        ...currentSearchParams,
-        ...(newFilterQueries.length > 0 && {
-          [GetCollectionItemsQueryParams.FILTER_QUERIES]:
-            newFilterQueriesWithFacetValueEncoded.join(',')
-        }),
-        ...(currentSearchCriteria.searchText && {
-          [QueryParamKey.QUERY]: currentSearchCriteria.searchText
-        })
-      }
+      currentSearchParams.set(
+        GetCollectionItemsQueryParams.FILTER_QUERIES,
+        newFilterQueriesWithFacetValueEncoded.join(',')
+      )
+
+      return currentSearchParams
     })
 
     const newCollectionSearchCriteria = new CollectionSearchCriteria(

@@ -40,6 +40,8 @@ describe('Collection Items Panel', () => {
   })
 
   beforeEach(async () => {
+    cy.viewport(1280, 720)
+
     cy.intercept(SEARCH_ENDPOINT_REGEX).as('getCollectionItems')
 
     // Creates 8 datasets with 1 file each
@@ -109,7 +111,7 @@ describe('Collection Items Panel', () => {
     })
 
     // 2 - Now perform a search in the input
-    cy.findByPlaceholderText('Search this collection...').type('Darwin{enter}')
+    cy.findByPlaceholderText('Search this collection...').type('Darwin{enter}', { force: true })
 
     cy.wait('@getCollectionItems').then((interception) => {
       const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
@@ -143,7 +145,7 @@ describe('Collection Items Panel', () => {
 
     // 3 - Clear the search and assert that the search is performed correctly and the url is updated correctly
     cy.findByPlaceholderText('Search this collection...').clear()
-    cy.findByRole('button', { name: /Search submit/ }).click()
+    cy.findByRole('button', { name: /Search submit/ }).click({ force: true })
 
     cy.wait('@getCollectionItems').then((interception) => {
       const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
@@ -176,7 +178,7 @@ describe('Collection Items Panel', () => {
 
     // 4 - Uncheck the Collections checkbox
 
-    cy.findByRole('checkbox', { name: /Collections/ }).click()
+    cy.findByRole('checkbox', { name: /Collections/ }).click({ force: true })
 
     cy.wait('@getCollectionItems').then((interception) => {
       const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
@@ -207,7 +209,7 @@ describe('Collection Items Panel', () => {
     })
 
     // 5 - Uncheck the Dataset checkbox
-    cy.findByRole('checkbox', { name: /Datasets/ }).click()
+    cy.findByRole('checkbox', { name: /Datasets/ }).click({ force: true })
 
     cy.wait('@getCollectionItems').then((interception) => {
       const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
@@ -234,7 +236,7 @@ describe('Collection Items Panel', () => {
       cy.url().should('include', `/collections?${fifthExpectedURL}`)
     })
 
-    //6 - Navigate back with the browser and assert that the url is updated correctly and the items are displayed correctly as in step 4
+    // 6 - Navigate back with the browser and assert that the url is updated correctly and the items are displayed correctly as in step 4
     cy.go('back')
 
     cy.wait('@getCollectionItems').then((interception) => {
@@ -263,6 +265,47 @@ describe('Collection Items Panel', () => {
       }).toString()
 
       cy.url().should('include', `/collections?${fourthExpectedURL}`)
+    })
+
+    // 7 - Selects a facet filter
+    cy.findByRole('button', { name: /Finch, Fiona/ }).click()
+
+    cy.wait('@getCollectionItems').then((interception) => {
+      const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
+        extractInfoFromInterceptedResponse(interception)
+
+      cy.findByTestId('items-list')
+        .should('exist')
+        .children()
+        .should('have.length', totalItemsInResponse)
+
+      collectionsInResponse.length > 0 &&
+        cy.findAllByTestId('collection-card').should('have.length', collectionsInResponse.length)
+
+      datasetsInResponse.length > 0 &&
+        cy.findAllByTestId('dataset-card').should('have.length', datasetsInResponse.length)
+
+      filesInResponse.length > 0 &&
+        cy.findAllByTestId('file-card').should('have.length', filesInResponse.length)
+
+      const expectedURL = new URLSearchParams({
+        [GetCollectionItemsQueryParams.TYPES]: [
+          CollectionItemType.DATASET,
+          CollectionItemType.FILE
+        ].join(','),
+        [GetCollectionItemsQueryParams.FILTER_QUERIES]: [
+          `authorName_ss:${encodeURIComponent('Finch, Fiona')}`
+        ].join(',')
+      }).toString()
+
+      console.log({ expectedURL })
+
+      cy.url().should('include', `/collections?${expectedURL}`)
+
+      // Assert that the selected facet filter is displayed
+      cy.findAllByRole('button', { name: /Finch, Fiona/ })
+        .should('exist')
+        .should('have.length', 2)
     })
   })
 })
