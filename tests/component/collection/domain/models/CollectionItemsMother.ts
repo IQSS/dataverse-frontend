@@ -1,4 +1,7 @@
-import { CollectionItem } from '@/collection/domain/models/CollectionItemSubset'
+import {
+  CollectionItem,
+  CollectionItemsFacet
+} from '@/collection/domain/models/CollectionItemSubset'
 import { FileItemTypePreviewMother } from '../../../files/domain/models/FileItemTypePreviewMother'
 import { CollectionItemTypePreviewMother } from './CollectionItemTypePreviewMother'
 import { DatasetItemTypePreviewMother } from '../../../dataset/domain/models/DatasetItemTypePreviewMother'
@@ -20,5 +23,38 @@ export class CollectionItemsMother {
     const files = FileItemTypePreviewMother.createMany(numberOfFiles)
 
     return [...collections, ...datasets, ...files]
+  }
+
+  static createItemsFacets(): CollectionItemsFacet[] {
+    return [
+      {
+        name: 'dvCategory',
+        friendlyName: 'Dataverse Category',
+        labels: [
+          {
+            name: 'Department',
+            count: 1
+          },
+          {
+            name: 'Journal',
+            count: 1
+          },
+          {
+            name: 'Laboratory',
+            count: 1
+          }
+        ]
+      },
+      {
+        name: 'authorName_ss',
+        friendlyName: 'Author Name',
+        labels: [
+          {
+            name: 'Admin, Dataverse',
+            count: 4
+          }
+        ]
+      }
+    ]
   }
 }

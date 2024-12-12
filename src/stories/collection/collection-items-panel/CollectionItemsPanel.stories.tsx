@@ -52,6 +52,26 @@ export const WithAllFiltersAndSearchValue: Story = {
   )
 }
 
+export const WithFacetFiltersApplied: Story = {
+  render: () => (
+    <CollectionItemsPanel
+      collectionId="collectionId"
+      collectionQueryParams={{
+        pageQuery: 1,
+        searchQuery: 'some search',
+        typesQuery: [
+          CollectionItemType.COLLECTION,
+          CollectionItemType.DATASET,
+          CollectionItemType.FILE
+        ],
+        filtersQuery: ['dvCategory:Department', 'authorName_ss:Admin, Dataverse']
+      }}
+      collectionRepository={new CollectionMockRepository()}
+      addDataSlot={null}
+    />
+  )
+}
+
 export const WithAddDataButtons: Story = {
   render: () => (
     <CollectionItemsPanel

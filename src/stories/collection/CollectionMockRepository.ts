@@ -59,6 +59,8 @@ export class CollectionMockRepository implements CollectionRepository {
       numberOfFiles
     })
 
+    const facets = CollectionItemsMother.createItemsFacets()
+
     const isDefaultSelected =
       searchCriteria?.itemTypes?.length === 2 &&
       searchCriteria?.itemTypes?.includes(CollectionItemType.COLLECTION) &&
@@ -72,6 +74,7 @@ export class CollectionMockRepository implements CollectionRepository {
       setTimeout(() => {
         resolve({
           items: filteredByTypeItems,
+          facets: facets,
           totalItemCount: isDefaultSelected ? 6 : 200 // This is a fake number, its big so we can always scroll to load more items for the story
         })
       }, FakerHelper.loadingTimout())
