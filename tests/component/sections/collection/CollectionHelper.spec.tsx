@@ -9,14 +9,19 @@ const PAGE_NUMBER = 1
 
 describe('CollectionHelper', () => {
   it('define collection query params correctly when all query params are in the url', () => {
-    const searchParams = new URLSearchParams({})
+    const searchParams = new URLSearchParams({
+      [QueryParamKey.QUERY]: QUERY_VALUE,
+      [GetCollectionItemsQueryParams.TYPES]: [
+        CollectionItemType.COLLECTION,
+        CollectionItemType.DATASET
+      ].join(','),
+      [QueryParamKey.PAGE]: PAGE_NUMBER.toString(),
+      [GetCollectionItemsQueryParams.FILTER_QUERIES]: [
+        'someFilter:someValue',
+        'otherFilter:otherValue'
+      ].join(',')
+    })
 
-    searchParams.set(QueryParamKey.QUERY, QUERY_VALUE)
-    searchParams.set(
-      GetCollectionItemsQueryParams.TYPES,
-      [CollectionItemType.COLLECTION, CollectionItemType.DATASET].join(',')
-    )
-    searchParams.set(QueryParamKey.PAGE, PAGE_NUMBER.toString())
     const collectionQueryParams = CollectionHelper.defineCollectionQueryParams(searchParams)
 
     expect(collectionQueryParams.searchQuery).to.equal(DECODED_QUERY_VALUE)
@@ -25,26 +30,33 @@ describe('CollectionHelper', () => {
       CollectionItemType.DATASET
     ])
     expect(collectionQueryParams.pageQuery).to.equal(PAGE_NUMBER)
+    expect(collectionQueryParams.filtersQuery).to.deep.equal([
+      'someFilter:someValue',
+      'otherFilter:otherValue'
+    ])
   })
 
   it('define collection query params correctly when only query param is in the url', () => {
-    const searchParams = new URLSearchParams({})
+    const searchParams = new URLSearchParams({
+      [QueryParamKey.QUERY]: QUERY_VALUE
+    })
 
-    searchParams.set(QueryParamKey.QUERY, QUERY_VALUE)
     const collectionQueryParams = CollectionHelper.defineCollectionQueryParams(searchParams)
 
     expect(collectionQueryParams.searchQuery).to.equal(DECODED_QUERY_VALUE)
     expect(collectionQueryParams.typesQuery).to.deep.equal(undefined)
     expect(collectionQueryParams.pageQuery).to.equal(1)
+    expect(collectionQueryParams.filtersQuery).to.equal(undefined)
   })
 
   it('define collection query params correctly when only types query param is in the url', () => {
-    const searchParams = new URLSearchParams({})
+    const searchParams = new URLSearchParams({
+      [GetCollectionItemsQueryParams.TYPES]: [
+        CollectionItemType.COLLECTION,
+        CollectionItemType.DATASET
+      ].join(',')
+    })
 
-    searchParams.set(
-      GetCollectionItemsQueryParams.TYPES,
-      [CollectionItemType.COLLECTION, CollectionItemType.DATASET].join(',')
-    )
     const collectionQueryParams = CollectionHelper.defineCollectionQueryParams(searchParams)
 
     expect(collectionQueryParams.searchQuery).to.equal(undefined)
@@ -62,5 +74,6 @@ describe('CollectionHelper', () => {
     expect(collectionQueryParams.searchQuery).to.equal(undefined)
     expect(collectionQueryParams.typesQuery).to.deep.equal(undefined)
     expect(collectionQueryParams.pageQuery).to.equal(1)
+    expect(collectionQueryParams.filtersQuery).to.equal(undefined)
   })
 })

@@ -14,7 +14,9 @@ const items = CollectionItemsMother.createItems({
   numberOfFiles: 3
 })
 
-const itemsWithCount: CollectionItemSubset = { items, totalItemCount: 200 }
+const facets = CollectionItemsMother.createItemsFacets()
+
+const itemsWithCount: CollectionItemSubset = { items, facets, totalItemCount: 200 }
 
 describe('Collection page', () => {
   beforeEach(() => {
@@ -182,7 +184,7 @@ describe('Collection page', () => {
     cy.mountAuthenticated(
       <Collection
         collectionRepository={collectionRepository}
-        collectionId="collection"
+        collectionIdFromParams="collection"
         created={false}
         published={false}
         collectionQueryParams={{ pageQuery: 1 }}
