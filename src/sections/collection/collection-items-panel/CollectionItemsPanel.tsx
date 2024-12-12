@@ -166,7 +166,10 @@ export const CollectionItemsPanel = ({
 
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
       currentSearchCriteria.searchText,
-      newItemsTypes
+      newItemsTypes,
+      undefined,
+      undefined,
+      currentSearchCriteria.filterQueries
     )
 
     const totalItemsCount = await loadMore(resetPaginationInfo, newCollectionSearchCriteria, true)
