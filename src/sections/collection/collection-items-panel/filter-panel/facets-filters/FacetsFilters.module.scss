@@ -41,13 +41,13 @@
         display: flex;
       }
 
-      button {
+      .facet-label-button {
         padding: 0;
         text-align: left;
         text-decoration: none;
         text-wrap: nowrap;
 
-        &[aria-selected='true'] {
+        &.selected {
           font-weight: 600;
         }
 

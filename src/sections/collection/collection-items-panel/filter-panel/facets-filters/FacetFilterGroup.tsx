@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import cn from 'classnames'
 import { Button, Col, Row } from '@iqss/dataverse-design-system'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import { CollectionItemsFacet } from '@/collection/domain/models/CollectionItemSubset'
@@ -64,8 +65,9 @@ export const FacetFilterGroup = ({
             <li key={label.name}>
               <Button
                 onClick={() => handleClickFacetLabel(facet.name, label.name)}
-                role="option"
-                aria-selected={isFacetLabelSelected}
+                className={cn(styles['facet-label-button'], {
+                  [styles['selected']]: isFacetLabelSelected
+                })}
                 aria-label={
                   isFacetLabelSelected
                     ? t('removeSelectedFacet', { labelName: label.name })

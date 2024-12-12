@@ -37,12 +37,15 @@ interface CollectionItemsPanelProps {
  * 2. When the user scrolls to the bottom of the list and there are more items to load
  * 3. When the user submits a search query in the search panel
  * 4. When the user changes the item types in the filter panel
- * 5. When the user navigates back and forward in the browser
+ * 5. When the user selects or removes a facet filter
+ * 6. When the user navigates back and forward in the browser
  *
  * It initializes the search criteria with the query params in the URL.
  * By default if no query params are present in the URL, the search query is empty and the item types are COLLECTION and DATASET.
  * Every time a load of items is triggered, the pagination info is updated and the URL is updated with the new query params so it can be shared and the user can navigate back and forward in the browser.
  */
+
+// TODO:ME - Fix Tests
 
 export const CollectionItemsPanel = ({
   collectionId,
