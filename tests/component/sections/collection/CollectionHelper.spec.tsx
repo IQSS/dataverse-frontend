@@ -1,4 +1,4 @@
-import { GetCollectionItemsQueryParams } from '@/collection/domain/models/GetCollectionItemsQueryParams'
+import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
 import { CollectionHelper } from '@/sections/collection/CollectionHelper'
 import { QueryParamKey } from '@/sections/Route.enum'
 import { CollectionItemType } from '@iqss/dataverse-client-javascript'
@@ -11,12 +11,12 @@ describe('CollectionHelper', () => {
   it('define collection query params correctly when all query params are in the url', () => {
     const searchParams = new URLSearchParams({
       [QueryParamKey.QUERY]: QUERY_VALUE,
-      [GetCollectionItemsQueryParams.TYPES]: [
+      [CollectionItemsQueryParams.TYPES]: [
         CollectionItemType.COLLECTION,
         CollectionItemType.DATASET
       ].join(','),
       [QueryParamKey.PAGE]: PAGE_NUMBER.toString(),
-      [GetCollectionItemsQueryParams.FILTER_QUERIES]: [
+      [CollectionItemsQueryParams.FILTER_QUERIES]: [
         'someFilter:someValue',
         'otherFilter:otherValue'
       ].join(',')
@@ -51,7 +51,7 @@ describe('CollectionHelper', () => {
 
   it('define collection query params correctly when only types query param is in the url', () => {
     const searchParams = new URLSearchParams({
-      [GetCollectionItemsQueryParams.TYPES]: [
+      [CollectionItemsQueryParams.TYPES]: [
         CollectionItemType.COLLECTION,
         CollectionItemType.DATASET
       ].join(',')

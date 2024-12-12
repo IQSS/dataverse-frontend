@@ -1,5 +1,16 @@
 import { type CollectionItemType } from './CollectionItemType'
-import { FilterQuery, OrderType, SortType } from './GetCollectionItemsQueryParams'
+
+export enum SortType {
+  NAME = 'name',
+  DATE = 'date'
+}
+
+export enum OrderType {
+  ASC = 'asc',
+  DESC = 'desc'
+}
+
+export type FilterQuery = `${string}:${string}`
 
 export class CollectionSearchCriteria {
   constructor(

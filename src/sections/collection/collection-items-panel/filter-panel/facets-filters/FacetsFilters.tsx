@@ -1,9 +1,9 @@
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { Stack } from '@iqss/dataverse-design-system'
 import { CollectionItemsFacet } from '@/collection/domain/models/CollectionItemSubset'
-import { FilterQuery } from '@/collection/domain/models/GetCollectionItemsQueryParams'
+import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
 import { FacetFilterGroup, RemoveAddFacetFilter } from './FacetFilterGroup'
 import styles from './FacetsFilters.module.scss'
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 
 interface FacetsFiltersProps {
   facets: CollectionItemsFacet[]

@@ -3,12 +3,12 @@ import { useSearchParams } from 'react-router-dom'
 import { Stack } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
-import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
-import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import {
-  FilterQuery,
-  GetCollectionItemsQueryParams
-} from '@/collection/domain/models/GetCollectionItemsQueryParams'
+  CollectionSearchCriteria,
+  FilterQuery
+} from '@/collection/domain/models/CollectionSearchCriteria'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
+import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
 import { useGetAccumulatedItems } from './useGetAccumulatedItems'
 import { UseCollectionQueryParamsReturnType } from '../useGetCollectionQueryParams'
 import { useLoadMoreOnPopStateEvent } from './useLoadMoreOnPopStateEvent'
@@ -44,8 +44,6 @@ interface CollectionItemsPanelProps {
  * By default if no query params are present in the URL, the search query is empty and the item types are COLLECTION and DATASET.
  * Every time a load of items is triggered, the pagination info is updated and the URL is updated with the new query params so it can be shared and the user can navigate back and forward in the browser.
  */
-
-// TODO:ME - Fix Tests
 
 export const CollectionItemsPanel = ({
   collectionId,
@@ -118,7 +116,7 @@ export const CollectionItemsPanel = ({
       // Update the URL with the search value ,keep other querys and include all item types always
       setSearchParams((currentSearchParams) => {
         currentSearchParams.set(
-          GetCollectionItemsQueryParams.TYPES,
+          CollectionItemsQueryParams.TYPES,
           [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(
             ','
           )
@@ -159,9 +157,9 @@ export const CollectionItemsPanel = ({
     const resetPaginationInfo = new CollectionItemsPaginationInfo()
     setPaginationInfo(resetPaginationInfo)
 
-    // Update the URL with the new item types, keep other querys and include the search value if exists
+    // Update the URL with the new item types, keep other querys
     setSearchParams((currentSearchParams) => {
-      currentSearchParams.set(GetCollectionItemsQueryParams.TYPES, newItemsTypes.join(','))
+      currentSearchParams.set(CollectionItemsQueryParams.TYPES, newItemsTypes.join(','))
 
       return currentSearchParams
     })
@@ -205,7 +203,7 @@ export const CollectionItemsPanel = ({
     // Update the URL with the new facets, keep other querys and include the search value if exists
     setSearchParams((currentSearchParams) => {
       currentSearchParams.set(
-        GetCollectionItemsQueryParams.FILTER_QUERIES,
+        CollectionItemsQueryParams.FILTER_QUERIES,
         newFilterQueriesWithFacetValueEncoded.join(',')
       )
 

@@ -8,13 +8,13 @@ import { AppLoader } from './sections/shared/layout/app-loader/AppLoader'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
-  // <React.StrictMode>
-  <React.Suspense fallback={<AppLoader fullViewport />}>
-    <LoadingProvider>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </LoadingProvider>
-  </React.Suspense>
-  // </React.StrictMode>
+  <React.StrictMode>
+    <React.Suspense fallback={<AppLoader fullViewport />}>
+      <LoadingProvider>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </LoadingProvider>
+    </React.Suspense>
+  </React.StrictMode>
 )

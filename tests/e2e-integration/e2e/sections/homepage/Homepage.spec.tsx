@@ -1,4 +1,4 @@
-import { GetCollectionItemsQueryParams } from '@/collection/domain/models/GetCollectionItemsQueryParams'
+import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
 import { CollectionItemType } from '../../../../../src/collection/domain/models/CollectionItemType'
 import { QueryParamKey } from '../../../../../src/sections/Route.enum'
 
@@ -14,7 +14,7 @@ describe('Homepage', () => {
     const searchParams = new URLSearchParams()
     searchParams.set(QueryParamKey.QUERY, encodedSearchValue)
     searchParams.set(
-      GetCollectionItemsQueryParams.TYPES,
+      CollectionItemsQueryParams.TYPES,
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(',')
     )
 

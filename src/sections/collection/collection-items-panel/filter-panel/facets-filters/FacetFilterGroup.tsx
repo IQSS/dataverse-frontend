@@ -4,7 +4,7 @@ import cn from 'classnames'
 import { Button, Col, Row } from '@iqss/dataverse-design-system'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import { CollectionItemsFacet } from '@/collection/domain/models/CollectionItemSubset'
-import { FilterQuery } from '@/collection/domain/models/GetCollectionItemsQueryParams'
+import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
 import styles from './FacetsFilters.module.scss'
 
 const FACETS_PER_VIEW = 5

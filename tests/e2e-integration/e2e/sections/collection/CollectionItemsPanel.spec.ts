@@ -1,6 +1,6 @@
 import { CollectionItem } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import { GetCollectionItemsQueryParams } from '@/collection/domain/models/GetCollectionItemsQueryParams'
+import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
 import { QueryParamKey } from '@/sections/Route.enum'
 import { DatasetHelper } from '@tests/e2e-integration/shared/datasets/DatasetHelper'
 import { FileHelper } from '@tests/e2e-integration/shared/files/FileHelper'
@@ -100,7 +100,7 @@ describe('Collection Items Panel', () => {
         cy.findAllByTestId('file-card').should('have.length', filesInResponse.length)
 
       const firstExpectedURL = new URLSearchParams({
-        [GetCollectionItemsQueryParams.TYPES]: [
+        [CollectionItemsQueryParams.TYPES]: [
           CollectionItemType.COLLECTION,
           CollectionItemType.DATASET,
           CollectionItemType.FILE
@@ -132,7 +132,7 @@ describe('Collection Items Panel', () => {
         cy.findAllByTestId('file-card').should('have.length', filesInResponse.length)
 
       const secondExpectedURL = new URLSearchParams({
-        [GetCollectionItemsQueryParams.TYPES]: [
+        [CollectionItemsQueryParams.TYPES]: [
           CollectionItemType.COLLECTION,
           CollectionItemType.DATASET,
           CollectionItemType.FILE
@@ -166,7 +166,7 @@ describe('Collection Items Panel', () => {
         cy.findAllByTestId('file-card').should('have.length', filesInResponse.length)
 
       const thirdExpectedURL = new URLSearchParams({
-        [GetCollectionItemsQueryParams.TYPES]: [
+        [CollectionItemsQueryParams.TYPES]: [
           CollectionItemType.COLLECTION,
           CollectionItemType.DATASET,
           CollectionItemType.FILE
@@ -199,7 +199,7 @@ describe('Collection Items Panel', () => {
         cy.findAllByTestId('file-card').should('have.length', filesInResponse.length)
 
       const fourthExpectedURL = new URLSearchParams({
-        [GetCollectionItemsQueryParams.TYPES]: [
+        [CollectionItemsQueryParams.TYPES]: [
           CollectionItemType.DATASET,
           CollectionItemType.FILE
         ].join(',')
@@ -230,7 +230,7 @@ describe('Collection Items Panel', () => {
         cy.findAllByTestId('file-card').should('have.length', filesInResponse.length)
 
       const fifthExpectedURL = new URLSearchParams({
-        [GetCollectionItemsQueryParams.TYPES]: [CollectionItemType.FILE].join(',')
+        [CollectionItemsQueryParams.TYPES]: [CollectionItemType.FILE].join(',')
       }).toString()
 
       cy.url().should('include', `/collections?${fifthExpectedURL}`)
@@ -258,7 +258,7 @@ describe('Collection Items Panel', () => {
         cy.findAllByTestId('file-card').should('have.length', filesInResponse.length)
 
       const fourthExpectedURL = new URLSearchParams({
-        [GetCollectionItemsQueryParams.TYPES]: [
+        [CollectionItemsQueryParams.TYPES]: [
           CollectionItemType.DATASET,
           CollectionItemType.FILE
         ].join(',')
@@ -289,11 +289,11 @@ describe('Collection Items Panel', () => {
         cy.findAllByTestId('file-card').should('have.length', filesInResponse.length)
 
       const expectedURL = new URLSearchParams({
-        [GetCollectionItemsQueryParams.TYPES]: [
+        [CollectionItemsQueryParams.TYPES]: [
           CollectionItemType.DATASET,
           CollectionItemType.FILE
         ].join(','),
-        [GetCollectionItemsQueryParams.FILTER_QUERIES]: [
+        [CollectionItemsQueryParams.FILTER_QUERIES]: [
           `authorName_ss:${encodeURIComponent('Finch, Fiona')}`
         ].join(',')
       }).toString()

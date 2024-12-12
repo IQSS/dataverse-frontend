@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import { FilterQuery } from '@/collection/domain/models/GetCollectionItemsQueryParams'
+import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionHelper } from './CollectionHelper'
 
 export interface UseCollectionQueryParamsReturnType {

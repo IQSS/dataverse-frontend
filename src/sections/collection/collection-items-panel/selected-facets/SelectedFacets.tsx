@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Button } from '@iqss/dataverse-design-system'
 import { X as CloseIcon } from 'react-bootstrap-icons'
-import { FilterQuery } from '@/collection/domain/models/GetCollectionItemsQueryParams'
+import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
 import styles from './SelectedFacets.module.scss'
 
 interface SelectedFacetsProps {

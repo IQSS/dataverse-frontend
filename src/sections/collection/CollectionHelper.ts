@@ -1,8 +1,6 @@
-import {
-  FilterQuery,
-  GetCollectionItemsQueryParams
-} from '@/collection/domain/models/GetCollectionItemsQueryParams'
-import { CollectionItemType } from '../../collection/domain/models/CollectionItemType'
+import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
+import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { QueryParamKey } from '../Route.enum'
 
 export class CollectionHelper {
@@ -15,7 +13,7 @@ export class CollectionHelper {
       ? decodeURIComponent(searchParams.get(QueryParamKey.QUERY) as string)
       : undefined
 
-    const typesParam = searchParams.get(GetCollectionItemsQueryParams.TYPES) ?? undefined
+    const typesParam = searchParams.get(CollectionItemsQueryParams.TYPES) ?? undefined
 
     const typesQuery = typesParam
       ?.split(',')
@@ -24,7 +22,7 @@ export class CollectionHelper {
         Object.values(CollectionItemType).includes(type as CollectionItemType)
       ) as CollectionItemType[]
 
-    const filtersParam = searchParams.get(GetCollectionItemsQueryParams.FILTER_QUERIES) ?? undefined
+    const filtersParam = searchParams.get(CollectionItemsQueryParams.FILTER_QUERIES) ?? undefined
 
     const filtersQuery: FilterQuery[] | undefined = filtersParam
       ? (filtersParam
