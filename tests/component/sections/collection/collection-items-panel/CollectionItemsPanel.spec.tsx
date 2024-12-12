@@ -498,7 +498,7 @@ describe('CollectionItemsPanel', () => {
       cy.findByRole('checkbox', { name: /Files/ }).uncheck()
     })
 
-    it.only('show selected filters on top of items list', () => {
+    it('show selected filters on top of items list', () => {
       cy.customMount(
         <CollectionItemsPanel
           collectionId={ROOT_COLLECTION_ALIAS}

@@ -5,6 +5,14 @@ import styles from '@/sections/collection/collection-items-panel/filter-panel/fa
 const facets = CollectionItemsMother.createItemsFacets()
 
 describe('FacetsFilters', () => {
+  it('should render skeleton while loading collection items and no facets', () => {
+    cy.customMount(
+      <FacetsFilters facets={[]} onFacetChange={cy.stub()} isLoadingCollectionItems={true} />
+    )
+
+    cy.findByTestId('facets-filters-skeleton').should('exist')
+  })
+
   it('should render selected facets with selected classname', () => {
     const onFacetChange = cy.stub().as('onFacetChange')
 
@@ -41,8 +49,6 @@ describe('FacetsFilters', () => {
     cy.findByRole('button', { name: /Journal/ }).click()
 
     cy.wrap(onFacetChange).should('be.calledWith', 'dvCategory:Journal', 'add')
-
-    // TODO:ME - Check correct aria labels if selected or not, test the show more or less buttons
   })
 
   it('should call onFacetChange when clicking on an alreadt selected facet filter with the correct args', () => {
@@ -60,5 +66,33 @@ describe('FacetsFilters', () => {
     cy.findByRole('button', { name: /Department/ }).click()
 
     cy.wrap(onFacetChange).should('be.calledWith', 'dvCategory:Department', 'remove')
+  })
+
+  it('show more and less functionality', () => {
+    const onFacetChange = cy.stub().as('onFacetChange')
+
+    cy.customMount(
+      <FacetsFilters
+        facets={facets}
+        onFacetChange={onFacetChange}
+        isLoadingCollectionItems={false}
+      />
+    )
+
+    cy.findByRole('button', { name: /More.../ }).should('exist')
+
+    // This will be the sixth label, we are only showing 5 by default
+    cy.findByRole('button', { name: /Foo/ }).should('not.exist')
+
+    cy.findByRole('button', { name: /More.../ }).click()
+
+    cy.findByRole('button', { name: /Foo/ }).should('exist')
+
+    cy.findByRole('button', { name: /More.../ }).should('not.exist')
+    cy.findByRole('button', { name: /Less.../ }).should('exist')
+
+    cy.findByRole('button', { name: /Less.../ }).click()
+
+    cy.findByRole('button', { name: /Foo/ }).should('not.exist')
   })
 })

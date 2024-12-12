@@ -42,6 +42,22 @@ export class CollectionItemsMother {
           {
             name: 'Laboratory',
             count: 1
+          },
+          {
+            name: 'Researcher',
+            count: 1
+          },
+          {
+            name: 'Organization or Institution',
+            count: 1
+          },
+          {
+            name: 'Foo',
+            count: 1
+          },
+          {
+            name: 'Bar',
+            count: 1
           }
         ]
       },

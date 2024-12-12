@@ -45,14 +45,16 @@ export const FacetsFilters = ({
 
 const FacetsFiltersSkeleton = () => (
   <SkeletonTheme>
-    {Array.from({ length: 3 }).map((_, index) => (
-      <div style={{ padding: '16px 0 8px 0' }} key={index}>
-        <Skeleton height={18} width={160} style={{ marginBottom: 8 }} />
+    <div data-testid="facets-filters-skeleton">
+      {Array.from({ length: 3 }).map((_, index) => (
+        <div style={{ padding: '16px 0 8px 0' }} key={index}>
+          <Skeleton height={18} width={160} style={{ marginBottom: 8 }} />
 
-        {Array.from({ length: 4 }).map((_, index) => (
-          <Skeleton key={index} height={14} width={120} />
-        ))}
-      </div>
-    ))}
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton key={index} height={14} width={120} />
+          ))}
+        </div>
+      ))}
+    </div>
   </SkeletonTheme>
 )
