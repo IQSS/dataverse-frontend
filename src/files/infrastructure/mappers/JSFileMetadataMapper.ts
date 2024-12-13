@@ -29,13 +29,13 @@ export class JSFileMetadataMapper {
     return new FileMetadata(
       this.toFileType(jsFile.contentType, jsFile.originalFormatLabel),
       this.toFileSize(jsFile.sizeBytes),
-      this.toFileDate(jsFile.creationDate ?? '', jsFile.publicationDate, jsFile.embargo),
+      this.toFileDate(jsFile.creationDate, jsFile.publicationDate, jsFile.embargo),
       this.toFileDownloads(downloadsCount),
       this.toFileLabels(jsFile.categories, jsFile.tabularTags),
       this.toFileIsDeleted(jsFile.deleted),
       this.toFileOriginalFileDownloadUrl(jsFile.id),
-      jsFile.creationDate ? new Date(jsFile.creationDate) : new Date(),
-      jsFile.publicationDate ? new Date(jsFile.publicationDate) : new Date(),
+      jsFile.creationDate,
+      jsFile.publicationDate,
       this.toFileThumbnail(thumbnail),
       this.toFileDirectory(jsFile.directoryLabel),
       this.toFileEmbargo(jsFile.embargo),
@@ -55,7 +55,7 @@ export class JSFileMetadataMapper {
   }
 
   static toFileDate(
-    jsFileCreationDate: string,
+    jsFileCreationDate?: string,
     jsFilePublicationDate?: string,
     jsFileEmbargo?: JSFileEmbargo
   ): FileDate {
@@ -63,13 +63,14 @@ export class JSFileMetadataMapper {
       if (jsFileEmbargo) {
         return {
           type: FileDateType.METADATA_RELEASED,
-          date: new Date(jsFilePublicationDate)
+          date: jsFilePublicationDate
         }
       }
-      return { type: FileDateType.PUBLISHED, date: new Date(jsFilePublicationDate) }
+      return { type: FileDateType.PUBLISHED, date: jsFilePublicationDate }
     }
+
     if (jsFileCreationDate) {
-      return { type: FileDateType.DEPOSITED, date: new Date(jsFileCreationDate) }
+      return { type: FileDateType.DEPOSITED, date: jsFileCreationDate }
     }
     throw new Error('File date not found')
   }

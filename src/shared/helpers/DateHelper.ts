@@ -1,16 +1,4 @@
 export class DateHelper {
-  static toDisplayFileFormat(date: Date): string {
-    if (!date) {
-      return ''
-    }
-    return date.toLocaleDateString(Intl.DateTimeFormat().resolvedOptions().locale, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      timeZone: 'UTC'
-    })
-  }
-
   static toDisplayFormat(date: Date): string {
     if (!date) {
       return ''

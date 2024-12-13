@@ -12,6 +12,7 @@ import {
 } from '../../../../../src/files/domain/models/FileMetadata'
 import FileTypeToFriendlyTypeMap from '../../../../../src/files/domain/models/FileTypeToFriendlyTypeMap'
 import { FakerHelper } from '../../../shared/FakerHelper'
+import { DateHelper } from '@/shared/helpers/DateHelper'
 
 const valueOrUndefined: <T>(value: T) => T | undefined = (value) => {
   const shouldShowValue = faker.datatype.boolean()
@@ -143,7 +144,7 @@ export class FileMetadataMother {
       size: FileSizeMother.create(),
       date: {
         type: FakerHelper.fileDateType(),
-        date: FakerHelper.recentDate()
+        date: DateHelper.toISO8601Format(FakerHelper.recentDate())
       },
       downloadCount: FakerHelper.smallNumber(40),
       labels: faker.datatype.boolean() ? FileLabelMother.createMany(3) : [],
@@ -155,8 +156,10 @@ export class FileMetadataMother {
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
       isDeleted: faker.datatype.boolean(),
       downloadUrls: FileDownloadUrlsMother.create(),
-      depositDate: FakerHelper.pastDate(),
-      publicationDate: faker.datatype.boolean() ? FakerHelper.pastDate() : undefined,
+      depositDate: DateHelper.toISO8601Format(FakerHelper.pastDate()),
+      publicationDate: faker.datatype.boolean()
+        ? DateHelper.toISO8601Format(FakerHelper.pastDate())
+        : undefined,
       persistentId: faker.datatype.uuid(),
       ...props
     }
@@ -315,7 +318,7 @@ export class FileMetadataMother {
 
   static createWithPublicationDate(props?: Partial<FileMetadata>): FileMetadata {
     return this.createDefault({
-      publicationDate: FakerHelper.pastDate(),
+      publicationDate: DateHelper.toISO8601Format(FakerHelper.pastDate()),
       ...props
     })
   }

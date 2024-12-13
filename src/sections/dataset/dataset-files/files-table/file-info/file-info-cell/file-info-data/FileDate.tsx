@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { FileDate as FileDateModel } from '../../../../../../../files/domain/models/FileMetadata'
-import { DateHelper } from '../../../../../../../shared/helpers/DateHelper'
 
 export function FileDate({ date }: { date: FileDateModel }) {
   const { t } = useTranslation('files')
@@ -8,10 +7,7 @@ export function FileDate({ date }: { date: FileDateModel }) {
   return (
     <div>
       <span>
-        {t(`table.date.${date.type}`)}{' '}
-        <time dateTime={DateHelper.toISO8601Format(date.date)}>
-          {DateHelper.toDisplayFileFormat(date.date)}
-        </time>
+        {t(`table.date.${date.type}`)} <time dateTime={date.date}>{date.date}</time>
       </span>
     </div>
   )

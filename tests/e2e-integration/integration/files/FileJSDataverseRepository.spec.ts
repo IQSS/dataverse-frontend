@@ -31,6 +31,8 @@ import {
 } from '../../../../src/dataset/domain/models/Dataset'
 import { File } from '../../../../src/files/domain/models/File'
 import { FileIngest, FileIngestStatus } from '../../../../src/files/domain/models/FileIngest'
+import { DateHelper } from '@/shared/helpers/DateHelper'
+
 const DRAFT_PARAM = DatasetNonNumericVersion.DRAFT
 
 chai.use(chaiAsPromised)
@@ -38,8 +40,7 @@ const expect = chai.expect
 
 const fileRepository = new FileJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
-const dateNow = new Date()
-dateNow.setHours(2, 0, 0, 0)
+const dateNow = DateHelper.toISO8601Format(new Date())
 const filePreviewExpectedData = (id: number): FilePreview => {
   return {
     id: id,
@@ -161,7 +162,7 @@ describe('File JSDataverse Repository', () => {
 
   const compareMetadata = (fileMetadata: FileMetadata, expectedFileMetadata: FileMetadata) => {
     expect(fileMetadata.type).to.deep.equal(expectedFileMetadata.type)
-    cy.compareDate(fileMetadata.date.date, expectedFileMetadata.date.date)
+    expect(fileMetadata.date.date).to.deep.equal(expectedFileMetadata.date.date)
     expect(fileMetadata.downloadCount).to.deep.equal(expectedFileMetadata.downloadCount)
     expect(fileMetadata.labels).to.deep.equal(expectedFileMetadata.labels)
     expect(fileMetadata.checksum?.algorithm).to.deep.equal(expectedFileMetadata.checksum?.algorithm)
@@ -249,8 +250,7 @@ describe('File JSDataverse Repository', () => {
             expect(file.datasetPublishingStatus).to.deep.equal(
               expectedPublishedFile.datasetPublishingStatus
             )
-            cy.compareDate(
-              file.metadata.date.date,
+            expect(file.metadata.date.date).to.deep.equal(
               filePreviewExpectedData(file.id).metadata.date.date
             )
           })
