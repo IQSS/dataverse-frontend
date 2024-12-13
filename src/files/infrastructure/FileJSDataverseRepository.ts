@@ -147,10 +147,7 @@ export class FileJSDataverseRepository implements FileRepository {
   private static getAllDownloadCount(jsFiles: JSFile[]): Promise<number[]> {
     return Promise.all(
       jsFiles.map((jsFile) => {
-        return FileJSDataverseRepository.getDownloadCountById(
-          jsFile.id,
-          jsFile.publicationDate ? new Date(jsFile.publicationDate) : new Date()
-        )
+        return FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate)
       })
     )
   }
@@ -164,7 +161,7 @@ export class FileJSDataverseRepository implements FileRepository {
       .then((jsFilePermissions) => JSFilePermissionsMapper.toFilePermissions(jsFilePermissions))
   }
 
-  private static getDownloadCountById(id: number, publicationDate?: Date): Promise<number> {
+  private static getDownloadCountById(id: number, publicationDate?: string): Promise<number> {
     return publicationDate !== undefined
       ? getFileDownloadCount.execute(id).then((downloadCount) => Number(downloadCount))
       : Promise.resolve(0)
@@ -237,10 +234,7 @@ export class FileJSDataverseRepository implements FileRepository {
           jsDataset,
           getDatasetCitation.execute(jsDataset.id, datasetVersionNumber, includeDeaccessioned),
           FileJSDataverseRepository.getCitationById(jsFile.id),
-          FileJSDataverseRepository.getDownloadCountById(
-            jsFile.id,
-            jsFile.publicationDate ? new Date(jsFile.publicationDate) : new Date()
-          ),
+          FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate),
           FileJSDataverseRepository.getPermissionsById(jsFile.id),
           FileJSDataverseRepository.getThumbnailById(jsFile.id),
           FileJSDataverseRepository.getTabularDataById(jsFile.id, jsFile.tabularData)
