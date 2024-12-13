@@ -11,6 +11,8 @@ import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemS
 import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionItemsMother } from '../../../tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
+import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 
 export class CollectionMockRepository implements CollectionRepository {
   getById(_id?: string): Promise<Collection> {
@@ -77,10 +79,19 @@ export class CollectionMockRepository implements CollectionRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+
   publish(_persistentId: string): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getFeaturedItems(_collectionIdOrAlias: number | string): Promise<CollectionFeaturedItem[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(CollectionFeaturedItemMother.createFeaturedItems())
       }, FakerHelper.loadingTimout())
     })
   }

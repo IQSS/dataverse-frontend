@@ -66,6 +66,14 @@ const AccountPage = lazy(() =>
   }))
 )
 
+const CollectionFeaturedItems = lazy(() =>
+  import('../sections/collection-featured-items/CollectionFeaturedItemsFactory').then(
+    ({ CollectionFeaturedItemsFactory }) => ({
+      default: () => CollectionFeaturedItemsFactory.create()
+    })
+  )
+)
+
 export const routes: RouteObject[] = [
   {
     path: '/',
@@ -162,6 +170,15 @@ export const routes: RouteObject[] = [
             element: (
               <Suspense fallback={<AppLoader />}>
                 <AccountPage />
+              </Suspense>
+            ),
+            errorElement: <ErrorPage />
+          },
+          {
+            path: Route.COLLECTION_FEATURED_ITEMS,
+            element: (
+              <Suspense fallback={<AppLoader />}>
+                <CollectionFeaturedItems />
               </Suspense>
             ),
             errorElement: <ErrorPage />

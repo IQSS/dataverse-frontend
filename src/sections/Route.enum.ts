@@ -11,14 +11,16 @@ export enum Route {
   COLLECTIONS_BASE = '/collections',
   COLLECTIONS = '/collections/:collectionId',
   CREATE_COLLECTION = '/collections/:ownerCollectionId/create',
-  ACCOUNT = '/account'
+  ACCOUNT = '/account',
+  COLLECTION_FEATURED_ITEMS = '/collections/:collectionId/featured-items'
 }
 
 export const RouteWithParams = {
   COLLECTIONS: (collectionId?: string) =>
     collectionId ? `/collections/${collectionId}` : Route.COLLECTIONS_BASE,
   CREATE_COLLECTION: (ownerCollectionId: string) => `/collections/${ownerCollectionId}/create`,
-  CREATE_DATASET: (collectionId: string) => `/datasets/${collectionId}/create`
+  CREATE_DATASET: (collectionId: string) => `/datasets/${collectionId}/create`,
+  COLLECTION_FEATURED_ITEMS: (collectionId: string) => `/collections/${collectionId}/featured-items`
 }
 
 export enum QueryParamKey {

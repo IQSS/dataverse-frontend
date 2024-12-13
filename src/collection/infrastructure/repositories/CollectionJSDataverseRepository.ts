@@ -16,6 +16,8 @@ import { CollectionItemsPaginationInfo } from '../../domain/models/CollectionIte
 import { CollectionItemSubset } from '../../domain/models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCriteria'
 import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
+import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id?: string): Promise<Collection> {
@@ -58,7 +60,18 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
         }
       })
   }
+
   publish(collectionIdOrAlias: number | string): Promise<void> {
     return publishCollection.execute(collectionIdOrAlias)
+  }
+
+  getFeaturedItems(_collectionId: string): Promise<CollectionFeaturedItem[]> {
+    // TODO:ME Mocked data for now
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(CollectionFeaturedItemMother.createFeaturedItems())
+      }, 1_000)
+    })
   }
 }

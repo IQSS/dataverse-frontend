@@ -1,5 +1,6 @@
 import { Collection } from '../models/Collection'
 import { CollectionFacet } from '../models/CollectionFacet'
+import { CollectionFeaturedItem } from '../models/CollectionFeaturedItem'
 import { CollectionItemsPaginationInfo } from '../models/CollectionItemsPaginationInfo'
 import { CollectionItemSubset } from '../models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '../models/CollectionSearchCriteria'
@@ -17,4 +18,5 @@ export interface CollectionRepository {
     paginationInfo: CollectionItemsPaginationInfo,
     searchCriteria?: CollectionSearchCriteria
   ): Promise<CollectionItemSubset>
+  getFeaturedItems(collectionIdOrAlias: number | string): Promise<CollectionFeaturedItem[]>
 }

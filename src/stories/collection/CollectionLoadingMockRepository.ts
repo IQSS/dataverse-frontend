@@ -5,6 +5,7 @@ import { CollectionFacet } from '../../collection/domain/models/CollectionFacet'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
+import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 
 export class CollectionLoadingMockRepository extends CollectionMockRepository {
   getById(_id?: string): Promise<Collection> {
@@ -24,6 +25,10 @@ export class CollectionLoadingMockRepository extends CollectionMockRepository {
     _paginationInfo: CollectionItemsPaginationInfo,
     _searchCriteria?: CollectionSearchCriteria
   ): Promise<CollectionItemSubset> {
+    return new Promise(() => {})
+  }
+
+  getFeaturedItems(_collectionId: string): Promise<CollectionFeaturedItem[]> {
     return new Promise(() => {})
   }
 }
