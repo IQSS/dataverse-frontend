@@ -88,7 +88,7 @@ export class CollectionMockRepository implements CollectionRepository {
     })
   }
 
-  getFeaturedItems(_collectionIdOrAlias: number | string): Promise<CollectionFeaturedItem[]> {
+  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(CollectionFeaturedItemMother.createFeaturedItems())

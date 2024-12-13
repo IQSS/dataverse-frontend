@@ -36,7 +36,7 @@ export class CollectionErrorMockRepository extends CollectionMockRepository {
     })
   }
 
-  getFeaturedItems(_collectionId: string): Promise<CollectionFeaturedItem[]> {
+  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
     return new Promise(() => {})
   }
 }

@@ -65,7 +65,7 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     return publishCollection.execute(collectionIdOrAlias)
   }
 
-  getFeaturedItems(_collectionId: string): Promise<CollectionFeaturedItem[]> {
+  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
     // TODO:ME Mocked data for now
 
     return new Promise((resolve) => {

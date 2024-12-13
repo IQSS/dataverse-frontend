@@ -3,7 +3,7 @@ import { CollectionRepository } from '../repositories/CollectionRepository'
 
 export async function getCollectionFeaturedItems(
   collectionRepository: CollectionRepository,
-  collectionIdOrAlias: number | string
+  collectionIdOrAlias?: number | string
 ): Promise<CollectionFeaturedItem[]> {
   return collectionRepository.getFeaturedItems(collectionIdOrAlias)
 }

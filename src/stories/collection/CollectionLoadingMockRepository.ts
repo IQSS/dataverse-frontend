@@ -28,7 +28,7 @@ export class CollectionLoadingMockRepository extends CollectionMockRepository {
     return new Promise(() => {})
   }
 
-  getFeaturedItems(_collectionId: string): Promise<CollectionFeaturedItem[]> {
+  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
     return new Promise(() => {})
   }
 }

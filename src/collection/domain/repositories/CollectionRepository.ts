@@ -18,5 +18,5 @@ export interface CollectionRepository {
     paginationInfo: CollectionItemsPaginationInfo,
     searchCriteria?: CollectionSearchCriteria
   ): Promise<CollectionItemSubset>
-  getFeaturedItems(collectionIdOrAlias: number | string): Promise<CollectionFeaturedItem[]>
+  getFeaturedItems(collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]>
 }

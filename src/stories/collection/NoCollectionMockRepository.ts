@@ -39,7 +39,7 @@ export class NoCollectionMockRepository extends CollectionMockRepository {
     })
   }
 
-  getFeaturedItems(_collectionId: string): Promise<CollectionFeaturedItem[]> {
+  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve([])
