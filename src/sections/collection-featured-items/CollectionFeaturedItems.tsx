@@ -9,6 +9,8 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { FeaturedItemsForm } from './featured-items-form/FeaturedItemsForm'
+import { FeaturedItemsFormHelper } from './featured-items-form/FeaturedItemsFormHelper'
+import { FeaturedItemsFormData } from './types'
 
 interface CollectionFeaturedItemsProps {
   collectionRepository: CollectionRepository
@@ -36,12 +38,6 @@ export const CollectionFeaturedItems = ({
 
   const isLoadingData = isLoading || isLoadingCollectionFeaturedItems
 
-  console.log({
-    collectionFeaturedItems,
-    isLoadingCollectionFeaturedItems,
-    errorCollectionFeaturedItems
-  })
-
   if (!isLoading && !collection) {
     return <PageNotFound />
   }
@@ -52,6 +48,10 @@ export const CollectionFeaturedItems = ({
 
   if (errorCollectionFeaturedItems) {
     return <Alert variant="danger">{errorCollectionFeaturedItems}</Alert>
+  }
+
+  const formDefaultValues: FeaturedItemsFormData = {
+    featuredItems: FeaturedItemsFormHelper.defineDefaultFeaturedItems(collectionFeaturedItems)
   }
 
   return (
@@ -69,7 +69,7 @@ export const CollectionFeaturedItems = ({
 
       <Alert variant="info">{t('infoMessage')}</Alert>
 
-      <FeaturedItemsForm />
+      <FeaturedItemsForm defaultValues={formDefaultValues} />
     </section>
   )
 }

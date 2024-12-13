@@ -1,0 +1,16 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 2rem;
+}
+
+.show-data-checkbox-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  :global .form-check {
+    margin-bottom: 0;
+  }
+}
