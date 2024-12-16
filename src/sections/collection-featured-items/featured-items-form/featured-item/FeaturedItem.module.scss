@@ -46,6 +46,10 @@
     }
   }
 
+  .form-group-content {
+    cursor: auto;
+  }
+
   .image-dropzone {
     display: grid;
     place-items: center;
@@ -66,5 +70,12 @@
     small {
       margin: 0;
     }
+  }
+
+  .error-msg {
+    width: 100%;
+    margin-top: 0.25rem;
+    color: $dv-danger-color;
+    font-size: 0.875em;
   }
 }

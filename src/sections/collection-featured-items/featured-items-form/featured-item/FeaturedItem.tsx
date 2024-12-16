@@ -1,7 +1,7 @@
 import { Controller, useFormContext } from 'react-hook-form'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Col, Form, Row } from '@iqss/dataverse-design-system'
+import { Col, Form, RichTextEditor, Row } from '@iqss/dataverse-design-system'
 import cn from 'classnames'
 import { DynamicFieldsButtons } from '@/sections/shared/form/DynamicFieldsButtons/DynamicFieldsButtons'
 import styles from './FeaturedItem.module.scss'
@@ -13,6 +13,9 @@ interface FeaturedItemProps {
   onRemoveField: (index: number) => void
   disableDragWhenOnlyOneItem: boolean
 }
+
+// TODO:ME - Image just an input image field, no dropzone as it is too small
+// TODO:ME - Logic to show the image thumbnail on top of the image input field, if an image is uploaded (use the image field from the form). Add button to remove the image. how that logic could be?
 
 export const FeaturedItem = ({
   id,
@@ -113,26 +116,39 @@ export const FeaturedItem = ({
             </Form.Group>
           </Row>
           <Row>
-            <Form.Group controlId={`featuredItems.${itemIndex}.content`} as={Col}>
-              <Form.Group.Label required={true}>Content</Form.Group.Label>
+            <Form.Group as={Col} className={styles['form-group-content']}>
+              <Form.Group.Label required={true} id={`featuredItems.${itemIndex}.content`}>
+                Content
+              </Form.Group.Label>
 
               <Controller
                 name={`featuredItems.${itemIndex}.content`}
                 control={control}
-                rules={{ required: 'Content is required' }}
-                render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
-                  <Col>
-                    <Form.Group.TextArea
-                      value={value as string}
-                      onChange={onChange}
-                      isInvalid={invalid}
-                      aria-required={true}
-                      rows={3}
-                      ref={ref}
-                    />
-                    <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
-                  </Col>
-                )}
+                rules={{
+                  required: 'Content is required',
+                  validate: (value: string) => {
+                    if (value === '<p></p>' || value === '') {
+                      return 'Content is required'
+                    }
+                    return true
+                  }
+                }}
+                render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => {
+                  // TODO:ME - Make ref work with RichTextEditor
+                  // TODO:ME - Allow passing aria-required to RichTextEditor
+                  return (
+                    <Col>
+                      <RichTextEditor
+                        // editorContentId="asd"
+                        initialValue={value as string}
+                        editorContentAriaLabelledBy={`featuredItems.${itemIndex}.content`}
+                        onChange={onChange}
+                      />
+
+                      {invalid && <div className={styles['error-msg']}>{error?.message}</div>}
+                    </Col>
+                  )
+                }}
               />
             </Form.Group>
           </Row>

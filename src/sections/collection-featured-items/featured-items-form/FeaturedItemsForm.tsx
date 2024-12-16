@@ -59,7 +59,7 @@ export const FeaturedItemsForm = ({ defaultValues }: FeaturedItemsFormProps) => 
   }
 
   const submitForm = (data: FeaturedItemsFormData) => {
-    console.log(data)
+    console.log({ data })
   }
 
   //   const formFieldsToFeaturedItems: CollectionFeaturedItem[] = form
