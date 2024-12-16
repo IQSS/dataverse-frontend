@@ -32,5 +32,10 @@
   },
   "publishedAlert": "Your collection is now public.",
   "addFacetFilter": "Add {{labelName}} facet filter",
-  "removeSelectedFacet": "Remove {{labelName}} facet filter"
+  "removeSelectedFacet": "Remove {{labelName}} facet filter",
+  "editedAlert": "You have successfully updated your collection!",
+  "editCollection": {
+    "edit": "Edit",
+    "generalInfo": "General Information"
+  }
 }

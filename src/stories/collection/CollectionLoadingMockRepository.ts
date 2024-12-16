@@ -1,10 +1,11 @@
-import { CollectionDTO, CollectionUserPermissions } from '@iqss/dataverse-client-javascript'
+import { CollectionUserPermissions } from '@iqss/dataverse-client-javascript'
 import { Collection } from '../../collection/domain/models/Collection'
 import { CollectionMockRepository } from './CollectionMockRepository'
 import { CollectionFacet } from '../../collection/domain/models/CollectionFacet'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
+import { CollectionDTO } from '@/collection/domain/useCases/DTOs/CollectionDTO'
 
 export class CollectionLoadingMockRepository extends CollectionMockRepository {
   getById(_id?: string): Promise<Collection> {
@@ -24,6 +25,10 @@ export class CollectionLoadingMockRepository extends CollectionMockRepository {
     _paginationInfo: CollectionItemsPaginationInfo,
     _searchCriteria?: CollectionSearchCriteria
   ): Promise<CollectionItemSubset> {
+    return new Promise(() => {})
+  }
+
+  edit(_collectionIdOrAlias: string, _updatedCollection: CollectionDTO): Promise<void> {
     return new Promise(() => {})
   }
 }
