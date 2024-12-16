@@ -52,7 +52,7 @@
     "start": "vite --base=/spa",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "npm run lint:eslint && npm run lint:stylelint && npm run lint:prettier",
+    "lint": "npm run typecheck && npm run lint:eslint && npm run lint:stylelint && npm run lint:prettier",
     "lint:fix": "eslint --fix --ext .ts,.tsx ./src --ignore-path .gitignore . && stylelint --fix **/*.scss && prettier . --write",
     "lint:eslint": "eslint --ignore-path .gitignore .",
     "lint:stylelint": "stylelint **/*.scss ",
