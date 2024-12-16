@@ -39,6 +39,7 @@ interface ItemsListProps {
   filterQueriesSelected: FilterQuery[]
   sortSelected?: SortType
   orderSelected?: OrderType
+  searchText?: string
 }
 
 export const ItemsList = forwardRef(
@@ -59,7 +60,8 @@ export const ItemsList = forwardRef(
       itemsTypesSelected,
       filterQueriesSelected,
       sortSelected,
-      orderSelected
+      orderSelected,
+      searchText
     }: ItemsListProps,
     ref
   ) => {
@@ -115,6 +117,7 @@ export const ItemsList = forwardRef(
                         isLoadingCollectionItems={isLoadingItems}
                         currentSortType={sortSelected}
                         currentSortOrder={orderSelected}
+                        currentSearchText={searchText}
                         onSortChange={onSortChange}></ItemsSortBy>
                     </Col>
                   </Row>

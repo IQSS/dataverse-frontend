@@ -62,8 +62,8 @@ export const CollectionItemsPanel = ({
   const currentSearchCriteria = new CollectionSearchCriteria(
     collectionQueryParams.searchQuery,
     collectionQueryParams.typesQuery || [CollectionItemType.COLLECTION, CollectionItemType.DATASET],
-    undefined,
-    undefined,
+    collectionQueryParams.sortQuery,
+    collectionQueryParams.orderQuery,
     collectionQueryParams.filtersQuery
   )
 
@@ -133,7 +133,10 @@ export const CollectionItemsPanel = ({
     // WHEN SEARCHING, WE RESET THE PAGINATION INFO AND KEEP ALL ITEM TYPES!!
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
       searchValue === '' ? undefined : searchValue,
-      [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE]
+      [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
+      undefined,
+      undefined,
+      undefined
     )
 
     const totalItemsCount = await loadMore(resetPaginationInfo, newCollectionSearchCriteria, true)
@@ -169,8 +172,8 @@ export const CollectionItemsPanel = ({
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
       currentSearchCriteria.searchText,
       newItemsTypes,
-      undefined,
-      undefined,
+      currentSearchCriteria.sort,
+      currentSearchCriteria.order,
       currentSearchCriteria.filterQueries
     )
 
@@ -182,7 +185,35 @@ export const CollectionItemsPanel = ({
     }
   }
 
-  const handleSortChange = async (sort: SortType, order: OrderType) => {}
+  const handleSortChange = async (sort: SortType, order: OrderType) => {
+    itemsListContainerRef.current?.scrollTo({ top: 0 })
+
+    const resetPaginationInfo = new CollectionItemsPaginationInfo()
+    setPaginationInfo(resetPaginationInfo)
+
+    // Update the URL with the new sort and order, keep other querys
+    setSearchParams((currentSearchParams) => {
+      currentSearchParams.set(CollectionItemsQueryParams.SORT, sort)
+      currentSearchParams.set(CollectionItemsQueryParams.ORDER, order)
+      return currentSearchParams
+    })
+
+    const newCollectionSearchCriteria = new CollectionSearchCriteria(
+      currentSearchCriteria.searchText,
+      currentSearchCriteria.itemTypes,
+      sort,
+      order,
+      currentSearchCriteria.filterQueries
+    )
+
+    const totalItemsCount = await loadMore(resetPaginationInfo, newCollectionSearchCriteria, true)
+
+    if (totalItemsCount !== undefined) {
+      const paginationInfoUpdated = resetPaginationInfo.withTotal(totalItemsCount)
+      setPaginationInfo(paginationInfoUpdated)
+    }
+  }
+
   const handleFacetChange = async (filterQuery: FilterQuery, removeOrAdd: RemoveAddFacetFilter) => {
     const newFilterQueries =
       removeOrAdd === RemoveAddFacetFilter.ADD
@@ -219,8 +250,8 @@ export const CollectionItemsPanel = ({
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
       currentSearchCriteria.searchText,
       currentSearchCriteria.itemTypes,
-      undefined,
-      undefined,
+      currentSearchCriteria.sort,
+      currentSearchCriteria.order,
       newFilterQueries
     )
 
@@ -239,8 +270,8 @@ export const CollectionItemsPanel = ({
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
       collectionQueryParams.searchQuery,
       collectionQueryParams.typesQuery,
-      undefined,
-      undefined,
+      collectionQueryParams.sortQuery,
+      collectionQueryParams.orderQuery,
       collectionQueryParams.filtersQuery
     )
 
@@ -306,6 +337,7 @@ export const CollectionItemsPanel = ({
             filterQueriesSelected={currentSearchCriteria.filterQueries ?? []}
             sortSelected={currentSearchCriteria.sort}
             orderSelected={currentSearchCriteria.order}
+            searchText={currentSearchCriteria.searchText}
             paginationInfo={paginationInfo}
             onBottomReach={handleLoadMoreOnBottomReach}
             onSortChange={handleSortChange}

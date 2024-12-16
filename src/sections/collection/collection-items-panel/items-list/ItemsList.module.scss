@@ -1,4 +1,5 @@
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
 @import 'src/assets/variables';
 
 .items-list-root-ref {
@@ -65,16 +66,12 @@
     }
   }
 
+  .selected-sort-option{
+    font-weight: $dv-font-weight-bold;
+  }
+
   .sort-button {
     text-align: end;
-
-    &.selected {
-      font-weight: 600;
-    }
-
-    &:disabled {
-      color: $dv-primary-color;
-    }
   }
 
   .icon {

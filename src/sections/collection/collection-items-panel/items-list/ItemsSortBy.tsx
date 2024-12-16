@@ -17,24 +17,26 @@ export enum SortOption {
 interface ItemsSortByProps {
   currentSortType?: SortType
   currentSortOrder?: OrderType
-  currentQuery?: string
+  currentSearchText?: string
   onSortChange: (newSortType: SortType, newOrderType: OrderType) => void
   isLoadingCollectionItems: boolean
 }
 function convertToSortOption(
   sortType?: SortType,
   orderType?: OrderType,
-  query?: string
+  searchText?: string
 ): SortOption {
-  if (sortType === SortType.NAME) {
-    return orderType === OrderType.ASC ? SortOption.NAME_ASC : SortOption.NAME_DESC
+  let sortOption: SortOption
+  if (searchText) {
+    sortOption = SortOption.RELEVANCE
+  } else if (sortType === SortType.NAME) {
+    sortOption = orderType === OrderType.ASC ? SortOption.NAME_ASC : SortOption.NAME_DESC
   } else if (sortType === SortType.DATE) {
-    return orderType === OrderType.ASC ? SortOption.DATE_ASC : SortOption.DATE_DESC
-  } else if (query) {
-    return SortOption.RELEVANCE
+    sortOption = orderType === OrderType.ASC ? SortOption.DATE_ASC : SortOption.DATE_DESC
   } else {
-    return SortOption.DATE_DESC
+    sortOption = SortOption.DATE_DESC
   }
+  return sortOption
 }
 function convertFromSortOption(sortOption: SortOption): {
   sortType: SortType
@@ -58,21 +60,27 @@ export function ItemsSortBy({
   currentSortType,
   currentSortOrder,
   onSortChange,
+  currentSearchText,
   isLoadingCollectionItems
 }: ItemsSortByProps) {
   const { t } = useTranslation('collection')
   const [selectedOption, setSelectedOption] = useState<SortOption>(
-    convertToSortOption(currentSortType, currentSortOrder)
+    convertToSortOption(currentSortType, currentSortOrder, currentSearchText)
   )
   const handleSortChange = (eventKey: string | null) => {
-    if (selectedOption !== eventKey) {
-      setSelectedOption(eventKey as SortOption)
+    const newSortOption = eventKey as SortOption
+    if (selectedOption !== newSortOption) {
+      setSelectedOption(newSortOption)
       onSortChange(
-        convertFromSortOption(selectedOption).sortType,
-        convertFromSortOption(selectedOption).orderType
+        convertFromSortOption(newSortOption).sortType,
+        convertFromSortOption(newSortOption).orderType
       )
     }
   }
+
+  const sortOptions = Object.values(SortOption).filter(
+    (sortByOption) => sortByOption !== SortOption.RELEVANCE || currentSearchText !== undefined
+  )
 
   return (
     <DropdownButton
@@ -81,11 +89,11 @@ export function ItemsSortBy({
       id="collection-items-sort"
       variant="secondary"
       onSelect={handleSortChange}>
-      {Object.values(SortOption).map((sortByOption) => (
+      {Object.values(sortOptions).map((sortByOption) => (
         <DropdownButtonItem
           key={sortByOption}
           eventKey={sortByOption}
-          className={selectedOption === sortByOption ? styles['sortButton.selected'] : ''}>
+          className={selectedOption === sortByOption ? styles['selected-sort-option'] : ''}>
           {t(`sort.options.${sortByOption}`)}
         </DropdownButtonItem>
       ))}

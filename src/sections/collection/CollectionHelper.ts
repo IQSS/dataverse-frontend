@@ -1,5 +1,9 @@
 import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
-import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
+import {
+  FilterQuery,
+  OrderType,
+  SortType
+} from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { QueryParamKey } from '../Route.enum'
 
@@ -31,6 +35,10 @@ export class CollectionHelper {
           .filter((decodedFilter) => /^[^:]+:[^:]+$/.test(decodedFilter)) as FilterQuery[])
       : undefined
 
-    return { pageQuery, searchQuery, typesQuery, filtersQuery }
+    const sortQuery = (searchParams.get(CollectionItemsQueryParams.SORT) as SortType) ?? undefined
+    const orderQuery =
+      (searchParams.get(CollectionItemsQueryParams.ORDER) as OrderType) ?? undefined
+
+    return { pageQuery, searchQuery, typesQuery, filtersQuery, sortQuery, orderQuery }
   }
 }
