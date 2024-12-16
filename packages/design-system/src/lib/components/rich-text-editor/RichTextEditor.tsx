@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { forwardRef, RefObject, useEffect } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
@@ -17,55 +17,67 @@ export interface RichTextEditorProps {
   locales?: RichTextEditorLocales
   editorContentId?: string
   editorContentAriaLabelledBy?: string
+  invalid?: boolean
 }
 
-export const RichTextEditor = ({
-  initialValue,
-  onChange,
-  disabled,
-  locales,
-  editorContentId,
-  editorContentAriaLabelledBy
-}: RichTextEditorProps) => {
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        heading: {
-          levels: [1, 2, 3]
+export const RichTextEditor = forwardRef(
+  (
+    {
+      initialValue,
+      onChange,
+      disabled,
+      locales,
+      editorContentId,
+      editorContentAriaLabelledBy,
+      invalid
+    }: RichTextEditorProps,
+    ref
+  ) => {
+    const editor = useEditor({
+      extensions: [
+        StarterKit.configure({
+          heading: {
+            levels: [1, 2, 3]
+          }
+        }),
+        Underline,
+        Link.configure({
+          openOnClick: false,
+          autolink: true,
+          linkOnPaste: true
+        }),
+        CodeBlock,
+        Placeholder.configure({
+          placeholder: locales?.placeholder ?? richTextEditorDefaultLocales.placeholder
+        })
+      ],
+      content: initialValue,
+      editorProps: {
+        attributes: {
+          class: 'rich-text-editor-content',
+          ...(editorContentId && { id: editorContentId }),
+          ...(editorContentAriaLabelledBy && { 'aria-labelledby': editorContentAriaLabelledBy })
         }
-      }),
-      Underline,
-      Link.configure({
-        openOnClick: false,
-        autolink: true,
-        linkOnPaste: true
-      }),
-      CodeBlock,
-      Placeholder.configure({
-        placeholder: locales?.placeholder ?? richTextEditorDefaultLocales.placeholder
-      })
-    ],
-    content: initialValue,
-    editorProps: {
-      attributes: {
-        class: 'rich-text-editor-content',
-        ...(editorContentId && { id: editorContentId }),
-        ...(editorContentAriaLabelledBy && { 'aria-labelledby': editorContentAriaLabelledBy })
-      }
-    },
-    onUpdate: ({ editor }) => onChange && onChange(editor.getHTML())
-  })
+      },
+      onUpdate: ({ editor }) => onChange && onChange(editor.getHTML())
+    })
 
-  useEffect(() => {
-    if (editor) editor.setEditable(disabled ? false : true, false)
-  }, [disabled, editor])
+    useEffect(() => {
+      if (editor) editor.setEditable(disabled ? false : true, false)
+    }, [disabled, editor])
 
-  return (
-    <div className="rich-text-editor-wrapper" data-testid="rich-text-editor-wrapper">
-      <EditorActions editor={editor} disabled={disabled} locales={locales} />
-      <div className="editor-content-wrapper">
-        <EditorContent editor={editor} />
+    return (
+      <div
+        className={`rich-text-editor-wrapper ${invalid ? 'invalid' : ''}`}
+        data-testid="rich-text-editor-wrapper"
+        ref={ref as RefObject<HTMLDivElement>}
+        tabIndex={0}>
+        <EditorActions editor={editor} disabled={disabled} locales={locales} />
+        <div className="editor-content-wrapper">
+          <EditorContent editor={editor} />
+        </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
+)
+RichTextEditor.displayName = 'RichTextEditor'

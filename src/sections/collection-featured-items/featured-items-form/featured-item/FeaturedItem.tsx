@@ -134,7 +134,6 @@ export const FeaturedItem = ({
                   }
                 }}
                 render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => {
-                  // TODO:ME - Make ref work with RichTextEditor
                   // TODO:ME - Allow passing aria-required to RichTextEditor
                   return (
                     <Col>
@@ -143,6 +142,8 @@ export const FeaturedItem = ({
                         initialValue={value as string}
                         editorContentAriaLabelledBy={`featuredItems.${itemIndex}.content`}
                         onChange={onChange}
+                        invalid={invalid}
+                        ref={ref}
                       />
 
                       {invalid && <div className={styles['error-msg']}>{error?.message}</div>}

@@ -76,3 +76,15 @@ export const WithLabel: Story = {
     </Form.Group>
   )
 }
+
+export const WithError: Story = {
+  render: () => (
+    <Form.Group as={Col}>
+      <Form.Group.Label id="label-id">Dataset Description</Form.Group.Label>
+      <Col>
+        <RichTextEditor editorContentAriaLabelledBy="label-id" onChange={handleChange} invalid />
+        <Form.Group.Feedback type="invalid">Content is required</Form.Group.Feedback>
+      </Col>
+    </Form.Group>
+  )
+}
