@@ -127,7 +127,7 @@ export const FeaturedItem = ({
                       onChange={onChange}
                       isInvalid={invalid}
                       aria-required={true}
-                      //   rows={3}
+                      rows={3}
                       ref={ref}
                     />
                     <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
