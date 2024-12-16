@@ -61,10 +61,7 @@ export class JSFileMetadataMapper {
   ): FileDate {
     if (jsFilePublicationDate) {
       if (jsFileEmbargo) {
-        return {
-          type: FileDateType.METADATA_RELEASED,
-          date: jsFilePublicationDate
-        }
+        return { type: FileDateType.METADATA_RELEASED, date: jsFilePublicationDate }
       }
       return { type: FileDateType.PUBLISHED, date: jsFilePublicationDate }
     }

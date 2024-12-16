@@ -146,9 +146,9 @@ export class FileJSDataverseRepository implements FileRepository {
 
   private static getAllDownloadCount(jsFiles: JSFile[]): Promise<number[]> {
     return Promise.all(
-      jsFiles.map((jsFile) => {
-        return FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate)
-      })
+      jsFiles.map((jsFile) =>
+        FileJSDataverseRepository.getDownloadCountById(jsFile.id, jsFile.publicationDate)
+      )
     )
   }
   private static getAllWithPermissions(files: JSFile[]): Promise<FilePermissions[]> {
