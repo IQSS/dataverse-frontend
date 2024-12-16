@@ -3,5 +3,6 @@ export enum CollectionItemsQueryParams {
   ORDER = 'order',
   START = 'start',
   TYPES = 'types',
+  QUERY = 'q',
   FILTER_QUERIES = 'fqs'
 }

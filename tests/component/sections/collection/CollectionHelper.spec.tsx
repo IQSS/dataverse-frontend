@@ -10,7 +10,7 @@ const PAGE_NUMBER = 1
 describe('CollectionHelper', () => {
   it('define collection query params correctly when all query params are in the url', () => {
     const searchParams = new URLSearchParams({
-      [QueryParamKey.QUERY]: QUERY_VALUE,
+      [CollectionItemsQueryParams.QUERY]: QUERY_VALUE,
       [CollectionItemsQueryParams.TYPES]: [
         CollectionItemType.COLLECTION,
         CollectionItemType.DATASET
@@ -38,7 +38,7 @@ describe('CollectionHelper', () => {
 
   it('define collection query params correctly when only query param is in the url', () => {
     const searchParams = new URLSearchParams({
-      [QueryParamKey.QUERY]: QUERY_VALUE
+      [CollectionItemsQueryParams.QUERY]: QUERY_VALUE
     })
 
     const collectionQueryParams = CollectionHelper.defineCollectionQueryParams(searchParams)
