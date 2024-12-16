@@ -5,7 +5,9 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import {
   CollectionSearchCriteria,
-  FilterQuery
+  FilterQuery,
+  OrderType,
+  SortType
 } from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
@@ -180,6 +182,7 @@ export const CollectionItemsPanel = ({
     }
   }
 
+  const handleSortChange = async (sort: SortType, order: OrderType) => {}
   const handleFacetChange = async (filterQuery: FilterQuery, removeOrAdd: RemoveAddFacetFilter) => {
     const newFilterQueries =
       removeOrAdd === RemoveAddFacetFilter.ADD
@@ -301,8 +304,11 @@ export const CollectionItemsPanel = ({
             hasSearchValue={currentSearchCriteria.hasSearchText()}
             itemsTypesSelected={currentSearchCriteria.itemTypes as CollectionItemType[]}
             filterQueriesSelected={currentSearchCriteria.filterQueries ?? []}
+            sortSelected={currentSearchCriteria.sort}
+            orderSelected={currentSearchCriteria.order}
             paginationInfo={paginationInfo}
             onBottomReach={handleLoadMoreOnBottomReach}
+            onSortChange={handleSortChange}
             ref={itemsListContainerRef}
           />
         </Stack>

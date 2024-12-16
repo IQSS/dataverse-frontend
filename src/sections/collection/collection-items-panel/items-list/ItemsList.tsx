@@ -5,7 +5,11 @@ import cn from 'classnames'
 import { type CollectionItem } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
+import {
+  FilterQuery,
+  SortType,
+  OrderType
+} from '@/collection/domain/models/CollectionSearchCriteria'
 import { PaginationResultsInfo } from '@/sections/shared/pagination/PaginationResultsInfo'
 import { NO_COLLECTION_ITEMS } from '../useGetAccumulatedItems'
 import { ErrorItemsMessage } from './ErrorItemsMessage'
@@ -15,6 +19,8 @@ import { CollectionCard } from './collection-card/CollectionCard'
 import { DatasetCard } from './dataset-card/DatasetCard'
 import { FileCard } from './file-card/FileCard'
 import styles from './ItemsList.module.scss'
+import { Col, Row } from '@iqss/dataverse-design-system'
+import { ItemsSortBy } from '@/sections/collection/collection-items-panel/items-list/ItemsSortBy'
 
 interface ItemsListProps {
   parentCollectionAlias: string
@@ -28,8 +34,11 @@ interface ItemsListProps {
   hasSearchValue: boolean
   paginationInfo: CollectionItemsPaginationInfo
   onBottomReach: (paginationInfo: CollectionItemsPaginationInfo) => void
+  onSortChange: (newSortType: SortType, newOrderType: OrderType) => void
   itemsTypesSelected: CollectionItemType[]
   filterQueriesSelected: FilterQuery[]
+  sortSelected?: SortType
+  orderSelected?: OrderType
 }
 
 export const ItemsList = forwardRef(
@@ -46,8 +55,11 @@ export const ItemsList = forwardRef(
       hasSearchValue,
       paginationInfo,
       onBottomReach,
+      onSortChange,
       itemsTypesSelected,
-      filterQueriesSelected
+      filterQueriesSelected,
+      sortSelected,
+      orderSelected
     }: ItemsListProps,
     ref
   ) => {
@@ -91,10 +103,21 @@ export const ItemsList = forwardRef(
                     <Skeleton height={19} width={190} />
                   </SkeletonTheme>
                 ) : (
-                  <PaginationResultsInfo
-                    paginationInfo={paginationInfo}
-                    accumulated={accumulatedCount}
-                  />
+                  <Row>
+                    <Col>
+                      <PaginationResultsInfo
+                        paginationInfo={paginationInfo}
+                        accumulated={accumulatedCount}
+                      />
+                    </Col>
+                    <Col className={styles['sort-button']}>
+                      <ItemsSortBy
+                        isLoadingCollectionItems={isLoadingItems}
+                        currentSortType={sortSelected}
+                        currentSortOrder={orderSelected}
+                        onSortChange={onSortChange}></ItemsSortBy>
+                    </Col>
+                  </Row>
                 )}
               </header>
 

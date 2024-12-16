@@ -16,6 +16,17 @@
       "datasetAndFile": "datasets or files"
     }
   },
+  "sort": {
+    "title": "Sort",
+    "options" : {
+      "relevance": "Relevance",
+      "nameAsc": "Name (A-Z)",
+      "nameDesc": "Name (Z-A)",
+      "dateAsc": "Oldest",
+      "dateDesc": "Newest",
+      "relevance": "Relevance"
+    }
+  },
   "noSearchMatches": "There are no collections, datasets, or files that match your search. Please try a new search by using other or broader terms. You can also check out the <anchor>search guide</anchor> for tips.",
   "createdAlert": "You have successfully created your collection! To learn more about what you can do with your collection, check out the <anchor>User Guide</anchor>.",
   "filterResults": "Filter Results",
