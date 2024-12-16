@@ -113,10 +113,7 @@ export const FeaturedItem = ({
             </Form.Group>
           </Row>
           <Row>
-            <Form.Group
-              controlId={`featuredItems.${itemIndex}.content`}
-              as={Col}
-              style={{ display: isSorting ? 'none' : 'block' }}>
+            <Form.Group controlId={`featuredItems.${itemIndex}.content`} as={Col}>
               <Form.Group.Label required={true}>Content</Form.Group.Label>
 
               <Controller

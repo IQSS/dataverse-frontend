@@ -9,7 +9,7 @@ import {
 } from '@iqss/dataverse-design-system'
 import { FeaturedItem } from './featured-item/FeaturedItem'
 // import { PreviewCarousel } from './PreviewCarousel/PreviewCarousel'
-import { FeaturedItemFieldWithId, FeaturedItemsFormData } from '../types'
+import { FeaturedItemFieldWithSortId, FeaturedItemsFormData } from '../types'
 import styles from './FeaturedItemsForm.module.scss'
 
 interface FeaturedItemsFormProps {
@@ -111,7 +111,7 @@ export const FeaturedItemsForm = ({ defaultValues }: FeaturedItemsFormProps) => 
 
         <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
           <SortableContext items={fieldsArray}>
-            {(fieldsArray as FeaturedItemFieldWithId[]).map((field, index) => (
+            {(fieldsArray as FeaturedItemFieldWithSortId[]).map((field, index) => (
               <FeaturedItem
                 id={field.id}
                 itemIndex={index}

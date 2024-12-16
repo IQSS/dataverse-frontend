@@ -6,6 +6,7 @@
   padding: 1rem;
   border: solid 1px $dv-secondary-color;
   border-radius: 6px;
+  touch-action: none;
 
   &.sorting {
     background-color: color.adjust($dv-secondary-color, $alpha: -0.4);

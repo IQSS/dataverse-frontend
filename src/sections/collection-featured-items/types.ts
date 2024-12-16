@@ -11,6 +11,6 @@ export type FeaturedItemField = {
   itemId?: CollectionFeaturedItem['id']
 }
 
-export type FeaturedItemFieldWithId = FeaturedItemField & {
+export type FeaturedItemFieldWithSortId = FeaturedItemField & {
   id: string
 }
