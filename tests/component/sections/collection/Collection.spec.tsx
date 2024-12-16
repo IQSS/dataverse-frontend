@@ -182,7 +182,7 @@ describe('Collection page', () => {
     cy.mountAuthenticated(
       <Collection
         collectionRepository={collectionRepository}
-        collectionId="collection"
+        collectionIdFromParams="collection"
         created={false}
         published={false}
         collectionQueryParams={{ pageQuery: 1 }}

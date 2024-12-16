@@ -1,11 +1,11 @@
-import { CollectionRepository } from '../../../../src/collection/domain/repositories/CollectionRepository'
-import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
-import { CreateCollection } from '../../../../src/sections/create-collection/CreateCollection'
-import { UserRepository } from '../../../../src/users/domain/repositories/UserRepository'
-import { CollectionFacetMother } from '../../collection/domain/models/CollectionFacetMother'
-import { CollectionMother } from '../../collection/domain/models/CollectionMother'
-import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
-import { UserMother } from '../../users/domain/models/UserMother'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { MetadataBlockInfoRepository } from '@/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
+import { CreateCollection } from '@/sections/create-collection/CreateCollection'
+import { UserRepository } from '@/users/domain/repositories/UserRepository'
+import { CollectionFacetMother } from '@tests/component/collection/domain/models/CollectionFacetMother'
+import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
+import { MetadataBlockInfoMother } from '@tests/component/metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { UserMother } from '@tests/component/users/domain/models/UserMother'
 
 const collectionRepository: CollectionRepository = {} as CollectionRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -57,7 +57,7 @@ describe('CreateCollection', () => {
       <CreateCollection
         collectionRepository={collectionRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
-        ownerCollectionId="root"
+        parentCollectionId="root"
       />
     )
     cy.clock()
@@ -76,7 +76,7 @@ describe('CreateCollection', () => {
       <CreateCollection
         collectionRepository={collectionRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
-        ownerCollectionId="root"
+        parentCollectionId="root"
       />
     )
 
@@ -95,87 +95,70 @@ describe('CreateCollection', () => {
       <CreateCollection
         collectionRepository={collectionRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
-        ownerCollectionId="root"
+        parentCollectionId="root"
       />
     )
 
     cy.findByText('Page Not Found').should('exist')
   })
 
-  it('pre-fills specific form fields with user data', () => {
-    cy.mountAuthenticated(
-      <CreateCollection
-        collectionRepository={collectionRepository}
-        metadataBlockInfoRepository={metadataBlockInfoRepository}
-        ownerCollectionId="root"
-      />
-    )
-
-    cy.findByLabelText(/^Collection Name/i).should(
-      'have.value',
-      `${testUser.displayName} Collection`
-    )
-
-    cy.findByLabelText(/^Affiliation/i).should('have.value', testUser.affiliation)
-
-    cy.findByLabelText(/^Email/i).should('have.value', testUser.email)
-  })
-
   it('should show alert error message when user is not allowed to create collection', () => {
-    collectionRepository.getUserPermissions = cy.stub().resolves(
-      CollectionMother.createUserPermissions({
-        canAddCollection: false
-      })
-    )
+    const DELAYED_TIME = 200
+    collectionRepository.getUserPermissions = cy.stub().callsFake(() => {
+      return Cypress.Promise.delay(DELAYED_TIME).then(() =>
+        CollectionMother.createUserPermissions({
+          canAddCollection: false
+        })
+      )
+    })
 
     cy.mountAuthenticated(
       <CreateCollection
         collectionRepository={collectionRepository}
-        ownerCollectionId="root"
+        parentCollectionId="root"
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     )
-    cy.findAllByTestId('not-allowed-to-create-collection-alert').should('exist')
+
+    cy.wait(DELAYED_TIME * 2)
+
+    cy.findByText(
+      /You do not have permissions to create a collection within this collection./
+    ).should('exist')
   })
 
   it('should not show alert error message when user is allowed to create collection', () => {
+    const DELAYED_TIME = 200
+    collectionRepository.getUserPermissions = cy.stub().callsFake(() => {
+      return Cypress.Promise.delay(DELAYED_TIME).then(() => userPermissionsMock)
+    })
+
     cy.mountAuthenticated(
       <CreateCollection
         collectionRepository={collectionRepository}
-        ownerCollectionId="root"
+        parentCollectionId="root"
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     )
-    cy.findAllByTestId('not-allowed-to-create-collection-alert').should('not.exist')
+
+    cy.wait(DELAYED_TIME * 2)
+
+    cy.findByText(
+      /You do not have permissions to create a collection within this collection./
+    ).should('not.exist')
   })
 
-  it('should display an alert error message for each error in loading the required data', () => {
-    collectionRepository.getUserPermissions = cy
-      .stub()
-      .rejects(new Error('Error getting user permissions'))
-    collectionRepository.getFacets = cy.stub().rejects(new Error('Error getting collection facets'))
-    metadataBlockInfoRepository.getByCollectionId = cy
-      .stub()
-      .rejects(new Error('Error getting metadata blocks info'))
-    metadataBlockInfoRepository.getAll = cy
-      .stub()
-      .rejects(new Error('Error getting all metadata blocks info'))
-    metadataBlockInfoRepository.getAllFacetableMetadataFields = cy
-      .stub()
-      .rejects(new Error('Error getting all facetable metadata fields'))
+  it('should show alert error message when getting the user permissions fails', () => {
+    collectionRepository.getUserPermissions = cy.stub().rejects('Error')
 
     cy.mountAuthenticated(
       <CreateCollection
         collectionRepository={collectionRepository}
-        ownerCollectionId="root"
+        parentCollectionId="root"
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
     )
 
-    cy.findByText(/Error getting user permissions/).should('exist')
-    cy.findByText(/Error getting collection facets/).should('exist')
-    cy.findByText(/Error getting metadata blocks info/).should('exist')
-    cy.findByText(/Error getting all metadata blocks info/).should('exist')
-    cy.findByText(/Error getting all facetable metadata fields/).should('exist')
+    cy.findByText('Error').should('exist')
   })
 })

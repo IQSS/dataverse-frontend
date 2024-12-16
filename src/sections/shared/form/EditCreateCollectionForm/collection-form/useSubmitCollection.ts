@@ -1,0 +1,166 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { WriteError } from '@iqss/dataverse-client-javascript'
+import { CollectionFormData, CollectionFormValuesOnSubmit } from '../types'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import {
+  EditCreateCollectionFormMode,
+  FACET_IDS_FIELD,
+  INPUT_LEVELS_GROUPER,
+  METADATA_BLOCKS_NAMES_GROUPER,
+  USE_FACETS_FROM_PARENT,
+  USE_FIELDS_FROM_PARENT
+} from '../EditCreateCollectionForm'
+import { CollectionDTO } from '@/collection/domain/useCases/DTOs/CollectionDTO'
+import { createCollection } from '@/collection/domain/useCases/createCollection'
+import { editCollection } from '@/collection/domain/useCases/editCollection'
+import { RouteWithParams } from '@/sections/Route.enum'
+import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
+import { CollectionFormHelper } from '../CollectionFormHelper'
+import { FormState } from 'react-hook-form'
+
+export enum SubmissionStatus {
+  NotSubmitted = 'NotSubmitted',
+  IsSubmitting = 'IsSubmitting',
+  SubmitComplete = 'SubmitComplete',
+  Errored = 'Errored'
+}
+
+type UseSubmitCollectionReturnType =
+  | {
+      submissionStatus:
+        | SubmissionStatus.NotSubmitted
+        | SubmissionStatus.IsSubmitting
+        | SubmissionStatus.SubmitComplete
+      submitForm: (formData: CollectionFormData) => void
+      submitError: null
+    }
+  | {
+      submissionStatus: SubmissionStatus.Errored
+      submitForm: (formData: CollectionFormData) => void
+      submitError: string
+    }
+
+export function useSubmitCollection(
+  mode: EditCreateCollectionFormMode,
+  collectionIdOrParentCollectionId: string,
+  collectionRepository: CollectionRepository,
+  isEditingRootCollection: boolean,
+  formDirtyFields: FormState<CollectionFormData>['dirtyFields'],
+  onSubmitErrorCallback: () => void
+): UseSubmitCollectionReturnType {
+  const navigate = useNavigate()
+
+  const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
+    SubmissionStatus.NotSubmitted
+  )
+  const [submitError, setSubmitError] = useState<string | null>(null)
+
+  const submitForm = (formData: CollectionFormValuesOnSubmit): void => {
+    // setSubmissionStatus(SubmissionStatus.IsSubmitting)
+
+    const contactsDTO = formData.contacts.map((contact) => contact.value)
+
+    const metadataBlockNamesDTO =
+      CollectionFormHelper.formatFormMetadataBlockNamesToMetadataBlockNamesDTO(
+        formData[METADATA_BLOCKS_NAMES_GROUPER]
+      )
+
+    const inputLevelsDTO = CollectionFormHelper.formatFormInputLevelsToInputLevelsDTO(
+      metadataBlockNamesDTO,
+      formData[INPUT_LEVELS_GROUPER]
+    )
+
+    const facetIdsDTO = formData.facetIds.map((facet) => facet.value)
+
+    const useFieldsFromParentChecked = formData[USE_FIELDS_FROM_PARENT]
+
+    const useFacetsFromParentChecked = formData[USE_FACETS_FROM_PARENT]
+
+    const hasMetadataBlockNamesChangedFromDefaultValue =
+      formDirtyFields[METADATA_BLOCKS_NAMES_GROUPER] !== undefined
+
+    const hasInputLevelsChangedFromDefaultValue =
+      formDirtyFields[INPUT_LEVELS_GROUPER] !== undefined
+
+    const hasFacetIdsChangedFromDefaultValue = formDirtyFields[FACET_IDS_FIELD] !== undefined
+
+    const shouldSendMetadataBlockNamesAndInputLevels =
+      CollectionFormHelper.defineShouldSendMetadataBlockNamesAndInputLevels(
+        useFieldsFromParentChecked,
+        isEditingRootCollection,
+        hasMetadataBlockNamesChangedFromDefaultValue,
+        hasInputLevelsChangedFromDefaultValue,
+        mode
+      )
+
+    const shouldSendFacetIds = CollectionFormHelper.defineShouldSendFacetIds(
+      useFacetsFromParentChecked,
+      isEditingRootCollection,
+      hasFacetIdsChangedFromDefaultValue,
+      mode
+    )
+
+    const newOrUpdatedCollection: CollectionDTO = {
+      name: formData.name,
+      alias: formData.alias,
+      type: formData.type,
+      affiliation: formData.affiliation,
+      description: formData.description,
+      contacts: contactsDTO,
+      metadataBlockNames: shouldSendMetadataBlockNamesAndInputLevels
+        ? metadataBlockNamesDTO
+        : undefined,
+      inputLevels: shouldSendMetadataBlockNamesAndInputLevels ? inputLevelsDTO : undefined,
+      facetIds: shouldSendFacetIds ? facetIdsDTO : undefined
+    }
+
+    if (mode === 'create') {
+      createCollection(
+        collectionRepository,
+        newOrUpdatedCollection,
+        collectionIdOrParentCollectionId
+      )
+        .then(() => {
+          setSubmitError(null)
+          setSubmissionStatus(SubmissionStatus.SubmitComplete)
+
+          navigate(RouteWithParams.COLLECTIONS(newOrUpdatedCollection.alias), {
+            state: { created: true }
+          })
+          return
+        })
+        .catch((err: WriteError) => {
+          const error = new JSDataverseWriteErrorHandler(err)
+          const formattedError = error.getReasonWithoutStatusCode() ?? error.getErrorMessage()
+          setSubmitError(formattedError)
+          setSubmissionStatus(SubmissionStatus.Errored)
+          onSubmitErrorCallback()
+        })
+    } else {
+      editCollection(collectionRepository, newOrUpdatedCollection, collectionIdOrParentCollectionId)
+        .then(() => {
+          setSubmitError(null)
+          setSubmissionStatus(SubmissionStatus.SubmitComplete)
+
+          navigate(RouteWithParams.COLLECTIONS(newOrUpdatedCollection.alias), {
+            state: { edited: true }
+          })
+          return
+        })
+        .catch((err: WriteError) => {
+          const error = new JSDataverseWriteErrorHandler(err)
+          const formattedError = error.getReasonWithoutStatusCode() ?? error.getErrorMessage()
+          setSubmitError(formattedError)
+          setSubmissionStatus(SubmissionStatus.Errored)
+          onSubmitErrorCallback()
+        })
+    }
+  }
+
+  return {
+    submissionStatus,
+    submitForm,
+    submitError
+  } as UseSubmitCollectionReturnType
+}

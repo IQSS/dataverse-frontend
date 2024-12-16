@@ -22,7 +22,11 @@ export class JSCollectionMapper {
         jsCollection.alias,
         jsCollection.isPartOf
       ),
-      inputLevels: jsCollection.inputLevels
+      inputLevels: jsCollection.inputLevels,
+      type: jsCollection.type,
+      contacts: jsCollection.contacts ?? [],
+      isMetadataBlockRoot: jsCollection.isMetadataBlockRoot,
+      isFacetRoot: jsCollection.isFacetRoot
     }
   }
 
