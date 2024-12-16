@@ -21,13 +21,19 @@ interface ItemsSortByProps {
   onSortChange: (newSortType: SortType, newOrderType: OrderType) => void
   isLoadingCollectionItems: boolean
 }
-function convertToSortOption(sortType?: SortType, orderType?: OrderType): SortOption {
+function convertToSortOption(
+  sortType?: SortType,
+  orderType?: OrderType,
+  query?: string
+): SortOption {
   if (sortType === SortType.NAME) {
     return orderType === OrderType.ASC ? SortOption.NAME_ASC : SortOption.NAME_DESC
   } else if (sortType === SortType.DATE) {
     return orderType === OrderType.ASC ? SortOption.DATE_ASC : SortOption.DATE_DESC
-  } else {
+  } else if (query) {
     return SortOption.RELEVANCE
+  } else {
+    return SortOption.DATE_DESC
   }
 }
 function convertFromSortOption(sortOption: SortOption): {
@@ -79,7 +85,7 @@ export function ItemsSortBy({
         <DropdownButtonItem
           key={sortByOption}
           eventKey={sortByOption}
-          className={selectedOption === sortByOption ? styles['selected-option'] : ''}>
+          className={selectedOption === sortByOption ? styles['sortButton.selected'] : ''}>
           {t(`sort.options.${sortByOption}`)}
         </DropdownButtonItem>
       ))}
