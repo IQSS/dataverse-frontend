@@ -34,7 +34,7 @@ interface ItemsListProps {
   hasSearchValue: boolean
   paginationInfo: CollectionItemsPaginationInfo
   onBottomReach: (paginationInfo: CollectionItemsPaginationInfo) => void
-  onSortChange: (newSortType: SortType, newOrderType: OrderType) => void
+  onSortChange: (newSortType?: SortType, newOrderType?: OrderType) => void
   itemsTypesSelected: CollectionItemType[]
   filterQueriesSelected: FilterQuery[]
   sortSelected?: SortType

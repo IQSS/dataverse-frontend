@@ -108,27 +108,25 @@ export const CollectionItemsPanel = ({
     const resetPaginationInfo = new CollectionItemsPaginationInfo()
     setPaginationInfo(resetPaginationInfo)
 
-    if (searchValue === '') {
-      // Update the URL without the search value, keep other querys
-      setSearchParams((currentSearchParams) => {
+    // When searching, we reset the item types to COLLECTION, DATASET and FILE. Other filters are cleared
+    setSearchParams((currentSearchParams) => {
+      if (searchValue === '') {
         currentSearchParams.delete(QueryParamKey.QUERY)
-        return currentSearchParams
-      })
-    } else {
-      // Update the URL with the search value ,keep other querys and include all item types always
-      setSearchParams((currentSearchParams) => {
-        currentSearchParams.set(
-          CollectionItemsQueryParams.TYPES,
-          [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(
-            ','
-          )
-        )
-
+      } else {
         currentSearchParams.set(QueryParamKey.QUERY, searchValue)
+      }
+      currentSearchParams.set(
+        CollectionItemsQueryParams.TYPES,
+        [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(
+          ','
+        )
+      )
 
-        return currentSearchParams
-      })
-    }
+      currentSearchParams.delete(CollectionItemsQueryParams.SORT)
+      currentSearchParams.delete(CollectionItemsQueryParams.ORDER)
+      currentSearchParams.delete(CollectionItemsQueryParams.FILTER_QUERIES)
+      return currentSearchParams
+    })
 
     // WHEN SEARCHING, WE RESET THE PAGINATION INFO AND KEEP ALL ITEM TYPES!!
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
@@ -193,8 +191,18 @@ export const CollectionItemsPanel = ({
 
     // Update the URL with the new sort and order, keep other querys
     setSearchParams((currentSearchParams) => {
-      currentSearchParams.set(CollectionItemsQueryParams.SORT, sort)
-      currentSearchParams.set(CollectionItemsQueryParams.ORDER, order)
+      if (sort !== undefined) {
+        currentSearchParams.set(CollectionItemsQueryParams.SORT, sort)
+      } else {
+        currentSearchParams.delete(CollectionItemsQueryParams.SORT)
+      }
+
+      if (order !== undefined) {
+        currentSearchParams.set(CollectionItemsQueryParams.ORDER, order)
+      } else {
+        currentSearchParams.delete(CollectionItemsQueryParams.ORDER)
+      }
+
       return currentSearchParams
     })
 

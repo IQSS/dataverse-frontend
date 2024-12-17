@@ -18,7 +18,7 @@ interface ItemsSortByProps {
   currentSortType?: SortType
   currentSortOrder?: OrderType
   currentSearchText?: string
-  onSortChange: (newSortType: SortType, newOrderType: OrderType) => void
+  onSortChange: (newSortType?: SortType, newOrderType?: OrderType) => void
   isLoadingCollectionItems: boolean
 }
 function convertToSortOption(
@@ -27,20 +27,20 @@ function convertToSortOption(
   searchText?: string
 ): SortOption {
   let sortOption: SortOption
-  if (searchText) {
-    sortOption = SortOption.RELEVANCE
-  } else if (sortType === SortType.NAME) {
+  if (sortType === SortType.NAME) {
     sortOption = orderType === OrderType.ASC ? SortOption.NAME_ASC : SortOption.NAME_DESC
   } else if (sortType === SortType.DATE) {
     sortOption = orderType === OrderType.ASC ? SortOption.DATE_ASC : SortOption.DATE_DESC
+  } else if (searchText) {
+    sortOption = SortOption.RELEVANCE
   } else {
     sortOption = SortOption.DATE_DESC
   }
   return sortOption
 }
 function convertFromSortOption(sortOption: SortOption): {
-  sortType: SortType
-  orderType: OrderType
+  sortType?: SortType
+  orderType?: OrderType
 } {
   switch (sortOption) {
     case SortOption.NAME_ASC:
@@ -52,7 +52,7 @@ function convertFromSortOption(sortOption: SortOption): {
     case SortOption.DATE_DESC:
       return { sortType: SortType.DATE, orderType: OrderType.DESC }
     case SortOption.RELEVANCE:
-      return { sortType: SortType.SCORE, orderType: OrderType.DESC }
+      return { sortType: undefined, orderType: undefined }
   }
 }
 
