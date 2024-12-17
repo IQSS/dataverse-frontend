@@ -18,7 +18,7 @@
   },
   "sort": {
     "title": "Sort",
-    "options" : {
+    "options": {
       "relevance": "Relevance",
       "nameAsc": "Name (A-Z)",
       "nameDesc": "Name (Z-A)",
