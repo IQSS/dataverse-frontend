@@ -100,28 +100,28 @@ export const ItemsList = forwardRef(
           {areItemsAvailable && (
             <>
               <header>
-                {isLoadingItems ? (
-                  <SkeletonTheme>
-                    <Skeleton height={19} width={190} />
-                  </SkeletonTheme>
-                ) : (
-                  <Row>
-                    <Col>
+                <Row>
+                  <Col>
+                    {isLoadingItems ? (
+                      <SkeletonTheme>
+                        <Skeleton height={19} width={190} />
+                      </SkeletonTheme>
+                    ) : (
                       <PaginationResultsInfo
                         paginationInfo={paginationInfo}
                         accumulated={accumulatedCount}
                       />
-                    </Col>
-                    <Col className={styles['sort-button']}>
-                      <ItemsSortBy
-                        isLoadingCollectionItems={isLoadingItems}
-                        currentSortType={sortSelected}
-                        currentSortOrder={orderSelected}
-                        currentSearchText={searchText}
-                        onSortChange={onSortChange}></ItemsSortBy>
-                    </Col>
-                  </Row>
-                )}
+                    )}
+                  </Col>
+                  <Col className={styles['sort-button']}>
+                    <ItemsSortBy
+                      isLoadingCollectionItems={isLoadingItems}
+                      currentSortType={sortSelected}
+                      currentSortOrder={orderSelected}
+                      currentSearchText={searchText}
+                      onSortChange={onSortChange}></ItemsSortBy>
+                  </Col>
+                </Row>
               </header>
 
               <ul data-testid="items-list">

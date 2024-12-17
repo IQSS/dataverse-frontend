@@ -88,6 +88,7 @@ export function ItemsSortBy({
       title={t('sort.title')}
       id="collection-items-sort"
       variant="secondary"
+      disabled={isLoadingCollectionItems}
       onSelect={handleSortChange}>
       {Object.values(sortOptions).map((sortByOption) => (
         <DropdownButtonItem
