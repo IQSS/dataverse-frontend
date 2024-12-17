@@ -8,7 +8,16 @@ import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
 import { Interception } from 'cypress/types/net-stubbing'
 
 const numbersOfDatasetsToCreate = [1, 2, 3, 4, 5, 6, 7, 8]
-
+const datasetTitles = [
+  'Darwin',
+  'Einstein',
+  'Galileo',
+  'Newton',
+  'Tesla',
+  'Curie',
+  'Hawking',
+  'Sagan'
+]
 const SEARCH_ENDPOINT_REGEX = /^\/api\/v1\/search(\?.*)?$/
 
 function extractInfoFromInterceptedResponse(interception: Interception) {
@@ -46,7 +55,7 @@ describe('Collection Items Panel', () => {
 
     // Creates 8 datasets with 1 file each
     for (const _number of numbersOfDatasetsToCreate) {
-      await DatasetHelper.createWithFile(FileHelper.create())
+      await DatasetHelper.createWithFileAndTitle(FileHelper.create(), datasetTitles[_number - 1])
     }
   })
 
@@ -79,7 +88,7 @@ describe('Collection Items Panel', () => {
     })
 
     // 1 - Now select the Files checkbox
-    cy.findByRole('checkbox', { name: /Files/ }).click()
+    cy.findByRole('checkbox', { name: /Files/ }).click({ force: true })
 
     cy.wait('@getCollectionItems').then((interception) => {
       const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
@@ -268,7 +277,7 @@ describe('Collection Items Panel', () => {
     })
 
     // 7 - Selects a facet filter
-    cy.findByRole('button', { name: /Finch, Fiona/ }).click()
+    cy.findByRole('button', { name: /Finch, Fiona/ }).click({ force: true })
 
     cy.wait('@getCollectionItems').then((interception) => {
       const { totalItemsInResponse, collectionsInResponse, datasetsInResponse, filesInResponse } =
@@ -307,5 +316,16 @@ describe('Collection Items Panel', () => {
         .should('exist')
         .should('have.length', 2)
     })
+    // 8 Sort by Name (Z-A)
+    cy.visit(`/spa/collections`)
+    cy.findByRole('button', { name: /Sort/ }).click({ force: true })
+    cy.contains('Name (Z-A)').click({ force: true })
+
+    cy.findAllByTestId('dataset-card').first().contains('Tesla')
+    const sortExpectedUrl = new URLSearchParams({
+      [CollectionItemsQueryParams.SORT]: 'name',
+      [CollectionItemsQueryParams.ORDER]: 'desc'
+    }).toString()
+    cy.url().should('include', `/collections?${sortExpectedUrl}`)
   })
 })
