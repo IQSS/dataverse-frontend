@@ -183,7 +183,7 @@ export const CollectionItemsPanel = ({
     }
   }
 
-  const handleSortChange = async (sort: SortType, order: OrderType) => {
+  const handleSortChange = async (sort?: SortType, order?: OrderType) => {
     itemsListContainerRef.current?.scrollTo({ top: 0 })
 
     const resetPaginationInfo = new CollectionItemsPaginationInfo()
