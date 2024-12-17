@@ -134,15 +134,14 @@ export const FeaturedItem = ({
                   }
                 }}
                 render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => {
-                  // TODO:ME - Allow passing aria-required to RichTextEditor
                   return (
                     <Col>
                       <RichTextEditor
-                        // editorContentId="asd"
                         initialValue={value as string}
                         editorContentAriaLabelledBy={`featuredItems.${itemIndex}.content`}
                         onChange={onChange}
                         invalid={invalid}
+                        ariaRequired
                         ref={ref}
                       />
 

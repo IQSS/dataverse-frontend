@@ -18,6 +18,7 @@ export interface RichTextEditorProps {
   editorContentId?: string
   editorContentAriaLabelledBy?: string
   invalid?: boolean
+  ariaRequired?: boolean
 }
 
 export const RichTextEditor = forwardRef(
@@ -29,7 +30,8 @@ export const RichTextEditor = forwardRef(
       locales,
       editorContentId,
       editorContentAriaLabelledBy,
-      invalid
+      invalid,
+      ariaRequired
     }: RichTextEditorProps,
     ref
   ) => {
@@ -56,7 +58,9 @@ export const RichTextEditor = forwardRef(
         attributes: {
           class: 'rich-text-editor-content',
           ...(editorContentId && { id: editorContentId }),
-          ...(editorContentAriaLabelledBy && { 'aria-labelledby': editorContentAriaLabelledBy })
+          ...(editorContentAriaLabelledBy && { 'aria-labelledby': editorContentAriaLabelledBy }),
+          ...(disabled && { disabled: 'true' }),
+          ...(ariaRequired && { 'aria-required': 'true' })
         }
       },
       onUpdate: ({ editor }) => onChange && onChange(editor.getHTML())
