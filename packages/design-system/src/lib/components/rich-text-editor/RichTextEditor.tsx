@@ -3,7 +3,6 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
-import CodeBlock from '@tiptap/extension-code-block'
 import Placeholder from '@tiptap/extension-placeholder'
 import { EditorActions } from './EditorActions'
 import { richTextEditorDefaultLocales, RichTextEditorLocales } from './defaultLocales'
@@ -48,7 +47,6 @@ export const RichTextEditor = forwardRef(
           autolink: true,
           linkOnPaste: true
         }),
-        CodeBlock,
         Placeholder.configure({
           placeholder: locales?.placeholder ?? richTextEditorDefaultLocales.placeholder
         })
