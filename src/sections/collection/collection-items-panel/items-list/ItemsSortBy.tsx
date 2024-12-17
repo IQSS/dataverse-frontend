@@ -9,8 +9,8 @@ import { OrderType } from '@/collection/domain/models/CollectionSearchCriteria'
 export enum SortOption {
   NAME_ASC = 'nameAsc',
   NAME_DESC = 'nameDesc',
-  DATE_ASC = 'dateAsc',
   DATE_DESC = 'dateDesc',
+  DATE_ASC = 'dateAsc',
   RELEVANCE = 'relevance'
 }
 
