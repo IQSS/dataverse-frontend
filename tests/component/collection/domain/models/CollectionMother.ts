@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker'
 import { FakerHelper } from '../../../shared/FakerHelper'
 import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
 import { CollectionUserPermissions } from '../../../../../src/collection/domain/models/CollectionUserPermissions'
+import { CollectionType } from '@/collection/domain/models/CollectionType'
 
 export class CollectionMother {
   static create(props?: Partial<Collection>): Collection {
@@ -16,6 +17,10 @@ export class CollectionMother {
       affiliation: faker.datatype.boolean() ? faker.lorem.words(3) : undefined,
       hierarchy: UpwardHierarchyNodeMother.createCollection(),
       inputLevels: [],
+      contacts: [],
+      type: CollectionType.UNCATEGORIZED,
+      isMetadataBlockRoot: true,
+      isFacetRoot: true,
       ...props
     }
   }

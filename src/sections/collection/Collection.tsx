@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import { Alert, Col, Row } from '@iqss/dataverse-design-system'
+import { Alert, ButtonGroup, Col, Row } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { useCollection } from './useCollection'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
-import { useSession } from '../session/SessionContext'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
 import { type UseCollectionQueryParamsReturnType } from './useGetCollectionQueryParams'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
@@ -15,6 +14,7 @@ import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
 import { ShareCollectionButton } from './share-collection-button/ShareCollectionButton'
+import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectionDropdown'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {
@@ -22,6 +22,7 @@ interface CollectionProps {
   collectionIdFromParams: string | undefined
   created: boolean
   published: boolean
+  edited?: boolean
   collectionQueryParams: UseCollectionQueryParamsReturnType
   infiniteScrollEnabled?: boolean
 }
@@ -31,11 +32,12 @@ export function Collection({
   collectionRepository,
   created,
   published,
+  edited,
   collectionQueryParams
 }: CollectionProps) {
   useTranslation('collection')
+  const { t } = useTranslation('collection')
   useScrollTop()
-  const { user } = useSession()
   const { collection, isLoading } = useCollection(
     collectionRepository,
     collectionIdFromParams,
@@ -47,13 +49,13 @@ export function Collection({
   })
 
   const canUserAddCollection = Boolean(collectionUserPermissions?.canAddCollection)
+  const canUserEditCollection = Boolean(collectionUserPermissions?.canEditCollection)
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
   const canUserPublishCollection = Boolean(collectionUserPermissions?.canPublishCollection)
 
-  const showAddDataActions = Boolean(user && (canUserAddCollection || canUserAddDataset))
-  const showPublishButton = user && !collection?.isReleased && canUserPublishCollection
-
-  const { t } = useTranslation('collection')
+  const showAddDataActions = canUserAddCollection || canUserAddDataset
+  const showPublishButton = !collection?.isReleased && canUserPublishCollection
+  const showEditButton = canUserEditCollection
 
   if (!isLoading && !collection) {
     return <PageNotFound />
@@ -69,6 +71,11 @@ export function Collection({
             <BreadcrumbsGenerator hierarchy={collection.hierarchy} />
             <CollectionInfo collection={collection} />
             {created && <CreatedAlert />}
+            {edited && (
+              <Alert variant="success" dismissible={false}>
+                {t('editedAlert')}
+              </Alert>
+            )}
             {published && (
               <Alert variant="success" dismissible={false}>
                 {t('publishedAlert')}
@@ -78,18 +85,21 @@ export function Collection({
             <div className={styles['metrics-actions-container']}>
               <div className={styles.metrics}></div>
               <div className={styles['right-content']}>
-                <div className={styles['contact-share-btns']}>
-                  {/* 👇 Here should go Contact button also */}
-                  {/* <ContactButton /> */}
+                {/* 👇 Here should go Contact button also */}
+                {/* <ContactButton /> */}
 
-                  <ShareCollectionButton />
-                </div>
+                <ShareCollectionButton />
 
-                {showPublishButton && (
-                  <PublishCollectionButton
-                    repository={collectionRepository}
-                    collectionId={collection.id}
-                  />
+                {(showPublishButton || showEditButton) && (
+                  <ButtonGroup>
+                    {showPublishButton && (
+                      <PublishCollectionButton
+                        repository={collectionRepository}
+                        collectionId={collection.id}
+                      />
+                    )}
+                    {showEditButton && <EditCollectionDropdown collection={collection} />}
+                  </ButtonGroup>
                 )}
               </div>
             </div>
