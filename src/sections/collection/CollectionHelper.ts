@@ -1,5 +1,7 @@
-import { CollectionItemType } from '../../collection/domain/models/CollectionItemType'
+import { Collection } from '@/collection/domain/models/Collection'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { QueryParamKey } from '../Route.enum'
+import { UpwardHierarchyNode } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 export class CollectionHelper {
   static defineCollectionQueryParams(searchParams: URLSearchParams) {
@@ -21,5 +23,15 @@ export class CollectionHelper {
       ) as CollectionItemType[]
 
     return { pageQuery, searchQuery, typesQuery }
+  }
+
+  static isRootCollection(collectionHierarchy: Collection['hierarchy']) {
+    return !collectionHierarchy.parent
+  }
+
+  static getParentCollection(
+    collectionHierarchy: Collection['hierarchy']
+  ): UpwardHierarchyNode | undefined {
+    return collectionHierarchy.parent
   }
 }

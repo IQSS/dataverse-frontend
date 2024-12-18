@@ -1,4 +1,7 @@
 import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { CollectionContact } from './CollectionContact'
+import { CollectionType } from './CollectionType'
+import { CollectionInputLevel } from './CollectionInputLevel'
 
 export interface Collection {
   id: string
@@ -8,10 +11,8 @@ export interface Collection {
   description?: string
   affiliation?: string
   inputLevels?: CollectionInputLevel[]
-}
-
-export interface CollectionInputLevel {
-  datasetFieldName: string
-  include: boolean
-  required: boolean
+  type: CollectionType
+  contacts: CollectionContact[]
+  isMetadataBlockRoot: boolean
+  isFacetRoot: boolean
 }

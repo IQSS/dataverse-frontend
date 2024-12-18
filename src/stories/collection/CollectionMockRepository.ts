@@ -88,11 +88,19 @@ export class CollectionMockRepository implements CollectionRepository {
     })
   }
 
+  edit(_collectionIdOrAlias: string, _updatedCollection: CollectionDTO): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
   getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(CollectionFeaturedItemMother.createFeaturedItems())
-      }, FakerHelper.loadingTimout())
+      })
     })
   }
 }

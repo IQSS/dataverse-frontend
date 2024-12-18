@@ -1,6 +1,10 @@
 import { CollectionHelper } from '@/sections/collection/CollectionHelper'
 import { QueryParamKey } from '@/sections/Route.enum'
-import { CollectionItemType } from '@iqss/dataverse-client-javascript'
+import {
+  DvObjectType,
+  UpwardHierarchyNode
+} from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 
 const QUERY_VALUE = 'John%20Doe'
 const DECODED_QUERY_VALUE = 'John Doe'
@@ -61,5 +65,60 @@ describe('CollectionHelper', () => {
     expect(collectionQueryParams.searchQuery).to.equal(undefined)
     expect(collectionQueryParams.typesQuery).to.deep.equal(undefined)
     expect(collectionQueryParams.pageQuery).to.equal(1)
+  })
+
+  describe('isRootCollection', () => {
+    it('returns true when collection is root collection', () => {
+      const collectionHierarchy: UpwardHierarchyNode = new UpwardHierarchyNode(
+        'Root',
+        DvObjectType.COLLECTION,
+        'root'
+      )
+      expect(CollectionHelper.isRootCollection(collectionHierarchy)).to.be.true
+    })
+
+    it('returns false when collection is not root collection', () => {
+      const collectionHierarchy: UpwardHierarchyNode = new UpwardHierarchyNode(
+        'Subcollection',
+        DvObjectType.COLLECTION,
+        'subcollection',
+        undefined,
+        undefined,
+        undefined,
+        new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root')
+      )
+      expect(CollectionHelper.isRootCollection(collectionHierarchy)).to.be.false
+    })
+  })
+
+  describe('getParentCollection', () => {
+    it('returns parent collection when collection has parent', () => {
+      const parentCollection: UpwardHierarchyNode = new UpwardHierarchyNode(
+        'Root',
+        DvObjectType.COLLECTION,
+        'root'
+      )
+      const collectionHierarchy: UpwardHierarchyNode = new UpwardHierarchyNode(
+        'Subcollection',
+        DvObjectType.COLLECTION,
+        'subcollection',
+        undefined,
+        undefined,
+        undefined,
+        parentCollection
+      )
+      expect(CollectionHelper.getParentCollection(collectionHierarchy)).to.deep.equal(
+        parentCollection
+      )
+    })
+
+    it('returns undefined when collection does not have parent', () => {
+      const collectionHierarchy: UpwardHierarchyNode = new UpwardHierarchyNode(
+        'Root',
+        DvObjectType.COLLECTION,
+        'root'
+      )
+      expect(CollectionHelper.getParentCollection(collectionHierarchy)).to.be.undefined
+    })
   })
 })
