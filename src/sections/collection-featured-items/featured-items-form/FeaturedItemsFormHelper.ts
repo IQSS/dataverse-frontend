@@ -10,7 +10,7 @@ export class FeaturedItemsFormHelper {
         {
           title: '',
           content: '',
-          image: undefined
+          image: null
         }
       ]
     }
@@ -21,7 +21,7 @@ export class FeaturedItemsFormHelper {
       return {
         title,
         content,
-        image: imageUrl,
+        image: imageUrl ? imageUrl : null,
         itemId: id
       }
     })

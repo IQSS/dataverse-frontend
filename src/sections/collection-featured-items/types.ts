@@ -7,7 +7,7 @@ export type FeaturedItemsFormData = {
 export type FeaturedItemField = {
   title: string
   content: string
-  image?: File | string
+  image: File | string | null
   itemId?: CollectionFeaturedItem['id']
 }
 

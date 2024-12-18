@@ -35,7 +35,7 @@ export const FeaturedItemsForm = ({ defaultValues }: FeaturedItemsFormProps) => 
   const handleOnAddField = (index: number) => {
     insert(
       index + 1,
-      { title: '', content: '', image: undefined },
+      { title: '', content: '', image: null },
       {
         shouldFocus: true,
         focusName: `featuredItems.${index + 1}.title`
