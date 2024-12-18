@@ -33,6 +33,10 @@
   "publishedAlert": "Your collection is now public.",
   "addFacetFilter": "Add {{labelName}} facet filter",
   "removeSelectedFacet": "Remove {{labelName}} facet filter",
+  "share": {
+    "shareCollection": "Share Collection",
+    "helpText": "Share this collection on your favorite social media networks."
+  },
   "editedAlert": "You have successfully updated your collection!",
   "editCollection": {
     "edit": "Edit",
