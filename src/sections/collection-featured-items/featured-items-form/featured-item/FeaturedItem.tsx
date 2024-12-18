@@ -46,7 +46,6 @@ export const FeaturedItem = ({
   return (
     <div
       ref={setNodeRef}
-      {...attributesCheckingDisabled}
       style={style}
       className={cn(styles['featured-item-fields-wrapper'], {
         [styles['sorting']]: isSorting,
@@ -57,6 +56,7 @@ export const FeaturedItem = ({
           <button
             type="button"
             ref={setActivatorNodeRef}
+            {...attributesCheckingDisabled}
             {...listeners}
             className={cn(styles['drag-handle'], {
               [styles['disabled']]: disableDragWhenOnlyOneItem
