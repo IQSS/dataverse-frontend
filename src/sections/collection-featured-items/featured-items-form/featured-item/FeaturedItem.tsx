@@ -5,6 +5,7 @@ import { Col, Form, RichTextEditor, Row } from '@iqss/dataverse-design-system'
 import cn from 'classnames'
 import { DynamicFieldsButtons } from '@/sections/shared/form/DynamicFieldsButtons/DynamicFieldsButtons'
 import styles from './FeaturedItem.module.scss'
+import { ImageField } from './image-field/ImageField'
 
 interface FeaturedItemProps {
   id: string
@@ -13,9 +14,6 @@ interface FeaturedItemProps {
   onRemoveField: (index: number) => void
   disableDragWhenOnlyOneItem: boolean
 }
-
-// TODO:ME - Image just an input image field, no dropzone as it is too small
-// TODO:ME - Logic to show the image thumbnail on top of the image input field, if an image is uploaded (use the image field from the form). Add button to remove the image. how that logic could be?
 
 export const FeaturedItem = ({
   id,
@@ -77,6 +75,7 @@ export const FeaturedItem = ({
         </Col>
         <Col md={8} lg={9}>
           <Row>
+            {/* TITLE FIELD */}
             <Form.Group controlId={`featuredItems.${itemIndex}.title`} as={Col} md={6}>
               <Form.Group.Label required={true}>Title</Form.Group.Label>
 
@@ -99,22 +98,12 @@ export const FeaturedItem = ({
                 )}
               />
             </Form.Group>
-            <Form.Group controlId={`featuredItems.${itemIndex}.image`} as={Col} md={6}>
-              <Form.Group.Label required={false}>Image</Form.Group.Label>
 
-              <Controller
-                name={`featuredItems.${itemIndex}.image`}
-                control={control}
-                render={({ field }) => (
-                  <Col>
-                    <div className={styles['image-dropzone']}>
-                      <Form.Group.Text>Upload an image</Form.Group.Text>
-                    </div>
-                  </Col>
-                )}
-              />
-            </Form.Group>
+            {/* IMAGE FIELD */}
+            <ImageField itemIndex={itemIndex} />
           </Row>
+
+          {/* CONTENT FIELD */}
           <Row>
             <Form.Group as={Col} className={styles['form-group-content']}>
               <Form.Group.Label required={true} id={`featuredItems.${itemIndex}.content`}>
