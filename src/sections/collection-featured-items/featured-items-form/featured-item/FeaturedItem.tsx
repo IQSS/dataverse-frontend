@@ -1,11 +1,11 @@
 import { Controller, useFormContext } from 'react-hook-form'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Col, Form, RichTextEditor, Row } from '@iqss/dataverse-design-system'
 import cn from 'classnames'
+import { Col, Form, RichTextEditor, Row } from '@iqss/dataverse-design-system'
 import { DynamicFieldsButtons } from '@/sections/shared/form/DynamicFieldsButtons/DynamicFieldsButtons'
+import { ImageField } from './ImageField'
 import styles from './FeaturedItem.module.scss'
-import { ImageField } from './image-field/ImageField'
 
 interface FeaturedItemProps {
   id: string

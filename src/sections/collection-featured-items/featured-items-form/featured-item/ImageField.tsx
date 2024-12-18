@@ -4,7 +4,7 @@ import { Controller, UseControllerProps, useFormContext } from 'react-hook-form'
 import { Button, Col, Form, Stack, Tooltip } from '@iqss/dataverse-design-system'
 import { ArrowDownUp, ArrowCounterclockwise, XLg } from 'react-bootstrap-icons'
 import cn from 'classnames'
-import styles from '../FeaturedItem.module.scss'
+import styles from './FeaturedItem.module.scss'
 
 interface ImageFieldProps {
   itemIndex: number
@@ -19,6 +19,8 @@ interface FormattedSelectedFile {
 }
 
 const IMAGE_MAX_SIZE_ACCEPTED = 1_000_000 // 1MB
+
+// TODO:ME - Show size, type and name of the image maybe?
 
 export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
   const { control, setValue } = useFormContext()
