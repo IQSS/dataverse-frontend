@@ -8,7 +8,10 @@
       "description": "Upload an image to display with the item, accepted extensions are png, jpg, jpeg and webp, and the maximum file size is {{maxImageSize}}.",
       "invalid": {
         "size": "The file is too large. The maximum file size is {{maxImageSize}}"
-      }
+      },
+      "restoreInitial": "Restore initial image",
+      "changeImage": "Change image",
+      "removeImage": "Remove image"
     }
   }
 }

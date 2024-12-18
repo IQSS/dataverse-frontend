@@ -1,12 +1,10 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Controller, UseControllerProps, useFormContext } from 'react-hook-form'
-import { Button, Col, Form, Stack } from '@iqss/dataverse-design-system'
-import { X as CloseIcon, ArrowDownUp, ArrowCounterclockwise } from 'react-bootstrap-icons'
+import { Button, Col, Form, Stack, Tooltip } from '@iqss/dataverse-design-system'
+import { ArrowDownUp, ArrowCounterclockwise, XLg } from 'react-bootstrap-icons'
 import cn from 'classnames'
 import styles from '../FeaturedItem.module.scss'
-
-// TODO:ME - Add tooltips
 
 interface ImageFieldProps {
   itemIndex: number
@@ -63,8 +61,11 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
   const handleClickChangeImage = () => fileInputRef?.click()
 
   const handleRemoveImage = () => {
+    formattedSelectedFile?.objectUrl && URL.revokeObjectURL(formattedSelectedFile.objectUrl)
     setFormattedSelectedFile(null)
+
     fileInputRef?.value && (fileInputRef.value = '')
+
     setValue(`featuredItems.${itemIndex}.image`, null, {
       shouldDirty: true,
       shouldValidate: true
@@ -72,8 +73,11 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
   }
 
   const handleRestoreInitialImage = () => {
+    formattedSelectedFile?.objectUrl && URL.revokeObjectURL(formattedSelectedFile.objectUrl)
     setFormattedSelectedFile(null)
+
     fileInputRef?.value && (fileInputRef.value = '')
+
     setValue(`featuredItems.${itemIndex}.image`, initialImageUrl, {
       shouldDirty: true,
       shouldValidate: true
@@ -112,9 +116,13 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
                   }}
                 />
                 {showFileInput && initialImageUrl && (
-                  <Button onClick={handleRestoreInitialImage} aria-label="Restore initial image">
-                    <ArrowCounterclockwise />
-                  </Button>
+                  <Tooltip placement="top" overlay={t('form.image.restoreInitial')}>
+                    <Button
+                      onClick={handleRestoreInitialImage}
+                      aria-label={t('form.image.restoreInitial')}>
+                      <ArrowCounterclockwise />
+                    </Button>
+                  </Tooltip>
                 )}
               </Stack>
               <div
@@ -125,13 +133,27 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
                 {isNewFileSelected && (
                   <img src={formattedSelectedFile?.objectUrl} alt="Image preview" />
                 )}
+                <div className={styles['image-actions']}>
+                  <Tooltip placement="top" overlay={t('form.image.changeImage')}>
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={handleClickChangeImage}
+                      aria-label={t('form.image.changeImage')}>
+                      <ArrowDownUp />
+                    </Button>
+                  </Tooltip>
 
-                <Button type="button" onClick={handleClickChangeImage} aria-label="Change image">
-                  <ArrowDownUp />
-                </Button>
-                <Button type="button" onClick={handleRemoveImage} aria-label="Remove image">
-                  <CloseIcon />
-                </Button>
+                  <Tooltip placement="top" overlay={t('form.image.removeImage')}>
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={handleRemoveImage}
+                      aria-label={t('form.image.removeImage')}>
+                      <XLg />
+                    </Button>
+                  </Tooltip>
+                </div>
               </div>
 
               {invalid && <div className={styles['error-msg']}>{error?.message}</div>}
