@@ -1,7 +1,7 @@
 import { Badge, Button, Col, Form } from '@iqss/dataverse-design-system'
 import { FileUploadState } from '../../../../files/domain/models/FileUploadState'
 import styles from './FileForm.module.scss'
-import { FormEvent, useState, KeyboardEvent, useId } from 'react'
+import { useState, KeyboardEvent, useId, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Plus, X } from 'react-bootstrap-icons'
 
@@ -63,7 +63,7 @@ export function FileForm({ file, availableTags, updateFiles, setTagOptions }: Fi
               type="text"
               placeholder={t('fileForm.fileName')}
               defaultValue={file.fileName}
-              onChange={(event: FormEvent<HTMLInputElement>) =>
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 updateFileName(file, event.currentTarget.value)
               }
             />
@@ -78,7 +78,7 @@ export function FileForm({ file, availableTags, updateFiles, setTagOptions }: Fi
               type="text"
               placeholder={t('fileForm.filePath')}
               defaultValue={file.fileDir}
-              onChange={(event: FormEvent<HTMLInputElement>) =>
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 updateFileDir(file, event.currentTarget.value)
               }
             />
@@ -91,7 +91,7 @@ export function FileForm({ file, availableTags, updateFiles, setTagOptions }: Fi
           <Col sm={9}>
             <Form.Group.TextArea
               defaultValue={file.description}
-              onChange={(event: FormEvent<HTMLInputElement>) =>
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 updateFileDescription(file, event.currentTarget.value)
               }
             />
@@ -119,7 +119,7 @@ export function FileForm({ file, availableTags, updateFiles, setTagOptions }: Fi
                   placeholder={t('tags.addCustomTag')}
                   title={t('tags.creatingNewTag')}
                   value={tag}
-                  onChange={(event: FormEvent<HTMLInputElement>) =>
+                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
                     setTag(event.currentTarget.value)
                   }
                 />
