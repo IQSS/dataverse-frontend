@@ -13,6 +13,7 @@ interface FeaturedItemProps {
   onAddField: (index: number) => void
   onRemoveField: (index: number) => void
   disableDragWhenOnlyOneItem: boolean
+  initialImageUrl?: string
 }
 
 export const FeaturedItem = ({
@@ -20,7 +21,8 @@ export const FeaturedItem = ({
   itemIndex,
   onAddField,
   onRemoveField,
-  disableDragWhenOnlyOneItem
+  disableDragWhenOnlyOneItem,
+  initialImageUrl
 }: FeaturedItemProps) => {
   const { control } = useFormContext()
   const {
@@ -100,7 +102,7 @@ export const FeaturedItem = ({
             </Form.Group>
 
             {/* IMAGE FIELD */}
-            <ImageField itemIndex={itemIndex} />
+            <ImageField itemIndex={itemIndex} initialImageUrl={initialImageUrl} />
           </Row>
 
           {/* CONTENT FIELD */}

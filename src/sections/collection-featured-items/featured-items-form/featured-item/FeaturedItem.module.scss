@@ -56,4 +56,22 @@
     color: $dv-danger-color;
     font-size: 0.875em;
   }
+
+  .image-wrapper {
+    padding: 4px;
+    border: solid 1px $dv-border-color;
+    border-radius: 6px;
+
+    img {
+      width: 100px;
+      min-height: fit-content;
+      max-height: 100px;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    &.hide {
+      display: none;
+    }
+  }
 }

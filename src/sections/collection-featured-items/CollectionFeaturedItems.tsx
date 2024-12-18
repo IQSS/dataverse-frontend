@@ -17,6 +17,8 @@ interface CollectionFeaturedItemsProps {
   collectionIdFromParams: string | undefined
 }
 
+// TODO:ME - Add skeleton loading
+
 export const CollectionFeaturedItems = ({
   collectionRepository,
   collectionIdFromParams
@@ -69,7 +71,10 @@ export const CollectionFeaturedItems = ({
 
       <Alert variant="info">{t('infoMessage')}</Alert>
 
-      <FeaturedItemsForm defaultValues={formDefaultValues} />
+      <FeaturedItemsForm
+        defaultValues={formDefaultValues}
+        collectionFeaturedItems={collectionFeaturedItems}
+      />
     </section>
   )
 }

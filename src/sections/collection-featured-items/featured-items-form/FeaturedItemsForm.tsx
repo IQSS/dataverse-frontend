@@ -7,6 +7,7 @@ import {
   // Form,
   // QuestionMarkTooltip
 } from '@iqss/dataverse-design-system'
+import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { FeaturedItem } from './featured-item/FeaturedItem'
 // import { PreviewCarousel } from './PreviewCarousel/PreviewCarousel'
 import { FeaturedItemFieldWithSortId, FeaturedItemsFormData } from '../types'
@@ -14,9 +15,13 @@ import styles from './FeaturedItemsForm.module.scss'
 
 interface FeaturedItemsFormProps {
   defaultValues: FeaturedItemsFormData
+  collectionFeaturedItems: CollectionFeaturedItem[]
 }
 
-export const FeaturedItemsForm = ({ defaultValues }: FeaturedItemsFormProps) => {
+export const FeaturedItemsForm = ({
+  defaultValues,
+  collectionFeaturedItems
+}: FeaturedItemsFormProps) => {
   const form = useForm<FeaturedItemsFormData>({
     mode: 'onChange',
     defaultValues
@@ -118,6 +123,9 @@ export const FeaturedItemsForm = ({ defaultValues }: FeaturedItemsFormProps) => 
                 disableDragWhenOnlyOneItem={fieldsArray.length === 1}
                 onAddField={handleOnAddField}
                 onRemoveField={handleOnRemoveField}
+                initialImageUrl={
+                  collectionFeaturedItems.find((item) => item.id === field.itemId)?.imageUrl
+                }
                 key={field.id}
               />
             ))}
