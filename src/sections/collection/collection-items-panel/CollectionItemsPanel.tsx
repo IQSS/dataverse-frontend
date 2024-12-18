@@ -15,7 +15,6 @@ import { useGetAccumulatedItems } from './useGetAccumulatedItems'
 import { UseCollectionQueryParamsReturnType } from '../useGetCollectionQueryParams'
 import { useLoadMoreOnPopStateEvent } from './useLoadMoreOnPopStateEvent'
 import { useLoading } from '@/sections/loading/LoadingContext'
-import { QueryParamKey } from '../../Route.enum'
 import { CollectionHelper } from '../CollectionHelper'
 import { FilterPanel } from './filter-panel/FilterPanel'
 import { ItemsList } from './items-list/ItemsList'
@@ -111,9 +110,9 @@ export const CollectionItemsPanel = ({
     // When searching, we reset the item types to COLLECTION, DATASET and FILE. Other filters are cleared
     setSearchParams((currentSearchParams) => {
       if (searchValue === '') {
-        currentSearchParams.delete(QueryParamKey.QUERY)
+        currentSearchParams.delete(CollectionItemsQueryParams.QUERY)
       } else {
-        currentSearchParams.set(QueryParamKey.QUERY, searchValue)
+        currentSearchParams.set(CollectionItemsQueryParams.QUERY, searchValue)
       }
       currentSearchParams.set(
         CollectionItemsQueryParams.TYPES,

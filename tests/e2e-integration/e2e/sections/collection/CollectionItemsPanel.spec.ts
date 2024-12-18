@@ -1,7 +1,6 @@
 import { CollectionItem } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
-import { QueryParamKey } from '@/sections/Route.enum'
 import { DatasetHelper } from '@tests/e2e-integration/shared/datasets/DatasetHelper'
 import { FileHelper } from '@tests/e2e-integration/shared/files/FileHelper'
 import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
@@ -146,7 +145,7 @@ describe('Collection Items Panel', () => {
           CollectionItemType.DATASET,
           CollectionItemType.FILE
         ].join(','),
-        [QueryParamKey.QUERY]: 'Darwin'
+        [CollectionItemsQueryParams.QUERY]: 'Darwin'
       }).toString()
 
       cy.url().should('include', `/collections?${secondExpectedURL}`)
@@ -306,8 +305,6 @@ describe('Collection Items Panel', () => {
           `authorName_ss:${encodeURIComponent('Finch, Fiona')}`
         ].join(',')
       }).toString()
-
-      console.log({ expectedURL })
 
       cy.url().should('include', `/collections?${expectedURL}`)
 

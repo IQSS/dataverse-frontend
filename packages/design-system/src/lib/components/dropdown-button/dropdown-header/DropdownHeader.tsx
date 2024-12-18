@@ -1,6 +1,10 @@
-import { PropsWithChildren } from 'react'
 import { Dropdown } from 'react-bootstrap'
 
-export function DropdownHeader({ children }: PropsWithChildren) {
-  return <Dropdown.Header>{children}</Dropdown.Header>
+interface DropdownHeaderProps {
+  className?: string
+  children: React.ReactNode
+}
+
+export function DropdownHeader({ className, children }: DropdownHeaderProps) {
+  return <Dropdown.Header className={className}>{children}</Dropdown.Header>
 }

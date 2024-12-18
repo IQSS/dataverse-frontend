@@ -72,10 +72,14 @@ export function useFileSelection(
 
   useEffect(() => {
     setFileSelection(updateFileSelection())
+    // TODO: Not a priority as the one for inifinite scroll is used but the eslint disable should be removed and the dependency should be added
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPageSelectedRowModel])
 
   useEffect(() => {
     setCurrentPageRowSelection(computeCurrentPageRowSelection())
+    // TODO: Not a priority as the one for inifinite scroll is used but the eslint disable should be removed and the dependency should be added
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginationInfo])
 
   return {

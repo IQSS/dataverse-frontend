@@ -5,7 +5,8 @@ import {
   SortType
 } from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import { QueryParamKey } from '../Route.enum'
+import { Collection } from '@/collection/domain/models/Collection'
+import { UpwardHierarchyNode } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
 
 export class CollectionHelper {
   static defineCollectionQueryParams(searchParams: URLSearchParams) {
@@ -13,8 +14,8 @@ export class CollectionHelper {
       ? parseInt(searchParams.get('page') as string, 10)
       : 1
 
-    const searchQuery = searchParams.get(QueryParamKey.QUERY)
-      ? decodeURIComponent(searchParams.get(QueryParamKey.QUERY) as string)
+    const searchQuery = searchParams.get(CollectionItemsQueryParams.QUERY)
+      ? decodeURIComponent(searchParams.get(CollectionItemsQueryParams.QUERY) as string)
       : undefined
 
     const typesParam = searchParams.get(CollectionItemsQueryParams.TYPES) ?? undefined
@@ -40,5 +41,15 @@ export class CollectionHelper {
       (searchParams.get(CollectionItemsQueryParams.ORDER) as OrderType) ?? undefined
 
     return { pageQuery, searchQuery, typesQuery, filtersQuery, sortQuery, orderQuery }
+  }
+
+  static isRootCollection(collectionHierarchy: Collection['hierarchy']) {
+    return !collectionHierarchy.parent
+  }
+
+  static getParentCollection(
+    collectionHierarchy: Collection['hierarchy']
+  ): UpwardHierarchyNode | undefined {
+    return collectionHierarchy.parent
   }
 }

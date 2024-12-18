@@ -47,9 +47,7 @@ export function PublishCollectionModal({
         <Stack direction="vertical">
           <p className={styles.warningText}>{tCollection('publish.question')}</p>
           {submissionStatus === SubmissionStatus.Errored && (
-            <p className={styles.errorText}>
-              `${tCollection('publish.error')} ${publishError ? publishError : ''}`
-            </p>
+            <p className={styles.errorText}>{`${tCollection('publish.error')} ${publishError}`}</p>
           )}
         </Stack>
       </Modal.Body>
