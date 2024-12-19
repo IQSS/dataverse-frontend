@@ -8,8 +8,8 @@ import {
   // QuestionMarkTooltip
 } from '@iqss/dataverse-design-system'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
-import { FeaturedItem } from './featured-item/FeaturedItem'
-// import { PreviewCarousel } from './PreviewCarousel/PreviewCarousel'
+import { FeaturedItemField } from './featured-item-field/FeaturedItemField'
+import { PreviewCarousel } from './PreviewCarousel'
 import { FeaturedItemFieldWithSortId, FeaturedItemsFormData } from '../types'
 import styles from './FeaturedItemsForm.module.scss'
 
@@ -61,28 +61,33 @@ export const FeaturedItemsForm = ({
         move(activeIndex, overIndex)
       }
     }
+
+    setTimeout(() => {
+      const castedActive = active as {
+        data: { current?: { sortable?: { index: number; items: string[] } } }
+      }
+      const activeItemId =
+        castedActive.data.current?.sortable?.items[castedActive.data.current?.sortable?.index]
+
+      if (activeItemId) {
+        const activeElement = document.getElementById(activeItemId)
+
+        const firstChild = activeElement?.firstElementChild
+
+        if (firstChild) {
+          firstChild.scrollIntoView({ behavior: 'instant', block: 'center' })
+        }
+      }
+    }, 0)
   }
 
   const submitForm = (data: FeaturedItemsFormData) => {
     console.log({ data })
   }
 
-  //   const formFieldsToFeaturedItems: CollectionFeaturedItem[] = form
-  //     .watch('featuredItems')
-  //     .map((field) => {
-  //       const { title, content, image } = field
-
-  //       if (image?.file) {
-  //         const url = URL.createObjectURL(image.file)
-  //         return { title, content, image: { url, altText: image.altText } }
-  //       }
-
-  //       return { title, content }
-  //     })
-
   return (
     <FormProvider {...form}>
-      {/* <PreviewCarousel currentFormFeaturedItems={formFieldsToFeaturedItems} /> */}
+      <PreviewCarousel />
       <form
         onSubmit={form.handleSubmit(submitForm)}
         noValidate={true}
@@ -90,7 +95,7 @@ export const FeaturedItemsForm = ({
         data-testid="collection-form">
         {fieldsArray.length > 3 && (
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button disabled={!form.formState.isDirty}>Save Featured Items</Button>
+            <Button disabled={!form.formState.isDirty}>Save Changes</Button>
           </div>
         )}
 
@@ -117,7 +122,7 @@ export const FeaturedItemsForm = ({
         <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
           <SortableContext items={fieldsArray}>
             {(fieldsArray as FeaturedItemFieldWithSortId[]).map((field, index) => (
-              <FeaturedItem
+              <FeaturedItemField
                 id={field.id}
                 itemIndex={index}
                 disableDragWhenOnlyOneItem={fieldsArray.length === 1}
@@ -132,7 +137,7 @@ export const FeaturedItemsForm = ({
           </SortableContext>
         </DndContext>
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button disabled={!form.formState.isDirty}>Save Featured Items</Button>
+          <Button disabled={!form.formState.isDirty}>Save Changes</Button>
         </div>
       </form>
     </FormProvider>

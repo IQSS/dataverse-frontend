@@ -49,6 +49,7 @@ export const FeaturedItemField = ({
 
   return (
     <div
+      id={id}
       ref={setNodeRef}
       style={style}
       className={cn(styles['featured-item-fields-wrapper'], {

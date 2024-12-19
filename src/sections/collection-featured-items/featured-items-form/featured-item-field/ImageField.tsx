@@ -87,7 +87,11 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
   }
 
   return (
-    <Form.Group controlId={`featuredItems.${itemIndex}.image`} as={Col} md={6}>
+    <Form.Group
+      className={styles['form-group-image']}
+      controlId={`featuredItems.${itemIndex}.image`}
+      as={Col}
+      md={6}>
       <Form.Group.Label required={false} message={t('form.image.description')}>
         {t('form.image.label')}
       </Form.Group.Label>
