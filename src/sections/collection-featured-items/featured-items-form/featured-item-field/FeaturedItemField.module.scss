@@ -61,13 +61,13 @@
     position: relative;
     display: flex;
     justify-content: center;
+    min-height: 38px;
     padding: 4px;
     border: solid 1px $dv-border-color;
     border-radius: 6px;
 
     img {
       width: 100px;
-      min-height: fit-content;
       max-height: 100px;
       object-fit: contain;
       border-radius: 4px;

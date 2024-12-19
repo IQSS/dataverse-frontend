@@ -5,9 +5,9 @@ import cn from 'classnames'
 import { Col, Form, RichTextEditor, Row } from '@iqss/dataverse-design-system'
 import { DynamicFieldsButtons } from '@/sections/shared/form/DynamicFieldsButtons/DynamicFieldsButtons'
 import { ImageField } from './ImageField'
-import styles from './FeaturedItem.module.scss'
+import styles from './FeaturedItemField.module.scss'
 
-interface FeaturedItemProps {
+interface FeaturedItemFieldProps {
   id: string
   itemIndex: number
   onAddField: (index: number) => void
@@ -16,14 +16,16 @@ interface FeaturedItemProps {
   initialImageUrl?: string
 }
 
-export const FeaturedItem = ({
+// TODO:ME - Image field focus whithin styles
+
+export const FeaturedItemField = ({
   id,
   itemIndex,
   onAddField,
   onRemoveField,
   disableDragWhenOnlyOneItem,
   initialImageUrl
-}: FeaturedItemProps) => {
+}: FeaturedItemFieldProps) => {
   const { control } = useFormContext()
   const {
     attributes,
