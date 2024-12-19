@@ -8,6 +8,13 @@
   border: solid 1px $dv-border-color;
   border-radius: 6px;
 
+  &:focus,
+  &:focus-within {
+    border-color: color.adjust($dv-primary-color, $alpha: -0.4);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem color.adjust($dv-primary-color, $alpha: -0.75);
+  }
+
   .editor-content-wrapper {
     display: flex;
     flex: 1;
@@ -29,9 +36,9 @@
       }
 
       &.ProseMirror-focused {
-        border-color: #99bddb;
+        border-color: color.adjust($dv-primary-color, $alpha: -0.4);
         outline: 0;
-        box-shadow: 0 0 0 0.25rem rgba(51 122 183 / 25%);
+        box-shadow: 0 0 0 0.25rem color.adjust($dv-primary-color, $alpha: -0.75);
       }
 
       p.is-editor-empty:first-child::before {

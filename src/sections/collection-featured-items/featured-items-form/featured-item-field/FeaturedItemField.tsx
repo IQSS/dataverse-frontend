@@ -16,8 +16,6 @@ interface FeaturedItemFieldProps {
   initialImageUrl?: string
 }
 
-// TODO:ME - Image field focus whithin styles
-
 export const FeaturedItemField = ({
   id,
   itemIndex,
