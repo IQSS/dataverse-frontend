@@ -2,7 +2,7 @@ import { ArrowDownUp } from 'react-bootstrap-icons'
 import styles from './ItemsList.module.scss'
 import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { SortType } from '@/collection/domain/models/CollectionSearchCriteria'
 import { OrderType } from '@/collection/domain/models/CollectionSearchCriteria'
 
@@ -67,6 +67,13 @@ export function ItemsSortBy({
   const [selectedOption, setSelectedOption] = useState<SortOption>(
     convertToSortOption(currentSortType, currentSortOrder, currentSearchText)
   )
+  useEffect(() => {
+    const newSortOption = convertToSortOption(currentSortType, currentSortOrder, currentSearchText)
+    if (newSortOption !== selectedOption) {
+      setSelectedOption(newSortOption)
+    }
+  }, [currentSortType, currentSortOrder, currentSearchText])
+
   const handleSortChange = (eventKey: string | null) => {
     const newSortOption = eventKey as SortOption
     if (selectedOption !== newSortOption) {
@@ -94,6 +101,7 @@ export function ItemsSortBy({
         <DropdownButtonItem
           key={sortByOption}
           eventKey={sortByOption}
+          aria-selected={selectedOption === sortByOption}
           className={selectedOption === sortByOption ? styles['selected-sort-option'] : ''}>
           {t(`sort.options.${sortByOption}`)}
         </DropdownButtonItem>
