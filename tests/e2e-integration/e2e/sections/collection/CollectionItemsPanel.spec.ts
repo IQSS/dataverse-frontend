@@ -12,7 +12,7 @@ const datasetTitles = [
   'Einstein',
   'Galileo',
   'Newton',
-  'Tesla',
+  'Volta',
   'Curie',
   'Hawking',
   'Sagan'
@@ -318,7 +318,7 @@ describe('Collection Items Panel', () => {
     cy.findByRole('button', { name: /Sort/ }).click({ force: true })
     cy.contains('Name (Z-A)').click({ force: true })
 
-    cy.findAllByTestId('dataset-card').first().contains('Tesla')
+    cy.findAllByTestId('dataset-card').first().contains('Volta')
     const sortExpectedUrl = new URLSearchParams({
       [CollectionItemsQueryParams.SORT]: 'name',
       [CollectionItemsQueryParams.ORDER]: 'desc'
