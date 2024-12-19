@@ -38,6 +38,12 @@ const CreateCollectionPage = lazy(() =>
   )
 )
 
+const EditCollectionPage = lazy(() =>
+  import('../sections/edit-collection/EditCollectionFactory').then(({ EditCollectionFactory }) => ({
+    default: () => EditCollectionFactory.create()
+  }))
+)
+
 const CreateDatasetPage = lazy(() =>
   import('../sections/create-dataset/CreateDatasetFactory').then(({ CreateDatasetFactory }) => ({
     default: () => CreateDatasetFactory.create()
@@ -126,6 +132,15 @@ export const routes: RouteObject[] = [
             element: (
               <Suspense fallback={<AppLoader />}>
                 <CreateCollectionPage />
+              </Suspense>
+            ),
+            errorElement: <ErrorPage />
+          },
+          {
+            path: Route.EDIT_COLLECTION,
+            element: (
+              <Suspense fallback={<AppLoader />}>
+                <EditCollectionPage />
               </Suspense>
             ),
             errorElement: <ErrorPage />

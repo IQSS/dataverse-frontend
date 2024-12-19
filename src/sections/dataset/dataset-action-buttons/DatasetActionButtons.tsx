@@ -1,14 +1,15 @@
-import { Dataset } from '../../../dataset/domain/models/Dataset'
-import { ButtonGroup } from '@iqss/dataverse-design-system'
+import { useTranslation } from 'react-i18next'
+import { Button, ButtonGroup } from '@iqss/dataverse-design-system'
+import { Dataset } from '@/dataset/domain/models/Dataset'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { AccessDatasetMenu } from './access-dataset-menu/AccessDatasetMenu'
 import { PublishDatasetMenu } from './publish-dataset-menu/PublishDatasetMenu'
-import styles from './DatasetActionButtons.module.scss'
 import { SubmitForReviewButton } from './submit-for-review-button/SubmitForReviewButton'
 import { EditDatasetMenu } from './edit-dataset-menu/EditDatasetMenu'
 import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
-import { useTranslation } from 'react-i18next'
-import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
-import { CollectionRepository } from '../../../collection/domain/repositories/CollectionRepository'
+import { ShareDatasetButton } from './share-dataset-button/ShareDatasetButton'
+import styles from './DatasetActionButtons.module.scss'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset
@@ -22,6 +23,7 @@ export function DatasetActionButtons({
   collectionRepository
 }: DatasetActionButtonsProps) {
   const { t } = useTranslation('dataset')
+
   return (
     <ButtonGroup aria-label={t('datasetActionButtons.title')} vertical className={styles.group}>
       <AccessDatasetMenu
@@ -39,6 +41,12 @@ export function DatasetActionButtons({
       <SubmitForReviewButton dataset={dataset} />
       <EditDatasetMenu dataset={dataset} />
       <LinkDatasetButton dataset={dataset} />
+      <ButtonGroup className={styles['contact-owner-and-share-group']}>
+        <Button disabled variant="secondary" size="sm">
+          {t('datasetActionButtons.contactOwner')}
+        </Button>
+        <ShareDatasetButton />
+      </ButtonGroup>
     </ButtonGroup>
   )
 }

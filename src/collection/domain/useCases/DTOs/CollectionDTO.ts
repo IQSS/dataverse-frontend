@@ -1,3 +1,5 @@
+import { CollectionType } from '../../models/CollectionType'
+
 export interface CollectionDTO {
   alias: string
   name: string
@@ -8,18 +10,6 @@ export interface CollectionDTO {
   metadataBlockNames?: string[]
   facetIds?: string[]
   inputLevels?: CollectionInputLevelDTO[]
-}
-
-export enum CollectionType {
-  RESEARCHERS = 'RESEARCHERS',
-  RESEARCH_PROJECTS = 'RESEARCH_PROJECTS',
-  JOURNALS = 'JOURNALS',
-  ORGANIZATIONS_INSTITUTIONS = 'ORGANIZATIONS_INSTITUTIONS',
-  TEACHING_COURSES = 'TEACHING_COURSES',
-  UNCATEGORIZED = 'UNCATEGORIZED',
-  LABORATORY = 'LABORATORY',
-  RESEARCH_GROUP = 'RESEARCH_GROUP',
-  DEPARTMENT = 'DEPARTMENT'
 }
 
 export interface CollectionInputLevelDTO {

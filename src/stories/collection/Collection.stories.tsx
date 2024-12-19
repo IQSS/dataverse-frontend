@@ -97,3 +97,17 @@ export const Published: Story = {
     />
   )
 }
+
+export const Edited: Story = {
+  decorators: [WithLoggedInUser],
+  render: () => (
+    <Collection
+      collectionRepository={new CollectionMockRepository()}
+      collectionIdFromParams="collection"
+      created={false}
+      published={false}
+      edited={true}
+      collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
+    />
+  )
+}

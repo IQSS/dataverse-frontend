@@ -23,6 +23,30 @@ describe('PublishCollectionModal', () => {
     // Check if the error message is displayed
     cy.contains(errorMessage).should('exist')
   })
+
+  it('displays the fallback error message when publishCollection fails without an error message', () => {
+    const handleClose = cy.stub()
+    const repository = {} as CollectionRepository // Mock the repository as needed
+    repository.publish = cy.stub().as('repositoryPublish').rejects('Unknown error')
+
+    cy.mountAuthenticated(
+      <PublishCollectionModal
+        show={true}
+        repository={repository}
+        collectionId="testCollectionId"
+        handleClose={handleClose}
+      />
+    )
+
+    // Trigger the Publish action
+    cy.findByRole('button', { name: 'Continue' }).click()
+
+    // Check if the error message is displayed
+    cy.contains(
+      'Something went wrong while trying to publish the collection. Please try again later.'
+    ).should('exist')
+  })
+
   it('renders the PublishDatasetModal and triggers submitPublish on button click', () => {
     const handleClose = cy.stub()
     const repository = {} as CollectionRepository // Mock the repository as needed
