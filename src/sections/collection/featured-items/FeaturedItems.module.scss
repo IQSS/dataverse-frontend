@@ -7,6 +7,8 @@
 }
 
 .featured-item-card {
+  --inner-content-gap: 2rem;
+
   position: relative;
   display: flex;
   flex-direction: column;
@@ -36,13 +38,14 @@
   .inner-content {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: var(--inner-content-gap);
     align-items: flex-start;
     padding-inline: 1rem;
     padding-bottom: 1rem;
 
     .content {
       flex: 1;
+      max-width: 100%;
     }
 
     .image {
@@ -77,6 +80,12 @@
     .inner-content {
       flex-direction: row;
 
+      &:has(.image) {
+        .content {
+          max-width: calc(70% - var(--inner-content-gap));
+        }
+      }
+
       .image {
         max-width: 30%;
       }
@@ -86,8 +95,16 @@
   @media (min-width: 1024px) {
     max-height: 80dvh;
 
-    .inner-content .image {
-      max-width: 40%;
+    .inner-content {
+      &:has(.image) {
+        .content {
+          max-width: calc(60% - var(--inner-content-gap));
+        }
+      }
+
+      .image {
+        max-width: 40%;
+      }
     }
   }
 }
