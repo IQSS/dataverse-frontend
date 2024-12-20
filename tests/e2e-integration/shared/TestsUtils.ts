@@ -1,30 +1,38 @@
 import { ApiConfig } from '@iqss/dataverse-client-javascript/dist/core'
 import { DataverseApiHelper } from './DataverseApiHelper'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
-import { UserJSDataverseRepository } from '../../../src/users/infrastructure/repositories/UserJSDataverseRepository'
 import { DatasetHelper } from './datasets/DatasetHelper'
-import { BASE_URL } from '../../../src/config'
+import { DATAVERSE_BACKEND_URL, OIDC_AUTH_CONFIG } from '../../../src/config'
 
 export class TestsUtils {
-  static readonly DATAVERSE_BACKEND_URL = BASE_URL
+  static readonly DATAVERSE_BACKEND_URL = DATAVERSE_BACKEND_URL
+  static readonly USER_EMAIL = 'dataverse-user@mailinator.com'
+  static readonly USER_PASSWORD = 'user'
+  static readonly USER_USERNAME = 'user'
 
-  static setup() {
-    ApiConfig.init(`${this.DATAVERSE_BACKEND_URL}/api/v1`, DataverseApiAuthMechanism.SESSION_COOKIE)
-    DataverseApiHelper.setup()
+  static async setup(bearerToken: string) {
+    ApiConfig.init(
+      `${this.DATAVERSE_BACKEND_URL}/api/v1`,
+      DataverseApiAuthMechanism.BEARER_TOKEN,
+      undefined,
+      `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+    )
+
+    await DataverseApiHelper.setup(bearerToken)
   }
 
   static login() {
-    return cy.loginAsAdmin() // TODO - Replace with an ajax call to the API
+    return cy.login()
+  }
+
+  static logout() {
+    return cy.logout()
   }
 
   static wait(ms: number): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(resolve, ms)
     })
-  }
-
-  static logout() {
-    return new UserJSDataverseRepository().removeAuthenticated()
   }
 
   static async waitForNoLocks(persistentId: string, maxRetries = 20, delay = 1000): Promise<void> {
@@ -54,5 +62,17 @@ export class TestsUtils {
 
     console.log('Max retries reached.')
     throw new Error('Max retries reached.')
+  }
+
+  static enterCredentialsInKeycloak() {
+    cy.get('#username').type(this.USER_EMAIL)
+    cy.get('#password').type(this.USER_PASSWORD)
+    cy.get('#kc-login').click()
+  }
+
+  static finishSignUp() {
+    cy.get('#termsAccepted').check({ force: true })
+
+    cy.findByRole('button', { name: 'Create Account' }).click()
   }
 }

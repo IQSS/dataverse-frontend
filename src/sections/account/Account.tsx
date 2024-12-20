@@ -3,6 +3,7 @@ import { Tabs } from '@iqss/dataverse-design-system'
 import { AccountHelper, AccountPanelTabKey } from './AccountHelper'
 import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/UserJSDataverseRepository'
 import { ApiTokenSection } from './api-token-section/ApiTokenSection'
+import { AccountInfoSection } from './account-info-section/AccountInfoSection'
 import styles from './Account.module.scss'
 
 const tabsKeys = AccountHelper.ACCOUNT_PANEL_TABS_KEYS
@@ -28,11 +29,10 @@ export const Account = ({ defaultActiveTabKey, userRepository }: AccountProps) =
         <Tabs.Tab eventKey={tabsKeys.notifications} title={t('tabs.notifications')} disabled>
           <div className={styles['tab-container']}></div>
         </Tabs.Tab>
-        <Tabs.Tab
-          eventKey={tabsKeys.accountInformation}
-          title={t('tabs.accountInformation')}
-          disabled>
-          <div className={styles['tab-container']}></div>
+        <Tabs.Tab eventKey={tabsKeys.accountInformation} title={t('tabs.accountInformation')}>
+          <div className={styles['tab-container']}>
+            <AccountInfoSection />
+          </div>
         </Tabs.Tab>
         <Tabs.Tab eventKey={tabsKeys.apiToken} title={t('tabs.apiToken')}>
           <div className={styles['tab-container']}>

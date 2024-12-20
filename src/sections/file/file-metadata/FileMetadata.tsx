@@ -4,7 +4,7 @@ import { FilePreview } from '../file-preview/FilePreview'
 import { FileLabels } from '../file-labels/FileLabels'
 import { DateHelper } from '../../../shared/helpers/DateHelper'
 import { FileEmbargoDate } from '../file-embargo/FileEmbargoDate'
-import { BASE_URL } from '../../../config'
+import { DATAVERSE_BACKEND_URL } from '../../../config'
 import { FileMetadata as FileMetadataModel } from '../../../files/domain/models/FileMetadata'
 import { FilePermissions } from '../../../files/domain/models/FilePermissions'
 import { DatasetPublishingStatus } from '../../../dataset/domain/models/Dataset'
@@ -72,7 +72,7 @@ export function FileMetadata({
                   </p>
                 </Trans>
                 <code className={styles.code}>
-                  {BASE_URL}
+                  {DATAVERSE_BACKEND_URL}
                   {removeQueryParams(metadata.downloadUrls.original)}
                 </code>
               </Col>

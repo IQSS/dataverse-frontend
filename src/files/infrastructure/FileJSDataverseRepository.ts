@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios'
+import { axiosInstance } from '@/axiosInstance'
 import { FileRepository } from '../domain/repositories/FileRepository'
 import { FileDownloadMode, FileTabularData } from '../domain/models/FileMetadata'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
@@ -25,7 +27,7 @@ import { JSFileMapper } from './mappers/JSFileMapper'
 import { DatasetVersion, DatasetVersionNumber } from '../../dataset/domain/models/Dataset'
 import { File } from '../domain/models/File'
 import { FilePaginationInfo } from '../domain/models/FilePaginationInfo'
-import { BASE_URL } from '../../config'
+import { DATAVERSE_BACKEND_URL } from '../../config'
 import { FilePreview } from '../domain/models/FilePreview'
 import { JSFilesCountInfoMapper } from './mappers/JSFilesCountInfoMapper'
 import { JSFileMetadataMapper } from './mappers/JSFileMetadataMapper'
@@ -37,7 +39,7 @@ import { FileHolder } from '../domain/models/FileHolder'
 const includeDeaccessioned = true
 
 export class FileJSDataverseRepository implements FileRepository {
-  static readonly DATAVERSE_BACKEND_URL = BASE_URL
+  static readonly DATAVERSE_BACKEND_URL = DATAVERSE_BACKEND_URL
 
   getAllByDatasetPersistentId(
     datasetPersistentId: string,
@@ -172,15 +174,16 @@ export class FileJSDataverseRepository implements FileRepository {
   }
 
   private static getThumbnailById(id: number): Promise<string | undefined> {
-    return fetch(`${this.DATAVERSE_BACKEND_URL}/api/access/datafile/${id}?imageThumb=400`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        return response.blob()
+    return axiosInstance
+      .get(`${this.DATAVERSE_BACKEND_URL}/api/access/datafile/${id}?imageThumb=400`, {
+        responseType: 'blob'
       })
-      .then((blob) => {
-        return URL.createObjectURL(blob)
+      .then((res: AxiosResponse<Blob>) => {
+        const blob = res.data
+
+        const objectURL = URL.createObjectURL(blob)
+
+        return objectURL
       })
       .catch(() => {
         return undefined

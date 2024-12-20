@@ -4,6 +4,7 @@ import { CollectionJSDataverseRepository } from '../../collection/infrastructure
 import { Collection } from './Collection'
 import { INFINITE_SCROLL_ENABLED } from './config'
 import { useGetCollectionQueryParams } from './useGetCollectionQueryParams'
+import { ACCOUNT_CREATED_SESSION_STORAGE_KEY } from './AccountCreatedAlert'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 export class CollectionFactory {
@@ -16,9 +17,17 @@ function CollectionWithSearchParams() {
   const collectionQueryParams = useGetCollectionQueryParams()
   const { collectionId } = useParams<{ collectionId: string }>()
   const location = useLocation()
-  const state = location.state as { published: boolean; created: boolean } | undefined
+  const state = location.state as
+    | {
+        published?: boolean
+        created?: boolean
+        accountCreated?: boolean
+      }
+    | undefined
   const created = state?.created ?? false
   const published = state?.published ?? false
+  const accountCreated =
+    Boolean(sessionStorage.getItem(ACCOUNT_CREATED_SESSION_STORAGE_KEY)) ?? false
 
   return (
     <Collection
@@ -27,6 +36,7 @@ function CollectionWithSearchParams() {
       created={created}
       collectionQueryParams={collectionQueryParams}
       published={published}
+      accountCreated={accountCreated}
       infiniteScrollEnabled={INFINITE_SCROLL_ENABLED}
     />
   )

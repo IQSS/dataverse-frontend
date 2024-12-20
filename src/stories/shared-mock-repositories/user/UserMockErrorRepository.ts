@@ -1,9 +1,9 @@
-import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/UserJSDataverseRepository'
+import { UserMockRepository } from './UserMockRepository'
 import { TokenInfo } from '@/users/domain/models/TokenInfo'
 import { User } from '@/users/domain/models/User'
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 
-export class AccountPageMockErrorUserRepository extends UserJSDataverseRepository {
+export class UserMockErrorRepository extends UserMockRepository {
   getAuthenticated(): Promise<User> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
@@ -40,6 +40,14 @@ export class AccountPageMockErrorUserRepository extends UserJSDataverseRepositor
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Something went wrong revoking the api token. Try again later.')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  register(): Promise<void> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Something went wrong registering the user. Try again later.')
       }, FakerHelper.loadingTimout())
     })
   }

@@ -8,7 +8,15 @@ chai.use(chaiAsPromised)
 const expect = chai.expect
 
 describe('DataverseInfo JSDataverse Repository', () => {
-  before(() => TestsUtils.setup())
+  beforeEach(() => {
+    TestsUtils.login().then((token) => {
+      if (!token) {
+        throw new Error('Token not found after Keycloak login')
+      }
+
+      cy.wrap(TestsUtils.setup(token))
+    })
+  })
 
   it('gets the dataverse version number', async () => {
     const dataverseInfoRepository = new DataverseInfoJSDataverseRepository()

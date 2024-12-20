@@ -5,5 +5,7 @@ export interface User {
   firstName: string
   lastName: string
   email: string
+  identifier: string
   affiliation?: string
+  position?: string
 }

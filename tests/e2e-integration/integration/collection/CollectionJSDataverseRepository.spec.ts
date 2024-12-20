@@ -27,14 +27,19 @@ const collectionExpected: Collection = {
   inputLevels: undefined
 }
 describe('Collection JSDataverse Repository', () => {
-  before(() => TestsUtils.setup())
   beforeEach(() => {
-    TestsUtils.login()
+    TestsUtils.login().then((token) => {
+      if (!token) {
+        throw new Error('Token not found after Keycloak login')
+      }
+
+      cy.wrap(TestsUtils.setup(token))
+    })
   })
 
   it('gets the collection by id', async () => {
     const collectionResponse = await CollectionHelper.create('new-collection')
-    console.log('collectionResponse', collectionResponse.id)
+
     await collectionRepository.getById(collectionResponse.id).then((collection) => {
       if (!collection) {
         throw new Error('Collection not found')
@@ -47,6 +52,7 @@ describe('Collection JSDataverse Repository', () => {
     const timestamp = new Date().valueOf()
     const uniqueCollectionId = `test-publish-collection-${timestamp}`
     const collectionResponse = await CollectionHelper.create(uniqueCollectionId)
+
     await collectionRepository.publish(collectionResponse.id)
     await collectionRepository.getById(collectionResponse.id).then((collection) => {
       if (!collection) {

@@ -14,6 +14,7 @@ import { CollectionSkeleton } from './CollectionSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
+import { AccountCreatedAlert } from './AccountCreatedAlert'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {
@@ -22,6 +23,7 @@ interface CollectionProps {
   created: boolean
   published: boolean
   collectionQueryParams: UseCollectionQueryParamsReturnType
+  accountCreated: boolean
   infiniteScrollEnabled?: boolean
 }
 
@@ -30,6 +32,7 @@ export function Collection({
   collectionRepository,
   created,
   published,
+  accountCreated,
   collectionQueryParams
 }: CollectionProps) {
   useTranslation('collection')
@@ -65,12 +68,15 @@ export function Collection({
           <>
             <BreadcrumbsGenerator hierarchy={collection.hierarchy} />
             <CollectionInfo collection={collection} />
+
             {created && <CreatedAlert />}
             {published && (
               <Alert variant="success" dismissible={false}>
                 {t('publishedAlert')}
               </Alert>
             )}
+            {accountCreated && <AccountCreatedAlert />}
+
             {!collection.isReleased && canUserPublishCollection && (
               <div className={styles['action-buttons']}>
                 <PublishCollectionButton

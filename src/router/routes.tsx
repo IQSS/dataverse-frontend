@@ -4,7 +4,12 @@ import { Route } from '../sections/Route.enum'
 import { Layout } from '../sections/layout/Layout'
 import { ErrorPage } from '../sections/error-page/ErrorPage'
 import { ProtectedRoute } from './ProtectedRoute'
+import { AuthCallback } from '../sections/auth-callback/AuthCallback'
 import { AppLoader } from '../sections/shared/layout/app-loader/AppLoader'
+import { SessionProvider } from '@/sections/session/SessionProvider'
+import { UserJSDataverseRepository } from '@/users/infrastructure/repositories/UserJSDataverseRepository'
+
+const userRepository = new UserJSDataverseRepository()
 
 const Homepage = lazy(() =>
   import('../sections/homepage/HomepageFactory').then(({ HomepageFactory }) => ({
@@ -66,105 +71,129 @@ const AccountPage = lazy(() =>
   }))
 )
 
+const SignUpPage = lazy(() =>
+  import('../sections/sign-up/SignUpFactory').then(({ SignUpFactory }) => ({
+    default: () => SignUpFactory.create()
+  }))
+)
+
 export const routes: RouteObject[] = [
   {
-    path: '/',
-    element: <Layout />,
-    errorElement: <ErrorPage fullViewport />,
+    element: <SessionProvider repository={userRepository} />,
     children: [
       {
-        path: Route.HOME,
-        element: (
-          <Suspense fallback={<AppLoader />}>
-            <Homepage />
-          </Suspense>
-        ),
-        errorElement: <ErrorPage />
-      },
-      {
-        path: Route.COLLECTIONS_BASE,
-        element: (
-          <Suspense fallback={<AppLoader />}>
-            <CollectionPage />
-          </Suspense>
-        ),
-        errorElement: <ErrorPage />
-      },
-      {
-        path: Route.COLLECTIONS,
-        element: (
-          <Suspense fallback={<AppLoader />}>
-            <CollectionPage />
-          </Suspense>
-        ),
-        errorElement: <ErrorPage />
-      },
-      {
-        path: Route.DATASETS,
-        element: (
-          <Suspense fallback={<AppLoader />}>
-            <DatasetPage />
-          </Suspense>
-        ),
-        errorElement: <ErrorPage />
-      },
-      {
-        path: Route.FILES,
-        element: (
-          <Suspense fallback={<AppLoader />}>
-            <FilePage />
-          </Suspense>
-        ),
-        errorElement: <ErrorPage />
-      },
-      // 🔐 Protected routes are only accessible to authenticated users
-      {
-        element: <ProtectedRoute />,
+        path: '/',
+        element: <Layout />,
+        errorElement: <ErrorPage fullViewport />,
         children: [
           {
-            path: Route.CREATE_COLLECTION,
+            path: Route.HOME,
             element: (
               <Suspense fallback={<AppLoader />}>
-                <CreateCollectionPage />
+                <Homepage />
               </Suspense>
             ),
             errorElement: <ErrorPage />
           },
           {
-            path: Route.CREATE_DATASET,
+            path: Route.COLLECTIONS_BASE,
             element: (
               <Suspense fallback={<AppLoader />}>
-                <CreateDatasetPage />
+                <CollectionPage />
               </Suspense>
             ),
             errorElement: <ErrorPage />
           },
           {
-            path: Route.UPLOAD_DATASET_FILES,
+            path: Route.COLLECTIONS,
             element: (
               <Suspense fallback={<AppLoader />}>
-                <UploadDatasetFilesPage />
+                <CollectionPage />
               </Suspense>
             ),
             errorElement: <ErrorPage />
           },
           {
-            path: Route.EDIT_DATASET_METADATA,
+            path: Route.DATASETS,
             element: (
               <Suspense fallback={<AppLoader />}>
-                <EditDatasetMetadataPage />
+                <DatasetPage />
               </Suspense>
             ),
             errorElement: <ErrorPage />
           },
           {
-            path: Route.ACCOUNT,
+            path: Route.FILES,
             element: (
               <Suspense fallback={<AppLoader />}>
-                <AccountPage />
+                <FilePage />
               </Suspense>
             ),
             errorElement: <ErrorPage />
+          },
+          {
+            path: Route.AUTH_CALLBACK,
+            element: <AuthCallback />
+          },
+          {
+            path: Route.SIGN_UP,
+            element: (
+              <Suspense fallback={<AppLoader />}>
+                <SignUpPage />
+              </Suspense>
+            ),
+            errorElement: <ErrorPage />
+          },
+          // 🔐 Protected routes are only accessible to authenticated users
+          {
+            element: <ProtectedRoute />,
+            children: [
+              {
+                path: Route.CREATE_COLLECTION,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <CreateCollectionPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.CREATE_DATASET,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <CreateDatasetPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.UPLOAD_DATASET_FILES,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <UploadDatasetFilesPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.EDIT_DATASET_METADATA,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <EditDatasetMetadataPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              },
+              {
+                path: Route.ACCOUNT,
+                element: (
+                  <Suspense fallback={<AppLoader />}>
+                    <AccountPage />
+                  </Suspense>
+                ),
+                errorElement: <ErrorPage />
+              }
+            ]
           }
         ]
       }

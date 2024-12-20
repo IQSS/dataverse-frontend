@@ -5,13 +5,15 @@ import { CollectionHelper } from '../../../shared/collection/CollectionHelper'
 
 describe('Collection Page', () => {
   const title = faker.lorem.sentence()
-  before(() => {
-    TestsUtils.setup()
-    TestsUtils.login()
-  })
 
   beforeEach(() => {
-    TestsUtils.login()
+    TestsUtils.login().then((token) => {
+      if (!token) {
+        throw new Error('Token not found after Keycloak login')
+      }
+
+      cy.wrap(TestsUtils.setup(token))
+    })
   })
 
   it('successfully loads root collection when accessing the home', () => {
@@ -24,7 +26,7 @@ describe('Collection Page', () => {
       cy.wait(1_000)
       cy.visit('/spa/collections')
 
-      cy.findByText(/Dataverse Admin/i).should('exist')
+      cy.findByText(/Dataverse User/i).should('exist')
 
       cy.findByText(title).should('be.visible')
       cy.findByText(title).click({ force: true })
@@ -32,6 +34,7 @@ describe('Collection Page', () => {
       cy.findAllByText(title).should('be.visible')
     })
   })
+
   it('Successfully publishes a collection', () => {
     const timestamp = new Date().valueOf()
     const uniqueCollectionId = `test-publish-collection-${timestamp}`
@@ -49,44 +52,13 @@ describe('Collection Page', () => {
         cy.findByRole('button', { name: 'Publish' }).should('not.exist')
       })
   })
-  it('Navigates to Create Dataset page when New Dataset link clicked', () => {
-    cy.visit('/spa/collections')
-
-    cy.get('nav.navbar').within(() => {
-      const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
-      addDataBtn.should('exist')
-      addDataBtn.click({ force: true })
-      cy.findByText('New Dataset').should('be.visible').click({ force: true })
-    })
-
-    cy.visit('/spa/collections')
-
-    cy.get('main').within(() => {
-      const addDataBtn = cy.findByRole('button', { name: /Add Data/i })
-      addDataBtn.should('exist')
-      addDataBtn.click({ force: true })
-      cy.findByText('New Dataset').should('be.visible').click({ force: true })
-    })
-    cy.get(`h1`)
-      .findByText(/Create Dataset/i)
-      .should('exist')
-  })
-
-  it('log out Dataverse Admin user', () => {
-    cy.visit('/spa/collections')
-    cy.findAllByText(/Root/i).should('exist')
-
-    cy.findByText(/Dataverse Admin/i).click()
-    cy.findByRole('button', { name: /Log Out/i }).click()
-    cy.findByText(/Dataverse Admin/i).should('not.exist')
-  })
 
   describe.skip('Currently skipping all tests as we are only rendering an infinite scrollable container. Please refactor these tests if a toggle button is added to switch between pagination and infinite scroll.', () => {
     it('navigates to the correct page of the datasets list when passing the page query param', () => {
       cy.wrap(DatasetHelper.createMany(12), { timeout: 10000 }).then(() => {
         cy.visit('/spa/collections?page=2')
         cy.findAllByText(/Root/i).should('exist')
-        cy.findByText(/Dataverse Admin/i).should('exist')
+        cy.findByText(/Dataverse User/i).should('exist')
 
         cy.findByText('11 to 12 of 12 Datasets').should('exist')
       })
@@ -97,7 +69,7 @@ describe('Collection Page', () => {
         cy.visit('/spa/collections')
 
         cy.findAllByText(/Root/i).should('exist')
-        cy.findByText(/Dataverse Admin/i).should('exist')
+        cy.findByText(/Dataverse User/i).should('exist')
 
         cy.findByRole('button', { name: 'Next' }).click()
         cy.findByText('11 to 12 of 12 Datasets').should('exist')
@@ -110,7 +82,7 @@ describe('Collection Page', () => {
         cy.visit('/spa/collections?page=2')
 
         cy.findAllByText(/Root/i).should('exist')
-        cy.findByText(/Dataverse Admin/i).should('exist')
+        cy.findByText(/Dataverse User/i).should('exist')
         cy.findByText('11 to 12 of 12 Datasets').should('exist')
 
         cy.findByRole('button', { name: '1' }).click({ force: true })
@@ -130,7 +102,7 @@ describe('Collection Page', () => {
       cy.visit('/spa/collections/collection-1')
 
       cy.findAllByText(/Scientific Research/i).should('exist')
-      cy.findByText(/Dataverse Admin/i).should('exist')
+      cy.findByText(/Dataverse User/i).should('exist')
     })
   })
 })

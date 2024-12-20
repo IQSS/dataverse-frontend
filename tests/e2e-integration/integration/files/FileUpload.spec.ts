@@ -13,21 +13,24 @@ const fileRepository = new FileJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
 
 describe('DirectUpload', () => {
-  before(() => {
-    TestsUtils.setup()
-  })
-
   beforeEach(() => {
-    TestsUtils.login()
+    TestsUtils.login().then((token) => {
+      if (!token) {
+        throw new Error('Token not found after Keycloak login')
+      }
+
+      cy.wrap(TestsUtils.setup(token))
+    })
   })
 
   it('should upload file and add it to the dataset', async () => {
-    const dataset = await DatasetHelper.create().then((datasetResponse) =>
-      datasetRepository.getByPersistentId(
-        datasetResponse.persistentId,
-        DatasetNonNumericVersion.DRAFT
-      )
+    const datasetResponse = await DatasetHelper.create()
+
+    const dataset = await datasetRepository.getByPersistentId(
+      datasetResponse.persistentId,
+      DatasetNonNumericVersion.DRAFT
     )
+
     if (!dataset) throw new Error('Dataset not found')
 
     const singlePartFile = FileHelper.createSinglePartFileBlob()
@@ -74,18 +77,19 @@ describe('DirectUpload', () => {
   })
 
   it('should upload 2 files and add it to the dataset', async () => {
-    const dataset = await DatasetHelper.create().then((datasetResponse) =>
-      datasetRepository.getByPersistentId(
-        datasetResponse.persistentId,
-        DatasetNonNumericVersion.DRAFT
-      )
-    )
-    if (!dataset) throw new Error('Dataset not found')
+    const datasetResponse = await DatasetHelper.create()
 
     const singlePartFile1 = FileHelper.createSinglePartFileBlob()
     const singlePartFile2 = FileHelper.createSinglePartFileBlob()
     let storageId1: string | undefined = undefined
     let storageId2: string | undefined = undefined
+
+    const dataset = await datasetRepository.getByPersistentId(
+      datasetResponse.persistentId,
+      DatasetNonNumericVersion.DRAFT
+    )
+
+    if (!dataset) throw new Error('Dataset not found')
 
     const upload1 = fileRepository.uploadFile(
       dataset.persistentId,
@@ -156,16 +160,17 @@ describe('DirectUpload', () => {
   })
 
   it('should not finish uploading file to destinations when user cancels immediately', async () => {
-    const dataset = await DatasetHelper.create().then((datasetResponse) =>
-      datasetRepository.getByPersistentId(
-        datasetResponse.persistentId,
-        DatasetNonNumericVersion.DRAFT
-      )
-    )
-    if (!dataset) throw new Error('Dataset not found')
+    const datasetResponse = await DatasetHelper.create()
 
     const multipartFile = FileHelper.createMultipartFileBlob()
     const controller = new AbortController()
+
+    const dataset = await datasetRepository.getByPersistentId(
+      datasetResponse.persistentId,
+      DatasetNonNumericVersion.DRAFT
+    )
+
+    if (!dataset) throw new Error('Dataset not found')
 
     const upload = fileRepository.uploadFile(
       dataset.persistentId,

@@ -1,23 +1,43 @@
+import { AuthProvider, TAuthConfig } from 'react-oauth2-code-pkce'
 import { ApiConfig } from '@iqss/dataverse-client-javascript/dist/core'
-import { Router } from './router'
-import { SessionProvider } from './sections/session/SessionProvider'
-import { UserJSDataverseRepository } from './users/infrastructure/repositories/UserJSDataverseRepository'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
-import { BASE_URL } from './config'
+import { Router } from './router'
+import { Route } from './sections/Route.enum'
+import { OIDC_AUTH_CONFIG, DATAVERSE_BACKEND_URL } from './config'
 import 'react-loading-skeleton/dist/skeleton.css'
 
-if (BASE_URL === '') {
+if (DATAVERSE_BACKEND_URL === '') {
   throw Error('VITE_DATAVERSE_BACKEND_URL environment variable should be specified.')
 } else {
-  ApiConfig.init(`${BASE_URL}/api/v1`, DataverseApiAuthMechanism.SESSION_COOKIE)
+  ApiConfig.init(
+    `${DATAVERSE_BACKEND_URL}/api/v1`,
+    DataverseApiAuthMechanism.BEARER_TOKEN,
+    undefined,
+    `${OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX}token`
+  )
 }
 
-const userRepository = new UserJSDataverseRepository()
+const origin = window.location.origin
+const BASENAME_URL = import.meta.env.BASE_URL ?? ''
+
+const authConfig: TAuthConfig = {
+  clientId: 'test',
+  authorizationEndpoint: `${origin}/realms/test/protocol/openid-connect/auth`,
+  tokenEndpoint: `${origin}/realms/test/protocol/openid-connect/token`,
+  logoutEndpoint: `${origin}/realms/test/protocol/openid-connect/logout`,
+  logoutRedirect: `${origin}${BASENAME_URL}`,
+  redirectUri: `${origin}${BASENAME_URL}${Route.AUTH_CALLBACK}`,
+  scope: 'openid',
+  autoLogin: false,
+  clearURL: false,
+  storageKeyPrefix: OIDC_AUTH_CONFIG.LOCAL_STORAGE_KEY_PREFIX
+}
+
 function App() {
   return (
-    <SessionProvider repository={userRepository}>
+    <AuthProvider authConfig={authConfig}>
       <Router />
-    </SessionProvider>
+    </AuthProvider>
   )
 }
 
