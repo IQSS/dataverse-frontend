@@ -1,6 +1,6 @@
-import { Card } from 'react-bootstrap'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { Slider } from './silder/Slider'
+import { FeaturedItem } from './FeaturedItem'
 import styles from './FeaturedItems.module.scss'
 
 interface FeaturedItemsProps {
@@ -16,24 +16,8 @@ export const FeaturedItems = ({ featuredItems }: FeaturedItemsProps) => {
       nextLabel="Go to next slide"
       dotLabel="Go to slide"
       className={styles['featured-items-slider']}
-      items={featuredItems.map((featuredItem, index) => (
-        <Card className={styles['featured-item-card']} key={index}>
-          <Card.Body>
-            <Card.Title as="h2" style={{ position: 'sticky', top: 0 }}>
-              {featuredItem.title}
-            </Card.Title>
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-              {featuredItem.imageUrl && (
-                <img
-                  src={featuredItem.imageUrl}
-                  alt={featuredItem.title}
-                  style={{ maxWidth: '40%' }}
-                />
-              )}
-              <div style={{ flex: 1 }} dangerouslySetInnerHTML={{ __html: featuredItem.content }} />
-            </div>
-          </Card.Body>
-        </Card>
+      items={featuredItems.map((featuredItem) => (
+        <FeaturedItem featuredItem={featuredItem} key={featuredItem.id} />
       ))}
     />
   )
