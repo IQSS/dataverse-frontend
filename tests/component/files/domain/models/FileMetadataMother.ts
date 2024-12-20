@@ -143,7 +143,7 @@ export class FileMetadataMother {
       size: FileSizeMother.create(),
       date: {
         type: FakerHelper.fileDateType(),
-        date: FakerHelper.recentDate()
+        date: '2024-02-01'
       },
       downloadCount: FakerHelper.smallNumber(40),
       labels: faker.datatype.boolean() ? FileLabelMother.createMany(3) : [],
@@ -155,8 +155,8 @@ export class FileMetadataMother {
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
       isDeleted: faker.datatype.boolean(),
       downloadUrls: FileDownloadUrlsMother.create(),
-      depositDate: FakerHelper.pastDate(),
-      publicationDate: faker.datatype.boolean() ? FakerHelper.pastDate() : undefined,
+      depositDate: '2020-01-01',
+      publicationDate: faker.datatype.boolean() ? '2020-01-01' : undefined,
       persistentId: faker.datatype.uuid(),
       ...props
     }
@@ -315,7 +315,7 @@ export class FileMetadataMother {
 
   static createWithPublicationDate(props?: Partial<FileMetadata>): FileMetadata {
     return this.createDefault({
-      publicationDate: FakerHelper.pastDate(),
+      publicationDate: '2020-01-01',
       ...props
     })
   }

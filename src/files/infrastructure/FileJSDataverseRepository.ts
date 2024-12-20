@@ -161,7 +161,7 @@ export class FileJSDataverseRepository implements FileRepository {
       .then((jsFilePermissions) => JSFilePermissionsMapper.toFilePermissions(jsFilePermissions))
   }
 
-  private static getDownloadCountById(id: number, publicationDate?: Date): Promise<number> {
+  private static getDownloadCountById(id: number, publicationDate?: string): Promise<number> {
     return publicationDate !== undefined
       ? getFileDownloadCount.execute(id).then((downloadCount) => Number(downloadCount))
       : Promise.resolve(0)

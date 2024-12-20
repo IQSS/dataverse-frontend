@@ -87,7 +87,7 @@ export enum FileDateType {
 
 export interface FileDate {
   type: FileDateType
-  date: Date
+  date: string
 }
 
 export class FileEmbargo {
@@ -150,8 +150,8 @@ export class FileMetadata {
     readonly labels: FileLabel[],
     public readonly isDeleted: boolean,
     public readonly downloadUrls: FileDownloadUrls,
-    readonly depositDate: Date,
-    readonly publicationDate?: Date,
+    readonly depositDate?: string,
+    readonly publicationDate?: string,
     public thumbnail?: string,
     readonly directory?: string,
     readonly embargo?: FileEmbargo,

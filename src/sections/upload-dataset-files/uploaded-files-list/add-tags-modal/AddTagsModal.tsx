@@ -1,6 +1,6 @@
 import { Button, Col, Form, Modal, Badge } from '@iqss/dataverse-design-system'
 import styles from './AddTagsModal.module.scss'
-import { FormEvent, useState, KeyboardEvent, useId } from 'react'
+import { useState, KeyboardEvent, useId, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Plus, X } from 'react-bootstrap-icons'
 
@@ -78,7 +78,7 @@ export function AddTagsModal({ show, availableTags, setTagOptions, update }: Add
                     placeholder={t('tags.addNewTag')}
                     value={newCustomTag}
                     title={t('addTags.customTag')}
-                    onChange={(event: FormEvent<HTMLInputElement>) =>
+                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
                       setNewCustomTag(event.currentTarget.value)
                     }
                   />
