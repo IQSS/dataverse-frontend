@@ -8,6 +8,21 @@ import { EditorActions } from './EditorActions'
 import { richTextEditorDefaultLocales, RichTextEditorLocales } from './defaultLocales'
 import './RichTextEditor.scss'
 
+export enum RichTextEditorCustomClasses {
+  HEADING = 'rte-heading',
+  PARAGRAPH = 'rte-paragraph',
+  BOLD = 'rte-bold',
+  ITALIC = 'rte-italic',
+  STRIKE = 'rte-strike',
+  BULLET_LIST = 'rte-bullet-list',
+  ORDERED_LIST = 'rte-ordered-list',
+  CODE = 'rte-code',
+  CODE_BLOCK = 'rte-code-block',
+  BLOCKQUOTE = 'rte-blockquote',
+  UNDERLINE = 'rte-underline',
+  LINK = 'rte-link'
+}
+
 export interface RichTextEditorProps {
   initialValue?: string | undefined
   onChange?: (value: string) => void
@@ -38,14 +53,69 @@ export const RichTextEditor = forwardRef(
       extensions: [
         StarterKit.configure({
           heading: {
-            levels: [1, 2, 3]
+            levels: [1, 2, 3],
+            HTMLAttributes: {
+              class: RichTextEditorCustomClasses.HEADING
+            }
+          },
+          paragraph: {
+            HTMLAttributes: {
+              class: RichTextEditorCustomClasses.PARAGRAPH
+            }
+          },
+          bold: {
+            HTMLAttributes: {
+              class: RichTextEditorCustomClasses.BOLD
+            }
+          },
+          italic: {
+            HTMLAttributes: {
+              class: RichTextEditorCustomClasses.ITALIC
+            }
+          },
+          strike: {
+            HTMLAttributes: {
+              class: RichTextEditorCustomClasses.STRIKE
+            }
+          },
+          bulletList: {
+            HTMLAttributes: {
+              class: RichTextEditorCustomClasses.BULLET_LIST
+            }
+          },
+          orderedList: {
+            HTMLAttributes: {
+              class: RichTextEditorCustomClasses.ORDERED_LIST
+            }
+          },
+          code: {
+            HTMLAttributes: {
+              class: RichTextEditorCustomClasses.CODE
+            }
+          },
+          codeBlock: {
+            HTMLAttributes: {
+              class: RichTextEditorCustomClasses.CODE_BLOCK
+            }
+          },
+          blockquote: {
+            HTMLAttributes: {
+              class: RichTextEditorCustomClasses.BLOCKQUOTE
+            }
           }
         }),
-        Underline,
+        Underline.configure({
+          HTMLAttributes: {
+            class: RichTextEditorCustomClasses.UNDERLINE
+          }
+        }),
         Link.configure({
           openOnClick: false,
           autolink: true,
-          linkOnPaste: true
+          linkOnPaste: true,
+          HTMLAttributes: {
+            class: RichTextEditorCustomClasses.LINK
+          }
         }),
         Placeholder.configure({
           placeholder: locales?.placeholder ?? richTextEditorDefaultLocales.placeholder
