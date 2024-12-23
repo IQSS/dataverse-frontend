@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { Slider } from './silder/Slider'
 import { FeaturedItem } from './FeaturedItem'
@@ -6,14 +7,15 @@ import styles from './FeaturedItems.module.scss'
 interface FeaturedItemsProps {
   featuredItems: CollectionFeaturedItem[]
 }
-// TODO:ME - Add this locales to the locales file
 
 export const FeaturedItems = ({ featuredItems }: FeaturedItemsProps) => {
+  const { t } = useTranslation('collection')
+
   return (
     <Slider
-      prevLabel="Go to previous slide"
-      nextLabel="Go to next slide"
-      dotLabel="Go to slide"
+      prevLabel={t('featuredItems.slider.prevLabel')}
+      nextLabel={t('featuredItems.slider.nextLabel')}
+      dotLabel={t('featuredItems.slider.dotLabel')}
       className={styles['featured-items-slider']}
       items={featuredItems.map((featuredItem) => (
         <FeaturedItem featuredItem={featuredItem} key={featuredItem.id} />
