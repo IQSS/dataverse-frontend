@@ -24,6 +24,7 @@ export const FeaturedItem = ({ featuredItem }: FeaturedItemProps) => {
       setCardScrolled(scrollTop > 50)
     }
   }
+
   return (
     <div className={styles['featured-item-card']} onScroll={handleScroll} ref={cardRef}>
       <h2

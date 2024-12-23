@@ -6,6 +6,7 @@ import { Col, Form, RichTextEditor, Row } from '@iqss/dataverse-design-system'
 import { DynamicFieldsButtons } from '@/sections/shared/form/DynamicFieldsButtons/DynamicFieldsButtons'
 import { ImageField } from './ImageField'
 import styles from './FeaturedItemField.module.scss'
+import { useTranslation } from 'react-i18next'
 
 interface FeaturedItemFieldProps {
   id: string
@@ -24,6 +25,9 @@ export const FeaturedItemField = ({
   disableDragWhenOnlyOneItem,
   initialImageUrl
 }: FeaturedItemFieldProps) => {
+  const { t } = useTranslation('collectionFeaturedItems')
+  const { t: tShared } = useTranslation('shared')
+
   const { control } = useFormContext()
   const {
     attributes,
@@ -64,7 +68,7 @@ export const FeaturedItemField = ({
             className={cn(styles['drag-handle'], {
               [styles['disabled']]: disableDragWhenOnlyOneItem
             })}
-            aria-label="press space to select and keys to drag"
+            aria-label={tShared('dragHandleLabel')}
             disabled={disableDragWhenOnlyOneItem}>
             <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
               <circle cx="9" cy="6" r="1.5" fill="#777" />
@@ -80,12 +84,12 @@ export const FeaturedItemField = ({
           <Row>
             {/* TITLE FIELD */}
             <Form.Group controlId={`featuredItems.${itemIndex}.title`} as={Col} md={6}>
-              <Form.Group.Label required={true}>Title</Form.Group.Label>
+              <Form.Group.Label required={true}>{t('form.title.label')}</Form.Group.Label>
 
               <Controller
                 name={`featuredItems.${itemIndex}.title`}
                 control={control}
-                rules={{ required: 'Title is required' }}
+                rules={{ required: t('form.title.required') }}
                 render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
                   <Col>
                     <Form.Group.Input
@@ -110,17 +114,17 @@ export const FeaturedItemField = ({
           <Row>
             <Form.Group as={Col} className={styles['form-group-content']}>
               <Form.Group.Label required={true} id={`featuredItems.${itemIndex}.content`}>
-                Content
+                {t('form.content.label')}
               </Form.Group.Label>
 
               <Controller
                 name={`featuredItems.${itemIndex}.content`}
                 control={control}
                 rules={{
-                  required: 'Content is required',
+                  required: t('form.content.required'),
                   validate: (value: string) => {
                     if (value === '<p></p>' || value === '') {
-                      return 'Content is required'
+                      return t('form.content.required')
                     }
                     return true
                   }

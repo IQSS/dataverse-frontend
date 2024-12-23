@@ -40,7 +40,7 @@ export const CollectionForm = ({
   isEditingRootCollection
 }: CollectionFormProps) => {
   const formContainerRef = useRef<HTMLDivElement>(null)
-  const { t } = useTranslation('shared', { keyPrefix: 'collectionForm' })
+  const { t } = useTranslation('shared')
   const navigate = useNavigate()
   const onCreateMode = mode === 'create'
 
@@ -86,7 +86,9 @@ export const CollectionForm = ({
       )}
       {submissionStatus === SubmissionStatus.SubmitComplete && (
         <Alert variant="success" dismissible={false}>
-          {onCreateMode ? t('submitStatus.createSuccess') : t('submitStatus.editSuccess')}
+          {onCreateMode
+            ? t('collectionForm.submitStatus.createSuccess')
+            : t('collectionForm.submitStatus.editSuccess')}
         </Alert>
       )}
       <FormProvider {...form}>
@@ -123,14 +125,14 @@ export const CollectionForm = ({
 
           <Stack direction="horizontal" className="pt-3">
             <Button type="submit" disabled={disableSubmitButton}>
-              {onCreateMode ? t('saveButton.createMode') : t('saveButton.editMode')}
+              {onCreateMode ? t('collectionForm.createCollection') : t('saveChanges')}
             </Button>
             <Button
               variant="secondary"
               type="button"
               onClick={handleCancel}
               disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
-              {t('cancelButton')}
+              {t('cancel')}
             </Button>
           </Stack>
         </form>

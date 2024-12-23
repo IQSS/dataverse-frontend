@@ -95,7 +95,14 @@
   @media (min-width: 1024px) {
     max-height: 80dvh;
 
+    .title {
+      padding-inline: 2rem;
+    }
+
     .inner-content {
+      padding-inline: 2rem;
+      padding-bottom: 2rem;
+
       &:has(.image) {
         .content {
           max-width: calc(60% - var(--inner-content-gap));

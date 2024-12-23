@@ -74,7 +74,11 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
       controlId={`featuredItems.${itemIndex}.image`}
       as={Col}
       md={6}>
-      <Form.Group.Label required={false} message={t('form.image.description')}>
+      <Form.Group.Label
+        required={false}
+        message={t('form.image.description', {
+          maxImageSize: formatBytes(IMAGE_MAX_SIZE_ACCEPTED)
+        })}>
         {t('form.image.label')}
       </Form.Group.Label>
 

@@ -2,11 +2,8 @@ import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { SortableContext } from '@dnd-kit/sortable'
-import {
-  Button
-  // Form,
-  // QuestionMarkTooltip
-} from '@iqss/dataverse-design-system'
+import { useTranslation } from 'react-i18next'
+import { Button } from '@iqss/dataverse-design-system'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { FeaturedItemField } from './featured-item-field/FeaturedItemField'
 import { PreviewCarousel } from './PreviewCarousel'
@@ -22,6 +19,7 @@ export const FeaturedItemsForm = ({
   defaultValues,
   collectionFeaturedItems
 }: FeaturedItemsFormProps) => {
+  const { t: tShared } = useTranslation('shared')
   const form = useForm<FeaturedItemsFormData>({
     mode: 'onChange',
     defaultValues
@@ -94,30 +92,10 @@ export const FeaturedItemsForm = ({
         className={styles.form}
         data-testid="collection-form">
         {fieldsArray.length > 3 && (
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button disabled={!form.formState.isDirty}>Save Changes</Button>
+          <div className={styles['save-changes-wrapper']}>
+            <Button disabled={!form.formState.isDirty}>{tShared('saveChanges')}</Button>
           </div>
         )}
-
-        {/* <Controller
-          name="withShowDataButton"
-          control={form.control}
-          render={({ field: { onChange, ref, value } }) => (
-            <div className={styles['show-data-checkbox-wrapper']}>
-              <Form.Group.Checkbox
-                id="withShowDataButton"
-                onChange={onChange}
-                label="Show data by default"
-                checked={value}
-                ref={ref}
-              />
-              <QuestionMarkTooltip
-                placement="right"
-                message="If this option is unchecked, the collections, datasets, and files list will not appear by default. To display them, the user will need to click a button located below the carousel."
-              />
-            </div>
-          )}
-        /> */}
 
         <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
           <SortableContext items={fieldsArray}>
@@ -136,8 +114,8 @@ export const FeaturedItemsForm = ({
             ))}
           </SortableContext>
         </DndContext>
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button disabled={!form.formState.isDirty}>Save Changes</Button>
+        <div className={styles['save-changes-wrapper']}>
+          <Button disabled={!form.formState.isDirty}>{tShared('saveChanges')}</Button>
         </div>
       </form>
     </FormProvider>
