@@ -11,13 +11,12 @@ import { PageNotFound } from '../page-not-found/PageNotFound'
 import { FeaturedItemsForm } from './featured-items-form/FeaturedItemsForm'
 import { FeaturedItemsFormHelper } from './featured-items-form/FeaturedItemsFormHelper'
 import { FeaturedItemsFormData } from './types'
+import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 
 interface CollectionFeaturedItemsProps {
   collectionRepository: CollectionRepository
   collectionIdFromParams: string | undefined
 }
-
-// TODO:ME - Add skeleton loading
 
 export const CollectionFeaturedItems = ({
   collectionRepository,
@@ -45,7 +44,7 @@ export const CollectionFeaturedItems = ({
   }
 
   if (isLoadingData || !collection) {
-    return <p>Loading collection and collection featured items skeleton for</p>
+    return <AppLoader />
   }
 
   if (errorCollectionFeaturedItems) {
