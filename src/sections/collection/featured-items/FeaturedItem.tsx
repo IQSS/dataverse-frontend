@@ -1,4 +1,5 @@
 import { UIEvent, useRef, useState } from 'react'
+import DOMPurify from 'dompurify'
 import cn from 'classnames'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import styles from './FeaturedItems.module.scss'
@@ -10,6 +11,10 @@ interface FeaturedItemProps {
 export const FeaturedItem = ({ featuredItem }: FeaturedItemProps) => {
   const [cardScrolled, setCardScrolled] = useState(false)
   const cardRef = useRef<HTMLDivElement | null>(null)
+
+  const sanitizedContent = DOMPurify.sanitize(featuredItem.content, {
+    USE_PROFILES: { html: true }
+  })
 
   const handleScroll = (e: UIEvent<HTMLDivElement>) => {
     e.stopPropagation()
@@ -31,10 +36,7 @@ export const FeaturedItem = ({ featuredItem }: FeaturedItemProps) => {
         {featuredItem.imageUrl && (
           <img src={featuredItem.imageUrl} alt={featuredItem.title} className={styles.image} />
         )}
-        <div
-          className={styles.content}
-          dangerouslySetInnerHTML={{ __html: featuredItem.content }}
-        />
+        <div className={styles.content} dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
       </div>
     </div>
   )

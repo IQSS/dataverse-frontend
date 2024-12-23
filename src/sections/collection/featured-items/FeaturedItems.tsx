@@ -7,8 +7,6 @@ interface FeaturedItemsProps {
   featuredItems: CollectionFeaturedItem[]
 }
 
-// TODO:ME - Sanitize the content before rendering it, check that nothing is missing, when sending to the backend sanitize also and be careful with ul as in lio.
-
 export const FeaturedItems = ({ featuredItems }: FeaturedItemsProps) => {
   return (
     <Slider
