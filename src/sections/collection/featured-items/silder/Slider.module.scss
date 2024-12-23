@@ -3,12 +3,19 @@
 
 .slider-container {
   $dotsHeight: 3rem;
+  $arrowSize: 40px;
+  $arrowMarginX: 0.5rem;
 
   position: relative;
   display: flex;
   align-items: center;
   width: 100%;
   overflow: hidden;
+
+  // If the slider has no arrows, add padding to the container to avoid flickering
+  &:not(:has(.slider-arrow)) {
+    padding-inline: calc($arrowSize + $arrowMarginX * 2);
+  }
 
   .slider {
     display: flex;
@@ -35,11 +42,11 @@
 
   .slider-arrow {
     display: none;
-    width: 40px;
-    height: 40px;
+    width: $arrowSize;
+    height: $arrowSize;
     border-radius: 50%;
     transform: translateY(-50%);
-    margin-inline: 0.5rem;
+    margin-inline: $arrowMarginX;
 
     @media screen and (min-width: 768px) {
       display: flex;

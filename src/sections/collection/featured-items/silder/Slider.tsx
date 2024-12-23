@@ -26,6 +26,8 @@ export const Slider = ({
   const sliderRef = useRef<HTMLDivElement | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
 
+  const oneItemOnly = items.length === 1
+
   const handleScroll = () => {
     if (sliderRef.current) {
       const index = Math.round(sliderRef.current.scrollLeft / sliderRef.current.offsetWidth)
@@ -63,7 +65,7 @@ export const Slider = ({
         },
         className
       )}>
-      {showArrows && (
+      {showArrows && !oneItemOnly && (
         <Button
           className={styles['slider-arrow']}
           size="sm"
@@ -80,7 +82,7 @@ export const Slider = ({
           </div>
         ))}
       </div>
-      {showArrows && (
+      {showArrows && !oneItemOnly && (
         <Button
           className={styles['slider-arrow']}
           size="sm"
@@ -90,7 +92,7 @@ export const Slider = ({
           <ChevronRight size={30} />
         </Button>
       )}
-      {showDots && (
+      {showDots && !oneItemOnly && (
         <div className={styles['slider-dots']}>
           {items.map((_, index) => (
             <button
