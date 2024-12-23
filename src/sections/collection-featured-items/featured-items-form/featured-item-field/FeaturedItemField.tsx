@@ -1,12 +1,12 @@
-import { Controller, useFormContext } from 'react-hook-form'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { useTranslation } from 'react-i18next'
 import cn from 'classnames'
-import { Col, Form, RichTextEditor, Row } from '@iqss/dataverse-design-system'
+import { Col, Row } from '@iqss/dataverse-design-system'
 import { DynamicFieldsButtons } from '@/sections/shared/form/DynamicFieldsButtons/DynamicFieldsButtons'
 import { ImageField } from './ImageField'
 import styles from './FeaturedItemField.module.scss'
-import { useTranslation } from 'react-i18next'
+import ContentField from './ContentField'
 
 interface FeaturedItemFieldProps {
   id: string
@@ -25,10 +25,8 @@ export const FeaturedItemField = ({
   disableDragWhenOnlyOneItem,
   initialImageUrl
 }: FeaturedItemFieldProps) => {
-  const { t } = useTranslation('collectionFeaturedItems')
   const { t: tShared } = useTranslation('shared')
 
-  const { control } = useFormContext()
   const {
     attributes,
     listeners,
@@ -81,76 +79,10 @@ export const FeaturedItemField = ({
           </button>
         </Col>
         <Col md={8} lg={9}>
-          <Row>
-            {/* TITLE FIELD */}
-            <Form.Group controlId={`featuredItems.${itemIndex}.title`} as={Col} md={6}>
-              <Form.Group.Label required={true}>{t('form.title.label')}</Form.Group.Label>
-
-              <Controller
-                name={`featuredItems.${itemIndex}.title`}
-                control={control}
-                rules={{ required: t('form.title.required') }}
-                render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
-                  <Col>
-                    <Form.Group.Input
-                      type="text"
-                      value={value as string}
-                      aria-required={true}
-                      onChange={onChange}
-                      isInvalid={invalid}
-                      ref={ref}
-                    />
-                    <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
-                  </Col>
-                )}
-              />
-            </Form.Group>
-
-            {/* IMAGE FIELD */}
-            <ImageField itemIndex={itemIndex} initialImageUrl={initialImageUrl} />
-          </Row>
-
           {/* CONTENT FIELD */}
-          <Row>
-            <Form.Group as={Col} className={styles['form-group-content']}>
-              <Form.Group.Label required={true} id={`featuredItems.${itemIndex}.content`}>
-                {t('form.content.label')}
-              </Form.Group.Label>
-
-              <Controller
-                name={`featuredItems.${itemIndex}.content`}
-                control={control}
-                rules={{
-                  required: t('form.content.required'),
-                  validate: (value: string) => {
-                    const content = value.replace(/<p[^>]*>|<\/p>/g, '').trim()
-                    const isEmptyTag = content === ''
-
-                    if (isEmptyTag || value === '') {
-                      return t('form.content.required')
-                    }
-                    return true
-                  }
-                }}
-                render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => {
-                  return (
-                    <Col>
-                      <RichTextEditor
-                        initialValue={value as string}
-                        editorContentAriaLabelledBy={`featuredItems.${itemIndex}.content`}
-                        onChange={onChange}
-                        invalid={invalid}
-                        ariaRequired
-                        ref={ref}
-                      />
-
-                      {invalid && <div className={styles['error-msg']}>{error?.message}</div>}
-                    </Col>
-                  )
-                }}
-              />
-            </Form.Group>
-          </Row>
+          <ContentField itemIndex={itemIndex} />
+          {/* IMAGE FIELD */}
+          <ImageField itemIndex={itemIndex} initialImageUrl={initialImageUrl} />
         </Col>
         <Col md={3} lg={2} style={{ marginTop: '2rem' }}>
           <DynamicFieldsButtons

@@ -22,26 +22,12 @@
   border-radius: 6px;
   margin-inline: auto;
 
-  .title {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    margin-bottom: 1rem;
-    padding: 1rem;
-    background-color: #fff;
-
-    &.card-scrolled {
-      box-shadow: 0 2px 4px rgba(0 0 0 / 30%);
-    }
-  }
-
   .inner-content {
     display: flex;
     flex-direction: column;
     gap: var(--inner-content-gap);
     align-items: flex-start;
-    padding-inline: 1rem;
-    padding-bottom: 1rem;
+    padding: 1rem;
 
     .content {
       flex: 1;
@@ -95,13 +81,8 @@
   @media (min-width: 1024px) {
     max-height: 80dvh;
 
-    .title {
-      padding-inline: 2rem;
-    }
-
     .inner-content {
-      padding-inline: 2rem;
-      padding-bottom: 2rem;
+      padding: 2rem;
 
       &:has(.image) {
         .content {

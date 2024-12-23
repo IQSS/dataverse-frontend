@@ -6,6 +6,7 @@ import styles from './FeaturedItems.module.scss'
 interface FeaturedItemsProps {
   featuredItems: CollectionFeaturedItem[]
 }
+// TODO:ME - Add this locales to the locales file
 
 export const FeaturedItems = ({ featuredItems }: FeaturedItemsProps) => {
   return (

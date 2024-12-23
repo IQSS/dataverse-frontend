@@ -8,7 +8,6 @@ export class FeaturedItemsFormHelper {
     if (!collectionFeaturedItems.length) {
       return [
         {
-          title: '',
           content: '',
           image: null
         }
@@ -16,10 +15,9 @@ export class FeaturedItemsFormHelper {
     }
 
     return collectionFeaturedItems.map((collectionFeaturedItem) => {
-      const { id, title, content, imageUrl } = collectionFeaturedItem
+      const { id, content, imageUrl } = collectionFeaturedItem
 
       return {
-        title,
         content,
         image: imageUrl ? imageUrl : null,
         itemId: id

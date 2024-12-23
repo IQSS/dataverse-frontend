@@ -1,6 +1,8 @@
 @use 'sass:color';
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
+// TODO:ME - Fix styles when dragging
+
 .featured-item-fields-wrapper {
   position: relative;
   padding: 1rem;
@@ -38,7 +40,12 @@
   }
 
   .form-group-content {
+    margin-bottom: 1rem;
     cursor: auto;
+  }
+
+  .form-group-image {
+    margin-bottom: 1rem;
   }
 
   .error-msg {
@@ -58,8 +65,8 @@
     border-radius: 6px;
 
     img {
-      width: 100px;
-      max-height: 100px;
+      width: 175px;
+      max-height: 175px;
       object-fit: contain;
       border-radius: 4px;
     }
