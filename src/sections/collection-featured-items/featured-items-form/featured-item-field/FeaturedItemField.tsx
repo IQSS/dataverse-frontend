@@ -93,6 +93,7 @@ export const FeaturedItemField = ({
           />
         </Col>
       </Row>
+      <span className={styles['order-value']}>Order {itemIndex + 1}</span>
     </div>
   )
 }

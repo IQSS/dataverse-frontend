@@ -1,7 +1,6 @@
 @use 'sass:color';
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
-
-// TODO:ME - Fix styles when dragging
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
 
 .featured-item-fields-wrapper {
   position: relative;
@@ -39,13 +38,13 @@
     }
   }
 
-  .form-group-content {
-    margin-bottom: 1rem;
-    cursor: auto;
-  }
-
+  .form-group-content,
   .form-group-image {
     margin-bottom: 1rem;
+  }
+
+  .form-group-content {
+    cursor: auto;
   }
 
   .error-msg {
@@ -93,12 +92,23 @@
     }
   }
 
+  .order-value {
+    position: absolute;
+    top: 0.75rem;
+    right: 1rem;
+    padding: 0.25rem 0.5rem;
+    font-size: $dv-font-size-sm;
+    background-color: color.adjust($dv-secondary-color, $alpha: -0.4);
+    border-radius: 6px;
+  }
+
   &.sorting {
     background-color: color.adjust($dv-secondary-color, $alpha: -0.4);
 
-    .form-group-content,
-    .form-group-image {
-      display: none;
+    // To decrease the height of the RTE input when draggin and make the draggable element easier to move
+    :global .rich-text-editor-content {
+      min-height: unset !important;
+      max-height: 120px !important;
     }
 
     &.active {
