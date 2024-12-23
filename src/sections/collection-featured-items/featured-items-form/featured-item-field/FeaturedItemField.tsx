@@ -123,7 +123,10 @@ export const FeaturedItemField = ({
                 rules={{
                   required: t('form.content.required'),
                   validate: (value: string) => {
-                    if (value === '<p></p>' || value === '') {
+                    const content = value.replace(/<p[^>]*>|<\/p>/g, '').trim()
+                    const isEmptyTag = content === ''
+
+                    if (isEmptyTag || value === '') {
                       return t('form.content.required')
                     }
                     return true
