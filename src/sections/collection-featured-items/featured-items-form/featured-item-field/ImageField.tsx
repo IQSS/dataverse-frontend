@@ -11,23 +11,12 @@ interface ImageFieldProps {
   initialImageUrl?: string
 }
 
-interface FormattedSelectedFile {
-  size: number
-  type: string
-  name: string
-  objectUrl: string
-}
-
 const IMAGE_MAX_SIZE_ACCEPTED = 1_000_000 // 1MB
-
-// TODO:ME - Show size, type and name of the image maybe?
 
 export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
   const { control, setValue } = useFormContext()
   const { t } = useTranslation('collectionFeaturedItems')
-  const [formattedSelectedFile, setFormattedSelectedFile] = useState<FormattedSelectedFile | null>(
-    null
-  )
+  const [selectedFileObjectURL, setSelectedFileObjectURL] = useState<string | null>(null)
 
   let fileInputRef: HTMLInputElement | null = null
 
@@ -38,14 +27,7 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
     const file = e.target.files?.[0]
 
     if (file) {
-      const formattedFile: FormattedSelectedFile = {
-        size: file.size,
-        type: file.type,
-        name: file.name,
-        objectUrl: URL.createObjectURL(file)
-      }
-
-      setFormattedSelectedFile(formattedFile)
+      setSelectedFileObjectURL(URL.createObjectURL(file))
     }
 
     formOnChange(file || null)
@@ -63,8 +45,8 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
   const handleClickChangeImage = () => fileInputRef?.click()
 
   const handleRemoveImage = () => {
-    formattedSelectedFile?.objectUrl && URL.revokeObjectURL(formattedSelectedFile.objectUrl)
-    setFormattedSelectedFile(null)
+    selectedFileObjectURL && URL.revokeObjectURL(selectedFileObjectURL)
+    setSelectedFileObjectURL(null)
 
     fileInputRef?.value && (fileInputRef.value = '')
 
@@ -75,8 +57,8 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
   }
 
   const handleRestoreInitialImage = () => {
-    formattedSelectedFile?.objectUrl && URL.revokeObjectURL(formattedSelectedFile.objectUrl)
-    setFormattedSelectedFile(null)
+    selectedFileObjectURL && URL.revokeObjectURL(selectedFileObjectURL)
+    setSelectedFileObjectURL(null)
 
     fileInputRef?.value && (fileInputRef.value = '')
 
@@ -136,8 +118,8 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
                   [styles['hide']]: showFileInput
                 })}>
                 {isExistingFile && <img src={castedValue} alt="Image preview" />}
-                {isNewFileSelected && (
-                  <img src={formattedSelectedFile?.objectUrl} alt="Image preview" />
+                {isNewFileSelected && selectedFileObjectURL && (
+                  <img src={selectedFileObjectURL} alt="Image preview" />
                 )}
                 <div className={styles['image-actions']}>
                   <Tooltip placement="top" overlay={t('form.image.changeImage')}>
