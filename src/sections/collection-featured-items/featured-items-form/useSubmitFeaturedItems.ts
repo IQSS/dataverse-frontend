@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 // import { WriteError } from '@iqss/dataverse-client-javascript'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { FeaturedItemsFormData } from '../types'
+import { FeaturedItemsFormHelper } from './FeaturedItemsFormHelper'
 
 export enum SubmissionStatus {
   NotSubmitted = 'NotSubmitted',
@@ -38,24 +39,29 @@ export function useSubmitFeaturedItems(
   )
   const [submitError, setSubmitError] = useState<string | null>(null)
 
-  const submitForm = (formData: FeaturedItemsFormData): void => {
+  const submitForm = (formCollectedData: FeaturedItemsFormData): void => {
     // setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
-    console.log(formData)
+    console.log(formCollectedData)
 
-    // const newOrUpdatedCollection: CollectionDTO = {
-    //   name: formData.name,
-    //   alias: formData.alias,
-    //   type: formData.type,
-    //   affiliation: formData.affiliation,
-    //   description: formData.description,
-    //   contacts: contactsDTO,
-    //   metadataBlockNames: shouldSendMetadataBlockNamesAndInputLevels
-    //     ? metadataBlockNamesDTO
-    //     : undefined,
-    //   inputLevels: shouldSendMetadataBlockNamesAndInputLevels ? inputLevelsDTO : undefined,
-    //   facetIds: shouldSendFacetIds ? facetIdsDTO : undefined
-    // }
+    const formData = new FormData()
+
+    const itemsDTO = FeaturedItemsFormHelper.defineFeaturedItemsDTO(formCollectedData.featuredItems)
+
+    console.log({ itemsDTO })
+
+    itemsDTO.forEach((item) => {
+      if (item.id) {
+        formData.append(`items[${item.order}][id]`, item.id)
+      }
+      formData.append(`items[${item.order}][order]`, JSON.stringify(item.order))
+      formData.append(`items[${item.order}][content]`, item.content)
+      formData.append(`items[${item.order}][keepFile]`, JSON.stringify(item.keepFile))
+
+      if (item.file) {
+        formData.append(`items[${item.order}][file]`, item.file)
+      }
+    })
 
     //   editCollection(collectionRepository, newOrUpdatedCollection, collectionIdOrParentCollectionId)
     //     .then(() => {
