@@ -71,8 +71,10 @@ export const CollectionFeaturedItems = ({
       <Alert variant="info">{t('infoMessage')}</Alert>
 
       <FeaturedItemsForm
+        collectionId={collection.id}
         defaultValues={formDefaultValues}
         collectionFeaturedItems={collectionFeaturedItems}
+        collectionRepository={collectionRepository}
       />
     </section>
   )

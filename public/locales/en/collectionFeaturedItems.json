@@ -19,6 +19,9 @@
       "invalid": {
         "maxLength": "Content must be {{maxLength}} characters or less."
       }
+    },
+    "submitStatus": {
+      "success": "Featured items have been updated successfully."
     }
   }
 }
