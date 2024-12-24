@@ -41,7 +41,7 @@ export const FeaturedItemsForm = ({
       { content: '', image: null },
       {
         shouldFocus: true,
-        focusName: `featuredItems.${index + 1}.title`
+        focusName: `featuredItems.${index + 1}.content`
       }
     )
   }

@@ -13,6 +13,10 @@ const ContentField = ({ itemIndex }: ContentFieldProps) => {
 
   const rules: UseControllerProps['rules'] = {
     required: t('form.content.required'),
+    maxLength: {
+      value: 15_000,
+      message: t('form.content.invalid.maxLength', { maxLength: 15_000 })
+    },
     validate: (value: string) => {
       const content = value.replace(/<p[^>]*>|<\/p>/g, '').trim()
       const isEmptyTag = content === ''
