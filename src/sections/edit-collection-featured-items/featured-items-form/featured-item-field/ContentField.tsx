@@ -9,7 +9,7 @@ interface ContentFieldProps {
 
 const ContentField = ({ itemIndex }: ContentFieldProps) => {
   const { control } = useFormContext()
-  const { t } = useTranslation('collectionFeaturedItems')
+  const { t } = useTranslation('editCollectionFeaturedItems')
 
   const rules: UseControllerProps['rules'] = {
     required: t('form.content.required'),

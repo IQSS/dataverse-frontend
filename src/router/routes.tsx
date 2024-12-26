@@ -72,10 +72,10 @@ const AccountPage = lazy(() =>
   }))
 )
 
-const CollectionFeaturedItems = lazy(() =>
-  import('../sections/collection-featured-items/CollectionFeaturedItemsFactory').then(
-    ({ CollectionFeaturedItemsFactory }) => ({
-      default: () => CollectionFeaturedItemsFactory.create()
+const EditCollectionFeaturedItems = lazy(() =>
+  import('../sections/edit-collection-featured-items/EditCollectionFeaturedItemsFactory').then(
+    ({ EditCollectionFeaturedItemsFactory }) => ({
+      default: () => EditCollectionFeaturedItemsFactory.create()
     })
   )
 )
@@ -190,10 +190,10 @@ export const routes: RouteObject[] = [
             errorElement: <ErrorPage />
           },
           {
-            path: Route.COLLECTION_FEATURED_ITEMS,
+            path: Route.EDIT_COLLECTION_FEATURED_ITEMS,
             element: (
               <Suspense fallback={<AppLoader />}>
-                <CollectionFeaturedItems />
+                <EditCollectionFeaturedItems />
               </Suspense>
             ),
             errorElement: <ErrorPage />

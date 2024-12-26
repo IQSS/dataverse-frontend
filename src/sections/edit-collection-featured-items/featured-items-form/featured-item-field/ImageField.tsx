@@ -15,7 +15,7 @@ const IMAGE_MAX_SIZE_ACCEPTED = 1_000_000 // 1MB
 
 export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
   const { control, setValue } = useFormContext()
-  const { t } = useTranslation('collectionFeaturedItems')
+  const { t } = useTranslation('editCollectionFeaturedItems')
   const [selectedFileObjectURL, setSelectedFileObjectURL] = useState<string | null>(null)
 
   let fileInputRef: HTMLInputElement | null = null

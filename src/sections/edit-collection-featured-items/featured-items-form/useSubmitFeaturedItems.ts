@@ -37,7 +37,7 @@ export function useSubmitFeaturedItems(
   collectionRepository: CollectionRepository
 ): UseSubmitFeaturedItemsReturnType {
   const navigate = useNavigate()
-  const { t } = useTranslation('collectionFeaturedItems')
+  const { t } = useTranslation('editCollectionFeaturedItems')
 
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted

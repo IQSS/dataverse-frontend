@@ -7,7 +7,7 @@ import { FeaturedItemsFormHelper } from './FeaturedItemsFormHelper'
 import { FeaturedItemField } from '../types'
 
 export const PreviewCarousel = () => {
-  const { t } = useTranslation('collectionFeaturedItems')
+  const { t } = useTranslation('editCollectionFeaturedItems')
   const featureItemFieldValues = useWatch({ name: 'featuredItems' }) as FeaturedItemField[]
 
   const formFieldsToFeaturedItems: CollectionFeaturedItem[] =

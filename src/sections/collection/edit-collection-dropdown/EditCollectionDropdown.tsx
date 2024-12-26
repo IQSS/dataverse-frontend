@@ -26,7 +26,7 @@ export const EditCollectionDropdown = ({ collection }: EditCollectionDropdownPro
   }
 
   const onClickEditFeaturedItems = () => {
-    navigate(RouteWithParams.COLLECTION_FEATURED_ITEMS(collection.id))
+    navigate(RouteWithParams.EDIT_COLLECTION_FEATURED_ITEMS(collection.id))
   }
 
   return (

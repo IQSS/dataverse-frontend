@@ -13,16 +13,16 @@ import { FeaturedItemsFormHelper } from './featured-items-form/FeaturedItemsForm
 import { FeaturedItemsFormData } from './types'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 
-interface CollectionFeaturedItemsProps {
+interface EditCollectionFeaturedItemsProps {
   collectionRepository: CollectionRepository
   collectionIdFromParams: string | undefined
 }
 
-export const CollectionFeaturedItems = ({
+export const EditCollectionFeaturedItems = ({
   collectionRepository,
   collectionIdFromParams
-}: CollectionFeaturedItemsProps) => {
-  const { t } = useTranslation('collectionFeaturedItems')
+}: EditCollectionFeaturedItemsProps) => {
+  const { t } = useTranslation('editCollectionFeaturedItems')
   const { setIsLoading } = useLoading()
   const { collection, isLoading } = useCollection(collectionRepository, collectionIdFromParams)
   const {

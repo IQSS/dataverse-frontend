@@ -13,7 +13,7 @@ export enum Route {
   CREATE_COLLECTION = '/collections/:parentCollectionId/create',
   EDIT_COLLECTION = '/collections/:collectionId/edit',
   ACCOUNT = '/account',
-  COLLECTION_FEATURED_ITEMS = '/collections/:collectionId/featured-items'
+  EDIT_COLLECTION_FEATURED_ITEMS = '/collections/:collectionId/edit-featured-items'
 }
 
 export const RouteWithParams = {
@@ -22,7 +22,8 @@ export const RouteWithParams = {
   CREATE_COLLECTION: (parentCollectionId: string) => `/collections/${parentCollectionId}/create`,
   CREATE_DATASET: (collectionId: string) => `/datasets/${collectionId}/create`,
   EDIT_COLLECTION: (collectionId: string) => `/collections/${collectionId}/edit`,
-  COLLECTION_FEATURED_ITEMS: (collectionId: string) => `/collections/${collectionId}/featured-items`
+  EDIT_COLLECTION_FEATURED_ITEMS: (collectionId: string) =>
+    `/collections/${collectionId}/edit-featured-items`
 }
 
 export enum QueryParamKey {

@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { CollectionFeaturedItems } from '@/sections/collection-featured-items/CollectionFeaturedItems'
+import { EditCollectionFeaturedItems } from '@/sections/edit-collection-featured-items/EditCollectionFeaturedItems'
 import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { WithLoggedInUser } from '../WithLoggedInUser'
@@ -7,9 +7,9 @@ import { CollectionMockRepository } from '../collection/CollectionMockRepository
 import { FakerHelper } from '@tests/component/shared/FakerHelper'
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 
-const meta: Meta<typeof CollectionFeaturedItems> = {
-  title: 'Pages/Collection Featured Items',
-  component: CollectionFeaturedItems,
+const meta: Meta<typeof EditCollectionFeaturedItems> = {
+  title: 'Pages/Edit Collection Featured Items',
+  component: EditCollectionFeaturedItems,
   decorators: [WithI18next, WithLayout, WithLoggedInUser],
   parameters: {
     // Sets the delay for all stories.
@@ -18,11 +18,11 @@ const meta: Meta<typeof CollectionFeaturedItems> = {
 }
 export default meta
 
-type Story = StoryObj<typeof CollectionFeaturedItems>
+type Story = StoryObj<typeof EditCollectionFeaturedItems>
 
 export const Default: Story = {
   render: () => (
-    <CollectionFeaturedItems
+    <EditCollectionFeaturedItems
       collectionRepository={new CollectionMockRepository()}
       collectionIdFromParams="root"
     />
@@ -40,7 +40,7 @@ collectionRepositoryWithFeaturedItems.getFeaturedItems = () => {
 
 export const WithInitialFeaturedItems: Story = {
   render: () => (
-    <CollectionFeaturedItems
+    <EditCollectionFeaturedItems
       collectionRepository={collectionRepositoryWithFeaturedItems}
       collectionIdFromParams="root"
     />
