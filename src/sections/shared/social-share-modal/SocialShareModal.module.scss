@@ -1,0 +1,50 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.help-block {
+  color: $dv-subtext-color;
+  font-size: 14px;
+}
+
+.social-btn {
+  display: grid;
+  place-items: center;
+  padding: 8px 12px;
+  background-color: transparent;
+  border: 0;
+  border-radius: 6px;
+  transition: all 0.15s ease-in-out;
+
+  &:hover {
+    scale: 1.1;
+    box-shadow: 2px 2px 10px rgb(0 0 0 / 30%);
+  }
+
+  &:active {
+    scale: 1;
+    box-shadow: none;
+  }
+
+  &.fb {
+    background-color: #3a5795;
+
+    svg {
+      color: #fff;
+    }
+  }
+
+  &.x {
+    background-color: #000;
+
+    svg {
+      color: #fff;
+    }
+  }
+
+  &.linkedin {
+    background-color: #6f5499;
+
+    svg {
+      color: #fff;
+    }
+  }
+}

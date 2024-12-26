@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { Alert, ButtonGroup, Col, Row } from '@iqss/dataverse-design-system'
-
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { useCollection } from './useCollection'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
@@ -15,6 +14,7 @@ import { CollectionSkeleton } from './CollectionSkeleton'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
+import { ShareCollectionButton } from './share-collection-button/ShareCollectionButton'
 import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectionDropdown'
 import { FeaturedItemsCarousel } from './featured-items/FeaturedItemsCarousel'
 import styles from './Collection.module.scss'
@@ -110,6 +110,28 @@ export function Collection({
                 </ButtonGroup>
               </div>
             )}
+
+            <div className={styles['metrics-actions-container']}>
+              <div className={styles.metrics}></div>
+              <div className={styles['right-content']}>
+                {/* 👇 Here should go Contact button also */}
+                {/* <ContactButton /> */}
+
+                <ShareCollectionButton />
+
+                {(showPublishButton || showEditButton) && (
+                  <ButtonGroup>
+                    {showPublishButton && (
+                      <PublishCollectionButton
+                        repository={collectionRepository}
+                        collectionId={collection.id}
+                      />
+                    )}
+                    {showEditButton && <EditCollectionDropdown collection={collection} />}
+                  </ButtonGroup>
+                )}
+              </div>
+            </div>
 
             <CollectionItemsPanel
               key={collection.id}

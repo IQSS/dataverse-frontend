@@ -2,7 +2,6 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Accordion, Col, Row } from '@iqss/dataverse-design-system'
 import { FilePreview } from '../file-preview/FilePreview'
 import { FileLabels } from '../file-labels/FileLabels'
-import { DateHelper } from '../../../shared/helpers/DateHelper'
 import { FileEmbargoDate } from '../file-embargo/FileEmbargoDate'
 import { BASE_URL } from '../../../config'
 import { FileMetadata as FileMetadataModel } from '../../../files/domain/models/FileMetadata'
@@ -99,9 +98,7 @@ export function FileMetadata({
               <strong>{t('metadata.fields.depositDate')}</strong>
             </Col>
             <Col>
-              <time dateTime={DateHelper.toISO8601Format(metadata.depositDate)}>
-                {DateHelper.toISO8601Format(metadata.depositDate)}
-              </time>
+              <time dateTime={metadata.depositDate}>{metadata.depositDate}</time>
             </Col>
           </Row>
           {metadata.publicationDate && (
@@ -110,9 +107,7 @@ export function FileMetadata({
                 <strong>{t('metadata.fields.metadataReleaseDate')}</strong>
               </Col>
               <Col>
-                <time dateTime={DateHelper.toISO8601Format(metadata.publicationDate)}>
-                  {DateHelper.toISO8601Format(metadata.publicationDate)}
-                </time>
+                <time dateTime={metadata.publicationDate}>{metadata.publicationDate}</time>
               </Col>
             </Row>
           )}
@@ -130,9 +125,7 @@ export function FileMetadata({
                   />
                 ) : (
                   metadata.publicationDate && (
-                    <time dateTime={DateHelper.toISO8601Format(metadata.publicationDate)}>
-                      {DateHelper.toISO8601Format(metadata.publicationDate)}
-                    </time>
+                    <time dateTime={metadata.publicationDate}>{metadata.publicationDate}</time>
                   )
                 )}
               </Col>

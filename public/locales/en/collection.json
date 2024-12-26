@@ -31,6 +31,10 @@
     "error": "There was an error publishing your collection."
   },
   "publishedAlert": "Your collection is now public.",
+  "share": {
+    "shareCollection": "Share Collection",
+    "helpText": "Share this collection on your favorite social media networks."
+  },
   "editedAlert": "You have successfully updated your collection!",
   "editCollection": {
     "edit": "Edit",

@@ -1,9 +1,9 @@
+import { ChangeEvent, useState, KeyboardEvent, useId } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Badge, Button, Col, Form } from '@iqss/dataverse-design-system'
+import { Plus, X } from 'react-bootstrap-icons'
 import { FileUploadState } from '../../../../files/domain/models/FileUploadState'
 import styles from './FileForm.module.scss'
-import { useState, KeyboardEvent, useId, ChangeEvent } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Plus, X } from 'react-bootstrap-icons'
 
 interface FileFormProps {
   file: FileUploadState

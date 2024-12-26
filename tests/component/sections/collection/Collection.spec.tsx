@@ -196,4 +196,27 @@ describe('Collection page', () => {
     cy.findByRole('button', { name: /Cancel/i }).click()
     cy.findByText('Publish Collection').should('not.exist')
   })
+
+  it('opens and close the share collection modal', () => {
+    cy.viewport(1200, 800)
+
+    cy.mountAuthenticated(
+      <Collection
+        collectionRepository={collectionRepository}
+        collectionIdFromParams="collection"
+        created={false}
+        published={false}
+        collectionQueryParams={{ pageQuery: 1 }}
+      />
+    )
+    cy.findByRole('button', { name: /Share/i }).should('exist')
+
+    cy.findByRole('button', { name: /Share/i }).click()
+    cy.findByText('Share this collection on your favorite social media networks.').should('exist')
+
+    cy.findAllByRole('button', { name: /Close/i }).last().click()
+    cy.findByText('Share this collection on your favorite social media networks.').should(
+      'not.exist'
+    )
+  })
 })
