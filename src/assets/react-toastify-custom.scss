@@ -1,0 +1,14 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
+
+:root {
+  --toastify-color-info: #{$dv-info-color};
+  --toastify-color-success: #{$dv-success-color};
+  --toastify-color-warning: #{$dv-warning-color};
+  --toastify-color-error: #{$dv-danger-color};
+
+  // --toastify-icon-color-success: #{$dv-success-color};
+  // --toastify-icon-color-error: #{$dv-danger-color};
+  // --toastify-icon-color-warning: #{$dv-warning-color};
+  --toastify-font-family: #{$dv-font-family};
+}
