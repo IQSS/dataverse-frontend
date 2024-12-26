@@ -1,4 +1,7 @@
-import { RichTextEditor } from '../../../src/lib/components/rich-text-editor/RichTextEditor'
+import {
+  RichTextEditor,
+  RichTextEditorCustomClasses
+} from '../../../src/lib/components/rich-text-editor/RichTextEditor'
 
 const editorContentId = 'test-editor-content-id'
 
@@ -31,7 +34,7 @@ describe('RichTextEditor', () => {
   })
 
   it('should render the component with initial value', () => {
-    const initialValue = '<p>Hello <strong>Dataverse</strong>!</p>'
+    const initialValue = `<p class="${RichTextEditorCustomClasses.PARAGRAPH}">Hello <strong class="${RichTextEditorCustomClasses.BOLD}">Dataverse</strong>!</p>`
 
     cy.mount(<RichTextEditor editorContentId={editorContentId} initialValue={initialValue} />)
 
@@ -51,7 +54,10 @@ describe('RichTextEditor', () => {
 
     cy.get(`#${editorContentId}`).type(textToType)
 
-    cy.get('@onChange').should('have.been.calledWith', `<p>${textToType}</p>`)
+    cy.get('@onChange').should(
+      'have.been.calledWith',
+      `<p class="${RichTextEditorCustomClasses.PARAGRAPH}">${textToType}</p>`
+    )
   })
 
   describe('Editor Actions', () => {
@@ -62,7 +68,10 @@ describe('RichTextEditor', () => {
 
       cy.findByLabelText('Heading 1').click()
 
-      cy.get(`#${editorContentId}`).should('contain.html', `<h1>${textToType}</h1>`)
+      cy.get(`#${editorContentId}`).should(
+        'contain.html',
+        `<h1 class="${RichTextEditorCustomClasses.HEADING}">${textToType}</h1>`
+      )
 
       cy.findByLabelText('Heading 1').should('have.attr', 'aria-pressed', 'true')
     })
@@ -74,7 +83,10 @@ describe('RichTextEditor', () => {
 
       cy.findByLabelText('Heading 2').click()
 
-      cy.get(`#${editorContentId}`).should('contain.html', `<h2>${textToType}</h2>`)
+      cy.get(`#${editorContentId}`).should(
+        'contain.html',
+        `<h2 class="${RichTextEditorCustomClasses.HEADING}">${textToType}</h2>`
+      )
 
       cy.findByLabelText('Heading 2').should('have.attr', 'aria-pressed', 'true')
     })
@@ -86,7 +98,10 @@ describe('RichTextEditor', () => {
 
       cy.findByLabelText('Heading 3').click()
 
-      cy.get(`#${editorContentId}`).should('contain.html', `<h3>${textToType}</h3>`)
+      cy.get(`#${editorContentId}`).should(
+        'contain.html',
+        `<h3 class="${RichTextEditorCustomClasses.HEADING}">${textToType}</h3>`
+      )
 
       cy.findByLabelText('Heading 3').should('have.attr', 'aria-pressed', 'true')
     })
@@ -100,7 +115,10 @@ describe('RichTextEditor', () => {
 
       cy.findByLabelText('Bold').click()
 
-      cy.get(`#${editorContentId}`).should('contain.html', `<p><strong>${textToType}</strong></p>`)
+      cy.get(`#${editorContentId}`).should(
+        'contain.html',
+        `<p class="${RichTextEditorCustomClasses.PARAGRAPH}"><strong class="${RichTextEditorCustomClasses.BOLD}">${textToType}</strong></p>`
+      )
 
       cy.findByLabelText('Bold').should('have.attr', 'aria-pressed', 'true')
     })
@@ -114,7 +132,10 @@ describe('RichTextEditor', () => {
 
       cy.findByLabelText('Italic').click()
 
-      cy.get(`#${editorContentId}`).should('contain.html', `<p><em>${textToType}</em></p>`)
+      cy.get(`#${editorContentId}`).should(
+        'contain.html',
+        `<p class="${RichTextEditorCustomClasses.PARAGRAPH}"><em class="${RichTextEditorCustomClasses.ITALIC}">${textToType}</em></p>`
+      )
 
       cy.findByLabelText('Italic').should('have.attr', 'aria-pressed', 'true')
     })
@@ -128,7 +149,10 @@ describe('RichTextEditor', () => {
 
       cy.findByLabelText('Underline').click()
 
-      cy.get(`#${editorContentId}`).should('contain.html', `<p><u>${textToType}</u></p>`)
+      cy.get(`#${editorContentId}`).should(
+        'contain.html',
+        `<p class="${RichTextEditorCustomClasses.PARAGRAPH}"><u class="${RichTextEditorCustomClasses.UNDERLINE}">${textToType}</u></p>`
+      )
 
       cy.findByLabelText('Underline').should('have.attr', 'aria-pressed', 'true')
     })
@@ -142,7 +166,10 @@ describe('RichTextEditor', () => {
 
       cy.findByLabelText('Strikethrough').click()
 
-      cy.get(`#${editorContentId}`).should('contain.html', `<p><s>${textToType}</s></p>`)
+      cy.get(`#${editorContentId}`).should(
+        'contain.html',
+        `<p class="${RichTextEditorCustomClasses.PARAGRAPH}"><s class="${RichTextEditorCustomClasses.STRIKE}">${textToType}</s></p>`
+      )
 
       cy.findByLabelText('Strikethrough').should('have.attr', 'aria-pressed', 'true')
     })
@@ -156,7 +183,10 @@ describe('RichTextEditor', () => {
 
       cy.findByLabelText('Unordered list').click()
 
-      cy.get(`#${editorContentId}`).should('contain.html', `<ul><li><p>${textToType}</p></li></ul>`)
+      cy.get(`#${editorContentId}`).should(
+        'contain.html',
+        `<ul class="${RichTextEditorCustomClasses.BULLET_LIST}"><li><p class="${RichTextEditorCustomClasses.PARAGRAPH}">${textToType}</p></li></ul>`
+      )
 
       cy.findByLabelText('Unordered list').should('have.attr', 'aria-pressed', 'true')
     })
@@ -170,7 +200,10 @@ describe('RichTextEditor', () => {
 
       cy.findByLabelText('Ordered list').click()
 
-      cy.get(`#${editorContentId}`).should('contain.html', `<ol><li><p>${textToType}</p></li></ol>`)
+      cy.get(`#${editorContentId}`).should(
+        'contain.html',
+        `<ol class="${RichTextEditorCustomClasses.ORDERED_LIST}"><li><p class="${RichTextEditorCustomClasses.PARAGRAPH}">${textToType}</p></li></ol>`
+      )
 
       cy.findByLabelText('Ordered list').should('have.attr', 'aria-pressed', 'true')
     })
@@ -184,7 +217,10 @@ describe('RichTextEditor', () => {
 
       cy.findByLabelText('Code').click()
 
-      cy.get(`#${editorContentId}`).should('contain.html', `<p><code>${textToType}</code></p>`)
+      cy.get(`#${editorContentId}`).should(
+        'contain.html',
+        `<p class="${RichTextEditorCustomClasses.PARAGRAPH}"><code class="${RichTextEditorCustomClasses.CODE}">${textToType}</code></p>`
+      )
 
       cy.findByLabelText('Code').should('have.attr', 'aria-pressed', 'true')
     })
@@ -198,7 +234,10 @@ describe('RichTextEditor', () => {
 
       cy.findByLabelText('Code block').click()
 
-      cy.get(`#${editorContentId}`).should('contain.html', `<pre><code>${textToType}</code></pre>`)
+      cy.get(`#${editorContentId}`).should(
+        'contain.html',
+        `<pre class="${RichTextEditorCustomClasses.CODE_BLOCK}"><code>${textToType}</code></pre>`
+      )
 
       cy.findByLabelText('Code block').should('have.attr', 'aria-pressed', 'true')
     })
@@ -214,7 +253,7 @@ describe('RichTextEditor', () => {
 
       cy.get(`#${editorContentId}`).should(
         'contain.html',
-        `<blockquote><p>${textToType}</p></blockquote>`
+        `<blockquote class="${RichTextEditorCustomClasses.BLOCKQUOTE}"><p class="${RichTextEditorCustomClasses.PARAGRAPH}">${textToType}</p></blockquote>`
       )
 
       cy.findByLabelText('Blockquote').should('have.attr', 'aria-pressed', 'true')
@@ -236,7 +275,7 @@ describe('RichTextEditor', () => {
 
         cy.get(`#${editorContentId}`).should(
           'contain.html',
-          '<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.dataverse.com">Here goes a link</a></p>'
+          `<p class="${RichTextEditorCustomClasses.PARAGRAPH}"><a target="_blank" rel="noopener noreferrer nofollow" class="${RichTextEditorCustomClasses.LINK}" href="https://www.dataverse.com">Here goes a link</a></p>`
         )
       })
 
@@ -265,7 +304,10 @@ describe('RichTextEditor', () => {
 
         cy.findByRole('button', { name: 'OK' }).click()
 
-        cy.get(`#${editorContentId}`).should('contain.html', '<p>Here goes a link</p>')
+        cy.get(`#${editorContentId}`).should(
+          'contain.html',
+          `<p class="${RichTextEditorCustomClasses.PARAGRAPH}">Here goes a link</p>`
+        )
       })
     })
 
@@ -283,7 +325,10 @@ describe('RichTextEditor', () => {
 
         cy.findByLabelText('Undo').click()
 
-        cy.get(`#${editorContentId}`).should('contain.html', `<p>${textToType}</p>`)
+        cy.get(`#${editorContentId}`).should(
+          'contain.html',
+          `<p class="${RichTextEditorCustomClasses.PARAGRAPH}">${textToType}</p>`
+        )
 
         cy.clock().then((clock) => clock.restore())
       })
@@ -303,7 +348,10 @@ describe('RichTextEditor', () => {
 
         cy.findByLabelText('Redo').click()
 
-        cy.get(`#${editorContentId}`).should('contain.html', `<p>${textToType} added text</p>`)
+        cy.get(`#${editorContentId}`).should(
+          'contain.html',
+          `<p class="${RichTextEditorCustomClasses.PARAGRAPH}">${textToType} added text</p>`
+        )
 
         cy.clock().then((clock) => clock.restore())
       })
