@@ -13,6 +13,7 @@ import { CollectionItemsMother } from '../../../tests/component/collection/domai
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 
 export class CollectionMockRepository implements CollectionRepository {
   getById(_id?: string): Promise<Collection> {
@@ -101,6 +102,17 @@ export class CollectionMockRepository implements CollectionRepository {
       setTimeout(() => {
         resolve(CollectionFeaturedItemMother.createFeaturedItems())
       })
+    })
+  }
+
+  updateFeaturedItems(
+    _collectionId: string,
+    _featuredItemsDTO: CollectionFeaturedItemsDTO
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
     })
   }
 }

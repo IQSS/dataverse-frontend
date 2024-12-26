@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-// import { WriteError } from '@iqss/dataverse-client-javascript'
+import { WriteError } from '@iqss/dataverse-client-javascript'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import { FeaturedItemsFormData } from '../types'
 import { FeaturedItemsFormHelper } from './FeaturedItemsFormHelper'
+import { updateCollectionFeaturedItems } from '@/collection/domain/useCases/updateCollectionFeaturedItems'
+import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
+import { RouteWithParams } from '@/sections/Route.enum'
+import { FeaturedItemsFormData } from '../types'
 
 export enum SubmissionStatus {
   NotSubmitted = 'NotSubmitted',
@@ -40,46 +43,45 @@ export function useSubmitFeaturedItems(
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   const submitForm = (formCollectedData: FeaturedItemsFormData): void => {
-    // setSubmissionStatus(SubmissionStatus.IsSubmitting)
+    setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
-    console.log(formCollectedData)
-
-    const formData = new FormData()
+    const _formData = new FormData()
 
     const itemsDTO = FeaturedItemsFormHelper.defineFeaturedItemsDTO(formCollectedData.featuredItems)
 
+    // TODO: Send form data from SPA or trough JS Dataverse and from here send this itemsDTO only 👆
+
     console.log({ itemsDTO })
 
-    itemsDTO.forEach((item) => {
-      if (item.id) {
-        formData.append(`items[${item.order}][id]`, item.id)
-      }
-      formData.append(`items[${item.order}][order]`, JSON.stringify(item.order))
-      formData.append(`items[${item.order}][content]`, item.content)
-      formData.append(`items[${item.order}][keepFile]`, JSON.stringify(item.keepFile))
+    // itemsDTO.forEach((item) => {
+    //   if (item.id) {
+    //     formData.append(`items[${item.order}][id]`, item.id)
+    //   }
+    //   formData.append(`items[${item.order}][order]`, JSON.stringify(item.order))
+    //   formData.append(`items[${item.order}][content]`, item.content)
+    //   formData.append(`items[${item.order}][keepFile]`, JSON.stringify(item.keepFile))
 
-      if (item.file) {
-        formData.append(`items[${item.order}][file]`, item.file)
-      }
-    })
+    //   if (item.file) {
+    //     formData.append(`items[${item.order}][file]`, item.file)
+    //   }
+    // })
 
-    //   editCollection(collectionRepository, newOrUpdatedCollection, collectionIdOrParentCollectionId)
-    //     .then(() => {
-    //       setSubmitError(null)
-    //       setSubmissionStatus(SubmissionStatus.SubmitComplete)
+    updateCollectionFeaturedItems(collectionRepository, itemsDTO, collectionId)
+      .then(() => {
+        setSubmitError(null)
+        setSubmissionStatus(SubmissionStatus.SubmitComplete)
 
-    //       navigate(RouteWithParams.COLLECTIONS(newOrUpdatedCollection.alias), {
-    //         state: { edited: true }
-    //       })
-    //       return
-    //     })
-    //     .catch((err: WriteError) => {
-    //       const error = new JSDataverseWriteErrorHandler(err)
-    //       const formattedError = error.getReasonWithoutStatusCode() ?? error.getErrorMessage()
-    //       setSubmitError(formattedError)
-    //       setSubmissionStatus(SubmissionStatus.Errored)
-    //       onSubmitErrorCallback()
-    //     })
+        // TODO:ME Use toastify to easy show success message instead of using static alerts
+
+        navigate(RouteWithParams.COLLECTIONS(collectionId))
+      })
+      .catch((err: WriteError) => {
+        const error = new JSDataverseWriteErrorHandler(err)
+        const formattedError = error.getReasonWithoutStatusCode() ?? error.getErrorMessage()
+        setSubmitError(formattedError)
+        setSubmissionStatus(SubmissionStatus.Errored)
+        onSubmitErrorCallback()
+      })
   }
 
   return {

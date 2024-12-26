@@ -1,5 +1,5 @@
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
-import { FeaturedItemsFormData } from '../types'
+import { FeaturedItemField, FeaturedItemsFormData } from '../types'
 import {
   CollectionFeaturedItemDTO,
   CollectionFeaturedItemsDTO
@@ -26,6 +26,33 @@ export class FeaturedItemsFormHelper {
         image: imageUrl ? imageUrl : null,
         itemId: id
       }
+    })
+  }
+
+  static transformFormFieldsToFeaturedItems(
+    featureItemFieldValues: FeaturedItemField[]
+  ): CollectionFeaturedItem[] {
+    return featureItemFieldValues.map((field, index) => {
+      const { content, image, itemId } = field
+
+      const currentFeaturedItem: CollectionFeaturedItem = {
+        id: itemId ?? window.crypto.randomUUID(),
+        type: 'custom',
+        order: index,
+        content
+      }
+
+      if (image && image instanceof File) {
+        const objectUrl = URL.createObjectURL(image)
+
+        currentFeaturedItem.imageUrl = objectUrl
+      }
+
+      if (image && typeof image === 'string') {
+        currentFeaturedItem.imageUrl = image
+      }
+
+      return currentFeaturedItem
     })
   }
 

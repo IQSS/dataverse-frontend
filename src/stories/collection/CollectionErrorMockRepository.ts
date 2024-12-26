@@ -6,6 +6,7 @@ import { Collection } from '../../collection/domain/models/Collection'
 import { CollectionFacet } from '../../collection/domain/models/CollectionFacet'
 import { CollectionMockRepository } from './CollectionMockRepository'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 
 export class CollectionErrorMockRepository extends CollectionMockRepository {
   getById(_id?: string): Promise<Collection> {
@@ -37,6 +38,21 @@ export class CollectionErrorMockRepository extends CollectionMockRepository {
   }
 
   getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
-    return new Promise(() => {})
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Something went wrong')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  updateFeaturedItems(
+    _collectionId: string,
+    _featuredItemsDTO: CollectionFeaturedItemsDTO
+  ): Promise<void> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Something went wrong')
+      }, FakerHelper.loadingTimout())
+    })
   }
 }

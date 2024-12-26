@@ -3,37 +3,16 @@ import { useTranslation } from 'react-i18next'
 import { Accordion } from '@iqss/dataverse-design-system'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { FeaturedItems } from '@/sections/collection/featured-items/FeaturedItems'
+import { FeaturedItemsFormHelper } from './FeaturedItemsFormHelper'
 import { FeaturedItemField } from '../types'
 
 export const PreviewCarousel = () => {
   const { t } = useTranslation('collectionFeaturedItems')
-  const featuredItemsFieldValue = useWatch({ name: 'featuredItems' }) as FeaturedItemField[]
+  const featureItemFieldValues = useWatch({ name: 'featuredItems' }) as FeaturedItemField[]
 
-  const formFieldsToFeaturedItems: CollectionFeaturedItem[] = featuredItemsFieldValue.map(
-    (field, index) => {
-      const { title, content, image, itemId } = field
+  const formFieldsToFeaturedItems: CollectionFeaturedItem[] =
+    FeaturedItemsFormHelper.transformFormFieldsToFeaturedItems(featureItemFieldValues)
 
-      const currentFeaturedItem: CollectionFeaturedItem = {
-        id: itemId ?? window.crypto.randomUUID(),
-        type: 'custom',
-        order: index,
-        title,
-        content
-      }
-
-      if (image && image instanceof File) {
-        const objectUrl = URL.createObjectURL(image)
-
-        currentFeaturedItem.imageUrl = objectUrl
-      }
-
-      if (image && typeof image === 'string') {
-        currentFeaturedItem.imageUrl = image
-      }
-
-      return currentFeaturedItem
-    }
-  )
   return (
     <Accordion>
       <Accordion.Item eventKey="0" style={{ overflow: 'hidden' }}>
