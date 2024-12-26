@@ -1,10 +1,9 @@
-import { useRef } from 'react'
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { SortableContext } from '@dnd-kit/sortable'
 import { useTranslation } from 'react-i18next'
-import { Alert, Button } from '@iqss/dataverse-design-system'
+import { Button } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { FeaturedItemField } from './featured-item-field/FeaturedItemField'
@@ -26,21 +25,17 @@ export const FeaturedItemsForm = ({
   defaultValues,
   collectionFeaturedItems
 }: FeaturedItemsFormProps) => {
-  const { t } = useTranslation('collectionFeaturedItems')
   const { t: tShared } = useTranslation('shared')
 
-  const { submitForm, submissionStatus, submitError } = useSubmitFeaturedItems(
+  const { submitForm, submissionStatus } = useSubmitFeaturedItems(
     collectionId,
-    collectionRepository,
-    onSubmittedFeaturedItemsError
+    collectionRepository
   )
 
   const form = useForm<FeaturedItemsFormData>({
     mode: 'onChange',
     defaultValues
   })
-
-  const errorContainerRef = useRef<HTMLDivElement>(null)
 
   const {
     fields: fieldsArray,
@@ -96,29 +91,12 @@ export const FeaturedItemsForm = ({
     }, 0)
   }
 
-  function onSubmittedFeaturedItemsError() {
-    errorContainerRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-
   const disableSubmitButton =
     submissionStatus === SubmissionStatus.IsSubmitting || !form.formState.isDirty
 
   return (
     <FormProvider {...form}>
       <PreviewCarousel />
-      <div className={styles['error-container']} ref={errorContainerRef}>
-        {submissionStatus === SubmissionStatus.Errored && (
-          <Alert variant={'danger'} dismissible={false}>
-            {submitError}
-          </Alert>
-        )}
-      </div>
-
-      {submissionStatus === SubmissionStatus.SubmitComplete && (
-        <Alert variant="success" dismissible={false}>
-          {t('form.submitStatus.success')}
-        </Alert>
-      )}
 
       <form
         onSubmit={form.handleSubmit(submitForm)}

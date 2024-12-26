@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { useTranslation } from 'react-i18next'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { FeaturedItemsFormHelper } from './FeaturedItemsFormHelper'
@@ -32,10 +34,10 @@ type UseSubmitFeaturedItemsReturnType =
 
 export function useSubmitFeaturedItems(
   collectionId: string,
-  collectionRepository: CollectionRepository,
-  onSubmitErrorCallback: () => void
+  collectionRepository: CollectionRepository
 ): UseSubmitFeaturedItemsReturnType {
   const navigate = useNavigate()
+  const { t } = useTranslation('collectionFeaturedItems')
 
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
@@ -71,8 +73,7 @@ export function useSubmitFeaturedItems(
         setSubmitError(null)
         setSubmissionStatus(SubmissionStatus.SubmitComplete)
 
-        // TODO:ME Use toastify to easy show success message instead of using static alerts
-
+        toast.success(t('form.submitStatus.success'))
         navigate(RouteWithParams.COLLECTIONS(collectionId))
       })
       .catch((err: WriteError) => {
@@ -80,7 +81,8 @@ export function useSubmitFeaturedItems(
         const formattedError = error.getReasonWithoutStatusCode() ?? error.getErrorMessage()
         setSubmitError(formattedError)
         setSubmissionStatus(SubmissionStatus.Errored)
-        onSubmitErrorCallback()
+
+        toast.error(formattedError, { autoClose: false })
       })
   }
 
