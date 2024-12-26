@@ -12,7 +12,6 @@ import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionS
 import { CollectionItemsMother } from '../../../tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 
 export class CollectionMockRepository implements CollectionRepository {
@@ -100,7 +99,7 @@ export class CollectionMockRepository implements CollectionRepository {
   getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(CollectionFeaturedItemMother.createFeaturedItems())
+        resolve([])
       })
     })
   }

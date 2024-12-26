@@ -4,7 +4,8 @@ import { WithI18next } from '../WithI18next'
 import { WithLayout } from '../WithLayout'
 import { WithLoggedInUser } from '../WithLoggedInUser'
 import { CollectionMockRepository } from '../collection/CollectionMockRepository'
-import { CollectionLoadingMockRepository } from '../collection/CollectionLoadingMockRepository'
+import { FakerHelper } from '@tests/component/shared/FakerHelper'
+import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 
 const meta: Meta<typeof CollectionFeaturedItems> = {
   title: 'Pages/Collection Featured Items',
@@ -16,6 +17,7 @@ const meta: Meta<typeof CollectionFeaturedItems> = {
   }
 }
 export default meta
+
 type Story = StoryObj<typeof CollectionFeaturedItems>
 
 export const Default: Story = {
@@ -26,10 +28,20 @@ export const Default: Story = {
     />
   )
 }
-export const Loading: Story = {
+
+const collectionRepositoryWithFeaturedItems = new CollectionMockRepository()
+collectionRepositoryWithFeaturedItems.getFeaturedItems = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(CollectionFeaturedItemMother.createFeaturedItems())
+    }, FakerHelper.loadingTimout())
+  })
+}
+
+export const WithInitialFeaturedItems: Story = {
   render: () => (
     <CollectionFeaturedItems
-      collectionRepository={new CollectionLoadingMockRepository()}
+      collectionRepository={collectionRepositoryWithFeaturedItems}
       collectionIdFromParams="root"
     />
   )

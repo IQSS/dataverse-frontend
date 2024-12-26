@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
-import { Slider } from './silder/Slider'
+import { Slider } from './slider/Slider'
 import { FeaturedItem } from './FeaturedItem'
 import styles from './FeaturedItems.module.scss'
 
-interface FeaturedItemsProps {
+export interface FeaturedItemsProps {
   featuredItems: CollectionFeaturedItem[]
 }
 

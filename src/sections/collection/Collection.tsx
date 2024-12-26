@@ -6,6 +6,7 @@ import { useCollection } from './useCollection'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
 import { type UseCollectionQueryParamsReturnType } from './useGetCollectionQueryParams'
+import { useGetCollectionFeaturedItems } from './useGetCollectionFeaturedItems'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import AddDataActionsButton from '../shared/add-data-actions/AddDataActionsButton'
 import { CollectionItemsPanel } from './collection-items-panel/CollectionItemsPanel'
@@ -15,6 +16,7 @@ import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
 import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectionDropdown'
+import { FeaturedItemsCarousel } from './featured-items/FeaturedItemsCarousel'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {
@@ -38,7 +40,7 @@ export function Collection({
   useTranslation('collection')
   const { t } = useTranslation('collection')
   useScrollTop()
-  const { collection, isLoading } = useCollection(
+  const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
     collectionIdFromParams,
     published
@@ -47,6 +49,11 @@ export function Collection({
     collectionIdOrAlias: collectionIdFromParams,
     collectionRepository
   })
+
+  const { collectionFeaturedItems, isLoading: isLoadingCollectionFeaturedItems } =
+    useGetCollectionFeaturedItems(collectionRepository, collectionIdFromParams)
+
+  const hasFeaturedItems = collectionFeaturedItems.length > 0
 
   const canUserAddCollection = Boolean(collectionUserPermissions?.canAddCollection)
   const canUserEditCollection = Boolean(collectionUserPermissions?.canEditCollection)
@@ -57,7 +64,11 @@ export function Collection({
   const showPublishButton = !collection?.isReleased && canUserPublishCollection
   const showEditButton = canUserEditCollection
 
-  if (!isLoading && !collection) {
+  if (isLoadingCollection || isLoadingCollectionFeaturedItems) {
+    return <CollectionSkeleton />
+  }
+
+  if (!isLoadingCollection && !collection) {
     return <PageNotFound />
   }
 
@@ -80,6 +91,11 @@ export function Collection({
               <Alert variant="success" dismissible={false}>
                 {t('publishedAlert')}
               </Alert>
+            )}
+            {hasFeaturedItems && (
+              <div className={styles['featured-items-wrapper']}>
+                <FeaturedItemsCarousel featuredItems={collectionFeaturedItems} />
+              </div>
             )}
             {(showPublishButton || showEditButton) && (
               <div className={styles['action-buttons']}>
