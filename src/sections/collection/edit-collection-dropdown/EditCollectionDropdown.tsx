@@ -25,6 +25,10 @@ export const EditCollectionDropdown = ({ collection }: EditCollectionDropdownPro
     navigate(RouteWithParams.EDIT_COLLECTION(collection.id))
   }
 
+  const onClickEditFeaturedItems = () => {
+    navigate(RouteWithParams.COLLECTION_FEATURED_ITEMS(collection.id))
+  }
+
   return (
     <DropdownButton
       id="edit-collection-dropdown"
@@ -47,6 +51,9 @@ export const EditCollectionDropdown = ({ collection }: EditCollectionDropdownPro
       <DropdownSeparator />
       <DropdownButtonItem onClick={onClickEditGeneralInformation}>
         {t('editCollection.generalInfo')}
+      </DropdownButtonItem>
+      <DropdownButtonItem onClick={onClickEditFeaturedItems}>
+        {t('featuredItems.title')}
       </DropdownButtonItem>
     </DropdownButton>
   )

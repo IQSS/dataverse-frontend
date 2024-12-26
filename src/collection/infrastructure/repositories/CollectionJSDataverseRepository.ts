@@ -18,7 +18,7 @@ import { CollectionItemSubset } from '../../domain/models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCriteria'
 import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
-import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+// import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
@@ -76,7 +76,8 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
 
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(CollectionFeaturedItemMother.createFeaturedItems())
+        resolve([])
+        // resolve(CollectionFeaturedItemMother.createFeaturedItems())
       }, 1_000)
     })
   }
