@@ -4,6 +4,7 @@ import { Controller, UseControllerProps, useFormContext } from 'react-hook-form'
 import { Button, Col, Form, Stack, Tooltip } from '@iqss/dataverse-design-system'
 import { ArrowDownUp, ArrowCounterclockwise, XLg } from 'react-bootstrap-icons'
 import cn from 'classnames'
+import { FeaturedItemsFormHelper } from '../FeaturedItemsFormHelper'
 import styles from './FeaturedItemField.module.scss'
 
 interface ImageFieldProps {
@@ -11,7 +12,7 @@ interface ImageFieldProps {
   initialImageUrl?: string
 }
 
-const IMAGE_MAX_SIZE_ACCEPTED = 1_000_000 // 1MB
+export const FEATURED_ITEM_IMAGE_MAX_SIZE_ACCEPTED = 1_000_000 // 1MB
 
 export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
   const { control, setValue } = useFormContext()
@@ -30,13 +31,15 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
       setSelectedFileObjectURL(URL.createObjectURL(file))
     }
 
-    formOnChange(file || null)
+    formOnChange(file || /* istanbul ignore next */ null)
   }
 
   const rules: UseControllerProps['rules'] = {
     validate: (value) => {
-      if (value instanceof File && value.size > IMAGE_MAX_SIZE_ACCEPTED) {
-        return t('form.image.invalid.size', { maxImageSize: formatBytes(IMAGE_MAX_SIZE_ACCEPTED) })
+      if (value instanceof File && value.size > FEATURED_ITEM_IMAGE_MAX_SIZE_ACCEPTED) {
+        return t('form.image.invalid.size', {
+          maxImageSize: FeaturedItemsFormHelper.formatBytes(FEATURED_ITEM_IMAGE_MAX_SIZE_ACCEPTED)
+        })
       }
       return true
     }
@@ -76,7 +79,7 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
       <Form.Group.Label
         required={false}
         message={t('form.image.description', {
-          maxImageSize: formatBytes(IMAGE_MAX_SIZE_ACCEPTED)
+          maxImageSize: FeaturedItemsFormHelper.formatBytes(FEATURED_ITEM_IMAGE_MAX_SIZE_ACCEPTED)
         })}>
         {t('form.image.label')}
       </Form.Group.Label>
@@ -109,6 +112,7 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
                 {showFileInput && initialImageUrl && (
                   <Tooltip placement="top" overlay={t('form.image.restoreInitial')}>
                     <Button
+                      type="button"
                       onClick={handleRestoreInitialImage}
                       aria-label={t('form.image.restoreInitial')}>
                       <ArrowCounterclockwise />
@@ -120,11 +124,33 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
                 className={cn(styles['image-wrapper'], {
                   [styles['hide']]: showFileInput
                 })}>
-                {isExistingFile && <img src={castedValue} alt="Image preview" />}
+                {isExistingFile && (
+                  <img
+                    src={castedValue}
+                    alt="Image preview"
+                    data-testid={`existing-file-img-${itemIndex.toString()}`}
+                  />
+                )}
                 {isNewFileSelected && selectedFileObjectURL && (
-                  <img src={selectedFileObjectURL} alt="Image preview" />
+                  <img
+                    src={selectedFileObjectURL}
+                    alt="Image preview"
+                    data-testid={`selected-file-img-${itemIndex.toString()}`}
+                  />
                 )}
                 <div className={styles['image-actions']}>
+                  {initialImageUrl && selectedFileObjectURL && (
+                    <Tooltip placement="top" overlay={t('form.image.restoreInitial')}>
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={handleRestoreInitialImage}
+                        aria-label={t('form.image.restoreInitial')}>
+                        <ArrowCounterclockwise />
+                      </Button>
+                    </Tooltip>
+                  )}
+
                   <Tooltip placement="top" overlay={t('form.image.changeImage')}>
                     <Button
                       type="button"
@@ -154,16 +180,4 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
       />
     </Form.Group>
   )
-}
-
-const formatBytes = (bytes: number, decimals = 2) => {
-  if (!+bytes) return '0 Bytes'
-
-  const k = 1024
-  const dm = decimals < 0 ? 0 : decimals
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
 }

@@ -52,6 +52,7 @@ export const FeaturedItemField = ({
       id={id}
       ref={setNodeRef}
       style={style}
+      data-testid={`featured-item-${itemIndex.toString()}`}
       className={cn(styles['featured-item-fields-wrapper'], {
         [styles['sorting']]: isSorting,
         [styles['active']]: active?.id === id

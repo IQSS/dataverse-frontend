@@ -7,6 +7,8 @@ interface ContentFieldProps {
   itemIndex: number
 }
 
+export const FEATURED_ITEM_CONTENT_MAX_LENGTH_ACCEPTED = 15_000
+
 const ContentField = ({ itemIndex }: ContentFieldProps) => {
   const { control } = useFormContext()
   const { t } = useTranslation('editCollectionFeaturedItems')
@@ -14,8 +16,10 @@ const ContentField = ({ itemIndex }: ContentFieldProps) => {
   const rules: UseControllerProps['rules'] = {
     required: t('form.content.required'),
     maxLength: {
-      value: 15_000,
-      message: t('form.content.invalid.maxLength', { maxLength: 15_000 })
+      value: FEATURED_ITEM_CONTENT_MAX_LENGTH_ACCEPTED,
+      message: t('form.content.invalid.maxLength', {
+        maxLength: FEATURED_ITEM_CONTENT_MAX_LENGTH_ACCEPTED
+      })
     },
     validate: (value: string) => {
       const content = value.replace(/<p[^>]*>|<\/p>/g, '').trim()
