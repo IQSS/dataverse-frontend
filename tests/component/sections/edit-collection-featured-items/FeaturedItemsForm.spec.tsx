@@ -37,6 +37,9 @@ const formDefaultValues: FeaturedItemsFormData = {
 }
 
 describe('FeaturedItemsForm', () => {
+  beforeEach(() => {
+    cy.viewport(1280, 720)
+  })
   it('renders the default form correctly', () => {
     cy.mountAuthenticated(
       <FeaturedItemsForm
@@ -76,7 +79,6 @@ describe('FeaturedItemsForm', () => {
       cy.findByText('Order 1').should('exist').should('be.visible')
 
       cy.findByLabelText(/Content/)
-        .should('exist')
         .should('be.visible')
         .should('have.attr', 'aria-required', 'true')
         .should('contain', 'Featured Item One')
@@ -527,7 +529,7 @@ describe('FeaturedItemsForm', () => {
     })
   })
 
-  describe.only('Order Items Drag and Drop', () => {
+  describe('Order Items Drag and Drop', () => {
     it('should change the order of the items when dragging and dropping', () => {
       cy.mountAuthenticated(
         <FeaturedItemsForm
@@ -563,36 +565,32 @@ describe('FeaturedItemsForm', () => {
         // Drag and drop the second item to the first position
         cy.findByLabelText('press space to select and keys to drag')
           .as('dragHandle')
-          .focus()
-          .type('{enter}')
-          .type('{upArrow}')
-          .type('{upArrow}') // with two presses of down arrow, item A should be moved to the Item B position
-          .type('{enter}')
+          .realMouseDown()
+          .realMouseMove(0, -200)
+          .wait(200)
+          .realMouseUp()
       })
 
-      // cy.findAllByLabelText('press space to select and keys to drag').as('dragHandles')
+      // Now we assert that the order of the items has changed by checking the content of each item
+      cy.get('@first-item').within(() => {
+        cy.findByText('Order 1').should('exist').should('be.visible')
 
-      // cy.get('@dragHandles').should('have.length', 3)
+        cy.findByLabelText(/Content/)
+          .should('exist')
+          .should('be.visible')
+          .should('have.attr', 'aria-required', 'true')
+          .should('contain', 'Featured Item Two')
+      })
 
-      // cy.get('@dragHandles')
-      //   .first()
-      //   .focus()
-      //   .type('{enter}')
-      //   .type('{downArrow}')
-      //   .type('{downArrow}') // with two presses of down arrow, item A should be moved to the Item B position
-      //   .type('{enter}')
+      cy.get('@second-item').within(() => {
+        cy.findByText('Order 2').should('exist').should('be.visible')
 
-      // // Check the new order of items
-      // cy.get('@rightList').within(() => {
-      //   cy.get('[aria-roledescription="sortable"]').as('sortableItems')
-      //   cy.get('@sortableItems').should('have.length', 3)
-
-      //   cy.get('@sortableItems').spread((firstItem, secondItem, thirdItem) => {
-      //     cy.wrap(firstItem).should('contain.text', 'Item B')
-      //     cy.wrap(secondItem).should('contain.text', 'Item A')
-      //     cy.wrap(thirdItem).should('contain.text', 'Item C')
-      //   })
-      // })
+        cy.findByLabelText(/Content/)
+          .should('exist')
+          .should('be.visible')
+          .should('have.attr', 'aria-required', 'true')
+          .should('contain', 'Featured Item One')
+      })
     })
   })
 })

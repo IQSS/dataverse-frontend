@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "types": ["vite/client", "cypress", "@testing-library/cypress"],
+    "types": ["vite/client", "cypress", "@testing-library/cypress", "cypress-real-events"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
