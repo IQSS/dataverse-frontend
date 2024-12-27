@@ -97,19 +97,6 @@ export function Collection({
                 <FeaturedItemsCarousel featuredItems={collectionFeaturedItems} />
               </div>
             )}
-            {(showPublishButton || showEditButton) && (
-              <div className={styles['action-buttons']}>
-                <ButtonGroup>
-                  {showPublishButton && (
-                    <PublishCollectionButton
-                      repository={collectionRepository}
-                      collectionId={collection.id}
-                    />
-                  )}
-                  {showEditButton && <EditCollectionDropdown collection={collection} />}
-                </ButtonGroup>
-              </div>
-            )}
 
             <div className={styles['metrics-actions-container']}>
               <div className={styles.metrics}></div>

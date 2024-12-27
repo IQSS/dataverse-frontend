@@ -31,13 +31,13 @@ export const EditCollectionFeaturedItems = ({
     error: errorCollectionFeaturedItems
   } = useGetCollectionFeaturedItems(collectionRepository, collectionIdFromParams)
 
+  const isLoadingData = isLoading || isLoadingCollectionFeaturedItems
+
   useEffect(() => {
-    if (!isLoading && collection) {
+    if (!isLoadingData) {
       setIsLoading(false)
     }
-  }, [collection, isLoading, setIsLoading])
-
-  const isLoadingData = isLoading || isLoadingCollectionFeaturedItems
+  }, [isLoadingData, setIsLoading])
 
   if (!isLoading && !collection) {
     return <PageNotFound />
