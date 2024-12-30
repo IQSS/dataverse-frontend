@@ -12,6 +12,7 @@ interface SliderProps {
   prevLabel?: string
   dotLabel?: string
   className?: string
+  dataTestId?: string
 }
 
 export const Slider = ({
@@ -21,7 +22,8 @@ export const Slider = ({
   prevLabel = 'Previous',
   nextLabel = 'Next',
   dotLabel = 'Go to slide',
-  className
+  className,
+  dataTestId
 }: SliderProps) => {
   const sliderRef = useRef<HTMLDivElement | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -64,7 +66,8 @@ export const Slider = ({
           [styles['with-dots']]: showDots
         },
         className
-      )}>
+      )}
+      data-testid={dataTestId}>
       {showArrows && !oneItemOnly && (
         <Button
           className={styles['slider-arrow']}
