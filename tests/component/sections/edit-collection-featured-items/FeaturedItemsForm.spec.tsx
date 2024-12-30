@@ -531,7 +531,7 @@ describe('FeaturedItemsForm', () => {
   })
 
   describe('Order Items Drag and Drop', () => {
-    it.only('should change the order of the items when dragging and dropping', () => {
+    it('should change the order of the items when dragging and dropping', () => {
       cy.mountAuthenticated(
         <FeaturedItemsForm
           collectionId={testCollection.id}
