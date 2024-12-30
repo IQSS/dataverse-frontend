@@ -6,7 +6,8 @@ import {
 } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 
 export class FeaturedItemsFormHelper {
-  static defineDefaultFeaturedItems(
+  // To define the default form featured items values
+  static defineFormDefaultFeaturedItems(
     collectionFeaturedItems: CollectionFeaturedItem[]
   ): FeaturedItemsFormData['featuredItems'] {
     if (!collectionFeaturedItems.length) {
@@ -29,6 +30,7 @@ export class FeaturedItemsFormHelper {
     })
   }
 
+  // This method is to transform current form data into "actual featured items" to show the current preview while the user is editing
   static transformFormFieldsToFeaturedItems(
     featureItemFieldValues: FeaturedItemField[]
   ): CollectionFeaturedItem[] {
@@ -38,7 +40,7 @@ export class FeaturedItemsFormHelper {
       const currentFeaturedItem: CollectionFeaturedItem = {
         id: itemId ?? window.crypto.randomUUID(),
         type: 'custom',
-        order: index,
+        order: index + 1,
         content
       }
 
@@ -56,6 +58,7 @@ export class FeaturedItemsFormHelper {
     })
   }
 
+  // This method is to transform the form data into DTOs to send to the backend
   static defineFeaturedItemsDTO(
     formFeaturedItems: FeaturedItemsFormData['featuredItems']
   ): CollectionFeaturedItemsDTO {

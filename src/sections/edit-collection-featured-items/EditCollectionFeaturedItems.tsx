@@ -52,7 +52,7 @@ export const EditCollectionFeaturedItems = ({
   }
 
   const formDefaultValues: FeaturedItemsFormData = {
-    featuredItems: FeaturedItemsFormHelper.defineDefaultFeaturedItems(collectionFeaturedItems)
+    featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(collectionFeaturedItems)
   }
 
   return (

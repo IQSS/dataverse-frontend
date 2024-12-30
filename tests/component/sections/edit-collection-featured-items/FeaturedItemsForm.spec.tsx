@@ -7,6 +7,8 @@ import { FeaturedItemsFormData } from '@/sections/edit-collection-featured-items
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 
+// TODO:ME Test the form submition, way to test toast?
+
 const collectionRepository = {} as CollectionRepository
 const testCollection = CollectionMother.create({ name: 'Collection Name' })
 
@@ -29,11 +31,11 @@ const featuredItemTwo = CollectionFeaturedItemMother.createFeaturedItem({
 const testFeaturedItems = [featuredItemOne, featuredItemTwo]
 
 const emptyFeaturedItems = {
-  featuredItems: FeaturedItemsFormHelper.defineDefaultFeaturedItems([])
+  featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems([])
 }
 
 const formDefaultValues: FeaturedItemsFormData = {
-  featuredItems: FeaturedItemsFormHelper.defineDefaultFeaturedItems(testFeaturedItems)
+  featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(testFeaturedItems)
 }
 
 describe('FeaturedItemsForm', () => {
@@ -400,7 +402,7 @@ describe('FeaturedItemsForm', () => {
       ]
 
       const formDefaultValuesWith4Items: FeaturedItemsFormData = {
-        featuredItems: FeaturedItemsFormHelper.defineDefaultFeaturedItems(fourFeaturedItems)
+        featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(fourFeaturedItems)
       }
 
       cy.mountAuthenticated(
@@ -465,7 +467,7 @@ describe('FeaturedItemsForm', () => {
       const testFeaturedItemWithLongText = [featuredItemOne]
 
       const formDefaultValues: FeaturedItemsFormData = {
-        featuredItems: FeaturedItemsFormHelper.defineDefaultFeaturedItems(
+        featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(
           testFeaturedItemWithLongText
         )
       }
