@@ -1,4 +1,5 @@
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 import { FEATURED_ITEM_CONTENT_MAX_LENGTH_ACCEPTED } from '@/sections/edit-collection-featured-items/featured-items-form/featured-item-field/ContentField'
 import { FEATURED_ITEM_IMAGE_MAX_SIZE_ACCEPTED } from '@/sections/edit-collection-featured-items/featured-items-form/featured-item-field/ImageField'
 import { FeaturedItemsForm } from '@/sections/edit-collection-featured-items/featured-items-form/FeaturedItemsForm'
@@ -6,8 +7,6 @@ import { FeaturedItemsFormHelper } from '@/sections/edit-collection-featured-ite
 import { FeaturedItemsFormData } from '@/sections/edit-collection-featured-items/types'
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
-
-// TODO:ME Test the form submition, way to test toast?
 
 const collectionRepository = {} as CollectionRepository
 const testCollection = CollectionMother.create({ name: 'Collection Name' })
@@ -593,6 +592,124 @@ describe('FeaturedItemsForm', () => {
           .should('have.attr', 'aria-required', 'true')
           .should('contain', 'Featured Item One')
       })
+    })
+  })
+
+  describe('Form Submition', () => {
+    it('should submit the form with the new values and show toast', () => {
+      collectionRepository.updateFeaturedItems = cy.stub().as('updateFeaturedItems').resolves()
+
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={emptyFeaturedItems}
+          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        />
+      )
+
+      // Add content to the default empy first item
+      cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
+
+      cy.get('@first-item').within(() => {
+        cy.findByLabelText(/Content/).type('New Content')
+
+        cy.get(`[aria-label="Add Featured Item"]`).should('exist').should('be.visible').click()
+      })
+
+      // Add a second item with content and image
+      cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
+
+      cy.get('@second-item').within(() => {
+        cy.findByLabelText(/Content/).type('New Content 2')
+
+        cy.fixture('images/harvard_uni.png', null, { timeout: 10_0000 }).then(
+          (harvardUniImage: ArrayBuffer) => {
+            cy.findByLabelText(/Image/).selectFile(
+              {
+                contents: harvardUniImage,
+                fileName: 'harvard_uni.png',
+                mimeType: 'image/png'
+              },
+              { action: 'select' }
+            )
+          }
+        )
+      })
+
+      // Submit the form
+      cy.findByRole('button', { name: /Save Changes/ })
+        .should('be.visible')
+        .should('be.enabled')
+        .click()
+
+      cy.get('@updateFeaturedItems').should((spy) => {
+        const updateFeaturedItemsSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+        const collectionFeaturedItemsDTO = updateFeaturedItemsSpy.getCall(0)
+          .args[1] as CollectionFeaturedItemsDTO
+
+        console.log(collectionFeaturedItemsDTO[1].file)
+
+        expect(updateFeaturedItemsSpy).to.be.calledOnce
+
+        // First item, content only
+        expect(collectionFeaturedItemsDTO[0].id).to.eq(undefined)
+        expect(collectionFeaturedItemsDTO[0].order).to.eq(1)
+        expect(collectionFeaturedItemsDTO[0].content).to.eq(
+          '<p class="rte-paragraph">New Content</p>'
+        )
+        expect(collectionFeaturedItemsDTO[0].file).to.eq(undefined)
+        expect(collectionFeaturedItemsDTO[0].keepFile).to.eq(false)
+
+        // Second item with content and image
+        expect(collectionFeaturedItemsDTO[1].id).to.eq(undefined)
+        expect(collectionFeaturedItemsDTO[1].order).to.eq(2)
+        expect(collectionFeaturedItemsDTO[1].content).to.eq(
+          '<p class="rte-paragraph">New Content 2</p>'
+        )
+        expect(collectionFeaturedItemsDTO[1].file).to.not.eq(undefined)
+        expect(collectionFeaturedItemsDTO[1].file?.name).to.eq('harvard_uni.png')
+        expect(collectionFeaturedItemsDTO[1].keepFile).to.eq(false)
+      })
+
+      cy.findByText(/Featured items have been updated successfully./)
+        .should('exist')
+        .should('be.visible')
+    })
+
+    it('should show an error toast when the form submission fails', () => {
+      collectionRepository.updateFeaturedItems = cy
+        .stub()
+        .as('updateFeaturedItems')
+        .rejects(new Error('Test Error'))
+
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={emptyFeaturedItems}
+          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        />
+      )
+
+      // Add content to the default empy first item
+      cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
+
+      cy.get('@first-item').within(() => {
+        cy.findByLabelText(/Content/).type('New Content')
+      })
+
+      // Submit the form
+      cy.findByRole('button', { name: /Save Changes/ })
+        .should('be.visible')
+        .should('be.enabled')
+        .click()
+
+      cy.findByText(/Test Error/)
+        .should('exist')
+        .should('be.visible')
+
+      cy.findByText(/Featured items have been updated successfully./).should('not.exist')
     })
   })
 })
