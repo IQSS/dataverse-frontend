@@ -60,7 +60,7 @@ export const EditCollectionFeaturedItems = ({
       <BreadcrumbsGenerator
         hierarchy={collection.hierarchy}
         withActionItem
-        actionItemText="Featured Items"
+        actionItemText={t('pageTitle')}
       />
       <header>
         <h1>{t('pageTitle')}</h1>
@@ -68,7 +68,7 @@ export const EditCollectionFeaturedItems = ({
 
       <SeparationLine />
 
-      <Alert variant="info">{t('infoMessage')}</Alert>
+      {collectionFeaturedItems.length === 0 && <Alert variant="info">{t('infoMessage')}</Alert>}
 
       <FeaturedItemsForm
         collectionId={collection.id}

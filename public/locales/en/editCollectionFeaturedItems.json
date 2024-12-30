@@ -1,6 +1,6 @@
 {
   "pageTitle": "Featured Items",
-  "infoMessage": "Add Featured Items to showcase key content in your collection. These items will appear as cards in a carousel, each including a title and either text or text with an image. If your collection has a description, it will be the first carousel item by default.",
+  "infoMessage": "Add Featured Items to showcase key content in your collection. These items will appear as cards in a carousel, each including a rich text content with an optional image.",
   "previewCarouselHeader": "Live preview of your featured items",
   "form": {
     "image": {
