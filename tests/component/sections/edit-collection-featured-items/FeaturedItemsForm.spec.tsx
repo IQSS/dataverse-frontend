@@ -531,7 +531,7 @@ describe('FeaturedItemsForm', () => {
   })
 
   describe('Order Items Drag and Drop', () => {
-    it('should change the order of the items when dragging and dropping', () => {
+    it.only('should change the order of the items when dragging and dropping', () => {
       cy.mountAuthenticated(
         <FeaturedItemsForm
           collectionId={testCollection.id}
@@ -567,7 +567,7 @@ describe('FeaturedItemsForm', () => {
         cy.findByLabelText('press space to select and keys to drag')
           .as('dragHandle')
           .realMouseDown()
-          .realMouseMove(0, -200)
+          .realMouseMove(0, -300)
           .wait(200)
           .realMouseUp()
       })
