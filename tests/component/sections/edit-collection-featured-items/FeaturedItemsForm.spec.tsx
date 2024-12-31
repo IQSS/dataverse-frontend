@@ -540,6 +540,8 @@ describe('FeaturedItemsForm', () => {
       />
     )
 
+    cy.wait(200)
+
     cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
     cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
 
@@ -569,13 +571,13 @@ describe('FeaturedItemsForm', () => {
         .focus()
         .type('{enter}')
         .type(
-          '{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}',
+          '{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}',
           { delay: 100 }
         )
         .type('{enter}')
     })
 
-    cy.wait(500)
+    cy.wait(200)
 
     // Now we assert that the order of the items has changed by checking the content of each item
     cy.get('@first-item').within(() => {
