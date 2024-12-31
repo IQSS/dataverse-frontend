@@ -530,68 +530,70 @@ describe('FeaturedItemsForm', () => {
     })
   })
 
-  describe('Order Items Drag and Drop', () => {
-    it('should change the order of the items when dragging and dropping', () => {
-      cy.mountAuthenticated(
-        <FeaturedItemsForm
-          collectionId={testCollection.id}
-          collectionRepository={collectionRepository}
-          defaultValues={formDefaultValues}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
-        />
-      )
+  it('should change the order of the items ', () => {
+    cy.mountAuthenticated(
+      <FeaturedItemsForm
+        collectionId={testCollection.id}
+        collectionRepository={collectionRepository}
+        defaultValues={formDefaultValues}
+        collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+      />
+    )
 
-      cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
-      cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
+    cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
+    cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
 
-      cy.get('@first-item').within(() => {
-        cy.findByText('Order 1').should('exist').should('be.visible')
+    cy.get('@first-item').within(() => {
+      cy.findByText('Order 1').should('exist').should('be.visible')
 
-        cy.findByLabelText(/Content/)
-          .should('exist')
-          .should('be.visible')
-          .should('have.attr', 'aria-required', 'true')
-          .should('contain', 'Featured Item One')
-      })
+      cy.findByLabelText(/Content/)
+        .should('exist')
+        .should('be.visible')
+        .should('have.attr', 'aria-required', 'true')
+        .should('contain', 'Featured Item One')
+    })
 
-      cy.get('@second-item').within(() => {
-        cy.findByText('Order 2').should('exist').should('be.visible')
+    cy.get('@second-item').within(() => {
+      cy.findByText('Order 2').should('exist').should('be.visible')
 
-        cy.findByLabelText(/Content/)
-          .should('exist')
-          .should('be.visible')
-          .should('have.attr', 'aria-required', 'true')
-          .should('contain', 'Featured Item Two')
+      cy.findByLabelText(/Content/)
+        .should('exist')
+        .should('be.visible')
+        .should('have.attr', 'aria-required', 'true')
+        .should('contain', 'Featured Item Two')
+    })
+    // Focus the first item and move it to the second position with the keys
+    cy.get('@first-item').within(() => {
+      cy.findByLabelText('press space to select and keys to drag')
+        .as('dragHandle')
+        .focus()
+        .type('{enter}')
+        .type(
+          '{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}',
+          { delay: 100 }
+        )
+        .type('{enter}')
+    })
 
-        // Drag and drop the second item to the first position
-        cy.findByLabelText('press space to select and keys to drag')
-          .as('dragHandle')
-          .realMouseDown()
-          .realMouseMove(0, -300)
-          .wait(200)
-          .realMouseUp()
-      })
+    // Now we assert that the order of the items has changed by checking the content of each item
+    cy.get('@first-item').within(() => {
+      cy.findByText('Order 1').should('exist').should('be.visible')
 
-      // Now we assert that the order of the items has changed by checking the content of each item
-      cy.get('@first-item').within(() => {
-        cy.findByText('Order 1').should('exist').should('be.visible')
+      cy.findByLabelText(/Content/)
+        .should('exist')
+        .should('be.visible')
+        .should('have.attr', 'aria-required', 'true')
+        .should('contain', 'Featured Item Two')
+    })
 
-        cy.findByLabelText(/Content/)
-          .should('exist')
-          .should('be.visible')
-          .should('have.attr', 'aria-required', 'true')
-          .should('contain', 'Featured Item Two')
-      })
+    cy.get('@second-item').within(() => {
+      cy.findByText('Order 2').should('exist').should('be.visible')
 
-      cy.get('@second-item').within(() => {
-        cy.findByText('Order 2').should('exist').should('be.visible')
-
-        cy.findByLabelText(/Content/)
-          .should('exist')
-          .should('be.visible')
-          .should('have.attr', 'aria-required', 'true')
-          .should('contain', 'Featured Item One')
-      })
+      cy.findByLabelText(/Content/)
+        .should('exist')
+        .should('be.visible')
+        .should('have.attr', 'aria-required', 'true')
+        .should('contain', 'Featured Item One')
     })
   })
 
