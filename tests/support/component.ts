@@ -16,7 +16,6 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 import '@cypress/code-coverage/support'
-import 'cypress-real-events'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 // Alternatively you can use CommonJS syntax:
