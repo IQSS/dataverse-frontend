@@ -575,6 +575,8 @@ describe('FeaturedItemsForm', () => {
         .type('{enter}')
     })
 
+    cy.wait(500)
+
     // Now we assert that the order of the items has changed by checking the content of each item
     cy.get('@first-item').within(() => {
       cy.findByText('Order 1').should('exist').should('be.visible')
