@@ -18,6 +18,7 @@ export const FormTextArea = React.forwardRef(function FormTextArea(
   return (
     <FormBS.Control
       as="textarea"
+      rows={5}
       disabled={disabled}
       name={name}
       isValid={isValid}
