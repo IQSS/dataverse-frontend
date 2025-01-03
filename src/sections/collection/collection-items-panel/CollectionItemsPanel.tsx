@@ -1,19 +1,25 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { Stack } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
-import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
+import {
+  CollectionSearchCriteria,
+  FilterQuery
+} from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
+import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
 import { useGetAccumulatedItems } from './useGetAccumulatedItems'
 import { UseCollectionQueryParamsReturnType } from '../useGetCollectionQueryParams'
 import { useLoadMoreOnPopStateEvent } from './useLoadMoreOnPopStateEvent'
 import { useLoading } from '@/sections/loading/LoadingContext'
-import { QueryParamKey } from '../../Route.enum'
 import { CollectionHelper } from '../CollectionHelper'
 import { FilterPanel } from './filter-panel/FilterPanel'
 import { ItemsList } from './items-list/ItemsList'
 import { SearchPanel } from './search-panel/SearchPanel'
 import { ItemTypeChange } from './filter-panel/type-filters/TypeFilters'
+import { RemoveAddFacetFilter } from './filter-panel/facets-filters/FacetFilterGroup'
+import { SelectedFacets } from './selected-facets/SelectedFacets'
 import styles from './CollectionItemsPanel.module.scss'
 
 interface CollectionItemsPanelProps {
@@ -30,7 +36,8 @@ interface CollectionItemsPanelProps {
  * 2. When the user scrolls to the bottom of the list and there are more items to load
  * 3. When the user submits a search query in the search panel
  * 4. When the user changes the item types in the filter panel
- * 5. When the user navigates back and forward in the browser
+ * 5. When the user selects or removes a facet filter
+ * 6. When the user navigates back and forward in the browser
  *
  * It initializes the search criteria with the query params in the URL.
  * By default if no query params are present in the URL, the search query is empty and the item types are COLLECTION and DATASET.
@@ -51,7 +58,10 @@ export const CollectionItemsPanel = ({
   // This object will update every time we update a query param in the URL with the setSearchParams setter
   const currentSearchCriteria = new CollectionSearchCriteria(
     collectionQueryParams.searchQuery,
-    collectionQueryParams.typesQuery || [CollectionItemType.COLLECTION, CollectionItemType.DATASET]
+    collectionQueryParams.typesQuery || [CollectionItemType.COLLECTION, CollectionItemType.DATASET],
+    undefined,
+    undefined,
+    collectionQueryParams.filtersQuery
   )
 
   const [paginationInfo, setPaginationInfo] = useState<CollectionItemsPaginationInfo>(
@@ -62,6 +72,7 @@ export const CollectionItemsPanel = ({
   const {
     isLoadingItems,
     accumulatedItems,
+    facets,
     totalAvailable,
     hasNextPage,
     error,
@@ -97,20 +108,23 @@ export const CollectionItemsPanel = ({
     if (searchValue === '') {
       // Update the URL without the search value, keep other querys
       setSearchParams((currentSearchParams) => {
-        currentSearchParams.delete(QueryParamKey.QUERY)
+        currentSearchParams.delete(CollectionItemsQueryParams.QUERY)
         return currentSearchParams
       })
     } else {
       // Update the URL with the search value ,keep other querys and include all item types always
-      setSearchParams((currentSearchParams) => ({
-        ...currentSearchParams,
-        [QueryParamKey.COLLECTION_ITEM_TYPES]: [
-          CollectionItemType.COLLECTION,
-          CollectionItemType.DATASET,
-          CollectionItemType.FILE
-        ].join(','),
-        [QueryParamKey.QUERY]: searchValue
-      }))
+      setSearchParams((currentSearchParams) => {
+        currentSearchParams.set(
+          CollectionItemsQueryParams.TYPES,
+          [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(
+            ','
+          )
+        )
+
+        currentSearchParams.set(CollectionItemsQueryParams.QUERY, searchValue)
+
+        return currentSearchParams
+      })
     }
 
     // WHEN SEARCHING, WE RESET THE PAGINATION INFO AND KEEP ALL ITEM TYPES!!
@@ -137,24 +151,73 @@ export const CollectionItemsPanel = ({
           (itemType) => itemType !== type
         )
 
-    // KEEP SEARCH VALUE IF EXISTS
     itemsListContainerRef.current?.scrollTo({ top: 0 })
 
     const resetPaginationInfo = new CollectionItemsPaginationInfo()
     setPaginationInfo(resetPaginationInfo)
 
-    // Update the URL with the new item types, keep other querys and include the search value if exists
-    setSearchParams((currentSearchParams) => ({
-      ...currentSearchParams,
-      [QueryParamKey.COLLECTION_ITEM_TYPES]: newItemsTypes.join(','),
-      ...(currentSearchCriteria.searchText && {
-        [QueryParamKey.QUERY]: currentSearchCriteria.searchText
-      })
-    }))
+    // Update the URL with the new item types, keep other querys
+    setSearchParams((currentSearchParams) => {
+      currentSearchParams.set(CollectionItemsQueryParams.TYPES, newItemsTypes.join(','))
+
+      return currentSearchParams
+    })
 
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
       currentSearchCriteria.searchText,
-      newItemsTypes
+      newItemsTypes,
+      undefined,
+      undefined,
+      currentSearchCriteria.filterQueries
+    )
+
+    const totalItemsCount = await loadMore(resetPaginationInfo, newCollectionSearchCriteria, true)
+
+    if (totalItemsCount !== undefined) {
+      const paginationInfoUpdated = resetPaginationInfo.withTotal(totalItemsCount)
+      setPaginationInfo(paginationInfoUpdated)
+    }
+  }
+
+  const handleFacetChange = async (filterQuery: FilterQuery, removeOrAdd: RemoveAddFacetFilter) => {
+    const newFilterQueries =
+      removeOrAdd === RemoveAddFacetFilter.ADD
+        ? [
+            ...new Set([
+              ...(currentSearchCriteria?.filterQueries ?? /* istanbul ignore next */ []),
+              filterQuery
+            ])
+          ]
+        : (currentSearchCriteria.filterQueries ?? /* istanbul ignore next */ []).filter(
+            (fQuery) => fQuery !== filterQuery
+          )
+
+    itemsListContainerRef.current?.scrollTo({ top: 0 })
+
+    const resetPaginationInfo = new CollectionItemsPaginationInfo()
+    setPaginationInfo(resetPaginationInfo)
+
+    const newFilterQueriesWithFacetValueEncoded = newFilterQueries.map((fq) => {
+      const [facetName, facetValue] = fq.split(':')
+      return `${facetName}:${encodeURIComponent(facetValue)}`
+    })
+
+    // Update the URL with the new facets, keep other querys and include the search value if exists
+    setSearchParams((currentSearchParams) => {
+      currentSearchParams.set(
+        CollectionItemsQueryParams.FILTER_QUERIES,
+        newFilterQueriesWithFacetValueEncoded.join(',')
+      )
+
+      return currentSearchParams
+    })
+
+    const newCollectionSearchCriteria = new CollectionSearchCriteria(
+      currentSearchCriteria.searchText,
+      currentSearchCriteria.itemTypes,
+      undefined,
+      undefined,
+      newFilterQueries
     )
 
     const totalItemsCount = await loadMore(resetPaginationInfo, newCollectionSearchCriteria, true)
@@ -171,7 +234,10 @@ export const CollectionItemsPanel = ({
 
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
       collectionQueryParams.searchQuery,
-      collectionQueryParams.typesQuery
+      collectionQueryParams.typesQuery,
+      undefined,
+      undefined,
+      collectionQueryParams.filtersQuery
     )
 
     const newPaginationInfo = new CollectionItemsPaginationInfo()
@@ -182,6 +248,9 @@ export const CollectionItemsPanel = ({
       setPaginationInfo(paginationInfoUpdated)
     }
   }
+
+  const showSelectedFacets =
+    currentSearchCriteria.filterQueries && currentSearchCriteria.filterQueries.length > 0
 
   useEffect(() => {
     setIsLoading(isLoadingItems)
@@ -202,24 +271,40 @@ export const CollectionItemsPanel = ({
         <FilterPanel
           currentItemTypes={currentSearchCriteria.itemTypes}
           onItemTypesChange={handleItemsTypeChange}
+          currentFilterQueries={currentSearchCriteria.filterQueries}
+          facets={facets}
+          onFacetChange={handleFacetChange}
           isLoadingCollectionItems={isLoadingItems}
         />
 
-        <ItemsList
-          parentCollectionAlias={collectionId}
-          items={accumulatedItems}
-          error={error}
-          accumulatedCount={accumulatedCount}
-          isLoadingItems={isLoadingItems}
-          areItemsAvailable={areItemsAvailable}
-          hasNextPage={hasNextPage}
-          isEmptyItems={isEmptyItems}
-          hasSearchValue={currentSearchCriteria.hasSearchText()}
-          itemsTypesSelected={currentSearchCriteria.itemTypes as CollectionItemType[]}
-          paginationInfo={paginationInfo}
-          onBottomReach={handleLoadMoreOnBottomReach}
-          ref={itemsListContainerRef}
-        />
+        <Stack direction="vertical" gap={2}>
+          {showSelectedFacets && facets.length > 0 && (
+            <SelectedFacets
+              onRemoveFacet={(filterQuery: FilterQuery) =>
+                handleFacetChange(filterQuery, RemoveAddFacetFilter.REMOVE)
+              }
+              selectedFilterQueries={currentSearchCriteria.filterQueries}
+              isLoadingCollectionItems={isLoadingItems}
+            />
+          )}
+
+          <ItemsList
+            parentCollectionAlias={collectionId}
+            items={accumulatedItems}
+            error={error}
+            accumulatedCount={accumulatedCount}
+            isLoadingItems={isLoadingItems}
+            areItemsAvailable={areItemsAvailable}
+            hasNextPage={hasNextPage}
+            isEmptyItems={isEmptyItems}
+            hasSearchValue={currentSearchCriteria.hasSearchText()}
+            itemsTypesSelected={currentSearchCriteria.itemTypes as CollectionItemType[]}
+            filterQueriesSelected={currentSearchCriteria.filterQueries ?? []}
+            paginationInfo={paginationInfo}
+            onBottomReach={handleLoadMoreOnBottomReach}
+            ref={itemsListContainerRef}
+          />
+        </Stack>
       </div>
     </section>
   )
