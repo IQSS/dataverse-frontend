@@ -3,7 +3,11 @@
   "remove": "Remove",
   "add": "Add",
   "cancel": "Cancel",
+  "close": "Close",
   "continue": "Continue",
+  "more": "More...",
+  "less": "Less...",
+  "share": "Share",
   "pageNumberNotFound": {
     "heading": "Page Number Not Found",
     "message": "The page number you requested does not exist. Please try a different page number."

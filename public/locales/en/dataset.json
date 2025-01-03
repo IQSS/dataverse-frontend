@@ -59,7 +59,12 @@
         "archivalZip": "Archival Format (.tab) ZIP"
       }
     },
-    "uploadFiles": "Upload Files"
+    "uploadFiles": "Upload Files",
+    "share": {
+      "shareDataset": "Share Dataset",
+      "helpText": "Share this dataset on your favorite social media networks."
+    },
+    "contactOwner": "Contact Owner"
   },
   "alerts": {
     "publishInProgress": {
