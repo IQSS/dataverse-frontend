@@ -64,6 +64,9 @@ export function Collection({
   const showPublishButton = !collection?.isReleased && canUserPublishCollection
   const showEditButton = canUserEditCollection
 
+  // TODO:ME - If collection is unpublished, in order to see the featuredItems the user should be able to canViewUnpublishedCollection
+  // getFeaturedItems should be called only if the collection is published or the user canViewUnpublishedCollection but after the collection is loaded, so in a presentational component better
+
   if (isLoadingCollection || isLoadingCollectionFeaturedItems) {
     return <CollectionSkeleton />
   }
