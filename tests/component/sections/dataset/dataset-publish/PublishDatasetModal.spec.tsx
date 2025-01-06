@@ -199,6 +199,12 @@ describe('PublishDatasetModal', () => {
     cy.findByText(
       /Due to the nature of the changes to the current draft this will be a major release \(2\.0\)/
     ).should('exist')
+    cy.findByText('Continue').click()
+    cy.get('@repositoryPublish').should(
+      'have.been.calledWith',
+      'testPersistentId',
+      VersionUpdateType.MAJOR
+    )
   })
 
   it('Displays warning text for unreleased Collection', () => {

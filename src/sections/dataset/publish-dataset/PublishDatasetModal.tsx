@@ -47,7 +47,6 @@ export function PublishDatasetModal({
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const navigate = useNavigate()
-  console.log('requiresMajorVersionUpdate', requiresMajorVersionUpdate)
   const { submissionStatus, submitPublish, publishError } = usePublishDataset(
     repository,
     collectionRepository,
@@ -139,7 +138,10 @@ export function PublishDatasetModal({
         <Button
           variant="primary"
           onClick={() => {
-            submitPublish(selectedVersionUpdateType)
+            const versionUpdateType = requiresMajorVersionUpdate
+              ? VersionUpdateType.MAJOR
+              : selectedVersionUpdateType
+            submitPublish(versionUpdateType)
           }}
           type="submit">
           {t('publish.continueButton')}
