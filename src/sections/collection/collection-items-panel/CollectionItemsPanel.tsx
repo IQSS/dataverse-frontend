@@ -5,7 +5,9 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import {
   CollectionSearchCriteria,
-  FilterQuery
+  FilterQuery,
+  OrderType,
+  SortType
 } from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
 import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
@@ -31,13 +33,14 @@ interface CollectionItemsPanelProps {
 
 /**
  * HOW IT WORKS:
- * This component loads items on 5 different scenarios:
+ * This component loads items on the following scenarios:
  * 1. When the component mounts
  * 2. When the user scrolls to the bottom of the list and there are more items to load
  * 3. When the user submits a search query in the search panel
  * 4. When the user changes the item types in the filter panel
  * 5. When the user selects or removes a facet filter
  * 6. When the user navigates back and forward in the browser
+ * 7. When the user changes the sort and order of the items
  *
  * It initializes the search criteria with the query params in the URL.
  * By default if no query params are present in the URL, the search query is empty and the item types are COLLECTION and DATASET.
@@ -59,8 +62,8 @@ export const CollectionItemsPanel = ({
   const currentSearchCriteria = new CollectionSearchCriteria(
     collectionQueryParams.searchQuery,
     collectionQueryParams.typesQuery || [CollectionItemType.COLLECTION, CollectionItemType.DATASET],
-    undefined,
-    undefined,
+    collectionQueryParams.sortQuery,
+    collectionQueryParams.orderQuery,
     collectionQueryParams.filtersQuery
   )
 
@@ -105,32 +108,33 @@ export const CollectionItemsPanel = ({
     const resetPaginationInfo = new CollectionItemsPaginationInfo()
     setPaginationInfo(resetPaginationInfo)
 
-    if (searchValue === '') {
-      // Update the URL without the search value, keep other querys
-      setSearchParams((currentSearchParams) => {
+    // When searching, we reset the item types to COLLECTION, DATASET and FILE. Other filters are cleared
+    setSearchParams((currentSearchParams) => {
+      if (searchValue === '') {
         currentSearchParams.delete(CollectionItemsQueryParams.QUERY)
-        return currentSearchParams
-      })
-    } else {
-      // Update the URL with the search value ,keep other querys and include all item types always
-      setSearchParams((currentSearchParams) => {
-        currentSearchParams.set(
-          CollectionItemsQueryParams.TYPES,
-          [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(
-            ','
-          )
-        )
-
+      } else {
         currentSearchParams.set(CollectionItemsQueryParams.QUERY, searchValue)
+      }
+      currentSearchParams.set(
+        CollectionItemsQueryParams.TYPES,
+        [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(
+          ','
+        )
+      )
 
-        return currentSearchParams
-      })
-    }
+      currentSearchParams.delete(CollectionItemsQueryParams.SORT)
+      currentSearchParams.delete(CollectionItemsQueryParams.ORDER)
+      currentSearchParams.delete(CollectionItemsQueryParams.FILTER_QUERIES)
+      return currentSearchParams
+    })
 
     // WHEN SEARCHING, WE RESET THE PAGINATION INFO AND KEEP ALL ITEM TYPES!!
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
       searchValue === '' ? undefined : searchValue,
-      [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE]
+      [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE],
+      undefined,
+      undefined,
+      undefined
     )
 
     const totalItemsCount = await loadMore(resetPaginationInfo, newCollectionSearchCriteria, true)
@@ -166,8 +170,47 @@ export const CollectionItemsPanel = ({
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
       currentSearchCriteria.searchText,
       newItemsTypes,
-      undefined,
-      undefined,
+      currentSearchCriteria.sort,
+      currentSearchCriteria.order,
+      currentSearchCriteria.filterQueries
+    )
+
+    const totalItemsCount = await loadMore(resetPaginationInfo, newCollectionSearchCriteria, true)
+
+    if (totalItemsCount !== undefined) {
+      const paginationInfoUpdated = resetPaginationInfo.withTotal(totalItemsCount)
+      setPaginationInfo(paginationInfoUpdated)
+    }
+  }
+
+  const handleSortChange = async (sort?: SortType, order?: OrderType) => {
+    itemsListContainerRef.current?.scrollTo({ top: 0 })
+
+    const resetPaginationInfo = new CollectionItemsPaginationInfo()
+    setPaginationInfo(resetPaginationInfo)
+
+    // Update the URL with the new sort and order, keep other querys
+    setSearchParams((currentSearchParams) => {
+      if (sort !== undefined) {
+        currentSearchParams.set(CollectionItemsQueryParams.SORT, sort)
+      } else {
+        currentSearchParams.delete(CollectionItemsQueryParams.SORT)
+      }
+
+      if (order !== undefined) {
+        currentSearchParams.set(CollectionItemsQueryParams.ORDER, order)
+      } else {
+        currentSearchParams.delete(CollectionItemsQueryParams.ORDER)
+      }
+
+      return currentSearchParams
+    })
+
+    const newCollectionSearchCriteria = new CollectionSearchCriteria(
+      currentSearchCriteria.searchText,
+      currentSearchCriteria.itemTypes,
+      sort,
+      order,
       currentSearchCriteria.filterQueries
     )
 
@@ -215,8 +258,8 @@ export const CollectionItemsPanel = ({
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
       currentSearchCriteria.searchText,
       currentSearchCriteria.itemTypes,
-      undefined,
-      undefined,
+      currentSearchCriteria.sort,
+      currentSearchCriteria.order,
       newFilterQueries
     )
 
@@ -235,8 +278,8 @@ export const CollectionItemsPanel = ({
     const newCollectionSearchCriteria = new CollectionSearchCriteria(
       collectionQueryParams.searchQuery,
       collectionQueryParams.typesQuery,
-      undefined,
-      undefined,
+      collectionQueryParams.sortQuery,
+      collectionQueryParams.orderQuery,
       collectionQueryParams.filtersQuery
     )
 
@@ -300,8 +343,11 @@ export const CollectionItemsPanel = ({
             hasSearchValue={currentSearchCriteria.hasSearchText()}
             itemsTypesSelected={currentSearchCriteria.itemTypes as CollectionItemType[]}
             filterQueriesSelected={currentSearchCriteria.filterQueries ?? []}
+            sortSelected={currentSearchCriteria.sort}
+            orderSelected={currentSearchCriteria.order}
             paginationInfo={paginationInfo}
             onBottomReach={handleLoadMoreOnBottomReach}
+            onSortChange={handleSortChange}
             ref={itemsListContainerRef}
           />
         </Stack>
