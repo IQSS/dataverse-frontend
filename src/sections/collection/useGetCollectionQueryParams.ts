@@ -1,8 +1,11 @@
 import { useSearchParams } from 'react-router-dom'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
-import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
+import {
+  FilterQuery,
+  SortType,
+  OrderType
+} from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionHelper } from './CollectionHelper'
-import { SortType, OrderType } from '@/collection/domain/models/CollectionSearchCriteria'
 
 export interface UseCollectionQueryParamsReturnType {
   pageQuery: number
