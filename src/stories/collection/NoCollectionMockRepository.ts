@@ -33,6 +33,7 @@ export class NoCollectionMockRepository extends CollectionMockRepository {
       setTimeout(() => {
         resolve({
           items: [],
+          facets: [],
           totalItemCount: 0
         })
       }, FakerHelper.loadingTimout())

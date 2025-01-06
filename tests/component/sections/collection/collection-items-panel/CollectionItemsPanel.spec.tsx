@@ -17,7 +17,9 @@ const items = CollectionItemsMother.createItems({
   numberOfFiles: 3
 })
 
-const itemsWithCount: CollectionItemSubset = { items, totalItemCount }
+const facets = CollectionItemsMother.createItemsFacets()
+
+const itemsWithCount: CollectionItemSubset = { items, facets, totalItemCount }
 
 describe('CollectionItemsPanel', () => {
   beforeEach(() => {
@@ -34,7 +36,8 @@ describe('CollectionItemsPanel', () => {
         collectionQueryParams={{
           pageQuery: 1,
           searchQuery: undefined,
-          typesQuery: undefined
+          typesQuery: undefined,
+          filtersQuery: undefined
         }}
         addDataSlot={null}
       />
@@ -46,7 +49,11 @@ describe('CollectionItemsPanel', () => {
   describe('NoItemsMessage', () => {
     it('renders correct no items message when there are no collection, dataset or files', () => {
       const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = { items: emptyItems, totalItemCount: 0 }
+      const emptyItemsWithCount: CollectionItemSubset = {
+        items: emptyItems,
+        facets: [],
+        totalItemCount: 0
+      }
       collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.customMount(
@@ -60,7 +67,8 @@ describe('CollectionItemsPanel', () => {
               CollectionItemType.COLLECTION,
               CollectionItemType.DATASET,
               CollectionItemType.FILE
-            ]
+            ],
+            filtersQuery: undefined
           }}
           addDataSlot={null}
         />
@@ -73,7 +81,11 @@ describe('CollectionItemsPanel', () => {
 
     it('renders correct no items message when there are no collections', () => {
       const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = { items: emptyItems, totalItemCount: 0 }
+      const emptyItemsWithCount: CollectionItemSubset = {
+        items: emptyItems,
+        facets: [],
+        totalItemCount: 0
+      }
       collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.customMount(
@@ -83,7 +95,8 @@ describe('CollectionItemsPanel', () => {
           collectionQueryParams={{
             pageQuery: 1,
             searchQuery: undefined,
-            typesQuery: [CollectionItemType.COLLECTION]
+            typesQuery: [CollectionItemType.COLLECTION],
+            filtersQuery: undefined
           }}
           addDataSlot={null}
         />
@@ -94,7 +107,11 @@ describe('CollectionItemsPanel', () => {
 
     it('renders correct no items message when there are no datasets', () => {
       const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = { items: emptyItems, totalItemCount: 0 }
+      const emptyItemsWithCount: CollectionItemSubset = {
+        items: emptyItems,
+        facets: [],
+        totalItemCount: 0
+      }
       collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.customMount(
@@ -104,7 +121,8 @@ describe('CollectionItemsPanel', () => {
           collectionQueryParams={{
             pageQuery: 1,
             searchQuery: undefined,
-            typesQuery: [CollectionItemType.DATASET]
+            typesQuery: [CollectionItemType.DATASET],
+            filtersQuery: undefined
           }}
           addDataSlot={null}
         />
@@ -115,7 +133,11 @@ describe('CollectionItemsPanel', () => {
 
     it('renders correct no items message when there are no files', () => {
       const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = { items: emptyItems, totalItemCount: 0 }
+      const emptyItemsWithCount: CollectionItemSubset = {
+        items: emptyItems,
+        facets: [],
+        totalItemCount: 0
+      }
       collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.customMount(
@@ -125,7 +147,8 @@ describe('CollectionItemsPanel', () => {
           collectionQueryParams={{
             pageQuery: 1,
             searchQuery: undefined,
-            typesQuery: [CollectionItemType.FILE]
+            typesQuery: [CollectionItemType.FILE],
+            filtersQuery: undefined
           }}
           addDataSlot={null}
         />
@@ -136,7 +159,11 @@ describe('CollectionItemsPanel', () => {
 
     it('renders correct no items message when there are no collections and datasets', () => {
       const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = { items: emptyItems, totalItemCount: 0 }
+      const emptyItemsWithCount: CollectionItemSubset = {
+        items: emptyItems,
+        facets: [],
+        totalItemCount: 0
+      }
       collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.customMount(
@@ -146,7 +173,8 @@ describe('CollectionItemsPanel', () => {
           collectionQueryParams={{
             pageQuery: 1,
             searchQuery: undefined,
-            typesQuery: [CollectionItemType.COLLECTION, CollectionItemType.DATASET]
+            typesQuery: [CollectionItemType.COLLECTION, CollectionItemType.DATASET],
+            filtersQuery: undefined
           }}
           addDataSlot={null}
         />
@@ -157,7 +185,11 @@ describe('CollectionItemsPanel', () => {
 
     it('renders correct no items message when there are no collections and files', () => {
       const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = { items: emptyItems, totalItemCount: 0 }
+      const emptyItemsWithCount: CollectionItemSubset = {
+        items: emptyItems,
+        facets: [],
+        totalItemCount: 0
+      }
       collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.customMount(
@@ -167,7 +199,8 @@ describe('CollectionItemsPanel', () => {
           collectionQueryParams={{
             pageQuery: 1,
             searchQuery: undefined,
-            typesQuery: [CollectionItemType.COLLECTION, CollectionItemType.FILE]
+            typesQuery: [CollectionItemType.COLLECTION, CollectionItemType.FILE],
+            filtersQuery: undefined
           }}
           addDataSlot={null}
         />
@@ -178,7 +211,11 @@ describe('CollectionItemsPanel', () => {
 
     it('renders correct no items message when there are no datasets and files', () => {
       const emptyItems: CollectionItem[] = []
-      const emptyItemsWithCount: CollectionItemSubset = { items: emptyItems, totalItemCount: 0 }
+      const emptyItemsWithCount: CollectionItemSubset = {
+        items: emptyItems,
+        facets: [],
+        totalItemCount: 0
+      }
       collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
       cy.customMount(
@@ -188,7 +225,8 @@ describe('CollectionItemsPanel', () => {
           collectionQueryParams={{
             pageQuery: 1,
             searchQuery: undefined,
-            typesQuery: [CollectionItemType.DATASET, CollectionItemType.FILE]
+            typesQuery: [CollectionItemType.DATASET, CollectionItemType.FILE],
+            filtersQuery: undefined
           }}
           addDataSlot={null}
         />
@@ -200,7 +238,11 @@ describe('CollectionItemsPanel', () => {
 
   it('renders the no search results message when there are no items matching the search query', () => {
     const emptyItems: CollectionItem[] = []
-    const emptyItemsWithCount: CollectionItemSubset = { items: emptyItems, totalItemCount: 0 }
+    const emptyItemsWithCount: CollectionItemSubset = {
+      items: emptyItems,
+      facets: [],
+      totalItemCount: 0
+    }
     collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
 
     cy.customMount(
@@ -210,7 +252,36 @@ describe('CollectionItemsPanel', () => {
         collectionQueryParams={{
           pageQuery: 1,
           searchQuery: 'some search',
-          typesQuery: undefined
+          typesQuery: undefined,
+          filtersQuery: undefined
+        }}
+        addDataSlot={null}
+      />
+    )
+
+    cy.findByText(/There are no collections, datasets, or files that match your search./).should(
+      'exist'
+    )
+  })
+
+  it('renders the no search results message when there are no items matching the facet filters', () => {
+    const emptyItems: CollectionItem[] = []
+    const emptyItemsWithCount: CollectionItemSubset = {
+      items: emptyItems,
+      facets: [],
+      totalItemCount: 0
+    }
+    collectionRepository.getItems = cy.stub().resolves(emptyItemsWithCount)
+
+    cy.customMount(
+      <CollectionItemsPanel
+        collectionId={ROOT_COLLECTION_ALIAS}
+        collectionRepository={collectionRepository}
+        collectionQueryParams={{
+          pageQuery: 1,
+          searchQuery: 'some search',
+          typesQuery: undefined,
+          filtersQuery: ['some:filter']
         }}
         addDataSlot={null}
       />
@@ -231,7 +302,8 @@ describe('CollectionItemsPanel', () => {
         collectionQueryParams={{
           pageQuery: 1,
           searchQuery: undefined,
-          typesQuery: undefined
+          typesQuery: undefined,
+          filtersQuery: undefined
         }}
         addDataSlot={null}
       />
@@ -248,7 +320,8 @@ describe('CollectionItemsPanel', () => {
         collectionQueryParams={{
           pageQuery: 1,
           searchQuery: undefined,
-          typesQuery: undefined
+          typesQuery: undefined,
+          filtersQuery: undefined
         }}
         addDataSlot={null}
       />
@@ -267,7 +340,8 @@ describe('CollectionItemsPanel', () => {
         collectionQueryParams={{
           pageQuery: 1,
           searchQuery: undefined,
-          typesQuery: undefined
+          typesQuery: undefined,
+          filtersQuery: undefined
         }}
         addDataSlot={null}
       />
@@ -285,7 +359,8 @@ describe('CollectionItemsPanel', () => {
         collectionQueryParams={{
           pageQuery: 1,
           searchQuery: undefined,
-          typesQuery: undefined
+          typesQuery: undefined,
+          filtersQuery: undefined
         }}
         addDataSlot={null}
       />
@@ -304,6 +379,7 @@ describe('CollectionItemsPanel', () => {
     const first4Elements = items.slice(0, 4)
     const first4ElementsWithCount: CollectionItemSubset = {
       items: first4Elements,
+      facets,
       totalItemCount: 4
     }
     collectionRepository.getItems = cy.stub().resolves(first4ElementsWithCount)
@@ -315,7 +391,8 @@ describe('CollectionItemsPanel', () => {
         collectionQueryParams={{
           pageQuery: 1,
           searchQuery: undefined,
-          typesQuery: undefined
+          typesQuery: undefined,
+          filtersQuery: undefined
         }}
         addDataSlot={null}
       />
@@ -334,7 +411,8 @@ describe('CollectionItemsPanel', () => {
         collectionQueryParams={{
           pageQuery: 1,
           searchQuery: undefined,
-          typesQuery: undefined
+          typesQuery: undefined,
+          filtersQuery: undefined
         }}
         addDataSlot={null}
       />
@@ -358,7 +436,8 @@ describe('CollectionItemsPanel', () => {
           collectionQueryParams={{
             pageQuery: 1,
             searchQuery: undefined,
-            typesQuery: undefined
+            typesQuery: undefined,
+            filtersQuery: undefined
           }}
           addDataSlot={null}
         />
@@ -379,7 +458,8 @@ describe('CollectionItemsPanel', () => {
           collectionQueryParams={{
             pageQuery: 1,
             searchQuery: undefined,
-            typesQuery: undefined
+            typesQuery: undefined,
+            filtersQuery: undefined
           }}
           addDataSlot={null}
         />
@@ -402,7 +482,8 @@ describe('CollectionItemsPanel', () => {
           collectionQueryParams={{
             pageQuery: 1,
             searchQuery: 'something',
-            typesQuery: undefined
+            typesQuery: undefined,
+            filtersQuery: undefined
           }}
           addDataSlot={null}
         />
@@ -417,6 +498,38 @@ describe('CollectionItemsPanel', () => {
       cy.findByRole('checkbox', { name: /Files/ }).uncheck()
     })
 
+    it('show selected filters on top of items list', () => {
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: undefined,
+            filtersQuery: ['dvCategory:Department', 'authorName_ss:Admin, Dataverse']
+          }}
+          addDataSlot={null}
+        />
+      )
+
+      cy.findAllByRole('button', { name: /Department/ })
+        .should('exist')
+        .should('have.length', 2)
+
+      cy.findAllByRole('button', { name: /Department/ })
+        .first()
+        .click()
+
+      cy.findAllByRole('button', { name: /Admin, Dataverse/ })
+        .should('exist')
+        .should('have.length', 2)
+
+      cy.findAllByRole('button', { name: /Admin, Dataverse/ })
+        .first()
+        .click()
+    })
+
     it('it calls the loadItemsOnBackAndForwardNavigation on pop state event when navigating back and forward', () => {
       cy.customMount(
         <CollectionItemsPanel
@@ -425,7 +538,8 @@ describe('CollectionItemsPanel', () => {
           collectionQueryParams={{
             pageQuery: 1,
             searchQuery: undefined,
-            typesQuery: undefined
+            typesQuery: undefined,
+            filtersQuery: undefined
           }}
           addDataSlot={null}
         />

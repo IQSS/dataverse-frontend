@@ -58,6 +58,7 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
 
         return {
           items: collectionItemsPreviewsMapped,
+          facets: jsCollectionItemSubset.facets,
           totalItemCount: jsCollectionItemSubset.totalItemCount
         }
       })
