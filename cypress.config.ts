@@ -20,7 +20,7 @@ export default defineConfig({
   },
   component: {
     indexHtmlFile: 'tests/support/component-index.html',
-    specPattern: ['tests/component/**/FeaturedItemsForm.spec.tsx'],
+    specPattern: ['tests/component/**/*.spec.{js,jsx,ts,tsx}'],
     supportFile: 'tests/support/component.ts',
     fixturesFolder: 'tests/component/fixtures',
     devServer: {
