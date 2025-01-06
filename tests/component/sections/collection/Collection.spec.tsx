@@ -240,4 +240,20 @@ describe('Collection page', () => {
 
     cy.findByTestId('featured-items-slider').should('exist')
   })
+
+  it('does not show the collection featured items carousel when there are no featured items', () => {
+    collectionRepository.getFeaturedItems = cy.stub().resolves([])
+
+    cy.customMount(
+      <Collection
+        collectionRepository={collectionRepository}
+        collectionIdFromParams="collection"
+        created={false}
+        published={false}
+        collectionQueryParams={{ pageQuery: 1 }}
+      />
+    )
+
+    cy.findByTestId('featured-items-slider').should('not.exist')
+  })
 })

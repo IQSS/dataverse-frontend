@@ -1,9 +1,8 @@
 @use 'sass:color';
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
-.featured-items-slider {
-  padding-top: 2rem;
-  background-color: color.adjust($dv-secondary-color, $lightness: 10%);
+.featured-items-accordion {
+  margin-bottom: 1rem;
 }
 
 .featured-item-card {

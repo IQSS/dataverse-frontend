@@ -5,7 +5,6 @@ import { useCollection } from './useCollection'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
 import { type UseCollectionQueryParamsReturnType } from './useGetCollectionQueryParams'
-import { useGetCollectionFeaturedItems } from './useGetCollectionFeaturedItems'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import AddDataActionsButton from '../shared/add-data-actions/AddDataActionsButton'
 import { CollectionItemsPanel } from './collection-items-panel/CollectionItemsPanel'
@@ -16,7 +15,7 @@ import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
 import { ShareCollectionButton } from './share-collection-button/ShareCollectionButton'
 import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectionDropdown'
-import { FeaturedItemsCarousel } from './featured-items/FeaturedItemsCarousel'
+import { FeaturedItems } from './featured-items/FeaturedItems'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {
@@ -37,9 +36,8 @@ export function Collection({
   edited,
   collectionQueryParams
 }: CollectionProps) {
-  useTranslation('collection')
-  const { t } = useTranslation('collection')
   useScrollTop()
+  const { t } = useTranslation('collection')
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
     collectionIdFromParams,
@@ -50,24 +48,20 @@ export function Collection({
     collectionRepository
   })
 
-  const { collectionFeaturedItems, isLoading: isLoadingCollectionFeaturedItems } =
-    useGetCollectionFeaturedItems(collectionRepository, collectionIdFromParams)
-
-  const hasFeaturedItems = collectionFeaturedItems.length > 0
-
   const canUserAddCollection = Boolean(collectionUserPermissions?.canAddCollection)
   const canUserEditCollection = Boolean(collectionUserPermissions?.canEditCollection)
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
   const canUserPublishCollection = Boolean(collectionUserPermissions?.canPublishCollection)
+  const canUserViewUnpublishedCollection = Boolean(
+    collectionUserPermissions?.canViewUnpublishedCollection
+  )
 
   const showAddDataActions = canUserAddCollection || canUserAddDataset
   const showPublishButton = !collection?.isReleased && canUserPublishCollection
   const showEditButton = canUserEditCollection
+  const showCollectionFeaturedItems = canUserViewUnpublishedCollection || collection?.isReleased
 
-  // TODO:ME - If collection is unpublished, in order to see the featuredItems the user should be able to canViewUnpublishedCollection
-  // getFeaturedItems should be called only if the collection is published or the user canViewUnpublishedCollection but after the collection is loaded, so in a presentational component better
-
-  if (isLoadingCollection || isLoadingCollectionFeaturedItems) {
+  if (isLoadingCollection) {
     return <CollectionSkeleton />
   }
 
@@ -95,10 +89,11 @@ export function Collection({
                 {t('publishedAlert')}
               </Alert>
             )}
-            {hasFeaturedItems && (
-              <div className={styles['featured-items-wrapper']}>
-                <FeaturedItemsCarousel featuredItems={collectionFeaturedItems} />
-              </div>
+            {showCollectionFeaturedItems && (
+              <FeaturedItems
+                collectionRepository={collectionRepository}
+                collectionId={collection.id}
+              />
             )}
 
             <div className={styles['metrics-actions-container']}>

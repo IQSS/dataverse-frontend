@@ -1,26 +1,43 @@
 import { useTranslation } from 'react-i18next'
-import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import { Accordion } from '@iqss/dataverse-design-system'
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { useGetCollectionFeaturedItems } from '../useGetCollectionFeaturedItems'
 import { Slider } from './slider/Slider'
 import { FeaturedItem } from './FeaturedItem'
 import styles from './FeaturedItems.module.scss'
 
 export interface FeaturedItemsProps {
-  featuredItems: CollectionFeaturedItem[]
+  collectionRepository: CollectionRepository
+  collectionId: string
 }
 
-export const FeaturedItems = ({ featuredItems }: FeaturedItemsProps) => {
+export const FeaturedItems = ({ collectionRepository, collectionId }: FeaturedItemsProps) => {
   const { t } = useTranslation('collection')
+  const { collectionFeaturedItems, isLoading: isLoadingCollectionFeaturedItems } =
+    useGetCollectionFeaturedItems(collectionRepository, collectionId)
+
+  const hasFeaturedItems = collectionFeaturedItems.length > 0
+
+  if (isLoadingCollectionFeaturedItems || !hasFeaturedItems) {
+    return null
+  }
 
   return (
-    <Slider
-      prevLabel={t('featuredItems.slider.prevLabel')}
-      nextLabel={t('featuredItems.slider.nextLabel')}
-      dotLabel={t('featuredItems.slider.dotLabel')}
-      className={styles['featured-items-slider']}
-      dataTestId="featured-items-slider"
-      items={featuredItems.map((featuredItem) => (
-        <FeaturedItem featuredItem={featuredItem} key={featuredItem.id} />
-      ))}
-    />
+    <Accordion className={styles['featured-items-accordion']}>
+      <Accordion.Item eventKey="0" style={{ overflow: 'hidden' }}>
+        <Accordion.Header>{t('featuredItems.title')}</Accordion.Header>
+        <Accordion.Body style={{ padding: 0, paddingTop: '2rem' }}>
+          <Slider
+            prevLabel={t('featuredItems.slider.prevLabel')}
+            nextLabel={t('featuredItems.slider.nextLabel')}
+            dotLabel={t('featuredItems.slider.dotLabel')}
+            dataTestId="featured-items-slider"
+            items={collectionFeaturedItems.map((featuredItem) => (
+              <FeaturedItem featuredItem={featuredItem} key={featuredItem.id} />
+            ))}
+          />
+        </Accordion.Body>
+      </Accordion.Item>
+    </Accordion>
   )
 }
