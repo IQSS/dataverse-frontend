@@ -37,7 +37,7 @@ const formDefaultValues: FeaturedItemsFormData = {
 
 describe('FeaturedItemsForm', () => {
   beforeEach(() => {
-    cy.viewport(1280, 720)
+    cy.viewport(1440, 824)
   })
   it('renders the default form correctly', () => {
     cy.mountAuthenticated(
@@ -566,7 +566,7 @@ describe('FeaturedItemsForm', () => {
         .focus()
         .type('{enter}')
         .type(
-          '{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}',
+          '{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}',
           { delay: 100 }
         )
         .type('{enter}')
