@@ -5,6 +5,7 @@ import cn from 'classnames'
 import { type CollectionItem } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
 import { CollectionItemType } from '@/collection/domain/models/CollectionItemType'
+import { FilterQuery } from '@/collection/domain/models/CollectionSearchCriteria'
 import { PaginationResultsInfo } from '@/sections/shared/pagination/PaginationResultsInfo'
 import { NO_COLLECTION_ITEMS } from '../useGetAccumulatedItems'
 import { ErrorItemsMessage } from './ErrorItemsMessage'
@@ -28,6 +29,7 @@ interface ItemsListProps {
   paginationInfo: CollectionItemsPaginationInfo
   onBottomReach: (paginationInfo: CollectionItemsPaginationInfo) => void
   itemsTypesSelected: CollectionItemType[]
+  filterQueriesSelected: FilterQuery[]
 }
 
 export const ItemsList = forwardRef(
@@ -44,7 +46,8 @@ export const ItemsList = forwardRef(
       hasSearchValue,
       paginationInfo,
       onBottomReach,
-      itemsTypesSelected
+      itemsTypesSelected,
+      filterQueriesSelected
     }: ItemsListProps,
     ref
   ) => {
@@ -56,17 +59,20 @@ export const ItemsList = forwardRef(
       rootMargin: '0px 0px 250px 0px'
     })
 
-    const showNoItemsMessage = !isLoadingItems && isEmptyItems && !hasSearchValue
-    const showNoSearchMatchesMessage = !isLoadingItems && isEmptyItems && hasSearchValue
+    const showNoItemsMessage =
+      !isLoadingItems && isEmptyItems && !hasSearchValue && filterQueriesSelected.length === 0
+    const showNoSearchMatchesMessage =
+      !isLoadingItems && isEmptyItems && (hasSearchValue || filterQueriesSelected.length > 0)
 
     const showSentrySkeleton = hasNextPage && !error && !isEmptyItems
     const showNotSentrySkeleton = isLoadingItems && isEmptyItems
 
     return (
-      <section ref={rootRef}>
+      <section ref={rootRef} className={styles['items-list-root-ref']}>
         <div
           className={cn(styles['items-list'], {
-            [styles['empty-or-error']]: isEmptyItems || error
+            [styles['empty-or-error']]: isEmptyItems || error,
+            [styles['only-one-or-two-items']]: items.length === 1 || items.length === 2
           })}
           tabIndex={0}
           ref={ref as ForwardedRef<HTMLDivElement>}
@@ -141,7 +147,7 @@ export const InitialLoadingSkeleton = () => (
       data-testid="collection-items-list-infinite-scroll-skeleton-header">
       <Skeleton width="17%" />
     </div>
-    <Skeleton height="109px" style={{ marginBottom: 6 }} />
+    <Skeleton height="109px" style={{ marginBottom: 6, marginTop: 16 }} />
     <Skeleton height="109px" style={{ marginBottom: 6 }} />
     <Skeleton height="109px" style={{ marginBottom: 6 }} />
     <Skeleton height="109px" style={{ marginBottom: 6 }} />

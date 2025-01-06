@@ -40,7 +40,10 @@ export function usePublishCollection(
         return
       })
       .catch((err) => {
-        const errorMessage = err instanceof Error && err.message ? err.message : 'Unknown Error' // TODO: i18n
+        const errorMessage =
+          err instanceof Error && err.message
+            ? err.message
+            : 'Something went wrong while trying to publish the collection. Please try again later.'
 
         setPublishError(errorMessage)
         setSubmissionStatus(SubmissionStatus.Errored)

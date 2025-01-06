@@ -55,17 +55,12 @@ export const NestedButtonGroups: Story = {
   render: () => (
     <ButtonToolbar ariaLabel="Toolbar with button groups">
       <ButtonGroup vertical>
-        <DropdownButton asButtonGroup withSpacing title="Access File" id="access-file">
+        <DropdownButton asButtonGroup title="Access File" id="access-file">
           <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
           <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
           <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>
         </DropdownButton>
-        <DropdownButton
-          asButtonGroup
-          withSpacing
-          title="Edit File"
-          id="edit-file"
-          variant="secondary">
+        <DropdownButton asButtonGroup title="Edit File" id="edit-file" variant="secondary">
           <DropdownButtonItem href="/item-1">Item 1</DropdownButtonItem>
           <DropdownButtonItem href="/item-2">Item 2</DropdownButtonItem>
           <DropdownButtonItem href="/item-3">Item 3</DropdownButtonItem>

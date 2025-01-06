@@ -3,7 +3,11 @@
   "remove": "Remove",
   "add": "Add",
   "cancel": "Cancel",
+  "close": "Close",
   "continue": "Continue",
+  "more": "More...",
+  "less": "Less...",
+  "share": "Share",
   "pageNumberNotFound": {
     "heading": "Page Number Not Found",
     "message": "The page number you requested does not exist. Please try a different page number."
@@ -58,6 +62,92 @@
     },
     "saveButton": {
       "createMode": "Save Dataset",
+      "editMode": "Save Changes"
+    },
+    "cancelButton": "Cancel"
+  },
+  "collectionForm": {
+    "fields": {
+      "hostCollection": {
+        "label": "Host Collection",
+        "description": "The collection which contains this data.",
+        "required": "Host Collection is required"
+      },
+      "name": {
+        "label": "Collection Name",
+        "description": "The project, department, university, professor, or journal this collection will contain data for.",
+        "required": "Collection Name is required"
+      },
+      "affiliation": {
+        "label": "Affiliation",
+        "description": "The organization with which this collection is affiliated."
+      },
+      "alias": {
+        "label": "Identifier",
+        "description": "Short name used for the URL of this collection.",
+        "required": "Identifier is required",
+        "invalid": {
+          "format": "Identifier is not valid. Valid characters are a-Z, 0-9, '_', and '-'.",
+          "maxLength": "Identifier must be at most {{maxLength}} characters."
+        },
+        "suggestion": "Psst... try this"
+      },
+      "storage": {
+        "label": "Storage",
+        "description": "A storage service to be used for datasets in this collection."
+      },
+      "type": {
+        "label": "Category",
+        "description": "The type that most closely reflects this collection.",
+        "required": "Category is required"
+      },
+      "description": {
+        "label": "Description",
+        "description": "A summary describing the purpose, nature or scope of this collection.",
+        "subLabel": "This field supports only certain <htmlTooltip>HTML tags</htmlTooltip>.",
+        "htmlAllowedTags": "<a>, <b>, <blockquote>, <br>, <code>, <del>, <dd>, <dl>, <dt>, <em>, <hr>, <h1>-<h3>, <i>, <img>, <kbd>, <li>, <ol>, <p>, <pre>, <s>, <sup>, <sub>, <strong>, <strike>, <u>, <ul>"
+      },
+      "contacts": {
+        "label": "Email",
+        "description": "The email address(es) of the contact(s) for the collection.",
+        "required": "Email is required",
+        "invalid": "Email is not a valid email"
+      },
+      "metadataFields": {
+        "sectionLabel": "Metadata Fields",
+        "helperText": "Choose the metadata fields to use in dataset templates and when adding a dataset to this collection.",
+        "useMetadataFieldsFrom": "Use metadata fields from",
+        "inputLevelsTable": {
+          "hideTableAriaLabel": "Hide input levels table",
+          "requiredByDataverse": "Required by Dataverse",
+          "hidden": "Hidden",
+          "optional": "Optional",
+          "required": "Required",
+          "conditionallyRequired": "Conditionally Required"
+        }
+      },
+      "browseSearchFacets": {
+        "label": "Browse/Search Facets",
+        "helperText": "Choose and order the metadata fields to use as facets when browsing this collection.",
+        "useBrowseSearchFacetsFrom": "Use browse/search facets from",
+        "selectedFacets": "Selected",
+        "invalid": {
+          "minLength": "At least one facet must be selected."
+        }
+      }
+    },
+    "confirmResetModal": {
+      "title": "Reset Modifications",
+      "warning": "Are you sure you want to reset the selected metadata fields? If you do this, any customizations (hidden, required, optional) you have done will no longer appear.",
+      "continue": "Continue",
+      "cancel": "Cancel"
+    },
+    "submitStatus": {
+      "createSuccess": "Collection created successfully.",
+      "editSuccess": "Collection updated successfully."
+    },
+    "saveButton": {
+      "createMode": "Create Collection",
       "editMode": "Save Changes"
     },
     "cancelButton": "Cancel"

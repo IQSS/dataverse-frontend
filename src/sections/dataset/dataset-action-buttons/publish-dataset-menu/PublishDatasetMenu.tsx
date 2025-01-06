@@ -47,6 +47,7 @@ export function PublishDatasetMenu({
         releasedVersionExists={dataset.version.someDatasetVersionHasBeenReleased}
         nextMajorVersion={dataset.nextMajorVersion}
         nextMinorVersion={dataset.nextMinorVersion}
+        requiresMajorVersionUpdate={dataset.requiresMajorVersionUpdate}
         handleClose={() => setShowModal(false)}
       />
 

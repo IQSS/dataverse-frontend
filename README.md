@@ -223,6 +223,10 @@ The environment is accessible through the following URLs:
 > #### Account Page BreadCrumbs
 >
 > The Account Page has been updated to remove breadcrumbs, as the page is not part of the main navigation.
+>
+> #### Share Collection and Dataset feature
+>
+> Links to share a collection or a dataset via LinkedIn, X or Facebook will now open in a new tab instead of a popup.
 
 </details>
 

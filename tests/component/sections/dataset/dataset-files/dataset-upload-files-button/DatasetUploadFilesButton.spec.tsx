@@ -56,7 +56,9 @@ describe('DatasetUploadFilesButton', () => {
     cy.findByRole('button', { name: 'Upload Files' }).should('exist').should('be.disabled')
   })
 
-  it.skip('calls upload files use case when button is clicked', () => {
-    // TODO - Implement upload files
+  it('test click', () => {
+    cy.mountAuthenticated(withDataset(<DatasetUploadFilesButton />, datasetWithUpdatePermissions))
+
+    cy.findByRole('button', { name: 'Upload Files' }).click()
   })
 })

@@ -2,8 +2,9 @@ import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Form, CloseButton } from '@iqss/dataverse-design-system'
 import { Search as SearchIcon } from 'react-bootstrap-icons'
-import { QueryParamKey, Route } from '../../Route.enum'
+import { Route } from '../../Route.enum'
 import { CollectionItemType } from '../../../collection/domain/models/CollectionItemType'
+import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
 import styles from './SearchInput.module.scss'
 
 export const SearchInput = () => {
@@ -25,9 +26,9 @@ export const SearchInput = () => {
     const encodedSearchValue = encodeURIComponent(trimmedSearchValue)
 
     const searchParams = new URLSearchParams()
-    searchParams.set(QueryParamKey.QUERY, encodedSearchValue)
+    searchParams.set(CollectionItemsQueryParams.QUERY, encodedSearchValue)
     searchParams.set(
-      QueryParamKey.COLLECTION_ITEM_TYPES,
+      CollectionItemsQueryParams.TYPES,
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(',')
     )
 

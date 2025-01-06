@@ -5,8 +5,10 @@ import {
   DatasetMetadataBlocks as JSDatasetMetadataBlocks,
   DatasetMetadataFields as JSDatasetMetadataFields,
   DatasetUserPermissions as JSDatasetPermissions,
+  DatasetVersionDiff as JSDatasetVersionDiff,
   DvObjectOwnerNode as JSUpwardHierarchyNode
 } from '@iqss/dataverse-client-javascript'
+import { DatasetVersionDiff } from '../../domain/models/DatasetVersionDiff'
 import {
   Dataset,
   DatasetDownloadUrls,
@@ -44,7 +46,8 @@ export class JSDatasetMapper {
     requestedVersion?: string,
     privateUrl?: PrivateUrl,
     latestPublishedVersionMajorNumber?: number,
-    latestPublishedVersionMinorNumber?: number
+    latestPublishedVersionMinorNumber?: number,
+    datasetVersionDiff?: JSDatasetVersionDiff
   ): Dataset {
     const version = JSDatasetVersionMapper.toVersion(
       jsDataset.versionId,
@@ -87,7 +90,8 @@ export class JSDatasetMapper {
       JSDatasetMapper.toNextMinorVersion(
         latestPublishedVersionMajorNumber,
         latestPublishedVersionMinorNumber
-      )
+      ),
+      JSDatasetMapper.toRequiresMajorVersionUpdate(datasetVersionDiff)
     ).build()
   }
 
@@ -116,6 +120,31 @@ export class JSDatasetMapper {
     return nextMinorVersion
   }
 
+  static toRequiresMajorVersionUpdate(
+    datasetVersionDiff: JSDatasetVersionDiff | undefined
+  ): boolean {
+    if (datasetVersionDiff === undefined) {
+      return false
+    }
+    const required =
+      ((datasetVersionDiff.filesAdded && datasetVersionDiff.filesAdded.length > 0) ||
+        (datasetVersionDiff.filesRemoved && datasetVersionDiff.filesRemoved.length > 0) ||
+        (datasetVersionDiff.filesReplaced && datasetVersionDiff.filesReplaced.length > 0)) ??
+      false
+    return required
+  }
+  static toDatasetVersionDiff(jsDatasetVersionDiff: JSDatasetVersionDiff): DatasetVersionDiff {
+    return {
+      oldVersion: jsDatasetVersionDiff.oldVersion,
+      newVersion: jsDatasetVersionDiff.newVersion,
+      metadataChanges: jsDatasetVersionDiff.metadataChanges,
+      filesAdded: jsDatasetVersionDiff.filesAdded,
+      filesRemoved: jsDatasetVersionDiff.filesRemoved,
+      fileChanges: jsDatasetVersionDiff.fileChanges,
+      filesReplaced: jsDatasetVersionDiff.filesReplaced,
+      termsOfAccess: jsDatasetVersionDiff.termsOfAccess
+    }
+  }
   static toDatasetTitle(jsDatasetMetadataBlocks: JSDatasetMetadataBlocks): string {
     return jsDatasetMetadataBlocks[0].fields.title
   }
