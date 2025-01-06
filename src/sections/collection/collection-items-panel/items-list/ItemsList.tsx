@@ -60,8 +60,7 @@ export const ItemsList = forwardRef(
       itemsTypesSelected,
       filterQueriesSelected,
       sortSelected,
-      orderSelected,
-      searchText
+      orderSelected
     }: ItemsListProps,
     ref
   ) => {
@@ -118,7 +117,7 @@ export const ItemsList = forwardRef(
                       isLoadingCollectionItems={isLoadingItems}
                       currentSortType={sortSelected}
                       currentSortOrder={orderSelected}
-                      currentSearchText={searchText}
+                      hasSearchValue={hasSearchValue}
                       onSortChange={onSortChange}></ItemsSortBy>
                   </Col>
                 </Row>

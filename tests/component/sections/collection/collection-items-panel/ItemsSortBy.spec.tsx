@@ -9,7 +9,7 @@ describe('ItemsSortBy', () => {
       <ItemsSortBy
         currentSortType={undefined}
         currentSortOrder={undefined}
-        currentSearchText={'searchText'}
+        hasSearchValue={true}
         isLoadingCollectionItems={false}
         onSortChange={onSortChange}></ItemsSortBy>
     )
@@ -41,7 +41,7 @@ describe('ItemsSortBy', () => {
         isLoadingCollectionItems={false}
         currentSortType={SortType.NAME}
         currentSortOrder={OrderType.DESC}
-        currentSearchText={'test'}
+        hasSearchValue={true}
         onSortChange={onSortChange}></ItemsSortBy>
     )
     cy.findByRole('button', { name: /Sort/ }).click()

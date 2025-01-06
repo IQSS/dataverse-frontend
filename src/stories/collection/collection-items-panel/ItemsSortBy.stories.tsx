@@ -2,14 +2,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../WithI18next'
 import { ItemsSortBy } from '@/sections/collection/collection-items-panel/items-list/ItemsSortBy'
 import { OrderType, SortType } from '@/collection/domain/models/CollectionSearchCriteria'
-/*
-<ItemsSortBy
-                      isLoadingCollectionItems={isLoadingItems}
-                      currentSortType={sortSelected}
-                      currentSortOrder={orderSelected}
-                      currentSearchText={searchText}
-                      onSortChange={onSortChange}></ItemsSortBy>
- */
+
 const meta: Meta<typeof ItemsSortBy> = {
   title: 'Sections/Collection Page/Sort Button',
   component: ItemsSortBy,
@@ -29,7 +22,7 @@ export const Default: Story = {
       isLoadingCollectionItems={false}
       currentSortType={undefined}
       currentSortOrder={undefined}
-      currentSearchText={'test'}
+      hasSearchValue={true}
       onSortChange={() => {}}
     />
   )
@@ -41,7 +34,7 @@ export const WithSortType: Story = {
       isLoadingCollectionItems={false}
       currentSortType={SortType.NAME}
       currentSortOrder={OrderType.DESC}
-      currentSearchText={undefined}
+      hasSearchValue={false}
       onSortChange={() => {}}
     />
   )
