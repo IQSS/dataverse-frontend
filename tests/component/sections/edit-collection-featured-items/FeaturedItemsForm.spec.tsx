@@ -12,19 +12,17 @@ const collectionRepository = {} as CollectionRepository
 const testCollection = CollectionMother.create({ name: 'Collection Name' })
 
 const featuredItemOne = CollectionFeaturedItemMother.createFeaturedItem({
-  id: 'item-1-id',
-  type: 'custom',
-  imageUrl: 'https://loremflickr.com/320/240',
-  order: 1,
+  id: 1,
+  imageFileUrl: 'https://loremflickr.com/320/240',
+  displayOrder: 1,
   content: '<h1 class="rte-heading">Featured Item One</h1>'
 })
 
 const featuredItemTwo = CollectionFeaturedItemMother.createFeaturedItem({
-  id: 'item-2-id',
-  type: 'custom',
-  order: 2,
+  id: 2,
+  displayOrder: 2,
   content: '<h1 class="rte-heading">Featured Item Two</h1>',
-  imageUrl: undefined
+  imageFileUrl: undefined
 })
 
 const testFeaturedItems = [featuredItemOne, featuredItemTwo]
@@ -92,7 +90,7 @@ describe('FeaturedItemsForm', () => {
         .should('exist')
         .should('be.visible')
         .should('have.attr', 'src')
-        .should('include', featuredItemOne.imageUrl)
+        .should('include', featuredItemOne.imageFileUrl)
     })
 
     cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
@@ -212,7 +210,7 @@ describe('FeaturedItemsForm', () => {
           .should('exist')
           .should('be.visible')
           .should('have.attr', 'src')
-          .should('include', featuredItemOne.imageUrl)
+          .should('include', featuredItemOne.imageFileUrl)
 
         cy.get(`[aria-label="Remove image"]`).should('exist').should('be.visible').click()
 
@@ -227,7 +225,7 @@ describe('FeaturedItemsForm', () => {
           .should('exist')
           .should('be.visible')
           .should('have.attr', 'src')
-          .should('include', featuredItemOne.imageUrl)
+          .should('include', featuredItemOne.imageFileUrl)
       })
     })
 
@@ -279,7 +277,7 @@ describe('FeaturedItemsForm', () => {
           .should('exist')
           .should('be.visible')
           .should('have.attr', 'src')
-          .should('include', featuredItemOne.imageUrl)
+          .should('include', featuredItemOne.imageFileUrl)
       })
     })
 
@@ -378,19 +376,17 @@ describe('FeaturedItemsForm', () => {
 
     it('should show the top save button when there are more than 3 items', () => {
       const localTestFeaturedItemThree = CollectionFeaturedItemMother.createFeaturedItem({
-        id: 'item-3-id',
-        type: 'custom',
-        order: 3,
+        id: 3,
+        displayOrder: 3,
         content: '<h1 class="rte-heading">Featured Item Three</h1>',
-        imageUrl: undefined
+        imageFileUrl: undefined
       })
 
       const localTestFeaturedItemFour = CollectionFeaturedItemMother.createFeaturedItem({
-        id: 'item-4-id',
-        type: 'custom',
-        order: 4,
+        id: 4,
+        displayOrder: 4,
         content: '<h1 class="rte-heading">Featured Item Four</h1>',
-        imageUrl: undefined
+        imageFileUrl: undefined
       })
 
       const fourFeaturedItems = [
@@ -454,10 +450,9 @@ describe('FeaturedItemsForm', () => {
 
     it('should show an error message when the content is larger than max length accepted', () => {
       const featuredItemOne = CollectionFeaturedItemMother.createFeaturedItem({
-        id: 'item-1-id',
-        type: 'custom',
-        imageUrl: 'https://loremflickr.com/320/240',
-        order: 1,
+        id: 1,
+        imageFileUrl: 'https://loremflickr.com/320/240',
+        displayOrder: 1,
         content: `<p class="rte-paragraph">${'a'.repeat(
           FEATURED_ITEM_CONTENT_MAX_LENGTH_ACCEPTED
         )}</p>`
@@ -660,7 +655,7 @@ describe('FeaturedItemsForm', () => {
 
         // First item, content only
         expect(collectionFeaturedItemsDTO[0].id).to.eq(undefined)
-        expect(collectionFeaturedItemsDTO[0].order).to.eq(1)
+        expect(collectionFeaturedItemsDTO[0].displayOrder).to.eq(1)
         expect(collectionFeaturedItemsDTO[0].content).to.eq(
           '<p class="rte-paragraph">New Content</p>'
         )
@@ -669,7 +664,7 @@ describe('FeaturedItemsForm', () => {
 
         // Second item with content and image
         expect(collectionFeaturedItemsDTO[1].id).to.eq(undefined)
-        expect(collectionFeaturedItemsDTO[1].order).to.eq(2)
+        expect(collectionFeaturedItemsDTO[1].displayOrder).to.eq(2)
         expect(collectionFeaturedItemsDTO[1].content).to.eq(
           '<p class="rte-paragraph">New Content 2</p>'
         )

@@ -7,19 +7,17 @@ const collectionRepository = {} as CollectionRepository
 const collection = CollectionMother.create({ name: 'Collection Name' })
 
 const featuredItemOne = CollectionFeaturedItemMother.createFeaturedItem({
-  id: 'item-1-id',
-  type: 'custom',
-  imageUrl: 'https://via.placeholder.com/400x400',
-  order: 1,
+  id: 1,
+  imageFileUrl: 'https://via.placeholder.com/400x400',
+  displayOrder: 1,
   content: '<h1 class="rte-heading">Featured Item One</h1>'
 })
 
 const featuredItemTwo = CollectionFeaturedItemMother.createFeaturedItem({
-  id: 'item-2-id',
-  type: 'custom',
-  order: 2,
+  id: 2,
+  displayOrder: 2,
   content: '<h1 class="rte-heading">Featured Item Two</h1>',
-  imageUrl: undefined
+  imageFileUrl: undefined
 })
 
 describe('EditCollectionFeaturedItems', () => {

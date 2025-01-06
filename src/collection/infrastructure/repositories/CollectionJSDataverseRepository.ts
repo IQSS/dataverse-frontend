@@ -7,7 +7,8 @@ import {
   getCollectionUserPermissions,
   getCollectionItems,
   publishCollection,
-  updateCollection
+  updateCollection,
+  getCollectionFeaturedItems
 } from '@iqss/dataverse-client-javascript'
 import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'
@@ -18,7 +19,6 @@ import { CollectionItemSubset } from '../../domain/models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCriteria'
 import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
-// import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
@@ -71,15 +71,8 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     return updateCollection.execute(collectionIdOrAlias, updatedCollection)
   }
 
-  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
-    // TODO:ME Mocked data for now
-
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([])
-        // resolve(CollectionFeaturedItemMother.createFeaturedItems())
-      }, 1_000)
-    })
+  getFeaturedItems(collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
+    return getCollectionFeaturedItems.execute(collectionIdOrAlias)
   }
 
   updateFeaturedItems(

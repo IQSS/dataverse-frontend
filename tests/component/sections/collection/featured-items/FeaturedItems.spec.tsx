@@ -3,11 +3,11 @@ import { CollectionFeaturedItemMother } from '@tests/component/collection/domain
 
 const featuredItemOne = CollectionFeaturedItemMother.createFeaturedItem({
   content: '<h1 class="rte-heading">Title One</h1>',
-  imageUrl: undefined
+  imageFileUrl: undefined
 })
 const featuredItemTwo = CollectionFeaturedItemMother.createFeaturedItem({
   content: '<h1 class="rte-heading">Title Two</h1>',
-  imageUrl: undefined
+  imageFileUrl: undefined
 })
 
 const testFeaturedItems = [featuredItemOne, featuredItemTwo]

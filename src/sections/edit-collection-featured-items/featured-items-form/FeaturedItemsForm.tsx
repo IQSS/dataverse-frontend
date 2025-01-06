@@ -119,7 +119,7 @@ export const FeaturedItemsForm = ({
                 onAddField={handleOnAddField}
                 onRemoveField={handleOnRemoveField}
                 initialImageUrl={
-                  collectionFeaturedItems.find((item) => item.id === field.itemId)?.imageUrl
+                  collectionFeaturedItems.find((item) => item.id === field.itemId)?.imageFileUrl
                 }
                 key={field.id}
               />

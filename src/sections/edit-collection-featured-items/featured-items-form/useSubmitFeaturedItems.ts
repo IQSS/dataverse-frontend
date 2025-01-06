@@ -57,14 +57,14 @@ export function useSubmitFeaturedItems(
 
     // itemsDTO.forEach((item) => {
     //   if (item.id) {
-    //     formData.append(`items[${item.order}][id]`, item.id)
+    //     formData.append(`items[${item.displayOrder}][id]`, item.id)
     //   }
-    //   formData.append(`items[${item.order}][order]`, JSON.stringify(item.order))
-    //   formData.append(`items[${item.order}][content]`, item.content)
-    //   formData.append(`items[${item.order}][keepFile]`, JSON.stringify(item.keepFile))
+    //   formData.append(`items[${item.displayOrder}][displayOrder]`, JSON.stringify(item.displayOrder))
+    //   formData.append(`items[${item.displayOrder}][content]`, item.content)
+    //   formData.append(`items[${item.displayOrder}][keepFile]`, JSON.stringify(item.keepFile))
 
     //   if (item.file) {
-    //     formData.append(`items[${item.order}][file]`, item.file)
+    //     formData.append(`items[${item.displayOrder}][file]`, item.file)
     //   }
     // })
 

@@ -1,9 +1,9 @@
 export type CollectionFeaturedItemsDTO = CollectionFeaturedItemDTO[]
 
 export interface CollectionFeaturedItemDTO {
+  id?: number
   content: string
-  order: number
+  displayOrder: number
   file?: File
   keepFile: boolean
-  id?: string
 }

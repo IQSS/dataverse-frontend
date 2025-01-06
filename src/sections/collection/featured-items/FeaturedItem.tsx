@@ -14,8 +14,8 @@ export const FeaturedItem = ({ featuredItem }: FeaturedItemProps) => {
   return (
     <div className={styles['featured-item-card']}>
       <div className={styles['inner-content']}>
-        {featuredItem.imageUrl && (
-          <img src={featuredItem.imageUrl} alt="" className={styles.image} />
+        {featuredItem.imageFileUrl && (
+          <img src={featuredItem.imageFileUrl} alt="" className={styles.image} />
         )}
         <div className={styles.content} dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
       </div>

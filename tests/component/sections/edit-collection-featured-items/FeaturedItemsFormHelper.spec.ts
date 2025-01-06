@@ -4,19 +4,17 @@ import { FeaturedItemField } from '@/sections/edit-collection-featured-items/typ
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 
 const testFeaturedItemOne = CollectionFeaturedItemMother.createFeaturedItem({
-  id: 'item-1-id',
-  type: 'custom',
-  imageUrl: 'https://via.placeholder.com/400x400',
-  order: 1,
+  id: 1,
+  imageFileUrl: 'https://via.placeholder.com/400x400',
+  displayOrder: 1,
   content: '<h1 class="rte-heading">Featured Item One</h1>'
 })
 
 const testFeaturedItemTwo = CollectionFeaturedItemMother.createFeaturedItem({
-  id: 'item-2-id',
-  type: 'custom',
-  order: 2,
+  id: 2,
+  displayOrder: 2,
   content: '<h1 class="rte-heading">Featured Item Two</h1>',
-  imageUrl: undefined
+  imageFileUrl: undefined
 })
 
 const testCollectionFeaturedItems = [testFeaturedItemOne, testFeaturedItemTwo]
@@ -25,12 +23,12 @@ const testFormFields: FeaturedItemField[] = [
   {
     content: '<h1 class="rte-heading">Featured Item One</h1>',
     image: 'https://via.placeholder.com/400x400',
-    itemId: 'item-1-id'
+    itemId: 1
   },
   {
     content: '<h1 class="rte-heading">Featured Item Two</h1>',
     image: null,
-    itemId: 'item-2-id'
+    itemId: 2
   },
   {
     content: '<h1 class="rte-heading">Featured Item Three</h1>',
@@ -43,7 +41,7 @@ const testFormFields: FeaturedItemField[] = [
   {
     content: '<h1 class="rte-heading">Featured Item Five</h1>',
     image: new File([''], 'image.jpg'),
-    itemId: 'item-abc-id'
+    itemId: 3
   }
 ]
 
@@ -71,12 +69,12 @@ describe('FeaturedItemsFormHelper', () => {
         {
           content: '<h1 class="rte-heading">Featured Item One</h1>',
           image: 'https://via.placeholder.com/400x400',
-          itemId: 'item-1-id'
+          itemId: 1
         },
         {
           content: '<h1 class="rte-heading">Featured Item Two</h1>',
           image: null,
-          itemId: 'item-2-id'
+          itemId: 2
         }
       ])
     })
@@ -87,18 +85,18 @@ describe('FeaturedItemsFormHelper', () => {
 
     expect(result[0].id).to.deep.equal(testFormFields[0].itemId)
     expect(result[0].content).to.deep.equal(testFormFields[0].content)
-    expect(result[0].imageUrl).to.deep.equal(testFormFields[0].image)
-    expect(result[0].order).to.deep.equal(1)
+    expect(result[0].imageFileUrl).to.deep.equal(testFormFields[0].image)
+    expect(result[0].displayOrder).to.deep.equal(1)
 
     expect(result[1].id).to.deep.equal(testFormFields[1].itemId)
     expect(result[1].content).to.deep.equal(testFormFields[1].content)
-    expect(result[1].imageUrl).to.deep.equal(undefined)
-    expect(result[1].order).to.deep.equal(2)
+    expect(result[1].imageFileUrl).to.deep.equal(undefined)
+    expect(result[1].displayOrder).to.deep.equal(2)
 
     expect(result[2].id).to.not.deep.equal(testFormFields[2].itemId)
     expect(result[2].content).to.deep.equal(testFormFields[2].content)
-    expect(result[2].imageUrl).to.include('blob:')
-    expect(result[2].order).to.deep.equal(3)
+    expect(result[2].imageFileUrl).to.include('blob:')
+    expect(result[2].displayOrder).to.deep.equal(3)
   })
 
   it('should define featured items DTO based on form data', () => {
@@ -108,31 +106,31 @@ describe('FeaturedItemsFormHelper', () => {
     expect(result[0].content).to.deep.equal(testFormFields[0].content)
     expect(result[0].file).to.deep.equal(undefined)
     expect(result[0].keepFile).to.deep.equal(true)
-    expect(result[0].order).to.deep.equal(1)
+    expect(result[0].displayOrder).to.deep.equal(1)
 
     expect(result[1].id).to.deep.equal(testFormFields[1].itemId)
     expect(result[1].content).to.deep.equal(testFormFields[1].content)
     expect(result[1].file).to.deep.equal(undefined)
     expect(result[1].keepFile).to.deep.equal(false)
-    expect(result[1].order).to.deep.equal(2)
+    expect(result[1].displayOrder).to.deep.equal(2)
 
     expect(result[2].id).to.deep.equal(undefined)
     expect(result[2].content).to.deep.equal(testFormFields[2].content)
     expect(result[2].file).to.deep.equal(testFormFields[2].image)
     expect(result[2].keepFile).to.deep.equal(false)
-    expect(result[2].order).to.deep.equal(3)
+    expect(result[2].displayOrder).to.deep.equal(3)
 
     expect(result[3].id).to.deep.equal(undefined)
     expect(result[3].content).to.deep.equal(testFormFields[3].content)
     expect(result[3].file).to.deep.equal(undefined)
     expect(result[3].keepFile).to.deep.equal(false)
-    expect(result[3].order).to.deep.equal(4)
+    expect(result[3].displayOrder).to.deep.equal(4)
 
     expect(result[4].id).to.deep.equal(testFormFields[4].itemId)
     expect(result[4].content).to.deep.equal(testFormFields[4].content)
     expect(result[4].file).to.deep.equal(testFormFields[4].image)
     expect(result[4].keepFile).to.deep.equal(false)
-    expect(result[4].order).to.deep.equal(5)
+    expect(result[4].displayOrder).to.deep.equal(5)
   })
 
   describe('formatBytes', () => {

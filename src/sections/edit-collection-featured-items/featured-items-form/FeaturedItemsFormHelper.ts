@@ -20,11 +20,11 @@ export class FeaturedItemsFormHelper {
     }
 
     return collectionFeaturedItems.map((collectionFeaturedItem) => {
-      const { id, content, imageUrl } = collectionFeaturedItem
+      const { id, content, imageFileUrl } = collectionFeaturedItem
 
       return {
         content,
-        image: imageUrl ? imageUrl : null,
+        image: imageFileUrl ? imageFileUrl : null,
         itemId: id
       }
     })
@@ -38,20 +38,19 @@ export class FeaturedItemsFormHelper {
       const { content, image, itemId } = field
 
       const currentFeaturedItem: CollectionFeaturedItem = {
-        id: itemId ?? window.crypto.randomUUID(),
-        type: 'custom',
-        order: index + 1,
+        id: itemId ?? this.generateFakeNumberId(),
+        displayOrder: index + 1,
         content
       }
 
       if (image && image instanceof File) {
         const objectUrl = URL.createObjectURL(image)
 
-        currentFeaturedItem.imageUrl = objectUrl
+        currentFeaturedItem.imageFileUrl = objectUrl
       }
 
       if (image && typeof image === 'string') {
-        currentFeaturedItem.imageUrl = image
+        currentFeaturedItem.imageFileUrl = image
       }
 
       return currentFeaturedItem
@@ -67,7 +66,7 @@ export class FeaturedItemsFormHelper {
 
       const itemDTO: CollectionFeaturedItemDTO = {
         content,
-        order: index + 1,
+        displayOrder: index + 1,
         keepFile: false
       }
 
@@ -108,5 +107,9 @@ export class FeaturedItemsFormHelper {
     const i = Math.floor(Math.log(bytes) / Math.log(k))
 
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+  }
+
+  static generateFakeNumberId(): number {
+    return Date.now() + Math.floor(Math.random() * 1000)
   }
 }
