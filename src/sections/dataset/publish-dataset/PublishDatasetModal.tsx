@@ -29,6 +29,7 @@ interface PublishDatasetModalProps {
   handleClose: () => void
   nextMajorVersion?: string
   nextMinorVersion?: string
+  requiresMajorVersionUpdate?: boolean
 }
 
 export function PublishDatasetModal({
@@ -40,12 +41,12 @@ export function PublishDatasetModal({
   releasedVersionExists,
   handleClose,
   nextMajorVersion,
-  nextMinorVersion
+  nextMinorVersion,
+  requiresMajorVersionUpdate
 }: PublishDatasetModalProps) {
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const navigate = useNavigate()
-
   const { submissionStatus, submitPublish, publishError } = usePublishDataset(
     repository,
     collectionRepository,
@@ -82,20 +83,15 @@ export function PublishDatasetModal({
         <Stack direction="vertical">
           <PublishDatasetHelpText
             releasedVersionExists={releasedVersionExists}
-            parentCollectionIsReleased={parentCollection.isReleased}
+            nextMajorVersion={nextMajorVersionString}
+            parentCollectionIsReleased={parentCollection.isReleased ?? false}
             parentCollectionName={parentCollection.name}
             parentCollectionId={parentCollection.id}
+            requiresMajorVersionUpdate={requiresMajorVersionUpdate ?? false}
           />
-          <License
-            license={{
-              name: defaultLicense.name,
-              uri: defaultLicense.uri,
-              iconUri: defaultLicense.iconUri
-            }}
-          />
-          {releasedVersionExists && (
+
+          {releasedVersionExists && !requiresMajorVersionUpdate && (
             <>
-              <Form.Group.Text>{t('publish.selectVersion')}</Form.Group.Text>
               <Form.RadioGroup title={'Update Version'}>
                 <Form.Group.Radio
                   defaultChecked
@@ -124,6 +120,14 @@ export function PublishDatasetModal({
               </Form.RadioGroup>
             </>
           )}
+          <License
+            license={{
+              name: defaultLicense.name,
+              uri: defaultLicense.uri,
+              iconUri: defaultLicense.iconUri
+            }}
+          />
+          <p className={styles.secondaryText}>{t('publish.termsText')}</p>
         </Stack>
         <span className={styles.errorText}>
           {submissionStatus === SubmissionStatus.Errored &&
@@ -134,7 +138,10 @@ export function PublishDatasetModal({
         <Button
           variant="primary"
           onClick={() => {
-            submitPublish(selectedVersionUpdateType)
+            const versionUpdateType = requiresMajorVersionUpdate
+              ? VersionUpdateType.MAJOR
+              : selectedVersionUpdateType
+            submitPublish(versionUpdateType)
           }}
           type="submit">
           {t('publish.continueButton')}

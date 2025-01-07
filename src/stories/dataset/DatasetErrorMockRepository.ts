@@ -5,6 +5,7 @@ import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount
 import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { VersionUpdateType } from '../../dataset/domain/models/VersionUpdateType'
+import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
 
 export class DatasetErrorMockRepository implements DatasetMockRepository {
   getAllWithCount: (
@@ -40,6 +41,17 @@ export class DatasetErrorMockRepository implements DatasetMockRepository {
   }
 
   create(_dataset: DatasetDTO): Promise<{ persistentId: string }> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Error thrown from mock')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+  getVersionDiff(
+    _persistentId: string,
+    _oldVersion: string,
+    _newVersion: string
+  ): Promise<DatasetVersionDiff> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Error thrown from mock')

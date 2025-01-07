@@ -25,7 +25,7 @@ describe('PublishDatasetModal', () => {
     )
     cy.findByText('Publish Dataset').should('exist')
     cy.findByText(
-      'Are you sure you want to publish this dataset? Once you do so, it must remain public.'
+      'Are you sure you want to publish this dataset? Once you do so, it must remain published.'
     ).should('exist')
     cy.findByText('Major Release (2.0)').should('not.exist')
     cy.findByText('Minor Release (1.1)').should('not.exist')
@@ -170,6 +170,43 @@ describe('PublishDatasetModal', () => {
     )
     cy.findByText(/Update Current Version/).should('not.exist')
   })
+  it('renders the PublishDatasetModal for previously released dataset that requires major version update', () => {
+    const handleClose = cy.stub()
+    const repository = {} as DatasetRepository // Mock the repository as needed
+    repository.publish = cy.stub().as('repositoryPublish').resolves()
+    const collectionRepository = {} as CollectionRepository
+    collectionRepository.publish = cy.stub().as('collectionRepositoryPublish').resolves()
+    const parentCollection = UpwardHierarchyNodeMother.createCollection()
+    cy.mountAuthenticated(
+      <PublishDatasetModal
+        show={true}
+        repository={repository}
+        collectionRepository={collectionRepository}
+        parentCollection={parentCollection}
+        persistentId="testPersistentId"
+        releasedVersionExists={true}
+        nextMajorVersion={'2.0'}
+        requiresMajorVersionUpdate={true}
+        nextMinorVersion={'1.1'}
+        handleClose={handleClose}
+      />
+    )
+
+    // Check if the modal is rendered
+    cy.findByText('Publish Dataset').should('exist')
+    cy.findByText('Are you sure you want to republish this dataset?').should('exist')
+
+    cy.findByText(
+      /Due to the nature of the changes to the current draft this will be a major release \(2\.0\)/
+    ).should('exist')
+    cy.findByText('Continue').click()
+    cy.get('@repositoryPublish').should(
+      'have.been.calledWith',
+      'testPersistentId',
+      VersionUpdateType.MAJOR
+    )
+  })
+
   it('Displays warning text for unreleased Collection', () => {
     const handleClose = cy.stub()
     const repository = {} as DatasetRepository // Mock the repository as needed

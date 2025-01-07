@@ -1,5 +1,6 @@
 import { DatasetRepository } from '../../domain/repositories/DatasetRepository'
 import { Dataset, DatasetLock, DatasetNonNumericVersion } from '../../domain/models/Dataset'
+import { DatasetVersionDiff } from '../../domain/models/DatasetVersionDiff'
 import {
   createDataset,
   CreatedDatasetIdentifiers as JSDatasetIdentifiers,
@@ -10,6 +11,7 @@ import {
   DatasetUserPermissions as JSDatasetPermissions,
   DatasetVersionState,
   FileDownloadSizeMode,
+  DatasetVersionDiff as JSDatasetVersionDiff,
   getAllDatasetPreviews,
   getDataset,
   getDatasetCitation,
@@ -23,7 +25,8 @@ import {
   ReadError,
   updateDataset,
   VersionUpdateType as JSVersionUpdateType,
-  WriteError
+  WriteError,
+  getDatasetVersionDiff
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -46,6 +49,7 @@ interface IDatasetDetails {
   jsDatasetFilesTotalArchivalDownloadSize: number
   latestPublishedVersionMajorNumber?: number
   latestPublishedVersionMinorNumber?: number
+  datasetVersionDiff?: JSDatasetVersionDiff
 }
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
@@ -66,6 +70,18 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         }
       })
   }
+  getVersionDiff(
+    persistentId: string,
+    oldVersion: string,
+    newVersion: string
+  ): Promise<DatasetVersionDiff> {
+    return getDatasetVersionDiff
+      .execute(persistentId, oldVersion, newVersion)
+      .then((jsDatasetVersionDiff) => {
+        return JSDatasetMapper.toDatasetVersionDiff(jsDatasetVersionDiff)
+      })
+  }
+
   private async getLatestPublishedVersionNumbers(
     datasetDetails: IDatasetDetails
   ): Promise<IDatasetDetails> {
@@ -78,6 +94,19 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           latestPublishedDataset.versionInfo.minorNumber
         return datasetDetails
       })
+
+    return datasetDetails
+  }
+
+  private async getVersionDiffDetails(datasetDetails: IDatasetDetails): Promise<IDatasetDetails> {
+    await this.getVersionDiff(
+      datasetDetails.jsDataset.persistentId,
+      DatasetNonNumericVersion.LATEST_PUBLISHED,
+      DatasetNonNumericVersion.DRAFT
+    ).then((datasetVersionDiff) => {
+      datasetDetails.datasetVersionDiff = datasetVersionDiff
+      return datasetDetails
+    })
 
     return datasetDetails
   }
@@ -161,8 +190,11 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           datasetDetails.jsDataset.publicationDate !== undefined
         ) {
           // If the dataset is a draft, but has a publication date, then we need the version
-          // numbers of the latest published version to show in the "Publish" button
-          return this.getLatestPublishedVersionNumbers(datasetDetails)
+          // numbers of the latest published version and the datasetVersionDiff,
+          // for the PublishDatasetModal component.
+          return this.getLatestPublishedVersionNumbers(datasetDetails).then((updatedDetails) =>
+            this.getVersionDiffDetails(updatedDetails)
+          )
         } else {
           return datasetDetails
         }
@@ -179,7 +211,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           requestedVersion,
           undefined,
           datasetDetails.latestPublishedVersionMajorNumber,
-          datasetDetails.latestPublishedVersionMinorNumber
+          datasetDetails.latestPublishedVersionMinorNumber,
+          datasetDetails.datasetVersionDiff
         )
       })
       .catch((error: ReadError) => {
