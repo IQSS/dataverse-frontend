@@ -22,7 +22,13 @@ export class JSFileItemTypePreviewMapper {
       datasetPersistentId: jsFilePreview.datasetPersistentId,
       datasetCitation: jsFilePreview.datasetCitation,
       publicationStatuses: jsFilePreview.publicationStatuses,
-      releaseOrCreateDate: jsFilePreview.releaseOrCreateDate
+      releaseOrCreateDate: jsFilePreview.releaseOrCreateDate,
+      restricted: jsFilePreview.restricted,
+      canDownloadFile: jsFilePreview.canDownloadFile,
+      categories: jsFilePreview.categories,
+      tabularTags: jsFilePreview.tabularTags,
+      observations: jsFilePreview.observations,
+      variables: jsFilePreview.variables
     }
   }
 }

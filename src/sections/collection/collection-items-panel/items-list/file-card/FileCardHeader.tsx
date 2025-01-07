@@ -22,9 +22,11 @@ export function FileCardHeader({ filePreview }: FileCardHeaderProps) {
   return (
     <header className={styles['card-header-container']}>
       <div className={styles['left-side-content']}>
-        <div className={styles['restricted-icon']}>
-          {/* TODO: change the properties to dynamic ones for the icon */}
-          <FileAccessRestrictedIcon restricted={true} canDownloadFile={false} />
+        <div className={styles['restricted-icon']} data-testid="file-access-restricted-icon">
+          <FileAccessRestrictedIcon
+            restricted={filePreview.restricted}
+            canDownloadFile={filePreview.canDownloadFile}
+          />
         </div>
         <LinkToPage
           page={Route.FILES}

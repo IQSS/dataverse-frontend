@@ -29,6 +29,12 @@ export class FileItemTypePreviewMother {
       datasetCitation: faker.lorem.paragraph(),
       publicationStatuses: [PublicationStatus.Published],
       releaseOrCreateDate: faker.date.past(),
+      restricted: faker.datatype.boolean(),
+      canDownloadFile: faker.datatype.boolean(),
+      categories: [faker.lorem.word()],
+      tabularTags: [faker.lorem.word()],
+      observations: faker.datatype.number(),
+      variables: faker.datatype.number(),
       ...props
     }
   }
@@ -60,6 +66,9 @@ export class FileItemTypePreviewMother {
       datasetCitation: 'test citation',
       publicationStatuses: [PublicationStatus.Published],
       releaseOrCreateDate: new Date('2023-05-15T08:21:01Z'),
+      restricted: false,
+      canDownloadFile: true,
+      categories: ['test category'],
       ...props
     })
   }
