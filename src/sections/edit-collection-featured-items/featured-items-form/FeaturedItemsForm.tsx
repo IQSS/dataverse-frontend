@@ -2,14 +2,13 @@ import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { SortableContext } from '@dnd-kit/sortable'
-import { useTranslation } from 'react-i18next'
-import { Button } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { FeaturedItemField } from './featured-item-field/FeaturedItemField'
 import { PreviewCarousel } from './PreviewCarousel'
 import { FeaturedItemFieldWithSortId, FeaturedItemsFormData } from '../types'
 import { SubmissionStatus, useSubmitFeaturedItems } from './useSubmitFeaturedItems'
+import { ActionButtons } from './ActionButtons'
 import styles from './FeaturedItemsForm.module.scss'
 
 interface FeaturedItemsFormProps {
@@ -25,7 +24,7 @@ export const FeaturedItemsForm = ({
   defaultValues,
   collectionFeaturedItems
 }: FeaturedItemsFormProps) => {
-  const { t: tShared } = useTranslation('shared')
+  const hasInitialFeaturedItems = collectionFeaturedItems.length > 0
 
   const { submitForm, submissionStatus } = useSubmitFeaturedItems(
     collectionId,
@@ -91,21 +90,29 @@ export const FeaturedItemsForm = ({
     }, 0)
   }
 
-  const disableSubmitButton =
-    submissionStatus === SubmissionStatus.IsSubmitting || !form.formState.isDirty
+  const handleDeleteAll = () => {
+    submitForm(form.getValues(), true)
+  }
+
+  const showActionButtonsOnTop = fieldsArray.length >= 3
 
   return (
     <FormProvider {...form}>
       <PreviewCarousel />
 
       <form
-        onSubmit={form.handleSubmit(submitForm)}
+        onSubmit={form.handleSubmit((formData) => submitForm(formData, false))}
         noValidate={true}
         className={styles.form}
         data-testid="featured-items-form">
-        {fieldsArray.length > 3 && (
-          <div className={styles['save-changes-wrapper']}>
-            <Button disabled={disableSubmitButton}>{tShared('saveChanges')}</Button>
+        {showActionButtonsOnTop && (
+          <div className={styles['actions-wrapper']}>
+            <ActionButtons
+              isSubmitting={submissionStatus === SubmissionStatus.IsSubmitting}
+              isFormDirty={form.formState.isDirty}
+              hasInitialFeaturedItems={hasInitialFeaturedItems}
+              onDeleteAllFeaturedItems={handleDeleteAll}
+            />
           </div>
         )}
 
@@ -126,8 +133,13 @@ export const FeaturedItemsForm = ({
             ))}
           </SortableContext>
         </DndContext>
-        <div className={styles['save-changes-wrapper']}>
-          <Button disabled={disableSubmitButton}>{tShared('saveChanges')}</Button>
+        <div className={styles['actions-wrapper']}>
+          <ActionButtons
+            isSubmitting={submissionStatus === SubmissionStatus.IsSubmitting}
+            isFormDirty={form.formState.isDirty}
+            hasInitialFeaturedItems={hasInitialFeaturedItems}
+            onDeleteAllFeaturedItems={handleDeleteAll}
+          />
         </div>
       </form>
     </FormProvider>

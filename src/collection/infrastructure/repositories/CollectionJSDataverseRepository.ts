@@ -20,6 +20,7 @@ import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCr
 import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
+// import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id?: string): Promise<Collection> {
@@ -74,6 +75,7 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
 
   getFeaturedItems(collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
     return getCollectionFeaturedItems.execute(collectionIdOrAlias)
+    // return CollectionFeaturedItemMother.createFeaturedItems()
   }
 
   updateFeaturedItems(

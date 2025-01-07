@@ -23,12 +23,12 @@ type UseSubmitFeaturedItemsReturnType =
         | SubmissionStatus.NotSubmitted
         | SubmissionStatus.IsSubmitting
         | SubmissionStatus.SubmitComplete
-      submitForm: (formData: FeaturedItemsFormData) => void
+      submitForm: (formData: FeaturedItemsFormData, deleteAll?: boolean) => void
       submitError: null
     }
   | {
       submissionStatus: SubmissionStatus.Errored
-      submitForm: (formData: FeaturedItemsFormData) => void
+      submitForm: (formData: FeaturedItemsFormData, deleteAll?: boolean) => void
       submitError: string
     }
 
@@ -44,12 +44,14 @@ export function useSubmitFeaturedItems(
   )
   const [submitError, setSubmitError] = useState<string | null>(null)
 
-  const submitForm = (formCollectedData: FeaturedItemsFormData): void => {
+  const submitForm = (formCollectedData: FeaturedItemsFormData, deleteAll = false): void => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
     const _formData = new FormData()
 
-    const itemsDTO = FeaturedItemsFormHelper.defineFeaturedItemsDTO(formCollectedData.featuredItems)
+    const itemsDTO = deleteAll
+      ? []
+      : FeaturedItemsFormHelper.defineFeaturedItemsDTO(formCollectedData.featuredItems)
 
     // TODO: Send form data from SPA or trough JS Dataverse and from here send this itemsDTO only 👆
 

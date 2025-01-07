@@ -374,7 +374,7 @@ describe('FeaturedItemsForm', () => {
       cy.get('[data-testid="featured-item-1"]').should('not.exist')
     })
 
-    it('should show the top save button when there are more than 3 items', () => {
+    it('should show the top save button when there are at least 3 items', () => {
       const localTestFeaturedItemThree = CollectionFeaturedItemMother.createFeaturedItem({
         id: 3,
         displayOrder: 3,
@@ -382,22 +382,10 @@ describe('FeaturedItemsForm', () => {
         imageFileUrl: undefined
       })
 
-      const localTestFeaturedItemFour = CollectionFeaturedItemMother.createFeaturedItem({
-        id: 4,
-        displayOrder: 4,
-        content: '<h1 class="rte-heading">Featured Item Four</h1>',
-        imageFileUrl: undefined
-      })
-
-      const fourFeaturedItems = [
-        featuredItemOne,
-        featuredItemTwo,
-        localTestFeaturedItemThree,
-        localTestFeaturedItemFour
-      ]
+      const testFeaturedItems = [featuredItemOne, featuredItemTwo, localTestFeaturedItemThree]
 
       const formDefaultValuesWith4Items: FeaturedItemsFormData = {
-        featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(fourFeaturedItems)
+        featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(testFeaturedItems)
       }
 
       cy.mountAuthenticated(
@@ -405,14 +393,13 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={formDefaultValuesWith4Items}
-          collectionFeaturedItems={fourFeaturedItems}
+          collectionFeaturedItems={testFeaturedItems}
         />
       )
 
       cy.get('[data-testid="featured-item-0"]').should('exist').should('be.visible')
       cy.get('[data-testid="featured-item-1"]').should('exist').should('be.visible')
       cy.get('[data-testid="featured-item-2"]').should('exist').should('be.visible')
-      cy.get('[data-testid="featured-item-3"]').should('exist').should('be.visible')
 
       cy.findAllByRole('button', { name: /Save Changes/ }).should('have.length', 2)
     })
