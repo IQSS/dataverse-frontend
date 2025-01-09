@@ -31,13 +31,14 @@ export class FileItemTypePreviewMother {
       datasetCitation: faker.lorem.paragraph(),
       publicationStatuses: [PublicationStatus.Published],
       releaseOrCreateDate: faker.date.past(),
-      // TODO: Add more properties as needed
       tags: [
         FileLabelMother.create({ type: FileLabelType.TAG }),
         FileLabelMother.create({ type: FileLabelType.CATEGORY })
       ],
-      variablesCount: faker.datatype.number(),
-      observationsCount: faker.datatype.number(),
+      restricted: faker.datatype.boolean(),
+      canDownloadFile: faker.datatype.boolean(),
+      observations: faker.datatype.number(),
+      variables: faker.datatype.number(),
       ...props
     }
   }

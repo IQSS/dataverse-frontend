@@ -22,10 +22,11 @@ export interface FileItemTypePreview {
   datasetCitation: string
   publicationStatuses: PublicationStatus[]
   releaseOrCreateDate: Date
-  // TODO: Add more properties as needed
+  variables?: number
+  observations?: number
+  restricted: boolean
+  canDownloadFile: boolean
   tags?: FileLabel[]
-  variablesCount?: number
-  observationsCount?: number
 }
 
 export interface FilePreviewChecksum {

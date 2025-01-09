@@ -124,8 +124,8 @@ export class JSFileMetadataMapper {
 
   static toFileTabularData(jsTabularData: JSFileTabularData[]): FileTabularData {
     return {
-      variablesCount: jsTabularData[0].varQuantity ?? 0,
-      observationsCount: jsTabularData[0].caseQuantity ?? 0,
+      variables: jsTabularData[0].varQuantity ?? 0,
+      observations: jsTabularData[0].caseQuantity ?? 0,
       unf: jsTabularData[0].UNF
     }
   }

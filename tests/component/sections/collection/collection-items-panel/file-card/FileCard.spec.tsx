@@ -36,7 +36,7 @@ describe('FileCard', () => {
       filePreview.tags.forEach((tag) => {
         cy.findByText(tag.value).should('exist')
       })
-    filePreview.variablesCount && cy.contains(filePreview.variablesCount).should('exist')
-    filePreview.observationsCount && cy.contains(filePreview.observationsCount).should('exist')
+    filePreview.variables && cy.contains(filePreview.variables).should('exist')
+    filePreview.observations && cy.contains(filePreview.observations).should('exist')
   })
 })

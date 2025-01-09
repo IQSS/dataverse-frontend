@@ -99,8 +99,8 @@ export class FileEmbargo {
 }
 
 export interface FileTabularData {
-  variablesCount: number
-  observationsCount: number
+  variables: number
+  observations: number
   unf?: string
 }
 

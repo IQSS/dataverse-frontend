@@ -385,7 +385,7 @@ describe('FileMetadata', () => {
 
   it('renders the tabular data if it exists', () => {
     const metadataWithTabularData = FileMetadataMother.create({
-      tabularData: FileTabularDataMother.create({ variablesCount: 123, observationsCount: 321 })
+      tabularData: FileTabularDataMother.create({ variables: 123, observations: 321 })
     })
     cy.customMount(
       <FileMetadata

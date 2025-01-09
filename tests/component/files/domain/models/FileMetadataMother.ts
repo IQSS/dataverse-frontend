@@ -58,8 +58,8 @@ export class FileTypeMother {
 export class FileTabularDataMother {
   static create(props?: Partial<FileTabularData>): FileTabularData {
     return {
-      variablesCount: faker.datatype.number(100),
-      observationsCount: faker.datatype.number(100),
+      variables: faker.datatype.number(100),
+      observations: faker.datatype.number(100),
       unf: `UNF:6:xXw6cIZnwHWvmRdwhYCQZA==`,
       ...props
     }

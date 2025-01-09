@@ -408,15 +408,15 @@ describe('File JSDataverse Repository', () => {
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
           const expectedTabularData = {
-            variablesCount: 7,
-            observationsCount: 10
+            variables: 7,
+            observations: 10
           }
           files.forEach((file) => {
-            expect(file.metadata.tabularData?.variablesCount).to.deep.equal(
-              expectedTabularData.variablesCount
+            expect(file.metadata.tabularData?.variables).to.deep.equal(
+              expectedTabularData.variables
             )
-            expect(file.metadata.tabularData?.observationsCount).to.deep.equal(
-              expectedTabularData.observationsCount
+            expect(file.metadata.tabularData?.observations).to.deep.equal(
+              expectedTabularData.observations
             )
             expect(file.metadata.tabularData?.unf).to.not.be.undefined
           })

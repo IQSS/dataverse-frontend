@@ -16,8 +16,8 @@ interface FileCardInfoProps {
 
 export function FileCardInfo({ filePreview }: FileCardInfoProps) {
   const bytesFormatted = FileCardHelper.formatBytesToCompactNumber(filePreview.sizeInBytes)
-  const variablesCount = filePreview.variablesCount || 0
-  const observationsCount = filePreview.observationsCount || 0
+  const variables = filePreview.variables || 0
+  const observations = filePreview.observations || 0
 
   return (
     <div className={styles['card-info-container']}>
@@ -44,7 +44,7 @@ export function FileCardInfo({ filePreview }: FileCardInfoProps) {
           <span>{`- ${bytesFormatted}`}</span>{' '}
           {/*TODO: filePreview.fileType is tabular file, then show variables and observations */}
           {filePreview.fileType === 'Tab-Delimited' && (
-            <span>{`- ${variablesCount} variables, ${observationsCount} observations`}</span>
+            <span>{`- ${variables} variables, ${observations} observations`}</span>
           )}
           {filePreview.checksum && (
             <Stack direction="horizontal" gap={0}>

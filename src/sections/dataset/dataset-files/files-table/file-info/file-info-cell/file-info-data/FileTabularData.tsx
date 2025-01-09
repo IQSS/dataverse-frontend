@@ -13,8 +13,8 @@ export function FileTabularData({
   }
   return (
     <div>
-      {tabularData.variablesCount} {t('table.tabularData.variables')},{' '}
-      {tabularData.observationsCount} {t('table.tabularData.observations')}{' '}
+      {tabularData.variables} {t('table.tabularData.variables')}, {tabularData.observations}{' '}
+      {t('table.tabularData.observations')}{' '}
       {tabularData.unf && <CopyToClipboardButton text={tabularData.unf} />}
     </div>
   )
