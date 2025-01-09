@@ -1,4 +1,11 @@
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
+@import 'src/assets/variables';
+
+.items-list-root-ref {
+  flex: 1;
+  height: 100%;
+}
 
 .items-list {
   --inline-padding: 1rem;
@@ -10,17 +17,24 @@
   overflow-y: auto;
   border: 1px solid $dv-border-color;
   border-radius: 4px;
+  scroll-margin-top: calc(#{$header-aproximate-height} + 1rem);
 
   @media screen and (max-width: 768px) {
     --inline-padding: 0.5rem;
   }
 
-  @media screen and (min-width: 1280px) {
+  @media screen and (min-width: 992px) {
     height: 60vh;
-    max-height: 60vh;
+    min-height: 100%;
+    max-height: unset;
+
+    &.only-one-or-two-items {
+      height: auto;
+    }
   }
 
   &.empty-or-error {
+    height: auto;
     padding-block: var(--inline-padding);
   }
 
@@ -50,6 +64,19 @@
     li {
       list-style: none;
     }
+  }
+
+  .selected-sort-option {
+    font-weight: $dv-font-weight-bold;
+  }
+
+  .sort-button {
+    text-align: end;
+  }
+
+  .icon {
+    margin-right: 0.3em;
+    margin-bottom: 0.2em;
   }
 
   .pagination-results-skeleton {

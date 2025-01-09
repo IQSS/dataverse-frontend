@@ -1,5 +1,5 @@
+import { CollectionItemsQueryParams } from '@/collection/domain/models/CollectionItemsQueryParams'
 import { CollectionItemType } from '../../../../../src/collection/domain/models/CollectionItemType'
-import { QueryParamKey } from '../../../../../src/sections/Route.enum'
 
 describe('Homepage', () => {
   it('should navigate to the collections page with the search value encoded in the URL', () => {
@@ -11,9 +11,9 @@ describe('Homepage', () => {
     const encodedSearchValue = encodeURIComponent(searchValue)
 
     const searchParams = new URLSearchParams()
-    searchParams.set(QueryParamKey.QUERY, encodedSearchValue)
+    searchParams.set(CollectionItemsQueryParams.QUERY, encodedSearchValue)
     searchParams.set(
-      QueryParamKey.COLLECTION_ITEM_TYPES,
+      CollectionItemsQueryParams.TYPES,
       [CollectionItemType.COLLECTION, CollectionItemType.DATASET, CollectionItemType.FILE].join(',')
     )
 

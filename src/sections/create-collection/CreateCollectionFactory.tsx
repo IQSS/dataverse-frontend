@@ -14,15 +14,15 @@ export class CreateCollectionFactory {
 }
 
 function CreateCollectionWithParams() {
-  const { ownerCollectionId } = useParams<{ ownerCollectionId: string }>() as {
-    ownerCollectionId: string
+  const { parentCollectionId } = useParams<{ parentCollectionId: string }>() as {
+    parentCollectionId: string
   }
   return (
     <CreateCollection
-      ownerCollectionId={ownerCollectionId}
+      parentCollectionId={parentCollectionId}
       collectionRepository={collectionRepository}
       metadataBlockInfoRepository={metadataBlockInfoRepository}
-      key={ownerCollectionId}
+      key={parentCollectionId}
     />
   )
 }

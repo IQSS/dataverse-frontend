@@ -1,5 +1,5 @@
 export class DateHelper {
-  static toDisplayFormat(date: Date | undefined): string {
+  static toDisplayFormat(date: Date): string {
     if (!date) {
       return ''
     }

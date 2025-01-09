@@ -16,6 +16,17 @@
       "datasetAndFile": "datasets or files"
     }
   },
+  "sort": {
+    "title": "Sort",
+    "options": {
+      "relevance": "Relevance",
+      "nameAsc": "Name (A-Z)",
+      "nameDesc": "Name (Z-A)",
+      "dateAsc": "Oldest",
+      "dateDesc": "Newest",
+      "relevance": "Relevance"
+    }
+  },
   "noSearchMatches": "There are no collections, datasets, or files that match your search. Please try a new search by using other or broader terms. You can also check out the <anchor>search guide</anchor> for tips.",
   "createdAlert": "You have successfully created your collection! To learn more about what you can do with your collection, check out the <anchor>User Guide</anchor>.",
   "filterResults": "Filter Results",
@@ -30,5 +41,16 @@
     "question": "Are you sure you want to publish your collection? Once you do so it must remain published.",
     "error": "There was an error publishing your collection."
   },
-  "publishedAlert": "Your collection is now public."
+  "publishedAlert": "Your collection is now public.",
+  "addFacetFilter": "Add {{labelName}} facet filter",
+  "removeSelectedFacet": "Remove {{labelName}} facet filter",
+  "share": {
+    "shareCollection": "Share Collection",
+    "helpText": "Share this collection on your favorite social media networks."
+  },
+  "editedAlert": "You have successfully updated your collection!",
+  "editCollection": {
+    "edit": "Edit",
+    "generalInfo": "General Information"
+  }
 }

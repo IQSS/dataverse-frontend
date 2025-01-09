@@ -11,10 +11,19 @@
   gap: 10px;
 }
 
-.action-buttons {
+.metrics-actions-container {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+
+  .right-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
 }
 
 .subtext {
