@@ -29,7 +29,7 @@ export function RestrictionModal({
     update({ saved: saved, terms: terms, requestAccess: requestAccess })
 
   return (
-    <Modal show={show} onHide={() => handleClose(false)} size="lg">
+    <Modal data-testid="restrictionModal" show={show} onHide={() => handleClose(false)} size="lg">
       <Modal.Header>
         <Modal.Title>{t('restriction.restrictAccess')}</Modal.Title>
       </Modal.Header>
@@ -47,6 +47,7 @@ export function RestrictionModal({
               <Col sm={9}>
                 <Form.Group.Checkbox
                   label={t('restriction.enableAccessRequest')}
+                  data-testid="enable-access-request-checkbox"
                   id={'requestAccessCB'}
                   checked={requestAccess}
                   onChange={(event: FormEvent<HTMLInputElement>) =>
@@ -61,6 +62,7 @@ export function RestrictionModal({
               </Form.Group.Label>
               <Col sm={9}>
                 <Form.Group.TextArea
+                  data-testid="terms-of-access-textarea"
                   defaultValue={defaultTerms}
                   onChange={(event: FormEvent<HTMLInputElement>) =>
                     setTerms(event.currentTarget.value)
