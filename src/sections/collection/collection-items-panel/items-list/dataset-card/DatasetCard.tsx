@@ -21,7 +21,6 @@ export function DatasetCard({ datasetPreview }: DatasetCardProps) {
           version={datasetPreview.version}
           thumbnail={datasetPreview.thumbnail}
         />
-        {/* TODO: remove the hardcoded thumbnail once the real one could get */}
         <DatasetCardInfo
           version={datasetPreview.version}
           releaseOrCreateDate={datasetPreview.releaseOrCreateDate}

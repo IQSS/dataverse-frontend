@@ -42,14 +42,12 @@ export function FileCardInfo({ filePreview }: FileCardInfoProps) {
         <div className={styles.info}>
           <span>{filePreview.fileType}</span>
           <span>{`- ${bytesFormatted}`}</span>{' '}
-          {/*TODO: filePreview.fileType is tabular file, then show variables and observations */}
           {filePreview.fileType === 'Tab-Delimited' && (
             <span>{`- ${variables} variables, ${observations} observations`}</span>
           )}
           {filePreview.checksum && (
             <Stack direction="horizontal" gap={0}>
               <span>{`- ${filePreview.checksum.type}:`}</span>
-
               <CopyToClipboardButton text={filePreview.checksum.value} />
             </Stack>
           )}
