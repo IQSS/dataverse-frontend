@@ -23,10 +23,6 @@ export interface FileItemTypePreview {
   releaseOrCreateDate: Date
   restricted: boolean
   canDownloadFile: boolean
-  categories?: string[]
-  tabularTags?: string[]
-  observations?: number
-  variables?: number
 }
 
 export interface FilePreviewChecksum {

@@ -24,11 +24,7 @@ export class JSFileItemTypePreviewMapper {
       publicationStatuses: jsFilePreview.publicationStatuses,
       releaseOrCreateDate: jsFilePreview.releaseOrCreateDate,
       restricted: jsFilePreview.restricted,
-      canDownloadFile: jsFilePreview.canDownloadFile,
-      categories: jsFilePreview.categories,
-      tabularTags: jsFilePreview.tabularTags,
-      observations: jsFilePreview.observations,
-      variables: jsFilePreview.variables
+      canDownloadFile: jsFilePreview.canDownloadFile
     }
   }
 }
