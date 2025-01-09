@@ -335,59 +335,66 @@ describe('UploadDatasetFiles', () => {
     cy.get('input[value="users1.json"]').should('not.exist')
     cy.get('input[value="users2.json"]').should('exist')
   })
+  let i = 0
+  for (i = 0; i < 20; i++) {
+    it.only('restrict uploaded file, test ' + i, () => {
+      const testDataset = DatasetMother.create()
 
-  it('restrict uploaded file', () => {
-    const testDataset = DatasetMother.create()
+      mountWithDataset(
+        <UploadDatasetFiles fileRepository={new FileMockRepository()} />,
+        testDataset
+      )
 
-    mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
+      cy.findByTestId('drag-and-drop').as('dnd')
+      cy.get('@dnd').should('exist')
 
-    cy.findByTestId('drag-and-drop').as('dnd')
-    cy.get('@dnd').should('exist')
+      cy.get('@dnd').selectFile(
+        { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+        { action: 'drag-drop' }
+      )
+      cy.get('@dnd').selectFile(
+        { fileName: 'users2.json', contents: [{ name: 'John Doe the 2nd' }] },
+        { action: 'drag-drop' }
+      )
+      // wait for upload to finish
 
-    cy.get('@dnd').selectFile(
-      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
-      { action: 'drag-drop' }
-    )
-    cy.get('@dnd').selectFile(
-      { fileName: 'users2.json', contents: [{ name: 'John Doe the 2nd' }] },
-      { action: 'drag-drop' }
-    )
-    // wait for upload to finish
-    cy.findByText('2 files uploaded').should('exist')
-    cy.get('[type="checkbox"]').last().click()
-    cy.findByText('Save Changes').first().click()
-    cy.get('[type="checkbox"]').last().should('be.checked')
-    cy.get('[type="checkbox"]').last().click()
-    cy.get('[type="checkbox"]').last().should('not.be.checked')
-    cy.get('[type="checkbox"]').first().click()
-    cy.findByText('Edit files').first().click()
-    cy.findByText('Restrict').first().click()
-    cy.findByText('Save Changes').first().click()
-    cy.get('[type="checkbox"]').last().should('be.checked')
-    cy.findByText('Edit files').first().click()
-    cy.findByText('Unrestrict').first().click()
-    cy.get('[type="checkbox"]').last().should('not.be.checked')
-    cy.findByText('Edit files').first().click()
-    cy.findByText('Restrict').first().click()
-    cy.findByLabelText('Close').click()
-    cy.get('[type="checkbox"]').last().should('not.be.checked')
-    cy.findByText('Edit files').first().click()
-    cy.findByText('Restrict').first().click()
-    cy.get('[type="checkbox"]').last().click()
-    cy.get('textarea').last().type('Hello, World!')
-    cy.findByText('Save Changes').first().click()
-    cy.get('[type="checkbox"]').last().should('be.checked')
-    cy.findByText('Edit files').first().click()
-    cy.findByText('Restrict').first().click()
-    cy.findByTitle('Cancel Changes').click()
-    cy.get('[type="checkbox"]').last().should('be.checked')
-    cy.get('[type="checkbox"]').first().click()
-    cy.get('[type="checkbox"]').first().click()
-    cy.findByText('Edit files').first().click()
-    cy.findByTitle('Delete selected').click()
-    cy.get('input[value="users1.json"]').should('not.exist')
-    cy.get('input[value="users2.json"]').should('not.exist')
-  })
+      cy.findByText('2 files uploaded').should('exist')
+      cy.get('[type="checkbox"]').last().click()
+
+      cy.findByText('Save Changes').first().click()
+      cy.get('[type="checkbox"]').last().should('be.checked')
+      cy.get('[type="checkbox"]').last().click()
+      cy.get('[type="checkbox"]').last().should('not.be.checked')
+      cy.get('[type="checkbox"]').first().click()
+      cy.findByText('Edit files').first().click()
+      cy.findByText('Restrict').first().click()
+      cy.findByText('Save Changes').first().click()
+      cy.get('[type="checkbox"]').last().should('be.checked')
+      cy.findByText('Edit files').first().click()
+      cy.findByText('Unrestrict').first().click()
+      cy.get('[type="checkbox"]').last().should('not.be.checked')
+      cy.findByText('Edit files').first().click()
+      cy.findByText('Restrict').first().click()
+      cy.findByLabelText('Close').click()
+      cy.get('[type="checkbox"]').last().should('not.be.checked')
+      cy.findByText('Edit files').first().click()
+      cy.findByText('Restrict').first().click()
+      cy.get('[type="checkbox"]').last().click()
+      cy.get('textarea').last().type('Hello, World!')
+      cy.findByText('Save Changes').first().click()
+      cy.get('[type="checkbox"]').last().should('be.checked')
+      cy.findByText('Edit files').first().click()
+      cy.findByText('Restrict').first().click()
+      cy.findByTitle('Cancel Changes').click()
+      cy.get('[type="checkbox"]').last().should('be.checked')
+      cy.get('[type="checkbox"]').first().click()
+      cy.get('[type="checkbox"]').first().click()
+      cy.findByText('Edit files').first().click()
+      cy.findByTitle('Delete selected').click()
+      cy.get('input[value="users1.json"]').should('not.exist')
+      cy.get('input[value="users2.json"]').should('not.exist')
+    })
+  }
 
   it('edit tags', () => {
     const testDataset = DatasetMother.create()
