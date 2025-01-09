@@ -337,7 +337,7 @@ describe('UploadDatasetFiles', () => {
   })
   let i = 0
   for (i = 0; i < 20; i++) {
-    it.only('restrict uploaded file, test ' + i, () => {
+    it(`restrict uploaded file, test ${i}`, () => {
       const testDataset = DatasetMother.create()
 
       mountWithDataset(
