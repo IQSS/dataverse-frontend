@@ -35,8 +35,6 @@ export class FileItemTypePreviewMother {
         FileLabelMother.create({ type: FileLabelType.TAG }),
         FileLabelMother.create({ type: FileLabelType.CATEGORY })
       ],
-      restricted: faker.datatype.boolean(),
-      canDownloadFile: faker.datatype.boolean(),
       observations: faker.datatype.number(),
       variables: faker.datatype.number(),
       ...props

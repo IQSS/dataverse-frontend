@@ -4,7 +4,6 @@ import { DateHelper } from '@/shared/helpers/DateHelper'
 import { FileCardHelper } from '@/sections/collection/collection-items-panel/items-list/file-card/FileCardHelper'
 
 describe('FileCard', () => {
-  beforeEach(() => {})
   it('should render the card', () => {
     const filePreview = FileItemTypePreviewMother.create()
     cy.customMount(<FileCard filePreview={filePreview} />)
@@ -23,7 +22,6 @@ describe('FileCard', () => {
 
   it('should render the card if file is tabular', () => {
     const filePreview = FileItemTypePreviewMother.create({ fileType: 'Tab-Delimited' })
-    // TODO: Change the fileType: 'Tab-Delimited' to all tabular types
     cy.customMount(<FileCard filePreview={filePreview} />)
 
     cy.contains(DateHelper.toDisplayFormat(filePreview.releaseOrCreateDate)).should('exist')

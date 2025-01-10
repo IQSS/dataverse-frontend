@@ -24,8 +24,6 @@ export interface FileItemTypePreview {
   releaseOrCreateDate: Date
   variables?: number
   observations?: number
-  restricted: boolean
-  canDownloadFile: boolean
   tags?: FileLabel[]
 }
 
