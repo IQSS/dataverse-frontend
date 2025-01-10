@@ -335,7 +335,7 @@ describe('UploadDatasetFiles', () => {
     cy.get('input[value="users1.json"]').should('not.exist')
     cy.get('input[value="users2.json"]').should('exist')
   })
-  it.only(`restrict uploaded file`, () => {
+  it(`restrict uploaded file`, () => {
     const testDataset = DatasetMother.create()
 
     mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
