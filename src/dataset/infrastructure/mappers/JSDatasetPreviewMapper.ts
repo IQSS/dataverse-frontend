@@ -16,7 +16,7 @@ export class JSDatasetPreviewMapper {
       ),
       releaseOrCreateDate: JSDatasetPreviewMapper.toPreviewDate(jsDatasetPreview.versionInfo),
       description: jsDatasetPreview.description,
-      thumbnail: undefined, // TODO: get dataset thumbnail from Dataverse https://github.com/IQSS/dataverse-frontend/issues/203
+      thumbnail: jsDatasetPreview.imageUrl,
       publicationStatuses: jsDatasetPreview.publicationStatuses,
       parentCollectionName: jsDatasetPreview.parentCollectionName,
       parentCollectionAlias: jsDatasetPreview.parentCollectionAlias
