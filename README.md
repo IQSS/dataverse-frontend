@@ -210,7 +210,7 @@ The environment is accessible through the following URLs:
 > The original JSF Dataverses/Datasets list on the home page uses normal paging buttons at the bottom of the list.
 > We have implemented infinite scrolling in this list, replacing the normal paging buttons, but the goal would be to be
 > able to toggle between normal paging and infinite scrolling via a toggle setting or button.
->
+> 
 > #### Create/Edit Collection Page Identifier Field
 >
 > A feature has been added to suggest an identifier to the user based on the collection name entered.
@@ -227,6 +227,10 @@ The environment is accessible through the following URLs:
 > #### Share Collection and Dataset feature
 >
 > Links to share a collection or a dataset via LinkedIn, X or Facebook will now open in a new tab instead of a popup.
+> 
+> #### Dataverses are Called Collections
+>
+> While JSF refers to "Dataverses" (sometimes called "sub-dataverses" or child dataverses by the Dataverse community), the SPA calls them "Collections".
 
 </details>
 
