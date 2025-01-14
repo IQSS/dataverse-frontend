@@ -66,7 +66,7 @@ export class FeaturedItemsFormHelper {
 
       const itemDTO: CollectionFeaturedItemDTO = {
         content,
-        displayOrder: index + 1,
+        displayOrder: index,
         keepFile: false
       }
 
