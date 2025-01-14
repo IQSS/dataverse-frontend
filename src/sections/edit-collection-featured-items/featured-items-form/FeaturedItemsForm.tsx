@@ -90,9 +90,7 @@ export const FeaturedItemsForm = ({
     }, 0)
   }
 
-  const handleDeleteAll = () => {
-    submitForm(form.getValues(), true)
-  }
+  const handleDeleteAll = () => {}
 
   const showActionButtonsOnTop = fieldsArray.length >= 3
 
@@ -101,7 +99,7 @@ export const FeaturedItemsForm = ({
       <PreviewCarousel />
 
       <form
-        onSubmit={form.handleSubmit((formData) => submitForm(formData, false))}
+        onSubmit={form.handleSubmit(submitForm)}
         noValidate={true}
         className={styles.form}
         data-testid="featured-items-form">

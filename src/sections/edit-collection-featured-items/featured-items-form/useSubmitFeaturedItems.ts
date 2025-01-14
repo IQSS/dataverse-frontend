@@ -23,12 +23,12 @@ type UseSubmitFeaturedItemsReturnType =
         | SubmissionStatus.NotSubmitted
         | SubmissionStatus.IsSubmitting
         | SubmissionStatus.SubmitComplete
-      submitForm: (formData: FeaturedItemsFormData, deleteAll?: boolean) => void
+      submitForm: (formData: FeaturedItemsFormData) => void
       submitError: null
     }
   | {
       submissionStatus: SubmissionStatus.Errored
-      submitForm: (formData: FeaturedItemsFormData, deleteAll?: boolean) => void
+      submitForm: (formData: FeaturedItemsFormData) => void
       submitError: string
     }
 
@@ -44,31 +44,14 @@ export function useSubmitFeaturedItems(
   )
   const [submitError, setSubmitError] = useState<string | null>(null)
 
-  const submitForm = (formCollectedData: FeaturedItemsFormData, deleteAll = false): void => {
+  // TODO:ME Create new method to handle the delete all feature with its own use case
+
+  const submitForm = (formCollectedData: FeaturedItemsFormData): void => {
+    const itemsDTO = FeaturedItemsFormHelper.defineFeaturedItemsDTO(formCollectedData.featuredItems)
+
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
-    const _formData = new FormData()
-
-    const itemsDTO = deleteAll
-      ? []
-      : FeaturedItemsFormHelper.defineFeaturedItemsDTO(formCollectedData.featuredItems)
-
-    // TODO: Send form data from SPA or trough JS Dataverse and from here send this itemsDTO only 👆
-
     console.log({ itemsDTO })
-
-    // itemsDTO.forEach((item) => {
-    //   if (item.id) {
-    //     formData.append(`items[${item.displayOrder}][id]`, item.id)
-    //   }
-    //   formData.append(`items[${item.displayOrder}][displayOrder]`, JSON.stringify(item.displayOrder))
-    //   formData.append(`items[${item.displayOrder}][content]`, item.content)
-    //   formData.append(`items[${item.displayOrder}][keepFile]`, JSON.stringify(item.keepFile))
-
-    //   if (item.file) {
-    //     formData.append(`items[${item.displayOrder}][file]`, item.file)
-    //   }
-    // })
 
     updateCollectionFeaturedItems(collectionRepository, itemsDTO, collectionId)
       .then(() => {
