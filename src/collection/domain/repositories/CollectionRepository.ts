@@ -22,7 +22,8 @@ export interface CollectionRepository {
   edit(collectionIdOrAlias: string, updatedCollection: CollectionDTO): Promise<void>
   getFeaturedItems(collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]>
   updateFeaturedItems(
-    collectionId: string,
+    collectionIdOrAlias: number | string,
     featuredItemsDTO: CollectionFeaturedItemsDTO
-  ): Promise<void>
+  ): Promise<CollectionFeaturedItem[]>
+  deleteFeaturedItems(collectionIdOrAlias: number | string): Promise<void>
 }

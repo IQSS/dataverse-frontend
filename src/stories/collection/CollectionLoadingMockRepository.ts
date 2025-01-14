@@ -41,7 +41,11 @@ export class CollectionLoadingMockRepository extends CollectionMockRepository {
   updateFeaturedItems(
     _collectionId: string,
     _featuredItemsDTO: CollectionFeaturedItemsDTO
-  ): Promise<void> {
+  ): Promise<CollectionFeaturedItem[]> {
+    return new Promise(() => {})
+  }
+
+  deleteFeaturedItems(_collectionIdOrAlias: number | string): Promise<void> {
     return new Promise(() => {})
   }
 }

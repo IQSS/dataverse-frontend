@@ -8,7 +8,9 @@ import {
   getCollectionItems,
   publishCollection,
   updateCollection,
-  getCollectionFeaturedItems
+  getCollectionFeaturedItems,
+  updateCollectionFeaturedItems,
+  deleteCollectionFeaturedItems
 } from '@iqss/dataverse-client-javascript'
 import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'
@@ -20,7 +22,6 @@ import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCr
 import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
-// import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id?: string): Promise<Collection> {
@@ -75,19 +76,16 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
 
   getFeaturedItems(collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
     return getCollectionFeaturedItems.execute(collectionIdOrAlias)
-    // return CollectionFeaturedItemMother.createFeaturedItems()
   }
 
   updateFeaturedItems(
-    _collectionId: string,
-    _featuredItemsDTO: CollectionFeaturedItemsDTO
-  ): Promise<void> {
-    // TODO:ME Mocked data for now
+    collectionIdOrAlias: number | string,
+    featuredItemsDTO: CollectionFeaturedItemsDTO
+  ): Promise<CollectionFeaturedItem[]> {
+    return updateCollectionFeaturedItems.execute(collectionIdOrAlias, featuredItemsDTO)
+  }
 
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve()
-      }, 2_000)
-    })
+  deleteFeaturedItems(collectionIdOrAlias: number | string): Promise<void> {
+    return deleteCollectionFeaturedItems.execute(collectionIdOrAlias)
   }
 }

@@ -48,7 +48,15 @@ export class CollectionErrorMockRepository extends CollectionMockRepository {
   updateFeaturedItems(
     _collectionId: string,
     _featuredItemsDTO: CollectionFeaturedItemsDTO
-  ): Promise<void> {
+  ): Promise<CollectionFeaturedItem[]> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Something went wrong')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  deleteFeaturedItems(_collectionIdOrAlias: number | string): Promise<void> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {
         reject('Something went wrong')
