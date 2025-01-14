@@ -5,6 +5,7 @@ import { Button, Col, Form, Stack, Tooltip } from '@iqss/dataverse-design-system
 import { ArrowDownUp, ArrowCounterclockwise, XLg } from 'react-bootstrap-icons'
 import cn from 'classnames'
 import { FeaturedItemsFormHelper } from '../FeaturedItemsFormHelper'
+import { appendTimestampToImageUrl } from '@/sections/collection/featured-items/FeaturedItem'
 import styles from './FeaturedItemField.module.scss'
 
 interface ImageFieldProps {
@@ -89,10 +90,10 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
         control={control}
         rules={rules}
         render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => {
-          const castedValue = value as string | File | null
+          const castedImageValue = value as string | File | null
 
-          const isNewFileSelected = castedValue instanceof File
-          const isExistingFile = typeof castedValue === 'string' && castedValue !== ''
+          const isNewFileSelected = castedImageValue instanceof File
+          const isExistingFile = typeof castedImageValue === 'string' && castedImageValue !== ''
           const showFileInput = (!isNewFileSelected && !isExistingFile) || invalid
 
           return (
@@ -126,7 +127,7 @@ export const ImageField = ({ itemIndex, initialImageUrl }: ImageFieldProps) => {
                 })}>
                 {isExistingFile && (
                   <img
-                    src={castedValue}
+                    src={appendTimestampToImageUrl(castedImageValue)}
                     alt="Image preview"
                     data-testid={`existing-file-img-${itemIndex.toString()}`}
                   />
