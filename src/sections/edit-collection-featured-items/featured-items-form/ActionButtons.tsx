@@ -3,33 +3,37 @@ import { Button, Stack } from '@iqss/dataverse-design-system'
 
 interface ActionButtonsProps {
   isSubmitting: boolean
+  isDeletingFeaturedItems: boolean
   isFormDirty: boolean
   hasInitialFeaturedItems: boolean
-  onDeleteAllFeaturedItems: () => void
+  onClickDelete: () => void
+  position: 'top' | 'bottom'
 }
 
 export const ActionButtons = ({
   isSubmitting,
+  isDeletingFeaturedItems,
   isFormDirty,
   hasInitialFeaturedItems,
-  onDeleteAllFeaturedItems
+  onClickDelete,
+  position
 }: ActionButtonsProps) => {
   const { t: tShared } = useTranslation('shared')
   const { t } = useTranslation('editCollectionFeaturedItems')
 
   return (
     <Stack direction="horizontal" gap={3}>
-      {hasInitialFeaturedItems && (
+      {hasInitialFeaturedItems && position === 'bottom' && (
         <Button
-          onClick={onDeleteAllFeaturedItems}
+          onClick={onClickDelete}
           type="button"
           variant="danger"
-          disabled={isSubmitting}>
-          {t('deleteAll')}
+          disabled={isSubmitting || isDeletingFeaturedItems}>
+          {t('deleteAll.action')}
         </Button>
       )}
 
-      <Button type="submit" disabled={isSubmitting || !isFormDirty}>
+      <Button type="submit" disabled={isSubmitting || !isFormDirty || isDeletingFeaturedItems}>
         {tShared('saveChanges')}
       </Button>
     </Stack>

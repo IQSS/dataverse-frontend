@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
@@ -8,7 +9,9 @@ import { FeaturedItemField } from './featured-item-field/FeaturedItemField'
 import { PreviewCarousel } from './PreviewCarousel'
 import { FeaturedItemFieldWithSortId, FeaturedItemsFormData } from '../types'
 import { SubmissionStatus, useSubmitFeaturedItems } from './useSubmitFeaturedItems'
+import { useDeleteFeaturedItems } from './useDeleteFeaturedItems'
 import { ActionButtons } from './ActionButtons'
+import { ConfirmDeleteModal } from './ConfirmDeleteModal'
 import styles from './FeaturedItemsForm.module.scss'
 
 interface FeaturedItemsFormProps {
@@ -24,9 +27,15 @@ export const FeaturedItemsForm = ({
   defaultValues,
   collectionFeaturedItems
 }: FeaturedItemsFormProps) => {
+  const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false)
   const hasInitialFeaturedItems = collectionFeaturedItems.length > 0
 
   const { submitForm, submissionStatus } = useSubmitFeaturedItems(
+    collectionId,
+    collectionRepository
+  )
+
+  const { deleteFeaturedItems, isDeletingFeaturedItems } = useDeleteFeaturedItems(
     collectionId,
     collectionRepository
   )
@@ -90,56 +99,73 @@ export const FeaturedItemsForm = ({
     }, 0)
   }
 
-  const handleDeleteAll = () => {}
+  const handleOpenDeleteConfirmationModal = () => setShowConfirmDeleteModal(true)
+  const handleCloseModal = () => setShowConfirmDeleteModal(false)
+
+  const handleContinueWithDelete = () => {
+    setShowConfirmDeleteModal(false)
+    deleteFeaturedItems()
+  }
 
   const showActionButtonsOnTop = fieldsArray.length >= 3
 
   return (
-    <FormProvider {...form}>
-      <PreviewCarousel />
+    <>
+      <FormProvider {...form}>
+        <PreviewCarousel />
 
-      <form
-        onSubmit={form.handleSubmit(submitForm)}
-        noValidate={true}
-        className={styles.form}
-        data-testid="featured-items-form">
-        {showActionButtonsOnTop && (
+        <form
+          onSubmit={form.handleSubmit(submitForm)}
+          noValidate={true}
+          className={styles.form}
+          data-testid="featured-items-form">
+          {showActionButtonsOnTop && (
+            <div className={styles['actions-wrapper']}>
+              <ActionButtons
+                isSubmitting={submissionStatus === SubmissionStatus.IsSubmitting}
+                isDeletingFeaturedItems={isDeletingFeaturedItems}
+                isFormDirty={form.formState.isDirty}
+                hasInitialFeaturedItems={hasInitialFeaturedItems}
+                onClickDelete={handleOpenDeleteConfirmationModal}
+                position="top"
+              />
+            </div>
+          )}
+
+          <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
+            <SortableContext items={fieldsArray}>
+              {(fieldsArray as FeaturedItemFieldWithSortId[]).map((field, index) => (
+                <FeaturedItemField
+                  id={field.id}
+                  itemIndex={index}
+                  disableDragWhenOnlyOneItem={fieldsArray.length === 1}
+                  onAddField={handleOnAddField}
+                  onRemoveField={handleOnRemoveField}
+                  initialImageUrl={
+                    collectionFeaturedItems.find((item) => item.id === field.itemId)?.imageFileUrl
+                  }
+                  key={field.id}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
           <div className={styles['actions-wrapper']}>
             <ActionButtons
               isSubmitting={submissionStatus === SubmissionStatus.IsSubmitting}
+              isDeletingFeaturedItems={isDeletingFeaturedItems}
               isFormDirty={form.formState.isDirty}
               hasInitialFeaturedItems={hasInitialFeaturedItems}
-              onDeleteAllFeaturedItems={handleDeleteAll}
+              onClickDelete={handleOpenDeleteConfirmationModal}
+              position="bottom"
             />
           </div>
-        )}
-
-        <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
-          <SortableContext items={fieldsArray}>
-            {(fieldsArray as FeaturedItemFieldWithSortId[]).map((field, index) => (
-              <FeaturedItemField
-                id={field.id}
-                itemIndex={index}
-                disableDragWhenOnlyOneItem={fieldsArray.length === 1}
-                onAddField={handleOnAddField}
-                onRemoveField={handleOnRemoveField}
-                initialImageUrl={
-                  collectionFeaturedItems.find((item) => item.id === field.itemId)?.imageFileUrl
-                }
-                key={field.id}
-              />
-            ))}
-          </SortableContext>
-        </DndContext>
-        <div className={styles['actions-wrapper']}>
-          <ActionButtons
-            isSubmitting={submissionStatus === SubmissionStatus.IsSubmitting}
-            isFormDirty={form.formState.isDirty}
-            hasInitialFeaturedItems={hasInitialFeaturedItems}
-            onDeleteAllFeaturedItems={handleDeleteAll}
-          />
-        </div>
-      </form>
-    </FormProvider>
+        </form>
+      </FormProvider>
+      <ConfirmDeleteModal
+        show={showConfirmDeleteModal}
+        handleClose={handleCloseModal}
+        handleContinue={handleContinueWithDelete}
+      />
+    </>
   )
 }

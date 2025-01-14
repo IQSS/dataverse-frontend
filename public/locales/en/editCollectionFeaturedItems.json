@@ -2,7 +2,11 @@
   "pageTitle": "Featured Items",
   "infoMessage": "Add Featured Items to showcase key content in your collection. These items will appear as cards in a carousel, each including a rich text content with an optional image.",
   "previewCarouselHeader": "Live preview of your featured items",
-  "deleteAll": "Delete all featured items",
+  "deleteAll": {
+    "action": "Delete all featured items",
+    "confirmation": "Are you sure you want to delete all featured items from this collection?",
+    "success": "All featured items have been deleted successfully."
+  },
   "form": {
     "image": {
       "label": "Image",

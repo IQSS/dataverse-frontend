@@ -44,14 +44,10 @@ export function useSubmitFeaturedItems(
   )
   const [submitError, setSubmitError] = useState<string | null>(null)
 
-  // TODO:ME Create new method to handle the delete all feature with its own use case
-
   const submitForm = (formCollectedData: FeaturedItemsFormData): void => {
     const itemsDTO = FeaturedItemsFormHelper.defineFeaturedItemsDTO(formCollectedData.featuredItems)
 
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
-
-    console.log({ itemsDTO })
 
     updateCollectionFeaturedItems(collectionRepository, itemsDTO, collectionId)
       .then(() => {
