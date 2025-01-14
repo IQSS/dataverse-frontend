@@ -161,6 +161,10 @@ The environment is accessible through the following URLs:
 > The design system and frontend in this repo are inspired by the Dataverse Project [Style Guide][dv_docs_styleguide_url],
 > but the following changes have been made, especially for accessibility.
 >
+> #### Dataverses are Called Collections
+>
+> While JSF refers to "Dataverses" (sometimes called "sub-dataverses" or child dataverses by the Dataverse community), the SPA calls them "Collections".
+>
 > #### Links
 >
 > We added an underline to links to make them accessible.
@@ -205,9 +209,9 @@ The environment is accessible through the following URLs:
 >
 > We have also introduced infinite scroll pagination here.
 >
-> #### Dataverses/Datasets list
+> #### Collection items list (collections/datasets/files)
 >
-> The original JSF Dataverses/Datasets list on the home page uses normal paging buttons at the bottom of the list.
+> The original JSF Dataverses/Datasets/Files list on the home page uses normal paging buttons at the bottom of the list.
 > We have implemented infinite scrolling in this list, replacing the normal paging buttons, but the goal would be to be
 > able to toggle between normal paging and infinite scrolling via a toggle setting or button.
 >
