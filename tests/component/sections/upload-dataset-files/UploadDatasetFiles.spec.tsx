@@ -335,8 +335,7 @@ describe('UploadDatasetFiles', () => {
     cy.get('input[value="users1.json"]').should('not.exist')
     cy.get('input[value="users2.json"]').should('exist')
   })
-
-  it('restrict uploaded file', () => {
+  it(`restrict uploaded file`, () => {
     const testDataset = DatasetMother.create()
 
     mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
@@ -353,38 +352,60 @@ describe('UploadDatasetFiles', () => {
       { action: 'drag-drop' }
     )
     // wait for upload to finish
+    // Set users2.json to restricted
     cy.findByText('2 files uploaded').should('exist')
-    cy.get('[type="checkbox"]').last().click()
-    cy.findByText('Save Changes').first().click()
-    cy.get('[type="checkbox"]').last().should('be.checked')
-    cy.get('[type="checkbox"]').last().click()
-    cy.get('[type="checkbox"]').last().should('not.be.checked')
-    cy.get('[type="checkbox"]').first().click()
-    cy.findByText('Edit files').first().click()
-    cy.findByText('Restrict').first().click()
-    cy.findByText('Save Changes').first().click()
-    cy.get('[type="checkbox"]').last().should('be.checked')
-    cy.findByText('Edit files').first().click()
-    cy.findByText('Unrestrict').first().click()
-    cy.get('[type="checkbox"]').last().should('not.be.checked')
-    cy.findByText('Edit files').first().click()
-    cy.findByText('Restrict').first().click()
+    cy.findByTestId('restricted_checkbox_users2.json').click()
+    cy.findByText('Save Changes').click()
+    cy.findByTestId('restrctionModal').should('not.exist')
+
+    // Set users2.json to unrestricted
+    cy.findByTestId('restricted_checkbox_users2.json').should('be.checked')
+    cy.findByTestId('restricted_checkbox_users2.json').click()
+    cy.findByTestId('restricted_checkbox_users2.json').should('not.be.checked')
+
+    // Set both files to restricted
+    cy.findByTestId('select-all-files-checkbox').click()
+    cy.findByRole('button', { name: 'Edit files' }).click()
+    cy.findByTestId('restrict-selected').click()
+    cy.findByText('Save Changes').click()
+    cy.findByTestId('restrctionModal').should('not.exist')
+    cy.findByTestId('restricted_checkbox_users1.json').should('be.checked')
+    cy.findByTestId('restricted_checkbox_users2.json').should('be.checked')
+
+    // Set both files to unrestricted
+    cy.findByRole('button', { name: 'Edit files' }).click()
+    cy.findByTestId('unrestrict-selected').click()
+    cy.findByTestId('restricted_checkbox_users1.json').should('not.be.checked')
+    cy.findByTestId('restricted_checkbox_users2.json').should('not.be.checked')
+
+    // Select Restrict, but don't save changes in the Modal.
+    // The changes should not be applied.
+    cy.findByRole('button', { name: 'Edit files' }).click()
+    cy.findByTestId('restrict-selected').click()
     cy.findByLabelText('Close').click()
-    cy.get('[type="checkbox"]').last().should('not.be.checked')
-    cy.findByText('Edit files').first().click()
-    cy.findByText('Restrict').first().click()
-    cy.get('[type="checkbox"]').last().click()
-    cy.get('textarea').last().type('Hello, World!')
-    cy.findByText('Save Changes').first().click()
-    cy.get('[type="checkbox"]').last().should('be.checked')
-    cy.findByText('Edit files').first().click()
-    cy.findByText('Restrict').first().click()
+    cy.findByTestId('restricted_checkbox_users1.json').should('not.be.checked')
+    cy.findByTestId('restricted_checkbox_users2.json').should('not.be.checked')
+
+    // Select Restrict, and add a reason,then save changes in the Modal.
+    cy.findByRole('button', { name: 'Edit files' }).click()
+    cy.findByTestId('restrict-selected').click()
+    cy.findByTestId('enable-access-request-checkbox').click()
+    cy.findByTestId('terms-of-access-textarea').type('Hello, World!')
+    cy.findByText('Save Changes').click()
+    cy.findByTestId('restricted_checkbox_users1.json').should('be.checked')
+    cy.findByTestId('restricted_checkbox_users2.json').should('be.checked')
+
+    // Select Restrict, cancel changes in the Modal. The changes should not be applied.
+    cy.findByRole('button', { name: 'Edit files' }).click()
+    cy.findByTestId('restrict-selected').click()
     cy.findByTitle('Cancel Changes').click()
-    cy.get('[type="checkbox"]').last().should('be.checked')
-    cy.get('[type="checkbox"]').first().click()
-    cy.get('[type="checkbox"]').first().click()
-    cy.findByText('Edit files').first().click()
-    cy.findByTitle('Delete selected').click()
+    cy.findByTestId('restricted_checkbox_users1.json').should('be.checked')
+    cy.findByTestId('restricted_checkbox_users2.json').should('be.checked')
+
+    cy.get('input[value="users1.json"]').should('exist')
+    cy.get('input[value="users2.json"]').should('exist')
+    cy.findByRole('button', { name: 'Edit files' }).click()
+    cy.findByTestId('delete-selected').click()
     cy.get('input[value="users1.json"]').should('not.exist')
     cy.get('input[value="users2.json"]').should('not.exist')
   })

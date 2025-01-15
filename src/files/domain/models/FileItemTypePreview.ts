@@ -21,6 +21,8 @@ export interface FileItemTypePreview {
   datasetCitation: string
   publicationStatuses: PublicationStatus[]
   releaseOrCreateDate: Date
+  restricted: boolean
+  canDownloadFile: boolean
 }
 
 export interface FilePreviewChecksum {

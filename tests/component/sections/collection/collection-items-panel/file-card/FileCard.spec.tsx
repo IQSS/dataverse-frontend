@@ -8,6 +8,9 @@ describe('FileCard', () => {
     const filePreview = FileItemTypePreviewMother.create()
     cy.customMount(<FileCard filePreview={filePreview} />)
 
+    filePreview.restricted
+      ? cy.findByTestId('file-access-restricted-icon').should('exist')
+      : cy.findByTestId('file-access-restricted-icon').should('not.exist')
     cy.contains(DateHelper.toDisplayFormat(filePreview.releaseOrCreateDate)).should('exist')
     cy.contains(filePreview.fileType).should('exist')
     filePreview.checksum?.type && cy.contains(filePreview.checksum?.type).should('exist')
