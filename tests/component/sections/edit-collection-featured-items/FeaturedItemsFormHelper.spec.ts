@@ -106,31 +106,31 @@ describe('FeaturedItemsFormHelper', () => {
     expect(result[0].content).to.deep.equal(testFormFields[0].content)
     expect(result[0].file).to.deep.equal(undefined)
     expect(result[0].keepFile).to.deep.equal(true)
-    expect(result[0].displayOrder).to.deep.equal(1)
+    expect(result[0].displayOrder).to.deep.equal(0)
 
     expect(result[1].id).to.deep.equal(testFormFields[1].itemId)
     expect(result[1].content).to.deep.equal(testFormFields[1].content)
     expect(result[1].file).to.deep.equal(undefined)
     expect(result[1].keepFile).to.deep.equal(false)
-    expect(result[1].displayOrder).to.deep.equal(2)
+    expect(result[1].displayOrder).to.deep.equal(1)
 
     expect(result[2].id).to.deep.equal(undefined)
     expect(result[2].content).to.deep.equal(testFormFields[2].content)
     expect(result[2].file).to.deep.equal(testFormFields[2].image)
     expect(result[2].keepFile).to.deep.equal(false)
-    expect(result[2].displayOrder).to.deep.equal(3)
+    expect(result[2].displayOrder).to.deep.equal(2)
 
     expect(result[3].id).to.deep.equal(undefined)
     expect(result[3].content).to.deep.equal(testFormFields[3].content)
     expect(result[3].file).to.deep.equal(undefined)
     expect(result[3].keepFile).to.deep.equal(false)
-    expect(result[3].displayOrder).to.deep.equal(4)
+    expect(result[3].displayOrder).to.deep.equal(3)
 
     expect(result[4].id).to.deep.equal(testFormFields[4].itemId)
     expect(result[4].content).to.deep.equal(testFormFields[4].content)
     expect(result[4].file).to.deep.equal(testFormFields[4].image)
     expect(result[4].keepFile).to.deep.equal(false)
-    expect(result[4].displayOrder).to.deep.equal(5)
+    expect(result[4].displayOrder).to.deep.equal(4)
   })
 
   describe('formatBytes', () => {

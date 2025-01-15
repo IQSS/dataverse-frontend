@@ -63,4 +63,12 @@ describe('EditCollectionDropdown', () => {
 
     cy.findByRole('button', { name: /General Information/i }).click()
   })
+
+  it('clicks the featured items button', () => {
+    cy.mountAuthenticated(<EditCollectionDropdown collection={rootCollection} />)
+
+    openDropdown()
+
+    cy.findByRole('button', { name: /Featured Items/i }).click()
+  })
 })

@@ -513,7 +513,7 @@ describe('FeaturedItemsForm', () => {
   })
 
   // TODO: This test is failing in CI sometimes, we need to investigate why and fix it
-  it.skip('should change the order of the items ', () => {
+  it('should change the order of the items ', () => {
     cy.mountAuthenticated(
       <FeaturedItemsForm
         collectionId={testCollection.id}
@@ -585,7 +585,7 @@ describe('FeaturedItemsForm', () => {
   })
 
   describe('Form Submition', () => {
-    it('should submit the form with the new values and show toast', () => {
+    it('should submit the form with the new values and show toast - case when collection dont have initial items', () => {
       collectionRepository.updateFeaturedItems = cy.stub().as('updateFeaturedItems').resolves()
 
       cy.mountAuthenticated(
@@ -593,7 +593,7 @@ describe('FeaturedItemsForm', () => {
           collectionId={testCollection.id}
           collectionRepository={collectionRepository}
           defaultValues={emptyFeaturedItems}
-          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+          collectionFeaturedItems={[]}
         />
       )
 
@@ -637,13 +637,11 @@ describe('FeaturedItemsForm', () => {
         const collectionFeaturedItemsDTO = updateFeaturedItemsSpy.getCall(0)
           .args[1] as CollectionFeaturedItemsDTO
 
-        console.log(collectionFeaturedItemsDTO[1].file)
-
         expect(updateFeaturedItemsSpy).to.be.calledOnce
 
         // First item, content only
         expect(collectionFeaturedItemsDTO[0].id).to.eq(undefined)
-        expect(collectionFeaturedItemsDTO[0].displayOrder).to.eq(1)
+        expect(collectionFeaturedItemsDTO[0].displayOrder).to.eq(0)
         expect(collectionFeaturedItemsDTO[0].content).to.eq(
           '<p class="rte-paragraph">New Content</p>'
         )
@@ -652,13 +650,141 @@ describe('FeaturedItemsForm', () => {
 
         // Second item with content and image
         expect(collectionFeaturedItemsDTO[1].id).to.eq(undefined)
-        expect(collectionFeaturedItemsDTO[1].displayOrder).to.eq(2)
+        expect(collectionFeaturedItemsDTO[1].displayOrder).to.eq(1)
         expect(collectionFeaturedItemsDTO[1].content).to.eq(
           '<p class="rte-paragraph">New Content 2</p>'
         )
         expect(collectionFeaturedItemsDTO[1].file).to.not.eq(undefined)
         expect(collectionFeaturedItemsDTO[1].file?.name).to.eq('harvard_uni.png')
         expect(collectionFeaturedItemsDTO[1].keepFile).to.eq(false)
+      })
+
+      cy.findByText(/Featured items have been updated successfully./)
+        .should('exist')
+        .should('be.visible')
+    })
+
+    it('should submit the form with the new values and show toast - case when collection has initial items', () => {
+      collectionRepository.updateFeaturedItems = cy.stub().as('updateFeaturedItems').resolves()
+
+      const featuredItemThree = CollectionFeaturedItemMother.createFeaturedItem({
+        id: 3,
+        displayOrder: 3,
+        content: '<h1 class="rte-heading">Featured Item Two</h1>',
+        imageFileUrl: undefined
+      })
+
+      const formDefaultValues: FeaturedItemsFormData = {
+        featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems([
+          featuredItemOne,
+          featuredItemTwo,
+          featuredItemThree
+        ])
+      }
+
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={formDefaultValues}
+          collectionFeaturedItems={[featuredItemOne, featuredItemTwo, featuredItemThree]}
+        />
+      )
+      cy.findByTestId('featured-item-0').as('first-item').should('exist').should('be.visible')
+      cy.findByTestId('featured-item-1').as('second-item').should('exist').should('be.visible')
+      cy.findByTestId('featured-item-2').as('third-item').should('exist').should('be.visible')
+      // Change the content of the first item
+
+      cy.get('@first-item').within(() => {
+        cy.findByLabelText(/Content/)
+          .clear()
+          .type('New Content')
+      })
+
+      cy.get('@third-item').within(() => {
+        // Change the image of the third item
+        cy.fixture('images/harvard_uni.png', null, { timeout: 10_0000 }).then(
+          (harvardUniImage: ArrayBuffer) => {
+            cy.findByLabelText(/Image/).selectFile(
+              {
+                contents: harvardUniImage,
+                fileName: 'harvard_uni.png',
+                mimeType: 'image/png'
+              },
+              { action: 'select' }
+            )
+          }
+        )
+        // Add a fourth item with content and image
+        cy.get(`[aria-label="Add Featured Item"]`).should('exist').should('be.visible').click()
+      })
+
+      cy.findByTestId('featured-item-3').as('fourth-item').should('exist').should('be.visible')
+
+      cy.get('@fourth-item').within(() => {
+        cy.findByLabelText(/Content/).type('New Content 4')
+
+        cy.fixture('images/harvard_uni.png', null, { timeout: 10_0000 }).then(
+          (harvardUniImage: ArrayBuffer) => {
+            cy.findByLabelText(/Image/).selectFile(
+              {
+                contents: harvardUniImage,
+                fileName: 'harvard_uni.png',
+                mimeType: 'image/png'
+              },
+              { action: 'select' }
+            )
+          }
+        )
+      })
+
+      // Submit the form with the top save button, as we show one on top and one on the bottom since we have 3 items
+      cy.findAllByRole('button', { name: /Save Changes/ })
+        .should('be.visible')
+        .should('be.enabled')
+        .first()
+        .click()
+
+      cy.get('@updateFeaturedItems').should((spy) => {
+        const updateFeaturedItemsSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+        const collectionFeaturedItemsDTO = updateFeaturedItemsSpy.getCall(0)
+          .args[1] as CollectionFeaturedItemsDTO
+
+        expect(updateFeaturedItemsSpy).to.be.calledOnce
+
+        // First item, content changed
+        expect(collectionFeaturedItemsDTO[0].id).to.eq(1)
+        expect(collectionFeaturedItemsDTO[0].displayOrder).to.eq(0)
+        expect(collectionFeaturedItemsDTO[0].content).to.eq(
+          '<p class="rte-paragraph">New Content</p>'
+        )
+        expect(collectionFeaturedItemsDTO[0].file).to.eq(undefined)
+        expect(collectionFeaturedItemsDTO[0].keepFile).to.eq(true)
+
+        // Second item, untouched
+        expect(collectionFeaturedItemsDTO[1].id).to.eq(2)
+        expect(collectionFeaturedItemsDTO[1].displayOrder).to.eq(1)
+        expect(collectionFeaturedItemsDTO[1].content).to.eq(featuredItemTwo.content)
+        expect(collectionFeaturedItemsDTO[1].file).to.eq(undefined)
+        expect(collectionFeaturedItemsDTO[1].keepFile).to.eq(false)
+
+        // Third item, image changed
+        expect(collectionFeaturedItemsDTO[2].id).to.eq(3)
+        expect(collectionFeaturedItemsDTO[2].displayOrder).to.eq(2)
+        expect(collectionFeaturedItemsDTO[2].content).to.eq(featuredItemThree.content)
+        expect(collectionFeaturedItemsDTO[2].file).to.not.eq(undefined)
+        expect(collectionFeaturedItemsDTO[2].file?.name).to.eq('harvard_uni.png')
+        expect(collectionFeaturedItemsDTO[2].keepFile).to.eq(false)
+
+        // New fourth item with content and image
+        expect(collectionFeaturedItemsDTO[3].id).to.eq(undefined)
+        expect(collectionFeaturedItemsDTO[3].displayOrder).to.eq(3)
+        expect(collectionFeaturedItemsDTO[3].content).to.eq(
+          '<p class="rte-paragraph">New Content 4</p>'
+        )
+        expect(collectionFeaturedItemsDTO[3].file).to.not.eq(undefined)
+        expect(collectionFeaturedItemsDTO[3].file?.name).to.eq('harvard_uni.png')
+        expect(collectionFeaturedItemsDTO[3].keepFile).to.eq(false)
       })
 
       cy.findByText(/Featured items have been updated successfully./)
@@ -699,6 +825,141 @@ describe('FeaturedItemsForm', () => {
         .should('be.visible')
 
       cy.findByText(/Featured items have been updated successfully./).should('not.exist')
+    })
+  })
+
+  describe('Delete All Featured Items', () => {
+    it('should not show the delete all button when the collection has no initial items', () => {
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={emptyFeaturedItems}
+          collectionFeaturedItems={[]}
+        />
+      )
+
+      cy.findByRole('button', { name: /Delete all featured items/ }).should('not.exist')
+    })
+
+    it('should show the delete all button when the collection has initial items', () => {
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={formDefaultValues}
+          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        />
+      )
+
+      cy.findByRole('button', { name: /Delete all featured items/ })
+        .should('exist')
+        .should('be.visible')
+    })
+
+    it('should show the confirmation modal when clicking the delete all button', () => {
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={formDefaultValues}
+          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        />
+      )
+
+      cy.findByRole('button', { name: /Delete all featured items/ })
+        .should('exist')
+        .should('be.visible')
+        .click()
+
+      cy.findByRole('dialog').should('exist').should('be.visible')
+    })
+
+    it('should cancel the delete all action when clicking the cancel button in the confirmation modal', () => {
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={formDefaultValues}
+          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        />
+      )
+
+      cy.findByRole('button', { name: /Delete all featured items/ })
+        .should('exist')
+        .should('be.visible')
+        .click()
+
+      cy.findByRole('dialog').should('exist').should('be.visible')
+
+      cy.findByRole('button', { name: /Cancel/ }).click()
+
+      cy.findByRole('dialog').should('not.exist')
+    })
+
+    it('should delete all featured items when clicking the confirm button in the confirmation modal', () => {
+      collectionRepository.deleteFeaturedItems = cy.stub().as('deleteFeaturedItems').resolves()
+
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={formDefaultValues}
+          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        />
+      )
+
+      cy.findByRole('button', { name: /Delete all featured items/ })
+        .should('exist')
+        .should('be.visible')
+        .click()
+
+      cy.findByRole('dialog').should('exist').should('be.visible')
+
+      cy.findByRole('button', { name: /Continue/ }).click()
+
+      cy.get('@deleteFeaturedItems').should((spy) => {
+        const deleteAllFeaturedItemsSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+        const collectionId = deleteAllFeaturedItemsSpy.getCall(0).args[0] as string
+
+        expect(deleteAllFeaturedItemsSpy).to.be.calledOnce
+        expect(collectionId).to.eq(testCollection.id)
+      })
+
+      cy.findByText(/All featured items have been deleted successfully./)
+        .should('exist')
+        .should('be.visible')
+    })
+
+    it('should show error toast if delete all featured items fails', () => {
+      collectionRepository.deleteFeaturedItems = cy
+        .stub()
+        .as('deleteFeaturedItems')
+        .rejects(new Error('Test Error: featured items failed to delete'))
+
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={formDefaultValues}
+          collectionFeaturedItems={[featuredItemOne, featuredItemTwo]}
+        />
+      )
+
+      cy.findByRole('button', { name: /Delete all featured items/ })
+        .should('exist')
+        .should('be.visible')
+        .click()
+
+      cy.findByRole('dialog').should('exist').should('be.visible')
+
+      cy.findByRole('button', { name: /Continue/ }).click()
+
+      cy.findByText(/Test Error: featured items failed to delete/)
+        .should('exist')
+        .should('be.visible')
+
+      cy.findByText(/All featured items have been deleted successfully./).should('not.exist')
     })
   })
 })
