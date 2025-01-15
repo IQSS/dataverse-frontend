@@ -24,9 +24,9 @@ export const FeaturedItems = ({ collectionRepository, collectionId }: FeaturedIt
 
   return (
     <Accordion className={styles['featured-items-accordion']}>
-      <Accordion.Item eventKey="0" style={{ overflow: 'hidden' }}>
+      <Accordion.Item eventKey="0" className={styles['accordion-item']}>
         <Accordion.Header>{t('featuredItems.title')}</Accordion.Header>
-        <Accordion.Body style={{ padding: 0, paddingTop: '2rem' }}>
+        <Accordion.Body className={styles['accordion-body']}>
           <Slider
             prevLabel={t('featuredItems.slider.prevLabel')}
             nextLabel={t('featuredItems.slider.nextLabel')}

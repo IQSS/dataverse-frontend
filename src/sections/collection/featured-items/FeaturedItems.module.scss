@@ -3,6 +3,16 @@
 
 .featured-items-accordion {
   margin-bottom: 1rem;
+
+  .accordion-item {
+    overflow: hidden;
+  }
+
+  .accordion-body {
+    padding: 0;
+    padding-top: 2rem;
+    background-color: color.adjust($dv-secondary-color, $lightness: 10%);
+  }
 }
 
 .featured-item-card {

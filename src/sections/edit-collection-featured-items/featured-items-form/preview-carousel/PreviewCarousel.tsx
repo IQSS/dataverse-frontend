@@ -4,8 +4,9 @@ import { Accordion } from '@iqss/dataverse-design-system'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { Slider } from '@/sections/collection/featured-items/slider/Slider'
 import { FeaturedItem } from '@/sections/collection/featured-items/FeaturedItem'
-import { FeaturedItemsFormHelper } from './FeaturedItemsFormHelper'
-import { FeaturedItemField } from '../types'
+import { FeaturedItemsFormHelper } from '../FeaturedItemsFormHelper'
+import { FeaturedItemField } from '../../types'
+import styles from './PreviewCarousel.module.scss'
 
 export const PreviewCarousel = () => {
   const { t } = useTranslation('editCollectionFeaturedItems')
@@ -16,10 +17,10 @@ export const PreviewCarousel = () => {
     FeaturedItemsFormHelper.transformFormFieldsToFeaturedItems(featureItemFieldValues)
 
   return (
-    <Accordion>
-      <Accordion.Item eventKey="0" style={{ overflow: 'hidden' }}>
+    <Accordion className={styles['preview-carousel-accordion']}>
+      <Accordion.Item eventKey="0" className={styles['accordion-item']}>
         <Accordion.Header>{t('previewCarouselHeader')}</Accordion.Header>
-        <Accordion.Body style={{ padding: 0, paddingTop: '2rem' }}>
+        <Accordion.Body className={styles['accordion-body']}>
           <Slider
             prevLabel={tCollection('featuredItems.slider.prevLabel')}
             nextLabel={tCollection('featuredItems.slider.nextLabel')}

@@ -11,7 +11,6 @@
   align-items: center;
   width: 100%;
   overflow: hidden;
-  background-color: color.adjust($dv-secondary-color, $lightness: 10%);
 
   // If the slider has no arrows, add padding to the container to avoid flickering
   &:not(:has(.slider-arrow)) {
