@@ -37,7 +37,9 @@ export class JSFileItemTypePreviewMapper {
       releaseOrCreateDate: jsFilePreview.releaseOrCreateDate,
       tags: [...categoriesAsLabels, ...tabularTagsAsLabels] as FileLabel[],
       variables: jsFilePreview.variables,
-      observations: jsFilePreview.observations
+      observations: jsFilePreview.observations,
+      restricted: jsFilePreview.restricted,
+      canDownloadFile: jsFilePreview.canDownloadFile
     }
   }
 }

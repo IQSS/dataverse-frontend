@@ -25,6 +25,8 @@ export interface FileItemTypePreview {
   variables?: number
   observations?: number
   tags?: FileLabel[]
+  restricted: boolean
+  canDownloadFile: boolean
 }
 
 export interface FilePreviewChecksum {
