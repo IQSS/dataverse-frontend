@@ -97,4 +97,44 @@ describe('EditDatasetMenu', () => {
       .should('have.class', 'disabled')
     cy.findByRole('button', { name: 'Metadata' }).should('exist').should('have.class', 'disabled')
   })
+
+  it('clicks on the Files (Upload) button', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithAllAllowed(),
+      locks: [],
+      hasValidTermsOfAccess: true
+    })
+
+    cy.mountAuthenticated(<EditDatasetMenu dataset={dataset} />)
+
+    cy.findByRole('button', { name: 'Edit Dataset' }).click()
+    cy.findByRole('button', { name: 'Files (Upload)' }).click()
+  })
+
+  it('clicks on the Files (Upload) button and dataset version is DRAFT', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithAllAllowed(),
+      locks: [],
+      hasValidTermsOfAccess: true,
+      version: DatasetVersionMother.createDraft()
+    })
+
+    cy.mountAuthenticated(<EditDatasetMenu dataset={dataset} />)
+
+    cy.findByRole('button', { name: 'Edit Dataset' }).click()
+    cy.findByRole('button', { name: 'Files (Upload)' }).click()
+  })
+
+  it('clicks on the Metadata button', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithAllAllowed(),
+      locks: [],
+      hasValidTermsOfAccess: true
+    })
+
+    cy.mountAuthenticated(<EditDatasetMenu dataset={dataset} />)
+
+    cy.findByRole('button', { name: 'Edit Dataset' }).click()
+    cy.findByRole('button', { name: 'Metadata' }).click()
+  })
 })
