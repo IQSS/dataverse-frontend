@@ -52,14 +52,10 @@ export function Collection({
   const canUserEditCollection = Boolean(collectionUserPermissions?.canEditCollection)
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
   const canUserPublishCollection = Boolean(collectionUserPermissions?.canPublishCollection)
-  const canUserViewUnpublishedCollection = Boolean(
-    collectionUserPermissions?.canViewUnpublishedCollection
-  )
 
   const showAddDataActions = canUserAddCollection || canUserAddDataset
   const showPublishButton = !collection?.isReleased && canUserPublishCollection
   const showEditButton = canUserEditCollection
-  const showCollectionFeaturedItems = canUserViewUnpublishedCollection || collection?.isReleased
 
   if (isLoadingCollection) {
     return <CollectionSkeleton />
@@ -89,12 +85,11 @@ export function Collection({
                 {t('publishedAlert')}
               </Alert>
             )}
-            {showCollectionFeaturedItems && (
-              <FeaturedItems
-                collectionRepository={collectionRepository}
-                collectionId={collection.id}
-              />
-            )}
+
+            <FeaturedItems
+              collectionRepository={collectionRepository}
+              collectionId={collection.id}
+            />
 
             <div className={styles['metrics-actions-container']}>
               <div className={styles.metrics}></div>
