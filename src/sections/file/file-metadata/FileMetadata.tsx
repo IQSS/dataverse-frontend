@@ -157,13 +157,13 @@ export function FileMetadata({
                 <Col sm={3}>
                   <strong>{t('metadata.fields.variables')}</strong>
                 </Col>
-                <Col>{metadata.tabularData.variablesCount}</Col>
+                <Col>{metadata.tabularData.variables}</Col>
               </Row>
               <Row className={styles.row}>
                 <Col sm={3}>
                   <strong>{t('metadata.fields.observations')}</strong>
                 </Col>
-                <Col>{metadata.tabularData.observationsCount}</Col>
+                <Col>{metadata.tabularData.observations}</Col>
               </Row>
             </>
           )}

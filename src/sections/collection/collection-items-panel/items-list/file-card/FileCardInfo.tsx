@@ -6,6 +6,7 @@ import { FileCardHelper } from './FileCardHelper'
 import { Route } from '@/sections/Route.enum'
 import { DvObjectType } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { LinkToPage } from '@/sections/shared/link-to-page/LinkToPage'
+import { FileLabels } from '@/sections/file/file-labels/FileLabels'
 import { CopyToClipboardButton } from '@/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/copy-to-clipboard-button/CopyToClipboardButton'
 import styles from './FileCard.module.scss'
 
@@ -15,6 +16,8 @@ interface FileCardInfoProps {
 
 export function FileCardInfo({ filePreview }: FileCardInfoProps) {
   const bytesFormatted = FileCardHelper.formatBytesToCompactNumber(filePreview.sizeInBytes)
+  const variables = filePreview.variables || 0
+  const observations = filePreview.observations || 0
 
   return (
     <div className={styles['card-info-container']}>
@@ -39,6 +42,9 @@ export function FileCardInfo({ filePreview }: FileCardInfoProps) {
         <div className={styles.info}>
           <span>{filePreview.fileType}</span>
           <span>{`- ${bytesFormatted}`}</span>
+          {filePreview.fileType === 'Tab-Delimited' && (
+            <span>{`- ${variables} variables, ${observations} observations`}</span>
+          )}
           {filePreview.checksum && (
             <Stack direction="horizontal" gap={0}>
               <span>{`- ${filePreview.checksum.type}:`}</span>
@@ -46,7 +52,10 @@ export function FileCardInfo({ filePreview }: FileCardInfoProps) {
             </Stack>
           )}
         </div>
-        <p className={styles.description}>{filePreview.description}</p>
+        <div>
+          <FileLabels labels={filePreview.tags || []} />
+        </div>
+        {filePreview.description && <p className={styles.description}>{filePreview.description}</p>}
       </Stack>
     </div>
   )
