@@ -41,7 +41,7 @@ export function FileCardInfo({ filePreview }: FileCardInfoProps) {
 
         <div className={styles.info}>
           <span>{filePreview.fileType}</span>
-          <span>{`- ${bytesFormatted}`}</span>{' '}
+          <span>{`- ${bytesFormatted}`}</span>
           {filePreview.fileType === 'Tab-Delimited' && (
             <span>{`- ${variables} variables, ${observations} observations`}</span>
           )}
