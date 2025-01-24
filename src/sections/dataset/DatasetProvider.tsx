@@ -11,6 +11,7 @@ interface DatasetProviderProps {
     persistentId?: string
     privateUrlToken?: string
     version?: string
+    keepRawFields?: boolean
   }
   isPublishing?: boolean
 }
@@ -25,7 +26,13 @@ export function DatasetProvider({
 
   const getDataset = useCallback(() => {
     if (searchParams.persistentId) {
-      return getDatasetByPersistentId(repository, searchParams.persistentId, searchParams.version)
+      return getDatasetByPersistentId(
+        repository,
+        searchParams.persistentId,
+        searchParams.version,
+        undefined,
+        searchParams.keepRawFields
+      )
     }
     if (searchParams.privateUrlToken) {
       return getDatasetByPrivateUrlToken(repository, searchParams.privateUrlToken)
