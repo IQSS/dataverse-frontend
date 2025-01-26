@@ -1,6 +1,7 @@
 {
   "filesTabTitle": "Files",
   "metadataTabTitle": "Metadata",
+  "termsTabTitle": "Terms",
   "anonymizedFieldValue": "withheld",
   "license": {
     "title": "License/Data Use Agreement",
@@ -115,6 +116,16 @@
       "heading": "Unpublished Dataset Private URL",
       "alertText": "This unpublished dataset is being privately shared."
     }
+  },
+  "terms": {
+    "editTermsButton": "Edit Term Requirements",
+    "title": "Terms",
+    "termsOfUse": "Terms of Use",
+    "termsOfAccess": "Terms of Access",
+    "termsOfAccessPlaceholder": "Enter terms of access",
+    "termsOfUsePlaceholder": "Enter terms of use",
+    "termsOfUseHelpText": "These terms will be displayed to users who download your data.",
+    "termsOfAccessHelpText": "These terms will be displayed to users who request access to your data."
   },
   "publish": {
     "draftQuestion": "Are you sure you want to publish this dataset? Once you do so, it must remain published.",

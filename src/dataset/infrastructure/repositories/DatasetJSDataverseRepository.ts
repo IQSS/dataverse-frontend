@@ -178,6 +178,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .execute(persistentId, version, includeDeaccessioned)
       .then((jsDataset) => this.fetchDatasetDetails(jsDataset, version))
       .then((datasetDetails) => {
+        console.log('jsDataset', datasetDetails.jsDataset)
         return this.fetchDownloadSizes(persistentId, version).then((downloadSizes) => {
           datasetDetails.jsDatasetFilesTotalOriginalDownloadSize = downloadSizes[0]
           datasetDetails.jsDatasetFilesTotalArchivalDownloadSize = downloadSizes[1]

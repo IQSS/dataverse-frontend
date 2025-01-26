@@ -367,7 +367,7 @@ export interface DatasetDownloadUrls {
   original: string
   archival: string
 }
-export interface TermsOfUse {
+export interface DatasetTermsOfUse {
   fileAccessRequest: boolean
   termsOfAccess?: string
   dataAccessPlace?: string
@@ -385,7 +385,7 @@ export class Dataset {
     public readonly alerts: Alert[],
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
-    public readonly termsOfUse: TermsOfUse,
+    public readonly termsOfUse: DatasetTermsOfUse,
     public readonly metadataBlocks: DatasetMetadataBlocks,
     public readonly permissions: DatasetPermissions,
     public readonly locks: DatasetLock[],
@@ -478,7 +478,7 @@ export class Dataset {
       public readonly version: DatasetVersion,
       public readonly summaryFields: DatasetMetadataBlock[],
       public readonly license: DatasetLicense = defaultLicense,
-      public readonly termsOfUse: TermsOfUse,
+      public readonly termsOfUse: DatasetTermsOfUse,
       public readonly metadataBlocks: DatasetMetadataBlocks,
       public readonly permissions: DatasetPermissions,
       public readonly locks: DatasetLock[],

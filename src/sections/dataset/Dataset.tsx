@@ -26,6 +26,7 @@ import useUpdateDatasetAlerts from './useUpdateDatasetAlerts'
 import { QueryParamKey, Route } from '../Route.enum'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
+import { DatasetTerms } from '@/sections/dataset/dataset-terms/DatasetTerms'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -150,6 +151,11 @@ export function Dataset({
                         metadataBlocks={dataset.metadataBlocks}
                         metadataBlockInfoRepository={metadataBlockInfoRepository}
                       />
+                    </div>
+                  </Tabs.Tab>
+                  <Tabs.Tab title={'Terms'} eventKey={'terms'}>
+                    <div className={styles['tab-container']}>
+                      <DatasetTerms license={dataset.license} termsOfUse={dataset.termsOfUse} />
                     </div>
                   </Tabs.Tab>
                 </Tabs>
