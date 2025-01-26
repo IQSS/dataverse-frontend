@@ -416,6 +416,16 @@ export class DatasetMother {
       fileDownloadSizes: [],
       requestedVersion: undefined,
       hierarchy: UpwardHierarchyNodeMother.createDataset(),
+      termsOfUse: {
+        fileAccessRequest: true,
+        termsOfAccess: 'Terms of access',
+        dataAccessPlace: 'Data access place',
+        originalArchive: 'Original archive',
+        availabilityStatus: 'Availability status',
+        contactForAccess: 'Contact for access',
+        sizeOfCollection: 'Size of collection',
+        studyCompletion: 'Study completion'
+      },
       ...props
     }
 
@@ -424,6 +434,7 @@ export class DatasetMother {
       dataset.version,
       dataset.summaryFields,
       dataset.license,
+      dataset.termsOfUse,
       dataset.metadataBlocks,
       dataset.permissions,
       dataset.locks,

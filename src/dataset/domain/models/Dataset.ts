@@ -367,6 +367,16 @@ export interface DatasetDownloadUrls {
   original: string
   archival: string
 }
+export interface TermsOfUse {
+  fileAccessRequest: boolean
+  termsOfAccess?: string
+  dataAccessPlace?: string
+  originalArchive?: string
+  availabilityStatus?: string
+  contactForAccess?: string
+  sizeOfCollection?: string
+  studyCompletion?: string
+}
 
 export class Dataset {
   constructor(
@@ -375,6 +385,7 @@ export class Dataset {
     public readonly alerts: Alert[],
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly license: DatasetLicense,
+    public readonly termsOfUse: TermsOfUse,
     public readonly metadataBlocks: DatasetMetadataBlocks,
     public readonly permissions: DatasetPermissions,
     public readonly locks: DatasetLock[],
@@ -467,6 +478,7 @@ export class Dataset {
       public readonly version: DatasetVersion,
       public readonly summaryFields: DatasetMetadataBlock[],
       public readonly license: DatasetLicense = defaultLicense,
+      public readonly termsOfUse: TermsOfUse,
       public readonly metadataBlocks: DatasetMetadataBlocks,
       public readonly permissions: DatasetPermissions,
       public readonly locks: DatasetLock[],
@@ -535,6 +547,7 @@ export class Dataset {
         this.alerts,
         this.summaryFields,
         this.license,
+        this.termsOfUse,
         this.metadataBlocks,
         this.permissions,
         this.locks,

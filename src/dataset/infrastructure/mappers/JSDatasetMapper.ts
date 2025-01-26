@@ -61,6 +61,7 @@ export class JSDatasetMapper {
       version,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, jsDatasetSummaryFieldsNames),
       jsDataset.license,
+      jsDataset.termsOfUse,
       JSDatasetMapper.toMetadataBlocks(
         jsDataset.metadataBlocks,
         jsDataset.alternativePersistentId,
