@@ -26,7 +26,7 @@ export function EditDatasetTermsButton() {
       onClick={handleClick}
       icon={<Backpack className={styles.icon} />}
       disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
-      {t('terms.editTermsButton')}
+      {t('termsTab.editTermsButton')}
     </Button>
   )
 }

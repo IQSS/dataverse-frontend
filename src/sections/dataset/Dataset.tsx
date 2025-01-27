@@ -153,9 +153,13 @@ export function Dataset({
                       />
                     </div>
                   </Tabs.Tab>
-                  <Tabs.Tab title={'Terms'} eventKey={'terms'}>
+                  <Tabs.Tab title={t('termsTabTitle')} eventKey={'terms'}>
                     <div className={styles['tab-container']}>
-                      <DatasetTerms license={dataset.license} termsOfUse={dataset.termsOfUse} />
+                      <DatasetTerms
+                        license={dataset.license}
+                        termsOfUse={dataset.termsOfUse}
+                        numberOfRestrictedFiles={dataset.fileDownloadSizes.length}
+                      />
                     </div>
                   </Tabs.Tab>
                 </Tabs>

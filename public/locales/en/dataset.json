@@ -117,15 +117,22 @@
       "alertText": "This unpublished dataset is being privately shared."
     }
   },
-  "terms": {
+  "termsTab": {
     "editTermsButton": "Edit Term Requirements",
-    "title": "Terms",
-    "termsOfUse": "Terms of Use",
-    "termsOfAccess": "Terms of Access",
-    "termsOfAccessPlaceholder": "Enter terms of access",
-    "termsOfUsePlaceholder": "Enter terms of use",
-    "termsOfUseHelpText": "These terms will be displayed to users who download your data.",
-    "termsOfAccessHelpText": "These terms will be displayed to users who request access to your data."
+    "licenseTitle": "Dataset Terms",
+    "termsTitle": "Restricted Files + Terms of Access",
+    "dataAccessPlace": "Data Access Place",
+    "originalArchive": "Original Archive",
+    "availabilityStatus": "Availability Status",
+    "contactForAccess": "Contact for Access",
+    "sizeOfCollection": "Size of Collection",
+    "studyCompletion": "Study Completion",
+    "dataAccessPlaceTip": "If the data is not only in Dataverse, list the location(s) where the data are currently stored.",
+    "originalArchiveTip": "Archive from which the data was obtained.",
+    "availabilityStatusTip": "Statement of Dataset availability. A depositor may need to indicate that a Dataset is unavailable because it is embargoed for a period of time, because it has been superseded, because a new edition is imminent, etc.",
+    "contactForAccessTip": "If different from the Dataset Contact, this is the Contact person or organization (include email or full address, and telephone number if available) that controls access to a collection.",
+    "sizeOfCollectionTip": "Summary of the number of physical files that exist in a Dataset, recording the number of files that contain data and noting whether the collection contains machine readable documentation and/or other supplementary files and information, such as code, data dictionaries, data definition statements, or data collection instruments.",
+    "studyCompletionTip": "Relationship of the data collected to the amount of data coded and stored in the Dataset. Information as to why certain items of collected information were not included in the dataset or a specific data file should be provided."
   },
   "publish": {
     "draftQuestion": "Are you sure you want to publish this dataset? Once you do so, it must remain published.",
