@@ -1,26 +1,48 @@
 import { Accordion, Col, Row } from '@iqss/dataverse-design-system'
-import { DatasetLicense, DatasetTermsOfUse } from '../../../dataset/domain/models/Dataset'
+import {
+  DatasetLicense,
+  DatasetTermsOfUse,
+  DatasetVersion
+} from '../../../dataset/domain/models/Dataset'
 import { License } from '@/sections/dataset/dataset-summary/License'
 import { EditDatasetTermsButton } from '@/sections/dataset/dataset-terms/EditDatasetTermsButton'
 import { useTranslation } from 'react-i18next'
 import { QuestionMarkTooltip } from '@iqss/dataverse-design-system'
 import styles from '@/sections/dataset/dataset-terms/DatasetTerms.module.scss'
+import { useGetFilesCountInfo } from '@/sections/dataset/dataset-files/useGetFilesCountInfo'
+import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { FileAccessCount } from '@/files/domain/models/FilesCountInfo'
+import { FileAccessOption } from '@/files/domain/models/FileCriteria'
 
 interface DatasetTermsProps {
   license: DatasetLicense
   termsOfUse: DatasetTermsOfUse
-  numberOfRestrictedFiles: number
+  filesRepository: FileRepository
+  datasetPersistentId: string
+  datasetVersion: DatasetVersion
 }
-/*
- dataAccessPlace?: string
-  originalArchive?: string
-  availabilityStatus?: string
-  contactForAccess?: string
-  sizeOfCollection?: string
-  studyCompletion?: string
- */
-export function DatasetTerms({ license, termsOfUse }: DatasetTermsProps) {
+
+export function DatasetTerms({
+  license,
+  termsOfUse,
+  filesRepository,
+  datasetPersistentId,
+  datasetVersion
+}: DatasetTermsProps) {
   const { t } = useTranslation('dataset')
+  const {
+    filesCountInfo,
+    isLoading: _isLoadingFilesCountInfo,
+    error: errorFilesCountInfo
+  } = useGetFilesCountInfo({
+    filesRepository,
+    datasetPersistentId,
+    datasetVersion
+  })
+  const restrictedFilesCount = filesCountInfo
+    ? numberOfRestrictedFiles(filesCountInfo.perAccess)
+    : 0
+
   return (
     <>
       <div className={styles['edit-terms-button-container']}>
@@ -36,6 +58,35 @@ export function DatasetTerms({ license, termsOfUse }: DatasetTermsProps) {
         <Accordion.Item eventKey={'1'}>
           <Accordion.Header>{t('termsTab.termsTitle')}</Accordion.Header>
           <Accordion.Body>
+            {filesCountInfo && restrictedFilesCount > 0 && (
+              <>
+                <DatasetTermsRow
+                  title={t('termsTab.restrictedFiles')}
+                  tooltipMessage={t('termsTab.restrictedFilesTip')}
+                  value={
+                    restrictedFilesCount === 1
+                      ? t('termsTab.restrictedFilesOne')
+                      : t('termsTab.restrictedFilesMany', {
+                          count: restrictedFilesCount
+                        })
+                  }
+                />
+                <DatasetTermsRow
+                  title={t('termsTab.termsOfAccess')}
+                  tooltipMessage={t('termsTab.termsOfAccessTip')}
+                  value={termsOfUse.termsOfAccess}
+                />
+                <DatasetTermsRow
+                  title={t('termsTab.requestAccess')}
+                  tooltipMessage={t('termsTab.requestAccessTip')}
+                  value={
+                    termsOfUse.fileAccessRequest
+                      ? t('termsTab.requestAccessTrue')
+                      : t('termsTab.requestAccessFalse')
+                  }
+                />
+              </>
+            )}
             <DatasetTermsRow
               title={t('termsTab.dataAccessPlace')}
               tooltipMessage={t('termsTab.dataAccessPlaceTip')}
@@ -71,6 +122,10 @@ export function DatasetTerms({ license, termsOfUse }: DatasetTermsProps) {
       </Accordion>
     </>
   )
+}
+
+const numberOfRestrictedFiles = (fileAccessArray: FileAccessCount[]): number => {
+  return fileAccessArray.find((access) => access.access === FileAccessOption.RESTRICTED)?.count || 0
 }
 
 interface DatasetTermsRowProps {

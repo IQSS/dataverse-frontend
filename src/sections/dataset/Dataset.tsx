@@ -158,7 +158,9 @@ export function Dataset({
                       <DatasetTerms
                         license={dataset.license}
                         termsOfUse={dataset.termsOfUse}
-                        numberOfRestrictedFiles={dataset.fileDownloadSizes.length}
+                        filesRepository={fileRepository}
+                        datasetPersistentId={dataset.persistentId}
+                        datasetVersion={dataset.version}
                       />
                     </div>
                   </Tabs.Tab>
