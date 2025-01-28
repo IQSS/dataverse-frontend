@@ -1,12 +1,13 @@
 import { Row, Col } from '@iqss/dataverse-design-system'
 import { DatasetLicense as LicenseModel } from '../../../dataset/domain/models/Dataset'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 
 interface LicenseProps {
   license: LicenseModel
+  includeHelpText?: boolean
 }
 
-export function License({ license }: LicenseProps) {
+export function License({ license, includeHelpText = false }: LicenseProps) {
   const { t } = useTranslation('dataset')
 
   return (
@@ -15,6 +16,23 @@ export function License({ license }: LicenseProps) {
         <b>{t('license.title')}</b>
       </Col>
       <Col>
+        {includeHelpText && (
+          <div style={{ margin: '10px 0' }}>
+            <Trans
+              t={t}
+              i18nKey="termsTab.licenseHelpText"
+              components={{
+                anchor: (
+                  <a
+                    href="https://dataverse.org/best-practices/dataverse-community-norms"
+                    target="_blank"
+                    rel="noreferrer"
+                  />
+                )
+              }}
+            />
+          </div>
+        )}
         {license.iconUri && (
           <img
             alt={t(`license.altTextPrefix`) + license.name}

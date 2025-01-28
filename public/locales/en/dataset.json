@@ -121,6 +121,7 @@
     "editTermsButton": "Edit Term Requirements",
     "licenseTitle": "Dataset Terms",
     "termsTitle": "Restricted Files + Terms of Access",
+    "licenseHelpText": "Our <anchor>Community Norms</anchor> as well as good scientific practices expect that proper credit is given via citation. Please use the data citation shown on the dataset page.",
     "restrictedFiles": "Restricted Files",
     "termsOfAccess": "Terms of Access for Restricted Files",
     "requestAccess": "Request Access",
