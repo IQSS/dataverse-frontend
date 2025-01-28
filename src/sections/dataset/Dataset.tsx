@@ -26,7 +26,6 @@ import useUpdateDatasetAlerts from './useUpdateDatasetAlerts'
 import { QueryParamKey, Route } from '../Route.enum'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
-import { MarkdownComponent } from '../dataset/markdown/MarkdownComponent'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -98,9 +97,7 @@ export function Dataset({
             </div>
 
             <header className={styles.header}>
-              <h1>
-                <MarkdownComponent markdown={dataset.version.title} />
-              </h1>
+              <h1>{dataset.version.title}</h1>
               <DatasetLabels labels={dataset.version.labels} />
             </header>
             <div className={styles.container}>

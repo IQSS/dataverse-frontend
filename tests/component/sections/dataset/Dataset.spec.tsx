@@ -167,7 +167,7 @@ describe('Dataset', () => {
     )
 
     cy.findByText('Dataset Title').should('exist')
-    cy.findByText('Dataset Title').parents('.active').should('exist')
+    cy.findByText('Dataset Title').should('exist').should('have.class', 'active')
     cy.findByRole('link', { name: 'Root' }).should('exist')
   })
 

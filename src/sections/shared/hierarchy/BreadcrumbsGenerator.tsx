@@ -6,7 +6,6 @@ import {
 import { LinkToPage } from '../link-to-page/LinkToPage'
 import { Route } from '../../Route.enum'
 import styles from './BreadcrumbsGenerator.module.scss'
-import { MarkdownComponent } from '../../dataset/markdown/MarkdownComponent'
 
 type BreadcrumbGeneratorProps =
   | {
@@ -26,16 +25,6 @@ export function BreadcrumbsGenerator({
   actionItemText
 }: BreadcrumbGeneratorProps) {
   const hierarchyArray = hierarchy.toArray()
-  const renderItemName = (item: UpwardHierarchyNode) => {
-    if (item.type === 'dataset') {
-      return (
-        <span style={{ display: 'inline-block' }}>
-          <MarkdownComponent markdown={item.name} />
-        </span>
-      )
-    }
-    return item.name
-  }
 
   return (
     <Breadcrumb className={styles['breadcrumb-generator']}>
@@ -46,7 +35,7 @@ export function BreadcrumbsGenerator({
         if (isLast) {
           return (
             <Breadcrumb.Item key={index} active>
-              {renderItemName(item)}
+              {item.name}
             </Breadcrumb.Item>
           )
         }
@@ -60,7 +49,7 @@ export function BreadcrumbsGenerator({
                 page: Route.COLLECTIONS_BASE,
                 children: <>{item.name}</>
               }}>
-              {renderItemName(item)}
+              {item.name}
             </Breadcrumb.Item>
           )
         }
@@ -76,7 +65,7 @@ export function BreadcrumbsGenerator({
               persistentId: item.persistentId,
               version: item.version
             }}>
-            {renderItemName(item)}
+            {item.name}
           </Breadcrumb.Item>
         )
       })}
