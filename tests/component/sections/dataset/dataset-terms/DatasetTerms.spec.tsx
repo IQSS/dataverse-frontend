@@ -21,10 +21,19 @@ const noRestrictedFilesCountInfo = FilesCountInfoMother.create({
     { access: FileAccessOption.RESTRICTED, count: 0 }
   ]
 })
+const singleRestrictedFilesCountInfo = FilesCountInfoMother.create({
+  perAccess: [
+    { access: FileAccessOption.PUBLIC, count: 222 },
+    { access: FileAccessOption.RESTRICTED, count: 1 }
+  ]
+})
 
 const license = LicenseMother.create()
 const termsOfUse = TermsOfUseMother.create()
 const emptyTermsOfUse = TermsOfUseMother.createEmpty()
+const accessAllowedTermsOfUse = TermsOfUseMother.create({ fileAccessRequest: true })
+const accessNotAllowedTermsOfUse = TermsOfUseMother.create({ fileAccessRequest: false })
+const termsOfUseWithUndefinedValue = TermsOfUseMother.create({ dataAccessPlace: undefined })
 
 describe('DatasetTerms', () => {
   beforeEach(() => {
@@ -60,7 +69,37 @@ describe('DatasetTerms', () => {
     cy.findByText('Restricted Files').should('exist')
     cy.findByText('There are 10 restricted files in this dataset.').should('exist')
   })
+  it('does not render a row if the value is undefined', () => {
+    cy.customMount(
+      <DatasetTerms
+        license={license}
+        termsOfUse={termsOfUseWithUndefinedValue}
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
 
+    cy.findByText('Restricted Files + Terms of Access').should('exist')
+    cy.findByText('Data Access Place').should('not.exist')
+  })
+  it('renders the one restricted file message', () => {
+    fileRepository.getFilesCountInfoByDatasetPersistentId = cy
+      .stub()
+      .resolves(singleRestrictedFilesCountInfo)
+    cy.customMount(
+      <DatasetTerms
+        license={license}
+        termsOfUse={termsOfUse}
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByText('Restricted Files').should('exist')
+    cy.findByText('There is 1 restricted file in this dataset.').should('exist')
+  })
   it('renders the terms of access', () => {
     cy.customMount(
       <DatasetTerms
@@ -76,11 +115,11 @@ describe('DatasetTerms', () => {
     cy.findByText(termsOfUse.termsOfAccess as string).should('exist')
   })
 
-  it('renders the request access information', () => {
+  it('renders the request access allowed message', () => {
     cy.customMount(
       <DatasetTerms
         license={license}
-        termsOfUse={termsOfUse}
+        termsOfUse={accessAllowedTermsOfUse}
         filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
@@ -88,11 +127,21 @@ describe('DatasetTerms', () => {
     )
 
     cy.findByText('Request Access').should('exist')
-    cy.findByText(
-      termsOfUse.fileAccessRequest
-        ? 'Users may request access to files.'
-        : 'Users may not request access to files.'
-    ).should('exist')
+    cy.findByText('Users may request access to files.').should('exist')
+  })
+  it('renders the request access not allowed message', () => {
+    cy.customMount(
+      <DatasetTerms
+        license={license}
+        termsOfUse={accessNotAllowedTermsOfUse}
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByText('Request Access').should('exist')
+    cy.findByText('Users may not request access to files.').should('exist')
   })
 
   it('renders the data access place', () => {
