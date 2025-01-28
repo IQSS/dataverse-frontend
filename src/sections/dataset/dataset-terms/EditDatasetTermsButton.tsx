@@ -17,6 +17,7 @@ export function EditDatasetTermsButton() {
   }
 
   const handleClick = () => {
+    console.log('calling showModal')
     showModal()
   }
 

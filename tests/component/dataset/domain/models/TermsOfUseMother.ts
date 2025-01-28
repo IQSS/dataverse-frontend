@@ -16,4 +16,16 @@ export class TermsOfUseMother {
 
     return { ...defaultTerms, ...props }
   }
+  static createEmpty(): DatasetTermsOfUse {
+    return {
+      termsOfAccess: undefined,
+      fileAccessRequest: false,
+      dataAccessPlace: undefined,
+      originalArchive: undefined,
+      availabilityStatus: undefined,
+      contactForAccess: undefined,
+      sizeOfCollection: undefined,
+      studyCompletion: undefined
+    }
+  }
 }

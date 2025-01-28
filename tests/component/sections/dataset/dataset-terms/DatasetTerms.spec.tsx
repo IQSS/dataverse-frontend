@@ -1,7 +1,7 @@
 import { FilesCountInfoMother } from '../../../files/domain/models/FilesCountInfoMother'
-import { DatasetTerms } from '../../../../../src/sections/dataset/dataset-terms/DatasetTerms'
-import { FileRepository } from '../../../../../src/files/domain/repositories/FileRepository'
-import { FileAccessOption } from '../../../../../src/files/domain/models/FileCriteria'
+import { DatasetTerms } from '@/sections/dataset/dataset-terms/DatasetTerms'
+import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { FileAccessOption } from '@/files/domain/models/FileCriteria'
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { LicenseMother } from '../../../dataset/domain/models/LicenseMother'
 import { TermsOfUseMother } from '../../../dataset/domain/models/TermsOfUseMother'
@@ -15,8 +15,16 @@ const testFilesCountInfo = FilesCountInfoMother.create({
     { access: FileAccessOption.RESTRICTED, count: 10 }
   ]
 })
+const noRestrictedFilesCountInfo = FilesCountInfoMother.create({
+  perAccess: [
+    { access: FileAccessOption.PUBLIC, count: 222 },
+    { access: FileAccessOption.RESTRICTED, count: 0 }
+  ]
+})
+
 const license = LicenseMother.create()
 const termsOfUse = TermsOfUseMother.create()
+const emptyTermsOfUse = TermsOfUseMother.createEmpty()
 
 describe('DatasetTerms', () => {
   beforeEach(() => {
@@ -34,8 +42,8 @@ describe('DatasetTerms', () => {
       />
     )
 
-    cy.findByText('License').should('exist')
-    cy.findByText('Terms').should('exist')
+    cy.findByText('Dataset Terms').should('exist')
+    cy.findByText('Restricted Files + Terms of Access').should('exist')
   })
 
   it('renders the correct number of restricted files', () => {
@@ -50,7 +58,7 @@ describe('DatasetTerms', () => {
     )
 
     cy.findByText('Restricted Files').should('exist')
-    cy.findByText('10 files are restricted.').should('exist')
+    cy.findByText('There are 10 restricted files in this dataset.').should('exist')
   })
 
   it('renders the terms of access', () => {
@@ -64,7 +72,7 @@ describe('DatasetTerms', () => {
       />
     )
 
-    cy.findByText('Terms of Access').should('exist')
+    cy.findByText('Terms of Access for Restricted Files').should('exist')
     cy.findByText(termsOfUse.termsOfAccess as string).should('exist')
   })
 
@@ -80,7 +88,11 @@ describe('DatasetTerms', () => {
     )
 
     cy.findByText('Request Access').should('exist')
-    cy.findByText(termsOfUse.fileAccessRequest ? 'Yes' : 'No').should('exist')
+    cy.findByText(
+      termsOfUse.fileAccessRequest
+        ? 'Users may request access to files.'
+        : 'Users may not request access to files.'
+    ).should('exist')
   })
 
   it('renders the data access place', () => {
@@ -171,5 +183,35 @@ describe('DatasetTerms', () => {
 
     cy.findByText('Study Completion').should('exist')
     cy.findByText(termsOfUse.studyCompletion as string).should('exist')
+  })
+  it('does not render the terms of use AccordionItem if terms of use fields are empty', () => {
+    cy.customMount(
+      <DatasetTerms
+        license={license}
+        termsOfUse={emptyTermsOfUse}
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByText('Restricted Files + Terms of Access').should('not.exist')
+  })
+  it('does not render Request Access field if there are no restricted files', () => {
+    fileRepository.getFilesCountInfoByDatasetPersistentId = cy
+      .stub()
+      .resolves(noRestrictedFilesCountInfo)
+    cy.customMount(
+      <DatasetTerms
+        license={license}
+        termsOfUse={termsOfUse}
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByText('Request Access').should('not.exist')
+    cy.findByText('Terms of Access for Restricted Files').should('not.exist')
   })
 })
