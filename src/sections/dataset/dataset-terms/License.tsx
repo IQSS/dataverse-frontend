@@ -1,6 +1,7 @@
 import { Row, Col } from '@iqss/dataverse-design-system'
 import { DatasetLicense as LicenseModel } from '../../../dataset/domain/models/Dataset'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
+import styles from '@/sections/dataset/dataset-terms/DatasetTerms.module.scss'
 
 interface LicenseProps {
   license: LicenseModel | undefined
@@ -15,6 +16,21 @@ export function License({ license }: LicenseProps) {
         <b>{t('license.title')}</b>
       </Col>
       <Col>
+        <div className={styles['community-norms-text']}>
+          <Trans
+            t={t}
+            i18nKey="termsTab.licenseHelpText"
+            components={{
+              anchor: (
+                <a
+                  href="https://dataverse.org/best-practices/dataverse-community-norms"
+                  target="_blank"
+                  rel="noreferrer"
+                />
+              )
+            }}
+          />
+        </div>
         {license && license.iconUri && (
           <img
             alt={t(`license.altTextPrefix`) + license.name}
@@ -28,7 +44,7 @@ export function License({ license }: LicenseProps) {
             {license.name}
           </a>
         )}
-        {!license && <span>{'Custom Terms'}</span>}
+        {!license && <span>{t('termsTab.customTermsHelpText')}</span>}
       </Col>
     </Row>
   )

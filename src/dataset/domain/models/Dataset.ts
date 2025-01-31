@@ -392,7 +392,6 @@ export class Dataset {
     public readonly version: DatasetVersion,
     public readonly alerts: Alert[],
     public readonly summaryFields: DatasetMetadataBlock[],
-    public readonly license: DatasetLicense,
     public readonly termsOfUse: DatasetTermsOfUse,
     public readonly metadataBlocks: DatasetMetadataBlocks,
     public readonly permissions: DatasetPermissions,
@@ -403,6 +402,7 @@ export class Dataset {
     public readonly downloadUrls: DatasetDownloadUrls,
     public readonly fileDownloadSizes: FileDownloadSize[],
     public readonly hierarchy: UpwardHierarchyNode,
+    public readonly license?: DatasetLicense,
     public readonly thumbnail?: string,
     public readonly privateUrl?: PrivateUrl, // will be set if the user requested a version that did not exist
     public readonly requestedVersion?: string,
@@ -485,7 +485,6 @@ export class Dataset {
       public readonly persistentId: string,
       public readonly version: DatasetVersion,
       public readonly summaryFields: DatasetMetadataBlock[],
-      public readonly license: DatasetLicense = defaultLicense,
       public readonly termsOfUse: DatasetTermsOfUse,
       public readonly metadataBlocks: DatasetMetadataBlocks,
       public readonly permissions: DatasetPermissions,
@@ -496,6 +495,7 @@ export class Dataset {
       public readonly downloadUrls: DatasetDownloadUrls,
       public readonly fileDownloadSizes: FileDownloadSize[],
       public readonly hierarchy: UpwardHierarchyNode,
+      public readonly license?: DatasetLicense,
       public readonly thumbnail?: string,
       public readonly privateUrl?: PrivateUrl, // will be set if the user requested a version that did not exist
 
@@ -554,7 +554,6 @@ export class Dataset {
         this.version,
         this.alerts,
         this.summaryFields,
-        this.license,
         this.termsOfUse,
         this.metadataBlocks,
         this.permissions,
@@ -565,6 +564,7 @@ export class Dataset {
         this.downloadUrls,
         this.fileDownloadSizes,
         this.hierarchy,
+        this.license,
         this.thumbnail,
         this.privateUrl,
         this.requestedVersion,

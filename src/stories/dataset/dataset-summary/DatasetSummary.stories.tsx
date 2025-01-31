@@ -11,7 +11,7 @@ const meta: Meta<typeof DatasetSummary> = {
   decorators: [WithI18next]
 }
 
-const licenseMock: DatasetLicense = DatasetMother.createRealistic().license
+const licenseMock: DatasetLicense = DatasetMother.createRealistic().license!
 const summaryFieldsMock: DatasetMetadataBlock[] = DatasetMother.createRealistic().summaryFields
 export default meta
 type Story = StoryObj<typeof DatasetSummary>

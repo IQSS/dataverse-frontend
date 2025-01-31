@@ -5,7 +5,7 @@ import { MetadataBlockInfoRepository } from '../../../metadata-block-info/domain
 
 interface DatasetSummaryProps {
   summaryFields: DatasetMetadataBlock[]
-  license: DatasetLicense
+  license: DatasetLicense | undefined
   metadataBlockInfoRepository: MetadataBlockInfoRepository
 }
 

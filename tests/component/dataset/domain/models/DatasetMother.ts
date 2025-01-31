@@ -433,7 +433,6 @@ export class DatasetMother {
       dataset.persistentId,
       dataset.version,
       dataset.summaryFields,
-      dataset.license,
       dataset.termsOfUse,
       dataset.metadataBlocks,
       dataset.permissions,
@@ -444,6 +443,7 @@ export class DatasetMother {
       dataset.downloadUrls,
       dataset.fileDownloadSizes,
       dataset.hierarchy,
+      dataset.license,
       dataset.thumbnail,
       dataset.privateUrl,
       dataset.requestedVersion

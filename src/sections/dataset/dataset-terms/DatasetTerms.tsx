@@ -16,7 +16,7 @@ import { TermsOfAccess } from '@/sections/dataset/dataset-terms/TermsOfAccess'
 import styles from '@/sections/dataset/dataset-terms/DatasetTerms.module.scss'
 
 interface DatasetTermsProps {
-  license: DatasetLicense
+  license: DatasetLicense | undefined
   termsOfUse: DatasetTermsOfUse
   filesRepository: FileRepository
   datasetPersistentId: string

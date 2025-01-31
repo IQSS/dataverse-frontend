@@ -1,10 +1,10 @@
 import { DatasetLicense } from '../../../dataset/domain/models/Dataset'
-import { License } from '@/sections/dataset/dataset-summary/License'
+import { License } from '@/sections/dataset/dataset-terms/License'
 import { useTranslation } from 'react-i18next'
 import { DatasetTermsRow } from '@/sections/dataset/dataset-terms/DatasetTermsRow'
 
 interface LicenseTermsProps {
-  license: DatasetLicense
+  license?: DatasetLicense
   termsOfUse?: string
   confidentialityDeclaration?: string
   specialPermissions?: string
@@ -15,7 +15,7 @@ interface LicenseTermsProps {
   disclaimer?: string
 }
 interface LicenseTermsProps {
-  license: DatasetLicense
+  license?: DatasetLicense
   termsOfUse?: string
   confidentialityDeclaration?: string
   specialPermissions?: string
@@ -40,7 +40,7 @@ export function LicenseTerms({
 
   return (
     <>
-      <License license={license} includeHelpText={true} />
+      <License license={license} />
       <DatasetTermsRow
         title={t('termsTab.termsOfUse')}
         tooltipMessage={t('termsTab.termsOfUseTip')}
