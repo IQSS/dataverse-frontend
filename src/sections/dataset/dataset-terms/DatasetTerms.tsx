@@ -8,12 +8,13 @@ import { License } from '@/sections/dataset/dataset-summary/License'
 import { EditDatasetTermsButton } from '@/sections/dataset/dataset-terms/EditDatasetTermsButton'
 import { useTranslation } from 'react-i18next'
 import { QuestionMarkTooltip } from '@iqss/dataverse-design-system'
-import styles from '@/sections/dataset/dataset-terms/DatasetTerms.module.scss'
 import { useGetFilesCountInfo } from '@/sections/dataset/dataset-files/useGetFilesCountInfo'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { FileAccessCount } from '@/files/domain/models/FilesCountInfo'
 import { FileAccessOption } from '@/files/domain/models/FileCriteria'
 import { SpinnerSymbol } from '@/sections/dataset/dataset-files/files-table/spinner-symbol/SpinnerSymbol'
+import { MarkdownComponent } from '@/sections/dataset/markdown/MarkdownComponent'
+import styles from '@/sections/dataset/dataset-terms/DatasetTerms.module.scss'
 
 interface DatasetTermsProps {
   license: DatasetLicense
@@ -50,6 +51,7 @@ export function DatasetTerms({
   if (isLoading) {
     return <SpinnerSymbol />
   }
+
   return (
     <>
       <div className={styles['edit-terms-button-container']}>
@@ -60,6 +62,46 @@ export function DatasetTerms({
           <Accordion.Header>{t('termsTab.licenseTitle')}</Accordion.Header>
           <Accordion.Body>
             <License license={license} includeHelpText={true} />
+            <DatasetTermsRow
+              title={t('termsTab.termsOfUse')}
+              tooltipMessage={t('termsTab.termsOfUseTip')}
+              value={termsOfUse.termsOfUse}
+            />
+            <DatasetTermsRow
+              title={t('termsTab.confidentialityDeclaration')}
+              tooltipMessage={t('termsTab.confidentiality' + 'DeclarationTip')}
+              value={termsOfUse.confidentialityDeclaration}
+            />
+            <DatasetTermsRow
+              title={t('termsTab.specialPermissions')}
+              tooltipMessage={t('termsTab.specialPermissionsTip')}
+              value={termsOfUse.specialPermissions}
+            />
+            <DatasetTermsRow
+              title={t('termsTab.restrictions')}
+              tooltipMessage={t('termsTab.restrictionsTip')}
+              value={termsOfUse.restrictions}
+            />
+            <DatasetTermsRow
+              title={t('termsTab.citationRequirements')}
+              tooltipMessage={t('termsTab.citationRequirementsTip')}
+              value={termsOfUse.citationRequirements}
+            />
+            <DatasetTermsRow
+              title={t('termsTab.depositorRequirements')}
+              tooltipMessage={t('termsTab.depositorRequirementsTip')}
+              value={termsOfUse.depositorRequirements}
+            />
+            <DatasetTermsRow
+              title={t('termsTab.conditions')}
+              tooltipMessage={t('termsTab.conditionsTip')}
+              value={termsOfUse.conditions}
+            />
+            <DatasetTermsRow
+              title={t('termsTab.disclaimer')}
+              tooltipMessage={t('termsTab.disclaimerTip')}
+              value={termsOfUse.disclaimer}
+            />
           </Accordion.Body>
         </Accordion.Item>
         {!termsOfUseIsEmpty && (
@@ -156,16 +198,7 @@ const DatasetTermsRow = ({ title, tooltipMessage, value }: DatasetTermsRowProps)
           <QuestionMarkTooltip placement="right" message={tooltipMessage}></QuestionMarkTooltip>
         </>
       </Col>
-      <Col>
-        {value && (
-          <div>
-            {
-              //TODO: handle html in value
-              value
-            }
-          </div>
-        )}
-      </Col>
+      <Col>{value && <div>{<MarkdownComponent markdown={value} />}</div>}</Col>
     </Row>
   )
 }
