@@ -1,19 +1,18 @@
-import { Accordion, Col, Row } from '@iqss/dataverse-design-system'
+import { Accordion } from '@iqss/dataverse-design-system'
 import {
   DatasetLicense,
   DatasetTermsOfUse,
   DatasetVersion
 } from '../../../dataset/domain/models/Dataset'
-import { License } from '@/sections/dataset/dataset-summary/License'
 import { EditDatasetTermsButton } from '@/sections/dataset/dataset-terms/EditDatasetTermsButton'
 import { useTranslation } from 'react-i18next'
-import { QuestionMarkTooltip } from '@iqss/dataverse-design-system'
 import { useGetFilesCountInfo } from '@/sections/dataset/dataset-files/useGetFilesCountInfo'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { FileAccessCount } from '@/files/domain/models/FilesCountInfo'
 import { FileAccessOption } from '@/files/domain/models/FileCriteria'
 import { SpinnerSymbol } from '@/sections/dataset/dataset-files/files-table/spinner-symbol/SpinnerSymbol'
-import { MarkdownComponent } from '@/sections/dataset/markdown/MarkdownComponent'
+import { LicenseTerms } from '@/sections/dataset/dataset-terms/LicenseTerms'
+import { TermsOfAccess } from '@/sections/dataset/dataset-terms/TermsOfAccess'
 import styles from '@/sections/dataset/dataset-terms/DatasetTerms.module.scss'
 
 interface DatasetTermsProps {
@@ -61,111 +60,17 @@ export function DatasetTerms({
         <Accordion.Item eventKey={'0'}>
           <Accordion.Header>{t('termsTab.licenseTitle')}</Accordion.Header>
           <Accordion.Body>
-            <License license={license} includeHelpText={true} />
-            <DatasetTermsRow
-              title={t('termsTab.termsOfUse')}
-              tooltipMessage={t('termsTab.termsOfUseTip')}
-              value={termsOfUse.termsOfUse}
-            />
-            <DatasetTermsRow
-              title={t('termsTab.confidentialityDeclaration')}
-              tooltipMessage={t('termsTab.confidentiality' + 'DeclarationTip')}
-              value={termsOfUse.confidentialityDeclaration}
-            />
-            <DatasetTermsRow
-              title={t('termsTab.specialPermissions')}
-              tooltipMessage={t('termsTab.specialPermissionsTip')}
-              value={termsOfUse.specialPermissions}
-            />
-            <DatasetTermsRow
-              title={t('termsTab.restrictions')}
-              tooltipMessage={t('termsTab.restrictionsTip')}
-              value={termsOfUse.restrictions}
-            />
-            <DatasetTermsRow
-              title={t('termsTab.citationRequirements')}
-              tooltipMessage={t('termsTab.citationRequirementsTip')}
-              value={termsOfUse.citationRequirements}
-            />
-            <DatasetTermsRow
-              title={t('termsTab.depositorRequirements')}
-              tooltipMessage={t('termsTab.depositorRequirementsTip')}
-              value={termsOfUse.depositorRequirements}
-            />
-            <DatasetTermsRow
-              title={t('termsTab.conditions')}
-              tooltipMessage={t('termsTab.conditionsTip')}
-              value={termsOfUse.conditions}
-            />
-            <DatasetTermsRow
-              title={t('termsTab.disclaimer')}
-              tooltipMessage={t('termsTab.disclaimerTip')}
-              value={termsOfUse.disclaimer}
-            />
+            <LicenseTerms {...termsOfUse} license={license} />
           </Accordion.Body>
         </Accordion.Item>
         {!termsOfUseIsEmpty && (
           <Accordion.Item eventKey={'1'}>
             <Accordion.Header>{t('termsTab.termsTitle')}</Accordion.Header>
             <Accordion.Body>
-              {filesCountInfo && restrictedFilesCount > 0 && (
-                <>
-                  <DatasetTermsRow
-                    title={t('termsTab.restrictedFiles')}
-                    tooltipMessage={t('termsTab.restrictedFilesTip')}
-                    value={
-                      restrictedFilesCount === 1
-                        ? t('termsTab.restrictedFilesOne')
-                        : t('termsTab.restrictedFilesMany', {
-                            count: restrictedFilesCount
-                          })
-                    }
-                  />
-                  <DatasetTermsRow
-                    title={t('termsTab.termsOfAccess')}
-                    tooltipMessage={t('termsTab.termsOfAccessTip')}
-                    value={termsOfUse.termsOfAccess}
-                  />
-                  <DatasetTermsRow
-                    title={t('termsTab.requestAccess')}
-                    tooltipMessage={t('termsTab.requestAccessTip')}
-                    value={
-                      termsOfUse.fileAccessRequest
-                        ? t('termsTab.requestAccessTrue')
-                        : t('termsTab.requestAccessFalse')
-                    }
-                  />
-                </>
-              )}
-              <DatasetTermsRow
-                title={t('termsTab.dataAccessPlace')}
-                tooltipMessage={t('termsTab.dataAccessPlaceTip')}
-                value={termsOfUse.dataAccessPlace}
-              />
-              <DatasetTermsRow
-                title={t('termsTab.originalArchive')}
-                tooltipMessage={t('termsTab.originalArchiveTip')}
-                value={termsOfUse.originalArchive}
-              />
-              <DatasetTermsRow
-                title={t('termsTab.availabilityStatus')}
-                tooltipMessage={t('termsTab.availabilityStatusTip')}
-                value={termsOfUse.availabilityStatus}
-              />
-              <DatasetTermsRow
-                title={t('termsTab.contactForAccess')}
-                tooltipMessage={t('termsTab.contactForAccessTip')}
-                value={termsOfUse.contactForAccess}
-              />
-              <DatasetTermsRow
-                title={t('termsTab.sizeOfCollection')}
-                tooltipMessage={t('termsTab.sizeOfCollectionTip')}
-                value={termsOfUse.sizeOfCollection}
-              />
-              <DatasetTermsRow
-                title={t('termsTab.studyCompletion')}
-                tooltipMessage={t('termsTab.studyCompletionTip')}
-                value={termsOfUse.studyCompletion}
+              <TermsOfAccess
+                {...termsOfUse}
+                filesCountInfo={filesCountInfo}
+                restrictedFilesCount={restrictedFilesCount}
               />
             </Accordion.Body>
           </Accordion.Item>
@@ -177,28 +82,4 @@ export function DatasetTerms({
 
 const numberOfRestrictedFiles = (fileAccessArray: FileAccessCount[]): number => {
   return fileAccessArray.find((access) => access.access === FileAccessOption.RESTRICTED)?.count || 0
-}
-
-interface DatasetTermsRowProps {
-  title: string
-  tooltipMessage: string
-  value: string | undefined
-}
-
-const DatasetTermsRow = ({ title, tooltipMessage, value }: DatasetTermsRowProps) => {
-  if (value === undefined) {
-    return null
-  }
-
-  return (
-    <Row className={styles['dataset-terms-row']}>
-      <Col sm={3}>
-        <>
-          <strong>{title} </strong>
-          <QuestionMarkTooltip placement="right" message={tooltipMessage}></QuestionMarkTooltip>
-        </>
-      </Col>
-      <Col>{value && <div>{<MarkdownComponent markdown={value} />}</div>}</Col>
-    </Row>
-  )
 }
