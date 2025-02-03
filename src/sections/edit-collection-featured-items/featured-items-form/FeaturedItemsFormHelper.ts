@@ -32,9 +32,9 @@ export class FeaturedItemsFormHelper {
 
   // This method is to transform current form data into "actual featured items" to show the current preview while the user is editing
   static transformFormFieldsToFeaturedItems(
-    featureItemFieldValues: FeaturedItemField[]
+    featuredItemsFieldValues: FeaturedItemField[]
   ): CollectionFeaturedItem[] {
-    return featureItemFieldValues.map((field, index) => {
+    return featuredItemsFieldValues.map((field, index) => {
       const { content, image, itemId } = field
 
       const currentFeaturedItem: CollectionFeaturedItem = {

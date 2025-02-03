@@ -11,10 +11,10 @@ import styles from './PreviewCarousel.module.scss'
 export const PreviewCarousel = () => {
   const { t } = useTranslation('editCollectionFeaturedItems')
   const { t: tCollection } = useTranslation('collection')
-  const featureItemFieldValues = useWatch({ name: 'featuredItems' }) as FeaturedItemField[]
+  const featuredItemFieldValues = useWatch({ name: 'featuredItems' }) as FeaturedItemField[]
 
   const formFieldsToFeaturedItems: CollectionFeaturedItem[] =
-    FeaturedItemsFormHelper.transformFormFieldsToFeaturedItems(featureItemFieldValues)
+    FeaturedItemsFormHelper.transformFormFieldsToFeaturedItems(featuredItemFieldValues)
 
   return (
     <Accordion className={styles['preview-carousel-accordion']}>
