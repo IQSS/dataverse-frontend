@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import styles from './Dataset.module.scss'
 import { useNavigate } from 'react-router-dom'
@@ -37,6 +37,7 @@ interface DatasetProps {
   metadataUpdated?: boolean
   filesTabInfiniteScrollEnabled?: boolean
   publishInProgress?: boolean
+  tab?: string
 }
 
 export function Dataset({
@@ -47,7 +48,8 @@ export function Dataset({
   created,
   metadataUpdated,
   filesTabInfiniteScrollEnabled,
-  publishInProgress
+  publishInProgress,
+  tab = 'files'
 }: DatasetProps) {
   const { setIsLoading } = useLoading()
   const { dataset, isLoading: isDatasetLoading } = useDataset()
@@ -55,7 +57,7 @@ export function Dataset({
   const navigate = useNavigate()
   const { hideModal, isModalOpen } = useNotImplementedModal()
   const publishCompleted = useCheckPublishCompleted(publishInProgress, dataset, datasetRepository)
-
+  const [activeTab, setActiveTab] = useState<string>(tab)
   useUpdateDatasetAlerts({
     dataset,
     created,
@@ -79,7 +81,14 @@ export function Dataset({
   if (isDatasetLoading && !dataset) {
     return <DatasetSkeleton />
   }
-
+  const handleCustomTermsClick = () => {
+    setActiveTab('terms')
+  }
+  const handleTabSelect = (key: string | null) => {
+    if (key) {
+      setActiveTab(key)
+    }
+  }
   return (
     <>
       <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
@@ -119,6 +128,7 @@ export function Dataset({
                   <DatasetSummary
                     summaryFields={dataset.summaryFields}
                     license={dataset.license}
+                    onCustomTermsClick={handleCustomTermsClick}
                     metadataBlockInfoRepository={metadataBlockInfoRepository}
                   />
                 </Col>
@@ -126,7 +136,7 @@ export function Dataset({
               {publishInProgress && <TabsSkeleton />}
 
               {(!publishInProgress || !isDatasetLoading) && (
-                <Tabs defaultActiveKey="files">
+                <Tabs defaultActiveKey={activeTab} onSelect={handleTabSelect}>
                   <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
                     <div className={styles['tab-container']}>
                       {filesTabInfiniteScrollEnabled ? (

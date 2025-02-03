@@ -1,12 +1,13 @@
-import { Row, Col } from '@iqss/dataverse-design-system'
+import { Row, Col, Button } from '@iqss/dataverse-design-system'
 import { DatasetLicense as LicenseModel } from '../../../dataset/domain/models/Dataset'
 import { useTranslation } from 'react-i18next'
 
 interface LicenseProps {
   license: LicenseModel | undefined
+  onCustomTermsClick?: () => void
 }
 
-export function License({ license }: LicenseProps) {
+export function License({ license, onCustomTermsClick }: LicenseProps) {
   const { t } = useTranslation('dataset')
 
   return (
@@ -23,12 +24,15 @@ export function License({ license }: LicenseProps) {
             style={{ marginRight: '0.5rem' }}
           />
         )}
-        {license && (
+        {license ? (
           <a target="_blank" rel="noreferrer" href={license.uri}>
             {license.name}
           </a>
+        ) : (
+          <Button variant="link" onClick={onCustomTermsClick}>
+            {t('Custom Terms')}
+          </Button>
         )}
-        {!license && <span>{'Custom Terms'}</span>}
       </Col>
     </Row>
   )

@@ -7,12 +7,14 @@ interface DatasetSummaryProps {
   summaryFields: DatasetMetadataBlock[]
   license: DatasetLicense | undefined
   metadataBlockInfoRepository: MetadataBlockInfoRepository
+  onCustomTermsClick: () => void
 }
 
 export function DatasetSummary({
   summaryFields,
   license,
-  metadataBlockInfoRepository
+  metadataBlockInfoRepository,
+  onCustomTermsClick
 }: DatasetSummaryProps) {
   return (
     <>
@@ -20,7 +22,7 @@ export function DatasetSummary({
         summaryFields={summaryFields}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
-      <License license={license} />
+      <License license={license} onCustomTermsClick={onCustomTermsClick} />
     </>
   )
 }

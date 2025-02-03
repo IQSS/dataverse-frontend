@@ -22,6 +22,7 @@ export const Default: Story = {
       summaryFields={summaryFieldsMock}
       license={licenseMock}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+      onCustomTermsClick={() => console.log('Custom terms clicked')}
     />
   )
 }
