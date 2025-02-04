@@ -25,7 +25,7 @@ interface LicenseTermsProps {
   conditions?: string
   disclaimer?: string
 }
-export function LicenseTerms({
+export function CustomTerms({
   license,
   termsOfUse,
   confidentialityDeclaration,
@@ -40,7 +40,6 @@ export function LicenseTerms({
 
   return (
     <>
-      <License license={license} />
       <DatasetTermsRow
         title={t('termsTab.termsOfUse')}
         tooltipMessage={t('termsTab.termsOfUseTip')}

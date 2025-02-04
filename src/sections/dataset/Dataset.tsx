@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import styles from './Dataset.module.scss'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { DatasetLabels } from './dataset-labels/DatasetLabels'
 import { useLoading } from '../loading/LoadingContext'
 import { DatasetSkeleton, TabsSkeleton } from './DatasetSkeleton'
@@ -55,6 +55,7 @@ export function Dataset({
   const { dataset, isLoading: isDatasetLoading } = useDataset()
   const { t } = useTranslation('dataset')
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { hideModal, isModalOpen } = useNotImplementedModal()
   const publishCompleted = useCheckPublishCompleted(publishInProgress, dataset, datasetRepository)
   const [activeTab, setActiveTab] = useState<string>(tab)
@@ -83,7 +84,12 @@ export function Dataset({
   }
   const handleCustomTermsClick = () => {
     setActiveTab('terms')
+    const newParams = new URLSearchParams(searchParams)
+    newParams.set('tab', 'terms')
+    // Update URL without reloading
+    navigate(`?${newParams.toString()}`, { replace: true })
   }
+
   const handleTabSelect = (key: string | null) => {
     if (key) {
       setActiveTab(key)

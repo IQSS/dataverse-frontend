@@ -19,6 +19,16 @@ export const RouteWithParams = {
   COLLECTIONS: (collectionId?: string) =>
     collectionId ? `/collections/${collectionId}` : Route.COLLECTIONS_BASE,
   CREATE_COLLECTION: (parentCollectionId: string) => `/collections/${parentCollectionId}/create`,
+  DATASETS: (persistentId: string, version?: string, tab?: string): string => {
+    let url = `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${persistentId}`
+    if (version) {
+      url += `&${QueryParamKey.VERSION}=${version}`
+    }
+    if (tab) {
+      url += `&${QueryParamKey.TAB}=${tab}`
+    }
+    return url
+  },
   CREATE_DATASET: (collectionId: string) => `/datasets/${collectionId}/create`,
   EDIT_COLLECTION: (collectionId: string) => `/collections/${collectionId}/edit`
 }
@@ -27,5 +37,6 @@ export enum QueryParamKey {
   VERSION = 'version',
   PERSISTENT_ID = 'persistentId',
   PAGE = 'page',
-  COLLECTION_ID = 'collectionId'
+  COLLECTION_ID = 'collectionId',
+  TAB = 'tab'
 }

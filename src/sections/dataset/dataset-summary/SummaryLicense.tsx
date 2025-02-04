@@ -7,7 +7,7 @@ interface LicenseProps {
   onCustomTermsClick?: () => void
 }
 
-export function License({ license, onCustomTermsClick }: LicenseProps) {
+export function SummaryLicense({ license, onCustomTermsClick }: LicenseProps) {
   const { t } = useTranslation('dataset')
 
   return (

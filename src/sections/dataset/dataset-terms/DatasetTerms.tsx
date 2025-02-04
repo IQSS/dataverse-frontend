@@ -11,9 +11,10 @@ import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { FileAccessCount } from '@/files/domain/models/FilesCountInfo'
 import { FileAccessOption } from '@/files/domain/models/FileCriteria'
 import { SpinnerSymbol } from '@/sections/dataset/dataset-files/files-table/spinner-symbol/SpinnerSymbol'
-import { LicenseTerms } from '@/sections/dataset/dataset-terms/LicenseTerms'
+import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
 import { TermsOfAccess } from '@/sections/dataset/dataset-terms/TermsOfAccess'
 import styles from '@/sections/dataset/dataset-terms/DatasetTerms.module.scss'
+import { License } from '@/sections/dataset/dataset-terms/License'
 
 interface DatasetTermsProps {
   license: DatasetLicense | undefined
@@ -60,7 +61,8 @@ export function DatasetTerms({
         <Accordion.Item eventKey={'0'}>
           <Accordion.Header>{t('termsTab.licenseTitle')}</Accordion.Header>
           <Accordion.Body>
-            <LicenseTerms {...termsOfUse} license={license} />
+            <License license={license} />
+            <CustomTerms {...termsOfUse} license={license} />
           </Accordion.Body>
         </Accordion.Item>
         {!termsOfUseIsEmpty && (

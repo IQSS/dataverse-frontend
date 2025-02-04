@@ -1,23 +1,21 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { Button, Modal, Stack } from '@iqss/dataverse-design-system'
 import { Form } from '@iqss/dataverse-design-system'
 import type { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { VersionUpdateType } from '@/dataset/domain/models/VersionUpdateType'
 import { useSession } from '../../session/SessionContext'
-import { License } from '../dataset-summary/License'
-import {
-  DatasetNonNumericVersionSearchParam,
-  defaultLicense
-} from '@/dataset/domain/models/Dataset'
+import { SummaryLicense } from '../dataset-summary/SummaryLicense'
+import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
 import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
+import { QueryParamKey, Route } from '../../Route.enum'
 import { usePublishDataset } from './usePublishDataset'
 import { PublishDatasetHelpText } from './PublishDatasetHelpText'
-import styles from './PublishDatasetModal.module.scss'
-import { useNavigate } from 'react-router-dom'
-import { QueryParamKey, Route } from '../../Route.enum'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { UpwardHierarchyNode } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { DatasetLicense } from '@/dataset/domain/models/Dataset'
+import styles from './PublishDatasetModal.module.scss'
 
 interface PublishDatasetModalProps {
   show: boolean
@@ -25,6 +23,7 @@ interface PublishDatasetModalProps {
   collectionRepository: CollectionRepository
   parentCollection: UpwardHierarchyNode
   persistentId: string
+  license: DatasetLicense
   releasedVersionExists: boolean
   handleClose: () => void
   nextMajorVersion?: string
@@ -38,6 +37,7 @@ export function PublishDatasetModal({
   collectionRepository,
   parentCollection,
   persistentId,
+  license,
   releasedVersionExists,
   handleClose,
   nextMajorVersion,
@@ -120,11 +120,11 @@ export function PublishDatasetModal({
               </Form.RadioGroup>
             </>
           )}
-          <License
-            license={{
-              name: defaultLicense.name,
-              uri: defaultLicense.uri,
-              iconUri: defaultLicense.iconUri
+          <SummaryLicense
+            license={license}
+            onCustomTermsClick={() => {
+              const termsUrl = `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}&${QueryParamKey.TAB}=terms`
+              window.open(termsUrl, '_blank')
             }}
           />
           <p className={styles.secondaryText}>{t('publish.termsText')}</p>

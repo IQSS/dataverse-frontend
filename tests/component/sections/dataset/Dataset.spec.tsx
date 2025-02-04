@@ -234,7 +234,29 @@ describe('Dataset', () => {
 
     cy.findByText('Dataset Terms').should('exist')
   })
+  it('renders the Dataset Terms tab', () => {
+    const testDataset = DatasetMother.create()
 
+    mountWithDataset(
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+        tab={'metadata'}
+      />,
+      testDataset
+    )
+
+    cy.findAllByText(testDataset.version.title).should('exist')
+
+    const termsTab = cy.findByRole('tab', { name: 'Terms' })
+    termsTab.should('exist')
+
+    termsTab.click()
+
+    cy.findByText('Dataset Terms').should('exist')
+  })
   it('renders the Dataset in anonymized view', () => {
     const testDatasetAnonymized = DatasetMother.createAnonymized()
 
