@@ -7,7 +7,10 @@ import {
   getCollectionUserPermissions,
   getCollectionItems,
   publishCollection,
-  updateCollection
+  updateCollection,
+  getCollectionFeaturedItems,
+  updateCollectionFeaturedItems,
+  deleteCollectionFeaturedItems
 } from '@iqss/dataverse-client-javascript'
 import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'
@@ -17,6 +20,8 @@ import { CollectionItemsPaginationInfo } from '../../domain/models/CollectionIte
 import { CollectionItemSubset } from '../../domain/models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '../../domain/models/CollectionSearchCriteria'
 import { JSCollectionItemsMapper } from '../mappers/JSCollectionItemsMapper'
+import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 
 export class CollectionJSDataverseRepository implements CollectionRepository {
   getById(id?: string): Promise<Collection> {
@@ -60,11 +65,27 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
         }
       })
   }
+
   publish(collectionIdOrAlias: number | string): Promise<void> {
     return publishCollection.execute(collectionIdOrAlias)
   }
 
   edit(collectionIdOrAlias: string, updatedCollection: CollectionDTO): Promise<void> {
     return updateCollection.execute(collectionIdOrAlias, updatedCollection)
+  }
+
+  getFeaturedItems(collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
+    return getCollectionFeaturedItems.execute(collectionIdOrAlias)
+  }
+
+  updateFeaturedItems(
+    collectionIdOrAlias: number | string,
+    featuredItemsDTO: CollectionFeaturedItemsDTO
+  ): Promise<CollectionFeaturedItem[]> {
+    return updateCollectionFeaturedItems.execute(collectionIdOrAlias, featuredItemsDTO)
+  }
+
+  deleteFeaturedItems(collectionIdOrAlias: number | string): Promise<void> {
+    return deleteCollectionFeaturedItems.execute(collectionIdOrAlias)
   }
 }

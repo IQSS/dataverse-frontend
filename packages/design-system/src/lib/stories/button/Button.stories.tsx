@@ -29,6 +29,7 @@ import { Search } from 'react-bootstrap-icons'
  * ```
  * theme.color.primary
  * theme.color.secondary
+ * theme.color.dangerColor
  *
  * theme.color.linkColor
  * theme.color.linkColorHover
@@ -69,6 +70,14 @@ export const SecondaryButton: Story = {
 }
 
 /**
+ * The danger button should be used to indicate that the action the user is about to take could be irreversible.
+ * Suitable for actions like deleting items.
+ */
+export const DangerButton: Story = {
+  render: () => <Button variant="danger">Danger</Button>
+}
+
+/**
  * The link button should be used as a secondary or tertiary button, or as a subtle call-to-action. Its purpose is to
  * draw attention to the button without being overly distracting, while also providing a clear call-to-action. It looks
  * like a link because the usage is very similar. E.g.: "Read More" or "Learn More".
@@ -87,6 +96,7 @@ export const AllVariantsAtAGlance: Story = {
       <Button withSpacing variant="secondary">
         Secondary
       </Button>
+      <Button variant="danger">Danger</Button>
       <Button withSpacing variant="link">
         Link
       </Button>

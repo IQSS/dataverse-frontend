@@ -201,6 +201,21 @@ export const InputWithButton: Story = {
   )
 }
 
+export const FileInput: Story = {
+  render: () => (
+    <Form>
+      <Form.Group controlId="basic-form-file">
+        <Form.Group.Label column sm={3}>
+          File
+        </Form.Group.Label>
+        <Col sm={9}>
+          <Form.Group.Input type="file" accept=".png, .jpg, .jpeg, .webp" />
+        </Col>
+      </Form.Group>
+    </Form>
+  )
+}
+
 export const Select: Story = {
   render: () => (
     <Form>
