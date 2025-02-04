@@ -52,6 +52,7 @@ const ContentField = ({ itemIndex }: ContentFieldProps) => {
                 invalid={invalid}
                 ariaRequired
                 ref={ref}
+                editorContentId={`featuredItems.${itemIndex}.editorContent`}
               />
 
               {invalid && <div className={styles['error-msg']}>{error?.message}</div>}

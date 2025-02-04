@@ -50,6 +50,7 @@ export const FeaturedItemField = ({
   return (
     <div
       id={id}
+      data-featured-item={`featured-item-${itemIndex}`}
       ref={setNodeRef}
       style={style}
       data-testid={`featured-item-${itemIndex.toString()}`}
