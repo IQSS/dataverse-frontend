@@ -3,6 +3,8 @@ import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { SortableContext } from '@dnd-kit/sortable'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { FeaturedItemField } from './featured-item-field/FeaturedItemField'
@@ -27,6 +29,7 @@ export const FeaturedItemsForm = ({
   defaultValues,
   collectionFeaturedItems
 }: FeaturedItemsFormProps) => {
+  const { t } = useTranslation('editCollectionFeaturedItems')
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false)
   const hasInitialFeaturedItems = collectionFeaturedItems.length > 0
 
@@ -56,6 +59,11 @@ export const FeaturedItemsForm = ({
   })
 
   const handleOnAddField = (index: number) => {
+    if (fieldsArray.length === 10) {
+      toast.warning(t('form.maxItemsReached', { maxFeaturedItems: 10 }))
+      return
+    }
+
     insert(
       index + 1,
       { content: '', image: null },

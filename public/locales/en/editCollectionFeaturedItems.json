@@ -27,6 +27,7 @@
     },
     "submitStatus": {
       "success": "Featured items have been updated successfully."
-    }
+    },
+    "maxItemsReached": "You can add up to {{maxFeaturedItems}} featured items."
   }
 }
