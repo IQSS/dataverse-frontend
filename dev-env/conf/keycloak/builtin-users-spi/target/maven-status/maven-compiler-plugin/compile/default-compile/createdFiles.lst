@@ -1,0 +1,6 @@
+edu/harvard/iq/keycloak/auth/spi/DataverseAuthenticatedUser.class
+edu/harvard/iq/keycloak/auth/spi/DataverseUserStorageProvider.class
+edu/harvard/iq/keycloak/auth/spi/DataverseUserAdapter.class
+edu/harvard/iq/keycloak/auth/spi/DataverseUserStorageProviderFactory.class
+edu/harvard/iq/keycloak/auth/spi/DataverseAPIService.class
+edu/harvard/iq/keycloak/auth/spi/DataverseBuiltinUser.class

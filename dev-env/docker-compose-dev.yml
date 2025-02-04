@@ -183,7 +183,7 @@ services:
 
   dev_keycloak:
     container_name: 'dev_keycloak'
-    image: 'quay.io/keycloak/keycloak:21.0'
+    image: 'quay.io/keycloak/keycloak:22.0'
     hostname: keycloak
     command:
       - 'start-dev'
@@ -196,6 +196,7 @@ services:
       - KEYCLOAK_ADMIN=kcadmin
       - KEYCLOAK_ADMIN_PASSWORD=kcpassword
       - KEYCLOAK_LOGLEVEL=DEBUG
+      - DATAVERSE_DB_USER=${DATAVERSE_DB_USER}
     networks:
       dataverse:
         aliases:
@@ -203,6 +204,8 @@ services:
     expose:
       - 9080
     volumes:
+      - './conf/keycloak/builtin-users-spi/conf/quarkus.properties:/opt/keycloak/conf/quarkus.properties'
+      - './conf/keycloak/builtin-users-spi/target/keycloak-dv-builtin-users-authenticator-1.0-SNAPSHOT.jar:/opt/keycloak/providers/keycloak-dv-builtin-users-authenticator-1.0-SNAPSHOT.jar'
       - './keycloak/test-realm.json:/opt/keycloak/data/import/test-realm.json'
 
 networks:

@@ -1,0 +1,6 @@
+/Users/guillermoportasgonzalez/Projects/theam/harvard/newrepo/dataverse/conf/keycloak/builtin-users-spi/src/main/java/edu/harvard/iq/keycloak/auth/spi/DataverseAPIService.java
+/Users/guillermoportasgonzalez/Projects/theam/harvard/newrepo/dataverse/conf/keycloak/builtin-users-spi/src/main/java/edu/harvard/iq/keycloak/auth/spi/DataverseAuthenticatedUser.java
+/Users/guillermoportasgonzalez/Projects/theam/harvard/newrepo/dataverse/conf/keycloak/builtin-users-spi/src/main/java/edu/harvard/iq/keycloak/auth/spi/DataverseBuiltinUser.java
+/Users/guillermoportasgonzalez/Projects/theam/harvard/newrepo/dataverse/conf/keycloak/builtin-users-spi/src/main/java/edu/harvard/iq/keycloak/auth/spi/DataverseUserAdapter.java
+/Users/guillermoportasgonzalez/Projects/theam/harvard/newrepo/dataverse/conf/keycloak/builtin-users-spi/src/main/java/edu/harvard/iq/keycloak/auth/spi/DataverseUserStorageProvider.java
+/Users/guillermoportasgonzalez/Projects/theam/harvard/newrepo/dataverse/conf/keycloak/builtin-users-spi/src/main/java/edu/harvard/iq/keycloak/auth/spi/DataverseUserStorageProviderFactory.java
