@@ -484,7 +484,7 @@ describe('EditCreateCollectionForm', () => {
           cy.findByLabelText('Subtitle').should('be.checked')
         })
 
-        it('should send metadataBlockNames and inputLevels as undefined if use fields from parent is checked', () => {
+        it('should send inheritMetadataBlocksFromParent in true if use metadata fields from parent is checked', () => {
           const collectionRepository = {} as CollectionRepository
           collectionRepository.create = cy.stub().as('createCollection').resolves()
           collectionRepository.getFacets = cy.stub().resolves(CollectionFacetMother.createFacets())
@@ -510,15 +510,13 @@ describe('EditCreateCollectionForm', () => {
             const createCollectionSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
             const collectionDTO = createCollectionSpy.getCall(0).args[0] as CollectionDTO
 
-            const inputLevels = collectionDTO.inputLevels
-            const metadataBlockNames = collectionDTO.metadataBlockNames
+            const inheritMetadataBlocksFromParent = collectionDTO.inheritMetadataBlocksFromParent
 
-            expect(inputLevels).to.be.undefined
-            expect(metadataBlockNames).to.be.undefined
+            expect(inheritMetadataBlocksFromParent).to.be.true
           })
         })
 
-        it('should not send metadataBlockNames and inputLevels as undefined if use fields from parent is unchecked', () => {
+        it('should send inheritMetadataBlocksFromParent in false if use metadata fields from parent is unchecked', () => {
           const collectionRepository = {} as CollectionRepository
           collectionRepository.create = cy.stub().as('createCollection').resolves()
           collectionRepository.getFacets = cy.stub().resolves(CollectionFacetMother.createFacets())
@@ -533,12 +531,12 @@ describe('EditCreateCollectionForm', () => {
             />
           )
 
-          cy.get('@useFieldsFromParentCheckbox').uncheck({ force: true })
-
           // Accept suggestion
           cy.findByRole('button', { name: 'Apply suggestion' }).click()
           // Select a Category option
           cy.findByLabelText(/^Category/i).select(1)
+
+          cy.get('@useFieldsFromParentCheckbox').uncheck({ force: true })
 
           cy.findByRole('button', { name: 'Create Collection' }).click()
 
@@ -546,11 +544,9 @@ describe('EditCreateCollectionForm', () => {
             const createCollectionSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
             const collectionDTO = createCollectionSpy.getCall(0).args[0] as CollectionDTO
 
-            const inputLevels = collectionDTO.inputLevels
-            const metadataBlockNames = collectionDTO.metadataBlockNames
+            const inheritMetadataBlocksFromParent = collectionDTO.inheritMetadataBlocksFromParent
 
-            expect(inputLevels).to.not.be.undefined
-            expect(metadataBlockNames).to.not.be.undefined
+            expect(inheritMetadataBlocksFromParent).to.be.false
           })
         })
       })
@@ -847,6 +843,10 @@ describe('EditCreateCollectionForm', () => {
 
     describe('BrowseSearchFacetsSection functionality', () => {
       beforeEach(() => {
+        const collectionRepository = {} as CollectionRepository
+        collectionRepository.create = cy.stub().as('createCollection').resolves()
+        collectionRepository.getFacets = cy.stub().resolves(CollectionFacetMother.createFacets())
+
         cy.mountAuthenticated(
           <EditCreateCollectionForm
             mode="create"
@@ -1041,6 +1041,44 @@ describe('EditCreateCollectionForm', () => {
 
         cy.findByText('At least one facet must be selected.').should('not.exist')
       })
+
+      it('should send inheritFacetsFromParent in true if use facets from parent is checked', () => {
+        // Accept suggestion
+        cy.findByRole('button', { name: 'Apply suggestion' }).click()
+        // Select a Category option
+        cy.findByLabelText(/^Category/i).select(1)
+
+        cy.findByRole('button', { name: 'Create Collection' }).click()
+
+        cy.get('@createCollection').should((spy) => {
+          const createCollectionSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+          const collectionDTO = createCollectionSpy.getCall(0).args[0] as CollectionDTO
+
+          const inheritFacetsFromParent = collectionDTO.inheritFacetsFromParent
+
+          expect(inheritFacetsFromParent).to.be.true
+        })
+      })
+
+      it('should send inheritFacetsFromParent in false if use facets from parent is unchecked', () => {
+        // Accept suggestion
+        cy.findByRole('button', { name: 'Apply suggestion' }).click()
+        // Select a Category option
+        cy.findByLabelText(/^Category/i).select(1)
+
+        cy.get('@useFacetsFromParentCheckbox').uncheck({ force: true })
+
+        cy.findByRole('button', { name: 'Create Collection' }).click()
+
+        cy.get('@createCollection').should((spy) => {
+          const createCollectionSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
+          const collectionDTO = createCollectionSpy.getCall(0).args[0] as CollectionDTO
+
+          const inheritFacetsFromParent = collectionDTO.inheritFacetsFromParent
+
+          expect(inheritFacetsFromParent).to.be.false
+        })
+      })
     })
   })
 
@@ -1161,7 +1199,7 @@ describe('EditCreateCollectionForm', () => {
       cy.findByLabelText(/^Email/i).should('have.value', collectionBeingEdited.contacts[0].email)
     })
 
-    it('when editing the root collection, should not send metadataBlockNames and inputLevels as undefined if any of them have changed', () => {
+    it('when editing the root collection, should send inheritFacetsFromParent and inheritMetadataBlocksFromParent in false always', () => {
       const collectionRepository = {} as CollectionRepository
       collectionRepository.edit = cy.stub().as('editCollection').resolves()
       collectionRepository.getFacets = cy.stub().resolves(CollectionFacetMother.createFacets())
@@ -1186,124 +1224,11 @@ describe('EditCreateCollectionForm', () => {
         const editCollectionSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
         const collectionDTO = editCollectionSpy.getCall(0).args[1] as CollectionDTO
 
-        const inputLevels = collectionDTO.inputLevels
-        const metadataBlockNames = collectionDTO.metadataBlockNames
+        const inheritFacetsFromParent = collectionDTO.inheritFacetsFromParent
+        const inheritMetadataBlocksFromParent = collectionDTO.inheritMetadataBlocksFromParent
 
-        expect(inputLevels).not.to.be.undefined
-        expect(metadataBlockNames).not.to.be.undefined
-      })
-    })
-
-    it('when editing the root collection, should send metadataBlockNames and inputLevels as undefined if they didnt changed', () => {
-      const collectionRepository = {} as CollectionRepository
-      collectionRepository.edit = cy.stub().as('editCollection').resolves()
-      collectionRepository.getFacets = cy.stub().resolves(CollectionFacetMother.createFacets())
-
-      cy.mountAuthenticated(
-        <EditCreateCollectionForm
-          mode="edit"
-          user={testUser}
-          collection={rootCollection}
-          parentCollection={undefined}
-          collectionRepository={collectionRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-        />
-      )
-
-      // Change affiliation in order to be able to save
-      cy.findByLabelText(/^Affiliation/i)
-        .clear()
-        .type('New Affiliation')
-
-      cy.findByRole('button', { name: 'Save Changes' }).click()
-
-      cy.get('@editCollection').should((spy) => {
-        const editCollectionSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
-        const collectionDTO = editCollectionSpy.getCall(0).args[1] as CollectionDTO
-
-        const inputLevels = collectionDTO.inputLevels
-        const metadataBlockNames = collectionDTO.metadataBlockNames
-
-        expect(inputLevels).to.be.undefined
-        expect(metadataBlockNames).to.be.undefined
-      })
-    })
-
-    it('when editing root collection, should not send facetIds as undefined if they have changed', () => {
-      const collectionRepository = {} as CollectionRepository
-      collectionRepository.edit = cy.stub().as('editCollection').resolves()
-      collectionRepository.getFacets = cy.stub().resolves(CollectionFacetMother.createFacets())
-
-      cy.mountAuthenticated(
-        <EditCreateCollectionForm
-          mode="edit"
-          user={testUser}
-          collection={rootCollection}
-          parentCollection={undefined}
-          collectionRepository={collectionRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-        />
-      )
-
-      cy.findByTestId('left-list-group').as('leftList')
-      cy.findByTestId('actions-column').as('actionsColumn')
-      cy.findByTestId('right-list-group').as('rightList')
-
-      // Change the default selected facets
-      cy.get('@leftList').within(() => {
-        cy.findByText('Topic Classification Term').click()
-      })
-
-      cy.get('@actionsColumn').within(() => {
-        cy.findByLabelText('move selected to right').click()
-      })
-
-      cy.get('@rightList').within(() => {
-        cy.findByLabelText('Topic Classification Term').should('exist')
-      })
-
-      cy.findByRole('button', { name: 'Save Changes' }).click()
-
-      cy.get('@editCollection').should((spy) => {
-        const editCollectionSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
-        const collectionDTO = editCollectionSpy.getCall(0).args[1] as CollectionDTO
-
-        const facetIds = collectionDTO.facetIds
-
-        expect(facetIds).to.not.be.undefined
-      })
-    })
-
-    it('when editing root collection, should send facetIds as undefined if they didnt changed', () => {
-      const collectionRepository = {} as CollectionRepository
-      collectionRepository.edit = cy.stub().as('editCollection').resolves()
-      collectionRepository.getFacets = cy.stub().resolves(CollectionFacetMother.createFacets())
-
-      cy.mountAuthenticated(
-        <EditCreateCollectionForm
-          mode="edit"
-          user={testUser}
-          collection={rootCollection}
-          parentCollection={undefined}
-          collectionRepository={collectionRepository}
-          metadataBlockInfoRepository={metadataBlockInfoRepository}
-        />
-      )
-
-      // Change affiliation in order to be able to save
-      cy.findByLabelText(/^Affiliation/i)
-        .clear()
-        .type('New Affiliation')
-
-      cy.findByRole('button', { name: 'Save Changes' }).click()
-
-      cy.get('@editCollection').should((spy) => {
-        const editCollectionSpy = spy as unknown as Cypress.Agent<sinon.SinonSpy>
-        const collectionDTO = editCollectionSpy.getCall(0).args[1] as CollectionDTO
-
-        const facetIds = collectionDTO.facetIds
-
-        expect(facetIds).to.be.undefined
+        expect(inheritFacetsFromParent).to.be.false
+        expect(inheritMetadataBlocksFromParent).to.be.false
       })
     })
   })
