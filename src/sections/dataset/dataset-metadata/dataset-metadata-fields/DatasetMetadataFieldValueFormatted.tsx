@@ -61,12 +61,12 @@ export function metadataFieldValueToDisplayFormat(
 
   if (isArrayOfObjects(metadataFieldValue)) {
     return metadataFieldValue
-      .map((subField) => joinSubFields(subField, metadataBlockInfo))
-      .join('\n\n')
+      .map((metadataSubField) => joinSubFields(metadataSubField, metadataBlockInfo))
+      .join(' \n \n')
   }
 
   if (Array.isArray(metadataFieldValue)) {
-    return metadataFieldValue.join(separator)
+    return metadataFieldValue.join(`${separator} `)
   }
 
   if (isAnObject(metadataFieldValue)) {
@@ -93,12 +93,9 @@ function joinSubFields(
   metadataBlockInfo?: MetadataBlockInfoDisplayFormat
 ): string {
   return Object.entries(metadataSubField)
-    .map(([subFieldName, subFieldValue]) => {
-      return formatSubFieldValue(
-        subFieldValue,
-        metadataBlockInfo?.fields[subFieldName]?.displayFormat
-      )
-    })
+    .map(([subFieldName, subFieldValue]) =>
+      formatSubFieldValue(subFieldValue, metadataBlockInfo?.fields[subFieldName]?.displayFormat)
+    )
     .join(' ')
 }
 
