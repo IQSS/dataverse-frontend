@@ -10,13 +10,13 @@ import {
   MetadataField
 } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { SubmissionStatus, useSubmitCollection } from './useSubmitCollection'
-import styles from './CollectionForm.module.scss'
 import { TopFieldsSection } from './top-fields-section/TopFieldsSection'
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
 import { MetadataFieldsSection } from './metadata-fields-section/MetadataFieldsSection'
 import { BrowseSearchFacetsSection } from './browse-search-facets-section/BrowseSearchFacetsSection'
 import { EditCreateCollectionFormMode } from '../EditCreateCollectionForm'
 import { RouteWithParams } from '@/sections/Route.enum'
+import styles from './CollectionForm.module.scss'
 
 export interface CollectionFormProps {
   mode: EditCreateCollectionFormMode
@@ -49,14 +49,10 @@ export const CollectionForm = ({
     defaultValues
   })
 
-  const { formState } = form
-
   const { submitForm, submitError, submissionStatus } = useSubmitCollection(
     mode,
     collectionIdOrParentCollectionId,
     collectionRepository,
-    isEditingRootCollection,
-    formState.dirtyFields,
     onSubmittedCollectionError
   )
 
@@ -71,8 +67,8 @@ export const CollectionForm = ({
   }
 
   const disableSubmitButton = useMemo(() => {
-    return submissionStatus === SubmissionStatus.IsSubmitting || !formState.isDirty
-  }, [submissionStatus, formState.isDirty])
+    return submissionStatus === SubmissionStatus.IsSubmitting || !form.formState.isDirty
+  }, [submissionStatus, form.formState.isDirty])
 
   return (
     <div
