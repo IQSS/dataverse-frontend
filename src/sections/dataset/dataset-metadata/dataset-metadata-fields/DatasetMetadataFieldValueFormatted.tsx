@@ -18,6 +18,13 @@ interface DatasetMetadataFieldValueFormattedProps {
   metadataFieldValue: DatasetMetadataFieldValueModel
   metadataBlockDisplayFormatInfo: MetadataBlockInfoDisplayFormat
 }
+
+const turndownService = new TurndownService()
+
+function transformHtmlToMarkdown(source: string): string {
+  return turndownService.turndown(source)
+}
+
 export function DatasetMetadataFieldValueFormatted({
   metadataBlockName,
   metadataFieldName,
@@ -37,7 +44,12 @@ export function DatasetMetadataFieldValueFormatted({
     t(`${metadataBlockName}.datasetField.${metadataFieldName}.name`)
   )
 
-  return <MarkdownComponent markdown={valueFormattedWithNamesTranslated} />
+  if (metadataBlockDisplayFormatInfo.fields[metadataFieldName]?.type === 'TEXTBOX') {
+    const markdownValue = transformHtmlToMarkdown(valueFormattedWithNamesTranslated)
+    return <MarkdownComponent markdown={markdownValue} />
+  }
+
+  return <span>{valueFormattedWithNamesTranslated}</span>
 }
 
 export function metadataFieldValueToDisplayFormat(
@@ -46,24 +58,22 @@ export function metadataFieldValueToDisplayFormat(
   metadataBlockInfo?: MetadataBlockInfoDisplayFormat
 ): string {
   const separator = metadataBlockInfo?.fields[metadataFieldName]?.displayFormat ?? ''
-  const isTextbox = metadataBlockInfo?.fields[metadataFieldName]?.type === 'TEXTBOX'
-  const formatValue = (value: string) => (isTextbox ? transformHtmlToMarkdown(value) : value)
 
   if (isArrayOfObjects(metadataFieldValue)) {
     return metadataFieldValue
-      .map((metadataSubField) => joinSubFields(metadataSubField, metadataBlockInfo))
-      .join(' \n \n')
+      .map((subField) => joinSubFields(subField, metadataBlockInfo))
+      .join('\n\n')
   }
 
   if (Array.isArray(metadataFieldValue)) {
-    return formatValue(metadataFieldValue.join(`${separator} `))
+    return metadataFieldValue.join(separator)
   }
 
   if (isAnObject(metadataFieldValue)) {
-    return formatValue(joinObjectValues(metadataFieldValue, separator))
+    return joinObjectValues(metadataFieldValue, separator)
   }
 
-  return formatValue(metadataFieldValue)
+  return metadataFieldValue
 }
 
 export function isArrayOfObjects(variable: unknown): variable is object[] {
@@ -86,31 +96,23 @@ function joinSubFields(
     .map(([subFieldName, subFieldValue]) => {
       return formatSubFieldValue(
         subFieldValue,
-        metadataBlockInfo?.fields[subFieldName]?.displayFormat,
-        metadataBlockInfo?.fields[subFieldName]?.type
+        metadataBlockInfo?.fields[subFieldName]?.displayFormat
       )
     })
     .join(' ')
 }
 
-const turndownService = new TurndownService()
-function transformHtmlToMarkdown(source: string): string {
-  return turndownService.turndown(source)
-}
-
 function formatSubFieldValue(
   subFieldValue: string | undefined,
-  displayFormat: string | undefined,
-  type: string | undefined
+  displayFormat: string | undefined
 ): string {
   if (subFieldValue === undefined) {
     return ''
   }
 
-  const formattedValue =
-    type === 'TEXTBOX' && subFieldValue ? transformHtmlToMarkdown(subFieldValue) : subFieldValue
+  if (!displayFormat) {
+    return subFieldValue
+  }
 
-  return displayFormat
-    ? displayFormat.replaceAll(METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER, formattedValue)
-    : formattedValue
+  return displayFormat.replaceAll(METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER, subFieldValue)
 }
