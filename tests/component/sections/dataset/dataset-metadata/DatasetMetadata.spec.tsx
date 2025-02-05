@@ -63,6 +63,7 @@ describe('DatasetMetadata', () => {
           )
           cy.findByAltText(translatedAltText).should('exist')
           cy.findByAltText(translatedAltText).should('have.attr', 'src', imageUrl)
+          cy.intercept(imageUrl).as('image')
         })
       }
     } else {
@@ -323,5 +324,6 @@ describe('DatasetMetadata', () => {
     )
 
     cy.findAllByTestId('ds-metadata-block-display-format-error').should('exist')
+    cy.contains('Error getting metadata block display info').should('not.exist')
   })
 })
