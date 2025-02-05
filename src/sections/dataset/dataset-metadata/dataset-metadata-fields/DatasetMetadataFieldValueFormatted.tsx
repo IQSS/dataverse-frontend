@@ -1,3 +1,4 @@
+import TurndownService from 'turndown'
 import {
   METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
   METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER,
@@ -45,6 +46,8 @@ export function metadataFieldValueToDisplayFormat(
   metadataBlockInfo?: MetadataBlockInfoDisplayFormat
 ): string {
   const separator = metadataBlockInfo?.fields[metadataFieldName]?.displayFormat ?? ''
+  const isTextbox = metadataBlockInfo?.fields[metadataFieldName]?.type === 'TEXTBOX'
+  const formatValue = (value: string) => (isTextbox ? transformHtmlToMarkdown(value) : value)
 
   if (isArrayOfObjects(metadataFieldValue)) {
     return metadataFieldValue
@@ -53,14 +56,14 @@ export function metadataFieldValueToDisplayFormat(
   }
 
   if (Array.isArray(metadataFieldValue)) {
-    return metadataFieldValue.join(`${separator} `)
+    return formatValue(metadataFieldValue.join(`${separator} `))
   }
 
   if (isAnObject(metadataFieldValue)) {
-    return joinObjectValues(metadataFieldValue, separator)
+    return formatValue(joinObjectValues(metadataFieldValue, separator))
   }
 
-  return metadataFieldValue
+  return formatValue(metadataFieldValue)
 }
 
 export function isArrayOfObjects(variable: unknown): variable is object[] {
@@ -80,23 +83,34 @@ function joinSubFields(
   metadataBlockInfo?: MetadataBlockInfoDisplayFormat
 ): string {
   return Object.entries(metadataSubField)
-    .map(([subFieldName, subFieldValue]) =>
-      formatSubFieldValue(subFieldValue, metadataBlockInfo?.fields[subFieldName]?.displayFormat)
-    )
+    .map(([subFieldName, subFieldValue]) => {
+      return formatSubFieldValue(
+        subFieldValue,
+        metadataBlockInfo?.fields[subFieldName]?.displayFormat,
+        metadataBlockInfo?.fields[subFieldName]?.type
+      )
+    })
     .join(' ')
+}
+
+const turndownService = new TurndownService()
+function transformHtmlToMarkdown(source: string): string {
+  return turndownService.turndown(source)
 }
 
 function formatSubFieldValue(
   subFieldValue: string | undefined,
-  displayFormat: string | undefined
+  displayFormat: string | undefined,
+  type: string | undefined
 ): string {
   if (subFieldValue === undefined) {
     return ''
   }
 
-  if (!displayFormat) {
-    return subFieldValue
-  }
+  const formattedValue =
+    type === 'TEXTBOX' && subFieldValue ? transformHtmlToMarkdown(subFieldValue) : subFieldValue
 
-  return displayFormat.replaceAll(METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER, subFieldValue)
+  return displayFormat
+    ? displayFormat.replaceAll(METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER, formattedValue)
+    : formattedValue
 }

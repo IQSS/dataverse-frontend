@@ -49,6 +49,7 @@ function DatasetWithSearchParams() {
   const privateUrlToken = searchParams.get('privateUrlToken')
   const searchParamVersion = searchParams.get('version') ?? undefined
   const version = searchParamVersionToDomainVersion(searchParamVersion)
+  const keepRawFields = true
   const location = useLocation()
   const state = location.state as
     | { created: boolean; metadataUpdated: boolean; publishInProgress: boolean }
@@ -81,7 +82,7 @@ function DatasetWithSearchParams() {
   return (
     <DatasetProvider
       repository={datasetRepository}
-      searchParams={{ persistentId: persistentId, version: version }}
+      searchParams={{ persistentId: persistentId, version: version, keepRawFields: keepRawFields }}
       isPublishing={publishInProgress}>
       <Dataset
         collectionRepository={collectionRepository}
