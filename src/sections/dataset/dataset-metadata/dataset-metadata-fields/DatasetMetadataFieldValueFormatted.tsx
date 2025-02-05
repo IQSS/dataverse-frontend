@@ -49,7 +49,7 @@ export function DatasetMetadataFieldValueFormatted({
     return <MarkdownComponent markdown={markdownValue} />
   }
 
-  return <span>{valueFormattedWithNamesTranslated}</span>
+  return <MarkdownComponent markdown={valueFormattedWithNamesTranslated} />
 }
 
 export function metadataFieldValueToDisplayFormat(
