@@ -4,7 +4,10 @@ import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { FileAccessOption } from '@/files/domain/models/FileCriteria'
 import { DatasetMother } from '../../../dataset/domain/models/DatasetMother'
 import { LicenseMother } from '../../../dataset/domain/models/LicenseMother'
-import { TermsOfUseMother } from '../../../dataset/domain/models/TermsOfUseMother'
+import {
+  TermsOfUseMother,
+  TermsOfAccessMother
+} from '../../../dataset/domain/models/TermsOfUseMother'
 
 const datasetPersistentId = 'test-dataset-persistent-id'
 const datasetVersion = DatasetMother.create().version
@@ -30,10 +33,20 @@ const singleRestrictedFilesCountInfo = FilesCountInfoMother.create({
 
 const license = LicenseMother.create()
 const termsOfUse = TermsOfUseMother.create()
-const emptyTermsOfUse = TermsOfUseMother.createEmpty()
-const accessAllowedTermsOfUse = TermsOfUseMother.create({ fileAccessRequest: true })
-const accessNotAllowedTermsOfUse = TermsOfUseMother.create({ fileAccessRequest: false })
-const termsOfUseWithUndefinedValue = TermsOfUseMother.create({ dataAccessPlace: undefined })
+const emptyCustomTerms = TermsOfUseMother.create({ customTermsOfUse: undefined })
+
+const emptyTermsOfAccess = TermsOfUseMother.create({
+  termsOfAccess: TermsOfAccessMother.createEmpty()
+})
+const accessAllowedTermsOfUse = TermsOfUseMother.create({
+  termsOfAccess: TermsOfAccessMother.create({ fileAccessRequest: true })
+})
+const accessNotAllowedTermsOfUse = TermsOfUseMother.create({
+  termsOfAccess: TermsOfAccessMother.create({ fileAccessRequest: false })
+})
+const termsOfUseWithUndefinedValue = TermsOfUseMother.create({
+  termsOfAccess: TermsOfAccessMother.create({ dataAccessPlace: undefined })
+})
 
 describe('DatasetTerms', () => {
   beforeEach(() => {
@@ -100,19 +113,21 @@ describe('DatasetTerms', () => {
     cy.findByText('Restricted Files').should('exist')
     cy.findByText('There is 1 restricted file in this dataset.').should('exist')
   })
-  it('renders the terms of access', () => {
+  it('renders the custom terms', () => {
     cy.customMount(
       <DatasetTerms
-        license={license}
+        license={undefined}
         termsOfUse={termsOfUse}
         filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
     )
-
+    console.log('termsOfUse', termsOfUse)
     cy.findByText('Terms of Access for Restricted Files').should('exist')
-    cy.findByText(termsOfUse.termsOfAccess as string).should('exist')
+    cy.findByText(termsOfUse.termsOfAccess.termsOfAccessForRestrictedFiles as string).should(
+      'exist'
+    )
   })
 
   it('renders the request access allowed message', () => {
@@ -148,22 +163,22 @@ describe('DatasetTerms', () => {
     cy.customMount(
       <DatasetTerms
         license={license}
-        termsOfUse={termsOfUse}
+        termsOfUse={emptyCustomTerms}
         filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
       />
     )
-
+    console.log(emptyCustomTerms)
     cy.findByText('Data Access Place').should('exist')
-    cy.findByText(termsOfUse.dataAccessPlace as string).should('exist')
+    cy.findByText(emptyCustomTerms.termsOfAccess.dataAccessPlace as string).should('exist')
   })
 
   it('renders the original archive information', () => {
     cy.customMount(
       <DatasetTerms
         license={license}
-        termsOfUse={termsOfUse}
+        termsOfUse={emptyCustomTerms}
         filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
@@ -171,14 +186,14 @@ describe('DatasetTerms', () => {
     )
 
     cy.findByText('Original Archive').should('exist')
-    cy.findByText(termsOfUse.originalArchive as string).should('exist')
+    cy.findByText(emptyCustomTerms.termsOfAccess.originalArchive as string).should('exist')
   })
 
   it('renders the availability status', () => {
     cy.customMount(
       <DatasetTerms
         license={license}
-        termsOfUse={termsOfUse}
+        termsOfUse={emptyCustomTerms}
         filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
@@ -186,14 +201,14 @@ describe('DatasetTerms', () => {
     )
 
     cy.findByText('Availability Status').should('exist')
-    cy.findByText(termsOfUse.availabilityStatus as string).should('exist')
+    cy.findByText(emptyCustomTerms.termsOfAccess.availabilityStatus as string).should('exist')
   })
 
   it('renders the contact for access information', () => {
     cy.customMount(
       <DatasetTerms
         license={license}
-        termsOfUse={termsOfUse}
+        termsOfUse={emptyCustomTerms}
         filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
@@ -201,14 +216,14 @@ describe('DatasetTerms', () => {
     )
 
     cy.findByText('Contact for Access').should('exist')
-    cy.findByText(termsOfUse.contactForAccess as string).should('exist')
+    cy.findByText(emptyCustomTerms.termsOfAccess.contactForAccess as string).should('exist')
   })
 
   it('renders the size of collection information', () => {
     cy.customMount(
       <DatasetTerms
         license={license}
-        termsOfUse={termsOfUse}
+        termsOfUse={emptyCustomTerms}
         filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
@@ -216,14 +231,14 @@ describe('DatasetTerms', () => {
     )
 
     cy.findByText('Size of Collection').should('exist')
-    cy.findByText(termsOfUse.sizeOfCollection as string).should('exist')
+    cy.findByText(emptyCustomTerms.termsOfAccess.sizeOfCollection as string).should('exist')
   })
 
   it('renders the study completion information', () => {
     cy.customMount(
       <DatasetTerms
         license={license}
-        termsOfUse={termsOfUse}
+        termsOfUse={emptyCustomTerms}
         filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
@@ -231,13 +246,13 @@ describe('DatasetTerms', () => {
     )
 
     cy.findByText('Study Completion').should('exist')
-    cy.findByText(termsOfUse.studyCompletion as string).should('exist')
+    cy.findByText(emptyCustomTerms.termsOfAccess.studyCompletion as string).should('exist')
   })
   it('does not render the terms of use AccordionItem if terms of use fields are empty', () => {
     cy.customMount(
       <DatasetTerms
         license={license}
-        termsOfUse={emptyTermsOfUse}
+        termsOfUse={emptyTermsOfAccess}
         filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}
@@ -253,7 +268,7 @@ describe('DatasetTerms', () => {
     cy.customMount(
       <DatasetTerms
         license={license}
-        termsOfUse={termsOfUse}
+        termsOfUse={emptyCustomTerms}
         filesRepository={fileRepository}
         datasetPersistentId={datasetPersistentId}
         datasetVersion={datasetVersion}

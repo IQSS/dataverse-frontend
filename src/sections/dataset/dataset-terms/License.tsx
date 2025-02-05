@@ -44,7 +44,11 @@ export function License({ license }: LicenseProps) {
             {license.name}
           </a>
         )}
-        {!license && <span>{t('termsTab.customTermsHelpText')}</span>}
+        {!license && (
+          <span>
+            {t('customTerms.title')} - {t('customTerms.description')}
+          </span>
+        )}
       </Col>
     </Row>
   )

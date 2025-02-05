@@ -44,7 +44,7 @@ export function DatasetTerms({
   const restrictedFilesCount = filesCountInfo
     ? numberOfRestrictedFiles(filesCountInfo.perAccess)
     : 0
-  const termsOfUseIsEmpty = Object.values(termsOfUse).every(
+  const termsOfAccessIsEmpty = Object.values(termsOfUse.termsOfAccess).every(
     (value) => value === undefined || typeof value === 'boolean'
   )
 
@@ -62,15 +62,15 @@ export function DatasetTerms({
           <Accordion.Header>{t('termsTab.licenseTitle')}</Accordion.Header>
           <Accordion.Body>
             <License license={license} />
-            <CustomTerms {...termsOfUse} license={license} />
+            <CustomTerms customTerms={termsOfUse.customTermsOfUse} />
           </Accordion.Body>
         </Accordion.Item>
-        {!termsOfUseIsEmpty && (
+        {!termsOfAccessIsEmpty && (
           <Accordion.Item eventKey={'1'}>
             <Accordion.Header>{t('termsTab.termsTitle')}</Accordion.Header>
             <Accordion.Body>
               <TermsOfAccess
-                {...termsOfUse}
+                termsOfAccess={termsOfUse.termsOfAccess}
                 filesCountInfo={filesCountInfo}
                 restrictedFilesCount={restrictedFilesCount}
               />

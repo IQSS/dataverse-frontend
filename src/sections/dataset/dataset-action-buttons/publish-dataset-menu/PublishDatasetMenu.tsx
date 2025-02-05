@@ -44,6 +44,8 @@ export function PublishDatasetMenu({
         collectionRepository={collectionRepository}
         parentCollection={dataset.parentCollectionNode}
         persistentId={dataset.persistentId}
+        license={dataset.license}
+        customTerms={dataset.termsOfUse.customTermsOfUse}
         releasedVersionExists={dataset.version.someDatasetVersionHasBeenReleased}
         nextMajorVersion={dataset.nextMajorVersion}
         nextMinorVersion={dataset.nextMinorVersion}

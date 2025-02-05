@@ -6,8 +6,10 @@ import { Form } from '@iqss/dataverse-design-system'
 import type { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { VersionUpdateType } from '@/dataset/domain/models/VersionUpdateType'
 import { useSession } from '../../session/SessionContext'
-import { SummaryLicense } from '../dataset-summary/SummaryLicense'
-import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
+import {
+  DatasetNonNumericVersionSearchParam,
+  CustomTerms as CustomTermsModel
+} from '@/dataset/domain/models/Dataset'
 import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
 import { QueryParamKey, Route } from '../../Route.enum'
 import { usePublishDataset } from './usePublishDataset'
@@ -16,6 +18,8 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { UpwardHierarchyNode } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { DatasetLicense } from '@/dataset/domain/models/Dataset'
 import styles from './PublishDatasetModal.module.scss'
+import { PublishLicense } from '@/sections/dataset/publish-dataset/PublishLicense'
+import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
 
 interface PublishDatasetModalProps {
   show: boolean
@@ -23,7 +27,8 @@ interface PublishDatasetModalProps {
   collectionRepository: CollectionRepository
   parentCollection: UpwardHierarchyNode
   persistentId: string
-  license: DatasetLicense
+  license: DatasetLicense | undefined
+  customTerms?: CustomTermsModel
   releasedVersionExists: boolean
   handleClose: () => void
   nextMajorVersion?: string
@@ -38,6 +43,7 @@ export function PublishDatasetModal({
   parentCollection,
   persistentId,
   license,
+  customTerms,
   releasedVersionExists,
   handleClose,
   nextMajorVersion,
@@ -120,13 +126,17 @@ export function PublishDatasetModal({
               </Form.RadioGroup>
             </>
           )}
-          <SummaryLicense
+          <PublishLicense
             license={license}
-            onCustomTermsClick={() => {
+            handleCustomTermsClick={() => {
               const termsUrl = `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}&${QueryParamKey.TAB}=terms`
-              window.open(termsUrl, '_blank')
+              const newTabUrl = `${window.location.origin}${import.meta.env.BASE_URL}${termsUrl}`
+              window.open(newTabUrl, '_blank')
             }}
           />
+          <div>
+            <CustomTerms customTerms={customTerms} />
+          </div>
           <p className={styles.secondaryText}>{t('publish.termsText')}</p>
         </Stack>
         <span className={styles.errorText}>

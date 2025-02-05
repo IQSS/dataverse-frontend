@@ -13,6 +13,7 @@ export function DatasetTermsRow({ title, tooltipMessage, value }: DatasetTermsRo
   if (value === undefined) {
     return null
   }
+  console.log('value', value)
 
   return (
     <Row className={styles['dataset-terms-row']}>

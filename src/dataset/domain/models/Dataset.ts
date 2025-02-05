@@ -367,16 +367,20 @@ export interface DatasetDownloadUrls {
   original: string
   archival: string
 }
-export interface DatasetTermsOfUse {
+
+export interface TermsOfAccess {
   fileAccessRequest: boolean
-  termsOfAccess?: string
+  termsOfAccessForRestrictedFiles?: string
   dataAccessPlace?: string
   originalArchive?: string
   availabilityStatus?: string
   contactForAccess?: string
   sizeOfCollection?: string
   studyCompletion?: string
-  termsOfUse?: string
+}
+
+export interface CustomTerms {
+  termsOfUse: string
   confidentialityDeclaration?: string
   specialPermissions?: string
   restrictions?: string
@@ -384,6 +388,10 @@ export interface DatasetTermsOfUse {
   depositorRequirements?: string
   conditions?: string
   disclaimer?: string
+}
+export interface DatasetTermsOfUse {
+  termsOfAccess: TermsOfAccess
+  customTermsOfUse?: CustomTerms
 }
 
 export class Dataset {

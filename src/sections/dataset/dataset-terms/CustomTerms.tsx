@@ -1,84 +1,57 @@
-import { DatasetLicense } from '../../../dataset/domain/models/Dataset'
-import { License } from '@/sections/dataset/dataset-terms/License'
 import { useTranslation } from 'react-i18next'
 import { DatasetTermsRow } from '@/sections/dataset/dataset-terms/DatasetTermsRow'
+import { CustomTerms as CustomTermsModel } from '../../../dataset/domain/models/Dataset'
 
-interface LicenseTermsProps {
-  license?: DatasetLicense
-  termsOfUse?: string
-  confidentialityDeclaration?: string
-  specialPermissions?: string
-  restrictions?: string
-  citationRequirements?: string
-  depositorRequirements?: string
-  conditions?: string
-  disclaimer?: string
+interface CustomTermsProps {
+  customTerms?: CustomTermsModel
 }
-interface LicenseTermsProps {
-  license?: DatasetLicense
-  termsOfUse?: string
-  confidentialityDeclaration?: string
-  specialPermissions?: string
-  restrictions?: string
-  citationRequirements?: string
-  depositorRequirements?: string
-  conditions?: string
-  disclaimer?: string
-}
-export function CustomTerms({
-  license,
-  termsOfUse,
-  confidentialityDeclaration,
-  specialPermissions,
-  restrictions,
-  citationRequirements,
-  depositorRequirements,
-  conditions,
-  disclaimer
-}: LicenseTermsProps) {
+
+export function CustomTerms({ customTerms }: CustomTermsProps) {
   const { t } = useTranslation('dataset')
-
+  if (!customTerms) {
+    return null
+  }
   return (
     <>
       <DatasetTermsRow
         title={t('termsTab.termsOfUse')}
         tooltipMessage={t('termsTab.termsOfUseTip')}
-        value={termsOfUse}
+        value={customTerms.termsOfUse}
       />
       <DatasetTermsRow
         title={t('termsTab.confidentialityDeclaration')}
         tooltipMessage={t('termsTab.confidentialityDeclarationTip')}
-        value={confidentialityDeclaration}
+        value={customTerms.confidentialityDeclaration}
       />
       <DatasetTermsRow
         title={t('termsTab.specialPermissions')}
         tooltipMessage={t('termsTab.specialPermissionsTip')}
-        value={specialPermissions}
+        value={customTerms.specialPermissions}
       />
       <DatasetTermsRow
         title={t('termsTab.restrictions')}
         tooltipMessage={t('termsTab.restrictionsTip')}
-        value={restrictions}
+        value={customTerms.restrictions}
       />
       <DatasetTermsRow
         title={t('termsTab.citationRequirements')}
         tooltipMessage={t('termsTab.citationRequirementsTip')}
-        value={citationRequirements}
+        value={customTerms.citationRequirements}
       />
       <DatasetTermsRow
         title={t('termsTab.depositorRequirements')}
         tooltipMessage={t('termsTab.depositorRequirementsTip')}
-        value={depositorRequirements}
+        value={customTerms.depositorRequirements}
       />
       <DatasetTermsRow
         title={t('termsTab.conditions')}
         tooltipMessage={t('termsTab.conditionsTip')}
-        value={conditions}
+        value={customTerms.conditions}
       />
       <DatasetTermsRow
         title={t('termsTab.disclaimer')}
         tooltipMessage={t('termsTab.disclaimerTip')}
-        value={disclaimer}
+        value={customTerms.disclaimer}
       />
     </>
   )
