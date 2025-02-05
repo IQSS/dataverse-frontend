@@ -8,6 +8,8 @@
   "more": "More...",
   "less": "Less...",
   "share": "Share",
+  "saveChanges": "Save Changes",
+  "dragHandleLabel": "press space to select and keys to drag",
   "pageNumberNotFound": {
     "heading": "Page Number Not Found",
     "message": "The page number you requested does not exist. Please try a different page number."
@@ -60,11 +62,7 @@
       "submitting": "Form Submitting",
       "submissionSuccess": "Form submission successful"
     },
-    "saveButton": {
-      "createMode": "Save Dataset",
-      "editMode": "Save Changes"
-    },
-    "cancelButton": "Cancel"
+    "saveDataset": "Save Dataset"
   },
   "collectionForm": {
     "fields": {
@@ -146,10 +144,6 @@
       "createSuccess": "Collection created successfully.",
       "editSuccess": "Collection updated successfully."
     },
-    "saveButton": {
-      "createMode": "Create Collection",
-      "editMode": "Save Changes"
-    },
-    "cancelButton": "Cancel"
+    "createCollection": "Create Collection"
   }
 }

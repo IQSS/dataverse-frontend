@@ -1,0 +1,33 @@
+{
+  "pageTitle": "Featured Items",
+  "infoMessage": "Add Featured Items to showcase key content in your collection. These items will appear as cards in a carousel, each including a rich text content with an optional image.",
+  "previewCarouselHeader": "Live preview of your featured items",
+  "deleteAll": {
+    "action": "Delete all featured items",
+    "confirmation": "Are you sure you want to delete all featured items from this collection?",
+    "success": "All featured items have been deleted successfully."
+  },
+  "form": {
+    "image": {
+      "label": "Image",
+      "description": "Upload an image to display with the item, accepted extensions are png, jpg, jpeg and webp, and the maximum file size is {{maxImageSize}}.",
+      "invalid": {
+        "size": "The file is too large. The maximum file size is {{maxImageSize}}"
+      },
+      "restoreInitial": "Restore initial image",
+      "changeImage": "Change image",
+      "removeImage": "Remove image"
+    },
+    "content": {
+      "label": "Content",
+      "required": "Content is required",
+      "invalid": {
+        "maxLength": "Content must be {{maxLength}} characters or less."
+      }
+    },
+    "submitStatus": {
+      "success": "Featured items have been updated successfully."
+    },
+    "maxItemsReached": "You can add up to {{maxFeaturedItems}} featured items."
+  }
+}

@@ -6,6 +6,8 @@ import { WithLoggedInUser } from '../WithLoggedInUser'
 import { CollectionMockRepository } from './CollectionMockRepository'
 import { CollectionLoadingMockRepository } from './CollectionLoadingMockRepository'
 import { UnpublishedCollectionMockRepository } from '@/stories/collection/UnpublishedCollectionMockRepository'
+import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { FakerHelper } from '@tests/component/shared/FakerHelper'
 
 const meta: Meta<typeof Collection> = {
   title: 'Pages/Collection',
@@ -108,6 +110,32 @@ export const Edited: Story = {
       published={false}
       edited={true}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
+    />
+  )
+}
+
+const collectionRepositoryWithFeaturedItems = new CollectionMockRepository()
+collectionRepositoryWithFeaturedItems.getFeaturedItems = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(CollectionFeaturedItemMother.createFeaturedItems())
+    }, FakerHelper.loadingTimout())
+  })
+}
+
+export const WithFeaturedItems: Story = {
+  decorators: [WithLoggedInUser],
+  render: () => (
+    <Collection
+      collectionRepository={collectionRepositoryWithFeaturedItems}
+      collectionIdFromParams="collection"
+      created={false}
+      published={false}
+      collectionQueryParams={{
+        pageQuery: 1,
+        searchQuery: undefined,
+        typesQuery: undefined
+      }}
     />
   )
 }

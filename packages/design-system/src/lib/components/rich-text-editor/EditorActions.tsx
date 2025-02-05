@@ -114,6 +114,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             aria-label="Heading 1"
             disabled={disabled}
             title="Heading 1"
+            type="button"
             variant="secondary"
             size="sm"
             icon={<TypeH1 size={18} />}
@@ -125,6 +126,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             aria-label="Heading 2"
             disabled={disabled}
             title="Heading 2"
+            type="button"
             variant="secondary"
             size="sm"
             icon={<TypeH2 size={18} />}
@@ -136,6 +138,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             aria-label="Heading 3"
             disabled={disabled}
             title="Heading 3"
+            type="button"
             variant="secondary"
             size="sm"
             icon={<TypeH3 size={18} />}
@@ -151,6 +154,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             aria-label="Bold"
             disabled={disabled}
             title="Bold"
+            type="button"
             variant="secondary"
             size="sm"
             icon={<TypeBold size={18} />}
@@ -164,6 +168,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             aria-label="Italic"
             disabled={disabled}
             title="Italic"
+            type="button"
             variant="secondary"
             size="sm"
             icon={<TypeItalic size={18} />}
@@ -178,6 +183,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             aria-label="Underline"
             disabled={disabled}
             title="Underline"
+            type="button"
             variant="secondary"
             size="sm"
             icon={<TypeUnderline size={18} />}
@@ -191,6 +197,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             aria-label="Strikethrough"
             disabled={disabled}
             title="Strikethrough"
+            type="button"
             variant="secondary"
             size="sm"
             icon={<TypeStrikethrough size={18} />}
@@ -208,6 +215,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             aria-label="Unordered list"
             disabled={disabled}
             title="Unordered list"
+            type="button"
             variant="secondary"
             size="sm"
             icon={<ListUl size={18} />}
@@ -221,6 +229,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             aria-label="Ordered list"
             disabled={disabled}
             title="Ordered list"
+            type="button"
             variant="secondary"
             size="sm"
             icon={<ListOl size={18} />}
@@ -235,6 +244,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             aria-label="Add link"
             disabled={disabled}
             title="Add link"
+            type="button"
             variant="secondary"
             size="sm"
             icon={<Link size={18} />}
@@ -246,6 +256,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             aria-label="Code"
             disabled={disabled}
             title="Code"
+            type="button"
             variant="secondary"
             size="sm"
             icon={<Code size={18} />}
@@ -259,6 +270,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             aria-label="Code block"
             disabled={disabled}
             title="Code block"
+            type="button"
             variant="secondary"
             size="sm"
             icon={<CodeSquare size={18} />}
@@ -271,6 +283,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             aria-pressed={isActiveBlockquote}
             aria-label="Blockquote"
             title="Blockquote"
+            type="button"
             disabled={disabled}
             variant="secondary"
             size="sm"
@@ -286,6 +299,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             aria-label="Undo"
             disabled={disabled || !editor?.can().undo()}
             title="Undo"
+            type="button"
             variant="secondary"
             size="sm"
             icon={<ArrowLeft size={18} />}
@@ -296,6 +310,7 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
             aria-label="Redo"
             disabled={disabled || !editor?.can().redo()}
             title="Redo"
+            type="button"
             variant="secondary"
             size="sm"
             icon={<ArrowRight size={18} />}
@@ -321,10 +336,10 @@ export const EditorActions = ({ editor, disabled, locales }: EditorActionsProps)
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleOKLinkDialog} variant="primary">
+          <Button onClick={handleOKLinkDialog} variant="primary" type="button">
             {locales?.linkDialog?.ok ?? richTextEditorDefaultLocales.linkDialog?.ok}
           </Button>
-          <Button onClick={handleCloseLinkDialog} variant="secondary">
+          <Button onClick={handleCloseLinkDialog} variant="secondary" type="button">
             {locales?.linkDialog?.cancel ?? richTextEditorDefaultLocales.linkDialog?.cancel}
           </Button>
         </Modal.Footer>
