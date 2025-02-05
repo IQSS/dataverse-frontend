@@ -136,6 +136,12 @@ cd packages/design-system && npm run build
 
 **Running &amp; Building the App:**
 
+Set up your environment file.
+
+```bash
+cp .env.example .env
+```
+
 Run the app in the development mode. Open [http://localhost:5173][dv_app_localhost_build_url] to view it in your browser.
 
 ```bash
@@ -210,7 +216,7 @@ As the script argument, add the name of the Dataverse image tag you want to depl
 ```bash
 # /dev-env/ directory
 
-# copy the .env.example file to .env
+# copy the .env.example file to .env (if you haven't already)
 # To test file upload, update the .env file with S3 credentials
 $ cp .env.example .env
 
