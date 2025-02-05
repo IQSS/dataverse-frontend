@@ -216,7 +216,7 @@ As the script argument, add the name of the Dataverse image tag you want to depl
 ```bash
 # /dev-env/ directory
 
-# copy the .env.example file to .env (if you haven't already)
+# copy the .env.example file to .env
 # To test file upload, update the .env file with S3 credentials
 $ cp .env.example .env
 
