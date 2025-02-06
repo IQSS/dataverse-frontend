@@ -251,7 +251,7 @@ If you want to add test data (collections and datasets) to the Dataverse instanc
 # /dev-env/ directory
 
 $ ./add-env-data.sh
-````
+```
 
 > Note: The above command uses the [dataverse-sample-data][dv_repo_dvsampledata_url] repository whose scripts occasionally
 > fail, so some test data may not be added.
