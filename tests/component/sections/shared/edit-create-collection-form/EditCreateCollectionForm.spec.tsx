@@ -1043,9 +1043,8 @@ describe('EditCreateCollectionForm', () => {
       })
 
       it('should send inheritFacetsFromParent in true if use facets from parent is checked', () => {
-        // Accept suggestion
         cy.findByRole('button', { name: 'Apply suggestion' }).click()
-        // Select a Category option
+
         cy.findByLabelText(/^Category/i).select(1)
 
         cy.findByRole('button', { name: 'Create Collection' }).click()
@@ -1061,9 +1060,8 @@ describe('EditCreateCollectionForm', () => {
       })
 
       it('should send inheritFacetsFromParent in false if use facets from parent is unchecked', () => {
-        // Accept suggestion
         cy.findByRole('button', { name: 'Apply suggestion' }).click()
-        // Select a Category option
+
         cy.findByLabelText(/^Category/i).select(1)
 
         cy.get('@useFacetsFromParentCheckbox').uncheck({ force: true })
