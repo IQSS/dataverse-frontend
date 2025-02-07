@@ -61,6 +61,7 @@
   "deleteFileModal": {
     "title": "Delete File",
     "message": "The file will be deleted after you click on the Delete button.",
+    "messagePublishedDataset": "Files will not be removed from previously published versions of the dataset.",
     "delete": "Delete"
   }
 }

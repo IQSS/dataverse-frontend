@@ -3,7 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { ConfirmDeleteFileModal } from './ConfirmDeleteFileModal'
 
-export const DeleteFileButton = () => {
+interface DeleteFileButtonProps {
+  datasetReleasedVersionExists: boolean
+}
+
+export const DeleteFileButton = ({ datasetReleasedVersionExists }: DeleteFileButtonProps) => {
   const { t } = useTranslation('file')
   const [showModal, setShowModal] = useState(false)
 
@@ -23,6 +27,7 @@ export const DeleteFileButton = () => {
         show={showModal}
         handleClose={handleCloseModal}
         handleDelete={handleConfirmDelete}
+        datasetReleasedVersionExists={datasetReleasedVersionExists}
       />
     </>
   )
