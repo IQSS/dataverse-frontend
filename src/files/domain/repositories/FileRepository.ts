@@ -43,4 +43,5 @@ export interface FileRepository {
     storageIdSetter: (storageId: string) => void
   ) => Promise<void>
   addUploadedFiles: (datasetId: number | string, files: UploadedFileDTO[]) => Promise<void>
+  deleteFile: (fileId: number | string) => Promise<void>
 }
