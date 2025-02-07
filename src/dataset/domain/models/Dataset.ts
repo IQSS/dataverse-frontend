@@ -391,7 +391,7 @@ export interface CustomTerms {
 }
 export interface DatasetTermsOfUse {
   termsOfAccess: TermsOfAccess
-  customTermsOfUse?: CustomTerms
+  customTerms?: CustomTerms
 }
 
 export class Dataset {

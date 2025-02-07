@@ -62,7 +62,7 @@ export function DatasetTerms({
           <Accordion.Header>{t('termsTab.licenseTitle')}</Accordion.Header>
           <Accordion.Body>
             <License license={license} />
-            <CustomTerms customTerms={termsOfUse.customTermsOfUse} />
+            <CustomTerms customTerms={termsOfUse.customTerms} />
           </Accordion.Body>
         </Accordion.Item>
         {!termsOfAccessIsEmpty && (

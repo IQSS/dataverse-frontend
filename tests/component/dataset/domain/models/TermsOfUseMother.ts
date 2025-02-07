@@ -55,7 +55,7 @@ export class TermsOfUseMother {
   static create(props?: Partial<DatasetTermsOfUse>): DatasetTermsOfUse {
     const defaultTerms: DatasetTermsOfUse = {
       termsOfAccess: TermsOfAccessMother.create(),
-      customTermsOfUse: CustomTermsMother.create()
+      customTerms: CustomTermsMother.create()
     }
     return { ...defaultTerms, ...props }
   }
