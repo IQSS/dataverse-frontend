@@ -35,6 +35,8 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
     return <FileSkeleton />
   }
 
+  console.log(file?.datasetVersion.someDatasetVersionHasBeenReleased)
+
   return (
     <>
       {!file ? (
@@ -84,7 +86,11 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                         DatasetPublishingStatus.DEACCESSIONED
                       }
                     />
-                    <EditFileMenu />
+                    <EditFileMenu
+                      datasetReleasedVersionExists={
+                        file.datasetVersion.someDatasetVersionHasBeenReleased
+                      }
+                    />
                   </ButtonGroup>
                 </Col>
               </Row>
