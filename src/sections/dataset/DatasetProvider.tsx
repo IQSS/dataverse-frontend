@@ -31,7 +31,7 @@ export function DatasetProvider({
         searchParams.persistentId,
         searchParams.version,
         undefined,
-        searchParams.keepRawFields
+        true
       )
     }
     if (searchParams.privateUrlToken) {

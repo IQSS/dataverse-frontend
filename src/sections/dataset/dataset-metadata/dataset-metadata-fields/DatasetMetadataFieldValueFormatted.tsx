@@ -46,6 +46,7 @@ export function DatasetMetadataFieldValueFormatted({
 
   if (metadataBlockDisplayFormatInfo.fields[metadataFieldName]?.type === 'TEXTBOX') {
     const markdownValue = transformHtmlToMarkdown(valueFormattedWithNamesTranslated)
+
     return <MarkdownComponent markdown={markdownValue} />
   }
 
