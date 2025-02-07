@@ -246,4 +246,51 @@ describe('PublishDatasetMenu', () => {
 
     cy.findByRole('button', { name: 'Return to Author' }).should('exist')
   })
+
+  it('shows the PublishDatasetModal when the Publish button is clicked', () => {
+    const dataset = DatasetMother.create({
+      version: DatasetVersionMother.createDraftAsLatestVersion(),
+      permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+      locks: [],
+      hasValidTermsOfAccess: true,
+      isValid: true
+    })
+
+    cy.mountAuthenticated(
+      <PublishDatasetMenu
+        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+        dataset={dataset}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Publish Dataset' }).click()
+    cy.findByRole('button', { name: 'Publish' }).click()
+    cy.findByRole('dialog').should('exist')
+  })
+
+  it('hides the PublishDatasetModal when handleClose is called', () => {
+    const dataset = DatasetMother.create({
+      version: DatasetVersionMother.createDraftAsLatestVersion(),
+      permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+      locks: [],
+      hasValidTermsOfAccess: true,
+      isValid: true
+    })
+
+    cy.mountAuthenticated(
+      <PublishDatasetMenu
+        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+        dataset={dataset}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Publish Dataset' }).click()
+    cy.findByRole('button', { name: 'Publish' }).click()
+    cy.findByRole('dialog').should('exist')
+
+    cy.findByRole('button', { name: 'Close' }).click()
+    cy.findByRole('dialog').should('not.exist')
+  })
 })
