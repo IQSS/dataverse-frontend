@@ -102,6 +102,8 @@ export function useSubmitCollection(
     )
 
     const newOrUpdatedCollection: CollectionDTO = {
+      inheritFacetsFromParent: false,
+      inheritMetadataBlocksFromParent: false,
       name: formData.name,
       alias: formData.alias,
       type: formData.type,
