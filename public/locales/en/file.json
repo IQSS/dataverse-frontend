@@ -47,6 +47,20 @@
     }
   },
   "actionButtons": {
-    "title": "File Action Buttons"
+    "title": "File Action Buttons",
+    "editFileMenu": {
+      "title": "Edit File",
+      "options": {
+        "metadata": "Metadata",
+        "restrict": "Restrict",
+        "replace": "Replace",
+        "delete": "Delete"
+      }
+    }
+  },
+  "deleteFileModal": {
+    "title": "Delete File",
+    "message": "The file will be deleted after you click on the Delete button.",
+    "delete": "Delete"
   }
 }
