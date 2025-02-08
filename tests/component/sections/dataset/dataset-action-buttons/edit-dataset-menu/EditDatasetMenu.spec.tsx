@@ -97,4 +97,36 @@ describe('EditDatasetMenu', () => {
       .should('have.class', 'disabled')
     cy.findByRole('button', { name: 'Metadata' }).should('exist').should('have.class', 'disabled')
   })
+  it('navigates to the correct URL when Files (Upload) is clicked', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithAllAllowed(),
+      locks: [],
+      hasValidTermsOfAccess: true,
+      version: DatasetVersionMother.createReleasedWithLatestVersionIsADraft()
+    })
+
+    cy.mountAuthenticated(<EditDatasetMenu dataset={dataset} />)
+
+    cy.findByRole('button', { name: 'Edit Dataset' }).click()
+    cy.findByRole('button', { name: 'Files (Upload)' }).click()
+    // TODO: use vite plugin to mock navigate
+    // https://github.com/cypress-io/cypress/tree/develop/npm/vite-plugin-cypress-esm
+    // expect(navigateMock).to.have.been.calledWith('/upload-dataset-files')
+  })
+  it('navigates to the correct URL when Edit Metadata is clicked', () => {
+    const dataset = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithAllAllowed(),
+      locks: [],
+      hasValidTermsOfAccess: true,
+      version: DatasetVersionMother.createReleasedWithLatestVersionIsADraft()
+    })
+
+    cy.mountAuthenticated(<EditDatasetMenu dataset={dataset} />)
+
+    cy.findByRole('button', { name: 'Edit Dataset' }).click()
+    cy.findByRole('button', { name: 'Metadata' }).click()
+    // TODO: use vite plugin to mock navigate
+    // https://github.com/cypress-io/cypress/tree/develop/npm/vite-plugin-cypress-esm
+    // expect(navigateMock).to.have.been.calledWith('/upload-dataset-files')
+  })
 })
