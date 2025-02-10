@@ -25,15 +25,15 @@ export const TopFieldsSection = ({ isEditingRootCollection }: TopFieldsSectionPr
   const nameRules: UseControllerProps['rules'] = {
     required: t('fields.name.required'),
     maxLength: {
-      value: 120,
-      message: t('fields.name.invalid.maxLength', { maxLength: 120 })
+      value: 255,
+      message: t('fields.name.invalid.maxLength', { maxLength: 255 })
     }
   }
 
   const affiliationRules: UseControllerProps['rules'] = {
     maxLength: {
-      value: 120,
-      message: t('fields.affiliation.invalid.maxLength', { maxLength: 120 })
+      value: 255,
+      message: t('fields.affiliation.invalid.maxLength', { maxLength: 255 })
     }
   }
 
