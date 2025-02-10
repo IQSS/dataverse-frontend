@@ -12,6 +12,7 @@ export class FileMother {
     return {
       id: faker.datatype.number(),
       name: faker.system.fileName(),
+      datasetPersistentId: faker.datatype.uuid(),
       datasetVersion: DatasetVersionMother.create(),
       hierarchy: UpwardHierarchyNodeMother.createFile(),
       citation: FileCitationMother.create('File Title'),
