@@ -71,9 +71,7 @@ export function PublishDatasetModal({
   const nextMajorVersionString = nextMajorVersion ? nextMajorVersion : ''
   const nextMinorVersionString = nextMinorVersion ? nextMinorVersion : ''
   function onPublishSucceed() {
-    navigate(
-      RouteWithParams.DATASETS(persistentId, DatasetNonNumericVersionSearchParam.DRAFT, 'terms')
-    )
+    navigate(RouteWithParams.DATASETS(persistentId, DatasetNonNumericVersionSearchParam.DRAFT))
     handleClose()
   }
 
