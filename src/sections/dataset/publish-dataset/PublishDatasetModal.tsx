@@ -6,7 +6,6 @@ import { Form } from '@iqss/dataverse-design-system'
 import type { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { VersionUpdateType } from '@/dataset/domain/models/VersionUpdateType'
 import { useSession } from '../../session/SessionContext'
-import { RouteWithParams } from '../../Route.enum'
 import {
   DatasetNonNumericVersionSearchParam,
   CustomTerms as CustomTermsModel
@@ -71,7 +70,13 @@ export function PublishDatasetModal({
   const nextMajorVersionString = nextMajorVersion ? nextMajorVersion : ''
   const nextMinorVersionString = nextMinorVersion ? nextMinorVersion : ''
   function onPublishSucceed() {
-    navigate(RouteWithParams.DATASETS(persistentId, DatasetNonNumericVersionSearchParam.DRAFT))
+    navigate(
+      `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
+      {
+        state: { publishInProgress: true },
+        replace: true
+      }
+    )
     handleClose()
   }
 
