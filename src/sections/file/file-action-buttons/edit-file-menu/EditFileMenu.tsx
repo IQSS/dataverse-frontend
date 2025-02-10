@@ -18,6 +18,9 @@ export interface EditFileMenuDatasetInfo {
 export const EditFileMenu = ({ fileId, fileRepository, datasetInfo }: EditFileMenuProps) => {
   const { t } = useTranslation('file')
 
+  // TODO:ME - Add permissions check after Issue https://github.com/IQSS/dataverse/issues/11226 is resolved.
+  // TODO:ME - Add unit tests.
+
   return (
     <DropdownButton
       id="edit-files-menu"
