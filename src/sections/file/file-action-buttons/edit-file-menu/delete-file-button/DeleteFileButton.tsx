@@ -1,21 +1,50 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
+import { deleteFile } from '@/files/domain/useCases/deleteFile'
+import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { QueryParamKey, Route } from '@/sections/Route.enum'
+import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
 import { ConfirmDeleteFileModal } from './ConfirmDeleteFileModal'
+import { EditFileMenuDatasetInfo } from '../EditFileMenu'
+import { useDeleteFile } from './useDeleteFile'
+import { toast } from 'react-toastify'
 
 interface DeleteFileButtonProps {
-  datasetReleasedVersionExists: boolean
+  fileId: number
+  fileRepository: FileRepository
+  datasetInfo: EditFileMenuDatasetInfo
 }
 
-export const DeleteFileButton = ({ datasetReleasedVersionExists }: DeleteFileButtonProps) => {
+export const DeleteFileButton = ({
+  fileId,
+  fileRepository,
+  datasetInfo
+}: DeleteFileButtonProps) => {
   const { t } = useTranslation('file')
   const [showModal, setShowModal] = useState(false)
+  const navigate = useNavigate()
+  const { handleDeleteFile, isDeletingFile, errorDeletingFile } = useDeleteFile({
+    fileRepository,
+    onSuccessfulDelete: closeModalAndNavigateToDataset
+  })
 
   const handleOpenModal = () => setShowModal(true)
   const handleCloseModal = () => setShowModal(false)
 
-  const handleConfirmDelete = () => {
-    console.log('Delete')
+  function closeModalAndNavigateToDataset() {
+    setShowModal(false)
+
+    const searchParams = new URLSearchParams()
+    searchParams.set(QueryParamKey.PERSISTENT_ID, datasetInfo.persistentId)
+
+    if (datasetInfo.isDraft) {
+      searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
+    }
+    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
+
+    toast.success(t('fileDeletedSuccess'))
   }
 
   return (
@@ -26,8 +55,10 @@ export const DeleteFileButton = ({ datasetReleasedVersionExists }: DeleteFileBut
       <ConfirmDeleteFileModal
         show={showModal}
         handleClose={handleCloseModal}
-        handleDelete={handleConfirmDelete}
-        datasetReleasedVersionExists={datasetReleasedVersionExists}
+        handleDelete={() => handleDeleteFile(fileId)}
+        datasetReleasedVersionExists={datasetInfo.releasedVersionExists}
+        isDeletingFile={isDeletingFile}
+        errorDeletingFile={errorDeletingFile}
       />
     </>
   )

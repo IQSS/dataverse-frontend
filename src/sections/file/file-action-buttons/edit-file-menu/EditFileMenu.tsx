@@ -1,12 +1,21 @@
 import { useTranslation } from 'react-i18next'
 import { DropdownButton } from '@iqss/dataverse-design-system'
+import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { DeleteFileButton } from './delete-file-button/DeleteFileButton'
 
 interface EditFileMenuProps {
-  datasetReleasedVersionExists: boolean
+  fileId: number
+  fileRepository: FileRepository
+  datasetInfo: EditFileMenuDatasetInfo
 }
 
-export const EditFileMenu = ({ datasetReleasedVersionExists }: EditFileMenuProps) => {
+export interface EditFileMenuDatasetInfo {
+  persistentId: string
+  isDraft: boolean
+  releasedVersionExists: boolean
+}
+
+export const EditFileMenu = ({ fileId, fileRepository, datasetInfo }: EditFileMenuProps) => {
   const { t } = useTranslation('file')
 
   return (
@@ -20,7 +29,7 @@ export const EditFileMenu = ({ datasetReleasedVersionExists }: EditFileMenuProps
       <DropdownButtonItem>{t('actionButtons.editFileMenu.options.restrict')}</DropdownButtonItem>
       <DropdownButtonItem>{t('actionButtons.editFileMenu.options.replace')}</DropdownButtonItem> */}
 
-      <DeleteFileButton datasetReleasedVersionExists={datasetReleasedVersionExists} />
+      <DeleteFileButton fileId={fileId} fileRepository={fileRepository} datasetInfo={datasetInfo} />
     </DropdownButton>
   )
 }
