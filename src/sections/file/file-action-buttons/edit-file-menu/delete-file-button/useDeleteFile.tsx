@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { WriteError } from '@iqss/dataverse-client-javascript'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { deleteFile } from '@/files/domain/useCases/deleteFile'
@@ -19,6 +20,7 @@ export const useDeleteFile = ({
   fileRepository,
   onSuccessfulDelete
 }: UseDeleteFile): UseDeleteFileReturn => {
+  const { t } = useTranslation('file')
   const [isDeletingFile, setIsDeletingFile] = useState<boolean>(false)
   const [errorDeletingFile, setErrorDeletingFile] = useState<string | null>(null)
 
@@ -35,7 +37,7 @@ export const useDeleteFile = ({
         const formattedError = error.getReasonWithoutStatusCode() ?? error.getErrorMessage()
         setErrorDeletingFile(formattedError)
       } else {
-        setErrorDeletingFile('Something went wrong deleting the file. Try again later.')
+        setErrorDeletingFile(t('defaultFileDeleteError'))
       }
     } finally {
       setIsDeletingFile(false)

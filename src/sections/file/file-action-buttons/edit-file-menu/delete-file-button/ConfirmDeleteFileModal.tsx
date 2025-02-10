@@ -24,7 +24,7 @@ export const ConfirmDeleteFileModal = ({
   const { t } = useTranslation('file')
 
   return (
-    <Modal show={show} onHide={handleClose} centered size="lg">
+    <Modal show={show} onHide={isDeletingFile ? () => {} : handleClose} centered size="lg">
       <Modal.Header>
         <Modal.Title>{t('deleteFileModal.title')}</Modal.Title>
       </Modal.Header>

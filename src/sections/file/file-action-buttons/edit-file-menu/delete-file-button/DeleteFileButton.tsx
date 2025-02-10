@@ -1,15 +1,14 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
-import { deleteFile } from '@/files/domain/useCases/deleteFile'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
 import { ConfirmDeleteFileModal } from './ConfirmDeleteFileModal'
 import { EditFileMenuDatasetInfo } from '../EditFileMenu'
 import { useDeleteFile } from './useDeleteFile'
-import { toast } from 'react-toastify'
 
 interface DeleteFileButtonProps {
   fileId: number

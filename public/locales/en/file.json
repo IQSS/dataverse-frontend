@@ -64,5 +64,6 @@
     "messagePublishedDataset": "Files will not be removed from previously published versions of the dataset.",
     "delete": "Delete"
   },
-  "fileDeletedSuccess": "The file has been deleted."
+  "fileDeletedSuccess": "The file has been deleted.",
+  "defaultFileDeleteError": "Something went wrong deleting the file. Try again later."
 }

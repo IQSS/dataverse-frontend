@@ -27,6 +27,7 @@ export class FileMother {
   static createRealistic(props?: Partial<File>): File {
     return this.create({
       name: 'File Title',
+      datasetPersistentId: '123',
       datasetVersion: DatasetVersionMother.createRealistic(),
       citation: FileCitationMother.create('File Title'),
       hierarchy: UpwardHierarchyNodeMother.createFile({ name: 'File Title' }),
