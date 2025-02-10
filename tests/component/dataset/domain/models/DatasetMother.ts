@@ -417,7 +417,7 @@ export class DatasetMother {
       fileDownloadSizes: [],
       requestedVersion: undefined,
       hierarchy: UpwardHierarchyNodeMother.createDataset(),
-      termsOfUse: TermsOfUseMother.create(),
+      termsOfUse: TermsOfUseMother.withoutCustomTerms(),
       ...props
     }
     return new Dataset.Builder(

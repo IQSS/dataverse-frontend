@@ -59,4 +59,11 @@ export class TermsOfUseMother {
     }
     return { ...defaultTerms, ...props }
   }
+  static withoutCustomTerms(props?: Partial<DatasetTermsOfUse>): DatasetTermsOfUse {
+    const defaultTerms: DatasetTermsOfUse = {
+      termsOfAccess: TermsOfAccessMother.create(),
+      customTerms: undefined
+    }
+    return { ...defaultTerms, ...props }
+  }
 }

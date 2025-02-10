@@ -21,13 +21,13 @@ type Story = StoryObj<typeof DatasetTerms>
 
 const testDataset = DatasetMother.createRealistic()
 const license = LicenseMother.create()
-const termsOfUse = TermsOfUseMother.create()
+const termsOfUseWithoutCustomTerms = TermsOfUseMother.withoutCustomTerms()
 
 export const Default: Story = {
   render: () => (
     <DatasetTerms
       license={license}
-      termsOfUse={termsOfUse}
+      termsOfUse={termsOfUseWithoutCustomTerms}
       filesRepository={new FileMockRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
@@ -39,7 +39,7 @@ export const Loading: Story = {
   render: () => (
     <DatasetTerms
       license={license}
-      termsOfUse={termsOfUse}
+      termsOfUse={termsOfUseWithoutCustomTerms}
       filesRepository={new FileMockLoadingRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
@@ -51,7 +51,7 @@ export const RestrictedFiles: Story = {
   render: () => (
     <DatasetTerms
       license={license}
-      termsOfUse={termsOfUse}
+      termsOfUse={termsOfUseWithoutCustomTerms}
       filesRepository={new FileMockRestrictedFilesRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
@@ -63,7 +63,18 @@ export const NoRestrictedFiles: Story = {
   render: () => (
     <DatasetTerms
       license={license}
-      termsOfUse={termsOfUse}
+      termsOfUse={termsOfUseWithoutCustomTerms}
+      filesRepository={new FileMockNoRestrictedFilesRepository()}
+      datasetPersistentId={testDataset.persistentId}
+      datasetVersion={testDataset.version}
+    />
+  )
+}
+export const CustomTerms: Story = {
+  render: () => (
+    <DatasetTerms
+      license={undefined}
+      termsOfUse={TermsOfUseMother.create()}
       filesRepository={new FileMockNoRestrictedFilesRepository()}
       datasetPersistentId={testDataset.persistentId}
       datasetVersion={testDataset.version}
