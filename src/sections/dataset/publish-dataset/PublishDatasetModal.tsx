@@ -129,9 +129,13 @@ export function PublishDatasetModal({
           <PublishLicense
             license={license}
             handleCustomTermsClick={() => {
-              const termsUrl = `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}&${QueryParamKey.TAB}=terms`
-              const newTabUrl = `${window.location.origin}${import.meta.env.BASE_URL}${termsUrl}`
-              window.open(newTabUrl, '_blank')
+              const searchParams = new URLSearchParams(location.search)
+              searchParams.set('tab', 'terms')
+              const newUrl = `${import.meta.env.BASE_URL}${
+                location.pathname
+              }?${searchParams.toString()}`
+
+              window.open(newUrl, '_blank')
             }}
           />
           <div>
