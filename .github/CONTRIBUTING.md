@@ -1,6 +1,6 @@
 # Guidance on how to contribute
 
-> All contributions to this project will be released under the Apache SummaryLicense, Version 2.0.
+> All contributions to this project will be released under the Apache License, Version 2.0.
 > By submitting a pull request or filing a bug, issue, or
 > feature request, you are agreeing to comply with this waiver of copyright interest.
 > Details can be found in our [LICENSE](/LICENSE).
