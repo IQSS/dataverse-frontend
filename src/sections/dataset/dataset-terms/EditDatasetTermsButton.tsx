@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Backpack } from 'react-bootstrap-icons'
+import { BriefcaseFill } from 'react-bootstrap-icons'
 import { Button } from '@iqss/dataverse-design-system'
 import styles from './EditDatasetTermsButton.module.scss'
 import { useSession } from '@/sections/session/SessionContext'
@@ -13,19 +13,19 @@ export function EditDatasetTermsButton() {
   const { showModal } = useNotImplementedModal()
 
   if (!user || !dataset?.permissions.canUpdateDataset) {
-    return <></>
+    return null
   }
 
   const handleClick = () => {
-    console.log('calling showModal')
     showModal()
   }
 
   return (
     <Button
       type="button"
+      size={'sm'}
       onClick={handleClick}
-      icon={<Backpack className={styles.icon} />}
+      icon={<BriefcaseFill className={styles.icon} />}
       disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
       {t('termsTab.editTermsButton')}
     </Button>
