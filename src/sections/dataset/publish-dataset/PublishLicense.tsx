@@ -3,7 +3,7 @@ import { DatasetLicense as LicenseModel } from '../../../dataset/domain/models/D
 import { useTranslation } from 'react-i18next'
 
 interface PublishLicenseProps {
-  license: LicenseModel | undefined
+  license?: LicenseModel
   handleCustomTermsClick: () => void
 }
 

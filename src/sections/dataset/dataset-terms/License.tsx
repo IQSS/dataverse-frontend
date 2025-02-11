@@ -4,7 +4,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import styles from '@/sections/dataset/dataset-terms/DatasetTerms.module.scss'
 
 interface LicenseProps {
-  license: LicenseModel | undefined
+  license?: LicenseModel
 }
 
 export function License({ license }: LicenseProps) {
