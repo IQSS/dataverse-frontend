@@ -1,7 +1,6 @@
 import { EditDatasetTermsButton } from '@/sections/dataset/dataset-terms/EditDatasetTermsButton'
 import { ReactNode } from 'react'
 import { DatasetProvider } from '@/sections/dataset/DatasetProvider'
-import { UserMother } from '@tests/component/users/domain/models/UserMother'
 import {
   DatasetMother,
   DatasetPermissionsMother
@@ -26,7 +25,6 @@ describe('EditDatasetTermsButton', () => {
   }
 
   it('renders the EditDatasetTermsButton if the user has permission to update the dataset', () => {
-    const user = UserMother.create()
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed()
     })
