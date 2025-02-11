@@ -144,7 +144,7 @@
     "depositorRequirements": "Depositor Requirements",
     "conditions": "Conditions",
     "disclaimer": "Disclaimer",
-    "declarationTip": "Indicates whether signing of a confidentiality declaration is needed to access a resource.",
+    "confidentialityDeclarationTip": "Indicates whether signing of a confidentiality declaration is needed to access a resource.",
     "specialPermissionsTip": "Determine if any special permissions are required to access a resource (e.g., if form is a needed and where to access the form).",
     "restrictionsTip": "Any restrictions on access to or use of the collection, such as privacy certification or distribution restrictions, should be indicated here. These can be restrictions applied by the author, producer, or disseminator of the data collection. If the data are restricted to only a certain class of user, specify which type.",
     "citationRequirementsTip": "Include special/explicit citation requirements for data to be cited properly in articles or other publications that are based on analysis of the data. For standard data citation requirements refer to our Community Norms.",
