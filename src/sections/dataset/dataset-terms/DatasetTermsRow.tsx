@@ -13,15 +13,12 @@ export function DatasetTermsRow({ title, tooltipMessage, value }: DatasetTermsRo
   if (value === undefined) {
     return null
   }
-  console.log('value', value)
 
   return (
     <Row className={styles['dataset-terms-row']}>
       <Col sm={3}>
-        <>
-          <strong>{title} </strong>
-          <QuestionMarkTooltip placement="right" message={tooltipMessage}></QuestionMarkTooltip>
-        </>
+        <strong>{title} </strong>
+        <QuestionMarkTooltip placement="right" message={tooltipMessage} />
       </Col>
       <Col>{value && <div>{<MarkdownComponent markdown={value} />}</div>}</Col>
     </Row>
