@@ -28,8 +28,8 @@ export const Default: Story = {
       collectionRepository={new CollectionMockRepository()}
       parentCollection={UpwardHierarchyNodeMother.createCollection()}
       persistentId={'test'}
-      license={undefined}
-      customTerms={CustomTermsMother.create()}
+      license={LicenseMother.create()}
+      customTerms={undefined}
       releasedVersionExists={false}
       handleClose={() => {}}></PublishDatasetModal>
   )
@@ -99,6 +99,21 @@ export const RequiresMajorVersionUpdate: Story = {
       nextMinorVersion={'1.1'}
       nextMajorVersion={'2.0'}
       requiresMajorVersionUpdate={true}
+      handleClose={() => {}}></PublishDatasetModal>
+  )
+}
+export const WithCustomTerms: Story = {
+  decorators: [WithLoggedInUser],
+  render: () => (
+    <PublishDatasetModal
+      show={true}
+      repository={new DatasetMockRepository()}
+      collectionRepository={new CollectionMockRepository()}
+      parentCollection={UpwardHierarchyNodeMother.createCollection()}
+      persistentId={'test'}
+      license={undefined}
+      customTerms={CustomTermsMother.create()}
+      releasedVersionExists={false}
       handleClose={() => {}}></PublishDatasetModal>
   )
 }
