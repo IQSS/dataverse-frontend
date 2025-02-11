@@ -32,11 +32,7 @@ export function DatasetTerms({
   datasetVersion
 }: DatasetTermsProps) {
   const { t } = useTranslation('dataset')
-  const {
-    filesCountInfo,
-    isLoading,
-    error: errorFilesCountInfo
-  } = useGetFilesCountInfo({
+  const { filesCountInfo, isLoading } = useGetFilesCountInfo({
     filesRepository,
     datasetPersistentId,
     datasetVersion
