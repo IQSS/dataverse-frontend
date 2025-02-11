@@ -8,25 +8,8 @@ interface TabsProps {
 }
 
 function Tabs({ defaultActiveKey, onSelect, children }: PropsWithChildren<TabsProps>) {
-  const [key, setKey] = useState(defaultActiveKey)
-
-  useEffect(() => {
-    if (defaultActiveKey) {
-      setKey(defaultActiveKey)
-    }
-  }, [defaultActiveKey])
-
-  const handleSelect = (k: string | null) => {
-    if (k) {
-      setKey(k)
-      if (onSelect) {
-        onSelect(k)
-      }
-    }
-  }
-
   return (
-    <TabsBS onSelect={handleSelect} activeKey={key}>
+    <TabsBS onSelect={onSelect} activeKey={defaultActiveKey}>
       {children}
     </TabsBS>
   )
