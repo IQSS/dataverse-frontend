@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import styles from './Dataset.module.scss'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -59,6 +59,8 @@ export function Dataset({
   const { hideModal, isModalOpen } = useNotImplementedModal()
   const publishCompleted = useCheckPublishCompleted(publishInProgress, dataset, datasetRepository)
   const [activeTab, setActiveTab] = useState<string>(tab)
+  const termsTabRef = useRef<HTMLDivElement>(null)
+
   useUpdateDatasetAlerts({
     dataset,
     created,
@@ -88,6 +90,7 @@ export function Dataset({
     newParams.set('tab', 'terms')
     // Update URL without reloading
     navigate(`?${newParams.toString()}`, { replace: true })
+    termsTabRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
   const handleTabSelect = (key: string | null) => {
@@ -170,7 +173,7 @@ export function Dataset({
                     </div>
                   </Tabs.Tab>
                   <Tabs.Tab title={t('termsTabTitle')} eventKey={'terms'}>
-                    <div className={styles['tab-container']}>
+                    <div ref={termsTabRef} className={styles['tab-container']}>
                       <DatasetTerms
                         license={dataset.license}
                         termsOfUse={dataset.termsOfUse}
