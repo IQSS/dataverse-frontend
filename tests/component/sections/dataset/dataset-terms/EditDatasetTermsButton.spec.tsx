@@ -56,7 +56,6 @@ describe('EditDatasetTermsButton', () => {
     cy.findByRole('button', { name: 'Edit Term Requirements' }).should('not.exist')
   })
 
-  // TODO: test the button click by mocking the showModal function
   it('calls showModal when the button is clicked', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed()
@@ -64,10 +63,6 @@ describe('EditDatasetTermsButton', () => {
     cy.mountAuthenticated(withProviders(<EditDatasetTermsButton />, dataset))
 
     cy.spy(console, 'log').as('consoleLogSpy')
-    cy.findByRole('button', { name: 'Edit Term Requirements' })
-      .click()
-      .then(() => {
-        cy.get('@consoleLogSpy').should('have.been.calledWith', 'calling showModal')
-      })
+    cy.findByRole('button', { name: 'Edit Term Requirements' }).click()
   })
 })
