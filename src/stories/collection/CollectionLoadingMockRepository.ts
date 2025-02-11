@@ -6,6 +6,8 @@ import { CollectionItemsPaginationInfo } from '@/collection/domain/models/Collec
 import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '@/collection/domain/models/CollectionSearchCriteria'
 import { CollectionDTO } from '@/collection/domain/useCases/DTOs/CollectionDTO'
+import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import { CollectionFeaturedItemsDTO } from '@/collection/domain/useCases/DTOs/CollectionFeaturedItemsDTO'
 
 export class CollectionLoadingMockRepository extends CollectionMockRepository {
   getById(_id?: string): Promise<Collection> {
@@ -29,6 +31,21 @@ export class CollectionLoadingMockRepository extends CollectionMockRepository {
   }
 
   edit(_collectionIdOrAlias: string, _updatedCollection: CollectionDTO): Promise<void> {
+    return new Promise(() => {})
+  }
+
+  getFeaturedItems(_collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]> {
+    return new Promise(() => {})
+  }
+
+  updateFeaturedItems(
+    _collectionId: string,
+    _featuredItemsDTO: CollectionFeaturedItemsDTO
+  ): Promise<CollectionFeaturedItem[]> {
+    return new Promise(() => {})
+  }
+
+  deleteFeaturedItems(_collectionIdOrAlias: number | string): Promise<void> {
     return new Promise(() => {})
   }
 }

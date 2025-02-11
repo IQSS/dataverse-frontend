@@ -3,6 +3,7 @@ import { CollectionRepository } from '@/collection/domain/repositories/Collectio
 import { CollectionMother } from '@tests/component/collection/domain/models/CollectionMother'
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
+import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 
 const collectionRepository = {} as CollectionRepository
 const collection = CollectionMother.create({ name: 'Collection Name' })
@@ -23,6 +24,7 @@ describe('Collection page', () => {
     collectionRepository.getById = cy.stub().resolves(collection)
     collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
     collectionRepository.getItems = cy.stub().resolves(itemsWithCount)
+    collectionRepository.getFeaturedItems = cy.stub().resolves([])
   })
 
   it('renders skeleton while loading', () => {
@@ -220,5 +222,38 @@ describe('Collection page', () => {
     cy.findByText('Share this collection on your favorite social media networks.').should(
       'not.exist'
     )
+  })
+
+  it('shows the collection featured items carousel when there are featured items', () => {
+    const featuredItems = CollectionFeaturedItemMother.createFeaturedItems()
+    collectionRepository.getFeaturedItems = cy.stub().resolves(featuredItems)
+
+    cy.customMount(
+      <Collection
+        collectionRepository={collectionRepository}
+        collectionIdFromParams="collection"
+        created={false}
+        published={false}
+        collectionQueryParams={{ pageQuery: 1 }}
+      />
+    )
+
+    cy.findByTestId('featured-items-slider').should('exist')
+  })
+
+  it('does not show the collection featured items carousel when there are no featured items', () => {
+    collectionRepository.getFeaturedItems = cy.stub().resolves([])
+
+    cy.customMount(
+      <Collection
+        collectionRepository={collectionRepository}
+        collectionIdFromParams="collection"
+        created={false}
+        published={false}
+        collectionQueryParams={{ pageQuery: 1 }}
+      />
+    )
+
+    cy.findByTestId('featured-items-slider').should('not.exist')
   })
 })

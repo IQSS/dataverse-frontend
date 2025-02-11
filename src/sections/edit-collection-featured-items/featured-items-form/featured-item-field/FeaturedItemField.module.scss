@@ -1,0 +1,119 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
+
+.featured-item-fields-wrapper {
+  position: relative;
+  padding: 1rem;
+  border: solid 1px $dv-secondary-color;
+  border-radius: 6px;
+  touch-action: none;
+
+  .drag-handle {
+    width: 38px;
+    height: 38px;
+    margin-bottom: 0.5rem;
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+    border: solid 1px $dv-secondary-color;
+    border-radius: 4px;
+    cursor: grab;
+
+    &:hover:not(.disabled) {
+      background-color: $dv-secondary-color;
+    }
+
+    &:active:not(.disabled) {
+      cursor: grabbing;
+    }
+
+    &.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    @media (min-width: 768px) {
+      margin-bottom: 0;
+    }
+  }
+
+  .form-group-content,
+  .form-group-image {
+    margin-bottom: 1rem;
+  }
+
+  .form-group-content {
+    cursor: auto;
+  }
+
+  .error-msg {
+    width: 100%;
+    margin-top: 0.25rem;
+    color: $dv-danger-color;
+    font-size: 0.875em;
+  }
+
+  .image-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    min-height: 38px;
+    padding: 4px;
+    border: solid 1px $dv-border-color;
+    border-radius: 6px;
+
+    img {
+      width: 175px;
+      max-height: 175px;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    &.hide {
+      display: none;
+    }
+
+    &:focus-within {
+      border-color: color.adjust($dv-primary-color, $alpha: -0.4);
+      outline: 0;
+      box-shadow: 0 0 0 0.25rem color.adjust($dv-primary-color, $alpha: -0.75);
+    }
+
+    .image-actions {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      display: flex;
+      gap: 0.25rem;
+      align-items: center;
+      align-self: flex-start;
+      justify-self: flex-end;
+    }
+  }
+
+  .order-value {
+    position: absolute;
+    top: 0.75rem;
+    right: 1rem;
+    padding: 0.25rem 0.5rem;
+    font-size: $dv-font-size-sm;
+    background-color: color.adjust($dv-secondary-color, $alpha: -0.4);
+    border-radius: 6px;
+  }
+
+  &.sorting {
+    background-color: color.adjust($dv-secondary-color, $alpha: -0.4);
+
+    // To decrease the height of the RTE input when draggin and make the draggable element easier to move
+    :global .rich-text-editor-content {
+      min-height: unset !important;
+      max-height: 120px !important;
+    }
+
+    &.active {
+      z-index: 999;
+      background-color: color.adjust($dv-primary-color, $alpha: -0.4);
+    }
+  }
+}

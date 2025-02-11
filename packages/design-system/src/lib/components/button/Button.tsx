@@ -5,7 +5,7 @@ import { IconName } from '../icon/IconName'
 import { Icon } from '../icon/Icon'
 
 type ButtonSize = 'sm' | 'lg'
-type ButtonVariant = 'primary' | 'secondary' | 'link'
+type ButtonVariant = 'primary' | 'secondary' | 'link' | 'danger'
 type ButtonType = 'button' | 'reset' | 'submit'
 
 interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {

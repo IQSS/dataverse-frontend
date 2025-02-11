@@ -4,7 +4,8 @@ import { DatasetProvider } from '../../../../../../src/sections/dataset/DatasetP
 import {
   DatasetLockMother,
   DatasetMother,
-  DatasetPermissionsMother
+  DatasetPermissionsMother,
+  DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
 import { DatasetRepository } from '../../../../../../src/dataset/domain/repositories/DatasetRepository'
 import { Dataset as DatasetModel } from '../../../../../../src/dataset/domain/models/Dataset'
@@ -13,6 +14,7 @@ const datasetRepository: DatasetRepository = {} as DatasetRepository
 const datasetWithUpdatePermissions = DatasetMother.create({
   permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed()
 })
+
 describe('DatasetUploadFilesButton', () => {
   const withDataset = (component: ReactNode, dataset: DatasetModel | undefined) => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
@@ -58,6 +60,16 @@ describe('DatasetUploadFilesButton', () => {
 
   it('test click', () => {
     cy.mountAuthenticated(withDataset(<DatasetUploadFilesButton />, datasetWithUpdatePermissions))
+
+    cy.findByRole('button', { name: 'Upload Files' }).click()
+  })
+
+  it('test click with a draft dataset version', () => {
+    const draftDatasetVersion = DatasetMother.create({
+      permissions: DatasetPermissionsMother.createWithUpdateDatasetAllowed(),
+      version: DatasetVersionMother.createDraft()
+    })
+    cy.mountAuthenticated(withDataset(<DatasetUploadFilesButton />, draftDatasetVersion))
 
     cy.findByRole('button', { name: 'Upload Files' }).click()
   })

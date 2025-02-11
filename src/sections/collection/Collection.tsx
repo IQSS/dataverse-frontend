@@ -15,6 +15,7 @@ import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
 import { ShareCollectionButton } from './share-collection-button/ShareCollectionButton'
 import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectionDropdown'
+import { FeaturedItems } from './featured-items/FeaturedItems'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {
@@ -35,10 +36,9 @@ export function Collection({
   edited,
   collectionQueryParams
 }: CollectionProps) {
-  useTranslation('collection')
-  const { t } = useTranslation('collection')
   useScrollTop()
-  const { collection, isLoading } = useCollection(
+  const { t } = useTranslation('collection')
+  const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
     collectionIdFromParams,
     published
@@ -57,7 +57,11 @@ export function Collection({
   const showPublishButton = !collection?.isReleased && canUserPublishCollection
   const showEditButton = canUserEditCollection
 
-  if (!isLoading && !collection) {
+  if (isLoadingCollection) {
+    return <CollectionSkeleton />
+  }
+
+  if (!isLoadingCollection && !collection) {
     return <PageNotFound />
   }
 
@@ -81,6 +85,11 @@ export function Collection({
                 {t('publishedAlert')}
               </Alert>
             )}
+
+            <FeaturedItems
+              collectionRepository={collectionRepository}
+              collectionId={collection.id}
+            />
 
             <div className={styles['metrics-actions-container']}>
               <div className={styles.metrics}></div>
