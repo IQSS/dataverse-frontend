@@ -14,8 +14,6 @@ import { SpinnerSymbol } from '@/sections/dataset/dataset-files/files-table/spin
 import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
 import { TermsOfAccess } from '@/sections/dataset/dataset-terms/TermsOfAccess'
 import { License } from '@/sections/dataset/dataset-terms/License'
-import { useSession } from '@/sections/session/SessionContext'
-import { useDataset } from '@/sections/dataset/DatasetContext'
 
 interface DatasetTermsProps {
   license: DatasetLicense | undefined
@@ -33,8 +31,6 @@ export function DatasetTerms({
   datasetVersion
 }: DatasetTermsProps) {
   const { t } = useTranslation('dataset')
-  const { user } = useSession()
-  const { dataset } = useDataset()
   const { filesCountInfo, isLoading } = useGetFilesCountInfo({
     filesRepository,
     datasetPersistentId,
