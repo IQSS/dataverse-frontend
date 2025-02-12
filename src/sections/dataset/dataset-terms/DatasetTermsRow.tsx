@@ -6,7 +6,7 @@ import styles from '@/sections/dataset/dataset-terms/DatasetTerms.module.scss'
 interface DatasetTermsRowProps {
   title: string
   tooltipMessage: string
-  value: string | undefined
+  value?: string
 }
 
 export function DatasetTermsRow({ title, tooltipMessage, value }: DatasetTermsRowProps) {

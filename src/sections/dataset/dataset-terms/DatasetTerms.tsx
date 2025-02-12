@@ -13,8 +13,9 @@ import { FileAccessOption } from '@/files/domain/models/FileCriteria'
 import { SpinnerSymbol } from '@/sections/dataset/dataset-files/files-table/spinner-symbol/SpinnerSymbol'
 import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
 import { TermsOfAccess } from '@/sections/dataset/dataset-terms/TermsOfAccess'
-import styles from '@/sections/dataset/dataset-terms/DatasetTerms.module.scss'
 import { License } from '@/sections/dataset/dataset-terms/License'
+import { useSession } from '@/sections/session/SessionContext'
+import { useDataset } from '@/sections/dataset/DatasetContext'
 
 interface DatasetTermsProps {
   license: DatasetLicense | undefined
@@ -32,6 +33,8 @@ export function DatasetTerms({
   datasetVersion
 }: DatasetTermsProps) {
   const { t } = useTranslation('dataset')
+  const { user } = useSession()
+  const { dataset } = useDataset()
   const { filesCountInfo, isLoading } = useGetFilesCountInfo({
     filesRepository,
     datasetPersistentId,
@@ -51,9 +54,7 @@ export function DatasetTerms({
 
   return (
     <>
-      <div className={styles['edit-terms-button-container']}>
-        <EditDatasetTermsButton />
-      </div>
+      <EditDatasetTermsButton />
       <Accordion defaultActiveKey={['0', '1']} alwaysOpen={true}>
         <Accordion.Item eventKey={'0'}>
           <Accordion.Header>{t('termsTab.licenseTitle')}</Accordion.Header>

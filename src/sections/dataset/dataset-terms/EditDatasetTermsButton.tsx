@@ -21,13 +21,15 @@ export function EditDatasetTermsButton() {
   }
 
   return (
-    <Button
-      type="button"
-      size={'sm'}
-      onClick={handleClick}
-      icon={<BriefcaseFill className={styles.icon} />}
-      disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
-      {t('termsTab.editTermsButton')}
-    </Button>
+    <div className={styles['edit-terms-button-container']}>
+      <Button
+        type="button"
+        size={'sm'}
+        onClick={handleClick}
+        icon={<BriefcaseFill className={styles.icon} />}
+        disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
+        {t('termsTab.editTermsButton')}
+      </Button>
+    </div>
   )
 }
