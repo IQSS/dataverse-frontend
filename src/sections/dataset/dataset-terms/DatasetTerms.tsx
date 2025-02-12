@@ -43,6 +43,7 @@ export function DatasetTerms({
   const termsOfAccessIsEmpty = Object.values(termsOfUse.termsOfAccess).every(
     (value) => value === undefined || typeof value === 'boolean'
   )
+  const displayTermsOfAccess = !termsOfAccessIsEmpty || restrictedFilesCount > 0
 
   if (isLoading) {
     return <SpinnerSymbol />
@@ -61,7 +62,7 @@ export function DatasetTerms({
             <CustomTerms customTerms={termsOfUse.customTerms} />
           </Accordion.Body>
         </Accordion.Item>
-        {!termsOfAccessIsEmpty && (
+        {displayTermsOfAccess && (
           <Accordion.Item eventKey={'1'}>
             <Accordion.Header>{t('termsTab.termsTitle')}</Accordion.Header>
             <Accordion.Body>

@@ -33,7 +33,7 @@ const singleRestrictedFilesCountInfo = FilesCountInfoMother.create({
 
 const license = LicenseMother.create()
 const termsOfUse = TermsOfUseMother.create()
-const emptyCustomTerms = TermsOfUseMother.create({ customTermsOfUse: undefined })
+const emptyCustomTerms = TermsOfUseMother.withoutCustomTerms()
 
 const emptyTermsOfAccess = TermsOfUseMother.create({
   termsOfAccess: TermsOfAccessMother.createEmpty()
@@ -248,7 +248,10 @@ describe('DatasetTerms', () => {
     cy.findByText('Study Completion').should('exist')
     cy.findByText(emptyCustomTerms.termsOfAccess.studyCompletion as string).should('exist')
   })
-  it('does not render the terms of use AccordionItem if terms of use fields are empty', () => {
+  it('does not render the terms of use AccordionItem if terms of use fields are empty and no restricted files', () => {
+    fileRepository.getFilesCountInfoByDatasetPersistentId = cy
+      .stub()
+      .resolves(noRestrictedFilesCountInfo)
     cy.customMount(
       <DatasetTerms
         license={license}
@@ -260,6 +263,22 @@ describe('DatasetTerms', () => {
     )
 
     cy.findByText('Restricted Files + Terms of Access').should('not.exist')
+  })
+  it('renders the terms of use AccordionItem if terms of use fields are empty and at least one restricted file', () => {
+    fileRepository.getFilesCountInfoByDatasetPersistentId = cy
+      .stub()
+      .resolves(singleRestrictedFilesCountInfo)
+    cy.customMount(
+      <DatasetTerms
+        license={license}
+        termsOfUse={emptyTermsOfAccess}
+        filesRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+        datasetVersion={datasetVersion}
+      />
+    )
+
+    cy.findByText('Restricted Files + Terms of Access').should('exist')
   })
   it('does not render Request Access field if there are no restricted files', () => {
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy
