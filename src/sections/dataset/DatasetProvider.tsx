@@ -11,7 +11,6 @@ interface DatasetProviderProps {
     persistentId?: string
     privateUrlToken?: string
     version?: string
-    keepRawFields?: boolean
   }
   isPublishing?: boolean
 }

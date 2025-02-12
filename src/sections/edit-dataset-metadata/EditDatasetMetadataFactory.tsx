@@ -20,12 +20,11 @@ function EditDatasetMetadataWithParams() {
   const persistentId = searchParams.get('persistentId') ?? undefined
   const searchParamVersion = searchParams.get('version') ?? undefined
   const version = searchParamVersionToDomainVersion(searchParamVersion)
-  const keepRawFields = true
 
   return (
     <DatasetProvider
       repository={datasetRepository}
-      searchParams={{ persistentId: persistentId, version: version, keepRawFields: keepRawFields }}>
+      searchParams={{ persistentId: persistentId, version: version }}>
       <EditDatasetMetadata
         datasetRepository={datasetRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}

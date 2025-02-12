@@ -63,7 +63,6 @@ describe('DatasetMetadata', () => {
           )
           cy.findByAltText(translatedAltText).should('exist')
           cy.findByAltText(translatedAltText).should('have.attr', 'src', imageUrl)
-          cy.intercept(imageUrl).as('image')
         })
       }
     } else {
