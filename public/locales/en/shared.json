@@ -74,11 +74,17 @@
       "name": {
         "label": "Collection Name",
         "description": "The project, department, university, professor, or journal this collection will contain data for.",
-        "required": "Collection Name is required"
+        "required": "Collection Name is required",
+        "invalid": {
+          "maxLength": "Collection Name must be at most {{maxLength}} characters."
+        }
       },
       "affiliation": {
         "label": "Affiliation",
-        "description": "The organization with which this collection is affiliated."
+        "description": "The organization with which this collection is affiliated.",
+        "invalid": {
+          "maxLength": "Affiliation must be at most {{maxLength}} characters."
+        }
       },
       "alias": {
         "label": "Identifier",
