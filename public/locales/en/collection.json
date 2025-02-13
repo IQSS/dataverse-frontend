@@ -51,7 +51,8 @@
   "editedAlert": "You have successfully updated your collection!",
   "editCollection": {
     "edit": "Edit",
-    "generalInfo": "General Information"
+    "generalInfo": "General Information",
+    "deleteCollection": "Delete Collection"
   },
   "featuredItems": {
     "title": "Featured Items",
@@ -60,5 +61,12 @@
       "nextLabel": "Go to next slide",
       "dotLabel": "Go to slide"
     }
-  }
+  },
+  "deleteCollectionModal": {
+    "title": "Delete Collection",
+    "message": "Are you sure you want to delete your collection? You cannot undelete this collection.",
+    "delete": "Delete"
+  },
+  "collectionDeletedSuccess": "Your collection has been deleted.",
+  "defaultCollectionDeleteError": "Something went wrong deleting the collection. Try again later."
 }
