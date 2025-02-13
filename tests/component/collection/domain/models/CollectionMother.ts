@@ -74,6 +74,13 @@ export class CollectionMother {
     })
   }
 
+  static createSubCollectionWithNoChildObjects(): Collection {
+    return CollectionMother.createWithOnlyRequiredFields({
+      childCount: 0,
+      hierarchy: UpwardHierarchyNodeMother.createSubCollection()
+    })
+  }
+
   static createUserPermissions(
     props?: Partial<CollectionUserPermissions>
   ): CollectionUserPermissions {
