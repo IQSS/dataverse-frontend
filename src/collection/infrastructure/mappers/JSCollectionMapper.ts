@@ -26,7 +26,8 @@ export class JSCollectionMapper {
       type: jsCollection.type,
       contacts: jsCollection.contacts ?? [],
       isMetadataBlockRoot: jsCollection.isMetadataBlockRoot,
-      isFacetRoot: jsCollection.isFacetRoot
+      isFacetRoot: jsCollection.isFacetRoot,
+      childCount: jsCollection.childCount
     }
   }
 

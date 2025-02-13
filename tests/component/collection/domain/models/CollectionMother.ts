@@ -21,6 +21,7 @@ export class CollectionMother {
       type: CollectionType.UNCATEGORIZED,
       isMetadataBlockRoot: true,
       isFacetRoot: true,
+      childCount: faker.datatype.number(),
       ...props
     }
   }

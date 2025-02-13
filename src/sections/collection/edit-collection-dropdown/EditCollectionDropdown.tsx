@@ -38,9 +38,10 @@ export const EditCollectionDropdown = ({
     navigate(RouteWithParams.EDIT_COLLECTION_FEATURED_ITEMS(collection.id))
   }
 
-  // TODO:ME - We need another check, if collection has data
   const canCollectionBeDeleted =
-    canUserDeleteCollection && !CollectionHelper.isRootCollection(collection.hierarchy)
+    canUserDeleteCollection &&
+    !CollectionHelper.isRootCollection(collection.hierarchy) &&
+    collection.childCount === 0
 
   return (
     <DropdownButton
