@@ -31,7 +31,8 @@ export const useDeleteCollection = ({
     try {
       await deleteCollection(collectionRepository, collectionIdOrAlias)
 
-      // Wait 3 seconds before calling onSuccessfulDelete (which is redirecting to parent collection) otherwise Search API will still return the deleted collection item
+      // Wait before calling onSuccessfulDelete (which is redirecting to parent collection)
+      // Otherwise Search API will still return the deleted collection item
       await Utils.sleep(3000)
 
       onSuccessfulDelete?.()
