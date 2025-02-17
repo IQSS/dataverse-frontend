@@ -6,7 +6,7 @@ on:
     types: [opened, reopened]
 
 env:
-  E2E_DATAVERSE_IMAGE_TAG: unstable
+  E2E_DATAVERSE_IMAGE_TAG: 11255-child-count-get-collection-ext
 
 jobs:
   e2e:
@@ -56,7 +56,7 @@ jobs:
       - name: Update registry for the containerized development environment
         working-directory: dev-env
         run: |
-          sed -i~ '/^REGISTRY=/s/=.*/=docker.io/' .env
+          sed -i~ '/^REGISTRY=/s/=.*/=ghcr.io/' .env
         shell: bash
 
       - name: Start containers
