@@ -3,19 +3,23 @@ import { DropdownButton } from '@iqss/dataverse-design-system'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { DeleteFileButton } from './delete-file-button/DeleteFileButton'
 
-interface EditFileMenuProps {
+interface EditFileDropdownProps {
   fileId: number
   fileRepository: FileRepository
-  datasetInfo: EditFileMenuDatasetInfo
+  datasetInfo: EditFileDropdownDatasetInfo
 }
 
-export interface EditFileMenuDatasetInfo {
+export interface EditFileDropdownDatasetInfo {
   persistentId: string
   isDraft: boolean
   releasedVersionExists: boolean
 }
 
-export const EditFileMenu = ({ fileId, fileRepository, datasetInfo }: EditFileMenuProps) => {
+export const EditFileDropdown = ({
+  fileId,
+  fileRepository,
+  datasetInfo
+}: EditFileDropdownProps) => {
   const { t } = useTranslation('file')
 
   // TODO:ME - Add permissions check after Issue https://github.com/IQSS/dataverse/issues/11226 is resolved.

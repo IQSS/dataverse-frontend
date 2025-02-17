@@ -15,7 +15,7 @@ import { FileMetadata } from './file-metadata/FileMetadata'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { AccessFileMenu } from './file-action-buttons/access-file-menu/AccessFileMenu'
 import { DatasetPublishingStatus } from '../../dataset/domain/models/Dataset'
-import { EditFileMenu } from './file-action-buttons/edit-file-menu/EditFileMenu'
+import { EditFileDropdown } from './file-action-buttons/edit-file-dropdown/EditFileDropdown'
 
 interface FileProps {
   repository: FileRepository
@@ -84,7 +84,7 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                         DatasetPublishingStatus.DEACCESSIONED
                       }
                     />
-                    <EditFileMenu
+                    <EditFileDropdown
                       fileId={file.id}
                       fileRepository={repository}
                       datasetInfo={{
