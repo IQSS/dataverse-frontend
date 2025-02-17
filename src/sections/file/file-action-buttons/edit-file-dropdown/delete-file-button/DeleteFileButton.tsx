@@ -6,7 +6,7 @@ import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
-import { ConfirmDeleteFileModal } from './ConfirmDeleteFileModal'
+import { ConfirmDeleteFileModal } from './confirm-delete-file-modal/ConfirmDeleteFileModal'
 import { EditFileDropdownDatasetInfo } from '../EditFileDropdown'
 import { useDeleteFile } from './useDeleteFile'
 
@@ -21,19 +21,20 @@ export const DeleteFileButton = ({
   fileRepository,
   datasetInfo
 }: DeleteFileButtonProps) => {
-  const { t } = useTranslation('file')
-  const [showModal, setShowModal] = useState(false)
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const navigate = useNavigate()
+  const { t } = useTranslation('file')
+
   const { handleDeleteFile, isDeletingFile, errorDeletingFile } = useDeleteFile({
     fileRepository,
     onSuccessfulDelete: closeModalAndNavigateToDataset
   })
 
-  const handleOpenModal = () => setShowModal(true)
-  const handleCloseModal = () => setShowModal(false)
+  const handleOpenModal = () => setShowConfirmationModal(true)
+  const handleCloseModal = () => setShowConfirmationModal(false)
 
   function closeModalAndNavigateToDataset() {
-    setShowModal(false)
+    setShowConfirmationModal(false)
 
     const searchParams = new URLSearchParams()
     searchParams.set(QueryParamKey.PERSISTENT_ID, datasetInfo.persistentId)
@@ -41,9 +42,8 @@ export const DeleteFileButton = ({
     if (datasetInfo.isDraft) {
       searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
     }
-    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
-
     toast.success(t('fileDeletedSuccess'))
+    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
   }
 
   return (
@@ -52,7 +52,7 @@ export const DeleteFileButton = ({
         {t('actionButtons.editFileDropdown.options.delete')}
       </DropdownButtonItem>
       <ConfirmDeleteFileModal
-        show={showModal}
+        show={showConfirmationModal}
         handleClose={handleCloseModal}
         handleDelete={() => handleDeleteFile(fileId)}
         datasetReleasedVersionExists={datasetInfo.releasedVersionExists}
