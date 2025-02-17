@@ -510,6 +510,40 @@ describe('FeaturedItemsForm', () => {
           .should('be.visible')
       })
     })
+
+    it('should show toast error message when trying to add more than 10 featured items', () => {
+      const testFeaturedItems = Array.from({ length: 10 }, (_, index) =>
+        CollectionFeaturedItemMother.createFeaturedItem({
+          id: index,
+          displayOrder: index,
+          content: `<h1 class="rte-heading">Featured Item ${index}</h1>`,
+          imageFileUrl: undefined
+        })
+      )
+
+      const formDefaultValues: FeaturedItemsFormData = {
+        featuredItems: FeaturedItemsFormHelper.defineFormDefaultFeaturedItems(testFeaturedItems)
+      }
+
+      cy.mountAuthenticated(
+        <FeaturedItemsForm
+          collectionId={testCollection.id}
+          collectionRepository={collectionRepository}
+          defaultValues={formDefaultValues}
+          collectionFeaturedItems={testFeaturedItems}
+        />
+      )
+
+      cy.findByTestId('featured-item-9').as('last-item').should('exist').should('be.visible')
+
+      cy.get('@last-item').within(() => {
+        cy.get(`[aria-label="Add Featured Item"]`).should('exist').should('be.visible').click()
+      })
+
+      cy.findByText(/You can add up to 10 featured items./)
+        .should('exist')
+        .should('be.visible')
+    })
   })
 
   // TODO: This test is failing in CI sometimes, we need to investigate why and fix it
