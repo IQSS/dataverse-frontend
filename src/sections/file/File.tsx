@@ -84,16 +84,19 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                         DatasetPublishingStatus.DEACCESSIONED
                       }
                     />
-                    <EditFileDropdown
-                      fileId={file.id}
-                      fileRepository={repository}
-                      datasetInfo={{
-                        persistentId: file.datasetPersistentId,
-                        isDraft:
-                          file.datasetVersion.publishingStatus === DatasetPublishingStatus.DRAFT,
-                        releasedVersionExists: file.datasetVersion.someDatasetVersionHasBeenReleased
-                      }}
-                    />
+                    {file.permissions.canEditOwnerDataset && (
+                      <EditFileDropdown
+                        fileId={file.id}
+                        fileRepository={repository}
+                        datasetInfo={{
+                          persistentId: file.datasetPersistentId,
+                          isDraft:
+                            file.datasetVersion.publishingStatus === DatasetPublishingStatus.DRAFT,
+                          releasedVersionExists:
+                            file.datasetVersion.someDatasetVersionHasBeenReleased
+                        }}
+                      />
+                    )}
                   </ButtonGroup>
                 </Col>
               </Row>
