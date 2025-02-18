@@ -74,8 +74,6 @@ export function useSubmitCollection(
     const useFacetsFromParentChecked = formData[USE_FACETS_FROM_PARENT]
 
     const newOrUpdatedCollection: CollectionDTO = {
-      inheritFacetsFromParent: useFacetsFromParentChecked,
-      inheritMetadataBlocksFromParent: useMetadataFieldsFromParentChecked,
       name: formData.name,
       alias: formData.alias,
       type: formData.type,
@@ -84,7 +82,9 @@ export function useSubmitCollection(
       contacts: contactsDTO,
       metadataBlockNames: metadataBlockNamesDTO,
       inputLevels: inputLevelsDTO,
-      facetIds: facetIdsDTO
+      facetIds: facetIdsDTO,
+      inheritMetadataBlocksFromParent: useMetadataFieldsFromParentChecked,
+      inheritFacetsFromParent: useFacetsFromParentChecked
     }
 
     if (mode === 'create') {
