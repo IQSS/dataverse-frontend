@@ -5,7 +5,6 @@ import { CollectionFormData, CollectionFormValuesOnSubmit } from '../types'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import {
   EditCreateCollectionFormMode,
-  FACET_IDS_FIELD,
   INPUT_LEVELS_GROUPER,
   METADATA_BLOCKS_NAMES_GROUPER,
   USE_FACETS_FROM_PARENT,
@@ -17,7 +16,6 @@ import { editCollection } from '@/collection/domain/useCases/editCollection'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { CollectionFormHelper } from '../CollectionFormHelper'
-import { FormState } from 'react-hook-form'
 
 export enum SubmissionStatus {
   NotSubmitted = 'NotSubmitted',
@@ -45,8 +43,6 @@ export function useSubmitCollection(
   mode: EditCreateCollectionFormMode,
   collectionIdOrParentCollectionId: string,
   collectionRepository: CollectionRepository,
-  isEditingRootCollection: boolean,
-  formDirtyFields: FormState<CollectionFormData>['dirtyFields'],
   onSubmitErrorCallback: () => void
 ): UseSubmitCollectionReturnType {
   const navigate = useNavigate()
@@ -57,7 +53,7 @@ export function useSubmitCollection(
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   const submitForm = (formData: CollectionFormValuesOnSubmit): void => {
-    // setSubmissionStatus(SubmissionStatus.IsSubmitting)
+    setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
     const contactsDTO = formData.contacts.map((contact) => contact.value)
 
@@ -73,33 +69,9 @@ export function useSubmitCollection(
 
     const facetIdsDTO = formData.facetIds.map((facet) => facet.value)
 
-    const useFieldsFromParentChecked = formData[USE_FIELDS_FROM_PARENT]
+    const useMetadataFieldsFromParentChecked = formData[USE_FIELDS_FROM_PARENT]
 
     const useFacetsFromParentChecked = formData[USE_FACETS_FROM_PARENT]
-
-    const hasMetadataBlockNamesChangedFromDefaultValue =
-      formDirtyFields[METADATA_BLOCKS_NAMES_GROUPER] !== undefined
-
-    const hasInputLevelsChangedFromDefaultValue =
-      formDirtyFields[INPUT_LEVELS_GROUPER] !== undefined
-
-    const hasFacetIdsChangedFromDefaultValue = formDirtyFields[FACET_IDS_FIELD] !== undefined
-
-    const shouldSendMetadataBlockNamesAndInputLevels =
-      CollectionFormHelper.defineShouldSendMetadataBlockNamesAndInputLevels(
-        useFieldsFromParentChecked,
-        isEditingRootCollection,
-        hasMetadataBlockNamesChangedFromDefaultValue,
-        hasInputLevelsChangedFromDefaultValue,
-        mode
-      )
-
-    const shouldSendFacetIds = CollectionFormHelper.defineShouldSendFacetIds(
-      useFacetsFromParentChecked,
-      isEditingRootCollection,
-      hasFacetIdsChangedFromDefaultValue,
-      mode
-    )
 
     const newOrUpdatedCollection: CollectionDTO = {
       inheritFacetsFromParent: false,
@@ -110,11 +82,9 @@ export function useSubmitCollection(
       affiliation: formData.affiliation,
       description: formData.description,
       contacts: contactsDTO,
-      metadataBlockNames: shouldSendMetadataBlockNamesAndInputLevels
-        ? metadataBlockNamesDTO
-        : undefined,
-      inputLevels: shouldSendMetadataBlockNamesAndInputLevels ? inputLevelsDTO : undefined,
-      facetIds: shouldSendFacetIds ? facetIdsDTO : undefined
+      metadataBlockNames: metadataBlockNamesDTO,
+      inputLevels: inputLevelsDTO,
+      facetIds: facetIdsDTO
     }
 
     if (mode === 'create') {
