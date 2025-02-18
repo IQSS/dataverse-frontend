@@ -48,6 +48,10 @@
     "shareCollection": "Share Collection",
     "helpText": "Share this collection on your favorite social media networks."
   },
+  "contact": {
+    "contactCollection": "Email Collection Contact",
+    "helpText": "Email the contact for this collection."
+  },
   "editedAlert": "You have successfully updated your collection!",
   "editCollection": {
     "edit": "Edit",

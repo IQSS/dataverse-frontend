@@ -14,9 +14,11 @@ import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
 import { ShareCollectionButton } from './share-collection-button/ShareCollectionButton'
+import { ContactCollectionButton } from './contact-collection-button/ContactCollectionButton'
 import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectionDropdown'
 import { FeaturedItems } from './featured-items/FeaturedItems'
 import styles from './Collection.module.scss'
+import { useState } from 'react'
 
 interface CollectionProps {
   collectionRepository: CollectionRepository
@@ -56,6 +58,7 @@ export function Collection({
   const showAddDataActions = canUserAddCollection || canUserAddDataset
   const showPublishButton = !collection?.isReleased && canUserPublishCollection
   const showEditButton = canUserEditCollection
+  const [contactSuccess, setContactSuccess] = useState(false)
 
   if (isLoadingCollection) {
     return <CollectionSkeleton />
@@ -85,6 +88,13 @@ export function Collection({
                 {t('publishedAlert')}
               </Alert>
             )}
+            {contactSuccess && (
+              <Alert variant="success" dismissible>
+                {t('contactForm.successMessage', {
+                  defaultValue: 'Your message has been sent successfully!'
+                })}
+              </Alert>
+            )}
 
             <FeaturedItems
               collectionRepository={collectionRepository}
@@ -94,8 +104,7 @@ export function Collection({
             <div className={styles['metrics-actions-container']}>
               <div className={styles.metrics}></div>
               <div className={styles['right-content']}>
-                {/* 👇 Here should go Contact button also */}
-                {/* <ContactButton /> */}
+                <ContactCollectionButton onSuccess={() => setContactSuccess(true)} />
 
                 <ShareCollectionButton />
 
