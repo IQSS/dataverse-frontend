@@ -18,8 +18,6 @@ export interface EditFileMenuDatasetInfo {
 export const EditFileMenu = ({ fileId, fileRepository, datasetInfo }: EditFileMenuProps) => {
   const { t } = useTranslation('file')
 
-  // TODO:ME - Add unit tests.
-
   return (
     <DropdownButton
       id="edit-files-menu"

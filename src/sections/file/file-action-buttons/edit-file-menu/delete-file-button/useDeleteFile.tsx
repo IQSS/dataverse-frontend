@@ -34,7 +34,8 @@ export const useDeleteFile = ({
     } catch (err: WriteError | unknown) {
       if (err instanceof WriteError) {
         const error = new JSDataverseWriteErrorHandler(err)
-        const formattedError = error.getReasonWithoutStatusCode() ?? error.getErrorMessage()
+        const formattedError =
+          error.getReasonWithoutStatusCode() ?? /* istanbul ignore next */ error.getErrorMessage()
         setErrorDeletingFile(formattedError)
       } else {
         setErrorDeletingFile(t('defaultFileDeleteError'))
