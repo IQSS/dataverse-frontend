@@ -133,6 +133,7 @@ export function Dataset({
                           filesRepository={fileRepository}
                           datasetPersistentId={dataset.persistentId}
                           datasetVersion={dataset.version}
+                          key={dataset.version.publishingStatus}
                         />
                       ) : (
                         <DatasetFiles
