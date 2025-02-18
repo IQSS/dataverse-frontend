@@ -115,7 +115,7 @@ export class FileMockRepository implements FileRepository {
     })
   }
 
-  deleteFile(_fileId: number | string): Promise<void> {
+  delete(_fileId: number | string): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()

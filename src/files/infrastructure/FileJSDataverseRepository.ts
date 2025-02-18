@@ -305,7 +305,7 @@ export class FileJSDataverseRepository implements FileRepository {
     return addUploadedFilesToDataset.execute(datasetId, uploadedFiles)
   }
 
-  deleteFile(fileId: number | string): Promise<void> {
+  delete(fileId: number | string): Promise<void> {
     return deleteFile.execute(fileId)
   }
 }

@@ -49,7 +49,7 @@ export class FileMockLoadingRepository extends FileMockRepository implements Fil
     })
   }
 
-  deleteFile(_fileId: number | string): Promise<void> {
+  delete(_fileId: number | string): Promise<void> {
     return new Promise(() => {
       setTimeout(() => {
         // Do nothing
