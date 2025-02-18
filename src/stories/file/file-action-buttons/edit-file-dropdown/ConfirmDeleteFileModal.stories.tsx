@@ -1,10 +1,10 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { WithI18next } from '../../../WithI18next'
 import { WithSettings } from '../../../WithSettings'
-import { ConfirmDeleteFileModal } from '@/sections/file/file-action-buttons/edit-file-dropdown/delete-file-button/confirm-delete-file-modal/ConfirmDeleteFileModal'
+import { ConfirmDeleteFileModal } from '@/sections/file/file-action-buttons/edit-file-menu/delete-file-button/confirm-delete-file-modal/ConfirmDeleteFileModal'
 
 const meta: Meta<typeof ConfirmDeleteFileModal> = {
-  title: 'Sections/File Page/Action Buttons/EditFileDropdown/ConfirmDeleteFileModal',
+  title: 'Sections/File Page/Action Buttons/EditFileMenu/ConfirmDeleteFileModal',
   component: ConfirmDeleteFileModal,
   decorators: [WithI18next, WithSettings]
 }

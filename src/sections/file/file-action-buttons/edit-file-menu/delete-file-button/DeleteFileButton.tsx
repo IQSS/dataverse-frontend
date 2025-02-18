@@ -7,13 +7,13 @@ import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
 import { ConfirmDeleteFileModal } from './confirm-delete-file-modal/ConfirmDeleteFileModal'
-import { EditFileDropdownDatasetInfo } from '../EditFileDropdown'
+import { EditFileMenuDatasetInfo } from '../EditFileMenu'
 import { useDeleteFile } from './useDeleteFile'
 
 interface DeleteFileButtonProps {
   fileId: number
   fileRepository: FileRepository
-  datasetInfo: EditFileDropdownDatasetInfo
+  datasetInfo: EditFileMenuDatasetInfo
 }
 
 export const DeleteFileButton = ({
@@ -49,7 +49,7 @@ export const DeleteFileButton = ({
   return (
     <>
       <DropdownButtonItem onClick={handleOpenModal}>
-        {t('actionButtons.editFileDropdown.options.delete')}
+        {t('actionButtons.editFileMenu.options.delete')}
       </DropdownButtonItem>
       <ConfirmDeleteFileModal
         show={showConfirmationModal}

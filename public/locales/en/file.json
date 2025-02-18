@@ -48,7 +48,7 @@
   },
   "actionButtons": {
     "title": "File Action Buttons",
-    "editFileDropdown": {
+    "editFileMenu": {
       "title": "Edit File",
       "options": {
         "metadata": "Metadata",
