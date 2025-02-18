@@ -94,9 +94,18 @@ function joinSubFields(
   metadataBlockInfo?: MetadataBlockInfoDisplayFormat
 ): string {
   return Object.entries(metadataSubField)
-    .map(([subFieldName, subFieldValue]) =>
-      formatSubFieldValue(subFieldValue, metadataBlockInfo?.fields[subFieldName]?.displayFormat)
-    )
+    .map(([subFieldName, subFieldValue]) => {
+      let formattedSubFieldValue = formatSubFieldValue(
+        subFieldValue,
+        metadataBlockInfo?.fields[subFieldName]?.displayFormat
+      )
+      const subFieldType = metadataBlockInfo?.fields[subFieldName]?.type as string | undefined
+
+      if (subFieldType === 'TEXTBOX')
+        formattedSubFieldValue = transformHtmlToMarkdown(formattedSubFieldValue)
+
+      return formattedSubFieldValue
+    })
     .join(' ')
 }
 
@@ -111,6 +120,7 @@ function formatSubFieldValue(
   if (!displayFormat) {
     return subFieldValue
   }
+  console.log(displayFormat, subFieldValue)
 
   return displayFormat.replaceAll(METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER, subFieldValue)
 }
