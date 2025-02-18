@@ -23,7 +23,18 @@ export const TopFieldsSection = ({ isEditingRootCollection }: TopFieldsSectionPr
   }
 
   const nameRules: UseControllerProps['rules'] = {
-    required: t('fields.name.required')
+    required: t('fields.name.required'),
+    maxLength: {
+      value: 255,
+      message: t('fields.name.invalid.maxLength', { maxLength: 255 })
+    }
+  }
+
+  const affiliationRules: UseControllerProps['rules'] = {
+    maxLength: {
+      value: 255,
+      message: t('fields.affiliation.invalid.maxLength', { maxLength: 255 })
+    }
   }
 
   const aliasRules: UseControllerProps['rules'] = {
@@ -119,6 +130,7 @@ export const TopFieldsSection = ({ isEditingRootCollection }: TopFieldsSectionPr
           <Controller
             name="affiliation"
             control={control}
+            rules={affiliationRules}
             render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
               <Col>
                 <Form.Group.Input
