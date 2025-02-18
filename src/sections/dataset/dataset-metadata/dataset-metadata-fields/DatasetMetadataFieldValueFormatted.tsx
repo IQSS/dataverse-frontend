@@ -120,7 +120,6 @@ function formatSubFieldValue(
   if (!displayFormat) {
     return subFieldValue
   }
-  console.log(displayFormat, subFieldValue)
 
   return displayFormat.replaceAll(METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER, subFieldValue)
 }
