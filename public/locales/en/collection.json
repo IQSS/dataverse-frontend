@@ -54,7 +54,10 @@
     "verificationText": "Please fill this out to prove you are not a robot.",
     "contactSuccess": "Message sent.",
     "validation": {
-      "verification": "Verification is required.",
+      "captchaInput": {
+        "required": "Validation is required.",
+        "invalid": "Incorrect answer."
+      },
       "email": { "required": "Email is required.", "maxLength": "Subject cannot exceed 255" },
       "subject": { "required": "Subject is required.", "maxLength": "Subject cannot exceed 255" },
       "message": { "required": "Message is required.", "maxLength": "Message cannot exceed 255" }

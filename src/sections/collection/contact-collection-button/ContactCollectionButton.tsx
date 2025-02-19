@@ -6,9 +6,13 @@ import { ContactModal } from '@/sections/shared/contact-modal/contact-modal'
 
 interface ContactCollectionButtonProps {
   onSuccess: () => void
+  collectionName: string
 }
 
-export const ContactCollectionButton = ({ onSuccess }: ContactCollectionButtonProps) => {
+export const ContactCollectionButton = ({
+  onSuccess,
+  collectionName
+}: ContactCollectionButtonProps) => {
   const { t } = useTranslation('collection')
   const { t: tContact } = useTranslation('Contact')
 
@@ -33,6 +37,7 @@ export const ContactCollectionButton = ({ onSuccess }: ContactCollectionButtonPr
         handleClose={closeContactModal}
         title={t('contact.contactCollection')}
         onSuccess={onSuccess}
+        toContactName={collectionName}
       />
     </>
   )

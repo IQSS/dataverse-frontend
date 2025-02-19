@@ -49,7 +49,6 @@ export function Collection({
     collectionIdOrAlias: collectionIdFromParams,
     collectionRepository
   })
-
   const canUserAddCollection = Boolean(collectionUserPermissions?.canAddCollection)
   const canUserEditCollection = Boolean(collectionUserPermissions?.canEditCollection)
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
@@ -102,7 +101,10 @@ export function Collection({
             <div className={styles['metrics-actions-container']}>
               <div className={styles.metrics}></div>
               <div className={styles['right-content']}>
-                <ContactCollectionButton onSuccess={() => setContactSuccess(true)} />
+                <ContactCollectionButton
+                  onSuccess={() => setContactSuccess(true)}
+                  collectionName={collection.name}
+                />
 
                 <ShareCollectionButton />
 

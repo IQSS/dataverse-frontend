@@ -4,11 +4,10 @@ import { Form, Row, Col } from '@iqss/dataverse-design-system'
 
 interface ContactFormProps {
   isLoggedIn: boolean
-  fromEmail?: string
-  collectionName?: string
+  toContactName?: string
 }
 
-export function ContactForm({ isLoggedIn, fromEmail, collectionName }: ContactFormProps) {
+export function ContactForm({ isLoggedIn, toContactName }: ContactFormProps) {
   const { t } = useTranslation('collection')
   const { control } = useFormContext()
 
@@ -43,7 +42,7 @@ export function ContactForm({ isLoggedIn, fromEmail, collectionName }: ContactFo
           <Form.Group.Label>To</Form.Group.Label>
         </Col>
         <Col lg={9}>
-          <Form.Group.Text>{collectionName} Contact</Form.Group.Text>
+          <Form.Group.Text>{toContactName} Contact</Form.Group.Text>
         </Col>
       </Row>
 
@@ -52,28 +51,25 @@ export function ContactForm({ isLoggedIn, fromEmail, collectionName }: ContactFo
           <Form.Group.Label required>From</Form.Group.Label>
         </Col>
         <Col lg={9}>
-          {isLoggedIn ? (
-            <Form.Group.Text>{fromEmail}</Form.Group.Text>
-          ) : (
-            <Controller
-              name="fromEmail"
-              control={control}
-              rules={emailRules}
-              render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
-                <>
-                  <Form.Group.Input
-                    value={value as string}
-                    onChange={onChange}
-                    ref={ref}
-                    type="email"
-                    isInvalid={invalid}
-                    placeholder="name@email.xyz"
-                  />
-                  <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
-                </>
-              )}
-            />
-          )}
+          <Controller
+            name="fromEmail"
+            control={control}
+            rules={emailRules}
+            render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
+              <>
+                <Form.Group.Input
+                  value={value as string}
+                  onChange={onChange}
+                  ref={ref}
+                  type="email"
+                  readOnly={isLoggedIn}
+                  isInvalid={invalid}
+                  placeholder="name@email.xyz"
+                />
+                <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+              </>
+            )}
+          />
         </Col>
       </Row>
 

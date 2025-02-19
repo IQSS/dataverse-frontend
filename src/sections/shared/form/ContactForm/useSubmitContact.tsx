@@ -16,13 +16,6 @@ export type UseSubmitContactReturnType = {
   submitError: string | null
 }
 
-export type ContactFormData = {
-  identifier?: string
-  subject: string
-  body: string
-  fromEmail: string
-}
-
 export function useSubmitContact(contactRepository: ContactRepository): UseSubmitContactReturnType {
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
