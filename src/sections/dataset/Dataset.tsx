@@ -1,7 +1,7 @@
-import { useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import styles from './Dataset.module.scss'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { DatasetLabels } from './dataset-labels/DatasetLabels'
 import { useLoading } from '../loading/LoadingContext'
 import { DatasetSkeleton, TabsSkeleton } from './DatasetSkeleton'
@@ -26,6 +26,7 @@ import useUpdateDatasetAlerts from './useUpdateDatasetAlerts'
 import { QueryParamKey, Route } from '../Route.enum'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
+import { DatasetTerms } from '@/sections/dataset/dataset-terms/DatasetTerms'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -36,6 +37,7 @@ interface DatasetProps {
   metadataUpdated?: boolean
   filesTabInfiniteScrollEnabled?: boolean
   publishInProgress?: boolean
+  tab?: string
 }
 
 export function Dataset({
@@ -46,14 +48,18 @@ export function Dataset({
   created,
   metadataUpdated,
   filesTabInfiniteScrollEnabled,
-  publishInProgress
+  publishInProgress,
+  tab = 'files'
 }: DatasetProps) {
   const { setIsLoading } = useLoading()
   const { dataset, isLoading: isDatasetLoading } = useDataset()
   const { t } = useTranslation('dataset')
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { hideModal, isModalOpen } = useNotImplementedModal()
   const publishCompleted = useCheckPublishCompleted(publishInProgress, dataset, datasetRepository)
+  const [activeTab, setActiveTab] = useState<string>(tab)
+  const termsTabRef = useRef<HTMLDivElement>(null)
 
   useUpdateDatasetAlerts({
     dataset,
@@ -78,7 +84,20 @@ export function Dataset({
   if (isDatasetLoading && !dataset) {
     return <DatasetSkeleton />
   }
+  const handleCustomTermsClick = () => {
+    setActiveTab('terms')
+    const newParams = new URLSearchParams(searchParams)
+    newParams.set('tab', 'terms')
+    // Update URL without reloading
+    navigate(`?${newParams.toString()}`, { replace: true })
+    termsTabRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
 
+  const handleTabSelect = (key: string | null) => {
+    if (key) {
+      setActiveTab(key)
+    }
+  }
   return (
     <>
       <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
@@ -118,6 +137,7 @@ export function Dataset({
                   <DatasetSummary
                     summaryFields={dataset.summaryFields}
                     license={dataset.license}
+                    onCustomTermsClick={handleCustomTermsClick}
                     metadataBlockInfoRepository={metadataBlockInfoRepository}
                   />
                 </Col>
@@ -125,7 +145,7 @@ export function Dataset({
               {publishInProgress && <TabsSkeleton />}
 
               {(!publishInProgress || !isDatasetLoading) && (
-                <Tabs defaultActiveKey="files">
+                <Tabs defaultActiveKey={activeTab} onSelect={handleTabSelect}>
                   <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
                     <div className={styles['tab-container']}>
                       {filesTabInfiniteScrollEnabled ? (
@@ -149,6 +169,17 @@ export function Dataset({
                         persistentId={dataset.persistentId}
                         metadataBlocks={dataset.metadataBlocks}
                         metadataBlockInfoRepository={metadataBlockInfoRepository}
+                      />
+                    </div>
+                  </Tabs.Tab>
+                  <Tabs.Tab title={t('termsTabTitle')} eventKey={'terms'}>
+                    <div ref={termsTabRef} className={styles['tab-container']}>
+                      <DatasetTerms
+                        license={dataset.license}
+                        termsOfUse={dataset.termsOfUse}
+                        filesRepository={fileRepository}
+                        datasetPersistentId={dataset.persistentId}
+                        datasetVersion={dataset.version}
                       />
                     </div>
                   </Tabs.Tab>

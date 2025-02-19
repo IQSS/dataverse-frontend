@@ -48,6 +48,7 @@ function DatasetWithSearchParams() {
   const persistentId = searchParams.get('persistentId') ?? undefined
   const privateUrlToken = searchParams.get('privateUrlToken')
   const searchParamVersion = searchParams.get('version') ?? undefined
+  const tab = searchParams.get('tab') ?? undefined
   const version = searchParamVersionToDomainVersion(searchParamVersion)
   const location = useLocation()
   const state = location.state as
@@ -73,6 +74,7 @@ function DatasetWithSearchParams() {
           fileRepository={fileRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
+          tab={tab}
         />
       </DatasetProvider>
     )
@@ -92,6 +94,7 @@ function DatasetWithSearchParams() {
         publishInProgress={publishInProgress}
         metadataUpdated={metadataUpdated}
         filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
+        tab={tab}
       />
     </DatasetProvider>
   )

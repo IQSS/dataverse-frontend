@@ -1,23 +1,25 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { Button, Modal, Stack } from '@iqss/dataverse-design-system'
 import { Form } from '@iqss/dataverse-design-system'
 import type { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { VersionUpdateType } from '@/dataset/domain/models/VersionUpdateType'
 import { useSession } from '../../session/SessionContext'
-import { License } from '../dataset-summary/License'
 import {
   DatasetNonNumericVersionSearchParam,
-  defaultLicense
+  CustomTerms as CustomTermsModel
 } from '@/dataset/domain/models/Dataset'
 import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
+import { QueryParamKey, Route } from '../../Route.enum'
 import { usePublishDataset } from './usePublishDataset'
 import { PublishDatasetHelpText } from './PublishDatasetHelpText'
-import styles from './PublishDatasetModal.module.scss'
-import { useNavigate } from 'react-router-dom'
-import { QueryParamKey, Route } from '../../Route.enum'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { UpwardHierarchyNode } from '@/shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { DatasetLicense } from '@/dataset/domain/models/Dataset'
+import styles from './PublishDatasetModal.module.scss'
+import { PublishLicense } from '@/sections/dataset/publish-dataset/PublishLicense'
+import { CustomTerms } from '@/sections/dataset/dataset-terms/CustomTerms'
 
 interface PublishDatasetModalProps {
   show: boolean
@@ -25,6 +27,8 @@ interface PublishDatasetModalProps {
   collectionRepository: CollectionRepository
   parentCollection: UpwardHierarchyNode
   persistentId: string
+  license: DatasetLicense | undefined
+  customTerms?: CustomTermsModel
   releasedVersionExists: boolean
   handleClose: () => void
   nextMajorVersion?: string
@@ -38,6 +42,8 @@ export function PublishDatasetModal({
   collectionRepository,
   parentCollection,
   persistentId,
+  license,
+  customTerms,
   releasedVersionExists,
   handleClose,
   nextMajorVersion,
@@ -120,13 +126,21 @@ export function PublishDatasetModal({
               </Form.RadioGroup>
             </>
           )}
-          <License
-            license={{
-              name: defaultLicense.name,
-              uri: defaultLicense.uri,
-              iconUri: defaultLicense.iconUri
+          <PublishLicense
+            license={license}
+            handleCustomTermsClick={() => {
+              const searchParams = new URLSearchParams(location.search)
+              searchParams.set('tab', 'terms')
+              const newUrl = `${import.meta.env.BASE_URL}${
+                location.pathname
+              }?${searchParams.toString()}`
+
+              window.open(newUrl, '_blank')
             }}
           />
+          <div>
+            <CustomTerms customTerms={customTerms} />
+          </div>
           <p className={styles.secondaryText}>{t('publish.termsText')}</p>
         </Stack>
         <span className={styles.errorText}>

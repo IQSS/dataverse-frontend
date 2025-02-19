@@ -3,6 +3,8 @@ import { DatasetRepository } from '../../../../../src/dataset/domain/repositorie
 import { PublishDatasetModal } from '../../../../../src/sections/dataset/publish-dataset/PublishDatasetModal'
 import { CollectionRepository } from '../../../../../src/collection/domain/repositories/CollectionRepository'
 import { UpwardHierarchyNodeMother } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNodeMother'
+import { CustomTermsMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
+import { LicenseMother } from '@tests/component/dataset/domain/models/LicenseMother'
 
 describe('PublishDatasetModal', () => {
   it('display modal for never released dataset', () => {
@@ -16,6 +18,7 @@ describe('PublishDatasetModal', () => {
       <PublishDatasetModal
         show={true}
         repository={repository}
+        license={LicenseMother.create()}
         collectionRepository={collectionRepository}
         parentCollection={parentCollection}
         persistentId="testPersistentId"
@@ -51,6 +54,7 @@ describe('PublishDatasetModal', () => {
       <PublishDatasetModal
         show={true}
         repository={repository}
+        license={LicenseMother.create()}
         collectionRepository={collectionRepository}
         parentCollection={parentCollection}
         persistentId="testPersistentId"
@@ -79,6 +83,7 @@ describe('PublishDatasetModal', () => {
         show={true}
         repository={repository}
         collectionRepository={collectionRepository}
+        license={LicenseMother.create()}
         parentCollection={parentCollection}
         persistentId="testPersistentId"
         releasedVersionExists={false}
@@ -101,6 +106,7 @@ describe('PublishDatasetModal', () => {
     const parentCollection = UpwardHierarchyNodeMother.createCollection()
     cy.mountAuthenticated(
       <PublishDatasetModal
+        license={LicenseMother.create()}
         show={true}
         repository={repository}
         collectionRepository={collectionRepository}
@@ -136,6 +142,7 @@ describe('PublishDatasetModal', () => {
       <PublishDatasetModal
         show={true}
         repository={repository}
+        license={LicenseMother.create()}
         collectionRepository={collectionRepository}
         parentCollection={parentCollection}
         persistentId="testPersistentId"
@@ -157,6 +164,7 @@ describe('PublishDatasetModal', () => {
     const parentCollection = UpwardHierarchyNodeMother.createCollection()
     cy.mountAuthenticated(
       <PublishDatasetModal
+        license={LicenseMother.create()}
         show={true}
         repository={repository}
         collectionRepository={collectionRepository}
@@ -179,6 +187,7 @@ describe('PublishDatasetModal', () => {
     const parentCollection = UpwardHierarchyNodeMother.createCollection()
     cy.mountAuthenticated(
       <PublishDatasetModal
+        license={LicenseMother.create()}
         show={true}
         repository={repository}
         collectionRepository={collectionRepository}
@@ -216,6 +225,7 @@ describe('PublishDatasetModal', () => {
     const parentCollection = UpwardHierarchyNodeMother.createCollection({ isReleased: false })
     cy.mountAuthenticated(
       <PublishDatasetModal
+        license={LicenseMother.create()}
         show={true}
         repository={repository}
         collectionRepository={collectionRepository}
@@ -230,5 +240,28 @@ describe('PublishDatasetModal', () => {
     cy.findByRole('link', { name: parentCollection.name })
       .should('have.attr', 'href')
       .and('include', `/collections/${parentCollection.id}`)
+  })
+
+  it('Displays custom terms when license is undefined', () => {
+    const handleClose = cy.stub()
+    const repository = {} as DatasetRepository // Mock the repository as needed
+    repository.publish = cy.stub().as('repositoryPublish').resolves()
+    const collectionRepository = {} as CollectionRepository
+    collectionRepository.publish = cy.stub().as('collectionRepositoryPublish').resolves()
+    const parentCollection = UpwardHierarchyNodeMother.createCollection({ isReleased: false })
+    cy.mountAuthenticated(
+      <PublishDatasetModal
+        license={undefined}
+        customTerms={CustomTermsMother.create()}
+        show={true}
+        repository={repository}
+        collectionRepository={collectionRepository}
+        parentCollection={parentCollection}
+        persistentId="testPersistentId"
+        releasedVersionExists={false}
+        handleClose={handleClose}
+      />
+    )
+    cy.findByText(/Custom Dataset Terms/).should('exist')
   })
 })
