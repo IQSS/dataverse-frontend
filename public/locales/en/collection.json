@@ -52,5 +52,13 @@
   "editCollection": {
     "edit": "Edit",
     "generalInfo": "General Information"
+  },
+  "featuredItems": {
+    "title": "Featured Items",
+    "slider": {
+      "prevLabel": "Go to previous slide",
+      "nextLabel": "Go to next slide",
+      "dotLabel": "Go to slide"
+    }
   }
 }

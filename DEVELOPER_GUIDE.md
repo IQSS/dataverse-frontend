@@ -229,8 +229,6 @@ Please note that the image tag must be pre-pushed to the Docker registry; otherw
 the existing tags for alpha and unstable versions on DockerHub at [@gdcc/dataverse][dv_app_docker_image_url]. Images
 associated with pull requests (PRs) are available in the [GitHub Container Registry].
 
-````bash
-
 If you are running the script for the first time, it may take a while, since npm has to install all project dependencies.
 This can also happen if you added new dependencies to `package.json`, or used the _uninstall_ script to remove current
 project files and shut down any running containers.
@@ -253,7 +251,7 @@ If you want to add test data (collections and datasets) to the Dataverse instanc
 # /dev-env/ directory
 
 $ ./add-env-data.sh
-````
+```
 
 > Note: The above command uses the [dataverse-sample-data][dv_repo_dvsampledata_url] repository whose scripts occasionally
 > fail, so some test data may not be added.

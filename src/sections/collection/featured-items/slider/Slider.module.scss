@@ -1,0 +1,87 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.slider-container {
+  $dotsHeight: 3rem;
+  $arrowSize: 40px;
+  $arrowMarginX: 0.5rem;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  overflow: hidden;
+
+  // If the slider has no arrows, add padding to the container to avoid flickering
+  &:not(:has(.slider-arrow)) {
+    padding-inline: calc($arrowSize + $arrowMarginX * 2);
+  }
+
+  .slider {
+    display: flex;
+    gap: 2rem;
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .slider-item {
+      display: flex;
+      flex: 0 0 100%;
+      scroll-snap-align: start;
+      justify-content: center;
+      max-height: 100%;
+      overflow-x: hidden;
+    }
+  }
+
+  .slider-arrow {
+    display: none;
+    width: $arrowSize;
+    height: $arrowSize;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    margin-inline: $arrowMarginX;
+
+    @media screen and (min-width: 768px) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  &.with-dots {
+    padding-bottom: $dotsHeight;
+  }
+
+  .slider-dots {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin-inline: auto;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    height: $dotsHeight;
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      background-color: color.adjust($dv-primary-color, $alpha: -0.7);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+
+      &.active {
+        background: $dv-primary-color;
+      }
+    }
+  }
+}

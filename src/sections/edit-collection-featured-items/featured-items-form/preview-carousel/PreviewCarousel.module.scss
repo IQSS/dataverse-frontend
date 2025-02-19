@@ -1,0 +1,16 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.preview-carousel-accordion {
+  margin-bottom: 1rem;
+
+  .accordion-item {
+    overflow: hidden;
+  }
+
+  .accordion-body {
+    padding: 0;
+    padding-top: 2rem;
+    background-color: color.adjust($dv-secondary-color, $lightness: 10%);
+  }
+}

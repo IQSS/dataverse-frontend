@@ -1,10 +1,12 @@
 import { Collection } from '../models/Collection'
 import { CollectionFacet } from '../models/CollectionFacet'
+import { CollectionFeaturedItem } from '../models/CollectionFeaturedItem'
 import { CollectionItemsPaginationInfo } from '../models/CollectionItemsPaginationInfo'
 import { CollectionItemSubset } from '../models/CollectionItemSubset'
 import { CollectionSearchCriteria } from '../models/CollectionSearchCriteria'
 import { CollectionUserPermissions } from '../models/CollectionUserPermissions'
 import { CollectionDTO } from '../useCases/DTOs/CollectionDTO'
+import { CollectionFeaturedItemsDTO } from '../useCases/DTOs/CollectionFeaturedItemsDTO'
 
 export interface CollectionRepository {
   getById: (id?: string) => Promise<Collection>
@@ -18,4 +20,10 @@ export interface CollectionRepository {
     searchCriteria?: CollectionSearchCriteria
   ): Promise<CollectionItemSubset>
   edit(collectionIdOrAlias: string, updatedCollection: CollectionDTO): Promise<void>
+  getFeaturedItems(collectionIdOrAlias?: number | string): Promise<CollectionFeaturedItem[]>
+  updateFeaturedItems(
+    collectionIdOrAlias: number | string,
+    featuredItemsDTO: CollectionFeaturedItemsDTO
+  ): Promise<CollectionFeaturedItem[]>
+  deleteFeaturedItems(collectionIdOrAlias: number | string): Promise<void>
 }

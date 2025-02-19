@@ -10,13 +10,13 @@ import {
   MetadataField
 } from '@/metadata-block-info/domain/models/MetadataBlockInfo'
 import { SubmissionStatus, useSubmitCollection } from './useSubmitCollection'
-import styles from './CollectionForm.module.scss'
 import { TopFieldsSection } from './top-fields-section/TopFieldsSection'
 import { SeparationLine } from '@/sections/shared/layout/SeparationLine/SeparationLine'
 import { MetadataFieldsSection } from './metadata-fields-section/MetadataFieldsSection'
 import { BrowseSearchFacetsSection } from './browse-search-facets-section/BrowseSearchFacetsSection'
 import { EditCreateCollectionFormMode } from '../EditCreateCollectionForm'
 import { RouteWithParams } from '@/sections/Route.enum'
+import styles from './CollectionForm.module.scss'
 
 export interface CollectionFormProps {
   mode: EditCreateCollectionFormMode
@@ -40,7 +40,7 @@ export const CollectionForm = ({
   isEditingRootCollection
 }: CollectionFormProps) => {
   const formContainerRef = useRef<HTMLDivElement>(null)
-  const { t } = useTranslation('shared', { keyPrefix: 'collectionForm' })
+  const { t } = useTranslation('shared')
   const navigate = useNavigate()
   const onCreateMode = mode === 'create'
 
@@ -49,14 +49,10 @@ export const CollectionForm = ({
     defaultValues
   })
 
-  const { formState } = form
-
   const { submitForm, submitError, submissionStatus } = useSubmitCollection(
     mode,
     collectionIdOrParentCollectionId,
     collectionRepository,
-    isEditingRootCollection,
-    formState.dirtyFields,
     onSubmittedCollectionError
   )
 
@@ -71,8 +67,8 @@ export const CollectionForm = ({
   }
 
   const disableSubmitButton = useMemo(() => {
-    return submissionStatus === SubmissionStatus.IsSubmitting || !formState.isDirty
-  }, [submissionStatus, formState.isDirty])
+    return submissionStatus === SubmissionStatus.IsSubmitting || !form.formState.isDirty
+  }, [submissionStatus, form.formState.isDirty])
 
   return (
     <div
@@ -86,7 +82,9 @@ export const CollectionForm = ({
       )}
       {submissionStatus === SubmissionStatus.SubmitComplete && (
         <Alert variant="success" dismissible={false}>
-          {onCreateMode ? t('submitStatus.createSuccess') : t('submitStatus.editSuccess')}
+          {onCreateMode
+            ? t('collectionForm.submitStatus.createSuccess')
+            : t('collectionForm.submitStatus.editSuccess')}
         </Alert>
       )}
       <FormProvider {...form}>
@@ -123,14 +121,14 @@ export const CollectionForm = ({
 
           <Stack direction="horizontal" className="pt-3">
             <Button type="submit" disabled={disableSubmitButton}>
-              {onCreateMode ? t('saveButton.createMode') : t('saveButton.editMode')}
+              {onCreateMode ? t('collectionForm.createCollection') : t('saveChanges')}
             </Button>
             <Button
               variant="secondary"
               type="button"
               onClick={handleCancel}
               disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
-              {t('cancelButton')}
+              {t('cancel')}
             </Button>
           </Stack>
         </form>

@@ -554,4 +554,85 @@ describe('CollectionItemsPanel', () => {
       })
     })
   })
+
+  describe('Sorting', () => {
+    // These cases about sorting are not possible to test the change in here as they react to the url change
+    // They are properly tested in the e2e tests and in another unit test.
+    // This will just click the different sort buttons to go through the code
+    it('clicks the sort by name A-Z button', () => {
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: undefined,
+            filtersQuery: undefined
+          }}
+          addDataSlot={null}
+        />
+      )
+
+      cy.findByRole('button', { name: /Sort/ }).click()
+      cy.findByRole('button', { name: /Name \(A-Z\)/ }).click()
+    })
+
+    it('clicks the sort by name Z-A button', () => {
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: undefined,
+            filtersQuery: undefined
+          }}
+          addDataSlot={null}
+        />
+      )
+
+      cy.findByRole('button', { name: /Sort/ }).click()
+      cy.findByRole('button', { name: /Name \(Z-A\)/ }).click()
+    })
+
+    it('clicks the sort by newest button', () => {
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: undefined,
+            filtersQuery: undefined
+          }}
+          addDataSlot={null}
+        />
+      )
+
+      cy.findByRole('button', { name: /Sort/ }).click()
+      cy.findByRole('button', { name: /Newest/ }).click()
+    })
+
+    it('clicks the sort by oldest button', () => {
+      cy.customMount(
+        <CollectionItemsPanel
+          collectionId={ROOT_COLLECTION_ALIAS}
+          collectionRepository={collectionRepository}
+          collectionQueryParams={{
+            pageQuery: 1,
+            searchQuery: undefined,
+            typesQuery: undefined,
+            filtersQuery: undefined
+          }}
+          addDataSlot={null}
+        />
+      )
+
+      cy.findByRole('button', { name: /Sort/ }).click()
+      cy.findByRole('button', { name: /Oldest/ }).click()
+    })
+  })
 })

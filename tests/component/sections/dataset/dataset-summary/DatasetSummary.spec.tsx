@@ -8,7 +8,7 @@ import { MetadataBlockInfoRepository } from '../../../../../src/metadata-block-i
 import { MetadataBlockInfoMother } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 
 describe('DatasetSummary', () => {
-  const licenseMock: DatasetLicense = DatasetMother.create().license
+  const licenseMock: DatasetLicense | undefined = DatasetMother.create().license
   const summaryFieldsMock: DatasetMetadataBlock[] = DatasetMother.create().summaryFields
   const metadataBlockInfoMock = MetadataBlockInfoMother.create()
   const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
@@ -35,7 +35,7 @@ describe('DatasetSummary', () => {
     })
 
     cy.get('img').should('exist')
-    cy.findByText(licenseMock.name).should('exist')
+    licenseMock && cy.findByText(licenseMock.name).should('exist')
   })
 
   it('renders an empty span if there is an error getting the metadata block display info', () => {

@@ -37,6 +37,16 @@ const jsDataset = {
     lastUpdateTime: new Date('2023-09-07T13:40:04.000Z'),
     releaseTime: undefined
   },
+  termsOfUse: {
+    fileAccessRequest: true,
+    termsOfAccess: 'New terms',
+    dataAccessPlace: 'New place',
+    originalArchive: 'New archive',
+    availabilityStatus: 'New status',
+    contactForAccess: 'New contact',
+    sizeOfCollection: 'New size',
+    studyCompletion: 'New completion'
+  },
   metadataBlocks: [
     {
       name: 'citation',
@@ -226,6 +236,16 @@ const expectedDataset = {
     uri: 'http://creativecommons.org/publicdomain/zero/1.0',
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
+  termsOfUse: {
+    fileAccessRequest: true,
+    termsOfAccess: 'New terms',
+    dataAccessPlace: 'New place',
+    originalArchive: 'New archive',
+    availabilityStatus: 'New status',
+    contactForAccess: 'New contact',
+    sizeOfCollection: 'New size',
+    studyCompletion: 'New completion'
+  },
   metadataBlocks: [
     {
       name: 'citation',
@@ -324,6 +344,16 @@ const expectedDatasetWithPublicationDate = {
     name: 'CC0 1.0',
     uri: 'http://creativecommons.org/publicdomain/zero/1.0',
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+  },
+  termsOfUse: {
+    fileAccessRequest: true,
+    termsOfAccess: 'New terms',
+    dataAccessPlace: 'New place',
+    originalArchive: 'New archive',
+    availabilityStatus: 'New status',
+    contactForAccess: 'New contact',
+    sizeOfCollection: 'New size',
+    studyCompletion: 'New completion'
   },
   metadataBlocks: [
     {
@@ -424,6 +454,16 @@ const expectedDatasetWithNextVersionNumbers = {
     name: 'CC0 1.0',
     uri: 'http://creativecommons.org/publicdomain/zero/1.0',
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+  },
+  termsOfUse: {
+    fileAccessRequest: true,
+    termsOfAccess: 'New terms',
+    dataAccessPlace: 'New place',
+    originalArchive: 'New archive',
+    availabilityStatus: 'New status',
+    contactForAccess: 'New contact',
+    sizeOfCollection: 'New size',
+    studyCompletion: 'New completion'
   },
   metadataBlocks: [
     {
@@ -547,6 +587,16 @@ const expectedDatasetAlternateVersion = {
     name: 'CC0 1.0',
     uri: 'http://creativecommons.org/publicdomain/zero/1.0',
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+  },
+  termsOfUse: {
+    fileAccessRequest: true,
+    termsOfAccess: 'New terms',
+    dataAccessPlace: 'New place',
+    originalArchive: 'New archive',
+    availabilityStatus: 'New status',
+    contactForAccess: 'New contact',
+    sizeOfCollection: 'New size',
+    studyCompletion: 'New completion'
   },
   locks: [
     {

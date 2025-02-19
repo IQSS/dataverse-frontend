@@ -60,7 +60,7 @@ export class JSDatasetMapper {
       jsDataset.persistentId,
       version,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, jsDatasetSummaryFieldsNames),
-      jsDataset.license,
+      jsDataset.termsOfUse,
       JSDatasetMapper.toMetadataBlocks(
         jsDataset.metadataBlocks,
         jsDataset.alternativePersistentId,
@@ -83,6 +83,7 @@ export class JSDatasetMapper {
         version,
         jsDataset.isPartOf
       ),
+      jsDataset.license,
       undefined, // TODO: get dataset thumbnail from js-dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl,
       requestedVersion,

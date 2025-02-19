@@ -8,6 +8,8 @@
   "more": "More...",
   "less": "Less...",
   "share": "Share",
+  "saveChanges": "Save Changes",
+  "dragHandleLabel": "press space to select and keys to drag",
   "pageNumberNotFound": {
     "heading": "Page Number Not Found",
     "message": "The page number you requested does not exist. Please try a different page number."
@@ -60,11 +62,7 @@
       "submitting": "Form Submitting",
       "submissionSuccess": "Form submission successful"
     },
-    "saveButton": {
-      "createMode": "Save Dataset",
-      "editMode": "Save Changes"
-    },
-    "cancelButton": "Cancel"
+    "saveDataset": "Save Dataset"
   },
   "collectionForm": {
     "fields": {
@@ -76,11 +74,17 @@
       "name": {
         "label": "Collection Name",
         "description": "The project, department, university, professor, or journal this collection will contain data for.",
-        "required": "Collection Name is required"
+        "required": "Collection Name is required",
+        "invalid": {
+          "maxLength": "Collection Name must be at most {{maxLength}} characters."
+        }
       },
       "affiliation": {
         "label": "Affiliation",
-        "description": "The organization with which this collection is affiliated."
+        "description": "The organization with which this collection is affiliated.",
+        "invalid": {
+          "maxLength": "Affiliation must be at most {{maxLength}} characters."
+        }
       },
       "alias": {
         "label": "Identifier",
@@ -146,10 +150,6 @@
       "createSuccess": "Collection created successfully.",
       "editSuccess": "Collection updated successfully."
     },
-    "saveButton": {
-      "createMode": "Create Collection",
-      "editMode": "Save Changes"
-    },
-    "cancelButton": "Cancel"
+    "createCollection": "Create Collection"
   }
 }

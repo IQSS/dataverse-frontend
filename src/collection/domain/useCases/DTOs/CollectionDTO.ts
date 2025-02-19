@@ -10,6 +10,8 @@ export interface CollectionDTO {
   metadataBlockNames?: string[]
   facetIds?: string[]
   inputLevels?: CollectionInputLevelDTO[]
+  inheritMetadataBlocksFromParent: boolean
+  inheritFacetsFromParent: boolean
 }
 
 export interface CollectionInputLevelDTO {
