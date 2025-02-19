@@ -89,10 +89,8 @@ export function Collection({
               </Alert>
             )}
             {contactSuccess && (
-              <Alert variant="success" dismissible>
-                {t('contactForm.successMessage', {
-                  defaultValue: 'Your message has been sent successfully!'
-                })}
+              <Alert variant="success" onClose={() => setContactSuccess(false)}>
+                {t('contact.contactSuccess')}
               </Alert>
             )}
 

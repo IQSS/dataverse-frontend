@@ -17,7 +17,6 @@ export type UseSubmitContactReturnType = {
 }
 
 export type ContactFormData = {
-  targetId?: number
   identifier?: string
   subject: string
   body: string
@@ -34,8 +33,9 @@ export function useSubmitContact(contactRepository: ContactRepository): UseSubmi
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
     setSubmitError(null)
     try {
+      if (!formData.identifier) formData.identifier = 'root'
+
       const contacts: Contact[] = await contactRepository.submitContactInfo(formData)
-      console.log('Contact submitted successfully:', contacts)
       setSubmissionStatus(SubmissionStatus.SubmitComplete)
       return contacts
     } catch (error) {

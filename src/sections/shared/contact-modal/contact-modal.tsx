@@ -10,6 +10,8 @@ import {
 import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
 import { useForm, FormProvider } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
+import { ContactDTO } from '@/contact/domain/useCases/ContactDTO'
+import { Captcha } from '../form/ContactForm/ContactCaptcha'
 
 interface ContactModalProps {
   show: boolean
@@ -17,32 +19,24 @@ interface ContactModalProps {
   title: string
   onSuccess: () => void
 }
+
 export const ContactModal = ({ show, title, handleClose, onSuccess }: ContactModalProps) => {
   const { t } = useTranslation('shared')
   const { collectionId } = useParams<{ collectionId: string }>()
-  const contactRepository = useMemo(() => new ContactJSDataverseRepository(), [])
-  const { submitForm, submissionStatus } = useSubmitContact(contactRepository)
   const [collectionName, setCollectionName] = useState<string>('Root')
   const [userEmail, setUserEmail] = useState<string>('')
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
 
+  const contactRepository = useMemo(() => new ContactJSDataverseRepository(), [])
+
+  const { submitForm, submissionStatus, submitError } = useSubmitContact(contactRepository)
+
+  //CAPTCHA
   const [num1, setNum1] = useState(0)
   const [num2, setNum2] = useState(0)
+  const [captchaInput, setCaptchaInput] = useState('')
   const [captchaAnswer, setCaptchaAnswer] = useState(0)
-
-  useEffect(() => {
-    const generateQuestion = () => {
-      const randomNum1 = Math.floor(Math.random() * 10) + 1
-      const randomNum2 = Math.floor(Math.random() * 10) + 1
-      setNum1(randomNum1)
-      setNum2(randomNum2)
-      setCaptchaAnswer(randomNum1 + randomNum2)
-    }
-
-    if (show) {
-      generateQuestion()
-    }
-  }, [show])
+  const [captchaError, setCaptchaError] = useState<string | null>(null)
 
   useEffect(() => {
     const handleGetUserEmail = async () => {
@@ -66,15 +60,45 @@ export const ContactModal = ({ show, title, handleClose, onSuccess }: ContactMod
     defaultValues: {
       subject: '',
       body: '',
-      fromEmail: userEmail
+      fromEmail: ''
     }
   })
 
   const { reset } = methods
-  const onSubmit = async (data: ContactFormData) => {
+
+  useEffect(() => {
+    if (show) {
+      const randomNum1 = Math.floor(Math.random() * 10) + 1
+      const randomNum2 = Math.floor(Math.random() * 10) + 1
+      setNum1(randomNum1)
+      setNum2(randomNum2)
+      setCaptchaAnswer(randomNum1 + randomNum2)
+    }
+  }, [show, contactRepository])
+
+  const onSubmit = async (data: ContactDTO) => {
+    if (submissionStatus === SubmissionStatus.Errored) {
+      return
+    }
+    if (!captchaInput) {
+      setCaptchaError('Verification is required.')
+      return
+    }
+
+    if (parseInt(captchaInput, 10) !== captchaAnswer) {
+      setCaptchaError('Incorrect answer. Please try again.')
+      return
+    }
+
+    setCaptchaError(null)
+
+    isLoggedIn && (data.fromEmail = userEmail)
+    data.identifier = collectionId || ''
+
     await submitForm(data)
     onSuccess()
     reset()
+    setCaptchaInput('')
   }
 
   useEffect(() => {
@@ -87,19 +111,26 @@ export const ContactModal = ({ show, title, handleClose, onSuccess }: ContactMod
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        {submissionStatus === SubmissionStatus.Errored && (
+          <Alert variant="danger" dismissible={false}>
+            {submitError}
+          </Alert>
+        )}
+        {captchaError && (
+          <Alert variant="danger" dismissible={false}>
+            {captchaError}
+          </Alert>
+        )}
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
-            {submissionStatus === SubmissionStatus.Errored && (
-              <Alert variant="danger">{submissionStatus}</Alert>
-            )}
             <ContactForm
               isLoggedIn={isLoggedIn}
               fromEmail={userEmail}
               collectionName={collectionName ?? ''}
-              validateCaptcha={[num1, num2, captchaAnswer]}
             />
           </form>
         </FormProvider>
+        <Captcha userInput={captchaInput} onChange={setCaptchaInput} num1={num1} num2={num2} />
       </Modal.Body>
       <Modal.Footer>
         <Button

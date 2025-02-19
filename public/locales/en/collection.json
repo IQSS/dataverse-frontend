@@ -50,8 +50,17 @@
   },
   "contact": {
     "contactCollection": "Email Collection Contact",
-    "helpText": "Email the contact for this collection."
+    "helpText": "Email the contact for this collection.",
+    "verificationText": "Please fill this out to prove you are not a robot.",
+    "contactSuccess": "Message sent.",
+    "validation": {
+      "verification": "Verification is required.",
+      "email": { "required": "Email is required.", "maxLength": "Subject cannot exceed 255" },
+      "subject": { "required": "Subject is required.", "maxLength": "Subject cannot exceed 255" },
+      "message": { "required": "Message is required.", "maxLength": "Message cannot exceed 255" }
+    }
   },
+
   "editedAlert": "You have successfully updated your collection!",
   "editCollection": {
     "edit": "Edit",

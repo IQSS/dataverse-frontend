@@ -8,10 +8,11 @@ interface AlertProps {
   variant: AlertVariant
   dismissible?: boolean
   customHeading?: string
-  children: ReactNode
+  children?: ReactNode
+  onClose?: () => void
 }
 
-function Alert({ variant, dismissible = true, customHeading, children }: AlertProps) {
+function Alert({ variant, dismissible = true, customHeading, children, onClose }: AlertProps) {
   interface AlertHeadings {
     [key: string]: string
   }
@@ -29,10 +30,15 @@ function Alert({ variant, dismissible = true, customHeading, children }: AlertPr
   }
   const heading = getAlertHeading(variant, customHeading)
 
+  const handleClose = () => {
+    onClose && onClose()
+    setShow(false)
+  }
+
   return (
     <>
       {show && (
-        <AlertBS variant={variant} onClose={() => setShow(false)} dismissible={dismissible}>
+        <AlertBS variant={variant} onClose={handleClose} dismissible={dismissible}>
           <AlertIcon variant={variant} />
           &nbsp;
           <b>{heading}</b> - {children}

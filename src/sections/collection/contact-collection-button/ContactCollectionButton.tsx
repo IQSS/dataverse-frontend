@@ -7,6 +7,7 @@ import { ContactModal } from '@/sections/shared/contact-modal/contact-modal'
 interface ContactCollectionButtonProps {
   onSuccess: () => void
 }
+
 export const ContactCollectionButton = ({ onSuccess }: ContactCollectionButtonProps) => {
   const { t } = useTranslation('collection')
   const { t: tContact } = useTranslation('Contact')
