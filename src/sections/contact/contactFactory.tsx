@@ -1,11 +1,8 @@
-import { ReactElement } from 'react'
-import { ContactCollectionButton } from '@/sections/collection/contact-collection-button/ContactCollectionButton'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
 
-const contactRepository = new ContactJSDataverseRepository()
-
-export class ContactFactory {
-  static create(): ReactElement {
-    return <ContactCollectionButton onSuccess={() => {}} collectionName="root" />
+export class ContactRepositoryFactory {
+  static create(): ContactRepository {
+    return new ContactJSDataverseRepository()
   }
 }

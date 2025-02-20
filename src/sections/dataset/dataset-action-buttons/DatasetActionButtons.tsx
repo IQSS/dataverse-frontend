@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Button, ButtonGroup } from '@iqss/dataverse-design-system'
+import { ButtonGroup } from '@iqss/dataverse-design-system'
 import { Dataset } from '@/dataset/domain/models/Dataset'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
@@ -10,17 +10,20 @@ import { EditDatasetMenu } from './edit-dataset-menu/EditDatasetMenu'
 import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
 import { ShareDatasetButton } from './share-dataset-button/ShareDatasetButton'
 import styles from './DatasetActionButtons.module.scss'
+import { ContactButton } from '@/sections/contact/ContactButton'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset
   datasetRepository: DatasetRepository
   collectionRepository: CollectionRepository
+  onSuccess: () => void
 }
 
 export function DatasetActionButtons({
   dataset,
   datasetRepository,
-  collectionRepository
+  collectionRepository,
+  onSuccess
 }: DatasetActionButtonsProps) {
   const { t } = useTranslation('dataset')
 
@@ -42,9 +45,13 @@ export function DatasetActionButtons({
       <EditDatasetMenu dataset={dataset} />
       <LinkDatasetButton dataset={dataset} />
       <ButtonGroup className={styles['contact-owner-and-share-group']}>
-        <Button disabled variant="secondary" size="sm">
-          {t('datasetActionButtons.contactOwner')}
-        </Button>
+        <ContactButton
+          onSuccess={onSuccess}
+          isCollection={false}
+          toContactName={dataset.metadataBlocks[0].fields.title}
+          id={dataset.persistentId}
+        />
+
         <ShareDatasetButton />
       </ButtonGroup>
     </ButtonGroup>

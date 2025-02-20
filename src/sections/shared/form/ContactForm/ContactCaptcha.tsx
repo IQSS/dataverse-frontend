@@ -1,10 +1,10 @@
-import { Form, Col, Row } from '@iqss/dataverse-design-system'
 import { useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { Form, Col, Row } from '@iqss/dataverse-design-system'
 
 export function Captcha() {
-  const { t } = useTranslation('collection')
+  const { t } = useTranslation('contact')
   const { control } = useFormContext()
 
   const [num1, setNum1] = useState(Math.floor(Math.random() * 10))
@@ -19,8 +19,16 @@ export function Captcha() {
 
   const captchaRules = {
     required: t('contact.validation.captchaInput.required'),
-    validate: (value: string) =>
-      parseInt(value, 10) === captchaAnswer || t('contact.validation.captchaInput.invalid')
+    validate: (value: string) => {
+      if (!/^\d+$/.test(value)) {
+        return t('contact.validation.captchaInput.onlyNumber')
+      }
+      return parseInt(value, 10) === captchaAnswer || t('contact.validation.captchaInput.invalid')
+    },
+    maxLength: {
+      value: 10,
+      message: t('contact.validation.captchaInput.maxLength', { maxLength: 10 })
+    }
   }
 
   return (
@@ -28,12 +36,10 @@ export function Captcha() {
       <Col lg={3}>{''}</Col>
       <Col lg={9}>
         <Form.Group.Label required>{t('contact.verificationText')}</Form.Group.Label>
-
         <div className="d-flex align-items-center">
-          <Form.Group.Label style={{ margin: '5px' }}>
+          <Form.Group.Label style={{ margin: 0 }}>
             {num1} + {num2} =
           </Form.Group.Label>
-
           <Controller
             name="captchaInput"
             control={control}

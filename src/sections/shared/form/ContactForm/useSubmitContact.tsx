@@ -1,7 +1,7 @@
+import { useState } from 'react'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { ContactDTO } from '@/contact/domain/useCases/ContactDTO'
 import { Contact } from '@/contact/domain/models/Contact'
-import { useState } from 'react'
 
 export enum SubmissionStatus {
   NotSubmitted = 'NotSubmitted',
@@ -26,8 +26,6 @@ export function useSubmitContact(contactRepository: ContactRepository): UseSubmi
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
     setSubmitError(null)
     try {
-      if (!formData.identifier) formData.identifier = 'root'
-
       const contacts: Contact[] = await contactRepository.submitContactInfo(formData)
       setSubmissionStatus(SubmissionStatus.SubmitComplete)
       return contacts

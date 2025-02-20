@@ -1,27 +1,28 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useForm, FormProvider } from 'react-hook-form'
 import { Alert, Button, Modal } from '@iqss/dataverse-design-system'
+import { ContactRepositoryFactory } from '@/sections/contact/contactFactory'
+import { ContactDTO } from '@/contact/domain/useCases/ContactDTO'
+import { Captcha } from '@/sections/shared/form/ContactForm/ContactCaptcha'
 import { ContactForm } from '@/sections/shared/form/ContactForm/ContactForm'
+import { useSession } from '@/sections/session/SessionContext'
 import {
   useSubmitContact,
   SubmissionStatus
 } from '@/sections/shared/form/ContactForm/useSubmitContact'
-import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
-import { useForm, FormProvider } from 'react-hook-form'
-import { ContactDTO } from '@/contact/domain/useCases/ContactDTO'
-import { Captcha } from '../form/ContactForm/ContactCaptcha'
-import { useSession } from '@/sections/session/SessionContext'
 
 interface ContactModalProps {
   show: boolean
   handleClose: () => void
   title: string
   onSuccess: () => void
-  toContactName?: string
+  toContactName: string
+  id: string | number
 }
 
 export type ContactFormData = {
-  identifier?: string
+  id: string | number
   subject: string
   body: string
   fromEmail: string
@@ -32,18 +33,19 @@ export const ContactModal = ({
   title,
   handleClose,
   onSuccess,
-  toContactName
+  toContactName,
+  id
 }: ContactModalProps) => {
   const { t } = useTranslation('shared')
   const { user } = useSession()
 
-  //todo: MOVE it to factory
-  const contactRepository = useMemo(() => new ContactJSDataverseRepository(), [])
+  const contactRepository = ContactRepositoryFactory.create()
 
   const { submitForm, submissionStatus, submitError } = useSubmitContact(contactRepository)
 
   const methods = useForm<ContactFormData>({
     defaultValues: {
+      id: id,
       subject: '',
       body: '',
       fromEmail: user?.email || ''
@@ -52,8 +54,15 @@ export const ContactModal = ({
 
   const { reset } = methods
 
-  const onSubmit = async (data: ContactDTO) => {
-    await submitForm(data)
+  const onSubmit = async (data: ContactFormData) => {
+    const formData: ContactDTO = {
+      subject: data.subject,
+      body: data.body,
+      fromEmail: data.fromEmail,
+      ...(typeof data.id === 'string' ? { identifier: data.id } : { targetId: data.id })
+    }
+
+    await submitForm(formData)
     onSuccess()
     reset()
   }
@@ -91,9 +100,7 @@ export const ContactModal = ({
         <Button
           type="submit"
           onClick={methods.handleSubmit(onSubmit)}
-          disabled={
-            !methods.formState.isValid || submissionStatus === SubmissionStatus.IsSubmitting
-          }>
+          disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
           {submissionStatus === SubmissionStatus.IsSubmitting ? t('submitting') : t('submit')}
         </Button>
       </Modal.Footer>

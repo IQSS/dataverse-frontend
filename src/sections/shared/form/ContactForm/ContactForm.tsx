@@ -8,7 +8,7 @@ interface ContactFormProps {
 }
 
 export function ContactForm({ isLoggedIn, toContactName }: ContactFormProps) {
-  const { t } = useTranslation('collection')
+  const { t } = useTranslation('contact')
   const { control } = useFormContext()
 
   const emailRules: UseControllerProps['rules'] = {

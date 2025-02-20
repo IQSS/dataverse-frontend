@@ -14,7 +14,7 @@ import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
 import { ShareCollectionButton } from './share-collection-button/ShareCollectionButton'
-import { ContactCollectionButton } from './contact-collection-button/ContactCollectionButton'
+import { ContactButton } from '@/sections/contact/ContactButton'
 import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectionDropdown'
 import { FeaturedItems } from './featured-items/FeaturedItems'
 import styles from './Collection.module.scss'
@@ -101,9 +101,11 @@ export function Collection({
             <div className={styles['metrics-actions-container']}>
               <div className={styles.metrics}></div>
               <div className={styles['right-content']}>
-                <ContactCollectionButton
+                <ContactButton
                   onSuccess={() => setContactSuccess(true)}
-                  collectionName={collection.name}
+                  toContactName={collection.name}
+                  isCollection={true}
+                  id={collection.id}
                 />
 
                 <ShareCollectionButton />
