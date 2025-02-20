@@ -30,5 +30,6 @@ export enum QueryParamKey {
   VERSION = 'version',
   PERSISTENT_ID = 'persistentId',
   PAGE = 'page',
-  COLLECTION_ID = 'collectionId'
+  COLLECTION_ID = 'collectionId',
+  TAB = 'tab'
 }

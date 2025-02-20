@@ -136,6 +136,12 @@ cd packages/design-system && npm run build
 
 **Running &amp; Building the App:**
 
+Set up your environment file.
+
+```bash
+cp .env.example .env
+```
+
 Run the app in the development mode. Open [http://localhost:5173][dv_app_localhost_build_url] to view it in your browser.
 
 ```bash
