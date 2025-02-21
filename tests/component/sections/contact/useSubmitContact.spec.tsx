@@ -63,4 +63,18 @@ describe('useSubmitContact', () => {
     expect(result.current.submissionStatus).to.equal(SubmissionStatus.Errored)
     expect(result.current.submitError).to.equal('Unknown error occurred')
   })
+
+  it('should handle submission error with a generic error message if not an Error instance', async () => {
+    contactRepository.submitContactInfo = cy.stub().rejects('error')
+
+    const { result } = renderHook(() => useSubmitContact(contactRepository))
+
+    await act(async () => {
+      const response = await result.current.submitForm(mockFormData)
+      expect(response).to.equal('Unknown error occurred')
+    })
+
+    expect(result.current.submissionStatus).to.equal(SubmissionStatus.Errored)
+    expect(result.current.submitError).to.equal('Unknown error occurred')
+  })
 })

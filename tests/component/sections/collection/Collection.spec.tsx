@@ -281,7 +281,7 @@ describe('Collection page', () => {
     cy.findByRole('dialog').should('not.exist')
   })
 
-  it.only('shows the alert when the information was sent to contact successfully', () => {
+  it('shows the alert when the information was sent to contact successfully', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}

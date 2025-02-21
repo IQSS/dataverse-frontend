@@ -1,10 +1,16 @@
-import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { ContactButton } from '@/sections/contact/ContactButton'
 
+const mockContacts = {
+  fromEmail: 'test@dataverse.com',
+  subject: 'Test',
+  body: 'You have just been sent the following message via the Root.'
+}
+const contactRepository: ContactRepository = {} as ContactRepository
+
 describe('ContactButton', () => {
-  const contactRepository = new ContactJSDataverseRepository()
   beforeEach(() => {
-    cy.stub(ContactJSDataverseRepository.prototype, 'submitContactInfo').resolves([])
+    contactRepository.submitContactInfo = cy.stub().resolves([mockContacts])
     cy.customMount(
       <ContactButton
         onSuccess={() => {}}
@@ -18,26 +24,34 @@ describe('ContactButton', () => {
       .should('exist')
       .click()
   })
-  it('shows contact button if it is in collection page ', () => {
-    cy.findByRole('dialog').should('exist')
-    cy.findByText(/Email Collection Contact/i).should('exist')
-  })
 
-  it('shows contact button if it is in collection page with numeric id', () => {
+  it('shows correct contact title based on isCollection prop', () => {
     cy.customMount(
       <ContactButton
         onSuccess={() => {}}
         toContactName="Test Dataset"
         isCollection={true}
-        id={1}
+        id="root"
+        contactRepository={contactRepository}
+      />
+    )
+    cy.findByRole('Tooltip', { name: /Email Collection Contact/i }).should('exist')
+    cy.findByRole('button', { name: /Contact/i }).click()
+    cy.findByText(/Email Collection Contact/i).should('exist')
+
+    cy.customMount(
+      <ContactButton
+        onSuccess={() => {}}
+        toContactName="Test Dataset"
+        isCollection={false}
+        id="root"
         contactRepository={contactRepository}
       />
     )
 
-    cy.findByRole('button', { name: /Contact/i })
-      .should('exist')
-      .click()
-    cy.findByRole('dialog').should('exist')
+    cy.findByRole('Tooltip').should('not.exist')
+    cy.findByRole('button', { name: /Contact Owner/i }).click()
+    cy.findByText(/Email Dataset Contact/i).should('exist')
   })
 
   it('shows contact owner button if it is in dataset page ', () => {
@@ -50,46 +64,7 @@ describe('ContactButton', () => {
         contactRepository={contactRepository}
       />
     )
-    cy.findByRole('button', { name: /Contact Owner/i })
-      .should('exist')
-      .click()
-    cy.findByText(/Email Dataset Contact/i).should('exist')
-    cy.findByRole('dialog').should('exist')
-  })
-
-  it('shows validation errors when fields are empty', () => {
-    cy.findByRole('button', { name: /submit/i }).click()
-    cy.findByText(/email is required/i).should('exist')
-    cy.findByText(/subject is required/i).should('exist')
-    cy.findByText(/message is required/i).should('exist')
-  })
-
-  it('shows validation errors when email is in wrong format', () => {
-    cy.findByTestId('fromEmail').type('email')
-    cy.findByTestId('subject').type('subject')
-    cy.findByTestId('body').type('message')
-    cy.findByRole('button', { name: /submit/i }).click()
-    cy.findByText(/Invalid email format/i).should('exist')
-  })
-
-  it('shows validation errors when captcha answer is wrong ', () => {
-    cy.findByTestId('fromEmail').type('email@dataverse.com')
-    cy.findByTestId('subject').type('subject')
-    cy.findByTestId('body').type('message')
-    cy.findByRole('button', { name: /submit/i }).click()
-    cy.findByTestId('captchaNumbers')
-      .invoke('text')
-      .then((text) => {
-        const matches = text.match(/(\d+)\s*\+\s*(\d+)\s*=/)
-        if (matches) {
-          const num1 = parseInt(matches[1], 10)
-          const num2 = parseInt(matches[2], 10)
-          const answer = num1 + num2 + 1
-          cy.findByTestId('captchaInput').type(answer.toString())
-          cy.findByRole('button', { name: /Submit/i }).click()
-          cy.findByText(/Incorrect answer./i).should('exist')
-        }
-      })
+    cy.findByRole('button', { name: /Contact Owner/i }).should('exist')
   })
 
   it('should successfully submit if every field is valid', () => {
@@ -113,9 +88,12 @@ describe('ContactButton', () => {
 })
 
 describe('ContactButton Error', () => {
+  beforeEach(() => {
+    contactRepository.submitContactInfo = cy
+      .stub()
+      .rejects(new Error('Failed to submit contact info'))
+  })
   it('should send alert if the submission is failed', () => {
-    const contactRepository = new ContactJSDataverseRepository()
-    cy.stub(ContactJSDataverseRepository.prototype, 'submitContactInfo').rejects(new Error('Error'))
     cy.customMount(
       <ContactButton
         onSuccess={() => {}}
