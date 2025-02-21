@@ -19,7 +19,7 @@ import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectio
 import { FeaturedItems } from './featured-items/FeaturedItems'
 import styles from './Collection.module.scss'
 import { useState } from 'react'
-import { ContactRepositoryFactory } from '@/sections/contact/ContactFactory'
+import { ContactRepositoryFactory } from '@/sections/contact/contactFactory'
 
 interface CollectionProps {
   collectionRepository: CollectionRepository
