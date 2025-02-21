@@ -70,7 +70,10 @@ export const ContactModal = ({
   }
 
   useEffect(() => {
-    if (submissionStatus === SubmissionStatus.SubmitComplete) handleClose()
+    if (submissionStatus === SubmissionStatus.SubmitComplete) {
+      handleClose()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submissionStatus])
 
   return (

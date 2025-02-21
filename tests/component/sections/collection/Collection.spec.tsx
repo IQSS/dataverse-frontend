@@ -308,10 +308,10 @@ describe('Collection page', () => {
           cy.findByTestId('subject').type('subject')
           cy.findByTestId('body').type('message')
           cy.findByTestId('captchaInput').type(answer.toString())
-          cy.findByRole('button', { name: /Submit/i }).click()
+          cy.findByText('Submit').click()
         }
       })
     cy.findByRole('dialog').should('not.exist')
-    cy.findByText('Success').should('exist')
+    cy.findByText('Success!').should('exist')
   })
 })
