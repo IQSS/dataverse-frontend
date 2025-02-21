@@ -28,6 +28,7 @@ describe('DatasetActionButtons', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
+        onSuccess={() => {}}
       />
     )
 
@@ -36,6 +37,8 @@ describe('DatasetActionButtons', () => {
     cy.findByRole('button', { name: 'Publish Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Link Dataset' }).should('exist')
+    cy.findByRole('button', { name: 'Contact Owner' }).should('exist')
+    cy.findByRole('button', { name: 'Share' }).should('exist')
   })
 
   it('renders the DatasetActionButtons with the Submit for Review button', () => {
@@ -56,6 +59,7 @@ describe('DatasetActionButtons', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
+        onSuccess={() => {}}
       />
     )
 
@@ -64,5 +68,7 @@ describe('DatasetActionButtons', () => {
     cy.findByRole('button', { name: 'Submit for Review' }).should('exist')
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Link Dataset' }).should('exist')
+    cy.findByRole('button', { name: 'Contact Owner' }).should('exist')
+    cy.findByRole('button', { name: 'Share' }).should('exist')
   })
 })

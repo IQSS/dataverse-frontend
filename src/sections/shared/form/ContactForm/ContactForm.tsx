@@ -19,7 +19,7 @@ export function ContactForm({ isLoggedIn, toContactName }: ContactFormProps) {
     },
     maxLength: {
       value: 255,
-      message: t('contact.validation.email,maxLength', { maxLength: 255 })
+      message: t('contact.validation.email.maxLength', { maxLength: 255 })
     }
   }
 
@@ -58,6 +58,7 @@ export function ContactForm({ isLoggedIn, toContactName }: ContactFormProps) {
             render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
               <>
                 <Form.Group.Input
+                  data-testid="fromEmail"
                   value={value as string}
                   onChange={onChange}
                   ref={ref}
@@ -85,6 +86,7 @@ export function ContactForm({ isLoggedIn, toContactName }: ContactFormProps) {
             render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
               <>
                 <Form.Group.Input
+                  data-testid="subject"
                   value={value as string}
                   onChange={onChange}
                   ref={ref}
@@ -110,6 +112,7 @@ export function ContactForm({ isLoggedIn, toContactName }: ContactFormProps) {
             render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
               <>
                 <Form.Group.TextArea
+                  data-testid="body"
                   value={value as string}
                   onChange={onChange}
                   ref={ref}

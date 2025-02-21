@@ -3,19 +3,22 @@ import { useTranslation } from 'react-i18next'
 import { Button, Tooltip } from '@iqss/dataverse-design-system'
 import { Envelope } from 'react-bootstrap-icons'
 import { ContactModal } from '@/sections/shared/contact-modal/contact-modal'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 interface ContactButtonProps {
   onSuccess: () => void
   toContactName: string
   isCollection: boolean
   id: string | number
+  contactRepository: ContactRepository
 }
 
 export const ContactButton = ({
   onSuccess,
   toContactName,
   isCollection,
-  id
+  id,
+  contactRepository
 }: ContactButtonProps) => {
   const { t } = useTranslation('contact')
   const [showContactModal, setShowContactModal] = useState(false)
@@ -45,6 +48,7 @@ export const ContactButton = ({
             onSuccess={onSuccess}
             toContactName={toContactName}
             id={id}
+            contactRepository={contactRepository}
           />
         </>
       ) : (
@@ -60,6 +64,7 @@ export const ContactButton = ({
             onSuccess={onSuccess}
             toContactName={toContactName}
             id={id}
+            contactRepository={contactRepository}
           />
         </>
       )}

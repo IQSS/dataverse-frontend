@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm, FormProvider } from 'react-hook-form'
 import { Alert, Button, Modal } from '@iqss/dataverse-design-system'
-import { ContactRepositoryFactory } from '@/sections/contact/contactFactory'
 import { ContactDTO } from '@/contact/domain/useCases/ContactDTO'
 import { Captcha } from '@/sections/shared/form/ContactForm/ContactCaptcha'
 import { ContactForm } from '@/sections/shared/form/ContactForm/ContactForm'
@@ -11,6 +10,7 @@ import {
   useSubmitContact,
   SubmissionStatus
 } from '@/sections/shared/form/ContactForm/useSubmitContact'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 interface ContactModalProps {
   show: boolean
@@ -19,6 +19,7 @@ interface ContactModalProps {
   onSuccess: () => void
   toContactName: string
   id: string | number
+  contactRepository: ContactRepository
 }
 
 export type ContactFormData = {
@@ -26,6 +27,7 @@ export type ContactFormData = {
   subject: string
   body: string
   fromEmail: string
+  captchaInput: string
 }
 
 export const ContactModal = ({
@@ -34,12 +36,11 @@ export const ContactModal = ({
   handleClose,
   onSuccess,
   toContactName,
-  id
+  id,
+  contactRepository
 }: ContactModalProps) => {
   const { t } = useTranslation('shared')
   const { user } = useSession()
-
-  const contactRepository = ContactRepositoryFactory.create()
 
   const { submitForm, submissionStatus, submitError } = useSubmitContact(contactRepository)
 
@@ -48,7 +49,8 @@ export const ContactModal = ({
       id: id,
       subject: '',
       body: '',
-      fromEmail: user?.email || ''
+      fromEmail: user?.email ?? '',
+      captchaInput: ''
     }
   })
 
@@ -101,7 +103,7 @@ export const ContactModal = ({
           type="submit"
           onClick={methods.handleSubmit(onSubmit)}
           disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
-          {submissionStatus === SubmissionStatus.IsSubmitting ? t('submitting') : t('submit')}
+          {submissionStatus === SubmissionStatus.IsSubmitting ? t('Submitting') : t('Submit')}
         </Button>
       </Modal.Footer>
     </Modal>

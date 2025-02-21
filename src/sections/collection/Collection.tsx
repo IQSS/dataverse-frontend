@@ -19,6 +19,7 @@ import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectio
 import { FeaturedItems } from './featured-items/FeaturedItems'
 import styles from './Collection.module.scss'
 import { useState } from 'react'
+import { ContactRepositoryFactory } from '../contact/contactFactory'
 
 interface CollectionProps {
   collectionRepository: CollectionRepository
@@ -40,6 +41,8 @@ export function Collection({
 }: CollectionProps) {
   useScrollTop()
   const { t } = useTranslation('collection')
+  const { t: tContact } = useTranslation('contact')
+  const contactRepository = ContactRepositoryFactory.create()
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
     collectionIdFromParams,
@@ -89,7 +92,7 @@ export function Collection({
             )}
             {contactSuccess && (
               <Alert variant="success" onClose={() => setContactSuccess(false)}>
-                {t('contact.contactSuccess')}
+                {tContact('contact.contactSuccess')}
               </Alert>
             )}
 
@@ -106,6 +109,7 @@ export function Collection({
                   toContactName={collection.name}
                   isCollection={true}
                   id={collection.id}
+                  contactRepository={contactRepository}
                 />
 
                 <ShareCollectionButton />

@@ -17,6 +17,7 @@ import { AlertProvider } from '../../../../src/sections/alerts/AlertProvider'
 import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
 
 const setAnonymizedView = () => {}
 const fileRepository: FileRepository = {} as FileRepository
@@ -348,5 +349,41 @@ describe('Dataset', () => {
     cy.findAllByText(testDataset.version.title).should('exist')
 
     cy.findByText(/The metadata for this dataset has been updated./).should('exist')
+  })
+
+  it('shows the alert when the information was sent to contact successfully', () => {
+    const testDataset = DatasetMother.create()
+    mountWithDataset(
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+        metadataUpdated={true}
+      />,
+      testDataset
+    )
+    cy.stub(ContactJSDataverseRepository.prototype, 'submitContactInfo').resolves([])
+
+    cy.findByRole('button', { name: /Contact Owner/i })
+      .should('exist')
+      .click()
+    cy.findByTestId('captchaNumbers')
+      .invoke('text')
+      .then((text) => {
+        const matches = text.match(/(\d+)\s*\+\s*(\d+)\s*=/)
+        if (matches) {
+          const num1 = parseInt(matches[1], 10)
+          const num2 = parseInt(matches[2], 10)
+          const answer = num1 + num2
+          cy.findByTestId('fromEmail').type('email@dataverse.com')
+          cy.findByTestId('subject').type('subject')
+          cy.findByTestId('body').type('message')
+          cy.findByTestId('captchaInput').type(answer.toString())
+          cy.findByText('Submit').click()
+        }
+      })
+    cy.findByRole('dialog').should('not.exist')
+    cy.findByText('Success!').should('exist')
   })
 })

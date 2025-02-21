@@ -11,6 +11,7 @@ import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
 import { ShareDatasetButton } from './share-dataset-button/ShareDatasetButton'
 import styles from './DatasetActionButtons.module.scss'
 import { ContactButton } from '@/sections/contact/ContactButton'
+import { ContactRepositoryFactory } from '@/sections/contact/contactFactory'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset
@@ -26,6 +27,7 @@ export function DatasetActionButtons({
   onSuccess
 }: DatasetActionButtonsProps) {
   const { t } = useTranslation('dataset')
+  const contactRepository = ContactRepositoryFactory.create()
 
   return (
     <ButtonGroup aria-label={t('datasetActionButtons.title')} vertical className={styles.group}>
@@ -50,6 +52,7 @@ export function DatasetActionButtons({
           isCollection={false}
           toContactName={dataset.metadataBlocks[0].fields.title}
           id={dataset.persistentId}
+          contactRepository={contactRepository}
         />
 
         <ShareDatasetButton />

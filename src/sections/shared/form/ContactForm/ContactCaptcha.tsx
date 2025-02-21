@@ -37,7 +37,7 @@ export function Captcha() {
       <Col lg={9}>
         <Form.Group.Label required>{t('contact.verificationText')}</Form.Group.Label>
         <div className="d-flex align-items-center">
-          <Form.Group.Label style={{ margin: 0 }}>
+          <Form.Group.Label style={{ margin: 0 }} data-testid="captchaNumbers">
             {num1} + {num2} =
           </Form.Group.Label>
           <Controller
@@ -47,6 +47,7 @@ export function Captcha() {
             render={({ field: { onChange, ref, value }, fieldState: { error } }) => (
               <>
                 <Form.Group.Input
+                  data-testid="captchaInput"
                   value={value as string}
                   onChange={onChange}
                   ref={ref}
