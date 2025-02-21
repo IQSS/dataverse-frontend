@@ -386,4 +386,24 @@ describe('Dataset', () => {
     cy.findByRole('dialog').should('not.exist')
     cy.findByText(/Message sent./).should('exist')
   })
+
+  it('does not show the tooltip for contact owner button', () => {
+    const testDataset = DatasetMother.create()
+    mountWithDataset(
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+        metadataUpdated={true}
+      />,
+      testDataset
+    )
+
+    cy.findByRole('button', { name: /Contact Owner/i })
+      .should('exist')
+      .trigger('mouseover')
+
+    cy.findByRole('tooltip').should('not.exist')
+  })
 })

@@ -35,7 +35,7 @@ describe('ContactButton', () => {
         contactRepository={contactRepository}
       />
     )
-    cy.findByRole('Tooltip', { name: /Email Collection Contact/i }).should('exist')
+
     cy.findByRole('button', { name: /Contact/i }).click()
     cy.findByText(/Email Collection Contact/i).should('exist')
 
@@ -49,7 +49,6 @@ describe('ContactButton', () => {
       />
     )
 
-    cy.findByRole('Tooltip').should('not.exist')
     cy.findByRole('button', { name: /Contact Owner/i }).click()
     cy.findByText(/Email Dataset Contact/i).should('exist')
   })

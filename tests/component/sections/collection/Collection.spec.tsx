@@ -281,6 +281,25 @@ describe('Collection page', () => {
     cy.findByRole('dialog').should('not.exist')
   })
 
+  it('show the tooltip for contact button', () => {
+    cy.customMount(
+      <Collection
+        collectionRepository={collectionRepository}
+        collectionIdFromParams="collection"
+        created={false}
+        published={false}
+        collectionQueryParams={{ pageQuery: 1 }}
+      />
+    )
+    cy.stub(ContactJSDataverseRepository.prototype, 'submitContactInfo').resolves([])
+
+    cy.findByRole('button', { name: /Contact/i })
+      .should('exist')
+      .trigger('mouseover')
+
+    cy.findByRole('tooltip').should('be.visible').and('have.text', 'Email Collection Contact')
+  })
+
   it('shows the alert when the information was sent to contact successfully', () => {
     cy.customMount(
       <Collection
