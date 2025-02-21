@@ -11,7 +11,7 @@ import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
 import { ShareDatasetButton } from './share-dataset-button/ShareDatasetButton'
 import styles from './DatasetActionButtons.module.scss'
 import { ContactButton } from '@/sections/contact/ContactButton'
-import { ContactRepositoryFactory } from '@/sections/contact/ContactFactory'
+import { ContactRepositoryFactory } from '@/sections/contact/contactFactory'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset
