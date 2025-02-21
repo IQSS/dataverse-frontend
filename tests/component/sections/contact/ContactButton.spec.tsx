@@ -14,12 +14,29 @@ describe('ContactButton', () => {
         contactRepository={contactRepository}
       />
     )
-
     cy.findByRole('button', { name: /Contact/i })
       .should('exist')
       .click()
   })
   it('shows contact button if it is in collection page ', () => {
+    cy.findByRole('dialog').should('exist')
+    cy.findByText(/Email Collection Contact/i).should('exist')
+  })
+
+  it('shows contact button if it is in collection page with numeric id', () => {
+    cy.customMount(
+      <ContactButton
+        onSuccess={() => {}}
+        toContactName="Test Dataset"
+        isCollection={true}
+        id={1}
+        contactRepository={contactRepository}
+      />
+    )
+
+    cy.findByRole('button', { name: /Contact/i })
+      .should('exist')
+      .click()
     cy.findByRole('dialog').should('exist')
   })
 
@@ -36,6 +53,7 @@ describe('ContactButton', () => {
     cy.findByRole('button', { name: /Contact Owner/i })
       .should('exist')
       .click()
+    cy.findByText(/Email Dataset Contact/i).should('exist')
     cy.findByRole('dialog').should('exist')
   })
 
@@ -91,5 +109,41 @@ describe('ContactButton', () => {
         }
       })
     cy.findByRole('dialog').should('not.exist')
+  })
+})
+
+describe('ContactButton Error', () => {
+  it('should send alert if the submission is failed', () => {
+    const contactRepository = new ContactJSDataverseRepository()
+    cy.stub(ContactJSDataverseRepository.prototype, 'submitContactInfo').rejects(new Error('Error'))
+    cy.customMount(
+      <ContactButton
+        onSuccess={() => {}}
+        toContactName="Test Dataset"
+        isCollection={true}
+        id="root"
+        contactRepository={contactRepository}
+      />
+    )
+
+    cy.findByRole('button', { name: /Contact/i })
+      .should('exist')
+      .click()
+    cy.findByTestId('captchaNumbers')
+      .invoke('text')
+      .then((text) => {
+        const matches = text.match(/(\d+)\s*\+\s*(\d+)\s*=/)
+        if (matches) {
+          const num1 = parseInt(matches[1], 10)
+          const num2 = parseInt(matches[2], 10)
+          const answer = num1 + num2
+          cy.findByTestId('fromEmail').type('email@dataverse.com')
+          cy.findByTestId('subject').type('subject')
+          cy.findByTestId('body').type('message')
+          cy.findByTestId('captchaInput').type(answer.toString())
+          cy.findByRole('button', { name: /Submit/i }).click()
+        }
+      })
+    cy.findByText('Error').should('exist')
   })
 })

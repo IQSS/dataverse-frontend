@@ -384,6 +384,6 @@ describe('Dataset', () => {
         }
       })
     cy.findByRole('dialog').should('not.exist')
-    cy.findByText('Success!').should('exist')
+    cy.findByText(/Message sent./).should('exist')
   })
 })

@@ -60,7 +60,7 @@ export const ContactButton = ({
           <ContactModal
             show={showContactModal}
             handleClose={closeContactModal}
-            title={t('contact.contactCollection')}
+            title={t('contact.contactDataset')}
             onSuccess={onSuccess}
             toContactName={toContactName}
             id={id}
