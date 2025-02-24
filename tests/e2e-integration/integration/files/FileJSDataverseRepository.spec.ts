@@ -481,10 +481,10 @@ describe('File JSDataverse Repository', () => {
           dataset.persistentId,
           dataset.version,
           new FilePaginationInfo(),
-          new FileCriteria().withFilterByType('text/tab-separated-values')
+          new FileCriteria().withFilterByType('text/plain')
         )
         .then((files) => {
-          expect(files.length).to.equal(1)
+          expect(files.length).to.equal(2)
         })
     })
 
