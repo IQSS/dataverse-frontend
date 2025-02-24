@@ -1,4 +1,5 @@
-import { PropsWithChildren, useCallback, useEffect, useState } from 'react'
+import { PropsWithChildren, useEffect, useState } from 'react'
+import { useDeepCompareCallback } from 'use-deep-compare'
 import { DatasetContext } from './DatasetContext'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { Dataset } from '../../dataset/domain/models/Dataset'
@@ -23,9 +24,15 @@ export function DatasetProvider({
   const [dataset, setDataset] = useState<Dataset>()
   const [isLoading, setIsLoading] = useState(true)
 
-  const getDataset = useCallback(() => {
+  const getDataset = useDeepCompareCallback(() => {
     if (searchParams.persistentId) {
-      return getDatasetByPersistentId(repository, searchParams.persistentId, searchParams.version)
+      return getDatasetByPersistentId(
+        repository,
+        searchParams.persistentId,
+        searchParams.version,
+        undefined,
+        true
+      )
     }
     if (searchParams.privateUrlToken) {
       return getDatasetByPrivateUrlToken(repository, searchParams.privateUrlToken)
@@ -46,7 +53,7 @@ export function DatasetProvider({
         console.error('There was an error getting the dataset', error)
         setIsLoading(false)
       })
-  }, [repository, searchParams, getDataset, isPublishing])
+  }, [repository, getDataset, isPublishing])
 
   return (
     <DatasetContext.Provider value={{ dataset, isLoading }}>{children}</DatasetContext.Provider>

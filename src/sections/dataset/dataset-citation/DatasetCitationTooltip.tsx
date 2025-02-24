@@ -12,7 +12,6 @@ export function DatasetCitationTooltip({ status }: DatasetCitationTooltipProps) 
   if (status === DatasetPublishingStatus.RELEASED) {
     return <></>
   }
-
   return (
     <QuestionMarkTooltip placement={'top'} message={t(`citation.status.${status}.description`)} />
   )

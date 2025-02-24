@@ -1,0 +1,11 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.dataset-terms-row {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.community-norms-text {
+  margin: 10px 0;
+  color: $dv-subtext-color;
+}

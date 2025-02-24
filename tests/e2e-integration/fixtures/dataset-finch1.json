@@ -5,6 +5,16 @@
       "uri": "http://creativecommons.org/publicdomain/zero/1.0",
       "iconUri": "https://licensebuttons.net/p/zero/1.0/88x31.png"
     },
+    "termsOfUse": {
+      "fileAccessRequest": true,
+      "termsOfAccess": "Terms of access",
+      "dataAccessPlace": "Data access place",
+      "originalArchive": "Original archive",
+      "availabilityStatus": "Availability status",
+      "contactForAccess": "Contact for access",
+      "sizeOfCollection": "Size of collection",
+      "studyCompletion": "Study completion"
+    },
     "metadataBlocks": {
       "citation": {
         "fields": [

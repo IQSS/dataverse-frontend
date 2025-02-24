@@ -2412,7 +2412,7 @@ DA:17,201
 DA:26,16
 BRDA:1,0,0,16
 end_of_record
-SF:src/sections/dataset/dataset-summary/License.tsx
+SF:src/sections/dataset/dataset-summary/SummaryLicense.tsx
 DA:9,332
 DA:10,332
 DA:12,327

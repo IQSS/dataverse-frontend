@@ -25,6 +25,7 @@ import {
   COUNTRY_FIELD_VOCAB_VALUES,
   SUBJECT_FIELD_VOCAB_VALUES
 } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { TermsOfUseMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
 
 export class DatasetVersionMother {
   static create(props?: Partial<DatasetVersion>): DatasetVersion {
@@ -416,14 +417,14 @@ export class DatasetMother {
       fileDownloadSizes: [],
       requestedVersion: undefined,
       hierarchy: UpwardHierarchyNodeMother.createDataset(),
+      termsOfUse: TermsOfUseMother.withoutCustomTerms(),
       ...props
     }
-
     return new Dataset.Builder(
       dataset.persistentId,
       dataset.version,
       dataset.summaryFields,
-      dataset.license,
+      dataset.termsOfUse,
       dataset.metadataBlocks,
       dataset.permissions,
       dataset.locks,
@@ -433,6 +434,7 @@ export class DatasetMother {
       dataset.downloadUrls,
       dataset.fileDownloadSizes,
       dataset.hierarchy,
+      dataset.license,
       dataset.thumbnail,
       dataset.privateUrl,
       dataset.requestedVersion
