@@ -6,7 +6,12 @@ import { DatasetsWithCount } from '../models/DatasetsWithCount'
 import { VersionUpdateType } from '../models/VersionUpdateType'
 
 export interface DatasetRepository {
-  getByPersistentId: (persistentId: string, version?: string) => Promise<Dataset | undefined>
+  getByPersistentId: (
+    persistentId: string,
+    version?: string,
+    requestedVersion?: string,
+    keepRawFields?: boolean
+  ) => Promise<Dataset | undefined>
   getLocks(persistentId: string): Promise<DatasetLock[]>
   getByPrivateUrlToken: (privateUrlToken: string) => Promise<Dataset | undefined>
   getVersionDiff: (
