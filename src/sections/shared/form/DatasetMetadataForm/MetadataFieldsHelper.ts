@@ -298,7 +298,9 @@ export class MetadataFieldsHelper {
     return formattedNewObject
   }
 
-  public static formatFormValuesToDatasetDTO(formValues: DatasetMetadataFormValues): DatasetDTO {
+  public static formatFormValuesToDatasetDTOForCreation(
+    formValues: DatasetMetadataFormValues
+  ): DatasetDTO {
     const metadataBlocks: DatasetDTO['metadataBlocks'] = []
 
     for (const metadataBlockName in formValues) {
@@ -368,6 +370,92 @@ export class MetadataFieldsHelper {
           if (formattedMetadataChildFieldValues.length > 0) {
             formattedMetadataBlock.fields[fieldName] = formattedMetadataChildFieldValues
           }
+
+          return
+        }
+      })
+
+      metadataBlocks.push(formattedMetadataBlock)
+    }
+    return { licence: defaultLicense, metadataBlocks }
+  }
+
+  public static formatFormValuesToDatasetDTOForEdition(
+    formValues: DatasetMetadataFormValues
+  ): DatasetDTO {
+    const metadataBlocks: DatasetDTO['metadataBlocks'] = []
+
+    for (const metadataBlockName in formValues) {
+      const formattedMetadataBlock: DatasetMetadataBlockValuesDTO = {
+        name: metadataBlockName,
+        fields: {}
+      }
+      const metadataBlockFormValues = formValues[metadataBlockName]
+
+      Object.entries(metadataBlockFormValues).forEach(([fieldName, fieldValue]) => {
+        if (this.isPrimitiveFieldValue(fieldValue)) {
+          // if (fieldValue !== '') {
+          formattedMetadataBlock.fields[fieldName] = fieldValue
+          return
+          // }
+          // return
+        }
+        if (this.isVocabularyMultipleFieldValue(fieldValue)) {
+          // if (fieldValue.length > 0) {
+          formattedMetadataBlock.fields[fieldName] = fieldValue
+          return
+          // }
+          // return
+        }
+
+        if (this.isPrimitiveMultipleFieldValue(fieldValue)) {
+          const primitiveMultipleFieldValues = fieldValue
+            .map((primitiveField) => primitiveField.value)
+            .filter((v) => v !== '')
+
+          // if (primitiveMultipleFieldValues.length > 0) {
+          formattedMetadataBlock.fields[fieldName] = primitiveMultipleFieldValues
+          return
+          // }
+          // return
+        }
+
+        if (this.isComposedSingleFieldValue(fieldValue)) {
+          const formattedMetadataChildFieldValue: DatasetMetadataChildFieldValueDTO = {}
+
+          Object.entries(fieldValue).forEach(([nestedFieldName, nestedFieldValue]) => {
+            // if (nestedFieldValue !== '') {
+            formattedMetadataChildFieldValue[nestedFieldName] = nestedFieldValue
+            // }
+          })
+
+          // TODO:ME - Review this one in deep
+          if (Object.keys(formattedMetadataChildFieldValue).length > 0) {
+            formattedMetadataBlock.fields[fieldName] = formattedMetadataChildFieldValue
+            return
+          }
+          return
+        }
+
+        if (this.isComposedMultipleFieldValue(fieldValue)) {
+          const formattedMetadataChildFieldValues: DatasetMetadataChildFieldValueDTO[] = []
+
+          fieldValue.forEach((composedFieldValues) => {
+            const composedField: DatasetMetadataChildFieldValueDTO = {}
+            Object.entries(composedFieldValues).forEach(([nestedFieldName, nestedFieldValue]) => {
+              // if (nestedFieldValue !== '') {
+              composedField[nestedFieldName] = nestedFieldValue
+              // }
+            })
+            // TODO:ME - Review this one in deep
+            // if (Object.keys(composedField).length > 0) {
+            formattedMetadataChildFieldValues.push(composedField)
+            // }
+          })
+          // TODO:ME - Review this one in deep
+          // if (formattedMetadataChildFieldValues.length > 0) {
+          formattedMetadataBlock.fields[fieldName] = formattedMetadataChildFieldValues
+          // }
 
           return
         }

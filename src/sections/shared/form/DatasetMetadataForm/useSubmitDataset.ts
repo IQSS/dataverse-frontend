@@ -48,16 +48,21 @@ export function useSubmitDataset(
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   const submitForm = (formData: DatasetMetadataFormValues): void => {
-    setSubmissionStatus(SubmissionStatus.IsSubmitting)
+    // setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
     const formDataBackToOriginalKeys = MetadataFieldsHelper.replaceSlashKeysWithDot(formData)
 
-    const formattedFormValues = MetadataFieldsHelper.formatFormValuesToDatasetDTO(
-      formDataBackToOriginalKeys
-    )
+    const formattedFormValuesForCreation =
+      MetadataFieldsHelper.formatFormValuesToDatasetDTOForCreation(formDataBackToOriginalKeys)
+
+    const formattedFormValuesForEdition =
+      MetadataFieldsHelper.formatFormValuesToDatasetDTOForEdition(formDataBackToOriginalKeys)
+
+    console.log({ formattedFormValuesForEdition })
+    // return
 
     if (mode === 'create') {
-      createDataset(datasetRepository, formattedFormValues, collectionId)
+      createDataset(datasetRepository, formattedFormValuesForCreation, collectionId)
         .then(({ persistentId }) => {
           setSubmitError(null)
           setSubmissionStatus(SubmissionStatus.SubmitComplete)
@@ -86,7 +91,7 @@ export function useSubmitDataset(
       updateDatasetMetadata(
         datasetRepository,
         currentEditedDatasetPersistentID,
-        formattedFormValues
+        formattedFormValuesForEdition
       )
         .then(() => {
           setSubmitError(null)
