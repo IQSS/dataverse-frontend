@@ -24,9 +24,11 @@ import {
   publishDataset,
   ReadError,
   updateDataset,
+  deaccessionDataset,
   VersionUpdateType as JSVersionUpdateType,
   WriteError,
-  getDatasetVersionDiff
+  getDatasetVersionDiff,
+  DatasetDeaccessionDTO
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -309,6 +311,17 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   updateMetadata(datasetId: string | number, updatedDataset: DatasetDTO): Promise<void> {
     return updateDataset
       .execute(datasetId, DatasetDTOMapper.toJSDatasetDTO(updatedDataset))
+      .catch((error: WriteError) => {
+        throw new Error(error.message)
+      })
+  }
+  deaccession(
+    datasetId: string | number,
+    version: string,
+    deaccessionDTO: DatasetDeaccessionDTO
+  ): Promise<void> {
+    return deaccessionDataset
+      .execute(datasetId, version, deaccessionDTO)
       .catch((error: WriteError) => {
         throw new Error(error.message)
       })
