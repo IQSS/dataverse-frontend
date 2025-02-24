@@ -4,6 +4,7 @@ import { DatasetSummary } from '../../../sections/dataset/dataset-summary/Datase
 import { DatasetMetadataBlock, DatasetLicense } from '../../../dataset/domain/models/Dataset'
 import { DatasetMother } from '../../../../tests/component/dataset/domain/models/DatasetMother'
 import { MetadataBlockInfoMockRepository } from '../../shared-mock-repositories/metadata-block-info/MetadataBlockInfoMockRepository'
+import { LicenseMother } from '@tests/component/dataset/domain/models/LicenseMother'
 
 const meta: Meta<typeof DatasetSummary> = {
   title: 'Sections/Dataset Page/DatasetSummary',
@@ -11,7 +12,7 @@ const meta: Meta<typeof DatasetSummary> = {
   decorators: [WithI18next]
 }
 
-const licenseMock: DatasetLicense = DatasetMother.createRealistic().license
+const licenseMock: DatasetLicense = LicenseMother.create()
 const summaryFieldsMock: DatasetMetadataBlock[] = DatasetMother.createRealistic().summaryFields
 export default meta
 type Story = StoryObj<typeof DatasetSummary>
@@ -22,6 +23,17 @@ export const Default: Story = {
       summaryFields={summaryFieldsMock}
       license={licenseMock}
       metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+      onCustomTermsClick={() => console.log('Custom terms clicked')}
+    />
+  )
+}
+export const withCustomTerms: Story = {
+  render: () => (
+    <DatasetSummary
+      summaryFields={summaryFieldsMock}
+      license={undefined}
+      metadataBlockInfoRepository={new MetadataBlockInfoMockRepository()}
+      onCustomTermsClick={() => console.log('Custom terms clicked')}
     />
   )
 }

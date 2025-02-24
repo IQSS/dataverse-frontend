@@ -368,13 +368,39 @@ export interface DatasetDownloadUrls {
   archival: string
 }
 
+export interface TermsOfAccess {
+  fileAccessRequest: boolean
+  termsOfAccessForRestrictedFiles?: string
+  dataAccessPlace?: string
+  originalArchive?: string
+  availabilityStatus?: string
+  contactForAccess?: string
+  sizeOfCollection?: string
+  studyCompletion?: string
+}
+
+export interface CustomTerms {
+  termsOfUse: string
+  confidentialityDeclaration?: string
+  specialPermissions?: string
+  restrictions?: string
+  citationRequirements?: string
+  depositorRequirements?: string
+  conditions?: string
+  disclaimer?: string
+}
+export interface DatasetTermsOfUse {
+  termsOfAccess: TermsOfAccess
+  customTerms?: CustomTerms
+}
+
 export class Dataset {
   constructor(
     public readonly persistentId: string,
     public readonly version: DatasetVersion,
     public readonly alerts: Alert[],
     public readonly summaryFields: DatasetMetadataBlock[],
-    public readonly license: DatasetLicense,
+    public readonly termsOfUse: DatasetTermsOfUse,
     public readonly metadataBlocks: DatasetMetadataBlocks,
     public readonly permissions: DatasetPermissions,
     public readonly locks: DatasetLock[],
@@ -384,6 +410,7 @@ export class Dataset {
     public readonly downloadUrls: DatasetDownloadUrls,
     public readonly fileDownloadSizes: FileDownloadSize[],
     public readonly hierarchy: UpwardHierarchyNode,
+    public readonly license?: DatasetLicense,
     public readonly thumbnail?: string,
     public readonly privateUrl?: PrivateUrl, // will be set if the user requested a version that did not exist
     public readonly requestedVersion?: string,
@@ -466,7 +493,7 @@ export class Dataset {
       public readonly persistentId: string,
       public readonly version: DatasetVersion,
       public readonly summaryFields: DatasetMetadataBlock[],
-      public readonly license: DatasetLicense = defaultLicense,
+      public readonly termsOfUse: DatasetTermsOfUse,
       public readonly metadataBlocks: DatasetMetadataBlocks,
       public readonly permissions: DatasetPermissions,
       public readonly locks: DatasetLock[],
@@ -476,6 +503,7 @@ export class Dataset {
       public readonly downloadUrls: DatasetDownloadUrls,
       public readonly fileDownloadSizes: FileDownloadSize[],
       public readonly hierarchy: UpwardHierarchyNode,
+      public readonly license?: DatasetLicense,
       public readonly thumbnail?: string,
       public readonly privateUrl?: PrivateUrl, // will be set if the user requested a version that did not exist
 
@@ -534,7 +562,7 @@ export class Dataset {
         this.version,
         this.alerts,
         this.summaryFields,
-        this.license,
+        this.termsOfUse,
         this.metadataBlocks,
         this.permissions,
         this.locks,
@@ -544,6 +572,7 @@ export class Dataset {
         this.downloadUrls,
         this.fileDownloadSizes,
         this.hierarchy,
+        this.license,
         this.thumbnail,
         this.privateUrl,
         this.requestedVersion,

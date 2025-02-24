@@ -1,6 +1,6 @@
-import { License } from '../../../../../src/sections/dataset/dataset-summary/License'
+import { SummaryLicense } from '@/sections/dataset/dataset-summary/SummaryLicense'
 
-describe('License', () => {
+describe('SummaryLicense', () => {
   it('renders the license information correctly', () => {
     const licenseMock = {
       name: 'Test License',
@@ -8,9 +8,9 @@ describe('License', () => {
       uri: 'https://example.com/license'
     }
 
-    cy.customMount(<License license={licenseMock} />)
+    cy.customMount(<SummaryLicense license={licenseMock} />)
 
-    cy.findByText('License/Data Use Agreement').should('exist')
+    cy.findByText('SummaryLicense/Data Use Agreement').should('exist')
     cy.findByText(licenseMock.name).should('exist')
 
     cy.findByAltText(`License image for ${licenseMock.name}`)
