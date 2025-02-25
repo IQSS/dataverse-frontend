@@ -7,7 +7,7 @@ import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteE
 
 interface UseDeleteFile {
   fileRepository: FileRepository
-  onSuccessfulDelete?: () => void
+  onSuccessfulDelete: () => void
 }
 
 interface UseDeleteFileReturn {
@@ -30,7 +30,7 @@ export const useDeleteFile = ({
     try {
       await deleteFile(fileRepository, fileId)
 
-      onSuccessfulDelete?.()
+      onSuccessfulDelete()
     } catch (err: WriteError | unknown) {
       if (err instanceof WriteError) {
         const error = new JSDataverseWriteErrorHandler(err)
