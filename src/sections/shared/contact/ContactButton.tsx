@@ -7,14 +7,16 @@ import { ContactRepository } from '@/contact/domain/repositories/ContactReposito
 
 interface ContactButtonProps {
   toContactName: string
-  isCollection: boolean
+  contactObjectType: ContactObjectType
   id: string | number
   contactRepository: ContactRepository
 }
 
+type ContactObjectType = 'collection' | 'dataset'
+
 export const ContactButton = ({
   toContactName,
-  isCollection,
+  contactObjectType,
   id,
   contactRepository
 }: ContactButtonProps) => {
@@ -25,11 +27,9 @@ export const ContactButton = ({
 
   return (
     <>
-      {isCollection ? (
+      {contactObjectType == 'collection' && (
         <>
-          <Tooltip
-            overlay={isCollection ? t('contact.contactCollection') : t('contact.contactDataset')}
-            placement="top">
+          <Tooltip overlay={t('contact.contactCollection')} placement="top">
             <Button
               variant="link"
               onClick={openContactModal}
@@ -47,7 +47,8 @@ export const ContactButton = ({
             contactRepository={contactRepository}
           />
         </>
-      ) : (
+      )}
+      {contactObjectType == 'dataset' && (
         <>
           <Button variant="secondary" onClick={openContactModal} size="sm">
             {t('contact.title.dataset')}

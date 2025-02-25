@@ -4,11 +4,11 @@ import {
   SubmissionStatus
 } from '@/sections/shared/form/ContactForm/useSendFeedbacktoOwners'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
-import { feedbackDTO } from '@/contact/domain/useCases/feedbackDTO'
+import { FeedbackDTO } from '@/contact/domain/useCases/FeedbackDTO'
 
 const contactRepository: ContactRepository = {} as ContactRepository
 
-const mockFormData: feedbackDTO = {
+const mockFormData: FeedbackDTO = {
   subject: 'Test',
   body: 'Hello',
   fromEmail: 'test@dataverse.com'

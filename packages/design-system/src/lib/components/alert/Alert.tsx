@@ -9,10 +9,9 @@ interface AlertProps {
   dismissible?: boolean
   customHeading?: string
   children?: ReactNode
-  onClose?: () => void
 }
 
-function Alert({ variant, dismissible = true, customHeading, children, onClose }: AlertProps) {
+function Alert({ variant, dismissible = true, customHeading, children }: AlertProps) {
   interface AlertHeadings {
     [key: string]: string
   }

@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { WithI18next } from '../../WithI18next'
+import { WithI18next } from '../../../WithI18next'
 import { ContactModal } from '@/sections/shared/contact/contact-modal/contact-modal'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 

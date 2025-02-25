@@ -14,7 +14,7 @@ describe('ContactButton', () => {
     cy.customMount(
       <ContactButton
         toContactName="Test Dataset"
-        isCollection={true}
+        contactObjectType="collection"
         id="root"
         contactRepository={contactRepository}
       />
@@ -24,11 +24,11 @@ describe('ContactButton', () => {
       .click()
   })
 
-  it('shows correct contact title based on isCollection prop', () => {
+  it('shows correct contact title based on different contact object', () => {
     cy.customMount(
       <ContactButton
         toContactName="Test Dataset"
-        isCollection={true}
+        contactObjectType="collection"
         id="root"
         contactRepository={contactRepository}
       />
@@ -40,7 +40,7 @@ describe('ContactButton', () => {
     cy.customMount(
       <ContactButton
         toContactName="Test Dataset"
-        isCollection={false}
+        contactObjectType="dataset"
         id="root"
         contactRepository={contactRepository}
       />
@@ -54,7 +54,7 @@ describe('ContactButton', () => {
     cy.customMount(
       <ContactButton
         toContactName="Test Dataset"
-        isCollection={false}
+        contactObjectType="dataset"
         id="1"
         contactRepository={contactRepository}
       />
@@ -92,7 +92,7 @@ describe('ContactButton Error', () => {
     cy.customMount(
       <ContactButton
         toContactName="Test Dataset"
-        isCollection={true}
+        contactObjectType="collection"
         id="root"
         contactRepository={contactRepository}
       />

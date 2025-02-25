@@ -18,7 +18,7 @@ import { ContactButton } from '@/sections/shared/contact/ContactButton'
 import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectionDropdown'
 import { FeaturedItems } from './featured-items/FeaturedItems'
 import styles from './Collection.module.scss'
-import { ContactRepositoryFactory } from '@/sections/shared/contact/ContactFactory'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 interface CollectionProps {
   collectionRepository: CollectionRepository
@@ -28,6 +28,7 @@ interface CollectionProps {
   edited?: boolean
   collectionQueryParams: UseCollectionQueryParamsReturnType
   infiniteScrollEnabled?: boolean
+  contactRepository: ContactRepository
 }
 
 export function Collection({
@@ -36,11 +37,11 @@ export function Collection({
   created,
   published,
   edited,
-  collectionQueryParams
+  collectionQueryParams,
+  contactRepository
 }: CollectionProps) {
   useScrollTop()
   const { t } = useTranslation('collection')
-  const contactRepository = ContactRepositoryFactory.create()
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
     collectionIdFromParams,
@@ -98,7 +99,7 @@ export function Collection({
               <div className={styles['right-content']}>
                 <ContactButton
                   toContactName={collection.name}
-                  isCollection={true}
+                  contactObjectType={'collection'}
                   id={collection.id}
                   contactRepository={contactRepository}
                 />

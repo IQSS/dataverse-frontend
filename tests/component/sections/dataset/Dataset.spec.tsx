@@ -17,13 +17,14 @@ import { AlertProvider } from '../../../../src/sections/alerts/AlertProvider'
 import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 const setAnonymizedView = () => {}
 const fileRepository: FileRepository = {} as FileRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
 const collectionRepository: CollectionRepository = {} as CollectionRepository
+const contactRepository = {} as ContactRepository
 
 const TOTAL_FILES_COUNT = 200
 const allFiles = FilePreviewMother.createMany(TOTAL_FILES_COUNT)
@@ -97,6 +98,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       testDataset
     )
@@ -114,6 +116,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       emptyDataset
     )
@@ -130,6 +133,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       dataset
     )
@@ -147,6 +151,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       dataset
     )
@@ -163,6 +168,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       testDataset
     )
@@ -180,6 +186,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       testDataset
     )
@@ -200,6 +207,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       testDataset
     )
@@ -222,6 +230,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       testDataset
     )
@@ -244,6 +253,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         tab={'metadata'}
       />,
       testDataset
@@ -267,6 +277,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       testDatasetAnonymized
     )
@@ -285,6 +296,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       testDataset
     )
@@ -302,6 +314,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         filesTabInfiniteScrollEnabled={true}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       testDataset
     )
@@ -321,6 +334,7 @@ describe('Dataset', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           collectionRepository={collectionRepository}
           created={true}
+          contactRepository={contactRepository}
         />
       </AlertProvider>,
       testDataset
@@ -341,6 +355,7 @@ describe('Dataset', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           collectionRepository={collectionRepository}
           metadataUpdated={true}
+          contactRepository={contactRepository}
         />
       </AlertProvider>,
       testDataset
@@ -359,11 +374,12 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         metadataUpdated={true}
       />,
       testDataset
     )
-    cy.stub(ContactJSDataverseRepository.prototype, 'sendFeedbacktoOwners').resolves([])
+    cy.stub(contactRepository, 'sendFeedbacktoOwners').resolves([])
 
     cy.findByRole('button', { name: /Contact Owner/i })
       .should('exist')
@@ -395,6 +411,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         metadataUpdated={true}
       />,
       testDataset

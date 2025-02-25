@@ -4,9 +4,10 @@ import { CollectionMother } from '@tests/component/collection/domain/models/Coll
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
-import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 const collectionRepository = {} as CollectionRepository
+const contactRepository = {} as ContactRepository
 const collection = CollectionMother.create({ name: 'Collection Name' })
 const userPermissionsMock = CollectionMother.createUserPermissions()
 
@@ -37,6 +38,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -62,6 +64,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -76,6 +79,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -90,6 +94,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -103,6 +108,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -116,6 +122,7 @@ describe('Collection page', () => {
     cy.mountAuthenticated(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -134,6 +141,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created
         published={false}
@@ -147,6 +155,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={true}
@@ -168,6 +177,7 @@ describe('Collection page', () => {
     cy.mountAuthenticated(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -187,6 +197,7 @@ describe('Collection page', () => {
     cy.mountAuthenticated(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -208,6 +219,7 @@ describe('Collection page', () => {
     cy.mountAuthenticated(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -232,6 +244,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -248,6 +261,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -264,6 +278,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -285,13 +300,14 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
-    cy.stub(ContactJSDataverseRepository.prototype, 'sendFeedbacktoOwners').resolves([])
+    cy.stub(contactRepository, 'sendFeedbacktoOwners').resolves([])
 
     cy.findByRole('button', { name: /Contact/i })
       .should('exist')
@@ -304,13 +320,14 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
-    cy.stub(ContactJSDataverseRepository.prototype, 'sendFeedbacktoOwners').resolves([])
+    cy.stub(contactRepository, 'sendFeedbacktoOwners').resolves([])
 
     cy.findByRole('button', { name: /Contact/i })
       .should('exist')
