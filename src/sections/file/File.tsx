@@ -90,8 +90,6 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                         fileRepository={repository}
                         datasetInfo={{
                           persistentId: file.datasetPersistentId,
-                          isDraft:
-                            file.datasetVersion.publishingStatus === DatasetPublishingStatus.DRAFT,
                           releasedVersionExists:
                             file.datasetVersion.someDatasetVersionHasBeenReleased
                         }}

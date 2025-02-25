@@ -13,8 +13,7 @@ describe('EditFileMenu', () => {
         fileRepository={new FileMockRepository()}
         datasetInfo={{
           persistentId: testFile.datasetPersistentId,
-          releasedVersionExists: false,
-          isDraft: false
+          releasedVersionExists: false
         }}
       />
     )
@@ -30,8 +29,7 @@ describe('EditFileMenu', () => {
           fileRepository={new FileMockRepository()}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            isDraft: false
+            releasedVersionExists: false
           }}
         />
       )
@@ -52,8 +50,7 @@ describe('EditFileMenu', () => {
           fileRepository={new FileMockRepository()}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: true,
-            isDraft: false
+            releasedVersionExists: true
           }}
         />
       )
@@ -74,8 +71,7 @@ describe('EditFileMenu', () => {
           fileRepository={new FileMockRepository()}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            isDraft: true
+            releasedVersionExists: false
           }}
         />
       )
@@ -105,8 +101,7 @@ describe('EditFileMenu', () => {
           fileRepository={fileRepository}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            isDraft: false
+            releasedVersionExists: false
           }}
         />
       )
@@ -130,8 +125,7 @@ describe('EditFileMenu', () => {
           fileRepository={fileRepository}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            isDraft: false
+            releasedVersionExists: false
           }}
         />
       )

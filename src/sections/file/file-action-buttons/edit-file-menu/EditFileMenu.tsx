@@ -11,7 +11,6 @@ interface EditFileMenuProps {
 
 export interface EditFileMenuDatasetInfo {
   persistentId: string
-  isDraft: boolean
   releasedVersionExists: boolean
 }
 

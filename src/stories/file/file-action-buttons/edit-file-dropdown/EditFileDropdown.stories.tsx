@@ -23,8 +23,7 @@ export const Default: Story = {
       fileRepository={new FileMockRepository()}
       datasetInfo={{
         persistentId: storyFile.datasetPersistentId,
-        releasedVersionExists: false,
-        isDraft: false
+        releasedVersionExists: false
       }}
     />
   )
