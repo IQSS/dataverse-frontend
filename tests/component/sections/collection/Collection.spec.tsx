@@ -27,6 +27,7 @@ describe('Collection page', () => {
     collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
     collectionRepository.getItems = cy.stub().resolves(itemsWithCount)
     collectionRepository.getFeaturedItems = cy.stub().resolves([])
+    contactRepository.sendFeedbacktoOwners = cy.stub().resolves([])
   })
 
   it('renders skeleton while loading', () => {
@@ -285,7 +286,6 @@ describe('Collection page', () => {
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
-
     cy.findByRole('button', { name: /Contact/i }).click()
     cy.findByText('Contact').should('exist')
     cy.findByRole('dialog').should('exist')
@@ -307,7 +307,6 @@ describe('Collection page', () => {
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
-    cy.stub(contactRepository, 'sendFeedbacktoOwners').resolves([])
 
     cy.findByRole('button', { name: /Contact/i })
       .should('exist')
@@ -327,8 +326,6 @@ describe('Collection page', () => {
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
-    cy.stub(contactRepository, 'sendFeedbacktoOwners').resolves([])
-
     cy.findByRole('button', { name: /Contact/i })
       .should('exist')
       .click()
@@ -347,7 +344,7 @@ describe('Collection page', () => {
           cy.findByText('Submit').click()
         }
       })
-    cy.findByRole('dialog').should('not.exist')
-    cy.findByText('Success!').should('exist')
+    cy.findByTestId('dialog').should('not.exist')
+    cy.findByText(/Message sent./).should('exist')
   })
 })

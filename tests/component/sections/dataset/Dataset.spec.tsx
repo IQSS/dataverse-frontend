@@ -69,6 +69,7 @@ describe('Dataset', () => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
     datasetRepository.getLocks = cy.stub().resolves([])
+    contactRepository.sendFeedbacktoOwners = cy.stub().resolves([])
     fileRepository.getAllByDatasetPersistentIdWithCount = cy.stub().resolves(testFiles)
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
     fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(19900)
@@ -379,7 +380,6 @@ describe('Dataset', () => {
       />,
       testDataset
     )
-    cy.stub(contactRepository, 'sendFeedbacktoOwners').resolves([])
 
     cy.findByRole('button', { name: /Contact Owner/i })
       .should('exist')
@@ -399,7 +399,7 @@ describe('Dataset', () => {
           cy.findByText('Submit').click()
         }
       })
-    cy.findByRole('dialog').should('not.exist')
+    cy.findByTestId('dialog').should('not.exist')
     cy.findByText(/Message sent./).should('exist')
   })
 
