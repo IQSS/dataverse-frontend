@@ -53,8 +53,6 @@ export const ContactModal = ({
     }
   })
 
-  const { reset } = methods
-
   const onSubmit = async (data: ContactFormData) => {
     const formData: FeedbackDTO = {
       subject: data.subject,
@@ -64,13 +62,13 @@ export const ContactModal = ({
     }
 
     await submitForm(formData)
-    toast.success(t('contact.contactSuccess'))
-    reset()
+    methods.reset()
   }
 
   useEffect(() => {
     if (submissionStatus === SubmissionStatus.SubmitComplete) {
       handleClose()
+      toast.success(t('contact.contactSuccess'))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submissionStatus])

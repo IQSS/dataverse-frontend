@@ -367,7 +367,7 @@ describe('Dataset', () => {
     cy.findByText(/The metadata for this dataset has been updated./).should('exist')
   })
 
-  it('shows the alert when the information was sent to contact successfully', () => {
+  it('shows the toast when the information was sent to contact successfully', () => {
     const testDataset = DatasetMother.create()
     mountWithDataset(
       <Dataset

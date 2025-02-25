@@ -24,7 +24,7 @@ describe('ContactButton', () => {
       .click()
   })
 
-  it('shows correct contact title based on different contact object', () => {
+  it('shows contact button and correct title if it is in collection page ', () => {
     cy.customMount(
       <ContactButton
         toContactName="Test Dataset"
@@ -50,7 +50,7 @@ describe('ContactButton', () => {
     cy.findByText(/Email Dataset Contact/i).should('exist')
   })
 
-  it('shows contact owner button if it is in dataset page ', () => {
+  it('shows contact owner button and correct title if it is in dataset page ', () => {
     cy.customMount(
       <ContactButton
         toContactName="Test Dataset"
@@ -80,15 +80,30 @@ describe('ContactButton', () => {
       })
     cy.findByRole('dialog').should('not.exist')
   })
-})
 
-describe('ContactButton Error', () => {
-  beforeEach(() => {
+  it('should submit form with numeric id succefully ', () => {
+    cy.findByTestId('captchaNumbers')
+      .invoke('text')
+      .then((text) => {
+        const matches = text.match(/(\d+)\s*\+\s*(\d+)\s*=/)
+        if (matches) {
+          const num1 = parseInt(matches[1], 10)
+          const num2 = parseInt(matches[2], 10)
+          const answer = num1 + num2
+          cy.findByTestId('fromEmail').type('email@dataverse.com')
+          cy.findByTestId('subject').type('subject')
+          cy.findByTestId('body').type('message')
+          cy.findByTestId('captchaInput').type(answer.toString())
+          cy.findByRole('button', { name: /Submit/i }).click()
+        }
+      })
+  })
+
+  it('should send alert if the submission is failed', () => {
     contactRepository.sendFeedbacktoOwners = cy
       .stub()
       .rejects(new Error('Failed to submit contact info'))
-  })
-  it('should send alert if the submission is failed', () => {
+
     cy.customMount(
       <ContactButton
         toContactName="Test Dataset"
@@ -101,6 +116,7 @@ describe('ContactButton Error', () => {
     cy.findByRole('button', { name: /Contact/i })
       .should('exist')
       .click()
+
     cy.findByTestId('captchaNumbers')
       .invoke('text')
       .then((text) => {

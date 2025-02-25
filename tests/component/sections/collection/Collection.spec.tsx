@@ -315,7 +315,7 @@ describe('Collection page', () => {
     cy.findByRole('tooltip').should('be.visible').and('have.text', 'Email Collection Contact')
   })
 
-  it('shows the alert when the information was sent to contact successfully', () => {
+  it('shows the toast when the information was sent to contact successfully', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
