@@ -10,21 +10,19 @@ import { EditDatasetMenu } from './edit-dataset-menu/EditDatasetMenu'
 import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
 import { ShareDatasetButton } from './share-dataset-button/ShareDatasetButton'
 import styles from './DatasetActionButtons.module.scss'
-import { ContactButton } from '@/sections/contact/ContactButton'
-import { ContactRepositoryFactory } from '@/sections/contact/contactFactory'
+import { ContactButton } from '@/sections/shared/contact/ContactButton'
+import { ContactRepositoryFactory } from '@/sections/shared/contact/ContactFactory'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset
   datasetRepository: DatasetRepository
   collectionRepository: CollectionRepository
-  onSuccess: () => void
 }
 
 export function DatasetActionButtons({
   dataset,
   datasetRepository,
-  collectionRepository,
-  onSuccess
+  collectionRepository
 }: DatasetActionButtonsProps) {
   const { t } = useTranslation('dataset')
   const contactRepository = ContactRepositoryFactory.create()
@@ -48,7 +46,6 @@ export function DatasetActionButtons({
       <LinkDatasetButton dataset={dataset} />
       <ButtonGroup className={styles['contact-owner-and-share-group']}>
         <ContactButton
-          onSuccess={onSuccess}
           isCollection={false}
           toContactName={dataset.metadataBlocks[0].fields.title}
           id={dataset.persistentId}

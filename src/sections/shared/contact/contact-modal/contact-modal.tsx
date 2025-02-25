@@ -2,21 +2,21 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm, FormProvider } from 'react-hook-form'
 import { Alert, Button, Modal } from '@iqss/dataverse-design-system'
-import { ContactDTO } from '@/contact/domain/useCases/ContactDTO'
+import { FeedbackDTO } from '@/contact/domain/useCases/FeedbackDTO'
 import { Captcha } from '@/sections/shared/form/ContactForm/ContactCaptcha'
 import { ContactForm } from '@/sections/shared/form/ContactForm/ContactForm'
 import { useSession } from '@/sections/session/SessionContext'
 import {
-  useSubmitContact,
+  useSendFeedbacktoOwners,
   SubmissionStatus
-} from '@/sections/shared/form/ContactForm/useSubmitContact'
+} from '@/sections/shared/form/ContactForm/useSendFeedbacktoOwners'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
+import { toast } from 'react-toastify'
 
 interface ContactModalProps {
   show: boolean
   handleClose: () => void
   title: string
-  onSuccess: () => void
   toContactName: string
   id: string | number
   contactRepository: ContactRepository
@@ -34,7 +34,6 @@ export const ContactModal = ({
   show,
   title,
   handleClose,
-  onSuccess,
   toContactName,
   id,
   contactRepository
@@ -42,7 +41,7 @@ export const ContactModal = ({
   const { t } = useTranslation('shared')
   const { user } = useSession()
 
-  const { submitForm, submissionStatus, submitError } = useSubmitContact(contactRepository)
+  const { submitForm, submissionStatus, submitError } = useSendFeedbacktoOwners(contactRepository)
 
   const methods = useForm<ContactFormData>({
     defaultValues: {
@@ -57,7 +56,7 @@ export const ContactModal = ({
   const { reset } = methods
 
   const onSubmit = async (data: ContactFormData) => {
-    const formData: ContactDTO = {
+    const formData: FeedbackDTO = {
       subject: data.subject,
       body: data.body,
       fromEmail: data.fromEmail,
@@ -65,7 +64,7 @@ export const ContactModal = ({
     }
 
     await submitForm(formData)
-    onSuccess()
+    toast.success(t('contact.contactSuccess'))
     reset()
   }
 

@@ -1,13 +1,13 @@
 import { ContactRepository } from '../repositories/ContactRepository'
 import { WriteError } from '@iqss/dataverse-client-javascript'
-import { ContactDTO } from './ContactDTO'
+import { FeedbackDTO } from '../useCases/FeedbackDTO'
 import { Contact } from '../models/Contact'
 
-export async function submitContact(
+export async function sendFeedbacktoOwners(
   ContactRepository: ContactRepository,
-  contactDTO: ContactDTO
+  FeedbackDTO: FeedbackDTO
 ): Promise<Contact[]> {
-  return ContactRepository.submitContactInfo(contactDTO).catch((error: WriteError) => {
+  return ContactRepository.sendFeedbacktoOwners(FeedbackDTO).catch((error: WriteError) => {
     throw new Error(error.message)
   })
 }

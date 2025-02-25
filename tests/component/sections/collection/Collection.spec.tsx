@@ -291,7 +291,7 @@ describe('Collection page', () => {
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
-    cy.stub(ContactJSDataverseRepository.prototype, 'submitContactInfo').resolves([])
+    cy.stub(ContactJSDataverseRepository.prototype, 'sendFeedbacktoOwners').resolves([])
 
     cy.findByRole('button', { name: /Contact/i })
       .should('exist')
@@ -310,7 +310,7 @@ describe('Collection page', () => {
         collectionQueryParams={{ pageQuery: 1 }}
       />
     )
-    cy.stub(ContactJSDataverseRepository.prototype, 'submitContactInfo').resolves([])
+    cy.stub(ContactJSDataverseRepository.prototype, 'sendFeedbacktoOwners').resolves([])
 
     cy.findByRole('button', { name: /Contact/i })
       .should('exist')

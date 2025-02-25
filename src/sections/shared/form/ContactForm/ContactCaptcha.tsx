@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Form, Col, Row } from '@iqss/dataverse-design-system'
 
 export function Captcha() {
-  const { t } = useTranslation('contact')
+  const { t } = useTranslation('shared')
   const { control } = useFormContext()
 
   const [num1, setNum1] = useState(Math.floor(Math.random() * 10))

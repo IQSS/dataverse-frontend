@@ -1,5 +1,5 @@
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
-import { ContactButton } from '@/sections/contact/ContactButton'
+import { ContactButton } from '@/sections/shared/contact/ContactButton'
 
 const mockContacts = {
   fromEmail: 'test@dataverse.com',
@@ -10,10 +10,9 @@ const contactRepository: ContactRepository = {} as ContactRepository
 
 describe('ContactButton', () => {
   beforeEach(() => {
-    contactRepository.submitContactInfo = cy.stub().resolves([mockContacts])
+    contactRepository.sendFeedbacktoOwners = cy.stub().resolves([mockContacts])
     cy.customMount(
       <ContactButton
-        onSuccess={() => {}}
         toContactName="Test Dataset"
         isCollection={true}
         id="root"
@@ -28,7 +27,6 @@ describe('ContactButton', () => {
   it('shows correct contact title based on isCollection prop', () => {
     cy.customMount(
       <ContactButton
-        onSuccess={() => {}}
         toContactName="Test Dataset"
         isCollection={true}
         id="root"
@@ -41,7 +39,6 @@ describe('ContactButton', () => {
 
     cy.customMount(
       <ContactButton
-        onSuccess={() => {}}
         toContactName="Test Dataset"
         isCollection={false}
         id="root"
@@ -56,7 +53,6 @@ describe('ContactButton', () => {
   it('shows contact owner button if it is in dataset page ', () => {
     cy.customMount(
       <ContactButton
-        onSuccess={() => {}}
         toContactName="Test Dataset"
         isCollection={false}
         id="1"
@@ -88,14 +84,13 @@ describe('ContactButton', () => {
 
 describe('ContactButton Error', () => {
   beforeEach(() => {
-    contactRepository.submitContactInfo = cy
+    contactRepository.sendFeedbacktoOwners = cy
       .stub()
       .rejects(new Error('Failed to submit contact info'))
   })
   it('should send alert if the submission is failed', () => {
     cy.customMount(
       <ContactButton
-        onSuccess={() => {}}
         toContactName="Test Dataset"
         isCollection={true}
         id="root"

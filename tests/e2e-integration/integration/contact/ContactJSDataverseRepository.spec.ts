@@ -1,7 +1,7 @@
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
-import { ContactDTO } from '@/contact/domain/useCases/ContactDTO'
+import { FeedbackDTO } from '@/contact/domain/useCases/FeedbackDTO'
 import { Contact } from '@/contact/domain/models/Contact'
 import { TestsUtils } from '../../shared/TestsUtils'
 
@@ -15,12 +15,12 @@ describe('Contact JSDataverse Repository', () => {
   beforeEach(() => TestsUtils.login())
 
   it('send information to contacts', async () => {
-    const data: ContactDTO = {
+    const data: FeedbackDTO = {
       subject: 'test subject',
       body: 'test message body',
       fromEmail: 'test@dataverse.com'
     }
-    const contact: Contact[] = await repository.submitContactInfo(data)
+    const contact: Contact[] = await repository.sendFeedbacktoOwners(data)
 
     expect(contact).to.not.be.undefined
   })

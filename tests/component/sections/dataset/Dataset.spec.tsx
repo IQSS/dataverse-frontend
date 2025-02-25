@@ -363,7 +363,7 @@ describe('Dataset', () => {
       />,
       testDataset
     )
-    cy.stub(ContactJSDataverseRepository.prototype, 'submitContactInfo').resolves([])
+    cy.stub(ContactJSDataverseRepository.prototype, 'sendFeedbacktoOwners').resolves([])
 
     cy.findByRole('button', { name: /Contact Owner/i })
       .should('exist')

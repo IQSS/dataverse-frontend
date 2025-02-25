@@ -1,6 +1,6 @@
-import { ContactDTO } from '../useCases/ContactDTO'
+import { FeedbackDTO } from '../useCases/FeedbackDTO'
 import { Contact } from '../models/Contact'
 
 export interface ContactRepository {
-  submitContactInfo: (contactDTO: ContactDTO) => Promise<Contact[]>
+  sendFeedbacktoOwners: (feedbackDTO: FeedbackDTO) => Promise<Contact[]>
 }

@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
-import { Alert, Col, Row, Tabs } from '@iqss/dataverse-design-system'
+import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import styles from './Dataset.module.scss'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { DatasetLabels } from './dataset-labels/DatasetLabels'
@@ -54,14 +54,12 @@ export function Dataset({
   const { setIsLoading } = useLoading()
   const { dataset, isLoading: isDatasetLoading } = useDataset()
   const { t } = useTranslation('dataset')
-  const { t: tcontact } = useTranslation('contact')
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { hideModal, isModalOpen } = useNotImplementedModal()
   const publishCompleted = useCheckPublishCompleted(publishInProgress, dataset, datasetRepository)
   const [activeTab, setActiveTab] = useState<string>(tab)
   const termsTabRef = useRef<HTMLDivElement>(null)
-  const [contactSuccess, setContactSuccess] = useState(false)
 
   useUpdateDatasetAlerts({
     dataset,
@@ -113,18 +111,13 @@ export function Dataset({
               <Row>
                 <Col>
                   <DatasetAlerts />
-                  {contactSuccess && (
-                    <Alert variant="success" onClose={() => setContactSuccess(false)}>
-                      {tcontact('contact.contactSuccess')}
-                    </Alert>
-                  )}
                 </Col>
               </Row>
             </div>
 
             <header className={styles.header}>
               <h1>{dataset.version.title}</h1>
-              <DatasetLabels labels={dataset.version.labels} />{' '}
+              <DatasetLabels labels={dataset.version.labels} />
             </header>
             <div className={styles.container}>
               <Row>
@@ -136,7 +129,6 @@ export function Dataset({
                     datasetRepository={datasetRepository}
                     collectionRepository={collectionRepository}
                     dataset={dataset}
-                    onSuccess={() => setContactSuccess(true)}
                   />
                 </Col>
               </Row>

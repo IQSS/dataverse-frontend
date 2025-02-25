@@ -1,5 +1,5 @@
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
-import { ContactDTO } from '@/contact/domain/useCases/ContactDTO'
+import { FeedbackDTO } from '@/contact/domain/useCases/FeedbackDTO'
 import { Contact } from '@/contact/domain/models/Contact'
 import { useState } from 'react'
 
@@ -12,21 +12,23 @@ export enum SubmissionStatus {
 
 export type UseSubmitContactReturnType = {
   submissionStatus: SubmissionStatus
-  submitForm: (formData: ContactDTO) => Promise<Contact[] | string>
+  submitForm: (formData: FeedbackDTO) => Promise<Contact[] | string>
   submitError: string | null
 }
 
-export function useSubmitContact(contactRepository: ContactRepository): UseSubmitContactReturnType {
+export function useSendFeedbacktoOwners(
+  contactRepository: ContactRepository
+): UseSubmitContactReturnType {
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>(
     SubmissionStatus.NotSubmitted
   )
   const [submitError, setSubmitError] = useState<string | null>(null)
 
-  const submitForm = async (formData: ContactDTO): Promise<Contact[] | string> => {
+  const submitForm = async (formData: FeedbackDTO): Promise<Contact[] | string> => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
     setSubmitError(null)
     try {
-      const contacts: Contact[] = await contactRepository.submitContactInfo(formData)
+      const contacts: Contact[] = await contactRepository.sendFeedbacktoOwners(formData)
       setSubmissionStatus(SubmissionStatus.SubmitComplete)
       return contacts
     } catch (error) {

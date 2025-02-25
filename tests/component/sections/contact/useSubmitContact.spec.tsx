@@ -1,27 +1,31 @@
 import { act, renderHook } from '@testing-library/react'
 import {
-  useSubmitContact,
+  useSendFeedbacktoOwners,
   SubmissionStatus
-} from '@/sections/shared/form/ContactForm/useSubmitContact'
+} from '@/sections/shared/form/ContactForm/useSendFeedbacktoOwners'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
-import { ContactDTO } from '@/contact/domain/useCases/ContactDTO'
+import { feedbackDTO } from '@/contact/domain/useCases/feedbackDTO'
 
 const contactRepository: ContactRepository = {} as ContactRepository
 
-const mockFormData: ContactDTO = { subject: 'Test', body: 'Hello', fromEmail: 'test@dataverse.com' }
+const mockFormData: feedbackDTO = {
+  subject: 'Test',
+  body: 'Hello',
+  fromEmail: 'test@dataverse.com'
+}
 const mockContacts = {
   fromEmail: 'test@dataverse.com',
   subject: 'Test',
   body: 'You have just been sent the following message via the Root.'
 }
 
-describe('useSubmitContact', () => {
+describe('useSendFeedbacktoOwners', () => {
   beforeEach(() => {
-    contactRepository.submitContactInfo = cy.stub().resolves([mockContacts])
+    contactRepository.sendFeedbacktoOwners = cy.stub().resolves([mockContacts])
   })
 
   it('should handle successful form submission', async () => {
-    const { result } = renderHook(() => useSubmitContact(contactRepository))
+    const { result } = renderHook(() => useSendFeedbacktoOwners(contactRepository))
 
     expect(result.current.submissionStatus).to.equal(SubmissionStatus.NotSubmitted)
     expect(result.current.submitError).to.equal(null)
@@ -37,9 +41,9 @@ describe('useSubmitContact', () => {
 
   it('should handle submission error with a proper error message', async () => {
     const errorMessage = 'Failed to submit contact info'
-    contactRepository.submitContactInfo = cy.stub().rejects(new Error(errorMessage))
+    contactRepository.sendFeedbacktoOwners = cy.stub().rejects(new Error(errorMessage))
 
-    const { result } = renderHook(() => useSubmitContact(contactRepository))
+    const { result } = renderHook(() => useSendFeedbacktoOwners(contactRepository))
 
     await act(async () => {
       const response = await result.current.submitForm(mockFormData)
@@ -51,9 +55,9 @@ describe('useSubmitContact', () => {
   })
 
   it('should handle submission error with a generic error message if not an Error instance', async () => {
-    contactRepository.submitContactInfo = cy.stub().rejects('Some error string')
+    contactRepository.sendFeedbacktoOwners = cy.stub().rejects('Some error string')
 
-    const { result } = renderHook(() => useSubmitContact(contactRepository))
+    const { result } = renderHook(() => useSendFeedbacktoOwners(contactRepository))
 
     await act(async () => {
       const response = await result.current.submitForm(mockFormData)
@@ -65,9 +69,9 @@ describe('useSubmitContact', () => {
   })
 
   it('should handle submission error with a generic error message if not an Error instance', async () => {
-    contactRepository.submitContactInfo = cy.stub().rejects('error')
+    contactRepository.sendFeedbacktoOwners = cy.stub().rejects('error')
 
-    const { result } = renderHook(() => useSubmitContact(contactRepository))
+    const { result } = renderHook(() => useSendFeedbacktoOwners(contactRepository))
 
     await act(async () => {
       const response = await result.current.submitForm(mockFormData)

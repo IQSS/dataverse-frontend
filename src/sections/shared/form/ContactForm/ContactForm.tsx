@@ -8,7 +8,7 @@ interface ContactFormProps {
 }
 
 export function ContactForm({ isLoggedIn, toContactName }: ContactFormProps) {
-  const { t } = useTranslation('contact')
+  const { t } = useTranslation('shared')
   const { control } = useFormContext()
 
   const emailRules: UseControllerProps['rules'] = {
@@ -76,7 +76,7 @@ export function ContactForm({ isLoggedIn, toContactName }: ContactFormProps) {
 
       <Row className="mb-3">
         <Col lg={3}>
-          <Form.Group.Label required>{t('subject')}</Form.Group.Label>
+          <Form.Group.Label required>{t('contact.subject')}</Form.Group.Label>
         </Col>
         <Col lg={9}>
           <Controller
@@ -102,7 +102,7 @@ export function ContactForm({ isLoggedIn, toContactName }: ContactFormProps) {
 
       <Row className="mb-3">
         <Col lg={3}>
-          <Form.Group.Label required>{t('message')}</Form.Group.Label>
+          <Form.Group.Label required>{t('contact.message')}</Form.Group.Label>
         </Col>
         <Col lg={9}>
           <Controller

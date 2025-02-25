@@ -1,5 +1,5 @@
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
-import { ContactModal } from '@/sections/shared/contact-modal/contact-modal'
+import { ContactModal } from '@/sections/shared/contact/contact-modal/contact-modal'
 
 const contactRepository: ContactRepository = {} as ContactRepository
 
@@ -13,14 +13,13 @@ const toContactName = 'Root'
 
 describe('Contact Modal', () => {
   beforeEach(() => {
-    contactRepository.submitContactInfo = cy.stub().resolves([mockContacts])
+    contactRepository.sendFeedbacktoOwners = cy.stub().resolves([mockContacts])
 
     cy.customMount(
       <ContactModal
         show
         title={title}
         handleClose={() => {}}
-        onSuccess={() => {}}
         toContactName={toContactName}
         id="123"
         contactRepository={contactRepository}
@@ -85,7 +84,7 @@ describe('Contact Modal', () => {
 })
 
 it('should submit form and transform numeric id correctly ', () => {
-  contactRepository.submitContactInfo = cy.stub().resolves([mockContacts])
+  contactRepository.sendFeedbacktoOwners = cy.stub().resolves([mockContacts])
   const title = 'Email Collection Contact'
   const toContactName = 'Root'
 
@@ -94,7 +93,6 @@ it('should submit form and transform numeric id correctly ', () => {
       show
       title={title}
       handleClose={() => {}}
-      onSuccess={() => {}}
       toContactName={toContactName}
       id={12}
       contactRepository={contactRepository}
@@ -115,7 +113,7 @@ it('should submit form and transform numeric id correctly ', () => {
         cy.findByTestId('captchaInput').type(answer.toString())
         cy.findByRole('button', { name: /Submit/i }).click()
       }
-      cy.wrap(contactRepository.submitContactInfo).should('have.been.calledWith', {
+      cy.wrap(contactRepository.sendFeedbacktoOwners).should('have.been.calledWith', {
         subject: 'Test Subject',
         body: 'This is a test message.',
         fromEmail: 'email@dataverse.com',

@@ -14,12 +14,11 @@ import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
 import { ShareCollectionButton } from './share-collection-button/ShareCollectionButton'
-import { ContactButton } from '@/sections/contact/ContactButton'
+import { ContactButton } from '@/sections/shared/contact/ContactButton'
 import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectionDropdown'
 import { FeaturedItems } from './featured-items/FeaturedItems'
 import styles from './Collection.module.scss'
-import { useState } from 'react'
-import { ContactRepositoryFactory } from '@/sections/contact/contactFactory'
+import { ContactRepositoryFactory } from '@/sections/shared/contact/ContactFactory'
 
 interface CollectionProps {
   collectionRepository: CollectionRepository
@@ -41,7 +40,6 @@ export function Collection({
 }: CollectionProps) {
   useScrollTop()
   const { t } = useTranslation('collection')
-  const { t: tContact } = useTranslation('contact')
   const contactRepository = ContactRepositoryFactory.create()
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
@@ -60,7 +58,6 @@ export function Collection({
   const showAddDataActions = canUserAddCollection || canUserAddDataset
   const showPublishButton = !collection?.isReleased && canUserPublishCollection
   const showEditButton = canUserEditCollection
-  const [contactSuccess, setContactSuccess] = useState(false)
 
   if (isLoadingCollection) {
     return <CollectionSkeleton />
@@ -90,11 +87,6 @@ export function Collection({
                 {t('publishedAlert')}
               </Alert>
             )}
-            {contactSuccess && (
-              <Alert variant="success" onClose={() => setContactSuccess(false)}>
-                {tContact('contact.contactSuccess')}
-              </Alert>
-            )}
 
             <FeaturedItems
               collectionRepository={collectionRepository}
@@ -105,7 +97,6 @@ export function Collection({
               <div className={styles.metrics}></div>
               <div className={styles['right-content']}>
                 <ContactButton
-                  onSuccess={() => setContactSuccess(true)}
                   toContactName={collection.name}
                   isCollection={true}
                   id={collection.id}

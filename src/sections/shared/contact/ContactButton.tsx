@@ -2,11 +2,10 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Tooltip } from '@iqss/dataverse-design-system'
 import { Envelope } from 'react-bootstrap-icons'
-import { ContactModal } from '@/sections/shared/contact-modal/contact-modal'
+import { ContactModal } from '@/sections/shared/contact/contact-modal/contact-modal'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 interface ContactButtonProps {
-  onSuccess: () => void
   toContactName: string
   isCollection: boolean
   id: string | number
@@ -14,15 +13,13 @@ interface ContactButtonProps {
 }
 
 export const ContactButton = ({
-  onSuccess,
   toContactName,
   isCollection,
   id,
   contactRepository
 }: ContactButtonProps) => {
-  const { t } = useTranslation('contact')
+  const { t } = useTranslation('shared')
   const [showContactModal, setShowContactModal] = useState(false)
-
   const openContactModal = () => setShowContactModal(true)
   const closeContactModal = () => setShowContactModal(false)
 
@@ -37,7 +34,7 @@ export const ContactButton = ({
               variant="link"
               onClick={openContactModal}
               icon={<Envelope style={{ marginRight: '0.3rem', marginBottom: '0.2rem' }} />}>
-              {t('title.collection')}
+              {t('contact.title.collection')}
             </Button>
           </Tooltip>
 
@@ -45,7 +42,6 @@ export const ContactButton = ({
             show={showContactModal}
             handleClose={closeContactModal}
             title={t('contact.contactCollection')}
-            onSuccess={onSuccess}
             toContactName={toContactName}
             id={id}
             contactRepository={contactRepository}
@@ -54,14 +50,13 @@ export const ContactButton = ({
       ) : (
         <>
           <Button variant="secondary" onClick={openContactModal} size="sm">
-            {t('title.dataset')}
+            {t('contact.title.dataset')}
           </Button>
 
           <ContactModal
             show={showContactModal}
             handleClose={closeContactModal}
             title={t('contact.contactDataset')}
-            onSuccess={onSuccess}
             toContactName={toContactName}
             id={id}
             contactRepository={contactRepository}

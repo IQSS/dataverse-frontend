@@ -30,15 +30,10 @@ function Alert({ variant, dismissible = true, customHeading, children, onClose }
   }
   const heading = getAlertHeading(variant, customHeading)
 
-  const handleClose = () => {
-    onClose && onClose()
-    setShow(false)
-  }
-
   return (
     <>
       {show && (
-        <AlertBS variant={variant} onClose={handleClose} dismissible={dismissible}>
+        <AlertBS variant={variant} onClose={() => setShow(false)} dismissible={dismissible}>
           <AlertIcon variant={variant} />
           &nbsp;
           <b>{heading}</b> - {children}

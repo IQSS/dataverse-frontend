@@ -1,4 +1,4 @@
-export interface ContactDTO {
+export interface FeedbackDTO {
   targetId?: number
   identifier?: string
   fromEmail: string

@@ -41,7 +41,6 @@ export const WithPublishPermissions: Story = {
       })}
       datasetRepository={new DatasetMockRepository()}
       collectionRepository={new CollectionMockRepository()}
-      onSuccess={() => {}}
     />
   )
 }
@@ -61,7 +60,6 @@ export const WithNoDatasetPermissions: Story = {
       })}
       datasetRepository={new DatasetMockRepository()}
       collectionRepository={new CollectionMockRepository()}
-      onSuccess={() => {}}
     />
   )
 }
@@ -85,7 +83,6 @@ export const WithUpdateAndNoPublishDatasetPermissions: Story = {
       })}
       datasetRepository={new DatasetMockRepository()}
       collectionRepository={new CollectionMockRepository()}
-      onSuccess={() => {}}
     />
   )
 }
