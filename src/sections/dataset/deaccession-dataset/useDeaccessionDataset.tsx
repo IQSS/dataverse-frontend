@@ -30,35 +30,43 @@ export function useDeaccessionDataset(
   )
   const [deaccessionError, setDeaccessionError] = useState<string | null>(null)
 
-  const submitDeaccession = async (deaccessionFormData: DeaccessionFormData): Promise<void> => {
-    setSubmissionStatus(SubmissionStatus.IsSubmitting)
-    console.log('deaccessionFormData', deaccessionFormData)
-    try {
-      await Promise.all(
-        deaccessionFormData.versions.map(async (version) => {
-          const datasetDeaccessionDTO = {
-            persistentId,
-            versionNumber: version,
-            deaccessionReason: deaccessionFormData.deaccessionReason,
-            deaccessionReasonOther: deaccessionFormData.deaccessionReasonOther,
-            deaccesionForwardUrl: deaccessionFormData.deaccessionForwardUrl
-          }
-          console.log('calling deaccession', datasetDeaccessionDTO)
-          await deaccessionDataset(repository, persistentId, version, datasetDeaccessionDTO)
-        })
-      )
-      setDeaccessionError(null)
-      setSubmissionStatus(SubmissionStatus.SubmitComplete)
-      onPublishSucceed()
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error && err.message
-          ? err.message
-          : 'Something went wrong while trying to deaccession your dataset'
-      setDeaccessionError(errorMessage)
-      setSubmissionStatus(SubmissionStatus.Errored)
-    }
+  const submitDeaccession = (deaccessionFormData: DeaccessionFormData): void => {
+    // Run the async function without returning a promise
+    void (async () => {
+      setSubmissionStatus(SubmissionStatus.IsSubmitting)
+      console.log('deaccessionFormData', deaccessionFormData)
+
+      try {
+        await Promise.all(
+          deaccessionFormData.versions.map(async (version) => {
+            const datasetDeaccessionDTO = {
+              deaccessionReason:
+                deaccessionFormData.deaccessionReason +
+                (deaccessionFormData.deaccessionReasonOther
+                  ? ` ${deaccessionFormData.deaccessionReasonOther}`
+                  : ''),
+              deaccesionForwardUrl: deaccessionFormData.deaccessionForwardUrl
+            }
+
+            console.log('calling deaccession', datasetDeaccessionDTO)
+            await deaccessionDataset(repository, persistentId, version, datasetDeaccessionDTO)
+          })
+        )
+
+        setDeaccessionError(null)
+        setSubmissionStatus(SubmissionStatus.SubmitComplete)
+        onPublishSucceed()
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error && err.message
+            ? err.message
+            : 'Something went wrong while trying to deaccession your dataset'
+        setDeaccessionError(errorMessage)
+        setSubmissionStatus(SubmissionStatus.Errored)
+      }
+    })()
   }
+
   return {
     submissionStatus,
     submitDeaccession,

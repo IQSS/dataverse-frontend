@@ -62,37 +62,42 @@ export function DeaccessionDatasetModal({
           <div>Warning Text</div>
           <form noValidate={true} onSubmit={handleSubmit(submitDeaccession)}>
             {versionList.length > 1 && (
-              <Form.Group controlId={'versions'}>
-                <Form.Group.Label required>
-                  Which version(s) do you want to deaccession?
-                </Form.Group.Label>
-                <Controller
-                  name="versions"
-                  control={control}
-                  rules={{ required: 'Please select at least one version to deaccession' }}
-                  render={({ field: { onChange, ref, value }, fieldState }) => (
-                    <>
-                      <Form.CheckboxGroup
-                        title={'Versions'}
-                        isInvalid={fieldState.invalid}
-                        isValid={!fieldState.invalid}>
+              <Form.Group>
+                <Form.Group.Label>Select at least one option:</Form.Group.Label>
+                <div>
+                  <Controller
+                    name="versions"
+                    control={control}
+                    rules={{
+                      validate: (value) =>
+                        value.length > 0 ? true : 'You must select at least one version.'
+                    }}
+                    render={({ field }) => (
+                      <>
                         {versionList.map((version) => (
                           <Form.Group.Checkbox
                             key={version.versionNumber}
-                            id={`version-${version.versionNumber}`}
-                            label={`${version.versionNumber} ${version.lastUpdatedDate}`}
+                            id={version.versionNumber}
+                            label={version.versionNumber + ' - ' + version.lastUpdatedDate}
                             value={version.versionNumber}
-                            onChange={onChange}
+                            checked={field.value.includes(version.versionNumber)}
+                            isInvalid={!!errors.versions} // Apply Bootstrap's invalid styling
+                            onChange={(e) => {
+                              const newValue = e.target.checked
+                                ? [...field.value, e.target.value] // Add to array if checked
+                                : field.value.filter((val) => val !== e.target.value) // Remove if unchecked
+
+                              field.onChange(newValue) // Update field value
+                            }}
                           />
                         ))}
-                      </Form.CheckboxGroup>
-
-                      <Form.Group.Feedback type="invalid">
-                        {fieldState.error?.message}
-                      </Form.Group.Feedback>
-                    </>
-                  )}
-                />
+                        <Form.Group.Feedback type="invalid" className="d-block">
+                          {errors.versions?.message}
+                        </Form.Group.Feedback>
+                      </>
+                    )}
+                  />
+                </div>
               </Form.Group>
             )}
             <Form.Group controlId={'deccessionReason'}>
@@ -123,24 +128,39 @@ export function DeaccessionDatasetModal({
               <Form.Group.Label>
                 Please enter additional information about the reason for deaccession.
               </Form.Group.Label>
-              <Form.Group.TextArea />
+              <Controller
+                name="deaccessionReasonOther"
+                control={control}
+                render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
+                  <>
+                    <Form.Group.TextArea
+                      value={value}
+                      onChange={onChange}
+                      isInvalid={invalid}
+                      ref={ref}
+                    />
+                    {invalid && (
+                      <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+                    )}
+                  </>
+                )}
+              />
             </Form.Group>
             <Button variant="primary" type="submit">
               {t('publish.continueButton')}
             </Button>
+            <Button
+              withSpacing
+              variant="secondary"
+              type="button"
+              onClick={handleClose}
+              disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
+              {t('publish.cancelButton')}
+            </Button>
           </form>
         </Stack>
       </Modal.Body>
-      <Modal.Footer>
-        <Button
-          withSpacing
-          variant="secondary"
-          type="button"
-          onClick={handleClose}
-          disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
-          {t('publish.cancelButton')}
-        </Button>
-      </Modal.Footer>
+      <Modal.Footer></Modal.Footer>
     </Modal>
   )
 }

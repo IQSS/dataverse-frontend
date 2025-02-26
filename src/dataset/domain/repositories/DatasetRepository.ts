@@ -4,7 +4,7 @@ import { DatasetPaginationInfo } from '../models/DatasetPaginationInfo'
 import { DatasetDTO } from '../useCases/DTOs/DatasetDTO'
 import { DatasetsWithCount } from '../models/DatasetsWithCount'
 import { VersionUpdateType } from '../models/VersionUpdateType'
-import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
+import { DatasetDeaccessionDTO } from '../useCases/DTOs/DatasetDTO'
 
 export interface DatasetRepository {
   getByPersistentId: (persistentId: string, version?: string) => Promise<Dataset | undefined>
