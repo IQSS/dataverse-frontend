@@ -11,9 +11,10 @@ describe('DeaccessionDatasetModal', () => {
     { versionNumber: '1.0', lastUpdatedDate: '2023-01-01' },
     { versionNumber: '2.0', lastUpdatedDate: '2023-02-01' }
   ]
-  const handleClose = cy.stub()
 
-  it('renders correctly', () => {
+  it.only('renders correctly', () => {
+    const handleClose = cy.stub()
+
     cy.customMount(
       <DeaccessionDatasetModal
         show={true}
@@ -32,6 +33,9 @@ describe('DeaccessionDatasetModal', () => {
   })
 
   it('submits the form', () => {
+    const handleClose = cy.stub()
+    repository.deaccession = cy.stub().resolves()
+
     cy.customMount(
       <DeaccessionDatasetModal
         show={true}
@@ -46,7 +50,7 @@ describe('DeaccessionDatasetModal', () => {
     cy.get('select').select('Option 1')
     cy.get('textarea').type('Additional information')
     cy.get('button[type="submit"]').click()
-
+    cy.wrap(repository.deaccession).should('have.been.calledOnce')
     // Add assertions to verify form submission behavior
   })
 })

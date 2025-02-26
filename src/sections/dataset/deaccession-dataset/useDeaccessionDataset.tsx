@@ -32,7 +32,7 @@ export function useDeaccessionDataset(
 
   const submitDeaccession = async (deaccessionFormData: DeaccessionFormData): Promise<void> => {
     setSubmissionStatus(SubmissionStatus.IsSubmitting)
-
+    console.log('deaccessionFormData', deaccessionFormData)
     try {
       await Promise.all(
         deaccessionFormData.versions.map(async (version) => {
@@ -43,6 +43,7 @@ export function useDeaccessionDataset(
             deaccessionReasonOther: deaccessionFormData.deaccessionReasonOther,
             deaccesionForwardUrl: deaccessionFormData.deaccessionForwardUrl
           }
+          console.log('calling deaccession', datasetDeaccessionDTO)
           await deaccessionDataset(repository, persistentId, version, datasetDeaccessionDTO)
         })
       )

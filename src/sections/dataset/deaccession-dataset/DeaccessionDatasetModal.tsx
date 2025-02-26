@@ -39,7 +39,7 @@ export function DeaccessionDatasetModal({
     handleSubmit,
     watch,
     formState: { errors }
-  } = useForm<DeaccessionFormData>()
+  } = useForm<DeaccessionFormData>({ defaultValues: { versions: [] } })
 
   function onDeaccessionSucceed() {
     navigate(
@@ -70,38 +70,52 @@ export function DeaccessionDatasetModal({
                   name="versions"
                   control={control}
                   rules={{ required: 'Please select at least one version to deaccession' }}
-                  render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
+                  render={({ field: { onChange, ref, value }, fieldState }) => (
                     <>
-                      <Form.CheckboxGroup title={'Versions'}>
+                      <Form.CheckboxGroup
+                        title={'Versions'}
+                        isInvalid={fieldState.invalid}
+                        isValid={!fieldState.invalid}>
                         {versionList.map((version) => (
                           <Form.Group.Checkbox
-                            id={version.versionNumber}
                             key={version.versionNumber}
-                            label={version.versionNumber + ' ' + version.lastUpdatedDate}
+                            id={`version-${version.versionNumber}`}
+                            label={`${version.versionNumber} ${version.lastUpdatedDate}`}
                             value={version.versionNumber}
+                            onChange={onChange}
                           />
                         ))}
                       </Form.CheckboxGroup>
-                      <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+
+                      <Form.Group.Feedback type="invalid">
+                        {fieldState.error?.message}
+                      </Form.Group.Feedback>
                     </>
-                  )}></Controller>
+                  )}
+                />
               </Form.Group>
             )}
-            <Form.Group controlId={'reason'}>
+            <Form.Group controlId={'deccessionReason'}>
               <Form.Group.Label required>Why are you deaccessioning this version?</Form.Group.Label>
               <Controller
-                name="versions"
+                name="deaccessionReason"
                 control={control}
-                rules={{ required: 'Please select at least one version to deaccession' }}
-                render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
+                rules={{ required: 'Please select a deaccession reason' }}
+                render={({ field: { onChange, ref, value }, fieldState }) => (
                   <>
-                    <Form.Group.Select>
+                    <Form.Group.Select
+                      value={value as string}
+                      onChange={onChange}
+                      isInvalid={fieldState.invalid}
+                      ref={ref}>
                       <option>Select...</option>
                       <option value="1">Option 1</option>
                       <option value="2">Option 2</option>
                       <option value="3">Option 3</option>
                     </Form.Group.Select>
-                    <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+                    <Form.Group.Feedback type="invalid">
+                      {fieldState.error?.message}
+                    </Form.Group.Feedback>
                   </>
                 )}></Controller>
             </Form.Group>
@@ -111,13 +125,13 @@ export function DeaccessionDatasetModal({
               </Form.Group.Label>
               <Form.Group.TextArea />
             </Form.Group>
+            <Button variant="primary" type="submit">
+              {t('publish.continueButton')}
+            </Button>
           </form>
         </Stack>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="primary" type="submit">
-          {t('publish.continueButton')}
-        </Button>
         <Button
           withSpacing
           variant="secondary"
