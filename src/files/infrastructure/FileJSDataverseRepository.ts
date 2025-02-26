@@ -1,7 +1,6 @@
 import { FileRepository } from '../domain/repositories/FileRepository'
 import { FileDownloadMode, FileTabularData } from '../domain/models/FileMetadata'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
-
 import {
   File as JSFile,
   FileDownloadSizeMode,
@@ -17,7 +16,8 @@ import {
   uploadFile as jsUploadFile,
   addUploadedFilesToDataset,
   UploadedFileDTO,
-  ReadError
+  ReadError,
+  deleteFile
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -303,5 +303,9 @@ export class FileJSDataverseRepository implements FileRepository {
 
   addUploadedFiles(datasetId: number | string, uploadedFiles: UploadedFileDTO[]): Promise<void> {
     return addUploadedFilesToDataset.execute(datasetId, uploadedFiles)
+  }
+
+  delete(fileId: number | string): Promise<void> {
+    return deleteFile.execute(fileId)
   }
 }

@@ -7,6 +7,7 @@ import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/Upw
 
 export interface File {
   id: number
+  datasetPersistentId: string
   name: string
   access: FileAccess
   datasetVersion: DatasetVersion
