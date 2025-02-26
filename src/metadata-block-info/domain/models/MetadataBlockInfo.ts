@@ -101,7 +101,7 @@ export interface MetadataBlockInfoDisplayFormat {
 
 export type MetadataBlockInfoDisplayFormatFields = Record<string, MetadataFieldInfo>
 
-export type MetadataFieldInfo = Pick<MetadataField, 'displayFormat'>
+export type MetadataFieldInfo = Pick<MetadataField, 'displayFormat' | 'type'>
 
 export const METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER = '#VALUE'
 export const METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER = '#NAME'

@@ -58,6 +58,7 @@ export class JSFileMapper {
     )
     return {
       id: this.toFileId(jsFile.id),
+      datasetPersistentId: jsDataset.persistentId,
       name: this.toFileName(jsFile.name),
       access: JSFileAccessMapper.toFileAccess(jsFile.restricted),
       datasetVersion: datasetVersion,
