@@ -7,14 +7,15 @@ describe('CollectionInfo', () => {
       name: 'Collection Name',
       affiliation: 'Affiliation',
       isReleased: true,
-      description: 'Here is a description with [a link](https://dataverse.org)'
+      description: 'Here is a <b>description</b> with <a href="https://dataverse.org">a link</a>'
     })
     cy.customMount(<CollectionInfo collection={collection} />)
 
     cy.findByRole('heading', { name: 'Collection Name' }).should('exist')
     cy.findByText('(Affiliation)').should('exist')
-    cy.findByText(/Here is a description with/).should('exist')
+    cy.findByText(/Here is a/).should('exist')
     cy.findByRole('link', { name: 'a link' }).should('exist')
+    cy.get('strong').contains('description').should('exist')
     cy.findByText('Unpublished').should('not.exist')
   })
 
