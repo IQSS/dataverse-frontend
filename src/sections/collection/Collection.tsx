@@ -99,7 +99,7 @@ export function Collection({
               <div className={styles['right-content']}>
                 <ContactButton
                   toContactName={collection.name}
-                  contactObjectType={'collection'}
+                  contactObjectType="collection"
                   id={collection.id}
                   contactRepository={contactRepository}
                 />

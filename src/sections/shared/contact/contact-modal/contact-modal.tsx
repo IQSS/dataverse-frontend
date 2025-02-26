@@ -1,15 +1,10 @@
-import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm, FormProvider } from 'react-hook-form'
-import { Alert, Button, Modal } from '@iqss/dataverse-design-system'
+import { Alert, Button, Modal, Spinner } from '@iqss/dataverse-design-system'
 import { FeedbackDTO } from '@/contact/domain/useCases/FeedbackDTO'
-import { Captcha } from '@/sections/shared/form/ContactForm/ContactCaptcha'
 import { ContactForm } from '@/sections/shared/form/ContactForm/ContactForm'
 import { useSession } from '@/sections/session/SessionContext'
-import {
-  useSendFeedbacktoOwners,
-  SubmissionStatus
-} from '@/sections/shared/form/ContactForm/useSendFeedbacktoOwners'
+import { useSendFeedbacktoOwners } from '@/sections/shared/form/ContactForm/useSendFeedbacktoOwners'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { toast } from 'react-toastify'
 
@@ -41,9 +36,17 @@ export const ContactModal = ({
   const { t } = useTranslation('shared')
   const { user } = useSession()
 
-  const { submitForm, submissionStatus, submitError } = useSendFeedbacktoOwners(contactRepository)
+  const closeModalAndSentToast = () => {
+    handleClose()
+    toast.success(t('contact.contactSuccess'))
+  }
 
-  const methods = useForm<ContactFormData>({
+  const { submitForm, isSubmittingForm, submitError } = useSendFeedbacktoOwners({
+    contactRepository,
+    onSuccessfulSubmit: closeModalAndSentToast
+  })
+
+  const formMethods = useForm<ContactFormData>({
     defaultValues: {
       id: id,
       subject: '',
@@ -62,48 +65,42 @@ export const ContactModal = ({
     }
 
     await submitForm(formData)
-    methods.reset()
   }
 
-  useEffect(() => {
-    if (submissionStatus === SubmissionStatus.SubmitComplete) {
-      handleClose()
-      toast.success(t('contact.contactSuccess'))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [submissionStatus])
-
   return (
-    <Modal show={show} onHide={handleClose} centered>
+    <Modal
+      show={show}
+      onHide={() => {
+        handleClose()
+        formMethods.reset()
+      }}
+      centered>
       <Modal.Header>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {submissionStatus === SubmissionStatus.Errored && (
+        {submitError && (
           <Alert variant="danger" dismissible={false}>
             {submitError}
           </Alert>
         )}
-        <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <FormProvider {...formMethods}>
+          <form onSubmit={formMethods.handleSubmit(onSubmit)}>
             <ContactForm isLoggedIn={Boolean(user)} toContactName={toContactName} />
           </form>
-          <Captcha />
         </FormProvider>
       </Modal.Body>
       <Modal.Footer>
-        <Button
-          variant="secondary"
-          type="button"
-          disabled={submissionStatus === SubmissionStatus.IsSubmitting}
-          onClick={handleClose}>
+        <Button variant="secondary" type="button" disabled={isSubmittingForm} onClick={handleClose}>
           {t('close')}
         </Button>
         <Button
           type="submit"
-          onClick={methods.handleSubmit(onSubmit)}
-          disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
-          {submissionStatus === SubmissionStatus.IsSubmitting ? t('Submitting') : t('Submit')}
+          onClick={formMethods.handleSubmit(onSubmit)}
+          disabled={isSubmittingForm}>
+          {isSubmittingForm && <Spinner variant="light" animation="border" size="sm" />
+            ? t('Submitting')
+            : t('Submit')}
         </Button>
       </Modal.Footer>
     </Modal>

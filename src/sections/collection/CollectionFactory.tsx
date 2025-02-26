@@ -8,6 +8,7 @@ import { useGetCollectionQueryParams } from './useGetCollectionQueryParams'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 const contactRepository = new ContactJSDataverseRepository()
+
 export class CollectionFactory {
   static create(): ReactElement {
     return <CollectionWithSearchParams />

@@ -169,11 +169,22 @@
         "required": "Validation is required.",
         "invalid": "Incorrect answer.",
         "onlyNumber": "Only numbers are allowed.",
-        "maxLength": "Answer cannot exceed 10."
+        "maxLength": "Answer cannot exceed {{maxLength}} ."
       },
-      "email": { "required": "Email is required.", "maxLength": "Email cannot exceed 255." },
-      "subject": { "required": "Subject is required.", "maxLength": "Subject cannot exceed 255." },
-      "message": { "required": "Message is required.", "maxLength": "Message cannot exceed 255." }
-    }
+      "email": {
+        "invalid": "Invalid email format.",
+        "required": "Email is required.",
+        "maxLength": "Email cannot exceed {{maxLength}} ."
+      },
+      "subject": {
+        "required": "Subject is required.",
+        "maxLength": "Subject cannot exceed {{maxLength}} ."
+      },
+      "message": {
+        "required": "Message is required.",
+        "maxLength": "Message cannot exceed {{maxLength}} ."
+      }
+    },
+    "defaultFeedbackSubmitError": "An error occurred while submitting your feedback. Please try again later."
   }
 }

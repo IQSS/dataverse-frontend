@@ -26,7 +26,7 @@ describe('Contact Modal', () => {
       />
     )
   })
-  it('should should fields and information correctly', () => {
+  it('should fields and information correctly', () => {
     cy.findByText(title).should('exist')
     cy.findByText('Root Contact').should('exist')
     cy.findByText('From').should('exist')

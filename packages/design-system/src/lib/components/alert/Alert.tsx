@@ -8,7 +8,7 @@ interface AlertProps {
   variant: AlertVariant
   dismissible?: boolean
   customHeading?: string
-  children?: ReactNode
+  children: ReactNode
 }
 
 function Alert({ variant, dismissible = true, customHeading, children }: AlertProps) {

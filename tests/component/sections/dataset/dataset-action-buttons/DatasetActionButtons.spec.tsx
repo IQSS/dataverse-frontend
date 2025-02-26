@@ -8,10 +8,11 @@ import {
   DatasetPermissionsMother,
   DatasetVersionMother
 } from '../../../dataset/domain/models/DatasetMother'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
-
 const collectionRepository: CollectionRepository = {} as CollectionRepository
+const contactRepository: ContactRepository = {} as ContactRepository
 
 describe('DatasetActionButtons', () => {
   it('renders the DatasetActionButtons with the Publish button', () => {
@@ -28,7 +29,7 @@ describe('DatasetActionButtons', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
-        onSuccess={() => {}}
+        contactRepository={contactRepository}
       />
     )
 
@@ -59,7 +60,7 @@ describe('DatasetActionButtons', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
-        onSuccess={() => {}}
+        contactRepository={contactRepository}
       />
     )
 

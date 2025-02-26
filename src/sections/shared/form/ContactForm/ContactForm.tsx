@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Controller, useFormContext, UseControllerProps } from 'react-hook-form'
 import { Form, Row, Col } from '@iqss/dataverse-design-system'
+import { Validator } from '@/shared/helpers/Validator'
+import { Captcha } from './ContactCaptcha'
 
 interface ContactFormProps {
   isLoggedIn: boolean
@@ -13,9 +15,10 @@ export function ContactForm({ isLoggedIn, toContactName }: ContactFormProps) {
 
   const emailRules: UseControllerProps['rules'] = {
     required: t('contact.validation.email.required'),
-    pattern: {
-      value: /^[^@ ]+@[^@ ]+\.[^@ ]+$/,
-      message: 'Invalid email format'
+    validate: (value: string) => {
+      if (!Validator.isValidEmail(value)) {
+        return t('contact.validation.email.invalid')
+      }
     },
     maxLength: {
       value: 255,
@@ -45,7 +48,6 @@ export function ContactForm({ isLoggedIn, toContactName }: ContactFormProps) {
           <Form.Group.Text>{toContactName} Contact</Form.Group.Text>
         </Col>
       </Row>
-
       <Row className="mb-3">
         <Col lg={3}>
           <Form.Group.Label required>From</Form.Group.Label>
@@ -73,7 +75,6 @@ export function ContactForm({ isLoggedIn, toContactName }: ContactFormProps) {
           />
         </Col>
       </Row>
-
       <Row className="mb-3">
         <Col lg={3}>
           <Form.Group.Label required>{t('contact.subject')}</Form.Group.Label>
@@ -99,7 +100,6 @@ export function ContactForm({ isLoggedIn, toContactName }: ContactFormProps) {
           />
         </Col>
       </Row>
-
       <Row className="mb-3">
         <Col lg={3}>
           <Form.Group.Label required>{t('contact.message')}</Form.Group.Label>
@@ -122,6 +122,12 @@ export function ContactForm({ isLoggedIn, toContactName }: ContactFormProps) {
               </>
             )}
           />
+        </Col>
+      </Row>{' '}
+      <Row className="mb-3">
+        <Col lg={3}>{''}</Col>
+        <Col lg={9}>
+          <Captcha />
         </Col>
       </Row>
     </>

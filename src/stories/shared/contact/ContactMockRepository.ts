@@ -1,10 +1,10 @@
-import { Contact } from '@/contact/domain/models/Contact'
+import { ContactResponse } from '@/contact/domain/models/ContactResponse'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import { FeedbackDTO } from '@/contact/domain/useCases/FeedbackDTO'
 
 export class ContactMockRepository implements ContactRepository {
-  sendFeedbacktoOwners(_feedbackDTO: FeedbackDTO): Promise<Contact[]> {
-    return new Promise<Contact[]>((resolve) => {
+  sendFeedbacktoOwners(_feedbackDTO: FeedbackDTO): Promise<ContactResponse[]> {
+    return new Promise<ContactResponse[]>((resolve) => {
       setTimeout(() => {
         resolve([])
       }, 1_000)

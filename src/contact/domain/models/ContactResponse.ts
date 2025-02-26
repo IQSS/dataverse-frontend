@@ -1,4 +1,4 @@
-export interface Contact {
+export interface ContactResponse {
   subject: string
   body: string
   fromEmail: string
