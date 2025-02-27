@@ -116,7 +116,6 @@ describe('EditCollectionDropdown', () => {
       openDropdown()
 
       cy.findByRole('button', { name: /Delete Collection/i }).should('exist')
-      // cy.findByRole('button', { name: /Confirm/i }).click()
     })
 
     it('does not show the delete button if user cannot delete collection', () => {
