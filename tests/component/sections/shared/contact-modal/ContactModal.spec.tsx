@@ -92,4 +92,16 @@ describe('Contact Modal', () => {
         }
       })
   })
+
+  it('should reset the form after close the modal', () => {
+    cy.findByTestId('fromEmail').type('email')
+    cy.findByTestId('subject').type('subject')
+    cy.findByTestId('body').type('message')
+    cy.findByTestId('captchaInput').type('abc')
+    cy.get('.modal-header').find('button').click()
+    cy.findByTestId('fromEmail').should('have.value', '')
+    cy.findByTestId('subject').should('have.value', '')
+    cy.findByTestId('body').should('have.value', '')
+    cy.findByTestId('captchaInput').should('have.value', '')
+  })
 })
