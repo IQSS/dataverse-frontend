@@ -23,8 +23,7 @@
       "nameAsc": "Name (A-Z)",
       "nameDesc": "Name (Z-A)",
       "dateAsc": "Oldest",
-      "dateDesc": "Newest",
-      "relevance": "Relevance"
+      "dateDesc": "Newest"
     }
   },
   "noSearchMatches": "There are no collections, datasets, or files that match your search. Please try a new search by using other or broader terms. You can also check out the <anchor>search guide</anchor> for tips.",

@@ -23,7 +23,7 @@ export class JSMetadataBlockInfoMapper {
     const fields: MetadataBlockInfoDisplayFormatFields = {}
 
     Object.entries(jsMetadataBlockInfoFields).forEach(([key, value]) => {
-      fields[key] = { displayFormat: this.toDisplayFormat(value.displayFormat) }
+      fields[key] = { displayFormat: this.toDisplayFormat(value.displayFormat), type: value.type }
 
       if (value.typeClass === 'compound' && value.childMetadataFields) {
         this.processCompoundFields(value.childMetadataFields, fields)
@@ -38,7 +38,7 @@ export class JSMetadataBlockInfoMapper {
     result: MetadataBlockInfoDisplayFormatFields
   ): void {
     Object.entries(jsFields).forEach(([key, value]) => {
-      result[key] = { displayFormat: this.toDisplayFormat(value.displayFormat) }
+      result[key] = { displayFormat: this.toDisplayFormat(value.displayFormat), type: value.type }
     })
   }
 

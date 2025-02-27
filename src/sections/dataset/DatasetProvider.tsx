@@ -26,7 +26,13 @@ export function DatasetProvider({
 
   const getDataset = useDeepCompareCallback(() => {
     if (searchParams.persistentId) {
-      return getDatasetByPersistentId(repository, searchParams.persistentId, searchParams.version)
+      return getDatasetByPersistentId(
+        repository,
+        searchParams.persistentId,
+        searchParams.version,
+        undefined,
+        true
+      )
     }
     if (searchParams.privateUrlToken) {
       return getDatasetByPrivateUrlToken(repository, searchParams.privateUrlToken)

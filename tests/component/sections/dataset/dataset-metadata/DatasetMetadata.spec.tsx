@@ -323,5 +323,6 @@ describe('DatasetMetadata', () => {
     )
 
     cy.findAllByTestId('ds-metadata-block-display-format-error').should('exist')
+    cy.contains('Error getting metadata block display info').should('not.exist')
   })
 })

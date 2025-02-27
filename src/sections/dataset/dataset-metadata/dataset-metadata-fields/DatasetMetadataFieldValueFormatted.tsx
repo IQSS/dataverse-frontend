@@ -1,3 +1,4 @@
+import TurndownService from 'turndown'
 import {
   METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
   METADATA_FIELD_DISPLAY_FORMAT_PLACEHOLDER,
@@ -17,6 +18,13 @@ interface DatasetMetadataFieldValueFormattedProps {
   metadataFieldValue: DatasetMetadataFieldValueModel
   metadataBlockDisplayFormatInfo: MetadataBlockInfoDisplayFormat
 }
+
+const turndownService = new TurndownService()
+
+function transformHtmlToMarkdown(source: string): string {
+  return turndownService.turndown(source)
+}
+
 export function DatasetMetadataFieldValueFormatted({
   metadataBlockName,
   metadataFieldName,
@@ -35,6 +43,12 @@ export function DatasetMetadataFieldValueFormatted({
     METADATA_FIELD_DISPLAY_FORMAT_NAME_PLACEHOLDER,
     t(`${metadataBlockName}.datasetField.${metadataFieldName}.name`)
   )
+
+  if (metadataBlockDisplayFormatInfo.fields[metadataFieldName]?.type === 'TEXTBOX') {
+    const markdownValue = transformHtmlToMarkdown(valueFormattedWithNamesTranslated)
+
+    return <MarkdownComponent markdown={markdownValue} />
+  }
 
   return <MarkdownComponent markdown={valueFormattedWithNamesTranslated} />
 }
@@ -80,9 +94,18 @@ function joinSubFields(
   metadataBlockInfo?: MetadataBlockInfoDisplayFormat
 ): string {
   return Object.entries(metadataSubField)
-    .map(([subFieldName, subFieldValue]) =>
-      formatSubFieldValue(subFieldValue, metadataBlockInfo?.fields[subFieldName]?.displayFormat)
-    )
+    .map(([subFieldName, subFieldValue]) => {
+      let formattedSubFieldValue = formatSubFieldValue(
+        subFieldValue,
+        metadataBlockInfo?.fields[subFieldName]?.displayFormat
+      )
+      const subFieldType = metadataBlockInfo?.fields[subFieldName]?.type as string | undefined
+
+      if (subFieldType === 'TEXTBOX')
+        formattedSubFieldValue = transformHtmlToMarkdown(formattedSubFieldValue)
+
+      return formattedSubFieldValue
+    })
     .join(' ')
 }
 
