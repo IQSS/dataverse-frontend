@@ -26,6 +26,7 @@ describe('Contact Modal', () => {
       />
     )
   })
+
   it('should fields and information correctly', () => {
     cy.findByText(title).should('exist')
     cy.findByText('Root Contact').should('exist')
@@ -38,6 +39,13 @@ describe('Contact Modal', () => {
     cy.findByText('Close').should('exist')
   })
 
+  it('shows validation errors when fields are empty', () => {
+    cy.findByRole('button', { name: /submit/i }).click()
+    cy.findByText(/email is required/i).should('exist')
+    cy.findByText(/subject is required/i).should('exist')
+    cy.findByText(/message is required/i).should('exist')
+  })
+
   it('should validation errors when captcha answer is not numbers', () => {
     cy.findByTestId('fromEmail').type('email@dataverse.com')
     cy.findByTestId('subject').type('subject')
@@ -47,11 +55,14 @@ describe('Contact Modal', () => {
     cy.findByText(/Only numbers are allowed./i).should('exist')
   })
 
-  it('shows validation errors when fields are empty', () => {
-    cy.findByRole('button', { name: /submit/i }).click()
-    cy.findByText(/email is required/i).should('exist')
-    cy.findByText(/subject is required/i).should('exist')
-    cy.findByText(/message is required/i).should('exist')
+  it('should show validation error when the entered captcha is incorrect', () => {
+    const incorrectCaptcha = '99'
+    cy.findByTestId('fromEmail').type('email@dataverse.com')
+    cy.findByTestId('subject').type('subject')
+    cy.findByTestId('body').type('message')
+    cy.findByTestId('captchaInput').type(incorrectCaptcha)
+    cy.findByRole('button', { name: /Submit/i }).click()
+    cy.findByText(/Incorrect answer./).should('exist')
   })
 
   it('shows validation errors when email is in wrong format', () => {

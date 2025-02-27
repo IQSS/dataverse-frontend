@@ -81,6 +81,44 @@ describe('ContactButton', () => {
     cy.findByRole('dialog').should('not.exist')
   })
 
+  it('should show submitting button if the form is submitting', () => {
+    contactRepository.sendFeedbacktoOwners = cy.stub().callsFake(() => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve([mockContacts])
+        }, 2000)
+      })
+    })
+
+    cy.customMount(
+      <ContactButton
+        toContactName="Test Dataset"
+        contactObjectType="collection"
+        id="root"
+        contactRepository={contactRepository}
+      />
+    )
+    cy.findByRole('button', { name: /Contact/i }).click()
+
+    cy.findByTestId('fromEmail').type('email@dataverse.com')
+    cy.findByTestId('subject').type('subject')
+    cy.findByTestId('body').type('message')
+    cy.findByTestId('captchaNumbers')
+      .invoke('text')
+      .then((text) => {
+        const matches = text.match(/(\d+)\s*\+\s*(\d+)\s*=/)
+        if (matches) {
+          const num1 = parseInt(matches[1], 10)
+          const num2 = parseInt(matches[2], 10)
+          const answer = num1 + num2
+          cy.findByTestId('captchaInput').type(answer.toString())
+        }
+      })
+    cy.findByRole('button', { name: /Submit/i }).click()
+    cy.findByRole('button', { name: /Submitting/i }).should('exist')
+    cy.findByRole('dialog').should('not.exist')
+  })
+
   it('should submit form with numeric id succefully ', () => {
     cy.findByTestId('captchaNumbers')
       .invoke('text')
