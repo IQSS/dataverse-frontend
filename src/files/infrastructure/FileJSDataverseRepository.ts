@@ -17,7 +17,8 @@ import {
   addUploadedFilesToDataset,
   UploadedFileDTO,
   ReadError,
-  deleteFile
+  deleteFile,
+  replaceFile
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -307,5 +308,10 @@ export class FileJSDataverseRepository implements FileRepository {
 
   delete(fileId: number | string): Promise<void> {
     return deleteFile.execute(fileId)
+  }
+
+  replace(fileId: number | string, uploadedFileDTO: UploadedFileDTO): Promise<void> {
+    // TODO:ME Check current file mime type and if different from new file then forceReplace = true
+    return replaceFile.execute(fileId, uploadedFileDTO)
   }
 }

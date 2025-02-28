@@ -44,4 +44,5 @@ export interface FileRepository {
   ) => Promise<void>
   addUploadedFiles: (datasetId: number | string, files: UploadedFileDTO[]) => Promise<void>
   delete: (fileId: number | string) => Promise<void>
+  replace: (fileId: number | string, uploadedFileDTO: UploadedFileDTO) => Promise<void>
 }

@@ -1,3 +1,5 @@
+import { ReferrerType } from './replace-file/ReplaceFile'
+
 export enum Route {
   HOME = '/',
   SIGN_UP = '/dataverseuser.xhtml?editMode=CREATE&redirectPage=%2Fdataverse.xhtml',
@@ -8,6 +10,7 @@ export enum Route {
   UPLOAD_DATASET_FILES = '/datasets/upload-files',
   EDIT_DATASET_METADATA = '/datasets/edit-metadata',
   FILES = '/files',
+  FILES_REPLACE = '/files/replace',
   COLLECTIONS_BASE = '/collections',
   COLLECTIONS = '/collections/:collectionId',
   CREATE_COLLECTION = '/collections/:parentCollectionId/create',
@@ -23,7 +26,16 @@ export const RouteWithParams = {
   CREATE_DATASET: (collectionId: string) => `/datasets/${collectionId}/create`,
   EDIT_COLLECTION: (collectionId: string) => `/collections/${collectionId}/edit`,
   EDIT_COLLECTION_FEATURED_ITEMS: (collectionId: string) =>
-    `/collections/${collectionId}/edit-featured-items`
+    `/collections/${collectionId}/edit-featured-items`,
+  FILES_REPLACE: (datasetPersistentId: string, fileId: number, referrerType: ReferrerType) => {
+    const searchParams = new URLSearchParams({
+      [QueryParamKey.FILE_ID]: fileId.toString(),
+      [QueryParamKey.PERSISTENT_ID]: datasetPersistentId,
+      [QueryParamKey.REFERRER]: referrerType
+    })
+
+    return `/files/replace?${searchParams.toString()}`
+  }
 }
 
 export enum QueryParamKey {
@@ -31,5 +43,7 @@ export enum QueryParamKey {
   PERSISTENT_ID = 'persistentId',
   PAGE = 'page',
   COLLECTION_ID = 'collectionId',
-  TAB = 'tab'
+  TAB = 'tab',
+  REFERRER = 'referrer',
+  FILE_ID = 'fileId'
 }
