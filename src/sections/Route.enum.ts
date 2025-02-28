@@ -27,10 +27,16 @@ export const RouteWithParams = {
   EDIT_COLLECTION: (collectionId: string) => `/collections/${collectionId}/edit`,
   EDIT_COLLECTION_FEATURED_ITEMS: (collectionId: string) =>
     `/collections/${collectionId}/edit-featured-items`,
-  FILES_REPLACE: (datasetPersistentId: string, fileId: number, referrerType: ReferrerType) => {
+  FILES_REPLACE: (
+    datasetPersistentId: string,
+    datasetVersion: string,
+    fileId: number,
+    referrerType: ReferrerType
+  ) => {
     const searchParams = new URLSearchParams({
       [QueryParamKey.FILE_ID]: fileId.toString(),
       [QueryParamKey.PERSISTENT_ID]: datasetPersistentId,
+      [QueryParamKey.DATASET_VERSION]: datasetVersion,
       [QueryParamKey.REFERRER]: referrerType
     })
 
@@ -45,5 +51,6 @@ export enum QueryParamKey {
   COLLECTION_ID = 'collectionId',
   TAB = 'tab',
   REFERRER = 'referrer',
-  FILE_ID = 'fileId'
+  FILE_ID = 'fileId',
+  DATASET_VERSION = 'datasetVersion'
 }

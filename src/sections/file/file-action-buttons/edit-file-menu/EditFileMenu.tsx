@@ -13,6 +13,7 @@ interface EditFileMenuProps {
 
 export interface EditFileMenuDatasetInfo {
   persistentId: string
+  versionNumber: string
   releasedVersionExists: boolean
 }
 
@@ -21,7 +22,14 @@ export const EditFileMenu = ({ fileId, fileRepository, datasetInfo }: EditFileMe
   const navigate = useNavigate()
 
   const handleOnReplaceClick = () =>
-    navigate(RouteWithParams.FILES_REPLACE(datasetInfo.persistentId, fileId, 'FILE'))
+    navigate(
+      RouteWithParams.FILES_REPLACE(
+        datasetInfo.persistentId,
+        datasetInfo.versionNumber,
+        fileId,
+        'FILE'
+      )
+    )
 
   return (
     <DropdownButton

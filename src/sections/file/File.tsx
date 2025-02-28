@@ -91,7 +91,8 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                         datasetInfo={{
                           persistentId: file.datasetPersistentId,
                           releasedVersionExists:
-                            file.datasetVersion.someDatasetVersionHasBeenReleased
+                            file.datasetVersion.someDatasetVersionHasBeenReleased,
+                          versionNumber: file.datasetVersion.number.toSearchParam()
                         }}
                       />
                     )}
