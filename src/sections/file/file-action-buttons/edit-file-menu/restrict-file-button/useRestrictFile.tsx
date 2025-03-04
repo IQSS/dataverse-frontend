@@ -40,7 +40,9 @@ export const useRestrictFile = ({
           error.getReasonWithoutStatusCode() ?? /* istanbul ignore next */ error.getErrorMessage()
         seterrorRestrictingFile(formattedError)
       } else {
-        seterrorRestrictingFile(t('defaultFileRestrictError'))
+        isRestricted
+          ? seterrorRestrictingFile(t('restriction.defaultFileUnrestrictError'))
+          : seterrorRestrictingFile(t('restriction.defaultFileRestrictError'))
       }
     } finally {
       setisRestrictingFile(false)

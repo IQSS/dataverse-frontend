@@ -270,6 +270,56 @@ describe('EditFileMenu', () => {
         .should('exist')
         .should('be.visible')
     })
+
+    it('shows the default error message if restrict file fails with not a js-dataverse WriteError', () => {
+      const fileRepository = new FileMockRepository()
+      fileRepository.restrict = cy.stub().rejects('Some error')
+
+      cy.customMount(
+        <EditFileMenu
+          fileId={testFile.id}
+          fileRepository={fileRepository}
+          isRestricted={false}
+          datasetInfo={{
+            persistentId: testFile.datasetPersistentId,
+            releasedVersionExists: false
+          }}
+        />
+      )
+
+      cy.findByRole('button', { name: 'Edit File' }).click()
+      cy.findByRole('button', { name: 'Restrict' }).click()
+      cy.findByRole('dialog').should('exist')
+
+      cy.findByRole('button', { name: /Save Changes/i }).click()
+
+      cy.findByText('Something went wrong restricting the file. Try again later.').should('exist')
+    })
+
+    it('shows the js-dataverse WriteError message if restrict fails with a js-dataverse WriteError', () => {
+      const fileRepository = new FileMockRepository()
+      fileRepository.restrict = cy.stub().rejects(new WriteError('error message.'))
+
+      cy.customMount(
+        <EditFileMenu
+          fileId={testFile.id}
+          fileRepository={fileRepository}
+          isRestricted={false}
+          datasetInfo={{
+            persistentId: testFile.datasetPersistentId,
+            releasedVersionExists: false
+          }}
+        />
+      )
+
+      cy.findByRole('button', { name: 'Edit File' }).click()
+      cy.findByRole('button', { name: 'Restrict' }).click()
+      cy.findByRole('dialog').should('exist')
+
+      cy.findByRole('button', { name: /Save Changes/i }).click()
+
+      cy.findByText('error message.').should('exist')
+    })
   })
 
   describe('Unrestrict button', () => {
@@ -342,6 +392,56 @@ describe('EditFileMenu', () => {
       cy.findByText(/The file has been unrestricted./)
         .should('exist')
         .should('be.visible')
+    })
+
+    it('shows the default error message if unrestrict file fails with not a js-dataverse WriteError', () => {
+      const fileRepository = new FileMockRepository()
+      fileRepository.restrict = cy.stub().rejects('Some error')
+
+      cy.customMount(
+        <EditFileMenu
+          fileId={testFile.id}
+          fileRepository={fileRepository}
+          isRestricted={true}
+          datasetInfo={{
+            persistentId: testFile.datasetPersistentId,
+            releasedVersionExists: false
+          }}
+        />
+      )
+
+      cy.findByRole('button', { name: 'Edit File' }).click()
+      cy.findByRole('button', { name: 'Unrestrict' }).click()
+      cy.findByRole('dialog').should('exist')
+
+      cy.findByRole('button', { name: /Save Changes/i }).click()
+
+      cy.findByText('Something went wrong unrestricting the file. Try again later.').should('exist')
+    })
+
+    it('shows the js-dataverse WriteError message if unrestrict fails with a js-dataverse WriteError', () => {
+      const fileRepository = new FileMockRepository()
+      fileRepository.restrict = cy.stub().rejects(new WriteError('error message.'))
+
+      cy.customMount(
+        <EditFileMenu
+          fileId={testFile.id}
+          fileRepository={fileRepository}
+          isRestricted={true}
+          datasetInfo={{
+            persistentId: testFile.datasetPersistentId,
+            releasedVersionExists: false
+          }}
+        />
+      )
+
+      cy.findByRole('button', { name: 'Edit File' }).click()
+      cy.findByRole('button', { name: 'Unrestrict' }).click()
+      cy.findByRole('dialog').should('exist')
+
+      cy.findByRole('button', { name: /Save Changes/i }).click()
+
+      cy.findByText('error message.').should('exist')
     })
   })
 })

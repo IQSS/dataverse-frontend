@@ -80,6 +80,8 @@
     "saveChanges": "Save Changes",
     "cancelChanges": "Cancel Changes",
     "messagePublishedDataset": "Files will not be changed from previously published versions of the dataset.",
-    "message": "The file will be unrestricted."
+    "message": "The file will be unrestricted.",
+    "defaultFileRestrictError": "Something went wrong restricting the file. Try again later.",
+    "defaultFileUnrestrictError": "Something went wrong unrestricting the file. Try again later."
   }
 }
