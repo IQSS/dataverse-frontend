@@ -1,10 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { Button, Modal, Spinner, Stack, Col, Form } from '@iqss/dataverse-design-system'
-// import { ExclamationCircleFill, ExclamationTriangle } from 'react-bootstrap-icons'
-import styles from './ConfirmRestrictFileModal.module.scss'
-import { FormEvent, useState } from 'react'
 import { ExclamationTriangle } from 'react-bootstrap-icons'
+import { Button, Modal, Spinner, Stack, Col, Form } from '@iqss/dataverse-design-system'
+import styles from './ConfirmRestrictFileModal.module.scss'
 
 interface ConfirmRestrictFileModalProps {
   show: boolean
@@ -29,8 +27,8 @@ export const ConfirmRestrictFileModal = ({
 }: ConfirmRestrictFileModalProps) => {
   const { t: tShared } = useTranslation('shared')
   const { t } = useTranslation('file')
-  const [requestAccess, setRequestAccess] = useState(true) // TODO need connect to API
-  const [terms, setTerms] = useState(termsOfAccessForRestrictedFiles) // TODO need connect to API
+  const requestAccess = true // TODO need connect to API
+  const terms = termsOfAccessForRestrictedFiles // TODO need connect to API
 
   return (
     <Modal show={show} onHide={isRestrictingFile ? () => {} : handleClose} centered size="lg">
@@ -62,9 +60,6 @@ export const ConfirmRestrictFileModal = ({
                     data-testid="enable-access-request-checkbox"
                     id={'requestAccessCB'}
                     checked={requestAccess}
-                    onChange={(event: FormEvent<HTMLInputElement>) =>
-                      setRequestAccess(event.currentTarget.checked)
-                    }
                   />
                 </Col>
               </Form.Group>
@@ -76,9 +71,7 @@ export const ConfirmRestrictFileModal = ({
                   <Form.Group.TextArea
                     data-testid="terms-of-access-textarea"
                     defaultValue={terms}
-                    onChange={(event: FormEvent<HTMLInputElement>) =>
-                      setTerms(event.currentTarget.value)
-                    }
+                    disabled
                   />
                 </Col>
               </Form.Group>

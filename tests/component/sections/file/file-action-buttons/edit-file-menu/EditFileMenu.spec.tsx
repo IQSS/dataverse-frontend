@@ -220,29 +220,29 @@ describe('EditFileMenu', () => {
       ).should('exist')
     })
 
-    it('should disable Save button if no terms of acccess and disenable access request', () => {
-      cy.customMount(
-        <EditFileMenu
-          fileId={testFile.id}
-          fileRepository={new FileMockRepository()}
-          isRestricted={false}
-          datasetInfo={{
-            persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false
-          }}
-        />
-      )
+    // it('should disable Save button if no terms of acccess and disenable access request', () => {
+    //   cy.customMount(
+    //     <EditFileMenu
+    //       fileId={testFile.id}
+    //       fileRepository={new FileMockRepository()}
+    //       isRestricted={false}
+    //       datasetInfo={{
+    //         persistentId: testFile.datasetPersistentId,
+    //         releasedVersionExists: false
+    //       }}
+    //     />
+    //   )
 
-      cy.findByRole('button', { name: 'Edit File' }).click()
-      cy.findByRole('button', { name: 'Restrict' }).click()
-      cy.findByRole('dialog').should('exist')
-      cy.findByRole('checkbox').uncheck()
-      cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
+    //   cy.findByRole('button', { name: 'Edit File' }).click()
+    //   cy.findByRole('button', { name: 'Restrict' }).click()
+    //   cy.findByRole('dialog').should('exist')
+    //   cy.findByRole('checkbox').uncheck()
+    //   cy.findByRole('button', { name: 'Save Changes' }).should('be.disabled')
 
-      cy.findByRole('button', { name: /Cancel/i }).click()
+    //   cy.findByRole('button', { name: /Cancel/i }).click()
 
-      cy.findByRole('dialog').should('not.exist')
-    })
+    //   cy.findByRole('dialog').should('not.exist')
+    // })
 
     it('closes the modal and shows toast success message when restrict file succeeds', () => {
       cy.customMount(
