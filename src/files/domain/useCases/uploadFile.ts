@@ -10,9 +10,11 @@ export function uploadFile(
   storageIdSetter: (storageId: string) => void
 ): () => void {
   const controller = new AbortController()
+
   fileRepository
     .uploadFile(datasetId, { file: file }, progress, controller, storageIdSetter)
     .then(done)
     .catch(failed)
+
   return () => controller.abort()
 }

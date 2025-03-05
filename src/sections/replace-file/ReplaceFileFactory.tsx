@@ -1,13 +1,11 @@
 import { ReactElement } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FileJSDataverseRepository } from '@/files/infrastructure/FileJSDataverseRepository'
-import { DatasetJSDataverseRepository } from '@/dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { type ReferrerType, ReplaceFile } from './ReplaceFile'
 import { QueryParamKey } from '../Route.enum'
 import { searchParamVersionToDomainVersion } from '@/router'
 
 const fileRepository = new FileJSDataverseRepository()
-const datasetRepository = new DatasetJSDataverseRepository()
 
 export class ReplaceFileFactory {
   static create(): ReactElement {
@@ -38,7 +36,6 @@ function ReplaceFileWithParams() {
   return (
     <ReplaceFile
       fileRepository={fileRepository}
-      datasetRepository={datasetRepository}
       fileIdFromParams={fileId}
       datasetPidFromParams={datasetId}
       datasetVersionFromParams={datasetVersionNumber}
