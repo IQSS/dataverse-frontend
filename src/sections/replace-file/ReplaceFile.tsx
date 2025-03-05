@@ -7,6 +7,7 @@ import { FileUploader } from '../shared/file-uploader/FileUploader'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { PageNotFound } from '../page-not-found/PageNotFound'
+import { FileUploadState } from '../shared/file-uploader/fileUploaderReducer'
 
 interface ReplaceFileProps {
   fileRepository: FileRepository
@@ -47,7 +48,7 @@ export const ReplaceFile = ({
     return <PageNotFound />
   }
 
-  const handleUploadedFiles = (files: File[]) => {
+  const handleUploadedFiles = (files: FileUploadState[]) => {
     console.group('Uploaded files from callback')
     console.log(files)
     console.groupEnd()
@@ -65,7 +66,7 @@ export const ReplaceFile = ({
         datasetPersistentId={datasetPidFromParams}
         onUploadedFiles={handleUploadedFiles}
         storageConfiguration="S3"
-        multiple={false}
+        multiple={true} // TODO:ME - Change to false here, should allow only one, Also test removing from bottom file list and upload should be enabled again
       />
     </section>
   )

@@ -1,22 +1,23 @@
 import { ChangeEventHandler, DragEventHandler, useRef, useState } from 'react'
+import { useDeepCompareEffect } from 'use-deep-compare'
 import { Semaphore } from 'async-mutex'
+import { toast } from 'react-toastify'
 import { md5 } from 'js-md5'
 import cn from 'classnames'
 import { Button, Card, ProgressBar } from '@iqss/dataverse-design-system'
 import { uploadFile } from '@/files/domain/useCases/uploadFile'
-import { Plus, X } from 'react-bootstrap-icons'
-import { useFileUploader } from './fileUploaderReducer'
+import { Plus, XLg } from 'react-bootstrap-icons'
+import { FileUploadState, mockFileUploadState, useFileUploader } from './fileUploaderReducer'
 import { FileUploaderHelper } from './FileUploaderHelper'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import styles from './FileUploader.module.scss'
-import { toast } from 'react-toastify'
 
 interface FileUploaderProps {
   fileRepository: FileRepository
   datasetPersistentId: string
   storageConfiguration: FileStorageConfiguration
   multiple: boolean
-  onUploadedFiles: (files: File[]) => void
+  onUploadedFiles: (files: FileUploadState[]) => void
 }
 
 type FileStorageConfiguration = 'S3'
@@ -35,12 +36,22 @@ export const FileUploader = ({
   onUploadedFiles
 }: FileUploaderProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
-  const { state, addFiles, addFile, removeFile, updateFile, getFileByKey } = useFileUploader()
+
+  const [isDragging, setIsDragging] = useState(false)
+
   const [uploadingToCancelMap, setUploadingToCancelMap] = useState(new Map<string, () => void>())
 
+  const { state, addFiles, addFile, removeFile, updateFile, getFileByKey } = useFileUploader()
+
   const totalFiles = Object.keys(state).length
-  const uploadingFilesInProgress = Object.values(state).filter((file) => file)
   // const uploadingFilesInProgress = Object.values(state).filter((file) => file.uploading)
+  const uploadingFilesInProgress = Object.values(mockFileUploadState).filter(
+    (file) => file.uploading
+  )
+
+  const uploadedDoneAndHashedFiles = Object.values(state).filter(
+    (file) => file.done && file.checksumValue
+  )
   const canKeepUploading = multiple ? true : totalFiles === 0
 
   const onFileUploadFailed = (file: File) => {
@@ -74,6 +85,11 @@ export const FileUploader = ({
   }
 
   const uploadOneFile = async (file: File) => {
+    if (FileUploaderHelper.isDS_StoreFile(file)) {
+      toast.info('We avoid uploading a .DS_Store file.')
+      return
+    }
+
     await semaphore.acquire(1)
 
     // TODO:ME - There was a sanity check here, needed? or leave it?
@@ -105,6 +121,16 @@ export const FileUploader = ({
     setUploadingToCancelMap((x) => x.set(fileKey, cancelFunction))
   }
 
+  const handleInputFileChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const filesArray = Array.from(event.target.files || [])
+
+    if (filesArray && filesArray.length > 0) {
+      for (const file of filesArray) {
+        void uploadOneFile(file)
+      }
+    }
+  }
+
   // waiting on the possibility to test folder drop: https://github.com/cypress-io/cypress/issues/19696
   const addFromDir = (dir: FileSystemDirectoryEntry) => {
     /* istanbul ignore next */
@@ -115,6 +141,10 @@ export const FileUploader = ({
         if (entry.isFile) {
           const fse = entry as FileSystemFileEntry
           fse.file((file) => {
+            if (FileUploaderHelper.isDS_StoreFile(file)) {
+              toast.info(`We did not upload the file ${file.name} as it is a .DS_Store file`)
+              return
+            }
             void uploadOneFile(file)
           })
         } else if (entry.isDirectory) {
@@ -124,25 +154,11 @@ export const FileUploader = ({
     })
   }
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    const filesArray = Array.from(event.target.files || [])
-
-    if (filesArray && filesArray.length > 0) {
-      for (const file of filesArray) {
-        void uploadOneFile(file)
-      }
-    }
-  }
-
-  // Avoid dropping if can't keep uploading
-  const handleDrop: DragEventHandler<HTMLDivElement> = (event) => {
+  const handleDropFiles: DragEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault()
+    setIsDragging(false)
 
-    console.log({ canKeepUploading })
-
-    if (!canKeepUploading) {
-      return
-    }
+    if (!canKeepUploading) return
 
     const droppedItems = event.dataTransfer.items
 
@@ -152,14 +168,16 @@ export const FileUploader = ({
           addFromDir(droppedFile.webkitGetAsEntry() as FileSystemDirectoryEntry)
         } else if (droppedFile.webkitGetAsEntry()?.isFile) {
           const fse = droppedFile.webkitGetAsEntry() as FileSystemFileEntry
-          fse.file((file) => void uploadOneFile(file))
+          fse.file((file) => {
+            if (FileUploaderHelper.isDS_StoreFile(file)) {
+              toast.info(`We did not upload the file ${file.name} as it is a .DS_Store file`)
+              return
+            }
+            void uploadOneFile(file)
+          })
         }
       })
     }
-  }
-
-  const handleDragOver: DragEventHandler<HTMLDivElement> = (event) => {
-    event.preventDefault()
   }
 
   const cancelUpload = (fileKey: string, fileName: string) => {
@@ -176,113 +194,82 @@ export const FileUploader = ({
     toast.info(`Upload canceled - ${fileName}`)
   }
 
-  console.log(state)
+  useDeepCompareEffect(() => {
+    onUploadedFiles(uploadedDoneAndHashedFiles)
+  }, [uploadedDoneAndHashedFiles, onUploadedFiles])
 
   return (
     <Card>
       <Card.Header>
-        <Button
-          variant="secondary"
-          onClick={() => inputRef.current?.click()}
-          disabled={!canKeepUploading}>
-          <Plus></Plus> {`Select file${multiple ? 's' : ''} to add`}
-          {/* {selectText} */}
+        <Button onClick={() => inputRef.current?.click()} disabled={!canKeepUploading} size="sm">
+          <Plus size={22} /> {`Select File${multiple ? 's' : ''} to Add`}
         </Button>
       </Card.Header>
       <Card.Body>
         <div
-          className={styles.file_uploader}
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          //   onDragEnter={handleDragEnter}
-          //   onDragLeave={handleDragLeave}
-          data-testid="file-uploader-drop-zone"
-          //   style={{ backgroundColor: bgColor }}
-          style={{ minHeight: '300px', border: 'solid 1px red' }}>
-          <div>
-            <input
-              ref={inputRef}
-              type="file"
-              onChange={handleChange}
-              multiple={multiple}
-              hidden
-              disabled={!canKeepUploading}
-            />
-          </div>
+          className={cn(styles.file_uploader_drop_zone, {
+            [styles.is_dragging]: isDragging
+          })}
+          onDrop={handleDropFiles}
+          onDragOver={(e) => {
+            e.preventDefault()
+            setIsDragging(true)
+          }}
+          onDragEnter={() => setIsDragging(true)}
+          onDragLeave={() => setIsDragging(false)}
+          data-testid="file-uploader-drop-zone">
+          <input
+            ref={inputRef}
+            type="file"
+            onChange={handleInputFileChange}
+            multiple={multiple}
+            hidden
+            disabled={!canKeepUploading}
+          />
+
           {uploadingFilesInProgress.length > 0 ? (
-            <div className="uploading-files-list">
+            <ul className={styles.uploading_files_list}>
               {uploadingFilesInProgress.map((file) => {
                 return (
-                  <div className={styles.file} key={file.key}>
-                    <div
-                      className={cn(styles.file_name, {
-                        [styles.failed]: file.failed
-                      })}>
-                      {file.fileDir ? file.fileDir : file.fileName}
-                    </div>
-                    <div className={styles.file_size}>{file.fileSizeString}</div>
-                    {file.uploading && (
-                      <div className={styles.upload_progress}>
-                        <ProgressBar now={file.progress} />
+                  <li className={styles.uploading_file} key={file.key}>
+                    <div className={styles.info_progress_wrapper}>
+                      <div className={styles.info_wrapper}>
+                        <span
+                          className={cn({
+                            [styles.failed]: file.failed
+                          })}>
+                          {file.fileDir ? file.fileDir : file.fileName}
+                        </span>
+                        <small>{file.fileSizeString}</small>
                       </div>
-                    )}
 
+                      {file.uploading && (
+                        <div className={styles.upload_progress}>
+                          <ProgressBar now={file.progress} />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* TODO:ME - Check controlling when to show cancel */}
                     <div className={styles.cancel_upload}>
                       <Button
                         variant="secondary"
                         size="sm"
-                        withSpacing
                         onClick={() => cancelUpload(file.key, file.fileName)}>
-                        <X
-                          className={styles.icon}
-                          // title={cancelTitle}
-                        />
+                        <XLg />
                       </Button>
                     </div>
-                  </div>
+                  </li>
                 )
               })}
-            </div>
+            </ul>
           ) : (
-            <div className={styles.info}>Drag and drop files and/or directories here</div>
+            <p className={styles.drag_drop_msg}>
+              {multiple
+                ? 'Drag and drop files and/or directories here.'
+                : 'Drag and drop file here.'}
+            </p>
           )}
-          {/* {files.filter((x) => !FileUploaderHelper.get(x, fileUploaderState).done).length > 0 ? (
-            <div className={styles.files}>
-              {files
-                .filter((x) => !FileUploaderHelper.get(x, fileUploaderState).done)
-                .map((file) => (
-                  <div className={styles.file} key={FileUploaderHelper.key(file)}>
-                    <div
-                      className={cn(styles.file_name, {
-                        [styles.failed]: FileUploaderHelper.get(file, fileUploaderState).failed
-                      })}>
-                      {file.webkitRelativePath ? file.webkitRelativePath : file.name}
-                    </div>
-                    <div className={styles.file_size}>
-                      {FileUploaderHelper.get(file, fileUploaderState).fileSizeString}
-                    </div>
-                    <div className={styles.upload_progress}>
-                      {FileUploaderHelper.get(file, fileUploaderState).progressHidden ? null : (
-                        <ProgressBar
-                          now={FileUploaderHelper.get(file, fileUploaderState).progress}
-                        />
-                      )}
-                    </div>
-                    <div className={styles.cancel_upload}>
-                      <Button
-                        variant="secondary"
-                        {...{ size: 'sm' }}
-                        withSpacing
-                        onClick={() => cancelUpload(file)}>
-                        <X className={styles.icon} title={cancelTitle} />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          ) : (
-            <div className={styles.info}>{info}</div>
-          )} */}
         </div>
       </Card.Body>
     </Card>
