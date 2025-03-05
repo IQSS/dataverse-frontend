@@ -181,5 +181,30 @@
     "majorVersion": "Major Release",
     "updateCurrentVersion": "Update Current Version (will permanently overwrite the latest published version)",
     "error": "An error occurred while publishing the dataset."
+  },
+  "deaccession" : {
+    "version": {
+      "label": "Which version(s) do you want to deaccession?",
+      "validation": "Please select at least one version to deaccession."
+    },
+    "reason": {
+      "label": "What is the reason for Deaccession?",
+      "validation": "Please select a reason for deaccessioning this dataset.",
+      "options": {
+        "identifiable": "There is identifiable data in one or more files.",
+        "retracted": "The research article has been retracted.",
+        "transferred": "The dataset has been transferred to another repository.",
+        "irb": "IRB request.",
+        "legalIssue": "Legal issue or Data Usage Agreement.",
+        "invalid": "Not a valid dataset."
+      }
+    },
+    "reasonOther": {
+      "label": "Please enter additional information about the reason for deaccession."
+    },
+    "forwardUrl": {
+      "label": "If applicable, please provide the URL where this dataset can be accessed after deaccessioning.",
+      "validation": "Please enter a valid URL."
+    }
   }
 }
