@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import { useFile } from '../file/useFile'
@@ -10,6 +10,9 @@ import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { FileUploadState } from '../shared/file-uploader/fileUploaderReducer'
 import { FileInfo } from './file-info/FileInfo'
+import { FileTypeDifferentModal } from './file-type-different-modal/FileTypeDifferentModal'
+import MimeTypeDisplay from '@/files/domain/models/FileTypeToFriendlyTypeMap'
+import { useOpenFileTypeDifferentModal } from './file-type-different-modal/useOpenFileTypeDifferentModal'
 import styles from './ReplaceFile.module.scss'
 
 interface ReplaceFileProps {
@@ -17,10 +20,14 @@ interface ReplaceFileProps {
   fileIdFromParams: number
   datasetPidFromParams: string
   datasetVersionFromParams: string
-  referrer: ReferrerType
+  referrer?: ReferrerType
 }
 
-//TODO:ME - Add restrict file link from dataset files page
+// TODO:ME - Test removing from bottom file list and upload should be enabled again
+// TODO:ME - How to delete a file because its different mime type?
+// TODO:ME - How to delete a file because it has the same content?
+// TODO:ME - Add restrict file link from dataset files page
+// TODO:ME - After uploading files, check existing files with same content in the dataset and show modal to remove duplicate file (should call delete s3 file endpoint?)
 
 export type ReferrerType = 'FILE' | 'DATASET'
 
@@ -28,8 +35,7 @@ export const ReplaceFile = ({
   fileRepository,
   fileIdFromParams,
   datasetPidFromParams,
-  datasetVersionFromParams,
-  referrer
+  datasetVersionFromParams
 }: ReplaceFileProps) => {
   const { t } = useTranslation('replaceFile')
   const { t: tFiles } = useTranslation('files')
@@ -40,11 +46,23 @@ export const ReplaceFile = ({
     datasetVersionFromParams
   )
 
+  const [uploadedFiles, setUploadedFiles] = useState<FileUploadState[]>([])
+
+  const { showFileTypeDifferentModal, handleCloseFileTypeDifferentModal } =
+    useOpenFileTypeDifferentModal({
+      originalFileType: file?.metadata.type.value,
+      uploadedFileType: uploadedFiles[0]?.fileType
+    })
+
   useEffect(() => {
     if (!isLoadingFile) {
       setIsLoading(false)
     }
   }, [setIsLoading, isLoadingFile])
+
+  const handleSyncUploadedFiles = useCallback((files: FileUploadState[]) => {
+    setUploadedFiles(files)
+  }, [])
 
   if (isLoadingFile) {
     return <AppLoader />
@@ -54,12 +72,7 @@ export const ReplaceFile = ({
     return <PageNotFound />
   }
 
-  const handleUploadedFiles = (files: FileUploadState[]) => {
-    // console.group('Uploaded files from callback')
-    // console.log(files)
-    // console.groupEnd()
-  }
-
+  console.log(uploadedFiles)
   return (
     <section>
       <BreadcrumbsGenerator
@@ -69,7 +82,9 @@ export const ReplaceFile = ({
       />
       <Row className={styles.original_file_info_container}>
         <Col md={2}>
-          <strong>{t('originalFile')}</strong>
+          <span>
+            <strong>{t('originalFile')}</strong>
+          </span>
         </Col>
         <Col md={10}>
           <FileInfo file={file} />
@@ -82,13 +97,24 @@ export const ReplaceFile = ({
             <FileUploader
               fileRepository={fileRepository}
               datasetPersistentId={datasetPidFromParams}
-              onUploadedFiles={handleUploadedFiles}
+              onUploadedFiles={handleSyncUploadedFiles}
               storageConfiguration="S3"
-              multiple={true} // TODO:ME - Change to false here, should allow only one, Also test removing from bottom file list and upload should be enabled again
+              multiple={false}
             />
           </div>
         </Tabs.Tab>
       </Tabs>
+
+      {/* File Type Different Modal */}
+      <FileTypeDifferentModal
+        show={showFileTypeDifferentModal}
+        handleContinue={handleCloseFileTypeDifferentModal}
+        handleDeleteFile={() => {}}
+        isDeletingFile={false}
+        errorDeletingFile={null}
+        originalFileType={MimeTypeDisplay[file.metadata.type.value]}
+        replacementFileType={MimeTypeDisplay[uploadedFiles[0]?.fileType]}
+      />
     </section>
   )
 }

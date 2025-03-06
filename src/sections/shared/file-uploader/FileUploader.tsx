@@ -46,10 +46,10 @@ export const FileUploader = ({
   const { state, addFiles, addFile, removeFile, updateFile, getFileByKey } = useFileUploader()
 
   const totalFiles = Object.keys(state).length
-  // const uploadingFilesInProgress = Object.values(state).filter((file) => file.uploading)
-  const uploadingFilesInProgress = Object.values(mockFileUploadState).filter(
-    (file) => file.uploading
-  )
+  const uploadingFilesInProgress = Object.values(state).filter((file) => !file.done)
+  // const uploadingFilesInProgress = Object.values(mockFileUploadState).filter(
+  //   (file) => file.uploading
+  // )
 
   const uploadedDoneAndHashedFiles = Object.values(state).filter(
     (file) => file.done && file.checksumValue
@@ -97,8 +97,6 @@ export const FileUploader = ({
     // TODO:ME - There was a sanity check here, needed? or leave it?
 
     const fileKey = FileUploaderHelper.getFileKey(file)
-    console.log(state)
-    console.log({ fileKey })
 
     addFile(file)
 
