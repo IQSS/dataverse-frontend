@@ -1,22 +1,21 @@
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { Button, Modal, Stack } from '@iqss/dataverse-design-system'
-import { Form } from '@iqss/dataverse-design-system'
+import { Alert, Button, Form, Modal, Stack } from '@iqss/dataverse-design-system'
 import type { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
 import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
 import { QueryParamKey, Route } from '../../Route.enum'
 import { useDeaccessionDataset } from '@/sections/dataset/deaccession-dataset/useDeaccessionDataset'
-import { VersionSummary } from '@/dataset/domain/models/DatasetVersionDiff'
+import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { isValidURL } from '@/metadata-block-info/domain/models/fieldValidations'
 import { DeaccessionFormData } from './DeaccessionFormData'
 import { Controller, useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
-interface PublishDatasetModalProps {
+interface DeaccessionDatasetModalProps {
   show: boolean
   repository: DatasetRepository
   persistentId: string
-  versionList: VersionSummary[]
+  versionList?: DatasetVersionSummaryInfo[]
   handleClose: () => void
 }
 
@@ -26,7 +25,7 @@ export function DeaccessionDatasetModal({
   persistentId,
   versionList,
   handleClose
-}: PublishDatasetModalProps) {
+}: DeaccessionDatasetModalProps) {
   const { t } = useTranslation('dataset')
   const navigate = useNavigate()
   const { submissionStatus, submitDeaccession, deaccessionError } = useDeaccessionDataset(
@@ -34,25 +33,29 @@ export function DeaccessionDatasetModal({
     persistentId,
     onDeaccessionSucceed
   )
-
+  const publishedVersions = versionList?.filter((version) => version.publishedOn) || []
+  const defaultVersions = publishedVersions.length === 1 ? [publishedVersions[0].versionNumber] : []
   const {
     control,
     handleSubmit,
     watch,
     formState: { errors }
-  } = useForm<DeaccessionFormData>({ defaultValues: { versions: [], deaccessionForwardUrl: '' } })
+  } = useForm<DeaccessionFormData>({
+    defaultValues: { versions: defaultVersions, deaccessionForwardUrl: '' }
+  })
 
   function onDeaccessionSucceed() {
-    navigate(
-      `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${persistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`,
-      {
-        state: { publishInProgress: true },
-        replace: true
-      }
-    )
+    navigate(`${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${persistentId}`)
     handleClose()
+    toast.success('Dataset deaccessioned successfully')
   }
 
+  function isValidNonEmptyURL(value: string): boolean {
+    if (value.trim() === '') {
+      return true // Consider empty strings as valid
+    }
+    return isValidURL(value)
+  }
   return (
     <Modal show={show} onHide={handleClose} size="xl">
       <Modal.Header>
@@ -60,9 +63,31 @@ export function DeaccessionDatasetModal({
       </Modal.Header>
       <Modal.Body>
         <Stack direction="vertical">
-          <div>Warning Text</div>
+          <Alert
+            variant={'warning'}
+            customHeading={'Deaccession is permanent.'}
+            dismissible={false}>
+            <Trans
+              t={t}
+              i18nKey="deaccession.warning"
+              components={{
+                anchor: (
+                  <a
+                    href="https://guides.dataverse.org/en/latest/user/dataset-management.html#dataset-deaccession"
+                    target="_blank"
+                    rel="noreferrer"
+                  />
+                )
+              }}
+            />
+          </Alert>
+          {submissionStatus === SubmissionStatus.Errored && (
+            <Alert variant={'danger'} dismissible={false}>
+              {deaccessionError}
+            </Alert>
+          )}
           <form noValidate={true} onSubmit={handleSubmit(submitDeaccession)}>
-            {versionList.length > 1 && (
+            {publishedVersions.length > 1 && (
               <Form.Group>
                 <Form.Group.Label>{t('deaccession.version.label')}</Form.Group.Label>
                 <div>
@@ -75,23 +100,26 @@ export function DeaccessionDatasetModal({
                     }}
                     render={({ field }) => (
                       <>
-                        {versionList.map((version) => (
-                          <Form.Group.Checkbox
-                            key={version.versionNumber}
-                            id={version.versionNumber}
-                            label={version.versionNumber + ' - ' + version.lastUpdatedDate}
-                            value={version.versionNumber}
-                            checked={field.value.includes(version.versionNumber)}
-                            isInvalid={!!errors.versions}
-                            onChange={(e) => {
-                              const newValue = e.target.checked
-                                ? [...field.value, e.target.value] // Add to array if checked
-                                : field.value.filter((val) => val !== e.target.value) // Remove if unchecked
+                        {publishedVersions.map(
+                          (version) =>
+                            version.publishedOn && (
+                              <Form.Group.Checkbox
+                                key={version.versionNumber}
+                                id={version.versionNumber}
+                                label={`${version.versionNumber} - ${version.publishedOn}`}
+                                value={version.versionNumber}
+                                checked={field.value.includes(version.versionNumber)}
+                                isInvalid={!!errors.versions}
+                                onChange={(e) => {
+                                  const newValue = e.target.checked
+                                    ? [...field.value, e.target.value] // Add to array if checked
+                                    : field.value.filter((val) => val !== e.target.value) // Remove if unchecked
 
-                              field.onChange(newValue)
-                            }}
-                          />
-                        ))}
+                                  field.onChange(newValue)
+                                }}
+                              />
+                            )
+                        )}
                         <Form.Group.Feedback type="invalid" className="d-block">
                           {errors.versions?.message}
                         </Form.Group.Feedback>
@@ -110,7 +138,7 @@ export function DeaccessionDatasetModal({
                 render={({ field: { onChange, ref, value }, fieldState }) => (
                   <>
                     <Form.Group.Select
-                      value={value as string}
+                      value={value}
                       onChange={onChange}
                       isInvalid={fieldState.invalid}
                       ref={ref}>
@@ -166,12 +194,14 @@ export function DeaccessionDatasetModal({
                 name="deaccessionForwardUrl"
                 control={control}
                 rules={{
-                  validate: (value) => isValidURL(value) || t('deaccession.forwardUrl.validation')
+                  validate: (value) =>
+                    isValidNonEmptyURL(value) || t('deaccession.forwardUrl.validation')
                 }}
                 render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
                   <>
                     <Form.Group.Input
                       type="text"
+                      data-testid="deaccession-forward-url"
                       value={value}
                       onChange={onChange}
                       isInvalid={invalid}

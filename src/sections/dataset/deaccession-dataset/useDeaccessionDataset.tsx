@@ -45,7 +45,7 @@ export function useDeaccessionDataset(
                 (deaccessionFormData.deaccessionReasonOther
                   ? ` ${deaccessionFormData.deaccessionReasonOther}`
                   : ''),
-              deaccesionForwardUrl: deaccessionFormData.deaccessionForwardUrl
+              deaccessionForwardUrl: deaccessionFormData.deaccessionForwardUrl
             }
 
             console.log('calling deaccession', datasetDeaccessionDTO)

@@ -12,9 +12,11 @@ import { DeaccessionDatasetButton } from './DeaccessionDatasetButton'
 import { useNotImplementedModal } from '../../../not-implemented/NotImplementedModalContext'
 import { useSession } from '../../../session/SessionContext'
 import { QueryParamKey, Route } from '../../../Route.enum'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
 interface EditDatasetMenuProps {
   dataset: Dataset
+  datasetRepository: DatasetRepository
 }
 
 enum EditDatasetMenuItems {
@@ -23,10 +25,11 @@ enum EditDatasetMenuItems {
   TERMS = 'terms',
   PERMISSIONS = 'permissions',
   PRIVATE_URL = 'privateUrl',
-  THUMBNAILS_PLUS_WIDGETS = 'thumbnailsPlusWidgets'
+  THUMBNAILS_PLUS_WIDGETS = 'thumbnailsPlusWidgets',
+  DEACCESSION = 'deaccession'
 }
 
-export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
+export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuProps) {
   const { user } = useSession()
   const { showModal } = useNotImplementedModal()
   const { t } = useTranslation('dataset')
@@ -46,6 +49,9 @@ export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
     }
     if (eventKey === EditDatasetMenuItems.METADATA) {
       navigate(`${Route.EDIT_DATASET_METADATA}?${searchParams.toString()}`)
+      return
+    }
+    if (eventKey === EditDatasetMenuItems.DEACCESSION) {
       return
     }
     showModal()
@@ -89,7 +95,7 @@ export function EditDatasetMenu({ dataset }: EditDatasetMenuProps) {
         {t('datasetActionButtons.editDataset.thumbnailsPlusWidgets')}
       </DropdownButtonItem>
       <DeleteDatasetButton dataset={dataset} />
-      <DeaccessionDatasetButton dataset={dataset} />
+      <DeaccessionDatasetButton datasetRepository={datasetRepository} dataset={dataset} />
     </DropdownButton>
   )
 }

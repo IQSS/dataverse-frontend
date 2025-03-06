@@ -5,6 +5,7 @@ import {
   DatasetMother,
   DatasetPermissionsMother
 } from '../../../../../tests/component/dataset/domain/models/DatasetMother'
+import { DatasetMockRepository } from '../../../dataset/DatasetMockRepository'
 import { EditDatasetMenu } from '../../../../sections/dataset/dataset-action-buttons/edit-dataset-menu/EditDatasetMenu'
 
 const meta: Meta<typeof EditDatasetMenu> = {
@@ -23,6 +24,7 @@ type Story = StoryObj<typeof EditDatasetMenu>
 export const WithAllPermissions: Story = {
   render: () => (
     <EditDatasetMenu
+      datasetRepository={new DatasetMockRepository()}
       dataset={DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithAllAllowed(),
         hasValidTermsOfAccess: true
@@ -34,6 +36,7 @@ export const WithAllPermissions: Story = {
 export const WithManagePermissionsNotAllowed: Story = {
   render: () => (
     <EditDatasetMenu
+      datasetRepository={new DatasetMockRepository()}
       dataset={DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithManagePermissionsNotAllowed(),
         hasValidTermsOfAccess: true
@@ -45,6 +48,7 @@ export const WithManagePermissionsNotAllowed: Story = {
 export const WithNoValidTermsOfAccess: Story = {
   render: () => (
     <EditDatasetMenu
+      datasetRepository={new DatasetMockRepository()}
       dataset={DatasetMother.create({
         permissions: DatasetPermissionsMother.createWithAllAllowed(),
         hasValidTermsOfAccess: false

@@ -22,8 +22,8 @@ export const Default: Story = {
       repository={new DatasetMockRepository()}
       persistentId={'test'}
       versionList={[
-        { versionNumber: '1.0', lastUpdatedDate: '2023-01-01' },
-        { versionNumber: '1.1', lastUpdatedDate: '2023-02-01' }
+        { id: 1, contributors: 'contributors', versionNumber: '1.0', publishedOn: '2023-01-01' },
+        { id: 2, contributors: 'contributors', versionNumber: '1.1', publishedOn: '2023-02-01' }
       ]}
       handleClose={() => {}}></DeaccessionDatasetModal>
   )
@@ -36,7 +36,9 @@ export const WithOneVersion: Story = {
       show={true}
       repository={new DatasetMockRepository()}
       persistentId={'test'}
-      versionList={[{ versionNumber: '1.0', lastUpdatedDate: '2023-01-01' }]}
+      versionList={[
+        { id: 1, contributors: 'contributors', versionNumber: '1.0', publishedOn: '2023-01-01' }
+      ]}
       handleClose={() => {}}></DeaccessionDatasetModal>
   )
 }

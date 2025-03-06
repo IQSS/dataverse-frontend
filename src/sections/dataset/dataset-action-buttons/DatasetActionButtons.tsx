@@ -39,7 +39,7 @@ export function DatasetActionButtons({
         collectionRepository={collectionRepository}
       />
       <SubmitForReviewButton dataset={dataset} />
-      <EditDatasetMenu dataset={dataset} />
+      <EditDatasetMenu dataset={dataset} datasetRepository={datasetRepository} />
       <LinkDatasetButton dataset={dataset} />
       <ButtonGroup className={styles['contact-owner-and-share-group']}>
         <Button disabled variant="secondary" size="sm">

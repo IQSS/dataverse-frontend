@@ -182,7 +182,8 @@
     "updateCurrentVersion": "Update Current Version (will permanently overwrite the latest published version)",
     "error": "An error occurred while publishing the dataset."
   },
-  "deaccession" : {
+  "deaccession": {
+    "warning": "This dataset will no longer be public and a tombstone will display the reason for deaccessioning. Please read the <anchor>documentation</anchor> if you have any questions.",
     "version": {
       "label": "Which version(s) do you want to deaccession?",
       "validation": "Please select at least one version to deaccession."

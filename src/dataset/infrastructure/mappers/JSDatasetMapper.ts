@@ -6,7 +6,8 @@ import {
   DatasetMetadataFields as JSDatasetMetadataFields,
   DatasetUserPermissions as JSDatasetPermissions,
   DatasetVersionDiff as JSDatasetVersionDiff,
-  DvObjectOwnerNode as JSUpwardHierarchyNode
+  DvObjectOwnerNode as JSUpwardHierarchyNode,
+  DatasetVersionSummaryInfo as JSDatasetVersionSummaryInfo
 } from '@iqss/dataverse-client-javascript'
 import { DatasetVersionDiff } from '../../domain/models/DatasetVersionDiff'
 import {
@@ -47,7 +48,8 @@ export class JSDatasetMapper {
     privateUrl?: PrivateUrl,
     latestPublishedVersionMajorNumber?: number,
     latestPublishedVersionMinorNumber?: number,
-    datasetVersionDiff?: JSDatasetVersionDiff
+    datasetVersionDiff?: JSDatasetVersionDiff,
+    jsDatasetVersionSummaries?: JSDatasetVersionSummaryInfo[]
   ): Dataset {
     const version = JSDatasetVersionMapper.toVersion(
       jsDataset.versionId,
@@ -92,7 +94,8 @@ export class JSDatasetMapper {
         latestPublishedVersionMajorNumber,
         latestPublishedVersionMinorNumber
       ),
-      JSDatasetMapper.toRequiresMajorVersionUpdate(datasetVersionDiff)
+      JSDatasetMapper.toRequiresMajorVersionUpdate(datasetVersionDiff),
+      jsDatasetVersionSummaries
     ).build()
   }
 
