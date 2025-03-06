@@ -298,6 +298,8 @@ export class MetadataFieldsHelper {
     return formattedNewObject
   }
 
+  // TODO:ME - Refactor these two functions into one
+
   public static formatFormValuesToDatasetDTOForCreation(
     formValues: DatasetMetadataFormValues
   ): DatasetDTO {
@@ -394,18 +396,12 @@ export class MetadataFieldsHelper {
 
       Object.entries(metadataBlockFormValues).forEach(([fieldName, fieldValue]) => {
         if (this.isPrimitiveFieldValue(fieldValue)) {
-          // if (fieldValue !== '') {
           formattedMetadataBlock.fields[fieldName] = fieldValue
           return
-          // }
-          // return
         }
         if (this.isVocabularyMultipleFieldValue(fieldValue)) {
-          // if (fieldValue.length > 0) {
           formattedMetadataBlock.fields[fieldName] = fieldValue
           return
-          // }
-          // return
         }
 
         if (this.isPrimitiveMultipleFieldValue(fieldValue)) {
@@ -413,23 +409,17 @@ export class MetadataFieldsHelper {
             .map((primitiveField) => primitiveField.value)
             .filter((v) => v !== '')
 
-          // if (primitiveMultipleFieldValues.length > 0) {
           formattedMetadataBlock.fields[fieldName] = primitiveMultipleFieldValues
           return
-          // }
-          // return
         }
 
         if (this.isComposedSingleFieldValue(fieldValue)) {
           const formattedMetadataChildFieldValue: DatasetMetadataChildFieldValueDTO = {}
 
           Object.entries(fieldValue).forEach(([nestedFieldName, nestedFieldValue]) => {
-            // if (nestedFieldValue !== '') {
             formattedMetadataChildFieldValue[nestedFieldName] = nestedFieldValue
-            // }
           })
 
-          // TODO:ME - Review this one in deep
           if (Object.keys(formattedMetadataChildFieldValue).length > 0) {
             formattedMetadataBlock.fields[fieldName] = formattedMetadataChildFieldValue
             return
@@ -443,19 +433,13 @@ export class MetadataFieldsHelper {
           fieldValue.forEach((composedFieldValues) => {
             const composedField: DatasetMetadataChildFieldValueDTO = {}
             Object.entries(composedFieldValues).forEach(([nestedFieldName, nestedFieldValue]) => {
-              // if (nestedFieldValue !== '') {
               composedField[nestedFieldName] = nestedFieldValue
-              // }
             })
-            // TODO:ME - Review this one in deep
-            // if (Object.keys(composedField).length > 0) {
+
             formattedMetadataChildFieldValues.push(composedField)
-            // }
           })
-          // TODO:ME - Review this one in deep
-          // if (formattedMetadataChildFieldValues.length > 0) {
+
           formattedMetadataBlock.fields[fieldName] = formattedMetadataChildFieldValues
-          // }
 
           return
         }
