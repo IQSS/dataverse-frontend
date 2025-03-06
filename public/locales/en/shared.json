@@ -152,5 +152,9 @@
       "editSuccess": "Collection updated successfully."
     },
     "createCollection": "Create Collection"
+  },
+  "fileUploader": {
+    "supportedFiles": "All file types are supported for upload and download in their original format. If you are uploading Excel, CSV, TSV, RData, Stata, or SPSS files, <anchor>see the guides</anchor> for tabular support and limitations.",
+    "accordionTitle": "Upload with HTTP via your browser"
   }
 }

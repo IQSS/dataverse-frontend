@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Tabs } from '@iqss/dataverse-design-system'
 import { useFile } from '../file/useFile'
 import { useLoading } from '../loading/LoadingContext'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
@@ -8,6 +9,7 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { FileUploadState } from '../shared/file-uploader/fileUploaderReducer'
+import styles from './ReplaceFile.module.scss'
 
 interface ReplaceFileProps {
   fileRepository: FileRepository
@@ -16,6 +18,8 @@ interface ReplaceFileProps {
   datasetVersionFromParams: string
   referrer: ReferrerType
 }
+
+//TODO:ME - Add restrict file link from dataset files page
 
 export type ReferrerType = 'FILE' | 'DATASET'
 
@@ -27,6 +31,7 @@ export const ReplaceFile = ({
   referrer
 }: ReplaceFileProps) => {
   const { t } = useTranslation('replaceFile')
+  const { t: tFiles } = useTranslation('files')
   const { setIsLoading } = useLoading()
   const { file, isLoading: isLoadingFile } = useFile(
     fileRepository,
@@ -61,13 +66,20 @@ export const ReplaceFile = ({
         withActionItem
         actionItemText={t('pageTitle')}
       />
-      <FileUploader
-        fileRepository={fileRepository}
-        datasetPersistentId={datasetPidFromParams}
-        onUploadedFiles={handleUploadedFiles}
-        storageConfiguration="S3"
-        multiple={true} // TODO:ME - Change to false here, should allow only one, Also test removing from bottom file list and upload should be enabled again
-      />
+
+      <Tabs defaultActiveKey="metadata">
+        <Tabs.Tab eventKey="metadata" title={tFiles('files')}>
+          <div className={styles.tab_container}>
+            <FileUploader
+              fileRepository={fileRepository}
+              datasetPersistentId={datasetPidFromParams}
+              onUploadedFiles={handleUploadedFiles}
+              storageConfiguration="S3"
+              multiple={true} // TODO:ME - Change to false here, should allow only one, Also test removing from bottom file list and upload should be enabled again
+            />
+          </div>
+        </Tabs.Tab>
+      </Tabs>
     </section>
   )
 }

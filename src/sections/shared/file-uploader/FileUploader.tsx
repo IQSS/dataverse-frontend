@@ -1,12 +1,13 @@
 import { ChangeEventHandler, DragEventHandler, useRef, useState } from 'react'
 import { useDeepCompareEffect } from 'use-deep-compare'
+import { Trans, useTranslation } from 'react-i18next'
+import { Plus, XLg } from 'react-bootstrap-icons'
 import { Semaphore } from 'async-mutex'
 import { toast } from 'react-toastify'
 import { md5 } from 'js-md5'
 import cn from 'classnames'
-import { Button, Card, ProgressBar } from '@iqss/dataverse-design-system'
+import { Accordion, Button, Card, ProgressBar } from '@iqss/dataverse-design-system'
 import { uploadFile } from '@/files/domain/useCases/uploadFile'
-import { Plus, XLg } from 'react-bootstrap-icons'
 import { FileUploadState, mockFileUploadState, useFileUploader } from './fileUploaderReducer'
 import { FileUploaderHelper } from './FileUploaderHelper'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
@@ -35,6 +36,7 @@ export const FileUploader = ({
   multiple,
   onUploadedFiles
 }: FileUploaderProps) => {
+  const { t } = useTranslation('shared', { keyPrefix: 'fileUploader' })
   const inputRef = useRef<HTMLInputElement>(null)
 
   const [isDragging, setIsDragging] = useState(false)
@@ -199,79 +201,107 @@ export const FileUploader = ({
   }, [uploadedDoneAndHashedFiles, onUploadedFiles])
 
   return (
-    <Card>
-      <Card.Header>
-        <Button onClick={() => inputRef.current?.click()} disabled={!canKeepUploading} size="sm">
-          <Plus size={22} /> {`Select File${multiple ? 's' : ''} to Add`}
-        </Button>
-      </Card.Header>
-      <Card.Body>
-        <div
-          className={cn(styles.file_uploader_drop_zone, {
-            [styles.is_dragging]: isDragging
-          })}
-          onDrop={handleDropFiles}
-          onDragOver={(e) => {
-            e.preventDefault()
-            setIsDragging(true)
+    <div>
+      <p className={styles.helper_text}>
+        <Trans
+          t={t}
+          i18nKey="supportedFiles"
+          components={{
+            anchor: (
+              <a
+                href="https://guides.dataverse.org/en/latest/user/dataset-management.html#tabular-data-files"
+                target="_blank"
+                rel="noreferrer"
+              />
+            )
           }}
-          onDragEnter={() => setIsDragging(true)}
-          onDragLeave={() => setIsDragging(false)}
-          data-testid="file-uploader-drop-zone">
-          <input
-            ref={inputRef}
-            type="file"
-            onChange={handleInputFileChange}
-            multiple={multiple}
-            hidden
-            disabled={!canKeepUploading}
-          />
+        />
+      </p>
 
-          {uploadingFilesInProgress.length > 0 ? (
-            <ul className={styles.uploading_files_list}>
-              {uploadingFilesInProgress.map((file) => {
-                return (
-                  <li className={styles.uploading_file} key={file.key}>
-                    <div className={styles.info_progress_wrapper}>
-                      <div className={styles.info_wrapper}>
-                        <span
-                          className={cn({
-                            [styles.failed]: file.failed
-                          })}>
-                          {file.fileDir ? file.fileDir : file.fileName}
-                        </span>
-                        <small>{file.fileSizeString}</small>
-                      </div>
+      <Accordion defaultActiveKey="0">
+        <Accordion.Item eventKey="0">
+          <Accordion.Header>{t('accordionTitle')}</Accordion.Header>
+          <Accordion.Body>
+            <Card>
+              <Card.Header>
+                <Button
+                  onClick={() => inputRef.current?.click()}
+                  disabled={!canKeepUploading}
+                  size="sm">
+                  <Plus size={22} /> {`Select File${multiple ? 's' : ''} to Add`}
+                </Button>
+              </Card.Header>
+              <Card.Body>
+                <div
+                  className={cn(styles.file_uploader_drop_zone, {
+                    [styles.is_dragging]: isDragging
+                  })}
+                  onDrop={handleDropFiles}
+                  onDragOver={(e) => {
+                    e.preventDefault()
+                    setIsDragging(true)
+                  }}
+                  onDragEnter={() => setIsDragging(true)}
+                  onDragLeave={() => setIsDragging(false)}
+                  data-testid="file-uploader-drop-zone">
+                  <input
+                    ref={inputRef}
+                    type="file"
+                    onChange={handleInputFileChange}
+                    multiple={multiple}
+                    hidden
+                    disabled={!canKeepUploading}
+                  />
 
-                      {file.uploading && (
-                        <div className={styles.upload_progress}>
-                          <ProgressBar now={file.progress} />
-                        </div>
-                      )}
-                    </div>
+                  {uploadingFilesInProgress.length > 0 ? (
+                    <ul className={styles.uploading_files_list}>
+                      {uploadingFilesInProgress.map((file) => {
+                        return (
+                          <li className={styles.uploading_file} key={file.key}>
+                            <div className={styles.info_progress_wrapper}>
+                              <div className={styles.info_wrapper}>
+                                <span
+                                  className={cn({
+                                    [styles.failed]: file.failed
+                                  })}>
+                                  {file.fileDir ? file.fileDir : file.fileName}
+                                </span>
+                                <small>{file.fileSizeString}</small>
+                              </div>
 
-                    {/* TODO:ME - Check controlling when to show cancel */}
-                    <div className={styles.cancel_upload}>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => cancelUpload(file.key, file.fileName)}>
-                        <XLg />
-                      </Button>
-                    </div>
-                  </li>
-                )
-              })}
-            </ul>
-          ) : (
-            <p className={styles.drag_drop_msg}>
-              {multiple
-                ? 'Drag and drop files and/or directories here.'
-                : 'Drag and drop file here.'}
-            </p>
-          )}
-        </div>
-      </Card.Body>
-    </Card>
+                              {file.uploading && (
+                                <div className={styles.upload_progress}>
+                                  <ProgressBar now={file.progress} />
+                                </div>
+                              )}
+                            </div>
+
+                            {/* TODO:ME - Check controlling when to show cancel */}
+                            <div className={styles.cancel_upload}>
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => cancelUpload(file.key, file.fileName)}>
+                                <XLg />
+                              </Button>
+                            </div>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  ) : (
+                    <p className={styles.drag_drop_msg}>
+                      {multiple
+                        ? 'Drag and drop files and/or directories here.'
+                        : 'Drag and drop file here.'}
+                    </p>
+                  )}
+                </div>
+              </Card.Body>
+            </Card>
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+    </div>
   )
 }

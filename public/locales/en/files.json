@@ -1,4 +1,5 @@
 {
+  "files": "Files",
   "filesLoading": "Files loading spinner symbol",
   "errorUnkownGetFilesFromDataset": "There was an error getting the files total download size",
   "errorUnkownGetFilesCountInfo": "There was an error getting the files count info",
