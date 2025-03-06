@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Tabs } from '@iqss/dataverse-design-system'
+import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import { useFile } from '../file/useFile'
 import { useLoading } from '../loading/LoadingContext'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
@@ -9,6 +9,7 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { FileUploadState } from '../shared/file-uploader/fileUploaderReducer'
+import { FileInfo } from './file-info/FileInfo'
 import styles from './ReplaceFile.module.scss'
 
 interface ReplaceFileProps {
@@ -54,9 +55,9 @@ export const ReplaceFile = ({
   }
 
   const handleUploadedFiles = (files: FileUploadState[]) => {
-    console.group('Uploaded files from callback')
-    console.log(files)
-    console.groupEnd()
+    // console.group('Uploaded files from callback')
+    // console.log(files)
+    // console.groupEnd()
   }
 
   return (
@@ -66,6 +67,14 @@ export const ReplaceFile = ({
         withActionItem
         actionItemText={t('pageTitle')}
       />
+      <Row className={styles.original_file_info_container}>
+        <Col md={2}>
+          <strong>{t('originalFile')}</strong>
+        </Col>
+        <Col md={10}>
+          <FileInfo file={file} />
+        </Col>
+      </Row>
 
       <Tabs defaultActiveKey="metadata">
         <Tabs.Tab eventKey="metadata" title={tFiles('files')}>

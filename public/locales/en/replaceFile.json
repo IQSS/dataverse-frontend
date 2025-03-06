@@ -1,4 +1,5 @@
 {
   "pageTitle": "Replace File",
-  "notAllowedToReplaceFile": "You do not have permissions to replace this file."
+  "notAllowedToReplaceFile": "You do not have permissions to replace this file.",
+  "originalFile": "Original File"
 }
