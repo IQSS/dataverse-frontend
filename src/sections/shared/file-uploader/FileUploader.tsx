@@ -1,7 +1,7 @@
 import { ChangeEventHandler, DragEventHandler, useRef, useState } from 'react'
 import { useDeepCompareEffect } from 'use-deep-compare'
 import { Trans, useTranslation } from 'react-i18next'
-import { Plus, XLg } from 'react-bootstrap-icons'
+import { ExclamationTriangle, Plus, XLg } from 'react-bootstrap-icons'
 import { Semaphore } from 'async-mutex'
 import { toast } from 'react-toastify'
 import { md5 } from 'js-md5'
@@ -11,8 +11,8 @@ import { uploadFile } from '@/files/domain/useCases/uploadFile'
 import { FileUploadState, mockFileUploadState, useFileUploader } from './fileUploaderReducer'
 import { FileUploaderHelper } from './FileUploaderHelper'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import { FileTypeDifferentModal } from './file-type-different-modal/FileTypeDifferentModal'
 import MimeTypeDisplay from '@/files/domain/models/FileTypeToFriendlyTypeMap'
+import { SwalModal } from '../swal-modal/SwalModal'
 import styles from './FileUploader.module.scss'
 
 type FileUploaderProps =
@@ -22,7 +22,7 @@ type FileUploaderProps =
       storageConfiguration: FileStorageConfiguration
       multiple: boolean
       onUploadedFiles: (files: FileUploadState[]) => void
-      isToReplaceFile?: false
+      replaceFile?: false
       originalFileType?: never
     }
   | {
@@ -31,7 +31,7 @@ type FileUploaderProps =
       storageConfiguration: FileStorageConfiguration
       multiple: false
       onUploadedFiles: (files: FileUploadState[]) => void
-      isToReplaceFile: true
+      replaceFile: true
       originalFileType: string
     }
 
@@ -49,10 +49,10 @@ export const FileUploader = ({
   storageConfiguration,
   multiple,
   onUploadedFiles,
-  isToReplaceFile,
+  replaceFile,
   originalFileType
 }: FileUploaderProps) => {
-  const { t } = useTranslation('shared', { keyPrefix: 'fileUploader' })
+  const { t } = useTranslation('shared')
   const inputRef = useRef<HTMLInputElement>(null)
 
   const [isDragging, setIsDragging] = useState(false)
@@ -63,9 +63,6 @@ export const FileUploader = ({
 
   const totalFiles = Object.keys(state).length
   const uploadingFilesInProgress = Object.values(state).filter((file) => !file.done)
-  // const uploadingFilesInProgress = Object.values(mockFileUploadState).filter(
-  //   (file) => file.uploading
-  // )
 
   const uploadedDoneAndHashedFiles = Object.values(state).filter(
     (file) => file.done && file.checksumValue
@@ -104,20 +101,27 @@ export const FileUploader = ({
 
   const uploadOneFile = async (file: File) => {
     if (FileUploaderHelper.isDS_StoreFile(file)) {
-      toast.info('We avoid uploading a .DS_Store file.')
+      toast.info(`We did not upload the file ${file.name} as it is a .DS_Store file`)
       return
     }
 
     if (
-      originalFileType &&
+      replaceFile &&
       FileUploaderHelper.originalFileAndReplacementFileHaveDifferentTypes(
-        file.type,
-        originalFileType
+        originalFileType,
+        file.type
       )
     ) {
-      // TODO:ME - We need dialog promise types for this
+      const shouldContinue = await requestFileTypeDifferentConfirmation()
 
-      return
+      if (!shouldContinue) {
+        // Reset the file input, otherwise in case user cancels but then tries to upload the same file again, the input will not trigger the change event
+        if (inputRef.current) {
+          inputRef.current.value = ''
+        }
+        // Stop the upload process for this file
+        return
+      }
     }
 
     await semaphore.acquire(1)
@@ -169,10 +173,6 @@ export const FileUploader = ({
         if (entry.isFile) {
           const fse = entry as FileSystemFileEntry
           fse.file((file) => {
-            if (FileUploaderHelper.isDS_StoreFile(file)) {
-              toast.info(`We did not upload the file ${file.name} as it is a .DS_Store file`)
-              return
-            }
             void uploadOneFile(file)
           })
         } else if (entry.isDirectory) {
@@ -197,10 +197,6 @@ export const FileUploader = ({
         } else if (droppedFile.webkitGetAsEntry()?.isFile) {
           const fse = droppedFile.webkitGetAsEntry() as FileSystemFileEntry
           fse.file((file) => {
-            if (FileUploaderHelper.isDS_StoreFile(file)) {
-              toast.info(`We did not upload the file ${file.name} as it is a .DS_Store file`)
-              return
-            }
             void uploadOneFile(file)
           })
         }
@@ -226,12 +222,36 @@ export const FileUploader = ({
     onUploadedFiles(uploadedDoneAndHashedFiles)
   }, [uploadedDoneAndHashedFiles, onUploadedFiles])
 
+  const requestFileTypeDifferentConfirmation = async (): Promise<boolean> => {
+    const result = await SwalModal.fire({
+      titleText: t('fileUploader.fileTypeDifferentModal.title'),
+      showDenyButton: true,
+      denyButtonText: t('cancel'),
+      confirmButtonText: t('continue'),
+      html: (
+        <div className={styles.file_type_different_msg}>
+          <ExclamationTriangle size={24} />
+          <span>
+            {t('fileUploader.fileTypeDifferentModal.message', {
+              originalFileType: MimeTypeDisplay['text/plain'],
+              replacementFileType: MimeTypeDisplay['application/vnd.ms-excel']
+            })}
+          </span>
+        </div>
+      ),
+      allowOutsideClick: false,
+      allowEscapeKey: false
+    })
+
+    return result.isConfirmed
+  }
+
   return (
     <div>
       <p className={styles.helper_text}>
         <Trans
           t={t}
-          i18nKey="supportedFiles"
+          i18nKey="fileUploader.supportedFiles"
           components={{
             anchor: (
               <a
@@ -246,7 +266,7 @@ export const FileUploader = ({
 
       <Accordion defaultActiveKey="0">
         <Accordion.Item eventKey="0">
-          <Accordion.Header>{t('accordionTitle')}</Accordion.Header>
+          <Accordion.Header>{t('fileUploader.accordionTitle')}</Accordion.Header>
           <Accordion.Body>
             <Card>
               <Card.Header>
@@ -254,7 +274,10 @@ export const FileUploader = ({
                   onClick={() => inputRef.current?.click()}
                   disabled={!canKeepUploading}
                   size="sm">
-                  <Plus size={22} /> {`Select File${multiple ? 's' : ''} to Add`}
+                  <Plus size={22} />{' '}
+                  {multiple
+                    ? t('fileUploader.selectFileMultiple')
+                    : t('fileUploader.selectFileSingle')}
                 </Button>
               </Card.Header>
               <Card.Body>
@@ -318,8 +341,8 @@ export const FileUploader = ({
                   ) : (
                     <p className={styles.drag_drop_msg}>
                       {multiple
-                        ? 'Drag and drop files and/or directories here.'
-                        : 'Drag and drop file here.'}
+                        ? t('fileUploader.dragDropMultiple')
+                        : t('fileUploader.dragDropSingle')}
                     </p>
                   )}
                 </div>
@@ -328,22 +351,6 @@ export const FileUploader = ({
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
-
-      {/* File Type Different Modal */}
-      {originalFileType && (
-        <p>holo</p>
-        // <FileTypeDifferentModal
-        //   show={fileTypeDifferentModalInfo.show}
-        //   handleContinue={() =>
-        //     setFileTypeDifferentModalInfo((current) => ({ ...current, show: false }))
-        //   }
-        //   handleDeleteFile={() => {}}
-        //   isDeletingFile={false}
-        //   errorDeletingFile={null}
-        //   originalFileType={MimeTypeDisplay[originalFileType]}
-        //   replacementFileType={MimeTypeDisplay[fileTypeDifferentModalInfo.uploadedFileType]}
-        // />
-      )}
     </div>
   )
 }

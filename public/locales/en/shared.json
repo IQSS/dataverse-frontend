@@ -155,6 +155,14 @@
   },
   "fileUploader": {
     "supportedFiles": "All file types are supported for upload and download in their original format. If you are uploading Excel, CSV, TSV, RData, Stata, or SPSS files, <anchor>see the guides</anchor> for tabular support and limitations.",
-    "accordionTitle": "Upload with HTTP via your browser"
+    "accordionTitle": "Upload with HTTP via your browser",
+    "selectFileSingle": "Select file to add",
+    "selectFileMultiple": "Select files to add",
+    "dragDropSingle": "Drag and drop file here.",
+    "dragDropMultiple": "Drag and drop files and/or directories here.",
+    "fileTypeDifferentModal": {
+      "title": "File Type Different",
+      "message": "The original file ({{originalFileType}}) and replacement file ({{replacementFileType}}) are different file types. Would you like to continue?"
+    }
   }
 }

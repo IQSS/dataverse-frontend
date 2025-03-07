@@ -90,9 +90,9 @@ export const ReplaceFile = ({
               datasetPersistentId={datasetPidFromParams}
               onUploadedFiles={handleSyncUploadedFiles}
               storageConfiguration="S3"
-              multiple={false}
-              isToReplaceFile
+              replaceFile={true}
               originalFileType={file.metadata.type.value}
+              multiple={false}
             />
           </div>
         </Tabs.Tab>

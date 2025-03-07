@@ -92,6 +92,16 @@
   }
 }
 
+.file_type_different_msg {
+  display: flex;
+  gap: 1rem;
+  color: $dv-warning-color;
+
+  svg {
+    min-width: fit-content;
+  }
+}
+
 // .uploaded_files {
 //   display: grid;
 //   grid-template-columns: 4rem repeat(3, auto) 3.5rem;
