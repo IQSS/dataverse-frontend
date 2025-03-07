@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { useContext } from 'react'
+import { DatasetContext } from '@/sections/dataset/DatasetContext'
 import { Dataset } from '../../../../dataset/domain/models/Dataset'
 import { DropdownButtonItem, DropdownSeparator } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
@@ -22,6 +24,7 @@ export function DeaccessionDatasetButton({
 }: DeaccessionDatasetButtonProps) {
   const { t } = useTranslation('dataset')
   const navigate = useNavigate()
+  const datasetContext = useContext(DatasetContext)
   const [showDeaccessionModal, setShowDeaccessionModal] = useState(false)
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const { submissionStatus, submitDeaccession, deaccessionError } = useDeaccessionDataset(
@@ -36,7 +39,7 @@ export function DeaccessionDatasetButton({
   const defaultVersions = publishedVersions.length === 1 ? [publishedVersions[0].versionNumber] : []
   function onDeaccessionSucceed() {
     setShowConfirmationModal(false)
-    navigate(0)
+    datasetContext?.refreshDataset()
     toast.success('Dataset deaccessioned successfully')
   }
   const {
