@@ -160,6 +160,7 @@
     "selectFileMultiple": "Select files to add",
     "dragDropSingle": "Drag and drop file here.",
     "dragDropMultiple": "Drag and drop files and/or directories here.",
+    "uploadFailed": "There was an error uploading this file.",
     "fileTypeDifferentModal": {
       "title": "File Type Different",
       "message": "The original file ({{originalFileType}}) and replacement file ({{replacementFileType}}) are different file types. Would you like to continue?"

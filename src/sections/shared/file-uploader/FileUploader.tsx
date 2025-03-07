@@ -306,34 +306,37 @@ export const FileUploader = ({
                     <ul className={styles.uploading_files_list}>
                       {uploadingFilesInProgress.map((file) => {
                         return (
-                          <li className={styles.uploading_file} key={file.key}>
+                          <li
+                            className={cn(styles.uploading_file, {
+                              [styles.failed]: file.failed
+                            })}
+                            key={file.key}>
                             <div className={styles.info_progress_wrapper}>
-                              <div className={styles.info_wrapper}>
-                                <span
-                                  className={cn({
-                                    [styles.failed]: file.failed
-                                  })}>
-                                  {file.fileDir ? file.fileDir : file.fileName}
-                                </span>
+                              <p className={styles.info}>
+                                <span>{file.fileName}</span>
                                 <small>{file.fileSizeString}</small>
-                              </div>
+                              </p>
 
-                              {file.uploading && (
+                              {file.uploading && !file.failed && (
                                 <div className={styles.upload_progress}>
                                   <ProgressBar now={file.progress} />
                                 </div>
                               )}
+
+                              {file.failed && (
+                                <p className={styles.failed_message}>
+                                  {t('fileUploader.uploadFailed')}
+                                </p>
+                              )}
                             </div>
 
                             {/* TODO:ME - Check controlling when to show cancel */}
-                            <div className={styles.cancel_upload}>
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                onClick={() => cancelUpload(file.key, file.fileName)}>
-                                <XLg />
-                              </Button>
-                            </div>
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => cancelUpload(file.key, file.fileName)}>
+                              <XLg />
+                            </Button>
                           </li>
                         )
                       })}
