@@ -91,6 +91,7 @@ describe('DeaccessionDatasetButton', () => {
       cy.findByText('Confirm Deaccession').should('exist')
     })
     it('does not render versionList if it only contains one published element', () => {
+      repository.deaccession = cy.stub().resolves()
       const singleVersionList = DatasetVersionSummaryInfoMother.createList(2)
       singleVersionList[0].publishedOn = '2021-01-01'
       singleVersionList[1].publishedOn = undefined
@@ -103,6 +104,17 @@ describe('DeaccessionDatasetButton', () => {
       cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
       cy.get('form').should('exist')
       cy.get('input[type="checkbox"]').should('not.exist')
+      cy.get('select').select('IRB request.')
+      cy.get('button[type="submit"]').click()
+      cy.get('button').contains('Yes').should('exist').click()
+      cy.wrap(repository.deaccession).should(
+        'be.calledWithMatch',
+        dataset.persistentId,
+        dataset.versionsSummaries![0].versionNumber,
+        {
+          deaccessionReason: 'IRB request.'
+        }
+      )
     })
     it('only renders version if it is published', () => {
       const handleClose = cy.stub()
@@ -158,7 +170,7 @@ describe('DeaccessionDatasetButton', () => {
         .should('exist')
       cy.get('div').contains('Please enter a valid URL').should('exist')
     })
-    it.only('submits the form', () => {
+    it('submits the form', () => {
       const handleClose = cy.stub()
       repository.deaccession = cy.stub().resolves()
       const dataset = DatasetMother.create({

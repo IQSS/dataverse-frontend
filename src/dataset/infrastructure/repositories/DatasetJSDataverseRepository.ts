@@ -231,7 +231,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           undefined,
           datasetDetails.latestPublishedVersionMajorNumber,
           datasetDetails.latestPublishedVersionMinorNumber,
-          datasetDetails.datasetVersionDiff
+          datasetDetails.datasetVersionDiff,
+          datasetDetails.jsDatasetVersionsSummaries
         )
       })
       .catch((error: ReadError) => {
