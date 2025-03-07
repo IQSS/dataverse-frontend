@@ -207,5 +207,14 @@
       "label": "If applicable, please provide the URL where this dataset can be accessed after deaccessioning.",
       "validation": "Please enter a valid URL."
     }
+  },
+  "confirmDeaccession": {
+    "title": "Confirm Deaccession",
+    "message": "Are you sure you want to deaccession? This is permanent and the selected version(s) will no longer be viewable by the public.",
+    "reason": "Reason for deaccessioning:",
+    "reasonOther": "Additional information about the reason for deaccession:",
+    "forwardUrl": "URL where this dataset can be accessed after deaccessioning:",
+    "cancelButton": "Cancel",
+    "deaccessionButton": "Deaccession"
   }
 }

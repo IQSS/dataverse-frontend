@@ -4,15 +4,24 @@ import {
   DatasetVersionMother
 } from '../../../../dataset/domain/models/DatasetMother'
 import { DeaccessionDatasetButton } from '../../../../../../src/sections/dataset/dataset-action-buttons/edit-dataset-menu/DeaccessionDatasetButton'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
+import { DatasetVersionSummaryInfoMother } from '@tests/component/dataset/domain/models/DatasetVersionSummaryInfoMother'
+import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+const dataset = DatasetMother.create({
+  permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+  version: DatasetVersionMother.createReleased(),
+  versionsSummaries: DatasetVersionSummaryInfoMother.createList(3)
+})
 
 describe('DeaccessionDatasetButton', () => {
+  const repository: DatasetRepository = {} as DatasetRepository
   it('renders the DeaccessionDatasetButton if the user has publish dataset permissions and the dataset is released', () => {
     const dataset = DatasetMother.create({
       permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
       version: DatasetVersionMother.createReleased()
     })
 
-    cy.customMount(<DeaccessionDatasetButton dataset={dataset} />)
+    cy.customMount(<DeaccessionDatasetButton datasetRepository={repository} dataset={dataset} />)
 
     cy.findByRole('separator').should('exist')
     cy.findByRole('button', { name: 'Deaccession Dataset' }).should('exist')
@@ -24,7 +33,7 @@ describe('DeaccessionDatasetButton', () => {
       version: DatasetVersionMother.createReleased()
     })
 
-    cy.customMount(<DeaccessionDatasetButton dataset={dataset} />)
+    cy.customMount(<DeaccessionDatasetButton datasetRepository={repository} dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Deaccession Dataset' }).should('not.exist')
   })
@@ -35,8 +44,147 @@ describe('DeaccessionDatasetButton', () => {
       version: DatasetVersionMother.createNotReleased()
     })
 
-    cy.customMount(<DeaccessionDatasetButton dataset={dataset} />)
+    cy.customMount(<DeaccessionDatasetButton datasetRepository={repository} dataset={dataset} />)
 
     cy.findByRole('button', { name: 'Deaccession Dataset' }).should('not.exist')
+  })
+  describe('Tests the deaccession modal', () => {
+    it('renders the DeaccessionDatasetButton and opens the modal on click', () => {
+      const dataset = DatasetMother.create({
+        permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+        version: DatasetVersionMother.createReleased(),
+        versionsSummaries: DatasetVersionSummaryInfoMother.createList(3)
+      })
+      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+
+      // Check if the button is rendered
+      cy.findByRole('button', { name: 'Deaccession Dataset' }).should('exist')
+
+      // Click the button to open the modal
+      cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
+
+      // Check if the modal is opened
+      cy.get('div').contains('Deaccession Dataset').should('exist')
+      cy.get('div').contains('Deaccession is permanent.').should('exist')
+      cy.get('form').should('exist')
+      cy.get('input[type="checkbox"]').should('have.length', dataset.versionsSummaries?.length)
+      cy.get('select').should('exist')
+      cy.get('textarea').should('exist')
+    })
+    it('displays the confirm modal when the deaccession modal is submitted', () => {
+      const dataset = DatasetMother.create({
+        permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+        version: DatasetVersionMother.createReleased()
+      })
+
+      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+
+      // Open the deaccession modal
+      cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
+
+      // Submit the form to open the confirmation modal
+      cy.get('select').select('IRB request.')
+      cy.get('input[type="checkbox"]').first().check()
+
+      // Confirm modal should be displayed
+      cy.get('button').contains('Continue').click()
+      cy.findByText('Confirm Deaccession').should('exist')
+    })
+    it('does not render versionList if it only contains one published element', () => {
+      const singleVersionList = DatasetVersionSummaryInfoMother.createList(2)
+      singleVersionList[0].publishedOn = '2021-01-01'
+      singleVersionList[1].publishedOn = undefined
+      const dataset = DatasetMother.create({
+        permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+        version: DatasetVersionMother.createReleased(),
+        versionsSummaries: singleVersionList
+      })
+      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+      cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
+      cy.get('form').should('exist')
+      cy.get('input[type="checkbox"]').should('not.exist')
+    })
+    it('only renders version if it is published', () => {
+      const handleClose = cy.stub()
+
+      const singleVersionList: DatasetVersionSummaryInfo[] = [
+        {
+          id: 1,
+          versionNumber: '1.0',
+          publishedOn: '2021-01-01',
+          contributors: 'Contributors'
+        },
+        {
+          id: 2,
+          versionNumber: '2.0',
+          publishedOn: '2021-01-02',
+          contributors: 'Contributors'
+        },
+        {
+          id: 3,
+          versionNumber: 'draft',
+          publishedOn: undefined,
+          contributors: 'Contributors'
+        }
+      ]
+      const dataset = DatasetMother.create({
+        permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+        version: DatasetVersionMother.createReleased(),
+        versionsSummaries: singleVersionList
+      })
+      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+      cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
+      cy.get('form').should('exist')
+      cy.findByText('1.0 - 2021-01-01').should('exist')
+      cy.findByText('2.0 - 2021-01-02').should('exist')
+      cy.findByText('draft -').should('not.exist')
+    })
+    it('displays validation error messages', () => {
+      const handleClose = cy.stub()
+      const dataset = DatasetMother.create({
+        permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+        version: DatasetVersionMother.createReleased(),
+        versionsSummaries: DatasetVersionSummaryInfoMother.createList(3)
+      })
+      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+      cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
+      cy.get('form').should('exist')
+      cy.findByTestId('deaccession-forward-url').type('bad-url')
+      cy.get('button[type="submit"]').click()
+      // Check for validation error messages
+      cy.get('div').contains('Please select at least one version to deaccession.').should('exist')
+      cy.get('div')
+        .contains('Please select a reason for deaccessioning this dataset.')
+        .should('exist')
+      cy.get('div').contains('Please enter a valid URL').should('exist')
+    })
+    it.only('submits the form', () => {
+      const handleClose = cy.stub()
+      repository.deaccession = cy.stub().resolves()
+      const dataset = DatasetMother.create({
+        permissions: DatasetPermissionsMother.createWithPublishingDatasetAllowed(),
+        version: DatasetVersionMother.createReleased(),
+        versionsSummaries: DatasetVersionSummaryInfoMother.createList(3)
+      })
+      console.log('dataset', dataset)
+      cy.customMount(<DeaccessionDatasetButton dataset={dataset} datasetRepository={repository} />)
+      cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
+      cy.get('input[type="checkbox"]').first().check()
+
+      cy.get('select').select('IRB request.')
+      cy.get('textarea').type('Additional information')
+      cy.findByTestId('deaccession-forward-url').type('https://example.com')
+      cy.get('button[type="submit"]').click()
+      cy.get('button').contains('Yes', { timeout: 10000 }).should('exist').click()
+      cy.wrap(repository.deaccession).should(
+        'be.calledWithMatch',
+        dataset.persistentId,
+        dataset.versionsSummaries![0].versionNumber,
+        {
+          deaccessionReason: 'IRB request. Additional information',
+          deaccessionForwardUrl: 'https://example.com'
+        }
+      )
+    })
   })
 })

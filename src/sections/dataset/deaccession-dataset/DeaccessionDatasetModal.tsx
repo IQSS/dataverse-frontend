@@ -1,54 +1,31 @@
 import { Trans, useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
 import { Alert, Button, Form, Modal, Stack } from '@iqss/dataverse-design-system'
-import type { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
-import { QueryParamKey, Route } from '../../Route.enum'
-import { useDeaccessionDataset } from '@/sections/dataset/deaccession-dataset/useDeaccessionDataset'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { isValidURL } from '@/metadata-block-info/domain/models/fieldValidations'
 import { DeaccessionFormData } from './DeaccessionFormData'
-import { Controller, useForm } from 'react-hook-form'
-import { toast } from 'react-toastify'
+import { Controller, Control, FieldErrors, UseFormSetValue } from 'react-hook-form'
 
 interface DeaccessionDatasetModalProps {
   show: boolean
-  repository: DatasetRepository
-  persistentId: string
   versionList?: DatasetVersionSummaryInfo[]
   handleClose: () => void
+  handleSubmitForm: () => void
+  control: Control<DeaccessionFormData>
+  errors: FieldErrors<DeaccessionFormData>
+  setValue: UseFormSetValue<DeaccessionFormData>
 }
 
 export function DeaccessionDatasetModal({
   show,
-  repository,
-  persistentId,
   versionList,
-  handleClose
+  handleClose,
+  handleSubmitForm,
+  control,
+  errors,
+  setValue
 }: DeaccessionDatasetModalProps) {
   const { t } = useTranslation('dataset')
-  const navigate = useNavigate()
-  const { submissionStatus, submitDeaccession, deaccessionError } = useDeaccessionDataset(
-    repository,
-    persistentId,
-    onDeaccessionSucceed
-  )
   const publishedVersions = versionList?.filter((version) => version.publishedOn) || []
-  const defaultVersions = publishedVersions.length === 1 ? [publishedVersions[0].versionNumber] : []
-  const {
-    control,
-    handleSubmit,
-    watch,
-    formState: { errors }
-  } = useForm<DeaccessionFormData>({
-    defaultValues: { versions: defaultVersions, deaccessionForwardUrl: '' }
-  })
-
-  function onDeaccessionSucceed() {
-    navigate(`${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${persistentId}`)
-    handleClose()
-    toast.success('Dataset deaccessioned successfully')
-  }
 
   function isValidNonEmptyURL(value: string): boolean {
     if (value.trim() === '') {
@@ -56,6 +33,7 @@ export function DeaccessionDatasetModal({
     }
     return isValidURL(value)
   }
+
   return (
     <Modal show={show} onHide={handleClose} size="xl">
       <Modal.Header>
@@ -81,12 +59,7 @@ export function DeaccessionDatasetModal({
               }}
             />
           </Alert>
-          {submissionStatus === SubmissionStatus.Errored && (
-            <Alert variant={'danger'} dismissible={false}>
-              {deaccessionError}
-            </Alert>
-          )}
-          <form noValidate={true} onSubmit={handleSubmit(submitDeaccession)}>
+          <form noValidate={true} onSubmit={handleSubmitForm}>
             {publishedVersions.length > 1 && (
               <Form.Group>
                 <Form.Group.Label>{t('deaccession.version.label')}</Form.Group.Label>
@@ -218,12 +191,7 @@ export function DeaccessionDatasetModal({
             <Button variant="primary" type="submit">
               {t('publish.continueButton')}
             </Button>
-            <Button
-              withSpacing
-              variant="secondary"
-              type="button"
-              onClick={handleClose}
-              disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
+            <Button withSpacing variant="secondary" type="button" onClick={handleClose}>
               {t('publish.cancelButton')}
             </Button>
           </form>
