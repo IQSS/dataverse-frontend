@@ -40,7 +40,6 @@ type FileStorageConfiguration = 'S3'
 const limit = 6
 const semaphore = new Semaphore(limit)
 
-// TODO:ME - Check semaphore working ok and not missing somewhere
 // TODO:ME - Check the fix validity endpoint to know the hashing algorithm to use
 
 export const FileUploader = ({
@@ -101,7 +100,7 @@ export const FileUploader = ({
 
   const uploadOneFile = async (file: File) => {
     if (FileUploaderHelper.isDS_StoreFile(file)) {
-      toast.info(`We did not upload the file ${file.name} as it is a .DS_Store file`)
+      toast.info(`File ${file.name} dismissed as it is a .DS_Store file.`)
       return
     }
 
@@ -116,6 +115,14 @@ export const FileUploader = ({
         // Stop the upload process for this file
         return
       }
+    }
+
+    // Check if file is already being uploaded or has already been uploaded
+    if (getFileByKey(FileUploaderHelper.getFileKey(file))) {
+      const fileInfo = getFileByKey(FileUploaderHelper.getFileKey(file)) as FileUploadState
+      toast.info(`File ${fileInfo.key} dismissed as it is or has already being uploaded.`)
+
+      return
     }
 
     await semaphore.acquire(1)
@@ -167,7 +174,17 @@ export const FileUploader = ({
         if (entry.isFile) {
           const fse = entry as FileSystemFileEntry
           fse.file((file) => {
-            void uploadOneFile(file)
+            const fileWithPath = new File([file], file.name, {
+              type: file.type,
+              lastModified: file.lastModified
+            })
+
+            Object.defineProperty(fileWithPath, 'webkitRelativePath', {
+              value: entry.fullPath,
+              writable: true
+            })
+
+            void uploadOneFile(fileWithPath)
           })
         } else if (entry.isDirectory) {
           addFromDir(entry as FileSystemDirectoryEntry)
@@ -307,7 +324,11 @@ export const FileUploader = ({
                             key={file.key}>
                             <div className={styles.info_progress_wrapper}>
                               <p className={styles.info}>
-                                <span>{file.fileName}</span>
+                                <span>
+                                  {file.fileDir
+                                    ? `${file.fileDir}/${file.fileName}`
+                                    : file.fileName}
+                                </span>
                                 <small>{file.fileSizeString}</small>
                               </p>
 

@@ -55,7 +55,7 @@ const fileUploaderReducer = (state: FileUploaderState, action: Action): FileUplo
             done: false,
             removed: false,
             fileName: file.name,
-            fileDir: toDir(file.webkitRelativePath),
+            fileDir: file.webkitRelativePath ? toDir(file.webkitRelativePath) : undefined,
             fileType: file.type,
             tags: [],
             restricted: false
@@ -134,7 +134,7 @@ export const useFileUploader = () => {
   )
   const removeFile = useCallback((key: string) => dispatch({ type: 'REMOVE_FILE', key }), [])
 
-  const getFileByKey = (key: string) => state[key]
+  const getFileByKey = (key: string): FileUploadState | undefined => state[key]
 
   return { state, addFiles, addFile, updateFile, removeFile, getFileByKey }
 }
