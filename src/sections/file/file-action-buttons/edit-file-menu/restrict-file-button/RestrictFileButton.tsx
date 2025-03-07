@@ -44,7 +44,6 @@ export const RestrictFileButton = ({
       ? toast.success(t('restriction.fileUnrestrictedSuccess'))
       : toast.success(t('restriction.fileRestrictdSuccess'))
     navigate(`${Route.DATASETS}?${searchParams.toString()}`)
-    // window.location.href = `/spa${Route.DATASETS}?${searchParams.toString()}`
   }
   return (
     <>

@@ -5,6 +5,7 @@ import { EditFilesMenu } from '../../../../../../sections/dataset/dataset-files/
 import { WithLoggedInUser } from '../../../../../WithLoggedInUser'
 import { WithDatasetAllPermissionsGranted } from '../../../../WithDatasetAllPermissionsGranted'
 import { FilePreviewMother } from '../../../../../../../tests/component/files/domain/models/FilePreviewMother'
+import { FileMockRepository } from '@/stories/file/FileMockRepository'
 
 const meta: Meta<typeof EditFilesMenu> = {
   title: 'Sections/Dataset Page/DatasetFiles/FilesTable/EditFilesMenu',
@@ -16,5 +17,11 @@ export default meta
 type Story = StoryObj<typeof EditFilesMenu>
 
 export const Default: Story = {
-  render: () => <EditFilesMenu files={FilePreviewMother.createMany(2)} fileSelection={{}} />
+  render: () => (
+    <EditFilesMenu
+      files={FilePreviewMother.createMany(2)}
+      fileSelection={{}}
+      fileRepository={new FileMockRepository()}
+    />
+  )
 }

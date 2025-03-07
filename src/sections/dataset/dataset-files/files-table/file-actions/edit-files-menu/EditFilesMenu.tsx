@@ -53,6 +53,7 @@ export function EditFilesMenu({ files, fileSelection, fileRepository }: EditFile
         fileSelection={fileSelection}
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
+        isHeader={true}
       />
     </DropdownButton>
   )

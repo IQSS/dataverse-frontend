@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ExclamationTriangle } from 'react-bootstrap-icons'
-import { Button, Modal, Spinner, Stack, Col, Form } from '@iqss/dataverse-design-system'
+import { Button, Modal, Spinner, Stack, Col, Form, Alert } from '@iqss/dataverse-design-system'
 import styles from './ConfirmRestrictFileModal.module.scss'
 
 interface ConfirmRestrictFileModalProps {
@@ -36,8 +36,13 @@ export const ConfirmRestrictFileModal = ({
         <Modal.Title>{t('restriction.restrictAccess')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        {' '}
+        <Alert variant={'info'} dismissible={false}>
+          {'Request Access and Terms of Access are not editable now, waiting for API connection.'}
+        </Alert>
         {!isRestricted && (
           <div className={styles.restriction_form}>
+            {' '}
             <div className={styles.restriction_info}>
               <p>
                 {t('restriction.restrictionInfoP1')} <b>{t('restriction.restrictionInfoP2')}</b>
@@ -56,6 +61,7 @@ export const ConfirmRestrictFileModal = ({
                 </Form.Group.Label>
                 <Col sm={9}>
                   <Form.Group.Checkbox
+                    disabled
                     label={t('restriction.enableAccessRequest')}
                     data-testid="enable-access-request-checkbox"
                     id={'requestAccessCB'}
@@ -106,7 +112,6 @@ export const ConfirmRestrictFileModal = ({
           {tShared('cancel')}
         </Button>
         <Button
-          variant="danger"
           onClick={handleRestrict}
           type="button"
           disabled={isRestrictingFile || (!requestAccess && !terms)}>

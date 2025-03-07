@@ -24,11 +24,11 @@ export const useRestrictFile = ({
   onSuccessfulRestrict
 }: UseRestrictFile): UseRestrictFileReturn => {
   const { t } = useTranslation('file')
-  const [isRestrictingFile, setisRestrictingFile] = useState<boolean>(false)
+  const [isRestrictingFile, setIsRestrictingFile] = useState<boolean>(false)
   const [errorRestrictingFile, seterrorRestrictingFile] = useState<string | null>(null)
 
   const handleRestrictFile = async (fileId: number) => {
-    setisRestrictingFile(true)
+    setIsRestrictingFile(true)
 
     try {
       await restrictFile(fileRepository, fileId, !isRestricted)
@@ -45,7 +45,7 @@ export const useRestrictFile = ({
           : seterrorRestrictingFile(t('restriction.defaultFileRestrictError'))
       }
     } finally {
-      setisRestrictingFile(false)
+      setIsRestrictingFile(false)
     }
   }
 

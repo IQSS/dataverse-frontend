@@ -73,6 +73,7 @@ export function FileOptionsMenu({ file, fileRepository }: FileOptionsMenuProps) 
           fileSelection={{ [file.id]: file }}
           fileRepository={fileRepository}
           datasetInfo={datasetInfo}
+          isHeader={false}
         />
       </DropdownButton>
     </Tooltip>

@@ -14,6 +14,7 @@ interface EditFileOptionsProps {
   fileSelection: FileSelection
   fileRepository: FileRepository
   datasetInfo: EditFilesMenuDatasetInfo
+  isHeader: boolean
 }
 
 export interface EditFilesMenuDatasetInfo {
@@ -28,13 +29,15 @@ export function EditFilesOptions({
   files,
   fileSelection,
   fileRepository,
-  datasetInfo
+  datasetInfo,
+  isHeader
 }: EditFileOptionsProps) {
   const { t } = useTranslation('files')
   const [showNoFilesSelectedModal, setShowNoFilesSelectedModal] = useState(false)
   const settingsEmbargoAllowed = false // TODO - Ask Guillermo if this is included in the settings endpoint
   const provenanceEnabledByConfig = false // TODO - Ask Guillermo if this is included in the MVP and from which endpoint is coming from
   const { showModal } = useNotImplementedModal()
+
   const onClick = () => {
     if (Object.keys(fileSelection).length === SELECTED_FILES_EMPTY) {
       setShowNoFilesSelectedModal(true)
@@ -44,20 +47,46 @@ export function EditFilesOptions({
     }
   }
 
+  if (!isHeader) {
+    return (
+      <>
+        {files.map((file) => (
+          <>
+            <RestrictFileButton
+              key={file.id}
+              fileId={file.id}
+              isRestricted={file.access.restricted}
+              fileRepository={fileRepository}
+              datasetInfo={datasetInfo}
+            />
+
+            <DeleteFileButton
+              key={file.id}
+              fileId={file.id}
+              fileRepository={fileRepository}
+              datasetInfo={datasetInfo}
+            />
+          </>
+        ))}
+      </>
+    )
+  }
+
   return (
     <>
       <DropdownButtonItem onClick={onClick}>
         {t('actions.editFilesMenu.options.metadata')}
       </DropdownButtonItem>
-      {files.map((file) => (
-        <RestrictFileButton
-          key={file.id}
-          fileId={file.id}
-          isRestricted={file.access.restricted}
-          fileRepository={fileRepository}
-          datasetInfo={datasetInfo}
-        />
-      ))}
+      {files.some((file) => file.access.restricted) && (
+        <DropdownButtonItem onClick={onClick}>
+          {t('actions.editFilesMenu.options.unrestrict')}
+        </DropdownButtonItem>
+      )}
+      {files.some((file) => !file.access.restricted) && (
+        <DropdownButtonItem onClick={onClick}>
+          {t('actions.editFilesMenu.options.restrict')}
+        </DropdownButtonItem>
+      )}
       <DropdownButtonItem onClick={onClick}>
         {t('actions.editFilesMenu.options.replace')}
       </DropdownButtonItem>
@@ -71,14 +100,9 @@ export function EditFilesOptions({
           {t('actions.editFilesMenu.options.provenance')}
         </DropdownButtonItem>
       )}
-      {files.map((file) => (
-        <DeleteFileButton
-          key={file.id}
-          fileId={file.id}
-          fileRepository={fileRepository}
-          datasetInfo={datasetInfo}
-        />
-      ))}
+      <DropdownButtonItem onClick={onClick}>
+        {t('actions.editFilesMenu.options.delete')}
+      </DropdownButtonItem>
       <NoSelectedFilesModal
         show={showNoFilesSelectedModal}
         handleClose={() => setShowNoFilesSelectedModal(false)}
