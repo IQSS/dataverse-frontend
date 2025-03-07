@@ -25,43 +25,12 @@ export interface FileUploadState {
 export type FileUploaderState = Record<string, FileUploadState>
 
 type Action =
-  | { type: 'ADD_FILES'; files: File[] }
   | { type: 'ADD_FILE'; file: File }
   | { type: 'UPDATE_FILE'; key: string; updates: Partial<FileUploadState> }
   | { type: 'REMOVE_FILE'; key: string }
 
 const fileUploaderReducer = (state: FileUploaderState, action: Action): FileUploaderState => {
   switch (action.type) {
-    case 'ADD_FILES': {
-      const newState = { ...state }
-
-      const { files } = action
-
-      files.forEach((file) => {
-        const fileKey = FileUploaderHelper.getFileKey(file)
-
-        if (!newState[fileKey]) {
-          newState[fileKey] = {
-            key: fileKey,
-            progress: 0,
-            uploading: true,
-            fileSizeString: new FileSize(file.size, FileSizeUnit.BYTES).toString(),
-            fileSize: file.size,
-            fileLastModified: file.lastModified,
-            failed: false,
-            done: false,
-            removed: false,
-            fileName: file.name,
-            fileDir: file.webkitRelativePath ? toDir(file.webkitRelativePath) : undefined,
-            fileType: file.type,
-            tags: [],
-            restricted: false
-          }
-        }
-      })
-      return newState
-    }
-
     case 'ADD_FILE': {
       const { file } = action
       const fileKey = FileUploaderHelper.getFileKey(file)
@@ -120,8 +89,6 @@ const fileUploaderReducer = (state: FileUploaderState, action: Action): FileUplo
 export const useFileUploader = () => {
   const [state, dispatch] = useReducer(fileUploaderReducer, {})
 
-  const addFiles = useCallback((files: File[]) => dispatch({ type: 'ADD_FILES', files }), [])
-
   const addFile = useCallback((file: File) => dispatch({ type: 'ADD_FILE', file }), [])
 
   const updateFile = useCallback(
@@ -133,7 +100,7 @@ export const useFileUploader = () => {
 
   const getFileByKey = (key: string): FileUploadState | undefined => state[key]
 
-  return { state, addFiles, addFile, updateFile, removeFile, getFileByKey }
+  return { state, addFile, updateFile, removeFile, getFileByKey }
 }
 
 const toDir = (relativePath: string): string => {
