@@ -34,7 +34,6 @@ export function useDeaccessionDataset(
     // Run the async function without returning a promise
     void (async () => {
       setSubmissionStatus(SubmissionStatus.IsSubmitting)
-      console.log('deaccessionFormData', deaccessionFormData)
 
       try {
         await Promise.all(
@@ -48,7 +47,6 @@ export function useDeaccessionDataset(
               deaccessionForwardUrl: deaccessionFormData.deaccessionForwardUrl
             }
 
-            console.log('calling deaccession', datasetDeaccessionDTO)
             await deaccessionDataset(repository, persistentId, version, datasetDeaccessionDTO)
           })
         )

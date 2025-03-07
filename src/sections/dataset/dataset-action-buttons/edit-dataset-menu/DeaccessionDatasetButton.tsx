@@ -57,21 +57,16 @@ export function DeaccessionDatasetButton({
   }
   const handleOpen = () => setShowDeaccessionModal(true)
   const handleClose = () => setShowDeaccessionModal(false)
-  const handleConfirm = () => {
+
+  const handleCancelConfirmation = () => {
+    setShowConfirmationModal(false)
+  }
+  const handleSubmitForm: SubmitHandler<DeaccessionFormData> = () => {
     setShowDeaccessionModal(false)
     setShowConfirmationModal(true)
   }
-  const handleCancelConfirmation = () => {
-    console.log('handleCancelConfirmation')
-    setShowConfirmationModal(false)
-  }
-  const handleSubmitForm: SubmitHandler<DeaccessionFormData> = (data) => {
-    handleConfirm()
-  }
   const handleConfirmDeaccession = () => {
-    console.log('handleConfirmDeaccession')
     const formData = watch()
-    console.log('formData', formData)
     submitDeaccession(formData)
   }
 
