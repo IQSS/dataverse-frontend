@@ -11,15 +11,29 @@ import { uploadFile } from '@/files/domain/useCases/uploadFile'
 import { FileUploadState, mockFileUploadState, useFileUploader } from './fileUploaderReducer'
 import { FileUploaderHelper } from './FileUploaderHelper'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { FileTypeDifferentModal } from './file-type-different-modal/FileTypeDifferentModal'
+import MimeTypeDisplay from '@/files/domain/models/FileTypeToFriendlyTypeMap'
 import styles from './FileUploader.module.scss'
 
-interface FileUploaderProps {
-  fileRepository: FileRepository
-  datasetPersistentId: string
-  storageConfiguration: FileStorageConfiguration
-  multiple: boolean
-  onUploadedFiles: (files: FileUploadState[]) => void
-}
+type FileUploaderProps =
+  | {
+      fileRepository: FileRepository
+      datasetPersistentId: string
+      storageConfiguration: FileStorageConfiguration
+      multiple: boolean
+      onUploadedFiles: (files: FileUploadState[]) => void
+      isToReplaceFile?: false
+      originalFileType?: never
+    }
+  | {
+      fileRepository: FileRepository
+      datasetPersistentId: string
+      storageConfiguration: FileStorageConfiguration
+      multiple: false
+      onUploadedFiles: (files: FileUploadState[]) => void
+      isToReplaceFile: true
+      originalFileType: string
+    }
 
 type FileStorageConfiguration = 'S3'
 
@@ -34,7 +48,9 @@ export const FileUploader = ({
   datasetPersistentId,
   storageConfiguration,
   multiple,
-  onUploadedFiles
+  onUploadedFiles,
+  isToReplaceFile,
+  originalFileType
 }: FileUploaderProps) => {
   const { t } = useTranslation('shared', { keyPrefix: 'fileUploader' })
   const inputRef = useRef<HTMLInputElement>(null)
@@ -89,6 +105,18 @@ export const FileUploader = ({
   const uploadOneFile = async (file: File) => {
     if (FileUploaderHelper.isDS_StoreFile(file)) {
       toast.info('We avoid uploading a .DS_Store file.')
+      return
+    }
+
+    if (
+      originalFileType &&
+      FileUploaderHelper.originalFileAndReplacementFileHaveDifferentTypes(
+        file.type,
+        originalFileType
+      )
+    ) {
+      // TODO:ME - We need dialog promise types for this
+
       return
     }
 
@@ -300,6 +328,22 @@ export const FileUploader = ({
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
+
+      {/* File Type Different Modal */}
+      {originalFileType && (
+        <p>holo</p>
+        // <FileTypeDifferentModal
+        //   show={fileTypeDifferentModalInfo.show}
+        //   handleContinue={() =>
+        //     setFileTypeDifferentModalInfo((current) => ({ ...current, show: false }))
+        //   }
+        //   handleDeleteFile={() => {}}
+        //   isDeletingFile={false}
+        //   errorDeletingFile={null}
+        //   originalFileType={MimeTypeDisplay[originalFileType]}
+        //   replacementFileType={MimeTypeDisplay[fileTypeDifferentModalInfo.uploadedFileType]}
+        // />
+      )}
     </div>
   )
 }

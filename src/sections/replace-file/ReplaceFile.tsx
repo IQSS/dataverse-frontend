@@ -10,9 +10,6 @@ import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { FileUploadState } from '../shared/file-uploader/fileUploaderReducer'
 import { FileInfo } from './file-info/FileInfo'
-import { FileTypeDifferentModal } from './file-type-different-modal/FileTypeDifferentModal'
-import MimeTypeDisplay from '@/files/domain/models/FileTypeToFriendlyTypeMap'
-import { useOpenFileTypeDifferentModal } from './file-type-different-modal/useOpenFileTypeDifferentModal'
 import styles from './ReplaceFile.module.scss'
 
 interface ReplaceFileProps {
@@ -47,12 +44,6 @@ export const ReplaceFile = ({
   )
 
   const [uploadedFiles, setUploadedFiles] = useState<FileUploadState[]>([])
-
-  const { showFileTypeDifferentModal, handleCloseFileTypeDifferentModal } =
-    useOpenFileTypeDifferentModal({
-      originalFileType: file?.metadata.type.value,
-      uploadedFileType: uploadedFiles[0]?.fileType
-    })
 
   useEffect(() => {
     if (!isLoadingFile) {
@@ -100,21 +91,12 @@ export const ReplaceFile = ({
               onUploadedFiles={handleSyncUploadedFiles}
               storageConfiguration="S3"
               multiple={false}
+              isToReplaceFile
+              originalFileType={file.metadata.type.value}
             />
           </div>
         </Tabs.Tab>
       </Tabs>
-
-      {/* File Type Different Modal */}
-      <FileTypeDifferentModal
-        show={showFileTypeDifferentModal}
-        handleContinue={handleCloseFileTypeDifferentModal}
-        handleDeleteFile={() => {}}
-        isDeletingFile={false}
-        errorDeletingFile={null}
-        originalFileType={MimeTypeDisplay[file.metadata.type.value]}
-        replacementFileType={MimeTypeDisplay[uploadedFiles[0]?.fileType]}
-      />
     </section>
   )
 }
