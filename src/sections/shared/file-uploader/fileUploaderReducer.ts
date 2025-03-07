@@ -2,9 +2,6 @@ import { useReducer, useCallback } from 'react'
 import { FileSize, FileSizeUnit } from '@/files/domain/models/FileMetadata'
 import { FileUploaderHelper } from './FileUploaderHelper'
 
-// TODO:ME Use the dto mapper before submitting the files
-// TODO:ME When removing a file from the already uploaded files list, should be removed from the file uploader state.
-
 export interface FileUploadState {
   key: string
   progress: number

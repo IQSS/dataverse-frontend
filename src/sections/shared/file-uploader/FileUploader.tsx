@@ -40,8 +40,6 @@ type FileStorageConfiguration = 'S3'
 const limit = 6
 const semaphore = new Semaphore(limit)
 
-// TODO:ME - Check the fix validity endpoint to know the hashing algorithm to use
-
 export const FileUploader = ({
   fileRepository,
   datasetPersistentId,
@@ -126,8 +124,6 @@ export const FileUploader = ({
     }
 
     await semaphore.acquire(1)
-
-    // TODO:ME - There was a sanity check here, needed? or leave it?
 
     const fileKey = FileUploaderHelper.getFileKey(file)
 
@@ -219,14 +215,13 @@ export const FileUploader = ({
     const cancelFunction = uploadingToCancelMap.get(fileKey)
     if (cancelFunction) {
       cancelFunction()
+      toast.info(`Upload canceled - ${fileName}`)
     }
     setUploadingToCancelMap((x) => {
       x.delete(fileKey)
       return x
     })
     removeFile(fileKey)
-
-    toast.info(`Upload canceled - ${fileName}`)
   }
 
   useDeepCompareEffect(() => {
@@ -345,7 +340,6 @@ export const FileUploader = ({
                               )}
                             </div>
 
-                            {/* TODO:ME - Check controlling when to show cancel */}
                             <Button
                               variant="secondary"
                               size="sm"

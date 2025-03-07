@@ -23,6 +23,8 @@ interface ReplaceFileProps {
 // TODO - We need something to check if the file has the same content as the original file. Easy for replacement, but what about adding new files to a dataset?
 // TODO:ME - Add restrict file link from dataset files page
 // TODO:ME - Check current file mime type and if different from new file then forceReplace = true
+// TODO:ME Use the dto mapper before submitting the files
+// TODO:ME - Check the fix validity endpoint to know the hashing algorithm to use
 
 export const ReplaceFile = ({
   fileRepository,
