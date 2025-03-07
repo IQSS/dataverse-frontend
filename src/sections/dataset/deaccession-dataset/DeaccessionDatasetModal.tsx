@@ -3,7 +3,7 @@ import { Alert, Button, Form, Modal, Stack } from '@iqss/dataverse-design-system
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { isValidURL } from '@/metadata-block-info/domain/models/fieldValidations'
 import { DeaccessionFormData } from './DeaccessionFormData'
-import { Controller, Control, FieldErrors, UseFormSetValue } from 'react-hook-form'
+import { Controller, Control, FieldErrors } from 'react-hook-form'
 
 interface DeaccessionDatasetModalProps {
   show: boolean
@@ -12,7 +12,6 @@ interface DeaccessionDatasetModalProps {
   handleSubmitForm: () => void
   control: Control<DeaccessionFormData>
   errors: FieldErrors<DeaccessionFormData>
-  setValue: UseFormSetValue<DeaccessionFormData>
 }
 
 export function DeaccessionDatasetModal({
@@ -21,8 +20,7 @@ export function DeaccessionDatasetModal({
   handleClose,
   handleSubmitForm,
   control,
-  errors,
-  setValue
+  errors
 }: DeaccessionDatasetModalProps) {
   const { t } = useTranslation('dataset')
 

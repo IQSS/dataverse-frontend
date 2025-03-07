@@ -8,7 +8,6 @@ import { DeaccessionDatasetModal } from '@/sections/dataset/deaccession-dataset/
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { DeaccessionFormData } from '@/sections/dataset/deaccession-dataset/DeaccessionFormData'
 import { useDeaccessionDataset } from '@/sections/dataset/deaccession-dataset/useDeaccessionDataset'
-import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { ConfirmationModal } from '@/sections/dataset/deaccession-dataset/ConfirmationModal'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
@@ -35,12 +34,15 @@ export function DeaccessionDatasetButton({
       (version) => version.publishedOn && version.summary !== 'versionDeaccessioned'
     ) || []
   const defaultVersions = publishedVersions.length === 1 ? [publishedVersions[0].versionNumber] : []
-
+  function onDeaccessionSucceed() {
+    setShowConfirmationModal(false)
+    navigate(0)
+    toast.success('Dataset deaccessioned successfully')
+  }
   const {
     control,
     handleSubmit,
     formState: { errors },
-    setValue,
     watch
   } = useForm<DeaccessionFormData>({
     defaultValues: { versions: defaultVersions, deaccessionForwardUrl: '' }
@@ -71,14 +73,6 @@ export function DeaccessionDatasetButton({
     const formData = watch()
     console.log('formData', formData)
     submitDeaccession(formData)
-    setShowConfirmationModal(false)
-  }
-
-  function onDeaccessionSucceed() {
-    navigate(`${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${dataset.persistentId}`)
-    handleClose()
-    toast.success('Dataset deaccessioned successfully')
-    window.location.reload()
   }
 
   return (
@@ -94,7 +88,6 @@ export function DeaccessionDatasetButton({
         handleSubmitForm={handleSubmit(handleSubmitForm)}
         control={control}
         errors={errors}
-        setValue={setValue}
       />
       <ConfirmationModal
         submissionStatus={submissionStatus}

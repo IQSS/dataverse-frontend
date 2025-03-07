@@ -1,8 +1,9 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { DeaccessionDatasetModal } from '../../../sections/dataset/deaccession-dataset/DeaccessionDatasetModal'
-import { DatasetMockRepository } from '../DatasetMockRepository'
 import { WithI18next } from '../../WithI18next'
 import { WithLoggedInUser } from '../../WithLoggedInUser'
+import { Control } from 'react-hook-form'
+import { DeaccessionFormData } from '@/sections/dataset/deaccession-dataset/DeaccessionFormData'
 
 const meta: Meta<typeof DeaccessionDatasetModal> = {
   title: 'Sections/Dataset Page/DeaccessionDatasetModal',
@@ -19,13 +20,14 @@ export const Default: Story = {
   render: () => (
     <DeaccessionDatasetModal
       show={true}
-      repository={new DatasetMockRepository()}
-      persistentId={'test'}
-      versionList={[
+      handleSubmitForm={() => {}}
+      handleClose={() => {}}
+      control={{} as Control<DeaccessionFormData>}
+      errors={{}}
+      publishedVersions={[
         { id: 1, contributors: 'contributors', versionNumber: '1.0', publishedOn: '2023-01-01' },
         { id: 2, contributors: 'contributors', versionNumber: '1.1', publishedOn: '2023-02-01' }
-      ]}
-      handleClose={() => {}}></DeaccessionDatasetModal>
+      ]}></DeaccessionDatasetModal>
   )
 }
 
@@ -34,11 +36,12 @@ export const WithOneVersion: Story = {
   render: () => (
     <DeaccessionDatasetModal
       show={true}
-      repository={new DatasetMockRepository()}
-      persistentId={'test'}
-      versionList={[
+      handleSubmitForm={() => {}}
+      handleClose={() => {}}
+      control={{} as Control<DeaccessionFormData>}
+      errors={{}}
+      publishedVersions={[
         { id: 1, contributors: 'contributors', versionNumber: '1.0', publishedOn: '2023-01-01' }
-      ]}
-      handleClose={() => {}}></DeaccessionDatasetModal>
+      ]}></DeaccessionDatasetModal>
   )
 }

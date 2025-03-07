@@ -41,14 +41,6 @@ import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
 
 const includeDeaccessioned = true
-type DatasetDetails = [
-  JSDataset,
-  string[],
-  string,
-  JSDatasetPermissions,
-  JSDatasetLock[],
-  JSDatasetVersionSummaryInfo[]
-]
 
 interface IDatasetDetails {
   jsDataset: JSDataset
