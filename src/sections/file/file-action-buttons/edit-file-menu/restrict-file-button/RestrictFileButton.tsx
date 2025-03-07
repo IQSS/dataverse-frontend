@@ -26,7 +26,7 @@ export const RestrictFileButton = ({
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const navigate = useNavigate()
   const { t } = useTranslation('file')
-
+  // const [isNavigate, setIsNavigat] = useState(false)
   const { handleRestrictFile, isRestrictingFile, errorRestrictingFile } = useRestrictFile({
     isRestricted,
     fileRepository,
@@ -37,7 +37,6 @@ export const RestrictFileButton = ({
 
   function closeModalAndNavigateToDataset() {
     setShowConfirmationModal(false)
-
     const searchParams = new URLSearchParams()
     searchParams.set(QueryParamKey.PERSISTENT_ID, datasetInfo.persistentId)
     searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
@@ -45,8 +44,8 @@ export const RestrictFileButton = ({
       ? toast.success(t('restriction.fileUnrestrictedSuccess'))
       : toast.success(t('restriction.fileRestrictdSuccess'))
     navigate(`${Route.DATASETS}?${searchParams.toString()}`)
+    // window.location.href = `/spa${Route.DATASETS}?${searchParams.toString()}`
   }
-
   return (
     <>
       <DropdownButtonItem onClick={handleOpenModal}>

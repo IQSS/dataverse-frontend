@@ -39,6 +39,7 @@ export function DatasetFiles({
       />
       <FilesTable
         files={files}
+        fileRepository={filesRepository}
         isLoading={isLoading}
         paginationInfo={paginationInfo}
         filesTotalDownloadSize={filesTotalDownloadSize}

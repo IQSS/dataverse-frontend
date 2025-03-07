@@ -7,8 +7,15 @@ import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import { FileAlreadyDeletedModal } from './FileAlreadyDeletedModal'
 import { useDataset } from '../../../../../../DatasetContext'
+import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { EditFilesMenuDatasetInfo } from '../../../edit-files-menu/EditFilesOptions'
 
-export function FileOptionsMenu({ file }: { file: FilePreview }) {
+interface FileOptionsMenuProps {
+  file: FilePreview
+  fileRepository: FileRepository
+}
+
+export function FileOptionsMenu({ file, fileRepository }: FileOptionsMenuProps) {
   const { t } = useTranslation('files')
   const { user } = useSession()
   const { dataset } = useDataset()
@@ -16,6 +23,13 @@ export function FileOptionsMenu({ file }: { file: FilePreview }) {
 
   if (!user || !dataset?.permissions.canUpdateDataset || !dataset.hasValidTermsOfAccess) {
     return <></>
+  }
+
+  const datasetInfo: EditFilesMenuDatasetInfo = {
+    persistentId: dataset.persistentId,
+    releasedVersionExists: dataset.version.someDatasetVersionHasBeenReleased || false,
+    termsOfAccessForRestrictedFiles:
+      dataset.termsOfUse?.termsOfAccess?.termsOfAccessForRestrictedFiles || ''
   }
 
   if (file.metadata.isDeleted) {
@@ -54,7 +68,12 @@ export function FileOptionsMenu({ file }: { file: FilePreview }) {
         <DropdownHeader>
           <PencilFill /> {t('actions.optionsMenu.headers.editOptions')}
         </DropdownHeader>
-        <EditFilesOptions files={[file]} fileSelection={{ [file.id]: file }} />
+        <EditFilesOptions
+          files={[file]}
+          fileSelection={{ [file.id]: file }}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+        />
       </DropdownButton>
     </Tooltip>
   )

@@ -171,6 +171,7 @@ export function DatasetFilesScrollable({
           showSentryRef={showSentryRef}
           isEmptyFiles={isEmptyFiles}
           accumulatedCount={accumulatedCount}
+          fileRepository={filesRepository}
         />
       </div>
     </section>
