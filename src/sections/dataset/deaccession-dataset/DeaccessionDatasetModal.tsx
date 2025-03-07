@@ -22,7 +22,7 @@ export function DeaccessionDatasetModal({
   control,
   errors
 }: DeaccessionDatasetModalProps) {
-  const { t } = useTranslation('dataset')
+  const { t } = useTranslation(['dataset', 'shared'])
 
   function isValidNonEmptyURL(value: string): boolean {
     if (value.trim() === '') {
@@ -126,7 +126,7 @@ export function DeaccessionDatasetModal({
                         {t('deaccession.reason.options.irb')}
                       </option>
                       <option value={t('deaccession.reason.options.legalIssue')}>
-                        {t('deaccession.reasons.legalIssue')}
+                        {t('deaccession.reason.options.legalIssue')}
                       </option>
                       <option value={t('deaccession.reason.options.invalid')}>
                         {t('deaccession.reason.options.invalid')}
@@ -171,6 +171,7 @@ export function DeaccessionDatasetModal({
                   <>
                     <Form.Group.Input
                       type="text"
+                      placeholder="https://"
                       data-testid="deaccession-forward-url"
                       value={value}
                       onChange={onChange}
@@ -186,10 +187,10 @@ export function DeaccessionDatasetModal({
             </Form.Group>
 
             <Button variant="primary" type="submit">
-              {t('publish.continueButton')}
+              {t('continue', { ns: 'shared' })}
             </Button>
             <Button withSpacing variant="secondary" type="button" onClick={handleClose}>
-              {t('publish.cancelButton')}
+              {t('cancel', { ns: 'shared' })}
             </Button>
           </form>
         </Stack>
