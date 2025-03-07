@@ -105,13 +105,7 @@ export const FileUploader = ({
       return
     }
 
-    if (
-      replaceFile &&
-      FileUploaderHelper.originalFileAndReplacementFileHaveDifferentTypes(
-        originalFileType,
-        file.type
-      )
-    ) {
+    if (replaceFile && originalFileType !== file.type) {
       const shouldContinue = await requestFileTypeDifferentConfirmation()
 
       if (!shouldContinue) {

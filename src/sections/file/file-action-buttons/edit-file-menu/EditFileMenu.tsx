@@ -23,12 +23,7 @@ export const EditFileMenu = ({ fileId, fileRepository, datasetInfo }: EditFileMe
 
   const handleOnReplaceClick = () =>
     navigate(
-      RouteWithParams.FILES_REPLACE(
-        datasetInfo.persistentId,
-        datasetInfo.versionNumber,
-        fileId,
-        'FILE'
-      )
+      RouteWithParams.FILES_REPLACE(datasetInfo.persistentId, datasetInfo.versionNumber, fileId)
     )
 
   return (

@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FileJSDataverseRepository } from '@/files/infrastructure/FileJSDataverseRepository'
-import { type ReferrerType, ReplaceFile } from './ReplaceFile'
+import { ReplaceFile } from './ReplaceFile'
 import { QueryParamKey } from '../Route.enum'
 import { searchParamVersionToDomainVersion } from '@/router'
 
@@ -19,7 +19,6 @@ function ReplaceFileWithParams() {
   if (
     searchParams.get(QueryParamKey.FILE_ID) === null ||
     searchParams.get(QueryParamKey.PERSISTENT_ID) === null ||
-    searchParams.get(QueryParamKey.REFERRER) === null ||
     searchParams.get(QueryParamKey.DATASET_VERSION) === null
   ) {
     throw new Error('Missing required query parameters')
@@ -31,7 +30,6 @@ function ReplaceFileWithParams() {
   const datasetVersionNumber = searchParamVersionToDomainVersion(
     datasetVersionSearchParam
   ) as string
-  const referrer = searchParams.get(QueryParamKey.REFERRER) as ReferrerType
 
   return (
     <ReplaceFile
@@ -39,7 +37,6 @@ function ReplaceFileWithParams() {
       fileIdFromParams={fileId}
       datasetPidFromParams={datasetId}
       datasetVersionFromParams={datasetVersionNumber}
-      referrer={referrer}
     />
   )
 }

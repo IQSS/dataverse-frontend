@@ -1,5 +1,3 @@
-import { ReferrerType } from './replace-file/ReplaceFile'
-
 export enum Route {
   HOME = '/',
   SIGN_UP = '/dataverseuser.xhtml?editMode=CREATE&redirectPage=%2Fdataverse.xhtml',
@@ -27,17 +25,11 @@ export const RouteWithParams = {
   EDIT_COLLECTION: (collectionId: string) => `/collections/${collectionId}/edit`,
   EDIT_COLLECTION_FEATURED_ITEMS: (collectionId: string) =>
     `/collections/${collectionId}/edit-featured-items`,
-  FILES_REPLACE: (
-    datasetPersistentId: string,
-    datasetVersion: string,
-    fileId: number,
-    referrerType: ReferrerType
-  ) => {
+  FILES_REPLACE: (datasetPersistentId: string, datasetVersion: string, fileId: number) => {
     const searchParams = new URLSearchParams({
       [QueryParamKey.FILE_ID]: fileId.toString(),
       [QueryParamKey.PERSISTENT_ID]: datasetPersistentId,
-      [QueryParamKey.DATASET_VERSION]: datasetVersion,
-      [QueryParamKey.REFERRER]: referrerType
+      [QueryParamKey.DATASET_VERSION]: datasetVersion
     })
 
     return `/files/replace?${searchParams.toString()}`
@@ -50,7 +42,6 @@ export enum QueryParamKey {
   PAGE = 'page',
   COLLECTION_ID = 'collectionId',
   TAB = 'tab',
-  REFERRER = 'referrer',
   FILE_ID = 'fileId',
   DATASET_VERSION = 'datasetVersion'
 }

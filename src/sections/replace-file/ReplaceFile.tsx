@@ -17,16 +17,12 @@ interface ReplaceFileProps {
   fileIdFromParams: number
   datasetPidFromParams: string
   datasetVersionFromParams: string
-  referrer?: ReferrerType
 }
 
 // TODO:ME - Test removing from bottom file list and upload should be enabled again
-// TODO:ME - How to delete a file because its different mime type?
-// TODO:ME - How to delete a file because it has the same content?
+// TODO - We need something to check if the file has the same content as the original file. Easy for replacement, but what about adding new files to a dataset?
 // TODO:ME - Add restrict file link from dataset files page
-// TODO:ME - After uploading files, check existing files with same content in the dataset and show modal to remove duplicate file (should call delete s3 file endpoint?)
-
-export type ReferrerType = 'FILE' | 'DATASET'
+// TODO:ME - Check current file mime type and if different from new file then forceReplace = true
 
 export const ReplaceFile = ({
   fileRepository,
