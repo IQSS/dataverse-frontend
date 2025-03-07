@@ -31,7 +31,9 @@ export function DeaccessionDatasetButton({
     onDeaccessionSucceed
   )
   const publishedVersions =
-    dataset.versionsSummaries?.filter((version) => version.publishedOn) || []
+    dataset.versionsSummaries?.filter(
+      (version) => version.publishedOn && version.summary !== 'versionDeaccessioned'
+    ) || []
   const defaultVersions = publishedVersions.length === 1 ? [publishedVersions[0].versionNumber] : []
 
   const {
@@ -46,7 +48,8 @@ export function DeaccessionDatasetButton({
 
   if (
     !dataset.version.someDatasetVersionHasBeenReleased ||
-    !dataset.permissions.canPublishDataset
+    !dataset.permissions.canPublishDataset ||
+    publishedVersions.length === 0
   ) {
     return <></>
   }
@@ -75,6 +78,7 @@ export function DeaccessionDatasetButton({
     navigate(`${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${dataset.persistentId}`)
     handleClose()
     toast.success('Dataset deaccessioned successfully')
+    window.location.reload()
   }
 
   return (
@@ -85,7 +89,7 @@ export function DeaccessionDatasetButton({
       </DropdownButtonItem>
       <DeaccessionDatasetModal
         show={showDeaccessionModal}
-        versionList={dataset.versionsSummaries}
+        publishedVersions={publishedVersions}
         handleClose={handleClose}
         handleSubmitForm={handleSubmit(handleSubmitForm)}
         control={control}

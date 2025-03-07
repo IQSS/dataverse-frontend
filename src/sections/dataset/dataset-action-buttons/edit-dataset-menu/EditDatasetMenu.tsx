@@ -31,7 +31,7 @@ enum EditDatasetMenuItems {
 
 export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuProps) {
   const { user } = useSession()
-  const { showModal } = useNotImplementedModal()
+  const { showModal, hideModal } = useNotImplementedModal()
   const { t } = useTranslation('dataset')
   const navigate = useNavigate()
 
@@ -52,6 +52,7 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
       return
     }
     if (eventKey === EditDatasetMenuItems.DEACCESSION) {
+      hideModal()
       return
     }
     showModal()
@@ -95,7 +96,9 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
         {t('datasetActionButtons.editDataset.thumbnailsPlusWidgets')}
       </DropdownButtonItem>
       <DeleteDatasetButton dataset={dataset} />
-      <DeaccessionDatasetButton datasetRepository={datasetRepository} dataset={dataset} />
+      <DropdownButtonItem eventKey={EditDatasetMenuItems.DEACCESSION} as="div">
+        <DeaccessionDatasetButton datasetRepository={datasetRepository} dataset={dataset} />
+      </DropdownButtonItem>
     </DropdownButton>
   )
 }

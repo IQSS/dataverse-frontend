@@ -7,7 +7,7 @@ import { Controller, Control, FieldErrors, UseFormSetValue } from 'react-hook-fo
 
 interface DeaccessionDatasetModalProps {
   show: boolean
-  versionList?: DatasetVersionSummaryInfo[]
+  publishedVersions: DatasetVersionSummaryInfo[]
   handleClose: () => void
   handleSubmitForm: () => void
   control: Control<DeaccessionFormData>
@@ -17,7 +17,7 @@ interface DeaccessionDatasetModalProps {
 
 export function DeaccessionDatasetModal({
   show,
-  versionList,
+  publishedVersions,
   handleClose,
   handleSubmitForm,
   control,
@@ -25,7 +25,6 @@ export function DeaccessionDatasetModal({
   setValue
 }: DeaccessionDatasetModalProps) {
   const { t } = useTranslation('dataset')
-  const publishedVersions = versionList?.filter((version) => version.publishedOn) || []
 
   function isValidNonEmptyURL(value: string): boolean {
     if (value.trim() === '') {
