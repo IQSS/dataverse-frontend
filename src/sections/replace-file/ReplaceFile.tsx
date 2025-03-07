@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import { useFile } from '../file/useFile'
 import { useLoading } from '../loading/LoadingContext'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import { FileUploader } from '../shared/file-uploader/FileUploader'
+import FileUploader, { FileUploaderRef } from '../shared/file-uploader/FileUploader'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { PageNotFound } from '../page-not-found/PageNotFound'
@@ -19,7 +19,6 @@ interface ReplaceFileProps {
   datasetVersionFromParams: string
 }
 
-// TODO:ME - Test removing from bottom file list and upload should be enabled again
 // TODO - We need something to check if the file has the same content as the original file. Easy for replacement, but what about adding new files to a dataset?
 // TODO:ME - Add restrict file link from dataset files page
 // TODO:ME - Check current file mime type and if different from new file then forceReplace = true
@@ -40,6 +39,7 @@ export const ReplaceFile = ({
     fileIdFromParams,
     datasetVersionFromParams
   )
+  const fileUploaderRef = useRef<FileUploaderRef>(null)
 
   const [uploadedFiles, setUploadedFiles] = useState<FileUploadState[]>([])
 
@@ -52,6 +52,10 @@ export const ReplaceFile = ({
   const handleSyncUploadedFiles = useCallback((files: FileUploadState[]) => {
     setUploadedFiles(files)
   }, [])
+
+  const handleRemoveFileFromFileUploaderState = (fileKey: string) => {
+    fileUploaderRef.current?.removeUploadedFile(fileKey)
+  }
 
   if (isLoadingFile) {
     return <AppLoader />
@@ -88,13 +92,30 @@ export const ReplaceFile = ({
               datasetPersistentId={datasetPidFromParams}
               onUploadedFiles={handleSyncUploadedFiles}
               storageConfiguration="S3"
-              replaceFile={true}
-              originalFileType={file.metadata.type.value}
-              multiple={false}
+              replaceFile={false}
+              // originalFileType={file.metadata.type.value}
+              multiple={true}
+              ref={fileUploaderRef}
             />
           </div>
         </Tabs.Tab>
       </Tabs>
+
+      {uploadedFiles.length > 0 && (
+        <div>
+          <h3>Uploaded Files</h3>
+          <ul>
+            {uploadedFiles.map((uploadedFile) => (
+              <li key={uploadedFile.key}>
+                <span>{uploadedFile.fileName}</span>
+                <button onClick={() => handleRemoveFileFromFileUploaderState(uploadedFile.key)}>
+                  Remove File
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </section>
   )
 }
