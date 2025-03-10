@@ -161,9 +161,40 @@
     "dragDropSingle": "Drag and drop file here.",
     "dragDropMultiple": "Drag and drop files and/or directories here.",
     "uploadFailed": "There was an error uploading this file.",
+    "fileUploadSkipped": {
+      "dsStore": "File upload skipped: .DS_Store files are not allowed.",
+      "alreadyUploaded": "File {{fileName}} was skipped because it has already been uploaded."
+    },
     "fileTypeDifferentModal": {
       "title": "File Type Different",
       "message": "The original file ({{originalFileType}}) and replacement file ({{replacementFileType}}) are different file types. Would you like to continue?"
     }
+  },
+  "uploadedFilesList": {
+    "fields": {
+      "fileName": {
+        "label": "File Name",
+        "required": "File Name is required",
+        "invalid": {
+          "maxLength": "File Name must be at most {{maxLength}} characters.",
+          "characters": "The file name contains invalid characters. The following characters are not allowed: : < > ; # / \" * | ? \\"
+        }
+      },
+      "filePath": {
+        "label": "File Path",
+        "description": "Hierarchical directory structure path used to display file organization and support reproducibility.",
+        "invalid": {
+          "maxLength": "File Path must be at most {{maxLength}} characters.",
+          "characters": "The file path contains invalid characters. Only letters, numbers, spaces, dashes, periods, backslashes, and forward slashes are allowed."
+        }
+      },
+      "description": {
+        "label": "Description",
+        "invalid": {
+          "maxLength": "Description must be at most {{maxLength}} characters."
+        }
+      }
+    },
+    "removeFile": "Remove File"
   }
 }

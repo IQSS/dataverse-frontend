@@ -11,6 +11,8 @@ import { PageNotFound } from '../page-not-found/PageNotFound'
 import { FileUploadState, mockFileUploadState } from '../shared/file-uploader/fileUploaderReducer'
 import { FileInfo } from './file-info/FileInfo'
 import { UploadedFilesList } from './uploaded-files-list/UploadedFilesList'
+import { UploadedFilesListHelper } from './uploaded-files-list/UploadedFilesListHelper'
+import { UploadedFileInfo } from './uploaded-files-list/UploadedFileInfo'
 import styles from './ReplaceFile.module.scss'
 
 interface ReplaceFileProps {
@@ -41,7 +43,10 @@ export const ReplaceFile = ({
     datasetVersionFromParams
   )
   const fileUploaderRef = useRef<FileUploaderRef>(null)
-  const [uploadedFiles, setUploadedFiles] = useState<FileUploadState[]>([])
+  const [uploadedFilesInfo, setUploadedFilesInfo] = useState<UploadedFileInfo[]>(
+    []
+    // UploadedFilesListHelper.mapUploadedFilesToUploadedFileInfo(Object.values(mockFileUploadState))
+  )
 
   useEffect(() => {
     if (!isLoadingFile) {
@@ -50,7 +55,8 @@ export const ReplaceFile = ({
   }, [setIsLoading, isLoadingFile])
 
   const handleSyncUploadedFiles = useCallback((files: FileUploadState[]) => {
-    setUploadedFiles(files)
+    const newUploadedFilesMapped = UploadedFilesListHelper.mapUploadedFilesToUploadedFileInfo(files)
+    setUploadedFilesInfo(newUploadedFilesMapped)
   }, [])
 
   const handleRemoveFileFromFileUploaderState = (fileKey: string) => {
@@ -65,7 +71,6 @@ export const ReplaceFile = ({
     return <PageNotFound />
   }
 
-  console.log(uploadedFiles)
   return (
     <section>
       <BreadcrumbsGenerator
@@ -92,31 +97,20 @@ export const ReplaceFile = ({
               datasetPersistentId={datasetPidFromParams}
               onUploadedFiles={handleSyncUploadedFiles}
               storageConfiguration="S3"
-              replaceFile={false}
-              // originalFileType={file.metadata.type.value}
-              multiple={true}
+              replaceFile={true}
+              originalFileType={file.metadata.type.value}
+              multiple={false}
               ref={fileUploaderRef}
             />
           </div>
         </Tabs.Tab>
       </Tabs>
 
-      <UploadedFilesList uploadedFiles={Object.values(mockFileUploadState)} />
-
-      {uploadedFiles.length > 0 && (
-        <div>
-          <h3>Uploaded Files</h3>
-          <ul>
-            {uploadedFiles.map((uploadedFile) => (
-              <li key={uploadedFile.key}>
-                <span>{uploadedFile.fileName}</span>
-                <button onClick={() => handleRemoveFileFromFileUploaderState(uploadedFile.key)}>
-                  Remove File
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+      {uploadedFilesInfo.length > 0 && (
+        <UploadedFilesList
+          uploadedFilesInfo={uploadedFilesInfo}
+          removeFileFromFileUploaderState={handleRemoveFileFromFileUploaderState}
+        />
       )}
     </section>
   )

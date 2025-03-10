@@ -1,0 +1,50 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.uploaded_file_data {
+  position: relative;
+}
+
+.icon_fields_wrapper {
+  display: flex;
+  gap: 1rem;
+
+  .icon {
+    display: none;
+    height: fit-content;
+    padding-top: 0.5rem;
+    color: $dv-file-border-color;
+
+    > span {
+      margin-right: 0;
+      font-size: 62px;
+      line-height: 1;
+    }
+
+    @media (min-width: 768px) {
+      display: block;
+    }
+  }
+
+  .form_fields {
+    width: 100%;
+
+    input,
+    textarea {
+      max-width: 350px;
+    }
+  }
+}
+
+.remove_button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem;
+  background-color: color.adjust($dv-secondary-color, $blackness: 30%);
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+}

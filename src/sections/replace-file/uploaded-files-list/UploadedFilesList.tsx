@@ -1,19 +1,31 @@
 import { useState } from 'react'
-import { Form, Table } from '@iqss/dataverse-design-system'
-import { FileUploadState } from '@/sections/shared/file-uploader/fileUploaderReducer'
+import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
+import { Button, Table } from '@iqss/dataverse-design-system'
 import { RowSelectionCheckbox } from '@/sections/shared/form/row-selection-checkbox/RowSelectionCheckbox'
+import { UploadedFileRow } from './uploaded-file-row/UploadedFileRow'
 import styles from './UploadedFilesList.module.scss'
+import { UploadedFileInfo } from './UploadedFileInfo'
 
-interface UploadedFilesListProps {
-  uploadedFiles: FileUploadState[]
+interface FilesListFormData {
+  files: UploadedFileInfo[]
 }
 
-export const UploadedFilesList = ({ uploadedFiles }: UploadedFilesListProps) => {
-  const [selectedFiles, setSelectedFiles] = useState<FileUploadState[]>([])
-  const allFilesSelected = selectedFiles.length === uploadedFiles.length
-  const someFilesSelected = selectedFiles.length > 0 && selectedFiles.length < uploadedFiles.length
+interface UploadedFilesListProps {
+  uploadedFilesInfo: UploadedFileInfo[]
+  removeFileFromFileUploaderState: (fileKey: string) => void
+}
 
-  const handleSelectFile = (file: FileUploadState) => {
+// TODO:ME - FilePath+FileName should not be repeated in the list, maybe on submit only this?
+export const UploadedFilesList = ({
+  uploadedFilesInfo,
+  removeFileFromFileUploaderState
+}: UploadedFilesListProps) => {
+  const [selectedFiles, setSelectedFiles] = useState<UploadedFileInfo[]>([])
+  const allFilesSelected = selectedFiles.length === uploadedFilesInfo.length
+  const someFilesSelected =
+    selectedFiles.length > 0 && selectedFiles.length < uploadedFilesInfo.length
+
+  const handleSelectFile = (file: UploadedFileInfo) => {
     setSelectedFiles((prevSelectedFiles) => {
       if (prevSelectedFiles.includes(file)) {
         return prevSelectedFiles.filter((selectedFile) => selectedFile !== file)
@@ -23,53 +35,83 @@ export const UploadedFilesList = ({ uploadedFiles }: UploadedFilesListProps) => 
   }
 
   const handleToogleAllFiles = () => {
-    if (selectedFiles.length === uploadedFiles.length) {
+    if (selectedFiles.length === uploadedFilesInfo.length) {
       setSelectedFiles([])
     } else {
-      setSelectedFiles(uploadedFiles)
+      setSelectedFiles(uploadedFilesInfo)
     }
   }
 
+  const form = useForm<FilesListFormData>({
+    mode: 'onChange',
+    values: {
+      files: uploadedFilesInfo
+    }
+  })
+
+  const { fields: uploadedFilesFieldsFormArray } = useFieldArray({
+    control: form.control,
+    name: 'files'
+  })
+
+  // const { submitForm, submitError, submissionStatus } = useSubmitCollection(
+  //   mode,
+  //   collectionIdOrParentCollectionId,
+  //   collectionRepository,
+  //   onSubmittedCollectionError
+  // )
+
+  const submitForm = (data: FilesListFormData) => {
+    console.log({ data })
+  }
+
+  const filesLength = uploadedFilesInfo.length
+
+  console.log({ uploadedFilesInfo, uploadedFilesFieldsFormArray })
+
   return (
-    <div className={styles.table_wrapper}>
-      <Table>
-        <thead>
-          <tr>
-            <th scope="col" colSpan={1}>
-              <div>
-                <RowSelectionCheckbox
-                  checked={allFilesSelected}
-                  indeterminate={someFilesSelected}
-                  onChange={handleToogleAllFiles}
+    <FormProvider {...form}>
+      <form
+        onSubmit={form.handleSubmit(submitForm)}
+        noValidate={true}
+        data-testid="files-uploaded-form">
+        <div className={styles.table_wrapper}>
+          <Table>
+            <thead>
+              <tr>
+                <th scope="col" colSpan={1}>
+                  <div>
+                    <RowSelectionCheckbox
+                      checked={allFilesSelected}
+                      indeterminate={someFilesSelected}
+                      onChange={handleToogleAllFiles}
+                    />
+                  </div>
+                </th>
+                <th scope="col" colSpan={1}>
+                  {`${filesLength} ${filesLength > 1 ? 'Files' : 'File'} uploaded`}
+                </th>
+                <th scope="col" colSpan={1}>
+                  Edit
+                </th>
+              </tr>
+            </thead>
+            <tbody className={styles.table_body}>
+              {uploadedFilesFieldsFormArray.map((file, index) => (
+                <UploadedFileRow
+                  key={index}
+                  file={file}
+                  isSelected={selectedFiles.includes(file)}
+                  handleSelectFile={handleSelectFile}
+                  handleRemoveFile={removeFileFromFileUploaderState}
+                  itemIndex={index}
                 />
-              </div>
-            </th>
-            <th scope="col" colSpan={1}>
-              12 files uploaded
-            </th>
-            <th scope="col" colSpan={1}>
-              Edit
-            </th>
-          </tr>
-        </thead>
-        <tbody className={styles.table_body}>
-          {uploadedFiles.map((file, index) => (
-            <tr key={index}>
-              <th colSpan={1}>
-                <RowSelectionCheckbox
-                  checked={selectedFiles.some((selectedFile) => selectedFile.key === file.key)}
-                  onChange={() => handleSelectFile(file)}
-                />
-              </th>
-              <td colSpan={2}>
-                <div>{file.fileName}</div>
-                <div>{file.fileDir ?? 'empty file path'}</div>
-                <div>Description here</div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    </div>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+        <Button type="submit">Save Changes</Button>
+      </form>
+    </FormProvider>
   )
 }
