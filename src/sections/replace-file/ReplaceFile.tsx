@@ -8,8 +8,9 @@ import FileUploader, { FileUploaderRef } from '../shared/file-uploader/FileUploa
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { PageNotFound } from '../page-not-found/PageNotFound'
-import { FileUploadState } from '../shared/file-uploader/fileUploaderReducer'
+import { FileUploadState, mockFileUploadState } from '../shared/file-uploader/fileUploaderReducer'
 import { FileInfo } from './file-info/FileInfo'
+import { UploadedFilesList } from './uploaded-files-list/UploadedFilesList'
 import styles from './ReplaceFile.module.scss'
 
 interface ReplaceFileProps {
@@ -40,7 +41,6 @@ export const ReplaceFile = ({
     datasetVersionFromParams
   )
   const fileUploaderRef = useRef<FileUploaderRef>(null)
-
   const [uploadedFiles, setUploadedFiles] = useState<FileUploadState[]>([])
 
   useEffect(() => {
@@ -100,6 +100,8 @@ export const ReplaceFile = ({
           </div>
         </Tabs.Tab>
       </Tabs>
+
+      <UploadedFilesList uploadedFiles={Object.values(mockFileUploadState)} />
 
       {uploadedFiles.length > 0 && (
         <div>

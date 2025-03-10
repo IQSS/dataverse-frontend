@@ -5,7 +5,6 @@ import { FileUploaderHelper } from './FileUploaderHelper'
 export interface FileUploadState {
   key: string
   progress: number
-  storageId?: string
   uploading: boolean
   fileSizeString: string
   fileSize: number
@@ -16,9 +15,7 @@ export interface FileUploadState {
   fileName: string
   fileDir: string | undefined
   fileType: string
-  description?: string
-  tags: string[]
-  restricted: boolean
+  storageId?: string
   checksumValue?: string
 }
 
@@ -53,9 +50,7 @@ const fileUploaderReducer = (state: FileUploaderState, action: Action): FileUplo
           removed: false,
           fileName: file.name,
           fileDir: file.webkitRelativePath ? toDir(file.webkitRelativePath) : undefined,
-          fileType: file.type,
-          tags: [],
-          restricted: false
+          fileType: file.type
         }
       }
     }
@@ -123,9 +118,6 @@ export const mockFileUploadState: FileUploaderState = {
     fileName: 'document.pdf',
     fileDir: undefined,
     fileType: 'application/pdf',
-    description: 'Important document',
-    tags: ['work', 'pdf'],
-    restricted: false,
     checksumValue: 'abcd1234'
   },
   file2: {
@@ -140,9 +132,7 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'image.png',
     fileDir: undefined,
-    fileType: 'image/png',
-    tags: ['design', 'png'],
-    restricted: true
+    fileType: 'image/png'
   },
   file3: {
     key: 'file3',
@@ -156,9 +146,7 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'video.mp4',
     fileDir: undefined,
-    fileType: 'video/mp4',
-    tags: ['media', 'video'],
-    restricted: false
+    fileType: 'video/mp4'
   },
   file4: {
     key: 'file4',
@@ -172,9 +160,7 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'spreadsheet.xlsx',
     fileDir: 'documents',
-    fileType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    tags: ['finance', 'excel'],
-    restricted: true
+    fileType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
   },
   file5: {
     key: 'file5',
@@ -188,9 +174,7 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'presentation.pptx',
     fileDir: 'slides',
-    fileType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    tags: ['work', 'presentation'],
-    restricted: false
+    fileType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
   },
   file6: {
     key: 'file6',
@@ -204,9 +188,7 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'audio_super_long_name_file.mp3',
     fileDir: '',
-    fileType: 'audio/mpeg',
-    tags: ['music', 'mp3'],
-    restricted: false
+    fileType: 'audio/mpeg'
   },
   file7: {
     key: 'file7',
@@ -220,9 +202,7 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'notes.txt',
     fileDir: 'documents',
-    fileType: 'text/plain',
-    tags: ['notes', 'text'],
-    restricted: false
+    fileType: 'text/plain'
   },
   file8: {
     key: 'file8',
@@ -236,9 +216,7 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'compressed.zip',
     fileDir: 'archives',
-    fileType: 'application/zip',
-    tags: ['backup', 'zip'],
-    restricted: true
+    fileType: 'application/zip'
   },
   file9: {
     key: 'file9',
@@ -252,9 +230,7 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'report.docx',
     fileDir: 'reports',
-    fileType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    tags: ['report', 'document'],
-    restricted: false
+    fileType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   },
   file10: {
     key: 'file10',
@@ -268,8 +244,6 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'corrupted-file.dat',
     fileDir: 'unknown',
-    fileType: 'application/octet-stream',
-    tags: ['unknown', 'error'],
-    restricted: true
+    fileType: 'application/octet-stream'
   }
 }
