@@ -69,8 +69,7 @@ export function FileOptionsMenu({ file, fileRepository }: FileOptionsMenuProps) 
           <PencilFill /> {t('actions.optionsMenu.headers.editOptions')}
         </DropdownHeader>
         <EditFilesOptions
-          files={[file]}
-          fileSelection={{ [file.id]: file }}
+          file={file}
           fileRepository={fileRepository}
           datasetInfo={datasetInfo}
           isHeader={false}

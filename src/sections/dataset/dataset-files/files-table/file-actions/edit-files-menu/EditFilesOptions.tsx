@@ -9,13 +9,23 @@ import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { RestrictFileButton } from '@/sections/file/file-action-buttons/edit-file-menu/restrict-file-button/RestrictFileButton'
 import { DeleteFileButton } from '@/sections/file/file-action-buttons/edit-file-menu/delete-file-button/DeleteFileButton'
 
-interface EditFileOptionsProps {
-  files: FilePreview[]
-  fileSelection: FileSelection
-  fileRepository: FileRepository
-  datasetInfo: EditFilesMenuDatasetInfo
-  isHeader: boolean
-}
+type EditFilesOptionsProps =
+  | {
+      files: FilePreview[]
+      file?: never
+      fileSelection: FileSelection
+      fileRepository: FileRepository
+      datasetInfo?: never
+      isHeader: true
+    }
+  | {
+      files?: never
+      file: FilePreview
+      fileSelection?: never
+      fileRepository: FileRepository
+      datasetInfo: EditFilesMenuDatasetInfo
+      isHeader: false
+    }
 
 export interface EditFilesMenuDatasetInfo {
   persistentId: string
@@ -24,19 +34,40 @@ export interface EditFilesMenuDatasetInfo {
 }
 
 const SELECTED_FILES_EMPTY = 0
-
 export function EditFilesOptions({
+  file,
   files,
   fileSelection,
   fileRepository,
   datasetInfo,
   isHeader
-}: EditFileOptionsProps) {
+}: EditFilesOptionsProps) {
   const { t } = useTranslation('files')
   const [showNoFilesSelectedModal, setShowNoFilesSelectedModal] = useState(false)
   const settingsEmbargoAllowed = false // TODO - Ask Guillermo if this is included in the settings endpoint
   const provenanceEnabledByConfig = false // TODO - Ask Guillermo if this is included in the MVP and from which endpoint is coming from
   const { showModal } = useNotImplementedModal()
+
+  if (!isHeader) {
+    return (
+      <>
+        <RestrictFileButton
+          key={file.id}
+          fileId={file.id}
+          isRestricted={file.access.restricted}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+        />
+
+        <DeleteFileButton
+          key={file.id}
+          fileId={file.id}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+        />
+      </>
+    )
+  }
 
   const onClick = () => {
     if (Object.keys(fileSelection).length === SELECTED_FILES_EMPTY) {
@@ -45,31 +76,6 @@ export function EditFilesOptions({
       // TODO - Implement edit files
       showModal()
     }
-  }
-
-  if (!isHeader) {
-    return (
-      <>
-        {files.map((file) => (
-          <>
-            <RestrictFileButton
-              key={file.id}
-              fileId={file.id}
-              isRestricted={file.access.restricted}
-              fileRepository={fileRepository}
-              datasetInfo={datasetInfo}
-            />
-
-            <DeleteFileButton
-              key={file.id}
-              fileId={file.id}
-              fileRepository={fileRepository}
-              datasetInfo={datasetInfo}
-            />
-          </>
-        ))}
-      </>
-    )
   }
 
   return (

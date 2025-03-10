@@ -664,9 +664,6 @@ describe('JS Dataset Mapper', () => {
       jsDatasetFilesTotalOriginalDownloadSize,
       jsDatasetFilesTotalArchivalDownloadSize
     )
-
-    console.log('mapped', mapped)
-    console.log('expectedDataset', expectedDataset)
     expect(expectedDataset).to.deep.equal(mapped)
   })
   it('maps jsDataset model to the domain Dataset model for alternate version', () => {

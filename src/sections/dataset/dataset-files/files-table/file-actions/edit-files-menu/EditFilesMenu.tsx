@@ -9,7 +9,6 @@ import { useDataset } from '../../../../DatasetContext'
 import { FileSelection } from '../../row-selection/useFileSelection'
 import { useMediaQuery } from '../../../../../../shared/hooks/useMediaQuery'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import { EditFilesMenuDatasetInfo } from './EditFilesOptions'
 
 interface EditFilesMenuProps {
   files: FilePreview[]
@@ -31,13 +30,6 @@ export function EditFilesMenu({ files, fileSelection, fileRepository }: EditFile
     return <></>
   }
 
-  const datasetInfo: EditFilesMenuDatasetInfo = {
-    persistentId: dataset.persistentId,
-    releasedVersionExists: dataset.version.someDatasetVersionHasBeenReleased || false,
-    termsOfAccessForRestrictedFiles:
-      dataset.termsOfUse?.termsOfAccess?.termsOfAccessForRestrictedFiles || ''
-  }
-
   return (
     <DropdownButton
       id="edit-files-menu"
@@ -52,7 +44,6 @@ export function EditFilesMenu({ files, fileSelection, fileRepository }: EditFile
         files={files}
         fileSelection={fileSelection}
         fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
         isHeader={true}
       />
     </DropdownButton>

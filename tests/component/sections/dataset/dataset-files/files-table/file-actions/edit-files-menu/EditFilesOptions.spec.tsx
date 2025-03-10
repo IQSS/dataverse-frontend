@@ -18,7 +18,6 @@ describe('EditFilesOptions', () => {
         files={files}
         fileSelection={{}}
         fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
         isHeader={true}
       />
     )
@@ -37,7 +36,6 @@ describe('EditFilesOptions', () => {
         files={[fileUnrestricted]}
         fileSelection={{}}
         fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
         isHeader={true}
       />
     )
@@ -54,7 +52,6 @@ describe('EditFilesOptions', () => {
         files={[fileRestricted]}
         fileSelection={{}}
         fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
         isHeader={true}
       />
     )
@@ -70,7 +67,6 @@ describe('EditFilesOptions', () => {
         files={files}
         fileSelection={{}}
         fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
         isHeader={true}
       />
     )
@@ -86,7 +82,6 @@ describe('EditFilesOptions', () => {
         files={files}
         fileSelection={{}}
         fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
         isHeader={true}
       />
     )
@@ -102,7 +97,6 @@ describe('EditFilesOptions', () => {
         files={files}
         fileSelection={{}}
         fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
         isHeader={true}
       />
     )
@@ -126,7 +120,6 @@ describe('EditFilesOptions', () => {
         files={files}
         fileSelection={{ 'some-file-id': FilePreviewMother.create() }}
         fileRepository={fileRepository}
-        datasetInfo={datasetInfo}
         isHeader={true}
       />
     )
@@ -147,8 +140,7 @@ describe('EditFilesOptions for a single file', () => {
     const fileUnrestricted = FilePreviewMother.createDefault()
     cy.customMount(
       <EditFilesOptions
-        files={[fileUnrestricted]}
-        fileSelection={{}}
+        file={fileUnrestricted}
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
         isHeader={false}
@@ -163,8 +155,7 @@ describe('EditFilesOptions for a single file', () => {
     const fileUnrestricted = FilePreviewMother.createDefault()
     cy.customMount(
       <EditFilesOptions
-        files={[fileUnrestricted]}
-        fileSelection={{}}
+        file={fileUnrestricted}
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
         isHeader={false}
@@ -180,8 +171,7 @@ describe('EditFilesOptions for a single file', () => {
     const fileRestricted = FilePreviewMother.createRestricted()
     cy.customMount(
       <EditFilesOptions
-        files={[fileRestricted]}
-        fileSelection={{}}
+        file={fileRestricted}
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
         isHeader={false}
@@ -198,8 +188,7 @@ describe('EditFilesOptions for a single file', () => {
     const fileUnrestricted = FilePreviewMother.createDefault()
     cy.customMount(
       <EditFilesOptions
-        files={[fileUnrestricted]}
-        fileSelection={{}}
+        file={fileUnrestricted}
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
         isHeader={false}

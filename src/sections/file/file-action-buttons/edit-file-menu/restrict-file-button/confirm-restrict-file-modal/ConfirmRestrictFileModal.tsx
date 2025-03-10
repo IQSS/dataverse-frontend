@@ -64,7 +64,7 @@ export const ConfirmRestrictFileModal = ({
                     disabled
                     label={t('restriction.enableAccessRequest')}
                     data-testid="enable-access-request-checkbox"
-                    id={'requestAccessCB'}
+                    id={'requestAccessCheckbox'}
                     checked={requestAccess}
                   />
                 </Col>
