@@ -25,5 +25,3 @@ export const FileThumbnail = ({ name, thumbnail, typeValue }: FileThumbnailProps
     </div>
   )
 }
-
-export default FileThumbnail

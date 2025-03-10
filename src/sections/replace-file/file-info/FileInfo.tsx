@@ -8,7 +8,7 @@ import { FileChecksum } from '@/sections/dataset/dataset-files/files-table/file-
 import { FileTabularData } from '@/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileTabularData'
 import { FileDescription } from '@/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileDescription'
 import { FileLabels } from '@/sections/file/file-labels/FileLabels'
-import FileThumbnail from './FileThumbnail'
+import { FileThumbnail } from './FileThumbnail'
 import styles from './FileInfo.module.scss'
 
 interface FileInfoProps {
