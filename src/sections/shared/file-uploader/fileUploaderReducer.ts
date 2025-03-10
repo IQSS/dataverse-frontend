@@ -48,8 +48,10 @@ const fileUploaderReducer = (state: FileUploaderState, action: Action): FileUplo
           failed: false,
           done: false,
           removed: false,
-          fileName: file.name,
-          fileDir: file.webkitRelativePath ? toDir(file.webkitRelativePath) : undefined,
+          fileName: FileUploaderHelper.sanitizeFileName(file.name),
+          fileDir: file.webkitRelativePath
+            ? toDir(FileUploaderHelper.sanitizeFilePath(file.webkitRelativePath))
+            : undefined,
           fileType: file.type
         }
       }

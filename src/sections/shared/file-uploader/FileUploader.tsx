@@ -114,7 +114,7 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
 
     const uploadOneFile = async (file: File) => {
       if (FileUploaderHelper.isDS_StoreFile(file)) {
-        toast.info(`File ${file.name} dismissed as it is a .DS_Store file.`)
+        toast.info(t('fileUploader.fileUploadSkipped.dsStore'))
         return
       }
 
@@ -130,11 +130,12 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
           return
         }
       }
-
-      // Check if file is already being uploaded or has already been uploaded
+      // File already uploaded
       if (getFileByKey(FileUploaderHelper.getFileKey(file))) {
         const fileInfo = getFileByKey(FileUploaderHelper.getFileKey(file)) as FileUploadState
-        toast.info(`File ${fileInfo.key} dismissed as it is or has already being uploaded.`)
+        toast.info(
+          t('fileUploader.fileUploadSkipped.alreadyUploaded', { fileName: fileInfo.fileName })
+        )
 
         return
       }
