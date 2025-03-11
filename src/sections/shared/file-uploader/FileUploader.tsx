@@ -16,11 +16,13 @@ import { md5 } from 'js-md5'
 import cn from 'classnames'
 import { Accordion, Button, Card, ProgressBar } from '@iqss/dataverse-design-system'
 import { uploadFile } from '@/files/domain/useCases/uploadFile'
-import { FileUploadState, mockFileUploadState, useFileUploader } from './fileUploaderReducer'
-import { FileUploaderHelper } from './FileUploaderHelper'
+import { useGetFixityAlgorithm } from './useGetFixityAlgorithm'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import MimeTypeDisplay from '@/files/domain/models/FileTypeToFriendlyTypeMap'
+import { FileUploadState, mockFileUploadState, useFileUploader } from './fileUploaderReducer'
+import { FileUploaderHelper } from './FileUploaderHelper'
 import { SwalModal } from '../swal-modal/SwalModal'
+import { LoadingConfigSpinner } from './loading-config-spinner/LoadingConfigSpinner'
 import styles from './FileUploader.module.scss'
 
 type FileUploaderProps =
@@ -67,6 +69,7 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
   ) => {
     const { t } = useTranslation('shared')
     const inputRef = useRef<HTMLInputElement>(null)
+    const { fixityAlgorithm, isLoadingFixityAlgorithm } = useGetFixityAlgorithm(fileRepository)
 
     const [isDragging, setIsDragging] = useState(false)
 
@@ -91,6 +94,7 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
     }
 
     const onFileUploadFinished = (file: File) => {
+      // TODO:ME - Here we should create the hash with the fixityAlgorithm
       const hash = md5.create()
       const reader = file.stream().getReader()
       reader
@@ -274,6 +278,8 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
     useDeepCompareEffect(() => {
       onUploadedFiles(uploadedDoneAndHashedFiles)
     }, [uploadedDoneAndHashedFiles, onUploadedFiles])
+
+    if (isLoadingFixityAlgorithm) return <LoadingConfigSpinner />
 
     return (
       <div>

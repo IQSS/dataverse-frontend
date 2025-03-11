@@ -161,6 +161,7 @@
     "dragDropSingle": "Drag and drop file here.",
     "dragDropMultiple": "Drag and drop files and/or directories here.",
     "uploadFailed": "There was an error uploading this file.",
+    "loadingConfiguration": "Loading configuration",
     "fileUploadSkipped": {
       "dsStore": "File upload skipped: .DS_Store files are not allowed.",
       "alreadyUploaded": "File {{fileName}} was skipped because it has already been uploaded."

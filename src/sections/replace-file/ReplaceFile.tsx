@@ -26,7 +26,7 @@ interface ReplaceFileProps {
 // TODO:ME - Add restrict file link from dataset files page
 // TODO:ME - Check current file mime type and if different from new file then forceReplace = true
 // TODO:ME Use the dto mapper before submitting the files
-// TODO:ME - Check the fix validity endpoint to know the hashing algorithm to use
+// TODO:ME - Use useBlocker to prevent user from leaving the page while uploading files, if continue leaving, abort current uploads
 
 export const ReplaceFile = ({
   fileRepository,
