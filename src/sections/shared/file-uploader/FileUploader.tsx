@@ -123,7 +123,10 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
       }
 
       if (replaceFile && originalFileType !== file.type) {
-        const shouldContinue = await requestFileTypeDifferentConfirmation()
+        const shouldContinue = await requestFileTypeDifferentConfirmation(
+          originalFileType,
+          file.type
+        )
 
         if (!shouldContinue) {
           // Reset the file input, otherwise in case user cancels but then tries to upload the same file again, the input will not trigger the change event
@@ -245,7 +248,10 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
       removeFile(fileKey)
     }
 
-    const requestFileTypeDifferentConfirmation = async (): Promise<boolean> => {
+    const requestFileTypeDifferentConfirmation = async (
+      originalFileType: string,
+      replacementFileType: string
+    ): Promise<boolean> => {
       const result = await SwalModal.fire({
         titleText: t('fileUploader.fileTypeDifferentModal.title'),
         showDenyButton: true,
@@ -256,8 +262,8 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
             <ExclamationTriangle size={24} />
             <span>
               {t('fileUploader.fileTypeDifferentModal.message', {
-                originalFileType: MimeTypeDisplay['text/plain'],
-                replacementFileType: MimeTypeDisplay['application/vnd.ms-excel']
+                originalFileType: MimeTypeDisplay[originalFileType],
+                replacementFileType: MimeTypeDisplay[replacementFileType]
               })}
             </span>
           </div>
