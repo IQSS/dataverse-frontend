@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
@@ -9,6 +9,7 @@ import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dat
 import { ConfirmRestrictFileModal } from './confirm-restrict-file-modal/ConfirmRestrictFileModal'
 import { EditFileMenuDatasetInfo } from '../EditFileMenu'
 import { useRestrictFile } from './useRestrictFile'
+import { useFilesContext } from '@/sections/file/FilesContext'
 
 interface RestrictFileButtonProps {
   fileId: number
@@ -34,16 +35,25 @@ export const RestrictFileButton = ({
   })
   const handleOpenModal = () => setShowConfirmationModal(true)
   const handleCloseModal = () => setShowConfirmationModal(false)
+  const { refreshFiles } = useFilesContext()
+  const [searchParamsURL] = useSearchParams()
+  const urlParams = new URLSearchParams(searchParamsURL)
+  const version = urlParams.get(QueryParamKey.VERSION)
 
   function closeModalAndNavigateToDataset() {
     setShowConfirmationModal(false)
-    const searchParams = new URLSearchParams()
-    searchParams.set(QueryParamKey.PERSISTENT_ID, datasetInfo.persistentId)
-    searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
+
+    if (version === 'DRAFT' || version === ':draft') {
+      void refreshFiles()
+    } else {
+      const searchParams = new URLSearchParams()
+      searchParams.set(QueryParamKey.PERSISTENT_ID, datasetInfo.persistentId)
+      searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
+      navigate(`${Route.DATASETS}?${searchParams.toString()}`)
+    }
     isRestricted
       ? toast.success(t('restriction.fileUnrestrictedSuccess'))
       : toast.success(t('restriction.fileRestrictdSuccess'))
-    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
   }
   return (
     <>
