@@ -16,7 +16,6 @@ interface UploadedFilesListProps {
   removeFileFromFileUploaderState: (fileKey: string) => void
 }
 
-// TODO:ME - FilePath+FileName should not be repeated in the list, maybe on submit only this?
 export const UploadedFilesList = ({
   uploadedFilesInfo,
   removeFileFromFileUploaderState
@@ -47,7 +46,7 @@ export const UploadedFilesList = ({
     mode: 'onChange'
   })
 
-  const { fields: uploadedFilesFieldsFormArray } = useFieldArray({
+  const { fields: uploadedFilesFieldsFormArray, remove } = useFieldArray({
     control: form.control,
     name: 'files'
   })
@@ -74,6 +73,11 @@ export const UploadedFilesList = ({
 
   const submitForm = (data: FilesListFormData) => {
     console.log({ data })
+  }
+
+  const handleRemoveFileFromList = (fileIndex: number, fileKey: string) => {
+    remove(fileIndex)
+    removeFileFromFileUploaderState(fileKey)
   }
 
   const filesLength = uploadedFilesInfo.length
@@ -111,7 +115,7 @@ export const UploadedFilesList = ({
                   file={file}
                   isSelected={selectedFiles.includes(file)}
                   handleSelectFile={handleSelectFile}
-                  handleRemoveFile={removeFileFromFileUploaderState}
+                  handleRemoveFile={handleRemoveFileFromList}
                   itemIndex={index}
                   key={file.id}
                 />

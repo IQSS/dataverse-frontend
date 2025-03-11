@@ -54,8 +54,8 @@ export const ReplaceFile = ({
   }, [setIsLoading, isLoadingFile])
 
   const handleSyncUploadedFiles = useCallback((files: FileUploadState[]) => {
-    const newUploadedFilesMapped = UploadedFilesListHelper.mapUploadedFilesToUploadedFileInfo(files)
-    setUploadedFilesInfo(newUploadedFilesMapped)
+    const uploadedFilesMapped = UploadedFilesListHelper.mapUploadedFilesToUploadedFileInfo(files)
+    setUploadedFilesInfo(uploadedFilesMapped)
   }, [])
 
   const handleRemoveFileFromFileUploaderState = (fileKey: string) => {
@@ -69,6 +69,8 @@ export const ReplaceFile = ({
   if (!file) {
     return <PageNotFound />
   }
+
+  console.log(uploadedFilesInfo)
 
   return (
     <section>

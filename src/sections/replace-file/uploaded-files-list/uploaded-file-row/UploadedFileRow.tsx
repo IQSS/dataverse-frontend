@@ -15,7 +15,7 @@ interface UploadedFileRowProps {
   isSelected: boolean
   itemIndex: number
   handleSelectFile: (file: UploadedFileInfo) => void
-  handleRemoveFile: (fileKey: string) => void
+  handleRemoveFile: (fileIndex: number, fileKey: string) => void
 }
 
 export const UploadedFileRow = ({
@@ -61,7 +61,9 @@ export const UploadedFileRow = ({
             <CloseButton
               type="button"
               className={styles.remove_button}
-              onClick={() => handleRemoveFile(file.key)}
+              onClick={() => {
+                handleRemoveFile(itemIndex, file.key)
+              }}
               aria-label={t('uploadedFilesList.removeFile')}
             />
           </div>
