@@ -321,7 +321,6 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     return getDatasetVersionsSummaries
       .execute(datasetId)
       .then((summaris) => {
-        console.log('getDatasetVersionsSummaries', summaris)
         return summaris
       })
       .catch((error: ReadError) => {

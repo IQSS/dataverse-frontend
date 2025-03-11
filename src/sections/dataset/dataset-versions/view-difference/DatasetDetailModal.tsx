@@ -1,16 +1,14 @@
-import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { Button, Modal } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
-import { DatasetVersionsDifferenceTable } from './DatasetVersionsDifferenceTable'
-// import { getDatasetVersionsSummaries } from '@/dataset/domain/useCases/getDatasetVersionsSummaries'
+import { DatasetVersionsDifferenceTable } from '../DatasetVersionsDifferenceTable'
+import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
 
 interface VersionDetailModalProps {
   show: boolean
   handleClose: () => void
-
   isLoading: boolean
   errorLoading: string | null
-  datasetVersionDifferences: DatasetVersionSummaryInfo[] | []
+  datasetVersionDifferences: DatasetVersionDiff | undefined
 }
 
 export const VersionDetailModal = ({

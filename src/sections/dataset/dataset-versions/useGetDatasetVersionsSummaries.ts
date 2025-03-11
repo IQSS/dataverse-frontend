@@ -27,7 +27,6 @@ export const useGetDatasetVersionsSummaries = ({
       try {
         const response = await getDatasetVersionsSummaries(datasetRepository, persistentId)
 
-        console.log('GetDatasetVersionsSummaries', response)
         setSummaries(response)
       } catch (err) {
         const errorMessage =

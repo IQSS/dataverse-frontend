@@ -1,13 +1,13 @@
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
-import { Alert, Button, Table, Form } from '@iqss/dataverse-design-system'
+import { Alert, Table, Form } from '@iqss/dataverse-design-system'
 import { useState } from 'react'
-import { VersionDetailModal } from './DatasetDetailModal'
-import { useGetDatasetVersionsSummaries } from '../useGetDatasetVersionsSummaries'
+import { useGetDatasetVersionsSummaries } from './useGetDatasetVersionsSummaries'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { Dataset } from '@/dataset/domain/models/Dataset'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
-import { DatasetVersionViewDifferenceButton } from './DatasetVersionViewDifferenceButton'
+import { DatasetVersionViewDifferenceButton } from './view-difference/DatasetVersionViewDifferenceButton'
 import { generateDatasetVersionSummaryDescription } from './generateSummaryDescription'
+import { DatasetViewDetailButton } from './DatasetViewDetailButton'
 
 interface DatasetVersionsProps {
   datasetRepository: DatasetRepository
@@ -18,9 +18,7 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
     datasetRepository,
     persistentId: dataset?.persistentId ?? ''
   })
-  const [selectedVersionDetail, setSelectedVersionDetail] = useState<
-    DatasetVersionSummaryInfo[] | []
-  >([])
+
   const [selectedVersions, setSelectedVersions] = useState<DatasetVersionSummaryInfo[]>([])
 
   const handleCheckboxChange = (dataset: DatasetVersionSummaryInfo) => {
@@ -42,9 +40,18 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
   if (error) {
     return <Alert variant="danger">Error loading dataset versions</Alert>
   }
+  console.log(selectedVersions)
   return (
     <>
-      <DatasetVersionViewDifferenceButton />
+      {selectedVersions.length == 2 && (
+        <DatasetVersionViewDifferenceButton
+          newVersionNumber={selectedVersions[0]?.versionNumber}
+          oldVersionNumber={selectedVersions[1]?.versionNumber}
+          datasetRepository={datasetRepository}
+        />
+      )}
+      {/* TODO: if the length < 2, then aks user to select 2 versions */}
+
       <Table>
         <thead>
           <tr>
@@ -81,12 +88,11 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
                       </>
                     ))}
                     {dataset && dataset.summary && previousDataset && (
-                      <Button
-                        size="sm"
-                        variant="link"
-                        onClick={() => setSelectedVersionDetail([dataset, previousDataset])}>
-                        View Detail
-                      </Button>
+                      <DatasetViewDetailButton
+                        datasetRepository={datasetRepository}
+                        oldVersionNumber={previousDataset.versionNumber}
+                        newVersionNumber={dataset.versionNumber}
+                      />
                     )}
                   </td>
                   <td>{}</td>
@@ -98,16 +104,6 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
             })}
         </tbody>
       </Table>
-
-      {selectedVersionDetail.length === 2 && (
-        <VersionDetailModal
-          show={!!selectedVersionDetail.length}
-          handleClose={() => setSelectedVersionDetail([])}
-          isLoading={false}
-          datasetVersionDifferences={selectedVersionDetail}
-          errorLoading={null}
-        />
-      )}
     </>
   )
 }

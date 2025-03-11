@@ -1,17 +1,33 @@
 import { useTranslation } from 'react-i18next'
-import { ArrowLeftRight } from 'react-bootstrap-icons'
 import { Button } from '@iqss/dataverse-design-system'
-import styles from '../dataset-terms/EditDatasetTermsButton.module.scss'
 import { useSession } from '@/sections/session/SessionContext'
 import { useDataset } from '@/sections/dataset/DatasetContext'
-import { DatasetVersionViewDifferenceModal } from './DatasetVersionViewDifferenceModal'
 import { useState } from 'react'
+import { VersionDetailModal } from './view-difference/DatasetDetailModal'
+import { useGetDatasetVersionDiff } from './view-difference/useGetDatasetVersionDiff'
+import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 
-export function DatasetVersionViewDifferenceButton() {
+interface DatasetViewDetailButtonProps {
+  oldVersionNumber: string
+  newVersionNumber: string
+  datasetRepository: DatasetRepository
+}
+export function DatasetViewDetailButton({
+  oldVersionNumber,
+  newVersionNumber,
+  datasetRepository
+}: DatasetViewDetailButtonProps) {
   const { t } = useTranslation('dataset')
   const { user } = useSession()
   const { dataset } = useDataset()
+
   const [showModal, setShowModal] = useState(false)
+  const { differences, error, isLoading } = useGetDatasetVersionDiff({
+    datasetRepository,
+    persistentId: dataset?.persistentId || '',
+    oldVersion: oldVersionNumber,
+    newVersion: newVersionNumber
+  })
 
   if (!user || !dataset?.permissions.canUpdateDataset) {
     return null
@@ -22,22 +38,21 @@ export function DatasetVersionViewDifferenceButton() {
   }
 
   return (
-    <div className={styles['edit-terms-button-container']}>
+    <div>
       <Button
-        type="button"
+        variant="link"
         size={'sm'}
         onClick={handleClick}
-        icon={<ArrowLeftRight className={styles.icon} />}
         disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
-        {t('View Difference')}
+        {t('View Detail')}
       </Button>
       {showModal && (
-        <DatasetVersionViewDifferenceModal
+        <VersionDetailModal
           show={!!showModal}
           handleClose={() => setShowModal(false)}
           isLoading={false}
-          dataset={null}
           errorLoading={null}
+          datasetVersionDifferences={undefined}
         />
       )}
     </div>
