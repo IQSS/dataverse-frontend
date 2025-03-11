@@ -26,7 +26,8 @@ import {
   updateDataset,
   VersionUpdateType as JSVersionUpdateType,
   WriteError,
-  getDatasetVersionDiff
+  getDatasetVersionDiff,
+  getDatasetVersionsSummaries
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -35,7 +36,7 @@ import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
 import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
 import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
-
+import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 const includeDeaccessioned = true
 type DatasetDetails = [JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[]]
 
@@ -312,6 +313,18 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     return updateDataset
       .execute(datasetId, DatasetDTOMapper.toJSDatasetDTO(updatedDataset))
       .catch((error: WriteError) => {
+        throw new Error(error.message)
+      })
+  }
+
+  getDatasetVersionsSummaries(datasetId: number | string): Promise<DatasetVersionSummaryInfo[]> {
+    return getDatasetVersionsSummaries
+      .execute(datasetId)
+      .then((summaris) => {
+        console.log('getDatasetVersionsSummaries', summaris)
+        return summaris
+      })
+      .catch((error: ReadError) => {
         throw new Error(error.message)
       })
   }

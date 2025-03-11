@@ -27,6 +27,7 @@ import { QueryParamKey, Route } from '../Route.enum'
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { DatasetTerms } from '@/sections/dataset/dataset-terms/DatasetTerms'
+import { DatasetVersions } from './dataset-versions/DatasetVersions'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -60,7 +61,6 @@ export function Dataset({
   const publishCompleted = useCheckPublishCompleted(publishInProgress, dataset, datasetRepository)
   const [activeTab, setActiveTab] = useState<string>(tab)
   const termsTabRef = useRef<HTMLDivElement>(null)
-
   useUpdateDatasetAlerts({
     dataset,
     created,
@@ -98,6 +98,7 @@ export function Dataset({
       setActiveTab(key)
     }
   }
+
   return (
     <>
       <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
@@ -182,6 +183,11 @@ export function Dataset({
                         datasetPersistentId={dataset.persistentId}
                         datasetVersion={dataset.version}
                       />
+                    </div>
+                  </Tabs.Tab>
+                  <Tabs.Tab title={t('Version')} eventKey={'versions'}>
+                    <div ref={termsTabRef} className={styles['tab-container']}>
+                      <DatasetVersions datasetRepository={datasetRepository} dataset={dataset} />
                     </div>
                   </Tabs.Tab>
                 </Tabs>

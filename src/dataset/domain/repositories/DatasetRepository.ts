@@ -4,6 +4,7 @@ import { DatasetPaginationInfo } from '../models/DatasetPaginationInfo'
 import { DatasetDTO } from '../useCases/DTOs/DatasetDTO'
 import { DatasetsWithCount } from '../models/DatasetsWithCount'
 import { VersionUpdateType } from '../models/VersionUpdateType'
+import { DatasetVersionSummaryInfo } from '../models/DatasetVersionSummaryInfo'
 
 export interface DatasetRepository {
   getByPersistentId: (
@@ -27,4 +28,5 @@ export interface DatasetRepository {
     paginationInfo: DatasetPaginationInfo
   ) => Promise<DatasetsWithCount>
   publish(persistentId: string, versionUpdateType: VersionUpdateType): Promise<void>
+  getDatasetVersionsSummaries: (datasetId: number | string) => Promise<DatasetVersionSummaryInfo[]>
 }
