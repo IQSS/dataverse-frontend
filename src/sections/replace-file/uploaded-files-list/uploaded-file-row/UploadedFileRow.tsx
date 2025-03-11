@@ -1,11 +1,13 @@
+import { useTranslation } from 'react-i18next'
 import { Controller, UseControllerProps, useFormContext } from 'react-hook-form'
 import { CloseButton, Col, Form, Icon, IconName, Row } from '@iqss/dataverse-design-system'
+import { InfoCircleFill } from 'react-bootstrap-icons'
+import MimeTypeDisplay from '@/files/domain/models/FileTypeToFriendlyTypeMap'
 import { FileTypeToFileIconMap } from '@/sections/file/file-preview/FileTypeToFileIconMap'
 import { RowSelectionCheckbox } from '@/sections/shared/form/row-selection-checkbox/RowSelectionCheckbox'
 import { UploadedFileInfo } from '../UploadedFileInfo'
-import styles from './UploadedFileRow.module.scss'
-import { useTranslation } from 'react-i18next'
 import { UploadedFilesListHelper } from '../UploadedFilesListHelper'
+import styles from './UploadedFileRow.module.scss'
 
 interface UploadedFileRowProps {
   file: UploadedFileInfo
@@ -41,7 +43,6 @@ export const UploadedFileRow = ({
     }
   }
 
-  // TODO:ME - Agregar validacion para file path validos
   const filePathRules: UseControllerProps['rules'] = {
     validate: (value: string) => {
       if (!UploadedFilesListHelper.isValidFilePath(value)) {
@@ -68,114 +69,109 @@ export const UploadedFileRow = ({
         <RowSelectionCheckbox checked={isSelected} onChange={() => handleSelectFile(file)} />
       </th>
       <td colSpan={2}>
-        <div className={styles.uploaded_file_data}>
-          <div className={styles.icon_fields_wrapper}>
-            <div className={styles.icon}>
-              <Icon name={iconName} />
-            </div>
-            <div className={styles.form_fields}>
-              {/* File Name field */}
-              <Form.Group controlId={`files.${itemIndex}.fileName`} as={Row}>
-                <Form.Group.Label required={true} column md={2}>
-                  {t('uploadedFilesList.fields.fileName.label')}
-                </Form.Group.Label>
-                <Col md={10}>
-                  <Controller
-                    name={`files.${itemIndex}.fileName`}
-                    control={control}
-                    rules={fileNameRules}
-                    render={({
-                      field: { onChange, ref, value },
-                      fieldState: { invalid, error }
-                    }) => (
-                      <>
-                        <Form.Group.Input
-                          type="text"
-                          value={value as string}
-                          onChange={onChange}
-                          isInvalid={invalid}
-                          aria-required={true}
-                          ref={ref}
-                        />
-                        <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
-                      </>
-                    )}
-                  />
-                </Col>
-              </Form.Group>
+        <div className={styles.icon_fields_wrapper}>
+          <div className={styles.icon}>
+            <Icon name={iconName} />
+          </div>
+          <div className={styles.form_fields}>
+            {/* File Name field */}
+            <Form.Group controlId={`files.${itemIndex}.fileName`} as={Row}>
+              <Form.Group.Label required={true} column lg={2}>
+                {t('uploadedFilesList.fields.fileName.label')}
+              </Form.Group.Label>
+              <Col lg={10}>
+                <Controller
+                  name={`files.${itemIndex}.fileName`}
+                  control={control}
+                  rules={fileNameRules}
+                  render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
+                    <>
+                      <Form.Group.Input
+                        type="text"
+                        value={value as string}
+                        onChange={onChange}
+                        isInvalid={invalid}
+                        aria-required={true}
+                        ref={ref}
+                      />
+                      <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+                    </>
+                  )}
+                />
+              </Col>
+            </Form.Group>
 
-              {/* File Path field */}
-              <Form.Group controlId={`files.${itemIndex}.fileDir`} as={Row}>
-                <Form.Group.Label column md={2}>
-                  {t('uploadedFilesList.fields.filePath.label')}
-                </Form.Group.Label>
-                <Col md={10}>
-                  <Controller
-                    name={`files.${itemIndex}.fileDir`}
-                    control={control}
-                    rules={filePathRules}
-                    render={({
-                      field: { onChange, ref, value },
-                      fieldState: { invalid, error }
-                    }) => (
-                      <>
-                        <Form.Group.Input
-                          type="text"
-                          value={value as string}
-                          onChange={onChange}
-                          isInvalid={invalid}
-                          ref={ref}
-                        />
-                        <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
-                      </>
-                    )}
-                  />
-                </Col>
-              </Form.Group>
+            {/* File Path field */}
+            <Form.Group controlId={`files.${itemIndex}.fileDir`} as={Row}>
+              <Form.Group.Label
+                message={t('uploadedFilesList.fields.filePath.description')}
+                column
+                lg={2}>
+                {t('uploadedFilesList.fields.filePath.label')}
+              </Form.Group.Label>
+              <Col lg={10}>
+                <Controller
+                  name={`files.${itemIndex}.fileDir`}
+                  control={control}
+                  rules={filePathRules}
+                  render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
+                    <>
+                      <Form.Group.Input
+                        type="text"
+                        value={value as string}
+                        onChange={onChange}
+                        isInvalid={invalid}
+                        ref={ref}
+                      />
+                      <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+                    </>
+                  )}
+                />
+              </Col>
+            </Form.Group>
 
-              {/* TODO:ME - Fix this */}
-              <div className={styles.file_info}>
-                <span>Size: {file.fileSizeString}</span>
-                <span>Type: {file.fileType}</span>
-                <span>MD5: {file.checksumValue}</span>
-              </div>
+            {/* Description field */}
+            <Form.Group controlId={`files.${itemIndex}.description`} as={Row}>
+              <Form.Group.Label column lg={2}>
+                {t('uploadedFilesList.fields.description.label')}
+              </Form.Group.Label>
+              <Col lg={10}>
+                <Controller
+                  name={`files.${itemIndex}.description`}
+                  control={control}
+                  rules={descriptionRules}
+                  render={({ field: { onChange, ref, value }, fieldState: { invalid, error } }) => (
+                    <>
+                      <Form.Group.TextArea
+                        value={value as string}
+                        onChange={onChange}
+                        isInvalid={invalid}
+                        rows={2}
+                        ref={ref}
+                      />
+                      <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
+                    </>
+                  )}
+                />
+              </Col>
+            </Form.Group>
 
-              {/* Description field */}
-              <Form.Group controlId={`files.${itemIndex}.description`} as={Row}>
-                <Form.Group.Label column md={2}>
-                  {t('uploadedFilesList.fields.description.label')}
-                </Form.Group.Label>
-                <Col md={10}>
-                  <Controller
-                    name={`files.${itemIndex}.description`}
-                    control={control}
-                    rules={descriptionRules}
-                    render={({
-                      field: { onChange, ref, value },
-                      fieldState: { invalid, error }
-                    }) => (
-                      <>
-                        <Form.Group.TextArea
-                          value={value as string}
-                          onChange={onChange}
-                          isInvalid={invalid}
-                          rows={2}
-                          ref={ref}
-                        />
-                        <Form.Group.Feedback type="invalid">{error?.message}</Form.Group.Feedback>
-                      </>
-                    )}
-                  />
-                </Col>
-              </Form.Group>
+            <div className={styles.file_extra_info}>
+              <InfoCircleFill />
+              <span>{file.fileSizeString}</span>-<span>{MimeTypeDisplay[file.fileType]}</span>-
+              <span>
+                <i>{file.checksumAlgorithm}:</i> {file.checksumValue}
+              </span>
             </div>
           </div>
-          <CloseButton
-            type="button"
-            className={styles.remove_button}
-            onClick={() => handleRemoveFile(file.key)}
-            aria-label={t('uploadedFilesList.removeFile')}
-          />
+          <div>
+            <CloseButton
+              type="button"
+              className={styles.remove_button}
+              onClick={() => handleRemoveFile(file.key)}
+              aria-label={t('uploadedFilesList.removeFile')}
+            />
+          </div>
         </div>
       </td>
     </tr>
