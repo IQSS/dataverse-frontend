@@ -38,14 +38,16 @@ const jsDataset = {
     releaseTime: undefined
   },
   termsOfUse: {
-    fileAccessRequest: true,
-    termsOfAccess: 'New terms',
-    dataAccessPlace: 'New place',
-    originalArchive: 'New archive',
-    availabilityStatus: 'New status',
-    contactForAccess: 'New contact',
-    sizeOfCollection: 'New size',
-    studyCompletion: 'New completion'
+    termsOfAccess: {
+      fileAccessRequest: true,
+      termsOfAccess: 'New terms',
+      dataAccessPlace: 'New place',
+      originalArchive: 'New archive',
+      availabilityStatus: 'New status',
+      contactForAccess: 'New contact',
+      sizeOfCollection: 'New size',
+      studyCompletion: 'New completion'
+    }
   },
   metadataBlocks: [
     {
@@ -193,6 +195,34 @@ const jsDatasetVersionDiff = {
 }
 const jsDatasetFilesTotalOriginalDownloadSize = 5
 const jsDatasetFilesTotalArchivalDownloadSize = 7
+const jsDatasetVersionSummaries = [
+  {
+    id: 101,
+    versionNumber: '1.0',
+    summary: {
+      citation: {
+        added: 1,
+        deleted: 0,
+        changed: 1
+      }
+    },
+    contributors: 'John Doe',
+    publishedOn: '2023-01-01'
+  },
+  {
+    id: 102,
+    versionNumber: '2.0',
+    summary: {
+      citation: {
+        added: 1,
+        deleted: 0,
+        changed: 1
+      }
+    },
+    contributors: 'Jane Doe',
+    publishedOn: '2023-02-01'
+  }
+]
 const expectedDataset = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
@@ -237,14 +267,16 @@ const expectedDataset = {
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
   termsOfUse: {
-    fileAccessRequest: true,
-    termsOfAccess: 'New terms',
-    dataAccessPlace: 'New place',
-    originalArchive: 'New archive',
-    availabilityStatus: 'New status',
-    contactForAccess: 'New contact',
-    sizeOfCollection: 'New size',
-    studyCompletion: 'New completion'
+    termsOfAccess: {
+      fileAccessRequest: true,
+      termsOfAccess: 'New terms',
+      dataAccessPlace: 'New place',
+      originalArchive: 'New archive',
+      availabilityStatus: 'New status',
+      contactForAccess: 'New contact',
+      sizeOfCollection: 'New size',
+      studyCompletion: 'New completion'
+    }
   },
   metadataBlocks: [
     {
@@ -303,7 +335,35 @@ const expectedDataset = {
   ),
   nextMajorVersion: undefined,
   nextMinorVersion: undefined,
-  requiresMajorVersionUpdate: false
+  requiresMajorVersionUpdate: false,
+  versionsSummaries: [
+    {
+      id: 101,
+      versionNumber: '1.0',
+      summary: {
+        citation: {
+          added: 1,
+          deleted: 0,
+          changed: 1
+        }
+      },
+      contributors: 'John Doe',
+      publishedOn: '2023-01-01'
+    },
+    {
+      id: 102,
+      versionNumber: '2.0',
+      summary: {
+        citation: {
+          added: 1,
+          deleted: 0,
+          changed: 1
+        }
+      },
+      contributors: 'Jane Doe',
+      publishedOn: '2023-02-01'
+    }
+  ]
 }
 const expectedDatasetWithPublicationDate = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -346,14 +406,16 @@ const expectedDatasetWithPublicationDate = {
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
   termsOfUse: {
-    fileAccessRequest: true,
-    termsOfAccess: 'New terms',
-    dataAccessPlace: 'New place',
-    originalArchive: 'New archive',
-    availabilityStatus: 'New status',
-    contactForAccess: 'New contact',
-    sizeOfCollection: 'New size',
-    studyCompletion: 'New completion'
+    termsOfAccess: {
+      fileAccessRequest: true,
+      termsOfAccess: 'New terms',
+      dataAccessPlace: 'New place',
+      originalArchive: 'New archive',
+      availabilityStatus: 'New status',
+      contactForAccess: 'New contact',
+      sizeOfCollection: 'New size',
+      studyCompletion: 'New completion'
+    }
   },
   metadataBlocks: [
     {
@@ -413,7 +475,35 @@ const expectedDatasetWithPublicationDate = {
   ),
   nextMajorVersion: undefined,
   nextMinorVersion: undefined,
-  requiresMajorVersionUpdate: false
+  requiresMajorVersionUpdate: false,
+  versionsSummaries: [
+    {
+      id: 101,
+      versionNumber: '1.0',
+      summary: {
+        citation: {
+          added: 1,
+          deleted: 0,
+          changed: 1
+        }
+      },
+      contributors: 'John Doe',
+      publishedOn: '2023-01-01'
+    },
+    {
+      id: 102,
+      versionNumber: '2.0',
+      summary: {
+        citation: {
+          added: 1,
+          deleted: 0,
+          changed: 1
+        }
+      },
+      contributors: 'Jane Doe',
+      publishedOn: '2023-02-01'
+    }
+  ]
 }
 const expectedDatasetWithNextVersionNumbers = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -456,14 +546,16 @@ const expectedDatasetWithNextVersionNumbers = {
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
   termsOfUse: {
-    fileAccessRequest: true,
-    termsOfAccess: 'New terms',
-    dataAccessPlace: 'New place',
-    originalArchive: 'New archive',
-    availabilityStatus: 'New status',
-    contactForAccess: 'New contact',
-    sizeOfCollection: 'New size',
-    studyCompletion: 'New completion'
+    termsOfAccess: {
+      fileAccessRequest: true,
+      termsOfAccess: 'New terms',
+      dataAccessPlace: 'New place',
+      originalArchive: 'New archive',
+      availabilityStatus: 'New status',
+      contactForAccess: 'New contact',
+      sizeOfCollection: 'New size',
+      studyCompletion: 'New completion'
+    }
   },
   metadataBlocks: [
     {
@@ -523,7 +615,35 @@ const expectedDatasetWithNextVersionNumbers = {
   ),
   nextMajorVersion: '2.0',
   nextMinorVersion: '1.3',
-  requiresMajorVersionUpdate: false
+  requiresMajorVersionUpdate: false,
+  versionsSummaries: [
+    {
+      id: 101,
+      versionNumber: '1.0',
+      summary: {
+        citation: {
+          added: 1,
+          deleted: 0,
+          changed: 1
+        }
+      },
+      contributors: 'John Doe',
+      publishedOn: '2023-01-01'
+    },
+    {
+      id: 102,
+      versionNumber: '2.0',
+      summary: {
+        citation: {
+          added: 1,
+          deleted: 0,
+          changed: 1
+        }
+      },
+      contributors: 'Jane Doe',
+      publishedOn: '2023-02-01'
+    }
+  ]
 }
 
 const expectedDatasetAlternateVersion = {
@@ -589,14 +709,16 @@ const expectedDatasetAlternateVersion = {
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
   },
   termsOfUse: {
-    fileAccessRequest: true,
-    termsOfAccess: 'New terms',
-    dataAccessPlace: 'New place',
-    originalArchive: 'New archive',
-    availabilityStatus: 'New status',
-    contactForAccess: 'New contact',
-    sizeOfCollection: 'New size',
-    studyCompletion: 'New completion'
+    termsOfAccess: {
+      fileAccessRequest: true,
+      termsOfAccess: 'New terms',
+      dataAccessPlace: 'New place',
+      originalArchive: 'New archive',
+      availabilityStatus: 'New status',
+      contactForAccess: 'New contact',
+      sizeOfCollection: 'New size',
+      studyCompletion: 'New completion'
+    }
   },
   locks: [
     {
@@ -647,20 +769,53 @@ const expectedDatasetAlternateVersion = {
   ),
   nextMajorVersion: undefined,
   nextMinorVersion: undefined,
-  requiresMajorVersionUpdate: false
+  requiresMajorVersionUpdate: false,
+  versionsSummaries: [
+    {
+      id: 101,
+      versionNumber: '1.0',
+      summary: {
+        citation: {
+          added: 1,
+          deleted: 0,
+          changed: 1
+        }
+      },
+      contributors: 'John Doe',
+      publishedOn: '2023-01-01'
+    },
+    {
+      id: 102,
+      versionNumber: '2.0',
+      summary: {
+        citation: {
+          added: 1,
+          deleted: 0,
+          changed: 1
+        }
+      },
+      contributors: 'Jane Doe',
+      publishedOn: '2023-02-01'
+    }
+  ]
 }
+
 describe('JS Dataset Mapper', () => {
-  it('maps jsDataset model to the domain Dataset model', () => {
-    const mapped = JSDatasetMapper.toDataset(
-      jsDataset,
-      citation,
-      datasetSummaryFields,
-      jsDatasetPermissions,
-      jsDatasetLocks,
-      jsDatasetFilesTotalOriginalDownloadSize,
-      jsDatasetFilesTotalArchivalDownloadSize
-    )
-    expect(expectedDataset).to.deep.equal(mapped)
+  describe('JS Dataset Mapper', () => {
+    it('maps jsDataset model to the domain Dataset model', () => {
+      const mapped = JSDatasetMapper.toDataset(
+        jsDataset,
+        citation,
+        datasetSummaryFields,
+        jsDatasetPermissions,
+        jsDatasetLocks,
+        jsDatasetFilesTotalOriginalDownloadSize,
+        jsDatasetFilesTotalArchivalDownloadSize,
+        jsDatasetVersionSummaries
+      )
+
+      expect(mapped).to.deep.equal(expectedDataset)
+    })
   })
   it('maps jsDataset model to the domain Dataset model for alternate version', () => {
     const mappedWithAlternate = JSDatasetMapper.toDataset(
@@ -671,6 +826,7 @@ describe('JS Dataset Mapper', () => {
       jsDatasetLocks,
       jsDatasetFilesTotalOriginalDownloadSize,
       jsDatasetFilesTotalArchivalDownloadSize,
+      jsDatasetVersionSummaries,
       '4.0'
     )
 
@@ -714,7 +870,8 @@ describe('JS Dataset Mapper', () => {
         jsDatasetPermissions,
         jsDatasetLocks,
         jsDatasetFilesTotalOriginalDownloadSize,
-        jsDatasetFilesTotalArchivalDownloadSize
+        jsDatasetFilesTotalArchivalDownloadSize,
+        jsDatasetVersionSummaries
       )
     )
   })
@@ -756,7 +913,8 @@ describe('JS Dataset Mapper', () => {
         jsDatasetPermissions,
         jsDatasetLocks,
         jsDatasetFilesTotalOriginalDownloadSize,
-        jsDatasetFilesTotalArchivalDownloadSize
+        jsDatasetFilesTotalArchivalDownloadSize,
+        jsDatasetVersionSummaries
       )
     )
   })
@@ -774,7 +932,8 @@ describe('JS Dataset Mapper', () => {
       jsDatasetPermissions,
       jsDatasetLocks,
       jsDatasetFilesTotalOriginalDownloadSize,
-      jsDatasetFilesTotalArchivalDownloadSize
+      jsDatasetFilesTotalArchivalDownloadSize,
+      jsDatasetVersionSummaries
     )
 
     expect(expectedDatasetWithPublicationDate).to.deep.equal(actual)
@@ -795,6 +954,7 @@ describe('JS Dataset Mapper', () => {
       jsDatasetLocks,
       jsDatasetFilesTotalOriginalDownloadSize,
       jsDatasetFilesTotalArchivalDownloadSize,
+      jsDatasetVersionSummaries,
       undefined,
       undefined,
       latestPublishedVersionMajorNumber,
@@ -817,6 +977,7 @@ describe('JS Dataset Mapper', () => {
       jsDatasetLocks,
       jsDatasetFilesTotalOriginalDownloadSize,
       jsDatasetFilesTotalArchivalDownloadSize,
+      jsDatasetVersionSummaries,
       undefined,
       undefined,
       latestPublishedVersionMajorNumber,

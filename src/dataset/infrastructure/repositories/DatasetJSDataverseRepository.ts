@@ -219,12 +219,12 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           datasetDetails.jsDatasetLocks,
           datasetDetails.jsDatasetFilesTotalOriginalDownloadSize,
           datasetDetails.jsDatasetFilesTotalArchivalDownloadSize,
+          datasetDetails.jsDatasetVersionsSummaries,
           requestedVersion,
           undefined,
           datasetDetails.latestPublishedVersionMajorNumber,
           datasetDetails.latestPublishedVersionMinorNumber,
-          datasetDetails.datasetVersionDiff,
-          datasetDetails.jsDatasetVersionsSummaries
+          datasetDetails.datasetVersionDiff
         )
       })
       .catch((error: ReadError) => {

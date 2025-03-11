@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { DatasetRepository } from '../../../dataset/domain/repositories/DatasetRepository'
 import { deaccessionDataset } from '../../../dataset/domain/useCases/deaccessionDataset'
-
 import { SubmissionStatus } from '../../shared/form/DatasetMetadataForm/useSubmitDataset'
 import { DeaccessionFormData } from '@/sections/dataset/deaccession-dataset/DeaccessionFormData'
 
@@ -36,20 +35,18 @@ export function useDeaccessionDataset(
       setSubmissionStatus(SubmissionStatus.IsSubmitting)
 
       try {
-        await Promise.all(
-          deaccessionFormData.versions.map(async (version) => {
-            const datasetDeaccessionDTO = {
-              deaccessionReason:
-                deaccessionFormData.deaccessionReason +
-                (deaccessionFormData.deaccessionReasonOther
-                  ? ` ${deaccessionFormData.deaccessionReasonOther}`
-                  : ''),
-              deaccessionForwardUrl: deaccessionFormData.deaccessionForwardUrl
-            }
+        for (const version of deaccessionFormData.versions) {
+          const datasetDeaccessionDTO = {
+            deaccessionReason:
+              deaccessionFormData.deaccessionReason +
+              (deaccessionFormData.deaccessionReasonOther
+                ? ` ${deaccessionFormData.deaccessionReasonOther}`
+                : ''),
+            deaccessionForwardUrl: deaccessionFormData.deaccessionForwardUrl
+          }
 
-            await deaccessionDataset(repository, persistentId, version, datasetDeaccessionDTO)
-          })
-        )
+          await deaccessionDataset(repository, persistentId, version, datasetDeaccessionDTO)
+        }
 
         setDeaccessionError(null)
         setSubmissionStatus(SubmissionStatus.SubmitComplete)
