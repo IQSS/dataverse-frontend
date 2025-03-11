@@ -7,7 +7,7 @@ import styles from './ConfirmLeaveModal.module.scss'
 interface ConfirmLeaveModalProps {
   show: boolean
   handleCancelLeavePage: () => void
-  handleConfirmLeavePage: () => Promise<void>
+  handleConfirmLeavePage: () => void
 }
 
 export const ConfirmLeaveModal = ({
@@ -41,7 +41,7 @@ export const ConfirmLeaveModal = ({
         <Button
           onClick={() => {
             setIsRemovingFiles(true)
-            void handleConfirmLeavePage()
+            handleConfirmLeavePage()
           }}
           type="button"
           disabled={isRemovingFiles}>

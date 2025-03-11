@@ -282,7 +282,7 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
       return result.isConfirmed
     }
 
-    const handleConfirmLeavePage = async () => {
+    const handleConfirmLeavePage = () => {
       if (navigationBlocker.state === 'blocked') {
         // First cancel all uploads in progress
         uploadingToCancelMap.forEach((cancelFunction) => {
