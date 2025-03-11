@@ -31,6 +31,10 @@
     textarea {
       width: clamp(175px, 100%, 350px);
     }
+
+    :global .invalid-feedback {
+      width: clamp(175px, 100%, 350px);
+    }
   }
 
   .file_extra_info {

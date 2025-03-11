@@ -6,7 +6,7 @@ export interface UploadedFileInfo {
   checksumValue: string
   checksumAlgorithm: FixityAlgorithm
   fileName: string
-  fileDir: string | undefined
+  fileDir: string
   fileType: string
   fileSize: number
   fileSizeString: string

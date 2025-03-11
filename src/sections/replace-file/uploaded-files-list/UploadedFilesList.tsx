@@ -1,12 +1,13 @@
 import { useState } from 'react'
+import { useDeepCompareEffect } from 'use-deep-compare'
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import { Button, Table } from '@iqss/dataverse-design-system'
 import { RowSelectionCheckbox } from '@/sections/shared/form/row-selection-checkbox/RowSelectionCheckbox'
 import { UploadedFileRow } from './uploaded-file-row/UploadedFileRow'
-import styles from './UploadedFilesList.module.scss'
 import { UploadedFileInfo } from './UploadedFileInfo'
+import styles from './UploadedFilesList.module.scss'
 
-interface FilesListFormData {
+export interface FilesListFormData {
   files: UploadedFileInfo[]
 }
 
@@ -43,16 +44,26 @@ export const UploadedFilesList = ({
   }
 
   const form = useForm<FilesListFormData>({
-    mode: 'onChange',
-    values: {
-      files: uploadedFilesInfo
-    }
+    mode: 'onChange'
   })
 
   const { fields: uploadedFilesFieldsFormArray } = useFieldArray({
     control: form.control,
     name: 'files'
   })
+
+  useDeepCompareEffect(() => {
+    // Update the form fields with the new files but keep the existing ones with the modified fields values
+    const currentFormFilesValues = form.getValues('files')
+
+    const filteredNewFiles = uploadedFilesInfo.filter(
+      (uploadedFile) =>
+        !currentFormFilesValues.some((currentFile) => currentFile.key === uploadedFile.key)
+    )
+    form.setValue('files', [...currentFormFilesValues, ...filteredNewFiles], {
+      shouldValidate: true
+    })
+  }, [form, uploadedFilesInfo])
 
   // const { submitForm, submitError, submissionStatus } = useSubmitCollection(
   //   mode,
@@ -66,8 +77,6 @@ export const UploadedFilesList = ({
   }
 
   const filesLength = uploadedFilesInfo.length
-
-  console.log({ uploadedFilesInfo, uploadedFilesFieldsFormArray })
 
   return (
     <FormProvider {...form}>
@@ -99,12 +108,12 @@ export const UploadedFilesList = ({
             <tbody className={styles.table_body}>
               {uploadedFilesFieldsFormArray.map((file, index) => (
                 <UploadedFileRow
-                  key={index}
                   file={file}
                   isSelected={selectedFiles.includes(file)}
                   handleSelectFile={handleSelectFile}
                   handleRemoveFile={removeFileFromFileUploaderState}
                   itemIndex={index}
+                  key={file.id}
                 />
               ))}
             </tbody>

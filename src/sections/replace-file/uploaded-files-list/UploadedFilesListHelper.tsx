@@ -22,6 +22,22 @@ export class UploadedFilesListHelper {
     }))
   }
 
+  public static isUniqueCombinationOfFilepathAndFilename({
+    fileName,
+    filePath,
+    fileKey,
+    allFiles
+  }: {
+    fileName: string
+    filePath: string
+    fileKey: string
+    allFiles: UploadedFileInfo[]
+  }): boolean {
+    return !allFiles
+      .filter((f) => f.key !== fileKey)
+      .some((file) => `${file.fileDir}/${file.fileName}` === `${filePath}/${fileName}`)
+  }
+
   public static isValidFilePath(filePath: string): boolean {
     const FILE_PATH_REGEX = /^[\w.\-\\/ ]*$/
 

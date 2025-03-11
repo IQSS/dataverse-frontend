@@ -184,7 +184,8 @@
         "required": "File Name is required",
         "invalid": {
           "maxLength": "File Name must be at most {{maxLength}} characters.",
-          "characters": "The file name contains invalid characters. The following characters are not allowed: : < > ; # / \" * | ? \\"
+          "characters": "The file name contains invalid characters. The following characters are not allowed: : < > ; # / \" * | ? \\",
+          "duplicateCombination": "File Name, File Path or combination of File path + File name should be unique. There is already a combination with the same value."
         }
       },
       "filePath": {
@@ -192,7 +193,8 @@
         "description": "Hierarchical directory structure path used to display file organization and support reproducibility.",
         "invalid": {
           "maxLength": "File Path must be at most {{maxLength}} characters.",
-          "characters": "The file path contains invalid characters. Only letters, numbers, spaces, dashes, periods, backslashes, and forward slashes are allowed."
+          "characters": "The file path contains invalid characters. Only letters, numbers, spaces, dashes, periods, backslashes, and forward slashes are allowed.",
+          "duplicateCombination": "File Name, File Path or combination of File path + File name should be unique. There is already a combination with the same value."
         }
       },
       "description": {
