@@ -169,6 +169,12 @@
     "fileTypeDifferentModal": {
       "title": "File Type Different",
       "message": "The original file ({{originalFileType}}) and replacement file ({{replacementFileType}}) are different file types. Would you like to continue?"
+    },
+    "confirmLeaveModal": {
+      "title": "Discard Uploaded Files?",
+      "message": "Uploaded files haven’t been saved. If you leave now, they’ll be lost.",
+      "stay": "Stay on this page",
+      "leave": "Leave without saving"
     }
   },
   "uploadedFilesList": {

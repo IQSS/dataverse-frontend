@@ -8,6 +8,7 @@ import {
   useRef,
   useState
 } from 'react'
+import { useBlocker } from 'react-router-dom'
 import { useDeepCompareEffect } from 'use-deep-compare'
 import { Trans, useTranslation } from 'react-i18next'
 import { ExclamationTriangle, Plus, XLg } from 'react-bootstrap-icons'
@@ -24,6 +25,7 @@ import { FileUploadState, mockFileUploadState, useFileUploader } from './fileUpl
 import { FileUploaderHelper } from './FileUploaderHelper'
 import { SwalModal } from '../swal-modal/SwalModal'
 import { LoadingConfigSpinner } from './loading-config-spinner/LoadingConfigSpinner'
+import { ConfirmLeaveModal } from './confirm-leave-modal/ConfirmLeaveModal'
 import styles from './FileUploader.module.scss'
 
 type FileUploaderProps =
@@ -76,7 +78,8 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
 
     const [uploadingToCancelMap, setUploadingToCancelMap] = useState(new Map<string, () => void>())
 
-    const { state, addFile, removeFile, updateFile, getFileByKey, setConfig } = useFileUploader()
+    const { state, addFile, removeFile, removeAllFiles, updateFile, getFileByKey, setConfig } =
+      useFileUploader()
 
     const totalFiles = Object.keys(state.files).length
     const uploadingFilesInProgress = Object.values(state.files).filter((file) => !file.done)
@@ -85,6 +88,9 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
       (file) => file.done && file.checksumValue
     )
     const canKeepUploading = multiple ? true : totalFiles === 0
+
+    // Block navigation if there are files in progress or already uploaded
+    const navigationBlocker = useBlocker(totalFiles > 0)
 
     const onFileUploadFailed = (file: File) => {
       setUploadingToCancelMap((x) => {
@@ -276,6 +282,28 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
       return result.isConfirmed
     }
 
+    const handleConfirmLeavePage = async () => {
+      if (navigationBlocker.state === 'blocked') {
+        // First cancel all uploads in progress
+        uploadingToCancelMap.forEach((cancelFunction) => {
+          cancelFunction()
+        })
+
+        // TODO - Remove already uploaded files from the bucket, we need an endpoint for this
+
+        // Then reset the file uploader state
+        removeAllFiles()
+
+        navigationBlocker.proceed()
+      }
+    }
+
+    const handleCancelLeavePage = () => {
+      if (navigationBlocker.state === 'blocked') {
+        navigationBlocker.reset()
+      }
+    }
+
     useImperativeHandle(ref, () => ({
       removeUploadedFile: (fileKey: string) => {
         removeFile(fileKey)
@@ -291,15 +319,6 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
         setConfig({ checksumAlgorithm: fixityAlgorithm })
       }
     }, [fixityAlgorithm, isLoadingFixityAlgorithm, setConfig])
-
-    useEffect(() => {
-      // Clean up any uploading files in progress
-      // return () => {
-      //   uploadingToCancelMap.forEach((cancelFunction) => {
-      //     cancelFunction()
-      //   })
-      // }
-    }, [])
 
     if (isLoadingFixityAlgorithm) return <LoadingConfigSpinner />
 
@@ -414,6 +433,12 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>
+
+        <ConfirmLeaveModal
+          show={navigationBlocker.state === 'blocked'}
+          handleCancelLeavePage={handleCancelLeavePage}
+          handleConfirmLeavePage={handleConfirmLeavePage}
+        />
       </div>
     )
   }

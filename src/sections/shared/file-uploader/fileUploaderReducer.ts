@@ -35,6 +35,7 @@ type Action =
   | { type: 'ADD_FILE'; file: File }
   | { type: 'UPDATE_FILE'; key: string; updates: Partial<FileUploadState> }
   | { type: 'REMOVE_FILE'; key: string }
+  | { type: 'REMOVE_ALL_FILES' }
   | { type: 'SET_CONFIG'; config: FileUploaderGlobalConfig }
 
 const fileUploaderReducer = (
@@ -103,6 +104,10 @@ const fileUploaderReducer = (
       return { ...state, files: newFiles }
     }
 
+    case 'REMOVE_ALL_FILES': {
+      return { ...state, files: {} }
+    }
+
     default:
       return state
   }
@@ -123,13 +128,15 @@ export const useFileUploader = () => {
   )
   const removeFile = useCallback((key: string) => dispatch({ type: 'REMOVE_FILE', key }), [])
 
+  const removeAllFiles = useCallback(() => dispatch({ type: 'REMOVE_ALL_FILES' }), [])
+
   const getFileByKey = (key: string): FileUploadState | undefined => state.files[key]
 
   const setConfig = useCallback((config: FileUploaderGlobalConfig) => {
     dispatch({ type: 'SET_CONFIG', config })
   }, [])
 
-  return { state, addFile, updateFile, removeFile, getFileByKey, setConfig }
+  return { state, addFile, updateFile, removeFile, removeAllFiles, getFileByKey, setConfig }
 }
 
 const toDir = (relativePath: string): string => {
