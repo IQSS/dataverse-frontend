@@ -1,6 +1,11 @@
 import { useReducer, useCallback } from 'react'
 import { FileSize, FileSizeUnit } from '@/files/domain/models/FileMetadata'
 import { FileUploaderHelper } from './FileUploaderHelper'
+import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
+
+export interface FileUploaderGlobalConfig {
+  checksumAlgorithm: FixityAlgorithm
+}
 
 export interface FileUploadState {
   key: string
@@ -17,42 +22,59 @@ export interface FileUploadState {
   fileType: string
   storageId?: string
   checksumValue?: string
+  checksumAlgorithm: FixityAlgorithm
 }
 
 export type FileUploaderState = Record<string, FileUploadState>
+export interface FileUploaderFullState {
+  config: FileUploaderGlobalConfig
+  files: FileUploaderState
+}
 
 type Action =
   | { type: 'ADD_FILE'; file: File }
   | { type: 'UPDATE_FILE'; key: string; updates: Partial<FileUploadState> }
   | { type: 'REMOVE_FILE'; key: string }
+  | { type: 'SET_CONFIG'; config: FileUploaderGlobalConfig }
 
-const fileUploaderReducer = (state: FileUploaderState, action: Action): FileUploaderState => {
+const fileUploaderReducer = (
+  state: FileUploaderFullState,
+  action: Action
+): FileUploaderFullState => {
   switch (action.type) {
+    case 'SET_CONFIG': {
+      return { ...state, config: action.config }
+    }
+
     case 'ADD_FILE': {
       const { file } = action
       const fileKey = FileUploaderHelper.getFileKey(file)
 
-      if (state[fileKey]) {
+      if (state.files[fileKey]) {
         return state
       }
 
       return {
         ...state,
-        [fileKey]: {
-          key: fileKey,
-          progress: 0,
-          uploading: true,
-          fileSizeString: new FileSize(file.size, FileSizeUnit.BYTES).toString(),
-          fileSize: file.size,
-          fileLastModified: file.lastModified,
-          failed: false,
-          done: false,
-          removed: false,
-          fileName: FileUploaderHelper.sanitizeFileName(file.name),
-          fileDir: file.webkitRelativePath
-            ? toDir(FileUploaderHelper.sanitizeFilePath(file.webkitRelativePath))
-            : undefined,
-          fileType: file.type
+        files: {
+          ...state.files,
+          [fileKey]: {
+            key: fileKey,
+            progress: 0,
+            uploading: true,
+            fileSizeString: new FileSize(file.size, FileSizeUnit.BYTES).toString(),
+            fileSize: file.size,
+            fileLastModified: file.lastModified,
+            failed: false,
+            done: false,
+            removed: false,
+            fileName: FileUploaderHelper.sanitizeFileName(file.name),
+            fileDir: file.webkitRelativePath
+              ? toDir(FileUploaderHelper.sanitizeFilePath(file.webkitRelativePath))
+              : undefined,
+            fileType: file.type,
+            checksumAlgorithm: state.config.checksumAlgorithm
+          }
         }
       }
     }
@@ -60,22 +82,25 @@ const fileUploaderReducer = (state: FileUploaderState, action: Action): FileUplo
     case 'UPDATE_FILE': {
       const { key, updates } = action
 
-      if (!state[key]) return state
+      if (!state.files[key]) return state
 
       return {
         ...state,
-        [key]: { ...state[key], ...updates }
+        files: {
+          ...state.files,
+          [key]: { ...state.files[key], ...updates }
+        }
       }
     }
 
     case 'REMOVE_FILE': {
       const { key } = action
 
-      if (!state[key]) return state
+      if (!state.files[key]) return state
 
-      const newState = { ...state }
-      delete newState[key]
-      return newState
+      const newFiles = { ...state.files }
+      delete newFiles[key]
+      return { ...state, files: newFiles }
     }
 
     default:
@@ -84,7 +109,10 @@ const fileUploaderReducer = (state: FileUploaderState, action: Action): FileUplo
 }
 
 export const useFileUploader = () => {
-  const [state, dispatch] = useReducer(fileUploaderReducer, {})
+  const [state, dispatch] = useReducer(fileUploaderReducer, {
+    config: { checksumAlgorithm: FixityAlgorithm.MD5 },
+    files: {}
+  })
 
   const addFile = useCallback((file: File) => dispatch({ type: 'ADD_FILE', file }), [])
 
@@ -95,9 +123,13 @@ export const useFileUploader = () => {
   )
   const removeFile = useCallback((key: string) => dispatch({ type: 'REMOVE_FILE', key }), [])
 
-  const getFileByKey = (key: string): FileUploadState | undefined => state[key]
+  const getFileByKey = (key: string): FileUploadState | undefined => state.files[key]
 
-  return { state, addFile, updateFile, removeFile, getFileByKey }
+  const setConfig = useCallback((config: FileUploaderGlobalConfig) => {
+    dispatch({ type: 'SET_CONFIG', config })
+  }, [])
+
+  return { state, addFile, updateFile, removeFile, getFileByKey, setConfig }
 }
 
 const toDir = (relativePath: string): string => {
@@ -120,7 +152,8 @@ export const mockFileUploadState: FileUploaderState = {
     fileName: 'document.pdf',
     fileDir: undefined,
     fileType: 'application/pdf',
-    checksumValue: 'abcd1234'
+    checksumValue: 'abcd1234',
+    checksumAlgorithm: FixityAlgorithm.MD5
   },
   file2: {
     key: 'file2',
@@ -134,7 +167,8 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'image.png',
     fileDir: undefined,
-    fileType: 'image/png'
+    fileType: 'image/png',
+    checksumAlgorithm: FixityAlgorithm.MD5
   },
   file3: {
     key: 'file3',
@@ -148,7 +182,8 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'video.mp4',
     fileDir: undefined,
-    fileType: 'video/mp4'
+    fileType: 'video/mp4',
+    checksumAlgorithm: FixityAlgorithm.MD5
   },
   file4: {
     key: 'file4',
@@ -162,7 +197,8 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'spreadsheet.xlsx',
     fileDir: 'documents',
-    fileType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    fileType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    checksumAlgorithm: FixityAlgorithm.MD5
   },
   file5: {
     key: 'file5',
@@ -176,7 +212,8 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'presentation.pptx',
     fileDir: 'slides',
-    fileType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+    fileType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    checksumAlgorithm: FixityAlgorithm.MD5
   },
   file6: {
     key: 'file6',
@@ -190,7 +227,8 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'audio_super_long_name_file.mp3',
     fileDir: '',
-    fileType: 'audio/mpeg'
+    fileType: 'audio/mpeg',
+    checksumAlgorithm: FixityAlgorithm.MD5
   },
   file7: {
     key: 'file7',
@@ -204,7 +242,8 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'notes.txt',
     fileDir: 'documents',
-    fileType: 'text/plain'
+    fileType: 'text/plain',
+    checksumAlgorithm: FixityAlgorithm.MD5
   },
   file8: {
     key: 'file8',
@@ -218,7 +257,8 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'compressed.zip',
     fileDir: 'archives',
-    fileType: 'application/zip'
+    fileType: 'application/zip',
+    checksumAlgorithm: FixityAlgorithm.MD5
   },
   file9: {
     key: 'file9',
@@ -232,7 +272,8 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'report.docx',
     fileDir: 'reports',
-    fileType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    fileType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    checksumAlgorithm: FixityAlgorithm.MD5
   },
   file10: {
     key: 'file10',
@@ -246,6 +287,7 @@ export const mockFileUploadState: FileUploaderState = {
     removed: false,
     fileName: 'corrupted-file.dat',
     fileDir: 'unknown',
-    fileType: 'application/octet-stream'
+    fileType: 'application/octet-stream',
+    checksumAlgorithm: FixityAlgorithm.MD5
   }
 }

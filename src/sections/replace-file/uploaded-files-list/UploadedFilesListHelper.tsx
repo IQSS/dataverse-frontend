@@ -12,6 +12,7 @@ export class UploadedFilesListHelper {
       key: file.key,
       storageId: file.storageId as string, // Casted to string because at this point we know it is not undefined as it was already uploaded
       checksumValue: file.checksumValue as string, // Casted to string because at this point we know it is not undefined as it was already uploaded
+      checksumAlgorithm: file.checksumAlgorithm,
       fileName: file.fileName,
       fileDir: file.fileDir ?? '',
       fileType: file.fileType,

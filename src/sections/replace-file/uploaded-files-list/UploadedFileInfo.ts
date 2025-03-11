@@ -1,7 +1,10 @@
+import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
+
 export interface UploadedFileInfo {
   key: string
   storageId: string
   checksumValue: string
+  checksumAlgorithm: FixityAlgorithm
   fileName: string
   fileDir: string | undefined
   fileType: string

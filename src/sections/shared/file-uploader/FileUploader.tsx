@@ -3,6 +3,7 @@ import {
   DragEventHandler,
   forwardRef,
   memo,
+  useEffect,
   useImperativeHandle,
   useRef,
   useState
@@ -75,12 +76,12 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
 
     const [uploadingToCancelMap, setUploadingToCancelMap] = useState(new Map<string, () => void>())
 
-    const { state, addFile, removeFile, updateFile, getFileByKey } = useFileUploader()
+    const { state, addFile, removeFile, updateFile, getFileByKey, setConfig } = useFileUploader()
 
-    const totalFiles = Object.keys(state).length
-    const uploadingFilesInProgress = Object.values(state).filter((file) => !file.done)
+    const totalFiles = Object.keys(state.files).length
+    const uploadingFilesInProgress = Object.values(state.files).filter((file) => !file.done)
 
-    const uploadedDoneAndHashedFiles = Object.values(state).filter(
+    const uploadedDoneAndHashedFiles = Object.values(state.files).filter(
       (file) => file.done && file.checksumValue
     )
     const canKeepUploading = multiple ? true : totalFiles === 0
@@ -284,6 +285,21 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
     useDeepCompareEffect(() => {
       onUploadedFiles(uploadedDoneAndHashedFiles)
     }, [uploadedDoneAndHashedFiles, onUploadedFiles])
+
+    useEffect(() => {
+      if (!isLoadingFixityAlgorithm) {
+        setConfig({ checksumAlgorithm: fixityAlgorithm })
+      }
+    }, [fixityAlgorithm, isLoadingFixityAlgorithm, setConfig])
+
+    useEffect(() => {
+      // Clean up any uploading files in progress
+      // return () => {
+      //   uploadingToCancelMap.forEach((cancelFunction) => {
+      //     cancelFunction()
+      //   })
+      // }
+    }, [])
 
     if (isLoadingFixityAlgorithm) return <LoadingConfigSpinner />
 
