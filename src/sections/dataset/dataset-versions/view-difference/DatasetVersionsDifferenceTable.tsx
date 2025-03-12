@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
 import { Table } from '@iqss/dataverse-design-system'
 import { DateHelper } from '@/shared/helpers/DateHelper'
@@ -8,6 +9,7 @@ interface VersionDetailModalProps {
 }
 
 export const DatasetVersionsDifferenceTable = ({ differences }: VersionDetailModalProps) => {
+  const { t } = useTranslation('dataset')
   const { oldVersion, newVersion, metadataChanges, filesAdded, filesRemoved } = differences
 
   const citationMetadata = metadataChanges?.find((m) => m.blockName === 'Citation Metadata')
@@ -22,14 +24,16 @@ export const DatasetVersionsDifferenceTable = ({ differences }: VersionDetailMod
           <tr className={styles['version-row']}>
             <td></td>
             <td>
-              Version: {oldVersion.versionNumber}
+              {t('versions.version')}: {oldVersion.versionNumber}
               <br />
-              Last Updated: {DateHelper.toDisplayFormat(new Date(oldVersion.lastUpdatedDate))}
+              {t('versions.lastUpdated')}:{' '}
+              {DateHelper.toDisplayFormat(new Date(oldVersion.lastUpdatedDate))}
             </td>
             <td>
-              Version: {newVersion.versionNumber}
+              {t('versions.version')}: {newVersion.versionNumber}
               <br />
-              Last Updated: {DateHelper.toDisplayFormat(new Date(newVersion.lastUpdatedDate))}
+              {t('versions.lastUpdated')}:{' '}
+              {DateHelper.toDisplayFormat(new Date(newVersion.lastUpdatedDate))}
             </td>
           </tr>
         </tbody>
@@ -39,9 +43,7 @@ export const DatasetVersionsDifferenceTable = ({ differences }: VersionDetailMod
         <Table bordered>
           <thead>
             <tr>
-              <th>Citation Metadata</th>
-              <th></th>
-              <th></th>
+              <th>{t('versions.citationMetadata')}</th>
             </tr>
           </thead>
           <tbody>
@@ -60,9 +62,7 @@ export const DatasetVersionsDifferenceTable = ({ differences }: VersionDetailMod
         <Table bordered>
           <thead>
             <tr>
-              <th>Additional Citation Metadata</th>
-              <th></th>
-              <th></th>
+              <th>{t('versions.additionalCitationMetadata')}</th>
             </tr>
           </thead>
           <tbody>
@@ -81,27 +81,25 @@ export const DatasetVersionsDifferenceTable = ({ differences }: VersionDetailMod
         <Table bordered>
           <thead>
             <tr>
-              <th>Files</th>
-              <th></th>
-              <th></th>
+              <th>{t('versions.files')}</th>
             </tr>
           </thead>
           <tbody>
             {filesRemoved?.map((file) => (
               <tr key={`removed-${file.fileId}`}>
                 <td>
-                  File ID: {file.fileId}
+                  {t('versions.fileID')} {file.fileId}
                   <br />
-                  MD5: {file.MD5}
+                  {t('versions.MD5')} {file.MD5}
                 </td>
                 <td>
-                  Name: {file.fileName}
+                  {t('versions.name')}: {file.fileName}
                   <br />
-                  Type: {file.type || 'Unknown'}
+                  {t('versions.type')}: {file.type || 'Unknown'}
                   <br />
-                  Description: {file.description || ''}
+                  {t('versions.description')}: {file.description || ''}
                   <br />
-                  Access: {file.isRestricted ? 'Restricted' : 'Public'}
+                  {t('versions.access')}: {file.isRestricted ? 'Restricted' : 'Public'}
                 </td>
                 <td></td>
               </tr>
@@ -109,19 +107,19 @@ export const DatasetVersionsDifferenceTable = ({ differences }: VersionDetailMod
             {filesAdded?.map((file) => (
               <tr key={`added-${file.fileId}`}>
                 <td>
-                  File ID: {file.fileId}
+                  {t('versions.fileID')} {file.fileId}
                   <br />
-                  MD5: {file.MD5}
+                  {t('versions.MD5')} {file.MD5}
                 </td>
                 <td></td>
                 <td>
-                  Name: {file.fileName}
+                  {t('versions.name')}: {file.fileName}
                   <br />
-                  Type: {file.type || 'Unknown'}
+                  {t('versions.type')}: {file.type || 'Unknown'}
                   <br />
-                  Description: {file.description || ''}
+                  {t('versions.description')}: {file.description || ''}
                   <br />
-                  Access: {file.isRestricted ? 'Restricted' : 'Public'}
+                  {t('versions.access')}: {file.isRestricted ? 'Restricted' : 'Public'}
                 </td>
               </tr>
             ))}

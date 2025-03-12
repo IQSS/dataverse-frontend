@@ -1,37 +1,43 @@
 import { useTranslation } from 'react-i18next'
 import { ArrowLeftRight } from 'react-bootstrap-icons'
 import { Button } from '@iqss/dataverse-design-system'
-import { useSession } from '@/sections/session/SessionContext'
-import { useDataset } from '@/sections/dataset/DatasetContext'
 import { useState } from 'react'
 import { VersionDetailModal } from './DatasetVersionsDetailModal'
 import { useGetDatasetVersionDiff } from './useGetDatasetVersionDiff'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import styles from './DatasetVersionViewDifferenceButton.module.scss'
+import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+
+interface DatasetVersionViewDifferenceButtonProps {
+  datasetRepository: DatasetRepository
+  persistentId: string
+  selectedVersions?: DatasetVersionSummaryInfo[] | []
+}
 
 export function DatasetVersionViewDifferenceButton({
-  oldVersionNumber,
-  newVersionNumber,
-  datasetRepository
-}: {
-  oldVersionNumber: string
-  newVersionNumber: string
-  datasetRepository: DatasetRepository
-}) {
+  datasetRepository,
+  persistentId,
+  selectedVersions = []
+}: DatasetVersionViewDifferenceButtonProps) {
   const { t } = useTranslation('dataset')
-  const { user } = useSession()
-  const { dataset } = useDataset()
+
+  const newVersionNumber =
+    selectedVersions[0]?.id > selectedVersions[1]?.id
+      ? selectedVersions[0]?.versionNumber
+      : selectedVersions[1]?.versionNumber
+  const oldVersionNumber =
+    selectedVersions[0]?.id < selectedVersions[1]?.id
+      ? selectedVersions[0]?.versionNumber
+      : selectedVersions[1]?.versionNumber
 
   const [showModal, setShowModal] = useState(false)
+  // TODO handle isLoading and error
   const { differences, error, isLoading } = useGetDatasetVersionDiff({
     datasetRepository,
-    persistentId: dataset?.persistentId || '',
+    persistentId: persistentId,
     oldVersion: oldVersionNumber,
     newVersion: newVersionNumber
   })
-  if (!user || !dataset?.permissions.canUpdateDataset) {
-    return null
-  }
 
   const handleClick = () => {
     setShowModal(true)
@@ -44,17 +50,17 @@ export function DatasetVersionViewDifferenceButton({
         size={'sm'}
         onClick={handleClick}
         icon={<ArrowLeftRight className={styles.icon} />}
-        disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
-        {t('View Difference')}
+        disabled={isLoading}>
+        {t('versions.viewDifferences')}
       </Button>
-      {isLoading && <></>}
-      {showModal && differences && (
+
+      {showModal && (
         <VersionDetailModal
           show={!!showModal}
           handleClose={() => setShowModal(false)}
           isLoading={false}
           errorLoading={null}
-          datasetVersionDifferences={differences}
+          datasetVersionDifferences={selectedVersions.length < 2 ? undefined : differences}
         />
       )}
     </div>

@@ -216,5 +216,26 @@
     "forwardUrl": "URL where this dataset can be accessed after deaccessioning:",
     "cancelButton": "Cancel",
     "deaccessionButton": "Deaccession"
+  },
+  "versions": {
+    "viewDifferences": "View Differences",
+    "viewDifferencesDetail": "View Differences Detail",
+    "selectTwo": "Please select two versions to view the differences.",
+    "datasetVersions": "Dataset Versions",
+    "summary": "Summary",
+    "versionNote": "Version Note",
+    "contributors": "Contributors",
+    "publishedOn": "Published On",
+    "version": "Version",
+    "lastUpdated": "Last Updated",
+    "files": "Files",
+    "citationMetadata": "Citation Metadata",
+    "additionalCitationMetadata": "Additional Citation Metadata",
+    "fileID": "File ID",
+    "MD5": "MD5",
+    "name": "Name",
+    "type": "Type",
+    "description": "Description",
+    "access": "Access"
   }
 }

@@ -38,11 +38,11 @@ export function DatasetViewDetailButton({
   }
 
   return (
-    <div>
+    <>
       <Button
         variant="link"
-        size={'sm'}
         onClick={handleClick}
+        style={{ padding: 0 }}
         disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
         {t('View Detail')}
       </Button>
@@ -57,6 +57,6 @@ export function DatasetViewDetailButton({
           datasetVersionDifferences={differences}
         />
       )}
-    </div>
+    </>
   )
 }

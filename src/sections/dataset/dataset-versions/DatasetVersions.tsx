@@ -1,26 +1,30 @@
-import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
-import { Alert, Table, Form } from '@iqss/dataverse-design-system'
 import { useState } from 'react'
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { Alert, Table, Form, Button } from '@iqss/dataverse-design-system'
+import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { useGetDatasetVersionsSummaries } from './useGetDatasetVersionsSummaries'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { Dataset } from '@/dataset/domain/models/Dataset'
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { DatasetVersionViewDifferenceButton } from './view-difference/DatasetVersionViewDifferenceButton'
 import { generateDatasetVersionSummaryDescription } from './generateSummaryDescription'
 import { DatasetViewDetailButton } from './DatasetViewDetailButton'
 import styles from './DatasetVersions.module.scss'
+import { QueryParamKey, Route } from '@/sections/Route.enum'
 
 interface DatasetVersionsProps {
   datasetRepository: DatasetRepository
   dataset: Dataset
 }
 export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsProps) {
+  const navigate = useNavigate()
+  const { t } = useTranslation('dataset')
+  const [selectedVersions, setSelectedVersions] = useState<DatasetVersionSummaryInfo[]>([])
   const { datasetVersionSummaries, error, isLoading } = useGetDatasetVersionsSummaries({
     datasetRepository,
     persistentId: dataset?.persistentId ?? ''
   })
-
-  const [selectedVersions, setSelectedVersions] = useState<DatasetVersionSummaryInfo[]>([])
 
   const handleCheckboxChange = (dataset: DatasetVersionSummaryInfo) => {
     setSelectedVersions((prevSelected) => {
@@ -34,8 +38,15 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
     })
   }
 
+  const navigateToVersion = (versionNumber: string) => {
+    const searchParams = new URLSearchParams()
+    searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
+    searchParams.set(QueryParamKey.VERSION, versionNumber)
+    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
+  }
+
   if (isLoading) {
-    return <LoadingSkeleton />
+    return <DatasetVersionsLoadingSkeleton />
   }
 
   if (error) {
@@ -44,32 +55,22 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
 
   return (
     <>
-      {selectedVersions.length == 2 && (
-        <DatasetVersionViewDifferenceButton
-          newVersionNumber={
-            selectedVersions[0]?.id > selectedVersions[1]?.id
-              ? selectedVersions[0]?.versionNumber
-              : selectedVersions[1]?.versionNumber
-          }
-          oldVersionNumber={
-            selectedVersions[0]?.id < selectedVersions[1]?.id
-              ? selectedVersions[0]?.versionNumber
-              : selectedVersions[1]?.versionNumber
-          }
-          datasetRepository={datasetRepository}
-        />
-      )}
-      {/* TODO: if the length < 2, then aks user to select 2 versions */}
+      <DatasetVersionViewDifferenceButton
+        datasetRepository={datasetRepository}
+        persistentId={dataset.persistentId}
+        selectedVersions={selectedVersions}
+      />
+
       <div className={styles['dataset-versions-table']} data-testid="dataset-versions-table">
         <Table>
           <thead>
             <tr>
               <th></th>
-              <th>Dataset Version</th>
-              <th>Summary</th>
-              <th>Version Note</th>
-              <th>Contributors</th>
-              <th>Published On</th>
+              <th>{t('versions.datasetVersions')}</th>
+              <th>{t('versions.summary')}</th>
+              <th>{t('versions.versionNote')}</th>
+              <th>{t('versions.contributors')}</th>
+              <th>{t('versions.publishedOn')}</th>
             </tr>
           </thead>
           <tbody>
@@ -81,6 +82,7 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
                 return (
                   <tr key={dataset.id}>
                     <td>
+                      {/* TODO: If deaccession, disable the version  checkbox*/}
                       <Form.Group.Checkbox
                         label={''}
                         id={`dataset-${dataset.id}`}
@@ -89,27 +91,34 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
                         onChange={() => handleCheckboxChange(dataset)}
                       />
                     </td>
-                    <td>{dataset.versionNumber}</td>
-                    <td style={{ textAlign: 'left' }}>
-                      {/* TODO: If deaccession, diable the version  */}
-                      {Object.entries(summaryObject).map(([key, description]) => (
-                        <>
-                          {typeof dataset.summary !== 'string' ? (
-                            <>
-                              <strong>{key}:</strong> ({description});{' '}
-                            </>
-                          ) : (
-                            <>{description}</>
-                          )}
-                        </>
-                      ))}
-                      {dataset && typeof dataset.summary !== 'string' && previousDataset && (
-                        <DatasetViewDetailButton
-                          datasetRepository={datasetRepository}
-                          oldVersionNumber={previousDataset.versionNumber}
-                          newVersionNumber={dataset.versionNumber}
-                        />
-                      )}
+                    <td>
+                      <Button
+                        variant="link"
+                        onClick={() => navigateToVersion(dataset.versionNumber)}>
+                        {dataset.versionNumber}
+                      </Button>
+                    </td>
+                    <td>
+                      <p style={{ display: 'flex', flexWrap: 'wrap' }}>
+                        {Object.entries(summaryObject).map(([key, description]) => (
+                          <span key={`${dataset.id}-${key}`}>
+                            {typeof dataset.summary !== 'string' ? (
+                              <>
+                                <strong>{key}:</strong> ({description});
+                              </>
+                            ) : (
+                              description
+                            )}
+                          </span>
+                        ))}
+                        {dataset && typeof dataset.summary !== 'string' && previousDataset && (
+                          <DatasetViewDetailButton
+                            datasetRepository={datasetRepository}
+                            oldVersionNumber={previousDataset.versionNumber}
+                            newVersionNumber={dataset.versionNumber}
+                          />
+                        )}
+                      </p>
                     </td>
                     <td>{}</td>
                     {/* TODO: Version note is missing, need to connect with API */}
@@ -125,39 +134,37 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
   )
 }
 
-const LoadingSkeleton = () => {
+const DatasetVersionsLoadingSkeleton = () => {
   return (
     <>
-      <tr data-testid="table-row-loading-skeleton">
-        <SkeletonTheme>
-          <td style={{ verticalAlign: 'middle' }}>
-            <Skeleton height="18px" width="18px" />
-          </td>
-          <td colSpan={100}>
-            <Skeleton height="100px" />
-          </td>
-        </SkeletonTheme>
-      </tr>
-      <tr>
-        <SkeletonTheme>
-          <td style={{ verticalAlign: 'middle' }}>
-            <Skeleton height="18px" width="18px" />
-          </td>
-          <td colSpan={100}>
-            <Skeleton height="100px" />
-          </td>
-        </SkeletonTheme>
-      </tr>
-      <tr>
-        <SkeletonTheme>
-          <td style={{ verticalAlign: 'middle' }}>
-            <Skeleton height="18px" width="18px" />
-          </td>
-          <td colSpan={100}>
-            <Skeleton height="100px" />
-          </td>
-        </SkeletonTheme>
-      </tr>
+      <Table>
+        <tbody>
+          {Array.from({ length: 3 }).map((_, index) => (
+            <tr key={index} data-testid={`dataset-version-skeleton-${index}`}>
+              <SkeletonTheme>
+                <td style={{ verticalAlign: 'middle' }}>
+                  <Skeleton height="18px" width="18px" />
+                </td>
+                <td>
+                  <Skeleton height="18px" width="100px" />
+                </td>
+                <td>
+                  <Skeleton height="18px" width="250px" />
+                </td>
+                <td>
+                  <Skeleton height="18px" width="150px" />
+                </td>
+                <td>
+                  <Skeleton height="18px" width="200px" />
+                </td>
+                <td>
+                  <Skeleton height="18px" width="120px" />
+                </td>
+              </SkeletonTheme>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     </>
   )
 }

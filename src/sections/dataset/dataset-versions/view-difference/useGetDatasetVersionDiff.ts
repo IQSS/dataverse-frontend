@@ -34,7 +34,7 @@ export const useGetDatasetVersionDiff = ({
           datasetRepository,
           persistentId,
           oldVersion,
-          newVersion
+          newVersion == 'DRAFT' ? ':draft' : newVersion
         )
         setDifferences(response)
       } catch (err) {

@@ -2,12 +2,13 @@
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
+  margin: auto;
+  text-align: center;
 
   th,
   td {
     vertical-align: top;
     width: auto;
-    text-align: center;
   }
 
   th {

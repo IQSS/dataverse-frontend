@@ -8,7 +8,7 @@ interface VersionDetailModalProps {
   handleClose: () => void
   isLoading: boolean
   errorLoading: string | null
-  datasetVersionDifferences: DatasetVersionDiff
+  datasetVersionDifferences: DatasetVersionDiff | undefined
 }
 
 export const VersionDetailModal = ({
@@ -27,7 +27,11 @@ export const VersionDetailModal = ({
         <Modal.Title>Version Differences Detail</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <DatasetVersionsDifferenceTable differences={datasetVersionDifferences} />
+        {datasetVersionDifferences ? (
+          <DatasetVersionsDifferenceTable differences={datasetVersionDifferences} />
+        ) : (
+          <p> Please select two versions to view the differences.</p>
+        )}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose} type="button" disabled={isLoading}>
