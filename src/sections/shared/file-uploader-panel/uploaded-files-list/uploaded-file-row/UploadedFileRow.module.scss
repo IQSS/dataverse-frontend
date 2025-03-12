@@ -51,6 +51,7 @@
 }
 
 .remove_button {
+  margin-right: 0.75rem;
   padding: 0.5rem;
   background-color: color.adjust($dv-secondary-color, $blackness: 30%);
   opacity: 0.8;

@@ -37,6 +37,7 @@ export const FileInfo = memo(({ file }: FileInfoProps) => (
         {!file.metadata.tabularData && <FileChecksum checksum={file.metadata.checksum} />}
 
         <FileTabularData tabularData={file.metadata.tabularData} />
+        {/* TODO:ME - Do we really need to show description and labels here? check jsf version */}
         <FileDescription description={file.metadata.description} />
         <FileLabels labels={file.metadata.labels} />
       </div>

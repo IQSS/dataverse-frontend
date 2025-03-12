@@ -11,4 +11,5 @@ export interface UploadedFileInfo {
   fileSize: number
   fileSizeString: string
   fileLastModified: number
+  description: string
 }

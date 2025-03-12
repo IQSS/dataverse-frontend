@@ -13,11 +13,13 @@ export interface FilesListFormData {
 
 interface UploadedFilesListProps {
   uploadedFilesInfo: UploadedFileInfo[]
+  onSaveChanges: (data: FilesListFormData) => Promise<void>
   removeFileFromFileUploaderState: (fileKey: string) => void
 }
 
 export const UploadedFilesList = ({
   uploadedFilesInfo,
+  onSaveChanges,
   removeFileFromFileUploaderState
 }: UploadedFilesListProps) => {
   const [selectedFiles, setSelectedFiles] = useState<UploadedFileInfo[]>([])
@@ -72,7 +74,7 @@ export const UploadedFilesList = ({
   // )
 
   const submitForm = (data: FilesListFormData) => {
-    console.log({ data })
+    void onSaveChanges(data)
   }
 
   const handleRemoveFileFromList = (fileIndex: number, fileKey: string) => {

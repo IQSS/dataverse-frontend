@@ -21,32 +21,22 @@ import { uploadFile } from '@/files/domain/useCases/uploadFile'
 import { useGetFixityAlgorithm } from './useGetFixityAlgorithm'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import MimeTypeDisplay from '@/files/domain/models/FileTypeToFriendlyTypeMap'
-import { FileUploadState, mockFileUploadState, useFileUploader } from './fileUploaderReducer'
+import { FileUploadState, useFileUploader } from './fileUploaderReducer'
 import { FileUploaderHelper } from './FileUploaderHelper'
 import { SwalModal } from '../swal-modal/SwalModal'
 import { LoadingConfigSpinner } from './loading-config-spinner/LoadingConfigSpinner'
 import { ConfirmLeaveModal } from './confirm-leave-modal/ConfirmLeaveModal'
 import styles from './FileUploader.module.scss'
 
-type FileUploaderProps =
-  | {
-      fileRepository: FileRepository
-      datasetPersistentId: string
-      storageConfiguration: FileStorageConfiguration
-      multiple: boolean
-      onUploadedFiles: (files: FileUploadState[]) => void
-      replaceFile?: false
-      originalFileType?: never
-    }
-  | {
-      fileRepository: FileRepository
-      datasetPersistentId: string
-      storageConfiguration: FileStorageConfiguration
-      multiple: false
-      onUploadedFiles: (files: FileUploadState[]) => void
-      replaceFile: true
-      originalFileType: string
-    }
+type FileUploaderProps = {
+  fileRepository: FileRepository
+  datasetPersistentId: string
+  storageConfiguration: FileStorageConfiguration
+  multiple: boolean
+  onUploadedFiles: (files: FileUploadState[]) => void
+  replaceFile?: boolean
+  originalFileType?: string
+}
 
 type FileStorageConfiguration = 'S3'
 
@@ -129,7 +119,7 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
         return
       }
 
-      if (replaceFile && originalFileType !== file.type) {
+      if (replaceFile && originalFileType && originalFileType !== file.type) {
         const shouldContinue = await requestFileTypeDifferentConfirmation(
           originalFileType,
           file.type

@@ -18,7 +18,8 @@ export class UploadedFilesListHelper {
       fileType: file.fileType,
       fileSize: file.fileSize,
       fileSizeString: file.fileSizeString,
-      fileLastModified: file.fileLastModified
+      fileLastModified: file.fileLastModified,
+      description: ''
     }))
   }
 
