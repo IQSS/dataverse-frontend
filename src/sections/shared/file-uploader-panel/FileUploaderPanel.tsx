@@ -116,6 +116,8 @@ export const FileUploaderPanel = ({
           uploadedFilesInfo={uploadedFilesInfo}
           onSaveChanges={onSaveChanges}
           removeFileFromFileUploaderState={handleRemoveFileFromFileUploaderState}
+          replaceFile={replaceFile}
+          originalFile={originalFile}
           isSaving={isSaving}
         />
       )}

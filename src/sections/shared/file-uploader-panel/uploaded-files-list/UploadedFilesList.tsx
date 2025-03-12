@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useDeepCompareEffect } from 'use-deep-compare'
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import { Button, Table } from '@iqss/dataverse-design-system'
+import { File } from '@/files/domain/models/File'
 import { RowSelectionCheckbox } from '@/sections/shared/form/row-selection-checkbox/RowSelectionCheckbox'
 import { UploadedFileRow } from './uploaded-file-row/UploadedFileRow'
 import { UploadedFileInfo } from './UploadedFileInfo'
@@ -15,6 +16,8 @@ interface UploadedFilesListProps {
   uploadedFilesInfo: UploadedFileInfo[]
   onSaveChanges: (data: FilesListFormData) => Promise<void>
   removeFileFromFileUploaderState: (fileKey: string) => void
+  replaceFile?: boolean
+  originalFile?: File
   isSaving: boolean
 }
 
@@ -22,6 +25,8 @@ export const UploadedFilesList = ({
   uploadedFilesInfo,
   onSaveChanges,
   removeFileFromFileUploaderState,
+  replaceFile,
+  originalFile,
   isSaving
 }: UploadedFilesListProps) => {
   const [selectedFiles, setSelectedFiles] = useState<UploadedFileInfo[]>([])
@@ -63,10 +68,18 @@ export const UploadedFilesList = ({
       (uploadedFile) =>
         !currentFormFilesValues.some((currentFile) => currentFile.key === uploadedFile.key)
     )
+
+    // If replacing file, add the original file description to the new file
+    if (replaceFile && originalFile && filteredNewFiles.length > 0) {
+      if (originalFile.metadata.description) {
+        filteredNewFiles[0].description = originalFile.metadata.description
+      }
+    }
+
     form.setValue('files', [...currentFormFilesValues, ...filteredNewFiles], {
       shouldValidate: true
     })
-  }, [form, uploadedFilesInfo])
+  }, [form, uploadedFilesInfo, originalFile, replaceFile])
 
   const submitForm = (data: FilesListFormData) => {
     void onSaveChanges(data)

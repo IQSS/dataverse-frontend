@@ -23,7 +23,6 @@ interface ReplaceFileProps {
   datasetVersionFromParams: string
 }
 
-// TODO:ME - Populate description field with the original file description
 // TODO:ME - En replace file que pasa si lo reemplazo por un archivo con different content pero mismo name??
 // TODO:ME - Maybe is better to receive union type prop mode= 'replace-file' | 'add-files-to-dataset' and handle the use cases inside the component?
 // TODO - We need something to check if the file has the same content as the original file. Easy for replacement, but what about adding new files to a dataset?
