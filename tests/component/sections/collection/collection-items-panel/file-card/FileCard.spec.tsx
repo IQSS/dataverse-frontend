@@ -2,7 +2,7 @@ import { FileCard } from '@/sections/collection/collection-items-panel/items-lis
 import { FileItemTypePreviewMother } from '@tests/component/files/domain/models/FileItemTypePreviewMother'
 import { DateHelper } from '@/shared/helpers/DateHelper'
 import { FileCardHelper } from '@/sections/collection/collection-items-panel/items-list/file-card/FileCardHelper'
-
+import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
 describe('FileCard', () => {
   it('should render the card', () => {
     const filePreview = FileItemTypePreviewMother.create()
@@ -42,7 +42,7 @@ describe('FileCard', () => {
   })
   it('should render the card if dateset is draft version', () => {
     const filePreview = FileItemTypePreviewMother.create({
-      publicationStatuses: ['Draft']
+      publicationStatuses: [PublicationStatus.Draft]
     })
     cy.customMount(<FileCard filePreview={filePreview} />)
 
