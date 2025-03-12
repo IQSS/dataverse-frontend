@@ -12,6 +12,8 @@ import { FilesListFormData } from '../shared/file-uploader-panel/uploaded-files-
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { PageNotFound } from '../page-not-found/PageNotFound'
+import { QueryParamKey, Route } from '../Route.enum'
+import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
 import styles from './ReplaceFile.module.scss'
 
 interface ReplaceFileProps {
@@ -20,6 +22,9 @@ interface ReplaceFileProps {
   datasetPidFromParams: string
   datasetVersionFromParams: string
 }
+
+// TODO:ME - En replace file que pasa si lo reemplazo por un archivo con different content pero mismo name??
+// TODO:ME - Populate description field with the original file description
 // TODO -       //  Info – This draft version needs to be published. When ready for sharing, please <a>go to the dataset page</a> to publish it so that others can see these changes.
 // TODO - We need something to check if the file has the same content as the original file. Easy for replacement, but what about adding new files to a dataset?
 // TODO:ME - Add restrict file link from dataset files page ( integrate cheng branch)
@@ -41,13 +46,21 @@ export const ReplaceFile = ({
     datasetVersionFromParams
   )
 
-  const { handleReplaceFile, isReplacingFile, errorReplacingFile } = useReplaceFile(fileRepository)
+  const { handleReplaceFile, newFileID, isReplacingFile } = useReplaceFile(fileRepository)
 
   useEffect(() => {
     if (!isLoadingFile) {
       setIsLoading(false)
     }
   }, [setIsLoading, isLoadingFile])
+
+  useEffect(() => {
+    if (newFileID) {
+      navigate(
+        `${Route.FILES}?id=${newFileID}&${QueryParamKey.DATASET_VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
+      )
+    }
+  }, [newFileID, navigate, t])
 
   if (isLoadingFile) {
     return <AppLoader />
@@ -85,6 +98,7 @@ export const ReplaceFile = ({
         onSaveChanges={handleSaveChanges}
         replaceFile={true}
         multiple={false}
+        saveSucceeded={newFileID !== null}
       />
     </section>
   )
