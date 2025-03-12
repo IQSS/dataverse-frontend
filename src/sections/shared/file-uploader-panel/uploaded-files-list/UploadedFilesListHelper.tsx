@@ -1,4 +1,4 @@
-import { FileUploadState } from '@/sections/shared/file-uploader/fileUploaderReducer'
+import { FileUploadState } from '../fileUploaderReducer'
 import { UploadedFileInfo } from './UploadedFileInfo'
 
 export class UploadedFilesListHelper {

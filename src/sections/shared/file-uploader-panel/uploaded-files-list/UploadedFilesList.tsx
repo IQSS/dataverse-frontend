@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useDeepCompareEffect } from 'use-deep-compare'
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
-import { Button, Table } from '@iqss/dataverse-design-system'
+import { Button, DropdownButton, DropdownButtonItem, Table } from '@iqss/dataverse-design-system'
+import { PencilFill } from 'react-bootstrap-icons'
 import { File } from '@/files/domain/models/File'
 import { RowSelectionCheckbox } from '@/sections/shared/form/row-selection-checkbox/RowSelectionCheckbox'
 import { UploadedFileRow } from './uploaded-file-row/UploadedFileRow'
@@ -29,17 +30,17 @@ export const UploadedFilesList = ({
   originalFile,
   isSaving
 }: UploadedFilesListProps) => {
-  const [selectedFiles, setSelectedFiles] = useState<UploadedFileInfo[]>([])
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([])
   const allFilesSelected = selectedFiles.length === uploadedFilesInfo.length
   const someFilesSelected =
     selectedFiles.length > 0 && selectedFiles.length < uploadedFilesInfo.length
 
-  const handleSelectFile = (file: UploadedFileInfo) => {
-    setSelectedFiles((prevSelectedFiles) => {
-      if (prevSelectedFiles.includes(file)) {
-        return prevSelectedFiles.filter((selectedFile) => selectedFile !== file)
+  const handleSelectFile = (fileKey: string) => {
+    setSelectedFiles((prev) => {
+      if (prev.includes(fileKey)) {
+        return prev.filter((key) => key !== fileKey)
       }
-      return [...prevSelectedFiles, file]
+      return [...prev, fileKey]
     })
   }
 
@@ -47,7 +48,7 @@ export const UploadedFilesList = ({
     if (selectedFiles.length === uploadedFilesInfo.length) {
       setSelectedFiles([])
     } else {
-      setSelectedFiles(uploadedFilesInfo)
+      setSelectedFiles(uploadedFilesInfo.map((file) => file.key))
     }
   }
 
@@ -90,7 +91,18 @@ export const UploadedFilesList = ({
     removeFileFromFileUploaderState(fileKey)
   }
 
-  const filesLength = uploadedFilesInfo.length
+  const handleRemoveSelectedFilesFromList = () => {
+    const newFiles = uploadedFilesFieldsFormArray.filter(
+      (file) => !selectedFiles.includes(file.key)
+    )
+
+    form.setValue('files', newFiles)
+    setSelectedFiles([])
+
+    selectedFiles.forEach((fileKey) => {
+      removeFileFromFileUploaderState(fileKey)
+    })
+  }
 
   return (
     <FormProvider {...form}>
@@ -113,10 +125,24 @@ export const UploadedFilesList = ({
                   </div>
                 </th>
                 <th scope="col" colSpan={1}>
-                  {`${filesLength} ${filesLength > 1 ? 'Files' : 'File'} uploaded`}
+                  {`${uploadedFilesInfo.length} ${
+                    uploadedFilesInfo.length > 1 ? 'Files' : 'File'
+                  } uploaded`}
                 </th>
                 <th scope="col" colSpan={1}>
-                  Edit
+                  <div className={styles.edit_dropdown}>
+                    <DropdownButton
+                      id="edit-selected-files-menu"
+                      icon={<PencilFill className={styles.edit_dropdown_icon} />}
+                      title="Edit"
+                      ariaLabel="Edit selected files"
+                      variant="secondary"
+                      disabled={selectedFiles.length === 0 || isSaving}>
+                      <DropdownButtonItem onClick={handleRemoveSelectedFilesFromList}>
+                        Delete selected files
+                      </DropdownButtonItem>
+                    </DropdownButton>
+                  </div>
                 </th>
               </tr>
             </thead>
@@ -124,7 +150,7 @@ export const UploadedFilesList = ({
               {uploadedFilesFieldsFormArray.map((file, index) => (
                 <UploadedFileRow
                   file={file}
-                  isSelected={selectedFiles.includes(file)}
+                  isSelected={selectedFiles.includes(file.key)}
                   handleSelectFile={handleSelectFile}
                   handleRemoveFile={handleRemoveFileFromList}
                   itemIndex={index}

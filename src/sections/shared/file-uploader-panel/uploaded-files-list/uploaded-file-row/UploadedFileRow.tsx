@@ -14,7 +14,7 @@ interface UploadedFileRowProps {
   file: UploadedFileInfo
   isSelected: boolean
   itemIndex: number
-  handleSelectFile: (file: UploadedFileInfo) => void
+  handleSelectFile: (fileKey: string) => void
   handleRemoveFile: (fileIndex: number, fileKey: string) => void
   isSaving: boolean
 }
@@ -34,7 +34,7 @@ export const UploadedFileRow = ({
   return (
     <tr>
       <th colSpan={1}>
-        <RowSelectionCheckbox checked={isSelected} onChange={() => handleSelectFile(file)} />
+        <RowSelectionCheckbox checked={isSelected} onChange={() => handleSelectFile(file.key)} />
       </th>
       <td colSpan={2}>
         <div className={styles.icon_fields_wrapper}>

@@ -55,6 +55,17 @@
     th:last-child {
       width: 35%;
       border-width: 0 1px 0 0;
+
+      .edit_dropdown {
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 0.75rem;
+
+        .edit_dropdown_icon {
+          margin-right: 0.5rem;
+          margin-bottom: 0.2rem;
+        }
+      }
     }
   }
 

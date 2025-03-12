@@ -30,7 +30,7 @@ export const useReplaceFile = (fileRepository: FileRepository): UseReplaceFileRe
       directoryLabel: newFileInfo.fileDir,
       // categories?: string[];
       // restrict?: boolean;
-      mimeType: newFileInfo.fileType,
+      mimeType: newFileInfo.fileType === '' ? 'application/octet-stream' : newFileInfo.fileType, // some browsers (e.g., chromium for .java files) fail to detect the mime type for some files and leave the fileType as an empty string, we use the default value 'application/octet-stream' in that case
       forceReplace: true
     }
 
