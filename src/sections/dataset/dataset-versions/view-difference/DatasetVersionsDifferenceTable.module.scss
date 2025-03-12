@@ -1,15 +1,15 @@
 .dataset-versions-difference-table {
   width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
   font-size: small;
+  table-layout: fixed;
+  border-collapse: collapse;
 
   th,
   td {
-    text-align: left;
-    padding: 12px;
-    vertical-align: top;
     width: 30%;
+    padding: 12px;
+    text-align: left;
+    vertical-align: top;
     overflow-wrap: anywhere;
   }
 

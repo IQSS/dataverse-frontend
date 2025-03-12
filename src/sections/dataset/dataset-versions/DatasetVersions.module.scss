@@ -1,14 +1,14 @@
 .dataset-versions-table {
   width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
   margin: auto;
   text-align: center;
+  table-layout: fixed;
+  border-collapse: collapse;
 
   th,
   td {
-    vertical-align: top;
     width: auto;
+    vertical-align: top;
   }
 
   th {
