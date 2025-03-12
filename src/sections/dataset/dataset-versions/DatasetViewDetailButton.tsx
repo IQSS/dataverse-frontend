@@ -3,7 +3,7 @@ import { Button } from '@iqss/dataverse-design-system'
 import { useSession } from '@/sections/session/SessionContext'
 import { useDataset } from '@/sections/dataset/DatasetContext'
 import { useState } from 'react'
-import { VersionDetailModal } from './view-difference/DatasetDetailModal'
+import { VersionDetailModal } from './view-difference/DatasetVersionsDetailModal'
 import { useGetDatasetVersionDiff } from './view-difference/useGetDatasetVersionDiff'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 

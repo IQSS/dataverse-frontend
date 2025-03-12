@@ -185,7 +185,7 @@ export function Dataset({
                       />
                     </div>
                   </Tabs.Tab>
-                  <Tabs.Tab title={t('Version')} eventKey={'versions'}>
+                  <Tabs.Tab title={t('Versions')} eventKey={'versions'}>
                     <div ref={termsTabRef} className={styles['tab-container']}>
                       <DatasetVersions datasetRepository={datasetRepository} dataset={dataset} />
                     </div>

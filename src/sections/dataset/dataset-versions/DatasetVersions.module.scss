@@ -1,0 +1,16 @@
+.dataset-versions-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+
+  th,
+  td {
+    vertical-align: top;
+    width: auto;
+    text-align: center;
+  }
+
+  th {
+    font-weight: 600;
+  }
+}

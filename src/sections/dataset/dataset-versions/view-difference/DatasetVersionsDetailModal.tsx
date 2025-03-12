@@ -1,7 +1,7 @@
 import { Button, Modal } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
-import { DatasetVersionsDifferenceTable } from '../DatasetVersionsDifferenceTable'
+import { DatasetVersionsDifferenceTable } from './DatasetVersionsDifferenceTable'
 
 interface VersionDetailModalProps {
   show: boolean
@@ -22,7 +22,7 @@ export const VersionDetailModal = ({
   const { t: tShared } = useTranslation('shared')
 
   return (
-    <Modal show={show} onHide={isLoading ? () => {} : handleClose} centered size="lg">
+    <Modal show={show} onHide={isLoading ? () => {} : handleClose} centered size="xl">
       <Modal.Header>
         <Modal.Title>Version Differences Detail</Modal.Title>
       </Modal.Header>

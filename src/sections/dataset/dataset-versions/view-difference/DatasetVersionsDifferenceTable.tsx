@@ -1,5 +1,8 @@
 import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
 import { Table } from '@iqss/dataverse-design-system'
+import { DateHelper } from '@/shared/helpers/DateHelper'
+import styles from './DatasetVersionsDifferenceTable.module.scss'
+
 interface VersionDetailModalProps {
   differences: DatasetVersionDiff
 }
@@ -13,27 +16,25 @@ export const DatasetVersionsDifferenceTable = ({ differences }: VersionDetailMod
   )
 
   return (
-    <>
-      {/* Version Numbers Table */}
-      <Table bordered>
+    <div className={styles['dataset-versions-difference-table']}>
+      <Table>
         <tbody>
-          <tr>
+          <tr className={styles['version-row']}>
             <td></td>
             <td>
               Version: {oldVersion.versionNumber}
               <br />
-              Last Updated: {new Date(oldVersion.lastUpdatedDate).toLocaleString()}
+              Last Updated: {DateHelper.toDisplayFormat(new Date(oldVersion.lastUpdatedDate))}
             </td>
             <td>
               Version: {newVersion.versionNumber}
               <br />
-              Last Updated: {new Date(newVersion.lastUpdatedDate).toLocaleString()}
+              Last Updated: {DateHelper.toDisplayFormat(new Date(newVersion.lastUpdatedDate))}
             </td>
           </tr>
         </tbody>
       </Table>
 
-      {/* Citation Metadata Table */}
       {citationMetadata && (
         <Table bordered>
           <thead>
@@ -47,15 +48,14 @@ export const DatasetVersionsDifferenceTable = ({ differences }: VersionDetailMod
             {citationMetadata.changed.map((field) => (
               <tr key={field.fieldName}>
                 <td>{field.fieldName}</td>
-                <td>{field.oldValue || '-'}</td>
-                <td>{field.newValue || '-'}</td>
+                <td>{field.oldValue || ''}</td>
+                <td>{field.newValue || ''}</td>
               </tr>
             ))}
           </tbody>
         </Table>
       )}
 
-      {/* Additional Citation Metadata Table */}
       {additionalCitationMetadata && (
         <Table bordered>
           <thead>
@@ -69,15 +69,14 @@ export const DatasetVersionsDifferenceTable = ({ differences }: VersionDetailMod
             {additionalCitationMetadata.changed.map((field) => (
               <tr key={field.fieldName}>
                 <td>{field.fieldName}</td>
-                <td>{field.oldValue || '-'}</td>
-                <td>{field.newValue || '-'}</td>
+                <td>{field.oldValue || ''}</td>
+                <td>{field.newValue || ''}</td>
               </tr>
             ))}
           </tbody>
         </Table>
       )}
 
-      {/* Files Table */}
       {(filesAdded || filesRemoved) && (
         <Table bordered>
           <thead>
@@ -100,7 +99,7 @@ export const DatasetVersionsDifferenceTable = ({ differences }: VersionDetailMod
                   <br />
                   Type: {file.type || 'Unknown'}
                   <br />
-                  Description: {file.description || '-'}
+                  Description: {file.description || ''}
                   <br />
                   Access: {file.isRestricted ? 'Restricted' : 'Public'}
                 </td>
@@ -120,7 +119,7 @@ export const DatasetVersionsDifferenceTable = ({ differences }: VersionDetailMod
                   <br />
                   Type: {file.type || 'Unknown'}
                   <br />
-                  Description: {file.description || '-'}
+                  Description: {file.description || ''}
                   <br />
                   Access: {file.isRestricted ? 'Restricted' : 'Public'}
                 </td>
@@ -129,6 +128,6 @@ export const DatasetVersionsDifferenceTable = ({ differences }: VersionDetailMod
           </tbody>
         </Table>
       )}
-    </>
+    </div>
   )
 }

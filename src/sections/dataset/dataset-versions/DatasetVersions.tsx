@@ -8,6 +8,7 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { DatasetVersionViewDifferenceButton } from './view-difference/DatasetVersionViewDifferenceButton'
 import { generateDatasetVersionSummaryDescription } from './generateSummaryDescription'
 import { DatasetViewDetailButton } from './DatasetViewDetailButton'
+import styles from './DatasetVersions.module.scss'
 
 interface DatasetVersionsProps {
   datasetRepository: DatasetRepository
@@ -44,12 +45,6 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
   return (
     <>
       {selectedVersions.length == 2 && (
-        // <DatasetVersionViewDifferenceButton
-        //   newVersionNumber={selectedVersions[0]?.versionNumber}
-        //   oldVersionNumber={selectedVersions[1]?.versionNumber}
-        //   datasetRepository={datasetRepository}
-        //   handleClose={handleClose}
-        // />
         <DatasetVersionViewDifferenceButton
           newVersionNumber={
             selectedVersions[0]?.id > selectedVersions[1]?.id
@@ -65,65 +60,67 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
         />
       )}
       {/* TODO: if the length < 2, then aks user to select 2 versions */}
+      <div className={styles['dataset-versions-table']} data-testid="dataset-versions-table">
+        <Table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Dataset Version</th>
+              <th>Summary</th>
+              <th>Version Note</th>
+              <th>Contributors</th>
+              <th>Published On</th>
+            </tr>
+          </thead>
+          <tbody>
+            {datasetVersionSummaries &&
+              datasetVersionSummaries.map((dataset) => {
+                const previousDataset = datasetVersionSummaries.find((d) => d.id === dataset.id - 1)
+                const summaryObject = generateDatasetVersionSummaryDescription(dataset.summary)
 
-      <Table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Dataset Version</th>
-            <th>Summary</th>
-            <th>Version Note</th>
-            <th>Contributors</th>
-            <th>Published On</th>
-          </tr>
-        </thead>
-        <tbody>
-          {datasetVersionSummaries &&
-            datasetVersionSummaries.map((dataset) => {
-              const previousDataset = datasetVersionSummaries.find((d) => d.id === dataset.id - 1)
-              const summaryObject = generateDatasetVersionSummaryDescription(dataset.summary)
-
-              return (
-                <tr key={dataset.id}>
-                  <td>
-                    <Form.Group.Checkbox
-                      label={''}
-                      id={`dataset-${dataset.id}`}
-                      data-testid="select-all-files-checkbox"
-                      checked={selectedVersions.some((item) => item.id === dataset.id)}
-                      onChange={() => handleCheckboxChange(dataset)}
-                    />
-                  </td>
-                  <td>{dataset.versionNumber}</td>
-                  <td>
-                    {Object.entries(summaryObject).map(([key, description]) => (
-                      <>
-                        {typeof dataset.summary !== 'string' ? (
-                          <>
-                            <strong>{key}:</strong> ({description});{' '}
-                          </>
-                        ) : (
-                          <>{description}; </>
-                        )}
-                      </>
-                    ))}
-                    {dataset && typeof dataset.summary !== 'string' && previousDataset && (
-                      <DatasetViewDetailButton
-                        datasetRepository={datasetRepository}
-                        oldVersionNumber={previousDataset.versionNumber}
-                        newVersionNumber={dataset.versionNumber}
+                return (
+                  <tr key={dataset.id}>
+                    <td>
+                      <Form.Group.Checkbox
+                        label={''}
+                        id={`dataset-${dataset.id}`}
+                        data-testid="select-all-files-checkbox"
+                        checked={selectedVersions.some((item) => item.id === dataset.id)}
+                        onChange={() => handleCheckboxChange(dataset)}
                       />
-                    )}
-                  </td>
-                  <td>{}</td>
-                  {/* TODO: Version note is missing, need to connect with API */}
-                  <td>{dataset.contributors}</td>
-                  <td>{dataset.publishedOn}</td>
-                </tr>
-              )
-            })}
-        </tbody>
-      </Table>
+                    </td>
+                    <td>{dataset.versionNumber}</td>
+                    <td style={{ textAlign: 'left' }}>
+                      {/* TODO: If deaccession, diable the version  */}
+                      {Object.entries(summaryObject).map(([key, description]) => (
+                        <>
+                          {typeof dataset.summary !== 'string' ? (
+                            <>
+                              <strong>{key}:</strong> ({description});{' '}
+                            </>
+                          ) : (
+                            <>{description}</>
+                          )}
+                        </>
+                      ))}
+                      {dataset && typeof dataset.summary !== 'string' && previousDataset && (
+                        <DatasetViewDetailButton
+                          datasetRepository={datasetRepository}
+                          oldVersionNumber={previousDataset.versionNumber}
+                          newVersionNumber={dataset.versionNumber}
+                        />
+                      )}
+                    </td>
+                    <td>{}</td>
+                    {/* TODO: Version note is missing, need to connect with API */}
+                    <td>{dataset.contributors}</td>
+                    <td>{dataset.publishedOn}</td>
+                  </tr>
+                )
+              })}
+          </tbody>
+        </Table>
+      </div>
     </>
   )
 }
