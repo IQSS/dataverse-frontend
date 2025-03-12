@@ -16,6 +16,7 @@ import { toast } from 'react-toastify'
 import { md5 } from 'js-md5'
 import cn from 'classnames'
 import { Accordion, Button, Card, ProgressBar } from '@iqss/dataverse-design-system'
+import { File as FileModel } from '@/files/domain/models/File'
 import { uploadFile } from '@/files/domain/useCases/uploadFile'
 import { useGetFixityAlgorithm } from './useGetFixityAlgorithm'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
@@ -33,7 +34,7 @@ type FileUploaderProps = {
   multiple: boolean
   onUploadedFiles: (files: FileUploadState[]) => void
   replaceFile?: boolean
-  originalFileType?: string
+  originalFile?: FileModel
   isSaving: boolean
 }
 
@@ -55,7 +56,7 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
       multiple,
       onUploadedFiles,
       replaceFile,
-      originalFileType,
+      originalFile,
       isSaving
     },
     ref
@@ -116,9 +117,9 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
         return
       }
 
-      if (replaceFile && originalFileType && originalFileType !== file.type) {
+      if (replaceFile && originalFile && originalFile.metadata.type.value !== file.type) {
         const shouldContinue = await requestFileTypeDifferentConfirmation(
-          originalFileType,
+          originalFile.metadata.type.value,
           file.type
         )
 

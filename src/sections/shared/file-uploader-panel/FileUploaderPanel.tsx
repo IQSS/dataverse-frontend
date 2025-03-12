@@ -10,6 +10,7 @@ import { FileUploadState } from './fileUploaderReducer'
 import styles from './FileUploaderPanel.module.scss'
 import { useBlocker } from 'react-router-dom'
 import { ConfirmLeaveModal } from './confirm-leave-modal/ConfirmLeaveModal'
+import { File } from '@/files/domain/models/File'
 
 type FileUploaderPanelProps =
   | {
@@ -18,7 +19,7 @@ type FileUploaderPanelProps =
       storageConfiguration: FileStorageConfiguration
       multiple: boolean
       replaceFile?: false
-      originalFileType?: never
+      originalFile?: never
       onSaveChanges: (data: FilesListFormData) => Promise<void>
       isSaving: boolean
       saveSucceeded: boolean
@@ -29,7 +30,7 @@ type FileUploaderPanelProps =
       storageConfiguration: FileStorageConfiguration
       multiple: false
       replaceFile: true
-      originalFileType: string
+      originalFile: File
       onSaveChanges: (data: FilesListFormData) => Promise<void>
       isSaving: boolean
       saveSucceeded: boolean
@@ -43,7 +44,7 @@ export const FileUploaderPanel = ({
   storageConfiguration,
   multiple,
   replaceFile,
-  originalFileType,
+  originalFile,
   onSaveChanges,
   isSaving,
   saveSucceeded
@@ -101,7 +102,7 @@ export const FileUploaderPanel = ({
               onUploadedFiles={handleSyncUploadedFiles}
               storageConfiguration={storageConfiguration}
               replaceFile={replaceFile}
-              originalFileType={originalFileType}
+              originalFile={originalFile}
               multiple={multiple}
               isSaving={isSaving}
               ref={fileUploaderRef}
