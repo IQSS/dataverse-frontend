@@ -5,6 +5,6 @@ export function replaceFile(
   fileRepository: FileRepository,
   fileId: number | string,
   newFile: UploadedFileDTO
-): Promise<void> {
+): Promise<number> {
   return fileRepository.replace(fileId, newFile)
 }

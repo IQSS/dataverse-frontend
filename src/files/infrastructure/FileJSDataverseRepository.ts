@@ -311,8 +311,10 @@ export class FileJSDataverseRepository implements FileRepository {
     return deleteFile.execute(fileId)
   }
 
-  replace(fileId: number | string, uploadedFileDTO: UploadedFileDTO): Promise<void> {
-    return replaceFile.execute(fileId, uploadedFileDTO)
+  replace(fileId: number | string, uploadedFileDTO: UploadedFileDTO): Promise<number> {
+    return replaceFile
+      .execute(fileId, uploadedFileDTO)
+      .then((newFileIdentifier) => newFileIdentifier)
   }
 
   // TODO - Not a priority but could be nice to implement this use case in js-dataverse when having time
