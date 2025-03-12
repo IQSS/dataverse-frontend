@@ -1,5 +1,7 @@
 {
   "pageTitle": "Replace File",
   "notAllowedToReplaceFile": "You do not have permissions to replace this file.",
-  "originalFile": "Original File"
+  "originalFile": "Original File",
+  "fileReplacedSuccessfully": "The file has been replaced.",
+  "defaultFileReplaceError": "Something went wrong replacing the file. Try again later."
 }

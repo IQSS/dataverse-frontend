@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Col, Row } from '@iqss/dataverse-design-system'
-import { UploadedFileDTO } from '@iqss/dataverse-client-javascript'
-import { replaceFile } from '@/files/domain/useCases/replaceFile'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { useFile } from '../file/useFile'
+import { useReplaceFile } from './useReplaceFile'
 import { useLoading } from '../loading/LoadingContext'
 import { FileInfo } from './file-info/FileInfo'
 import { FileUploaderPanel } from '../shared/file-uploader-panel/FileUploaderPanel'
@@ -20,7 +20,7 @@ interface ReplaceFileProps {
   datasetPidFromParams: string
   datasetVersionFromParams: string
 }
-
+// TODO -       //  Info – This draft version needs to be published. When ready for sharing, please <a>go to the dataset page</a> to publish it so that others can see these changes.
 // TODO - We need something to check if the file has the same content as the original file. Easy for replacement, but what about adding new files to a dataset?
 // TODO:ME - Add restrict file link from dataset files page ( integrate cheng branch)
 // TODO:ME Use the dto mapper before submitting the files
@@ -33,11 +33,15 @@ export const ReplaceFile = ({
 }: ReplaceFileProps) => {
   const { t } = useTranslation('replaceFile')
   const { setIsLoading } = useLoading()
+  const navigate = useNavigate()
+
   const { file, isLoading: isLoadingFile } = useFile(
     fileRepository,
     fileIdFromParams,
     datasetVersionFromParams
   )
+
+  const { handleReplaceFile, isReplacingFile, errorReplacingFile } = useReplaceFile(fileRepository)
 
   useEffect(() => {
     if (!isLoadingFile) {
@@ -53,31 +57,7 @@ export const ReplaceFile = ({
     return <PageNotFound />
   }
 
-  const handleSaveChanges = async (data: FilesListFormData) => {
-    console.log(data)
-    const uploadedFile = data.files[0]
-
-    const fileDTO: UploadedFileDTO = {
-      storageId: uploadedFile.storageId,
-      checksumValue: uploadedFile.checksumValue,
-      checksumType: uploadedFile.checksumAlgorithm,
-      fileName: uploadedFile.fileName,
-      description: uploadedFile.description,
-      directoryLabel: uploadedFile.fileDir,
-      // categories?: string[];
-      // restrict?: boolean;
-      mimeType: uploadedFile.fileType,
-      forceReplace: true
-    }
-
-    replaceFile(fileRepository, file.id, fileDTO)
-      .then(() => {
-        console.log('File replaced successfully')
-      })
-      .catch((error) => {
-        console.error('Error replacing file', error)
-      })
-  }
+  const handleSaveChanges = (data: FilesListFormData) => handleReplaceFile(file.id, data.files[0])
 
   return (
     <section>
