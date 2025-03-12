@@ -40,13 +40,27 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
   if (error) {
     return <Alert variant="danger">Error loading dataset versions</Alert>
   }
-  console.log(selectedVersions)
+
   return (
     <>
       {selectedVersions.length == 2 && (
+        // <DatasetVersionViewDifferenceButton
+        //   newVersionNumber={selectedVersions[0]?.versionNumber}
+        //   oldVersionNumber={selectedVersions[1]?.versionNumber}
+        //   datasetRepository={datasetRepository}
+        //   handleClose={handleClose}
+        // />
         <DatasetVersionViewDifferenceButton
-          newVersionNumber={selectedVersions[0]?.versionNumber}
-          oldVersionNumber={selectedVersions[1]?.versionNumber}
+          newVersionNumber={
+            selectedVersions[0]?.id > selectedVersions[1]?.id
+              ? selectedVersions[0]?.versionNumber
+              : selectedVersions[1]?.versionNumber
+          }
+          oldVersionNumber={
+            selectedVersions[0]?.id < selectedVersions[1]?.id
+              ? selectedVersions[0]?.versionNumber
+              : selectedVersions[1]?.versionNumber
+          }
           datasetRepository={datasetRepository}
         />
       )}
@@ -84,10 +98,16 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
                   <td>
                     {Object.entries(summaryObject).map(([key, description]) => (
                       <>
-                        <strong>{key}:</strong> ({description});{' '}
+                        {typeof dataset.summary !== 'string' ? (
+                          <>
+                            <strong>{key}:</strong> ({description});{' '}
+                          </>
+                        ) : (
+                          <>{description}; </>
+                        )}
                       </>
                     ))}
-                    {dataset && dataset.summary && previousDataset && (
+                    {dataset && typeof dataset.summary !== 'string' && previousDataset && (
                       <DatasetViewDetailButton
                         datasetRepository={datasetRepository}
                         oldVersionNumber={previousDataset.versionNumber}

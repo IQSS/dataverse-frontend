@@ -29,7 +29,6 @@ export function DatasetVersionViewDifferenceButton({
     oldVersion: oldVersionNumber,
     newVersion: newVersionNumber
   })
-  console.log(differences)
   if (!user || !dataset?.permissions.canUpdateDataset) {
     return null
   }
@@ -48,7 +47,8 @@ export function DatasetVersionViewDifferenceButton({
         disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
         {t('View Difference')}
       </Button>
-      {showModal && (
+      {isLoading && <></>}
+      {showModal && differences && (
         <VersionDetailModal
           show={!!showModal}
           handleClose={() => setShowModal(false)}

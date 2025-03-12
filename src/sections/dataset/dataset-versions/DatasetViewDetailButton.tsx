@@ -46,13 +46,15 @@ export function DatasetViewDetailButton({
         disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
         {t('View Detail')}
       </Button>
-      {showModal && (
+      {showModal && differences && (
         <VersionDetailModal
           show={!!showModal}
-          handleClose={() => setShowModal(false)}
+          handleClose={() => {
+            setShowModal(false)
+          }}
           isLoading={false}
           errorLoading={null}
-          datasetVersionDifferences={undefined}
+          datasetVersionDifferences={differences}
         />
       )}
     </div>
