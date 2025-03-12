@@ -114,4 +114,12 @@ export class FileMockRepository implements FileRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+
+  delete(_fileId: number | string): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
 }

@@ -7,7 +7,12 @@ import { VersionUpdateType } from '../models/VersionUpdateType'
 import { DatasetDeaccessionDTO } from '../useCases/DTOs/DatasetDTO'
 
 export interface DatasetRepository {
-  getByPersistentId: (persistentId: string, version?: string) => Promise<Dataset | undefined>
+  getByPersistentId: (
+    persistentId: string,
+    version?: string,
+    requestedVersion?: string,
+    keepRawFields?: boolean
+  ) => Promise<Dataset | undefined>
   getLocks(persistentId: string): Promise<DatasetLock[]>
   getByPrivateUrlToken: (privateUrlToken: string) => Promise<Dataset | undefined>
   getVersionDiff: (

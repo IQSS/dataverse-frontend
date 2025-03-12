@@ -45,7 +45,10 @@ export function BreadcrumbsGenerator({
             <Breadcrumb.Item
               key={index}
               linkAs={LinkToPage}
-              linkProps={{ page: Route.COLLECTIONS_BASE, children: <>{item.name}</> }}>
+              linkProps={{
+                page: Route.COLLECTIONS_BASE,
+                children: <>{item.name}</>
+              }}>
               {item.name}
             </Breadcrumb.Item>
           )

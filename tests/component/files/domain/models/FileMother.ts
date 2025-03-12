@@ -12,6 +12,7 @@ export class FileMother {
     return {
       id: faker.datatype.number(),
       name: faker.system.fileName(),
+      datasetPersistentId: faker.datatype.uuid(),
       datasetVersion: DatasetVersionMother.create(),
       hierarchy: UpwardHierarchyNodeMother.createFile(),
       citation: FileCitationMother.create('File Title'),
@@ -26,6 +27,7 @@ export class FileMother {
   static createRealistic(props?: Partial<File>): File {
     return this.create({
       name: 'File Title',
+      datasetPersistentId: '123',
       datasetVersion: DatasetVersionMother.createRealistic(),
       citation: FileCitationMother.create('File Title'),
       hierarchy: UpwardHierarchyNodeMother.createFile({ name: 'File Title' }),

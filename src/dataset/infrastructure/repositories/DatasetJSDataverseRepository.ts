@@ -183,10 +183,11 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   getByPersistentId(
     persistentId: string,
     version: string = DatasetNonNumericVersion.LATEST_PUBLISHED,
-    requestedVersion?: string
+    requestedVersion?: string,
+    keepRawFields?: boolean
   ): Promise<Dataset | undefined> {
     return getDataset
-      .execute(persistentId, version, includeDeaccessioned)
+      .execute(persistentId, version, includeDeaccessioned, keepRawFields)
       .then((jsDataset) => this.fetchDatasetDetails(jsDataset, version))
       .then((datasetDetails) => {
         return this.fetchDownloadSizes(persistentId, version).then((downloadSizes) => {
@@ -235,7 +236,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         return this.getByPersistentId(
           persistentId,
           DatasetNonNumericVersion.LATEST_PUBLISHED,
-          (requestedVersion = version)
+          (requestedVersion = version),
+          keepRawFields
         )
       })
   }
