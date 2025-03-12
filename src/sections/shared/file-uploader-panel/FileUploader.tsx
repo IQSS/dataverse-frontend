@@ -210,13 +210,26 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
 
     const handleDropFiles: DragEventHandler<HTMLDivElement> = (event) => {
       event.preventDefault()
+      event.stopPropagation()
       setIsDragging(false)
 
-      if (!canKeepUploading || isSaving) return
+      if (isSaving) return
+
+      if (replaceFile && totalFiles > 0) {
+        toast.error(t('fileUploader.replaceFileAlreadyOneFileError'))
+        return
+      }
 
       const droppedItems = event.dataTransfer.items
 
       if (droppedItems.length > 0) {
+        if (!multiple) {
+          if (droppedItems.length > 1) {
+            toast.error(t('fileUploader.replaceFileMultipleError'))
+            return
+          }
+        }
+
         Array.from(droppedItems).forEach((droppedFile) => {
           if (droppedFile.webkitGetAsEntry()?.isDirectory) {
             addFromDir(droppedFile.webkitGetAsEntry() as FileSystemDirectoryEntry)
