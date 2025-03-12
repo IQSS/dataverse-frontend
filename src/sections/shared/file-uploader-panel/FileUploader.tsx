@@ -34,6 +34,7 @@ type FileUploaderProps = {
   onUploadedFiles: (files: FileUploadState[]) => void
   replaceFile?: boolean
   originalFileType?: string
+  isSaving: boolean
 }
 
 type FileStorageConfiguration = 'S3'
@@ -54,7 +55,8 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
       multiple,
       onUploadedFiles,
       replaceFile,
-      originalFileType
+      originalFileType,
+      isSaving
     },
     ref
   ) => {
@@ -209,7 +211,7 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
       event.preventDefault()
       setIsDragging(false)
 
-      if (!canKeepUploading) return
+      if (!canKeepUploading || isSaving) return
 
       const droppedItems = event.dataTransfer.items
 
@@ -313,7 +315,7 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
                 <Card.Header>
                   <Button
                     onClick={() => inputRef.current?.click()}
-                    disabled={!canKeepUploading}
+                    disabled={!canKeepUploading || isSaving}
                     size="sm">
                     <Plus size={22} />{' '}
                     {multiple
@@ -340,7 +342,7 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
                       onChange={handleInputFileChange}
                       multiple={multiple}
                       hidden
-                      disabled={!canKeepUploading}
+                      disabled={!canKeepUploading || isSaving}
                     />
 
                     {uploadingFilesInProgress.length > 0 ? (

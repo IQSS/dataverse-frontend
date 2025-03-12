@@ -99,6 +99,7 @@ export const ReplaceFile = ({
         replaceFile={true}
         multiple={false}
         saveSucceeded={newFileID !== null}
+        isSaving={isReplacingFile}
       />
     </section>
   )

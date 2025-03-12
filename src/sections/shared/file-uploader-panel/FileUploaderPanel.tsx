@@ -20,6 +20,7 @@ type FileUploaderPanelProps =
       replaceFile?: false
       originalFileType?: never
       onSaveChanges: (data: FilesListFormData) => Promise<void>
+      isSaving: boolean
       saveSucceeded: boolean
     }
   | {
@@ -30,6 +31,7 @@ type FileUploaderPanelProps =
       replaceFile: true
       originalFileType: string
       onSaveChanges: (data: FilesListFormData) => Promise<void>
+      isSaving: boolean
       saveSucceeded: boolean
     }
 
@@ -43,6 +45,7 @@ export const FileUploaderPanel = ({
   replaceFile,
   originalFileType,
   onSaveChanges,
+  isSaving,
   saveSucceeded
 }: FileUploaderPanelProps) => {
   const { t: tFiles } = useTranslation('files')
@@ -100,6 +103,7 @@ export const FileUploaderPanel = ({
               replaceFile={replaceFile}
               originalFileType={originalFileType}
               multiple={multiple}
+              isSaving={isSaving}
               ref={fileUploaderRef}
             />
           </div>
@@ -111,6 +115,7 @@ export const FileUploaderPanel = ({
           uploadedFilesInfo={uploadedFilesInfo}
           onSaveChanges={onSaveChanges}
           removeFileFromFileUploaderState={handleRemoveFileFromFileUploaderState}
+          isSaving={isSaving}
         />
       )}
       <ConfirmLeaveModal

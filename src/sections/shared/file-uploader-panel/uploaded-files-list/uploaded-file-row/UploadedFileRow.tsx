@@ -16,6 +16,7 @@ interface UploadedFileRowProps {
   itemIndex: number
   handleSelectFile: (file: UploadedFileInfo) => void
   handleRemoveFile: (fileIndex: number, fileKey: string) => void
+  isSaving: boolean
 }
 
 export const UploadedFileRow = ({
@@ -23,7 +24,8 @@ export const UploadedFileRow = ({
   isSelected,
   handleSelectFile,
   handleRemoveFile,
-  itemIndex
+  itemIndex,
+  isSaving
 }: UploadedFileRowProps) => {
   const { t } = useTranslation('shared')
 
@@ -65,6 +67,7 @@ export const UploadedFileRow = ({
                 handleRemoveFile(itemIndex, file.key)
               }}
               aria-label={t('uploadedFilesList.removeFile')}
+              disabled={isSaving}
             />
           </div>
         </div>

@@ -15,12 +15,14 @@ interface UploadedFilesListProps {
   uploadedFilesInfo: UploadedFileInfo[]
   onSaveChanges: (data: FilesListFormData) => Promise<void>
   removeFileFromFileUploaderState: (fileKey: string) => void
+  isSaving: boolean
 }
 
 export const UploadedFilesList = ({
   uploadedFilesInfo,
   onSaveChanges,
-  removeFileFromFileUploaderState
+  removeFileFromFileUploaderState,
+  isSaving
 }: UploadedFilesListProps) => {
   const [selectedFiles, setSelectedFiles] = useState<UploadedFileInfo[]>([])
   const allFilesSelected = selectedFiles.length === uploadedFilesInfo.length
@@ -66,13 +68,6 @@ export const UploadedFilesList = ({
     })
   }, [form, uploadedFilesInfo])
 
-  // const { submitForm, submitError, submissionStatus } = useSubmitCollection(
-  //   mode,
-  //   collectionIdOrParentCollectionId,
-  //   collectionRepository,
-  //   onSubmittedCollectionError
-  // )
-
   const submitForm = (data: FilesListFormData) => {
     void onSaveChanges(data)
   }
@@ -100,6 +95,7 @@ export const UploadedFilesList = ({
                       checked={allFilesSelected}
                       indeterminate={someFilesSelected}
                       onChange={handleToogleAllFiles}
+                      disabled={isSaving}
                     />
                   </div>
                 </th>
@@ -119,13 +115,16 @@ export const UploadedFilesList = ({
                   handleSelectFile={handleSelectFile}
                   handleRemoveFile={handleRemoveFileFromList}
                   itemIndex={index}
+                  isSaving={isSaving}
                   key={file.id}
                 />
               ))}
             </tbody>
           </Table>
         </div>
-        <Button type="submit">Save Changes</Button>
+        <Button type="submit" disabled={isSaving}>
+          Save Changes
+        </Button>
       </form>
     </FormProvider>
   )
