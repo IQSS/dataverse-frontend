@@ -1,0 +1,62 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
+
+.icon_fields_wrapper {
+  display: flex;
+  gap: 1rem;
+  padding-block: 0.75rem 0.5rem;
+
+  .icon {
+    display: none;
+    height: fit-content;
+    padding-top: 0.5rem;
+    color: $dv-file-border-color;
+
+    > span {
+      margin-right: 0;
+      font-size: 62px;
+      line-height: 1;
+    }
+
+    @media (min-width: 768px) {
+      display: block;
+    }
+  }
+
+  .form_fields {
+    width: 100%;
+
+    input,
+    textarea {
+      width: clamp(175px, 100%, 350px);
+    }
+
+    :global .invalid-feedback {
+      width: clamp(175px, 100%, 350px);
+    }
+  }
+
+  .file_extra_info {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+    color: $dv-subtext-color;
+    font-size: $dv-font-size-sm;
+
+    svg {
+      margin-right: 0.25rem;
+    }
+  }
+}
+
+.remove_button {
+  margin-right: 0.75rem;
+  padding: 0.5rem;
+  background-color: color.adjust($dv-secondary-color, $blackness: 30%);
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+}

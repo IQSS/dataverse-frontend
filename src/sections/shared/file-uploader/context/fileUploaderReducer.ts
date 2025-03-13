@@ -1,35 +1,53 @@
-import { useReducer, useCallback } from 'react'
+import { File as FileModel } from '@/files/domain/models/File'
 import { FileSize, FileSizeUnit } from '@/files/domain/models/FileMetadata'
-import { FileUploaderHelper } from './FileUploaderHelper'
 import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
+import { FileUploaderHelper } from '../FileUploaderHelper'
+import { OperationType, StorageType } from '../FileUploader'
 
-export interface FileUploaderGlobalConfig {
-  checksumAlgorithm: FixityAlgorithm
+export interface FileUploaderState {
+  config: FileUploaderGlobalConfig
+  files: FileUploadInputState
+  uploadingToCancelMap: Map<string, () => void>
+  isSaving: boolean
+  isRemovingFiles: boolean
 }
+export type FileUploadInputState = Record<string, FileUploadState>
 
 export interface FileUploadState {
   key: string
   progress: number
-  uploading: boolean
-  fileSizeString: string
-  fileSize: number
-  fileLastModified: number
-  failed: boolean
-  done: boolean
-  removed: boolean
+  status: FileUploadStatus
   fileName: string
   fileDir: string | undefined
   fileType: string
+  fileSizeString: string
+  fileSize: number
+  fileLastModified: number
   storageId?: string
   checksumValue?: string
   checksumAlgorithm: FixityAlgorithm
 }
 
-export type FileUploaderState = Record<string, FileUploadState>
-export interface FileUploaderFullState {
-  config: FileUploaderGlobalConfig
-  files: FileUploaderState
+export enum FileUploadStatus {
+  UPLOADING = 'uploading',
+  DONE = 'done',
+  FAILED = 'failed',
+  REMOVED = 'removed'
 }
+
+export type FileUploaderGlobalConfig =
+  | {
+      checksumAlgorithm: FixityAlgorithm
+      storageType: StorageType
+      operationType: OperationType.REPLACE_FILE
+      originalFile: FileModel
+    }
+  | {
+      checksumAlgorithm: FixityAlgorithm
+      storageType: StorageType
+      operationType: OperationType.ADD_FILES_TO_DATASET
+      originalFile?: never
+    }
 
 type Action =
   | { type: 'ADD_FILE'; file: File }
@@ -37,11 +55,14 @@ type Action =
   | { type: 'REMOVE_FILE'; key: string }
   | { type: 'REMOVE_ALL_FILES' }
   | { type: 'SET_CONFIG'; config: FileUploaderGlobalConfig }
+  | { type: 'SET_IS_SAVING'; isSaving: boolean }
+  | { type: 'ADD_UPLOADING_TO_CANCEL'; key: string; cancel: () => void }
+  | { type: 'REMOVE_UPLOADING_TO_CANCEL'; key: string }
 
-const fileUploaderReducer = (
-  state: FileUploaderFullState,
+export const fileUploaderReducer = (
+  state: FileUploaderState,
   action: Action
-): FileUploaderFullState => {
+): FileUploaderState => {
   switch (action.type) {
     case 'SET_CONFIG': {
       return { ...state, config: action.config }
@@ -62,18 +83,15 @@ const fileUploaderReducer = (
           [fileKey]: {
             key: fileKey,
             progress: 0,
-            uploading: true,
-            fileSizeString: new FileSize(file.size, FileSizeUnit.BYTES).toString(),
-            fileSize: file.size,
-            fileLastModified: file.lastModified,
-            failed: false,
-            done: false,
-            removed: false,
+            status: FileUploadStatus.UPLOADING,
             fileName: FileUploaderHelper.sanitizeFileName(file.name),
             fileDir: file.webkitRelativePath
               ? toDir(FileUploaderHelper.sanitizeFilePath(file.webkitRelativePath))
               : undefined,
             fileType: file.type,
+            fileSizeString: new FileSize(file.size, FileSizeUnit.BYTES).toString(),
+            fileSize: file.size,
+            fileLastModified: file.lastModified,
             checksumAlgorithm: state.config.checksumAlgorithm
           }
         }
@@ -108,35 +126,25 @@ const fileUploaderReducer = (
       return { ...state, files: {} }
     }
 
+    case 'SET_IS_SAVING': {
+      return { ...state, isSaving: action.isSaving }
+    }
+
+    case 'ADD_UPLOADING_TO_CANCEL': {
+      const { key, cancel } = action
+      state.uploadingToCancelMap.set(key, cancel)
+      return state
+    }
+
+    case 'REMOVE_UPLOADING_TO_CANCEL': {
+      const { key } = action
+      state.uploadingToCancelMap.delete(key)
+      return state
+    }
+
     default:
       return state
   }
-}
-
-export const useFileUploader = () => {
-  const [state, dispatch] = useReducer(fileUploaderReducer, {
-    config: { checksumAlgorithm: FixityAlgorithm.MD5 },
-    files: {}
-  })
-
-  const addFile = useCallback((file: File) => dispatch({ type: 'ADD_FILE', file }), [])
-
-  const updateFile = useCallback(
-    (key: string, updates: Partial<FileUploadState>) =>
-      dispatch({ type: 'UPDATE_FILE', key, updates }),
-    []
-  )
-  const removeFile = useCallback((key: string) => dispatch({ type: 'REMOVE_FILE', key }), [])
-
-  const removeAllFiles = useCallback(() => dispatch({ type: 'REMOVE_ALL_FILES' }), [])
-
-  const getFileByKey = (key: string): FileUploadState | undefined => state.files[key]
-
-  const setConfig = useCallback((config: FileUploaderGlobalConfig) => {
-    dispatch({ type: 'SET_CONFIG', config })
-  }, [])
-
-  return { state, addFile, updateFile, removeFile, removeAllFiles, getFileByKey, setConfig }
 }
 
 const toDir = (relativePath: string): string => {

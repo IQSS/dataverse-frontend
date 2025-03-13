@@ -1,19 +1,14 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Col, Row } from '@iqss/dataverse-design-system'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { useFile } from '../file/useFile'
-import { useReplaceFile } from './useReplaceFile'
 import { useLoading } from '../loading/LoadingContext'
 import { FileInfo } from './file-info/FileInfo'
-import { FileUploaderPanel } from '../shared/file-uploader-panel/FileUploaderPanel'
-import { FilesListFormData } from '../shared/file-uploader-panel/uploaded-files-list/UploadedFilesList'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { PageNotFound } from '../page-not-found/PageNotFound'
-import { QueryParamKey, Route } from '../Route.enum'
-import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
+import { FileUploader, OperationType } from '../shared/file-uploader/FileUploader'
 import styles from './ReplaceFile.module.scss'
 
 interface ReplaceFileProps {
@@ -38,7 +33,6 @@ export const ReplaceFile = ({
 }: ReplaceFileProps) => {
   const { t } = useTranslation('replaceFile')
   const { setIsLoading } = useLoading()
-  const navigate = useNavigate()
 
   const { file, isLoading: isLoadingFile } = useFile(
     fileRepository,
@@ -46,7 +40,7 @@ export const ReplaceFile = ({
     datasetVersionFromParams
   )
 
-  const { handleReplaceFile, newFileID, isReplacingFile } = useReplaceFile(fileRepository)
+  // const { handleReplaceFile, newFileID, isReplacingFile } = useReplaceFile(fileRepository)
 
   useEffect(() => {
     if (!isLoadingFile) {
@@ -54,13 +48,13 @@ export const ReplaceFile = ({
     }
   }, [setIsLoading, isLoadingFile])
 
-  useEffect(() => {
-    if (newFileID) {
-      navigate(
-        `${Route.FILES}?id=${newFileID}&${QueryParamKey.DATASET_VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
-      )
-    }
-  }, [newFileID, navigate, t])
+  // useEffect(() => {
+  //   if (newFileID) {
+  //     navigate(
+  //       `${Route.FILES}?id=${newFileID}&${QueryParamKey.DATASET_VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
+  //     )
+  //   }
+  // }, [newFileID, navigate, t])
 
   if (isLoadingFile) {
     return <AppLoader />
@@ -70,7 +64,11 @@ export const ReplaceFile = ({
     return <PageNotFound />
   }
 
-  const handleSaveChanges = (data: FilesListFormData) => handleReplaceFile(file.id, data.files[0])
+  // const handleSaveChanges = (data: FilesListFormData) => handleReplaceFile(file.id, data.files[0])
+
+  // const uploadedDoneAndHashedFiles = Object.values(fileUploaderState.files).filter(
+  //   (file) => file.status === FileUploadStatus.DONE && file.checksumValue
+  // )
 
   return (
     <section>
@@ -89,8 +87,15 @@ export const ReplaceFile = ({
           <FileInfo file={file} />
         </Col>
       </Row>
+      <FileUploader
+        fileRepository={fileRepository}
+        datasetPersistentId={datasetPidFromParams}
+        storageType="S3"
+        operationType={OperationType.REPLACE_FILE}
+        originalFile={file}
+      />
 
-      <FileUploaderPanel
+      {/* <FileUploaderPanel
         fileRepository={fileRepository}
         datasetPersistentId={datasetPidFromParams}
         storageConfiguration="S3"
@@ -100,7 +105,7 @@ export const ReplaceFile = ({
         multiple={false}
         saveSucceeded={newFileID !== null}
         isSaving={isReplacingFile}
-      />
+      /> */}
     </section>
   )
 }
