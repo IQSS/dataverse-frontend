@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Col, Row } from '@iqss/dataverse-design-system'
+import { Col, Row, Tabs } from '@iqss/dataverse-design-system'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { useFile } from '../file/useFile'
 import { useLoading } from '../loading/LoadingContext'
@@ -31,6 +31,7 @@ export const ReplaceFile = ({
   datasetVersionFromParams
 }: ReplaceFileProps) => {
   const { t } = useTranslation('replaceFile')
+  const { t: tFiles } = useTranslation('files')
   const { setIsLoading } = useLoading()
 
   const { file, isLoading: isLoadingFile } = useFile(
@@ -70,13 +71,19 @@ export const ReplaceFile = ({
           <FileInfo file={file} />
         </Col>
       </Row>
-      <FileUploader
-        fileRepository={fileRepository}
-        datasetPersistentId={datasetPidFromParams}
-        storageType="S3"
-        operationType={OperationType.REPLACE_FILE}
-        originalFile={file}
-      />
+      <Tabs defaultActiveKey="files">
+        <Tabs.Tab eventKey="files" title={tFiles('files')}>
+          <div className={styles.tab_container}>
+            <FileUploader
+              fileRepository={fileRepository}
+              datasetPersistentId={datasetPidFromParams}
+              storageType="S3"
+              operationType={OperationType.REPLACE_FILE}
+              originalFile={file}
+            />
+          </div>
+        </Tabs.Tab>
+      </Tabs>
 
       {/* <FileUploaderPanel
         fileRepository={fileRepository}

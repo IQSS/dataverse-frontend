@@ -6,7 +6,8 @@ import {
   FileUploaderState,
   FileUploadStatus,
   UploadedFile,
-  ReplaceOperationInfo
+  ReplaceOperationInfo,
+  AddFilesToDatasetOperationInfo
 } from './fileUploaderReducer'
 
 interface FileUploaderContextValue {
@@ -22,6 +23,9 @@ interface FileUploaderContextValue {
   addUploadingToCancel: (key: string, cancel: () => void) => void
   removeUploadingToCancel: (key: string) => void
   setReplaceOperationInfo: (replaceOperationInfo: ReplaceOperationInfo) => void
+  setAddFilesToDatasetOperationInfo: (
+    addFilesToDatasetOperationInfo: AddFilesToDatasetOperationInfo
+  ) => void
 }
 
 const FileUploaderContext = createContext<FileUploaderContextValue | undefined>(undefined)
@@ -38,7 +42,8 @@ export const FileUploaderProvider = ({ children, initialConfig }: FileUploaderPr
     uploadingToCancelMap: new Map(),
     isSaving: false,
     isRemovingFiles: false,
-    replaceOperationInfo: { success: false, newFileIdentifier: null }
+    replaceOperationInfo: { success: false, newFileIdentifier: null },
+    addFilesToDatasetOperationInfo: { success: false }
   })
 
   const addFile = useCallback((file: File) => dispatch({ type: 'ADD_FILE', file }), [])
@@ -78,6 +83,13 @@ export const FileUploaderProvider = ({ children, initialConfig }: FileUploaderPr
     dispatch({ type: 'SET_REPLACE_OPERATION_INFO', replaceOperationInfo })
   }, [])
 
+  const setAddFilesToDatasetOperationInfo = useCallback(
+    (addFilesToDatasetOperationInfo: { success: boolean }) => {
+      dispatch({ type: 'SET_ADD_FILES_TO_DATASET_OPERATION_INFO', addFilesToDatasetOperationInfo })
+    },
+    []
+  )
+
   const uploadedDoneAndHashedFiles: UploadedFile[] = useMemo(
     () =>
       Object.values(fileUploaderState.files).filter(
@@ -101,7 +113,8 @@ export const FileUploaderProvider = ({ children, initialConfig }: FileUploaderPr
         setIsSaving,
         addUploadingToCancel,
         removeUploadingToCancel,
-        setReplaceOperationInfo
+        setReplaceOperationInfo,
+        setAddFilesToDatasetOperationInfo
       }}>
       {children}
     </FileUploaderContext.Provider>

@@ -11,6 +11,7 @@ export interface FileUploaderState {
   isSaving: boolean
   isRemovingFiles: boolean
   replaceOperationInfo: ReplaceOperationInfo
+  addFilesToDatasetOperationInfo: AddFilesToDatasetOperationInfo
 }
 export type FileUploadInputState = Record<string, FileUploadState>
 
@@ -58,6 +59,10 @@ export type ReplaceOperationInfo = {
   newFileIdentifier: number | null
 }
 
+export type AddFilesToDatasetOperationInfo = {
+  success: boolean
+}
+
 type Action =
   | { type: 'ADD_FILE'; file: File }
   | { type: 'UPDATE_FILE'; key: string; updates: Partial<FileUploadState> }
@@ -66,6 +71,10 @@ type Action =
   | { type: 'SET_CONFIG'; config: FileUploaderGlobalConfig }
   | { type: 'SET_IS_SAVING'; isSaving: boolean }
   | { type: 'SET_REPLACE_OPERATION_INFO'; replaceOperationInfo: ReplaceOperationInfo }
+  | {
+      type: 'SET_ADD_FILES_TO_DATASET_OPERATION_INFO'
+      addFilesToDatasetOperationInfo: AddFilesToDatasetOperationInfo
+    }
   | { type: 'ADD_UPLOADING_TO_CANCEL'; key: string; cancel: () => void }
   | { type: 'REMOVE_UPLOADING_TO_CANCEL'; key: string }
 
@@ -155,6 +164,10 @@ export const fileUploaderReducer = (
 
     case 'SET_REPLACE_OPERATION_INFO': {
       return { ...state, replaceOperationInfo: action.replaceOperationInfo }
+    }
+
+    case 'SET_ADD_FILES_TO_DATASET_OPERATION_INFO': {
+      return { ...state, addFilesToDatasetOperationInfo: action.addFilesToDatasetOperationInfo }
     }
 
     default:

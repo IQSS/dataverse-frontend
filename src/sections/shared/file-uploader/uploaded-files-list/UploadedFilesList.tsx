@@ -7,14 +7,13 @@ import { Button, DropdownButton, DropdownButtonItem, Table } from '@iqss/dataver
 import { PencilFill } from 'react-bootstrap-icons'
 import { RowSelectionCheckbox } from '@/sections/shared/form/row-selection-checkbox/RowSelectionCheckbox'
 import { useReplaceFile } from '../useReplaceFile'
+import { useAddUploadedFilesToDataset } from '../useAddUploadedFilesToDataset'
 import { UploadedFileRow } from './uploaded-file-row/UploadedFileRow'
 import { useFileUploaderContext } from '../context/FileUploaderContext'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { UploadedFile } from '../context/fileUploaderReducer'
 import { OperationType } from '../FileUploader'
 import styles from './UploadedFilesList.module.scss'
-
-// import { addUploadedFiles } from '@/files/domain/useCases/addUploadedFiles'
 
 export interface FilesListFormData {
   files: UploadedFile[]
@@ -42,6 +41,10 @@ export const UploadedFilesList = ({
   } = useFileUploaderContext()
 
   const { submitReplaceFile } = useReplaceFile(fileRepository)
+  const { submitUploadedFilesToDataset } = useAddUploadedFilesToDataset(
+    fileRepository,
+    datasetPersistentId
+  )
 
   const [selectedFiles, setSelectedFiles] = useState<string[]>([])
   const allFilesSelected = selectedFiles.length === uploadedFiles.length
@@ -90,11 +93,9 @@ export const UploadedFilesList = ({
       void submitReplaceFile(originalFile.id, data.files[0])
     }
 
-    // if (OperationType.ADD_FILES_TO_DATASET === operationType) {
-    //   // void submitAddFilesToDataset(data)
-
-    //   void addUploadedFiles
-    // }
+    if (OperationType.ADD_FILES_TO_DATASET === operationType) {
+      void submitUploadedFilesToDataset(data.files)
+    }
   }
 
   const handleRemoveFileFromList = (fileIndex: number, fileKey: string) => {

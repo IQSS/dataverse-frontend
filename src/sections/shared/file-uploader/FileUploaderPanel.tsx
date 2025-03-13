@@ -20,7 +20,7 @@ const FileUploaderPanel = ({ fileRepository, datasetPersistentId }: FileUploader
   const navigate = useNavigate()
 
   const {
-    fileUploaderState: { replaceOperationInfo, files, config },
+    fileUploaderState: { replaceOperationInfo, addFilesToDatasetOperationInfo, files, config },
     uploadedFiles
   } = useFileUploaderContext()
 
@@ -31,7 +31,21 @@ const FileUploaderPanel = ({ fileRepository, datasetPersistentId }: FileUploader
         `${Route.FILES}?id=${replaceOperationInfo.newFileIdentifier}&${QueryParamKey.DATASET_VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
       )
     }
-  }, [replaceOperationInfo, tReplaceFile, navigate])
+
+    if (addFilesToDatasetOperationInfo.success) {
+      // Success! – One or more files have been updated.
+      toast.success('One or more files have been updated.')
+      navigate(
+        `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetPersistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
+      )
+    }
+  }, [
+    replaceOperationInfo,
+    addFilesToDatasetOperationInfo,
+    datasetPersistentId,
+    tReplaceFile,
+    navigate
+  ])
 
   console.log({ files, originalFile: config.originalFile })
 
