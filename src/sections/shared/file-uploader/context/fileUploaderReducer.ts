@@ -10,6 +10,7 @@ export interface FileUploaderState {
   uploadingToCancelMap: Map<string, () => void>
   isSaving: boolean
   isRemovingFiles: boolean
+  replaceOperationInfo: ReplaceOperationInfo
 }
 export type FileUploadInputState = Record<string, FileUploadState>
 
@@ -18,15 +19,18 @@ export interface FileUploadState {
   progress: number
   status: FileUploadStatus
   fileName: string
-  fileDir: string | undefined
+  fileDir: string
   fileType: string
   fileSizeString: string
   fileSize: number
   fileLastModified: number
+  description: string
   storageId?: string
   checksumValue?: string
   checksumAlgorithm: FixityAlgorithm
 }
+
+export type UploadedFile = FileUploadState & { storageId: string; checksumValue: string }
 
 export enum FileUploadStatus {
   UPLOADING = 'uploading',
@@ -49,6 +53,11 @@ export type FileUploaderGlobalConfig =
       originalFile?: never
     }
 
+export type ReplaceOperationInfo = {
+  success: boolean
+  newFileIdentifier: number | null
+}
+
 type Action =
   | { type: 'ADD_FILE'; file: File }
   | { type: 'UPDATE_FILE'; key: string; updates: Partial<FileUploadState> }
@@ -56,6 +65,7 @@ type Action =
   | { type: 'REMOVE_ALL_FILES' }
   | { type: 'SET_CONFIG'; config: FileUploaderGlobalConfig }
   | { type: 'SET_IS_SAVING'; isSaving: boolean }
+  | { type: 'SET_REPLACE_OPERATION_INFO'; replaceOperationInfo: ReplaceOperationInfo }
   | { type: 'ADD_UPLOADING_TO_CANCEL'; key: string; cancel: () => void }
   | { type: 'REMOVE_UPLOADING_TO_CANCEL'; key: string }
 
@@ -87,12 +97,13 @@ export const fileUploaderReducer = (
             fileName: FileUploaderHelper.sanitizeFileName(file.name),
             fileDir: file.webkitRelativePath
               ? toDir(FileUploaderHelper.sanitizeFilePath(file.webkitRelativePath))
-              : undefined,
+              : state.config.originalFile?.metadata.directory ?? '',
             fileType: file.type,
             fileSizeString: new FileSize(file.size, FileSizeUnit.BYTES).toString(),
             fileSize: file.size,
             fileLastModified: file.lastModified,
-            checksumAlgorithm: state.config.checksumAlgorithm
+            checksumAlgorithm: state.config.checksumAlgorithm,
+            description: state.config.originalFile?.metadata.description ?? ''
           }
         }
       }
@@ -140,6 +151,10 @@ export const fileUploaderReducer = (
       const { key } = action
       state.uploadingToCancelMap.delete(key)
       return state
+    }
+
+    case 'SET_REPLACE_OPERATION_INFO': {
+      return { ...state, replaceOperationInfo: action.replaceOperationInfo }
     }
 
     default:

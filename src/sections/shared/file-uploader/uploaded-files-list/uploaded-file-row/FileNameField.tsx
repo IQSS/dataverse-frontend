@@ -70,5 +70,3 @@ export const FileNameField = ({ itemIndex }: FileNameFieldProps) => {
     </Form.Group>
   )
 }
-
-export default FileNameField

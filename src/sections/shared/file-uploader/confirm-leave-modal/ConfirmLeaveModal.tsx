@@ -27,7 +27,7 @@ export const ConfirmLeaveModal = () => {
 
   const handleConfirmLeavePage = () => {
     if (navigationBlocker.state === 'blocked') {
-      // TODO - Remove already uploaded files from the bucket, we need an endpoint for this
+      // TODO:ME - Remove already uploaded files from the bucket, we need an endpoint for this
       navigationBlocker.proceed()
     }
   }

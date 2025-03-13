@@ -4,8 +4,7 @@ import { FileUploaderProvider } from './context/FileUploaderContext'
 import { useGetFixityAlgorithm } from './useGetFixityAlgorithm'
 import { FileUploaderGlobalConfig } from './context/fileUploaderReducer'
 import { LoadingConfigSpinner } from './loading-config-spinner/LoadingConfigSpinner'
-import FileUploadInput from './file-upload-input/FileUploadInput'
-import { ConfirmLeaveModal } from './confirm-leave-modal/ConfirmLeaveModal'
+import FileUploaderPanel from './FileUploaderPanel'
 
 type FileUploaderProps =
   | {
@@ -43,7 +42,6 @@ export const FileUploader = ({
     return <LoadingConfigSpinner />
   }
 
-  // 👇 Armamos el config con el tipo correcto
   const initialConfig: FileUploaderGlobalConfig =
     operationType === OperationType.REPLACE_FILE
       ? {
@@ -60,9 +58,10 @@ export const FileUploader = ({
 
   return (
     <FileUploaderProvider initialConfig={initialConfig}>
-      <FileUploadInput fileRepository={fileRepository} datasetPersistentId={datasetPersistentId} />
-
-      <ConfirmLeaveModal />
+      <FileUploaderPanel
+        fileRepository={fileRepository}
+        datasetPersistentId={datasetPersistentId}
+      />
     </FileUploaderProvider>
   )
 }

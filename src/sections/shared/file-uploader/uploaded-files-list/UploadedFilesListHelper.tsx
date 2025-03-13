@@ -1,29 +1,6 @@
-// import { FileUploadState } from '../fileUploaderReducer'
-import { FileUploadState } from '../context/fileUploaderReducer'
-import { UploadedFileInfo } from './UploadedFileInfo'
+import { UploadedFile } from '../context/fileUploaderReducer'
 
 export class UploadedFilesListHelper {
-  /**
-   * To map the uploaded files retrieved from the file uploader to the uploaded file info interface model.
-   * FileUploadState is the model the File Uploader uses to store the uploaded files.
-   * UploadedFileInfo is the model used to display the uploaded files in the uploaded files list.
-   */
-  public static mapUploadedFilesToUploadedFileInfo(files: FileUploadState[]): UploadedFileInfo[] {
-    return files.map((file) => ({
-      key: file.key,
-      storageId: file.storageId as string, // Casted to string because at this point we know it is not undefined as it was already uploaded
-      checksumValue: file.checksumValue as string, // Casted to string because at this point we know it is not undefined as it was already uploaded
-      checksumAlgorithm: file.checksumAlgorithm,
-      fileName: file.fileName,
-      fileDir: file.fileDir ?? '',
-      fileType: file.fileType,
-      fileSize: file.fileSize,
-      fileSizeString: file.fileSizeString,
-      fileLastModified: file.fileLastModified,
-      description: ''
-    }))
-  }
-
   public static isUniqueCombinationOfFilepathAndFilename({
     fileName,
     filePath,
@@ -33,7 +10,7 @@ export class UploadedFilesListHelper {
     fileName: string
     filePath: string
     fileKey: string
-    allFiles: UploadedFileInfo[]
+    allFiles: UploadedFile[]
   }): boolean {
     return !allFiles
       .filter((f) => f.key !== fileKey)

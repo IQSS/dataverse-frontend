@@ -19,7 +19,6 @@ interface ReplaceFileProps {
 }
 
 // TODO:ME - Create the hash with the fixityAlgorithm instead of hardcoded MD5 in the onFileUploadFinished function
-// TODO:ME - Maybe is better to receive union type prop mode= 'replace-file' | 'add-files-to-dataset' and handle the use cases inside the component?
 // TODO:ME - Add restrict file link from dataset files page ( integrate cheng branch)
 // TODO:ME Use the dto mapper before submitting the files
 // TODO - We need something to tell the user which files have the same contents as other files already in the dataset.
@@ -40,21 +39,11 @@ export const ReplaceFile = ({
     datasetVersionFromParams
   )
 
-  // const { handleReplaceFile, newFileID, isReplacingFile } = useReplaceFile(fileRepository)
-
   useEffect(() => {
     if (!isLoadingFile) {
       setIsLoading(false)
     }
   }, [setIsLoading, isLoadingFile])
-
-  // useEffect(() => {
-  //   if (newFileID) {
-  //     navigate(
-  //       `${Route.FILES}?id=${newFileID}&${QueryParamKey.DATASET_VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
-  //     )
-  //   }
-  // }, [newFileID, navigate, t])
 
   if (isLoadingFile) {
     return <AppLoader />
@@ -63,12 +52,6 @@ export const ReplaceFile = ({
   if (!file) {
     return <PageNotFound />
   }
-
-  // const handleSaveChanges = (data: FilesListFormData) => handleReplaceFile(file.id, data.files[0])
-
-  // const uploadedDoneAndHashedFiles = Object.values(fileUploaderState.files).filter(
-  //   (file) => file.status === FileUploadStatus.DONE && file.checksumValue
-  // )
 
   return (
     <section>

@@ -1,25 +1,22 @@
-import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
 import { UploadedFileDTO, WriteError } from '@iqss/dataverse-client-javascript'
 import { replaceFile } from '@/files/domain/useCases/replaceFile'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
-import { UploadedFileInfo } from '../shared/file-uploader-panel/uploaded-files-list/UploadedFileInfo'
+import { UploadedFileInfo } from '../file-uploader-panel/uploaded-files-list/UploadedFileInfo'
+import { useFileUploaderContext } from './context/FileUploaderContext'
 
 interface UseReplaceFileReturn {
-  isReplacingFile: boolean
-  newFileID: number | null
-  handleReplaceFile: (fileId: number, file: UploadedFileInfo) => Promise<void>
+  submitReplaceFile: (originalFileID: number, file: UploadedFileInfo) => Promise<void>
 }
 
 export const useReplaceFile = (fileRepository: FileRepository): UseReplaceFileReturn => {
+  const { setIsSaving, setReplaceOperationInfo, removeAllFiles } = useFileUploaderContext()
   const { t } = useTranslation('replaceFile')
-  const [isReplacingFile, setIsReplacingFile] = useState<boolean>(false)
-  const [newFileID, setNewFileID] = useState<number | null>(null)
 
-  const handleReplaceFile = async (fileId: number, newFileInfo: UploadedFileInfo) => {
-    setIsReplacingFile(true)
+  const submitReplaceFile = async (originalFileID: number, newFileInfo: UploadedFileInfo) => {
+    setIsSaving(true)
 
     const newFileDTO: UploadedFileDTO = {
       storageId: newFileInfo.storageId,
@@ -35,28 +32,26 @@ export const useReplaceFile = (fileRepository: FileRepository): UseReplaceFileRe
     }
 
     try {
-      const newFileIdentifier = await replaceFile(fileRepository, fileId, newFileDTO)
+      const newFileIdentifier = await replaceFile(fileRepository, originalFileID, newFileDTO)
 
-      setNewFileID(newFileIdentifier)
-      toast.success(t('fileReplacedSuccessfully'))
+      removeAllFiles()
+      setReplaceOperationInfo({ success: true, newFileIdentifier })
     } catch (err: WriteError | unknown) {
       if (err instanceof WriteError) {
         const error = new JSDataverseWriteErrorHandler(err)
         const formattedError =
           error.getReasonWithoutStatusCode() ?? /* istanbul ignore next */ error.getErrorMessage()
 
-        toast.error(t(formattedError))
+        toast.error(formattedError)
       } else {
         toast.error(t('defaultFileReplaceError'))
       }
     } finally {
-      setIsReplacingFile(false)
+      setIsSaving(false)
     }
   }
 
   return {
-    newFileID,
-    isReplacingFile,
-    handleReplaceFile
+    submitReplaceFile
   }
 }

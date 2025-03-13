@@ -146,6 +146,10 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
         void uploadOneFile(file)
       }
     }
+
+    if (inputRef.current) {
+      inputRef.current.value = ''
+    }
   }
 
   // waiting on the possibility to test folder drop: https://github.com/cypress-io/cypress/issues/19696
