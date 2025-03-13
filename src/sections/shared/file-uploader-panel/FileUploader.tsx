@@ -89,7 +89,6 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
     }
 
     const onFileUploadFinished = (file: File) => {
-      // TODO:ME - Here we should create the hash with the fixityAlgorithm
       const hash = md5.create()
       const reader = file.stream().getReader()
       reader
@@ -298,8 +297,6 @@ const FileUploader = forwardRef<FileUploaderRef, FileUploaderProps>(
         setConfig({ checksumAlgorithm: fixityAlgorithm })
       }
     }, [fixityAlgorithm, isLoadingFixityAlgorithm, setConfig])
-
-    // TODO:ME - UseEffect here with return clean function that cancels all uploads in progress
 
     if (isLoadingFixityAlgorithm) return <LoadingConfigSpinner />
 
