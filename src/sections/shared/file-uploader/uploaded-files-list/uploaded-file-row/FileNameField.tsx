@@ -13,12 +13,12 @@ export const FileNameField = ({ itemIndex }: FileNameFieldProps) => {
   const { t } = useTranslation('shared')
 
   const fileNameRules: UseControllerProps<FilesListFormData>['rules'] = {
-    required: t('uploadedFilesList.fields.fileName.required'),
+    required: t('fileUploader.uploadedFilesList.fields.fileName.required'),
     validate: (value, formValues) => {
       const currentFile = formValues.files[itemIndex]
 
       if (!UploadedFilesListHelper.isValidFileName(value as string)) {
-        return t('uploadedFilesList.fields.fileName.invalid.characters')
+        return t('fileUploader.uploadedFilesList.fields.fileName.invalid.characters')
       }
 
       if (
@@ -29,7 +29,7 @@ export const FileNameField = ({ itemIndex }: FileNameFieldProps) => {
           allFiles: formValues.files
         })
       ) {
-        return t('uploadedFilesList.fields.fileName.invalid.duplicateCombination', {
+        return t('fileUploader.uploadedFilesList.fields.fileName.invalid.duplicateCombination', {
           fileName: value
         })
       }
@@ -38,14 +38,16 @@ export const FileNameField = ({ itemIndex }: FileNameFieldProps) => {
     },
     maxLength: {
       value: 255,
-      message: t('uploadedFilesList.fields.fileName.invalid.maxLength', { maxLength: 255 })
+      message: t('fileUploader.uploadedFilesList.fields.fileName.invalid.maxLength', {
+        maxLength: 255
+      })
     }
   }
 
   return (
     <Form.Group controlId={`files.${itemIndex}.fileName`} as={Row}>
       <Form.Group.Label required={true} column lg={2}>
-        {t('uploadedFilesList.fields.fileName.label')}
+        {t('fileUploader.uploadedFilesList.fields.fileName.label')}
       </Form.Group.Label>
       <Col lg={10}>
         <Controller

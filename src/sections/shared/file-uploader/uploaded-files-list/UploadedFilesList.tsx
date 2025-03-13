@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useDeepCompareEffect } from 'use-deep-compare'
@@ -11,7 +11,7 @@ import { useAddUploadedFilesToDataset } from '../useAddUploadedFilesToDataset'
 import { UploadedFileRow } from './uploaded-file-row/UploadedFileRow'
 import { useFileUploaderContext } from '../context/FileUploaderContext'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import { UploadedFile } from '../context/fileUploaderReducer'
+import { FileUploadStatus, UploadedFile } from '../context/fileUploaderReducer'
 import { OperationType } from '../FileUploader'
 import styles from './UploadedFilesList.module.scss'
 
@@ -33,12 +33,17 @@ export const UploadedFilesList = ({
 
   const {
     fileUploaderState: {
+      files,
       isSaving,
       config: { operationType, originalFile }
     },
     uploadedFiles,
     removeFile
   } = useFileUploaderContext()
+
+  const anyFileUploading = useMemo(() => {
+    return Object.values(files).some((file) => file.status === FileUploadStatus.UPLOADING)
+  }, [files])
 
   const { submitReplaceFile } = useReplaceFile(fileRepository)
   const { submitUploadedFilesToDataset } = useAddUploadedFilesToDataset(
@@ -143,8 +148,10 @@ export const UploadedFilesList = ({
                 </th>
                 <th scope="col" colSpan={1}>
                   {`${uploadedFiles.length} ${
-                    uploadedFiles.length > 1 ? 'Files' : 'File'
-                  } uploaded`}
+                    uploadedFiles.length > 1
+                      ? t('fileUploader.uploadedFilesList.uploadedFiles')
+                      : t('fileUploader.uploadedFilesList.uploadedFile')
+                  }`}
                 </th>
                 <th scope="col" colSpan={1}>
                   <div className={styles.edit_dropdown}>
@@ -152,11 +159,11 @@ export const UploadedFilesList = ({
                       id="edit-selected-files-menu"
                       icon={<PencilFill className={styles.edit_dropdown_icon} />}
                       title="Edit"
-                      ariaLabel="Edit selected files"
+                      ariaLabel={t('fileUploader.uploadedFilesList.editSelectedFiles')}
                       variant="secondary"
                       disabled={selectedFiles.length === 0 || isSaving}>
                       <DropdownButtonItem onClick={handleRemoveSelectedFilesFromList}>
-                        Delete selected files
+                        {t('fileUploader.uploadedFilesList.removeSelectedFiles')}
                       </DropdownButtonItem>
                     </DropdownButton>
                   </div>
@@ -178,7 +185,7 @@ export const UploadedFilesList = ({
             </tbody>
           </Table>
         </div>
-        <Button type="submit" disabled={isSaving}>
+        <Button type="submit" disabled={isSaving || anyFileUploading}>
           Save Changes
         </Button>
       </form>

@@ -17,7 +17,7 @@ export const FilePathField = ({ itemIndex }: FilePathFieldProps) => {
       const currentFile = formValues.files[itemIndex]
 
       if (!UploadedFilesListHelper.isValidFilePath(value as string)) {
-        return t('uploadedFilesList.fields.filePath.invalid.characters')
+        return t('fileUploader.uploadedFilesList.fields.filePath.invalid.characters')
       }
 
       if (
@@ -28,7 +28,7 @@ export const FilePathField = ({ itemIndex }: FilePathFieldProps) => {
           allFiles: formValues.files
         })
       ) {
-        return t('uploadedFilesList.fields.filePath.invalid.duplicateCombination', {
+        return t('fileUploader.uploadedFilesList.fields.filePath.invalid.duplicateCombination', {
           fileName: value
         })
       }
@@ -37,14 +37,19 @@ export const FilePathField = ({ itemIndex }: FilePathFieldProps) => {
     },
     maxLength: {
       value: 255,
-      message: t('uploadedFilesList.fields.filePath.invalid.maxLength', { maxLength: 255 })
+      message: t('fileUploader.uploadedFilesList.fields.filePath.invalid.maxLength', {
+        maxLength: 255
+      })
     }
   }
 
   return (
     <Form.Group controlId={`files.${itemIndex}.fileDir`} as={Row}>
-      <Form.Group.Label message={t('uploadedFilesList.fields.filePath.description')} column lg={2}>
-        {t('uploadedFilesList.fields.filePath.label')}
+      <Form.Group.Label
+        message={t('fileUploader.uploadedFilesList.fields.filePath.description')}
+        column
+        lg={2}>
+        {t('fileUploader.uploadedFilesList.fields.filePath.label')}
       </Form.Group.Label>
       <Col lg={10}>
         <Controller

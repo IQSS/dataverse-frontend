@@ -4,11 +4,11 @@ import { UploadedFileDTO, WriteError } from '@iqss/dataverse-client-javascript'
 import { addUploadedFiles } from '@/files/domain/useCases/addUploadedFiles'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
-import { UploadedFileInfo } from '../file-uploader-panel/uploaded-files-list/UploadedFileInfo'
 import { useFileUploaderContext } from './context/FileUploaderContext'
+import { UploadedFile } from './context/fileUploaderReducer'
 
 interface UseAddUploadedFilesToDatasetReturn {
-  submitUploadedFilesToDataset: (uploadedFiles: UploadedFileInfo[]) => Promise<void>
+  submitUploadedFilesToDataset: (uploadedFiles: UploadedFile[]) => Promise<void>
 }
 
 export const useAddUploadedFilesToDataset = (
@@ -17,9 +17,9 @@ export const useAddUploadedFilesToDataset = (
 ): UseAddUploadedFilesToDatasetReturn => {
   const { setIsSaving, setAddFilesToDatasetOperationInfo, removeAllFiles } =
     useFileUploaderContext()
-  //   const { t } = useTranslation('replaceFile')
+  const { t } = useTranslation('shared')
 
-  const submitUploadedFilesToDataset = async (uploadedFiles: UploadedFileInfo[]) => {
+  const submitUploadedFilesToDataset = async (uploadedFiles: UploadedFile[]) => {
     setIsSaving(true)
 
     const uploadedFilesDTO: UploadedFileDTO[] = uploadedFiles.map((newFileInfo) => ({
@@ -47,8 +47,7 @@ export const useAddUploadedFilesToDataset = (
 
         toast.error(formattedError)
       } else {
-        // toast.error(t('defaultFileReplaceError'))
-        toast.error('defaultAddUploadedFilesError')
+        toast.error(t('defaultAddUploadedFilesToDatasetError'))
       }
     } finally {
       setIsSaving(false)

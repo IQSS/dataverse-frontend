@@ -59,18 +59,20 @@ export const ConfirmLeaveModal = () => {
           variant="secondary"
           onClick={handleCancelLeavePage}
           type="button"
-          disabled={fileUploaderState.isRemovingFiles}>
+          // disabled={fileUploaderState.isRemovingFiles}
+        >
           {t('fileUploader.confirmLeaveModal.stay')}
         </Button>
         <Button
           onClick={handleConfirmLeavePage}
           type="button"
-          disabled={fileUploaderState.isRemovingFiles}>
+          // disabled={fileUploaderState.isRemovingFiles}
+        >
           <Stack direction="horizontal" gap={1}>
             {t('fileUploader.confirmLeaveModal.leave')}
-            {fileUploaderState.isRemovingFiles && (
+            {/* {fileUploaderState.isRemovingFiles && (
               <Spinner variant="light" animation="border" size="sm" />
-            )}
+            )} */}
           </Stack>
         </Button>
       </Modal.Footer>

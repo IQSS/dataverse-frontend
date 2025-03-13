@@ -13,14 +13,16 @@ export const FileDescriptionField = ({ itemIndex }: FileDescriptionFieldProps) =
   const descriptionRules: UseControllerProps['rules'] = {
     maxLength: {
       value: 255,
-      message: t('uploadedFilesList.fields.description.invalid.maxLength', { maxLength: 255 })
+      message: t('fileUploader.uploadedFilesList.fields.description.invalid.maxLength', {
+        maxLength: 255
+      })
     }
   }
 
   return (
     <Form.Group controlId={`files.${itemIndex}.description`} as={Row}>
       <Form.Group.Label column lg={2}>
-        {t('uploadedFilesList.fields.description.label')}
+        {t('fileUploader.uploadedFilesList.fields.description.label')}
       </Form.Group.Label>
       <Col lg={10}>
         <Controller

@@ -16,7 +16,7 @@ interface FileUploaderPanelProps {
 }
 
 const FileUploaderPanel = ({ fileRepository, datasetPersistentId }: FileUploaderPanelProps) => {
-  const { t: tReplaceFile } = useTranslation('replaceFile')
+  const { t } = useTranslation('shared')
   const navigate = useNavigate()
 
   const {
@@ -26,7 +26,7 @@ const FileUploaderPanel = ({ fileRepository, datasetPersistentId }: FileUploader
 
   useDeepCompareEffect(() => {
     if (replaceOperationInfo.success && replaceOperationInfo.newFileIdentifier) {
-      toast.success(tReplaceFile('fileReplacedSuccessfully'))
+      toast.success(t('fileUploader.fileReplacedSuccessfully'))
       navigate(
         `${Route.FILES}?id=${replaceOperationInfo.newFileIdentifier}&${QueryParamKey.DATASET_VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
       )
@@ -39,13 +39,7 @@ const FileUploaderPanel = ({ fileRepository, datasetPersistentId }: FileUploader
         `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetPersistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
       )
     }
-  }, [
-    replaceOperationInfo,
-    addFilesToDatasetOperationInfo,
-    datasetPersistentId,
-    tReplaceFile,
-    navigate
-  ])
+  }, [replaceOperationInfo, addFilesToDatasetOperationInfo, datasetPersistentId, t, navigate])
 
   console.log({ files, originalFile: config.originalFile })
 

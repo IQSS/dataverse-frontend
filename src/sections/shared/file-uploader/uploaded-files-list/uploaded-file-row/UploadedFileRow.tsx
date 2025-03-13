@@ -4,14 +4,14 @@ import { InfoCircleFill } from 'react-bootstrap-icons'
 import MimeTypeDisplay from '@/files/domain/models/FileTypeToFriendlyTypeMap'
 import { FileTypeToFileIconMap } from '@/sections/file/file-preview/FileTypeToFileIconMap'
 import { RowSelectionCheckbox } from '@/sections/shared/form/row-selection-checkbox/RowSelectionCheckbox'
-import { UploadedFileInfo } from '../../context/fileUploaderReducer'
+import { UploadedFile } from '../../context/fileUploaderReducer'
 import { FileNameField } from './FileNameField'
 import { FilePathField } from './FilePathField'
 import { FileDescriptionField } from './FileDescriptionField'
 import styles from './UploadedFileRow.module.scss'
 
 interface UploadedFileRowProps {
-  file: UploadedFileInfo
+  file: UploadedFile
   isSelected: boolean
   itemIndex: number
   handleSelectFile: (fileKey: string) => void
@@ -66,7 +66,7 @@ export const UploadedFileRow = ({
               onClick={() => {
                 handleRemoveFile(itemIndex, file.key)
               }}
-              aria-label={t('uploadedFilesList.removeFile')}
+              aria-label={t('fileUploader.uploadedFilesList.removeFile')}
               disabled={isSaving}
             />
           </div>

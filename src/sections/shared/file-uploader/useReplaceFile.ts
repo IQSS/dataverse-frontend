@@ -4,18 +4,18 @@ import { UploadedFileDTO, WriteError } from '@iqss/dataverse-client-javascript'
 import { replaceFile } from '@/files/domain/useCases/replaceFile'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
-import { UploadedFileInfo } from '../file-uploader-panel/uploaded-files-list/UploadedFileInfo'
 import { useFileUploaderContext } from './context/FileUploaderContext'
+import { UploadedFile } from './context/fileUploaderReducer'
 
 interface UseReplaceFileReturn {
-  submitReplaceFile: (originalFileID: number, file: UploadedFileInfo) => Promise<void>
+  submitReplaceFile: (originalFileID: number, file: UploadedFile) => Promise<void>
 }
 
 export const useReplaceFile = (fileRepository: FileRepository): UseReplaceFileReturn => {
   const { setIsSaving, setReplaceOperationInfo, removeAllFiles } = useFileUploaderContext()
-  const { t } = useTranslation('replaceFile')
+  const { t } = useTranslation('shared')
 
-  const submitReplaceFile = async (originalFileID: number, newFileInfo: UploadedFileInfo) => {
+  const submitReplaceFile = async (originalFileID: number, newFileInfo: UploadedFile) => {
     setIsSaving(true)
 
     const newFileDTO: UploadedFileDTO = {
@@ -44,7 +44,7 @@ export const useReplaceFile = (fileRepository: FileRepository): UseReplaceFileRe
 
         toast.error(formattedError)
       } else {
-        toast.error(t('defaultFileReplaceError'))
+        toast.error(t('fileUploader.defaultFileReplaceError'))
       }
     } finally {
       setIsSaving(false)
