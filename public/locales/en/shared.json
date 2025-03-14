@@ -167,6 +167,7 @@
     "fileReplacedSuccessfully": "The file has been replaced.",
     "defaultFileReplaceError": "Something went wrong replacing the file. Try again later.",
     "defaultAddUploadedFilesToDatasetError": "Something went wrong adding the uploaded files to the dataset. Try again later.",
+    "filesAddedToDatasetSuccessfully": "Files added to dataset successfully.",
     "fileUploadSkipped": {
       "dsStore": "File upload skipped: .DS_Store files are not allowed.",
       "alreadyUploaded": "File {{fileName}} was skipped because it has already been uploaded."

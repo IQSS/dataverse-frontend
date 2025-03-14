@@ -26,6 +26,7 @@ const FileUploaderPanel = ({ fileRepository, datasetPersistentId }: FileUploader
   } = useFileUploaderContext()
 
   useDeepCompareEffect(() => {
+    // Listens to the replace operation info result and navigates to the new file page if the operation was successful
     if (replaceOperationInfo.success && replaceOperationInfo.newFileIdentifier) {
       toast.success(t('fileUploader.fileReplacedSuccessfully'))
       navigate(
@@ -33,9 +34,9 @@ const FileUploaderPanel = ({ fileRepository, datasetPersistentId }: FileUploader
       )
     }
 
+    // Listens to the add files to dataset operation info result and navigates to the dataset page if the operation was successful
     if (addFilesToDatasetOperationInfo.success) {
-      // Success! – One or more files have been updated.
-      toast.success('One or more files have been updated.')
+      toast.success(t('fileUploader.filesAddedToDatasetSuccessfully'))
       navigate(
         `${Route.DATASETS}?${QueryParamKey.PERSISTENT_ID}=${datasetPersistentId}&${QueryParamKey.VERSION}=${DatasetNonNumericVersionSearchParam.DRAFT}`
       )

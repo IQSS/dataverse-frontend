@@ -27,7 +27,14 @@ export const ConfirmLeaveModal = () => {
 
   const handleConfirmLeavePage = () => {
     if (navigationBlocker.state === 'blocked') {
-      // TODO:ME - Remove already uploaded files from the bucket, we need an endpoint for this
+      // TODO - Remove the files from the S3 bucket we need an API endpoint for this.
+
+      // Cancel all the uploading files if there are any
+      if (fileUploaderState.uploadingToCancelMap.size > 0) {
+        fileUploaderState.uploadingToCancelMap.forEach((cancel) => {
+          cancel()
+        })
+      }
       navigationBlocker.proceed()
     }
   }

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { useDeepCompareEffect } from 'use-deep-compare'
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import {
@@ -34,6 +35,7 @@ export const UploadedFilesList = ({
   datasetPersistentId
 }: UploadedFilesListProps) => {
   const { t } = useTranslation('shared')
+  const navigate = useNavigate()
 
   const {
     fileUploaderState: {
@@ -78,7 +80,7 @@ export const UploadedFilesList = ({
 
   const form = useForm<FilesListFormData>({ mode: 'onChange' })
 
-  const { fields: uploadedFilesFieldsFormArray, remove } = useFieldArray({
+  const { fields: uploadedFilesFieldsFormArray, remove: removeFormField } = useFieldArray({
     control: form.control,
     name: 'files'
   })
@@ -108,12 +110,13 @@ export const UploadedFilesList = ({
   }
 
   const handleRemoveFileFromList = (fileIndex: number, fileKey: string) => {
-    // TODO - Apart from removing from the form list and the state, we should call an api to remove the file from the S3 bucket
-    remove(fileIndex)
+    // TODO - Remove the file from the S3 bucket we need an API endpoint for this.
+    removeFormField(fileIndex)
     removeFile(fileKey)
   }
 
   const handleRemoveSelectedFilesFromList = () => {
+    // TODO - Remove the files from the S3 bucket we need an API endpoint for this.
     const newFiles = uploadedFilesFieldsFormArray.filter(
       (file) => !selectedFiles.includes(file.key)
     )
@@ -125,6 +128,8 @@ export const UploadedFilesList = ({
       removeFile(fileKey)
     })
   }
+
+  const handleCancel = () => navigate(-1)
 
   return (
     <FormProvider {...form}>
@@ -184,12 +189,25 @@ export const UploadedFilesList = ({
                   />
                 ))}
               </tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan={3}>
+                    <div className={styles.btns_container}>
+                      <Button
+                        type="button"
+                        onClick={handleCancel}
+                        disabled={isSaving}
+                        variant="secondary">
+                        {t('cancel')}
+                      </Button>
+                      <Button type="submit" disabled={isSaving || anyFileUploading}>
+                        {t('saveChanges')}
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
             </Table>
-          </div>
-          <div className={styles.bottom_container}>
-            <Button type="submit" disabled={isSaving || anyFileUploading}>
-              Save Changes
-            </Button>
           </div>
         </Stack>
       </form>

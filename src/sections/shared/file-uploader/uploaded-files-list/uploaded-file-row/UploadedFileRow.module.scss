@@ -39,6 +39,7 @@
 
   .file_extra_info {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.25rem;
     align-items: center;
     color: $dv-subtext-color;
