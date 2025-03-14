@@ -2,6 +2,7 @@ import { useDeepCompareEffect } from 'use-deep-compare'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { Stack } from '@iqss/dataverse-design-system'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
@@ -20,7 +21,7 @@ const FileUploaderPanel = ({ fileRepository, datasetPersistentId }: FileUploader
   const navigate = useNavigate()
 
   const {
-    fileUploaderState: { replaceOperationInfo, addFilesToDatasetOperationInfo, files, config },
+    fileUploaderState: { replaceOperationInfo, addFilesToDatasetOperationInfo },
     uploadedFiles
   } = useFileUploaderContext()
 
@@ -41,10 +42,8 @@ const FileUploaderPanel = ({ fileRepository, datasetPersistentId }: FileUploader
     }
   }, [replaceOperationInfo, addFilesToDatasetOperationInfo, datasetPersistentId, t, navigate])
 
-  console.log({ files, originalFile: config.originalFile })
-
   return (
-    <div>
+    <Stack gap={4}>
       <FileUploadInput fileRepository={fileRepository} datasetPersistentId={datasetPersistentId} />
 
       {uploadedFiles.length > 0 && (
@@ -55,7 +54,7 @@ const FileUploaderPanel = ({ fileRepository, datasetPersistentId }: FileUploader
       )}
 
       <ConfirmLeaveModal />
-    </div>
+    </Stack>
   )
 }
 

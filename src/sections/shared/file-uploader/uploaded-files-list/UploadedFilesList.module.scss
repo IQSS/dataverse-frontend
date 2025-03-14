@@ -4,7 +4,11 @@
   width: 100%;
   max-height: 600px;
   overflow-y: auto;
-  margin-block: 1rem;
+  border-bottom: solid 1px $dv-border-color;
+
+  table {
+    margin-bottom: 0;
+  }
 
   thead {
     th {
@@ -88,4 +92,9 @@
       text-align: center;
     }
   }
+}
+
+.bottom_container {
+  display: flex;
+  justify-content: flex-end;
 }

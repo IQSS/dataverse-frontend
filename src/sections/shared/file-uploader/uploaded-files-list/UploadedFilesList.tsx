@@ -1,9 +1,14 @@
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useDeepCompareEffect } from 'use-deep-compare'
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
-import { Button, DropdownButton, DropdownButtonItem, Table } from '@iqss/dataverse-design-system'
+import {
+  Button,
+  DropdownButton,
+  DropdownButtonItem,
+  Stack,
+  Table
+} from '@iqss/dataverse-design-system'
 import { PencilFill } from 'react-bootstrap-icons'
 import { RowSelectionCheckbox } from '@/sections/shared/form/row-selection-checkbox/RowSelectionCheckbox'
 import { useReplaceFile } from '../useReplaceFile'
@@ -28,8 +33,7 @@ export const UploadedFilesList = ({
   fileRepository,
   datasetPersistentId
 }: UploadedFilesListProps) => {
-  const { t } = useTranslation('replaceFile')
-  const navigate = useNavigate()
+  const { t } = useTranslation('shared')
 
   const {
     fileUploaderState: {
@@ -114,16 +118,12 @@ export const UploadedFilesList = ({
       (file) => !selectedFiles.includes(file.key)
     )
 
-    newFiles.forEach((file, index) => {
-      handleRemoveFileFromList(index, file.key)
-    })
-
-    // form.setValue('files', newFiles)
+    form.setValue('files', newFiles)
     setSelectedFiles([])
 
-    // selectedFiles.forEach((fileKey) => {
-    //   removeFileFromFileUploaderState(fileKey)
-    // })
+    selectedFiles.forEach((fileKey) => {
+      removeFile(fileKey)
+    })
   }
 
   return (
@@ -131,63 +131,67 @@ export const UploadedFilesList = ({
       <form
         onSubmit={form.handleSubmit(submitForm)}
         noValidate={true}
-        data-testid="files-uploaded-form">
-        <div className={styles.table_wrapper}>
-          <Table>
-            <thead>
-              <tr>
-                <th scope="col" colSpan={1}>
-                  <div>
-                    <RowSelectionCheckbox
-                      checked={allFilesSelected}
-                      indeterminate={someFilesSelected}
-                      onChange={handleToogleAllFiles}
-                      disabled={isSaving}
-                    />
-                  </div>
-                </th>
-                <th scope="col" colSpan={1}>
-                  {`${uploadedFiles.length} ${
-                    uploadedFiles.length > 1
-                      ? t('fileUploader.uploadedFilesList.uploadedFiles')
-                      : t('fileUploader.uploadedFilesList.uploadedFile')
-                  }`}
-                </th>
-                <th scope="col" colSpan={1}>
-                  <div className={styles.edit_dropdown}>
-                    <DropdownButton
-                      id="edit-selected-files-menu"
-                      icon={<PencilFill className={styles.edit_dropdown_icon} />}
-                      title="Edit"
-                      ariaLabel={t('fileUploader.uploadedFilesList.editSelectedFiles')}
-                      variant="secondary"
-                      disabled={selectedFiles.length === 0 || isSaving}>
-                      <DropdownButtonItem onClick={handleRemoveSelectedFilesFromList}>
-                        {t('fileUploader.uploadedFilesList.removeSelectedFiles')}
-                      </DropdownButtonItem>
-                    </DropdownButton>
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody className={styles.table_body}>
-              {uploadedFilesFieldsFormArray.map((file, index) => (
-                <UploadedFileRow
-                  file={file}
-                  isSelected={selectedFiles.includes(file.key)}
-                  handleSelectFile={handleSelectFile}
-                  handleRemoveFile={handleRemoveFileFromList}
-                  itemIndex={index}
-                  isSaving={isSaving}
-                  key={file.id}
-                />
-              ))}
-            </tbody>
-          </Table>
-        </div>
-        <Button type="submit" disabled={isSaving || anyFileUploading}>
-          Save Changes
-        </Button>
+        data-testid="uploaded-files-list-form">
+        <Stack>
+          <div className={styles.table_wrapper}>
+            <Table>
+              <thead>
+                <tr>
+                  <th scope="col" colSpan={1}>
+                    <div>
+                      <RowSelectionCheckbox
+                        checked={allFilesSelected}
+                        indeterminate={someFilesSelected}
+                        onChange={handleToogleAllFiles}
+                        disabled={isSaving}
+                      />
+                    </div>
+                  </th>
+                  <th scope="col" colSpan={1}>
+                    {`${uploadedFiles.length} ${
+                      uploadedFiles.length > 1
+                        ? t('fileUploader.uploadedFilesList.uploadedFiles')
+                        : t('fileUploader.uploadedFilesList.uploadedFile')
+                    }`}
+                  </th>
+                  <th scope="col" colSpan={1}>
+                    <div className={styles.edit_dropdown}>
+                      <DropdownButton
+                        id="edit-selected-files-menu"
+                        icon={<PencilFill className={styles.edit_dropdown_icon} />}
+                        title="Edit"
+                        ariaLabel={t('fileUploader.uploadedFilesList.editSelectedFiles')}
+                        variant="secondary"
+                        disabled={selectedFiles.length === 0 || isSaving}>
+                        <DropdownButtonItem onClick={handleRemoveSelectedFilesFromList}>
+                          {t('fileUploader.uploadedFilesList.removeSelectedFiles')}
+                        </DropdownButtonItem>
+                      </DropdownButton>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className={styles.table_body}>
+                {uploadedFilesFieldsFormArray.map((file, index) => (
+                  <UploadedFileRow
+                    file={file}
+                    isSelected={selectedFiles.includes(file.key)}
+                    handleSelectFile={handleSelectFile}
+                    handleRemoveFile={handleRemoveFileFromList}
+                    itemIndex={index}
+                    isSaving={isSaving}
+                    key={file.id}
+                  />
+                ))}
+              </tbody>
+            </Table>
+          </div>
+          <div className={styles.bottom_container}>
+            <Button type="submit" disabled={isSaving || anyFileUploading}>
+              Save Changes
+            </Button>
+          </div>
+        </Stack>
       </form>
     </FormProvider>
   )
