@@ -4,7 +4,6 @@ import { ExclamationTriangle, Plus, XLg } from 'react-bootstrap-icons'
 import { Trans, useTranslation } from 'react-i18next'
 import { Semaphore } from 'async-mutex'
 import { toast } from 'react-toastify'
-import { md5 } from 'js-md5'
 import cn from 'classnames'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import MimeTypeDisplay from '@/files/domain/models/FileTypeToFriendlyTypeMap'
@@ -36,7 +35,7 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
   } = useFileUploaderContext()
 
   const {
-    config: { operationType, originalFile },
+    config: { operationType, originalFile, checksumAlgorithm },
     uploadingToCancelMap,
     isSaving
   } = fileUploaderState
@@ -60,23 +59,16 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
     semaphore.release(1)
   }
 
-  const onFileUploadFinished = (file: File) => {
-    const hash = md5.create()
-    const reader = file.stream().getReader()
-    reader
-      .read()
-      .then(async function updateHash({ done, value }) {
-        if (done) {
-          updateFile(FileUploaderHelper.getFileKey(file), { checksumValue: hash.hex() })
-        } else {
-          hash.update(value)
-          await updateHash(await reader.read())
-        }
-      })
-      .finally(() => {
-        removeUploadingToCancel(FileUploaderHelper.getFileKey(file))
-        semaphore.release(1)
-      })
+  const onFileUploadFinished = async (file: File) => {
+    const fileKey = FileUploaderHelper.getFileKey(file)
+
+    try {
+      const checksumValue = await FileUploaderHelper.getChecksum(file, checksumAlgorithm)
+      updateFile(fileKey, { checksumValue })
+    } finally {
+      removeUploadingToCancel(fileKey)
+      semaphore.release(1)
+    }
   }
 
   const uploadOneFile = async (file: File) => {
@@ -125,7 +117,7 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
       file,
       () => {
         updateFile(fileKey, { status: FileUploadStatus.DONE })
-        onFileUploadFinished(file)
+        void onFileUploadFinished(file)
       },
       () => {
         updateFile(fileKey, { status: FileUploadStatus.FAILED })
