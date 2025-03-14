@@ -6,7 +6,6 @@ import { Alert, Table, Form, Button } from '@iqss/dataverse-design-system'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { useGetDatasetVersionsSummaries } from './useGetDatasetVersionsSummaries'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
-import { Dataset } from '@/dataset/domain/models/Dataset'
 import { DatasetVersionViewDifferenceButton } from './view-difference/DatasetVersionViewDifferenceButton'
 import { generateDatasetVersionSummaryDescription } from './generateSummaryDescription'
 import { DatasetViewDetailButton } from './DatasetViewDetailButton'
@@ -15,32 +14,32 @@ import { QueryParamKey, Route } from '@/sections/Route.enum'
 
 interface DatasetVersionsProps {
   datasetRepository: DatasetRepository
-  dataset: Dataset
+  datasetId: string
 }
-export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsProps) {
+export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersionsProps) {
   const navigate = useNavigate()
   const { t } = useTranslation('dataset')
   const [selectedVersions, setSelectedVersions] = useState<DatasetVersionSummaryInfo[]>([])
   const { datasetVersionSummaries, error, isLoading } = useGetDatasetVersionsSummaries({
     datasetRepository,
-    persistentId: dataset?.persistentId ?? ''
+    persistentId: datasetId
   })
 
-  const handleCheckboxChange = (dataset: DatasetVersionSummaryInfo) => {
+  const handleCheckboxChange = (datasetSummary: DatasetVersionSummaryInfo) => {
     setSelectedVersions((prevSelected) => {
-      if (prevSelected.some((item) => item.id === dataset.id)) {
-        return prevSelected.filter((item) => item.id !== dataset.id)
+      if (prevSelected.some((item) => item.id === datasetSummary.id)) {
+        return prevSelected.filter((item) => item.id !== datasetSummary.id)
       }
       if (prevSelected.length < 2) {
-        return [...prevSelected, dataset]
+        return [...prevSelected, datasetSummary]
       }
-      return [prevSelected[1], dataset]
+      return [prevSelected[1], datasetSummary]
     })
   }
 
   const navigateToVersion = (versionNumber: string) => {
     const searchParams = new URLSearchParams()
-    searchParams.set(QueryParamKey.PERSISTENT_ID, dataset.persistentId)
+    searchParams.set(QueryParamKey.PERSISTENT_ID, datasetId)
     searchParams.set(QueryParamKey.VERSION, versionNumber)
     navigate(`${Route.DATASETS}?${searchParams.toString()}`)
   }
@@ -57,7 +56,7 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
     <>
       <DatasetVersionViewDifferenceButton
         datasetRepository={datasetRepository}
-        persistentId={dataset.persistentId}
+        persistentId={datasetId}
         selectedVersions={selectedVersions}
       />
 
@@ -82,7 +81,7 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
                 return (
                   <tr key={dataset.id}>
                     <td>
-                      {/* TODO: If deaccession, disable the version  checkbox*/}
+                      {/* TODO: If deaccession, disable the version checkbox*/}
                       <Form.Group.Checkbox
                         label={''}
                         id={`dataset-${dataset.id}`}
@@ -111,7 +110,7 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
                             )}
                           </span>
                         ))}
-                        {dataset && typeof dataset.summary !== 'string' && previousDataset && (
+                        {previousDataset && (
                           <DatasetViewDetailButton
                             datasetRepository={datasetRepository}
                             oldVersionNumber={previousDataset.versionNumber}
@@ -135,12 +134,24 @@ export function DatasetVersions({ datasetRepository, dataset }: DatasetVersionsP
 }
 
 const DatasetVersionsLoadingSkeleton = () => {
+  const { t } = useTranslation('dataset')
+
   return (
-    <>
+    <div data-testid={`dataset-loading-skeleton`}>
       <Table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>{t('versions.datasetVersions')}</th>
+            <th>{t('versions.summary')}</th>
+            <th>{t('versions.versionNote')}</th>
+            <th>{t('versions.contributors')}</th>
+            <th>{t('versions.publishedOn')}</th>
+          </tr>
+        </thead>
         <tbody>
           {Array.from({ length: 3 }).map((_, index) => (
-            <tr key={index} data-testid={`dataset-version-skeleton-${index}`}>
+            <tr key={index}>
               <SkeletonTheme>
                 <td style={{ verticalAlign: 'middle' }}>
                   <Skeleton height="18px" width="18px" />
@@ -165,6 +176,6 @@ const DatasetVersionsLoadingSkeleton = () => {
           ))}
         </tbody>
       </Table>
-    </>
+    </div>
   )
 }

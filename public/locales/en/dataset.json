@@ -236,6 +236,8 @@
     "name": "Name",
     "type": "Type",
     "description": "Description",
-    "access": "Access"
-  }
+    "access": "Access",
+    "needTwoVersions": "Please select two versions to view the differences."
+  },
+  "getDatasetVersionDiffError": "Error Fetching Dataset Version Differences"
 }

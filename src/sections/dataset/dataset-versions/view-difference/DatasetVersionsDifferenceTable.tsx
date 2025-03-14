@@ -4,11 +4,13 @@ import { Table } from '@iqss/dataverse-design-system'
 import { DateHelper } from '@/shared/helpers/DateHelper'
 import styles from './DatasetVersionsDifferenceTable.module.scss'
 
-interface VersionDetailModalProps {
+interface atasetVersionsDifferenceTableProps {
   differences: DatasetVersionDiff
 }
 
-export const DatasetVersionsDifferenceTable = ({ differences }: VersionDetailModalProps) => {
+export const DatasetVersionsDifferenceTable = ({
+  differences
+}: atasetVersionsDifferenceTableProps) => {
   const { t } = useTranslation('dataset')
   const { oldVersion, newVersion, metadataChanges, filesAdded, filesRemoved } = differences
 

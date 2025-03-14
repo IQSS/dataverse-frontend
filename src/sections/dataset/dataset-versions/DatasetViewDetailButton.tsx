@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { Button } from '@iqss/dataverse-design-system'
-import { useSession } from '@/sections/session/SessionContext'
 import { useDataset } from '@/sections/dataset/DatasetContext'
 import { useState } from 'react'
 import { VersionDetailModal } from './view-difference/DatasetVersionsDetailModal'
@@ -18,7 +17,6 @@ export function DatasetViewDetailButton({
   datasetRepository
 }: DatasetViewDetailButtonProps) {
   const { t } = useTranslation('dataset')
-  const { user } = useSession()
   const { dataset } = useDataset()
 
   const [showModal, setShowModal] = useState(false)
@@ -29,21 +27,13 @@ export function DatasetViewDetailButton({
     newVersion: newVersionNumber
   })
 
-  if (!user || !dataset?.permissions.canUpdateDataset) {
-    return null
-  }
-
   const handleClick = () => {
     setShowModal(true)
   }
 
   return (
     <>
-      <Button
-        variant="link"
-        onClick={handleClick}
-        style={{ padding: 0 }}
-        disabled={dataset.checkIsLockedFromEdits(user.persistentId)}>
+      <Button variant="link" onClick={handleClick} style={{ padding: 0 }}>
         {t('View Detail')}
       </Button>
       {showModal && differences && (
@@ -52,8 +42,8 @@ export function DatasetViewDetailButton({
           handleClose={() => {
             setShowModal(false)
           }}
-          isLoading={false}
-          errorLoading={null}
+          isLoading={isLoading}
+          errorLoading={error}
           datasetVersionDifferences={differences}
         />
       )}

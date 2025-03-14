@@ -17,6 +17,10 @@ import { AlertProvider } from '../../../../src/sections/alerts/AlertProvider'
 import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import {
+  DatasetVersionSummaryInfo,
+  DatasetVersionSummaryStringValues
+} from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 
 const setAnonymizedView = () => {}
 const fileRepository: FileRepository = {} as FileRepository
@@ -55,6 +59,31 @@ const testFilesCountInfo = FilesCountInfoMother.create({
   ]
 })
 
+const versionSummaryInfo: DatasetVersionSummaryInfo[] = [
+  {
+    id: 8,
+    versionNumber: '2.0',
+    summary: {
+      files: {
+        added: 3,
+        removed: 1,
+        replaced: 0,
+        changedFileMetaData: 0,
+        changedVariableMetadata: 0
+      },
+      termsAccessChanged: false
+    },
+    contributors: 'Test ',
+    publishedOn: '2025-03-11'
+  },
+  {
+    id: 7,
+    versionNumber: '1.0',
+    summary: DatasetVersionSummaryStringValues.firstPublished,
+    contributors: 'Test ',
+    publishedOn: '2025-03-11'
+  }
+]
 describe('Dataset', () => {
   const mountWithDataset = (
     component: ReactNode,
@@ -348,5 +377,32 @@ describe('Dataset', () => {
     cy.findAllByText(testDataset.version.title).should('exist')
 
     cy.findByText(/The metadata for this dataset has been updated./).should('exist')
+  })
+
+  it('renders the Dataset Versions tab', () => {
+    const testDataset = DatasetMother.create()
+    datasetRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
+
+    mountWithDataset(
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+      />,
+      testDataset
+    )
+
+    cy.findAllByText(testDataset.version.title).should('exist')
+
+    const versionsTab = cy.findByRole('tab', { name: 'Versions' })
+    versionsTab.should('exist').click()
+
+    cy.findByRole('button', { name: 'View Differences' }).should('exist')
+    cy.findByText('Dataset Versions').should('exist')
+    cy.findByText('Summary').should('exist')
+    cy.findByText('Version Note').should('exist')
+    cy.findByText('Contributors').should('exist')
+    cy.findByText('Published On').should('exist')
   })
 })

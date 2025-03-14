@@ -38,6 +38,7 @@ export function DatasetVersionViewDifferenceButton({
     oldVersion: oldVersionNumber,
     newVersion: newVersionNumber
   })
+  console.log('differences', error)
 
   const handleClick = () => {
     setShowModal(true)
@@ -58,8 +59,8 @@ export function DatasetVersionViewDifferenceButton({
         <VersionDetailModal
           show={!!showModal}
           handleClose={() => setShowModal(false)}
-          isLoading={false}
-          errorLoading={null}
+          isLoading={isLoading}
+          errorHandling={error}
           datasetVersionDifferences={selectedVersions.length < 2 ? undefined : differences}
         />
       )}
