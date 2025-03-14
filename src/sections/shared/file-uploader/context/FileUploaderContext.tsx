@@ -41,7 +41,6 @@ export const FileUploaderProvider = ({ children, initialConfig }: FileUploaderPr
     files: {},
     uploadingToCancelMap: new Map(),
     isSaving: false,
-    isRemovingFiles: false,
     replaceOperationInfo: { success: false, newFileIdentifier: null },
     addFilesToDatasetOperationInfo: { success: false }
   })

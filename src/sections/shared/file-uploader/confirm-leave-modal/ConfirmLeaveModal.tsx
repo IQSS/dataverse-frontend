@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useBlocker } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Button, Modal, Spinner, Stack } from '@iqss/dataverse-design-system'
+import { Button, Modal, Stack } from '@iqss/dataverse-design-system'
 import { ExclamationTriangle } from 'react-bootstrap-icons'
 import { useFileUploaderContext } from '../context/FileUploaderContext'
 import styles from './ConfirmLeaveModal.module.scss'
@@ -55,24 +55,12 @@ export const ConfirmLeaveModal = () => {
         </Stack>
       </Modal.Body>
       <Modal.Footer>
-        <Button
-          variant="secondary"
-          onClick={handleCancelLeavePage}
-          type="button"
-          // disabled={fileUploaderState.isRemovingFiles}
-        >
+        <Button variant="secondary" onClick={handleCancelLeavePage} type="button">
           {t('fileUploader.confirmLeaveModal.stay')}
         </Button>
-        <Button
-          onClick={handleConfirmLeavePage}
-          type="button"
-          // disabled={fileUploaderState.isRemovingFiles}
-        >
+        <Button onClick={handleConfirmLeavePage} type="button">
           <Stack direction="horizontal" gap={1}>
             {t('fileUploader.confirmLeaveModal.leave')}
-            {/* {fileUploaderState.isRemovingFiles && (
-              <Spinner variant="light" animation="border" size="sm" />
-            )} */}
           </Stack>
         </Button>
       </Modal.Footer>

@@ -21,7 +21,6 @@ interface ReplaceFileProps {
 // TODO:ME - Add restrict file link from dataset files page ( integrate cheng branch)
 // TODO - We need something to tell the user which files have the same contents as other files already in the dataset.
 // TODO:ME - UseEffect in FileUploader with return clean function that cancels all uploads in progress
-// TODO:ME - isRemovingFiles should block navigation away? is needed?
 
 export const ReplaceFile = ({
   fileRepository,

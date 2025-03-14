@@ -9,7 +9,6 @@ export interface FileUploaderState {
   files: FileUploadInputState
   uploadingToCancelMap: Map<string, () => void>
   isSaving: boolean
-  isRemovingFiles: boolean
   replaceOperationInfo: ReplaceOperationInfo
   addFilesToDatasetOperationInfo: AddFilesToDatasetOperationInfo
 }
