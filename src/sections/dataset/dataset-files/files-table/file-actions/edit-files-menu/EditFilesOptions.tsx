@@ -6,8 +6,8 @@ import { FileSelection } from '../../row-selection/useFileSelection'
 import { NoSelectedFilesModal } from '../no-selected-files-modal/NoSelectedFilesModal'
 import { useNotImplementedModal } from '../../../../../not-implemented/NotImplementedModalContext'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
-import { RestrictFileButton } from '@/sections/file/file-action-buttons/edit-file-menu/restrict-file-button/RestrictFileButton'
-import { DeleteFileButton } from '@/sections/file/file-action-buttons/edit-file-menu/delete-file-button/DeleteFileButton'
+import { DatasetRestrictFileButton } from '@/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/DatasetRestrictFileButton'
+import { DatasetDeleteFileButton } from '@/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/DatasetDeleteFileButton'
 
 type EditFilesOptionsProps =
   | {
@@ -51,16 +51,14 @@ export function EditFilesOptions({
   if (!isHeader) {
     return (
       <>
-        <RestrictFileButton
-          key={file.id}
+        <DatasetRestrictFileButton
           fileId={file.id}
           isRestricted={file.access.restricted}
           fileRepository={fileRepository}
           datasetInfo={datasetInfo}
         />
 
-        <DeleteFileButton
-          key={file.id}
+        <DatasetDeleteFileButton
           fileId={file.id}
           fileRepository={fileRepository}
           datasetInfo={datasetInfo}

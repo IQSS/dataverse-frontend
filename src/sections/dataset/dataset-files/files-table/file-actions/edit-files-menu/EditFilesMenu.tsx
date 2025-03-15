@@ -1,7 +1,6 @@
 import { DropdownButton } from '@iqss/dataverse-design-system'
 import { PencilFill } from 'react-bootstrap-icons'
 import { useSession } from '../../../../../session/SessionContext'
-import styles from './EditFilesMenu.module.scss'
 import { EditFilesOptions } from './EditFilesOptions'
 import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
@@ -9,6 +8,7 @@ import { useDataset } from '../../../../DatasetContext'
 import { FileSelection } from '../../row-selection/useFileSelection'
 import { useMediaQuery } from '../../../../../../shared/hooks/useMediaQuery'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import styles from './EditFilesMenu.module.scss'
 
 interface EditFilesMenuProps {
   files: FilePreview[]
