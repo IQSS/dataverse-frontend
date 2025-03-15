@@ -31,14 +31,12 @@ export function DatasetVersionViewDifferenceButton({
       : selectedVersions[1]?.versionNumber
 
   const [showModal, setShowModal] = useState(false)
-  // TODO handle isLoading and error
   const { differences, error, isLoading } = useGetDatasetVersionDiff({
     datasetRepository,
     persistentId: persistentId,
     oldVersion: oldVersionNumber,
     newVersion: newVersionNumber
   })
-  console.log('differences', error)
 
   const handleClick = () => {
     setShowModal(true)

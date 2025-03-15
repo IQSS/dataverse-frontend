@@ -5,6 +5,7 @@ import {
 } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { generateDatasetVersionSummaryDescription } from '@/sections/dataset/dataset-versions/generateSummaryDescription'
+import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
 
 const datasetsRepository: DatasetRepository = {} as DatasetRepository
 
@@ -105,12 +106,87 @@ const versionSummaryInfo: DatasetVersionSummaryInfo[] = [
     publishedOn: '2025-03-11'
   }
 ]
+
+const datasetVersionDiff: DatasetVersionDiff | undefined = {
+  oldVersion: {
+    versionNumber: '1.0',
+    lastUpdatedDate: '2025-03-11T16:22:00Z'
+  },
+  newVersion: {
+    versionNumber: 'DRAFT',
+    lastUpdatedDate: '2025-03-13T14:09:03Z'
+  },
+
+  metadataChanges: [
+    {
+      blockName: 'Citation Metadata',
+      changed: [
+        {
+          fieldName: 'Title',
+          oldValue: 'testdateset',
+          newValue: 'testdsaddsf'
+        },
+        {
+          fieldName: 'Subtitle',
+          oldValue: '',
+          newValue: 'affd'
+        },
+        {
+          fieldName: 'Description',
+          oldValue: 'd',
+          newValue: 'dadadf'
+        },
+        {
+          fieldName: 'Related Publication',
+          oldValue: '',
+          newValue: 'af'
+        }
+      ]
+    }
+  ],
+  filesRemoved: [
+    {
+      fileName: 'blob (2)',
+      MD5: '53d3d10e00812f7c55e0c9c3935f3769',
+      type: 'application/octet-stream',
+      fileId: 40,
+      description: '',
+      isRestricted: false,
+      filePath: '',
+      tags: [],
+      categories: []
+    },
+    {
+      fileName: 'blob',
+      MD5: '53d3d10e00812f7c55e0c9c3935f3769',
+      type: 'application/octet-stream',
+      fileId: 41,
+      description: '',
+      isRestricted: false,
+      filePath: '',
+      tags: [],
+      categories: []
+    },
+    {
+      fileName: 'blob (1)',
+      MD5: '53d3d10e00812f7c55e0c9c3935f3769',
+      type: 'application/octet-stream',
+      fileId: 42,
+      description: '',
+      isRestricted: false,
+      filePath: '',
+      tags: [],
+      categories: []
+    }
+  ]
+}
 describe('DatasetVersions', () => {
   beforeEach(() => {
     cy.customMount(
       <DatasetVersions datasetId={'datasetId'} datasetRepository={datasetsRepository} />
     )
     datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
+    datasetsRepository.getVersionDiff = cy.stub().resolves(datasetVersionDiff)
   })
 
   it('should render the dataset versions table with correct data', () => {
@@ -157,6 +233,16 @@ describe('DatasetVersions', () => {
 
   it('should render view differences button, close modal if cancel', () => {
     cy.customMount(<DatasetVersions datasetId={''} datasetRepository={datasetsRepository} />)
+    cy.findByRole('button', { name: 'View Differences' }).should('exist').click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByRole('button', { name: /Cancel/i }).click()
+    cy.findByRole('dialog').should('not.exist')
+  })
+
+  it('should render view differences button, close modal if cancel', () => {
+    cy.customMount(<DatasetVersions datasetId={''} datasetRepository={datasetsRepository} />)
+    cy.get('input[type="checkbox"]').first().check()
+    cy.get('input[type="checkbox"]').last().check()
     cy.findByRole('button', { name: 'View Differences' }).should('exist').click()
     cy.findByRole('dialog').should('exist')
     cy.findByRole('button', { name: /Cancel/i }).click()

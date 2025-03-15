@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { ReadError } from '@iqss/dataverse-client-javascript'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { getDatasetVersionDiff } from '@/dataset/domain/useCases/getDatasetVersionDiff'
 import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
-import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 
 interface UseGetDatasetVersionDiff {
   differences: DatasetVersionDiff | undefined
@@ -25,7 +23,6 @@ export const useGetDatasetVersionDiff = ({
   oldVersion,
   newVersion
 }: getDatasetVersionDiffProps): UseGetDatasetVersionDiff => {
-  const { t } = useTranslation('dataset')
   const [differences, setDifferences] = useState<DatasetVersionDiff>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
@@ -42,24 +39,22 @@ export const useGetDatasetVersionDiff = ({
         )
         setDifferences(response)
       } catch (err: ReadError | unknown) {
-        if (err instanceof ReadError) {
-          const error = new JSDataverseWriteErrorHandler(err)
-          const formattedError =
-            error.getReasonWithoutStatusCode() ?? /* istanbul ignore next */ error.getErrorMessage()
-          setError(formattedError)
-        }
+        const errorMessage =
+          err instanceof Error && err.message
+            ? err.message
+            : 'Something went wrong getting the information from the dataset version differences. Try again later.'
+        setError(errorMessage)
       } finally {
         setIsLoading(false)
       }
     }
 
-    console.log('handleGetDatasetVersionDiff', error)
     void handleGetDatasetVersionDiff()
-  }, [newVersion, oldVersion])
+  }, [newVersion, oldVersion, persistentId, datasetRepository])
 
   return {
     differences,
-    error,
-    isLoading
+    error: error,
+    isLoading: isLoading
   }
 }

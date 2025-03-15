@@ -26,18 +26,20 @@ export const VersionDetailModal = ({
 
   if (isLoading || errorHandling) {
     return (
-      <Modal show={show} onHide={isLoading ? () => {} : handleClose} centered size="xl">
+      <Modal show={show} onHide={handleClose} centered size="xl">
         <Modal.Header>
           <Modal.Title>{t('versions.viewDifferencesDetail')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {isLoading && <Spinner variant="light" animation="border" size="sm" />}
-          {errorHandling && (
-            <>
-              <ExclamationCircleFill />
-              <span>{errorHandling}</span>
-            </>
-          )}
+          <div className={`${styles.message} ${styles.error}`}>
+            {isLoading && <Spinner data-testid={`loading-spinner`} variant="info" />}
+            {errorHandling && (
+              <>
+                <ExclamationCircleFill />
+                <span>{errorHandling}</span>
+              </>
+            )}
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose} type="button" disabled={isLoading}>

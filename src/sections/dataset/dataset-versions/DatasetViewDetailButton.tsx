@@ -43,7 +43,7 @@ export function DatasetViewDetailButton({
             setShowModal(false)
           }}
           isLoading={isLoading}
-          errorLoading={error}
+          errorHandling={error}
           datasetVersionDifferences={differences}
         />
       )}

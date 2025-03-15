@@ -108,6 +108,7 @@ describe('DatasetVersions', () => {
         datasetVersionDifferences={datasetVersionDiff}
       />
     )
+
     cy.get('span').should('exist')
     cy.get('table').should('not.exist')
   })
@@ -122,8 +123,23 @@ describe('DatasetVersions', () => {
         datasetVersionDifferences={datasetVersionDiff}
       />
     )
-    cy.get('span').should('exist')
+
     cy.findByText('Error message').should('exist')
     cy.get('table').should('not.exist')
+  })
+
+  it('should render a modal with loading spinner', () => {
+    cy.customMount(
+      <VersionDetailModal
+        show={true}
+        handleClose={() => {}}
+        isLoading={true}
+        errorHandling={''}
+        datasetVersionDifferences={datasetVersionDiff}
+      />
+    )
+
+    cy.get('table').should('not.exist')
+    cy.findByRole('button', { name: 'Cancel' }).should('be.disabled')
   })
 })
