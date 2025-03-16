@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Controller, FieldValues, UseControllerProps, useFormContext } from 'react-hook-form'
 import { Col, Form, Row } from '@iqss/dataverse-design-system'
 import { FilesListFormData } from '../UploadedFilesList'
-import { UploadedFilesListHelper } from '../UploadedFilesListHelper'
+import { FileUploaderHelper } from '../../FileUploaderHelper'
 
 interface FilePathFieldProps {
   itemIndex: number
@@ -16,12 +16,12 @@ export const FilePathField = ({ itemIndex }: FilePathFieldProps) => {
     validate: (value, formValues) => {
       const currentFile = formValues.files[itemIndex]
 
-      if (!UploadedFilesListHelper.isValidFilePath(value as string)) {
+      if (!FileUploaderHelper.isValidFilePath(value as string)) {
         return t('fileUploader.uploadedFilesList.fields.filePath.invalid.characters')
       }
 
       if (
-        !UploadedFilesListHelper.isUniqueCombinationOfFilepathAndFilename({
+        !FileUploaderHelper.isUniqueCombinationOfFilepathAndFilename({
           fileName: currentFile.fileName,
           filePath: value as string,
           fileKey: currentFile.key,

@@ -1,19 +1,48 @@
-import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
 import { md5 } from 'js-md5'
+import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
+import { UploadedFile } from './context/fileUploaderReducer'
 
 export class FileUploaderHelper {
   public static getFileKey = (file: File): string => file.webkitRelativePath || file.name
 
   public static isDS_StoreFile = (file: File): boolean => file.name === '.DS_Store'
 
-  public static sanitizeFileName(fileName: string) {
-    // Replace all invalid characters with underscore
-    return fileName.replace(/[:<>;#/"*|?\\]/g, '_')
+  public static isUniqueCombinationOfFilepathAndFilename({
+    fileName,
+    filePath,
+    fileKey,
+    allFiles
+  }: {
+    fileName: string
+    filePath: string
+    fileKey: string
+    allFiles: UploadedFile[]
+  }): boolean {
+    return !allFiles
+      .filter((f) => f.key !== fileKey)
+      .some((file) => `${file.fileDir}/${file.fileName}` === `${filePath}/${fileName}`)
+  }
+
+  public static isValidFilePath(filePath: string): boolean {
+    const FILE_PATH_REGEX = /^[\w.\-\\/ ]*$/
+
+    return FILE_PATH_REGEX.test(filePath)
+  }
+
+  public static isValidFileName(fileName: string): boolean {
+    const FILE_NAME_REGEX = /^[^:<>;#/"*|?\\]+$/
+
+    return FILE_NAME_REGEX.test(fileName)
   }
 
   public static sanitizeFilePath(filePath: string) {
     // Replace all invalid characters with underscore
     return filePath.replace(/[^\w.\-\\/ ]/g, '_')
+  }
+
+  public static sanitizeFileName(fileName: string) {
+    // Replace all invalid characters with underscore
+    return fileName.replace(/[:<>;#/"*|?\\]/g, '_')
   }
 
   public static async getChecksum(blob: Blob, algorithm: FixityAlgorithm): Promise<string> {
