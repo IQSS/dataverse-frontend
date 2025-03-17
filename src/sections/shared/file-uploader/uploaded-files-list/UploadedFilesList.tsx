@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { KeyboardEvent, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useDeepCompareEffect } from 'use-deep-compare'
@@ -132,10 +132,25 @@ export const UploadedFilesList = ({
 
   const handleCancel = () => navigate(-1)
 
+  const handleKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
+    if (e.key !== 'Enter') return
+
+    const isButton = e.target instanceof HTMLButtonElement
+    const isButtonTypeSubmit = isButton ? (e.target as HTMLButtonElement).type === 'submit' : false
+    const isTextarea = e.target instanceof HTMLTextAreaElement
+
+    if (isButtonTypeSubmit || isTextarea) {
+      return
+    }
+
+    e.preventDefault()
+  }
+
   return (
     <FormProvider {...form}>
       <form
         onSubmit={form.handleSubmit(submitForm)}
+        onKeyDown={handleKeyDown}
         noValidate={true}
         data-testid="uploaded-files-list-form">
         <Stack>

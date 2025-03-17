@@ -1,7 +1,8 @@
+import { useMemo } from 'react'
 import { useDeepCompareEffect } from 'use-deep-compare'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useBlocker, useNavigate } from 'react-router-dom'
 import { Stack } from '@iqss/dataverse-design-system'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
@@ -21,9 +22,41 @@ const FileUploaderPanel = ({ fileRepository, datasetPersistentId }: FileUploader
   const navigate = useNavigate()
 
   const {
-    fileUploaderState: { replaceOperationInfo, addFilesToDatasetOperationInfo },
+    fileUploaderState: {
+      files,
+      isSaving,
+      uploadingToCancelMap,
+      replaceOperationInfo,
+      addFilesToDatasetOperationInfo
+    },
     uploadedFiles
   } = useFileUploaderContext()
+
+  const shouldBlockAwayNavigation = useMemo(() => {
+    return Object.keys(files).length > 0 || isSaving || uploadingToCancelMap.size > 0
+  }, [files, isSaving, uploadingToCancelMap.size])
+
+  const navigationBlocker = useBlocker(shouldBlockAwayNavigation)
+
+  const handleConfirmLeavePage = () => {
+    if (navigationBlocker.state === 'blocked') {
+      // TODO - Remove the files from the S3 bucket we need an API endpoint for this.
+
+      // Cancel all the uploading files if there are any
+      if (uploadingToCancelMap.size > 0) {
+        uploadingToCancelMap.forEach((cancel) => {
+          cancel()
+        })
+      }
+      navigationBlocker.proceed()
+    }
+  }
+
+  const handleCancelLeavePage = () => {
+    if (navigationBlocker.state === 'blocked') {
+      navigationBlocker.reset()
+    }
+  }
 
   useDeepCompareEffect(() => {
     // Listens to the replace operation info result and navigates to the new file page if the operation was successful
@@ -54,7 +87,11 @@ const FileUploaderPanel = ({ fileRepository, datasetPersistentId }: FileUploader
         />
       )}
 
-      <ConfirmLeaveModal />
+      <ConfirmLeaveModal
+        show={navigationBlocker.state === 'blocked'}
+        onStay={handleCancelLeavePage}
+        onLeave={handleConfirmLeavePage}
+      />
     </Stack>
   )
 }

@@ -6,7 +6,7 @@ export const LoadingConfigSpinner = () => {
   const { t } = useTranslation('shared', { keyPrefix: 'fileUploader' })
 
   return (
-    <div className={styles.loading_config}>
+    <div className={styles.loading_config} data-testid="loading-config-spinner">
       <Spinner animation="border" variant="primary" />
       <span>
         {t('loadingConfiguration')}{' '}
