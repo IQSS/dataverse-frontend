@@ -18,7 +18,9 @@ interface ReplaceFileProps {
   datasetVersionFromParams: string
 }
 
-// TODO:ME - Add restrict file link from dataset files page ( integrate cheng branch)
+// TODO:ME - Add storybook stories
+// TODO:ME - Add component/unit tests
+// TODO:ME - Add integration tests
 // TODO - We need something to tell the user which files have the same contents as other files already in the dataset.
 
 export const ReplaceFile = ({

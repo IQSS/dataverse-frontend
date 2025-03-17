@@ -10,7 +10,7 @@ import {
   AddFilesToDatasetOperationInfo
 } from './fileUploaderReducer'
 
-interface FileUploaderContextValue {
+export interface FileUploaderContextValue {
   fileUploaderState: FileUploaderState
   uploadedFiles: UploadedFile[]
   addFile: (file: File) => void
@@ -28,7 +28,7 @@ interface FileUploaderContextValue {
   ) => void
 }
 
-const FileUploaderContext = createContext<FileUploaderContextValue | undefined>(undefined)
+export const FileUploaderContext = createContext<FileUploaderContextValue | undefined>(undefined)
 
 interface FileUploaderProviderProps {
   children: ReactNode

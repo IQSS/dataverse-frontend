@@ -7,6 +7,7 @@ import {
   Button,
   DropdownButton,
   DropdownButtonItem,
+  Spinner,
   Stack,
   Table
 } from '@iqss/dataverse-design-system'
@@ -201,7 +202,10 @@ export const UploadedFilesList = ({
                         {t('cancel')}
                       </Button>
                       <Button type="submit" disabled={isSaving || anyFileUploading}>
-                        {t('saveChanges')}
+                        <Stack direction="horizontal" gap={1}>
+                          {t('saveChanges')}
+                          {isSaving && <Spinner variant="light" animation="border" size="sm" />}
+                        </Stack>
                       </Button>
                     </div>
                   </td>
