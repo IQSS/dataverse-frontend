@@ -336,7 +336,7 @@ const FileUploadInput = ({ fileRepository, datasetPersistentId }: FileUploadInpu
                               variant="secondary"
                               size="sm"
                               onClick={() => cancelUpload(file.key, file.fileName)}>
-                              <XLg />
+                              <XLg title={t('fileUploader.cancelUpload')} />
                             </Button>
                           </li>
                         )

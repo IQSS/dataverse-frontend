@@ -160,6 +160,7 @@
     "selectFileMultiple": "Select files to add",
     "dragDropSingle": "Drag and drop file here.",
     "dragDropMultiple": "Drag and drop files and/or directories here.",
+    "cancelUpload": "Cancel upload",
     "uploadFailed": "There was an error uploading this file.",
     "loadingConfiguration": "Loading configuration",
     "replaceFileMultipleError": "You can only drop one file to replace.",
