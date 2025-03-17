@@ -16,7 +16,7 @@ interface FileInfoProps {
 }
 
 export const FileInfo = memo(({ file }: FileInfoProps) => (
-  <div className={styles.file_info}>
+  <div className={styles.file_info} data-testid="original-file-info">
     <div className={styles.thumbnail_container}>
       <FileThumbnail
         name={file.name}

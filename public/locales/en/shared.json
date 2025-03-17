@@ -165,7 +165,7 @@
     "loadingConfiguration": "Loading configuration",
     "replaceFileMultipleError": "You can only drop one file to replace.",
     "replaceFileAlreadyOneFileError": "You already have a file to replace. Please remove it first.",
-    "fileReplacedSuccessfully": "The file has been replaced.",
+    "fileReplacedSuccessfully": "The file has been replaced successfully.",
     "defaultFileReplaceError": "Something went wrong replacing the file. Try again later.",
     "defaultAddUploadedFilesToDatasetError": "Something went wrong adding the uploaded files to the dataset. Try again later.",
     "filesAddedToDatasetSuccessfully": "Files added to dataset successfully.",

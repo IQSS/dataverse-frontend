@@ -1,3 +1,4 @@
+import { WriteError } from '@iqss/dataverse-client-javascript'
 import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
 import { DatasetMother, DatasetVersionMother } from '../../dataset/domain/models/DatasetMother'
 import { FileRepository } from '../../../../src/files/domain/repositories/FileRepository'
@@ -281,6 +282,58 @@ describe('UploadDatasetFiles', () => {
 
     // Check toast
     cy.findByText('Files added to dataset successfully.')
+  })
+
+  it('shows unknown error message in toast when adding files fails', () => {
+    const testDataset = DatasetMother.create()
+    const fileMockRepository = new FileMockRepository()
+    fileMockRepository.addUploadedFiles = cy.stub().rejects()
+
+    mountWithDataset(<UploadDatasetFiles fileRepository={fileMockRepository} />, testDataset)
+
+    cy.findByTestId('file-uploader-drop-zone').as('dnd')
+    cy.get('@dnd').should('exist')
+
+    cy.get('@dnd').selectFile(
+      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+      { action: 'drag-drop' }
+    )
+    cy.findByText('users1.json').should('exist')
+
+    // wait for upload to finish
+    cy.findByTitle('Cancel upload').should('not.exist')
+
+    cy.findByText('Save Changes').click()
+
+    // Check toast
+    cy.findByText('Something went wrong adding the uploaded files to the dataset. Try again later.')
+  })
+
+  it('shows js-dv write error specific message in toast when adding file fails', () => {
+    const testDataset = DatasetMother.create()
+    const fileMockRepository = new FileMockRepository()
+    fileMockRepository.addUploadedFiles = cy
+      .stub()
+      .rejects(new WriteError('Adding files failed because of A, B, C.'))
+
+    mountWithDataset(<UploadDatasetFiles fileRepository={fileMockRepository} />, testDataset)
+
+    cy.findByTestId('file-uploader-drop-zone').as('dnd')
+    cy.get('@dnd').should('exist')
+
+    cy.get('@dnd').selectFile(
+      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+      { action: 'drag-drop' }
+    )
+    cy.findByText('users1.json').should('exist')
+
+    // wait for upload to finish
+    cy.findByTitle('Cancel upload').should('not.exist')
+
+    cy.findByText('Save Changes').click()
+
+    // Check toast
+    cy.findByText('Adding files failed because of A, B, C.')
   })
 
   it('cancels saving uploaded files', () => {

@@ -50,7 +50,7 @@ export const useAddUploadedFilesToDataset = (
 
         toast.error(formattedError)
       } else {
-        toast.error(t('defaultAddUploadedFilesToDatasetError'))
+        toast.error(t('fileUploader.defaultAddUploadedFilesToDatasetError'))
       }
     } finally {
       setIsSaving(false)
