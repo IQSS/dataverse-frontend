@@ -188,12 +188,18 @@ describe('DatasetVersions', () => {
 
   it('should render view differences button, open a modal if click', () => {
     cy.customMount(<DatasetVersions datasetId={''} datasetRepository={datasetsRepository} />)
+
+    cy.findAllByTestId('select-checkbox').first().should('exist').check().should('be.checked')
+    cy.findAllByTestId('select-checkbox').last().should('exist').check().should('be.checked')
     cy.findByRole('button', { name: 'View Differences' }).should('exist').click()
     cy.findByRole('dialog').should('exist')
   })
 
   it('should render view differences button, close modal if cancel', () => {
     cy.customMount(<DatasetVersions datasetId={''} datasetRepository={datasetsRepository} />)
+
+    cy.findAllByTestId('select-checkbox').first().should('exist').check().should('be.checked')
+    cy.findAllByTestId('select-checkbox').last().should('exist').check().should('be.checked')
     cy.findByRole('button', { name: 'View Differences' }).should('exist').click()
     cy.findByRole('dialog').should('exist')
     cy.findByRole('button', { name: /Cancel/i }).click()

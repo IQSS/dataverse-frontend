@@ -394,11 +394,8 @@ describe('Dataset', () => {
     )
 
     cy.findAllByText(testDataset.version.title).should('exist')
-
     const versionsTab = cy.findByRole('tab', { name: 'Versions' })
     versionsTab.should('exist').click()
-
-    cy.findByRole('button', { name: 'View Differences' }).should('exist')
     cy.findByText('Dataset Versions').should('exist')
     cy.findByText('Summary').should('exist')
     cy.findByText('Version Note').should('exist')

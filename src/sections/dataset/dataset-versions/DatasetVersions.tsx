@@ -70,7 +70,7 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
         <Table>
           <thead>
             <tr>
-              {!showViewDifferenceButton && <th></th>}
+              {!showViewDifferenceButton && <th>{t('versions.select')}</th>}
               <th>{t('versions.datasetVersions')}</th>
               <th>{t('versions.summary')}</th>
               <th>{t('versions.versionNote')}</th>
@@ -146,7 +146,7 @@ export const DatasetVersionsLoadingSkeleton = () => {
       <Table>
         <thead>
           <tr>
-            <th></th>
+            <th>{t('versions.select')}</th>
             <th>{t('versions.datasetVersions')}</th>
             <th>{t('versions.summary')}</th>
             <th>{t('versions.versionNote')}</th>
