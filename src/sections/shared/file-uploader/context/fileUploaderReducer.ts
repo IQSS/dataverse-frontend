@@ -69,7 +69,6 @@ type Action =
   | { type: 'UPDATE_FILE'; key: string; updates: Partial<FileUploadState> }
   | { type: 'REMOVE_FILE'; key: string }
   | { type: 'REMOVE_ALL_FILES' }
-  | { type: 'SET_CONFIG'; config: FileUploaderGlobalConfig }
   | { type: 'SET_IS_SAVING'; isSaving: boolean }
   | { type: 'SET_REPLACE_OPERATION_INFO'; replaceOperationInfo: ReplaceOperationInfo }
   | {
@@ -84,10 +83,6 @@ export const fileUploaderReducer = (
   action: Action
 ): FileUploaderState => {
   switch (action.type) {
-    case 'SET_CONFIG': {
-      return { ...state, config: action.config }
-    }
-
     case 'ADD_FILE': {
       const { file } = action
       const fileKey = FileUploaderHelper.getFileKey(file)

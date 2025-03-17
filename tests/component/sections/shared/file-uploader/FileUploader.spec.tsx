@@ -81,97 +81,6 @@ describe('FileUploader', () => {
       cy.findByText('Select file to add').should('be.disabled')
     })
 
-    describe('Different File Type confirmation dialog', () => {
-      it('shows the Different File Type warning when trying to upload a file with different type', () => {
-        cy.customMount(
-          <FileUploader
-            fileRepository={fileMockRepository}
-            datasetPersistentId=":latest"
-            storageType="S3"
-            operationType={OperationType.REPLACE_FILE}
-            originalFile={fileMock}
-          />
-        )
-
-        cy.findByTestId('file-uploader-drop-zone').as('dnd')
-        cy.get('@dnd').should('exist')
-
-        cy.get('@dnd').selectFile(
-          { fileName: 'users1.txt', contents: [{ name: 'John Doe the 1st' }] },
-          { action: 'drag-drop', force: true }
-        )
-
-        cy.findByText('File Type Different').should('exist').should('be.visible')
-        cy.findByText(
-          /The original file \(JSON\) and replacement file \(Plain Text\) are different file types\. Would you like to continue?/
-        )
-      })
-
-      it('cancels the upload when the user clicks on the cancel button', () => {
-        cy.customMount(
-          <FileUploader
-            fileRepository={fileMockRepository}
-            datasetPersistentId=":latest"
-            storageType="S3"
-            operationType={OperationType.REPLACE_FILE}
-            originalFile={fileMock}
-          />
-        )
-
-        cy.findByTestId('file-uploader-drop-zone').as('dnd')
-        cy.get('@dnd').should('exist')
-
-        cy.get('@dnd').selectFile(
-          { fileName: 'users1.txt', contents: [{ name: 'John Doe the 1st' }] },
-          { action: 'drag-drop', force: true }
-        )
-
-        cy.findByText('File Type Different').should('exist').should('be.visible')
-        cy.findByText(
-          /The original file \(JSON\) and replacement file \(Plain Text\) are different file types\. Would you like to continue?/
-        )
-
-        cy.get('.swal2-actions').within(() => {
-          cy.findAllByText(/Cancel/)
-            .first()
-            .click()
-        })
-
-        cy.findByText('users1.txt').should('not.exist')
-      })
-
-      it('continues the upload when the user clicks on the continue button', () => {
-        cy.customMount(
-          <FileUploader
-            fileRepository={fileMockRepository}
-            datasetPersistentId=":latest"
-            storageType="S3"
-            operationType={OperationType.REPLACE_FILE}
-            originalFile={fileMock}
-          />
-        )
-
-        cy.findByTestId('file-uploader-drop-zone').as('dnd')
-        cy.get('@dnd').should('exist')
-
-        cy.get('@dnd').selectFile(
-          { fileName: 'users1.txt', contents: [{ name: 'John Doe the 1st' }] },
-          { action: 'drag-drop', force: true }
-        )
-
-        cy.findByText('File Type Different').should('exist').should('be.visible')
-        cy.findByText(
-          /The original file \(JSON\) and replacement file \(Plain Text\) are different file types\. Would you like to continue?/
-        )
-
-        cy.get('.swal2-actions').within(() => {
-          cy.findAllByText(/Continue/).click()
-        })
-
-        cy.findByText('users1.txt').should('exist')
-      })
-    })
-
     it('shows unknown error message in toast when replacing file fails', () => {
       fileMockRepository.replace = cy.stub().rejects()
 
@@ -302,6 +211,127 @@ describe('FileUploader', () => {
 
       cy.findByText('.DS_Store').should('not.exist')
       cy.findByText('File upload skipped: .DS_Store files are not allowed.').should('exist')
+    })
+
+    it('does not allow to upload a new file is there is already one and shows toast message', () => {
+      cy.customMount(
+        <FileUploader
+          fileRepository={fileMockRepository}
+          datasetPersistentId=":latest"
+          storageType="S3"
+          operationType={OperationType.REPLACE_FILE}
+          originalFile={fileMock}
+        />
+      )
+
+      cy.findByTestId('file-uploader-drop-zone').as('dnd')
+      cy.get('@dnd').should('exist')
+
+      cy.get('@dnd').selectFile(
+        { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+        { action: 'drag-drop' }
+      )
+
+      cy.findByText('users1.json').should('exist')
+
+      cy.get('@dnd').selectFile(
+        { fileName: 'users2.json', contents: [{ name: 'John Doe the 2nd' }] },
+        { action: 'drag-drop' }
+      )
+
+      cy.findByText('users2.json').should('not.exist')
+      cy.findByText('You already have a file to replace. Please remove it first.').should('exist')
+    })
+
+    describe('Different File Type confirmation dialog', () => {
+      it('shows the Different File Type warning when trying to upload a file with different type', () => {
+        cy.customMount(
+          <FileUploader
+            fileRepository={fileMockRepository}
+            datasetPersistentId=":latest"
+            storageType="S3"
+            operationType={OperationType.REPLACE_FILE}
+            originalFile={fileMock}
+          />
+        )
+
+        cy.findByTestId('file-uploader-drop-zone').as('dnd')
+        cy.get('@dnd').should('exist')
+
+        cy.get('@dnd').selectFile(
+          { fileName: 'users1.txt', contents: [{ name: 'John Doe the 1st' }] },
+          { action: 'drag-drop', force: true }
+        )
+
+        cy.findByText('File Type Different').should('exist').should('be.visible')
+        cy.findByText(
+          /The original file \(JSON\) and replacement file \(Plain Text\) are different file types\. Would you like to continue?/
+        )
+      })
+
+      it('cancels the upload when the user clicks on the cancel button', () => {
+        cy.customMount(
+          <FileUploader
+            fileRepository={fileMockRepository}
+            datasetPersistentId=":latest"
+            storageType="S3"
+            operationType={OperationType.REPLACE_FILE}
+            originalFile={fileMock}
+          />
+        )
+
+        cy.findByTestId('file-uploader-drop-zone').as('dnd')
+        cy.get('@dnd').should('exist')
+
+        cy.get('@dnd').selectFile(
+          { fileName: 'users1.txt', contents: [{ name: 'John Doe the 1st' }] },
+          { action: 'drag-drop', force: true }
+        )
+
+        cy.findByText('File Type Different').should('exist').should('be.visible')
+        cy.findByText(
+          /The original file \(JSON\) and replacement file \(Plain Text\) are different file types\. Would you like to continue?/
+        )
+
+        cy.get('.swal2-actions').within(() => {
+          cy.findAllByText(/Cancel/)
+            .first()
+            .click()
+        })
+
+        cy.findByText('users1.txt').should('not.exist')
+      })
+
+      it('continues the upload when the user clicks on the continue button', () => {
+        cy.customMount(
+          <FileUploader
+            fileRepository={fileMockRepository}
+            datasetPersistentId=":latest"
+            storageType="S3"
+            operationType={OperationType.REPLACE_FILE}
+            originalFile={fileMock}
+          />
+        )
+
+        cy.findByTestId('file-uploader-drop-zone').as('dnd')
+        cy.get('@dnd').should('exist')
+
+        cy.get('@dnd').selectFile(
+          { fileName: 'users1.txt', contents: [{ name: 'John Doe the 1st' }] },
+          { action: 'drag-drop', force: true }
+        )
+
+        cy.findByText('File Type Different').should('exist').should('be.visible')
+        cy.findByText(
+          /The original file \(JSON\) and replacement file \(Plain Text\) are different file types\. Would you like to continue?/
+        )
+
+        cy.get('.swal2-actions').within(() => {
+          cy.findAllByText(/Continue/).click()
+        })
+
+        cy.findByText('users1.txt').should('exist')
+      })
     })
   })
 
@@ -685,6 +715,8 @@ describe('FileUploader', () => {
       cy.wait(3_000)
 
       cy.findByLabelText('Select all files').click()
+      cy.findByLabelText('Deselect all files').click()
+      cy.findByLabelText('Select all files').click()
 
       cy.findByText('Edit').should('not.be.disabled')
     })
@@ -717,12 +749,42 @@ describe('FileUploader', () => {
       cy.findByText('2 Files uploaded').should('exist')
 
       cy.findAllByLabelText('Select row').first().click()
+      cy.findAllByLabelText('Select row').first().click()
+      cy.findAllByLabelText('Select row').first().click()
+
       cy.findByText('Edit').click()
       cy.findByText('Remove Selected Files').click()
 
       cy.findByLabelText(/File Name/)
         .should('have.length', 1)
         .should('have.value', 'users2.json')
+
+      cy.findByText('1 File uploaded').should('exist')
+    })
+
+    it('does not submit the form when pressing enter in the description textarea', () => {
+      cy.customMount(
+        <FileUploader
+          fileRepository={fileMockRepository}
+          datasetPersistentId=":latest"
+          storageType="S3"
+          operationType={OperationType.ADD_FILES_TO_DATASET}
+        />
+      )
+
+      cy.findByTestId('file-uploader-drop-zone').as('dnd')
+      cy.get('@dnd').should('exist')
+
+      cy.get('@dnd').selectFile(
+        { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
+        { action: 'drag-drop' }
+      )
+      cy.findByText('users1.json').should('exist')
+
+      // wait for upload to finish
+      cy.wait(3_000)
+
+      cy.findByLabelText('Description').type('{enter}')
 
       cy.findByText('1 File uploaded').should('exist')
     })
@@ -817,6 +879,25 @@ describe('FileUploader', () => {
         cy.findByText(
           /File Name, File Path or combination of File path \+ File name should be unique./
         )
+
+        // Now test for file path
+
+        // cy.findAllByLabelText(/File Name/)
+        //   .last()
+        //   .clear()
+        //   .type('users2.json')
+
+        cy.findAllByLabelText(/File Path/)
+          .first()
+          .type('path/to/file')
+
+        cy.findAllByLabelText(/File Path/)
+          .last()
+          .type('path/to/file')
+
+        cy.findAllByText(
+          /File Name, File Path or combination of File path \+ File name should be unique./
+        ).should('have.length', 2)
       })
     })
   })

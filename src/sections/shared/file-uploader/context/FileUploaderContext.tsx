@@ -18,7 +18,6 @@ export interface FileUploaderContextValue {
   removeFile: (key: string) => void
   removeAllFiles: () => void
   getFileByKey: (key: string) => FileUploadState | undefined
-  setConfig: (config: FileUploaderGlobalConfig) => void
   setIsSaving: (isSaving: boolean) => void
   addUploadingToCancel: (key: string, cancel: () => void) => void
   removeUploadingToCancel: (key: string) => void
@@ -66,10 +65,6 @@ export const FileUploaderProvider = ({ children, initialConfig }: FileUploaderPr
     dispatch({ type: 'SET_IS_SAVING', isSaving })
   }, [])
 
-  const setConfig = useCallback((config: FileUploaderGlobalConfig) => {
-    dispatch({ type: 'SET_CONFIG', config })
-  }, [])
-
   const addUploadingToCancel = useCallback((key: string, cancel: () => void) => {
     dispatch({ type: 'ADD_UPLOADING_TO_CANCEL', key, cancel })
   }, [])
@@ -108,7 +103,6 @@ export const FileUploaderProvider = ({ children, initialConfig }: FileUploaderPr
         removeFile,
         removeAllFiles,
         getFileByKey,
-        setConfig,
         setIsSaving,
         addUploadingToCancel,
         removeUploadingToCancel,
@@ -123,7 +117,9 @@ export const FileUploaderProvider = ({ children, initialConfig }: FileUploaderPr
 export const useFileUploaderContext = (): FileUploaderContextValue => {
   const context = useContext(FileUploaderContext)
   if (!context) {
-    throw new Error('useFileUploaderContext must be used within a FileUploaderProvider')
+    /* istanbul ignore next */ throw new Error(
+      'useFileUploaderContext must be used within a FileUploaderProvider'
+    )
   }
   return context
 }

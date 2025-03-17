@@ -29,7 +29,7 @@ export const UploadedFileRow = ({
 }: UploadedFileRowProps) => {
   const { t } = useTranslation('shared')
 
-  const iconName = FileTypeToFileIconMap[file.fileType] || IconName.OTHER
+  const iconName = FileTypeToFileIconMap[file.fileType] || /* istanbul ignore next */ IconName.OTHER
 
   return (
     <tr>

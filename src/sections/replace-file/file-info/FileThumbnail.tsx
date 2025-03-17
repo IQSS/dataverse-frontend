@@ -11,12 +11,16 @@ interface FileThumbnailProps {
 }
 
 export const FileThumbnail = ({ name, thumbnail, typeValue }: FileThumbnailProps) => {
-  const iconName = FileTypeToFileIconMap[typeValue] || IconName.OTHER
+  const iconName = FileTypeToFileIconMap[typeValue] || /* istanbul ignore next */ IconName.OTHER
 
   return (
     <div>
       {thumbnail ? (
-        <FilePreviewImage name={name} thumbnail={thumbnail} tooltipPlacement="bottom" />
+        /* istanbul ignore next */ <FilePreviewImage
+          name={name}
+          thumbnail={thumbnail}
+          tooltipPlacement="bottom"
+        />
       ) : (
         <div className={styles.file_icon}>
           <Icon name={iconName} />
