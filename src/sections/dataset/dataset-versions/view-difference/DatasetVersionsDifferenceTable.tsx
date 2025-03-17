@@ -15,9 +15,6 @@ export const DatasetVersionsDifferenceTable = ({
   const { oldVersion, newVersion, metadataChanges, filesAdded, filesRemoved } = differences
 
   const citationMetadata = metadataChanges?.find((m) => m.blockName === 'Citation Metadata')
-  const additionalCitationMetadata = metadataChanges?.find(
-    (m) => m.blockName === 'Additional Citation Metadata'
-  )
 
   return (
     <div className={styles['dataset-versions-difference-table']}>
@@ -60,25 +57,6 @@ export const DatasetVersionsDifferenceTable = ({
         </Table>
       )}
 
-      {additionalCitationMetadata && (
-        <Table bordered>
-          <thead>
-            <tr>
-              <th>{t('versions.additionalCitationMetadata')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {additionalCitationMetadata.changed.map((field) => (
-              <tr key={field.fieldName}>
-                <td>{field.fieldName}</td>
-                <td>{field.oldValue || ''}</td>
-                <td>{field.newValue || ''}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      )}
-
       {(filesAdded || filesRemoved) && (
         <Table bordered>
           <thead>
@@ -97,7 +75,7 @@ export const DatasetVersionsDifferenceTable = ({
                 <td>
                   {t('versions.name')}: {file.fileName}
                   <br />
-                  {t('versions.type')}: {file.type || 'Unknown'}
+                  {t('versions.type')}: {file.type || ''}
                   <br />
                   {t('versions.description')}: {file.description || ''}
                   <br />
@@ -117,11 +95,11 @@ export const DatasetVersionsDifferenceTable = ({
                 <td>
                   {t('versions.name')}: {file.fileName}
                   <br />
-                  {t('versions.type')}: {file.type || 'Unknown'}
+                  {t('versions.type')}: {file.type || ''}
                   <br />
                   {t('versions.description')}: {file.description || ''}
                   <br />
-                  {t('versions.access')}: {file.isRestricted ? 'Restricted' : 'Public'}
+                  {t('versions.access')}: {file.isRestricted ? 'Restricted' : 'Unrestricted'}
                 </td>
               </tr>
             ))}

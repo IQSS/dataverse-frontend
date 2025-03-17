@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { Button } from '@iqss/dataverse-design-system'
-import { useDataset } from '@/sections/dataset/DatasetContext'
 import { useState } from 'react'
 import { VersionDetailModal } from './view-difference/DatasetVersionsDetailModal'
 import { useGetDatasetVersionDiff } from './view-difference/useGetDatasetVersionDiff'
@@ -10,31 +9,27 @@ interface DatasetViewDetailButtonProps {
   oldVersionNumber: string
   newVersionNumber: string
   datasetRepository: DatasetRepository
+  datasetId: string
 }
 export function DatasetViewDetailButton({
   oldVersionNumber,
   newVersionNumber,
-  datasetRepository
+  datasetRepository,
+  datasetId
 }: DatasetViewDetailButtonProps) {
   const { t } = useTranslation('dataset')
-  const { dataset } = useDataset()
-
   const [showModal, setShowModal] = useState(false)
   const { differences, error, isLoading } = useGetDatasetVersionDiff({
     datasetRepository,
-    persistentId: dataset?.persistentId || '',
+    persistentId: datasetId,
     oldVersion: oldVersionNumber,
     newVersion: newVersionNumber
   })
 
-  const handleClick = () => {
-    setShowModal(true)
-  }
-
   return (
     <>
-      <Button variant="link" onClick={handleClick} style={{ padding: 0 }}>
-        {t('View Detail')}
+      <Button variant="link" onClick={() => setShowModal(true)} style={{ padding: 0 }}>
+        {t('versions.viewDetails')}
       </Button>
       {showModal && differences && (
         <VersionDetailModal

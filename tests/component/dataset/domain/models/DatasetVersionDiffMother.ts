@@ -2,30 +2,76 @@ import { faker } from '@faker-js/faker'
 import { DatasetVersionDiff } from '../../../../../src/dataset/domain/models/DatasetVersionDiff'
 
 export class DatasetVersionDiffMother {
-  static create(props?: Partial<DatasetVersionDiff>): DatasetVersionDiff {
+  static create(): DatasetVersionDiff {
     const datasetVersionDiff = {
-      persistentId: faker.datatype.uuid(),
       oldVersion: {
-        versionNumber: '1.0',
-        lastUpdatedDate: '2023-05-15T08:21:03Z'
+        versionNumber: '2.0',
+        lastUpdatedDate: faker.date.recent().toISOString()
       },
       newVersion: {
-        versionNumber: '1.1',
-        lastUpdatedDate: '2023-05-20T08:21:03Z'
+        versionNumber: 'DRAFT',
+        lastUpdatedDate: faker.date.recent().toISOString()
       },
-      metadataBlockDiffs: [
+
+      metadataChanges: [
         {
-          blockName: 'citation',
+          blockName: 'Citation Metadata',
           changed: [
             {
-              fieldName: 'title',
-              oldValue: 'Old Title',
-              newValue: 'New Title'
+              fieldName: 'Title',
+              oldValue: faker.datatype.string(),
+              newValue: ''
+            },
+            {
+              fieldName: 'Subtitle',
+              oldValue: '',
+              newValue: faker.datatype.string()
+            },
+            {
+              fieldName: 'Description',
+              oldValue: faker.datatype.string(),
+              newValue: faker.datatype.string()
             }
           ]
         }
       ],
-      ...props
+      filesAdded: [
+        {
+          fileName: faker.datatype.string(),
+          MD5: faker.datatype.uuid(),
+          type: '',
+          fileId: faker.datatype.number(),
+          description: '',
+          isRestricted: faker.datatype.boolean(),
+          filePath: '',
+          tags: [],
+          categories: []
+        },
+        {
+          fileName: faker.datatype.string(),
+          MD5: faker.datatype.uuid(),
+          type: '',
+          fileId: faker.datatype.number(),
+          description: '',
+          isRestricted: faker.datatype.boolean(),
+          filePath: '',
+          tags: [],
+          categories: []
+        }
+      ],
+      filesRemoved: [
+        {
+          fileName: faker.datatype.string(),
+          MD5: faker.datatype.uuid(),
+          type: '',
+          fileId: faker.datatype.number(),
+          description: faker.datatype.string(),
+          isRestricted: faker.datatype.boolean(),
+          filePath: '',
+          tags: [],
+          categories: []
+        }
+      ]
     }
     return datasetVersionDiff
   }

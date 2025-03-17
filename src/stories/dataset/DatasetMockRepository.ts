@@ -5,6 +5,7 @@ import { DatasetMother } from '../../../tests/component/dataset/domain/models/Da
 import { DatasetPaginationInfo } from '../../dataset/domain/models/DatasetPaginationInfo'
 import { DatasetItemTypePreviewMother } from '../../../tests/component/dataset/domain/models/DatasetItemTypePreviewMother'
 import { DatasetVersionDiffMother } from '../../../tests/component/dataset/domain/models/DatasetVersionDiffMother'
+import { DatasetVersionsSummariesMother } from '../../../tests/component/dataset/domain/models/DatasetVersionsSummariesMother'
 import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
 import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
@@ -92,7 +93,7 @@ export class DatasetMockRepository implements DatasetRepository {
   getDatasetVersionsSummaries(_datasetId: number | string): Promise<DatasetVersionSummaryInfo[]> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve([])
+        resolve(DatasetVersionsSummariesMother.create())
       }, FakerHelper.loadingTimout())
     })
   }

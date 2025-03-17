@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { ReadError } from '@iqss/dataverse-client-javascript'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { getDatasetVersionDiff } from '@/dataset/domain/useCases/getDatasetVersionDiff'
 import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
@@ -38,7 +37,8 @@ export const useGetDatasetVersionDiff = ({
           newVersion == 'DRAFT' ? ':draft' : newVersion
         )
         setDifferences(response)
-      } catch (err: ReadError | unknown) {
+      } catch (err) {
+        console.log('test', err)
         const errorMessage =
           err instanceof Error && err.message
             ? err.message

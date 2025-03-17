@@ -20,7 +20,7 @@ const datasetVersionDiff: DatasetVersionDiff | undefined = {
         {
           fieldName: 'Title',
           oldValue: 'testdateset',
-          newValue: 'testdsaddsf'
+          newValue: ''
         },
         {
           fieldName: 'Subtitle',
@@ -40,7 +40,7 @@ const datasetVersionDiff: DatasetVersionDiff | undefined = {
       ]
     }
   ],
-  filesRemoved: [
+  filesAdded: [
     {
       fileName: 'blob (2)',
       MD5: '53d3d10e00812f7c55e0c9c3935f3769',
@@ -48,6 +48,30 @@ const datasetVersionDiff: DatasetVersionDiff | undefined = {
       fileId: 40,
       description: '',
       isRestricted: false,
+      filePath: '',
+      tags: [],
+      categories: []
+    },
+    {
+      fileName: 'blob (5)',
+      MD5: '53d3d10e00812f7c55e0c9c3935f3769',
+      type: '',
+      fileId: 40,
+      description: '',
+      isRestricted: true,
+      filePath: '',
+      tags: [],
+      categories: []
+    }
+  ],
+  filesRemoved: [
+    {
+      fileName: 'blob (2)',
+      MD5: '53d3d10e00812f7c55e0c9c3935f3769',
+      type: '',
+      fileId: 40,
+      description: '',
+      isRestricted: true,
       filePath: '',
       tags: [],
       categories: []
@@ -94,8 +118,56 @@ describe('DatasetVersions', () => {
     cy.get('table').find('tbody').first().find('tr').should('have.length', 1) // for versions info
     const numOfTbody = (datasetVersionDiff?.metadataChanges?.length ?? 0) + 2 // add extra 2 for Versions info(header) and Files tables
     cy.get('table').find('tbody').should('have.length', numOfTbody)
-    const numOfFilesTr = datasetVersionDiff?.filesRemoved?.length ?? 0
+    const numOfFilesTr =
+      (datasetVersionDiff?.filesRemoved?.length ?? 0) +
+      (datasetVersionDiff?.filesAdded?.length ?? 0)
     cy.get('table').find('tbody').last().find('tr').should('have.length', numOfFilesTr)
+  })
+
+  it('should render a correct file info', () => {
+    cy.customMount(
+      <VersionDetailModal
+        show={true}
+        handleClose={() => {}}
+        isLoading={false}
+        errorHandling={''}
+        datasetVersionDifferences={datasetVersionDiff}
+      />
+    )
+    datasetsRepository.getVersionDiff = cy.stub().resolves(datasetVersionDiff)
+
+    cy.get('table').should('exist')
+    const FileId = datasetVersionDiff?.filesRemoved?.[0].fileId ?? 'N/A'
+    const MD5 = datasetVersionDiff?.filesRemoved?.[0].MD5 ?? 'N/A'
+    const text = `File ID ${FileId}MD5 ${MD5}`
+    cy.get('table')
+      .find('tbody')
+      .last()
+      .find('tr')
+      .first()
+      .find('td')
+      .first()
+      .should('have.text', text)
+  })
+
+  it('should handle empty file lists', () => {
+    cy.customMount(
+      <VersionDetailModal
+        show={true}
+        handleClose={() => {}}
+        isLoading={false}
+        errorHandling={''}
+        datasetVersionDifferences={{
+          ...datasetVersionDiff,
+          filesRemoved: [],
+          filesAdded: []
+        }}
+      />
+    )
+
+    cy.get('table').should('exist')
+    cy.get('table').find('tbody').should('have.length', 3)
+    cy.get('table').find('tbody').last().find('tr').should('have.length', 0)
   })
 
   it('should render a modal with the differences between two versions', () => {

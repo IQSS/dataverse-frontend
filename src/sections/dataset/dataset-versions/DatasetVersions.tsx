@@ -16,6 +16,7 @@ interface DatasetVersionsProps {
   datasetRepository: DatasetRepository
   datasetId: string
 }
+
 export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersionsProps) {
   const navigate = useNavigate()
   const { t } = useTranslation('dataset')
@@ -44,6 +45,9 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
     navigate(`${Route.DATASETS}?${searchParams.toString()}`)
   }
 
+  // If there's only 1 version, we don't show the "View Differences" button or the checkbox column
+  const showViewDifferenceButton = datasetVersionSummaries && datasetVersionSummaries.length < 2
+
   if (isLoading) {
     return <DatasetVersionsLoadingSkeleton />
   }
@@ -54,17 +58,19 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
 
   return (
     <>
-      <DatasetVersionViewDifferenceButton
-        datasetRepository={datasetRepository}
-        persistentId={datasetId}
-        selectedVersions={selectedVersions}
-      />
+      {!showViewDifferenceButton && selectedVersions.length === 2 && (
+        <DatasetVersionViewDifferenceButton
+          datasetRepository={datasetRepository}
+          persistentId={datasetId}
+          selectedVersions={selectedVersions}
+        />
+      )}
 
       <div className={styles['dataset-versions-table']} data-testid="dataset-versions-table">
         <Table>
           <thead>
             <tr>
-              <th></th>
+              {!showViewDifferenceButton && <th></th>}
               <th>{t('versions.datasetVersions')}</th>
               <th>{t('versions.summary')}</th>
               <th>{t('versions.versionNote')}</th>
@@ -73,59 +79,58 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
             </tr>
           </thead>
           <tbody>
-            {datasetVersionSummaries &&
-              datasetVersionSummaries.map((dataset) => {
-                const previousDataset = datasetVersionSummaries.find((d) => d.id === dataset.id - 1)
-                const summaryObject = generateDatasetVersionSummaryDescription(dataset.summary)
+            {datasetVersionSummaries?.map((dataset) => {
+              const previousDataset = datasetVersionSummaries.find((d) => d.id === dataset.id - 1)
+              const summaryObject = generateDatasetVersionSummaryDescription(dataset.summary)
 
-                return (
-                  <tr key={dataset.id}>
+              return (
+                <tr key={dataset.id}>
+                  {!showViewDifferenceButton && (
                     <td>
                       {/* TODO: If deaccession, disable the version checkbox*/}
                       <Form.Group.Checkbox
-                        label={''}
+                        label=""
                         id={`dataset-${dataset.id}`}
-                        data-testid="select-all-files-checkbox"
+                        data-testid="select-checkbox"
                         checked={selectedVersions.some((item) => item.id === dataset.id)}
                         onChange={() => handleCheckboxChange(dataset)}
                       />
                     </td>
-                    <td>
-                      <Button
-                        variant="link"
-                        onClick={() => navigateToVersion(dataset.versionNumber)}>
-                        {dataset.versionNumber}
-                      </Button>
-                    </td>
-                    <td>
-                      <p style={{ display: 'flex', flexWrap: 'wrap' }}>
-                        {Object.entries(summaryObject).map(([key, description]) => (
-                          <span key={`${dataset.id}-${key}`}>
-                            {typeof dataset.summary !== 'string' ? (
-                              <>
-                                <strong>{key}:</strong> ({description});
-                              </>
-                            ) : (
-                              description
-                            )}
-                          </span>
-                        ))}
-                        {previousDataset && (
-                          <DatasetViewDetailButton
-                            datasetRepository={datasetRepository}
-                            oldVersionNumber={previousDataset.versionNumber}
-                            newVersionNumber={dataset.versionNumber}
-                          />
-                        )}
-                      </p>
-                    </td>
-                    <td>{}</td>
-                    {/* TODO: Version note is missing, need to connect with API */}
-                    <td>{dataset.contributors}</td>
-                    <td>{dataset.publishedOn}</td>
-                  </tr>
-                )
-              })}
+                  )}
+                  <td>
+                    <Button variant="link" onClick={() => navigateToVersion(dataset.versionNumber)}>
+                      {dataset.versionNumber}
+                    </Button>
+                  </td>
+                  <td>
+                    <p style={{ display: 'flex', flexWrap: 'wrap' }}>
+                      {Object.entries(summaryObject).map(([key, description]) => (
+                        <span key={`${dataset.id}-${key}`}>
+                          {typeof dataset.summary !== 'string' ? (
+                            <>
+                              <strong>{key}:</strong> ({description});
+                            </>
+                          ) : (
+                            description
+                          )}
+                        </span>
+                      ))}
+                      {previousDataset && (
+                        <DatasetViewDetailButton
+                          datasetRepository={datasetRepository}
+                          oldVersionNumber={previousDataset.versionNumber}
+                          newVersionNumber={dataset.versionNumber}
+                          datasetId={datasetId}
+                        />
+                      )}
+                    </p>
+                  </td>
+                  <td>{/* TODO: version note API is missing */}</td>
+                  <td>{dataset.contributors}</td>
+                  <td>{dataset.publishedOn}</td>
+                </tr>
+              )
+            })}
           </tbody>
         </Table>
       </div>
@@ -133,7 +138,7 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
   )
 }
 
-const DatasetVersionsLoadingSkeleton = () => {
+export const DatasetVersionsLoadingSkeleton = () => {
   const { t } = useTranslation('dataset')
 
   return (

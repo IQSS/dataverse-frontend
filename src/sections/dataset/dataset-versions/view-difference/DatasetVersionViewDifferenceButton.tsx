@@ -37,23 +37,18 @@ export function DatasetVersionViewDifferenceButton({
     oldVersion: oldVersionNumber,
     newVersion: newVersionNumber
   })
-
-  const handleClick = () => {
-    setShowModal(true)
-  }
-
   return (
     <div className={styles['edit-terms-button-container']}>
       <Button
         type="button"
         size={'sm'}
-        onClick={handleClick}
+        onClick={() => setShowModal(true)}
         icon={<ArrowLeftRight className={styles.icon} />}
         disabled={isLoading}>
         {t('versions.viewDifferences')}
       </Button>
 
-      {showModal && (
+      {showModal && newVersionNumber && oldVersionNumber && (
         <VersionDetailModal
           show={!!showModal}
           handleClose={() => setShowModal(false)}

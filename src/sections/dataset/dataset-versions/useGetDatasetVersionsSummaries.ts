@@ -25,9 +25,9 @@ export const useGetDatasetVersionsSummaries = ({
     const handleGetDatasetVersionsSummaries = async () => {
       setIsLoading(true)
       try {
-        const response = await getDatasetVersionsSummaries(datasetRepository, persistentId)
+        const versionSummaries = await getDatasetVersionsSummaries(datasetRepository, persistentId)
 
-        setSummaries(response)
+        setSummaries(versionSummaries)
       } catch (err) {
         const errorMessage =
           err instanceof Error && err.message
