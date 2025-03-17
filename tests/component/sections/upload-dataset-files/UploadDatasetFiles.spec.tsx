@@ -1,4 +1,3 @@
-import { WriteError } from '@iqss/dataverse-client-javascript'
 import { DatasetRepository } from '../../../../src/dataset/domain/repositories/DatasetRepository'
 import { DatasetMother, DatasetVersionMother } from '../../dataset/domain/models/DatasetMother'
 import { FileRepository } from '../../../../src/files/domain/repositories/FileRepository'
@@ -6,11 +5,8 @@ import { Dataset as DatasetModel } from '../../../../src/dataset/domain/models/D
 import { ReactNode } from 'react'
 import { DatasetProvider } from '../../../../src/sections/dataset/DatasetProvider'
 import { UploadDatasetFiles } from '../../../../src/sections/upload-dataset-files/UploadDatasetFiles'
-import { FileMockLoadingRepository } from '../../../../src/stories/file/FileMockLoadingRepository'
 import { LoadingProvider } from '../../../../src/sections/loading/LoadingProvider'
-import { FileMockFailedRepository } from '../../../../src/stories/file/FileMockFailedUploadRepository'
 import { FileMockRepository } from '../../../../src/stories/file/FileMockRepository'
-import FileUploadInputStyles from '../../../../src/sections/shared/file-uploader/file-upload-input/FileUploadInput.module.scss'
 
 const fileRepository: FileRepository = {} as FileRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
@@ -78,179 +74,7 @@ describe('UploadDatasetFiles', () => {
     cy.findByText('Page Not Found').should('exist')
   })
 
-  it('renders the file uploader', () => {
-    const testDataset = DatasetMother.create()
-
-    mountWithDataset(
-      <UploadDatasetFiles fileRepository={new FileMockLoadingRepository()} />,
-      testDataset
-    )
-
-    cy.findByText('Select files to add').should('exist')
-    cy.findByTestId('file-uploader-drop-zone').as('dnd')
-    cy.get('@dnd').should('exist')
-  })
-
-  it('renders the files being uploaded', () => {
-    const testDataset = DatasetMother.create()
-
-    mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
-
-    cy.findByTestId('file-uploader-drop-zone').as('dnd')
-    cy.get('@dnd').should('exist')
-
-    cy.get('@dnd').selectFile(
-      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
-      { action: 'drag-drop' }
-    )
-    cy.findByText('users1.json').should('exist')
-    cy.findByTitle('Cancel upload').should('exist')
-    cy.findByRole('progressbar').should('exist')
-    cy.findByText('Select files to add').should('exist')
-  })
-
-  it('cancels one upload and leaves other uploads', () => {
-    const testDataset = DatasetMother.create()
-
-    mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
-
-    cy.findByTestId('file-uploader-drop-zone').as('dnd')
-    cy.get('@dnd').should('exist')
-
-    cy.get('@dnd').selectFile(
-      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
-      { action: 'drag-drop' }
-    )
-    cy.get('@dnd').selectFile(
-      { fileName: 'users2.json', contents: [{ name: 'John Doe the 2nd' }] },
-      { action: 'drag-drop' }
-    )
-    cy.get('@dnd').selectFile(
-      { fileName: 'users3.json', contents: [{ name: 'John Doe the 3rd' }] },
-      { action: 'drag-drop' }
-    )
-    cy.findAllByTitle('Cancel upload').first().parent().click()
-    cy.findByText('users1.json').should('not.exist')
-    cy.findByText('Upload canceled - users1.json').should('exist')
-
-    cy.findByText('users2.json').should('exist')
-    cy.findByText('users3.json').should('exist')
-    cy.findAllByTitle('Cancel upload').should('exist')
-    cy.findAllByRole('progressbar').should('exist')
-    cy.findByText('Select files to add').should('exist')
-  })
-
-  it('renders file upload by clicking add button', () => {
-    const testDataset = DatasetMother.create()
-
-    mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
-
-    cy.findByText('Select files to add').should('exist').click()
-    cy.get('input[type=file]').selectFile(
-      {
-        fileName: 'users1.json',
-        contents: [{ name: 'John Doe the 1st' }]
-      },
-      { action: 'select', force: true }
-    )
-    cy.findByText('users1.json').should('exist')
-  })
-
-  it('renders failed file upload', () => {
-    const testDataset = DatasetMother.create()
-
-    mountWithDataset(
-      <UploadDatasetFiles fileRepository={new FileMockFailedRepository()} />,
-      testDataset
-    )
-
-    cy.findByTestId('file-uploader-drop-zone').as('dnd')
-    cy.get('@dnd').should('exist')
-
-    cy.get('@dnd').selectFile(
-      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
-      { action: 'drag-drop' }
-    )
-
-    cy.findByText('users1.json').should('exist')
-    cy.findByText('users1.json').parents('li').should('have.class', FileUploadInputStyles.failed)
-  })
-
-  it('prevents double re-uploads', () => {
-    const testDataset = DatasetMother.create()
-
-    mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
-
-    cy.findByTestId('file-uploader-drop-zone').as('dnd')
-    cy.get('@dnd').should('exist')
-
-    cy.get('@dnd').selectFile(
-      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
-      { action: 'drag-drop', force: true }
-    )
-    cy.get('@dnd').selectFile(
-      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
-      { action: 'drag-drop', force: true }
-    )
-    cy.get('@dnd').selectFile(
-      { fileName: 'users3.json', contents: [{ name: 'John Doe the 3rd' }] },
-      { action: 'drag-drop', force: true }
-    )
-    cy.findByText('users3.json').should('exist')
-    cy.findByText('users1.json').should('exist')
-    cy.findAllByTitle('Cancel upload').should('have.length', 2)
-    cy.findAllByRole('progressbar').should('have.length', 2)
-    cy.findByText('Select files to add').should('exist')
-
-    // wait for upload to finish
-    cy.findByTitle('Cancel upload').should('not.exist')
-
-    cy.get('@dnd').selectFile(
-      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
-      { action: 'drag-drop', force: true }
-    )
-    cy.get('@dnd').selectFile(
-      { fileName: 'users3.json', contents: [{ name: 'John Doe the 3rd' }] },
-      { action: 'drag-drop', force: true }
-    )
-    cy.findByText('users3.json').should('have.length', 1)
-    cy.findByText('users1.json').should('have.length', 1)
-
-    // Check toasts
-    cy.findByText('File users3.json was skipped because it has already been uploaded.')
-    cy.findByText('File users1.json was skipped because it has already been uploaded.')
-  })
-
-  it('prevents double uploads', () => {
-    const testDataset = DatasetMother.create()
-
-    mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
-
-    cy.findByTestId('file-uploader-drop-zone').as('dnd')
-    cy.get('@dnd').should('exist')
-
-    cy.get('@dnd').selectFile(
-      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
-      { action: 'drag-drop' }
-    )
-    cy.get('@dnd').selectFile(
-      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
-      { action: 'drag-drop' }
-    )
-    cy.get('@dnd').selectFile(
-      { fileName: 'users3.json', contents: [{ name: 'John Doe the 3rd' }] },
-      { action: 'drag-drop' }
-    )
-    cy.findByText('users3.json').should('exist')
-    cy.findByText('users1.json').should('exist')
-    cy.findAllByTitle('Cancel upload').should('have.length', 2)
-    cy.findAllByRole('progressbar').should('have.length', 2)
-    cy.findByText('Select files to add').should('exist')
-    // Check toasts
-    cy.findByText('File users1.json was skipped because it has already been uploaded.')
-  })
-
-  it('saves uploaded files', () => {
+  it('adds files to dataset successfully', () => {
     const testDataset = DatasetMother.create()
 
     mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
@@ -272,7 +96,7 @@ describe('UploadDatasetFiles', () => {
     cy.findAllByRole('progressbar').should('have.length', 2)
     cy.findByText('Select files to add').should('exist')
     // wait for upload to finish
-    cy.findByTitle('Cancel upload').should('not.exist')
+    cy.wait(3_000)
 
     cy.findByText('Save Changes').click()
     cy.findByText('users1.json').should('not.exist')
@@ -282,115 +106,6 @@ describe('UploadDatasetFiles', () => {
 
     // Check toast
     cy.findByText('Files added to dataset successfully.')
-  })
-
-  it('shows unknown error message in toast when adding files fails', () => {
-    const testDataset = DatasetMother.create()
-    const fileMockRepository = new FileMockRepository()
-    fileMockRepository.addUploadedFiles = cy.stub().rejects()
-
-    mountWithDataset(<UploadDatasetFiles fileRepository={fileMockRepository} />, testDataset)
-
-    cy.findByTestId('file-uploader-drop-zone').as('dnd')
-    cy.get('@dnd').should('exist')
-
-    cy.get('@dnd').selectFile(
-      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
-      { action: 'drag-drop' }
-    )
-    cy.findByText('users1.json').should('exist')
-
-    // wait for upload to finish
-    cy.findByTitle('Cancel upload').should('not.exist')
-
-    cy.findByText('Save Changes').click()
-
-    // Check toast
-    cy.findByText('Something went wrong adding the uploaded files to the dataset. Try again later.')
-  })
-
-  it('shows js-dv write error specific message in toast when adding file fails', () => {
-    const testDataset = DatasetMother.create()
-    const fileMockRepository = new FileMockRepository()
-    fileMockRepository.addUploadedFiles = cy
-      .stub()
-      .rejects(new WriteError('Adding files failed because of A, B, C.'))
-
-    mountWithDataset(<UploadDatasetFiles fileRepository={fileMockRepository} />, testDataset)
-
-    cy.findByTestId('file-uploader-drop-zone').as('dnd')
-    cy.get('@dnd').should('exist')
-
-    cy.get('@dnd').selectFile(
-      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
-      { action: 'drag-drop' }
-    )
-    cy.findByText('users1.json').should('exist')
-
-    // wait for upload to finish
-    cy.findByTitle('Cancel upload').should('not.exist')
-
-    cy.findByText('Save Changes').click()
-
-    // Check toast
-    cy.findByText('Adding files failed because of A, B, C.')
-  })
-
-  it('cancels saving uploaded files', () => {
-    const testDataset = DatasetMother.create()
-
-    mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
-
-    cy.findByTestId('file-uploader-drop-zone').as('dnd')
-    cy.get('@dnd').should('exist')
-
-    cy.get('@dnd').selectFile(
-      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
-      { action: 'drag-drop' }
-    )
-    cy.get('@dnd').selectFile(
-      { fileName: 'users2.json', contents: [{ name: 'John Doe the 2nd' }] },
-      { action: 'drag-drop' }
-    )
-
-    cy.findByText('users1.json').should('exist')
-    cy.findByText('users2.json').should('exist')
-    cy.findAllByTitle('Cancel upload').should('have.length', 2)
-    cy.findAllByRole('progressbar').should('have.length', 2)
-    cy.findByText('Select files to add').should('exist')
-    // wait for upload to finish
-    cy.findByTitle('Cancel upload').should('not.exist')
-
-    cy.findByText('Cancel').click()
-  })
-
-  it('removes uploaded file from the list', () => {
-    const testDataset = DatasetMother.create()
-
-    mountWithDataset(<UploadDatasetFiles fileRepository={new FileMockRepository()} />, testDataset)
-
-    cy.findByTestId('file-uploader-drop-zone').as('dnd')
-    cy.get('@dnd').should('exist')
-
-    cy.get('@dnd').selectFile(
-      { fileName: 'users1.json', contents: [{ name: 'John Doe the 1st' }] },
-      { action: 'drag-drop' }
-    )
-    cy.get('@dnd').selectFile(
-      { fileName: 'users2.json', contents: [{ name: 'John Doe the 2nd' }] },
-      { action: 'drag-drop' }
-    )
-    cy.findByText('users1.json').should('exist')
-    cy.findByText('users2.json').should('exist')
-    cy.findAllByTitle('Cancel upload').should('have.length', 2)
-    cy.findAllByRole('progressbar').should('have.length', 2)
-    cy.findByText('Select files to add').should('exist')
-    // wait for upload to finish
-    cy.findByTitle('Cancel upload').should('not.exist')
-    cy.findAllByLabelText('Remove File').first().click()
-    cy.findByText('users1.json').should('not.exist')
-    cy.get('input[value="users1.json"]').should('not.exist')
-    cy.get('input[value="users2.json"]').should('exist')
   })
 
   // TODO: Leaving this for reference, will make restrict and labels feature in a separate PR

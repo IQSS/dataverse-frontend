@@ -29,7 +29,8 @@ const FileUploaderPanel = ({ fileRepository, datasetPersistentId }: FileUploader
       replaceOperationInfo,
       addFilesToDatasetOperationInfo
     },
-    uploadedFiles
+    uploadedFiles,
+    removeAllFiles
   } = useFileUploaderContext()
 
   const shouldBlockAwayNavigation = useMemo(() => {
@@ -41,6 +42,8 @@ const FileUploaderPanel = ({ fileRepository, datasetPersistentId }: FileUploader
   const handleConfirmLeavePage = () => {
     if (navigationBlocker.state === 'blocked') {
       // TODO - Remove the files from the S3 bucket we need an API endpoint for this.
+
+      removeAllFiles()
 
       // Cancel all the uploading files if there are any
       if (uploadingToCancelMap.size > 0) {

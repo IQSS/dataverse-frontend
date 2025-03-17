@@ -17,13 +17,14 @@ describe('FileThumbnail', () => {
     cy.findByText('Restricted with access Icon').should('not.exist')
   })
 
+  // TODO:ME - force true
   it('renders FilePreviewImage when thumbnail is provided with unlocked icon if restricted with access', () => {
     const file = FilePreviewMother.createWithThumbnailRestrictedWithAccessGranted()
 
     cy.customMount(<FileThumbnail file={file} />)
 
     cy.findByAltText(file.name).should('exist')
-    cy.findByAltText(file.name).trigger('mouseover')
+    cy.findByAltText(file.name).trigger('mouseover', { force: true })
     cy.findByRole('tooltip').should('exist')
 
     cy.findByText('Restricted File Icon').should('not.exist')

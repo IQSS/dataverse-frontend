@@ -165,6 +165,11 @@ export const UploadedFilesList = ({
                         indeterminate={someFilesSelected}
                         onChange={handleToogleAllFiles}
                         disabled={isSaving}
+                        aria-label={
+                          allFilesSelected
+                            ? t('fileUploader.uploadedFilesList.deselectAllFiles')
+                            : t('fileUploader.uploadedFilesList.selectAllFiles')
+                        }
                       />
                     </div>
                   </th>
