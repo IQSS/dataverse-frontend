@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { UploadedFileDTO, WriteError } from '@iqss/dataverse-client-javascript'
 import { addUploadedFiles } from '@/files/domain/useCases/addUploadedFiles'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { UploadedFileDTOMapper } from '@/files/infrastructure/mappers/UploadedFileDTOMapper'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { useFileUploaderContext } from './context/FileUploaderContext'
 import { UploadedFile } from './context/fileUploaderReducer'
@@ -22,17 +23,19 @@ export const useAddUploadedFilesToDataset = (
   const submitUploadedFilesToDataset = async (uploadedFiles: UploadedFile[]) => {
     setIsSaving(true)
 
-    const uploadedFilesDTO: UploadedFileDTO[] = uploadedFiles.map((newFileInfo) => ({
-      storageId: newFileInfo.storageId,
-      checksumValue: newFileInfo.checksumValue,
-      checksumType: newFileInfo.checksumAlgorithm,
-      fileName: newFileInfo.fileName,
-      description: newFileInfo.description,
-      directoryLabel: newFileInfo.fileDir,
-      // categories?: string[];
-      // restrict?: boolean;
-      mimeType: newFileInfo.fileType === '' ? 'application/octet-stream' : newFileInfo.fileType // some browsers (e.g., chromium for .java files) fail to detect the mime type for some files and leave the fileType as an empty string, we use the default value 'application/octet-stream' in that case
-    }))
+    const uploadedFilesDTO: UploadedFileDTO[] = uploadedFiles.map((newFileInfo) =>
+      UploadedFileDTOMapper.toUploadedFileDTO(
+        newFileInfo.fileName,
+        newFileInfo.description,
+        newFileInfo.fileDir,
+        newFileInfo.tags,
+        newFileInfo.restricted,
+        newFileInfo.storageId,
+        newFileInfo.checksumValue,
+        newFileInfo.checksumAlgorithm,
+        newFileInfo.fileType
+      )
+    )
 
     try {
       await addUploadedFiles(fileRepository, datasetPersistentId, uploadedFilesDTO)

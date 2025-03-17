@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { UploadedFileDTO, WriteError } from '@iqss/dataverse-client-javascript'
 import { replaceFile } from '@/files/domain/useCases/replaceFile'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { UploadedFileDTOMapper } from '@/files/infrastructure/mappers/UploadedFileDTOMapper'
 import { JSDataverseWriteErrorHandler } from '@/shared/helpers/JSDataverseWriteErrorHandler'
 import { useFileUploaderContext } from './context/FileUploaderContext'
 import { UploadedFile } from './context/fileUploaderReducer'
@@ -18,18 +19,17 @@ export const useReplaceFile = (fileRepository: FileRepository): UseReplaceFileRe
   const submitReplaceFile = async (originalFileID: number, newFileInfo: UploadedFile) => {
     setIsSaving(true)
 
-    const newFileDTO: UploadedFileDTO = {
-      storageId: newFileInfo.storageId,
-      checksumValue: newFileInfo.checksumValue,
-      checksumType: newFileInfo.checksumAlgorithm,
-      fileName: newFileInfo.fileName,
-      description: newFileInfo.description,
-      directoryLabel: newFileInfo.fileDir,
-      // categories?: string[];
-      // restrict?: boolean;
-      mimeType: newFileInfo.fileType === '' ? 'application/octet-stream' : newFileInfo.fileType, // some browsers (e.g., chromium for .java files) fail to detect the mime type for some files and leave the fileType as an empty string, we use the default value 'application/octet-stream' in that case
-      forceReplace: true
-    }
+    const newFileDTO: UploadedFileDTO = UploadedFileDTOMapper.toUploadedFileDTO(
+      newFileInfo.fileName,
+      newFileInfo.description,
+      newFileInfo.fileDir,
+      newFileInfo.tags,
+      newFileInfo.restricted,
+      newFileInfo.storageId,
+      newFileInfo.checksumValue,
+      newFileInfo.checksumAlgorithm,
+      newFileInfo.fileType
+    )
 
     try {
       const newFileIdentifier = await replaceFile(fileRepository, originalFileID, newFileDTO)

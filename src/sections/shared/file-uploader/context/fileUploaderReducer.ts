@@ -25,6 +25,8 @@ export interface FileUploadState {
   fileSize: number
   fileLastModified: number
   description: string
+  tags: string[]
+  restricted: boolean
   storageId?: string
   checksumValue?: string
   checksumAlgorithm: FixityAlgorithm
@@ -111,7 +113,9 @@ export const fileUploaderReducer = (
             fileSize: file.size,
             fileLastModified: file.lastModified,
             checksumAlgorithm: state.config.checksumAlgorithm,
-            description: state.config.originalFile?.metadata.description ?? ''
+            description: state.config.originalFile?.metadata.description ?? '',
+            restricted: state.config.originalFile?.access.restricted ?? false,
+            tags: state.config.originalFile?.metadata.labels.map((label) => label.value) ?? []
           }
         }
       }
