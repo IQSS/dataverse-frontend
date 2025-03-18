@@ -20,8 +20,6 @@ const fileMock = FileMother.create({
   })
 })
 
-// TODO:ME - Add integration test for blocker of file uploader
-
 describe('FileUploader', () => {
   describe('replace mode', () => {
     it('shows the loading configuration spinner while loading the fixity algorithm', () => {

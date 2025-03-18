@@ -17,7 +17,6 @@ describe('FileThumbnail', () => {
     cy.findByText('Restricted with access Icon').should('not.exist')
   })
 
-  // TODO:ME - force true
   it('renders FilePreviewImage when thumbnail is provided with unlocked icon if restricted with access', () => {
     const file = FilePreviewMother.createWithThumbnailRestrictedWithAccessGranted()
 

@@ -29,6 +29,9 @@ export enum OperationType {
   ADD_FILES_TO_DATASET = 'add-files-to-dataset'
 }
 
+// TODO - We need something to tell the user which files have the same contents as other files already in the dataset.
+// TODO - When leaving the page or removing an uploaded file from the bottom list, we need to also delete the file from the S3 bucket. We need an API endpoint for this.
+
 export const FileUploader = ({
   fileRepository,
   datasetPersistentId,

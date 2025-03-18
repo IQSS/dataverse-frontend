@@ -18,9 +18,6 @@ interface ReplaceFileProps {
   datasetVersionFromParams: string
 }
 
-// TODO:ME - Add component/unit tests
-// TODO - We need something to tell the user which files have the same contents as other files already in the dataset.
-
 export const ReplaceFile = ({
   fileRepository,
   fileIdFromParams,
