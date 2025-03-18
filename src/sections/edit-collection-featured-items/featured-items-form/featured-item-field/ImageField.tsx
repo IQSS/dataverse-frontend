@@ -5,7 +5,7 @@ import { Button, Col, Form, Stack, Tooltip } from '@iqss/dataverse-design-system
 import { ArrowDownUp, ArrowCounterclockwise, XLg } from 'react-bootstrap-icons'
 import cn from 'classnames'
 import { FeaturedItemsFormHelper } from '../FeaturedItemsFormHelper'
-import { appendTimestampToImageUrl } from '@/sections/collection/featured-items/FeaturedItem'
+import { appendTimestampToImageUrl } from '@/sections/collection/featured-items/FeaturedItemCard'
 import styles from './FeaturedItemField.module.scss'
 
 interface ImageFieldProps {
