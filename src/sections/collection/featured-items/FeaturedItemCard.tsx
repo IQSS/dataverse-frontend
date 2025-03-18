@@ -52,7 +52,7 @@ export const FeaturedItemCard = ({ featuredItem }: FeaturedItemProps) => {
         <footer className={styles.footer}>
           <Link
             to={`/featured-item/collection-alias/featured-item-id`}
-            className="btn btn-primary btn-sm">
+            className="btn btn-secondary btn-sm">
             See {getDisplayValue(featuredItem.type)}
           </Link>
         </footer>

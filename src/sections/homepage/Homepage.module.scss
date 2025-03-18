@@ -8,6 +8,11 @@
   align-items: center;
   justify-content: center;
   min-height: $main-container-available-height;
+  padding-top: 4rem;
+}
+
+.featured-items-wrapper {
+  min-width: 100%;
 }
 
 .middle-search-cta-wrapper {
@@ -17,5 +22,5 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding-block: 2rem;
+  padding-block: 3rem;
 }
