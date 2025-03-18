@@ -1,17 +1,40 @@
-import { PropsWithChildren } from 'react'
 import { Card as CardBS } from 'react-bootstrap'
 import { CardHeader } from './CardHeader'
 import { CardBody } from './CardBody'
+import { CardImage } from './CardImage'
 
 /**
  * ## Description
  * The card component shows a body in a frame with a header.
  */
-function Card({ children }: PropsWithChildren) {
-  return <CardBS>{children}</CardBS>
+
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode
+  border?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'dark' | 'light'
+  text?:
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'danger'
+    | 'warning'
+    | 'info'
+    | 'dark'
+    | 'light'
+    | 'white'
+    | 'muted'
+  bg?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'dark' | 'light'
+  className?: string
+}
+function Card({ children, border, bg, className, ...rest }: CardProps) {
+  return (
+    <CardBS border={border} bg={bg} className={className} {...rest}>
+      {children}
+    </CardBS>
+  )
 }
 
 Card.Header = CardHeader
 Card.Body = CardBody
+Card.Image = CardImage
 
 export { Card }
