@@ -37,7 +37,7 @@ export const DatasetDeleteFileButton = ({
   const [searchParamsURL] = useSearchParams()
   const urlParams = new URLSearchParams(searchParamsURL)
   const version = urlParams.get(QueryParamKey.VERSION)
-  console.log(refreshFiles)
+
   function closeModalAndNavigateToDataset() {
     setShowConfirmationModal(false)
 

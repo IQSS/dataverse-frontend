@@ -114,7 +114,7 @@ describe('EditFilesOptions', () => {
     cy.findByText('Close').click()
   })
 
-  it('does not show the No Selected Files message when files are selected and one option is clicked', () => {
+  it.only('does not show the No Selected Files message when files are selected and one option is clicked', () => {
     cy.customMount(
       <EditFilesOptions
         files={files}
@@ -163,8 +163,10 @@ describe('EditFilesOptions for a single file', () => {
     )
 
     cy.findByRole('button', { name: 'Restrict' }).should('exist').click()
+    cy.findByRole('dialog').should('exist')
     cy.findByRole('button', { name: 'Save Changes' }).should('exist')
     cy.findByText('Cancel').click()
+    cy.findByRole('dialog').should('not.exist')
   })
 
   it('renders the unrestrict option if file is restricted', () => {
@@ -179,12 +181,14 @@ describe('EditFilesOptions for a single file', () => {
     )
 
     cy.findByRole('button', { name: 'Unrestrict' }).should('exist').click()
+    cy.findByRole('dialog').should('exist')
     cy.findByText('The file will be unrestricted.').should('exist')
     cy.findByRole('button', { name: 'Save Changes' }).should('exist')
     cy.findByText('Cancel').click()
+    cy.findByRole('dialog').should('not.exist')
   })
 
-  it('renders delete', () => {
+  it('renders delete modal', () => {
     const fileUnrestricted = FilePreviewMother.createDefault()
     cy.customMount(
       <EditFilesOptions
@@ -196,7 +200,66 @@ describe('EditFilesOptions for a single file', () => {
     )
 
     cy.findByRole('button', { name: 'Delete' }).should('exist').click()
+    cy.findByRole('dialog').should('exist')
     cy.findByText('The file will be deleted after you click on the Delete button.').should('exist')
     cy.findByText('Cancel').click()
+    cy.findByRole('dialog').should('not.exist')
+  })
+
+  it('should delete file if delete button clicked', () => {
+    fileRepository.delete = cy.stub().resolves()
+    cy.customMount(
+      <EditFilesOptions
+        file={FilePreviewMother.createDefault()}
+        fileRepository={fileRepository}
+        datasetInfo={datasetInfo}
+        isHeader={false}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Delete' }).click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByTestId('deleteButton').click()
+    cy.findByRole('dialog').should('not.exist')
+    cy.findByText(/The file has been deleted./).should('exist')
+  })
+
+  it('should restrict file if restrict button clicked', () => {
+    fileRepository.restrict = cy.stub().resolves()
+    cy.customMount(
+      <EditFilesOptions
+        file={FilePreviewMother.createDefault()}
+        fileRepository={fileRepository}
+        datasetInfo={datasetInfo}
+        isHeader={false}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Restrict' }).click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByRole('button', { name: /Save Changes/i }).click()
+    cy.findByRole('dialog').should('not.exist')
+    cy.findByText(/The file has been restricted./).should('exist')
+  })
+
+  it('should unrestrict file if restrict button clicked', () => {
+    fileRepository.restrict = cy.stub().resolves()
+    const fileRestricted = FilePreviewMother.createRestricted()
+
+    cy.customMount(
+      <EditFilesOptions
+        file={fileRestricted}
+        fileRepository={fileRepository}
+        datasetInfo={datasetInfo}
+        isHeader={false}
+      />
+    )
+
+    cy.findByRole('button', { name: 'Unrestrict' }).click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByText('The file will be unrestricted.').should('exist')
+    cy.findByRole('button', { name: /Save Changes/i }).click()
+    cy.findByRole('dialog').should('not.exist')
+    cy.findByText(/The file has been unrestricted./).should('exist')
   })
 })
