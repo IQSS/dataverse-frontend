@@ -125,7 +125,11 @@ export const FeaturedItems = ({
           tabIndex={0}>
           {collectionFeaturedItems.map((item, index) => (
             <div key={index} className={styles['slider-item']} data-index={index}>
-              <FeaturedItemCard featuredItem={item as CustomFeaturedItem} key={item.id} />
+              <FeaturedItemCard
+                featuredItem={item as CustomFeaturedItem}
+                collectionId={collectionId}
+                key={item.id}
+              />
             </div>
           ))}
         </div>

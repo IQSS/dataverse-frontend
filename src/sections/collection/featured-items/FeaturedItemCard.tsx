@@ -1,19 +1,21 @@
 import { useMemo } from 'react'
 import DOMPurify from 'dompurify'
+import { Link } from 'react-router-dom'
 import cn from 'classnames'
 import { Card } from '@iqss/dataverse-design-system'
 import {
   CollectionFeaturedItem,
   CustomFeaturedItem
 } from '@/collection/domain/models/CollectionFeaturedItem'
-import { Link } from 'react-router-dom'
+import { RouteWithParams } from '@/sections/Route.enum'
 import styles from './FeaturedItems.module.scss'
 
 interface FeaturedItemProps {
   featuredItem: CustomFeaturedItem
+  collectionId: string
 }
 
-export const FeaturedItemCard = ({ featuredItem }: FeaturedItemProps) => {
+export const FeaturedItemCard = ({ featuredItem, collectionId }: FeaturedItemProps) => {
   const imageUrl = useMemo(() => {
     if (!featuredItem.imageFileUrl) return null
 
@@ -51,7 +53,7 @@ export const FeaturedItemCard = ({ featuredItem }: FeaturedItemProps) => {
         />
         <footer className={styles.footer}>
           <Link
-            to={`/featured-item/collection-alias/featured-item-id`}
+            to={RouteWithParams.FEATURED_ITEM(collectionId, featuredItem.id.toString())}
             className="btn btn-secondary btn-sm">
             See {getDisplayValue(featuredItem.type)}
           </Link>
