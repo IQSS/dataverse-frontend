@@ -6,7 +6,7 @@ import styles from './Metrics.module.scss'
 
 const SLOTS_DURATION = 1.6
 const SLOTS_SPEED = 0.6
-const SLOTS_ANIMATE_ON_VISIBLE = { triggerOnce: false, rootMargin: '0px 0px -150px 0px' }
+const SLOTS_ANIMATE_ON_VISIBLE = { triggerOnce: true, rootMargin: '0px 0px -150px 0px' }
 const SLOT_PROPS = {
   duration: SLOTS_DURATION,
   speed: SLOTS_SPEED,
