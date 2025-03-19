@@ -6,11 +6,16 @@ import { FeaturedItems } from '../collection/featured-items/FeaturedItems'
 import { SearchInput } from './search-input/SearchInput'
 import { useLoading } from '../loading/LoadingContext'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
+import { Metrics } from './metrics/Metrics'
 import styles from './Homepage.module.scss'
 
 interface HomepageProps {
   collectionRepository: CollectionRepository
 }
+
+// TODO:ME - Create Feaured Item by id page
+// TODO:ME - Use that page component for showing it in the preview carousel
+// TODO:ME - Modify card to show dvObject types and make a storybook example
 
 export const Homepage = ({ collectionRepository }: HomepageProps) => {
   const { collection, isLoading: isLoadingCollection } = useCollection(collectionRepository)
@@ -28,19 +33,18 @@ export const Homepage = ({ collectionRepository }: HomepageProps) => {
 
   return (
     <section className={styles['section-wrapper']}>
-      <div style={{ minWidth: '100%' }}>
-        <h3>Stats</h3>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus pariatur animi quam
-          officiis nemo dolore nisi, iure amet minus, impedit cumque incidunt sapiente, molestias
-          quos et vel tenetur sit blanditiis laborum porro sequi. Cupiditate magnam laborum
-          quibusdam mollitia atque quas consequatur, quasi omnis iste veritatis, suscipit maiores
-          libero consequuntur vel voluptatum provident nisi! Molestiae dolorum eligendi et explicabo
-          culpa accusamus consectetur, expedita labore harum iste enim quam laborum nulla dolore
-          laboriosam dignissimos. Quis consequatur quidem, unde libero vero adipisci! Repellendus
-          itaque voluptatibus dolore natus placeat laudantium quis iste amet alias incidunt!
-        </p>
-      </div>
+      {collection && (
+        <>
+          <div className={styles['featured-items-wrapper']}>
+            <FeaturedItems
+              collectionRepository={collectionRepository}
+              collectionId={collection.id}
+              // hideTitle
+            />
+          </div>
+          {/* <div className={styles['separation-line']} /> */}
+        </>
+      )}
 
       <div className={styles['middle-search-cta-wrapper']}>
         <SearchInput />
@@ -49,15 +53,9 @@ export const Homepage = ({ collectionRepository }: HomepageProps) => {
         </Link>
       </div>
 
-      {collection && (
-        <div className={styles['featured-items-wrapper']}>
-          <FeaturedItems
-            collectionRepository={collectionRepository}
-            collectionId={collection.id}
-            hideTitle
-          />
-        </div>
-      )}
+      <div className={styles['separation-line']} />
+
+      <Metrics />
     </section>
   )
 }

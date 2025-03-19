@@ -12,11 +12,13 @@ export interface FeaturedItemsProps {
   collectionRepository: CollectionRepository
   collectionId: string
   hideTitle?: boolean
+  className?: string
 }
 
 export const FeaturedItems = ({
   collectionRepository,
   collectionId,
+  className,
   hideTitle = false
 }: FeaturedItemsProps) => {
   const { t } = useTranslation('collection')
@@ -98,8 +100,8 @@ export const FeaturedItems = ({
   }
 
   return (
-    <div className={styles.featured_items}>
-      {!hideTitle && <h3>{t('featuredItems.title')}</h3>}
+    <div className={`${styles.featured_items} ${className || ''}`}>
+      {!hideTitle && <h4>{t('featuredItems.title')}</h4>}
 
       <div className={styles['slider-container']} data-testid="featured-items-slider">
         {!oneItemOnly && isOverflowing && (

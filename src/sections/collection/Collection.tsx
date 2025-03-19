@@ -89,6 +89,7 @@ export function Collection({
             <FeaturedItems
               collectionRepository={collectionRepository}
               collectionId={collection.id}
+              className={styles['featured-items-spacing']}
             />
 
             <div className={styles['metrics-actions-container']}>
