@@ -65,6 +65,7 @@ export const ContactModal = ({
     }
 
     await submitForm(formData)
+    formMethods.reset()
   }
 
   return (

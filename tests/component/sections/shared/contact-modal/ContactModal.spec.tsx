@@ -104,4 +104,27 @@ describe('Contact Modal', () => {
     cy.findByTestId('body').should('have.value', '')
     cy.findByTestId('captchaInput').should('have.value', '')
   })
+
+  it('should reset the form after submit the form success', () => {
+    cy.findByTestId('fromEmail').type('email@test.com')
+    cy.findByTestId('subject').type('subject')
+    cy.findByTestId('body').type('message')
+    cy.findByTestId('captchaNumbers')
+      .invoke('text')
+      .then((text) => {
+        const matches = text.match(/(\d+)\s*\+\s*(\d+)\s*=/)
+        if (matches) {
+          const num1 = parseInt(matches[1], 10)
+          const num2 = parseInt(matches[2], 10)
+          const answer = num1 + num2
+          cy.findByTestId('captchaInput').type(answer.toString())
+          cy.findByRole('button', { name: /Submit/i }).click()
+        }
+      })
+    cy.findByRole('button', { name: /Submit/i }).click()
+    cy.findByTestId('fromEmail').should('have.value', '')
+    cy.findByTestId('subject').should('have.value', '')
+    cy.findByTestId('body').should('have.value', '')
+    cy.findByTestId('captchaInput').should('have.value', '')
+  })
 })
