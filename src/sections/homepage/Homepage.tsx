@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { useCollection } from '../collection/useCollection'
 import { FeaturedItems } from '../collection/featured-items/FeaturedItems'
-import { SearchInput } from './search-input/SearchInput'
 import { useLoading } from '../loading/LoadingContext'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
+import { SearchInput } from './search-input/SearchInput'
 import { Metrics } from './metrics/Metrics'
+import { Usage } from './usage/Usage'
 import styles from './Homepage.module.scss'
 
 interface HomepageProps {
@@ -33,18 +34,9 @@ export const Homepage = ({ collectionRepository }: HomepageProps) => {
 
   return (
     <section className={styles['section-wrapper']}>
-      {collection && (
-        <>
-          <div className={styles['featured-items-wrapper']}>
-            <FeaturedItems
-              collectionRepository={collectionRepository}
-              collectionId={collection.id}
-              // hideTitle
-            />
-          </div>
-          {/* <div className={styles['separation-line']} /> */}
-        </>
-      )}
+      <Usage collectionId={collection?.id as string} />
+
+      <div className={styles['separation-line']} />
 
       <div className={styles['middle-search-cta-wrapper']}>
         <SearchInput />
@@ -54,6 +46,19 @@ export const Homepage = ({ collectionRepository }: HomepageProps) => {
       </div>
 
       <div className={styles['separation-line']} />
+
+      {collection && (
+        <>
+          <div className={styles['featured-items-wrapper']}>
+            <FeaturedItems
+              collectionRepository={collectionRepository}
+              collectionId={collection.id}
+              // hideTitle
+            />
+          </div>
+          <div className={styles['separation-line']} />
+        </>
+      )}
 
       <Metrics />
     </section>

@@ -26,31 +26,4 @@
       border-bottom: 0;
     }
   }
-
-  .table {
-    width: 100%;
-    border-bottom: solid 1px $dv-border-color;
-
-    @media (min-width: 768px) {
-      border: 0;
-    }
-
-    th,
-    td {
-      padding: 4px;
-    }
-
-    thead th {
-      font-size: 18px;
-    }
-
-    tbody th {
-      font-weight: 400;
-    }
-
-    tbody td {
-      font-weight: 600;
-      font-size: 20px;
-    }
-  }
 }
