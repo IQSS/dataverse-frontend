@@ -137,6 +137,17 @@
         margin: 0;
         font-size: 14px;
       }
+
+      // Both of these are only beacuse block codes make card overflow
+      :global .rte-code-block {
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      :global .rte-code-block code {
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
     }
 
     .footer {

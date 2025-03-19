@@ -1,7 +1,11 @@
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Accordion } from '@iqss/dataverse-design-system'
-import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import {
+  CollectionFeaturedItem,
+  CustomFeaturedItem
+} from '@/collection/domain/models/CollectionFeaturedItem'
+import { FeaturedItemView } from '@/sections/featured-item/featured-item-view/FeaturedItemView'
 import { FeaturedItemsFormHelper } from '../FeaturedItemsFormHelper'
 import { FeaturedItemField } from '../../types'
 import { Slider } from './slider/Slider'
@@ -26,10 +30,10 @@ export const PreviewCarousel = () => {
             dotLabel={tCollection('featuredItems.slider.dotLabel')}
             dataTestId="featured-items-slider"
             items={formFieldsToFeaturedItems.map((featuredItem) => (
-              <div key={featuredItem.id}>
-                Mock, here we need to use the Featured Item Page component or something similar.
-                {/* <FeaturedItemCard featuredItem={featuredItem} key={featuredItem.id} /> */}
-              </div>
+              <FeaturedItemView
+                key={featuredItem.id}
+                featuredItem={featuredItem as CustomFeaturedItem}
+              />
             ))}
           />
         </Accordion.Body>
