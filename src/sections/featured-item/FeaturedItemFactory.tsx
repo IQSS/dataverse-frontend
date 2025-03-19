@@ -12,14 +12,16 @@ export class FeaturedItemFactory {
 }
 
 function FeaturedItemWithParams() {
-  const { parentCollectionId } = useParams<{ parentCollectionId: string }>() as {
+  const { parentCollectionId, featuredItemId } = useParams<{ parentCollectionId: string }>() as {
     parentCollectionId: string
+    featuredItemId: string
   }
 
   return (
     <FeaturedItem
       collectionRepository={collectionRepository}
       parentCollectionIdFromParams={parentCollectionId}
+      featuredItemId={featuredItemId}
     />
   )
 }
