@@ -32,7 +32,7 @@ export const useGetDatasetVersionsSummaries = ({
         const errorMessage =
           err instanceof Error && err.message
             ? err.message
-            : 'There was an error getting the metadata block info by name'
+            : 'Something went wrong getting the information from the dataset versions summaries. Try again later.'
         setError(errorMessage)
       } finally {
         setIsLoading(false)

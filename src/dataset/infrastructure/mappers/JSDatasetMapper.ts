@@ -44,12 +44,12 @@ export class JSDatasetMapper {
     jsDatasetLocks: JSDatasetLock[],
     jsDatasetFilesTotalOriginalDownloadSize: number,
     jsDatasetFilesTotalArchivalDownloadSize: number,
+    jsDatasetVersionSummaries?: JSDatasetVersionSummaryInfo[],
     requestedVersion?: string,
     privateUrl?: PrivateUrl,
     latestPublishedVersionMajorNumber?: number,
     latestPublishedVersionMinorNumber?: number,
-    datasetVersionDiff?: JSDatasetVersionDiff,
-    jsDatasetVersionSummaries?: JSDatasetVersionSummaryInfo[]
+    datasetVersionDiff?: JSDatasetVersionDiff
   ): Dataset {
     const version = JSDatasetVersionMapper.toVersion(
       jsDataset.versionId,

@@ -5,15 +5,13 @@ import {
   SummaryUpdates
 } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 
-export function generateDatasetVersionSummaryDescription(
+export const generateDatasetVersionSummaryDescription = function (
   summary?: DatasetVersionSummary | DatasetVersionSummaryStringValues
 ): Record<string, string> {
   if (!summary) {
-    console.error('No summary provided.')
     return {}
   }
 
-  //TODO Make a .json to save all the translations
   if (typeof summary === 'string') {
     switch (summary) {
       case DatasetVersionSummaryStringValues.firstPublished:
@@ -29,8 +27,6 @@ export function generateDatasetVersionSummaryDescription(
           previousVersionDeaccessioned:
             'Due to the previous version being deaccessioned, there are no difference notes available for this published version.'
         }
-      default:
-        return { default: summary }
     }
   }
 
@@ -41,11 +37,10 @@ export function generateDatasetVersionSummaryDescription(
       case 'Citation Metadata': {
         const metadataDescriptions: string[] = []
         Object.entries(value as Record<string, SummaryUpdates>).forEach(([field, change]) => {
-          if (change.changed > 0 || change.added > 0 || change.deleted > 0) {
+          if (change.changed > 0 || change.added > 0) {
             const changes = []
             if (change.changed > 0) changes.push('Changed')
             if (change.added > 0) changes.push(`${change.added} Added`)
-            if (change.deleted > 0) changes.push(`${change.deleted} Deleted`)
 
             metadataDescriptions.push(`${field} (${changes.join('; ')})`)
           }
@@ -97,11 +92,6 @@ export function generateDatasetVersionSummaryDescription(
 
       case 'termsAccessChanged':
         if (value) descriptionObject[key] = 'Terms Access: Changed'
-        break
-
-      default:
-        console.warn(`Unhandled summary key: ${key}`)
-        descriptionObject[key] = `Unhandled summary key: ${key}`
         break
     }
   })

@@ -1,7 +1,7 @@
 import {
   DatasetVersionSummaryInfo,
   DatasetVersionSummaryStringValues
-} from '@iqss/dataverse-client-javascript'
+} from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 
 export class DatasetVersionsSummariesMother {
   static create(): DatasetVersionSummaryInfo[] {

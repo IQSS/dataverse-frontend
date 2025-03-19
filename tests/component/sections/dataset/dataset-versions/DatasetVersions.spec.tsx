@@ -1,9 +1,13 @@
 import { DatasetVersions } from '@/sections/dataset/dataset-versions/DatasetVersions'
-import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+import {
+  DatasetVersionSummaryInfo,
+  DatasetVersionSummaryStringValues
+} from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { generateDatasetVersionSummaryDescription } from '@/sections/dataset/dataset-versions/generateSummaryDescription'
 import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
 import { DatasetVersionsSummariesMother } from '../../../dataset/domain/models/DatasetVersionsSummariesMother'
+import { DatasetVersionDiffMother } from '../../../dataset/domain/models/DatasetVersionDiffMother'
 
 const datasetsRepository: DatasetRepository = {} as DatasetRepository
 
@@ -34,80 +38,8 @@ const versionSummaryInfoDraft: DatasetVersionSummaryInfo[] = [
     publishedOn: ''
   }
 ]
+const datasetVersionDiff: DatasetVersionDiff = DatasetVersionDiffMother.create()
 
-const datasetVersionDiff: DatasetVersionDiff | undefined = {
-  oldVersion: {
-    versionNumber: '1.0',
-    lastUpdatedDate: '2025-03-11T16:22:00Z'
-  },
-  newVersion: {
-    versionNumber: 'DRAFT',
-    lastUpdatedDate: '2025-03-13T14:09:03Z'
-  },
-
-  metadataChanges: [
-    {
-      blockName: 'Citation Metadata',
-      changed: [
-        {
-          fieldName: 'Title',
-          oldValue: 'testdateset',
-          newValue: 'testdsaddsf'
-        },
-        {
-          fieldName: 'Subtitle',
-          oldValue: '',
-          newValue: 'affd'
-        },
-        {
-          fieldName: 'Description',
-          oldValue: 'd',
-          newValue: 'dadadf'
-        },
-        {
-          fieldName: 'Related Publication',
-          oldValue: '',
-          newValue: 'af'
-        }
-      ]
-    }
-  ],
-  filesRemoved: [
-    {
-      fileName: 'blob (2)',
-      MD5: '53d3d10e00812f7c55e0c9c3935f3769',
-      type: 'application/octet-stream',
-      fileId: 40,
-      description: '',
-      isRestricted: false,
-      filePath: '',
-      tags: [],
-      categories: []
-    },
-    {
-      fileName: 'blob',
-      MD5: '53d3d10e00812f7c55e0c9c3935f3769',
-      type: 'application/octet-stream',
-      fileId: 41,
-      description: '',
-      isRestricted: false,
-      filePath: '',
-      tags: [],
-      categories: []
-    },
-    {
-      fileName: 'blob (1)',
-      MD5: '53d3d10e00812f7c55e0c9c3935f3769',
-      type: 'application/octet-stream',
-      fileId: 42,
-      description: '',
-      isRestricted: false,
-      filePath: '',
-      tags: [],
-      categories: []
-    }
-  ]
-}
 describe('DatasetVersions', () => {
   it('should render the dataset versions table without view differences button and checkbox', () => {
     datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfoDraft)
@@ -159,8 +91,8 @@ describe('DatasetVersions', () => {
 
   it('should render the dataset versions table without view differences button if only one version checked', () => {
     datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
-    cy.findByTestId('dataset-versions-table').should('exist')
 
+    cy.findByTestId('dataset-versions-table').should('exist')
     cy.contains('th', 'Dataset Versions').should('exist')
     cy.contains('th', 'Summary').should('exist')
     cy.contains('th', 'Version Note').should('exist')
@@ -169,7 +101,25 @@ describe('DatasetVersions', () => {
     cy.findAllByTestId('select-checkbox').first().should('exist').check().should('be.checked')
     cy.findByRole('button', { name: 'View Differences' }).should('not.exist')
 
-    cy.findByText(/View Detail/).should('not.exist')
+    cy.findByText(/View Details/).should('not.exist')
+  })
+
+  it('should open dataset versions modal', () => {
+    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
+
+    cy.findByTestId('dataset-versions-table').should('exist')
+    cy.get('tr').eq(1).find('td').eq(2).findByText('View Details').should('exist').click()
+    cy.findByRole('dialog').should('exist')
+  })
+
+  it('should close dataset versions modal', () => {
+    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
+
+    cy.findByTestId('dataset-versions-table').should('exist')
+    cy.get('tr').eq(1).find('td').eq(2).findByText('View Details').should('exist').click()
+    cy.findByRole('dialog').should('exist')
+    cy.findByRole('button', { name: /Cancel/i }).click()
+    cy.findByRole('dialog').should('not.exist')
   })
 
   it('should not render the dataset version table if dataset is undefined', () => {
@@ -214,5 +164,116 @@ describe('DatasetVersions', () => {
     cy.findByRole('dialog').should('exist')
     cy.findByRole('button', { name: /Cancel/i }).click()
     cy.findByRole('dialog').should('not.exist')
+  })
+})
+
+describe('DatasetVersions generateDatasetVersionSummaryDescription', () => {
+  it('should render the dataset versions table with correct descriptions from generateDatasetVersionSummaryDescription', () => {
+    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
+    cy.customMount(
+      <DatasetVersions datasetId={'datasetId'} datasetRepository={datasetsRepository} />
+    )
+    cy.findByTestId('dataset-versions-table').should('exist')
+
+    versionSummaryInfo.forEach((version) => {
+      cy.contains('td', version.versionNumber).should('exist')
+      cy.contains('td', version.contributors).should('exist')
+
+      const summaryObject = generateDatasetVersionSummaryDescription(version.summary)
+      Object.entries(summaryObject).forEach(([_key, value]) => {
+        cy.contains(value).should('exist')
+      })
+    })
+  })
+
+  it('should handle multiple simultaneous summaries', () => {
+    const versionSummary = {
+      files: {
+        added: 2,
+        removed: 1,
+        replaced: 1,
+        changedFileMetaData: 3,
+        changedVariableMetadata: 1
+      },
+      termsAccessChanged: true,
+      'Citation Metadata': {
+        Description: { changed: 1, added: 0, deleted: 0 },
+        Title: { changed: 0, added: 1, deleted: 0 }
+      },
+      'Additional Citation Metadata': {
+        added: 1,
+        removed: 1,
+        replaced: 1,
+        changedFileMetaData: 2,
+        changedVariableMetadata: 1
+      }
+    }
+
+    const result = generateDatasetVersionSummaryDescription(versionSummary)
+    expect(result.Files).to.include(`Added: ${versionSummary.files.added}`)
+    expect(result.Files).to.include(`Removed: ${versionSummary.files.removed}`)
+    expect(result.Files).to.include(`Replaced: ${versionSummary.files.replaced}`)
+    expect(result.Files).to.include(
+      `File Metadata Changed: ${versionSummary.files.changedFileMetaData}`
+    )
+    expect(result.Files).to.include(
+      `Variable Metadata Changed: ${versionSummary.files.changedVariableMetadata}`
+    )
+    expect(result.termsAccessChanged).to.equal('Terms Access: Changed')
+    expect(result['Citation Metadata']).to.include('Description (Changed)')
+    expect(result['Citation Metadata']).to.include('Title (1 Added)')
+    expect(result['termsAccessChanged']).to.includes('Terms Access: Changed')
+
+    expect(result['Additional Citation Metadata']).to.include(
+      `${versionSummary['Additional Citation Metadata'].added} Added`
+    )
+    expect(result['Additional Citation Metadata']).to.include(
+      `${versionSummary['Additional Citation Metadata'].removed} Removed`
+    )
+    expect(result['Additional Citation Metadata']).to.include(
+      `${versionSummary['Additional Citation Metadata'].replaced} Replaced`
+    )
+    expect(result['Additional Citation Metadata']).to.include(
+      `${versionSummary['Additional Citation Metadata'].changedFileMetaData} Changed`
+    )
+    expect(result['Additional Citation Metadata']).to.include(
+      `Variable Metadata Changed: ${versionSummary['Additional Citation Metadata'].changedVariableMetadata}`
+    )
+
+    expect(result.termsAccessChanged).to.includes('Terms Access: Changed')
+  })
+
+  it('should handle DatasetVersionSummaryStringValues correctly', () => {
+    expect(
+      generateDatasetVersionSummaryDescription(DatasetVersionSummaryStringValues.firstPublished)
+    ).to.deep.equal({ firstPublished: 'This is the First Published Version' })
+
+    expect(
+      generateDatasetVersionSummaryDescription(
+        DatasetVersionSummaryStringValues.versionDeaccessioned
+      )
+    ).to.deep.equal({
+      versionDeaccessioned: 'Deaccessioned Reason: The research article has been retracted.'
+    })
+
+    expect(
+      generateDatasetVersionSummaryDescription(DatasetVersionSummaryStringValues.firstDraft)
+    ).to.deep.equal({ firstDraft: 'Initial Draft Version' })
+
+    expect(
+      generateDatasetVersionSummaryDescription(
+        DatasetVersionSummaryStringValues.previousVersionDeaccessioned
+      )
+    ).to.deep.equal({
+      previousVersionDeaccessioned:
+        'Due to the previous version being deaccessioned, there are no difference notes available for this published version.'
+    })
+  })
+
+  it('should handle unexpected keys gracefully', () => {
+    const versionSummary = undefined
+
+    const result = generateDatasetVersionSummaryDescription(versionSummary)
+    expect(result).to.deep.equal({})
   })
 })

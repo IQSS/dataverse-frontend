@@ -218,7 +218,7 @@
     "deaccessionButton": "Deaccession"
   },
   "versions": {
-    "select": "",
+    "select": " ",
     "viewDifferences": "View Differences",
     "viewDifferencesDetail": "View Differences Detail",
     "selectTwo": "Please select two versions to view the differences.",

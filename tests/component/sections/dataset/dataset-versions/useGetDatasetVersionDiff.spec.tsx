@@ -36,9 +36,9 @@ describe('useGetDatasetVersionDiff', () => {
     expect(result.current.differences).to.deep.equal(datasetVersionDiffMock)
   })
 
-  it('should return correct error message when a ReadError occurs', async () => {
-    const readError = new ReadError('Error message')
-    datasetRepository.getVersionDiff = cy.stub().rejects(readError)
+  it('should return correct error message when a Error occurs', async () => {
+    const error = new ReadError('Error message')
+    datasetRepository.getVersionDiff = cy.stub().rejects(error)
 
     const { result } = renderHook(() =>
       useGetDatasetVersionDiff({
@@ -50,14 +50,15 @@ describe('useGetDatasetVersionDiff', () => {
     )
     await act(() => {
       expect(result.current.isLoading).to.deep.equal(true)
+      expect(result.current.error).to.deep.equal(null)
       return expect(result.current.differences).to.deep.equal(undefined)
     })
 
     expect(result.current.isLoading).to.deep.equal(false)
-    expect(result.current.error).to.deep.equal(readError.message)
+    expect(result.current.error).to.deep.equal(error.message)
   })
 
-  it('should return a generic error message for non-ReadError exceptions', async () => {
+  it('should return a generic error message for non-Error exceptions', async () => {
     datasetRepository.getVersionDiff = cy.stub().rejects('Unexpected error')
 
     const { result } = renderHook(() =>
@@ -71,6 +72,7 @@ describe('useGetDatasetVersionDiff', () => {
 
     await act(() => {
       expect(result.current.isLoading).to.deep.equal(true)
+      expect(result.current.error).to.deep.equal(null)
       return expect(result.current.differences).to.deep.equal(undefined)
     })
 
