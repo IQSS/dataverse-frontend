@@ -14,12 +14,14 @@ export interface FeaturedItemsProps {
   collectionRepository: CollectionRepository
   collectionId: string
   className?: string
+  withLoadingSkeleton?: boolean
 }
 
 export const FeaturedItems = ({
   collectionRepository,
   collectionId,
-  className
+  className,
+  withLoadingSkeleton
 }: FeaturedItemsProps) => {
   const { t } = useTranslation('collection')
   const theme = useTheme()
@@ -52,7 +54,7 @@ export const FeaturedItems = ({
     }
   }, [collectionFeaturedItems])
 
-  if (isLoadingCollectionFeaturedItems) {
+  if (isLoadingCollectionFeaturedItems && withLoadingSkeleton) {
     return (
       <SkeletonTheme>
         <div
@@ -71,6 +73,10 @@ export const FeaturedItems = ({
         </div>
       </SkeletonTheme>
     )
+  }
+
+  if (isLoadingCollectionFeaturedItems && !withLoadingSkeleton) {
+    return null
   }
 
   if (!isLoadingCollectionFeaturedItems && !hasFeaturedItems) {

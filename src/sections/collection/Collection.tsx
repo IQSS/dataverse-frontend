@@ -98,6 +98,7 @@ export function Collection({
                 collectionRepository={collectionRepository}
                 collectionId={collection.id}
                 className={styles['featured-items-spacing']}
+                withLoadingSkeleton={false}
               />
             )}
 

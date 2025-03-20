@@ -16,7 +16,6 @@ interface HomepageProps {
 }
 
 // TODO:ME - Storybook for Featured Item Page
-// TODO:ME - Placeholder skeleton featured items card while loading
 // TODO:ME - Unit tests for Homepage and new FeaturedItems slider
 
 export const Homepage = ({ collectionRepository }: HomepageProps) => {
@@ -55,6 +54,7 @@ export const Homepage = ({ collectionRepository }: HomepageProps) => {
             <FeaturedItems
               collectionRepository={collectionRepository}
               collectionId={collection.id}
+              withLoadingSkeleton={true}
             />
             <div className={styles['separation-line']} />
           </div>
