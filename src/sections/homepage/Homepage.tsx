@@ -15,10 +15,9 @@ interface HomepageProps {
   collectionRepository: CollectionRepository
 }
 
+// TODO:ME - Storybook for Featured Item Page
 // TODO:ME - Detect if user prefers reduced motion with javascript and avoid startValue of counter, else startValue of 0
 // TODO:ME - Placeholder skeleton featured items card while loading
-// TODO:ME - Modify card to show dvObject types and make a storybook example
-// TODO:ME - Storybook for Featured Item Page
 // TODO:ME - Unit tests for Homepage and new FeaturedItems slider
 
 export const Homepage = ({ collectionRepository }: HomepageProps) => {

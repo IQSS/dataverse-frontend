@@ -5,7 +5,8 @@ import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CustomFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { useGetCollectionFeaturedItems } from '../useGetCollectionFeaturedItems'
-import { FeaturedItemCard } from './FeaturedItemCard'
+import { CustomFeaturedItemCard } from './custom-featured-item-card/CustomFeaturedItemCard'
+import { DvObjectFeaturedItemCard } from './dv-object-featured-item-card/DvObjectFeaturedItemCard'
 import styles from './FeaturedItems.module.scss'
 
 export interface FeaturedItemsProps {
@@ -34,7 +35,7 @@ export const FeaturedItems = ({
   useEffect(() => {
     if (!sliderRef.current) return
 
-    checkSliderPositionToDisableButtons()
+    // checkSliderPositionToDisableButtons()
 
     setIsOverflowing(sliderRef.current.scrollWidth > sliderRef.current.clientWidth)
 
@@ -123,11 +124,15 @@ export const FeaturedItems = ({
           tabIndex={0}>
           {collectionFeaturedItems.map((item, index) => (
             <div key={index} className={styles['slider-item']} data-index={index}>
-              <FeaturedItemCard
-                featuredItem={item as CustomFeaturedItem}
-                collectionId={collectionId}
-                key={item.id}
-              />
+              {item.type === 'collection' || item.type === 'dataset' || item.type === 'file' ? (
+                <DvObjectFeaturedItemCard featuredItem={item} key={item.id} />
+              ) : (
+                <CustomFeaturedItemCard
+                  featuredItem={item as CustomFeaturedItem}
+                  collectionId={collectionId}
+                  key={item.id}
+                />
+              )}
             </div>
           ))}
         </div>

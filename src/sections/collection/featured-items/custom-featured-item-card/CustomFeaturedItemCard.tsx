@@ -4,19 +4,19 @@ import { Link } from 'react-router-dom'
 import cn from 'classnames'
 import { Card, Stack } from '@iqss/dataverse-design-system'
 import { BoxArrowUpRight } from 'react-bootstrap-icons'
-import {
-  CollectionFeaturedItem,
-  CustomFeaturedItem
-} from '@/collection/domain/models/CollectionFeaturedItem'
+import { CustomFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { RouteWithParams } from '@/sections/Route.enum'
-import styles from './FeaturedItems.module.scss'
+import styles from './CustomFeaturedItemCard.module.scss'
 
-interface FeaturedItemProps {
+interface CustomFeaturedItemCardProps {
   featuredItem: CustomFeaturedItem
   collectionId: string
 }
 
-export const FeaturedItemCard = ({ featuredItem, collectionId }: FeaturedItemProps) => {
+export const CustomFeaturedItemCard = ({
+  featuredItem,
+  collectionId
+}: CustomFeaturedItemCardProps) => {
   const imageUrl = useMemo(() => {
     if (!featuredItem.imageFileUrl) return null
 
@@ -29,21 +29,8 @@ export const FeaturedItemCard = ({ featuredItem, collectionId }: FeaturedItemPro
     USE_PROFILES: { html: true }
   })
 
-  const getDisplayValue = (type: CollectionFeaturedItem['type']) => {
-    switch (type) {
-      case 'collection':
-        return 'Collection'
-      case 'dataset':
-        return 'Dataset'
-      case 'file':
-        return 'File'
-      default:
-        return 'Featured Item'
-    }
-  }
-
   return (
-    <Card className={styles.featured_item_card}>
+    <Card className={styles.custom_featured_item_card}>
       {imageUrl && <Card.Image src={imageUrl} alt="" variant="top" className={styles.image} />}
       <Card.Body className={styles.body}>
         <div
@@ -57,7 +44,7 @@ export const FeaturedItemCard = ({ featuredItem, collectionId }: FeaturedItemPro
             to={RouteWithParams.FEATURED_ITEM(collectionId, featuredItem.id.toString())}
             className="btn btn-secondary btn-sm">
             <Stack direction="horizontal" gap={2}>
-              <span className={styles.cta_link_text}>See {getDisplayValue(featuredItem.type)}</span>
+              <span className={styles.cta_link_text}>See Featured Item</span>
               <BoxArrowUpRight size={14} />
             </Stack>
           </Link>

@@ -1,0 +1,72 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.custom_featured_item_card {
+  min-height: 100%;
+  overflow: hidden;
+
+  .image {
+    max-height: 100px;
+    object-fit: cover;
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+
+  .content {
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    line-clamp: 6;
+    -webkit-box-orient: vertical;
+    width: 100%;
+    overflow: hidden;
+
+    &.with_image {
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+    }
+
+    h1 {
+      font-size: 18px;
+    }
+
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-size: 16px;
+    }
+
+    p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    // Both of these are only beacuse block codes make card overflow
+    :global .rte-code-block {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    :global .rte-code-block code {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    .cta_link_text {
+      color: color.adjust($dv-brand-color, $lightness: -9%);
+      font-weight: 500;
+    }
+  }
+}

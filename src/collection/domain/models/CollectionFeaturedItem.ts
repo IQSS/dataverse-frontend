@@ -15,4 +15,5 @@ export type DvObjectFeaturedItem = {
   linkUrl?: string // Optional for now for demo purposes
   title?: string // Optional for now for demo purposes
   description?: string // Optional for now for demo purposes
+  displayOrder: number
 }

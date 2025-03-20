@@ -1,0 +1,65 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.custom_featured_item_card {
+  min-height: 100%;
+  overflow: hidden;
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .desc_img_wrapper {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .icon {
+    display: flex;
+    justify-content: flex-end;
+    height: fit-content;
+    padding-top: 0.35rem;
+
+    &.collection {
+      color: $dv-collection-border-color;
+    }
+
+    &.dataset {
+      color: $dv-dataset-border-color;
+    }
+
+    &.file {
+      color: $dv-file-border-color;
+    }
+
+    > span {
+      margin-right: 0;
+      font-size: 50px;
+      line-height: 1;
+    }
+  }
+
+  .description {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: auto;
+
+    .cta_link_text {
+      color: color.adjust($dv-brand-color, $lightness: -9%);
+      font-weight: 500;
+    }
+  }
+}
