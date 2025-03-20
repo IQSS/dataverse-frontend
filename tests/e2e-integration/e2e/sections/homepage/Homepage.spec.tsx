@@ -20,9 +20,9 @@ describe('Homepage', () => {
     cy.url().should('include', `/collections?${searchParams.toString()}`)
   })
 
-  it('navigates directly to the collection page when clicking the Browse Collections button', () => {
+  it('navigates directly to the collection page when clicking the Browse All Collections button', () => {
     cy.visit('/spa/')
-    cy.findByRole('link', { name: 'Browse Collections' }).click()
+    cy.findByRole('link', { name: 'Browse All Collections' }).click()
 
     cy.url().should('eq', `${Cypress.config().baseUrl as string}/spa/collections`)
   })
