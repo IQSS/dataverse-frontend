@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { Button, useTheme } from '@iqss/dataverse-design-system'
 import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
@@ -51,7 +52,28 @@ export const FeaturedItems = ({
     }
   }, [collectionFeaturedItems])
 
-  if (isLoadingCollectionFeaturedItems || !hasFeaturedItems) {
+  if (isLoadingCollectionFeaturedItems) {
+    return (
+      <SkeletonTheme>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '1.5rem',
+            marginBottom: '1.5rem',
+            overflowX: 'hidden'
+          }}>
+          <Skeleton height={240} width={280} />
+          <Skeleton height={240} width={280} />
+          <Skeleton height={240} width={280} />
+          <Skeleton height={240} width={280} />
+        </div>
+      </SkeletonTheme>
+    )
+  }
+
+  if (!isLoadingCollectionFeaturedItems && !hasFeaturedItems) {
     return null
   }
 
