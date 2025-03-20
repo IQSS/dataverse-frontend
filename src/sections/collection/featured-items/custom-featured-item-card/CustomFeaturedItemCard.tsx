@@ -2,8 +2,7 @@ import { useMemo } from 'react'
 import DOMPurify from 'dompurify'
 import { Link } from 'react-router-dom'
 import cn from 'classnames'
-import { Card, Stack } from '@iqss/dataverse-design-system'
-import { BoxArrowUpRight } from 'react-bootstrap-icons'
+import { Card } from '@iqss/dataverse-design-system'
 import { CustomFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
 import { RouteWithParams } from '@/sections/Route.enum'
 import styles from './CustomFeaturedItemCard.module.scss'
@@ -30,27 +29,23 @@ export const CustomFeaturedItemCard = ({
   })
 
   return (
-    <Card className={styles.custom_featured_item_card}>
-      {imageUrl && <Card.Image src={imageUrl} alt="" variant="top" className={styles.image} />}
-      <Card.Body className={styles.body}>
-        <div
-          className={cn(styles.content, {
-            [styles.with_image]: imageUrl
-          })}
-          dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-        />
-        <footer className={styles.footer}>
-          <Link
-            to={RouteWithParams.FEATURED_ITEM(collectionId, featuredItem.id.toString())}
-            className="btn btn-secondary btn-sm">
-            <Stack direction="horizontal" gap={2}>
-              <span className={styles.cta_link_text}>See Featured Item</span>
-              <BoxArrowUpRight size={14} />
-            </Stack>
-          </Link>
-        </footer>
-      </Card.Body>
-    </Card>
+    <Link
+      to={RouteWithParams.FEATURED_ITEM(collectionId, featuredItem.id.toString())}
+      className={styles.link_wrapper}>
+      <Card className={styles.custom_featured_item_card}>
+        {imageUrl && <Card.Image src={imageUrl} alt="" variant="top" className={styles.image} />}
+        <Card.Body>
+          <div
+            className={cn(styles.content, {
+              [styles.with_image]: imageUrl
+            })}
+            dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+            inert=""
+            tabIndex={-1}
+          />
+        </Card.Body>
+      </Card>
+    </Link>
   )
 }
 

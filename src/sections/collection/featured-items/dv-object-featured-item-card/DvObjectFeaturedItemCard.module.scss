@@ -1,9 +1,25 @@
 @use 'sass:color';
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
+.link_wrapper {
+  color: unset;
+  text-decoration: none;
+
+  &:hover {
+    color: unset;
+    text-decoration: none;
+  }
+}
+
 .custom_featured_item_card {
   min-height: 100%;
   overflow: hidden;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    border-color: $dv-brand-color;
+    box-shadow: 2px 2px 4px 0 rgba(0 0 0 / 10%);
+  }
 
   .body {
     display: flex;
@@ -43,8 +59,8 @@
 
   .description {
     display: -webkit-box;
-    -webkit-line-clamp: 4;
-    line-clamp: 4;
+    -webkit-line-clamp: 6;
+    line-clamp: 6;
     -webkit-box-orient: vertical;
     width: 100%;
     margin: 0;

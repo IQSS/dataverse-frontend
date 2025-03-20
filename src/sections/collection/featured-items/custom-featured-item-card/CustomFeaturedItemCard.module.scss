@@ -1,33 +1,47 @@
 @use 'sass:color';
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
+.link_wrapper {
+  color: unset;
+  text-decoration: none;
+
+  &:hover {
+    color: unset;
+    text-decoration: none;
+  }
+}
+
 .custom_featured_item_card {
   min-height: 100%;
   overflow: hidden;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    border-color: $dv-brand-color;
+    box-shadow: 2px 2px 4px 0 rgba(0 0 0 / 10%);
+  }
 
   .image {
     max-height: 100px;
     object-fit: cover;
   }
 
-  .body {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    justify-content: space-between;
-  }
-
   .content {
     display: -webkit-box;
-    -webkit-line-clamp: 6;
-    line-clamp: 6;
+    -webkit-line-clamp: 8;
+    line-clamp: 8;
     -webkit-box-orient: vertical;
     width: 100%;
     overflow: hidden;
+    pointer-events: none;
+
+    & * {
+      pointer-events: none;
+    }
 
     &.with_image {
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
+      -webkit-line-clamp: 4;
+      line-clamp: 4;
     }
 
     h1 {
@@ -56,17 +70,6 @@
     :global .rte-code-block code {
       white-space: pre-wrap;
       word-break: break-word;
-    }
-  }
-
-  .footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-
-    .cta_link_text {
-      color: color.adjust($dv-brand-color, $lightness: -9%);
-      font-weight: 500;
     }
   }
 }

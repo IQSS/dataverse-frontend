@@ -106,7 +106,7 @@ export const FeaturedItems = ({
 
     const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current
 
-    if (scrollLeft === 0) {
+    if (scrollLeft < 50) {
       setBackBtnDisabled(true)
     } else {
       setBackBtnDisabled(false)

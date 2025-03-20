@@ -15,8 +15,10 @@ interface HomepageProps {
   collectionRepository: CollectionRepository
 }
 
+// TODO:ME - If coming from homepage, do not show the root featured items again
+// TODO:ME - Change text to Browse All Collections
+//
 // TODO:ME - Storybook for Featured Item Page
-// TODO:ME - Detect if user prefers reduced motion with javascript and avoid startValue of counter, else startValue of 0
 // TODO:ME - Placeholder skeleton featured items card while loading
 // TODO:ME - Unit tests for Homepage and new FeaturedItems slider
 
