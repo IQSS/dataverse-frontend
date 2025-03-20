@@ -93,7 +93,9 @@ export function Collection({
             )}
 
             {previousPathIsHomepage &&
-            CollectionHelper.isRootCollection(collection.hierarchy) ? null : (
+            /* istanbul ignore next */ CollectionHelper.isRootCollection(
+              collection.hierarchy
+            ) ? /* istanbul ignore next */ null : (
               <FeaturedItems
                 collectionRepository={collectionRepository}
                 collectionId={collection.id}

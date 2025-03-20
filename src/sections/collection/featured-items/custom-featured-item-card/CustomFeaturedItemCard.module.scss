@@ -61,6 +61,10 @@
       font-size: 14px;
     }
 
+    a {
+      word-break: break-all;
+    }
+
     // Both of these are only beacuse block codes make card overflow
     :global .rte-code-block {
       white-space: pre-wrap;

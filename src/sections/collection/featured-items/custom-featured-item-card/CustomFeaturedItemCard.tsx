@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import DOMPurify from 'dompurify'
 import { Link } from 'react-router-dom'
 import cn from 'classnames'
@@ -16,14 +15,6 @@ export const CustomFeaturedItemCard = ({
   featuredItem,
   collectionId
 }: CustomFeaturedItemCardProps) => {
-  const imageUrl = useMemo(() => {
-    if (!featuredItem.imageFileUrl) return null
-
-    return featuredItem.imageFileUrl.startsWith('blob:')
-      ? featuredItem.imageFileUrl
-      : appendTimestampToImageUrl(featuredItem.imageFileUrl)
-  }, [featuredItem.imageFileUrl])
-
   const sanitizedContent = DOMPurify.sanitize(featuredItem.content, {
     USE_PROFILES: { html: true }
   })
@@ -33,12 +24,19 @@ export const CustomFeaturedItemCard = ({
       to={RouteWithParams.FEATURED_ITEM(collectionId, featuredItem.id.toString())}
       aria-label="View featured item"
       className={styles.link_wrapper}>
-      <Card className={styles.custom_featured_item_card}>
-        {imageUrl && <Card.Image src={imageUrl} alt="" variant="top" className={styles.image} />}
+      <Card className={styles.custom_featured_item_card} data-testid="custom-featured-item-card">
+        {featuredItem.imageFileUrl && (
+          <Card.Image
+            src={appendTimestampToImageUrl(featuredItem.imageFileUrl)}
+            alt=""
+            variant="top"
+            className={styles.image}
+          />
+        )}
         <Card.Body>
           <div
             className={cn(styles.content, {
-              [styles.with_image]: imageUrl
+              [styles.with_image]: featuredItem.imageFileUrl
             })}
             dangerouslySetInnerHTML={{ __html: sanitizedContent }}
             inert=""

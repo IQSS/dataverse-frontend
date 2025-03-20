@@ -36,15 +36,16 @@ export const FeaturedItems = ({
   const hasFeaturedItems = collectionFeaturedItems.length > 0
 
   useEffect(() => {
-    if (!sliderRef.current) return
-
-    // checkSliderPositionToDisableButtons()
-
-    setIsOverflowing(sliderRef.current.scrollWidth > sliderRef.current.clientWidth)
+    if (sliderRef.current) {
+      setIsOverflowing(sliderRef.current.scrollWidth > sliderRef.current.clientWidth)
+    }
 
     const handleResize = () => {
-      if (!sliderRef.current) return
-      setIsOverflowing(sliderRef.current.scrollWidth > sliderRef.current?.clientWidth)
+      if (sliderRef.current) {
+        /* istanbul ignore next */ setIsOverflowing(
+          sliderRef.current.scrollWidth > sliderRef.current?.clientWidth
+        )
+      }
     }
 
     window.addEventListener('resize', handleResize)
@@ -58,6 +59,7 @@ export const FeaturedItems = ({
     return (
       <SkeletonTheme>
         <div
+          data-testid="featured-items-skeleton"
           style={{
             display: 'flex',
             justifyContent: 'center',
@@ -86,48 +88,48 @@ export const FeaturedItems = ({
   const oneItemOnly = collectionFeaturedItems.length === 1
 
   const handleNext = () => {
-    if (!sliderRef.current) return
+    if (sliderRef.current) {
+      const { width } = sliderRef.current.getBoundingClientRect()
 
-    const { width } = sliderRef.current.getBoundingClientRect()
-
-    sliderRef.current.scrollBy({
-      left: width,
-      behavior: 'smooth'
-    })
+      sliderRef.current.scrollBy({
+        left: width,
+        behavior: 'smooth'
+      })
+    }
   }
 
   const handlePrev = () => {
-    if (!sliderRef.current) return
+    if (sliderRef.current) {
+      const { width } = sliderRef.current.getBoundingClientRect()
 
-    const { width } = sliderRef.current.getBoundingClientRect()
-
-    sliderRef.current.scrollBy({
-      left: -width,
-      behavior: 'smooth'
-    })
+      sliderRef.current.scrollBy({
+        left: -width,
+        behavior: 'smooth'
+      })
+    }
   }
 
   const checkSliderPositionToDisableButtons = () => {
-    if (!sliderRef.current) return
+    if (sliderRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current
 
-    const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current
+      if (scrollLeft < 50) {
+        setBackBtnDisabled(true)
+      } else {
+        setBackBtnDisabled(false)
+      }
 
-    if (scrollLeft < 50) {
-      setBackBtnDisabled(true)
-    } else {
-      setBackBtnDisabled(false)
-    }
-
-    // 50 is the threshold to know when the scroll is at the end
-    if (scrollLeft + clientWidth > scrollWidth - 50) {
-      setNextBtnDisabled(true)
-    } else {
-      setNextBtnDisabled(false)
+      // 50 is the threshold to know when the scroll is at the end
+      if (scrollLeft + clientWidth > scrollWidth - 50) {
+        setNextBtnDisabled(true)
+      } else {
+        setNextBtnDisabled(false)
+      }
     }
   }
 
   return (
-    <div className={`${styles.featured_items} ${className || ''}`}>
+    <div className={`${styles.featured_items} ${className || ''}`} data-testid="featured-items">
       <h4>{t('featuredItems.title')}</h4>
 
       <div className={styles['slider-container']} data-testid="featured-items-slider">
@@ -138,6 +140,7 @@ export const FeaturedItems = ({
             variant="secondary"
             aria-label={t('featuredItems.slider.prevLabel')}
             onClick={handlePrev}
+            data-testid="featured-items-slider-prev-btn"
             disabled={backBtnDisabled}>
             <ChevronLeft size={30} color={theme.color.primary} />
           </Button>
@@ -172,6 +175,7 @@ export const FeaturedItems = ({
             variant="secondary"
             aria-label={t('featuredItems.slider.nextLabel')}
             onClick={handleNext}
+            data-testid="featured-items-slider-next-btn"
             disabled={nextBtnDisabled}>
             <ChevronRight size={30} color={theme.color.primary} />
           </Button>

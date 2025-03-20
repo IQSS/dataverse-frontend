@@ -37,17 +37,6 @@ export class CollectionFeaturedItemMother {
     ]
   }
 
-  static createFeaturedItem(props?: Partial<CollectionFeaturedItem>): CollectionFeaturedItem {
-    return {
-      id: 1,
-      imageFileUrl: 'https://loremflickr.com/640/480',
-      displayOrder: 1,
-      content:
-        '<h2 class="rte-heading">Some Title</h2><p class="rte-paragraph">Hello <strong class="rte-bold">Dataverse</strong></p>',
-      ...props
-    }
-  }
-
   static createCustomFeaturedItem(
     img: 'css' | 'books',
     props?: Partial<CustomFeaturedItem>
