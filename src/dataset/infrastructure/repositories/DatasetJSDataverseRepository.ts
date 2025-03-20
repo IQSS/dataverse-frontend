@@ -12,6 +12,7 @@ import {
   DatasetVersionState,
   FileDownloadSizeMode,
   DatasetVersionDiff as JSDatasetVersionDiff,
+  DatasetVersionSummaryInfo as JSDatasetVersionSummaryInfo,
   getAllDatasetPreviews,
   getDataset,
   getDatasetCitation,
@@ -24,9 +25,11 @@ import {
   publishDataset,
   ReadError,
   updateDataset,
+  deaccessionDataset,
   VersionUpdateType as JSVersionUpdateType,
   WriteError,
   getDatasetVersionDiff,
+  DatasetDeaccessionDTO,
   getDatasetVersionsSummaries
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
@@ -37,8 +40,8 @@ import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
 import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+
 const includeDeaccessioned = true
-type DatasetDetails = [JSDataset, string[], string, JSDatasetPermissions, JSDatasetLock[]]
 
 interface IDatasetDetails {
   jsDataset: JSDataset
@@ -51,6 +54,7 @@ interface IDatasetDetails {
   latestPublishedVersionMajorNumber?: number
   latestPublishedVersionMinorNumber?: number
   datasetVersionDiff?: JSDatasetVersionDiff
+  jsDatasetVersionsSummaries: JSDatasetVersionSummaryInfo[]
 }
 
 export class DatasetJSDataverseRepository implements DatasetRepository {
@@ -117,25 +121,32 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     version?: string
   ): Promise<IDatasetDetails> {
     return Promise.all([
-      jsDataset,
       getDatasetSummaryFieldNames.execute(),
       getDatasetCitation.execute(jsDataset.id, version, includeDeaccessioned),
       getDatasetUserPermissions.execute(jsDataset.id),
-      getDatasetLocks.execute(jsDataset.id)
+      getDatasetLocks.execute(jsDataset.id),
+      getDatasetVersionsSummaries.execute(jsDataset.id)
     ]).then(
       ([
-        jsDataset,
         summaryFieldsNames,
         citation,
         jsDatasetPermissions,
-        jsDatasetLocks
-      ]: DatasetDetails) => {
+        jsDatasetLocks,
+        jsDatasetVersionsSummaries
+      ]: [
+        string[],
+        string,
+        JSDatasetPermissions,
+        JSDatasetLock[],
+        JSDatasetVersionSummaryInfo[]
+      ]) => {
         return {
           jsDataset,
           summaryFieldsNames,
           citation,
           jsDatasetPermissions,
           jsDatasetLocks,
+          jsDatasetVersionsSummaries,
           jsDatasetFilesTotalOriginalDownloadSize: 0,
           jsDatasetFilesTotalArchivalDownloadSize: 0
         }
@@ -210,6 +221,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           datasetDetails.jsDatasetLocks,
           datasetDetails.jsDatasetFilesTotalOriginalDownloadSize,
           datasetDetails.jsDatasetFilesTotalArchivalDownloadSize,
+          datasetDetails.jsDatasetVersionsSummaries,
           requestedVersion,
           undefined,
           datasetDetails.latestPublishedVersionMajorNumber,
@@ -304,9 +316,6 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     return publishDataset.execute(persistentId, jsVersionUpdateType).catch((error: WriteError) => {
       throw new Error(error.message)
     })
-    return publishDataset.execute(persistentId, jsVersionUpdateType).catch((error: WriteError) => {
-      throw new Error(error.message)
-    })
   }
 
   updateMetadata(datasetId: string | number, updatedDataset: DatasetDTO): Promise<void> {
@@ -316,15 +325,20 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
         throw new Error(error.message)
       })
   }
-
-  getDatasetVersionsSummaries(datasetId: number | string): Promise<DatasetVersionSummaryInfo[]> {
-    return getDatasetVersionsSummaries
-      .execute(datasetId)
-      .then((summaris) => {
-        return summaris
-      })
-      .catch((error: ReadError) => {
+  deaccession(
+    datasetId: string | number,
+    version: string,
+    deaccessionDTO: DatasetDeaccessionDTO
+  ): Promise<void> {
+    return deaccessionDataset
+      .execute(datasetId, version, deaccessionDTO)
+      .catch((error: WriteError) => {
         throw new Error(error.message)
       })
+  }
+  getDatasetVersionsSummaries(datasetId: number | string): Promise<DatasetVersionSummaryInfo[]> {
+    return getDatasetVersionsSummaries.execute(datasetId).catch((error: ReadError) => {
+      throw new Error(error.message)
+    })
   }
 }
