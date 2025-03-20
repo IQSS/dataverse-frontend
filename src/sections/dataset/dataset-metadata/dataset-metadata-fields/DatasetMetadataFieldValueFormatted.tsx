@@ -58,7 +58,7 @@ export function metadataFieldValueToDisplayFormat(
   metadataFieldValue: DatasetMetadataFieldValueModel,
   metadataBlockInfo?: MetadataBlockInfoDisplayFormat
 ): string {
-  const separator = ";"
+  const separator = ';'
 
   if (isArrayOfObjects(metadataFieldValue)) {
     return metadataFieldValue
