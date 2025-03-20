@@ -18,7 +18,7 @@
 
   &:hover {
     border-color: $dv-brand-color;
-    box-shadow: 2px 2px 4px 0 rgba(0 0 0 / 10%);
+    box-shadow: 2px 2px 4px 0 color.adjust($dv-brand-color, $alpha: -0.75);
   }
 
   .image {

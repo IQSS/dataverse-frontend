@@ -31,6 +31,7 @@ export const CustomFeaturedItemCard = ({
   return (
     <Link
       to={RouteWithParams.FEATURED_ITEM(collectionId, featuredItem.id.toString())}
+      aria-label="View featured item"
       className={styles.link_wrapper}>
       <Card className={styles.custom_featured_item_card}>
         {imageUrl && <Card.Image src={imageUrl} alt="" variant="top" className={styles.image} />}
