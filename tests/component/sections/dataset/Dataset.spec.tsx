@@ -379,7 +379,7 @@ describe('Dataset', () => {
     cy.findByText(/The metadata for this dataset has been updated./).should('exist')
   })
 
-  it('renders the Dataset Versions tab', () => {
+  it('renders the Dataset Version tab', () => {
     const testDataset = DatasetMother.create()
     datasetRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
 
@@ -396,7 +396,7 @@ describe('Dataset', () => {
     cy.findAllByText(testDataset.version.title).should('exist')
     const versionsTab = cy.findByRole('tab', { name: 'Versions' })
     versionsTab.should('exist').click()
-    cy.findByText('Dataset Versions').should('exist')
+    cy.findByText('Dataset Version').should('exist')
     cy.findByText('Summary').should('exist')
     cy.findByText('Version Note').should('exist')
     cy.findByText('Contributors').should('exist')

@@ -45,14 +45,14 @@ describe('DatasetVersions', () => {
     datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfoDraft)
     cy.findByTestId('dataset-versions-table').should('exist')
 
-    cy.contains('th', 'Dataset Versions').should('exist')
+    cy.contains('th', 'Dataset Version').should('exist')
     cy.contains('th', 'Summary').should('exist')
     cy.contains('th', 'Version Note').should('exist')
     cy.contains('th', 'Contributors').should('exist')
     cy.contains('th', 'Published On').should('exist')
     cy.findByRole('button', { name: 'View Differences' }).should('not.exist')
     cy.findAllByTestId('select-checkbox').should('not.exist')
-    cy.findByText(/View Detail/).should('not.exist')
+    cy.findByText(/View Details/).should('not.exist')
   })
 
   beforeEach(() => {
@@ -66,7 +66,7 @@ describe('DatasetVersions', () => {
   it('should render the dataset versions table with view differences button and checkbox', () => {
     cy.findByTestId('dataset-versions-table').should('exist')
 
-    cy.contains('th', 'Dataset Versions').should('exist')
+    cy.contains('th', 'Dataset Version').should('exist')
     cy.contains('th', 'Summary').should('exist')
     cy.contains('th', 'Version Note').should('exist')
     cy.contains('th', 'Contributors').should('exist')
@@ -93,7 +93,7 @@ describe('DatasetVersions', () => {
     datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
 
     cy.findByTestId('dataset-versions-table').should('exist')
-    cy.contains('th', 'Dataset Versions').should('exist')
+    cy.contains('th', 'Dataset Version').should('exist')
     cy.contains('th', 'Summary').should('exist')
     cy.contains('th', 'Version Note').should('exist')
     cy.contains('th', 'Contributors').should('exist')
