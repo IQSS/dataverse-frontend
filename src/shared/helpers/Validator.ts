@@ -9,4 +9,9 @@ export class Validator {
     const IDENTIFIER_REGEX = /^[a-zA-Z0-9_-]+$/
     return IDENTIFIER_REGEX.test(input)
   }
+
+  static isValidNumber(input: string): boolean {
+    const NUMBER_REGEX = /^\d+$/
+    return NUMBER_REGEX.test(input)
+  }
 }
