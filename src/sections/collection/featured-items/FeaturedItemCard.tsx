@@ -2,7 +2,8 @@ import { useMemo } from 'react'
 import DOMPurify from 'dompurify'
 import { Link } from 'react-router-dom'
 import cn from 'classnames'
-import { Card } from '@iqss/dataverse-design-system'
+import { Card, Stack } from '@iqss/dataverse-design-system'
+import { BoxArrowUpRight } from 'react-bootstrap-icons'
 import {
   CollectionFeaturedItem,
   CustomFeaturedItem
@@ -55,7 +56,10 @@ export const FeaturedItemCard = ({ featuredItem, collectionId }: FeaturedItemPro
           <Link
             to={RouteWithParams.FEATURED_ITEM(collectionId, featuredItem.id.toString())}
             className="btn btn-secondary btn-sm">
-            See {getDisplayValue(featuredItem.type)}
+            <Stack direction="horizontal" gap={2}>
+              <span className={styles.cta_link_text}>See {getDisplayValue(featuredItem.type)}</span>
+              <BoxArrowUpRight size={14} />
+            </Stack>
           </Link>
         </footer>
       </Card.Body>

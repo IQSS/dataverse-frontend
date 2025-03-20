@@ -6,7 +6,10 @@ import { SortableContext } from '@dnd-kit/sortable'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
-import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import {
+  CollectionFeaturedItem,
+  CustomFeaturedItem
+} from '@/collection/domain/models/CollectionFeaturedItem'
 import { FeaturedItemField } from './featured-item-field/FeaturedItemField'
 import { PreviewCarousel } from './preview-carousel/PreviewCarousel'
 import { FeaturedItemFieldWithSortId, FeaturedItemsFormData } from '../types'
@@ -160,7 +163,9 @@ export const FeaturedItemsForm = ({
                   onAddField={handleOnAddField}
                   onRemoveField={handleOnRemoveField}
                   initialImageUrl={
-                    collectionFeaturedItems.find((item) => item.id === field.itemId)?.imageFileUrl
+                    (collectionFeaturedItems as CustomFeaturedItem[]).find(
+                      (item) => item.id === field.itemId
+                    )?.imageFileUrl
                   }
                   key={field.id}
                 />

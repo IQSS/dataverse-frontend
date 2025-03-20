@@ -11,15 +11,13 @@ import styles from './FeaturedItems.module.scss'
 export interface FeaturedItemsProps {
   collectionRepository: CollectionRepository
   collectionId: string
-  hideTitle?: boolean
   className?: string
 }
 
 export const FeaturedItems = ({
   collectionRepository,
   collectionId,
-  className,
-  hideTitle = false
+  className
 }: FeaturedItemsProps) => {
   const { t } = useTranslation('collection')
   const theme = useTheme()
@@ -101,7 +99,7 @@ export const FeaturedItems = ({
 
   return (
     <div className={`${styles.featured_items} ${className || ''}`}>
-      {!hideTitle && <h4>{t('featuredItems.title')}</h4>}
+      <h4>{t('featuredItems.title')}</h4>
 
       <div className={styles['slider-container']} data-testid="featured-items-slider">
         {!oneItemOnly && isOverflowing && (
