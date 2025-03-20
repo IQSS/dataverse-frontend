@@ -54,7 +54,7 @@ export function DatasetVersionViewDifferenceButton({
           handleClose={() => setShowModal(false)}
           isLoading={isLoading}
           errorHandling={error}
-          datasetVersionDifferences={selectedVersions.length < 2 ? undefined : differences}
+          datasetVersionDifferences={differences}
         />
       )}
     </div>

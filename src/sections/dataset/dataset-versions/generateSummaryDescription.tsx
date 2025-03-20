@@ -53,19 +53,14 @@ export const generateDatasetVersionSummaryDescription = function (
 
       case 'Additional Citation Metadata': {
         const additionMetadataChanges: string[] = []
-        const fileSummary = value as FilesSummaryUpdates
+        const AdditionalCitationMetadata = value as SummaryUpdates
 
-        if (fileSummary.added > 0) additionMetadataChanges.push(`${fileSummary.added} Added`)
-        if (fileSummary.removed > 0) additionMetadataChanges.push(`${fileSummary.removed} Removed`)
-        if (fileSummary.replaced > 0)
-          additionMetadataChanges.push(`${fileSummary.replaced} Replaced`)
-        if (fileSummary.changedFileMetaData > 0)
-          additionMetadataChanges.push(`${fileSummary.changedFileMetaData} Changed`)
-        if (fileSummary.changedVariableMetadata > 0)
-          additionMetadataChanges.push(
-            `Variable Metadata Changed: ${fileSummary.changedVariableMetadata}`
-          )
-
+        if (AdditionalCitationMetadata.added > 0)
+          additionMetadataChanges.push(`${AdditionalCitationMetadata.added} Added`)
+        if (AdditionalCitationMetadata.deleted > 0)
+          additionMetadataChanges.push(`${AdditionalCitationMetadata.deleted} Removed`)
+        if (AdditionalCitationMetadata.changed > 0)
+          additionMetadataChanges.push(`${AdditionalCitationMetadata.changed} Changed`)
         if (additionMetadataChanges.length > 0) {
           descriptionObject[key] = additionMetadataChanges.join('; ')
         }

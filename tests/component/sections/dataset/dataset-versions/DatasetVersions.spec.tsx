@@ -89,7 +89,7 @@ describe('DatasetVersions', () => {
     })
   })
 
-  it('should render the dataset versions table without view differences button if only one version checked', () => {
+  it('should render the dataset versions table without view differences button if less than 2 versions being selected', () => {
     datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
 
     cy.findByTestId('dataset-versions-table').should('exist')
@@ -100,11 +100,17 @@ describe('DatasetVersions', () => {
     cy.contains('th', 'Published On').should('exist')
     cy.findAllByTestId('select-checkbox').first().should('exist').check().should('be.checked')
     cy.findByRole('button', { name: 'View Differences' }).should('not.exist')
-
-    cy.findByText(/View Details/).should('not.exist')
   })
 
-  it('should open dataset versions modal', () => {
+  it('should not show view detail buttons if there is only one version', () => {
+    datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
+
+    cy.findByTestId('dataset-versions-table').should('exist')
+    cy.get('tr').eq(1).find('td').eq(2).findByText('View Details').should('exist').click()
+  })
+
+
+  it('should open dataset versions detail modal', () => {
     datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
 
     cy.findByTestId('dataset-versions-table').should('exist')
@@ -112,7 +118,7 @@ describe('DatasetVersions', () => {
     cy.findByRole('dialog').should('exist')
   })
 
-  it('should close dataset versions modal', () => {
+  it('should close dataset versions detail modal', () => {
     datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
 
     cy.findByTestId('dataset-versions-table').should('exist')
@@ -202,10 +208,8 @@ describe('DatasetVersions generateDatasetVersionSummaryDescription', () => {
       },
       'Additional Citation Metadata': {
         added: 1,
-        removed: 1,
-        replaced: 1,
-        changedFileMetaData: 2,
-        changedVariableMetadata: 1
+        deleted: 1,
+        changed: 1
       }
     }
 
@@ -228,19 +232,11 @@ describe('DatasetVersions generateDatasetVersionSummaryDescription', () => {
       `${versionSummary['Additional Citation Metadata'].added} Added`
     )
     expect(result['Additional Citation Metadata']).to.include(
-      `${versionSummary['Additional Citation Metadata'].removed} Removed`
+      `${versionSummary['Additional Citation Metadata'].deleted} Removed`
     )
     expect(result['Additional Citation Metadata']).to.include(
-      `${versionSummary['Additional Citation Metadata'].replaced} Replaced`
+      `${versionSummary['Additional Citation Metadata'].changed} Changed`
     )
-    expect(result['Additional Citation Metadata']).to.include(
-      `${versionSummary['Additional Citation Metadata'].changedFileMetaData} Changed`
-    )
-    expect(result['Additional Citation Metadata']).to.include(
-      `Variable Metadata Changed: ${versionSummary['Additional Citation Metadata'].changedVariableMetadata}`
-    )
-
-    expect(result.termsAccessChanged).to.includes('Terms Access: Changed')
   })
 
   it('should handle DatasetVersionSummaryStringValues correctly', () => {

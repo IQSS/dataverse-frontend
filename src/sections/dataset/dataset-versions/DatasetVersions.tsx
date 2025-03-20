@@ -45,7 +45,9 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
     navigate(`${Route.DATASETS}?${searchParams.toString()}`)
   }
 
-  // If there's only 1 version, we don't show the "View Differences" button or the checkbox column
+  const isDeaccession = datasetVersionSummaries?.some(
+    (dataset) => dataset.summary === 'versionDeaccessioned'
+  )
   const showViewDifferenceButton = datasetVersionSummaries && datasetVersionSummaries.length < 2
 
   if (isLoading) {
@@ -79,15 +81,17 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
             </tr>
           </thead>
           <tbody>
-            {datasetVersionSummaries?.map((dataset) => {
-              const previousDataset = datasetVersionSummaries.find((d) => d.id === dataset.id - 1)
+            {datasetVersionSummaries?.map((dataset, index) => {
+              const previousDataset =
+                index < datasetVersionSummaries.length - 1
+                  ? datasetVersionSummaries[index + 1]
+                  : null
               const summaryObject = generateDatasetVersionSummaryDescription(dataset.summary)
 
               return (
                 <tr key={dataset.id}>
-                  {!showViewDifferenceButton && (
+                  {!showViewDifferenceButton && !isDeaccession && (
                     <td>
-                      {/* TODO: If deaccession, disable the version checkbox*/}
                       <Form.Group.Checkbox
                         label=""
                         id={`dataset-${dataset.id}`}

@@ -24,6 +24,26 @@ export const Default: Story = {
   )
 }
 
-// export const Loading: Story = {
-//   render: () => <DatasetVersionsDetailModal />
-// }
+export const Loading: Story = {
+  render: () => (
+    <VersionDetailModal
+      show={true}
+      handleClose={() => {}}
+      isLoading={true}
+      errorHandling={null}
+      datasetVersionDifferences={versionsDiff}
+    />
+  )
+}
+
+export const Error: Story = {
+  render: () => (
+    <VersionDetailModal
+      show={true}
+      handleClose={() => {}}
+      isLoading={false}
+      errorHandling={'There was an error'}
+      datasetVersionDifferences={versionsDiff}
+    />
+  )
+}
