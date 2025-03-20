@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { useCollection } from '../collection/useCollection'
 import { FeaturedItems } from '../collection/featured-items/FeaturedItems'
@@ -14,7 +15,6 @@ interface HomepageProps {
   collectionRepository: CollectionRepository
 }
 
-// TODO:ME - Add translations for home page texts
 // TODO:ME - Detect if user prefers reduced motion with javascript and avoid startValue of counter, else startValue of 0
 // TODO:ME - Placeholder skeleton featured items card while loading
 // TODO:ME - Modify card to show dvObject types and make a storybook example
@@ -24,6 +24,7 @@ interface HomepageProps {
 export const Homepage = ({ collectionRepository }: HomepageProps) => {
   const { collection, isLoading: isLoadingCollection } = useCollection(collectionRepository)
   const { setIsLoading } = useLoading()
+  const { t } = useTranslation('homepage')
 
   useEffect(() => {
     if (!isLoadingCollection) {
@@ -44,7 +45,7 @@ export const Homepage = ({ collectionRepository }: HomepageProps) => {
       <div className={styles['middle-search-cta-wrapper']}>
         <SearchInput />
         <Link to="/collections" className="btn btn-secondary">
-          Browse Collections
+          {t('browseCollections')}
         </Link>
       </div>
 

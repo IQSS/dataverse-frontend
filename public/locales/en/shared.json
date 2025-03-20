@@ -10,6 +10,9 @@
   "share": "Share",
   "delete": "Delete",
   "saveChanges": "Save Changes",
+  "search": "Search",
+  "clearSearch": "Clear Search",
+  "submitSearch": "Submit Search",
   "dragHandleLabel": "press space to select and keys to drag",
   "pageNumberNotFound": {
     "heading": "Page Number Not Found",

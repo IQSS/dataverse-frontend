@@ -1,4 +1,5 @@
 import SlotCounter from 'react-slot-counter'
+import { useTranslation } from 'react-i18next'
 import { Col, Row } from '@iqss/dataverse-design-system'
 import styles from './Metrics.module.scss'
 
@@ -20,71 +21,73 @@ const compactNumbersFormatter = Intl.NumberFormat(undefined, {
 })
 
 export const Metrics = () => {
+  const { t } = useTranslation('homepage', { keyPrefix: 'metrics' })
+
   return (
     <div className={styles.metrics}>
-      <h4>Activity</h4>
+      <h4>{t('title')}</h4>
 
       <Row>
         <Col xs={12} md={6} className={styles.dataset_metrics_column}>
           <Row className="text-center mb-4">
             <Col xs={12}>
-              <h5 className="h4 text-muted mb-3">Datasets</h5>
+              <h5 className="h4 text-muted mb-3">{t('datasets')}</h5>
             </Col>
             <Col xs={6} className="mb-4">
               <div className="display-6 fw-bold text-primary">
                 <SlotCounter value={compactNumbersFormatter.format(187911)} {...SLOT_PROPS} />
               </div>
-              <div className="small text-muted">Total</div>
+              <div className="small text-muted">{t('total')}</div>
             </Col>
             <Col xs={6} className="mb-4">
               <div className="display-6 fw-bold text-primary">
                 <SlotCounter value={compactNumbersFormatter.format(2162)} {...SLOT_PROPS} />
               </div>
-              <div className="small text-muted">Past 30 Days</div>
+              <div className="small text-muted">{t('past30days')}</div>
             </Col>
 
             <Col xs={6}>
               <div className="display-6 fw-bold text-primary">
                 <SlotCounter value={compactNumbersFormatter.format(101869)} {...SLOT_PROPS} />
               </div>
-              <div className="small text-muted">Deposited</div>
+              <div className="small text-muted">{t('deposited')}</div>
             </Col>
             <Col xs={6}>
               <div className="display-6 fw-bold text-primary">
                 <SlotCounter value={compactNumbersFormatter.format(86042)} {...SLOT_PROPS} />
               </div>
-              <div className="small text-muted">Harvested</div>
+              <div className="small text-muted">{t('harvested')}</div>
             </Col>
           </Row>
         </Col>
         <Col xs={12} md={6}>
           <Row className="text-center">
             <Col xs={12}>
-              <h5 className="h4 text-muted mb-3">Files</h5>
+              <h5 className="h4 text-muted mb-3">{t('files')}</h5>
             </Col>
             <Col xs={6} className="mb-4">
               <div className="display-6 fw-bold text-primary">
                 <SlotCounter value={compactNumbersFormatter.format(91514796)} {...SLOT_PROPS} />
               </div>
-              <div className="small text-muted">Downloaded</div>
+              <div className="small text-muted">{t('downloaded')}</div>
             </Col>
             <Col xs={6} className="mb-4">
               <div className="display-6 fw-bold text-primary">
                 <SlotCounter value={compactNumbersFormatter.format(4761951)} {...SLOT_PROPS} />
               </div>
-              <div className="small text-muted">Downloads (30 days)</div>
+              <div className="small text-muted">{t('download30days')}</div>
             </Col>
             <Col xs={6}>
               <div className="display-6 fw-bold text-primary">
                 <SlotCounter value={compactNumbersFormatter.format(2302964)} {...SLOT_PROPS} />
               </div>
-              <div className="small text-muted">Deposited</div>
+              <div className="small text-muted">{t('deposited')}</div>
             </Col>
             <Col xs={6}>
               <div className="display-6 fw-bold text-primary">
                 <SlotCounter value={compactNumbersFormatter.format(61622)} {...SLOT_PROPS} />
               </div>
-              <div className="small text-muted">Deposited (30 days)</div>
+              <div className="small text-muted">{t('deposited30days')}</div>
             </Col>
           </Row>
         </Col>
