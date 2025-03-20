@@ -15,7 +15,6 @@ interface HomepageProps {
   collectionRepository: CollectionRepository
 }
 
-// TODO:ME - Storybook for Featured Item Page
 // TODO:ME - Unit tests for Homepage and new FeaturedItems slider
 
 export const Homepage = ({ collectionRepository }: HomepageProps) => {
