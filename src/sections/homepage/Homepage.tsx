@@ -15,7 +15,6 @@ interface HomepageProps {
   collectionRepository: CollectionRepository
 }
 
-// TODO:ME - If coming from homepage, do not show the root featured items again
 // TODO:ME - Storybook for Featured Item Page
 // TODO:ME - Placeholder skeleton featured items card while loading
 // TODO:ME - Unit tests for Homepage and new FeaturedItems slider
