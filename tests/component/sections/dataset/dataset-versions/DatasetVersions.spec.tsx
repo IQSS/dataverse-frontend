@@ -109,7 +109,6 @@ describe('DatasetVersions', () => {
     cy.get('tr').eq(1).find('td').eq(2).findByText('View Details').should('exist').click()
   })
 
-
   it('should open dataset versions detail modal', () => {
     datasetsRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
 

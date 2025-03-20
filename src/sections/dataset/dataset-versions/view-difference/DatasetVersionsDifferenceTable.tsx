@@ -99,7 +99,7 @@ export const DatasetVersionsDifferenceTable = ({
                   <br />
                   {t('versions.description')}: {file.description || ''}
                   <br />
-                  {t('versions.access')}: {file.isRestricted ? 'Restricted' : 'Unrestricted'}
+                  {t('versions.access')}: {file.isRestricted ? 'Restricted' : 'Public'}
                 </td>
               </tr>
             ))}
