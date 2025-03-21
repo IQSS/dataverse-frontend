@@ -11,6 +11,7 @@ import { CollectionFeaturedItemsDTO } from '../useCases/DTOs/CollectionFeaturedI
 export interface CollectionRepository {
   getById: (id?: string) => Promise<Collection>
   create(collection: CollectionDTO, hostCollection?: string): Promise<number>
+  delete(collectionIdOrAlias: number | string): Promise<void>
   getFacets(collectionIdOrAlias?: number | string): Promise<CollectionFacet[]>
   getUserPermissions(collectionIdOrAlias?: number | string): Promise<CollectionUserPermissions>
   publish(collectionIdOrAlias: number | string): Promise<void>

@@ -28,7 +28,8 @@ void i18next
       'computationalworkflow',
       'geospatial',
       'journal',
-      'socialscience'
+      'socialscience',
+      'homepage'
     ],
     returnNull: false,
     backend: {

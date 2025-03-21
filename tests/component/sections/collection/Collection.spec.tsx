@@ -4,8 +4,10 @@ import { CollectionMother } from '@tests/component/collection/domain/models/Coll
 import { CollectionItemsMother } from '@tests/component/collection/domain/models/CollectionItemsMother'
 import { CollectionItemSubset } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 const collectionRepository = {} as CollectionRepository
+const contactRepository = {} as ContactRepository
 const collection = CollectionMother.create({ name: 'Collection Name' })
 const userPermissionsMock = CollectionMother.createUserPermissions()
 
@@ -25,6 +27,7 @@ describe('Collection page', () => {
     collectionRepository.getUserPermissions = cy.stub().resolves(userPermissionsMock)
     collectionRepository.getItems = cy.stub().resolves(itemsWithCount)
     collectionRepository.getFeaturedItems = cy.stub().resolves([])
+    contactRepository.sendFeedbacktoOwners = cy.stub().resolves([])
   })
 
   it('renders skeleton while loading', () => {
@@ -36,6 +39,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -61,6 +65,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -75,6 +80,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -89,6 +95,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -102,6 +109,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -115,6 +123,7 @@ describe('Collection page', () => {
     cy.mountAuthenticated(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -133,6 +142,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created
         published={false}
@@ -146,6 +156,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={true}
@@ -167,6 +178,7 @@ describe('Collection page', () => {
     cy.mountAuthenticated(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -186,6 +198,7 @@ describe('Collection page', () => {
     cy.mountAuthenticated(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -207,6 +220,7 @@ describe('Collection page', () => {
     cy.mountAuthenticated(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -231,6 +245,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -238,7 +253,7 @@ describe('Collection page', () => {
       />
     )
 
-    cy.findByTestId('featured-items-slider').should('exist')
+    cy.findByTestId('featured-items').should('exist')
   })
 
   it('does not show the collection featured items carousel when there are no featured items', () => {
@@ -247,6 +262,7 @@ describe('Collection page', () => {
     cy.customMount(
       <Collection
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
         collectionIdFromParams="collection"
         created={false}
         published={false}
@@ -254,6 +270,81 @@ describe('Collection page', () => {
       />
     )
 
-    cy.findByTestId('featured-items-slider').should('not.exist')
+    cy.findByTestId('featured-items').should('not.exist')
+  })
+
+  it('opens and colses contact modal', () => {
+    cy.viewport(1200, 800)
+
+    cy.customMount(
+      <Collection
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
+        collectionIdFromParams="collection"
+        created={false}
+        published={false}
+        collectionQueryParams={{ pageQuery: 1 }}
+      />
+    )
+    cy.findByRole('button', { name: /Contact/i }).click()
+    cy.findByText('Contact').should('exist')
+    cy.findByRole('dialog').should('exist')
+    cy.findByTestId('fromEmail').should('exist')
+    cy.findByText('Email Collection Contact').should('exist')
+    cy.findByTestId('body').should('exist')
+    cy.findByText('Close').click()
+    cy.findByRole('dialog').should('not.exist')
+  })
+
+  it('show the tooltip for contact button', () => {
+    cy.customMount(
+      <Collection
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
+        collectionIdFromParams="collection"
+        created={false}
+        published={false}
+        collectionQueryParams={{ pageQuery: 1 }}
+      />
+    )
+
+    cy.findByRole('button', { name: /Contact/i })
+      .should('exist')
+      .trigger('mouseover')
+
+    cy.findByRole('tooltip').should('be.visible').and('have.text', 'Email Collection Contact')
+  })
+
+  it('shows the toast when the information was sent to contact successfully', () => {
+    cy.customMount(
+      <Collection
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
+        collectionIdFromParams="collection"
+        created={false}
+        published={false}
+        collectionQueryParams={{ pageQuery: 1 }}
+      />
+    )
+    cy.findByRole('button', { name: /Contact/i })
+      .should('exist')
+      .click()
+    cy.findByTestId('captchaNumbers')
+      .invoke('text')
+      .then((text) => {
+        const matches = text.match(/(\d+)\s*\+\s*(\d+)\s*=/)
+        if (matches) {
+          const num1 = parseInt(matches[1], 10)
+          const num2 = parseInt(matches[2], 10)
+          const answer = num1 + num2
+          cy.findByTestId('fromEmail').type('email@dataverse.com')
+          cy.findByTestId('subject').type('subject')
+          cy.findByTestId('body').type('message')
+          cy.findByTestId('captchaInput').type(answer.toString())
+          cy.findByText('Submit').click()
+        }
+      })
+    cy.findByTestId('dialog').should('not.exist')
+    cy.findByText(/Message sent./).should('exist')
   })
 })
