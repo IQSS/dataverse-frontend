@@ -38,6 +38,10 @@
       max-height: 70vh;
       padding-inline: 1.5rem;
       overflow-x: hidden;
+
+      > section {
+        width: 100%;
+      }
     }
   }
 
