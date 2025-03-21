@@ -39,7 +39,6 @@ describe('DatasetSummary', () => {
           summaryFieldDescription.should('exist')
 
           const summaryFieldValueString = metadataFieldValueToDisplayFormat(
-            summaryFieldName,
             summaryFieldValue,
             metadataBlockInfoMock
           )

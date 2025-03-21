@@ -34,7 +34,6 @@ export function DatasetMetadataFieldValueFormatted({
   const { t } = useTranslation(metadataBlockName)
 
   const valueFormatted = metadataFieldValueToDisplayFormat(
-    metadataFieldName,
     metadataFieldValue,
     metadataBlockDisplayFormatInfo
   )
@@ -54,7 +53,6 @@ export function DatasetMetadataFieldValueFormatted({
 }
 
 export function metadataFieldValueToDisplayFormat(
-  metadataFieldName: string,
   metadataFieldValue: DatasetMetadataFieldValueModel,
   metadataBlockInfo?: MetadataBlockInfoDisplayFormat
 ): string {
