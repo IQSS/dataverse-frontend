@@ -67,14 +67,6 @@ export const AllBordersAtAGlance: Story = {
         <Card.Header>Info</Card.Header>
         <Card.Body>Body containing content.</Card.Body>
       </Card>
-      <Card border="dark" style={{ width: '18rem' }}>
-        <Card.Header>Dark</Card.Header>
-        <Card.Body>Body containing content.</Card.Body>
-      </Card>
-      <Card border="light" style={{ width: '18rem' }}>
-        <Card.Header>Light</Card.Header>
-        <Card.Body>Body containing content.</Card.Body>
-      </Card>
     </div>
   )
 }
@@ -104,14 +96,6 @@ export const AllBackgroundsAtAGlance: Story = {
       </Card>
       <Card bg="info" text="white" style={{ width: '18rem' }}>
         <Card.Header>Info</Card.Header>
-        <Card.Body>Body containing content.</Card.Body>
-      </Card>
-      <Card bg="dark" text="white" style={{ width: '18rem' }}>
-        <Card.Header>Dark</Card.Header>
-        <Card.Body>Body containing content.</Card.Body>
-      </Card>
-      <Card bg="light" style={{ width: '18rem' }}>
-        <Card.Header>Light</Card.Header>
         <Card.Body>Body containing content.</Card.Body>
       </Card>
     </div>

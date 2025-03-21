@@ -10,19 +10,9 @@ import { CardImage } from './CardImage'
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
-  border?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'dark' | 'light'
-  text?:
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'danger'
-    | 'warning'
-    | 'info'
-    | 'dark'
-    | 'light'
-    | 'white'
-    | 'muted'
-  bg?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'dark' | 'light'
+  border?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info'
+  text?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'white' | 'muted'
+  bg?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info'
   className?: string
 }
 function Card({ children, border, bg, className, ...rest }: CardProps) {
