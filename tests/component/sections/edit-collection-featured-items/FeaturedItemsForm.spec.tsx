@@ -11,14 +11,14 @@ import { CollectionMother } from '@tests/component/collection/domain/models/Coll
 const collectionRepository = {} as CollectionRepository
 const testCollection = CollectionMother.create({ name: 'Collection Name' })
 
-const featuredItemOne = CollectionFeaturedItemMother.createFeaturedItem({
+const featuredItemOne = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
   id: 1,
   imageFileUrl: 'https://loremflickr.com/320/240',
   displayOrder: 1,
   content: '<h1 class="rte-heading">Featured Item One</h1>'
 })
 
-const featuredItemTwo = CollectionFeaturedItemMother.createFeaturedItem({
+const featuredItemTwo = CollectionFeaturedItemMother.createCustomFeaturedItem('books', {
   id: 2,
   displayOrder: 2,
   content: '<h1 class="rte-heading">Featured Item Two</h1>',
@@ -375,12 +375,15 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should show the top save button when there are at least 3 items', () => {
-      const localTestFeaturedItemThree = CollectionFeaturedItemMother.createFeaturedItem({
-        id: 3,
-        displayOrder: 3,
-        content: '<h1 class="rte-heading">Featured Item Three</h1>',
-        imageFileUrl: undefined
-      })
+      const localTestFeaturedItemThree = CollectionFeaturedItemMother.createCustomFeaturedItem(
+        'css',
+        {
+          id: 3,
+          displayOrder: 3,
+          content: '<h1 class="rte-heading">Featured Item Three</h1>',
+          imageFileUrl: undefined
+        }
+      )
 
       const testFeaturedItems = [featuredItemOne, featuredItemTwo, localTestFeaturedItemThree]
 
@@ -436,7 +439,7 @@ describe('FeaturedItemsForm', () => {
     })
 
     it('should show an error message when the content is larger than max length accepted', () => {
-      const featuredItemOne = CollectionFeaturedItemMother.createFeaturedItem({
+      const featuredItemOne = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
         id: 1,
         imageFileUrl: 'https://loremflickr.com/320/240',
         displayOrder: 1,
@@ -701,7 +704,7 @@ describe('FeaturedItemsForm', () => {
     it('should submit the form with the new values and show toast - case when collection has initial items', () => {
       collectionRepository.updateFeaturedItems = cy.stub().as('updateFeaturedItems').resolves()
 
-      const featuredItemThree = CollectionFeaturedItemMother.createFeaturedItem({
+      const featuredItemThree = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
         id: 3,
         displayOrder: 3,
         content: '<h1 class="rte-heading">Featured Item Two</h1>',

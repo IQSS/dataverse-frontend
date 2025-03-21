@@ -5,9 +5,31 @@
 .section-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
   min-height: $main-container-available-height;
+  padding-top: 2rem;
+}
+
+.separation-line {
+  width: 100%;
+  height: 1px;
+  margin: 0 auto;
+  background-color: $dv-border-color;
+  margin-block: 1.5rem;
+}
+
+.featured-items-wrapper {
+  min-width: 100%;
+
+  .separation-line {
+    display: none;
+  }
+
+  &:has(h4) {
+    .separation-line {
+      display: block;
+    }
+  }
 }
 
 .middle-search-cta-wrapper {

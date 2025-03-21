@@ -5,6 +5,7 @@ import { useCollection } from './useCollection'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
 import { type UseCollectionQueryParamsReturnType } from './useGetCollectionQueryParams'
+import { useHistoryTracker } from '@/router/HistoryTrackerProvider'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import AddDataActionsButton from '../shared/add-data-actions/AddDataActionsButton'
 import { CollectionItemsPanel } from './collection-items-panel/CollectionItemsPanel'
@@ -17,6 +18,8 @@ import { ShareCollectionButton } from './share-collection-button/ShareCollection
 import { ContactButton } from '@/sections/shared/contact/ContactButton'
 import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectionDropdown'
 import { FeaturedItems } from './featured-items/FeaturedItems'
+import { Route } from '../Route.enum'
+import { CollectionHelper } from './CollectionHelper'
 import styles from './Collection.module.scss'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
@@ -42,6 +45,9 @@ export function Collection({
 }: CollectionProps) {
   useScrollTop()
   const { t } = useTranslation('collection')
+  const { previousPath } = useHistoryTracker()
+  const previousPathIsHomepage = previousPath === Route.HOME
+
   const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
     collectionIdFromParams,
@@ -90,10 +96,17 @@ export function Collection({
               </Alert>
             )}
 
-            <FeaturedItems
-              collectionRepository={collectionRepository}
-              collectionId={collection.id}
-            />
+            {previousPathIsHomepage &&
+            /* istanbul ignore next */ CollectionHelper.isRootCollection(
+              collection.hierarchy
+            ) ? /* istanbul ignore next */ null : (
+              <FeaturedItems
+                collectionRepository={collectionRepository}
+                collectionId={collection.id}
+                className={styles['featured-items-spacing']}
+                withLoadingSkeleton={false}
+              />
+            )}
 
             <div className={styles['metrics-actions-container']}>
               <div className={styles.metrics}></div>

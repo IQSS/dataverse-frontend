@@ -1,0 +1,38 @@
+@use 'sass:color';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.card {
+  height: 100%;
+
+  .card_body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    p {
+      text-wrap: pretty;
+    }
+
+    .footer_wrapper {
+      display: flex;
+      justify-content: flex-end;
+
+      .cta_link_text {
+        color: color.adjust($dv-brand-color, $lightness: -9%);
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.column_card {
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
+  @media (min-width: 992px) {
+    &:not(:last-child) {
+      margin-bottom: 0;
+    }
+  }
+}
