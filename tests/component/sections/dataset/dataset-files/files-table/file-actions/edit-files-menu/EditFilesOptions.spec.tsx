@@ -114,7 +114,7 @@ describe('EditFilesOptions', () => {
     cy.findByText('Close').click()
   })
 
-  it.only('does not show the No Selected Files message when files are selected and one option is clicked', () => {
+  it('does not show the No Selected Files message when files are selected and one option is clicked', () => {
     cy.customMount(
       <EditFilesOptions
         files={files}
