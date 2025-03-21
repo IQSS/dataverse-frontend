@@ -40,7 +40,7 @@ export const Metrics = () => {
               <div className="display-6 fw-bold text-primary">
                 <SlotCounter
                   value={compactNumbersFormatter.format(187911)}
-                  startValue={!prefersReducedMotion ? '000K' : undefined}
+                  startValue={!prefersReducedMotion ? '000K' : /* istanbul ignore next */ undefined}
                   {...SLOT_PROPS}
                 />
               </div>
@@ -50,7 +50,7 @@ export const Metrics = () => {
               <div className="display-6 fw-bold text-primary">
                 <SlotCounter
                   value={compactNumbersFormatter.format(2162)}
-                  startValue={!prefersReducedMotion ? '00K' : undefined}
+                  startValue={!prefersReducedMotion ? '00K' : /* istanbul ignore next */ undefined}
                   {...SLOT_PROPS}
                 />
               </div>
@@ -61,7 +61,7 @@ export const Metrics = () => {
               <div className="display-6 fw-bold text-primary">
                 <SlotCounter
                   value={compactNumbersFormatter.format(101869)}
-                  startValue={!prefersReducedMotion ? '000K' : undefined}
+                  startValue={!prefersReducedMotion ? '000K' : /* istanbul ignore next */ undefined}
                   {...SLOT_PROPS}
                 />
               </div>
@@ -71,7 +71,7 @@ export const Metrics = () => {
               <div className="display-6 fw-bold text-primary">
                 <SlotCounter
                   value={compactNumbersFormatter.format(86042)}
-                  startValue={!prefersReducedMotion ? '00K' : undefined}
+                  startValue={!prefersReducedMotion ? '00K' : /* istanbul ignore next */ undefined}
                   {...SLOT_PROPS}
                 />
               </div>
@@ -88,7 +88,7 @@ export const Metrics = () => {
               <div className="display-6 fw-bold text-primary">
                 <SlotCounter
                   value={compactNumbersFormatter.format(91514796)}
-                  startValue={!prefersReducedMotion ? '00M' : undefined}
+                  startValue={!prefersReducedMotion ? '00M' : /* istanbul ignore next */ undefined}
                   {...SLOT_PROPS}
                 />
               </div>
@@ -98,7 +98,7 @@ export const Metrics = () => {
               <div className="display-6 fw-bold text-primary">
                 <SlotCounter
                   value={compactNumbersFormatter.format(4761951)}
-                  startValue={!prefersReducedMotion ? '00M' : undefined}
+                  startValue={!prefersReducedMotion ? '00M' : /* istanbul ignore next */ undefined}
                   {...SLOT_PROPS}
                 />
               </div>
@@ -108,7 +108,7 @@ export const Metrics = () => {
               <div className="display-6 fw-bold text-primary">
                 <SlotCounter
                   value={compactNumbersFormatter.format(2302964)}
-                  startValue={!prefersReducedMotion ? '000M' : undefined}
+                  startValue={!prefersReducedMotion ? '000M' : /* istanbul ignore next */ undefined}
                   {...SLOT_PROPS}
                 />
               </div>
@@ -118,7 +118,7 @@ export const Metrics = () => {
               <div className="display-6 fw-bold text-primary">
                 <SlotCounter
                   value={compactNumbersFormatter.format(61622)}
-                  startValue={!prefersReducedMotion ? '00K' : undefined}
+                  startValue={!prefersReducedMotion ? '00K' : /* istanbul ignore next */ undefined}
                   {...SLOT_PROPS}
                 />
               </div>

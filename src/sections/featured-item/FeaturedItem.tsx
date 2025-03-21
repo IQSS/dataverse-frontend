@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Alert } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { CustomFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
@@ -20,6 +21,7 @@ export const FeaturedItem = ({
   featuredItemId
 }: FeaturedItemProps) => {
   const { setIsLoading } = useLoading()
+  const { t } = useTranslation('featuredItem')
 
   const {
     collectionFeaturedItems,
@@ -49,7 +51,7 @@ export const FeaturedItem = ({
   if (error || !collectionFeaturedItems || !featuredItemFoundById || !collection) {
     return (
       <Alert variant="danger" dismissible={false}>
-        Error loading featured item
+        {t('error')}
       </Alert>
     )
   }
