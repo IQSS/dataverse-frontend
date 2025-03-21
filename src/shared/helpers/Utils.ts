@@ -12,4 +12,6 @@ export class Utils {
       timeoutId = setTimeout(() => fn(...args), delay)
     }
   }
+
+  static sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
 }

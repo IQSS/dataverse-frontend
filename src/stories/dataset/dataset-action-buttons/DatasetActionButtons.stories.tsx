@@ -11,6 +11,7 @@ import {
 import { WithLoggedInUser } from '../../WithLoggedInUser'
 import { DatasetMockRepository } from '../DatasetMockRepository'
 import { CollectionMockRepository } from '@/stories/collection/CollectionMockRepository'
+import { ContactMockRepository } from '@/stories/shared/contact/ContactMockRepository'
 
 const meta: Meta<typeof DatasetActionButtons> = {
   title: 'Sections/Dataset Page/DatasetActionButtons',
@@ -41,6 +42,7 @@ export const WithPublishPermissions: Story = {
       })}
       datasetRepository={new DatasetMockRepository()}
       collectionRepository={new CollectionMockRepository()}
+      contactRepository={new ContactMockRepository()}
     />
   )
 }
@@ -60,6 +62,7 @@ export const WithNoDatasetPermissions: Story = {
       })}
       datasetRepository={new DatasetMockRepository()}
       collectionRepository={new CollectionMockRepository()}
+      contactRepository={new ContactMockRepository()}
     />
   )
 }
@@ -83,6 +86,7 @@ export const WithUpdateAndNoPublishDatasetPermissions: Story = {
       })}
       datasetRepository={new DatasetMockRepository()}
       collectionRepository={new CollectionMockRepository()}
+      contactRepository={new ContactMockRepository()}
     />
   )
 }

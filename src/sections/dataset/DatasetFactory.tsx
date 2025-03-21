@@ -16,12 +16,13 @@ import { AlertProvider } from '../alerts/AlertProvider'
 import { searchParamVersionToDomainVersion } from '../../router'
 import { FILES_TAB_INFINITE_SCROLL_ENABLED } from './config'
 import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
+import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
-
+const contactRepository = new ContactJSDataverseRepository()
 const settingRepository = new SettingJSDataverseRepository()
 
 export class DatasetFactory {
@@ -73,6 +74,7 @@ function DatasetWithSearchParams() {
           datasetRepository={datasetRepository}
           fileRepository={fileRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
+          contactRepository={contactRepository}
           filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
           tab={tab}
         />
@@ -90,6 +92,7 @@ function DatasetWithSearchParams() {
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        contactRepository={contactRepository}
         created={created}
         publishInProgress={publishInProgress}
         metadataUpdated={metadataUpdated}

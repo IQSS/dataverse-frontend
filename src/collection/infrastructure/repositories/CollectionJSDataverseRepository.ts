@@ -10,7 +10,8 @@ import {
   updateCollection,
   getCollectionFeaturedItems,
   updateCollectionFeaturedItems,
-  deleteCollectionFeaturedItems
+  deleteCollectionFeaturedItems,
+  deleteCollection
 } from '@iqss/dataverse-client-javascript'
 import { JSCollectionMapper } from '../mappers/JSCollectionMapper'
 import { CollectionDTO } from '../../domain/useCases/DTOs/CollectionDTO'
@@ -34,6 +35,10 @@ export class CollectionJSDataverseRepository implements CollectionRepository {
     return createCollection
       .execute(collection, hostCollection)
       .then((newCollectionIdentifier) => newCollectionIdentifier)
+  }
+
+  delete(collectionIdOrAlias: number | string): Promise<void> {
+    return deleteCollection.execute(collectionIdOrAlias)
   }
 
   getFacets(collectionIdOrAlias?: number | string): Promise<CollectionFacet[]> {

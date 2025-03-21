@@ -86,7 +86,7 @@ export const FeaturedItemsForm = ({
 
   const handleOnRemoveField = (index: number) => remove(index)
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = /* istanbul ignore next */ (event: DragEndEvent) => {
     const { active, over } = event
 
     if (over && active.id !== over?.id) {

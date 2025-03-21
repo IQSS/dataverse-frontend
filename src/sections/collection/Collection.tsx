@@ -14,9 +14,11 @@ import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
 import { ShareCollectionButton } from './share-collection-button/ShareCollectionButton'
+import { ContactButton } from '@/sections/shared/contact/ContactButton'
 import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectionDropdown'
 import { FeaturedItems } from './featured-items/FeaturedItems'
 import styles from './Collection.module.scss'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 interface CollectionProps {
   collectionRepository: CollectionRepository
@@ -26,6 +28,7 @@ interface CollectionProps {
   edited?: boolean
   collectionQueryParams: UseCollectionQueryParamsReturnType
   infiniteScrollEnabled?: boolean
+  contactRepository: ContactRepository
 }
 
 export function Collection({
@@ -34,7 +37,8 @@ export function Collection({
   created,
   published,
   edited,
-  collectionQueryParams
+  collectionQueryParams,
+  contactRepository
 }: CollectionProps) {
   useScrollTop()
   const { t } = useTranslation('collection')
@@ -47,11 +51,11 @@ export function Collection({
     collectionIdOrAlias: collectionIdFromParams,
     collectionRepository
   })
-
   const canUserAddCollection = Boolean(collectionUserPermissions?.canAddCollection)
   const canUserEditCollection = Boolean(collectionUserPermissions?.canEditCollection)
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
   const canUserPublishCollection = Boolean(collectionUserPermissions?.canPublishCollection)
+  const canUserDeleteCollection = Boolean(collectionUserPermissions?.canDeleteCollection)
 
   const showAddDataActions = canUserAddCollection || canUserAddDataset
   const showPublishButton = !collection?.isReleased && canUserPublishCollection
@@ -94,8 +98,12 @@ export function Collection({
             <div className={styles['metrics-actions-container']}>
               <div className={styles.metrics}></div>
               <div className={styles['right-content']}>
-                {/* 👇 Here should go Contact button also */}
-                {/* <ContactButton /> */}
+                <ContactButton
+                  toContactName={collection.name}
+                  contactObjectType="collection"
+                  id={collection.id}
+                  contactRepository={contactRepository}
+                />
 
                 <ShareCollectionButton />
 
@@ -107,7 +115,13 @@ export function Collection({
                         collectionId={collection.id}
                       />
                     )}
-                    {showEditButton && <EditCollectionDropdown collection={collection} />}
+                    {showEditButton && (
+                      <EditCollectionDropdown
+                        collection={collection}
+                        canUserDeleteCollection={canUserDeleteCollection}
+                        collectionRepository={collectionRepository}
+                      />
+                    )}
                   </ButtonGroup>
                 )}
               </div>

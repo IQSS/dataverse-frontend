@@ -218,5 +218,40 @@
       "selectAllFiles": "Select all files",
       "deselectAllFiles": "Deselect all files"
     }
+  },
+  "contact": {
+    "message": "Message",
+    "subject": "Subject",
+    "title": {
+      "collection": "Contact",
+      "dataset": "Contact Owner"
+    },
+    "contactCollection": "Email Collection Contact",
+    "contactDataset": "Email Dataset Contact",
+    "helpText": "Email the contact for this collection.",
+    "verificationText": "Please fill this out to prove you are not a robot.",
+    "contactSuccess": "Message sent.",
+    "validation": {
+      "captchaInput": {
+        "required": "Validation is required.",
+        "invalid": "Incorrect answer.",
+        "onlyNumber": "Only numbers are allowed.",
+        "maxLength": "Answer cannot exceed {{maxLength}} ."
+      },
+      "email": {
+        "invalid": "Invalid email format.",
+        "required": "Email is required.",
+        "maxLength": "Email cannot exceed {{maxLength}} ."
+      },
+      "subject": {
+        "required": "Subject is required.",
+        "maxLength": "Subject cannot exceed {{maxLength}} ."
+      },
+      "message": {
+        "required": "Message is required.",
+        "maxLength": "Message cannot exceed {{maxLength}} ."
+      }
+    },
+    "defaultFeedbackSubmitError": "An error occurred while submitting your feedback. Please try again later."
   }
 }
