@@ -55,6 +55,7 @@ export function Collection({
   const canUserEditCollection = Boolean(collectionUserPermissions?.canEditCollection)
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
   const canUserPublishCollection = Boolean(collectionUserPermissions?.canPublishCollection)
+  const canUserDeleteCollection = Boolean(collectionUserPermissions?.canDeleteCollection)
 
   const showAddDataActions = canUserAddCollection || canUserAddDataset
   const showPublishButton = !collection?.isReleased && canUserPublishCollection
@@ -114,7 +115,13 @@ export function Collection({
                         collectionId={collection.id}
                       />
                     )}
-                    {showEditButton && <EditCollectionDropdown collection={collection} />}
+                    {showEditButton && (
+                      <EditCollectionDropdown
+                        collection={collection}
+                        canUserDeleteCollection={canUserDeleteCollection}
+                        collectionRepository={collectionRepository}
+                      />
+                    )}
                   </ButtonGroup>
                 )}
               </div>

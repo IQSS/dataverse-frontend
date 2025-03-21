@@ -23,10 +23,19 @@ export class CollectionMockRepository implements CollectionRepository {
       }, FakerHelper.loadingTimout())
     })
   }
+
   create(_collection: CollectionDTO, _hostCollection?: string): Promise<number> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(1)
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  delete(_collectionIdOrAlias: number | string): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
       }, FakerHelper.loadingTimout())
     })
   }

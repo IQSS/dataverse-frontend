@@ -39,7 +39,8 @@ const collectionExpected: Collection = {
     }
   ],
   isMetadataBlockRoot: false,
-  isFacetRoot: false
+  isFacetRoot: false,
+  childCount: 0
 }
 
 describe('Collection JSDataverse Repository', () => {
@@ -50,13 +51,12 @@ describe('Collection JSDataverse Repository', () => {
 
   it('gets the collection by id', async () => {
     const collectionResponse = await CollectionHelper.create('new-collection')
-    console.log('collectionResponse', collectionResponse.id)
+
     await collectionRepository.getById(collectionResponse.id).then((collection) => {
       if (!collection) {
         throw new Error('Collection not found')
       }
 
-      console.log('collection', collection)
       expect(collection).to.deep.equal(collectionExpected)
     })
   })
