@@ -28,12 +28,31 @@ collectionRepositoryWithFeaturedItems.getFeaturedItems = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve([
-        ...CollectionFeaturedItemMother.createFeaturedItems(),
-        ...CollectionFeaturedItemMother.createFeaturedItems()
+        CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
+          id: 11,
+          displayOrder: 1
+        }),
+        CollectionFeaturedItemMother.createDvObjectCollectionFeaturedItem({
+          id: 32,
+          displayOrder: 2
+        }),
+        CollectionFeaturedItemMother.createDvObjectDatasetFeaturedItem({
+          id: 40,
+          displayOrder: 3
+        }),
+        CollectionFeaturedItemMother.createCustomFeaturedItem('books', {
+          id: 55,
+          displayOrder: 4
+        }),
+        CollectionFeaturedItemMother.createDvObjectFileFeaturedItem({
+          id: 45,
+          displayOrder: 5
+        })
       ])
     }, FakerHelper.loadingTimout())
   })
 }
+
 export const WithFeaturedItems: Story = {
   render: () => <Homepage collectionRepository={collectionRepositoryWithFeaturedItems} />
 }
