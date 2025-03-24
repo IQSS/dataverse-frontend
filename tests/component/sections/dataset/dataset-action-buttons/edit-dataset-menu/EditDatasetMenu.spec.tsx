@@ -21,7 +21,6 @@ describe('EditDatasetMenu', () => {
     )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist').should('be.enabled').click()
-
     cy.findByRole('button', { name: 'Files (Upload)' }).should('exist')
     cy.findByRole('button', { name: 'Metadata' }).should('exist')
     cy.findByRole('button', { name: 'Terms' }).should('exist')
@@ -118,7 +117,9 @@ describe('EditDatasetMenu', () => {
       hasValidTermsOfAccess: true
     })
 
-    cy.mountAuthenticated(<EditDatasetMenu dataset={dataset} />)
+    cy.mountAuthenticated(
+      <EditDatasetMenu datasetRepository={new DatasetMockRepository()} dataset={dataset} />
+    )
 
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
     cy.findByRole('button', { name: 'Files (Upload)' }).click()
@@ -154,6 +155,7 @@ describe('EditDatasetMenu', () => {
     cy.findByRole('button', { name: 'Edit Dataset' }).click()
     cy.findByRole('button', { name: 'Metadata' }).click()
   })
+
   it('clicks on the Deaccession button', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createReleased(),
@@ -170,6 +172,7 @@ describe('EditDatasetMenu', () => {
     cy.findByRole('button', { name: 'Deaccession Dataset' }).click()
     cy.findByText('Deaccession is permanent.').should('exist')
   })
+
   it('clicks on the Terms button', () => {
     const dataset = DatasetMother.create({
       version: DatasetVersionMother.createReleased(),
