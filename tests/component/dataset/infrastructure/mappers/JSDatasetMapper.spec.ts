@@ -37,6 +37,7 @@ const jsDataset = {
     lastUpdateTime: new Date('2023-09-07T13:40:04.000Z'),
     releaseTime: undefined
   },
+  internalVersionNumber: 1,
   termsOfUse: {
     fileAccessRequest: true,
     termsOfAccess: 'New terms',
@@ -214,6 +215,7 @@ const expectedDataset = {
     citation:
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
+  internalVersionNumber: 1,
   requestedVersion: undefined,
   publicationDate: undefined,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
@@ -323,6 +325,7 @@ const expectedDatasetWithPublicationDate = {
     citation:
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
+  internalVersionNumber: 1,
   requestedVersion: undefined,
   publicationDate: undefined,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
@@ -433,6 +436,7 @@ const expectedDatasetWithNextVersionNumbers = {
     citation:
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
+  internalVersionNumber: 1,
   requestedVersion: undefined,
   publicationDate: undefined,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
@@ -547,6 +551,7 @@ const expectedDatasetAlternateVersion = {
     citation:
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
+  internalVersionNumber: 1,
   requestedVersion: '4.0',
   publicationDate: undefined,
   hasValidTermsOfAccess: true,
