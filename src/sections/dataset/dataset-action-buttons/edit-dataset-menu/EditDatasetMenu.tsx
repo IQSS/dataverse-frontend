@@ -5,11 +5,7 @@ import {
   DatasetNonNumericVersionSearchParam,
   DatasetPublishingStatus
 } from '../../../../dataset/domain/models/Dataset'
-import {
-  DropdownButton,
-  DropdownButtonItem,
-  DropdownSeparator
-} from '@iqss/dataverse-design-system'
+import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { EditDatasetPermissionsMenu } from './EditDatasetPermissionsMenu'
 import { DeleteDatasetButton } from './DeleteDatasetButton'
 import { DeaccessionDatasetButton } from './DeaccessionDatasetButton'
