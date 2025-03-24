@@ -20,7 +20,7 @@ export function ConfirmationModal({
   const { t } = useTranslation(['dataset', 'shared'])
 
   return (
-    <Modal show={show} onHide={onCancel}>
+    <Modal size={'lg'} show={show} onHide={onCancel}>
       <Modal.Header>
         <Modal.Title>{t('confirmDeaccession.title')}</Modal.Title>
       </Modal.Header>
