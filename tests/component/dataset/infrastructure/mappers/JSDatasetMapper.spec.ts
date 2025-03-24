@@ -801,22 +801,21 @@ const expectedDatasetAlternateVersion = {
 }
 
 describe('JS Dataset Mapper', () => {
-  describe('JS Dataset Mapper', () => {
-    it('maps jsDataset model to the domain Dataset model', () => {
-      const mapped = JSDatasetMapper.toDataset(
-        jsDataset,
-        citation,
-        datasetSummaryFields,
-        jsDatasetPermissions,
-        jsDatasetLocks,
-        jsDatasetFilesTotalOriginalDownloadSize,
-        jsDatasetFilesTotalArchivalDownloadSize,
-        jsDatasetVersionSummaries
-      )
+  it('maps jsDataset model to the domain Dataset model', () => {
+    const mapped = JSDatasetMapper.toDataset(
+      jsDataset,
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions,
+      jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize,
+      jsDatasetVersionSummaries
+    )
 
-      expect(mapped).to.deep.equal(expectedDataset)
-    })
+    expect(mapped).to.deep.equal(expectedDataset)
   })
+
   it('maps jsDataset model to the domain Dataset model for alternate version', () => {
     const mappedWithAlternate = JSDatasetMapper.toDataset(
       jsDataset,
