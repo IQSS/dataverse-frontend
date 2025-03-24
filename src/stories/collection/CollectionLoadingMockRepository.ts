@@ -13,15 +13,23 @@ export class CollectionLoadingMockRepository extends CollectionMockRepository {
   getById(_id?: string): Promise<Collection> {
     return new Promise(() => {})
   }
+
   create(_collection: CollectionDTO, _hostCollection?: string): Promise<number> {
     return new Promise(() => {})
   }
+
+  delete(_collectionIdOrAlias: number | string): Promise<void> {
+    return new Promise(() => {})
+  }
+
   getFacets(_collectionIdOrAlias: number | string): Promise<CollectionFacet[]> {
     return new Promise(() => {})
   }
+
   getUserPermissions(_collectionIdOrAlias: number | string): Promise<CollectionUserPermissions> {
     return new Promise(() => {})
   }
+
   getItems(
     _collectionId: string,
     _paginationInfo: CollectionItemsPaginationInfo,

@@ -4,7 +4,9 @@ import { FileUserPermissions as JSFilePermissions } from '@iqss/dataverse-client
 export class JSFilePermissionsMapper {
   static toFilePermissions(jsFileUserPermissions: JSFilePermissions): FilePermissions {
     return {
-      canDownloadFile: jsFileUserPermissions.canDownloadFile
+      canDownloadFile: jsFileUserPermissions.canDownloadFile,
+      canManageFilePermissions: jsFileUserPermissions.canManageFilePermissions,
+      canEditOwnerDataset: jsFileUserPermissions.canEditOwnerDataset
     }
   }
 }

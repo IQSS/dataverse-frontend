@@ -8,10 +8,11 @@ import {
   DatasetPermissionsMother,
   DatasetVersionMother
 } from '../../../dataset/domain/models/DatasetMother'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
-
 const collectionRepository: CollectionRepository = {} as CollectionRepository
+const contactRepository: ContactRepository = {} as ContactRepository
 
 describe('DatasetActionButtons', () => {
   it('renders the DatasetActionButtons with the Publish button', () => {
@@ -28,6 +29,7 @@ describe('DatasetActionButtons', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />
     )
 
@@ -36,6 +38,8 @@ describe('DatasetActionButtons', () => {
     cy.findByRole('button', { name: 'Publish Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Link Dataset' }).should('exist')
+    cy.findByRole('button', { name: 'Contact Owner' }).should('exist')
+    cy.findByRole('button', { name: 'Share' }).should('exist')
   })
 
   it('renders the DatasetActionButtons with the Submit for Review button', () => {
@@ -56,6 +60,7 @@ describe('DatasetActionButtons', () => {
         dataset={dataset}
         datasetRepository={datasetRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />
     )
 
@@ -64,5 +69,7 @@ describe('DatasetActionButtons', () => {
     cy.findByRole('button', { name: 'Submit for Review' }).should('exist')
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Link Dataset' }).should('exist')
+    cy.findByRole('button', { name: 'Contact Owner' }).should('exist')
+    cy.findByRole('button', { name: 'Share' }).should('exist')
   })
 })

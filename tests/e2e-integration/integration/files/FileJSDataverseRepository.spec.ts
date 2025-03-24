@@ -25,6 +25,8 @@ import { DatasetVersionMother } from '../../../component/dataset/domain/models/D
 import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePaginationInfo'
 import { FilePreview } from '../../../../src/files/domain/models/FilePreview'
 import {
+  DatasetLabelSemanticMeaning,
+  DatasetLabelValue,
   DatasetNonNumericVersion,
   DatasetPublishingStatus,
   DatasetVersionNumber
@@ -41,7 +43,7 @@ const expect = chai.expect
 const fileRepository = new FileJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
 const dateNow = DateHelper.toISO8601Format(new Date())
-const filePreviewExpectedData = (id: number): FilePreview => {
+const filePreviewExpectedData = (id: number): Omit<FilePreview, 'datasetVersionNumber'> => {
   return {
     id: id,
     name: 'blob',
@@ -83,21 +85,29 @@ const filePreviewExpectedData = (id: number): FilePreview => {
       isActivelyEmbargoed: false,
       isTabular: false
     },
-    permissions: { canDownloadFile: true }
+    permissions: {
+      canDownloadFile: true,
+      canManageFilePermissions: true,
+      canEditOwnerDataset: true
+    }
   }
 }
 
 const expectedFileCitationRegex = new RegExp(
   `^Finch, Fiona, ${new Date().getFullYear()}, "Darwin's Finches", <a href="https:\\/\\/doi\\.org\\/10\\.5072\\/FK2\\/[A-Z0-9]+" target="_blank">https:\\/\\/doi\\.org\\/10\\.5072\\/FK2\\/[A-Z0-9]+<\\/a>, Root, DRAFT VERSION; blob \\[fileName\\]$`
 )
-const fileExpectedData = (id: number): File => {
+const fileExpectedData = (id: number, datasetPid: string): Omit<File, 'hierarchy'> => {
   return {
     id: id,
     name: 'blob',
+    datasetPersistentId: datasetPid,
     datasetVersion: {
       labels: [
-        { semanticMeaning: 'dataset', value: 'Draft' },
-        { semanticMeaning: 'warning', value: 'Unpublished' }
+        { semanticMeaning: DatasetLabelSemanticMeaning.DATASET, value: DatasetLabelValue.DRAFT },
+        {
+          semanticMeaning: DatasetLabelSemanticMeaning.WARNING,
+          value: DatasetLabelValue.UNPUBLISHED
+        }
       ],
       id: 74,
       title: "Darwin's Finches",
@@ -148,7 +158,11 @@ const fileExpectedData = (id: number): File => {
       isActivelyEmbargoed: false,
       isTabular: false
     },
-    permissions: { canDownloadFile: true }
+    permissions: {
+      canDownloadFile: true,
+      canManageFilePermissions: true,
+      canEditOwnerDataset: true
+    }
   }
 }
 
@@ -481,10 +495,10 @@ describe('File JSDataverse Repository', () => {
           dataset.persistentId,
           dataset.version,
           new FilePaginationInfo(),
-          new FileCriteria().withFilterByType('text/tab-separated-values')
+          new FileCriteria().withFilterByType('text/plain')
         )
         .then((files) => {
-          expect(files.length).to.equal(1)
+          expect(files.length).to.equal(2)
         })
     })
 
@@ -867,7 +881,7 @@ describe('File JSDataverse Repository', () => {
       const datasetResponse = await DatasetHelper.createWithFile(FileHelper.create())
       if (!datasetResponse.file) throw new Error('File not found')
 
-      const expectedFile = fileExpectedData(datasetResponse.file.id)
+      const expectedFile = fileExpectedData(datasetResponse.file.id, datasetResponse.persistentId)
 
       await fileRepository.getById(datasetResponse.file.id).then((file) => {
         expect(file.name).to.deep.equal(expectedFile.name)

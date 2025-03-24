@@ -35,8 +35,13 @@
       flex: 0 0 100%;
       scroll-snap-align: start;
       justify-content: center;
-      max-height: 100%;
+      max-height: 70vh;
+      padding-inline: 1.5rem;
       overflow-x: hidden;
+
+      > section {
+        width: 100%;
+      }
     }
   }
 

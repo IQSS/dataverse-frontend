@@ -1,4 +1,5 @@
 import { Collection } from '../../collection/domain/models/Collection'
+import TurndownService from 'turndown'
 import styles from './Collection.module.scss'
 import { MarkdownComponent } from '../dataset/markdown/MarkdownComponent'
 import { Badge } from '@iqss/dataverse-design-system'
@@ -7,6 +8,7 @@ import { DatasetLabelSemanticMeaning } from '../../dataset/domain/models/Dataset
 interface CollectionInfoProps {
   collection: Collection
 }
+const turndownService = new TurndownService()
 
 export function CollectionInfo({ collection }: CollectionInfoProps) {
   return (
@@ -26,7 +28,7 @@ export function CollectionInfo({ collection }: CollectionInfoProps) {
       </header>
       {collection.description && (
         <div>
-          <MarkdownComponent markdown={collection.description} />
+          <MarkdownComponent markdown={turndownService.turndown(collection.description)} />
         </div>
       )}
     </>

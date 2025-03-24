@@ -15,4 +15,5 @@ export interface Collection {
   contacts: CollectionContact[]
   isMetadataBlockRoot: boolean
   isFacetRoot: boolean
+  childCount: number
 }

@@ -23,8 +23,7 @@
       "nameAsc": "Name (A-Z)",
       "nameDesc": "Name (Z-A)",
       "dateAsc": "Oldest",
-      "dateDesc": "Newest",
-      "relevance": "Relevance"
+      "dateDesc": "Newest"
     }
   },
   "noSearchMatches": "There are no collections, datasets, or files that match your search. Please try a new search by using other or broader terms. You can also check out the <anchor>search guide</anchor> for tips.",
@@ -51,7 +50,8 @@
   "editedAlert": "You have successfully updated your collection!",
   "editCollection": {
     "edit": "Edit",
-    "generalInfo": "General Information"
+    "generalInfo": "General Information",
+    "deleteCollection": "Delete Collection"
   },
   "featuredItems": {
     "title": "Featured Items",
@@ -60,5 +60,12 @@
       "nextLabel": "Go to next slide",
       "dotLabel": "Go to slide"
     }
-  }
+  },
+  "deleteCollectionModal": {
+    "title": "Delete Collection",
+    "message": "Are you sure you want to delete your collection? You cannot undelete this collection.",
+    "delete": "Delete"
+  },
+  "collectionDeletedSuccess": "Your collection has been deleted.",
+  "defaultCollectionDeleteError": "Something went wrong deleting the collection. Try again later."
 }
