@@ -5,7 +5,11 @@ import {
   DatasetNonNumericVersionSearchParam,
   DatasetPublishingStatus
 } from '../../../../dataset/domain/models/Dataset'
-import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
+import {
+  DropdownButton,
+  DropdownButtonItem,
+  DropdownSeparator
+} from '@iqss/dataverse-design-system'
 import { EditDatasetPermissionsMenu } from './EditDatasetPermissionsMenu'
 import { DeleteDatasetButton } from './DeleteDatasetButton'
 import { DeaccessionDatasetButton } from './DeaccessionDatasetButton'
@@ -19,7 +23,7 @@ interface EditDatasetMenuProps {
   datasetRepository: DatasetRepository
 }
 
-enum EditDatasetMenuItems {
+export enum EditDatasetMenuItems {
   FILES_UPLOAD = 'filesUpload',
   METADATA = 'metadata',
   TERMS = 'terms',
@@ -49,10 +53,6 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
     }
     if (eventKey === EditDatasetMenuItems.METADATA) {
       navigate(`${Route.EDIT_DATASET_METADATA}?${searchParams.toString()}`)
-      return
-    }
-    if (eventKey === EditDatasetMenuItems.DEACCESSION) {
-      hideModal()
       return
     }
     showModal()
@@ -96,9 +96,7 @@ export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuP
         {t('datasetActionButtons.editDataset.thumbnailsPlusWidgets')}
       </DropdownButtonItem>
       <DeleteDatasetButton dataset={dataset} />
-      <DropdownButtonItem eventKey={EditDatasetMenuItems.DEACCESSION} as="div">
-        <DeaccessionDatasetButton datasetRepository={datasetRepository} dataset={dataset} />
-      </DropdownButtonItem>
+      <DeaccessionDatasetButton datasetRepository={datasetRepository} dataset={dataset} />
     </DropdownButton>
   )
 }

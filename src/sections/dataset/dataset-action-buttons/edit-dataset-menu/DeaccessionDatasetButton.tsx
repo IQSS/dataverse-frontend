@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useContext } from 'react'
 import { DatasetContext } from '@/sections/dataset/DatasetContext'
@@ -23,7 +22,6 @@ export function DeaccessionDatasetButton({
   datasetRepository
 }: DeaccessionDatasetButtonProps) {
   const { t } = useTranslation('dataset')
-  const navigate = useNavigate()
   const datasetContext = useContext(DatasetContext)
   const [showDeaccessionModal, setShowDeaccessionModal] = useState(false)
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
@@ -50,7 +48,6 @@ export function DeaccessionDatasetButton({
   } = useForm<DeaccessionFormData>({
     defaultValues: { versions: defaultVersions, deaccessionForwardUrl: '' }
   })
-
   if (
     !dataset.version.someDatasetVersionHasBeenReleased ||
     !dataset.permissions.canPublishDataset ||
@@ -58,7 +55,10 @@ export function DeaccessionDatasetButton({
   ) {
     return <></>
   }
-  const handleOpen = () => setShowDeaccessionModal(true)
+  const handleOpen = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setShowDeaccessionModal(true)
+  }
   const handleClose = () => setShowDeaccessionModal(false)
 
   const handleCancelConfirmation = () => {
