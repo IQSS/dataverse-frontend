@@ -41,7 +41,6 @@ export function DatasetProvider({
     return Promise.resolve(undefined)
   }, [repository, searchParams])
 
-  // Fetch dataset on mount or when dependencies change
   const fetchDataset = useCallback(() => {
     if (isPublishing) return
     setIsLoading(true)
