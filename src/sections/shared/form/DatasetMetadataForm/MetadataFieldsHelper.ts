@@ -332,8 +332,6 @@ export class MetadataFieldsHelper {
             .map((primitiveField) => primitiveField.value)
             .filter((v) => v !== '')
 
-          console.log({ primitiveMultipleFieldValues })
-
           if (primitiveMultipleFieldValues.length > 0 || mode === 'edit') {
             formattedMetadataBlock.fields[fieldName] = primitiveMultipleFieldValues
             return

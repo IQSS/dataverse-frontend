@@ -32,8 +32,6 @@ type UseSubmitDatasetReturnType =
       submitError: string
     }
 
-// TODO:ME - Add integration tests and component tests
-
 export function useSubmitDataset(
   mode: DatasetMetadataFormMode,
   collectionId: string,
