@@ -16,7 +16,11 @@ export interface DatasetRepository {
   ) => Promise<DatasetVersionDiff>
 
   create: (dataset: DatasetDTO, collectionId: string) => Promise<{ persistentId: string }>
-  updateMetadata: (datasetId: string | number, datasetDTO: DatasetDTO) => Promise<void>
+  updateMetadata: (
+    datasetId: string | number,
+    datasetDTO: DatasetDTO,
+    internalVersionNumber: number
+  ) => Promise<void>
   getAllWithCount: (
     collectionId: string,
     paginationInfo: DatasetPaginationInfo
