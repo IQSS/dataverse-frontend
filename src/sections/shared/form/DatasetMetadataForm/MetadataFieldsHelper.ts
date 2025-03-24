@@ -298,10 +298,9 @@ export class MetadataFieldsHelper {
     return formattedNewObject
   }
 
-  // TODO:ME - Refactor these two functions into one
-
-  public static formatFormValuesToDatasetDTOForCreation(
-    formValues: DatasetMetadataFormValues
+  public static formatFormValuesToDatasetDTO(
+    formValues: DatasetMetadataFormValues,
+    mode: 'create' | 'edit'
   ): DatasetDTO {
     const metadataBlocks: DatasetDTO['metadataBlocks'] = []
 
@@ -314,14 +313,14 @@ export class MetadataFieldsHelper {
 
       Object.entries(metadataBlockFormValues).forEach(([fieldName, fieldValue]) => {
         if (this.isPrimitiveFieldValue(fieldValue)) {
-          if (fieldValue !== '') {
+          if (fieldValue !== '' || mode === 'edit') {
             formattedMetadataBlock.fields[fieldName] = fieldValue
             return
           }
           return
         }
         if (this.isVocabularyMultipleFieldValue(fieldValue)) {
-          if (fieldValue.length > 0) {
+          if (fieldValue.length > 0 || mode === 'edit') {
             formattedMetadataBlock.fields[fieldName] = fieldValue
             return
           }
@@ -333,7 +332,9 @@ export class MetadataFieldsHelper {
             .map((primitiveField) => primitiveField.value)
             .filter((v) => v !== '')
 
-          if (primitiveMultipleFieldValues.length > 0) {
+          console.log({ primitiveMultipleFieldValues })
+
+          if (primitiveMultipleFieldValues.length > 0 || mode === 'edit') {
             formattedMetadataBlock.fields[fieldName] = primitiveMultipleFieldValues
             return
           }
@@ -344,7 +345,7 @@ export class MetadataFieldsHelper {
           const formattedMetadataChildFieldValue: DatasetMetadataChildFieldValueDTO = {}
 
           Object.entries(fieldValue).forEach(([nestedFieldName, nestedFieldValue]) => {
-            if (nestedFieldValue !== '') {
+            if (nestedFieldValue !== '' || mode === 'edit') {
               formattedMetadataChildFieldValue[nestedFieldName] = nestedFieldValue
             }
           })
@@ -361,85 +362,17 @@ export class MetadataFieldsHelper {
           fieldValue.forEach((composedFieldValues) => {
             const composedField: DatasetMetadataChildFieldValueDTO = {}
             Object.entries(composedFieldValues).forEach(([nestedFieldName, nestedFieldValue]) => {
-              if (nestedFieldValue !== '') {
+              if (nestedFieldValue !== '' || mode === 'edit') {
                 composedField[nestedFieldName] = nestedFieldValue
               }
             })
-            if (Object.keys(composedField).length > 0) {
+            if (Object.keys(composedField).length > 0 || mode === 'edit') {
               formattedMetadataChildFieldValues.push(composedField)
             }
           })
-          if (formattedMetadataChildFieldValues.length > 0) {
+          if (formattedMetadataChildFieldValues.length > 0 || mode === 'edit') {
             formattedMetadataBlock.fields[fieldName] = formattedMetadataChildFieldValues
           }
-
-          return
-        }
-      })
-
-      metadataBlocks.push(formattedMetadataBlock)
-    }
-    return { licence: defaultLicense, metadataBlocks }
-  }
-
-  public static formatFormValuesToDatasetDTOForEdition(
-    formValues: DatasetMetadataFormValues
-  ): DatasetDTO {
-    const metadataBlocks: DatasetDTO['metadataBlocks'] = []
-
-    for (const metadataBlockName in formValues) {
-      const formattedMetadataBlock: DatasetMetadataBlockValuesDTO = {
-        name: metadataBlockName,
-        fields: {}
-      }
-      const metadataBlockFormValues = formValues[metadataBlockName]
-
-      Object.entries(metadataBlockFormValues).forEach(([fieldName, fieldValue]) => {
-        if (this.isPrimitiveFieldValue(fieldValue)) {
-          formattedMetadataBlock.fields[fieldName] = fieldValue
-          return
-        }
-        if (this.isVocabularyMultipleFieldValue(fieldValue)) {
-          formattedMetadataBlock.fields[fieldName] = fieldValue
-          return
-        }
-
-        if (this.isPrimitiveMultipleFieldValue(fieldValue)) {
-          const primitiveMultipleFieldValues = fieldValue
-            .map((primitiveField) => primitiveField.value)
-            .filter((v) => v !== '')
-
-          formattedMetadataBlock.fields[fieldName] = primitiveMultipleFieldValues
-          return
-        }
-
-        if (this.isComposedSingleFieldValue(fieldValue)) {
-          const formattedMetadataChildFieldValue: DatasetMetadataChildFieldValueDTO = {}
-
-          Object.entries(fieldValue).forEach(([nestedFieldName, nestedFieldValue]) => {
-            formattedMetadataChildFieldValue[nestedFieldName] = nestedFieldValue
-          })
-
-          if (Object.keys(formattedMetadataChildFieldValue).length > 0) {
-            formattedMetadataBlock.fields[fieldName] = formattedMetadataChildFieldValue
-            return
-          }
-          return
-        }
-
-        if (this.isComposedMultipleFieldValue(fieldValue)) {
-          const formattedMetadataChildFieldValues: DatasetMetadataChildFieldValueDTO[] = []
-
-          fieldValue.forEach((composedFieldValues) => {
-            const composedField: DatasetMetadataChildFieldValueDTO = {}
-            Object.entries(composedFieldValues).forEach(([nestedFieldName, nestedFieldValue]) => {
-              composedField[nestedFieldName] = nestedFieldValue
-            })
-
-            formattedMetadataChildFieldValues.push(composedField)
-          })
-
-          formattedMetadataBlock.fields[fieldName] = formattedMetadataChildFieldValues
 
           return
         }

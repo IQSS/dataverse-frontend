@@ -32,12 +32,15 @@ type UseSubmitDatasetReturnType =
       submitError: string
     }
 
+// TODO:ME - Add integration tests and component tests
+
 export function useSubmitDataset(
   mode: DatasetMetadataFormMode,
   collectionId: string,
   datasetRepository: DatasetRepository,
   onSubmitErrorCallback: () => void,
-  datasetPersistentID?: string
+  datasetPersistentID?: string,
+  datasetInternalVersionNumber?: number
 ): UseSubmitDatasetReturnType {
   const navigate = useNavigate()
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
@@ -52,11 +55,13 @@ export function useSubmitDataset(
 
     const formDataBackToOriginalKeys = MetadataFieldsHelper.replaceSlashKeysWithDot(formData)
 
-    if (mode === 'create') {
-      const formattedFormValuesForCreation =
-        MetadataFieldsHelper.formatFormValuesToDatasetDTOForCreation(formDataBackToOriginalKeys)
+    const formattedFormValues = MetadataFieldsHelper.formatFormValuesToDatasetDTO(
+      formDataBackToOriginalKeys,
+      mode
+    )
 
-      createDataset(datasetRepository, formattedFormValuesForCreation, collectionId)
+    if (mode === 'create') {
+      createDataset(datasetRepository, formattedFormValues, collectionId)
         .then(({ persistentId }) => {
           setSubmitError(null)
           setSubmissionStatus(SubmissionStatus.SubmitComplete)
@@ -82,13 +87,11 @@ export function useSubmitDataset(
     } else {
       const currentEditedDatasetPersistentID = datasetPersistentID as string
 
-      const formattedFormValuesForEdition =
-        MetadataFieldsHelper.formatFormValuesToDatasetDTOForEdition(formDataBackToOriginalKeys)
-
       updateDatasetMetadata(
         datasetRepository,
         currentEditedDatasetPersistentID,
-        formattedFormValuesForEdition
+        formattedFormValues,
+        datasetInternalVersionNumber as number
       )
         .then(() => {
           setSubmitError(null)
