@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { RouteObject } from 'react-router-dom'
+import { Navigate, RouteObject } from 'react-router-dom'
 import { Route } from '../sections/Route.enum'
 import { Layout } from '../sections/layout/Layout'
 import { ErrorPage } from '../sections/error-page/ErrorPage'
@@ -83,6 +83,12 @@ const EditCollectionFeaturedItems = lazy(() =>
 const FeaturedItemPage = lazy(() =>
   import('../sections/featured-item/FeaturedItemFactory').then(({ FeaturedItemFactory }) => ({
     default: () => FeaturedItemFactory.create()
+  }))
+)
+
+const NotFoundPage = lazy(() =>
+  import('../sections/not-found-page/NotFoundPageFactory').then(({ NotFoundPageFactory }) => ({
+    default: () => NotFoundPageFactory.create()
   }))
 )
 
@@ -214,6 +220,15 @@ export const routes: RouteObject[] = [
             errorElement: <ErrorPage />
           }
         ]
+      },
+      // 🕵️‍♂️ Not found page, if the path doesn't match any route we redirect to not found page.
+      {
+        path: Route.NOT_FOUND_PAGE,
+        element: <NotFoundPage />
+      },
+      {
+        path: '*',
+        element: <Navigate to={Route.NOT_FOUND_PAGE} replace />
       }
     ]
   }
