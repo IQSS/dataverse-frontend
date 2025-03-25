@@ -82,8 +82,8 @@ export function DeaccessionDatasetModal({
                                 isInvalid={!!errors.versions}
                                 onChange={(e) => {
                                   const newValue = e.target.checked
-                                    ? [...field.value, e.target.value] // Add to array if checked
-                                    : field.value.filter((val) => val !== e.target.value) // Remove if unchecked
+                                    ? [...field.value, e.target.value]
+                                    : field.value.filter((val) => val !== e.target.value)
 
                                   field.onChange(newValue)
                                 }}

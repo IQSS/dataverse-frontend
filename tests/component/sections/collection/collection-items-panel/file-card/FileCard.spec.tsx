@@ -3,6 +3,7 @@ import { FileItemTypePreviewMother } from '@tests/component/files/domain/models/
 import { DateHelper } from '@/shared/helpers/DateHelper'
 import { FileCardHelper } from '@/sections/collection/collection-items-panel/items-list/file-card/FileCardHelper'
 import { PublicationStatus } from '@/shared/core/domain/models/PublicationStatus'
+
 describe('FileCard', () => {
   it('should render the card', () => {
     const filePreview = FileItemTypePreviewMother.create()
@@ -40,6 +41,7 @@ describe('FileCard', () => {
     filePreview.variables && cy.contains(filePreview.variables).should('exist')
     filePreview.observations && cy.contains(filePreview.observations).should('exist')
   })
+
   it('should render the card if dateset is draft version', () => {
     const filePreview = FileItemTypePreviewMother.create({
       publicationStatuses: [PublicationStatus.Draft]
