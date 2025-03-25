@@ -7,14 +7,27 @@ import styles from './NotFoundPage.module.scss'
 
 interface NotFoundPageProps {
   dvObjectNotFoundType?: 'collection' | 'dataset' | 'file'
-  dvObjectNotFoundName?: string
 }
 
-export const NotFoundPage = ({ dvObjectNotFoundType, dvObjectNotFoundName }: NotFoundPageProps) => {
+// TODO:ME - Remove old not found page alert after finishing and adapat tests
+export const NotFoundPage = ({ dvObjectNotFoundType }: NotFoundPageProps) => {
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('notFoundPage')
 
   useEffect(() => setIsLoading(false), [setIsLoading])
+
+  const defineMessageType = (dvObjectNotFoundType?: 'collection' | 'dataset' | 'file') => {
+    if (dvObjectNotFoundType === 'collection') {
+      return 'Collection'
+    }
+    if (dvObjectNotFoundType === 'dataset') {
+      return 'Dataset'
+    }
+    if (dvObjectNotFoundType === 'file') {
+      return 'File'
+    }
+    return 'Page'
+  }
 
   return (
     <section className={styles['section-wrapper']} data-testid="not-found-page">
@@ -25,7 +38,7 @@ export const NotFoundPage = ({ dvObjectNotFoundType, dvObjectNotFoundName }: Not
           <Trans
             t={t}
             i18nKey="message"
-            values={{ type: 'Page' }}
+            values={{ type: defineMessageType(dvObjectNotFoundType) }}
             components={{
               1: <strong />
             }}
