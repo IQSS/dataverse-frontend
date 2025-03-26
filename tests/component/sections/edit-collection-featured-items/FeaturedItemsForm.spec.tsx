@@ -516,7 +516,7 @@ describe('FeaturedItemsForm', () => {
 
     it('should show toast error message when trying to add more than 10 featured items', () => {
       const testFeaturedItems = Array.from({ length: 10 }, (_, index) =>
-        CollectionFeaturedItemMother.createFeaturedItem({
+        CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
           id: index,
           displayOrder: index,
           content: `<h1 class="rte-heading">Featured Item ${index}</h1>`,
