@@ -120,7 +120,8 @@ const datasetData = (persistentId: string, versionId: number) => {
         { semanticMeaning: 'dataset', value: 'Draft' },
         { semanticMeaning: 'warning', value: 'Unpublished' }
       ],
-      someDatasetVersionHasBeenReleased: false
+      someDatasetVersionHasBeenReleased: false,
+      termsOfAccess: undefined
     },
     permissions: {
       canDownloadFiles: true,

@@ -5,15 +5,18 @@ import {
 import {
   DatasetPublishingStatus,
   DatasetVersion,
-  DatasetVersionNumber
+  DatasetVersionNumber,
+  TermsOfAccess
 } from '../../domain/models/Dataset'
+
 export class JSDatasetVersionMapper {
   static toVersion(
     jDatasetVersionId: number,
     jsDatasetVersionInfo: JSDatasetVersionInfo,
     jsDatasetTitle: string,
     jsDatasetCitation: string,
-    jsDatasetPublicationDate?: string
+    jsDatasetPublicationDate?: string,
+    jsDatasettermsOfAccess?: TermsOfAccess
   ): DatasetVersion {
     return new DatasetVersion.Builder(
       jDatasetVersionId,
@@ -24,7 +27,8 @@ export class JSDatasetVersionMapper {
       true, // TODO Connect with dataset version isLatest
       false, // TODO Connect with dataset version isInReview
       this.toStatus(jsDatasetVersionInfo.state),
-      this.toSomeDatasetVersionHasBeenReleased(jsDatasetVersionInfo, jsDatasetPublicationDate)
+      this.toSomeDatasetVersionHasBeenReleased(jsDatasetVersionInfo, jsDatasetPublicationDate),
+      jsDatasettermsOfAccess
     )
   }
 
