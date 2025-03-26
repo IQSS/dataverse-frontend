@@ -44,7 +44,7 @@ export const NotFoundPage = ({ dvObjectNotFoundType }: NotFoundPageProps) => {
             }}
           />
         </h1>
-        <Link to={Route.HOME} className={`${styles.btn} btn btn-secondary`}>
+        <Link to={Route.HOME} className={`${styles.btn} btn btn-primary`}>
           {t('backToHomepage', { brandName: 'Dataverse' })}
         </Link>
       </div>

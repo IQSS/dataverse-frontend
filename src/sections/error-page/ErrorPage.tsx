@@ -31,7 +31,7 @@ export function ErrorPage({ fullViewport = false }: AppLoaderProps) {
           </h1>
         </div>
 
-        <Link to={Route.HOME} className="btn btn-secondary">
+        <Link to={Route.HOME} className="btn btn-primary">
           {t('backToHomepage', { brandName: t('brandName') })}
         </Link>
       </div>
