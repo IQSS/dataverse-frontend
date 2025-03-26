@@ -4,10 +4,11 @@ import styles from './Layout.module.scss'
 import { FooterFactory } from './footer/FooterFactory'
 import TopBarProgressIndicator from './topbar-progress-indicator/TopbarProgressIndicator'
 import { HeaderFactory } from './header/HeaderFactory'
+import { HistoryTrackerProvider } from '@/router/HistoryTrackerProvider'
 
 export function Layout() {
   return (
-    <>
+    <HistoryTrackerProvider>
       <TopBarProgressIndicator />
       {HeaderFactory.create()}
       <main>
@@ -17,6 +18,6 @@ export function Layout() {
       </main>
 
       {FooterFactory.create()}
-    </>
+    </HistoryTrackerProvider>
   )
 }

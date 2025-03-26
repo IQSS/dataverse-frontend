@@ -6,14 +6,14 @@ import { CollectionMother } from '@tests/component/collection/domain/models/Coll
 const collectionRepository = {} as CollectionRepository
 const collection = CollectionMother.create({ name: 'Collection Name' })
 
-const featuredItemOne = CollectionFeaturedItemMother.createFeaturedItem({
+const featuredItemOne = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
   id: 1,
   imageFileUrl: 'https://via.placeholder.com/400x400',
   displayOrder: 1,
   content: '<h1 class="rte-heading">Featured Item One</h1>'
 })
 
-const featuredItemTwo = CollectionFeaturedItemMother.createFeaturedItem({
+const featuredItemTwo = CollectionFeaturedItemMother.createCustomFeaturedItem('books', {
   id: 2,
   displayOrder: 2,
   content: '<h1 class="rte-heading">Featured Item Two</h1>',

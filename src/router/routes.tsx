@@ -86,6 +86,12 @@ const ReplaceFile = lazy(() =>
   }))
 )
 
+const FeaturedItemPage = lazy(() =>
+  import('../sections/featured-item/FeaturedItemFactory').then(({ FeaturedItemFactory }) => ({
+    default: () => FeaturedItemFactory.create()
+  }))
+)
+
 export const routes: RouteObject[] = [
   {
     path: '/',
@@ -133,6 +139,15 @@ export const routes: RouteObject[] = [
         element: (
           <Suspense fallback={<AppLoader />}>
             <FilePage />
+          </Suspense>
+        ),
+        errorElement: <ErrorPage />
+      },
+      {
+        path: Route.FEATURED_ITEM,
+        element: (
+          <Suspense fallback={<AppLoader />}>
+            <FeaturedItemPage />
           </Suspense>
         ),
         errorElement: <ErrorPage />

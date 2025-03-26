@@ -1,4 +1,5 @@
-import { Slider } from '@/sections/collection/featured-items/slider/Slider'
+import { Slider } from '@/sections/edit-collection-featured-items/featured-items-form/preview-carousel/slider/Slider'
+
 const twoItems = ['Item One', 'Item Two']
 const oneItemOnly = ['Item One']
 const dataTestId = 'slider-test-id'

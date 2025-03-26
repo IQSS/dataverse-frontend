@@ -14,7 +14,8 @@ export enum Route {
   CREATE_COLLECTION = '/collections/:parentCollectionId/create',
   EDIT_COLLECTION = '/collections/:collectionId/edit',
   ACCOUNT = '/account',
-  EDIT_COLLECTION_FEATURED_ITEMS = '/collections/:collectionId/edit-featured-items'
+  EDIT_COLLECTION_FEATURED_ITEMS = '/collections/:collectionId/edit-featured-items',
+  FEATURED_ITEM = '/featured-item/:parentCollectionId/:featuredItemId'
 }
 
 export const RouteWithParams = {
@@ -33,7 +34,9 @@ export const RouteWithParams = {
     })
 
     return `/files/replace?${searchParams.toString()}`
-  }
+  },
+  FEATURED_ITEM: (parentCollectionId: string, featuredItemId: string) =>
+    `/featured-item/${parentCollectionId}/${featuredItemId}`
 }
 
 export enum QueryParamKey {

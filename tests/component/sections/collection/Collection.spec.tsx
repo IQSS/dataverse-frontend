@@ -253,7 +253,7 @@ describe('Collection page', () => {
       />
     )
 
-    cy.findByTestId('featured-items-slider').should('exist')
+    cy.findByTestId('featured-items').should('exist')
   })
 
   it('does not show the collection featured items carousel when there are no featured items', () => {
@@ -270,7 +270,7 @@ describe('Collection page', () => {
       />
     )
 
-    cy.findByTestId('featured-items-slider').should('not.exist')
+    cy.findByTestId('featured-items').should('not.exist')
   })
 
   it('opens and colses contact modal', () => {

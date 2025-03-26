@@ -1,4 +1,7 @@
-import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import {
+  CollectionFeaturedItem,
+  CustomFeaturedItem
+} from '@/collection/domain/models/CollectionFeaturedItem'
 import { FeaturedItemField, FeaturedItemsFormData } from '../types'
 import {
   CollectionFeaturedItemDTO,
@@ -20,7 +23,7 @@ export class FeaturedItemsFormHelper {
     }
 
     return collectionFeaturedItems.map((collectionFeaturedItem) => {
-      const { id, content, imageFileUrl } = collectionFeaturedItem
+      const { id, content, imageFileUrl } = collectionFeaturedItem as CustomFeaturedItem
 
       return {
         content,
