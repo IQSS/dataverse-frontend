@@ -23,7 +23,7 @@ describe('FileThumbnail', () => {
     cy.customMount(<FileThumbnail file={file} />)
 
     cy.findByAltText(file.name).should('exist')
-    cy.findByAltText(file.name).trigger('mouseover')
+    cy.findByAltText(file.name).trigger('mouseover', { force: true })
     cy.findByRole('tooltip').should('exist')
 
     cy.findByText('Restricted File Icon').should('not.exist')

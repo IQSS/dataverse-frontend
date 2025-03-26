@@ -17,6 +17,14 @@ export class CollectionErrorMockRepository extends CollectionMockRepository {
     })
   }
 
+  delete(_collectionIdOrAlias: number | string): Promise<void> {
+    return new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject('Something went wrong')
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
   getFacets(_collectionIdOrAlias: number | string): Promise<CollectionFacet[]> {
     return new Promise((_resolve, reject) => {
       setTimeout(() => {

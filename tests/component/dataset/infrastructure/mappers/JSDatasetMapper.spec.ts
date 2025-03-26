@@ -241,6 +241,7 @@ const expectedDataset = {
       majorNumber: 0
     },
     someDatasetVersionHasBeenReleased: false,
+    termsOfAccess: undefined,
     citation:
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
@@ -374,6 +375,7 @@ const expectedDatasetWithPublicationDate = {
     publishingStatus: 'draft',
     isLatest: true,
     isInReview: false,
+    termsOfAccess: undefined,
     latestVersionPublishingStatus: 'draft',
     number: {
       minorNumber: 0,
@@ -520,6 +522,7 @@ const expectedDatasetWithNextVersionNumbers = {
       majorNumber: 0
     },
     someDatasetVersionHasBeenReleased: true,
+    termsOfAccess: undefined,
     citation:
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
@@ -664,6 +667,7 @@ const expectedDatasetAlternateVersion = {
       majorNumber: 0
     },
     someDatasetVersionHasBeenReleased: false,
+    termsOfAccess: undefined,
     citation:
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },

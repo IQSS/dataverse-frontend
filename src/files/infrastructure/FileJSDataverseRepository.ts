@@ -17,7 +17,8 @@ import {
   addUploadedFilesToDataset,
   UploadedFileDTO,
   ReadError,
-  deleteFile
+  deleteFile,
+  restrictFile
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -307,5 +308,9 @@ export class FileJSDataverseRepository implements FileRepository {
 
   delete(fileId: number | string): Promise<void> {
     return deleteFile.execute(fileId)
+  }
+
+  restrict(fileId: number | string, restrict: boolean): Promise<void> {
+    return restrictFile.execute(fileId, restrict)
   }
 }

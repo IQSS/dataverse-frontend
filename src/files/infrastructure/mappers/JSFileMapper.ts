@@ -54,7 +54,9 @@ export class JSFileMapper {
       jsDataset.versionId,
       jsDataset.versionInfo,
       JSDatasetMapper.toDatasetTitle(jsDataset.metadataBlocks),
-      datasetCitation
+      datasetCitation,
+      jsDataset.publicationDate,
+      jsDataset.termsOfUse?.termsOfAccess
     )
     return {
       id: this.toFileId(jsFile.id),

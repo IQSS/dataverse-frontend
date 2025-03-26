@@ -1,5 +1,7 @@
+import cn from 'classnames'
 import { useMemo, useRef, useState } from 'react'
 import useInfiniteScroll, { UseInfiniteScrollHookRefCallback } from 'react-infinite-scroll-hook'
+import { Alert } from '@iqss/dataverse-design-system'
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
 import { FileCriteria } from '../../../files/domain/models/FileCriteria'
 import { DatasetVersion } from '../../../dataset/domain/models/Dataset'
@@ -10,9 +12,8 @@ import { useGetFilesTotalDownloadSize } from './useGetFilesTotalDownloadSize'
 import { useObserveElementSize } from '../../../shared/hooks/useObserveElementSize'
 import { FilesTableScrollable } from './files-table/FilesTableScrollable'
 import { FileCriteriaForm } from './file-criteria-form/FileCriteriaForm'
-import cn from 'classnames'
+import { FilesContext } from '@/sections/file/FilesContext'
 import styles from './DatasetFilesScrollable.module.scss'
-import { Alert } from '@iqss/dataverse-design-system'
 
 interface DatasetFilesScrollableProps {
   filesRepository: FileRepository
@@ -67,7 +68,8 @@ export function DatasetFilesScrollable({
     areFilesAvailable,
     totalAvailable,
     hasNextPage,
-    isEmptyFiles
+    isEmptyFiles,
+    refreshFiles
   } = useGetAccumulatedFiles({
     filesRepository,
     datasetPersistentId,
@@ -140,7 +142,6 @@ export function DatasetFilesScrollable({
       </>
     )
   }
-
   return (
     <section ref={rootRef}>
       <div
@@ -161,17 +162,21 @@ export function DatasetFilesScrollable({
           />
         </header>
 
-        <FilesTableScrollable
-          files={accumulatedFiles}
-          paginationInfo={paginationInfo}
-          filesTotalDownloadSize={filesTotalDownloadSize}
-          criteria={criteria}
-          criteriaContainerHeight={criteriaContainerSize.height}
-          sentryRef={sentryRef}
-          showSentryRef={showSentryRef}
-          isEmptyFiles={isEmptyFiles}
-          accumulatedCount={accumulatedCount}
-        />
+        <FilesContext.Provider
+          value={{ files: accumulatedFiles, isLoading, refreshFiles: refreshFiles }}>
+          <FilesTableScrollable
+            files={accumulatedFiles}
+            paginationInfo={paginationInfo}
+            filesTotalDownloadSize={filesTotalDownloadSize}
+            criteria={criteria}
+            criteriaContainerHeight={criteriaContainerSize.height}
+            sentryRef={sentryRef}
+            showSentryRef={showSentryRef}
+            isEmptyFiles={isEmptyFiles}
+            accumulatedCount={accumulatedCount}
+            fileRepository={filesRepository}
+          />
+        </FilesContext.Provider>
       </div>
     </section>
   )
