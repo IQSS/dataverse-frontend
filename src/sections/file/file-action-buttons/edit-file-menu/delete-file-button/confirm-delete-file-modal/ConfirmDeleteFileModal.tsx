@@ -49,7 +49,12 @@ export const ConfirmDeleteFileModal = ({
         <Button variant="secondary" onClick={handleClose} type="button" disabled={isDeletingFile}>
           {tShared('cancel')}
         </Button>
-        <Button variant="danger" onClick={handleDelete} type="button" disabled={isDeletingFile}>
+        <Button
+          variant="danger"
+          data-testid={'deleteButton'}
+          onClick={handleDelete}
+          type="button"
+          disabled={isDeletingFile}>
           <Stack direction="horizontal" gap={1}>
             {tShared('delete')}
             {isDeletingFile && <Spinner variant="light" animation="border" size="sm" />}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FilePreview } from '../../../files/domain/models/FilePreview'
 import { FileRepository } from '../../../files/domain/repositories/FileRepository'
@@ -24,6 +24,7 @@ type UseGetAccumulatedFilesReturnType = {
   isEmptyFiles: boolean
   areFilesAvailable: boolean
   accumulatedCount: number
+  refreshFiles: () => Promise<void>
 }
 
 type UseGetAccumulatedFilesParams = {
@@ -92,6 +93,11 @@ export const useGetAccumulatedFiles = ({
     }
   }
 
+  const refreshFiles = useCallback(async () => {
+    await loadMore(new FilePaginationInfo(), new FileCriteria(), true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accumulatedFiles.length, filesRepository, datasetPersistentId, datasetVersion])
+
   return {
     isLoading,
     accumulatedFiles,
@@ -101,7 +107,8 @@ export const useGetAccumulatedFiles = ({
     loadMore,
     isEmptyFiles,
     areFilesAvailable,
-    accumulatedCount
+    accumulatedCount,
+    refreshFiles
   }
 }
 

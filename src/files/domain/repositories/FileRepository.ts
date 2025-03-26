@@ -44,4 +44,5 @@ export interface FileRepository {
   ) => Promise<void>
   addUploadedFiles: (datasetId: number | string, files: UploadedFileDTO[]) => Promise<void>
   delete: (fileId: number | string) => Promise<void>
+  restrict: (fileId: number | string, restrict: boolean) => Promise<void>
 }

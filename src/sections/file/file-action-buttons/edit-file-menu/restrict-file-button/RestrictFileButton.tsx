@@ -6,55 +6,64 @@ import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
-import { ConfirmDeleteFileModal } from './confirm-delete-file-modal/ConfirmDeleteFileModal'
+import { ConfirmRestrictFileModal } from './confirm-restrict-file-modal/ConfirmRestrictFileModal'
 import { EditFileMenuDatasetInfo } from '../EditFileMenu'
-import { useDeleteFile } from './useDeleteFile'
+import { useRestrictFile } from './useRestrictFile'
 
-interface DeleteFileButtonProps {
+interface RestrictFileButtonProps {
   fileId: number
+  isRestricted: boolean
   fileRepository: FileRepository
   datasetInfo: EditFileMenuDatasetInfo
 }
 
-export const DeleteFileButton = ({
+export const RestrictFileButton = ({
   fileId,
+  isRestricted,
   fileRepository,
   datasetInfo
-}: DeleteFileButtonProps) => {
+}: RestrictFileButtonProps) => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const navigate = useNavigate()
   const { t } = useTranslation('file')
-
-  const { handleDeleteFile, isDeletingFile, errorDeletingFile } = useDeleteFile({
+  // const [isNavigate, setIsNavigat] = useState(false)
+  const { handleRestrictFile, isRestrictingFile, errorRestrictingFile } = useRestrictFile({
+    isRestricted,
     fileRepository,
-    onSuccessfulDelete: closeModalAndNavigateToDataset
+    onSuccessfulRestrict: closeModalAndNavigateToDataset
   })
-
   const handleOpenModal = () => setShowConfirmationModal(true)
   const handleCloseModal = () => setShowConfirmationModal(false)
 
   function closeModalAndNavigateToDataset() {
     setShowConfirmationModal(false)
+
     const searchParams = new URLSearchParams()
     searchParams.set(QueryParamKey.PERSISTENT_ID, datasetInfo.persistentId)
     searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
     navigate(`${Route.DATASETS}?${searchParams.toString()}`)
 
-    toast.success(t('fileDeletedSuccess'))
+    isRestricted
+      ? toast.success(t('restriction.fileUnrestrictedSuccess'))
+      : toast.success(t('restriction.fileRestrictdSuccess'))
   }
 
   return (
     <>
       <DropdownButtonItem onClick={handleOpenModal}>
-        {t('actionButtons.editFileMenu.options.delete')}
+        {isRestricted
+          ? t('actionButtons.editFileMenu.options.unrestrict')
+          : t('actionButtons.editFileMenu.options.restrict')}
       </DropdownButtonItem>
-      <ConfirmDeleteFileModal
+      <ConfirmRestrictFileModal
         show={showConfirmationModal}
         handleClose={handleCloseModal}
-        handleDelete={() => handleDeleteFile(fileId)}
+        handleRestrict={() => handleRestrictFile(fileId)}
         datasetReleasedVersionExists={datasetInfo.releasedVersionExists}
-        isDeletingFile={isDeletingFile}
-        errorDeletingFile={errorDeletingFile}
+        termsOfAccessForRestrictedFiles={datasetInfo.termsOfAccessForRestrictedFiles}
+        isRestrictingFile={isRestrictingFile}
+        errorRestrictingFile={errorRestrictingFile}
+        isRestricted={isRestricted}
       />
     </>
   )
