@@ -51,7 +51,7 @@ describe('UploadDatasetFiles', () => {
 
     mountWithDataset(<UploadDatasetFiles fileRepository={fileRepository} />, emptyDataset)
 
-    cy.findByText('Page Not Found').should('exist')
+    cy.findByTestId('not-found-page').should('exist')
   })
 
   it('renders the file uploader', () => {
