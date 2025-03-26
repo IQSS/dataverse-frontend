@@ -48,6 +48,8 @@ export const ReplaceFile = ({
     return <PageNotFound />
   }
 
+  console.log('a')
+
   return (
     <section>
       <BreadcrumbsGenerator
