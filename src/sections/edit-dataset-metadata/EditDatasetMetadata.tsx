@@ -5,13 +5,13 @@ import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepo
 import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { useDataset } from '../dataset/DatasetContext'
 import { useLoading } from '../loading/LoadingContext'
-import { PageNotFound } from '../page-not-found/PageNotFound'
 import { HostCollection } from './HostCollection'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { DatasetMetadataForm } from '../shared/form/DatasetMetadataForm'
 import { EditDatasetMetadataSkeleton } from './EditDatasetMetadataSkeleton'
 import { UpwardHierarchyNode } from '../../shared/hierarchy/domain/models/UpwardHierarchyNode'
+import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import styles from './EditDatasetMetadata.module.scss'
 
 interface EditDatasetMetadataProps {
@@ -44,38 +44,36 @@ export const EditDatasetMetadata = ({
     return <EditDatasetMetadataSkeleton />
   }
 
+  if (!dataset) {
+    return <NotFoundPage dvObjectNotFoundType="dataset" />
+  }
+
   return (
     <>
-      {!dataset ? (
-        <PageNotFound />
-      ) : (
-        <>
-          <BreadcrumbsGenerator
-            hierarchy={dataset?.hierarchy}
-            withActionItem
-            actionItemText={t('breadcrumbActionItem')}
-          />
-          <Alert variant="info" customHeading={t('infoAlert.heading')}>
-            {t('infoAlert.text')}
-          </Alert>
-          <HostCollection collectionName={datasetParentCollection?.name} />
-          <SeparationLine />
-          <Tabs defaultActiveKey="metadata">
-            <Tabs.Tab eventKey="metadata" title={t('metadata')}>
-              <div className={styles['tab-container']}>
-                <DatasetMetadataForm
-                  mode="edit"
-                  collectionId={datasetParentCollection?.id}
-                  datasetRepository={datasetRepository}
-                  metadataBlockInfoRepository={metadataBlockInfoRepository}
-                  datasetPersistentID={dataset.persistentId}
-                  datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
-                />
-              </div>
-            </Tabs.Tab>
-          </Tabs>
-        </>
-      )}
+      <BreadcrumbsGenerator
+        hierarchy={dataset?.hierarchy}
+        withActionItem
+        actionItemText={t('breadcrumbActionItem')}
+      />
+      <Alert variant="info" customHeading={t('infoAlert.heading')}>
+        {t('infoAlert.text')}
+      </Alert>
+      <HostCollection collectionName={datasetParentCollection?.name} />
+      <SeparationLine />
+      <Tabs defaultActiveKey="metadata">
+        <Tabs.Tab eventKey="metadata" title={t('metadata')}>
+          <div className={styles['tab-container']}>
+            <DatasetMetadataForm
+              mode="edit"
+              collectionId={datasetParentCollection?.id}
+              datasetRepository={datasetRepository}
+              metadataBlockInfoRepository={metadataBlockInfoRepository}
+              datasetPersistentID={dataset.persistentId}
+              datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+            />
+          </div>
+        </Tabs.Tab>
+      </Tabs>
     </>
   )
 }

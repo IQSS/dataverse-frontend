@@ -10,6 +10,8 @@ interface NotFoundPageProps {
 }
 
 // TODO:ME - Remove old not found page alert after finishing and adapat tests
+// TODO:ME - Show 404 page if status was 404 else show error page
+// TODO:ME - Action related error should not happen, just show as it is now
 export const NotFoundPage = ({ dvObjectNotFoundType }: NotFoundPageProps) => {
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('notFoundPage')
