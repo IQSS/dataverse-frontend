@@ -36,7 +36,7 @@ export default defineConfig({
   },
   env: {
     codeCoverage: {
-      exclude: ['tests/**/*.*', '**/ErrorPage.tsx']
+      exclude: ['tests/**/*.*', '**/ErrorPage.tsx','**/FileUploader.tsx']
     }
   }
 })

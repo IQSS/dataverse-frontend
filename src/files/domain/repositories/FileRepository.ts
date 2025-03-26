@@ -47,4 +47,5 @@ export interface FileRepository {
   delete: (fileId: number | string) => Promise<void>
   replace: (fileId: number | string, uploadedFileDTO: UploadedFileDTO) => Promise<number>
   getFixityAlgorithm: () => Promise<FixityAlgorithm>
+  restrict: (fileId: number | string, restrict: boolean) => Promise<void>
 }

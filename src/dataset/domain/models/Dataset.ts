@@ -246,12 +246,12 @@ export class DatasetVersion {
     public readonly isLatest: boolean,
     public readonly isInReview: boolean,
     public readonly latestVersionPublishingStatus: DatasetPublishingStatus,
-    public readonly someDatasetVersionHasBeenReleased: boolean
+    public readonly someDatasetVersionHasBeenReleased: boolean,
+    public readonly termsOfAccess?: TermsOfAccess
   ) {}
 
   static Builder = class {
     public readonly labels: DatasetLabel[] = []
-
     constructor(
       public readonly id: number,
       public readonly title: string,
@@ -261,7 +261,8 @@ export class DatasetVersion {
       public readonly isLatest: boolean,
       public readonly isInReview: boolean,
       public readonly latestVersionPublishingStatus: DatasetPublishingStatus,
-      public readonly someDatasetVersionHasBeenReleased: boolean
+      public readonly someDatasetVersionHasBeenReleased: boolean,
+      public readonly termsOfAccess?: TermsOfAccess
     ) {
       this.createLabels()
     }
@@ -327,7 +328,8 @@ export class DatasetVersion {
         this.isLatest,
         this.isInReview,
         this.latestVersionPublishingStatus,
-        this.someDatasetVersionHasBeenReleased
+        this.someDatasetVersionHasBeenReleased,
+        this.termsOfAccess
       )
     }
   }

@@ -18,7 +18,8 @@ import {
   UploadedFileDTO,
   ReadError,
   deleteFile,
-  replaceFile
+  replaceFile,
+  restrictFile
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -334,5 +335,9 @@ export class FileJSDataverseRepository implements FileRepository {
         console.log('Error fetching fixityAlgorithm, using MD5', error)
         return FixityAlgorithm.MD5
       })
+  }
+
+  restrict(fileId: number | string, restrict: boolean): Promise<void> {
+    return restrictFile.execute(fileId, restrict)
   }
 }

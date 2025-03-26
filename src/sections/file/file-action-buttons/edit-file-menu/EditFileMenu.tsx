@@ -4,10 +4,12 @@ import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-syste
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { DeleteFileButton } from './delete-file-button/DeleteFileButton'
+import { RestrictFileButton } from './restrict-file-button/RestrictFileButton'
 
 interface EditFileMenuProps {
   fileId: number
   fileRepository: FileRepository
+  isRestricted: boolean
   datasetInfo: EditFileMenuDatasetInfo
 }
 
@@ -15,9 +17,15 @@ export interface EditFileMenuDatasetInfo {
   persistentId: string
   versionNumber: string
   releasedVersionExists: boolean
+  termsOfAccessForRestrictedFiles?: string
 }
 
-export const EditFileMenu = ({ fileId, fileRepository, datasetInfo }: EditFileMenuProps) => {
+export const EditFileMenu = ({
+  fileId,
+  fileRepository,
+  datasetInfo,
+  isRestricted
+}: EditFileMenuProps) => {
   const { t } = useTranslation('file')
   const navigate = useNavigate()
 
@@ -32,10 +40,12 @@ export const EditFileMenu = ({ fileId, fileRepository, datasetInfo }: EditFileMe
       title={t('actionButtons.editFileMenu.title')}
       asButtonGroup
       variant="secondary">
-      {/* 👇 These buttons are commented out but I keep them because they are the next thing to be developed.*/}
-      {/* <DropdownButtonItem>{t('actionButtons.editFileMenu.options.metadata')}</DropdownButtonItem>
-      <DropdownButtonItem>{t('actionButtons.editFileMenu.options.restrict')}</DropdownButtonItem>
-       */}
+      <RestrictFileButton
+        fileId={fileId}
+        isRestricted={isRestricted}
+        fileRepository={fileRepository}
+        datasetInfo={datasetInfo}
+      />
       <DropdownButtonItem onClick={handleOnReplaceClick}>
         {t('actionButtons.editFileMenu.options.replace')}
       </DropdownButtonItem>

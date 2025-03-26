@@ -93,11 +93,14 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                       <EditFileMenu
                         fileId={file.id}
                         fileRepository={repository}
+                        isRestricted={file.access.restricted}
                         datasetInfo={{
                           persistentId: file.datasetPersistentId,
                           releasedVersionExists:
                             file.datasetVersion.someDatasetVersionHasBeenReleased,
-                          versionNumber: file.datasetVersion.number.toSearchParam()
+                          versionNumber: file.datasetVersion.number.toSearchParam(),
+                          termsOfAccessForRestrictedFiles:
+                            file.datasetVersion.termsOfAccess?.termsOfAccessForRestrictedFiles
                         }}
                       />
                     )}
