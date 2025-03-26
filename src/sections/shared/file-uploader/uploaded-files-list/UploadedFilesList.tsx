@@ -71,7 +71,7 @@ export const UploadedFilesList = ({
     })
   }
 
-  const handleToogleAllFiles = () => {
+  const handleToggleAllFiles = () => {
     if (selectedFiles.length === uploadedFiles.length) {
       setSelectedFiles([])
     } else {
@@ -163,7 +163,7 @@ export const UploadedFilesList = ({
                       <RowSelectionCheckbox
                         checked={allFilesSelected}
                         indeterminate={someFilesSelected}
-                        onChange={handleToogleAllFiles}
+                        onChange={handleToggleAllFiles}
                         disabled={isSaving}
                         aria-label={
                           allFilesSelected

@@ -42,15 +42,9 @@ export const UploadedFileRow = ({
             <Icon name={iconName} />
           </div>
           <div className={styles.form_fields}>
-            {/* File Name field */}
             <FileNameField itemIndex={itemIndex} />
-
-            {/* File Path field */}
             <FilePathField itemIndex={itemIndex} />
-
-            {/* Description field */}
             <FileDescriptionField itemIndex={itemIndex} />
-
             <div className={styles.file_extra_info}>
               <InfoCircleFill />
               <span>{file.fileSizeString}</span>-<span>{MimeTypeDisplay[file.fileType]}</span>-

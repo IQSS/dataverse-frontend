@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { File } from '@/files/domain/models/File'
 import { FileDate } from '@/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileDate'
 import { FileDirectory } from '@/sections/dataset/dataset-files/files-table/file-info/file-info-cell/file-info-data/FileDirectory'
@@ -15,7 +14,7 @@ interface FileInfoProps {
   file: File
 }
 
-export const FileInfo = memo(({ file }: FileInfoProps) => (
+export const FileInfo = ({ file }: FileInfoProps) => (
   <div className={styles.file_info} data-testid="original-file-info">
     <div className={styles.thumbnail_container}>
       <FileThumbnail
@@ -42,6 +41,4 @@ export const FileInfo = memo(({ file }: FileInfoProps) => (
       </div>
     </div>
   </div>
-))
-
-FileInfo.displayName = 'FileInfo'
+)
