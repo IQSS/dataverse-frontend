@@ -1,11 +1,12 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { NotFoundPage } from '@/sections/not-found-page/NotFoundPage'
 import { WithI18next } from '../WithI18next'
+import { WithLayout } from '../WithLayout'
 
 const meta: Meta<typeof NotFoundPage> = {
   title: 'Pages/Not Found Page',
   component: NotFoundPage,
-  decorators: [WithI18next],
+  decorators: [WithI18next, WithLayout],
   parameters: {
     // Sets the delay for all stories.
     chromatic: { delay: 15000, pauseAnimationAtEnd: true }
