@@ -12,21 +12,21 @@ interface NotFoundPageProps {
 export const NotFoundPage = ({ dvObjectNotFoundType }: NotFoundPageProps) => {
   const { setIsLoading } = useLoading()
   const { t } = useTranslation('notFoundPage')
+  const { t: tShared } = useTranslation('shared')
 
   useEffect(() => setIsLoading(false), [setIsLoading])
 
-  // TODO:ME - Use locales
   const defineMessageType = (dvObjectNotFoundType?: 'collection' | 'dataset' | 'file') => {
     if (dvObjectNotFoundType === 'collection') {
-      return 'Collection'
+      return tShared('collection')
     }
     if (dvObjectNotFoundType === 'dataset') {
-      return 'Dataset'
+      return tShared('dataset')
     }
     if (dvObjectNotFoundType === 'file') {
-      return 'File'
+      return tShared('file')
     }
-    return 'Page'
+    return tShared('page')
   }
 
   return (
@@ -44,7 +44,7 @@ export const NotFoundPage = ({ dvObjectNotFoundType }: NotFoundPageProps) => {
             }}
           />
         </h1>
-        <Link to={Route.HOME} className={`${styles.btn} btn btn-primary`}>
+        <Link to={Route.HOME} className={`${styles.btn} btn btn-secondary`}>
           {t('backToHomepage', { brandName: 'Dataverse' })}
         </Link>
       </div>

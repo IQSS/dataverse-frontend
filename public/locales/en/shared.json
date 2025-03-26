@@ -1,4 +1,8 @@
 {
+  "collection": "Collection",
+  "dataset": "Dataset",
+  "file": "File",
+  "page": "Page",
   "asterisksIndicateRequiredFields": "Asterisks indicate required fields",
   "remove": "Remove",
   "add": "Add",
