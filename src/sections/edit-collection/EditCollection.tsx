@@ -9,7 +9,7 @@ import { useSession } from '../session/SessionContext'
 import { useCollection } from '../collection/useCollection'
 import { User } from '@/users/domain/models/User'
 import { CollectionHelper } from '../collection/CollectionHelper'
-import { PageNotFound } from '../page-not-found/PageNotFound'
+import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
@@ -55,7 +55,7 @@ export const EditCollection = ({
   }, [setIsLoading, isLoadingData])
 
   if (!isLoadingCollection && !collection) {
-    return <PageNotFound />
+    return <NotFoundPage dvObjectNotFoundType="collection" />
   }
 
   if (isLoadingData || !collection) {

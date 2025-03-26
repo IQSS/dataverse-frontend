@@ -18,10 +18,6 @@
     "heading": "Page Number Not Found",
     "message": "The page number you requested does not exist. Please try a different page number."
   },
-  "pageNotFound": {
-    "heading": "Page Not Found",
-    "message": "The page you are looking for was not found."
-  },
   "pagination": {
     "results_one": "1 {{item}}",
     "results_other": "{{start}} to {{end}} of {{formattedCount}} {{item}}s",

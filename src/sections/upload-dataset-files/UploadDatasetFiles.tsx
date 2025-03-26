@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { FileRepository } from '../../files/domain/repositories/FileRepository'
 import { useLoading } from '../loading/LoadingContext'
 import { useDataset } from '../dataset/DatasetContext'
-import { PageNotFound } from '../page-not-found/PageNotFound'
+import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { FileUploader } from './FileUploader'
 import { FileUploadState, FileUploadTools } from '../../files/domain/models/FileUploadState'
@@ -162,7 +162,7 @@ export const UploadDatasetFiles = ({ fileRepository: fileRepository }: UploadDat
   return (
     <>
       {!dataset ? (
-        <PageNotFound />
+        <NotFoundPage dvObjectNotFoundType="dataset" />
       ) : (
         <>
           <BreadcrumbsGenerator
