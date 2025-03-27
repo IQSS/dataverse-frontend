@@ -338,7 +338,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
   }
   getDatasetVersionsSummaries(datasetId: number | string): Promise<DatasetVersionSummaryInfo[]> {
     return getDatasetVersionsSummaries.execute(datasetId).catch((error: ReadError) => {
-      throw new Error(error.message)
+      throw error
     })
   }
 }

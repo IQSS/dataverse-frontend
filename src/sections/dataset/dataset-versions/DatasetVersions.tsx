@@ -3,11 +3,15 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Alert, Table, Form, Button } from '@iqss/dataverse-design-system'
-import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
+import {
+  DatasetVersionSummary,
+  DatasetVersionSummaryInfo,
+  DatasetVersionSummaryStringValues
+} from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 import { useGetDatasetVersionsSummaries } from './useGetDatasetVersionsSummaries'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { DatasetVersionViewDifferenceButton } from './view-difference/DatasetVersionViewDifferenceButton'
-import { generateDatasetVersionSummaryDescription } from './generateSummaryDescription'
+import { useDatasetVersionSummaryDescription } from './useDatasetVersionSummaryDescription'
 import { DatasetViewDetailButton } from './DatasetViewDetailButton'
 import styles from './DatasetVersions.module.scss'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
@@ -86,12 +90,11 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
                 index < datasetVersionSummaries.length - 1
                   ? datasetVersionSummaries[index + 1]
                   : null
-              const summaryObject = generateDatasetVersionSummaryDescription(dataset.summary)
 
               return (
                 <tr key={dataset.id}>
                   {!showViewDifferenceButton && !isDeaccession && (
-                    <td>
+                    <td style={{ verticalAlign: 'middle' }}>
                       <Form.Group.Checkbox
                         label=""
                         id={`dataset-${dataset.id}`}
@@ -107,18 +110,8 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
                     </Button>
                   </td>
                   <td>
-                    <p style={{ display: 'flex', flexWrap: 'wrap' }}>
-                      {Object.entries(summaryObject).map(([key, description]) => (
-                        <span key={`${dataset.id}-${key}`}>
-                          {typeof dataset.summary !== 'string' ? (
-                            <>
-                              <strong>{key}:</strong> ({description});
-                            </>
-                          ) : (
-                            description
-                          )}
-                        </span>
-                      ))}
+                    <p style={{ display: 'flex', flexWrap: 'wrap', margin: 0 }}>
+                      <SummaryDescription summary={dataset.summary} />
                       {previousDataset && (
                         <DatasetViewDetailButton
                           datasetRepository={datasetRepository}
@@ -186,5 +179,27 @@ export const DatasetVersionsLoadingSkeleton = () => {
         </tbody>
       </Table>
     </div>
+  )
+}
+
+export const SummaryDescription = ({
+  summary
+}: {
+  summary?: DatasetVersionSummary | DatasetVersionSummaryStringValues
+}) => {
+  const summaryText: Record<string, string> = useDatasetVersionSummaryDescription(summary)
+
+  return (
+    <>
+      {Object.entries(summaryText).map(([key, value]) =>
+        typeof summary === 'string' ? (
+          <span key={key}>{value}</span>
+        ) : (
+          <span key={key}>
+            <strong>{key}</strong>: {key == 'Files' ? <strong>{value}</strong> : value};&nbsp;
+          </span>
+        )
+      )}
+    </>
   )
 }

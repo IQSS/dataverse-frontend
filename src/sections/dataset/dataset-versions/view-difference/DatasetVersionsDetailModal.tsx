@@ -23,51 +23,6 @@ export const VersionDetailModal = ({
   const { t } = useTranslation('dataset')
   const { t: tShared } = useTranslation('shared')
 
-  if (isLoading) {
-    return (
-      <Modal show={show} onHide={handleClose} centered size="xl">
-        <Modal.Header>
-          <Modal.Title>{t('versions.viewDifferencesDetail')}</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <div className={`${styles.message} ${styles.error}`}>
-            <Spinner data-testid="loading-spinner" variant="info" />
-          </div>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose} type="button" disabled={isLoading}>
-            {tShared('cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    )
-  }
-
-  if (errorHandling) {
-    return (
-      <Modal show={show} onHide={handleClose} centered size="xl">
-        <Modal.Header>
-          <Modal.Title>{t('versions.viewDifferencesDetail')}</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <div className={`${styles.message} ${styles.error}`}>
-            <ExclamationCircleFill />
-            <span>{errorHandling}</span>
-          </div>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose} type="button" disabled={isLoading}>
-            {tShared('cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    )
-  }
-
   return (
     <Modal show={show} onHide={handleClose} centered size="xl">
       <Modal.Header>
@@ -75,8 +30,19 @@ export const VersionDetailModal = ({
       </Modal.Header>
 
       <Modal.Body>
-        {datasetVersionDifferences && (
+        {datasetVersionDifferences && !isLoading && !errorHandling && (
           <DatasetVersionsDifferenceTable differences={datasetVersionDifferences} />
+        )}
+        {isLoading && (
+          <div className={`${styles.message} ${styles.error}`}>
+            <Spinner data-testid="loading-spinner" variant="info" />
+          </div>
+        )}
+        {errorHandling && (
+          <div className={`${styles.message} ${styles.error}`}>
+            <ExclamationCircleFill />
+            <span>{errorHandling}</span>
+          </div>
         )}
       </Modal.Body>
 

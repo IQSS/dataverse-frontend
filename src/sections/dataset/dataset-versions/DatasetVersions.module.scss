@@ -5,13 +5,29 @@
   table-layout: fixed;
   border-collapse: collapse;
 
+  th {
+    font-weight: 600;
+  }
+
   th,
   td {
     width: auto;
     vertical-align: top;
   }
 
-  th {
-    font-weight: 600;
+  tbody {
+    tr {
+      &:has(input[type='checkbox']:checked) {
+        background-color: #ffc;
+      }
+    }
+
+    th:first-child {
+      text-align: center;
+    }
+  }
+
+  input[type='checkbox'] {
+    margin: 0;
   }
 }
