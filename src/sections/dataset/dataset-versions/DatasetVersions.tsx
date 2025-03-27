@@ -98,7 +98,7 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
               return (
                 <tr key={dataset.id}>
                   {!showViewDifferenceButton && !isDeaccession && (
-                    <td style={{ verticalAlign: 'middle'}}>
+                    <td style={{ verticalAlign: 'middle' }}>
                       <Form.Group.Checkbox
                         label=""
                         id={`dataset-${dataset.id}`}

@@ -453,7 +453,6 @@ describe('Dataset', () => {
     cy.findByRole('tooltip').should('not.exist')
   })
 
-
   it('renders the Dataset Version tab', () => {
     const testDataset = DatasetMother.create()
     datasetRepository.getDatasetVersionsSummaries = cy.stub().resolves(versionSummaryInfo)
@@ -463,8 +462,8 @@ describe('Dataset', () => {
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
-        collectionRepository={collectionRepository} 
-        contactRepository={contactRepository}      
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       testDataset
     )
