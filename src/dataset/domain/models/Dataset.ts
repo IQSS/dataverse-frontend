@@ -1,6 +1,7 @@
 import { Alert, AlertMessageKey } from '../../../alert/domain/models/Alert'
 import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { FileDownloadSize } from '../../../files/domain/models/FileMetadata'
+import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 
 export enum DatasetLabelSemanticMeaning {
   DATASET = 'dataset',
@@ -419,7 +420,8 @@ export class Dataset {
     public readonly publicationDate?: string,
     public readonly nextMajorVersion?: string,
     public readonly nextMinorVersion?: string,
-    public readonly requiresMajorVersionUpdate?: boolean
+    public readonly requiresMajorVersionUpdate?: boolean,
+    public readonly versionsSummaries?: DatasetVersionSummaryInfo[]
   ) {}
 
   public checkIsLockedFromPublishing(userPersistentId: string): boolean {
@@ -512,7 +514,8 @@ export class Dataset {
       public readonly requestedVersion?: string,
       public readonly nextMajorVersionNumber?: string,
       public readonly nextMinorVersionNumber?: string,
-      public readonly requiresMajorVersionUpdate?: boolean
+      public readonly requiresMajorVersionUpdate?: boolean,
+      public readonly versionsSummaries?: DatasetVersionSummaryInfo[]
     ) {
       this.withAlerts()
     }
@@ -581,7 +584,8 @@ export class Dataset {
         undefined,
         this.nextMajorVersionNumber,
         this.nextMinorVersionNumber,
-        this.requiresMajorVersionUpdate
+        this.requiresMajorVersionUpdate,
+        this.versionsSummaries
       )
     }
   }

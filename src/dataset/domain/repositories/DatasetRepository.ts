@@ -4,6 +4,7 @@ import { DatasetPaginationInfo } from '../models/DatasetPaginationInfo'
 import { DatasetDTO } from '../useCases/DTOs/DatasetDTO'
 import { DatasetsWithCount } from '../models/DatasetsWithCount'
 import { VersionUpdateType } from '../models/VersionUpdateType'
+import { DatasetDeaccessionDTO } from '../useCases/DTOs/DatasetDTO'
 
 export interface DatasetRepository {
   getByPersistentId: (
@@ -22,6 +23,12 @@ export interface DatasetRepository {
 
   create: (dataset: DatasetDTO, collectionId: string) => Promise<{ persistentId: string }>
   updateMetadata: (datasetId: string | number, datasetDTO: DatasetDTO) => Promise<void>
+  deaccession: (
+    datasetId: string | number,
+    version: string,
+    deaccessionDTO: DatasetDeaccessionDTO
+  ) => Promise<void>
+
   getAllWithCount: (
     collectionId: string,
     paginationInfo: DatasetPaginationInfo

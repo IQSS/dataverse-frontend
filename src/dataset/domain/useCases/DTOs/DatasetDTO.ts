@@ -19,3 +19,8 @@ type DatasetMetadataFieldValueDTO =
   | DatasetMetadataChildFieldValueDTO[]
 
 export type DatasetMetadataChildFieldValueDTO = Record<string, string>
+
+export interface DatasetDeaccessionDTO {
+  deaccessionReason: string
+  deaccessionForwardURL?: string
+}
