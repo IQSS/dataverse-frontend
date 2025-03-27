@@ -29,5 +29,11 @@
 
   input[type='checkbox'] {
     margin: 0;
+    margin-right: 20px;
   }
+}
+
+.visually-hidden {
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
 }

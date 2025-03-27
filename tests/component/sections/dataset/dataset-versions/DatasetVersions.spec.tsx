@@ -151,6 +151,7 @@ describe('DatasetVersions', () => {
     cy.findAllByTestId('select-checkbox').last().should('exist').check().should('be.checked')
     cy.findByRole('button', { name: 'View Differences' }).should('exist').click()
     cy.findByRole('dialog').should('exist')
+    cy.findByRole('button', { name: 'View Differences' }).should('exist')
   })
 
   it('should render view differences button, close modal if cancel', () => {
@@ -162,6 +163,7 @@ describe('DatasetVersions', () => {
     cy.findByRole('dialog').should('exist')
     cy.findByRole('button', { name: /Cancel/i }).click()
     cy.findByRole('dialog').should('not.exist')
+    cy.findByRole('button', { name: 'View Differences' }).should('exist')
   })
 
   it('should render view differences button, close modal if click outside', () => {
@@ -172,5 +174,6 @@ describe('DatasetVersions', () => {
     cy.findByRole('dialog').should('exist')
     cy.findByRole('button', { name: /Cancel/i }).click()
     cy.findByRole('dialog').should('not.exist')
+    cy.findByRole('button', { name: 'View Differences' }).should('exist')
   })
 })

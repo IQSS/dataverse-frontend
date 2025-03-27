@@ -76,7 +76,11 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
         <Table>
           <thead>
             <tr>
-              {!showViewDifferenceButton && <th>{t('versions.select')}</th>}
+              {!showViewDifferenceButton && (
+                <th>
+                  <span className={styles['visually-hidden']}>{t('versions.select')}</span>
+                </th>
+              )}
               <th>{t('versions.datasetVersions')}</th>
               <th>{t('versions.summary')}</th>
               <th>{t('versions.versionNote')}</th>
@@ -94,7 +98,7 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
               return (
                 <tr key={dataset.id}>
                   {!showViewDifferenceButton && !isDeaccession && (
-                    <td style={{ verticalAlign: 'middle' }}>
+                    <td style={{ verticalAlign: 'middle'}}>
                       <Form.Group.Checkbox
                         label=""
                         id={`dataset-${dataset.id}`}
