@@ -33,6 +33,7 @@ describe('Create Dataset', () => {
         cy.findByLabelText('Toggle options menu').click({ force: true })
 
         cy.findByLabelText('Agricultural Sciences').click()
+        cy.findByLabelText('Arts and Humanities').click()
       })
     cy.findByText(/Save Dataset/i).click()
 
@@ -41,6 +42,7 @@ describe('Create Dataset', () => {
     cy.contains('This dataset has been created.').should('exist')
     cy.findByText(DatasetLabelValue.DRAFT).should('exist')
     cy.findByText(DatasetLabelValue.UNPUBLISHED).should('exist')
+    cy.contains('Agricultural Sciences; Arts and Humanities').should('exist')
   })
 
   it('navigates to the home if the user cancels the form', () => {

@@ -12,7 +12,7 @@ export interface FormCheckboxProps
 }
 
 export const FormCheckbox = React.forwardRef(function FormCheckbox(
-  { label, id, isValid, isInvalid, validFeedback, invalidFeedback, ...props }: FormCheckboxProps,
+  { label, id, isValid, isInvalid, ...props }: FormCheckboxProps,
   ref
 ) {
   return (
@@ -25,8 +25,6 @@ export const FormCheckbox = React.forwardRef(function FormCheckbox(
         {...props}
       />
       <FormBS.Check.Label>{label}</FormBS.Check.Label>
-      <FormBS.Control.Feedback type="invalid">{invalidFeedback}</FormBS.Control.Feedback>
-      <FormBS.Control.Feedback type="valid">{validFeedback}</FormBS.Control.Feedback>
     </FormBS.Check>
   )
 })
