@@ -28,12 +28,14 @@ import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/re
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { DatasetTerms } from '@/sections/dataset/dataset-terms/DatasetTerms'
 import { DatasetVersions } from './dataset-versions/DatasetVersions'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
   fileRepository: FileRepository
   metadataBlockInfoRepository: MetadataBlockInfoRepository
   collectionRepository: CollectionRepository
+  contactRepository: ContactRepository
   created?: boolean
   metadataUpdated?: boolean
   filesTabInfiniteScrollEnabled?: boolean
@@ -46,6 +48,7 @@ export function Dataset({
   fileRepository,
   metadataBlockInfoRepository,
   collectionRepository,
+  contactRepository,
   created,
   metadataUpdated,
   filesTabInfiniteScrollEnabled,
@@ -130,6 +133,7 @@ export function Dataset({
                     datasetRepository={datasetRepository}
                     collectionRepository={collectionRepository}
                     dataset={dataset}
+                    contactRepository={contactRepository}
                   />
                 </Col>
               </Row>

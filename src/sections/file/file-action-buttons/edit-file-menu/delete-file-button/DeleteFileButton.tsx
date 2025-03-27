@@ -35,13 +35,12 @@ export const DeleteFileButton = ({
 
   function closeModalAndNavigateToDataset() {
     setShowConfirmationModal(false)
-
     const searchParams = new URLSearchParams()
     searchParams.set(QueryParamKey.PERSISTENT_ID, datasetInfo.persistentId)
     searchParams.set(QueryParamKey.VERSION, DatasetNonNumericVersionSearchParam.DRAFT)
+    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
 
     toast.success(t('fileDeletedSuccess'))
-    navigate(`${Route.DATASETS}?${searchParams.toString()}`)
   }
 
   return (

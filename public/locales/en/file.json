@@ -53,6 +53,7 @@
       "options": {
         "metadata": "Metadata",
         "restrict": "Restrict",
+        "unrestrict": "Unrestrict",
         "replace": "Replace",
         "delete": "Delete"
       }
@@ -65,5 +66,22 @@
     "delete": "Delete"
   },
   "fileDeletedSuccess": "The file has been deleted.",
-  "defaultFileDeleteError": "Something went wrong deleting the file. Try again later."
+  "defaultFileDeleteError": "Something went wrong deleting the file. Try again later.",
+  "restriction": {
+    "fileRestrictdSuccess": "The file has been restricted.",
+    "fileUnrestrictedSuccess": "The file has been unrestricted.",
+    "restrictAccess": "Restrict Access",
+    "restrictionInfoP1": "Restricting limits access to published files. People who want to use the restricted files can request access by default. ",
+    "restrictionInfoP2": "If you disable request access, you must add information about access to the Terms of Access field.",
+    "restrictionInfoP3": "Learn about restricting files and dataset access in the ",
+    "userGuide": "User Guide",
+    "termsOfAccess": "Terms of Access for Restricted Files",
+    "enableAccessRequest": "Enable access request",
+    "saveChanges": "Save Changes",
+    "cancelChanges": "Cancel Changes",
+    "messagePublishedDataset": "Files will not be changed from previously published versions of the dataset.",
+    "message": "The file will be unrestricted.",
+    "defaultFileRestrictError": "Something went wrong restricting the file. Try again later.",
+    "defaultFileUnrestrictError": "Something went wrong unrestricting the file. Try again later."
+  }
 }

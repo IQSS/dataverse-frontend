@@ -1,16 +1,19 @@
-import { CollectionFeaturedItem } from '@/collection/domain/models/CollectionFeaturedItem'
+import {
+  CollectionFeaturedItem,
+  CustomFeaturedItem
+} from '@/collection/domain/models/CollectionFeaturedItem'
 import { FeaturedItemsFormHelper } from '@/sections/edit-collection-featured-items/featured-items-form/FeaturedItemsFormHelper'
 import { FeaturedItemField } from '@/sections/edit-collection-featured-items/types'
 import { CollectionFeaturedItemMother } from '@tests/component/collection/domain/models/CollectionFeaturedItemMother'
 
-const testFeaturedItemOne = CollectionFeaturedItemMother.createFeaturedItem({
+const testFeaturedItemOne = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
   id: 1,
   imageFileUrl: 'https://via.placeholder.com/400x400',
   displayOrder: 1,
   content: '<h1 class="rte-heading">Featured Item One</h1>'
 })
 
-const testFeaturedItemTwo = CollectionFeaturedItemMother.createFeaturedItem({
+const testFeaturedItemTwo = CollectionFeaturedItemMother.createCustomFeaturedItem('css', {
   id: 2,
   displayOrder: 2,
   content: '<h1 class="rte-heading">Featured Item Two</h1>',
@@ -81,7 +84,9 @@ describe('FeaturedItemsFormHelper', () => {
   })
 
   it('should transform form fields mapped to collection featured items', () => {
-    const result = FeaturedItemsFormHelper.transformFormFieldsToFeaturedItems(testFormFields)
+    const result = FeaturedItemsFormHelper.transformFormFieldsToFeaturedItems(
+      testFormFields
+    ) as CustomFeaturedItem[]
 
     expect(result[0].id).to.deep.equal(testFormFields[0].itemId)
     expect(result[0].content).to.deep.equal(testFormFields[0].content)

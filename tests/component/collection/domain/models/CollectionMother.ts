@@ -21,6 +21,7 @@ export class CollectionMother {
       type: CollectionType.UNCATEGORIZED,
       isMetadataBlockRoot: true,
       isFacetRoot: true,
+      childCount: faker.datatype.number(),
       ...props
     }
   }
@@ -70,6 +71,13 @@ export class CollectionMother {
   static createWithAffiliation(): Collection {
     return CollectionMother.createWithOnlyRequiredFields({
       affiliation: FakerHelper.affiliation()
+    })
+  }
+
+  static createSubCollectionWithNoChildObjects(): Collection {
+    return CollectionMother.createWithOnlyRequiredFields({
+      childCount: 0,
+      hierarchy: UpwardHierarchyNodeMother.createSubCollection()
     })
   }
 

@@ -31,7 +31,7 @@ export function CollectionCardInfo({
             <LinkToPage
               type={DvObjectType.COLLECTION}
               page={Route.COLLECTIONS}
-              searchParams={{ id: collectionPreview.parentCollectionAlias.toString() }}>
+              searchParams={{ id: collectionPreview.parentCollectionAlias?.toString() }}>
               {collectionPreview.parentCollectionName}
             </LinkToPage>
           )}

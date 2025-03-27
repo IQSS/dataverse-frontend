@@ -4,11 +4,13 @@ import { FileOptionsMenu } from './file-options-menu/FileOptionsMenu'
 import { ButtonGroup } from '@iqss/dataverse-design-system'
 import { useTranslation } from 'react-i18next'
 import { DatasetPublishingStatus } from '../../../../../../../dataset/domain/models/Dataset'
+import { FileRepository } from '@/files/domain/repositories/FileRepository'
 
 interface FileActionButtonsProps {
   file: FilePreview
+  fileRepository: FileRepository
 }
-export function FileActionButtons({ file }: FileActionButtonsProps) {
+export function FileActionButtons({ file, fileRepository }: FileActionButtonsProps) {
   const { t } = useTranslation('files')
 
   return (
@@ -22,7 +24,7 @@ export function FileActionButtons({ file }: FileActionButtonsProps) {
         ingestInProgress={file.ingest.isInProgress}
         asIcon
       />
-      <FileOptionsMenu file={file} />
+      <FileOptionsMenu file={file} fileRepository={fileRepository} />
     </ButtonGroup>
   )
 }

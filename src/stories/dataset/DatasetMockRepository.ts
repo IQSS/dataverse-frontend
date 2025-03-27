@@ -11,7 +11,7 @@ import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { VersionUpdateType } from '../../dataset/domain/models/VersionUpdateType'
 import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
-
+import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 export class DatasetMockRepository implements DatasetRepository {
   getAllWithCount: (
     collectionId: string,
@@ -94,6 +94,18 @@ export class DatasetMockRepository implements DatasetRepository {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(DatasetVersionsSummariesMother.create())
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  deaccession(
+    _datasetId: string | number,
+    _version: string,
+    _datasetDeaccessionDTO: DatasetDeaccessionDTO
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
       }, FakerHelper.loadingTimout())
     })
   }

@@ -1,6 +1,10 @@
-import { HTMLAttributes, PropsWithChildren } from 'react'
 import { Card as CardBS } from 'react-bootstrap'
 
-export function CardBody({ children }: HTMLAttributes<PropsWithChildren>) {
-  return <CardBS.Body>{children}</CardBS.Body>
+interface CardBodyProps {
+  children: React.ReactNode
+  className?: string
+}
+
+export function CardBody({ children, className }: CardBodyProps) {
+  return <CardBS.Body className={className}>{children}</CardBS.Body>
 }

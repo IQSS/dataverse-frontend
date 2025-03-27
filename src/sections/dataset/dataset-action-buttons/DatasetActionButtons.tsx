@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Button, ButtonGroup } from '@iqss/dataverse-design-system'
+import { ButtonGroup } from '@iqss/dataverse-design-system'
 import { Dataset } from '@/dataset/domain/models/Dataset'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
@@ -10,17 +10,21 @@ import { EditDatasetMenu } from './edit-dataset-menu/EditDatasetMenu'
 import { LinkDatasetButton } from './link-dataset-button/LinkDatasetButton'
 import { ShareDatasetButton } from './share-dataset-button/ShareDatasetButton'
 import styles from './DatasetActionButtons.module.scss'
+import { ContactButton } from '@/sections/shared/contact/ContactButton'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 interface DatasetActionButtonsProps {
   dataset: Dataset
   datasetRepository: DatasetRepository
   collectionRepository: CollectionRepository
+  contactRepository: ContactRepository
 }
 
 export function DatasetActionButtons({
   dataset,
   datasetRepository,
-  collectionRepository
+  collectionRepository,
+  contactRepository
 }: DatasetActionButtonsProps) {
   const { t } = useTranslation('dataset')
 
@@ -39,12 +43,16 @@ export function DatasetActionButtons({
         collectionRepository={collectionRepository}
       />
       <SubmitForReviewButton dataset={dataset} />
-      <EditDatasetMenu dataset={dataset} />
+      <EditDatasetMenu dataset={dataset} datasetRepository={datasetRepository} />
       <LinkDatasetButton dataset={dataset} />
       <ButtonGroup className={styles['contact-owner-and-share-group']}>
-        <Button disabled variant="secondary" size="sm">
-          {t('datasetActionButtons.contactOwner')}
-        </Button>
+        <ContactButton
+          toContactName={dataset.metadataBlocks[0].fields.title}
+          contactObjectType="dataset"
+          id={dataset.persistentId}
+          contactRepository={contactRepository}
+        />
+
         <ShareDatasetButton />
       </ButtonGroup>
     </ButtonGroup>
