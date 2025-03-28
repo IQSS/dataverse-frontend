@@ -417,7 +417,7 @@ export class DatasetMother {
       privateUrl: undefined,
       fileDownloadSizes: [],
       requestedVersion: undefined,
-      hierarchy: UpwardHierarchyNodeMother.createDataset(),
+      hierarchy: UpwardHierarchyNodeMother.createDataset({ name: props?.version?.title }),
       termsOfUse: TermsOfUseMother.withoutCustomTerms(),
       versionsSummaries: DatasetVersionSummaryInfoMother.createList(3),
       ...props

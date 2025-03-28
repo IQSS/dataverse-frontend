@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import { DropdownButton } from '@iqss/dataverse-design-system'
+import { useNavigate } from 'react-router-dom'
+import { DropdownButton, DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { RouteWithParams } from '@/sections/Route.enum'
 import { DeleteFileButton } from './delete-file-button/DeleteFileButton'
 import { RestrictFileButton } from './restrict-file-button/RestrictFileButton'
 
@@ -13,6 +15,7 @@ interface EditFileMenuProps {
 
 export interface EditFileMenuDatasetInfo {
   persistentId: string
+  versionNumber: string
   releasedVersionExists: boolean
   termsOfAccessForRestrictedFiles?: string
 }
@@ -24,6 +27,12 @@ export const EditFileMenu = ({
   isRestricted
 }: EditFileMenuProps) => {
   const { t } = useTranslation('file')
+  const navigate = useNavigate()
+
+  const handleOnReplaceClick = () =>
+    navigate(
+      RouteWithParams.FILES_REPLACE(datasetInfo.persistentId, datasetInfo.versionNumber, fileId)
+    )
 
   return (
     <DropdownButton
@@ -31,15 +40,15 @@ export const EditFileMenu = ({
       title={t('actionButtons.editFileMenu.title')}
       asButtonGroup
       variant="secondary">
-      {/* 👇 These buttons are commented out but I keep them because they are the next thing to be developed.*/}
-      {/* <DropdownButtonItem>{t('actionButtons.editFileMenu.options.metadata')}</DropdownButtonItem>
-      <DropdownButtonItem>{t('actionButtons.editFileMenu.options.replace')}</DropdownButtonItem> */}
       <RestrictFileButton
         fileId={fileId}
         isRestricted={isRestricted}
         fileRepository={fileRepository}
         datasetInfo={datasetInfo}
       />
+      <DropdownButtonItem onClick={handleOnReplaceClick}>
+        {t('actionButtons.editFileMenu.options.replace')}
+      </DropdownButtonItem>
       <DeleteFileButton fileId={fileId} fileRepository={fileRepository} datasetInfo={datasetInfo} />
     </DropdownButton>
   )
