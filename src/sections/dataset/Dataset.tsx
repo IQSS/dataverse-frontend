@@ -28,6 +28,7 @@ import { MetadataBlockInfoRepository } from '../../metadata-block-info/domain/re
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { DatasetTerms } from '@/sections/dataset/dataset-terms/DatasetTerms'
 import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
+import { DatasetMetrics } from './dataset-metrics/DatasetMetrics'
 
 interface DatasetProps {
   datasetRepository: DatasetRepository
@@ -124,20 +125,8 @@ export function Dataset({
             </header>
             <div className={styles.container}>
               <Row>
-                <Col sm={9}>
+                <Col lg={9} className="mb-4">
                   <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
-                </Col>
-                <Col sm={3}>
-                  <DatasetActionButtons
-                    datasetRepository={datasetRepository}
-                    collectionRepository={collectionRepository}
-                    dataset={dataset}
-                    contactRepository={contactRepository}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col sm={9} className={styles['summary-container']}>
                   <DatasetSummary
                     summaryFields={dataset.summaryFields}
                     license={dataset.license}
@@ -145,7 +134,20 @@ export function Dataset({
                     metadataBlockInfoRepository={metadataBlockInfoRepository}
                   />
                 </Col>
+                <Col lg={3}>
+                  <DatasetActionButtons
+                    datasetRepository={datasetRepository}
+                    collectionRepository={collectionRepository}
+                    dataset={dataset}
+                    contactRepository={contactRepository}
+                  />
+                  <DatasetMetrics
+                    datasetRepository={datasetRepository}
+                    datasetId={dataset.persistentId}
+                  />
+                </Col>
               </Row>
+
               {publishInProgress && <TabsSkeleton />}
 
               {(!publishInProgress || !isDatasetLoading) && (

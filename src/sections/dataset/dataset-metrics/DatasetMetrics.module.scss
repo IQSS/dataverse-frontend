@@ -1,0 +1,29 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.dataset-metrics {
+  margin-bottom: 0.5rem;
+  border: solid 1px $dv-border-color;
+  border-radius: 4px;
+
+  .title {
+    display: flex;
+    flex-direction: column;
+    padding: 0.25rem 0.5rem;
+    border-bottom: solid 1px $dv-border-color;
+
+    span {
+      font-weight: 500;
+    }
+  }
+
+  .results {
+    padding: 0.25rem 0.5rem;
+
+    .make-data-count {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      align-items: center;
+    }
+  }
+}

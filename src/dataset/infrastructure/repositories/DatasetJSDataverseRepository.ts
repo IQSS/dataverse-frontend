@@ -30,7 +30,8 @@ import {
   WriteError,
   getDatasetVersionDiff,
   DatasetDeaccessionDTO,
-  getDatasetVersionsSummaries
+  getDatasetVersionsSummaries,
+  getDatasetDownloadCount
 } from '@iqss/dataverse-client-javascript'
 import { JSDatasetMapper } from '../mappers/JSDatasetMapper'
 import { DatasetPaginationInfo } from '../../domain/models/DatasetPaginationInfo'
@@ -39,6 +40,7 @@ import { DatasetDTO } from '../../domain/useCases/DTOs/DatasetDTO'
 import { DatasetDTOMapper } from '../mappers/DatasetDTOMapper'
 import { DatasetsWithCount } from '../../domain/models/DatasetsWithCount'
 import { VersionUpdateType } from '../../domain/models/VersionUpdateType'
+import { DatasetDownloadCount } from '@/dataset/domain/models/DatasetDownloadCount'
 
 const includeDeaccessioned = true
 
@@ -334,5 +336,14 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       .catch((error: WriteError) => {
         throw new Error(error.message)
       })
+  }
+
+  getDownloadCount(
+    datasetId: string | number,
+    includeMDC?: boolean
+  ): Promise<DatasetDownloadCount> {
+    return getDatasetDownloadCount
+      .execute(datasetId, includeMDC)
+      .then((jsDatasetDownloadCount) => jsDatasetDownloadCount)
   }
 }
