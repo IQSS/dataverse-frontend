@@ -249,24 +249,26 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       getPrivateUrlDatasetCitation.execute(privateUrlToken)
     ])
       .then(async ([jsDataset, summaryFieldsNames, citation]: [JSDataset, string[], string]) => {
-        const [permissions, locks, originalSize, archivalSize] = await Promise.all([
-          getDatasetUserPermissions.execute(jsDataset.id),
-          getDatasetLocks.execute(jsDataset.id),
-          getDatasetFilesTotalDownloadSize.execute(
-            jsDataset.id,
-            DatasetNonNumericVersion.DRAFT,
-            FileDownloadSizeMode.ORIGINAL,
-            undefined,
-            includeDeaccessioned
-          ),
-          getDatasetFilesTotalDownloadSize.execute(
-            jsDataset.id,
-            DatasetNonNumericVersion.DRAFT,
-            FileDownloadSizeMode.ARCHIVAL,
-            undefined,
-            includeDeaccessioned
-          )
-        ])
+        const [permissions, locks, originalSize, archivalSize, versionsSummaries] =
+          await Promise.all([
+            getDatasetUserPermissions.execute(jsDataset.id),
+            getDatasetLocks.execute(jsDataset.id),
+            getDatasetFilesTotalDownloadSize.execute(
+              jsDataset.id,
+              DatasetNonNumericVersion.DRAFT,
+              FileDownloadSizeMode.ORIGINAL,
+              undefined,
+              includeDeaccessioned
+            ),
+            getDatasetFilesTotalDownloadSize.execute(
+              jsDataset.id,
+              DatasetNonNumericVersion.DRAFT,
+              FileDownloadSizeMode.ARCHIVAL,
+              undefined,
+              includeDeaccessioned
+            ),
+            getDatasetVersionsSummaries.execute(jsDataset.id)
+          ])
 
         return JSDatasetMapper.toDataset(
           jsDataset,
@@ -275,7 +277,8 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
           permissions,
           locks,
           originalSize,
-          archivalSize
+          archivalSize,
+          versionsSummaries
         )
       })
       .catch((error: ReadError) => {

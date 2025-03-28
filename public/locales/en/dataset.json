@@ -243,8 +243,8 @@
   },
   "getDatasetVersionDiffError": "Error Fetching Dataset Version Differences",
   "datasetVersionSummary": {
-    "firstPublished": "This is the First Published Version",
-    "firstDraft": "Initial Draft Version",
+    "firstPublished": "This is the First Published Version.",
+    "firstDraft": "This is a draft version.",
     "versionDeaccessioned": "Deaccessioned Reason: The research article has been retracted.",
     "previousVersionDeaccessioned": "Due to the previous version being deaccessioned, there are no difference notes available for this published version.",
     "citationMetadata": {

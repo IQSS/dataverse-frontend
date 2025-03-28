@@ -31,7 +31,7 @@ export enum EditDatasetMenuItems {
 
 export function EditDatasetMenu({ dataset, datasetRepository }: EditDatasetMenuProps) {
   const { user } = useSession()
-  const { showModal, hideModal } = useNotImplementedModal()
+  const { showModal } = useNotImplementedModal()
   const { t } = useTranslation('dataset')
   const navigate = useNavigate()
 

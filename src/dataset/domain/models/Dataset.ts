@@ -413,6 +413,7 @@ export class Dataset {
     public readonly downloadUrls: DatasetDownloadUrls,
     public readonly fileDownloadSizes: FileDownloadSize[],
     public readonly hierarchy: UpwardHierarchyNode,
+    public readonly versionsSummaries: DatasetVersionSummaryInfo[],
     public readonly license?: DatasetLicense,
     public readonly thumbnail?: string,
     public readonly privateUrl?: PrivateUrl, // will be set if the user requested a version that did not exist
@@ -420,8 +421,7 @@ export class Dataset {
     public readonly publicationDate?: string,
     public readonly nextMajorVersion?: string,
     public readonly nextMinorVersion?: string,
-    public readonly requiresMajorVersionUpdate?: boolean,
-    public readonly versionsSummaries?: DatasetVersionSummaryInfo[]
+    public readonly requiresMajorVersionUpdate?: boolean
   ) {}
 
   public checkIsLockedFromPublishing(userPersistentId: string): boolean {
@@ -507,15 +507,14 @@ export class Dataset {
       public readonly downloadUrls: DatasetDownloadUrls,
       public readonly fileDownloadSizes: FileDownloadSize[],
       public readonly hierarchy: UpwardHierarchyNode,
+      public readonly versionsSummaries: DatasetVersionSummaryInfo[],
       public readonly license?: DatasetLicense,
       public readonly thumbnail?: string,
       public readonly privateUrl?: PrivateUrl, // will be set if the user requested a version that did not exist
-
       public readonly requestedVersion?: string,
       public readonly nextMajorVersionNumber?: string,
       public readonly nextMinorVersionNumber?: string,
-      public readonly requiresMajorVersionUpdate?: boolean,
-      public readonly versionsSummaries?: DatasetVersionSummaryInfo[]
+      public readonly requiresMajorVersionUpdate?: boolean
     ) {
       this.withAlerts()
     }
@@ -577,6 +576,7 @@ export class Dataset {
         this.downloadUrls,
         this.fileDownloadSizes,
         this.hierarchy,
+        this.versionsSummaries,
         this.license,
         this.thumbnail,
         this.privateUrl,
@@ -584,8 +584,7 @@ export class Dataset {
         undefined,
         this.nextMajorVersionNumber,
         this.nextMinorVersionNumber,
-        this.requiresMajorVersionUpdate,
-        this.versionsSummaries
+        this.requiresMajorVersionUpdate
       )
     }
   }

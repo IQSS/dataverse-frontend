@@ -102,7 +102,7 @@ describe('DeaccessionDatasetButton', () => {
       cy.wrap(repository.deaccession).should(
         'be.calledWithMatch',
         dataset.persistentId,
-        dataset.versionsSummaries![0].versionNumber,
+        dataset.versionsSummaries[0].versionNumber,
         {
           deaccessionReason: 'IRB request.'
         }
@@ -186,7 +186,7 @@ describe('DeaccessionDatasetButton', () => {
       cy.wrap(repository.deaccession).should(
         'be.calledWithMatch',
         dataset.persistentId,
-        dataset.versionsSummaries![0].versionNumber,
+        dataset.versionsSummaries[0].versionNumber,
         {
           deaccessionReason: 'IRB request. Additional information',
           deaccessionForwardUrl: 'https://example.com'

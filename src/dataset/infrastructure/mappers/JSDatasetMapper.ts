@@ -44,7 +44,7 @@ export class JSDatasetMapper {
     jsDatasetLocks: JSDatasetLock[],
     jsDatasetFilesTotalOriginalDownloadSize: number,
     jsDatasetFilesTotalArchivalDownloadSize: number,
-    jsDatasetVersionSummaries?: JSDatasetVersionSummaryInfo[],
+    jsDatasetVersionSummaries: JSDatasetVersionSummaryInfo[],
     requestedVersion?: string,
     privateUrl?: PrivateUrl,
     latestPublishedVersionMajorNumber?: number,
@@ -85,6 +85,7 @@ export class JSDatasetMapper {
         version,
         jsDataset.isPartOf
       ),
+      jsDatasetVersionSummaries,
       jsDataset.license,
       undefined, // TODO: get dataset thumbnail from js-dataverse https://github.com/IQSS/dataverse-frontend/issues/203
       privateUrl,
@@ -94,8 +95,7 @@ export class JSDatasetMapper {
         latestPublishedVersionMajorNumber,
         latestPublishedVersionMinorNumber
       ),
-      JSDatasetMapper.toRequiresMajorVersionUpdate(datasetVersionDiff),
-      jsDatasetVersionSummaries
+      JSDatasetMapper.toRequiresMajorVersionUpdate(datasetVersionDiff)
     ).build()
   }
 

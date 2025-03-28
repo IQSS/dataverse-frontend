@@ -436,14 +436,14 @@ export class DatasetMother {
       dataset.downloadUrls,
       dataset.fileDownloadSizes,
       dataset.hierarchy,
+      dataset.versionsSummaries,
       dataset.license,
       dataset.thumbnail,
       dataset.privateUrl,
       dataset.requestedVersion,
       dataset.nextMajorVersion,
       dataset.nextMinorVersion,
-      dataset.requiresMajorVersionUpdate,
-      dataset.versionsSummaries
+      dataset.requiresMajorVersionUpdate
     ).build()
   }
 
