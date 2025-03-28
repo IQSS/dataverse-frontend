@@ -45,7 +45,7 @@ describe('useDatasetVersionSummaryDescription', () => {
     const { result } = renderHook(() =>
       useDatasetVersionSummaryDescription(DatasetVersionSummaryStringValues.firstPublished)
     )
-    expect(result.current).to.deep.equal({ firstPublished: 'This is the First Published Version' })
+    expect(result.current).to.deep.equal({ firstPublished: 'This is the First Published Version.' })
   })
 
   it('returns correct values for version deaccessioned', () => {
@@ -73,6 +73,6 @@ describe('useDatasetVersionSummaryDescription', () => {
     const { result } = renderHook(() =>
       useDatasetVersionSummaryDescription(DatasetVersionSummaryStringValues.firstDraft)
     )
-    expect(result.current).to.deep.equal({ firstDraft: 'Initial Draft Version' })
+    expect(result.current).to.deep.equal({ firstDraft: 'This is a draft version.' })
   })
 })
