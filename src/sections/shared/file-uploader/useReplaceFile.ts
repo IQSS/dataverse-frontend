@@ -28,7 +28,8 @@ export const useReplaceFile = (fileRepository: FileRepository): UseReplaceFileRe
       newFileInfo.storageId,
       newFileInfo.checksumValue,
       newFileInfo.checksumAlgorithm,
-      newFileInfo.fileType
+      newFileInfo.fileType,
+      true
     )
 
     try {
