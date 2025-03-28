@@ -14,7 +14,7 @@ export class FileMother {
       name: faker.system.fileName(),
       datasetPersistentId: faker.datatype.uuid(),
       datasetVersion: DatasetVersionMother.create(),
-      hierarchy: UpwardHierarchyNodeMother.createFile(),
+      hierarchy: UpwardHierarchyNodeMother.createFile({ name: props?.name }),
       citation: FileCitationMother.create('File Title'),
       access: FileAccessMother.create(),
       metadata: FileMetadataMother.create(),
@@ -78,6 +78,13 @@ export class FileMother {
   static createWithDownloadPermissionDenied(props?: Partial<File>): File {
     return this.create({
       permissions: FilePermissionsMother.createWithDownloadFileDenied(),
+      ...props
+    })
+  }
+
+  static createWithTypeTabular(props?: Partial<File>): File {
+    return this.create({
+      metadata: FileMetadataMother.createTabular(),
       ...props
     })
   }

@@ -80,6 +80,12 @@ const EditCollectionFeaturedItems = lazy(() =>
   )
 )
 
+const ReplaceFile = lazy(() =>
+  import('../sections/replace-file/ReplaceFileFactory').then(({ ReplaceFileFactory }) => ({
+    default: () => ReplaceFileFactory.create()
+  }))
+)
+
 const FeaturedItemPage = lazy(() =>
   import('../sections/featured-item/FeaturedItemFactory').then(({ FeaturedItemFactory }) => ({
     default: () => FeaturedItemFactory.create()
@@ -209,6 +215,15 @@ export const routes: RouteObject[] = [
             element: (
               <Suspense fallback={<AppLoader />}>
                 <EditCollectionFeaturedItems />
+              </Suspense>
+            ),
+            errorElement: <ErrorPage />
+          },
+          {
+            path: Route.FILES_REPLACE,
+            element: (
+              <Suspense fallback={<AppLoader />}>
+                <ReplaceFile />
               </Suspense>
             ),
             errorElement: <ErrorPage />
