@@ -6,6 +6,7 @@ import { WithLoggedInUser } from '../../../../../../WithLoggedInUser'
 import { WithDatasetAllPermissionsGranted } from '../../../../../WithDatasetAllPermissionsGranted'
 import { WithDatasetLockedFromEdits } from '../../../../../WithDatasetLockedFromEdits'
 import { FilePreviewMother } from '../../../../../../../../tests/component/files/domain/models/FilePreviewMother'
+import { FileMockRepository } from '@/stories/file/FileMockRepository'
 
 const meta: Meta<typeof FileOptionsMenu> = {
   title:
@@ -19,22 +20,42 @@ type Story = StoryObj<typeof FileOptionsMenu>
 
 export const DefaultWithLoggedInUser: Story = {
   decorators: [WithDatasetAllPermissionsGranted],
-  render: () => <FileOptionsMenu file={FilePreviewMother.createDefault()} />
+  render: () => (
+    <FileOptionsMenu
+      file={FilePreviewMother.createDefault()}
+      fileRepository={new FileMockRepository()}
+    />
+  )
 }
 
 export const Restricted: Story = {
   decorators: [WithDatasetAllPermissionsGranted],
-  render: () => <FileOptionsMenu file={FilePreviewMother.createRestricted()} />
+  render: () => (
+    <FileOptionsMenu
+      file={FilePreviewMother.createRestricted()}
+      fileRepository={new FileMockRepository()}
+    />
+  )
 }
 
 export const WithDatasetLocked: Story = {
   decorators: [WithDatasetLockedFromEdits],
-  render: () => <FileOptionsMenu file={FilePreviewMother.createDefault()} />
+  render: () => (
+    <FileOptionsMenu
+      file={FilePreviewMother.createDefault()}
+      fileRepository={new FileMockRepository()}
+    />
+  )
 }
 
 export const WithFileAlreadyDeleted: Story = {
   decorators: [WithDatasetAllPermissionsGranted],
-  render: () => <FileOptionsMenu file={FilePreviewMother.createDeleted()} />
+  render: () => (
+    <FileOptionsMenu
+      file={FilePreviewMother.createDeleted()}
+      fileRepository={new FileMockRepository()}
+    />
+  )
 }
 
 //

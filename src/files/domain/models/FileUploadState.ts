@@ -1,6 +1,7 @@
 import { UploadedFileDTO } from '@iqss/dataverse-client-javascript'
 import { FileSize, FileSizeUnit } from './FileMetadata'
 import { UploadedFileDTOMapper } from '../../infrastructure/mappers/UploadedFileDTOMapper'
+import { FixityAlgorithm } from './FixityAlgorithm'
 
 export interface FileUploadState {
   progress: number
@@ -152,6 +153,7 @@ export class FileUploadTools {
         uploadedFile.restricted,
         uploadedFile.storageId as string,
         uploadedFile.checksumValue as string,
+        FixityAlgorithm.MD5,
         uploadedFile.fileType === '' ? 'application/octet-stream' : uploadedFile.fileType // some browsers (e.g., chromium for .java files) fail to detect the mime type for some files and leave the fileType as an empty string, we use the default value 'application/octet-stream' in that case
       )
     )

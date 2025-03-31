@@ -21,9 +21,11 @@ export const Default: Story = {
     <EditFileMenu
       fileId={storyFile.id}
       fileRepository={new FileMockRepository()}
+      isRestricted={false}
       datasetInfo={{
         persistentId: storyFile.datasetPersistentId,
-        releasedVersionExists: false
+        releasedVersionExists: false,
+        versionNumber: storyFile.datasetVersion.number.toString()
       }}
     />
   )

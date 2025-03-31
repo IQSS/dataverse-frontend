@@ -17,7 +17,9 @@ import {
   addUploadedFilesToDataset,
   UploadedFileDTO,
   ReadError,
-  deleteFile
+  deleteFile,
+  replaceFile,
+  restrictFile
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -33,6 +35,7 @@ import { FilePermissions } from '../domain/models/FilePermissions'
 import { JSFilePermissionsMapper } from './mappers/JSFilePermissionsMapper'
 import { FilesWithCount } from '../domain/models/FilesWithCount'
 import { FileHolder } from '../domain/models/FileHolder'
+import { FixityAlgorithm } from '../domain/models/FixityAlgorithm'
 
 const includeDeaccessioned = true
 
@@ -307,5 +310,34 @@ export class FileJSDataverseRepository implements FileRepository {
 
   delete(fileId: number | string): Promise<void> {
     return deleteFile.execute(fileId)
+  }
+
+  replace(fileId: number | string, uploadedFileDTO: UploadedFileDTO): Promise<number> {
+    return replaceFile
+      .execute(fileId, uploadedFileDTO)
+      .then((newFileIdentifier) => newFileIdentifier)
+  }
+
+  // TODO - Not a priority but could be nice to implement this use case in js-dataverse when having time
+  getFixityAlgorithm(): Promise<FixityAlgorithm> {
+    return fetch(`${BASE_URL}/api/files/fixityAlgorithm`)
+      .then((response) => {
+        if (!response.ok) {
+          console.log('Did not get fixityAlgorithm from Dataverse, using MD5')
+          return { data: { message: FixityAlgorithm.MD5 } }
+        }
+        return response.json()
+      })
+      .then((checksumAlgJson: { data: { message: FixityAlgorithm } }) => {
+        return checksumAlgJson?.data?.message ?? FixityAlgorithm.MD5
+      })
+      .catch((error) => {
+        console.log('Error fetching fixityAlgorithm, using MD5', error)
+        return FixityAlgorithm.MD5
+      })
+  }
+
+  restrict(fileId: number | string, restrict: boolean): Promise<void> {
+    return restrictFile.execute(fileId, restrict)
   }
 }

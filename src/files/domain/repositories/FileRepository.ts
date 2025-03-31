@@ -8,6 +8,7 @@ import { FilePreview } from '../models/FilePreview'
 import { FilesWithCount } from '../models/FilesWithCount'
 import { FileHolder } from '../models/FileHolder'
 import { UploadedFileDTO } from '@iqss/dataverse-client-javascript'
+import { FixityAlgorithm } from '../models/FixityAlgorithm'
 
 export interface FileRepository {
   getAllByDatasetPersistentId: (
@@ -44,4 +45,7 @@ export interface FileRepository {
   ) => Promise<void>
   addUploadedFiles: (datasetId: number | string, files: UploadedFileDTO[]) => Promise<void>
   delete: (fileId: number | string) => Promise<void>
+  replace: (fileId: number | string, uploadedFileDTO: UploadedFileDTO) => Promise<number>
+  getFixityAlgorithm: () => Promise<FixityAlgorithm>
+  restrict: (fileId: number | string, restrict: boolean) => Promise<void>
 }

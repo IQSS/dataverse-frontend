@@ -2,6 +2,8 @@
   "asterisksIndicateRequiredFields": "Asterisks indicate required fields",
   "remove": "Remove",
   "add": "Add",
+  "yes": "Yes",
+  "no": "No",
   "cancel": "Cancel",
   "close": "Close",
   "continue": "Continue",
@@ -155,6 +157,72 @@
       "editSuccess": "Collection updated successfully."
     },
     "createCollection": "Create Collection"
+  },
+  "fileUploader": {
+    "supportedFiles": "All file types are supported for upload and download in their original format. If you are uploading Excel, CSV, TSV, RData, Stata, or SPSS files, <anchor>see the guides</anchor> for tabular support and limitations.",
+    "accordionTitle": "Upload with HTTP via your browser",
+    "selectFileSingle": "Select file to add",
+    "selectFileMultiple": "Select files to add",
+    "dragDropSingle": "Drag and drop file here.",
+    "dragDropMultiple": "Drag and drop files and/or directories here.",
+    "cancelUpload": "Cancel upload",
+    "uploadFailed": "There was an error uploading this file.",
+    "loadingConfiguration": "Loading configuration",
+    "replaceFileMultipleError": "You can only drop one file to replace.",
+    "replaceFileAlreadyOneFileError": "You already have a file to replace. Please remove it first.",
+    "fileReplacedSuccessfully": "The file has been replaced successfully.",
+    "defaultFileReplaceError": "Something went wrong replacing the file. Try again later.",
+    "defaultAddUploadedFilesToDatasetError": "Something went wrong adding the uploaded files to the dataset. Try again later.",
+    "filesAddedToDatasetSuccessfully": "Files added to dataset successfully.",
+    "fileUploadSkipped": {
+      "dsStore": "File upload skipped: .DS_Store files are not allowed.",
+      "alreadyUploaded": "File {{fileName}} was skipped because it has already been uploaded."
+    },
+    "fileTypeDifferentModal": {
+      "title": "File Type Different",
+      "message": "The original file ({{originalFileType}}) and replacement file ({{replacementFileType}}) are different file types. Would you like to continue?"
+    },
+    "confirmLeaveModal": {
+      "title": "Discard Uploaded Files?",
+      "message": "Uploaded files haven’t been saved. If you leave now, they’ll be lost.",
+      "stay": "Stay on this page",
+      "leave": "Leave without saving"
+    },
+    "uploadedFilesList": {
+      "fields": {
+        "fileName": {
+          "label": "File Name",
+          "required": "File Name is required",
+          "invalid": {
+            "maxLength": "File Name must be at most {{maxLength}} characters.",
+            "characters": "The file name contains invalid characters. The following characters are not allowed: : < > ; # / \" * | ? \\",
+            "duplicateCombination": "File Name, File Path or combination of File path + File name should be unique. There is already a combination with the same value."
+          }
+        },
+        "filePath": {
+          "label": "File Path",
+          "description": "Hierarchical directory structure path used to display file organization and support reproducibility.",
+          "invalid": {
+            "maxLength": "File Path must be at most {{maxLength}} characters.",
+            "characters": "The file path contains invalid characters. Only letters, numbers, spaces, dashes, periods, backslashes, and forward slashes are allowed.",
+            "duplicateCombination": "File Name, File Path or combination of File path + File name should be unique. There is already a combination with the same value."
+          }
+        },
+        "description": {
+          "label": "Description",
+          "invalid": {
+            "maxLength": "Description must be at most {{maxLength}} characters."
+          }
+        }
+      },
+      "removeFile": "Remove File",
+      "editSelectedFiles": "Edit Selected Files",
+      "removeSelectedFiles": "Remove Selected Files",
+      "uploadedFile": "File uploaded",
+      "uploadedFiles": "Files uploaded",
+      "selectAllFiles": "Select all files",
+      "deselectAllFiles": "Deselect all files"
+    }
   },
   "contact": {
     "message": "Message",

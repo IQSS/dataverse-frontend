@@ -4,6 +4,7 @@ import { FilePreview } from '../../../../files/domain/models/FilePreview'
 import { getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { createColumnsDefinition } from './FilesTableColumnsDefinition'
 import { FilePaginationInfo } from '../../../../files/domain/models/FilePaginationInfo'
+import { FileRepository } from '@/files/domain/repositories/FileRepository'
 
 export type RowSelection = {
   [key: string]: boolean
@@ -16,7 +17,8 @@ export type FileSelection = {
 export function useFilesTableScrollable(
   files: FilePreview[],
   paginationInfo: FilePaginationInfo,
-  accumulatedFilesCount: number
+  accumulatedFilesCount: number,
+  fileRepository: FileRepository
 ) {
   const [rowSelection, setRowSelection] = useState<RowSelection>({})
   const [selectedRowsModels, setSelectedRowsModels] = useState<Record<string, Row<FilePreview>>>({})
@@ -38,7 +40,12 @@ export function useFilesTableScrollable(
 
   const table = useReactTable({
     data: files,
-    columns: createColumnsDefinition(paginationInfo, fileSelection, accumulatedFilesCount),
+    columns: createColumnsDefinition(
+      paginationInfo,
+      fileSelection,
+      fileRepository,
+      accumulatedFilesCount
+    ),
     state: {
       rowSelection: rowSelection
     },

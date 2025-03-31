@@ -9,6 +9,7 @@ import { DatasetDTO } from '../../dataset/domain/useCases/DTOs/DatasetDTO'
 import { DatasetsWithCount } from '../../dataset/domain/models/DatasetsWithCount'
 import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { VersionUpdateType } from '../../dataset/domain/models/VersionUpdateType'
+import { DatasetDeaccessionDTO } from '@iqss/dataverse-client-javascript'
 export class DatasetMockRepository implements DatasetRepository {
   getAllWithCount: (
     collectionId: string,
@@ -80,6 +81,17 @@ export class DatasetMockRepository implements DatasetRepository {
   }
 
   updateMetadata(_datasetId: string | number, _updatedDataset: DatasetDTO): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+  deaccession(
+    _datasetId: string | number,
+    _version: string,
+    _datasetDeaccessionDTO: DatasetDeaccessionDTO
+  ): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()
