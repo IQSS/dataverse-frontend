@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react'
 import { DatasetRepository } from '@/dataset/domain/repositories/DatasetRepository'
 import { getDatasetVersionDiff } from '@/dataset/domain/useCases/getDatasetVersionDiff'
 import { DatasetVersionDiff } from '@/dataset/domain/models/DatasetVersionDiff'
+import {
+  DatasetNonNumericVersion,
+  DatasetNonNumericVersionSearchParam
+} from '@/dataset/domain/models/Dataset'
 
 interface UseGetDatasetVersionDiff {
   differences: DatasetVersionDiff | undefined
@@ -34,7 +38,9 @@ export const useGetDatasetVersionDiff = ({
           datasetRepository,
           persistentId,
           oldVersion,
-          newVersion == 'DRAFT' ? ':draft' : newVersion
+          newVersion == DatasetNonNumericVersionSearchParam.DRAFT
+            ? DatasetNonNumericVersion.DRAFT
+            : newVersion
         )
         setDifferences(response)
       } catch (err) {

@@ -19,40 +19,40 @@ export class DatasetVersionDiffMother {
           changed: [
             {
               fieldName: 'Title',
-              oldValue: faker.datatype.string(),
+              oldValue: 'test title',
               newValue: ''
             },
             {
               fieldName: 'Subtitle',
               oldValue: '',
-              newValue: faker.datatype.string()
+              newValue: 'new test subtitle '
             },
             {
               fieldName: 'Description',
-              oldValue: faker.datatype.string(),
-              newValue: faker.datatype.string()
+              oldValue: 'this is a test description',
+              newValue: 'this is a new test description'
             }
           ]
         }
       ],
       filesAdded: [
         {
-          fileName: faker.datatype.string(),
+          fileName: 'file2',
           MD5: faker.datatype.uuid(),
           type: '',
           fileId: faker.datatype.number(),
-          description: '',
+          description: 'file2 description',
           isRestricted: faker.datatype.boolean(),
           filePath: '',
           tags: [],
           categories: []
         },
         {
-          fileName: faker.datatype.string(),
+          fileName: 'file3',
           MD5: faker.datatype.uuid(),
           type: '',
           fileId: faker.datatype.number(),
-          description: '',
+          description: 'file3 description',
           isRestricted: faker.datatype.boolean(),
           filePath: '',
           tags: [],
@@ -61,11 +61,11 @@ export class DatasetVersionDiffMother {
       ],
       filesRemoved: [
         {
-          fileName: faker.datatype.string(),
+          fileName: 'file1',
           MD5: faker.datatype.uuid(),
           type: '',
           fileId: faker.datatype.number(),
-          description: faker.datatype.string(),
+          description: 'file1 description',
           isRestricted: faker.datatype.boolean(),
           filePath: '',
           tags: [],
