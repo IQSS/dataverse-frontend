@@ -11,7 +11,8 @@ export class UploadedFileDTOMapper {
     storageId: string,
     checksumValue: string,
     checksumType: FixityAlgorithm,
-    fileType: string
+    fileType: string,
+    forceReplace?: boolean
   ): UploadedFileDTO {
     return {
       fileName: fileName,
@@ -22,7 +23,8 @@ export class UploadedFileDTOMapper {
       storageId: storageId,
       checksumValue: checksumValue,
       checksumType: checksumType,
-      mimeType: fileType === '' ? 'application/octet-stream' : fileType // some browsers (e.g., chromium for .java files) fail to detect the mime type for some files and leave the fileType as an empty string, we use the default value 'application/octet-stream' in that case
+      mimeType: fileType === '' ? 'application/octet-stream' : fileType, // some browsers (e.g., chromium for .java files) fail to detect the mime type for some files and leave the fileType as an empty string, we use the default value 'application/octet-stream' in that case,
+      ...(forceReplace && { forceReplace: true })
     }
   }
 }
