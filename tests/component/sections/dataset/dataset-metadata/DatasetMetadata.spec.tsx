@@ -206,7 +206,6 @@ describe('DatasetMetadata', () => {
           const metadataFieldNameTranslated = t[metadataBlock.name].datasetField[metadataFieldName]
             .name as string
           const metadataFieldValueString = metadataFieldValueToDisplayFormat(
-            metadataFieldName,
             metadataFieldValue,
             metadataBlockInfoMock
           )
