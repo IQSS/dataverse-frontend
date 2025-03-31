@@ -9,12 +9,11 @@ import { JSDataverseReadErrorHandler } from '@/shared/helpers/JSDataverseReadErr
 interface UseGetDatasetDownloadCountProps {
   datasetRepository: DatasetRepository
   datasetId: number | string
-  includeMDC?: boolean
+  includeMDC: boolean
 }
 
 interface UseGetDatasetDownloadCountReturn {
-  downloadCountIncludingMDC: DatasetDownloadCount | null
-  downloadCountNotIncludingMDC: DatasetDownloadCount | null
+  downloadCount: DatasetDownloadCount | null
   isLoadingDownloadCount: boolean
   errorLoadingDownloadCount: string | null
 }
@@ -26,11 +25,7 @@ export const useGetDatasetDownloadCount = ({
 }: UseGetDatasetDownloadCountProps): UseGetDatasetDownloadCountReturn => {
   const { t } = useTranslation('dataset')
 
-  const [downloadCountIncludingMDC, setDownloadCountIncludingMDC] =
-    useState<DatasetDownloadCount | null>(null)
-
-  const [downloadCountNotIncludingMDC, setDownloadNotCountIncludingMDC] =
-    useState<DatasetDownloadCount | null>(null)
+  const [downloadCount, setDownloadCount] = useState<DatasetDownloadCount | null>(null)
 
   const [isLoadingDownloadCount, setIsLoadingDownloadCount] = useState<boolean>(true)
   const [errorLoadingDownloadCount, setErrorLoadingDownloadCount] = useState<string | null>(null)
@@ -40,20 +35,9 @@ export const useGetDatasetDownloadCount = ({
       setIsLoadingDownloadCount(true)
 
       try {
-        const downloadCountIncludingMDC = await getDatasetDownloadCount(
-          datasetRepository,
-          datasetId,
-          true
-        )
+        const res = await getDatasetDownloadCount(datasetRepository, datasetId, includeMDC)
 
-        const downloadCountNotIncludingMDC = await getDatasetDownloadCount(
-          datasetRepository,
-          datasetId,
-          false
-        )
-
-        setDownloadCountIncludingMDC(downloadCountIncludingMDC)
-        setDownloadNotCountIncludingMDC(downloadCountNotIncludingMDC)
+        setDownloadCount(res)
       } catch (err: ReadError | unknown) {
         if (err instanceof ReadError) {
           const error = new JSDataverseReadErrorHandler(err)
@@ -72,8 +56,7 @@ export const useGetDatasetDownloadCount = ({
   }, [datasetRepository, datasetId, includeMDC, t])
 
   return {
-    downloadCountIncludingMDC,
-    downloadCountNotIncludingMDC,
+    downloadCount,
     isLoadingDownloadCount,
     errorLoadingDownloadCount
   }

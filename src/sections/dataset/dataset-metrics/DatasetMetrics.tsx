@@ -10,19 +10,19 @@ interface DatasetMetricsProps {
   datasetId: number | string
 }
 
-// TODO:ME - Add unit tests for component and hook
-// TODO:ME - Check replacing different file type failing
-
 export const DatasetMetrics = ({ datasetRepository, datasetId }: DatasetMetricsProps) => {
   const { t } = useTranslation('dataset')
   const {
-    downloadCountIncludingMDC,
-    downloadCountNotIncludingMDC,
-    isLoadingDownloadCount,
-    errorLoadingDownloadCount
-  } = useGetDatasetDownloadCount({ datasetRepository, datasetId })
+    downloadCount: downloadCountIncludingMDC,
+    isLoadingDownloadCount: isLoadingDownloadCountIncludingMDC,
+    errorLoadingDownloadCount: errorLoadingDownloadCountIncludingMDC
+  } = useGetDatasetDownloadCount({ datasetRepository, datasetId, includeMDC: true })
 
-  //   console.log({ downloadCountNotIncludingMDC, downloadCountIncludingMDC })
+  const {
+    downloadCount: downloadCountNotIncludingMDC,
+    isLoadingDownloadCount: isLoadingDownloadCountNotIncludingMDC,
+    errorLoadingDownloadCount: errorLoadingDownloadCountNotIncludingMDC
+  } = useGetDatasetDownloadCount({ datasetRepository, datasetId, includeMDC: false })
 
   const checkIsMDCenabled = (MDCStartDate: string | undefined): MDCStartDate is string => {
     return typeof MDCStartDate === 'string' ? true : false
@@ -30,19 +30,13 @@ export const DatasetMetrics = ({ datasetRepository, datasetId }: DatasetMetricsP
 
   const isMDCenabled = checkIsMDCenabled(downloadCountIncludingMDC?.MDCStartDate)
 
-  if (isLoadingDownloadCount) {
+  if (isLoadingDownloadCountIncludingMDC || isLoadingDownloadCountNotIncludingMDC) {
     return <DatasetMetricsSkeleton />
   }
 
-  if (errorLoadingDownloadCount) {
+  if (errorLoadingDownloadCountIncludingMDC || errorLoadingDownloadCountNotIncludingMDC) {
     return null
   }
-
-  /*
-    - Setting `includeMDC` to True will ignore the `MDCStartDate` setting and return a total count.
-    - If MDC isn't enabled, the download count will return a total count, without `MDCStartDate`.
-    - If MDC is enabled but the `includeMDC` is false, the count will be limited to the time before `MDCStartDate`
-  */
 
   return (
     <div className={styles['dataset-metrics']}>
@@ -70,7 +64,7 @@ export const DatasetMetrics = ({ datasetRepository, datasetId }: DatasetMetricsP
 
       <div className={styles.results}>
         {!isMDCenabled && (
-          <span>
+          <span data-testid="classic-download-count">
             {t('metrics.downloads.count.default', {
               count: downloadCountNotIncludingMDC?.downloadCount
             })}{' '}
@@ -80,7 +74,7 @@ export const DatasetMetrics = ({ datasetRepository, datasetId }: DatasetMetricsP
 
         {/* If we received the MDCStartDate it means MDC is enabled and the count returned will be limited to the time prior to the MDCStartDate */}
         {isMDCenabled && (
-          <div className={styles['make-data-count']}>
+          <div className={styles['mdc-count']} data-testid="mdc-download-count">
             <span>
               {t('metrics.downloads.count.default', {
                 count: downloadCountIncludingMDC.downloadCount
@@ -91,6 +85,7 @@ export const DatasetMetrics = ({ datasetRepository, datasetId }: DatasetMetricsP
               />
             </span>
 
+            {/* If we have downloads before MDC was enabled, we show them also. */}
             {downloadCountNotIncludingMDC && downloadCountNotIncludingMDC.downloadCount > 0 && (
               <small>
                 {`(+${t('metrics.downloads.count.preMDC', {
@@ -111,7 +106,7 @@ export const DatasetMetrics = ({ datasetRepository, datasetId }: DatasetMetricsP
 
 const DatasetMetricsSkeleton = () => (
   <SkeletonTheme>
-    <div className={styles['dataset-metrics']}>
+    <div className={styles['dataset-metrics']} data-testid="dataset-metrics-skeleton">
       <div className={styles.title}>
         <Skeleton height={18} width={120} />
       </div>

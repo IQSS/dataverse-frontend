@@ -1,3 +1,4 @@
+@use 'sass:color';
 @import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
 
 .dataset-metrics {
@@ -9,6 +10,7 @@
     display: flex;
     flex-direction: column;
     padding: 0.25rem 0.5rem;
+    background: color.adjust($dv-secondary-color, $alpha: -0.7);
     border-bottom: solid 1px $dv-border-color;
 
     span {
@@ -17,9 +19,13 @@
   }
 
   .results {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
     padding: 0.25rem 0.5rem;
+    padding-left: 1rem;
 
-    .make-data-count {
+    .mdc-count {
       display: flex;
       flex-wrap: wrap;
       gap: 0.25rem;
