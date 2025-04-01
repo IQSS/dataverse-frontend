@@ -1,10 +1,13 @@
 import { AuthProvider, TAuthConfig } from 'react-oauth2-code-pkce'
 import { ApiConfig } from '@iqss/dataverse-client-javascript/dist/core'
+import { ToastContainer } from 'react-toastify'
 import { DataverseApiAuthMechanism } from '@iqss/dataverse-client-javascript/dist/core/infra/repositories/ApiConfig'
 import { Router } from './router'
 import { Route } from './sections/Route.enum'
 import { OIDC_AUTH_CONFIG, DATAVERSE_BACKEND_URL } from './config'
 import 'react-loading-skeleton/dist/skeleton.css'
+import './assets/react-toastify-custom.scss'
+import './assets/swal-custom.scss'
 
 if (DATAVERSE_BACKEND_URL === '') {
   throw Error('VITE_DATAVERSE_BACKEND_URL environment variable should be specified.')
@@ -35,9 +38,12 @@ const authConfig: TAuthConfig = {
 
 function App() {
   return (
-    <AuthProvider authConfig={authConfig}>
-      <Router />
-    </AuthProvider>
+    <>
+      <AuthProvider authConfig={authConfig}>
+        <Router />
+      </AuthProvider>
+      <ToastContainer position="top-right" autoClose={5000} pauseOnHover />
+    </>
   )
 }
 

@@ -1,7 +1,12 @@
 {
   "filesTabTitle": "Files",
   "metadataTabTitle": "Metadata",
+  "termsTabTitle": "Terms",
   "anonymizedFieldValue": "withheld",
+  "customTerms": {
+    "title": "Custom Dataset Terms",
+    "description": "The following custom terms have been defined for this dataset."
+  },
   "license": {
     "title": "License/Data Use Agreement",
     "altTextPrefix": "License image for "
@@ -59,7 +64,12 @@
         "archivalZip": "Archival Format (.tab) ZIP"
       }
     },
-    "uploadFiles": "Upload Files"
+    "uploadFiles": "Upload Files",
+    "share": {
+      "shareDataset": "Share Dataset",
+      "helpText": "Share this dataset on your favorite social media networks."
+    },
+    "contactOwner": "Contact Owner"
   },
   "alerts": {
     "publishInProgress": {
@@ -111,11 +121,59 @@
       "alertText": "This unpublished dataset is being privately shared."
     }
   },
+  "termsTab": {
+    "editTermsButton": "Edit Term Requirements",
+    "licenseTitle": "Dataset Terms",
+    "termsTitle": "Restricted Files + Terms of Access",
+    "licenseHelpText": "Our <anchor>Community Norms</anchor> as well as good scientific practices expect that proper credit is given via citation. Please use the data citation shown on the dataset page.",
+    "restrictedFiles": "Restricted Files",
+    "termsOfAccess": "Terms of Access for Restricted Files",
+    "requestAccess": "Request Access",
+    "dataAccessPlace": "Data Access Place",
+    "originalArchive": "Original Archive",
+    "availabilityStatus": "Availability Status",
+    "contactForAccess": "Contact for Access",
+    "sizeOfCollection": "Size of Collection",
+    "studyCompletion": "Study Completion",
+    "termsOfUse": "Terms of Use",
+    "termsOfUseTip": "The terms of use for this dataset.",
+    "confidentialityDeclaration": "Confidentiality Declaration",
+    "specialPermissions": "Special Permissions",
+    "restrictions": "Restrictions",
+    "citationRequirements": "Citation Requirements",
+    "depositorRequirements": "Depositor Requirements",
+    "conditions": "Conditions",
+    "disclaimer": "Disclaimer",
+    "confidentialityDeclarationTip": "Indicates whether signing of a confidentiality declaration is needed to access a resource.",
+    "specialPermissionsTip": "Determine if any special permissions are required to access a resource (e.g., if form is a needed and where to access the form).",
+    "restrictionsTip": "Any restrictions on access to or use of the collection, such as privacy certification or distribution restrictions, should be indicated here. These can be restrictions applied by the author, producer, or disseminator of the data collection. If the data are restricted to only a certain class of user, specify which type.",
+    "citationRequirementsTip": "Include special/explicit citation requirements for data to be cited properly in articles or other publications that are based on analysis of the data. For standard data citation requirements refer to our Community Norms.",
+    "depositorRequirementsTip": "Information regarding user responsibility for informing Dataset Depositors, Authors or Curators of their use of data through providing citations to the published work or providing copies of the manuscripts.",
+    "conditionsTip": "Any additional information that will assist the user in understanding the access and use conditions of the Dataset.",
+    "disclaimerTip": "Information regarding responsibility for uses of the Dataset.",
+    "restrictedFilesOne": "There is 1 restricted file in this dataset.",
+    "restrictedFilesMany": "There are {{count}} restricted files in this dataset.",
+    "termsOfAccessTip": "Information on how and if users can access restricted files in this Dataset",
+    "requestAccessTip": "If checked, users can request access to the restricted files in this dataset.",
+    "requestAccessTrue": "Users may request access to files.",
+    "requestAccessFalse": "Users may not request access to files.",
+    "restrictedFilesTip": "The number of restricted files in this dataset.",
+    "dataAccessPlaceTip": "If the data is not only in Dataverse, list the location(s) where the data are currently stored.",
+    "originalArchiveTip": "Archive from which the data was obtained.",
+    "availabilityStatusTip": "Statement of Dataset availability. A depositor may need to indicate that a Dataset is unavailable because it is embargoed for a period of time, because it has been superseded, because a new edition is imminent, etc.",
+    "contactForAccessTip": "If different from the Dataset Contact, this is the Contact person or organization (include email or full address, and telephone number if available) that controls access to a collection.",
+    "sizeOfCollectionTip": "Summary of the number of physical files that exist in a Dataset, recording the number of files that contain data and noting whether the collection contains machine readable documentation and/or other supplementary files and information, such as code, data dictionaries, data definition statements, or data collection instruments.",
+    "studyCompletionTip": "Relationship of the data collected to the amount of data coded and stored in the Dataset. Information as to why certain items of collected information were not included in the dataset or a specific data file should be provided."
+  },
   "publish": {
-    "draftQuestion": "Are you sure you want to publish this dataset? Once you do so, it must remain public.",
+    "draftQuestion": "Are you sure you want to publish this dataset? Once you do so, it must remain published.",
+    "draftSubtext": "This version of the dataset will be published with the following terms:",
     "previouslyReleasedQuestion": "Are you sure you want to republish this dataset?",
-    "releaseCollectionQuestion": "This dataset cannot be published until <a>{{parentCollectionName}}</a> is published. Would you like to publish both right now?",
-    "termsText": "To publish with custom Terms of Use, click the Cancel button and go to the Terms tab for this dataset.",
+    "previouslyReleasedSubtext": "Select if this is a minor or major version update.",
+    "releaseCollectionQuestion": "This dataset cannot be published until <a>{{parentCollectionName}}</a> is published. Would you like to publish both right now?  ",
+    "releaseCollectionSubtext": "Once you publish this dataset it must remain published.",
+    "requiresMajorReleaseSubtext": "Due to the nature of the changes to the current draft this will be a major release ({{versionNumber}})",
+    "termsText": "To change the terms for this version, click the Cancel button and go to the Terms tab for this dataset.",
     "selectVersion": "Select if this is a minor or major version update.",
     "continueButton": "Continue",
     "cancelButton": "Cancel",
@@ -123,5 +181,40 @@
     "majorVersion": "Major Release",
     "updateCurrentVersion": "Update Current Version (will permanently overwrite the latest published version)",
     "error": "An error occurred while publishing the dataset."
+  },
+  "deaccession": {
+    "warning": "This dataset will no longer be public and a tombstone will display the reason for deaccessioning. Please read the <anchor>documentation</anchor> if you have any questions.",
+    "version": {
+      "label": "Which version(s) do you want to deaccession?",
+      "validation": "Please select at least one version to deaccession."
+    },
+    "reason": {
+      "label": "What is the reason for Deaccession?",
+      "validation": "Please select a reason for deaccessioning this dataset.",
+      "options": {
+        "identifiable": "There is identifiable data in one or more files.",
+        "retracted": "The research article has been retracted.",
+        "transferred": "The dataset has been transferred to another repository.",
+        "irb": "IRB request.",
+        "legalIssue": "Legal issue or Data Usage Agreement.",
+        "invalid": "Not a valid dataset."
+      }
+    },
+    "reasonOther": {
+      "label": "Please enter additional information about the reason for deaccession."
+    },
+    "forwardUrl": {
+      "label": "If applicable, please provide the URL where this dataset can be accessed after deaccessioning.",
+      "validation": "Please enter a valid URL."
+    }
+  },
+  "confirmDeaccession": {
+    "title": "Confirm Deaccession",
+    "message": "Are you sure you want to deaccession? This is permanent and the selected version(s) will no longer be viewable by the public.",
+    "reason": "Reason for deaccessioning:",
+    "reasonOther": "Additional information about the reason for deaccession:",
+    "forwardUrl": "URL where this dataset can be accessed after deaccessioning:",
+    "cancelButton": "Cancel",
+    "deaccessionButton": "Deaccession"
   }
 }

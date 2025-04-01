@@ -17,12 +17,14 @@ import { AlertProvider } from '../../../../src/sections/alerts/AlertProvider'
 import { MetadataBlockInfoRepository } from '../../../../src/metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 import { MetadataBlockInfoMother } from '../../metadata-block-info/domain/models/MetadataBlockInfoMother'
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 const setAnonymizedView = () => {}
 const fileRepository: FileRepository = {} as FileRepository
 const datasetRepository: DatasetRepository = {} as DatasetRepository
 const metadataBlockInfoRepository: MetadataBlockInfoRepository = {} as MetadataBlockInfoRepository
 const collectionRepository: CollectionRepository = {} as CollectionRepository
+const contactRepository = {} as ContactRepository
 
 const TOTAL_FILES_COUNT = 200
 const allFiles = FilePreviewMother.createMany(TOTAL_FILES_COUNT)
@@ -67,6 +69,7 @@ describe('Dataset', () => {
     datasetRepository.getByPersistentId = cy.stub().resolves(dataset)
     datasetRepository.getByPrivateUrlToken = cy.stub().resolves(dataset)
     datasetRepository.getLocks = cy.stub().resolves([])
+    contactRepository.sendFeedbacktoOwners = cy.stub().resolves([])
     fileRepository.getAllByDatasetPersistentIdWithCount = cy.stub().resolves(testFiles)
     fileRepository.getFilesCountInfoByDatasetPersistentId = cy.stub().resolves(testFilesCountInfo)
     fileRepository.getFilesTotalDownloadSizeByDatasetPersistentId = cy.stub().resolves(19900)
@@ -96,6 +99,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       testDataset
     )
@@ -113,6 +117,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       emptyDataset
     )
@@ -129,6 +134,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       dataset
     )
@@ -146,6 +152,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       dataset
     )
@@ -162,6 +169,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       testDataset
     )
@@ -179,6 +187,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       testDataset
     )
@@ -199,6 +208,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       testDataset
     )
@@ -212,7 +222,53 @@ describe('Dataset', () => {
 
     cy.findByText('Citation Metadata').should('exist')
   })
+  it('renders the Dataset Terms tab', () => {
+    const testDataset = DatasetMother.create()
 
+    mountWithDataset(
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
+      />,
+      testDataset
+    )
+
+    cy.findAllByText(testDataset.version.title).should('exist')
+
+    const termsTab = cy.findByRole('tab', { name: 'Terms' })
+    termsTab.should('exist')
+
+    termsTab.click()
+
+    cy.findByText('Dataset Terms').should('exist')
+  })
+  it('renders the Dataset Terms tab', () => {
+    const testDataset = DatasetMother.create()
+
+    mountWithDataset(
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
+        tab={'metadata'}
+      />,
+      testDataset
+    )
+
+    cy.findAllByText(testDataset.version.title).should('exist')
+
+    const termsTab = cy.findByRole('tab', { name: 'Terms' })
+    termsTab.should('exist')
+
+    termsTab.click()
+
+    cy.findByText('Dataset Terms').should('exist')
+  })
   it('renders the Dataset in anonymized view', () => {
     const testDatasetAnonymized = DatasetMother.createAnonymized()
 
@@ -222,6 +278,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       testDatasetAnonymized
     )
@@ -240,6 +297,7 @@ describe('Dataset', () => {
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       testDataset
     )
@@ -257,6 +315,7 @@ describe('Dataset', () => {
         metadataBlockInfoRepository={metadataBlockInfoRepository}
         filesTabInfiniteScrollEnabled={true}
         collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
       />,
       testDataset
     )
@@ -276,6 +335,7 @@ describe('Dataset', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           collectionRepository={collectionRepository}
           created={true}
+          contactRepository={contactRepository}
         />
       </AlertProvider>,
       testDataset
@@ -296,6 +356,7 @@ describe('Dataset', () => {
           metadataBlockInfoRepository={metadataBlockInfoRepository}
           collectionRepository={collectionRepository}
           metadataUpdated={true}
+          contactRepository={contactRepository}
         />
       </AlertProvider>,
       testDataset
@@ -304,5 +365,62 @@ describe('Dataset', () => {
     cy.findAllByText(testDataset.version.title).should('exist')
 
     cy.findByText(/The metadata for this dataset has been updated./).should('exist')
+  })
+
+  it('shows the toast when the information was sent to contact successfully', () => {
+    const testDataset = DatasetMother.create()
+    mountWithDataset(
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
+        metadataUpdated={true}
+      />,
+      testDataset
+    )
+
+    cy.findByRole('button', { name: /Contact Owner/i })
+      .should('exist')
+      .click()
+    cy.findByTestId('captchaNumbers')
+      .invoke('text')
+      .then((text) => {
+        const matches = text.match(/(\d+)\s*\+\s*(\d+)\s*=/)
+        if (matches) {
+          const num1 = parseInt(matches[1], 10)
+          const num2 = parseInt(matches[2], 10)
+          const answer = num1 + num2
+          cy.findByTestId('fromEmail').type('email@dataverse.com')
+          cy.findByTestId('subject').type('subject')
+          cy.findByTestId('body').type('message')
+          cy.findByTestId('captchaInput').type(answer.toString())
+          cy.findByText('Submit').click()
+        }
+      })
+    cy.findByTestId('dialog').should('not.exist')
+    cy.findByText(/Message sent./).should('exist')
+  })
+
+  it('does not show the tooltip for contact owner button', () => {
+    const testDataset = DatasetMother.create()
+    mountWithDataset(
+      <Dataset
+        datasetRepository={datasetRepository}
+        fileRepository={fileRepository}
+        metadataBlockInfoRepository={metadataBlockInfoRepository}
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
+        metadataUpdated={true}
+      />,
+      testDataset
+    )
+
+    cy.findByRole('button', { name: /Contact Owner/i })
+      .should('exist')
+      .trigger('mouseover')
+
+    cy.findByRole('tooltip').should('not.exist')
   })
 })

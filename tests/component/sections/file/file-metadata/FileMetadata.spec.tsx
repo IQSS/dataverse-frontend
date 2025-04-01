@@ -11,7 +11,6 @@ import {
 } from '../../../files/domain/models/FileMetadataMother'
 import { DatasetPublishingStatus } from '../../../../../src/dataset/domain/models/Dataset'
 import { FilePermissionsMother } from '../../../files/domain/models/FilePermissionsMother'
-import { DateHelper } from '../../../../../src/shared/helpers/DateHelper'
 
 const file = FileMother.create()
 describe('FileMetadata', () => {
@@ -215,7 +214,9 @@ describe('FileMetadata', () => {
       />
     )
     cy.findByText('Deposit Date').should('exist')
-    cy.get('time').contains(DateHelper.toISO8601Format(file.metadata.depositDate)).should('exist')
+    if (file.metadata.depositDate) {
+      cy.get('time').contains(file.metadata.depositDate).should('exist')
+    }
   })
 
   it('renders the file Metadata Release Date', () => {
@@ -231,9 +232,7 @@ describe('FileMetadata', () => {
 
     cy.findByText('Metadata Release Date').should('exist')
     if (metadataWithPublicationDate.publicationDate) {
-      cy.findAllByText(
-        DateHelper.toISO8601Format(metadataWithPublicationDate.publicationDate)
-      ).should('exist')
+      cy.findAllByText(metadataWithPublicationDate.publicationDate).should('exist')
     }
   })
 
@@ -264,9 +263,7 @@ describe('FileMetadata', () => {
 
     cy.findByText('Publication Date').should('exist')
     if (metadataWithPublicationDate.publicationDate) {
-      cy.findAllByText(
-        DateHelper.toISO8601Format(metadataWithPublicationDate.publicationDate)
-      ).should('exist')
+      cy.findAllByText(metadataWithPublicationDate.publicationDate).should('exist')
     }
   })
 
@@ -284,9 +281,7 @@ describe('FileMetadata', () => {
 
     cy.findByText('Publication Date').should('exist')
     if (metadataWithPublicationDateEmbargoed.publicationDate) {
-      cy.findAllByText(
-        DateHelper.toISO8601Format(metadataWithPublicationDateEmbargoed.publicationDate)
-      ).should('exist')
+      cy.findAllByText(metadataWithPublicationDateEmbargoed.publicationDate).should('exist')
     }
   })
 
@@ -390,7 +385,7 @@ describe('FileMetadata', () => {
 
   it('renders the tabular data if it exists', () => {
     const metadataWithTabularData = FileMetadataMother.create({
-      tabularData: FileTabularDataMother.create({ variablesCount: 123, observationsCount: 321 })
+      tabularData: FileTabularDataMother.create({ variables: 123, observations: 321 })
     })
     cy.customMount(
       <FileMetadata

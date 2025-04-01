@@ -26,9 +26,16 @@ export class DatasetHelper extends DataverseApiHelper {
     )
   }
 
-  static async createWithTitle(title: string): Promise<DatasetResponse> {
+  static async createWithTitle(
+    title: string,
+    collectionId = ROOT_COLLECTION_ALIAS
+  ): Promise<DatasetResponse> {
     newDatasetData.datasetVersion.metadataBlocks.citation.fields[0].value = title
-    return this.request<DatasetResponse>(`/dataverses/root/datasets`, 'POST', newDatasetData)
+    return this.request<DatasetResponse>(
+      `/dataverses/${collectionId}/datasets`,
+      'POST',
+      newDatasetData
+    )
   }
 
   static async destroy(persistentId: string): Promise<DatasetResponse | undefined> {
@@ -157,6 +164,15 @@ export class DatasetHelper extends DataverseApiHelper {
     return { ...datasetResponse, file: file }
   }
 
+  static async createWithFileAndTitle(
+    fileData: FileData,
+    title: string,
+    collectionId = ROOT_COLLECTION_ALIAS
+  ): Promise<DatasetResponse> {
+    const datasetResponse = await this.createWithTitle(title, collectionId)
+    const file = await this.uploadFile(datasetResponse.persistentId, fileData)
+    return { ...datasetResponse, file: file }
+  }
   static async createWithFileAndPublish(
     fileData: FileData,
     collectionId = ROOT_COLLECTION_ALIAS

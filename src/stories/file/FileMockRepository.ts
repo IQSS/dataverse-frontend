@@ -14,6 +14,7 @@ import { FakerHelper } from '../../../tests/component/shared/FakerHelper'
 import { FilesWithCount } from '../../files/domain/models/FilesWithCount'
 import { FileHolder } from '../../files/domain/models/FileHolder'
 import { UploadedFileDTO } from '@iqss/dataverse-client-javascript'
+import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
 
 export class FileMockRepository implements FileRepository {
   constructor(public readonly fileMock?: File) {}
@@ -108,6 +109,38 @@ export class FileMockRepository implements FileRepository {
   }
 
   addUploadedFiles(_datasetId: number | string, _files: UploadedFileDTO[]): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  delete(_fileId: number | string): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  replace(_fileId: number | string, _uploadedFileDTO: UploadedFileDTO): Promise<number> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(1)
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  getFixityAlgorithm(): Promise<FixityAlgorithm> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(FixityAlgorithm.MD5)
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  restrict(_fileId: number | string, _restrict: boolean): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()

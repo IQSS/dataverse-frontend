@@ -25,12 +25,15 @@ import { DatasetVersionMother } from '../../../component/dataset/domain/models/D
 import { FilePaginationInfo } from '../../../../src/files/domain/models/FilePaginationInfo'
 import { FilePreview } from '../../../../src/files/domain/models/FilePreview'
 import {
+  DatasetLabelSemanticMeaning,
+  DatasetLabelValue,
   DatasetNonNumericVersion,
   DatasetPublishingStatus,
   DatasetVersionNumber
 } from '../../../../src/dataset/domain/models/Dataset'
 import { File } from '../../../../src/files/domain/models/File'
 import { FileIngest, FileIngestStatus } from '../../../../src/files/domain/models/FileIngest'
+import { DateHelper } from '@/shared/helpers/DateHelper'
 
 const DRAFT_PARAM = DatasetNonNumericVersion.DRAFT
 
@@ -39,9 +42,8 @@ const expect = chai.expect
 
 const fileRepository = new FileJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
-const dateNow = new Date()
-dateNow.setHours(2, 0, 0, 0)
-const filePreviewExpectedData = (id: number): FilePreview => {
+const dateNow = DateHelper.toISO8601Format(new Date())
+const filePreviewExpectedData = (id: number): Omit<FilePreview, 'datasetVersionNumber'> => {
   return {
     id: id,
     name: 'blob',
@@ -83,21 +85,29 @@ const filePreviewExpectedData = (id: number): FilePreview => {
       isActivelyEmbargoed: false,
       isTabular: false
     },
-    permissions: { canDownloadFile: true }
+    permissions: {
+      canDownloadFile: true,
+      canManageFilePermissions: true,
+      canEditOwnerDataset: true
+    }
   }
 }
 
 const expectedFileCitationRegex = new RegExp(
   `^Finch, Fiona, ${new Date().getFullYear()}, "Darwin's Finches", <a href="https:\\/\\/doi\\.org\\/10\\.5072\\/FK2\\/[A-Z0-9]+" target="_blank">https:\\/\\/doi\\.org\\/10\\.5072\\/FK2\\/[A-Z0-9]+<\\/a>, Root, DRAFT VERSION; blob \\[fileName\\]$`
 )
-const fileExpectedData = (id: number): File => {
+const fileExpectedData = (id: number, datasetPid: string): Omit<File, 'hierarchy'> => {
   return {
     id: id,
     name: 'blob',
+    datasetPersistentId: datasetPid,
     datasetVersion: {
       labels: [
-        { semanticMeaning: 'dataset', value: 'Draft' },
-        { semanticMeaning: 'warning', value: 'Unpublished' }
+        { semanticMeaning: DatasetLabelSemanticMeaning.DATASET, value: DatasetLabelValue.DRAFT },
+        {
+          semanticMeaning: DatasetLabelSemanticMeaning.WARNING,
+          value: DatasetLabelValue.UNPUBLISHED
+        }
       ],
       id: 74,
       title: "Darwin's Finches",
@@ -148,7 +158,11 @@ const fileExpectedData = (id: number): File => {
       isActivelyEmbargoed: false,
       isTabular: false
     },
-    permissions: { canDownloadFile: true }
+    permissions: {
+      canDownloadFile: true,
+      canManageFilePermissions: true,
+      canEditOwnerDataset: true
+    }
   }
 }
 
@@ -165,7 +179,7 @@ describe('File JSDataverse Repository', () => {
 
   const compareMetadata = (fileMetadata: FileMetadata, expectedFileMetadata: FileMetadata) => {
     expect(fileMetadata.type).to.deep.equal(expectedFileMetadata.type)
-    cy.compareDate(fileMetadata.date.date, expectedFileMetadata.date.date)
+    expect(fileMetadata.date.date).to.deep.equal(expectedFileMetadata.date.date)
     expect(fileMetadata.downloadCount).to.deep.equal(expectedFileMetadata.downloadCount)
     expect(fileMetadata.labels).to.deep.equal(expectedFileMetadata.labels)
     expect(fileMetadata.checksum?.algorithm).to.deep.equal(expectedFileMetadata.checksum?.algorithm)
@@ -254,8 +268,7 @@ describe('File JSDataverse Repository', () => {
             expect(file.datasetPublishingStatus).to.deep.equal(
               expectedPublishedFile.datasetPublishingStatus
             )
-            cy.compareDate(
-              file.metadata.date.date,
+            expect(file.metadata.date.date).to.deep.equal(
               filePreviewExpectedData(file.id).metadata.date.date
             )
           })
@@ -415,15 +428,15 @@ describe('File JSDataverse Repository', () => {
         .getAllByDatasetPersistentId(dataset.persistentId, dataset.version)
         .then((files) => {
           const expectedTabularData = {
-            variablesCount: 7,
-            observationsCount: 10
+            variables: 7,
+            observations: 10
           }
           files.forEach((file) => {
-            expect(file.metadata.tabularData?.variablesCount).to.deep.equal(
-              expectedTabularData.variablesCount
+            expect(file.metadata.tabularData?.variables).to.deep.equal(
+              expectedTabularData.variables
             )
-            expect(file.metadata.tabularData?.observationsCount).to.deep.equal(
-              expectedTabularData.observationsCount
+            expect(file.metadata.tabularData?.observations).to.deep.equal(
+              expectedTabularData.observations
             )
             expect(file.metadata.tabularData?.unf).to.not.be.undefined
           })
@@ -499,10 +512,10 @@ describe('File JSDataverse Repository', () => {
           dataset.persistentId,
           dataset.version,
           new FilePaginationInfo(),
-          new FileCriteria().withFilterByType('text/tab-separated-values')
+          new FileCriteria().withFilterByType('text/plain')
         )
         .then((files) => {
-          expect(files.length).to.equal(1)
+          expect(files.length).to.equal(2)
         })
     })
 
@@ -895,7 +908,7 @@ describe('File JSDataverse Repository', () => {
       const datasetResponse = await DatasetHelper.createWithFile(FileHelper.create())
       if (!datasetResponse.file) throw new Error('File not found')
 
-      const expectedFile = fileExpectedData(datasetResponse.file.id)
+      const expectedFile = fileExpectedData(datasetResponse.file.id, datasetResponse.persistentId)
 
       await fileRepository.getById(datasetResponse.file.id).then((file) => {
         expect(file.name).to.deep.equal(expectedFile.name)

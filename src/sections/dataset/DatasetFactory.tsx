@@ -1,7 +1,8 @@
-import { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect, useContext } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { Dataset } from './Dataset'
+import { DatasetContext } from './DatasetContext'
 import { DatasetJSDataverseRepository } from '../../dataset/infrastructure/repositories/DatasetJSDataverseRepository'
 import { useAnonymized } from './anonymized/AnonymizedContext'
 import { AnonymizedProvider } from './anonymized/AnonymizedProvider'
@@ -16,12 +17,13 @@ import { AlertProvider } from '../alerts/AlertProvider'
 import { searchParamVersionToDomainVersion } from '../../router'
 import { FILES_TAB_INFINITE_SCROLL_ENABLED } from './config'
 import { CollectionJSDataverseRepository } from '@/collection/infrastructure/repositories/CollectionJSDataverseRepository'
+import { ContactJSDataverseRepository } from '@/contact/infrastructure/ContactJSDataverseRepository'
 
 const collectionRepository = new CollectionJSDataverseRepository()
 const datasetRepository = new DatasetJSDataverseRepository()
 const fileRepository = new FileJSDataverseRepository()
 const metadataBlockInfoRepository = new MetadataBlockInfoJSDataverseRepository()
-
+const contactRepository = new ContactJSDataverseRepository()
 const settingRepository = new SettingJSDataverseRepository()
 
 export class DatasetFactory {
@@ -48,6 +50,7 @@ function DatasetWithSearchParams() {
   const persistentId = searchParams.get('persistentId') ?? undefined
   const privateUrlToken = searchParams.get('privateUrlToken')
   const searchParamVersion = searchParams.get('version') ?? undefined
+  const tab = searchParams.get('tab') ?? undefined
   const version = searchParamVersionToDomainVersion(searchParamVersion)
   const location = useLocation()
   const state = location.state as
@@ -56,10 +59,17 @@ function DatasetWithSearchParams() {
   const created = state?.created ?? false
   const publishInProgress = state?.publishInProgress ?? false
   const metadataUpdated = state?.metadataUpdated ?? false
+  const datasetContext = useContext(DatasetContext)
 
   useEffect(() => {
     if (privateUrlToken) setAnonymizedView(true)
   }, [privateUrlToken, setAnonymizedView])
+
+  useEffect(() => {
+    if (datasetContext?.refreshDataset) {
+      datasetContext.refreshDataset()
+    }
+  }, [version, datasetContext])
 
   if (privateUrlToken) {
     return (
@@ -72,7 +82,9 @@ function DatasetWithSearchParams() {
           datasetRepository={datasetRepository}
           fileRepository={fileRepository}
           metadataBlockInfoRepository={metadataBlockInfoRepository}
+          contactRepository={contactRepository}
           filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
+          tab={tab}
         />
       </DatasetProvider>
     )
@@ -88,10 +100,12 @@ function DatasetWithSearchParams() {
         datasetRepository={datasetRepository}
         fileRepository={fileRepository}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
+        contactRepository={contactRepository}
         created={created}
         publishInProgress={publishInProgress}
         metadataUpdated={metadataUpdated}
         filesTabInfiniteScrollEnabled={FILES_TAB_INFINITE_SCROLL_ENABLED}
+        tab={tab}
       />
     </DatasetProvider>
   )

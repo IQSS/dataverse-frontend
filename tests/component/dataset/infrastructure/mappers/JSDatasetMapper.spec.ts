@@ -37,6 +37,19 @@ const jsDataset = {
     lastUpdateTime: new Date('2023-09-07T13:40:04.000Z'),
     releaseTime: undefined
   },
+  internalVersionNumber: 1,
+  termsOfUse: {
+    termsOfAccess: {
+      fileAccessRequest: true,
+      termsOfAccess: 'New terms',
+      dataAccessPlace: 'New place',
+      originalArchive: 'New archive',
+      availabilityStatus: 'New status',
+      contactForAccess: 'New contact',
+      sizeOfCollection: 'New size',
+      studyCompletion: 'New completion'
+    }
+  },
   metadataBlocks: [
     {
       name: 'citation',
@@ -86,8 +99,131 @@ const jsDatasetLocks: JSDatasetLock[] = [
     datasetPersistentId: 'doi:10.5072/FK2/B4B2MJ'
   }
 ]
+const jsDatasetVersionDiff = {
+  oldVersion: {
+    versionNumber: '1.0',
+    lastUpdatedDate: '2023-05-15T08:21:03Z'
+  },
+  newVersion: {
+    versionNumber: '2.0',
+    lastUpdatedDate: '2023-06-15T08:21:03Z'
+  },
+  metadataChanges: [
+    {
+      blockName: 'citation',
+      changed: [
+        {
+          fieldName: 'title',
+          oldValue: 'Old Title',
+          newValue: 'New Title'
+        }
+      ]
+    }
+  ],
+  filesAdded: [
+    {
+      fileName: 'file2.txt',
+      MD5: 'd41d8cd98f00b204e9800998ecf8427e',
+      type: 'text/plain',
+      fileId: 2,
+      filePath: '/path/to/file2.txt',
+      description: 'New file',
+      isRestricted: false,
+      tags: ['tag2'],
+      categories: ['category2']
+    }
+  ],
+  filesRemoved: [
+    {
+      fileName: 'file1.txt',
+      MD5: 'd41d8cd98f00b204e9800998ecf8427e',
+      type: 'text/plain',
+      fileId: 1,
+      filePath: '/path/to/file1.txt',
+      description: 'Test file',
+      isRestricted: false,
+      tags: ['tag1'],
+      categories: ['category1']
+    }
+  ],
+  fileChanges: [
+    {
+      fileName: 'file1.txt',
+      md5: 'd41d8cd98f00b204e9800998ecf8427e',
+      fileId: 1,
+      changed: [
+        {
+          fieldName: 'description',
+          oldValue: 'Old description',
+          newValue: 'New description'
+        }
+      ]
+    }
+  ],
+  filesReplaced: [
+    {
+      oldFile: {
+        fileName: 'file1.txt',
+        MD5: 'd41d8cd98f00b204e9800998ecf8427e',
+        type: 'text/plain',
+        fileId: 1,
+        filePath: '/path/to/file1.txt',
+        description: 'Test file',
+        isRestricted: false,
+        tags: ['tag1'],
+        categories: ['category1']
+      },
+      newFile: {
+        fileName: 'file2.txt',
+        MD5: 'd41d8cd98f00b204e9800998ecf8427e',
+        type: 'text/plain',
+        fileId: 2,
+        filePath: '/path/to/file2.txt',
+        description: 'New file',
+        isRestricted: false,
+        tags: ['tag2'],
+        categories: ['category2']
+      }
+    }
+  ],
+  termsOfAccess: [
+    {
+      fieldName: 'termsOfAccess',
+      oldValue: 'Old terms',
+      newValue: 'New terms'
+    }
+  ]
+}
 const jsDatasetFilesTotalOriginalDownloadSize = 5
 const jsDatasetFilesTotalArchivalDownloadSize = 7
+const jsDatasetVersionSummaries = [
+  {
+    id: 101,
+    versionNumber: '1.0',
+    summary: {
+      citation: {
+        added: 1,
+        deleted: 0,
+        changed: 1
+      }
+    },
+    contributors: 'John Doe',
+    publishedOn: '2023-01-01'
+  },
+  {
+    id: 102,
+    versionNumber: '2.0',
+    summary: {
+      citation: {
+        added: 1,
+        deleted: 0,
+        changed: 1
+      }
+    },
+    contributors: 'Jane Doe',
+    publishedOn: '2023-02-01'
+  }
+]
 const expectedDataset = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
   version: {
@@ -106,9 +242,11 @@ const expectedDataset = {
       majorNumber: 0
     },
     someDatasetVersionHasBeenReleased: false,
+    termsOfAccess: undefined,
     citation:
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
+  internalVersionNumber: 1,
   requestedVersion: undefined,
   publicationDate: undefined,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
@@ -130,6 +268,18 @@ const expectedDataset = {
     name: 'CC0 1.0',
     uri: 'http://creativecommons.org/publicdomain/zero/1.0',
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+  },
+  termsOfUse: {
+    termsOfAccess: {
+      fileAccessRequest: true,
+      termsOfAccess: 'New terms',
+      dataAccessPlace: 'New place',
+      originalArchive: 'New archive',
+      availabilityStatus: 'New status',
+      contactForAccess: 'New contact',
+      sizeOfCollection: 'New size',
+      studyCompletion: 'New completion'
+    }
   },
   metadataBlocks: [
     {
@@ -187,7 +337,36 @@ const expectedDataset = {
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root', undefined, undefined, true)
   ),
   nextMajorVersion: undefined,
-  nextMinorVersion: undefined
+  nextMinorVersion: undefined,
+  requiresMajorVersionUpdate: false,
+  versionsSummaries: [
+    {
+      id: 101,
+      versionNumber: '1.0',
+      summary: {
+        citation: {
+          added: 1,
+          deleted: 0,
+          changed: 1
+        }
+      },
+      contributors: 'John Doe',
+      publishedOn: '2023-01-01'
+    },
+    {
+      id: 102,
+      versionNumber: '2.0',
+      summary: {
+        citation: {
+          added: 1,
+          deleted: 0,
+          changed: 1
+        }
+      },
+      contributors: 'Jane Doe',
+      publishedOn: '2023-02-01'
+    }
+  ]
 }
 const expectedDatasetWithPublicationDate = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -198,6 +377,7 @@ const expectedDatasetWithPublicationDate = {
     publishingStatus: 'draft',
     isLatest: true,
     isInReview: false,
+    termsOfAccess: undefined,
     latestVersionPublishingStatus: 'draft',
     number: {
       minorNumber: 0,
@@ -207,6 +387,7 @@ const expectedDatasetWithPublicationDate = {
     citation:
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
+  internalVersionNumber: 1,
   requestedVersion: undefined,
   publicationDate: undefined,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
@@ -228,6 +409,18 @@ const expectedDatasetWithPublicationDate = {
     name: 'CC0 1.0',
     uri: 'http://creativecommons.org/publicdomain/zero/1.0',
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+  },
+  termsOfUse: {
+    termsOfAccess: {
+      fileAccessRequest: true,
+      termsOfAccess: 'New terms',
+      dataAccessPlace: 'New place',
+      originalArchive: 'New archive',
+      availabilityStatus: 'New status',
+      contactForAccess: 'New contact',
+      sizeOfCollection: 'New size',
+      studyCompletion: 'New completion'
+    }
   },
   metadataBlocks: [
     {
@@ -286,7 +479,36 @@ const expectedDatasetWithPublicationDate = {
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root', undefined, undefined, true)
   ),
   nextMajorVersion: undefined,
-  nextMinorVersion: undefined
+  nextMinorVersion: undefined,
+  requiresMajorVersionUpdate: false,
+  versionsSummaries: [
+    {
+      id: 101,
+      versionNumber: '1.0',
+      summary: {
+        citation: {
+          added: 1,
+          deleted: 0,
+          changed: 1
+        }
+      },
+      contributors: 'John Doe',
+      publishedOn: '2023-01-01'
+    },
+    {
+      id: 102,
+      versionNumber: '2.0',
+      summary: {
+        citation: {
+          added: 1,
+          deleted: 0,
+          changed: 1
+        }
+      },
+      contributors: 'Jane Doe',
+      publishedOn: '2023-02-01'
+    }
+  ]
 }
 const expectedDatasetWithNextVersionNumbers = {
   persistentId: 'doi:10.5072/FK2/B4B2MJ',
@@ -303,9 +525,11 @@ const expectedDatasetWithNextVersionNumbers = {
       majorNumber: 0
     },
     someDatasetVersionHasBeenReleased: true,
+    termsOfAccess: undefined,
     citation:
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
+  internalVersionNumber: 1,
   requestedVersion: undefined,
   publicationDate: undefined,
   alerts: [{ variant: 'warning', messageKey: 'draftVersion', dynamicFields: undefined }],
@@ -327,6 +551,18 @@ const expectedDatasetWithNextVersionNumbers = {
     name: 'CC0 1.0',
     uri: 'http://creativecommons.org/publicdomain/zero/1.0',
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+  },
+  termsOfUse: {
+    termsOfAccess: {
+      fileAccessRequest: true,
+      termsOfAccess: 'New terms',
+      dataAccessPlace: 'New place',
+      originalArchive: 'New archive',
+      availabilityStatus: 'New status',
+      contactForAccess: 'New contact',
+      sizeOfCollection: 'New size',
+      studyCompletion: 'New completion'
+    }
   },
   metadataBlocks: [
     {
@@ -385,7 +621,36 @@ const expectedDatasetWithNextVersionNumbers = {
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root', undefined, undefined, true)
   ),
   nextMajorVersion: '2.0',
-  nextMinorVersion: '1.3'
+  nextMinorVersion: '1.3',
+  requiresMajorVersionUpdate: false,
+  versionsSummaries: [
+    {
+      id: 101,
+      versionNumber: '1.0',
+      summary: {
+        citation: {
+          added: 1,
+          deleted: 0,
+          changed: 1
+        }
+      },
+      contributors: 'John Doe',
+      publishedOn: '2023-01-01'
+    },
+    {
+      id: 102,
+      versionNumber: '2.0',
+      summary: {
+        citation: {
+          added: 1,
+          deleted: 0,
+          changed: 1
+        }
+      },
+      contributors: 'Jane Doe',
+      publishedOn: '2023-02-01'
+    }
+  ]
 }
 
 const expectedDatasetAlternateVersion = {
@@ -406,9 +671,11 @@ const expectedDatasetAlternateVersion = {
       majorNumber: 0
     },
     someDatasetVersionHasBeenReleased: false,
+    termsOfAccess: undefined,
     citation:
       'Finch, Fiona, 2023, "Darwin\'s Finches", <a href="https://doi.org/10.5072/FK2/B4B2MJ" target="_blank">https://doi.org/10.5072/FK2/B4B2MJ</a>, Root, DRAFT VERSION'
   },
+  internalVersionNumber: 1,
   requestedVersion: '4.0',
   publicationDate: undefined,
   hasValidTermsOfAccess: true,
@@ -449,6 +716,18 @@ const expectedDatasetAlternateVersion = {
     name: 'CC0 1.0',
     uri: 'http://creativecommons.org/publicdomain/zero/1.0',
     iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+  },
+  termsOfUse: {
+    termsOfAccess: {
+      fileAccessRequest: true,
+      termsOfAccess: 'New terms',
+      dataAccessPlace: 'New place',
+      originalArchive: 'New archive',
+      availabilityStatus: 'New status',
+      contactForAccess: 'New contact',
+      sizeOfCollection: 'New size',
+      studyCompletion: 'New completion'
+    }
   },
   locks: [
     {
@@ -498,8 +777,38 @@ const expectedDatasetAlternateVersion = {
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root', undefined, undefined, true)
   ),
   nextMajorVersion: undefined,
-  nextMinorVersion: undefined
+  nextMinorVersion: undefined,
+  requiresMajorVersionUpdate: false,
+  versionsSummaries: [
+    {
+      id: 101,
+      versionNumber: '1.0',
+      summary: {
+        citation: {
+          added: 1,
+          deleted: 0,
+          changed: 1
+        }
+      },
+      contributors: 'John Doe',
+      publishedOn: '2023-01-01'
+    },
+    {
+      id: 102,
+      versionNumber: '2.0',
+      summary: {
+        citation: {
+          added: 1,
+          deleted: 0,
+          changed: 1
+        }
+      },
+      contributors: 'Jane Doe',
+      publishedOn: '2023-02-01'
+    }
+  ]
 }
+
 describe('JS Dataset Mapper', () => {
   it('maps jsDataset model to the domain Dataset model', () => {
     const mapped = JSDatasetMapper.toDataset(
@@ -509,10 +818,13 @@ describe('JS Dataset Mapper', () => {
       jsDatasetPermissions,
       jsDatasetLocks,
       jsDatasetFilesTotalOriginalDownloadSize,
-      jsDatasetFilesTotalArchivalDownloadSize
+      jsDatasetFilesTotalArchivalDownloadSize,
+      jsDatasetVersionSummaries
     )
-    expect(expectedDataset).to.deep.equal(mapped)
+
+    expect(mapped).to.deep.equal(expectedDataset)
   })
+
   it('maps jsDataset model to the domain Dataset model for alternate version', () => {
     const mappedWithAlternate = JSDatasetMapper.toDataset(
       jsDataset,
@@ -522,6 +834,7 @@ describe('JS Dataset Mapper', () => {
       jsDatasetLocks,
       jsDatasetFilesTotalOriginalDownloadSize,
       jsDatasetFilesTotalArchivalDownloadSize,
+      jsDatasetVersionSummaries,
       '4.0'
     )
 
@@ -565,7 +878,8 @@ describe('JS Dataset Mapper', () => {
         jsDatasetPermissions,
         jsDatasetLocks,
         jsDatasetFilesTotalOriginalDownloadSize,
-        jsDatasetFilesTotalArchivalDownloadSize
+        jsDatasetFilesTotalArchivalDownloadSize,
+        jsDatasetVersionSummaries
       )
     )
   })
@@ -607,7 +921,8 @@ describe('JS Dataset Mapper', () => {
         jsDatasetPermissions,
         jsDatasetLocks,
         jsDatasetFilesTotalOriginalDownloadSize,
-        jsDatasetFilesTotalArchivalDownloadSize
+        jsDatasetFilesTotalArchivalDownloadSize,
+        jsDatasetVersionSummaries
       )
     )
   })
@@ -625,7 +940,8 @@ describe('JS Dataset Mapper', () => {
       jsDatasetPermissions,
       jsDatasetLocks,
       jsDatasetFilesTotalOriginalDownloadSize,
-      jsDatasetFilesTotalArchivalDownloadSize
+      jsDatasetFilesTotalArchivalDownloadSize,
+      jsDatasetVersionSummaries
     )
 
     expect(expectedDatasetWithPublicationDate).to.deep.equal(actual)
@@ -646,11 +962,139 @@ describe('JS Dataset Mapper', () => {
       jsDatasetLocks,
       jsDatasetFilesTotalOriginalDownloadSize,
       jsDatasetFilesTotalArchivalDownloadSize,
+      jsDatasetVersionSummaries,
       undefined,
       undefined,
       latestPublishedVersionMajorNumber,
       latestPublishedVersionMinorNumber
     )
     expect(expectedDatasetWithNextVersionNumbers).to.deep.equal(actual)
+  })
+  it('maps jsDataset model to the domain Dataset model when datasetVersionDiff is provided', () => {
+    const latestPublishedVersionMajorNumber = 1
+    const latestPublishedVersionMinorNumber = 2
+    const jsDatasetWithPublicationDate = {
+      ...jsDataset,
+      publicationDate: '2023-02-12'
+    }
+    const actual = JSDatasetMapper.toDataset(
+      jsDatasetWithPublicationDate,
+      citation,
+      datasetSummaryFields,
+      jsDatasetPermissions,
+      jsDatasetLocks,
+      jsDatasetFilesTotalOriginalDownloadSize,
+      jsDatasetFilesTotalArchivalDownloadSize,
+      jsDatasetVersionSummaries,
+      undefined,
+      undefined,
+      latestPublishedVersionMajorNumber,
+      latestPublishedVersionMinorNumber,
+      jsDatasetVersionDiff
+    )
+    const expectedDatasetWithRequiredVersionUpdate = {
+      ...expectedDatasetWithNextVersionNumbers,
+      requiresMajorVersionUpdate: true
+    }
+    expect(expectedDatasetWithRequiredVersionUpdate).to.deep.equal(actual)
+  })
+  it('maps jsDatasetVersionDiff model to the domain DatasetVersionDiff model', () => {
+    const expectedDatasetVersionDiff = {
+      oldVersion: {
+        versionNumber: '1.0',
+        lastUpdatedDate: '2023-05-15T08:21:03Z'
+      },
+      newVersion: {
+        versionNumber: '2.0',
+        lastUpdatedDate: '2023-06-15T08:21:03Z'
+      },
+      metadataChanges: [
+        {
+          blockName: 'citation',
+          changed: [
+            {
+              fieldName: 'title',
+              oldValue: 'Old Title',
+              newValue: 'New Title'
+            }
+          ]
+        }
+      ],
+      filesAdded: [
+        {
+          fileName: 'file2.txt',
+          MD5: 'd41d8cd98f00b204e9800998ecf8427e',
+          type: 'text/plain',
+          fileId: 2,
+          filePath: '/path/to/file2.txt',
+          description: 'New file',
+          isRestricted: false,
+          tags: ['tag2'],
+          categories: ['category2']
+        }
+      ],
+      filesRemoved: [
+        {
+          fileName: 'file1.txt',
+          MD5: 'd41d8cd98f00b204e9800998ecf8427e',
+          type: 'text/plain',
+          fileId: 1,
+          filePath: '/path/to/file1.txt',
+          description: 'Test file',
+          isRestricted: false,
+          tags: ['tag1'],
+          categories: ['category1']
+        }
+      ],
+      fileChanges: [
+        {
+          fileName: 'file1.txt',
+          md5: 'd41d8cd98f00b204e9800998ecf8427e',
+          fileId: 1,
+          changed: [
+            {
+              fieldName: 'description',
+              oldValue: 'Old description',
+              newValue: 'New description'
+            }
+          ]
+        }
+      ],
+      filesReplaced: [
+        {
+          oldFile: {
+            fileName: 'file1.txt',
+            MD5: 'd41d8cd98f00b204e9800998ecf8427e',
+            type: 'text/plain',
+            fileId: 1,
+            filePath: '/path/to/file1.txt',
+            description: 'Test file',
+            isRestricted: false,
+            tags: ['tag1'],
+            categories: ['category1']
+          },
+          newFile: {
+            fileName: 'file2.txt',
+            MD5: 'd41d8cd98f00b204e9800998ecf8427e',
+            type: 'text/plain',
+            fileId: 2,
+            filePath: '/path/to/file2.txt',
+            description: 'New file',
+            isRestricted: false,
+            tags: ['tag2'],
+            categories: ['category2']
+          }
+        }
+      ],
+      termsOfAccess: [
+        {
+          fieldName: 'termsOfAccess',
+          oldValue: 'Old terms',
+          newValue: 'New terms'
+        }
+      ]
+    }
+    const actual = JSDatasetMapper.toDatasetVersionDiff(jsDatasetVersionDiff)
+    expect(expectedDatasetVersionDiff).to.deep.equal(actual)
   })
 })

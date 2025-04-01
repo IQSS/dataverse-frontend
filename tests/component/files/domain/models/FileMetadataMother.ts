@@ -58,8 +58,8 @@ export class FileTypeMother {
 export class FileTabularDataMother {
   static create(props?: Partial<FileTabularData>): FileTabularData {
     return {
-      variablesCount: faker.datatype.number(100),
-      observationsCount: faker.datatype.number(100),
+      variables: faker.datatype.number(100),
+      observations: faker.datatype.number(100),
       unf: `UNF:6:xXw6cIZnwHWvmRdwhYCQZA==`,
       ...props
     }
@@ -143,7 +143,7 @@ export class FileMetadataMother {
       size: FileSizeMother.create(),
       date: {
         type: FakerHelper.fileDateType(),
-        date: FakerHelper.recentDate()
+        date: '2024-02-01'
       },
       downloadCount: FakerHelper.smallNumber(40),
       labels: faker.datatype.boolean() ? FileLabelMother.createMany(3) : [],
@@ -155,8 +155,8 @@ export class FileMetadataMother {
       description: valueOrUndefined<string>(faker.lorem.paragraph()),
       isDeleted: faker.datatype.boolean(),
       downloadUrls: FileDownloadUrlsMother.create(),
-      depositDate: FakerHelper.pastDate(),
-      publicationDate: faker.datatype.boolean() ? FakerHelper.pastDate() : undefined,
+      depositDate: '2020-01-01',
+      publicationDate: faker.datatype.boolean() ? '2020-01-01' : undefined,
       persistentId: faker.datatype.uuid(),
       ...props
     }
@@ -261,9 +261,10 @@ export class FileMetadataMother {
     })
   }
 
-  static createWithDescription(): FileMetadata {
+  static createWithDescription(props?: Partial<FileMetadata>): FileMetadata {
     return this.createDefault({
-      description: FakerHelper.paragraph()
+      description: FakerHelper.paragraph(),
+      ...props
     })
   }
 
@@ -315,7 +316,7 @@ export class FileMetadataMother {
 
   static createWithPublicationDate(props?: Partial<FileMetadata>): FileMetadata {
     return this.createDefault({
-      publicationDate: FakerHelper.pastDate(),
+      publicationDate: '2020-01-01',
       ...props
     })
   }

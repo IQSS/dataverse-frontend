@@ -25,7 +25,7 @@ import { VersionUpdateType } from '../../../../src/dataset/domain/models/Version
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
-
+const rootCollectionAlias = 'root'
 function getCurrentDateInYYYYMMDDFormat() {
   const date = new Date()
   const [year, month, day] = [
@@ -53,6 +53,16 @@ const datasetData = (persistentId: string, versionId: number) => {
       name: 'CC0 1.0',
       uri: 'http://creativecommons.org/publicdomain/zero/1.0',
       iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+    },
+    termsOfUse: {
+      fileAccessRequest: true,
+      termsOfAccess: 'Terms of access',
+      dataAccessPlace: 'Data access place',
+      originalArchive: 'Original archive',
+      availabilityStatus: 'Availability status',
+      contactForAccess: 'Contact for access',
+      sizeOfCollection: 'Size of collection',
+      studyCompletion: 'Study completion'
     },
     metadataBlocks: [
       {
@@ -110,8 +120,18 @@ const datasetData = (persistentId: string, versionId: number) => {
         { semanticMeaning: 'dataset', value: 'Draft' },
         { semanticMeaning: 'warning', value: 'Unpublished' }
       ],
-      someDatasetVersionHasBeenReleased: false
+      someDatasetVersionHasBeenReleased: false,
+      termsOfAccess: undefined
     },
+    versionsSummaries: [
+      {
+        id: versionId,
+        versionNumber: 'DRAFT',
+        publishedOn: '',
+        summary: 'firstDraft',
+        contributors: 'Dataverse Admin'
+      }
+    ],
     permissions: {
       canDownloadFiles: true,
       canUpdateDataset: true,
@@ -168,6 +188,7 @@ describe('Dataset JSDataverse Repository', () => {
         expect(dataset.locks).to.deep.equal(datasetExpected.locks)
         expect(dataset.downloadUrls).to.deep.equal(datasetExpected.downloadUrls)
         expect(dataset.fileDownloadSizes).to.deep.equal(datasetExpected.fileDownloadSizes)
+        expect(dataset.versionsSummaries).to.deep.equal(datasetExpected.versionsSummaries)
       })
   })
 
@@ -376,6 +397,11 @@ describe('Dataset JSDataverse Repository', () => {
 
   it('creates a new dataset from DatasetDTO', async () => {
     const datasetDTO: DatasetDTO = {
+      licence: {
+        name: 'CC0 1.0',
+        uri: 'http://creativecommons.org/publicdomain/zero/1.0',
+        iconUri: 'https://licensebuttons.net/p/zero/1.0/88x31.png'
+      },
       metadataBlocks: [
         {
           name: MetadataBlockName.CITATION,
@@ -403,7 +429,7 @@ describe('Dataset JSDataverse Repository', () => {
       ]
     }
 
-    await datasetRepository.create(datasetDTO).then((response) => {
+    await datasetRepository.create(datasetDTO, rootCollectionAlias).then((response) => {
       expect(response.persistentId).to.exist
     })
   })

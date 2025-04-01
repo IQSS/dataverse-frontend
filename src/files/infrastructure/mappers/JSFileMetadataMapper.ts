@@ -34,7 +34,7 @@ export class JSFileMetadataMapper {
       this.toFileLabels(jsFile.categories, jsFile.tabularTags),
       this.toFileIsDeleted(jsFile.deleted),
       this.toFileOriginalFileDownloadUrl(jsFile.id),
-      jsFile.creationDate ?? new Date(),
+      jsFile.creationDate,
       jsFile.publicationDate,
       this.toFileThumbnail(thumbnail),
       this.toFileDirectory(jsFile.directoryLabel),
@@ -55,8 +55,8 @@ export class JSFileMetadataMapper {
   }
 
   static toFileDate(
-    jsFileCreationDate?: Date,
-    jsFilePublicationDate?: Date,
+    jsFileCreationDate?: string,
+    jsFilePublicationDate?: string,
     jsFileEmbargo?: JSFileEmbargo
   ): FileDate {
     if (jsFilePublicationDate) {
@@ -65,6 +65,7 @@ export class JSFileMetadataMapper {
       }
       return { type: FileDateType.PUBLISHED, date: jsFilePublicationDate }
     }
+
     if (jsFileCreationDate) {
       return { type: FileDateType.DEPOSITED, date: jsFileCreationDate }
     }
@@ -123,8 +124,8 @@ export class JSFileMetadataMapper {
 
   static toFileTabularData(jsTabularData: JSFileTabularData[]): FileTabularData {
     return {
-      variablesCount: jsTabularData[0].varQuantity ?? 0,
-      observationsCount: jsTabularData[0].caseQuantity ?? 0,
+      variables: jsTabularData[0].varQuantity ?? 0,
+      observations: jsTabularData[0].caseQuantity ?? 0,
       unf: jsTabularData[0].UNF
     }
   }

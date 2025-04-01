@@ -15,6 +15,8 @@ import { FileMetadata } from './file-metadata/FileMetadata'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { AccessFileMenu } from './file-action-buttons/access-file-menu/AccessFileMenu'
 import { DatasetPublishingStatus } from '../../dataset/domain/models/Dataset'
+import { EditFileMenu } from './file-action-buttons/edit-file-menu/EditFileMenu'
+import { DraftAlert } from './draft-alert/DraftAlert'
 
 interface FileProps {
   repository: FileRepository
@@ -42,6 +44,10 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
         <>
           <BreadcrumbsGenerator hierarchy={file.hierarchy} />
           <article>
+            <DraftAlert
+              datasetPersistentId={file.datasetPersistentId}
+              datasetVersion={file.datasetVersion}
+            />
             <header className={styles.header}>
               <h1>{file.name}</h1>
               <p className={styles.subtext}>
@@ -83,6 +89,21 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                         DatasetPublishingStatus.DEACCESSIONED
                       }
                     />
+                    {file.permissions.canEditOwnerDataset && (
+                      <EditFileMenu
+                        fileId={file.id}
+                        fileRepository={repository}
+                        isRestricted={file.access.restricted}
+                        datasetInfo={{
+                          persistentId: file.datasetPersistentId,
+                          releasedVersionExists:
+                            file.datasetVersion.someDatasetVersionHasBeenReleased,
+                          versionNumber: file.datasetVersion.number.toSearchParam(),
+                          termsOfAccessForRestrictedFiles:
+                            file.datasetVersion.termsOfAccess?.termsOfAccessForRestrictedFiles
+                        }}
+                      />
+                    )}
                   </ButtonGroup>
                 </Col>
               </Row>

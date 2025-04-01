@@ -1,0 +1,52 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/typography.module';
+
+/*
+  Here are declared the classes that will overwrite certain SweetAlert2 modal styles.
+  The classes declared here are defined in the SwalModal component that takes the Swal component from the library and adds some defaults to it.
+  So we have a SweetAlert2 component with the styles that we want in the whole app.
+*/
+
+.swal-popup-custom {
+  width: clamp(300px, 80%, 700px);
+  padding-bottom: 0;
+}
+
+.swal-title-custom {
+  padding: 1rem;
+  color: $dv-text-color;
+  font-weight: 500;
+  font-size: 1.5rem;
+  text-align: left;
+  border-bottom: solid 1px $dv-border-color;
+}
+
+.swal-html-container-custom {
+  padding: 1rem;
+  color: $dv-text-color;
+  font-size: $dv-font-size;
+  text-align: left;
+}
+
+.swal-actions-custom {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin: 0;
+  padding: 12px;
+  border-top: solid 1px $dv-border-color;
+}
+
+.swal-button-custom {
+  &.confirm {
+    order: 3;
+  }
+
+  &.cancel {
+    order: 2;
+  }
+
+  &.deny {
+    order: 1;
+  }
+}

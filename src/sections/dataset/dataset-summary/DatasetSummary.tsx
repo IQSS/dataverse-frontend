@@ -1,18 +1,20 @@
 import { SummaryFields } from './SummaryFields'
 import { DatasetLicense, DatasetMetadataBlock } from '../../../dataset/domain/models/Dataset'
-import { License } from './License'
+import { SummaryLicense } from './SummaryLicense'
 import { MetadataBlockInfoRepository } from '../../../metadata-block-info/domain/repositories/MetadataBlockInfoRepository'
 
 interface DatasetSummaryProps {
   summaryFields: DatasetMetadataBlock[]
-  license: DatasetLicense
+  license?: DatasetLicense
   metadataBlockInfoRepository: MetadataBlockInfoRepository
+  onCustomTermsClick: () => void
 }
 
 export function DatasetSummary({
   summaryFields,
   license,
-  metadataBlockInfoRepository
+  metadataBlockInfoRepository,
+  onCustomTermsClick
 }: DatasetSummaryProps) {
   return (
     <>
@@ -20,7 +22,7 @@ export function DatasetSummary({
         summaryFields={summaryFields}
         metadataBlockInfoRepository={metadataBlockInfoRepository}
       />
-      <License license={license} />
+      <SummaryLicense license={license} onCustomTermsClick={onCustomTermsClick} />
     </>
   )
 }

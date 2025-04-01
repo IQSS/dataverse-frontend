@@ -48,4 +48,20 @@ export class FileMockLoadingRepository extends FileMockRepository implements Fil
       }, FakerHelper.loadingTimout())
     })
   }
+
+  delete(_fileId: number | string): Promise<void> {
+    return new Promise(() => {
+      setTimeout(() => {
+        // Do nothing
+      }, FakerHelper.loadingTimout())
+    })
+  }
+
+  restrict(_fileId: number | string, _restrict: boolean): Promise<void> {
+    return new Promise(() => {
+      setTimeout(() => {
+        // Do nothing
+      }, FakerHelper.loadingTimout())
+    })
+  }
 }

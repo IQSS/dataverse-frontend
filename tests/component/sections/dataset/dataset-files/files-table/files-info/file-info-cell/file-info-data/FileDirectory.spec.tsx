@@ -4,7 +4,7 @@ describe('FileDirectory', () => {
   it('renders nothing when directory is undefined', () => {
     cy.customMount(<FileDirectory directory={undefined} />)
 
-    cy.get('.directory-container').should('not.exist')
+    cy.findByTestId('directory-container').should('not.exist')
   })
 
   it('renders the directory when directory is provided', () => {

@@ -47,6 +47,7 @@
     max-width: 64px;
     height: 48px;
     max-height: 48px;
+    object-fit: contain;
     vertical-align: top;
   }
 
@@ -109,4 +110,8 @@
     overflow: hidden;
     color: black;
   }
+}
+
+.restricted-icon {
+  margin: -5px -5px 0 0;
 }

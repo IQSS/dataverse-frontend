@@ -1,3 +1,4 @@
+import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import { DatasetRepository } from '../../../../../src/dataset/domain/repositories/DatasetRepository'
 import { FileSizeUnit } from '../../../../../src/files/domain/models/FileMetadata'
 import { DatasetActionButtons } from '../../../../../src/sections/dataset/dataset-action-buttons/DatasetActionButtons'
@@ -7,8 +8,11 @@ import {
   DatasetPermissionsMother,
   DatasetVersionMother
 } from '../../../dataset/domain/models/DatasetMother'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 
 const datasetRepository: DatasetRepository = {} as DatasetRepository
+const collectionRepository: CollectionRepository = {} as CollectionRepository
+const contactRepository: ContactRepository = {} as ContactRepository
 
 describe('DatasetActionButtons', () => {
   it('renders the DatasetActionButtons with the Publish button', () => {
@@ -21,7 +25,12 @@ describe('DatasetActionButtons', () => {
     })
 
     cy.mountAuthenticated(
-      <DatasetActionButtons dataset={dataset} datasetRepository={datasetRepository} />
+      <DatasetActionButtons
+        dataset={dataset}
+        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
+      />
     )
 
     cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
@@ -29,6 +38,8 @@ describe('DatasetActionButtons', () => {
     cy.findByRole('button', { name: 'Publish Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Link Dataset' }).should('exist')
+    cy.findByRole('button', { name: 'Contact Owner' }).should('exist')
+    cy.findByRole('button', { name: 'Share' }).should('exist')
   })
 
   it('renders the DatasetActionButtons with the Submit for Review button', () => {
@@ -45,7 +56,12 @@ describe('DatasetActionButtons', () => {
     })
 
     cy.mountAuthenticated(
-      <DatasetActionButtons dataset={dataset} datasetRepository={datasetRepository} />
+      <DatasetActionButtons
+        dataset={dataset}
+        datasetRepository={datasetRepository}
+        collectionRepository={collectionRepository}
+        contactRepository={contactRepository}
+      />
     )
 
     cy.findByRole('group', { name: 'Dataset Action Buttons' }).should('exist')
@@ -53,5 +69,7 @@ describe('DatasetActionButtons', () => {
     cy.findByRole('button', { name: 'Submit for Review' }).should('exist')
     cy.findByRole('button', { name: 'Edit Dataset' }).should('exist')
     cy.findByRole('button', { name: 'Link Dataset' }).should('exist')
+    cy.findByRole('button', { name: 'Contact Owner' }).should('exist')
+    cy.findByRole('button', { name: 'Share' }).should('exist')
   })
 })

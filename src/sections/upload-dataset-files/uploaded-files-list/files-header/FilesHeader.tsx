@@ -75,6 +75,7 @@ export function FilesHeader({
           label={''}
           aria-label={t('filesHeader.selectAll')}
           id={'select-all'}
+          data-testid="select-all-files-checkbox"
           checked={selectAllChecked}
           onChange={all}
         />
@@ -96,16 +97,26 @@ export function FilesHeader({
           icon={<PencilFill className={styles.icon_pencil} />}
           id={'edit-files'}
           title={t('filesHeader.editFiles')}>
-          <DropdownButtonItem onClick={showAddTagsModal} title={t('filesHeader.addTagsToSelected')}>
+          <DropdownButtonItem
+            data-testid="add-tags-selected"
+            onClick={showAddTagsModal}
+            title={t('filesHeader.addTagsToSelected')}>
             {t('filesHeader.addTags')}
           </DropdownButtonItem>
-          <DropdownButtonItem onClick={() => updateRestriction(true)}>
+          <DropdownButtonItem
+            data-testid="restrict-selected"
+            onClick={() => updateRestriction(true)}>
             {t('filesHeader.restrict')}
           </DropdownButtonItem>
-          <DropdownButtonItem onClick={() => updateRestriction(false)}>
+          <DropdownButtonItem
+            data-testid="unrestrict-selected"
+            onClick={() => updateRestriction(false)}>
             {t('filesHeader.unrestrict')}
           </DropdownButtonItem>
-          <DropdownButtonItem onClick={deleteSelected} title={t('filesHeader.deleteSelected')}>
+          <DropdownButtonItem
+            data-testid="delete-selected"
+            onClick={deleteSelected}
+            title={t('filesHeader.deleteSelected')}>
             {t('delete')}
           </DropdownButtonItem>
         </DropdownButton>

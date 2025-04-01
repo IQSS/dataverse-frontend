@@ -1,4 +1,5 @@
-import { PropsWithChildren, useCallback, useEffect, useState } from 'react'
+import { PropsWithChildren, useEffect, useState, useCallback } from 'react'
+import { useDeepCompareCallback } from 'use-deep-compare'
 import { DatasetContext } from './DatasetContext'
 import { DatasetRepository } from '../../dataset/domain/repositories/DatasetRepository'
 import { Dataset } from '../../dataset/domain/models/Dataset'
@@ -14,6 +15,7 @@ interface DatasetProviderProps {
   }
   isPublishing?: boolean
 }
+
 export function DatasetProvider({
   repository,
   searchParams,
@@ -23,9 +25,15 @@ export function DatasetProvider({
   const [dataset, setDataset] = useState<Dataset>()
   const [isLoading, setIsLoading] = useState(true)
 
-  const getDataset = useCallback(() => {
+  const getDataset = useDeepCompareCallback(() => {
     if (searchParams.persistentId) {
-      return getDatasetByPersistentId(repository, searchParams.persistentId, searchParams.version)
+      return getDatasetByPersistentId(
+        repository,
+        searchParams.persistentId,
+        searchParams.version,
+        undefined,
+        true
+      )
     }
     if (searchParams.privateUrlToken) {
       return getDatasetByPrivateUrlToken(repository, searchParams.privateUrlToken)
@@ -33,7 +41,7 @@ export function DatasetProvider({
     return Promise.resolve(undefined)
   }, [repository, searchParams])
 
-  useEffect(() => {
+  const fetchDataset = useCallback(() => {
     if (isPublishing) return
     setIsLoading(true)
 
@@ -46,9 +54,15 @@ export function DatasetProvider({
         console.error('There was an error getting the dataset', error)
         setIsLoading(false)
       })
-  }, [repository, searchParams, getDataset, isPublishing])
+  }, [getDataset, isPublishing])
+
+  useEffect(() => {
+    fetchDataset()
+  }, [fetchDataset])
 
   return (
-    <DatasetContext.Provider value={{ dataset, isLoading }}>{children}</DatasetContext.Provider>
+    <DatasetContext.Provider value={{ dataset, isLoading, refreshDataset: fetchDataset }}>
+      {children}
+    </DatasetContext.Provider>
   )
 }

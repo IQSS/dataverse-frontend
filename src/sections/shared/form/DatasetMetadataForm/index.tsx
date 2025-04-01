@@ -17,6 +17,7 @@ type DatasetMetadataFormProps =
       datasetPersistentID?: never
       metadataBlockInfoRepository: MetadataBlockInfoRepository
       datasetMetadaBlocksCurrentValues?: never
+      datasetInternalVersionNumber?: never
     }
   | {
       mode: 'edit'
@@ -25,6 +26,7 @@ type DatasetMetadataFormProps =
       datasetPersistentID: string
       metadataBlockInfoRepository: MetadataBlockInfoRepository
       datasetMetadaBlocksCurrentValues: DatasetMetadataBlocks
+      datasetInternalVersionNumber: number
     }
 
 export type DatasetMetadataFormMode = 'create' | 'edit'
@@ -35,7 +37,8 @@ export const DatasetMetadataForm = ({
   datasetRepository,
   datasetPersistentID,
   metadataBlockInfoRepository,
-  datasetMetadaBlocksCurrentValues
+  datasetMetadaBlocksCurrentValues,
+  datasetInternalVersionNumber
 }: DatasetMetadataFormProps) => {
   const { setIsLoading } = useLoading()
   const onEditMode = mode === 'edit'
@@ -112,6 +115,7 @@ export const DatasetMetadataForm = ({
       errorLoadingMetadataBlocksInfo={errorLoadingMetadataBlocksInfo}
       datasetRepository={datasetRepository}
       datasetPersistentID={datasetPersistentID}
+      datasetInternalVersionNumber={datasetInternalVersionNumber}
     />
   )
 }

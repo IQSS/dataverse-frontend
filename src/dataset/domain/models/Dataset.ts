@@ -1,6 +1,7 @@
 import { Alert, AlertMessageKey } from '../../../alert/domain/models/Alert'
 import { UpwardHierarchyNode } from '../../../shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { FileDownloadSize } from '../../../files/domain/models/FileMetadata'
+import { DatasetVersionSummaryInfo } from '@/dataset/domain/models/DatasetVersionSummaryInfo'
 
 export enum DatasetLabelSemanticMeaning {
   DATASET = 'dataset',
@@ -246,12 +247,12 @@ export class DatasetVersion {
     public readonly isLatest: boolean,
     public readonly isInReview: boolean,
     public readonly latestVersionPublishingStatus: DatasetPublishingStatus,
-    public readonly someDatasetVersionHasBeenReleased: boolean
+    public readonly someDatasetVersionHasBeenReleased: boolean,
+    public readonly termsOfAccess?: TermsOfAccess
   ) {}
 
   static Builder = class {
     public readonly labels: DatasetLabel[] = []
-
     constructor(
       public readonly id: number,
       public readonly title: string,
@@ -261,7 +262,8 @@ export class DatasetVersion {
       public readonly isLatest: boolean,
       public readonly isInReview: boolean,
       public readonly latestVersionPublishingStatus: DatasetPublishingStatus,
-      public readonly someDatasetVersionHasBeenReleased: boolean
+      public readonly someDatasetVersionHasBeenReleased: boolean,
+      public readonly termsOfAccess?: TermsOfAccess
     ) {
       this.createLabels()
     }
@@ -327,7 +329,8 @@ export class DatasetVersion {
         this.isLatest,
         this.isInReview,
         this.latestVersionPublishingStatus,
-        this.someDatasetVersionHasBeenReleased
+        this.someDatasetVersionHasBeenReleased,
+        this.termsOfAccess
       )
     }
   }
@@ -368,13 +371,40 @@ export interface DatasetDownloadUrls {
   archival: string
 }
 
+export interface TermsOfAccess {
+  fileAccessRequest: boolean
+  termsOfAccessForRestrictedFiles?: string
+  dataAccessPlace?: string
+  originalArchive?: string
+  availabilityStatus?: string
+  contactForAccess?: string
+  sizeOfCollection?: string
+  studyCompletion?: string
+}
+
+export interface CustomTerms {
+  termsOfUse: string
+  confidentialityDeclaration?: string
+  specialPermissions?: string
+  restrictions?: string
+  citationRequirements?: string
+  depositorRequirements?: string
+  conditions?: string
+  disclaimer?: string
+}
+export interface DatasetTermsOfUse {
+  termsOfAccess: TermsOfAccess
+  customTerms?: CustomTerms
+}
+
 export class Dataset {
   constructor(
     public readonly persistentId: string,
     public readonly version: DatasetVersion,
+    public readonly internalVersionNumber: number,
     public readonly alerts: Alert[],
     public readonly summaryFields: DatasetMetadataBlock[],
-    public readonly license: DatasetLicense,
+    public readonly termsOfUse: DatasetTermsOfUse,
     public readonly metadataBlocks: DatasetMetadataBlocks,
     public readonly permissions: DatasetPermissions,
     public readonly locks: DatasetLock[],
@@ -384,12 +414,15 @@ export class Dataset {
     public readonly downloadUrls: DatasetDownloadUrls,
     public readonly fileDownloadSizes: FileDownloadSize[],
     public readonly hierarchy: UpwardHierarchyNode,
+    public readonly license?: DatasetLicense,
     public readonly thumbnail?: string,
     public readonly privateUrl?: PrivateUrl, // will be set if the user requested a version that did not exist
     public readonly requestedVersion?: string,
     public readonly publicationDate?: string,
     public readonly nextMajorVersion?: string,
-    public readonly nextMinorVersion?: string
+    public readonly nextMinorVersion?: string,
+    public readonly requiresMajorVersionUpdate?: boolean,
+    public readonly versionsSummaries?: DatasetVersionSummaryInfo[]
   ) {}
 
   public checkIsLockedFromPublishing(userPersistentId: string): boolean {
@@ -464,8 +497,9 @@ export class Dataset {
     constructor(
       public readonly persistentId: string,
       public readonly version: DatasetVersion,
+      public readonly internalVersionNumber: number,
       public readonly summaryFields: DatasetMetadataBlock[],
-      public readonly license: DatasetLicense = defaultLicense,
+      public readonly termsOfUse: DatasetTermsOfUse,
       public readonly metadataBlocks: DatasetMetadataBlocks,
       public readonly permissions: DatasetPermissions,
       public readonly locks: DatasetLock[],
@@ -475,12 +509,15 @@ export class Dataset {
       public readonly downloadUrls: DatasetDownloadUrls,
       public readonly fileDownloadSizes: FileDownloadSize[],
       public readonly hierarchy: UpwardHierarchyNode,
+      public readonly license?: DatasetLicense,
       public readonly thumbnail?: string,
       public readonly privateUrl?: PrivateUrl, // will be set if the user requested a version that did not exist
 
       public readonly requestedVersion?: string,
       public readonly nextMajorVersionNumber?: string,
-      public readonly nextMinorVersionNumber?: string
+      public readonly nextMinorVersionNumber?: string,
+      public readonly requiresMajorVersionUpdate?: boolean,
+      public readonly versionsSummaries?: DatasetVersionSummaryInfo[]
     ) {
       this.withAlerts()
     }
@@ -530,9 +567,10 @@ export class Dataset {
       return new Dataset(
         this.persistentId,
         this.version,
+        this.internalVersionNumber,
         this.alerts,
         this.summaryFields,
-        this.license,
+        this.termsOfUse,
         this.metadataBlocks,
         this.permissions,
         this.locks,
@@ -542,12 +580,15 @@ export class Dataset {
         this.downloadUrls,
         this.fileDownloadSizes,
         this.hierarchy,
+        this.license,
         this.thumbnail,
         this.privateUrl,
         this.requestedVersion,
         undefined,
         this.nextMajorVersionNumber,
-        this.nextMinorVersionNumber
+        this.nextMinorVersionNumber,
+        this.requiresMajorVersionUpdate,
+        this.versionsSummaries
       )
     }
   }

@@ -4,8 +4,8 @@ import styles from '../../../../../../../../../src/sections/dataset/dataset-file
 describe('FileTabularData', () => {
   it('renders the tabular data and CopyToClipboardButton when tabularData is provided', () => {
     const tabularData = {
-      variablesCount: 10,
-      observationsCount: 100,
+      variables: 10,
+      observations: 100,
       unf: 'UNF:6:xXw6cIZnwHWvmRdwhYCQZA=='
     }
     cy.customMount(<FileTabularData tabularData={tabularData} />)

@@ -2,8 +2,20 @@
   "asterisksIndicateRequiredFields": "Asterisks indicate required fields",
   "remove": "Remove",
   "add": "Add",
+  "yes": "Yes",
+  "no": "No",
   "cancel": "Cancel",
+  "close": "Close",
   "continue": "Continue",
+  "more": "More...",
+  "less": "Less...",
+  "share": "Share",
+  "delete": "Delete",
+  "saveChanges": "Save Changes",
+  "search": "Search",
+  "clearSearch": "Clear Search",
+  "submitSearch": "Submit Search",
+  "dragHandleLabel": "press space to select and keys to drag",
   "pageNumberNotFound": {
     "heading": "Page Number Not Found",
     "message": "The page number you requested does not exist. Please try a different page number."
@@ -56,10 +68,195 @@
       "submitting": "Form Submitting",
       "submissionSuccess": "Form submission successful"
     },
-    "saveButton": {
-      "createMode": "Save Dataset",
-      "editMode": "Save Changes"
+    "saveDataset": "Save Dataset"
+  },
+  "collectionForm": {
+    "fields": {
+      "hostCollection": {
+        "label": "Host Collection",
+        "description": "The collection which contains this data.",
+        "required": "Host Collection is required"
+      },
+      "name": {
+        "label": "Collection Name",
+        "description": "The project, department, university, professor, or journal this collection will contain data for.",
+        "required": "Collection Name is required",
+        "invalid": {
+          "maxLength": "Collection Name must be at most {{maxLength}} characters."
+        }
+      },
+      "affiliation": {
+        "label": "Affiliation",
+        "description": "The organization with which this collection is affiliated.",
+        "invalid": {
+          "maxLength": "Affiliation must be at most {{maxLength}} characters."
+        }
+      },
+      "alias": {
+        "label": "Identifier",
+        "description": "Short name used for the URL of this collection.",
+        "required": "Identifier is required",
+        "invalid": {
+          "format": "Identifier is not valid. Valid characters are a-Z, 0-9, '_', and '-'.",
+          "maxLength": "Identifier must be at most {{maxLength}} characters."
+        },
+        "suggestion": "Psst... try this"
+      },
+      "storage": {
+        "label": "Storage",
+        "description": "A storage service to be used for datasets in this collection."
+      },
+      "type": {
+        "label": "Category",
+        "description": "The type that most closely reflects this collection.",
+        "required": "Category is required"
+      },
+      "description": {
+        "label": "Description",
+        "description": "A summary describing the purpose, nature or scope of this collection.",
+        "subLabel": "This field supports only certain <htmlTooltip>HTML tags</htmlTooltip>.",
+        "htmlAllowedTags": "<a>, <b>, <blockquote>, <br>, <code>, <del>, <dd>, <dl>, <dt>, <em>, <hr>, <h1>-<h3>, <i>, <img>, <kbd>, <li>, <ol>, <p>, <pre>, <s>, <sup>, <sub>, <strong>, <strike>, <u>, <ul>"
+      },
+      "contacts": {
+        "label": "Email",
+        "description": "The email address(es) of the contact(s) for the collection.",
+        "required": "Email is required",
+        "invalid": "Email is not a valid email"
+      },
+      "metadataFields": {
+        "sectionLabel": "Metadata Fields",
+        "helperText": "Choose the metadata fields to use in dataset templates and when adding a dataset to this collection.",
+        "useMetadataFieldsFrom": "Use metadata fields from",
+        "inputLevelsTable": {
+          "hideTableAriaLabel": "Hide input levels table",
+          "requiredByDataverse": "Required by Dataverse",
+          "hidden": "Hidden",
+          "optional": "Optional",
+          "required": "Required",
+          "conditionallyRequired": "Conditionally Required"
+        }
+      },
+      "browseSearchFacets": {
+        "label": "Browse/Search Facets",
+        "helperText": "Choose and order the metadata fields to use as facets when browsing this collection.",
+        "useBrowseSearchFacetsFrom": "Use browse/search facets from",
+        "selectedFacets": "Selected",
+        "invalid": {
+          "minLength": "At least one facet must be selected."
+        }
+      }
     },
-    "cancelButton": "Cancel"
+    "confirmResetModal": {
+      "title": "Reset Modifications",
+      "warning": "Are you sure you want to reset the selected metadata fields? If you do this, any customizations (hidden, required, optional) you have done will no longer appear.",
+      "continue": "Continue",
+      "cancel": "Cancel"
+    },
+    "submitStatus": {
+      "createSuccess": "Collection created successfully.",
+      "editSuccess": "Collection updated successfully."
+    },
+    "createCollection": "Create Collection"
+  },
+  "fileUploader": {
+    "supportedFiles": "All file types are supported for upload and download in their original format. If you are uploading Excel, CSV, TSV, RData, Stata, or SPSS files, <anchor>see the guides</anchor> for tabular support and limitations.",
+    "accordionTitle": "Upload with HTTP via your browser",
+    "selectFileSingle": "Select file to add",
+    "selectFileMultiple": "Select files to add",
+    "dragDropSingle": "Drag and drop file here.",
+    "dragDropMultiple": "Drag and drop files and/or directories here.",
+    "cancelUpload": "Cancel upload",
+    "uploadFailed": "There was an error uploading this file.",
+    "loadingConfiguration": "Loading configuration",
+    "replaceFileMultipleError": "You can only drop one file to replace.",
+    "replaceFileAlreadyOneFileError": "You already have a file to replace. Please remove it first.",
+    "fileReplacedSuccessfully": "The file has been replaced successfully.",
+    "defaultFileReplaceError": "Something went wrong replacing the file. Try again later.",
+    "defaultAddUploadedFilesToDatasetError": "Something went wrong adding the uploaded files to the dataset. Try again later.",
+    "filesAddedToDatasetSuccessfully": "Files added to dataset successfully.",
+    "fileUploadSkipped": {
+      "dsStore": "File upload skipped: .DS_Store files are not allowed.",
+      "alreadyUploaded": "File {{fileName}} was skipped because it has already been uploaded."
+    },
+    "fileTypeDifferentModal": {
+      "title": "File Type Different",
+      "message": "The original file ({{originalFileType}}) and replacement file ({{replacementFileType}}) are different file types. Would you like to continue?"
+    },
+    "confirmLeaveModal": {
+      "title": "Discard Uploaded Files?",
+      "message": "Uploaded files haven’t been saved. If you leave now, they’ll be lost.",
+      "stay": "Stay on this page",
+      "leave": "Leave without saving"
+    },
+    "uploadedFilesList": {
+      "fields": {
+        "fileName": {
+          "label": "File Name",
+          "required": "File Name is required",
+          "invalid": {
+            "maxLength": "File Name must be at most {{maxLength}} characters.",
+            "characters": "The file name contains invalid characters. The following characters are not allowed: : < > ; # / \" * | ? \\",
+            "duplicateCombination": "File Name, File Path or combination of File path + File name should be unique. There is already a combination with the same value."
+          }
+        },
+        "filePath": {
+          "label": "File Path",
+          "description": "Hierarchical directory structure path used to display file organization and support reproducibility.",
+          "invalid": {
+            "maxLength": "File Path must be at most {{maxLength}} characters.",
+            "characters": "The file path contains invalid characters. Only letters, numbers, spaces, dashes, periods, backslashes, and forward slashes are allowed.",
+            "duplicateCombination": "File Name, File Path or combination of File path + File name should be unique. There is already a combination with the same value."
+          }
+        },
+        "description": {
+          "label": "Description",
+          "invalid": {
+            "maxLength": "Description must be at most {{maxLength}} characters."
+          }
+        }
+      },
+      "removeFile": "Remove File",
+      "editSelectedFiles": "Edit Selected Files",
+      "removeSelectedFiles": "Remove Selected Files",
+      "uploadedFile": "File uploaded",
+      "uploadedFiles": "Files uploaded",
+      "selectAllFiles": "Select all files",
+      "deselectAllFiles": "Deselect all files"
+    }
+  },
+  "contact": {
+    "message": "Message",
+    "subject": "Subject",
+    "title": {
+      "collection": "Contact",
+      "dataset": "Contact Owner"
+    },
+    "contactCollection": "Email Collection Contact",
+    "contactDataset": "Email Dataset Contact",
+    "helpText": "Email the contact for this collection.",
+    "verificationText": "Please fill this out to prove you are not a robot.",
+    "contactSuccess": "Message sent.",
+    "validation": {
+      "captchaInput": {
+        "required": "Validation is required.",
+        "invalid": "Incorrect answer.",
+        "onlyNumber": "Only numbers are allowed.",
+        "maxLength": "Answer cannot exceed {{maxLength}} ."
+      },
+      "email": {
+        "invalid": "Invalid email format.",
+        "required": "Email is required.",
+        "maxLength": "Email cannot exceed {{maxLength}} ."
+      },
+      "subject": {
+        "required": "Subject is required.",
+        "maxLength": "Subject cannot exceed {{maxLength}} ."
+      },
+      "message": {
+        "required": "Message is required.",
+        "maxLength": "Message cannot exceed {{maxLength}} ."
+      }
+    },
+    "defaultFeedbackSubmitError": "An error occurred while submitting your feedback. Please try again later."
   }
 }

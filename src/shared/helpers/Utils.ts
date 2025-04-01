@@ -22,4 +22,6 @@ export class Utils {
       return null
     }
   }
+
+  static sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
 }

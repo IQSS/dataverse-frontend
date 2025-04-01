@@ -15,4 +15,9 @@ export class Validator {
 
     return USERNAME_REGEX.test(input)
   }
+
+  static isValidNumber(input: string): boolean {
+    const NUMBER_REGEX = /^\d+$/
+    return NUMBER_REGEX.test(input)
+  }
 }

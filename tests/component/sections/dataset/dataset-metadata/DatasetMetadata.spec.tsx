@@ -206,7 +206,6 @@ describe('DatasetMetadata', () => {
           const metadataFieldNameTranslated = t[metadataBlock.name].datasetField[metadataFieldName]
             .name as string
           const metadataFieldValueString = metadataFieldValueToDisplayFormat(
-            metadataFieldName,
             metadataFieldValue,
             metadataBlockInfoMock
           )
@@ -323,5 +322,6 @@ describe('DatasetMetadata', () => {
     )
 
     cy.findAllByTestId('ds-metadata-block-display-format-error').should('exist')
+    cy.contains('Error getting metadata block display info').should('not.exist')
   })
 })

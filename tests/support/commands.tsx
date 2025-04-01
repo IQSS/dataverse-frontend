@@ -39,16 +39,17 @@ export {}
 //   }
 // }
 import '@testing-library/cypress/add-commands'
-import { ThemeProvider } from '@iqss/dataverse-design-system'
 import { ReactNode } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import i18next from '../../src/i18n'
-import { Location, MemoryRouter } from 'react-router-dom'
+import { RouteObject, RouterProvider, createMemoryRouter, Location } from 'react-router-dom'
+import { ThemeProvider } from '@iqss/dataverse-design-system'
 import { TestsUtils } from '@tests/e2e-integration/shared/TestsUtils'
 import { Utils } from '@/shared/helpers/Utils'
-import { OIDC_AUTH_CONFIG } from '@/config'
 import { SessionContext } from '@/sections/session/SessionContext'
 import { User } from '@/users/domain/models/User'
+import { OIDC_AUTH_CONFIG } from '@/config'
+import { ToastContainer } from 'react-toastify'
 
 // Define your custom mount function
 
@@ -57,15 +58,37 @@ export type RouterInitialEntry = string | Partial<Location>
 Cypress.Commands.add(
   'customMount',
   (component: ReactNode, initialEntries?: RouterInitialEntry[]) => {
+    const routes: RouteObject[] = [
+      {
+        element: component,
+        path: '/*'
+      }
+    ]
+    const memoryRouter = createMemoryRouter(routes)
+
     return cy.mount(
-      <MemoryRouter initialEntries={initialEntries}>
-        <ThemeProvider>
-          <I18nextProvider i18n={i18next}>{component}</I18nextProvider>
-        </ThemeProvider>
-      </MemoryRouter>
+      <ThemeProvider>
+        <I18nextProvider i18n={i18next}>
+          <RouterProvider router={memoryRouter} />
+        </I18nextProvider>
+        <ToastContainer position="top-right" autoClose={5000} pauseOnHover />
+      </ThemeProvider>
     )
   }
 )
+
+// Cypress.Commands.add(
+//   'customMount',
+//   (component: ReactNode, initialEntries?: RouterInitialEntry[]) => {
+//     return cy.mount(
+//       <MemoryRouter initialEntries={initialEntries}>
+//         <ThemeProvider>
+//           <I18nextProvider i18n={i18next}>{component}</I18nextProvider>
+//         </ThemeProvider>
+//       </MemoryRouter>
+//     )
+//   }
+// )
 
 Cypress.Commands.add(
   'mountAuthenticated',

@@ -3,7 +3,6 @@ import { axiosInstance } from '@/axiosInstance'
 import { FileRepository } from '../domain/repositories/FileRepository'
 import { FileDownloadMode, FileTabularData } from '../domain/models/FileMetadata'
 import { FilesCountInfo } from '../domain/models/FilesCountInfo'
-
 import {
   File as JSFile,
   FileDownloadSizeMode,
@@ -19,7 +18,10 @@ import {
   uploadFile as jsUploadFile,
   addUploadedFilesToDataset,
   UploadedFileDTO,
-  ReadError
+  ReadError,
+  deleteFile,
+  replaceFile,
+  restrictFile
 } from '@iqss/dataverse-client-javascript'
 import { FileCriteria } from '../domain/models/FileCriteria'
 import { DomainFileMapper } from './mappers/DomainFileMapper'
@@ -35,6 +37,7 @@ import { FilePermissions } from '../domain/models/FilePermissions'
 import { JSFilePermissionsMapper } from './mappers/JSFilePermissionsMapper'
 import { FilesWithCount } from '../domain/models/FilesWithCount'
 import { FileHolder } from '../domain/models/FileHolder'
+import { FixityAlgorithm } from '../domain/models/FixityAlgorithm'
 
 const includeDeaccessioned = true
 
@@ -163,7 +166,7 @@ export class FileJSDataverseRepository implements FileRepository {
       .then((jsFilePermissions) => JSFilePermissionsMapper.toFilePermissions(jsFilePermissions))
   }
 
-  private static getDownloadCountById(id: number, publicationDate?: Date): Promise<number> {
+  private static getDownloadCountById(id: number, publicationDate?: string): Promise<number> {
     return publicationDate !== undefined
       ? getFileDownloadCount.execute(id).then((downloadCount) => Number(downloadCount))
       : Promise.resolve(0)
@@ -306,5 +309,38 @@ export class FileJSDataverseRepository implements FileRepository {
 
   addUploadedFiles(datasetId: number | string, uploadedFiles: UploadedFileDTO[]): Promise<void> {
     return addUploadedFilesToDataset.execute(datasetId, uploadedFiles)
+  }
+
+  delete(fileId: number | string): Promise<void> {
+    return deleteFile.execute(fileId)
+  }
+
+  replace(fileId: number | string, uploadedFileDTO: UploadedFileDTO): Promise<number> {
+    return replaceFile
+      .execute(fileId, uploadedFileDTO)
+      .then((newFileIdentifier) => newFileIdentifier)
+  }
+
+  // TODO - Not a priority but could be nice to implement this use case in js-dataverse when having time
+  getFixityAlgorithm(): Promise<FixityAlgorithm> {
+    return fetch(`${BASE_URL}/api/files/fixityAlgorithm`)
+      .then((response) => {
+        if (!response.ok) {
+          console.log('Did not get fixityAlgorithm from Dataverse, using MD5')
+          return { data: { message: FixityAlgorithm.MD5 } }
+        }
+        return response.json()
+      })
+      .then((checksumAlgJson: { data: { message: FixityAlgorithm } }) => {
+        return checksumAlgJson?.data?.message ?? FixityAlgorithm.MD5
+      })
+      .catch((error) => {
+        console.log('Error fetching fixityAlgorithm, using MD5', error)
+        return FixityAlgorithm.MD5
+      })
+  }
+
+  restrict(fileId: number | string, restrict: boolean): Promise<void> {
+    return restrictFile.execute(fileId, restrict)
   }
 }

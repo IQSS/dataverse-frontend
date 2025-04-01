@@ -5,20 +5,68 @@ import { useState } from 'react'
 import { FileSelection } from '../../row-selection/useFileSelection'
 import { NoSelectedFilesModal } from '../no-selected-files-modal/NoSelectedFilesModal'
 import { useNotImplementedModal } from '../../../../../not-implemented/NotImplementedModalContext'
+import { FileRepository } from '@/files/domain/repositories/FileRepository'
+import { DatasetRestrictFileButton } from '@/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/DatasetRestrictFileButton'
+import { DatasetDeleteFileButton } from '@/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/DatasetDeleteFileButton'
 
-interface EditFileOptionsProps {
-  files: FilePreview[]
-  fileSelection: FileSelection
+type EditFilesOptionsProps =
+  | {
+      files: FilePreview[]
+      file?: never
+      fileSelection: FileSelection
+      fileRepository: FileRepository
+      datasetInfo?: never
+      isHeader: true
+    }
+  | {
+      files?: never
+      file: FilePreview
+      fileSelection?: never
+      fileRepository: FileRepository
+      datasetInfo: EditFilesMenuDatasetInfo
+      isHeader: false
+    }
+
+export interface EditFilesMenuDatasetInfo {
+  persistentId: string
+  releasedVersionExists: boolean
+  termsOfAccessForRestrictedFiles?: string
 }
 
 const SELECTED_FILES_EMPTY = 0
-
-export function EditFilesOptions({ files, fileSelection }: EditFileOptionsProps) {
+export function EditFilesOptions({
+  file,
+  files,
+  fileSelection,
+  fileRepository,
+  datasetInfo,
+  isHeader
+}: EditFilesOptionsProps) {
   const { t } = useTranslation('files')
   const [showNoFilesSelectedModal, setShowNoFilesSelectedModal] = useState(false)
   const settingsEmbargoAllowed = false // TODO - Ask Guillermo if this is included in the settings endpoint
   const provenanceEnabledByConfig = false // TODO - Ask Guillermo if this is included in the MVP and from which endpoint is coming from
   const { showModal } = useNotImplementedModal()
+
+  if (!isHeader) {
+    return (
+      <>
+        <DatasetRestrictFileButton
+          fileId={file.id}
+          isRestricted={file.access.restricted}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+        />
+
+        <DatasetDeleteFileButton
+          fileId={file.id}
+          fileRepository={fileRepository}
+          datasetInfo={datasetInfo}
+        />
+      </>
+    )
+  }
+
   const onClick = () => {
     if (Object.keys(fileSelection).length === SELECTED_FILES_EMPTY) {
       setShowNoFilesSelectedModal(true)

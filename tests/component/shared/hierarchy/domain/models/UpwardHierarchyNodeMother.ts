@@ -43,4 +43,13 @@ export class UpwardHierarchyNodeMother {
       isReleased: props?.isReleased ?? true
     })
   }
+
+  static createSubCollection(props?: Partial<UpwardHierarchyNode>): UpwardHierarchyNode {
+    return this.create({
+      ...props,
+      type: DvObjectType.COLLECTION,
+      name: props?.name ?? 'SubCollection',
+      parent: props?.parent ?? this.createCollection()
+    })
+  }
 }

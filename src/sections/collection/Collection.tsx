@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import { Alert, Col, Row } from '@iqss/dataverse-design-system'
+import { Alert, ButtonGroup, Col, Row } from '@iqss/dataverse-design-system'
 import { CollectionRepository } from '../../collection/domain/repositories/CollectionRepository'
 import { useCollection } from './useCollection'
 import { useScrollTop } from '../../shared/hooks/useScrollTop'
-import { useSession } from '../session/SessionContext'
 import { useGetCollectionUserPermissions } from '../../shared/hooks/useGetCollectionUserPermissions'
 import { type UseCollectionQueryParamsReturnType } from './useGetCollectionQueryParams'
+import { useHistoryTracker } from '@/router/HistoryTrackerProvider'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import AddDataActionsButton from '../shared/add-data-actions/AddDataActionsButton'
 import { CollectionItemsPanel } from './collection-items-panel/CollectionItemsPanel'
@@ -15,6 +15,13 @@ import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreatedAlert } from './CreatedAlert'
 import { PublishCollectionButton } from './publish-collection/PublishCollectionButton'
 import { AccountCreatedAlert } from './AccountCreatedAlert'
+import { ShareCollectionButton } from './share-collection-button/ShareCollectionButton'
+import { ContactButton } from '@/sections/shared/contact/ContactButton'
+import { EditCollectionDropdown } from './edit-collection-dropdown/EditCollectionDropdown'
+import { FeaturedItems } from './featured-items/FeaturedItems'
+import { Route } from '../Route.enum'
+import { CollectionHelper } from './CollectionHelper'
+import { ContactRepository } from '@/contact/domain/repositories/ContactRepository'
 import styles from './Collection.module.scss'
 
 interface CollectionProps {
@@ -22,9 +29,11 @@ interface CollectionProps {
   collectionIdFromParams: string | undefined
   created: boolean
   published: boolean
+  edited?: boolean
   collectionQueryParams: UseCollectionQueryParamsReturnType
   accountCreated: boolean
   infiniteScrollEnabled?: boolean
+  contactRepository: ContactRepository
 }
 
 export function Collection({
@@ -32,13 +41,17 @@ export function Collection({
   collectionRepository,
   created,
   published,
-  accountCreated,
-  collectionQueryParams
+  edited,
+  collectionQueryParams,
+  contactRepository,
+  accountCreated
 }: CollectionProps) {
-  useTranslation('collection')
   useScrollTop()
-  const { user } = useSession()
-  const { collection, isLoading } = useCollection(
+  const { t } = useTranslation('collection')
+  const { previousPath } = useHistoryTracker()
+  const previousPathIsHomepage = previousPath === Route.HOME
+
+  const { collection, isLoading: isLoadingCollection } = useCollection(
     collectionRepository,
     collectionIdFromParams,
     published
@@ -47,15 +60,21 @@ export function Collection({
     collectionIdOrAlias: collectionIdFromParams,
     collectionRepository
   })
-
   const canUserAddCollection = Boolean(collectionUserPermissions?.canAddCollection)
+  const canUserEditCollection = Boolean(collectionUserPermissions?.canEditCollection)
   const canUserAddDataset = Boolean(collectionUserPermissions?.canAddDataset)
-  const canUserPublishCollection = user && Boolean(collectionUserPermissions?.canPublishCollection)
+  const canUserPublishCollection = Boolean(collectionUserPermissions?.canPublishCollection)
+  const canUserDeleteCollection = Boolean(collectionUserPermissions?.canDeleteCollection)
 
-  const showAddDataActions = Boolean(user && (canUserAddCollection || canUserAddDataset))
-  const { t } = useTranslation('collection')
+  const showAddDataActions = canUserAddCollection || canUserAddDataset
+  const showPublishButton = !collection?.isReleased && canUserPublishCollection
+  const showEditButton = canUserEditCollection
 
-  if (!isLoading && !collection) {
+  if (isLoadingCollection) {
+    return <CollectionSkeleton />
+  }
+
+  if (!isLoadingCollection && !collection) {
     return <PageNotFound />
   }
 
@@ -70,6 +89,11 @@ export function Collection({
             <CollectionInfo collection={collection} />
 
             {created && <CreatedAlert />}
+            {edited && (
+              <Alert variant="success" dismissible={false}>
+                {t('editedAlert')}
+              </Alert>
+            )}
             {published && (
               <Alert variant="success" dismissible={false}>
                 {t('publishedAlert')}
@@ -77,14 +101,49 @@ export function Collection({
             )}
             {accountCreated && <AccountCreatedAlert />}
 
-            {!collection.isReleased && canUserPublishCollection && (
-              <div className={styles['action-buttons']}>
-                <PublishCollectionButton
-                  repository={collectionRepository}
-                  collectionId={collection.id}
-                />
-              </div>
+            {previousPathIsHomepage &&
+            /* istanbul ignore next */ CollectionHelper.isRootCollection(
+              collection.hierarchy
+            ) ? /* istanbul ignore next */ null : (
+              <FeaturedItems
+                collectionRepository={collectionRepository}
+                collectionId={collection.id}
+                className={styles['featured-items-spacing']}
+                withLoadingSkeleton={false}
+              />
             )}
+
+            <div className={styles['metrics-actions-container']}>
+              <div className={styles.metrics}></div>
+              <div className={styles['right-content']}>
+                <ContactButton
+                  toContactName={collection.name}
+                  contactObjectType="collection"
+                  id={collection.id}
+                  contactRepository={contactRepository}
+                />
+
+                <ShareCollectionButton />
+
+                {(showPublishButton || showEditButton) && (
+                  <ButtonGroup>
+                    {showPublishButton && (
+                      <PublishCollectionButton
+                        repository={collectionRepository}
+                        collectionId={collection.id}
+                      />
+                    )}
+                    {showEditButton && (
+                      <EditCollectionDropdown
+                        collection={collection}
+                        canUserDeleteCollection={canUserDeleteCollection}
+                        collectionRepository={collectionRepository}
+                      />
+                    )}
+                  </ButtonGroup>
+                )}
+              </div>
+            </div>
 
             <CollectionItemsPanel
               key={collection.id}

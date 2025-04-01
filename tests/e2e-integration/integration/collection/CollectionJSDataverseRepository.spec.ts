@@ -7,8 +7,10 @@ import {
   UpwardHierarchyNode
 } from '../../../../src/shared/hierarchy/domain/models/UpwardHierarchyNode'
 import { Collection } from '../../../../src/collection/domain/models/Collection'
+import { CollectionType } from '@/collection/domain/models/CollectionType'
 
 const collectionRepository = new CollectionJSDataverseRepository()
+
 const collectionExpected: Collection = {
   id: 'new-collection',
   name: 'Scientific Research',
@@ -24,8 +26,23 @@ const collectionExpected: Collection = {
     undefined,
     new UpwardHierarchyNode('Root', DvObjectType.COLLECTION, 'root', undefined, undefined, true)
   ),
-  inputLevels: undefined
+  inputLevels: undefined,
+  type: CollectionType.LABORATORY,
+  contacts: [
+    {
+      email: 'pi@example.edu',
+      displayOrder: 0
+    },
+    {
+      email: 'student@example.edu',
+      displayOrder: 1
+    }
+  ],
+  isMetadataBlockRoot: false,
+  isFacetRoot: false,
+  childCount: 0
 }
+
 describe('Collection JSDataverse Repository', () => {
   beforeEach(() => {
     TestsUtils.login().then((token) => {

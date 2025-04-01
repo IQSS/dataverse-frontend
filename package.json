@@ -12,8 +12,12 @@
     ]
   },
   "dependencies": {
+    "@dnd-kit/core": "6.1.0",
+    "@dnd-kit/modifiers": "7.0.0",
+    "@dnd-kit/sortable": "8.0.0",
+    "@dnd-kit/utilities": "3.2.2",
     "@faker-js/faker": "7.6.0",
-    "@iqss/dataverse-client-javascript": "2.0.0-pr224.5f50318",
+    "@iqss/dataverse-client-javascript": "2.0.0-alpha.33",
     "@iqss/dataverse-design-system": "*",
     "@istanbuljs/nyc-config-typescript": "1.0.2",
     "@tanstack/react-table": "8.9.2",
@@ -26,7 +30,7 @@
     "async-mutex": "0.5.0",
     "bootstrap": "5.2.3",
     "classnames": "2.5.1",
-    "dompurify": "3.2.2",
+    "dompurify": "3.2.3",
     "html-react-parser": "3.0.16",
     "i18next": "22.4.9",
     "i18next-browser-languagedetector": "7.0.1",
@@ -35,7 +39,7 @@
     "lodash": "^4.17.21",
     "moment-timezone": "0.5.43",
     "react-bootstrap": "2.7.2",
-    "react-bootstrap-icons": "1.10.3",
+    "react-bootstrap-icons": "1.11.4",
     "react-confetti": "6.1.0",
     "react-hook-form": "7.51.2",
     "react-i18next": "12.1.5",
@@ -44,9 +48,14 @@
     "react-markdown": "8.0.7",
     "react-oauth2-code-pkce": "1.22.1",
     "react-router-dom": "6.23.1",
+    "react-slot-counter": "3.3.0",
+    "react-toastify": "11.0.2",
     "react-topbar-progress-indicator": "4.1.1",
     "sass": "1.58.1",
-    "typescript": "4.9.5",
+    "sweetalert2": "11.17.2",
+    "sweetalert2-react-content": "5.1.0",
+    "turndown": "7.2.0",
+    "typescript": "5.7.2",
     "use-deep-compare": "1.2.1",
     "vite-plugin-istanbul": "4.0.1",
     "web-vitals": "2.1.4"
@@ -55,7 +64,7 @@
     "start": "vite --base=/spa",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "npm run lint:eslint && npm run lint:stylelint && npm run lint:prettier",
+    "lint": "npm run typecheck && npm run lint:eslint && npm run lint:stylelint && npm run lint:prettier",
     "lint:fix": "eslint --fix --ext .ts,.tsx ./src --ignore-path .gitignore . && stylelint --fix **/*.scss && prettier . --write",
     "lint:eslint": "eslint --ignore-path .gitignore .",
     "lint:stylelint": "stylelint **/*.scss ",
@@ -80,9 +89,7 @@
   "pre-commit": [
     "typecheck",
     "lint:fix",
-    "git:add",
-    "test:unit",
-    "test:coverage"
+    "git:add"
   ],
   "eslintConfig": {
     "extends": [

@@ -25,6 +25,8 @@ import {
   COUNTRY_FIELD_VOCAB_VALUES,
   SUBJECT_FIELD_VOCAB_VALUES
 } from '../../../metadata-block-info/domain/models/MetadataBlockInfoMother'
+import { TermsOfUseMother } from '@tests/component/dataset/domain/models/TermsOfUseMother'
+import { DatasetVersionSummaryInfoMother } from '@tests/component/dataset/domain/models/DatasetVersionSummaryInfoMother'
 
 export class DatasetVersionMother {
   static create(props?: Partial<DatasetVersion>): DatasetVersion {
@@ -337,6 +339,7 @@ export class DatasetMother {
     const dataset = {
       persistentId: faker.datatype.uuid(),
       version: DatasetVersionMother.create(),
+      internalVersionNumber: faker.datatype.number(),
       license: {
         name: 'CC0 1.0',
         uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
@@ -415,15 +418,17 @@ export class DatasetMother {
       privateUrl: undefined,
       fileDownloadSizes: [],
       requestedVersion: undefined,
-      hierarchy: UpwardHierarchyNodeMother.createDataset(),
+      hierarchy: UpwardHierarchyNodeMother.createDataset({ name: props?.version?.title }),
+      termsOfUse: TermsOfUseMother.withoutCustomTerms(),
+      versionsSummaries: DatasetVersionSummaryInfoMother.createList(3),
       ...props
     }
-
     return new Dataset.Builder(
       dataset.persistentId,
       dataset.version,
+      dataset.internalVersionNumber,
       dataset.summaryFields,
-      dataset.license,
+      dataset.termsOfUse,
       dataset.metadataBlocks,
       dataset.permissions,
       dataset.locks,
@@ -433,9 +438,14 @@ export class DatasetMother {
       dataset.downloadUrls,
       dataset.fileDownloadSizes,
       dataset.hierarchy,
+      dataset.license,
       dataset.thumbnail,
       dataset.privateUrl,
-      dataset.requestedVersion
+      dataset.requestedVersion,
+      dataset.nextMajorVersion,
+      dataset.nextMinorVersion,
+      dataset.requiresMajorVersionUpdate,
+      dataset.versionsSummaries
     ).build()
   }
 

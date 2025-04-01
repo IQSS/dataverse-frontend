@@ -72,6 +72,9 @@ export function useFiles(
         console.error('There was an error getting the files')
         setIsLoading(false)
       })
+
+    // TODO: Not a priority as the one for inifinite scroll is used but the eslint disable should be removed and the dependency should be added
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     filesRepository,
     datasetPersistentId,

@@ -24,6 +24,7 @@ interface FormProps {
   errorLoadingMetadataBlocksInfo: string | null
   datasetRepository: DatasetRepository
   datasetPersistentID?: string
+  datasetInternalVersionNumber?: number
 }
 
 export const MetadataForm = ({
@@ -33,11 +34,12 @@ export const MetadataForm = ({
   metadataBlocksInfo,
   errorLoadingMetadataBlocksInfo,
   datasetRepository,
-  datasetPersistentID
+  datasetPersistentID,
+  datasetInternalVersionNumber
 }: FormProps) => {
   const { user } = useSession()
   const navigate = useNavigate()
-  const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
+  const { t } = useTranslation('shared')
 
   const accordionRef = useRef<HTMLDivElement>(null)
   const formContainerRef = useRef<HTMLDivElement>(null)
@@ -54,7 +56,8 @@ export const MetadataForm = ({
     collectionId,
     datasetRepository,
     onSubmitDatasetError,
-    datasetPersistentID
+    datasetPersistentID,
+    datasetInternalVersionNumber
   )
 
   useEffect(() => {
@@ -150,7 +153,7 @@ export const MetadataForm = ({
             {onEditMode && (
               <div>
                 <Button type="submit" disabled={disableSubmitButton}>
-                  {t('saveButton.editMode')}
+                  {t('saveChanges')}
                 </Button>
                 <Button
                   withSpacing
@@ -158,7 +161,7 @@ export const MetadataForm = ({
                   type="button"
                   onClick={handleCancel}
                   disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
-                  {t('cancelButton')}
+                  {t('cancel')}
                 </Button>
               </div>
             )}
@@ -167,7 +170,7 @@ export const MetadataForm = ({
           {submissionStatus === SubmissionStatus.Errored && (
             <Alert
               variant={'danger'}
-              customHeading={t('validationAlert.title')}
+              customHeading={t('datasetMetadataForm.validationAlert.title')}
               dismissible={false}>
               {submitError}
             </Alert>
@@ -175,7 +178,7 @@ export const MetadataForm = ({
 
           {submissionStatus === SubmissionStatus.SubmitComplete && (
             <Alert variant="success" dismissible={false}>
-              {t('status.success')}
+              {t('datasetMetadataForm.status.success')}
             </Alert>
           )}
 
@@ -198,13 +201,16 @@ export const MetadataForm = ({
           <SeparationLine />
 
           {onCreateMode && (
-            <Alert variant={'info'} customHeading={t('metadataTip.title')} dismissible={false}>
-              {t('metadataTip.content')}
+            <Alert
+              variant={'info'}
+              customHeading={t('datasetMetadataForm.metadataTip.title')}
+              dismissible={false}>
+              {t('datasetMetadataForm.metadataTip.content')}
             </Alert>
           )}
           <div className={styles['bottom-buttons-container']}>
             <Button type="submit" disabled={disableSubmitButton}>
-              {onCreateMode ? t('saveButton.createMode') : t('saveButton.editMode')}
+              {onCreateMode ? t('datasetMetadataForm.saveDataset') : t('saveChanges')}
             </Button>
             <Button
               withSpacing
@@ -212,7 +218,7 @@ export const MetadataForm = ({
               type="button"
               onClick={handleCancel}
               disabled={submissionStatus === SubmissionStatus.IsSubmitting}>
-              {t('cancelButton')}
+              {t('cancel')}
             </Button>
           </div>
         </form>

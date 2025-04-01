@@ -153,6 +153,7 @@ export function UploadedFiles({
                       <div>
                         <Form.Group.Checkbox
                           label={t('restricted')}
+                          data-testid={'restricted_checkbox_' + file.fileName}
                           id={'restricted-' + file.key}
                           checked={file.restricted}
                           onChange={(event: FormEvent<HTMLInputElement>) =>

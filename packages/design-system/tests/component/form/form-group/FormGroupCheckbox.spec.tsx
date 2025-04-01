@@ -71,38 +71,6 @@ describe('FormCheckbox', () => {
     cy.findByText(tooltipMessage).should('be.visible')
   })
 
-  it('renders with invalid feedback', () => {
-    cy.mount(
-      <FormCheckboxGroup title="Checkbox">
-        <FormGroup.Checkbox
-          id="checkbox-1"
-          label={option1Label}
-          name={checkboxName}
-          isInvalid
-          invalidFeedback="Invalid feedback"
-        />
-      </FormCheckboxGroup>
-    )
-
-    cy.findByText('Invalid feedback').should('exist')
-  })
-
-  it('renders with valid feedback', () => {
-    cy.mount(
-      <FormCheckboxGroup title="Checkbox">
-        <FormGroup.Checkbox
-          id="checkbox-1"
-          label={option1Label}
-          name={checkboxName}
-          isValid
-          validFeedback="Valid feedback"
-        />
-      </FormCheckboxGroup>
-    )
-
-    cy.findByText('Valid feedback').should('exist')
-  })
-
   it('renders with invalid feedback as a group', () => {
     cy.mount(
       <FormCheckboxGroup title="Checkbox" isInvalid>

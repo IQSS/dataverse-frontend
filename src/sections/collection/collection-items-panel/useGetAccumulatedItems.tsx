@@ -3,6 +3,7 @@ import { getCollectionItems } from '@/collection/domain/useCases/getCollectionIt
 import { CollectionRepository } from '@/collection/domain/repositories/CollectionRepository'
 import {
   CollectionItem,
+  CollectionItemsFacet,
   CollectionItemSubset
 } from '@/collection/domain/models/CollectionItemSubset'
 import { CollectionItemsPaginationInfo } from '@/collection/domain/models/CollectionItemsPaginationInfo'
@@ -13,6 +14,7 @@ export const NO_COLLECTION_ITEMS = 0
 type UseGetAccumulatedItemsReturnType = {
   isLoadingItems: boolean
   accumulatedItems: CollectionItem[]
+  facets: CollectionItemsFacet[]
   totalAvailable: number | undefined
   hasNextPage: boolean
   error: string | null
@@ -37,6 +39,7 @@ export const useGetAccumulatedItems = ({
 }: UseGetAccumulatedItemsParams): UseGetAccumulatedItemsReturnType => {
   const [isLoadingItems, setIsLoadingItems] = useState(false)
   const [accumulatedItems, setAccumulatedItems] = useState<CollectionItem[]>([])
+  const [facets, setFacets] = useState<CollectionItemsFacet[]>([])
   const [hasNextPage, setHasNextPage] = useState<boolean>(true)
   const [totalAvailable, setTotalAvailable] = useState<number | undefined>(undefined)
   const [error, setError] = useState<string | null>(null)
@@ -55,7 +58,7 @@ export const useGetAccumulatedItems = ({
     setIsLoadingItems(true)
 
     try {
-      const { items, totalItemCount } = await loadNextItems(
+      const { items, facets, totalItemCount } = await loadNextItems(
         collectionRepository,
         collectionId,
         pagination,
@@ -65,6 +68,8 @@ export const useGetAccumulatedItems = ({
       const newAccumulatedItems = !resetAccumulated ? [...accumulatedItems, ...items] : items
 
       setAccumulatedItems(newAccumulatedItems)
+
+      setFacets(facets)
 
       setTotalAvailable(totalItemCount)
 
@@ -93,6 +98,7 @@ export const useGetAccumulatedItems = ({
   return {
     isLoadingItems,
     accumulatedItems,
+    facets,
     totalAvailable,
     hasNextPage,
     error,

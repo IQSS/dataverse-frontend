@@ -3,8 +3,8 @@ import * as React from 'react'
 
 export type FormInputElement = HTMLInputElement | HTMLTextAreaElement
 
-export interface FormInputProps extends React.HTMLAttributes<FormInputElement> {
-  type?: 'text' | 'email' | 'password' | 'search'
+export interface FormInputProps extends Omit<React.InputHTMLAttributes<FormInputElement>, 'size'> {
+  type?: 'text' | 'email' | 'password' | 'search' | 'file'
   readOnly?: boolean
   name?: string
   isValid?: boolean

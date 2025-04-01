@@ -1,0 +1,25 @@
+@import 'node_modules/@iqss/dataverse-design-system/src/lib/assets/styles/design-tokens/colors.module';
+
+.transfer-list-container {
+  display: flex;
+  justify-content: center;
+
+  .error-msg {
+    width: 100%;
+    margin-top: 0.25rem;
+    color: $dv-danger-color;
+    font-size: 0.875em;
+  }
+
+  @media (min-width: 768px) {
+    justify-content: flex-start;
+  }
+}
+
+.select-facets-by-block-container {
+  width: 100%;
+
+  @media (min-width: 768px) {
+    width: 370px;
+  }
+}

@@ -37,7 +37,8 @@ export function useSubmitDataset(
   collectionId: string,
   datasetRepository: DatasetRepository,
   onSubmitErrorCallback: () => void,
-  datasetPersistentID?: string
+  datasetPersistentID?: string,
+  datasetInternalVersionNumber?: number
 ): UseSubmitDatasetReturnType {
   const navigate = useNavigate()
   const { t } = useTranslation('shared', { keyPrefix: 'datasetMetadataForm' })
@@ -53,7 +54,8 @@ export function useSubmitDataset(
     const formDataBackToOriginalKeys = MetadataFieldsHelper.replaceSlashKeysWithDot(formData)
 
     const formattedFormValues = MetadataFieldsHelper.formatFormValuesToDatasetDTO(
-      formDataBackToOriginalKeys
+      formDataBackToOriginalKeys,
+      mode
     )
 
     if (mode === 'create') {
@@ -86,7 +88,8 @@ export function useSubmitDataset(
       updateDatasetMetadata(
         datasetRepository,
         currentEditedDatasetPersistentID,
-        formattedFormValues
+        formattedFormValues,
+        datasetInternalVersionNumber as number
       )
         .then(() => {
           setSubmitError(null)
