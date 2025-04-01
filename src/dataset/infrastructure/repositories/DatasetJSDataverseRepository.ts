@@ -317,9 +317,13 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     })
   }
 
-  updateMetadata(datasetId: string | number, updatedDataset: DatasetDTO): Promise<void> {
+  updateMetadata(
+    datasetId: string | number,
+    updatedDataset: DatasetDTO,
+    internalVersionNumber: number
+  ): Promise<void> {
     return updateDataset
-      .execute(datasetId, DatasetDTOMapper.toJSDatasetDTO(updatedDataset))
+      .execute(datasetId, DatasetDTOMapper.toJSDatasetDTO(updatedDataset), internalVersionNumber)
       .catch((error: WriteError) => {
         throw new Error(error.message)
       })
