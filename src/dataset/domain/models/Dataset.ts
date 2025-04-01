@@ -401,6 +401,7 @@ export class Dataset {
   constructor(
     public readonly persistentId: string,
     public readonly version: DatasetVersion,
+    public readonly internalVersionNumber: number,
     public readonly alerts: Alert[],
     public readonly summaryFields: DatasetMetadataBlock[],
     public readonly termsOfUse: DatasetTermsOfUse,
@@ -496,6 +497,7 @@ export class Dataset {
     constructor(
       public readonly persistentId: string,
       public readonly version: DatasetVersion,
+      public readonly internalVersionNumber: number,
       public readonly summaryFields: DatasetMetadataBlock[],
       public readonly termsOfUse: DatasetTermsOfUse,
       public readonly metadataBlocks: DatasetMetadataBlocks,
@@ -565,6 +567,7 @@ export class Dataset {
       return new Dataset(
         this.persistentId,
         this.version,
+        this.internalVersionNumber,
         this.alerts,
         this.summaryFields,
         this.termsOfUse,

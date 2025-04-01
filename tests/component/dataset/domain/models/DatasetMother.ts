@@ -339,6 +339,7 @@ export class DatasetMother {
     const dataset = {
       persistentId: faker.datatype.uuid(),
       version: DatasetVersionMother.create(),
+      internalVersionNumber: faker.datatype.number(),
       license: {
         name: 'CC0 1.0',
         uri: 'https://creativecommons.org/publicdomain/zero/1.0/',
@@ -425,6 +426,7 @@ export class DatasetMother {
     return new Dataset.Builder(
       dataset.persistentId,
       dataset.version,
+      dataset.internalVersionNumber,
       dataset.summaryFields,
       dataset.termsOfUse,
       dataset.metadataBlocks,

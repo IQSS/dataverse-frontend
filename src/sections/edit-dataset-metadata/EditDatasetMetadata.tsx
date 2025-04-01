@@ -70,6 +70,7 @@ export const EditDatasetMetadata = ({
               metadataBlockInfoRepository={metadataBlockInfoRepository}
               datasetPersistentID={dataset.persistentId}
               datasetMetadaBlocksCurrentValues={dataset.metadataBlocks}
+              datasetInternalVersionNumber={dataset.internalVersionNumber}
             />
           </div>
         </Tabs.Tab>
