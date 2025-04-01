@@ -19,10 +19,6 @@ import '@cypress/code-coverage/support'
 import '../../src/assets/swal-custom.scss'
 import '../../src/assets/react-toastify-custom.scss'
 import 'react-loading-skeleton/dist/skeleton.css'
-
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
-
 import { mount, MountReturn } from 'cypress/react18'
 import { RouterInitialEntry } from './commands'
 import { ReactNode } from 'react'

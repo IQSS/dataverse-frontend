@@ -64,7 +64,9 @@ Cypress.Commands.add(
         path: '/*'
       }
     ]
-    const memoryRouter = createMemoryRouter(routes)
+    const memoryRouter = createMemoryRouter(routes, {
+      initialEntries: initialEntries
+    })
 
     return cy.mount(
       <ThemeProvider>
