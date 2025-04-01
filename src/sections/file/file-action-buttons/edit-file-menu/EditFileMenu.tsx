@@ -5,6 +5,7 @@ import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { DeleteFileButton } from './delete-file-button/DeleteFileButton'
 import { RestrictFileButton } from './restrict-file-button/RestrictFileButton'
+import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFileFactory'
 
 interface EditFileMenuProps {
   fileId: number
@@ -31,7 +32,12 @@ export const EditFileMenu = ({
 
   const handleOnReplaceClick = () =>
     navigate(
-      RouteWithParams.FILES_REPLACE(datasetInfo.persistentId, datasetInfo.versionNumber, fileId)
+      RouteWithParams.FILES_REPLACE(
+        datasetInfo.persistentId,
+        datasetInfo.versionNumber,
+        fileId,
+        ReplaceFileReferrer.FILE
+      )
     )
 
   return (
