@@ -7,6 +7,12 @@ import { searchParamVersionToDomainVersion } from '@/router'
 
 const fileRepository = new FileJSDataverseRepository()
 
+// From where the user is coming from
+export enum ReplaceFileReferrer {
+  DATASET = 'dataset',
+  FILE = 'file'
+}
+
 export class ReplaceFileFactory {
   static create(): ReactElement {
     return <ReplaceFileWithParams />
@@ -31,6 +37,8 @@ function ReplaceFileWithParams() {
   const datasetVersionNumber = searchParamVersionToDomainVersion(
     datasetVersionSearchParam
   ) as string
+  const referrer =
+    (searchParams.get(QueryParamKey.REFERRER) as ReplaceFileReferrer | null) ?? undefined
 
   return (
     <ReplaceFile
@@ -38,6 +46,7 @@ function ReplaceFileWithParams() {
       fileIdFromParams={fileId}
       datasetPidFromParams={datasetId}
       datasetVersionFromParams={datasetVersionNumber}
+      referrer={referrer}
     />
   )
 }

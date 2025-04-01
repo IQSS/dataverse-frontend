@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { DropdownButtonItem } from '@iqss/dataverse-design-system'
 import { FilePreview } from '../../../../../../files/domain/models/FilePreview'
 import { useTranslation } from 'react-i18next'
@@ -8,6 +9,8 @@ import { useNotImplementedModal } from '../../../../../not-implemented/NotImplem
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { DatasetRestrictFileButton } from '@/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/DatasetRestrictFileButton'
 import { DatasetDeleteFileButton } from '@/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/DatasetDeleteFileButton'
+import { RouteWithParams } from '@/sections/Route.enum'
+import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFileFactory'
 
 type EditFilesOptionsProps =
   | {
@@ -29,6 +32,7 @@ type EditFilesOptionsProps =
 
 export interface EditFilesMenuDatasetInfo {
   persistentId: string
+  versionNumber: string
   releasedVersionExists: boolean
   termsOfAccessForRestrictedFiles?: string
 }
@@ -43,6 +47,7 @@ export function EditFilesOptions({
   isHeader
 }: EditFilesOptionsProps) {
   const { t } = useTranslation('files')
+  const { t: tFile } = useTranslation('file')
   const [showNoFilesSelectedModal, setShowNoFilesSelectedModal] = useState(false)
   const settingsEmbargoAllowed = false // TODO - Ask Guillermo if this is included in the settings endpoint
   const provenanceEnabledByConfig = false // TODO - Ask Guillermo if this is included in the MVP and from which endpoint is coming from
@@ -57,6 +62,17 @@ export function EditFilesOptions({
           fileRepository={fileRepository}
           datasetInfo={datasetInfo}
         />
+
+        <DropdownButtonItem
+          as={Link}
+          to={RouteWithParams.FILES_REPLACE(
+            datasetInfo.persistentId,
+            datasetInfo.versionNumber,
+            file.id,
+            ReplaceFileReferrer.DATASET
+          )}>
+          {tFile('actionButtons.editFileMenu.options.replace')}
+        </DropdownButtonItem>
 
         <DatasetDeleteFileButton
           fileId={file.id}
@@ -91,9 +107,6 @@ export function EditFilesOptions({
           {t('actions.editFilesMenu.options.restrict')}
         </DropdownButtonItem>
       )}
-      <DropdownButtonItem onClick={onClick}>
-        {t('actions.editFilesMenu.options.replace')}
-      </DropdownButtonItem>
       {settingsEmbargoAllowed && (
         <DropdownButtonItem onClick={onClick}>
           {t('actions.editFilesMenu.options.embargo')}

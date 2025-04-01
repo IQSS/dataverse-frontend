@@ -8,7 +8,8 @@ const fileRepository: FileRepository = {} as FileRepository
 const datasetInfo = {
   persistentId: `doi:10.5072/FK2/0000}`,
   releasedVersionExists: false,
-  termsOfAccessForRestrictedFiles: ''
+  termsOfAccessForRestrictedFiles: '',
+  versionNumber: '1.0'
 }
 
 describe('EditFilesOptions', () => {
