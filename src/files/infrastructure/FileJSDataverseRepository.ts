@@ -323,7 +323,7 @@ export class FileJSDataverseRepository implements FileRepository {
 
   // TODO - Not a priority but could be nice to implement this use case in js-dataverse when having time
   getFixityAlgorithm(): Promise<FixityAlgorithm> {
-    return fetch(`${BASE_URL}/api/files/fixityAlgorithm`)
+    return fetch(`${DATAVERSE_BACKEND_URL}/api/files/fixityAlgorithm`)
       .then((response) => {
         if (!response.ok) {
           console.log('Did not get fixityAlgorithm from Dataverse, using MD5')

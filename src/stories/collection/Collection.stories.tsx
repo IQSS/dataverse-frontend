@@ -118,6 +118,7 @@ export const AccountCreated: Story = {
   render: () => (
     <Collection
       collectionRepository={new CollectionMockRepository()}
+      contactRepository={new ContactMockRepository()}
       collectionIdFromParams="collection"
       created={false}
       published={false}
@@ -137,6 +138,7 @@ export const Edited: Story = {
       created={false}
       published={false}
       edited={true}
+      accountCreated={false}
       collectionQueryParams={{ pageQuery: 1, searchQuery: undefined, typesQuery: undefined }}
     />
   )
@@ -160,6 +162,7 @@ export const WithFeaturedItems: Story = {
       collectionIdFromParams="collection"
       created={false}
       published={false}
+      accountCreated={false}
       collectionQueryParams={{
         pageQuery: 1,
         searchQuery: undefined,
