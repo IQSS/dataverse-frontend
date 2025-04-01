@@ -1,3 +1,4 @@
+import { QueryParamKey } from '@/sections/Route.enum'
 import { EditFilesOptions } from '../../../../../../../../src/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/EditFilesOptions'
 import { FilePreviewMother } from '../../../../../../files/domain/models/FilePreviewMother'
 import { FileRepository } from '@/files/domain/repositories/FileRepository'
@@ -141,7 +142,18 @@ describe('EditFilesOptions for a single file', () => {
     )
 
     cy.findByRole('button', { name: 'Restrict' }).should('exist')
-    cy.findByRole('button', { name: 'Replace' }).should('exist')
+
+    const searchParams = new URLSearchParams({
+      [QueryParamKey.FILE_ID]: fileUnrestricted.id.toString(),
+      [QueryParamKey.PERSISTENT_ID]: datasetInfo.persistentId,
+      [QueryParamKey.DATASET_VERSION]: datasetInfo.versionNumber,
+      [QueryParamKey.REFERRER]: 'dataset'
+    })
+
+    cy.findByRole('link', { name: 'Replace' })
+      .should('have.attr', 'href')
+      .and('include', searchParams.toString())
+
     cy.findByRole('button', { name: 'Delete' }).should('exist')
   })
 
