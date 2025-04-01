@@ -24,7 +24,6 @@ describe('EditFilesOptions', () => {
     )
 
     cy.findByRole('button', { name: 'Metadata' }).should('exist')
-    cy.findByRole('button', { name: 'Replace' }).should('exist')
     cy.findByRole('button', { name: 'Embargo' }).should('not.exist')
     cy.findByRole('button', { name: 'Provenance' }).should('not.exist')
     cy.findByRole('button', { name: 'Delete' }).should('exist')
@@ -106,10 +105,6 @@ describe('EditFilesOptions', () => {
     cy.findByText('Select File(s)').should('exist')
     cy.findByText('Close').click()
 
-    cy.findByRole('button', { name: 'Replace' }).click()
-    cy.findByText('Select File(s)').should('exist')
-    cy.findByText('Close').click()
-
     cy.findByRole('button', { name: 'Delete' }).click()
     cy.findByText('Select File(s)').should('exist')
     cy.findByText('Close').click()
@@ -126,9 +121,6 @@ describe('EditFilesOptions', () => {
     )
 
     cy.findByRole('button', { name: 'Metadata' }).click()
-    cy.findByText('Select File(s)').should('not.exist')
-
-    cy.findByRole('button', { name: 'Replace' }).click()
     cy.findByText('Select File(s)').should('not.exist')
 
     cy.findByRole('button', { name: 'Delete' }).click()
@@ -149,6 +141,7 @@ describe('EditFilesOptions for a single file', () => {
     )
 
     cy.findByRole('button', { name: 'Restrict' }).should('exist')
+    cy.findByRole('button', { name: 'Replace' }).should('exist')
     cy.findByRole('button', { name: 'Delete' }).should('exist')
   })
 
