@@ -30,7 +30,6 @@ export const useRestrictFile = ({
 }: UseRestrictFile): UseRestrictFileReturn => {
   const { t } = useTranslation('file')
   const [isRestrictingFile, setIsRestrictingFile] = useState<boolean>(false)
-
   const [errorRestrictingFile, seterrorRestrictingFile] = useState<string | null>(null)
 
   const handleRestrictFile = async (
@@ -39,7 +38,7 @@ export const useRestrictFile = ({
     terms?: string
   ) => {
     setIsRestrictingFile(true)
-    console.log('enableAccessRequest terms', enableAccessRequest, terms)
+
     const restrictDTO: RestrictDTO = {
       restrict: !isRestricted
     }
