@@ -80,6 +80,7 @@ export function DeaccessionDatasetModal({
                                 value={version.versionNumber}
                                 checked={field.value.includes(version.versionNumber)}
                                 isInvalid={!!errors.versions}
+                                invalidFeedback={errors.versions?.message}
                                 onChange={(e) => {
                                   const newValue = e.target.checked
                                     ? [...field.value, e.target.value]
@@ -90,9 +91,6 @@ export function DeaccessionDatasetModal({
                               />
                             )
                         )}
-                        <Form.Group.Feedback type="invalid" className="d-block">
-                          {errors.versions?.message}
-                        </Form.Group.Feedback>
                       </>
                     )}
                   />
