@@ -10,7 +10,7 @@ import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { DatasetRestrictFileButton } from '@/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/DatasetRestrictFileButton'
 import { DatasetDeleteFileButton } from '@/sections/dataset/dataset-files/files-table/file-actions/edit-files-menu/DatasetDeleteFileButton'
 import { RouteWithParams } from '@/sections/Route.enum'
-import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFileFactory'
+import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
 
 type EditFilesOptionsProps =
   | {

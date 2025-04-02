@@ -1,4 +1,4 @@
-import { ReplaceFileReferrer } from './replace-file/ReplaceFileFactory'
+import { ReplaceFileReferrer } from './replace-file/ReplaceFile'
 
 export enum Route {
   HOME = '/',

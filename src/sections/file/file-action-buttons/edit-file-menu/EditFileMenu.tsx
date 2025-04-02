@@ -5,7 +5,7 @@ import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { RouteWithParams } from '@/sections/Route.enum'
 import { DeleteFileButton } from './delete-file-button/DeleteFileButton'
 import { RestrictFileButton } from './restrict-file-button/RestrictFileButton'
-import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFileFactory'
+import { ReplaceFileReferrer } from '@/sections/replace-file/ReplaceFile'
 
 interface EditFileMenuProps {
   fileId: number

@@ -1,17 +1,11 @@
 import { ReactElement } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FileJSDataverseRepository } from '@/files/infrastructure/FileJSDataverseRepository'
-import { ReplaceFile } from './ReplaceFile'
+import { ReplaceFile, ReplaceFileReferrer } from './ReplaceFile'
 import { QueryParamKey } from '../Route.enum'
 import { searchParamVersionToDomainVersion } from '@/router'
 
 const fileRepository = new FileJSDataverseRepository()
-
-// From where the user is coming from
-export enum ReplaceFileReferrer {
-  DATASET = 'dataset',
-  FILE = 'file'
-}
 
 export class ReplaceFileFactory {
   static create(): ReactElement {

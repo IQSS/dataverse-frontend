@@ -9,7 +9,6 @@ import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { AppLoader } from '../shared/layout/app-loader/AppLoader'
 import { PageNotFound } from '../page-not-found/PageNotFound'
 import { FileUploader, OperationType } from '../shared/file-uploader/FileUploader'
-import { ReplaceFileReferrer } from './ReplaceFileFactory'
 import styles from './ReplaceFile.module.scss'
 
 interface ReplaceFileProps {
@@ -18,6 +17,12 @@ interface ReplaceFileProps {
   datasetPidFromParams: string
   datasetVersionFromParams: string
   referrer?: ReplaceFileReferrer
+}
+
+// From where the user is coming from
+export enum ReplaceFileReferrer {
+  DATASET = 'dataset',
+  FILE = 'file'
 }
 
 export const ReplaceFile = ({
