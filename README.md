@@ -243,7 +243,7 @@ The environment is accessible through the following URLs:
 >  
 > However, using Keycloak is not mandatory. If you do not require authentication for Dataverse built-in users, you can use any OIDC provider to handle user authentication in the SPA.  
 >  
-> For supporting built-in users, Keycloak must be properly configured and integrated with the Dataverse backend using the Dataverse Built-in Users SPI.  
+> For supporting built-in users, Keycloak must be properly configured and integrated with the Dataverse backend using the [Dataverse Built-in Users SPI][dv_repo_builtin_users_spi_provider].  
 >  
 > On the SPA side, ensure that the PKCE environment variables are set up to connect to the chosen OIDC provider for authentication.  
 >  
@@ -343,7 +343,7 @@ Distributed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for mo
 [dv_repo_projectstatus_url]: https://www.repostatus.org/#wip
 [dv_repo_releases_url]: https://github.com/IQSS/dataverse-frontend/releases
 
-<!-- Datavserse Associated Repositories -->
+<!-- Dataverse Associated Repositories -->
 <!-- @iqss/dataverse-client-javascript -->
 
 [dv_repo_dvclientjs_url]: https://github.com/IQSS/dataverse-client-javascript/pkgs/npm/dataverse-client-javascript
@@ -353,6 +353,7 @@ Distributed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for mo
 [dv_repo_legacyjsf_releases_url]: https://github.com/IQSS/dataverse/releases
 [dv_repo_legacyjsf_issues_url]: https://github.com/IQSS/dataverse/issues
 [dv_repo_vscode_url]: https://github.com/IQSS/vscode-settings
+[dv_repo_builtin_users_spi_provider]: https://github.com/IQSS/dataverse/tree/develop/conf/keycloak/builtin-users-spi
 
 <!-- Application Instances -->
 <!-- [dv_app_] -->
