@@ -234,6 +234,22 @@ The environment is accessible through the following URLs:
 
 </details>
 
+<details>
+  <summary><strong>Requirements for deploying the SPA</strong></summary>
+
+> ### Deploying a Keycloak Instance for Built-in Users Authentication
+>
+> To enable authentication for Dataverse built-in user accounts in the SPA, you must deploy a Keycloak instance as an OIDC authentication provider / broker. 
+>
+> This Keycloak instance should be properly configured and integrated with the Dataverse backend using the Dataverse Built-in Users SPI.
+>
+> On the SPA side, ensure that the PKCE environment variables are set up to connect to the Keycloak provider for OIDC authentication.
+>
+> Additionally, to allow the SPI to authenticate users against the Dataverse database, the Dataverse database must be accessible from
+> the Keycloak service within the deployed infrastructure.
+
+</details>
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Roadmap
