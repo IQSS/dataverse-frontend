@@ -100,7 +100,9 @@ export function File({ repository, id, datasetVersionNumber }: FileProps) {
                             file.datasetVersion.someDatasetVersionHasBeenReleased,
                           versionNumber: file.datasetVersion.number.toSearchParam(),
                           termsOfAccessForRestrictedFiles:
-                            file.datasetVersion.termsOfAccess?.termsOfAccessForRestrictedFiles
+                            file.datasetVersion.termsOfAccess?.termsOfAccessForRestrictedFiles,
+                          requestAccess:
+                            file.datasetVersion.termsOfAccess?.fileAccessRequest ?? true
                         }}
                       />
                     )}

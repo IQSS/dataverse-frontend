@@ -15,6 +15,7 @@ import { FilesWithCount } from '../../files/domain/models/FilesWithCount'
 import { FileHolder } from '../../files/domain/models/FileHolder'
 import { UploadedFileDTO } from '@iqss/dataverse-client-javascript'
 import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
+import { RestrictDTO } from '@/files/domain/useCases/restrictFileDTO'
 
 export class FileMockRepository implements FileRepository {
   constructor(public readonly fileMock?: File) {}
@@ -140,7 +141,7 @@ export class FileMockRepository implements FileRepository {
     })
   }
 
-  restrict(_fileId: number | string, _restrict: boolean): Promise<void> {
+  restrict(_fileId: number | string, _restrictDTO: RestrictDTO): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve()

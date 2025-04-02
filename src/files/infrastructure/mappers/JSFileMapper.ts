@@ -33,7 +33,10 @@ export class JSFileMapper {
       name: this.toFileName(jsFile.name),
       datasetPublishingStatus: datasetVersion.publishingStatus,
       datasetVersionNumber: datasetVersion.number,
-      access: JSFileAccessMapper.toFileAccess(jsFile.restricted),
+      access: JSFileAccessMapper.toFileAccess(
+        jsFile.restricted,
+        datasetVersion.termsOfAccess?.fileAccessRequest
+      ),
       ingest: JSFileIngestMapper.toFileIngest(),
       metadata: JSFileMetadataMapper.toFileMetadata(jsFile, downloadsCount, thumbnail, tabularData),
       permissions: permissions
@@ -62,7 +65,10 @@ export class JSFileMapper {
       id: this.toFileId(jsFile.id),
       datasetPersistentId: jsDataset.persistentId,
       name: this.toFileName(jsFile.name),
-      access: JSFileAccessMapper.toFileAccess(jsFile.restricted),
+      access: JSFileAccessMapper.toFileAccess(
+        jsFile.restricted,
+        datasetVersion.termsOfAccess?.fileAccessRequest
+      ),
       datasetVersion: datasetVersion,
       citation: citation,
       metadata: JSFileMetadataMapper.toFileMetadata(jsFile, downloadsCount, thumbnail, tabularData),

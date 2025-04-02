@@ -108,7 +108,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       DatasetNonNumericVersion.LATEST_PUBLISHED,
       DatasetNonNumericVersion.DRAFT
     ).then((datasetVersionDiff) => {
-      datasetDetails.datasetVersionDiff = datasetVersionDiff
+      datasetDetails.datasetVersionDiff = datasetVersionDiff as JSDatasetVersionDiff
       return datasetDetails
     })
 

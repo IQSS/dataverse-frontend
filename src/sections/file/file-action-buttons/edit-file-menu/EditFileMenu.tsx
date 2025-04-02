@@ -17,6 +17,7 @@ export interface EditFileMenuDatasetInfo {
   persistentId: string
   versionNumber: string
   releasedVersionExists: boolean
+  requestAccess?: boolean
   termsOfAccessForRestrictedFiles?: string
 }
 

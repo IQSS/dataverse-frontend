@@ -31,6 +31,7 @@ export interface EditFilesMenuDatasetInfo {
   persistentId: string
   releasedVersionExists: boolean
   termsOfAccessForRestrictedFiles?: string
+  requestAccess?: boolean
 }
 
 const SELECTED_FILES_EMPTY = 0
