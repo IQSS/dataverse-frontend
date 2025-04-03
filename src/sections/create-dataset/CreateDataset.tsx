@@ -14,7 +14,7 @@ import { useLoading } from '../loading/LoadingContext'
 
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { useCollection } from '../collection/useCollection'
-import { PageNotFound } from '../page-not-found/PageNotFound'
+import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { CreateDatasetSkeleton } from './CreateDatasetSkeleton'
 
 interface CreateDatasetProps {
@@ -53,7 +53,7 @@ export function CreateDataset({
   }, [isLoadingData, setIsLoading])
 
   if (!isLoadingCollection && !collection) {
-    return <PageNotFound />
+    return <NotFoundPage dvObjectNotFoundType="collection" />
   }
 
   if (isLoadingCollection || !collection) {

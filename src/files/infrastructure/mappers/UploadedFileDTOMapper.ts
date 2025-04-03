@@ -1,3 +1,4 @@
+import { FixityAlgorithm } from '@/files/domain/models/FixityAlgorithm'
 import { UploadedFileDTO } from '@iqss/dataverse-client-javascript'
 
 export class UploadedFileDTOMapper {
@@ -9,7 +10,9 @@ export class UploadedFileDTOMapper {
     restricted: boolean,
     storageId: string,
     checksumValue: string,
-    fileType: string
+    checksumType: FixityAlgorithm,
+    fileType: string,
+    forceReplace?: boolean
   ): UploadedFileDTO {
     return {
       fileName: fileName,
@@ -19,8 +22,9 @@ export class UploadedFileDTOMapper {
       restrict: restricted,
       storageId: storageId,
       checksumValue: checksumValue,
-      checksumType: 'md5',
-      mimeType: fileType
+      checksumType: checksumType,
+      mimeType: fileType === '' ? 'application/octet-stream' : fileType, // some browsers (e.g., chromium for .java files) fail to detect the mime type for some files and leave the fileType as an empty string, we use the default value 'application/octet-stream' in that case,
+      ...(forceReplace && { forceReplace: true })
     }
   }
 }

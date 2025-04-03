@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { DatasetLabels } from './dataset-labels/DatasetLabels'
 import { useLoading } from '../loading/LoadingContext'
 import { DatasetSkeleton, TabsSkeleton } from './DatasetSkeleton'
-import { PageNotFound } from '../page-not-found/PageNotFound'
+import { NotFoundPage } from '../not-found-page/NotFoundPage'
 import { useTranslation } from 'react-i18next'
 import { DatasetMetadata } from './dataset-metadata/DatasetMetadata'
 import { DatasetSummary } from './dataset-summary/DatasetSummary'
@@ -87,6 +87,11 @@ export function Dataset({
   if (isDatasetLoading && !dataset) {
     return <DatasetSkeleton />
   }
+
+  if (!dataset) {
+    return <NotFoundPage dvObjectNotFoundType="dataset" />
+  }
+
   const handleCustomTermsClick = () => {
     setActiveTab('terms')
     const newParams = new URLSearchParams(searchParams)
@@ -105,106 +110,103 @@ export function Dataset({
   return (
     <>
       <NotImplementedModal show={isModalOpen} handleClose={hideModal} />
-      {!dataset ? (
-        <PageNotFound />
-      ) : (
-        <>
-          <BreadcrumbsGenerator hierarchy={dataset.hierarchy} />
-          <article>
-            <div className={styles.container}>
-              <Row>
-                <Col>
-                  <DatasetAlerts />
-                </Col>
-              </Row>
-            </div>
+      <BreadcrumbsGenerator hierarchy={dataset.hierarchy} />
+      <article>
+        <div className={styles.container}>
+          <Row>
+            <Col>
+              <DatasetAlerts />
+            </Col>
+          </Row>
+        </div>
 
-            <header className={styles.header}>
-              <h1>{dataset.version.title}</h1>
-              <DatasetLabels labels={dataset.version.labels} />
-            </header>
-            <div className={styles.container}>
-              <Row>
-                <Col sm={9}>
-                  <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
-                </Col>
-                <Col sm={3}>
-                  <DatasetActionButtons
-                    datasetRepository={datasetRepository}
-                    collectionRepository={collectionRepository}
-                    dataset={dataset}
-                    contactRepository={contactRepository}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col sm={9} className={styles['summary-container']}>
-                  <DatasetSummary
-                    summaryFields={dataset.summaryFields}
-                    license={dataset.license}
-                    onCustomTermsClick={handleCustomTermsClick}
+        <header className={styles.header}>
+          <h1>{dataset.version.title}</h1>
+          <DatasetLabels labels={dataset.version.labels} />
+        </header>
+
+        <div className={styles.container}>
+          <Row>
+            <Col sm={9}>
+              <DatasetCitation thumbnail={dataset.thumbnail} version={dataset.version} />
+            </Col>
+            <Col sm={3}>
+              <DatasetActionButtons
+                datasetRepository={datasetRepository}
+                collectionRepository={collectionRepository}
+                dataset={dataset}
+                contactRepository={contactRepository}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={9} className={styles['summary-container']}>
+              <DatasetSummary
+                summaryFields={dataset.summaryFields}
+                license={dataset.license}
+                onCustomTermsClick={handleCustomTermsClick}
+                metadataBlockInfoRepository={metadataBlockInfoRepository}
+              />
+            </Col>
+          </Row>
+          {publishInProgress && <TabsSkeleton />}
+
+          {(!publishInProgress || !isDatasetLoading) && (
+            <Tabs defaultActiveKey={activeTab} onSelect={handleTabSelect}>
+              <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
+                <div className={styles['tab-container']}>
+                  {filesTabInfiniteScrollEnabled ? (
+                    <DatasetFilesScrollable
+                      filesRepository={fileRepository}
+                      datasetPersistentId={dataset.persistentId}
+                      datasetVersion={dataset.version}
+                      key={dataset.version.publishingStatus}
+                    />
+                  ) : (
+                    <DatasetFiles
+                      filesRepository={fileRepository}
+                      datasetPersistentId={dataset.persistentId}
+                      datasetVersion={dataset.version}
+                    />
+                  )}
+                </div>
+              </Tabs.Tab>
+              <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
+                <div className={styles['tab-container']}>
+                  <DatasetMetadata
+                    persistentId={dataset.persistentId}
+                    metadataBlocks={dataset.metadataBlocks}
                     metadataBlockInfoRepository={metadataBlockInfoRepository}
                   />
-                </Col>
-              </Row>
-              {publishInProgress && <TabsSkeleton />}
+                </div>
+              </Tabs.Tab>
 
-              {(!publishInProgress || !isDatasetLoading) && (
-                <Tabs defaultActiveKey={activeTab} onSelect={handleTabSelect}>
-                  <Tabs.Tab eventKey="files" title={t('filesTabTitle')}>
-                    <div className={styles['tab-container']}>
-                      {filesTabInfiniteScrollEnabled ? (
-                        <DatasetFilesScrollable
-                          filesRepository={fileRepository}
-                          datasetPersistentId={dataset.persistentId}
-                          datasetVersion={dataset.version}
-                          key={dataset.version.publishingStatus}
-                        />
-                      ) : (
-                        <DatasetFiles
-                          filesRepository={fileRepository}
-                          datasetPersistentId={dataset.persistentId}
-                          datasetVersion={dataset.version}
-                        />
-                      )}
-                    </div>
-                  </Tabs.Tab>
-                  <Tabs.Tab eventKey="metadata" title={t('metadataTabTitle')}>
-                    <div className={styles['tab-container']}>
-                      <DatasetMetadata
-                        persistentId={dataset.persistentId}
-                        metadataBlocks={dataset.metadataBlocks}
-                        metadataBlockInfoRepository={metadataBlockInfoRepository}
-                      />
-                    </div>
-                  </Tabs.Tab>
-                  <Tabs.Tab title={t('termsTabTitle')} eventKey={'terms'}>
-                    <div ref={termsTabRef} className={styles['tab-container']}>
-                      <DatasetTerms
-                        license={dataset.license}
-                        termsOfUse={dataset.termsOfUse}
-                        filesRepository={fileRepository}
-                        datasetPersistentId={dataset.persistentId}
-                        datasetVersion={dataset.version}
-                      />
-                    </div>
-                  </Tabs.Tab>
-                  <Tabs.Tab title={t('Versions')} eventKey={'versions'}>
-                    <div className={styles['tab-container']}>
-                      <DatasetVersions
-                        datasetRepository={datasetRepository}
-                        datasetId={dataset.persistentId}
-                        key={dataset.version.publishingStatus}
-                      />
-                    </div>
-                  </Tabs.Tab>
-                </Tabs>
-              )}
-              <SeparationLine />
-            </div>
-          </article>
-        </>
-      )}
+              <Tabs.Tab eventKey="terms" title={t('termsTabTitle')}>
+                <div ref={termsTabRef} className={styles['tab-container']}>
+                  <DatasetTerms
+                    license={dataset.license}
+                    termsOfUse={dataset.termsOfUse}
+                    filesRepository={fileRepository}
+                    datasetPersistentId={dataset.persistentId}
+                    datasetVersion={dataset.version}
+                  />
+                </div>
+              </Tabs.Tab>
+
+              <Tabs.Tab eventKey="versions" title={t('Versions')}>
+                <div className={styles['tab-container']}>
+                  <DatasetVersions
+                    datasetRepository={datasetRepository}
+                    datasetId={dataset.persistentId}
+                    key={dataset.version.publishingStatus}
+                  />
+                </div>
+              </Tabs.Tab>
+            </Tabs>
+          )}
+          <SeparationLine />
+        </div>
+      </article>
     </>
   )
 }
