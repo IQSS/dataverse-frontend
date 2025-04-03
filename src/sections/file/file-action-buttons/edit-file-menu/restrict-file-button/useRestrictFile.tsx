@@ -17,7 +17,7 @@ interface UseRestrictFileReturn {
   errorRestrictingFile: string | null
   handleRestrictFile: (
     fileId: number,
-    enableAccessRequest: boolean | undefined,
+    enableAccessRequest: boolean,
     terms: string | undefined
   ) => Promise<void>
   isRestricted: boolean
@@ -34,7 +34,7 @@ export const useRestrictFile = ({
 
   const handleRestrictFile = async (
     fileId: number,
-    enableAccessRequest: boolean | undefined,
+    enableAccessRequest: boolean,
     terms?: string
   ) => {
     setIsRestrictingFile(true)
@@ -49,7 +49,6 @@ export const useRestrictFile = ({
     }
 
     try {
-      console
       await restrictFile(fileRepository, fileId, restrictDTO)
       onSuccessfulRestrict()
     } catch (err: WriteError | unknown) {

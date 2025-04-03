@@ -1,14 +1,14 @@
 import { useTranslation } from 'react-i18next'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ExclamationTriangle } from 'react-bootstrap-icons'
 import { Button, Modal, Spinner, Stack, Col, Form } from '@iqss/dataverse-design-system'
 import styles from './ConfirmRestrictFileModal.module.scss'
-import { useState } from 'react'
 
 interface ConfirmRestrictFileModalProps {
   show: boolean
   handleClose: () => void
-  handleRestrict: (enableAccessRequest: boolean | undefined, terms: string | undefined) => void
+  handleRestrict: (enableAccessRequest: boolean, terms: string | undefined) => void
   datasetReleasedVersionExists: boolean
   requestAccess: boolean
   isRestrictingFile: boolean
