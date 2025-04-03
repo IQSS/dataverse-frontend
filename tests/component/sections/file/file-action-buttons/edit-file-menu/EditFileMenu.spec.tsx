@@ -398,7 +398,7 @@ describe('EditFileMenu', () => {
     })
   })
 
-  describe.only('Unrestrict button', () => {
+  describe('Unrestrict button', () => {
     it('opens and close the unrestrict file modal', () => {
       cy.customMount(
         <EditFileMenu
