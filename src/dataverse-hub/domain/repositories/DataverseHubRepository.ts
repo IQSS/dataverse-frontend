@@ -1,5 +1,5 @@
-export class DataverseHubRepository {
-  getVersion(): Promise<string> {
-    return Promise.resolve('v. 4.99.99')
-  }
+import { InstallationMetrics } from '../models/InstallationMetrics'
+
+export interface DataverseHubRepository {
+  getInstallationMetricsByHubId: (dvHubId: string) => Promise<InstallationMetrics>
 }
