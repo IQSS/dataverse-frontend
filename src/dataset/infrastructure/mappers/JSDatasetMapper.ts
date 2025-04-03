@@ -61,6 +61,7 @@ export class JSDatasetMapper {
     return new Dataset.Builder(
       jsDataset.persistentId,
       version,
+      jsDataset.internalVersionNumber,
       JSDatasetMapper.toSummaryFields(jsDataset.metadataBlocks, jsDatasetSummaryFieldsNames),
       jsDataset.termsOfUse,
       JSDatasetMapper.toMetadataBlocks(

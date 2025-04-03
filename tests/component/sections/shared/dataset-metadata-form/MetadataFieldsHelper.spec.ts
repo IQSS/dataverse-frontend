@@ -1247,7 +1247,7 @@ const formValuesWithValuesBackToDotKeys: DatasetMetadataFormValues = {
   }
 }
 
-const expectedDatasetDTO: DatasetDTO = {
+const expectedDatasetDTOInCreateMode: DatasetDTO = {
   licence: defaultLicense,
   metadataBlocks: [
     {
@@ -1269,6 +1269,43 @@ const expectedDatasetDTO: DatasetDTO = {
             'subfield.1': 'foo',
             'subfield.2': 'bar',
             someNestedKeyWithoutDot: 'bar'
+          }
+        ],
+        'composed.field.not.multiple': {
+          'subfield.1': 'foo',
+          'subfield.2': 'bar',
+          someNestedKeyWithoutDot: 'bar'
+        }
+      }
+    }
+  ]
+}
+
+const expectedDatasetDTOInEditMode: DatasetDTO = {
+  licence: defaultLicense,
+  metadataBlocks: [
+    {
+      name: 'foo',
+      fields: {
+        someKeyWithoutDot: 'bar',
+        controlledVocabularyNotMultiple: 'Option2',
+        controlledVocabularyMultiple: ['Option1'],
+        'primitive.text.not.multiple': 'foo',
+        'primitive.text.multiple': ['foo', 'bar'],
+        'primitive.textbox.not.multiple': '',
+        'primitive.textbox.multiple': [],
+        'primitive.float.not.multiple': '23.55',
+        'primitive.float.multiple': ['23.55', '45.55'],
+        'primitive.int.not.multiple': '23',
+        'primitive.int.multiple': ['23', '45'],
+        'primitive.date.not.multiple': '2022-01-01',
+        'primitive.date.multiple': ['2022-01-01', '2022-12-31'],
+        'composed.field.multiple': [
+          {
+            'subfield.1': 'foo',
+            'subfield.2': 'bar',
+            someNestedKeyWithoutDot: 'bar',
+            controlledVocabularyNotMultiple: ''
           }
         ],
         'composed.field.not.multiple': {
@@ -1322,12 +1359,24 @@ describe('MetadataFieldsHelper', () => {
     expect(result).to.deep.equal(formValuesWithValuesBackToDotKeys)
   })
 
-  it('should get dataset DTO from form values', () => {
-    const result = MetadataFieldsHelper.formatFormValuesToDatasetDTO(
-      formValuesWithValuesBackToDotKeys
-    )
+  describe('should format form values to dataset DTO', () => {
+    it('In create mode, removing empty values', () => {
+      const result = MetadataFieldsHelper.formatFormValuesToDatasetDTO(
+        formValuesWithValuesBackToDotKeys,
+        'create'
+      )
 
-    expect(result).to.deep.equal(expectedDatasetDTO)
+      expect(result).to.deep.equal(expectedDatasetDTOInCreateMode)
+    })
+
+    it('In edit mode, keeping empty values', () => {
+      const result = MetadataFieldsHelper.formatFormValuesToDatasetDTO(
+        formValuesWithValuesBackToDotKeys,
+        'edit'
+      )
+
+      expect(result).to.deep.equal(expectedDatasetDTOInEditMode)
+    })
   })
 
   it('works all together, simulates a use in an edit mode form', () => {
@@ -1353,7 +1402,8 @@ describe('MetadataFieldsHelper', () => {
       MetadataFieldsHelper.replaceSlashKeysWithDot(inTestFormDefaultValues)
 
     const inTestDatasetDTO = MetadataFieldsHelper.formatFormValuesToDatasetDTO(
-      formValuesWithValuesBackToDotKeys
+      formValuesWithValuesBackToDotKeys,
+      'edit'
     )
 
     expect(inTestNormalizedMetadataBlocksInfo).to.deep.equal(normalizedMetadataBlocksInfo)
@@ -1367,7 +1417,7 @@ describe('MetadataFieldsHelper', () => {
 
     expect(inTestFormDefaultValuesBackToDotKeys).to.deep.equal(formValuesWithValuesBackToDotKeys)
 
-    expect(inTestDatasetDTO).to.deep.equal(expectedDatasetDTO)
+    expect(inTestDatasetDTO).to.deep.equal(expectedDatasetDTOInEditMode)
   })
 
   describe('defineFieldName', () => {

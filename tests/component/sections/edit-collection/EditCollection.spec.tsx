@@ -99,7 +99,7 @@ describe('EditCollection', () => {
       />
     )
 
-    cy.findByText('Page Not Found').should('exist')
+    cy.findByTestId('not-found-page').should('exist')
   })
 
   it('should show alert error message when user is not allowed to edit the collection', () => {

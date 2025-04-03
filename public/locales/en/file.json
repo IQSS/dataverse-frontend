@@ -67,6 +67,12 @@
   },
   "fileDeletedSuccess": "The file has been deleted.",
   "defaultFileDeleteError": "Something went wrong deleting the file. Try again later.",
+  "alerts": {
+    "draftVersion": {
+      "heading": "This draft version needs to be published",
+      "alertText": "When ready for sharing, please <a>go to the dataset page</a> to publish it so that others can see these changes."
+    }
+  },
   "restriction": {
     "fileRestrictdSuccess": "The file has been restricted.",
     "fileUnrestrictedSuccess": "The file has been unrestricted.",
