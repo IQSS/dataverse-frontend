@@ -4,8 +4,6 @@ import { ThemeProvider } from '@iqss/dataverse-design-system'
 import { createBrowserRouter, RouteObject, RouterProvider } from 'react-router-dom'
 import { FakerHelper } from '../tests/component/shared/FakerHelper'
 import 'react-loading-skeleton/dist/skeleton.css'
-import '../src/assets/swal-custom.scss'
-import '../src/assets/react-toastify-custom.scss'
 
 const preview: Preview = {
   parameters: {

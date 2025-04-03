@@ -195,7 +195,6 @@ const MimeTypeDisplay: Record<string, string> = {
   'application/photoshop': 'Photoshop Image',
   'image/vnd.adobe.photoshop': 'Photoshop Image',
   'application/x-photoshop': 'Photoshop Image',
-  'image/webp': 'WebP Image',
   // Audio
   'audio/x-aiff': 'AIFF Audio',
   'audio/mp3': 'MP3 Audio',

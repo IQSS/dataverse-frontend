@@ -99,7 +99,7 @@ describe('CreateCollection', () => {
       />
     )
 
-    cy.findByTestId('not-found-page').should('exist')
+    cy.findByText('Page Not Found').should('exist')
   })
 
   it('should show alert error message when user is not allowed to create collection', () => {

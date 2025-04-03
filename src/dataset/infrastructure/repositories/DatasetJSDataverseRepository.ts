@@ -109,7 +109,7 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
       DatasetNonNumericVersion.LATEST_PUBLISHED,
       DatasetNonNumericVersion.DRAFT
     ).then((datasetVersionDiff) => {
-      datasetDetails.datasetVersionDiff = datasetVersionDiff as DatasetVersionDiff
+      datasetDetails.datasetVersionDiff = datasetVersionDiff
       return datasetDetails
     })
 
@@ -321,13 +321,9 @@ export class DatasetJSDataverseRepository implements DatasetRepository {
     })
   }
 
-  updateMetadata(
-    datasetId: string | number,
-    updatedDataset: DatasetDTO,
-    internalVersionNumber: number
-  ): Promise<void> {
+  updateMetadata(datasetId: string | number, updatedDataset: DatasetDTO): Promise<void> {
     return updateDataset
-      .execute(datasetId, DatasetDTOMapper.toJSDatasetDTO(updatedDataset), internalVersionNumber)
+      .execute(datasetId, DatasetDTOMapper.toJSDatasetDTO(updatedDataset))
       .catch((error: WriteError) => {
         throw new Error(error.message)
       })

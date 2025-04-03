@@ -7,7 +7,7 @@ import { useCollection } from '../collection/useCollection'
 import { useLoading } from '../loading/LoadingContext'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
-import { NotFoundPage } from '../not-found-page/NotFoundPage'
+import { PageNotFound } from '../page-not-found/PageNotFound'
 import { FeaturedItemsForm } from './featured-items-form/FeaturedItemsForm'
 import { FeaturedItemsFormHelper } from './featured-items-form/FeaturedItemsFormHelper'
 import { FeaturedItemsFormData } from './types'
@@ -40,7 +40,7 @@ export const EditCollectionFeaturedItems = ({
   }, [isLoadingData, setIsLoading])
 
   if (!isLoading && !collection) {
-    return <NotFoundPage dvObjectNotFoundType="collection" />
+    return <PageNotFound />
   }
 
   if (isLoadingData || !collection) {

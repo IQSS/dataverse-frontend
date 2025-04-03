@@ -73,7 +73,7 @@ describe('Collection page', () => {
       />
     )
 
-    cy.findByTestId('not-found-page').should('exist')
+    cy.findByText('Page Not Found').should('exist')
   })
 
   it('renders the breadcrumbs', () => {

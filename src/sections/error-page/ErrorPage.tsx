@@ -4,7 +4,6 @@ import styles from './ErrorPage.module.scss'
 import { useErrorLogger } from './useErrorLogger'
 import { ExclamationCircle } from 'react-bootstrap-icons'
 import { useTheme } from '@iqss/dataverse-design-system'
-import { Route } from '../Route.enum'
 import cn from 'classnames'
 
 interface AppLoaderProps {
@@ -31,7 +30,7 @@ export function ErrorPage({ fullViewport = false }: AppLoaderProps) {
           </h1>
         </div>
 
-        <Link to={Route.HOME} className="btn btn-primary">
+        <Link to="/" className="btn btn-secondary">
           {t('backToHomepage', { brandName: t('brandName') })}
         </Link>
       </div>

@@ -11,7 +11,7 @@ import { User } from '@/users/domain/models/User'
 import { BreadcrumbsGenerator } from '../shared/hierarchy/BreadcrumbsGenerator'
 import { SeparationLine } from '../shared/layout/SeparationLine/SeparationLine'
 import { RequiredFieldText } from '../shared/form/RequiredFieldText/RequiredFieldText'
-import { NotFoundPage } from '../not-found-page/NotFoundPage'
+import { PageNotFound } from '../page-not-found/PageNotFound'
 import { CreateCollectionSkeleton } from './CreateCollectionSkeleton'
 import { EditCreateCollectionForm } from '../shared/form/EditCreateCollectionForm/EditCreateCollectionForm'
 
@@ -55,7 +55,7 @@ export function CreateCollection({
   }, [isLoading, isLoadingData, setIsLoading])
 
   if (!isLoadingCollection && !collection) {
-    return <NotFoundPage dvObjectNotFoundType="collection" />
+    return <PageNotFound />
   }
 
   if (isLoadingData || !collection) {

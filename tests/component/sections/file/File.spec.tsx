@@ -45,7 +45,7 @@ describe('File', () => {
 
     cy.customMount(<File repository={fileRepository} id={19} />)
 
-    cy.findByTestId('not-found-page').should('exist')
+    cy.findByText('Page Not Found').should('exist')
   })
 
   it('renders the restricted icon if the file is restricted', () => {

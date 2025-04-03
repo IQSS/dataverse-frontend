@@ -75,7 +75,7 @@ describe('EditDatasetMetadata', () => {
       emptyDataset
     )
 
-    cy.findByTestId('not-found-page').should('exist')
+    cy.findByText('Page Not Found').should('exist')
   })
 
   it('renders the Host Collection', () => {

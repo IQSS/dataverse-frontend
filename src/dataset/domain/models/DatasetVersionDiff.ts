@@ -7,7 +7,6 @@ export interface DatasetVersionDiff {
   fileChanges?: FileDiff[]
   filesReplaced?: FileReplacement[]
   termsOfAccess?: FieldDiff[]
-  versionState?: DatasetVersionState
 }
 
 export interface FileSummary {
@@ -46,11 +45,4 @@ export interface FieldDiff {
   fieldName: string
   oldValue: string
   newValue: string
-}
-
-export declare enum DatasetVersionState {
-  DRAFT = 'DRAFT',
-  RELEASED = 'RELEASED',
-  ARCHIVED = 'ARCHIVED',
-  DEACCESSIONED = 'DEACCESSIONED'
 }

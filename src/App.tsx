@@ -7,7 +7,6 @@ import { BASE_URL } from './config'
 import { ToastContainer } from 'react-toastify'
 import 'react-loading-skeleton/dist/skeleton.css'
 import './assets/react-toastify-custom.scss'
-import './assets/swal-custom.scss'
 
 if (BASE_URL === '') {
   throw Error('VITE_DATAVERSE_BACKEND_URL environment variable should be specified.')

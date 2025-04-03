@@ -36,7 +36,7 @@ describe('EditCollectionFeaturedItems', () => {
       />
     )
 
-    cy.findByTestId('not-found-page').should('exist')
+    cy.findByText('Page Not Found').should('exist')
   })
 
   it('should show app loader while loading the collection', () => {

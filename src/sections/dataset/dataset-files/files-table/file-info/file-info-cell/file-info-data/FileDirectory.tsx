@@ -3,7 +3,7 @@ export function FileDirectory({ directory }: { directory: string | undefined }) 
     return <></>
   }
   return (
-    <div data-testid="directory-container">
+    <div className="directory-container">
       <span>{directory}</span>
     </div>
   )

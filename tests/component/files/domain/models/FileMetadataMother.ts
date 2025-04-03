@@ -261,10 +261,9 @@ export class FileMetadataMother {
     })
   }
 
-  static createWithDescription(props?: Partial<FileMetadata>): FileMetadata {
+  static createWithDescription(): FileMetadata {
     return this.createDefault({
-      description: FakerHelper.paragraph(),
-      ...props
+      description: FakerHelper.paragraph()
     })
   }
 

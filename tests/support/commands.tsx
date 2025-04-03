@@ -45,26 +45,18 @@ import { I18nextProvider } from 'react-i18next'
 import i18next from '../../src/i18n'
 import { UserRepository } from '../../src/users/domain/repositories/UserRepository'
 import { SessionProvider } from '../../src/sections/session/SessionProvider'
-import { RouteObject, RouterProvider, createMemoryRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 // Define your custom mount function
 
 Cypress.Commands.add('customMount', (component: ReactNode) => {
-  const routes: RouteObject[] = [
-    {
-      element: component,
-      path: '/*'
-    }
-  ]
-  const memoryRouter = createMemoryRouter(routes)
-
   return cy.mount(
-    <ThemeProvider>
-      <I18nextProvider i18n={i18next}>
-        <RouterProvider router={memoryRouter} />
-      </I18nextProvider>
-      <ToastContainer position="top-right" autoClose={5000} pauseOnHover />
-    </ThemeProvider>
+    <MemoryRouter>
+      <ThemeProvider>
+        <I18nextProvider i18n={i18next}>{component}</I18nextProvider>
+        <ToastContainer position="top-right" autoClose={5000} pauseOnHover />
+      </ThemeProvider>
+    </MemoryRouter>
   )
 })
 

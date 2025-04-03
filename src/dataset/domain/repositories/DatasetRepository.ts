@@ -23,11 +23,7 @@ export interface DatasetRepository {
   ) => Promise<DatasetVersionDiff>
 
   create: (dataset: DatasetDTO, collectionId: string) => Promise<{ persistentId: string }>
-  updateMetadata: (
-    datasetId: string | number,
-    datasetDTO: DatasetDTO,
-    internalVersionNumber: number
-  ) => Promise<void>
+  updateMetadata: (datasetId: string | number, datasetDTO: DatasetDTO) => Promise<void>
   deaccession: (
     datasetId: string | number,
     version: string,

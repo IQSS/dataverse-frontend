@@ -7,14 +7,14 @@ import { FileRepository } from '@/files/domain/repositories/FileRepository'
 import { QueryParamKey, Route } from '@/sections/Route.enum'
 import { DatasetNonNumericVersionSearchParam } from '@/dataset/domain/models/Dataset'
 import { ConfirmDeleteFileModal } from '@/sections/file/file-action-buttons/edit-file-menu/delete-file-button/confirm-delete-file-modal/ConfirmDeleteFileModal'
+import { EditFileMenuDatasetInfo } from '@/sections/file/file-action-buttons/edit-file-menu/EditFileMenu'
 import { useDeleteFile } from '@/sections/file/file-action-buttons/edit-file-menu/delete-file-button/useDeleteFile'
 import { useFilesContext } from '@/sections/file/FilesContext'
-import { EditFilesMenuDatasetInfo } from './EditFilesOptions'
 
 interface DatasetDeleteFileButtonProps {
   fileId: number
   fileRepository: FileRepository
-  datasetInfo: EditFilesMenuDatasetInfo
+  datasetInfo: EditFileMenuDatasetInfo
 }
 
 export const DatasetDeleteFileButton = ({

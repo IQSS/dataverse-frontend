@@ -39,7 +39,7 @@ describe('Create Dataset', () => {
         collectionId={'non-existing-collection'}
       />
     )
-    cy.findByTestId('not-found-page').should('exist')
+    cy.findByText('Page Not Found').should('exist')
   })
 
   it('should show loading skeleton while loading the collection', () => {

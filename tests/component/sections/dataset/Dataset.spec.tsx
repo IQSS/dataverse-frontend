@@ -151,7 +151,7 @@ describe('Dataset', () => {
       emptyDataset
     )
 
-    cy.findByTestId('not-found-page').should('exist')
+    cy.findByText('Page Not Found').should('exist')
   })
   it('renders Success alert when dataset is created', () => {
     const dataset = DatasetMother.create()

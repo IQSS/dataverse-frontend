@@ -15,6 +15,8 @@ interface HomepageProps {
   collectionRepository: CollectionRepository
 }
 
+// TODO:ME - Unit tests for Homepage and new FeaturedItems slider
+
 export const Homepage = ({ collectionRepository }: HomepageProps) => {
   const { collection, isLoading: isLoadingCollection } = useCollection(collectionRepository)
   const { setIsLoading } = useLoading()

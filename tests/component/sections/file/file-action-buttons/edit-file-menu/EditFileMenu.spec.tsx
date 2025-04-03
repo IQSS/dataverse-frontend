@@ -14,34 +14,13 @@ describe('EditFileMenu', () => {
         isRestricted={false}
         datasetInfo={{
           persistentId: testFile.datasetPersistentId,
-          versionNumber: testFile.datasetVersion.number.toSearchParam(),
-          releasedVersionExists: false
-        }}
-      />
-    )
-
-    cy.findByRole('button', { name: 'Edit File' }).should('exist').click()
-    cy.findByRole('button', { name: 'Replace' }).should('exist')
-    cy.findByRole('button', { name: 'Delete' }).should('exist')
-  })
-
-  it('clicks the replace button', () => {
-    cy.customMount(
-      <EditFileMenu
-        fileId={testFile.id}
-        fileRepository={new FileMockRepository()}
-        isRestricted={false}
-        datasetInfo={{
-          persistentId: testFile.datasetPersistentId,
-          versionNumber: testFile.datasetVersion.number.toSearchParam(),
           releasedVersionExists: false,
           termsOfAccessForRestrictedFiles: 'terms of access for restricted files'
         }}
       />
     )
 
-    cy.findByRole('button', { name: 'Edit File' }).click()
-    cy.findByRole('button', { name: 'Replace' }).click()
+    cy.findByRole('button', { name: 'Edit File' }).should('exist')
   })
 
   describe('Delete button', () => {
@@ -53,7 +32,6 @@ describe('EditFileMenu', () => {
           isRestricted={false}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
             releasedVersionExists: false
           }}
         />
@@ -76,7 +54,6 @@ describe('EditFileMenu', () => {
           isRestricted={false}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
             releasedVersionExists: true
           }}
         />
@@ -99,7 +76,6 @@ describe('EditFileMenu', () => {
           isRestricted={false}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
             releasedVersionExists: false
           }}
         />
@@ -131,7 +107,6 @@ describe('EditFileMenu', () => {
           isRestricted={false}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
             releasedVersionExists: false
           }}
         />
@@ -157,7 +132,6 @@ describe('EditFileMenu', () => {
           isRestricted={false}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
             releasedVersionExists: false
           }}
         />
@@ -182,8 +156,7 @@ describe('EditFileMenu', () => {
           isRestricted={false}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            releasedVersionExists: false
           }}
         />
       )
@@ -207,7 +180,6 @@ describe('EditFileMenu', () => {
           isRestricted={false}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            versionNumber: testFile.datasetVersion.number.toSearchParam(),
             releasedVersionExists: false,
             termsOfAccessForRestrictedFiles: 'test terms of access'
           }}
@@ -234,8 +206,7 @@ describe('EditFileMenu', () => {
           isRestricted={false}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: true,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            releasedVersionExists: true
           }}
         />
       )
@@ -258,8 +229,7 @@ describe('EditFileMenu', () => {
           isRestricted={false}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            releasedVersionExists: false
           }}
         />
       )
@@ -283,8 +253,7 @@ describe('EditFileMenu', () => {
           isRestricted={false}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            releasedVersionExists: false
           }}
         />
       )
@@ -314,8 +283,7 @@ describe('EditFileMenu', () => {
           isRestricted={false}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            releasedVersionExists: false
           }}
         />
       )
@@ -340,8 +308,7 @@ describe('EditFileMenu', () => {
           isRestricted={false}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            releasedVersionExists: false
           }}
         />
       )
@@ -365,8 +332,7 @@ describe('EditFileMenu', () => {
           isRestricted={true}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            releasedVersionExists: false
           }}
         />
       )
@@ -389,8 +355,7 @@ describe('EditFileMenu', () => {
           isRestricted={true}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: true,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            releasedVersionExists: true
           }}
         />
       )
@@ -411,8 +376,7 @@ describe('EditFileMenu', () => {
           isRestricted={true}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            releasedVersionExists: false
           }}
         />
       )
@@ -442,8 +406,7 @@ describe('EditFileMenu', () => {
           isRestricted={true}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            releasedVersionExists: false
           }}
         />
       )
@@ -468,8 +431,7 @@ describe('EditFileMenu', () => {
           isRestricted={true}
           datasetInfo={{
             persistentId: testFile.datasetPersistentId,
-            releasedVersionExists: false,
-            versionNumber: testFile.datasetVersion.number.toSearchParam()
+            releasedVersionExists: false
           }}
         />
       )

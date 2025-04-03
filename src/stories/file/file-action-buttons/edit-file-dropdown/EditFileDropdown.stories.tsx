@@ -24,8 +24,7 @@ export const Default: Story = {
       isRestricted={false}
       datasetInfo={{
         persistentId: storyFile.datasetPersistentId,
-        releasedVersionExists: false,
-        versionNumber: storyFile.datasetVersion.number.toString()
+        releasedVersionExists: false
       }}
     />
   )
