@@ -4,15 +4,24 @@ import { Table } from '@iqss/dataverse-design-system'
 import { DateHelper } from '@/shared/helpers/DateHelper'
 import styles from './DatasetVersionsDifferenceTable.module.scss'
 
-interface atasetVersionsDifferenceTableProps {
+interface datasetVersionsDifferenceTableProps {
   differences: DatasetVersionDiff
 }
 
 export const DatasetVersionsDifferenceTable = ({
   differences
-}: atasetVersionsDifferenceTableProps) => {
+}: datasetVersionsDifferenceTableProps) => {
   const { t } = useTranslation('dataset')
-  const { oldVersion, newVersion, metadataChanges, filesAdded, filesRemoved } = differences
+  const {
+    oldVersion,
+    newVersion,
+    metadataChanges,
+    filesAdded,
+    filesRemoved,
+    fileChanges,
+    termsOfAccess,
+    filesReplaced
+  } = differences
 
   const citationMetadata = metadataChanges?.find((m) => m.blockName === 'Citation Metadata')
 
@@ -57,7 +66,7 @@ export const DatasetVersionsDifferenceTable = ({
         </Table>
       )}
 
-      {(filesAdded || filesRemoved) && (
+      {(filesAdded || filesRemoved || fileChanges || filesRemoved) && (
         <Table bordered>
           <thead>
             <tr>
@@ -101,6 +110,74 @@ export const DatasetVersionsDifferenceTable = ({
                   <br />
                   {t('versions.access')}: {file.isRestricted ? 'Restricted' : 'Public'}
                 </td>
+              </tr>
+            ))}
+            {fileChanges &&
+              fileChanges.map((file) => (
+                <tr key={`changed-${file.fileId}`}>
+                  <td>
+                    {t('versions.fileID')} {file.fileId}
+                    <br />
+                    {t('versions.MD5')} {file.MD5}
+                  </td>
+                  <td>
+                    {file.changed.map((change) => (
+                      <div key={change.fieldName}>
+                        {change.fieldName}: {change.oldValue || ''}
+                      </div>
+                    ))}
+                  </td>
+                  <td>
+                    {file.changed.map((change) => (
+                      <div key={change.fieldName}>
+                        {change.fieldName}: {change.newValue || ''}
+                      </div>
+                    ))}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </Table>
+      )}
+
+      {filesReplaced && (
+        <Table bordered>
+          <tbody>
+            {filesReplaced.map(({ oldFile, newFile }) => (
+              <tr key={`replaced-${oldFile.fileId}-${newFile.fileId}`}>
+                <td>{t('versions.replace')}</td>
+                <td>
+                  {t('versions.name')}: {oldFile.fileName}
+                  <br />
+                  {t('versions.type')}: {oldFile.type || ''}
+                  <br />
+                  {t('versions.description')}: {oldFile.description || ''}
+                  <br />
+                </td>
+                <td>
+                  {t('versions.fileID')} {newFile.fileId}
+                  <br />
+                  {t('versions.MD5')} {newFile.MD5} <br />
+                  {t('versions.name')}: {newFile.fileName}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
+      {termsOfAccess && (
+        <Table bordered>
+          <thead>
+            <tr>
+              <th>{t('versions.termsAccess')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {termsOfAccess.changed.map((term) => (
+              <tr key={term.fieldName}>
+                <td>{term.fieldName}</td>
+                <td>{term.oldValue || ''}</td>
+                <td>{term.newValue || ''}</td>
               </tr>
             ))}
           </tbody>

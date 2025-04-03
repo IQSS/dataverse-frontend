@@ -473,7 +473,7 @@ describe('Dataset', () => {
     versionsTab.should('exist').click()
     cy.findByText('Dataset Version').should('exist')
     cy.findByText('Summary').should('exist')
-    cy.findByText('Version Note').should('exist')
+    // cy.findByText('Version Note').should('exist')
     cy.findByText('Contributors').should('exist')
     cy.findByText('Published On').should('exist')
   })

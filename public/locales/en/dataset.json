@@ -232,6 +232,7 @@
     "files": "Files",
     "citationMetadata": "Citation Metadata",
     "additionalCitationMetadata": "Additional Citation Metadata",
+    "termsAccess": "Terms of Use and Access",
     "fileID": "File ID",
     "MD5": "MD5",
     "name": "Name",
@@ -239,7 +240,8 @@
     "description": "Description",
     "access": "Access",
     "needTwoVersions": "Please select two versions to view the differences.",
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "replace": "File Replace"
   },
   "getDatasetVersionDiffError": "Error Fetching Dataset Version Differences",
   "datasetVersionSummary": {
@@ -263,6 +265,6 @@
       "fileMetadataChanged": "File Metadata Changed: {{count}}",
       "variableMetadataChanged": "Variable Metadata Changed: {{count}}"
     },
-    "termsAccessChanged": "Terms Access: Changed"
+    "termsAccessChanged": "Changed"
   }
 }

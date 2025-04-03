@@ -61,7 +61,7 @@ export class DatasetVersionDiffMother {
       ],
       filesRemoved: [
         {
-          fileName: 'file1',
+          fileName: 'file10',
           MD5: faker.datatype.uuid(),
           type: '',
           fileId: faker.datatype.number(),
@@ -71,7 +71,56 @@ export class DatasetVersionDiffMother {
           tags: [],
           categories: []
         }
-      ]
+      ],
+      filesChanges: [
+        {
+          fileName: 'file4',
+          md5: faker.datatype.uuid(),
+          fileId: faker.datatype.number(),
+          changed: [
+            {
+              fieldName: 'isRestricted',
+              oldValue: 'old title',
+              newValue: 'new title'
+            }
+          ]
+        }
+      ],
+      fileReplaced: [
+        {
+          oldFile: {
+            fileName: 'file5',
+            MD5: faker.datatype.uuid(),
+            type: '',
+            fileId: faker.datatype.number(),
+            description: 'file5 description',
+            isRestricted: faker.datatype.boolean(),
+            filePath: '',
+            tags: [],
+            categories: []
+          },
+          newFile: {
+            fileName: 'file6',
+            MD5: faker.datatype.uuid(),
+            type: '',
+            fileId: faker.datatype.number(),
+            description: 'file6 description',
+            isRestricted: faker.datatype.boolean(),
+            filePath: '',
+            tags: [],
+            categories: []
+          }
+        }
+      ],
+      termsOfAccess: {
+        changed: [
+          {
+            fieldName: 'Terms of Access for Restricted Files',
+            oldValue: 'old value',
+            newValue: 'new value'
+          }
+        ]
+      }
     }
     return datasetVersionDiff
   }

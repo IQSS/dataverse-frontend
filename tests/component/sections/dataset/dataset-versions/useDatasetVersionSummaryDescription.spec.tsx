@@ -38,7 +38,7 @@ describe('useDatasetVersionSummaryDescription', () => {
     expect(result.current)
       .haveOwnProperty('Additional Citation Metadata')
       .equal('1 Added; 1 Removed; 1 Changed')
-    expect(result.current).haveOwnProperty('termsAccessChanged').equal('Terms Access: Changed')
+    expect(result.current).haveOwnProperty('Terms of Use/Access').equal('Changed')
   })
 
   it('returns correct values for first publish', () => {

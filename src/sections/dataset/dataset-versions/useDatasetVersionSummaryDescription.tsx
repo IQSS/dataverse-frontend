@@ -106,7 +106,8 @@ export const useDatasetVersionSummaryDescription = (
       }
 
       case 'termsAccessChanged':
-        if (value) description[key] = t('datasetVersionSummary.termsAccessChanged')
+        if (value)
+          description['Terms of Use/Access'] = t('datasetVersionSummary.termsAccessChanged')
         break
     }
   })

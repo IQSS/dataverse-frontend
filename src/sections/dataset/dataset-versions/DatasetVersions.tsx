@@ -83,7 +83,7 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
               )}
               <th>{t('versions.datasetVersions')}</th>
               <th>{t('versions.summary')}</th>
-              <th>{t('versions.versionNote')}</th>
+              {/* <th>{t('versions.versionNote')}</th> */}
               <th>{t('versions.contributors')}</th>
               <th>{t('versions.publishedOn')}</th>
             </tr>
@@ -126,7 +126,7 @@ export function DatasetVersions({ datasetRepository, datasetId }: DatasetVersion
                       )}
                     </p>
                   </td>
-                  <td>{/* TODO: version note API is missing */}</td>
+                  {/* <td>{ TODO: version note API is missing }</td> */}
                   <td>{dataset.contributors}</td>
                   <td>{dataset.publishedOn}</td>
                 </tr>
