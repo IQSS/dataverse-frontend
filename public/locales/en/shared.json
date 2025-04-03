@@ -1,4 +1,8 @@
 {
+  "collection": "Collection",
+  "dataset": "Dataset",
+  "file": "File",
+  "page": "Page",
   "asterisksIndicateRequiredFields": "Asterisks indicate required fields",
   "remove": "Remove",
   "add": "Add",
@@ -19,10 +23,6 @@
   "pageNumberNotFound": {
     "heading": "Page Number Not Found",
     "message": "The page number you requested does not exist. Please try a different page number."
-  },
-  "pageNotFound": {
-    "heading": "Page Not Found",
-    "message": "The page you are looking for was not found."
   },
   "pagination": {
     "results_one": "1 {{item}}",

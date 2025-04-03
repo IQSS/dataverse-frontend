@@ -67,7 +67,7 @@ describe('File', () => {
           cy.wrap(TestsUtils.logout())
           cy.visit(`/spa/files?id=${id}`)
 
-          cy.findByText('Page Not Found').should('exist')
+          cy.findByTestId('not-found-page').should('exist')
         })
     })
 
@@ -90,7 +90,7 @@ describe('File', () => {
 
     it('loads page not found when passing a wrong id', () => {
       cy.visit(`/spa/files?id=wrong-id`)
-      cy.findByText('Page Not Found').should('exist')
+      cy.findByTestId('not-found-page').should('exist')
     })
 
     it('loads correctly the breadcrumbs', () => {
