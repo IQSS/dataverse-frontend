@@ -237,18 +237,17 @@ The environment is accessible through the following URLs:
 <details>
   <summary><strong>Requirements for deploying the SPA</strong></summary>
 
-> ### Deploying a Keycloak Instance for Built-in Users Authentication  
->  
-> To enable authentication for Dataverse built-in user accounts in the SPA, you must deploy a Keycloak instance as an OIDC authentication provider and broker for the SPA.  
->  
-> However, using Keycloak is not mandatory. If you do not require authentication for Dataverse built-in users, you can use any OIDC provider to handle user authentication in the SPA.  
->  
-> For supporting built-in users, Keycloak must be properly configured and integrated with the Dataverse backend using the [Dataverse Built-in Users SPI][dv_repo_builtin_users_spi_provider].  
->  
-> On the SPA side, ensure that the PKCE environment variables are set up to connect to the chosen OIDC provider for authentication.  
->  
-> Additionally, to allow the SPI to authenticate users against the Dataverse database, the Dataverse database must be accessible from the Keycloak service within the deployed infrastructure.  
-
+> ### Deploying a Keycloak Instance for Built-in Users Authentication
+>
+> To enable authentication for Dataverse built-in user accounts in the SPA, you must deploy a Keycloak instance as an OIDC authentication provider and broker for the SPA.
+>
+> However, using Keycloak is not mandatory. If you do not require authentication for Dataverse built-in users, you can use any OIDC provider to handle user authentication in the SPA.
+>
+> For supporting built-in users, Keycloak must be properly configured and integrated with the Dataverse backend using the [Dataverse Built-in Users SPI][dv_repo_builtin_users_spi_provider].
+>
+> On the SPA side, ensure that the PKCE environment variables are set up to connect to the chosen OIDC provider for authentication.
+>
+> Additionally, to allow the SPI to authenticate users against the Dataverse database, the Dataverse database must be accessible from the Keycloak service within the deployed infrastructure.
 
 </details>
 
